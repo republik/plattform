@@ -7,6 +7,7 @@ import colors from '../../../theme/colors'
 import { serifRegular16, sansSerifRegular12 } from '../../Typography/styles'
 
 import { Header, Tags, Actions, Error } from '../Internal/Composer'
+import { DiscussionContext } from '../DiscussionContext'
 
 const styles = {
   root: css({}),
@@ -46,143 +47,118 @@ const styles = {
   })
 }
 
-export class CommentComposer extends PureComponent {
-  constructor(props) {
-    super(props)
+export const CommentComposer = props => {
+  const { t, isRoot, onClose, onCloseLabel, onSubmitLabel, secondaryActions } = props
 
-    this.state = {
-      text: props.initialText || '',
-      tagValue: props.tagValue,
+  /*
+   * Get the discussion metadata and action callbacks from the DiscussionContext.
+   *
+   * The 'tagRequired' setting only applies to root comments.
+   */
+  const { discussion, actions } = React.useContext(DiscussionContext)
+  const { tags, rules, displayAuthor } = discussion
+  const tagRequired = isRoot && discussion.tagRequired
+  const { maxLength } = rules
 
-      /*
-       * We keep track of the submission process, to prevent the user from
-       * submitting the comment multiple times.
-       *
-       * This also enables us to show a loading indicator.
-       */
-      submit: { loading: false, error: undefined }
+  /*
+   * Refs
+   *
+   * We have one ref that is pointing to the root elment of the comment composer, and
+   * another which gives us access to the <Textarea> input element. The later MUST be
+   * a function-style ref because <Textarea> doesn't support React.useRef()-style refs.
+   */
+  const root = React.useRef()
+  const [textarea, textareaRef] = React.useState(null)
+
+  /*
+   * Focus the textarea upon mount.
+   */
+  React.useEffect(() => {
+    if (textarea) {
+      textarea.focus()
     }
+  }, [textarea])
 
-    this.root = React.createRef()
-
-    this.onChange = ev => {
-      this.setState({ text: ev.target.value })
-    }
-
-    this.onSubmit = () => {
-      const { text, tagValue, submit } = this.state
-
-      this.setState({ submit: { ...submit, loading: true } })
-      this.props.onSubmit({ text, tags: tagValue ? [tagValue] : undefined }).then(({ ok, error }) => {
-        if (ok) {
-          /*
-           * Set 'loading' true, to keep the onSubmit button disabled. Otherwise it
-           * might become active again before our controller closes us.
-           */
-          this.setState({ submit: { loading: true, error: undefined } })
-        } else if (error) {
-          this.setState({ submit: { loading: false, error } })
-        }
-      })
-    }
-
-    // MUST be a function because <Textarea> doesn't support
-    // React.createRef()-style refs.
-    this.textarea = null
-    this.textareaRef = ref => {
-      this.textarea = ref
-    }
-
-    this.onTagChange = tagValue => {
-      this.setState({ tagValue })
-    }
+  const [text, setText] = React.useState(props.initialText || '')
+  const onChangeText = ev => {
+    setText(ev.target.value)
   }
 
-  componentDidMount() {
-    if (this.textarea) {
-      this.textarea.focus()
-    }
+  const [tagValue, setTagValue] = React.useState(props.tagValue)
 
-    // Scroll the viewport such that the composer is aligned to the top.
-    // scrollIntoView(this.root.current, {
-    //   align: { top: 0, topOffset: 60 }
-    // })
+  /*
+   * We keep track of the submission process, to prevent the user from
+   * submitting the comment multiple times.
+   *
+   * This also enables us to show a loading indicator.
+   */
+  const [{ loading, error }, setSubmit] = React.useState({ loading: false, error: undefined })
+  const onSubmit = () => {
+    setSubmit({ loading: true, error })
+    props.onSubmit({ text, tags: tagValue ? [tagValue] : undefined }).then(({ ok, error }) => {
+      if (ok) {
+        /*
+         * Set 'loading' true, to keep the onSubmit button disabled. Otherwise it
+         * might become active again before our controller closes us.
+         */
+        setSubmit({ loading: true, error: undefined })
+      } else if (error) {
+        setSubmit({ loading: true, error })
+      }
+    })
   }
 
-  render() {
-    const {
-      t,
-      displayAuthor,
-      onClose,
-      onOpenDiscussionPreferences,
-      submitLabel,
-      cancelLabel,
-      secondaryActions,
-      maxLength,
-      tagRequired,
-      tags
-    } = this.props
-    const {
-      text,
-      tagValue,
-      submit: { loading, error }
-    } = this.state
-    const canSubmit = !loading && text && (!tagRequired || tagValue) && (!maxLength || text.length <= maxLength)
+  const canSubmit = !loading && text && (!tagRequired || tagValue) && (!maxLength || text.length <= maxLength)
 
-    return (
-      <div ref={this.root} {...styles.root}>
-        <div {...styles.background}>
-          <div style={{ borderBottom: '1px solid white' }}>
-            <Header t={t} displayAuthor={displayAuthor} onClick={onOpenDiscussionPreferences} />
-          </div>
-
-          {tags && (
-            <div style={{ borderBottom: '1px solid white' }}>
-              <Tags tags={tags} onChange={this.onTagChange} value={tagValue} />
-            </div>
-          )}
-
-          <Textarea
-            inputRef={this.textareaRef}
-            {...styles.textArea}
-            {...(maxLength ? styles.textAreaLimit : {})}
-            {...(text === '' ? styles.textAreaEmpty : {})}
-            placeholder={t('styleguide/CommentComposer/placeholder')}
-            value={text}
-            rows="1"
-            onChange={this.onChange}
-          />
-
-          {maxLength && <MaxLengthIndicator maxLength={maxLength} length={text.length} />}
+  return (
+    <div ref={root} {...styles.root}>
+      <div {...styles.background}>
+        <div style={{ borderBottom: '1px solid white' }}>
+          <Header t={t} displayAuthor={displayAuthor} onClick={actions.openDiscussionPreferences} />
         </div>
 
-        <Actions
-          t={t}
-          onClose={onClose}
-          onCloseLabel={cancelLabel}
-          onSubmit={canSubmit ? this.onSubmit : undefined}
-          onSubmitLabel={submitLabel}
-          secondaryActions={secondaryActions}
+        {tags && (
+          <div style={{ borderBottom: '1px solid white' }}>
+            <Tags tags={tags} onChange={setTagValue} value={tagValue} />
+          </div>
+        )}
+
+        <Textarea
+          inputRef={textareaRef}
+          {...styles.textArea}
+          {...(maxLength ? styles.textAreaLimit : {})}
+          {...(text === '' ? styles.textAreaEmpty : {})}
+          placeholder={t('styleguide/CommentComposer/placeholder')}
+          value={text}
+          rows="1"
+          onChange={onChangeText}
         />
 
-        {error && <Error>{error}</Error>}
+        {maxLength && <MaxLengthIndicator maxLength={maxLength} length={text.length} />}
       </div>
-    )
-  }
+
+      <Actions
+        t={t}
+        onClose={onClose}
+        onCloseLabel={onCloseLabel}
+        onSubmit={canSubmit ? onSubmit : undefined}
+        onSubmitLabel={onSubmitLabel}
+        secondaryActions={secondaryActions}
+      />
+
+      {error && <Error>{error}</Error>}
+    </div>
+  )
 }
 
 CommentComposer.propTypes = {
   t: PropTypes.func.isRequired,
-  displayAuthor: PropTypes.object.isRequired,
-  onOpenDiscussionPreferences: PropTypes.func.isRequired,
+  isRoot: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
   onCloseLabel: PropTypes.string,
   onSubmit: PropTypes.func.isRequired,
   onSubmitLabel: PropTypes.string,
-  secondaryActions: PropTypes.object,
-  maxLength: PropTypes.number,
-  tagRequired: PropTypes.bool,
-  tags: PropTypes.arrayOf(PropTypes.string)
+  secondaryActions: PropTypes.object
 }
 
 const MaxLengthIndicator = ({ maxLength, length }) => {

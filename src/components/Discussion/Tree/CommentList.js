@@ -121,7 +121,7 @@ const CommentNode = ({ t, comment }) => {
   const { discussion, highlightedCommentId, actions } = React.useContext(DiscussionContext)
   const { displayAuthor } = discussion
 
-  const { id, parentIds, text, comments } = comment
+  const { id, parentIds, tags, text, comments } = comment
 
   const isHighlighted = id === highlightedCommentId
   const nestLimitExceeded = parentIds.length > config.nestLimit
@@ -197,9 +197,9 @@ const CommentNode = ({ t, comment }) => {
             edit: () => (
               <CommentComposer
                 t={t}
+                isRoot={parentIds.length === 0}
                 initialText={text}
-                displayAuthor={displayAuthor}
-                onOpenDiscussionPreferences={actions.openDiscussionPreferences}
+                tagValue={tags[0]}
                 onClose={closeEditor}
                 onSubmit={({ text, tags }) =>
                   actions.editComment(comment, text, tags).then(result => {
@@ -231,8 +231,7 @@ const CommentNode = ({ t, comment }) => {
           <div style={{ marginBottom: 30 }}>
             <CommentComposer
               t={t}
-              displayAuthor={displayAuthor}
-              onOpenDiscussionPreferences={actions.openDiscussionPreferences}
+              isRoot={false /* Replies can never be root comments */}
               onClose={closeReplyComposer}
               onSubmit={({ text, tags }) =>
                 actions.submitComment(comment, text, tags).then(result => {

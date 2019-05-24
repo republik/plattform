@@ -37,7 +37,14 @@ export const DiscussionContext = React.createContext({
      * ISO 8601 string. If set then the user must wait until that time before
      * they can write another comment.
      */
-    userWaitUntil: undefined
+    userWaitUntil: null,
+
+    rules: {
+      maxLength: null
+    },
+
+    tags: [],
+    tagRequired: false
   },
 
   /**
