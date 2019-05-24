@@ -3,7 +3,7 @@ import { css } from 'glamor'
 import MdCheck from 'react-icons/lib/md/check'
 import colors from '../../../../theme/colors'
 import { sansSerifMedium16, sansSerifRegular14 } from '../../../Typography/styles'
-import { onlyS } from '../../../../theme/mediaQueries'
+import { onlyS, mUp } from '../../../../theme/mediaQueries'
 
 import { ellipsize, underline } from '../../../../lib/styleMixins'
 import { timeFormat } from '../../../../lib/timeFormat'
@@ -24,10 +24,39 @@ const buttonStyle = {
   cursor: 'pointer'
 }
 
+const action = css({
+  ...buttonStyle,
+  ...sansSerifRegular14,
+  color: colors.lightText,
+  flexShrink: 0,
+  height: '40px',
+  cursor: 'pointer',
+  '&:hover': {
+    color: colors.text
+  },
+  '& svg': {
+    display: 'inline-block',
+    margin: '10px',
+    verticalAlign: 'middle'
+  }
+})
+
 const styles = {
   root: css({
     display: 'flex',
-    alignItems: 'center'
+    alignItems: 'center',
+
+    /*
+     * On larger screens, hide the action button and reveal only on hover.
+     */
+    [mUp]: {
+      [`& [data-${action}]`]: {
+        display: 'none'
+      },
+      [`&:hover [data-${action}]`]: {
+        display: 'block'
+      }
+    }
   }),
   profilePicture: css({
     display: 'block',
@@ -42,7 +71,7 @@ const styles = {
     flexDirection: 'column',
     justifyContent: 'center',
     flexGrow: 1,
-    minWidth: 0,
+    minWidth: 0
   }),
   name: css({
     ...sansSerifMedium16,
@@ -107,22 +136,7 @@ const styles = {
       display: 'none'
     }
   }),
-  action: css({
-    ...buttonStyle,
-    ...sansSerifRegular14,
-    color: colors.lightText,
-    flexShrink: 0,
-    height: '40px',
-    cursor: 'pointer',
-    '&:hover': {
-      color: colors.text
-    },
-    '& svg': {
-      display: 'inline-block',
-      margin: '12px',
-      verticalAlign: 'middle'
-    }
-  })
+  action
 }
 
 const dateTimeFormat = timeFormat('%d. %B %Y %H:%M')
@@ -141,7 +155,7 @@ export const Header = ({ t, comment, isExpanded, onToggle }) => {
     <div {...styles.root}>
       <links.Profile displayAuthor={displayAuthor} passHref>
         <a {...styles.link}>
-          <img {...styles.profilePicture} src={profilePicture || DEFAULT_PROFILE_PICTURE} alt='' />
+          <img {...styles.profilePicture} src={profilePicture || DEFAULT_PROFILE_PICTURE} alt="" />
         </a>
       </links.Profile>
       <div {...styles.center}>
@@ -149,26 +163,34 @@ export const Header = ({ t, comment, isExpanded, onToggle }) => {
           <a {...styles.name}>{name}</a>
         </links.Profile>
         <div {...styles.meta}>
-          {credential && <div {...styles.credential} title={credential.verified ? t('styleguide/comment/header/verifiedCredential', undefined, '') : undefined}>
-            <div {...styles.descriptionText} style={{ color: credential.verified ? colors.text : colors.lightText }}>
-              {credential.description}
+          {credential && (
+            <div
+              {...styles.credential}
+              title={credential.verified ? t('styleguide/comment/header/verifiedCredential', undefined, '') : undefined}
+            >
+              <div {...styles.descriptionText} style={{ color: credential.verified ? colors.text : colors.lightText }}>
+                {credential.description}
+              </div>
+              {credential.verified && <MdCheck {...styles.verifiedCheck} />}
             </div>
-            {credential.verified && <MdCheck {...styles.verifiedCheck} />}
-          </div>}
+          )}
           {credential && <div style={{ whiteSpace: 'pre' }}>{' · '}</div>}
           <div {...styles.timeago} title={titleDate(createdAt)}>
             <links.Comment comment={comment} passHref>
               <a {...styles.linkUnderline}>{clock.formatTimeRelative(new Date(createdAt))}</a>
             </links.Comment>
           </div>
-          {isUpdated && <div {...styles.timeago} title={titleDate(updatedAt)}>
-            {' · '}{t('styleguide/comment/header/updated')}
-          </div>}
+          {isUpdated && (
+            <div {...styles.timeago} title={titleDate(updatedAt)}>
+              {' · '}
+              {t('styleguide/comment/header/updated')}
+            </div>
+          )}
         </div>
       </div>
       {onToggle && (
         <button {...styles.action} onClick={onToggle}>
-          {(!isExpanded && comments && comments.totalCount > 0) && (
+          {!isExpanded && comments && comments.totalCount > 0 && (
             <div {...styles.replies}>
               {t.pluralize('styleguide/comment/header/replies', { count: comments.totalCount })}
             </div>
@@ -181,13 +203,16 @@ export const Header = ({ t, comment, isExpanded, onToggle }) => {
 }
 
 const IcExpand = () => (
-  <svg width="16px" height="16px" viewBox="0 0 16 16">
-    <path d="M8,0 V16 M0,8 H16" strokeWidth="2" stroke="currentColor" />
+  <svg width="20px" height="20px" viewBox="0 0 20 20">
+    <rect stroke="currentColor" strokeWidth="2" fill="white" x="1" y="1" width="18" height="18" />
+    <rect fill="currentColor" x="9" y="6" width="2" height="8" />
+    <rect fill="currentColor" x="6" y="9" width="8" height="2" />
   </svg>
 )
 
 const IcCollapse = () => (
-  <svg width="16px" height="16px" viewBox="0 0 16 16">
-    <path d="M0,8 H16" strokeWidth="2" stroke="currentColor" />
+  <svg width="20px" height="20px" viewBox="0 0 20 20">
+    <rect stroke="currentColor" strokeWidth="2" fill="white" x="1" y="1" width="18" height="18" />
+    <rect fill="currentColor" x="6" y="9" width="8" height="2" />
   </svg>
 )
