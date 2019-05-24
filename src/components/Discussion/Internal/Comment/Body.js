@@ -64,7 +64,7 @@ const styles = {
   }),
   collapeToggleContainer: css({
     borderTop: `1px solid ${colors.divider}`,
-    marginTop: 6,
+    marginTop: 6
   }),
   collapseToggleButton: css({
     ...buttonStyle,
@@ -80,11 +80,12 @@ const styles = {
 
 const MissingNode = ({ node, children }) => {
   return (
-    <span style={{
-      textDecoration: `underline wavy ${colors.divider}`,
-      display: 'inline-block',
-      margin: 4
-    }}
+    <span
+      style={{
+        textDecoration: `underline wavy ${colors.divider}`,
+        display: 'inline-block',
+        margin: 4
+      }}
       title={`Markdown element "${node.type}" wird nicht unterstützt.`}
     >
       {children || node.value || node.identifier || '[…]'}
@@ -93,7 +94,8 @@ const MissingNode = ({ node, children }) => {
 }
 
 export const Body = ({ t, comment, context }) => {
-  const { discussion: { collapsable }, highlightedCommentId } = React.useContext(DiscussionContext)
+  const { discussion, highlightedCommentId } = React.useContext(DiscussionContext)
+  const { collapsable } = discussion
 
   const { published, content, userCanEdit, adminUnpublished } = comment
 
@@ -122,26 +124,24 @@ export const Body = ({ t, comment, context }) => {
      * exceeds the threshold.
      */
     if (bodyVisibility === 'indeterminate' && collapsable && bodySize.height !== undefined) {
-      const maxBodyHeight = (isDesktop ? COLLAPSED_HEIGHT.desktop : COLLAPSED_HEIGHT.mobile)
+      const maxBodyHeight = isDesktop ? COLLAPSED_HEIGHT.desktop : COLLAPSED_HEIGHT.mobile
       if (bodySize.height > maxBodyHeight + COLLAPSED_HEIGHT.threshold) {
         setBodyVisibility('preview')
       }
     }
   }, [comment.id, highlightedCommentId, isDesktop, collapsable, bodyVisibility, bodySize])
 
-  const collapsed = (!collapsable || bodyVisibility === 'indeterminate') ? undefined : (bodyVisibility === 'preview')
+  const collapsed = !collapsable || bodyVisibility === 'indeterminate' ? undefined : bodyVisibility === 'preview'
   const collapseLabel = t(`styleguide/CommentActions/${collapsed ? 'expand' : 'collapse'}`)
-  const onToggleCollapsed = React.useCallback(() => setBodyVisibility(v => v === 'preview' ? 'full' : 'preview'), [setBodyVisibility])
+  const onToggleCollapsed = React.useCallback(() => setBodyVisibility(v => (v === 'preview' ? 'full' : 'preview')), [
+    setBodyVisibility
+  ])
 
   return (
-    <Fragment>
-      {!published && (
-        <div {...styles.unpublished}>{t('styleguide/comment/unpublished')}</div>
-      )}
+    <>
+      {!published && <div {...styles.unpublished}>{t('styleguide/comment/unpublished')}</div>}
 
-      <div ref={bodyRef}
-        {...(collapsed ? styles.collapsedBody : undefined)}
-        style={{ opacity: published ? 1 : 0.5 }}>
+      <div ref={bodyRef} {...(collapsed ? styles.collapsedBody : undefined)} style={{ opacity: published ? 1 : 0.5 }}>
         {context && context.title && (
           <div {...styles.context}>
             <Context {...context} />
@@ -150,23 +150,16 @@ export const Body = ({ t, comment, context }) => {
         {content && renderMdast(content, schema, { MissingNode })}
       </div>
 
-      {userCanEdit && (() => {
-        if (adminUnpublished) {
-          return (
-            <Label {...styles.margin}>
-              {t('styleguide/comment/adminUnpublished')}
-            </Label>
-          )
-        } else if (!published) {
-          return (
-            <Label {...styles.margin}>
-              {t('styleguide/comment/unpublished/userCanEdit')}
-            </Label>
-          )
-        } else {
-          return null
-        }
-      })()}
+      {userCanEdit &&
+        (() => {
+          if (adminUnpublished) {
+            return <Label {...styles.margin}>{t('styleguide/comment/adminUnpublished')}</Label>
+          } else if (!published) {
+            return <Label {...styles.margin}>{t('styleguide/comment/unpublished/userCanEdit')}</Label>
+          } else {
+            return null
+          }
+        })()}
 
       {bodyVisibility !== 'indeterminate' && (
         <div {...(collapsed ? styles.collapeToggleContainer : {})}>
@@ -174,8 +167,7 @@ export const Body = ({ t, comment, context }) => {
             {collapseLabel}
           </button>
         </div>
-      )
-      }
-    </Fragment >
+      )}
+    </>
   )
 }

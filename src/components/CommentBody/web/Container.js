@@ -9,6 +9,12 @@ const styles = {
     ...serifRegular14,
     [mUp]: {
       ...serifRegular16
+    },
+    '& > *:first-child': {
+      marginTop: 0
+    },
+    '& > *:last-child': {
+      marginBottom: 0
     }
   })
 }
