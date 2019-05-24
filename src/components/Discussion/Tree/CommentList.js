@@ -157,7 +157,7 @@ const CommentNode = ({ t, comment }) => {
         return state
       }
     },
-    { mode: 'view', bodyVisibility: 'indeterminate', isExpanded: true, showReplyComposer: false }
+    { mode: 'view', isExpanded: true, showReplyComposer: false }
   )
 
   /*
@@ -176,7 +176,7 @@ const CommentNode = ({ t, comment }) => {
   /*
    * This is an experiment to draw end points at the vertical toggle lines.
    */
-  const drawLineEnd = true
+  const drawLineEnd = false
 
   const rootStyle = styles.root({ isExpanded, nestLimitExceeded })
 
