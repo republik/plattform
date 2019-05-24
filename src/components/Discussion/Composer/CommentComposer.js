@@ -49,7 +49,7 @@ const styles = {
 }
 
 export const CommentComposer = props => {
-  const { t, isRoot, onClose, onCloseLabel, onSubmitLabel, secondaryActions } = props
+  const { t, isRoot, onClose, onCloseLabel, onSubmitLabel } = props
 
   /*
    * Get the discussion metadata and action callbacks from the DiscussionContext.
@@ -151,7 +151,6 @@ export const CommentComposer = props => {
         onCloseLabel={onCloseLabel}
         onSubmit={canSubmit ? onSubmit : undefined}
         onSubmitLabel={onSubmitLabel}
-        secondaryActions={secondaryActions}
       />
 
       {error && <Error>{error}</Error>}
@@ -165,8 +164,7 @@ CommentComposer.propTypes = {
   onClose: PropTypes.func.isRequired,
   onCloseLabel: PropTypes.string,
   onSubmit: PropTypes.func.isRequired,
-  onSubmitLabel: PropTypes.string,
-  secondaryActions: PropTypes.object
+  onSubmitLabel: PropTypes.string
 }
 
 const MaxLengthIndicator = ({ maxLength, length }) => {

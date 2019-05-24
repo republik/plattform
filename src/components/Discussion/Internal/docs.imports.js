@@ -9,6 +9,7 @@ import * as ComposerComponents from './Composer'
 export { default as MdMarkdown } from 'react-icons/lib/go/markdown'
 export { default as MdMood } from 'react-icons/lib/md/mood'
 
+export { DiscussionContext } from '../DiscussionContext'
 export const Comment = { ...CommentComponents }
 export const Composer = { ...ComposerComponents }
 

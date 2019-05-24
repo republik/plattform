@@ -211,19 +211,24 @@ The two primary actions on the right (_onClose_, _onSubmit_) are always present.
 `<SecondaryAction>` renders as a button by default, but you can adjust that with the `as` prop. It also sets up CSS for font, color, and hover style to match the primary actions.
 
 ```react|noSource,span-2
-<Composer.Actions
-  t={t}
-  onClose={() => {}}
-  onCloseLabel="onClose"
-  onSubmit={() => {}}
-  onSubmitLabel="onSubmit"
-  secondaryActions={(
-    <>
-      <Composer.SecondaryAction><MdMood height={26} width={26} /></Composer.SecondaryAction>
-      <Composer.SecondaryAction><MdMarkdown height={26} width={26} /></Composer.SecondaryAction>
-    </>
-  )}
-/>
+<DiscussionContext.Provider
+  value={{
+    composerSecondaryActions: (
+      <>
+        <Composer.SecondaryAction><MdMood height={26} width={26} /></Composer.SecondaryAction>
+        <Composer.SecondaryAction><MdMarkdown height={26} width={26} /></Composer.SecondaryAction>
+      </>
+    )
+  }}
+>
+  <Composer.Actions
+    t={t}
+    onClose={() => {}}
+    onCloseLabel="onClose"
+    onSubmit={() => {}}
+    onSubmitLabel="onSubmit"
+  />
+</DiscussionContext.Provider>
 ```
 
 ```code|span-4

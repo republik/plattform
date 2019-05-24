@@ -103,5 +103,11 @@ export const DiscussionContext = React.createContext({
   links: {
     Profile: ({ displayAuthor, passHref, ...props }) => <React.Fragment {...props} />,
     Comment: ({ comment, passHref, ...props }) => <React.Fragment {...props} />
-  }
+  },
+
+  /**
+   * React Element that will be placed into the secondary actions slot of the
+   * composer. Can be null to not show anything.
+   */
+  composerSecondaryActions: null
 })

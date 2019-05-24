@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { css } from 'glamor'
 import colors from '../../../../theme/colors'
 import { sansSerifMedium14 } from '../../../Typography/styles'
+import { DiscussionContext } from '../../DiscussionContext'
 
 const actionButtonStyle = {
   ...sansSerifMedium14,
@@ -61,30 +62,19 @@ const styles = {
   })
 }
 
-export const Actions = (props) => {
-  const {
-    t,
-    onClose,
-    onCloseLabel = t('styleguide/CommentComposer/cancel'),
-    onSubmit,
-    onSubmitLabel = t('styleguide/CommentComposer/answer'),
-    secondaryActions
-  } = props
+export const Actions = ({ t, onClose, onCloseLabel, onSubmit, onSubmitLabel }) => {
+  const { composerSecondaryActions } = React.useContext(DiscussionContext)
 
   return (
     <div {...styles.root}>
-      {secondaryActions && (
-        <div {...styles.secondaryActions}>
-          {secondaryActions}
-        </div>
-      )}
+      {composerSecondaryActions && <div {...styles.secondaryActions}>{composerSecondaryActions}</div>}
 
       <div {...styles.mainActions}>
         <button {...styles.closeButton} onClick={onClose}>
-          {onCloseLabel}
+          {onCloseLabel || t('styleguide/CommentComposer/cancel')}
         </button>
         <button {...styles.submitButton} onClick={onSubmit} disabled={!onSubmit}>
-          {onSubmitLabel}
+          {onSubmitLabel || t('styleguide/CommentComposer/answer')}
         </button>
       </div>
     </div>
@@ -96,10 +86,9 @@ Actions.propTypes = {
   onClose: PropTypes.func.isRequired,
   onCloseLabel: PropTypes.string,
   onSubmit: PropTypes.func,
-  onSubmitLabel: PropTypes.string,
-  secondaryActions: PropTypes.object
+  onSubmitLabel: PropTypes.string
 }
 
-export const SecondaryAction = ({ as = "button", ...props }) => {
+export const SecondaryAction = ({ as = 'button', ...props }) => {
   return React.createElement(as, { ...styles.secondaryAction, ...props })
 }

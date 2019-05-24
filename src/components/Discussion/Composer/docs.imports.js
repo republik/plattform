@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import React from 'react'
 
 import { default as MdMarkdown } from 'react-icons/lib/go/markdown'
 import { default as MdMood } from 'react-icons/lib/md/mood'
@@ -9,6 +9,7 @@ import { Editorial } from '../../Typography'
 import { default as Button } from '../../Button'
 import { SecondaryAction } from '../Internal/Composer'
 import { CommentComposer } from './CommentComposer'
+import { DiscussionContext } from '../DiscussionContext'
 
 export { CommentComposerPlaceholder } from './CommentComposerPlaceholder'
 
@@ -44,41 +45,50 @@ export const CommentComposerPlayground = () => {
     { counter: 1, mode: 'composer', initialText: someText, tagValue: undefined, tagRequired: true }
   )
 
+  const discussionContextValue = {
+    discussion: {
+      displayAuthor: {
+        name: 'Adrienne Fichter',
+        profilePicture: '/static/profilePicture1.png',
+        credential: { description: 'Redaktorin', verified: false }
+      },
+      rules: { maxLength },
+      tags: ['Lob', 'Kritik', 'Wunsch', 'Keine Angabe'],
+      tagRequired
+    },
+    actions: {
+      openDiscussionPreferences: () => Promise.resolve({ ok: true })
+    },
+    composerSecondaryActions: (
+      <>
+        <SecondaryAction>
+          <MdMood height={26} width={26} />
+        </SecondaryAction>
+        <SecondaryAction>
+          <MdMarkdown height={26} width={26} />
+        </SecondaryAction>
+      </>
+    )
+  }
+
   return (
     <div>
       {mode !== 'initial' && (
-        <CommentComposer
-          key={counter}
-          t={t}
-          initialText={initialText}
-          tagRequired={tagRequired}
-          displayAuthor={{
-            name: 'Adrienne Fichter',
-            profilePicture: '/static/profilePicture1.png',
-            credential: { description: 'Redaktorin', verified: false }
-          }}
-          onEditPreferences={() => {}}
-          onClose={() => {
-            dispatch({ cancel: {} })
-          }}
-          onSubmit={(text, tags) =>
-            new Promise(resolve => {
-              dispatch({ submit: { resolve } })
-            })
-          }
-          maxLength={maxLength}
-          tags={['Lob', 'Kritik', 'Wunsch', 'Keine Angabe']}
-          secondaryActions={
-            <Fragment>
-              <SecondaryAction>
-                <MdMood height={26} width={26} />
-              </SecondaryAction>
-              <SecondaryAction>
-                <MdMarkdown height={26} width={26} />
-              </SecondaryAction>
-            </Fragment>
-          }
-        />
+        <DiscussionContext.Provider value={discussionContextValue}>
+          <CommentComposer
+            key={counter}
+            t={t}
+            initialText={initialText}
+            onClose={() => {
+              dispatch({ cancel: {} })
+            }}
+            onSubmit={(text, tags) =>
+              new Promise(resolve => {
+                dispatch({ submit: { resolve } })
+              })
+            }
+          />
+        </DiscussionContext.Provider>
       )}
 
       {mode === 'initial' && (

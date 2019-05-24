@@ -17,6 +17,7 @@ export const mkComment = (n, children, pageInfo) => ({
   createdAt: "2019-01-01",
   updatedAt: "2019-01-01",
   parentIds: [],
+  tags: [],
   comments: children.length === 0
     ? (pageInfo ? {totalCount: 27, pageInfo, nodes: []} : undefined)
     : {totalCount: 27, pageInfo, nodes: children}
