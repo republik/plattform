@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import { css } from 'glamor'
-import Textarea from 'react-textarea-autosize';
+import Textarea from 'react-textarea-autosize'
 import scrollIntoView from 'scroll-into-view'
 import colors from '../../../theme/colors'
 import { serifRegular16, sansSerifRegular12 } from '../../Typography/styles'
@@ -42,7 +42,7 @@ const styles = {
     lineHeight: 1,
     position: 'absolute',
     bottom: 6,
-    left: 8,
+    left: 8
   })
 }
 
@@ -70,25 +70,32 @@ export class CommentComposer extends PureComponent {
     }
 
     this.onSubmit = () => {
-      const { text, tagValue, submit: { error } } = this.state
+      const { text, tagValue, submit } = this.state
 
-      this.setState({ submit: { loading: true, error } })
+      this.setState({ submit: { ...submit, loading: true } })
       this.props.onSubmit({ text, tags: tagValue ? [tagValue] : undefined }).then(
-        () => { this.setState({ submit: { loading: false, error: undefined } }) },
-        error => { this.setState({ submit: { loading: false, error } }) }
+        () => {
+          /*
+           * Set 'loading' true, to keep the onSubmit button disabled. Otherwise it
+           * might become active again before our controller closes us.
+           */
+          this.setState({ submit: { loading: true, error: undefined } })
+        },
+        error => {
+          this.setState({ submit: { loading: false, error } })
+        }
       )
     }
 
     // MUST be a function because <Textarea> doesn't support
     // React.createRef()-style refs.
     this.textarea = null
-    this.textareaRef = (ref) => {
+    this.textareaRef = ref => {
       this.textarea = ref
     }
 
-    this.onTagChange = (tagValue) => {
+    this.onTagChange = tagValue => {
       this.setState({ tagValue })
-      this.props.onTagChange && this.props.onTagChange(tagValue)
     }
   }
 
@@ -116,27 +123,23 @@ export class CommentComposer extends PureComponent {
       tagRequired,
       tags
     } = this.props
-    const { text, tagValue, submit: { loading, error } } = this.state
+    const {
+      text,
+      tagValue,
+      submit: { loading, error }
+    } = this.state
     const canSubmit = !loading && text && (!tagRequired || tagValue) && (!maxLength || text.length <= maxLength)
 
     return (
       <div ref={this.root} {...styles.root}>
         <div {...styles.background}>
           <div style={{ borderBottom: '1px solid white' }}>
-            <Header
-              t={t}
-              displayAuthor={displayAuthor}
-              onClick={onEditPreferences}
-            />
+            <Header t={t} displayAuthor={displayAuthor} onClick={onEditPreferences} />
           </div>
 
           {tags && (
             <div style={{ borderBottom: '1px solid white' }}>
-              <Tags
-                tags={tags}
-                onChange={this.onTagChange}
-                value={tagValue}
-              />
+              <Tags tags={tags} onChange={this.onTagChange} value={tagValue} />
             </div>
           )}
 
@@ -147,7 +150,7 @@ export class CommentComposer extends PureComponent {
             {...(text === '' ? styles.textAreaEmpty : {})}
             placeholder={t('styleguide/CommentComposer/placeholder')}
             value={text}
-            rows='1'
+            rows="1"
             onChange={this.onChange}
           />
 
