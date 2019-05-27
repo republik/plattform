@@ -4,6 +4,7 @@ import { css } from 'glamor'
 import colors from '../../../../theme/colors'
 import { sansSerifMedium14 } from '../../../Typography/styles'
 import { DiscussionContext } from '../../DiscussionContext'
+import { mUp } from '../../../../theme/mediaQueries'
 
 const actionButtonStyle = {
   ...sansSerifMedium14,
@@ -50,12 +51,17 @@ const styles = {
     }
   }),
   secondaryActions: css({
-    display: 'flex'
+    display: 'flex',
+    minWidth: 0,
+    flexShrink: 1
   }),
   secondaryAction: css({
     ...actionButtonStyle,
     color: colors.lightText,
-    margin: '0 8px',
+    margin: '0 4px',
+    [mUp]: {
+      margin: '0 8px'
+    },
     '&:hover': {
       color: colors.text
     }

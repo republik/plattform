@@ -210,6 +210,10 @@ The two primary actions on the right (_onClose_, _onSubmit_) are always present.
 
 `<SecondaryAction>` renders as a button by default, but you can adjust that with the `as` prop. It also sets up CSS for font, color, and hover style to match the primary actions.
 
+```hint
+Due to limited space on mobile devices, you can really only put two actions (28px wide) into the secondary actions slot. Make sure you test that everything fits on a 320px wide screen and when the composer is shown in a deeply nested setting (with 5 vertical bars left of it), where the composer is squeezed into 240px.
+```
+
 ```react|noSource,span-2
 <DiscussionContext.Provider
   value={{
