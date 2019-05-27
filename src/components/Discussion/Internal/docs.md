@@ -249,3 +249,17 @@ The error message that is shown at the bottom of the `<CommentComposer>` if crea
   Sie sind zu früh. Bitte warten Sie, 161.446s bevor Sie wieder kommentieren.
 </Composer.Error>
 ```
+
+# Tree
+
+#### LoadMore
+
+This is a button that shows how many more comments can be loaded at this point in the comment tree. It starts out as just text in primary color. But if a new comment is added to the discussion while the user has the page open, it changes style.
+
+```react|noSource,span-3
+<LoadMore1 t={t} count={17} />
+```
+
+```react|noSource,span-3
+<LoadMore1 t={t} alternative count={18}/>
+```

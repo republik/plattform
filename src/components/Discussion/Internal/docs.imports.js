@@ -10,6 +10,7 @@ export { default as MdMarkdown } from 'react-icons/lib/go/markdown'
 export { default as MdMood } from 'react-icons/lib/md/mood'
 
 export { DiscussionContext } from '../DiscussionContext'
+export { LoadMore1 } from '../Tree/LoadMore'
 export const Comment = { ...CommentComponents }
 export const Composer = { ...ComposerComponents }
 
