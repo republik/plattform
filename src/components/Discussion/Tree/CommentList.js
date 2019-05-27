@@ -1,12 +1,12 @@
 import React from 'react'
 import { css } from 'glamor'
+import scrollIntoView from 'scroll-into-view'
+
+import colors from '../../../theme/colors'
 import { DiscussionContext } from '../DiscussionContext'
 import { CommentComposer } from '../Composer/CommentComposer'
-
 import { LoadMore } from './LoadMore'
 import * as Comment from '../Internal/Comment'
-import colors from '../../../theme/colors'
-
 import * as config from '../config'
 
 const buttonStyle = {
@@ -124,6 +124,8 @@ const CommentNode = ({ t, comment }) => {
   const isHighlighted = id === highlightedCommentId
   const nestLimitExceeded = parentIds.length > config.nestLimit
 
+  const root = React.useRef()
+
   /*
    * The local state that the CommentNode component manages.
    *
@@ -164,12 +166,26 @@ const CommentNode = ({ t, comment }) => {
   const closeEditor = React.useCallback(() => {
     dispatch({ closeEditor: {} })
   }, [dispatch])
-  const toggleReplies = React.useCallback(() => {
-    dispatch({ toggleReplies: {} })
-  }, [dispatch])
   const closeReplyComposer = React.useCallback(() => {
     dispatch({ closeReplyComposer: {} })
   }, [dispatch])
+
+  const toggleReplies = React.useCallback(() => {
+    dispatch({ toggleReplies: {} })
+
+    /*
+     * When collapsing the node, and the top of the node is outside of the viewport
+     * (eg. the user is collapsing a really long thread), scroll up to make sure
+     * the node is in the viewport.
+     *
+     * FIXME: 60 is the header height (plus some), but that height is different
+     * on mobile and desktop.
+     */
+    const topOffset = 60
+    if (isExpanded && root.current.getBoundingClientRect().top < topOffset) {
+      scrollIntoView(root.current, { align: { top: 0, topOffset } })
+    }
+  }, [dispatch, isExpanded])
 
   /*
    * This is an experiment to draw end points at the vertical toggle lines.
@@ -180,7 +196,7 @@ const CommentNode = ({ t, comment }) => {
 
   if (isExpanded) {
     return (
-      <div data-comment-id={id} {...rootStyle}>
+      <div ref={root} data-comment-id={id} {...rootStyle}>
         {!nestLimitExceeded && <button {...styles.verticalToggle({ drawLineEnd })} onClick={toggleReplies} />}
         <div {...(mode === 'view' && isHighlighted ? styles.highlightContainer : {})}>
           {{
@@ -255,7 +271,7 @@ const CommentNode = ({ t, comment }) => {
     )
   } else {
     return (
-      <div data-comment-id={id} {...rootStyle}>
+      <div ref={root} data-comment-id={id} {...rootStyle}>
         <button {...styles.verticalToggle({ drawLineEnd })} onClick={toggleReplies} />
         <Comment.Header t={t} comment={comment} isExpanded={isExpanded} onToggle={toggleReplies} />
       </div>
