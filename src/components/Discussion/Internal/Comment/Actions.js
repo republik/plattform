@@ -67,6 +67,18 @@ const styles = {
       flexShrink: 0
     }
   }),
+  selectedVoteButton: css({
+    lineHeight: 1,
+    fontSize: '24px',
+    textAlign: 'center',
+    height: '40px',
+    margin: 0,
+    color: colors.primary,
+    '& > svg': {
+      display: 'block',
+      flexShrink: 0
+    }
+  }),
   leftButton: css({
     ...buttonStyle,
     fontSize: '18px',
@@ -84,11 +96,22 @@ export const Actions = ({ t, comment, onReply, onEdit }) => {
   const canUnpublish = (isAdmin || userCanEdit) && published
   const onUnpublish = canUnpublish ? () => actions.unpublishComment(comment) : undefined
 
-  const canUpvote = displayAuthor && userVote !== 'UP'
-  const onUpvote = canUpvote ? () => actions.upvoteComment(comment) : undefined
-
-  const canDownvote = displayAuthor && userVote !== 'DOWN'
-  const onDownvote = canDownvote ? () => actions.downvoteComment(comment) : undefined
+  /*
+   * The onClick functions are wired up such that when the user clicks a particular button twice,
+   * they effectively undo their vote. Eg. if the user clicks on 'downvote', then a second
+   * click on the downvote icon will 'unvote' their choice.
+   */
+  const { onUpvote, onDownvote } = (() => {
+    if (!displayAuthor) {
+      return { onUpvote: undefined, onDownvote: undefined }
+    } else if (userVote === 'UP') {
+      return { onUpvote: () => actions.unvoteComment(comment), onDownvote: () => actions.downvoteComment(comment) }
+    } else if (userVote === 'DOWN') {
+      return { onUpvote: () => actions.upvoteComment(comment), onDownvote: () => actions.unvoteComment(comment) }
+    } else {
+      return { onUpvote: () => actions.upvoteComment(comment), onDownvote: () => actions.downvoteComment(comment) }
+    }
+  })()
 
   const replyBlockedMessage = (() => {
     const waitUntilDate = userWaitUntil && new Date(userWaitUntil)
@@ -124,7 +147,11 @@ export const Actions = ({ t, comment, onReply, onEdit }) => {
       </IconButton>
       <div {...styles.votes}>
         <div {...styles.vote}>
-          <IconButton type="vote" onClick={onUpvote} title={t('styleguide/CommentActions/upvote')}>
+          <IconButton
+            type={userVote === 'UP' ? 'selectedVote' : 'vote'}
+            onClick={onUpvote}
+            title={t('styleguide/CommentActions/upvote')}
+          >
             <MdKeyboardArrowUp />
           </IconButton>
           <span title={t.pluralize('styleguide/CommentActions/upvote/count', { count: upVotes })}>{upVotes}</span>
@@ -132,7 +159,11 @@ export const Actions = ({ t, comment, onReply, onEdit }) => {
         <div {...styles.voteDivider}>/</div>
         <div {...styles.vote}>
           <span title={t.pluralize('styleguide/CommentActions/downvote/count', { count: downVotes })}>{downVotes}</span>
-          <IconButton type="vote" onClick={onDownvote} title={t('styleguide/CommentActions/downvote')}>
+          <IconButton
+            type={userVote === 'DOWN' ? 'selectedVote' : 'vote'}
+            onClick={onDownvote}
+            title={t('styleguide/CommentActions/downvote')}
+          >
             <MdKeyboardArrowDown />
           </IconButton>
         </div>
