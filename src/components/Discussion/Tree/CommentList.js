@@ -8,6 +8,7 @@ import { CommentComposer } from '../Composer/CommentComposer'
 import { LoadMore } from './LoadMore'
 import * as Comment from '../Internal/Comment'
 import * as config from '../config'
+import { mUp } from '../../../theme/mediaQueries'
 
 const buttonStyle = {
   display: 'block',
@@ -28,16 +29,25 @@ const styles = {
     css({
       position: 'relative',
       margin: `10px 0 ${isExpanded ? 24 : 16}px`,
-      paddingLeft: nestLimitExceeded ? 0 : config.indentSize
+      paddingLeft: nestLimitExceeded ? 0 : config.indentSizeS,
+
+      [mUp]: {
+        paddingLeft: nestLimitExceeded ? 0 : config.indentSizeM
+      }
     }),
   verticalToggle: ({ drawLineEnd }) =>
     css({
       ...buttonStyle,
       position: 'absolute',
       top: 0,
-      left: -((config.indentSize - config.verticalLineWidth) / 2),
+      left: -((config.indentSizeS - config.verticalLineWidth) / 2),
       bottom: drawLineEnd ? 20 : 0,
-      width: config.indentSize,
+      width: config.indentSizeS,
+
+      [mUp]: {
+        left: -((config.indentSizeM - config.verticalLineWidth) / 2),
+        width: config.indentSizeM
+      },
 
       '&::before': {
         display: 'block',
@@ -45,9 +55,13 @@ const styles = {
         position: 'absolute',
         top: 0,
         bottom: 0,
-        left: (config.indentSize - config.verticalLineWidth) / 2,
+        left: (config.indentSizeS - config.verticalLineWidth) / 2,
         width: config.verticalLineWidth,
-        background: colors.divider
+        background: colors.divider,
+
+        [mUp]: {
+          left: (config.indentSizeM - config.verticalLineWidth) / 2
+        }
       },
       '&:hover::before': {
         background: colors.primary
@@ -61,8 +75,12 @@ const styles = {
           height: `${config.verticalLineWidth + 2 * 2}px`,
           bottom: -2 - config.verticalLineWidth / 2,
           borderRadius: '100%',
-          left: (config.indentSize - config.verticalLineWidth) / 2 - 2,
-          background: colors.divider
+          left: (config.indentSizeS - config.verticalLineWidth) / 2 - 2,
+          background: colors.divider,
+
+          [mUp]: {
+            left: (config.indentSizeM - config.verticalLineWidth) / 2 - 2
+          }
         },
         '&:hover::after': {
           background: colors.primary
