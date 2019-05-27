@@ -102,18 +102,26 @@ export const CommentComposer = props => {
    */
   const [{ loading, error }, setSubmit] = React.useState({ loading: false, error: undefined })
   const onSubmit = () => {
-    setSubmit({ loading: true, error })
-    props.onSubmit({ text, tags: tagValue ? [tagValue] : undefined }).then(({ ok, error }) => {
-      if (ok) {
+    if (root.current) {
+      setSubmit({ loading: true, error })
+      props.onSubmit({ text, tags: tagValue ? [tagValue] : undefined }).then(({ ok, error }) => {
         /*
-         * Set 'loading' true, to keep the onSubmit button disabled. Otherwise it
-         * might become active again before our controller closes us.
+         * We may have been umounted in the meantime. Use 'root.current' as a signal that we have
+         * been so we can avoid calling React functions which generate warnings.
          */
-        setSubmit({ loading: true, error: undefined })
-      } else if (error) {
-        setSubmit({ loading: true, error })
-      }
-    })
+        if (root.current) {
+          if (ok) {
+            /*
+             * Set 'loading' true, to keep the onSubmit button disabled. Otherwise it
+             * might become active again before our controller closes us.
+             */
+            setSubmit({ loading: true, error: undefined })
+          } else if (error) {
+            setSubmit({ loading: true, error })
+          }
+        }
+      })
+    }
   }
 
   const canSubmit = !loading && text && (!tagRequired || tagValue) && (!maxLength || text.length <= maxLength)
