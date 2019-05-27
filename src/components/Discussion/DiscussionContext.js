@@ -78,7 +78,7 @@ export const DiscussionContext = React.createContext({
     /**
      * Fetch more comments.
      */
-    fetchMoreComments: (parentId, after) => Promise.resolve({ ok: true }),
+    fetchMoreComments: ({ parentId, after, appendAfter }) => Promise.resolve({ ok: true }),
 
     shareComment: commentId => Promise.resolve({ ok: true }),
     openDiscussionPreferences: () => Promise.resolve({ ok: true })

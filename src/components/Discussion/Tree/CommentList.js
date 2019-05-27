@@ -123,7 +123,14 @@ export const CommentList = ({ t, parentId = null, comments }) => {
           visualDepth={0}
           count={numMoreComments}
           onClick={() => {
-            actions.fetchMoreComments(parentId, comments.pageInfo.endCursor)
+            const after = comments.pageInfo.endCursor
+
+            const appendAfter = (() => {
+              const lastNode = nodes[nodes.length - 1]
+              return lastNode ? lastNode.id : undefined
+            })()
+
+            actions.fetchMoreComments({ parentId, after, appendAfter })
           }}
         />
       )}
