@@ -212,7 +212,7 @@ HR,Kroatien,Öffentliche Angebote dominieren
 BE,Belgien,Öffentliche und private
 DK,Dänemark,Private Angebote dominieren
 DE,Deutschland,Öffentliche und private
-EE,Estland,Öffentliche und private
+EE,Estland,Öffentliche Angebote dominieren
 FR,Frankreich,Öffentliche und private
 UK,Grossbritannien,Private Angebote dominieren
 IT,Italien,Öffentliche und private
@@ -231,12 +231,12 @@ SK,Slowakei,Öffentliche Angebote dominieren
 ES,Spanien,Öffentliche Angebote dominieren
 CZ,Tschechien,Öffentliche und private
 SI,Slowenien,Öffentliche und private
+FI,Finnland,Öffentliche und private
+CY,Zypern,Öffentliche Angebote dominieren
 HU,Ungarn,
-CY,Zypern,
 BA,Bosnien und Herzegowina,
 AL,Albanien,
 BG,Bulgarien,
-FI,Finnland,
 IE,Irland,
 IS,Island,
 EL,Griechenland,
