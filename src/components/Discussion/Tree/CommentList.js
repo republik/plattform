@@ -92,23 +92,19 @@ const styles = {
 export const CommentList = ({ t, parentId = null, comments }) => {
   const { actions } = React.useContext(DiscussionContext)
 
-  if (!comments) {
-    return null
-  }
+  const { nodes = [], totalCount = 0, pageInfo } = comments
+  const { endCursor } = pageInfo || {}
+  const lastNode = nodes[nodes.length - 1]
 
-  const { nodes = [] } = comments
+  const loadMore = React.useCallback(() => {
+    const appendAfter = lastNode ? lastNode.id : undefined
+    actions.fetchMoreComments({ parentId, after: endCursor, appendAfter })
+  }, [parentId, endCursor, lastNode])
 
   const numMoreComments = (() => {
-    const countComments = comments => {
-      if (comments && comments.totalCount) {
-        return comments.totalCount || 0
-      } else {
-        return 0
-      }
-    }
-
+    const countComments = ({ totalCount = 0 } = {}) => totalCount
     const availableCount = nodes.reduce((a, { comments }) => a + 1 + countComments(comments), 0)
-    return comments.totalCount - availableCount
+    return totalCount - availableCount
   })()
 
   return (
@@ -116,24 +112,7 @@ export const CommentList = ({ t, parentId = null, comments }) => {
       {nodes.map(comment => (
         <CommentNode key={comment.id} t={t} comment={comment} />
       ))}
-
-      {numMoreComments > 0 && (
-        <LoadMore
-          t={t}
-          visualDepth={0}
-          count={numMoreComments}
-          onClick={() => {
-            const after = comments.pageInfo.endCursor
-
-            const appendAfter = (() => {
-              const lastNode = nodes[nodes.length - 1]
-              return lastNode ? lastNode.id : undefined
-            })()
-
-            actions.fetchMoreComments({ parentId, after, appendAfter })
-          }}
-        />
-      )}
+      <LoadMore t={t} visualDepth={0} count={numMoreComments} onClick={loadMore} />
     </>
   )
 }
@@ -285,13 +264,7 @@ const CommentNode = ({ t, comment }) => {
           </div>
         )}
 
-        {(() => {
-          if (comments && comments.totalCount > 0) {
-            return <CommentList t={t} parentId={id} comments={comments} />
-          } else {
-            return null
-          }
-        })()}
+        <CommentList t={t} parentId={id} comments={comments} />
       </div>
     )
   } else {

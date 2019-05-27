@@ -50,10 +50,21 @@ const styles = {
   })
 }
 
-export const LoadMore = ({ t, count, onClick }) => {
+export const LoadMore = React.memo(({ t, count, onClick }) => {
   const previousCount = usePrevious(count)
-  return <LoadMore1 t={t} alternative={previousCount !== undefined && count !== previousCount} count={count} onClick={onClick} />
-}
+  if (count === 0) {
+    return null
+  } else {
+    return (
+      <LoadMore1
+        t={t}
+        alternative={previousCount !== undefined && count !== previousCount}
+        count={count}
+        onClick={onClick}
+      />
+    )
+  }
+})
 
 LoadMore.propTypes = {
   t: PropTypes.func.isRequired,
