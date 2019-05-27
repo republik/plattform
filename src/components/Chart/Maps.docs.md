@@ -71,19 +71,15 @@ npx -p topojson geo2topo -q 1e5 nuts=nuts-projected-clean.json cb=nuts-compositi
     config={{
       "type": "ProjectedMap",
       "heightRatio": 0.77,
-      "points": true,
       "colorLegend": false,
       "features": {
-        "url": "/static/geo/nuts2013-60m-l2-merged-ch.json",
+        "url": "/static/geo/nuts2016-20m-l2.json",
         "object": "nuts",
         "compositionBorders": "cb"
       }
     }}
-    values={`
-x,y
-408,327
-    `.trim()} />
-  <Editorial.Note>Geobasis: <Editorial.A href="https://ec.europa.eu/eurostat/web/gisco/geodata/reference-data/administrative-units-statistical-units/nuts">NUTS 2013 60M L2</Editorial.A></Editorial.Note>
+    values={''} />
+  <Editorial.Note>Geobasis: <Editorial.A href="https://ec.europa.eu/eurostat/web/gisco/geodata/reference-data/administrative-units-statistical-units/nuts">NUTS 2016 20M L2</Editorial.A></Editorial.Note>
 </div>
 ```
 
@@ -94,7 +90,7 @@ Europe without composition.
 ```
 npm i -g ndjson-cli d3-dsv
 
-npx -p d3-geo-projection geoproject 'd3.geoConicConformal().rotate([-10, -53]).parallels([0, 60])' < nuts.json > nuts-projected.json
+npx -p d3-geo-projection geoproject 'd3.geoConicConformal().rotate([-10, -53]).parallels([0, 60]).fitSize([960, 960], d)' < nuts.json > nuts-projected.json
 
 # map to get clean id and name prop, filter out some regions
 ndjson-split 'd.features' \
@@ -118,7 +114,7 @@ ndjson-reduce 'p.features.push(d), p' '{type: "FeatureCollection", features: []}
 # generate topojson
 npx -p topojson geo2topo -q 1e5 nuts=nuts-projected-clean.json > nuts-topo.json
 
-npx -p topojson toposimplify -p 0.02 < nuts-topo.json > nuts2013-20m-l2-custom-gdp.json
+npx -p topojson toposimplify -p 1 < nuts-topo.json > nuts2013-20m-l2-custom-gdp.json
 ```
 
 ```react
