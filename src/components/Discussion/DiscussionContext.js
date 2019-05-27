@@ -72,6 +72,7 @@ export const DiscussionContext = React.createContext({
     editComment: (comment, content, tags) => Promise.resolve({ ok: true }),
     upvoteComment: comment => Promise.resolve({ ok: true }),
     downvoteComment: comment => Promise.resolve({ ok: true }),
+    unvoteComment: comment => Promise.resolve({ ok: true }),
     unpublishComment: comment => Promise.resolve({ ok: true }),
 
     /**
