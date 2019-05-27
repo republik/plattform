@@ -112,7 +112,7 @@ ndjson-reduce 'p.features.push(d), p' '{type: "FeatureCollection", features: []}
   > nuts-projected-clean.json
 
 # generate topojson
-npx -p topojson geo2topo -q 1e5 nuts=nuts-projected-clean.json > nuts-topo.json
+npx -p topojson geo2topo nuts=nuts-projected-clean.json > nuts-topo.json
 
 npx -p topojson toposimplify -p 1 < nuts-topo.json > nuts2013-20m-l2-custom-gdp.json
 ```
@@ -154,6 +154,99 @@ npx -p topojson toposimplify -p 1 < nuts-topo.json > nuts2013-20m-l2-custom-gdp.
     }}
     values={data.nuts13mCHdGDP} />
   <Editorial.Note>Quelle: Eurostat. Das BIP pro Kopf ist nach Kaufkraft bereinigt. Geobasis: <Editorial.A href="https://ec.europa.eu/eurostat/web/gisco/geodata/reference-data/administrative-units-statistical-units/nuts">NUTS 2013 20M L2</Editorial.A>, ohne entlegene Gebiete, fusionierte Schweiz</Editorial.Note>
+</div>
+```
+
+#### Ordinal Colors
+
+```
+# npm i -g ndjson-cli d3-dsv topojson d3-geo-projection
+
+geoproject 'd3.geoIdentity().clipExtent([[-24.5,33.870416],[35.156250,71.910888]])' < countries.json > countries-clipped.json
+
+geoproject 'd3.geoConicConformal().rotate([-10, -53]).parallels([0, 60]).fitSize([960, 960], d)' < countries-clipped.json > countries-projected.json
+
+ndjson-split 'd.features' \
+  < countries-projected.json \
+  > countries-projected.ndjson
+
+ndjson-filter 'd.geometry && !["MA","DZ","TN","GL","SJ","RU","UA","TR","BY","MD"].includes(d.properties.CNTR_ID)' \
+  < countries-projected.ndjson \
+  | ndjson-map 'd.id = d.properties.CNTR_ID, d.properties = {name: d.properties.NAME_ENGL}, d' \
+  > countries-projected-filered.ndjson
+
+ndjson-join --left 'd.id' <(cat countries-projected-filered.ndjson) <(csv2json -n names.csv) \
+  | ndjson-map 'd[1] && (d[0].properties.name = d[1].name), d[0]' \
+  > countries-projected-clean.ndjson
+
+ndjson-reduce 'p.features.push(d), p' '{type: "FeatureCollection", features: []}' \
+  < countries-projected-clean.ndjson \
+  > countries-projected-clean.json
+
+geo2topo countries=countries-projected-clean.json > countries-topo.json
+
+toposimplify -p 1 < countries-topo.json > countries2016-20m-europe.json
+```
+
+```react
+<div>
+  <CsvChart
+    config={{
+      "type": "ProjectedMap",
+      "heightRatio": 0.9,
+      "choropleth": true,
+      "color": "category",
+      "colorLegendMinWidth": 100,
+      "colorLegendSize": 0.3,
+      "colorRange": ["#66c2a5", "#fc8d62", "#8da0cb"],
+      "legendTitle": "E-ID-Angebote",
+      "missingDataLegend": "Nicht untersucht",
+      "features": {
+        "url": "/static/geo/countries2016-20m-europe.json",
+        "object": "countries"
+      }
+    }}
+    values={`
+feature,name,category
+HR,Kroatien,Öffentliche Angebote dominieren
+BE,Belgien,Öffentliche und private
+DK,Dänemark,Private Angebote dominieren
+DE,Deutschland,Öffentliche und private
+EE,Estland,Öffentliche und private
+FR,Frankreich,Öffentliche und private
+UK,Grossbritannien,Private Angebote dominieren
+IT,Italien,Öffentliche und private
+LV,Lettland,Öffentliche und private
+LT,Litauen,Öffentliche Angebote dominieren
+LU,Luxemburg,Öffentliche und private
+MT,Malta,Öffentliche Angebote dominieren
+NL,Niederlande,Öffentliche und private
+NO,Norwegen,Öffentliche und private
+AT,Österreich,Öffentliche und private
+PL,Polen,Öffentliche Angebote dominieren
+PT,Portugal,Öffentliche Angebote dominieren
+SE,Schweden,Öffentliche und private
+CH,Schweiz,Private Angebote dominieren
+SK,Slowakei,Öffentliche Angebote dominieren
+ES,Spanien,Öffentliche Angebote dominieren
+CZ,Tschechien,Öffentliche und private
+HU,Ungarn,
+CY,Zypern,
+BA,Bosnien und Herzegowina,
+AL,Albanien,
+BG,Bulgarien,
+FI,Finnland,
+IE,Irland,
+IS,Island,
+EL,Griechenland,
+LI,Liechtenstein,
+ME,Montenegro,
+MK,Nord Mazedonien,
+RO,Rumänien,
+RS,Serbien,
+SI,Slowenien,
+    `.trim()} />
+  <Editorial.Note>Geobasis: <Editorial.A href="https://ec.europa.eu/eurostat/web/gisco/geodata/reference-data/administrative-units-statistical-units/countries">Eurostat Countries 2016 20M</Editorial.A></Editorial.Note>
 </div>
 ```
 

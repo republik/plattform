@@ -36,9 +36,11 @@ export default (props, geoJson) => {
     data = data.filter(filter)
   }
   data = data.map(d => {
+    const value = +d.value
     return {
       datum: d,
-      value: +d.value,
+      value: value,
+      empty: !value && !d[props.color],
       featureId: String(d[props.feature])
     }
   })
@@ -54,9 +56,9 @@ export default (props, geoJson) => {
   let colorValues
   let colorRange = props.colorRanges[props.colorRange] || props.colorRange
 
-  if (props.ordinalAccessor) {
+  if (props.color) {
     colorScale = scaleOrdinal()
-    colorAccessor = d => d.datum[props.ordinalAccessor]
+    colorAccessor = d => d.datum[props.color]
     domain = data.map(colorAccessor).filter(deduplicate)
     colorValues = domain.map(value => ({
       label: tLabel(value),

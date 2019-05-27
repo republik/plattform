@@ -161,6 +161,7 @@ export class GenericMap extends Component {
     return !!hoverFeature && groupedData.map(({ values: groupData, key: groupTitle }) => {
       return groupData.filter(datum => datum.feature === hoverFeature).map((d, i) => {
         const [[x0, y0], [x1]] = d.feature.bounds()
+        const ordinalValue = d.datum && d.datum[props.color]
         return (
           <ContextBox
             key={d.feature.id}
@@ -175,7 +176,13 @@ export class GenericMap extends Component {
               {groupTitle && title === groupTitle && <Fragment>
                 {tLabel(groupTitle)}<br />
               </Fragment>}
-              {d.empty ? missingDataLegend : `${numberFormat(d.value)} ${props.unit}`}
+              {d.empty
+                ? missingDataLegend
+                : <Fragment>
+                  {d.value ? `${numberFormat(d.value)} ${props.unit}` : ''}
+                  {!!d.value && ordinalValue && <br />}
+                  {ordinalValue}
+                </Fragment>}
             </ContextBoxValue>
           </ContextBox>
         )
@@ -421,7 +428,7 @@ GenericMap.propTypes = {
   ignoreMissingFeature: PropTypes.bool.isRequired,
   tLabel: PropTypes.func.isRequired,
   description: PropTypes.string,
-  ordinalAccessor: PropTypes.string
+  color: PropTypes.string
 }
 
 GenericMap.defaultProps = {
@@ -434,7 +441,7 @@ GenericMap.defaultProps = {
   colorLegendMinWidth: 80,
   points: false,
   choropleth: false,
-  missingDataColor: colors.disabled,
+  missingDataColor: colors.divider,
   ignoreMissingFeature: false,
   feature: 'feature',
   shape: 'circle',
