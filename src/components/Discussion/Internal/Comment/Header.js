@@ -95,7 +95,16 @@ const styles = {
     flexGrow: 0,
     flexShrink: 1,
     textDecoration: 'none',
-    ...ellipsize
+    ...ellipsize,
+
+    /*
+     * Add hover effect only if the element has a href attribute. We always
+     * render the name as a <a> tag, but if it's not a public profile then
+     * we don't set a href attribute.
+     */
+    '[href]:hover': {
+      ...underline
+    }
   }),
   meta: css({
     ...sansSerifRegular14,
