@@ -230,6 +230,7 @@ CH,Schweiz,Private Angebote dominieren
 SK,Slowakei,Öffentliche Angebote dominieren
 ES,Spanien,Öffentliche Angebote dominieren
 CZ,Tschechien,Öffentliche und private
+SI,Slowenien,Öffentliche und private
 HU,Ungarn,
 CY,Zypern,
 BA,Bosnien und Herzegowina,
@@ -244,7 +245,6 @@ ME,Montenegro,
 MK,Nord Mazedonien,
 RO,Rumänien,
 RS,Serbien,
-SI,Slowenien,
     `.trim()} />
   <Editorial.Note>Geobasis: <Editorial.A href="https://ec.europa.eu/eurostat/web/gisco/geodata/reference-data/administrative-units-statistical-units/countries">Eurostat Countries 2016 20M</Editorial.A></Editorial.Note>
 </div>
