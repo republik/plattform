@@ -142,7 +142,7 @@ export const Body = ({ t, comment, context }) => {
       {!published && <div {...styles.unpublished}>{t('styleguide/comment/unpublished')}</div>}
 
       <div ref={bodyRef} {...(collapsed ? styles.collapsedBody : undefined)} style={{ opacity: published ? 1 : 0.5 }}>
-        {context && context.title && (
+        {content && context && context.title && (
           <div {...styles.context}>
             <Context {...context} />
           </div>
