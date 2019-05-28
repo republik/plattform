@@ -3,8 +3,19 @@ import React from 'react'
 /**
  * The DiscussionContext wraps static details about a discussion and all
  * discussion-wide callbacks that are provided to all Comment components.
+ *
+ * You MUST wrap components which require the DiscussionContext in the provider.
+ * There is no default value. The components which require DiscussionContext
+ * are very likely to crash if you forget to provide the context.
  */
-export const DiscussionContext = React.createContext({
+export const DiscussionContext = React.createContext()
+
+/**
+ * This here is only for documentation purposes, to give you an idea about the
+ * shape of the context value. This value is provided to all components in
+ * the documentation pages.
+ */
+export const sampleDiscussionContextValue = {
   /**
    * Admin users have elevated priviledges, they can for example unpublish
    * any comment.
@@ -111,4 +122,4 @@ export const DiscussionContext = React.createContext({
    * composer. Can be null to not show anything.
    */
   composerSecondaryActions: null
-})
+}
