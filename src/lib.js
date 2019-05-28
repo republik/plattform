@@ -129,3 +129,8 @@ export {
 } from './components/Typography'
 
 export * from './components/Discussion'
+
+export { useMediaQuery } from './lib/useMediaQuery'
+export { useBoundingClientRect } from './lib/useBoundingClientRect'
+export { usePrevious } from './lib/usePrevious'
+export { useSize } from './lib/useSize'
