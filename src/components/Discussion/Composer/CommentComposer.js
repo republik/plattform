@@ -215,6 +215,10 @@ const MaxLengthIndicator = ({ maxLength, length }) => {
   const remaining = maxLength - length
   const color = remaining < 0 ? colors.error : remaining < 21 ? colors.text : colors.lightText
 
+  if (remaining > maxLength * 0.33) {
+    return null
+  }
+
   return (
     <div {...styles.maxLengthIndicator} style={{ color }}>
       {remaining}
