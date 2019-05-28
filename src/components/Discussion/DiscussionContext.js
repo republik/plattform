@@ -102,10 +102,15 @@ export const sampleDiscussionContextValue = {
     now: Date.now(),
 
     /**
-     * Format the given date relative to the current time. The date
-     * can be in the future or past.
+     * Format the given date relative to the current time. The date can be in the
+     * future or past.
+     *
+     * The function will automatically format the time in the future or past, but you
+     * can override this using the 'direction' option (can be 'future' or 'past').
+     * This is handy to avoid showing a time in the future (eg. "in a few seconds")
+     * when you meant "just now", which can happen when clocks drift apart.
      */
-    formatTimeRelative: date => '2h'
+    formatTimeRelative: (date, { direction } = {}) => '2h'
   },
 
   /**
