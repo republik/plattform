@@ -57,7 +57,7 @@ export const CommentComposer = props => {
    * The 'tagRequired' setting only applies to root comments.
    */
   const { discussion, actions } = React.useContext(DiscussionContext)
-  const { tags, rules, displayAuthor } = discussion
+  const { id, tags, rules, displayAuthor } = discussion
   const tagRequired = isRoot && discussion.tagRequired
   const { maxLength } = rules
 
@@ -87,9 +87,36 @@ export const CommentComposer = props => {
     }
   }, [textarea])
 
-  const [text, setText] = React.useState(props.initialText || '')
+  /*
+   * Synchronize the text with localStorage, and restore it from there if not otherwise
+   * provided through props. This way the user won't lose their text if the browser
+   * crashes or if they inadvertently close the composer.
+   *
+   * The value in local storage is keyed by the discussion id.
+   */
+  const localStorageKey = `commentComposerText:${id}`
+
+  const [text, setText] = React.useState(() => {
+    if (props.initialText) {
+      return props.initialText
+    } else if (typeof localStorage !== 'undefined') {
+      try {
+        return localStorage.getItem(localStorageKey) || ''
+      } catch (e) {
+        return ''
+      }
+    } else {
+      return ''
+    }
+  })
+
   const onChangeText = ev => {
     setText(ev.target.value)
+    try {
+      localStorage.setItem(localStorageKey, ev.target.value)
+    } catch (e) {
+      /* Ignore errors */
+    }
   }
 
   const [tagValue, setTagValue] = React.useState(props.tagValue)
@@ -106,18 +133,27 @@ export const CommentComposer = props => {
       setSubmit({ loading: true, error })
       props.onSubmit({ text, tags: tagValue ? [tagValue] : undefined }).then(({ ok, error }) => {
         /*
-         * We may have been umounted in the meantime. Use 'root.current' as a signal that we have
-         * been so we can avoid calling React functions which generate warnings.
+         * We may have been umounted in the meantime, so we use 'root.current' as a signal that
+         * we have been so we can avoid calling React setState functions which generate warnings.
+         *
+         * In the case of success, we keep 'loading' true, to keep the onSubmit button disabled.
+         * Otherwise it might become active again before our controller closes us, allowing the
+         * user to click it again.
          */
-        if (root.current) {
-          if (ok) {
-            /*
-             * Set 'loading' true, to keep the onSubmit button disabled. Otherwise it
-             * might become active again before our controller closes us.
-             */
+
+        if (ok) {
+          try {
+            localStorage.removeItem(localStorageKey)
+          } catch (e) {
+            /* Ignore */
+          }
+
+          if (root.current) {
             setSubmit({ loading: true, error: undefined })
-          } else if (error) {
-            setSubmit({ loading: true, error })
+          }
+        } else {
+          if (root.current) {
+            setSubmit({ loading: false, error })
           }
         }
       })
