@@ -11,10 +11,31 @@ if (!DISPLAY_AUTHOR_SECRET) {
   throw new Error('missing required DISPLAY_AUTHOR_SECRET')
 }
 
-const textForComment = ({ userId, content, published, adminUnpublished }, user) =>
-  (!published || adminUnpublished) && (!user || !userId || userId !== user.id)
+const textForComment = async ({ userId, content, published, adminUnpublished, discussionId }, context) => {
+  const user = context && context.user
+  let text = (!published || adminUnpublished) && (!user || !userId || userId !== user.id)
     ? null
     : content
+  if (text && !user) {
+    const namesToHide = await context.loaders.Discussion.byIdCommenterNamesToHide.load(discussionId)
+    if (namesToHide) {
+      namesToHide.forEach(n => {
+        try {
+          text = text.replace(new RegExp(n.name, 'gmi'), n.initials)
+        } catch (e) {}
+        if (n.lastName.length > 3) {
+          try {
+            text = text.replace(
+              new RegExp(`(^|[^\\S\\r\\n]+)(${n.lastName})(\\W|_|$)`, 'gmi'),
+              (match, p1 = '', p2, p3 = '') => `${p1}${n.lastNameShort}${p3 !== '.' ? '.' : ''}${p3}`
+            )
+          } catch (e) {}
+        }
+      })
+    }
+  }
+  return text
+}
 
 /**
  * @typedef {Object} Preview
@@ -74,19 +95,19 @@ module.exports = {
       ? adminUnpublished
       : null,
 
-  content: (comment, args, context) => {
-    const text = textForComment(comment, context && context.user)
+  content: async (comment, args, context) => {
+    const text = await textForComment(comment, context)
     if (!text) {
       return text
     }
     return remark.parse(text)
   },
 
-  text: (comment, args, { user }) =>
-    textForComment(comment, user),
+  text: (comment, args, context) =>
+    textForComment(comment, context),
 
-  preview: (comment, { length = 500 }, context) => {
-    const text = textForComment(comment, context && context.user)
+  preview: async (comment, { length = 500 }, context) => {
+    const text = await textForComment(comment, context)
     if (!text) {
       return null
     }

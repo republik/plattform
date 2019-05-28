@@ -1,5 +1,6 @@
 const createDataLoader = require('@orbiting/backend-modules-dataloader')
 const isUUID = require('is-uuid')
+const { nameUtil } = require('@orbiting/backend-modules-utils')
 
 module.exports = (context) => ({
   clear: async (id) => {
@@ -66,6 +67,69 @@ module.exports = (context) => ({
     (key, rows) => {
       const row = rows.find(row => row.discussionId === key)
       return (row && row.count) || 0
+    }
+  ),
+  byIdCommenterNamesToHide: createDataLoader(
+    ids =>
+      context.pgdb.query(`
+        WITH names AS (
+          SELECT
+            DISTINCT c."discussionId", u."firstName", u."lastName"
+          FROM
+            comments c
+          JOIN
+            users u
+            ON
+              c."userId" = u.id
+              AND u."nameAccessRole" != 'PUBLIC'
+          LEFT JOIN
+            "discussionPreferences" dp
+            ON
+              c."userId" = dp."userId"
+              AND c."discussionId" = dp."discussionId"
+          JOIN
+            discussions d
+            ON c."discussionId" = d.id
+          WHERE
+            ARRAY[c."discussionId"] && :ids
+            AND (dp."userId" IS NULL OR dp.anonymous = false)
+            AND d.anonymity != 'ENFORCED'
+            AND u."firstName" != 'Anonymous'
+            AND u."lastName" != 'Anonymous'
+        )
+        SELECT
+          "discussionId",
+          json_agg(
+            json_build_object(
+              'firstName', trim("firstName"),
+              'lastName', trim("lastName")
+            )
+          ) AS "userNames"
+        FROM
+          names
+        GROUP BY
+          "discussionId"
+      `, {
+        ids
+      })
+        .then(rows => rows
+          .map(row => ({
+            ...row,
+            userNames: row.userNames.map(u => {
+              const name = nameUtil.getName(u)
+              return {
+                ...u,
+                name,
+                initials: nameUtil.getInitials(name),
+                lastNameShort: `${u.lastName[0].toUpperCase()}`
+              }
+            })
+          }))
+        ),
+    null,
+    (key, rows) => {
+      const row = rows.find(row => row.discussionId === key)
+      return (row && row.userNames) || []
     }
   )
 })
