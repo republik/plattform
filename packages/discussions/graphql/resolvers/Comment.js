@@ -1,7 +1,7 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
 const crypto = require('crypto')
 // TODO don't require from servers
-const { portrait: getPortrait } = require('../../../../servers/republik/graphql/resolvers/User')
+const { portrait: getPortrait, name: getName } = require('../../../../servers/republik/graphql/resolvers/User')
 const remark = require('../../lib/remark')
 
 const {
@@ -183,6 +183,7 @@ module.exports = {
     }
 
     const profilePicture = getPortrait(commenter, (args && args.portrait), context)
+    const name = getName(commenter, null, context)
 
     return anonymous
       ? {
@@ -191,7 +192,7 @@ module.exports = {
       }
       : {
         id,
-        name: commenter.name || t('api/noname'),
+        name: name || t('api/noname'),
         profilePicture: profilePicture,
         credential,
         anonymity: false,
