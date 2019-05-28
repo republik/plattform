@@ -25,7 +25,11 @@ const buttonStyle = {
   cursor: 'pointer'
 }
 
-const action = ({ isExpanded }) =>
+/**
+ * This style is exported so that <CommentNode> can control the visibility
+ * of this action button on hover over the whole comment element.
+ */
+export const headerActionStyle = ({ isExpanded }) =>
   css({
     ...buttonStyle,
     ...sansSerifRegular14,
@@ -48,19 +52,7 @@ const styles = {
   root: ({ isExpanded }) =>
     css({
       display: 'flex',
-      alignItems: 'center',
-
-      /*
-       * On larger screens, hide the action button and reveal only on hover.
-       */
-      [mUp]: isExpanded && {
-        [`& [data-${action({ isExpanded })}]`]: {
-          display: 'none'
-        },
-        [`&:hover [data-${action({ isExpanded })}]`]: {
-          display: 'block'
-        }
-      }
+      alignItems: 'center'
     }),
   profilePicture: css({
     display: 'block',
@@ -159,8 +151,7 @@ const styles = {
     [onlyS]: {
       display: 'none'
     }
-  }),
-  action
+  })
 }
 
 const dateTimeFormat = timeFormat('%d. %B %Y %H:%M')
@@ -228,7 +219,7 @@ export const Header = ({ t, comment, isExpanded, onToggle }) => {
         </div>
       </div>
       {onToggle && (
-        <button {...styles.action({ isExpanded })} onClick={onToggle}>
+        <button {...headerActionStyle({ isExpanded })} onClick={onToggle}>
           {!isExpanded && comments && comments.totalCount > 0 && (
             <div {...styles.replies}>
               {t.pluralize('styleguide/comment/header/replies', { count: comments.totalCount })}

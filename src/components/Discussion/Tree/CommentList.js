@@ -25,6 +25,20 @@ const styles = {
     margin: '0 -7px 12px -7px',
     background: colors.primaryBg
   }),
+  commentWrapper: ({ isExpanded }) =>
+    css({
+      /*
+       * On larger screens, hide the action button and reveal only on hover.
+       */
+      [mUp]: isExpanded && {
+        [`& [data-${Comment.headerActionStyle({ isExpanded })}]`]: {
+          display: 'none'
+        },
+        [`&:hover [data-${Comment.headerActionStyle({ isExpanded })}]`]: {
+          display: 'block'
+        }
+      }
+    }),
   root: ({ isExpanded, nestLimitExceeded }) =>
     css({
       position: 'relative',
@@ -205,12 +219,12 @@ const CommentNode = ({ t, comment }) => {
         <div {...(mode === 'view' && isHighlighted ? styles.highlightContainer : {})}>
           {{
             view: () => (
-              <>
+              <div {...styles.commentWrapper({ isExpanded })}>
                 <Comment.Header t={t} comment={comment} isExpanded={isExpanded} onToggle={toggleReplies} />
                 <div style={{ marginTop: 12 }}>
                   <Comment.Body t={t} comment={comment} context={tags[0] ? { title: tags[0] } : undefined} />
                 </div>
-              </>
+              </div>
             ),
             edit: () => (
               <CommentComposer
