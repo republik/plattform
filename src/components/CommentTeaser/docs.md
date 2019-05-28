@@ -34,6 +34,7 @@ Props:
 
 ```react|noSource,span-3
 <CommentTeaser
+  createdAt="2019-01-01"
   preview={{
     string: "Die Zeitungskäufe von Christoph Blocher, die Selbstideologisierung der NZZ, die Frankenstein-Monster-Strategie der Tamedia: Ehrlich gesagt wäre es uns lieber",
     more: true
@@ -50,6 +51,7 @@ Props:
 ```react|noSource,span-3
 <CommentTeaser
   tags={["Kritik"]}
+  createdAt="2019-01-01"
   preview={{
     string: "Die Zeitungskäufe von Christoph Blocher, die Selbstideologisierung der NZZ, die Frankenstein-Monster-Strategie der Tamedia: Ehrlich gesagt wäre es uns lieber",
     more: true
@@ -64,6 +66,7 @@ Props:
 
 ```react|noSource,span-3
 <CommentTeaser
+  createdAt="2019-01-01"
   displayAuthor={{
     profilePicture: '/static/profilePicture1.png',
     name: 'Christof Moser',
@@ -84,6 +87,7 @@ Props:
 
 ```react|noSource,span-3
 <CommentTeaser
+  createdAt="2019-01-01"
   tags={["Kritik"]}
   displayAuthor={{
     profilePicture: '/static/profilePicture1.png',
@@ -104,6 +108,7 @@ Props:
 
 ```react|noSource,span-3
 <CommentTeaser
+  createdAt="2019-01-01"
   displayAuthor={{
     profilePicture: '/static/profilePicture1.png',
     name: 'Christof Moser',

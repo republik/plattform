@@ -12,6 +12,7 @@ import { serifRegular14, sansSerifRegular14 } from '../Typography/styles'
 import { CommentBodyParagraph } from '../CommentBody/web'
 import { Context, Header } from '../Discussion/Internal/Comment'
 import RawHtml from '../RawHtml/'
+import { DiscussionContext } from '../Discussion/DiscussionContext'
 
 const styles = {
   root: css({
@@ -20,7 +21,7 @@ const styles = {
     paddingTop: 10
   }),
   header: css({
-    marginBottom: 10,
+    marginBottom: 10
   }),
   body: css({
     ...serifRegular14,
@@ -95,100 +96,99 @@ export const CommentTeaser = ({
   // assuming frontend currently supports only one tag.
   const tag = tags && !!tags.length && tags[0]
 
+  /*
+   * A reduced version of DiscussionContext value, just enough so we can render
+   * the Comment Header component.
+   */
+  const discussionContextValue = {
+    discussion,
+
+    clock: {
+      now: Date.now(),
+      formatTimeRelative: date => timeago(date.toISOString())
+    },
+
+    links: {
+      Profile: ({ displayAuthor, ...props }) => (
+        <Link {...props} discussion={discussion} displayAuthor={displayAuthor} />
+      ),
+      Comment: ({ comment, ...props }) => <Link {...props} discussion={discussion} commentId={comment.id} />
+    }
+  }
+
   return (
-    <div id={id} {...styles.root}>
-      {displayAuthor && (
-        <div {...styles.header}>
-          <Header
-            t={t}
-            comment={{
-              id,
-              displayAuthor,
-              createdAt,
-              parentIds: []
-            }}
-            Link={Link}
-          />
-        </div>
-      )}
-      {tag && (
-        <Context
-          title={
-            <Link
-              commentId={id}
-              discussion={discussion}
-              passHref
-            >
-              <a {...styles.link}>
-                {tag}
-              </a>
-            </Link>
-          }
-        />
-      )}
-      <div {...styles.body} style={{ marginTop: displayAuthor || tag ? undefined : 0 }}>
-        <CommentBodyParagraph>
-          <Link
-            commentId={id}
-            discussion={discussion}
-            passHref
-          >
-            <a {...styles.link}>
-              {!!preview && !highlight && (
-                <Fragment>
-                  {preview.string}
-                  {!!preview.more && <Fragment>&nbsp;…</Fragment>}
-                </Fragment>
-              )}
-              {!!highlight && (
-                <Fragment>
-                  <RawHtml
-                    dangerouslySetInnerHTML={{
-                      __html: highlight
-                    }}
-                  />
-                  {!endsWithPunctuation && <Fragment>&nbsp;…</Fragment>}
-                </Fragment>
-              )}
-            </a>
-          </Link>
-        </CommentBodyParagraph>
-      </div>
-      <div {...styles.footer}>
-        <div {...styles.discussionReference} style={{
-          paddingRight: newPage ? `${ICON_SIZE + 5}px` : undefined
-        }}>
-          {t.elements(`styleguide/CommentTeaser/${parentIds && parentIds.length ? 'reply' : 'comment'}/link`, {
-            link: (
-              <Link
-                key={id}
-                commentId={id}
-                discussion={discussion}
-                passHref
-              >
-                <a {...linkRule}>
-                  {inQuotes(discussion.title)}
-                  {newPage && (
-                    <span {...styles.icon}>
-                      <NewPage size={ICON_SIZE} fill={colors.disabled} />
-                    </span>
-                  )}
-                </a>
-              </Link>
-            )
-          })}
-        </div>
-        {!displayAuthor && (
-          <div {...styles.timeago}>
-            <Link commentId={id} discussion={discussion} passHref>
-              <a {...styles.linkUnderline}>
-                {timeago(createdAt)}
-              </a>
-            </Link>
+    <DiscussionContext.Provider value={discussionContextValue}>
+      <div id={id} {...styles.root}>
+        {displayAuthor && (
+          <div {...styles.header}>
+            <Header t={t} comment={{ id, displayAuthor, createdAt, parentIds: [] }} />
           </div>
         )}
+        {tag && (
+          <Context
+            title={
+              <Link commentId={id} discussion={discussion} passHref>
+                <a {...styles.link}>{tag}</a>
+              </Link>
+            }
+          />
+        )}
+        <div {...styles.body} style={{ marginTop: displayAuthor || tag ? undefined : 0 }}>
+          <CommentBodyParagraph>
+            <Link commentId={id} discussion={discussion} passHref>
+              <a {...styles.link}>
+                {!!preview && !highlight && (
+                  <Fragment>
+                    {preview.string}
+                    {!!preview.more && <Fragment>&nbsp;…</Fragment>}
+                  </Fragment>
+                )}
+                {!!highlight && (
+                  <Fragment>
+                    <RawHtml
+                      dangerouslySetInnerHTML={{
+                        __html: highlight
+                      }}
+                    />
+                    {!endsWithPunctuation && <Fragment>&nbsp;…</Fragment>}
+                  </Fragment>
+                )}
+              </a>
+            </Link>
+          </CommentBodyParagraph>
+        </div>
+        <div {...styles.footer}>
+          <div
+            {...styles.discussionReference}
+            style={{
+              paddingRight: newPage ? `${ICON_SIZE + 5}px` : undefined
+            }}
+          >
+            {t.elements(`styleguide/CommentTeaser/${parentIds && parentIds.length ? 'reply' : 'comment'}/link`, {
+              link: (
+                <Link key={id} commentId={id} discussion={discussion} passHref>
+                  <a {...linkRule}>
+                    {inQuotes(discussion.title)}
+                    {newPage && (
+                      <span {...styles.icon}>
+                        <NewPage size={ICON_SIZE} fill={colors.disabled} />
+                      </span>
+                    )}
+                  </a>
+                </Link>
+              )
+            })}
+          </div>
+          {!displayAuthor && (
+            <div {...styles.timeago}>
+              <Link commentId={id} discussion={discussion} passHref>
+                <a {...styles.linkUnderline}>{timeago(createdAt)}</a>
+              </Link>
+            </div>
+          )}
+        </div>
       </div>
-    </div>
+    </DiscussionContext.Provider>
   )
 }
 
