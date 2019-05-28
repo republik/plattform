@@ -63,8 +63,18 @@ const styles = {
     marginBottom: 10
   }),
   collapeToggleContainer: css({
+    position: 'relative',
     borderTop: `1px solid ${colors.divider}`,
-    marginTop: 6
+    '&::before': {
+      position: 'absolute',
+      display: 'block',
+      content: '""',
+      left: 0,
+      right: 0,
+      top: -61,
+      height: 60,
+      background: 'linear-gradient(0deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%)'
+    }
   }),
   collapseToggleButton: css({
     ...buttonStyle,
