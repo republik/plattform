@@ -7,9 +7,6 @@ import Spinner from '../Spinner'
 const { P } = Interaction
 
 const styles = {
-  error: css({
-    color: colors.error
-  }),
   message: css({
     position: 'absolute',
     top: '50%',
@@ -26,7 +23,7 @@ const styles = {
 }
 
 const ErrorMessage = ({ error }) => (
-  <P {...styles.error}>
+  <P style={{ color: colors.error }}>
     {error.graphQLErrors && error.graphQLErrors.length ? (
       error.graphQLErrors.map(e => e.message).join(', ')
     ) : (
