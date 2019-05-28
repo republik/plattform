@@ -45,18 +45,11 @@ const canAccessBasics = (user, me) => (
   (user._raw.isListed && !user._raw.isAdminUnlisted)
 )
 
-const initials = (name) => name
-  .split(' ')
-  .map(p => p[0])
-  .filter(Boolean)
-  .map(p => `${p}.`)
-  .join(' ')
-
 module.exports = {
   name (user, args, context) {
     const name = exposeAccessField('nameAccessRole', 'name')(user, args, context)
     if (!name) {
-      return initials(user.name)
+      return user.initials
     }
     return name
   },

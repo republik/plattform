@@ -1,14 +1,10 @@
-const getName = user =>
-  [user.firstName, user.lastName]
-    .filter(Boolean)
-    .join(' ')
-    .trim()
+const { nameUtil } = require('@orbiting/backend-modules-utils')
 
 module.exports = (user, additionalFields = {}) => {
   if (!user) {
     return null
   }
-  const name = getName(user)
+  const name = nameUtil.getName(user)
   return {
     // default public fields
     id: user.id,
@@ -16,6 +12,7 @@ module.exports = (user, additionalFields = {}) => {
     firstName: user.firstName,
     lastName: user.lastName,
     name,
+    initials: nameUtil.getInitials(name),
     hasPublicProfile: user.hasPublicProfile,
     // api read access protected by a resolver functions
     roles: user.roles || [],
