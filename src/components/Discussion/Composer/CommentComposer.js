@@ -160,8 +160,6 @@ export const CommentComposer = props => {
     }
   }
 
-  const canSubmit = !loading && text && (!tagRequired || tagValue) && (!maxLength || text.length <= maxLength)
-
   return (
     <div ref={root} {...styles.root}>
       <div {...styles.background}>
@@ -193,7 +191,7 @@ export const CommentComposer = props => {
         t={t}
         onClose={onClose}
         onCloseLabel={onCloseLabel}
-        onSubmit={canSubmit ? onSubmit : undefined}
+        onSubmit={loading ? undefined : onSubmit}
         onSubmitLabel={onSubmitLabel}
       />
 
