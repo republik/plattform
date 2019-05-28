@@ -10,7 +10,7 @@ import { sansSerifRegular14 } from '../../../Typography/styles'
 import colors from '../../../../theme/colors'
 import { mUp } from '../../../../theme/mediaQueries'
 import { useMediaQuery } from '../../../../lib/useMediaQuery'
-import { useSize } from '../../../../lib/useSize'
+import { useBoundingClientRect } from '../../../../lib/useBoundingClientRect'
 
 import createCommentSchema from '../../../../templates/Comment'
 
@@ -109,7 +109,7 @@ export const Body = ({ t, comment, context }) => {
    *   - 'preview': The body is collapsed.
    */
   const [bodyVisibility, setBodyVisibility] = React.useState('indeterminate')
-  const [bodyRef, bodySize] = useSize()
+  const [bodyRef, bodySize] = useBoundingClientRect([content])
   const isDesktop = useMediaQuery(mUp)
   React.useEffect(() => {
     /*
