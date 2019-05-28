@@ -247,17 +247,20 @@ module.exports = async (discussion, args, context, info) => {
   let topIds
   if (focusId) {
     focusComment = comments.find(c => c.id === focusId)
-    // topValue used for sorting
-    // we assign it here, because focusComment might be a node without
-    // children, which deepSortTree doesn't calculate a topValue for
-    focusComment.topValue = topValue
 
-    // Set comment (and its parents as topIds), used later for sorting tree and
-    // ensuring comment-tree bubbles to the very top.
-    topIds = _([focusComment.id])
-      .concat(focusComment.parentIds)
-      .compact()
-      .value()
+    if (focusComment) {
+      // topValue used for sorting
+      // we assign it here, because focusComment might be a node without
+      // children, which deepSortTree doesn't calculate a topValue for
+      focusComment.topValue = topValue
+
+      // Set comment (and its parents as topIds), used later for sorting tree and
+      // ensuring comment-tree bubbles to the very top.
+      topIds = _([focusComment.id])
+        .concat(focusComment.parentIds)
+        .compact()
+        .value()
+    }
   }
 
   assembleTree(tree, comments)
