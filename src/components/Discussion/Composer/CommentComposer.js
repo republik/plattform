@@ -167,7 +167,8 @@ export const CommentComposer = props => {
           <Header t={t} displayAuthor={displayAuthor} onClick={actions.openDiscussionPreferences} />
         </div>
 
-        {tags && (
+        {/* Tags are only available in the root composer! */}
+        {isRoot && tags && (
           <div style={{ borderBottom: '1px solid white' }}>
             <Tags tags={tags} onChange={setTagValue} value={tagValue} />
           </div>
