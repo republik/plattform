@@ -1,6 +1,6 @@
 const createDataLoader = require('@orbiting/backend-modules-dataloader')
 const isUUID = require('is-uuid')
-const { nameUtil } = require('@orbiting/backend-modules-utils')
+const { transformName } = require('../lib/nameClipper')
 
 module.exports = (context) => ({
   clear: async (id) => {
@@ -69,7 +69,7 @@ module.exports = (context) => ({
       return (row && row.count) || 0
     }
   ),
-  byIdCommenterNamesToHide: createDataLoader(
+  byIdCommenterNamesToClip: createDataLoader(
     ids =>
       context.pgdb.query(`
         WITH names AS (
@@ -115,15 +115,7 @@ module.exports = (context) => ({
         .then(rows => rows
           .map(row => ({
             ...row,
-            userNames: row.userNames.map(u => {
-              const name = nameUtil.getName(u)
-              return {
-                ...u,
-                name,
-                initials: nameUtil.getInitials(name),
-                lastNameShort: `${u.lastName[0].toUpperCase()}`
-              }
-            })
+            userNames: row.userNames.map(transformName)
           }))
         ),
     null,

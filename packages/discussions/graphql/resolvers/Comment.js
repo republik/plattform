@@ -3,6 +3,7 @@ const crypto = require('crypto')
 // TODO don't require from servers
 const { portrait: getPortrait, name: getName } = require('../../../../servers/republik/graphql/resolvers/User')
 const remark = require('../../lib/remark')
+const { clipNamesInText } = require('../../lib/nameClipper')
 
 const {
   DISPLAY_AUTHOR_SECRET
@@ -17,22 +18,8 @@ const textForComment = async ({ userId, content, published, adminUnpublished, di
     ? null
     : content
   if (text && !user) {
-    const namesToHide = await context.loaders.Discussion.byIdCommenterNamesToHide.load(discussionId)
-    if (namesToHide) {
-      namesToHide.forEach(n => {
-        try {
-          text = text.replace(new RegExp(n.name, 'gmi'), n.initials)
-        } catch (e) {}
-        if (n.lastName.length > 3) {
-          try {
-            text = text.replace(
-              new RegExp(`(^|[^\\S\\r\\n]+)(${n.lastName})(\\W|_|$)`, 'gmi'),
-              (match, p1 = '', p2, p3 = '') => `${p1}${n.lastNameShort}${p3 !== '.' ? '.' : ''}${p3}`
-            )
-          } catch (e) {}
-        }
-      })
-    }
+    const namesToClip = await context.loaders.Discussion.byIdCommenterNamesToClip.load(discussionId)
+    text = clipNamesInText(namesToClip, text)
   }
   return text
 }
