@@ -1,3 +1,5 @@
+const DEFAULT_ROLES = ['editor', 'admin']
+
 const upsert = async (
   redirection,
   { pgdb },
@@ -61,9 +63,9 @@ const get = async (
     WHERE
       source = :source
       ${notResource
-        ? 'AND NOT (resource @> :notResource)'
-        : ''
-      }
+    ? 'AND NOT (resource @> :notResource)'
+    : ''
+}
       AND "deletedAt" IS NULL
   `, {
     source,
@@ -73,7 +75,7 @@ const get = async (
   })
 }
 
-const del = async (
+const deleteBySource = async (
   source,
   { pgdb },
   now = new Date()
@@ -88,8 +90,104 @@ const del = async (
   )
 }
 
+const add = async (args, pgdb) => {
+  const now = new Date()
+  const defaults = {
+    status: 302,
+    keepQuery: false,
+    resource: null,
+    createdAt: now,
+    updatedAt: now
+  }
+  const redirection = { ...defaults, ...args }
+
+  const exists = !!(await pgdb.public.redirections.count({
+    source: redirection.source,
+    deletedAt: null
+  }))
+
+  if (exists) {
+    throw new Error('Redirection exists already.')
+  }
+
+  if (!isValidSource(redirection.source)) {
+    throw new Error(`Redirection source "${redirection.source}" is invalid.`)
+  }
+
+  return pgdb.public.redirections.insertAndGet(redirection)
+}
+
+const update = async (args, pgdb) => {
+  const now = new Date()
+  const defaults = {
+    status: 302,
+    keepQuery: false,
+    resource: null,
+    updatedAt: now
+  }
+  const redirection = { ...defaults, ...args }
+  const conditions = { id: redirection.id, deletedAt: null }
+
+  const exists = !!(await pgdb.public.redirections.count(conditions))
+
+  if (!exists) {
+    throw new Error('Redirection does not exist.')
+  }
+
+  if (redirection.source) {
+    if (!isValidSource(redirection.source)) {
+      throw new Error(`Redirection source "${redirection.source}" is invalid.`)
+    }
+
+    const sibling = !!(await pgdb.public.redirections.count({
+      source: redirection.source,
+      deletedAt: null,
+      'id !=': redirection.id
+    }))
+
+    if (sibling) {
+      throw new Error(`Another Redirection with source "${redirection.source}" exists.`)
+    }
+  }
+
+  return pgdb.public.redirections.updateAndGetOne(conditions, redirection)
+}
+
+const deleteById = async ({ id }, pgdb) => {
+  const conditions = { id, deletedAt: null }
+  const exists = !!(await pgdb.public.redirections.count(conditions))
+
+  if (!exists) {
+    throw new Error('Redirection does not exist.')
+  }
+
+  return !!(await pgdb.public.redirections.update(conditions, { deletedAt: new Date() }))
+}
+
+const findAll = async (limit, offset, pgdb) =>
+  pgdb.public.redirections.find(
+    { deletedAt: null },
+    { limit, offset, orderBy: { createdAt: 'desc' } }
+  )
+
+const isValidSource = (source) => {
+  try {
+    const sourceUrl = new URL(source, process.env.FRONTEND_BASE_URL)
+    return source === sourceUrl.pathname
+  } catch (e) {
+    return false
+  }
+}
+
 module.exports = {
   upsert,
+  add,
+  update,
+  deleteById,
+  deleteBySource,
+  delete: deleteBySource,
   get,
-  delete: del
+  findAll,
+  isValidSource,
+  DEFAULT_ROLES
 }
