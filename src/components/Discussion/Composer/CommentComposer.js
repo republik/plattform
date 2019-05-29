@@ -48,17 +48,23 @@ const styles = {
   })
 }
 
+/**
+ * The key in localStorage under which we store the text. Keyed by the discussion ID.
+ *
+ * This is exported from the styleguide so that the frontend can reuse this. In
+ * particular, this allows the frontend to directly display the CommentComposer
+ * if there is text stored in localStorage.
+ */
+export const commentComposerStorageKey = discussionId => `commentComposerText:${discussionId}`
+
 export const CommentComposer = props => {
   const { t, isRoot, onClose, onCloseLabel, onSubmitLabel } = props
 
   /*
    * Get the discussion metadata and action callbacks from the DiscussionContext.
-   *
-   * The 'tagRequired' setting only applies to root comments.
    */
   const { discussion, actions } = React.useContext(DiscussionContext)
   const { id, tags, rules, displayAuthor } = discussion
-  const tagRequired = isRoot && discussion.tagRequired
   const { maxLength } = rules
 
   /*
@@ -91,10 +97,8 @@ export const CommentComposer = props => {
    * Synchronize the text with localStorage, and restore it from there if not otherwise
    * provided through props. This way the user won't lose their text if the browser
    * crashes or if they inadvertently close the composer.
-   *
-   * The value in local storage is keyed by the discussion id.
    */
-  const localStorageKey = `commentComposerText:${id}`
+  const localStorageKey = commentComposerStorageKey(id)
 
   const [text, setText] = React.useState(() => {
     if (props.initialText) {
