@@ -129,9 +129,6 @@ module.exports = {
         name: {
           type: 'text'
         },
-        nameAccessRole: {
-          type: 'keyword'
-        },
         pgpPublicKey: {
           type: 'text'
         },

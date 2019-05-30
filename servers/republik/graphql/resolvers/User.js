@@ -14,10 +14,10 @@ const {
 } = process.env
 
 const exposeProfileField = (key, format) => (user, args, { pgdb, user: me }) => {
-  if (Roles.userIsMeOrHasProfile(user, me)) {
+  if (Roles.userIsMeOrProfileVisible(user, me)) {
     return format
-      ? format(user._raw[key], args)
-      : user._raw[key]
+      ? format(user._raw[key] || user[key], args)
+      : user._raw[key] || user[key]
   }
   return null
 }
@@ -39,40 +39,22 @@ const exposeAccessField = (accessRoleKey, key, format) => (user, args, { pgdb, u
   return null
 }
 
-// statement & portrait and related content
 const canAccessBasics = (user, me) => (
-  Roles.userIsMeOrHasProfile(user, me) ||
-  (user._raw.isListed && !user._raw.isAdminUnlisted)
+  Roles.userIsMeOrProfileVisible(user, me)
 )
 
 module.exports = {
-  name (user, args, context) {
-    const name = exposeAccessField('nameAccessRole', 'name')(user, args, context)
-    if (!name) {
-      return user.initials
-    }
-    return name
-  },
-  firstName (user, args, context) {
-    const firstName = exposeAccessField('nameAccessRole', 'firstName')(user, args, context)
-    if (!firstName) {
-      return user._raw.firstName[0]
-    }
-    return firstName
-  },
-  lastName (user, args, context) {
-    const lastName = exposeAccessField('nameAccessRole', 'lastName')(user, args, context)
-    if (!lastName) {
-      return user._raw.lastName[0]
-    }
-    return lastName
-  },
-  nameAccessRole (user, args, { user: me }) {
-    if (Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter'])) {
-      return user._raw.nameAccessRole
-    }
-    return null
-  },
+  name: exposeProfileField('name'),
+  firstName: exposeProfileField('firstName'),
+  lastName: exposeProfileField('lastName'),
+  username: exposeProfileField('username'),
+  badges: exposeProfileField('badges'),
+  biography: exposeProfileField('biography'),
+  facebookId: exposeProfileField('facebookId'),
+  twitterHandle: exposeProfileField('twitterHandle'),
+  publicUrl: exposeProfileField('publicUrl'),
+  disclosures: exposeProfileField('disclosures'),
+  statement: exposeProfileField('statement'),
   isListed: (user) => user._raw.isListed,
   isAdminUnlisted (user, args, { user: me }) {
     if (Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter'])) {
@@ -83,12 +65,6 @@ module.exports = {
   isEligibleForProfile (user, args, { user: me, pgdb }) {
     if (Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter'])) {
       return isEligible(user.id, pgdb)
-    }
-    return null
-  },
-  statement (user, args, { user: me }) {
-    if (canAccessBasics(user, me)) {
-      return user._raw.statement
     }
     return null
   },
@@ -168,84 +144,6 @@ module.exports = {
       return user._raw.phoneNumberAccessRole
     }
     return null
-  },
-  badges: exposeProfileField('badges'),
-  biography: exposeProfileField('biography'),
-  facebookId: exposeProfileField('facebookId'),
-  twitterHandle: exposeProfileField('twitterHandle'),
-  publicUrl: exposeProfileField('publicUrl'),
-  disclosures: exposeProfileField('disclosures'),
-  async comments (user, args, { pgdb, user: me }) {
-    const emptyCommentConnection = {
-      id: user.id,
-      totalCount: 0,
-      pageInfo: null,
-      nodes: []
-    }
-    if (!Roles.userIsMeOrHasProfile(user, me)) {
-      return emptyCommentConnection
-    }
-    const {
-      first: _first = 10,
-      after
-    } = args
-    const first = Math.min(_first, 100)
-
-    const comments = await pgdb.query(`
-      SELECT
-        c.*,
-        to_json(d.*) AS discussion
-      FROM
-        comments c
-      JOIN
-        discussions d
-        ON d.id = c."discussionId"
-      LEFT JOIN
-        "discussionPreferences" dp
-        ON
-          dp."discussionId" = d.id AND
-          dp."userId" = :userId
-      WHERE
-        c."userId" = :userId AND
-        d.anonymity != 'ENFORCED' AND
-        d.hidden = false AND
-        (dp IS NULL OR dp.anonymous = false)
-      ORDER BY
-        c."createdAt" DESC
-    `, {
-      userId: user.id
-    })
-    const totalCount = comments.length
-
-    if (!me || !Roles.userIsInRoles(me, ['member']) || !comments.length) {
-      return {
-        ...emptyCommentConnection,
-        totalCount
-      }
-    }
-
-    const afterId = after
-      ? Buffer.from(after, 'base64').toString('utf-8')
-      : null
-
-    let startIndex = 0
-    if (afterId) {
-      startIndex = comments.findIndex(node => node.id === afterId)
-    }
-    const endIndex = startIndex + first
-    const nodes = comments.slice(startIndex, endIndex)
-
-    return {
-      id: user.id,
-      totalCount,
-      pageInfo: {
-        endCursor: nodes.length
-          ? Buffer.from(`${nodes[nodes.length - 1].id}`).toString('base64')
-          : null,
-        hasNextPage: endIndex < comments.length
-      },
-      nodes
-    }
   },
   birthday (user, args, { user: me }) {
     if (Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter'])) {

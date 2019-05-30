@@ -81,7 +81,7 @@ module.exports = (context) => ({
             users u
             ON
               c."userId" = u.id
-              AND u."nameAccessRole" != 'PUBLIC'
+              AND u."hasPublicProfile" = false
           LEFT JOIN
             "discussionPreferences" dp
             ON

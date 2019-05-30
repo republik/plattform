@@ -8,7 +8,7 @@ module.exports = {
       pageInfo: null,
       nodes: []
     }
-    if (!Roles.userIsMeOrHasProfile(user, me)) {
+    if (!Roles.userIsMeOrProfileVisible(user, me)) {
       return emptyCommentConnection
     }
     const {

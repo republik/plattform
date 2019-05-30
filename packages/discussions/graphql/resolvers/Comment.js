@@ -148,7 +148,8 @@ module.exports = {
   ) => {
     const {
       t,
-      loaders
+      loaders,
+      user: me
     } = context
 
     const id = crypto
@@ -192,6 +193,9 @@ module.exports = {
 
     const profilePicture = getPortrait(commenter, (args && args.portrait), context)
     const name = getName(commenter, null, context)
+    const username = Roles.userIsMeOrProfileVisible(commenter, me)
+      ? commenter._raw.username || commenter._raw.id
+      : null
 
     return anonymous
       ? {
@@ -204,9 +208,7 @@ module.exports = {
         profilePicture: profilePicture,
         credential,
         anonymity: false,
-        username: commenter._raw.hasPublicProfile
-          ? commenter._raw.username
-          : null
+        username
       }
   },
 

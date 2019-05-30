@@ -17,6 +17,7 @@ module.exports = {
   name: expose(userBasicsAccessRoles, 'name'),
   firstName: expose(userBasicsAccessRoles, 'firstName'),
   lastName: expose(userBasicsAccessRoles, 'lastName'),
+  username: expose(userBasicsAccessRoles, 'username'),
   async sessions (user, args, { pgdb, user: me }) {
     if (Roles.userIsMeOrInRoles(user, me, userAccessRoles)) {
       return findAllUserSessions({ pgdb, userId: user.id })

@@ -5,7 +5,3 @@ ALTER TABLE users
 ALTER TABLE users
   ALTER COLUMN "testimonialId" DROP DEFAULT
 ;
-
-ALTER TABLE users
-  DROP COLUMN "nameAccessRole"
-;

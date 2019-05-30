@@ -77,7 +77,6 @@ module.exports = async (_, args, context) => {
 
   const updateFields = [
     'username',
-    'nameAccessRole',
     'firstName',
     'lastName',
     'birthday',

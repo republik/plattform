@@ -33,8 +33,6 @@ input ImageProperties {
 }
 
 extend type User {
-  nameAccessRole: AccessRole
-
   address: Address
   hasAddress: Boolean
   credentials: [Credential!]!
