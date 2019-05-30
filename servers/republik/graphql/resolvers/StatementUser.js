@@ -1,5 +1,5 @@
 const {
-  username,
+  slug,
   portrait,
   credentials,
   statement,
@@ -15,7 +15,7 @@ module.exports = {
   id (user) {
     return user._raw.testimonialId
   },
-  username,
+  username: slug,
   portrait,
   credentials,
   statement,

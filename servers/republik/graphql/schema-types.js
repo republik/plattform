@@ -33,6 +33,8 @@ input ImageProperties {
 }
 
 extend type User {
+  slug: String
+
   address: Address
   hasAddress: Boolean
   credentials: [Credential!]!

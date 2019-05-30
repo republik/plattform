@@ -13,8 +13,12 @@ const {
   AWS_S3_BUCKET_PROD
 } = process.env
 
+const canAccessBasics = (user, me) => (
+  Roles.userIsMeOrProfileVisible(user, me)
+)
+
 const exposeProfileField = (key, format) => (user, args, { pgdb, user: me }) => {
-  if (Roles.userIsMeOrProfileVisible(user, me)) {
+  if (canAccessBasics(user, me)) {
     return format
       ? format(user._raw[key] || user[key], args)
       : user._raw[key] || user[key]
@@ -39,10 +43,6 @@ const exposeAccessField = (accessRoleKey, key, format) => (user, args, { pgdb, u
   return null
 }
 
-const canAccessBasics = (user, me) => (
-  Roles.userIsMeOrProfileVisible(user, me)
-)
-
 module.exports = {
   name: exposeProfileField('name'),
   firstName: exposeProfileField('firstName'),
@@ -56,6 +56,12 @@ module.exports = {
   disclosures: exposeProfileField('disclosures'),
   statement: exposeProfileField('statement'),
   isListed: (user) => user._raw.isListed,
+  slug (user, args, { user: me }) {
+    if (canAccessBasics(user, me)) {
+      return user._raw.username || user._raw.id
+    }
+    return null
+  },
   isAdminUnlisted (user, args, { user: me }) {
     if (Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter'])) {
       return user._raw.isAdminUnlisted

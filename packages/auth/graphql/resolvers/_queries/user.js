@@ -9,11 +9,14 @@ module.exports = async (_, { slug }, { user: me, pgdb }) => {
 
   const user = await resolveUser({ slug, pgdb })
 
-  if (user.deletedAt && !Roles.userIsInRoles(['admin', 'supporter'])) {
+  if (
+    !user ||
+    (user.deletedAt && !Roles.userIsInRoles(me, ['admin', 'supporter']))
+  ) {
     return null
   }
 
-  if (user && Roles.userIsMeOrProfileVisible(user, me)) {
+  if (Roles.userIsMeOrProfileVisible(user, me)) {
     return transformUser(user)
   }
 
