@@ -142,7 +142,7 @@ const styles = {
     flexGrow: 0,
     whiteSpace: 'pre'
   }),
-  replies: css({
+  expandCount: css({
     display: 'inline-block',
     paddingLeft: '16px',
     marginRigth: '-4px',
@@ -221,8 +221,8 @@ export const Header = ({ t, comment, isExpanded, onToggle }) => {
       {onToggle && (
         <button {...headerActionStyle({ isExpanded })} onClick={onToggle}>
           {!isExpanded && comments && comments.totalCount > 0 && (
-            <div {...styles.replies}>
-              {t.pluralize('styleguide/comment/header/replies', { count: comments.totalCount })}
+            <div {...styles.expandCount}>
+              {t.pluralize('styleguide/comment/header/expandCount', { count: comments.totalCount + 1 })}
             </div>
           )}
           {isExpanded ? <IcCollapse /> : <IcExpand />}

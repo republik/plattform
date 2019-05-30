@@ -1,5 +1,5 @@
 {
-  "updated": "2019-03-08T13:49:49.307Z",
+  "updated": "2019-05-30T19:01:47.103Z",
   "title": "live",
   "data": [
     {
@@ -8,11 +8,11 @@
     },
     {
       "key": "styleguide/CommentComposer/answer",
-      "value": "Antworten"
+      "value": "antworten"
     },
     {
       "key": "styleguide/CommentComposer/cancel",
-      "value": "Abbrechen"
+      "value": "abbrechen"
     },
     {
       "key": "styleguide/CommentComposer/etiquette",
@@ -28,7 +28,7 @@
     },
     {
       "key": "styleguide/CommentActions/edit",
-      "value": "Bearbeiten"
+      "value": "bearbeiten"
     },
     {
       "key": "styleguide/CommentActions/upvote",
@@ -100,12 +100,12 @@
       "value": "Verifizierte Rolle"
     },
     {
-      "key": "styleguide/comment/header/replies/1",
-      "value": "1 Kommentar"
+      "key": "styleguide/comment/header/expandCount/1",
+      "value": "1 Beitrag"
     },
     {
-      "key": "styleguide/comment/header/replies/other",
-      "value": "{count} Kommentare"
+      "key": "styleguide/comment/header/expandCount/other",
+      "value": "{count} Beiträge"
     },
     {
       "key": "styleguide/comment/header/credentialMissing",
@@ -113,7 +113,7 @@
     },
     {
       "key": "styleguide/comment/edit/submit",
-      "value": "Bearbeiten"
+      "value": "bearbeiten"
     },
     {
       "key": "styleguide/comment/unpublished",
