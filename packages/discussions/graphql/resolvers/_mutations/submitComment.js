@@ -98,6 +98,7 @@ module.exports = async (_, args, context) => {
       ...id ? { id } : { },
       discussionId: discussion.id,
       parentIds,
+      depth: (parentIds && parentIds.length) || 0,
       userId,
       content,
       hotness: hotness(0, 0, (new Date().getTime())),
@@ -113,7 +114,7 @@ module.exports = async (_, args, context) => {
     await pubsub.publish('comment', { comment: {
       mutation: 'CREATED',
       node: comment
-    }})
+    } })
 
     slack.publishComment(comment, discussion, context)
 
