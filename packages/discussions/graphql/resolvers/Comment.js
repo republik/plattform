@@ -17,11 +17,11 @@ if (!DISPLAY_AUTHOR_SECRET) {
 }
 
 const textForComment = async ({ userId, content, published, adminUnpublished, discussionId }, context) => {
-  const user = context && context.user
-  let text = (!published || adminUnpublished) && (!user || !userId || userId !== user.id)
+  const me = context && context.user
+  let text = (!published || adminUnpublished) && (!me || !userId || userId !== me.id)
     ? null
     : content
-  if (text && !user) {
+  if (text && !Roles.userIsInRoles(me, ['member'])) {
     const namesToClip = await context.loaders.Discussion.byIdCommenterNamesToClip.load(discussionId)
     text = clipNamesInText(namesToClip, text)
   }
