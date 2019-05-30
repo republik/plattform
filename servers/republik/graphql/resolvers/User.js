@@ -44,7 +44,12 @@ const exposeAccessField = (accessRoleKey, key, format) => (user, args, { pgdb, u
 }
 
 module.exports = {
-  name: exposeProfileField('name'),
+  name (user, args, { user: me }) {
+    if (canAccessBasics(user, me)) {
+      return user.name
+    }
+    return user.initials
+  },
   firstName: exposeProfileField('firstName'),
   lastName: exposeProfileField('lastName'),
   username: exposeProfileField('username'),
