@@ -8,14 +8,15 @@ module.exports = {
       return redirection.target
     }
 
+    const base = process.env.FRONTEND_BASE_URL || 'http://localhosts'
     const pathUrl = redirection.__pathUrl
-    const targetUrl = new URL(redirection.target, process.env.FRONTEND_BASE_URL)
+    const targetUrl = new URL(redirection.target, base)
 
     if (redirection.keepQuery) {
       pathUrl.searchParams.forEach((value, name) => targetUrl.searchParams.set(name, value))
     }
 
-    return targetUrl.toString().replace(process.env.FRONTEND_BASE_URL, '')
+    return targetUrl.toString().replace(base, '')
   },
   resource (redirection, args, { user }) {
     if (!Roles.userIsInRoles(user, DEFAULT_ROLES)) {
