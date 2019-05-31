@@ -110,9 +110,9 @@ const add = async (args, pgdb) => {
     throw new Error('Redirection exists already.')
   }
 
-  if (!isValidSource(redirection.source)) {
-    throw new Error(`Redirection source "${redirection.source}" is invalid.`)
-  }
+  validateSource(redirection.source)
+  validateTarget(redirection.target)
+  validateStatus(redirection.status)
 
   return pgdb.public.redirections.insertAndGet(redirection)
 }
@@ -135,9 +135,7 @@ const update = async (args, pgdb) => {
   }
 
   if (redirection.source) {
-    if (!isValidSource(redirection.source)) {
-      throw new Error(`Redirection source "${redirection.source}" is invalid.`)
-    }
+    validateSource(redirection.source)
 
     const sibling = !!(await pgdb.public.redirections.count({
       source: redirection.source,
@@ -148,6 +146,14 @@ const update = async (args, pgdb) => {
     if (sibling) {
       throw new Error(`Another Redirection with source "${redirection.source}" exists.`)
     }
+  }
+
+  if (redirection.target) {
+    validateTarget(redirection.target)
+  }
+
+  if (redirection.status) {
+    validateStatus(redirection.status)
   }
 
   return pgdb.public.redirections.updateAndGetOne(conditions, redirection)
@@ -170,12 +176,27 @@ const findAll = async (limit, offset, pgdb) =>
     { limit, offset, orderBy: { createdAt: 'desc' } }
   )
 
-const isValidSource = (source) => {
-  try {
-    const sourceUrl = new URL(source, process.env.FRONTEND_BASE_URL)
-    return source === sourceUrl.pathname
-  } catch (e) {
-    return false
+const validateSource = (source) => {
+  const base = process.env.FRONTEND_BASE_URL || 'http://localhost'
+  const sourceUrl = new URL(source, base)
+
+  if (![source, encodeURI(source)].includes(sourceUrl.pathname)) {
+    throw new Error(`source "${source}" is invalid.`)
+  }
+}
+
+const validateTarget = (target) => {
+  const base = process.env.FRONTEND_BASE_URL || 'http://localhost'
+  const targetUrl = new URL(target, base)
+
+  if (![target, encodeURI(target)].includes(targetUrl.toString().replace(base, ''))) {
+    throw new Error(`target "${target}" is invalid.`)
+  }
+}
+
+const validateStatus = (status) => {
+  if (![301, 302].includes(status)) {
+    throw new Error(`status "${status}" is invalid.`)
   }
 }
 
@@ -188,6 +209,8 @@ module.exports = {
   delete: deleteBySource,
   get,
   findAll,
-  isValidSource,
+  validateSource,
+  validateTarget,
+  validateStatus,
   DEFAULT_ROLES
 }
