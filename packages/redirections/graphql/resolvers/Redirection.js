@@ -8,7 +8,7 @@ module.exports = {
       return redirection.target
     }
 
-    const base = process.env.FRONTEND_BASE_URL || 'http://localhosts'
+    const base = process.env.FRONTEND_BASE_URL || 'http://localhost'
     const pathUrl = redirection.__pathUrl
     const targetUrl = new URL(redirection.target, base)
 
