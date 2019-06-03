@@ -5,8 +5,8 @@ const { ensureSignedIn } = require('@orbiting/backend-modules-auth')
 const { claim } = require('../../../lib/grants')
 
 module.exports = async (_, { voucherCode }, { req, user, pgdb, t, mail }) => {
-  debug('begin', { voucherCode, user: user.id })
   ensureSignedIn(req)
+  debug('begin', { voucherCode, user: user.id })
 
   const transaction = await pgdb.transactionBegin()
 
