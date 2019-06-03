@@ -7,18 +7,29 @@ const mockPgdbInstance = ({
   update = jest.fn(),
   updateAndGetOne = jest.fn(),
   count = jest.fn(),
-  insertAndGet = jest.fn()
-} = {}) => ({
-  public: {
-    redirections: {
-      find,
-      update,
-      updateAndGetOne,
-      count,
-      insertAndGet
-    }
+  insertAndGet = jest.fn(),
+  commit = jest.fn(),
+  rollback = jest.fn()
+} = {}) => {
+  const pgdb = {
+    public: {
+      redirections: {
+        find,
+        update,
+        updateAndGetOne,
+        count,
+        insertAndGet
+      }
+    },
+    transactionCommit: commit,
+    transactionRollback: rollback
   }
-})
+
+  return {
+    ...pgdb,
+    transactionBegin: () => pgdb
+  }
+}
 
 describe('add()', () => {
   beforeEach(() => {
@@ -38,43 +49,61 @@ describe('add()', () => {
   test('throw Error if source is missing', async () => {
     const { add } = Redirections
 
-    const countMock = jest.fn()
     const insertMock = jest.fn()
-    const pgdb = mockPgdbInstance({ count: countMock, insertAndGet: insertMock })
+    const commitMock = jest.fn()
+    const rollbackMock = jest.fn()
+    const pgdb = mockPgdbInstance({
+      insertAndGet: insertMock,
+      commit: commitMock,
+      rollback: rollbackMock
+    })
 
     await expect(add({ target: '/route/to/predition' }, pgdb))
       .rejects.toThrow(/source .* invalid/)
 
-    expect(countMock).toHaveBeenCalledTimes(1)
     expect(insertMock).not.toHaveBeenCalled()
+    expect(commitMock).not.toHaveBeenCalled()
+    expect(rollbackMock).toHaveBeenCalledTimes(1)
   })
 
   test('throw Error if target is missing', async () => {
     const { add } = Redirections
 
-    const countMock = jest.fn()
     const insertMock = jest.fn()
-    const pgdb = mockPgdbInstance({ count: countMock, insertAndGet: insertMock })
+    const commitMock = jest.fn()
+    const rollbackMock = jest.fn()
+    const pgdb = mockPgdbInstance({
+      insertAndGet: insertMock,
+      commit: commitMock,
+      rollback: rollbackMock
+    })
 
     await expect(add({ source: '/foobar' }, pgdb))
       .rejects.toThrow(/target .* invalid/)
 
-    expect(countMock).toHaveBeenCalledTimes(1)
     expect(insertMock).not.toHaveBeenCalled()
+    expect(commitMock).not.toHaveBeenCalled()
+    expect(rollbackMock).toHaveBeenCalledTimes(1)
   })
 
   test('throw Error if status is invalid', async () => {
     const { add } = Redirections
 
-    const countMock = jest.fn()
     const insertMock = jest.fn()
-    const pgdb = mockPgdbInstance({ count: countMock, insertAndGet: insertMock })
+    const commitMock = jest.fn()
+    const rollbackMock = jest.fn()
+    const pgdb = mockPgdbInstance({
+      insertAndGet: insertMock,
+      commit: commitMock,
+      rollback: rollbackMock
+    })
 
     await expect(add({ source: '/foobar', target: '/route/to/predition', status: 123 }, pgdb))
       .rejects.toThrow(/status .* invalid/)
 
-    expect(countMock).toHaveBeenCalledTimes(1)
     expect(insertMock).not.toHaveBeenCalled()
+    expect(commitMock).not.toHaveBeenCalled()
+    expect(rollbackMock).toHaveBeenCalledTimes(1)
   })
 
   test('throw Error if source already exists', async () => {
@@ -83,7 +112,14 @@ describe('add()', () => {
     const countMock = jest.fn()
       .mockReturnValueOnce(1)
     const insertMock = jest.fn()
-    const pgdb = mockPgdbInstance({ count: countMock, insertAndGet: insertMock })
+    const commitMock = jest.fn()
+    const rollbackMock = jest.fn()
+    const pgdb = mockPgdbInstance({
+      count: countMock,
+      insertAndGet: insertMock,
+      commit: commitMock,
+      rollback: rollbackMock
+    })
 
     await expect(add({ source: '/foobar', target: '/route/to/predition' }, pgdb))
       .rejects.toThrow(/Redirection exists already/)
@@ -91,6 +127,8 @@ describe('add()', () => {
     expect(countMock)
       .toHaveBeenCalledWith({ deletedAt: null, source: '/foobar' })
     expect(insertMock).not.toHaveBeenCalled()
+    expect(commitMock).not.toHaveBeenCalled()
+    expect(rollbackMock).toHaveBeenCalledTimes(1)
   })
 
   test('w/ source and target', async () => {
@@ -98,7 +136,14 @@ describe('add()', () => {
 
     const countMock = jest.fn()
     const insertMock = jest.fn()
-    const pgdb = mockPgdbInstance({ count: countMock, insertAndGet: insertMock })
+    const commitMock = jest.fn()
+    const rollbackMock = jest.fn()
+    const pgdb = mockPgdbInstance({
+      count: countMock,
+      insertAndGet: insertMock,
+      commit: commitMock,
+      rollback: rollbackMock
+    })
 
     const expectedDefaultValues = {
       status: 302,
@@ -119,6 +164,8 @@ describe('add()', () => {
       .toHaveBeenCalledWith({ deletedAt: null, source: '/foobar' })
     expect(insertMock)
       .toHaveBeenCalledWith({ ...expectedDefaultValues, ...expectedProps })
+    expect(commitMock).toHaveBeenCalledTimes(1)
+    expect(rollbackMock).not.toHaveBeenCalled()
   })
 
   test('w/ source, target, status and keepQuery', async () => {
@@ -126,7 +173,14 @@ describe('add()', () => {
 
     const countMock = jest.fn()
     const insertMock = jest.fn()
-    const pgdb = mockPgdbInstance({ count: countMock, insertAndGet: insertMock })
+    const commitMock = jest.fn()
+    const rollbackMock = jest.fn()
+    const pgdb = mockPgdbInstance({
+      count: countMock,
+      insertAndGet: insertMock,
+      commit: commitMock,
+      rollback: rollbackMock
+    })
 
     const expectedDefaultValues = {
       resource: null,
@@ -147,6 +201,8 @@ describe('add()', () => {
       .toHaveBeenCalledWith({ deletedAt: null, source: '/foobar' })
     expect(insertMock)
       .toHaveBeenCalledWith({ ...expectedDefaultValues, ...expectedProps })
+    expect(commitMock).toHaveBeenCalledTimes(1)
+    expect(rollbackMock).not.toHaveBeenCalled()
   })
 
   test('w/ external target', async () => {
@@ -154,7 +210,14 @@ describe('add()', () => {
 
     const countMock = jest.fn()
     const insertMock = jest.fn()
-    const pgdb = mockPgdbInstance({ count: countMock, insertAndGet: insertMock })
+    const commitMock = jest.fn()
+    const rollbackMock = jest.fn()
+    const pgdb = mockPgdbInstance({
+      count: countMock,
+      insertAndGet: insertMock,
+      commit: commitMock,
+      rollback: rollbackMock
+    })
 
     const expectedDefaultValues = {
       status: 302,
@@ -175,6 +238,8 @@ describe('add()', () => {
       .toHaveBeenCalledWith({ deletedAt: null, source: '/foobar' })
     expect(insertMock)
       .toHaveBeenCalledWith({ ...expectedDefaultValues, ...expectedProps })
+    expect(commitMock).toHaveBeenCalledTimes(1)
+    expect(rollbackMock).not.toHaveBeenCalled()
   })
 })
 
@@ -196,13 +261,20 @@ describe('update()', () => {
   test('throw Error if id null', async () => {
     const { update } = Redirections
 
-    const countMock = jest.fn()
-    const updateMock = jest.fn()
-    const pgdb = mockPgdbInstance({ count: countMock, update: updateMock })
+    const updateAndGetOneMock = jest.fn()
+    const commitMock = jest.fn()
+    const rollbackMock = jest.fn()
+    const pgdb = mockPgdbInstance({
+      updateAndGetOne: updateAndGetOneMock,
+      commit: commitMock,
+      rollback: rollbackMock
+    })
 
     await expect(update({ id: null }, pgdb)).rejects.toThrow(/Redirection does not exist/)
-    expect(countMock).toHaveBeenCalledTimes(1)
-    expect(updateMock).not.toHaveBeenCalled()
+
+    expect(updateAndGetOneMock).not.toHaveBeenCalled()
+    expect(commitMock).not.toHaveBeenCalled()
+    expect(rollbackMock).toHaveBeenCalledTimes(1)
   })
 
   test('throw Error if source taken already', async () => {
@@ -211,8 +283,15 @@ describe('update()', () => {
     const countMock = jest.fn()
       .mockReturnValueOnce(1)
       .mockReturnValueOnce(1)
-    const updateMock = jest.fn()
-    const pgdb = mockPgdbInstance({ count: countMock, update: updateMock })
+    const updateAndGetOneMock = jest.fn()
+    const commitMock = jest.fn()
+    const rollbackMock = jest.fn()
+    const pgdb = mockPgdbInstance({
+      count: countMock,
+      updateAndGetOne: updateAndGetOneMock,
+      commit: commitMock,
+      rollback: rollbackMock
+    })
 
     await expect(update({ id: '123-123-123', source: '/foobar', target: '/route/to/perdition' }, pgdb))
       .rejects.toThrow(/Another Redirection with source/)
@@ -222,8 +301,9 @@ describe('update()', () => {
       .toHaveBeenNthCalledWith(1, { deletedAt: null, id: '123-123-123' })
     expect(countMock)
       .toHaveBeenNthCalledWith(2, { deletedAt: null, 'id !=': '123-123-123', source: '/foobar' })
-
-    expect(updateMock).not.toHaveBeenCalled()
+    expect(updateAndGetOneMock).not.toHaveBeenCalled()
+    expect(commitMock).not.toHaveBeenCalled()
+    expect(rollbackMock).toHaveBeenCalledTimes(1)
   })
 
   test('throw Error if source is not a valid path', async () => {
@@ -232,8 +312,15 @@ describe('update()', () => {
     const countMock = jest.fn()
       .mockReturnValueOnce(1)
       .mockReturnValueOnce(1)
-    const updateMock = jest.fn()
-    const pgdb = mockPgdbInstance({ count: countMock, update: updateMock })
+    const updateAndGetOneMock = jest.fn()
+    const commitMock = jest.fn()
+    const rollbackMock = jest.fn()
+    const pgdb = mockPgdbInstance({
+      count: countMock,
+      updateAndGetOne: updateAndGetOneMock,
+      commit: commitMock,
+      rollback: rollbackMock
+    })
 
     await expect(update({ id: '123-123-123', source: '/foobar?schnarz=bar', target: '/route/to/perdition' }, pgdb))
       .rejects.toThrow(/source .* invalid/)
@@ -241,8 +328,9 @@ describe('update()', () => {
     expect(countMock).toHaveBeenCalledTimes(1)
     expect(countMock)
       .toHaveBeenNthCalledWith(1, { deletedAt: null, id: '123-123-123' })
-
-    expect(updateMock).not.toHaveBeenCalled()
+    expect(updateAndGetOneMock).not.toHaveBeenCalled()
+    expect(commitMock).not.toHaveBeenCalled()
+    expect(rollbackMock).toHaveBeenCalledTimes(1)
   })
 
   test('throw Error if target is not a valid URL nor path', async () => {
@@ -251,8 +339,15 @@ describe('update()', () => {
     const countMock = jest.fn()
       .mockReturnValueOnce(1)
       .mockReturnValueOnce(0)
-    const updateMock = jest.fn()
-    const pgdb = mockPgdbInstance({ count: countMock, update: updateMock })
+    const updateAndGetOneMock = jest.fn()
+    const commitMock = jest.fn()
+    const rollbackMock = jest.fn()
+    const pgdb = mockPgdbInstance({
+      count: countMock,
+      updateAndGetOne: updateAndGetOneMock,
+      commit: commitMock,
+      rollback: rollbackMock
+    })
 
     await expect(update({ id: '123-123-123', source: '/foobar', target: 'faulty/target/route' }, pgdb))
       .rejects.toThrow(/target .* invalid/)
@@ -260,8 +355,9 @@ describe('update()', () => {
     expect(countMock).toHaveBeenCalledTimes(2)
     expect(countMock)
       .toHaveBeenNthCalledWith(1, { deletedAt: null, id: '123-123-123' })
-
-    expect(updateMock).not.toHaveBeenCalled()
+    expect(updateAndGetOneMock).not.toHaveBeenCalled()
+    expect(commitMock).not.toHaveBeenCalled()
+    expect(rollbackMock).toHaveBeenCalledTimes(1)
   })
 
   test('w/ new target', async () => {
@@ -270,8 +366,15 @@ describe('update()', () => {
     const countMock = jest.fn()
       .mockReturnValueOnce(1)
       .mockReturnValueOnce(0)
-    const updateMock = jest.fn()
-    const pgdb = mockPgdbInstance({ count: countMock, updateAndGetOne: updateMock })
+    const updateAndGetOneMock = jest.fn()
+    const commitMock = jest.fn()
+    const rollbackMock = jest.fn()
+    const pgdb = mockPgdbInstance({
+      count: countMock,
+      updateAndGetOne: updateAndGetOneMock,
+      commit: commitMock,
+      rollback: rollbackMock
+    })
 
     const expectedConditions = { deletedAt: null, id: '123-123-123' }
     const expectedDefaultValues = {
@@ -285,13 +388,15 @@ describe('update()', () => {
 
     await update(expectedProps, pgdb)
 
-    expect(updateMock).toHaveBeenCalledWith(
+    expect(updateAndGetOneMock).toHaveBeenCalledWith(
       expectedConditions,
       {
         ...expectedProps,
         ...expectedDefaultValues
       }
     )
+    expect(commitMock).toHaveBeenCalledTimes(1)
+    expect(rollbackMock).not.toHaveBeenCalled()
   })
 
   test('w/ new target, status, keepQuery and resource', async () => {
@@ -300,8 +405,15 @@ describe('update()', () => {
     const countMock = jest.fn()
       .mockReturnValueOnce(1)
       .mockReturnValueOnce(0)
-    const updateMock = jest.fn()
-    const pgdb = mockPgdbInstance({ count: countMock, updateAndGetOne: updateMock })
+    const updateAndGetOneMock = jest.fn()
+    const commitMock = jest.fn()
+    const rollbackMock = jest.fn()
+    const pgdb = mockPgdbInstance({
+      count: countMock,
+      updateAndGetOne: updateAndGetOneMock,
+      commit: commitMock,
+      rollback: rollbackMock
+    })
 
     const expectedProps = {
       id: '123-123-123',
@@ -313,13 +425,15 @@ describe('update()', () => {
 
     await update(expectedProps, pgdb)
 
-    expect(updateMock).toHaveBeenCalledWith(
+    expect(updateAndGetOneMock).toHaveBeenCalledWith(
       { deletedAt: null, id: '123-123-123' },
       {
         ...expectedProps,
         updatedAt: pinnedDate
       }
     )
+    expect(commitMock).toHaveBeenCalledTimes(1)
+    expect(rollbackMock).not.toHaveBeenCalled()
   })
 })
 
@@ -340,12 +454,19 @@ describe('deleteById()', () => {
   test('throw Error if id null', async () => {
     const { deleteById } = Redirections
 
-    const countMock = jest.fn()
     const updateMock = jest.fn()
-    const pgdb = mockPgdbInstance({ count: countMock, update: updateMock })
+    const commitMock = jest.fn()
+    const rollbackMock = jest.fn()
+    const pgdb = mockPgdbInstance({
+      update: updateMock,
+      commit: commitMock,
+      rollback: rollbackMock
+    })
 
     await expect(deleteById({ id: null }, pgdb)).rejects.toThrow(/Redirection does not exist/)
     expect(updateMock).not.toHaveBeenCalled()
+    expect(commitMock).not.toHaveBeenCalled()
+    expect(rollbackMock).toHaveBeenCalledTimes(1)
   })
 
   test('id 123-123-123', async () => {
@@ -353,7 +474,14 @@ describe('deleteById()', () => {
 
     const countMock = jest.fn().mockReturnValue(1)
     const updateMock = jest.fn()
-    const pgdb = mockPgdbInstance({ count: countMock, update: updateMock })
+    const commitMock = jest.fn()
+    const rollbackMock = jest.fn()
+    const pgdb = mockPgdbInstance({
+      count: countMock,
+      update: updateMock,
+      commit: commitMock,
+      rollback: rollbackMock
+    })
 
     const expectedConditions = { deletedAt: null, id: '123-123-123' }
 
@@ -361,6 +489,8 @@ describe('deleteById()', () => {
 
     expect(countMock).toHaveBeenCalledWith(expectedConditions)
     expect(updateMock).toHaveBeenCalledWith(expectedConditions, { deletedAt: pinnedDate })
+    expect(commitMock).toHaveBeenCalledTimes(1)
+    expect(rollbackMock).not.toHaveBeenCalled()
   })
 })
 

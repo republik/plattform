@@ -1,3 +1,5 @@
+const debug = require('debug')('rediretions:lib:Redirections')
+
 const DEFAULT_ROLES = ['editor', 'admin']
 
 const upsert = async (
@@ -100,21 +102,34 @@ const add = async (args, pgdb) => {
     updatedAt: now
   }
   const redirection = { ...defaults, ...args }
+  const transaction = await pgdb.transactionBegin()
 
-  const exists = !!(await pgdb.public.redirections.count({
-    source: redirection.source,
-    deletedAt: null
-  }))
+  try {
+    const exists = !!(await transaction.public.redirections.count({
+      source: redirection.source,
+      deletedAt: null
+    }))
 
-  if (exists) {
-    throw new Error('Redirection exists already.')
+    if (exists) {
+      throw new Error('Redirection exists already.')
+    }
+
+    validateSource(redirection.source)
+    validateTarget(redirection.target)
+    validateStatus(redirection.status)
+
+    const result = await transaction.public.redirections.insertAndGet(redirection)
+
+    await transaction.transactionCommit()
+
+    return result
+  } catch (e) {
+    await transaction.transactionRollback()
+
+    debug('rollback', { source: redirection.source, target: redirection.target })
+
+    throw e
   }
-
-  validateSource(redirection.source)
-  validateTarget(redirection.target)
-  validateStatus(redirection.status)
-
-  return pgdb.public.redirections.insertAndGet(redirection)
 }
 
 const update = async (args, pgdb) => {
@@ -127,47 +142,74 @@ const update = async (args, pgdb) => {
   }
   const redirection = { ...defaults, ...args }
   const conditions = { id: redirection.id, deletedAt: null }
+  const transaction = await pgdb.transactionBegin()
 
-  const exists = !!(await pgdb.public.redirections.count(conditions))
+  try {
+    const exists = !!(await transaction.public.redirections.count(conditions))
 
-  if (!exists) {
-    throw new Error('Redirection does not exist.')
-  }
-
-  if (redirection.source) {
-    validateSource(redirection.source)
-
-    const sibling = !!(await pgdb.public.redirections.count({
-      source: redirection.source,
-      deletedAt: null,
-      'id !=': redirection.id
-    }))
-
-    if (sibling) {
-      throw new Error(`Another Redirection with source "${redirection.source}" exists.`)
+    if (!exists) {
+      throw new Error('Redirection does not exist.')
     }
-  }
 
-  if (redirection.target) {
-    validateTarget(redirection.target)
-  }
+    if (redirection.source) {
+      validateSource(redirection.source)
 
-  if (redirection.status) {
-    validateStatus(redirection.status)
-  }
+      const sibling = !!(await transaction.public.redirections.count({
+        source: redirection.source,
+        deletedAt: null,
+        'id !=': redirection.id
+      }))
 
-  return pgdb.public.redirections.updateAndGetOne(conditions, redirection)
+      if (sibling) {
+        throw new Error(`Another Redirection with source "${redirection.source}" exists.`)
+      }
+    }
+
+    if (redirection.target) {
+      validateTarget(redirection.target)
+    }
+
+    if (redirection.status) {
+      validateStatus(redirection.status)
+    }
+
+    const result = await transaction.public.redirections.updateAndGetOne(conditions, redirection)
+
+    await transaction.transactionCommit()
+
+    return result
+  } catch (e) {
+    await transaction.transactionRollback()
+
+    debug('rollback', { redirection })
+
+    throw e
+  }
 }
 
 const deleteById = async ({ id }, pgdb) => {
   const conditions = { id, deletedAt: null }
-  const exists = !!(await pgdb.public.redirections.count(conditions))
+  const transaction = await pgdb.transactionBegin()
 
-  if (!exists) {
-    throw new Error('Redirection does not exist.')
+  try {
+    const exists = !!(await transaction.public.redirections.count(conditions))
+
+    if (!exists) {
+      throw new Error('Redirection does not exist.')
+    }
+
+    const isUpdated = !!(await transaction.public.redirections.update(conditions, { deletedAt: new Date() }))
+
+    await transaction.transactionCommit()
+
+    return isUpdated
+  } catch (e) {
+    await transaction.transactionRollback()
+
+    debug('rollback', { id })
+
+    throw e
   }
-
-  return !!(await pgdb.public.redirections.update(conditions, { deletedAt: new Date() }))
 }
 
 const findAll = async (limit, offset, pgdb) =>
