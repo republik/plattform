@@ -64,10 +64,7 @@ const get = async (
       redirections
     WHERE
       source = :source
-      ${notResource
-    ? 'AND NOT (resource @> :notResource)'
-    : ''
-}
+      ${notResource ? 'AND NOT (resource @> :notResource)' : ''}
       AND "deletedAt" IS NULL
   `, {
     source,
