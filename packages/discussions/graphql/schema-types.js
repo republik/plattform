@@ -147,6 +147,8 @@ type DisplayUser {
   credential: Credential
   profilePicture: String
   anonymity: Boolean!
+  slug: String
+  # deprecated: use slug
   username: String
 }
 

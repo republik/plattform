@@ -196,7 +196,7 @@ module.exports = {
 
     const profilePicture = getPortrait(commenter, (args && args.portrait), context)
     const name = getName(commenter, null, context)
-    const username = getSlug(commenter, null, context)
+    const slug = getSlug(commenter, null, context)
 
     return anonymous
       ? {
@@ -209,7 +209,8 @@ module.exports = {
         profilePicture: profilePicture,
         credential,
         anonymity: false,
-        username
+        username: slug,
+        slug
       }
   },
 
