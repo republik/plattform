@@ -7,9 +7,11 @@ schema {
 type queries {
   redirection(path: String): Redirection
   redirections(
-    limit: Int,
-    offset: Int
-  ): [Redirection!]!
+    first: Int
+    last: Int
+    before: String
+    after: String
+  ): RedirectionConnection!
 }
 
 type mutations {
