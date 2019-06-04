@@ -5,14 +5,6 @@ const querystring = require('querystring')
 
 const { isEligible } = require('../../lib/profile')
 
-// the first 4 are old portrait URL legacy
-const {
-  ASSETS_BASE_URL,
-  ASSETS_SERVER_BASE_URL,
-  AWS_S3_BUCKET,
-  AWS_S3_BUCKET_PROD
-} = process.env
-
 const canAccessBasics = (user, me) => (
   Roles.userIsMeOrProfileVisible(user, me)
 )
@@ -97,12 +89,6 @@ module.exports = {
       if (!portraitUrl) {
         return portraitUrl
       }
-      // TODO migrate DB entries from _384x384 to _original and from ASSETS_BASE_URL to ASSETS_SERVER_BASE_URL/s3/AWS_S3_BUCKET
-      const legacyMode = portraitUrl.indexOf('_384x384') > -1
-      if (legacyMode) {
-        portraitUrl = portraitUrl.replace('_384x384', '_original')
-        portraitUrl = portraitUrl.replace(ASSETS_BASE_URL, `${ASSETS_SERVER_BASE_URL}/s3/${AWS_S3_BUCKET_PROD || AWS_S3_BUCKET}`)
-      }
       const bw = args && args.properties && args.properties.bw !== undefined
         ? args.properties.bw
         : true // bw is default for portrait images
@@ -110,10 +96,8 @@ module.exports = {
       if (args && args.properties) {
         const { width, height } = args.properties
         resize = `${width || ''}x${height || ''}`
-      } else if ((args && args.size) || legacyMode) { // PortraitSize is deprecated
-        resize = args && args.size === 'SHARE'
-          ? '1000x1000'
-          : '384x384'
+      } else if (args && args.size === 'SHARE') { // PortraitSize is deprecated
+        resize = '1000x1000'
       } else {
         resize = '384x384' // default for portraits
       }
