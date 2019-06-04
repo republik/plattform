@@ -150,6 +150,7 @@ module.exports = async (_, args, context) => {
 
   if (portrait) {
     portraitUrl = await Portrait.upload(portrait)
+    await Portrait.del(me._raw.portraitUrl)
   } else if (portrait === null && me._raw.portraitUrl) {
     await Portrait.del(me._raw.portraitUrl)
     portraitUrl = null
