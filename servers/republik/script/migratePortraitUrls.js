@@ -3,7 +3,7 @@
  * This script migrates the old portraitUrl format
  *
  * Usage:
- * ./script/fixMemberRole.js [restartCount]
+ * ./script/migratePortraitUrls.js [--dry]
  */
 require('@orbiting/backend-modules-env').config()
 const fetch = require('isomorphic-unfetch')
