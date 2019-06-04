@@ -9,13 +9,13 @@ require('@orbiting/backend-modules-env').config()
 const fetch = require('isomorphic-unfetch')
 const Promise = require('bluebird')
 const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
-const { lib: { upload: { uploadPortrait } } } = require('@orbiting/backend-modules-assets')
+const { lib: { Portrait } } = require('@orbiting/backend-modules-assets')
 
 console.log('running migratePortraitUrls.js...')
 PgDb.connect().then(async pgdb => {
   const dry = process.argv[2] === '--dry'
 
-  let users = await pgdb.public.users.find({
+  const users = await pgdb.public.users.find({
     'portraitUrl like': '%384x384%'
   })
   console.log(`num users to migrate: ${users.length}`)
@@ -39,7 +39,7 @@ PgDb.connect().then(async pgdb => {
         return
       }
 
-      const newPortraitUrl = await uploadPortrait(portrait, true, dry)
+      const newPortraitUrl = await Portrait.upload(portrait, dry)
         .catch(error => {
           console.error('uploadPortrait failed', { portraitUrl, error })
         })
