@@ -1,4 +1,4 @@
-const upload = require('./upload')
+const Portrait = require('./Portrait')
 const s3 = require('./s3')
 const getWidthHeight = require('./getWidthHeight')
 const returnImage = require('./returnImage')
@@ -7,7 +7,7 @@ const webp = require('./webp')
 const Repo = require('./Repo')
 
 module.exports = {
-  upload,
+  Portrait,
   s3,
   getWidthHeight,
   returnImage,

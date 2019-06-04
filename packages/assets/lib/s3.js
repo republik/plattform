@@ -68,6 +68,30 @@ const getHead = async ({
   return result
 }
 
+const del = async ({
+  path,
+  bucket
+}) => {
+  if (path[0] === '/') {
+    throw new Error('path must not be absolute')
+  }
+
+  if (!s3) {
+    throw new Error('s3 not available')
+  }
+
+  try {
+    await s3.deleteObject({
+      Key: path,
+      Bucket: bucket
+    }).promise()
+  } catch (e) {
+    return false
+  }
+
+  return true
+}
+
 const get = ({
   region = AWS_REGION,
   bucket,
@@ -88,5 +112,6 @@ const get = ({
 module.exports = {
   upload,
   getHead,
-  get
+  get,
+  del
 }

@@ -1,6 +1,6 @@
 const crypto = require('crypto')
 const checkEnv = require('check-env')
-const { upload: uploadS3 } = require('./s3')
+const S3 = require('./s3')
 const querystring = require('querystring')
 const sharp = require('sharp')
 
@@ -18,22 +18,26 @@ const PORTRAIT_FOLDER = 'portraits'
 
 const toJPEG = async (buffer) => {
   const image = sharp(buffer)
-    .rotate()
-    .jpeg({
-      quality: 100
-    })
+  const meta = await image.metadata()
+
+  if (meta.format === 'jpeg') {
+    return {
+      meta,
+      data: buffer
+    }
+  } else {
+    image
+      .rotate()
+      .jpeg({ quality: 100 })
+  }
+
   return {
-    meta: await image.metadata(),
+    meta,
     data: await image.toBuffer()
   }
 }
 
-const getMeta = async (buffer) => {
-  const image = sharp(buffer)
-  return image.metadata()
-}
-
-const uploadPortrait = async (portrait, isJPEG = false, dry = false) => {
+const upload = async (portrait, dry = false) => {
   const portraitPath = [
     `${PORTRAIT_FOLDER}/`,
     // always a new path—cache buster!
@@ -43,12 +47,10 @@ const uploadPortrait = async (portrait, isJPEG = false, dry = false) => {
 
   const inputBuffer = Buffer.from(portrait, 'base64')
 
-  const { meta, data } = isJPEG
-    ? { meta: await getMeta(inputBuffer), data: inputBuffer }
-    : await toJPEG(inputBuffer)
+  const { meta, data } = await toJPEG(inputBuffer)
 
   if (!dry) {
-    await uploadS3({
+    await S3.upload({
       stream: data,
       path: portraitPath,
       mimeType: 'image/jpeg',
@@ -62,6 +64,15 @@ const uploadPortrait = async (portrait, isJPEG = false, dry = false) => {
   return `${ASSETS_SERVER_BASE_URL}/s3/${AWS_S3_BUCKET}/${portraitPath}?${query}`
 }
 
+const del = (portraitUrl) => {
+  if (!portraitUrl) {
+    return
+  }
+  const [, bucket, path] = new RegExp(/.*?s3\/(.*?)\/(.*?)\?/).exec(portraitUrl)
+  return S3.del({ bucket, path })
+}
+
 module.exports = {
-  uploadPortrait
+  upload,
+  del
 }
