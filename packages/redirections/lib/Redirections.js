@@ -209,10 +209,10 @@ const deleteById = async ({ id }, pgdb) => {
   }
 }
 
-const findAll = async (limit, offset, pgdb) =>
+const findAll = async (pgdb) =>
   pgdb.public.redirections.find(
     { deletedAt: null },
-    { limit, offset, orderBy: { createdAt: 'desc' } }
+    { orderBy: { createdAt: 'desc' } }
   )
 
 const validateSource = (source) => {
