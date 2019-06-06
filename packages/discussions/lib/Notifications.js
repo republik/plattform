@@ -99,10 +99,10 @@ const submitComment = async (comment, discussion, context) => {
       context
     )
 
-    const contentMdast = getContent(comment, null, context)
+    const contentMdast = await getContent(comment, null, context)
     const htmlContent = renderEmail(contentMdast, commentSchema, { doctype: '' })
 
-    const preview = getPreview(comment, { length: 128 }, context)
+    const preview = await getPreview(comment, { length: 128 }, context)
     const shortBody = preview.more
       ? `${preview.string}...`
       : preview.string
