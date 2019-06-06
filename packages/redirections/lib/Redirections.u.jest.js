@@ -500,51 +500,16 @@ describe('findAll()', () => {
     expect(typeof findAll).toBe('function')
   })
 
-  test('w/o arguments', async () => {
+  test('execute', async () => {
     const { findAll } = Redirections
 
     const findMock = jest.fn()
     const pgdb = mockPgdbInstance({ find: findMock })
 
-    await findAll(undefined, undefined, pgdb)
+    await findAll(pgdb)
     expect(findMock).toHaveBeenCalledWith(
       { deletedAt: null },
       { orderBy: { createdAt: 'desc' } }
-    )
-  })
-
-  test('limit 25', async () => {
-    const { findAll } = Redirections
-
-    const findMock = jest.fn()
-    const pgdb = mockPgdbInstance({ find: findMock })
-
-    await findAll(25, undefined, pgdb)
-
-    expect(findMock).toHaveBeenCalledWith(
-      { deletedAt: null },
-      {
-        limit: 25,
-        orderBy: { createdAt: 'desc' }
-      }
-    )
-  })
-
-  test('limit 25 and offset 75', async () => {
-    const { findAll } = Redirections
-
-    const findMock = jest.fn()
-    const pgdb = mockPgdbInstance({ find: findMock })
-
-    await findAll(25, 75, pgdb)
-
-    expect(findMock).toHaveBeenCalledWith(
-      { deletedAt: null },
-      {
-        limit: 25,
-        offset: 75,
-        orderBy: { createdAt: 'desc' }
-      }
     )
   })
 })
