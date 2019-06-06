@@ -14,7 +14,6 @@ module.exports = {
     return user._raw.testimonialId
   },
   slug,
-  username: slug, // deprecated
   credentials,
   updatedAt,
   portrait: (user, args, context) => portrait(user, args, { ...context, allowAccess: true }),

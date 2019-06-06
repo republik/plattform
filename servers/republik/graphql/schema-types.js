@@ -248,8 +248,6 @@ type StatementUser {
   id: ID!
   name: String!
   slug: String
-  # deprecated
-  username: String
   portrait(
     properties: ImageProperties
   ): String
