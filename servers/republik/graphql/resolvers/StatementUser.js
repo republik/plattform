@@ -15,7 +15,7 @@ module.exports = {
   id (user) {
     return user._raw.testimonialId
   },
-  username: slug,
+  slug,
   portrait,
   credentials,
   statement,

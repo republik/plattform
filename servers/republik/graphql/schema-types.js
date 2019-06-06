@@ -247,7 +247,7 @@ type StatementUserConnection {
 type StatementUser {
   id: ID!
   name: String!
-  username: String
+  slug: String
   portrait(
     properties: ImageProperties
   ): String
