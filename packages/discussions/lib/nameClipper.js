@@ -1,5 +1,7 @@
 const { nameUtil } = require('@orbiting/backend-modules-utils')
 
+const excludeLastNames = ['weiss']
+
 const transformName = (u) => {
   const name = nameUtil.getName(u)
   return {
@@ -19,10 +21,10 @@ const clipNamesInText = (namesToClip, text) => {
     try {
       newText = newText.replace(new RegExp(n.name, 'gmi'), n.initials)
     } catch (e) {}
-    if (n.lastName.length > 3) {
+    if (n.lastName.length > 3 && !excludeLastNames.includes(n.lastName.toLowerCase())) {
       try {
         newText = newText.replace(
-          new RegExp(`(^|[^\\S\\r\\n]+)(${n.lastName})(\\W|_|$)`, 'gmi'),
+          new RegExp(`(^|[^\\S\\r\\n]+)(${n.lastName}s?)(\\W|_|$)`, 'gmi'),
           (match, p1 = '', p2, p3 = '') =>
             `${p1}${n.lastNameShort}${p3 !== '.' ? '.' : ''}${p3}`
         )
