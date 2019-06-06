@@ -83,8 +83,8 @@ module.exports = {
     }
     return null
   },
-  portrait (user, args, { user: me, req }) {
-    if (canAccessBasics(user, me)) {
+  portrait (user, args, { user: me, req, allowAccess = false }) {
+    if (allowAccess || canAccessBasics(user, me)) {
       let { portraitUrl } = user._raw
       if (!portraitUrl) {
         return portraitUrl

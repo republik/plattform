@@ -17,7 +17,7 @@ module.exports = {
   },
   slug,
   username: slug, // deprecated
-  portrait,
+  portrait: (obj, args, context) => portrait(obj, args, { ...context, allowAccess: true }),
   credentials,
   statement,
   sequenceNumber,
