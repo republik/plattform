@@ -1,9 +1,7 @@
 const {
   slug,
   portrait,
-  credentials,
-  statement,
-  sequenceNumber
+  credentials
 } = require('./User.js')
 const {
   updatedAt
@@ -17,9 +15,9 @@ module.exports = {
   },
   slug,
   username: slug, // deprecated
-  portrait: (obj, args, context) => portrait(obj, args, { ...context, allowAccess: true }),
   credentials,
-  statement,
-  sequenceNumber,
-  updatedAt
+  updatedAt,
+  portrait: (user, args, context) => portrait(user, args, { ...context, allowAccess: true }),
+  sequenceNumber: (user, args, context) => user._raw.sequenceNumber,
+  statement: (user, args, context) => user._raw.statement
 }
