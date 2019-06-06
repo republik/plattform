@@ -8,7 +8,7 @@ const nameRegex = () => new RegExp(/[^ \u0041-\u007a\u00c0-\u00ff\u0100-\u017F\u
 const cleanName = (name) =>
   name
     .trim()
-    .replace(nameRegex(), (match) => { console.log(match); return '' })
+    .replace(nameRegex(), '')
 
 const transformName = (u) => {
   const firstName = cleanName(u.firstName)
