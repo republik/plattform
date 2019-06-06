@@ -16,6 +16,7 @@ module.exports = {
     return user._raw.testimonialId
   },
   slug,
+  username: slug, // deprecated
   portrait,
   credentials,
   statement,
