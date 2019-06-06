@@ -8,7 +8,6 @@ import { onlyS, mUp } from '../../../../theme/mediaQueries'
 import { ellipsize, underline } from '../../../../lib/styleMixins'
 import { timeFormat } from '../../../../lib/timeFormat'
 
-import { DEFAULT_PROFILE_PICTURE } from '../../../Logo/BrandMark'
 import { DiscussionContext } from '../../DiscussionContext'
 import * as config from '../../config'
 
@@ -169,10 +168,13 @@ export const Header = ({ t, comment, isExpanded, onToggle }) => {
       {(() => {
         const n = parentIds.length - config.nestLimit
         if (n < 0) {
+          if (!profilePicture) {
+            return null
+          }
           return (
             <links.Profile displayAuthor={displayAuthor} passHref>
               <a {...styles.link}>
-                <img {...styles.profilePicture} src={profilePicture || DEFAULT_PROFILE_PICTURE} alt="" />
+                <img {...styles.profilePicture} src={profilePicture} alt="" />
               </a>
             </links.Profile>
           )
