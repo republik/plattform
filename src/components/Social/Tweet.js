@@ -75,13 +75,13 @@ const Tweet = ({
       <p {...styles.text} dangerouslySetInnerHTML={{ __html: html }} />
       {image && (
         <Figure>
-          <a href={url} target="_blank" {...styles.mediaContainer}>
+          <a href={url} {...styles.mediaContainer}>
             {playable && <span {...styles.playIcon}><PlayIcon/></span>}
-            <FigureImage src={image} alt="" />
+            <FigureImage src={image} alt='' />
           </a>
           {more && (
             <FigureCaption>
-              <a href={url} target="_blank" {...css(link)}>
+              <a href={url} {...css(link)}>
                 {more}
               </a>
             </FigureCaption>

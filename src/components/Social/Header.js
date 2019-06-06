@@ -84,7 +84,7 @@ const styles = {
 const dateFormat = timeFormat('%d. %B %Y')
 
 const Link = ({ href, children }) => (
-  <a href={href} target="_blank" {...styles.link}>
+  <a href={href} {...styles.link}>
     {children}
   </a>
 )
