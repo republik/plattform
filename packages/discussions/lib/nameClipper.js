@@ -2,13 +2,24 @@ const { naming } = require('@orbiting/backend-modules-utils')
 
 const excludeLastNames = ['weiss']
 
+// https://unicode-table.com/en/
+const nameRegex = () => new RegExp(/[^ \u0041-\u007a\u00c0-\u00ff\u0100-\u017F\u0180-\u024F\u0250-\u02AF\u0370-\u03FF\u0400-\u04FF\u0400-\u04FF\u1E00-\u1EFF]/g)
+
+const cleanName = (name) =>
+  name
+    .trim()
+    .replace(nameRegex(), (match) => { console.log(match); return '' })
+
 const transformName = (u) => {
-  const name = naming.getName(u)
+  const firstName = cleanName(u.firstName)
+  const lastName = cleanName(u.lastName)
+  const name = naming.getName({ firstName, lastName })
   return {
-    ...u,
+    firstName,
+    lastName,
     name,
     initials: naming.getInitials(name),
-    lastNameShort: `${u.lastName[0].toUpperCase()}`
+    lastNameShort: lastName ? `${lastName[0].toUpperCase()}` : null
   }
 }
 
@@ -21,7 +32,11 @@ const clipNamesInText = (namesToClip, text) => {
     try {
       newText = newText.replace(new RegExp(n.name, 'gmi'), n.initials)
     } catch (e) {}
-    if (n.lastName.length > 3 && !excludeLastNames.includes(n.lastName.toLowerCase())) {
+    if (
+      n.lastName &&
+      n.lastName.length > 3 &&
+      !excludeLastNames.includes(n.lastName.toLowerCase())
+    ) {
       try {
         newText = newText.replace(
           new RegExp(`(^|[^\\S\\r\\n]+)(${n.lastName}s?)(\\W|_|$)`, 'gmi'),

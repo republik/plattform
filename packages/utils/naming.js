@@ -1,3 +1,4 @@
+
 const getName = ({ firstName, lastName }) =>
   [firstName, lastName]
     .filter(Boolean)
