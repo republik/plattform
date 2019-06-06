@@ -1,13 +1,13 @@
-const { nameUtil } = require('@orbiting/backend-modules-utils')
+const { naming } = require('@orbiting/backend-modules-utils')
 
 const excludeLastNames = ['weiss']
 
 const transformName = (u) => {
-  const name = nameUtil.getName(u)
+  const name = naming.getName(u)
   return {
     ...u,
     name,
-    initials: nameUtil.getInitials(name),
+    initials: naming.getInitials(name),
     lastNameShort: `${u.lastName[0].toUpperCase()}`
   }
 }
