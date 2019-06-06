@@ -99,10 +99,10 @@ const submitComment = async (comment, discussion, context) => {
       context
     )
 
-    const contentMdast = getContent(comment)
+    const contentMdast = getContent(comment, null, context)
     const htmlContent = renderEmail(contentMdast, commentSchema, { doctype: '' })
 
-    const preview = getPreview(comment, { length: 128 })
+    const preview = getPreview(comment, { length: 128 }, context)
     const shortBody = preview.more
       ? `${preview.string}...`
       : preview.string
@@ -133,7 +133,7 @@ const submitComment = async (comment, discussion, context) => {
         url: commentUrl,
         userIds: webUserIds,
         tag: comment.id
-      }})
+      } })
     }
 
     // notify APP
