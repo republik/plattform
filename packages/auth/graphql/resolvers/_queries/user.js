@@ -16,7 +16,10 @@ module.exports = async (_, { slug }, { user: me, pgdb }) => {
     return null
   }
 
-  if (Roles.userIsMeOrProfileVisible(user, me)) {
+  if (
+    Roles.userIsInRoles(me, ['admin', 'supporter']) ||
+    Roles.userIsMeOrProfileVisible(user, me)
+  ) {
     return transformUser(user)
   }
 
