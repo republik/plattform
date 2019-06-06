@@ -4,7 +4,8 @@ const fetch = require('isomorphic-unfetch')
 const {
   AWS_REGION,
   AWS_ACCESS_KEY_ID,
-  AWS_SECRET_ACCESS_KEY
+  AWS_SECRET_ACCESS_KEY,
+  AWS_S3_BUCKET
 } = process.env
 
 let s3
@@ -78,6 +79,10 @@ const del = async ({
 
   if (!s3) {
     throw new Error('s3 not available')
+  }
+
+  if (bucket !== AWS_S3_BUCKET) {
+    throw new Error(`s3 refuse to delete: specified bucket doesn't match AWS_S3_BUCKET`, { path, bucket, AWS_S3_BUCKET })
   }
 
   try {
