@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { css } from 'glamor'
-import { mUp, tUp } from './mediaQueries'
+import { mUp } from './mediaQueries'
 import Text from './Text'
 import colors from '../../theme/colors'
 
@@ -10,15 +10,9 @@ import { breakoutUp } from '../Center'
 import LazyLoad from '../LazyLoad'
 
 const IMAGE_SIZE = {
-  tiny: 180,
   small: 220,
   medium: 300,
   large: 360
-}
-
-const sizeTiny = {
-  maxHeight: `${IMAGE_SIZE.tiny}px`,
-  maxWidth: `${IMAGE_SIZE.tiny}px`
 }
 
 const sizeSmall = {

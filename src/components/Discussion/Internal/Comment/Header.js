@@ -3,7 +3,7 @@ import { css } from 'glamor'
 import MdCheck from 'react-icons/lib/md/check'
 import colors from '../../../../theme/colors'
 import { sansSerifMedium16, sansSerifRegular14 } from '../../../Typography/styles'
-import { onlyS, mUp } from '../../../../theme/mediaQueries'
+import { onlyS } from '../../../../theme/mediaQueries'
 
 import { ellipsize, underline } from '../../../../lib/styleMixins'
 import { timeFormat } from '../../../../lib/timeFormat'
