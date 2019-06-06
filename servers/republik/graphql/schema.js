@@ -14,11 +14,11 @@ type queries {
     search: String
     # user id, legacy testimonial id or username to inject as first result
     focus: String
-  ): UserConnection!
+  ): StatementUserConnection!
   nextStatement(
     sequenceNumber: Int!,
     orderDirection: OrderDirection!
-  ): User!
+  ): StatementUser!
 
   greeting: Greeting
   faqs: [Faq!]!

@@ -1,8 +1,13 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
 const crypto = require('crypto')
 // TODO don't require from servers
-const { portrait: getPortrait } = require('../../../../servers/republik/graphql/resolvers/User')
+const {
+  portrait: getPortrait,
+  name: getName,
+  slug: getSlug
+} = require('../../../../servers/republik/graphql/resolvers/User')
 const remark = require('../../lib/remark')
+const { clipNamesInText } = require('../../lib/nameClipper')
 
 const {
   DISPLAY_AUTHOR_SECRET
@@ -11,10 +16,17 @@ if (!DISPLAY_AUTHOR_SECRET) {
   throw new Error('missing required DISPLAY_AUTHOR_SECRET')
 }
 
-const textForComment = ({ userId, content, published, adminUnpublished }, user) =>
-  (!published || adminUnpublished) && (!user || !userId || userId !== user.id)
+const textForComment = async ({ userId, content, published, adminUnpublished, discussionId }, context) => {
+  const me = context && context.user
+  let text = (!published || adminUnpublished) && (!me || !userId || userId !== me.id)
     ? null
     : content
+  if (text && !Roles.userIsInRoles(me, ['member'])) {
+    const namesToClip = await context.loaders.Discussion.byIdCommenterNamesToClip.load(discussionId)
+    text = clipNamesInText(namesToClip, text)
+  }
+  return text
+}
 
 /**
  * @typedef {Object} Preview
@@ -74,19 +86,19 @@ module.exports = {
       ? adminUnpublished
       : null,
 
-  content: (comment, args, context) => {
-    const text = textForComment(comment, context && context.user)
+  content: async (comment, args, context) => {
+    const text = await textForComment(comment, context)
     if (!text) {
       return text
     }
     return remark.parse(text)
   },
 
-  text: (comment, args, { user }) =>
-    textForComment(comment, user),
+  text: (comment, args, context) =>
+    textForComment(comment, context),
 
-  preview: (comment, { length = 500 }, context) => {
-    const text = textForComment(comment, context && context.user)
+  preview: async (comment, { length = 500 }, context) => {
+    const text = await textForComment(comment, context)
     if (!text) {
       return null
     }
@@ -183,6 +195,8 @@ module.exports = {
     }
 
     const profilePicture = getPortrait(commenter, (args && args.portrait), context)
+    const name = getName(commenter, null, context)
+    const slug = getSlug(commenter, null, context)
 
     return anonymous
       ? {
@@ -191,13 +205,12 @@ module.exports = {
       }
       : {
         id,
-        name: commenter.name || t('api/noname'),
+        name: name || t('api/noname'),
         profilePicture: profilePicture,
         credential,
         anonymity: false,
-        username: commenter._raw.hasPublicProfile
-          ? commenter._raw.username
-          : null
+        username: slug,
+        slug
       }
   },
 

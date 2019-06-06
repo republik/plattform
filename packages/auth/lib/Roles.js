@@ -57,7 +57,7 @@ const addUserToRole = async (userId, role, pgdb) => {
     role: JSON.stringify([role]),
     userId
   })
-  return pgdb.public.users.findOne({id: userId})
+  return pgdb.public.users.findOne({ id: userId })
 }
 
 const removeUserFromRole = async (userId, role, pgdb) => {
@@ -72,7 +72,7 @@ const removeUserFromRole = async (userId, role, pgdb) => {
     role,
     userId
   })
-  return pgdb.public.users.findOne({id: userId})
+  return pgdb.public.users.findOne({ id: userId })
 }
 
 const userIsMe = (user, me) => (
@@ -89,9 +89,11 @@ const ensureUserIsMeOrInRoles = (user, me, roles) => (
   ensureUserIsInRoles(me, roles)
 )
 
-const userIsMeOrHasProfile = (user, me) => (
-  user._raw.hasPublicProfile ||
-  userIsMe(user, me)
+const userIsMeOrProfileVisible = (user, me) => (
+  user && (
+    user.hasPublicProfile || (user._raw && user._raw.hasPublicProfile) ||
+    userIsMeOrInRoles(user, me, ['member', 'admin', 'supporter'])
+  )
 )
 
 module.exports = {
@@ -103,7 +105,7 @@ module.exports = {
   userIsMe,
   userIsMeOrInRoles,
   ensureUserIsMeOrInRoles,
-  userIsMeOrHasProfile,
+  userIsMeOrProfileVisible,
   ensureUserIsInRoles,
   addUserToRole,
   removeUserFromRole

@@ -16,7 +16,7 @@ const { Redirections: {
   delete: deleteRedirection
 } } = require('@orbiting/backend-modules-redirections')
 
-const { lib: { upload: { uploadPortrait } } } = require('@orbiting/backend-modules-assets')
+const { lib: { Portrait } } = require('@orbiting/backend-modules-assets')
 const { ensureStringLength } = require('@orbiting/backend-modules-utils')
 
 const MAX_STATEMENT_LENGTH = 140
@@ -149,7 +149,11 @@ module.exports = async (_, args, context) => {
     : undefined
 
   if (portrait) {
-    portraitUrl = await uploadPortrait(portrait)
+    portraitUrl = await Portrait.upload(portrait)
+    await Portrait.del(me._raw.portraitUrl)
+  } else if (portrait === null && me._raw.portraitUrl) {
+    await Portrait.del(me._raw.portraitUrl)
+    portraitUrl = null
   }
 
   if (username !== undefined && username !== null) {
