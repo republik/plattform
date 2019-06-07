@@ -110,8 +110,10 @@ const init = async ({
   }
 
   const close = async () => {
-    await redlock().lock(lockKey, 1000 * lockTtlSecs * 2)
+    const lock = await redlock().lock(lockKey, 1000 * lockTtlSecs * 2)
     clearTimeout(timeout)
+    await lock.unlock()
+      .catch((err) => { console.error(err) })
   }
 
   if (runInitially) {

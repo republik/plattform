@@ -231,16 +231,19 @@ const init = async () => {
     }
 
     // wait for job to finish
-    await redlock(redis).lock(lockKey, ttl * 10)
+    const lock = await redlock(redis).lock(lockKey, ttl * 10)
 
     await subClient.unsubscribeAsync()
 
     await Promise.all([
       subClient.quit(),
-      Redis.disconnect(redis),
       Elasticsearch.disconnect(elastic),
       PgDb.disconnect(pgdb)
     ])
+
+    await lock.unlock()
+      .catch((err) => { console.error(err) })
+    await Redis.disconnect(redis)
 
     singleton = null
   }
