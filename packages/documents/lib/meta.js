@@ -120,8 +120,17 @@ const getEstimatedReadingMinutes = doc => {
   return null
 }
 
-const isReadingMinutesSuppressed = (resolvedFields) =>
+const isReadingMinutesSuppressed = (fields, resolvedFields) =>
   suppressReadingMinutes && (
+    // Paths
+    (
+      fields.path &&
+      suppressReadingMinutes.paths &&
+      suppressReadingMinutes.paths.includes(
+        fields.path
+      )
+    ) ||
+
     // Series
     (
       resolvedFields.series &&
@@ -168,7 +177,7 @@ const getMeta = doc => {
     ? metaFieldResolver(doc.content.meta, doc._all)
     : {}
 
-  const readingMinutesSuppressed = isReadingMinutesSuppressed(resolvedFields)
+  const readingMinutesSuppressed = isReadingMinutesSuppressed(doc.content.meta, resolvedFields)
   const estimatedReadingMinutes = !readingMinutesSuppressed
     ? getEstimatedReadingMinutes(doc)
     : null
