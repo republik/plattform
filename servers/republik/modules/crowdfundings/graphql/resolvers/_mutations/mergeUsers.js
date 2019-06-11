@@ -116,10 +116,43 @@ module.exports = async (_, args, context) => {
       await transaction.public.ballots.update(from, to)
     }
     await transaction.public.stripeCustomers.update(from, to)
-    await transaction.public.discussionPreferences.update(from, to)
     await transaction.public.comments.update(from, to)
     await transaction.public.credentials.update(from, to)
     await transaction.public.consents.update(from, to)
+
+    const sourceDPs = await transaction.public.discussionPreferences.find(from)
+    if (sourceDPs.length) {
+      const targetDPs = await transaction.public.discussionPreferences.find({
+        userId: targetUser.id,
+        discussionId: sourceDPs.map(dp => dp.discussionId)
+      })
+
+      if (targetDPs.length) {
+        const moveSourceDPs = sourceDPs
+          .filter(sourceDP => {
+            const targetDP = targetDPs.find(dp => dp.discussionId === sourceDP.discussionId)
+            if (!targetDP) {
+              return true
+            }
+            if (targetDP.anonymous) {
+              return false
+            }
+            if (sourceDP.anonymous || (sourceDP.credentialId && !targetDP.credentialId)) {
+              return true
+            }
+            return false
+          })
+          .filter(Boolean)
+        if (moveSourceDPs.length) {
+          await transaction.public.discussionPreferences.update(
+            { id: moveSourceDPs.map(dp => dp.id) },
+            { userId: targetUser.id }
+          )
+        }
+      } else {
+        await transaction.public.discussionPreferences.update(from, to)
+      }
+    }
 
     let sessions = await transaction.public.sessions.find({ 'sess @>': { passport: { user: sourceUser.id } } })
     for (let session of sessions) {
