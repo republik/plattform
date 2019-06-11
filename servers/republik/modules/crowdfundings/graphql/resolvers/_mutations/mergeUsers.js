@@ -7,6 +7,7 @@ const { Redirections: {
   upsert: upsertRedirection
 } } = require('@orbiting/backend-modules-redirections')
 const { publishMonitor } = require('../../../../../lib/slack')
+const uuid = require('uuid/v4')
 
 module.exports = async (_, args, context) => {
   const { pgdb, req, t, mail: { moveNewsletterSubscriptions } } = context
@@ -49,7 +50,7 @@ module.exports = async (_, args, context) => {
     await transaction.public.users.updateOne(
       { id: sourceUser.id },
       {
-        testimonialId: null,
+        testimonialId: uuid(),
         username: null
       }
     )
@@ -76,7 +77,9 @@ module.exports = async (_, args, context) => {
       statement: statementUser && statementUser.statement,
       isListed: statementUser && statementUser.isListed,
       isAdminUnlisted: statementUser && statementUser.isAdminUnlisted,
-      testimonialId: statementUser && statementUser.testimonialId,
+      testimonialId: statementUser
+        ? statementUser.testimonialId
+        : users.map(u => u.testimonialId).filter(Boolean)[0],
       portraitUrl: statementUser
         ? statementUser.portraitUrl
         : users.map(u => u.portraitUrl).filter(Boolean)[0],
