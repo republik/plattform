@@ -1,7 +1,7 @@
 const debug = require('debug')('search:lib:indexPgTable')
 
 // Amount of rows, documents in a single bulk request.
-const BULK_SIZE = 10000
+const BULK_SIZE = 1000
 
 // Interval in seconds stats about bulk progress is printed.
 const STATS_INTERVAL_SECS = 5
