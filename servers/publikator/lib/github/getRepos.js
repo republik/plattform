@@ -168,7 +168,6 @@ const nameQuery = repoNames => ({
 module.exports = {
   getRepos: async (args) => {
     const { githubApolloFetch, githubRest } = await createGithubClients()
-
     if (args.search) {
       if (args.orderBy) {
         throw new Error('getRepos: orderBy not supported when searching')
@@ -178,14 +177,12 @@ module.exports = {
         throw new Error('getRepos: pagination not supported when searching')
       }
 
-      const search = await githubRest.search.code({
+      const search = await githubRest.search.repos({
         q: `org:${GITHUB_LOGIN} ${args.search}`,
         per_page: args.first
       })
 
       const searchResultRepos = search.data.items
-        .map(item => item.repository)
-        .filter((a, index, all) => index === all.findIndex(b => a.id === b.id))
 
       let repositories = []
 
@@ -198,17 +195,6 @@ module.exports = {
 
         repositories = searchResultRepos.map((_, i) => repositoryOwner[`r${i}`])
       }
-
-      // TK: Once GraphQL supports code results
-      // const {
-      //   data: {
-      //     search: {
-      //       pageInfo,
-      //       repositoryCount: totalCount,
-      //       nodes: repositories
-      //     }
-      //   }
-      // } = await githubApolloFetch(searchQuery(args))
 
       return {
         pageInfo: {
