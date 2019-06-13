@@ -3,6 +3,7 @@ import {css} from 'glamor'
 import SG from '../../theme/env'
 
 const VIEWBOX = SG.LOGO_VIEWBOX || '0 0 4 1.5'
+const GRADIENT = SG.LOGO_GRADIENT
 const PATH = SG.LOGO_PATH || 'M0 0 L4 0 L4 1.5 L3 0.5 L2 4 L1 0.5 L0 1.5 Z'
 const VIEWBOX_ARRAY = VIEWBOX.split(' ').map(d => +d)
 const WIDTH = VIEWBOX_ARRAY[2] - VIEWBOX_ARRAY[0]
@@ -28,7 +29,8 @@ const styles = {
 
 const LogoSvg = ({width, height, fill, ...props}) => (
   <svg {...props} width={width} height={height} viewBox={VIEWBOX}>
-    <path fill={fill} d={PATH} />
+    {GRADIENT && <defs dangerouslySetInnerHTML={{ __html: GRADIENT }} />}
+    <path fill={GRADIENT ? 'url(#logo-gradient)' : fill} d={PATH} />
   </svg>
 )
 
