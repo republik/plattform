@@ -85,7 +85,7 @@ const upsertResolvedMeta = (
   }))
 }
 
-const after = async ({indexName, type: indexType, elastic, pgdb}) => {
+const after = async ({ indexName, type: indexType, elastic, pgdb }) => {
   const dossiers = await findTemplates(elastic, 'dossier')
   await upsertResolvedMeta(
     { indexName, entities: dossiers, type: 'dossier', elastic }
@@ -101,18 +101,26 @@ const iterateRepos = async (context, callback) => {
   let pageInfo
   let pageCounter = 1
   do {
-    console.info(`requesting repos (page ${pageCounter}) ...`)
-    pageCounter += 1
-    const repos = await getRepos(null, {
+    console.info(`requesting repos (page ${pageCounter++}) ...`)
+
+    const options = {
       first: 20,
-      orderBy: {
-        field: 'PUSHED_AT',
-        direction: 'DESC'
-      },
       ...(pageInfo && pageInfo.hasNextPage)
         ? { after: pageInfo.endCursor }
         : { }
-    }, context)
+    }
+
+    if (context.searchTerm) {
+      options.search = context.searchTerm
+    } else {
+      options.orderBy = {
+        field: 'PUSHED_AT',
+        direction: 'DESC'
+      }
+    }
+
+    const repos = await getRepos(null, options, context)
+
     pageInfo = repos.pageInfo
     const allLatestPublications = await Promise.all(
       repos.nodes
@@ -131,7 +139,7 @@ const iterateRepos = async (context, callback) => {
 
 module.exports = {
   before: () => {},
-  insert: async ({indexName, type: indexType, elastic, pgdb, redis}) => {
+  insert: async ({ indexName, type: indexType, elastic, pgdb, redis }) => {
     if (!AWS_ACCESS_KEY_ID || !AWS_SECRET_ACCESS_KEY) {
       console.warn('missing AWS_ACCESS_KEY_ID and/or AWS_SECRET_ACCESS_KEY skipping image uploads!')
     }
