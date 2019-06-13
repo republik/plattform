@@ -80,6 +80,7 @@ SG_FONT_FAMILIES={"serifRegular":"'Droid Serif', serif"}
 SG_FONT_FACES=@import url('https://fonts.googleapis.com/css?family=Droid+Serif')
 SG_LOGO_PATH=M0 0 L4 0 L4 1.5 L3 0.5 L2 4 L1 0.5 L0 1.5 Z
 SG_LOGO_VIEWBOX=0 0 4 1.5
+SG_LOGO_GRADIENT=<linearGradient id="logo-gradient"></linearGradient>
 SG_BRAND_MARK_PATH=M0 4 L1 0 L4 4 Z
 SG_BRAND_MARK_VIEWBOX=0 0 4 4
 ```
