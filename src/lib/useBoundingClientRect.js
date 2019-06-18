@@ -15,7 +15,7 @@ export const useBoundingClientRect = (deps = []) => {
       if (el) {
         setRect(el.getBoundingClientRect())
       }
-    }, deps),
+    }, deps), // eslint-disable-line react-hooks/exhaustive-deps
     rect
   ]
 }

@@ -113,7 +113,7 @@ export const CommentList = ({ t, parentId = null, comments }) => {
   const loadMore = React.useCallback(() => {
     const appendAfter = lastNode ? lastNode.id : undefined
     actions.fetchMoreComments({ parentId, after: endCursor, appendAfter })
-  }, [parentId, endCursor, lastNode])
+  }, [parentId, endCursor, lastNode, actions])
 
   const numMoreComments = (() => {
     const countComments = ({ totalCount = 0 } = {}) => totalCount

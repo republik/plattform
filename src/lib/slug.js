@@ -23,6 +23,7 @@ const diacriticsMap = diacritics.reduce(
 
 export const slug = string => string
   .toLowerCase()
+  // eslint-disable-next-line no-control-regex
   .replace(/[^\u0000-\u007E]/g, a => diacriticsMap[a] || a)
   .replace(/[^0-9a-z]+/g, ' ')
   .trim()
