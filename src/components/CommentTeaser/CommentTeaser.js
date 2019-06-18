@@ -182,7 +182,9 @@ export const CommentTeaser = ({
           {!displayAuthor && (
             <div {...styles.timeago}>
               <Link commentId={id} discussion={discussion} passHref>
-                <a {...styles.linkUnderline}>{timeago(createdAt)}</a>
+                <a {...styles.linkUnderline} suppressHydrationWarning>
+                  {timeago(createdAt)}
+                </a>
               </Link>
             </div>
           )}

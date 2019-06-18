@@ -209,7 +209,9 @@ export const Header = ({ t, comment, isExpanded, onToggle }) => {
           {credential && <div style={{ whiteSpace: 'pre' }}>{' · '}</div>}
           <div {...styles.timeago} title={titleDate(createdAt)}>
             <links.Comment comment={comment} passHref>
-              <a {...styles.linkUnderline}>{clock.formatTimeRelative(new Date(createdAt), { direction: 'past' })}</a>
+              <a {...styles.linkUnderline} suppressHydrationWarning>
+                {clock.formatTimeRelative(new Date(createdAt), { direction: 'past' })}
+              </a>
             </links.Comment>
           </div>
           {isUpdated && (
