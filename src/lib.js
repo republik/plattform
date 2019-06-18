@@ -128,7 +128,15 @@ export {
   HR
 } from './components/Typography'
 
-export * from './components/Discussion'
+export { commentComposerStorageKey, CommentComposer, CommentComposerPlaceholder } from './components/Discussion/Composer'
+export { SecondaryAction as CommentComposerSecondaryAction } from './components/Discussion/Internal/Composer'
+export { renderCommentMdast } from './components/Discussion/Internal/Comment/render'
+
+export { CommentList } from './components/Discussion/Tree'
+
+export { DiscussionContext } from './components/Discussion/DiscussionContext'
+
+
 
 export { useMediaQuery } from './lib/useMediaQuery'
 export { useBoundingClientRect } from './lib/useBoundingClientRect'

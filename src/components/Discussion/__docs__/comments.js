@@ -24,6 +24,7 @@ export const mkComment = (n, children, extraCount = 0) => ({
   }
 })
 
+export const comment0 = mkComment('0', [])
 export const comment1 = mkComment('1', [])
 
 export const comment2 = mkComment('2', [

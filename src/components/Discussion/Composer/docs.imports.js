@@ -76,6 +76,7 @@ export const CommentComposerPlayground = () => {
       {mode !== 'initial' && (
         <DiscussionContext.Provider value={discussionContextValue}>
           <CommentComposer
+            isRoot
             key={counter}
             t={t}
             initialText={initialText}

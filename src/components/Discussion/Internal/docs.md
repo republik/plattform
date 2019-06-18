@@ -246,7 +246,7 @@ The error message that is shown at the bottom of the `<CommentComposer>` if crea
 
 ```react|noSource
 <Composer.Error>
-  Sie sind zu früh. Bitte warten Sie, 161.446s bevor Sie wieder kommentieren.
+  Sie sind zu früh. Bitte warten Sie 2 Minuten, bevor Sie wieder kommentieren.
 </Composer.Error>
 ```
 

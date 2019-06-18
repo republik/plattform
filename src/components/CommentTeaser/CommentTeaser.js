@@ -168,7 +168,7 @@ export const CommentTeaser = ({
           >
             {t.elements(`styleguide/CommentTeaser/${parentIds && parentIds.length ? 'reply' : 'comment'}/link`, {
               link: (
-                <Link key={id} commentId={id} discussion={discussion} passHref>
+                <Link key={`link-${id}`} commentId={id} discussion={discussion} passHref>
                   <a {...linkRule}>
                     {inQuotes(discussion.title)}
                     {newPage && (

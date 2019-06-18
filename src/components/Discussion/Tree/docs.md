@@ -20,7 +20,7 @@ Two root-level components and one more that can be loaded.
   comments={{
     totalCount: 3,
     directTotalCount: 3,
-    nodes: [comments.comment1, comments.comment1]
+    nodes: [comments.comment0, comments.comment1]
   }}
 />
 ```

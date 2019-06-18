@@ -1,6 +1,5 @@
 import React from 'react'
 import { css } from 'glamor'
-import { renderMdast } from 'mdast-react-render'
 
 import { DiscussionContext } from '../../DiscussionContext'
 
@@ -12,13 +11,11 @@ import { mUp } from '../../../../theme/mediaQueries'
 import { useMediaQuery } from '../../../../lib/useMediaQuery'
 import { useBoundingClientRect } from '../../../../lib/useBoundingClientRect'
 
-import createCommentSchema from '../../../../templates/Comment'
-
 import { Context } from './Context'
+import { renderCommentMdast } from './render'
 
 import { COLLAPSED_HEIGHT } from '../../config'
 
-const schema = createCommentSchema()
 const highlightPadding = 7
 
 const buttonStyle = {
@@ -90,21 +87,6 @@ const styles = {
   })
 }
 
-const MissingNode = ({ node, children }) => {
-  return (
-    <span
-      style={{
-        textDecoration: `underline wavy ${colors.divider}`,
-        display: 'inline-block',
-        margin: 4
-      }}
-      title={`Markdown element "${node.type}" wird nicht unterstützt.`}
-    >
-      {children || node.value || node.identifier || '[…]'}
-    </span>
-  )
-}
-
 export const Body = ({ t, comment, context }) => {
   const { discussion, highlightedCommentId } = React.useContext(DiscussionContext)
   const { collapsable } = discussion
@@ -159,7 +141,7 @@ export const Body = ({ t, comment, context }) => {
             <Context {...context} />
           </div>
         )}
-        {content && renderMdast(content, schema, { MissingNode })}
+        {content && renderCommentMdast(content)}
       </div>
 
       {userCanEdit &&
