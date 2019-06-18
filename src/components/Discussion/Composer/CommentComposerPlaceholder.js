@@ -13,8 +13,10 @@ const styles = {
     padding: '8px',
     height: '56px',
     cursor: 'pointer',
-    '&:hover': {
-      color: colors.text
+    '@media (hover)': {
+      ':hover': {
+        color: colors.text
+      }
     }
   }),
   profilePicture: css({

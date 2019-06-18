@@ -34,20 +34,24 @@ const styles = {
     ...actionButtonStyle,
     color: colors.lightText,
     marginLeft: '16px',
-    '&:hover': {
-      color: colors.text
+    '@media (hover)': {
+      ':hover': {
+        color: colors.text
+      }
     }
   }),
   submitButton: css({
     ...actionButtonStyle,
     color: colors.primary,
     marginLeft: '16px',
-    '&[disabled]': {
+    '[disabled]': {
       color: colors.disabled,
       cursor: 'inherit'
     },
-    '&:not([disabled]):hover': {
-      color: colors.secondary
+    '@media (hover)': {
+      ':not([disabled]):hover': {
+        color: colors.secondary
+      }
     }
   }),
   secondaryActions: css({
@@ -62,8 +66,10 @@ const styles = {
     [mUp]: {
       margin: '0 8px'
     },
-    '&:hover': {
-      color: colors.text
+    '@media (hover)': {
+      ':hover': {
+        color: colors.text
+      }
     }
   })
 }

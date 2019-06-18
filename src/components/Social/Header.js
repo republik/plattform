@@ -75,8 +75,10 @@ const styles = {
     ':visited': {
       color: colors.text
     },
-    ':hover': {
-      color: colors.lightText
+    '@media (hover)': {
+      ':hover': {
+        color: colors.lightText
+      }
     }
   })
 }

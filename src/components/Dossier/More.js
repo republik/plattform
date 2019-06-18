@@ -16,8 +16,10 @@ const styles = {
     '& > a': {
       color: colors.text
     },
-    '& > a:hover': {
-      color: colors.lightText
+    '@media (hover)': {
+      '& > a:hover': {
+        color: colors.lightText
+      }
     }
   })
 }

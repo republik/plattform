@@ -36,8 +36,10 @@ export const headerActionStyle = ({ isExpanded }) =>
     flexShrink: 0,
     height: '40px',
     cursor: 'pointer',
-    '&:hover': {
-      color: colors.text
+    '@media (hover)': {
+      ':hover': {
+        color: colors.text
+      },
     },
     '& svg': {
       display: 'inline-block',
@@ -93,8 +95,10 @@ const styles = {
      * render the name as a <a> tag, but if it's not a public profile then
      * we don't set a href attribute.
      */
-    '[href]:hover': {
-      ...underline
+    '@media (hover)': {
+      '[href]:hover': {
+        ...underline
+      }
     }
   }),
   meta: css({
@@ -131,8 +135,10 @@ const styles = {
   linkUnderline: css({
     color: 'inherit',
     textDecoration: 'none',
-    ':hover': {
-      ...underline
+    '@media (hover)': {
+      ':hover': {
+        ...underline
+      }
     }
   }),
   timeago: css({

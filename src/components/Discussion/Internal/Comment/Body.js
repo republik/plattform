@@ -82,8 +82,10 @@ const styles = {
     color: colors.primary,
     height: '32px',
     lineHeight: '32px',
-    '&:hover': {
-      color: colors.secondary
+    '@media (hover)': {
+      ':hover': {
+        color: colors.secondary
+      }
     }
   })
 }

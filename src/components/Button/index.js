@@ -26,10 +26,12 @@ const buttonStyle = css(plainButtonRule, {
   border: `1px solid ${colors.secondary}`,
   borderRadius: 0,
   color: colors.secondary,
-  ':hover': {
-    backgroundColor: colors.primary,
-    borderColor: colors.primary,
-    color: '#fff'
+  '@media (hover)': {
+    ':hover': {
+      backgroundColor: colors.primary,
+      borderColor: colors.primary,
+      color: '#fff'
+    }
   },
   ':active': {
     backgroundColor: colors.secondary,
@@ -47,9 +49,11 @@ const primaryStyle = css({
   backgroundColor: colors.primary,
   borderColor: colors.primary,
   color: '#fff',
-  ':hover': {
-    backgroundColor: colors.secondary,
-    borderColor: colors.secondary
+  '@media (hover)': {
+    ':hover': {
+      backgroundColor: colors.secondary,
+      borderColor: colors.secondary
+    },
   },
   ':active': {
     backgroundColor: '#000',
@@ -66,10 +70,12 @@ const blackStyle = css({
   backgroundColor: 'transparent',
   borderColor: '#000',
   color: '#000',
-  ':hover': {
-    backgroundColor: '#000',
-    borderColor: '#000',
-    color: '#fff'
+  '@media (hover)': {
+    ':hover': {
+      backgroundColor: '#000',
+      borderColor: '#000',
+      color: '#fff'
+    },
   },
   ':active': {
     backgroundColor: '#000',
@@ -81,10 +87,12 @@ const whiteStyle = css({
   backgroundColor: 'transparent',
   borderColor: '#fff',
   color: '#fff',
-  ':hover': {
-    backgroundColor: '#fff',
-    borderColor: '#fff',
-    color: '#000'
+  '@media (hover)': {
+    ':hover': {
+      backgroundColor: '#fff',
+      borderColor: '#fff',
+      color: '#000'
+    },
   },
   ':active': {
     backgroundColor: '#fff',

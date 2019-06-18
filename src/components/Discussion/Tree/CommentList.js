@@ -31,11 +31,13 @@ const styles = {
        * On larger screens, hide the action button and reveal only on hover.
        */
       [mUp]: isExpanded && {
-        [`& [data-${Comment.headerActionStyle({ isExpanded })}]`]: {
-          display: 'none'
-        },
-        [`&:hover [data-${Comment.headerActionStyle({ isExpanded })}]`]: {
-          display: 'block'
+        '@media (hover)': {
+          [`& [data-${Comment.headerActionStyle({ isExpanded })}]`]: {
+            display: 'none'
+          },
+          [`&:hover [data-${Comment.headerActionStyle({ isExpanded })}]`]: {
+            display: 'block'
+          }
         }
       }
     }),
@@ -63,7 +65,7 @@ const styles = {
         width: config.indentSizeM
       },
 
-      '&::before': {
+      '::before': {
         display: 'block',
         content: '""',
         position: 'absolute',
@@ -77,11 +79,13 @@ const styles = {
           left: (config.indentSizeM - config.verticalLineWidth) / 2
         }
       },
-      '&:hover::before': {
-        background: colors.primary
+      '@media (hover)': {
+        ':hover::before': {
+          background: colors.primary
+        },
       },
       ...(drawLineEnd && {
-        '&::after': {
+        '::after': {
           display: 'block',
           content: '""',
           position: 'absolute',
@@ -96,8 +100,10 @@ const styles = {
             left: (config.indentSizeM - config.verticalLineWidth) / 2 - 2
           }
         },
-        '&:hover::after': {
-          background: colors.primary
+        '@media (hover)': {
+          ':hover::after': {
+            background: colors.primary
+          }
         }
       })
     })

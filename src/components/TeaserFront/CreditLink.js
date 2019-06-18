@@ -12,22 +12,28 @@ const CreditLink = ({ attributes, children, color, collapsedColor, ...props }) =
 
   const baseColorStyle = color ? {
     color,
-    ':hover': {
-      color: labColor.l > 50
-        ? labColor.darker(0.6)
-        : labColor.brighter(3)
+    '@media (hover)': {
+      ':hover': {
+        color: labColor.l > 50
+          ? labColor.darker(0.6)
+          : labColor.brighter(3)
+      }
     }
   } : {
     color: colors.text,
-    ':hover': {
-      color: colors.lightText
+    '@media (hover)': {
+      ':hover': {
+        color: colors.lightText
+      }
     }
   }
 
   const colorStyle = labCollapsedColor ? {
     color: collapsedColor,
-    ':hover': {
-      color: labCollapsedColor.l > 50 ? labCollapsedColor.darker(0.6) : labCollapsedColor.brighter(3)
+    '@media (hover)': {
+      ':hover': {
+        color: labCollapsedColor.l > 50 ? labCollapsedColor.darker(0.6) : labCollapsedColor.brighter(3)
+      },
     },
     [tUp]: {
       ...baseColorStyle

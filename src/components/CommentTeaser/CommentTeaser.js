@@ -40,8 +40,10 @@ const styles = {
   linkUnderline: css({
     color: 'inherit',
     textDecoration: 'none',
-    ':hover': {
-      ...underline
+    '@media (hover)': {
+      ':hover': {
+        ...underline
+      }
     }
   }),
   footer: css({

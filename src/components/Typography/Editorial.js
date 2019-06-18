@@ -205,8 +205,10 @@ export const link = css({
   ...underline,
   cursor: 'pointer',
   color: colors.text,
-  ':hover': {
-    color: colors.lightText
+  '@media (hover)': {
+    ':hover': {
+      color: colors.lightText
+    }
   }
 })
 export const A = ({ children, attributes, ...props }) => (

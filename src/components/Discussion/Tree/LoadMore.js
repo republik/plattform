@@ -20,17 +20,16 @@ const styles = {
     whiteSpace: 'nowrap',
     lineHeight: '40px',
     padding: 0,
-    '&:hover': {
-      color: colors.secondary
+    '@media (hover)': {
+      ':hover': {
+        color: colors.secondary
+      }
     }
   }),
   alternative: css({
     color: 'white',
     padding: '0 7px',
-    '&:hover': {
-      color: 'white'
-    },
-    '&::before': {
+    '::before': {
       position: 'absolute',
       content: '""',
       display: 'block',
@@ -41,8 +40,13 @@ const styles = {
       borderRadius: 10,
       background: colors.primary
     },
-    '&:hover::before': {
-      background: colors.secondary
+    '@media (hover)': {
+      ':hover': {
+        color: 'white'
+      },
+      ':hover::before': {
+        background: colors.secondary
+      },
     },
     '& > span': {
       position: 'relative'

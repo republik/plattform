@@ -41,9 +41,11 @@ const styles = {
     padding: '0 30px',
     opacity: 0,
     transition: 'opacity 0.1s linear',
-    ':hover': {
-      transition: 'opacity 0.5s linear',
-      opacity: '0.7'
+    '@media (hover)': {
+      ':hover': {
+        transition: 'opacity 0.5s linear',
+        opacity: '0.7'
+      }
     }
   }),
   navButton: css({

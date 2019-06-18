@@ -86,8 +86,10 @@ const styles = {
       width: 150,
       height: 150,
     },
-    ':hover': {
-      animationIterationCount: 'infinite'
+    '@media (hover)': {
+      ':hover': {
+        animationIterationCount: 'infinite'
+      }
     }
   }),
   col2: css({

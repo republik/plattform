@@ -8,8 +8,10 @@ export const link = {
   ':visited': {
     color: colors.primary
   },
-  ':hover': {
-    color: colors.secondary
+  '@media (hover)': {
+    ':hover': {
+      color: colors.secondary
+    }
   }
 }
 

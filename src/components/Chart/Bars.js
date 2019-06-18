@@ -103,8 +103,10 @@ const styles = {
   }),
   barLabelLink: css({
     ...underline,
-    ':hover': {
-      fill: colors.lightText
+    '@media (hover)': {
+      ':hover': {
+        fill: colors.lightText
+      }
     }
   }),
   inlineLabel: css({
