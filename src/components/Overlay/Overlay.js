@@ -17,6 +17,7 @@ const styles = {
 
     [mUp]: {
       overflowY: 'auto',
+      WebkitOverflowScrolling: 'touch'
     },
   }),
   inner: css({
@@ -26,6 +27,7 @@ const styles = {
     height: '100vh',
     boxShadow: '0 0 6px rgba(0,0,0,.2)',
     overflowY: 'auto',
+    WebkitOverflowScrolling: 'touch',
 
     [mUp]: {
       maxWidth: '600px',
@@ -51,10 +53,9 @@ class Overlay extends PureComponent {
     })
 
     // The code below is used to block scrolling of the page behind the overlay.
-    // The trick is to add overflow:hidden and block touchmove events
+    // Does not work on iOS, additionally blocking touchmove events would work
+    // but also prevent overflowing overlays from scrolling
     document.body.style.overflow = 'hidden'
-    this.onTouchMove = e => e.preventDefault()
-    document.body.addEventListener('touchmove', this.onTouchMove, { passive: false })
   }
 
   componentWillUnmount () {
@@ -62,7 +63,6 @@ class Overlay extends PureComponent {
 
     // Remove scroll block
     document.body.style.overflow = ''
-    document.body.removeEventListener('touchmove', this.onTouchMove)
   }
 
   render () {

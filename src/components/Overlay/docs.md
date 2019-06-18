@@ -50,6 +50,9 @@ state: {isOpen: false}
           This is a placeholder to make the overlay content taller than the viewport
           so that we can test the overflow behavior.
         </Interaction.P>
+        <Interaction.P>
+          The End.
+        </Interaction.P>
       </OverlayBody>
     </Overlay>
   )}
