@@ -28,6 +28,9 @@ const fieldStyle = css({
   borderBottom: `solid ${colors.disabled} ${borderWidth}px`,
   borderRadius: 0,
   color: colors.text,
+  ':disabled': {
+    color: colors.disabled
+  },
   ':focus': {
     borderColor: colors.primary
   }
@@ -92,6 +95,9 @@ const whiteStyle = css({
   borderColor: '#fff',
   ':focus': {
     borderColor: '#fff'
+  },
+  ':disabled': {
+    color: 'rgba(255,255,255,0.8)'
   }
 })
 const blackStyle = css({
@@ -100,6 +106,9 @@ const blackStyle = css({
   borderColor: '#000',
   ':focus': {
     borderColor: '#000'
+  },
+  ':disabled': {
+    color: 'rgba(0,0,0,0.8)'
   }
 })
 const arrowUpStyle = css({
@@ -153,7 +162,8 @@ class Field extends Component {
       renderInput,
       onInc,
       onDec,
-      icon
+      icon,
+      disabled
     } = this.props
 
     let simulationClassName
@@ -198,6 +208,7 @@ class Field extends Component {
     return (
       <label {...containerStyle}>
         {renderInput({
+          disabled,
           name,
           autoComplete,
           type,
@@ -229,7 +240,7 @@ class Field extends Component {
           ].filter(Boolean).join(' ')
         })}
         <span {...labelStyle}>{error || label}</span>
-        {hasDecrease && (
+        {!disabled && hasDecrease && (
           <ArrowDown
             fill={isFocused ? colors.primary : colors.disabled}
             size={fieldHeight / 2}
@@ -242,7 +253,7 @@ class Field extends Component {
               }
             }} />
         )}
-        {hasIncrease && (
+        {!disabled && hasIncrease && (
           <ArrowUp
             fill={isFocused ? colors.primary : colors.disabled}
             size={fieldHeight / 2}
@@ -266,8 +277,8 @@ class Field extends Component {
 Field.propTypes = {
   error: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   renderInput: PropTypes.func.isRequired,
-  isFocused: PropTypes.bool,
-  icon: PropTypes.node
+  icon: PropTypes.node,
+  disabled: PropTypes.bool
 }
 
 Field.defaultProps = {

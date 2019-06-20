@@ -28,7 +28,21 @@
   icon={<SearchIcon size={30} />} />
 ```
 
+```react|span-3
+<Field
+  disabled
+  label='Label' />
+```
+
+```react|span-3
+<Field
+  disabled
+  label='Label' value='Some Text' />
+```
+
 Normally `value` should be a string. Even if you pass in numbers, you'll receive strings on change by default.
+
+Disabled fields should usually be rendered in a faded container.
 
 Please note: `simulate` is for testing and documentation purposes only. It will not work in production environments.
 
