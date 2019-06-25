@@ -1,5 +1,5 @@
 {
-  "updated": "2019-05-20T15:51:33.878Z",
+  "updated": "2019-06-25T10:02:48.876Z",
   "title": "live",
   "data": [
     {
@@ -37,6 +37,10 @@
     {
       "key": "api/signin/mail/appNotice/subject",
       "value": "Anmelden via App"
+    },
+    {
+      "key": "api/signin/EMAIL_CODE/mail/subject",
+      "value": "Bestätigungszahl für Zugriff: {code}"
     },
     {
       "key": "api/signin/app/title",
@@ -161,6 +165,14 @@
     {
       "key": "api/auth/accessToken/pledgePackages/notAllowed",
       "value": "Der verwendete Token erlaubt es nicht das Packet {package} zu kaufen."
+    },
+    {
+      "key": "api/auth/emailCode/tokensExceeded",
+      "value": "Anzahl der gleichzeitig gültigen Tokens überschritten."
+    },
+    {
+      "key": "api/auth/emailCode/collison",
+      "value": "Kollision des zu generierenden Codes."
     }
   ]
 }

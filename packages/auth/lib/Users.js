@@ -148,7 +148,7 @@ const signIn = async (_email, context, pgdb, req, consents, _tokenType) => {
 
   const { email } = (user || { email: _email })
 
-  const { EMAIL_TOKEN } = TokenTypes
+  const { EMAIL_TOKEN, EMAIL_CODE } = TokenTypes
   // check if tokenType is enabled as firstFactor
   // email is always enabled
   const enabledTokenTypes = await enabledFirstFactors(email, pgdb)
@@ -156,7 +156,10 @@ const signIn = async (_email, context, pgdb, req, consents, _tokenType) => {
   if (!tokenType || tokenType !== EMAIL_TOKEN) {
     if (!tokenType) {
       tokenType = enabledTokenTypes[0]
-    } else if (enabledTokenTypes.indexOf(tokenType) === -1) {
+    } else if (
+      enabledTokenTypes.indexOf(tokenType) === -1 &&
+      tokenType !== EMAIL_CODE
+    ) {
       throw new TokenTypeNotEnabledError({ tokenType })
     }
   }
@@ -297,9 +300,13 @@ const authorizeSession = async ({ pgdb, tokens, email: emailFromQuery, signInHoo
       throw new SessionTokenValidationFailed({ email: emailFromQuery })
     }
 
-    const validated = await validateChallenge(token.type, { pgdb, session, user: existingUser, me }, token)
+    const validated = await validateChallenge(
+      token.type,
+      { pgdb, session, email: emailFromQuery, user: existingUser, req, me },
+      token
+    )
     if (!validated) {
-      console.error('wrong token')
+      console.error('unable to validate token')
       throw new SessionTokenValidationFailed({ email: emailFromQuery, ...token })
     }
     tokenTypes.push(token.type)
@@ -498,7 +505,7 @@ const updateUserEmail = async ({ pgdb, user, email }) => {
     await transaction.public.sessions.delete(
       {
         'sess @>': {
-          passport: {user: user.id}
+          passport: { user: user.id }
         }
       })
     await transaction.public.users.updateOne(
