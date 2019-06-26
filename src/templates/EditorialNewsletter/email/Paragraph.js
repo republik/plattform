@@ -1,6 +1,7 @@
 import React from 'react'
 import colors from '../../../theme/colors'
 import { fontFamilies } from '../../../theme/fonts'
+import { Editorial } from '../../../components/Typography'
 
 export const paragraphStyle = {
   color: colors.text,
@@ -15,26 +16,14 @@ export const linkStyle = {
   textDecorationSkip: 'ink'
 }
 
-const emphasisStyle = {
-  color: colors.text,
-  fontFamily: fontFamilies.serifBold,
-  fontWeight: 'normal'
-}
-const cursiveStyle = {
-  fontFamily: fontFamilies.serifItalic,
-  fontStyle: 'normal',
-  fontWeight: 'normal'
-}
-
 export const Br = () => <br />
-export const Emphasis = ({ children }) => (
-  <strong style={emphasisStyle}>{children}</strong>
-)
-export const Cursive = ({ children }) => <em style={cursiveStyle}>{children}</em>
 export const Link = ({ children, href, title }) => (
   <a href={href} title={title} style={linkStyle}>
     {children}
   </a>
 )
 
-export default ({ children }) => <p style={paragraphStyle}>{children}</p>
+// emails normally don't do glamor but
+// Editorial.fontRule is manually injected in ./Container
+export default ({ children }) =>
+  <p style={paragraphStyle} className={Editorial.fontRule}>{children}</p>

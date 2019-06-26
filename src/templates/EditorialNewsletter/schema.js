@@ -1,4 +1,5 @@
-import Paragraph, { Emphasis, Cursive, Link, Br } from './email/Paragraph'
+import React from 'react'
+import Paragraph, { Link, Br } from './email/Paragraph'
 import { H2 } from './email/Headlines'
 import HR from './email/HR'
 import Blockquote, { BlockquoteText, BlockquoteSource } from './email/Blockquote'
@@ -82,7 +83,7 @@ const createNewsletterSchema = ({
       link,
       {
         matchMdast: matchType('strong'),
-        component: Emphasis,
+        component: ({attributes, children}) => <strong {...attributes}>{children}</strong>,
         editorModule: 'mark',
         editorOptions: {
           type: 'STRONG',
@@ -91,7 +92,7 @@ const createNewsletterSchema = ({
       },
       {
         matchMdast: matchType('emphasis'),
-        component: Cursive,
+        component: ({attributes, children}) => <em {...attributes}>{children}</em>,
         editorModule: 'mark',
         editorOptions: {
           type: 'EMPHASIS',

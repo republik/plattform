@@ -1,7 +1,9 @@
 import React from 'react'
+import { cssFor } from 'glamor'
 import { Mso } from 'mdast-react-render/lib/email'
 import Header from './Header'
 import SG from '../../../theme/env'
+import { Editorial } from '../../../components/Typography'
 
 export default ({ children, attributes = {}, meta }) => (
   <html>
@@ -25,16 +27,10 @@ export default ({ children, attributes = {}, meta }) => (
         dangerouslySetInnerHTML={{
           __html: `
         ${SG.FONT_FACES}
+        ${cssFor(Editorial.fontRule)}
       `
         }}
       />
-      <Mso>
-        {`
-        <style>
-          strong { font-weight:bold !important; }
-        </style>
-        `}
-      </Mso>
     </head>
     <body style={{ margin: 0, padding: 0, backgroundColor: '#fff' }}>
       <Mso>

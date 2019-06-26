@@ -1,9 +1,10 @@
 import React from 'react'
 import { css } from 'glamor'
+import { fontStyles } from '../../../theme/fonts'
 
 const styles = {
   container: {
-    fontFamily: 'serif',
+    ...fontStyles.serifRegular,
     fontSize: 18,
     color: '#000',
     WebkitFontSmoothing: 'antialiased',
