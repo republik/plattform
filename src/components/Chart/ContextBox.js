@@ -77,9 +77,9 @@ export const ContextBoxValue = ({label, children}) => {
     return null
   }
   return (
-    <div {...labeledValueStyle}>
+    <div {...labeledValueStyle} {...Interaction.fontRule}>
       {!!label && <Fragment>
-        <Interaction.Emphasis>{label}</Interaction.Emphasis>
+        <strong>{label}</strong>
         <br />
       </Fragment>}
       {children}
