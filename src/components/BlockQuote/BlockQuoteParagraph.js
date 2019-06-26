@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { css } from 'glamor'
 
 import { mUp } from '../../theme/mediaQueries'
+import { fontRule } from '../Typography/Interaction'
 import { sansSerifRegular15, sansSerifRegular18 } from '../Typography/styles'
 
 const styles = {
@@ -28,8 +29,9 @@ const styles = {
 const BlockQuoteParagraph = ({ children, attributes }) => {
   return (
     <p
-      {...styles.quote}
       {...attributes}
+      {...styles.quote}
+      {...fontRule}
     >
       {children}
     </p>

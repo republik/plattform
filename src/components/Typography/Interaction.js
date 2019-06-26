@@ -3,8 +3,13 @@ import * as styles from './styles'
 import { css } from 'glamor'
 import colors from '../../theme/colors'
 import { mUp } from '../../theme/mediaQueries'
-import { fontFamilies } from '../../theme/fonts'
+import { fontStyles } from '../../theme/fonts'
 
+export const fontRule = css({
+  ...fontStyles.sansSerifRegular,
+  '& em, & i': fontStyles.sansSerifItalic,
+  '& strong, & b': fontStyles.sansSerifMedium
+})
 
 const interactionHeadline = css({
   margin: '0 0 12px 0',
@@ -75,22 +80,15 @@ export const H3 = ({children, ...props}) => (
 )
 
 export const P = ({children, ...props}) => (
-  <p {...props} {...interactionP}>{children}</p>
+  <p {...props} {...interactionP} {...fontRule}>{children}</p>
 )
 
-const emphasis = css({
-  fontWeight: 'normal',
-  fontFamily: fontFamilies.sansSerifMedium
-})
+const emphasis = css(fontStyles.sansSerifMedium)
 export const Emphasis = ({children, attributes, ...props}) => (
   <strong {...props} {...attributes} {...emphasis}>{children}</strong>
 )
 
-const cursive = css({
-  fontWeight: 'normal',
-  fontFamily: fontFamilies.sansSerifItalic,
-  fontStyle: 'normal'
-})
+const cursive = css(fontStyles.sansSerifItalic)
 export const Cursive = ({children, attributes, ...props}) => (
   <em {...props} {...attributes} {...cursive}>{children}</em>
 )

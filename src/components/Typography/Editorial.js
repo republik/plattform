@@ -2,11 +2,19 @@ import React from 'react'
 import * as styles from './styles'
 import { css } from 'glamor'
 import { mUp } from '../../theme/mediaQueries'
-import { fontFamilies } from '../../theme/fonts'
+import { fontStyles } from '../../theme/fonts'
 import { underline } from '../../lib/styleMixins'
 import colors from '../../theme/colors'
+import { fontRule as interactionFontRule } from './Interaction'
 
 export { List, UnorderedList as UL, OrderedList as OL, ListItem as LI } from '../List'
+
+export const fontRule = css({
+  ...fontStyles.serifRegular,
+  '& em, & i': fontStyles.serifItalic,
+  '& strong, & b': fontStyles.serifBold,
+  '& strong em, & em strong, & b i, & i b': fontStyles.serifBoldItalic
+})
 
 const headline = css({
   ...styles.serifTitle30,
@@ -61,7 +69,7 @@ const lead = css({
 })
 
 export const Lead = ({ children, attributes, ...props }) => (
-  <p {...attributes} {...props} {...lead}>
+  <p {...attributes} {...props} {...lead} {...fontRule}>
     {children}
   </p>
 )
@@ -148,7 +156,7 @@ const paragraph = css({
   }
 })
 export const P = ({ children, attributes, ...props }) => (
-  <p {...attributes} {...props} {...paragraph}>
+  <p {...attributes} {...props} {...paragraph} {...fontRule}>
     {children}
   </p>
 )
@@ -164,28 +172,21 @@ const question = css({
   color: colors.text
 })
 export const Question = ({ children, attributes, ...props }) => (
-  <p {...attributes} {...props} {...question}>
+  <p {...attributes} {...props} {...question} {...fontRule}>
     {children}
   </p>
 )
 
 export const Answer = P
 
-const emphasis = css({
-  fontWeight: 'normal',
-  fontFamily: fontFamilies.serifBold
-})
+const emphasis = css(fontStyles.serifBold)
 export const Emphasis = ({ children, attributes, ...props }) => (
   <strong {...attributes} {...props} {...emphasis}>
     {children}
   </strong>
 )
 
-const cursive = css({
-  fontWeight: 'normal',
-  fontStyle: 'normal',
-  fontFamily: fontFamilies.serifItalic
-})
+const cursive = css(fontStyles.serifItalic)
 export const Cursive = ({ children, attributes, ...props }) => (
   <em {...attributes} {...props} {...cursive}>
     {children}
@@ -227,7 +228,7 @@ const note = css({
 })
 
 export const Note = ({ children, attributes, ...props }) => (
-  <p {...attributes} {...props} {...note}>
+  <p {...attributes} {...props} {...note} {...interactionFontRule}>
     {children}
   </p>
 )

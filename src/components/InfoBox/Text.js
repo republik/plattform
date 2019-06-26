@@ -1,5 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { fontRule } from '../Typography/Interaction'
 import { sansSerifRegular15, sansSerifRegular18 } from '../Typography/styles'
 import { css } from 'glamor'
 import colors from '../../theme/colors'
@@ -22,7 +23,7 @@ const styles = {
 
 export const Text = ({ children, attributes }) => {
   return (
-    <p {...attributes} {...textAttributes} {...styles.text}>
+    <p {...attributes} {...textAttributes} {...styles.text} {...fontRule}>
       {children}
     </p>
   )

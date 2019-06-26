@@ -13,6 +13,7 @@ import colors from '../../theme/colors'
 
 import { mUp } from '../../theme/mediaQueries'
 import { sansSerifMedium19, sansSerifMedium22, sansSerifRegular16, sansSerifRegular19 } from '../Typography/styles'
+import { fontRule } from '../Typography/Interaction'
 
 export const ReactCharts = {
   Bar,
@@ -71,7 +72,7 @@ export const ChartTitle = ({children, ...props}) => (
 )
 
 export const ChartLead = ({children, ...props}) => (
-  <p {...props} {...styles.p}>{children}</p>
+  <p {...props} {...styles.p} {...fontRule}>{children}</p>
 )
 
 class Chart extends Component {

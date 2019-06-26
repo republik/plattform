@@ -211,7 +211,9 @@ We use `text-decoration-skip: ink` to avoid `g`-conflicts.
 
 ```react
 <Editorial.Lead>
-  Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores.
+  Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.
+  {' '}
+  At vero eos et accusam et justo <em>duo dolores</em>.
 </Editorial.Lead>
 ```
 
@@ -248,7 +250,7 @@ We use `text-decoration-skip: ink` to avoid `g`-conflicts.
     What happened to Mr. Samsa?
   </Editorial.Question>
   <Editorial.Answer>
-    <Editorial.Emphasis>Franz Kafka:</Editorial.Emphasis> One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed into a horrible vermin. He lay on his armour-like back, and if he lifted his head a little he could see his brown belly, slightly domed and divided by arches into stiff sections.
+    <strong>Franz Kafka:</strong> One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed into a horrible vermin. He lay on his armour-like back, and if he lifted his head a little he could see his brown belly, slightly domed and divided by arches into stiff sections.
   </Editorial.Answer>
   <Editorial.Question>
     What happened next?
@@ -271,25 +273,25 @@ We use `text-decoration-skip: ink` to avoid `g`-conflicts.
 ```
 
 
-### Emphasis
+### Bold and Cursive
+
+`Editorial.P`, `Editorial.Question` and `Editorial.Lead` support `strong` and `em` child elements. You can also apply `Editorial.fontRule` to arbitrary elements:
 
 ```react
-<Editorial.P>
+<div {...Editorial.fontRule}>
   Ladies and Gentlemen,
   {' '}
-  <Editorial.Emphasis>es ist Zeit.</Editorial.Emphasis>
-</Editorial.P>
-```
-
-### Cursive
-
-```react
-<Editorial.P>
-  Let's go!
+  <strong>es ist Zeit.</strong>
   {' '}
-  <Editorial.Cursive>Clara</Editorial.Cursive>
-</Editorial.P>
+  Es ist <em>heiss.</em>
+  {' '}
+  So en <strong><em>scheiss</em></strong>,
+  {' '}
+  mit <em><strong>Schweiss</strong></em>.
+</div>
 ```
+
+`Editorial.Emphasis` and `Editorial.Cursive` are deprecated. Use `Editorial.fontRule` instead.
 
 ### Note
 
@@ -348,25 +350,25 @@ UI elements and structured information uses the sans serif cuts. Without margins
 </Interaction.P>
 ```
 
-### Emphasis
+### Bold and Cursive
+
+`Interaction.P` supports `strong` and `em` child elements:
 
 ```react
 <Interaction.P>
   Ladies and Gentlemen,
   {' '}
-  <Interaction.Emphasis>es ist Zeit.</Interaction.Emphasis>
-</Interaction.P>
-```
-
-### Cursive
-
-```react
-<Interaction.P>
+  <strong>es ist Zeit.</strong>
+  <br />
   Let's go!
   {' '}
-  <Interaction.Cursive>Clara</Interaction.Cursive>
+  <em>Clara</em>
 </Interaction.P>
 ```
+
+You can also apply `Interaction.fontRule` to arbitrary elements.
+
+`Interaction.Emphasis` and `Interaction.Cursive` are deprecated. Use `Interaction.fontRule` instead.
 
 ## Generic
 
@@ -377,7 +379,7 @@ UI elements and structured information uses the sans serif cuts. Without margins
   <Interaction.P>40 µg/m<Sup>3</Sup></Interaction.P>
   <Editorial.P>CO<Sub>2eq</Sub></Editorial.P>
   <Editorial.P>
-    One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed into a horrible vermin. He lay on his armour-like back, and if he lifted his head a little he could see <Editorial.Emphasis>40 µg/m<Sup>3</Sup> and CO<Sub>2eq</Sub></Editorial.Emphasis> and <Editorial.A href='#'>40 µg/m<Sup>3</Sup> and CO<Sub>2eq</Sub></Editorial.A>.
+    One morning, when Gregor Samsa <em>woke from troubled dreams</em>, he found himself transformed in his bed into a horrible vermin. He lay on his armour-like back, and if he lifted his head a little he could see <strong>40 µg/m<Sup>3</Sup> and CO<Sub>2eq</Sub></strong> and <Editorial.A href='#'>40 µg/m<Sup>3</Sup> and CO<Sub>2eq</Sub></Editorial.A>.
   </Editorial.P>
   <Editorial.P>
     <Sub>One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed into a horrible vermin. He lay on his armour-like back, and if he lifted his head a little he could see his brown belly.</Sub>

@@ -79,10 +79,10 @@ const link = {
   rules: globalInlines
 }
 
-const editorialFormatting = [
+const paragraphFormatting = [
   {
     matchMdast: matchType('strong'),
-    component: Editorial.Emphasis,
+    component: ({attributes, children}) => <strong {...attributes}>{children}</strong>,
     editorModule: 'mark',
     editorOptions: {
       type: 'STRONG',
@@ -92,13 +92,24 @@ const editorialFormatting = [
   },
   {
     matchMdast: matchType('emphasis'),
-    component: Editorial.Cursive,
+    component: ({attributes, children}) => <em {...attributes}>{children}</em>,
     editorModule: 'mark',
     editorOptions: {
       type: 'EMPHASIS',
       mdastType: 'emphasis'
     },
     rules: globalInlines
+  }
+]
+const paragraphRules = [
+  ...globalInlines,
+  ...paragraphFormatting,
+  {
+    ...link,
+    rules: [
+      ...globalInlines,
+      ...paragraphFormatting
+    ]
   }
 ]
 
@@ -140,17 +151,7 @@ const paragraph = {
     formatButtonText: 'Paragraph'
   },
   props: getProgressProps,
-  rules: [
-    ...globalInlines,
-    ...editorialFormatting,
-    {
-      ...link,
-      rules: [
-        ...globalInlines,
-        ...editorialFormatting
-      ]
-    }
-  ]
+  rules: paragraphRules
 }
 
 const figureImage = {
@@ -281,39 +282,6 @@ const centerFigure = {
   ]
 }
 
-const interactionFormatting = [
-  {
-    matchMdast: matchType('strong'),
-    component: Interaction.Emphasis,
-    editorModule: 'mark',
-    editorOptions: {
-      type: 'STRONG', // ToDo: Change to INTERACTIONSTRONG (pending contextual editor UI)
-      mdastType: 'strong'
-    }
-  },
-  {
-    matchMdast: matchType('emphasis'),
-    component: Interaction.Cursive,
-    editorModule: 'mark',
-    editorOptions: {
-      type: 'EMPHASIS', // ToDo: Change to INTERACTIONEMPHASIS (pending contextual editor UI)
-      mdastType: 'emphasis'
-    }
-  }
-]
-
-const interactionParagraphRules = [
-  ...globalInlines,
-  ...interactionFormatting,
-  {
-    ...link,
-    rules: [
-      ...globalInlines,
-      ...interactionFormatting
-    ]
-  }
-]
-
 const infoBox = {
   matchMdast: matchInfoBox,
   component: InfoBox,
@@ -373,7 +341,7 @@ const infoBox = {
         type: 'INFOP',
         placeholder: 'Infotext'
       },
-      rules: interactionParagraphRules
+      rules: paragraphRules
     }
   ]
 }
@@ -406,7 +374,7 @@ const blockQuote = {
         {
           matchMdast: matchParagraph,
           component: ({ children }) => children,
-          rules: interactionParagraphRules
+          rules: paragraphRules
         }
       ]
     },
@@ -1013,7 +981,7 @@ const createSchema = ({
                       afterType: 'PARAGRAPH',
                       insertAfterType: 'CENTER'
                     },
-                    rules: interactionParagraphRules
+                    rules: paragraphRules
                   }
                 ]
               },
@@ -1053,7 +1021,7 @@ const createSchema = ({
                       placeholder: 'Lead',
                       isStatic: true
                     },
-                    rules: interactionParagraphRules
+                    rules: paragraphRules
                   },
                   {
                     matchMdast: matchType('code'),
@@ -1090,7 +1058,7 @@ const createSchema = ({
                       afterType: 'PARAGRAPH',
                       insertAfterType: 'CENTER'
                     },
-                    rules: interactionParagraphRules
+                    rules: paragraphRules
                   }
                 ]
               },
