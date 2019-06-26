@@ -14,10 +14,7 @@ const styles = {
       ...sansSerifMedium18,
       marginBottom: '-14px'
     },
-    color: colors.text,
-    ':nth-of-type(2)': {
-      marginTop: 0
-    }
+    color: colors.text
   })
 }
 
