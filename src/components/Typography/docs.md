@@ -1,29 +1,24 @@
 ## Webfonts
 
-We have seven font cuts:
+We have several font cuts:
 
 - `serifTitle`
 - `serifRegular`
 - `serifItalic`
 - `serifBold`
+- `serifBoldItalic`
 - `sansSerifRegular`
 - `sansSerifItalic`
 - `sansSerifMedium`
 - `cursiveTitle`
 
-Full font family definitions are available as `fontFamilies` export from the style guide.
+Full font style definitions are available as `fontStyles` export from the style guide. The styles are made available as plain JavaScript objects which can be spread into glamors `css`, or used directly in inline styles. You should never overwrite `font-family`, `font-style` or `font-weight`.
 
 ```code|lang-js
-import {fontFamilies} from '@project-r/styleguide'
+import { fontStyles } from '@project-r/styleguide'
 ```
 
-```react|no-source
-<pre style={{overflow: 'auto'}}>
-    <code>
-    {JSON.stringify(fontFamilies, null, 2)}
-    </code>
-</pre>
-```
+The old `fontFamilies` export is deprecated and should no longer be used.
 
 A helper function to generate the `@font-face` css is available as `fontFaces`.
 
@@ -33,19 +28,17 @@ A helper function to generate the `@font-face` css is available as `fontFaces`.
 2. Include the following in your `pages/_document.js`:
 
 ```code|lang-js
-import {fontFaces} from '@project-r/styleguide'
+import { fontFaces } from '@project-r/styleguide'
 
 <style dangerouslySetInnerHTML={{ __html: fontFaces() }} />
 ```
 
-## Font styles
+## Font Styles Sizes
 
-A font style combines a font cut with a font size, line height, letter spacing, text transform etc. The styles are made available as plain JavaScript objects which can be mixed into glamor css objects, or used directly in inline styles.
-
-Font styles don't include colors, margins, nor do they make use of media queries.
+Prebuild styles with font sizes with line heights are also available. And should be used in most cases.
 
 ```code|lang-js
-import {colors: {text}, fontStyles: {serifRegular21}} from '@project-r/styleguide'
+import { colors: { text }, fontStyles: { serifRegular21 } } from '@project-r/styleguide'
 
 <div {...css({...serifRegular21, color: text})}>…</div>
 ```

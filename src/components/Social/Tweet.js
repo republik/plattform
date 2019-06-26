@@ -4,7 +4,10 @@ import { css } from 'glamor'
 import colors from '../../theme/colors'
 import { mUp } from '../../theme/mediaQueries'
 import {
-  link,
+  linkStyle,
+  linkRule
+} from '../Typography'
+import {
   sansSerifRegular15,
   sansSerifRegular18
 } from '../Typography/styles'
@@ -33,9 +36,7 @@ const styles = {
       ...sansSerifRegular18
     },
     color: colors.text,
-    '& a': {
-      ...link
-    }
+    '& a': linkStyle
   }),
   mediaContainer: css({
     display: 'inline-block',
@@ -81,7 +82,7 @@ const Tweet = ({
           </a>
           {more && (
             <FigureCaption>
-              <a href={url} {...css(link)}>
+              <a href={url} {...linkRule}>
                 {more}
               </a>
             </FigureCaption>

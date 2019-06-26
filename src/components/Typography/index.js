@@ -1,9 +1,12 @@
 import React from 'react'
-import * as styles from './styles'
+import colors from '../../theme/colors'
+import { mUp } from '../../theme/mediaQueries'
+import { fontStyles as _fontStyles } from '../../theme/fonts'
+import * as _fontStyleSizes from './styles'
 import * as _Editorial from './Editorial'
 import * as _Interaction from './Interaction'
 import * as _Scribble from './Scribble'
-import {css} from 'glamor'
+import { css } from 'glamor'
 
 // Namespaced exports.
 export const Editorial = {..._Editorial}
@@ -11,36 +14,113 @@ export const Interaction = {..._Interaction}
 export const Scribble = {..._Scribble}
 
 // Direct exports.
-export const fontStyles = styles
+export const fontStyles = {
+  ..._fontStyles,
+  ..._fontStyleSizes
+}
 
-export const linkRule = css(styles.link)
+export const linkStyle = {
+  textDecoration: 'none',
+  color: colors.primary,
+  ':visited': {
+    color: colors.primary
+  },
+  '@media (hover)': {
+    ':hover': {
+      color: colors.secondary
+    }
+  }
+}
+export const linkRule = css(linkStyle)
+
+const styles = {
+  h1: css({
+    ...fontStyles.serifBold36,
+    [mUp]: {
+      ...fontStyles.serifBold52,
+    },
+    color: colors.text,
+    margin: '30px 0 20px 0',
+    ':first-child': {
+      marginTop: 0
+    },
+    ':last-child': {
+      marginBottom: 0
+    }
+  }),
+  h2: css({
+    ...fontStyles.serifBold19,
+    [mUp]: {
+      ...fontStyles.serifBold24
+    },
+    color: colors.text,
+    margin: '30px 0 20px 0',
+    ':first-child': {
+      marginTop: 0
+    },
+    ':last-child': {
+      marginBottom: 0
+    }
+  }),
+  lead: css({
+    ...fontStyles.serifRegular25,
+    color: colors.text,
+    margin: '20px 0 20px 0'
+  }),
+  p: css({
+    color: colors.text,
+    ...fontStyles.serifRegular16,
+    [mUp]: {
+      ...fontStyles.serifRegular21,
+    },
+    margin: '20px 0 20px 0',
+    ':first-child': {
+      marginTop: 0
+    },
+    ':last-child': {
+      marginBottom: 0
+    }
+  }),
+  hr: css({
+    border: 0,
+    height: 1,
+    color: colors.divider,
+    backgroundColor: colors.divider,
+    marginTop: 30,
+    marginBottom: 30
+  }),
+  label: css({
+    ...fontStyles.sansSerifRegular14,
+    color: colors.secondary
+  }),
+  quote: css({
+    ...fontStyles.sansSerifRegular21,
+    color: colors.text,
+  })
+}
+
 export const A = ({children, ...props}) => (
   <a {...props} {...linkRule}>{children}</a>
 )
 
-const h1Rule = css(styles.h1)
 export const H1 = ({children, ...props}) => (
-  <h1 {...props} {...h1Rule}>{children}</h1>
+  <h1 {...props} {...styles.h1}>{children}</h1>
 )
 
-const h2Rule = css(styles.h2)
 export const H2 = ({children, ...props}) => (
-  <h2 {...props} {...h2Rule}>{children}</h2>
+  <h2 {...props} {...styles.h2}>{children}</h2>
 )
 
-const leadRule = css(styles.lead)
 export const Lead = ({children, ...props}) => (
-  <p {...props} {...leadRule}>{children}</p>
+  <p {...props} {...styles.lead}>{children}</p>
 )
 
-const pRule = css(styles.p)
 export const P = ({children, ...props}) => (
-  <p {...props} {...pRule}>{children}</p>
+  <p {...props} {...styles.p}>{children}</p>
 )
 
-const labelRule = css(styles.label)
 export const Label = ({children, ...props}) => (
-  <span {...props} {...labelRule}>{children}</span>
+  <span {...props} {...styles.label}>{children}</span>
 )
 
 const subSupStyles = {
@@ -66,16 +146,12 @@ export const Sub = ({children, attributes}) =>
 export const Sup = ({children, attributes}) =>
   <sup {...attributes} {...subSupStyles.base} {...subSupStyles.sup}>{children}</sup>
 
-const hrRule = css(styles.hr)
 export const HR = ({attributes}) =>
-  <hr {...attributes} {...hrRule} />
-
-const quoteRule = css(styles.quote)
-const quoteTextRule = css(styles.quoteText)
+  <hr {...attributes} {...styles.hr} />
 
 export const Quote = ({children, source, ...props}) => (
-  <blockquote {...props} {...quoteRule}>
-    <div {...quoteTextRule}>«{children}»</div>
+  <blockquote {...props} {...styles.quote}>
+    <div>«{children}»</div>
     {!!source && <cite>{source}</cite>}
   </blockquote>
 )

@@ -1,13 +1,11 @@
 import { createElement } from 'react'
 import { css } from 'glamor'
-import { link } from '../Typography/styles'
+import { linkStyle } from '../Typography'
 import PropTypes from 'prop-types'
 
 const styles = {
   default: css({
-    '& a': {
-      ...link
-    },
+    '& a': linkStyle,
     '& ul, & ol': {
       overflow: 'hidden'
     }

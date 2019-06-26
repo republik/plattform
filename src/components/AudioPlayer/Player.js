@@ -8,7 +8,8 @@ import { timeFormat } from '../../lib/timeFormat'
 import warn from '../../lib/warn'
 import { breakoutStyles } from '../Center'
 import { InlineSpinner } from '../Spinner'
-import { link, sansSerifRegular12, sansSerifRegular15 } from '../Typography/styles'
+import { linkRule } from '../Typography'
+import { sansSerifRegular12, sansSerifRegular15 } from '../Typography/styles'
 import Play from 'react-icons/lib/md/play-arrow'
 import Pause from 'react-icons/lib/md/pause'
 import Rewind from 'react-icons/lib/md/skip-previous'
@@ -169,8 +170,7 @@ const styles = {
       lineHeight: '25px',
     }
   }),
-  retry: css({
-    ...link,
+  retry: css(linkRule, {
     cursor: 'pointer'
   })
 }

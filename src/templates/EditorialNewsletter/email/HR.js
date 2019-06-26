@@ -1,4 +1,13 @@
 import React from 'react'
-import { hr } from '../../../components/Typography/styles'
+import colors from '../../../theme/colors'
 
-export default () => <hr style={hr} />
+const hrStyle = {
+  border: 0,
+  height: 1,
+  color: colors.divider,
+  backgroundColor: colors.divider,
+  marginTop: 30,
+  marginBottom: 30
+}
+
+export default () => <hr style={hrStyle} />
