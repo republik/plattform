@@ -12,7 +12,7 @@ const styles = {
     marginBottom: '-12px',
     [mUp]: {
       ...sansSerifMedium18,
-      marginBottom: '-15px'
+      marginBottom: '-14px'
     },
     color: colors.text,
     ':nth-of-type(2)': {
