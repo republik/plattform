@@ -5,3 +5,5 @@ export {
 } from './InfoBox'
 export { default as InfoBoxText } from './Text'
 export { default as InfoBoxTitle } from './Title'
+export { default as InfoBoxListItem } from './ListItem'
+export { default as InfoBoxSubhead } from './Subhead'

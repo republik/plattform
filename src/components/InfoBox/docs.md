@@ -167,3 +167,39 @@ Supported props:
   <Editorial.P>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores.</Editorial.P>
 </Center>
 ```
+
+### `<InfoBoxSubhead />` and `<InfoBoxListItem />`
+
+```react
+<InfoBox>
+  <InfoBoxTitle>This is a box title</InfoBoxTitle>
+  <InfoBoxSubhead>
+    This is a subhead
+  </InfoBoxSubhead>
+  <Editorial.UL>
+    <InfoBoxListItem>
+      <p>He lay on his armour-like back, and if he lifted his head a little he could see his brown belly, slightly domed and divided by arches into stiff sections.</p>
+    </InfoBoxListItem>
+    <InfoBoxListItem>
+      <p>The bedding was hardly able to cover it and seemed ready to slide off any moment. His many legs, pitifully thin compared with the size of the rest of him, waved about helplessly as he looked.</p>
+    </InfoBoxListItem>
+    <InfoBoxListItem>
+      <p>One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed into a horrible vermin.</p>
+    </InfoBoxListItem>
+  </Editorial.UL>
+    <InfoBoxSubhead>
+    This is a subhead
+  </InfoBoxSubhead>
+  <Editorial.OL>
+    <InfoBoxListItem>
+      <p>He lay on his armour-like back, and if he lifted his head a little he could see his brown belly, slightly domed and divided by arches into stiff sections.</p>
+    </InfoBoxListItem>
+    <InfoBoxListItem>
+      <p>The bedding was hardly able to cover it and seemed ready to slide off any moment. His many legs, pitifully thin compared with the size of the rest of him, waved about helplessly as he looked.</p>
+    </InfoBoxListItem>
+    <InfoBoxListItem>
+      <p>One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed into a horrible vermin.</p>
+    </InfoBoxListItem>
+  </Editorial.OL>
+</InfoBox>
+```

@@ -32,7 +32,9 @@ export { default as LazyImage } from './components/LazyLoad/Image'
 export {
   InfoBox,
   InfoBoxText,
-  InfoBoxTitle
+  InfoBoxTitle,
+  InfoBoxSubhead,
+  InfoBoxListItem
 } from './components/InfoBox'
 export {
   PullQuote,

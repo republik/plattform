@@ -613,6 +613,34 @@ Zweitens: ich habe erklärt mit diese zwei Spieler: nach Dortmund brauchen viell
 `}</Markdown>
 ```
 
+### With List
+
+```react|noSource
+<Markdown schema={schema}>{`
+<section><h6>CENTER</h6>
+
+<section><h6>INFOBOX</h6>
+
+### Boxentitel
+
+#### Boxenzwischentitel
+
+- Jemand mußte Josef K. verleumdet haben, denn ohne daß er etwas Böses getan hätte, wurde er eines Morgens verhaftet.
+- Die Köchin der Frau Grubach, seiner Zimmervermieterin, die ihm jeden Tag gegen acht Uhr früh das Frühstück brachte, kam diesmal nicht.
+- Das war noch niemals geschehen. K. wartete noch ein Weilchen, sah von seinem Kopfkissen aus die alte Frau, die ihm gegenüber wohnte und die ihn mit einer an ihr ganz ungewöhnlichen Neugierde beobachtete, dann aber, gleichzeitig befremdet und hungrig, läutete er.
+
+#### Boxenzwischentitel
+
+1. Sofort klopfte es und ein Mann, den er in dieser Wohnung noch niemals gesehen hatte, trat ein.
+2. Er war schlank und doch fest gebaut, er trug ein anliegendes schwarzes Kleid, das, ähnlich den Reiseanzügen, mit verschiedenen Falten, Taschen, Schnallen, Knöpfen und einem Gürtel versehen war.
+3. Und infolgedessen, ohne daß man sich darüber klar wurde, wozu es dienen sollte, besonders praktisch erschien.
+
+<hr /></section>
+
+<hr /></section>
+`}</Markdown>
+```
+
 ## Tweet
 
 ```react|noSource
