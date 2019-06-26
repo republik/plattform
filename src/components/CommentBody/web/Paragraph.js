@@ -1,7 +1,6 @@
 import React from 'react'
 import { css } from 'glamor'
 
-import * as Editorial from '../../Typography/Editorial'
 import { mUp } from '../../../theme/mediaQueries'
 import {
   sansSerifRegular12,
@@ -48,7 +47,7 @@ const Paragraph = ({ children }) => (
 )
 
 export const Heading = ({ children }) => (
-  <Paragraph><Editorial.Emphasis>{children}</Editorial.Emphasis></Paragraph>
+  <Paragraph><strong>{children}</strong></Paragraph>
 )
 
 export const Definition = ({ children }) => (

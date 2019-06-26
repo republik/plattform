@@ -13,7 +13,7 @@ import {
   CommentBodyListItem,
   CommentBodyParagraph
 } from '../../components/CommentBody/web'
-import * as Editorial from '../../components/Typography/Editorial'
+import { Editorial } from '../../components/Typography'
 
 const createSchema = ({ ...args } = {}) => {
   return createCommentSchema({
@@ -23,9 +23,7 @@ const createSchema = ({ ...args } = {}) => {
     BlockQuoteParagraph: CommentBodyBlockQuoteParagraph,
     Code: CommentBodyCode,
     Container: CommentBodyContainer,
-    Cursive: Editorial.Cursive,
     Definition: CommentBodyDefinition,
-    Emphasis: Editorial.Emphasis,
     Heading: CommentBodyHeading,
     Link: Editorial.A,
     List: CommentBodyList,

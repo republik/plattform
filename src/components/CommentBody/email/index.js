@@ -20,9 +20,7 @@ export {
 export {
   Paragraph,
   Code,
-  Cursive,
   Definition,
-  Emphasis,
   Heading,
   Link,
   StrikeThrough

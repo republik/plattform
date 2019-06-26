@@ -3,6 +3,7 @@ import { css } from 'glamor'
 
 import { mUp } from '../../../theme/mediaQueries'
 import { serifRegular14, serifRegular16 } from '../../Typography/styles'
+import { Editorial } from '../../Typography'
 
 const styles = {
   container: css({
@@ -20,7 +21,7 @@ const styles = {
 }
 
 export default ({ children }) => (
-  <div {...styles.container}>
+  <div {...styles.container} {...Editorial.fontRule}>
     {children}
   </div>
 )

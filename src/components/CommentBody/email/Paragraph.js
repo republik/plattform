@@ -16,18 +16,6 @@ export const linkStyle = {
   textDecorationSkip: 'ink'
 }
 
-const emphasisStyle = {
-  color: colors.text,
-  fontFamily: fontFamilies.serifBold,
-  fontWeight: 'normal'
-}
-
-const cursiveStyle = {
-  fontFamily: fontFamilies.serifItalic,
-  fontStyle: 'normal',
-  fontWeight: 'normal'
-}
-
 const strikeThroughStyle = {
   textDecoration: 'line-through'
 }
@@ -46,14 +34,6 @@ const definitionStyle = {
   fontSize: '15px',
   margin: '10px 0'
 }
-
-export const Emphasis = ({ children }) => (
-  <strong style={emphasisStyle}>{children}</strong>
-)
-
-export const Cursive = ({ children }) => (
-  <em style={cursiveStyle}>{children}</em>
-)
 
 export const Link = ({ children, href, title }) => (
   <a href={href} title={title} style={linkStyle}>
@@ -78,5 +58,5 @@ export const Paragraph = ({ children }) => (
 )
 
 export const Heading = ({ children }) => (
-  <Paragraph><Emphasis>{children}</Emphasis></Paragraph>
+  <Paragraph><strong>{children}</strong></Paragraph>
 )

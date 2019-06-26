@@ -12,9 +12,11 @@ const webSchema = createCommentSchema()
 
 A comment with [a link](https://example.com/ "Mit Titel"), an autolinked URL https://www.republik.ch, a long autolinked URL https://www.republik.ch/01234567890123456789012345678901234567890123456789.png, ![an image](/static/landscape.jpg?size=2000x1411 "Mit Bildtitel") and [...] an ellipsis.
 
-Emphasis (italic) with *asterisks* or _underscores_.
+Cursive (italic) with *asterisks* or _underscores_.
 
-Strong emphasis (bold) with **asterisks** or __underscores__.
+Strong (bold) with **asterisks** or __underscores__.
+
+Combined _**cursive bold**_.
 
 Strikethrough uses two tildes. ~~Scratch this.~~
 
@@ -121,9 +123,11 @@ const emailSchema = createCommentSchema()
 
 A comment with [a link](https://example.com/ "Mit Titel"), an autolinked URL https://www.republik.ch, a long autolinked URL https://www.republik.ch/01234567890123456789012345678901234567890123456789.png, ![an image](/static/landscape.jpg?size=2000x1411 "Mit Bildtitel") and [...] an ellipsis.
 
-Emphasis (italic) with *asterisks* or _underscores_.
+Cursive (italic) with *asterisks* or _underscores_.
 
-Strong emphasis (bold) with **asterisks** or __underscores__.
+Strong (bold) with **asterisks** or __underscores__.
+
+Combined _**cursive bold**_.
 
 Strikethrough uses two tildes. ~~Scratch this.~~
 

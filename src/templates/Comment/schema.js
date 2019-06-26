@@ -17,9 +17,7 @@ const createCommentSchema = ({
   BlockQuoteParagraph,
   Code,
   Container,
-  Cursive,
   Definition,
-  Emphasis,
   Heading,
   Link,
   List,
@@ -107,11 +105,11 @@ const createCommentSchema = ({
     },
     {
       matchMdast: matchType('emphasis'),
-      component: Cursive
+      component: ({children}) => <em>{children}</em>
     },
     {
       matchMdast: matchType('strong'),
-      component: Emphasis
+      component: ({children}) => <strong>{children}</strong>
     },
     {
       matchMdast: matchType('delete'),
