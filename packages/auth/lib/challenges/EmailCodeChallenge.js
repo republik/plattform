@@ -20,7 +20,6 @@ module.exports = {
       {
         type: Type,
         email,
-        'sessionId !=': null,
         'expiresAt >=': new Date()
       }
     ))
