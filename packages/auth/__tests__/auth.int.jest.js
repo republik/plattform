@@ -45,7 +45,7 @@ test('sign in', async () => {
   expect(userId).toEqual(Users.Unverified.id)
   expect(result.signInResult.data.signIn.tokenType).toBe('EMAIL_TOKEN')
   const tokens = await pgDatabase().public.tokens.find({ 'expiresAt >': new Date(), 'email': Users.Unverified.email })
-  const sessions = await pgDatabase().public.sessions.find({'sess @>': { 'email': Users.Unverified.email }})
+  const sessions = await pgDatabase().public.sessions.find({ 'sess @>': { 'email': Users.Unverified.email } })
   expect(tokens.length).toBe(1)
   expect(sessions.length).toBe(1)
 })
@@ -93,8 +93,8 @@ test('deny a session', async () => {
   const { payload } = await signIn({ user: Users.Unverified, skipAuthorization: true })
   const a = await denySession({ user: Users.Unverified, type: 'EMAIL_TOKEN', payload })
   expect(a).toBeTruthy()
-  const tokens = await pgDatabase().public.tokens.find({'expiresAt >': new Date()})
-  const sessions = await pgDatabase().public.sessions.find({'sess @>': { 'expire >': new Date() }})
+  const tokens = await pgDatabase().public.tokens.find({ 'expiresAt >': new Date() })
+  const sessions = await pgDatabase().public.sessions.find({ 'sess @>': { 'expire >': new Date() } })
   expect(tokens.length).toBe(0)
   expect(sessions.length).toBe(0)
 })
@@ -114,7 +114,7 @@ test('sign in with tokenType APP', async () => {
   expect(meDevice && meDevice.data && meDevice.data.me).toBeTruthy()
   expect(meDevice.data.me.id).toBe(Users.Unverified.id)
 
-  let sessions = await pgDatabase().public.sessions.find({'sess @>': { 'email': Users.Unverified.email }})
+  let sessions = await pgDatabase().public.sessions.find({ 'sess @>': { 'email': Users.Unverified.email } })
   expect(sessions.length).toBe(1)
   await pgDatabase().public.devices.insert({
     userId: Users.Unverified.id,
@@ -132,7 +132,7 @@ test('sign in with tokenType APP', async () => {
   expect(resultBrowser.signInResult.data.signIn.phrase).toBeTruthy()
   expect(resultBrowser.signInResult.errors).toBeFalsy()
 
-  sessions = await pgDatabase().public.sessions.find({'sess @>': { 'email': Users.Unverified.email }})
+  sessions = await pgDatabase().public.sessions.find({ 'sess @>': { 'email': Users.Unverified.email } })
   expect(sessions.length).toBe(2)
 
   const tokens = await pgDatabase().public.tokens.find({ email: Users.Unverified.email, type: 'APP' }, { limit: 1 })
@@ -156,7 +156,7 @@ test('sign in with tokenType APP', async () => {
   expect(resultDeviceAuthorize && resultDeviceAuthorize.data).toBeTruthy()
   expect(resultDeviceAuthorize.errors).toBeFalsy()
 
-  const meBrowser = await meQuery({apolloFetch: resultBrowser.apolloFetch})
+  const meBrowser = await meQuery({ apolloFetch: resultBrowser.apolloFetch })
   expect(meBrowser && meBrowser.data && meBrowser.data.me).toBeTruthy()
   expect(meBrowser.data.me.id).toBe(Users.Unverified.id)
   expect(meBrowser.data.me.sessions.length).toBe(2)
@@ -170,7 +170,7 @@ test('sign in with tokenType APP default tokenType', async () => {
   expect(meDevice && meDevice.data && meDevice.data.me).toBeTruthy()
   expect(meDevice.data.me.id).toBe(Users.Unverified.id)
 
-  let sessions = await pgDatabase().public.sessions.find({'sess @>': { 'email': Users.Unverified.email }})
+  let sessions = await pgDatabase().public.sessions.find({ 'sess @>': { 'email': Users.Unverified.email } })
   expect(sessions.length).toBe(1)
   await pgDatabase().public.devices.insert({
     userId: Users.Unverified.id,
@@ -192,7 +192,7 @@ test('sign in with tokenType APP default tokenType', async () => {
   expect(resultSession1.signInResult.data.signIn.tokenType).toBe('APP')
 
   // change default tokenType
-  const resultPreferredFirstFactor = await preferredFirstFactor({tokenType: 'EMAIL_TOKEN', apolloFetch: resultDevice.apolloFetch})
+  const resultPreferredFirstFactor = await preferredFirstFactor({ tokenType: 'EMAIL_TOKEN', apolloFetch: resultDevice.apolloFetch })
   expect(resultPreferredFirstFactor && resultPreferredFirstFactor.data).toBeTruthy()
   expect(resultPreferredFirstFactor.errors).toBeFalsy()
   expect(resultPreferredFirstFactor.data.preferredFirstFactor.preferredFirstFactor).toBe('EMAIL_TOKEN')
@@ -204,6 +204,75 @@ test('sign in with tokenType APP default tokenType', async () => {
   ).toBeTruthy()
   expect(resultSession2.signInResult.errors).toBeFalsy()
   expect(resultSession2.signInResult.data.signIn.tokenType).toBe('EMAIL_TOKEN')
+})
+
+describe(`sign in with tokenType EMAIL_CODE`, () => {
+  const tokenType = 'EMAIL_CODE'
+  const MAX_VALID_TOKENS = 5
+
+  test('authorize within same session', async () => {
+    const resultSignIn = await signIn({ user: Users.Unverified, tokenType, skipAuthorization: true })
+    expect(resultSignIn.signInResult.data.signIn.phrase).toBeTruthy()
+    expect(resultSignIn.signInResult.errors).toBeFalsy()
+
+    const resultAuthorize = await authorizeSession({
+      email: Users.Unverified.email,
+      tokens: [{ type: tokenType, payload: resultSignIn.payload }],
+      apolloFetch: resultSignIn.apolloFetch
+    })
+
+    expect(resultAuthorize.data && resultAuthorize.data.authorizeSession).toBeTruthy()
+  })
+
+  test('denies authorization with different session', async () => {
+    const tokenType = 'EMAIL_CODE'
+
+    const resultSignIn = await signIn({ user: Users.Unverified, tokenType, skipAuthorization: true })
+    expect(resultSignIn.signInResult.data.signIn.phrase).toBeTruthy()
+    expect(resultSignIn.signInResult.errors).toBeFalsy()
+
+    const resultAuthorize = await authorizeSession({
+      email: Users.Unverified.email,
+      tokens: [{ type: tokenType, payload: resultSignIn.payload }],
+      apolloFetch: global.instance.createApolloFetch()
+    })
+
+    expect(resultAuthorize.data).toBeFalsy()
+  })
+
+  test('fails if amount of simultaniously valid tokens is exceeded', async () => {
+    const tokenType = 'EMAIL_CODE'
+
+    for (let i = 0; i < MAX_VALID_TOKENS; i++) {
+      await signIn({
+        user: Users.Unverified,
+        tokenType,
+        skipAuthorization: true
+      })
+    }
+
+    const resultSignIn = await signIn({ user: Users.Unverified, tokenType, skipAuthorization: true })
+    expect(resultSignIn.signInResult.errors).toBeTruthy()
+  })
+
+  test('fails if amount of simultaniously valid tokens in multiple is exceeded', async () => {
+    for (let i = 0; i < MAX_VALID_TOKENS; i++) {
+      await signIn({
+        user: Users.Unverified,
+        tokenType,
+        skipAuthorization: true,
+        newCookieStore: true
+      })
+    }
+
+    const resultSignIn = await signIn({
+      user: Users.Unverified,
+      tokenType,
+      skipAuthorization: true,
+      apolloFetch: global.instance.createApolloFetch()
+    })
+    expect(resultSignIn.signInResult.errors).toBeTruthy()
+  })
 })
 
 test.skip('verify phoneNumber', async () => {
