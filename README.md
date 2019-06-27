@@ -76,8 +76,8 @@ Following environment variables are available for theming:
 
 ```
 SG_COLORS={"primary":"Maroon"}
-SG_FONT_FAMILIES={"serifRegular":"'Droid Serif', serif"}
-SG_FONT_FACES=@import url('https://fonts.googleapis.com/css?family=Droid+Serif')
+SG_FONT_STYLES={"serifRegular":{"fontFamily":"'Merriweather', serif"},"serifTitle":{"fontFamily":"'Merriweather', serif","fontWeight":900}}
+SG_FONT_FACES=@import url('https://fonts.googleapis.com/css?family=Merriweather:400,900&display=swap')
 SG_LOGO_PATH=M0 0 L4 0 L4 1.5 L3 0.5 L2 4 L1 0.5 L0 1.5 Z
 SG_LOGO_VIEWBOX=0 0 4 1.5
 SG_LOGO_GRADIENT=<linearGradient id="logo-gradient"></linearGradient>
