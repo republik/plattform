@@ -8,7 +8,7 @@ const CollisionError = newAuthError('email-code-challenge-collision', 'api/auth/
 
 const CODE_LENGTH = 4
 const MAX_VALID_TOKENS = 5
-const TTL = 1000 * 60 * 5 // 5 minutes
+const TTL = 1000 * 60 * 60 // 60 minutes
 const Type = 'EMAIL_CODE'
 
 const { DEFAULT_MAIL_FROM_ADDRESS } = process.env
