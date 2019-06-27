@@ -1,5 +1,5 @@
 {
-  "updated": "2019-06-25T10:02:48.876Z",
+  "updated": "2019-06-27T15:01:11.092Z",
   "title": "live",
   "data": [
     {
@@ -40,7 +40,7 @@
     },
     {
       "key": "api/signin/EMAIL_CODE/mail/subject",
-      "value": "Bestätigungszahl für Zugriff: {code}"
+      "value": "Bestätigungsziffern für Zugriff: {code}"
     },
     {
       "key": "api/signin/app/title",
