@@ -2,6 +2,7 @@ const querystring = require('querystring')
 const validator = require('validator')
 const { parse, format } = require('libphonenumber-js')
 const isUUID = require('is-uuid')
+const Promise = require('bluebird')
 const debug = require('debug')('auth:lib:Users')
 const { sendMailTemplate, moveNewsletterSubscriptions } = require('@orbiting/backend-modules-mail')
 const t = require('./t')
@@ -38,11 +39,14 @@ const TwoFactorAlreadyEnabledError = newAuthError('2fa-already-enabled', 'api/au
 const SecondFactorNotReadyError = newAuthError('2f-not-ready', 'api/auth/2f-not-ready')
 const SecondFactorHasToBeDisabledError = newAuthError('second-factor-has-to-be-disabled', 'api/auth/second-factor-has-to-be-disabled')
 const SessionTokenValidationFailed = newAuthError('token-validation-failed', 'api/token/invalid')
+const AuthorizationRateLimitError = newAuthError('authorize-rate-limit-tokens-email', 'api/auth/authorization-failed')
 
 const {
   AUTO_LOGIN_REGEX,
   FRONTEND_BASE_URL
 } = process.env
+
+const MAX_AUTHORIZE_ATTEMPTS = 10
 
 // in order of preference
 const enabledFirstFactors = async (email, pgdb) => {
@@ -279,6 +283,38 @@ const denySession = async ({ pgdb, token, email: emailFromQuery, me }) => {
 }
 
 const authorizeSession = async ({ pgdb, tokens, email: emailFromQuery, signInHooks = [], consents = [], requiredFields = [], req, me }) => {
+  const sessions = await pgdb.query(
+    `SELECT DISTINCT s.*
+    FROM
+      sessions s
+    LEFT JOIN
+      tokens t
+      ON t."sessionId" = s.id
+    WHERE
+      t.email = :email AND
+      t."expiresAt" >= now()`,
+    { email: emailFromQuery }
+  )
+
+  await Promise.map(sessions, async session => {
+    await pgdb.public.sessions.updateOne(
+      { id: session.id },
+      {
+        sess: {
+          ...session.sess,
+          authorizeAttempts: ++session.sess.authorizeAttempts || 1
+        }
+      }
+    )
+
+    if (session.sess.authorizeAttempts > MAX_AUTHORIZE_ATTEMPTS) {
+      throw new AuthorizationRateLimitError({
+        email: emailFromQuery,
+        authorizeAttempts: session.sess.authorizeAttempts
+      })
+    }
+  })
+
   // validate the challenges
   const existingUser = await pgdb.public.users.findOne({ email: emailFromQuery })
   const tokenTypes = []
