@@ -6,7 +6,7 @@ const t = require('../t')
 const TokensExceededError = newAuthError('email-code-challenge-tokens-exceeded', 'api/auth/emailCode/tokensExceeded')
 const CollisionError = newAuthError('email-code-challenge-collision', 'api/auth/emailCode/collison')
 
-const CODE_LENGTH = 4
+const CODE_LENGTH = 6
 const MAX_VALID_TOKENS = 5
 const TTL = 1000 * 60 * 60 // 60 minutes
 const Type = 'EMAIL_CODE'
