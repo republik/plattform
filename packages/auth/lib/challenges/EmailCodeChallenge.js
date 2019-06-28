@@ -27,7 +27,7 @@ module.exports = {
 
     if (existingPayloads.length >= MAX_VALID_TOKENS) {
       console.error('Unable to generate a new token: Found too many valid tokens.')
-      throw new TokensExceededError({ email, tokens: existingPayloads, MAX_VALID_TOKENS })
+      throw new TokensExceededError({ email, MAX_VALID_TOKENS })
     }
 
     let attempts = 10 ** CODE_LENGTH
