@@ -1,5 +1,4 @@
 const { Instance } = require('@orbiting/backend-modules-test')
-
 const OTP = require('otp')
 const {
   signIn,
@@ -206,7 +205,7 @@ test('sign in with tokenType APP default tokenType', async () => {
   expect(resultSession2.signInResult.data.signIn.tokenType).toBe('EMAIL_TOKEN')
 })
 
-describe(`sign in with tokenType EMAIL_CODE`, () => {
+describe('sign in with tokenType EMAIL_CODE', () => {
   const tokenType = 'EMAIL_CODE'
   const MAX_VALID_TOKENS = 5
 
@@ -225,7 +224,6 @@ describe(`sign in with tokenType EMAIL_CODE`, () => {
   })
 
   test('denies authorization with different session', async () => {
-
     const resultSignIn = await signIn({ user: Users.Unverified, tokenType, skipAuthorization: true })
     expect(resultSignIn.signInResult.data.signIn.phrase).toBeTruthy()
     expect(resultSignIn.signInResult.errors).toBeFalsy()
@@ -240,7 +238,6 @@ describe(`sign in with tokenType EMAIL_CODE`, () => {
   })
 
   test('fails if amount of simultaniously valid tokens is exceeded', async () => {
-
     for (let i = 0; i < MAX_VALID_TOKENS; i++) {
       await signIn({
         user: Users.Unverified,
@@ -253,7 +250,7 @@ describe(`sign in with tokenType EMAIL_CODE`, () => {
     expect(resultSignIn.signInResult.errors).toBeTruthy()
   })
 
-  test('fails if amount of simultaniously valid tokens in multiple is exceeded', async () => {
+  test('fails if amount of simultaniously valid tokens in multiple sessions is exceeded', async () => {
     for (let i = 0; i < MAX_VALID_TOKENS; i++) {
       await signIn({
         user: Users.Unverified,
@@ -270,6 +267,86 @@ describe(`sign in with tokenType EMAIL_CODE`, () => {
       apolloFetch: global.instance.createApolloFetch()
     })
     expect(resultSignIn.signInResult.errors).toBeTruthy()
+  })
+
+  test('authorize after some valid tokens expired', async () => {
+    for (let i = 0; i < 5; i++) {
+      await signIn({
+        user: Users.Unverified,
+        tokenType,
+        skipAuthorization: true
+      })
+    }
+
+    const tokens = (await pgDatabase().public.tokens.find(
+      { email: Users.Unverified.email }
+    ))
+
+    await pgDatabase().public.tokens.update(
+      { id: tokens.map(token => token.id)[0] },
+      { expiresAt: new Date() }
+    )
+
+    const resultSignIn = await signIn({ user: Users.Unverified, tokenType, skipAuthorization: true })
+    expect(resultSignIn.signInResult.data.signIn.phrase).toBeTruthy()
+    expect(resultSignIn.signInResult.errors).toBeFalsy()
+  })
+})
+
+describe('authorizeSession', () => {
+  test('rate limit attempts within session', async () => {
+    const resultSignIn = await signIn({
+      user: Users.Unverified,
+      tokenType: 'EMAIL_TOKEN',
+      skipAuthorization: true
+    })
+
+    const { apolloFetch } = resultSignIn
+
+    for (let i = 0; i < 10; i++) {
+      const resultAuthorize = await authorizeSession({
+        email: Users.Unverified.email,
+        tokens: [{ type: 'EMAIL_TOKEN', payload: `attempt-${i}` }],
+        apolloFetch
+      })
+
+      expect(resultAuthorize.data).toBeFalsy()
+    }
+
+    const resultAuthorize = await authorizeSession({
+      email: Users.Unverified.email,
+      tokens: [{ type: 'EMAIL_TOKEN', payload: resultSignIn.payload }],
+      apolloFetch
+    })
+
+    expect(resultAuthorize.data).toBeFalsy()
+  })
+
+  test('rate limit attempts in multiple sessions', async () => {
+    const resultSignIn = await signIn({
+      user: Users.Unverified,
+      tokenType: 'EMAIL_TOKEN',
+      skipAuthorization: true,
+      newCookieStore: true
+    })
+
+    for (let i = 0; i < 10; i++) {
+      const resultAuthorize = await authorizeSession({
+        email: Users.Unverified.email,
+        tokens: [{ type: 'EMAIL_TOKEN', payload: `attempt-${i}` }],
+        apolloFetch: global.instance.createApolloFetch()
+      })
+
+      expect(resultAuthorize.data).toBeFalsy()
+    }
+
+    const resultAuthorize = await authorizeSession({
+      email: Users.Unverified.email,
+      tokens: [{ type: 'EMAIL_TOKEN', payload: resultSignIn.payload }],
+      apolloFetch: global.instance.createApolloFetch()
+    })
+
+    expect(resultAuthorize.data).toBeFalsy()
   })
 })
 
