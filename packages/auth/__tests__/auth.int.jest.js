@@ -225,7 +225,6 @@ describe(`sign in with tokenType EMAIL_CODE`, () => {
   })
 
   test('denies authorization with different session', async () => {
-    const tokenType = 'EMAIL_CODE'
 
     const resultSignIn = await signIn({ user: Users.Unverified, tokenType, skipAuthorization: true })
     expect(resultSignIn.signInResult.data.signIn.phrase).toBeTruthy()
@@ -241,7 +240,6 @@ describe(`sign in with tokenType EMAIL_CODE`, () => {
   })
 
   test('fails if amount of simultaniously valid tokens is exceeded', async () => {
-    const tokenType = 'EMAIL_CODE'
 
     for (let i = 0; i < MAX_VALID_TOKENS; i++) {
       await signIn({
