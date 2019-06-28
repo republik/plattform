@@ -39,14 +39,12 @@ const TwoFactorAlreadyEnabledError = newAuthError('2fa-already-enabled', 'api/au
 const SecondFactorNotReadyError = newAuthError('2f-not-ready', 'api/auth/2f-not-ready')
 const SecondFactorHasToBeDisabledError = newAuthError('second-factor-has-to-be-disabled', 'api/auth/second-factor-has-to-be-disabled')
 const SessionTokenValidationFailed = newAuthError('token-validation-failed', 'api/token/invalid')
-const AuthorizationRateLimitError = newAuthError('authorize-rate-limit-tokens-email', 'api/auth/authorization-failed')
+const AuthorizationRateLimitError = newAuthError('authorize-rate-limit-tokens-email', 'api/token/invalid')
 
 const {
   AUTO_LOGIN_REGEX,
   FRONTEND_BASE_URL
 } = process.env
-
-const MAX_AUTHORIZE_ATTEMPTS = 10
 
 // in order of preference
 const enabledFirstFactors = async (email, pgdb) => {
@@ -282,38 +280,52 @@ const denySession = async ({ pgdb, token, email: emailFromQuery, me }) => {
   return true
 }
 
-const authorizeSession = async ({ pgdb, tokens, email: emailFromQuery, signInHooks = [], consents = [], requiredFields = [], req, me }) => {
-  const sessions = await pgdb.query(
-    `SELECT DISTINCT s.*
-    FROM
-      sessions s
-    LEFT JOIN
-      tokens t
-      ON t."sessionId" = s.id
-    WHERE
-      t.email = :email AND
-      t."expiresAt" >= now()`,
-    { email: emailFromQuery }
-  )
+const auditAuthorizeAttempts = async ({ pgdb, email, maxAttempts = 10 }) => {
+  const transaction = await pgdb.transactionBegin()
 
-  await Promise.map(sessions, async session => {
-    await pgdb.public.sessions.updateOne(
-      { id: session.id },
-      {
-        sess: {
-          ...session.sess,
-          authorizeAttempts: ++session.sess.authorizeAttempts || 1
-        }
-      }
+  try {
+    const sessions = await transaction.query(
+      `SELECT DISTINCT s.*
+      FROM
+        sessions s
+      LEFT JOIN
+        tokens t
+        ON t."sessionId" = s.id
+      WHERE
+        t.email = :email AND
+        t."expiresAt" >= now()`,
+      { email }
     )
 
-    if (session.sess.authorizeAttempts > MAX_AUTHORIZE_ATTEMPTS) {
-      throw new AuthorizationRateLimitError({
-        email: emailFromQuery,
-        authorizeAttempts: session.sess.authorizeAttempts
-      })
-    }
-  })
+    await Promise.map(sessions, async session => {
+      await transaction.public.sessions.updateOne(
+        { id: session.id },
+        {
+          sess: {
+            ...session.sess,
+            authorizeAttempts: ++session.sess.authorizeAttempts || 1
+          }
+        }
+      )
+
+      if (session.sess.authorizeAttempts > maxAttempts) {
+        throw new AuthorizationRateLimitError({
+          email,
+          authorizeAttempts: session.sess.authorizeAttempts,
+          maxAttempts
+        })
+      }
+    })
+
+    await transaction.transactionCommit()
+  } catch (e) {
+    await transaction.transactionRollback()
+    throw e
+  }
+}
+
+const authorizeSession = async ({ pgdb, tokens, email: emailFromQuery, signInHooks = [], consents = [], requiredFields = [], req, me }) => {
+  await auditAuthorizeAttempts({ pgdb, email: emailFromQuery })
 
   // validate the challenges
   const existingUser = await pgdb.public.users.findOne({ email: emailFromQuery })
@@ -639,5 +651,6 @@ module.exports = {
   SecondFactorHasToBeDisabledError,
   TwoFactorAlreadyDisabledError,
   TwoFactorAlreadyEnabledError,
-  SecondFactorNotReadyError
+  SecondFactorNotReadyError,
+  AuthorizationRateLimitError
 }
