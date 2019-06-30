@@ -2,24 +2,12 @@ import React from 'react'
 import { cssFor } from 'glamor'
 
 import { serifRegular16 } from '../../Typography/styles'
-import { Editorial } from '../../Typography'
 
-const styles = {
-  container: {
-    ...serifRegular16
-  }
-}
+// em and strong css is injected into email html head in the backend template
+// https://github.com/orbiting/backends/commit/ff8b6b35927f6a3402baec7f293ec7cdb25a90d8
 
 export default ({ children }) => (
-  <div style={styles.container} className={Editorial.fontRule}>
-    <style
-      type='text/css'
-      dangerouslySetInnerHTML={{
-        __html: `
-      ${cssFor(Editorial.fontRule)}
-    `
-      }}
-    />
+  <div style={serifRegular16}>
     {children}
   </div>
 )
