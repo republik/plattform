@@ -495,10 +495,10 @@
     stringify-entities "^1.3.1"
     unified "^6.1.5"
 
-"@project-r/styleguide@^6.30.1":
-  version "6.30.1"
-  resolved "https://registry.yarnpkg.com/@project-r/styleguide/-/styleguide-6.30.1.tgz#ac89fa8fa50a031edbdf6913af93b8e9bb523b9f"
-  integrity sha512-UCRuhvpblbjbUKVIcMbQ08jH3AMbnhkSeTWk+r0r5KSdBpS9apfDrqCEpNNw28mvaxd5Nqlri4nl9GW5YNVL9A==
+"@project-r/styleguide@https://s3.eu-central-1.amazonaws.com/republik-assets-dev/npm/project-r-styleguide-bold-italic-b4cce17.tgz":
+  version "0.0.0-development"
+  uid "5a473d86c98dae260f93ae8ad350a7dc2ab93557"
+  resolved "https://s3.eu-central-1.amazonaws.com/republik-assets-dev/npm/project-r-styleguide-bold-italic-b4cce17.tgz#5a473d86c98dae260f93ae8ad350a7dc2ab93557"
   dependencies:
     react-icons "^2.2.7"
     react-swipeable "^4.3.0"

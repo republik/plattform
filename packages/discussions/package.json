@@ -20,7 +20,7 @@
     "link": "yarn link"
   },
   "dependencies": {
-    "@project-r/styleguide": "^6.30.1",
+    "@project-r/styleguide": "https://s3.eu-central-1.amazonaws.com/republik-assets-dev/npm/project-r-styleguide-bold-italic-b4cce17.tgz",
     "dataloader": "^1.4.0"
   }
 }
