@@ -8,7 +8,10 @@ import { fontStyles } from '../../theme/fonts'
 export const fontRule = css({
   ...fontStyles.sansSerifRegular,
   '& em, & i': fontStyles.sansSerifItalic,
-  '& strong, & b': fontStyles.sansSerifMedium
+  '& strong, & b': fontStyles.sansSerifMedium,
+  '& strong em, & em strong, & b i, & i b': {
+    textDecoration: `underline wavy ${colors.error}`
+  }
 })
 
 const interactionHeadline = css({
