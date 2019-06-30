@@ -17,7 +17,9 @@ const {
   DEFAULT_MAIL_FROM_ADDRESS,
   DEFAULT_MAIL_FROM_NAME,
   SEND_MAILS_TAGS,
-  FRONTEND_BASE_URL
+  FRONTEND_BASE_URL,
+  SG_FONT_STYLES,
+  SG_FONT_FACES
 } = process.env
 
 const getTemplate = (name) => {
@@ -30,6 +32,39 @@ const getTemplate = (name) => {
 
   const contents = fs.readFileSync(templatePath, 'utf8')
   return contents
+}
+
+const envMergeVars = []
+
+if (FRONTEND_BASE_URL) {
+  envMergeVars.push({
+    name: 'frontend_base_url',
+    content: FRONTEND_BASE_URL
+  })
+}
+if (SG_FONT_FACES) {
+  envMergeVars.push({
+    name: 'SG_FONT_FACES',
+    content: SG_FONT_FACES
+  })
+}
+if (SG_FONT_STYLES) {
+  try {
+    const styles = JSON.parse(SG_FONT_STYLES)
+    Object.keys(styles).forEach(styleKey => {
+      const style = styles[styleKey]
+      envMergeVars.push({
+        // sansSerifRegular -> SANS_SERIF_REGULAR
+        name: `SG_FONT_STYLE_${styleKey.replace(/[A-Z]/g, char => `_${char}`).toUpperCase()}`,
+        content: Object.keys(style).map(key => {
+          // fontWeight -> font-weight
+          return `${key.replace(/[A-Z]/g, char => `-${char.toLowerCase()}`)}:${style[key]};`
+        }).join('')
+      })
+    })
+  } catch (e) {
+    console.warn('invalid SG_FONT_STYLES env')
+  }
 }
 
 // usage
@@ -53,18 +88,12 @@ module.exports = async (mail, context, log) => {
       .filter(Boolean)
 
   const mergeVars = [
-    ...mail.globalMergeVars || []
+    ...mail.globalMergeVars || [],
+    ...envMergeVars
   ]
 
-  if (FRONTEND_BASE_URL) {
-    mergeVars.push({
-      name: 'frontend_base_url',
-      content: FRONTEND_BASE_URL
-    })
-  }
-
   const message = {
-    to: [{email: mail.to}],
+    to: [{ email: mail.to }],
     subject: mail.subject,
     from_email: mail.fromEmail || DEFAULT_MAIL_FROM_ADDRESS,
     from_name: mail.fromName || DEFAULT_MAIL_FROM_NAME,
