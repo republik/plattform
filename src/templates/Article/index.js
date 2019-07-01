@@ -87,8 +87,7 @@ const paragraphFormatting = [
     editorOptions: {
       type: 'STRONG',
       mdastType: 'strong'
-    },
-    rules: globalInlines
+    }
   },
   {
     matchMdast: matchType('emphasis'),
@@ -97,8 +96,7 @@ const paragraphFormatting = [
     editorOptions: {
       type: 'EMPHASIS',
       mdastType: 'emphasis'
-    },
-    rules: globalInlines
+    }
   }
 ]
 const paragraphRules = [
