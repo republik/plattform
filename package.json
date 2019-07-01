@@ -64,7 +64,7 @@
     "tape": "^4.9.1"
   },
   "dependencies": {
-    "@orbiting/remark-preset": "^1.2.3",
+    "@orbiting/remark-preset": "^1.2.4",
     "@project-r/styleguide": "^6.35.0",
     "@project-r/template-newsletter": "^1.5.0",
     "apollo-cache-inmemory": "^1.2.10",
