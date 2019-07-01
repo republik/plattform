@@ -10,7 +10,9 @@ const sendResultNormalizer = require('../utils/sendResultNormalizer')
 
 checkEnv([
   'DEFAULT_MAIL_FROM_ADDRESS',
-  'DEFAULT_MAIL_FROM_NAME'
+  'DEFAULT_MAIL_FROM_NAME',
+  'ASSETS_SERVER_BASE_URL',
+  'FRONTEND_BASE_URL'
 ])
 
 const {
@@ -19,7 +21,8 @@ const {
   SEND_MAILS_TAGS,
   FRONTEND_BASE_URL,
   SG_FONT_STYLES,
-  SG_FONT_FACES
+  SG_FONT_FACES,
+  ASSETS_SERVER_BASE_URL
 } = process.env
 
 const getTemplate = (name) => {
@@ -36,15 +39,17 @@ const getTemplate = (name) => {
 
 const envMergeVars = []
 
-if (FRONTEND_BASE_URL) {
-  envMergeVars.push({
-    name: 'frontend_base_url',
-    content: FRONTEND_BASE_URL
-  })
-}
+envMergeVars.push({
+  name: 'frontend_base_url',
+  content: FRONTEND_BASE_URL
+})
+envMergeVars.push({
+  name: 'assets_server_base_url',
+  content: ASSETS_SERVER_BASE_URL
+})
 if (SG_FONT_FACES) {
   envMergeVars.push({
-    name: 'SG_FONT_FACES',
+    name: 'sg_font_faces',
     content: SG_FONT_FACES
   })
 }
@@ -55,7 +60,7 @@ if (SG_FONT_STYLES) {
       const style = styles[styleKey]
       envMergeVars.push({
         // sansSerifRegular -> SANS_SERIF_REGULAR
-        name: `SG_FONT_STYLE_${styleKey.replace(/[A-Z]/g, char => `_${char}`).toUpperCase()}`,
+        name: `sg_font_style_${styleKey.replace(/[A-Z]/g, char => `_${char}`).toLowerCase()}`,
         content: Object.keys(style).map(key => {
           // fontWeight -> font-weight
           return `${key.replace(/[A-Z]/g, char => `-${char.toLowerCase()}`)}:${style[key]};`
