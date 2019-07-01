@@ -39,7 +39,10 @@ module.exports = {
     if (voting.result && voting.result.groupTurnout) { // after counting
       return voting.result.groupTurnout
     }
-    return { entity: voting, groupSlug: true }
+    if (voting.groupSlug) {
+      return { entity: voting, groupSlug: true }
+    }
+    return null
   },
   async result (entity, args, { pgdb }) {
     if (entity.result) {
