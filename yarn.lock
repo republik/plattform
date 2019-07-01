@@ -482,10 +482,10 @@
   resolved "https://registry.yarnpkg.com/@orbiting/graphql-list-fields/-/graphql-list-fields-2.0.2.tgz#12686554c3cbca96f38f29166c031e89aa3a0fd2"
   integrity sha512-OKGJlG/QHohYYC0TAeEBx+y8PT9f/BPCRYlG16m+mMJx/F0QB3vVspOcs5v14sjrMrbCwtd3hhMUAyo75cQ+Ug==
 
-"@orbiting/remark-preset@^1.2.3":
-  version "1.2.3"
-  resolved "https://registry.yarnpkg.com/@orbiting/remark-preset/-/remark-preset-1.2.3.tgz#e0d778a5d04b8fff300a7dcf13d4eabc81a7c331"
-  integrity sha512-BZuu6eXGf8zZFRqKmSSlhw/l0OSGDIxDpR6/bslLXBOvX9/viP3pSBe0Ogot+iIqFjkEQ2JF5kWZELy15tP2kg==
+"@orbiting/remark-preset@^1.2.4":
+  version "1.2.4"
+  resolved "https://registry.yarnpkg.com/@orbiting/remark-preset/-/remark-preset-1.2.4.tgz#36b905c08a91165526042000581bb074f0158d10"
+  integrity sha512-ygQemXLUco9Fi0YapqUQbXZi3S+bFewrrm7gN1SLC9QOAb/CkaNwmURAQ2H6943dSOyV5Ej6fQqfEdFg0+QzIw==
   dependencies:
     js-yaml "^3.10.0"
     parse-entities "^1.1.1"
