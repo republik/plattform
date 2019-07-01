@@ -1,6 +1,7 @@
 const {
   numEligible,
-  numSubmitted
+  numSubmitted,
+  numSubmittedByGroup
 } = require('../../lib/Voting')
 
 module.exports = {
@@ -16,6 +17,8 @@ module.exports = {
   async submitted (obj, args, { pgdb }) {
     if (obj.submitted) {
       return obj.submitted
+    } else if (obj.groupSlug) {
+      return numSubmittedByGroup(obj.entity.groupSlug, pgdb)
     } else if (obj.entity) {
       return numSubmitted(obj.entity.id, pgdb)
     } else {
