@@ -1,5 +1,5 @@
 {
-  "updated": "2019-06-27T15:01:11.092Z",
+  "updated": "2019-07-01T10:23:49.347Z",
   "title": "live",
   "data": [
     {
@@ -168,11 +168,11 @@
     },
     {
       "key": "api/auth/emailCode/tokensExceeded",
-      "value": "Anzahl der gleichzeitig gültigen Tokens überschritten."
+      "value": "Anzahl der gleichzeitig gültigen Tokens überschritten"
     },
     {
       "key": "api/auth/emailCode/collison",
-      "value": "Kollision des zu generierenden Codes."
+      "value": "Kollision des zu generierenden Codes"
     }
   ]
 }
