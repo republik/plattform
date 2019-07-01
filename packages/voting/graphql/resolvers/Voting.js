@@ -35,6 +35,12 @@ module.exports = {
     }
     return { entity: voting }
   },
+  async groupTurnout (voting, args, { pgdb }) {
+    if (voting.result && voting.result.groupTurnout) { // after counting
+      return voting.result.groupTurnout
+    }
+    return { entity: voting, groupSlug: true }
+  },
   async result (entity, args, { pgdb }) {
     if (entity.result) {
       return entity.result

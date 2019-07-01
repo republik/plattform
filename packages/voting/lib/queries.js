@@ -1,4 +1,6 @@
 const debug = require('debug')('votings:lib:queries')
+const pick = require('lodash/pick')
+const isEqual = require('lodash/isEqual')
 
 const tableMapping = {
   votings: {
@@ -83,6 +85,16 @@ const buildQueries = (tableName) => {
     return result && result[0]
   }
 
+  const findByGroupSlug = async (groupSlug, pgdb) => {
+    const result = await pgdb.query(findQuery(`
+      WHERE
+        e."groupSlug" = :groupSlug
+    `), {
+      groupSlug
+    })
+    return result
+  }
+
   const userSubmitDate = async (id, userId, pgdb) => {
     if (!userId) {
       return null
@@ -114,6 +126,39 @@ const buildQueries = (tableName) => {
     `, {
       entityId: id
     })
+  }
+
+  const numSubmittedByGroup = async (groupSlug, pgdb) => {
+    return pgdb.queryOneField(`
+      SELECT
+        COUNT(DISTINCT(b."userId"))
+      FROM
+        "${table.ballotsTable}" b
+      JOIN
+        "${table.name}" e
+        ON b."${table.foreignKey}" = e.id
+      WHERE
+        e."groupSlug" = :groupSlug
+    `, {
+      groupSlug
+    })
+  }
+
+  const haveSameRestrictions = (entityA, entityB) => {
+    const maxAllowedMemberships = Math.max(
+      entityA.allowedMemberships ? entityA.allowedMemberships.length : 0,
+      entityB.allowedMemberships ? entityB.allowedMemberships.length : 0
+    )
+    const compareFields = [
+      'allowEmptyBallots',
+      'allowedRoles',
+      ...Array(maxAllowedMemberships).fill(1).map((_, i) => `allowedMemberships[${i}].membershipTypeId`),
+      ...Array(maxAllowedMemberships).fill(1).map((_, i) => `allowedMemberships[${i}].createdBefore`)
+    ]
+    return isEqual(
+      pick(entityA, compareFields),
+      pick(entityB, compareFields)
+    )
   }
 
   const countEligibles = async (entity, userId, pgdb) => {
@@ -152,7 +197,7 @@ const buildQueries = (tableName) => {
       ${where && where.length && 'WHERE ' + where}
     `
 
-    debug('countEligibles', query, options, {entity, userId})
+    debug('countEligibles', query, options, { entity, userId })
     return pgdb.queryOneField(query, options)
   }
 
@@ -206,9 +251,12 @@ const buildQueries = (tableName) => {
     find,
     findById,
     findBySlug,
+    findByGroupSlug,
     userSubmitDate,
     userHasSubmitted,
     numSubmitted,
+    numSubmittedByGroup,
+    haveSameRestrictions,
     numEligible,
     isEligible,
     turnout,
