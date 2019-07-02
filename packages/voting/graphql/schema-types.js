@@ -30,11 +30,13 @@ type Voting implements VotingInterface {
   allowEmptyBallots: Boolean!
   allowedMemberships: [VotingMembershipRequirement!]
   allowedRoles: [String!]
+  groupSlug: String
 
   name: String!
   discussion: Discussion
 
   turnout: VotingTurnout!
+  groupTurnout: VotingTurnout
 
   liveResult: Boolean!
   result: VotingResult
@@ -62,6 +64,7 @@ type VotingOptionResult {
 type VotingResult {
   options: [VotingOptionResult!]!
   turnout: VotingTurnout!
+  groupTurnout: VotingTurnout
   message: String
   video: Video
   createdAt: DateTime!
@@ -88,6 +91,8 @@ input VotingInput {
   allowEmptyBallots: Boolean
   allowedMemberships: [VotingMembershipRequirementInput!]
   allowedRoles: [String!]
+  # only group votings with identical restrictions (allow*)
+  groupSlug: String
 }
 
 input VotingOptionInput {

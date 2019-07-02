@@ -1,7 +1,7 @@
 const moment = require('moment')
 
 const { Roles } = require('@orbiting/backend-modules-auth')
-const { slugExists, create } = require('../../../lib/Voting')
+const { slugExists, create, findByGroupSlug, haveSameRestrictions } = require('../../../lib/Voting')
 const { Discussion: { upsert: upsertDiscussion } } = require('@orbiting/backend-modules-discussions')
 
 module.exports = async (_, { votingInput }, context) => {
@@ -11,7 +11,8 @@ module.exports = async (_, { votingInput }, context) => {
   const {
     slug,
     description,
-    beginDate
+    beginDate,
+    groupSlug
   } = votingInput
 
   const transaction = await pgdb.transactionBegin()
@@ -32,6 +33,16 @@ module.exports = async (_, { votingInput }, context) => {
       ...votingInput,
       discussionId
     }, transaction)
+
+    if (groupSlug) {
+      const groupedVotings = await findByGroupSlug(groupSlug, pgdb)
+      const conflictingRestrictions = groupedVotings.filter(v =>
+        !haveSameRestrictions(newVoting, v)
+      )
+      if (conflictingRestrictions.length) {
+        throw new Error(t('api/voting/group/restrictionsMissmatch'))
+      }
+    }
 
     await transaction.transactionCommit()
 

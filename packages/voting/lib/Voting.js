@@ -104,6 +104,15 @@ const finalize = async (voting, args, pgdb, t) => {
     options: await getOptionsResult(voting, args, pgdb, t),
     turnout: await queries.turnout(voting, pgdb)
   }
+  if (voting.groupSlug) {
+    Object.assign(result, {
+      groupSlug: voting.groupSlug,
+      groupTurnout: {
+        eligible: result.turnout.eligible,
+        submitted: await queries.numSubmittedByGroup(voting.groupSlug, pgdb)
+      }
+    })
+  }
   return finalizeLib('votings', voting, result, args, pgdb)
 }
 
