@@ -15,19 +15,27 @@
     <style type="text/css">
       {{sg_font_faces}}
     </style>
+    <style type="text/css">
+      p {
+        {{sg_font_style_sans_serif_regular}}
+      }
+      p strong {
+        {{sg_font_style_sans_serif_medium}}
+      }
+    </style>
   </head>
   <body style="margin: 0; padding: 0; background-color: #fff;">
     <table border="0" cellpadding="0" cellspacing="0" width="100%">
       <tbody>
         <tr>
           <td align="center" valign="top">
-            <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width:640px;color:#444;font-size:18px;{{sg_font_style_serif_regular}}">
+            <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width:640px;color:#444;font-size:18px;{{sg_font_style_sans_serif_regular}}">
               <tbody>
                 <tr>
                   <td style="padding:20px;">
                     <p>Guten Tag, {{name}}</p>
                     <p>
-                      <strong style="{{sg_font_style_serif_bold}}">
+                      <strong>
                         Ihre Zahlung in Höhe von {{total_formatted}} ist erfolgreich bei uns eingegangen, herzlichen Dank!
                       </strong>
                     </p>
@@ -44,7 +52,7 @@
                         <li>Spende: {{donation_formatted}}</li>
                       {{/if}}
                       <li>
-                        <strong style="{{sg_font_style_serif_bold}}">Total: {{total_formatted}}</strong>
+                        <strong>Total: {{total_formatted}}</strong>
                       </li>
                     </ul>
                     {{#if discount}}

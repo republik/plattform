@@ -15,13 +15,21 @@
     <style type="text/css">
       {{sg_font_faces}}
     </style>
+    <style type="text/css">
+      p {
+        {{sg_font_style_sans_serif_regular}}
+      }
+      p strong {
+        {{sg_font_style_sans_serif_medium}}
+      }
+    </style>
   </head>
   <body style="margin: 0; padding: 0; background-color: #fff;">
     <table border="0" cellpadding="0" cellspacing="0" width="100%">
       <tbody>
         <tr>
           <td align="center" valign="top">
-            <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width:640px;color:#444;font-size:18px;{{sg_font_style_serif_regular}}">
+            <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width:640px;color:#444;font-size:18px;{{sg_font_style_sans_serif_regular}}">
               <tbody>
                 <tr>
                   <td style="padding:20px;">
@@ -45,17 +53,17 @@
                         8004 Zürich
                       </p>
                       <p>bis spätestens {{due_date}}.</p>
-                      <p><strong style="{{sg_font_style_serif_bold}}">Und hier das Wichtigste. Vergessen Sie nicht, folgende Botschaft in das Feld «Betreff» des Einzahlungsscheins zu schreiben: {{HRID}}</strong>
+                      <p><strong>Und hier das Wichtigste. Vergessen Sie nicht, folgende Botschaft in das Feld «Betreff» des Einzahlungsscheins zu schreiben: {{HRID}}</strong>
                         <br>
                         (Sonst funktioniert die Zuordnung nicht.)
                       </p>
                     {{/if}}
                     {{#if waiting_for_payment}}<br>
-                      <p><strong style="{{sg_font_style_serif_bold}}">Da der Gesamtbetrag Ihrer Bestellung die magische Grenze von CHF 1000.– übersteigt, erhalten Sie die Gutscheincodes erst nach Zahlungseingang.</strong></p>
+                      <p><strong>Da der Gesamtbetrag Ihrer Bestellung die magische Grenze von CHF 1000.– übersteigt, erhalten Sie die Gutscheincodes erst nach Zahlungseingang.</strong></p>
                     {{/if}}
                     {{#if voucher_codes}}
-                      <p><strong style="{{sg_font_style_serif_bold}}">Für jedes Geschenk-Abonnement erhalten Sie hier einen 6-Zeichen-Code.</strong></p>
-                      <p><strong style="{{sg_font_style_serif_bold}}">{{voucher_codes}}</strong></p>
+                      <p><strong>Für jedes Geschenk-Abonnement erhalten Sie hier einen 6-Zeichen-Code.</strong></p>
+                      <p><strong>{{voucher_codes}}</strong></p>
                       <p>Sie können diesen der Person Ihrer Wahl mit einem Mittel Ihrer Wahl überreichen: sofort per Mail, traditionell per Briefpost oder originell als Schrift auf einem Kuchen.</p>
                       <p>Um das Geschenk einzulösen, muss der neue Besitzer, die neue Besitzerin des Codes auf die Seite <a href="{{link_claim}}">{{link_claim}}</a> gehen. Und die sechs Zeichen dort eintippen.</p>
                       {{#if goodies_count}}
@@ -73,7 +81,7 @@
                             {{/if}}
                           {{/options}}
                         </ul>
-                        <p><strong style="{{sg_font_style_serif_bold}}">Stellen Sie dafür bitte sicher, dass Sie Ihre Adresse unter <a href="{{link_account_account}}">{{link_account}}</a> korrekt eingetragen haben.</strong></p>
+                        <p><strong>Stellen Sie dafür bitte sicher, dass Sie Ihre Adresse unter <a href="{{link_account_account}}">{{link_account}}</a> korrekt eingetragen haben.</strong></p>
                       {{/if}}
                     {{/if}}
                     <p>Vielen Dank!</p>

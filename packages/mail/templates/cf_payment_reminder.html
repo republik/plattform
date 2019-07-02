@@ -15,20 +15,28 @@
     <style type="text/css">
       {{sg_font_faces}}
     </style>
+    <style type="text/css">
+      p {
+        {{sg_font_style_sans_serif_regular}}
+      }
+      p strong {
+        {{sg_font_style_sans_serif_medium}}
+      }
+    </style>
   </head>
   <body style="margin: 0; padding: 0; background-color: #fff;">
     <table border="0" cellpadding="0" cellspacing="0" width="100%">
       <tbody>
         <tr>
           <td align="center" valign="top">
-            <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width:640px;color:#444;font-size:18px;{{sg_font_style_serif_regular}}">
+            <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width:640px;color:#444;font-size:18px;{{sg_font_style_sans_serif_regular}}">
               <tbody>
                 <tr>
                   <td style="padding:20px;">
                     <p>Sehr geehrte Verlegerin, sehr geehrter Verleger</p>
                     <p>Sie haben sich entschieden, das digitale Magazin Republik von Project R zu unterstützen. Mit Ihrer Mitgliedschaft tragen Sie entscheidend dazu bei, ein neues Modell für unabhängigen Journalismus zu entwickeln. Dafür danken wir Ihnen herzlich!</p>
                     <p>Falls sich unsere Buchhaltung nicht irrt, ist Ihr angekündigter Abonnements- oder Unterstützungsbeitrag in der Höhe von CHF {{TOTAL}} noch ausstehend. Dürfen wir Sie freundlich bitten, den Betrag in den nächsten Tagen zu überweisen?</p>
-                    <p>Bitte geben Sie bei der Zahlung Ihren Namen und den folgenden Code als Zahlungszweck an (so können wir Ihre Zahlung zuordnen): <strong style="{{sg_font_style_serif_bold}}">{{HRID}}</strong>
+                    <p>Bitte geben Sie bei der Zahlung Ihren Namen und den folgenden Code als Zahlungszweck an (so können wir Ihre Zahlung zuordnen): <strong>{{HRID}}</strong>
                     </p>
                     {{#if `COMPANY_NAME == "REPUBLIK"`}}
                     <p>
@@ -36,7 +44,7 @@
                       IBAN: CH23 0900 0000 6122 9215 3<br>
                       BIC: POFICHBEXXX
                     </p>
-                    <p>lautend auf:<br><strong style="{{sg_font_style_serif_bold}}">Republik AG</strong>
+                    <p>lautend auf:<br><strong>Republik AG</strong>
                       <br>
                       Sihlhallenstrasse 1<br>
                       8004 Zürich
@@ -48,7 +56,7 @@
                       IBAN: CH50 0900 0000 6101 1760 6<br>
                       BIC: POFICHBEXXX
                     </p>
-                    <p>lautend auf:<br><strong style="{{sg_font_style_serif_bold}}">Project R Genossenschaft</strong>
+                    <p>lautend auf:<br><strong>Project R Genossenschaft</strong>
                       <br>
                       Sihlhallenstrasse 1<br>
                       8004 Zürich

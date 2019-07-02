@@ -15,17 +15,25 @@
     <style type="text/css">
       {{sg_font_faces}}
     </style>
+    <style type="text/css">
+      p {
+        {{sg_font_style_sans_serif_regular}}
+      }
+      p strong {
+        {{sg_font_style_sans_serif_medium}}
+      }
+    </style>
   </head>
   <body style="margin: 0; padding: 0; background-color: #fff;">
     <table border="0" cellpadding="0" cellspacing="0" width="100%">
       <tbody>
         <tr>
           <td align="center" valign="top">
-            <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width:640px;color:#444;font-size:18px;{{sg_font_style_serif_regular}}">
+            <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width:640px;color:#444;font-size:18px;{{sg_font_style_sans_serif_regular}}">
               <tbody>
                 <tr>
                   <td style="padding:20px;">
-                    <p><strong style="{{sg_font_style_serif_bold}}">{{name}}, herzlichen Dank für Ihre Grosszügigkeit und Ihr Vertrauen.</strong>
+                    <p><strong>{{name}}, herzlichen Dank für Ihre Grosszügigkeit und Ihr Vertrauen.</strong>
                     </p>
                     <p>Sie haben {{#if `gifted_memberships_count == 1`}}eine Mitgliedschaft{{elseif `gifted_memberships_count > 1`}}mehrere Mitgliedschaften{{/if}} für die Republik verschenkt. Dieses Abonnement neigt sich nun dem Ende zu. Nun möchten wir Sie fragen, ob Sie {{#if `gifted_memberships_count == 1`}}dieses Geschenk{{elseif `gifted_memberships_count > 1`}}diese Geschenke{{/if}} für ein weiteres Jahr machen möchten.</p>
                     <p>Klicken Sie <a href="{{prolong_url}}">hier, um die Geschenk-Mitgliedschaften zu verlängern</a>.</p>
