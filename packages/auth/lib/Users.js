@@ -39,7 +39,7 @@ const TwoFactorAlreadyEnabledError = newAuthError('2fa-already-enabled', 'api/au
 const SecondFactorNotReadyError = newAuthError('2f-not-ready', 'api/auth/2f-not-ready')
 const SecondFactorHasToBeDisabledError = newAuthError('second-factor-has-to-be-disabled', 'api/auth/second-factor-has-to-be-disabled')
 const SessionTokenValidationFailed = newAuthError('token-validation-failed', 'api/token/invalid')
-const AuthorizationRateLimitError = newAuthError('authorize-rate-limit-tokens-email', 'api/token/invalid')
+const AuthorizationRateLimitError = newAuthError('authorize-rate-limit-tokens-email', 'api/auth/errorAuthorizationRateLimit')
 
 const {
   AUTO_LOGIN_REGEX,
@@ -284,18 +284,27 @@ const auditAuthorizeAttempts = async ({ pgdb, email, maxAttempts = 10 }) => {
   const transaction = await pgdb.transactionBegin()
 
   try {
-    const sessions = await transaction.query(
-      `SELECT DISTINCT s.*
+    const sessions = await transaction.query(`
+      SELECT
+        s.*,
+        MAX(t."expiresAt") AS "tokenExpiresAt"
       FROM
         sessions s
-      JOIN
-        tokens t
+      JOIN tokens t
         ON t."sessionId" = s.id
       WHERE
-        t.email = :email AND
-        t."expiresAt" >= now()`,
-      { email }
-    )
+        t.email = :email
+        AND t."expiresAt" >= now()
+
+      GROUP BY s.sid
+    `, { email })
+
+    // Find token which expires next over all sessions
+    const nextExpireAt = sessions
+      .reduce((acc, curr) => acc.tokenExpiresAt > curr.tokenExpiresAt ? curr : acc)
+      .tokenExpiresAt
+
+    const minsNextExpireAt = Math.ceil((nextExpireAt - new Date()) / 1000 / 60)
 
     await Promise.map(sessions, async session => {
       await transaction.public.sessions.updateOne(
@@ -309,17 +318,27 @@ const auditAuthorizeAttempts = async ({ pgdb, email, maxAttempts = 10 }) => {
       )
 
       if (session.sess.authorizeAttempts > maxAttempts) {
-        throw new AuthorizationRateLimitError({
-          email,
-          authorizeAttempts: session.sess.authorizeAttempts,
-          maxAttempts
-        })
+        throw new AuthorizationRateLimitError(
+          {
+            email,
+            authorizeAttempts: session.sess.authorizeAttempts,
+            maxAttempts
+          },
+          {
+            mins: minsNextExpireAt
+          }
+        )
       }
     })
 
     await transaction.transactionCommit()
   } catch (e) {
     await transaction.transactionRollback()
+
+    if (e.type === 'authorize-rate-limit-tokens-email') {
+      throw e
+    }
+
     console.error(e)
 
     throw new AuthorizationRateLimitError({

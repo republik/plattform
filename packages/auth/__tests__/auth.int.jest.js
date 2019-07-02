@@ -293,7 +293,7 @@ describe('sign in with tokenType EMAIL_CODE', () => {
   })
 })
 
-describe('authorizeSession', () => {
+describe.only('authorizeSession', () => {
   test('rate limit attempts within session', async () => {
     const resultSignIn = await signIn({
       user: Users.Unverified,
@@ -313,13 +313,20 @@ describe('authorizeSession', () => {
       expect(resultAuthorize.data).toBeFalsy()
     }
 
-    const resultAuthorize = await authorizeSession({
+    const rateLimitedAuthorize = await authorizeSession({
       email: Users.Unverified.email,
       tokens: [{ type: 'EMAIL_TOKEN', payload: resultSignIn.payload }],
       apolloFetch
     })
 
-    expect(resultAuthorize.data).toBeFalsy()
+    expect(rateLimitedAuthorize.data).toBeFalsy()
+    expect(rateLimitedAuthorize.errors).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          message: expect.stringMatching(/^Zu viele Anmeldeversuche/)
+        })
+      ])
+    )
   })
 
   test('rate limit attempts in multiple sessions', async () => {
@@ -347,6 +354,13 @@ describe('authorizeSession', () => {
     })
 
     expect(rateLimitedAuthorize.data).toBeFalsy()
+    expect(rateLimitedAuthorize.errors).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          message: expect.stringMatching(/^Zu viele Anmeldeversuche/)
+        })
+      ])
+    )
   })
 })
 

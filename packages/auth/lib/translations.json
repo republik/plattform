@@ -1,5 +1,5 @@
 {
-  "updated": "2019-07-01T10:23:49.347Z",
+  "updated": "2019-07-02T13:27:53.422Z",
   "title": "live",
   "data": [
     {
@@ -29,6 +29,10 @@
     {
       "key": "api/auth/errorDestroyingSession",
       "value": "Ups, da ist was schiefgelaufen. Sorry!"
+    },
+    {
+      "key": "api/auth/errorAuthorizationRateLimit",
+      "value": "Zu viele Anmeldeversuche. Probieren Sie es in {mins} Minuten erneut."
     },
     {
       "key": "api/signin/mail/subject",
