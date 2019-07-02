@@ -340,13 +340,13 @@ describe('authorizeSession', () => {
       expect(resultAuthorize.data).toBeFalsy()
     }
 
-    const resultAuthorize = await authorizeSession({
+    const rateLimitedAuthorize = await authorizeSession({
       email: Users.Unverified.email,
       tokens: [{ type: 'EMAIL_TOKEN', payload: resultSignIn.payload }],
       apolloFetch: global.instance.createApolloFetch()
     })
 
-    expect(resultAuthorize.data).toBeFalsy()
+    expect(rateLimitedAuthorize.data).toBeFalsy()
   })
 })
 
