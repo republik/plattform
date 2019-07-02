@@ -34,17 +34,15 @@ module.exports = {
     let payload = null
 
     do {
+      if (attempts-- < 0) {
+        console.error('Unable to generate a new token: Attempts to generate payload exceeded.')
+        throw new CollisionError({ email, attempts })
+      }
+
       payload = `${Math.round(Math.random() * (10 ** CODE_LENGTH))}`
         .slice(0, CODE_LENGTH)
         .padStart(CODE_LENGTH, 0)
-
-      attempts--
-    } while (existingPayloads.includes(payload) && attempts > 0)
-
-    if (attempts === 0) {
-      console.error('Unable to generate a new token: Attempts to generate payload exceeded.')
-      throw new CollisionError({ email, attempts })
-    }
+    } while (existingPayloads.includes(payload))
 
     const expiresAt = new Date(new Date().getTime() + TTL)
     return { payload, expiresAt }
