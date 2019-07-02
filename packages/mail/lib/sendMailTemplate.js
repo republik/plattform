@@ -103,7 +103,7 @@ module.exports = async (mail, context, log) => {
     from_email: mail.fromEmail || DEFAULT_MAIL_FROM_ADDRESS,
     from_name: mail.fromName || DEFAULT_MAIL_FROM_NAME,
     html: getTemplate(mail.templateName),
-    merge_language: mail.mergeLanguage || 'mailchimp',
+    merge_language: mail.mergeLanguage || 'handlebars',
     global_merge_vars: mergeVars,
     auto_text: true,
     tags
