@@ -10,14 +10,19 @@ const sendResultNormalizer = require('../utils/sendResultNormalizer')
 
 checkEnv([
   'DEFAULT_MAIL_FROM_ADDRESS',
-  'DEFAULT_MAIL_FROM_NAME'
+  'DEFAULT_MAIL_FROM_NAME',
+  'ASSETS_SERVER_BASE_URL',
+  'FRONTEND_BASE_URL'
 ])
 
 const {
   DEFAULT_MAIL_FROM_ADDRESS,
   DEFAULT_MAIL_FROM_NAME,
   SEND_MAILS_TAGS,
-  FRONTEND_BASE_URL
+  FRONTEND_BASE_URL,
+  SG_FONT_STYLES,
+  SG_FONT_FACES,
+  ASSETS_SERVER_BASE_URL
 } = process.env
 
 const getTemplate = (name) => {
@@ -30,6 +35,41 @@ const getTemplate = (name) => {
 
   const contents = fs.readFileSync(templatePath, 'utf8')
   return contents
+}
+
+const envMergeVars = []
+
+envMergeVars.push({
+  name: 'frontend_base_url',
+  content: FRONTEND_BASE_URL
+})
+envMergeVars.push({
+  name: 'assets_server_base_url',
+  content: ASSETS_SERVER_BASE_URL
+})
+if (SG_FONT_FACES) {
+  envMergeVars.push({
+    name: 'sg_font_faces',
+    content: SG_FONT_FACES
+  })
+}
+if (SG_FONT_STYLES) {
+  try {
+    const styles = JSON.parse(SG_FONT_STYLES)
+    Object.keys(styles).forEach(styleKey => {
+      const style = styles[styleKey]
+      envMergeVars.push({
+        // sansSerifRegular -> SANS_SERIF_REGULAR
+        name: `sg_font_style_${styleKey.replace(/[A-Z]/g, char => `_${char}`).toLowerCase()}`,
+        content: Object.keys(style).map(key => {
+          // fontWeight -> font-weight
+          return `${key.replace(/[A-Z]/g, char => `-${char.toLowerCase()}`)}:${style[key]};`
+        }).join('')
+      })
+    })
+  } catch (e) {
+    console.warn('invalid SG_FONT_STYLES env')
+  }
 }
 
 // usage
@@ -53,23 +93,17 @@ module.exports = async (mail, context, log) => {
       .filter(Boolean)
 
   const mergeVars = [
-    ...mail.globalMergeVars || []
+    ...mail.globalMergeVars || [],
+    ...envMergeVars
   ]
 
-  if (FRONTEND_BASE_URL) {
-    mergeVars.push({
-      name: 'frontend_base_url',
-      content: FRONTEND_BASE_URL
-    })
-  }
-
   const message = {
-    to: [{email: mail.to}],
+    to: [{ email: mail.to }],
     subject: mail.subject,
     from_email: mail.fromEmail || DEFAULT_MAIL_FROM_ADDRESS,
     from_name: mail.fromName || DEFAULT_MAIL_FROM_NAME,
     html: getTemplate(mail.templateName),
-    merge_language: mail.mergeLanguage || 'mailchimp',
+    merge_language: mail.mergeLanguage || 'handlebars',
     global_merge_vars: mergeVars,
     auto_text: true,
     tags

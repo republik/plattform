@@ -482,10 +482,10 @@
   resolved "https://registry.yarnpkg.com/@orbiting/graphql-list-fields/-/graphql-list-fields-2.0.2.tgz#12686554c3cbca96f38f29166c031e89aa3a0fd2"
   integrity sha512-OKGJlG/QHohYYC0TAeEBx+y8PT9f/BPCRYlG16m+mMJx/F0QB3vVspOcs5v14sjrMrbCwtd3hhMUAyo75cQ+Ug==
 
-"@orbiting/remark-preset@^1.2.3":
-  version "1.2.3"
-  resolved "https://registry.yarnpkg.com/@orbiting/remark-preset/-/remark-preset-1.2.3.tgz#e0d778a5d04b8fff300a7dcf13d4eabc81a7c331"
-  integrity sha512-BZuu6eXGf8zZFRqKmSSlhw/l0OSGDIxDpR6/bslLXBOvX9/viP3pSBe0Ogot+iIqFjkEQ2JF5kWZELy15tP2kg==
+"@orbiting/remark-preset@^1.2.4":
+  version "1.2.4"
+  resolved "https://registry.yarnpkg.com/@orbiting/remark-preset/-/remark-preset-1.2.4.tgz#36b905c08a91165526042000581bb074f0158d10"
+  integrity sha512-ygQemXLUco9Fi0YapqUQbXZi3S+bFewrrm7gN1SLC9QOAb/CkaNwmURAQ2H6943dSOyV5Ej6fQqfEdFg0+QzIw==
   dependencies:
     js-yaml "^3.10.0"
     parse-entities "^1.1.1"
@@ -495,10 +495,10 @@
     stringify-entities "^1.3.1"
     unified "^6.1.5"
 
-"@project-r/styleguide@^6.30.1":
-  version "6.30.1"
-  resolved "https://registry.yarnpkg.com/@project-r/styleguide/-/styleguide-6.30.1.tgz#ac89fa8fa50a031edbdf6913af93b8e9bb523b9f"
-  integrity sha512-UCRuhvpblbjbUKVIcMbQ08jH3AMbnhkSeTWk+r0r5KSdBpS9apfDrqCEpNNw28mvaxd5Nqlri4nl9GW5YNVL9A==
+"@project-r/styleguide@^7.4.0":
+  version "7.4.0"
+  resolved "https://registry.yarnpkg.com/@project-r/styleguide/-/styleguide-7.4.0.tgz#aaa9e9f13587d1826a8ee4b4a93379ec7d9783bd"
+  integrity sha512-XbVIjKiX783JvivdFnu/eheTGLGi8oEJlxVuRW2RvxV4SXUpUS4m4Sk8jIeSfLXs2i64Sq7gDm5P05zQt9V59A==
   dependencies:
     react-icons "^2.2.7"
     react-swipeable "^4.3.0"

@@ -12,13 +12,24 @@
       </o:officedocumentsettings>
     </xml>
     <![endif]-->
+    <style type="text/css">
+      {{sg_font_faces}}
+    </style>
+    <style type="text/css">
+      p {
+        {{sg_font_style_sans_serif_regular}}
+      }
+      p strong {
+        {{sg_font_style_sans_serif_medium}}
+      }
+    </style>
   </head>
   <body style="margin: 0; padding: 0; background-color: #fff;">
     <table border="0" cellpadding="0" cellspacing="0" width="100%">
       <tbody>
         <tr>
           <td align="center" valign="top">
-            <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width:640px;color:#444;font-size:18px;font-family:Times, 'Times New Roman', serif;">
+            <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width:640px;color:#444;font-size:18px;{{sg_font_style_sans_serif_regular}}">
               <tbody>
                 <tr>
                   <td style="padding:20px;">
@@ -28,7 +39,7 @@
                           <table border="0" cellspacing="0" cellpadding="0">
                             <tr>
                               <td align="center" bgcolor="#3CAD00">
-                                <a href="{{prolong_url}}" style="font-size:20px;font-family:Helvetica, Arial, sans-serif;color:#ffffff;text-decoration:none;border-radius:0;padding:15px 30px 15px 30px;border:1px solid #3CAD00;display:inline-block;">Abonnement reaktivieren</a>
+                                <a href="{{prolong_url}}" style="font-size:20px;{{sg_font_style_sans_serif_regular}}color:#ffffff;text-decoration:none;border-radius:0;padding:15px 30px 15px 30px;border:1px solid #3CAD00;display:inline-block;">Abonnement reaktivieren</a>
                               </td>
                             </tr>
                           </table>
@@ -49,7 +60,7 @@
                     <p>Das tut uns doppelt weh.</p>
                     <p>Zum Ersten ist die Republik noch immer ein sehr junges Projekt. Und ein verletzliches. Denn bis jetzt steht erst der Rohbau. Wir haben das Magazin längst nicht fertig entwickelt. Und brauchen im zweiten Jahr dazu jede Frau, jeden Mann an Deck, die wir bekommen können.</p>
                     <p>Zum Zweiten fehlen Sie uns. Denn uns liegt eine möglichst breite Debatte am Herzen. Und dabei brauchen wir die verschiedensten Köpfe. Nicht zuletzt auch die skeptischen. Und die beschäftigten, die keine Zeit verschwendet haben, unsere vorherigen warnenden E-Mails zu lesen.</p>
-                    <p>Ersetzbar sind Sie sowieso nicht. Egal wie viele Leute wir an Bord haben – ohne Sie wird es in der Verlagsetage der Republik nie mehr eine <b>Nr. {{sequence_number}}</b> geben.</p>
+                    <p>Ersetzbar sind Sie sowieso nicht. Egal wie viele Leute wir an Bord haben – ohne Sie wird es in der Verlagsetage der Republik nie mehr eine <strong>Nr. {{sequence_number}}</strong> geben.</p>
                     <p>Deshalb: <a href="{{prolong_url}}">Kommen Sie zurück in die Verlagsetage</a>.</p>
                     <p>Mit Dank für das erste Jahr! Und mit der Hoffnung auf ein zweites.</p>
                     <p>Ihre Crew der Republik und von Project R</p>
@@ -61,7 +72,7 @@
                 <tr>
                   <td style="padding:20px;">
                     <p>
-                      <img height="79" src="https://gallery.mailchimp.com/650c1ec9003c7d8567eef4c5e/images/feb6bdde-83da-4211-bcf8-b09d3d3d012a.png" style="border: 0px  ; width: 180px !important; height: 79px !important; margin: 0px;" width="180" alt="feb6bdde-83da-4211-bcf8-b09d3d3d012a.png">
+                      <img height="79" src="{{assets_server_base_url}}/s3/republik-assets/assets/images/logo_republik_newsletter.png" style="border:0px;width:180px !important; height:79px !important;margin:0px;" width="180" alt="">
                       <br>
                       Republik AG<br>
                       Sihlhallenstrasse 1<br>
