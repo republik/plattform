@@ -320,7 +320,12 @@ const auditAuthorizeAttempts = async ({ pgdb, email, maxAttempts = 10 }) => {
     await transaction.transactionCommit()
   } catch (e) {
     await transaction.transactionRollback()
-    throw e
+    console.error(e)
+
+    throw new AuthorizationRateLimitError({
+      email,
+      maxAttempts
+    })
   }
 }
 
