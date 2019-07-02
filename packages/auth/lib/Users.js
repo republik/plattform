@@ -288,7 +288,7 @@ const auditAuthorizeAttempts = async ({ pgdb, email, maxAttempts = 10 }) => {
       `SELECT DISTINCT s.*
       FROM
         sessions s
-      LEFT JOIN
+      JOIN
         tokens t
         ON t."sessionId" = s.id
       WHERE
