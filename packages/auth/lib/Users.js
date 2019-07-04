@@ -299,6 +299,11 @@ const auditAuthorizeAttempts = async ({ pgdb, email, maxAttempts = 10 }) => {
       GROUP BY s.sid
     `, { email })
 
+    if (sessions.length === 0) {
+      await transaction.transactionCommit()
+      return
+    }
+
     // Find token which expires next over all sessions
     const nextExpireAt = sessions
       .reduce((acc, curr) => acc.tokenExpiresAt > curr.tokenExpiresAt ? curr : acc)
