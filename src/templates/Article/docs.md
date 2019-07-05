@@ -447,7 +447,7 @@ Genau zu diesem Zwecke erschaffen, immer im Schatten meines großen Bruders «Lo
 `}</Markdown>
 ```
 
-### With Figure
+### Pull Quote with Figure
 
 ```react|noSource
 <Markdown schema={schema}>{`
@@ -519,7 +519,7 @@ Was für eine Erleichterung. Standards sparen Zeit bei den Entwicklungskosten un
 `}</Markdown>
 ```
 
-### With Figure
+### Infobox with Figure
 
 ```react|noSource
 <Markdown schema={schema}>{`
@@ -613,7 +613,7 @@ Zweitens: ich habe erklärt mit diese zwei Spieler: nach Dortmund brauchen viell
 `}</Markdown>
 ```
 
-### With List
+### Infobox with List
 
 ```react|noSource
 <Markdown schema={schema}>{`
