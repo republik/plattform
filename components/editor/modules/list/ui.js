@@ -12,7 +12,7 @@ export const ListForm = options => {
     }
     // Multiple lists would involve more iteration work and given the fact, that this would happen on every select, I'd avoid it until necessary.
     const list = value.blocks.reduce(
-    (memo, node) =>
+      (memo, node) =>
         memo || value.document.getFurthest(node.key, matchBlock(options.TYPE)),
       undefined
     )
@@ -26,7 +26,7 @@ export const ListForm = options => {
           <Checkbox
             checked={list.data.get('compact')}
             onChange={handlerFactory('compact')}
-              >
+          >
                 Kompakt
           </Checkbox>
         </UIForm>
@@ -37,7 +37,7 @@ export const ListForm = options => {
   return createPropertyForm({
     isDisabled: ({ value }) => {
       const list = value.blocks.reduce(
-      (memo, node) =>
+        (memo, node) =>
           memo || value.document.getFurthest(node.key, matchBlock(options.TYPE)),
         undefined
       )
@@ -47,8 +47,9 @@ export const ListForm = options => {
   })(Form)
 }
 
-export const createListButton = ({TYPE, ordered, label, newBlock}) => createBlockButton({
+export const createListButton = ({ TYPE, ordered, label, parentTypes, newBlock }) => createBlockButton({
   type: TYPE,
+  parentTypes,
   reducer: props =>
     event => {
       const { onChange, value } = props
@@ -73,7 +74,7 @@ export const createListButton = ({TYPE, ordered, label, newBlock}) => createBloc
           .change()
           .call(
             injectBlock,
-            newBlock({ordered})
+            newBlock({ ordered })
           )
       )
     }
@@ -85,7 +86,7 @@ export const createListButton = ({TYPE, ordered, label, newBlock}) => createBloc
       data-active={active}
       data-disabled={disabled}
       data-visible={visible}
-      >
+    >
       {label}
     </span>
 )

@@ -4,7 +4,7 @@ import MarkdownSerializer from 'slate-mdast-serializer'
 import { matchBlock } from '../../utils'
 import createUi from './ui'
 
-export default ({rule, subModules, TYPE}) => {
+export default ({ rule, subModules, TYPE }) => {
   const editorOptions = rule.editorOptions || {}
 
   const titleModule = subModules.find(m => m.name === 'headline')
@@ -18,10 +18,14 @@ export default ({rule, subModules, TYPE}) => {
   }
 
   const figureModule = subModules.find(m => m.name === 'figure')
+  const title2Module = subModules.find(m => m.name === 'headline' && m !== titleModule)
+  const listModule = subModules.find(m => m.name === 'list')
 
   const orderedSubModules = [
     titleModule,
     figureModule,
+    title2Module,
+    listModule,
     paragraphModule
   ].filter(Boolean)
 
@@ -78,7 +82,7 @@ export default ({rule, subModules, TYPE}) => {
     }),
     plugins: [
       {
-        renderNode ({node, children, attributes}) {
+        renderNode ({ node, children, attributes }) {
           if (!serializerRule.match(node)) return
 
           const hasFigure = figureModule && node.nodes.find(n => n.type === figureModule.TYPE)
@@ -103,7 +107,14 @@ export default ({rule, subModules, TYPE}) => {
 
           // unwrap empty paragraph on enter
           const block = value.startBlock
-          if (!block.text && !isBackspace) {
+          if (
+            !block.text &&
+            !isBackspace &&
+            !(
+              // let list module handle it
+              listModule && value.document.getClosest(block.key, matchBlock(listModule.TYPE))
+            )
+          ) {
             event.preventDefault()
             return change
               .unwrapBlock(TYPE)
@@ -131,18 +142,19 @@ export default ({rule, subModules, TYPE}) => {
                   kinds: ['block'], types: [figureModule.TYPE], min: 0, max: 1
                 },
                 {
-                  kinds: ['block'], types: [paragraphModule.TYPE], min: 1
+                  kinds: ['block'],
+                  types: [
+                    paragraphModule.TYPE,
+                    title2Module && title2Module.TYPE,
+                    listModule && listModule.TYPE
+                  ].filter(Boolean),
+                  min: 1
                 }
               ].filter(Boolean),
-              normalize: (change, reason, {node, index, child}) => {
-                let orderedTypes = orderedSubModules
-                  .map(subModule => subModule.TYPE)
-                if (figureModule) {
-                  const hasFigure = !!node.nodes.find(n => n.type === figureModule.TYPE)
-                  if (!hasFigure) {
-                    orderedTypes = orderedTypes.filter(type => type !== figureModule.TYPE)
-                  }
-                }
+              normalize: (change, reason, { node, index, child }) => {
+                const desiredType = index === 0
+                  ? titleModule.TYPE
+                  : paragraphModule.TYPE
 
                 if (node.nodes.first().kind !== 'block') {
                   child = node.nodes.first()
@@ -156,7 +168,7 @@ export default ({rule, subModules, TYPE}) => {
                     index,
                     {
                       kind: 'block',
-                      type: orderedTypes[index]
+                      type: desiredType
                     }
                   )
                 }
@@ -164,7 +176,7 @@ export default ({rule, subModules, TYPE}) => {
                   change.wrapBlockByKey(
                     child.key,
                     {
-                      type: orderedTypes[index]
+                      type: desiredType
                     }
                   )
                 }
@@ -172,12 +184,12 @@ export default ({rule, subModules, TYPE}) => {
                   change.setNodeByKey(
                     child.key,
                     {
-                      type: orderedTypes[index]
+                      type: desiredType
                     }
                   )
                 }
                 if (reason === 'child_unknown') {
-                  if (index >= orderedTypes.length) {
+                  if (index > 1) {
                     change.unwrapNodeByKey(child.key)
                   }
                 }

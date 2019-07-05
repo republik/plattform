@@ -9,7 +9,13 @@ import {
 import MarkdownSerializer from 'slate-mdast-serializer'
 import { Block } from 'slate'
 
-export default ({rule, subModules, TYPE}) => {
+export default ({ rule, subModules, TYPE }) => {
+  const {
+    formatButtonText = 'Liste',
+    formatButtonTextOrdered = 'Aufzählung',
+    formatTypes
+  } = rule.editorOptions || {}
+
   const itemModule = subModules.find(m => m.name === 'listItem')
   if (!itemModule) {
     throw new Error('Missing listItem submodule')
@@ -51,7 +57,7 @@ export default ({rule, subModules, TYPE}) => {
     ]
   })
 
-  const newBlock = ({ordered = false, compact = true}) => Block.fromJSON(
+  const newBlock = ({ ordered = false, compact = true }) => Block.fromJSON(
     list.fromMdast({
       ordered,
       loose: !compact,
@@ -82,13 +88,15 @@ export default ({rule, subModules, TYPE}) => {
         createListButton({
           TYPE,
           ordered: false,
-          label: 'Liste',
+          label: formatButtonText,
+          parentTypes: formatTypes,
           newBlock
         }),
         createListButton({
           TYPE,
           ordered: true,
-          label: 'Aufzählung',
+          label: formatButtonTextOrdered,
+          parentTypes: formatTypes,
           newBlock
         })
       ],

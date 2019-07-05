@@ -16,9 +16,9 @@ export default ({ rule, subModules, TYPE }) => {
     depth,
     placeholder,
     formatButtonText,
+    formatTypes,
     isStatic = false
-  } =
-    rule.editorOptions || {}
+  } = rule.editorOptions || {}
 
   const inlineSerializer = new MarkdownSerializer({
     rules: subModules
@@ -81,7 +81,8 @@ export default ({ rule, subModules, TYPE }) => {
       blockFormatButtons: [
         formatButtonText &&
           createBlockButton({
-            type: TYPE
+            type: TYPE,
+            parentTypes: formatTypes
           })(({ active, disabled, visible, ...props }) => (
             <span
               {...buttonStyles.block}
