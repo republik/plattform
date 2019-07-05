@@ -435,16 +435,22 @@ const blockQuote = {
   rules: [
     {
       matchMdast: matchType('blockquote'),
-      component: BlockQuoteParagraph,
-      editorModule: 'paragraph',
+      component: ({ children }) => children,
+      editorModule: 'blocktext',
       editorOptions: {
-        type: 'BLOCKQUOTEPARAGRAPH',
-        placeholder: 'Zitat-Absatz'
+        type: 'BLOCKQUOTETEXT',
+        mdastType: 'blockquote',
+        isStatic: true
       },
       rules: [
         {
           matchMdast: matchParagraph,
-          component: ({ children }) => children,
+          editorModule: 'paragraph',
+          editorOptions: {
+            type: 'BLOCKQUOTEPARAGRAPH',
+            placeholder: 'Zitat-Absatz'
+          },
+          component: BlockQuoteParagraph,
           rules: paragraphRules
         }
       ]
