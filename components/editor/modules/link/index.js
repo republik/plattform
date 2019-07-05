@@ -6,6 +6,9 @@ import createUi from './ui'
 
 export default ({rule, subModules, TYPE}) => {
   const Link = rule.component
+  const {
+    formatTypes
+  } = rule.editorOptions || {}
 
   const link = {
     match: matchInline(TYPE),
@@ -40,7 +43,7 @@ export default ({rule, subModules, TYPE}) => {
       serializer
     },
     changes: {},
-    ui: createUi({TYPE}),
+    ui: createUi({ TYPE, parentTypes: formatTypes }),
     plugins: [
       {
         renderNode ({node, children, attributes}) {

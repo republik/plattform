@@ -160,7 +160,8 @@ export const LinkForm = options => withT(Form(options))
 
 export const LinkButton = options =>
   createInlineButton({
-    type: options.TYPE
+    type: options.TYPE,
+    parentTypes: options.parentTypes
   })(
     ({ active, disabled, visible, ...props }) =>
       <span
