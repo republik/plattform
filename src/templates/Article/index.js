@@ -341,20 +341,36 @@ const infoBox = {
       component: InfoBoxSubhead,
       editorModule: 'headline',
       editorOptions: {
-        placeholder: 'Titel',
-        type: 'LOGBOOK_TITLE',
+        placeholder: 'Zwischentitel',
+        type: 'INFOH2',
         depth: 4,
-        isStatic: true
+        isStatic: true,
+        formatButtonText: 'Infobox Zwischentitel',
+        formatTypes: [
+          'INFOP'
+        ]
       },
       rules: globalInlines
     },
     {
       ...list,
+      editorOptions: {
+        ...list.editorOptions,
+        type: 'INFOLIST',
+        formatButtonText: 'Infobox Liste',
+        formatButtonTextOrdered: 'Infobox Aufzählung',
+        formatTypes: [
+          'INFOP'
+        ]
+      },
       rules: [
         {
           matchMdast: matchType('listItem'),
           component: InfoBoxListItem,
           editorModule: 'listItem',
+          editorOptions: {
+            type: 'INFOLISTITEM'
+          },
           rules: [
             {
               matchMdast: matchParagraph,
