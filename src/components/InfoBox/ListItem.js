@@ -7,6 +7,7 @@ import {
 import colors from '../../theme/colors'
 import { css } from 'glamor'
 import { mUp } from '../../theme/mediaQueries'
+import { textAttributes } from './InfoBox'
 
 const WIDTH = 22
 
@@ -27,7 +28,7 @@ const styles = {
 
 
 const ListItem = ({ children, attributes = {}, style={} }) => (
-  <li {...styles.li} {...attributes} style={style}>
+  <li {...styles.li} {...attributes} {...textAttributes} style={style}>
     {children}
   </li>
 )

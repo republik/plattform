@@ -12,8 +12,8 @@ export const IMAGE_SIZES = {
 }
 export const DEFAULT_IMAGE_SIZE = 'S'
 
-export const textAttributes = {'data-infobox-text': true}
-const textSelector = '[data-infobox-text]'
+const textAttribute = 'data-infobox-text'
+export const textAttributes = {[textAttribute]: true}
 
 const figureChildStyles = Object.keys(IMAGE_SIZES).reduce((styles, key) => {
   const size = IMAGE_SIZES[key]
@@ -65,8 +65,12 @@ const textChildStyles = Object.keys(IMAGE_SIZES).reduce((styles, key) => {
   const size = IMAGE_SIZES[key]
   styles[key] = css({
     [mUp]: {
-      [`& ${textSelector}`]: {
-        marginLeft: size + 20
+      [`& [${textAttribute}]`]: {
+        marginLeft: size + 20,
+        // Text in ListItem
+        [`& [${textAttribute}]`]: {
+          marginLeft: 0
+        }
       }
     }
   })
