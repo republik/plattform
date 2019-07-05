@@ -4,7 +4,7 @@ import { matchBlock, createBlockButton, buttonStyles } from '../../utils'
 import MarkdownSerializer from 'slate-mdast-serializer'
 import { createStaticKeyHandler } from '../../utils/keyHandlers'
 
-export default ({rule, subModules, TYPE}) => {
+export default ({ rule, subModules, TYPE }) => {
   const paragraphModule = subModules.find(m => m.name === 'paragraph')
   if (!paragraphModule) {
     throw new Error('Missing paragraph submodule')
@@ -47,6 +47,7 @@ export default ({rule, subModules, TYPE}) => {
 
   return {
     TYPE,
+    rule,
     helpers: {
       serializer
     },
@@ -63,7 +64,7 @@ export default ({rule, subModules, TYPE}) => {
               data-active={active}
               data-disabled={disabled}
               data-visible={visible}
-              >
+            >
               {formatButtonText}
             </span>
         )
@@ -71,7 +72,7 @@ export default ({rule, subModules, TYPE}) => {
     },
     plugins: [
       {
-        renderNode ({node, children, attributes}) {
+        renderNode ({ node, children, attributes }) {
           if (!schemaRule.match(node)) return
 
           return (
@@ -124,17 +125,17 @@ export default ({rule, subModules, TYPE}) => {
                   min: 1
                 }
               ],
-              normalize: (change, reason, {node, index, child}) => {
+              normalize: (change, reason, { node, index, child }) => {
                 if (reason === 'child_type_invalid') {
                   change.setNodeByKey(
                     child.key,
-                    {type: paragraphModule.TYPE}
+                    { type: paragraphModule.TYPE }
                   )
                 }
                 if (reason === 'child_kind_invalid') {
                   change.wrapBlockByKey(
                     child.key,
-                    {type: paragraphModule.TYPE}
+                    { type: paragraphModule.TYPE }
                   )
                 }
               }
