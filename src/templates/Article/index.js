@@ -364,7 +364,7 @@ const infoBox = {
                 type: 'INFOP',
                 placeholder: 'Infotext'
               },
-              rules: interactionParagraphRules
+              rules: paragraphRules
             }
           ]
         }
