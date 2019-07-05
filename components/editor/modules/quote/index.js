@@ -4,7 +4,7 @@ import MarkdownSerializer from 'slate-mdast-serializer'
 import { matchBlock } from '../../utils'
 import createUi from './ui'
 
-export default ({rule, subModules, TYPE}) => {
+export default ({ rule, subModules, TYPE }) => {
   const editorOptions = rule.editorOptions || {}
 
   const paragrapQuoteModule = subModules.find(m => m.name === 'paragraph')
@@ -73,11 +73,13 @@ export default ({rule, subModules, TYPE}) => {
       TYPE,
       subModules: orderedSubModules,
       editorOptions,
+      paragrapQuoteModule,
+      paragraphSourceModule,
       figureModule
     }),
     plugins: [
       {
-        renderNode ({node, children, attributes}) {
+        renderNode ({ node, children, attributes }) {
           if (!serializerRule.match(node)) return
 
           const hasFigure = figureModule && !!node.nodes.find(n => n.type === figureModule.TYPE)
@@ -122,7 +124,7 @@ export default ({rule, subModules, TYPE}) => {
                   kinds: ['block'], types: [paragraphSourceModule.TYPE], min: 1, max: 1
                 }
               ].filter(Boolean),
-              normalize: (change, reason, {node, index, child}) => {
+              normalize: (change, reason, { node, index, child }) => {
                 let orderedTypes = orderedSubModules
                   .map(subModule => subModule.TYPE)
                 if (figureModule) {
