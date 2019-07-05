@@ -118,5 +118,5 @@ ListItem.propTypes = {
 }
 
 export const List = ({ children, data, attributes = {} }) => data.ordered
-  ? <OrderedList start={data.start} {...attributes}>{ children }</OrderedList>
-  : <UnorderedList>{ children }</UnorderedList>
+  ? <OrderedList start={data.start} compact={data.compact} {...attributes}>{ children }</OrderedList>
+  : <UnorderedList compact={data.compact}>{ children }</UnorderedList>
