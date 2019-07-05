@@ -166,7 +166,8 @@ const createTeasers = ({
           </Link>,
         editorModule: 'link',
         editorOptions: {
-          type: 'FRONTLINK'
+          type: 'FRONTLINK',
+          formatTypes: ['FRONTCREDIT']
         }
       }
     ]
