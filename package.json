@@ -2,7 +2,7 @@
   "name": "publikator-frontend",
   "version": "1.0.0",
   "engines": {
-    "node": "10.4.1"
+    "node": "12.2.0"
   },
   "description": "",
   "main": "server/index.js",
@@ -42,7 +42,7 @@
     "parser": "babel-eslint"
   },
   "devDependencies": {
-    "babel-eslint": "^10.0.1",
+    "babel-eslint": "^10.0.2",
     "babel-plugin-transform-react-jsx": "^6.24.1",
     "babel-preset-env": "^1.7.0",
     "babel-tape-runner": "^3.0.0",
@@ -50,7 +50,7 @@
     "diff": "^3.5.0",
     "enzyme": "^3.6.0",
     "enzyme-adapter-react-16": "^1.5.0",
-    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-import": "^2.18.0",
     "faucet": "0.0.1",
     "gsheets": "^2.0.0",
     "husky": "^1.0.0-rc.15",
