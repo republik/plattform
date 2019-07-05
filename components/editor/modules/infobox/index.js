@@ -78,7 +78,9 @@ export default ({ rule, subModules, TYPE }) => {
       TYPE,
       subModules: orderedSubModules,
       editorOptions,
-      figureModule
+      figureModule,
+      titleModule,
+      paragraphModule
     }),
     plugins: [
       {
