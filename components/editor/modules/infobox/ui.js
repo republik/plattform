@@ -6,7 +6,8 @@ import { Radio, Label, A } from '@project-r/styleguide'
 
 import {
   createPropertyForm,
-  buttonStyles
+  buttonStyles,
+  matchBlock
 } from '../../utils'
 import MetaForm from '../../utils/MetaForm'
 
@@ -33,7 +34,7 @@ export default ({ TYPE, subModules, editorOptions = {}, titleModule, paragraphMo
           .filter(isInfoboxBlock)
           .map(block => block.type === TYPE
             ? block
-            : value.document.getParent(block.key)
+            : value.document.getClosest(block.key, matchBlock(TYPE))
           )
           .filter((block, index, all) => all.indexOf(block) === index && block.type === TYPE)
           .map((block, i) => {
