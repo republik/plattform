@@ -8,7 +8,8 @@ import {
   buttonStyles
 } from '../../utils'
 import {
-  createStaticKeyHandler
+  createStaticKeyHandler,
+  createInsertAfterKeyHandler
 } from '../../utils/keyHandlers'
 
 export default ({ rule, subModules, TYPE }) => {
@@ -100,7 +101,7 @@ export default ({ rule, subModules, TYPE }) => {
       {
         onKeyDown: isStatic
           ? createStaticKeyHandler({ TYPE, rule })
-          : () => {},
+          : createInsertAfterKeyHandler({ TYPE, rule }),
         renderPlaceholder:
           placeholder &&
           (({ node }) => {
