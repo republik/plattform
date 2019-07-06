@@ -344,7 +344,8 @@ const infoBox = {
         placeholder: 'Zwischentitel',
         type: 'INFOH2',
         depth: 4,
-        isStatic: true,
+        afterType: 'INFOP',
+        insertAfterType: 'INFOBOX',
         formatButtonText: 'Infobox Zwischentitel',
         formatTypes: [
           'INFOP'
@@ -897,7 +898,9 @@ const createSchema = ({
                 editorOptions: {
                   type: 'H2',
                   depth: 2,
-                  formatButtonText: 'Zwischentitel'
+                  formatButtonText: 'Zwischentitel',
+                  afterType: 'PARAGRAPH',
+                  insertAfterType: 'CENTER'
                 },
                 rules: globalInlines
               },
