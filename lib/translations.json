@@ -1,5 +1,5 @@
 {
-  "updated": "2019-04-25T16:57:47.488Z",
+  "updated": "2019-07-06T22:23:12.623Z",
   "title": "live",
   "data": [
     {
@@ -759,6 +759,10 @@
       "value": "Diese Version kann nicht veröffentlicht werden:"
     },
     {
+      "key": "publish/validation/hasWarnings",
+      "value": "Warnungen:"
+    },
+    {
       "key": "publish/validation/slug/empty",
       "value": "Web-Slug fehlt"
     },
@@ -769,6 +773,26 @@
     {
       "key": "publish/validation/emailSubject/empty",
       "value": "E-Mail-Betreff fehlt"
+    },
+    {
+      "key": "publish/validation/title/empty",
+      "value": "Metadaten-Titel fehlt"
+    },
+    {
+      "key": "publish/validation/description/empty",
+      "value": "Metadaten-Deskription fehlt"
+    },
+    {
+      "key": "publish/validation/image/empty",
+      "value": "Metadaten-Bild fehlt"
+    },
+    {
+      "key": "publish/validation/facebookImage/empty",
+      "value": "Es ist auch kein spezifisches Bild für Facebook festgelegt"
+    },
+    {
+      "key": "publish/validation/twitterImage/empty",
+      "value": "Es ist auch kein spezifisches Bild für Twitter festgelegt"
     },
     {
       "key": "publish/error/unresolvedRepoIds",
