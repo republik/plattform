@@ -39,8 +39,10 @@ const insertAfter = (
     value.document
 
   const index = rootNode.nodes.findIndex(
-    n =>
+    n => (
+      n.key === value.endBlock.key ||
       !!n.findDescendant(m => m.key === value.endBlock.key)
+    )
   )
 
   if (index !== -1) {
