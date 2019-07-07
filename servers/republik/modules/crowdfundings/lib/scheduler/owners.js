@@ -15,10 +15,6 @@ const {
 } = process.env
 
 const STATS_INTERVAL_SECS = 3
-const me = {
-  roles: ['admin']
-}
-
 const DAYS_BEFORE_END_DATE = 29
 
 const formatDate = (date) =>
@@ -58,7 +54,9 @@ const createBuckets = (now) => [
   }
 ]
 
-const getBuckets = async ({ now }, { pgdb }) => {
+const getBuckets = async ({ now }, context) => {
+  const { pgdb } = context
+
   /**
    * Load users with a membership.
    *
@@ -115,7 +113,7 @@ const getBuckets = async ({ now }, { pgdb }) => {
       const prolongBeforeDate = await getProlongBeforeDate(
         user,
         { ignoreClaimedMemberships: false },
-        { pgdb, user: me }
+        { ...context, user }
       )
         .then(date => date && moment(date))
 
@@ -162,7 +160,7 @@ const getBuckets = async ({ now }, { pgdb }) => {
 
 const inform = async (args, context) => {
   const buckets = await getBuckets(args, context)
-  debug('buckets: %o', buckets.map(b => ({...b, users: b.users.length})))
+  debug('buckets: %o', buckets.map(b => ({ ...b, users: b.users.length })))
 
   return Promise.each(
     buckets,
