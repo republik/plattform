@@ -1,5 +1,8 @@
-const { Roles } = require('@orbiting/backend-modules-auth')
 const crypto = require('crypto')
+
+const { Roles } = require('@orbiting/backend-modules-auth')
+const { mdastToString } = require('@orbiting/backend-modules-utils')
+
 // TODO don't require from servers
 const {
   portrait: getPortrait,
@@ -41,37 +44,27 @@ const textForComment = async ({ userId, content, published, adminUnpublished, di
  *
  * @param  {Object}  node         mdast Object
  * @param  {Number}  [length=500] Maximum chars string should contain
- * @param  {String}  [string='']  Initial string
- * @param  {Boolean} [done=false] If true, char limit (<length>) has was reached
  * @return {Preview}
  */
-const mdastToHumanString = (node, length = 500, string = '', done = false) => {
-  if (node.children) {
-    node.children.forEach(child => {
-      if (!done && child.value) {
-        const parts = child.value.split(/\s/)
+const mdastToHumanString = (node, length = 500) => {
+  let string = ''
+  const parts = mdastToString(node)
+    // Remove trailing whitespaces before certain chars.
+    .replace(/\s([.,?!])/g, '$1')
+    .split(' ')
+    .filter(Boolean)
 
-        parts.forEach(part => {
-          if (string.length + part.length <= length) {
-            string += part.trim() + ' '
-          } else {
-            done = true
-          }
-        })
-      }
+  do {
+    const part = parts.shift()
 
-      if (!done && child.children && string.length <= length) {
-        const result = mdastToHumanString(child, length, string, done)
-        string = result.string + ' '
-        done = result.done
-      }
-    })
-  }
+    if (string.length + part.length > length) {
+      break
+    }
 
-  // Sanitize string to make it human readable
-  string = string.replace(/\s([.,])/g, '$1').replace(/\s\s/g, ' ').trim()
+    string += `${part} `
+  } while (string.length <= length && parts.length > 0)
 
-  return { string, more: !!done, done }
+  return { string: string.trim(), more: parts.length > 0 }
 }
 
 module.exports = {
