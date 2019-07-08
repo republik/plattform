@@ -6,15 +6,18 @@ const debug = require('debug')('stats:periods')
 const createCache = require('../../../modules/crowdfundings/lib/cache')
 const QUERY_CACHE_TTL_SECONDS = 60 * 5 // 5 min
 
-const {
-  PARKING_USER_ID
-} = process.env
+const { PARKING_USER_ID } = process.env
 
 const DORMANT_MEMBERSHIP_TYPES = ['ABO', 'BENEFACTOR_ABO']
 
 // returns memberships with all its periods where one period ends in given range
-const getMembershipsEndingInRange = (minEndDate, maxEndDate, membershipTypes, pgdb) =>
-  pgdb.query(`
+const getMembershipsEndingInRange = (minEndDate, maxEndDate, membershipTypes, pgdb) => {
+  const excludeParkingUserFragment =
+    PARKING_USER_ID
+      ? `m."userId" != '${PARKING_USER_ID}' AND`
+      : ''
+
+  return pgdb.query(`
     WITH dormant_membership_user_ids AS (
       SELECT
         DISTINCT(m."userId") as "userId"
@@ -34,7 +37,7 @@ const getMembershipsEndingInRange = (minEndDate, maxEndDate, membershipTypes, pg
           -- unclaimed GIVE is not "dormant"
           (m."userId" = p."userId" AND pkg.name != 'ABO_GIVE')
         ) AND
-        m."userId" != :PARKING_USER_ID AND
+        ${excludeParkingUserFragment}
         m."membershipTypeId" IN (
           SELECT id FROM "membershipTypes" WHERE name = ANY('{${DORMANT_MEMBERSHIP_TYPES.join(',')}}')
         )
@@ -48,7 +51,7 @@ const getMembershipsEndingInRange = (minEndDate, maxEndDate, membershipTypes, pg
       JOIN
         "membershipTypes" mt ON m."membershipTypeId" = mt.id
       WHERE
-        m."userId" != :PARKING_USER_ID AND
+        ${excludeParkingUserFragment}
         m."userId" NOT IN (SELECT "userId" FROM dormant_membership_user_ids) AND
         mp."endDate" >= :minEndDate AND
         mp."endDate" <= :maxEndDate AND
@@ -81,11 +84,11 @@ const getMembershipsEndingInRange = (minEndDate, maxEndDate, membershipTypes, pg
       GROUP BY
         m.id
   `, {
-    PARKING_USER_ID,
     minEndDate,
     maxEndDate,
     membershipTypes
   })
+}
 
 const isPeriodEndingInRange = (period, minEndDate, maxEndDate) => {
   const endDate = moment(period.endDate)
@@ -154,7 +157,7 @@ module.exports = async (_, args, context) => {
     key: queryId,
     ttl: QUERY_CACHE_TTL_SECONDS
   }, context)
-    .cache(() => getPeriods({minEndDate, maxEndDate, membershipTypes, queryId, context}))
+    .cache(() => getPeriods({ minEndDate, maxEndDate, membershipTypes, queryId, context }))
 }
 
 const getPeriods = async ({ minEndDate, maxEndDate, membershipTypes, queryId, context }) => {

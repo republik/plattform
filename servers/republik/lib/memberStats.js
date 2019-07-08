@@ -1,17 +1,15 @@
 const count = async ({ pgdb }) => {
-  const { PARKING_USER_ID } = process.env
+  const excludeParkingUserFragment = process.env.PARKING_USER_ID
+    ? `u.id != '${process.env.PARKING_USER_ID}' AND`
+    : ''
 
   return pgdb.queryOneField(`
-    SELECT
-      count(*)
-    FROM
-      users u
+    SELECT count(*)
+    FROM users u
     WHERE
-      u.roles @> '["member"]' AND
-      u.id != :excludeUserId
-  `, {
-    excludeUserId: PARKING_USER_ID
-  })
+      ${excludeParkingUserFragment}
+      u.roles @> '["member"]'
+  `)
 }
 
 module.exports = { count }
