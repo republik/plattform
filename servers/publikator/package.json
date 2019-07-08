@@ -39,7 +39,8 @@
     "superheroes": "^2.0.0",
     "supervillains": "^2.2.0",
     "throng": "^4.0.0",
-    "unist-util-visit": "^1.3.0"
+    "unist-util-visit": "^1.3.0",
+    "yargs": "^13.2.4"
   },
   "scripts": {
     "dev": "NODE_ENV=development nodemon $NODE_DEBUG_OPTION -w ../../packages -w graphql -w lib -w express -w .env -w package.json -w ../yarn.lock -w server.js -w index.js index.js",
