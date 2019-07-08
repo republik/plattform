@@ -12,16 +12,23 @@ const iterateRepos = async (context, callback) => {
   do {
     console.info(`requesting repos (page ${pageCounter++}) ...`)
 
-    const repos = await getRepos(null, {
+    const options = {
       first: 20,
-      orderBy: {
-        field: 'PUSHED_AT',
-        direction: 'DESC'
-      },
       ...(pageInfo && pageInfo.hasNextPage)
         ? { after: pageInfo.endCursor }
         : { }
-    }, context)
+    }
+
+    if (context.searchTerm) {
+      options.search = context.searchTerm
+    } else {
+      options.orderBy = {
+        field: 'PUSHED_AT',
+        direction: 'DESC'
+      }
+    }
+
+    const repos = await getRepos(null, options, context)
 
     pageInfo = repos.pageInfo
 
@@ -36,7 +43,7 @@ const iterateRepos = async (context, callback) => {
 
 module.exports = {
   before: () => {},
-  insert: async ({indexName, type: indexType, elastic, pgdb}) => {
+  insert: async ({ indexName, type: indexType, searchTerm, elastic, pgdb }) => {
     const stats = { [indexType]: { added: 0, total: 0 } }
     const statsInterval = setInterval(
       () => { console.log(indexName, stats) },
@@ -50,7 +57,8 @@ module.exports = {
         name: 'publikator-pullelasticsearch',
         email: 'ruggedly@republik.ch',
         roles: [ 'editor' ]
-      }
+      },
+      searchTerm
     }
 
     await iterateRepos(context, async (repo, publications) => {
