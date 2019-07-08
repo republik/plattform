@@ -14,7 +14,6 @@ const timeout = ms => new Promise(resolve => setTimeout(resolve, ms))
 module.exports = async ({
   indices: indicesFilter = mappings.list.map(({ name }) => name),
   switch: doSwitch = true,
-  search: searchTerm,
   inserts: doInserts = true,
   flush: doFlush = false
 }) => {
@@ -86,7 +85,6 @@ module.exports = async ({
       await inserts.dict[name].insert({
         indexName: index,
         type,
-        searchTerm,
         elastic,
         pgdb,
         redis
