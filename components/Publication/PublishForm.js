@@ -91,6 +91,15 @@ export const getRepoWithCommit = gql`
             slug
             emailSubject
             template
+            title
+            description
+            image
+            facebookDescription
+            facebookImage
+            facebookTitle
+            twitterDescription
+            twitterImage
+            twitterTitle
             format {
               meta {
                 path
@@ -178,6 +187,16 @@ class PublishForm extends Component {
             (meta.template !== 'front' && !meta.slug) && t('publish/validation/slug/empty'),
             (updateMailchimp && !meta.emailSubject) && t('publish/validation/emailSubject/empty')
           ].filter(Boolean)
+
+          const warnings = meta.template !== 'front'
+            ? [
+              !meta.title && t('publish/validation/title/empty'),
+              !meta.description && t('publish/validation/description/empty'),
+              !meta.facebookImage && !meta.image && t('publish/validation/facebookImage/empty'),
+              !meta.twitterImage && !meta.image && t('publish/validation/twitterImage/empty')
+            ].filter(Boolean)
+            : []
+
           const hasErrors = errors.length > 0
 
           const {
@@ -249,6 +268,23 @@ class PublishForm extends Component {
                       <li key={i}>
                         <Interaction.P style={{ color: colors.error }}>
                           {error}
+                        </Interaction.P>
+                      </li>
+                    ))}
+                  </ul>
+                  <br /><br />
+                </span>
+              )}
+              {warnings.length > 0 && (
+                <span>
+                  <Interaction.P style={{ color: colors.social }}>
+                    {t('publish/validation/hasWarnings')}
+                  </Interaction.P>
+                  <ul style={{ color: colors.social }}>
+                    {warnings.map((warning, i) => (
+                      <li key={i}>
+                        <Interaction.P style={{ color: colors.social }}>
+                          {warning}
                         </Interaction.P>
                       </li>
                     ))}

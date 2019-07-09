@@ -6,44 +6,43 @@ import injectBlock from '../../utils/injectBlock'
 import { matchBlock, createBlockButton, buttonStyles } from '../../utils'
 
 const getNewItem = options => {
-  const [paragraphModule, captionModule] = options.subModules
+  const [blocktextModule, captionModule] = options.subModules
   return () => Block.create({
     kind: 'block',
     type: options.TYPE,
     nodes: [
       Block.create({
         kind: 'block',
-        type: paragraphModule.TYPE
+        type: blocktextModule.TYPE
       }),
       captionModule.helpers.newBlock()
     ]
   })
 }
 
-export const getSubmodules = options => {
-  const [paragraphModule, captionModule] = options.subModules
+const getSubmodules = ({ subModules }) => {
+  const blocktextModule = subModules.find(m => m.name === 'blocktext')
+  if (!blocktextModule) {
+    throw new Error('Missing blocktext submodule')
+  }
+  const captionModule = subModules.find(m => m.name === 'figureCaption')
+  if (!captionModule) {
+    throw new Error('Missing figureCaption submodule')
+  }
   return {
-    paragraphModule,
+    blocktextModule,
     captionModule
   }
 }
 
-export const fromMdast = options => {
-  const { paragraphModule, captionModule } = getSubmodules(options)
+const fromMdast = options => {
+  const { blocktextModule, captionModule } = getSubmodules(options)
   return (node, index, parent, rest) => {
     const caption = node.children.filter(captionModule.rule.matchMdast)
-    const blockquotes = node.children.filter(paragraphModule.rule.matchMdast)
+    const blockquotes = node.children.filter(blocktextModule.rule.matchMdast)
     const serializedBlockQuotes = blockquotes.length
-      ? paragraphModule.helpers.serializer.fromMdast(blockquotes.map(n => ({
-        ...n,
-        children: n.children && n.children.length
-          ? n.children[0].children
-          : [{
-            type: 'text',
-            value: ''
-          }]
-      })))
-      : [{ kind: 'block', type: paragraphModule.TYPE }]
+      ? blocktextModule.helpers.serializer.fromMdast(blockquotes)
+      : [{ kind: 'block', type: blocktextModule.TYPE }]
 
     const serializedCaption = captionModule.helpers.serializer.fromMdast(caption.length ? caption : ([{
       type: 'paragraph',
@@ -70,8 +69,8 @@ export const fromMdast = options => {
   }
 }
 
-export const toMdast = options => {
-  const { paragraphModule, captionModule } = getSubmodules(options)
+const toMdast = options => {
+  const { blocktextModule, captionModule } = getSubmodules(options)
 
   return (node, index, parent, rest) => {
     const caption = node.nodes.slice(-1)
@@ -81,16 +80,14 @@ export const toMdast = options => {
       type: 'zone',
       identifier: 'BLOCKQUOTE',
       children: [
-        ...paragraphModule.helpers.serializer
-          .toMdast(paragraphs)
-          .map(n => ({ type: 'blockquote', children: [n] })),
+        ...blocktextModule.helpers.serializer.toMdast(paragraphs),
         ...captionModule.helpers.serializer.toMdast(caption)
       ]
     }
   }
 }
 
-export const getSerializer = options => {
+const getSerializer = options => {
   return new MarkdownSerializer({
     rules: [
       {
@@ -103,8 +100,8 @@ export const getSerializer = options => {
   })
 }
 
-export const blockQuotePlugin = options => {
-  const { paragraphModule, captionModule } = getSubmodules(options)
+const blockQuotePlugin = options => {
+  const { blocktextModule, captionModule } = getSubmodules(options)
   const BlockQuote = options.rule.component
   return {
     renderNode: ({ node, children, attributes }) => {
@@ -120,7 +117,7 @@ export const blockQuotePlugin = options => {
         [options.TYPE]: {
           nodes: [
             {
-              types: [paragraphModule.TYPE], min: 1
+              types: [blocktextModule.TYPE], min: 1
             },
             {
               types: [captionModule.TYPE], min: 1, max: 1
@@ -132,7 +129,7 @@ export const blockQuotePlugin = options => {
   }
 }
 
-export const createBlockQuoteButton = options => createBlockButton({
+const createBlockQuoteButton = options => createBlockButton({
   type: options.TYPE,
   reducer: props =>
     event => {
@@ -156,7 +153,7 @@ export const createBlockQuoteButton = options => createBlockButton({
       data-active={active}
       data-disabled={disabled}
       data-visible={visible}
-      >
+    >
       {options.rule.editorOptions.insertButtonText}
     </span>
   }

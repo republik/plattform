@@ -2,7 +2,7 @@
   "name": "publikator-frontend",
   "version": "1.0.0",
   "engines": {
-    "node": "10.4.1"
+    "node": "12.2.0"
   },
   "description": "",
   "main": "server/index.js",
@@ -19,8 +19,8 @@
     "standardize": "standard --fix",
     "precommit": "npm run test:unit && lint-staged",
     "translations": "gsheets --key=1qPubCKz2YzbcFkRfF0MrgRqD0KLsgRPxoZfG5G3tHOA --title=live --pretty --out lib/translations.json",
-    "link:sg": "rm -rf .next && npm link @project-r/styleguide && rm -rf node_modules/glamor && ln -s @project-r/styleguide/node_modules/glamor node_modules/glamor && echo '\n⚠️  Make sure to restart the next.js server. To unlink run npm run unlink:sg.\n'",
-    "unlink:sg": "rm -rf .next && rm -rf node_modules/glamor && rm -rf node_modules/@project-r/styleguide"
+    "sg:link": "./scripts/sg_link.sh",
+    "sg:unlink": "./scripts/sg_unlink.sh"
   },
   "repository": {
     "type": "git",
@@ -42,7 +42,7 @@
     "parser": "babel-eslint"
   },
   "devDependencies": {
-    "babel-eslint": "^10.0.1",
+    "babel-eslint": "^10.0.2",
     "babel-plugin-transform-react-jsx": "^6.24.1",
     "babel-preset-env": "^1.7.0",
     "babel-tape-runner": "^3.0.0",
@@ -50,7 +50,7 @@
     "diff": "^3.5.0",
     "enzyme": "^3.6.0",
     "enzyme-adapter-react-16": "^1.5.0",
-    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-import": "^2.18.0",
     "faucet": "0.0.1",
     "gsheets": "^2.0.0",
     "husky": "^1.0.0-rc.15",
@@ -65,7 +65,7 @@
   },
   "dependencies": {
     "@orbiting/remark-preset": "^1.2.4",
-    "@project-r/styleguide": "^7.4.0",
+    "@project-r/styleguide": "^7.6.0",
     "@project-r/template-newsletter": "^1.5.0",
     "apollo-cache-inmemory": "^1.2.10",
     "apollo-client": "^2.4.2",

@@ -658,6 +658,7 @@ export class EditorPage extends Component {
       ),
       !showLoading && repo && repo.isArchived && <RepoArchivedBanner />
     ].filter(Boolean)
+    const sidebarDisabled = !!(showLoading || error)
 
     return (
       <Frame raw>
@@ -738,13 +739,14 @@ export class EditorPage extends Component {
           )} />
           <Sidebar
             prependChildren={sidebarPrependChildren}
-            isDisabled={Boolean(showLoading || error)}
-            selectedTabId={(readOnly && 'workflow') || undefined}
+            isDisabled={sidebarDisabled}
+            selectedTabId={readOnly ? 'workflow' : 'edit'}
             isOpen={showSidebar}
           >
             {
               !readOnly &&
               <Sidebar.Tab tabId='edit' label='Editieren'>
+                <CharCount value={editorState} />
                 {
                   !!this.editor &&
                   <EditorUI
@@ -762,9 +764,6 @@ export class EditorPage extends Component {
                 isNew={isNew}
                 hasUncommittedChanges={hasUncommittedChanges}
               />
-            </Sidebar.Tab>
-            <Sidebar.Tab tabId='analytics' label='Info'>
-              <CharCount value={editorState} />
             </Sidebar.Tab>
           </Sidebar>
         </Frame.Body>

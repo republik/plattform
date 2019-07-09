@@ -93,7 +93,7 @@ export default class Sidebar extends Component {
   }
 
   componentWillReceiveProps (nextProps) {
-    if (nextProps.selectedTabId) {
+    if (nextProps.selectedTabId && nextProps.selectedTabId !== this.props.selectedTabId) {
       this.setState({
         selectedTabId: nextProps.selectedTabId
       })

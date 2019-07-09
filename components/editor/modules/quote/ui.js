@@ -1,7 +1,7 @@
 import React from 'react'
 import { Block } from 'slate'
 
-import { Radio, Label } from '@project-r/styleguide'
+import { Radio, Label, A } from '@project-r/styleguide'
 
 import {
   createPropertyForm,
@@ -10,7 +10,7 @@ import {
 
 import injectBlock from '../../utils/injectBlock'
 
-export default ({TYPE, subModules, editorOptions = {}, figureModule}) => {
+export default ({ TYPE, subModules, editorOptions = {}, paragrapQuoteModule, paragraphSourceModule, figureModule }) => {
   const {
     insertButtonText
   } = editorOptions
@@ -35,16 +35,17 @@ export default ({TYPE, subModules, editorOptions = {}, figureModule}) => {
           )
           .filter((block, index, all) => all.indexOf(block) === index && block.type === TYPE)
           .map((block, i) => {
+            const figureNode = figureModule && block.nodes.find(n => n.type === figureModule.TYPE)
             return (
               <div key={`infobox-${i}`}>
                 <Label>Zitat</Label><br />
-                <p style={{margin: '10px 0'}}>
+                <p style={{ margin: '10px 0' }}>
                   <Label>Ausrichtung</Label><br />
                   {[
-                    {label: 'Normal', size: undefined},
-                    {label: 'Klein', size: 'narrow'},
-                    {label: 'Gross', size: 'breakout'},
-                    {label: 'Links', size: 'float'}
+                    { label: 'Normal', size: undefined },
+                    { label: 'Klein', size: 'narrow' },
+                    { label: 'Gross', size: 'breakout' },
+                    { label: 'Links', size: 'float' }
                   ].map((size, i) => {
                     const checked = block.data.get('size') === size.size
 
@@ -69,6 +70,42 @@ export default ({TYPE, subModules, editorOptions = {}, figureModule}) => {
                     ]
                   })}
                 </p>
+                {figureModule && <p style={{ margin: '10px 0' }}>
+                  {figureNode ? (
+                    <A
+                      href='#'
+                      onClick={(e) => {
+                        e.preventDefault()
+                        onChange(
+                          value
+                            .change()
+                            .removeNodeByKey(figureNode.key)
+                        )
+                      }}
+                    >
+                      Bild entfernen
+                    </A>
+                  ) : (
+                    <A
+                      href='#'
+                      onClick={(e) => {
+                        e.preventDefault()
+                        onChange(
+                          value.change().insertNodeByKey(
+                            block.key,
+                            0,
+                            {
+                              kind: 'block',
+                              type: figureModule.TYPE
+                            }
+                          )
+                        )
+                      }}
+                    >
+                      Bild hinzufügen
+                    </A>
+                  )}
+                </p>}
               </div>
             )
           })
@@ -86,7 +123,10 @@ export default ({TYPE, subModules, editorOptions = {}, figureModule}) => {
           injectBlock,
           Block.create({
             type: TYPE,
-            nodes: subModules.map(module => Block.create(module.TYPE))
+            nodes: [
+              Block.create(paragrapQuoteModule.TYPE),
+              Block.create(paragraphSourceModule.TYPE)
+            ]
           })
         )
     )
@@ -103,7 +143,7 @@ export default ({TYPE, subModules, editorOptions = {}, figureModule}) => {
         data-disabled={disabled}
         data-visible
         onMouseDown={quoteButtonClickHandler(value, onChange)}
-        >
+      >
         {insertButtonText}
       </span>
     )

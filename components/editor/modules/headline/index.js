@@ -8,7 +8,8 @@ import {
   buttonStyles
 } from '../../utils'
 import {
-  createStaticKeyHandler
+  createStaticKeyHandler,
+  createInsertAfterKeyHandler
 } from '../../utils/keyHandlers'
 
 export default ({ rule, subModules, TYPE }) => {
@@ -16,9 +17,9 @@ export default ({ rule, subModules, TYPE }) => {
     depth,
     placeholder,
     formatButtonText,
+    formatTypes,
     isStatic = false
-  } =
-    rule.editorOptions || {}
+  } = rule.editorOptions || {}
 
   const inlineSerializer = new MarkdownSerializer({
     rules: subModules
@@ -81,7 +82,8 @@ export default ({ rule, subModules, TYPE }) => {
       blockFormatButtons: [
         formatButtonText &&
           createBlockButton({
-            type: TYPE
+            type: TYPE,
+            parentTypes: formatTypes
           })(({ active, disabled, visible, ...props }) => (
             <span
               {...buttonStyles.block}
@@ -99,7 +101,7 @@ export default ({ rule, subModules, TYPE }) => {
       {
         onKeyDown: isStatic
           ? createStaticKeyHandler({ TYPE, rule })
-          : () => {},
+          : createInsertAfterKeyHandler({ TYPE, rule }),
         renderPlaceholder:
           placeholder &&
           (({ node }) => {

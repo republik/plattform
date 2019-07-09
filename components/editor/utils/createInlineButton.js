@@ -1,11 +1,18 @@
 import { matchInline } from './'
 import createFormatButton from './createFormatButton'
 
-const isDisabled = inlineType =>
+const isDisabled = (inlineType, parentTypes) =>
   ({ value }) =>
-    value.isBlurred || (
+    value.isBlurred ||
+    (
       !isActive(inlineType)({ value }) &&
-      value.isEmpty
+      (
+        value.isEmpty ||
+        (
+          parentTypes &&
+          !value.blocks.every(block => parentTypes.includes(block.type))
+        )
+      )
     )
 
 const isActive = inlineType =>
@@ -35,15 +42,15 @@ const reducer = inlineType =>
       }
     }
 
-const defaultOptions = inlineType => ({
-  isDisabled: isDisabled(inlineType),
+const defaultOptions = (inlineType, parentTypes) => ({
+  isDisabled: isDisabled(inlineType, parentTypes),
   isActive: isActive(inlineType),
   reducer: reducer(inlineType)
 })
 
-export default ({ type, ...options }) =>
+export default options =>
   Component =>
       createFormatButton({
-        ...defaultOptions(type),
+        ...defaultOptions(options.type, options.parentTypes),
         ...options
       })(Component)

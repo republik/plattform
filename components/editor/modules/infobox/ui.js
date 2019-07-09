@@ -2,17 +2,18 @@ import React from 'react'
 import { Map } from 'immutable'
 import { Block } from 'slate'
 
-import { Radio, Label } from '@project-r/styleguide'
+import { Radio, Label, A, Checkbox } from '@project-r/styleguide'
 
 import {
   createPropertyForm,
-  buttonStyles
+  buttonStyles,
+  matchBlock
 } from '../../utils'
 import MetaForm from '../../utils/MetaForm'
 
 import injectBlock from '../../utils/injectBlock'
 
-export default ({TYPE, subModules, editorOptions = {}, figureModule}) => {
+export default ({ TYPE, subModules, editorOptions = {}, titleModule, paragraphModule, figureModule }) => {
   const {
     insertButtonText
   } = editorOptions
@@ -33,7 +34,7 @@ export default ({TYPE, subModules, editorOptions = {}, figureModule}) => {
           .filter(isInfoboxBlock)
           .map(block => block.type === TYPE
             ? block
-            : value.document.getParent(block.key)
+            : value.document.getClosest(block.key, matchBlock(TYPE))
           )
           .filter((block, index, all) => all.indexOf(block) === index && block.type === TYPE)
           .map((block, i) => {
@@ -48,18 +49,26 @@ export default ({TYPE, subModules, editorOptions = {}, figureModule}) => {
                   })
               )
             }
-            const hasFigure = figureModule && block.nodes.find(n => n.type === figureModule.TYPE)
+            const figureNode = figureModule && block.nodes.find(n => n.type === figureModule.TYPE)
             const floatSize = block.data.get('size') === 'float'
 
             return (
               <div key={`infobox-${i}`}>
                 <Label>Infobox</Label><br />
-                <p style={{margin: '10px 0'}}>
+                <p style={{ margin: '10px 0' }}>
+                  <Checkbox
+                    checked={block.data.get('collapsable') === true}
+                    onChange={onInputChange(block)('collapsable')
+                    }>
+                    aufklappbar
+                  </Checkbox>
+                </p>
+                <p style={{ margin: '10px 0' }}>
                   <Label>Ausrichtung</Label><br />
                   {[
-                    {label: 'Normal', size: undefined},
-                    {label: 'Gross', size: 'breakout'},
-                    {label: 'Links', size: 'float'}
+                    { label: 'Normal', size: undefined },
+                    { label: 'Gross', size: 'breakout' },
+                    { label: 'Links', size: 'float' }
                   ].map((size, i) => {
                     const checked = block.data.get('size') === size.size
 
@@ -84,7 +93,43 @@ export default ({TYPE, subModules, editorOptions = {}, figureModule}) => {
                     ]
                   })}
                 </p>
-                {hasFigure && !floatSize && <p style={{margin: '10px 0'}}>
+                {figureModule && <p style={{ margin: '10px 0' }}>
+                  {figureNode ? (
+                    <A
+                      href='#'
+                      onClick={(e) => {
+                        e.preventDefault()
+                        onChange(
+                          value
+                            .change()
+                            .removeNodeByKey(figureNode.key)
+                        )
+                      }}
+                    >
+                      Bild entfernen
+                    </A>
+                  ) : (
+                    <A
+                      href='#'
+                      onClick={(e) => {
+                        e.preventDefault()
+                        onChange(
+                          value.change().insertNodeByKey(
+                            block.key,
+                            1,
+                            {
+                              kind: 'block',
+                              type: figureModule.TYPE
+                            }
+                          )
+                        )
+                      }}
+                    >
+                      Bild hinzufügen
+                    </A>
+                  )}
+                </p>}
+                {figureNode && !floatSize && <p style={{ margin: '10px 0' }}>
                   <Label>Bildgrösse</Label><br />
                   {[
                     'S',
@@ -116,7 +161,7 @@ export default ({TYPE, subModules, editorOptions = {}, figureModule}) => {
                     ]
                   })}
                 </p>}
-                {hasFigure && !floatSize && <MetaForm
+                {figureNode && !floatSize && <MetaForm
                   data={Map({
                     figureFloat: block.data.get('figureFloat') || false
                   })}
@@ -138,7 +183,10 @@ export default ({TYPE, subModules, editorOptions = {}, figureModule}) => {
           injectBlock,
           Block.create({
             type: TYPE,
-            nodes: subModules.map(module => Block.create(module.TYPE))
+            nodes: [
+              Block.create(titleModule.TYPE),
+              Block.create(paragraphModule.TYPE)
+            ]
           })
         )
     )
@@ -154,7 +202,7 @@ export default ({TYPE, subModules, editorOptions = {}, figureModule}) => {
         data-disabled={disabled}
         data-visible
         onMouseDown={infoBoxButtonClickHandler(value, onChange)}
-        >
+      >
         {insertButtonText}
       </span>
     )

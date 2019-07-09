@@ -41,6 +41,33 @@ PIWIK_SITE_ID=1
 
 Your logo, fonts and colors? See [orbiting/styleguide](https://github.com/orbiting/styleguide#theming)
 
+#### Linking the Styleguide
+
+Want to change code in the styleguide and preview how it looks and behaves here?
+
+Here are the steps:
+
+```
+cd ../styleguide
+npm i
+npm link
+
+cd ../publikator-frontend
+npm i
+# deeply link styleguide and some peers
+# and add a tmp preinstall script to unlink
+npm run sg:link
+
+# do your work
+
+# simply run npm install to unlink
+# rm the links and the tmp preinstall script
+# reinstall stuff via npm
+npm i
+```
+
+_Why? `glamor`, `react` and `react-dom` use singletons. And `peerDependencies` are not flattened when `npm link`ed—two versions with their own singletons end up running. While linked this way those packages are linked to the styleguide node_modules folder._
+
 ### Templates
 
 You can limit the available templates:
