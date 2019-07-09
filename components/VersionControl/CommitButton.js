@@ -1,6 +1,7 @@
 import React from 'react'
+import { css } from 'glamor'
 import withT from '../../lib/withT'
-import { Button, A, colors } from '@project-r/styleguide'
+import { Button, A, colors, mediaQueries } from '@project-r/styleguide'
 
 const Text = ({
   t, isNew, readOnly, hasUncommittedChanges,
@@ -29,14 +30,14 @@ const Text = ({
 const CommitButton = (props) => {
   const { t, hasUncommittedChanges, isNew, readOnly, onCommit, onUnlock } = props
   return (
-    <div>
-      <div style={{ textAlign: 'center', fontSize: '14px', marginTop: 7 }}>
+    <div {...css({ width: 100, [mediaQueries.mUp]: { width: 180 } })}>
+      <div style={{ textAlign: 'center', marginTop: 7 }} {...css({ fontSize: 10, [mediaQueries.mUp]: { fontSize: 14 } })}>
         <Text {...props} />
       </div>
       <Button
         style={{
           margin: '4px 0 0',
-          width: '180px',
+          minWidth: 0,
           height: 40,
           fontSize: '16px',
           backgroundColor: readOnly ? colors.error : undefined,
