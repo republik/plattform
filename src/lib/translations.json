@@ -1,7 +1,15 @@
 {
-  "updated": "2019-05-30T19:01:47.103Z",
+  "updated": "2019-07-08T13:09:41.326Z",
   "title": "live",
   "data": [
+    {
+      "key": "styleguide/Collapsable/expand",
+      "value": "Alles lesen"
+    },
+    {
+      "key": "styleguide/Collapsable/collapse",
+      "value": "Weniger"
+    },
     {
       "key": "styleguide/CommentComposer/placeholder",
       "value": "Einen Kommentar verfassen…"
@@ -61,14 +69,6 @@
     {
       "key": "styleguide/CommentActions/downvote/count/other",
       "value": "{count} Gegenstimmen"
-    },
-    {
-      "key": "styleguide/CommentActions/expand",
-      "value": "Alles lesen"
-    },
-    {
-      "key": "styleguide/CommentActions/collapse",
-      "value": "Weniger"
     },
     {
       "key": "styleguide/CommentTeaser/comment/link",

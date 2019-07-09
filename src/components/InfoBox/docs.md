@@ -7,6 +7,8 @@ Supported props:
   - `float`: Break out to the left and let other elements flow around.
 - `figureSize`: The image size, `XS`, `S`, `M` or `L`. Should always be `XS` when `size` is `float`.
 - `figureFloat`: Enforce floating image on desktop.
+- `collapsable`: Whether the infobox should be collapsed by default.
+- `collapsableEditorPreview`: forward `editorPreview` to collapsable component.
 
 ```react
 <InfoBox>
@@ -166,6 +168,30 @@ Supported props:
   </InfoBox>
   <Editorial.P>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores.</Editorial.P>
 </Center>
+```
+
+### collapsable
+
+The `collapsable` attribute collapses the infobox, unless the content height is too small.
+
+```react
+<div>
+<InfoBox collapsable t={t}>
+  <InfoBoxTitle>This is a box title</InfoBoxTitle>
+  <InfoBoxText>
+    One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed into a horrible vermin. He lay on his armour-like back, and if he lifted his head a little he could see his brown belly, slightly domed and divided by arches into stiff sections. The bedding was hardly able to cover it and seemed ready to slide off any moment. His many legs, pitifully thin compared with the size of the rest of him, waved about helplessly as he looked. "What's happened to me?" he thought. It wasn't a dream. His room, a proper human room although a little too small, lay peacefully between its four familiar walls.
+  </InfoBoxText>
+  <InfoBoxText>
+    One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed into a horrible vermin. He lay on his armour-like back, and if he lifted his head a little he could see his brown belly, slightly domed and divided by arches into stiff sections. The bedding was hardly able to cover it and seemed ready to slide off any moment.
+  </InfoBoxText>
+</InfoBox>
+<InfoBox collapsable t={t}>
+  <InfoBoxTitle>This is a box title</InfoBoxTitle>
+  <InfoBoxText>
+    One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed into a horrible vermin.
+  </InfoBoxText>
+</InfoBox>
+</div>
 ```
 
 ### `<InfoBoxSubhead />` and `<InfoBoxListItem />`

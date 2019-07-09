@@ -239,7 +239,17 @@ ReactDOM.render(
                 colors: require('./theme/colors')
               },
               src: require('./components/Progress/docs.md')
-            }
+            },
+            {
+              path: '/collapsable',
+              title: 'Collapsable',
+              imports: {
+                t,
+                ...require('./components/Typography'),
+                ...require('./components/Collapsable')
+              },
+              src: require('./components/Collapsable/docs.md')
+            },
           ]
         },
         {
@@ -325,6 +335,7 @@ ReactDOM.render(
               path: '/infobox',
               title: 'InfoBox',
               imports: {
+                t,
                 css,
                 ...require('./components/Typography'),
                 ...require('./components/InfoBox'),
@@ -492,7 +503,9 @@ ReactDOM.render(
               path: '/templates/article',
               title: 'Article',
               imports: {
-                schema: require('./templates/Article').default(),
+                schema: require('./templates/Article').default({
+                  t
+                }),
                 ...require('./templates/docs'),
                 renderMdast: require('mdast-react-render').renderMdast
               },

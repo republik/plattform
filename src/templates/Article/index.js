@@ -303,11 +303,13 @@ const centerFigure = {
   ]
 }
 
-const infoBox = {
+const createInfoBox = ({ t }) => ({
   matchMdast: matchInfoBox,
   component: InfoBox,
   props: (node, index, parent, { ancestors }) => ({
+    t,
     size: node.data.size,
+    collapsable: node.data.collapsable,
     figureSize: node.children.find(
       matchFigure
     )
@@ -416,7 +418,7 @@ const infoBox = {
       rules: paragraphRules
     }
   ]
-}
+})
 
 const blockQuote = {
   matchMdast: matchZone('BLOCKQUOTE'),
@@ -1017,7 +1019,7 @@ const createSchema = ({
                 },
                 isVoid: true
               },
-              infoBox,
+              createInfoBox({ t }),
               pullQuote,
               paragraph,
               {

@@ -615,11 +615,18 @@ Zweitens: ich habe erklärt mit diese zwei Spieler: nach Dortmund brauchen viell
 
 ### Infobox with List
 
+And `collapsable`.
+
 ```react|noSource
 <Markdown schema={schema}>{`
 <section><h6>CENTER</h6>
 
 <section><h6>INFOBOX</h6>
+
+\`\`\`
+{"collapsable": true}
+\`\`\`
+
 
 ### Boxentitel
 
