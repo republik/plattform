@@ -14,8 +14,14 @@ module.exports = toString
 function toString (node) {
   return (
     valueOf(node) ||
-    (node.children && node.children.map(toString).join(' ')) ||
-    ''
+    (
+      node.children &&
+      node.children
+        .map(toString)
+        .concat(node.type === 'paragraph' ? ' ' : '')
+        .join('')
+    ) ||
+    (node.type === 'break' ? ' ' : '')
   )
 }
 

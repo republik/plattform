@@ -49,9 +49,7 @@ const textForComment = async ({ userId, content, published, adminUnpublished, di
 const mdastToHumanString = (node, length = 500) => {
   let string = ''
   const parts = mdastToString(node)
-    // Remove trailing whitespaces before certain chars.
-    .replace(/\s([.,?!])/g, '$1')
-    .split(' ')
+    .split(/\s+/)
     .filter(Boolean)
 
   do {
