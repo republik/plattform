@@ -60,7 +60,7 @@ export default ({ TYPE, subModules, editorOptions = {}, titleModule, paragraphMo
                     checked={block.data.get('collapsable') === true}
                     onChange={onInputChange(block)('collapsable')
                     }>
-                    aufklappbare
+                    aufklappbar
                   </Checkbox>
                 </p>
                 <p style={{ margin: '10px 0' }}>
