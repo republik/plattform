@@ -1,5 +1,5 @@
 {
-  "updated": "2019-07-06T22:23:12.623Z",
+  "updated": "2019-07-09T09:58:35.476Z",
   "title": "live",
   "data": [
     {
@@ -783,16 +783,12 @@
       "value": "Metadaten-Deskription fehlt"
     },
     {
-      "key": "publish/validation/image/empty",
-      "value": "Metadaten-Bild fehlt"
-    },
-    {
       "key": "publish/validation/facebookImage/empty",
-      "value": "Es ist auch kein spezifisches Bild für Facebook festgelegt"
+      "value": "Bild für Facebook fehlt"
     },
     {
       "key": "publish/validation/twitterImage/empty",
-      "value": "Es ist auch kein spezifisches Bild für Twitter festgelegt"
+      "value": "Bild für Twitter fehlt"
     },
     {
       "key": "publish/error/unresolvedRepoIds",

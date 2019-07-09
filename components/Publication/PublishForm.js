@@ -192,7 +192,6 @@ class PublishForm extends Component {
             ? [
               !meta.title && t('publish/validation/title/empty'),
               !meta.description && t('publish/validation/description/empty'),
-              !meta.image && t('publish/validation/image/empty'),
               !meta.facebookImage && !meta.image && t('publish/validation/facebookImage/empty'),
               !meta.twitterImage && !meta.image && t('publish/validation/twitterImage/empty')
             ].filter(Boolean)
