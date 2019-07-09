@@ -2,7 +2,7 @@ import React from 'react'
 import { Map } from 'immutable'
 import { Block } from 'slate'
 
-import { Radio, Label, A } from '@project-r/styleguide'
+import { Radio, Label, A, Checkbox } from '@project-r/styleguide'
 
 import {
   createPropertyForm,
@@ -55,6 +55,14 @@ export default ({ TYPE, subModules, editorOptions = {}, titleModule, paragraphMo
             return (
               <div key={`infobox-${i}`}>
                 <Label>Infobox</Label><br />
+                <p style={{ margin: '10px 0' }}>
+                  <Checkbox
+                    checked={block.data.get('collapsable') === true}
+                    onChange={onInputChange(block)('collapsable')
+                    }>
+                    aufklappbare
+                  </Checkbox>
+                </p>
                 <p style={{ margin: '10px 0' }}>
                   <Label>Ausrichtung</Label><br />
                   {[

@@ -1,5 +1,5 @@
 {
-  "updated": "2019-07-09T09:58:35.476Z",
+  "updated": "2019-07-09T18:17:08.423Z",
   "title": "live",
   "data": [
     {
@@ -897,6 +897,14 @@
     {
       "key": "api/unpublish/disabled",
       "value": "Artikel können derzeit nicht zurückgezogen werden."
+    },
+    {
+      "key": "styleguide/Collapsable/expand",
+      "value": "Alles lesen"
+    },
+    {
+      "key": "styleguide/Collapsable/collapse",
+      "value": "Weniger"
     }
   ]
 }

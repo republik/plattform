@@ -91,6 +91,7 @@ export default ({ rule, subModules, TYPE }) => {
           return (
             <Container
               {...node.data.toJS()}
+              collapsableEditorPreview
               figureSize={hasFigure ? node.data.get('figureSize', 'S') : undefined}
               attributes={attributes}>
               {children}
