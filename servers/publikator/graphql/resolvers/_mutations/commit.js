@@ -10,6 +10,7 @@ const superb = require('superb')
 const superheroes = require('superheroes')
 const sleep = require('await-sleep')
 const sharp = require('sharp')
+const slugify = require('slugify')
 const {
   createGithubClients,
   commitNormalizer,
@@ -250,9 +251,11 @@ module.exports = async (_, args, context) => {
       force: !parentId
     })
   } else {
-    branch = `${superb.random()}-${superheroes.random().toLowerCase()}`
-      .replace(/\s/g, '-')
-      .replace(/\./g, '-')
+    branch = slugify(
+      `${superb.random()}-${superheroes.random()}`
+        .replace(/\./g, '-')
+        .toLowerCase()
+    )
     await githubRest.gitdata.createRef({
       owner: login,
       repo: repoName,
