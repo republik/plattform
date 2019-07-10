@@ -44,14 +44,14 @@ const createBuckets = (now) => [
     maxEndDate: getMaxEndDate(now, 7),
     onlyMembershipTypes: ['ABO'],
     users: []
-  }/*,
+  },
   {
     templateName: 'membership_owner_prolong_notice_0',
     minEndDate: getMinEndDate(now, -3),
     maxEndDate: getMaxEndDate(now, 0),
     onlyMembershipTypes: ['ABO'],
     users: []
-  } */
+  }
 ]
 
 const getBuckets = async ({ now }, context) => {
