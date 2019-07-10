@@ -33,14 +33,14 @@ const getMaxEndDate = (now, daysBeforeEndDate) =>
 const createBuckets = (now) => [
   {
     templateName: 'membership_owner_prolong_notice',
-    minEndDate: getMinEndDate(now, 15),
+    minEndDate: getMinEndDate(now, 22),
     maxEndDate: getMaxEndDate(now, DAYS_BEFORE_END_DATE),
     onlyMembershipTypes: ['ABO'],
     users: []
   },
   {
     templateName: 'membership_owner_prolong_notice_7',
-    minEndDate: getMinEndDate(now, 3),
+    minEndDate: getMinEndDate(now, 5),
     maxEndDate: getMaxEndDate(now, 7),
     onlyMembershipTypes: ['ABO'],
     users: []
