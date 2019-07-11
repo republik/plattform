@@ -24,7 +24,7 @@ Context:
 ```react
 <AudioPlayer
   src={{
-    mp3: 'https://cdn.republik.space/s3/republik-assets/assets/audio-artikel/republik_diktator_fichter.mp3'
+    mp3: 'https://cdn.repub.ch/s3/republik-assets/assets/audio-artikel/republik_diktator_fichter.mp3'
   }}
   t={t}
 />
@@ -33,7 +33,7 @@ Context:
 ```react
 <AudioPlayer
   src={{
-    mp3: 'https://cdn.republik.space/s3/republik-assets/assets/audio-artikel/republik_diktator_fichter.mp3'
+    mp3: 'https://cdn.repub.ch/s3/republik-assets/assets/audio-artikel/republik_diktator_fichter.mp3'
   }}
   timePosition='left'
   t={t}
@@ -43,7 +43,7 @@ Context:
 ```react
 <AudioPlayer
   src={{
-    mp3: 'https://cdn.republik.space/s3/republik-assets/assets/audio-artikel/republik_diktator_fichter.mp3'
+    mp3: 'https://cdn.repub.ch/s3/republik-assets/assets/audio-artikel/republik_diktator_fichter.mp3'
   }}
   download
   scrubberPosition='bottom'
@@ -54,7 +54,7 @@ Context:
 ```react
 <AudioPlayer
   src={{
-    mp3: 'https://cdn.republik.space/s3/republik-assets/assets/audio-artikel/republik_diktator_fichter.mp3'
+    mp3: 'https://cdn.repub.ch/s3/republik-assets/assets/audio-artikel/republik_diktator_fichter.mp3'
   }}
   closeHandler={() => {console.log('Close button clicked')}}
   download
@@ -66,7 +66,7 @@ Context:
 ```react
 <AudioPlayer
   src={{
-    mp3: 'https://cdn.republik.space/s3/republik-assets/assets/audio-artikel/republik_diktator_fichter.mp3'
+    mp3: 'https://cdn.repub.ch/s3/republik-assets/assets/audio-artikel/republik_diktator_fichter.mp3'
   }}
   closeHandler={() => {console.log('Close button clicked')}}
   download
@@ -81,7 +81,7 @@ Context:
 ```react
 <AudioPlayer
   src={{
-    mp3: 'https://cdn.republik.space/s3/republik-assets/assets/audio-artikel/republik_diktator_fichter.mp3'
+    mp3: 'https://cdn.repub.ch/s3/republik-assets/assets/audio-artikel/republik_diktator_fichter.mp3'
   }}
   closeHandler={() => {console.log('Close button clicked')}}
   download
@@ -113,7 +113,7 @@ Context:
 ```react
 <AudioPlayer
   src={{
-    mp3: 'https://cdn.republik.space/s3/republik-assets/assets/audio-artikel/republik_diktator_fichter.mp3'
+    mp3: 'https://cdn.repub.ch/s3/republik-assets/assets/audio-artikel/republik_diktator_fichter.mp3'
   }}
   size='narrow'
   t={t}
@@ -123,7 +123,7 @@ Context:
 ```react
 <AudioPlayer
   src={{
-    mp3: 'https://cdn.republik.space/s3/republik-assets/assets/audio-artikel/republik_diktator_fichter.mp3'
+    mp3: 'https://cdn.repub.ch/s3/republik-assets/assets/audio-artikel/republik_diktator_fichter.mp3'
   }}
   size='tiny'
   t={t}

@@ -11,7 +11,7 @@ The Equal Earth projection, by Bojan Šavrič et al., 2018.
       "heightRatio": 0.5,
       "points": true,
       "features": {
-        "url": "https://cdn.republik.space/s3/republik-assets/assets/geo/world-atlas-110m.json",
+        "url": "https://cdn.repub.ch/s3/republik-assets/assets/geo/world-atlas-110m.json",
         "object": "land"
       }
     }}
@@ -299,7 +299,7 @@ make topo/ch-cantons.json PROPERTIES="name --id-property=abbr" REPROJECT=true
       "thresholds": [0.3,0.4,0.5,0.6,0.7],
       "colorRange": ["rgb(103,0,13)", "rgb(187,21,26)", "rgb(239,69,51)", "rgb(75,151,201)", "rgb(24,100,170)", "rgb(8,48,107)"],
       "features": {
-        "url": "https://cdn.republik.space/s3/republik-assets/assets/geo/ch-cantons.json",
+        "url": "https://cdn.repub.ch/s3/republik-assets/assets/geo/ch-cantons.json",
         "object": "cantons"
       }
     }}

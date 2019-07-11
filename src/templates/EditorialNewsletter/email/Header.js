@@ -16,7 +16,7 @@ export default ({ meta }) => {
         >
           <img
             height="79"
-            src="https://cdn.republik.space/s3/republik-assets/assets/images/logo_republik_newsletter.png"
+            src="https://cdn.repub.ch/s3/republik-assets/assets/images/logo_republik_newsletter.png"
             style={{
               border: 0,
               width: '180px !important',
