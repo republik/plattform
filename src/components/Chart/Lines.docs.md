@@ -5605,7 +5605,7 @@ year,value
 
 ## Log Scale
 
-Use it wisely, mostly to focus on percentual changes and thereby [putting growth into perspective](https://www.youtube.com/watch?v=skACYvfwMJw). In most cases you should define custom ticks with `yTicks` when using `"yScale": "log"` and set `"yNice": 0`. It is good pratice to set ticks that reveal the log effect. We also lable it explicitly though.
+Use it wisely, mostly to reveal percentual changes, like slowing growth, and thereby [putting changes into perspective](https://www.youtube.com/watch?v=skACYvfwMJw). In most cases you should define custom ticks with `yTicks` when using `"yScale": "log"` and set `"yNice": 0`. It is good pratice to set ticks that reveal the log effect. We also automatically label it explicitly.
 
 ```react
 <div>
