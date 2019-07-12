@@ -10,6 +10,12 @@ import {
   deduplicate
 } from './utils'
 
+import { propTypes as barPropTypes } from './Bars'
+import { propTypes as timeBarPropTypes } from './TimeBars'
+import { propTypes as linePropTypes } from './Lines'
+import { propTypes as scatterPlotPropTypes } from './ScatterPlots'
+import { propTypes as genericMapPropTypes } from './Maps'
+
 const propTypeNames = new Map()
 Object.keys(PropTypes).forEach(key => {
   propTypeNames.set(PropTypes[key], key)
@@ -17,16 +23,19 @@ Object.keys(PropTypes).forEach(key => {
 })
 propTypeNames.set(sortPropType, 'string')
 
-const isSubType = Component => Component.base || Component.extends
+const baseChartPropTypes = {
+  Bar: barPropTypes,
+  TimeBar: timeBarPropTypes,
+  Line: linePropTypes,
+  ScatterPlot: scatterPlotPropTypes,
+  GenericMap: genericMapPropTypes
+}
 
 const charts = Object.keys(ReactCharts)
-const baseCharts = charts
-  .filter(key => !isSubType(ReactCharts[key]))
-  .filter(key => ReactCharts[key].propTypes)
 
-const props = baseCharts.reduce(
+const props = Object.keys(baseChartPropTypes).reduce(
   (all, chart) => {
-    const propTypes = ReactCharts[chart].propTypes
+    const propTypes = baseChartPropTypes[chart]
     const props = Object.keys(propTypes).map(key => ({
       key,
       type: propTypeNames.get(propTypes[key]),

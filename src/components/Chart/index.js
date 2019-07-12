@@ -7,7 +7,7 @@ import Bar, { Lollipop } from './Bars'
 import TimeBar from './TimeBars'
 import { Line, Slope } from './Lines'
 import ScatterPlot from './ScatterPlots'
-import { GenericMap, ProjectedMap, SwissMap } from './Maps';
+import { GenericMap, ProjectedMap, SwissMap } from './Maps'
 
 import colors from '../../theme/colors'
 

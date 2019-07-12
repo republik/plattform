@@ -284,8 +284,8 @@ LineGroup.propTypes = {
   yAxisFormat: PropTypes.func.isRequired,
   yAnnotations: PropTypes.arrayOf(PropTypes.shape({
     value: PropTypes.number.isRequired,
-    label: PropTypes.string.isRequired,
-    x: PropTypes.string,
+    label: PropTypes.string,
+    x: PropTypes.date,
     dy: PropTypes.string
   })),
   x: PropTypes.func.isRequired,
@@ -451,7 +451,7 @@ const LineChart = (props) => {
   )
 }
 
-LineChart.propTypes = {
+export const propTypes = {
   children: PropTypes.node,
   values: PropTypes.array.isRequired,
   width: PropTypes.number.isRequired,
@@ -500,13 +500,15 @@ LineChart.propTypes = {
   yTicks: PropTypes.arrayOf(PropTypes.number),
   yAnnotations: PropTypes.arrayOf(PropTypes.shape({
     value: PropTypes.number.isRequired,
-    label: PropTypes.string.isRequired,
+    label: PropTypes.string,
     x: PropTypes.string,
     dy: PropTypes.string
   })),
   tLabel: PropTypes.func.isRequired,
   description: PropTypes.string
 }
+
+LineChart.propTypes = propTypes
 
 export const Line = props => <LineChart {...props} />
 
@@ -551,7 +553,5 @@ Slope.defaultProps = {
 }
 
 // Additional Info for Docs
-// - Line is the master chart and «owns» the prop types
-Line.propTypes = LineChart.propTypes
 // - Slope just has different default props
 Slope.base = 'Line'

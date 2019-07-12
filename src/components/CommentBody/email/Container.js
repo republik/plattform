@@ -1,5 +1,4 @@
 import React from 'react'
-import { cssFor } from 'glamor'
 
 import { serifRegular16 } from '../../Typography/styles'
 

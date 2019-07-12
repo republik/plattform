@@ -376,7 +376,7 @@ const featuresShape = PropTypes.shape({
   url: PropTypes.string.isRequired
 })
 
-GenericMap.propTypes = {
+export const propTypes = {
   children: PropTypes.node,
   values: PropTypes.array.isRequired,
   width: PropTypes.number.isRequired,
@@ -431,6 +431,8 @@ GenericMap.propTypes = {
   color: PropTypes.string
 }
 
+GenericMap.propTypes = propTypes
+
 GenericMap.defaultProps = {
   numberFormat: 's',
   columns: 1,
@@ -448,6 +450,8 @@ GenericMap.defaultProps = {
   sizes: [10],
   getProjection: () => geoEqualEarth()
 }
+
+
 
 export const ProjectedMap = props => <GenericMap {...props} />
 

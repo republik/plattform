@@ -364,6 +364,8 @@ const BarChart = (props) => {
                       {subsup.svg(bar.first.label)}
                     </text>
                     if (href) {
+                      // disable a11y rule because it does not understand that this a tag is an svg tag
+                      // eslint-disable-next-line jsx-a11y/anchor-is-valid
                       barLabel = <a xlinkHref={href}>{barLabel}</a>
                     }
                     return (
@@ -517,7 +519,7 @@ const BarChart = (props) => {
   )
 }
 
-BarChart.propTypes = {
+export const propTypes = {
   children: PropTypes.node,
   values: PropTypes.array.isRequired,
   width: PropTypes.number.isRequired,
@@ -560,6 +562,8 @@ BarChart.propTypes = {
   description: PropTypes.string,
   showBarValues: PropTypes.bool
 }
+
+BarChart.propTypes = propTypes
 
 BarChart.defaultProps = {
   columns: 1,

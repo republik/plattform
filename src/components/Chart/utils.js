@@ -161,8 +161,6 @@ export const calculateAxis = (numberFormat, tLabel, domain, unit = '', {
   } else if (specifier.type === 's') {
     const magnitude = d3Max([max - (min > 0 ? min : 0), min].map(Math.abs))
     let pow = formatPow(tLabel, Math.max(0, min) + magnitude / 2)
-    let scaledStep = pow.scale(step)
-    let scaledMax = pow.scale(max)
     specifier.precision = precisionFixed(
       ticks.reduce(
         (precision, value) => precision || pow.scale(value) - Math.floor(pow.scale(value)),

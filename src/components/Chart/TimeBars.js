@@ -421,7 +421,7 @@ const TimeBarChart = (props) => {
   )
 }
 
-TimeBarChart.propTypes = {
+export const propTypes = {
   children: PropTypes.node,
   values: PropTypes.array.isRequired,
   padding: PropTypes.number.isRequired,
@@ -461,6 +461,8 @@ TimeBarChart.propTypes = {
   tLabel: PropTypes.func.isRequired,
   description: PropTypes.string
 }
+
+TimeBarChart.propTypes = propTypes
 
 TimeBarChart.defaultProps = {
   x: 'year',

@@ -459,7 +459,7 @@ class ScatterPlot extends Component {
   }
 }
 
-ScatterPlot.propTypes = {
+export const propTypes = {
   children: PropTypes.node,
   values: PropTypes.array.isRequired,
   width: PropTypes.number.isRequired,
@@ -515,6 +515,8 @@ ScatterPlot.propTypes = {
   tLabel: PropTypes.func.isRequired,
   description: PropTypes.string
 }
+
+ScatterPlot.propTypes = propTypes
 
 ScatterPlot.defaultProps = {
   x: 'value',

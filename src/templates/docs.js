@@ -1,4 +1,3 @@
-import React from 'react'
 import { renderMdast } from 'mdast-react-render'
 import { parse } from '@orbiting/remark-preset'
 
