@@ -298,7 +298,9 @@ const BarChart = (props) => {
     x.nice(3)
   }
 
-  const xAxis = calculateAxis(props.numberFormat, tLabel, x.domain())
+  const xAxis = calculateAxis(props.numberFormat, tLabel, x.domain(), undefined, {
+    ticks: props.xTicks
+  })
 
   // stack bars
   groupedData.forEach(group => {

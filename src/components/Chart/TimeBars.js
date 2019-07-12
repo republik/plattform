@@ -171,7 +171,9 @@ const TimeBarChart = (props) => {
     })
   })
 
-  const yAxis = calculateAxis(props.numberFormat, tLabel, y.domain(), tLabel(props.unit))
+  const yAxis = calculateAxis(props.numberFormat, tLabel, y.domain(), tLabel(props.unit), {
+    ticks: props.yTicks
+  })
   const yTicks = props.yTicks || yAxis.ticks
   // ensure highest value is last
   // - the last value is labled with the unit

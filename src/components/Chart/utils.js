@@ -132,10 +132,12 @@ export const getFormat = (numberFormat, tLabel) => {
 
 export const last = (array, index) => array.length - 1 === index
 
-export const calculateAxis = (numberFormat, tLabel, domain, unit = '') => {
+export const calculateAxis = (numberFormat, tLabel, domain, unit = '', {
+  ticks: predefinedTicks
+} = {}) => {
   const [min, max] = domain
   const step = (max - min) / 2
-  const ticks = [
+  const ticks = predefinedTicks || [
     min,
     min < 0 && max > 0
       ? 0
@@ -161,12 +163,22 @@ export const calculateAxis = (numberFormat, tLabel, domain, unit = '') => {
     let pow = formatPow(tLabel, Math.max(0, min) + magnitude / 2)
     let scaledStep = pow.scale(step)
     let scaledMax = pow.scale(max)
-    specifier.precision = precisionFixed((scaledStep - Math.floor(scaledStep)) || (scaledMax - Math.floor(scaledMax)))
+    specifier.precision = precisionFixed(
+      ticks.reduce(
+        (precision, value) => precision || pow.scale(value) - Math.floor(pow.scale(value)),
+        0
+      )
+    )
 
     lastFormat = sFormat(tLabel, specifier.precision, pow, 'f')
     regularFormat = sFormat(tLabel, specifier.precision, {scale: pow.scale, suffix: ''}, 'f')
   } else {
-    specifier.precision = precisionFixed((step - Math.floor(step)) || (max - Math.floor(max)))
+    specifier.precision = precisionFixed(
+      ticks.reduce(
+        (precision, value) => precision || value - Math.floor(value),
+        0
+      )
+    )
     lastFormat = regularFormat = format(specifier.toString())
   }
   const axisFormat = (value, isLast) => isLast ? `${lastFormat(value)} ${unit}` : regularFormat(value)

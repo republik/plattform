@@ -236,7 +236,11 @@ class ScatterPlot extends Component {
     if (xNice) {
       x.nice(xNice)
     }
-    const xAxis = calculateAxis(props.xNumberFormat || props.numberFormat, tLabel, x.domain()) // xUnit is rendered separately
+    const xAxis = calculateAxis(props.xNumberFormat || props.numberFormat, tLabel, x.domain(), undefined, {
+      ticks: props.xLines
+        ? props.xLines.map(line => line.tick)
+        : props.xTicks
+    }) // xUnit is rendered separately
     const xLines = props.xLines || (
       props.xTicks || (props.xScale === 'log' ? get3EqualDistTicks(x) : xAxis.ticks)
     ).map(tick => ({ tick }))
@@ -260,7 +264,11 @@ class ScatterPlot extends Component {
     if (yNice) {
       y.nice(yNice)
     }
-    const yAxis = calculateAxis(props.yNumberFormat || props.numberFormat, tLabel, y.domain(), tLabel(props.yUnit))
+    const yAxis = calculateAxis(props.yNumberFormat || props.numberFormat, tLabel, y.domain(), tLabel(props.yUnit), {
+      ticks: props.yLines
+        ? props.yLines.map(line => line.tick)
+        : props.yTicks
+    })
     const yLines = props.yLines || (
       props.yTicks || (props.yScale === 'log' ? get3EqualDistTicks(y) : yAxis.ticks)
     ).map(tick => ({ tick }))
