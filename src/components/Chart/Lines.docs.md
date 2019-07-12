@@ -5602,3 +5602,283 @@ year,value
     />
 </div>
 ```
+
+## Log Scale
+
+```react
+<div>
+  <ChartTitle>Preise, Mieten und Löhne</ChartTitle>
+  <CsvChart
+    config={{
+      "type": "Line",
+      "color": "category",
+      "numberFormat": ".0f",
+      "yScale": "log",
+      "yTicks": [
+        500,
+        1000,
+        2000,
+        3000
+      ],
+      "yNice": 0,
+      "yAnnotations": [{
+        "value": 100,
+        "x": "1939"
+      }],
+      "xTicks": [
+        1939,
+        1970,
+        2000,
+        2018
+      ],
+      "paddingLeft": 5,
+      "colorSort": "none"
+    }}
+    values={`
+year,category,value
+1939,Löhne,100.0
+1942,Löhne,125.0
+1943,Löhne,134.0
+1944,Löhne,143.0
+1945,Löhne,153.0
+1946,Löhne,169.0
+1947,Löhne,183.0
+1948,Löhne,193.0
+1949,Löhne,195.0
+1950,Löhne,197.0
+1951,Löhne,206.0
+1952,Löhne,212.0
+1953,Löhne,215.0
+1954,Löhne,218.0
+1955,Löhne,224.0
+1956,Löhne,233.0
+1957,Löhne,244.0
+1958,Löhne,252.0
+1959,Löhne,260.0
+1960,Löhne,272.0
+1961,Löhne,289.0
+1962,Löhne,310.0
+1963,Löhne,332.0
+1964,Löhne,358.0
+1965,Löhne,384.0
+1966,Löhne,412.0
+1967,Löhne,439.0
+1968,Löhne,460.0
+1969,Löhne,488.0
+1970,Löhne,534.0
+1971,Löhne,601.0
+1972,Löhne,667.0
+1973,Löhne,747.0
+1974,Löhne,838.0
+1975,Löhne,901.0
+1976,Löhne,920.0
+1977,Löhne,942.0
+1978,Löhne,972.0
+1979,Löhne,1004.0
+1980,Löhne,1058.0
+1981,Löhne,1124.0
+1982,Löhne,1203.0
+1983,Löhne,1248.0
+1984,Löhne,1283.0
+1985,Löhne,1323.0
+1986,Löhne,1370.0
+1987,Löhne,1403.0
+1988,Löhne,1452.0
+1989,Löhne,1507.0
+1990,Löhne,1595.0
+1991,Löhne,1706.0
+1992,Löhne,1788.0
+1993,Löhne,1836.0
+1994,Löhne,1862.0
+1995,Löhne,1887.0
+1996,Löhne,1910.0
+1997,Löhne,1919.0
+1998,Löhne,1932.0
+1999,Löhne,1938.0
+2000,Löhne,1963.0
+2001,Löhne,2011.0
+2002,Löhne,2047.0
+2003,Löhne,2076.0
+2004,Löhne,2095.0
+2005,Löhne,2115.0
+2006,Löhne,2140.0
+2007,Löhne,2175.0
+2008,Löhne,2219.0
+2009,Löhne,2266.0
+2010,Löhne,2285.0
+2011,Löhne,2306.0
+2012,Löhne,2326.0
+2013,Löhne,2343.0
+2014,Löhne,2361.0
+2015,Löhne,2370.0
+2016,Löhne,2386.0
+2017,Löhne,2395.0
+2018,Löhne,2407.0
+1939,Mietpreise,100.0
+1940,Mietpreise,99.8
+1941,Mietpreise,99.8
+1942,Mietpreise,100.1
+1943,Mietpreise,100.3
+1944,Mietpreise,101.2
+1945,Mietpreise,101.6
+1946,Mietpreise,102.3
+1947,Mietpreise,103.3
+1948,Mietpreise,104.8
+1949,Mietpreise,106.9
+1950,Mietpreise,108.8
+1951,Mietpreise,116.8
+1952,Mietpreise,118.7
+1953,Mietpreise,120.8
+1954,Mietpreise,124.8
+1955,Mietpreise,127.8
+1956,Mietpreise,131.0
+1957,Mietpreise,134.1
+1958,Mietpreise,141.1
+1959,Mietpreise,145.5
+1960,Mietpreise,148.8
+1961,Mietpreise,157.4
+1962,Mietpreise,161.4
+1963,Mietpreise,173.1
+1964,Mietpreise,179.3
+1965,Mietpreise,190.8
+1966,Mietpreise,213.5
+1967,Mietpreise,230.8
+1968,Mietpreise,246.3
+1969,Mietpreise,261.3
+1970,Mietpreise,281.3
+1971,Mietpreise,307.9
+1972,Mietpreise,328.9
+1973,Mietpreise,351.4
+1974,Mietpreise,385.6
+1975,Mietpreise,413.0
+1976,Mietpreise,420.9
+1977,Mietpreise,422.3
+1978,Mietpreise,422.3
+1979,Mietpreise,424.3
+1980,Mietpreise,434.5
+1981,Mietpreise,467.7
+1982,Mietpreise,509.2
+1983,Mietpreise,522.1
+1984,Mietpreise,536.2
+1985,Mietpreise,556.3
+1986,Mietpreise,575.5
+1987,Mietpreise,591.1
+1988,Mietpreise,608.0
+1989,Mietpreise,650.7
+1990,Mietpreise,713.0
+1991,Mietpreise,773.3
+1992,Mietpreise,818.5
+1993,Mietpreise,837.0
+1994,Mietpreise,838.2
+1995,Mietpreise,854.8
+1996,Mietpreise,862.4
+1997,Mietpreise,862.4
+1998,Mietpreise,863.4
+1999,Mietpreise,871.7
+2000,Mietpreise,897.7
+2001,Mietpreise,913.4
+2002,Mietpreise,918.3
+2003,Mietpreise,921.3
+2004,Mietpreise,940.5
+2005,Mietpreise,949.7
+2006,Mietpreise,970.4
+2007,Mietpreise,990.7
+2008,Mietpreise,1021.2
+2009,Mietpreise,1036.4
+2010,Mietpreise,1050.7
+2011,Mietpreise,1062.1
+2012,Mietpreise,1062.2
+2013,Mietpreise,1076.7
+2014,Mietpreise,1088.5
+2015,Mietpreise,1089.3
+2016,Mietpreise,1100.7
+2017,Mietpreise,1111.0
+2018,Mietpreise,1116.7
+1939,Konsumentenpeise,100.0
+1940,Konsumentenpeise,112.6
+1941,Konsumentenpeise,129.8
+1942,Konsumentenpeise,140.6
+1943,Konsumentenpeise,144.5
+1944,Konsumentenpeise,146.6
+1945,Konsumentenpeise,145.6
+1946,Konsumentenpeise,149.3
+1947,Konsumentenpeise,157.3
+1948,Konsumentenpeise,158.2
+1949,Konsumentenpeise,155.2
+1950,Konsumentenpeise,155.4
+1951,Konsumentenpeise,165.2
+1952,Konsumentenpeise,165.2
+1953,Konsumentenpeise,164.3
+1954,Konsumentenpeise,167.1
+1955,Konsumentenpeise,167.7
+1956,Konsumentenpeise,171.4
+1957,Konsumentenpeise,174.9
+1958,Konsumentenpeise,176.4
+1959,Konsumentenpeise,175.4
+1960,Konsumentenpeise,178.5
+1961,Konsumentenpeise,184.7
+1962,Konsumentenpeise,190.7
+1963,Konsumentenpeise,198.1
+1964,Konsumentenpeise,202.7
+1965,Konsumentenpeise,212.7
+1966,Konsumentenpeise,222.4
+1967,Konsumentenpeise,230.2
+1968,Konsumentenpeise,235.3
+1969,Konsumentenpeise,240.8
+1970,Konsumentenpeise,253.8
+1971,Konsumentenpeise,270.6
+1972,Konsumentenpeise,289.2
+1973,Konsumentenpeise,323.7
+1974,Konsumentenpeise,348.1
+1975,Konsumentenpeise,360.1
+1976,Konsumentenpeise,364.7
+1977,Konsumentenpeise,369.0
+1978,Konsumentenpeise,371.6
+1979,Konsumentenpeise,390.9
+1980,Konsumentenpeise,408.1
+1981,Konsumentenpeise,435.1
+1982,Konsumentenpeise,458.8
+1983,Konsumentenpeise,468.7
+1984,Konsumentenpeise,482.2
+1985,Konsumentenpeise,497.9
+1986,Konsumentenpeise,498.1
+1987,Konsumentenpeise,507.4
+1988,Konsumentenpeise,517.4
+1989,Konsumentenpeise,543.4
+1990,Konsumentenpeise,572.0
+1991,Konsumentenpeise,601.9
+1992,Konsumentenpeise,622.5
+1993,Konsumentenpeise,638.0
+1994,Konsumentenpeise,640.6
+1995,Konsumentenpeise,653.1
+1996,Konsumentenpeise,658.2
+1997,Konsumentenpeise,660.8
+1998,Konsumentenpeise,659.6
+1999,Konsumentenpeise,670.6
+2000,Konsumentenpeise,680.7
+2001,Konsumentenpeise,682.9
+2002,Konsumentenpeise,689.0
+2003,Konsumentenpeise,693.0
+2004,Konsumentenpeise,702.3
+2005,Konsumentenpeise,709.4
+2006,Konsumentenpeise,713.7
+2007,Konsumentenpeise,728.0
+2008,Konsumentenpeise,733.1
+2009,Konsumentenpeise,735.3
+2010,Konsumentenpeise,739.0
+2011,Konsumentenpeise,733.7
+2012,Konsumentenpeise,730.5
+2013,Konsumentenpeise,731.1
+2014,Konsumentenpeise,728.7
+2015,Konsumentenpeise,719.1
+2016,Konsumentenpeise,719.0
+2017,Konsumentenpeise,725.1
+2018,Konsumentenpeise,730.1
+    `.trim()}
+    />
+  <Editorial.Note>
+    Quelle: BFS
+  </Editorial.Note>
+</div>
+```
+

@@ -15,7 +15,8 @@ import { timeFormat } from '../../lib/timeFormat'
 
 import layout, {
   LABEL_FONT, VALUE_FONT,
-  Y_CONNECTOR, Y_CONNECTOR_PADDING
+  Y_CONNECTOR, Y_CONNECTOR_PADDING,
+  yScales
 } from './Lines.layout'
 
 import {
@@ -283,7 +284,9 @@ LineGroup.propTypes = {
   yAxisFormat: PropTypes.func.isRequired,
   yAnnotations: PropTypes.arrayOf(PropTypes.shape({
     value: PropTypes.number.isRequired,
-    label: PropTypes.string.isRequired
+    label: PropTypes.string.isRequired,
+    x: PropTypes.string,
+    dy: PropTypes.string
   })),
   x: PropTypes.func.isRequired,
   xTicks: PropTypes.array.isRequired,
@@ -457,6 +460,7 @@ LineChart.propTypes = {
   xScale: PropTypes.oneOf(['time', 'ordinal']),
   xSort: sortPropType,
   xTicks: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.string, PropTypes.number])),
+  yScale: PropTypes.oneOf(Object.keys(yScales)),
   timeParse: PropTypes.string.isRequired,
   timeFormat: PropTypes.string.isRequired,
   column: PropTypes.string,
@@ -509,6 +513,7 @@ export const Line = props => <LineChart {...props} />
 Line.defaultProps = {
   x: 'year',
   xScale: 'time',
+  yScale: 'linear',
   timeParse: '%Y',
   timeFormat: '%Y',
   numberFormat: '.0%',
@@ -529,6 +534,7 @@ export const Slope = props => <LineChart {...props} />
 Slope.defaultProps = {
   x: 'year',
   xScale: 'ordinal',
+  yScale: 'linear',
   timeParse: '%Y',
   timeFormat: '%Y',
   numberFormat: '.0%',

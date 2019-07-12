@@ -1,5 +1,5 @@
 import { timeParse } from 'd3-time-format'
-import { scaleLinear, scaleOrdinal } from 'd3-scale'
+import { scaleLinear, scaleLog, scaleOrdinal } from 'd3-scale'
 import { min, max } from 'd3-array'
 
 import { createTextGauger } from '../../lib/textGauger'
@@ -34,11 +34,17 @@ const Y_END_LABEL_SPACE = 3 // width of space between label and value
 const valueGauger = createTextGauger(VALUE_FONT, {dimension: 'width', html: true})
 const labelGauger = createTextGauger(LABEL_FONT, {dimension: 'width', html: true})
 
+export const yScales = {
+  linear: scaleLinear,
+  log: scaleLog
+}
+
 export default (props) => {
   const {
     values,
     mini,
-    yAnnotations
+    yAnnotations,
+    tLabel
   } = props
   let data = values
   if (props.filter) {
@@ -78,9 +84,19 @@ export default (props) => {
   }
   const lineGroup =  props.category ? d => d.category : d => d.datum[props.color]
 
+  const logScale = props.yScale === 'log'
+  const forceZero = !logScale && props.zero
+
+  let yCut
+  if (!forceZero) {
+    yCut = tLabel('Achse gekürzt')
+  }
+  if (logScale) {
+    yCut = tLabel('Logarithmische Skala')
+  }
   const yCutHeight = mini ? 25 : AXIS_BOTTOM_CUTOFF_HEIGHT
   const paddingTop = AXIS_TOP_HEIGHT + (props.column ? COLUMN_TITLE_HEIGHT : 0)
-  const paddingBottom = AXIS_BOTTOM_HEIGHT + (props.zero ? 0 : yCutHeight)
+  const paddingBottom = AXIS_BOTTOM_HEIGHT + (yCut ? yCutHeight : 0)
   const innerHeight = mini ? props.height - paddingTop - paddingBottom : props.height
   const columnHeight = innerHeight + paddingTop + paddingBottom
 
@@ -92,13 +108,16 @@ export default (props) => {
     yValues = yValues.concat(props.yTicks)
   }
   const minValue = min(yValues)
-  const y = scaleLinear()
+
+  const y = yScales[props.yScale]()
     .domain([
-      props.zero ? Math.min(0, minValue) : minValue,
+      forceZero ? Math.min(0, minValue) : minValue,
       max(yValues)
     ])
-    .nice(props.yNice)
     .range([innerHeight + paddingTop, paddingTop])
+  if (props.yNice) {
+    y.nice(props.yNice)
+  }
   const colorAccessor = props.color ? d => d.datum[props.color] : d => d.category
   const colorValues = []
     .concat(data.map(colorAccessor))
@@ -113,12 +132,9 @@ export default (props) => {
   }
   const color = scaleOrdinal(colorRange).domain(colorValues)
 
-  const { unit, tLabel } = props
-  let yCut
-  if (!props.zero) {
-    yCut = tLabel('Achse gekürzt')
-  }
-  const yAxis = calculateAxis(props.numberFormat, tLabel, y.domain(), unit)
+  const yAxis = calculateAxis(props.numberFormat, tLabel, y.domain(), props.unit, {
+    ticks: props.yTicks
+  })
   const {format: yFormat} = yAxis
 
   const startValue = !mini && props.startValue
