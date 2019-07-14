@@ -21,6 +21,9 @@ if (AWS_ACCESS_KEY_ID && AWS_SECRET_ACCESS_KEY) {
 } else {
   console.warn('missing env AWS_ACCESS_KEY_ID and/or AWS_SECRET_ACCESS_KEY, uploading images will not work')
 }
+if (!AWS_S3_BUCKET) {
+  console.warn('missing env AWS_S3_BUCKET, uploading new and deleting existing images will not work')
+}
 
 const upload = async ({
   stream,

@@ -5,13 +5,12 @@ const querystring = require('querystring')
 const sharp = require('sharp')
 
 checkEnv([
-  'ASSETS_SERVER_BASE_URL',
-  'AWS_S3_BUCKET'
+  'ASSETS_SERVER_BASE_URL'
 ])
 
 const {
   ASSETS_SERVER_BASE_URL,
-  AWS_S3_BUCKET
+  AWS_S3_BUCKET // ./s3 warns if missing
 } = process.env
 
 const PORTRAIT_FOLDER = 'portraits'
