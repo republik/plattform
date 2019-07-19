@@ -221,7 +221,7 @@ const TimeBarChart = (props) => {
     xDomain = xValues.reduce(
       (values, value, index, all) => {
         values.push(value)
-        const next = interval.offset(xParser(value), 1)
+        const next = interval.offset(xParser(value), props.xIntervalStep)
         if (
           all.indexOf(xParserFormat(next)) === -1 &&
           index !== all.length - 1
@@ -473,6 +473,7 @@ TimeBarChart.defaultProps = {
   padding: 50,
   unit: '',
   colorLegend: true,
+  xIntervalStep: 1,
   yAnnotations: [],
   xAnnotations: []
 }

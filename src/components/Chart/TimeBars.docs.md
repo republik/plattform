@@ -562,3 +562,27 @@ year,typ,value
   `.trim()} />
 ```
 
+### Custom Intervals
+
+- `timeParse`: a `d3-time-format` string
+- `xInterval`: e.g. `year`, `month`, `day`— any [d3-time interval](https://github.com/d3/d3-time#intervals). Without the `time` prefix and all lowercase.
+- `xIntervalStep`: Int
+
+```react
+<CsvChart
+  config={{
+    "type": "TimeBar",
+    "x": "month",
+    "timeParse": "%Y-%m",
+    "xInterval": "month",
+    "xIntervalStep": 6
+  }}
+  values={`
+month,value
+2018-01,1
+2018-07,2
+2019-01,3
+2019-07,4
+  `.trim()} />
+```
+
