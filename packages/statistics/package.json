@@ -1,0 +1,26 @@
+{
+  "name": "@orbiting/backend-modules-statistics",
+  "version": "0.0.1",
+  "description": "Statistical data",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/orbiting/backends.git"
+  },
+  "author": "Patrick Venetz <patrick.venetz@republik.ch>",
+  "license": "AGPL-3.0",
+  "publishConfig": {
+    "access": "public"
+  },
+  "bugs": {
+    "url": "https://github.com/orbiting/backends/issues"
+  },
+  "homepage": "https://github.com/orbiting/backends#readme",
+  "scripts": {
+    "link": "yarn link"
+  },
+  "dependencies": {
+    "moment": "^2.24.0",
+    "yargs": "^13.3.0"
+  }
+}
