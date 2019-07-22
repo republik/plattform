@@ -1,16 +1,25 @@
-const { getTemplate } = require('../lib/sendMailTemplate')
+const handlebars = require('handlebars')
+
+const { getTemplate, envMergeVars } = require('../lib/sendMailTemplate')
 
 module.exports = async (server, pgdb, t) => {
   server.get(
     '/mail/render/:template',
     async (req, res) => {
-      const html = await getTemplate(req.params.template)
+      const source = await getTemplate(req.params.template)
 
-      if (!html) {
+      if (!source) {
         return res.sendStatus(404)
       }
 
-      return res.send(html)
+      const template = handlebars.compile(source, { noEscape: true })
+      const vars = { ...req.query }
+
+      envMergeVars.forEach(({ name, content }) => {
+        vars[name] = content
+      })
+
+      return res.send(template(vars))
     }
   )
 }
