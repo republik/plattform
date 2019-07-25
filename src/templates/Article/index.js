@@ -119,8 +119,13 @@ const getProgressId = (node, index, parent, { ancestors }) => {
     const indexOfParent = rootNode && rootNode.children.length && rootNode.children.indexOf(parent)
     return indexOfParent + '-' + index
   }
-  if (node.identifier === 'FIGURE' && ancestors.length === 1) {
-    return index
+  if (index > 0) {
+    if (node.identifier === 'FIGURE' && ancestors.length === 1) {
+      return index
+    }
+    if (node.identifier === 'DYNAMIC_COMPONENT' && ancestors.length === 1) {
+      return index
+    }
   }
 }
 
@@ -515,6 +520,7 @@ const pullQuote = {
 }
 
 export const COVER_TYPE = 'COVERFIGURE'
+export const DYNAMICCOMPONENT_TYPE = 'DYNAMICCOMPONENT'
 
 const mdastToString = node => node
   ? (
@@ -729,6 +735,12 @@ const createSchema = ({
   })
 
   const cover = createCover({onAudioCoverClick})
+  const dynamicComponent = createDynamicComponent({
+    t,
+    dynamicComponentRequire,
+    insertButtonText: 'Dynamic Component',
+    type: DYNAMICCOMPONENT_TYPE
+  })
 
   return {
     repoPrefix,
@@ -762,6 +774,7 @@ const createSchema = ({
             }
           },
           cover,
+          addProgressProps(dynamicComponent),
           titleBlockRule || {
             matchMdast: matchZone('TITLE'),
             component: ({children, format, ...props}) => (
@@ -786,7 +799,8 @@ const createSchema = ({
             }),
             editorModule: 'title',
             editorOptions: {
-              coverType: COVER_TYPE
+              coverType: COVER_TYPE,
+              dynamicComponentCoverType: DYNAMICCOMPONENT_TYPE
             },
             rules: [
               {
@@ -1157,18 +1171,10 @@ const createSchema = ({
                 },
                 isVoid: true
               },
-              createDynamicComponent({
-                t,
-                dynamicComponentRequire,
-                insertButtonText: 'Dynamic Component'
-              })
+              dynamicComponent
             ].map(addProgressProps)
           },
           addProgressProps(centerFigure),
-          addProgressProps(createDynamicComponent({
-            t,
-            dynamicComponentRequire
-          })),
           {
             matchMdast: () => false,
             editorModule: 'specialchars'

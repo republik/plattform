@@ -10,9 +10,9 @@ import {
   matchZone
 } from 'mdast-react-render/lib/utils'
 
-const createDynamicComponent = ({t, dynamicComponentRequire, insertButtonText}) => ({
+const createDynamicComponent = ({t, dynamicComponentRequire, insertButtonText, type}) => ({
   matchMdast: matchZone('DYNAMIC_COMPONENT'),
-  component: ({showException, raw = false, size, ...props}) => {
+  component: ({showException, raw = false, size, attributes, ...props}) => {
     const content = (
       <ErrorBoundary
         showException={showException}
@@ -25,7 +25,7 @@ const createDynamicComponent = ({t, dynamicComponentRequire, insertButtonText}) 
       return content
     }
 
-    return <Figure size={size}>
+    return <Figure size={size} attributes={attributes}>
       {content}
     </Figure>
   },
@@ -43,6 +43,7 @@ const createDynamicComponent = ({t, dynamicComponentRequire, insertButtonText}) 
   },
   editorModule: 'dynamiccomponent',
   editorOptions: {
+    type,
     insertTypes: [
       'PARAGRAPH'
     ],
