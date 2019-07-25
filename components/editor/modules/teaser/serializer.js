@@ -75,8 +75,17 @@ export const fromMdast = ({
     rules: getRules(subModules)
   })
 
+  const children = node.children.filter(node => node !== imageParagraph)
+  const lastChild = node.children[node.children.length - 1]
+  if ((!lastChild || lastChild.type !== 'paragraph') && !data.onlyImage) {
+    children.push({
+      type: 'paragraph',
+      children: []
+    })
+  }
+
   const nodes = childSerializer.fromMdast(
-    node.children.filter(node => node !== imageParagraph),
+    children,
     0,
     node,
     {
