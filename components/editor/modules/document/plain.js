@@ -15,6 +15,7 @@ export default ({ rule, subModules, TYPE }) => {
   }
   const titleModule = subModules.find(m => m.name === 'title')
   const figureModule = subModules.find(m => m.name === 'figure')
+  const dynamicComponentModule = subModules.find(m => m.name === 'dynamiccomponent')
 
   const childSerializer = new MarkdownSerializer({
     rules: subModules.reduce(
@@ -161,6 +162,9 @@ ${titleModule ? 'Text' : title}
         schema: {
           document: {
             nodes: [
+              dynamicComponentModule && {
+                types: [dynamicComponentModule.TYPE], min: 0, max: 1
+              },
               figureModule && {
                 types: [figureModule.TYPE], min: 0, max: 1
               },
@@ -177,7 +181,8 @@ ${titleModule ? 'Text' : title}
             first: (titleModule || figureModule) && {
               types: [
                 titleModule && titleModule.TYPE,
-                figureModule && figureModule.TYPE
+                figureModule && figureModule.TYPE,
+                dynamicComponentModule && dynamicComponentModule.TYPE
               ].filter(Boolean)
             },
             last: {

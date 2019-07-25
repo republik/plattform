@@ -8,7 +8,7 @@ import {
 } from '../../utils'
 import MetaForm from '../../utils/MetaForm'
 
-export default ({TYPE, subModules, editorOptions}) => {
+export default ({ TYPE, subModules, editorOptions }) => {
   const isTitleBlock = block => block.type === TYPE || subModules.some(m => m.TYPE === block.type)
   const Form = createPropertyForm({
     isDisabled: ({ value }) => (
@@ -20,7 +20,8 @@ export default ({TYPE, subModules, editorOptions}) => {
     }
 
     const {
-      coverType
+      coverType,
+      dynamicComponentCoverType
     } = editorOptions
 
     return <div>
@@ -45,7 +46,11 @@ export default ({TYPE, subModules, editorOptions}) => {
               )
             }
             const firstNode = value.document.nodes.first()
+
             const hasCover = firstNode.type === coverType
+            const hasDynamicCover = firstNode.type === dynamicComponentCoverType
+
+            const hasAnyCover = hasCover || hasDynamicCover
 
             return (
               <div key={`titleblock-${i}`}>
@@ -56,7 +61,7 @@ export default ({TYPE, subModules, editorOptions}) => {
                   })}
                   onInputChange={onInputChange(block)}
                 />
-                {!!coverType && (hasCover ? (
+                {hasAnyCover && (
                   <A
                     href='#'
                     onClick={(e) => {
@@ -67,10 +72,11 @@ export default ({TYPE, subModules, editorOptions}) => {
                           .removeNodeByKey(firstNode.key)
                       )
                     }}
-                    >
+                  >
                     Cover entfernen
                   </A>
-                ) : (
+                )}
+                {!!coverType && !hasAnyCover && (
                   <A
                     href='#'
                     onClick={(e) => {
@@ -86,10 +92,30 @@ export default ({TYPE, subModules, editorOptions}) => {
                         )
                       )
                     }}
-                    >
+                  >
                     Cover hinzufügen
                   </A>
-                ))}
+                )}
+                <br />
+                {!!dynamicComponentCoverType && !hasAnyCover && (
+                  <A
+                    href='#'
+                    onClick={(e) => {
+                      e.preventDefault()
+                      onChange(
+                        value.change().insertNodeByKey(
+                          value.document.key,
+                          0,
+                          {
+                            kind: 'block',
+                            type: dynamicComponentCoverType
+                          }
+                        )
+                      )
+                    }}>
+                    Dynamic Component Cover hinzufügen
+                  </A>
+                )}
               </div>
             )
           })
