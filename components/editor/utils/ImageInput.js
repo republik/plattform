@@ -52,7 +52,7 @@ const readImage = (onChange, t) => e => {
   reader.readAsDataURL(file)
 }
 
-const ImageInput = ({onChange, t, src, label, maxWidth = 200}) => (
+const ImageInput = ({ onChange, t, src, label, maxWidth = 200 }) => (
   <label>
     <Label {...styles.label}>
       {label}
@@ -66,7 +66,7 @@ const ImageInput = ({onChange, t, src, label, maxWidth = 200}) => (
       alt='' />
     <input
       type='file'
-      accept='image/jpeg,image/png,image/gif'
+      accept='image/jpeg,image/png,image/gif,image/svg+xml'
       {...styles.input}
       onChange={readImage(onChange, t)}
     />
