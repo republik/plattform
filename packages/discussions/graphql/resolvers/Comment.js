@@ -55,7 +55,7 @@ const mdastToHumanString = (node, length = 500) => {
   do {
     const part = parts.shift()
 
-    if (string.length + part.length > length) {
+    if (!part || string.length + part.length > length) {
       break
     }
 
