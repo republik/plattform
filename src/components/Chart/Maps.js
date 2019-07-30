@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from 'react'
 import PropTypes from 'prop-types'
-import { scaleOrdinal } from 'd3-scale'
+import { scaleLinear } from 'd3-scale'
+import { descending, max } from 'd3-array'
 import { symbol, symbolSquare, symbolCircle } from 'd3-shape'
 import { geoIdentity, geoMercator, geoEqualEarth } from 'd3-geo'
 import ColorLegend from './ColorLegend'
@@ -10,12 +11,17 @@ import { css } from 'glamor'
 import memoize from 'lodash/memoize'
 import { feature as topojsonFeature, mesh as topojsonMesh } from 'topojson'
 
+import {
+  subsup,
+} from './utils'
+
 import Loader from '../Loader'
 
 import ContextBox, { ContextBoxValue } from './ContextBox'
 
 import {
-  sansSerifMedium14
+  sansSerifMedium14,
+  sansSerifRegular14
 } from '../Typography/styles'
 
 import colors from '../../theme/colors'
@@ -31,6 +37,9 @@ const styles = {
     userSelect: 'none',
     WebkitTapHighlightColor: 'rgba(0, 0, 0, 0)'
   }),
+  pointGroup: css({
+    userSelect: 'none',
+  })
 }
 
 const symbolShapes = {
@@ -39,30 +48,55 @@ const symbolShapes = {
 }
 const shapes = Object.keys(symbolShapes).concat('marker')
 
-const Points = ({data, colorScale, colorAccessor, project, shape, sizes, domain}) => {
+const Points = ({data, colorScale, colorAccessor, project, shape, sizeRangeMax, hoverPoint, setHoverPoint}) => {
+
+  const valueAccessor = d => isNaN(d.value) ? 1 : d.value
+
   const marker = shape === 'marker'
   let symbolPath
   if (!marker) {
-    const size = scaleOrdinal().domain(domain).range(sizes)
+    const size = scaleLinear().domain([0, max(data.map(d => valueAccessor(d)))]).range([0, sizeRangeMax])
     symbolPath = symbol()
       .type(symbolShapes[shape])
-      .size(d => size(colorAccessor(d)))
+      .size(d => size(valueAccessor(d)))
   }
+
+  const displayData = React.useMemo(
+    () => [...data].sort((a,b) => descending(valueAccessor(a), valueAccessor(b))), 
+    [data]
+  )
 
   return (
     <g>
-      {data.map((d, i) => {
-        const color = colorScale(colorAccessor(d))
+      {displayData.map((d, i) => {
+        const color = isNaN(d.value) ? '#000000' : colorScale(colorAccessor(d))
         let pos = project([d.datum.lon || d.datum.x, d.datum.lat || d.datum.y])
+
+        const stroke = hoverPoint === d ? {
+          strokeWidth: 1,
+          stroke: '#000000',
+        } : null
+
         if (marker) {
           pos = pos.map(Math.round)
         }
         return (
-          <g key={i} transform={`translate(${pos.join(',')})`}>
+          <g 
+            key={i} 
+            transform={`translate(${pos.join(',')})`}
+            onMouseEnter={() => setHoverPoint(d)}
+            onTouchStart={() => setHoverPoint(d)}
+            onMouseLeave={() => setHoverPoint(null)}
+            onTouchEnd={() => setHoverPoint(null)}
+            {...styles.pointGroup}
+          >
             {marker && <circle cy={-MARKER_HEIGHT} r={MARKER_RADIUS} fill={color} stroke='white' strokeWidth='1' />}
             {marker && <line y2={-MARKER_HEIGHT} stroke={color} strokeWidth='2' shapeRendering='crispEdges' />}
             {!marker && (
-              <path d={symbolPath(d)} fill={color} />
+              <>
+                <path d={symbolPath(d)} fill='none' {...stroke} />
+                <path d={symbolPath(d)} fill={color} opacity={isNaN(d.value) ? 1 : 0.6} />
+              </>
             )}
           </g>
         )
@@ -78,7 +112,7 @@ Points.propTypes = {
   project: PropTypes.func.isRequired,
   shape: PropTypes.oneOf(shapes).isRequired,
   domain: PropTypes.array,
-  sizes: PropTypes.arrayOf(PropTypes.number)
+  sizeRangeMax: PropTypes.number
 }
 
 // for synchronous access in constructor
@@ -140,6 +174,9 @@ export class GenericMap extends Component {
     fetchJsonCacheData.clear()
     fetchJson.cache.clear()
   }
+  setHoverPoint = (point) => {
+    this.setState({hoverPoint: point})
+  }
   renderTooltips() {
     const props = this.props
     const {
@@ -189,6 +226,68 @@ export class GenericMap extends Component {
       })
     })
   }
+  renderPointTooltip() {
+    const {
+      hoverPoint,
+      layout: {
+        projectPoint,
+        numberFormat
+      }
+    } = this.state
+    const {
+      width,
+      pointLabel,
+      pointAttributes,
+      unit,
+    } = this.props
+    
+    if (!hoverPoint) {
+      return null
+    }
+
+    const [ x, y ] = projectPoint([hoverPoint.datum.lon, hoverPoint.datum.lat])
+    
+    const value = isNaN(hoverPoint.datum.value) 
+      ? String(hoverPoint.datum.value).trim()
+      : numberFormat(hoverPoint.datum.value)
+
+    const body = pointAttributes.map(t => {
+      const val = hoverPoint.datum[t]
+      if (val) {
+        return (<>{subsup(val)}<br/></>)
+      } else {
+        return null
+      }
+    })
+
+    const hasValue = hoverPoint.datum.value !== undefined
+    const showTooltip = hasValue || body.length > 0 || hoverPoint.datum[pointLabel]
+
+    if (showTooltip) {
+      return (
+        <ContextBox
+          orientation="top"
+          x={x}
+          y={y}
+          contextWidth={width}
+        >
+          <ContextBoxValue label={hoverPoint.datum[pointLabel]}>
+            {hasValue && (
+              <>
+                {`${value} `}
+                {subsup(unit)}
+                <br />
+              </>
+            )}
+            {body}
+          </ContextBoxValue>
+        </ContextBox>
+      )        
+    } else {
+      return null
+    }
+
+  }
   render() {
     const { props, state } = this
     const {
@@ -202,9 +301,9 @@ export class GenericMap extends Component {
       missingDataColor
     } = props
     const {
-      loading, error, geoJson
+      loading, error, geoJson, hoverPoint
     } = state
-
+    
     const {
       paddingTop,
       paddingLeft,
@@ -327,7 +426,10 @@ export class GenericMap extends Component {
                           domain={domain}
                           project={projectPoint}
                           shape={props.shape}
-                          sizes={props.sizes} />
+                          sizeRangeMax={props.sizeRangeMax}
+                          hoverPoint={hoverPoint}
+                          setHoverPoint={this.setHoverPoint}
+                        />
                       )}
                     </g>
                   </g>
@@ -360,6 +462,7 @@ export class GenericMap extends Component {
           {children}
         </div>
         {hasTooltips && this.renderTooltips()}
+        {this.renderPointTooltip()}
       </div>
     )
   }
@@ -408,7 +511,7 @@ export const propTypes = {
     sequential: PropTypes.array.isRequired
   }).isRequired,
   shape: PropTypes.oneOf(shapes).isRequired,
-  sizes: PropTypes.arrayOf(PropTypes.number),
+  sizeRangeMax: PropTypes.number,
   features: featuresShape,
   geotiff: geotiffShape,
   geotiffLegendTitle: PropTypes.string,
@@ -421,6 +524,8 @@ export const propTypes = {
   numberFormat: PropTypes.string.isRequired,
   filter: PropTypes.string,
   points: PropTypes.bool.isRequired,
+  pointLabel: PropTypes.string,
+  pointAttributes: PropTypes.arrayOf(PropTypes.string),
   choropleth: PropTypes.bool.isRequired,
   feature: PropTypes.string,
   missingDataLegend: PropTypes.string,
@@ -442,12 +547,13 @@ GenericMap.defaultProps = {
   colorLegendSize: 0.16,
   colorLegendMinWidth: 80,
   points: false,
+  pointAttributes: [],
   choropleth: false,
   missingDataColor: colors.divider,
   ignoreMissingFeature: false,
   feature: 'feature',
   shape: 'circle',
-  sizes: [10],
+  sizeRangeMax: 10,
   getProjection: () => geoEqualEarth()
 }
 
