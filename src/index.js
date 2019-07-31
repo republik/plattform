@@ -1,3 +1,7 @@
+import 'core-js/fn/array/from'
+import 'core-js/fn/array/find'
+import 'core-js/es6'
+
 import React, { Fragment } from 'react'
 import ReactDOM from 'react-dom'
 import { Catalog, ReactSpecimen } from '@catalog/core'
@@ -7,9 +11,6 @@ import './global.css'
 import './catalogTheme.css'
 import * as fontStyles from './components/Typography/styles'
 
-import 'core-js/fn/array/from'
-import 'core-js/fn/array/find'
-import 'core-js/es6'
 
 import { fontFaces } from './theme/fonts'
 import { createFormatter } from './lib/translate'
