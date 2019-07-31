@@ -195,4 +195,6 @@ PgDb.connect().then(async pgdb => {
   )
 
   console.log(stats)
-})
+
+  await pgdb.close()
+}).catch(e => { throw e })
