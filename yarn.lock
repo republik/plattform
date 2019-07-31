@@ -496,9 +496,9 @@
     unified "^6.1.5"
 
 "@project-r/styleguide@^7.4.0":
-  version "7.6.1"
-  resolved "https://registry.yarnpkg.com/@project-r/styleguide/-/styleguide-7.6.1.tgz#236e2d7170d61e2d5775150bd8e3982b73b450b1"
-  integrity sha512-B2JZNnG1+vHuU8o9X/IPkffvwLt78z7+txFWOcieijXEvOor6gqizakwHkGjS1tALwq1ZUpAmHvo8dYQVI/hug==
+  version "7.10.2"
+  resolved "https://registry.yarnpkg.com/@project-r/styleguide/-/styleguide-7.10.2.tgz#e2e9bf79bd596a79a73da9bc03c890af8b2e1574"
+  integrity sha512-HCIYg9jEYg9WGfrCN/ZztvbW4/wxPNRL36EzXlURKyMtXwiHbKPAy7o4sCMqBzyscQZ+vCQgq/0TssvVkSoEsw==
   dependencies:
     react-icons "^2.2.7"
     react-swipeable "^4.3.0"
