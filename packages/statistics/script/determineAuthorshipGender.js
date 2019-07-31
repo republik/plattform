@@ -9,11 +9,10 @@
 
 require('@orbiting/backend-modules-env').config()
 
-const fs = require('fs')
-const path = require('path')
 const yargs = require('yargs')
 const moment = require('moment')
 
+const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
 const Elasticsearch = require('@orbiting/backend-modules-base/lib/Elasticsearch')
 const utils = require('@orbiting/backend-modules-search/lib/utils')
 const { mdastToString } = require('@orbiting/backend-modules-utils')
@@ -33,23 +32,15 @@ const argv = yargs
   .version()
   .argv
 
-const classifiedAutors =
-  fs
-    .readFileSync(path.join(__dirname, '../data/classifiedAuthors.tsv'))
-    .toString()
-    .split('\n')
-    .map(line => {
-      const [author, gender = 'n'] = line.split('\t')
-      return { author, gender }
-    })
-
 const unclassifiedAuthors = []
 const articles = []
 
 const elastic = Elasticsearch.connect()
 const days = argv.end.diff(argv.begin, 'days')
 
-const run = async () => {
+PgDb.connect().then(async pgdb => {
+  const classifiedAuthors = await pgdb.public.gsheets.findOneFieldOnly({ name: 'authors' }, 'data')
+
   const docs = await elastic.search({
     index: utils.getIndexAlias('document', 'read'),
     _source: [
@@ -134,7 +125,7 @@ const run = async () => {
       // m = male
       const gender = authorship
         .map(authorName => {
-          const classifiedAuthor = classifiedAutors.find(a => a.author === authorName)
+          const classifiedAuthor = classifiedAuthors.find(a => a.name === authorName)
           if (!classifiedAuthor) {
             unclassifiedAuthors.push({ author: authorName, path: meta.path })
           }
@@ -204,6 +195,4 @@ const run = async () => {
   )
 
   console.log(stats)
-}
-
-run()
+})
