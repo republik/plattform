@@ -133,3 +133,4 @@ module.exports = async (mail, context, log) => {
 }
 
 module.exports.getTemplate = getTemplate
+module.exports.envMergeVars = envMergeVars
