@@ -71,6 +71,7 @@ const upsertItem = async (tableName, query, data, { pgdb, t }) => {
     console.error(`missing table ${tableName}`)
     throw new Error(t('api/unexpected'))
   }
+
   const existingItem = await pgdb.public[tableName].findOne(query)
   if (!existingItem) {
     return pgdb.public[tableName].insertAndGet(
@@ -81,38 +82,41 @@ const upsertItem = async (tableName, query, data, { pgdb, t }) => {
       { skipUndefined: true }
     )
       .then(spreadItemData)
-  } else {
-    let newData = { ...data }
-    let accessor
-    if (data.percentage) {
-      accessor = 'percentage'
-      newData.percentage = Math.max(newData.percentage, 0)
-      newData.percentage = Math.min(newData.percentage, 1)
-    } else if (data.secs) {
-      accessor = 'secs'
-    }
-    if (accessor) {
-      const existingMax = existingItem.data.max || existingItem
-      if (existingMax.data[accessor] > newData[accessor]) {
-        newData = {
-          ...newData,
-          max: existingMax
-        }
+  }
+
+  let newData = { ...data }
+  let accessor
+
+  if (newData.percentage) {
+    accessor = 'percentage'
+    newData.percentage = Math.max(newData.percentage, 0)
+    newData.percentage = Math.min(newData.percentage, 1)
+  } else if (newData.secs) {
+    accessor = 'secs'
+  }
+
+  if (accessor) {
+    const existingMax = existingItem.data.max || existingItem
+    if (existingMax.data[accessor] > newData[accessor]) {
+      newData = {
+        ...newData,
+        max: existingMax
       }
     }
-    return pgdb.public[tableName].updateAndGetOne(
-      {
-        id: existingItem.id
-      },
-      {
-        ...query,
-        data: newData,
-        updatedAt: new Date()
-      },
-      { skipUndefined: true }
-    )
-      .then(spreadItemData)
   }
+
+  return pgdb.public[tableName].updateAndGetOne(
+    {
+      id: existingItem.id
+    },
+    {
+      ...query,
+      data: newData,
+      updatedAt: new Date()
+    },
+    { skipUndefined: true }
+  )
+    .then(spreadItemData)
 }
 
 const getDocumentItem = async (args, context) =>
