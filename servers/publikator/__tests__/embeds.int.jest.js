@@ -197,7 +197,7 @@ describe('embeds authorized', () => {
       __typename: 'TwitterEmbed',
       id: '931088218279366656',
       text: 'What’s the manager’s message to the fans ahead of #AFCvTHFC?\n\n“Just to support the team and stand with us for the 90 minutes”\n\n#WeAreTheArsenal🔴 https://t.co/GQM6lFfcVr',
-      userName: 'Arsenal FC'
+      userName: 'Arsenal'
     })
   }, 30000)
 
