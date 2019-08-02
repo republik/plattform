@@ -87,11 +87,11 @@ const upsertItem = async (tableName, query, data, { pgdb, t }) => {
   let newData = { ...data }
   let accessor
 
-  if (newData.percentage) {
+  if (newData.percentage !== undefined && newData.percentage !== null) {
     accessor = 'percentage'
     newData.percentage = Math.max(newData.percentage, 0)
     newData.percentage = Math.min(newData.percentage, 1)
-  } else if (newData.secs) {
+  } else if (newData.secs !== undefined && newData.secs !== null) {
     accessor = 'secs'
   }
 
