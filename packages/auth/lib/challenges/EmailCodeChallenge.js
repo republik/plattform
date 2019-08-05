@@ -48,15 +48,19 @@ module.exports = {
     return { payload, expiresAt }
   },
   startChallenge: async ({ email, token, pgdb }) => {
+    // Split payload into chunks glued w/ a space
+    // e.g. 12345678 -> "123 456 78"
+    const chunkedCode = token.payload.match(/\d{1,3}/g).join(' ')
+
     return sendMailTemplate({
       to: email,
       fromEmail: DEFAULT_MAIL_FROM_ADDRESS,
-      subject: t('api/signin/EMAIL_CODE/mail/subject', { code: token.payload }),
+      subject: t('api/signin/EMAIL_CODE/mail/subject', { code: chunkedCode }),
       templateName: 'signin_code',
       mergeLanguage: 'handlebars',
       globalMergeVars: [
         { name: 'code',
-          content: token.payload
+          content: chunkedCode
         }
       ]
     }, { pgdb })
