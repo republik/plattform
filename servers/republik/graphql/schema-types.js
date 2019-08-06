@@ -187,6 +187,7 @@ type Employee {
   subgroup: String
   name: String
   title: String
+  greeting: String
   user: User
 }
 

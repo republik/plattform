@@ -2,43 +2,53 @@ const { shuffle } = require('d3-array')
 const { transformUser } = require('@orbiting/backend-modules-auth')
 
 module.exports = async (_, args, { pgdb }) => {
-  const data = await pgdb.public.gsheets.findOneFieldOnly({ name: 'employees' }, 'data')
-  if (!data) {
+  const employees = await pgdb.public.gsheets.findOneFieldOnly({ name: 'employees' }, 'data')
+  if (!employees) {
     return []
   }
-  let result = data.filter(d => d.published)
+  let result = employees.filter(e => e.published)
+
+  if (args.withGreeting) {
+    result = result.filter(d => d.greeting)
+  }
 
   if (args.shuffle) {
-    const randomOrder = shuffle(result)
-    const boosted = shuffle([
-      randomOrder.find(d => d.famous && d.gender === 'f'),
-      randomOrder.find(d => d.famous && d.gender === 'm')
-    ])
-    const rest = randomOrder.filter(d => !boosted.includes(d))
+    const shuffledEmployees = shuffle(result)
 
-    result = [
-      boosted[0],
-      rest[0],
-      boosted[1]
-    ].concat(rest.slice(1))
-      .filter(Boolean)
-      .filter((a, i, all) => all.findIndex(b => b.userId === a.userId) === i)
-      .slice(0, args.shuffle)
+    if (!args.withBoosted) {
+      result = shuffledEmployees.slice(0, args.shuffle)
+    } else {
+      const boostedEmployees = shuffle([
+        shuffledEmployees.find(({ famous, gender }) => famous && gender === 'f'),
+        shuffledEmployees.find(({ famous, gender }) => famous && gender === 'f')
+      ])
+      const otherEmployees = shuffledEmployees.filter(e => !boostedEmployees.includes(e))
+
+      result = [
+        boostedEmployees.shift(),
+        otherEmployees.shift(),
+        boostedEmployees.shift()
+      ]
+        .concat(otherEmployees)
+        .filter(Boolean)
+        .filter((a, i, all) => all.findIndex(b => b.userId === a.userId) === i)
+        .slice(0, args.shuffle)
+    }
   }
 
   const userIds = result
     .map(e => e.userId)
     .filter(Boolean)
 
-  const users = await pgdb.public.users.find({
-    id: userIds
-  })
-    .then(result => result
-      .map(transformUser)
-    )
+  if (userIds.length === 0) {
+    return result
+  }
 
-  return result.map(d => ({
-    ...d,
-    user: users.find(u => u.id === d.userId)
+  const users = await pgdb.public.users.find({ id: userIds })
+    .then(result => result.map(transformUser))
+
+  return result.map(e => ({
+    ...e,
+    user: users.find(u => u.id === e.userId)
   }))
 }
