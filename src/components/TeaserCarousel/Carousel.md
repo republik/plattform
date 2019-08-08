@@ -15,13 +15,16 @@ Supported props:
 ```react
 <TeaserFrontCarousel tag='Alle Rezensionen'>
   <TeaserFrontCarouselTile image='/static/carousel/solstad.png' onClick={() => console.log("click on first tile")}>
+        <Editorial.Format>Poesie & Prosa</Editorial.Format>
+
    <TeaserFrontCarouselHeadline>Das Rätsel Dag Solstad</TeaserFrontCarouselHeadline>
     <TeaserFrontCarouselLead>
       Dag Solstad: «T. Singer» Der Norweger gehört zu den schrulligsten Autoren der Gegenwart.
     </TeaserFrontCarouselLead>
-     <TeaserFrontCredit>
-      Von <TeaserFrontCreditLink color='#000' href='#'>Jan Wilm</TeaserFrontCreditLink>, 05.07.2019
-    </TeaserFrontCredit>
+    <Editorial.Credit>
+      Von <Editorial.A  color='#000' href='#'>Jan Wilm</Editorial.A >, 05.07.2019
+    </Editorial.Credit>
+
   </TeaserFrontCarouselTile>
 
   <TeaserFrontCarouselTile image='/static/carousel/jackson.png'>
@@ -29,6 +32,9 @@ Supported props:
     <TeaserFrontCarouselLead>
       Peter Jackson: «They Shall Not Grow Old» Der Blockbuster-Regisseur zeigt den Ersten Weltkrieg.
     </TeaserFrontCarouselLead>
+    <Editorial.Credit>
+      Von <Editorial.A  color='#000' href='#'>Simon Spiegel</Editorial.A >, 05.07.2019
+    </Editorial.Credit>
   </TeaserFrontCarouselTile>
 
   <TeaserFrontCarouselTile image='/static/carousel/vault.png'>
@@ -36,6 +42,9 @@ Supported props:
     <TeaserFrontCarouselLead>
       «Heaven’s Vault» ist ein aussergewöhnliches Adventure-Game.
     </TeaserFrontCarouselLead>
+    <Editorial.Credit>
+      Von <Editorial.A  color='#000' href='#'>Christof Zurschmitten</Editorial.A >, 05.07.2019
+    </Editorial.Credit>
   </TeaserFrontCarouselTile>
 
   <TeaserFrontCarouselTile image='/static/carousel/rinck.png'>
@@ -43,6 +52,9 @@ Supported props:
     <TeaserFrontCarouselLead>
       Die Essays und Gedichte von Monika Rinck sind das originellste Denkabenteuer.
     </TeaserFrontCarouselLead>
+    <Editorial.Credit>
+      Von <Editorial.A  color='#000' href='#'>Daniel Graf</Editorial.A >, 05.07.2019
+    </Editorial.Credit>
   </TeaserFrontCarouselTile>
 
   <TeaserFrontCarouselTile image='/static/carousel/calle.png'>
@@ -50,6 +62,9 @@ Supported props:
     <TeaserFrontCarouselLead>
       Sophie Calle: «Un certain regard» Das Fotomuseum Winterthur zeigt eine beeindruckende Schau.
     </TeaserFrontCarouselLead>
+    <Editorial.Credit>
+      Von <Editorial.A  color='#000' href='#'>Daniel Binswanger</Editorial.A >, 05.07.2019
+    </Editorial.Credit>
   </TeaserFrontCarouselTile>
 
 </TeaserFrontCarousel>
