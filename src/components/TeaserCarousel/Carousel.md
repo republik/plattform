@@ -1,7 +1,7 @@
 A `<TeaserFrontCarousel />` is a row of teaser cards through which the user can scroll horizontally.
 
 Changelog:
-- A new color: outline \`#D7D7D7\`
+- A new color: outline `#D7D7D7`
 
 Notes:
 - Uses the same media queries as TeaserFront (like Dossier).
@@ -17,7 +17,7 @@ Supported props:
 
 ### `<TeaserFrontCarousel />`: default
 
-```react|responsive
+```react
 <TeaserFrontCarousel format='Alle Rezensionen'>
   <TeaserFrontCarouselTile image='/static/carousel/solstad.png' onClick={() => console.log("click on first tile")}>
     <TeaserFrontCarouselTag>Poesie & Prosa</TeaserFrontCarouselTag>
@@ -120,7 +120,7 @@ Supported props:
 ```
 
 
-### `<TeaserFrontCarousel />`: black background
+### `<TeaserFrontCarousel />`
 
 ```react
 <TeaserFrontCarousel format='Alle Serien' bgColor='#000' color='#FFF'>
