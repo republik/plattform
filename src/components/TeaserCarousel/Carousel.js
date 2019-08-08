@@ -1,7 +1,7 @@
 import { css } from "glamor";
 import React from "react";
 import { breakoutUp } from "../Center";
-import { FigureByline, FigureImage } from "../Figure";
+import { FigureImage } from "../Figure";
 import LazyLoad from "../LazyLoad";
 import { mUp } from "../TeaserFront/mediaQueries";
 import Text from "../TeaserFront/Text";
@@ -31,8 +31,7 @@ const sizeLarge = {
 const styles = {
   carousel: css({
     margin: 0,
-    padding: "0 15px",
-    border: "1px solid green" // Delete
+    padding: "0 15px"
   }),
 
   carouselRow: css({
@@ -40,8 +39,7 @@ const styles = {
     display: "flex",
     flexDirection: "row",
     overflowX: "scroll",
-    flexWrap: "nowrap",
-    border: "1px solid pink" // Delete
+    flexWrap: "nowrap"
   }),
 
   tile: css({
@@ -97,36 +95,22 @@ export const TeaserFrontCarousel = ({ bgColor, color, section, children }) => {
 
 const TeaserFrontCarouselTile = ({
   children,
-  // attributes,
   noOutline = false,
   image,
-  // byline,
   alt,
   onClick,
   color,
-  bgColor,
-  align,
   aboveTheFold
 }) => {
-  const background = bgColor || "";
-  const justifyContent =
-    align === "top" ? "flex-start" : align === "bottom" ? "flex-end" : "";
   const imageProps =
     image && FigureImage.utils.getResizedSrcs(image, IMAGE_SIZE.large, false);
-  let tileStyle = {
-    background,
-    cursor: onClick ? "pointer" : "default",
-    justifyContent
-  };
+  let tileStyle = css(styles.tile, {
+    border: noOutline ? "none" : `1px solid ${colors.outline}`,
+    cursor: onClick ? "pointer" : "default"
+  });
 
   return (
-    <div
-      {...attributes}
-      {...styles.tile}
-      onClick={onClick}
-      style={tileStyle}
-      className="tile"
-    >
+    <div {...tileStyle} onClick={onClick} className="tile">
       <div {...styles.container}>
         {/* Image */}
         {imageProps && (
@@ -141,11 +125,6 @@ const TeaserFrontCarouselTile = ({
                 alt={alt}
                 {...styles.image}
               />
-              {/* {byline && (
-              <FigureByline position="rightCompact" style={{ color }}>
-                {byline}
-              </FigureByline>
-            )} */}
             </LazyLoad>
           </div>
         )}
