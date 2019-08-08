@@ -78,12 +78,18 @@ const styles = {
   })
 };
 
-export const TeaserFrontCarousel = ({ bgColor, color, children }) => {
+export const TeaserFrontCarousel = ({ bgColor, color, section, children }) => {
   // console.log(React.Children.count(children));
-  let rowStyles = { backgroundColor: bgColor, color };
+
+  const customStyles = css(styles.carousel, {
+    backgroundColor: bgColor ? bgColor : "none",
+    color: color ? color : "inherit"
+  });
+
   return (
-    <section {...styles.carousel}>
-      <div role="group" {...styles.carouselRow} style={rowStyles}>
+    <section {...customStyles}>
+      {section}
+      <div role="group" {...styles.carouselRow}>
         {children}
       </div>
     </section>
