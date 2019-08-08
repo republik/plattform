@@ -49,7 +49,6 @@ const styles = {
     textAlign: "center",
     padding: "30px 15px 40px 15px",
     minWidth: "300px",
-    border: `1px solid ${colors.outline}`,
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
@@ -98,7 +97,8 @@ export const TeaserFrontCarousel = ({ bgColor, color, section, children }) => {
 
 const TeaserFrontCarouselTile = ({
   children,
-  attributes,
+  // attributes,
+  noOutline = false,
   image,
   // byline,
   alt,
