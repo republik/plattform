@@ -13,7 +13,7 @@ Supported props:
 ### `<TeaserFrontCarousel />`: default
 
 ```react
-<TeaserFrontCarousel tag='Alle Rezensionen'>
+<TeaserFrontCarousel format='Alle Rezensionen'>
   <TeaserFrontCarouselTile image='/static/carousel/solstad.png' onClick={() => console.log("click on first tile")}>
         <Editorial.Format>Poesie & Prosa</Editorial.Format>
 
@@ -73,7 +73,7 @@ Supported props:
 ### `<TeaserFrontCarousel />`: black background
 
 ```react
-<TeaserFrontCarousel tag='Alle Serien' bgColor='#000' color='#FFF'>
+<TeaserFrontCarousel format='Alle Serien' bgColor='#000' color='#FFF'>
   <TeaserFrontCarouselTile image='/static/carousel/murdoch.png' color='#FFF' noOutline>
    <TeaserFrontCarouselHeadline>Die Dynastie Murdoch</TeaserFrontCarouselHeadline>
   </TeaserFrontCarouselTile>
