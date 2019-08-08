@@ -51,3 +51,19 @@ Supported props:
 
 </TeaserFrontCarousel>
 ```
+
+### `<TeaserFrontCarousel />`: black background
+
+```react
+<TeaserFrontCarousel section='Alle Serien' bgColor='#000' color='#FFF'>
+  <TeaserFrontCarouselTile image='/static/carousel/murdoch.png' color='#FFF' noOutline>
+   <TeaserFrontCarouselHeadline>Die Dynastie Murdoch</TeaserFrontCarouselHeadline>
+  </TeaserFrontCarouselTile>
+
+  <TeaserFrontCarouselTile image='/static/carousel/homestory.png' color='#FFF' noOutline>
+   <TeaserFrontCarouselHeadline>Homestory</TeaserFrontCarouselHeadline>
+  </TeaserFrontCarouselTile>
+
+
+</TeaserFrontCarousel>
+```
