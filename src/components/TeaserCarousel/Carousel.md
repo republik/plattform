@@ -17,7 +17,7 @@ Supported props:
 
 ### `<TeaserFrontCarousel />`: default
 
-```react
+```react|responsive
 <TeaserFrontCarousel format='Alle Rezensionen'>
   <TeaserFrontCarouselTile image='/static/carousel/solstad.png' onClick={() => console.log("click on first tile")}>
     <TeaserFrontCarouselTag>Poesie & Prosa</TeaserFrontCarouselTag>
@@ -78,7 +78,7 @@ Supported props:
 ### `<TeaserFrontCarousel />`: with fewer elements
 
 
-```react|responsive
+```react
 <TeaserFrontCarousel format='Alle Rezensionen'>
   <TeaserFrontCarouselTile image='/static/carousel/binswanger.png' onClick={() => console.log("click on first tile")}>
     <TeaserFrontCarouselTag color='#00B4FF'>
@@ -150,7 +150,7 @@ Supported props:
 
 ```react
 <div style={{maxWidth: '300px'}}>
-  <TeaserFrontCarouselTile image='/static/carousel/calle.png'>
+  <TeaserFrontCarouselTile image='/static/carousel/calle.png' bgColor='#FFF' >
     <TeaserFrontCarouselTag>Kunst</TeaserFrontCarouselTag>
     <TeaserFrontCarouselHeadline>Blindes Sehen</TeaserFrontCarouselHeadline>
     <TeaserFrontCarouselLead>

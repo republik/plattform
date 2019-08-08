@@ -99,19 +99,21 @@ export const TeaserFrontCarousel = ({
 };
 
 const TeaserFrontCarouselTile = ({
-  children,
+  color = "#000",
+  bgColor = "none",
   noOutline = false,
   image,
   alt,
   onClick,
-  color = "#000",
-  aboveTheFold
+  aboveTheFold,
+  children
 }) => {
   const imageProps =
     image && FigureImage.utils.getResizedSrcs(image, IMAGE_SIZE.large, false);
   let tileStyle = css(styles.tile, {
     border: noOutline ? "none" : `1px solid ${colors.outline}`,
     color,
+    backgroundColor: bgColor,
     cursor: onClick ? "pointer" : "default"
   });
 
