@@ -1,9 +1,9 @@
 A `<TeaserFrontCarousel />` is a row of teaser cards through which the user can scroll horizontally.
 
 Changelog:
- - Two new colors: outline & tag
-- one new font size
+- A new color: outline \`#D7D7D7\`
 
+Notes:
 - Uses the same media queries as TeaserFront (like Dossier).
 - Used for "Alle Serien", "Alle Formatte", "Alle Kolumnen", "All Recenzionen"
 - "Alle Serien" has a black background.
@@ -13,6 +13,7 @@ Changelog:
 Supported props:
 - `color`: The text color.
 - `bgColor`: The background color.
+
 
 ### `<TeaserFrontCarousel />`: default
 
@@ -31,7 +32,7 @@ Supported props:
   </TeaserFrontCarouselTile>
 
   <TeaserFrontCarouselTile image='/static/carousel/jackson.png'>
-    <TeaserFrontCarouselTag color='red'>Film</TeaserFrontCarouselTag>
+    <TeaserFrontCarouselTag>Film</TeaserFrontCarouselTag>
     <TeaserFrontCarouselHeadline>Echt jetzt?</TeaserFrontCarouselHeadline>
     <TeaserFrontCarouselLead>
       Peter Jackson: «They Shall Not Grow Old» Der Blockbuster-Regisseur zeigt den Ersten Weltkrieg.
@@ -77,9 +78,9 @@ Supported props:
 ### `<TeaserFrontCarousel />`: with fewer elements
 
 
-```react
+```react|responsive
 <TeaserFrontCarousel format='Alle Rezensionen'>
-  <TeaserFrontCarouselTile image='/static/carousel/solstad.png' onClick={() => console.log("click on first tile")}>
+  <TeaserFrontCarouselTile image='/static/carousel/binswanger.png' onClick={() => console.log("click on first tile")}>
     <TeaserFrontCarouselTag color='#00B4FF'>
       Binswanger
     </TeaserFrontCarouselTag>
@@ -93,7 +94,7 @@ Supported props:
     </Editorial.Credit>
   </TeaserFrontCarouselTile>
 
-  <TeaserFrontCarouselTile image='/static/carousel/solstad.png' onClick={() => console.log("click on first tile")}>
+  <TeaserFrontCarouselTile image='/static/carousel/berg.png' onClick={() => console.log("click on first tile")}>
     <TeaserFrontCarouselTag color="#00B4FF">Sybille Berg</TeaserFrontCarouselTag>
     <TeaserFrontCarouselHeadline>
       «Was führt Männer oft zu fast albern anmutender Selbstüber-schätzung?»
@@ -103,7 +104,7 @@ Supported props:
     </Editorial.Credit>
   </TeaserFrontCarouselTile>
 
-  <TeaserFrontCarouselTile image='/static/carousel/solstad.png' onClick={() => console.log("click on first tile")}>
+  <TeaserFrontCarouselTile image='/static/carousel/niggli.png' onClick={() => console.log("click on first tile")}>
     <TeaserFrontCarouselTag color="#00B4FF">Niggli</TeaserFrontCarouselTag>
     <TeaserFrontCarouselHeadline>
       Sir Kim Darroch, Ritter der ungeschminkten Wahrheit
