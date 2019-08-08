@@ -31,7 +31,6 @@ const colors = {
   error: "#9E0041",
   divider: "#DBDCDD",
   outline: "#D7D7D7",
-  tag: "#7C7C7C",
   online: "#00DC00",
   social: "#E9A733",
   editorial: "#00B4FF",

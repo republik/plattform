@@ -10,7 +10,7 @@ const styles = {
   })
 };
 
-const Tag = ({ children, color = colors.tag }) => {
+const Tag = ({ children, color = colors.feuilleton }) => {
   const customStyles = css(styles.tag, {
     color
   });
