@@ -120,7 +120,7 @@ Supported props:
 ```
 
 
-### `<TeaserFrontCarousel />`
+### `<TeaserFrontCarousel />`: black background
 
 ```react
 <TeaserFrontCarousel format='Alle Serien' bgColor='#000' color='#FFF'>
@@ -136,7 +136,7 @@ Supported props:
 </TeaserFrontCarousel>
 ```
 
-### `<TeaserFrontCarouselTile />`: black background
+### `<TeaserFrontCarouselTile />`
 
 A Carousel has `TeaserFrontCarouselTile` as direct children. They can also be customized.
 Supported props:
