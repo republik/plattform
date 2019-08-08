@@ -115,7 +115,7 @@ import { colors: { text }, fontStyles: { serifRegular21 } } from '@project-r/sty
 <div {...css(styles.serifRegular14)}>The quick brown fox jumps over the lazy dog</div>
 ```
 
-#### `sansSerifMedium{58,40,32,26,22,20,19,18,16,15}`
+#### `sansSerifMedium{58,40,32,26,22,20,19,18,16,15,14}`
 ```react|noSource,plain
 <div {...css(styles.sansSerifMedium58)}>The quick brown fox jumps over</div>
 ```
@@ -147,7 +147,7 @@ import { colors: { text }, fontStyles: { serifRegular21 } } from '@project-r/sty
 <div {...css(styles.sansSerifMedium15)}>The quick brown fox jumps over the lazy dog</div>
 ```
 
-#### `sansSerifRegular{30,23,21,18,16,15,14,13,12,11,10}`
+#### `sansSerifRegular{30,23,22,21,18,16,15,14,13,12,11,10}`
 ```react|noSource,plain
 <div {...css(styles.sansSerifRegular30)}>The quick brown fox jumps over the lazy dog</div>
 ```
