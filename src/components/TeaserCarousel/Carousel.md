@@ -1,5 +1,9 @@
 A `<TeaserFrontCarousel />` is a row of teaser cards through which the user can scroll horizontally.
 
+Changelog:
+ - Two new colors: outline & tag
+- one new font size
+
 - Uses the same media queries as TeaserFront (like Dossier).
 - Used for "Alle Serien", "Alle Formatte", "Alle Kolumnen", "All Recenzionen"
 - "Alle Serien" has a black background.
@@ -15,9 +19,8 @@ Supported props:
 ```react
 <TeaserFrontCarousel format='Alle Rezensionen'>
   <TeaserFrontCarouselTile image='/static/carousel/solstad.png' onClick={() => console.log("click on first tile")}>
-        <Editorial.Format>Poesie & Prosa</Editorial.Format>
-
-   <TeaserFrontCarouselHeadline>Das Rätsel Dag Solstad</TeaserFrontCarouselHeadline>
+    <TeaserFrontCarouselTag>Poesie & Prosa</TeaserFrontCarouselTag>
+    <TeaserFrontCarouselHeadline>Das Rätsel Dag Solstad</TeaserFrontCarouselHeadline>
     <TeaserFrontCarouselLead>
       Dag Solstad: «T. Singer» Der Norweger gehört zu den schrulligsten Autoren der Gegenwart.
     </TeaserFrontCarouselLead>
@@ -28,7 +31,8 @@ Supported props:
   </TeaserFrontCarouselTile>
 
   <TeaserFrontCarouselTile image='/static/carousel/jackson.png'>
-   <TeaserFrontCarouselHeadline>Echt jetzt?</TeaserFrontCarouselHeadline>
+    <TeaserFrontCarouselTag color='red'>Film</TeaserFrontCarouselTag>
+    <TeaserFrontCarouselHeadline>Echt jetzt?</TeaserFrontCarouselHeadline>
     <TeaserFrontCarouselLead>
       Peter Jackson: «They Shall Not Grow Old» Der Blockbuster-Regisseur zeigt den Ersten Weltkrieg.
     </TeaserFrontCarouselLead>
@@ -38,7 +42,7 @@ Supported props:
   </TeaserFrontCarouselTile>
 
   <TeaserFrontCarouselTile image='/static/carousel/vault.png'>
-   <TeaserFrontCarouselHeadline>Tote Sprachen leben länger</TeaserFrontCarouselHeadline>
+    <TeaserFrontCarouselHeadline>Tote Sprachen leben länger</TeaserFrontCarouselHeadline>
     <TeaserFrontCarouselLead>
       «Heaven’s Vault» ist ein aussergewöhnliches Adventure-Game.
     </TeaserFrontCarouselLead>
@@ -48,7 +52,7 @@ Supported props:
   </TeaserFrontCarouselTile>
 
   <TeaserFrontCarouselTile image='/static/carousel/rinck.png'>
-   <TeaserFrontCarouselHeadline>Die vier Gangarten von lechts nach Rinck</TeaserFrontCarouselHeadline>
+    <TeaserFrontCarouselHeadline>Die vier Gangarten von lechts nach Rinck</TeaserFrontCarouselHeadline>
     <TeaserFrontCarouselLead>
       Die Essays und Gedichte von Monika Rinck sind das originellste Denkabenteuer.
     </TeaserFrontCarouselLead>
@@ -58,7 +62,8 @@ Supported props:
   </TeaserFrontCarouselTile>
 
   <TeaserFrontCarouselTile image='/static/carousel/calle.png'>
-   <TeaserFrontCarouselHeadline>Blindes Sehen</TeaserFrontCarouselHeadline>
+    <TeaserFrontCarouselTag>Kunst</TeaserFrontCarouselTag>
+    <TeaserFrontCarouselHeadline>Blindes Sehen</TeaserFrontCarouselHeadline>
     <TeaserFrontCarouselLead>
       Sophie Calle: «Un certain regard» Das Fotomuseum Winterthur zeigt eine beeindruckende Schau.
     </TeaserFrontCarouselLead>

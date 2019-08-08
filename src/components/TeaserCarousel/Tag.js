@@ -1,28 +1,21 @@
-import React from "react";
 import { css } from "glamor";
-import { mUp } from "../TeaserFront/mediaQueries";
-import { sansSerifRegular22, sansSerifMedium20 } from "../Typography/styles";
-import ChevronRight from "react-icons/lib/fa/chevron-right";
+import React from "react";
+import { sansSerifMedium14 } from "../Typography/styles";
+import colors from "../../theme/colors";
 
 const styles = {
   tag: css({
-    display: "inline-block",
-    ...sansSerifRegular22,
-    margin: "0 0 20px 0"
-  }),
-  icon: css({
-    marginLeft: "8px",
-    ...sansSerifRegular22
+    ...sansSerifMedium14,
+    margin: "0 0 10px 0"
   })
 };
 
-const Tag = ({ tag }) => {
-  return (
-    <div {...styles.tag}>
-      {tag}
-      <ChevronRight {...styles.icon} size={20} />
-    </div>
-  );
+const Tag = ({ children, color = colors.tag }) => {
+  const customStyles = css(styles.tag, {
+    color
+  });
+
+  return <div {...customStyles}>{children}</div>;
 };
 
 export default Tag;
