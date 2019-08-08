@@ -90,3 +90,30 @@ Supported props:
 
 </TeaserFrontCarousel>
 ```
+
+### `<TeaserFrontCarouselTile />`: black background
+
+A Carousel has `TeaserFrontCarouselTile` as direct children. They can also be customized.
+Supported props:
+- `color`: The text color. Default: black.
+- `bgColor`: The background color. Default: none.
+- `noOutline`: Boolean, no outline when `true`. Default: `false`.
+- `image`: image source.
+- `alt`: image alt text.
+- `onClick`: function executed on click.
+
+
+```react
+<div style={{maxWidth: '300px'}}>
+  <TeaserFrontCarouselTile image='/static/carousel/calle.png'>
+    <TeaserFrontCarouselTag>Kunst</TeaserFrontCarouselTag>
+    <TeaserFrontCarouselHeadline>Blindes Sehen</TeaserFrontCarouselHeadline>
+    <TeaserFrontCarouselLead>
+      Sophie Calle: «Un certain regard» Das Fotomuseum Winterthur zeigt eine beeindruckende Schau.
+    </TeaserFrontCarouselLead>
+    <Editorial.Credit>
+      Von <Editorial.A  color='#000' href='#'>Daniel Binswanger</Editorial.A >, 05.07.2019
+    </Editorial.Credit>
+  </TeaserFrontCarouselTile>
+</div>
+```
