@@ -100,13 +100,14 @@ const TeaserFrontCarouselTile = ({
   image,
   alt,
   onClick,
-  color,
+  color = "#000",
   aboveTheFold
 }) => {
   const imageProps =
     image && FigureImage.utils.getResizedSrcs(image, IMAGE_SIZE.large, false);
   let tileStyle = css(styles.tile, {
     border: noOutline ? "none" : `1px solid ${colors.outline}`,
+    color,
     cursor: onClick ? "pointer" : "default"
   });
 
@@ -131,7 +132,7 @@ const TeaserFrontCarouselTile = ({
         )}
         {/* Body */}
         <div {...styles.textContainer}>
-          <Text color={color} maxWidth={"600px"} margin={"0 auto"}>
+          <Text color={color} margin={"0 auto"}>
             {children}
           </Text>
         </div>
