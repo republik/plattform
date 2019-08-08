@@ -6,6 +6,7 @@ import LazyLoad from "../LazyLoad";
 import { mUp } from "../TeaserFront/mediaQueries";
 import Text from "../TeaserFront/Text";
 import colors from "../../theme/colors";
+import Tag from "./Tag";
 
 const IMAGE_SIZE = {
   small: 220,
@@ -75,7 +76,7 @@ const styles = {
   })
 };
 
-export const TeaserFrontCarousel = ({ bgColor, color, section, children }) => {
+export const TeaserFrontCarousel = ({ bgColor, color, tag, children }) => {
   // console.log(React.Children.count(children));
 
   const customStyles = css(styles.carousel, {
@@ -85,7 +86,7 @@ export const TeaserFrontCarousel = ({ bgColor, color, section, children }) => {
 
   return (
     <section {...customStyles}>
-      {section}
+      <Tag tag={tag} />
       <div role="group" {...styles.carouselRow}>
         {children}
       </div>
