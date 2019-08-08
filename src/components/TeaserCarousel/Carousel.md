@@ -14,7 +14,7 @@ Supported props:
 
 ```react
 <TeaserFrontCarousel section='Alle Rezensionen'>
-  <TeaserFrontCarouselTile image='/static/carousel/solstad.png'>
+  <TeaserFrontCarouselTile image='/static/carousel/solstad.png' onClick={() => console.log("click on first tile")}>
    <TeaserFrontCarouselHeadline>Das Rätsel Dag Solstad</TeaserFrontCarouselHeadline>
     <TeaserFrontCarouselLead>
       Dag Solstad: «T. Singer» Der Norweger gehört zu den schrulligsten Autoren der Gegenwart.
