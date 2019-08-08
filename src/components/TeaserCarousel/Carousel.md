@@ -74,6 +74,50 @@ Supported props:
 
 </TeaserFrontCarousel>
 ```
+### `<TeaserFrontCarousel />`: with fewer elements
+
+
+```react
+<TeaserFrontCarousel format='Alle Rezensionen'>
+  <TeaserFrontCarouselTile image='/static/carousel/solstad.png' onClick={() => console.log("click on first tile")}>
+    <TeaserFrontCarouselTag color='#00B4FF'>
+      Binswanger
+    </TeaserFrontCarouselTag>
+
+    <TeaserFrontCarouselHeadline>
+      «Was verbindet die rechtspopulsistischen Parteien eigentlich?»
+    </TeaserFrontCarouselHeadline>
+
+    <Editorial.Credit>
+      Von <Editorial.A href='#'>Daniel Binswanger</Editorial.A >, 05.07.2019
+    </Editorial.Credit>
+  </TeaserFrontCarouselTile>
+
+  <TeaserFrontCarouselTile image='/static/carousel/solstad.png' onClick={() => console.log("click on first tile")}>
+    <TeaserFrontCarouselTag color="#00B4FF">Sybille Berg</TeaserFrontCarouselTag>
+    <TeaserFrontCarouselHeadline>
+      «Was führt Männer oft zu fast albern anmutender Selbstüber-schätzung?»
+    </TeaserFrontCarouselHeadline>
+    <Editorial.Credit>
+      Von <Editorial.A href='#'>Sybille Berg</Editorial.A >, 05.07.2019
+    </Editorial.Credit>
+  </TeaserFrontCarouselTile>
+
+  <TeaserFrontCarouselTile image='/static/carousel/solstad.png' onClick={() => console.log("click on first tile")}>
+    <TeaserFrontCarouselTag color="#00B4FF">Niggli</TeaserFrontCarouselTag>
+    <TeaserFrontCarouselHeadline>
+      Sir Kim Darroch, Ritter der ungeschminkten Wahrheit
+    </TeaserFrontCarouselHeadline>
+    <Editorial.Credit>
+      Von <Editorial.A href='#'>Marcel Alexander Niggli</Editorial.A >, 05.07.2019
+    </Editorial.Credit>
+  </TeaserFrontCarouselTile>
+
+
+
+</TeaserFrontCarousel>
+```
+
 
 ### `<TeaserFrontCarousel />`: black background
 
