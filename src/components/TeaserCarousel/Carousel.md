@@ -1,13 +1,19 @@
-A `<TeaserFrontCarousel />`.
+A `<TeaserFrontCarousel />` is a row of teaser cards through which the user can scroll horizontally.
 
-UIses the same media queries as TeaserFront (like Dossier).
+- Uses the same media queries as TeaserFront (like Dossier).
+- Used for "Alle Serien", "Alle Formatte", "Alle Kolumnen", "All Recenzionen"
+- "Alle Serien" has a black background.
+
+
 
 Supported props:
 - `color`: The text color.
-- `bgColor`: The background color to use in stacked mode.
+- `bgColor`: The background color.
 
-```react|responsive
-<TeaserFrontCarousel>
+### `<TeaserFrontCarousel />`: default
+
+```react
+<TeaserFrontCarousel section='Alle Rezensionen'>
   <TeaserFrontCarouselTile image='/static/carousel/solstad.png'>
    <TeaserFrontCarouselHeadline>Das Rätsel Dag Solstad</TeaserFrontCarouselHeadline>
     <TeaserFrontCarouselLead>
