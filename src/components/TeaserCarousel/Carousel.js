@@ -32,7 +32,7 @@ const sizeLarge = {
 const styles = {
   carousel: css({
     margin: 0,
-    padding: "0 15px"
+    padding: "30px 15px"
   }),
 
   carouselRow: css({
