@@ -519,7 +519,9 @@ ReactDOM.render(
                 css,
                 t,
                 ...require("./components/Typography"),
-                ...require("./components/TeaserCarousel")
+                ...require("./components/TeaserCarousel"),
+                ...require("./components/TeaserFront")
+
                 // ...require("./components/Figure")
               },
               src: require("./components/TeaserCarousel/Carousel.md")

@@ -3,7 +3,7 @@ A `<TeaserFrontCarousel />` is a row of teaser cards through which the user can 
 - Uses the same media queries as TeaserFront (like Dossier).
 - Used for "Alle Serien", "Alle Formatte", "Alle Kolumnen", "All Recenzionen"
 - "Alle Serien" has a black background.
-
+- the Credit component is from TeaserFront
 
 
 Supported props:
@@ -13,12 +13,15 @@ Supported props:
 ### `<TeaserFrontCarousel />`: default
 
 ```react
-<TeaserFrontCarousel section='Alle Rezensionen'>
+<TeaserFrontCarousel tag='Alle Rezensionen'>
   <TeaserFrontCarouselTile image='/static/carousel/solstad.png' onClick={() => console.log("click on first tile")}>
    <TeaserFrontCarouselHeadline>Das Rätsel Dag Solstad</TeaserFrontCarouselHeadline>
     <TeaserFrontCarouselLead>
       Dag Solstad: «T. Singer» Der Norweger gehört zu den schrulligsten Autoren der Gegenwart.
     </TeaserFrontCarouselLead>
+     <TeaserFrontCredit>
+      Von <TeaserFrontCreditLink color='#000' href='#'>Jan Wilm</TeaserFrontCreditLink>, 05.07.2019
+    </TeaserFrontCredit>
   </TeaserFrontCarouselTile>
 
   <TeaserFrontCarouselTile image='/static/carousel/jackson.png'>
@@ -55,7 +58,7 @@ Supported props:
 ### `<TeaserFrontCarousel />`: black background
 
 ```react
-<TeaserFrontCarousel section='Alle Serien' bgColor='#000' color='#FFF'>
+<TeaserFrontCarousel tag='Alle Serien' bgColor='#000' color='#FFF'>
   <TeaserFrontCarouselTile image='/static/carousel/murdoch.png' color='#FFF' noOutline>
    <TeaserFrontCarouselHeadline>Die Dynastie Murdoch</TeaserFrontCarouselHeadline>
   </TeaserFrontCarouselTile>
