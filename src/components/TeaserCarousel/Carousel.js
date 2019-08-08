@@ -76,11 +76,15 @@ const styles = {
   })
 };
 
-export const TeaserFrontCarousel = ({ bgColor, color, format, children }) => {
+export const TeaserFrontCarousel = ({
+  bgColor = "#FFF",
+  color,
+  format,
+  children
+}) => {
   // console.log(React.Children.count(children));
-
   const customStyles = css(styles.carousel, {
-    backgroundColor: bgColor ? bgColor : "none",
+    backgroundColor: bgColor,
     color: color ? color : "inherit"
   });
 
