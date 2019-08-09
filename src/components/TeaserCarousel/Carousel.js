@@ -6,7 +6,7 @@ import LazyLoad from "../LazyLoad";
 import { mUp } from "../TeaserFront/mediaQueries";
 import Text from "../TeaserFront/Text";
 import colors from "../../theme/colors";
-import { TeaserFrontCarouselFormat } from ".";
+import { TeaserFrontCarouselFormat, TeaserFrontCarouselArticleCount } from ".";
 
 const IMAGE_SIZE = {
   small: { maxWidth: 200, maxHeight: 160 },
@@ -99,6 +99,7 @@ const TeaserFrontCarouselTile = ({
   color = "#000",
   bgColor = "none",
   noOutline = false,
+  count,
   image,
   alt,
   onClick,
@@ -135,6 +136,13 @@ const TeaserFrontCarouselTile = ({
         <div>
           <Text color={color} margin={"0 auto"}>
             {children}
+            {count && (
+              <TeaserFrontCarouselArticleCount
+                count={count}
+                bgColor={color}
+                color={bgColor}
+              />
+            )}
           </Text>
         </div>
       </div>
