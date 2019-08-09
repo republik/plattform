@@ -1,6 +1,7 @@
 export {
   default as TeaserFrontCarouselTile,
-  TeaserFrontCarousel
+  TeaserFrontCarousel,
+  TeaserFrontCarouselRow
 } from './Carousel'
 
 export { default as TeaserFrontCarouselHeadline } from './Headline'

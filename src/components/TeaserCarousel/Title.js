@@ -15,13 +15,13 @@ const styles = {
   })
 }
 
-const Format = ({ label }) => {
+const Title = ({ children }) => {
   return (
     <div {...styles.label}>
-      {label}
+      {children}
       <ChevronRight {...styles.icon} size={24} />
     </div>
   )
 }
 
-export default Format
+export default Title

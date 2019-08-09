@@ -90,13 +90,14 @@ export const TeaserFrontCarousel = ({
     color: color ? color : 'inherit'
   })
 
+  return <section {...customStyles}>{children}</section>
+}
+
+export const TeaserFrontCarouselRow = ({ children }) => {
   return (
-    <section {...customStyles}>
-      <TeaserFrontCarouselTitle label={format} />
-      <div role="group" {...styles.carouselRow}>
-        {children}
-      </div>
-    </section>
+    <div role="group" {...styles.carouselRow}>
+      {children}
+    </div>
   )
 }
 
