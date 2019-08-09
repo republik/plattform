@@ -67,7 +67,6 @@ const styles = {
   image: css({
     // border: "1px solid red",
     height: "100%",
-    width: "100%",
     maxWidth: "100%",
     maxHeight: IMAGE_SIZE.large.maxHeight,
     objectFit: "scale-down"
