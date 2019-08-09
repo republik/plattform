@@ -34,6 +34,7 @@ const styles = {
     textAlign: 'center',
     padding: '30px 15px 40px 15px',
     minWidth: '300px',
+    maxWidth: '33%',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
