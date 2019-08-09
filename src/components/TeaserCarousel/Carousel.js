@@ -103,9 +103,8 @@ const TeaserFrontCarouselTile = ({
     <div {...tileStyle} onClick={onClick} className="tile">
       <div {...styles.container}>
         {/* Image */}
-        {/* USE a <figure />? */}
         {imageProps && (
-          <div {...styles.imageContainer}>
+          <figure {...styles.imageContainer}>
             <LazyLoad visible={aboveTheFold}>
               <img
                 src={imageProps.src}
@@ -114,7 +113,7 @@ const TeaserFrontCarouselTile = ({
                 {...styles.image}
               />
             </LazyLoad>
-          </div>
+          </figure>
         )}
         {/* Body */}
         <div>
