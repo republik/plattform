@@ -1,6 +1,5 @@
 import { css } from 'glamor'
 import React from 'react'
-import { breakoutUp } from '../Center'
 import { FigureImage } from '../Figure'
 import LazyLoad from '../LazyLoad'
 import { mUp } from '../TeaserFront/mediaQueries'
@@ -32,33 +31,39 @@ const styles = {
   tile: css({
     margin: '0 7px 0 0',
     textAlign: 'center',
-    padding: '30px 15px 40px 15px',
     width: '33%',
     minWidth: 300,
     maxWidth: 450,
     display: 'flex',
-    alignItems: 'center',
     justifyContent: 'center',
     ...sansSerifRegular18,
     ':last-of-type': { margin: 0 },
     [mUp]: {
-      minWidth: '248'
+      minWidth: 248
     }
   }),
 
-  container: css({
-    margin: 'auto'
-  }),
+  container: css({}),
 
   imageContainer: css({
     margin: '0 auto 14px auto',
     maxWidth: IMAGE_SIZE.large.maxWidth,
     maxHeight: IMAGE_SIZE.large.maxHeight
   }),
+
+  imageContainerBigger: css({
+    margin: '0 auto'
+  }),
+
   image: css({
     height: '100%',
     maxWidth: '100%',
     maxHeight: IMAGE_SIZE.large.maxHeight,
+    objectFit: 'scale-down'
+  }),
+
+  imageBigger: css({
+    maxWidth: '100%',
     objectFit: 'scale-down'
   })
 }
@@ -86,6 +91,7 @@ const TeaserFrontCarouselTile = ({
   bgColor = 'unset',
   noOutline = false,
   count,
+  bigger,
   image,
   alt,
   onClick,
@@ -98,25 +104,36 @@ const TeaserFrontCarouselTile = ({
     border: noOutline ? 'none' : `1px solid ${colors.outline}`,
     color,
     backgroundColor: bgColor,
-    cursor: onClick ? 'pointer' : 'default'
+    cursor: onClick ? 'pointer' : 'default',
+    padding: bigger ? '0 0 40px 0' : '30px 15px 40px 15px',
+    alignItems: bigger ? 'flex-start' : 'center'
   })
+
+  let containerStyle = css(styles.container, {
+    margin: bigger ? '0' : '0 auto'
+  })
+  let imageContainerStyles = bigger
+    ? styles.imageContainerBigger
+    : styles.imageContainer
+  let imageStyles = bigger ? styles.imageBigger : styles.image
 
   return (
     <div {...tileStyle} onClick={onClick} className="tile">
-      <div {...styles.container}>
+      <div {...containerStyle}>
         {/* Image */}
         {imageProps && (
-          <figure {...styles.imageContainer}>
+          <figure {...imageContainerStyles}>
             <LazyLoad visible={aboveTheFold}>
               <img
                 src={imageProps.src}
                 srcSet={imageProps.srcSet}
                 alt={alt}
-                {...styles.image}
+                {...imageStyles}
               />
             </LazyLoad>
           </figure>
         )}
+
         {/* Body */}
         <div>
           <Text color={color} margin={'0 auto'}>

@@ -17,7 +17,7 @@ Supported props:
 
 ### `<TeaserFrontCarousel />`: default
 
-```react|responsive
+```react
 <TeaserFrontCarousel>
   <TeaserFrontCarouselTitle>Alle Rezensionen</TeaserFrontCarouselTitle>
   <TeaserFrontCarouselRow>
@@ -77,8 +77,8 @@ Supported props:
   </TeaserFrontCarouselRow>
 </TeaserFrontCarousel>
 ```
-### `<TeaserFrontCarousel />`: with fewer elements
-
+### `<TeaserFrontCarousel />`: with only 3 elements
+Below 4 tiles, each tile will use 33% of the space available, up to a maximum of 450 pixels.
 
 ```react
 <TeaserFrontCarousel>
@@ -118,6 +118,7 @@ Supported props:
       </Editorial.Credit>
     </TeaserFrontCarouselTile>
 
+
  </TeaserFrontCarouselRow>
 
 </TeaserFrontCarousel>
@@ -131,23 +132,23 @@ Supported props:
   <TeaserFrontCarouselTitle>Alle Serien</TeaserFrontCarouselTitle>
 
   <TeaserFrontCarouselRow>
-    <TeaserFrontCarouselTile image='/static/carousel/murdoch.png' count={12} bgColor='#000' color='#FFF' noOutline>
+    <TeaserFrontCarouselTile bigger image='/static/carousel/murdoch.png' count={12} bgColor='#000' color='#FFF' noOutline>
     <TeaserFrontCarouselHeadline bigger>Die Dynastie Murdoch</TeaserFrontCarouselHeadline>
     </TeaserFrontCarouselTile>
 
-    <TeaserFrontCarouselTile image='/static/carousel/homestory.png' count={6} bgColor='#000' color='#FFF' noOutline>
+    <TeaserFrontCarouselTile bigger image='/static/carousel/homestory.png' count={6} bgColor='#000' color='#FFF' noOutline>
     <TeaserFrontCarouselHeadline bigger>Homestory</TeaserFrontCarouselHeadline>
     </TeaserFrontCarouselTile>
 
-    <TeaserFrontCarouselTile image='/static/carousel/eth.png' bgColor='#000' color='#FFF' noOutline>
+    <TeaserFrontCarouselTile bigger image='/static/carousel/eth.png' count={8} bgColor='#000' color='#FFF' noOutline>
     <TeaserFrontCarouselHeadline bigger>Der Fall ETH</TeaserFrontCarouselHeadline>
     </TeaserFrontCarouselTile>
 
-    <TeaserFrontCarouselTile image='/static/carousel/mike.png' bgColor='#000' color='#FFF' noOutline>
+    <TeaserFrontCarouselTile bigger image='/static/carousel/mike.png' count={24} bgColor='#000' color='#FFF' noOutline>
     <TeaserFrontCarouselHeadline bigger>«Am Limit»: Die Geschichte von Mike</TeaserFrontCarouselHeadline>
     </TeaserFrontCarouselTile>
 
-    <TeaserFrontCarouselTile image='/static/carousel/strahlen.png' bgColor='#000' color='#FFF' noOutline>
+    <TeaserFrontCarouselTile bigger image='/static/carousel/strahlen.png' count={10   } bgColor='#000' color='#FFF' noOutline>
     <TeaserFrontCarouselHeadline bigger>Geheimnisvolle Strahlen</TeaserFrontCarouselHeadline>
     </TeaserFrontCarouselTile>
 
@@ -163,6 +164,9 @@ Supported props:
 - `bgColor`: The background color. Default: none.
 - `noOutline`: Boolean, no outline when `true`. Default: `false`.
 - `count`: if an article `count` (number) is provided, this number in an icon will be displayed.
+
+- `bigger`: -> Alle Serien
+
 - `image`: image source.
 - `alt`: image alt text.
 - `onClick`: function executed on click.
