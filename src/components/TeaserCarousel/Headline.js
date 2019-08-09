@@ -11,7 +11,12 @@ const styles = {
 };
 
 const Headline = ({ children }) => {
-  return <h1 {...styles.base}>{children}</h1>;
+const Headline = ({ bigger = false, children }) => {
+  let headlineStyles = css(
+    styles.base,
+    bigger ? { ...serifBold28 } : { ...serifBold16 }
+  );
+  return <h1 {...headlineStyles}>{children}</h1>;
 };
 
 Headline.propTypes = {

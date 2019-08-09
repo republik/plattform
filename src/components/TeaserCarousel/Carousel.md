@@ -129,19 +129,19 @@ Supported props:
   </TeaserFrontCarouselTile>
 
   <TeaserFrontCarouselTile image='/static/carousel/homestory.png' count={6} bgColor='#000' color='#FFF' noOutline>
-   <TeaserFrontCarouselHeadline>Homestory</TeaserFrontCarouselHeadline>
+   <TeaserFrontCarouselHeadline bigger>Homestory</TeaserFrontCarouselHeadline>
   </TeaserFrontCarouselTile>
 
   <TeaserFrontCarouselTile image='/static/carousel/eth.png' bgColor='#000' color='#FFF' noOutline>
-   <TeaserFrontCarouselHeadline>Der Fall ETH</TeaserFrontCarouselHeadline>
+   <TeaserFrontCarouselHeadline bigger>Der Fall ETH</TeaserFrontCarouselHeadline>
   </TeaserFrontCarouselTile>
 
   <TeaserFrontCarouselTile image='/static/carousel/mike.png' bgColor='#000' color='#FFF' noOutline>
-   <TeaserFrontCarouselHeadline>«Am Limit»: Die Geschichte von Mike</TeaserFrontCarouselHeadline>
+   <TeaserFrontCarouselHeadline bigger>«Am Limit»: Die Geschichte von Mike</TeaserFrontCarouselHeadline>
   </TeaserFrontCarouselTile>
 
   <TeaserFrontCarouselTile image='/static/carousel/strahlen.png' bgColor='#000' color='#FFF' noOutline>
-   <TeaserFrontCarouselHeadline>Geheimnisvolle Strahlen</TeaserFrontCarouselHeadline>
+   <TeaserFrontCarouselHeadline bigger>Geheimnisvolle Strahlen</TeaserFrontCarouselHeadline>
   </TeaserFrontCarouselTile>
 
 
