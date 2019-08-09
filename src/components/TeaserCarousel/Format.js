@@ -20,7 +20,7 @@ const Format = ({ label }) => {
   return (
     <div {...styles.label}>
       {label}
-      <ChevronRight {...styles.icon} size={20} />
+      <ChevronRight {...styles.icon} size={24} />
     </div>
   );
 };
