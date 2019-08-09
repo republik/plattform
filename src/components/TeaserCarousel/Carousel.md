@@ -7,7 +7,7 @@ Notes:
 - Uses the same media queries as TeaserFront (like Dossier).
 - Used for "Alle Serien", "Alle Formatte", "Alle Kolumnen", "All Recenzionen"
 - "Alle Serien" has a black background.
-- the Credit component is from TeaserFront
+- the Credit component is not specific to the Carousel.
 
 
 Supported props:
@@ -124,23 +124,23 @@ Supported props:
 
 ```react
 <TeaserFrontCarousel format='Alle Serien' bgColor='#000' color='#FFF'>
-  <TeaserFrontCarouselTile image='/static/carousel/murdoch.png' color='#FFF' noOutline>
-   <TeaserFrontCarouselHeadline>Die Dynastie Murdoch</TeaserFrontCarouselHeadline>
+  <TeaserFrontCarouselTile image='/static/carousel/murdoch.png' count={12} bgColor='#000' color='#FFF' noOutline>
+   <TeaserFrontCarouselHeadline bigger>Die Dynastie Murdoch</TeaserFrontCarouselHeadline>
   </TeaserFrontCarouselTile>
 
-  <TeaserFrontCarouselTile image='/static/carousel/homestory.png' color='#FFF' noOutline>
+  <TeaserFrontCarouselTile image='/static/carousel/homestory.png' count={6} bgColor='#000' color='#FFF' noOutline>
    <TeaserFrontCarouselHeadline>Homestory</TeaserFrontCarouselHeadline>
   </TeaserFrontCarouselTile>
 
-  <TeaserFrontCarouselTile image='/static/carousel/eth.png' color='#FFF' noOutline>
+  <TeaserFrontCarouselTile image='/static/carousel/eth.png' bgColor='#000' color='#FFF' noOutline>
    <TeaserFrontCarouselHeadline>Der Fall ETH</TeaserFrontCarouselHeadline>
   </TeaserFrontCarouselTile>
 
-  <TeaserFrontCarouselTile image='/static/carousel/mike.png' color='#FFF' noOutline>
+  <TeaserFrontCarouselTile image='/static/carousel/mike.png' bgColor='#000' color='#FFF' noOutline>
    <TeaserFrontCarouselHeadline>«Am Limit»: Die Geschichte von Mike</TeaserFrontCarouselHeadline>
   </TeaserFrontCarouselTile>
 
-  <TeaserFrontCarouselTile image='/static/carousel/strahlen.png' color='#FFF' noOutline>
+  <TeaserFrontCarouselTile image='/static/carousel/strahlen.png' bgColor='#000' color='#FFF' noOutline>
    <TeaserFrontCarouselHeadline>Geheimnisvolle Strahlen</TeaserFrontCarouselHeadline>
   </TeaserFrontCarouselTile>
 
@@ -155,6 +155,7 @@ Supported props:
 - `color`: The text color. Default: black.
 - `bgColor`: The background color. Default: none.
 - `noOutline`: Boolean, no outline when `true`. Default: `false`.
+- `count`: if an article `count` (number) is provided, this number in an icon will be displayed.
 - `image`: image source.
 - `alt`: image alt text.
 - `onClick`: function executed on click.
