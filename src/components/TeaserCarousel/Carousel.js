@@ -6,7 +6,7 @@ import LazyLoad from '../LazyLoad'
 import { mUp } from '../TeaserFront/mediaQueries'
 import Text from '../TeaserFront/Text'
 import colors from '../../theme/colors'
-import { TeaserFrontCarouselTitle, TeaserFrontCarouselArticleCount } from '.'
+import { TeaserFrontCarouselArticleCount } from '.'
 import { sansSerifRegular18 } from '../Typography/styles'
 
 const IMAGE_SIZE = {
@@ -33,8 +33,9 @@ const styles = {
     margin: '0 7px 0 0',
     textAlign: 'center',
     padding: '30px 15px 40px 15px',
-    minWidth: '300px',
-    maxWidth: '33%',
+    width: '33%',
+    minWidth: 300,
+    maxWidth: 450,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
