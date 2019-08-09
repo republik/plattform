@@ -15,21 +15,6 @@ const IMAGE_SIZE = {
   large: { maxWidth: 160, maxHeight: 120 }
 }
 
-// const sizeSmall = {
-//   maxHeight: `${IMAGE_SIZE.small.height}px`,
-//   maxWidth: `${IMAGE_SIZE.small.width}px`
-// };
-
-// const sizeMedium = {
-//   maxHeight: `${IMAGE_SIZE.medium.height}px`,
-//   maxWidth: `${IMAGE_SIZE.medium.width}px`
-// };
-
-// const sizeLarge = {
-//   maxHeight: `${IMAGE_SIZE.large.height}px`,
-//   maxWidth: `${IMAGE_SIZE.large.width}px`
-// };
-
 const styles = {
   carousel: css({
     margin: 0,
@@ -64,13 +49,11 @@ const styles = {
   }),
 
   imageContainer: css({
-    // border: "1px solid blue",
     margin: '0 auto 14px auto',
     maxWidth: IMAGE_SIZE.large.maxWidth,
     maxHeight: IMAGE_SIZE.large.maxHeight
   }),
   image: css({
-    // border: "1px solid red",
     height: '100%',
     maxWidth: '100%',
     maxHeight: IMAGE_SIZE.large.maxHeight,
@@ -78,12 +61,7 @@ const styles = {
   })
 }
 
-export const TeaserFrontCarousel = ({
-  bgColor = '#FFF',
-  color,
-  format,
-  children
-}) => {
+export const TeaserFrontCarousel = ({ bgColor = '#FFF', color, children }) => {
   // console.log(React.Children.count(children));
   const customStyles = css(styles.carousel, {
     backgroundColor: bgColor,
@@ -103,7 +81,7 @@ export const TeaserFrontCarouselRow = ({ children }) => {
 
 const TeaserFrontCarouselTile = ({
   color = '#000',
-  bgColor = 'none',
+  bgColor = 'unset',
   noOutline = false,
   count,
   image,
