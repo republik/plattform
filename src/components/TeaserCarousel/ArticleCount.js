@@ -1,6 +1,6 @@
 import { css } from 'glamor'
 import React from 'react'
-import { sansSerifRegular18 } from '../Typography/styles'
+import { sansSerifMedium16 } from '../Typography/styles'
 
 const ICON_SIZE = 29
 
@@ -36,14 +36,14 @@ const styles = {
   }),
   count: css({
     position: 'absolute',
-    top: -2,
+    top: -1,
     left: 0,
-    paddingLeft: '6px',
+    paddingLeft: 6,
     width: '100%',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    ...sansSerifRegular18
+    ...sansSerifMedium16
   })
 }
 
