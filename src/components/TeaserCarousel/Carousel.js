@@ -43,7 +43,9 @@ const styles = {
     }
   }),
 
-  container: css({}),
+  container: css({
+    width: '100%' // IE11 needs this
+  }),
 
   imageContainer: css({
     margin: '0 auto 14px auto',
