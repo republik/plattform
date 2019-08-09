@@ -130,8 +130,7 @@ export const serifBold16 = {
 export const sansSerifRegular30 = {
   ...fontStyles.sansSerifRegular,
   fontSize: 30,
-  lineHeight: '35px',
-  letterSpacing: -0.26
+  lineHeight: '35px'
 }
 export const sansSerifRegular23 = {
   ...fontStyles.sansSerifRegular,
