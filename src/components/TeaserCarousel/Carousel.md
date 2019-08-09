@@ -21,7 +21,7 @@ Supported props:
 <TeaserFrontCarousel>
   <TeaserFrontCarouselTitle>Alle Rezensionen</TeaserFrontCarouselTitle>
   <TeaserFrontCarouselRow>
-    <TeaserFrontCarouselTile image='/static/carousel/solstad.png' onClick={() => console.log("click on first tile")}>
+    <TeaserFrontCarouselTile image='/static/carousel/test.png' onClick={() => console.log("click on first tile")}>
       <TeaserFrontCarouselTag>Poesie & Prosa</TeaserFrontCarouselTag>
       <TeaserFrontCarouselHeadline>Das Rätsel Dag Solstad</TeaserFrontCarouselHeadline>
       <TeaserFrontCarouselLead>
