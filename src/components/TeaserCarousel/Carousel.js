@@ -9,25 +9,25 @@ import colors from "../../theme/colors";
 import { TeaserFrontCarouselFormat } from ".";
 
 const IMAGE_SIZE = {
-  small: 220,
-  medium: 300,
-  large: 360
+  small: { maxWidth: 200, maxHeight: 160 },
+  medium: { maxWidth: 200, maxHeight: 160 },
+  large: { maxWidth: 200, maxHeight: 160 }
 };
 
-const sizeSmall = {
-  maxHeight: `${IMAGE_SIZE.small}px`,
-  maxWidth: `${IMAGE_SIZE.small}px`
-};
+// const sizeSmall = {
+//   maxHeight: `${IMAGE_SIZE.small.height}px`,
+//   maxWidth: `${IMAGE_SIZE.small.width}px`
+// };
 
-const sizeMedium = {
-  maxHeight: `${IMAGE_SIZE.medium}px`,
-  maxWidth: `${IMAGE_SIZE.medium}px`
-};
+// const sizeMedium = {
+//   maxHeight: `${IMAGE_SIZE.medium.height}px`,
+//   maxWidth: `${IMAGE_SIZE.medium.width}px`
+// };
 
-const sizeLarge = {
-  maxHeight: `${IMAGE_SIZE.large}px`,
-  maxWidth: `${IMAGE_SIZE.large}px`
-};
+// const sizeLarge = {
+//   maxHeight: `${IMAGE_SIZE.large.height}px`,
+//   maxWidth: `${IMAGE_SIZE.large.width}px`
+// };
 
 const styles = {
   carousel: css({
@@ -59,20 +59,18 @@ const styles = {
   }),
 
   imageContainer: css({
+    // border: "1px solid blue",
     margin: "0 auto 14px auto",
-    [mUp]: {
-      fontSize: 0 // Removes the small flexbox space.
-    }
+    maxWidth: IMAGE_SIZE.large.maxWidth,
+    maxHeight: IMAGE_SIZE.large.maxHeight
   }),
   image: css({
-    minWidth: "100px",
-    ...sizeSmall,
-    [mUp]: {
-      ...sizeMedium
-    },
-    [breakoutUp]: {
-      ...sizeLarge
-    }
+    // border: "1px solid red",
+    height: "100%",
+    width: "100%",
+    maxWidth: "100%",
+    maxHeight: IMAGE_SIZE.large.maxHeight,
+    objectFit: "scale-down"
   })
 };
 
@@ -109,7 +107,7 @@ const TeaserFrontCarouselTile = ({
   children
 }) => {
   const imageProps =
-    image && FigureImage.utils.getResizedSrcs(image, IMAGE_SIZE.large, false);
+    image && FigureImage.utils.getResizedSrcs(image, IMAGE_SIZE.small, false);
   let tileStyle = css(styles.tile, {
     border: noOutline ? "none" : `1px solid ${colors.outline}`,
     color,
@@ -121,12 +119,10 @@ const TeaserFrontCarouselTile = ({
     <div {...tileStyle} onClick={onClick} className="tile">
       <div {...styles.container}>
         {/* Image */}
+        {/* USE a <figure />? */}
         {imageProps && (
           <div {...styles.imageContainer}>
-            <LazyLoad
-              visible={aboveTheFold}
-              style={{ position: "relative", fontSize: 0 }}
-            >
+            <LazyLoad visible={aboveTheFold}>
               <img
                 src={imageProps.src}
                 srcSet={imageProps.srcSet}
@@ -137,7 +133,7 @@ const TeaserFrontCarouselTile = ({
           </div>
         )}
         {/* Body */}
-        <div {...styles.textContainer}>
+        <div>
           <Text color={color} margin={"0 auto"}>
             {children}
           </Text>

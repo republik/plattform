@@ -132,6 +132,18 @@ Supported props:
    <TeaserFrontCarouselHeadline>Homestory</TeaserFrontCarouselHeadline>
   </TeaserFrontCarouselTile>
 
+  <TeaserFrontCarouselTile image='/static/carousel/eth.png' color='#FFF' noOutline>
+   <TeaserFrontCarouselHeadline>Der Fall ETH</TeaserFrontCarouselHeadline>
+  </TeaserFrontCarouselTile>
+
+  <TeaserFrontCarouselTile image='/static/carousel/mike.png' color='#FFF' noOutline>
+   <TeaserFrontCarouselHeadline>«Am Limit»: Die Geschichte von Mike</TeaserFrontCarouselHeadline>
+  </TeaserFrontCarouselTile>
+
+  <TeaserFrontCarouselTile image='/static/carousel/strahlen.png' color='#FFF' noOutline>
+   <TeaserFrontCarouselHeadline>Geheimnisvolle Strahlen</TeaserFrontCarouselHeadline>
+  </TeaserFrontCarouselTile>
+
 
 </TeaserFrontCarousel>
 ```
