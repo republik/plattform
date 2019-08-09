@@ -25,7 +25,13 @@ const styles = {
     display: 'flex',
     flexDirection: 'row',
     overflowX: 'scroll',
-    flexWrap: 'nowrap'
+    flexWrap: 'nowrap',
+    scrollbarWidth: 'none' /* Firefox */,
+    msOverflowStyle: 'none' /* IE 10+ */,
+    '&::-webkit-scrollbar': {
+      width: 0,
+      height: 0
+    }
   }),
 
   tile: css({
