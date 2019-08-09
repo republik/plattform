@@ -17,7 +17,7 @@ Supported props:
 
 ### `<TeaserFrontCarousel />`: default
 
-```react
+```react|responsive
 <TeaserFrontCarousel format='Alle Rezensionen'>
   <TeaserFrontCarouselTile image='/static/carousel/solstad.png' onClick={() => console.log("click on first tile")}>
     <TeaserFrontCarouselTag>Poesie & Prosa</TeaserFrontCarouselTag>

@@ -1,4 +1,4 @@
-import { getJson } from "./env";
+import { getJson } from './env'
 
 // some defaults are precomputed colors from d3-scale-chromatic
 /*
@@ -21,51 +21,51 @@ import { getJson } from "./env";
  */
 
 const colors = {
-  primary: "#00508C",
-  primaryBg: "#BFE1FF",
-  secondary: "#00335A",
-  secondaryBg: "#D8EEFF",
-  disabled: "#B8BDC1",
-  text: "#191919",
-  lightText: "#979797",
-  error: "#9E0041",
-  divider: "#DBDCDD",
-  outline: "#D7D7D7",
-  online: "#00DC00",
-  social: "#E9A733",
-  editorial: "#00B4FF",
-  meta: "#64966E",
-  feuilleton: "#555555",
-  scribble: "#ef4533",
-  neutral: "#bbb",
+  primary: '#00508C',
+  primaryBg: '#BFE1FF',
+  secondary: '#00335A',
+  secondaryBg: '#D8EEFF',
+  disabled: '#B8BDC1',
+  text: '#191919',
+  lightText: '#979797',
+  error: '#9E0041',
+  divider: '#DBDCDD',
+  outline: '#D7D7D7',
+  online: '#00DC00',
+  social: '#E9A733',
+  editorial: '#00B4FF',
+  meta: '#64966E',
+  feuilleton: '#555555',
+  scribble: '#ef4533',
+  neutral: '#bbb',
   sequential: [
-    "rgb(8, 48, 107)",
-    "rgb(8, 61, 126)",
-    "rgb(10, 74, 144)",
-    "rgb(15, 87, 159)",
-    "rgb(24, 100, 170)",
-    "rgb(34, 113, 180)",
-    "rgb(47, 126, 188)",
-    "rgb(60, 139, 195)",
-    "rgb(75, 151, 201)",
-    "rgb(91, 163, 207)",
-    "rgb(109, 174, 213)"
+    'rgb(8, 48, 107)',
+    'rgb(8, 61, 126)',
+    'rgb(10, 74, 144)',
+    'rgb(15, 87, 159)',
+    'rgb(24, 100, 170)',
+    'rgb(34, 113, 180)',
+    'rgb(47, 126, 188)',
+    'rgb(60, 139, 195)',
+    'rgb(75, 151, 201)',
+    'rgb(91, 163, 207)',
+    'rgb(109, 174, 213)'
   ],
-  sequential3: ["rgb(8,48,107)", "rgb(24,100,170)", "rgb(75,151,201)"],
-  opposite3: ["rgb(103,0,13)", "rgb(187,21,26)", "rgb(239,69,51)"],
+  sequential3: ['rgb(8,48,107)', 'rgb(24,100,170)', 'rgb(75,151,201)'],
+  opposite3: ['rgb(103,0,13)', 'rgb(187,21,26)', 'rgb(239,69,51)'],
   discrete: [
-    "#1f77b4",
-    "#ff7f0e",
-    "#2ca02c",
-    "#d62728",
-    "#9467bd",
-    "#8c564b",
-    "#e377c2",
-    "#7f7f7f",
-    "#bcbd22",
-    "#17becf"
+    '#1f77b4',
+    '#ff7f0e',
+    '#2ca02c',
+    '#d62728',
+    '#9467bd',
+    '#8c564b',
+    '#e377c2',
+    '#7f7f7f',
+    '#bcbd22',
+    '#17becf'
   ],
-  ...getJson("COLORS")
-};
+  ...getJson('COLORS')
+}
 
-export default colors;
+export default colors

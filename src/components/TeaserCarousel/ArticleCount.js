@@ -1,8 +1,8 @@
-import { css } from "glamor";
-import React from "react";
-import { sansSerifRegular18 } from "../Typography/styles";
+import { css } from 'glamor'
+import React from 'react'
+import { sansSerifRegular18 } from '../Typography/styles'
 
-const ICON_SIZE = 29;
+const ICON_SIZE = 29
 
 const Icon = ({ size, fill }) => (
   <svg
@@ -20,41 +20,41 @@ const Icon = ({ size, fill }) => (
       fill={fill}
     />
   </svg>
-);
+)
 
 const styles = {
   container: css({
-    position: "relative",
-    margin: "10px auto",
+    position: 'relative',
+    margin: '10px auto',
     width: ICON_SIZE,
     height: ICON_SIZE
   }),
   icon: css({
-    position: "absolute",
+    position: 'absolute',
     top: 0,
     left: 0
   }),
   count: css({
-    position: "absolute",
+    position: 'absolute',
     top: -2,
     left: 0,
-    paddingLeft: "6px",
-    width: "100%",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
+    paddingLeft: '6px',
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
     ...sansSerifRegular18
   })
-};
+}
 
-const ArticleCount = ({ count, bgColor = "#FFF", color }) => {
-  let countStyles = css(styles.count, { color });
+const ArticleCount = ({ count, bgColor = '#FFF', color }) => {
+  let countStyles = css(styles.count, { color })
   return (
     <div {...styles.container}>
       <Icon size={ICON_SIZE} fill={bgColor} />
       <span {...countStyles}>{count}</span>
     </div>
-  );
-};
+  )
+}
 
-export default ArticleCount;
+export default ArticleCount
