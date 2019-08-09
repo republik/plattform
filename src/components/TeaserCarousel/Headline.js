@@ -1,16 +1,15 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { css } from "glamor";
-import { serifBold19 } from "../Typography/styles";
+import { serifBold16, serifBold28 } from "../Typography/styles";
 
 const styles = {
   base: css({
     margin: "0 0 10px 0",
-    ...serifBold19
+    ...serifBold16
   })
 };
 
-const Headline = ({ children }) => {
 const Headline = ({ bigger = false, children }) => {
   let headlineStyles = css(
     styles.base,

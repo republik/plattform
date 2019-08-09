@@ -7,11 +7,12 @@ import { mUp } from "../TeaserFront/mediaQueries";
 import Text from "../TeaserFront/Text";
 import colors from "../../theme/colors";
 import { TeaserFrontCarouselFormat, TeaserFrontCarouselArticleCount } from ".";
+import { sansSerifRegular18 } from "../Typography/styles";
 
 const IMAGE_SIZE = {
-  small: { maxWidth: 200, maxHeight: 160 },
-  medium: { maxWidth: 200, maxHeight: 160 },
-  large: { maxWidth: 200, maxHeight: 160 }
+  small: { maxWidth: 160, maxHeight: 120 },
+  medium: { maxWidth: 160, maxHeight: 120 },
+  large: { maxWidth: 160, maxHeight: 120 }
 };
 
 // const sizeSmall = {
@@ -51,7 +52,11 @@ const styles = {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    ":last-of-type": { margin: 0 }
+    ...sansSerifRegular18,
+    ":last-of-type": { margin: 0 },
+    [mUp]: {
+      minWidth: "248"
+    }
   }),
 
   container: css({

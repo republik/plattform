@@ -6,10 +6,12 @@ import { serifRegular16, serifRegular18 } from "../Typography/styles";
 
 const styles = {
   lead: css({
-    ...serifRegular16,
+    ...serifRegular18,
     margin: "0 0 10px 0",
+    lineHeight: "22px",
     [mUp]: {
-      ...serifRegular18
+      ...serifRegular16,
+      lineHeight: "22px"
     }
   })
 };
