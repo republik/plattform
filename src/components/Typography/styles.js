@@ -119,6 +119,11 @@ export const serifBold17 = {
   fontSize: 17,
   lineHeight: "26px"
 };
+export const serifBold16 = {
+  ...fontStyles.serifBold,
+  fontSize: 16,
+  lineHeight: "24px"
+};
 
 // sansSerifRegular
 
@@ -253,6 +258,7 @@ export const sansSerifMedium14 = {
   fontSize: 14,
   lineHeight: "17px"
 };
+
 export const sansSerifMedium12 = {
   ...fontStyles.sansSerifMedium,
   fontSize: 12,
