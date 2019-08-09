@@ -6,7 +6,7 @@ import LazyLoad from '../LazyLoad'
 import { mUp } from '../TeaserFront/mediaQueries'
 import Text from '../TeaserFront/Text'
 import colors from '../../theme/colors'
-import { TeaserFrontCarouselFormat, TeaserFrontCarouselArticleCount } from '.'
+import { TeaserFrontCarouselTitle, TeaserFrontCarouselArticleCount } from '.'
 import { sansSerifRegular18 } from '../Typography/styles'
 
 const IMAGE_SIZE = {
@@ -92,7 +92,7 @@ export const TeaserFrontCarousel = ({
 
   return (
     <section {...customStyles}>
-      <TeaserFrontCarouselFormat label={format} />
+      <TeaserFrontCarouselTitle label={format} />
       <div role="group" {...styles.carouselRow}>
         {children}
       </div>
