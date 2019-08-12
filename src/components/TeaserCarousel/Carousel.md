@@ -19,7 +19,7 @@ Supported props:
 
 ```react
 <TeaserFrontCarousel>
-  <TeaserFrontCarouselTitle>Alle Rezensionen</TeaserFrontCarouselTitle>
+  <TeaserFrontCarouselTitle href="/recenzionen">Alle Rezensionen</TeaserFrontCarouselTitle>
   <TeaserFrontCarouselRow>
     <TeaserFrontCarouselTile image='/static/carousel/test.png' onClick={() => console.log("click on first tile")}>
       <TeaserFrontCarouselTag>Poesie & Prosa</TeaserFrontCarouselTag>
