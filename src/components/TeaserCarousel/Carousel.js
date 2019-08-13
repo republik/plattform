@@ -113,7 +113,7 @@ const TeaserFrontCarouselTile = ({
     color,
     backgroundColor: bgColor,
     cursor: onClick ? 'pointer' : 'default',
-    padding: bigger ? '0 0 40px 0' : '30px 15px 40px 15px',
+    padding: bigger ? '0 0 40px 0' : '30px 15px',
     alignItems: bigger ? 'flex-start' : 'center'
   })
 
