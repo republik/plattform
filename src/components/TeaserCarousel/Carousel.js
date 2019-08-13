@@ -21,22 +21,6 @@ const styles = {
     overflow: 'auto'
   }),
 
-  carouselRow: css({
-    margin: '0 -15px 0 -15px',
-    padding: '0 15px 0 15px',
-    width: 'auto',
-    display: 'flex',
-    flexDirection: 'row',
-    overflowX: 'scroll',
-    flexWrap: 'nowrap',
-    scrollbarWidth: 'none' /* Firefox */,
-    msOverflowStyle: 'none' /* IE 10+ */,
-    '&::-webkit-scrollbar': {
-      width: 0,
-      height: 0
-    }
-  }),
-
   tile: css({
     margin: '0 7px 0 0',
     textAlign: 'center',
@@ -80,21 +64,12 @@ const styles = {
 }
 
 export const TeaserFrontCarousel = ({ bgColor = '#FFF', color, children }) => {
-  // console.log(React.Children.count(children));
   const customStyles = css(styles.carousel, {
     backgroundColor: bgColor,
     color: color ? color : 'inherit'
   })
 
   return <section {...customStyles}>{children}</section>
-}
-
-export const TeaserFrontCarouselRow = ({ children }) => {
-  return (
-    <div role="group" {...styles.carouselRow}>
-      {children}
-    </div>
-  )
 }
 
 const TeaserFrontCarouselTile = ({
