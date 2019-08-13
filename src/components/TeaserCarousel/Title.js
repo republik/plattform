@@ -9,6 +9,8 @@ const Link = ({ children }) => <div>{children}</div>
 
 const styles = {
   link: css({
+    textDecoration: 'none',
+    color: '#000000',
     display: 'inline-block',
     cursor: 'pointer',
     ...sansSerifRegular30,
@@ -24,20 +26,16 @@ const styles = {
   })
 }
 
-const Title = ({ children, href }) => {
-  return (
-    <React.Fragment>
-      {href ? (
-        <Link href={href}>
-          <a {...styles.link}>
-            {children}
-            {<ChevronRight {...styles.icon} size={24} />}
-          </a>
-        </Link>
-      ) : (
-        <div {...styles.label}>{children}</div>
-      )}
-    </React.Fragment>
+const Title = ({ children, onClick, href }) => {
+  return href ? (
+    <a href={href} onClick={onClick} {...styles.link}>
+      {children}
+      {<ChevronRight {...styles.icon} size={24} />}
+    </a>
+  ) : (
+    <div onClick={onClick} {...styles.label}>
+      {children}
+    </div>
   )
 }
 
