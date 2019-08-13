@@ -21,6 +21,11 @@ export const serifTitle30 = {
   fontSize: 30,
   lineHeight: '34px'
 }
+export const serifTitle28 = {
+  ...fontStyles.serifTitle,
+  fontSize: 28,
+  lineHeight: '30px'
+}
 export const serifTitle26 = {
   ...fontStyles.serifTitle,
   fontSize: 26,
@@ -35,6 +40,11 @@ export const serifTitle20 = {
   ...fontStyles.serifTitle,
   fontSize: 20,
   lineHeight: '22px'
+}
+export const serifTitle16 = {
+  ...fontStyles.serifTitle,
+  fontSize: 16,
+  lineHeight: '18px'
 }
 
 // serifRegular
