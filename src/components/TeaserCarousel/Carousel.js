@@ -17,11 +17,14 @@ const IMAGE_SIZE = {
 const styles = {
   carousel: css({
     margin: 0,
-    padding: '30px 15px'
+    padding: '30px 15px',
+    overflow: 'auto'
   }),
 
   carouselRow: css({
-    margin: 0,
+    margin: '0 -15px 0 -15px',
+    padding: '0 15px 0 15px',
+    width: 'auto',
     display: 'flex',
     flexDirection: 'row',
     overflowX: 'scroll',
