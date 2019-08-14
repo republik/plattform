@@ -16,6 +16,76 @@ Supported props:
 
 
 ```react
+responsive: Mobile
+span: 2
+---
+<TeaserFrontTileRow columns={2}>
+  <TeaserFrontTile color='#000' bgColor='#FFFF3B'>
+    <Editorial.Format>Briefing aus Bern</Editorial.Format>
+    <TeaserFrontTileHeadline.Editorial columns={2}>Zwei Säulen im Umbau, grosse Geschenke – und Bersets Boys Club legt zu</TeaserFrontTileHeadline.Editorial>
+    <TeaserFrontCredit>
+      Von <TeaserFrontCreditLink color='#000' href='#'>Andrea Arezina</TeaserFrontCreditLink> und <TeaserFrontCreditLink color='#000' href='#'>Urs Bruderer</TeaserFrontCreditLink>, 04.07.2019
+    </TeaserFrontCredit>
+  </TeaserFrontTile>
+
+  <TeaserFrontTile
+    color='#FFF' bgColor='#542552'>
+    <Editorial.Format>An die Verlagsetage</Editorial.Format>
+    <TeaserFrontTileHeadline.Interaction columns={2}>Wohin ihr Geld fliesst</TeaserFrontTileHeadline.Interaction>
+  </TeaserFrontTile>
+</TeaserFrontTileRow>
+```
+```react
+responsive: Mobile
+span: 2
+---
+<TeaserFrontTileRow columns={2}>
+
+ <TeaserFrontTile image='/static/rothaus_portrait.jpg'
+    byline='Foto: Laurent Burst'
+    color='#fff' bgColor='#000'>
+    <TeaserFrontTileHeadline.Editorial>The fox</TeaserFrontTileHeadline.Editorial>
+    <TeaserFrontLead>
+      Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.
+    </TeaserFrontLead>
+    <TeaserFrontCredit>
+      An article by <TeaserFrontCreditLink color='#fff' href='#'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
+    </TeaserFrontCredit>
+  </TeaserFrontTile>
+
+  <TeaserFrontTile
+    color='#FFF' bgColor='#542552'>
+    <Editorial.Format>An die Verlagsetage</Editorial.Format>
+    <TeaserFrontTileHeadline.Interaction columns={2}>Wohin ihr Geld fliesst</TeaserFrontTileHeadline.Interaction>
+  </TeaserFrontTile>
+</TeaserFrontTileRow>
+```
+
+```react
+responsive: Mobile
+span: 2
+---
+<TeaserFrontTileRow columns={2}>
+   <TeaserFrontTile color='#000' bgColor='#FFFF3B'>
+    <Editorial.Format>Briefing aus Bern</Editorial.Format>
+    <TeaserFrontTileHeadline.Editorial columns={2}>Zwei Säulen im Umbau, grosse Geschenke – und Bersets Boys Club legt zu</TeaserFrontTileHeadline.Editorial>
+    <TeaserFrontCredit>
+      Von <TeaserFrontCreditLink color='#000' href='#'>Andrea Arezina</TeaserFrontCreditLink> und <TeaserFrontCreditLink color='#000' href='#'>Urs Bruderer</TeaserFrontCreditLink>, 04.07.2019
+    </TeaserFrontCredit>
+  </TeaserFrontTile>
+
+  <TeaserFrontTile image='/static/rothaus_landscape.jpg'
+    byline='Foto: Laurent Burst'
+    color='#000' bgColor='#fff'>
+    <TeaserFrontTileHeadline.Editorial>The quick brown fox</TeaserFrontTileHeadline.Editorial>
+
+    <TeaserFrontCredit>
+      An article by <TeaserFrontCreditLink color='#000' href='#'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
+    </TeaserFrontCredit>
+  </TeaserFrontTile>
+</TeaserFrontTileRow>
+```
+```react
 <TeaserFrontTileRow columns={2}>
   <TeaserFrontTile image='/static/rothaus_portrait.jpg'
     byline='Foto: Laurent Burst'
@@ -158,7 +228,7 @@ Supported props:
 
 ### Aligning items
 
-```react
+```react|responsive
 <TeaserFrontTileRow columns={2}>
   <TeaserFrontTile align='top' image='/static/rothaus_landscape.jpg' byline='Foto: Laurent Burst' color='#000' bgColor='#fff'>
     <TeaserFrontTileHeadline.Editorial>Short headline</TeaserFrontTileHeadline.Editorial>
