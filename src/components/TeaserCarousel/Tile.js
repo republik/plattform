@@ -48,19 +48,18 @@ const styles = {
 
   imageContainerBigger: css({
     position: 'relative',
-    margin: '0 auto'
+    margin: '15px auto' // room for image credit on top
   }),
 
   image: css({
     height: '100%',
     maxWidth: '100%',
-    maxHeight: IMAGE_SIZE.large.maxHeight,
-    objectFit: 'scale-down'
+    maxHeight: IMAGE_SIZE.large.maxHeight
   }),
 
   imageBigger: css({
     maxWidth: '100%',
-    objectFit: 'scale-down'
+    objectFit: 'contain'
   })
 }
 
@@ -109,16 +108,17 @@ const TeaserFrontCarouselTile = ({
               src={imageProps.src}
               srcSet={imageProps.srcSet}
               alt={alt}
-              maxWidth={IMAGE_SIZE.small.maxWidth}
+              maxWidth={bigger ? undefined : IMAGE_SIZE.small.maxWidth}
               {...imageStyles}
             />
-            <div style={{ position: 'relative' }}>
-              {byline && (
-                <FigureByline position="rightCompact" style={{ color }}>
-                  {byline}
-                </FigureByline>
-              )}
-            </div>
+            {byline && (
+              <FigureByline
+                position={bigger ? 'aboveRight' : 'rightCompact'}
+                style={{ color }}
+              >
+                {byline}
+              </FigureByline>
+            )}
           </div>
         )}
         {/* Body */}
