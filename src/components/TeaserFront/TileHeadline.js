@@ -1,7 +1,11 @@
 import React from 'react'
 import { css } from 'glamor'
 import { mUp } from './mediaQueries'
-import { serifTitle20, sansSerifMedium20, cursiveTitle20 } from '../Typography/styles'
+import {
+  serifTitle20,
+  sansSerifMedium20,
+  cursiveTitle20
+} from '../Typography/styles'
 
 const smallSize = {
   fontSize: '26px',
@@ -29,87 +33,93 @@ const styles = {
       marginBottom: 8
     }
   }),
-  editorialCol2: css({
+  editorialCol1: css({
     ...serifTitle20,
     ...smallSize,
+    [mUp]: {
+      ...standardSize
+    }
+  }),
+  editorialCol1Medium: css({
+    ...smallSize,
+    [mUp]: {
+      ...mediumSize
+    }
+  }),
+  editorialCol2: css({
+    ...serifTitle20,
+    // ...smallSize,
     [mUp]: {
       ...standardSize
     }
   }),
   editorialCol2Medium: css({
     ...serifTitle20,
-    ...smallSize,
+    // ...smallSize,
     [mUp]: {
       ...mediumSize
     }
   }),
   editorialCol3: css({
     ...serifTitle20,
-    ...smallSize,
+    // ...smallSize,
     [mUp]: {
       ...standardSize
     }
   }),
   interactionCol2: css({
     ...sansSerifMedium20,
-    ...smallSize,
+    // ...smallSize,
     [mUp]: {
       ...standardSize
     }
   }),
   interactionCol2Medium: css({
     ...sansSerifMedium20,
-    ...smallSize,
+    // ...smallSize,
     [mUp]: {
       ...mediumSize
     }
   }),
   interactionCol3: css({
     ...sansSerifMedium20,
-    ...smallSize,
+    // ...smallSize,
     [mUp]: {
       ...standardSize
     }
   }),
   scribble: css({
     ...cursiveTitle20,
-    ...smallSize,
+    // ...smallSize,
     [mUp]: {
       ...standardSize
     }
   })
 }
 
-export const Editorial = ({ children, medium, columns }) => {
-  const style = columns === 3
-    ? styles.editorialCol3
-    : medium
-      ? styles.editorialCol2Medium
-      : styles.editorialCol2
-  return (
-    <h1 {...styles.base} {...style}>
-      {children}
-    </h1>
+export const Editorial = ({ children, medium, columns = 1 }) => {
+  const headlineStyles = css(
+    styles.base,
+    medium
+      ? styles[`editorialCol${columns}Medium`]
+      : styles[`editorialCol${columns}`]
   )
+
+  return <h1 {...headlineStyles}>{children}</h1>
 }
 
-export const Interaction = ({ children, medium, columns }) => {
-  const style = columns === 3
-    ? styles.interactionCol3
-    : medium
-      ? styles.interactionCol2Medium
-      : styles.interactionCol2
-  return (
-    <h1 {...styles.base} {...style}>
-      {children}
-    </h1>
+export const Interaction = ({ children, medium, columns = 1 }) => {
+  const headlineStyles = css(
+    styles.base,
+    medium
+      ? styles[`interactionCol${columns}Medium`]
+      : styles[`interactionCol${columns}`]
   )
+  return <h1 {...headlineStyles}>{children}</h1>
 }
 
-export const Scribble = ({ children }) => {
-  return (
-    <h1 {...styles.base} {...styles.scribble}>
-      {children}
-    </h1>
-  )
-}
+export const Scribble = ({ children }) => (
+  <h1 {...styles.base} {...styles.scribble}>
+    {children}
+  </h1>
+)
