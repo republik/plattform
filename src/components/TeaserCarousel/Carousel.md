@@ -21,7 +21,7 @@ Supported props:
 <TeaserFrontCarousel>
   <TeaserFrontCarouselTitle href="/recenzionen">Alle Rezensionen</TeaserFrontCarouselTitle>
   <TeaserFrontCarouselRow>
-    <TeaserFrontCarouselTile image='/static/carousel/test.png' onClick={() => console.log("click on first tile")}>
+    <TeaserFrontCarouselTile byline='Foto: Laurent Burst' image='/static/carousel/test.png' onClick={() => console.log("click on first tile")}>
       <TeaserFrontCarouselTag>Poesie & Prosa</TeaserFrontCarouselTag>
       <TeaserFrontCarouselHeadline.Editorial>Das Rätsel Dag Solstad</TeaserFrontCarouselHeadline.Editorial>
       <TeaserFrontCarouselLead>
@@ -33,7 +33,7 @@ Supported props:
 
     </TeaserFrontCarouselTile>
 
-    <TeaserFrontCarouselTile image='/static/carousel/jackson.png'>
+    <TeaserFrontCarouselTile image='/static/carousel/jackson.png' byline='Foto: Laurent Burst' >
       <TeaserFrontCarouselTag>Film</TeaserFrontCarouselTag>
       <TeaserFrontCarouselHeadline.Editorial>Echt jetzt?</TeaserFrontCarouselHeadline.Editorial>
       <TeaserFrontCarouselLead>
@@ -64,7 +64,7 @@ Supported props:
       </Editorial.Credit>
     </TeaserFrontCarouselTile>
 
-    <TeaserFrontCarouselTile image='/static/carousel/calle.png'>
+    <TeaserFrontCarouselTile image='/static/carousel/calle.png' byline='Foto: Laurent Burst'>
       <TeaserFrontCarouselTag>Kunst</TeaserFrontCarouselTag>
       <TeaserFrontCarouselHeadline.Editorial>Blindes Sehen</TeaserFrontCarouselHeadline.Editorial>
       <TeaserFrontCarouselLead>

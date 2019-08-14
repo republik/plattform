@@ -1,8 +1,9 @@
+import { imageSizeInfo, imageResizeUrl } from 'mdast-react-render/lib/utils'
 import { css } from 'glamor'
 import React from 'react'
 import { TeaserFrontCarouselArticleCount } from '.'
 import colors from '../../theme/colors'
-import { FigureImage } from '../Figure'
+import { FigureImage, Figure, FigureCaption, FigureByline } from '../Figure'
 import LazyLoad from '../LazyLoad'
 import { mUp } from '../TeaserFront/mediaQueries'
 import Text from '../TeaserFront/Text'
@@ -37,10 +38,16 @@ const styles = {
   imageContainer: css({
     margin: '0 auto 14px auto',
     maxWidth: IMAGE_SIZE.large.maxWidth,
-    maxHeight: IMAGE_SIZE.large.maxHeight
+    width: 'auto',
+    position: 'relative',
+    '& img': {
+      maxHeight: IMAGE_SIZE.large.maxHeight,
+      objectFit: 'contain'
+    }
   }),
 
   imageContainerBigger: css({
+    position: 'relative',
     margin: '0 auto'
   }),
 
@@ -67,10 +74,9 @@ const TeaserFrontCarouselTile = ({
   alt,
   onClick,
   aboveTheFold,
+  byline,
   children
 }) => {
-  const imageProps =
-    image && FigureImage.utils.getResizedSrcs(image, IMAGE_SIZE.small, false)
   let tileStyle = css(styles.tile, {
     border: noOutline ? 'none' : `1px solid ${colors.outline}`,
     color,
@@ -83,6 +89,10 @@ const TeaserFrontCarouselTile = ({
   let containerStyle = css(styles.container, {
     margin: bigger ? '0' : '0 auto'
   })
+
+  const imageProps =
+    image &&
+    FigureImage.utils.getResizedSrcs(image, IMAGE_SIZE.small.maxWidth, true)
   let imageContainerStyles = bigger
     ? styles.imageContainerBigger
     : styles.imageContainer
@@ -93,18 +103,24 @@ const TeaserFrontCarouselTile = ({
       <div {...containerStyle}>
         {/* Image */}
         {imageProps && (
-          <figure {...imageContainerStyles}>
-            <LazyLoad visible={aboveTheFold}>
-              <img
-                src={imageProps.src}
-                srcSet={imageProps.srcSet}
-                alt={alt}
-                {...imageStyles}
-              />
-            </LazyLoad>
-          </figure>
+          <div {...imageContainerStyles}>
+            <FigureImage
+              aboveTheFold={aboveTheFold}
+              src={imageProps.src}
+              srcSet={imageProps.srcSet}
+              alt={alt}
+              maxWidth={IMAGE_SIZE.small.maxWidth}
+              {...imageStyles}
+            />
+            <div style={{ position: 'relative' }}>
+              {byline && (
+                <FigureByline position="rightCompact" style={{ color }}>
+                  {byline}
+                </FigureByline>
+              )}
+            </div>
+          </div>
         )}
-
         {/* Body */}
         <div>
           <Text color={color} margin={'0 auto'}>
