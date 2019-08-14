@@ -83,6 +83,12 @@ export const serifRegular16 = {
   fontSize: 16,
   lineHeight: '24px'
 }
+export const serifRegular15 = {
+  ...fontStyles.serifRegular,
+  fontSize: 15,
+  lineHeight: '24px'
+}
+
 export const serifRegular14 = {
   ...fontStyles.serifRegular,
   fontSize: 14,
