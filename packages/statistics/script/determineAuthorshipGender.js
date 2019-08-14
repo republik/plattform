@@ -105,7 +105,7 @@ PgDb.connect().then(async pgdb => {
         .replace(/Letzte Aktualisierung.*/, '')
         .replace(/(Die|die|der) Republik-Jury/, 'Republik-Jury')
         .replace('Ihrem Expeditionsteam', 'Expeditionsteam')
-        .replace(/(Eine? )?(Kommentar|Porträt|Essay|Interview|Einordnung|Gastbeitrag|Preisrede|Aufgezeichnet|Analyse|Bilder|Kolumne|Recherche|Nachruf) von /, '')
+        .replace(/(Eine? )?(Kommentar|Porträt|Essay|Interview|Einordnung|Gastbeitrag|Preisrede|Aufgezeichnet|Analyse|Bilder|Kolumne|Recherche|Nachruf|Reportage) von /, '')
         .replace(/Une recherche (d.? ?)/, '')
         .replace('von Anja', 'Anja')
         .split(/( und | and | & |,? mit |,? und |, )/)
