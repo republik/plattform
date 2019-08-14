@@ -154,6 +154,16 @@ The buttons / icons below the comment. The reply button is disabled if the discu
   onEdit={() => {}}
 />
 ```
+```react|noSource,span-2
+<Comment.IconLink
+  href={""}
+  onClick={() => {}}
+  discussionCommentsCount={6}
+  style={{}}
+  small={false}
+/>
+```
+
 
 # Composer
 
