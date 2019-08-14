@@ -69,21 +69,21 @@ const styles = {
   }),
   interactionCol2: css({
     ...sansSerifMedium20,
-    // ...smallSize,
+    ...smallSize,
     [mUp]: {
       ...standardSize
     }
   }),
   interactionCol2Medium: css({
     ...sansSerifMedium20,
-    // ...smallSize,
+    ...smallSize,
     [mUp]: {
       ...mediumSize
     }
   }),
   interactionCol3: css({
     ...sansSerifMedium20,
-    // ...smallSize,
+    ...smallSize,
     [mUp]: {
       ...standardSize
     }
