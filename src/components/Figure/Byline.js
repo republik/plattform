@@ -27,6 +27,16 @@ const positionBaseStyle = {
 }
 
 const positionStyle = {
+  aboveRight: css({
+    position: 'absolute',
+    whiteSpace: 'nowrap',
+    top: -15,
+    right: 0,
+    display: 'block',
+    [mUpFront]: {
+      ...sansSerifRegular12
+    }
+  }),
   below: css({
     display: 'block',
     marginTop: '5px',
