@@ -443,6 +443,17 @@ ReactDOM.render(
           title: 'Teasers',
           pages: [
             {
+              path: '/activedebate',
+              title: 'Active Debate',
+              imports: {
+                css,
+                t,
+                ...require('./components/Typography'),
+                ...require('./components/ActiveDebate')
+              },
+              src: require('./components/ActiveDebate/docs.md')
+            },
+            {
               path: '/teaserfeed',
               title: 'Feed',
               imports: {
