@@ -758,6 +758,7 @@ export class EditorPage extends Component {
               </Sidebar.Tab>
             }
             <Sidebar.Tab tabId='workflow' label='Workflow'>
+              <div style={{ marginBottom: 10 }}><CharCount value={editorState} /></div>
               <VersionControl
                 repoId={repoId}
                 commit={repo && (repo.commit || repo.latestCommit)}
