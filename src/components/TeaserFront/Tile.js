@@ -13,6 +13,10 @@ export const IMAGE_SIZE = {
   large: 360
 }
 
+// export const sizeSmall = {
+//   maxHeight: `${IMAGE_SIZE.small}px`,
+//   maxWidth: `${IMAGE_SIZE.small}px`
+// }
 export const sizeSmall = {
   maxHeight: `${IMAGE_SIZE.small}px`,
   maxWidth: `${IMAGE_SIZE.small}px`
@@ -29,19 +33,19 @@ export const sizeLarge = {
 }
 
 const styles = {
-  container: css({
-    margin: '0 auto',
-    textAlign: 'center',
-    padding: '30px 15px 40px 15px',
-    width: '100%',
-    [mUp]: {
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      justifyContent: 'center',
-      padding: '60px 0'
-    }
-  }),
+  // container: css({
+  //   margin: '0 auto',
+  //   textAlign: 'center',
+  //   // padding: '30px 15px 40px 15px',
+  //   width: '100%',
+  //   [mUp]: {
+  //     display: 'flex',
+  //     flexDirection: 'column',
+  //     alignItems: 'center',
+  //     justifyContent: 'center',
+  //     padding: '60px 0'
+  //   }
+  // }),
   textContainer: css({
     padding: 0,
     [mUp]: {
@@ -65,6 +69,7 @@ const styles = {
     width: '100%' // IE11
   }),
   image: css({
+    width: '100%',
     minWidth: '100px',
     ...sizeSmall,
     [mUp]: {
@@ -104,6 +109,7 @@ const Tile = ({
     cursor: onClick ? 'pointer' : 'default',
     justifyContent
   }
+
   if (onlyImage) {
     containerStyle.padding = 0
   }
@@ -111,9 +117,11 @@ const Tile = ({
   return (
     <div
       {...attributes}
-      {...styles.container}
       onClick={onClick}
       style={containerStyle}
+      // The styles of the container are defined
+      // on the parent component TeaserFrontTileRow
+      // with CSS children selectors.
       className="tile"
     >
       {imageProps && (
