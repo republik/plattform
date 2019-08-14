@@ -12,17 +12,17 @@ Supported props:
     highlight={false}
     documentTitle="Wenn Big Tech in Bern nach Regulierung ruft"
     preview={{
-        string: "Ohnein. Jetzt springt auch die   \"Republik\" auf den Zug auf und suggeriert, dass Elektromobilität schlecht sei wegen angeblicher Brandgefahr. Damit nun auch Republikleser mit gutem Gewissen weiterdieseln können... Elektroautos brennen pro",
-        more: true
-      }}
+      string: "Ohnein. Jetzt springt auch die   \"Republik\" auf den Zug auf und suggeriert, dass Elektromobilität schlecht sei wegen angeblicher Brandgefahr. Damit nun auch Republikleser mit gutem Gewissen weiterdieseln können... Elektroautos brennen pro",
+      more: true
+    }}
     commentCount={20}
     displayAuthor={{
-          id: "f815cc7cd2b9a3aed4190d6be5753a835822784b9bd202d5c54b681efd2036fe",
-          name: "Simon Schlauri",
-          profilePicture: "https://cdn.republik.space/s3/republik-assets/portraits/e7b5fec7809718a9f7b8c038c2747fd6.jpeg.webp?size=900x854&resize=384x384&bw=true"
-      }}
+      id: "f815cc7cd2b9a3aed4190d6be5753a835822784b9bd202d5c54b681efd2036fe",
+      name: "Simon Schlauri",
+      profilePicture: "https://cdn.republik.space/s3/republik-assets/portraits/e7b5fec7809718a9f7b8c038c2747fd6.jpeg.webp?size=900x854&resize=384x384&bw=true"
+    }}
     timeago="vor 10 m"
-  ></ActiveDebateTeaser>
+  />
 </ActiveDebate>
 ```
 
@@ -44,21 +44,40 @@ Supported props:
 - `timeago`: string.
 
 
-```react
+```react|span-3
 <ActiveDebateTeaser
   path="/2019/08/06/wenn-big-tech-in-bern-nach-regulierung-ruft"
   highlight={false}
   documentTitle="Wenn Big Tech in Bern nach Regulierung ruft"
   preview={{
-        string: "Ohnein. Jetzt springt auch die   \"Republik\" auf den Zug auf und suggeriert, dass Elektromobilität schlecht sei wegen angeblicher Brandgefahr. Damit nun auch Republikleser mit gutem Gewissen weiterdieseln können... Elektroautos brennen pro",
-        more: true
-      }}
-    commentCount={20}
-    displayAuthor={{
-          id: "f815cc7cd2b9a3aed4190d6be5753a835822784b9bd202d5c54b681efd2036fe",
-          name: "Simon Schlauri",
-          profilePicture: "https://cdn.republik.space/s3/republik-assets/portraits/e7b5fec7809718a9f7b8c038c2747fd6.jpeg.webp?size=900x854&resize=384x384&bw=true"
-      }}
-    timeago="vor 10 m"
+    string: "Ohnein. Jetzt springt auch die   \"Republik\" auf den Zug auf und suggeriert, dass Elektromobilität schlecht sei wegen angeblicher Brandgefahr. Damit nun auch Republikleser mit gutem Gewissen weiterdieseln können... Elektroautos brennen pro",
+    more: true
+  }}
+  highlight="Gut möglich, dass es bis zu einer klimaneutralen Grossbank einen Generationenwechsel braucht."
+  commentCount={20}
+  displayAuthor={{
+    id: "f815cc7cd2b9a3aed4190d6be5753a835822784b9bd202d5c54b681efd2036fe",
+    name: "Simon Schlauri",
+    profilePicture: "https://cdn.republik.space/s3/republik-assets/portraits/e7b5fec7809718a9f7b8c038c2747fd6.jpeg.webp?size=900x854&resize=384x384&bw=true"
+  }}
+  timeago="vor 10 m"
+/>
+```
+```react|span-3
+<ActiveDebateTeaser
+  path="/2019/08/06/wenn-big-tech-in-bern-nach-regulierung-ruft"
+  highlight={false}
+  documentTitle="Wenn Big Tech in Bern nach Regulierung ruft"
+  preview={{
+    string: "Ohnein. Jetzt springt auch die   \"Republik\" auf den Zug auf und suggeriert, dass Elektromobilität schlecht sei wegen angeblicher Brandgefahr. Damit nun auch Republikleser mit gutem Gewissen weiterdieseln können... Elektroautos brennen pro",
+    more: true
+  }}
+  commentCount={20}
+  displayAuthor={{
+    id: "f815cc7cd2b9a3aed4190d6be5753a835822784b9bd202d5c54b681efd2036fe",
+    name: "Simon Schlauri",
+    profilePicture: "https://cdn.republik.space/s3/republik-assets/portraits/e7b5fec7809718a9f7b8c038c2747fd6.jpeg.webp?size=900x854&resize=384x384&bw=true"
+  }}
+  timeago="vor 10 m"
 />
 ```
