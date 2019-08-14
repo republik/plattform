@@ -5,7 +5,12 @@ import React from 'react'
 import colors from '../../theme/colors'
 import { IconLink } from '../Discussion/Internal/Comment'
 import RawHtml from '../RawHtml/'
-import { sansSerifRegular14, serifRegular15 } from '../Typography/styles'
+import {
+  sansSerifRegular16,
+  sansSerifRegular14,
+  serifRegular15,
+  sansSerifMedium16
+} from '../Typography/styles'
 
 const styles = {
   root: css({
@@ -17,15 +22,15 @@ const styles = {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'baseline',
-    margin: '7px 0 12px 0'
+    margin: '7px 0 0 0'
   }),
   title: css({
-    ...sansSerifRegular14
+    ...sansSerifRegular16
   }),
   body: css({
     ...serifRegular15,
     color: colors.text,
-    margin: '10px 0'
+    margin: '12px 0'
   }),
 
   footer: css({
@@ -48,7 +53,9 @@ const styles = {
   }),
   authorName: css({
     flexShrink: 0,
-    paddingLeft: 10
+    paddingLeft: 10,
+    color: colors.text,
+    ...sansSerifMedium16
   }),
   timeago: css({
     color: colors.lightText,
@@ -81,7 +88,7 @@ export const DebateTeaser = ({
         }
       </div>
       {preview && (
-        <div {...styles.body} style={{ marginTop: 0 }}>
+        <div {...styles.body}>
           <React.Fragment>
             <RawHtml
               dangerouslySetInnerHTML={{
@@ -120,7 +127,7 @@ export const DebateTeaser = ({
 export default DebateTeaser
 
 DebateTeaser.propTypes = {
-  path: PropTypes.string,
+  href: PropTypes.string,
   highlight: PropTypes.string,
   documentTitle: PropTypes.string,
   preview: PropTypes.shape({
