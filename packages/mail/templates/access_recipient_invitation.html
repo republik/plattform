@@ -27,11 +27,13 @@
                   <td style="padding:20px;">
                     <p>Sehr geehrte Dame, sehr geehrter Herr</p>
                     {{#unless RECIPIENT_HAS_MEMBERSHIPS}}
+                    {{#if `RECIPIENT_EMAIL != GRANTER_EMAIL`}}
                     <p style="color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}"><strong style="{{sg_font_style_sans_serif_medium}}">{{GRANTER_NAME}} (<a href="mailto:{{GRANTER_EMAIL}}">{{GRANTER_EMAIL}}</a>) hat die Republik mit Ihnen geteilt.</strong>
                     </p>
                     {{#if GRANTER_MESSAGE}}
                     <p style="color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}">Und eine Nachricht für Sie mitgegeben:</p>
                     <blockquote style="color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}">{{{GRANTER_MESSAGE}}}</blockquote>
+                    {{/if}}
                     {{/if}}
                     <p style="color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}">Für {{CAMPAIGN_PERIOD}} sind Sie Gast an Bord. Und können nun unser Magazin entdecken, es lesen, sehen, hören und mitdiskutieren.</p>
                     <p style="color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}">Die Republik ist im Januar 2018 an den Start gegangen, es ist ein digitales Schweizer Magazin für Politik, Wirtschaft, Gesellschaft und Kultur. Für alles, was verwickelt oder komplex ist. Wir bieten täglich Beiträge zu aktuellen Themen – in unserem Magazin, im Feed oder auch per Newsletter ins E-Mail-Postfach geliefert.</p>

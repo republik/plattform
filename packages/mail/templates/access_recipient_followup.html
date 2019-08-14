@@ -26,8 +26,10 @@
                 <tr>
                   <td style="padding:20px;">
                     <p style="color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}">Sehr geehrte Dame, sehr geehrter Herr</p>
+                    {{#if `RECIPIENT_EMAIL != GRANTER_EMAIL`}}
                     <p style="color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}">Am {{GRANT_BEGIN}} hat {{GRANTER_NAME}} mit Ihnen das Abonnement der Republik geteilt.</p>
                     <p style="color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}">Damit Sie sehen, ob Ihnen das unabhängige Magazin zusagt.</p>
+                    {{/if}}
                     <p style="color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}">Nun ist es Zeit für eine Entscheidung: <a href="{{LINK_OFFERS_OVERVIEW}}">Kommen Sie an Bord?</a>
                     </p>
                     <p style="color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}">Wir sehen zwei vernünftige Gründe für Sie, die dafür sprechen:</p>
@@ -36,7 +38,7 @@
                     <p style="color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}">Denn die Republik macht ihre Arbeit auch, wenn Sie gerade Ihre machen. Unsere Aufgabe ist alles, was sich nicht allein mit Nachdenken am Schreibtisch klären lässt – alles, was verwickelt, komplex, unklar ist. Also alles, was Zeit braucht. Damit die öffentliche Debatte zu vernünftigen Ergebnissen führt.</p>
                     <p style="color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}">Das ist der Grund, warum keine lebendige Demokratie ohne lebendigen Journalismus möglich ist – in der Politik wie im Leben fällt man ohne gute Informationen keine guten Entscheidungen.</p>
                     <p style="color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}">Die Republik ist noch ein sehr junges Medium. Noch nicht perfekt, aber bestrebt, auf den aktuellen Stand des eigenen Irrtums zu kommen. Sie ist ein neues Modell in der Medienlandschaft – ohne Werbung, finanziert von den Leserinnen. Diese sind unsere einzigen Kunden, also unsere einzigen Chefs.</p>
-                    <p style="color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}">Bis jetzt haben wir {{REPUBLIK_MEMBERSHIPS_COUNT}} Chefinnen und Chefs in der Teppichetage (darunter auch {{GRANTER_NAME}}).</p>
+                    <p style="color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}">Bis jetzt haben wir {{REPUBLIK_MEMBERSHIPS_COUNT}} Chefinnen und Chefs in der Teppichetage{{#if `RECIPIENT_EMAIL != GRANTER_EMAIL`}} (darunter auch {{GRANTER_NAME}}){{/if}}.</p>
                     <p style="color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}">Ob Sie dazugehören wollen, ist nun Ihre Entscheidung.</p>
                     <p style="color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}"><a href="{{LINK_OFFERS_OVERVIEW}}">Unterstützen Sie unsere kleine Rebellion – für den Journalismus, gegen die Medienkonzerne!</a>
                     </p>
