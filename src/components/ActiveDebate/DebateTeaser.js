@@ -9,7 +9,8 @@ import {
   sansSerifRegular16,
   sansSerifRegular14,
   serifRegular15,
-  sansSerifMedium16
+  sansSerifMedium16,
+  serifBold28
 } from '../Typography/styles'
 
 const styles = {
@@ -21,7 +22,7 @@ const styles = {
   header: css({
     display: 'flex',
     justifyContent: 'space-between',
-    alignItems: 'baseline',
+    alignItems: 'center',
     margin: '7px 0 0 0'
   }),
   title: css({
@@ -32,7 +33,11 @@ const styles = {
     color: colors.text,
     margin: '12px 0'
   }),
-
+  highlight: css({
+    ...serifBold28,
+    color: colors.text,
+    margin: '12px 0'
+  }),
   footer: css({
     ...sansSerifRegular14,
     display: 'flex',
@@ -87,7 +92,7 @@ export const DebateTeaser = ({
           </React.Fragment>
         }
       </div>
-      {preview && (
+      {!highlight && preview && (
         <div {...styles.body}>
           <React.Fragment>
             <RawHtml
@@ -95,8 +100,20 @@ export const DebateTeaser = ({
                 __html: preview.string
               }}
             />
+
             {/* {!endsWithPunctuation && <Fragment>&nbsp;…</Fragment>} */}
           </React.Fragment>
+        </div>
+      )}
+      {highlight && (
+        <div {...styles.highlight}>
+          &#171;
+          <RawHtml
+            dangerouslySetInnerHTML={{
+              __html: highlight
+            }}
+          />
+          &#187;
         </div>
       )}
       {displayAuthor && (
