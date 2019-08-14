@@ -1,5 +1,5 @@
 {
-  "updated": "2019-08-06T08:18:34.727Z",
+  "updated": "2019-08-14T13:21:41.362Z",
   "title": "live",
   "data": [
     {
@@ -41,6 +41,10 @@
     {
       "key": "api/comment/empty",
       "value": "Ihr Beitrag ist leer."
+    },
+    {
+      "key": "api/comment/canNotComment",
+      "value": "Sie benötigen eine aktive Mitgliedschaft um sich an Debatten zu beteiligen."
     },
     {
       "key": "api/discussion/anonymity/forbidden",
