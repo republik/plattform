@@ -17,7 +17,7 @@ Supported props:
 
 ### `<TeaserFrontCarousel />`: default
 
-```react
+```react|responsive
 <TeaserFrontCarousel>
   <TeaserFrontCarouselTitle href="/recenzionen">Alle Rezensionen</TeaserFrontCarouselTitle>
   <TeaserFrontCarouselRow>
@@ -127,16 +127,16 @@ Below 4 tiles, each tile will use 33% of the space available, up to a maximum of
 
 ### `<TeaserFrontCarousel />`: black background
 
-```react
+```react|responsive
 <TeaserFrontCarousel bgColor='#000' color='#FFF'>
   <TeaserFrontCarouselTitle>Alle Serien</TeaserFrontCarouselTitle>
 
   <TeaserFrontCarouselRow>
-    <TeaserFrontCarouselTile bigger image='/static/carousel/murdoch.png' count={12} bgColor='#000' color='#FFF' noOutline>
+    <TeaserFrontCarouselTile bigger image='/static/carousel/murdoch.png' count={12} bgColor='#000' color='#FFF' noOutline byline='Foto: Laurent Burst'>
     <TeaserFrontCarouselHeadline.Serie bigger>Die Dynastie Murdoch</TeaserFrontCarouselHeadline.Serie>
     </TeaserFrontCarouselTile>
 
-    <TeaserFrontCarouselTile bigger image='/static/carousel/homestory.png' count={6} bgColor='#000' color='#FFF' noOutline>
+    <TeaserFrontCarouselTile bigger image='/static/carousel/homestory.png' count={6} bgColor='#000' color='#FFF' noOutline byline='Foto: Laurent Burst'>
     <TeaserFrontCarouselHeadline.Serie bigger>Homestory</TeaserFrontCarouselHeadline.Serie>
     </TeaserFrontCarouselTile>
 
