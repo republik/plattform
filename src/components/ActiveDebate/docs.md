@@ -1,9 +1,27 @@
 ### `<ActiveDebates />`.
 
 Supported props:
-- `hasHilight`: boolean, if `true`, the left column will be reserved for the highlighted debate.
+- `hasHighlight`: boolean, if `true`, the left column will be reserved for the highlighted debate.
 - `discussions`: array of discussions.
 - `t`: translation function.
+
+#### With Highlight
+
+```react|span-6
+<ActiveDebates
+  t={t}
+  hasHighlight={activeDebates.hasHighlight}
+  discussions={activeDebates.discussions}
+/>
+```
+#### Without Highlight
+```react|span-6
+<ActiveDebates
+  t={t}
+  hasHighlight={activeDebatesWithoutHighlight.hasHighlight}
+  discussions={activeDebatesWithoutHighlight.discussions}
+/>
+```
 
 ### `<ActiveDebateTeaser />`
 A teaser for the active debates.
@@ -20,17 +38,9 @@ Supported props:
   - `id`: id (`string`) of the last comment's author.
   - `name`: name (`string`) of the last comment's author.
   - `profilePicture`: url to the profile image of the last comment's author.
-- `timeago`: string.
 
 
 
-```react|span-6
-<ActiveDebates
-  t={t}
-  hasHighlight={activeDebates.hasHighlight}
-  discussions={activeDebates.discussions}
-/>
-```
 
 
 #### `<ActiveDebateTeaser />`
