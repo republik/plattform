@@ -1,54 +1,16 @@
-### `<ActiveDebate />`.
+### `<ActiveDebates />`.
 
 Supported props:
 - `hasHilight`: boolean, if `true`, the left column will be reserved for the highlighted debate.
+- `discussions`: array of discussions.
+- `t`: translation function.
 
-
-```react|noSource
-<ActiveDebate>
-  <ActiveDebateHeader>Aktive Debatten</ActiveDebateHeader>
-  <ActiveDebateDiscussionTeaser
-    path="/2019/08/06/wenn-big-tech-in-bern-nach-regulierung-ruft"
-    highlight={false}
-    documentTitle="Wenn Big Tech in Bern nach Regulierung ruft"
-    preview={{
-      string: "Ohnein. Jetzt springt auch die   \"Republik\" auf den Zug auf und suggeriert, dass Elektromobilität schlecht sei wegen angeblicher Brandgefahr. Damit nun auch Republikleser mit gutem Gewissen weiterdieseln können... Elektroautos brennen pro",
-      more: true
-    }}
-    highlight="Gut möglich, dass es bis zu einer klimaneutralen Grossbank einen Generationenwechsel braucht."
-    commentCount={20}
-    displayAuthor={{
-      id: "f815cc7cd2b9a3aed4190d6be5753a835822784b9bd202d5c54b681efd2036fe",
-      name: "Simon Schlauri",
-      profilePicture: "https://cdn.republik.space/s3/republik-assets/portraits/e7b5fec7809718a9f7b8c038c2747fd6.jpeg.webp?size=900x854&resize=384x384&bw=true"
-    }}
-    timeago="vor 10 m"
-  />
-  <ActiveDebateDiscussionTeaser
-    path="/2019/08/06/wenn-big-tech-in-bern-nach-regulierung-ruft"
-    highlight={false}
-    documentTitle="Wenn Big Tech in Bern nach Regulierung ruft"
-    preview={{
-      string: "Ohnein. Jetzt springt auch die   \"Republik\" auf den Zug auf und suggeriert, dass Elektromobilität schlecht sei wegen angeblicher Brandgefahr. Damit nun auch Republikleser mit gutem Gewissen weiterdieseln können... Elektroautos brennen pro",
-      more: true
-    }}
-    commentCount={20}
-    displayAuthor={{
-      id: "f815cc7cd2b9a3aed4190d6be5753a835822784b9bd202d5c54b681efd2036fe",
-      name: "Simon Schlauri",
-      profilePicture: "https://cdn.republik.space/s3/republik-assets/portraits/e7b5fec7809718a9f7b8c038c2747fd6.jpeg.webp?size=900x854&resize=384x384&bw=true"
-    }}
-    timeago="vor 10 m"
-  />
-</ActiveDebate>
-```
-
-### `<ActiveDebateDiscussionTeaser />`
+### `<ActiveDebateTeaser />`
 A teaser for the active debates.
 
 Supported props:
 - `href`: url to the debate page.
-- `highlight`: A quote (`string`) to highlight that will be displayed with a special style.
+- `highlight`: A quote (`string`) that will be displayed with a special style in lieu of `preview.string`.
 - `documentTitle`: the title (`string`) of the article that triggered the debate.
 - `preview`: an object with the properties:
   - `string`: a `string` that will be display a preview of the last comment.
@@ -61,40 +23,54 @@ Supported props:
 - `timeago`: string.
 
 
+
+```react|span-6
+<ActiveDebates
+  t={t}
+  hasHighlight={activeDebates.hasHighlight}
+  discussions={activeDebates.discussions}
+/>
+```
+
+
+#### `<ActiveDebateTeaser />`
+
 ```react|span-3
-<ActiveDebateDiscussionTeaser
-  path="/2019/08/06/wenn-big-tech-in-bern-nach-regulierung-ruft"
-  highlight={false}
-  documentTitle="Wenn Big Tech in Bern nach Regulierung ruft"
+<ActiveDebateTeaser
+  t={t}
+  path={debate.path}
+  documentId={debate.id}
+  documentTitle={debate.title}
+  commentCount={debate.comments.totalCount}
+  comments={debate.comments.nodes}
+/>
+```
+
+#### `<ActiveDebateHeader />`
+
+```react|span-3
+<ActiveDebateHeader
+  t={t}
+  documentTitle={'Stell dir vor, die UBS wird klimaneutral'}
+  commentCount={45}
+  href={''}
+/>
+```
+#### `<ActiveDebateComment />`
+
+```react|span-3
+<ActiveDebateComment
+  t={t}
   preview={{
-    string: "Ohnein. Jetzt springt auch die   \"Republik\" auf den Zug auf und suggeriert, dass Elektromobilität schlecht sei wegen angeblicher Brandgefahr. Damit nun auch Republikleser mit gutem Gewissen weiterdieseln können... Elektroautos brennen pro",
+    string:
+      'Einmal mehr geht es bei dieser Debatte um eine Huhn Ei Debatte. Ist es Aufgabe der Bank ihren Beitrag zu leisten oder in einer direkten Demokratie wie der Schweiz an den Stimmbürgern, die entsprechenden Rahmenbedingunge zu schaffen. Die',
     more: true
   }}
-  highlight="Gut möglich, dass es bis zu einer klimaneutralen Grossbank einen Generationenwechsel braucht."
-  commentCount={20}
-  displayAuthor={{
-    id: "f815cc7cd2b9a3aed4190d6be5753a835822784b9bd202d5c54b681efd2036fe",
-    name: "Simon Schlauri",
-    profilePicture: "https://cdn.republik.space/s3/republik-assets/portraits/e7b5fec7809718a9f7b8c038c2747fd6.jpeg.webp?size=900x854&resize=384x384&bw=true"
-  }}
-  timeago="vor 10 m"
 />
 ```
 ```react|span-3
-<ActiveDebateDiscussionTeaser
-  path="/2019/08/06/wenn-big-tech-in-bern-nach-regulierung-ruft"
-  highlight={false}
-  documentTitle="Wenn Big Tech in Bern nach Regulierung ruft"
-  preview={{
-    string: "Ohnein. Jetzt springt auch die   \"Republik\" auf den Zug auf und suggeriert, dass Elektromobilität schlecht sei wegen angeblicher Brandgefahr. Damit nun auch Republikleser mit gutem Gewissen weiterdieseln können... Elektroautos brennen pro",
-    more: true
-  }}
-  commentCount={20}
-  displayAuthor={{
-    id: "f815cc7cd2b9a3aed4190d6be5753a835822784b9bd202d5c54b681efd2036fe",
-    name: "Simon Schlauri",
-    profilePicture: "https://cdn.republik.space/s3/republik-assets/portraits/e7b5fec7809718a9f7b8c038c2747fd6.jpeg.webp?size=900x854&resize=384x384&bw=true"
-  }}
-  timeago="vor 10 m"
+<ActiveDebateComment
+  t={t}
+  highlight={'Gut möglich, dass es bis zu einer klimaneutralen Grossbank einen Generationenwechsel braucht.'}
 />
 ```
