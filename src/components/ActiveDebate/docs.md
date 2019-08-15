@@ -1,6 +1,3 @@
-```remove-react-source
-
-```
 
 ## `<ActiveDebates />`.
 
@@ -70,6 +67,8 @@ These components are used to build `ActiveDebateTeaser`.
 ```
 ### `<ActiveDebateComment />`
 
+If the comment has the `highlight` property defined, the body of the comment will be rendered as a quote in a bigger font.
+
 ```react|span-3
 <ActiveDebateComment
   t={t}
@@ -80,6 +79,7 @@ These components are used to build `ActiveDebateTeaser`.
   }}
 />
 ```
+
 ```react|span-3
 <ActiveDebateComment
   t={t}
