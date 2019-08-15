@@ -2,7 +2,7 @@ import { css } from 'glamor'
 import PropTypes from 'prop-types'
 import React from 'react'
 import { IconLink } from '../Discussion/Internal/Comment'
-import { sansSerifRegular16 } from '../Typography/styles'
+import { sansSerifMedium16 } from '../Typography/styles'
 import colors from '../../theme/colors'
 
 const styles = {
@@ -16,7 +16,7 @@ const styles = {
     color: colors.text
   }),
   title: css({
-    ...sansSerifRegular16,
+    ...sansSerifMedium16,
     marginRight: 10
   })
 }
