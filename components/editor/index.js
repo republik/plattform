@@ -80,6 +80,7 @@ const moduleCreators = {
   line: createLineModule,
   articleGroup: createArticleGroup,
   frontDossier: createFrontDossier,
+  frontCarousel: createFrontDossier,
   dossierIntro: createDossierIntro,
   articleCollection: createArticleCollection,
   chart: createChartModule,
@@ -204,17 +205,17 @@ class Editor extends Component {
               plugins={this.plugins}
               readOnly={readOnly} />
           </Document>
-          } />
+        } />
         { /* A full slate instance to normalize
                initially loaded docs but ignoring
                change events from it */ }
         {!value && (
-        <SlateEditor
-          ref={this.slateRef}
-          value={this.newDocument({title: 'Loading...'})}
-          plugins={this.plugins}
-          readOnly />
-          )}
+          <SlateEditor
+            ref={this.slateRef}
+            value={this.newDocument({ title: 'Loading...' })}
+            plugins={this.plugins}
+            readOnly />
+        )}
       </Container>
     )
   }
