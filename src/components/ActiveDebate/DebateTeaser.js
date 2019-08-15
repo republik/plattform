@@ -1,18 +1,11 @@
 import { css } from 'glamor'
 import PropTypes from 'prop-types'
 import React from 'react'
+import { ActiveDebateComment, ActiveDebateHeader } from '.'
 // import { ellipsize, underline } from '../../lib/styleMixins'
 import colors from '../../theme/colors'
-import {
-  sansSerifRegular16,
-  sansSerifRegular14,
-  serifRegular15,
-  sansSerifMedium16,
-  serifBold28
-} from '../Typography/styles'
-
 import { Header as UserProfile } from '../Discussion/Internal/Comment'
-import { ActiveDebateHeader, ActiveDebateComment } from '.'
+import { sansSerifMedium16, sansSerifRegular14 } from '../Typography/styles'
 
 const styles = {
   root: css({
@@ -58,11 +51,6 @@ export const DebateTeaser = ({
   documentTitle,
   commentCount,
   comments
-  // preview,
-  // commentCount,
-  // displayAuthor,
-  // timeago
-  // onClick,
 }) => {
   return (
     <div {...styles.root}>
@@ -80,25 +68,7 @@ export const DebateTeaser = ({
             highlight={comment.highlight ? comment.highlight : undefined}
             preview={comment.preview}
           />
-          <UserProfile
-            t={t}
-            comment={comment}
-            // comment={{
-            //   id: '50a17ba6-6864-4139-8c04-f53c02e19fe0',
-            //   createdAt: '2000-01-01',
-            //   updatedAt: new Date().toISOString(),
-            //   parentIds: [],
-            //   displayAuthor: {
-            //     name: 'Queen Daenerys Stormborn of the House Targaryen',
-            //     credential: {
-            //       description: 'The rightful Queen of the Seven Kingdoms',
-            //       verified: true
-            //     }
-            //   }
-            // }}
-            isExpanded={false}
-            onToggle={() => {}}
-          />
+          <UserProfile t={t} comment={comment} isExpanded={true} />
         </React.Fragment>
       ))}
     </div>
@@ -113,24 +83,4 @@ DebateTeaser.propTypes = {
   documentId: PropTypes.string,
   documentTitle: PropTypes.string,
   comments: PropTypes.array
-
-  // commentCount: PropTypes.number,
-  // displayAuthor: PropTypes.shape({
-  //   id: PropTypes.string,
-  //   name: PropTypes.string,
-  //   profilePicture: PropTypes.string
-  // }),
-  // timeago: PropTypes.string
 }
-// id="X"
-// tags={["Kritik"]}
-// createdAt="2019-01-01"
-// preview={{
-//   string: "Die Zeitungskäufe von Christoph Blocher, die Selbstideologisierung der NZZ, die Frankenstein-Monster-Strategie der Tamedia: Ehrlich gesagt wäre es uns lieber",
-//   more: true
-// }}
-// timeago={isoString => 'gerade eben'}
-// discussion={{
-//   title: "Der Crowdfunding-Code gegen die Frankenstein-Monster-Strategie"
-// }}
-// t={t}
