@@ -25,15 +25,17 @@ const styles = {
   }),
   left: css({
     [mUp]: {
-      flex: '1 1 0',
+      width: '50%',
+      flexGrow: 1,
       marginRight: 16
     }
   }),
   right: css({
     [mUp]: {
+      width: '50%',
       display: 'flex',
       flexDirection: 'column',
-      flex: '1 1 0',
+      flexGrow: 1,
       marginLeft: 16
     }
   })
