@@ -47,7 +47,6 @@ const styles = {
 export const DebateTeaser = ({
   t,
   path,
-  documentId, // Do we need this?
   documentTitle,
   commentCount,
   comments
@@ -80,7 +79,7 @@ export default DebateTeaser
 DebateTeaser.propTypes = {
   t: PropTypes.func,
   path: PropTypes.string,
-  documentId: PropTypes.string,
   documentTitle: PropTypes.string,
+  commentCount: PropTypes.number,
   comments: PropTypes.array
 }

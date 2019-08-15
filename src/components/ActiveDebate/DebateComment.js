@@ -22,7 +22,7 @@ const styles = {
   })
 }
 
-const DebateComment = ({ id, highlight, preview }) => {
+const DebateComment = ({ highlight, preview }) => {
   return (
     <>
       {!highlight && preview && (
@@ -56,7 +56,6 @@ const DebateComment = ({ id, highlight, preview }) => {
 export default DebateComment
 
 DebateComment.propTypes = {
-  id: PropTypes.string,
   highlight: PropTypes.string,
   preview: PropTypes.shape({
     string: PropTypes.string,
