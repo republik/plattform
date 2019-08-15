@@ -1,3 +1,3 @@
 export { default as ActiveDebate } from './ActiveDebate'
 export { default as ActiveDebateHeader } from './Header'
-export { default as ActiveDebateTeaser } from './DebateTeaser'
+export { default as ActiveDebateDiscussionTeaser } from './DiscussionTeaser'

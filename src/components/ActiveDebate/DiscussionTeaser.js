@@ -4,7 +4,7 @@ import React from 'react'
 // import { ellipsize, underline } from '../../lib/styleMixins'
 import colors from '../../theme/colors'
 import { IconLink } from '../Discussion/Internal/Comment'
-import RawHtml from '../RawHtml/'
+import RawHtml from '../RawHtml'
 import {
   sansSerifRegular16,
   sansSerifRegular14,
@@ -15,7 +15,7 @@ import {
 
 const styles = {
   root: css({
-    borderTop: `1px solid ${colors.text}`,
+    borderTop: `1px solid #C8C8C8`,
     margin: '0 0 40px 0',
     paddingTop: 10
   }),
@@ -69,7 +69,7 @@ const styles = {
   })
 }
 
-export const DebateTeaser = ({
+export const DiscussionTeaser = ({
   href,
   onClick,
   highlight,
@@ -83,67 +83,69 @@ export const DebateTeaser = ({
     ? displayAuthor.name
     : 'anonymous author'
   return (
-    <a {...styles.root} href={href} onClick={onClick}>
-      <div {...styles.header}>
-        {
-          <React.Fragment>
-            {documentTitle && <div {...styles.title}>{documentTitle}</div>}
-            <IconLink discussionCommentsCount={commentCount} small />
-          </React.Fragment>
-        }
-      </div>
-      {!highlight && preview && (
-        <div {...styles.body}>
-          <React.Fragment>
+    <div {...styles.root}>
+      <a href={href} onClick={onClick}>
+        <div {...styles.header}>
+          {
+            <React.Fragment>
+              {documentTitle && <div {...styles.title}>{documentTitle}</div>}
+              <IconLink discussionCommentsCount={commentCount} small />
+            </React.Fragment>
+          }
+        </div>
+        {!highlight && preview && (
+          <div {...styles.body}>
+            <React.Fragment>
+              <RawHtml
+                dangerouslySetInnerHTML={{
+                  __html: preview.string
+                }}
+              />
+
+              {/* {!endsWithPunctuation && <Fragment>&nbsp;…</Fragment>} */}
+            </React.Fragment>
+          </div>
+        )}
+        {highlight && (
+          <div {...styles.highlight}>
+            &#171;
             <RawHtml
               dangerouslySetInnerHTML={{
-                __html: preview.string
+                __html: highlight
               }}
             />
-
-            {/* {!endsWithPunctuation && <Fragment>&nbsp;…</Fragment>} */}
-          </React.Fragment>
-        </div>
-      )}
-      {highlight && (
-        <div {...styles.highlight}>
-          &#171;
-          <RawHtml
-            dangerouslySetInnerHTML={{
-              __html: highlight
-            }}
-          />
-          &#187;
-        </div>
-      )}
-      {displayAuthor && (
-        <div {...styles.footer}>
-          {displayAuthor.profilePicture && (
-            // <links.Profile displayAuthor={displayAuthor} passHref>
-            <a {...styles.link}>
-              <img
-                {...styles.profilePicture}
-                src={displayAuthor.profilePicture}
-                alt={`profile picture of this comment's author, ${authorName}`}
-              />
-            </a>
-            // </links.Profile>
-          )}
-          <div {...styles.commentMeta}>
-            {displayAuthor.name && (
-              <div {...styles.authorName}>{displayAuthor.name}</div>
-            )}
-            {timeago && <div {...styles.timeago}>{timeago}</div>}
+            &#187;
           </div>
-        </div>
-      )}
-    </a>
+        )}
+        {displayAuthor && (
+          <div {...styles.footer}>
+            {displayAuthor.profilePicture && (
+              // <links.Profile displayAuthor={displayAuthor} passHref>
+              <a {...styles.link}>
+                <img
+                  {...styles.profilePicture}
+                  src={displayAuthor.profilePicture}
+                  alt={`profile picture of this comment's author, ${authorName}`}
+                />
+              </a>
+              // </links.Profile>
+            )}
+            <div {...styles.commentMeta}>
+              {displayAuthor.name && (
+                <div {...styles.authorName}>{displayAuthor.name}</div>
+              )}
+              {timeago && <div {...styles.timeago}>{timeago}</div>}
+            </div>
+          </div>
+        )}
+      </a>
+    </div>
   )
 }
 
-export default DebateTeaser
+export default DiscussionTeaser
 
-DebateTeaser.propTypes = {
+DiscussionTeaser.propTypes = {
   href: PropTypes.string,
   highlight: PropTypes.string,
   documentTitle: PropTypes.string,
