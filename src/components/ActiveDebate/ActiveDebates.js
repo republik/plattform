@@ -10,38 +10,101 @@ const styles = {
     padding: '30px 15px',
     overflow: 'auto',
     backgroundColor: '#FFFFFF',
-    color: '#000000',
-    display: 'flex',
-    flexDirection: 'column',
+    color: '#000000'
+  }),
+  withoutHighlight: css({
     [mUp]: {
-      flexDirection: 'row'
+      columns: '2 auto',
+      '> *': { breakInside: 'avoid-column' }
     }
   }),
-  left: css({}),
-  right: css({})
+  withHighlight: css({
+    [mUp]: {
+      display: 'flex'
+    }
+  }),
+  left: css({
+    [mUp]: {
+      flex: '1 1 0',
+      marginRight: 16
+    }
+  }),
+  right: css({
+    [mUp]: {
+      display: 'flex',
+      flexDirection: 'column',
+      flex: '1 1 0',
+      marginLeft: 16
+    }
+  })
 }
 
-const ActiveDebates = ({ discussions, hasHighlight = false, t }) => (
-  <div role="group" {...styles.root}>
-    {discussions.map(discussion => (
-      <ActiveDebateTeaser
-        t={t}
-        path={discussion.path}
-        documentId={discussion.id}
-        documentTitle={discussion.title}
-        commentCount={discussion.comments.totalCount}
-        comments={discussion.comments.nodes}
-      />
-    ))}
-    {/* One or two columns based on hasHighlight */}
-    {/* <div {...styles.left}>hasHighlight</div>
-    <div {...styles.right}>hasHighlight</div> */}
-  </div>
-)
+const ActiveDebates = ({ discussions, hasHighlight = false, t }) => {
+  if (hasHighlight) {
+    const highlighted = discussions.filter(discussion =>
+      discussion.comments.nodes.some(comment =>
+        comment.hasOwnProperty('highlight')
+      )
+    )
+    const notHighlighted = discussions.filter(
+      discussion =>
+        !discussion.comments.nodes.some(comment =>
+          comment.hasOwnProperty('highlight')
+        )
+    )
+
+    return (
+      <div role="group" {...css(styles.root, styles.withHighlight)}>
+        <div {...styles.left}>
+          {highlighted.map(discussion => (
+            <ActiveDebateTeaser
+              key={discussion.id}
+              t={t}
+              path={discussion.path}
+              documentId={discussion.id}
+              documentTitle={discussion.title}
+              commentCount={discussion.comments.totalCount}
+              comments={discussion.comments.nodes}
+            />
+          ))}
+        </div>
+        <div {...styles.right}>
+          {notHighlighted.map(discussion => (
+            <ActiveDebateTeaser
+              key={discussion.id}
+              t={t}
+              path={discussion.path}
+              documentId={discussion.id}
+              documentTitle={discussion.title}
+              commentCount={discussion.comments.totalCount}
+              comments={discussion.comments.nodes}
+            />
+          ))}
+        </div>
+      </div>
+    )
+  } else {
+    return (
+      <div role="group" {...css(styles.root, styles.withoutHighlight)}>
+        {discussions.map(discussion => (
+          <ActiveDebateTeaser
+            key={discussion.id}
+            t={t}
+            path={discussion.path}
+            documentId={discussion.id}
+            documentTitle={discussion.title}
+            commentCount={discussion.comments.totalCount}
+            comments={discussion.comments.nodes}
+          />
+        ))}
+      </div>
+    )
+  }
+}
 
 export default ActiveDebates
 
 ActiveDebates.propTypes = {
   hasHighlight: PropTypes.bool,
-  discussions: PropTypes.object
+  discussions: PropTypes.array
 }
