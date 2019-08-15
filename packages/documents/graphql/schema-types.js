@@ -70,6 +70,7 @@ input DocumentInput {
 
 type Document {
   id: ID!
+  repoId: ID!
   # AST of /article.md
   content: JSON!
   meta: Meta!
