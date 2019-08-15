@@ -4,6 +4,7 @@ const t = require('./lib/t')
 
 const { graphql: documents } = require('@orbiting/backend-modules-documents')
 const { graphql: auth } = require('@orbiting/backend-modules-auth')
+const { graphql: discussions } = require('@orbiting/backend-modules-discussions')
 
 const loaderBuilders = {
   ...require('@orbiting/backend-modules-discussions/loaders'),
@@ -46,7 +47,8 @@ const run = async (workerId, config) => {
     localModule,
     [
       documents,
-      auth
+      auth,
+      discussions
     ]
   )
 

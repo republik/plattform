@@ -1,11 +1,5 @@
 module.exports = `
 
-type Credential {
-  description: String!
-  verified: Boolean!
-  isListed: Boolean!
-}
-
 enum AccessRole {
   ADMIN
   EDITOR

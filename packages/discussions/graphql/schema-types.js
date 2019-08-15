@@ -1,5 +1,11 @@
 module.exports = `
 
+type Credential {
+  description: String!
+  verified: Boolean!
+  isListed: Boolean!
+}
+
 extend type User {
   comments(
     after: String
