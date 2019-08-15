@@ -59,7 +59,7 @@ export class IconLink extends Component {
       ...style
     }
 
-    return (
+    return href ? (
       <a href={href} onClick={onClick} {...styles.link} style={patchedStyle}>
         <span {...styles.icon}>
           <Icon size={size} fill={colors.primary} />
@@ -74,6 +74,21 @@ export class IconLink extends Component {
           </span>
         )}
       </a>
+    ) : (
+      <div onClick={onClick} {...styles.link} style={patchedStyle}>
+        <span {...styles.icon}>
+          <Icon size={size} fill={colors.primary} />
+        </span>
+        {discussionCommentsCount > 0 && (
+          <span
+            {...styles.text}
+            {...styles.text}
+            style={{ fontSize, lineHeight }}
+          >
+            {discussionCommentsCount}
+          </span>
+        )}
+      </div>
     )
   }
 }
