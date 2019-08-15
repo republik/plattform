@@ -449,7 +449,8 @@ ReactDOM.render(
                 css,
                 t,
                 ...require('./components/Typography'),
-                ...require('./components/ActiveDebate')
+                ...require('./components/ActiveDebate'),
+                ...require('./components/ActiveDebate/__docs__')
               },
               src: require('./components/ActiveDebate/docs.md')
             },
