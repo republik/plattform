@@ -10,10 +10,10 @@ const styles = {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    margin: '7px 0 0 0',
     textDecoration: 'none',
     cursor: 'pointer',
-    color: colors.text
+    color: colors.text,
+    marginBottom: 18
   }),
   title: css({
     ...sansSerifMedium16,

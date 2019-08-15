@@ -17,7 +17,7 @@ import { ActiveDebateHeader, ActiveDebateComment } from '.'
 const styles = {
   root: css({
     borderTop: `1px solid #C8C8C8`,
-    margin: '0 0 40px 0',
+    margin: '0 0 30px 0',
     paddingTop: 10
   }),
   footer: css({

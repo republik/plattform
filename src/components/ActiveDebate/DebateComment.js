@@ -2,8 +2,9 @@ import { css } from 'glamor'
 import PropTypes from 'prop-types'
 import React from 'react'
 import colors from '../../theme/colors'
-import { serifBold28, serifRegular15 } from '../Typography/styles'
+import { serifBold28, serifBold38, serifRegular15 } from '../Typography/styles'
 import RawHtml from '../RawHtml'
+import { mUp } from '../../theme/mediaQueries'
 
 const styles = {
   body: css({
@@ -14,7 +15,10 @@ const styles = {
   highlight: css({
     ...serifBold28,
     color: colors.text,
-    margin: '12px 0'
+    marginBottom: 12,
+    [mUp]: {
+      ...serifBold38
+    }
   })
 }
 
