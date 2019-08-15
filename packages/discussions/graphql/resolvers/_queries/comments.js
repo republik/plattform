@@ -83,13 +83,16 @@ module.exports = async (_, args, context, info) => {
     : null
 
   return {
-    id: `${discussionId || 'comments'}{offset || ''}`,
+    id: `${discussionId || 'comments'}${offset || ''}`,
     totalCount: numComments,
     directTotalCount: numComments,
     pageInfo: {
       hasNextPage: !!endCursor,
       endCursor
     },
-    nodes: comments
+    nodes: comments,
+    focus: focusId && focusId === comments[0].id
+      ? comments[0]
+      : null
   }
 }
