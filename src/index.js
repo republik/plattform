@@ -448,6 +448,7 @@ ReactDOM.render(
               imports: {
                 css,
                 t,
+                ...require('./components/Discussion/Internal/Comment'),
                 ...require('./components/Typography'),
                 ...require('./components/ActiveDebate'),
                 ...require('./components/ActiveDebate/__docs__')

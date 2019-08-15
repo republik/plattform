@@ -1,13 +1,20 @@
-### `<ActiveDebates />`.
+```remove-react-source
+
+```
+
+## `<ActiveDebates />`.
 
 Supported props:
-- `hasHighlight`: boolean, if `true`, the left column will be reserved for the highlighted debate.
-- `discussions`: array of discussions.
-- `t`: translation function.
+- `hasHighlight` (boolean): boolean, if `true`, the left column will be reserved for the highlighted debate, on desktop.
+- `discussions` (array): array of discussions.
+- `t` (function): translation function.
+
+
+Careful, long words like "Generationswechsel" in the highlighted section will overflow at certain screen sizes.
 
 #### With Highlight
 
-```react|span-6
+```react|noSource,span-6
 <ActiveDebates
   t={t}
   hasHighlight={activeDebates.hasHighlight}
@@ -15,7 +22,7 @@ Supported props:
 />
 ```
 #### Without Highlight
-```react|span-6
+```react|noSource,span-6
 <ActiveDebates
   t={t}
   hasHighlight={activeDebatesWithoutHighlight.hasHighlight}
@@ -23,40 +30,35 @@ Supported props:
 />
 ```
 
-### `<ActiveDebateTeaser />`
-A teaser for the active debates.
+
+
+## `<ActiveDebateTeaser />`
+Each active debate is rendered as a teaser.
 
 Supported props:
-- `href`: url to the debate page.
-- `highlight`: A quote (`string`) that will be displayed with a special style in lieu of `preview.string`.
-- `documentTitle`: the title (`string`) of the article that triggered the debate.
-- `preview`: an object with the properties:
-  - `string`: a `string` that will be display a preview of the last comment.
-  - `more`: a `boolean` value.
-- `commentCount`: a `number` of the current contributions to the debate, this number will be displayed next to the "comment" icon.
-- `displayAuthor`: an object with the properties:
-  - `id`: id (`string`) of the last comment's author.
-  - `name`: name (`string`) of the last comment's author.
-  - `profilePicture`: url to the profile image of the last comment's author.
+- `t` (func): translation function.
+- `path` (string): the path to the discussion page.
+- `documentTitle` (string): The title of the article that triggered the debate.
+- `commentCount` (number):  a `number` of the current contributions to the debate, this number will be displayed next to the "comment" icon.
+- `comments` (array):
 
-
-
-
-
-#### `<ActiveDebateTeaser />`
 
 ```react|span-3
 <ActiveDebateTeaser
   t={t}
   path={debate.path}
-  documentId={debate.id}
   documentTitle={debate.title}
   commentCount={debate.comments.totalCount}
   comments={debate.comments.nodes}
 />
 ```
 
-#### `<ActiveDebateHeader />`
+
+## Internal
+
+These components are used to build `ActiveDebateTeaser`.
+
+### `<ActiveDebateHeader />`
 
 ```react|span-3
 <ActiveDebateHeader
@@ -66,7 +68,7 @@ Supported props:
   href={''}
 />
 ```
-#### `<ActiveDebateComment />`
+### `<ActiveDebateComment />`
 
 ```react|span-3
 <ActiveDebateComment
@@ -82,5 +84,17 @@ Supported props:
 <ActiveDebateComment
   t={t}
   highlight={'Gut möglich, dass es bis zu einer klimaneutralen Grossbank einen Generationenwechsel braucht.'}
+/>
+```
+
+###  `Discussion/Comment/Header`
+
+This component is borrowed from the [Discussion section](/components/discussion/internal). It is used to display meta information about the last comment(s) in an `ActiveDebateTeaser`.
+
+```react|noSource,span-2
+<Header
+  t={t}
+  comment={oneComment}
+  isExpanded={true}
 />
 ```
