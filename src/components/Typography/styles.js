@@ -108,6 +108,11 @@ export const serifBold42 = {
   lineHeight: '48px',
   letterSpacing: -0.3
 }
+export const serifBold38 = {
+  ...fontStyles.serifBold,
+  fontSize: 38,
+  lineHeight: '44px'
+}
 export const serifBold36 = {
   ...fontStyles.serifBold,
   fontSize: 36,
