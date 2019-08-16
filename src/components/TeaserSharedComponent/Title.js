@@ -27,7 +27,7 @@ const Title = ({ children, onClick, href }) => {
   return href ? (
     <a href={href} onClick={onClick} {...styles.link}>
       {children}
-      {<ChevronRight {...styles.icon} size={24} />}
+      {<ChevronRight {...styles.icon} size={30} />}
     </a>
   ) : (
     <div onClick={onClick} {...styles.label}>
