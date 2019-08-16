@@ -3,7 +3,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { mUp } from '../../theme/mediaQueries'
 import { ActiveDebateTeaser } from '.'
-import { TeaserFrontSectionTitle } from '../TeaserSharedComponent'
+
 const styles = {
   section: css({
     margin: 0,

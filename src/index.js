@@ -443,20 +443,6 @@ ReactDOM.render(
           title: 'Teasers',
           pages: [
             {
-              path: '/activedebate',
-              title: 'Active Debate',
-              imports: {
-                css,
-                t,
-                ...require('./components/ActiveDebate'),
-                ...require('./components/ActiveDebate/__docs__'),
-                ...require('./components/Discussion/Internal/Comment'),
-                ...require('./components/TeaserSharedComponent'),
-                ...require('./components/Typography')
-              },
-              src: require('./components/ActiveDebate/docs.md')
-            },
-            {
               path: '/teaserfeed',
               title: 'Feed',
               imports: {
@@ -525,6 +511,20 @@ ReactDOM.render(
                 ...require('./components/Figure')
               },
               src: require('./components/Dossier/Teaser.md')
+            },
+            {
+              path: '/teaseractivedebates',
+              title: 'TeaserActiveDebates',
+              imports: {
+                css,
+                t,
+                ...require('./components/TeaserActiveDebates'),
+                ...require('./components/TeaserActiveDebates/__docs__'),
+                ...require('./components/Discussion/Internal/Comment'),
+                ...require('./components/TeaserSharedComponent'),
+                ...require('./components/Typography')
+              },
+              src: require('./components/TeaserActiveDebates/docs.md')
             },
             {
               path: '/teasercarousel',

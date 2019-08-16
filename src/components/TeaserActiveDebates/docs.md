@@ -17,9 +17,9 @@ Careful, long words like "Generationswechsel" in the highlighted section will ov
   hasHighlight={activeDebates.hasHighlight}
   discussions={activeDebates.discussions}
 >
-  <TeaserFrontSectionTitle href="/">
+  <TeaserSectionTitle href="/">
     Aktive Debatten
-  </TeaserFrontSectionTitle>
+  </TeaserSectionTitle>
 </ActiveDebates>
 ```
 #### Without Highlight
@@ -29,9 +29,9 @@ Careful, long words like "Generationswechsel" in the highlighted section will ov
   hasHighlight={activeDebatesWithoutHighlight.hasHighlight}
   discussions={activeDebatesWithoutHighlight.discussions}
 >
-  <TeaserFrontSectionTitle href="/">
+  <TeaserSectionTitle href="/">
     Aktive Debatten
-  </TeaserFrontSectionTitle>
+  </TeaserSectionTitle>
 </ActiveDebates>
 ```
 
