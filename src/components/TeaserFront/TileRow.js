@@ -133,8 +133,7 @@ TeaserFrontTileRow.propTypes = {
   children: PropTypes.node.isRequired,
   attributes: PropTypes.object,
   columns: PropTypes.oneOf([1, 2, 3]).isRequired,
-  mobileColumns: PropTypes.oneOf([1, 2, 3]).isRequired,
-  mobileReverse: PropTypes.bool
+  mobileColumns: PropTypes.oneOf([1, 2, 3]).isRequired
 }
 
 TeaserFrontTileRow.defaultProps = {
