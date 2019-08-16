@@ -448,10 +448,11 @@ ReactDOM.render(
               imports: {
                 css,
                 t,
-                ...require('./components/Discussion/Internal/Comment'),
-                ...require('./components/Typography'),
                 ...require('./components/ActiveDebate'),
-                ...require('./components/ActiveDebate/__docs__')
+                ...require('./components/ActiveDebate/__docs__'),
+                ...require('./components/Discussion/Internal/Comment'),
+                ...require('./components/TeaserSharedComponent'),
+                ...require('./components/Typography')
               },
               src: require('./components/ActiveDebate/docs.md')
             },

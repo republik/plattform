@@ -16,7 +16,11 @@ Careful, long words like "Generationswechsel" in the highlighted section will ov
   t={t}
   hasHighlight={activeDebates.hasHighlight}
   discussions={activeDebates.discussions}
-/>
+>
+  <TeaserFrontSectionTitle href="/">
+    Aktive Debatten
+  </TeaserFrontSectionTitle>
+</ActiveDebates>
 ```
 #### Without Highlight
 ```react|noSource,span-6
@@ -24,7 +28,11 @@ Careful, long words like "Generationswechsel" in the highlighted section will ov
   t={t}
   hasHighlight={activeDebatesWithoutHighlight.hasHighlight}
   discussions={activeDebatesWithoutHighlight.discussions}
-/>
+>
+  <TeaserFrontSectionTitle href="/">
+    Aktive Debatten
+  </TeaserFrontSectionTitle>
+</ActiveDebates>
 ```
 
 
