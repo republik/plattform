@@ -47,17 +47,6 @@ const styles = {
   imageContainerBigger: css({
     position: 'relative',
     margin: '15px auto' // room for image credit on top.
-  }),
-
-  image: css({
-    height: '100%',
-    maxWidth: '100%',
-    maxHeight: IMAGE_SIZE.maxHeight
-  }),
-
-  imageBigger: css({
-    maxWidth: '100%',
-    objectFit: 'contain'
   })
 }
 
@@ -91,7 +80,6 @@ const Tile = ({
   let imageContainerStyles = bigger
     ? styles.imageContainerBigger
     : styles.imageContainer
-  let imageStyles = bigger ? styles.imageBigger : styles.image
 
   return (
     <div {...tileStyle} onClick={onClick} className="tile">
@@ -101,11 +89,8 @@ const Tile = ({
           <div {...imageContainerStyles}>
             <FigureImage
               aboveTheFold={aboveTheFold}
-              src={imageProps.src}
-              srcSet={imageProps.srcSet}
+              {...imageProps}
               alt={alt}
-              maxWidth={bigger ? undefined : IMAGE_SIZE.maxWidth}
-              {...imageStyles}
             />
             {byline && (
               <FigureByline
