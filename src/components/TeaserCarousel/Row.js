@@ -12,7 +12,7 @@ const styles = css({
   flexWrap: 'nowrap',
   scrollbarWidth: 'none' /* Firefox */,
   msOverflowStyle: 'none' /* IE 10+ */,
-  '-webkit-overflow-scrolling': 'touch',
+  WebkitOverflowScrolling: 'touch',
   '&::-webkit-scrollbar': {
     width: 0,
     height: 0
