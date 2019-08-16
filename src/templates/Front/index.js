@@ -38,6 +38,20 @@ import {
 } from '../../components/Dossier'
 
 import {
+  TeaserCarousel,
+  TeaserCarouselRow,
+  TeaserCarouselTile,
+  TeaserCarouselFormat,
+  TeaserCarouselHeadline,
+  TeaserCarouselSubject,
+  TeaserCarouselLead
+} from '../../components/TeaserCarousel'
+
+import {
+  TeaserSectionTitle
+} from '../../components/TeaserSharedComponent'
+
+import {
   matchTeaser,
   matchTeaserGroup,
   matchTeaserType,
@@ -229,6 +243,7 @@ const createSchema = ({
       teaserType: 'frontImage',
       insertButtonText: 'Front Image',
       formOptions: [
+        'formatUrl',
         'textPosition',
         'color',
         'bgColor',
@@ -286,6 +301,7 @@ const createSchema = ({
       teaserType: 'frontSplit',
       insertButtonText: 'Front Split',
       formOptions: [
+        'formatUrl',
         'color',
         'bgColor',
         'center',
@@ -340,6 +356,7 @@ const createSchema = ({
       teaserType: 'frontTypo',
       insertButtonText: 'Front Typo',
       formOptions: [
+        'formatUrl',
         'color',
         'bgColor',
         'kind',
@@ -395,6 +412,7 @@ const createSchema = ({
       teaserType: 'frontTile',
       showUI: false,
       formOptions: [
+        'formatUrl',
         'color',
         'bgColor',
         'center',
@@ -483,13 +501,13 @@ const createSchema = ({
       image: extractImage(node.children[0]),
       ...node.data
     }),
-    // TMP: Disabled until editor integration
     editorModule: 'teaser',
     editorOptions: {
       type: 'ARTICLETILE',
       showUI: false,
       teaserType: 'articleTile',
       formOptions: [
+        'formatUrl',
         'image',
         'byline',
         'kind',
@@ -596,7 +614,6 @@ const createSchema = ({
         {children}
       </TeaserFrontDossier>
     },
-    // TMP: Disabled until editor integration
     editorModule: 'frontDossier',
     editorOptions: {
       type: 'FRONTARTICLECOLLECTION',
@@ -639,6 +656,184 @@ const createSchema = ({
     ]
   }
 
+
+  const carouselSubject = {
+    matchMdast: matchHeading(2),
+    component: ({ children, attributes, ...props }) =>
+      <TeaserCarouselSubject attributes={attributes} {...props}>
+        {children}
+      </TeaserCarouselSubject>,
+    props: (node, index, parent, { ancestors }) => {
+      const teaser = ancestors.find(matchTeaser)
+      return {
+        color: teaser && teaser.data.color
+      }
+    },
+    editorModule: 'headline',
+    editorOptions: {
+      type: 'CAROUSELSUBJECT',
+      placeholder: 'Subject',
+      depth: 2,
+      isStatic: true
+    },
+    rules: globalInlines
+  }
+  const carouselTileLead = {
+    matchMdast: matchHeading(4),
+    component: ({ children, attributes }) =>
+      <TeaserCarouselLead attributes={attributes} columns={3}>
+        {children}
+      </TeaserCarouselLead>,
+    editorModule: 'headline',
+    editorOptions: {
+      type: 'CAROUSELLEAD',
+      placeholder: 'Lead',
+      isStatic: true,
+      depth: 4,
+      optional: true
+    },
+    rules: globalInlines
+  }
+
+  const carouselFormat = {
+    matchMdast: matchHeading(6),
+    component: ({ children, attributes, href, formatColor }) =>
+      <TeaserCarouselFormat color={formatColor}>
+        <Link href={href} passHref>
+          <a href={href} {...styles.link}>
+            {children}
+          </a>
+        </Link>
+      </TeaserCarouselFormat>,
+    props (node, index, parent, { ancestors }) {
+      const teaser = ancestors.find(matchTeaser)
+      return {
+        href: teaser
+          ? teaser.data.formatUrl
+          : undefined,
+        formatColor: teaser 
+          ? teaser.data.formatColor
+          : undefined
+      }
+    },
+    editorModule: 'headline',
+    editorOptions: {
+      type: 'FRONTCAROUSEFORMAT',
+      placeholder: 'Format',
+      depth: 6,
+      isStatic: true
+    },
+    rules: globalInlines
+  }
+  const carouselTile = {
+    matchMdast: matchTeaserType('articleTile'),
+    component: ({ children, attributes, ...props }) => {
+      return (
+        <Link href={props.url}>
+          <TeaserCarouselTile attributes={attributes} {...props}>
+            {children}
+          </TeaserCarouselTile>
+        </Link>
+      )
+    },
+    props: node => ({
+      image: extractImage(node.children[0]),
+      ...node.data
+    }),
+    editorModule: 'teaser',
+    editorOptions: {
+      type: 'CAROUSELTILE',
+      showUI: false,
+      teaserType: 'articleTile',
+      formOptions: [
+        'image',
+        'byline',
+        'kind',
+        'showImage',
+        'color',
+        'bgColor',
+        'formatColor'
+      ]
+    },
+    rules: [
+      image,
+      title(
+        'CAROUSELTILETITLE',
+        ({ children, attributes, kind }) => {
+          const Component = kind === 'editorial'
+          ? TeaserCarouselHeadline.Editorial
+          : kind === 'scribble'
+            ? TeaserCarouselHeadline.Scribble
+            : TeaserCarouselHeadline.Interaction
+          return (
+            <Component attributes={attributes}>
+              {children}
+            </Component>
+          )
+        }
+      ),
+      carouselSubject,
+      carouselTileLead,
+      carouselFormat,
+      credit
+    ]
+  }
+
+  const carouselRow = {
+    matchMdast: matchZone('TEASERGROUP'),
+    component: ({ children, attributes, ...props }) => {
+      return <TeaserCarouselRow attributes={attributes} {...props}>
+        {children}
+      </TeaserCarouselRow>
+    },
+    editorModule: 'articleGroup',
+    editorOptions: {
+      type: 'CAROUSELROW'
+    },
+    rules: [
+      carouselTile
+    ]
+  }
+
+  const carousel = {
+    matchMdast: matchTeaserType('carousel'),
+    component: ({ children, attributes, ...props }) => {
+      return <TeaserCarousel attributes={attributes} {...props}>
+        {children}
+      </TeaserCarousel>
+    },
+    editorModule: 'carousel',
+    editorOptions: {
+      type: 'CAROUSEL',
+      teaserType: 'carousel',
+      insertButtonText: 'Carousel',
+      formTitle: 'Carousel',
+      formOptions: [
+        'noAdapt',
+        'color',
+        'bgColor'
+      ]
+    },
+    rules: [
+      {
+        matchMdast: matchHeading(2),
+        component: ({ children, attributes }) => (
+          <TeaserSectionTitle attributes={attributes}>
+            {children}
+          </TeaserSectionTitle>
+        ),
+        editorModule: 'headline',
+        editorOptions: {
+          type: 'CAROUSELTITLE',
+          placeholder: 'Titel',
+          isStatic: true,
+          depth: 2
+        }
+      },
+      carouselRow
+    ]
+  }
+
   const schema = {
     getPath: ({ slug }) => `/${(slug || '').split('/').pop()}`,
     rules: [
@@ -674,6 +869,7 @@ const createSchema = ({
               frontTileTeaser
             ]
           },
+          carousel,
           {
             matchMdast: () => false,
             editorModule: 'specialchars'

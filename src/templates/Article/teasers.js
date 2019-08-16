@@ -192,6 +192,7 @@ const createTeasers = ({
       teaserType: 'articleTile',
       showUI: false,
       formOptions: [
+        'formatUrl',
         'formatColor',
         'showImage',
         'image',
