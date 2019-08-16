@@ -9,6 +9,7 @@ const styles = css({
   color: colors.lightText,
   ...sansSerifRegular16,
   lineHeight: '22px',
+
   [mUp]: {
     ...sansSerifRegular18,
     lineHeight: '24px'
@@ -16,7 +17,12 @@ const styles = css({
 })
 
 const Subject = ({ children }) => {
-  return <span {...styles}>{children} </span>
+  const customStyles = css(styles, {
+    '&::after': {
+      content: !!children.length ? ' ' : undefined
+    }
+  })
+  return <span {...customStyles}>{children}</span>
 }
 
 export default Subject
