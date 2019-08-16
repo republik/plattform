@@ -133,23 +133,23 @@ Below 4 tiles, each tile will use 33% of the space available, up to a maximum of
 
   <TeaserFrontCarouselRow>
     <TeaserFrontCarouselTile bigger image='/static/carousel/murdoch.png' count={12} bgColor='#000' color='#FFF' noOutline byline='Foto: Laurent Burst'>
-    <TeaserFrontCarouselHeadline.Serie bigger>Die Dynastie Murdoch</TeaserFrontCarouselHeadline.Serie>
+    <TeaserFrontCarouselHeadline.Editorial bigger>Die Dynastie Murdoch</TeaserFrontCarouselHeadline.Editorial>
     </TeaserFrontCarouselTile>
 
     <TeaserFrontCarouselTile bigger image='/static/carousel/homestory.png' count={6} bgColor='#000' color='#FFF' noOutline byline='Foto: Laurent Burst'>
-    <TeaserFrontCarouselHeadline.Serie bigger>Homestory</TeaserFrontCarouselHeadline.Serie>
+    <TeaserFrontCarouselHeadline.Editorial bigger>Homestory</TeaserFrontCarouselHeadline.Editorial>
     </TeaserFrontCarouselTile>
 
     <TeaserFrontCarouselTile bigger image='/static/carousel/eth.png' count={8} bgColor='#000' color='#FFF' noOutline>
-    <TeaserFrontCarouselHeadline.Serie bigger>Der Fall ETH</TeaserFrontCarouselHeadline.Serie>
+    <TeaserFrontCarouselHeadline.Editorial bigger>Der Fall ETH</TeaserFrontCarouselHeadline.Editorial>
     </TeaserFrontCarouselTile>
 
     <TeaserFrontCarouselTile bigger image='/static/carousel/mike.png' count={24} bgColor='#000' color='#FFF' noOutline>
-    <TeaserFrontCarouselHeadline.Serie bigger>«Am Limit»: Die Geschichte von Mike</TeaserFrontCarouselHeadline.Serie>
+    <TeaserFrontCarouselHeadline.Editorial bigger>«Am Limit»: Die Geschichte von Mike</TeaserFrontCarouselHeadline.Editorial>
     </TeaserFrontCarouselTile>
 
     <TeaserFrontCarouselTile bigger image='/static/carousel/strahlen.png' count={10   } bgColor='#000' color='#FFF' noOutline>
-    <TeaserFrontCarouselHeadline.Serie bigger>Geheimnisvolle Strahlen</TeaserFrontCarouselHeadline.Serie>
+    <TeaserFrontCarouselHeadline.Editorial bigger>Geheimnisvolle Strahlen</TeaserFrontCarouselHeadline.Editorial>
     </TeaserFrontCarouselTile>
 
   </TeaserFrontCarouselRow>
@@ -170,6 +170,7 @@ Supported props:
 - `image`: image source.
 - `alt`: image alt text.
 - `onClick`: function executed on click.
+- `children`: children components.
 
 
 ```react
@@ -186,24 +187,41 @@ Supported props:
 ```
 
 ### `<TeaserFrontCarouselHeadline />`
+Supported props:
+- `bigger` (boolean): if `true`, the font size and line height will be increased.
+- `children`: children components.
 
-```react|span-3
+#### Default (font-size: 19px)
+```react|span-2
 <TeaserFrontCarouselHeadline.Editorial>
-  Blindes Sehen
+  Das Rätsel Dag Solstad
 </TeaserFrontCarouselHeadline.Editorial>
 ```
-```react|span-3
+```react|span-2
 <TeaserFrontCarouselHeadline.Interaction>
-  Blindes Sehen
+  Die Republik vorgelesen
 </TeaserFrontCarouselHeadline.Interaction>
 ```
-```react|span-3
+```react|span-2
 <TeaserFrontCarouselHeadline.Scribble>
-  Blindes Sehen
+  Wer Talent hat, darf in die Schweiz migrieren
 </TeaserFrontCarouselHeadline.Scribble>
 ```
-```react|span-3
-<TeaserFrontCarouselHeadline.Serie>
-  Blindes Sehen
-</TeaserFrontCarouselHeadline.Serie>
+
+#### `bigger` = `true` (font-size: 28px)
+```react|span-2
+<TeaserFrontCarouselHeadline.Editorial bigger>
+  Die Dynastie Murdoch
+</TeaserFrontCarouselHeadline.Editorial>
 ```
+```react|span-2
+<TeaserFrontCarouselHeadline.Interaction bigger>
+  Die Republik vorgelesen
+</TeaserFrontCarouselHeadline.Interaction>
+```
+```react|span-2
+<TeaserFrontCarouselHeadline.Scribble bigger>
+  Wer Talent hat, darf in die Schweiz migrieren
+</TeaserFrontCarouselHeadline.Scribble>
+```
+
