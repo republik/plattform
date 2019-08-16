@@ -87,8 +87,7 @@ const Tile = ({
     margin: bigger ? '0' : '0 auto'
   })
 
-  const imageProps =
-    image && FigureImage.utils.getResizedSrcs(image, IMAGE_SIZE.maxWidth, true)
+  const imageProps = image && FigureImage.utils.getResizedSrcs(image, 450, true)
   let imageContainerStyles = bigger
     ? styles.imageContainerBigger
     : styles.imageContainer
