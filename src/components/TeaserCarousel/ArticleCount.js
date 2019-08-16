@@ -1,6 +1,7 @@
 import { css } from 'glamor'
 import React from 'react'
 import { sansSerifMedium16 } from '../Typography/styles'
+import PropTypes from 'prop-types'
 
 const ICON_SIZE = 29
 
@@ -47,7 +48,7 @@ const styles = {
   })
 }
 
-const ArticleCount = ({ count, bgColor = '#FFF', color }) => {
+const ArticleCount = ({ count, bgColor = '#FFFFFF', color = '#000000' }) => {
   let countStyles = css(styles.count, { color })
   return (
     <div {...styles.container}>
@@ -58,3 +59,14 @@ const ArticleCount = ({ count, bgColor = '#FFF', color }) => {
 }
 
 export default ArticleCount
+
+ArticleCount.propTypes = {
+  bgColor: PropTypes.string,
+  color: PropTypes.string,
+  count: PropTypes.number
+}
+
+ArticleCount.defaultProps = {
+  bgColor: '#FFFFFF',
+  color: '#000000'
+}

@@ -1,19 +1,16 @@
-import { imageSizeInfo, imageResizeUrl } from 'mdast-react-render/lib/utils'
 import { css } from 'glamor'
+import PropTypes from 'prop-types'
 import React from 'react'
 import { TeaserCarouselArticleCount } from '.'
 import colors from '../../theme/colors'
-import { FigureImage, Figure, FigureCaption, FigureByline } from '../Figure'
-import LazyLoad from '../LazyLoad'
+import { FigureByline, FigureImage } from '../Figure'
 import { mUp } from '../TeaserFront/mediaQueries'
 import Text from '../TeaserFront/Text'
 import { sansSerifRegular18 } from '../Typography/styles'
 
-// FIXME: we don't need all of these:
 const IMAGE_SIZE = {
-  small: { maxWidth: 160, maxHeight: 120 },
-  medium: { maxWidth: 160, maxHeight: 120 },
-  large: { maxWidth: 160, maxHeight: 120 }
+  maxWidth: 160,
+  maxHeight: 120
 }
 
 const styles = {
@@ -33,29 +30,29 @@ const styles = {
   }),
 
   container: css({
-    width: '100%' // IE11 needs this
+    width: '100%' // IE11
   }),
 
   imageContainer: css({
     margin: '0 auto 14px auto',
-    maxWidth: IMAGE_SIZE.large.maxWidth,
+    maxWidth: IMAGE_SIZE.maxWidth,
     width: 'auto',
     position: 'relative',
     '& img': {
-      maxHeight: IMAGE_SIZE.large.maxHeight,
+      maxHeight: IMAGE_SIZE.maxHeight,
       objectFit: 'contain'
     }
   }),
 
   imageContainerBigger: css({
     position: 'relative',
-    margin: '15px auto' // room for image credit on top. FIXME: only margin top when there IS a byline
+    margin: '15px auto' // room for image credit on top.
   }),
 
   image: css({
     height: '100%',
     maxWidth: '100%',
-    maxHeight: IMAGE_SIZE.large.maxHeight
+    maxHeight: IMAGE_SIZE.maxHeight
   }),
 
   imageBigger: css({
@@ -64,12 +61,12 @@ const styles = {
   })
 }
 
-const TeaserCarouselTile = ({
+const Tile = ({
+  bigger,
   color = '#000',
   bgColor = 'unset',
   noOutline = false,
   count,
-  bigger,
   image,
   alt,
   onClick,
@@ -91,8 +88,7 @@ const TeaserCarouselTile = ({
   })
 
   const imageProps =
-    image &&
-    FigureImage.utils.getResizedSrcs(image, IMAGE_SIZE.small.maxWidth, true)
+    image && FigureImage.utils.getResizedSrcs(image, IMAGE_SIZE.maxWidth, true)
   let imageContainerStyles = bigger
     ? styles.imageContainerBigger
     : styles.imageContainer
@@ -109,7 +105,7 @@ const TeaserCarouselTile = ({
               src={imageProps.src}
               srcSet={imageProps.srcSet}
               alt={alt}
-              maxWidth={bigger ? undefined : IMAGE_SIZE.small.maxWidth}
+              maxWidth={bigger ? undefined : IMAGE_SIZE.maxWidth}
               {...imageStyles}
             />
             {byline && (
@@ -139,4 +135,24 @@ const TeaserCarouselTile = ({
     </div>
   )
 }
-export default TeaserCarouselTile
+export default Tile
+
+Tile.propTypes = {
+  bigger: PropTypes.bool,
+  color: PropTypes.string,
+  bgColor: PropTypes.string,
+  noOutline: PropTypes.bool,
+  count: PropTypes.number,
+  image: PropTypes.string,
+  alt: PropTypes.string,
+  onClick: PropTypes.func,
+  aboveTheFold: PropTypes.bool,
+  byline: PropTypes.string,
+  children: PropTypes.node
+}
+
+Tile.defaultProps = {
+  color: '#000',
+  bgColor: 'unset',
+  noOutline: false
+}

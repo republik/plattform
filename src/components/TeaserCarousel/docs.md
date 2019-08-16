@@ -1,30 +1,30 @@
-A `<TeaserCarousel />` is a row of teaser cards through which the user can scroll horizontally.
-
-
-Notes:
-- Uses the same media queries as Teaser (like Dossier).
-- Used for "Alle Serien", "Alle Formatte", "Alle Kolumnen", "All Recenzionen"
-- "Alle Serien" has a black background.
-- the Credit component is not specific to the Carousel.
-
+A `<TeaserCarousel />` is a row of tiles through which the user can scroll horizontally.
 
 Supported props:
-- `color`: The text color.
-- `bgColor`: The background color.
+- `color` (string): The text color (default: `#FFFFFF`).
+- `bgColor` (string): The background color (default: `#000000`).
 
+Below 4 tiles, each tile will use 33% of the space available, up to a maximum of 450 pixels.
 
-### `<TeaserCarousel />`: default
+`TeaserCarousel` children can also be customized. The prop `bigger` can be passed to both `TeaserCarouselTile` and `TeaserCarouselHeadline`, this combination is used in the current design of the section "Alle Serien", in addition to a black background defined on the `TeaserCarousel` component itself.
 
-```react|responsive
+The media queries are defined in [`FrontTile`](/teaserfronttile).
+
+```react|span-6
 <TeaserCarousel>
   <TeaserSectionTitle href="/recenzionen">Alle Rezensionen</TeaserSectionTitle>
   <TeaserCarouselRow>
     <TeaserCarouselTile byline='Foto: Laurent Burst' image='/static/carousel/test.png' onClick={() => console.log("click on first tile")}>
       <TeaserCarouselFormat>Poesie & Prosa</TeaserCarouselFormat>
       <TeaserCarouselHeadline.Editorial>Das Rätsel Dag Solstad</TeaserCarouselHeadline.Editorial>
-      <TeaserCarouselLead>
-        Dag Solstad: «T. Singer» Der Norweger gehört zu den schrulligsssen Autoren der Gegenwart.
-      </TeaserCarouselLead>
+      <TeaserCarouselBody>
+        <TeaserCarouselSubject>
+          Dag Solstad: «T. Singer»
+        </TeaserCarouselSubject>
+        <TeaserCarouselLead>
+          Der Norweger gehört zu den schrulligsssen Autoren der Gegenwart.
+        </TeaserCarouselLead>
+      </TeaserCarouselBody>
       <Editorial.Credit>
         Von <Editorial.A  color='#000' href='#'>Jan Wilm</Editorial.A >, 05.07.2019
       </Editorial.Credit>
@@ -34,9 +34,14 @@ Supported props:
     <TeaserCarouselTile image='/static/carousel/jackson.png?size=400x216' byline='Foto: Laurent Burst' >
       <TeaserCarouselFormat>Film</TeaserCarouselFormat>
       <TeaserCarouselHeadline.Editorial>Echt jetzt?</TeaserCarouselHeadline.Editorial>
-      <TeaserCarouselLead>
-        Peter Jackson: «They Shall Not Grow Old» Der Blockbuster-Regisseur zeigt den Ersten Weltkrieg.
-      </TeaserCarouselLead>
+      <TeaserCarouselBody>
+        <TeaserCarouselSubject>
+          Peter Jackson: «They Shall Not Grow Old»
+        </TeaserCarouselSubject>
+        <TeaserCarouselLead>
+          Der Blockbuster-Regisseur zeigt den Ersten Weltkrieg.
+        </TeaserCarouselLead>
+      </TeaserCarouselBody>
       <Editorial.Credit>
         Von <Editorial.A  color='#000' href='#'>Simon Spiegel</Editorial.A >, 05.07.2019
       </Editorial.Credit>
@@ -44,9 +49,11 @@ Supported props:
 
     <TeaserCarouselTile image='/static/carousel/vault.png'>
       <TeaserCarouselHeadline.Editorial>Tote Sprachen leben länger</TeaserCarouselHeadline.Editorial>
-      <TeaserCarouselLead>
-        «Heaven’s Vault» ist ein aussergewöhnliches Adventure-Game.
-      </TeaserCarouselLead>
+      <TeaserCarouselBody>
+        <TeaserCarouselLead>
+          «Heaven’s Vault» ist ein aussergewöhnliches Adventure-Game.
+        </TeaserCarouselLead>
+      </TeaserCarouselBody>
       <Editorial.Credit>
         Von <Editorial.A  color='#000' href='#'>Christof Zurschmitten</Editorial.A >, 05.07.2019
       </Editorial.Credit>
@@ -54,9 +61,11 @@ Supported props:
 
     <TeaserCarouselTile byline='Foto: Laurent Burst' image='/static/carousel/rinck.png'>
       <TeaserCarouselHeadline.Editorial>Die vier Gangarten von lechts nach Rinck</TeaserCarouselHeadline.Editorial>
-      <TeaserCarouselLead>
-        Die Essays und Gedichte von Monika Rinck sind das originellste Denkabenteuer.
-      </TeaserCarouselLead>
+       <TeaserCarouselBody>
+        <TeaserCarouselLead>
+          Die Essays und Gedichte von Monika Rinck sind das originellste Denkabenteuer.
+        </TeaserCarouselLead>
+      </TeaserCarouselBody>
       <Editorial.Credit>
         Von <Editorial.A  color='#000' href='#'>Daniel Graf</Editorial.A >, 05.07.2019
       </Editorial.Credit>
@@ -65,9 +74,14 @@ Supported props:
     <TeaserCarouselTile image='/static/carousel/calle.png' byline='Foto: Laurent Burst'>
       <TeaserCarouselFormat>Kunst</TeaserCarouselFormat>
       <TeaserCarouselHeadline.Editorial>Blindes Sehen</TeaserCarouselHeadline.Editorial>
-      <TeaserCarouselLead>
-        Sophie Calle: «Un certain regard» Das Fotomuseum Winterthur zeigt eine beeindruckende Schau.
-      </TeaserCarouselLead>
+      <TeaserCarouselBody>
+        <TeaserCarouselSubject>
+          Sophie Calle: «Un certain regard»
+        </TeaserCarouselSubject>
+        <TeaserCarouselLead>
+          Das Fotomuseum Winterthur zeigt eine beeindruckende Schau.
+        </TeaserCarouselLead>
+      </TeaserCarouselBody>
       <Editorial.Credit>
         Von <Editorial.A  color='#000' href='#'>Daniel Binswanger</Editorial.A >, 05.07.2019
       </Editorial.Credit>
@@ -75,28 +89,25 @@ Supported props:
   </TeaserCarouselRow>
 </TeaserCarousel>
 ```
-### `<TeaserCarousel />`: with only 3 elements
-Below 4 tiles, each tile will use 33% of the space available, up to a maximum of 450 pixels.
 
-```react
+```react|span-6
 <TeaserCarousel>
  <TeaserSectionTitle>Alle Formate</TeaserSectionTitle>
   <TeaserCarouselRow>
+
     <TeaserCarouselTile image='/static/carousel/binswanger.png' onClick={() => console.log("click on first tile")}>
       <TeaserCarouselFormat color='#00B4FF'>
         Binswanger
       </TeaserCarouselFormat>
-
       <TeaserCarouselHeadline.Editorial>
         «Was verbindet die rechtspopulsistischen Parteien eigentlich?»
       </TeaserCarouselHeadline.Editorial>
-
       <Editorial.Credit>
         Von <Editorial.A href='#'>Daniel Binswanger</Editorial.A >, 05.07.2019
       </Editorial.Credit>
     </TeaserCarouselTile>
 
-    <TeaserCarouselTile image='/static/carousel/berg.png' onClick={() => console.log("click on first tile")}>
+    <TeaserCarouselTile image='/static/carousel/berg.png'>
       <TeaserCarouselFormat color="#00B4FF">Sybille Berg</TeaserCarouselFormat>
       <TeaserCarouselHeadline.Editorial>
         «Was führt Männer oft zu fast albern anmutender Selbstüber-schätzung?»
@@ -106,7 +117,7 @@ Below 4 tiles, each tile will use 33% of the space available, up to a maximum of
       </Editorial.Credit>
     </TeaserCarouselTile>
 
-    <TeaserCarouselTile image='/static/carousel/niggli.png' onClick={() => console.log("click on first tile")}>
+    <TeaserCarouselTile image='/static/carousel/niggli.png'>
       <TeaserCarouselFormat color="#00B4FF">Niggli</TeaserCarouselFormat>
       <TeaserCarouselHeadline.Editorial>
         Sir Kim Darroch, Ritter der ungeschminkten Wahrheit
@@ -116,80 +127,169 @@ Below 4 tiles, each tile will use 33% of the space available, up to a maximum of
       </Editorial.Credit>
     </TeaserCarouselTile>
 
-
  </TeaserCarouselRow>
-
 </TeaserCarousel>
 ```
 
-
-### `<TeaserCarousel />`: black background
-
-```react|responsive
+```react|span-6
 <TeaserCarousel bgColor='#000' color='#FFF'>
   <TeaserSectionTitle>Alle Serien</TeaserSectionTitle>
 
   <TeaserCarouselRow>
-    <TeaserCarouselTile bigger image='/static/carousel/murdoch.png' count={12} bgColor='#000' color='#FFF' noOutline byline='Foto: Laurent Burst'>
-    <TeaserCarouselHeadline.Editorial bigger>Die Dynastie Murdoch</TeaserCarouselHeadline.Editorial>
+    <TeaserCarouselTile
+      bigger
+      image='/static/carousel/murdoch.png'
+      count={12}
+      bgColor='#000'
+      color='#FFF'
+      noOutline
+      byline='Foto: Laurent Burst'
+    >
+    <TeaserCarouselHeadline.Editorial bigger>
+      Die Dynastie Murdoch
+    </TeaserCarouselHeadline.Editorial>
+
+    </TeaserCarouselTile>
+      <TeaserCarouselTile
+      bigger
+      image='/static/carousel/homestory.png'
+      count={6}
+      bgColor='#000'
+      color='#FFF'
+      noOutline
+      byline='Foto: Laurent Burst'
+    >
+      <TeaserCarouselHeadline.Editorial bigger>
+        Homestory
+      </TeaserCarouselHeadline.Editorial>
     </TeaserCarouselTile>
 
-    <TeaserCarouselTile bigger image='/static/carousel/homestory.png' count={6} bgColor='#000' color='#FFF' noOutline byline='Foto: Laurent Burst'>
-    <TeaserCarouselHeadline.Editorial bigger>Homestory</TeaserCarouselHeadline.Editorial>
+    <TeaserCarouselTile
+      bigger
+      image='/static/carousel/eth.png'
+      count={8}
+      bgColor='#000'
+      color='#FFF'
+      noOutline
+    >
+      <TeaserCarouselHeadline.Editorial bigger>
+        Der Fall ETH
+      </TeaserCarouselHeadline.Editorial>
     </TeaserCarouselTile>
 
-    <TeaserCarouselTile bigger image='/static/carousel/eth.png' count={8} bgColor='#000' color='#FFF' noOutline>
-    <TeaserCarouselHeadline.Editorial bigger>Der Fall ETH</TeaserCarouselHeadline.Editorial>
+    <TeaserCarouselTile
+      bigger
+      image='/static/carousel/mike.png'
+      count={24}
+      bgColor='#000'
+      color='#FFF'
+      noOutline
+    >
+      <TeaserCarouselHeadline.Editorial bigger>
+        «Am Limit»: Die Geschichte von Mike
+      </TeaserCarouselHeadline.Editorial>
     </TeaserCarouselTile>
 
-    <TeaserCarouselTile bigger image='/static/carousel/mike.png' count={24} bgColor='#000' color='#FFF' noOutline>
-    <TeaserCarouselHeadline.Editorial bigger>«Am Limit»: Die Geschichte von Mike</TeaserCarouselHeadline.Editorial>
-    </TeaserCarouselTile>
-
-    <TeaserCarouselTile bigger image='/static/carousel/strahlen.png' count={10   } bgColor='#000' color='#FFF' noOutline>
-    <TeaserCarouselHeadline.Editorial bigger>Geheimnisvolle Strahlen</TeaserCarouselHeadline.Editorial>
+    <TeaserCarouselTile
+      bigger
+      image='/static/carousel/strahlen.png'
+      count={10}
+      bgColor='#000'
+      color='#FFF'
+      noOutline
+    >
+      <TeaserCarouselHeadline.Editorial bigger>
+        Geheimnisvolle Strahlen
+      </TeaserCarouselHeadline.Editorial>
     </TeaserCarouselTile>
 
   </TeaserCarouselRow>
 </TeaserCarousel>
 ```
 
+### `<TeaserCarouselRow />`
+This is the container that overflows the screen width, and triggers horizontal scrolling.
+
 ### `<TeaserCarouselTile />`
 
-A Carousel has `TeaserCarouselTile` as direct children. They can also be customized.
+A Carousel has `TeaserCarouselTile` as direct children of a `TeaserCarouselRow`. They can also be customized.
 Supported props:
-- `color`: The text color. Default: black.
-- `bgColor`: The background color. Default: none.
-- `noOutline`: Boolean, no outline when `true`. Default: `false`.
-- `count`: if an article `count` (number) is provided, this number in an icon will be displayed.
-
-- `bigger`: -> Alle Serien
-
-- `image`: image source.
-- `alt`: image alt text.
-- `onClick`: function executed on click.
+- `bigger` (boolean): if `true`, the image will be top aligned and used the full width of the tile.
+- `color` (string): The text color (default: `#FFFFFF`).
+- `bgColor` (string): The background color (default: `unset`).
+- `noOutline`(boolean): if `true`, the tile will not have a border. Default: `false`.
+- `count` (number): if an article `count`is provided, this number will be displayed in an icon below the image.
+- `image` (string): image source.
+- `byline` (string): image credit.
+- `alt` (string): image alternative text.
+- `onClick` (function): function executed on click.
 - `children`: children components.
 
-
-```react
-<TeaserCarouselTile image='/static/carousel/calle.png' bgColor='#FFF' >
-  <TeaserCarouselFormat>Kunst</TeaserCarouselFormat>
-  <TeaserCarouselHeadline.Editorial>Blindes Sehen</TeaserCarouselHeadline.Editorial>
-  <TeaserCarouselLead>
-    Sophie Calle: «Un certain regard» Das Fotomuseum Winterthur zeigt eine beeindruckende Schau.
-  </TeaserCarouselLead>
+```react|span-2
+<TeaserCarouselTile
+  image='/static/carousel/calle.png'
+  bgColor='#FFFFFF'
+>
+  <TeaserCarouselFormat>
+    Kunst
+  </TeaserCarouselFormat>
+  <TeaserCarouselHeadline.Editorial>
+    Blindes Sehen
+  </TeaserCarouselHeadline.Editorial>
+   <TeaserCarouselBody>
+    <TeaserCarouselSubject>
+      Sophie Calle: «Un certain regard»
+    </TeaserCarouselSubject>
+    <TeaserCarouselLead>
+      Das Fotomuseum Winterthur zeigt eine beeindruckende Schau.
+    </TeaserCarouselLead>
+  </TeaserCarouselBody>
   <Editorial.Credit>
     Von <Editorial.A  color='#000' href='#'>Daniel Binswanger</Editorial.A >, 05.07.2019
   </Editorial.Credit>
 </TeaserCarouselTile>
 ```
+```react|span-2
+<TeaserCarouselTile
+  image='/static/carousel/binswanger.png'
+  onClick={() => console.log("click on first tile")}
+>
+  <TeaserCarouselFormat
+    color='#00B4FF'
+  >
+    Binswanger
+  </TeaserCarouselFormat>
+  <TeaserCarouselHeadline.Editorial>
+    «Was verbindet die rechtspopulsistischen Parteien eigentlich?»
+  </TeaserCarouselHeadline.Editorial>
+  <Editorial.Credit>
+    Von <Editorial.A href='#'>Daniel Binswanger</Editorial.A >, 05.07.2019
+  </Editorial.Credit>
+</TeaserCarouselTile>
+```
+```react|span-2
+<TeaserCarouselTile
+  bigger
+  image='/static/carousel/strahlen.png'
+  count={10}
+  bgColor='#000'
+  color='#FFF'
+  noOutline
+>
+  <TeaserCarouselHeadline.Editorial bigger>
+    Geheimnisvolle Strahlen
+  </TeaserCarouselHeadline.Editorial>
+</TeaserCarouselTile>
+```
 
 ### `<TeaserCarouselHeadline />`
 Supported props:
-- `bigger` (boolean): if `true`, the font size and line height will be increased.
+- `bigger` (boolean): if `true`, the font size and line height will be increased. Default: `false`.
 - `children`: children components.
 
-#### Default (font-size: 19px)
+Default (font-size: 19px)
+`bigger` = `true` (font-size: 28px)
+
 ```react|span-2
 <TeaserCarouselHeadline.Editorial>
   Das Rätsel Dag Solstad
@@ -206,7 +306,7 @@ Supported props:
 </TeaserCarouselHeadline.Scribble>
 ```
 
-#### `bigger` = `true` (font-size: 28px)
+
 ```react|span-2
 <TeaserCarouselHeadline.Editorial bigger>
   Die Dynastie Murdoch
@@ -223,3 +323,58 @@ Supported props:
 </TeaserCarouselHeadline.Scribble>
 ```
 
+
+### `<TeaserCarouselFormat />`
+Supported props:
+- `color` (string): if `true`, the font size and line height will be increased. Default: [feuilleton color](/colors).
+- `children`: children components.
+
+### `<TeaserCarouselBody />`, `<TeaserCarouselSubject />`, `<TeaserCarouselLead />`
+The teaser text content must be wrapped within `<TeaserCarouselBody />`, which defines layout and spacing. Two styles are available: `TeaserCarouselSubject` (light grey, sans serif), and `TeaserCarouselLead` (`text` color, serif).
+
+```react|span-2
+<TeaserCarouselBody>
+  <TeaserCarouselSubject>
+    Sophie Calle: «Un certain regard»
+  </TeaserCarouselSubject>
+  <TeaserCarouselLead>
+    Das Fotomuseum Winterthur zeigt eine beeindruckende Schau.
+  </TeaserCarouselLead>
+</TeaserCarouselBody>
+```
+```react|span-2
+<TeaserCarouselBody>
+  <TeaserCarouselSubject>
+    Sophie Calle: «Un certain regard»
+  </TeaserCarouselSubject>
+  <TeaserCarouselLead>
+    Das Fotomuseum Winterthur zeigt eine beeindruckende Schau.
+  </TeaserCarouselLead>
+</TeaserCarouselBody>
+```
+
+### `<TeaserCarouselArticleCount />`
+This component is only used when `TeaserCarouselTile`'s prop `count` is set.
+Supported props:
+- `color` (string): The text color (default: `#000000`).
+- `bgColor` (string): The background color (default: `#FFFFFF`).
+- `count` (number): the number to display.
+
+```react|span-2
+<div style={{backgroundColor: '#000000', width: '300px', height: '100px', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+  <TeaserCarouselArticleCount
+    count={12}
+    bgColor='#FFFFFF'
+    color='#000000'
+  />
+</div>
+```
+```react|span-2
+<div style={{backgroundColor: '#FFFFFF', width: '300px', height: '100px', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+  <TeaserCarouselArticleCount
+    count={9}
+    bgColor='#000000'
+    color='#FFFFFF'
+  />
+</div>
+```

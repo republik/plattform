@@ -1,6 +1,6 @@
-import React from 'react'
-import PropTypes from 'prop-types'
 import { css } from 'glamor'
+import PropTypes from 'prop-types'
+import React from 'react'
 import { fontStyles } from '../../theme/fonts'
 
 const styles = {
@@ -25,7 +25,7 @@ const styles = {
   bigger: css({ fontSize: 28, lineHeight: '28px' })
 }
 
-export const Editorial = ({ children, bigger }) => {
+export const Editorial = ({ children, bigger = false }) => {
   const headlineStyles = css(
     styles.base,
     styles.editorial,
@@ -56,4 +56,23 @@ export const Scribble = ({ children, bigger }) => {
 Editorial.propTypes = {
   children: PropTypes.node,
   bigger: PropTypes.bool
+}
+Editorial.defaultProps = {
+  bigger: false
+}
+
+Interaction.propTypes = {
+  children: PropTypes.node,
+  bigger: PropTypes.bool
+}
+Interaction.defaultProps = {
+  bigger: false
+}
+
+Scribble.propTypes = {
+  children: PropTypes.node,
+  bigger: PropTypes.bool
+}
+Scribble.defaultProps = {
+  bigger: false
 }
