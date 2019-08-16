@@ -282,7 +282,7 @@ const Form = withT(({ node, onChange, onTypeChange, options, t }) => {
       options.includes('color') &&
       <ColorPicker
         label='Textfarbe'
-        value={node.data.get('color') || '#000'}
+        value={node.data.get('color')}
         onChange={color => {
           onChange('color', null, color)
         }}
@@ -292,7 +292,7 @@ const Form = withT(({ node, onChange, onTypeChange, options, t }) => {
       options.includes('bgColor') &&
       <ColorPicker
         label='Hintergrundfarbe'
-        value={node.data.get('bgColor') || '#fff'}
+        value={node.data.get('bgColor')}
         onChange={color => {
           onChange('bgColor', null, color)
         }}

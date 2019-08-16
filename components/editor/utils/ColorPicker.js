@@ -15,9 +15,14 @@ const styles = {
     left: '0px'
   },
   button: {
+    display: 'inline-block',
     width: '30px',
     height: '30px',
-    border: '1px solid #000'
+    border: '1px solid #000',
+    textAlign: 'center',
+    verticalAlign: 'middle',
+    fontSize: 15,
+    padding: '7px 6px'
   }
 }
 
@@ -41,12 +46,29 @@ class ColorPicker extends Component {
 
   render () {
     return (
-      <div>
+      <div style={{ marginBottom: 5 }}>
         <Label>{this.props.label}</Label>
-        <div
-          onClick={this.clickHandler}
-          style={{ backgroundColor: this.props.value, ...styles.button }}
-        />
+        <div>
+          <span
+            onClick={this.clickHandler}
+            style={{
+              backgroundColor: this.props.value,
+              ...styles.button
+            }}
+          >{!this.props.value && '❌'}</span>
+          {!!this.props.value &&
+            <span
+              onClick={() => {
+                this.props.onChange(undefined)
+              }}
+              style={{
+                ...styles.button,
+                borderColor: 'transparent'
+              }}>
+              ❌
+            </span>
+          }
+        </div>
         {
           this.state.displayColorPicker &&
           <div style={styles.popover}>
