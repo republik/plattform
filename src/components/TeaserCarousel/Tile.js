@@ -37,16 +37,30 @@ const styles = {
     margin: '0 auto 14px auto',
     maxWidth: IMAGE_SIZE.maxWidth,
     width: 'auto',
-    position: 'relative',
-    '& img': {
-      maxHeight: IMAGE_SIZE.maxHeight,
-      objectFit: 'contain'
-    }
+    position: 'relative'
   }),
-
   imageContainerBigger: css({
     position: 'relative',
     margin: '15px auto' // room for image credit on top.
+  }),
+
+  // custom styles for portrait images
+  imageWrapper: css({
+    position: 'relative',
+    width: 'fit-content',
+    margin: '0 auto'
+  }),
+  image: css({
+    display: 'block',
+    height: '100%',
+    maxWidth: '100%',
+    maxHeight: IMAGE_SIZE.maxHeight
+  }),
+  imageBigger: css({
+    display: 'block',
+    margin: '0 auto',
+    maxWidth: '100%',
+    objectFit: 'contain'
   })
 }
 
@@ -81,11 +95,15 @@ const Tile = ({
     ? styles.imageContainerBigger
     : styles.imageContainer
 
+  let imageStyles = bigger ? styles.imageBigger : styles.image
+
+  const isPortrait = imageProps.size.width / imageProps.size.height <= 1
+
   return (
     <div {...tileStyle} onClick={onClick} className="tile">
       <div {...containerStyle}>
         {/* Image */}
-        {imageProps && (
+        {imageProps && !isPortrait && (
           <div {...imageContainerStyles}>
             <FigureImage
               aboveTheFold={aboveTheFold}
@@ -100,6 +118,26 @@ const Tile = ({
                 {byline}
               </FigureByline>
             )}
+          </div>
+        )}
+        {imageProps && isPortrait && (
+          <div {...imageContainerStyles}>
+            <div {...styles.imageWrapper}>
+              <img
+                {...imageStyles}
+                src={imageProps.src}
+                srcSet={imageProps.srcSet}
+                alt={alt}
+              />
+              {byline && (
+                <FigureByline
+                  position={bigger ? 'aboveRight' : 'rightCompact'}
+                  style={{ color }}
+                >
+                  {byline}
+                </FigureByline>
+              )}
+            </div>
           </div>
         )}
         {/* Body */}
