@@ -14,7 +14,10 @@ The media queries are defined in [`FrontTile`](/teaserfronttile).
 <TeaserCarousel>
   <TeaserSectionTitle href="/recenzionen">Alle Rezensionen</TeaserSectionTitle>
   <TeaserCarouselRow>
-    <TeaserCarouselTile byline='Foto: Laurent Burst' image='/static/carousel/test.png' onClick={() => console.log("click on first tile")}>
+    <TeaserCarouselTile
+      image='/static/carousel/test.png?size=4682x3512'
+      onClick={() => console.log("click on first tile")}
+    >
       <TeaserCarouselFormat>Poesie & Prosa</TeaserCarouselFormat>
       <TeaserCarouselHeadline.Editorial>Das Rätsel Dag Solstad</TeaserCarouselHeadline.Editorial>
       <TeaserCarouselBody>
@@ -31,7 +34,10 @@ The media queries are defined in [`FrontTile`](/teaserfronttile).
 
     </TeaserCarouselTile>
 
-    <TeaserCarouselTile image='/static/carousel/jackson.png?size=400x216' byline='Foto: Laurent Burst' >
+    <TeaserCarouselTile
+      image='/static/carousel/jackson.png?size=400x216'
+      byline='Foto: Laurent Burst'
+    >
       <TeaserCarouselFormat>Film</TeaserCarouselFormat>
       <TeaserCarouselHeadline.Editorial>Echt jetzt?</TeaserCarouselHeadline.Editorial>
       <TeaserCarouselBody>
@@ -47,7 +53,9 @@ The media queries are defined in [`FrontTile`](/teaserfronttile).
       </Editorial.Credit>
     </TeaserCarouselTile>
 
-    <TeaserCarouselTile image='/static/carousel/vault.png'>
+    <TeaserCarouselTile
+      image='/static/carousel/vault.png?size=376x214'
+    >
       <TeaserCarouselHeadline.Editorial>Tote Sprachen leben länger</TeaserCarouselHeadline.Editorial>
       <TeaserCarouselBody>
         <TeaserCarouselLead>
@@ -59,7 +67,10 @@ The media queries are defined in [`FrontTile`](/teaserfronttile).
       </Editorial.Credit>
     </TeaserCarouselTile>
 
-    <TeaserCarouselTile byline='Foto: Laurent Burst' image='/static/carousel/rinck.png'>
+    <TeaserCarouselTile
+      byline='Foto: Laurent Burst'
+      image='/static/carousel/rinck.png?size=176x240'
+    >
       <TeaserCarouselHeadline.Editorial>Die vier Gangarten von lechts nach Rinck</TeaserCarouselHeadline.Editorial>
        <TeaserCarouselBody>
         <TeaserCarouselLead>
@@ -71,7 +82,9 @@ The media queries are defined in [`FrontTile`](/teaserfronttile).
       </Editorial.Credit>
     </TeaserCarouselTile>
 
-    <TeaserCarouselTile image='/static/carousel/calle.png' byline='Foto: Laurent Burst'>
+    <TeaserCarouselTile
+      image='/static/carousel/calle.png?size=332x248'
+      byline='Foto: Laurent Burst'>
       <TeaserCarouselFormat>Kunst</TeaserCarouselFormat>
       <TeaserCarouselHeadline.Editorial>Blindes Sehen</TeaserCarouselHeadline.Editorial>
       <TeaserCarouselBody>
@@ -95,7 +108,7 @@ The media queries are defined in [`FrontTile`](/teaserfronttile).
  <TeaserSectionTitle>Alle Formate</TeaserSectionTitle>
   <TeaserCarouselRow>
 
-    <TeaserCarouselTile image='/static/carousel/binswanger.png' onClick={() => console.log("click on first tile")}>
+    <TeaserCarouselTile image='/static/carousel/binswanger.png?size=2480x2521' onClick={() => console.log("click on first tile")}>
       <TeaserCarouselFormat color='#00B4FF'>
         Binswanger
       </TeaserCarouselFormat>
@@ -107,7 +120,7 @@ The media queries are defined in [`FrontTile`](/teaserfronttile).
       </Editorial.Credit>
     </TeaserCarouselTile>
 
-    <TeaserCarouselTile image='/static/carousel/berg.png'>
+    <TeaserCarouselTile image='/static/carousel/berg.png?size=2480x2963'>
       <TeaserCarouselFormat color="#00B4FF">Sybille Berg</TeaserCarouselFormat>
       <TeaserCarouselHeadline.Editorial>
         «Was führt Männer oft zu fast albern anmutender Selbstüber-schätzung?»
@@ -117,7 +130,7 @@ The media queries are defined in [`FrontTile`](/teaserfronttile).
       </Editorial.Credit>
     </TeaserCarouselTile>
 
-    <TeaserCarouselTile image='/static/carousel/niggli.png'>
+    <TeaserCarouselTile image='/static/carousel/niggli.png?size=2422x2480'>
       <TeaserCarouselFormat color="#00B4FF">Niggli</TeaserCarouselFormat>
       <TeaserCarouselHeadline.Editorial>
         Sir Kim Darroch, Ritter der ungeschminkten Wahrheit
@@ -138,7 +151,7 @@ The media queries are defined in [`FrontTile`](/teaserfronttile).
   <TeaserCarouselRow>
     <TeaserCarouselTile
       bigger
-      image='/static/carousel/murdoch.png'
+      image='/static/carousel/murdoch.png?size=496x372'
       count={12}
       bgColor='#000'
       color='#FFF'
@@ -152,7 +165,7 @@ The media queries are defined in [`FrontTile`](/teaserfronttile).
     </TeaserCarouselTile>
       <TeaserCarouselTile
       bigger
-      image='/static/carousel/homestory.png'
+      image='/static/carousel/homestory.png?size=248x186'
       count={6}
       bgColor='#000'
       color='#FFF'
@@ -166,7 +179,7 @@ The media queries are defined in [`FrontTile`](/teaserfronttile).
 
     <TeaserCarouselTile
       bigger
-      image='/static/carousel/eth.png'
+      image='/static/carousel/eth.png?size=251x186'
       count={8}
       bgColor='#000'
       color='#FFF'
@@ -179,7 +192,7 @@ The media queries are defined in [`FrontTile`](/teaserfronttile).
 
     <TeaserCarouselTile
       bigger
-      image='/static/carousel/mike.png'
+      image='/static/carousel/mike.png?size=248x186'
       count={24}
       bgColor='#000'
       color='#FFF'
@@ -192,7 +205,7 @@ The media queries are defined in [`FrontTile`](/teaserfronttile).
 
     <TeaserCarouselTile
       bigger
-      image='/static/carousel/strahlen.png'
+      image='/static/carousel/strahlen.png?size=248x186'
       count={10}
       bgColor='#000'
       color='#FFF'
@@ -227,7 +240,7 @@ Supported props:
 
 ```react|span-2
 <TeaserCarouselTile
-  image='/static/carousel/calle.png'
+  image='/static/carousel/calle.png?size=332x248'
   bgColor='#FFFFFF'
 >
   <TeaserCarouselFormat>
@@ -251,7 +264,7 @@ Supported props:
 ```
 ```react|span-2
 <TeaserCarouselTile
-  image='/static/carousel/binswanger.png'
+  image='/static/carousel/binswanger.png?size=2480x2521'
   onClick={() => console.log("click on first tile")}
 >
   <TeaserCarouselFormat
@@ -270,7 +283,7 @@ Supported props:
 ```react|span-2
 <TeaserCarouselTile
   bigger
-  image='/static/carousel/strahlen.png'
+  image='/static/carousel/strahlen.png?size=248x186'
   count={10}
   bgColor='#000'
   color='#FFF'
@@ -345,10 +358,10 @@ The teaser text content must be wrapped within `<TeaserCarouselBody />`, which d
 ```react|span-2
 <TeaserCarouselBody>
   <TeaserCarouselSubject>
-    Sophie Calle: «Un certain regard»
+    Peter Jackson: «They Shall Not Grow Old»
   </TeaserCarouselSubject>
   <TeaserCarouselLead>
-    Das Fotomuseum Winterthur zeigt eine beeindruckende Schau.
+    Der Blockbuster-Regisseur zeigt den Ersten Weltkrieg.
   </TeaserCarouselLead>
 </TeaserCarouselBody>
 ```
@@ -369,6 +382,7 @@ Supported props:
   />
 </div>
 ```
+
 ```react|span-2
 <div style={{backgroundColor: '#FFFFFF', width: '300px', height: '100px', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
   <TeaserCarouselArticleCount
