@@ -9,6 +9,7 @@ import { mUp } from '../TeaserFront/mediaQueries'
 import Text from '../TeaserFront/Text'
 import { sansSerifRegular18 } from '../Typography/styles'
 
+// FIXME: we don't need all of these:
 const IMAGE_SIZE = {
   small: { maxWidth: 160, maxHeight: 120 },
   medium: { maxWidth: 160, maxHeight: 120 },
@@ -48,7 +49,7 @@ const styles = {
 
   imageContainerBigger: css({
     position: 'relative',
-    margin: '15px auto' // room for image credit on top
+    margin: '15px auto' // room for image credit on top. FIXME: only margin top when there IS a byline
   }),
 
   image: css({

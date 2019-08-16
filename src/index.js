@@ -531,9 +531,10 @@ ReactDOM.render(
               imports: {
                 css,
                 t,
-                ...require('./components/Typography'),
                 ...require('./components/TeaserCarousel'),
-                ...require('./components/TeaserFront')
+                ...require('./components/TeaserSharedComponent'),
+                ...require('./components/TeaserFront'),
+                ...require('./components/Typography')
 
                 // ...require("./components/Figure")
               },

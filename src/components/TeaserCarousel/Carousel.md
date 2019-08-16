@@ -19,7 +19,7 @@ Supported props:
 
 ```react|responsive
 <TeaserFrontCarousel>
-  <TeaserFrontCarouselTitle href="/recenzionen">Alle Rezensionen</TeaserFrontCarouselTitle>
+  <TeaserFrontSectionTitle href="/recenzionen">Alle Rezensionen</TeaserFrontSectionTitle>
   <TeaserFrontCarouselRow>
     <TeaserFrontCarouselTile byline='Foto: Laurent Burst' image='/static/carousel/test.png' onClick={() => console.log("click on first tile")}>
       <TeaserFrontCarouselTag>Poesie & Prosa</TeaserFrontCarouselTag>
@@ -82,7 +82,7 @@ Below 4 tiles, each tile will use 33% of the space available, up to a maximum of
 
 ```react
 <TeaserFrontCarousel>
- <TeaserFrontCarouselTitle>Alle Formate</TeaserFrontCarouselTitle>
+ <TeaserFrontSectionTitle>Alle Formate</TeaserFrontSectionTitle>
   <TeaserFrontCarouselRow>
     <TeaserFrontCarouselTile image='/static/carousel/binswanger.png' onClick={() => console.log("click on first tile")}>
       <TeaserFrontCarouselTag color='#00B4FF'>
@@ -129,7 +129,7 @@ Below 4 tiles, each tile will use 33% of the space available, up to a maximum of
 
 ```react|responsive
 <TeaserFrontCarousel bgColor='#000' color='#FFF'>
-  <TeaserFrontCarouselTitle>Alle Serien</TeaserFrontCarouselTitle>
+  <TeaserFrontSectionTitle>Alle Serien</TeaserFrontSectionTitle>
 
   <TeaserFrontCarouselRow>
     <TeaserFrontCarouselTile bigger image='/static/carousel/murdoch.png' count={12} bgColor='#000' color='#FFF' noOutline byline='Foto: Laurent Burst'>

@@ -4,9 +4,6 @@ import ChevronRight from 'react-icons/lib/md/keyboard-arrow-right'
 
 import { sansSerifRegular30 } from '../Typography/styles'
 
-// Placeholder for next/Link
-const Link = ({ children }) => <div>{children}</div>
-
 const styles = {
   link: css({
     textDecoration: 'none',
