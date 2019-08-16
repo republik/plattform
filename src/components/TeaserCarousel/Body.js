@@ -14,12 +14,12 @@ const styles = css({
   }
 })
 
-const Lead = ({ children }) => {
-  return <span>{children}</span>
+const Body = ({ children }) => {
+  return <div {...styles}>{children}</div>
 }
 
-Lead.propTypes = {
+Body.propTypes = {
   children: PropTypes.node
 }
 
-export default Lead
+export default Body
