@@ -7,7 +7,7 @@ import LazyLoad from '../LazyLoad'
 import { mUp } from './mediaQueries'
 import Text from './Text'
 
-export const IMAGE_SIZE = {
+const IMAGE_SIZE = {
   small: 220,
   medium: 300,
   large: 360
