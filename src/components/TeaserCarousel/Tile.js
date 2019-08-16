@@ -41,7 +41,7 @@ const styles = {
   }),
   imageContainerBigger: css({
     position: 'relative',
-    margin: '15px auto' // room for image credit on top.
+    margin: '15px auto 20px auto' // room for image credit on top.
   }),
 
   // custom styles for portrait images
