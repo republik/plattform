@@ -28,12 +28,7 @@ const DebateComment = ({ highlight, preview }) => {
       {!highlight && preview && (
         <div {...styles.body}>
           <React.Fragment>
-            <RawHtml
-              dangerouslySetInnerHTML={{
-                __html: preview.string
-              }}
-            />
-
+            {preview.string}
             {/* {!endsWithPunctuation && <Fragment>&nbsp;…</Fragment>} */}
           </React.Fragment>
         </div>
@@ -41,11 +36,7 @@ const DebateComment = ({ highlight, preview }) => {
       {highlight && (
         <div {...styles.highlight}>
           &#171;
-          <RawHtml
-            dangerouslySetInnerHTML={{
-              __html: highlight
-            }}
-          />
+          {highlight}
           &#187;
         </div>
       )}
