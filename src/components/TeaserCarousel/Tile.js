@@ -98,7 +98,9 @@ const Tile = ({
   let imageStyles = bigger ? styles.imageBigger : styles.image
 
   const isPortrait =
-    imageProps.size && imageProps.size.width / imageProps.size.height <= 1
+    imageProps &&
+    imageProps.size &&
+    imageProps.size.width / imageProps.size.height <= 1
       ? true
       : false
 
