@@ -527,8 +527,8 @@ ReactDOM.render(
               src: require('./components/Dossier/Teaser.md')
             },
             {
-              path: '/teaserfrontcarousel',
-              title: 'FrontCarousel',
+              path: '/teasercarousel',
+              title: 'TeaserCarousel',
               imports: {
                 css,
                 t,
@@ -539,7 +539,7 @@ ReactDOM.render(
 
                 // ...require("./components/Figure")
               },
-              src: require('./components/TeaserCarousel/Carousel.md')
+              src: require('./components/TeaserCarousel/docs.md')
             }
           ]
         },

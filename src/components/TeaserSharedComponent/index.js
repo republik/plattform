@@ -1,1 +1,1 @@
-export { default as TeaserFrontSectionTitle } from './Title'
+export { default as TeaserSectionTitle } from './Title'

@@ -18,7 +18,7 @@ const styles = {
     }
   })
 }
-export const TeaserFrontCarouselRow = ({ children }) => {
+export const Row = ({ children }) => {
   return (
     <div role="group" {...styles.carouselRow}>
       {children}
@@ -26,4 +26,4 @@ export const TeaserFrontCarouselRow = ({ children }) => {
   )
 }
 
-export default TeaserFrontCarouselRow
+export default Row

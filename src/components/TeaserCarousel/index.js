@@ -1,10 +1,10 @@
-import * as _TeaserFrontCarouselHeadline from './Headline'
+import * as _TeaserCarouselHeadline from './Headline'
 
-export const TeaserFrontCarouselHeadline = { ..._TeaserFrontCarouselHeadline }
+export const TeaserCarouselHeadline = { ..._TeaserCarouselHeadline }
 
-export { default as TeaserFrontCarousel } from './Carousel'
-export { default as TeaserFrontCarouselTile } from './Tile'
-export { default as TeaserFrontCarouselRow } from './Row'
-export { default as TeaserFrontCarouselLead } from './Lead'
-export { default as TeaserFrontCarouselTag } from './Tag'
-export { default as TeaserFrontCarouselArticleCount } from './ArticleCount'
+export { default as TeaserCarousel } from './Carousel'
+export { default as TeaserCarouselTile } from './Tile'
+export { default as TeaserCarouselRow } from './Row'
+export { default as TeaserCarouselLead } from './Lead'
+export { default as TeaserCarouselTag } from './Tag'
+export { default as TeaserCarouselArticleCount } from './ArticleCount'

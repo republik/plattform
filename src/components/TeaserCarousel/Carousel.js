@@ -9,7 +9,7 @@ const styles = {
   })
 }
 
-export const TeaserFrontCarousel = ({ bgColor = '#FFF', color, children }) => {
+export const Carousel = ({ bgColor = '#FFF', color, children }) => {
   const customStyles = css(styles.carousel, {
     backgroundColor: bgColor,
     color: color ? color : 'inherit'
@@ -18,4 +18,4 @@ export const TeaserFrontCarousel = ({ bgColor = '#FFF', color, children }) => {
   return <section {...customStyles}>{children}</section>
 }
 
-export default TeaserFrontCarousel
+export default Carousel

@@ -1,7 +1,7 @@
 import { imageSizeInfo, imageResizeUrl } from 'mdast-react-render/lib/utils'
 import { css } from 'glamor'
 import React from 'react'
-import { TeaserFrontCarouselArticleCount } from '.'
+import { TeaserCarouselArticleCount } from '.'
 import colors from '../../theme/colors'
 import { FigureImage, Figure, FigureCaption, FigureByline } from '../Figure'
 import LazyLoad from '../LazyLoad'
@@ -64,7 +64,7 @@ const styles = {
   })
 }
 
-const TeaserFrontCarouselTile = ({
+const TeaserCarouselTile = ({
   color = '#000',
   bgColor = 'unset',
   noOutline = false,
@@ -127,7 +127,7 @@ const TeaserFrontCarouselTile = ({
           <Text color={color} margin={'0 auto'}>
             {children}
             {count && (
-              <TeaserFrontCarouselArticleCount
+              <TeaserCarouselArticleCount
                 count={count}
                 bgColor={color}
                 color={bgColor}
@@ -139,4 +139,4 @@ const TeaserFrontCarouselTile = ({
     </div>
   )
 }
-export default TeaserFrontCarouselTile
+export default TeaserCarouselTile
