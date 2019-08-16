@@ -125,6 +125,7 @@ Byline.propTypes = {
   children: PropTypes.node.isRequired,
   attributes: PropTypes.object,
   position: PropTypes.oneOf([
+    'aboveRight',
     'below',
     'belowFeuilleton',
     'right',
