@@ -46,7 +46,6 @@
     "@storybook/addon-links": "^5.1.10",
     "@storybook/addons": "^5.1.10",
     "@storybook/react": "^5.1.10",
-    "babel-loader": "^8.0.6",
     "babel-tape-runner": "^3",
     "commitizen": "^2.9.6",
     "core-js": "^2.4.1",
