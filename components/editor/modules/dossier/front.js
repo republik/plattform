@@ -5,7 +5,8 @@ import { allBlocks, parent, childIndex, depth } from '../../utils/selection'
 
 import { buttonStyles, matchBlock } from '../../utils'
 
-import { TeaserInlineUI } from '../teaser/ui'
+import { TeaserInlineUI, TeaserForm } from '../teaser/ui'
+
 import {
   getIndex,
   getParent,
@@ -15,15 +16,23 @@ import {
   remove
 } from '../teaser/actions'
 
+const getData = data => ({
+  module: 'teasergroup', // used by publicator internally
+  url: null,
+  color: '',
+  bgColor: '',
+  ...data
+})
+
 const getNewBlock = options => {
   const { headlineModule, introTeaserModule, articleCollectionModule, outroTextModule } = getSubmodules(options)
 
   return () => Block.create({
     kind: 'block',
     type: options.TYPE,
-    data: {
+    data: getData({
       teaserType: options.rule.editorOptions.teaserType || 'frontArticleCollection'
-    },
+    }),
     nodes: [
       headlineModule && {
         kind: 'block',
@@ -52,23 +61,6 @@ const getSubmodules = ({ subModules }) => {
     outroTextModule
   }
 }
-
-const getData = data => ({
-  url: null,
-  textPosition: 'topleft',
-  color: '',
-  bgColor: '',
-  center: false,
-  image: null,
-  kind: 'editorial',
-  titleSize: 'standard',
-  teaserType: 'frontImage',
-  reverse: false,
-  portrait: true,
-  showImage: true,
-  onlyImage: false,
-  ...data || {}
-})
 
 const FrontDossierPlugin = options => {
   const Group = options.rule.component
@@ -174,10 +166,11 @@ const getSerializer = options => {
         }
       },
       toMdast: (object, index, parent, rest) => {
+        const { module, ...data } = object.data
         return {
           type: 'zone',
           identifier: 'TEASER',
-          data: object.data,
+          data,
           children: childSerializer.toMdast(object.nodes, 0, object, rest)
         }
       }
@@ -196,6 +189,9 @@ export default options => ({
   ui: {
     insertButtons: [
       FrontDossierButton(options)
-    ]
+    ],
+    forms: options.rule.editorOptions.formOptions ? [
+      TeaserForm({ subModuleResolver: getSubmodules, ...options })
+    ] : []
   }
 })

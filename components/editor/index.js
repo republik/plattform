@@ -80,7 +80,7 @@ const moduleCreators = {
   line: createLineModule,
   articleGroup: createArticleGroup,
   frontDossier: createFrontDossier,
-  frontCarousel: createFrontDossier,
+  carousel: createFrontDossier,
   dossierIntro: createDossierIntro,
   articleCollection: createArticleCollection,
   chart: createChartModule,

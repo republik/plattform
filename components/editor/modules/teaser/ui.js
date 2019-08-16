@@ -213,13 +213,15 @@ const Form = withT(({ node, onChange, onTypeChange, options, t }) => {
     <AutoSlugLinkInfo
       value={node.data.get('url')}
       label={t('metaData/field/href/document')} />
-    <Field
-      label='Format URL'
-      value={node.data.get('formatUrl')}
-      onChange={onChange('formatUrl')} />
-    <AutoSlugLinkInfo
-      value={node.data.get('formatUrl')}
-      label={t('metaData/field/href/document')} />
+    {options.includes('formatUrl') && <>
+      <Field
+        label='Format URL'
+        value={node.data.get('formatUrl')}
+        onChange={onChange('formatUrl')} />
+      <AutoSlugLinkInfo
+        value={node.data.get('formatUrl')}
+        label={t('metaData/field/href/document')} />
+    </>}
     {
       options.includes('textPosition') &&
       <Dropdown
@@ -365,8 +367,8 @@ export const TeaserForm = ({ subModuleResolver, ...options }) => {
   } = subModules
 
   const moduleTypes = Object.keys(subModules).map(
-    k => subModules[k].TYPE
-  )
+    k => subModules[k] && subModules[k].TYPE
+  ).filter(Boolean)
 
   return createPropertyForm({
     isDisabled: ({ value }) => {
@@ -454,12 +456,12 @@ export const TeaserForm = ({ subModuleResolver, ...options }) => {
       }
 
       return <div>
-        <Label>Teaser</Label>
-        <RepoSearch
+        <Label>{options.rule.editorOptions.formTitle || 'Teaser'}</Label>
+        {!options.rule.editorOptions.formOptions.includes('noAdapt') && <RepoSearch
           value={null}
           label='Von Artikel übernehmen'
           onChange={handleRepo}
-        />
+        />}
         <Form node={teaser} onChange={handlerFactory} onTypeChange={handleTypeChange} options={options.rule.editorOptions.formOptions} />
       </div>
     }
