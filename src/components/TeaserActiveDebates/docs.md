@@ -1,52 +1,68 @@
 
-## `<ActiveDebates />`.
 
 Supported props:
-- `hasHighlight` (boolean): boolean, if `true`, the left column will be reserved for the highlighted debate, on desktop.
+- `hasHighlight` (boolean): if `true`, the left column will be reserved for the highlighted debate, on desktop.
 - `discussions` (array): array of discussions.
 - `t` (function): translation function.
 
 
-Careful, long words like "Generationswechsel" in the highlighted section will overflow at certain screen sizes.
+Caveat: long words like "Generationenwechsel" in the highlighted section will overflow at certain screen sizes.
 
-#### With Highlight
 
-```react|noSource,span-6
-<ActiveDebates
+
+```react|span-6
+<TeaserActiveDebates
   t={t}
-  hasHighlight={activeDebates.hasHighlight}
+  hasHighlight={true}
   discussions={activeDebates.discussions}
 >
   <TeaserSectionTitle href="/">
     Aktive Debatten
   </TeaserSectionTitle>
-</ActiveDebates>
+</TeaserActiveDebates>
 ```
-#### Without Highlight
-```react|noSource,span-6
-<ActiveDebates
+
+```react|span-6
+<TeaserActiveDebates
   t={t}
-  hasHighlight={activeDebatesWithoutHighlight.hasHighlight}
+  hasHighlight={false}
   discussions={activeDebatesWithoutHighlight.discussions}
 >
   <TeaserSectionTitle href="/">
     Aktive Debatten
   </TeaserSectionTitle>
-</ActiveDebates>
+</TeaserActiveDebates>
 ```
 
 
 
 ## `<ActiveDebateTeaser />`
-Each active debate is rendered as a teaser.
 
 Supported props:
 - `t` (func): translation function.
 - `path` (string): the path to the discussion page.
 - `documentTitle` (string): The title of the article that triggered the debate.
 - `commentCount` (number):  a `number` of the current contributions to the debate, this number will be displayed next to the "comment" icon.
-- `comments` (array):
-
+- `comments` (array): An array of objects that mimics an api call:
+```code|lang-jsx,span-3
+    shapeOf({
+      id: string,
+      parentIds: array,
+      createdAt: Date,
+      updatedAt: Date,
+      preview: shapeOf({
+        string: string,
+        more: boolean
+      }),
+      displayAuthor: shapeOf({
+        id: string,
+        name: string,
+        slug: string,
+        credential: string,
+        profilePicture: string
+      })
+    })
+```
 
 ```react|span-3
 <ActiveDebateTeaser
@@ -99,7 +115,7 @@ If the comment has the `highlight` property defined, the body of the comment wil
 
 This component is borrowed from the [Discussion section](/components/discussion/internal). It is used to display meta information about the last comment(s) in an `ActiveDebateTeaser`.
 
-```react|noSource,span-2
+```react|span-2
 <Header
   t={t}
   comment={oneComment}
