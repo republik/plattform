@@ -1,22 +1,28 @@
 import { css } from 'glamor'
 import React from 'react'
 import ChevronRight from 'react-icons/lib/md/keyboard-arrow-right'
-
-import { sansSerifRegular30 } from '../Typography/styles'
+import { mUp } from '../TeaserFront/mediaQueries'
+import { sansSerifRegular22, sansSerifRegular30 } from '../Typography/styles'
 
 const styles = {
   link: css({
+    ...sansSerifRegular22,
     textDecoration: 'none',
     color: '#000000',
     display: 'inline-block',
     cursor: 'pointer',
-    ...sansSerifRegular30,
-    margin: '0 0 30px 0'
+    margin: '0 0 30px 0',
+    [mUp]: {
+      ...sansSerifRegular30
+    }
   }),
   label: css({
+    ...sansSerifRegular22,
     display: 'inline-block',
-    ...sansSerifRegular30,
-    margin: '0 0 30px 0'
+    margin: '0 0 30px 0',
+    [mUp]: {
+      ...sansSerifRegular30
+    }
   }),
   icon: css({
     marginLeft: '8px'
