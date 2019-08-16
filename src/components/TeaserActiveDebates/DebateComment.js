@@ -9,12 +9,14 @@ const styles = {
   body: css({
     ...serifRegular15,
     color: colors.text,
-    marginBottom: 21
+    marginBottom: 21,
+    marginTop: 18
   }),
   highlight: css({
     ...serifBold28,
     color: colors.text,
     marginBottom: 21,
+    marginTop: 18,
     [mUp]: {
       ...serifBold38
     }

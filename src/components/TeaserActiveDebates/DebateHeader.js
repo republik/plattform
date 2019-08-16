@@ -12,8 +12,7 @@ const styles = {
     alignItems: 'center',
     textDecoration: 'none',
     cursor: 'pointer',
-    color: colors.text,
-    marginBottom: 18
+    color: colors.text
   }),
   title: css({
     ...sansSerifMedium16,
