@@ -2,6 +2,9 @@ A `<TeaserFrontTile />` is a tilelike front page teaser that features an image o
 
 Supported props:
 - `image`: The URL of image.
+- `byline`: The credits for the image.
+- `alt`: A string to display as alternative text for the image.
+- `onClick`: A function triggered on click.
 - `color`: The text color.
 - `bgColor`: The background color to use in stacked mode.
 - `align`: `middle` (default), `top` or `bottom`.
@@ -9,17 +12,13 @@ Supported props:
 
 A `<TeaserFrontTileHeadline />` should be used.
 
-A `<TeaserFrontTileRow />` must be the parent of a `<TeaserFrontTile />`. It may contain a single tile, or 2 tiles side by side.
-
-Supported props:
-- `columns`: `1` (default), or `2`.
+A `<TeaserFrontTileRow />` must be the parent of a `<TeaserFrontTile />`. It may contain a single tile, 2 tiles, or 3 tiles side by side. The layout can differ on mobile or desktop, but must be curated. Any combination of the following props works:
+- `columns`: `1` (default), `2` or `3`.
+- `mobileColumns`: `1` (default), or `2`.
 
 
 ```react
-responsive: Mobile
-span: 2
----
-<TeaserFrontTileRow columns={2}>
+<TeaserFrontTileRow mobileColumns={2} columns={3} >
   <TeaserFrontTile color='#000' bgColor='#FFFF3B'>
     <Editorial.Format>Briefing aus Bern</Editorial.Format>
     <TeaserFrontTileHeadline.Editorial columns={2}>Zwei Säulen im Umbau, grosse Geschenke – und Bersets Boys Club legt zu</TeaserFrontTileHeadline.Editorial>
@@ -27,21 +26,12 @@ span: 2
       Von <TeaserFrontCreditLink color='#000' href='#'>Andrea Arezina</TeaserFrontCreditLink> und <TeaserFrontCreditLink color='#000' href='#'>Urs Bruderer</TeaserFrontCreditLink>, 04.07.2019
     </TeaserFrontCredit>
   </TeaserFrontTile>
-
   <TeaserFrontTile
     color='#FFF' bgColor='#542552'>
     <Editorial.Format>An die Verlagsetage</Editorial.Format>
     <TeaserFrontTileHeadline.Interaction columns={2}>Wohin ihr Geld fliesst</TeaserFrontTileHeadline.Interaction>
   </TeaserFrontTile>
-</TeaserFrontTileRow>
-```
-```react
-responsive: Mobile
-span: 2
----
-<TeaserFrontTileRow columns={2}>
-
- <TeaserFrontTile image='/static/rothaus_portrait.jpg'
+  <TeaserFrontTile image='/static/rothaus_portrait.jpg'
     byline='Foto: Laurent Burst'
     color='#fff' bgColor='#000'>
     <TeaserFrontTileHeadline.Editorial>The fox</TeaserFrontTileHeadline.Editorial>
@@ -52,39 +42,34 @@ span: 2
       An article by <TeaserFrontCreditLink color='#fff' href='#'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
     </TeaserFrontCredit>
   </TeaserFrontTile>
-
-  <TeaserFrontTile
-    color='#FFF' bgColor='#542552'>
-    <Editorial.Format>An die Verlagsetage</Editorial.Format>
-    <TeaserFrontTileHeadline.Interaction columns={2}>Wohin ihr Geld fliesst</TeaserFrontTileHeadline.Interaction>
-  </TeaserFrontTile>
 </TeaserFrontTileRow>
 ```
 
 ```react
-responsive: Mobile
-span: 2
----
-<TeaserFrontTileRow columns={2}>
-   <TeaserFrontTile color='#000' bgColor='#FFFF3B'>
+<TeaserFrontTileRow columns={3} >
+  <TeaserFrontTile color='#000' bgColor='#FFFF3B'>
     <Editorial.Format>Briefing aus Bern</Editorial.Format>
     <TeaserFrontTileHeadline.Editorial columns={2}>Zwei Säulen im Umbau, grosse Geschenke – und Bersets Boys Club legt zu</TeaserFrontTileHeadline.Editorial>
     <TeaserFrontCredit>
       Von <TeaserFrontCreditLink color='#000' href='#'>Andrea Arezina</TeaserFrontCreditLink> und <TeaserFrontCreditLink color='#000' href='#'>Urs Bruderer</TeaserFrontCreditLink>, 04.07.2019
     </TeaserFrontCredit>
   </TeaserFrontTile>
-
+  <TeaserFrontTile
+    color='#FFF' bgColor='#542552'>
+    <Editorial.Format>An die Verlagsetage</Editorial.Format>
+    <TeaserFrontTileHeadline.Interaction columns={2}>Wohin ihr Geld fliesst</TeaserFrontTileHeadline.Interaction>
+  </TeaserFrontTile>
   <TeaserFrontTile image='/static/rothaus_landscape.jpg'
     byline='Foto: Laurent Burst'
     color='#000' bgColor='#fff'>
     <TeaserFrontTileHeadline.Editorial>The quick brown fox</TeaserFrontTileHeadline.Editorial>
-
     <TeaserFrontCredit>
       An article by <TeaserFrontCreditLink color='#000' href='#'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
     </TeaserFrontCredit>
   </TeaserFrontTile>
 </TeaserFrontTileRow>
 ```
+
 ```react
 <TeaserFrontTileRow columns={2}>
   <TeaserFrontTile image='/static/rothaus_portrait.jpg'
