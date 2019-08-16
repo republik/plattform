@@ -11,60 +11,55 @@ const styles = {
     margin: 0,
     boxSizing: 'border-box',
     display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    // [mUp]: {
-    //   flexDirection: 'row',
-    //   justifyContent: 'center'
-    // }
-    '& .tile': {
-      margin: '0 auto',
-      textAlign: 'center',
-      padding: '30px 15px 40px 15px',
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      justifyContent: 'center',
-      [mUp]: {
-        padding: '60px 0'
-      }
-    }
-  }),
-
-  rowMobileReverse: css({
-    margin: 0,
-    display: 'flex',
-    flexDirection: 'column-reverse',
+    flexDirection: 'column',
     [mUp]: {
-      flexDirection: 'row'
+      flexDirection: 'row',
+      justifyContent: 'center'
     },
-
     '& .tile': {
       margin: '0 auto',
       textAlign: 'center',
       padding: '30px 15px 40px 15px',
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      justifyContent: 'center',
+      width: '100%',
       [mUp]: {
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
         padding: '60px 0'
       }
     }
   }),
 
-  col2: css({
+  // One column
+  mobileCol1: css({
     '& .tile': {
-      width: '50%',
-      padding: '15px'
-    },
+      width: '100%'
+    }
+  }),
+  col1: css({}),
 
+  // Two Columns
+  mobileCol2: css({
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    flexWrap: 'wrap',
+    '& .tile': {
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      width: '50%'
+    },
+    '& .tile:nth-child(3)': {
+      width: '100%'
+    }
+  }),
+  col2: css({
     [mUp]: {
       '& .tile': {
-        width: '50%',
-        flex: '1 1 0'
+        width: '50%'
       },
-
       '& img': {
         ...sizeSmall
       }
@@ -81,16 +76,19 @@ const styles = {
       borderTop: `1px solid ${colors.divider}`
     },
     [mUp]: {
-      flexWrap: 'wrap',
+      flexWrap: 'nowrap',
       '& .tile': {
         width: '33%',
         borderLeft: `1px solid ${colors.divider}`,
         borderTop: 'none',
-        margin: '0 0 50px 0',
-        padding: '20px 0'
+        margin: 0,
+        padding: '60px 0'
       },
       '& .tile:nth-child(2n+1)': {
         borderLeft: 'none'
+      },
+      '& .tile:nth-child(3)': {
+        width: '33%'
       },
       '& img': {
         ...sizeSmall
@@ -117,13 +115,13 @@ export const TeaserFrontTileRow = ({
   children,
   attributes,
   columns = 1,
-  mobileReverse
+  mobileColumns = 1
 }) => {
   const rowStyles = css(
-    mobileReverse ? styles.rowMobileReverse : styles.row,
-    styles[`col${columns}`]
+    styles.row,
+    styles[`col${columns}`],
+    styles[`mobileCol${mobileColumns}`]
   )
-  // FIXME: still stack tiles when there are three columns!
   return (
     <div role="group" {...attributes} {...rowStyles}>
       {children}
@@ -134,11 +132,14 @@ export const TeaserFrontTileRow = ({
 TeaserFrontTileRow.propTypes = {
   children: PropTypes.node.isRequired,
   attributes: PropTypes.object,
-  columns: PropTypes.oneOf([1, 2, 3]).isRequired
+  columns: PropTypes.oneOf([1, 2, 3]).isRequired,
+  mobileColumns: PropTypes.oneOf([1, 2, 3]).isRequired,
+  mobileReverse: PropTypes.bool
 }
 
 TeaserFrontTileRow.defaultProps = {
-  columns: 1
+  columns: 1,
+  mobileColumns: 1
 }
 
 export default TeaserFrontTileRow
