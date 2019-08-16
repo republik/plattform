@@ -443,6 +443,15 @@ ReactDOM.render(
           title: 'Teasers',
           pages: [
             {
+              path: '/teasersharedcomponents',
+              title: 'Shared Component',
+              imports: {
+                css,
+                ...require('./components/TeaserSharedComponent')
+              },
+              src: require('./components/TeaserSharedComponent/docs.md')
+            },
+            {
               path: '/teaserfeed',
               title: 'Feed',
               imports: {
