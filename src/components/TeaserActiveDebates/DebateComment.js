@@ -2,9 +2,8 @@ import { css } from 'glamor'
 import PropTypes from 'prop-types'
 import React from 'react'
 import colors from '../../theme/colors'
-import { serifBold28, serifBold38, serifRegular15 } from '../Typography/styles'
-import RawHtml from '../RawHtml'
 import { mUp } from '../../theme/mediaQueries'
+import { serifBold28, serifBold38, serifRegular15 } from '../Typography/styles'
 
 const styles = {
   body: css({
