@@ -20,7 +20,7 @@ Supported props:
   <TeaserSectionTitle href="/recenzionen">Alle Rezensionen</TeaserSectionTitle>
   <TeaserCarouselRow>
     <TeaserCarouselTile byline='Foto: Laurent Burst' image='/static/carousel/test.png' onClick={() => console.log("click on first tile")}>
-      <TeaserCarouselTag>Poesie & Prosa</TeaserCarouselTag>
+      <TeaserCarouselFormat>Poesie & Prosa</TeaserCarouselFormat>
       <TeaserCarouselHeadline.Editorial>Das Rätsel Dag Solstad</TeaserCarouselHeadline.Editorial>
       <TeaserCarouselLead>
         Dag Solstad: «T. Singer» Der Norweger gehört zu den schrulligsssen Autoren der Gegenwart.
@@ -32,7 +32,7 @@ Supported props:
     </TeaserCarouselTile>
 
     <TeaserCarouselTile image='/static/carousel/jackson.png?size=400x216' byline='Foto: Laurent Burst' >
-      <TeaserCarouselTag>Film</TeaserCarouselTag>
+      <TeaserCarouselFormat>Film</TeaserCarouselFormat>
       <TeaserCarouselHeadline.Editorial>Echt jetzt?</TeaserCarouselHeadline.Editorial>
       <TeaserCarouselLead>
         Peter Jackson: «They Shall Not Grow Old» Der Blockbuster-Regisseur zeigt den Ersten Weltkrieg.
@@ -63,7 +63,7 @@ Supported props:
     </TeaserCarouselTile>
 
     <TeaserCarouselTile image='/static/carousel/calle.png' byline='Foto: Laurent Burst'>
-      <TeaserCarouselTag>Kunst</TeaserCarouselTag>
+      <TeaserCarouselFormat>Kunst</TeaserCarouselFormat>
       <TeaserCarouselHeadline.Editorial>Blindes Sehen</TeaserCarouselHeadline.Editorial>
       <TeaserCarouselLead>
         Sophie Calle: «Un certain regard» Das Fotomuseum Winterthur zeigt eine beeindruckende Schau.
@@ -83,9 +83,9 @@ Below 4 tiles, each tile will use 33% of the space available, up to a maximum of
  <TeaserSectionTitle>Alle Formate</TeaserSectionTitle>
   <TeaserCarouselRow>
     <TeaserCarouselTile image='/static/carousel/binswanger.png' onClick={() => console.log("click on first tile")}>
-      <TeaserCarouselTag color='#00B4FF'>
+      <TeaserCarouselFormat color='#00B4FF'>
         Binswanger
-      </TeaserCarouselTag>
+      </TeaserCarouselFormat>
 
       <TeaserCarouselHeadline.Editorial>
         «Was verbindet die rechtspopulsistischen Parteien eigentlich?»
@@ -97,7 +97,7 @@ Below 4 tiles, each tile will use 33% of the space available, up to a maximum of
     </TeaserCarouselTile>
 
     <TeaserCarouselTile image='/static/carousel/berg.png' onClick={() => console.log("click on first tile")}>
-      <TeaserCarouselTag color="#00B4FF">Sybille Berg</TeaserCarouselTag>
+      <TeaserCarouselFormat color="#00B4FF">Sybille Berg</TeaserCarouselFormat>
       <TeaserCarouselHeadline.Editorial>
         «Was führt Männer oft zu fast albern anmutender Selbstüber-schätzung?»
       </TeaserCarouselHeadline.Editorial>
@@ -107,7 +107,7 @@ Below 4 tiles, each tile will use 33% of the space available, up to a maximum of
     </TeaserCarouselTile>
 
     <TeaserCarouselTile image='/static/carousel/niggli.png' onClick={() => console.log("click on first tile")}>
-      <TeaserCarouselTag color="#00B4FF">Niggli</TeaserCarouselTag>
+      <TeaserCarouselFormat color="#00B4FF">Niggli</TeaserCarouselFormat>
       <TeaserCarouselHeadline.Editorial>
         Sir Kim Darroch, Ritter der ungeschminkten Wahrheit
       </TeaserCarouselHeadline.Editorial>
@@ -173,7 +173,7 @@ Supported props:
 
 ```react
 <TeaserCarouselTile image='/static/carousel/calle.png' bgColor='#FFF' >
-  <TeaserCarouselTag>Kunst</TeaserCarouselTag>
+  <TeaserCarouselFormat>Kunst</TeaserCarouselFormat>
   <TeaserCarouselHeadline.Editorial>Blindes Sehen</TeaserCarouselHeadline.Editorial>
   <TeaserCarouselLead>
     Sophie Calle: «Un certain regard» Das Fotomuseum Winterthur zeigt eine beeindruckende Schau.
