@@ -5,24 +5,18 @@ import { mUp } from '../TeaserFront/mediaQueries'
 import { sansSerifRegular22, sansSerifRegular30 } from '../Typography/styles'
 
 const styles = {
-  link: css({
+  container: css({
     ...sansSerifRegular22,
-    textDecoration: 'none',
-    color: '#000000',
-    display: 'inline-block',
-    cursor: 'pointer',
-    margin: '0 0 30px 0',
     [mUp]: {
       ...sansSerifRegular30
-    }
+    },
+    display: 'block',
+    margin: '0 0 30px 0',
+    color: 'inherit'
   }),
-  label: css({
-    ...sansSerifRegular22,
-    display: 'inline-block',
-    margin: '0 0 30px 0',
-    [mUp]: {
-      ...sansSerifRegular30
-    }
+  link: css({
+    textDecoration: 'none',
+    cursor: 'pointer'
   }),
   icon: css({
     marginLeft: '8px'
@@ -31,14 +25,14 @@ const styles = {
 
 const Title = ({ children, onClick, href }) => {
   return href ? (
-    <a href={href} onClick={onClick} {...styles.link}>
+    <a href={href} onClick={onClick} {...styles.link} {...styles.container}>
       {children}
       {<ChevronRight {...styles.icon} size={30} />}
     </a>
   ) : (
-    <div onClick={onClick} {...styles.label}>
+    <span onClick={onClick} {...styles.container}>
       {children}
-    </div>
+    </span>
   )
 }
 
