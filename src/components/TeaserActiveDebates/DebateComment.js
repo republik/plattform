@@ -28,7 +28,7 @@ const DebateComment = ({ highlight, preview }) => {
         <div {...styles.body}>
           <React.Fragment>
             {preview.string}
-            {/* {!endsWithPunctuation && <Fragment>&nbsp;…</Fragment>} */}
+            {preview.more && <React.Fragment>&nbsp;…</React.Fragment>}
           </React.Fragment>
         </div>
       )}
