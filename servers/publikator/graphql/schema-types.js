@@ -133,9 +133,4 @@ enum Action {
   create
   delete
 }
-
-enum OrderDirection {
-  ASC
-  DESC
-}
 `
