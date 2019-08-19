@@ -100,14 +100,14 @@ const createShould = function (
       ]
     }
 
-    const rolbasedFilterArgs = Object.assign(
+    const rolebasedFilterArgs = Object.assign(
       {},
       { scheduledAt, ignorePrepublished },
-      getFilterObj(searchFilter)
+      getFilterObj(searchFilter, ['scheduledAt'])
     )
 
     const rolebasedFilterDefault =
-      _.get(search, 'rolebasedFilter.default', () => ({}))(rolbasedFilterArgs)
+      _.get(search, 'rolebasedFilter.default', () => ({}))(rolebasedFilterArgs)
 
     const rolebasedFilter = Object.assign({}, rolebasedFilterDefault)
 
@@ -118,7 +118,7 @@ const createShould = function (
           search,
           'rolebasedFilter.editor',
           () => rolebasedFilterDefault
-        )(rolbasedFilterArgs)
+        )(rolebasedFilterArgs)
       )
     }
 

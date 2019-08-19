@@ -51,6 +51,7 @@ input SearchFilterInput {
   hasFormat: Boolean
   template: String
   publishedAt: DateRangeInput
+  scheduledAt: DateRangeInput
   userId: ID
   author: String
   discussion: Boolean
