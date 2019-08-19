@@ -288,6 +288,9 @@ module.exports = {
             publishDate: {
               type: 'date'
             },
+            lastPublishedAt: {
+              type: 'date'
+            },
             scheduledAt: {
               type: 'date'
             },

@@ -40,6 +40,7 @@ type Meta {
   twitterDescription: String
   prepublication: Boolean
   publishDate: DateTime
+  lastPublishedAt: DateTime
   feed: Boolean
   gallery: Boolean
   kind: String

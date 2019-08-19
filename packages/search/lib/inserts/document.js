@@ -85,7 +85,7 @@ const upsertResolvedMeta = (
   }))
 }
 
-const after = async ({indexName, type: indexType, elastic, pgdb}) => {
+const after = async ({ indexName, type: indexType, elastic, pgdb }) => {
   const dossiers = await findTemplates(elastic, 'dossier')
   await upsertResolvedMeta(
     { indexName, entities: dossiers, type: 'dossier', elastic }
@@ -131,7 +131,7 @@ const iterateRepos = async (context, callback) => {
 
 module.exports = {
   before: () => {},
-  insert: async ({indexName, type: indexType, elastic, pgdb, redis}) => {
+  insert: async ({ indexName, type: indexType, elastic, pgdb, redis }) => {
     if (!AWS_ACCESS_KEY_ID || !AWS_SECRET_ACCESS_KEY) {
       console.warn('missing AWS_ACCESS_KEY_ID and/or AWS_SECRET_ACCESS_KEY skipping image uploads!')
     }
@@ -166,7 +166,8 @@ module.exports = {
           commit,
           meta: { scheduledAt },
           refName,
-          name: versionName
+          name: versionName,
+          date
         } = publication
 
         const isPrepublication = refName.indexOf('prepublication') > -1
@@ -188,6 +189,7 @@ module.exports = {
           repoId: repo.id,
           repoMeta,
           scheduledAt,
+          lastPublishedAt: isScheduled ? scheduledAt : date,
           prepublication: isPrepublication,
           doc,
           now,
