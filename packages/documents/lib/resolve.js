@@ -160,6 +160,7 @@ const contentUrlResolver = (doc, allDocuments = [], usernames = [], errors, urlP
         // - assigns a publishDate to an teaser
         // - highlights all teasers of a format or series
         node.data.urlMeta = {
+          repoId: linkedDoc.meta.repoId,
           publishDate: linkedDoc.meta.publishDate,
           format: linkedDoc.meta.template === 'format'
             ? linkedDoc.meta.repoId
