@@ -6,7 +6,7 @@ Supported props:
 
 Below 4 tiles, each tile will use 33% of the space available, up to a maximum of 450 pixels.
 
-`TeaserCarousel` children can also be customized. The prop `bigger` can be passed to both `TeaserCarouselTile` and `TeaserCarouselHeadline`, this combination is used in the current design of the section "Alle Serien", in addition to a black background defined on the `TeaserCarousel` component itself.
+`TeaserCarousel` children can also be customized. The prop `bigger` can be passed to both `TeaserCarouselTile` and `TeaserCarouselHeadline`, this combination is used in the current design of the section «Serien», in addition to a black background defined on the `TeaserCarousel` component itself.
 
 The media queries are defined in [`FrontTile`](/teaserfronttile).
 
@@ -36,7 +36,7 @@ The media queries are defined in [`FrontTile`](/teaserfronttile).
 
     <TeaserCarouselTile
       image='/static/carousel/jackson.png?size=400x216'
-      byline='Foto: Laurent Burst'
+      byline='Keystone'
     >
       <TeaserCarouselFormat>Film</TeaserCarouselFormat>
       <TeaserCarouselHeadline.Editorial>Echt jetzt?</TeaserCarouselHeadline.Editorial>
@@ -68,7 +68,7 @@ The media queries are defined in [`FrontTile`](/teaserfronttile).
     </TeaserCarouselTile>
 
     <TeaserCarouselTile
-      byline='Foto: Laurent Burst'
+      byline='Gene Glover/Agentur Focus'
       image='/static/carousel/rinck.png?size=176x240'
     >
       <TeaserCarouselHeadline.Editorial>Die vier Gangarten von lechts nach Rinck</TeaserCarouselHeadline.Editorial>
@@ -83,8 +83,7 @@ The media queries are defined in [`FrontTile`](/teaserfronttile).
     </TeaserCarouselTile>
 
     <TeaserCarouselTile
-      image='/static/carousel/calle.png?size=332x248'
-      byline='Foto: Laurent Burst'>
+      image='/static/carousel/calle.png?size=332x248'>
       <TeaserCarouselFormat>Kunst</TeaserCarouselFormat>
       <TeaserCarouselHeadline.Editorial>Blindes Sehen</TeaserCarouselHeadline.Editorial>
       <TeaserCarouselBody>
@@ -105,7 +104,7 @@ The media queries are defined in [`FrontTile`](/teaserfronttile).
 
 ```react|span-6
 <TeaserCarousel>
- <TeaserSectionTitle>Alle Formate</TeaserSectionTitle>
+ <TeaserSectionTitle>Kolumnen</TeaserSectionTitle>
   <TeaserCarouselRow>
 
     <TeaserCarouselTile image='/static/carousel/binswanger.png?size=2480x2521' onClick={() => console.log("click on first tile")}>
@@ -146,7 +145,7 @@ The media queries are defined in [`FrontTile`](/teaserfronttile).
 
 ```react|span-6
 <TeaserCarousel bgColor='#000' color='#FFF'>
-  <TeaserSectionTitle>Alle Serien</TeaserSectionTitle>
+  <TeaserSectionTitle>Serien</TeaserSectionTitle>
 
   <TeaserCarouselRow>
     <TeaserCarouselTile
@@ -155,8 +154,8 @@ The media queries are defined in [`FrontTile`](/teaserfronttile).
       count={12}
       bgColor='#000'
       color='#FFF'
-      noOutline
-      byline='Foto: Laurent Burst'
+      outline={null}
+      byline='Joan Wong'
     >
     <TeaserCarouselHeadline.Editorial bigger>
       Die Dynastie Murdoch
@@ -169,8 +168,8 @@ The media queries are defined in [`FrontTile`](/teaserfronttile).
       count={6}
       bgColor='#000'
       color='#FFF'
-      noOutline
-      byline='Foto: Laurent Burst'
+      outline={null}
+      byline='Doug Chayka'
     >
       <TeaserCarouselHeadline.Editorial bigger>
         Homestory
@@ -183,7 +182,7 @@ The media queries are defined in [`FrontTile`](/teaserfronttile).
       count={8}
       bgColor='#000'
       color='#FFF'
-      noOutline
+      outline={null}
     >
       <TeaserCarouselHeadline.Editorial bigger>
         Der Fall ETH
@@ -196,7 +195,7 @@ The media queries are defined in [`FrontTile`](/teaserfronttile).
       count={24}
       bgColor='#000'
       color='#FFF'
-      noOutline
+      outline={null}
     >
       <TeaserCarouselHeadline.Editorial bigger>
         «Am Limit»: Die Geschichte von Mike
@@ -209,7 +208,7 @@ The media queries are defined in [`FrontTile`](/teaserfronttile).
       count={10}
       bgColor='#000'
       color='#FFF'
-      noOutline
+      outline={null}
     >
       <TeaserCarouselHeadline.Editorial bigger>
         Geheimnisvolle Strahlen
@@ -230,7 +229,7 @@ Supported props:
 - `bigger` (boolean): if `true`, the image will be top aligned and used the full width of the tile.
 - `color` (string): The text color (default: `#FFFFFF`).
 - `bgColor` (string): The background color (default: `unset`).
-- `noOutline`(boolean): if `true`, the tile will not have a border. Default: `false`.
+- `outline`(string): The tile border color (default: `colors.outline`).
 - `count` (number): if an article `count`is provided, this number will be displayed in an icon below the image.
 - `image` (string): image source.
 - `byline` (string): image credit.
@@ -287,7 +286,7 @@ Supported props:
   count={10}
   bgColor='#000'
   color='#FFF'
-  noOutline
+  outline={null}
 >
   <TeaserCarouselHeadline.Editorial bigger>
     Geheimnisvolle Strahlen

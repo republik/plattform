@@ -66,9 +66,9 @@ const styles = {
 
 const Tile = ({
   bigger,
-  color = '#000',
-  bgColor = 'unset',
-  noOutline = false,
+  color,
+  bgColor,
+  outline,
   count,
   image,
   alt,
@@ -78,7 +78,7 @@ const Tile = ({
   children
 }) => {
   let tileStyle = css(styles.tile, {
-    border: noOutline ? 'none' : `1px solid ${colors.outline}`,
+    border: outline ? `1px solid ${outline}` : 'none',
     color,
     backgroundColor: bgColor,
     cursor: onClick ? 'pointer' : 'default',
@@ -168,7 +168,7 @@ Tile.propTypes = {
   bigger: PropTypes.bool,
   color: PropTypes.string,
   bgColor: PropTypes.string,
-  noOutline: PropTypes.bool,
+  outline: PropTypes.string,
   count: PropTypes.number,
   image: PropTypes.string,
   alt: PropTypes.string,
@@ -181,5 +181,5 @@ Tile.propTypes = {
 Tile.defaultProps = {
   color: '#000',
   bgColor: 'unset',
-  noOutline: false
+  outline: colors.outline
 }
