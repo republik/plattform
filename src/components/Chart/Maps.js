@@ -20,8 +20,7 @@ import Loader from '../Loader'
 import ContextBox, { ContextBoxValue } from './ContextBox'
 
 import {
-  sansSerifMedium14,
-  sansSerifRegular14
+  sansSerifMedium14
 } from '../Typography/styles'
 
 import colors from '../../theme/colors'
