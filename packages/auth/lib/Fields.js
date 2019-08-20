@@ -6,7 +6,7 @@ const MissingFieldsError = newAuthError(
   'api/fields/missing'
 )
 
-const getMissingFields = async ({ user }) => {
+const getMissingFields = async ({ user, pgdb }) => {
   const missingFields = []
 
   const isMember = !!user && Roles.userHasRole(user, 'member')
@@ -16,8 +16,12 @@ const getMissingFields = async ({ user }) => {
     user.lastName &&
     user.lastName.trim().length > 0
   )
+  const hasActiveMembership = !!user && !!(await pgdb.public.memberships.count({
+    userId: user.id,
+    active: true
+  }))
 
-  if (user && isMember && !hasNames) {
+  if (user && isMember && hasActiveMembership && !hasNames) {
     missingFields.push('firstName')
     missingFields.push('lastName')
   }
@@ -29,7 +33,7 @@ const ensureRequiredFields = async ({ user, email, providedFields, pgdb }) => {
   const missingFields = []
   const requiredFields = {}
 
-  const expectedFields = await getMissingFields({ user, email, pgdb })
+  const expectedFields = await getMissingFields({ user, pgdb })
 
   expectedFields
     .forEach(expectedField => {
