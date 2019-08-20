@@ -1,6 +1,9 @@
 import { css } from 'glamor'
 import PropTypes from 'prop-types'
 import React from 'react'
+import colors from '../../theme/colors'
+
+import CarouselContext, { defaultValue } from './Context'
 
 const styles = {
   carousel: css({
@@ -11,8 +14,10 @@ const styles = {
 }
 
 export const Carousel = ({
-  bgColor = '#FFFFFF',
-  color = '#000000',
+  bgColor,
+  color,
+  outline,
+  bigger,
   children
 }) => {
   const customStyles = css(styles.carousel, {
@@ -20,18 +25,24 @@ export const Carousel = ({
     color: color ? color : 'inherit'
   })
 
-  return <section {...customStyles}>{children}</section>
+  return <CarouselContext.Provider value={{
+    bigger,
+    outline,
+    bgColor,
+    color
+  }}>
+    <section {...customStyles}>{children}</section>
+  </CarouselContext.Provider>
 }
 
-export default Carousel
+export default React.memo(Carousel)
 
 Carousel.propTypes = {
   bgColor: PropTypes.string,
   color: PropTypes.string,
+  outline: PropTypes.string,
+  bigger: PropTypes.bool,
   children: PropTypes.node
 }
 
-Carousel.defaultProps = {
-  bgColor: '#FFFFFF',
-  color: '#000000'
-}
+Carousel.defaultProps = defaultValue

@@ -3,16 +3,18 @@ A `<TeaserCarousel />` is a row of tiles through which the user can scroll horiz
 Supported props:
 - `color` (string): The text color (default: `#FFFFFF`).
 - `bgColor` (string): The background color (default: `#000000`).
+- `outline` (string): The default outline color for cards (default: `#D7D7D7`).
+- `bigger` (bool): use bigger style for cards
 
 Below 4 tiles, each tile will use 33% of the space available, up to a maximum of 450 pixels.
 
-`TeaserCarousel` children can also be customized. The prop `bigger` can be passed to both `TeaserCarouselTile` and `TeaserCarouselHeadline`, this combination is used in the current design of the section «Serien», in addition to a black background defined on the `TeaserCarousel` component itself.
+`TeaserCarousel` provides a `React.context` to it's children to propagate `color`, `bgColor`, `outline` and `bigger`. It can be overwritten individually via props.
 
 The media queries are defined in [`FrontTile`](/teaserfronttile).
 
 ```react|span-6
 <TeaserCarousel>
-  <TeaserSectionTitle href="/recenzionen">Alle Rezensionen</TeaserSectionTitle>
+  <TeaserSectionTitle href="/recenzionen">Rezensionen</TeaserSectionTitle>
   <TeaserCarouselRow>
     <TeaserCarouselTile
       image='/static/carousel/test.png?size=4682x3512'
@@ -144,73 +146,53 @@ The media queries are defined in [`FrontTile`](/teaserfronttile).
 ```
 
 ```react|span-6
-<TeaserCarousel bgColor='#000' color='#FFF'>
+<TeaserCarousel bgColor='#000' color='#FFF' bigger outline={null}>
   <TeaserSectionTitle>Serien</TeaserSectionTitle>
 
   <TeaserCarouselRow>
     <TeaserCarouselTile
-      bigger
       image='/static/carousel/murdoch.png?size=496x372'
       count={12}
-      bgColor='#000'
-      color='#FFF'
-      outline={null}
       byline='Joan Wong'
     >
-    <TeaserCarouselHeadline.Editorial bigger>
+    <TeaserCarouselHeadline.Editorial>
       Die Dynastie Murdoch
     </TeaserCarouselHeadline.Editorial>
 
     </TeaserCarouselTile>
       <TeaserCarouselTile
-      bigger
       image='/static/carousel/homestory.png?size=248x186'
       count={6}
-      bgColor='#000'
-      color='#FFF'
-      outline={null}
       byline='Doug Chayka'
     >
-      <TeaserCarouselHeadline.Editorial bigger>
+      <TeaserCarouselHeadline.Editorial>
         Homestory
       </TeaserCarouselHeadline.Editorial>
     </TeaserCarouselTile>
 
     <TeaserCarouselTile
-      bigger
       image='/static/carousel/eth.png?size=248x186'
       count={8}
-      bgColor='#000'
-      color='#FFF'
-      outline={null}
     >
-      <TeaserCarouselHeadline.Editorial bigger>
+      <TeaserCarouselHeadline.Editorial>
         Der Fall ETH
       </TeaserCarouselHeadline.Editorial>
     </TeaserCarouselTile>
 
     <TeaserCarouselTile
-      bigger
       image='/static/carousel/mike.png?size=248x186'
       count={24}
-      bgColor='#000'
-      color='#FFF'
-      outline={null}
     >
-      <TeaserCarouselHeadline.Editorial bigger>
+      <TeaserCarouselHeadline.Editorial>
         «Am Limit»: Die Geschichte von Mike
       </TeaserCarouselHeadline.Editorial>
     </TeaserCarouselTile>
 
     <TeaserCarouselTile
-      bigger
       image='/static/carousel/strahlen.png?size=248x186'
       count={10}
-      bgColor='#000'
-      color='#FFF'
-      outline={null}
     >
-      <TeaserCarouselHeadline.Editorial bigger>
+      <TeaserCarouselHeadline.Editorial>
         Geheimnisvolle Strahlen
       </TeaserCarouselHeadline.Editorial>
     </TeaserCarouselTile>
@@ -240,7 +222,6 @@ Supported props:
 ```react|span-2
 <TeaserCarouselTile
   image='/static/carousel/calle.png?size=332x248'
-  bgColor='#FFFFFF'
 >
   <TeaserCarouselFormat>
     Kunst

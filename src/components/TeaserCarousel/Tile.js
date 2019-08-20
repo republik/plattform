@@ -8,6 +8,8 @@ import { mUp } from '../TeaserFront/mediaQueries'
 import Text from '../TeaserFront/Text'
 import { sansSerifRegular18 } from '../Typography/styles'
 
+import CarouselContext from './Context'
+
 const IMAGE_SIZE = {
   maxWidth: 160,
   maxHeight: 120
@@ -65,19 +67,28 @@ const styles = {
 }
 
 const Tile = ({
-  bigger,
-  color,
-  bgColor,
-  outline,
   count,
   image,
   alt,
   onClick,
   aboveTheFold,
   byline,
-  children
+  children,
+  ...styleFromProps
 }) => {
-  let tileStyle = css(styles.tile, {
+  const context = React.useContext(CarouselContext)
+  const style = {
+    ...context,
+    ...styleFromProps
+  }
+  const {
+    color,
+    bgColor,
+    outline,
+    bigger
+  } = style
+
+  const tileStyle = css(styles.tile, {
     border: outline ? `1px solid ${outline}` : 'none',
     color,
     backgroundColor: bgColor,
@@ -86,16 +97,16 @@ const Tile = ({
     alignItems: bigger ? 'flex-start' : 'center'
   })
 
-  let containerStyle = css(styles.container, {
+  const containerStyle = css(styles.container, {
     margin: bigger ? '0' : '0 auto'
   })
 
   const imageProps = image && FigureImage.utils.getResizedSrcs(image, 450, true)
-  let imageContainerStyles = bigger
+  const imageContainerStyles = bigger
     ? styles.imageContainerBigger
     : styles.imageContainer
 
-  let imageStyles = bigger ? styles.imageBigger : styles.image
+  const imageStyles = bigger ? styles.imageBigger : styles.image
 
   const isPortrait =
     imageProps &&
@@ -176,10 +187,4 @@ Tile.propTypes = {
   aboveTheFold: PropTypes.bool,
   byline: PropTypes.string,
   children: PropTypes.node
-}
-
-Tile.defaultProps = {
-  color: '#000',
-  bgColor: 'unset',
-  outline: colors.outline
 }

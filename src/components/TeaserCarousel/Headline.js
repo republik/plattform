@@ -3,6 +3,8 @@ import PropTypes from 'prop-types'
 import React from 'react'
 import { fontStyles } from '../../theme/fonts'
 
+import CarouselContext from './Context'
+
 const styles = {
   base: css({
     margin: '0 0 10px 0'
@@ -25,7 +27,10 @@ const styles = {
   bigger: css({ fontSize: 28, lineHeight: '28px' })
 }
 
-export const Editorial = ({ children, bigger = false }) => {
+export const Editorial = ({ children, bigger: biggerProp }) => {
+  const context = React.useContext(CarouselContext)
+  const bigger = biggerProp || context.bigger
+
   const headlineStyles = css(
     styles.base,
     styles.editorial,
@@ -35,8 +40,11 @@ export const Editorial = ({ children, bigger = false }) => {
   return <h1 {...headlineStyles}>{children}</h1>
 }
 
-export const Interaction = ({ children, bigger }) => {
-  let headlineStyles = css(
+export const Interaction = ({ children, bigger: biggerProp }) => {
+  const context = React.useContext(CarouselContext)
+  const bigger = biggerProp || context.bigger
+
+  const headlineStyles = css(
     styles.base,
     styles.interaction,
     bigger && styles.bigger
@@ -44,8 +52,11 @@ export const Interaction = ({ children, bigger }) => {
   return <h1 {...headlineStyles}>{children}</h1>
 }
 
-export const Scribble = ({ children, bigger }) => {
-  let headlineStyles = css(
+export const Scribble = ({ children, bigger: biggerProp }) => {
+  const context = React.useContext(CarouselContext)
+  const bigger = biggerProp || context.bigger
+
+  const headlineStyles = css(
     styles.base,
     styles.scribble,
     bigger && styles.bigger
