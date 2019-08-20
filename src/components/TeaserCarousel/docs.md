@@ -178,7 +178,7 @@ The media queries are defined in [`FrontTile`](/teaserfronttile).
 
     <TeaserCarouselTile
       bigger
-      image='/static/carousel/eth.png?size=251x186'
+      image='/static/carousel/eth.png?size=248x186'
       count={8}
       bgColor='#000'
       color='#FFF'

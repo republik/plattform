@@ -41,7 +41,7 @@ const styles = {
   }),
   imageContainerBigger: css({
     position: 'relative',
-    margin: '15px auto 20px auto' // room for image credit on top.
+    margin: '0 auto 22px auto' // room for image credit below
   }),
 
   // custom styles for portrait images
@@ -117,7 +117,7 @@ const Tile = ({
             />
             {byline && (
               <FigureByline
-                position={bigger ? 'aboveRight' : 'rightCompact'}
+                position={bigger ? 'belowRight' : 'rightCompact'}
                 style={{ color }}
               >
                 {byline}

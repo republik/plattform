@@ -27,14 +27,14 @@ const positionBaseStyle = {
 }
 
 const positionStyle = {
-  aboveRight: css({
+  belowRight: css({
     position: 'absolute',
     whiteSpace: 'nowrap',
-    top: -15,
+    bottom: -15,
     right: 0,
     display: 'block',
-    [mUpFront]: {
-      ...sansSerifRegular12
+    [mUp]: {
+      ...sansSerifRegular10
     }
   }),
   below: css({
@@ -125,7 +125,7 @@ Byline.propTypes = {
   children: PropTypes.node.isRequired,
   attributes: PropTypes.object,
   position: PropTypes.oneOf([
-    'aboveRight',
+    'belowRight',
     'below',
     'belowFeuilleton',
     'right',
