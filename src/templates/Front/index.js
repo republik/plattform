@@ -49,7 +49,7 @@ import {
 
 import {
   TeaserSectionTitle
-} from '../../components/TeaserSharedComponent'
+} from '../../components/TeaserShared'
 
 import {
   matchTeaser,

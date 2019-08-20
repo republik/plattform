@@ -443,15 +443,6 @@ ReactDOM.render(
           title: 'Teasers',
           pages: [
             {
-              path: '/teasersharedcomponents',
-              title: 'Shared Component',
-              imports: {
-                css,
-                ...require('./components/TeaserSharedComponent')
-              },
-              src: require('./components/TeaserSharedComponent/docs.md')
-            },
-            {
               path: '/teaserfeed',
               title: 'Feed',
               imports: {
@@ -530,7 +521,7 @@ ReactDOM.render(
                 ...require('./components/TeaserActiveDebates'),
                 ...require('./components/TeaserActiveDebates/__docs__'),
                 ...require('./components/Discussion/Internal/Comment'),
-                ...require('./components/TeaserSharedComponent'),
+                ...require('./components/TeaserShared'),
                 ...require('./components/Typography')
               },
               src: require('./components/TeaserActiveDebates/docs.md')
@@ -542,13 +533,22 @@ ReactDOM.render(
                 css,
                 t,
                 ...require('./components/TeaserCarousel'),
-                ...require('./components/TeaserSharedComponent'),
+                ...require('./components/TeaserShared'),
                 ...require('./components/TeaserFront'),
                 ...require('./components/Typography')
 
                 // ...require("./components/Figure")
               },
               src: require('./components/TeaserCarousel/docs.md')
+            },
+            {
+              path: '/teasershared',
+              title: 'Shared',
+              imports: {
+                css,
+                ...require('./components/TeaserShared')
+              },
+              src: require('./components/TeaserShared/docs.md')
             }
           ]
         },

@@ -23,7 +23,7 @@ const styles = {
   })
 }
 
-const Title = ({ children, onClick, href }) => {
+const SectionTitle = ({ children, onClick, href }) => {
   return href ? (
     <a href={href} onClick={onClick} {...styles.link} {...styles.container}>
       {children}
@@ -36,4 +36,4 @@ const Title = ({ children, onClick, href }) => {
   )
 }
 
-export default Title
+export default SectionTitle
