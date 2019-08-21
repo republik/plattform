@@ -93,7 +93,12 @@ const grant = async (granter, campaignId, email, message, t, pgdb, mail) => {
   const result = await evaluateConstraints(granter, campaign, email, t, pgdb)
 
   if (result.errors.length > 0) {
-    throw new Error(result.errors.shift())
+    const error = result.errors.shift()
+    console.error(
+      error,
+      { granter: granter.id, campaign: campaign.id, email }
+    )
+    throw new Error(error)
   }
 
   if (message && message.length > 255) {
@@ -204,7 +209,12 @@ const request = async (granter, campaignId, t, pgdb, mail) => {
   const result = await evaluateConstraints(granter, campaign, granter.email, t, pgdb)
 
   if (result.errors.length > 0) {
-    throw new Error(result.errors.shift())
+    const error = result.errors.shift()
+    console.error(
+      error,
+      { granter: granter.id, campaign: campaign.id, email: granter.email }
+    )
+    throw new Error(error)
   }
 
   const grant = await beginGrant(
