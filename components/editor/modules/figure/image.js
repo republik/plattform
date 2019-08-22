@@ -19,7 +19,7 @@ const styles = {
   })
 }
 
-export default ({rule, subModules, TYPE}) => {
+export default ({ rule, subModules, TYPE }) => {
   const Image = rule.component
 
   const figureImage = {
@@ -62,12 +62,13 @@ export default ({rule, subModules, TYPE}) => {
           const { node, editor, attributes } = props
           if (node.type !== TYPE) return
           const active = editor.value.blocks.some(block => block.key === node.key)
+
           return (
             <span
               {...styles.border}
               {...attributes}
               data-active={active}>
-              <Image src={node.data.get('src') || gray2x1} alt={node.data.get('alt')} />
+              <Image src={node.data.get('src') || gray2x1} alt={node.data.get('alt')} gallerySize={node.data.get('gallerySize')} />
             </span>
           )
         },

@@ -1,4 +1,4 @@
-import { Radio, Label } from '@project-r/styleguide'
+import { Radio, Label, Field } from '@project-r/styleguide'
 
 import {
   buttonStyles,
@@ -15,12 +15,12 @@ import createOnFieldChange from '../../utils/createOnFieldChange'
 import { getNewBlock } from './'
 
 const addFigure = options => {
-  const [
-    figureModule
-  ] = options.subModules
+  const [figureModule] = options.subModules
   return (value, onChange, figureGroupNode) => event => {
     event.preventDefault()
-    const index = figureGroupNode.nodes.findLastIndex(n => n.type === figureModule.TYPE)
+    const index = figureGroupNode.nodes.findLastIndex(
+      n => n.type === figureModule.TYPE
+    )
     onChange(
       value
         .change()
@@ -34,16 +34,17 @@ const addFigure = options => {
 }
 
 const unwrapFigures = options => {
-  const [
-    figureModule
-  ] = options.subModules
+  const [figureModule] = options.subModules
   return (value, onChange, figureGroupNode) => event => {
     event.preventDefault()
     onChange(
-      figureGroupNode.nodes.filter(n => n.type === figureModule.TYPE).reduce(
-        (t, child) => t.unwrapNodeByKey(child.key),
-        value.change()
-      ).removeNodeByKey(figureGroupNode.key)
+      figureGroupNode.nodes
+        .filter(n => n.type === figureModule.TYPE)
+        .reduce(
+          (t, child) => t.unwrapNodeByKey(child.key),
+          value.change()
+        )
+        .removeNodeByKey(figureGroupNode.key)
     )
   }
 }
@@ -54,20 +55,38 @@ const Form = ({ node, onChange }) => {
       <Radio
         value={4}
         checked={node.data.get('columns') === 4}
-        onChange={event => onChange('columns', null, Number(event.target.value))}>
-      4 Spalten
+        onChange={event =>
+          onChange('columns', null, Number(event.target.value))
+        }
+      >
+        4 Spalten
       </Radio>
       <Radio
         value={3}
         checked={node.data.get('columns') === 3}
-        onChange={event => onChange('columns', null, Number(event.target.value))}>
-      3 Spalten
+        onChange={event =>
+          onChange('columns', null, Number(event.target.value))
+        }
+      >
+        3 Spalten
       </Radio>
       <Radio
         value={2}
         checked={node.data.get('columns') === 2}
-        onChange={event => onChange('columns', null, Number(event.target.value))}>
-      2 Spalten
+        onChange={event =>
+          onChange('columns', null, Number(event.target.value))
+        }
+      >
+        2 Spalten
+      </Radio>
+      <Radio
+        value={1}
+        checked={node.data.get('columns') === 1}
+        onChange={event =>
+          onChange('columns', null, Number(event.target.value))
+        }
+      >
+        1 Spalte
       </Radio>
     </UIForm>
   )
@@ -81,35 +100,92 @@ export const FigureGroupForm = options => {
     isDisabled: ({ value }) => {
       const figureGroup = value.blocks.reduce(
         (memo, node) =>
-          memo || value.document.getFurthest(node.key, matchBlock(TYPE)),
+          memo ||
+          value.document.getFurthest(node.key, matchBlock(TYPE)),
         undefined
       )
 
       return !figureGroup
     }
-  })(
-    ({ disabled, onChange, value }) => {
-      if (disabled) {
-        return null
-      }
+  })(({ disabled, onChange, value }) => {
+    if (disabled) {
+      return null
+    }
 
-      const figureGroup = value.blocks.reduce(
-        (memo, node) =>
-          memo || value.document.getFurthest(node.key, matchBlock(TYPE)),
-        undefined
-      )
+    const figureGroup = value.blocks.reduce(
+      (memo, node) =>
+        memo ||
+        value.document.getFurthest(node.key, matchBlock(TYPE)),
+      undefined
+    )
 
-      const handlerFactory = createOnFieldChange((change) => {
+    const handlerFactory = createOnFieldChange(
+      change => {
         onChange(change)
-      }, value, figureGroup)
-      return <div>
+      },
+      value,
+      figureGroup
+    )
+    return (
+      <div>
         <Label>Bildergruppe</Label>
         <Form node={figureGroup} onChange={handlerFactory} />
+        <br />
+        <Label>Diashow</Label>
+        <UIForm>
+          <Radio
+            value={null}
+            checked={!figureGroup.data.get('slideshow')}
+            onChange={event =>
+              handlerFactory('slideshow', null, null)
+            }
+          >
+            Keine
+          </Radio>
+          <Radio
+            value={3}
+            checked={figureGroup.data.get('slideshow') === 3}
+            onChange={event =>
+              handlerFactory('slideshow', null, Number(event.target.value))
+            }
+          >
+            3 Zeilen Vorschau
+          </Radio>
+          <Radio
+            value={2}
+            checked={figureGroup.data.get('slideshow') === 2}
+            onChange={event =>
+              handlerFactory('slideshow', null, Number(event.target.value))
+            }
+          >
+            2 Zeilen Vorschau
+          </Radio>
+          <Radio
+            value={1}
+            checked={figureGroup.data.get('slideshow') === 1}
+            onChange={event =>
+              handlerFactory('slideshow', null, Number(event.target.value))
+            }
+          >
+            1 Zeile Vorschau
+          </Radio>
+        </UIForm>
+
+        <Field
+          label='Anzahl Zeilen als Diashow-Cover'
+          type='number'
+          value={figureGroup.data.get('slideshowCoverRows')}
+          onChange={handlerFactory('slideshowCoverRows')}
+        />
         <span
           {...buttonStyles.insert}
           data-disabled={disabled}
           data-visible
-          onMouseDown={addFigureHandler(value, onChange, figureGroup)}
+          onMouseDown={addFigureHandler(
+            value,
+            onChange,
+            figureGroup
+          )}
         >
           Bild hinzufügen
         </span>
@@ -117,41 +193,48 @@ export const FigureGroupForm = options => {
           {...buttonStyles.insert}
           data-disabled={disabled}
           data-visible
-          onMouseDown={unwrapFiguresHandler(value, onChange, figureGroup)}
+          onMouseDown={unwrapFiguresHandler(
+            value,
+            onChange,
+            figureGroup
+          )}
         >
           Bildergruppe auflösen
         </span>
       </div>
-    }
-  )
+    )
+  })
 }
 
 export const FigureGroupButton = options => {
-  const figureButtonClickHandler = (disabled, value, onChange) => event => {
+  const figureButtonClickHandler = (
+    disabled,
+    value,
+    onChange
+  ) => event => {
     event.preventDefault()
     if (!disabled) {
-      onChange(value
-        .change()
-        .call(
-          injectBlock,
-          getNewBlock(options)()
-        )
+      onChange(
+        value.change().call(injectBlock, getNewBlock(options)())
       )
     }
   }
 
   const insertTypes = options.rule.editorOptions.insertTypes || []
   return ({ value, onChange }) => {
-    const disabled = value.isBlurred ||
-      !value.blocks.every(
-        n => insertTypes.includes(n.type)
-      )
+    const disabled =
+      value.isBlurred ||
+      !value.blocks.every(n => insertTypes.includes(n.type))
     return (
       <span
         {...buttonStyles.insert}
         data-disabled={disabled}
         data-visible
-        onMouseDown={figureButtonClickHandler(disabled, value, onChange)}
+        onMouseDown={figureButtonClickHandler(
+          disabled,
+          value,
+          onChange
+        )}
       >
         {options.rule.editorOptions.insertButtonText}
       </span>

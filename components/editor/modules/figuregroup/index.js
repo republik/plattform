@@ -42,7 +42,7 @@ export const fromMdast = ({
   const [
     figureModule,
     captionModule
- ] = subModules
+  ] = subModules
 
   const figureSerializer = figureModule.helpers.serializer
 
@@ -53,8 +53,8 @@ export const fromMdast = ({
   const figures = (hasCaption
     ? node.children.slice(0, -1)
     : node.children).map(
-      v => figureSerializer.fromMdast(v)
-    )
+    v => figureSerializer.fromMdast(v)
+  )
   const nodes = hasCaption
     ? figures.concat(
       captionModule.helpers.serializer.fromMdast(caption)
@@ -109,8 +109,8 @@ const isEmpty = options => {
   return node => {
     const figures = node.nodes.skipLast(1)
     return figures.every(
-        figureModule.helpers.isEmpty
-      ) &&
+      figureModule.helpers.isEmpty
+    ) &&
       figures.size < 3 &&
       !node.nodes.last().text
   }
@@ -131,7 +131,7 @@ const figureGroupPlugin = options => {
       }
 
       return (
-        <FigureGroup size='breakout' {...node.data.toJS()} attributes={attributes}>
+        <FigureGroup size='breakout' {...node.data.toJS()} slideshow={false} attributes={attributes}>
           {children}
         </FigureGroup>
       )
