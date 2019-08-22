@@ -68,7 +68,7 @@ export default ({ rule, subModules, TYPE }) => {
               {...styles.border}
               {...attributes}
               data-active={active}>
-              <Image src={node.data.get('src') || gray2x1} alt={node.data.get('alt')} gallerySize={node.data.get('gallerySize')} />
+              <Image src={node.data.get('src') || gray2x1} alt={node.data.get('alt')} />
             </span>
           )
         },
