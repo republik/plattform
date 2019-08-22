@@ -57,19 +57,18 @@ class Image extends Component {
       gallerySize
     } = this.props
 
-    const onClick = (enableGallery && this.context.toggleGallery) ? this.context.toggleGallery : () => {}
+    const hasGallery = (enableGallery && this.context.toggleGallery)
+    const onClick =  hasGallery ? () => this.context.toggleGallery(src) : () => {}
 
     const size = sizeProp || (sizeProp === undefined && imageSizeInfo(src))
     const aspectRatio = size ? size.width / size.height : undefined
 
-    const handleClick = () => onClick(src)
-
     const image = isFinite(aspectRatio)
       ? <LazyImage attributes={attributes} visible={aboveTheFold}
           aspectRatio={aspectRatio}
-          src={src} srcSet={srcSet} alt={alt} onClick={handleClick} />
+          src={src} srcSet={srcSet} alt={alt} onClick={onClick} />
       : <img {...attributes} {...styles.image}
-          src={src} srcSet={srcSet} alt={alt} onClick={handleClick} />
+          src={src} srcSet={srcSet} alt={alt} onClick={onClick} />
 
     let wrappedImage = image
 
@@ -79,15 +78,13 @@ class Image extends Component {
           {wrappedImage}
         </span>
     }
-    if (src && gallerySize > 0) {
-      wrappedImage =
-        <>
-          {wrappedImage}
-          <GalleryButton gallerySize={gallerySize} onClick={handleClick} />
-        </>
-    }
+    wrappedImage =
+      <>
+        {wrappedImage}
+        { gallerySize > 0 && <GalleryButton gallerySize={gallerySize} onClick={onClick} /> }
+      </>
     return (
-      <div {...styles.imageContainer}>
+      <div {...styles.imageContainer} style={{cursor: hasGallery ? 'zoom-in' : undefined }}>
         {wrappedImage}
       </div>
     )
