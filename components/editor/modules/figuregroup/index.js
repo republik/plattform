@@ -4,6 +4,7 @@ import React from 'react'
 import { FigureGroupButton, FigureGroupForm } from './ui'
 import { matchBlock } from '../../utils'
 import { createRemoveEmptyKeyHandler } from '../../utils/keyHandlers'
+import GalleryIcon from 'react-icons/lib/md/filter'
 
 export const getData = data => ({
   columns: 2,
@@ -132,6 +133,11 @@ const figureGroupPlugin = options => {
 
       return (
         <FigureGroup size='breakout' {...node.data.toJS()} slideshow={false} attributes={attributes}>
+          { node.data.get('slideshow') > 0 &&
+            <div style={{ position: 'absolute', left: -25 }}>
+              <GalleryIcon />
+            </div>
+          }
           {children}
         </FigureGroup>
       )
