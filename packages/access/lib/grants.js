@@ -83,7 +83,7 @@ const grant = async (granter, campaignId, email, message, t, pgdb, mail) => {
 
   const campaign = await campaignsLib.findOne(campaignId, pgdb)
 
-  if (campaign === undefined) {
+  if (!campaign) {
     throw new Error(t(
       'api/access/grant/campaign/error',
       { campaignId }
@@ -199,7 +199,7 @@ const revoke = async (id, user, t, pgdb) => {
 const request = async (granter, campaignId, t, pgdb, mail) => {
   const campaign = await campaignsLib.findOne(campaignId, pgdb)
 
-  if (campaign === undefined) {
+  if (!campaign) {
     throw new Error(t(
       'api/access/request/campaign/error',
       { campaignId }
