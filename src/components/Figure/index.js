@@ -30,6 +30,7 @@ const styles = {
   figureGroup: css({
     margin: 0,
     display: 'block',
+    position: 'relative',
     [mUp]: {
       display: 'flex',
       flexWrap: 'wrap',
