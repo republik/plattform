@@ -1,33 +1,9 @@
 const debug = require('debug')('access:lib:memberships')
 
 const { Roles } = require('@orbiting/backend-modules-auth')
+const { hasUserActiveMembership } = require('@orbiting/backend-modules-utils')
 
 const eventsLib = require('./events')
-
-const hasUserActiveMembership = async (user, pgdb) => {
-  const memberships = await pgdb.query(`
-    SELECT memberships.id, packages.name
-    FROM memberships
-
-    INNER JOIN "membershipPeriods"
-      ON memberships.id = "membershipPeriods"."membershipId"
-
-    INNER JOIN pledges
-      ON memberships."pledgeId" = pledges.id
-
-    INNER JOIN packages
-      ON pledges."packageId" = packages.id
-
-    WHERE
-      memberships."userId" = '${user.id}'
-      AND "beginDate" <= NOW()
-      AND "endDate" > NOW()
-  `)
-
-  debug('hasUserActiveMembership', user.id, memberships)
-
-  return memberships.length > 0
-}
 
 const addMemberRole = async (grant, user, pgdb) => {
   debug('addMemberRole', { grant: grant.id, user: user.id })
@@ -79,7 +55,6 @@ const removeMemberRole = async (grant, user, findFn, pgdb) => {
 }
 
 module.exports = {
-  hasUserActiveMembership,
   addMemberRole,
   removeMemberRole
 }

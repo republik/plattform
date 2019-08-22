@@ -7,6 +7,7 @@
  */
 require('@orbiting/backend-modules-env').config()
 const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
+const { hasUserActiveMembership } = require('@orbiting/backend-modules-utils')
 // const fs = require('fs')
 const rw = require('rw')
 const { enforceSubscriptions } = require('../modules/crowdfundings/lib/Mail.js')
@@ -29,16 +30,12 @@ PgDb.connect().then(async pgdb => {
 
   let notMembers = []
   for (let email of emails) {
-    const user = await pgdb.public.users.findOne({email})
+    const user = await pgdb.public.users.findOne({ email })
     if (!user) {
       console.warn(`user not found for email: ${email}`)
       continue
     }
-    const hasActiveMembership = await pgdb.public.memberships.findFirst({
-      userId: user.id,
-      active: true
-    })
-    if (hasActiveMembership) {
+    if (await hasUserActiveMembership(user, pgdb)) {
       console.warn(`user has active membership. email: ${email}, id: ${user.id}`)
     } else {
       notMembers.push(user)

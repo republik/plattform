@@ -1,4 +1,5 @@
 const { Roles: { ensureUserIsInRoles } } = require('@orbiting/backend-modules-auth')
+const { hasUserActiveMembership } = require('@orbiting/backend-modules-utils')
 
 module.exports = async (_, args, { pgdb, req, user: me, t, mail: { enforceSubscriptions } }) => {
   ensureUserIsInRoles(me, ['supporter'])
@@ -33,14 +34,8 @@ module.exports = async (_, args, { pgdb, req, user: me, t, mail: { enforceSubscr
       return membership
     }
 
-    if (membership.active) {
-      const userHasActiveMembership = !!await transaction.public.memberships.findFirst({
-        userId: user.id,
-        active: true
-      })
-      if (userHasActiveMembership) {
-        throw new Error(t('api/membership/move/otherActive'))
-      }
+    if (membership.active && (await hasUserActiveMembership(user, transaction))) {
+      throw new Error(t('api/membership/move/otherActive'))
     }
 
     const newMembership = await transaction.public.memberships.updateAndGetOne(

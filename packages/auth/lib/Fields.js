@@ -1,3 +1,5 @@
+const { hasUserActiveMembership } = require('@orbiting/backend-modules-utils')
+
 const { newAuthError } = require('./AuthError')
 const Roles = require('./Roles')
 
@@ -16,10 +18,7 @@ const getMissingFields = async ({ user, pgdb }) => {
     user.lastName &&
     user.lastName.trim().length > 0
   )
-  const hasActiveMembership = !!user && !!(await pgdb.public.memberships.count({
-    userId: user.id,
-    active: true
-  }))
+  const hasActiveMembership = !!user && (await hasUserActiveMembership(user, pgdb))
 
   if (user && isMember && hasActiveMembership && !hasNames) {
     missingFields.push('firstName')

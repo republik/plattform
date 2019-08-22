@@ -4,7 +4,10 @@ const validator = require('validator')
 const Promise = require('bluebird')
 
 const { Roles } = require('@orbiting/backend-modules-auth')
-const { applyPgInterval: { add: addInterval } } = require('@orbiting/backend-modules-utils')
+const {
+  applyPgInterval: { add: addInterval },
+  hasUserActiveMembership
+} = require('@orbiting/backend-modules-utils')
 
 const campaignsLib = require('./campaigns')
 const constraints = require('./constraints')
@@ -150,10 +153,7 @@ const claim = async (voucherCode, user, t, pgdb, mail) => {
     })
   }
 
-  const hasMembership =
-    await membershipsLib.hasUserActiveMembership(user, pgdb)
-
-  if (!hasMembership) {
+  if (!(await hasUserActiveMembership(user, pgdb))) {
     const granter = await pgdb.public.users
       .findOne({ id: grant.granterUserId })
     const campaign = await pgdb.public.accessCampaigns
@@ -240,10 +240,7 @@ const request = async (granter, campaignId, t, pgdb, mail) => {
     })
   }
 
-  const hasMembership =
-    await membershipsLib.hasUserActiveMembership(granter, pgdb)
-
-  if (!hasMembership) {
+  if (!(await hasUserActiveMembership(granter, pgdb))) {
     await mailLib.sendRecipientOnboarding(granter, campaign, granter, grant, t, pgdb)
   }
 
@@ -286,10 +283,7 @@ const invalidate = async (grant, reason, t, pgdb, mail) => {
         })
       }
 
-      const hasMembership =
-        await membershipsLib.hasUserActiveMembership(recipient, pgdb)
-
-      if (!hasMembership) {
+      if (!(await hasUserActiveMembership(recipient, pgdb))) {
         const granter = await pgdb.public.users
           .findOne({ id: grant.granterUserId })
         const campaign = await pgdb.public.accessCampaigns
@@ -324,18 +318,13 @@ const followUp = async (campaign, grant, t, pgdb, mail) => {
   const recipient =
     await pgdb.public.users.findOne({ id: grant.recipientUserId })
 
-  if (recipient) {
-    const hasMembership =
-      await membershipsLib.hasUserActiveMembership(recipient, pgdb)
+  if (recipient && !(await hasUserActiveMembership(recipient, pgdb))) {
+    const granter = await pgdb.public.users
+      .findOne({ id: grant.granterUserId })
 
-    if (!hasMembership) {
-      const granter = await pgdb.public.users
-        .findOne({ id: grant.granterUserId })
-
-      await mailLib.sendRecipientFollowup(
-        granter, campaign, recipient, grant, t, pgdb
-      )
-    }
+    await mailLib.sendRecipientFollowup(
+      granter, campaign, recipient, grant, t, pgdb
+    )
   }
 
   debug('followUp', {
