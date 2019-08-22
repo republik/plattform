@@ -26,7 +26,7 @@ const isGrantable = async (args, context) => {
 
 const getMeta = () => ({
   visible: true,
-  grantable: null, // unkown if it is grantable
+  grantable: null, // unknown if it is grantable
   payload: {}
 })
 
