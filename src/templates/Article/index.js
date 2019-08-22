@@ -187,13 +187,35 @@ const figureImage = {
     const src = extractImage(node)
     const displayWidth = getDisplayWidth(ancestors)
     const enableGallery = parent.data ? !parent.data.excludeFromGallery : true
+
+    const group = ancestors.find(matchZone('FIGUREGROUP'))
+
+    let gallerySize
+    if (group && group.data.slideshow) {
+      const {
+        slideshow,
+        columns
+      } = group.data
+
+      const index = group.children.indexOf(parent)
+      const numFigs = group.children.filter(matchFigure).length
+
+      const galleryCover =
+        index === slideshow * columns - 1 &&
+        numFigs > slideshow * columns
+
+      gallerySize = galleryCover && numFigs
+
+    }
+
     return {
       ...FigureImage.utils.getResizedSrcs(
         src,
         displayWidth,
       ),
       alt: node.children[0].alt,
-      enableGallery
+      enableGallery,
+      gallerySize
     }
   },
   editorModule: 'figureImage',
@@ -227,10 +249,29 @@ const figureCaption = {
 
 const figure = {
   matchMdast: matchFigure,
-  component: Figure,
-  props: node => ({
-    size: node.data.size
-  }),
+  component: ({hidden, ...rest}) => {
+    const fig = <Figure {...rest} />
+    if (hidden) {
+      return <noscript>{fig}</noscript>
+    } 
+    return fig
+  },
+  props: (node, index, parent, { ancestors }) => {
+    
+    const group = ancestors.find(matchZone('FIGUREGROUP'))
+
+    let hidden = false
+    if (group && group.data.slideshow) {
+      const { slideshow, columns } = group.data
+      const index = group.children.indexOf(node)
+      hidden = index > slideshow * columns - 1
+    }
+
+    return {
+      hidden,
+      size: node.data.size,
+    }
+  },
   editorModule: 'figure',
   editorOptions: {
     pixelNote:
