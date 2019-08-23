@@ -39,7 +39,7 @@ test('calculateAxis with uneven ticks', assert => {
     [70,77.5,85],
     'auto ticks'
   )
-  assert.deepEqual(
+  assert.equal(
     yAxis.axisFormat(77.5),
     '77,5',
     'axis fromat with one decimal digit'
@@ -48,6 +48,30 @@ test('calculateAxis with uneven ticks', assert => {
     yAxis.axisFormat(85, true),
     '85,0 Jahre',
     'include unit for last tick'
+  )
+  assert.end()
+})
+
+
+test('calculateAxis with two decimal digit ticks', assert => {
+  const yAxis = calculateAxis('.2f', tLabel, [0.35, 0.65], 'Gini-Koeffizient', {
+    ticks: [0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65]
+  })
+
+  assert.equal(
+    yAxis.format(0.6),
+    '0,60',
+    'format with two decimal digit'
+  )
+  assert.equal(
+    yAxis.axisFormat(0.65),
+    '0,65',
+    'axis fromat with two decimal digit'
+  )
+  assert.equal(
+    yAxis.axisFormat(0.60),
+    '0,60',
+    'axis fromat with two decimal digit'
   )
   assert.end()
 })
