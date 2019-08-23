@@ -1,4 +1,4 @@
-import { Radio, Label, Field } from '@project-r/styleguide'
+import { Radio, Label } from '@project-r/styleguide'
 
 import {
   buttonStyles,
@@ -171,12 +171,6 @@ export const FigureGroupForm = options => {
           </Radio>
         </UIForm>
 
-        <Field
-          label='Anzahl Zeilen als Diashow-Cover'
-          type='number'
-          value={figureGroup.data.get('slideshowCoverRows')}
-          onChange={handlerFactory('slideshowCoverRows')}
-        />
         <span
           {...buttonStyles.insert}
           data-disabled={disabled}
