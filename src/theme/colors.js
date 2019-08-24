@@ -30,7 +30,6 @@ const colors = {
   lightText: '#979797',
   error: '#9E0041',
   divider: '#DBDCDD',
-  outline: '#D7D7D7',
   online: '#00DC00',
   social: '#E9A733',
   editorial: '#00B4FF',

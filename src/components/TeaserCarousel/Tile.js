@@ -74,19 +74,14 @@ const Tile = ({
   aboveTheFold,
   byline,
   children,
-  ...styleFromProps
+  ...rest
 }) => {
   const context = React.useContext(CarouselContext)
-  const style = {
-    ...context,
-    ...styleFromProps
-  }
-  const {
-    color,
-    bgColor,
-    outline,
-    bigger
-  } = style
+
+  const color = rest.color || context.color
+  const bgColor = rest.bgColor || context.bgColor
+  const outline = rest.outline || context.outline
+  const bigger = rest.bigger || context.bigger
 
   const tileStyle = css(styles.tile, {
     border: outline ? `1px solid ${outline}` : 'none',

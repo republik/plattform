@@ -1,9 +1,9 @@
 A `<TeaserCarousel />` is a row of tiles through which the user can scroll horizontally.
 
 Supported props:
-- `color` (string): The text color (default: `#FFFFFF`).
-- `bgColor` (string): The background color (default: `#000000`).
-- `outline` (string): The default outline color for cards (default: `#D7D7D7`).
+- `color` (string): The text color (default: `#fff`).
+- `bgColor` (string): The background color (default: `#000`).
+- `outline` (string): The default outline color for cards.
 - `bigger` (bool): use bigger style for cards
 
 Below 4 tiles, each tile will use 33% of the space available, up to a maximum of 450 pixels.
@@ -13,7 +13,7 @@ Below 4 tiles, each tile will use 33% of the space available, up to a maximum of
 The media queries are defined in [`FrontTile`](/teaserfronttile).
 
 ```react|span-6
-<TeaserCarousel>
+<TeaserCarousel outline='#D7D7D7'>
   <TeaserSectionTitle href="/recenzionen">Rezensionen</TeaserSectionTitle>
   <TeaserCarouselRow>
     <TeaserCarouselTile
@@ -105,7 +105,7 @@ The media queries are defined in [`FrontTile`](/teaserfronttile).
 ```
 
 ```react|span-6
-<TeaserCarousel>
+<TeaserCarousel outline='#D7D7D7'>
  <TeaserSectionTitle>Kolumnen</TeaserSectionTitle>
   <TeaserCarouselRow>
 
@@ -146,7 +146,7 @@ The media queries are defined in [`FrontTile`](/teaserfronttile).
 ```
 
 ```react|span-6
-<TeaserCarousel bgColor='#000' color='#FFF' bigger outline={null}>
+<TeaserCarousel bgColor='#000' color='#fff' bigger>
   <TeaserSectionTitle>Serien</TeaserSectionTitle>
 
   <TeaserCarouselRow>
@@ -209,9 +209,9 @@ This is the container that overflows the screen width, and triggers horizontal s
 A Carousel has `TeaserCarouselTile` as direct children of a `TeaserCarouselRow`. They can also be customized.
 Supported props:
 - `bigger` (boolean): if `true`, the image will be top aligned and used the full width of the tile.
-- `color` (string): The text color (default: `#FFFFFF`).
-- `bgColor` (string): The background color (default: `unset`).
-- `outline`(string): The tile border color (default: `colors.outline`).
+- `color` (string): The text color (default: `#fff`).
+- `bgColor` (string): The background color (default: `#000`).
+- `outline` (string): The tile border color.
 - `count` (number): if an article `count`is provided, this number will be displayed in an icon below the image.
 - `image` (string): image source.
 - `byline` (string): image credit.
@@ -222,6 +222,7 @@ Supported props:
 ```react|span-2
 <TeaserCarouselTile
   image='/static/carousel/calle.png?size=332x248'
+  outline='#D7D7D7'
 >
   <TeaserCarouselFormat>
     Kunst
@@ -245,7 +246,8 @@ Supported props:
 ```react|span-2
 <TeaserCarouselTile
   image='/static/carousel/binswanger.png?size=2480x2521'
-  onClick={() => console.log("click on first tile")}
+  outline='#D7D7D7'
+  onClick={() => console.log("click on tile")}
 >
   <TeaserCarouselFormat
     color='#00B4FF'
@@ -266,8 +268,7 @@ Supported props:
   image='/static/carousel/strahlen.png?size=248x186'
   count={10}
   bgColor='#000'
-  color='#FFF'
-  outline={null}
+  color='#fff'
 >
   <TeaserCarouselHeadline.Editorial bigger>
     Geheimnisvolle Strahlen
@@ -349,26 +350,26 @@ The teaser text content must be wrapped within `<TeaserCarouselBody />`, which d
 ### `<TeaserCarouselArticleCount />`
 This component is only used when `TeaserCarouselTile`'s prop `count` is set.
 Supported props:
-- `color` (string): The text color (default: `#000000`).
-- `bgColor` (string): The background color (default: `#FFFFFF`).
+- `color` (string): The text color (default: `#000`).
+- `bgColor` (string): The background color (default: `#fff`).
 - `count` (number): the number to display.
 
 ```react|span-2
-<div style={{backgroundColor: '#000000', width: '300px', height: '100px', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+<div style={{backgroundColor: '#000', width: '300px', height: '100px', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
   <TeaserCarouselArticleCount
     count={12}
-    bgColor='#FFFFFF'
-    color='#000000'
+    bgColor='#fff'
+    color='#000'
   />
 </div>
 ```
 
 ```react|span-2
-<div style={{backgroundColor: '#FFFFFF', width: '300px', height: '100px', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+<div style={{backgroundColor: '#fff', width: '300px', height: '100px', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
   <TeaserCarouselArticleCount
     count={9}
-    bgColor='#000000'
-    color='#FFFFFF'
+    bgColor='#000'
+    color='#fff'
   />
 </div>
 ```

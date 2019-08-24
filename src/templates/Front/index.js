@@ -752,8 +752,14 @@ const createSchema = ({
         'showImage',
         'color',
         'bgColor',
+        'outline',
         'formatColor'
-      ]
+      ],
+      defaultValues: {
+        // default to context provided values
+        color: undefined,
+        bgColor: undefined
+      }
     },
     rules: [
       image,
@@ -811,8 +817,13 @@ const createSchema = ({
       formOptions: [
         'noAdapt',
         'color',
-        'bgColor'
-      ]
+        'bgColor',
+        'outline',
+        'bigger'
+      ],
+      defaultValues: {
+        outline: '#D7D7D7'
+      }
     },
     rules: [
       {
