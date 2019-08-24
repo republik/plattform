@@ -301,6 +301,16 @@ const Form = withT(({ node, onChange, onTypeChange, options, t }) => {
       />
     }
     {
+      options.includes('outline') &&
+      <ColorPicker
+        label='Umrisslinienfarbe'
+        value={node.data.get('outline')}
+        onChange={color => {
+          onChange('outline', null, color)
+        }}
+      />
+    }
+    {
       options.includes('formatColor') &&
       <ColorPicker
         label='Formatfarbe'
@@ -324,6 +334,15 @@ const Form = withT(({ node, onChange, onTypeChange, options, t }) => {
         label='Bildcredit'
         value={node.data.get('byline')}
         onChange={onChange('byline')} />
+    }
+    {
+      options.includes('bigger') &&
+      <Checkbox
+        checked={node.data.get('bigger')}
+        onChange={onChange('bigger')}
+      >
+        Grösser (e.g. Serien)
+      </Checkbox>
     }
     {
       options.includes('showImage') &&

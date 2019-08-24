@@ -55,9 +55,10 @@ const getRules = subModules => subModules.reduce(
   []
 ).filter(Boolean)
 
-export const fromMdast = ({
+const fromMdast = ({
   TYPE,
-  subModules
+  subModules,
+  rule
 }) => (node,
   index,
   parent,
@@ -66,7 +67,10 @@ export const fromMdast = ({
   const imageParagraph = node.children.find(matchImageParagraph)
 
   // Remove module key from data
-  const { module, ...data } = getData(node.data)
+  const { module, ...data } = getData({
+    ...rule.editorOptions.defaultValues,
+    ...node.data
+  })
   if (imageParagraph) {
     data.image = imageParagraph.children[0].url
   }
@@ -126,7 +130,7 @@ export const fromMdast = ({
   return result
 }
 
-export const toMdast = ({
+const toMdast = ({
   TYPE,
   subModules
 }) => (

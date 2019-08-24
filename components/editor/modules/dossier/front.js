@@ -31,7 +31,8 @@ const getNewBlock = options => {
     kind: 'block',
     type: options.TYPE,
     data: getData({
-      teaserType: options.rule.editorOptions.teaserType || 'frontArticleCollection'
+      teaserType: options.rule.editorOptions.teaserType || 'frontArticleCollection',
+      ...options.rule.editorOptions.defaultValues
     }),
     nodes: [
       headlineModule && {
