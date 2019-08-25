@@ -114,8 +114,7 @@
     }
   },
   "dependencies": {
-    "react-icons": "^2.2.7",
-    "react-swipeable": "^4.3.0"
+    "react-icons": "^2.2.7"
   },
   "browserslist": [
     ">0.2%",

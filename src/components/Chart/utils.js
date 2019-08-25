@@ -171,11 +171,11 @@ export const calculateAxis = (numberFormat, tLabel, domain, unit = '', {
     lastFormat = sFormat(tLabel, specifier.precision, pow, 'f')
     regularFormat = sFormat(tLabel, specifier.precision, {scale: pow.scale, suffix: ''}, 'f')
   } else {
-    specifier.precision = precisionFixed(
-      ticks.reduce(
-        (precision, value) => precision || value - Math.floor(value),
-        0
-      )
+    specifier.precision = d3Max(
+      ticks.map((tick, i) => Math.max(
+        i && precisionFixed(tick - ticks[i - 1]),
+        precisionFixed(tick - Math.floor(tick))
+      ))
     )
     lastFormat = regularFormat = format(specifier.toString())
   }

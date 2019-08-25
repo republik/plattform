@@ -228,16 +228,6 @@ ReactDOM.render(
               src: require('./components/LazyLoad/docs.md')
             },
             {
-              path: '/gallery',
-              title: 'Gallery',
-              imports: {
-                css,
-                ...require('./components/Gallery'),
-                ...require('./components/Figure')
-              },
-              src: require('./components/Gallery/docs.md')
-            },
-            {
               path: '/components/progress',
               title: 'Progress',
               imports: {

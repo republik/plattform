@@ -4,16 +4,43 @@ import { css } from 'glamor'
 import { imageSizeInfo } from 'mdast-react-render/lib/utils'
 import { getResizedSrcs } from './utils'
 import LazyImage from '../LazyLoad/Image'
+import GalleryIcon from 'react-icons/lib/md/filter'
+import { sansSerifRegular12, sansSerifRegular15 } from '../Typography/styles'
+import { mUp } from '../../theme/mediaQueries'
 
 const styles = {
   image: css({
     display: 'block',
     width: '100%'
   }),
+  imageContainer: css({
+    position: 'relative'
+  }),
+  galleryButton: css({
+    position: 'absolute',
+    right: 15,
+    bottom: 15,
+    padding: 10,
+    background: 'rgba(0,0,0,0.7)',
+    color: '#fff',
+    cursor: 'pointer',
+    ...sansSerifRegular12,
+    [mUp]: {
+      ...sansSerifRegular15,
+      lineHeight: '18px'
+    }
+  }),
   maxWidth: css({
     display: 'block',
-    position: 'relative'
   })
+}
+
+const GalleryButton = ({gallerySize, onClick}) => {
+  return (
+    <div {...styles.galleryButton} onClick={onClick}>
+      <span style={{paddingRight: 10}}><GalleryIcon color='#fff' /></span>{`${gallerySize} Bilder`}
+    </div>
+  )
 }
 
 class Image extends Component {
@@ -26,10 +53,12 @@ class Image extends Component {
       maxWidth,
       size: sizeProp,
       aboveTheFold,
-      enableGallery = true
+      enableGallery = true,
+      gallerySize
     } = this.props
 
-    const onClick = (enableGallery && this.context.toggleGallery) ? this.context.toggleGallery : () => {}
+    const hasGallery = (enableGallery && this.context.toggleGallery)
+    const onClick =  hasGallery ? () => this.context.toggleGallery(src) : () => {}
 
     const size = sizeProp || (sizeProp === undefined && imageSizeInfo(src))
     const aspectRatio = size ? size.width / size.height : undefined
@@ -37,18 +66,28 @@ class Image extends Component {
     const image = isFinite(aspectRatio)
       ? <LazyImage attributes={attributes} visible={aboveTheFold}
           aspectRatio={aspectRatio}
-          src={src} srcSet={srcSet} alt={alt} onClick={() => onClick(src)} />
+          src={src} srcSet={srcSet} alt={alt} onClick={onClick} />
       : <img {...attributes} {...styles.image}
-          src={src} srcSet={srcSet} alt={alt} onClick={() => onClick(src)} />
+          src={src} srcSet={srcSet} alt={alt} onClick={onClick} />
+
+    let wrappedImage = image
 
     if (maxWidth) {
-      return (
+      wrappedImage = 
         <span {...styles.maxWidth} style={{maxWidth}}>
-          {image}
+          {wrappedImage}
         </span>
-      )
     }
-    return image
+    wrappedImage =
+      <>
+        {wrappedImage}
+        { gallerySize > 0 && <GalleryButton gallerySize={gallerySize} onClick={onClick} /> }
+      </>
+    return (
+      <div {...styles.imageContainer} style={{cursor: hasGallery ? 'zoom-in' : undefined }}>
+        {wrappedImage}
+      </div>
+    )
   }
 }
 
@@ -61,11 +100,13 @@ Image.propTypes = {
     height: PropTypes.number
   }),
   maxWidth: PropTypes.number,
-  aboveTheFold: PropTypes.bool
+  aboveTheFold: PropTypes.bool,
+  enableGallery: PropTypes.bool,
+  gallerySize: PropTypes.number,
 }
 
 Image.contextTypes = {
-  toggleGallery: PropTypes.func
+  toggleGallery: PropTypes.func,
 }
 
 Image.utils = {
