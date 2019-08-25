@@ -1,7 +1,6 @@
 import { css } from 'glamor'
 import PropTypes from 'prop-types'
 import React from 'react'
-import colors from '../../theme/colors'
 
 import CarouselContext, { defaultValue } from './Context'
 
