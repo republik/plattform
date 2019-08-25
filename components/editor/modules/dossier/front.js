@@ -1,6 +1,8 @@
 import MarkdownSerializer from 'slate-mdast-serializer'
 import { Block } from 'slate'
 
+import shortId from 'shortid'
+
 import { allBlocks, parent, childIndex, depth } from '../../utils/selection'
 
 import { buttonStyles, matchBlock } from '../../utils'
@@ -19,6 +21,7 @@ import {
 const getData = data => ({
   module: 'teasergroup', // used by publicator internally
   url: null,
+  id: (data && data.id) || shortId(),
   ...data
 })
 

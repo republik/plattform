@@ -351,13 +351,15 @@ const Form = withT(({ node, onChange, onTypeChange, options, t }) => {
       options.includes('count') &&
       <Field
         label='Anzahl (e.g. Episoden)'
-        value={node.data.get('count')}
-        onChange={onChange('count')} />
+        value={node.data.get('count') || ''}
+        onChange={(_, count) => {
+          onChange('count', null, +count || undefined)
+        }} />
     }
     {
       options.includes('bigger') &&
       <Checkbox
-        checked={node.data.get('bigger')}
+        checked={node.data.get('bigger') || false}
         onChange={onChange('bigger')}
       >
         Grösser (e.g. Serien)
