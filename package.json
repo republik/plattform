@@ -65,7 +65,7 @@
   },
   "dependencies": {
     "@orbiting/remark-preset": "^1.2.4",
-    "@project-r/styleguide": "^7.10.1",
+    "@project-r/styleguide": "^7.11.1",
     "@project-r/template-newsletter": "^1.5.0",
     "apollo-cache-inmemory": "^1.2.10",
     "apollo-client": "^2.4.2",

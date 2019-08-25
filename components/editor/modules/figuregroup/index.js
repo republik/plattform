@@ -4,6 +4,7 @@ import React from 'react'
 import { FigureGroupButton, FigureGroupForm } from './ui'
 import { matchBlock } from '../../utils'
 import { createRemoveEmptyKeyHandler } from '../../utils/keyHandlers'
+import GalleryIcon from 'react-icons/lib/md/filter'
 
 export const getData = data => ({
   columns: 2,
@@ -42,7 +43,7 @@ export const fromMdast = ({
   const [
     figureModule,
     captionModule
- ] = subModules
+  ] = subModules
 
   const figureSerializer = figureModule.helpers.serializer
 
@@ -53,8 +54,8 @@ export const fromMdast = ({
   const figures = (hasCaption
     ? node.children.slice(0, -1)
     : node.children).map(
-      v => figureSerializer.fromMdast(v)
-    )
+    v => figureSerializer.fromMdast(v)
+  )
   const nodes = hasCaption
     ? figures.concat(
       captionModule.helpers.serializer.fromMdast(caption)
@@ -109,8 +110,8 @@ const isEmpty = options => {
   return node => {
     const figures = node.nodes.skipLast(1)
     return figures.every(
-        figureModule.helpers.isEmpty
-      ) &&
+      figureModule.helpers.isEmpty
+    ) &&
       figures.size < 3 &&
       !node.nodes.last().text
   }
@@ -131,7 +132,12 @@ const figureGroupPlugin = options => {
       }
 
       return (
-        <FigureGroup size='breakout' {...node.data.toJS()} attributes={attributes}>
+        <FigureGroup size='breakout' {...node.data.toJS()} slideshow={false} attributes={attributes}>
+          { node.data.get('slideshow') > 0 &&
+            <div style={{ position: 'absolute', left: -25 }}>
+              <GalleryIcon />
+            </div>
+          }
           {children}
         </FigureGroup>
       )
