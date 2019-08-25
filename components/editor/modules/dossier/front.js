@@ -19,8 +19,6 @@ import {
 const getData = data => ({
   module: 'teasergroup', // used by publicator internally
   url: null,
-  color: '',
-  bgColor: '',
   ...data
 })
 

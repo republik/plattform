@@ -115,12 +115,24 @@ const cloneWithRepoData = options => (node, repoData) => {
     }
   }
 
-  const credits = paragraphModule.helpers.serializer.fromMdast({
+  let { title, lead, credits } = meta
+  if (
+    node.type === 'CAROUSELTILE' &&
+    meta.series &&
+    meta.series.episodes.length
+  ) {
+    data = data.set('count', meta.series.episodes.length)
+    title = meta.series.title
+    lead = ''
+    credits = []
+  }
+
+  const credit = paragraphModule.helpers.serializer.fromMdast({
     type: 'paragraph',
-    children: meta.credits
+    children: credits
   })
 
-  credits.nodes = credits.nodes.map(v => {
+  credit.nodes = credit.nodes.map(v => {
     if (v.type === linkModule.TYPE) {
       v.data.color = data.get('color')
     }
@@ -139,7 +151,7 @@ const cloneWithRepoData = options => (node, repoData) => {
       Block.create({
         type: titleModule.TYPE,
         data,
-        nodes: [Text.create(meta.title)]
+        nodes: [Text.create(title)]
       }),
       Block.create({
         type: subjectModule.TYPE,
@@ -155,11 +167,11 @@ const cloneWithRepoData = options => (node, repoData) => {
       Block.create({
         type: leadModule.TYPE,
         data,
-        nodes: meta.description
-          ? [Text.create(meta.description)]
+        nodes: lead
+          ? [Text.create(lead)]
           : []
       }),
-      credits
+      credit
     ]
   })
 
@@ -334,6 +346,13 @@ const Form = withT(({ node, onChange, onTypeChange, options, t }) => {
         label='Bildcredit'
         value={node.data.get('byline')}
         onChange={onChange('byline')} />
+    }
+    {
+      options.includes('count') &&
+      <Field
+        label='Anzahl (e.g. Episoden)'
+        value={node.data.get('count')}
+        onChange={onChange('count')} />
     }
     {
       options.includes('bigger') &&

@@ -28,6 +28,12 @@ query searchRepo($after: String, $search: String, $template: String) {
             credits
             kind
             color
+            series {
+              title
+              episodes {
+                title
+              }
+            }
             format {
               id
               repoId
