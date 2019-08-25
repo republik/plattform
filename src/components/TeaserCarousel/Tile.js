@@ -155,7 +155,7 @@ const Tile = ({
         <div>
           <Text color={color} margin={'0 auto'}>
             {children}
-            {count && (
+            {!!count && (
               <TeaserCarouselArticleCount
                 count={count}
                 bgColor={color}

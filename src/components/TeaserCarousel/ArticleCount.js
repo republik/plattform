@@ -48,7 +48,7 @@ const styles = {
   })
 }
 
-const ArticleCount = ({ count, bgColor = '#FFFFFF', color = '#000000' }) => {
+const ArticleCount = ({ count, bgColor, color }) => {
   let countStyles = css(styles.count, { color })
   return (
     <div {...styles.container}>
@@ -67,6 +67,6 @@ ArticleCount.propTypes = {
 }
 
 ArticleCount.defaultProps = {
-  bgColor: '#FFFFFF',
-  color: '#000000'
+  bgColor: '#000',
+  color: '#fff'
 }

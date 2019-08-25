@@ -753,7 +753,8 @@ const createSchema = ({
         'color',
         'bgColor',
         'outline',
-        'formatColor'
+        'formatColor',
+        'count'
       ],
       defaultValues: {
         // default to context provided values
