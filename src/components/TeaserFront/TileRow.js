@@ -1,4 +1,4 @@
-import { css } from 'glamor'
+import { css, merge } from 'glamor'
 import PropTypes from 'prop-types'
 import React from 'react'
 import colors from '../../theme/colors'
@@ -7,7 +7,7 @@ import { mUp } from './mediaQueries'
 import { sizeSmall, sizeMedium } from './Tile'
 
 const styles = {
-  row: css({
+  base: css({
     margin: 0,
     boxSizing: 'border-box',
     display: 'flex',
@@ -30,6 +30,9 @@ const styles = {
       }
     }
   }),
+  mobileReverse: css({
+    flexDirection: 'column-reverse'
+  }),
 
   // One column
   mobileCol1: css({
@@ -37,24 +40,30 @@ const styles = {
       width: '100%'
     }
   }),
-  col1: css({}),
 
   // Two Columns
   mobileCol2: css({
     flexDirection: 'row',
     justifyContent: 'space-between',
     flexWrap: 'wrap',
+    [mUp]: {
+      flexWrap: 'nowrap'
+    },
     '& .tile': {
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
       justifyContent: 'center',
-      width: '50%'
+      width: '50%',
+      [mUp]: {
+        width: '100%',
+      }
     },
     '& .tile:nth-child(3)': {
       width: '100%'
     }
   }),
+  col1: css({}),
   col2: css({
     [mUp]: {
       '& .tile': {
@@ -70,17 +79,11 @@ const styles = {
       }
     }
   }),
-
   col3: css({
-    '& .tile': {
-      borderTop: `1px solid ${colors.divider}`
-    },
     [mUp]: {
       flexWrap: 'nowrap',
       '& .tile': {
         width: '33%',
-        borderLeft: `1px solid ${colors.divider}`,
-        borderTop: 'none',
         margin: 0,
         padding: '60px 0'
       },
@@ -98,8 +101,37 @@ const styles = {
       '& .tile': {
         width: '33%'
       },
+      '& img': {
+        ...sizeSmall
+      }
+    }
+  }),
+  autoColumns: css({
+    '& .tile': {
+      borderTop: `1px solid ${colors.divider}`
+    },
+    [mUp]: {
+      flexWrap: 'wrap',
+      '& .tile': {
+        width: '50%',
+        borderLeft: `1px solid ${colors.divider}`,
+        borderTop: 'none',
+        margin: '0 0 50px 0',
+        padding: '20px 0'
+      },
       '& .tile:nth-child(2n+1)': {
-        borderLeft: `1px solid ${colors.divider}`
+        borderLeft: 'none'
+      },
+      '& img': {
+        ...sizeSmall
+      }
+    },
+    [breakoutUp]: {
+      '& .tile': {
+        width: '33%',
+      },
+      '& .tile:nth-child(2n+1)': {
+        borderLeft: `1px solid ${colors.divider}`,
       },
       '& .tile:nth-child(3n+1)': {
         borderLeft: 'none'
@@ -114,16 +146,19 @@ const styles = {
 export const TeaserFrontTileRow = ({
   children,
   attributes,
-  columns = 1,
-  mobileColumns = 1
+  columns,
+  autoColumns,
+  mobileReverse,
+  mobileColumns
 }) => {
-  const rowStyles = css(
-    styles.row,
-    styles[`col${columns}`],
-    styles[`mobileCol${mobileColumns}`]
+  const rowStyles = merge(
+    styles.base,
+    !autoColumns && styles[`col${columns}`],
+    mobileReverse && styles.mobileReverse,
+    autoColumns ? styles.autoColumns : styles[`mobileCol${mobileColumns}`]
   )
   return (
-    <div role="group" {...attributes} {...rowStyles}>
+    <div role='group' {...attributes} {...rowStyles}>
       {children}
     </div>
   )
@@ -132,8 +167,10 @@ export const TeaserFrontTileRow = ({
 TeaserFrontTileRow.propTypes = {
   children: PropTypes.node.isRequired,
   attributes: PropTypes.object,
+  mobileReverse: PropTypes.bool,
+  autoColumns: PropTypes.bool,
   columns: PropTypes.oneOf([1, 2, 3]).isRequired,
-  mobileColumns: PropTypes.oneOf([1, 2, 3]).isRequired
+  mobileColumns: PropTypes.oneOf([1, 2]).isRequired
 }
 
 TeaserFrontTileRow.defaultProps = {

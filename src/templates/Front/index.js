@@ -681,7 +681,7 @@ const createSchema = ({
   const carouselTileLead = {
     matchMdast: matchHeading(4),
     component: ({ children, attributes }) =>
-      <TeaserCarouselLead attributes={attributes} columns={3}>
+      <TeaserCarouselLead attributes={attributes}>
         {children}
       </TeaserCarouselLead>,
     editorModule: 'headline',
@@ -870,6 +870,10 @@ const createSchema = ({
             matchMdast: node => {
               return matchZone('TEASERGROUP')(node)
             },
+            props: node => ({
+              columns: node.data.columns,
+              mobileColumns: node.data.mobileColumns
+            }),
             component: ({ children, attributes, ...props }) => {
               return <TeaserFrontTileRow attributes={attributes} {...props}>
                 {children}

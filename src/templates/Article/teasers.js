@@ -228,7 +228,7 @@ const createTeasers = ({
       return matchZone('TEASERGROUP')(node)
     },
     component: ({ children, attributes, ...props }) => {
-      return <TeaserFrontTileRow columns={3} attributes={attributes} {...props}>
+      return <TeaserFrontTileRow autoColumns attributes={attributes} {...props}>
         {children}
       </TeaserFrontTileRow>
     },
