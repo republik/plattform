@@ -26,6 +26,14 @@ type mutations {
   Claim a granted membership with a voucher code
   """
   claimAccess(voucherCode: String!): AccessGrant!
+
+  """
+  Request access for one-self
+  """
+  requestAccess(
+    "An ID of an existing AccessCampaign"
+    campaignId: ID!
+  ): AccessGrant!
 }
 
 `

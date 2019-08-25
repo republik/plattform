@@ -1,5 +1,5 @@
 {
-  "updated": "2019-02-27T12:37:23.284Z",
+  "updated": "2019-08-14T13:21:41.362Z",
   "title": "live",
   "data": [
     {
@@ -41,6 +41,10 @@
     {
       "key": "api/comment/empty",
       "value": "Ihr Beitrag ist leer."
+    },
+    {
+      "key": "api/comment/canNotComment",
+      "value": "Sie benötigen eine aktive Mitgliedschaft um sich an Debatten zu beteiligen."
     },
     {
       "key": "api/discussion/anonymity/forbidden",
@@ -503,12 +507,16 @@
       "value": "Sie besitzen nicht die erforderliche Berechtigung."
     },
     {
+      "key": "api/access/constraint/limitGrants/error",
+      "value": "Sie können keinen weiteren Zugriff vergeben."
+    },
+    {
       "key": "api/access/constraint/limitSlots/error",
       "value": "Sie können keine weiteren Plätze vergeben."
     },
     {
       "key": "api/access/constraint/limitRevokedSlots/error",
-      "value": "Sie können derzeit keine Plätze mehr ergeben."
+      "value": "Sie können derzeit keine Plätze mehr vergeben."
     },
     {
       "key": "api/access/constraint/notGrantable/error",
