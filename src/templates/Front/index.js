@@ -809,6 +809,9 @@ const createSchema = ({
         {children}
       </TeaserCarousel>
     },
+    props: node => ({
+      ...node.data
+    }),
     editorModule: 'carousel',
     editorOptions: {
       type: 'CAROUSEL',
