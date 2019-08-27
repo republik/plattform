@@ -60,7 +60,7 @@
     "pull:elasticsearch": "GITHUB_GRAPHQL_RATELIMIT=true node packages/search/script/pullElasticsearch.js",
     "db:migrate:create": "packages/migrations/script/create.js",
     "db:migrate:up": "db-migrate up --migrations-dir packages/migrations/migrations",
-    "db:migrate:down": "db-migrate down --migrations-dir packages/db-migrations/migrations --verbose",
+    "db:migrate:down": "db-migrate down --migrations-dir packages/migrations/migrations --verbose",
     "db:seed": "servers/republik/seeds/script/seed.js",
     "sendNotification": "cd servers/republik && node ../../packages/notifications/script/sendNotification.js",
     "test": "TZ=Europe/Amsterdam jest --verbose --detectOpenHandles --forceExit",
