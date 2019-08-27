@@ -9,7 +9,7 @@ const getSessionId = async (req, pgdb) => {
   return session.id
 }
 
-module.exports = async (_, { token, information }, { pgdb, user: me, req }) => {
+module.exports = async (_, { token, information }, { pgdb, user: me, req, t }) => {
   ensureSignedIn(req)
 
   const sessionId = await getSessionId(req, pgdb)
@@ -42,10 +42,14 @@ module.exports = async (_, { token, information }, { pgdb, user: me, req }) => {
       }
       device = await transaction.public.devices.updateAndGetOne({ id: existingDevice.id }, {
         ...update,
-        information,
+        ...information ? { information } : {},
         updatedAt: now
       })
     } else {
+      if (!information) {
+        console.error('information required for device insert', { token, information })
+        throw new Error(t('api/unexpected'))
+      }
       device = await transaction.public.devices.insertAndGet({
         userId: me.id,
         sessionId,
@@ -62,9 +66,9 @@ module.exports = async (_, { token, information }, { pgdb, user: me, req }) => {
         SET
           "hadDevice" = true
           ${me._raw.discussionNotificationChannels.indexOf('APP') === -1 // avoid duplicates
-              ? ', "discussionNotificationChannels" = "discussionNotificationChannels" || \'["APP"]\''
-              : ''
-          }
+    ? ', "discussionNotificationChannels" = "discussionNotificationChannels" || \'["APP"]\''
+    : ''
+}
         WHERE
           id = :userId
       `, {
