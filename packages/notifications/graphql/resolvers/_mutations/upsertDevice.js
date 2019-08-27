@@ -62,9 +62,9 @@ module.exports = async (_, { token, information }, { pgdb, user: me, req }) => {
         SET
           "hadDevice" = true
           ${me._raw.discussionNotificationChannels.indexOf('APP') === -1 // avoid duplicates
-    ? ', "discussionNotificationChannels" = "discussionNotificationChannels" || \'["APP"]\''
-    : ''
-}
+              ? ', "discussionNotificationChannels" = "discussionNotificationChannels" || \'["APP"]\''
+              : ''
+          }
         WHERE
           id = :userId
       `, {
