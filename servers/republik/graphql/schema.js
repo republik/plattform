@@ -92,6 +92,15 @@ type mutations {
 
   # max every 12h
   requestPreview: MutationResult!
+
+  follow(
+    userId: ID!
+    entities: [FollowEntities!]!
+  ): FollowRelationship!
+  unfollow(
+    userId: ID!
+    entities: [FollowEntities!]!
+  ): FollowRelationship!
 }
 
 type subscriptions {

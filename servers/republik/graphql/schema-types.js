@@ -72,6 +72,24 @@ extend type User {
   sequenceNumber: Int
 
   newsletterSettings: NewsletterSettings!
+
+  # private
+  following: [FollowRelationship!]
+  # private
+  followers: [FollowRelationship!]
+
+  amIFollowing: Boolean!
+  isFollowingMe: Boolean!
+}
+
+enum FollowEntities {
+  COMMENTS
+}
+
+type FollowRelationship {
+  id: ID!
+  entities: [FollowEntities!]!
+  user: User!
 }
 
 type NewsletterSettings {
