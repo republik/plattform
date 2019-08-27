@@ -1,6 +1,6 @@
 module.exports = async (_, { id, token }, { pgdb }) => {
   const groups = await pgdb.public.gsheets.findOneFieldOnly(
-    { name: 'cards/mockUserCardGroups' },
+    { name: 'cards/mockCardGroups' },
     'data'
   )
 

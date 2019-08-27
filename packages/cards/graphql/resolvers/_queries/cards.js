@@ -5,13 +5,13 @@ const defaults = {
 }
 
 module.exports = async (_, args, { pgdb }) => {
-  const groups = await pgdb.public.gsheets.findOneFieldOnly(
-    { name: 'cards/mockUserCardGroups' },
+  const cards = await pgdb.public.gsheets.findOneFieldOnly(
+    { name: 'cards/mockCards' },
     'data'
   )
 
   return paginate(
     Object.assign({}, defaults, args),
-    groups
+    cards
   )
 }

@@ -6,12 +6,12 @@ schema {
 }
 
 type queries {
-  userCard(
+  card(
     id: ID
     token: String
-  ): UserCard!
+  ): Card!
 
-  userCards(
+  cards(
     id: ID
     token: String
     focus: ID
@@ -20,20 +20,18 @@ type queries {
     before: String
     after: String
     undecided: Boolean
-  ): UserCardConnection!
+  ): CardConnection!
 
-  userCardGroup(
+  cardGroup(
     id: ID
-  ): UserCardGroup!
+  ): CardGroup!
 
-  userCardGroups(
-    focus: ID
+  cardGroups(
     first: Int
     last: Int
     before: String
     after: String
-    undecided: Boolean
-  ): UserCardGroupConnection!
+  ): CardGroupConnection!
 }
 
 type mutations {
@@ -43,15 +41,15 @@ type mutations {
     email: String!
     portrait: String
     statement: String!
-  ): UserCard!
+  ): Card!
 
   upsertCardMatches(
     id: [ID!]!
-  ): UserCardConnection!
+  ): CardConnection!
 
   resetCardMatches(
     group: String
-  ): UserCardConnection!
+  ): CardConnection!
 }
 
 `

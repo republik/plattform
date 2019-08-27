@@ -66,18 +66,18 @@ const getRandomEntity = (entities) => {
 }
 
 PgDb.connect().then(async pgdb => {
-  const hasMockUserCards = !!(await pgdb.public.gsheets.count({ name: 'cards/mockUserCards' }))
-  if (!hasMockUserCards) {
+  const hasMockCards = !!(await pgdb.public.gsheets.count({ name: 'cards/mockCards' }))
+  if (!hasMockCards) {
     await pgdb.public.gsheets.insert({
-      name: 'cards/mockUserCards',
+      name: 'cards/mockCards',
       data: []
     })
   }
 
-  const hasMockUserCardGroups = !!(await pgdb.public.gsheets.count({ name: 'cards/mockUserCardGroups' }))
-  if (!hasMockUserCardGroups) {
+  const hasMockCardGroups = !!(await pgdb.public.gsheets.count({ name: 'cards/mockCardGroups' }))
+  if (!hasMockCardGroups) {
     await pgdb.public.gsheets.insert({
-      name: 'cards/mockUserCardGroups',
+      name: 'cards/mockCardGroups',
       data: []
     })
   }
@@ -98,9 +98,9 @@ PgDb.connect().then(async pgdb => {
   `)
 
   /**
-   * UserCardGroup
+   * CardGroup
    */
-  console.log(`Generiere UserCardGroups-Einträge zu Testzwecken...`)
+  console.log(`Generiere CardGroups-Einträge zu Testzwecken...`)
 
   const groups = names.map(name => ({
     id: faker.random.uuid(),
@@ -110,22 +110,22 @@ PgDb.connect().then(async pgdb => {
   }))
 
   await pgdb.public.gsheets.updateOne(
-    { name: 'cards/mockUserCardGroups' },
+    { name: 'cards/mockCardGroups' },
     { data: groups, updatedAt: new Date() }
   )
 
   console.log('Done.')
 
   /**
-   * UserCards
+   * Cards
    */
   const amount = minMaxInteger(4000, 4500)
 
-  console.log(`Generiere ${amount} UserCard-Einträge zu Testzwecken...`)
+  console.log(`Generiere ${amount} Card-Einträge zu Testzwecken...`)
 
   for (let card = 0; card < amount; card++) {
     if (card % 100 === 1) {
-      console.log(`... bei UserCard Nr. ${card}`)
+      console.log(`... bei Card Nr. ${card}`)
     }
 
     const campaignBudget = getWahlkampfbudget()
@@ -169,7 +169,7 @@ PgDb.connect().then(async pgdb => {
   }
 
   await pgdb.public.gsheets.updateOne(
-    { name: 'cards/mockUserCards' },
+    { name: 'cards/mockCards' },
     { data: deck, updatedAt: new Date() }
   )
 

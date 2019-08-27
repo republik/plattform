@@ -1,29 +1,29 @@
 module.exports = `
 
-type UserCard {
+type Card {
   id: ID!
   payload: JSON!
-  group: UserCardGroup!
+  group: CardGroup!
   user: User
   documents: DocumentConnection!
   match: Boolean
   totalMatches: Int!
 }
 
-type UserCardPageInfo {
+type CardPageInfo {
   hasNextPage: Boolean!
   endCursor: String
   hasPreviousPage: Boolean!
   startCursor: String
 }
 
-type UserCardConnection {
+type CardConnection {
   totalCount: Int!
-  pageInfo: UserCardPageInfo!
-  nodes: [UserCard!]!
+  pageInfo: CardPageInfo!
+  nodes: [Card!]!
 }
 
-type UserCardGroup {
+type CardGroup {
   id: ID!
   name: String!
   slug: String!
@@ -32,25 +32,25 @@ type UserCardGroup {
     last: Int
     before: String
     after: String
-  ): UserCardConnection!
+  ): CardConnection!
   discussion: Discussion
 }
 
-type UserCardGroupPageInfo {
+type CardGroupPageInfo {
   hasNextPage: Boolean!
   endCursor: String
   hasPreviousPage: Boolean!
   startCursor: String
 }
 
-type UserCardGroupConnection {
+type CardGroupConnection {
   totalCount: Int!
-  pageInfo: UserCardGroupPageInfo!
-  nodes: [UserCardGroup!]!
+  pageInfo: CardGroupPageInfo!
+  nodes: [CardGroup!]!
 }
 
 extend type User {
-  card: UserCard
+  card: Card
 }
 
 `
