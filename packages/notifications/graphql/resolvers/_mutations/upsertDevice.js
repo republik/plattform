@@ -19,9 +19,14 @@ module.exports = async (_, { token, information }, { pgdb, user: me, req }) => {
     const now = new Date()
 
     // check if device exists already
-    const existingDevice = await transaction.public.devices.findOne({
+    let existingDevice = await transaction.public.devices.findOne({
       token
     })
+    if (!existingDevice) {
+      existingDevice = await transaction.public.devices.findOne({
+        sessionId
+      })
+    }
     if (existingDevice) {
       debug('found existing device %O', existingDevice)
       const update = {}
@@ -32,6 +37,10 @@ module.exports = async (_, { token, information }, { pgdb, user: me, req }) => {
       if (existingDevice.sessionId !== sessionId) {
         debug('changing sessing of existing device')
         update.sessionId = sessionId
+      }
+      if (existingDevice.token !== token) {
+        debug('changing token of existing device')
+        update.token = token
       }
       device = await transaction.public.devices.updateAndGetOne({ id: existingDevice.id }, {
         ...update,
