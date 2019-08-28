@@ -9,7 +9,7 @@ const getSessionId = async (req, pgdb) => {
   return session.id
 }
 
-module.exports = async (_, { token, information }, { pgdb, user: me, req }) => {
+module.exports = async (_, { token, information }, { pgdb, user: me, req, t }) => {
   ensureSignedIn(req)
 
   const sessionId = await getSessionId(req, pgdb)
@@ -20,7 +20,10 @@ module.exports = async (_, { token, information }, { pgdb, user: me, req }) => {
 
     // check if device exists already
     const existingDevice = await transaction.public.devices.findOne({
-      token
+      or: [
+        { token },
+        { sessionId }
+      ]
     })
     if (existingDevice) {
       debug('found existing device %O', existingDevice)
@@ -33,12 +36,20 @@ module.exports = async (_, { token, information }, { pgdb, user: me, req }) => {
         debug('changing sessing of existing device')
         update.sessionId = sessionId
       }
+      if (existingDevice.token !== token) {
+        debug('changing token of existing device')
+        update.token = token
+      }
       device = await transaction.public.devices.updateAndGetOne({ id: existingDevice.id }, {
         ...update,
-        information,
+        ...information ? { information } : {},
         updatedAt: now
       })
     } else {
+      if (!information) {
+        console.error('information required for device insert', { token, information })
+        throw new Error(t('api/unexpected'))
+      }
       device = await transaction.public.devices.insertAndGet({
         userId: me.id,
         sessionId,
