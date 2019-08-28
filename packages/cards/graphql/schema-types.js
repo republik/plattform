@@ -50,7 +50,7 @@ type CardGroupConnection {
 }
 
 extend type User {
-  card: Card
+  cards: CardConnection!
 }
 
 `

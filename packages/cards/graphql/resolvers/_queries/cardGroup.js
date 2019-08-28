@@ -1,10 +1,5 @@
-module.exports = async (_, { id, token }, { pgdb }) => {
-  const groups = await pgdb.public.gsheets.findOneFieldOnly(
-    { name: 'cards/mockCardGroups' },
-    'data'
-  )
-
-  const group = groups.find(group => group.id === id)
+module.exports = async (_, { id, token }, { loaders }) => {
+  const group = await loaders.CardGroup.byId.load(id)
 
   if (!group) {
     throw new Error('api/cards/group/404')

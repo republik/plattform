@@ -1,28 +1,23 @@
-const { transformUser } = require('@orbiting/backend-modules-auth')
+const { paginate } = require('@orbiting/backend-modules-utils')
+
+const defaults = {
+  first: 10
+}
 
 module.exports = {
-  async user (card, args, { pgdb }) {
-    if (!card.user) {
-      return null
-    }
-
-    const user = await pgdb.public.users.findOne({ id: card.user.id })
-
-    return transformUser(user)
+  async user (card, args, { loaders }) {
+    return loaders.User.byId.load(card.userId)
   },
 
-  async group (card, args, { pgdb }) {
-    if (!card.group) {
-      return null
-    }
-
-    const groups = await pgdb.public.gsheets.findOneFieldOnly(
-      { name: 'cards/mockCardGroups' },
-      'data'
+  async group (card, args, { loaders }) {
+    return paginate(
+      Object.assign({}, defaults, args),
+      await loaders.CardGroup.byId.load(card.cardGroupId)
     )
+  },
 
-    const group = groups.find(group => group.id === card.group.id)
-
-    return group
+  payload (card) {
+    const { meta, ...payload } = card.payload
+    return payload
   }
 }

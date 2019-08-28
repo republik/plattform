@@ -5,10 +5,10 @@ const defaults = {
 }
 
 module.exports = {
-  async cards (cardGroup, args, { loaders }) {
+  async cards (user, args, { loaders }) {
     return paginate(
       Object.assign({}, defaults, args),
-      await loaders.Card.byCardGroupId.load(cardGroup.id)
+      await loaders.Card.byUserId.load(user.id)
     )
   }
 }
