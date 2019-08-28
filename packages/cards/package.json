@@ -13,7 +13,10 @@
     "url": "https://github.com/orbiting/backends/issues"
   },
   "homepage": "https://github.com/orbiting/backends#readme",
-  "devDependencies": {
-    "faker": "^4.1.0"
+  "dependencies": {
+    "bluebird": "^3.5.5",
+    "d3-dsv": "^1.1.1",
+    "node-fetch": "^2.6.0",
+    "yargs": "^14.0.0"
   }
 }

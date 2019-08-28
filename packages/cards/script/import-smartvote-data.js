@@ -1,15 +1,21 @@
 #!/usr/bin/env node
 require('@orbiting/backend-modules-env').config()
 
-const assert = require('assert')
 const { dsvFormat } = require('d3-dsv')
+const assert = require('assert')
+const fetch = require('node-fetch')
 const Promise = require('bluebird')
-const rw = require('rw')
+const url = require('url')
+const yargs = require('yargs')
+
+const argv = yargs
+  .option('data-url', { alias: 'd', required: true, coerce: url.parse })
+  .argv
 
 const { slug } = require('@project-r/styleguide/lib/lib/slug')
 const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
 
-const sampleDataLobbywatch = require('../data/sample-lobbywatch.json')
+const sampleDataLobbywatch = require('./sample-lobbywatch.json')
 
 const parse = dsvFormat(';').parse
 
@@ -169,8 +175,16 @@ const toPayload = (row) => {
 }
 
 PgDb.connect().then(async pgdb => {
-  const input = rw.readFileSync('/dev/stdin', 'utf8')
-  const raw = parse(input) // .slice(120, 122)
+  const input = await fetch(argv['data-url'])
+    .then(res => {
+      if (!res.ok) {
+        throw Error(`Unable to fetch data-url "${url.format(argv['data-url'])}" (HTTP Status Code: ${res.status})`)
+      }
+
+      return res.text()
+    })
+
+  const raw = parse(input)
   const payloads = raw.map(toPayload)
 
   /**
@@ -313,4 +327,7 @@ PgDb.connect().then(async pgdb => {
   console.log('Done.')
 
   await pgdb.close()
+}).catch(e => {
+  console.error(e)
+  process.exit(1)
 })
