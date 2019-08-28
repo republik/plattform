@@ -6,8 +6,7 @@ schema {
 type mutations {
   upsertDevice(token: ID!, information: DeviceInformationInput!): Device!
 
-  # deprecated: not used in app anymore, evict if no API calls tracked anymore
-  rollDeviceToken(oldToken: String, newToken: String!): Device!
+  rollDeviceToken(oldToken: String, newToken: String!): Device! @deprecated(reason: "not used in app anymore. Will be evicted if no API calls are tracked anymore.")
 
   # users can remove their devices
   removeDevice(id: ID!): Boolean!
