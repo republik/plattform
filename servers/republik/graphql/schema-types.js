@@ -13,11 +13,12 @@ enum AccessRole {
   PUBLIC
 }
 
+# deprecated: use ImageProperties instead
 enum PortraitSize {
-  # 384x384 deprecated(reason: "use ImageProperties instead")
-  SMALL
-  # 1000x1000 deprecated(reason: "use ImageProperties instead")
-  SHARE
+  # 384x384
+  SMALL @deprecated(reason: "use \`ImageProperties\` instead")
+  # 1000x1000
+  SHARE @deprecated(reason: "use \`ImageProperties\` instead")
   # original, in color
   # not exposed
   # ORIGINAL
@@ -43,8 +44,7 @@ extend type User {
 
   # url to portrait image
   portrait(
-    # deprecated(reason: "use ImageProperties instead"),
-    size: PortraitSize
+    size: PortraitSize # deprecated: "use ImageProperties instead"
     properties: ImageProperties
   ): String
 

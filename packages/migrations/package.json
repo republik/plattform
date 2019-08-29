@@ -1,5 +1,5 @@
 {
-  "name": "@orbiting/backend-modules-db-migrations",
+  "name": "@orbiting/backend-modules-migrations",
   "version": "0.0.1",
   "description": "all postgresql migration for orbiting",
   "repository": {
