@@ -26,6 +26,7 @@ type AudioSource implements PlayableMedia {
 
 type Meta {
   title: String
+  shortTitle: String
   slug: String
   path: String
   image: String
