@@ -86,11 +86,11 @@ export const TeaserFeed = ({
           <a {...styles.link} href={path}>{title}</a>
         </Link>
       </Headline>
-      <Lead>
+      {!!description && <Lead>
         <Link href={path} passHref>
           <a {...styles.link} href={path}>{description}</a>
         </Link>
-      </Lead>
+      </Lead>}
 
       <Credit>
         {credits && credits.length > 0 ? (
