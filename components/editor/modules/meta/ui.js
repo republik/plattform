@@ -42,6 +42,7 @@ const MetaData = ({ value, editor, mdastSchema, contextMeta, series, additionalF
     'feed',
     ...additionalFields,
     'title',
+    'shortTitle',
     'image',
     'description'
   ])

@@ -1,5 +1,5 @@
 {
-  "updated": "2019-07-09T18:17:08.423Z",
+  "updated": "2019-08-30T13:06:13.446Z",
   "title": "live",
   "data": [
     {
@@ -385,6 +385,14 @@
     {
       "key": "metaData/field/title",
       "value": "Titel"
+    },
+    {
+      "key": "metaData/field/shortTitle",
+      "value": "Kurztitel"
+    },
+    {
+      "key": "metaData/field/short/count",
+      "value": "{count} Zeichen"
     },
     {
       "key": "metaData/field/publishDate",

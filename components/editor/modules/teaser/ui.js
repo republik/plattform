@@ -127,6 +127,10 @@ const cloneWithRepoData = options => (node, repoData) => {
     credits = []
   }
 
+  if (meta.shortTitle) {
+    title = meta.shortTitle
+  }
+
   const credit = paragraphModule.helpers.serializer.fromMdast({
     type: 'paragraph',
     children: credits

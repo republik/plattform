@@ -22,6 +22,7 @@ query searchRepo($after: String, $search: String, $template: String) {
           id
           meta {
             title
+            shortTitle
             image
             description
             subject
