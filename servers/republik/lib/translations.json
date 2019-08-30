@@ -1,5 +1,5 @@
 {
-  "updated": "2019-08-14T13:21:41.362Z",
+  "updated": "2019-08-30T17:55:21.174Z",
   "title": "live",
   "data": [
     {
@@ -825,6 +825,10 @@
     {
       "key": "api/consents/notRevokable",
       "value": "Die Einwilligung ({consent}) kann nicht zurückgezogen werden."
+    },
+    {
+      "key": "api/subscriptions/type/notSupported",
+      "value": "Dieser Typ Subscription wird noch nicht unterstützt."
     }
   ]
 }

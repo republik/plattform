@@ -7,7 +7,7 @@ schema {
 type mutations {
   # upsert
   subscribe(
-    id: ID!
+    objectId: ID!
     type: SubscriptionObjectType!
     filters: [SubscriptionEvent!]
   ): Subscription!

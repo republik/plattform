@@ -10,6 +10,10 @@ CREATE TABLE subscriptions (
   "filters"            jsonb,
   "objectUserId"       uuid references "users",
   "objectDocumentId"   text,
-  "objectDiscussionId" uuid references "discussions"
+  "objectDiscussionId" uuid references "discussions",
+  "createdAt"          timestamptz default now(),
+  "updatedAt"          timestamptz default now()
 );
+-- TODO unique constraint
 
+-- TODO trigger to ensure object column integrity

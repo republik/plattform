@@ -32,7 +32,6 @@ enum SubscriptionObjectType {
 union SubscriptionObject = Document | User | Discussion
 
 type Subscription {
-  # subjectId-objectId
   id: ID!
   object: SubscriptionObject!
   subject: User!
