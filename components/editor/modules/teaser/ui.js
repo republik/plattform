@@ -115,7 +115,7 @@ const cloneWithRepoData = options => (node, repoData) => {
     }
   }
 
-  let { title, lead, credits } = meta
+  let { title, description, credits } = meta
   if (
     node.type === 'CAROUSELTILE' &&
     meta.series &&
@@ -123,12 +123,13 @@ const cloneWithRepoData = options => (node, repoData) => {
   ) {
     data = data.set('count', meta.series.episodes.length)
     title = meta.series.title
-    lead = ''
+    description = ''
     credits = []
   }
 
   if (meta.shortTitle) {
     title = meta.shortTitle
+    description = ''
   }
 
   const credit = paragraphModule.helpers.serializer.fromMdast({
@@ -171,8 +172,8 @@ const cloneWithRepoData = options => (node, repoData) => {
       Block.create({
         type: leadModule.TYPE,
         data,
-        nodes: lead
-          ? [Text.create(lead)]
+        nodes: description
+          ? [Text.create(description)]
           : []
       }),
       credit
