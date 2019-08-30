@@ -1,7 +1,7 @@
 const run = require('../run.js')
 
-const dir = 'packages/follow/migrations/sqls/'
-const file = '20190829014617-init-follow'
+const dir = 'packages/subscriptions/migrations/sqls/'
+const file = '20190829014617-init-subscriptions'
 
 exports.up = (db) =>
   run(db, dir, `${file}-up.sql`)
