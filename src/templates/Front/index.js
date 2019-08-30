@@ -55,16 +55,12 @@ import {
   matchTeaser,
   matchTeaserGroup,
   matchTeaserType,
+  skipMdastImage,
   extractImage,
   globalInlines,
   styles
 } from '../Article/utils'
 
-const image = {
-  matchMdast: matchImageParagraph,
-  component: () => null,
-  isVoid: true
-}
 
 export const subject = {
   matchMdast: matchHeading(2),
@@ -257,7 +253,7 @@ const createSchema = ({
       ]
     },
     rules: [
-      image,
+      skipMdastImage,
       title(
         'FRONTIMAGETITLE',
         ({ children, attributes, kind, titleSize }) => {
@@ -315,7 +311,7 @@ const createSchema = ({
       ]
     },
     rules: [
-      image,
+      skipMdastImage,
       title(
         'FRONTSPLITTITLE',
         ({ children, attributes, kind, titleSize }) => {
@@ -365,7 +361,7 @@ const createSchema = ({
       ]
     },
     rules: [
-      image,
+      skipMdastImage,
       title(
         'FRONTTYPOTITLE',
         ({ children, attributes, kind, titleSize }) => {
@@ -426,7 +422,7 @@ const createSchema = ({
       ]
     },
     rules: [
-      image,
+      skipMdastImage,
       title(
         'FRONTTILETITLE',
         ({ children, attributes, kind, titleSize, columns }) => {
@@ -452,211 +448,7 @@ const createSchema = ({
     ]
   }
 
-  const articleCollectionLead = {
-    matchMdast: matchHeading(4),
-    component: ({ children, attributes }) =>
-      <TeaserFrontDossierLead attributes={attributes}>
-        {children}
-      </TeaserFrontDossierLead>,
-    editorModule: 'headline',
-    editorOptions: {
-      type: 'ARTICLECOLLECTIONLEAD',
-      placeholder: 'Lead',
-      depth: 4,
-      isStatic: true,
-      optional: true
-    },
-    rules: globalInlines
-  }
-
-  const articleTileLead = {
-    matchMdast: matchHeading(4),
-    component: ({ children, attributes }) =>
-      <TeaserFrontLead attributes={attributes} columns={3}>
-        {children}
-      </TeaserFrontLead>,
-    editorModule: 'headline',
-    editorOptions: {
-      type: 'ARTICLETILELEAD',
-      placeholder: 'Lead',
-      isStatic: true,
-      depth: 4,
-      optional: true
-    },
-    rules: globalInlines
-  }
-
-  const articleTile = {
-    matchMdast: matchTeaserType('articleTile'),
-    component: ({ children, attributes, bgColor, ...props }) => {
-      return (
-        <Link href={props.url}>
-          <TeaserFrontTile attributes={attributes} {...props}>
-            {children}
-          </TeaserFrontTile>
-        </Link>
-      )
-    },
-    props: node => ({
-      image: extractImage(node.children[0]),
-      ...node.data
-    }),
-    editorModule: 'teaser',
-    editorOptions: {
-      type: 'ARTICLETILE',
-      showUI: false,
-      teaserType: 'articleTile',
-      formOptions: [
-        'formatUrl',
-        'image',
-        'byline',
-        'kind',
-        'showImage'
-      ]
-    },
-    rules: [
-      image,
-      title(
-        'ARTICLETILETITLE',
-        ({ children, attributes, kind }) => {
-          const Component = kind === 'editorial'
-          ? DossierTileHeadline.Editorial
-          : kind === 'scribble'
-            ? DossierTileHeadline.Scribble
-            : DossierTileHeadline.Interaction
-          return (
-            <Component attributes={attributes}>
-              {children}
-            </Component>
-          )
-        }
-      ),
-      subject,
-      articleTileLead,
-      format,
-      credit
-    ]
-  }
-
-  const articleTileRow = {
-    matchMdast: matchZone('TEASERGROUP'),
-    component: ({ children, attributes, ...props }) => {
-      return <TeaserFrontTileRow columns={3} attributes={attributes} {...props}>
-        {children}
-      </TeaserFrontTileRow>
-    },
-    editorModule: 'articleGroup',
-    editorOptions: {
-      type: 'ARTICLETILEROW'
-    },
-    rules: [
-      articleTile
-    ]
-  }
-
-  const articleCollectionIntro = {
-    matchMdast: node => {
-      return matchTeaserType('dossierIntro')(node)
-    },
-    props: node => ({
-      ...node.data,
-      image: extractImage(node.children[0])
-    }),
-    component: ({ children, attributes, ...props }) => {
-      return <TeaserFrontDossierIntro attributes={attributes} {...props}>
-        {children}
-      </TeaserFrontDossierIntro>
-    },
-    editorModule: 'dossierIntro',
-    editorOptions: {
-      type: 'ARTICLECOLLECTIONINTRO',
-      formOptions: [
-        'image',
-        'byline',
-        'kind'
-      ]
-    },
-    rules: [
-      image,
-      {
-        matchMdast: matchHeading(6),
-        component: ({ children, attributes }) => (
-          <DossierTag attributes={attributes}>
-            {children}
-          </DossierTag>
-        ),
-        editorModule: 'headline',
-        editorOptions: {
-          type: 'DOSSIERTAG',
-          placeholder: 'Dossier',
-          isStatic: true,
-          depth: 6
-        }
-      },
-      title(
-        'ARTICLECOLLECTIONTITLE',
-        ({ children, attributes, ...props }) => (
-          <Link href={props.url}>
-            <TeaserFrontDossierHeadline attributes={attributes}>
-              {children}
-            </TeaserFrontDossierHeadline>
-          </Link>
-        )
-      ),
-      articleCollectionLead
-    ]
-  }
-
-  const frontArticleCollectionTeaser = {
-    matchMdast: matchTeaserType('frontArticleCollection'),
-    component: ({ children, attributes, ...props }) => {
-      return <TeaserFrontDossier attributes={attributes} {...props}>
-        {children}
-      </TeaserFrontDossier>
-    },
-    editorModule: 'frontDossier',
-    editorOptions: {
-      type: 'FRONTARTICLECOLLECTION',
-      insertButtonText: 'Artikelsammlung / Dossier'
-    },
-    rules: [
-      articleCollectionIntro,
-      articleTileRow,
-      {
-        matchMdast: matchParagraph,
-        component: TeaserFrontDossierMore,
-        editorModule: 'paragraph',
-        editorOptions: {
-          isStatic: true,
-          placeholder: 'Mehr zum Thema-Link'
-        },
-        rules: [
-          ...globalInlines,
-          {
-            matchMdast: matchType('link'),
-            props: (node) => {
-              return {
-                title: node.title,
-                href: node.url
-              }
-            },
-            component: ({ children, data, ...props }) =>
-              <Link href={props.href} passHref>
-                <a {...props}>
-                  {children}
-                </a>
-              </Link>,
-            editorModule: 'link',
-            editorOptions: {
-              type: 'FRONTLINK'
-            }
-          }
-        ]
-      }
-    ]
-  }
-
-
+  
   const carouselSubject = {
     matchMdast: matchHeading(2),
     component: ({ children, attributes, ...props }) =>
@@ -763,7 +555,7 @@ const createSchema = ({
       }
     },
     rules: [
-      image,
+      skipMdastImage,
       title(
         'CAROUSELTILETITLE',
         ({ children, attributes, kind }) => {
@@ -865,7 +657,6 @@ const createSchema = ({
           frontImageTeaser,
           frontTypoTeaser,
           frontSplitTeaser,
-          frontArticleCollectionTeaser,
           {
             matchMdast: node => {
               return matchZone('TEASERGROUP')(node)
