@@ -10,6 +10,7 @@ const { graphql: voting } = require('@orbiting/backend-modules-voting')
 const { graphql: discussions } = require('@orbiting/backend-modules-discussions')
 const { graphql: collections } = require('@orbiting/backend-modules-collections')
 const { graphql: crowdsourcing } = require('@orbiting/backend-modules-crowdsourcing')
+const { graphql: subscriptions } = require('@orbiting/backend-modules-subscriptions')
 
 const loaderBuilders = {
   ...require('@orbiting/backend-modules-discussions/loaders'),
@@ -69,7 +70,8 @@ const run = async (workerId, config) => {
       access,
       voting,
       collections,
-      crowdsourcing
+      crowdsourcing,
+      subscriptions
     ]
   )
 
