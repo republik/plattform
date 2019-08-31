@@ -4,6 +4,7 @@ import React from 'react'
 import { ActiveDebateComment, ActiveDebateHeader } from '.'
 import colors from '../../theme/colors'
 import { Header as UserProfile } from '../Discussion/Internal/Comment'
+import { DiscussionContext } from '../Discussion/DiscussionContext'
 import { sansSerifMedium16, sansSerifRegular14 } from '../Typography/styles'
 
 const styles = {
@@ -43,33 +44,58 @@ const styles = {
   })
 }
 
+const DefaultLink = ({ children }) => children
+
 export const DebateTeaser = ({
   t,
-  path,
-  documentTitle,
-  commentCount,
-  comments
+  discussion,
+  DiscussionLink = DefaultLink,
+  CommentLink = DefaultLink
 }) => {
+  /*
+   * A reduced version of DiscussionContext value, just enough so we can render
+   * the Comment Header component.
+   */
+  const discussionContextValue = {
+    discussion,
+
+    clock: {
+      now: Date.now(),
+      formatTimeRelative: date => ''
+    },
+
+    links: {
+      Profile: ({ displayAuthor, ...props }) => (
+        <CommentLink {...props} discussion={discussion} displayAuthor={displayAuthor} />
+      ),
+      Comment: ({ comment, ...props }) => <CommentLink {...props} discussion={discussion} commentId={comment.id} />
+    }
+  }
+
   return (
-    <div {...styles.root}>
-      <ActiveDebateHeader
-        t={t}
-        documentTitle={documentTitle}
-        commentCount={commentCount}
-        href={path}
-      />
-      {comments.map(comment => (
-        <React.Fragment key={comment.id}>
-          <ActiveDebateComment
+    <DiscussionContext.Provider value={discussionContextValue}>
+      <div {...styles.root}>
+        <DiscussionLink discussion={discussion} passHref>
+          <ActiveDebateHeader
             t={t}
-            id={comment.id}
-            highlight={comment.highlight ? comment.highlight : undefined}
-            preview={comment.preview}
+            title={discussion.title}
+            commentCount={discussion.comments.totalCount}
+            href={discussion.path}
           />
-          <UserProfile t={t} comment={comment} isExpanded={true} />
-        </React.Fragment>
-      ))}
-    </div>
+        </DiscussionLink>
+        {discussion.comments.nodes.map(comment => (
+          <React.Fragment key={comment.id}>
+            <ActiveDebateComment
+              t={t}
+              id={comment.id}
+              highlight={comment.highlight ? comment.highlight : undefined}
+              preview={comment.preview}
+            />
+            <UserProfile t={t} comment={comment} isExpanded={true} />
+          </React.Fragment>
+        ))}
+      </div>
+    </DiscussionContext.Provider>
   )
 }
 
@@ -77,8 +103,5 @@ export default DebateTeaser
 
 DebateTeaser.propTypes = {
   t: PropTypes.func,
-  path: PropTypes.string,
-  documentTitle: PropTypes.string,
-  commentCount: PropTypes.number,
-  comments: PropTypes.array
+  discussion: PropTypes.object
 }

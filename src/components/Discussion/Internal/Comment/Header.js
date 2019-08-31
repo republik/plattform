@@ -165,7 +165,7 @@ const titleDate = string => dateTimeFormat(new Date(string))
 export const Header = ({ t, comment, isExpanded, onToggle }) => {
   const { clock, links } = React.useContext(DiscussionContext)
 
-  const { displayAuthor, updatedAt, createdAt, comments, parentIds } = comment
+  const { displayAuthor, updatedAt, createdAt, comments, parentIds = [] } = comment
   const { profilePicture, name, credential } = displayAuthor
   const isUpdated = updatedAt && updatedAt !== createdAt
 

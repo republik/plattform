@@ -41,7 +41,13 @@ const styles = {
   })
 }
 
-const ActiveDebates = ({ discussions, t, children }) => {
+const ActiveDebates = ({
+  discussions,
+  t,
+  CommentLink,
+  DiscussionLink,
+  children
+}) => {
   const highlighted = discussions.filter(discussion =>
     discussion.comments.nodes.some(comment =>
       comment.hasOwnProperty('highlight')
@@ -58,17 +64,15 @@ const ActiveDebates = ({ discussions, t, children }) => {
     return (
       <section {...styles.section}>
         {children}
-        <div role="group" {...css(styles.row, styles.withHighlight)}>
+        <div role='group' {...css(styles.row, styles.withHighlight)}>
           <div {...styles.left}>
             {highlighted.map(discussion => (
               <ActiveDebateTeaser
                 key={discussion.id}
+                discussion={discussion}
+                CommentLink={CommentLink}
+                DiscussionLink={DiscussionLink}
                 t={t}
-                path={discussion.path}
-                documentId={discussion.id}
-                documentTitle={discussion.title}
-                commentCount={discussion.comments.totalCount}
-                comments={discussion.comments.nodes}
               />
             ))}
           </div>
@@ -76,12 +80,10 @@ const ActiveDebates = ({ discussions, t, children }) => {
             {notHighlighted.map(discussion => (
               <ActiveDebateTeaser
                 key={discussion.id}
+                discussion={discussion}
+                CommentLink={CommentLink}
+                DiscussionLink={DiscussionLink}
                 t={t}
-                path={discussion.path}
-                documentId={discussion.id}
-                documentTitle={discussion.title}
-                commentCount={discussion.comments.totalCount}
-                comments={discussion.comments.nodes}
               />
             ))}
           </div>
@@ -92,16 +94,14 @@ const ActiveDebates = ({ discussions, t, children }) => {
     return (
       <section {...styles.section}>
         {children}
-        <div role="group" {...css(styles.row, styles.withoutHighlight)}>
+        <div role='group' {...css(styles.row, styles.withoutHighlight)}>
           {discussions.map(discussion => (
             <ActiveDebateTeaser
               key={discussion.id}
+              discussion={discussion}
+              CommentLink={CommentLink}
+              DiscussionLink={DiscussionLink}
               t={t}
-              path={discussion.path}
-              documentId={discussion.id}
-              documentTitle={discussion.title}
-              commentCount={discussion.comments.totalCount}
-              comments={discussion.comments.nodes}
             />
           ))}
         </div>

@@ -20,10 +20,10 @@ const styles = {
   })
 }
 
-const DebateHeader = ({ documentTitle, commentCount, href }) => {
+const DebateHeader = ({ title, commentCount, href }) => {
   return (
     <a href={href} {...styles.header}>
-      {documentTitle && <div {...styles.title}>{documentTitle}</div>}
+      {title && <div {...styles.title}>{title}</div>}
       <IconLink discussionCommentsCount={commentCount} small />
     </a>
   )
@@ -32,7 +32,7 @@ const DebateHeader = ({ documentTitle, commentCount, href }) => {
 export default DebateHeader
 
 DebateHeader.propTypes = {
-  documentTitle: PropTypes.string,
+  title: PropTypes.string,
   commentCount: PropTypes.number,
   href: PropTypes.string
 }

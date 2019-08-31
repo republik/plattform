@@ -35,7 +35,7 @@ Caveat: long words like «Generationenwechsel» in the highlighted comment will 
 Supported props:
 - `t` (func): translation function.
 - `path` (string): the path to the discussion page.
-- `documentTitle` (string): The title of the article that triggered the debate.
+- `title` (string): The title of the article that triggered the debate.
 - `commentCount` (number):  a `number` of the current contributions to the debate, this number will be displayed next to the "comment" icon.
 - `comments` (array): An array of objects that mimics an api call:
 ```code|lang-jsx,span-3
@@ -61,10 +61,7 @@ Supported props:
 ```react|span-3
 <ActiveDebateTeaser
   t={t}
-  path={debate.path}
-  documentTitle={debate.title}
-  commentCount={debate.comments.totalCount}
-  comments={debate.comments.nodes}
+  discussion={debate}
 />
 ```
 
@@ -78,7 +75,7 @@ These components are used to build `ActiveDebateTeaser`.
 ```react|span-3
 <ActiveDebateHeader
   t={t}
-  documentTitle={'Stell dir vor, die UBS wird klimaneutral'}
+  title={'Stell dir vor, die UBS wird klimaneutral'}
   commentCount={45}
   href={''}
 />
