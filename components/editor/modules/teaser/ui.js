@@ -225,7 +225,7 @@ const Form = withT(({ node, onChange, onTypeChange, options, t }) => {
   return <UIForm>
     <Field
       label='URL'
-      value={node.data.get('url')}
+      value={node.data.get('url') || ''}
       onChange={onChange('url')} />
     <AutoSlugLinkInfo
       value={node.data.get('url')}
@@ -233,7 +233,7 @@ const Form = withT(({ node, onChange, onTypeChange, options, t }) => {
     {options.includes('formatUrl') && <>
       <Field
         label='Format URL'
-        value={node.data.get('formatUrl')}
+        value={node.data.get('formatUrl') || ''}
         onChange={onChange('formatUrl')} />
       <AutoSlugLinkInfo
         value={node.data.get('formatUrl')}
@@ -349,7 +349,7 @@ const Form = withT(({ node, onChange, onTypeChange, options, t }) => {
       options.includes('byline') &&
       <Field
         label='Bildcredit'
-        value={node.data.get('byline')}
+        value={node.data.get('byline') || ''}
         onChange={onChange('byline')} />
     }
     {

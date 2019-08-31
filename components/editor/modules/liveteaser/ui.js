@@ -80,7 +80,10 @@ export default ({ TYPE, newBlock, rule = {} }) => {
                 data={Map(
                   form.map(field => [field.key, ''])
                 ).merge(
-                  node.data.remove('id').remove('module')
+                  node.data
+                    .remove('id')
+                    .remove('module')
+                    .remove('priorRepoIds')
                 )}
                 notes={Map(form.map(field => [field.key, field.note]))}
                 onInputChange={onInputChange}
