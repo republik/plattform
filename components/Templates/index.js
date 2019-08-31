@@ -11,6 +11,7 @@ import createDossierSchema from '@project-r/styleguide/lib/templates/Dossier'
 import { t } from '../../lib/withT'
 
 import dynamicComponentRequire from '../editor/modules/dynamiccomponent/require'
+import * as withFrontData from './withFrontData'
 
 const schemas = {
   // first is default schema for the editor
@@ -19,7 +20,7 @@ const schemas = {
   editorialNewsletter: editorialNewsletterSchema(),
   neutrum: neutrumSchema,
   article: createArticleSchema({ t, dynamicComponentRequire }),
-  front: createFrontSchema({ t }),
+  front: createFrontSchema({ t, ...withFrontData }),
   format: createFormatSchema({ t, dynamicComponentRequire }),
   discussion: createDiscussionSchema({ t, dynamicComponentRequire }),
   dossier: createDossierSchema({ t, dynamicComponentRequire })
