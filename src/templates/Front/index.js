@@ -651,7 +651,12 @@ const createSchema = ({
       {
         matchMdast: matchType('root'),
         // the document is not a node in slate and doesn't need attributes
-        component: ({ children }) => children,
+        component: ({ children }) =>
+          <div style={{
+            width: '100%', overflow: 'hidden', backgroundColor: '#fff'
+          }}>
+            {children}
+          </div>,
         editorModule: 'front',
         rules: [
           {
