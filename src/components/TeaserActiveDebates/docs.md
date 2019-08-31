@@ -1,19 +1,14 @@
 
 
 Supported props:
-- `hasHighlight` (boolean): if `true`, the left column will be reserved for the highlighted debate, on desktop.
 - `discussions` (array): array of discussions.
 - `t` (function): translation function.
 
-
-Caveat: long words like "Generationenwechsel" in the highlighted section will overflow at certain screen sizes.
-
-
+Caveat: long words like «Generationenwechsel» in the highlighted comment will be cut off at certain screen sizes unless soft hyphens are added.
 
 ```react|span-6
 <TeaserActiveDebates
   t={t}
-  hasHighlight={true}
   discussions={activeDebates.discussions}
 >
   <TeaserSectionTitle href="/">
@@ -25,7 +20,6 @@ Caveat: long words like "Generationenwechsel" in the highlighted section will ov
 ```react|span-6
 <TeaserActiveDebates
   t={t}
-  hasHighlight={false}
   discussions={activeDebatesWithoutHighlight.discussions}
 >
   <TeaserSectionTitle href="/">

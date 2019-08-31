@@ -41,13 +41,13 @@ const styles = {
   })
 }
 
-const ActiveDebates = ({ discussions, hasHighlight = false, t, children }) => {
-  if (hasHighlight) {
-    const highlighted = discussions.filter(discussion =>
-      discussion.comments.nodes.some(comment =>
-        comment.hasOwnProperty('highlight')
-      )
+const ActiveDebates = ({ discussions, t, children }) => {
+  const highlighted = discussions.filter(discussion =>
+    discussion.comments.nodes.some(comment =>
+      comment.hasOwnProperty('highlight')
     )
+  )
+  if (highlighted.length) {
     const notHighlighted = discussions.filter(
       discussion =>
         !discussion.comments.nodes.some(comment =>
@@ -113,7 +113,6 @@ const ActiveDebates = ({ discussions, hasHighlight = false, t, children }) => {
 export default ActiveDebates
 
 ActiveDebates.propTypes = {
-  hasHighlight: PropTypes.bool,
   discussions: PropTypes.array,
   children: PropTypes.node
 }

@@ -11,11 +11,11 @@ export const oneComment = {
   },
   displayAuthor: {
     id: 'f815cc7cd2b9a3aed4190d6be5753a835822784b9bd202d5c54b681efd2036fe',
-    name: 'Simon Schlauri',
-    slug: 'simonschlauri',
+    name: 'Simon',
+    slug: null,
     credential: null,
     profilePicture:
-      'https://cdn.republik.space/s3/republik-assets/portraits/e7b5fec7809718a9f7b8c038c2747fd6.jpeg.webp?size=900x854&resize=384x384&bw=true',
+      'https://cdn.republik.space/s3/republik-assets/portraits/e7b5fec7809718a9f7b8c038c2747fd6.jpeg?size=900x854&resize=384x384&bw=true',
     __typename: 'DisplayUser'
   },
   __typename: 'Comment'
@@ -276,11 +276,11 @@ export const activeDebates = {
             displayAuthor: {
               id:
                 'f815cc7cd2b9a3aed4190d6be5753a835822784b9bd202d5c54b681efd2036fe',
-              name: 'Simon Schlauri',
-              slug: 'simonschlauri',
+              name: 'Simon',
+              slug: null,
               credential: null,
               profilePicture:
-                'https://cdn.republik.space/s3/republik-assets/portraits/e7b5fec7809718a9f7b8c038c2747fd6.jpeg.webp?size=900x854&resize=384x384&bw=true',
+                'https://cdn.republik.space/s3/republik-assets/portraits/e7b5fec7809718a9f7b8c038c2747fd6.jpeg?size=900x854&resize=384x384&bw=true',
               __typename: 'DisplayUser'
             },
             __typename: 'Comment'
@@ -482,11 +482,11 @@ export const activeDebatesWithoutHighlight = {
             displayAuthor: {
               id:
                 'f815cc7cd2b9a3aed4190d6be5753a835822784b9bd202d5c54b681efd2036fe',
-              name: 'Simon Schlauri',
-              slug: 'simonschlauri',
+              name: 'Simon',
+              slug: null,
               credential: null,
               profilePicture:
-                'https://cdn.republik.space/s3/republik-assets/portraits/e7b5fec7809718a9f7b8c038c2747fd6.jpeg.webp?size=900x854&resize=384x384&bw=true',
+                'https://cdn.republik.space/s3/republik-assets/portraits/e7b5fec7809718a9f7b8c038c2747fd6.jpeg?size=900x854&resize=384x384&bw=true',
               __typename: 'DisplayUser'
             },
             __typename: 'Comment'

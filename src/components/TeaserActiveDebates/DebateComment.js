@@ -4,15 +4,18 @@ import React from 'react'
 import colors from '../../theme/colors'
 import { mUp } from '../../theme/mediaQueries'
 import { serifBold28, serifBold38, serifRegular15 } from '../Typography/styles'
+import { inQuotes } from '../../lib/inQuotes'
 
 const styles = {
   body: css({
+    overflow: 'hidden',
     ...serifRegular15,
     color: colors.text,
     marginBottom: 21,
     marginTop: 18
   }),
   highlight: css({
+    overflow: 'hidden',
     ...serifBold28,
     color: colors.text,
     marginBottom: 21,
@@ -36,9 +39,7 @@ const DebateComment = ({ highlight, preview }) => {
       )}
       {highlight && (
         <div {...styles.highlight}>
-          &#171;
-          {highlight}
-          &#187;
+          {inQuotes(highlight)}
         </div>
       )}
     </>
