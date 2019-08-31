@@ -61,6 +61,7 @@ import {
   styles
 } from '../Article/utils'
 
+import createLiveTeasers from './liveTeasers'
 
 export const subject = {
   matchMdast: matchHeading(2),
@@ -88,9 +89,12 @@ export const subject = {
 }
 
 const DefaultLink = ({ children }) => children
+const withData = Component => props => <Component {...props} data={{}} />
 
 const createSchema = ({
-  Link = DefaultLink
+  Link = DefaultLink,
+  withFeedData = withData,
+  t = () => ''
 } = {}) => {
   const credit = {
     matchMdast: matchParagraph,
@@ -448,7 +452,7 @@ const createSchema = ({
     ]
   }
 
-  
+
   const carouselSubject = {
     matchMdast: matchHeading(2),
     component: ({ children, attributes, ...props }) =>
@@ -680,6 +684,11 @@ const createSchema = ({
             ]
           },
           carousel,
+          ...createLiveTeasers({
+            Link,
+            t,
+            withFeedData
+          }),
           {
             matchMdast: () => false,
             editorModule: 'specialchars'

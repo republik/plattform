@@ -18,12 +18,9 @@ const styles = {
 }
 
 const InternalOnlyTag = ({ t }) => {
-  if (!t) {
-    return null
-  }
   return (
     <div {...styles.label}>
-      {t('styleguide/TeaserFeed/InternalOnlyTag')}
+      {t ? t('styleguide/TeaserFeed/InternalOnlyTag') : 'Internal'}
     </div>
   )
 }
