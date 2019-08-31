@@ -1,5 +1,5 @@
 {
-  "updated": "2019-08-30T13:06:13.446Z",
+  "updated": "2019-08-31T11:56:18.745Z",
   "title": "live",
   "data": [
     {
@@ -577,6 +577,14 @@
     {
       "key": "metaData/series/coverText/fontSize",
       "value": "Schriftgrösse"
+    },
+    {
+      "key": "metaData/field/minPublishDate",
+      "value": "Ab Publikationsdatum"
+    },
+    {
+      "key": "metaData/field/excludeRepoIds",
+      "value": "Dokumente ausschliessen"
     },
     {
       "key": "metaData/field/excludeFromGallery",

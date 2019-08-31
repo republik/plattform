@@ -1,10 +1,17 @@
-import { colors } from '@project-r/styleguide'
 import { Block } from 'slate'
 
 import { matchBlock } from '../../utils'
 import MarkdownSerializer from 'slate-mdast-serializer'
 
 import createUi from './ui'
+import { TeaserInlineUI } from '../teaser/ui'
+import {
+  getIndex,
+  getParent,
+  insert,
+  moveUp,
+  moveDown
+} from '../teaser/actions'
 
 export default ({ rule, subModules, TYPE }) => {
   const zone = {
@@ -15,17 +22,17 @@ export default ({ rule, subModules, TYPE }) => {
         kind: 'block',
         type: TYPE,
         data: {
-          identifier: node.identifier,
+          module: 'teasergroup',
           ...node.data
         },
         isVoid: true
       }
     },
     toMdast: (object) => {
-      const { identifier, ...data } = object.data
+      const { module, ...data } = object.data
       return {
         type: 'zone',
-        identifier,
+        identifier: 'LIVETEASER',
         data: data,
         children: []
       }
@@ -35,8 +42,10 @@ export default ({ rule, subModules, TYPE }) => {
   const newBlock = () => Block.fromJSON(
     zone.fromMdast({
       type: 'zone',
-      identifier: 'SPECIAL',
-      data: {}
+      identifier: 'LIVETEASER',
+      data: {
+        id: 'feed'
+      }
     })
   )
 
@@ -45,6 +54,9 @@ export default ({ rule, subModules, TYPE }) => {
       zone
     ]
   })
+
+  const Preview = rule.component
+  const UI = TeaserInlineUI({})
 
   return {
     TYPE,
@@ -56,25 +68,24 @@ export default ({ rule, subModules, TYPE }) => {
     ui: createUi({ TYPE, newBlock, rule }),
     plugins: [
       {
-        renderNode ({ node, children, editor: { value }, attributes }) {
+        renderNode ({ node, children, editor, attributes }) {
           if (!zone.match(node)) return
 
-          const active = value.blocks.some(block => block.key === node.key)
-          return (
-            <div style={{
-              width: '100%',
-              height: '20vh',
-              paddingTop: '8vh',
-              textAlign: 'center',
-              backgroundColor: colors.primaryBg,
-              transition: 'outline-color 0.2s',
-              outline: '4px solid transparent',
-              outlineColor: active ? colors.primary : 'transparent',
-              marginBottom: 10
-            }} {...attributes}>
-              {node.data.get('identifier') || 'Special'}
-            </div>
-          )
+          const isSelected = editor.value.blocks.some(block => block.key === node.key) && !editor.value.isBlurred
+
+          return <>
+            <UI
+              key='ui'
+              isSelected={isSelected}
+              nodeKey={node.key}
+              getIndex={getIndex(editor)}
+              getParent={getParent(editor)}
+              moveUp={moveUp(editor)}
+              moveDown={moveDown(editor)}
+              insert={insert(editor)}
+            />
+            <Preview attributes={attributes} {...node.data.toJS()} />
+          </>
         },
         schema: {
           [TYPE]: {

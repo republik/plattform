@@ -552,7 +552,7 @@ export const TeaserInlineUI = options =>
         <div contentEditable={false} {...uiStyles}>
           <div>
             <P {...styles.uiInlineRow}>
-              {!isOnlyChild && <RemoveButton onMouseDown={removeHandler} />}
+              {!isOnlyChild && remove && <RemoveButton onMouseDown={removeHandler} />}
               {!isFirstChild && <MoveUpButton onMouseDown={moveUpHandler} />}
               {!isLastChild && <MoveDownButton onMouseDown={moveDownHandler} />}
             </P>

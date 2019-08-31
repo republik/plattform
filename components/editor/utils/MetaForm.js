@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { css } from 'glamor'
+import { Map } from 'immutable'
 
 import { Field, Checkbox, Label } from '@project-r/styleguide'
 import AutosizeInput from 'react-textarea-autosize'
@@ -82,6 +83,7 @@ class Form extends Component {
       t,
       onInputChange,
       data,
+      notes = Map(),
       getWidth = defaultGetWidth,
       black
     } = this.props
@@ -154,19 +156,20 @@ class Form extends Component {
               black={black}
               onChange={onChange || onInputChange(key)} />
           }
+          const isShort = !!key.match(/short/i)
           return (
             <div
               key={key}
               {...styles.span}
               style={{ width: getWidth(key) }}>
               {input}
-              {!!key.match(/short/i) &&
+              {(notes.get(key) || isShort) &&
                 <Label style={{
                   display: 'block',
                   marginBottom: 10,
                   marginTop: -10
                 }}>
-                  {formattedValue && formattedValue.length ? t('metaData/field/short/count', {
+                  {notes.get(key)} {isShort && formattedValue && formattedValue.length ? t('metaData/field/short/count', {
                     count: formattedValue.length
                   }) : ' '}
                 </Label>}

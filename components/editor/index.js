@@ -44,6 +44,7 @@ import createArticleGroup from './modules/article/group'
 import createChartModule from './modules/chart'
 import createChartCanvasModule from './modules/chart/canvas'
 import createDynamicComponentModule from './modules/dynamiccomponent'
+import createLiveTeaserModule from './modules/liveteaser'
 
 const moduleCreators = {
   embedVideo: createEmbedVideoModule,
@@ -85,7 +86,8 @@ const moduleCreators = {
   articleCollection: createArticleCollection,
   chart: createChartModule,
   chartCanvas: createChartCanvasModule,
-  dynamiccomponent: createDynamicComponentModule
+  dynamiccomponent: createDynamicComponentModule,
+  liveteaser: createLiveTeaserModule
 }
 const initModule = (rule, context = {}) => {
   const { editorModule, editorOptions = {} } = rule
