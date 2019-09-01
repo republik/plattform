@@ -192,6 +192,22 @@ const createLiveTeasers = ({
           }
         ]
       }
+    },
+    {
+      matchMdast: node => matchZone('LIVETEASER')(node) && node.data.id === 'end',
+      props: node => node.data,
+      component: ({ attributes, data, url, label }) => {
+        return <div attributes={attributes} style={{ padding: '20px 0', backgroundColor: '#111', color: '#f0f0f0', textAlign: 'center' }}>
+          The End
+        </div>
+      },
+      isVoid: true,
+      editorModule: 'liveteaser',
+      editorOptions: {
+        type: 'LIVETEASEREND',
+        insertButtonText: 'The End',
+        insertId: 'end'
+      }
     }
   ]
 }
