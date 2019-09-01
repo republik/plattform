@@ -29,7 +29,7 @@ export default ({ rule, subModules, TYPE }) => {
       }
     },
     toMdast: (object) => {
-      const { module, ...data } = object.data
+      const { module, priorRepoIds, ...data } = object.data
       return {
         type: 'zone',
         identifier: 'LIVETEASER',
