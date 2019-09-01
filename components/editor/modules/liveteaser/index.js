@@ -1,7 +1,7 @@
 import { Block } from 'slate'
+import MarkdownSerializer from 'slate-mdast-serializer'
 
 import { matchBlock } from '../../utils'
-import MarkdownSerializer from 'slate-mdast-serializer'
 
 import createUi from './ui'
 import { TeaserInlineUI } from '../teaser/ui'
@@ -67,7 +67,7 @@ export default ({ rule, subModules, TYPE }) => {
       newBlock
     },
     changes: {},
-    ui: createUi({ TYPE, newBlock, rule }),
+    ui: createUi({ TYPE, newBlock, rule, zone }),
     plugins: [
       {
         renderNode ({ node, children, editor, attributes }) {
@@ -88,6 +88,19 @@ export default ({ rule, subModules, TYPE }) => {
             />
             <Preview attributes={attributes} {...node.data.toJS()} />
           </>
+        },
+        onKeyDown: (event, change) => {
+          const isBackspace = event.key === 'Backspace'
+          const isDelete = event.key === 'Delete'
+          if (!isBackspace && !isDelete) {
+            return
+          }
+
+          const inSelection = change.value.blocks.some(zone.match)
+          if (inSelection) {
+            event.preventDefault()
+            return true
+          }
         },
         schema: {
           [TYPE]: {

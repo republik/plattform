@@ -13,7 +13,7 @@ import { allBlocks, parent, childIndex, depth } from '../../utils/selection'
 
 import MetaForm from '../../utils/MetaForm'
 
-export default ({ TYPE, newBlock, rule = {} }) => {
+export default ({ TYPE, newBlock, rule = {}, zone }) => {
   const { editorOptions = {} } = rule
 
   const clickHandler = (value, onChange) => event => {
@@ -38,6 +38,9 @@ export default ({ TYPE, newBlock, rule = {} }) => {
       value.isBlurred ||
       value.isExpanded
     )
+    if (value.document.nodes.find(zone.match)) {
+      return null
+    }
     return (
       <span
         {...buttonStyles.insert}
