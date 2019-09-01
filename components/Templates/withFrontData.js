@@ -72,7 +72,7 @@ export const withFeedData = graphql(feedQuery, {
 })
 
 const discussionQuery = gql`
-query getFrontDiscussions($lastDays: Int!, $highlightId: ID) {
+query getFrontDiscussions($lastDays: Int!, $first: Int!, $highlightId: ID) {
   highlight: comments(first: 1, focusId: $highlightId) {
     id
     focus {
@@ -92,11 +92,11 @@ query getFrontDiscussions($lastDays: Int!, $highlightId: ID) {
       }
     }
   }
-  activeDiscussions(lastDays: $lastDays) {
+  activeDiscussions(lastDays: $lastDays, first: $first) {
     discussion {
       id
       ...DiscussionMetaData
-      comments(first: 2) {
+      comments(first: 3) {
         totalCount
         nodes {
           id
@@ -148,13 +148,14 @@ fragment DiscussionMetaData on Discussion {
 `
 
 export const withDiscussionsData = graphql(discussionQuery, {
-  options: ({ lastDays = 3, highlightId }) => ({
+  options: ({ lastDays = 3, first = 4, highlightId }) => ({
     variables: {
       lastDays: +lastDays,
+      first: +first,
       highlightId
     }
   }),
-  props: ({ data, ownProps: { highlightQuote } }) => {
+  props: ({ data, ownProps: { highlightQuote, first = 4 } }) => {
     let discussions
     if (!data.loading && !data.error) {
       discussions = data.activeDiscussions.map(a => a.discussion)
@@ -182,7 +183,7 @@ export const withDiscussionsData = graphql(discussionQuery, {
       }
 
       const seenNames = new Set()
-      let remainingComments = 5
+      let remainingComments = +first + hasHighlight
 
       discussions = discussions.reduce(
         (all, discussion, i) => {

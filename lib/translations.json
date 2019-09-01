@@ -1,5 +1,5 @@
 {
-  "updated": "2019-09-01T00:31:02.355Z",
+  "updated": "2019-09-01T10:38:55.148Z",
   "title": "live",
   "data": [
     {
@@ -593,6 +593,10 @@
     {
       "key": "metaData/field/lastDays",
       "value": "Letzte X Tage"
+    },
+    {
+      "key": "metaData/field/first",
+      "value": "Erste X"
     },
     {
       "key": "metaData/field/highlightId",
