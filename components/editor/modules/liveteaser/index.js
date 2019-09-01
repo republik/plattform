@@ -39,12 +39,14 @@ export default ({ rule, subModules, TYPE }) => {
     }
   }
 
+  const { editorOptions = {} } = rule
+
   const newBlock = () => Block.fromJSON(
     zone.fromMdast({
       type: 'zone',
       identifier: 'LIVETEASER',
       data: {
-        id: 'feed'
+        id: editorOptions.insertId
       }
     })
   )

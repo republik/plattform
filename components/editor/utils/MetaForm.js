@@ -108,7 +108,7 @@ class Form extends Component {
             </Checkbox>
           } else {
             let renderInput
-            if (key.match(/description/i)) {
+            if (key.match(/description|quote/i)) {
               renderInput = ({ ref, ...inputProps }) => (
                 <AutosizeInput {...styles.autoSize}
                   {...inputProps}
