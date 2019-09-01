@@ -1,6 +1,8 @@
 import test from 'tape'
 import timeago from './timeago'
-import { t } from './withT'
+import { createFormatter } from './translate'
+
+const t = createFormatter(require('./translations.json').data);
 
 [
   [

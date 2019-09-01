@@ -1,6 +1,8 @@
 import test from 'tape'
 import timeahead from './timeahead'
-import { t } from './withT'
+import { createFormatter } from './translate'
+
+const t = createFormatter(require('./translations.json').data);
 
 [
   [
