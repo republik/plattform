@@ -5,14 +5,16 @@ import get from 'lodash/get'
 import NewPage from 'react-icons/lib/md/open-in-new'
 
 import colors from '../../theme/colors'
+import { mUp } from '../../theme/mediaQueries'
 import { ellipsize, underline } from '../../lib/styleMixins'
 import { inQuotes } from '../../lib/inQuotes'
+import { useMediaQuery } from '../../lib/useMediaQuery'
 import { linkRule } from '../Typography/'
 import { serifRegular14, sansSerifRegular14 } from '../Typography/styles'
 import { CommentBodyParagraph } from '../CommentBody/web'
 import { Context, Header } from '../Discussion/Internal/Comment'
 import RawHtml from '../RawHtml/'
-import { DiscussionContext } from '../Discussion/DiscussionContext'
+import { DiscussionContext, formatTimeRelative } from '../Discussion/DiscussionContext'
 
 const styles = {
   root: css({
@@ -79,7 +81,6 @@ export const CommentTeaser = ({
   preview,
   highlights,
   createdAt,
-  timeago,
   Link = DefaultLink,
   discussion,
   tags,
@@ -87,6 +88,8 @@ export const CommentTeaser = ({
   onClick,
   newPage
 }) => {
+  const isDesktop = useMediaQuery(mUp)
+
   const highlight = get(highlights, '[0].fragments[0]', '').trim()
 
   const endsWithPunctuation =
@@ -102,14 +105,14 @@ export const CommentTeaser = ({
    * A reduced version of DiscussionContext value, just enough so we can render
    * the Comment Header component.
    */
+  const clock = {
+    now: Date.now(),
+    t,
+    isDesktop
+  }
   const discussionContextValue = {
     discussion,
-
-    clock: {
-      now: Date.now(),
-      formatTimeRelative: date => timeago(date.toISOString())
-    },
-
+    clock,
     links: {
       Profile: ({ displayAuthor, ...props }) => (
         <Link {...props} discussion={discussion} displayAuthor={displayAuthor} />
@@ -123,7 +126,7 @@ export const CommentTeaser = ({
       <div id={id} {...styles.root}>
         {displayAuthor && (
           <div {...styles.header}>
-            <Header t={t} comment={{ id, displayAuthor, createdAt, parentIds: [] }} />
+            <Header t={t} comment={{ id, displayAuthor, createdAt }} />
           </div>
         )}
         {tag && (
@@ -185,7 +188,7 @@ export const CommentTeaser = ({
             <div {...styles.timeago}>
               <Link commentId={id} discussion={discussion} passHref>
                 <a {...styles.linkUnderline} suppressHydrationWarning>
-                  {timeago(createdAt)}
+                  {formatTimeRelative(new Date(createdAt), {...clock, direction: 'past'})}
                 </a>
               </Link>
             </div>

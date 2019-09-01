@@ -14,9 +14,11 @@ import * as fontStyles from './components/Typography/styles'
 import { fontFaces } from './theme/fonts'
 import { createFormatter } from './lib/translate'
 import {
-  DiscussionContext,
-  sampleDiscussionContextValue
+  DiscussionContext
 } from './components/Discussion/DiscussionContext'
+import {
+  createSampleDiscussionContextValue
+} from './components/Discussion/DiscussionContext.docs'
 
 simulations(true)
 // prevent speedy in catalog
@@ -39,7 +41,7 @@ document.body.appendChild(styleTag)
 const t = createFormatter(require('./lib/translations.json').data)
 
 ReactDOM.render(
-  <DiscussionContext.Provider value={sampleDiscussionContextValue}>
+  <DiscussionContext.Provider value={createSampleDiscussionContextValue({ t })}>
     <Catalog
       title="Style Guide"
       theme={theme}

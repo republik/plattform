@@ -8,7 +8,7 @@ import { onlyS } from '../../../../theme/mediaQueries'
 import { ellipsize, underline } from '../../../../lib/styleMixins'
 import { timeFormat } from '../../../../lib/timeFormat'
 
-import { DiscussionContext } from '../../DiscussionContext'
+import { DiscussionContext, formatTimeRelative } from '../../DiscussionContext'
 import * as config from '../../config'
 
 export const profilePictureSize = 40
@@ -216,7 +216,7 @@ export const Header = ({ t, comment, isExpanded, onToggle }) => {
           <div {...styles.timeago} title={titleDate(createdAt)}>
             <links.Comment comment={comment} passHref>
               <a {...styles.linkUnderline} suppressHydrationWarning>
-                {clock.formatTimeRelative(new Date(createdAt), { direction: 'past' })}
+                {formatTimeRelative(new Date(createdAt), { ...clock, direction: 'past' })}
               </a>
             </links.Comment>
           </div>

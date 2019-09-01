@@ -1,5 +1,5 @@
 {
-  "updated": "2019-07-08T13:09:41.326Z",
+  "updated": "2019-09-01T00:03:08.188Z",
   "title": "live",
   "data": [
     {
@@ -190,6 +190,142 @@
     {
       "key": "styleguide/DynamicComponent/error",
       "value": "Diese Komponente ist kaputt."
+    },
+    {
+      "key": "timeago/justNow/other",
+      "value": "gerade eben"
+    },
+    {
+      "key": "timeago/seconds/1",
+      "value": "vor einer Sekunde"
+    },
+    {
+      "key": "timeago/seconds/other",
+      "value": "vor {count} Sekunden"
+    },
+    {
+      "key": "timeago/minutes/1",
+      "value": "vor einer Minute"
+    },
+    {
+      "key": "timeago/minutes/other",
+      "value": "vor {count} Minuten"
+    },
+    {
+      "key": "timeago/hours/1",
+      "value": "vor einer Stunde"
+    },
+    {
+      "key": "timeago/hours/other",
+      "value": "vor {count} Stunden"
+    },
+    {
+      "key": "timeago/days/1",
+      "value": "vor einem Tag"
+    },
+    {
+      "key": "timeago/days/other",
+      "value": "vor {count} Tagen"
+    },
+    {
+      "key": "timeago/weeks/1",
+      "value": "vor einer Woche"
+    },
+    {
+      "key": "timeago/weeks/other",
+      "value": "vor {count} Wochen"
+    },
+    {
+      "key": "timeago/months/1",
+      "value": "vor einem Monat"
+    },
+    {
+      "key": "timeago/months/other",
+      "value": "vor {count} Monaten"
+    },
+    {
+      "key": "timeago/years/1",
+      "value": "vor einem Jahr"
+    },
+    {
+      "key": "timeago/years/other",
+      "value": "vor {count} Jahren"
+    },
+    {
+      "key": "timeAhead/justNow/other",
+      "value": "in weniger als einer Minute"
+    },
+    {
+      "key": "timeAhead/minutes/1",
+      "value": "in einer Minute"
+    },
+    {
+      "key": "timeAhead/minutes/other",
+      "value": "in {count} Minuten"
+    },
+    {
+      "key": "timeAhead/hours/1",
+      "value": "in einer Stunde"
+    },
+    {
+      "key": "timeAhead/hours/other",
+      "value": "in {count} Stunden"
+    },
+    {
+      "key": "timeAhead/days/1",
+      "value": "erst in einem Tag"
+    },
+    {
+      "key": "timeAhead/days/other",
+      "value": "in {count} Tagen"
+    },
+    {
+      "key": "timeAhead/weeks/1",
+      "value": "erst in einer Woche"
+    },
+    {
+      "key": "timeAhead/weeks/other",
+      "value": "in {count} Wochen"
+    },
+    {
+      "key": "timeAhead/months/1",
+      "value": "in einem Monat"
+    },
+    {
+      "key": "timeAhead/months/other",
+      "value": "in {count} Monaten"
+    },
+    {
+      "key": "timeAhead/years/1",
+      "value": "in einem Jahr"
+    },
+    {
+      "key": "timeAhead/years/other",
+      "value": "in {count} Jahren"
+    },
+    {
+      "key": "timeduration/seconds",
+      "value": "vor {count} s"
+    },
+    {
+      "key": "timeduration/minutes",
+      "value": "vor {count} m"
+    },
+    {
+      "key": "timeduration/hours",
+      "value": "vor {count} h"
+    },
+    {
+      "key": "timeduration/days",
+      "value": "vor {count} d"
+    },
+    {
+      "key": "timeduration/weeks",
+      "value": "vor {count} w"
+    },
+    {
+      "key": "timeduration/years",
+      "value": "vor {count} y"
     }
   ]
 }

@@ -9,7 +9,7 @@ import ReplyIcon from 'react-icons/lib/md/reply'
 import ShareIcon from 'react-icons/lib/md/share'
 import colors from '../../../../theme/colors'
 import { sansSerifMedium14 } from '../../../Typography/styles'
-import { DiscussionContext } from '../../DiscussionContext'
+import { DiscussionContext, formatTimeRelative } from '../../DiscussionContext'
 
 const buttonStyle = {
   outline: 'none',
@@ -116,7 +116,7 @@ export const Actions = ({ t, comment, onReply, onEdit }) => {
   const replyBlockedMessage = (() => {
     const waitUntilDate = userWaitUntil && new Date(userWaitUntil)
     if (waitUntilDate && waitUntilDate > clock.now) {
-      return t('styleguide/CommentComposer/wait', { time: clock.formatTimeRelative(waitUntilDate) })
+      return t('styleguide/CommentComposer/wait', { time: formatTimeRelative(waitUntilDate, clock) })
     }
   })()
 

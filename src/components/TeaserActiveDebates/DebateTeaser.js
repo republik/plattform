@@ -3,6 +3,8 @@ import PropTypes from 'prop-types'
 import React from 'react'
 import { ActiveDebateComment, ActiveDebateHeader } from '.'
 import colors from '../../theme/colors'
+import { mUp } from '../../theme/mediaQueries'
+import { useMediaQuery } from '../../lib/useMediaQuery'
 import { Header as UserProfile } from '../Discussion/Internal/Comment'
 import { DiscussionContext } from '../Discussion/DiscussionContext'
 import { sansSerifMedium16, sansSerifRegular14 } from '../Typography/styles'
@@ -52,18 +54,19 @@ export const DebateTeaser = ({
   DiscussionLink = DefaultLink,
   CommentLink = DefaultLink
 }) => {
+  const isDesktop = useMediaQuery(mUp)
+
   /*
    * A reduced version of DiscussionContext value, just enough so we can render
    * the Comment Header component.
    */
   const discussionContextValue = {
     discussion,
-
     clock: {
       now: Date.now(),
-      formatTimeRelative: date => ''
+      isDesktop,
+      t
     },
-
     links: {
       Profile: ({ displayAuthor, ...props }) => (
         <CommentLink {...props} discussion={discussion} displayAuthor={displayAuthor} />

@@ -6,6 +6,9 @@ export const mediaQueries = allMediaQueries
 
 export {fontFamilies, fontFaces} from './theme/fonts'
 
+export {default as timeago} from './lib/timeago'
+export {default as timeahead} from './lib/timeahead'
+export {default as timeduration} from './lib/timeduration'
 export {slug} from './lib/slug'
 export {inQuotes} from './lib/inQuotes'
 export {createFormatter, createPlaceholderFormatter} from './lib/translate'
