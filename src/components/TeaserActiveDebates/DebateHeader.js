@@ -20,9 +20,9 @@ const styles = {
   })
 }
 
-const DebateHeader = ({ title, commentCount, href }) => {
+const DebateHeader = ({ title, commentCount, href, onClick }) => {
   return (
-    <a href={href} {...styles.header}>
+    <a href={href} onClick={onClick} {...styles.header}>
       {title && <div {...styles.title}>{title}</div>}
       <IconLink discussionCommentsCount={commentCount} small />
     </a>
