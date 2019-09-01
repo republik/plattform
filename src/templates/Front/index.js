@@ -4,8 +4,7 @@ import {
   matchType,
   matchZone,
   matchParagraph,
-  matchHeading,
-  matchImageParagraph
+  matchHeading
 } from 'mdast-react-render/lib/utils'
 
 import colors from '../../theme/colors'
@@ -26,16 +25,6 @@ import {
   TeaserFrontCreditLink,
   TeaserFrontSubject
 } from '../../components/TeaserFront'
-
-import {
-  TeaserFrontDossier,
-  TeaserFrontDossierIntro,
-  TeaserFrontDossierHeadline,
-  TeaserFrontDossierLead,
-  TeaserFrontDossierMore,
-  DossierTag,
-  DossierTileHeadline
-} from '../../components/Dossier'
 
 import {
   TeaserCarousel,
@@ -89,12 +78,11 @@ export const subject = {
 }
 
 const DefaultLink = ({ children }) => children
-const withData = Component => props => <Component {...props} data={{}} />
 
 const createSchema = ({
   Link = DefaultLink,
-  withFeedData = withData,
-  t = () => ''
+  t = () => '',
+  ...rest
 } = {}) => {
   const credit = {
     matchMdast: matchParagraph,
@@ -692,7 +680,7 @@ const createSchema = ({
           ...createLiveTeasers({
             Link,
             t,
-            withFeedData
+            ...rest
           }),
           {
             matchMdast: () => false,

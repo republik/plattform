@@ -2,16 +2,20 @@ import React from 'react'
 import { css } from 'glamor'
 
 import {
-  matchType,
-  matchZone,
-  matchParagraph,
-  matchHeading,
-  matchImageParagraph
+  matchZone
 } from 'mdast-react-render/lib/utils'
 
 import {
   TeaserFeed
 } from '../../components/TeaserFeed'
+
+import {
+  TeaserActiveDebates
+} from '../../components/TeaserActiveDebates'
+
+import {
+  TeaserSectionTitle
+} from '../../components/TeaserShared'
 
 import Center from '../../components/Center'
 import Loader from '../../components/Loader'
@@ -27,13 +31,27 @@ const styles = {
       paddingTop: 55,
       paddingBottom: 55
     }
+  }),
+  dialogContainer: css({
+    paddingTop: 10,
+    paddingBottom: 10,
+    [mUp]: {
+      paddingTop: 30,
+      paddingBottom: 30
+    }
   })
 }
 
+const DefaultLink = ({ children }) => children
+const withData = Component => props => <Component {...props} data={{}} />
+
 const createLiveTeasers = ({
-  Link,
-  withFeedData,
-  t
+  Link = DefaultLink,
+  CommentLink = DefaultLink,
+  DiscussionLink = DefaultLink,
+  t,
+  withFeedData = withData,
+  withDiscussionsData = withData
 }) => {
   const extractRepoIds = children => {
     if (!children) {
@@ -83,7 +101,7 @@ const createLiveTeasers = ({
                         key={doc.meta.path} />
                     )
                   })}
-                  <Link href={url}>
+                  <Link href={url} passHref>
                     <Editorial.A href={url}>{label}</Editorial.A>
                   </Link>
                 </div>
@@ -95,7 +113,8 @@ const createLiveTeasers = ({
       editorModule: 'liveteaser',
       editorOptions: {
         type: 'LIVETEASERFEED',
-        insertButtonText: 'Live Teaser',
+        insertButtonText: 'Feed Teaser',
+        insertId: 'feed',
         form: [
           {
             key: 'label'
@@ -110,6 +129,62 @@ const createLiveTeasers = ({
           {
             key: 'excludeRepoIds',
             note: 'Vorherige Artikel werden automatisch ausgeschlossen. Nur im Spezialfall hier Komma-separierte Repo-IDs eintragen.'
+          }
+        ]
+      }
+    },
+    {
+      matchMdast: node => matchZone('LIVETEASER')(node) && node.data.id === 'dialog',
+      props: node => node.data,
+      component: withDiscussionsData(({ attributes, data, url, label }) => {
+        return <Center attributes={attributes}>
+          <Loader
+            error={data.error}
+            loading={data.loading}
+            render={() => {
+              return (
+                <div {...styles.dialogContainer}>
+                  <TeaserActiveDebates
+                    t={t}
+                    CommentLink={CommentLink}
+                    DiscussionLink={DiscussionLink}
+                    discussions={data.discussions}
+                  >
+                    <Link href={url} passHref>
+                      <TeaserSectionTitle href={url}>
+                        {label}
+                      </TeaserSectionTitle>
+                    </Link>
+                  </TeaserActiveDebates>
+                </div>
+              )
+            }} />
+        </Center>
+      }),
+      isVoid: true,
+      editorModule: 'liveteaser',
+      editorOptions: {
+        type: 'LIVETEASERDIALOG',
+        insertButtonText: 'Dialog Teaser',
+        insertId: 'dialog',
+        form: [
+          {
+            key: 'label'
+          },
+          {
+            key: 'url'
+          },
+          {
+            key: 'lastDays',
+            note: 'Default 3'
+          },
+          {
+            key: 'highlightId',
+            note: 'Kommentar-ID (focus-Wert im URL)'
+          },
+          {
+            key: 'highlightQuote',
+            note: 'Zitat aus dem Kommentar'
           }
         ]
       }
