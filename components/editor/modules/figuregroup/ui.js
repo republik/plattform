@@ -170,6 +170,36 @@ export const FigureGroupForm = options => {
             1 Zeile Vorschau
           </Radio>
         </UIForm>
+        <p style={{ margin: '10px 0' }}>
+          <Label>Ausrichtung</Label><br />
+          {[
+            { label: 'Klein', size: 'narrow' },
+            { label: 'Normal', size: 'normal' },
+            { label: 'Gross', size: 'breakout' }
+          ].map((size, i) => {
+            const checked = figureGroup.data.get('size', 'breakout') === size.size
+
+            return [
+              <Radio
+                key={`radio${i}`}
+                checked={checked}
+                onChange={event => {
+                  event.preventDefault()
+                  if (checked) return
+
+                  let change = value.change()
+                    .setNodeByKey(figureGroup.key, {
+                      data: figureGroup.data.set('size', size.size)
+                    })
+
+                  onChange(change)
+                }}>
+                {size.label}
+              </Radio>,
+              <br key={`br${i}`} />
+            ]
+          })}
+        </p>
 
         <span
           {...buttonStyles.insert}
