@@ -6,10 +6,14 @@ import { ActiveDebateTeaser } from '.'
 
 const styles = {
   section: css({
-    margin: 0,
-    padding: '30px 15px',
+    margin: '0 auto',
+    maxWidth: 1300,
+    padding: '40px 15px',
     backgroundColor: '#FFFFFF',
-    color: '#000000'
+    color: '#000000',
+    [mUp]: {
+      padding: '70px 15px'
+    }
   }),
   row: css({}),
   withoutHighlight: css({
@@ -90,24 +94,23 @@ const ActiveDebates = ({
         </div>
       </section>
     )
-  } else {
-    return (
-      <section {...styles.section}>
-        {children}
-        <div role='group' {...css(styles.row, styles.withoutHighlight)}>
-          {discussions.map(discussion => (
-            <ActiveDebateTeaser
-              key={discussion.id}
-              discussion={discussion}
-              CommentLink={CommentLink}
-              DiscussionLink={DiscussionLink}
-              t={t}
-            />
-          ))}
-        </div>
-      </section>
-    )
-  }
+  } 
+  return (
+    <section {...styles.section}>
+      {children}
+      <div role='group' {...css(styles.row, styles.withoutHighlight)}>
+        {discussions.map(discussion => (
+          <ActiveDebateTeaser
+            key={discussion.id}
+            discussion={discussion}
+            CommentLink={CommentLink}
+            DiscussionLink={DiscussionLink}
+            t={t}
+          />
+        ))}
+      </div>
+    </section>
+  )
 }
 
 export default ActiveDebates

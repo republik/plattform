@@ -31,14 +31,6 @@ const styles = {
       paddingTop: 55,
       paddingBottom: 55
     }
-  }),
-  dialogContainer: css({
-    paddingTop: 10,
-    paddingBottom: 10,
-    [mUp]: {
-      paddingTop: 30,
-      paddingBottom: 30
-    }
   })
 }
 
@@ -137,29 +129,28 @@ const createLiveTeasers = ({
       matchMdast: node => matchZone('LIVETEASER')(node) && node.data.id === 'dialog',
       props: node => node.data,
       component: withDiscussionsData(({ attributes, data, url, label }) => {
-        return <Center attributes={attributes}>
-          <Loader
-            error={data.error}
-            loading={data.loading}
-            render={() => {
-              return (
-                <div {...styles.dialogContainer}>
-                  <TeaserActiveDebates
-                    t={t}
-                    CommentLink={CommentLink}
-                    DiscussionLink={DiscussionLink}
-                    discussions={data.discussions}
-                  >
-                    <Link href={url} passHref>
-                      <TeaserSectionTitle href={url}>
-                        {label}
-                      </TeaserSectionTitle>
-                    </Link>
-                  </TeaserActiveDebates>
-                </div>
-              )
-            }} />
-        </Center>
+        return <Loader
+          error={data.error}
+          loading={data.loading}
+          style={{minHeight: 600}}
+          render={() => {
+            return (
+              <div {...styles.dialogContainer}>
+                <TeaserActiveDebates
+                  t={t}
+                  CommentLink={CommentLink}
+                  DiscussionLink={DiscussionLink}
+                  discussions={data.discussions}
+                >
+                  <Link href={url} passHref>
+                    <TeaserSectionTitle href={url}>
+                      {label}
+                    </TeaserSectionTitle>
+                  </Link>
+                </TeaserActiveDebates>
+              </div>
+            )
+          }} />
       }),
       isVoid: true,
       editorModule: 'liveteaser',
