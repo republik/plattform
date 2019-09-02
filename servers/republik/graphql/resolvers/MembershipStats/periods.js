@@ -14,7 +14,7 @@ const DORMANT_MEMBERSHIP_TYPES = ['ABO', 'BENEFACTOR_ABO']
 const getMembershipsEndingInRange = (minEndDate, maxEndDate, membershipTypes, pgdb) => {
   const excludeParkingUserFragment =
     PARKING_USER_ID
-      ? `m."userId" != :excludeUserId AND`
+      ? 'm."userId" != :excludeUserId AND'
       : ''
 
   return pgdb.query(`
