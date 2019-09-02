@@ -123,14 +123,12 @@ const filterReducer = (schema) => (filters) => {
 }
 
 // converts the filter (from filterReducer) into an object without the md5 hashes
-const getFilterObj = (filter, omit = []) => {
+const getFilterObj = (filter) => {
   const obj = {}
   filter && Object.keys(filter)
     .forEach(fKey => {
       const filterEntry = filter[fKey]
-      if (omit.indexOf(filterEntry.key) === -1) {
-        obj[filterEntry.key] = filterEntry.value
-      }
+      obj[filterEntry.key] = filterEntry.value
     })
   return obj
 }

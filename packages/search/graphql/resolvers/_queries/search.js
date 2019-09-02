@@ -103,7 +103,7 @@ const createShould = function (
     const rolebasedFilterArgs = Object.assign(
       {},
       { scheduledAt, ignorePrepublished },
-      getFilterObj(searchFilter, ['scheduledAt'])
+      getFilterObj(searchFilter)
     )
 
     const rolebasedFilterDefault =
