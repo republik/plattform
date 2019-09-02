@@ -216,6 +216,7 @@ export const FigureGroup = ({ children, attributes, columns, size, data }) => {
 FigureGroup.propTypes = {
   children: PropTypes.node.isRequired,
   attributes: PropTypes.object,
+  size: PropTypes.oneOf(Object.keys(breakoutStyles)),
   columns: PropTypes.oneOf([2, 3, 4]).isRequired
 }
 

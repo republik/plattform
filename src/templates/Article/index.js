@@ -966,7 +966,7 @@ const createSchema = ({
                 component: FigureGroup,
                 props: node => {
                   return {
-                    size: 'breakout',
+                    size: node.data.size || 'breakout',
                     columns: node.data.columns
                   }
                 },

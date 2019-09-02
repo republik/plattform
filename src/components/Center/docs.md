@@ -1,14 +1,14 @@
 `<Center />` defines a max-width and ensures a horizontal padding.
 
 `<Breakout />` allows to adjust `size` (and positioning) of its content:
-- `undefined` (default, do nothing)
-- `narrow`
-- `tiny`
-- `breakout`
-- `breakoutLeft`
-- `float`
-- `floatSmall`
-- `floatTiny`
+- `undefined` and `'normal'` (default, do nothing)
+- `'narrow'`
+- `'tiny'`
+- `'breakout'`
+- `'breakoutLeft'`
+- `'float'`
+- `'floatSmall'`
+- `'floatTiny'`
 
 ```react|responsive
 <div>

@@ -64,6 +64,8 @@ export const breakoutStyles = {
     margin: '0 auto',
     maxWidth: TINY_WIDTH
   }),
+  // explicit no breakout
+  normal: css({}),
   breakout: css({
     [breakoutUp]: {
       marginLeft: -BREAKOUT,
