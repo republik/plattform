@@ -22,14 +22,12 @@ The media queries are defined in [`FrontTile`](/teaserfronttile).
     >
       <TeaserCarouselFormat>Poesie & Prosa</TeaserCarouselFormat>
       <TeaserCarouselHeadline.Editorial>Das Rätsel Dag Solstad</TeaserCarouselHeadline.Editorial>
-      <TeaserCarouselBody>
-        <TeaserCarouselSubject>
-          Dag Solstad: «T. Singer»
-        </TeaserCarouselSubject>
-        <TeaserCarouselLead>
-          Der Norweger gehört zu den schrulligsssen Autoren der Gegenwart.
-        </TeaserCarouselLead>
-      </TeaserCarouselBody>
+      <TeaserCarouselSubject>
+        Dag Solstad: «T. Singer»
+      </TeaserCarouselSubject>
+      <TeaserCarouselLead>
+        Der Norweger gehört zu den schrulligsssen Autoren der Gegenwart.
+      </TeaserCarouselLead>
       <Editorial.Credit>
         Von <Editorial.A  color='#000' href='#'>Jan Wilm</Editorial.A >, 05.07.2019
       </Editorial.Credit>
@@ -42,14 +40,12 @@ The media queries are defined in [`FrontTile`](/teaserfronttile).
     >
       <TeaserCarouselFormat>Film</TeaserCarouselFormat>
       <TeaserCarouselHeadline.Editorial>Echt jetzt?</TeaserCarouselHeadline.Editorial>
-      <TeaserCarouselBody>
-        <TeaserCarouselSubject>
-          Peter Jackson: «They Shall Not Grow Old»
-        </TeaserCarouselSubject>
-        <TeaserCarouselLead>
-          Der Blockbuster-Regisseur zeigt den Ersten Weltkrieg.
-        </TeaserCarouselLead>
-      </TeaserCarouselBody>
+      <TeaserCarouselSubject>
+        Peter Jackson: «They Shall Not Grow Old»
+      </TeaserCarouselSubject>
+      <TeaserCarouselLead>
+        Der Blockbuster-Regisseur zeigt den Ersten Weltkrieg.
+      </TeaserCarouselLead>
       <Editorial.Credit>
         Von <Editorial.A  color='#000' href='#'>Simon Spiegel</Editorial.A >, 05.07.2019
       </Editorial.Credit>
@@ -59,11 +55,9 @@ The media queries are defined in [`FrontTile`](/teaserfronttile).
       image='/static/carousel/vault.png?size=376x214'
     >
       <TeaserCarouselHeadline.Editorial>Tote Sprachen leben länger</TeaserCarouselHeadline.Editorial>
-      <TeaserCarouselBody>
-        <TeaserCarouselLead>
-          «Heaven’s Vault» ist ein aussergewöhnliches Adventure-Game.
-        </TeaserCarouselLead>
-      </TeaserCarouselBody>
+      <TeaserCarouselLead>
+        «Heaven’s Vault» ist ein aussergewöhnliches Adventure-Game.
+      </TeaserCarouselLead>
       <Editorial.Credit>
         Von <Editorial.A  color='#000' href='#'>Christof Zurschmitten</Editorial.A >, 05.07.2019
       </Editorial.Credit>
@@ -74,11 +68,9 @@ The media queries are defined in [`FrontTile`](/teaserfronttile).
       image='/static/carousel/rinck.png?size=176x240'
     >
       <TeaserCarouselHeadline.Editorial>Die vier Gangarten von lechts nach Rinck</TeaserCarouselHeadline.Editorial>
-       <TeaserCarouselBody>
-        <TeaserCarouselLead>
-          Die Essays und Gedichte von Monika Rinck sind das originellste Denkabenteuer.
-        </TeaserCarouselLead>
-      </TeaserCarouselBody>
+      <TeaserCarouselLead>
+        Die Essays und Gedichte von Monika Rinck sind das originellste Denkabenteuer.
+      </TeaserCarouselLead>
       <Editorial.Credit>
         Von <Editorial.A  color='#000' href='#'>Daniel Graf</Editorial.A >, 05.07.2019
       </Editorial.Credit>
@@ -88,14 +80,12 @@ The media queries are defined in [`FrontTile`](/teaserfronttile).
       image='/static/carousel/calle.png?size=332x248'>
       <TeaserCarouselFormat>Kunst</TeaserCarouselFormat>
       <TeaserCarouselHeadline.Editorial>Blindes Sehen</TeaserCarouselHeadline.Editorial>
-      <TeaserCarouselBody>
-        <TeaserCarouselSubject>
-          Sophie Calle: «Un certain regard»
-        </TeaserCarouselSubject>
-        <TeaserCarouselLead>
-          Das Fotomuseum Winterthur zeigt eine beeindruckende Schau.
-        </TeaserCarouselLead>
-      </TeaserCarouselBody>
+      <TeaserCarouselSubject>
+        Sophie Calle: «Un certain regard»
+      </TeaserCarouselSubject>
+      <TeaserCarouselLead>
+        Das Fotomuseum Winterthur zeigt eine beeindruckende Schau.
+      </TeaserCarouselLead>
       <Editorial.Credit>
         Von <Editorial.A  color='#000' href='#'>Daniel Binswanger</Editorial.A >, 05.07.2019
       </Editorial.Credit>
@@ -230,14 +220,12 @@ Supported props:
   <TeaserCarouselHeadline.Editorial>
     Blindes Sehen
   </TeaserCarouselHeadline.Editorial>
-   <TeaserCarouselBody>
-    <TeaserCarouselSubject>
-      Sophie Calle: «Un certain regard»
-    </TeaserCarouselSubject>
-    <TeaserCarouselLead>
-      Das Fotomuseum Winterthur zeigt eine beeindruckende Schau.
-    </TeaserCarouselLead>
-  </TeaserCarouselBody>
+  <TeaserCarouselSubject>
+    Sophie Calle: «Un certain regard»
+  </TeaserCarouselSubject>
+  <TeaserCarouselLead>
+    Das Fotomuseum Winterthur zeigt eine beeindruckende Schau.
+  </TeaserCarouselLead>
   <Editorial.Credit>
     Von <Editorial.A  color='#000' href='#'>Daniel Binswanger</Editorial.A >, 05.07.2019
   </Editorial.Credit>
@@ -323,28 +311,29 @@ Supported props:
 - `color` (string): if `true`, the font size and line height will be increased. Default: [feuilleton color](/colors).
 - `children`: children components.
 
-### `<TeaserCarouselBody />`, `<TeaserCarouselSubject />`, `<TeaserCarouselLead />`
-The teaser text content must be wrapped within `<TeaserCarouselBody />`, which defines layout and spacing. Two styles are available: `TeaserCarouselSubject` (light grey, sans serif), and `TeaserCarouselLead` (`text` color, serif).
+### `<TeaserCarouselSubject />`, `<TeaserCarouselLead />`
+
+Two styles are available: `TeaserCarouselSubject` (light grey, sans serif), and `TeaserCarouselLead` (`text` color, serif).
 
 ```react|span-2
-<TeaserCarouselBody>
+<>
   <TeaserCarouselSubject>
     Sophie Calle: «Un certain regard»
   </TeaserCarouselSubject>
   <TeaserCarouselLead>
     Das Fotomuseum Winterthur zeigt eine beeindruckende Schau.
   </TeaserCarouselLead>
-</TeaserCarouselBody>
+</>
 ```
 ```react|span-2
-<TeaserCarouselBody>
+<>
   <TeaserCarouselSubject>
     Peter Jackson: «They Shall Not Grow Old»
   </TeaserCarouselSubject>
   <TeaserCarouselLead>
     Der Blockbuster-Regisseur zeigt den Ersten Weltkrieg.
   </TeaserCarouselLead>
-</TeaserCarouselBody>
+</>
 ```
 
 ### `<TeaserCarouselArticleCount />`

@@ -5,7 +5,7 @@ import { TeaserCarouselArticleCount } from '.'
 import { FigureByline, FigureImage } from '../Figure'
 import { mUp } from '../TeaserFront/mediaQueries'
 import Text from '../TeaserFront/Text'
-import { sansSerifRegular18 } from '../Typography/styles'
+import { serifRegular16, serifRegular18 } from '../Typography/styles'
 
 import CarouselContext from './Context'
 
@@ -23,9 +23,12 @@ const styles = {
     maxWidth: 450,
     display: 'flex',
     justifyContent: 'center',
-    ...sansSerifRegular18,
     ':last-of-type': { margin: 0 },
+    ...serifRegular16,
+    lineHeight: '22px',
     [mUp]: {
+      ...serifRegular18,
+      lineHeight: '24px',
       minWidth: 248
     }
   }),
