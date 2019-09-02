@@ -19,6 +19,7 @@ const styles = {
   withoutHighlight: css({
     [mUp]: {
       columns: '2 auto',
+      columnGap: 30,
       '> *': { breakInside: 'avoid-column' }
     }
   }),

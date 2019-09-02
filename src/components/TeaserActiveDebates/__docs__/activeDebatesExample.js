@@ -5,7 +5,7 @@ export const oneComment = {
   updatedAt: new Date().toISOString(),
   preview: {
     string:
-      'Ohnein. Jetzt springt auch die "Republik" auf den Zug auf und suggeriert, dass Elektromobilität schlecht sei wegen angeblicher Brandgefahr. Damit nun auch Republikleser mit gutem Gewissen weiterdieseln können... Elektroautos brennen pro',
+      'Ohnein. Jetzt springt auch die "Republik" auf den Zug!',
     more: true,
     __typename: 'Preview'
   },
@@ -269,7 +269,7 @@ export const activeDebates = {
             updatedAt: new Date().toISOString(),
             preview: {
               string:
-                'Ohnein. Jetzt springt auch die "Republik" auf den Zug auf und suggeriert, dass Elektromobilität schlecht sei wegen angeblicher Brandgefahr. Damit nun auch Republikleser mit gutem Gewissen weiterdieseln können... Elektroautos brennen pro',
+                'Ohnein. Jetzt springt auch die "Republik" auf den Zug!',
               more: true,
               __typename: 'Preview'
             },
@@ -475,7 +475,7 @@ export const activeDebatesWithoutHighlight = {
             updatedAt: new Date().toISOString(),
             preview: {
               string:
-                'Ohnein. Jetzt springt auch die "Republik" auf den Zug auf und suggeriert, dass Elektromobilität schlecht sei wegen angeblicher Brandgefahr. Damit nun auch Republikleser mit gutem Gewissen weiterdieseln können... Elektroautos brennen pro',
+                'Ohnein. Jetzt springt auch die "Republik" auf den Zug!',
               more: true,
               __typename: 'Preview'
             },
