@@ -14,6 +14,7 @@ const {
     ensureCanPledgePackage
   }
 } = require('@orbiting/backend-modules-auth')
+const { hasUserActiveMembership } = require('@orbiting/backend-modules-utils')
 
 module.exports = async (_, args, context) => {
   const { pgdb, req, t } = context
@@ -184,7 +185,7 @@ module.exports = async (_, args, context) => {
     })
 
     // check if crowdfunding is still open
-    const crowdfunding = await pgdb.public.crowdfundings.findOne({id: pkg.crowdfundingId})
+    const crowdfunding = await pgdb.public.crowdfundings.findOne({ id: pkg.crowdfundingId })
     const now = new Date()
     const gracefullEnd = new Date(crowdfunding.endDate)
     gracefullEnd.setMinutes(now.getMinutes() + 20)
@@ -227,7 +228,7 @@ module.exports = async (_, args, context) => {
       const paymentSource = await transaction.public.paymentSources.findFirst({
         userId: user.id,
         method: 'POSTFINANCECARD'
-      }, {orderBy: ['createdAt desc']})
+      }, { orderBy: ['createdAt desc'] })
 
       if (paymentSource) { pfAliasId = paymentSource.pspId }
     } else {
@@ -240,8 +241,8 @@ module.exports = async (_, args, context) => {
         }
         user = accessTokenUser
       } else {
-        user = await transaction.public.users.findOne({email: pledge.user.email}) // try to load existing user by email
-        if (user && !!(await transaction.public.pledges.findFirst({userId: user.id}))) { // user has pledges
+        user = await transaction.public.users.findOne({ email: pledge.user.email }) // try to load existing user by email
+        if (user && !!(await transaction.public.pledges.findFirst({ userId: user.id }))) { // user has pledges
           await transaction.transactionRollback()
           return { // user must login before he can submitPledge
             emailVerify: true
@@ -253,7 +254,7 @@ module.exports = async (_, args, context) => {
             lastName: pledge.user.lastName,
             birthday: pledge.user.birthday,
             phoneNumber: pledge.user.phoneNumber
-          }, {skipUndefined: true})
+          }, { skipUndefined: true })
         }
       }
     }
@@ -262,7 +263,7 @@ module.exports = async (_, args, context) => {
       user.lastName !== pledge.user.lastName ||
       user.birthday !== pledge.user.birthday ||
       user.phoneNumber !== pledge.user.phoneNumber) {
-      user = await transaction.public.users.updateAndGetOne({id: user.id}, {
+      user = await transaction.public.users.updateAndGetOne({ id: user.id }, {
         firstName: pledge.user.firstName,
         lastName: pledge.user.lastName,
         birthday: pledge.user.birthday,
@@ -290,10 +291,7 @@ module.exports = async (_, args, context) => {
 
     // MONTHLY_ABO can only be bought if user has no active membership
     // and if user did not buy a MONTHLY already (then he has to reactivateMembership)
-    const userHasActiveMembership = await transaction.public.memberships.findFirst({
-      userId: user.id,
-      active: true
-    })
+    const userHasActiveMembership = await hasUserActiveMembership(user, transaction)
     const userHasMonthlyMembership = await transaction.queryOneField(`
       SELECT COUNT(*)
       FROM memberships m

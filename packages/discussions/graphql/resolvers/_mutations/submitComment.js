@@ -1,6 +1,7 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
 const hotness = require('../../../lib/hotness')
 const setDiscussionPreferences = require('../../../lib/setDiscussionPreferences')
+const userCanComment = require('../Discussion/userCanComment')
 const userWaitUntil = require('../Discussion/userWaitUntil')
 const slack = require('../../../lib/slack')
 const { timeahead } = require('@orbiting/backend-modules-formats')
@@ -46,6 +47,11 @@ module.exports = async (_, args, context) => {
 
     if (discussion.closed) {
       throw new Error(t('api/comment/closed'))
+    }
+
+    const canComment = await userCanComment(discussion, null, context)
+    if (!canComment) {
+      throw new Error(t('api/comment/canNotComment'))
     }
 
     // ensure user is within minInterval

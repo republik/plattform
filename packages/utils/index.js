@@ -3,5 +3,6 @@ module.exports = {
   ensureStringLength: require('./ensureStringLength'),
   paginate: require('./paginate'),
   naming: require('./naming'),
-  mdastToString: require('./mdastToString')
+  mdastToString: require('./mdastToString'),
+  hasUserActiveMembership: require('./hasUserActiveMembership')
 }

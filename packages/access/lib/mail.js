@@ -6,9 +6,9 @@ const { sendMailTemplate } = require('@orbiting/backend-modules-mail')
 const { timeFormat } = require('@orbiting/backend-modules-formats')
 const { transformUser } = require('@orbiting/backend-modules-auth')
 const base64u = require('@orbiting/backend-modules-base64u')
+const { hasUserActiveMembership } = require('@orbiting/backend-modules-utils')
 
 const campaignsLib = require('./campaigns')
-const membershipsLib = require('./memberships')
 const eventsLib = require('./events')
 
 const { count: memberStatsCount } = require('../../../servers/republik/lib/memberStats')
@@ -163,7 +163,7 @@ const getGlobalMergeVars = async (
   const recipientCampaigns =
     !!recipient && await campaignsLib.findForGranter(recipient, { pgdb })
   const recipientHasMemberships =
-    !!recipient && await membershipsLib.hasUserActiveMembership(recipient, pgdb)
+    !!recipient && (await hasUserActiveMembership(recipient, pgdb))
 
   const email = recipient ? recipient.email : grant.email
 
@@ -198,7 +198,7 @@ const getGlobalMergeVars = async (
 
     // Recipient
     { name: 'RECIPIENT_EMAIL',
-      content: grant.email
+      content: grant.email || safeRecipient.email
     },
     { name: 'RECIPIENT_NAME',
       content: safeRecipient.name || t('api/noname')

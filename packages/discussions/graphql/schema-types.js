@@ -154,8 +154,7 @@ type DisplayUser {
   profilePicture: String
   anonymity: Boolean!
   slug: String
-  # deprecated: use slug
-  username: String
+  username: String @deprecated(reason: "use \`slug\` instead")
 }
 
 type Preview {
