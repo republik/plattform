@@ -54,6 +54,9 @@ import {
   matchImage,
   matchImageParagraph
 } from 'mdast-react-render/lib/utils'
+
+import { slug } from '../../lib/slug'
+
 import {
   matchLast,
   matchInfoBox,
@@ -374,7 +377,13 @@ const createInfoBox = ({ t }) => ({
   rules: [
     {
       matchMdast: matchHeading(3),
-      component: InfoBoxTitle,
+      props: node => ({
+        slug: slug(mdastToString(node))
+      }),
+      component: ({ children, slug }) => <InfoBoxTitle>
+        <a {...styles.anchor} id={slug} />
+        {children}
+      </InfoBoxTitle>,
       editorModule: 'headline',
       editorOptions: {
         type: 'INFOH',
@@ -950,7 +959,13 @@ const createSchema = ({
             rules: [
               {
                 matchMdast: matchHeading(2),
-                component: Editorial.Subhead,
+                props: node => ({
+                  slug: slug(mdastToString(node))
+                }),
+                component: ({ children, slug }) => <Editorial.Subhead>
+                  <a {...styles.anchor} id={slug} />
+                  {children}
+                </Editorial.Subhead>,
                 editorModule: 'headline',
                 editorOptions: {
                   type: 'H2',

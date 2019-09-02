@@ -3,6 +3,7 @@ import { css } from 'glamor'
 import { timeFormat } from 'd3-time-format'
 
 import { Sub, Sup } from '../../components/Typography'
+import { mUp } from '../../theme/mediaQueries'
 
 import {
   matchType,
@@ -96,6 +97,15 @@ export const styles = {
   link: css({
     color: 'inherit',
     textDecoration: 'none'
+  }),
+  anchor: css({
+    display: 'block',
+    visibility: 'hidden',
+    position: 'relative',
+    top: -65, // HEADER_HEIGHT_MOBILE + 20
+    [mUp]: {
+      top: -80 // HEADER_HEIGHT + 20
+    }
   })
 }
 
