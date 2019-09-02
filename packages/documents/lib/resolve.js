@@ -108,7 +108,8 @@ const createUrlReplacer = (allDocuments = [], usernames = [], errors = [], urlPr
   const linkedDoc = allDocuments
     .find(d => d.meta.repoId === repoId)
   if (linkedDoc) {
-    return urlPrefix + linkedDoc.content.meta.path + searchString
+    const hash = url.split('#')[1]
+    return `${urlPrefix}${linkedDoc.content.meta.path}${searchString}${hash ? `#${hash}` : ''}`
   } else {
     errors.push(repoId)
   }
