@@ -14,7 +14,7 @@ export const setOrg = value => {
   githubOrg = value
 }
 
-const regex = /^https:\/\/github.com\/([^/]+)\/([^/?]+)\??(.*)/
+const regex = /^https:\/\/github.com\/([^/]+)\/([^/?]+)\??([^#]*)#?(.*)/
 export const extract = value => {
   const info = String(value).match(regex)
   if (!info || info[1] !== githubOrg) {
@@ -23,13 +23,14 @@ export const extract = value => {
   return {
     id: `${info[1]}/${info[2]}`,
     name: info[2],
-    query: info[3]
+    query: info[3],
+    hash: info[4]
   }
 }
 
 const nada = () => null
 
-export const RepoLink = ({value, Wrapper = Fragment, invalid = nada, autoSlug}) => {
+export const RepoLink = ({ value, Wrapper = Fragment, invalid = nada, autoSlug }) => {
   const info = extract(value)
   if (!info) {
     return invalid(info)
@@ -44,15 +45,15 @@ export const RepoLink = ({value, Wrapper = Fragment, invalid = nada, autoSlug}) 
         params={{
           repoId: info.id.split('/')
         }}>
-        <a {...linkRule}>{info.name}</a>
+        <a {...linkRule}>{info.name}{info.hash ? `#${info.hash}` : ''}</a>
       </Link>
     </Wrapper>
   )
 }
 
 export const AutoSlugLinkInfo = ({ label, value }) => (
-  <RepoLink value={value} autoSlug Wrapper={({children}) => (
-    <Label style={{display: 'block', marginTop: -5, marginBottom: 10}}>
+  <RepoLink value={value} autoSlug Wrapper={({ children }) => (
+    <Label style={{ display: 'block', marginTop: -5, marginBottom: 10 }}>
       {label}{' '}{children}
     </Label>
   )} />
