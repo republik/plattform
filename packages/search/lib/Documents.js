@@ -265,12 +265,12 @@ const loadLinkedMetaData = async ({
     : await search(null, {
       recursive: true,
       withoutContent: true,
-      scheduledAt,
       ignorePrepublished,
       first: sanitizedRepoIds.length * 2,
       filter: {
         repoId: sanitizedRepoIds,
-        type: 'Document'
+        type: 'Document',
+        ...scheduledAt ? { scheduledAt: { to: scheduledAt } } : { }
       }
     }, context).then(getDocsForConnection)
 

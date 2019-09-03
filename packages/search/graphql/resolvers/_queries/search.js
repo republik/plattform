@@ -53,7 +53,7 @@ const deepMergeArrays = function (objValue, srcValue) {
 }
 
 const createShould = function (
-  searchTerm, searchFilter, indicesList, user, scheduledAt, ignorePrepublished
+  searchTerm, searchFilter, indicesList, user, ignorePrepublished
 ) {
   const queries = []
 
@@ -102,7 +102,7 @@ const createShould = function (
 
     const rolebasedFilterArgs = Object.assign(
       {},
-      { scheduledAt, ignorePrepublished },
+      { ignorePrepublished },
       getFilterObj(searchFilter)
     )
 
@@ -161,12 +161,12 @@ const createHighlight = (indicesList) => {
 
 const defaultExcludes = [ 'contentString', 'resolved' ]
 const createQuery = (
-  searchTerm, filter, sort, indicesList, user, scheduledAt, withoutChildren, withoutAggs, ignorePrepublished
+  searchTerm, filter, sort, indicesList, user, withoutChildren, withoutAggs, ignorePrepublished
 ) => ({
   query: {
     bool: {
       should: createShould(
-        searchTerm, filter, indicesList, user, scheduledAt, ignorePrepublished
+        searchTerm, filter, indicesList, user, ignorePrepublished
       )
     }
   },
@@ -348,7 +348,6 @@ const search = async (__, args, context, info) => {
     after,
     before,
     recursive = false,
-    scheduledAt,
     ignorePrepublished,
     trackingId = uuid(),
     withoutContent: _withoutContent,
@@ -405,7 +404,7 @@ const search = async (__, args, context, info) => {
     index: indicesList.map(({ name }) => getIndexAlias(name, 'read')),
     from,
     size: first,
-    body: createQuery(search, filter, sort, indicesList, user, scheduledAt, withoutChildren, withoutAggs, ignorePrepublished)
+    body: createQuery(search, filter, sort, indicesList, user, withoutChildren, withoutAggs, ignorePrepublished)
   }
   debug('ES query', JSON.stringify(query))
 
