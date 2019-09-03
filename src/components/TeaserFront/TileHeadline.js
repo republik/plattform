@@ -41,6 +41,7 @@ const styles = {
     }
   }),
   editorialCol1Medium: css({
+    ...serifTitle20,
     ...smallSize,
     [mUp]: {
       ...mediumSize
@@ -48,21 +49,18 @@ const styles = {
   }),
   editorialCol2: css({
     ...serifTitle20,
-    // ...smallSize,
     [mUp]: {
       ...standardSize
     }
   }),
   editorialCol2Medium: css({
     ...serifTitle20,
-    // ...smallSize,
     [mUp]: {
       ...mediumSize
     }
   }),
   editorialCol3: css({
     ...serifTitle20,
-    // ...smallSize,
     [mUp]: {
       ...standardSize
     }
@@ -90,7 +88,6 @@ const styles = {
   }),
   scribble: css({
     ...cursiveTitle20,
-    // ...smallSize,
     [mUp]: {
       ...standardSize
     }
