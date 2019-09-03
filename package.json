@@ -57,7 +57,7 @@
     "commitmsg": "validate-commit-msg",
     "roleUser": "node packages/auth/script/roleUser",
     "roleUsers": "node packages/auth/script/roleUsers",
-    "translations": "cd packages/translate && yarn run translations && cd -",
+    "translations": "cd packages/translate && yarn translations && cd -",
     "pull:elasticsearch": "GITHUB_GRAPHQL_RATELIMIT=true node packages/search/script/pullElasticsearch.js",
     "db:migrate:create": "packages/migrations/script/create.js",
     "db:migrate:up": "db-migrate up --migrations-dir packages/migrations/migrations",
