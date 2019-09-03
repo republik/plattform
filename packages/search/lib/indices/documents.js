@@ -107,9 +107,18 @@ module.exports = {
         ]
 
         if (scheduledAt) {
-          should.push({ bool: { must: [
+          const must = [
             { term: { 'meta.prepublication': false } }
-          ] } })
+          ]
+          // scheduledAt can be date or a filter object
+          // date: filter lower or equal
+          // filter: ignore, is added to query in createShould
+          if (!scheduledAt.from && !scheduledAt.to) {
+            must.push(
+              { range: { 'meta.scheduledAt': { lte: scheduledAt } } }
+            )
+          }
+          should.push({ bool: { must } })
         }
 
         if (!ignorePrepublished) {
