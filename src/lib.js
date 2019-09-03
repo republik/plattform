@@ -135,6 +135,7 @@ export {
 export { commentComposerStorageKey, CommentComposer, CommentComposerPlaceholder } from './components/Discussion/Composer'
 export { SecondaryAction as CommentComposerSecondaryAction } from './components/Discussion/Internal/Composer'
 export { renderCommentMdast } from './components/Discussion/Internal/Comment/render'
+export { IconLink as DiscussionIconLink } from './components/Discussion/Internal/Comment/IconLink'
 
 export { CommentList } from './components/Discussion/Tree'
 
