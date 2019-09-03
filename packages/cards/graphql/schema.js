@@ -24,6 +24,7 @@ type queries {
 
   cardGroup(
     id: ID
+    slug: String
   ): CardGroup!
 
   cardGroups(
