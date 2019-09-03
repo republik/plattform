@@ -1,4 +1,4 @@
 module.exports = {
-  getFormatter: require('./getFormatter'),
-  TranslatedError: require('./TranslatedError')
+  TranslatedError: require('./TranslatedError'),
+  t: require('./t')
 }

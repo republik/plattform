@@ -4,8 +4,7 @@
   "description": "auth migrations, seeds, middleware, graphql schema and resolvers",
   "main": "index.js",
   "scripts": {
-    "link": "yarn link",
-    "translations": "gsheets --key=1mgLz3k2rQ_qcB2ZpmJRZbGLAX5vGcr0P9I2jbWaIgog --title=live --pretty --out lib/translations.json"
+    "link": "yarn link"
   },
   "repository": {
     "type": "git",
@@ -26,7 +25,7 @@
   "dependencies": {
     "apollo-modules-node": "^0.1.4",
     "check-env": "^1.3.0",
-    "connect-pg-simple": "^5.0.0",
+    "connect-pg-simple": "^6.0.1",
     "country-emoji": "^1.2.0",
     "debug": "^4.1.1",
     "express-basic-auth": "^1.1.5",

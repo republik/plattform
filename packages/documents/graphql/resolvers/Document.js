@@ -45,6 +45,13 @@ const addTeaserContentHash = (nodes) => {
 }
 
 module.exports = {
+  repoId (doc, args, context) {
+    return doc.repoId || Buffer.from(doc.id, 'base64')
+      .toString('utf-8')
+      .split('/')
+      .slice(0, 2)
+      .join('/')
+  },
   content (doc, { urlPrefix, searchString, webp }, context, info) {
     // we only do auto slugging when in a published documents context
     // - this is easiest detectable by _all being present from documents resolver

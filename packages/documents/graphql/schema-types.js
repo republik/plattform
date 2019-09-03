@@ -26,6 +26,7 @@ type AudioSource implements PlayableMedia {
 
 type Meta {
   title: String
+  shortTitle: String
   slug: String
   path: String
   image: String
@@ -40,6 +41,7 @@ type Meta {
   twitterDescription: String
   prepublication: Boolean
   publishDate: DateTime
+  lastPublishedAt: DateTime
   feed: Boolean
   gallery: Boolean
   kind: String
@@ -70,6 +72,7 @@ input DocumentInput {
 
 type Document {
   id: ID!
+  repoId: ID!
   # AST of /article.md
   content: JSON!
   meta: Meta!
