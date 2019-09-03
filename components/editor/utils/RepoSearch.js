@@ -22,12 +22,19 @@ query searchRepo($after: String, $search: String, $template: String) {
           id
           meta {
             title
+            shortTitle
             image
             description
             subject
             credits
             kind
             color
+            series {
+              title
+              episodes {
+                title
+              }
+            }
             format {
               id
               repoId

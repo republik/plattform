@@ -115,12 +115,29 @@ const cloneWithRepoData = options => (node, repoData) => {
     }
   }
 
-  const credits = paragraphModule.helpers.serializer.fromMdast({
+  let { title, description, credits } = meta
+  if (
+    node.type === 'CAROUSELTILE' &&
+    meta.series &&
+    meta.series.episodes.length
+  ) {
+    data = data.set('count', meta.series.episodes.length)
+    title = meta.series.title
+    description = ''
+    credits = []
+  }
+
+  if (meta.shortTitle) {
+    title = meta.shortTitle
+    description = ''
+  }
+
+  const credit = paragraphModule.helpers.serializer.fromMdast({
     type: 'paragraph',
-    children: meta.credits
+    children: credits
   })
 
-  credits.nodes = credits.nodes.map(v => {
+  credit.nodes = credit.nodes.map(v => {
     if (v.type === linkModule.TYPE) {
       v.data.color = data.get('color')
     }
@@ -139,7 +156,7 @@ const cloneWithRepoData = options => (node, repoData) => {
       Block.create({
         type: titleModule.TYPE,
         data,
-        nodes: [Text.create(meta.title)]
+        nodes: [Text.create(title)]
       }),
       Block.create({
         type: subjectModule.TYPE,
@@ -155,11 +172,11 @@ const cloneWithRepoData = options => (node, repoData) => {
       Block.create({
         type: leadModule.TYPE,
         data,
-        nodes: meta.description
-          ? [Text.create(meta.description)]
+        nodes: description
+          ? [Text.create(description)]
           : []
       }),
-      credits
+      credit
     ]
   })
 
@@ -208,18 +225,20 @@ const Form = withT(({ node, onChange, onTypeChange, options, t }) => {
   return <UIForm>
     <Field
       label='URL'
-      value={node.data.get('url')}
+      value={node.data.get('url') || ''}
       onChange={onChange('url')} />
     <AutoSlugLinkInfo
       value={node.data.get('url')}
       label={t('metaData/field/href/document')} />
-    <Field
-      label='Format URL'
-      value={node.data.get('formatUrl')}
-      onChange={onChange('formatUrl')} />
-    <AutoSlugLinkInfo
-      value={node.data.get('formatUrl')}
-      label={t('metaData/field/href/document')} />
+    {options.includes('formatUrl') && <>
+      <Field
+        label='Format URL'
+        value={node.data.get('formatUrl') || ''}
+        onChange={onChange('formatUrl')} />
+      <AutoSlugLinkInfo
+        value={node.data.get('formatUrl')}
+        label={t('metaData/field/href/document')} />
+    </>}
     {
       options.includes('textPosition') &&
       <Dropdown
@@ -282,7 +301,7 @@ const Form = withT(({ node, onChange, onTypeChange, options, t }) => {
       options.includes('color') &&
       <ColorPicker
         label='Textfarbe'
-        value={node.data.get('color') || '#000'}
+        value={node.data.get('color')}
         onChange={color => {
           onChange('color', null, color)
         }}
@@ -292,9 +311,19 @@ const Form = withT(({ node, onChange, onTypeChange, options, t }) => {
       options.includes('bgColor') &&
       <ColorPicker
         label='Hintergrundfarbe'
-        value={node.data.get('bgColor') || '#fff'}
+        value={node.data.get('bgColor')}
         onChange={color => {
           onChange('bgColor', null, color)
+        }}
+      />
+    }
+    {
+      options.includes('outline') &&
+      <ColorPicker
+        label='Umrisslinienfarbe'
+        value={node.data.get('outline')}
+        onChange={color => {
+          onChange('outline', null, color)
         }}
       />
     }
@@ -320,8 +349,26 @@ const Form = withT(({ node, onChange, onTypeChange, options, t }) => {
       options.includes('byline') &&
       <Field
         label='Bildcredit'
-        value={node.data.get('byline')}
+        value={node.data.get('byline') || ''}
         onChange={onChange('byline')} />
+    }
+    {
+      options.includes('count') &&
+      <Field
+        label='Anzahl (e.g. Episoden)'
+        value={node.data.get('count') || ''}
+        onChange={(_, count) => {
+          onChange('count', null, +count || undefined)
+        }} />
+    }
+    {
+      options.includes('bigger') &&
+      <Checkbox
+        checked={node.data.get('bigger') || false}
+        onChange={onChange('bigger')}
+      >
+        Grösser (e.g. Serien)
+      </Checkbox>
     }
     {
       options.includes('showImage') &&
@@ -365,8 +412,8 @@ export const TeaserForm = ({ subModuleResolver, ...options }) => {
   } = subModules
 
   const moduleTypes = Object.keys(subModules).map(
-    k => subModules[k].TYPE
-  )
+    k => subModules[k] && subModules[k].TYPE
+  ).filter(Boolean)
 
   return createPropertyForm({
     isDisabled: ({ value }) => {
@@ -454,12 +501,12 @@ export const TeaserForm = ({ subModuleResolver, ...options }) => {
       }
 
       return <div>
-        <Label>Teaser</Label>
-        <RepoSearch
+        <Label>{options.rule.editorOptions.formTitle || 'Teaser'}</Label>
+        {!options.rule.editorOptions.formOptions.includes('noAdapt') && <RepoSearch
           value={null}
           label='Von Artikel übernehmen'
           onChange={handleRepo}
-        />
+        />}
         <Form node={teaser} onChange={handlerFactory} onTypeChange={handleTypeChange} options={options.rule.editorOptions.formOptions} />
       </div>
     }
@@ -505,7 +552,7 @@ export const TeaserInlineUI = options =>
         <div contentEditable={false} {...uiStyles}>
           <div>
             <P {...styles.uiInlineRow}>
-              {!isOnlyChild && <RemoveButton onMouseDown={removeHandler} />}
+              {!isOnlyChild && remove && <RemoveButton onMouseDown={removeHandler} />}
               {!isFirstChild && <MoveUpButton onMouseDown={moveUpHandler} />}
               {!isLastChild && <MoveDownButton onMouseDown={moveDownHandler} />}
             </P>

@@ -12,7 +12,7 @@ import {
 import injectBlock from '../../utils/injectBlock'
 import MetaForm from '../../utils/MetaForm'
 
-export default ({TYPE, newBlock}) => {
+export default ({ TYPE, newBlock, rule }) => {
   const SpecialButton = createActionButton({
     isDisabled: ({ value }) => {
       return value.isBlurred
@@ -36,7 +36,7 @@ export default ({TYPE, newBlock}) => {
         {...props}
         data-disabled={disabled}
         data-visible={visible}
-        >
+      >
         Special
       </span>
   )

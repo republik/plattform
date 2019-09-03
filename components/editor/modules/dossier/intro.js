@@ -7,7 +7,7 @@ import { matchImageParagraph } from 'mdast-react-render/lib/utils'
 
 import { TeaserForm } from '../teaser/ui'
 
-export const getSubmodules = ({ subModules }) => {
+const getSubmodules = ({ subModules }) => {
   const [formatModule, titleModule, leadModule] = subModules
 
   if (!titleModule) {
@@ -37,12 +37,12 @@ const getRules = subModules => subModules.reduce(
   []
 ).filter(Boolean)
 
-export const fromMdast = options => {
+const fromMdast = options => {
   return (node, index, parent, rest) => {
     const { TYPE, subModules } = options
     const imageParagraph = node.children.find(matchImageParagraph)
 
-  // Remove module key from data
+    // Remove module key from data
     const { module, ...data } = getData(node.data)
     if (imageParagraph) {
       data.image = imageParagraph.children[0].url
@@ -57,16 +57,16 @@ export const fromMdast = options => {
         node.children.filter(node => node !== imageParagraph),
         0,
         node,
-      {
-        context: {
-          ...rest.context,
-          // pass link color to link through context
-          color: data.color
+        {
+          context: {
+            ...rest.context,
+            // pass link color to link through context
+            color: data.color
+          }
         }
-      }
       )
     // enhance all immediate children with data
-      .map(node => ({...node, data: {...node.data, ...data}}))
+      .map(node => ({ ...node, data: { ...node.data, ...data } }))
     const result = {
       kind: 'block',
       type: TYPE,
@@ -80,7 +80,7 @@ export const fromMdast = options => {
   }
 }
 
-export const toMdast = (options) => {
+const toMdast = (options) => {
   return (node, index, parent, rest) => {
     const { subModules } = options
     const { visitChildren, context } = rest
@@ -119,7 +119,7 @@ export const toMdast = (options) => {
   }
 }
 
-export const getSerializer = options =>
+const getSerializer = options =>
   new MarkdownSerializer({
     rules: [
       {
@@ -132,7 +132,7 @@ export const getSerializer = options =>
     ]
   })
 
-export const getData = data => ({
+const getData = data => ({
   url: null,
   textPosition: 'topleft',
   color: '#000',
@@ -149,7 +149,7 @@ export const getData = data => ({
   ...data || {}
 })
 
-export const getNewBlock = options => () => {
+const getNewBlock = options => () => {
   const {
     formatModule,
     titleModule,

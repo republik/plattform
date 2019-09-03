@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import { css } from 'glamor'
+import { Map } from 'immutable'
 
-import { Field, Checkbox } from '@project-r/styleguide'
+import { Field, Checkbox, Label } from '@project-r/styleguide'
 import AutosizeInput from 'react-textarea-autosize'
 import MaskedInput from 'react-maskedinput'
 
@@ -63,8 +64,8 @@ class Form extends Component {
     this.state = {}
   }
   componentWillReceiveProps (nextProps) {
-    const {data} = this.props
-    const {data: nextData} = nextProps
+    const { data } = this.props
+    const { data: nextData } = nextProps
     if (!nextData.equals(data)) {
       const { state } = this
       const nextState = {}
@@ -82,6 +83,7 @@ class Form extends Component {
       t,
       onInputChange,
       data,
+      notes = Map(),
       getWidth = defaultGetWidth,
       black
     } = this.props
@@ -106,14 +108,14 @@ class Form extends Component {
             </Checkbox>
           } else {
             let renderInput
-            if (key.match(/description/i)) {
-              renderInput = ({ref, ...inputProps}) => (
+            if (key.match(/description|quote/i)) {
+              renderInput = ({ ref, ...inputProps }) => (
                 <AutosizeInput {...styles.autoSize}
                   {...inputProps}
                   inputRef={ref} />
               )
             } else if (key.match(/date/i)) {
-              renderInput = ({ref, ...inputProps}) => (
+              renderInput = ({ ref, ...inputProps }) => (
                 <MaskedInput
                   {...inputProps}
                   {...styles.mask}
@@ -154,12 +156,23 @@ class Form extends Component {
               black={black}
               onChange={onChange || onInputChange(key)} />
           }
+          const isShort = !!key.match(/short/i)
           return (
             <div
               key={key}
               {...styles.span}
-              style={{width: getWidth(key)}}>
+              style={{ width: getWidth(key) }}>
               {input}
+              {(notes.get(key) || isShort) &&
+                <Label style={{
+                  display: 'block',
+                  marginBottom: 10,
+                  marginTop: -10
+                }}>
+                  {notes.get(key)} {isShort && formattedValue && formattedValue.length ? t('metaData/field/short/count', {
+                    count: formattedValue.length
+                  }) : ' '}
+                </Label>}
             </div>
           )
         }).toArray()}

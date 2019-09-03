@@ -44,6 +44,7 @@ import createArticleGroup from './modules/article/group'
 import createChartModule from './modules/chart'
 import createChartCanvasModule from './modules/chart/canvas'
 import createDynamicComponentModule from './modules/dynamiccomponent'
+import createLiveTeaserModule from './modules/liveteaser'
 
 const moduleCreators = {
   embedVideo: createEmbedVideoModule,
@@ -80,11 +81,13 @@ const moduleCreators = {
   line: createLineModule,
   articleGroup: createArticleGroup,
   frontDossier: createFrontDossier,
+  carousel: createFrontDossier,
   dossierIntro: createDossierIntro,
   articleCollection: createArticleCollection,
   chart: createChartModule,
   chartCanvas: createChartCanvasModule,
-  dynamiccomponent: createDynamicComponentModule
+  dynamiccomponent: createDynamicComponentModule,
+  liveteaser: createLiveTeaserModule
 }
 const initModule = (rule, context = {}) => {
   const { editorModule, editorOptions = {} } = rule
@@ -204,17 +207,17 @@ class Editor extends Component {
               plugins={this.plugins}
               readOnly={readOnly} />
           </Document>
-          } />
+        } />
         { /* A full slate instance to normalize
                initially loaded docs but ignoring
                change events from it */ }
         {!value && (
-        <SlateEditor
-          ref={this.slateRef}
-          value={this.newDocument({title: 'Loading...'})}
-          plugins={this.plugins}
-          readOnly />
-          )}
+          <SlateEditor
+            ref={this.slateRef}
+            value={this.newDocument({ title: 'Loading...' })}
+            plugins={this.plugins}
+            readOnly />
+        )}
       </Container>
     )
   }

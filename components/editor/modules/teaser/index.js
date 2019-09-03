@@ -47,7 +47,8 @@ export const getNewBlock = options => () => {
   } = getSubmodules(options)
 
   const data = getData({
-    teaserType: options.rule.editorOptions.teaserType
+    teaserType: options.rule.editorOptions.teaserType,
+    ...options.rule.editorOptions.defaultValues
   })
 
   const res = Block.create({

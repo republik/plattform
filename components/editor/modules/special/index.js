@@ -6,10 +6,10 @@ import MarkdownSerializer from 'slate-mdast-serializer'
 
 import createUi from './ui'
 
-export default ({rule, subModules, TYPE}) => {
+export default ({ rule, subModules, TYPE }) => {
   const zone = {
     match: matchBlock(TYPE),
-    matchMdast: (node) => node.type === 'zone',
+    matchMdast: rule.matchMdast,
     fromMdast: (node) => {
       return {
         kind: 'block',
@@ -22,7 +22,7 @@ export default ({rule, subModules, TYPE}) => {
       }
     },
     toMdast: (object) => {
-      const {identifier, ...data} = object.data
+      const { identifier, ...data } = object.data
       return {
         type: 'zone',
         identifier,
@@ -53,10 +53,10 @@ export default ({rule, subModules, TYPE}) => {
       newBlock
     },
     changes: {},
-    ui: createUi({TYPE, newBlock}),
+    ui: createUi({ TYPE, newBlock, rule }),
     plugins: [
       {
-        renderNode ({node, children, editor: {value}, attributes}) {
+        renderNode ({ node, children, editor: { value }, attributes }) {
           if (!zone.match(node)) return
 
           const active = value.blocks.some(block => block.key === node.key)

@@ -1,5 +1,5 @@
 {
-  "updated": "2019-07-09T18:17:08.423Z",
+  "updated": "2019-09-01T10:38:55.148Z",
   "title": "live",
   "data": [
     {
@@ -387,6 +387,14 @@
       "value": "Titel"
     },
     {
+      "key": "metaData/field/shortTitle",
+      "value": "Kurztitel"
+    },
+    {
+      "key": "metaData/field/short/count",
+      "value": "{count} Zeichen"
+    },
+    {
       "key": "metaData/field/publishDate",
       "value": "Publikationsdatum"
     },
@@ -569,6 +577,34 @@
     {
       "key": "metaData/series/coverText/fontSize",
       "value": "Schriftgrösse"
+    },
+    {
+      "key": "metaData/field/url",
+      "value": "URL"
+    },
+    {
+      "key": "metaData/field/minPublishDate",
+      "value": "Ab Publikationsdatum"
+    },
+    {
+      "key": "metaData/field/excludeRepoIds",
+      "value": "Dokumente ausschliessen"
+    },
+    {
+      "key": "metaData/field/lastDays",
+      "value": "Letzte X Tage"
+    },
+    {
+      "key": "metaData/field/first",
+      "value": "Erste X"
+    },
+    {
+      "key": "metaData/field/highlightId",
+      "value": "Hervorgehobene ID"
+    },
+    {
+      "key": "metaData/field/highlightQuote",
+      "value": "Hervorgehobenes Zitat"
     },
     {
       "key": "metaData/field/excludeFromGallery",
@@ -905,6 +941,258 @@
     {
       "key": "styleguide/Collapsable/collapse",
       "value": "Weniger"
+    },
+    {
+      "key": "timeago/justNow/other",
+      "value": "gerade eben"
+    },
+    {
+      "key": "timeago/seconds/1",
+      "value": "vor einer Sekunde"
+    },
+    {
+      "key": "timeago/seconds/other",
+      "value": "vor {count} Sekunden"
+    },
+    {
+      "key": "timeago/minutes/1",
+      "value": "vor einer Minute"
+    },
+    {
+      "key": "timeago/minutes/other",
+      "value": "vor {count} Minuten"
+    },
+    {
+      "key": "timeago/hours/1",
+      "value": "vor einer Stunde"
+    },
+    {
+      "key": "timeago/hours/other",
+      "value": "vor {count} Stunden"
+    },
+    {
+      "key": "timeago/days/1",
+      "value": "vor einem Tag"
+    },
+    {
+      "key": "timeago/days/other",
+      "value": "vor {count} Tagen"
+    },
+    {
+      "key": "timeago/weeks/1",
+      "value": "vor einer Woche"
+    },
+    {
+      "key": "timeago/weeks/other",
+      "value": "vor {count} Wochen"
+    },
+    {
+      "key": "timeago/months/1",
+      "value": "vor einem Monat"
+    },
+    {
+      "key": "timeago/months/other",
+      "value": "vor {count} Monaten"
+    },
+    {
+      "key": "timeago/years/1",
+      "value": "vor einem Jahr"
+    },
+    {
+      "key": "timeago/years/other",
+      "value": "vor {count} Jahren"
+    },
+    {
+      "key": "timeAhead/justNow/other",
+      "value": "in weniger als einer Minute"
+    },
+    {
+      "key": "timeAhead/minutes/1",
+      "value": "in einer Minute"
+    },
+    {
+      "key": "timeAhead/minutes/other",
+      "value": "in {count} Minuten"
+    },
+    {
+      "key": "timeAhead/hours/1",
+      "value": "in einer Stunde"
+    },
+    {
+      "key": "timeAhead/hours/other",
+      "value": "in {count} Stunden"
+    },
+    {
+      "key": "timeAhead/days/1",
+      "value": "erst in einem Tag"
+    },
+    {
+      "key": "timeAhead/days/other",
+      "value": "in {count} Tagen"
+    },
+    {
+      "key": "timeAhead/weeks/1",
+      "value": "erst in einer Woche"
+    },
+    {
+      "key": "timeAhead/weeks/other",
+      "value": "in {count} Wochen"
+    },
+    {
+      "key": "timeAhead/months/1",
+      "value": "in einem Monat"
+    },
+    {
+      "key": "timeAhead/months/other",
+      "value": "in {count} Monaten"
+    },
+    {
+      "key": "timeAhead/years/1",
+      "value": "in einem Jahr"
+    },
+    {
+      "key": "timeAhead/years/other",
+      "value": "in {count} Jahren"
+    },
+    {
+      "key": "timeduration/seconds",
+      "value": "vor {count} s"
+    },
+    {
+      "key": "timeduration/minutes",
+      "value": "vor {count} m"
+    },
+    {
+      "key": "timeduration/hours",
+      "value": "vor {count} h"
+    },
+    {
+      "key": "timeduration/days",
+      "value": "vor {count} d"
+    },
+    {
+      "key": "timeduration/weeks",
+      "value": "vor {count} w"
+    },
+    {
+      "key": "timeduration/years",
+      "value": "vor {count} y"
+    },
+    {
+      "key": "styleguide/CommentComposer/placeholder",
+      "value": "Einen Kommentar verfassen…"
+    },
+    {
+      "key": "styleguide/CommentComposer/answer",
+      "value": "antworten"
+    },
+    {
+      "key": "styleguide/CommentComposer/cancel",
+      "value": "abbrechen"
+    },
+    {
+      "key": "styleguide/CommentComposer/etiquette",
+      "value": "Etikette"
+    },
+    {
+      "key": "styleguide/CommentActions/answer",
+      "value": "antworten"
+    },
+    {
+      "key": "styleguide/CommentActions/unpublish",
+      "value": "unveröffentlichen"
+    },
+    {
+      "key": "styleguide/CommentActions/edit",
+      "value": "bearbeiten"
+    },
+    {
+      "key": "styleguide/CommentActions/upvote",
+      "value": "+1"
+    },
+    {
+      "key": "styleguide/CommentActions/upvote/count/0",
+      "value": "Keine Stimmen dafür"
+    },
+    {
+      "key": "styleguide/CommentActions/upvote/count/1",
+      "value": "Eine Stimme dafür"
+    },
+    {
+      "key": "styleguide/CommentActions/upvote/count/other",
+      "value": "{count} Stimmen dafür"
+    },
+    {
+      "key": "styleguide/CommentActions/downvote",
+      "value": "-1"
+    },
+    {
+      "key": "styleguide/CommentActions/downvote/count/0",
+      "value": "Keine Gegenstimmen"
+    },
+    {
+      "key": "styleguide/CommentActions/downvote/count/1",
+      "value": "Eine Gegenstimme"
+    },
+    {
+      "key": "styleguide/CommentActions/downvote/count/other",
+      "value": "{count} Gegenstimmen"
+    },
+    {
+      "key": "styleguide/CommentTeaser/comment/link",
+      "value": "Beitrag in {link}"
+    },
+    {
+      "key": "styleguide/CommentTeaser/reply/link",
+      "value": "Antwort in {link}"
+    },
+    {
+      "key": "styleguide/CommentTreeLoadMore/label/1",
+      "value": "Ein weiterer Kommentar"
+    },
+    {
+      "key": "styleguide/CommentTreeLoadMore/label/other",
+      "value": "{count} weitere Kommentare"
+    },
+    {
+      "key": "styleguide/CommentTreeCollapse/label",
+      "value": "ausblenden"
+    },
+    {
+      "key": "styleguide/comment/header/updated",
+      "value": "editiert"
+    },
+    {
+      "key": "styleguide/comment/header/verifiedCredential",
+      "value": "Verifizierte Rolle"
+    },
+    {
+      "key": "styleguide/comment/header/expandCount/1",
+      "value": "1 Beitrag"
+    },
+    {
+      "key": "styleguide/comment/header/expandCount/other",
+      "value": "{count} Beiträge"
+    },
+    {
+      "key": "styleguide/comment/header/credentialMissing",
+      "value": "Rolle definieren"
+    },
+    {
+      "key": "styleguide/comment/edit/submit",
+      "value": "bearbeiten"
+    },
+    {
+      "key": "styleguide/comment/unpublished",
+      "value": "(unveröffentlicht)"
+    },
+    {
+      "key": "styleguide/comment/unpublished/userCanEdit",
+      "value": "Bearbeiten Sie den Beitrag um ihn erneut zu publizieren."
+    },
+    {
+      "key": "styleguide/comment/adminUnpublished",
+      "value": "Leider mussen wir Ihren Beitrag unveröffentlichen. Wenden sie sich an kontakt@republik.ch."
     }
   ]
 }

@@ -17,24 +17,37 @@ import { getNewBlock } from './'
 const Form = ({ node, onChange }) => {
   return (
     <UIForm>
+      <Label>Spalten</Label>
       <Radio
         value={3}
         checked={node.data.get('columns') === 3}
         onChange={event => onChange('columns', null, Number(event.target.value))}>
         3 Teaser
       </Radio>
-      <br />
       <Radio
         value={2}
         checked={node.data.get('columns') === 2}
         onChange={event => onChange('columns', null, Number(event.target.value))}>
         2 Teaser
       </Radio>
-      <br />
       <Radio
         value={1}
         checked={node.data.get('columns') === 1}
         onChange={event => onChange('columns', null, Number(event.target.value))}>
+        1 Teaser
+      </Radio>
+      <br />
+      <Label>Mobile Spalten</Label>
+      <Radio
+        value={2}
+        checked={node.data.get('mobileColumns') === 2}
+        onChange={event => onChange('mobileColumns', null, Number(event.target.value))}>
+        2 Teaser
+      </Radio>
+      <Radio
+        value={1}
+        checked={!node.data.get('mobileColumns') || node.data.get('mobileColumns') === 1}
+        onChange={event => onChange('mobileColumns', null, Number(event.target.value))}>
         1 Teaser
       </Radio>
     </UIForm>
@@ -46,10 +59,10 @@ export const TeaserGroupForm = options => {
   return createPropertyForm({
     isDisabled: ({ value }) => {
       const teaser = value.blocks.reduce(
-      (memo, node) =>
-        memo || value.document.getFurthest(node.key, matchBlock(TYPE)),
-      undefined
-    )
+        (memo, node) =>
+          memo || value.document.getFurthest(node.key, matchBlock(TYPE)),
+        undefined
+      )
 
       return !teaser
     }
@@ -68,7 +81,6 @@ export const TeaserGroupForm = options => {
       const handlerFactory = createOnFieldChange(onChange, value, teaser)
 
       return <div>
-        <Label>Teaser-Spalte</Label>
         <Form node={teaser} onChange={handlerFactory} />
       </div>
     }
@@ -103,7 +115,7 @@ export const TeaserGroupButton = options => {
         data-disabled={disabled}
         data-visible
         onMouseDown={mouseDownHandler(disabled, value, onChange)}
-          >
+      >
         {options.rule.editorOptions.insertButton}
       </span>
     )
