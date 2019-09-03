@@ -41,6 +41,8 @@ const partyMap = {
   'JG': 'Grüne'
 }
 
+const parties = Object.keys(partyMap).map(k => k.toLowerCase())
+
 const replaceStrings = [
   // Names
   { search: new RegExp('Ueli'), replace: 'Ulrich' },
@@ -58,6 +60,9 @@ const replaceStrings = [
   { search: new RegExp('Crista'), replace: 'Cristina' },
   { search: new RegExp('Ann[^e]'), replace: 'Anne' },
   { search: new RegExp('Rony', 'i'), replace: 'Rosy' },
+  { search: new RegExp('Nathalie'), replace: 'Natalie' },
+  { search: new RegExp('Z\'graggen', 'i'), replace: 'Zgraggen' },
+  { search: new RegExp('Béa'), replace: 'Beatrice' },
 
   // Special cases
   { search: new RegExp('franço|franáo', 'i'), replace: 'franco' },
@@ -67,10 +72,10 @@ const replaceStrings = [
   { search: new RegExp('ö|î|oe|ô', 'g'), replace: 'o' },
   { search: new RegExp('ü|Å|ue', 'g'), replace: 'u' },
   { search: new RegExp('é|Ç|è|ê', 'g'), replace: 'e' },
-  { search: new RegExp('î', 'i'), replace: 'i' },
+  { search: new RegExp('î|ï|ï', 'i'), replace: 'i' },
 
   // Regular naming
-  { search: new RegExp('(_farbig|_wall_2000px|_color_DSC|SPInternational|SPInternation|PSInternational|PSInternation|Liste|hochformat|offiziell|LowRes|_rgb_a.png)', 'g'), replace: '' }
+  { search: new RegExp('(_farbig|_wall_2000px|_color_DSC|SPInternational|SPInternation|PSInternational|PSInternation|Liste|Hochformat|Gruene|hochformat|offiziell|LowRes|_rgb_a.png|Foto_)', 'g'), replace: '' }
 ]
 
 const toTokens = (string) => {
@@ -84,6 +89,7 @@ const toTokens = (string) => {
     .toLowerCase()
     .split(/[\s_-]/)
     .filter(a => a.length >= 2)
+    .filter(a => !parties.includes(a))
     .filter(Boolean)
     .sort()
 }
