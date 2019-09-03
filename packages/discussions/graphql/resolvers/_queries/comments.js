@@ -91,7 +91,7 @@ module.exports = async (_, args, context, info) => {
       endCursor
     },
     nodes: comments,
-    focus: focusId && focusId === comments[0].id
+    focus: focusId && comments.length && focusId === comments[0].id
       ? comments[0]
       : null
   }
