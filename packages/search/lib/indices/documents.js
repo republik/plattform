@@ -108,8 +108,7 @@ module.exports = {
 
         if (scheduledAt) {
           should.push({ bool: { must: [
-            { term: { 'meta.prepublication': false } },
-            { range: { 'meta.scheduledAt': { lte: scheduledAt } } }
+            { term: { 'meta.prepublication': false } }
           ] } })
         }
 
@@ -286,6 +285,9 @@ module.exports = {
               analyzer: 'german'
             },
             publishDate: {
+              type: 'date'
+            },
+            lastPublishedAt: {
               type: 'date'
             },
             scheduledAt: {

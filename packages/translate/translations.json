@@ -1,0 +1,1578 @@
+{
+  "updated": "2019-09-02T16:27:33.611Z",
+  "title": "live",
+  "data": [
+    {
+      "key": "api/unexpected",
+      "value": "Ups, da ist was schiefgelaufen. Sorry!"
+    },
+    {
+      "key": "api/temporaryUnsupported",
+      "value": "Die Funktion wird vorübergehend nicht unterstützt."
+    },
+    {
+      "key": "api/crowdfunding/tooLate",
+      "value": "Es tut uns sehr leid, das Crowdfunding ist bereits beendet."
+    },
+    {
+      "key": "api/reclaim/verified",
+      "value": "Die von Ihnen eingegebene E-Mail-Adresse ist schon besetzt. Wir können Ihren Kauf daher nicht übertragen. Bitte melden Sie sich bei kontakt@republik.ch. (Pledge E-Mail: {pledgeEmail}, gewünschte E-Mail: {targetEmail})"
+    },
+    {
+      "key": "api/membership/claim/alreadyHave",
+      "value": "Sie können keinen Gutscheincode einlösen, weil Sie schon eine Mitgliedschaft haben."
+    },
+    {
+      "key": "api/membership/claim/invalidToken",
+      "value": "Ihr Gutscheincode ist leider ungültig."
+    },
+    {
+      "key": "api/membership/claim/ownerIsClaimer",
+      "value": "Sie können keinen eigenen Gutscheincode einlösen."
+    },
+    {
+      "key": "api/membership/reduced/alreadyHas",
+      "value": "Sie können leider keine reduzierte Mitgliedschaft kaufen, da Sie bereits eine Mitgliedschaft besitzen."
+    },
+    {
+      "key": "api/membership/monthly/hasActive",
+      "value": "Sie können leider kein Monatsabo kaufen, da Sie bereits ein laufendes Abonnement besitzen."
+    },
+    {
+      "key": "api/membership/monthly/reactivate",
+      "value": "Sie können nicht noch einmal ein Monatsabonnement kaufen. Bitte verlängern Sie Ihr Abonnement stattdessen in Ihrem Konto (www.republik.ch/konto)."
+    },
+    {
+      "key": "api/membership/reactivate/otherActive",
+      "value": "Sie haben bereits eine andere, aktive Mitgliedschaft."
+    },
+    {
+      "key": "api/membership/cancel/isInactive",
+      "value": "Das Abonnement ist bereits deaktiviert."
+    },
+    {
+      "key": "api/membership/cancel/notRenewing",
+      "value": "Das Abonnement ist bereits gekündigt."
+    },
+    {
+      "key": "api/membership/cancel/unsupported",
+      "value": "Im Moment können nur Monatsabonnements gestoppt werden."
+    },
+    {
+      "key": "api/membership/pleaseWait",
+      "value": "Das Abonnement wird von unserem System noch bearbeitet, bitte versuchen Sie es später nochmals."
+    },
+    {
+      "key": "api/membership/404",
+      "value": "Die Mitgliedschaft konnte nicht gefunden werden."
+    },
+    {
+      "key": "api/membershipType/404",
+      "value": "Der Mitgliedschafts-Typ konnte nicht gefunden werden."
+    },
+    {
+      "key": "api/membership/move/otherActive",
+      "value": "Der Ziel-User hat bereits eine aktive Mitgliedschaft."
+    },
+    {
+      "key": "api/membership/move/monthlyDenied",
+      "value": "Monatsabos können nicht verschoben werden."
+    },
+    {
+      "key": "api/pledge/alreadyPaid",
+      "value": "Sie haben bereits bezahlt. Vielen Dank!"
+    },
+    {
+      "key": "api/pledge/paymentMethod/notAllowed",
+      "value": "Die von Ihnen gewählte Zahlungsart wird für das gewünschte Produkt nicht unterstützt. Bitte kontaktieren Sie uns unter kontakt@republik.ch."
+    },
+    {
+      "key": "api/pledge/reason",
+      "value": "Für eine reduzierte Mitgliedschaft wird eine Begründung benötigt."
+    },
+    {
+      "key": "api/pledge/empty",
+      "value": "Sie haben noch keine Kaufoption ausgewählt."
+    },
+    {
+      "key": "api/pledge/cancel/tooLate",
+      "value": "Dieser pledge kann höchstes {maxDays} nach dem Kauf storniert werden."
+    },
+    {
+      "key": "api/pay/stripe/invalid_number",
+      "value": "Dies ist keine valide Kreditkartennummer."
+    },
+    {
+      "key": "api/pay/stripe/invalid_expiry_month",
+      "value": "Der Monat des Kartenablaufdatums ist ungültig."
+    },
+    {
+      "key": "api/pay/stripe/invalid_expiry_year",
+      "value": "Das Jahr des Kartenablaufdatums ist ungültig."
+    },
+    {
+      "key": "api/pay/stripe/invalid_cvc",
+      "value": "Die Sicherheitsnummer der Karte ist ungültig."
+    },
+    {
+      "key": "api/pay/stripe/invalid_swipe_data",
+      "value": "The card’s swipe data is invalid."
+    },
+    {
+      "key": "api/pay/stripe/incorrect_number",
+      "value": "Die Kartennummer ist ungültig."
+    },
+    {
+      "key": "api/pay/stripe/expired_card",
+      "value": "Die Karte ist abgelaufen."
+    },
+    {
+      "key": "api/pay/stripe/incorrect_cvc",
+      "value": "Die Security Nummer ist falsch."
+    },
+    {
+      "key": "api/pay/stripe/incorrect_zip",
+      "value": "Die Postleitzahl der Karte konnte nicht geprüft werden."
+    },
+    {
+      "key": "api/pay/stripe/card_declined",
+      "value": "Ihre Karte wurde abgelehnt."
+    },
+    {
+      "key": "api/pay/stripe/missing",
+      "value": "There is no card on a customer that is being charged."
+    },
+    {
+      "key": "api/pay/stripe/processing_error",
+      "value": "Während der Bearbeitung der Karte ist ein Fehler aufgetreten."
+    },
+    {
+      "key": "api/paypal/deny",
+      "value": "Die Zahlung ist leider fehlgeschlagen. Bitte wählen Sie ein anderes Zahlungsmittel, um Ihre Bestellung abzuschliessen."
+    },
+    {
+      "key": "api/paypal/contactUs",
+      "value": "Während des Zahlungsverfahrens mit PayPal ist ein Problem aufgetreten, das zu einem nicht vorhersehbaren Resultat geführt hat. Bitte nehmen Sie Kontakt mit uns auf unter kontakt@republik.ch. Sie sollten es nicht erneut versuchen, da die Buchung möglicherweise bereits akzeptiert wurde."
+    },
+    {
+      "key": "api/paypal/delayed",
+      "value": "Ihre PayPal-Zahlung ist noch nicht bei uns eingetroffen. Falls Sie innerhalb von einigen Stunden nichts von uns hören, kontaktieren Sie uns bitte unter kontakt@republik.ch. Sie sollten es nicht erneut versuchen, da die Buchung höchstwahrscheinlich bereits akzeptiert wurde und noch verarbeitet wird."
+    },
+    {
+      "key": "api/pay/pspPayload/parseFailed",
+      "value": "Die Zahlungsdaten konnten nicht überprüft werden. Bitte kontaktieren Sie uns unter kontakt@repulik.ch und geben Sie folgende Nummer an: ID: {id}"
+    },
+    {
+      "key": "api/pay/paymentIdUsedAlready",
+      "value": "Ihr Einkauf scheint bereits bezahlt zu sein. Bitte kontaktieren Sie uns unter kontakt@repulik.ch und geben Sie folgende Nummer an: ID: {id}"
+    },
+    {
+      "key": "api/pledge/mail/subject",
+      "value": "Ihr Republik-Abo: Willkommen bei der Republik!"
+    },
+    {
+      "key": "api/payment/received/mail/subject",
+      "value": "Vielen Dank! Wir haben Ihre Zahlung erhalten."
+    },
+    {
+      "key": "api/email/subscription/payment/failed/subject",
+      "value": "Ihr Republik-Abo: Ihre Kreditkarte funktioniert nicht mehr"
+    },
+    {
+      "key": "api/email/subscription/deactivated/subject",
+      "value": "Ihr letzter Tag an Bord der Republik"
+    },
+    {
+      "key": "api/email/subscription/reactivated/subject",
+      "value": "Ihr Republik-Abo: Sie sind wieder da!"
+    },
+    {
+      "key": "api/users/merge/sourceAndTargetIdentical",
+      "value": "Bei Quelle und Ziel darf es sich nicht um denselben User handeln."
+    },
+    {
+      "key": "api/pledge/generate/missingAddress",
+      "value": "Bitte zuerst eine Adresse für den betreffenden User erfassen."
+    },
+    {
+      "key": "api/email/payment/reminder/subject",
+      "value": "Erinnerung: Republik-Abonnement"
+    },
+    {
+      "key": "api/pledge/404",
+      "value": "Der Pledge konnte nicht gefunden werden."
+    },
+    {
+      "key": "api/pledge/resolve/status",
+      "value": "Der Pledge muss im status PAID_INVESTIGATE sein um gelöst werden zu können."
+    },
+    {
+      "key": "api/pledge/resolve/status/successful",
+      "value": "Der Pledge muss im Status SUCCESSFUL sein um nachgeprüft werden zu können."
+    },
+    {
+      "key": "api/pledge/resolve/multiplePayments",
+      "value": "Dieser Pledge kann nicht editiert werden, da mehrere Zahlungen dazu vorliegen."
+    },
+    {
+      "key": "api/pledge/resolve/payment/status",
+      "value": "Die Zahlung dieses Pledges muss den status 'PAID' haben."
+    },
+    {
+      "key": "api/pledge/resolve/payment/notEnough",
+      "value": "Die Zahlung reicht nicht aus um den Pledge zu begleichen (min: {minTotal})."
+    },
+    {
+      "key": "api/payment/404",
+      "value": "Die Zahlung konnte nicht gefunden werden."
+    },
+    {
+      "key": "api/postfinancePayment/hide/matched",
+      "value": "Postfinance Zahlungen mit Status \"matched\" können nicht versteckt werden."
+    },
+    {
+      "key": "api/postfinancePayment/match/noPayment",
+      "value": "Es konnte keine Zahlung mit der HRID {hrid} und dem Status \"PAID\" gefunden werden."
+    },
+    {
+      "key": "api/postfinancePayment/match/duplicate",
+      "value": "Es liegt bereits eine zugeordnete Postfinance Zahlung mit der HRID {hrid} vor."
+    },
+    {
+      "key": "api/postfinancePayment/match/noChange",
+      "value": "Diese Postfinance Zahlung ist bereits zugeordnet."
+    },
+    {
+      "key": "api/payment/subscription/threeDsecure/notSupported",
+      "value": "Es tut uns leid, aus technischen Gründen können wir zurzeit kein Monats-Abonnement auf eine Kreditkarte buchen, die 3D secure voraussetzt. Sie können es entweder mit einer anderen Karte versuchen und/oder uns kontaktieren unter: kontakt@republik.ch. "
+    },
+    {
+      "key": "api/email/change/exists",
+      "value": "Diese E-Mail-Adresse ist schon besetzt."
+    },
+    {
+      "key": "api/email/invalid",
+      "value": "E-Mail-Adresse ungültig"
+    },
+    {
+      "key": "api/users/delete/claimedMembershipsNotSupported",
+      "value": "User, welche eine Membership eingelöst habe können zurzeit nicht gelöscht werden. Bitte wenden Sie sich an die IT."
+    },
+    {
+      "key": "api/payment/invoice/vat",
+      "value": "inkl. MWST-Satz {value}%"
+    },
+    {
+      "key": "api/payment/invoice/item/package/MONTHLY_ABO",
+      "value": "Monats-Abonnement"
+    },
+    {
+      "key": "api/payment/invoice/item/package/BENEFACTOR",
+      "value": "Gönner-Mitgliedschaft"
+    },
+    {
+      "key": "api/payment/invoice/item/package/ABO",
+      "value": "Abo und Mitgliedschaft für ein Jahr"
+    },
+    {
+      "key": "api/payment/invoice/item/package/ABO_GIVE",
+      "value": "Verschenken \"Abo und Mitgliedschaft für ein Jahr\""
+    },
+    {
+      "key": "api/payment/invoice/item/package/ABO_GIVE_MONTHS",
+      "value": "Verschenken \"Monats-Abo als Geschenk\""
+    },
+    {
+      "key": "api/payment/invoice/item/package/DONATE",
+      "value": "Spende"
+    },
+    {
+      "key": "api/payment/invoice/item/goodie/NOTEBOOK",
+      "value": "Notizbuch"
+    },
+    {
+      "key": "api/payment/invoice/item/goodie/TOTEBAG",
+      "value": "Tasche"
+    },
+    {
+      "key": "api/payment/invoice/item/donation",
+      "value": "Spende"
+    },
+    {
+      "key": "api/payment/invoice/item/discount",
+      "value": "Ermässigung"
+    },
+    {
+      "key": "api/email/membership_prolong_notice/subject",
+      "value": "Ihr Republik-Abo wurde verlängert"
+    },
+    {
+      "key": "api/email/pledge_abo/subject",
+      "value": "Ihr Republik-Abo: Willkommen bei der Republik!"
+    },
+    {
+      "key": "api/email/pledge_abo_give/subject",
+      "value": "Ihre Bestellung: Jahres-Abo und Mitgliedschaft als Geschenk"
+    },
+    {
+      "key": "api/email/pledge_abo_give_months/subject",
+      "value": "Ihre Bestellung: Monats-Abo als Geschenk"
+    },
+    {
+      "key": "api/email/pledge_monthly_abo/subject",
+      "value": "Ihr Republik Monats-Abo: Willkommen bei der Republik"
+    },
+    {
+      "key": "api/email/pledge_donate/subject",
+      "value": "Vielen Dank für Ihre Spende"
+    },
+    {
+      "key": "api/email/pledge_benefactor/subject",
+      "value": "Ihr Republik-Abo: Willkommen bei der Republik!"
+    },
+    {
+      "key": "api/email/pledge_prolong/subject",
+      "value": "Danke für Ihr grosses Herz und Ihren kühlen Kopf"
+    },
+    {
+      "key": "api/email/payment_successful_abo/subject",
+      "value": "Vielen Dank! Wir haben Ihre Zahlung erhalten."
+    },
+    {
+      "key": "api/email/payment_successful_abo_give/subject",
+      "value": "Vielen Dank! Wir haben Ihre Zahlung erhalten."
+    },
+    {
+      "key": "api/email/payment_successful_abo_give_months/subject",
+      "value": "Vielen Dank! Wir haben Ihre Zahlung erhalten."
+    },
+    {
+      "key": "api/email/payment_successful_benefactor/subject",
+      "value": "Vielen Dank! Wir haben Ihre Zahlung erhalten."
+    },
+    {
+      "key": "api/email/payment_successful_donate/subject",
+      "value": "Vielen Dank! Wir haben Ihre Zahlung erhalten."
+    },
+    {
+      "key": "api/email/payment_successful_prolong/subject",
+      "value": "Vielen Dank! Wir haben Ihre Zahlung erhalten."
+    },
+    {
+      "key": "api/email/option/goodie/notebook/1",
+      "value": "Notizbuch"
+    },
+    {
+      "key": "api/email/option/goodie/notebook/other",
+      "value": "Notizbücher"
+    },
+    {
+      "key": "api/email/option/goodie/totebag/1",
+      "value": "Tasche"
+    },
+    {
+      "key": "api/email/option/goodie/totebag/other",
+      "value": "Taschen"
+    },
+    {
+      "key": "api/email/option/membershiptype/abo/1",
+      "value": "Abo und Mitgliedschaft"
+    },
+    {
+      "key": "api/email/option/membershiptype/abo/other",
+      "value": "Abo und Mitgliedschaften"
+    },
+    {
+      "key": "api/email/option/membershiptype/benefactor_abo/1",
+      "value": "Gönner-Mitgliedschaft"
+    },
+    {
+      "key": "api/email/option/membershiptype/benefactor_abo/other",
+      "value": "Gönner-Mitgliedschaften"
+    },
+    {
+      "key": "api/email/option/membershiptype/monthly_abo/1",
+      "value": "Monats-Abo"
+    },
+    {
+      "key": "api/email/option/membershiptype/monthly_abo/others",
+      "value": "Monats-Abos"
+    },
+    {
+      "key": "api/email/option/membershiptype/abo_give_months/1",
+      "value": "Monats-Abo als Geschenk für {interval}"
+    },
+    {
+      "key": "api/email/option/membershiptype/abo_give_months/other",
+      "value": "Monats-Abos als Geschenk für {interval}"
+    },
+    {
+      "key": "api/email/option/other/gifted_membership",
+      "value": "Mitgliedschaft für {name} (#{sequenceNumber})"
+    },
+    {
+      "key": "api/email/option/interval/year/periods/1",
+      "value": "ein Jahr"
+    },
+    {
+      "key": "api/email/option/interval/year/periods/other",
+      "value": "{count} Jahre"
+    },
+    {
+      "key": "api/email/option/interval/month/periods/1",
+      "value": "einen Monat"
+    },
+    {
+      "key": "api/email/option/interval/month/periods/other",
+      "value": "{count} Monate"
+    },
+    {
+      "key": "api/email/option/interval/week/periods/1",
+      "value": "eine Woche"
+    },
+    {
+      "key": "api/email/option/interval/week/count/other",
+      "value": "{count} Wochen"
+    },
+    {
+      "key": "api/email/option/interval/day/periods/1",
+      "value": "einen Tag"
+    },
+    {
+      "key": "api/email/option/interval/day/periods/other",
+      "value": "{count} Tage"
+    },
+    {
+      "key": "api/membership/cancel/category/EDITORIAL",
+      "value": "Inhalte, und zwar:"
+    },
+    {
+      "key": "api/membership/cancel/category/NO_TIME",
+      "value": "Keine Zeit"
+    },
+    {
+      "key": "api/membership/cancel/category/TOO_EXPENSIVE",
+      "value": "Zu teuer"
+    },
+    {
+      "key": "api/membership/cancel/category/OTHER",
+      "value": "Anderes, und zwar:"
+    },
+    {
+      "key": "api/membership/cancel/category/VOID",
+      "value": "Ich möchte keinen Grund angeben."
+    },
+    {
+      "key": "api/membership/cancel/category/NO_MONEY",
+      "value": "Habe knappes Budget"
+    },
+    {
+      "key": "api/membership/cancel/category/SYSTEM",
+      "value": "SYSTEM"
+    },
+    {
+      "key": "api/membership/cancel/category/EDITORAL_NARCISSISTIC",
+      "value": "Selbstverliebter Stil"
+    },
+    {
+      "key": "api/membership/cancel/category/LOGIN_TECH",
+      "value": "Loginprobleme"
+    },
+    {
+      "key": "api/membership/cancel/category/PAPER",
+      "value": "Lieber Papier"
+    },
+    {
+      "key": "api/membership/cancel/category/EXPECTIONS",
+      "value": "Andere Erwartungen"
+    },
+    {
+      "key": "api/membership/cancel/category/RARELY_READ",
+      "value": "Selten gelesen"
+    },
+    {
+      "key": "api/membership/cancel/category/TOO_MUCH_TO_READ",
+      "value": "Zu viel Lesestoff"
+    },
+    {
+      "key": "api/membership/cancel/category/CROWFUNDING_ONLY",
+      "value": "Nur Crowdfunding"
+    },
+    {
+      "key": "api/membership/cancel/category/SEVERAL_REASONS",
+      "value": "Mehrere (der obigen) Gründe"
+    },
+    {
+      "key": "api/email/membership_cancel_notice/subject",
+      "value": "Bestätigung Ihrer Kündigung"
+    },
+    {
+      "key": "api/email/membership_giver_prolong_notice/subject",
+      "value": "Ihre verschenkten Abonnements"
+    },
+    {
+      "key": "api/email/membership_winback_NO_TIME/subject",
+      "value": "Das Beste der Republik"
+    },
+    {
+      "key": "api/email/membership_winback_TOO_EXPENSIVE/subject",
+      "value": "Günstiges Abo"
+    },
+    {
+      "key": "api/email/membership_winback_NO_MONEY/subject",
+      "value": "Günstiges Abo"
+    },
+    {
+      "key": "api/email/membership_winback/subject",
+      "value": "Ihre Kündigung"
+    },
+    {
+      "key": "api/email/membership_winback/fromEmail",
+      "value": "kontakt@republik.ch"
+    },
+    {
+      "key": "api/email/membership_winback/fromName",
+      "value": "Philipp von Essen"
+    },
+    {
+      "key": "api/email/membership_owner_prolong_notice/subject",
+      "value": "Am {endDate} erneuert sich Ihre Mitgliedschaft"
+    },
+    {
+      "key": "api/email/membership_owner_prolong_notice_7/subject",
+      "value": "Möchten Sie Ihr Abo verlängern oder die Republik verlassen? Entscheiden Sie sich bis {endDate}"
+    },
+    {
+      "key": "api/email/membership_owner_prolong_notice_0/sequenceNumber/true/subject",
+      "value": "Ihre Abonnementsrechnung (#{sequenceNumber})"
+    },
+    {
+      "key": "api/email/membership_owner_prolong_notice_0/subject",
+      "value": "Ihre Abonnementsrechnung"
+    },
+    {
+      "key": "api/email/membership_deactivated_abo_uncancelled/sequenceNumber/true/subject",
+      "value": "Ihr Abonnement Nr. {sequenceNumber} wurde deaktiviert"
+    },
+    {
+      "key": "api/email/membership_deactivated_benefactor_abo_uncancelled/sequenceNumber/true/subject",
+      "value": "Ihr Abonnement Nr. {sequenceNumber} wurde deaktiviert"
+    },
+    {
+      "key": "api/email/membership_deactivated/subject",
+      "value": "Ihr Abonnement wurde deaktiviert"
+    },
+    {
+      "key": "api/discussion/404",
+      "value": "Die Diskussion konnte nicht gefunden werden."
+    },
+    {
+      "key": "api/comment/tooEarly",
+      "value": "Sie sind zu früh. Sie können {timeahead} wieder einen Beitrag schreiben."
+    },
+    {
+      "key": "api/comment/closed",
+      "value": "Die Diskussion wurde stillgelegt."
+    },
+    {
+      "key": "api/comment/tooLong",
+      "value": "Ihr Beitrag darf höchstens {maxLength} Zeichen lang sein."
+    },
+    {
+      "key": "api/comment/empty",
+      "value": "Ihr Beitrag ist leer."
+    },
+    {
+      "key": "api/comment/canNotComment",
+      "value": "Sie benötigen eine aktive Mitgliedschaft um sich an Debatten zu beteiligen."
+    },
+    {
+      "key": "api/discussion/anonymity/forbidden",
+      "value": "Anonyme Kommentare sind in dieser Debatte nicht zugelassen."
+    },
+    {
+      "key": "api/discussion/anonymity/enforced",
+      "value": "In dieser Debatte sind nur anonyme Kommentare zugelassen."
+    },
+    {
+      "key": "api/discussion/args/first/tooBig",
+      "value": "Sie können maximal {max} Beiträge aufs mal abfragen."
+    },
+    {
+      "key": "api/comment/404",
+      "value": "Der Beitrag konnte nicht gefunden werden."
+    },
+    {
+      "key": "api/comment/parent/404",
+      "value": "Des Beitrags Vater konnte nicht gefunden werden."
+    },
+    {
+      "key": "api/comment/notYours",
+      "value": "Sie können nur Ihre eigenen Beiträge bearbeiten."
+    },
+    {
+      "key": "api/comment/anonymous/displayName",
+      "value": "Anonymous"
+    },
+    {
+      "key": "api/comment/id/duplicate",
+      "value": "ID-Kollision! Ups, da ist etwas schiefgelaufen. Bitte laden Sie die Seite neu und versuchen Sie den Komentar erneut abzusenden."
+    },
+    {
+      "key": "api/comment/notification/new/email/subject",
+      "value": "Neuer Beitrag von {authorName} in «{discussionName}»"
+    },
+    {
+      "key": "api/comment/notification/answer/email/subject",
+      "value": "Neue Antwort von {authorName} in «{discussionName}»"
+    },
+    {
+      "key": "api/comment/notification/new/web/subject",
+      "value": "Neuer Beitrag in «{discussionName}»"
+    },
+    {
+      "key": "api/comment/notification/answer/web/subject",
+      "value": "Neue Antwort in «{discussionName}»"
+    },
+    {
+      "key": "api/comment/notification/new/web/icon",
+      "value": "https://cdn.republik.space/frontend/static/apple-touch-icon.png"
+    },
+    {
+      "key": "api/comment/notification/new/app/subject",
+      "value": "Neuer Beitrag in «{discussionName}»"
+    },
+    {
+      "key": "api/comment/notification/answer/app/subject",
+      "value": "Neue Antwort in «{discussionName}»"
+    },
+    {
+      "key": "api/comment/tagRequired",
+      "value": "Bitte wählen Sie eine Kategorie aus."
+    },
+    {
+      "key": "api/comment/invalidTags",
+      "value": "Die folgenden Tags stehen in dieser Diskussion nicht zur Verfügung: {invalidTags}"
+    },
+    {
+      "key": "api/discussion/tagRequiredButNoTags",
+      "value": "Sie müssen mind. einen Tag angeben, damit tagRequired valid ist."
+    },
+    {
+      "key": "api/greeting",
+      "value": "Willkommen {name}"
+    },
+    {
+      "key": "api/pgpPublicKey/invalid",
+      "value": "Ungültiger PGP-Public-Key"
+    },
+    {
+      "key": "api/pgpPublicKey/private",
+      "value": "Dies ist ein privater PGP-Key, diesen sollten Sie nie auf eine Webseite hochladen. Bitte geben Sie Ihren Public-Key an."
+    },
+    {
+      "key": "api/publicProfile/usernameRequired",
+      "value": "Sie benötigen einen Benutzernamen, um ihr Profil zu publizieren"
+    },
+    {
+      "key": "api/publicProfile/usernameNeeded",
+      "value": "Sie benötigen einen Benutzernamen für Ihr öffentliches Profil"
+    },
+    {
+      "key": "api/newsletters/userNotFound",
+      "value": "Wir konnten diesen Benutzer nicht finden. Bitte versuchen Sie es später nochmal."
+    },
+    {
+      "key": "api/newsletters/get/failed",
+      "value": "Ihre Newsletter-Einstellungen konnten nicht abgefragt werden, bitte versuchen Sie es später noch einmal."
+    },
+    {
+      "key": "api/newsletters/update/failed",
+      "value": "Ihre Newsletter-Einstellunge konnten nicht aktualisiert werden, bitte versuchen Sie es später noch einmal."
+    },
+    {
+      "key": "api/newsletters/update/token/invalid",
+      "value": "Ihre Newsletter-Einstellunge konnten nicht aktualisiert werden, bitte melden Sie sich bei kontakt@republik.ch."
+    },
+    {
+      "key": "api/newsletters/update/interestIdNotSupported",
+      "value": "Dieser Newsletter wird nicht unterstützt."
+    },
+    {
+      "key": "api/newsletters/update/rolesNotEligible",
+      "value": "Sie haben keine Berechtigung, diesen Newsletter zu abonnieren."
+    },
+    {
+      "key": "api/statements/maxNodes",
+      "value": "Sie können maximal 100 Statements auf einmal abfragen"
+    },
+    {
+      "key": "api/statements/giveUp",
+      "value": "Allen Bemühungen zum Trotz konnte kein Statement gefunden werden."
+    },
+    {
+      "key": "profile/statement/needed",
+      "value": "Sie brauchen ein Statement, um auf der Community-Seite zu erscheinen"
+    },
+    {
+      "key": "profile/portrait/needed",
+      "value": "Sie benötigen ein Portrait, um auf der Community-Seite zu erscheinen"
+    },
+    {
+      "key": "profile/candidacy/statement/needed",
+      "value": "Ihr Profil ist im Moment mindestens einer Kandidatur zugeordnet, weshalb wir ein Statement zwingend benötigen."
+    },
+    {
+      "key": "profile/candidacy/credential/needed",
+      "value": "Ihr Profil ist im Moment mindestens einer Kandidatur zugeordnet, weshalb wir eine Funktion zwingend benötigen."
+    },
+    {
+      "key": "profile/candidacy/birthday/needed",
+      "value": "Ihr Profil ist im Moment mindestens einer Kandidatur zugeordnet, weshalb wir das Geburtsdatum zwingend benötigen."
+    },
+    {
+      "key": "profile/candidacy/needed",
+      "value": "Ihr Profil ist im Moment mindestens einer Kandidatur zugeordnet und kann im Moment nicht zurückgenommen werden."
+    },
+    {
+      "key": "profile/candidacy/electionPhase",
+      "value": "Sie sind zur Zeit Kandidatin in mind. einer Wahl. Deshalb können Sie Profil nicht anpassen. Bitte warten Sie bis die Wahl abgeschlossen ist."
+    },
+    {
+      "key": "profile/notEligible",
+      "value": "Nur Verlegerinnen und Abonnenten können ein Profil veröffentlichen."
+    },
+    {
+      "key": "api/faq/mail/subject",
+      "value": "Danke für Ihre Frage"
+    },
+    {
+      "key": "api/preview/mail/404",
+      "value": "Das Preview-Mail steht zur Zeit nicht zur Verfügung. Bitte versuchen Sie es später nochmal."
+    },
+    {
+      "key": "api/preview/mail/subject",
+      "value": "Preview Mail"
+    },
+    {
+      "key": "api/preview/mail/tooEarly",
+      "value": "Das Preview-Mail kann nur einmal pro Tag angefordert werden, bitte versuchen Sie es morgen nochmals."
+    },
+    {
+      "key": "api/preview/email/onboarding/subject",
+      "value": "Probelesen der Republik"
+    },
+    {
+      "key": "api/preview/email/followup/subject",
+      "value": "Zeit für eine Entscheidung"
+    },
+    {
+      "key": "profile/generic/tooLong",
+      "value": "{key}, maximal {max} Zeichen"
+    },
+    {
+      "key": "profile/generic/notInRange",
+      "value": "{key}, minimal {min} und maximal {max} Zeichen"
+    },
+    {
+      "key": "profile/statement/label",
+      "value": "Statement"
+    },
+    {
+      "key": "profile/disclosures/label",
+      "value": "Interessenbindungen"
+    },
+    {
+      "key": "profile/biography/label",
+      "value": "Steckbrief"
+    },
+    {
+      "key": "profile/contact/pgpPublicKey/label",
+      "value": "PGP-Public-Key"
+    },
+    {
+      "key": "profile/contact/publicUrl/label",
+      "value": "Webseite"
+    },
+    {
+      "key": "profile/contact/facebook/label",
+      "value": "Facebook"
+    },
+    {
+      "key": "profile/contact/twitter/label",
+      "value": "Twitter"
+    },
+    {
+      "key": "profile/contact/phoneNumber/label",
+      "value": "Telefonnummer"
+    },
+    {
+      "key": "profile/contact/phoneNumberNote/label",
+      "value": "Verfügbarkeit"
+    },
+    {
+      "key": "pledge/contact/firstName/label",
+      "value": "Ihr Vorname"
+    },
+    {
+      "key": "pledge/contact/lastName/label",
+      "value": "Ihr Nachname"
+    },
+    {
+      "key": "profile/credential/label",
+      "value": "Bezeichnung"
+    },
+    {
+      "key": "api/search/aggs/audioSource",
+      "value": "vorgelesene Artikel"
+    },
+    {
+      "key": "api/search/aggs/discussion",
+      "value": "Debatten"
+    },
+    {
+      "key": "api/search/aggs/dossier",
+      "value": "Dossiers"
+    },
+    {
+      "key": "api/search/aggs/feed",
+      "value": "Feed"
+    },
+    {
+      "key": "api/search/aggs/format",
+      "value": "Rubriken & Kolumnen"
+    },
+    {
+      "key": "api/search/aggs/hasAudio",
+      "value": "zum Hören"
+    },
+    {
+      "key": "api/search/aggs/hasVideo",
+      "value": "Video"
+    },
+    {
+      "key": "api/search/aggs/isSeriesEpisode",
+      "value": "Episoden"
+    },
+    {
+      "key": "api/search/aggs/isSeriesMaster",
+      "value": "Serien"
+    },
+    {
+      "key": "api/search/aggs/seriesMaster",
+      "value": "Serien"
+    },
+    {
+      "key": "api/search/aggs/template",
+      "value": "Vorlage"
+    },
+    {
+      "key": "api/search/aggs/template/article",
+      "value": "Artikel"
+    },
+    {
+      "key": "api/search/aggs/template/discussion",
+      "value": "Debatten"
+    },
+    {
+      "key": "api/search/aggs/template/dossier",
+      "value": "Dossiers"
+    },
+    {
+      "key": "api/search/aggs/template/editorialNewsletter",
+      "value": "Newsletter"
+    },
+    {
+      "key": "api/search/aggs/template/format",
+      "value": "Rubriken & Kolumnen"
+    },
+    {
+      "key": "api/search/aggs/template/front",
+      "value": "Front"
+    },
+    {
+      "key": "api/search/aggs/textLength",
+      "value": "Länge"
+    },
+    {
+      "key": "api/search/aggs/textLength/epic",
+      "value": "halbes Buch"
+    },
+    {
+      "key": "api/search/aggs/textLength/long",
+      "value": "erfreulich lang"
+    },
+    {
+      "key": "api/search/aggs/textLength/medium",
+      "value": "mittellang"
+    },
+    {
+      "key": "api/search/aggs/textLength/short",
+      "value": "kurz"
+    },
+    {
+      "key": "api/search/aggs/type",
+      "value": "Informationsarten"
+    },
+    {
+      "key": "api/search/aggs/type/Comment",
+      "value": "Debattenbeiträge"
+    },
+    {
+      "key": "api/search/aggs/type/Document",
+      "value": "Artikel"
+    },
+    {
+      "key": "api/search/aggs/type/User",
+      "value": "Profile"
+    },
+    {
+      "key": "api/search/aggs/userId",
+      "value": "Profile"
+    },
+    {
+      "key": "api/search/aggs/kind",
+      "value": "Ebene"
+    },
+    {
+      "key": "api/search/aggs/kind/editorial",
+      "value": "Editorial"
+    },
+    {
+      "key": "api/search/aggs/kind/meta",
+      "value": "wir über uns"
+    },
+    {
+      "key": "api/search/aggs/kind/scribble",
+      "value": "Ameisen"
+    },
+    {
+      "key": "api/noname",
+      "value": "Unbenannt"
+    },
+    {
+      "key": "api/access/period/seconds/1",
+      "value": "eine Sekunde"
+    },
+    {
+      "key": "api/access/period/seconds/other",
+      "value": "{count} Sekunden"
+    },
+    {
+      "key": "api/access/period/minutes/1",
+      "value": "eine Minute"
+    },
+    {
+      "key": "api/access/period/minutes/other",
+      "value": "{count} Minuten"
+    },
+    {
+      "key": "api/access/period/hours/1",
+      "value": "eine Stunde"
+    },
+    {
+      "key": "api/access/period/hours/other",
+      "value": "{count} Stunden"
+    },
+    {
+      "key": "api/access/period/days/1",
+      "value": "einen Tag"
+    },
+    {
+      "key": "api/access/period/days/other",
+      "value": "{count} Tage"
+    },
+    {
+      "key": "api/access/period/weeks/1",
+      "value": "eine Woche"
+    },
+    {
+      "key": "api/access/period/weeks/other",
+      "value": "{count} Wochen"
+    },
+    {
+      "key": "api/access/period/months/1",
+      "value": "einen Monat"
+    },
+    {
+      "key": "api/access/period/months/other",
+      "value": "{count} Monate"
+    },
+    {
+      "key": "api/access/period/years/1",
+      "value": "ein Jahr"
+    },
+    {
+      "key": "api/access/period/years/other",
+      "value": "{count} Jahre"
+    },
+    {
+      "key": "api/access/period/join",
+      "value": "und"
+    },
+    {
+      "key": "api/access/email/recipient/invitation/subject",
+      "value": "Einladung von {granterName}"
+    },
+    {
+      "key": "api/access/email/recipient/onboarding/subject",
+      "value": "Ihr Republik-Testzugang: Willkommen!"
+    },
+    {
+      "key": "api/access/email/recipient/expired/subject",
+      "value": "Ihre Reise ist beendet"
+    },
+    {
+      "key": "api/access/email/recipient/followup/subject",
+      "value": "Zeit für eine Entscheidung"
+    },
+    {
+      "key": "api/access/grant/email/error",
+      "value": "Wir konnten «{email}» nicht als gültige E-Mail-Adresse erkennen."
+    },
+    {
+      "key": "api/access/grant/campaign/error",
+      "value": "Kampagne «{campaignId}» nicht gefunden."
+    },
+    {
+      "key": "api/access/grant/message/error/tooLong",
+      "value": "Die persönliche Nachricht ist zu lange. Sie können lediglich bis zu {maxLength} Zeichen verwenden."
+    },
+    {
+      "key": "api/access/revoke/role/error",
+      "value": "Sie besitzen nicht die erforderliche Berechtigung."
+    },
+    {
+      "key": "api/access/constraint/limitGrants/error",
+      "value": "Sie können keinen weiteren Zugriff vergeben."
+    },
+    {
+      "key": "api/access/constraint/limitSlots/error",
+      "value": "Sie können keine weiteren Plätze vergeben."
+    },
+    {
+      "key": "api/access/constraint/limitRevokedSlots/error",
+      "value": "Sie können derzeit keine Plätze mehr vergeben."
+    },
+    {
+      "key": "api/access/constraint/notGrantable/error",
+      "value": "Sie können derzeit keinen Zugriff teilen."
+    },
+    {
+      "key": "api/access/constraint/recipientInNoSlot/error",
+      "value": "«{email}» erhielt bereits einen Zugriff."
+    },
+    {
+      "key": "api/access/constraint/recipientNotGranter/error",
+      "value": "Sie können sich selbst keinen Zugriff teilen."
+    },
+    {
+      "key": "api/access/constraint/requirePackage/error",
+      "value": "Sie benötigen ein bestimmtes Abonnement oder Mitgliedschaft um den Zugriff zu teilen."
+    },
+    {
+      "key": "api/access/constraint/requireRole/error",
+      "value": "Sie benötigen die Rolle «{role}» um den Zugriff zu teilen."
+    },
+    {
+      "key": "api/access/constraint/recipientBlacklist/error",
+      "value": "Sie können «{email}» keinen Zugriff teilen, da die E-Mail-Adresse auf einer schwarzen Liste aufgeführt ist."
+    },
+    {
+      "key": "api/access/constraint/granterBlacklist/error",
+      "value": "Sie können derzeit keinen Zugriff teilen, da Ihr Konto auf einer schwarzen Liste aufgeführt ist."
+    },
+    {
+      "key": "api/access/resolvers/AccessGrant/status/invalidated",
+      "value": "nicht mehr gültig"
+    },
+    {
+      "key": "api/access/resolvers/AccessGrant/status/revoked",
+      "value": "gültig, aber zurückgezogen"
+    },
+    {
+      "key": "api/access/resolvers/AccessGrant/status/unclaimed",
+      "value": "gültig, uneingelöst"
+    },
+    {
+      "key": "api/access/resolvers/AccessGrant/status/valid",
+      "value": "gültig"
+    },
+    {
+      "key": "api/access/resolvers/AccessGrant/tallDarkStranger",
+      "value": "Unbekannt"
+    },
+    {
+      "key": "api/access/claim/404",
+      "value": "Ihr Gutscheincode ist leider ungültig. Da hat sich vielleicht ein Vertipper eingeschlichen, oder der Gutscheincode ist bereits abgelaufen."
+    },
+    {
+      "key": "api/access/request/campaign/error",
+      "value": "Kampagne «{campaignId}» ist ungültig."
+    },
+    {
+      "key": "api/election/email/election_candidacy_confirmation_gen18m/subject",
+      "value": "Vielen Dank für Ihre Kandidatur"
+    },
+    {
+      "key": "api/election/exists",
+      "value": "Eine Wahl mit diesem Slug existiert bereits."
+    },
+    {
+      "key": "api/election/404",
+      "value": "Die Wahl konnte nicht gefunden werden."
+    },
+    {
+      "key": "api/election/candidacy/404",
+      "value": "Eine der gewählten Kandidaturen konnte nicht gefunden werden."
+    },
+    {
+      "key": "api/election/candidacy/tooLate",
+      "value": "Die Kandidatur-Phase ist bereits geschlossen."
+    },
+    {
+      "key": "api/election/candidacy/tooEarly",
+      "value": "Die Kandidatur-Phase hat noch nicht begonnen."
+    },
+    {
+      "key": "api/election/tooEarly",
+      "value": "Die Wahl ist noch nicht eröffnet."
+    },
+    {
+      "key": "api/election/tooLate",
+      "value": "Die Wahl ist bereits geschlossen."
+    },
+    {
+      "key": "api/election/notEligible",
+      "value": "Sie sind leider nicht berechtigt an der Wahl teilzunehmen."
+    },
+    {
+      "key": "api/election/alreadySubmitted",
+      "value": "Sie können nur einmal wählen."
+    },
+    {
+      "key": "api/election/noEmptyBallots",
+      "value": "Diese Wahl erlaubt keine leeren Eingaben."
+    },
+    {
+      "key": "api/election/result/needDecision",
+      "value": "Die Wahl ist unentschiden, Sie müssen die zu wählenden Kadidaten IDs angeben."
+    },
+    {
+      "key": "api/election/result/invalidCandidacyIdSupplied",
+      "value": "Mindestens eine der angebenen, zu wählenden Kandidaten IDs konnte nicht gefunden werden."
+    },
+    {
+      "key": "api/election/result/tooEarly",
+      "value": "Die Wahl läuft noch und kann daher nicht finalisiert werden."
+    },
+    {
+      "key": "api/election/result/alreadyFinalized",
+      "value": "Die Wahl ist bereits finalisiert."
+    },
+    {
+      "key": "api/voting/404",
+      "value": "Die Abstimmung konnte nicht gefunden werden."
+    },
+    {
+      "key": "api/voting/exists",
+      "value": "Eine Abstimmung mit diesem Slug existiert bereits."
+    },
+    {
+      "key": "api/voting/notEligible",
+      "value": "Sie sind leider nicht berechtigt an der Abstimmung teilzunehmen."
+    },
+    {
+      "key": "api/voting/alreadySubmitted",
+      "value": "Sie können nur einmal abstimmen."
+    },
+    {
+      "key": "api/voting/tooEarly",
+      "value": "Die Abstimmung ist noch nicht eröffnet."
+    },
+    {
+      "key": "api/voting/tooLate",
+      "value": "Die Abstimmung ist bereits geschlossen."
+    },
+    {
+      "key": "api/voting/option/404",
+      "value": "Die gewählte Option konnte nicht gefunden werden."
+    },
+    {
+      "key": "api/voting/option/votingIdMissmatch",
+      "value": "Die gewählte Option gehört nicht zur angegebenen Abstimmung."
+    },
+    {
+      "key": "api/voting/noEmptyBallots",
+      "value": "Diese Abstimmung erlaubt keine leeren Eingaben."
+    },
+    {
+      "key": "api/voting/result/invalidWinnerName",
+      "value": "Der angegebene winnerName {winnerName} konnte nicht gefunden werden."
+    },
+    {
+      "key": "api/voting/result/tooEarly",
+      "value": "Die Abstimmung läuft noch und kann daher nicht finalisiert werden."
+    },
+    {
+      "key": "api/voting/result/alreadyFinalized",
+      "value": "Die Abstimmung ist bereits finalisiert."
+    },
+    {
+      "key": "api/questionnaire/404",
+      "value": "Die Umfrage konnte nicht gefunden werden."
+    },
+    {
+      "key": "api/questionnaire/question/404",
+      "value": "Die Frage konnte nicht gefunden werden."
+    },
+    {
+      "key": "api/questionnaire/question/type/404",
+      "value": "Dieser Fragetyp ({type}) wird noch nicht unterstützt."
+    },
+    {
+      "key": "api/questionnaire/notEligible",
+      "value": "Sie sind leider nicht berechtigt an der Umfrage teilzunehmen."
+    },
+    {
+      "key": "api/questionnaire/alreadySubmitted",
+      "value": "Sie haben die Umfrage bereits abgeschlossen."
+    },
+    {
+      "key": "api/questionnaire/tooEarly",
+      "value": "Die Umfrage ist noch nicht eröffnet."
+    },
+    {
+      "key": "api/questionnaire/tooLate",
+      "value": "Die Umfrage ist bereits geschlossen."
+    },
+    {
+      "key": "api/questionnaire/answer/empty",
+      "value": "Leere Antworten sind nicht akzeptiert."
+    },
+    {
+      "key": "api/questionnaire/answer/wrongType",
+      "value": "Das Format der Antwort entspricht nicht dem der Frage."
+    },
+    {
+      "key": "api/questionnaire/answer/outOfRange",
+      "value": "Die Anwort liegt ausserhalb des gefragten Bereichs."
+    },
+    {
+      "key": "api/questionnaire/answer/Choice/tooMany",
+      "value": "Zu viele Möglichkeiten ausgewählt. Bitte beschränken Sie sich auf {max}."
+    },
+    {
+      "key": "api/questionnaire/answer/Choice/value/404",
+      "value": "Die gewählte Option konnte nicht gefunden werden."
+    },
+    {
+      "key": "api/questionnaire/answer/Document/404",
+      "value": "Das gewählte Dokument konnte nicht gefunden werden."
+    },
+    {
+      "key": "api/questionnaire/answer/Document/wrongTemplate",
+      "value": "Das gewählte Dokument ist nicht vom gewünschten template ({template}) ."
+    },
+    {
+      "key": "api/questionnaire/result/tooEarly",
+      "value": "Die Umfrage läuft noch und kann daher nicht finalisiert werden."
+    },
+    {
+      "key": "api/questionnaire/result/alreadyFinalized",
+      "value": "Die Umfrage ist bereits finalisiert."
+    },
+    {
+      "key": "api/questionnaire/answer/idExists",
+      "value": "ID-Kollision! Ups, da ist etwas schiefgelaufen. Bitte laden Sie die Seite neu."
+    },
+    {
+      "key": "api/questionnaire/answer/noQuestionRemapping",
+      "value": "ID-Frage-Diskrepanz. Ups, da ist etwas schiefgelaufen. Bitte laden Sie die Seite neu."
+    },
+    {
+      "key": "timeAhead/justNow/other",
+      "value": "in weniger als einer Minute"
+    },
+    {
+      "key": "timeAhead/minutes/1",
+      "value": "in einer Minute"
+    },
+    {
+      "key": "timeAhead/minutes/other",
+      "value": "in {count} Minuten"
+    },
+    {
+      "key": "timeAhead/hours/1",
+      "value": "in einer Stunde"
+    },
+    {
+      "key": "timeAhead/hours/other",
+      "value": "in {count} Stunden"
+    },
+    {
+      "key": "timeAhead/days/1",
+      "value": "erst in einem Tag"
+    },
+    {
+      "key": "timeAhead/days/other",
+      "value": "in {count} Tagen"
+    },
+    {
+      "key": "timeAhead/weeks/1",
+      "value": "erst in einer Woche"
+    },
+    {
+      "key": "timeAhead/weeks/other",
+      "value": "in {count} Wochen"
+    },
+    {
+      "key": "timeAhead/months/1",
+      "value": "in einem Monat"
+    },
+    {
+      "key": "timeAhead/months/other",
+      "value": "in {count} Monaten"
+    },
+    {
+      "key": "timeAhead/years/1",
+      "value": "in einem Jahr"
+    },
+    {
+      "key": "timeAhead/years/other",
+      "value": "in {count} Jahren"
+    },
+    {
+      "key": "api/collections/collection/404",
+      "value": "Die Liste konnte nicht gefunden werden."
+    },
+    {
+      "key": "api/collections/document/404",
+      "value": "Das Dokument konnte nicht gefunden werden."
+    },
+    {
+      "key": "api/collections/progress/notEnabled",
+      "value": "Sie müssen zuerst zustimmen, dass Ihre Position gespeichert wird."
+    },
+    {
+      "key": "api/subscriptions/type/notSupported",
+      "value": "Dieser Typ Subscription wird noch nicht unterstützt."
+    },
+    {
+      "key": "api/signIn",
+      "value": "Sie müssen sich zuerst anmelden."
+    },
+    {
+      "key": "api/unauthorized",
+      "value": "Nicht genehmigt. Sie müssen die Rolle «{role}» besitzen um die gewünschte Aktion auszuführen."
+    },
+    {
+      "key": "api/unauthorized/1",
+      "value": "Nicht genehmigt. Sie müssen die Rolle {role} besitzen um die gewünschte Aktion auszuführen."
+    },
+    {
+      "key": "api/unauthorized/other",
+      "value": "Nicht genehmigt. Sie müssen mindestens eine der folgenden Rollen {role} besitzen um die gewünschte Aktion auszuführen."
+    },
+    {
+      "key": "api/auth/errorSavingSession",
+      "value": "Ups, da ist was schiefgelaufen. Sorry!"
+    },
+    {
+      "key": "api/auth/errorDestroyingSession",
+      "value": "Ups, da ist was schiefgelaufen. Sorry!"
+    },
+    {
+      "key": "api/auth/errorAuthorizationRateLimit",
+      "value": "Zu viele Anmeldeversuche. Probieren Sie es in {mins} Minuten erneut."
+    },
+    {
+      "key": "api/signin/mail/subject",
+      "value": "Zugriff bestätigen: {phrase}"
+    },
+    {
+      "key": "api/signin/mail/appNotice/subject",
+      "value": "Anmelden via App"
+    },
+    {
+      "key": "api/signin/EMAIL_CODE/mail/subject",
+      "value": "Bestätigungsziffern für Zugriff: {code}"
+    },
+    {
+      "key": "api/signin/app/title",
+      "value": "Republik"
+    },
+    {
+      "key": "api/signin/app/body",
+      "value": "Wollen Sie sich gerade auf einem neuen Gerät anmelden?"
+    },
+    {
+      "key": "api/signIn/app/requiresMe",
+      "value": "Anmeldungen mit der App können nur von der Benutzerin selbst zugelassen werden."
+    },
+    {
+      "key": "api/token/invalid",
+      "value": "Token ungültig. Links zur Anmeldung sind nur einmal gültig."
+    },
+    {
+      "key": "api/checkUsername/min",
+      "value": "Benutzername, minimal {count} Zeichen"
+    },
+    {
+      "key": "api/checkUsername/max",
+      "value": "Benutzername, maximal {count} Zeichen"
+    },
+    {
+      "key": "api/checkUsername/invalid",
+      "value": "Benutzername, nur a-z, 0-9 und . erlaubt"
+    },
+    {
+      "key": "api/checkUsername/taken",
+      "value": "Benutzername, nicht mehr verfügbar"
+    },
+    {
+      "key": "api/users/404",
+      "value": "Der User konnte leider nicht gefunden werden."
+    },
+    {
+      "key": "api/email/change/confirmation/subject",
+      "value": "Ihre E-Mail-Adresse wurde geändert"
+    },
+    {
+      "key": "api/auth/tokenType/404",
+      "value": "Token Challenge Typ existiert nicht."
+    },
+    {
+      "key": "api/auth/tokenType/notEnabled",
+      "value": "Der gewählte Token-Typ steht nicht zur Verfügung. Bitte versuchen Sie sich mittels eines anderen Verfahrens anzumelden."
+    },
+    {
+      "key": "api/auth/shared-secret-not-supported",
+      "value": "Der angegebene Token Challenge unterstützt keine Shared Secrets."
+    },
+    {
+      "key": "api/auth/shared-secret-generation-failed",
+      "value": "Shared Secret konnte nicht erzeugt werden."
+    },
+    {
+      "key": "api/auth/shared-secret-validation-failed",
+      "value": "Shared Secret Verifizierung fehlgeschlagen."
+    },
+    {
+      "key": "api/auth/session-init-failed",
+      "value": "Die Session konnte aus einem unbekannten Grund nicht initialisiert werden."
+    },
+    {
+      "key": "api/auth/token-expired",
+      "value": "Der Token ist abgelaufen. Bitte melden Sie sich erneut an."
+    },
+    {
+      "key": "api/auth/authorization-failed",
+      "value": "Die Session konnte aus einem ubekannten Grund nicht authorisiert werden. Bitte versuchen Sie es noch einmal."
+    },
+    {
+      "key": "api/auth/2fa-already-disabled",
+      "value": "Zwei-Faktor-Authentifizierung ist bereits deaktiviert."
+    },
+    {
+      "key": "api/auth/2fa-already-enabled",
+      "value": "Die Zwei-Faktor-Authentifizierung ist bereits aktiviert."
+    },
+    {
+      "key": "api/auth/2f-not-ready",
+      "value": "Die Zwei-Faktor-Authentifierung kann erst aktiviert werden, wenn TOTP oder SMS Authentifierung eingerichtet wurde."
+    },
+    {
+      "key": "api/auth/2fa-has-to-be-disabled",
+      "value": "Bitte deaktivieren Sie zuerst die Zwei-Faktor-Authentifierung."
+    },
+    {
+      "key": "api/auth/sms/shared-secret",
+      "value": "SMS Login Authorisierung: {sharedSecret}"
+    },
+    {
+      "key": "api/auth/sms/your-code",
+      "value": "Ihr Code: {code}"
+    },
+    {
+      "key": "api/auth/sms/phone-number-not-valid",
+      "value": "Bitte geben Sie eine gültige Telefonnummer an (Format: +41 79 123 45 67)."
+    },
+    {
+      "key": "api/consents/missing",
+      "value": "Sie müssen folgenden Policies zustimmen um sich anmelden zu können: {consents}."
+    },
+    {
+      "key": "api/consents/notRevokable",
+      "value": "Die Einwilligung ({consent}) kann nicht zurückgezogen werden."
+    },
+    {
+      "key": "api/auth/accessToken/scope/404",
+      "value": "Der gewünschte scope ({scope}) konnte nicht gefunden werden."
+    },
+    {
+      "key": "api/auth/accessToken/key/404",
+      "value": "Der Benutzer-Schlüssel konnte nicht gefunden werden."
+    },
+    {
+      "key": "api/auth/accessToken/pledgePackages/notAllowed",
+      "value": "Der verwendete Token erlaubt es nicht das Packet {package} zu kaufen."
+    },
+    {
+      "key": "api/auth/emailCode/tokensExceeded",
+      "value": "Anzahl der gleichzeitig gültigen Tokens überschritten"
+    },
+    {
+      "key": "api/auth/emailCode/collison",
+      "value": "Kollision des zu generierenden Codes"
+    },
+    {
+      "key": "api/commit/parentId/required",
+      "value": "Please provide a parentId to commit to the existing repo \"{repoId}\"."
+    },
+    {
+      "key": "api/commit/parentId/notAllowed",
+      "value": "You must not provide a parentId to init the not existing repo \"{repoId}\"."
+    },
+    {
+      "key": "api/github/yaml/warning",
+      "value": "✋ The message contains yaml values used by Project R's CMS. Changing the values here is not supported (yet) and might result in unexpected consequences."
+    },
+    {
+      "key": "api/publish/scheduledAt/tooFarInTheFuture",
+      "value": "Sorry, the latest possible scheduling date is {days} into the future. "
+    },
+    {
+      "key": "api/publish/document/slug/404",
+      "value": "The slug is missing."
+    },
+    {
+      "key": "api/publish/document/slug/redirectsExist",
+      "value": "Der Slug ({path}) muss geändert werden da dieser bereits von einer Umleitung verwendet wird."
+    },
+    {
+      "key": "api/publish/document/slug/docExists",
+      "value": "Der Slug ({path}) muss geändert werden da dieser bereits von einem Artikel verwendet wird."
+    },
+    {
+      "key": "api/publish/discussion/repoId/missing",
+      "value": "Ups, da ist etwas schiefgelaufen. Die repoId des artikels wird benötigt um eine Diskussion anzulegen."
+    },
+    {
+      "key": "api/twitter/morephotos/other",
+      "value": "{count} weitere Fotos"
+    },
+    {
+      "key": "api/twitter/morephotos/1",
+      "value": "1 weiteres Foto"
+    },
+    {
+      "key": "api/publish/disabled",
+      "value": "Artikel können im Moment weder veröffentlicht noch zurückgezogen werden. Bitte versuche es in ein paar Minuten noch einmal, ansonsten kontaktiere bitte die IT."
+    },
+    {
+      "key": "api/archive/error/published",
+      "value": "«{repoId}» ist veröffentlicht und kann nicht archiviert werden. Heben Sie erst alle Veröffentlichungen auf."
+    }
+  ]
+}

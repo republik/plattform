@@ -207,11 +207,12 @@ module.exports = async (
     context
   })
 
-  // add fileds from prepareMetaForPublish to resolvedDoc
+  // add fields from prepareMetaForPublish to resolvedDoc
   resolvedDoc.content.meta = {
     ...resolvedDoc.content.meta,
     path: doc.content.meta.path,
     publishDate: doc.content.meta.publishDate,
+    lastPublishedAt: doc.content.meta.lastPublishedAt,
     discussionId: doc.content.meta.discussionId
   }
 

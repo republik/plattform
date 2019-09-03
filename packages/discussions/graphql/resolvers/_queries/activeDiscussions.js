@@ -1,6 +1,6 @@
 const moment = require('moment')
 
-module.exports = async (_, { lastDays = 5 }, { pgdb }) =>
+module.exports = async (_, { lastDays = 5, first = 10 }, { pgdb }) =>
   pgdb.query(`
     SELECT
       COUNT(*) as count,
@@ -14,8 +14,10 @@ module.exports = async (_, { lastDays = 5 }, { pgdb }) =>
       d.closed = false
     GROUP BY d.id
     ORDER BY 1 DESC
+    LIMIT :first
   `, {
-    minDate: moment().subtract(lastDays, 'days')
+    minDate: moment().subtract(lastDays, 'days'),
+    first
   })
     .then(result => result
       .map(result => ({
