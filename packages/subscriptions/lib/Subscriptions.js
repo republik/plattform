@@ -1,29 +1,12 @@
-const objectTypeToColumn = ({
+const { flipKeyValues } = require('@orbiting/backend-modules-utils')
+
+const objectTypes = ({
   'User': 'objectUserId',
   'Document': 'objectDocumentId',
   'Discussion': 'objectDiscussionId'
 })
 
-const columnToObjectType = Object.keys(objectTypeToColumn)
-  .reduce(
-    (agg, key) => {
-      agg[objectTypeToColumn[key]] = key
-      return agg
-    },
-    {}
-  )
-
-const getTypeOfRow = (dbObj) => {
-  return Object.keys(columnToObjectType)
-    .reduce((agg, columnKey) => {
-      if (agg) {
-        return agg
-      }
-      if (dbObj[columnKey] !== null) {
-        return columnToObjectType[columnKey]
-      }
-    }, null)
-}
+const columnNames = flipKeyValues(objectTypes)
 
 const subscribe = async (args, context) => {
   const { t, pgdb } = context
@@ -33,27 +16,30 @@ const subscribe = async (args, context) => {
     throw new Error(t('api/subscriptions/type/notSupported'))
   }
 
+  // TODO upsert
   const subscription = await pgdb.public.subscriptions.insertAndGet({
     userId,
     filters,
-    [objectTypeToColumn[type]]: objectId
+    objectType: type,
+    [objectTypes[type]]: objectId
   })
 
   return subscription
 }
 
 const getObject = async (subscription, context) => {
-  const type = getTypeOfRow(subscription)
   const { loaders, t } = context
+
+  const { objectType: type } = subscription
 
   if (type !== 'User') {
     throw new Error(t('api/subscriptions/type/notSupported'))
   }
 
+  const userId = subscription[objectTypes[type]]
+
   // TODO cleanup with type resolver
-  const obj = await loaders.User.byId.load(
-    subscription[objectTypeToColumn[type]]
-  )
+  const obj = await loaders.User.byId.load(userId)
   return {
     __typename: type,
     ...obj
@@ -66,8 +52,6 @@ const getSubject = (subscription, context) => {
 }
 
 module.exports = {
-  objectTypeToColumn,
-  columnToObjectType,
   subscribe,
   getObject,
   getSubject
