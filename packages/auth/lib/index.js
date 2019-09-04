@@ -11,7 +11,6 @@ module.exports = {
   Sessions: require('./Sessions'),
   t: require('./t'),
   transformUser: require('./transformUser'),
-  translations: require('./translations'),
   useragent: require('./useragent'),
   Users: require('./Users')
 }

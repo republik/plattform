@@ -108,7 +108,8 @@ const createUrlReplacer = (allDocuments = [], usernames = [], errors = [], urlPr
   const linkedDoc = allDocuments
     .find(d => d.meta.repoId === repoId)
   if (linkedDoc) {
-    return urlPrefix + linkedDoc.content.meta.path + searchString
+    const hash = url.split('#')[1]
+    return `${urlPrefix}${linkedDoc.content.meta.path}${searchString}${hash ? `#${hash}` : ''}`
   } else {
     errors.push(repoId)
   }
@@ -160,6 +161,7 @@ const contentUrlResolver = (doc, allDocuments = [], usernames = [], errors, urlP
         // - assigns a publishDate to an teaser
         // - highlights all teasers of a format or series
         node.data.urlMeta = {
+          repoId: linkedDoc.meta.repoId,
           publishDate: linkedDoc.meta.publishDate,
           format: linkedDoc.meta.template === 'format'
             ? linkedDoc.meta.repoId

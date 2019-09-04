@@ -1,9 +1,11 @@
 const { server: Server } = require('@orbiting/backend-modules-base')
 const { merge } = require('apollo-modules-node')
-const t = require('./lib/t')
+const { t } = require('@orbiting/backend-modules-translate')
 
 const { graphql: documents } = require('@orbiting/backend-modules-documents')
+const { graphql: search } = require('@orbiting/backend-modules-search')
 const { graphql: auth } = require('@orbiting/backend-modules-auth')
+const { graphql: discussions } = require('@orbiting/backend-modules-discussions')
 
 const loaderBuilders = {
   ...require('@orbiting/backend-modules-discussions/loaders'),
@@ -46,7 +48,9 @@ const run = async (workerId, config) => {
     localModule,
     [
       documents,
-      auth
+      search,
+      auth,
+      discussions
     ]
   )
 

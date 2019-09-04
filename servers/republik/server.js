@@ -1,6 +1,6 @@
 const { server: Server } = require('@orbiting/backend-modules-base')
 const { merge } = require('apollo-modules-node')
-const t = require('./lib/t')
+const { t } = require('@orbiting/backend-modules-translate')
 
 const { graphql: documents } = require('@orbiting/backend-modules-documents')
 const { graphql: redirections } = require('@orbiting/backend-modules-redirections')

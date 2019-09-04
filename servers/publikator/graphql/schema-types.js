@@ -133,13 +133,4 @@ enum Action {
   create
   delete
 }
-
-extend type Document {
-  repoId: String
-}
-
-enum OrderDirection {
-  ASC
-  DESC
-}
 `

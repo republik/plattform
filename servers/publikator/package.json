@@ -46,8 +46,7 @@
   "scripts": {
     "dev": "NODE_ENV=development nodemon $NODE_DEBUG_OPTION -w ../../packages -w graphql -w lib -w express -w .env -w package.json -w ../yarn.lock -w server.js -w index.js index.js",
     "inspect": "NODE_DEBUG_OPTION=--inspect yarn run dev",
-    "start": "node index.js",
-    "translations": "gsheets --key=1_1g3sW8u1aD9xGRfS479s0Pjwx0LxYRUEhETGkKlwLE --title=live --pretty --out lib/translations.json"
+    "start": "node index.js"
   },
   "devDependencies": {
     "gsheets": "^2.0.0",
