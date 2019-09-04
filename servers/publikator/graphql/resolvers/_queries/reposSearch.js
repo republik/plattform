@@ -160,6 +160,9 @@ module.exports = async (__, args, context) => {
       repo.latestPublications =
         repo.latestPublications.map(mapDocuments.bind(this, documents))
     }
+    if (repo.latestCommit) {
+      repo.latestCommit.document = documents.nodes.find(d => d.commitId === repo.latestCommit.id)
+    }
 
     return repo
   })
