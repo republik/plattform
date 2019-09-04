@@ -49,18 +49,21 @@ const styles = {
   }),
   editorialCol2: css({
     ...serifTitle20,
+    ...smallSize,
     [mUp]: {
       ...standardSize
     }
   }),
   editorialCol2Medium: css({
     ...serifTitle20,
+    ...smallSize,
     [mUp]: {
       ...mediumSize
     }
   }),
   editorialCol3: css({
     ...serifTitle20,
+    ...smallSize,
     [mUp]: {
       ...standardSize
     }

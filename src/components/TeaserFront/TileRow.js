@@ -83,7 +83,7 @@ const styles = {
     [mUp]: {
       flexWrap: 'nowrap',
       '& .tile': {
-        width: '33%',
+        width: '33.33%',
         margin: 0,
         padding: '60px 0'
       },
@@ -91,7 +91,7 @@ const styles = {
         borderLeft: 'none'
       },
       '& .tile:nth-child(3)': {
-        width: '33%'
+        width: '33.33%'
       },
       '& img': {
         ...sizeSmall
@@ -99,7 +99,7 @@ const styles = {
     },
     [breakoutUp]: {
       '& .tile': {
-        width: '33%'
+        width: '33.33%'
       },
       '& img': {
         ...sizeSmall
@@ -128,7 +128,7 @@ const styles = {
     },
     [breakoutUp]: {
       '& .tile': {
-        width: '33%',
+        width: '33.33%',
       },
       '& .tile:nth-child(2n+1)': {
         borderLeft: `1px solid ${colors.divider}`,

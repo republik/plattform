@@ -52,8 +52,7 @@ const styles = {
     width: '100%' // IE11
   }),
   image: css({
-    width: '100%',
-    minWidth: '100px',
+    minWidth: 100,
     ...sizeSmall,
     [mUp]: {
       ...sizeMedium
