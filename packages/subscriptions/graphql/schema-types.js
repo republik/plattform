@@ -25,9 +25,9 @@ enum SubscriptionEvent {
 }
 
 enum SubscriptionObjectType {
-  Document
   User
-  Discussion
+  #Document
+  #Discussion
 }
 union SubscriptionObject = Document | User | Discussion
 

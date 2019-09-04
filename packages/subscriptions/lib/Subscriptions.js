@@ -1,28 +1,39 @@
-const { flipKeyValues } = require('@orbiting/backend-modules-utils')
-
 const objectTypes = ({
   'User': 'objectUserId',
   'Document': 'objectDocumentId',
   'Discussion': 'objectDiscussionId'
 })
 
-const columnNames = flipKeyValues(objectTypes)
-
-const subscribe = async (args, context) => {
-  const { t, pgdb } = context
+const upsertSubscription = async (args, context) => {
+  const { pgdb } = context
   const { userId, objectId, type, filters } = args
 
-  if (type !== 'User') {
-    throw new Error(t('api/subscriptions/type/notSupported'))
-  }
-
-  // TODO upsert
-  const subscription = await pgdb.public.subscriptions.insertAndGet({
+  const findProps = {
     userId,
-    filters,
     objectType: type,
     [objectTypes[type]]: objectId
-  })
+  }
+  const updateProps = {
+    ...filters ? { filters } : {}
+  }
+
+  const existingSubscription = await pgdb.public.subscriptions.findOne(findProps)
+
+  let subscription
+  if (existingSubscription) {
+    subscription = await pgdb.public.subscriptions.updateAndGetOne(
+      { id: existingSubscription.id },
+      {
+        ...updateProps,
+        updatedAt: new Date()
+      }
+    )
+  } else {
+    subscription = await pgdb.public.subscriptions.insertAndGet({
+      ...findProps,
+      ...updateProps
+    })
+  }
 
   return subscription
 }
@@ -52,7 +63,7 @@ const getSubject = (subscription, context) => {
 }
 
 module.exports = {
-  subscribe,
+  upsertSubscription,
   getObject,
   getSubject
 }
