@@ -8,7 +8,7 @@ const upsertSubscription = async (args, context) => {
   const { pgdb, t } = context
   const { userId, objectId, type, filters } = args
 
-  if (userId === objectId) {
+  if (type === 'User' && userId === objectId) {
     throw new Error(t('api/subscriptions/notYourself'))
   }
 
