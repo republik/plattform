@@ -19,6 +19,13 @@ CREATE TABLE subscriptions (
 	unique("userId", "objectDiscussionId")
 );
 
+CREATE INDEX IF NOT EXISTS "subscription_user_id" ON "subscriptions"("userId");
+CREATE INDEX IF NOT EXISTS "subscription_filters" ON "subscriptions" USING gin ("filters");
+CREATE INDEX IF NOT EXISTS "subscription_object_type" ON "subscriptions"("objectType");
+CREATE INDEX IF NOT EXISTS "subscription_object_user_id" ON "subscriptions"("objectUserId");
+CREATE INDEX IF NOT EXISTS "subscription_object_document_id" ON "subscriptions"("objectDocumentId");
+CREATE INDEX IF NOT EXISTS "subscription_object_discussion_id" ON "subscriptions"("objectDiscussionId");
+
 CREATE FUNCTION check_subscription_trg() RETURNS trigger AS $$
 BEGIN
   CASE NEW."objectType"

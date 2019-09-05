@@ -49,7 +49,6 @@ const getObject = async (subscription, context) => {
 
   const userId = subscription[objectTypes[type]]
 
-  // TODO cleanup with type resolver
   const obj = await loaders.User.byId.load(userId)
   return {
     __typename: type,
