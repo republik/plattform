@@ -6,17 +6,17 @@ module.exports = (context) => ({
   ),
   byUserIdNodes: createDataLoader(userIds =>
     context.pgdb.public.subscriptions.find({ userId: userIds }),
-  null,
-  (key, rows) => {
-    return rows.filter(row => row.userId === key)
-  }
+    null,
+    (key, rows) => {
+      return rows.filter(row => row.userId === key)
+    }
   ),
   byObjectUserIdNodes: createDataLoader(objectUserIds =>
     context.pgdb.public.subscriptions.find({ objectUserId: objectUserIds }),
-  null,
-  (key, rows) => {
-    return rows.filter(row => row.objectUserId === key)
-  }
+    null,
+    (key, rows) => {
+      return rows.filter(row => row.objectUserId === key)
+    }
   )
 
 })
