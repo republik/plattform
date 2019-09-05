@@ -1,6 +1,6 @@
 CREATE DOMAIN subscription_object_type AS TEXT
 CHECK(
-  VALUE IN ('User')
+  VALUE IN ('User', 'Document', 'Discussion')
 );
 
 
