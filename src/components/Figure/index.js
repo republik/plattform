@@ -31,6 +31,10 @@ const styles = {
     margin: 0,
     display: 'block',
     position: 'relative',
+    '& noscript': {
+      display: 'block',
+      width: '100%'
+    },
     [mUp]: {
       display: 'flex',
       flexWrap: 'wrap',
@@ -217,7 +221,7 @@ FigureGroup.propTypes = {
   children: PropTypes.node.isRequired,
   attributes: PropTypes.object,
   size: PropTypes.oneOf(Object.keys(breakoutStyles)),
-  columns: PropTypes.oneOf([2, 3, 4]).isRequired
+  columns: PropTypes.oneOf([1, 2, 3, 4]).isRequired
 }
 
 FigureGroup.defaultProps = {

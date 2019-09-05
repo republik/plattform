@@ -193,7 +193,7 @@ const figureImage = {
 
     const group = ancestors.find(matchZone('FIGUREGROUP'))
 
-    let gallerySize
+    let gallerySize, aboveTheFold
     if (group && group.data.slideshow) {
       const {
         slideshow,
@@ -207,8 +207,13 @@ const figureImage = {
         index === slideshow * columns - 1 &&
         numFigs > slideshow * columns
 
-      gallerySize = galleryCover && numFigs
+      gallerySize = galleryCover ? numFigs : undefined
 
+      const hidden = index > slideshow * columns - 1
+      // hidden images are wrapped in a noscript tag
+      // setting aboveTheFold ensure that the figure
+      // does not create a second noscript tag
+      aboveTheFold = hidden || undefined
     }
 
     return {
@@ -218,7 +223,8 @@ const figureImage = {
       ),
       alt: node.children[0].alt,
       enableGallery,
-      gallerySize
+      gallerySize,
+      aboveTheFold
     }
   },
   editorModule: 'figureImage',

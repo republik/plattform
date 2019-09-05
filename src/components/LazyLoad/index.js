@@ -71,8 +71,7 @@ class LazyLoad extends Component {
     const visible = this.props.visible || this.state.visible
     return (
       <span ref={this.setRef} {...attributes} style={style}>
-        {visible ? children : null}
-        {!visible && !process.browser && <noscript>
+        {visible ? children : <noscript>
           {children}
         </noscript>}
       </span>
