@@ -29,8 +29,10 @@ module.exports = {
     )
   },
   async subscribedByMe (user, args, context) {
-    const { user: me, loaders: { Subscription } } = context
-    const subscriptions = await Subscription.byObjectUserIdNodes.load(user.id)
-    return subscriptions.find(s => s.userId === me.id)
+    const { user: me, pgdb } = context
+    return pgdb.public.subscriptions.findFirst({
+      userId: me.id,
+      objectUserId: user.id
+    })
   }
 }
