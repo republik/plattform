@@ -14,9 +14,9 @@ CREATE TABLE subscriptions (
   "objectDiscussionId" uuid references "discussions",
   "createdAt"          timestamptz default now(),
   "updatedAt"          timestamptz default now(),
-	unique("userId", "objectUserId"),
-	unique("userId", "objectDocumentId"),
-	unique("userId", "objectDiscussionId")
+  unique("userId", "objectUserId"),
+  unique("userId", "objectDocumentId"),
+  unique("userId", "objectDiscussionId")
 );
 
 CREATE INDEX IF NOT EXISTS "subscription_user_id" ON "subscriptions"("userId");
