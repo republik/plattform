@@ -38,6 +38,16 @@ const upsertSubscription = async (args, context) => {
   return subscription
 }
 
+const removeSubscription = async (id, context) => {
+  const { pgdb, t } = context
+
+  const subscription = await pgdb.public.subscriptions.deleteAndGetOne({ id })
+  if (!subscription) {
+    throw new Error(t('api/subscriptions/404'))
+  }
+  return subscription
+}
+
 const getObject = async (subscription, context) => {
   const { loaders, t } = context
 
@@ -63,6 +73,7 @@ const getSubject = (subscription, context) => {
 
 module.exports = {
   upsertSubscription,
+  removeSubscription,
   getObject,
   getSubject
 }

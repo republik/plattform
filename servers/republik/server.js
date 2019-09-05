@@ -16,7 +16,8 @@ const loaderBuilders = {
   ...require('@orbiting/backend-modules-discussions/loaders'),
   ...require('@orbiting/backend-modules-documents/loaders'),
   ...require('@orbiting/backend-modules-auth/loaders'),
-  ...require('@orbiting/backend-modules-collections/loaders')
+  ...require('@orbiting/backend-modules-collections/loaders'),
+  ...require('@orbiting/backend-modules-subscriptions/loaders')
 }
 
 const { AccessScheduler, graphql: access } = require('@orbiting/backend-modules-access')

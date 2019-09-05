@@ -1,5 +1,5 @@
 {
-  "updated": "2019-09-02T16:27:33.611Z",
+  "updated": "2019-09-05T12:57:56.615Z",
   "title": "live",
   "data": [
     {
@@ -1357,6 +1357,14 @@
     {
       "key": "api/subscriptions/type/notSupported",
       "value": "Dieser Typ Subscription wird noch nicht unterstützt."
+    },
+    {
+      "key": "api/subscriptions/404",
+      "value": "Die Subscription konnte nicht gefunden werden."
+    },
+    {
+      "key": "api/subscriptions/notAllowed",
+      "value": "Nicht genehmigt."
     },
     {
       "key": "api/signIn",
