@@ -1,5 +1,5 @@
 {
-  "updated": "2019-09-05T12:57:56.615Z",
+  "updated": "2019-09-05T15:22:27.321Z",
   "title": "live",
   "data": [
     {
@@ -1365,6 +1365,10 @@
     {
       "key": "api/subscriptions/notAllowed",
       "value": "Nicht genehmigt."
+    },
+    {
+      "key": "api/subscriptions/notYourself",
+      "value": "Sie können sich nicht selber folgen."
     },
     {
       "key": "api/signIn",

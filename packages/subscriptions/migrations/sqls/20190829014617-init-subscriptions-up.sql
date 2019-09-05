@@ -33,7 +33,8 @@ BEGIN
       IF
         NEW."objectUserId" IS NULL OR
         NEW."objectDocumentId" IS NOT NULL OR
-        NEW."objectDiscussionId" IS NOT NULL
+        NEW."objectDiscussionId" IS NOT NULL OR
+        NEW."userId" = NEW."objectUserId"
       THEN
         RAISE EXCEPTION 'PSQL EXCEPTION: wrong object arguments combination';
       END IF;
