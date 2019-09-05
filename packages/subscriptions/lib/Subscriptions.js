@@ -5,7 +5,7 @@ const objectTypes = ({
 })
 
 const upsertSubscription = async (args, context) => {
-  const { pgdb } = context
+  const { pgdb, t } = context
   const { userId, objectId, type, filters } = args
 
   const findProps = {
@@ -17,22 +17,32 @@ const upsertSubscription = async (args, context) => {
     ...filters ? { filters } : {}
   }
 
-  const existingSubscription = await pgdb.public.subscriptions.findOne(findProps)
+  const transaction = await pgdb.transactionBegin()
 
   let subscription
-  if (existingSubscription) {
-    subscription = await pgdb.public.subscriptions.updateAndGetOne(
-      { id: existingSubscription.id },
-      {
-        ...updateProps,
-        updatedAt: new Date()
-      }
-    )
-  } else {
-    subscription = await pgdb.public.subscriptions.insertAndGet({
-      ...findProps,
-      ...updateProps
-    })
+  try {
+    const existingSubscription = await transaction.public.subscriptions.findOne(findProps)
+
+    if (existingSubscription) {
+      subscription = await transaction.public.subscriptions.updateAndGetOne(
+        { id: existingSubscription.id },
+        {
+          ...updateProps,
+          updatedAt: new Date()
+        }
+      )
+    } else {
+      subscription = await transaction.public.subscriptions.insertAndGet({
+        ...findProps,
+        ...updateProps
+      })
+    }
+
+    await transaction.transactionCommit()
+  } catch (e) {
+    await transaction.transactionRollback()
+    console.error('rollback!', e)
+    throw new Error(t('api/unexpected'))
   }
 
   return subscription
