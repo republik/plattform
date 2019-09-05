@@ -3,16 +3,21 @@ module.exports = `
 extend type User {
   # subject: this.user
   # object: union
-  subscribedTo: SubscriptionConnection!
+  subscribedTo(
+    first: Int
+    last: Int
+    before: String
+    after: String
+	): SubscriptionConnection!
 
   # subject: user
   # object: this.user
-  subscribedBy: SubscriptionConnection!
-
-
-  # subject: this.user
-  # object: me
-  subscribedToMe: Subscription
+  subscribedBy(
+    first: Int
+    last: Int
+    before: String
+    after: String
+  ): SubscriptionConnection!
 
   # subject: me
   # object: this.user
@@ -43,7 +48,7 @@ type Subscription {
 type SubscriptionConnection {
   totalCount: Int!
   # private
-  pageInfo: SubscriptionPageInfo!
+  pageInfo: SubscriptionPageInfo
   # private
   nodes: [Subscription!]!
 }
