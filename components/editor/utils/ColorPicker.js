@@ -74,9 +74,9 @@ class ColorPicker extends Component {
           <div style={styles.popover}>
             <div style={styles.cover} onClick={this.closeHandler} />
             <ChromePicker
-              color={this.props.value}
-              onChange={({ hex }) => {
-                this.props.onChange(hex)
+              color={this.props.value || '#7C7070'}
+              onChange={(value) => {
+                this.props.onChange(value.hex)
               }}
             />
           </div>
