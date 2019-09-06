@@ -40,6 +40,16 @@ const submitComment = async (comment, discussion, context) => {
     t
   } = context
 
+  const displayAuthor = await getDisplayAuthor(
+    comment,
+    {
+      portrait: {
+        webp: false
+      }
+    },
+    context
+  )
+
   const discussionNotificationUsers = await pgdb.query(`
       -- commenters in discussion
       SELECT
@@ -92,12 +102,14 @@ const submitComment = async (comment, discussion, context) => {
   })
     .then(users => users.map(transformUser))
 
-  const commenterSubscribers = await Subscriptions.getSubscribersForObject(
-    'User',
-    comment.userId,
-    'COMMENTS',
-    context
-  )
+  const commenterSubscribers = displayAuthor.anonymity
+    ? []
+    : await Subscriptions.getSubscribersForObject(
+      'User',
+      comment.userId,
+      'COMMENTS',
+      context
+    )
 
   const notifyUsers = uniqWith(
     [
@@ -108,16 +120,6 @@ const submitComment = async (comment, discussion, context) => {
   )
 
   if (notifyUsers.length > 0) {
-    const displayAuthor = await getDisplayAuthor(
-      comment,
-      {
-        portrait: {
-          webp: false
-        }
-      },
-      context
-    )
-
     const contentMdast = await getContent(comment, null, context)
     const htmlContent = renderEmail(contentMdast, commentSchema, { doctype: '' })
 
