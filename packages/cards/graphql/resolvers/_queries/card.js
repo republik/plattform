@@ -1,4 +1,4 @@
-module.exports = async (_, { id, token }, { loaders }) => {
+module.exports = async (_, { id }, { loaders }) => {
   const card = await loaders.Card.byId.load(id)
 
   if (!card) {
