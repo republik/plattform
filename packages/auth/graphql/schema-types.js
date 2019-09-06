@@ -125,5 +125,6 @@ type SignInNotification {
 
 enum AccessTokenScope {
   CUSTOM_PLEDGE
+  CLAIM_CARD
 }
 `
