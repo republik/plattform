@@ -8,6 +8,7 @@ const repo = require('./Repo')
 const commit = require('./Commit')
 
 const resolveRepoId = field => async (meta, args, context) => {
+  // after publication: return fields resolved by documents/Document.meta
   if (typeof meta[field] === 'object') {
     return meta[field]
   }
