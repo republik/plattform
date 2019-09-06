@@ -101,6 +101,38 @@ const getSubscriptionByUserForObject = (
   })
 }
 
+const getSubscriptionsByUserForObjects = (
+  userId,
+  type,
+  objectIds,
+  filter,
+  context
+) => {
+  const { pgdb, t } = context
+
+  const objectColumn = objectTypes[type]
+  if (!objectColumn) {
+    throw new Error(t('api/unexpected'))
+  }
+
+  return pgdb.query(`
+    SELECT
+      s.*
+    FROM
+      subscriptions s
+    WHERE
+      s."userId" = :userId AND
+      s."objectType" = :type AND
+      ARRAY[s."${objectColumn}"] && :objectIds
+      ${filter ? 'AND (s.filters IS NULL OR s.filters ? :filter)' : ''}
+  `, {
+    userId,
+    type,
+    objectIds,
+    filter
+  })
+}
+
 const getSubscribersForObject = (
   type,
   objectId,
@@ -140,5 +172,6 @@ module.exports = {
   getObject,
   getSubject,
   getSubscriptionByUserForObject,
+  getSubscriptionsByUserForObjects,
   getSubscribersForObject
 }

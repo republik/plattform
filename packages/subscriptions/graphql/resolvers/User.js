@@ -1,4 +1,6 @@
-const { getSubscriptionByUserForObject } = require('../../lib/Subscriptions')
+const {
+  getSubscriptionByUserForObject
+} = require('../../lib/Subscriptions')
 const { paginate } = require('@orbiting/backend-modules-utils')
 
 const createSubscriptionConnection = (nodes, args, user, me) => {
@@ -31,6 +33,9 @@ module.exports = {
   },
   async subscribedByMe (user, args, context) {
     const { user: me } = context
+    if (!me) {
+      return
+    }
     return getSubscriptionByUserForObject(
       me.id,
       'User',

@@ -8,7 +8,7 @@ extend type User {
     last: Int
     before: String
     after: String
-	): SubscriptionConnection!
+  ): SubscriptionConnection!
 
   # subject: user
   # object: this.user
@@ -22,6 +22,15 @@ extend type User {
   # subject: me
   # object: this.user
   subscribedByMe: Subscription
+}
+
+extend type Discussion {
+  userSubscriptionsForCommenters(
+    first: Int
+    last: Int
+    before: String
+    after: String
+  ): SubscriptionConnection!
 }
 
 enum SubscriptionEvent {
