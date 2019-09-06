@@ -51,7 +51,12 @@ type CardGroupConnection {
 }
 
 extend type User {
-  cards: CardConnection!
+  cards(
+    first: Int
+    last: Int
+    before: String
+    after: String
+  ): CardConnection!
 }
 
 `

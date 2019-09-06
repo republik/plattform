@@ -8,12 +8,12 @@ schema {
 type queries {
   card(
     id: ID
-    token: String
+    accessToken: ID
   ): Card!
 
   cards(
     id: ID
-    token: String
+    accessToken: ID
     focus: ID
     first: Int
     last: Int
@@ -37,9 +37,8 @@ type queries {
 
 type mutations {
   claimCard(
-    id: ID
-    token: String
-    email: String!
+    id: ID!
+    accessToken: ID!
     portrait: String
     statement: String!
   ): Card!
