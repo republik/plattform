@@ -1,3 +1,5 @@
+const { transformUser } = require('@orbiting/backend-modules-auth')
+
 const objectTypes = ({
   'User': 'objectUserId',
   'Document': 'objectDocumentId',
@@ -18,7 +20,7 @@ const upsertSubscription = async (args, context) => {
     [objectTypes[type]]: objectId
   }
   const updateProps = {
-    ...filters ? { filters } : {}
+    filters: filters && filters.length ? filters : null
   }
 
   const transaction = await pgdb.transactionBegin()
@@ -85,9 +87,58 @@ const getSubject = (subscription, context) => {
   return loaders.User.byId.load(subscription.userId)
 }
 
+const getSubscriptionByUserForObject = (
+  userId,
+  type,
+  objectId,
+  context
+) => {
+  const { pgdb } = context
+  return pgdb.public.subscriptions.findFirst({
+    userId,
+    objectType: type,
+    [objectTypes[type]]: objectId
+  })
+}
+
+const getSubscribersForObject = (
+  type,
+  objectId,
+  filter,
+  context
+) => {
+  const { pgdb, t } = context
+
+  const objectColumn = objectTypes[type]
+  if (!objectColumn) {
+    throw new Error(t('api/unexpected'))
+  }
+
+  return pgdb.query(`
+    SELECT
+      u.*
+    FROM
+      subscriptions s
+    JOIN
+      users u
+      ON s."userId" = u.id
+    WHERE
+      s."objectType" = :type AND
+      s."${objectColumn}" = :objectId
+      ${filter ? 'AND (s.filters IS NULL OR s.filters ? :filter)' : ''}
+  `, {
+    type,
+    objectId,
+    filter
+  })
+    .then(users => users.map(transformUser))
+}
+
 module.exports = {
   upsertSubscription,
   removeSubscription,
   getObject,
-  getSubject
+  getSubject,
+  getSubscriptionByUserForObject,
+  getSubscribersForObject
 }

@@ -1,3 +1,4 @@
+const { getSubscriptionByUserForObject } = require('../../lib/Subscriptions')
 const { paginate } = require('@orbiting/backend-modules-utils')
 
 const createSubscriptionConnection = (nodes, args, user, me) => {
@@ -29,10 +30,12 @@ module.exports = {
     )
   },
   async subscribedByMe (user, args, context) {
-    const { user: me, pgdb } = context
-    return pgdb.public.subscriptions.findFirst({
-      userId: me.id,
-      objectUserId: user.id
-    })
+    const { user: me } = context
+    return getSubscriptionByUserForObject(
+      me.id,
+      'User',
+      user.id,
+      context
+    )
   }
 }
