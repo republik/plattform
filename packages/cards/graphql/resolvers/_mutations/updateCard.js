@@ -20,25 +20,33 @@ module.exports = async (
       throw new Error('api/cards/updateCard/cardNotFound')
     }
 
-    const portraitUrl = portrait ? await Portrait.upload(portrait) : null
-    await transaction.public.users.update(
-      { id: user.id },
-      {
-        portraitUrl: portraitUrl,
-        updatedAt: now
-      }
-    )
+    if (portrait !== undefined) {
+      const portraitUrl = portrait ? await Portrait.upload(portrait) : null
+      await transaction.public.users.update(
+        { id: user.id },
+        {
+          portraitUrl: portraitUrl,
+          updatedAt: now
+        }
+      )
+    }
 
     const updatedPayload = {
       ...card.payload,
       statement,
-      campaignBudget: (payload.campaignBudget && Number(payload.campaignBudget)) || null,
-      campaignBudgetComment: payload.campaignBudgetComment || '',
-      vestedInterestsRepublik: payload.vestedInterestsRepublik.map(({ name, entity, position }) => ({
-        name: (name && String(name)) || '',
-        entity: (entity && String(entity)) || '',
-        position: (position && String(position)) || ''
-      }))
+      ...payload.campaignBudget !== undefined && {
+        campaignBudget: (payload.campaignBudget && Number(payload.campaignBudget)) || null
+      },
+      ...payload.campaignBudgetComment !== undefined && {
+        campaignBudgetComment: payload.campaignBudgetComment || ''
+      },
+      ...payload.vestedInterests !== undefined && {
+        vestedInterests: payload.vestedInterests.map(({ name, entity, position }) => ({
+          name: (name && String(name)) || '',
+          entity: (entity && String(entity)) || '',
+          position: (position && String(position)) || ''
+        }))
+      }
     }
 
     await transaction.public.cards.update(
