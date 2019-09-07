@@ -79,7 +79,7 @@ const assignElection = (payload) => {
         elected: payload._import.elected
       }),
       _import: Object.assign({}, payload._import, {
-        credentialDescription: 'Nationalratskandidatur 2019'
+        credentialDescription: 'Nationalratskandidatur'
       })
     }
   }
@@ -92,7 +92,7 @@ const assignElection = (payload) => {
         elected: payload._import.elected
       }),
       _import: Object.assign({}, payload._import, {
-        credentialDescription: 'Ständeratskandidatur 2019'
+        credentialDescription: 'Ständeratskandidatur'
       })
     }
   }
@@ -215,9 +215,10 @@ PgDb.connect().then(async pgdb => {
 
   const emails =
     payloads
-      .map(payload => payload._import.email)
+      .map(payload => payload.meta.email)
       .filter(Boolean)
       .concat(payloads.map(payload => `wahl2019-${payload.meta.userId}@republik.ch`))
+
   const users =
     emails.length > 0
       ? await pgdb.public.users.find({ email: emails })
@@ -248,11 +249,11 @@ PgDb.connect().then(async pgdb => {
       console.log('  is missing, creating...')
       const group = groups.find(({ name }) => district === name)
 
-      const tempEmail = `wahl2019-${identifier}@republik.ch`
+      const tempEmail = payload.meta.email || `wahl2019-${identifier}@republik.ch`
 
       const user =
         users.find(({ email }) => {
-          return (payload._import.email && email.toLowerCase() === payload._import.email.toLowerCase()) ||
+          return (payload.meta.email && email.toLowerCase() === payload.meta.email.toLowerCase()) ||
           email.toLowerCase() === tempEmail.toLowerCase()
         }) ||
         await pgdb.public.users.insertAndGet({
