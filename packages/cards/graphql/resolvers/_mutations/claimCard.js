@@ -40,6 +40,7 @@ module.exports = async (
     await transaction.public.cards.update(
       { id },
       {
+        payload: { ...card.payload, statement },
         userId: user.id,
         updatedAt: now
       }
