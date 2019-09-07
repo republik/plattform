@@ -43,6 +43,13 @@ type mutations {
     statement: String!
   ): Card!
 
+  updateCard(
+    id: ID!
+    portrait: String
+    statement: String!
+    payload: JSON!
+  ): Card!
+
   upsertCardMatches(
     id: [ID!]!
   ): CardConnection!
