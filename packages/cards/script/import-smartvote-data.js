@@ -67,6 +67,10 @@ const sanitizeMetaDistrict = (value) => {
   return value
 }
 
+const LABEL_CANDIDACY_NATIONAL_COUNCIL = 'Nationalratskandidatur'
+const LABEL_CANDIDACY_COUNCTIL_OF_STATES_COUNCIL = 'Ständeratskandidatur'
+const LABEL_CANDIDACIES_BOTH = 'National- und Ständeratskandidatur'
+
 const assignElection = (payload) => {
   if (payload._import.electionId === '222') {
     return {
@@ -79,7 +83,7 @@ const assignElection = (payload) => {
         elected: payload._import.elected
       }),
       _import: Object.assign({}, payload._import, {
-        credentialDescription: 'Nationalratskandidatur'
+        credentialDescription: LABEL_CANDIDACY_NATIONAL_COUNCIL
       })
     }
   }
@@ -92,7 +96,7 @@ const assignElection = (payload) => {
         elected: payload._import.elected
       }),
       _import: Object.assign({}, payload._import, {
-        credentialDescription: 'Ständeratskandidatur'
+        credentialDescription: LABEL_CANDIDACY_COUNCTIL_OF_STATES_COUNCIL
       })
     }
   }
@@ -103,12 +107,25 @@ const assignElection = (payload) => {
 const toPayload = (row) => {
   const payload = {
     yearOfBirth: maybeNumber(row.year_of_birth),
+    age: maybeNumber(row.age),
     occupation: maybeString(row.occupation),
     party: maybeString(row.party_short),
     smartvoteCleavage:
       row.cleavage_1
         ? [1, 2, 3, 4, 5, 6, 7, 8].map((index) => maybeNumber(row[`cleavage_${index}`]))
         : null,
+    vestedInterests:
+      [1, 2, 3, 4, 5, 6, 7, 8].map((index) => {
+        if (!maybeString(row[`interest_name_${index}`])) {
+          return
+        }
+
+        return {
+          name: maybeString(row[`interest_name_${index}`]),
+          position: maybeString(row[`interest_position_${index}`]),
+          entity: maybeString(row[`interest_legal_form_${index}`])
+        }
+      }).filter(Boolean) || null,
     vestedInterestsSmartvote:
       [1, 2, 3, 4, 5, 6, 7, 8].map((index) => {
         if (!maybeString(row[`interest_name_${index}`])) {
@@ -144,16 +161,16 @@ const toPayload = (row) => {
     },
     meta: {
       userId: maybeString(row.ID_user),
-      email: maybeString(row['e-mail_public'])
-    },
-    _import: {
       candidateId: maybeString(row.ID_Candidate),
-      district: sanitizeMetaDistrict(row.district) || null,
+      email: maybeString(row['e-mail_public']),
       firstName: maybeString(row.firstname),
       lastName: maybeString(row.lastname),
       facebookId: maybeSocialHandle(row['LINK_facebook']),
       twitterHandle: maybeSocialHandle(row['LINK_twitter']),
-      publicUrl: maybeString(row['LINK_personal_website']),
+      publicUrl: maybeString(row['LINK_personal_website'])
+    },
+    _import: {
+      district: sanitizeMetaDistrict(row.district) || null,
       electionId: maybeString(row.ID_election),
       listName: maybeString(row.list),
       listNumbers: [maybeString(row.candidate_no_1), maybeString(row.candidate_no_2)].filter(Boolean) || null,
@@ -239,7 +256,7 @@ PgDb.connect().then(async pgdb => {
     const identifier = payload.meta.userId
     const district = payload._import.district
 
-    const name = [payload._import.firstName, payload._import.lastName].join(' ')
+    const name = [payload.meta.firstName, payload.meta.lastName].join(' ')
 
     console.log(`Card "${name}" (ID: "${identifier}")`)
 
@@ -258,11 +275,11 @@ PgDb.connect().then(async pgdb => {
         }) ||
         await pgdb.public.users.insertAndGet({
           email: tempEmail,
-          firstName: payload._import.firstName,
-          lastName: payload._import.lastName,
-          facebookId: payload._import.facebookId,
-          twitterHandle: payload._import.twitterHandle,
-          publicUrl: payload._import.publicUrl,
+          firstName: payload.meta.firstName,
+          lastName: payload.meta.lastName,
+          facebookId: payload.meta.facebookId,
+          twitterHandle: payload.meta.twitterHandle,
+          publicUrl: payload.meta.publicUrl,
           username: payload._import.suggestedUsernames.find(suggestedUsername => !usernamesTaken.includes(suggestedUsername)),
           verified: false,
           hasPublicProfile: true,
@@ -311,12 +328,48 @@ PgDb.connect().then(async pgdb => {
     })
 
     if (!existingCredential) {
-      await pgdb.public.credentials.insertAndGet({
+      const insertedCredential = await pgdb.public.credentials.insertAndGet({
         userId: card.userId,
         description: payload._import.credentialDescription,
-        isListed: !credentials.find(credential => credential.userId === card.userId),
+        isListed: true,
         verified: true
       })
+
+      await pgdb.public.credentials.update(
+        {
+          userId: card.userId,
+          'id !=': insertedCredential.id
+        },
+        { isListed: false, updatedAt: now }
+      )
+
+      credentials.push(insertedCredential)
+    }
+
+    const userCardCredentials = credentials.filter(credential => {
+      return credential.userId === card.userId &&
+      [
+        LABEL_CANDIDACY_NATIONAL_COUNCIL,
+        LABEL_CANDIDACY_COUNCTIL_OF_STATES_COUNCIL,
+        LABEL_CANDIDACIES_BOTH
+      ].includes(credential.description)
+    })
+
+    if (userCardCredentials.length === 2) {
+      const insertedCredential = await pgdb.public.credentials.insertAndGet({
+        userId: card.userId,
+        description: LABEL_CANDIDACIES_BOTH,
+        isListed: true, // !credentials.find(credential => credential.userId === card.userId),
+        verified: true
+      })
+
+      await pgdb.public.credentials.update(
+        {
+          userId: card.userId,
+          'id !=': insertedCredential.id
+        },
+        { isListed: false, updatedAt: now }
+      )
     }
   })
 
