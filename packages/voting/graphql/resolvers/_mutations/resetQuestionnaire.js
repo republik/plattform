@@ -13,7 +13,12 @@ module.exports = async (_, { id: questionnaireId }, context) => {
     const now = new Date()
 
     const questionnaire = await findById(questionnaireId, transaction)
-    await ensureReadyToSubmit(questionnaire, me.id, now, transaction, t)
+
+    if (questionnaire.immutableAnswers) {
+      throw new Error(t('api/questionnaire/answer/immutable'))
+    }
+
+    await ensureReadyToSubmit(questionnaire, me.id, now, { ...context, pgdb: transaction })
 
     await pgdb.public.answers.delete({
       questionnaireId,

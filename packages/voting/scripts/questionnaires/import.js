@@ -40,10 +40,13 @@ PgDb.connect().then(async pgdb => {
           slug,
           description: slug,
           beginDate: now,
-          endDate: moment(now).add(1, 'year'),
+          endDate: moment(now).add(99, 'year'),
           allowedRoles: [],
           liveResult: true,
-          immutableAnswers: true
+          immutableAnswers: true,
+          submitAnswersImmediately: true,
+          updateResultIncrementally: true,
+          noEmptyAnswers: true
         })
 
         let counter = 0

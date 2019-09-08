@@ -95,24 +95,33 @@ const buildQueries = (tableName) => {
     return result
   }
 
-  const userSubmitDate = async (id, userId, pgdb) => {
+  const userSubmitDate = async (id, userId, context) => {
+    const { pgdb, loaders: { QuestionnaireSubmissions } } = context
     if (!userId) {
       return null
     }
-    const ballot = await pgdb.public[table.ballotsTable].findFirst({
-      userId: userId,
-      [table.foreignKey]: id
-    })
+    let ballot
+    if (table.ballotsTable === 'questionnaireSubmissions') {
+      ballot = await QuestionnaireSubmissions.byKeyObj.load({
+        userId: userId,
+        [table.foreignKey]: id
+      })
+    } else {
+      ballot = await pgdb.public[table.ballotsTable].findFirst({
+        userId: userId,
+        [table.foreignKey]: id
+      })
+    }
     if (!ballot) {
       return null
     }
     return ballot.updatedAt
   }
-  const userHasSubmitted = async (id, userId, pgdb) => {
+  const userHasSubmitted = async (id, userId, context) => {
     if (!userId) {
       return false
     }
-    return !!(await userSubmitDate(id, userId, pgdb))
+    return !!(await userSubmitDate(id, userId, context))
   }
 
   const numSubmitted = async (id, pgdb) => {
@@ -164,6 +173,10 @@ const buildQueries = (tableName) => {
   const countEligibles = async (entity, userId, pgdb) => {
     const allowedRoles = entity.allowedRoles && entity.allowedRoles.length > 0
     const allowedMemberships = entity.allowedMemberships && entity.allowedMemberships.length > 0
+
+    if (!allowedRoles && !allowedMemberships && userId) {
+      return 1
+    }
 
     const options = {
       ...allowedRoles ? { roles: entity.allowedRoles } : {},
@@ -225,7 +238,9 @@ const buildQueries = (tableName) => {
     submitted: await numSubmitted(entity.id, pgdb)
   })
 
-  const ensureReadyToSubmit = async (entity, userId, now = new Date(), pgdb, t) => {
+  const ensureReadyToSubmit = async (entity, userId, now = new Date(), context) => {
+    const { pgdb, t } = context
+
     if (!entity) {
       throw new Error(t(`api/${table.translationsKey}/404`))
     }
@@ -239,7 +254,7 @@ const buildQueries = (tableName) => {
       throw new Error(t(`api/${table.translationsKey}/notEligible`))
     }
 
-    if (await userHasSubmitted(entity.id, userId, pgdb)) {
+    if (await userHasSubmitted(entity.id, userId, context)) {
       throw new Error(t(`api/${table.translationsKey}/alreadySubmitted`))
     }
   }

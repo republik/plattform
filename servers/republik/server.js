@@ -12,6 +12,7 @@ const { graphql: collections } = require('@orbiting/backend-modules-collections'
 const { graphql: crowdsourcing } = require('@orbiting/backend-modules-crowdsourcing')
 
 const loaderBuilders = {
+  ...require('@orbiting/backend-modules-voting/loaders'),
   ...require('@orbiting/backend-modules-discussions/loaders'),
   ...require('@orbiting/backend-modules-documents/loaders'),
   ...require('@orbiting/backend-modules-auth/loaders'),
