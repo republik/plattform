@@ -17,15 +17,6 @@ CREATE TABLE "cards" (
     "updatedAt" timestamp with time zone NOT NULL DEFAULT now()
 );
 
-CREATE TABLE "cardMatches" (
-    id uuid DEFAULT uuid_generate_v4() PRIMARY KEY,
-    "userId" uuid NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-    "cardId" uuid NOT NULL REFERENCES "cards"(id) ON DELETE CASCADE,
-    match boolean NOT NULL,
-    "createdAt" timestamp with time zone NOT NULL DEFAULT now(),
-    "updatedAt" timestamp with time zone NOT NULL DEFAULT now()
-);
-
 CREATE TABLE "cardDocuments" (
     id uuid DEFAULT uuid_generate_v4() PRIMARY KEY,
     "cardId" uuid NOT NULL REFERENCES "cards"(id) ON DELETE CASCADE,

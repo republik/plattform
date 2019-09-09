@@ -49,14 +49,6 @@ type mutations {
     statement: String!
     payload: JSON!
   ): Card!
-
-  upsertCardMatches(
-    id: [ID!]!
-  ): CardConnection!
-
-  resetCardMatches(
-    group: String
-  ): CardConnection!
 }
 
 `
