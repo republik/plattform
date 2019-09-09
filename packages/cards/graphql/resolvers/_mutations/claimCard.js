@@ -20,7 +20,7 @@ module.exports = async (
 
   const tokenUser = await getUserByAccessToken(accessToken, context)
   if (!tokenUser) {
-    throw new Error('api/cards/claimCard/userViaTokenNotFound')
+    throw new Error(t('api/cards/claimCard/userViaTokenNotFound'))
   }
 
   const transaction = await pgdb.transactionBegin()
@@ -29,11 +29,11 @@ module.exports = async (
   try {
     const card = await transaction.public.cards.findOne({ id, userId: tokenUser.id })
     if (!card) {
-      throw new Error('api/cards/claimCard/cardNotFound')
+      throw new Error(t('api/cards/claimCard/cardNotFound'))
     }
 
     if (tokenUser.id !== user.id && tokenUser.verified) {
-      throw new Error('api/cards/claimCard/cardOwnerVerified')
+      throw new Error(t('api/cards/claimCard/cardOwnerVerified'))
     }
 
     const hasExistingCards = !!(await transaction.public.cards.count({
@@ -41,7 +41,7 @@ module.exports = async (
       'id !=': id
     }))
     if (hasExistingCards) {
-      throw new Error('api/cards/claimCard/targetHasAlreadyCards')
+      throw new Error(t('api/cards/claimCard/targetHasAlreadyCards'))
     }
 
     const portraitUrl = portrait ? await Portrait.upload(portrait) : null

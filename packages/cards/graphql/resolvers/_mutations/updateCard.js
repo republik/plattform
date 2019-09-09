@@ -9,7 +9,7 @@ module.exports = async (
   { id, portrait, statement, payload },
   context
 ) => {
-  const { req, user, pgdb } = context
+  const { req, user, pgdb, t } = context
   ensureSignedIn(req)
 
   const transaction = await pgdb.transactionBegin()
@@ -18,7 +18,7 @@ module.exports = async (
   try {
     const card = await transaction.public.cards.findOne({ id, userId: user.id })
     if (!card) {
-      throw new Error('api/cards/updateCard/cardNotFound')
+      throw new Error(t('api/cards/updateCard/cardNotFound'))
     }
 
     if (portrait !== undefined) {
