@@ -23,7 +23,7 @@ module.exports = async (
       throw new Error('api/cards/claimCard/cardNotFound')
     }
 
-    if (tokenUser.verified) {
+    if (tokenUser.id !== user.id && tokenUser.verified) {
       throw new Error('api/cards/claimCard/cardOwnerVerified')
     }
 
