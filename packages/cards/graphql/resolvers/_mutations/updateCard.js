@@ -9,8 +9,6 @@ module.exports = async (
   const { req, user, pgdb } = context
   ensureSignedIn(req)
 
-  console.log({ id, portrait: portrait && portrait.length, statement, payload })
-
   const transaction = await pgdb.transactionBegin()
   const now = new Date()
 

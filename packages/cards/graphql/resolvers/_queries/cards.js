@@ -24,8 +24,6 @@ module.exports = async (_, args, context) => {
     ? await loaders.Card.byUserId.load(user.id)
     : await pgdb.public.cards.findAll()
 
-  console.log(cards)
-
   return paginate(
     Object.assign({}, defaults, args),
     shuffleSeed.shuffle(cards, (user && user.id) || 'Republik Rendezvous')
