@@ -1,12 +1,20 @@
-const { ensureSignedIn, AccessToken: { getUserByAccessToken } } = require('@orbiting/backend-modules-auth')
+const {
+  ensureSignedIn,
+  AccessToken: { getUserByAccessToken },
+  Roles
+} = require('@orbiting/backend-modules-auth')
 const { lib: { Portrait } } = require('@orbiting/backend-modules-assets')
+const { grants: grantsLib } = require('@orbiting/backend-modules-access')
+const { Redirections } = require('@orbiting/backend-modules-redirections')
+
+const { CLAIM_CARD_CAMPAIGN } = process.env
 
 module.exports = async (
   _,
   { id, accessToken, portrait, statement },
   context
 ) => {
-  const { req, user, pgdb } = context
+  const { req, user, pgdb, t, mail } = context
   ensureSignedIn(req)
 
   const tokenUser = await getUserByAccessToken(accessToken, context)
@@ -72,9 +80,6 @@ module.exports = async (
           firstName: user._raw.firstName || tokenUser._raw.firstName,
           lastName: user._raw.lastName || tokenUser._raw.lastName,
           username: user._raw.username || tokenUser._raw.username,
-          roles: Array.from(
-            new Set([].concat(user._raw.roles).concat(tokenUser._raw.roles).filter(Boolean))
-          ),
           hasPublicProfile: true,
           portraitUrl: portraitUrl || tokenUser._raw.portraitUrl || user._raw.portraitUrl,
           isListed: true,
@@ -85,13 +90,31 @@ module.exports = async (
         }
       )
 
-      // @TODO: If user.username && tokenUser.username !== user.username
-      // -> insert redirect
+      if (user._raw.username && user._raw.username !== tokenUser._raw.username) {
+        try {
+          await Redirections.add({
+            source: `/~${tokenUser._raw.username}`,
+            target: `/~${user._raw.username}`,
+            resource: { user: { id: user.id } }
+          }, transaction)
+        } catch (e) {
+          // Slack unable to setup redirect
+        }
+      }
 
       // @TODO: Move followers/follows from tokenUser to user
     }
 
     // @TODO Insert statement into discussion
+
+    if (CLAIM_CARD_CAMPAIGN) {
+      try {
+        await grantsLib.request(user, CLAIM_CARD_CAMPAIGN, t, transaction, mail)
+        await Roles.addUserToRole(user.id, 'debater', transaction)
+      } catch (e) {
+        // Slack unable to request trial
+      }
+    }
 
     await transaction.transactionCommit()
 
