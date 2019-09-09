@@ -196,6 +196,7 @@ PgDb.connect().then(async pgdb => {
 
   const raw = parse(input)
   const payloads = raw.map(toPayload)
+    .filter(({ meta }) => meta.userId && meta.candidateId)
 
   /**
    * Upsert CardGroups
