@@ -75,6 +75,22 @@ module.exports = async (
         }
       )
 
+      await transaction.public.credentials.update(
+        { userId: user.id },
+        {
+          isListed: false,
+          updatedAt: now
+        }
+      )
+
+      await transaction.public.credentials.update(
+        { userId: tokenUser.id },
+        {
+          userId: user.id,
+          updatedAt: now
+        }
+      )
+
       await transaction.public.users.update(
         { id: user.id },
         {
@@ -83,7 +99,6 @@ module.exports = async (
           username: user._raw.username || tokenUser._raw.username,
           hasPublicProfile: true,
           portraitUrl: portraitUrl || tokenUser._raw.portraitUrl || user._raw.portraitUrl,
-          isListed: true,
           facebookId: user._raw.facebookId || tokenUser._raw.facebookId,
           twitterHandle: user._raw.twitterHandle || tokenUser._raw.twitterHandle,
           publicUrl: user._raw.publicUrl || tokenUser._raw.publicUrl,
