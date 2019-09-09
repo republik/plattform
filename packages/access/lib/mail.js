@@ -112,6 +112,11 @@ const sendMail = async (
     pgdb
   }
 ) => {
+  const config = getCampaignEmailConfig(party, template, campaign)
+  if (config && config.enabled === false) {
+    return false
+  }
+
   const mail = await sendMailTemplate({
     to,
     fromEmail: process.env.DEFAULT_MAIL_FROM_ADDRESS,
@@ -277,4 +282,8 @@ const getGlobalMergeVars = async (
       content: 'https://project-r.construction/news'
     }
   ]
+}
+
+const getCampaignEmailConfig = (party, template, campaign) => {
+  return campaign.emailConfig.find(config => config.party === party && config.template === template)
 }
