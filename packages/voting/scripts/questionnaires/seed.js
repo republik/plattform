@@ -34,7 +34,6 @@ const createGraphQLContext = (defaultContext) => {
   const context = {
     ...defaultContext,
     t,
-    req: { user: defaultContext.user },
     loaders
   }
   Object.keys(loaderBuilders).forEach(key => {
@@ -50,6 +49,8 @@ PgDb.connect().then(async pgdb => {
   if (!slug) {
     throw new Error('first parameter must be the questionnaire slug to seed')
   }
+
+  const context = createGraphQLContext({ pgdb })
 
   const questionnaire = await Questionnaire.findBySlug(slug, pgdb)
   if (!questionnaire) {
@@ -92,7 +93,7 @@ PgDb.connect().then(async pgdb => {
 
       return Promise.each(
         users,
-        async (user) => {
+        (user) => {
           const { id: userId } = user
 
           // bias
@@ -131,7 +132,11 @@ PgDb.connect().then(async pgdb => {
                 payload: { value: [option.value] }
               }
             },
-            createGraphQLContext({ user, pgdb })
+            {
+              ...context,
+              user,
+              req: { user }
+            }
           )
         }
       )
