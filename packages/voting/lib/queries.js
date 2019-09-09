@@ -103,12 +103,12 @@ const buildQueries = (tableName) => {
     let ballot
     if (table.ballotsTable === 'questionnaireSubmissions') {
       ballot = await QuestionnaireSubmissions.byKeyObj.load({
-        userId: userId,
+        userId,
         [table.foreignKey]: id
       })
     } else {
       ballot = await pgdb.public[table.ballotsTable].findFirst({
-        userId: userId,
+        userId,
         [table.foreignKey]: id
       })
     }

@@ -193,5 +193,6 @@ const runOnce = async (...args) => {
 module.exports = {
   start,
   run,
-  runOnce
+  runOnce,
+  loaderBuilders
 }

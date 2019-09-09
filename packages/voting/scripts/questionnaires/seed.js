@@ -8,10 +8,12 @@ const Questionnaire = require('@orbiting/backend-modules-voting/lib/Questionnair
 const submitAnswer = require('@orbiting/backend-modules-voting/graphql/resolvers/_mutations/submitAnswer')
 const moment = require('moment')
 const uuid = require('uuid/v4')
+const { t } = require('@orbiting/backend-modules-translate')
+const { loaderBuilders } = require('../../../../servers/republik/server')
 
-const getRandomUserIds = (questionnaireId, limit, pgdb) =>
+const getRandomUsers = (questionnaireId, limit, pgdb) =>
   pgdb.query(`
-    SELECT u.id
+    SELECT u.*
     FROM users u
     WHERE
       u.id NOT IN (
@@ -26,7 +28,20 @@ const getRandomUserIds = (questionnaireId, limit, pgdb) =>
     questionnaireId,
     limit
   })
-    .then(r => r.map(u => u.id))
+
+const createGraphQLContext = (defaultContext) => {
+  const loaders = {}
+  const context = {
+    ...defaultContext,
+    t,
+    req: { user: defaultContext.user },
+    loaders
+  }
+  Object.keys(loaderBuilders).forEach(key => {
+    loaders[key] = loaderBuilders[key](context)
+  })
+  return context
+}
 
 PgDb.connect().then(async pgdb => {
   const slug = process.argv[2]
@@ -51,9 +66,9 @@ PgDb.connect().then(async pgdb => {
 
   const numSeconds = moment(now).diff(startTime, 'seconds')
 
-  const userIds = await getRandomUserIds(questionnaire.id, numUsers, pgdb)
-  const usersStartDate = userIds.reduce(
-    (agg, id) => {
+  const users = await getRandomUsers(questionnaire.id, numUsers, pgdb)
+  const usersStartDate = users.reduce(
+    (agg, { id }) => {
       const offsetSecs = Math.round(Math.random() * numSeconds)
       agg[id] = moment(startTime).add(offsetSecs, 'seconds').toDate()
       return agg
@@ -71,13 +86,15 @@ PgDb.connect().then(async pgdb => {
 
   await Promise.each(
     questions,
-    async (q, qIndex) => {
+    (q, qIndex) => {
       const bias = Math.round(Math.random())
       const getBias = () => bias
 
-      await Promise.map(
-        userIds,
-        async (userId) => {
+      return Promise.each(
+        users,
+        async (user) => {
+          const { id: userId } = user
+
           // bias
           const optionIndex = Math.round(Math.random() * 4) !== 4
             ? getBias(qIndex) // bias
@@ -104,7 +121,6 @@ PgDb.connect().then(async pgdb => {
           })
           */
 
-          const user = await pgdb.public.users.findOne({ id: userId })
           return submitAnswer(
             null,
             {
@@ -114,11 +130,8 @@ PgDb.connect().then(async pgdb => {
                 userId,
                 payload: { value: [option.value] }
               }
-            }, {
-              pgdb,
-              user,
-              req: { user }
-            }
+            },
+            createGraphQLContext({ user, pgdb })
           )
         }
       )

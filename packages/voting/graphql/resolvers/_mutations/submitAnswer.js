@@ -41,7 +41,10 @@ module.exports = async (_, { answer }, context) => {
       userId: me.id,
       questionId
     })
-    if (questionnaire.immutableAnswers && (existingAnswer || sameAnswer)) {
+    if (
+      (existingAnswer && existingAnswer.submitted) ||
+      (sameAnswer && sameAnswer.submitted)
+    ) {
       throw new Error(t('api/questionnaire/answer/immutable'))
     }
     if (sameAnswer) {

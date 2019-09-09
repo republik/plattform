@@ -43,6 +43,7 @@ module.exports = (loader, options = {}, find = defaultFind) =>
     ,
     {
       cacheKeyFn: getCacheKey,
-      ...options
+      ...options,
+      maxBatchSize: 1000
     }
   )
