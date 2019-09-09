@@ -105,7 +105,7 @@ module.exports = {
       const newQuery = querystring.stringify({
         ...querystring.parse(query),
         resize,
-        bw
+        bw: bw || undefined
       })
       const webp = args && args.webp !== undefined
         ? args.webp

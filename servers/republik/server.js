@@ -10,13 +10,15 @@ const { graphql: voting } = require('@orbiting/backend-modules-voting')
 const { graphql: discussions } = require('@orbiting/backend-modules-discussions')
 const { graphql: collections } = require('@orbiting/backend-modules-collections')
 const { graphql: crowdsourcing } = require('@orbiting/backend-modules-crowdsourcing')
+const { graphql: cards } = require('@orbiting/backend-modules-cards')
 
 const loaderBuilders = {
   ...require('@orbiting/backend-modules-voting/loaders'),
   ...require('@orbiting/backend-modules-discussions/loaders'),
   ...require('@orbiting/backend-modules-documents/loaders'),
   ...require('@orbiting/backend-modules-auth/loaders'),
-  ...require('@orbiting/backend-modules-collections/loaders')
+  ...require('@orbiting/backend-modules-collections/loaders'),
+  ...require('@orbiting/backend-modules-cards/loaders')
 }
 
 const { AccessScheduler, graphql: access } = require('@orbiting/backend-modules-access')
@@ -70,7 +72,8 @@ const run = async (workerId, config) => {
       access,
       voting,
       collections,
-      crowdsourcing
+      crowdsourcing,
+      cards
     ]
   )
 
