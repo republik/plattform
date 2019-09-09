@@ -37,8 +37,8 @@ const partyMap = {
   JCVP: 'CVP',
   JCSP: 'CVP',
 
-  'Grüne': 'Grüne',
-  'JG': 'Grüne'
+  'Grüne': 'Grüne',
+  'JG': 'Grüne'
 }
 
 const parties = Object.keys(partyMap).map(k => k.toLowerCase())
