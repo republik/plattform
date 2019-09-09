@@ -1,5 +1,8 @@
 const { ensureSignedIn } = require('@orbiting/backend-modules-auth')
 const { lib: { Portrait } } = require('@orbiting/backend-modules-assets')
+const { publish } = require('@orbiting/backend-modules-slack')
+
+const { ADMIN_FRONTEND_BASE_URL, SLACK_CHANNEL_FEED } = process.env
 
 module.exports = async (
   _,
@@ -58,9 +61,30 @@ module.exports = async (
 
     await transaction.transactionCommit()
 
+    await publish(
+      SLACK_CHANNEL_FEED,
+      [
+        `:pencil2: *updateCard* Card von *${[card.payload.meta.firstName, card.payload.meta.lastName].join(' ')}*`,
+        `_Republik Card ID: ${card.id}, Smartvote ID: ${card.payload.meta.userId}_`,
+        `durch *<${ADMIN_FRONTEND_BASE_URL}/users/${user.id}|${[user.firstName, user.lastName].join(' ')}>*`,
+        statement && `Statement: «${statement.replace(/\n/g, ' ').slice(0, 250)}»`,
+        user._raw.portraitUrl && `<${user._raw.portraitUrl}|${portrait ? 'neue ' : ''}Portrait-URL>`
+      ].filter(Boolean).join('\n')
+    )
+
     return pgdb.public.cards.findOne({ id })
   } catch (e) {
     await transaction.transactionRollback()
+
+    await publish(
+      SLACK_CHANNEL_FEED,
+      [
+        `:small_red_triangle: *updateCard (Fehler)*`,
+        e.message,
+        user && `durch *<${ADMIN_FRONTEND_BASE_URL}/users/${user.id}|${[user._raw.firstName, user._raw.lastName].join(' ')}>*`,
+        `_Republik Card ID: ${id}_`
+      ].filter(Boolean).join('\n')
+    )
 
     throw e
   }

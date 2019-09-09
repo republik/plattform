@@ -6,8 +6,9 @@ const {
 const { lib: { Portrait } } = require('@orbiting/backend-modules-assets')
 const { grants: grantsLib } = require('@orbiting/backend-modules-access')
 const { Redirections } = require('@orbiting/backend-modules-redirections')
+const { publish } = require('@orbiting/backend-modules-slack')
 
-const { CLAIM_CARD_CAMPAIGN } = process.env
+const { ADMIN_FRONTEND_BASE_URL, CLAIM_CARD_CAMPAIGN, SLACK_CHANNEL_FEED } = process.env
 
 module.exports = async (
   _,
@@ -118,9 +119,31 @@ module.exports = async (
 
     await transaction.transactionCommit()
 
+    const owner = await pgdb.public.users.findOne({ id: user.id })
+    await publish(
+      SLACK_CHANNEL_FEED,
+      [
+        `:fire: *claimCard* Card von *${[card.payload.meta.firstName, card.payload.meta.lastName].join(' ')}*`,
+        `_Republik Card ID: ${card.id}, Smartvote ID: ${card.payload.meta.userId}_`,
+        `durch *<${ADMIN_FRONTEND_BASE_URL}/users/${owner.id}|${[owner.firstName, owner.lastName].join(' ')}>*`,
+        statement && `Statement: «${statement.replace(/\n/g, ' ').slice(0, 250)}»`,
+        owner.portraitUrl && `<${owner.portraitUrl}|${portrait ? 'neue ' : ''}Portrait-URL>`
+      ].filter(Boolean).join('\n')
+    )
+
     return pgdb.public.cards.findOne({ id })
   } catch (e) {
     await transaction.transactionRollback()
+
+    await publish(
+      SLACK_CHANNEL_FEED,
+      [
+        `:small_red_triangle: *claimCard (Fehler)*`,
+        e.message,
+        user && `durch *<${ADMIN_FRONTEND_BASE_URL}/users/${user.id}|${[user._raw.firstName, user._raw.lastName].join(' ')}>*`,
+        `_Republik Card ID: ${id}_`
+      ].filter(Boolean).join('\n')
+    )
 
     throw e
   }
