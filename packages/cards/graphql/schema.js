@@ -9,7 +9,7 @@ type queries {
   card(
     id: ID
     accessToken: ID
-  ): Card!
+  ): Card
 
   cards(
     id: ID
@@ -25,7 +25,7 @@ type queries {
   cardGroup(
     id: ID
     slug: String
-  ): CardGroup!
+  ): CardGroup
 
   cardGroups(
     first: Int
