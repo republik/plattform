@@ -15,11 +15,7 @@ const argv = yargs
 const { slug } = require('@project-r/styleguide/lib/lib/slug')
 const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
 
-const sampleDataLobbywatch = require('./sample-lobbywatch.json')
-
 const parse = dsvFormat(';').parse
-
-const probableTrue = (probability) => Math.random() < probability
 
 const maybeString = (value) => {
   if (!value) {
@@ -138,10 +134,7 @@ const toPayload = (row) => {
           entity: maybeString(row[`interest_legal_form_${index}`])
         }
       }).filter(Boolean) || null,
-    vestedInterestsLobbywatch:
-      probableTrue(0.2)
-        ? sampleDataLobbywatch
-        : null,
+    vestedInterestsLobbywatch: null,
     campaignBudget: maybeNumber(row.campaign_budget),
     campaignBudgetComment: maybeString(row.cb_comment),
     nationalCouncil: {
