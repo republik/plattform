@@ -1,1 +1,1 @@
-ALTER TABLE "accessCampaigns" DROP COLUMN "emailConfig";
+ALTER TABLE "accessCampaigns" DROP COLUMN "config";

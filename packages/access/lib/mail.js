@@ -112,8 +112,8 @@ const sendMail = async (
     pgdb
   }
 ) => {
-  const config = getCampaignEmailConfig(party, template, campaign)
-  if (config && config.enabled === false) {
+  const emailConfig = getConfigEmails(party, template, campaign)
+  if (emailConfig && emailConfig.enabled === false) {
     return false
   }
 
@@ -284,6 +284,12 @@ const getGlobalMergeVars = async (
   ]
 }
 
-const getCampaignEmailConfig = (party, template, campaign) => {
-  return campaign.emailConfig.find(config => config.party === party && config.template === template)
+const getConfigEmails = (party, template, campaign) => {
+  const config = campaign.config
+
+  if (!config.emails) {
+    return
+  }
+
+  return config.emails.find(email => email.party === party && email.template === template)
 }

@@ -1,1 +1,1 @@
-ALTER TABLE "accessCampaigns" ADD COLUMN "emailConfig" jsonb NOT NULL DEFAULT '[]';
+ALTER TABLE "accessCampaigns" ADD COLUMN "config" jsonb NOT NULL DEFAULT '{}';

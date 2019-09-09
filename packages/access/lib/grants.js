@@ -142,6 +142,11 @@ const claim = async (voucherCode, user, t, pgdb, mail) => {
 
   const grant = await beginGrant(grantByVoucherCode, user, pgdb)
   await eventsLib.log(grant, 'grant', pgdb)
+
+  const campaign = await pgdb.public.accessCampaigns
+    .findOne({ id: grant.accessCampaignId })
+  const { subscribeToEditorialNewsletters = true } = campaign.config
+
   const hasRoleChanged =
     await membershipsLib.addMemberRole(grant, user, pgdb)
 
@@ -149,15 +154,13 @@ const claim = async (voucherCode, user, t, pgdb, mail) => {
     await mail.enforceSubscriptions({
       userId: user.id,
       pgdb,
-      subscribeToEditorialNewsletters: true
+      subscribeToEditorialNewsletters
     })
   }
 
   if (!(await hasUserActiveMembership(user, pgdb))) {
     const granter = await pgdb.public.users
       .findOne({ id: grant.granterUserId })
-    const campaign = await pgdb.public.accessCampaigns
-      .findOne({ id: grant.accessCampaignId })
 
     await mailLib.sendRecipientOnboarding(granter, campaign, user, grant, t, pgdb)
   }
@@ -229,6 +232,9 @@ const request = async (granter, campaignId, t, pgdb, mail) => {
   )
 
   await eventsLib.log(grant, 'request', pgdb)
+
+  const { subscribeToEditorialNewsletters = true } = campaign.config
+
   const hasRoleChanged =
     await membershipsLib.addMemberRole(grant, granter, pgdb)
 
@@ -236,7 +242,7 @@ const request = async (granter, campaignId, t, pgdb, mail) => {
     await mail.enforceSubscriptions({
       userId: granter.id,
       pgdb,
-      subscribeToEditorialNewsletters: true
+      subscribeToEditorialNewsletters
     })
   }
 
