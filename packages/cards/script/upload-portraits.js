@@ -33,7 +33,6 @@ PgDb.connect().then(async pgdb => {
         FROM cards c
         JOIN
           users u ON u.id = c."userId"
-          AND email LIKE 'wahl2019-%@republik.ch'
           AND "portraitUrl" IS NULL
         WHERE
           c.payload->'meta'->>'userId' = :cardUserId
