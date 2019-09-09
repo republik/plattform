@@ -99,21 +99,17 @@ module.exports = async (
             resource: { user: { id: user.id } }
           }, transaction)
         } catch (e) {
-          // Slack unable to setup redirect
+          console.warn(e)
         }
       }
-
-      // @TODO: Move followers/follows from tokenUser to user
     }
-
-    // @TODO Insert statement into discussion
 
     if (CLAIM_CARD_CAMPAIGN) {
       try {
         await grantsLib.request(user, CLAIM_CARD_CAMPAIGN, t, transaction, mail)
         await Roles.addUserToRole(user.id, 'debater', transaction)
       } catch (e) {
-        // Slack unable to request trial
+        console.warn(e)
       }
     }
 
