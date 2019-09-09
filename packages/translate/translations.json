@@ -1,5 +1,5 @@
 {
-  "updated": "2019-09-09T17:23:05.129Z",
+  "updated": "2019-09-09T17:58:10.645Z",
   "title": "live",
   "data": [
     {
@@ -1613,6 +1613,10 @@
     {
       "key": "api/cards/updateCard/cardNotFound",
       "value": "Karte nicht gefunden"
+    },
+    {
+      "key": "profile/cards/needed",
+      "value": "Ihr Profil ist im Moment einer Kandidatur zugeordnet und kann im Moment nicht zurückgenommen werden."
     }
   ]
 }
