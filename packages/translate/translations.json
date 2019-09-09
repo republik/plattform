@@ -1,5 +1,5 @@
 {
-  "updated": "2019-09-02T16:27:33.611Z",
+  "updated": "2019-09-09T17:58:10.645Z",
   "title": "live",
   "data": [
     {
@@ -1291,6 +1291,14 @@
       "value": "ID-Frage-Diskrepanz. Ups, da ist etwas schiefgelaufen. Bitte laden Sie die Seite neu."
     },
     {
+      "key": "api/questionnaire/answer/immutable",
+      "value": "Bereits eingereichte Antworten können nicht mehr geändert werden."
+    },
+    {
+      "key": "api/questionnaire/answer/updateResultIncrementally/choiceOnly",
+      "value": "Fehler: updateResultIncrementally wird nur von Fragen des Typs 'Choice' unterstützt."
+    },
+    {
       "key": "timeAhead/justNow/other",
       "value": "in weniger als einer Minute"
     },
@@ -1357,6 +1365,18 @@
     {
       "key": "api/subscriptions/type/notSupported",
       "value": "Dieser Typ Subscription wird noch nicht unterstützt."
+    },
+    {
+      "key": "api/subscriptions/404",
+      "value": "Die Subscription konnte nicht gefunden werden."
+    },
+    {
+      "key": "api/subscriptions/notAllowed",
+      "value": "Nicht genehmigt."
+    },
+    {
+      "key": "api/subscriptions/notYourself",
+      "value": "Sie können sich nicht selber folgen."
     },
     {
       "key": "api/signIn",
@@ -1573,6 +1593,30 @@
     {
       "key": "api/archive/error/published",
       "value": "«{repoId}» ist veröffentlicht und kann nicht archiviert werden. Heben Sie erst alle Veröffentlichungen auf."
+    },
+    {
+      "key": "api/cards/claimCard/userViaTokenNotFound",
+      "value": "Token ungültig"
+    },
+    {
+      "key": "api/cards/claimCard/cardNotFound",
+      "value": "Karte nicht gefunden"
+    },
+    {
+      "key": "api/cards/claimCard/cardOwnerVerified",
+      "value": "Diese Karte kann nicht übertragen werden."
+    },
+    {
+      "key": "api/cards/claimCard/targetHasAlreadyCards",
+      "value": "Sie besitzen bereits eine Karte und können keine weitere übertragen."
+    },
+    {
+      "key": "api/cards/updateCard/cardNotFound",
+      "value": "Karte nicht gefunden"
+    },
+    {
+      "key": "profile/cards/needed",
+      "value": "Ihr Profil ist im Moment einer Kandidatur zugeordnet und kann im Moment nicht zurückgenommen werden."
     }
   ]
 }
