@@ -14,12 +14,17 @@ module.exports = async (_, args, context) => {
   const user = accessToken && await getUserByAccessToken(accessToken, context)
 
   if (accessToken && !user) {
-    return []
+    return paginate(
+      Object.assign({}, defaults, args),
+      []
+    )
   }
 
   const cards = user
     ? await loaders.Card.byUserId.load(user.id)
     : await pgdb.public.cards.findAll()
+
+  console.log(cards)
 
   return paginate(
     Object.assign({}, defaults, args),
