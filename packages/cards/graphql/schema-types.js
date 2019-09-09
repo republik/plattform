@@ -4,7 +4,7 @@ type Card {
   id: ID!
   payload: JSON!
   group: CardGroup!
-  user: User!
+  user(accessToken: ID): User!
   statement: Comment
   documents: DocumentConnection!
   match: Boolean
