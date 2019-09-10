@@ -55,5 +55,6 @@ type mutations {
     slug: String!
     dry: Boolean!
   ): JSON!
+  anonymizeUserAnswers(questionnaireId: ID!): Questionnaire!
 }
 `

@@ -13,6 +13,7 @@ const { graphql: crowdsourcing } = require('@orbiting/backend-modules-crowdsourc
 const { graphql: cards } = require('@orbiting/backend-modules-cards')
 
 const loaderBuilders = {
+  ...require('@orbiting/backend-modules-voting/loaders'),
   ...require('@orbiting/backend-modules-discussions/loaders'),
   ...require('@orbiting/backend-modules-documents/loaders'),
   ...require('@orbiting/backend-modules-auth/loaders'),
@@ -195,5 +196,6 @@ const runOnce = async (...args) => {
 module.exports = {
   start,
   run,
-  runOnce
+  runOnce,
+  loaderBuilders
 }

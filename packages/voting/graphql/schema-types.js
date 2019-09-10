@@ -341,6 +341,7 @@ input AnswerInput {
 type Answer {
   id: ID!
   payload: JSON!
+  submitted: Boolean!
 }
 
 
