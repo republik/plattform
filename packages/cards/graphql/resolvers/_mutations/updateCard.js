@@ -61,16 +61,20 @@ module.exports = async (
 
     await transaction.transactionCommit()
 
-    await publish(
-      SLACK_CHANNEL_FEED,
-      [
-        `:pencil2: *updateCard* Card von *${[card.payload.meta.firstName, card.payload.meta.lastName].join(' ')}*`,
-        `_Republik Card ID: ${card.id}, Smartvote ID: ${card.payload.meta.userId}_`,
-        `durch *<${ADMIN_FRONTEND_BASE_URL}/users/${user.id}|${[user.firstName, user.lastName].join(' ')}>*`,
-        statement && `Statement: «${statement.replace(/\n/g, ' ').slice(0, 250)}»`,
-        user._raw.portraitUrl && `<${user._raw.portraitUrl}|${portrait ? 'neue ' : ''}Portrait-URL>`
-      ].filter(Boolean).join('\n')
-    )
+    try {
+      await publish(
+        SLACK_CHANNEL_FEED,
+        [
+          `:pencil2: *updateCard* Card von *${[card.payload.meta.firstName, card.payload.meta.lastName].join(' ')}*`,
+          `_Republik Card ID: ${card.id}, Smartvote ID: ${card.payload.meta.userId}_`,
+          `durch *<${ADMIN_FRONTEND_BASE_URL}/users/${user.id}|${[user.firstName, user.lastName].join(' ')}>*`,
+          statement && `Statement: «${statement.replace(/\n/g, ' ').slice(0, 250)}»`,
+          user._raw.portraitUrl && `<${user._raw.portraitUrl}|${portrait ? 'neue ' : ''}Portrait-URL>`
+        ].filter(Boolean).join('\n')
+      )
+    } catch (e) {
+      console.warn(e)
+    }
 
     return pgdb.public.cards.findOne({ id })
   } catch (e) {

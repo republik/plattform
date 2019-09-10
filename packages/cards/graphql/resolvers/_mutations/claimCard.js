@@ -130,17 +130,21 @@ module.exports = async (
 
     await transaction.transactionCommit()
 
-    const owner = await pgdb.public.users.findOne({ id: user.id })
-    await publish(
-      SLACK_CHANNEL_FEED,
-      [
-        `:fire: *claimCard* Card von *${[card.payload.meta.firstName, card.payload.meta.lastName].join(' ')}*`,
-        `_Republik Card ID: ${card.id}, Smartvote ID: ${card.payload.meta.userId}_`,
-        `durch *<${ADMIN_FRONTEND_BASE_URL}/users/${owner.id}|${[owner.firstName, owner.lastName].join(' ')}>*`,
-        statement && `Statement: «${statement.replace(/\n/g, ' ').slice(0, 250)}»`,
-        owner.portraitUrl && `<${owner.portraitUrl}|${portrait ? 'neue ' : ''}Portrait-URL>`
-      ].filter(Boolean).join('\n')
-    )
+    try {
+      const owner = await pgdb.public.users.findOne({ id: user.id })
+      await publish(
+        SLACK_CHANNEL_FEED,
+        [
+          `:fire: *claimCard* Card von *${[card.payload.meta.firstName, card.payload.meta.lastName].join(' ')}*`,
+          `_Republik Card ID: ${card.id}, Smartvote ID: ${card.payload.meta.userId}_`,
+          `durch *<${ADMIN_FRONTEND_BASE_URL}/users/${owner.id}|${[owner.firstName, owner.lastName].join(' ')}>*`,
+          statement && `Statement: «${statement.replace(/\n/g, ' ').slice(0, 250)}»`,
+          owner.portraitUrl && `<${owner.portraitUrl}|${portrait ? 'neue ' : ''}Portrait-URL>`
+        ].filter(Boolean).join('\n')
+      )
+    } catch (e) {
+      console.warn(e)
+    }
 
     return pgdb.public.cards.findOne({ id })
   } catch (e) {
