@@ -128,22 +128,6 @@ const updateResultIncrementally = async (questionnaireId, answer, transaction, c
   )
 }
 
-/*
-const getNumUsersSubmittedAnswers = async (questionnaireId, pgdb) => {
-  return pgdb.queryOneField(`
-    SELECT
-      COUNT(DISTINCT("userId"))
-    FROM
-      answers a
-    WHERE
-      a."questionnaireId" = :questionnaireId
-      a.submitted = true
-  `, {
-    questionnaireId
-  })
-}
-*/
-
 module.exports = {
   ...queries,
   transformQuestion,
