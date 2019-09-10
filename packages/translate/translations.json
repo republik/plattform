@@ -1,5 +1,5 @@
 {
-  "updated": "2019-09-08T22:36:24.246Z",
+  "updated": "2019-09-09T17:58:10.645Z",
   "title": "live",
   "data": [
     {
@@ -1593,6 +1593,30 @@
     {
       "key": "api/archive/error/published",
       "value": "«{repoId}» ist veröffentlicht und kann nicht archiviert werden. Heben Sie erst alle Veröffentlichungen auf."
+    },
+    {
+      "key": "api/cards/claimCard/userViaTokenNotFound",
+      "value": "Token ungültig"
+    },
+    {
+      "key": "api/cards/claimCard/cardNotFound",
+      "value": "Karte nicht gefunden"
+    },
+    {
+      "key": "api/cards/claimCard/cardOwnerVerified",
+      "value": "Diese Karte kann nicht übertragen werden."
+    },
+    {
+      "key": "api/cards/claimCard/targetHasAlreadyCards",
+      "value": "Sie besitzen bereits eine Karte und können keine weitere übertragen."
+    },
+    {
+      "key": "api/cards/updateCard/cardNotFound",
+      "value": "Karte nicht gefunden"
+    },
+    {
+      "key": "profile/cards/needed",
+      "value": "Ihr Profil ist im Moment einer Kandidatur zugeordnet und kann im Moment nicht zurückgenommen werden."
     }
   ]
 }
