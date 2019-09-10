@@ -6,6 +6,13 @@ import debounce from 'lodash.debounce'
 
 import { GITHUB_ORG, REPO_PREFIX } from '../../../lib/settings'
 
+// TMP: rm series for now because API can't handle it properly yet
+//             series {
+//               title
+//               episodes {
+//                 title
+//               }
+//             }
 export const filterRepos = gql`
 query searchRepo($after: String, $search: String, $template: String) {
   repos: reposSearch(first: 10, after: $after, search: $search, template: $template) {
@@ -29,12 +36,6 @@ query searchRepo($after: String, $search: String, $template: String) {
             credits
             kind
             color
-            series {
-              title
-              episodes {
-                title
-              }
-            }
             format {
               id
               repoId
