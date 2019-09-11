@@ -113,7 +113,11 @@ module.exports = async (_, args, context) => {
       skipUndefined: true
     })
 
-    notify(comment, discussion, context)
+    try {
+      await notify(comment, discussion, context)
+    } catch (e) {
+      console.warn(e)
+    }
 
     await transaction.transactionCommit()
 

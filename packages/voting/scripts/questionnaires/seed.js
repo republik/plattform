@@ -68,7 +68,7 @@ PgDb.connect().then(async pgdb => {
   const numSeconds = moment(now).diff(startTime, 'seconds')
 
   const users = await getRandomUsers(questionnaire.id, numUsers, pgdb)
-  const usersStartDate = users.reduce(
+  /* const usersStartDate = */users.reduce(
     (agg, { id }) => {
       const offsetSecs = Math.round(Math.random() * numSeconds)
       agg[id] = moment(startTime).add(offsetSecs, 'seconds').toDate()

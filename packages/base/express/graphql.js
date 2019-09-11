@@ -19,7 +19,12 @@ module.exports = (
   graphqlSchema,
   createGraphqlContext = identity => identity
 ) => {
-  const executableSchema = makeExecutableSchema(graphqlSchema)
+  const executableSchema = makeExecutableSchema({
+    ...graphqlSchema,
+    resolverValidationOptions: {
+      requireResolversForResolveType: false
+    }
+  })
 
   const createContext = ({ user, ...context } = {}) => createGraphqlContext({
     ...context,

@@ -11,6 +11,9 @@ const appNotifications = require('@orbiting/backend-modules-notifications/lib/ap
 
 const { sendMailTemplate } = require('@orbiting/backend-modules-mail')
 
+const { Subscriptions } = require('@orbiting/backend-modules-subscriptions')
+const uniqWith = require('lodash/uniqWith')
+
 const {
   DEFAULT_MAIL_FROM_ADDRESS,
   DEFAULT_MAIL_FROM_NAME,
@@ -37,7 +40,17 @@ const submitComment = async (comment, discussion, context) => {
     t
   } = context
 
-  const notifyUsers = await pgdb.query(`
+  const displayAuthor = await getDisplayAuthor(
+    comment,
+    {
+      portrait: {
+        webp: false
+      }
+    },
+    context
+  )
+
+  const discussionNotificationUsers = await pgdb.query(`
       -- commenters in discussion
       SELECT
         u.*
@@ -87,18 +100,26 @@ const submitComment = async (comment, discussion, context) => {
     parentIds: comment.parentIds,
     userId: comment.userId
   })
+    .then(users => users.map(transformUser))
 
-  if (notifyUsers.length > 0) {
-    const displayAuthor = await getDisplayAuthor(
-      comment,
-      {
-        portrait: {
-          webp: false
-        }
-      },
+  const commenterSubscribers = displayAuthor.anonymity
+    ? []
+    : await Subscriptions.getSubscribersForObject(
+      'User',
+      comment.userId,
+      'COMMENTS',
       context
     )
 
+  const notifyUsers = uniqWith(
+    [
+      ...discussionNotificationUsers,
+      ...commenterSubscribers
+    ].filter(Boolean),
+    (a, b) => a.id === b.id
+  )
+
+  if (notifyUsers.length > 0) {
     const contentMdast = await getContent(comment, null, context)
     const htmlContent = renderEmail(contentMdast, commentSchema, { doctype: '' })
 
@@ -120,7 +141,7 @@ const submitComment = async (comment, discussion, context) => {
 
     // notify WEB
     const webUserIds = notifyUsers
-      .filter(u => u.discussionNotificationChannels.indexOf('WEB') > -1)
+      .filter(u => u._raw.discussionNotificationChannels.indexOf('WEB') > -1)
       .map(u => u.id)
 
     if (webUserIds.length > 0) {
@@ -138,7 +159,7 @@ const submitComment = async (comment, discussion, context) => {
 
     // notify APP
     const appUserIds = notifyUsers
-      .filter(u => u.discussionNotificationChannels.indexOf('APP') > -1)
+      .filter(u => u._raw.discussionNotificationChannels.indexOf('APP') > -1)
       .map(u => u.id)
 
     if (appUserIds.length > 0) {
@@ -157,9 +178,8 @@ const submitComment = async (comment, discussion, context) => {
 
     // notify EMAIL
     await Promise.all(notifyUsers
-      .filter(u => u.discussionNotificationChannels.indexOf('EMAIL') > -1)
+      .filter(u => u._raw.discussionNotificationChannels.indexOf('EMAIL') > -1)
       .map(u => {
-        const user = transformUser(u)
         return sendMailTemplate({
           to: u.email,
           fromEmail: DEFAULT_MAIL_FROM_ADDRESS,
@@ -170,7 +190,7 @@ const submitComment = async (comment, discussion, context) => {
           templateName: 'cf_comment_notification_new',
           globalMergeVars: [
             { name: 'NAME',
-              content: user.name
+              content: u.name
             },
             { name: 'COMMENTER_NAME',
               content: displayAuthor.name

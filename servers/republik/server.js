@@ -10,6 +10,7 @@ const { graphql: voting } = require('@orbiting/backend-modules-voting')
 const { graphql: discussions } = require('@orbiting/backend-modules-discussions')
 const { graphql: collections } = require('@orbiting/backend-modules-collections')
 const { graphql: crowdsourcing } = require('@orbiting/backend-modules-crowdsourcing')
+const { graphql: subscriptions } = require('@orbiting/backend-modules-subscriptions')
 const { graphql: cards } = require('@orbiting/backend-modules-cards')
 
 const loaderBuilders = {
@@ -18,6 +19,7 @@ const loaderBuilders = {
   ...require('@orbiting/backend-modules-documents/loaders'),
   ...require('@orbiting/backend-modules-auth/loaders'),
   ...require('@orbiting/backend-modules-collections/loaders'),
+  ...require('@orbiting/backend-modules-subscriptions/loaders'),
   ...require('@orbiting/backend-modules-cards/loaders')
 }
 
@@ -73,6 +75,7 @@ const run = async (workerId, config) => {
       voting,
       collections,
       crowdsourcing,
+      subscriptions,
       cards
     ]
   )

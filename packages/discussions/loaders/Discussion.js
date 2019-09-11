@@ -123,5 +123,50 @@ module.exports = (context) => ({
       const row = rows.find(row => row.discussionId === key)
       return (row && row.userNames) || []
     }
+  ),
+  byIdCommenterIds: createDataLoader(
+    ids =>
+      context.pgdb.query(`
+        WITH user_ids AS (
+          SELECT
+            DISTINCT c."discussionId", u.id as "userId"
+          FROM
+            comments c
+          JOIN
+            users u
+            ON
+              c."userId" = u.id
+          LEFT JOIN
+            "discussionPreferences" dp
+            ON
+              c."userId" = dp."userId"
+              AND c."discussionId" = dp."discussionId"
+          JOIN
+            discussions d
+            ON c."discussionId" = d.id
+          WHERE
+            ARRAY[c."discussionId"] && :ids
+            AND (dp."userId" IS NULL OR dp.anonymous = false)
+            AND d.anonymity != 'ENFORCED'
+            AND u."firstName" != 'Anonymous'
+            AND u."lastName" != 'Anonymous'
+        )
+        SELECT
+          "discussionId",
+          json_agg(
+            "userId"
+          ) AS "userIds"
+        FROM
+          user_ids
+        GROUP BY
+          "discussionId"
+      `, {
+        ids
+      }),
+    null,
+    (key, rows) => {
+      const row = rows.find(row => row.discussionId === key)
+      return (row && row.userIds) || []
+    }
   )
 })
