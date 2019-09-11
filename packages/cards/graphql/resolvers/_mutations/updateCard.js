@@ -32,6 +32,16 @@ module.exports = async (
       )
     }
 
+    if (card.commentId) {
+      await transaction.public.comments.update(
+        { id: card.commentId },
+        {
+          content: statement,
+          updatedAt: now
+        }
+      )
+    }
+
     const updatedPayload = {
       ...card.payload,
       statement,
