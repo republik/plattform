@@ -29,9 +29,14 @@ module.exports = async (_, args, context, info) => {
     throw new Error(t('api/discussion/args/first/tooBig', { max: MAX_LIMIT }))
   }
 
+  const discussionIds = !discussionId &&
+    (await pgdb.public.discussions.find({ hidden: false })).map(discussion => discussion.id)
+
   const numComments = await pgdb.public.comments.count(
     {
-      discussionId,
+      ...discussionId
+        ? { discussionIds: [ discussionId ] }
+        : { discussionId: discussionIds },
       published: true,
       adminUnpublished: false
     },
@@ -58,7 +63,7 @@ module.exports = async (_, args, context, info) => {
     FROM
       comments
     WHERE
-      ${discussionId ? '"discussionId" = :discussionId AND' : ''}
+      ARRAY["discussionId"] && :discussionIds AND
       "published" = true AND
       "adminUnpublished" = false
     ORDER BY
@@ -68,7 +73,7 @@ module.exports = async (_, args, context, info) => {
     LIMIT :limit
     OFFSET :offset
   `, {
-    discussionId,
+    discussionIds,
     focusId: focusId || null,
     lastId: lastId || null,
     limit,

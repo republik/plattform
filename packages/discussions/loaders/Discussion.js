@@ -18,18 +18,11 @@ module.exports = (context) => ({
     context.loaders.Discussion.byId.clear(id)
     context.loaders.Discussion.byRepoId.clear(id)
   },
-  byId: createDataLoader(ids =>
-    context.pgdb.public.discussions.find({
-      id: ids,
-      hidden: false
-    })
+  byId: createDataLoader(
+    ids => context.pgdb.public.discussions.find({ id: ids })
   ),
   byRepoId: createDataLoader(
-    repoIds =>
-      context.pgdb.public.discussions.find({
-        repoId: repoIds,
-        hidden: false
-      }),
+    repoIds => context.pgdb.public.discussions.find({ repoId: repoIds }),
     null,
     (key, rows) => rows.find(row => row.repoId === key)
   ),

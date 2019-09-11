@@ -205,10 +205,22 @@ module.exports = {
       }
   },
 
-  comments: (comment, args, { t }) => {
+  comments: async (comment, args, { loaders, t }) => {
     if (comment.comments) {
       return comment.comments
     }
+
+    const children = await loaders.Comment.byParentId.load(comment.id)
+    const nodes = children.filter(child => child.parentIds.length === comment.depth + 1)
+
+    if (children) {
+      return {
+        totalCount: children.length,
+        directTotalCount: nodes.length,
+        nodes
+      }
+    }
+
     throw new Error(t('api/unexpected'))
   },
 
