@@ -16,18 +16,11 @@ const {
 const PORTRAIT_FOLDER = 'portraits'
 
 const toJPEG = async (buffer) => {
-  const image = sharp(buffer)
+  const image = sharp(buffer).rotate()
   const meta = await image.metadata()
 
-  if (meta.format === 'jpeg') {
-    return {
-      meta,
-      data: buffer
-    }
-  } else {
-    image
-      .rotate()
-      .jpeg({ quality: 100 })
+  if (meta.format !== 'jpeg') {
+    image.jpeg({ quality: 100 })
   }
 
   return {

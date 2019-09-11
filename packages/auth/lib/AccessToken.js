@@ -15,6 +15,10 @@ const scopeConfigs = {
     exposeFields: ['email', 'hasAddress', 'hasChargableSource', 'customPackages'],
     pledgePackages: ['PROLONG'],
     ttlDays: 90
+  },
+  'CLAIM_CARD': {
+    exposeFields: ['email', 'cards'],
+    ttlDays: 90
   }
 }
 

@@ -13,11 +13,13 @@ module.exports = async (_, { id: questionnaireId }, context) => {
     const now = new Date()
 
     const questionnaire = await findById(questionnaireId, transaction)
-    await ensureReadyToSubmit(questionnaire, me.id, now, transaction, t)
+
+    await ensureReadyToSubmit(questionnaire, me.id, now, { ...context, pgdb: transaction })
 
     await pgdb.public.answers.delete({
       questionnaireId,
-      userId: me.id
+      userId: me.id,
+      submitted: false
     })
 
     await transaction.transactionCommit()

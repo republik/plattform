@@ -9,7 +9,8 @@ const {
   isEligible,
   isInCandidacy,
   isInCandidacyInCandidacyPhase,
-  isInCandidacyInElectionPhase
+  isInCandidacyInElectionPhase,
+  hasCards
 } = require('../../../lib/profile')
 const { Redirections: {
   upsert: upsertRedirection,
@@ -126,6 +127,12 @@ module.exports = async (_, args, context) => {
       if ('hasPublicProfile' in args || 'birthday' in args || 'statement' in args) {
         throw new Error(t('profile/candidacy/electionPhase'))
       }
+    }
+  }
+
+  if (await hasCards(me._raw, pgdb)) {
+    if (args.hasPublicProfile === false) {
+      throw new Error(t('profile/cards/needed'))
     }
   }
 
