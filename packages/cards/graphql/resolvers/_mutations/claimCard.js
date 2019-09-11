@@ -7,6 +7,7 @@ const { lib: { Portrait } } = require('@orbiting/backend-modules-assets')
 const { grants: grantsLib } = require('@orbiting/backend-modules-access')
 const { Redirections } = require('@orbiting/backend-modules-redirections')
 const { publish } = require('@orbiting/backend-modules-slack')
+const hotness = require('@orbiting/backend-modules-discussions/lib/hotness')
 
 const { ADMIN_FRONTEND_BASE_URL, CLAIM_CARD_CAMPAIGN, SLACK_CHANNEL_FEED } = process.env
 
@@ -46,11 +47,38 @@ module.exports = async (
 
     const portraitUrl = portrait ? await Portrait.upload(portrait) : null
 
-    await transaction.public.cards.update(
+    const updatedCard = {
+      payload: { ...card.payload, statement },
+      userId: user.id
+    }
+
+    const cardGroup = await transaction.public.cardGroups.findOne({ id: card.cardGroupId })
+
+    if (!card.commentId) {
+      const comment = await transaction.public.comments.insertAndGet({
+        discussionId: cardGroup.discussionId,
+        userId: user.id,
+        content: statement.trim(),
+        hotness: hotness(0, 0, (new Date().getTime())),
+        createdAt: now,
+        updatedAt: now
+      })
+
+      updatedCard.commentId = comment.id
+    } else {
+      await transaction.public.comments.updateOne(
+        { id: card.commentId },
+        {
+          content: statement.trim(),
+          updatedAt: now
+        }
+      )
+    }
+
+    await transaction.public.cards.updateAndGet(
       { id },
       {
-        payload: { ...card.payload, statement },
-        userId: user.id,
+        ...updatedCard,
         updatedAt: now
       }
     )
@@ -116,6 +144,28 @@ module.exports = async (
         } catch (e) {
           console.warn(e)
         }
+      }
+    }
+
+    if (cardGroup.discussionId) {
+      const credentials = await transaction.public.credentials.find(
+        { userId: user.id, isListed: true }
+      )
+
+      const discussionPreference = await transaction.public.discussionPreferences.findOne(
+        { discussionId: cardGroup.discussionId, userId: user.id }
+      )
+
+      if (!discussionPreference) {
+        await transaction.public.discussionPreferences.insert({
+          discussionId: cardGroup.discussionId,
+          userId: user.id,
+          credentialId: credentials
+            .find(credential => credential.userId === user.id)
+            .id,
+          notificationOption: 'MY_CHILDREN',
+          anonymous: false
+        })
       }
     }
 
