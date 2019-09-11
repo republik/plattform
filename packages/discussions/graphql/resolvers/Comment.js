@@ -205,10 +205,32 @@ module.exports = {
       }
   },
 
-  comments: (comment, args, { t }) => {
+  comments: async (comment, args, { loaders, t }) => {
     if (comment.comments) {
       return comment.comments
     }
+
+    const children = await loaders.Comment.byParentId.load(comment.id)
+    const nodes = children
+      .map(child => {
+        const parentsLeft = child.parentIds.filter(p => p !== comment.id)
+        if (
+          (!comment.parentIds && parentsLeft.length === 0) ||
+          (comment.parentIds && parentsLeft.length === 1)
+        ) {
+          return child
+        }
+      })
+      .filter(Boolean)
+
+    if (children) {
+      return {
+        totalCount: children.length,
+        directTotalCount: nodes.length,
+        nodes: nodes
+      }
+    }
+
     throw new Error(t('api/unexpected'))
   },
 
