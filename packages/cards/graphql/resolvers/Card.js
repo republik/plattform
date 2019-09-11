@@ -23,5 +23,13 @@ module.exports = {
   payload (card) {
     const { meta, ...payload } = card.payload
     return payload
+  },
+
+  async statement (card, args, { loaders }) {
+    if (!card.commentId) {
+      return null
+    }
+
+    return loaders.Comment.byId.load(card.commentId)
   }
 }

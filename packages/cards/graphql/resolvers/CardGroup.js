@@ -10,5 +10,13 @@ module.exports = {
       Object.assign({}, defaults, args),
       await loaders.Card.byCardGroupId.load(cardGroup.id)
     )
+  },
+
+  async discussion (cardGroup, args, { loaders }) {
+    if (!cardGroup.discussionId) {
+      return null
+    }
+
+    return loaders.Discussion.byId.load(cardGroup.discussionId)
   }
 }
