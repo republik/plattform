@@ -111,7 +111,7 @@ const updateResultIncrementally = async (questionnaireId, answer, transaction, c
   }
 
   const optionPayload = payload
-    .find(p => p.option.value === answer.payload.value)
+    .find(p => p.option.value == answer.payload.value) // eslint-disable-line eqeqeq
 
   if (!optionPayload) {
     console.error('optionPayload not found', payload)
