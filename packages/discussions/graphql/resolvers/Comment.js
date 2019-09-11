@@ -211,24 +211,13 @@ module.exports = {
     }
 
     const children = await loaders.Comment.byParentId.load(comment.id)
-    const nodes = children
-      .map(child => {
-        if (
-          (!comment.parentIds && child.parentIds.length === 1) ||
-          (comment.parentIds && child.parentIds.length === comment.depth + 1)
-        ) {
-          return child
-        }
-
-        return false
-      })
-      .filter(Boolean)
+    const nodes = children.filter(child => child.parentIds.length === comment.depth + 1)
 
     if (children) {
       return {
         totalCount: children.length,
         directTotalCount: nodes.length,
-        nodes: nodes
+        nodes
       }
     }
 
