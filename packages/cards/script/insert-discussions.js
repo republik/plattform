@@ -22,7 +22,7 @@ PgDb.connect().then(async pgdb => {
 
       const discussion = await transaction.public.discussions.insertAndGet({
         title: `Wahltindär: ${group.name}`,
-        path: `/wahltindaer/${group.slug}/diskussion`,
+        path: `/wahltindaer/${group.slug}`,
 
         hidden: true,
         closed: true,
