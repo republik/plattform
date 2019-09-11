@@ -25,6 +25,7 @@ const partyMap = {
 
   FDP: 'FDP',
   jf: 'FDP',
+  PLR: 'FDP',
 
   SP: 'SP',
   JUSO: 'SP',
@@ -38,12 +39,18 @@ const partyMap = {
   JCSP: 'CVP',
 
   'Grüne': 'Grüne',
+  'Gruene': 'Grüne',
   'JG': 'Grüne'
 }
 
 const parties = Object.keys(partyMap).map(k => k.toLowerCase())
 
 const replaceStrings = [
+  // LOREM IPSUM to Lorem Ipsum
+  { search: new RegExp('[A-ZÄÖÜ]{2,}', 'g'),
+    replace: (match) => match.substr(0, 1) + match.substr(1).toLowerCase()
+  },
+
   // Names
   { search: new RegExp('Ueli'), replace: 'Ulrich' },
   { search: new RegExp('Ruedi'), replace: 'Rudolf' },
@@ -63,19 +70,27 @@ const replaceStrings = [
   { search: new RegExp('Nathalie'), replace: 'Natalie' },
   { search: new RegExp('Z\'graggen', 'i'), replace: 'Zgraggen' },
   { search: new RegExp('Béa'), replace: 'Beatrice' },
+  { search: new RegExp('Gian-Reto'), replace: 'Gianreto' },
+  { search: new RegExp('Ursind', 'i'), replace: 'Ursin' },
+  { search: new RegExp('Cédéric', 'i'), replace: 'Cedric' },
+  { search: new RegExp('Stephan', 'i'), replace: 'Stefan' },
+  { search: new RegExp('Gerter', 'i'), replace: 'Greter' },
+  { search: new RegExp('Hans.Peter', 'i'), replace: 'Hanspeter' },
+  { search: new RegExp('Moettli', 'i'), replace: 'Moetteli' },
 
   // Special cases
   { search: new RegExp('franço|franáo', 'i'), replace: 'franco' },
 
   // Chars
-  { search: new RegExp('ä|Ñ|ae|à|á|â', 'g'), replace: 'a' },
+  { search: new RegExp('ä|Ñ|ae|à|á|á|â', 'g'), replace: 'a' },
   { search: new RegExp('ö|î|oe|ô', 'g'), replace: 'o' },
-  { search: new RegExp('ü|Å|ue', 'g'), replace: 'u' },
-  { search: new RegExp('é|Ç|è|ê', 'g'), replace: 'e' },
-  { search: new RegExp('î|ï|ï', 'i'), replace: 'i' },
+  { search: new RegExp('ü|ü|Å|ue', 'g'), replace: 'u' },
+  { search: new RegExp('é|é|Ç|è|è|ê', 'g'), replace: 'e' },
+  { search: new RegExp('î|ï|ï|i╠ê', 'i'), replace: 'i' },
 
   // Regular naming
-  { search: new RegExp('(_farbig|_wall_2000px|_color_DSC|SPInternational|SPInternation|PSInternational|PSInternation|Liste|Hochformat|Gruene|hochformat|offiziell|LowRes|_rgb_a.png|Foto_)', 'g'), replace: '' }
+  { search: new RegExp('(png|jpeg|jpg|rgb)', 'i'), replace: '' },
+  { search: new RegExp('(_grune|_qur|_PK-Plakat|_Jpg_klein|_Alternative_hoch|_Alternative|Land-Luzern|JungCspo|_farbig|_wall_2000px|_color_DSC|Spinternational|Spinternation|Psinternational|Psinternation|Liste|Hochformat|Gruene|hochformat|offiziell|LowRes|_rgb_a|Foto_)', 'g'), replace: '' }
 ]
 
 const toTokens = (string) => {
@@ -88,7 +103,7 @@ const toTokens = (string) => {
     .replace(/[^a-zA-Z]/g, ' ')
     .toLowerCase()
     .split(/[\s_-]/)
-    .filter(a => a.length >= 2)
+    .filter(a => a.length > 2)
     .filter(a => !parties.includes(a))
     .filter(Boolean)
     .sort()
@@ -100,7 +115,7 @@ PgDb.connect().then(async pgdb => {
 
   console.log('Tokenizing file names')
   const images = files
-    .filter(file => !file.match(/(\.pdf$|Icon\r$|\/triage\/)/g))
+    .filter(file => !file.match(/(\.pdf$|Icon\r$|\/triage\/|\/archive\/)/g))
     .map(file => {
       const basename = path.basename(file, '.jpg')
       const party = file.match(/parties\/(.+?)\//, '$1')[1]
@@ -144,7 +159,8 @@ PgDb.connect().then(async pgdb => {
 
       // const user = users.find(({ id }) => id === record.userId)
       const user = await pgdb.public.users.findOne({ id: record.userId })
-      const name = [user.firstName, user.lastName].join(' ')
+
+      const name = [record.payload.meta.firstName, record.payload.meta.lastName].join(' ')
       const tokens = toTokens(name)
 
       return {
@@ -217,13 +233,13 @@ PgDb.connect().then(async pgdb => {
     return { image, card: electedCard, cards: electedCards, error: false }
   })
 
-  /* errornous
+  /* errornous */
   evaluatedImages
     .filter(evaluatedImage => evaluatedImage.error)
     .forEach(evaluatedImage => {
       if (evaluatedImage.cards.length > 0) {
         return evaluatedImage.cards.forEach(card => console.log([
-          evaluatedImage.image.basename,
+          evaluatedImage.image.file,
           evaluatedImage.image.tokens.join(' '),
           card.name,
           card.identifier,
@@ -234,7 +250,9 @@ PgDb.connect().then(async pgdb => {
       }
 
       return console.log([
-        evaluatedImage.image.basename,
+        evaluatedImage.image.file,
+        evaluatedImage.image.party,
+
         evaluatedImage.image.tokens.join(' '),
         '',
         '',
@@ -243,7 +261,6 @@ PgDb.connect().then(async pgdb => {
         evaluatedImage.error
       ].join('\t'))
     })
-  */
 
   console.log('Report', {
     evaluatedImages: evaluatedImages.length,

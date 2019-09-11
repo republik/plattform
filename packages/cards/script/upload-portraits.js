@@ -39,8 +39,12 @@ PgDb.connect().then(async pgdb => {
       `, { cardUserId })
 
       if (userId) {
-        const portraitUrl = await Portrait.upload(portrait)
-        await pgdb.public.users.update({ id: userId }, { portraitUrl, updatedAt: new Date() })
+        try {
+          const portraitUrl = await Portrait.upload(portrait)
+          await pgdb.public.users.update({ id: userId }, { portraitUrl, updatedAt: new Date() })
+        } catch (e) {
+          console.warn(e)
+        }
       }
     },
     { concurrency: 5 }

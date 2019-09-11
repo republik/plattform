@@ -137,6 +137,8 @@ const toPayload = (row) => {
     vestedInterestsLobbywatch: null,
     campaignBudget: maybeNumber(row.campaign_budget),
     campaignBudgetComment: maybeString(row.cb_comment),
+    campaignBudgetSmartvote: maybeNumber(row.campaign_budget),
+    campaignBudgetCommentSmartvote: maybeString(row.cb_comment),
     nationalCouncil: {
       listName: null,
       listNumbers: [],
@@ -276,8 +278,7 @@ PgDb.connect().then(async pgdb => {
           publicUrl: payload.meta.publicUrl,
           username: payload._import.suggestedUsernames.find(suggestedUsername => !usernamesTaken.includes(suggestedUsername)),
           verified: false,
-          hasPublicProfile: true,
-          isListed: true
+          hasPublicProfile: true
         })
 
       usernamesTaken.push(user.username)
