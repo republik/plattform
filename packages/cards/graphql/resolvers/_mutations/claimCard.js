@@ -134,6 +134,14 @@ module.exports = async (
         }
       )
 
+      await transaction.public.subscriptions.update(
+        { objectUserId: tokenUser.id },
+        {
+          objectUserId: user.id,
+          updatedAt: now
+        }
+      )
+
       if (user._raw.username && user._raw.username !== tokenUser._raw.username) {
         try {
           await Redirections.add({
