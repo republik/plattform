@@ -1,3 +1,5 @@
+const _ = require('lodash')
+
 const { AccessToken: { getUserByAccessToken } } = require('@orbiting/backend-modules-auth')
 
 module.exports = {
@@ -20,9 +22,15 @@ module.exports = {
     return loaders.CardGroup.byId.load(card.cardGroupId)
   },
 
-  payload (card) {
+  payload (card, args) {
+    const { paths } = args
     const { meta, ...payload } = card.payload
-    return payload
+
+    if (!paths || paths.length < 1) {
+      return payload
+    }
+
+    return _.pick(payload, paths.map(_.toPath))
   },
 
   async statement (card, args, { loaders }) {

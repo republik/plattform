@@ -14,12 +14,11 @@ type queries {
   cards(
     id: ID
     accessToken: ID
-    focus: ID
+    focus: [ID!]
     first: Int
     last: Int
     before: String
     after: String
-    undecided: Boolean
   ): CardConnection!
 
   cardGroup(

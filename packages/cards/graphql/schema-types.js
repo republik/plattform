@@ -2,7 +2,9 @@ module.exports = `
 
 type Card {
   id: ID!
-  payload: JSON!
+  payload(
+    paths: [String!]
+  ): JSON!
   group: CardGroup!
   user(accessToken: ID): User!
   statement: Comment
@@ -29,6 +31,7 @@ type CardGroup {
   name: String!
   slug: String!
   cards(
+    focus: [ID!]
     first: Int
     last: Int
     before: String
@@ -52,6 +55,7 @@ type CardGroupConnection {
 
 extend type User {
   cards(
+    focus: [ID!]
     first: Int
     last: Int
     before: String
