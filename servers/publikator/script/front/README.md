@@ -5,7 +5,10 @@ How to split a front repo into two based on a date. `republik/magazine` is used 
 All commands are relative to [here](./)
 
 ## Run
-0. clone `magazine`
+0. Archive magazine repo on github (to avoid missing changes).
+(Settings -> Danger Zone -> Archive this repository)
+
+1. clone `magazine`
 ```
 git clone --mirror git@github.com:republik/magazine.git
 ```
@@ -17,7 +20,7 @@ drwxr-xr-x  magazine
 -rwxr-xr-x  splitFront.js
 ```
 
-1. run `splitFront.js`
+2. run `splitFront.js`
 ```
 node ./splitFront.js 2019-01-01
 ```
@@ -27,10 +30,10 @@ drwxr-xr-x  magazine-after-2019-01-01
 drwxr-xr-x  magazine-before-2019-01-01
 ```
 
-2. create publikator docs
+3. create publikator docs
 Open the publikator instance of your choice (eg. `republik-dev`) and create two new documents (template: front). Eg: `before-2019-01-01` and `after-2019-01-01`
 
-3. Manually commit and force push
+4. Manually commit and force push
 Repeat for both your local folders:
 ```
 cd magazine-before-2019-01-01
@@ -40,4 +43,4 @@ git remote add git@github.com:republik-dev/before-2019-01-01.git
 git push --set-upstream origin master --force
 ```
 
-4. Goto publikator and publish the two new docs
+5. Goto publikator and publish the two new docs
