@@ -1,15 +1,8 @@
-const { paginate } = require('@orbiting/backend-modules-utils')
-
-const defaults = {
-  first: 10
-}
+const { paginateCards } = require('../../lib/cards')
 
 module.exports = {
   async cards (cardGroup, args, { loaders }) {
-    return paginate(
-      Object.assign({}, defaults, args),
-      await loaders.Card.byCardGroupId.load(cardGroup.id)
-    )
+    return paginateCards(args, await loaders.Card.byCardGroupId.load(cardGroup.id))
   },
 
   async discussion (cardGroup, args, { loaders }) {
