@@ -55,20 +55,22 @@ Promise.resolve().then(async () => {
       const regexResult = getDateRegex().exec(nodesString)
       const dateString = max(regexResult || [])
 
-      if (dateString) {
-        const date = moment(dateString, dateFormat)
-        if (date.isBefore(splitDate)) {
-          if (isAfter) {
-            console.warn('child with date before split date encountered after children with date after')
-          }
-          newRootChildren.before.push(rootChild)
-        } else {
-          if (!isAfter) {
-            firstDateAfter = date
-          }
-          isAfter = true
-          newRootChildren.after.push(rootChild)
+      const date = dateString && moment(dateString, dateFormat)
+      const key = date
+        ? (date.isBefore(splitDate) ? 'before' : 'after')
+        : (isAfter ? 'after' : 'before')
+
+      if (key === 'before') {
+        if (isAfter) {
+          console.warn('child with date before split date encountered after children with date after')
         }
+        newRootChildren.before.push(rootChild)
+      } else {
+        if (!isAfter) {
+          firstDateAfter = date
+        }
+        isAfter = true
+        newRootChildren.after.push(rootChild)
       }
     })
 
