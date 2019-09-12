@@ -2,7 +2,7 @@
 
 How to split a front repo into two based on a date. `republik/magazine` is used as an example here.
 
-All commands are relative to [here](./)
+All commands are relative to where this README is located.
 
 ## Run
 0. Archive magazine repo on github (to avoid missing changes).
