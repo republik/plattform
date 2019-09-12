@@ -111,7 +111,14 @@ Promise.resolve().then(async () => {
             path.join(newRepoDir, imagePath)
           )
             .catch(error => {
-              console.error('copying image failed', { error, imagePath })
+              // try with +xml
+              fs.copyFile(
+                path.join(repoDir, `${imagePath}+xml`),
+                path.join(newRepoDir, `${imagePath}+xml`)
+              )
+                .catch(e2 => {
+                  console.error('copying image failed', { error, imagePath })
+                })
             })
       )
 
