@@ -112,7 +112,7 @@ module.exports = async (
       )
 
       await transaction.public.subscriptions.update(
-        { objectUserId: tokenUser.id },
+        { 'userId !=': user.id, objectUserId: tokenUser.id },
         {
           objectUserId: user.id,
           updatedAt: now
