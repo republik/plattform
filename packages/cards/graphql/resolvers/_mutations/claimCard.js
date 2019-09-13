@@ -7,7 +7,8 @@ const { lib: { Portrait } } = require('@orbiting/backend-modules-assets')
 const { grants: grantsLib } = require('@orbiting/backend-modules-access')
 const { Redirections } = require('@orbiting/backend-modules-redirections')
 const { publish } = require('@orbiting/backend-modules-slack')
-const hotness = require('@orbiting/backend-modules-discussions/lib/hotness')
+
+const { upsertStatement } = require('../../../lib/cards')
 
 const { ADMIN_FRONTEND_BASE_URL, CLAIM_CARD_CAMPAIGN, SLACK_CHANNEL_FEED } = process.env
 
@@ -47,38 +48,14 @@ module.exports = async (
 
     const portraitUrl = portrait ? await Portrait.upload(portrait) : null
 
-    const updatedCard = {
-      payload: { ...card.payload, statement },
-      userId: user.id
-    }
-
-    const cardGroup = await transaction.public.cardGroups.findOne({ id: card.cardGroupId })
-
-    if (!card.commentId) {
-      const comment = await transaction.public.comments.insertAndGet({
-        discussionId: cardGroup.discussionId,
-        userId: user.id,
-        content: statement.trim(),
-        hotness: hotness(0, 0, (new Date().getTime())),
-        createdAt: now,
-        updatedAt: now
-      })
-
-      updatedCard.commentId = comment.id
-    } else {
-      await transaction.public.comments.updateOne(
-        { id: card.commentId },
-        {
-          content: statement.trim(),
-          updatedAt: now
-        }
-      )
-    }
-
     await transaction.public.cards.updateAndGet(
       { id },
       {
-        ...updatedCard,
+        payload: {
+          ...card.payload,
+          statement
+        },
+        userId: user.id,
         updatedAt: now
       }
     )
@@ -155,29 +132,7 @@ module.exports = async (
       }
     }
 
-    if (cardGroup.discussionId) {
-      const credentials = await transaction.public.credentials.find(
-        { userId: user.id, isListed: true }
-      )
-
-      const discussionPreference = await transaction.public.discussionPreferences.findOne(
-        { discussionId: cardGroup.discussionId, userId: user.id }
-      )
-
-      if (!discussionPreference) {
-        await transaction.public.discussionPreferences.insert({
-          discussionId: cardGroup.discussionId,
-          userId: user.id,
-          credentialId: credentials
-            .find(credential => credential.userId === user.id)
-            .id,
-          notificationOption: 'MY_CHILDREN',
-          anonymous: false
-        })
-      }
-    }
-
-    if (CLAIM_CARD_CAMPAIGN) {
+    if (CLAIM_CARD_CAMPAIGN && !Roles.userIsInRoles(user, ['debater'])) {
       try {
         await grantsLib.request(user, CLAIM_CARD_CAMPAIGN, t, transaction, mail)
         await Roles.addUserToRole(user.id, 'debater', transaction)
@@ -186,7 +141,23 @@ module.exports = async (
       }
     }
 
+    const statementAction = await upsertStatement(card, transaction)
+
     await transaction.transactionCommit()
+
+    if (statementAction === 'insert') {
+      try {
+        const updatedCard = await pgdb.public.cards.findOne({ id: card.id })
+        if (updatedCard.commentId) {
+          const comment = await pgdb.public.comments.findOne({ id: updatedCard.commentId })
+          const discussion = await pgdb.public.discussions.findOne({ id: comment.discussionId })
+          const { Notifications: { submitComment } } = require('@orbiting/backend-modules-discussions')
+          await submitComment(comment, discussion, context)
+        }
+      } catch (e) {
+        console.warn(e)
+      }
+    }
 
     try {
       const owner = await pgdb.public.users.findOne({ id: user.id })

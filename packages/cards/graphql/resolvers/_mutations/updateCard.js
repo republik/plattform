@@ -1,15 +1,18 @@
-const { ensureSignedIn } = require('@orbiting/backend-modules-auth')
+const { ensureSignedIn, Roles } = require('@orbiting/backend-modules-auth')
+const { grants: grantsLib } = require('@orbiting/backend-modules-access')
 const { lib: { Portrait } } = require('@orbiting/backend-modules-assets')
 const { publish } = require('@orbiting/backend-modules-slack')
 
-const { ADMIN_FRONTEND_BASE_URL, SLACK_CHANNEL_FEED } = process.env
+const { upsertStatement } = require('../../../lib/cards')
+
+const { ADMIN_FRONTEND_BASE_URL, CLAIM_CARD_CAMPAIGN, SLACK_CHANNEL_FEED } = process.env
 
 module.exports = async (
   _,
   { id, portrait, statement, payload },
   context
 ) => {
-  const { req, user, pgdb, t } = context
+  const { req, user, pgdb, t, mail } = context
   ensureSignedIn(req)
 
   const transaction = await pgdb.transactionBegin()
@@ -27,16 +30,6 @@ module.exports = async (
         { id: user.id },
         {
           portraitUrl: portraitUrl,
-          updatedAt: now
-        }
-      )
-    }
-
-    if (card.commentId) {
-      await transaction.public.comments.update(
-        { id: card.commentId },
-        {
-          content: statement,
           updatedAt: now
         }
       )
@@ -64,12 +57,36 @@ module.exports = async (
       { id },
       {
         payload: updatedPayload,
-        userId: user.id,
         updatedAt: now
       }
     )
 
+    if (CLAIM_CARD_CAMPAIGN && !Roles.userIsInRoles(user, ['debater'])) {
+      try {
+        await grantsLib.request(user, CLAIM_CARD_CAMPAIGN, t, transaction, mail)
+        await Roles.addUserToRole(user.id, 'debater', transaction)
+      } catch (e) {
+        console.warn(e)
+      }
+    }
+
+    const statementAction = await upsertStatement(card, transaction)
+
     await transaction.transactionCommit()
+
+    if (statementAction === 'insert') {
+      try {
+        const updatedCard = await pgdb.public.cards.findOne({ id: card.id })
+        if (updatedCard.commentId) {
+          const comment = await pgdb.public.comments.findOne({ id: updatedCard.commentId })
+          const discussion = await pgdb.public.discussions.findOne({ id: comment.discussionId })
+          const { Notifications: { submitComment } } = require('@orbiting/backend-modules-discussions')
+          await submitComment(comment, discussion, context)
+        }
+      } catch (e) {
+        console.warn(e)
+      }
+    }
 
     try {
       await publish(
