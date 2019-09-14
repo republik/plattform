@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import React from 'react'
 import colors from '../../theme/colors'
 import { mUp } from '../../theme/mediaQueries'
-import { serifBold28, serifBold38, serifRegular15 } from '../Typography/styles'
+import { serifBold28, serifBold32, serifRegular15 } from '../Typography/styles'
 import { inQuotes } from '../../lib/inQuotes'
 
 const styles = {
@@ -11,17 +11,17 @@ const styles = {
     overflow: 'hidden',
     ...serifRegular15,
     color: colors.text,
-    marginBottom: 21,
+    marginBottom: 10,
     marginTop: 18
   }),
   highlight: css({
     overflow: 'hidden',
     ...serifBold28,
     color: colors.text,
-    marginBottom: 21,
+    marginBottom: 10,
     marginTop: 18,
     [mUp]: {
-      ...serifBold38
+      ...serifBold32
     }
   })
 }
