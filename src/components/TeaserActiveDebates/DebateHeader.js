@@ -9,23 +9,22 @@ const styles = {
   header: css({
     display: 'flex',
     justifyContent: 'space-between',
-    alignItems: 'center',
-    textDecoration: 'none',
-    cursor: 'pointer',
-    color: colors.text
+    alignItems: 'center'
   }),
   title: css({
     ...sansSerifMedium16,
-    marginRight: 10
+    marginRight: 10,
+    color: colors.text,
+    textDecoration: 'none'
   })
 }
 
 const DebateHeader = ({ title, commentCount, href, onClick }) => {
   return (
-    <a href={href} onClick={onClick} {...styles.header}>
-      {title && <div {...styles.title}>{title}</div>}
-      <IconLink discussionCommentsCount={commentCount} small />
-    </a>
+    <div {...styles.header}>
+      {title && <a href={href} onClick={onClick} {...styles.title}>{title}</a>}
+      <IconLink href={href} onClick={onClick} discussionCommentsCount={commentCount} small />
+    </div>
   )
 }
 
