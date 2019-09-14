@@ -47,8 +47,7 @@ const symbolShapes = {
 }
 const shapes = Object.keys(symbolShapes).concat('marker')
 
-const Points = ({data, colorScale, colorAccessor, project, shape, sizeRangeMax, hoverPoint, setHoverPoint}) => {
-
+const Points = ({ data, colorScale, colorAccessor, project, shape, sizeRangeMax, hoverPoint, setHoverPoint, opacity }) => {
   const valueAccessor = d => isNaN(d.value) ? 1 : d.value
 
   const marker = shape === 'marker'
@@ -68,13 +67,8 @@ const Points = ({data, colorScale, colorAccessor, project, shape, sizeRangeMax, 
   return (
     <g>
       {displayData.map((d, i) => {
-        const color = isNaN(d.value) ? '#000000' : colorScale(colorAccessor(d))
+        const color = colorScale(colorAccessor(d))
         let pos = project([d.datum.lon || d.datum.x, d.datum.lat || d.datum.y])
-
-        const stroke = hoverPoint === d ? {
-          strokeWidth: 1,
-          stroke: '#000000',
-        } : null
 
         if (marker) {
           pos = pos.map(Math.round)
@@ -93,8 +87,11 @@ const Points = ({data, colorScale, colorAccessor, project, shape, sizeRangeMax, 
             {marker && <line y2={-MARKER_HEIGHT} stroke={color} strokeWidth='2' shapeRendering='crispEdges' />}
             {!marker && (
               <>
-                <path d={symbolPath(d)} fill='none' {...stroke} />
-                <path d={symbolPath(d)} fill={color} opacity={isNaN(d.value) ? 1 : 0.6} />
+                {hoverPoint === d && <path d={symbolPath(d)} fill='none' stroke='#000' strokeWidth='1' />}
+                <path d={symbolPath(d)} fill={color}
+                  style={{
+                    opacity
+                  }} />
               </>
             )}
           </g>
@@ -245,24 +242,23 @@ export class GenericMap extends Component {
     }
 
     const [ x, y ] = projectPoint([hoverPoint.datum.lon, hoverPoint.datum.lat])
-    
-    const value = isNaN(hoverPoint.datum.value) 
-      ? String(hoverPoint.datum.value).trim()
-      : numberFormat(hoverPoint.datum.value)
+
+    const value = hoverPoint.datum.value !== undefined && (
+      isNaN(hoverPoint.datum.value) 
+        ? String(hoverPoint.datum.value).trim()
+        : numberFormat(hoverPoint.datum.value)
+    )
 
     const body = pointAttributes.map(t => {
       const val = hoverPoint.datum[t]
       if (val) {
-        return (<>{subsup(val)}<br/></>)
+        return (<Fragment key={t}>{subsup(val)}<br/></Fragment>)
       } else {
         return null
       }
     })
 
-    const hasValue = hoverPoint.datum.value !== undefined
-    const showTooltip = hasValue || body.length > 0 || hoverPoint.datum[pointLabel]
-
-    if (showTooltip) {
+    if (value || body.length > 0 || hoverPoint.datum[pointLabel]) {
       return (
         <ContextBox
           orientation="top"
@@ -271,7 +267,7 @@ export class GenericMap extends Component {
           contextWidth={width}
         >
           <ContextBoxValue label={hoverPoint.datum[pointLabel]}>
-            {hasValue && (
+            {value && (
               <>
                 {`${value} `}
                 {subsup(unit)}
@@ -282,10 +278,8 @@ export class GenericMap extends Component {
           </ContextBoxValue>
         </ContextBox>
       )        
-    } else {
-      return null
     }
-
+    return null
   }
   render() {
     const { props, state } = this
@@ -297,7 +291,8 @@ export class GenericMap extends Component {
       description,
       choropleth,
       colorLegendSize,
-      missingDataColor
+      missingDataColor,
+      opacity
     } = props
     const {
       loading, error, geoJson, hoverPoint
@@ -428,6 +423,7 @@ export class GenericMap extends Component {
                           sizeRangeMax={props.sizeRangeMax}
                           hoverPoint={hoverPoint}
                           setHoverPoint={this.setHoverPoint}
+                          opacity={opacity}
                         />
                       )}
                     </g>
@@ -532,7 +528,8 @@ export const propTypes = {
   ignoreMissingFeature: PropTypes.bool.isRequired,
   tLabel: PropTypes.func.isRequired,
   description: PropTypes.string,
-  color: PropTypes.string
+  color: PropTypes.string,
+  opacity: PropTypes.number.isRequired
 }
 
 GenericMap.propTypes = propTypes
@@ -553,7 +550,8 @@ GenericMap.defaultProps = {
   feature: 'feature',
   shape: 'circle',
   sizeRangeMax: 10,
-  getProjection: () => geoEqualEarth()
+  getProjection: () => geoEqualEarth(),
+  opacity: 0.6
 }
 
 
