@@ -3,12 +3,11 @@ import PropTypes from 'prop-types'
 import React from 'react'
 
 import CarouselContext, { defaultValue } from './Context'
-import { PADDING } from './constants'
+import { PADDING, TILE_MAX_WIDTH } from './constants'
 
 const styles = {
   carousel: css({
-    margin: 0,
-    padding: `${30 - PADDING}px ${PADDING}px`
+    padding: `30px ${PADDING}px ${30 - PADDING}px`
   })
 }
 
@@ -19,10 +18,8 @@ export const Carousel = ({
   bigger,
   children
 }) => {
-  const customStyles = css(styles.carousel, {
-    backgroundColor: bgColor,
-    color: color ? color : 'inherit'
-  })
+  const row = children && children[1]
+  const nTiles = row && React.Children.count(row.props && row.props.children)
 
   return <CarouselContext.Provider value={{
     bigger,
@@ -30,7 +27,19 @@ export const Carousel = ({
     bgColor,
     color
   }}>
-    <section {...customStyles}>{children}</section>
+    <section {...styles.carousel} style={{
+      backgroundColor: bgColor,
+      color: color ? color : 'inherit'
+    }}>
+      <div style={{
+        margin: '0 auto',
+        maxWidth: nTiles
+          ? nTiles * TILE_MAX_WIDTH
+          : undefined
+      }}>
+        {children}
+      </div>
+    </section>
   </CarouselContext.Provider>
 }
 

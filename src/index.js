@@ -47,9 +47,10 @@ ReactDOM.render(
       theme={theme}
       useBrowserHistory
       responsiveSizes={[
-        { name: 'Desktop large', width: 1095, height: 800 },
+        { name: 'Mobile', width: 320, height: 480 },
         { name: 'Desktop small', width: 800, height: 600 },
-        { name: 'Mobile', width: 320, height: 480 }
+        { name: 'Desktop large', width: 1095, height: 800 },
+        { name: 'Desktop xlarge', width: 2560, height: 800 },
       ]}
       specimens={{
         'remove-react-source': () => {

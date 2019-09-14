@@ -139,7 +139,7 @@ The media queries are defined in [`FrontTile`](/teaserfronttile).
 </TeaserCarousel>
 ```
 
-```react|span-6
+```react|span-6,responsive
 <TeaserCarousel bgColor='#000' color='#fff' bigger>
   <TeaserSectionTitle>Serien</TeaserSectionTitle>
 
@@ -155,7 +155,7 @@ The media queries are defined in [`FrontTile`](/teaserfronttile).
 
     </TeaserCarouselTile>
       <TeaserCarouselTile
-      image='/static/carousel/homestory.png?size=248x186'
+      image='/static/carousel/homestory.png?size=496x372'
       count={6}
       byline='Doug Chayka'
     >
@@ -165,7 +165,7 @@ The media queries are defined in [`FrontTile`](/teaserfronttile).
     </TeaserCarouselTile>
 
     <TeaserCarouselTile
-      image='/static/carousel/eth.png?size=248x186'
+      image='/static/carousel/eth.png?size=496x372'
       count={8}
     >
       <TeaserCarouselHeadline.Editorial>
@@ -174,7 +174,7 @@ The media queries are defined in [`FrontTile`](/teaserfronttile).
     </TeaserCarouselTile>
 
     <TeaserCarouselTile
-      image='/static/carousel/mike.png?size=248x186'
+      image='/static/carousel/mike.png?size=496x372'
       count={24}
     >
       <TeaserCarouselHeadline.Editorial>
@@ -183,7 +183,7 @@ The media queries are defined in [`FrontTile`](/teaserfronttile).
     </TeaserCarouselTile>
 
     <TeaserCarouselTile
-      image='/static/carousel/strahlen.png?size=248x186'
+      image='/static/carousel/strahlen.png?size=496x372'
       count={10}
     >
       <TeaserCarouselHeadline.Editorial>
