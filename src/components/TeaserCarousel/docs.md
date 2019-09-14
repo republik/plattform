@@ -12,9 +12,13 @@ Below 4 tiles, each tile will use 33% of the space available, up to a maximum of
 
 The media queries are defined in [`FrontTile`](/teaserfronttile).
 
-```react|span-6
+```react|responsive
 <TeaserCarousel outline='#D7D7D7'>
-  <TeaserSectionTitle href="/recenzionen">Rezensionen</TeaserSectionTitle>
+  <TeaserSectionTitle href="/rezensionen" onClick={(e) => {
+    e.preventDefault()
+  }}>
+    Rezensionen
+  </TeaserSectionTitle>
   <TeaserCarouselRow>
     <TeaserCarouselTile
       image='/static/carousel/test.png?size=4682x3512'

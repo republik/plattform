@@ -3,12 +3,12 @@ import PropTypes from 'prop-types'
 import React from 'react'
 
 import CarouselContext, { defaultValue } from './Context'
+import { PADDING } from './constants'
 
 const styles = {
   carousel: css({
     margin: 0,
-    padding: '30px 15px',
-    overflow: 'auto'
+    padding: `30px ${PADDING}px`
   })
 }
 

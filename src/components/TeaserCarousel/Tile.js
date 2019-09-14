@@ -9,6 +9,8 @@ import { serifRegular16, serifRegular18 } from '../Typography/styles'
 
 import CarouselContext from './Context'
 
+import { TILE_MARGIN_RIGHT } from './constants'
+
 const IMAGE_SIZE = {
   maxWidth: 160,
   maxHeight: 120
@@ -16,7 +18,7 @@ const IMAGE_SIZE = {
 
 const styles = {
   tile: css({
-    margin: '0 7px 0 0',
+    marginRight: TILE_MARGIN_RIGHT,
     textAlign: 'center',
     width: '33%',
     minWidth: 300,
