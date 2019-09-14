@@ -12,3 +12,7 @@ pre[class*="HighlightedCode"] {
   max-height: 800px;
   overflow: auto;
 }
+
+[class*="ReactSpecimen"] {
+  background-color: transparent !important;
+}
