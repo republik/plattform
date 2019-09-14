@@ -8,7 +8,7 @@ import { PADDING } from './constants'
 const styles = {
   carousel: css({
     margin: 0,
-    padding: `30px ${PADDING}px`
+    padding: `${30 - PADDING}px ${PADDING}px`
   })
 }
 

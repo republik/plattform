@@ -7,6 +7,7 @@ import { PADDING, TILE_MARGIN_RIGHT } from './constants'
 const styles = {
   container: css({
     margin: `0 -${PADDING}px`,
+    paddingBottom: PADDING,
     width: 'auto',
     display: 'flex',
     flexDirection: 'row',
@@ -15,9 +16,9 @@ const styles = {
     scrollbarWidth: 'none' /* Firefox */,
     msOverflowStyle: 'none' /* IE 10+ */,
     WebkitOverflowScrolling: 'touch',
-    '&::-webkit-scrollbar': {
+    '::-webkit-scrollbar': {
       width: 0,
-      height: 0
+      background: 'transparent'
     }
   }),
   pad: css({
