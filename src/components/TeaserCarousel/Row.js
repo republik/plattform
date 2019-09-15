@@ -104,6 +104,14 @@ export const Row = ({ children }) => {
     }
   }, [])
 
+  const getTop = () => {
+    const scroller = overflow.current
+    return {
+      top: 0,
+      topOffset: scroller.getBoundingClientRect().top
+    }
+  }
+
   return (
     <div role='group' {...styles.container}>
       <div {...styles.overflow} ref={overflow}>
@@ -116,8 +124,9 @@ export const Row = ({ children }) => {
         {...left && styles.arrowHoverable}
         style={{ left: 0, backgroundColor: lightBg }}
         onClick={() => {
-          const clientWidth = overflow.current.clientWidth
-          const target = Array.from(overflow.current.children).find(element => {
+          const scroller = overflow.current
+          const clientWidth = scroller.clientWidth
+          const target = Array.from(scroller.children).find(element => {
             const { left } = element.getBoundingClientRect()
             return left + clientWidth >= 0
           })
@@ -125,7 +134,8 @@ export const Row = ({ children }) => {
             time: 400,
             align: {
               left: 0,
-              leftOffset: TILE_MARGIN_RIGHT
+              leftOffset: TILE_MARGIN_RIGHT,
+              ...getTop()
             }
           })
         }}>
@@ -150,7 +160,8 @@ export const Row = ({ children }) => {
             align: {
               left: 0,
               leftOffset: newRightEdge >= scroller.scrollWidth
-                ? 0 : PADDING
+                ? 0 : PADDING,
+              ...getTop()
             }
           })
         }}>
