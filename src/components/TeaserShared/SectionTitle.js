@@ -20,7 +20,10 @@ const styles = {
       }
     },
     display: 'block',
-    margin: '0 0 30px 0',
+    marginBottom: 15,
+    [mUp]: {
+      marginBottom: 25
+    },
     color: 'inherit'
   }),
   small: css({

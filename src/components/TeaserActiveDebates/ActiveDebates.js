@@ -8,11 +8,11 @@ const styles = {
   section: css({
     margin: '0 auto',
     maxWidth: 1300,
-    padding: '40px 15px',
+    padding: '40px 15px 10px',
     backgroundColor: '#FFFFFF',
     color: '#000000',
     [mUp]: {
-      padding: '70px 15px'
+      padding: '50px 15px 40px'
     }
   }),
   row: css({}),
