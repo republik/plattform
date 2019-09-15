@@ -162,12 +162,10 @@ ActiveDebates.data = {
 
         discussions = discussions.reduce(
           (all, discussion, i) => {
-            let remainingCommentsPerDiscussion = 1
+            let remainingCommentsPerDiscussion = i === 0 ? 2 : 1
             // get comments from never before seen names
             // - max 5 in total
-            // - max 1 per discussion
-            // - maybe eventually we could do «max 2 for first discussion, max 1»
-            //   «i === 0 ? 2 : 1» here but needs spacing fine tuning
+            // - max 2 for first discussion, max 1 for the rest
             const nodes = discussion.comments.nodes.filter(comment => {
               if ((!comment.preview && !comment.highlight) || !remainingComments || !remainingCommentsPerDiscussion || seenNames.has(comment.displayAuthor.name)) {
                 return false
