@@ -9,9 +9,10 @@ module.exports = async (_, { lastDays = 5, first = 10 }, { pgdb }) =>
     JOIN
       discussions d
       ON c."discussionId" = d.id
+      AND d.hidden = false
+      AND d.closed = false
     WHERE
-      c."createdAt" > :minDate AND
-      d.closed = false
+      c."createdAt" > :minDate
     GROUP BY d.id
     ORDER BY 1 DESC
     LIMIT :first
