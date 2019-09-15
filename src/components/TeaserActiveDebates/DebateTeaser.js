@@ -60,6 +60,12 @@ export const DebateTeaser = ({
    * A reduced version of DiscussionContext value, just enough so we can render
    * the Comment Header component.
    */
+  const links = {
+    Profile: ({ displayAuthor, ...props }) => (
+      <CommentLink {...props} discussion={discussion} displayAuthor={displayAuthor} />
+    ),
+    Comment: ({ comment, ...props }) => <CommentLink {...props} discussion={discussion} commentId={comment.id} />
+  }
   const discussionContextValue = {
     discussion,
     clock: {
@@ -67,12 +73,7 @@ export const DebateTeaser = ({
       isDesktop,
       t
     },
-    links: {
-      Profile: ({ displayAuthor, ...props }) => (
-        <CommentLink {...props} discussion={discussion} displayAuthor={displayAuthor} />
-      ),
-      Comment: ({ comment, ...props }) => <CommentLink {...props} discussion={discussion} commentId={comment.id} />
-    }
+    links
   }
 
   return (
@@ -86,16 +87,18 @@ export const DebateTeaser = ({
             href={discussion.path}
           />
         </DiscussionLink>
-        {discussion.comments.nodes.map(comment => (
-          <React.Fragment key={comment.id}>
-            <ActiveDebateComment
-              t={t}
-              id={comment.id}
-              highlight={comment.highlight ? comment.highlight : undefined}
-              preview={comment.preview}
-            />
+        {discussion.comments.nodes.map((comment, i, all) => (
+          <div key={comment.id} style={{ marginBottom: i !== all.length - 1 ? 30 : 0 }}>
+            <links.Comment comment={comment} passHref>
+              <ActiveDebateComment
+                t={t}
+                id={comment.id}
+                highlight={comment.highlight ? comment.highlight : undefined}
+                preview={comment.preview}
+              />
+            </links.Comment>
             <UserProfile t={t} comment={comment} isExpanded={true} />
-          </React.Fragment>
+          </div>
         ))}
       </div>
     </DiscussionContext.Provider>

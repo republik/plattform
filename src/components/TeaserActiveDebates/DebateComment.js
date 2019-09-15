@@ -7,44 +7,34 @@ import { serifBold28, serifBold32, serifRegular15 } from '../Typography/styles'
 import { inQuotes } from '../../lib/inQuotes'
 
 const styles = {
-  body: css({
+  base: css({
+    display: 'block',
     overflow: 'hidden',
-    ...serifRegular15,
-    color: colors.text,
-    marginBottom: 10,
-    marginTop: 18
-  }),
-  highlight: css({
-    overflow: 'hidden',
-    ...serifBold28,
     color: colors.text,
     marginBottom: 10,
     marginTop: 18,
+    textDecoration: 'none'
+  }),
+  preview: css(serifRegular15),
+  highlight: css({
+    ...serifBold28,
     [mUp]: {
       ...serifBold32
     }
   })
 }
 
-const DebateComment = ({ highlight, preview }) => {
-  return (
-    <>
-      {!highlight && preview && (
-        <div {...styles.body}>
-          <React.Fragment>
-            {preview.string}
-            {preview.more && <React.Fragment>&nbsp;…</React.Fragment>}
-          </React.Fragment>
-        </div>
-      )}
-      {highlight && (
-        <div {...styles.highlight}>
-          {inQuotes(highlight)}
-        </div>
-      )}
-    </>
-  )
-}
+const DebateComment = ({ highlight, preview, href, onClick }) => (
+  <a {...styles.base} {...styles[highlight ? 'highlight' : 'preview']} href={href} onClick={onClick}>
+    {highlight
+      ? inQuotes(highlight)
+      : preview && <React.Fragment>
+        {preview.string}
+        {preview.more && <React.Fragment>&nbsp;…</React.Fragment>}
+      </React.Fragment>
+    }
+  </a>
+)
 
 export default DebateComment
 
