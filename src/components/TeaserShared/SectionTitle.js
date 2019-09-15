@@ -6,6 +6,8 @@ import { sansSerifMedium16, sansSerifMedium22, sansSerifRegular30 } from '../Typ
 
 const styles = {
   container: css({
+    display: 'block',
+    marginBottom: 15,
     ...sansSerifMedium22,
     '& svg': {
       width: 22,
@@ -17,11 +19,7 @@ const styles = {
       '& svg': {
         width: 30,
         height: 30
-      }
-    },
-    display: 'block',
-    marginBottom: 15,
-    [mUp]: {
+      },
       marginBottom: 25
     },
     color: 'inherit'
