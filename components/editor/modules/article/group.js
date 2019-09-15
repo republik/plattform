@@ -115,16 +115,34 @@ const AricleGroupForm = options => {
     teaserModule
   ] = options.subModules
 
-  const clickHandler = (value, collection, onChange) => event => {
+  const addTeaser = (value, collection, onChange, after = false) => event => {
+    const selectedTeaser = value.document.getClosest(
+      value.startBlock.key,
+      matchBlock(teaserModule.TYPE)
+    )
+
     event.preventDefault()
     onChange(
       value
         .change()
         .insertNodeByKey(
           collection.key,
-          collection.nodes.size,
+          collection.nodes.indexOf(selectedTeaser) + (after ? 1 : 0),
           teaserModule.helpers.newItem()
         )
+    )
+  }
+  const rmTeaser = (value, collection, onChange) => event => {
+    const selectedTeaser = value.document.getClosest(
+      value.startBlock.key,
+      matchBlock(teaserModule.TYPE)
+    )
+
+    event.preventDefault()
+    onChange(
+      value
+        .change()
+        .removeNodeByKey(selectedTeaser.key)
     )
   }
 
@@ -139,12 +157,31 @@ const AricleGroupForm = options => {
     return <UIForm>
       <Interaction.P>
         <Label>Teaser-Liste</Label>
+        <br />
+        Teaser hinzufügen:
+        <br />
         <span
-          {...buttonStyles.insert}
+          {...buttonStyles.action}
           data-visible
-          onMouseDown={clickHandler(value, collection, onChange)}
+          onMouseDown={addTeaser(value, collection, onChange)}
         >
-          Teaser hinzufügen
+          davor
+        </span>
+        {' – '}
+        <span
+          {...buttonStyles.action}
+          data-visible
+          onMouseDown={addTeaser(value, collection, onChange, true)}
+        >
+          danach
+        </span>
+        <br /><br />
+        <span
+          {...buttonStyles.action}
+          data-visible
+          onMouseDown={rmTeaser(value, collection, onChange)}
+        >
+          Teaser entfernen
         </span>
       </Interaction.P>
     </UIForm>
