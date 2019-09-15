@@ -2,11 +2,11 @@ import { css } from 'glamor'
 import React from 'react'
 import ChevronRight from 'react-icons/lib/md/keyboard-arrow-right'
 import { mUp } from '../TeaserFront/mediaQueries'
-import { sansSerifRegular16, sansSerifRegular22, sansSerifRegular30 } from '../Typography/styles'
+import { sansSerifMedium16, sansSerifMedium22, sansSerifRegular30 } from '../Typography/styles'
 
 const styles = {
   container: css({
-    ...sansSerifRegular22,
+    ...sansSerifMedium22,
     '& svg': {
       width: 22,
       height: 22,
@@ -25,7 +25,7 @@ const styles = {
   }),
   small: css({
     color: 'inherit',
-    ...sansSerifRegular16,
+    ...sansSerifMedium16,
     '& svg': {
       marginTop: -1,
       width: 16,
