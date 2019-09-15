@@ -94,11 +94,14 @@ const cloneWithRepoData = options => (node, repoData) => {
 
   const isArticleTile = node.type === 'ARTICLETILE'
   const formatMeta = meta.format && meta.format.meta
+  data = data.set('kind', 'editorial')
   if (formatMeta) {
     data = data
-      .set('kind', formatMeta.kind)
+      .set('kind', formatMeta.kind === 'feuilleton'
+        ? 'editorial'
+        : formatMeta.kind)
       .set('formatUrl', `https://github.com/${meta.format.repoId}?autoSlug`)
-    if (isArticleTile) {
+    if (isArticleTile || node.type === 'CAROUSELTILE') {
       data = data.set(
         'formatColor',
         formatMeta.color
@@ -107,9 +110,6 @@ const cloneWithRepoData = options => (node, repoData) => {
             ? colors[formatMeta.kind]
             : undefined
       )
-      if (formatMeta.kind === 'feuilleton') {
-        data = data.set('kind', 'editorial')
-      }
     } else {
       data = data.set('color', formatMeta.color)
     }
