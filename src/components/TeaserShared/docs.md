@@ -23,3 +23,13 @@ Supported props:
     Aktive Debatten
 </TeaserSectionTitle>
 ```
+
+```react
+<TeaserSectionTitle
+  small
+  href='/'
+  onClick={() => {}}
+>
+    Alle Beiträge im Feed
+</TeaserSectionTitle>
+```

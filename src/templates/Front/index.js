@@ -530,6 +530,7 @@ const createSchema = ({
       showUI: false,
       teaserType: 'articleTile',
       formOptions: [
+        'formatUrl',
         'image',
         'byline',
         'kind',

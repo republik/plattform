@@ -19,7 +19,6 @@ import {
 
 import Center from '../../components/Center'
 import Loader from '../../components/Loader'
-import * as Editorial from '../../components/Typography/Editorial'
 
 import { mUp } from '../../theme/mediaQueries'
 
@@ -94,7 +93,7 @@ const createLiveTeasers = ({
                     )
                   })}
                   <Link href={url} passHref>
-                    <Editorial.A href={url}>{label}</Editorial.A>
+                    <TeaserSectionTitle small href={url}>{label}</TeaserSectionTitle>
                   </Link>
                 </div>
               )
