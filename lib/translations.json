@@ -1,5 +1,5 @@
 {
-  "updated": "2019-09-01T10:38:55.148Z",
+  "updated": "2019-09-15T22:03:14.378Z",
   "title": "live",
   "data": [
     {
@@ -728,7 +728,7 @@
     },
     {
       "key": "commit/warn/uncommittedChangesError",
-      "value": "Deine Aktivität konnte nicht gemolden werden."
+      "value": "Deine Aktivität konnte nicht gemeldet werden."
     },
     {
       "key": "commit/warn/failed",
@@ -1193,6 +1193,10 @@
     {
       "key": "styleguide/comment/adminUnpublished",
       "value": "Leider mussen wir Ihren Beitrag unveröffentlichen. Wenden sie sich an kontakt@republik.ch."
+    },
+    {
+      "key": "styleguide/TeaserFeed/InternalOnlyTag",
+      "value": "Intern publiziert"
     }
   ]
 }
