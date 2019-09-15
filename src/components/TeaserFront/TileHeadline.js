@@ -68,6 +68,20 @@ const styles = {
       ...standardSize
     }
   }),
+  interactionCol1: css({
+    ...sansSerifMedium20,
+    ...smallSize,
+    [mUp]: {
+      ...standardSize
+    }
+  }),
+  interactionCol1Medium: css({
+    ...sansSerifMedium20,
+    ...smallSize,
+    [mUp]: {
+      ...mediumSize
+    }
+  }),
   interactionCol2: css({
     ...sansSerifMedium20,
     ...smallSize,
