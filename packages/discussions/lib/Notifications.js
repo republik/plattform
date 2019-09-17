@@ -111,10 +111,31 @@ const submitComment = async (comment, discussion, context) => {
       context
     )
 
+  const subscriberDiscussionPreferences = await pgdb.public.discussionPreferences.find({
+    userId: commenterSubscribers.map(s => s.id),
+    discussionId: comment.discussionId
+  })
+
+  const discussionNotificationSubscribers =
+    commenterSubscribers.filter(subscriber => {
+      const subscriberDiscussionPreference =
+        subscriberDiscussionPreferences.find(({ userId }) => userId === subscriber.id)
+
+      const notificationOption =
+        subscriberDiscussionPreference &&
+        subscriberDiscussionPreference.notificationOption !== 'NONE'
+
+      if ([true, false].includes(notificationOption)) {
+        return notificationOption
+      }
+
+      return subscriber._raw.defaultDiscussionNotificationOption !== 'NONE'
+    })
+
   const notifyUsers = uniqWith(
     [
       ...discussionNotificationUsers,
-      ...commenterSubscribers
+      ...discussionNotificationSubscribers
     ].filter(Boolean),
     (a, b) => a.id === b.id
   )
