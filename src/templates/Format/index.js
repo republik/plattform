@@ -36,7 +36,7 @@ const createSchema = ({
           {value: 'editorial', text: 'Editorial'},
           {value: 'meta', text: 'Meta'},
           {value: 'scribble', text: 'Ameise'},
-          {value: 'feuilleton', text: 'Feuilleton'}
+          {value: 'opinion', text: 'Kolumne'}
         ]
       },
       {
