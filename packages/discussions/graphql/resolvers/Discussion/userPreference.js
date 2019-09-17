@@ -1,23 +1,16 @@
-module.exports = async (discussion, _, { pgdb, loaders, user }) => {
+module.exports = async (discussion, _, { loaders, user }) => {
   if (!user) {
     return null
   }
 
-  const userId = user.id
   const dp = await loaders.Discussion.Commenter.discussionPreferences.load({
     discussionId: discussion.id,
-    userId
+    userId: user.id
   })
+
   if (!dp) { // return default
-    const userCommented = !!(await pgdb.public.comments.findFirst({
-      userId,
-      discussionId: discussion.id
-    }))
     return {
-      anonymity: discussion.anonymity === 'ENFORCED',
-      notifications: !userCommented
-        ? 'NONE'
-        : user._raw.defaultDiscussionNotificationOption
+      anonymity: discussion.anonymity === 'ENFORCED'
     }
   }
 

@@ -45,7 +45,7 @@ type DiscussionRules {
 type DiscussionPreferences {
   anonymity: Boolean!
   credential: Credential
-  notifications: DiscussionNotificationOption!
+  notifications: DiscussionNotificationOption
 }
 input DiscussionPreferencesInput {
   anonymity: Boolean
