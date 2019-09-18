@@ -84,17 +84,21 @@ const filterCards = async (cards, { filters = {} }, context) => {
 
   // { subscribedByMe: <Boolean> }
   if (filters.subscribedByMe) {
-    const subscriptions = await Subscriptions.getSubscriptionsByUserForObjects(
-      context.user.id,
-      'User',
-      filteredCards.map(card => card.userId),
-      'COMMENTS',
-      context
-    )
+    if (context.user) {
+      const subscriptions = await Subscriptions.getSubscriptionsByUserForObjects(
+        context.user.id,
+        'User',
+        filteredCards.map(card => card.userId),
+        'COMMENTS',
+        context
+      )
 
-    const subscribedUserIds = subscriptions.map(subscription => subscription.objectUserId)
+      const subscribedUserIds = subscriptions.map(subscription => subscription.objectUserId)
 
-    filteredCards = filteredCards.filter(card => subscribedUserIds.includes(card.userId))
+      filteredCards = filteredCards.filter(card => subscribedUserIds.includes(card.userId))
+    } else {
+      filteredCards = []
+    }
   }
 
   return filteredCards
