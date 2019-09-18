@@ -73,12 +73,12 @@ const filterCards = async (cards, { filters = {} }, context) => {
     ))
   }
 
-  // { partyGroups: [ <partyGroup 1>, ...<partyGroup n> ]}
-  if (filters.partyGroups) {
+  // { fractions: [ <fraction 1>, ...<fraction n> ]}
+  if (filters.fractions) {
     filteredCards = filteredCards.filter(card => (
       card.payload &&
-      card.payload.party &&
-      filters.partyGroups.includes(card.payload.partyGroup)
+      card.payload.fraction &&
+      filters.fractions.includes(card.payload.fraction)
     ))
   }
 
