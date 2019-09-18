@@ -1,8 +1,12 @@
 const { paginateCards } = require('../../lib/cards')
 
 module.exports = {
-  async cards (cardGroup, args, { loaders }) {
-    return paginateCards(args, await loaders.Card.byCardGroupId.load(cardGroup.id))
+  async cards (cardGroup, args, context) {
+    return paginateCards(
+      await context.loaders.Card.byCardGroupId.load(cardGroup.id),
+      args,
+      context
+    )
   },
 
   async discussion (cardGroup, args, { loaders }) {

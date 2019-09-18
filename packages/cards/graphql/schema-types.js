@@ -13,6 +13,12 @@ type Card {
   totalMatches: Int!
 }
 
+input CardFiltersInput {
+  parties: [String!]
+  partyGroups: [String!]
+  subscribedByMe: Boolean
+}
+
 type CardPageInfo {
   hasNextPage: Boolean!
   endCursor: String
@@ -32,6 +38,7 @@ type CardGroup {
   slug: String!
   cards(
     focus: [ID!]
+    filters: CardFiltersInput
     first: Int
     last: Int
     before: String
@@ -56,6 +63,7 @@ type CardGroupConnection {
 extend type User {
   cards(
     focus: [ID!]
+    filters: CardFiltersInput
     first: Int
     last: Int
     before: String
