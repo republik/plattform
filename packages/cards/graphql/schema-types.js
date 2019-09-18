@@ -15,7 +15,7 @@ type Card {
 
 input CardFiltersInput {
   parties: [String!]
-  partyGroups: [String!]
+  fractions: [String!]
   subscribedByMe: Boolean
 }
 
@@ -30,6 +30,29 @@ type CardConnection {
   totalCount: Int!
   pageInfo: CardPageInfo!
   nodes: [Card!]!
+  aggregations(
+    keys: [CardAggregationKeys!]
+  ): [CardAggregation!]!
+}
+
+enum CardAggregationKeys {
+  party
+  fraction
+}
+
+type CardAggregation {
+  key: String!
+  buckets: [CardAggregationBucket!]!
+}
+
+type CardAggregationBucket {
+  value: String!
+  cards(
+    first: Int
+    last: Int
+    before: String
+    after: String
+  ): CardConnection!
 }
 
 type CardGroup {

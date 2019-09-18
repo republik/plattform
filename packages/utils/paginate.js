@@ -113,6 +113,7 @@ module.exports.paginator = (args, payloadFn, nodesFn) => {
       hasPreviousPage,
       startCursor: hasPreviousPage ? objectToBase64({ id: startCursor, payload }) : null
     },
-    nodes: nodeSubset
+    nodes: nodeSubset,
+    _nodes: nodes
   }
 }
