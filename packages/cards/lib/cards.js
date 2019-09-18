@@ -1,6 +1,7 @@
 const shuffleSeed = require('shuffle-seed')
 
 const { paginate: { paginator } } = require('@orbiting/backend-modules-utils')
+const { Subscriptions } = require('@orbiting/backend-modules-subscriptions')
 
 const defaults = {
   first: 10
@@ -60,7 +61,48 @@ const weightShuffleCards = (cards, seed, focus = []) => {
   return removeDuplicates(shuffeledCards, 'id')
 }
 
-const paginateCards = (args, cards) => {
+const filterCards = async (cards, { filters = {} }, context) => {
+  let filteredCards = [ ...cards ]
+
+  // { parties: [ <party 1>, ...<party n> ]}
+  if (filters.parties) {
+    filteredCards = filteredCards.filter(card => (
+      card.payload &&
+      card.payload.party &&
+      filters.parties.includes(card.payload.party)
+    ))
+  }
+
+  // { partyGroups: [ <partyGroup 1>, ...<partyGroup n> ]}
+  if (filters.partyGroups) {
+    filteredCards = filteredCards.filter(card => (
+      card.payload &&
+      card.payload.party &&
+      filters.partyGroups.includes(card.payload.partyGroup)
+    ))
+  }
+
+  // { subscribedByMe: <Boolean> }
+  if (filters.subscribedByMe) {
+    const subscriptions = await Subscriptions.getSubscriptionsByUserForObjects(
+      context.user.id,
+      'User',
+      filteredCards.map(card => card.userId),
+      'COMMENTS',
+      context
+    )
+
+    const subscribedUserIds = subscriptions.map(subscription => subscription.objectUserId)
+
+    filteredCards = filteredCards.filter(card => subscribedUserIds.includes(card.userId))
+  }
+
+  return filteredCards
+}
+
+const paginateCards = async (cards, args, context) => {
+  const filteredCards = await filterCards(cards, args, context)
+
   return paginator(
     Object.assign({}, defaults, args),
     ({ after, before }) => ({
@@ -69,7 +111,7 @@ const paginateCards = (args, cards) => {
         (before && before.payload && before.payload.seed) ||
         Math.round(Math.random() * 100000)
     }),
-    (args, payload) => weightShuffleCards(cards, payload.seed, args.focus)
+    (args, payload) => weightShuffleCards(filteredCards, payload.seed, args.focus)
   )
 }
 

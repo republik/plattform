@@ -16,5 +16,5 @@ module.exports = async (_, args, context) => {
     ? await loaders.Card.byUserId.load(user.id)
     : await pgdb.public.cards.find({}, { orderBy: { createdAt: 'ASC' } })
 
-  return paginateCards(args, cards)
+  return paginateCards(cards, args, context)
 }
