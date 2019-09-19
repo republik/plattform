@@ -74,7 +74,7 @@ module.exports = async (_, args, context, info) => {
     LIMIT :limit
     OFFSET :offset
   `, {
-    discussionIds,
+    discussionIds: discussions.map(d => d.id),
     focusId: focusId || null,
     lastId: lastId || null,
     limit,
