@@ -21,6 +21,7 @@ module.exports = async (_, args, context, info) => {
     first: limit = 40,
     offset = 0,
     discussionId,
+    discussionIds = [],
     focusId,
     lastId
   } = options
@@ -29,19 +30,19 @@ module.exports = async (_, args, context, info) => {
     throw new Error(t('api/discussion/args/first/tooBig', { max: MAX_LIMIT }))
   }
 
-  const discussionIds = !discussionId &&
-    (await pgdb.public.discussions.find({ hidden: false })).map(discussion => discussion.id)
+  discussionIds.push(discussionId)
 
-  const numComments = await pgdb.public.comments.count(
-    {
-      ...discussionId
-        ? { discussionIds: [ discussionId ] }
-        : { discussionId: discussionIds },
-      published: true,
-      adminUnpublished: false
-    },
-    { skipUndefined: true }
-  )
+  const discussions =
+    await pgdb.public.discussions.find({
+      ...(discussionIds.filter(Boolean).length > 0) && { id: discussionIds },
+      hidden: false
+    })
+
+  const numComments = await pgdb.public.comments.count({
+    discussionId: discussions.map(d => d.id),
+    published: true,
+    adminUnpublished: false
+  })
 
   let sortKey = getSortKey(orderBy)
   // there is no score in the db

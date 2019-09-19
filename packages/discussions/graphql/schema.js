@@ -19,6 +19,7 @@ type queries {
     first: Int
     after: String
     discussionId: ID
+    discussionIds: [ID!]
     focusId: ID
     lastId: ID
   ): CommentConnection!
