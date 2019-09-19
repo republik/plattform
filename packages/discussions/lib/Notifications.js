@@ -102,6 +102,8 @@ const submitComment = async (comment, discussion, context) => {
   })
     .then(users => users.map(transformUser))
 
+  let discussionNotificationSubscribers = []
+
   const commenterSubscribers = displayAuthor.anonymity
     ? []
     : await Subscriptions.getSubscribersForObject(
@@ -111,26 +113,29 @@ const submitComment = async (comment, discussion, context) => {
       context
     )
 
-  const subscriberDiscussionPreferences = await pgdb.public.discussionPreferences.find({
-    userId: commenterSubscribers.map(s => s.id),
-    discussionId: comment.discussionId
-  })
+  if (commenterSubscribers.length > 0) {
+    const subscriberDiscussionPreferences =
+      await pgdb.public.discussionPreferences.find({
+        userId: commenterSubscribers.map(s => s.id),
+        discussionId: comment.discussionId
+      })
 
-  const discussionNotificationSubscribers =
-    commenterSubscribers.filter(subscriber => {
-      const subscriberDiscussionPreference =
-        subscriberDiscussionPreferences.find(({ userId }) => userId === subscriber.id)
+    discussionNotificationSubscribers =
+      commenterSubscribers.filter(subscriber => {
+        const subscriberDiscussionPreference =
+          subscriberDiscussionPreferences.find(({ userId }) => userId === subscriber.id)
 
-      const notificationOption =
-        subscriberDiscussionPreference &&
-        subscriberDiscussionPreference.notificationOption !== 'NONE'
+        const notificationOption =
+          subscriberDiscussionPreference &&
+          subscriberDiscussionPreference.notificationOption !== 'NONE'
 
-      if ([true, false].includes(notificationOption)) {
-        return notificationOption
-      }
+        if ([true, false].includes(notificationOption)) {
+          return notificationOption
+        }
 
-      return subscriber._raw.defaultDiscussionNotificationOption !== 'NONE'
-    })
+        return subscriber._raw.defaultDiscussionNotificationOption !== 'NONE'
+      })
+  }
 
   const notifyUsers = uniqWith(
     [
