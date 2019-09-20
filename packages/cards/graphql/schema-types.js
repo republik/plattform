@@ -17,6 +17,12 @@ input CardFiltersInput {
   parties: [String!]
   fractions: [String!]
   subscribedByMe: Boolean
+  mustHave: [CardFiltersMustHaveInput!]
+}
+
+enum CardFiltersMustHaveInput {
+  portrait
+  cleavage
 }
 
 type CardPageInfo {

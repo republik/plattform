@@ -74,7 +74,7 @@ const filterCards = async (cards, { filters = {} }, context) => {
   }
 
   // { fractions: [ <fraction 1>, ...<fraction n> ]}
-  if (filters.fractions) {
+  if (filteredCards.length > 0 && filters.fractions) {
     filteredCards = filteredCards.filter(card => (
       card.payload &&
       card.payload.fraction &&
@@ -83,7 +83,7 @@ const filterCards = async (cards, { filters = {} }, context) => {
   }
 
   // { subscribedByMe: <Boolean> }
-  if (filters.subscribedByMe) {
+  if (filteredCards.length > 0 && filters.subscribedByMe) {
     if (context.user) {
       const subscriptions = await Subscriptions.getSubscriptionsByUserForObjects(
         context.user.id,
@@ -99,6 +99,24 @@ const filterCards = async (cards, { filters = {} }, context) => {
     } else {
       filteredCards = []
     }
+  }
+
+  // { mustHave: [ <value 1>, ... <value 2> ] }
+  if (filteredCards.length > 0 && filters.mustHave) {
+    const mustHavePortrait = filters.mustHave.includes('portrait')
+    const mustHaveCleavage = filters.mustHave.includes('cleavage')
+
+    const portrayedUserId = (await context.pgdb.public.users.find({
+      id: filteredCards.map(c => c.userId),
+      'portraitUrl !=': null
+    })).map(u => u.id)
+
+    filteredCards = filteredCards.filter(card => {
+      return (
+        (!mustHavePortrait || portrayedUserId.includes(card.userId)) &&
+        (!mustHaveCleavage || !!card.payload.smartvoteCleavage)
+      )
+    })
   }
 
   return filteredCards
