@@ -25,7 +25,7 @@ const removeDuplicates = (arrayWithObject, identfier) => {
 }
 
 const buildDeck = (cards, seed, focus = [], smartspider = []) => {
-  const smartspiderCount = smartspider.filter(s => s !== null).length
+  const smartspiderCount = smartspider.filter(s => s !== null && s >= 0).length
 
   const deck =
     cards
@@ -37,10 +37,11 @@ const buildDeck = (cards, seed, focus = [], smartspider = []) => {
           if (
             smartvoteCleavage &&
             smartvoteCleavage[leg] !== null &&
-            smartspider[leg] !== null
+            smartspider[leg] !== null &&
+            smartspider[leg] >= 0
           ) {
             distances.push(Math.abs(smartvoteCleavage[leg] - smartspider[leg]))
-          } else if (smartspider[leg] !== null) {
+          } else if (smartspider[leg] !== null && smartspider[leg] >= 0) {
             distances.push(100)
           } else {
             distances.push(0)
