@@ -1,4 +1,5 @@
 const shuffleSeed = require('shuffle-seed')
+const { ascending } = require('d3-array')
 
 const { paginate: { paginator } } = require('@orbiting/backend-modules-utils')
 const { Subscriptions } = require('@orbiting/backend-modules-subscriptions')
@@ -79,12 +80,12 @@ const buildDeck = (cards, seed, focus = [], smartspider = []) => {
   const focusCards =
     deck
       .filter(c => focus.includes(c.id))
-      .sort((a, b) => focus.indexOf(a.id) < focus.indexOf(b.id) ? -1 : 0)
+      .sort((a, b) => ascending(focus.indexOf(a.id), focus.indexOf(b.id)))
 
   const smartspiderRelevantCards =
     deck
       .filter(c => c._distance < 100)
-      .sort((a, b) => a._distance < b._distance ? -1 : 0)
+      .sort((a, b) => ascending(a._distance, b._distance))
 
   const shuffledCards = shuffleSeed.shuffle(deck, seed)
 
