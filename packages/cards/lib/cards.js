@@ -24,41 +24,74 @@ const removeDuplicates = (arrayWithObject, identfier) => {
   })
 }
 
-const weightShuffleCards = (cards, seed, focus = []) => {
-  const weightCards = cards
+const buildDeck = (cards, seed, focus = [], smartspider = []) => {
+  const smartspiderCount = smartspider.filter(s => s !== null).length
 
-  cards.forEach(card => {
+  const deck =
+    cards
+      .map(card => {
+        const distances = []
+        const { payload: { smartvoteCleavage } } = card
+
+        Array.from(Array(8).keys()).forEach((leg) => {
+          if (
+            smartvoteCleavage &&
+            smartvoteCleavage[leg] !== null &&
+            smartspider[leg] !== null
+          ) {
+            distances.push(Math.abs(smartvoteCleavage[leg] - smartspider[leg]))
+          } else if (smartspider[leg] !== null) {
+            distances.push(100)
+          } else {
+            distances.push(0)
+          }
+        })
+
+        return {
+          ...card,
+          _distance: +(distances.reduce((a, c) => a + c, 0) / smartspiderCount).toFixed(2)
+        }
+      })
+
+  deck.forEach(card => {
     const { payload } = card
     const { nationalCouncil } = payload
 
     if (nationalCouncil.electionPlausibility === 'GOOD') {
-      weightCards.push(card)
-      weightCards.push(card)
-      weightCards.push(card)
+      deck.push(card)
+      deck.push(card)
+      deck.push(card)
     }
 
     if (nationalCouncil.electionPlausibility === 'DECENT') {
-      weightCards.push(card)
-      weightCards.push(card)
+      deck.push(card)
+      deck.push(card)
     }
 
     if (payload.statement) {
-      weightCards.push(card)
-      weightCards.push(card)
-      weightCards.push(card)
+      deck.push(card)
+      deck.push(card)
+      deck.push(card)
     }
   })
 
-  const shuffeledCards = shuffleSeed.shuffle(weightCards, seed)
+  const focusCards =
+    deck
+      .filter(c => focus.includes(c.id))
+      .sort((a, b) => focus.indexOf(a.id) < focus.indexOf(b.id) ? -1 : 0)
 
-  focus.reverse().forEach(id => {
-    const focusedCard = shuffeledCards.find(card => card.id === id)
-    if (focusedCard) {
-      shuffeledCards.unshift(focusedCard)
-    }
-  })
+  const smartspiderRelevantCards =
+    deck
+      .filter(c => c._distance < 100)
+      .sort((a, b) => a._distance < b._distance ? -1 : 0)
 
-  return removeDuplicates(shuffeledCards, 'id')
+  const shuffledCards = shuffleSeed.shuffle(deck, seed)
+
+  return removeDuplicates([
+    ...focusCards,
+    ...smartspiderRelevantCards,
+    ...shuffledCards
+  ], 'id')
 }
 
 const filterCards = async (cards, { filters = {} }, context) => {
@@ -104,7 +137,8 @@ const filterCards = async (cards, { filters = {} }, context) => {
   // { mustHave: [ <value 1>, ... <value 2> ] }
   if (filteredCards.length > 0 && filters.mustHave) {
     const mustHavePortrait = filters.mustHave.includes('portrait')
-    const mustHaveCleavage = filters.mustHave.includes('cleavage')
+    const mustHaveSmartspider = filters.mustHave.includes('smartspider')
+    const mustHaveStatement = filters.mustHave.includes('statement')
 
     const portrayedUserId = (await context.pgdb.public.users.find({
       id: filteredCards.map(c => c.userId),
@@ -114,7 +148,8 @@ const filterCards = async (cards, { filters = {} }, context) => {
     filteredCards = filteredCards.filter(card => {
       return (
         (!mustHavePortrait || portrayedUserId.includes(card.userId)) &&
-        (!mustHaveCleavage || !!card.payload.smartvoteCleavage)
+        (!mustHaveSmartspider || !!card.payload.smartvoteCleavage) &&
+        (!mustHaveStatement || !!card.payload.statement)
       )
     })
   }
@@ -133,7 +168,12 @@ const paginateCards = async (cards, args, context) => {
         (before && before.payload && before.payload.seed) ||
         Math.round(Math.random() * 100000)
     }),
-    (args, payload) => weightShuffleCards(filteredCards, payload.seed, args.focus)
+    (args, payload) => buildDeck(
+      filteredCards,
+      payload.seed,
+      args.focus,
+      args.sort && args.sort.smartspider
+    )
   )
 }
 
@@ -200,7 +240,6 @@ const upsertStatement = async (_card, transaction) => {
 
 module.exports = {
   hasCards,
-  weightShuffleCards,
   paginateCards,
   upsertStatement
 }

@@ -9,8 +9,6 @@ type Card {
   user(accessToken: ID): User!
   statement: Comment
   documents: DocumentConnection!
-  match: Boolean
-  totalMatches: Int!
 }
 
 input CardFiltersInput {
@@ -22,7 +20,12 @@ input CardFiltersInput {
 
 enum CardFiltersMustHaveInput {
   portrait
-  cleavage
+  smartspider
+  statement
+}
+
+input CardSortInput {
+  smartspider: [Float]
 }
 
 type CardPageInfo {
@@ -67,6 +70,7 @@ type CardGroup {
   slug: String!
   cards(
     focus: [ID!]
+    sort: CardSortInput
     filters: CardFiltersInput
     first: Int
     last: Int
@@ -92,6 +96,7 @@ type CardGroupConnection {
 extend type User {
   cards(
     focus: [ID!]
+    sort: CardSortInput
     filters: CardFiltersInput
     first: Int
     last: Int
