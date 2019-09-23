@@ -1,4 +1,5 @@
 const shuffleSeed = require('shuffle-seed')
+const { ascending } = require('d3-array')
 
 const { paginate: { paginator } } = require('@orbiting/backend-modules-utils')
 const { Subscriptions } = require('@orbiting/backend-modules-subscriptions')
@@ -24,41 +25,86 @@ const removeDuplicates = (arrayWithObject, identfier) => {
   })
 }
 
-const weightShuffleCards = (cards, seed, focus = []) => {
-  const weightCards = cards
+const buildDeck = (cards, seed, focus = [], smartspider = []) => {
+  const smartspiderCount = smartspider.filter(s => s !== null && s >= 0).length
 
-  cards.forEach(card => {
+  const deck =
+    cards
+      .map(card => {
+        const distances = []
+        const { payload: { smartvoteCleavage } } = card
+
+        Array.from(Array(8).keys()).forEach((_, index) => {
+          if (
+            smartvoteCleavage &&
+            smartvoteCleavage[index] !== null &&
+            smartspider[index] !== null &&
+            smartspider[index] >= 0
+          ) {
+            distances.push(Math.abs(smartvoteCleavage[index] - smartspider[index]))
+          } else if (smartspider[index] !== null && smartspider[index] >= 0) {
+            distances.push(100)
+          } else {
+            distances.push(0)
+          }
+        })
+
+        return {
+          ...card,
+          _distance: +(distances.reduce((a, c) => a + c, 0) / smartspiderCount).toFixed(2)
+        }
+      })
+      .map(card => {
+        const _mandates =
+          0 +
+          (card.payload.nationalCouncil && card.payload.nationalCouncil.incumbent ? 1 : 0) +
+          (card.payload.councilOfStates && card.payload.councilOfStates.incumbent ? 1 : 0)
+
+        return {
+          ...card,
+          _mandates
+        }
+      })
+
+  deck.forEach(card => {
     const { payload } = card
     const { nationalCouncil } = payload
 
     if (nationalCouncil.electionPlausibility === 'GOOD') {
-      weightCards.push(card)
-      weightCards.push(card)
-      weightCards.push(card)
+      deck.push(card)
+      deck.push(card)
+      deck.push(card)
     }
 
     if (nationalCouncil.electionPlausibility === 'DECENT') {
-      weightCards.push(card)
-      weightCards.push(card)
+      deck.push(card)
+      deck.push(card)
     }
 
     if (payload.statement) {
-      weightCards.push(card)
-      weightCards.push(card)
-      weightCards.push(card)
+      deck.push(card)
+      deck.push(card)
+      deck.push(card)
     }
   })
 
-  const shuffeledCards = shuffleSeed.shuffle(weightCards, seed)
+  const focusCards =
+    deck
+      .filter(c => focus.includes(c.id))
+      .sort((a, b) => ascending(focus.indexOf(a.id), focus.indexOf(b.id)))
 
-  focus.reverse().forEach(id => {
-    const focusedCard = shuffeledCards.find(card => card.id === id)
-    if (focusedCard) {
-      shuffeledCards.unshift(focusedCard)
-    }
-  })
+  const smartspiderRelevantCards =
+    deck
+      .filter(c => c._distance < 100)
+      .sort((a, b) => ascending(a._distance, b._distance))
 
-  return removeDuplicates(shuffeledCards, 'id')
+  const shuffledCards = shuffleSeed.shuffle(deck, seed)
+
+  return removeDuplicates([
+    ...focusCards,
+    ...smartspiderRelevantCards,
+    ...shuffledCards
+  ], 'id')
 }
 
 const filterCards = async (cards, { filters = {} }, context) => {
@@ -74,7 +120,7 @@ const filterCards = async (cards, { filters = {} }, context) => {
   }
 
   // { fractions: [ <fraction 1>, ...<fraction n> ]}
-  if (filters.fractions) {
+  if (filteredCards.length > 0 && filters.fractions) {
     filteredCards = filteredCards.filter(card => (
       card.payload &&
       card.payload.fraction &&
@@ -82,8 +128,17 @@ const filterCards = async (cards, { filters = {} }, context) => {
     ))
   }
 
+  // { partyParents: [ <partyParent 1>, ...<partyParent n> ]}
+  if (filteredCards.length > 0 && filters.partyParents) {
+    filteredCards = filteredCards.filter(card => (
+      card.payload &&
+      card.payload.partyParent &&
+      filters.partyParents.includes(card.payload.partyParent)
+    ))
+  }
+
   // { subscribedByMe: <Boolean> }
-  if (filters.subscribedByMe) {
+  if (filteredCards.length > 0 && filters.subscribedByMe) {
     if (context.user) {
       const subscriptions = await Subscriptions.getSubscriptionsByUserForObjects(
         context.user.id,
@@ -101,6 +156,26 @@ const filterCards = async (cards, { filters = {} }, context) => {
     }
   }
 
+  // { mustHave: [ <value 1>, ... <value 2> ] }
+  if (filteredCards.length > 0 && filters.mustHave) {
+    const mustHavePortrait = filters.mustHave.includes('portrait')
+    const mustHaveSmartspider = filters.mustHave.includes('smartspider')
+    const mustHaveStatement = filters.mustHave.includes('statement')
+
+    const portrayedUserId = (await context.pgdb.public.users.find({
+      id: filteredCards.map(c => c.userId),
+      'portraitUrl !=': null
+    })).map(u => u.id)
+
+    filteredCards = filteredCards.filter(card => {
+      return (
+        (!mustHavePortrait || portrayedUserId.includes(card.userId)) &&
+        (!mustHaveSmartspider || !!card.payload.smartvoteCleavage) &&
+        (!mustHaveStatement || !!card.payload.statement)
+      )
+    })
+  }
+
   return filteredCards
 }
 
@@ -115,7 +190,12 @@ const paginateCards = async (cards, args, context) => {
         (before && before.payload && before.payload.seed) ||
         Math.round(Math.random() * 100000)
     }),
-    (args, payload) => weightShuffleCards(filteredCards, payload.seed, args.focus)
+    (args, payload) => buildDeck(
+      filteredCards,
+      payload.seed,
+      args.focus,
+      args.sort && args.sort.smartspider
+    )
   )
 }
 
@@ -182,7 +262,6 @@ const upsertStatement = async (_card, transaction) => {
 
 module.exports = {
   hasCards,
-  weightShuffleCards,
   paginateCards,
   upsertStatement
 }

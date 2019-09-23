@@ -9,14 +9,23 @@ type Card {
   user(accessToken: ID): User!
   statement: Comment
   documents: DocumentConnection!
-  match: Boolean
-  totalMatches: Int!
 }
 
 input CardFiltersInput {
   parties: [String!]
   fractions: [String!]
   subscribedByMe: Boolean
+  mustHave: [CardFiltersMustHaveInput!]
+}
+
+enum CardFiltersMustHaveInput {
+  portrait
+  smartspider
+  statement
+}
+
+input CardSortInput {
+  smartspider: [Float]
 }
 
 type CardPageInfo {
@@ -33,11 +42,13 @@ type CardConnection {
   aggregations(
     keys: [CardAggregationKeys!]
   ): [CardAggregation!]!
+  medians: CardMedians!
 }
 
 enum CardAggregationKeys {
   party
   fraction
+  partyParent
 }
 
 type CardAggregation {
@@ -55,12 +66,17 @@ type CardAggregationBucket {
   ): CardConnection!
 }
 
+type CardMedians {
+  smartspider: [Float!]
+}
+
 type CardGroup {
   id: ID!
   name: String!
   slug: String!
   cards(
     focus: [ID!]
+    sort: CardSortInput
     filters: CardFiltersInput
     first: Int
     last: Int
@@ -86,6 +102,7 @@ type CardGroupConnection {
 extend type User {
   cards(
     focus: [ID!]
+    sort: CardSortInput
     filters: CardFiltersInput
     first: Int
     last: Int

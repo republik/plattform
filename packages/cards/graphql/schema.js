@@ -15,6 +15,7 @@ type queries {
     id: ID
     accessToken: ID
     focus: [ID!]
+    sort: CardSortInput
     filters: CardFiltersInput
     first: Int
     last: Int
