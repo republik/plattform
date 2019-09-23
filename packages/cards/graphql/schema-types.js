@@ -42,11 +42,13 @@ type CardConnection {
   aggregations(
     keys: [CardAggregationKeys!]
   ): [CardAggregation!]!
+  medians: CardMedians!
 }
 
 enum CardAggregationKeys {
   party
   fraction
+  partyParent
 }
 
 type CardAggregation {
@@ -62,6 +64,10 @@ type CardAggregationBucket {
     before: String
     after: String
   ): CardConnection!
+}
+
+type CardMedians {
+  smartspider: [Float!]
 }
 
 type CardGroup {

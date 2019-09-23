@@ -34,15 +34,15 @@ const buildDeck = (cards, seed, focus = [], smartspider = []) => {
         const distances = []
         const { payload: { smartvoteCleavage } } = card
 
-        Array.from(Array(8).keys()).forEach((leg) => {
+        Array.from(Array(8).keys()).forEach((_, index) => {
           if (
             smartvoteCleavage &&
-            smartvoteCleavage[leg] !== null &&
-            smartspider[leg] !== null &&
-            smartspider[leg] >= 0
+            smartvoteCleavage[index] !== null &&
+            smartspider[index] !== null &&
+            smartspider[index] >= 0
           ) {
-            distances.push(Math.abs(smartvoteCleavage[leg] - smartspider[leg]))
-          } else if (smartspider[leg] !== null && smartspider[leg] >= 0) {
+            distances.push(Math.abs(smartvoteCleavage[index] - smartspider[index]))
+          } else if (smartspider[index] !== null && smartspider[index] >= 0) {
             distances.push(100)
           } else {
             distances.push(0)
@@ -52,6 +52,17 @@ const buildDeck = (cards, seed, focus = [], smartspider = []) => {
         return {
           ...card,
           _distance: +(distances.reduce((a, c) => a + c, 0) / smartspiderCount).toFixed(2)
+        }
+      })
+      .map(card => {
+        const _mandates =
+          0 +
+          (card.payload.nationalCouncil && card.payload.nationalCouncil.incumbent ? 1 : 0) +
+          (card.payload.councilOfStates && card.payload.councilOfStates.incumbent ? 1 : 0)
+
+        return {
+          ...card,
+          _mandates
         }
       })
 
@@ -114,6 +125,15 @@ const filterCards = async (cards, { filters = {} }, context) => {
       card.payload &&
       card.payload.fraction &&
       filters.fractions.includes(card.payload.fraction)
+    ))
+  }
+
+  // { partyParents: [ <partyParent 1>, ...<partyParent n> ]}
+  if (filteredCards.length > 0 && filters.partyParents) {
+    filteredCards = filteredCards.filter(card => (
+      card.payload &&
+      card.payload.partyParent &&
+      filters.partyParents.includes(card.payload.partyParent)
     ))
   }
 
