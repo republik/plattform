@@ -58,7 +58,7 @@ const styles = {
 export const commentComposerStorageKey = discussionId => `commentComposerText:${discussionId}`
 
 export const CommentComposer = props => {
-  const { t, isRoot, onClose, onCloseLabel, onSubmitLabel } = props
+  const { t, isRoot, hideHeader, onClose, onCloseLabel, onSubmitLabel } = props
 
   /*
    * Get the discussion metadata and action callbacks from the DiscussionContext.
@@ -167,9 +167,11 @@ export const CommentComposer = props => {
   return (
     <div ref={root} {...styles.root}>
       <div {...styles.background}>
-        <div style={{ borderBottom: '1px solid white' }}>
-          <Header t={t} displayAuthor={displayAuthor} onClick={actions.openDiscussionPreferences} />
-        </div>
+        {!hideHeader && (
+          <div style={{ borderBottom: '1px solid white' }}>
+            <Header t={t} displayAuthor={displayAuthor} onClick={actions.openDiscussionPreferences} />
+          </div>
+        )}
 
         {/* Tags are only available in the root composer! */}
         {isRoot && tags && (
@@ -208,6 +210,7 @@ export const CommentComposer = props => {
 CommentComposer.propTypes = {
   t: PropTypes.func.isRequired,
   isRoot: PropTypes.bool.isRequired,
+  hideHeader: PropTypes.bool,
   onClose: PropTypes.func.isRequired,
   onCloseLabel: PropTypes.string,
   onSubmit: PropTypes.func.isRequired,
