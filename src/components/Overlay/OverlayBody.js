@@ -4,10 +4,13 @@ import {mUp} from '../../theme/mediaQueries'
 import {height} from './OverlayToolbar'
 
 const overlayBodyStyle = css({
-  padding: `${height + 20}px 12px 20px`,
-
+  padding: `${height + 20}px 20px`,
+  // The iPhone X Space
+  // - thank you Apple for overlaying websites
+  paddingBottom: 120,
   [mUp]: {
-    padding: `${height + 20}px 20px 20px`,
+    padding: `${height + 20}px 20px`,
+    paddingBottom: 20
   }
 })
 

@@ -14,7 +14,6 @@ const styles = {
     zIndex: zIndex.overlay,
     transition: 'opacity .12s ease-in-out',
     background: 'rgba(0,0,0,.2)',
-
     [mUp]: {
       overflowY: 'auto',
       WebkitOverflowScrolling: 'touch'
