@@ -112,7 +112,7 @@ const renderDropdown = ({label, focus, white, black, items, onFocus, onBlur}) =>
     <Inner isOpen={isOpen}>
       <Label top={!!selectedItem} focus={isOpen || focus} text={label} white={white && !isOpen} black={black || (white && isOpen)}>
         <LButton {...getToggleButtonProps()} onFocus={onFocus} onBlur={onBlur} white={white && !isOpen} black={black || (white && isOpen)}>
-          {selectedItem ? selectedItem.text : ''}
+          {selectedItem ? (selectedItem.element || selectedItem.text) : ''}
         </LButton>
         <ArrowDown
           fill={
@@ -190,7 +190,7 @@ export const Items = ({items, selectedItem, highlightedIndex, getItemProps}) => 
       highlighted={index === highlightedIndex}
       {...getItemProps({item, index})}
     >
-      {item.text}
+      {item.element || item.text}
     </Item>
   )
   if (index === 0) {
