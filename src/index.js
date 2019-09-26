@@ -253,7 +253,19 @@ ReactDOM.render(
                 dropdownItems: [
                   { value: '1', text: 'Redaktorin' },
                   { value: '2', text: 'Fussballerin' },
-                  { value: '3', text: 'Pizzaliebhaberin' }
+                  { value: '3', text: 'Pizzaliebhaberin' },
+                  {
+                    value: '4',
+                    text: 'Fussballspielende Redaktionspizzaliebhaberin'
+                  },
+                  {
+                    value: '5',
+                    text: 'Fussballspielende Redaktionspizzaliebhaberin Elementa',
+                    element: <span>
+                      <small>Fussballspielende</small><br />
+                      Redaktionspizzaliebhaberin Elementa
+                    </span>
+                  }
                 ],
                 VirtualDropdownInternal: {
                   Items: require('./components/Form/VirtualDropdown.js').Items,

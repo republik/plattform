@@ -18,7 +18,6 @@ const styles = {
   labelText: css({
     ...sansSerifRegular21,
     color: colors.disabled,
-
     position: 'absolute',
     top: labelHeight,
     transition: 'top 200ms, font-size 200ms'
@@ -35,26 +34,32 @@ const styles = {
     color: colors.error
   }),
   field: css({
+    display: 'block',
+    padding: '6px 0',
     ...sansSerifRegular21,
-    fontSize: 22,
+    lineHeight: '27px',
+    minHeight: fieldHeight,
     color: colors.text,
     width: '100%',
-    display: 'block',
     appearance: 'none',
     outline: 'none',
     borderRadius: 0,
     backgroundColor: '#fff',
     border: 'none',
-    padding: '0',
     textAlign: 'left',
     cursor: 'pointer',
-    height: fieldHeight,
     borderBottom: `solid ${colors.disabled} ${borderWidth}px`,
     ':focus': {
       borderColor: colors.primary
     }
   }),
   select: css({
+    position: 'absolute',
+    top: labelHeight,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    opacity: 0,
     ':focus + svg': {
       fill: colors.primary
     }
@@ -108,6 +113,9 @@ export const Label = ({top, focus, error, text, black, white, children}) => {
     </label>
   )
 }
+
+export const LSpan = ({black, white, ...props}) =>
+  <span {...merge(styles.field, black && styles.black, white && styles.white)} {...props} />
 
 export const LButton = ({black, white, ...props}) =>
   <button {...merge(styles.field, black && styles.black, white && styles.white)} {...props} />

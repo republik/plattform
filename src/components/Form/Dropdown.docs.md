@@ -3,7 +3,14 @@ There are two versions of the dropdown component: a native dropdown which uses `
 The options are given as a list of objects, each option must have the following keys:
 
  - **value**: an ID (string) unique across all options.
- - **text**: what is shown in the UI.
+ - **text**: text label for the UI.
+ - **element**: optional React element, with e.g. two lines, to show in virtual UIs. Note: in native selects, e.g. iOS wheel, just the text will be shown.
+
+```react
+<pre style={{maxHeight: 380, overflow: 'auto'}}>
+  {JSON.stringify(dropdownItems, undefined, 2)}
+</pre>
+```
 
 Here is the high-level `<Dropdown />` component:
 
@@ -16,7 +23,7 @@ state: { value: '2' }
   value={state.value}
   onChange={(item) => {
     setState({value: item.value})
-    console.log(`Selected '${item.text}'`)
+    console.log('onChange', item)
   }}
 />
 ```
@@ -28,13 +35,13 @@ noSource: true
 span: 3
 state: { value: '2' }
 ---
-<VirtualDropdown
+<Dropdown.Virtual
   label='Bezeichnung'
   items={dropdownItems}
   value={state.value}
   onChange={(item) => {
     setState({value: item.value})
-    console.log(`Selected '${item.text}'`)
+    console.log('onChange', item)
   }}
 />
 ```
@@ -43,13 +50,13 @@ noSource: true
 span: 3
 state: { value: '2' }
 ---
-<NativeDropdown
+<Dropdown.Native
   label='Bezeichnung'
   items={dropdownItems}
   value={state.value}
   onChange={(item) => {
     setState({value: item.value})
-    console.log(`Selected '${item.text}'`)
+    console.log('onChange', item)
   }}
 />
 ```
@@ -61,11 +68,11 @@ The virtual dropdown element uses negative margin left/right. This is needed so 
 ```react|noSource
 <div>
   <Field label='Label' />
-  <VirtualDropdown
+  <Dropdown.Virtual
     label='Bezeichnung'
     items={dropdownItems}
   />
-  <NativeDropdown
+  <Dropdown.Native
     label='Bezeichnung'
     items={dropdownItems}
   />

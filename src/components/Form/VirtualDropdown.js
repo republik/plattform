@@ -10,7 +10,7 @@ import {labelHeight, fieldHeight, Label, LButton} from './Label'
 export const styles = {
   root: css({
     position: 'relative',
-    height: labelHeight + fieldHeight,
+    minHeight: labelHeight + fieldHeight,
     marginBottom: 12
   }),
   inner: css({
@@ -36,8 +36,8 @@ export const styles = {
 
   item: css({
     ...sansSerifRegular21,
+    lineHeight: '27px',
     color: colors.text,
-    lineHeight: 1,
     padding: '17px 12px',
     cursor: 'pointer',
     transition: 'background .12s'
@@ -109,8 +109,12 @@ export default VirtualDropdown
 
 const renderDropdown = ({label, focus, white, black, items, onFocus, onBlur}) => ({getToggleButtonProps, getItemProps, isOpen, inputValue, selectedItem, highlightedIndex}) => (
   <div {...styles.root}>
+    {/* ensure the height for selected multiline values (<Inner> is absolute) */}
+    {!!selectedItem && <LButton style={{ visibility: 'hidden' }}>
+      {selectedItem.element || selectedItem.text}
+    </LButton>}
     <Inner isOpen={isOpen}>
-      <Label top={!!selectedItem} focus={isOpen || focus} text={label} white={white && !isOpen} black={black || (white && isOpen)}>
+      <Label top={!!selectedItem || focus} focus={isOpen || focus} text={label} white={white && !isOpen} black={black || (white && isOpen)}>
         <LButton {...getToggleButtonProps()} onFocus={onFocus} onBlur={onBlur} white={white && !isOpen} black={black || (white && isOpen)}>
           {selectedItem ? (selectedItem.element || selectedItem.text) : ''}
         </LButton>
