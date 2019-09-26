@@ -151,38 +151,6 @@ ReactDOM.render(
               src: require('./components/Format/docs.md')
             },
             {
-              path: '/forms',
-              title: 'Forms',
-              imports: {
-                css,
-                ...require('./components/Typography'),
-                Button: require('./components/Button'),
-                Checkbox: require('./components/Form/Checkbox.js'),
-                Radio: require('./components/Form/Radio.js'),
-                Field: require('./components/Form/Field.js'),
-                FieldSet: require('./components/Form/FieldSet.js'),
-                Autocomplete: require('./components/Form/Autocomplete.js'),
-                MaskedInput: require('react-maskedinput'),
-                AutosizeInput: require('react-textarea-autosize'),
-                Dropdown: require('./components/Form/Dropdown.js'),
-                VirtualDropdown: require('./components/Form/VirtualDropdown.js'),
-                NativeDropdown: require('./components/Form/NativeDropdown.js'),
-                dropdownItems: [
-                  { value: '1', text: 'Redaktorin' },
-                  { value: '2', text: 'Fussballerin' },
-                  { value: '3', text: 'Pizzaliebhaberin' }
-                ],
-                VirtualDropdownInternal: {
-                  Items: require('./components/Form/VirtualDropdown.js').Items,
-                  ItemsContainer: require('./components/Form/VirtualDropdown.js')
-                    .ItemsContainer,
-                  Inner: require('./components/Form/VirtualDropdown.js').Inner
-                },
-                SearchIcon: require('react-icons/lib/md/search')
-              },
-              src: require('./components/Form/docs.md')
-            },
-            {
               path: '/components/overlay',
               title: 'Overlay',
               imports: { t, ...require('./components/Overlay/docs.imports') },
@@ -248,6 +216,55 @@ ReactDOM.render(
                 ...require('./components/Collapsable')
               },
               src: require('./components/Collapsable/docs.md')
+            }
+          ]
+        },
+        {
+          title: 'Forms',
+          pages: [
+            {
+              path: '/forms',
+              title: 'Fields',
+              imports: {
+                css,
+                ...require('./components/Typography'),
+                Button: require('./components/Button'),
+                Checkbox: require('./components/Form/Checkbox.js'),
+                Radio: require('./components/Form/Radio.js'),
+                Field: require('./components/Form/Field.js'),
+                FieldSet: require('./components/Form/FieldSet.js'),
+                MaskedInput: require('react-maskedinput'),
+                AutosizeInput: require('react-textarea-autosize'),
+                SearchIcon: require('react-icons/lib/md/search')
+              },
+              src: require('./components/Form/docs.md')
+            },
+            {
+              path: '/forms/dropdown',
+              title: 'Dropdown',
+              imports: {
+                css,
+                ...require('./components/Typography'),
+                Button: require('./components/Button'),
+                Field: require('./components/Form/Field.js'),
+                Dropdown: require('./components/Form/Dropdown.js'),
+                VirtualDropdown: require('./components/Form/VirtualDropdown.js'),
+                NativeDropdown: require('./components/Form/NativeDropdown.js'),
+                dropdownItems: [
+                  { value: '1', text: 'Redaktorin' },
+                  { value: '2', text: 'Fussballerin' },
+                  { value: '3', text: 'Pizzaliebhaberin' }
+                ],
+                VirtualDropdownInternal: {
+                  Items: require('./components/Form/VirtualDropdown.js').Items,
+                  ItemsContainer: require('./components/Form/VirtualDropdown.js')
+                    .ItemsContainer,
+                  Inner: require('./components/Form/VirtualDropdown.js').Inner
+                },
+                Autocomplete: require('./components/Form/Autocomplete.js'),
+                SearchIcon: require('react-icons/lib/md/search')
+              },
+              src: require('./components/Form/Dropdown.docs.md')
             }
           ]
         },
