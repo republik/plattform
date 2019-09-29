@@ -22,6 +22,7 @@ module.exports = async (_, args, context, info) => {
     offset = 0,
     discussionId,
     discussionIds = [],
+    toDepth,
     focusId,
     lastId
   } = options
@@ -35,11 +36,12 @@ module.exports = async (_, args, context, info) => {
   const discussions =
     await pgdb.public.discussions.find({
       ...(discussionIds.filter(Boolean).length > 0) && { id: discussionIds },
-      hidden: false
+      ...(discussionIds.filter(Boolean).length === 0) && { hidden: false }
     })
 
   const numComments = await pgdb.public.comments.count({
     discussionId: discussions.map(d => d.id),
+    ...(toDepth >= 0) && { 'depth <=': toDepth },
     published: true,
     adminUnpublished: false
   })
@@ -65,6 +67,7 @@ module.exports = async (_, args, context, info) => {
       comments
     WHERE
       ARRAY["discussionId"] && :discussionIds AND
+      ${toDepth >= 0 ? '"depth" <= :toDepth AND' : ''}
       "published" = true AND
       "adminUnpublished" = false
     ORDER BY
@@ -75,6 +78,7 @@ module.exports = async (_, args, context, info) => {
     OFFSET :offset
   `, {
     discussionIds: discussions.map(d => d.id),
+    toDepth,
     focusId: focusId || null,
     lastId: lastId || null,
     limit,
