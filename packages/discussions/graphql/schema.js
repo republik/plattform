@@ -20,6 +20,7 @@ type queries {
     after: String
     discussionId: ID
     discussionIds: [ID!]
+    toDepth: Int
     focusId: ID
     lastId: ID
   ): CommentConnection!
