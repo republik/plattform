@@ -35,7 +35,7 @@ module.exports = async (_, args, context, info) => {
   const discussions =
     await pgdb.public.discussions.find({
       ...(discussionIds.filter(Boolean).length > 0) && { id: discussionIds },
-      hidden: false
+      ...(discussionIds.filter(Boolean).length === 0) && { hidden: false }
     })
 
   const numComments = await pgdb.public.comments.count({
