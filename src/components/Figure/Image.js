@@ -53,12 +53,11 @@ class Image extends Component {
       maxWidth,
       size: sizeProp,
       aboveTheFold,
-      enableGallery = true,
+      enableGallery = false,
       gallerySize
     } = this.props
 
-    const hasGallery = (enableGallery && this.context.toggleGallery)
-    const onClick =  hasGallery ? () => this.context.toggleGallery(src) : () => {}
+    const onClick =  enableGallery ? () => this.context.toggleGallery && this.context.toggleGallery(src) : () => {}
 
     const size = sizeProp || (sizeProp === undefined && imageSizeInfo(src))
     const aspectRatio = size ? size.width / size.height : undefined
@@ -84,7 +83,7 @@ class Image extends Component {
         { gallerySize > 0 && <GalleryButton gallerySize={gallerySize} onClick={onClick} /> }
       </>
     return (
-      <div {...styles.imageContainer} style={{cursor: hasGallery ? 'zoom-in' : undefined }}>
+      <div {...styles.imageContainer} style={{cursor: enableGallery ? 'zoom-in' : undefined }}>
         {wrappedImage}
       </div>
     )
