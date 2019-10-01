@@ -187,9 +187,12 @@ const figureImage = {
   matchMdast: matchImageParagraph,
   component: FigureImage,
   props: (node, index, parent, { ancestors }) => {
+    const rootNode = ancestors[ancestors.length - 1]
+    const meta = rootNode ? rootNode.meta : {}
+
     const src = extractImage(node)
     const displayWidth = getDisplayWidth(ancestors)
-    const enableGallery = parent.data ? !parent.data.excludeFromGallery : true
+    const enableGallery = meta.gallery && (parent.data ? !parent.data.excludeFromGallery : true)
 
     const group = ancestors.find(matchZone('FIGUREGROUP'))
 
