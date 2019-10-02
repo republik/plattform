@@ -663,11 +663,15 @@ const createCover = ({ onAudioCoverClick }) => ({
     {
       matchMdast: matchImageParagraph,
       component: FigureImage,
-      props: (node, index, parent) => {
+      props: (node, index, parent, { ancestors }) => {
         const src = extractImage(node)
         const displayWidth =
           FIGURE_SIZES[parent.data.size] || 1500
         const setMaxWidth = parent.data.size !== undefined
+
+        const rootNode = ancestors[ancestors.length - 1]
+        const meta = rootNode ? rootNode.meta : {}
+        const enableGallery = meta.gallery
 
         return {
           ...FigureImage.utils.getResizedSrcs(
@@ -675,6 +679,7 @@ const createCover = ({ onAudioCoverClick }) => ({
             displayWidth,
             setMaxWidth
           ),
+          enableGallery,
           aboveTheFold: true,
           alt: node.children[0].alt
         }
