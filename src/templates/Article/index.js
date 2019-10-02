@@ -671,7 +671,7 @@ const createCover = ({ onAudioCoverClick }) => ({
 
         const rootNode = ancestors[ancestors.length - 1]
         const meta = rootNode ? rootNode.meta : {}
-        const enableGallery = meta.gallery
+        const enableGallery = meta.gallery && (parent.data ? !parent.data.excludeFromGallery : true)
 
         return {
           ...FigureImage.utils.getResizedSrcs(
