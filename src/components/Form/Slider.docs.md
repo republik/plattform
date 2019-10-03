@@ -1,13 +1,40 @@
-Hello, I am a slider:
-
-```react
+```react|plain
 state: {value: 3}
 ---
-<Slider
- value={value}
- min='1'
- max='10'
- onChange={(_, checked) => setState({checked})} />
+<div style={{padding: 20, background: 'white'}}>
+    <Label>{'Value: ' + state.value}</Label>
+    <br />
+    <Slider
+     value={state.value}
+     min='1'
+     max='10'
+     onChange={(_, value) => setState({value})} />
+</div>
 ```
 
-Btw this doesn't want to render -> Fix meeeee!
+```react|plain
+<div style={{padding: 20, background: 'white'}}>
+    <Slider
+     value='7'
+     min='1'
+     max='10'
+     inactive={true}
+     title='I am inactive' />
+</div>
+```
+
+```react|plain
+state: {value: 1}
+---
+<div style={{padding: 20, background: 'white'}}>
+    <Label>Full-width slider</Label>
+    <br />
+    <Slider
+     fullWidth={true}
+     value={state.value}
+     min='1'
+     max='100'
+     onChange={(_, value) => setState({value})} />
+</div>
+```
+

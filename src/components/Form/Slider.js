@@ -91,15 +91,21 @@ const styles = {
     '::-ms-thumb': {
       background: colors.disabled
     }
+  }),
+  fullWidth: css({
+    width: '100%'
   })
 }
 
-const Slider = ({ label, labelStyle, inactive, onChange, ...props }) => (
-  <label {...styles.label} style={labelStyle}>
+const Slider = ({ label, fullWidth, inactive, onChange, ...props }) => (
+  <label {...merge(
+    styles.label,
+    fullWidth ? styles.fullWidth : null)}>
     <input
-      {...inactive
-        ? merge(styles.slider, styles.sliderInactive)
-        : styles.slider}
+      {...merge(
+        styles.slider,
+        inactive ? styles.sliderInactive : null,
+        fullWidth ? styles.fullWidth : null)}
       type='range'
       {...props}
       onChange={e => onChange(e, +e.target.value)}

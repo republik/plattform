@@ -282,7 +282,10 @@ ReactDOM.render(
               path: '/forms/slider',
               title: 'Slider',
               imports: {
-                ...require('./components/Form/Slider.js')
+                css,
+                ...require('./components/Typography'),
+                Field: require('./components/Form/Label.js'),
+                Slider: require('./components/Form/Slider.js')
               },
               src: require('./components/Form/Slider.docs.md')
             }
