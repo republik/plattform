@@ -25,8 +25,15 @@ drwxr-xr-x  magazine
 2. run `splitFront.js`
 
 ```
-node ./splitFront.js 2019-01-01
+./splitFront.js --date 2019-01-01 --path ~/Articles/magazine
 ```
+
+Or by root children id:
+
+```
+./splitFront.js --id B3fTOtcv9 --path ~/Articles/magazine
+```
+
 After that you should get two additional folders, each containing `article.md` and `images/`.
 ```
 drwxr-xr-x  magazine-after-2019-01-01
