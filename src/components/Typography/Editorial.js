@@ -16,22 +16,21 @@ export const fontRule = css({
   '& strong em, & em strong, & b i, & i b': fontStyles.serifBoldItalic
 })
 
-const pxToEm = (cssRules, baseFontSize = 16) => {
+const pxToRem = (cssRules, baseFontSize = 16) => {
     return {
         ...cssRules,
-        fontSize: cssRules.fontSize && (parseInt(cssRules.fontSize) / baseFontSize + 'em'),
-        lineHeight: cssRules.fontSize && cssRules.lineHeight &&
-            (parseInt(cssRules.lineHeight) / parseInt(cssRules.fontSize))
+        fontSize: cssRules.fontSize && (parseInt(cssRules.fontSize) / baseFontSize + 'rem'),
+        lineHeight: cssRules.lineHeight && (parseInt(cssRules.lineHeight) / baseFontSize + 'rem')
     }
 }
 
 const headline = css({
-  ...pxToEm(styles.serifTitle30),
+  ...pxToRem(styles.serifTitle30),
   margin: '0 0 12px 0',
   [mUp]: {
-    ...pxToEm(styles.serifTitle58),
+    ...pxToRem(styles.serifTitle58),
     '[data-type*="meta"] > &': {
-      ...pxToEm(styles.sansSerifMedium58)
+      ...pxToRem(styles.sansSerifMedium58)
     },
     margin: '0 0 12px 0'
   },
@@ -51,10 +50,10 @@ export const Headline = ({ children, attributes, ...props }) => (
 )
 
 const subhead = css({
-  ...pxToEm(styles.serifBold19),
+  ...pxToRem(styles.serifBold19),
   margin: '36px 0 8px 0',
   [mUp]: {
-    ...pxToEm(styles.serifBold24),
+    ...pxToRem(styles.serifBold24),
     margin: '46px 0 12px 0'
   },
   color: colors.text
@@ -67,11 +66,11 @@ export const Subhead = ({ children, attributes, ...props }) => (
 )
 
 const lead = css({
-  ...pxToEm(styles.serifRegular19),
+  ...pxToRem(styles.serifRegular19),
   display: 'inline',
   margin: '0 0 10px 0',
   [mUp]: {
-    ...pxToEm(styles.serifRegular23),
+    ...pxToRem(styles.serifRegular23),
     margin: '0 0 20px 0'
   },
   color: colors.text
@@ -87,9 +86,9 @@ const subjectStyle = {
   color: '#8c8c8c',
   display: 'inline',
   margin: 0,
-  ...pxToEm(styles.sansSerifRegular19),
+  ...pxToRem(styles.sansSerifRegular19),
   [mUp]: {
-    ...pxToEm(styles.sansSerifRegular23),
+    ...pxToRem(styles.sansSerifRegular23),
     lineHeight: '27px'
   }
 }
@@ -117,9 +116,9 @@ export const Subject = ({ children, attributes, ...props }) => {
 
 const credit = css({
   margin: '10px 0 0 0',
-  ...pxToEm(styles.sansSerifRegular14),
+  ...pxToRem(styles.sansSerifRegular14),
   [mUp]: {
-    ...pxToEm(styles.sansSerifRegular15),
+    ...pxToRem(styles.sansSerifRegular15),
     margin: '20px 0 0 0'
   },
   color: colors.text
@@ -132,10 +131,10 @@ export const Credit = ({ children, attributes, ...props }) => (
 )
 
 const format = css({
-  ...pxToEm(styles.sansSerifMedium16),
+  ...pxToRem(styles.sansSerifMedium16),
   margin: '0 0 18px 0',
   [mUp]: {
-    ...pxToEm(styles.sansSerifMedium20),
+    ...pxToRem(styles.sansSerifMedium20),
     margin: '0 0 28px 0'
   }
 })
@@ -149,9 +148,9 @@ export const Format = ({ children, color, attributes, ...props }) => (
 const paragraph = css({
   color: colors.text,
   margin: '22px 0 22px 0',
-  ...pxToEm(styles.serifRegular17),
+  ...pxToRem(styles.serifRegular17),
   [mUp]: {
-    ...pxToEm(styles.serifRegular19),
+    ...pxToRem(styles.serifRegular19),
     margin: '30px 0 30px 0'
   },
   ':first-child': {
@@ -171,10 +170,10 @@ export const P = ({ children, attributes, ...props }) => (
 )
 
 const question = css({
-  ...pxToEm(styles.serifBold17),
+  ...pxToRem(styles.serifBold17),
   margin: '36px 0 -14px 0',
   [mUp]: {
-    ...pxToEm(styles.serifBold19),
+    ...pxToRem(styles.serifBold19),
     lineHeight: '30px',
     margin: '46px 0 -18px 0'
   },
@@ -228,10 +227,10 @@ export const A = ({ children, attributes, ...props }) => (
 )
 
 const note = css({
-  ...pxToEm(styles.sansSerifRegular12),
+  ...pxToRem(styles.sansSerifRegular12),
   margin: '22px 0',
   [mUp]: {
-    ...pxToEm(styles.sansSerifRegular15),
+    ...pxToRem(styles.sansSerifRegular15),
     margin: '30px 0'
   }
 })
