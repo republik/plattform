@@ -1,4 +1,5 @@
 import * as allMediaQueries from './theme/mediaQueries'
+import { exp } from 'd3-geo/src/math'
 
 export {default as zIndex} from './theme/zIndex'
 export {default as colors} from './theme/colors'
@@ -20,6 +21,7 @@ export {default as Field} from './components/Form/Field'
 export {default as FieldSet} from './components/Form/FieldSet'
 export {default as Radio} from './components/Form/Radio'
 export {default as Checkbox} from './components/Form/Checkbox'
+export {default as Slider} from './components/Form/Slider'
 export {default as Loader} from './components/Loader'
 export {default as RawHtml} from './components/RawHtml'
 export {default as IllustrationHtml} from './components/IllustrationHtml'

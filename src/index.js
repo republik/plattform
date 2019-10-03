@@ -277,6 +277,14 @@ ReactDOM.render(
                 SearchIcon: require('react-icons/lib/md/search')
               },
               src: require('./components/Form/Dropdown.docs.md')
+            },
+            {
+              path: '/forms/slider',
+              title: 'Slider',
+              imports: {
+                ...require('./components/Form/Slider.js')
+              },
+              src: require('./components/Form/Slider.docs.md')
             }
           ]
         },
