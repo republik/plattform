@@ -14,7 +14,7 @@ const { ADMIN_FRONTEND_BASE_URL, CLAIM_CARD_CAMPAIGN, SLACK_CHANNEL_FEED } = pro
 
 module.exports = async (
   _,
-  { id, accessToken, portrait, statement },
+  { id, accessToken, portrait, statement, payload },
   context
 ) => {
   const { req, user, pgdb, t, mail } = context
@@ -53,7 +53,10 @@ module.exports = async (
       {
         payload: {
           ...card.payload,
-          statement
+          statement,
+          ...payload && payload.financing !== undefined && {
+            financing: payload.financing || {}
+          }
         },
         userId: user.id,
         updatedAt: now
