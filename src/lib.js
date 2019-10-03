@@ -1,5 +1,4 @@
 import * as allMediaQueries from './theme/mediaQueries'
-import { exp } from 'd3-geo/src/math'
 
 export {default as zIndex} from './theme/zIndex'
 export {default as colors} from './theme/colors'
