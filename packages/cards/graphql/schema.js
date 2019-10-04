@@ -42,13 +42,14 @@ type mutations {
     accessToken: ID!
     portrait: String
     statement: String!
+    payload: JSON
   ): Card!
 
   updateCard(
     id: ID!
     portrait: String
     statement: String!
-    payload: JSON!
+    payload: JSON
   ): Card!
 }
 

@@ -38,6 +38,9 @@ module.exports = async (
     const updatedPayload = {
       ...card.payload,
       statement,
+      ...payload.financing !== undefined && {
+        financing: payload.financing || {}
+      },
       ...payload.campaignBudget !== undefined && {
         campaignBudget: (payload.campaignBudget && Number(payload.campaignBudget)) || null
       },
