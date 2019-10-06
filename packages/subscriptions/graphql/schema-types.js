@@ -55,7 +55,7 @@ type Subscription {
 }
 
 type SubscriptionConnection {
-  totalCount: Int!
+  totalCount: Int
   # private
   pageInfo: SubscriptionPageInfo
   # private

@@ -2,12 +2,16 @@ const {
   getSubscriptionByUserForObject
 } = require('../../lib/Subscriptions')
 const { paginate } = require('@orbiting/backend-modules-utils')
+const { Roles } = require('@orbiting/backend-modules-auth')
 
 const createSubscriptionConnection = (nodes, args, user, me) => {
   const connection = paginate(args, nodes)
-  if (user.id !== me.id) {
+  if (!Roles.userIsMe(user, me)) {
     connection.pageInfo = null
     connection.nodes = []
+  }
+  if (!Roles.userIsMeOrInRoles(user, me, ['admin'])) {
+    connection.totalCount = null
   }
   return connection
 }
