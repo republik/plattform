@@ -4,20 +4,21 @@ import { sansSerifRegular10, sansSerifRegular12 } from '../Typography/styles'
 import { css, merge } from 'glamor'
 import { mUp } from '../../theme/mediaQueries'
 import { mUp as mUpFront } from '../TeaserFront/mediaQueries'
+import { convertStyleToRem } from '../Typography/utils'
 
 const styles = {
   byline: css({
-    ...sansSerifRegular10,
+    ...convertStyleToRem(sansSerifRegular10),
     textRendering: 'optimizeLegibility',
     WebkitFontSmoothing: 'antialiased',
     [mUp]: {
-      ...sansSerifRegular12
+      ...convertStyleToRem(sansSerifRegular12)
     }
   })
 }
 
 const positionBaseStyle = {
-  ...sansSerifRegular12,
+  ...convertStyleToRem(sansSerifRegular12),
   transform: 'rotate(-90deg)',
   transformOrigin: '0 100%',
   textAlign: 'left',
@@ -34,7 +35,7 @@ const positionStyle = {
     right: 0,
     display: 'block',
     [mUp]: {
-      ...sansSerifRegular10
+      ...convertStyleToRem(sansSerifRegular10)
     }
   }),
   below: css({
@@ -42,7 +43,7 @@ const positionStyle = {
     marginTop: '5px',
     paddingLeft: '15px',
     [mUpFront]: {
-      ...sansSerifRegular12,
+      ...convertStyleToRem(sansSerifRegular12),
       paddingLeft: 0
     }
   }),
@@ -51,7 +52,7 @@ const positionStyle = {
     marginTop: '5px',
     paddingLeft: 0,
     [mUpFront]: {
-      ...sansSerifRegular12
+      ...convertStyleToRem(sansSerifRegular12)
     }
   }),
   // right of relative container on desktop, below on mobile.
@@ -66,11 +67,11 @@ const positionStyle = {
   // right of relative container on desktop and mobile, always small font size.
   rightCompact: css({
     ...positionBaseStyle,
-    ...sansSerifRegular10,
+    ...convertStyleToRem(sansSerifRegular10),
     left: '100%',
     marginLeft: '14px',
     [mUpFront]: {
-      ...sansSerifRegular10
+      ...convertStyleToRem(sansSerifRegular10)
     }
   }),
   // left of relative container on desktop, below on mobile.
@@ -97,13 +98,13 @@ const positionStyle = {
   // left inside relative container on desktop and mobile.
   leftInsideOnlyImage: css({
     ...positionBaseStyle,
-    ...sansSerifRegular10,
+    ...convertStyleToRem(sansSerifRegular10),
     left: 0,
     marginTop: 0,
     marginLeft: '15px',
     paddingLeft: '15px',
     [mUpFront]: {
-      ...sansSerifRegular12,
+      ...convertStyleToRem(sansSerifRegular12),
       marginLeft: '18px'
     }
   })
