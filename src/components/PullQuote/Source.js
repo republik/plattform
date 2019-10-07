@@ -3,14 +3,15 @@ import PropTypes from 'prop-types'
 import { sansSerifRegular14, sansSerifRegular15 } from '../Typography/styles'
 import { css } from 'glamor'
 import { mUp } from '../../theme/mediaQueries'
+import { convertStyleToRem } from '../Typography/utils'
 
 const styles = {
   cite: css({
     display: 'block',
-    ...sansSerifRegular14,
+    ...convertStyleToRem(sansSerifRegular14),
     marginTop: '18px',
     [mUp]: {
-      ...sansSerifRegular15,
+      ...convertStyleToRem(sansSerifRegular15),
       marginTop: '21px'
     },
     fontStyle: 'normal'

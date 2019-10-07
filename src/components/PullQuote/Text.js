@@ -4,9 +4,10 @@ import { serifBold24, serifBold28, serifBold42 } from '../Typography/styles'
 import { css } from 'glamor'
 import colors from '../../theme/colors'
 import { mUp } from '../../theme/mediaQueries'
+import { convertStyleToRem } from '../Typography/utils'
 
 const baseStyle = {
-  ...serifBold24,
+  ...convertStyleToRem(serifBold24),
   color: colors.text
 }
 
@@ -14,13 +15,13 @@ const styles = {
   default: css({
     ...baseStyle,
     [mUp]: {
-      ...serifBold28
+      ...convertStyleToRem(serifBold28)
     }
   }),
   large: css({
     ...baseStyle,
     [mUp]: {
-      ...serifBold42
+      ...convertStyleToRem(serifBold42)
     }
   })
 }
