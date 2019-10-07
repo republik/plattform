@@ -1,13 +1,13 @@
 export const DEFAULT_FONT_SIZE = 16
 
-const pxToRem = (pxSize, baseFontSize = DEFAULT_FONT_SIZE) => {
-  return pxSize && (parseInt(pxSize) / baseFontSize + 'rem')
+const pxToRem = (pxSize) => {
+  return pxSize && `${parseInt(pxSize, 10) / DEFAULT_FONT_SIZE}rem`
 }
 
-export const convertStyleToRem = (cssRules, baseFontSize = DEFAULT_FONT_SIZE) => {
+export const convertStyleToRem = (cssRules) => {
   return {
     ...cssRules,
-    fontSize: pxToRem(cssRules.fontSize, baseFontSize),
-    lineHeight: pxToRem(cssRules.lineHeight, baseFontSize)
+    fontSize: pxToRem(cssRules.fontSize),
+    lineHeight: pxToRem(cssRules.lineHeight)
   }
 }
