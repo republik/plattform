@@ -15,6 +15,15 @@
     <style type="text/css">
       {{sg_font_faces}}
     </style>
+    <style type="text/css">
+      p {
+        color:#282828;font-size:17px;line-height:24px;
+        {{sg_font_style_sans_serif_regular}}
+      }
+      p strong {
+        {{sg_font_style_sans_serif_medium}}
+      }
+    </style>
   </head>
   <body style="margin: 0; padding: 0; background-color: #fff;">
     <table border="0" cellpadding="0" cellspacing="0" width="100%">
@@ -25,72 +34,93 @@
               <tbody>
                 <tr>
                   <td style="padding:20px;">
-                    <p>Sehr geehrte Dame, sehr geehrter Herr</p>
+                    <p>Guten Tag</p>
                     {{#unless RECIPIENT_HAS_MEMBERSHIPS}}
-                    {{#if `RECIPIENT_EMAIL != GRANTER_EMAIL`}}
-                    <p style="color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}"><strong style="{{sg_font_style_sans_serif_medium}}">{{GRANTER_NAME}} (<a href="mailto:{{GRANTER_EMAIL}}">{{GRANTER_EMAIL}}</a>) hat die Republik mit Ihnen geteilt.</strong>
-                    </p>
-                    {{#if GRANTER_MESSAGE}}
-                    <p style="color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}">Und eine Nachricht für Sie mitgegeben:</p>
-                    <blockquote style="color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}">{{{GRANTER_MESSAGE}}}</blockquote>
-                    {{/if}}
-                    {{/if}}
-                    <p style="color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}">Für {{CAMPAIGN_PERIOD}} sind Sie Gast an Bord. Und können nun unser Magazin entdecken, es lesen, sehen, hören und mitdiskutieren.</p>
-                    <p style="color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}">Die Republik ist im Januar 2018 an den Start gegangen, es ist ein digitales Schweizer Magazin für Politik, Wirtschaft, Gesellschaft und Kultur. Für alles, was verwickelt oder komplex ist. Wir bieten täglich Beiträge zu aktuellen Themen – in unserem Magazin, im Feed oder auch per Newsletter ins E-Mail-Postfach geliefert.</p>
-                    <p style="color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}">Um Ihre Reise mit uns anzutreten, melden Sie sich einfach vor dem {{GRANT_BEGIN_BEFORE}} hier an:</p>
-                    <table width="100%" border="0" cellspacing="0" cellpadding="0">
-                      <tr>
-                        <td>
-                          <table border="0" cellspacing="0" cellpadding="0">
-                            <tr>
-                              <td align="center" bgcolor="#3CAD00">
-                                <a href="{{LINK_CLAIM_PREFILLED}}" style="font-size:20px;{{sg_font_style_sans_serif_regular}}color:#ffffff;text-decoration:none;border-radius:0;padding:15px 30px 15px 30px;border:1px solid #3CAD00;display:inline-block;">Jetzt anmelden</a>
-                              </td>
-                            </tr>
-                          </table>
-                        </td>
-                      </tr>
-                    </table>
-                    <p style="color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}">Falls der Knopf nicht funktioniert: Öffnen Sie <a href="{{LINK_CLAIM_PREFILLED}}">{{LINK_CLAIM_CONTEXTLESS}}</a>, geben Sie Ihren Namen, Ihre E-Mail Adresse und den folgenden Gutscheincode ein: <strong style="{{sg_font_style_sans_serif_medium}}">{{GRANT_VOUCHER_CODE}}</strong>
-                    </p>
+                    
+                      {{#if `RECIPIENT_EMAIL != GRANTER_EMAIL`}}
+                        <p><strong>{{GRANTER_NAME}} (<a href="mailto:{{GRANTER_EMAIL}}">{{GRANTER_EMAIL}}</a>) hat die Republik – ein neues, unabhängiges und werbefreies digitales Magazin für Politik, Wirtschaft, Gesellschaft und Kultur – mit Ihnen geteilt.</strong>
+                        </p>
+                        {{#if GRANTER_MESSAGE}}
+                        <p>Und uns eine Nachricht für Sie mitgegeben:</p>
+                        <blockquote style="color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}">{{{GRANTER_MESSAGE}}}</blockquote>
+                        {{/if}}
+                      {{/if}}
+                      
+                      {{#if `RECIPIENT_EMAIL != GRANTER_EMAIL`}}
+                        <p>Für {{CAMPAIGN_PERIOD}} sind Sie jetzt Gast an Bord der Republik. Und können unser Magazin entdecken, es lesen, sehen und hören.</p>
+                      {{/if}} 
+            
+                      <p>Die Republik erscheint von Montag bis Samstag mit täglich ein bis drei neuen Beiträgen. 
+                        <a href="{{link_manual}}">In der Republik-App</a>, <a href="{{link_signin}}">auf der Website</a> und als Newsletter.</p>
+              
+                      <p>Als Magazin bieten wir Einordnung und Vertiefung anstelle einer Flut von Nachrichten. Wir recherchieren, um Missstände aufzudecken, oft monatelang. Und diskutieren über drängende Fragen der Gegenwart.</p>
+                      <p>Die Republik ist aber noch mehr als ein Magazin. In der Republik sind inhaltliche Debatten mit Expertinnen, Lesern und Journalistinnen mehr als nur ein demokratischer Traum. Mit verschiedenen Veranstaltungen zu Politik, Gesellschaft und Kultur und in unserer Genossenschaft sind wir und schaffen wir Gemeinschaft, ermöglichen wir Austausch und Verbindungen.</p>
+                      <p>Wir sind ein Projekt gegen den Zynismus, den Vormarsch der Autoritären und gegen die Diktatur der Angst. Wir stehen für die Verteidigung der demokratischen Institutionen und die Werte der Aufklärung: für Treue zu Fakten, für Lösungen von Fall zu Fall, für Offenheit gegenüber Kritik, für Respektlosigkeit gegenüber der Macht und Respekt vor dem Menschen.</p>
+            
+                      <p>Um die Republik näher kennenzulernen, melden Sie sich einfach vor dem {{GRANT_BEGIN_BEFORE}} hier an:</p>
+                      <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                        <tr>
+                          <td>
+                            <table border="0" cellspacing="0" cellpadding="0">
+                              <tr>
+                                <td align="center" bgcolor="#3CAD00">
+                                  <a href="{{LINK_CLAIM_PREFILLED}}" style="font-size:20px;{{sg_font_style_sans_serif_regular}}color:#ffffff;text-decoration:none;border-radius:0;padding:15px 30px 15px 30px;border:1px solid #3CAD00;display:inline-block;">Jetzt anmelden</a>
+                                </td>
+                              </tr>
+                            </table>
+                          </td>
+                        </tr>
+                      </table>
+                      <p>Falls dieser Button nicht funktioniert: Öffnen Sie bitte <a href="{{LINK_CLAIM_PREFILLED}}">{{LINK_CLAIM_CONTEXTLESS}}</a>, und geben Sie dann Ihren Namen, Ihre E-Mail-Adresse und den folgenden Gutscheincode ein: <span style="font-family:monospace;">{{GRANT_VOUCHER_CODE}}</span>
+                      </p>
                     {{/unless}}
+
                     {{#if RECIPIENT_HAS_MEMBERSHIPS}}
-                    <p style="color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}">Sie erhalten diese E-Mail im Rahmen unserer Aktion «{{CAMPAIGN_TITLE}}».</p>
-                    <p style="color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}">{{GRANTER_NAME}} geht davon aus, dass Sie noch kein Republik-Abo besitzen. Dabei befinden Sie sich als Besitzerin oder Besitzer eines Abos bereits an Bord – vielen Dank dafür!</p>
-                    {{#if RECIPIENT_HAS_CAMPAIGNS}}
-                    <p style="color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}">Sie können Ihr Abo ebenfalls <a href="{{LINK_ACCOUNT_SHARE}}">mit anderen Personen teilen</a>. Die Empfänger erhalten eine persönliche Einladung per E-Mail.</p>
-                    <table width="100%" border="0" cellspacing="0" cellpadding="0">
-                      <tr>
-                        <td>
-                          <table border="0" cellspacing="0" cellpadding="0">
-                            <tr>
-                              <td align="center" bgcolor="#3CAD00">
-                                <a href="{{LINK_ACCOUNT_SHARE}}" style="font-size:20px;{{sg_font_style_sans_serif_regular}}color:#ffffff;text-decoration:none;border-radius:0;padding:15px 30px 15px 30px;border:1px solid #3CAD00;display:inline-block;">Zugriff teilen</a>
-                              </td>
-                            </tr>
-                          </table>
-                        </td>
-                      </tr>
-                    </table>
+                      <p>Sie erhalten diese E-Mail im Rahmen unserer Aktion «{{CAMPAIGN_TITLE}}».</p>
+                      
+                      {{#if `RECIPIENT_EMAIL != GRANTER_EMAIL`}}
+                      <p>{{GRANTER_NAME}} geht davon aus, dass Sie noch kein Republik-Abo besitzen. Dabei befinden Sie sich als Besitzerin oder Besitzer eines Abos bereits an Bord – vielen Dank dafür!</p>
+                      {{else}}
+                      <p>Sie haben aber bereits ein gültiges Abo – vielen Dank dafür!</p>
+                      {{/if}} 
+                      
+                      {{#if RECIPIENT_HAS_CAMPAIGNS}}
+                        <p>Sie können Ihr Abo auch <a href="{{LINK_ACCOUNT_SHARE}}">mit anderen Personen teilen</a>. Die Empfänger erhalten eine persönliche Einladung per E-Mail.</p>
+                        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                          <tr>
+                            <td>
+                              <table border="0" cellspacing="0" cellpadding="0">
+                                <tr>
+                                  <td align="center" bgcolor="#3CAD00">
+                                    <a href="{{LINK_ACCOUNT_SHARE}}" style="font-size:20px;{{sg_font_style_sans_serif_regular}}color:#ffffff;text-decoration:none;border-radius:0;padding:15px 30px 15px 30px;border:1px solid #3CAD00;display:inline-block;">Zugriff teilen</a>
+                                  </td>
+                                </tr>
+                              </table>
+                            </td>
+                          </tr>
+                        </table>
+                      {{/if}}
                     {{/if}}
-                    {{/if}}
-                    <p style="color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}">Bei weiteren Fragen und Anliegen stehen wir Ihnen gerne unter <a href="mailto:kontakt@republik.ch">kontakt@republik.ch</a> zur Verfügung.</p>
-                    <p style="color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}">Mit den besten Wünschen</p>
-                    <p style="color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}">Ihre Crew der Republik</p>
-                    {{#unless RECIPIENT_HAS_MEMBERSHIPS}}
-                    <p style="color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}">PS: Falls Sie sich heute nicht in Reiselaune befinden, können Sie diese Nachricht getrost ignorieren – oder sich bis zum {{GRANT_BEGIN_BEFORE}} Zeit lassen, Ihren Testzugang zu aktivieren.</p>
-                    {{/unless}}
+                    <p>Bei Fragen und Anliegen stehen wir Ihnen gerne unter <a href="mailto:kontakt@republik.ch">kontakt@republik.ch</a> zur Verfügung.</p>
+                    <p>Wir wünschen Ihnen viel Freude beim Lesen und Ausprobieren!</p>
+                    <p>Ihre Crew der Republik</p>
                   </td>
                 </tr>
                 <tr>
                   <td style="padding:20px;">
-                    <p style="color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}">
+                    <p style="font-size:14px;line-height:20px;{{sg_font_style_sans_serif_regular}}">Die Republik ist ein unabhängiges und werbefreies digitales Magazin für Politik, Wirtschaft, Gesellschaft und Kultur. Es wird von seinen Leserinnen und Lesern finanziert und erscheint von Montag bis Samstag mit täglich ein bis drei neuen Beiträgen. In der App, auf der Website und als Newsletter.</p>
+                    <p style="color:#282828;font-size:14px;line-height:20px;{{sg_font_style_sans_serif_regular}}">
                       <img height="79" src="{{frontend_base_url}}/static/logo_republik_newsletter.png" style="border:0px;width:180px !important; height:79px !important;margin:0px;" width="180" alt="">
                       <br>
                       Republik AG<br>
-                      Sihlhallenstrasse 1<br>
-                      8004 Zürich<br>
-                      Schweiz<br><a href="mailto:kontakt@republik.ch">kontakt@republik.ch</a>
+                      Sihlhallenstrasse 1, CH-8004 Zürich<br>
+                      <a href="{{frontend_base_url}}">www.republik.ch</a><br>
+                      <a href="mailto:kontakt@republik.ch">kontakt@republik.ch</a>
+                    </p>
+                    <p style="font-size:14px;line-height:20px;{{sg_font_style_sans_serif_regular}}">
+                        <a href="{{link_manifest}}">Unser Manifest</a><br />
+                        <a href="{{link_imprint}}">Das Impressum</a><br />
+                        <a href="{{link_faq}}">Häufig gestellte Fragen</a>
                     </p>
                   </td>
                 </tr>

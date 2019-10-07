@@ -15,6 +15,15 @@
     <style type="text/css">
       {{sg_font_faces}}
     </style>
+    <style type="text/css">
+      p {
+        color:#282828;font-size:17px;line-height:24px;
+        {{sg_font_style_sans_serif_regular}}
+      }
+      p strong {
+        {{sg_font_style_sans_serif_medium}}
+      }
+    </style>
   </head>
   <body style="margin: 0; padding: 0; background-color: #fff;">
     <table border="0" cellpadding="0" cellspacing="0" width="100%">
@@ -25,33 +34,57 @@
               <tbody>
                 <tr>
                   <td style="padding:20px;">
-                    <p style="color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}">Sehr geehrte Dame, sehr geehrter Herr</p>
-                    <p style="color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}">{{#if `RECIPIENT_EMAIL != GRANTER_EMAIL`}}Am {{GRANT_BEGIN}} sind Sie dank {{GRANTER_NAME}} für {{CAMPAIGN_PERIOD}} auf eine Expedition ins Ungewisse gestartet. {{/if}}Nun ist der Zeitpunkt gekommen, an dem die gemeinsame Reise zu einem Zwischenhalt kommt.</p>
-                    <p style="color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}">Hat Ihnen der Ausflug ins Verwickelte und Komplexe der Welt gefallen? Wir hoffen es. Und wir würden uns freuen, Sie als Verlegerin respektive Verleger begrüssen zu dürfen. Als offizielle Unterstützerin, Unterstützer unserer kleinen Rebellion – für den Journalismus, gegen die Medienkonzerne. Seit Januar 2018, unabhängig und komplett werbefrei. Kommen Sie auch an Bord!</p>
-                    <p style="color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}">Sie haben dazu zwei Möglichkeiten:
-                    </p>
-                    <ol type="a" style="color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}">
-                      <li>Ein <a href="{{LINK_OFFER_MONTHLY_ABO}}">Monatsabo</a>, das Sie jederzeit kündigen können.</li>
-                      <li>Ein <a href="{{LINK_OFFER_ABO}}">Jahresabonnement</a> mit automatischer Mitgliedschaft (und entsprechendem Mitspracherecht) in der <a href="{{LINK_PROJECTR}}">Project R Genossenschaft</a>. Sie tun Gutes und sparen gegenüber dem Monatsabo zudem noch Geld (immerhin 24 Franken).</li>
+                    <p>Guten Tag</p>
+                    
+                    {{#if `RECIPIENT_EMAIL != GRANTER_EMAIL`}}
+                      <p>Seit dem {{GRANT_BEGIN}} durften wir Sie dank einer Empfehlung von {{GRANTER_NAME}} probeweise als Leserin oder Leser an Bord der Republik haben.</p>
+                    {{/if}}
+                    
+                    <p>Hat Ihnen unser Magazin gefallen?</p>
+                    <p>Finden Sie unsere Idee eines unabhängigen und werbefreien digitalen Magazins für Politik, Wirtschaft, Gesellschaft und Kultur auch unterstützenswert?</p>
+                    <p>Wie Sie wissen, ist die Republik werbefrei und wird von ihren Leserinnen und Lesern finanziert.</p>
+                    <p>Als Magazin bieten wir Einordnung und Vertiefung anstelle einer Flut von Nachrichten.<br />
+                    In der Republik sind aber auch inhaltliche Debatten mit Expertinnen, Lesern und Journalistinnen mehr als nur ein demokratischer Traum. Mit verschiedenen Veranstaltungen zu Politik, Gesellschaft und Kultur und in unserer Genossenschaft sind wir und schaffen wir Gemeinschaft, ermöglichen wir Austausch und Verbindungen.</p>
+                    <p>Wir sind ein Projekt gegen den Zynismus, den Vormarsch der Autoritären und gegen die Diktatur der Angst. Wir stehen für die Verteidigung der demokratischen Institutionen und die Werte der Aufklärung: für Treue zu Fakten, für Lösungen von Fall zu Fall, für Offenheit gegenüber Kritik, für Respektlosigkeit gegenüber der Macht und Respekt vor dem Menschen.</p>
+                    <p>Wir würden uns sehr freuen, Sie als Leserin oder Leser, als Verlegerin oder Verleger und als Mitglied der Republik-Community willkommen zu heissen. Sie haben hierfür verschiedene Möglichkeiten:</p>
+                    <p>Mit einem Jahres-, Gönner- oder Ausbildungsabonnement erhalten Sie das digitale Magazin und werden Mitglied der Project R Genossenschaft, die das grösste Aktienpaket an der Republik hält. Wenn Sie nicht Teil der Genossenschaft sein wollen, sondern nur Zugriff aufs Magazin haben möchten, schliessen Sie am besten einfach ein (unbegrenztes) Monatsabo ab.</p>
+                    <p>Die Republik-Abonnemente/-Mitgliedschaften in der Übersicht:</p>
+
+                    <ol style="color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}">
+                      <li><a href="{{link_offer_monthly_abo}}">Monatsabonnement</a> CHF 22.–/Monat
+                      <p style="color:#282828;font-size:14px;line-height:20px;{{sg_font_style_sans_serif_regular}}">
+                        Verlängert sich automatisch, kann aber jederzeit und ohne Frist gekündigt werden. Mit diesem Abo erhalten Sie viel Kontext und Vertiefung – ohne dass Sie Teil unserer Genossenschaft werden.</p></li>
+                      <li><a href="{{link_offer_abo}}">Jahresabonnement</a> CHF 240.–/Jahr
+                      <p style="color:#282828;font-size:14px;line-height:20px;{{sg_font_style_sans_serif_regular}}">
+                        Verlängert sich nicht automatisch, wir erinnern Sie aber immer rechtzeitig daran, das Abonnement zu erneuern. Mit diesem Abo sichern Sie sich ein Jahr lang unabhängigen und werbefreien Qualitätsjournalismus und sind gleichzeitig Teil der Republik-Community und der Project R Genossenschaft.</p></li>
+                      <li><a href="{{link_offer_benefactor}}">Gönnerabonnement</a> ab CHF 1000.–/Jahr
+                      <p style="color:#282828;font-size:14px;line-height:20px;{{sg_font_style_sans_serif_regular}}">
+                        Verlängert sich nicht automatisch, wir erinnern Sie aber rechtzeitig daran, die Gönnerschaft zu erneuern. Mit der Gönnerschaft erhalten Sie ein Republik-Jahresabo, ein Extra-Dankeschön in Form eines Buches und die Sicherheit, etwas sehr Wichtiges zur Erhaltung einer wirklich freien Demokratie beigetragen zu haben. Zudem sind Sie Teil der Republik-Community und der Project R Genossenschaft.</p></li>
+                      <li><a href="{{link_offer_reduced_ausbildung}}">Ausbildungsabonnement</a> CHF 140.–/Jahr
+                      <p style="color:#282828;font-size:14px;line-height:20px;{{sg_font_style_sans_serif_regular}}">
+                        Verlängert sich nicht automatisch, wir erinnern Sie aber rechtzeitig daran, das Abo zu erneuern. Mit diesem Abo erhalten alle Auszubildenden und Studierenden Zugang zum vollständigen Republik-Angebot inklusive Genossenschafts-Mitgliedschaft – zu einem reduzierten Preis.</p></li>
                     </ol>
-                    <p style="color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}">Haben Sie Fragen oder brauchen Sie Hilfe? Unter <a href="mailto:kontakt@republik.ch">kontakt@republik.ch</a> helfen wir Ihnen gerne weiter.
-                    </p>
-                    <p style="color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}">
-                      Mit den besten Wünschen und hoffentlich auf bald!<br>
-                      <br>
-                      Ihre Crew der Republik
-                    </p>
+                    
+                    <p>Haben Sie Fragen oder brauchen Sie Hilfe? Unter <a href="mailto:kontakt@republik.ch">kontakt@republik.ch</a> helfen wir Ihnen gerne weiter.</p>
+                    <p>Herzlich<br>
+                      Ihre Crew der Republik</p>
                   </td>
                 </tr>
                 <tr>
                   <td style="padding:20px;">
-                    <p style="color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}">
+                    <p style="font-size:14px;line-height:20px;{{sg_font_style_sans_serif_regular}}">Die Republik ist ein unabhängiges und werbefreies digitales Magazin für Politik, Wirtschaft, Gesellschaft und Kultur. Es wird von seinen Leserinnen und Lesern finanziert und erscheint von Montag bis Samstag mit täglich ein bis drei neuen Beiträgen. In der App, auf der Website und als Newsletter.</p>
+                    <p style="color:#282828;font-size:14px;line-height:20px;{{sg_font_style_sans_serif_regular}}">
                       <img height="79" src="{{frontend_base_url}}/static/logo_republik_newsletter.png" style="border:0px;width:180px !important; height:79px !important;margin:0px;" width="180" alt="">
                       <br>
                       Republik AG<br>
-                      Sihlhallenstrasse 1<br>
-                      8004 Zürich<br>
-                      Schweiz<br><a href="mailto:kontakt@republik.ch">kontakt@republik.ch</a>
+                      Sihlhallenstrasse 1, CH-8004 Zürich<br>
+                      <a href="{{frontend_base_url}}">www.republik.ch</a><br>
+                      <a href="mailto:kontakt@republik.ch">kontakt@republik.ch</a>
+                    </p>
+                    <p style="font-size:14px;line-height:20px;{{sg_font_style_sans_serif_regular}}">
+                        <a href="{{link_manifest}}">Unser Manifest</a><br />
+                        <a href="{{link_imprint}}">Das Impressum</a><br />
+                        <a href="{{link_faq}}">Häufig gestellte Fragen</a>
                     </p>
                   </td>
                 </tr>

@@ -37,16 +37,66 @@ const getTemplate = (name) => {
   return contents
 }
 
-const envMergeVars = []
+const envMergeVars = [
+  { name: 'frontend_base_url',
+    content: FRONTEND_BASE_URL
+  },
+  { name: 'link_faq',
+    content: `${FRONTEND_BASE_URL}/faq`
+  },
+  { name: 'link_manifest',
+    content: `${FRONTEND_BASE_URL}/manifest`
+  },
+  { name: 'link_imprint',
+    content: `${FRONTEND_BASE_URL}/impressum`
+  },
+  { name: 'assets_server_base_url',
+    content: ASSETS_SERVER_BASE_URL
+  },
+  { name: 'link_signin',
+    content: `${FRONTEND_BASE_URL}/anmelden`
+  },
+  { name: 'link_claim_contextless',
+    content: `${FRONTEND_BASE_URL}/abholen`
+  },
+  { name: 'link_account_share',
+    content: `${FRONTEND_BASE_URL}/konto#teilen`
+  },
+  { name: 'link_offers_overview',
+    content: `${FRONTEND_BASE_URL}/angebote`
+  },
+  { name: 'link_offers',
+    content: `${FRONTEND_BASE_URL}/angebote?package=ABO`
+  },
+  { name: 'link_offer_abo',
+    content: `${FRONTEND_BASE_URL}/angebote?package=ABO`
+  },
+  { name: 'link_offer_monthly_abo',
+    content: `${FRONTEND_BASE_URL}/angebote?package=MONTHLY_ABO`
+  },
+  { name: 'link_offer_benefactor',
+    content: `${FRONTEND_BASE_URL}/angebote?package=BENEFACTOR`
+  },
+  { name: 'link_offer_reduced_ausbildung',
+    content: `${FRONTEND_BASE_URL}/angebote?package=ABO&userPrice=1&price=14000&reason=Ausbildung%3A%20`
+  },
+  { name: 'link_dialog',
+    content: `${FRONTEND_BASE_URL}/dialog`
+  },
+  { name: 'link_app',
+    content: `${FRONTEND_BASE_URL}/app`
+  },
+  { name: 'link_manual',
+    content: `${FRONTEND_BASE_URL}/anleitung`
+  },
+  { name: 'link_projectr',
+    content: 'https://project-r.construction/'
+  },
+  { name: 'link_project_r',
+    content: 'https://project-r.construction/news'
+  }
+]
 
-envMergeVars.push({
-  name: 'frontend_base_url',
-  content: FRONTEND_BASE_URL
-})
-envMergeVars.push({
-  name: 'assets_server_base_url',
-  content: ASSETS_SERVER_BASE_URL
-})
 if (SG_FONT_FACES) {
   envMergeVars.push({
     name: 'sg_font_faces',
