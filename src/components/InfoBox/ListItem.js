@@ -8,6 +8,7 @@ import colors from '../../theme/colors'
 import { css } from 'glamor'
 import { mUp } from '../../theme/mediaQueries'
 import { textAttributes } from './InfoBox'
+import { convertStyleToRem } from '../Typography/utils'
 
 const WIDTH = 22
 
@@ -16,9 +17,9 @@ const styles = {
     color: colors.text,
     paddingLeft: `${WIDTH}px`,
     position: 'relative',
-    ...sansSerifRegular15,
+    ...convertStyleToRem(sansSerifRegular15),
     [mUp]: {
-      ...sansSerifRegular18
+      ...convertStyleToRem(sansSerifRegular18)
     },
     '& p:last-child': {
       marginBottom: 0

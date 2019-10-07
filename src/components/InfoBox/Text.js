@@ -6,13 +6,14 @@ import { css } from 'glamor'
 import colors from '../../theme/colors'
 import { mUp } from '../../theme/mediaQueries'
 import { textAttributes } from './InfoBox'
+import { convertStyleToRem, pxToRem } from '../Typography/utils'
 
 const styles = {
   text: css({
-    ...sansSerifRegular15,
-    lineHeight: '24px',
+    ...convertStyleToRem(sansSerifRegular15),
+    lineHeight: pxToRem('24px'),
     [mUp]: {
-      ...sansSerifRegular18
+      ...convertStyleToRem(sansSerifRegular18)
     },
     color: colors.text,
     ':nth-of-type(2)': {
