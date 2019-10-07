@@ -59,8 +59,20 @@ const envMergeVars = [
   { name: 'link_claim_contextless',
     content: `${FRONTEND_BASE_URL}/abholen`
   },
+  { name: 'link_account',
+    content: `${FRONTEND_BASE_URL}/konto`
+  },
+  { name: 'link_account_abos',
+    content: `${FRONTEND_BASE_URL}/konto#abos`
+  },
   { name: 'link_account_share',
     content: `${FRONTEND_BASE_URL}/konto#teilen`
+  },
+  { name: 'link_account_account',
+    content: `${FRONTEND_BASE_URL}/konto#account`
+  },
+  { name: 'link_profile',
+    content: `${FRONTEND_BASE_URL}/~me`
   },
   { name: 'link_offers_overview',
     content: `${FRONTEND_BASE_URL}/angebote`

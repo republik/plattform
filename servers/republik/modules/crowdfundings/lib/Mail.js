@@ -107,7 +107,7 @@ mail.enforceSubscriptions = async ({
   pgdb,
   ...rest
 }) => {
-  const user = !!userId && await pgdb.public.users.findOne({id: userId})
+  const user = !!userId && await pgdb.public.users.findOne({ id: userId })
 
   const interests = await getInterestsForUser({
     userId: !!user && user.id,
@@ -177,7 +177,7 @@ mail.sendPledgeConfirmations = async ({ userId, pgdb, t }) => {
     }, { pgdb })
   }))
 
-  await pgdb.public.pledges.update({id: pledges.map(pledge => pledge.id)}, {
+  await pgdb.public.pledges.update({ id: pledges.map(pledge => pledge.id) }, {
     sendConfirmMail: false
   })
 }
@@ -419,7 +419,7 @@ mail.getPledgeMergeVars = async (
     { orderBy: ['createdAt desc'] }
   )
   const payment = pledgePayment
-    ? await pgdb.public.payments.findOne({id: pledgePayment.paymentId})
+    ? await pgdb.public.payments.findOne({ id: pledgePayment.paymentId })
     : {}
 
   const pledgeOptions = await pgdb.public.pledgeOptions.find({
@@ -507,7 +507,7 @@ mail.getPledgeMergeVars = async (
   const giftedMemberships = memberships
     .filter(membership => pledge.userId !== membership.userId)
 
-  const address = await pgdb.public.addresses.findOne({id: user.addressId})
+  const address = await pgdb.public.addresses.findOne({ id: user.addressId })
 
   const discount = pledge.donation < 0 ? (0 - pledge.donation) / 100 : 0
   const donation = pledge.donation > 0 ? pledge.donation / 100 : 0
@@ -646,22 +646,6 @@ mail.getPledgeMergeVars = async (
       content: await memberStatsCount({ pgdb })
     },
 
-    // Links
-    { name: 'link_signin',
-      content: `${FRONTEND_BASE_URL}/anmelden`
-    },
-    { name: 'link_dialog',
-      content: `${FRONTEND_BASE_URL}/dialog`
-    },
-    { name: 'link_profile',
-      content: `${FRONTEND_BASE_URL}/~me`
-    },
-    { name: 'link_account',
-      content: `${FRONTEND_BASE_URL}/konto`
-    },
-    { name: 'link_account_account',
-      content: `${FRONTEND_BASE_URL}/konto#account`
-    },
     { name: 'link_claim',
       content: `${FRONTEND_BASE_URL}/abholen`
     }

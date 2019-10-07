@@ -30,74 +30,86 @@
       <tbody>
         <tr>
           <td align="center" valign="top">
-            <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width:640px;color:#444;font-size:18px;{{sg_font_style_sans_serif_regular}}">
+            <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width:640px;color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}">
               <tbody>
                 <tr>
                   <td style="padding:20px;">
-                    <p>{{name}}, willkommen an Bord!</p>
-                    <p>Schön, sind Sie dabei. Wir freuen uns, Sie begrüssen zu dürfen. Hier finden Sie die wichtigsten Informationen:</p>
+                    <p>Guten Tag</p>
+                    <p>Und willkommen an Bord!<br />
+                      Wir freuen uns sehr, Sie bei der Republik begrüssen zu dürfen.</p>
+                      
+                    {{#if waiting_for_payment}}
+                      <p>Wir sind Ihnen sehr dankbar für Ihren grosszügigen Beitrag. Da er CHF 1000.– übersteigt, können Ihre Mitgliedschaft und Ihr Zugang erst nach Zahlungseingang aktiviert werden. Sie erhalten eine Bestätigung, wenn die Transaktion erfolgreich bei uns angekommen ist.</p>
+                    {{else}}
+                      <p>Sie können ab sofort <a href="{{link_signin}}">das Magazin lesen</a>, an <a href="{{link_dialog}}">sämtlichen Debatten teilnehmen</a>, eine <a href="{{link_profile}}">öffentliche Profilseite aufschalten</a> und Beiträge mit Ihren Freunden oder Feinden teilen.</p>
+                      <p>Falls Sie Fragen zur Inbetriebnahme des Magazins haben:<br /><a href="{{link_manual}}">Hier finden Sie die Gebrauchsanleitung</a>, die die wichtigsten davon klärt.</p>
+                      <p>Wir schicken Ihnen, unserer neusten Verlegerin, unserem neusten Verleger, auch regelmässig Neuigkeiten aus Redaktion und Verlag: zu Vorhaben, Hintergründen, Entscheidungen und Fehlern. Sie können Kritik üben und Vorschläge machen. Und sich mit Ihren {{republik_memberships_count}} Kolleginnen und Kollegen in der Verlagsetage austauschen.</p>
+                    {{/if}}
+
+                    <p><strong>Informationen zur Zahlung Ihres Abonnements und Ihrer Mitgliedschaft:</strong></p>
+
                     {{#if `payment_method != "PAYMENTSLIP"`}}
                       <p>Ihre Zahlung ist erfolgreich bei uns eingegangen, herzlichen Dank!</p>
                     {{/if}}
+                     
                     {{#if `payment_method == "PAYMENTSLIP"`}}
-                      <p>Sie haben Banküberweisung als Weg der Zahlung gewählt.</p>
-                      <p>Bitte überweisen Sie {{total_formatted}} an:</p>
-                      </p>
+                      <p>Sie haben eine Banküberweisung als Zahlungsweg gewählt.</p>
+                      <p>Bitte überweisen Sie {{total_formatted}} bis spätestens <strong>{{due_date}}</strong> an:</p>
                       <p>PC 61-11760-6<br>
                         IBAN: CH50 0900 0000 6101 1760 6<br>
                         BIC: POFICHBEXXX
                       </p>
-                      <p>
-                        lautend auf:
-                      </p>
+                      <p>lautend auf:</p>
                       <p>
                         Project R Genossenschaft<br>
                         Sihlhallenstrasse 1<br>
                         8004 Zürich
                       </p>
-                      <p>bis spätestens {{due_date}}.</p>
-                      <p><strong>Und hier das Wichtigste. Vergessen Sie nicht, folgende Botschaft in das Feld «Betreff» des Einzahlungsscheins zu schreiben: {{HRID}}</strong>
-                        <br>
-                        (Sonst funktioniert die Zuordnung nicht.)
-                      </p>
+                      <p><strong>Bitte vergessen Sie nicht, {{HRID}} in das Feld «Betreff» des Einzahlungsscheins zu schreiben, sonst funktioniert die Zuordnung nicht. Danke!</strong></p>
                     {{/if}}
-                    {{#if waiting_for_payment}}
-                      <p><strong>Da der Gesamtbetrag Ihrer Bestellung die magische Grenze von CHF 1000.– übersteigt, kann Ihre Mitgliedschaft und Ihr Zugang erst nach Zahlungseingang aktiviert werden. Sie erhalten eine Bestätigung, sobald die Transaktion erfolgreich bei uns angekommen ist.</strong></p>
-                    {{else}}
-                      <p>Sie können ab sofort unser <a href="{{link_signin}}">Magazin lesen</a>, an <a href="{{link_dialog}}">sämtlichen Debatten teilnehmen</a>, eine <a href="{{link_profile}}">öffentliche Profilseite aufschalten</a> und Beiträge mit Ihren Freunden oder Feinden teilen.</p>
-                      <p>Ausserdem freuen wir uns, Sie ab sofort als unsere neueste Verlegerin, unseren neuesten Verleger begrüssen zu können. Sie haben damit das Recht auf die interessantesten Neuigkeiten aus Redaktion und Verlag: zu Vorhaben, Hintergründen, Entscheidungen und Fehlern. Sie können Kritik üben und gelegentlich Vorschläge machen. Und sich mit Ihren {{republik_memberships_count}} Kolleginnen und Kollegen in der Verlagsetage austauschen.</p>
-                      <p>Falls Sie Fragen zur Inbetriebnahme des Magazins haben: Hier finden Sie die <a href="{{frontend_base_url}}/2018/01/13/gebrauchsanleitung">Gebrauchsanleitung</a>, die die wichtigsten davon klärt.</p>
+                    
+                    {{#unless waiting_for_payment}}
                       {{#if goodies_count}}
                         {{#if `goodies_count == 1`}}
-                          <p>Sie haben sich zu Ihrem Abo auch noch ein Republik-Objekt gegönnt. Sie werden es innerhalb der nächsten 7 Werktage per Post zugestellt bekommen.</p>
+                          <p>Sie haben sich zu Ihrem Abo auch ein Republik-Objekt gegönnt. Wir werden es Ihnen innerhalb der nächsten 7 Werktage per Post zustellen.</p>
                         {{elseif `goodies_count > 1`}}
-                          <p>Sie haben sich zu Ihrem Abo auch noch mehrere Republik-Objekte gegönnt. Sie werden diese innerhalb der nächsten 7 Werktage per Post zugestellt bekommen.</p>
+                          <p>Sie haben sich zu Ihrem Abo noch mehrere Republik-Objekte gegönnt. Wir werden sie Ihnen innerhalb der nächsten 7 Werktage per Post zustellen.</p>
                         {{/if}}
                         <ul>
-                          {{#options}}
-                            {{#if `this.otype == "Goodie"`}}
-                            <li>
-                              {{this.oamount}} {{this.olabel}}
-                            </li>
-                            {{/if}}
-                          {{/options}}
+                        {{#options}}
+                          {{#if `this.otype == "Goodie"`}}
+                          <li>
+                            {{this.oamount}} {{this.olabel}}
+                          </li>
+                          {{/if}}
+                        {{/options}}
                         </ul>
-                        <p><strong>Stellen Sie dafür bitte sicher, dass Sie Ihre Adresse unter <a href="{{link_account_account}}">{{link_account}}</a> korrekt eingetragen haben.</strong></p>
                       {{/if}}
-                    {{/if}}
-                    <p>Vielen Dank!</p>
-                    <p>Ihre Crew von Project R und Republik</p>
+                    {{/unless}}
+                    
+                    <p>Vielen Dank!<br />
+                      Und viel Vergnügen beim Start mit der Republik.</p>
+                    <p>Ihre Crew der Republik</p>
                   </td>
                 </tr>
                 <tr>
                   <td style="padding:20px;">
-                    <p>
+                    <p style="font-size:14px;line-height:20px;{{sg_font_style_sans_serif_regular}}">
+                      Die Republik ist ein unabhängiges und werbefreies digitales Magazin für Politik, Wirtschaft, Gesellschaft und Kultur. 
+                      Es wird von seinen Leserinnen und Lesern finanziert und erscheint von Montag bis Samstag mit täglich ein bis drei neuen Beiträgen. In der App, auf der Website und als Newsletter.
+                    </p>
+                    <p style="color:#282828;font-size:14px;line-height:20px;{{sg_font_style_sans_serif_regular}}">
                       <img height="79" src="{{frontend_base_url}}/static/logo_republik_newsletter.png" style="border:0px;width:180px !important; height:79px !important;margin:0px;" width="180" alt="">
                       <br>
                       Republik AG<br>
-                      Sihlhallenstrasse 1<br>
-                      8004 Zürich<br>
-                      Schweiz<br><a href="mailto:kontakt@republik.ch">kontakt@republik.ch</a>
+                      Sihlhallenstrasse 1, CH-8004 Zürich<br>
+                      <a href="{{frontend_base_url}}">www.republik.ch</a><br>
+                      <a href="mailto:kontakt@republik.ch">kontakt@republik.ch</a>
+                    </p>
+                    <p style="font-size:14px;line-height:20px;{{sg_font_style_sans_serif_regular}}">
+                        <a href="{{link_manifest}}">Unser Manifest</a><br />
+                        <a href="{{link_imprint}}">Das Impressum</a><br />
+                        <a href="{{link_faq}}">Häufig gestellte Fragen</a>
                     </p>
                   </td>
                 </tr>
