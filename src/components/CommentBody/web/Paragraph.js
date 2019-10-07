@@ -8,12 +8,13 @@ import {
   serifRegular14,
   serifRegular16
 } from '../../Typography/styles'
+import { convertStyleToRem } from '../../Typography/utils'
 
 const styles = {
   p: css({
-    ...serifRegular14,
+    ...convertStyleToRem(serifRegular14),
     [mUp]: {
-      ...serifRegular16
+      ...convertStyleToRem(serifRegular16)
     },
     margin: '10px 0',
     ':first-child': {
@@ -31,10 +32,10 @@ const styles = {
     padding: '0 5px'
   }),
   definition: css({
-    ...sansSerifRegular12,
+    ...convertStyleToRem(sansSerifRegular12),
     margin: '10px 0',
     [mUp]: {
-      ...sansSerifRegular15,
+      ...convertStyleToRem(sansSerifRegular15),
     },
     '& ~ &': {
       marginTop: -5

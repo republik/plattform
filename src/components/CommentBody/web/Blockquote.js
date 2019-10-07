@@ -4,6 +4,7 @@ import { css } from 'glamor'
 import colors from '../../../theme/colors'
 import { mUp } from '../../../theme/mediaQueries'
 import { serifRegular14, serifRegular16 } from '../../Typography/styles'
+import { convertStyleToRem } from '../../Typography/utils'
 
 const styles = {
   blockquote: css({
@@ -16,9 +17,9 @@ const styles = {
   }),
   paragraph: css({
     margin: '6px 0',
-    ...serifRegular14,
+    ...convertStyleToRem(serifRegular14),
     [mUp]: {
-      ...serifRegular16,
+      ...convertStyleToRem(serifRegular16),
       margin: '10px 0'
     },
     '&:first-child': {
