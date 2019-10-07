@@ -2,6 +2,7 @@ import React from 'react'
 import { css, merge } from 'glamor'
 import colors from '../../theme/colors'
 import { fontStyles } from '../../theme/fonts'
+import { Label } from '../Typography'
 
 const thumbSize = 18
 const trackHeight = 4
@@ -101,6 +102,7 @@ const Slider = ({ label, fullWidth, inactive, onChange, ...props }) => (
   <label {...merge(
     styles.label,
     fullWidth ? styles.fullWidth : null)}>
+    {label && <><Label>{label}</Label><br /></>}
     <input
       {...merge(
         styles.slider,
@@ -110,7 +112,6 @@ const Slider = ({ label, fullWidth, inactive, onChange, ...props }) => (
       {...props}
       onChange={e => onChange(e, +e.target.value)}
     />
-    {label}
   </label>
 )
 

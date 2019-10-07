@@ -2,9 +2,8 @@
 state: {example1: 3}
 ---
 <div style={{padding: 20, background: 'white'}}>
-    <Label>{'Value: ' + state.example1}</Label>
-    <br />
     <Slider
+     label={'Value: ' + state.example1}
      value={state.example1}
      min='1'
      max='10'
@@ -28,10 +27,9 @@ state: {example1: 3}
 state: {example3: 1}
 ---
 <div style={{padding: 20, background: 'white'}}>
-    <Label>Full-width slider</Label>
-    <br />
     <Slider
-     fullWidth={true}
+     label='Full-width slider'
+     fullWidth
      value={state.example3}
      min='1'
      max='100'

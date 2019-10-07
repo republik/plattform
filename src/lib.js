@@ -132,6 +132,10 @@ export {
   Sub, Sup,
   HR
 } from './components/Typography'
+export {
+  DEFAULT_FONT_SIZE,
+  pxToRem
+} from './components/Typography/utils'
 
 export { commentComposerStorageKey, CommentComposer, CommentComposerPlaceholder } from './components/Discussion/Composer'
 export { SecondaryAction as CommentComposerSecondaryAction } from './components/Discussion/Internal/Composer'

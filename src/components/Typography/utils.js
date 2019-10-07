@@ -1,6 +1,6 @@
 export const DEFAULT_FONT_SIZE = 16
 
-const pxToRem = (pxSize) => {
+export const pxToRem = (pxSize) => {
   return pxSize && `${parseInt(pxSize, 10) / DEFAULT_FONT_SIZE}rem`
 }
 
