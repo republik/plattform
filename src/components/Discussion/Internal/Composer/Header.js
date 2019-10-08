@@ -4,6 +4,7 @@ import MdCheck from 'react-icons/lib/md/check'
 import colors from '../../../../theme/colors'
 import { sansSerifMedium16, sansSerifRegular14 } from '../../../Typography/styles'
 import { ellipsize } from '../../../../lib/styleMixins'
+import { convertStyleToRem, pxToRem } from '../../../Typography/utils'
 
 const buttonStyle = {
   background: 'none',
@@ -40,8 +41,8 @@ const styles = {
     minWidth: 0
   }),
   name: css({
-    ...sansSerifMedium16,
-    lineHeight: '20px',
+    ...convertStyleToRem(sansSerifMedium16),
+    lineHeight: pxToRem('20px'),
     color: colors.text,
     minWidth: 0,
     flexGrow: 0,
@@ -49,8 +50,8 @@ const styles = {
     ...ellipsize
   }),
   meta: css({
-    ...sansSerifRegular14,
-    lineHeight: '20px',
+    ...convertStyleToRem(sansSerifRegular14),
+    lineHeight: pxToRem('20px'),
     color: colors.lightText,
     display: 'flex',
     alignItems: 'center'
@@ -80,10 +81,10 @@ const styles = {
   }),
   action: css({
     ...buttonStyle,
-    ...sansSerifRegular14,
+    ...convertStyleToRem(sansSerifRegular14),
     color: colors.primary,
     flexShrink: 0,
-    height: '40px',
+    height: pxToRem('40px'),
     marginLeft: 12,
     cursor: 'pointer',
     '& svg': {

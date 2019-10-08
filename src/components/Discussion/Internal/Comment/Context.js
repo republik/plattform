@@ -4,6 +4,7 @@ import colors from '../../../../theme/colors'
 import { ellipsize } from '../../../../lib/styleMixins'
 import { mUp } from '../../../../theme/mediaQueries'
 import { sansSerifMedium14, sansSerifMedium16, sansSerifRegular14 } from '../../../Typography/styles'
+import { convertStyleToRem } from '../../../Typography/utils'
 
 const styles = {
   root: css({
@@ -19,16 +20,16 @@ const styles = {
   }),
   title: css({
     ...ellipsize,
-    ...sansSerifMedium14,
+    ...convertStyleToRem(sansSerifMedium14),
     color: colors.text,
     [mUp]: {
-      ...sansSerifMedium16,
+      ...convertStyleToRem(sansSerifMedium16),
       lineHeight: '20px'
     }
   }),
   description: css({
     ...ellipsize,
-    ...sansSerifRegular14,
+    ...convertStyleToRem(sansSerifRegular14),
     color: colors.text
   })
 }

@@ -9,6 +9,7 @@ import { serifRegular16, sansSerifRegular12 } from '../../Typography/styles'
 
 import { Header, Tags, Actions, Error } from '../Internal/Composer'
 import { DiscussionContext } from '../DiscussionContext'
+import { convertStyleToRem } from '../../Typography/utils'
 
 const styles = {
   root: css({}),
@@ -27,7 +28,7 @@ const styles = {
     border: 'none',
     outline: 'none',
     boxSizing: 'border-box',
-    ...serifRegular16,
+    ...convertStyleToRem(serifRegular16),
     color: colors.text
   }),
   textAreaEmpty: css({
@@ -40,7 +41,7 @@ const styles = {
     paddingBottom: '28px'
   }),
   maxLengthIndicator: css({
-    ...sansSerifRegular12,
+    ...convertStyleToRem(sansSerifRegular12),
     lineHeight: 1,
     position: 'absolute',
     bottom: 6,

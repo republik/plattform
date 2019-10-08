@@ -2,16 +2,17 @@ import React from 'react'
 import { css } from 'glamor'
 import colors from '../../../theme/colors'
 import { serifRegular16 } from '../../Typography/styles'
+import { convertStyleToRem, pxToRem } from '../../Typography/utils'
 
 const styles = {
   root: css({
-    ...serifRegular16,
+    ...convertStyleToRem(serifRegular16),
     color: colors.lightText,
     display: 'flex',
     alignItems: 'center',
     background: colors.secondaryBg,
     padding: '8px',
-    height: '56px',
+    height: pxToRem('56px'),
     cursor: 'pointer',
     '@media (hover)': {
       ':hover': {

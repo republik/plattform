@@ -5,10 +5,11 @@ import { css } from 'glamor'
 import colors from '../../../theme/colors'
 import { sansSerifRegular14 } from '../../Typography/styles'
 import { usePrevious } from '../../../lib/usePrevious'
+import { convertStyleToRem, pxToRem } from '../../Typography/utils'
 
 const styles = {
   root: css({
-    ...sansSerifRegular14,
+    ...convertStyleToRem(sansSerifRegular14),
     color: colors.primary,
     position: 'relative',
     outline: 'none',
@@ -18,7 +19,7 @@ const styles = {
     border: 'none',
     cursor: 'pointer',
     whiteSpace: 'nowrap',
-    lineHeight: '40px',
+    lineHeight: pxToRem('40px'),
     padding: 0,
     '@media (hover)': {
       ':hover': {
