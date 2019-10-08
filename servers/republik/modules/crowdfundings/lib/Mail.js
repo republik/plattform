@@ -246,9 +246,6 @@ mail.sendMembershipDeactivated = async ({ membership, pgdb, t }) => {
       { name: 'prolong_url',
         content: `${FRONTEND_BASE_URL}/angebote?package=PROLONG&token=${customPledgeToken}`
       },
-      { name: 'account_abo_url',
-        content: `${FRONTEND_BASE_URL}/konto#abos`
-      },
       { name: 'sequence_number',
         content: sequenceNumber
       }
