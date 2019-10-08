@@ -68,7 +68,7 @@ const styles = {
   selectArrow: css({
     position: 'absolute',
     right: 0  ,
-    top: 28,
+    top: pxToRem(28),
     pointerEvents: 'none',
     fill: colors.disabled
   }),

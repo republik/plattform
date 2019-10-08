@@ -10,7 +10,7 @@ import {
   cursiveTitle20,
   cursiveTitle22
 } from '../Typography/styles'
-import { convertStyleToRem } from '../Typography/utils'
+import { convertStyleToRem, pxToRem } from '../Typography/utils'
 
 const styles = {
   base: css({
@@ -31,7 +31,7 @@ const styles = {
     ...convertStyleToRem(sansSerifMedium20),
     [mUp]: {
       ...convertStyleToRem(sansSerifMedium22),
-      lineHeight: '24px'
+      lineHeight: pxToRem(24)
     }
   }),
   scribble: css({
