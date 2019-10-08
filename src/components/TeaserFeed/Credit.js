@@ -4,13 +4,14 @@ import { css } from 'glamor'
 import colors from '../../theme/colors'
 import { mUp } from '../../theme/mediaQueries'
 import { sansSerifRegular14, sansSerifRegular15 } from '../Typography/styles'
+import { convertStyleToRem } from '../Typography/utils'
 
 const styles = {
   main: css({
     margin: 0,
-    ...sansSerifRegular14,
+    ...convertStyleToRem(sansSerifRegular14),
     [mUp]: {
-      ...sansSerifRegular15
+      ...convertStyleToRem(sansSerifRegular15)
     },
     color: colors.text
   })

@@ -3,13 +3,14 @@ import PropTypes from 'prop-types'
 import { sansSerifMedium14, sansSerifMedium16 } from '../Typography/styles'
 import { css } from 'glamor'
 import { mUp } from '../../theme/mediaQueries'
+import { convertStyleToRem } from '../Typography/utils'
 
 const styles = {
   main: css({
-    ...sansSerifMedium14,
+    ...convertStyleToRem(sansSerifMedium14),
     margin: '0 0 6px 0',
     [mUp]: {
-      ...sansSerifMedium16,
+      ...convertStyleToRem(sansSerifMedium16),
       margin: '-5px 0 8px 0'
     }
   })
