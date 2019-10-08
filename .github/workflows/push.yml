@@ -1,33 +1,23 @@
-on: push
+on:
+  push:
+    branches-ignore:    
+    - 'master'
 name: Publish branches to S3
 jobs:
-  excludeMaster:
+  packAndUpload:
     name: exclude master
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master
-    - name: exclude master
-      uses: actions/bin/filter@master
+    - uses: actions/setup-node@v1
       with:
-        args: not branch master
-    - name: npm install
-      uses: actions/npm@master
-      with:
-        args: install
-    - name: npm test
-      uses: actions/npm@master
-      with:
-        args: test
-    - name: npm build:lib
-      uses: actions/npm@master
-      with:
-        args: run build:lib
-    - name: npm pack
-      uses: actions/npm@master
-      with:
-        args: pack
+        node-version: '12.x'
+    - run: npm install
+    - run: npm test
+    - run: npm run build:lib
+    - run: npm pack
     - name: upload to S3
-      uses: actions/aws/cli@master
+      uses: actions/aws/cli@efb074ae4510f2d12c7801e4461b65bf5e8317e6
       env:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
