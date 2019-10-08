@@ -1,0 +1,50 @@
+on: push
+name: Publish branches to S3
+jobs:
+  excludeMaster:
+    name: exclude master
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - name: exclude master
+      uses: actions/bin/filter@46ffca7632504e61db2d4cb16be1e80f333cb859
+      with:
+        args: not branch master
+    - name: npm install
+      uses: actions/npm@4633da3702a5366129dca9d8cc3191476fc3433c
+      with:
+        args: install
+    - name: npm test
+      uses: actions/npm@4633da3702a5366129dca9d8cc3191476fc3433c
+      with:
+        args: test
+    - name: npm build:lib
+      uses: actions/npm@4633da3702a5366129dca9d8cc3191476fc3433c
+      with:
+        args: run build:lib
+    - name: npm pack
+      uses: actions/npm@4633da3702a5366129dca9d8cc3191476fc3433c
+      with:
+        args: pack
+    - name: upload to S3
+      uses: actions/aws/cli@efb074ae4510f2d12c7801e4461b65bf5e8317e6
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        PKG_NAME: project-r-styleguide
+        S3_PATH: republik-assets-dev/npm
+      with:
+        args: s3 cp $PKG_NAME-0.0.0-development.tgz s3://$S3_PATH/$PKG_NAME-`echo
+          ${{ github.ref }} | cut -d/ -f3`-`echo ${{ github.sha }} | cut -c-7`.tgz
+          --acl public-read
+    - name: notify on slack
+      uses: Ilshidur/action-slack@master
+      env:
+        PKG_NAME: project-r-styleguide
+        S3_PATH: republik-assets-dev/npm
+        SLACK_OVERRIDE_MESSAGE: "true"
+        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+      with:
+        args: '{{ GITHUB_ACTOR }} released: https://s3.eu-central-1.amazonaws.com/{{
+          S3_PATH }}/{{ PKG_NAME }}-<%- GITHUB_REF.split(''/'')[2] %>-<%- GITHUB_SHA.substring(0,
+          7) %>.tgz'
