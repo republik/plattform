@@ -106,8 +106,8 @@ const Slider = ({ label, fullWidth, inactive, onChange, ...props }) => (
     <input
       {...merge(
         styles.slider,
-        inactive ? styles.sliderInactive : null,
-        fullWidth ? styles.fullWidth : null)}
+        inactive && styles.sliderInactive,
+        fullWidth && styles.fullWidth)}
       type='range'
       {...props}
       onChange={e => onChange(e, +e.target.value)}
