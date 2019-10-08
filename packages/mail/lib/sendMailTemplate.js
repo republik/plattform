@@ -71,6 +71,9 @@ const envMergeVars = [
   { name: 'link_account_account',
     content: `${FRONTEND_BASE_URL}/konto#account`
   },
+  { name: 'link_account_notifications',
+    content: `${FRONTEND_BASE_URL}/konto#benachrichtigungen`
+  },
   { name: 'link_profile',
     content: `${FRONTEND_BASE_URL}/~me`
   },
