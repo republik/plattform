@@ -316,8 +316,6 @@ mail.prepareMembershipWinback = async ({ userId, cancellationCategory, cancelled
 
   return ({
     to: user.email,
-    fromEmail: t('api/email/membership_winback/fromEmail'),
-    fromName: t('api/email/membership_winback/fromName'),
     subject: t.first([
       `api/email/membership_winback_${cancellationCategory}/subject`,
       `api/email/membership_winback/subject`

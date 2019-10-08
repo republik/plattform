@@ -89,6 +89,9 @@ const envMergeVars = [
   { name: 'link_offer_benefactor',
     content: `${FRONTEND_BASE_URL}/angebote?package=BENEFACTOR`
   },
+  { name: 'link_offer_donate',
+    content: `${FRONTEND_BASE_URL}/angebote?package=BENEFACTOR`
+  },
   { name: 'link_offer_reduced_ausbildung',
     content: `${FRONTEND_BASE_URL}/angebote?package=ABO&userPrice=1&price=14000&reason=Ausbildung%3A%20`
   },
@@ -100,6 +103,9 @@ const envMergeVars = [
   },
   { name: 'link_manual',
     content: `${FRONTEND_BASE_URL}/anleitung`
+  },
+  { name: 'link_listen',
+    content: `${FRONTEND_BASE_URL}/vorgelesen`
   },
   { name: 'link_projectr',
     content: 'https://project-r.construction/'

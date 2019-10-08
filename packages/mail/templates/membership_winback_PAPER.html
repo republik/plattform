@@ -34,24 +34,36 @@
               <tbody>
                 <tr>
                   <td style="padding:20px;">
-                    <p><strong>Guten Abend {{name}}</strong>
-                    </p>
-                    <p>Sie haben sich entschieden, die Republik künftig nicht mehr zu abonnieren. Bei Ihrer Kündigung haben Sie angegeben, dass Sie lieber auf Papier lesen bzw. nicht gerne am Bildschirm.</p>
-                    <p>Eine gedruckte Republik ist zurzeit leider nicht in Planung. Doch vielleicht wird es einmal eine Best-of-Ausgabe geben. Falls Sie nichts dagegen haben, würden wir uns dann wieder bei Ihnen melden.</p>
-                    <p>Als alternative zum Lesen am Bildschirm haben wir übrigens bereits mehr als 100 Audiobeiträge verfügbar und planen, dieses Angebot auszubauen: <a href="https://www.republik.ch/2018/04/09/die-republik-vorgelesen">Hier finden Sie eine Auswahl an Audioartikeln.</a>
-                    </p>
-                    <p>Ich danke Ihnen herzlich für Ihr Interesse und für Ihre Unterstützung im vergangenen Jahr!</p>
-                    <p>Für die Crew von Project R und der Republik<br>Philipp von Essen</p>
+                    <p>Guten Tag, {{name}}</p>
+                    <p>Sie haben sich entschieden, die Republik künftig nicht mehr zu abonnieren.<br /> 
+                      Schade, sind Sie nicht mehr Teil der Republik und der Idee hinter unserem gemeinsamen Projekt!</p>
+                    <p>Bei Ihrer Kündigung haben Sie angegeben, dass Sie lieber auf Papier lesen beziehungsweise nicht gerne am Bildschirm.</p>
+                    <p>Eine gedruckte Republik ist zurzeit zwar nicht in Planung. Vielleicht wird es aber einmal eine Best-of-Ausgabe geben. Wenn Sie nichts dagegen haben, melden wir uns dann wieder bei Ihnen.</p>
+                    <p>Als Alternative zur Bildschirmlektüre haben wir übrigens bereits mehr als 100 Audiobeiträge verfügbar und planen, dieses Angebot auszubauen. <a href="{{link_listen}}">Hier finden Sie eine Auswahl an Audiobeiträgen</a>.</p>
+                    <p>Wir würden uns sehr freuen, wenn Sie zu einem späteren Zeitpunkt wieder bei uns vorbeischauten. Sie sind jederzeit willkommen.</p>
+                    <p>In jedem Fall gilt: Vielen Dank für Ihr Interesse und Ihre Unterstützung bis heute!</p>
+                    <p>Herzlich</p>
+                    <p>Ihre Crew der Republik</p>
                   </td>
                 </tr>
                 <tr>
-                  <td style="padding:20px;padding-top:0px;">
-                    <p>
+                  <td style="padding:20px;">
+                    <p style="font-size:14px;line-height:20px;{{sg_font_style_sans_serif_regular}}">
+                      Die Republik ist ein unabhängiges und werbefreies digitales Magazin für Politik, Wirtschaft, Gesellschaft und Kultur. 
+                      Es wird von seinen Leserinnen und Lesern finanziert und erscheint von Montag bis Samstag mit täglich ein bis drei neuen Beiträgen. In der App, auf der Website und als Newsletter.
+                    </p>
+                    <p style="color:#282828;font-size:14px;line-height:20px;{{sg_font_style_sans_serif_regular}}">
+                      <img height="79" src="{{frontend_base_url}}/static/logo_republik_newsletter.png" style="border:0px;width:180px !important; height:79px !important;margin:0px;" width="180" alt="">
+                      <br>
                       Republik AG<br>
-                      Sihlhallenstrasse 1<br>
-                      CH-8004 Zürich<br>
-                      Tel.: 079 787 47 65<br><a href="https://www.republik.ch">www.republik.ch</a>
-                      <br><img height="79" src="{{frontend_base_url}}/static/logo_republik_newsletter.png" style="border:0px;width:180px !important; height:79px !important;margin:0px;" width="180" alt="">
+                      Sihlhallenstrasse 1, CH-8004 Zürich<br>
+                      <a href="{{frontend_base_url}}">www.republik.ch</a><br>
+                      <a href="mailto:kontakt@republik.ch">kontakt@republik.ch</a>
+                    </p>
+                    <p style="font-size:14px;line-height:20px;{{sg_font_style_sans_serif_regular}}">
+                      <a href="{{link_manifest}}">Unser Manifest</a><br />
+                      <a href="{{link_imprint}}">Das Impressum</a><br />
+                      <a href="{{link_faq}}">Häufig gestellte Fragen</a>
                     </p>
                   </td>
                 </tr>
