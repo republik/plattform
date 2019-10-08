@@ -5,9 +5,10 @@ import colors from '../../../../theme/colors'
 import { sansSerifMedium14 } from '../../../Typography/styles'
 import { DiscussionContext } from '../../DiscussionContext'
 import { mUp } from '../../../../theme/mediaQueries'
+import { convertStyleToRem, pxToRem } from '../../../Typography/utils'
 
 const actionButtonStyle = {
-  ...sansSerifMedium14,
+  ...convertStyleToRem(sansSerifMedium14),
   outline: 'none',
   WebkitAppearance: 'none',
   background: 'transparent',
@@ -16,8 +17,8 @@ const actionButtonStyle = {
   alignSelf: 'stretch',
   display: 'flex',
   alignItems: 'center',
-  height: '40px',
-  lineHeight: '40px',
+  height: pxToRem(40),
+  lineHeight: pxToRem(40),
   padding: '0'
 }
 

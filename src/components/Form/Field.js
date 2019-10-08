@@ -4,6 +4,7 @@ import {css, merge, simulate} from 'glamor'
 import colors from '../../theme/colors'
 import {fontFamilies} from '../../theme/fonts'
 import {mUp} from '../../theme/mediaQueries'
+import { pxToRem } from '../Typography/utils'
 
 const xPadding = 0
 const yPadding = 9 // (40 - 22) / 2
@@ -19,9 +20,9 @@ const fieldStyle = css({
   // yPadding can interfere with font
   padding: `0 ${xPadding}px`,
   textDecoration: 'none',
-  height: fieldHeight,
+  height: pxToRem(fieldHeight),
   fontFamily: fontFamilies.sansSerifRegular,
-  fontSize: 22,
+  fontSize: pxToRem(22),
   boxSizing: 'border-box',
   backgroundColor: 'white',
   border: 'none',
@@ -53,34 +54,34 @@ const fieldIncStyle = css({
   }
 })
 const fieldIconStyle = css({
-  paddingRight: fieldHeight
+  paddingRight: pxToRem(fieldHeight)
 })
 
 const containerStyle = css({
   width: '100%',
-  paddingTop: lineHeight,
+  paddingTop: pxToRem(lineHeight),
   position: 'relative',
   display: 'inline-block',
   fontFamily: fontFamilies.sansSerifRegular,
-  fontSize: 22,
-  lineHeight: `${lineHeight}px`,
-  marginBottom: 15
+  fontSize: pxToRem(22),
+  lineHeight: pxToRem(lineHeight),
+  marginBottom: pxToRem(15)
 })
 const labelTextStyle = css({
   position: 'absolute',
-  left: xPadding,
-  top: lineHeight + yPadding,
+  left: pxToRem(xPadding),
+  top: pxToRem(lineHeight + yPadding),
   color: colors.disabled,
   transition: 'top 200ms, font-size 200ms'
 })
 const labelTextTopStyle = css({
   top: 3,
-  fontSize: 12,
-  lineHeight: '13px',
+  fontSize: pxToRem(12),
+  lineHeight: pxToRem(13),
   [mUp]: {
-    top: 5,
-    fontSize: 14,
-    lineHeight: '15px',
+    top: pxToRem(5),
+    fontSize: pxToRem(14),
+    lineHeight: pxToRem(15),
   }
 })
 const labelTextFocusedStyle = css({
@@ -114,19 +115,19 @@ const blackStyle = css({
 const arrowUpStyle = css({
   position: 'absolute',
   right: 0,
-  top: lineHeight + 3,
+  top: pxToRem(lineHeight + 3),
   cursor: 'pointer'
 })
 const arrowDownStyle = css({
   position: 'absolute',
   right: 0,
-  top: lineHeight + fieldHeight / 2 - 3,
+  top: pxToRem(lineHeight + fieldHeight / 2 - 3),
   cursor: 'pointer'
 })
 const iconWrapperStyle = css({
   position: 'absolute',
-  right: 3,
-  top: lineHeight + 5
+  right: pxToRem(3),
+  top: pxToRem(lineHeight + 5)
 })
 
 const ArrowUp = ({size, fill, ...props}) => (

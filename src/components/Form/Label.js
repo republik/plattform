@@ -3,6 +3,7 @@ import {css, merge} from 'glamor'
 
 import colors from '../../theme/colors'
 import {sansSerifRegular21} from '../Typography/styles'
+import { convertStyleToRem, pxToRem } from '../Typography/utils'
 
 const borderWidth = 1
 export const labelHeight = 20 // The height of the area at the top for the label.
@@ -11,21 +12,21 @@ export const fieldHeight = 40
 const styles = {
   label: css({
     width: '100%',
-    paddingTop: labelHeight,
+    paddingTop: pxToRem(labelHeight),
     position: 'relative',
     display: 'block',
   }),
   labelText: css({
-    ...sansSerifRegular21,
+    ...convertStyleToRem(sansSerifRegular21),
     color: colors.disabled,
     position: 'absolute',
-    top: labelHeight,
+    top: pxToRem(labelHeight),
     transition: 'top 200ms, font-size 200ms'
   }),
   labelTextTop: css({
     top: 5,
-    fontSize: 14,
-    lineHeight: '15px',
+    fontSize: pxToRem(14),
+    lineHeight: pxToRem(15),
   }),
   labelTextFocused: css({
     color: colors.primary
@@ -36,9 +37,9 @@ const styles = {
   field: css({
     display: 'block',
     padding: '6px 0',
-    ...sansSerifRegular21,
-    lineHeight: '27px',
-    minHeight: fieldHeight,
+    ...convertStyleToRem(sansSerifRegular21),
+    lineHeight: pxToRem(27),
+    minHeight: pxToRem(fieldHeight),
     color: colors.text,
     width: '100%',
     appearance: 'none',
@@ -55,7 +56,7 @@ const styles = {
   }),
   select: css({
     position: 'absolute',
-    top: labelHeight,
+    top: pxToRem(labelHeight),
     left: 0,
     right: 0,
     bottom: 0,

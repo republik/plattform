@@ -6,11 +6,12 @@ import zIndex from '../../theme/zIndex'
 import colors from '../../theme/colors'
 import {sansSerifRegular21} from '../Typography/styles'
 import {labelHeight, fieldHeight, Label, LButton} from './Label'
+import { convertStyleToRem, pxToRem } from '../Typography/utils'
 
 export const styles = {
   root: css({
     position: 'relative',
-    minHeight: labelHeight + fieldHeight,
+    minHeight: pxToRem(labelHeight + fieldHeight),
     marginBottom: 12
   }),
   inner: css({
@@ -35,8 +36,8 @@ export const styles = {
   }),
 
   item: css({
-    ...sansSerifRegular21,
-    lineHeight: '27px',
+    ...convertStyleToRem(sansSerifRegular21),
+    lineHeight: pxToRem(27),
     color: colors.text,
     padding: '17px 12px',
     cursor: 'pointer',

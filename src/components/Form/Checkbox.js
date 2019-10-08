@@ -2,11 +2,12 @@ import React from 'react'
 import { css, merge } from 'glamor'
 import colors from '../../theme/colors'
 import { fontFamilies } from '../../theme/fonts'
+import { pxToRem } from '../Typography/utils'
 
 const styles = {
   label: css({
-    fontSize: 16,
-    lineHeight: '20px',
+    fontSize: pxToRem(16),
+    lineHeight: pxToRem(20),
     color: colors.text,
     fontFamily: fontFamilies.sansSerifRegular,
     cursor: 'pointer'
