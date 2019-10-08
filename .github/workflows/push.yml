@@ -7,27 +7,27 @@ jobs:
     steps:
     - uses: actions/checkout@master
     - name: exclude master
-      uses: actions/bin/filter@46ffca7632504e61db2d4cb16be1e80f333cb859
+      uses: actions/bin/filter@master
       with:
         args: not branch master
     - name: npm install
-      uses: actions/npm@4633da3702a5366129dca9d8cc3191476fc3433c
+      uses: actions/npm@master
       with:
         args: install
     - name: npm test
-      uses: actions/npm@4633da3702a5366129dca9d8cc3191476fc3433c
+      uses: actions/npm@master
       with:
         args: test
     - name: npm build:lib
-      uses: actions/npm@4633da3702a5366129dca9d8cc3191476fc3433c
+      uses: actions/npm@master
       with:
         args: run build:lib
     - name: npm pack
-      uses: actions/npm@4633da3702a5366129dca9d8cc3191476fc3433c
+      uses: actions/npm@master
       with:
         args: pack
     - name: upload to S3
-      uses: actions/aws/cli@efb074ae4510f2d12c7801e4461b65bf5e8317e6
+      uses: actions/aws/cli@master
       env:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
