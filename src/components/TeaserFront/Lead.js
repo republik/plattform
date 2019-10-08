@@ -8,18 +8,21 @@ import {
   serifRegular19,
   serifRegular23
 } from '../Typography/styles'
+import { convertStyleToRem, pxToRem } from '../Typography/utils'
 
 const leadStyle = {
-  ...serifRegular19,
-  lineHeight: '27px',
+  ...convertStyleToRem(serifRegular19),
+  lineHeight: pxToRem('27px'),
   margin: '0 0 10px 0',
-  color: colors.text
+  color: colors.text,
+  wordBreak: 'break-word',
+  hyphens: 'auto'
 }
 
 const lead = css({
   ...leadStyle,
   [mUp]: {
-    ...serifRegular23,
+    ...convertStyleToRem(serifRegular23),
     margin: '0 0 20px 0'
   }
 })
@@ -27,7 +30,7 @@ const lead = css({
 const leadSmall = css({
   ...leadStyle,
   [mUp]: {
-    ...serifRegular18,
+    ...convertStyleToRem(serifRegular18),
     margin: '0 0 20px 0'
   }
 })
