@@ -174,44 +174,44 @@ const getGlobalMergeVars = async (
 
   return [
     // Grant,
-    { name: 'GRANT_CREATED',
+    { name: 'grant_created',
       content: dateFormat(grant.createdAt)
     },
-    { name: 'GRANT_BEGIN_BEFORE',
+    { name: 'grant_begin_before',
       content: dateFormat(grant.beginBefore)
     },
-    { name: 'GRANT_BEGIN',
+    { name: 'grant_begin',
       content: grant.beginAt && dateFormat(grant.beginAt)
     },
-    { name: 'GRANT_END',
+    { name: 'grant_end',
       content: grant.endAt && dateFormat(grant.endAt)
     },
-    { name: 'GRANT_VOUCHER_CODE',
+    { name: 'grant_voucher_code',
       content: grant.voucherCode
     },
 
     // Granter
-    { name: 'GRANTER_NAME',
+    { name: 'granter_name',
       content: safeGranter.name || t('api/noname')
     },
-    { name: 'GRANTER_EMAIL',
+    { name: 'granter_email',
       content: safeGranter.email
     },
-    { name: 'GRANTER_MESSAGE',
+    { name: 'granter_message',
       content: !!grant.message && escape(grant.message).replace(/\n/g, '<br />')
     },
 
     // Recipient
-    { name: 'RECIPIENT_EMAIL',
+    { name: 'recipient_email',
       content: grant.email || safeRecipient.email
     },
-    { name: 'RECIPIENT_NAME',
+    { name: 'recipient_name',
       content: safeRecipient.name || t('api/noname')
     },
-    { name: 'RECIPIENT_HAS_MEMBERSHIPS',
+    { name: 'recipient_has_memberships',
       content: !!recipient && recipientHasMemberships
     },
-    { name: 'RECIPIENT_HAS_CAMPAIGNS',
+    { name: 'recipent_has_campaigns',
       content:
         !!recipient &&
         !!recipientCampaigns &&
@@ -219,67 +219,31 @@ const getGlobalMergeVars = async (
     },
 
     // Campaign
-    { name: 'CAMPAIGN_TITLE',
+    { name: 'campaign_title',
       content: campaign.title
     },
-    { name: 'CAMPAIGN_BEGIN',
+    { name: 'campaign_begin',
       content: dateFormat(campaign.beginAt)
     },
-    { name: 'CAMPAIGN_END',
+    { name: 'campaign_end',
       content: dateFormat(campaign.endAt)
     },
-    { name: 'CAMPAIGN_PERIOD',
+    { name: 'campaign_period',
       content: getHumanInterval(campaign.grantPeriodInterval, t)
     },
 
     // Republik
     {
-      name: 'REPUBLIK_MEMBERSHIPS_COUNT',
+      name: 'republik_memberships_count',
       content: await memberStatsCount({ pgdb })
     },
 
     // Links
-    { name: 'LINK_SIGNIN',
-      content: `${FRONTEND_BASE_URL}/anmelden`
-    },
-    { name: 'LINK_CLAIM_CONTEXTLESS',
-      content: `${FRONTEND_BASE_URL}/abholen`
-    },
-    { name: 'LINK_CLAIM',
+    { name: 'link_claim',
       content: `${FRONTEND_BASE_URL}/abholen?context=access`
     },
-    { name: 'LINK_CLAIM_PREFILLED',
+    { name: 'link_claim_prefilled',
       content: `${FRONTEND_BASE_URL}/abholen?code=${grant.voucherCode}&email=${base64u.encode(email)}&context=access`
-    },
-    { name: 'LINK_ACCOUNT_SHARE',
-      content: `${FRONTEND_BASE_URL}/konto#teilen`
-    },
-    { name: 'LINK_OFFERS_OVERVIEW',
-      content: `${FRONTEND_BASE_URL}/angebote`
-    },
-    { name: 'LINK_OFFERS',
-      content: `${FRONTEND_BASE_URL}/angebote?package=ABO`
-    },
-    { name: 'LINK_OFFER_ABO',
-      content: `${FRONTEND_BASE_URL}/angebote?package=ABO`
-    },
-    { name: 'LINK_OFFER_MONTHLY_ABO',
-      content: `${FRONTEND_BASE_URL}/angebote?package=MONTHLY_ABO`
-    },
-    { name: 'LINK_DISCUSSIONS',
-      content: `${FRONTEND_BASE_URL}/dialog`
-    },
-    { name: 'LINK_MANIFEST',
-      content: `${FRONTEND_BASE_URL}/manifest`
-    },
-    { name: 'LINK_IMPRESSUM',
-      content: `${FRONTEND_BASE_URL}/impressum`
-    },
-    { name: 'LINK_PROJECTR',
-      content: 'https://project-r.construction/'
-    },
-    { name: 'LINK_PROJECTR_NEWS',
-      content: 'https://project-r.construction/news'
     }
   ]
 }

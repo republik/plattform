@@ -15,6 +15,15 @@
     <style type="text/css">
       {{sg_font_faces}}
     </style>
+    <style type="text/css">
+      p {
+        color:#282828;font-size:17px;line-height:24px;
+        {{sg_font_style_sans_serif_regular}}
+      }
+      p strong {
+        {{sg_font_style_sans_serif_medium}}
+      }
+    </style>
   </head>
   <body style="margin: 0; padding: 0; background-color: #fff;">
     <table border="0" cellpadding="0" cellspacing="0" width="100%">
@@ -25,51 +34,57 @@
               <tbody>
                 <tr>
                   <td style="padding:20px;">
-                    <p style="color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}">Sehr geehrte Dame, sehr geehrter Herr</p>
+                    <p>Guten Tag</p>
+                    
                     {{#if `RECIPIENT_EMAIL != GRANTER_EMAIL`}}
-                    <p style="color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}">Am {{GRANT_BEGIN}} hat {{GRANTER_NAME}} mit Ihnen das Abonnement der Republik geteilt.</p>
-                    <p style="color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}">Damit Sie sehen, ob Ihnen das unabhängige Magazin zusagt.</p>
+                      <p>Am {{GRANT_BEGIN}} hat {{GRANTER_NAME}} mit Ihnen das Republik-Abonnement geteilt.</p>
                     {{/if}}
-                    <p style="color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}">Nun ist es Zeit für eine Entscheidung: <a href="{{LINK_OFFERS_OVERVIEW}}">Kommen Sie an Bord?</a>
-                    </p>
-                    <p style="color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}">Wir sehen zwei vernünftige Gründe für Sie, die dafür sprechen:</p>
-                    <p style="color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}">Sie sind ein neugieriger Mensch. Und Sie fanden das Republik-Magazin bereichernd. Dann willkommen!</p>
-                    <p style="color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}">Sie hatten zwar wenig Zeit zu lesen. Aber Sie finden es wichtig, dass der journalistische Job gemacht wird, auch wenn Sie mit anderem beschäftigt sind. (Mit Beruf, Büchern, Kindern – was immer.)</p>
-                    <p style="color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}">Denn die Republik macht ihre Arbeit auch, wenn Sie gerade Ihre machen. Unsere Aufgabe ist alles, was sich nicht allein mit Nachdenken am Schreibtisch klären lässt – alles, was verwickelt, komplex, unklar ist. Also alles, was Zeit braucht. Damit die öffentliche Debatte zu vernünftigen Ergebnissen führt.</p>
-                    <p style="color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}">Das ist der Grund, warum keine lebendige Demokratie ohne lebendigen Journalismus möglich ist – in der Politik wie im Leben fällt man ohne gute Informationen keine guten Entscheidungen.</p>
-                    <p style="color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}">Die Republik ist noch ein sehr junges Medium. Noch nicht perfekt, aber bestrebt, auf den aktuellen Stand des eigenen Irrtums zu kommen. Sie ist ein neues Modell in der Medienlandschaft – ohne Werbung, finanziert von den Leserinnen. Diese sind unsere einzigen Kunden, also unsere einzigen Chefs.</p>
-                    <p style="color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}">Bis jetzt haben wir {{REPUBLIK_MEMBERSHIPS_COUNT}} Chefinnen und Chefs in der Teppichetage{{#if `RECIPIENT_EMAIL != GRANTER_EMAIL`}} (darunter auch {{GRANTER_NAME}}){{/if}}.</p>
-                    <p style="color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}">Ob Sie dazugehören wollen, ist nun Ihre Entscheidung.</p>
-                    <p style="color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}"><a href="{{LINK_OFFERS_OVERVIEW}}">Unterstützen Sie unsere kleine Rebellion – für den Journalismus, gegen die Medienkonzerne!</a>
-                    </p>
-                    <p style="color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}">Sie wollen an Bord? Dann freuen wir uns sehr, Sie in unserer lesenden Chefetage willkommen zu heissen. Keine Angst, die Aufnahmezeremonie dauert nicht mehr als fünf Minuten: <a href="{{LINK_OFFERS_OVERVIEW}}">{{LINK_OFFERS_OVERVIEW}}</a>
-                    </p>
-                    <p style="color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}">Wollen Sie das nicht tun, wäre es enorm freundlich von Ihnen, wenn Sie uns in einer formlosen E-Mail den Grund dafür mitteilen würden. Auch bei weiteren Fragen und Anliegen stehen wir Ihnen gerne zur Verfügung: <a href="mailto:kontakt@republik.ch">kontakt@republik.ch</a>.</p>
-                    <p style="color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}">Mit herzlichen Grüssen und Dank für Ihre Zeit – und Ihre Entscheidung.</p>
-                    <p style="color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}">Ihre Crew der Republik</p>
-                    <p style="color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}">PS: Falls Sie noch gründlicher über uns recherchieren wollen, hier einige Links:</p>
-                    <ul style="color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}">
-                      <li>
-                        <a href="{{LINK_MANIFEST}}">Unser Manifest zur Gründung</a>, so kurz wie grundsätzlich.
-                      </li>
-                      <li>
-                        <a href="{{LINK_IMPRESSUM}}">Das Impressum mit dem Überblick</a>, wer für uns arbeitet und schreibt.
-                      </li>
-                      <li>
-                        <a href="{{LINK_PROJECTR_NEWS}}">Unsere gesammelten Unternehmensnachrichten.</a>
-                      </li>
-                    </ul>
+                    
+                    <p>Für einen Einblick in unser unabhängiges, werbefreies digitales Magazin für Politik, Wirtschaft, Gesellschaft und Kultur. Und in unser Projekt gegen den Zynismus, den Vormarsch der Autoritären und gegen die Diktatur der Angst.</p>
+                    <p>Die Republik bietet Einordnung und Vertiefung anstelle einer Flut von Nachrichten. Wir recherchieren, um Missstände aufzudecken, oft monatelang. Und diskutieren über drängende Fragen der Gegenwart.</p>
+                    <p>Aber wir sind noch mehr: In der Republik sind inhaltliche Debatten mit Expertinnen, Lesern und Journalistinnen mehr als nur ein demokratischer Traum. Mit verschiedenen Veranstaltungen zu Politik, Gesellschaft und Kultur und in unserer Genossenschaft sind wir und schaffen wir Gemeinschaft, ermöglichen wir Austausch und Verbindungen.</p>
+                    <p>Nun ist es Zeit für eine Entscheidung: Werden Sie Teil der Republik-Idee und der Gemeinschaft? Wie Sie wahrscheinlich wissen, wird die Republik ausschliesslich von ihren Leserinnen und Lesern finanziert. Auch wenn Sie wenig zum Lesen kommen, leisten Sie so einen wichtigen Beitrag zur Medienvielfalt der Schweiz.</p>
+                    <p>Mit einem Jahres-, Gönner- oder Ausbildungsabonnement erhalten Sie das digitale Magazin und werden Mitglied der Project R Genossenschaft, die das grösste Aktienpaket an der Republik hält. Wenn Sie nicht Teil der Genossenschaft sein wollen, sondern nur Zugriff aufs Magazin haben möchten, schliessen Sie am besten einfach ein (unbegrenztes) Monatsabo ab.</p>
+                    
+                    <p>Die Republik-Abonnemente/-Mitgliedschaften in der Übersicht:</p>
+                    
+                    <ol style="color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}">
+                      <li><a href="{{link_offer_monthly_abo}}">Monatsabonnement</a> CHF 22.–/Monat
+                      <p style="color:#282828;font-size:14px;line-height:20px;{{sg_font_style_sans_serif_regular}}">
+                        Verlängert sich automatisch, kann aber jederzeit und ohne Frist gekündigt werden. Mit diesem Abo erhalten Sie viel Kontext und Vertiefung – ohne dass Sie Teil unserer Genossenschaft werden.</p></li>
+                      <li><a href="{{link_offer_abo}}">Jahresabonnement</a> CHF 240.–/Jahr
+                      <p style="color:#282828;font-size:14px;line-height:20px;{{sg_font_style_sans_serif_regular}}">
+                        Verlängert sich nicht automatisch, wir erinnern Sie aber immer rechtzeitig daran, das Abonnement zu erneuern. Mit diesem Abo sichern Sie sich ein Jahr lang unabhängigen und werbefreien Qualitätsjournalismus und sind gleichzeitig Teil der Republik-Community und der Project R Genossenschaft.</p></li>
+                      <li><a href="{{link_offer_benefactor}}">Gönnerabonnement</a> ab CHF 1000.–/Jahr
+                      <p style="color:#282828;font-size:14px;line-height:20px;{{sg_font_style_sans_serif_regular}}">
+                        Verlängert sich nicht automatisch, wir erinnern Sie aber rechtzeitig daran, die Gönnerschaft zu erneuern. Mit der Gönnerschaft erhalten Sie ein Republik-Jahresabo, ein Extra-Dankeschön in Form eines Buches und die Sicherheit, etwas sehr Wichtiges zur Erhaltung einer wirklich freien Demokratie beigetragen zu haben. Zudem sind Sie Teil der Republik-Community und der Project R Genossenschaft.</p></li>
+                      <li><a href="{{link_offer_reduced_ausbildung}}">Ausbildungsabonnement</a> CHF 140.–/Jahr
+                      <p style="color:#282828;font-size:14px;line-height:20px;{{sg_font_style_sans_serif_regular}}">
+                        Verlängert sich nicht automatisch, wir erinnern Sie aber rechtzeitig daran, das Abo zu erneuern. Mit diesem Abo erhalten alle Auszubildenden und Studierenden Zugang zum vollständigen Republik-Angebot inklusive Genossenschafts-Mitgliedschaft – zu einem reduzierten Preis.</p></li>
+                    </ol>
+                    
+                    <p><a href="{{link_offers_overview}}">Ob Sie dazugehören wollen, ist nun Ihre Entscheidung.</a>
+                    
+                    <p>Haben Sie noch Fragen? <a href="mailto:kontakt@republik.ch">kontakt@republik.ch</a>.</p>
+                    <p>Herzlich</p>
+                    <p>Ihre Crew der Republik</p>
                   </td>
                 </tr>
                 <tr>
                   <td style="padding:20px;">
-                    <p style="color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}">
+                    <p style="font-size:14px;line-height:20px;{{sg_font_style_sans_serif_regular}}">Die Republik ist ein unabhängiges und werbefreies digitales Magazin für Politik, Wirtschaft, Gesellschaft und Kultur. Es wird von seinen Leserinnen und Lesern finanziert und erscheint von Montag bis Samstag mit täglich ein bis drei neuen Beiträgen. In der App, auf der Website und als Newsletter.</p>
+                    <p style="color:#282828;font-size:14px;line-height:20px;{{sg_font_style_sans_serif_regular}}">
                       <img height="79" src="{{frontend_base_url}}/static/logo_republik_newsletter.png" style="border:0px;width:180px !important; height:79px !important;margin:0px;" width="180" alt="">
                       <br>
                       Republik AG<br>
-                      Sihlhallenstrasse 1<br>
-                      8004 Zürich<br>
-                      Schweiz<br><a href="mailto:kontakt@republik.ch">kontakt@republik.ch</a>
+                      Sihlhallenstrasse 1, CH-8004 Zürich<br>
+                      <a href="{{frontend_base_url}}">www.republik.ch</a><br>
+                      <a href="mailto:kontakt@republik.ch">kontakt@republik.ch</a>
+                    </p>
+                    <p style="font-size:14px;line-height:20px;{{sg_font_style_sans_serif_regular}}">
+                        <a href="{{link_manifest}}">Unser Manifest</a><br />
+                        <a href="{{link_imprint}}">Das Impressum</a><br />
+                        <a href="{{link_faq}}">Häufig gestellte Fragen</a>
                     </p>
                   </td>
                 </tr>
