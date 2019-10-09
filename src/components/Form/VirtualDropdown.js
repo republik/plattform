@@ -12,7 +12,7 @@ export const styles = {
   root: css({
     position: 'relative',
     minHeight: pxToRem(labelHeight + fieldHeight),
-    marginBottom: 12
+    marginBottom: pxToRem(12)
   }),
   inner: css({
     position: 'absolute',
@@ -62,7 +62,7 @@ export const styles = {
   arrowDown: css({
     position: 'absolute',
     right: 0,
-    top: 28,
+    top: pxToRem(28),
     pointerEvents: 'none'
   })
 }

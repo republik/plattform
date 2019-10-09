@@ -17,7 +17,7 @@ const actionButtonStyle = {
   alignSelf: 'stretch',
   display: 'flex',
   alignItems: 'center',
-  height: pxToRem(40),
+  minHeight: pxToRem(40),
   lineHeight: pxToRem(40),
   padding: '0'
 }
@@ -25,16 +25,16 @@ const actionButtonStyle = {
 const styles = {
   root: css({
     display: 'flex',
+    flexFlow: 'wrap',
     justifyContent: 'space-between'
   }),
   mainActions: css({
-    marginLeft: 'auto',
-    display: 'flex'
+    display: 'flex',
+    overflow: 'hidden'
   }),
   closeButton: css({
     ...actionButtonStyle,
     color: colors.lightText,
-    marginLeft: '16px',
     '@media (hover)': {
       ':hover': {
         color: colors.text
@@ -56,6 +56,7 @@ const styles = {
     }
   }),
   secondaryActions: css({
+    height: pxToRem(20),
     display: 'flex',
     minWidth: 0,
     flexShrink: 1
