@@ -37,7 +37,7 @@ export const styles = {
 
   item: css({
     ...convertStyleToRem(sansSerifRegular21),
-    lineHeight: pxToRem(27),
+    lineHeight: pxToRem(22),
     color: colors.text,
     padding: '17px 12px',
     cursor: 'pointer',
@@ -116,7 +116,7 @@ const renderDropdown = ({label, focus, white, black, items, onFocus, onBlur}) =>
     </LButton>}
     <Inner isOpen={isOpen}>
       <Label top={!!selectedItem || focus} focus={isOpen || focus} text={label} white={white && !isOpen} black={black || (white && isOpen)}>
-        <LButton {...getToggleButtonProps()} onFocus={onFocus} onBlur={onBlur} white={white && !isOpen} black={black || (white && isOpen)}>
+        <LButton style={{lineHeight: pxToRem(22)}} {...getToggleButtonProps()} onFocus={onFocus} onBlur={onBlur} white={white && !isOpen} black={black || (white && isOpen)}>
           {selectedItem ? (selectedItem.element || selectedItem.text) : ''}
         </LButton>
         <ArrowDown
