@@ -36,15 +36,15 @@
                   <td style="padding:20px;">
                     <p>Guten Tag</p>
                     <p>Herzlichen Dank für Ihre Grosszügigkeit und Ihr Vertrauen.</p>
-                    <p>Sie haben {{#if `gifted_memberships_count == 1`}}eine Republik-Abonnement{{elseif `gifted_memberships_count > 1`}}mehrere Republik-Abonnemente{{/if}} verschenkt.</p>
+                    <p>Sie haben {{#if `gifted_memberships_count == 1`}}eine Mitgliedschaft{{elseif `gifted_memberships_count > 1`}}mehrere Mitgliedschaften{{/if}} verschenkt.</p>
                     {{#if `gifted_memberships_count == 1`}}
-                      <p>Dieses Abonnement neigt sich dem Ende zu.</p>
+                      <p>Diese Mitgliedschaft neigt sich dem Ende zu.</p>
                     {{elseif `gifted_memberships_count > 1`}}
-                      <p>Diese Abonnemente neigen sich dem Ende zu.</p>
+                      <p>Diese Mitgliedschaften neigen sich dem Ende zu.</p>
                     {{/if}}
                     <p>Schenken Sie noch ein weiteres Jahr unabhängige und werbefreie Einordnung und Vertiefung anstelle einer Flut von Nachrichten?</p>
                     <p>Jedes Abonnement und jede Mitgliedschaft unterstützt die Republik und die Idee hinter unserem Projekt einer wirklich unabhängigen vierten Gewalt und zentralen demokratischen Institution. Und stärkt unser gemeinsames Projekt gegen den Zynismus, den Vormarsch der Autoritären und gegen die Diktatur der Angst.</p>
-                    <p>Folgende{{#if `gifted_memberships_count == 1`}}s Abonnement steht{{elseif `gifted_memberships_count > 1`}} Abonnemente stehen{{/if}} zur Verlängerung an:</p>
+                    <p>Folgende{{#if `gifted_memberships_count == 1`}} Mitgliedschaft steht{{elseif `gifted_memberships_count > 1`}} Mitgliedschaften stehen{{/if}} zur Verlängerung an:</p>
 
                     <ul>
                       {{#options}}
@@ -52,7 +52,7 @@
                       {{/options}}
                     </ul>
 
-                    <p>Klicken Sie <a href="{{prolong_url}}">hier, um {{#if `gifted_memberships_count == 1`}}das Geschenk-Abonnement{{elseif `gifted_memberships_count > 1`}}die Geschenk-Abonnemente{{/if}} zu verlängern</a>.</p>
+                    <p>Klicken Sie <a href="{{prolong_url}}">hier, um {{#if `gifted_memberships_count == 1`}}die Geschenk-Mitgliedschaft{{elseif `gifted_memberships_count > 1`}}die Geschenk-Mitgliedschaften{{/if}} zu verlängern</a>.</p>
                     <p>Falls Sie innerhalb der nächsten {{inform_claimers_days}} Tage nichts unternehmen, erlauben wir uns, {{#if `gifted_memberships_count == 1`}}den oder die Beschenkte{{elseif `gifted_memberships_count > 1`}}die Beschenkten{{/if}} direkt anzufragen, ob {{#if `gifted_memberships_count == 1`}}sie oder er{{elseif `gifted_memberships_count > 1`}}sie{{/if}} ein weiteres Jahr an Bord sein {{#if `gifted_memberships_count == 1`}}möchte{{elseif `gifted_memberships_count > 1`}}möchten{{/if}}. Dies dann natürlich auf eigene Rechnung.</p>
                     <p>Vielen Dank für Ihre Unterstützung.</p>
                     <p>Ihre Crew der Republik</p>
