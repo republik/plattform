@@ -2,27 +2,28 @@ import React from 'react'
 import { css } from 'glamor'
 import { mUp, tUp, dUp } from './mediaQueries'
 import { serifTitle20, sansSerifMedium20 } from '../Typography/styles'
+import { convertStyleToRem, pxToRem } from '../Typography/utils'
 
 const size = {
   s: {
-    fontSize: '38px',
-    lineHeight: '43px'
+    fontSize: pxToRem('38px'),
+    lineHeight: pxToRem('43px')
   },
   m: {
-    fontSize: '60px',
-    lineHeight: '70px'
+    fontSize: pxToRem('60px'),
+    lineHeight: pxToRem('70px')
   },
   l: {
-    fontSize: '80px',
-    lineHeight: '90px'
+    fontSize: pxToRem('80px'),
+    lineHeight: pxToRem('90px')
   },
   xl: {
-    fontSize: '100px',
-    lineHeight: '110px'
+    fontSize: pxToRem('100px'),
+    lineHeight: pxToRem('110px')
   },
   xxl: {
-    fontSize: '125px',
-    lineHeight: '135px'
+    fontSize: pxToRem('125px'),
+    lineHeight: pxToRem('135px')
   }
 }
 
@@ -70,10 +71,10 @@ const styles = {
     }
   }),
   editorial: css({
-    ...serifTitle20,
+    ...convertStyleToRem(serifTitle20),
   }),
   interaction: css({
-    ...sansSerifMedium20
+    ...convertStyleToRem(sansSerifMedium20)
   })
 }
 

@@ -6,6 +6,7 @@ import { fontStyles } from '../../theme/fonts'
 import { underline } from '../../lib/styleMixins'
 import colors from '../../theme/colors'
 import { fontRule as interactionFontRule } from './Interaction'
+import {convertStyleToRem} from "./utils";
 
 export { List, UnorderedList as UL, OrderedList as OL, ListItem as LI } from '../List'
 
@@ -17,12 +18,12 @@ export const fontRule = css({
 })
 
 const headline = css({
-  ...styles.serifTitle30,
+  ...convertStyleToRem(styles.serifTitle30),
   margin: '0 0 12px 0',
   [mUp]: {
-    ...styles.serifTitle58,
+    ...convertStyleToRem(styles.serifTitle58),
     '[data-type*="meta"] > &': {
-      ...styles.sansSerifMedium58
+      ...convertStyleToRem(styles.sansSerifMedium58)
     },
     margin: '0 0 12px 0'
   },
@@ -42,10 +43,10 @@ export const Headline = ({ children, attributes, ...props }) => (
 )
 
 const subhead = css({
-  ...styles.serifBold19,
+  ...convertStyleToRem(styles.serifBold19),
   margin: '36px 0 8px 0',
   [mUp]: {
-    ...styles.serifBold24,
+    ...convertStyleToRem(styles.serifBold24),
     margin: '46px 0 12px 0'
   },
   color: colors.text
@@ -58,11 +59,11 @@ export const Subhead = ({ children, attributes, ...props }) => (
 )
 
 const lead = css({
-  ...styles.serifRegular19,
+  ...convertStyleToRem(styles.serifRegular19),
   display: 'inline',
   margin: '0 0 10px 0',
   [mUp]: {
-    ...styles.serifRegular23,
+    ...convertStyleToRem(styles.serifRegular23),
     margin: '0 0 20px 0'
   },
   color: colors.text
@@ -78,9 +79,9 @@ const subjectStyle = {
   color: '#8c8c8c',
   display: 'inline',
   margin: 0,
-  ...styles.sansSerifRegular19,
+  ...convertStyleToRem(styles.sansSerifRegular19),
   [mUp]: {
-    ...styles.sansSerifRegular23,
+    ...convertStyleToRem(styles.sansSerifRegular23),
     lineHeight: '27px'
   }
 }
@@ -108,9 +109,9 @@ export const Subject = ({ children, attributes, ...props }) => {
 
 const credit = css({
   margin: '10px 0 0 0',
-  ...styles.sansSerifRegular14,
+  ...convertStyleToRem(styles.sansSerifRegular14),
   [mUp]: {
-    ...styles.sansSerifRegular15,
+    ...convertStyleToRem(styles.sansSerifRegular15),
     margin: '20px 0 0 0'
   },
   color: colors.text
@@ -123,10 +124,10 @@ export const Credit = ({ children, attributes, ...props }) => (
 )
 
 const format = css({
-  ...styles.sansSerifMedium16,
+  ...convertStyleToRem(styles.sansSerifMedium16),
   margin: '0 0 18px 0',
   [mUp]: {
-    ...styles.sansSerifMedium20,
+    ...convertStyleToRem(styles.sansSerifMedium20),
     margin: '0 0 28px 0'
   }
 })
@@ -140,9 +141,9 @@ export const Format = ({ children, color, attributes, ...props }) => (
 const paragraph = css({
   color: colors.text,
   margin: '22px 0 22px 0',
-  ...styles.serifRegular17,
+  ...convertStyleToRem(styles.serifRegular17),
   [mUp]: {
-    ...styles.serifRegular19,
+    ...convertStyleToRem(styles.serifRegular19),
     margin: '30px 0 30px 0'
   },
   ':first-child': {
@@ -162,10 +163,10 @@ export const P = ({ children, attributes, ...props }) => (
 )
 
 const question = css({
-  ...styles.serifBold17,
+  ...convertStyleToRem(styles.serifBold17),
   margin: '36px 0 -14px 0',
   [mUp]: {
-    ...styles.serifBold19,
+    ...convertStyleToRem(styles.serifBold19),
     lineHeight: '30px',
     margin: '46px 0 -18px 0'
   },
@@ -219,10 +220,10 @@ export const A = ({ children, attributes, ...props }) => (
 )
 
 const note = css({
-  ...styles.sansSerifRegular12,
+  ...convertStyleToRem(styles.sansSerifRegular12),
   margin: '22px 0',
   [mUp]: {
-    ...styles.sansSerifRegular15,
+    ...convertStyleToRem(styles.sansSerifRegular15),
     margin: '30px 0'
   }
 })

@@ -9,6 +9,7 @@ import {
   sansSerifMedium26,
   sansSerifMedium32
 } from '../Typography/styles'
+import { convertStyleToRem } from '../Typography/utils'
 
 const styles = {
   base: css({
@@ -19,21 +20,21 @@ const styles = {
     }
   }),
   editorial: css({
-    ...serifTitle26,
+    ...convertStyleToRem(serifTitle26),
     [tUp]: {
-      ...serifTitle32
+      ...convertStyleToRem(serifTitle32)
     }
   }),
   interaction: css({
-    ...sansSerifMedium26,
+    ...convertStyleToRem(sansSerifMedium26),
     [tUp]: {
-      ...sansSerifMedium32
+      ...convertStyleToRem(sansSerifMedium32)
     }
   }),
   scribble: css({
-    ...cursiveTitle26,
+    ...convertStyleToRem(cursiveTitle26),
     [tUp]: {
-      ...cursiveTitle32
+      ...convertStyleToRem(cursiveTitle32)
     }
   })
 }

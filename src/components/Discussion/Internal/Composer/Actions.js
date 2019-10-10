@@ -5,9 +5,10 @@ import colors from '../../../../theme/colors'
 import { sansSerifMedium14 } from '../../../Typography/styles'
 import { DiscussionContext } from '../../DiscussionContext'
 import { mUp } from '../../../../theme/mediaQueries'
+import { convertStyleToRem, pxToRem } from '../../../Typography/utils'
 
 const actionButtonStyle = {
-  ...sansSerifMedium14,
+  ...convertStyleToRem(sansSerifMedium14),
   outline: 'none',
   WebkitAppearance: 'none',
   background: 'transparent',
@@ -16,24 +17,23 @@ const actionButtonStyle = {
   alignSelf: 'stretch',
   display: 'flex',
   alignItems: 'center',
-  height: '40px',
-  lineHeight: '40px',
+  minHeight: pxToRem(40),
+  lineHeight: pxToRem(40),
   padding: '0'
 }
 
 const styles = {
   root: css({
     display: 'flex',
+    flexFlow: 'wrap',
     justifyContent: 'space-between'
   }),
   mainActions: css({
-    marginLeft: 'auto',
     display: 'flex'
   }),
   closeButton: css({
     ...actionButtonStyle,
     color: colors.lightText,
-    marginLeft: '16px',
     '@media (hover)': {
       ':hover': {
         color: colors.text
@@ -55,6 +55,7 @@ const styles = {
     }
   }),
   secondaryActions: css({
+    height: pxToRem(20),
     display: 'flex',
     minWidth: 0,
     flexShrink: 1

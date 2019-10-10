@@ -8,6 +8,7 @@ import {
 import colors from '../../theme/colors'
 import { css, merge } from 'glamor'
 import { mUp } from '../../theme/mediaQueries'
+import { convertStyleToRem, pxToRem } from '../Typography/utils'
 
 const WIDTH = 22
 const MARGIN = 8
@@ -33,20 +34,20 @@ const styles = {
     color: colors.text,
     paddingLeft: `${WIDTH}px`,
     position: 'relative',
-    ...serifRegular17,
+    ...convertStyleToRem(serifRegular17),
     [mUp]: {
-      ...serifRegular19
+      ...convertStyleToRem(serifRegular19)
     },
     '& p:last-child': {
       marginBottom: 0
     },
     'li &': {
-      ...serifRegular14,
-      lineHeight: '22px',
+      ...convertStyleToRem(serifRegular14),
+      lineHeight: pxToRem('22px'),
       margin: '12px 0',
       [mUp]: {
-        ...serifRegular17,
-        lineHeight: '28px',
+        ...convertStyleToRem(serifRegular17),
+        lineHeight: pxToRem('28px'),
         margin: '14px 0'
       }
     }
