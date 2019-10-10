@@ -14,8 +14,7 @@ const leadStyle = {
   ...convertStyleToRem(serifRegular19),
   lineHeight: pxToRem('27px'),
   margin: '0 0 10px 0',
-  color: colors.text,
-  hyphens: 'auto'
+  color: colors.text
 }
 
 const lead = css({

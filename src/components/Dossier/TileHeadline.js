@@ -14,7 +14,6 @@ import { convertStyleToRem } from '../Typography/utils'
 const styles = {
   base: css({
     margin: 0,
-    hyphens: 'auto',
     marginBottom: '16px',
     [tUp]: {
       marginBottom: '25px'
