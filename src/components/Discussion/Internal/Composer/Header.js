@@ -27,9 +27,9 @@ const styles = {
   }),
   profilePicture: css({
     display: 'block',
-    width: `40px`,
+    width: pxToRem(40),
     flex: `0 0 40px`,
-    height: `40px`,
+    height: pxToRem(40),
     marginRight: '8px'
   }),
   center: css({

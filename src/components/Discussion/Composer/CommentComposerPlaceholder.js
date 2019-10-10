@@ -22,8 +22,8 @@ const styles = {
   }),
   profilePicture: css({
     display: 'block',
-    width: '40px',
-    height: '40px',
+    width: pxToRem('40px'),
+    height: pxToRem('40px'),
     marginRight: '8px'
   }),
   meta: css({
