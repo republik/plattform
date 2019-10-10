@@ -4,17 +4,16 @@ import { sansSerifRegular12, sansSerifRegular15 } from '../Typography/styles'
 import { css } from 'glamor'
 import { mUp } from '../../theme/mediaQueries'
 import { PADDING } from '../Center'
-import { convertStyleToRem, pxToRem } from '../Typography/utils'
 
 const styles = {
   caption: css({
     margin: '5px auto 0 auto',
     width: '100%',
     maxWidth: `calc(100vw - ${PADDING * 2}px)`,
-    ...convertStyleToRem(sansSerifRegular12),
+    ...sansSerifRegular12,
     [mUp]: {
-      ...convertStyleToRem(sansSerifRegular15),
-      lineHeight: pxToRem('18px')
+      ...sansSerifRegular15,
+      lineHeight: '18px'
     }
   })
 }

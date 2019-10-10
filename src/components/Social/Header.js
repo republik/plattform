@@ -6,12 +6,10 @@ import { mUp } from '../../theme/mediaQueries'
 import { sansSerifMedium16, sansSerifRegular14 } from '../Typography/styles'
 import { ellipsize } from '../../lib/styleMixins'
 import { timeFormat } from '../../lib/timeFormat'
-import { convertStyleToRem, pxToRem } from '../Typography/utils'
 
 export const profilePictureSize = 40
 export const profilePictureMargin = 10
 const profilePictureBorderSize = 5
-const profilePictureBoxSize = profilePictureSize + 2 * profilePictureBorderSize;
 
 const styles = {
   root: css({
@@ -21,13 +19,13 @@ const styles = {
   }),
   profilePicture: css({
     display: 'block',
-    width: `${pxToRem(profilePictureBoxSize)}`,
+    width: `${profilePictureSize + 2 * profilePictureBorderSize}px`,
     flexGrow: 0,
     flexShrink: 0,
-    height: `${pxToRem(profilePictureBoxSize)}`,
-    margin: `${pxToRem(-profilePictureBorderSize)} ${pxToRem(-profilePictureBorderSize +
-      profilePictureMargin)} ${pxToRem(-profilePictureBorderSize)} ${pxToRem(-profilePictureBorderSize)}`,
-    border: `${pxToRem(profilePictureBorderSize)} solid white`
+    height: `${profilePictureSize + 2 * profilePictureBorderSize}px`,
+    margin: `${-profilePictureBorderSize}px ${-profilePictureBorderSize +
+      profilePictureMargin}px ${-profilePictureBorderSize}px ${-profilePictureBorderSize}px`,
+    border: `${profilePictureBorderSize}px solid white`
   }),
   meta: css({
     alignSelf: 'stretch',
@@ -37,8 +35,8 @@ const styles = {
     width: `calc(100% - ${profilePictureSize + profilePictureMargin}px)`
   }),
   name: css({
-    ...convertStyleToRem(sansSerifMedium16),
-    lineHeight: pxToRem('20px'),
+    ...sansSerifMedium16,
+    lineHeight: '20px',
     color: colors.text,
     display: 'flex',
     alignItems: 'center',
@@ -48,15 +46,14 @@ const styles = {
     ...ellipsize
   }),
   subline: css({
-    ...convertStyleToRem(sansSerifRegular14),
-    lineHeight: pxToRem('20px'),
+    ...sansSerifRegular14,
+    lineHeight: '20px',
     color: colors.text,
     display: 'flex',
     alignItems: 'center'
   }),
   sublineText: css({
-    ...ellipsize,
-    overflow: 'hidden'
+    ...ellipsize
   }),
   icon: css({
     color: '#CDCDCD',
@@ -66,9 +63,9 @@ const styles = {
     flexShrink: 0,
     display: 'inline-block',
     marginLeft: 4,
-    fontSize: pxToRem('17px'),
+    fontSize: '17px',
     [mUp]: {
-      fontSize: pxToRem('24px'),
+      fontSize: '24px',
       top: '8px'
     }
   }),

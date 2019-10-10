@@ -14,7 +14,6 @@ import colors from '../../theme/colors'
 import { mUp } from '../../theme/mediaQueries'
 import { sansSerifMedium19, sansSerifMedium22, sansSerifRegular16, sansSerifRegular19 } from '../Typography/styles'
 import { fontRule } from '../Typography/Interaction'
-import { convertStyleToRem, pxToRem } from '../Typography/utils'
 
 export const ReactCharts = {
   Bar,
@@ -45,10 +44,10 @@ const colorRanges = createRanges(colors)
 
 const styles = {
   h: css({
-    ...convertStyleToRem(sansSerifMedium19),
-    lineHeight: pxToRem('25px'),
+    ...sansSerifMedium19,
+    lineHeight: '25px',
     [mUp]: {
-      ...convertStyleToRem(sansSerifMedium22)
+      ...sansSerifMedium22
     },
     color: colors.text,
     margin: 0,
@@ -59,9 +58,9 @@ const styles = {
   }),
   p: css({
     color: colors.text,
-    ...convertStyleToRem(sansSerifRegular16),
+    ...sansSerifRegular16,
     [mUp]: {
-      ...convertStyleToRem(sansSerifRegular19)
+      ...sansSerifRegular19
     },
     margin: 0,
     marginBottom: 15

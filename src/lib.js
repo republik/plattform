@@ -20,7 +20,6 @@ export {default as Field} from './components/Form/Field'
 export {default as FieldSet} from './components/Form/FieldSet'
 export {default as Radio} from './components/Form/Radio'
 export {default as Checkbox} from './components/Form/Checkbox'
-export {default as Slider} from './components/Form/Slider'
 export {default as Loader} from './components/Loader'
 export {default as RawHtml} from './components/RawHtml'
 export {default as IllustrationHtml} from './components/IllustrationHtml'
@@ -132,11 +131,6 @@ export {
   Sub, Sup,
   HR
 } from './components/Typography'
-export {
-  DEFAULT_FONT_SIZE,
-  pxToRem,
-  convertStyleToRem
-} from './components/Typography/utils'
 
 export { commentComposerStorageKey, CommentComposer, CommentComposerPlaceholder } from './components/Discussion/Composer'
 export { SecondaryAction as CommentComposerSecondaryAction } from './components/Discussion/Internal/Composer'

@@ -5,7 +5,6 @@ import { css } from 'glamor'
 import { mUp } from '../../theme/mediaQueries'
 import { fontRule } from '../Typography/Interaction'
 import { sansSerifRegular15, sansSerifRegular18 } from '../Typography/styles'
-import { convertStyleToRem } from '../Typography/utils'
 
 const styles = {
   quote: css({
@@ -13,9 +12,9 @@ const styles = {
     margin: 0,
     padding: '0 15px 12px 15px',
     fontSize: '15px',
-    ...convertStyleToRem(sansSerifRegular15),
+    ...sansSerifRegular15,
     [mUp]: {
-      ...convertStyleToRem(sansSerifRegular18),
+      ...sansSerifRegular18,
       padding: '0 25px 20px 25px',
       '&:first-child': {
         paddingTop: '20px'

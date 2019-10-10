@@ -5,14 +5,13 @@ import { css } from 'glamor'
 import colors from '../../theme/colors'
 import { mUp } from '../../theme/mediaQueries'
 import { textAttributes } from './InfoBox'
-import { convertStyleToRem } from '../Typography/utils'
 
 const styles = {
   text: css({
-    ...convertStyleToRem(sansSerifMedium15),
+    ...sansSerifMedium15,
     marginBottom: '-12px',
     [mUp]: {
-      ...convertStyleToRem(sansSerifMedium18),
+      ...sansSerifMedium18,
       marginBottom: '-14px'
     },
     color: colors.text

@@ -14,7 +14,6 @@ import {
 import { Figure, FigureImage, FigureCaption } from '../Figure'
 import { Header } from './Header'
 import PlayIcon from 'react-icons/lib/md/play-arrow'
-import { convertStyleToRem } from '../Typography/utils'
 
 const styles = {
   container: css({
@@ -32,9 +31,9 @@ const styles = {
     }
   }),
   text: css({
-    ...convertStyleToRem(sansSerifRegular15),
+    ...sansSerifRegular15,
     [mUp]: {
-      ...convertStyleToRem(sansSerifRegular18)
+      ...sansSerifRegular18
     },
     color: colors.text,
     '& a': linkStyle

@@ -7,13 +7,12 @@ import {
   sansSerifMedium16,
   sansSerifMedium20
 } from '../Typography/styles'
-import { convertStyleToRem } from '../Typography/utils'
 
 const format = css({
-  ...convertStyleToRem(sansSerifMedium16),
+  ...sansSerifMedium16,
   margin: '0 0 18px 0',
   [mUp]: {
-    ...convertStyleToRem(sansSerifMedium20),
+    ...sansSerifMedium20,
     margin: '0 0 28px 0'
   }
 })

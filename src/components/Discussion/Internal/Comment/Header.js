@@ -10,7 +10,6 @@ import { timeFormat } from '../../../../lib/timeFormat'
 
 import { DiscussionContext, formatTimeRelative } from '../../DiscussionContext'
 import * as config from '../../config'
-import { convertStyleToRem, pxToRem } from '../../../Typography/utils'
 
 export const profilePictureSize = 40
 export const profilePictureMargin = 10
@@ -32,10 +31,10 @@ const buttonStyle = {
 export const headerActionStyle = ({ isExpanded }) =>
   css({
     ...buttonStyle,
-    ...convertStyleToRem(sansSerifRegular14),
+    ...sansSerifRegular14,
     color: isExpanded ? colors.divider : colors.lightText,
     flexShrink: 0,
-    height: pxToRem('40px'),
+    height: '40px',
     cursor: 'pointer',
     '@media (hover)': {
       ':hover': {
@@ -58,20 +57,20 @@ const styles = {
     }),
   profilePicture: css({
     display: 'block',
-    width: pxToRem(40),
-    flex: `0 0 ${pxToRem(40)}`,
-    height: pxToRem(40),
-    marginRight: pxToRem(8)
+    width: `40px`,
+    flex: `0 0 40px`,
+    height: `40px`,
+    marginRight: '8px'
   }),
   indentIndicators: css({
     flexShrink: 0,
-    marginRight: pxToRem(8 - 4),
+    marginRight: `${8 - 4}px`,
     display: 'flex'
   }),
   indentIndicator: css({
-    width: pxToRem(4 + config.verticalLineWidth),
-    height: pxToRem(40),
-    borderLeft: `${pxToRem(config.verticalLineWidth)} solid ${colors.divider}`
+    width: `${4 + config.verticalLineWidth}px`,
+    height: '40px',
+    borderLeft: `${config.verticalLineWidth}px solid ${colors.divider}`
   }),
   center: css({
     alignSelf: 'stretch',
@@ -82,8 +81,8 @@ const styles = {
     minWidth: 0
   }),
   name: css({
-    ...convertStyleToRem(sansSerifMedium16),
-    lineHeight: pxToRem(20),
+    ...sansSerifMedium16,
+    lineHeight: '20px',
     color: colors.text,
     minWidth: 0,
     flexGrow: 0,
@@ -103,8 +102,8 @@ const styles = {
     }
   }),
   meta: css({
-    ...convertStyleToRem(sansSerifRegular14),
-    lineHeight: pxToRem(20),
+    ...sansSerifRegular14,
+    lineHeight: '20px',
     color: colors.lightText,
     display: 'flex',
     alignItems: 'center'
@@ -126,8 +125,8 @@ const styles = {
     color: colors.primary,
     flexShrink: 0,
     display: 'inline-block',
-    marginLeft: pxToRem(4),
-    marginTop: pxToRem(-2)
+    marginLeft: 4,
+    marginTop: -2
   }),
   link: css({
     color: 'inherit',
@@ -150,8 +149,8 @@ const styles = {
   }),
   expandCount: css({
     display: 'inline-block',
-    paddingLeft: pxToRem(16),
-    marginRigth: pxToRem(-4),
+    paddingLeft: '16px',
+    marginRigth: '-4px',
     whiteSpace: 'pre',
     verticalAlign: 'middle',
     [onlyS]: {

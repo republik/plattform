@@ -8,7 +8,6 @@ import colors from '../../theme/colors'
 import { mUp } from '../../theme/mediaQueries'
 import { useMediaQuery } from '../../lib/useMediaQuery'
 import { useBoundingClientRect } from '../../lib/useBoundingClientRect'
-import { convertStyleToRem, pxToRem } from '../Typography/utils'
 
 const COLLAPSED_HEIGHT = {
   mobile: 180,
@@ -65,7 +64,7 @@ const styles = {
     }
   }),
   button: css({
-    ...convertStyleToRem(sansSerifRegular14),
+    ...sansSerifRegular14,
     outline: 'none',
     WebkitAppearance: 'none',
     background: 'transparent',
@@ -74,8 +73,8 @@ const styles = {
     display: 'block',
     cursor: 'pointer',
     color: colors.primary,
-    height: pxToRem('32px'),
-    lineHeight: pxToRem('32px'),
+    height: '32px',
+    lineHeight: '32px',
     '@media (hover)': {
       ':hover': {
         color: colors.secondary

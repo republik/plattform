@@ -2,7 +2,6 @@ import React from 'react'
 import {css, merge, simulate} from 'glamor'
 import colors from '../../theme/colors'
 import {fontFamilies} from '../../theme/fonts'
-import { pxToRem } from '../Typography/utils'
 
 export const plainButtonRule = css({
   border: 'none',
@@ -19,8 +18,8 @@ const buttonStyle = css(plainButtonRule, {
   minWidth: 160,
   textAlign: 'center',
   textDecoration: 'none',
-  fontSize: pxToRem(22),
-  height: pxToRem(60),
+  fontSize: 22,
+  height: 60,
   boxSizing: 'border-box',
   backgroundColor: '#fff',
   fontFamily: fontFamilies.sansSerifRegular,
@@ -106,8 +105,8 @@ const blockStyle = css({
   width: '100%'
 })
 const bigStyle = css({
-  fontSize: pxToRem(22),
-  height: pxToRem(80),
+  fontSize: 22,
+  height: 80,
   padding: '10px 30px 10px 30px'
 })
 

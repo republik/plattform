@@ -10,7 +10,6 @@ import {
   cursiveTitle20,
   cursiveTitle22
 } from '../Typography/styles'
-import { convertStyleToRem, pxToRem } from '../Typography/utils'
 
 const styles = {
   base: css({
@@ -22,22 +21,22 @@ const styles = {
     }
   }),
   editorial: css({
-    ...convertStyleToRem(serifTitle20),
+    ...serifTitle20,
     [mUp]: {
-      ...convertStyleToRem(serifTitle22),
+      ...serifTitle22,
     }
   }),
   interaction: css({
-    ...convertStyleToRem(sansSerifMedium20),
+    ...sansSerifMedium20,
     [mUp]: {
-      ...convertStyleToRem(sansSerifMedium22),
-      lineHeight: pxToRem(24)
+      ...sansSerifMedium22,
+      lineHeight: '24px'
     }
   }),
   scribble: css({
-    ...convertStyleToRem(cursiveTitle20),
+    ...cursiveTitle20,
     [mUp]: {
-      ...convertStyleToRem(cursiveTitle22),
+      ...cursiveTitle22,
     }
   })
 }

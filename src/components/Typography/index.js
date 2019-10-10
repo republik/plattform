@@ -7,7 +7,6 @@ import * as _Editorial from './Editorial'
 import * as _Interaction from './Interaction'
 import * as _Scribble from './Scribble'
 import { css } from 'glamor'
-import { convertStyleToRem } from './utils'
 
 // Namespaced exports.
 export const Editorial = {..._Editorial}
@@ -91,7 +90,7 @@ const styles = {
     marginBottom: 30
   }),
   label: css({
-    ...convertStyleToRem(fontStyles.sansSerifRegular14),
+    ...fontStyles.sansSerifRegular14,
     color: colors.secondary
   }),
   quote: css({

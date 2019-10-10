@@ -4,13 +4,12 @@ import { css } from 'glamor'
 import { mUp } from '../../../theme/mediaQueries'
 import { serifRegular14, serifRegular16 } from '../../Typography/styles'
 import { Editorial } from '../../Typography'
-import { convertStyleToRem } from '../../Typography/utils'
 
 const styles = {
   container: css({
-    ...convertStyleToRem(serifRegular14),
+    ...serifRegular14,
     [mUp]: {
-      ...convertStyleToRem(serifRegular16)
+      ...serifRegular16
     },
     '& > *:first-child': {
       marginTop: 0

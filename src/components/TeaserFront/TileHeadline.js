@@ -6,23 +6,22 @@ import {
   sansSerifMedium20,
   cursiveTitle20
 } from '../Typography/styles'
-import { pxToRem } from '../Typography/utils'
 
 const smallSize = {
-  fontSize: pxToRem('26px'),
-  lineHeight: pxToRem('32px'),
+  fontSize: '26px',
+  lineHeight: '32px',
   marginBottom: '16px'
 }
 
 const standardSize = {
-  fontSize: pxToRem('32px'),
-  lineHeight: pxToRem('37px'),
+  fontSize: '32px',
+  lineHeight: '37px',
   marginBottom: '25px'
 }
 
 const mediumSize = {
-  fontSize: pxToRem('48px'),
-  lineHeight: pxToRem('54px'),
+  fontSize: '48px',
+  lineHeight: '54px',
   marginBottom: '25px'
 }
 

@@ -4,14 +4,13 @@ import { css } from 'glamor'
 import colors from '../../theme/colors'
 import { mUp } from '../../theme/mediaQueries'
 import { serifRegular17, serifRegular19 } from '../Typography/styles'
-import { convertStyleToRem } from '../Typography/utils'
 
 const styles = {
   main: css({
-    ...convertStyleToRem(serifRegular17),
+    ...serifRegular17,
     margin: '0 0 5px 0',
     [mUp]: {
-      ...convertStyleToRem(serifRegular19)
+      ...serifRegular19
     },
     color: colors.text
   })

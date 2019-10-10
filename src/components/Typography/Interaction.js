@@ -4,7 +4,6 @@ import { css } from 'glamor'
 import colors from '../../theme/colors'
 import { mUp } from '../../theme/mediaQueries'
 import { fontStyles } from '../../theme/fonts'
-import { convertStyleToRem } from './utils'
 
 export const fontRule = css({
   ...fontStyles.sansSerifRegular,
@@ -17,9 +16,9 @@ export const fontRule = css({
 
 const interactionHeadline = css({
   margin: '0 0 12px 0',
-  ...convertStyleToRem(styles.sansSerifMedium30),
+  ...styles.sansSerifMedium30,
   [mUp]: {
-    ...convertStyleToRem(styles.sansSerifMedium58)
+    ...styles.sansSerifMedium58
   },
   color: colors.text,
   ':first-child': {
@@ -31,27 +30,27 @@ const interactionHeadline = css({
 })
 
 const interactionH1 = css({
-  ...convertStyleToRem(styles.sansSerifMedium30),
+  ...styles.sansSerifMedium30,
   [mUp]: {
-    ...convertStyleToRem(styles.sansSerifMedium40)
+    ...styles.sansSerifMedium40
   },
   color: colors.text,
   margin: 0
 })
 
 const interactionH2 = css({
-  ...convertStyleToRem(styles.sansSerifMedium22),
+  ...styles.sansSerifMedium22,
   [mUp]: {
-    ...convertStyleToRem(styles.sansSerifMedium30)
+    ...styles.sansSerifMedium30
   },
   color: colors.text,
   margin: 0
 })
 
 const interactionH3 = css({
-  ...convertStyleToRem(styles.sansSerifMedium19),
+  ...styles.sansSerifMedium19,
   [mUp]: {
-    ...convertStyleToRem(styles.sansSerifMedium22)
+    ...styles.sansSerifMedium22
   },
   color: colors.text,
   margin: 0
@@ -59,9 +58,9 @@ const interactionH3 = css({
 
 const interactionP = css({
   color: colors.text,
-  ...convertStyleToRem(styles.sansSerifRegular16),
+  ...styles.sansSerifRegular16,
   [mUp]: {
-    ...convertStyleToRem(styles.sansSerifRegular21)
+    ...styles.sansSerifRegular21
   },
   margin: 0
 })

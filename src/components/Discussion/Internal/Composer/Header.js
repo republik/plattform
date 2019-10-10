@@ -4,7 +4,6 @@ import MdCheck from 'react-icons/lib/md/check'
 import colors from '../../../../theme/colors'
 import { sansSerifMedium16, sansSerifRegular14 } from '../../../Typography/styles'
 import { ellipsize } from '../../../../lib/styleMixins'
-import { convertStyleToRem, pxToRem } from '../../../Typography/utils'
 
 const buttonStyle = {
   background: 'none',
@@ -27,9 +26,9 @@ const styles = {
   }),
   profilePicture: css({
     display: 'block',
-    width: pxToRem(40),
+    width: `40px`,
     flex: `0 0 40px`,
-    height: pxToRem(40),
+    height: `40px`,
     marginRight: '8px'
   }),
   center: css({
@@ -41,8 +40,8 @@ const styles = {
     minWidth: 0
   }),
   name: css({
-    ...convertStyleToRem(sansSerifMedium16),
-    lineHeight: pxToRem('20px'),
+    ...sansSerifMedium16,
+    lineHeight: '20px',
     color: colors.text,
     minWidth: 0,
     flexGrow: 0,
@@ -50,8 +49,8 @@ const styles = {
     ...ellipsize
   }),
   meta: css({
-    ...convertStyleToRem(sansSerifRegular14),
-    lineHeight: pxToRem('20px'),
+    ...sansSerifRegular14,
+    lineHeight: '20px',
     color: colors.lightText,
     display: 'flex',
     alignItems: 'center'
@@ -81,10 +80,10 @@ const styles = {
   }),
   action: css({
     ...buttonStyle,
-    ...convertStyleToRem(sansSerifRegular14),
+    ...sansSerifRegular14,
     color: colors.primary,
     flexShrink: 0,
-    height: pxToRem('40px'),
+    height: '40px',
     marginLeft: 12,
     cursor: 'pointer',
     '& svg': {
