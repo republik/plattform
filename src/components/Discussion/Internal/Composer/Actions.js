@@ -29,8 +29,7 @@ const styles = {
     justifyContent: 'space-between'
   }),
   mainActions: css({
-    display: 'flex',
-    overflow: 'hidden'
+    display: 'flex'
   }),
   closeButton: css({
     ...actionButtonStyle,
