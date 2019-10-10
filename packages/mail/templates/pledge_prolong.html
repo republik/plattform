@@ -36,10 +36,12 @@
                   <td style="padding:20px;">
                     <p>Guten Tag</p>
                     
-                    <p>Schön, sind Sie weiterhin Teil unseres einzigartigen Projektes gegen den Zynismus, den Vormarsch der Autoritären und gegen die Diktatur der Angst.</p> 
-                    <p>Mit Ihrem Abonnement erhalten Sie von Montag bis Freitag ein hochwertiges digitales Magazin. Sie unterstützen aber auch eine wirklich unabhängige vierte Gewalt.</p>
-                    <p>Denn: Die Republik steht für die Verteidigung der demokratischen Institutionen und die Werte der Aufklärung: für Treue zu Fakten, für Lösungen von Fall zu Fall, für Offenheit gegenüber Kritik, für Respektlosigkeit gegenüber der Macht und Respekt vor dem Menschen.</p>
-            
+                    {{#if `pledger_memberships_count > 0`}}
+                      <p>Schön, sind Sie weiterhin Teil unseres einzigartigen Projektes gegen den Zynismus, den Vormarsch der Autoritären und gegen die Diktatur der Angst.</p> 
+                      <p>Mit Ihrer Mitgliedschaft erhalten Sie von Montag bis Samstag ein hochwertiges digitales Magazin. Sie unterstützen aber auch eine wirklich unabhängige vierte Gewalt.</p>
+                      <p>Denn: Die Republik steht für die Verteidigung der demokratischen Institutionen und die Werte der Aufklärung: für Treue zu Fakten, für Lösungen von Fall zu Fall, für Offenheit gegenüber Kritik, für Respektlosigkeit gegenüber der Macht und Respekt vor dem Menschen.</p>
+                    {{/if}}
+                    
                     <p>Hier die wichtigsten Informationen über Ihre Verlängerung.</p>
 
                     {{#if `payment_method == "PAYMENTSLIP"`}}
@@ -88,9 +90,9 @@
                     {{/if}}
 
                     {{#if `gifted_memberships_count == 1`}}
-                      <p>Vielen Dank, dass Sie die Republik auch anderen zukommen lassen: Sie verlängern auch das Geschenkabonnement. Wir haben die Beschenkte darüber per E-Mail informiert.</p>
+                      <p>Vielen Dank, dass Sie die Republik anderen zukommen lassen: Sie verlängern auch das Geschenkabonnement. Wir haben die Beschenkte darüber per E-Mail informiert.</p>
                     {{elseif `gifted_memberships_count > 1`}}
-                      <p>Vielen Dank, dass Sie die Republik auch anderen zukommen lassen: Sie verlängern auch Ihre Geschenkabonnemente. Wir haben die Beschenkten darüber per E-Mail informiert.</p>
+                      <p>Vielen Dank, dass Sie die Republik anderen zukommen lassen: Sie verlängern auch Ihre Geschenkabonnemente. Wir haben die Beschenkten darüber per E-Mail informiert.</p>
                     {{/if}}
 
                     <p>Herzlich</p>

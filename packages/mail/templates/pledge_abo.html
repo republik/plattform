@@ -46,7 +46,7 @@
                       <p>Wir schicken Ihnen, unserer neusten Verlegerin, unserem neusten Verleger, auch regelmässig Neuigkeiten aus Redaktion und Verlag: zu Vorhaben, Hintergründen, Entscheidungen und Fehlern. Sie können Kritik üben und Vorschläge machen. Und sich mit Ihren {{republik_memberships_count}} Kolleginnen und Kollegen in der Verlagsetage austauschen.</p>
                     {{/if}}
 
-                    <p><strong>Informationen zur Zahlung Ihres Abonnements und Ihrer Mitgliedschaft:</strong></p>
+                    <p><strong>Informationen zur Zahlung Ihrer Mitgliedschaft:</strong></p>
 
                     {{#if `payment_method != "PAYMENTSLIP"`}}
                       <p>Ihre Zahlung ist erfolgreich bei uns eingegangen, herzlichen Dank!</p>
@@ -71,9 +71,9 @@
                     {{#unless waiting_for_payment}}
                       {{#if goodies_count}}
                         {{#if `goodies_count == 1`}}
-                          <p>Sie haben sich zu Ihrem Abo auch ein Republik-Objekt gegönnt. Wir werden es Ihnen innerhalb der nächsten 7 Werktage per Post zustellen.</p>
+                          <p>Sie haben sich zu Ihrer Mitgliedschaft auch ein Republik-Objekt gegönnt. Wir werden es Ihnen innerhalb der nächsten 7 Werktage per Post zustellen.</p>
                         {{elseif `goodies_count > 1`}}
-                          <p>Sie haben sich zu Ihrem Abo noch mehrere Republik-Objekte gegönnt. Wir werden sie Ihnen innerhalb der nächsten 7 Werktage per Post zustellen.</p>
+                          <p>Sie haben sich zu Ihrer Mitgliedschaft noch mehrere Republik-Objekte gegönnt. Wir werden sie Ihnen innerhalb der nächsten 7 Werktage per Post zustellen.</p>
                         {{/if}}
                         <ul>
                         {{#options}}
