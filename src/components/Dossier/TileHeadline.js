@@ -14,7 +14,6 @@ import { convertStyleToRem } from '../Typography/utils'
 const styles = {
   base: css({
     margin: 0,
-    wordBreak: 'break-word',
     hyphens: 'auto',
     marginBottom: '16px',
     [tUp]: {

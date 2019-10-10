@@ -15,7 +15,6 @@ const leadStyle = {
   lineHeight: pxToRem('27px'),
   margin: '0 0 10px 0',
   color: colors.text,
-  wordBreak: 'break-word',
   hyphens: 'auto'
 }
 
