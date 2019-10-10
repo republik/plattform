@@ -6,13 +6,12 @@ import zIndex from '../../theme/zIndex'
 import colors from '../../theme/colors'
 import {sansSerifRegular21} from '../Typography/styles'
 import {labelHeight, fieldHeight, Label, LButton} from './Label'
-import { convertStyleToRem, pxToRem } from '../Typography/utils'
 
 export const styles = {
   root: css({
     position: 'relative',
-    minHeight: pxToRem(labelHeight + fieldHeight),
-    marginBottom: pxToRem(12)
+    minHeight: labelHeight + fieldHeight,
+    marginBottom: 12
   }),
   inner: css({
     position: 'absolute',
@@ -36,8 +35,8 @@ export const styles = {
   }),
 
   item: css({
-    ...convertStyleToRem(sansSerifRegular21),
-    lineHeight: pxToRem(22),
+    ...sansSerifRegular21,
+    lineHeight: '27px',
     color: colors.text,
     padding: '17px 12px',
     cursor: 'pointer',
@@ -62,7 +61,7 @@ export const styles = {
   arrowDown: css({
     position: 'absolute',
     right: 0,
-    top: pxToRem(28),
+    top: 28,
     pointerEvents: 'none'
   })
 }
@@ -116,7 +115,7 @@ const renderDropdown = ({label, focus, white, black, items, onFocus, onBlur}) =>
     </LButton>}
     <Inner isOpen={isOpen}>
       <Label top={!!selectedItem || focus} focus={isOpen || focus} text={label} white={white && !isOpen} black={black || (white && isOpen)}>
-        <LButton style={{lineHeight: pxToRem(22)}} {...getToggleButtonProps()} onFocus={onFocus} onBlur={onBlur} white={white && !isOpen} black={black || (white && isOpen)}>
+        <LButton {...getToggleButtonProps()} onFocus={onFocus} onBlur={onBlur} white={white && !isOpen} black={black || (white && isOpen)}>
           {selectedItem ? (selectedItem.element || selectedItem.text) : ''}
         </LButton>
         <ArrowDown
