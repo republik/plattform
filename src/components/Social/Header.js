@@ -55,6 +55,7 @@ const styles = {
     alignItems: 'center'
   }),
   sublineText: css({
+    ...ellipsize,
     overflow: 'hidden'
   }),
   icon: css({
