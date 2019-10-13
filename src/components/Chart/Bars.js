@@ -325,6 +325,9 @@ const BarChart = (props) => {
     })
   })
 
+  const xTicks = props.xTicks || xAxis.ticks
+  const hasXTicks = !inlineValue && !!xTicks.length
+
   // rows and columns
   let yPos = 0
   groupBy(groupedData, (d, i) => Math.floor(i / columns)).forEach(({values: groups}) => {
@@ -336,16 +339,33 @@ const BarChart = (props) => {
       group.x = column * (columnWidth + COLUMN_PADDING)
     })
 
-    yPos += height + (!inlineValue ? AXIS_BOTTOM_HEIGHT : 0)
+    yPos += height + (hasXTicks ? AXIS_BOTTOM_HEIGHT : 0)
   })
 
   const isLollipop = props.barStyle === 'lollipop'
 
-  const xTicks = props.xTicks || xAxis.ticks
   const highlightZero = xTicks.indexOf(0) !== -1 && xTicks[0] !== 0
 
+  const colorLegendValues = []
+    .concat(
+      props.colorLegend &&
+      (
+        props.colorLegendValues ||
+        colorValues
+      ).map(colorValue => (
+        {color: color(colorValue), label: colorValue}
+      ))
+    )
+    .concat(!mini && band && bandLegend && {label: (
+      <span {...styles.bandLegend}>
+        <span {...styles.bandBar} />
+        {` ${bandLegend}`}
+      </span>
+    )})
+    .filter(Boolean)
+
   return (
-    <div>
+    <>
       <svg width={width} height={yPos}>
         <desc>{description}</desc>
         {
@@ -454,7 +474,7 @@ const BarChart = (props) => {
                     )
                   })
                 }
-                {!inlineValue && <g transform={`translate(0,${group.groupHeight + AXIS_BOTTOM_PADDING})`}>
+                {hasXTicks && <g transform={`translate(0,${group.groupHeight + AXIS_BOTTOM_PADDING})`}>
                   {
                     xTicks.map((tick, i) => {
                       let textAnchor = 'middle'
@@ -493,29 +513,11 @@ const BarChart = (props) => {
           })
         }
       </svg>
-      <div>
-        <ColorLegend inline values={(
-          []
-            .concat(
-              props.colorLegend &&
-              (
-                props.colorLegendValues ||
-                colorValues
-              ).map(colorValue => (
-                {color: color(colorValue), label: colorValue}
-              ))
-            )
-            .concat(!mini && band && bandLegend && {label: (
-              <span {...styles.bandLegend}>
-                <span {...styles.bandBar} />
-                {` ${bandLegend}`}
-              </span>
-            )})
-            .filter(Boolean)
-        )}/>
+      <div style={{ marginTop: !hasXTicks && colorLegendValues.length ? 3 : 0 }}>
+        <ColorLegend inline values={colorLegendValues}/>
         {children}
       </div>
-    </div>
+    </>
   )
 }
 
