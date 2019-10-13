@@ -104,7 +104,7 @@
     "test": "babel-tape-runner src/**/*.test.js | faucet && babel-tape-runner src/**/**/*.test.js | faucet",
     "cloc": "find . -name '*.js' -not -path \"./node_modules*\" -not -path \"./lib*\" | xargs wc -l",
     "eject": "react-scripts eject",
-    "semantic-release": "semantic-release pre && npm publish && semantic-release post",
+    "semantic-release": "semantic-release",
     "commitmsg": "validate-commit-msg",
     "translations": "gsheets --key=1sMS5u4SIFY2loAmx8jftDXqTbq2RheJLY7FBeXSm1Tc --title=live --pretty --out src/lib/translations.json"
   },
