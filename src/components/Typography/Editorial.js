@@ -6,7 +6,7 @@ import { fontStyles } from '../../theme/fonts'
 import { underline } from '../../lib/styleMixins'
 import colors from '../../theme/colors'
 import { fontRule as interactionFontRule } from './Interaction'
-import {convertStyleToRem} from "./utils";
+import { convertStyleToRem, pxToRem } from './utils'
 
 export { List, UnorderedList as UL, OrderedList as OL, ListItem as LI } from '../List'
 
@@ -144,7 +144,7 @@ const paragraph = css({
   ...convertStyleToRem(styles.serifRegular17),
   [mUp]: {
     ...convertStyleToRem(styles.serifRegular19),
-    margin: '30px 0 30px 0'
+    margin: `${pxToRem(30)} 0 ${pxToRem(30)} 0`
   },
   ':first-child': {
     marginTop: 0
