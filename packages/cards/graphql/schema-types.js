@@ -22,6 +22,7 @@ enum CardFiltersMustHaveInput {
   portrait
   smartspider
   statement
+  financing
 }
 
 input CardSortInput {
