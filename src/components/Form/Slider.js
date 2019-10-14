@@ -4,7 +4,7 @@ import colors from '../../theme/colors'
 import { fontStyles } from '../../theme/fonts'
 import { Label } from '../Typography'
 
-const thumbSize = 18
+const thumbSize = 20
 const trackHeight = 4
 
 const thumbStyle = {
