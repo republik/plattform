@@ -182,6 +182,8 @@ const filterCards = async (cards, { filters = {} }, context) => {
 }
 
 const paginateCards = async (cards, args, context) => {
+  const { focus = [] } = args
+  const focusCards = cards.filter(c => focus.includes(c.id))
   const filteredCards = await filterCards(cards, args, context)
 
   return paginator(
@@ -193,9 +195,12 @@ const paginateCards = async (cards, args, context) => {
         Math.round(Math.random() * 100000)
     }),
     (args, payload) => buildDeck(
-      filteredCards,
+      [
+        ...filteredCards,
+        ...focusCards
+      ],
       payload.seed,
-      args.focus,
+      focus,
       args.sort && args.sort.smartspider
     )
   )
