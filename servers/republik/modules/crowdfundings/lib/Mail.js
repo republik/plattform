@@ -499,6 +499,9 @@ mail.getPledgeMergeVars = async (
       (a, b) => a.membership && a.membership.userId !== pledge.userId ? 1 : 0
     )
 
+  const pledgerMemberships = memberships
+    .filter(membership => pledge.userId === membership.userId)
+
   const giftedMemberships = memberships
     .filter(membership => pledge.userId !== membership.userId)
 
@@ -632,15 +635,16 @@ mail.getPledgeMergeVars = async (
   ${address.country}</span>`
         : null
     },
+    { name: 'pledger_memberships_count',
+      content: pledgerMemberships.length
+    },
     { name: 'gifted_memberships_count',
       content: giftedMemberships.length
     },
-
     {
       name: 'republik_memberships_count',
       content: await memberStatsCount({ pgdb })
     },
-
     { name: 'link_claim',
       content: `${FRONTEND_BASE_URL}/abholen`
     }
