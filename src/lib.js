@@ -32,6 +32,7 @@ export { AudioPlayer } from './components/AudioPlayer'
 export { VideoPlayer } from './components/VideoPlayer'
 export { default as LazyLoad } from './components/LazyLoad'
 export { default as LazyImage } from './components/LazyLoad/Image'
+export { Collapsable } from './components/Collapsable'
 export {
   InfoBox,
   InfoBoxText,

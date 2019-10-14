@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { css } from 'glamor'
+import { css, merge } from 'glamor'
 
 import { sansSerifRegular14 } from '../Typography/styles'
 
@@ -52,16 +52,21 @@ const styles = {
   }),
   buttonContainer: css({
     position: 'relative',
-    borderTop: `1px solid ${colors.divider}`,
     '&::before': {
       position: 'absolute',
       display: 'block',
       content: '""',
       left: 0,
       right: 0,
-      top: -61,
+      top: -60,
       height: 60,
       background: 'linear-gradient(0deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%)'
+    }
+  }),
+  buttonContainerDivider: css({
+    borderTop: `1px solid ${colors.divider}`,
+    '&::before': {
+      top: -61,
     }
   }),
   button: css({
@@ -84,7 +89,7 @@ const styles = {
   })
 }
 
-const Collapsable = ({ t, children, height, threshold, initialVisibility, style, editorPreview }) => {
+const Collapsable = ({ t, children, height, threshold, initialVisibility, style, alwaysCollapsed, editorPreview }) => {
   /**
    * Measuring the body size (height), so we can determine whether to collapse
    * the body.
@@ -130,10 +135,10 @@ const Collapsable = ({ t, children, height, threshold, initialVisibility, style,
       </div>
 
       {bodyVisibility !== 'auto' && !editorPreview && (
-        <div {...(collapsed ? styles.buttonContainer : {})}>
-          <button {...styles.button} onClick={onToggleCollapsed} title={collapseLabel}>
+        <div {...merge(collapsed ? styles.buttonContainer : {}, !alwaysCollapsed && styles.buttonContainerDivider)}>
+          {!alwaysCollapsed && (<button {...styles.button} onClick={onToggleCollapsed} title={collapseLabel}>
             {collapseLabel}
-          </button>
+          </button>)}
         </div>
       )}
     </div>
@@ -151,13 +156,15 @@ Collapsable.propTypes = {
   initialVisibility: PropTypes.oneOf(['auto', 'full', 'preview']),
   threshold: PropTypes.number,
   style: PropTypes.object,
-  editorPreview: PropTypes.bool
+  editorPreview: PropTypes.bool,
+  alwaysCollapsed: PropTypes.bool
 }
 
 Collapsable.defaultProps = {
   height: COLLAPSED_HEIGHT,
   initialVisibility: 'auto',
-  threshold: 50
+  threshold: 50,
+  alwaysCollapsed: false
 }
 
 export default Collapsable
