@@ -35,7 +35,7 @@ const styles = {
     background: 'transparent',
     outline: 'none',
     width: 260,
-    padding: 0,
+    padding: '4px 0',
     marginTop: 0,
     marginRight: 10,
     marginBottom: 0,
