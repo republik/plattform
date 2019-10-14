@@ -161,6 +161,7 @@ const filterCards = async (cards, { filters = {} }, context) => {
     const mustHavePortrait = filters.mustHave.includes('portrait')
     const mustHaveSmartspider = filters.mustHave.includes('smartspider')
     const mustHaveStatement = filters.mustHave.includes('statement')
+    const mustHaveFinancing = filters.mustHave.includes('financing')
 
     const portrayedUserId = (await context.pgdb.public.users.find({
       id: filteredCards.map(c => c.userId),
@@ -171,7 +172,8 @@ const filterCards = async (cards, { filters = {} }, context) => {
       return (
         (!mustHavePortrait || portrayedUserId.includes(card.userId)) &&
         (!mustHaveSmartspider || !!card.payload.smartvoteCleavage) &&
-        (!mustHaveStatement || !!card.payload.statement)
+        (!mustHaveStatement || !!card.payload.statement) &&
+        (!mustHaveFinancing || !!card.payload.financing)
       )
     })
   }
@@ -180,6 +182,8 @@ const filterCards = async (cards, { filters = {} }, context) => {
 }
 
 const paginateCards = async (cards, args, context) => {
+  const { focus = [] } = args
+  const focusCards = cards.filter(c => focus.includes(c.id))
   const filteredCards = await filterCards(cards, args, context)
 
   return paginator(
@@ -191,9 +195,12 @@ const paginateCards = async (cards, args, context) => {
         Math.round(Math.random() * 100000)
     }),
     (args, payload) => buildDeck(
-      filteredCards,
+      [
+        ...filteredCards,
+        ...focusCards
+      ],
       payload.seed,
-      args.focus,
+      focus,
       args.sort && args.sort.smartspider
     )
   )
