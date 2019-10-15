@@ -2,6 +2,7 @@ import React from 'react'
 
 import Container from './Container'
 import Center from '../../components/Center'
+import Button from '../../components/Button'
 import {
   BlockQuote,
   BlockQuoteParagraph
@@ -1007,6 +1008,37 @@ const createSchema = ({
                     'PARAGRAPH'
                   ]
                 }
+              },
+              {
+                matchMdast: matchZone('BUTTON'),
+                component: ({ children }) => children,
+                rules: [
+                  {
+                    matchMdast: matchParagraph,
+                    component: ({ children }) => children,
+                    rules: [
+                      {
+                        matchMdast: matchType('link'),
+                        props: (node, index, parent, { ancestors }) => {
+                          const zone = ancestors.find(matchZone('BUTTON'))
+
+                          return {
+                            title: node.title,
+                            href: node.url,
+                            primary: zone.data.primary,
+                            style: {
+                              marginRight: 10,
+                              marginBottom: 10
+                            }
+                          }
+                        },
+                        component:  Button,
+                        editorModule: 'link',
+                        rules: globalInlines
+                      }
+                    ]
+                  }
+                ]
               },
               list,
               {
