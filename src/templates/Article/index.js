@@ -105,6 +105,9 @@ const paragraphFormatting = [
     }
   }
 ]
+
+const matchButton = node => node.type === 'span' && node.data.button
+
 const paragraphRules = [
   ...globalInlines,
   ...paragraphFormatting,
@@ -113,6 +116,31 @@ const paragraphRules = [
     rules: [
       ...globalInlines,
       ...paragraphFormatting
+    ]
+  },
+  {
+    matchMdast: matchButton,
+    component: ({ children }) => children,
+    rules: [
+      {
+        matchMdast: matchType('link'),
+        props: (node, index, parent, { ancestors }) => {
+          const button = ancestors.find(matchButton)
+
+          return {
+            title: node.title,
+            href: node.url,
+            primary: +button.data.primary,
+            style: {
+              marginRight: 10,
+              marginBottom: 10
+            }
+          }
+        },
+        component: Button,
+        editorModule: 'link',
+        rules: globalInlines
+      }
     ]
   }
 ]
