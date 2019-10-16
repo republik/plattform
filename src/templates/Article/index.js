@@ -106,7 +106,6 @@ const paragraphFormatting = [
   }
 ]
 
-const matchButton = node => node.type === 'span' && node.data.button
 
 const paragraphRules = [
   ...globalInlines,
@@ -116,31 +115,6 @@ const paragraphRules = [
     rules: [
       ...globalInlines,
       ...paragraphFormatting
-    ]
-  },
-  {
-    matchMdast: matchButton,
-    component: ({ children }) => children,
-    rules: [
-      {
-        matchMdast: matchType('link'),
-        props: (node, index, parent, { ancestors }) => {
-          const button = ancestors.find(matchButton)
-
-          return {
-            title: node.title,
-            href: node.url,
-            primary: +button.data.primary,
-            style: {
-              marginRight: 10,
-              marginBottom: 10
-            }
-          }
-        },
-        component: Button,
-        editorModule: 'link',
-        rules: globalInlines
-      }
     ]
   }
 ]
@@ -1039,34 +1013,33 @@ const createSchema = ({
               },
               {
                 matchMdast: matchZone('BUTTON'),
-                component: ({ children }) => children,
-                rules: [
-                  {
-                    matchMdast: matchParagraph,
-                    component: ({ children }) => children,
-                    rules: [
-                      {
-                        matchMdast: matchType('link'),
-                        props: (node, index, parent, { ancestors }) => {
-                          const zone = ancestors.find(matchZone('BUTTON'))
+                component: Button,
+                props: (node, index, parent, { ancestors }) => {
+                  const link = (
+                    node.children[0] &&
+                    node.children[0].children[0]
+                  ) || {}
 
-                          return {
-                            title: node.title,
-                            href: node.url,
-                            primary: zone.data.primary,
-                            style: {
-                              marginRight: 10,
-                              marginBottom: 10
-                            }
-                          }
-                        },
-                        component:  Button,
-                        editorModule: 'link',
-                        rules: globalInlines
-                      }
-                    ]
+                  return {
+                    title: link.title,
+                    href: link.url,
+                    primary: node.data.primary,
+                    style: {
+                      marginRight: 10,
+                      marginBottom: 10
+                    }
                   }
-                ]
+                },
+                rules: globalInlines.concat({
+                  matchMdast: matchParagraph,
+                  component: ({ children }) => children,
+                  rules: [{
+                    matchMdast: matchType('link'),
+                    component: ({ children }) => children,
+                    rules: globalInlines
+                  }]
+                }),
+                editorModule: 'button'
               },
               list,
               {
