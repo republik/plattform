@@ -1014,10 +1014,7 @@ const createSchema = ({
               {
                 matchMdast: matchZone('BUTTON'),
                 component: ({ children, ...props }) =>
-                  <Button {...props} style={{
-                    marginRight: 10,
-                    marginBottom: 10
-                  }}>{children}</Button>,
+                  <Button {...props} spacedOut>{children}</Button>,
                 props: (node, index, parent, { ancestors }) => {
                   const link = (
                     node.children[0] &&

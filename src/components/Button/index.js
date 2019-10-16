@@ -113,8 +113,15 @@ const bigStyle = css({
   padding: '10px 30px 10px 30px'
 })
 
+const spacedOutStyle = css({
+  margin: '0 10px 10px 0',
+  ':first-of-type': {
+    marginLeft: 0
+  },
+})
+
 const Button = ({
-  onClick, type, children, primary, dimmed, black, white,
+  onClick, type, children, primary, dimmed, black, white, spacedOut,
   big, block, style, disabled, href, title, target, simulate: sim, attributes
 }) => {
   const simulations = sim ? simulate(sim) : {}
@@ -125,7 +132,8 @@ const Button = ({
     black && blackStyle,
     white && whiteStyle,
     block && blockStyle,
-    big && bigStyle
+    big && bigStyle,
+    spacedOut && !block && spacedOutStyle
   )
 
   const Element = href ? 'a' : 'button'
