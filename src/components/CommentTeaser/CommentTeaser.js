@@ -27,6 +27,7 @@ const styles = {
   }),
   body: css({
     ...serifRegular14,
+    wordWrap: 'break-word',
     color: colors.text,
     margin: '10px 0'
   }),

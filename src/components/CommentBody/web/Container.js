@@ -8,6 +8,7 @@ import { convertStyleToRem } from '../../Typography/utils'
 
 const styles = {
   container: css({
+    wordWrap: 'break-word',
     ...convertStyleToRem(serifRegular14),
     [mUp]: {
       ...convertStyleToRem(serifRegular16)

@@ -133,3 +133,24 @@ Props:
   t={t}
 />
 ```
+
+```react|noSource,span-3
+<CommentTeaser
+  id="X"
+  createdAt="2019-01-01"
+  displayAuthor={{
+    profilePicture: '/static/profilePicture1.png',
+    name: 'Christof Moser',
+    credential: {description: 'Journalist', verified: true}
+  }}
+  preview={{
+    string: "FrankensteinSuperLangesMonsterWortOverflowVerhinderungsStrategieFrankensteinSuperLangesMonsterWortOverflowVerhinderungsStrategie ist word-wrap: break-word."
+  }}
+  parentIds={["somecommentid"]}
+  timeago={isoString => 'gerade eben'}
+  discussion={{
+    title: "Der Crowdfunding-Code gegen die Frankenstein-Monster-Strategie"
+  }}
+  t={t}
+/>
+```

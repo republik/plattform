@@ -142,6 +142,39 @@ If the comment is unpublished by the user themselves, they will still see the co
 <Comment.Body t={t} comment={comments.comment4} />
 ```
 
+Word overflow is prevented with `word-wrap: break-word`.
+
+```react|noSource
+<Comment.Body t={t} comment={{
+  id: 'monster-id',
+  displayAuthor: {
+    name: 'Ein Monster'
+  },
+  upVotes: 8,
+  downVotes: 3,
+  userVote: 'DOWN',
+  published: true,
+  createdAt: "2019-01-01",
+  updatedAt: "2019-01-01",
+  parentIds: [],
+  tags: [],
+  content: {
+    type: 'root',
+    children: [
+      {
+        type: 'paragraph',
+        children: [
+          {
+            type: 'text',
+            value: 'FrankensteinSuperLangesMonsterWortOverflowVerhinderungsStrategieFrankensteinSuperLangesMonsterWortOverflowVerhinderungsStrategieFrankensteinSuperLangesMonsterWortOverflowVerhinderungsStrategieFrankensteinSuperLangesMonsterWortOverflowVerhinderungsStrategieFrankensteinSuperLangesMonsterWortOverflowVerhinderungsStrategieFrankensteinSuperLangesMonsterWortOverflowVerhinderungsStrategie'
+          }
+        ]
+      }
+    ]
+  }
+}} />
+```
+
 #### Actions
 
 The buttons / icons below the comment. The reply button is disabled if the discussion doesn't allow the user to reply at the current time (this information is stored in the DiscussionContext).
