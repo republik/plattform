@@ -755,6 +755,18 @@ ReactDOM.render(
                 t
               },
               src: require('./components/Chart/Maps.docs.md')
+            },
+            {
+              path: '/charts/hemicycle',
+              title: 'Hemicycle',
+              imports: {
+                ...require('./components/Typography'),
+                ChartTitle: require('./components/Chart').ChartTitle,
+                ChartLead: require('./components/Chart').ChartLead,
+                CsvChart: require('./components/Chart/Csv'),
+                t
+              },
+              src: require('./components/Chart/Hemicycle.docs.md')
             }
           ]
         },

@@ -4,11 +4,7 @@ import { TableSpecimen, markdown } from '@catalog/core'
 import { ReactCharts } from './'
 import { descending, ascending } from 'd3-array'
 
-import {
-  sortPropType,
-  groupBy,
-  deduplicate
-} from './utils'
+import { sortPropType, groupBy, deduplicate } from './utils'
 
 import { propTypes as barPropTypes } from './Bars'
 import { propTypes as timeBarPropTypes } from './TimeBars'
@@ -28,37 +24,44 @@ const baseChartPropTypes = {
   TimeBar: timeBarPropTypes,
   Line: linePropTypes,
   ScatterPlot: scatterPlotPropTypes,
-  GenericMap: genericMapPropTypes
+  GenericMap: genericMapPropTypes,
 }
 
 const charts = Object.keys(ReactCharts)
 
-const props = Object.keys(baseChartPropTypes).reduce(
-  (all, chart) => {
-    const propTypes = baseChartPropTypes[chart]
-    const props = Object.keys(propTypes).map(key => ({
-      key,
-      type: propTypeNames.get(propTypes[key]),
-      chart
-    }))
+const props = Object.keys(baseChartPropTypes).reduce((all, chart) => {
+  const propTypes = baseChartPropTypes[chart]
+  const props = Object.keys(propTypes).map(key => ({
+    key,
+    type: propTypeNames.get(propTypes[key]),
+    chart,
+  }))
 
-    return all.concat(props)
-  },
-  []
-)
+  return all.concat(props)
+}, [])
 
 const IGNORE_KEYS = [
   // for react usage only
-  't', 'children', 'values', 'width', 'colorRanges',
+  't',
+  'children',
+  'values',
+  'width',
+  'colorRanges',
   // should not really be used
-  'mini', 'description', 'filter',
+  'mini',
+  'description',
+  'filter',
   // functions
-  'getProjection'
+  'getProjection',
 ]
 
 const propByName = groupBy(props, d => d.key)
   .filter(group => IGNORE_KEYS.indexOf(group.key) === -1)
-  .sort((a, b) => descending(a.values.length, b.values.length) || ascending(a.key, b.key))
+  .sort(
+    (a, b) =>
+      descending(a.values.length, b.values.length) ||
+      ascending(a.key, b.key),
+  )
 
 const examples = {
   color: '`"category"`',
@@ -67,44 +70,55 @@ const examples = {
   numberFormat: '`".2%"`',
   xTicks: '`[2005, 2010, 2015]`',
   colorSort: '`"none"`',
-  category: '`"datum.country === \'CH\' ? \'CH\' : \'andere\'"`',
+  category: "`\"datum.country === 'CH' ? 'CH' : 'andere'\"`",
   column: '`"category"`',
   columnSort: '`"none"`',
-  columnFilter: '`[{"title": "CH", "test": "datum.country === \'CH\'"}, {"title": "Andere", "test": "datum.country !== \'CH\'"}]`',
+  columnFilter:
+    '`[{"title": "CH", "test": "datum.country === \'CH\'"}, {"title": "Andere", "test": "datum.country !== \'CH\'"}]`',
   columns: '`3`',
   band: '`confidence95`',
   domain: '`[2005, 2015]`',
   height: '`300`',
-  sizeRangeMax: '`20`'
+  sizeRangeMax: '`20`',
 }
 const comments = {
   color: 'column name',
   colorSort: 'see `"sort"`',
   columnSort: '`see `"sort"`',
   sort: '`"none"`, `"ascending"`, `"descending"`',
-  colorRange: 'or presets: `"discrete"`, `"sequential3"`, `"diverging1"`, `"diverging1n"`, `"diverging2"`, `"diverging3"`',
-  colorLegend: 'force (`true`) or suppress (`false`) color legend, auto if not set',
-  timeParse: 'see [d3-time-format](https://github.com/d3/d3-time-format#locale_format)',
-  timeFormat: 'see [d3-time-format](https://github.com/d3/d3-time-format#locale_format)',
-  numberFormat: 'see [d3-format](https://github.com/d3/d3-format#locale_format)',
+  colorRange:
+    'or presets: `"discrete"`, `"sequential3"`, `"diverging1"`, `"diverging1n"`, `"diverging2"`, `"diverging3"`',
+  colorLegend:
+    'force (`true`) or suppress (`false`) color legend, auto if not set',
+  timeParse:
+    'see [d3-time-format](https://github.com/d3/d3-time-format#locale_format)',
+  timeFormat:
+    'see [d3-time-format](https://github.com/d3/d3-time-format#locale_format)',
+  numberFormat:
+    'see [d3-format](https://github.com/d3/d3-format#locale_format)',
   xTicks: 'same format as your x data',
   category: 'js expression, data row available as `datum`',
   columns: 'number of columns, normally 1 up to 4',
   domain: 'same format as your data',
   height: 'higher than 320 is usually bad on mobile',
-  sizeRangeMax: 'max radius plotted'
+  sizeRangeMax: 'max radius plotted',
 }
 const manualType = {
   colorRange: 'array, string',
-  xTicks: 'array'
+  xTicks: 'array',
 }
 
 const options = propByName.map(({ key, values }) => ({
   Name: `\`"${key}":\``,
   Example: examples[key],
-  Type: values.map(d => d.type).filter(Boolean).filter(deduplicate).join(', ') || manualType[key],
+  Type:
+    values
+      .map(d => d.type)
+      .filter(Boolean)
+      .filter(deduplicate)
+      .join(', ') || manualType[key],
   Charts: values.map(d => d.chart).join(', '),
-  Comment: comments[key]
+  Comment: comments[key],
 }))
 
 if (process.env.NODE_ENV === 'production') {
@@ -112,8 +126,6 @@ if (process.env.NODE_ENV === 'production') {
     delete option.Type
   })
 }
-
-
 
 const chartPages = charts.map(key => {
   const { base, wrap, defaultProps } = ReactCharts[key]
@@ -125,9 +137,9 @@ const chartPages = charts.map(key => {
     label = `Wraps ${wrap} with additional default props:`
   }
 
-
-  const keys = Object.keys(defaultProps)
-    .filter(key => IGNORE_KEYS.indexOf(key) === -1)
+  const keys = Object.keys(defaultProps).filter(
+    key => IGNORE_KEYS.indexOf(key) === -1,
+  )
 
   if (!keys.length) {
     return null
@@ -137,10 +149,14 @@ const chartPages = charts.map(key => {
 
   ${label}
 
-  ${<TableSpecimen rows={keys.map(key => ({
-    Name: key,
-    Value: `\`${JSON.stringify(defaultProps[key])}\``
-  }))} />}
+  ${(
+    <TableSpecimen
+      rows={keys.map(key => ({
+        Name: key,
+        Value: `\`${JSON.stringify(defaultProps[key])}\``,
+      }))}
+    />
+  )}
 
   `
 })
@@ -152,8 +168,18 @@ ${<TableSpecimen rows={options} />}
 
 `
 
-export default () => <Fragment>
-  {allProps}
-  {markdown`## Default Props`}
-  {chartPages}
-</Fragment>
+export default () => (
+  <Fragment>
+    {allProps}
+    {markdown`
+## Default Props
+    `}
+    {chartPages}
+    {markdown`
+### Credits
+
+- [Interactive Things: «Gut leben in Deutschland»](https://github.com/gut-leben-in-deutschland/bericht)
+- [SRF Data: Swiss party colors](https://github.com/srfdata/swiss-party-colors)
+    `}
+  </Fragment>
+)

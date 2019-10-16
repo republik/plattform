@@ -8,6 +8,7 @@ import TimeBar from './TimeBars'
 import { Line, Slope } from './Lines'
 import ScatterPlot from './ScatterPlots'
 import { GenericMap, ProjectedMap, SwissMap } from './Maps'
+import Hemicycle from './Hemicycle'
 
 import colors from '../../theme/colors'
 
@@ -15,6 +16,7 @@ import { mUp } from '../../theme/mediaQueries'
 import { sansSerifMedium19, sansSerifMedium22, sansSerifRegular16, sansSerifRegular19 } from '../Typography/styles'
 import { fontRule } from '../Typography/Interaction'
 import { convertStyleToRem, pxToRem } from '../Typography/utils'
+import { swissPartyColors } from './colorMaps'
 
 export const ReactCharts = {
   Bar,
@@ -25,7 +27,8 @@ export const ReactCharts = {
   ScatterPlot,
   GenericMap,
   ProjectedMap,
-  SwissMap
+  SwissMap,
+  Hemicycle,
 }
 
 const createRanges = ({neutral, sequential, sequential3, opposite3, discrete}) => {
@@ -42,6 +45,8 @@ const createRanges = ({neutral, sequential, sequential3, opposite3, discrete}) =
 }
 
 const colorRanges = createRanges(colors)
+
+const colorMaps = { swissPartyColors }
 
 const styles = {
   h: css({
@@ -103,6 +108,7 @@ class Chart extends Component {
           <ReactChart {...config}
             tLabel={tLabel}
             colorRanges={colorRanges}
+            colorMaps={colorMaps}
             width={width}
             values={this.props.values}
             description={config.description} />
