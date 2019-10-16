@@ -72,7 +72,8 @@
 <Button 
  href='https://reactjs.org/' 
  title="You don't know what's gonna hit you"
- block external>
+ target='_blank'
+ block>
   Open link in a new tab
 </Button>
 ```

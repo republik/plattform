@@ -115,7 +115,7 @@ const bigStyle = css({
 
 const Button = ({
   onClick, type, children, primary, dimmed, black, white,
-  big, block, style, disabled, href, title, external, simulate: sim
+  big, block, style, disabled, href, title, target, simulate: sim
 }) => {
   const simulations = sim ? simulate(sim) : {}
   const styles = merge(
@@ -128,15 +128,20 @@ const Button = ({
     big && bigStyle
   )
 
+  const Element = href ? 'a' : 'button'
+
   return (
-    href ?
-      (<a href={href} title={title} target={external ? '_blank' : ''} {...styles}>{children}</a>) :
-      (<button onClick={onClick} type={type} style={style} disabled={disabled}
-               {...styles}
-               {...simulations}>
-        {children}
-      </button>)
-  )
+    <Element onClick={onClick}
+             href={href}
+             title={title}
+             type={type}
+             style={style}
+             disabled={disabled}
+             target={target}
+             {...styles}
+             {...simulations}>
+      {children}
+    </Element>)
 }
 
 export default Button
