@@ -4,6 +4,8 @@ import { matchBlock } from '../../utils'
 import MarkdownSerializer from 'slate-mdast-serializer'
 // import { createStaticKeyHandler } from '../../utils/keyHandlers'
 
+import createUi from './ui'
+
 export default ({ rule, subModules, TYPE }) => {
   const inlineSerializer = new MarkdownSerializer({
     rules: subModules.reduce(
@@ -29,14 +31,14 @@ export default ({ rule, subModules, TYPE }) => {
         type: TYPE,
         data: {
           ...node.data,
-          url: link.url,
+          href: link.url,
           title: link.title
         },
         nodes: inlineSerializer.fromMdast(link.children || [], 0, node, rest)
       }
     },
     toMdast: (object, index, parent, rest) => {
-      const { url, title, ...data } = object.data
+      const { href, title, ...data } = object.data
 
       return {
         type: 'zone',
@@ -48,7 +50,7 @@ export default ({ rule, subModules, TYPE }) => {
             children: [
               {
                 type: 'link',
-                url,
+                url: href,
                 title,
                 children: inlineSerializer.toMdast(
                   object.nodes,
@@ -81,16 +83,14 @@ export default ({ rule, subModules, TYPE }) => {
       serializer
     },
     changes: {},
-    ui: {
-
-    },
+    ui: createUi({ TYPE }),
     plugins: [
       {
         renderNode ({ node, children, attributes }) {
           if (!schemaRule.match(node)) return
 
           return (
-            <Component attributes={attributes}>
+            <Component {...node.data.toJS()} attributes={attributes}>
               {children}
             </Component>
           )

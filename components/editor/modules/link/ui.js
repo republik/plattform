@@ -1,5 +1,5 @@
 import { Text } from 'slate'
-import React, { Component} from 'react'
+import React, { Component } from 'react'
 import { graphql } from 'react-apollo'
 import { Label, Field, Autocomplete } from '@project-r/styleguide'
 import LinkIcon from 'react-icons/lib/fa/chain'
@@ -16,7 +16,7 @@ import {
   buttonStyles
 } from '../../utils'
 
-export const getUsers = gql`
+const getUsers = gql`
 query getUsers($search: String!) {
   users(search: $search) {
     firstName
@@ -52,21 +52,21 @@ const SearchUserForm = withT(class extends Component {
 
   filterChangeHandler (value) {
     this.setState(
-        state => ({
-          ...this.state,
-          filter: value
-        })
-      )
+      state => ({
+        ...this.state,
+        filter: value
+      })
+    )
   }
 
   changeHandler (value) {
     this.setState(
-        state => ({
-          filter: null,
-          value: null
-        }),
-        () => this.props.onChange(value)
-      )
+      state => ({
+        filter: null,
+        value: null
+      }),
+      () => this.props.onChange(value)
+    )
   }
 
   render () {
@@ -79,17 +79,28 @@ const SearchUserForm = withT(class extends Component {
         items={[]}
         onChange={this.changeHandler}
         onFilterChange={this.filterChangeHandler}
-        />
+      />
     )
   }
 })
 
-const Form = options => ({ value, onChange, t }) => {
+const createForm = options => ({ value, onChange }) => {
   const { TYPE } = options
 
   if (!value.inlines.some(matchInline(TYPE))) {
     return null
   }
+  return <div>
+    <Label>Links</Label>
+    <LinkForm
+      TYPE={TYPE}
+      nodes={value.inlines.filter(matchInline(TYPE))}
+      value={value}
+      onChange={onChange} />
+  </div>
+}
+
+export const LinkForm = withT(({ kind = 'inline', TYPE, nodes, value, onChange, t }) => {
   const handlerFactory = createOnFieldChange(onChange, value)
   const authorChange = (onChange, value, node) => author => {
     onChange(
@@ -97,7 +108,7 @@ const Form = options => ({ value, onChange, t }) => {
         node.key,
         {
           type: TYPE,
-          kind: 'inline',
+          kind,
           data: node.data.merge({
             title: `${author.value.firstName} ${author.value.lastName}`,
             href: `/~${author.value.id}`
@@ -122,43 +133,37 @@ const Form = options => ({ value, onChange, t }) => {
       )
     )
   }
-  return <div>
-    <Label>Links</Label>
-    {
-      value.inlines
-        .filter(matchInline(TYPE))
-        .map((node, i) => {
-          const onInputChange = handlerFactory(node)
-          return (
-            <UIForm key={`link-form-${i}`}>
-              <Field
-                label={t(`metaData/field/href`, undefined, 'href')}
-                value={node.data.get('href')}
-                onChange={onInputChange('href')}
-              />
-              <AutoSlugLinkInfo
-                value={node.data.get('href')}
-                label={t('metaData/field/href/document')} />
-              <Field
-                label={t(`metaData/field/title`, undefined, 'title')}
-                value={node.data.get('title')}
-                onChange={onInputChange('title')}
-              />
-              <SearchUserForm onChange={authorChange(onChange, value, node)} />
-              <RepoSearch
-                label={t('link/repo/search')}
-                onChange={repoChange(onChange, value, node)}
-               />
-            </UIForm>
-          )
-        })
-    }
-  </div>
-}
 
-export const LinkForm = options => withT(Form(options))
+  return <>
+    {nodes.map((node, i) => {
+      const onInputChange = handlerFactory(node)
+      return (
+        <UIForm key={`link-form-${i}`}>
+          <Field
+            label={t(`metaData/field/href`, undefined, 'href')}
+            value={node.data.get('href')}
+            onChange={onInputChange('href')}
+          />
+          <AutoSlugLinkInfo
+            value={node.data.get('href')}
+            label={t('metaData/field/href/document')} />
+          <Field
+            label={t(`metaData/field/title`, undefined, 'title')}
+            value={node.data.get('title')}
+            onChange={onInputChange('title')}
+          />
+          <SearchUserForm onChange={authorChange(onChange, value, node)} />
+          <RepoSearch
+            label={t('link/repo/search')}
+            onChange={repoChange(onChange, value, node)}
+          />
+        </UIForm>
+      )
+    })}
+  </>
+})
 
-export const LinkButton = options =>
+const createLink = options =>
   createInlineButton({
     type: options.TYPE,
     parentTypes: options.parentTypes
@@ -170,14 +175,14 @@ export const LinkButton = options =>
         data-active={active}
         data-disabled={disabled}
         data-visible={visible}
-        >
+      >
         <LinkIcon />
       </span>
   )
 
 export default options => {
   return {
-    forms: [LinkForm(options)],
-    textFormatButtons: [LinkButton(options)]
+    forms: [createForm(options)],
+    textFormatButtons: [createLink(options)]
   }
 }
