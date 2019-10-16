@@ -35,7 +35,8 @@ const createNewsletterSchema = ({
   Caption,
   Byline,
   Sub,
-  Sup
+  Sup,
+  Button
 } = {}) => {
   const globalInlines = [
     {
@@ -249,6 +250,32 @@ const createNewsletterSchema = ({
                   depth: 2,
                   formatButtonText: 'Zwischentitel'
                 }
+              },
+              {
+                matchMdast: matchZone('BUTTON'),
+                component: Button,
+                props: (node, index, parent, { ancestors }) => {
+                  const link = (
+                    node.children[0] &&
+                    node.children[0].children[0]
+                  ) || {}
+
+                  return {
+                    title: link.title,
+                    href: link.url,
+                    primary: node.data.primary
+                  }
+                },
+                rules: globalInlines.concat({
+                  matchMdast: matchParagraph,
+                  component: ({ children }) => children,
+                  rules: [{
+                    matchMdast: matchType('link'),
+                    component: ({ children }) => children,
+                    rules: globalInlines
+                  }]
+                }),
+                editorModule: 'button'
               },
               {
                 matchMdast: matchZone('QUOTE'),

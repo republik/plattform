@@ -2,6 +2,7 @@ import createNewsletterSchema from '../schema'
 
 import Container from './Container'
 import StyledFigure from './Figure'
+import Button from './Button'
 
 import Center from '../../../components/Center'
 import {
@@ -11,6 +12,7 @@ import {
   FigureByline
 } from '../../../components/Figure'
 import { Sub, Sup } from '../../../components/Typography'
+
 
 const createSchema = ({ ...args } = {}) => {
   return createNewsletterSchema({
@@ -24,6 +26,7 @@ const createSchema = ({ ...args } = {}) => {
     Byline: FigureByline,
     Sub,
     Sup,
+    Button: Button,
     ...args
   })
 }

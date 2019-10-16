@@ -5,6 +5,7 @@ import Cover, { CoverImage } from './Cover'
 import Center from './Center'
 import Figure, { Image, Caption, Byline } from './Figure'
 import { Sub, Sup } from './SubSup'
+import { Button } from './Button'
 
 const createSchema = ({ ...args } = {}) => {
   return createNewsletterSchema({
@@ -18,6 +19,7 @@ const createSchema = ({ ...args } = {}) => {
     Byline,
     Sub,
     Sup,
+    Button,
     ...args
   })
 }

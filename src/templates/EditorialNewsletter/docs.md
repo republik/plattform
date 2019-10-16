@@ -59,6 +59,22 @@ Thomas Jefferson
 
 <hr /></section>
 
+<section><h6>BUTTON</h6>
+
+\`\`\`
+{"primary": true}
+\`\`\`
+
+[Call to action](#nox-an-der-langstrasse "Zur Sektion springen")
+
+<hr /></section>
+
+<section><h6>BUTTON</h6>
+
+[No thanks!](/devnull "Ins nichts")
+
+<hr /></section>
+
 Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat.
 
 <hr /></section>
@@ -138,6 +154,22 @@ Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming 
 Ich bin sicher, eine kleine Rebellion hie und da ist eine gute Sache; sie ist in der Politik so notwendig, um die Dinge zu klären, wie ein Sturm für das Wetter.
 
 Thomas Jefferson
+
+<hr /></section>
+
+<section><h6>BUTTON</h6>
+
+\`\`\`
+{"primary": true}
+\`\`\`
+
+[Call to action](#nox-an-der-langstrasse "Zur Sektion springen")
+
+<hr /></section>
+
+<section><h6>BUTTON</h6>
+
+[No thanks!](/devnull "Ins nichts")
 
 <hr /></section>
 
