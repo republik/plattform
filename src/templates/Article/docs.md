@@ -43,8 +43,6 @@ Von [Franz Kafka](<>) (Text) und [Laurent Burst](<>) (Bilder), 13. Juli 2017
 
 Und es war ihnen wie eine **Bestätigung** ihrer _neuen Träume_ und _guten Absichten_, als am **Ziele** ihrer Fahrt die Tochter als erste sich erhob und ihren jungen Körper dehnte. «Es ist ein eigentümlicher Apparat», sagte der Offizier zu dem Forschungsreisenden und überblickte mit einem gewissermaßen bewundernden Blick den ihm doch wohlbekannten Apparat.
 
-<span data-button="primary,block" data-primary="1">[NO<sub>x</sub> tötet](#nox-an-der-langstrasse "Zur Sektion springen")</span><span data-button="1">[Ignorieren](/devnull "Ins nichts")</span>
-
 <section><h6>BUTTON</h6>
 
 \`\`\`
