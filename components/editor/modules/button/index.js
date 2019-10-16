@@ -2,7 +2,7 @@ import React from 'react'
 
 import { matchBlock } from '../../utils'
 import MarkdownSerializer from 'slate-mdast-serializer'
-// import { createStaticKeyHandler } from '../../utils/keyHandlers'
+import { createStaticKeyHandler } from '../../utils/keyHandlers'
 
 import createUi from './ui'
 
@@ -74,7 +74,10 @@ export default ({ rule, subModules, TYPE }) => {
 
   const Component = rule.component
 
-  // const staticHandler = isStatic && createStaticKeyHandler({ TYPE, rule: rule || {} })
+  const staticHandle = createStaticKeyHandler({
+    TYPE: TYPE,
+    rule: { editorOptions: {} }
+  })
 
   return {
     TYPE,
@@ -95,9 +98,12 @@ export default ({ rule, subModules, TYPE }) => {
             </Component>
           )
         },
-        // onKeyDown (...args) {
-        //
-        // },
+        onKeyDown: (...args) => {
+          const [ event ] = args
+
+          const isEnter = event.key === 'Enter'
+          if (isEnter) return staticHandle(...args)
+        },
         schema: {
           blocks: {
             [TYPE]: {
