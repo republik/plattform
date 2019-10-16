@@ -1013,7 +1013,11 @@ const createSchema = ({
               },
               {
                 matchMdast: matchZone('BUTTON'),
-                component: Button,
+                component: ({ children, ...props }) =>
+                  <Button {...props} style={{
+                    marginRight: 10,
+                    marginBottom: 10
+                  }}>{children}</Button>,
                 props: (node, index, parent, { ancestors }) => {
                   const link = (
                     node.children[0] &&
@@ -1023,11 +1027,7 @@ const createSchema = ({
                   return {
                     title: link.title,
                     href: link.url,
-                    primary: node.data.primary,
-                    style: {
-                      marginRight: 10,
-                      marginBottom: 10
-                    }
+                    primary: node.data.primary
                   }
                 },
                 rules: globalInlines.concat({

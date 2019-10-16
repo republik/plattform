@@ -115,7 +115,7 @@ const bigStyle = css({
 
 const Button = ({
   onClick, type, children, primary, dimmed, black, white,
-  big, block, style, disabled, href, title, target, simulate: sim
+  big, block, style, disabled, href, title, target, simulate: sim, attributes
 }) => {
   const simulations = sim ? simulate(sim) : {}
   const styles = merge(
@@ -138,6 +138,7 @@ const Button = ({
              style={style}
              disabled={disabled}
              target={target}
+             {...attributes}
              {...styles}
              {...simulations}>
       {children}
