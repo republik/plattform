@@ -1,7 +1,7 @@
 import React from 'react'
-import {css, merge, simulate} from 'glamor'
+import { css, merge, simulate } from 'glamor'
 import colors from '../../theme/colors'
-import {fontFamilies} from '../../theme/fonts'
+import { fontFamilies } from '../../theme/fonts'
 import { pxToRem } from '../Typography/utils'
 
 export const plainButtonRule = css({
@@ -14,12 +14,14 @@ export const plainButtonRule = css({
 })
 
 const buttonStyle = css(plainButtonRule, {
-  verticalAlign: 'bottom',
+  display: 'inline-block',
+  verticalAlign: 'middle',
   padding: '10px 20px 10px 20px',
   minWidth: 160,
   textAlign: 'center',
   textDecoration: 'none',
   fontSize: pxToRem(22),
+  lineHeight: 1.5,
   height: pxToRem(60),
   boxSizing: 'border-box',
   backgroundColor: '#fff',
@@ -111,7 +113,10 @@ const bigStyle = css({
   padding: '10px 30px 10px 30px'
 })
 
-const Button = ({onClick, type, children, primary, dimmed, black, white, big, block, style, disabled, simulate: sim}) => {
+const Button = ({
+  onClick, type, children, primary, dimmed, black, white,
+  big, block, style, disabled, href, title, external, simulate: sim
+}) => {
   const simulations = sim ? simulate(sim) : {}
   const styles = merge(
     buttonStyle,
@@ -124,11 +129,13 @@ const Button = ({onClick, type, children, primary, dimmed, black, white, big, bl
   )
 
   return (
-    <button onClick={onClick} type={type} style={style} disabled={disabled}
-      {...styles}
-      {...simulations}>
-      {children}
-    </button>
+    href ?
+      (<a href={href} title={title} target={external ? '_blank' : ''} {...styles}>{children}</a>) :
+      (<button onClick={onClick} type={type} style={style} disabled={disabled}
+               {...styles}
+               {...simulations}>
+        {children}
+      </button>)
   )
 }
 

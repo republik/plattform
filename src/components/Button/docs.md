@@ -50,6 +50,33 @@
 </Button>
 ```
 
+## Button Link
+
+```react|span-3
+<Button 
+ href='https://www.republik.ch/feed' 
+ primary>
+  zur Feed
+</Button>
+```
+
+```react|span-3
+<Button 
+ href='https://www.republik.ch/feed' 
+ title='Republik feed anzeigen'>
+  zur Feed
+</Button>
+```
+
+```react
+<Button 
+ href='https://reactjs.org/' 
+ title="You don't know what's gonna hit you"
+ block external>
+  Open link in a new tab
+</Button>
+```
+
 ##  Dimmed
 
 Just like the secondary button, except that the default state looks dimmed liked the disabled state.
