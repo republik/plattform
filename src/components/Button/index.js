@@ -113,11 +113,15 @@ const bigStyle = css({
   padding: '10px 30px 10px 30px'
 })
 
-const spacedOutStyle = css({
-  margin: '0 10px 10px 0',
+const marginBottomStyle = css({
+  marginBottom: '10px'
+})
+
+const marginLeftStyle = css({
+  marginLeft: '10px',
   ':first-of-type': {
     marginLeft: 0
-  },
+  }
 })
 
 const Button = ({
@@ -133,7 +137,8 @@ const Button = ({
     white && whiteStyle,
     block && blockStyle,
     big && bigStyle,
-    spacedOut && !block && spacedOutStyle
+    spacedOut && marginBottomStyle,
+    spacedOut && !block && marginLeftStyle
   )
 
   const Element = href ? 'a' : 'button'

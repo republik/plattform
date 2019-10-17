@@ -62,7 +62,7 @@ Thomas Jefferson
 <section><h6>BUTTON</h6>
 
 \`\`\`
-{"primary": true}
+{"primary": true, "block": true}
 \`\`\`
 
 [Call to action](#nox-an-der-langstrasse "Zur Sektion springen")
@@ -70,6 +70,10 @@ Thomas Jefferson
 <hr /></section>
 
 <section><h6>BUTTON</h6>
+
+\`\`\`
+{"block": true}
+\`\`\`
 
 [No thanks!](/devnull "Ins nichts")
 
@@ -160,7 +164,7 @@ Thomas Jefferson
 <section><h6>BUTTON</h6>
 
 \`\`\`
-{"primary": true}
+{"primary": true, "block": true}
 \`\`\`
 
 [Call to action](#nox-an-der-langstrasse "Zur Sektion springen")
@@ -168,6 +172,10 @@ Thomas Jefferson
 <hr /></section>
 
 <section><h6>BUTTON</h6>
+
+\`\`\`
+{"block": true}
+\`\`\`
 
 [No thanks!](/devnull "Ins nichts")
 

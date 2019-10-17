@@ -1,6 +1,6 @@
 import React from 'react'
 
-export const Button = ({ href, title, primary, children, attributes }) => {
+export const Button = ({ href, title, primary, block, children, attributes }) => {
   const styles = {
     fontSize: '20px',
     fontFamily: 'Helvetica, Arial, sans-serif',
@@ -30,6 +30,7 @@ export const Button = ({ href, title, primary, children, attributes }) => {
         <tr>
           <td>
             <table
+              width={block && "100%"}
               border="0"
               cellSpacing="0"
               cellPadding="0"
@@ -37,14 +38,15 @@ export const Button = ({ href, title, primary, children, attributes }) => {
               <tbody>
               <tr>
                 <td
+                  width={block && "100%"}
                   align="center"
                   bgcolor={primary ? '#3CAD00' : '#4B6359'}>
                   <a
                     href={href}
                     title={title}
                     {...attributes}
-                    style={{ ...styles, ...primary ? primaryStyles : secondaryStyles }}>{
-                    children}
+                    style={{ ...styles, ...primary ? primaryStyles : secondaryStyles, ...block && {width: "100%"}  }}>
+                    {children}
                   </a>
                 </td>
               </tr>

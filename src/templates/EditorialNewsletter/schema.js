@@ -261,9 +261,9 @@ const createNewsletterSchema = ({
                   ) || {}
 
                   return {
+                    ...node.data,
                     title: link.title,
-                    href: link.url,
-                    primary: node.data.primary
+                    href: link.url
                   }
                 },
                 rules: globalInlines.concat({
