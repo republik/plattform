@@ -44,6 +44,13 @@ const processImageUrlsInContent = (mdast, fn) => {
           node.data[key] = fn(node.data[key])
         }
       }
+      if (typeof node.data.src === 'object') {
+        for (let key of embedImageKeys) {
+          if (node.data.src[key]) {
+            node.data.src[key] = fn(node.data.src[key])
+          }
+        }
+      }
     }
   })
 }
