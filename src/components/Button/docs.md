@@ -56,7 +56,7 @@
 <Button 
  href='https://www.republik.ch/feed' 
  primary>
-  zur Feed
+  Zum Feed
 </Button>
 ```
 
@@ -64,7 +64,7 @@
 <Button 
  href='https://www.republik.ch/feed' 
  title='Republik feed anzeigen'>
-  zur Feed
+  Zum Feed
 </Button>
 ```
 
