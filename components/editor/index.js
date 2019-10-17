@@ -45,6 +45,7 @@ import createChartModule from './modules/chart'
 import createChartCanvasModule from './modules/chart/canvas'
 import createDynamicComponentModule from './modules/dynamiccomponent'
 import createLiveTeaserModule from './modules/liveteaser'
+import createButtonModule from './modules/button'
 
 const moduleCreators = {
   embedVideo: createEmbedVideoModule,
@@ -87,7 +88,8 @@ const moduleCreators = {
   chart: createChartModule,
   chartCanvas: createChartCanvasModule,
   dynamiccomponent: createDynamicComponentModule,
-  liveteaser: createLiveTeaserModule
+  liveteaser: createLiveTeaserModule,
+  button: createButtonModule
 }
 const initModule = (rule, context = {}) => {
   const { editorModule, editorOptions = {} } = rule
