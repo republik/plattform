@@ -34,7 +34,7 @@ export const Button = ({ href, title, primary, block, children, attributes }) =>
         <tr>
           <td>
             <table
-              width={block && "100%"}
+              width={block ? "100%" : undefined}
               border="0"
               cellSpacing="0"
               cellPadding="0"
@@ -42,7 +42,7 @@ export const Button = ({ href, title, primary, block, children, attributes }) =>
               <tbody>
               <tr>
                 <td
-                  width={block && "100%"}
+                  width={block ? "100%" : undefined}
                   align="center"
                   bgcolor={primary ? colors.primary : "#ffffff"}>
                   <a
