@@ -1,9 +1,11 @@
 import React from 'react'
+import colors from '../../../theme/colors'
+import { fontFamilies } from '../../../theme/fonts'
 
 export const Button = ({ href, title, primary, block, children, attributes }) => {
   const styles = {
     fontSize: '20px',
-    fontFamily: 'Helvetica, Arial, sans-serif',
+    fontFamily: fontFamilies.sansSerifRegular,
     textDecoration: 'none',
     borderRadius: 0,
     padding: '15px 30px 15px 30px',
@@ -15,9 +17,9 @@ export const Button = ({ href, title, primary, block, children, attributes }) =>
   }
 
   const secondaryStyles = {
-    color: '#4B6359',
+    color: colors.secondary,
     backgroundColor: '#ffffff',
-    border: '1px solid #4B6359',
+    border: `1px solid ${colors.secondary}`,
     padding: '14px 30px 14px 30px'
   }
 
@@ -40,7 +42,7 @@ export const Button = ({ href, title, primary, block, children, attributes }) =>
                 <td
                   width={block && "100%"}
                   align="center"
-                  bgcolor={primary ? '#3CAD00' : '#4B6359'}>
+                  bgcolor={primary ? colors.primary : "#ffffff"}>
                   <a
                     href={href}
                     title={title}
