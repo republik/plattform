@@ -27,7 +27,7 @@ export const Button = ({ href, title, primary, block, children, attributes }) =>
       border="0"
       cellSpacing="0"
       cellPadding="0"
-      style={{marginBottom: 10}}>
+      style={{borderBottom: '10px solid transparent'}}>
       <tbody>
         <tr>
           <td>
