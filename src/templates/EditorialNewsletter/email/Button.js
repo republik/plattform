@@ -19,7 +19,6 @@ export const Button = ({ href, title, primary, block, children, attributes }) =>
 
   const tableStylesSecondary = {
     backgroundColor: '#ffffff',
-    border: `1px solid ${colors.secondary}`
   }
 
   return (<>
@@ -33,10 +32,10 @@ export const Button = ({ href, title, primary, block, children, attributes }) =>
           <td>
             <table
               width={block ? '100%' : undefined}
-              border="0"
+              border={primary? 0 : `1px solid ${colors.secondary}`}
               cellSpacing="0"
               cellPadding={primary ? '18' : '17'}
-              style={primary ? tableStylesPrimary : tableStylesSecondary}>
+              style={{...primary ? tableStylesPrimary : tableStylesSecondary, borderCollapse: 'collapse'}}>
               <tbody>
               <tr>
                 <td
