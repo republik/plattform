@@ -22,7 +22,7 @@ const buttonStyle = css(plainButtonRule, {
   textDecoration: 'none',
   fontSize: pxToRem(22),
   lineHeight: 1.5,
-  height: pxToRem(60),
+  minHeight: pxToRem(60),
   boxSizing: 'border-box',
   backgroundColor: '#fff',
   fontFamily: fontFamilies.sansSerifRegular,
