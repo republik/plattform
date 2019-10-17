@@ -25,7 +25,7 @@ PgDb.connect().then(async pgdb => {
   await Promise.map(
     files.filter(file => !file.match(/(Icon\r$)/g)),
     async file => {
-      console.log(file)
+      // console.log(file)
       const portrait = await fs.readFile(file)
       const cardUserId = file.match(/\/(\d+)\..+$/, '$1')[1]
       const userId = await pgdb.public.queryOneField(`
@@ -33,6 +33,7 @@ PgDb.connect().then(async pgdb => {
         FROM cards c
         JOIN
           users u ON u.id = c."userId"
+          -- AND u.verified = FALSE
           AND "portraitUrl" IS NULL
         WHERE
           c.payload->'meta'->>'userId' = :cardUserId
@@ -42,6 +43,7 @@ PgDb.connect().then(async pgdb => {
         try {
           const portraitUrl = await Portrait.upload(portrait)
           await pgdb.public.users.update({ id: userId }, { portraitUrl, updatedAt: new Date() })
+          console.log(file, userId, portraitUrl)
         } catch (e) {
           console.warn(e)
         }
