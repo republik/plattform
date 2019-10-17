@@ -16,40 +16,43 @@ export const Button = ({ href, title, primary, children, attributes }) => {
 
   const secondaryStyles = {
     color: '#4B6359',
-    backgroundColor: '#ffffff'
+    backgroundColor: '#ffffff',
+    border: '1px solid #4B6359',
+    padding: '14px 30px 14px 30px'
   }
 
-  return (<td
-    align="center"
-    bgcolor={primary ? '#3CAD00' : '#4B6359'}
-    borderSpacing="5px">
-    <a
-      href={href}
-      title={title}
-      {...attributes}
-      style={{ ...styles, ...primary ? primaryStyles : secondaryStyles }}>{
-      children}
-    </a>
-  </td>)
+  return (<table
+      width="100%"
+      border="0"
+      cellSpacing="0"
+      cellPadding="0">
+      <tbody>
+        <tr>
+          <td>
+            <table
+              border="0"
+              cellSpacing="0"
+              cellPadding="0"
+              style={{borderSpacing: "0 5px", borderCollapse: "separate"}}>
+              <tbody>
+              <tr>
+                <td
+                  align="center"
+                  bgcolor={primary ? '#3CAD00' : '#4B6359'}>
+                  <a
+                    href={href}
+                    title={title}
+                    {...attributes}
+                    style={{ ...styles, ...primary ? primaryStyles : secondaryStyles }}>{
+                    children}
+                  </a>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  )
 }
-
-export default ({ children }) => (
-  <table
-    width="100%"
-    border="0"
-    cellSpacing="0"
-    cellPadding="0">
-    <tr>
-      <td>
-        <table
-          border="0"
-          cellSpacing="10px"
-          cellPadding="0">
-          <tr>
-            {children}
-          </tr>
-        </table>
-      </td>
-    </tr>
-  </table>
-)
