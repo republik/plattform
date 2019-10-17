@@ -85,20 +85,6 @@ const sendRecipientFollowup =
       }
     )
 
-module.exports = {
-  // Invitation
-  sendRecipientInvitation,
-
-  // Onboarding
-  sendRecipientOnboarding,
-
-  // Offboarding when access expired
-  sendRecipientExpired,
-
-  // Followup after access expired
-  sendRecipientFollowup
-}
-
 const sendMail = async (
   to,
   party,
@@ -256,4 +242,23 @@ const getConfigEmails = (party, template, campaign) => {
   }
 
   return config.emails.find(email => email.party === party && email.template === template)
+}
+
+module.exports = {
+  // Invitation
+  sendRecipientInvitation,
+
+  // Onboarding
+  sendRecipientOnboarding,
+
+  // Offboarding when access expired
+  sendRecipientExpired,
+
+  // Followup after access expired
+  sendRecipientFollowup,
+
+  getTranslationVars,
+
+  // Get global merge variables
+  getGlobalMergeVars
 }
