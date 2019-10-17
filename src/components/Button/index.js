@@ -50,6 +50,7 @@ const linkStyle = css({
   display: 'inline-block',
   verticalAlign: 'middle',
   lineHeight: 1.5,
+  height: 'inherit',
   minHeight: pxToRem(60)
 })
 const primaryStyle = css({
