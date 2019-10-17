@@ -4,12 +4,14 @@ import { fontFamilies } from '../../../theme/fonts'
 
 export const Button = ({ href, title, primary, block, children, attributes }) => {
   const styles = {
+    boxSizing: 'content-box',
     fontSize: '20px',
     fontFamily: fontFamilies.sansSerifRegular,
     textDecoration: 'none',
     borderRadius: 0,
-    padding: '15px 30px 15px 30px',
+    padding: '15px 20px 15px 20px',
     display: 'inline-block',
+    minWidth: 160 - 40 // subtract padding because box-sizing = content-box
   }
 
   const primaryStyles = {
@@ -20,7 +22,7 @@ export const Button = ({ href, title, primary, block, children, attributes }) =>
     color: colors.secondary,
     backgroundColor: '#ffffff',
     border: `1px solid ${colors.secondary}`,
-    padding: '14px 30px 14px 30px'
+    padding: '14px 19px 14px 19px'
   }
 
   return (<table

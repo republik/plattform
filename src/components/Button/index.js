@@ -123,9 +123,8 @@ const marginBottomStyle = css({
 })
 
 const marginLeftStyle = css({
-  marginLeft: '10px',
-  ':first-of-type': {
-    marginLeft: 0
+  '& + a, & + button': {
+    marginLeft: '10px'
   }
 })
 
