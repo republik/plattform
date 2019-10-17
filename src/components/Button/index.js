@@ -14,15 +14,13 @@ export const plainButtonRule = css({
 })
 
 const buttonStyle = css(plainButtonRule, {
-  display: 'inline-block',
-  verticalAlign: 'middle',
+  verticalAlign: 'bottom',
   padding: '10px 20px 10px 20px',
   minWidth: 160,
   textAlign: 'center',
   textDecoration: 'none',
   fontSize: pxToRem(22),
-  lineHeight: 1.5,
-  minHeight: pxToRem(60),
+  height: pxToRem(60),
   boxSizing: 'border-box',
   backgroundColor: '#fff',
   fontFamily: fontFamilies.sansSerifRegular,
@@ -47,6 +45,12 @@ const buttonStyle = css(plainButtonRule, {
     borderColor: colors.disabled,
     cursor: 'default'
   }
+})
+const linkStyle = css({
+  display: 'inline-block',
+  verticalAlign: 'middle',
+  lineHeight: 1.5,
+  minHeight: pxToRem(60)
 })
 const primaryStyle = css({
   backgroundColor: colors.primary,
@@ -131,6 +135,7 @@ const Button = ({
   const simulations = sim ? simulate(sim) : {}
   const styles = merge(
     buttonStyle,
+    href && linkStyle,
     primary && primaryStyle,
     dimmed && dimmedStyle,
     black && blackStyle,
