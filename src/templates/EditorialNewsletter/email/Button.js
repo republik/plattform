@@ -25,9 +25,9 @@ export const Button = ({ href, title, primary, block, children, attributes }) =>
   return (<table
       width="100%"
       border="0"
-      cellSpacing="0"
+      cellSpacing="5"
       cellPadding="0"
-      style={{borderBottom: '10px solid transparent'}}>
+      style={{borderSpacing: 'separate', marginLeft: '-5px'}}>
       <tbody>
         <tr>
           <td>
