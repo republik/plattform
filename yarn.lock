@@ -495,13 +495,12 @@
     stringify-entities "^1.3.1"
     unified "^6.1.5"
 
-"@project-r/styleguide@^7.4.0":
-  version "7.10.2"
-  resolved "https://registry.yarnpkg.com/@project-r/styleguide/-/styleguide-7.10.2.tgz#e2e9bf79bd596a79a73da9bc03c890af8b2e1574"
-  integrity sha512-HCIYg9jEYg9WGfrCN/ZztvbW4/wxPNRL36EzXlURKyMtXwiHbKPAy7o4sCMqBzyscQZ+vCQgq/0TssvVkSoEsw==
+"@project-r/styleguide@^8.9.1":
+  version "8.9.1"
+  resolved "https://registry.yarnpkg.com/@project-r/styleguide/-/styleguide-8.9.1.tgz#f3d934c63a34d8601aa8a95f478de1b02baba72a"
+  integrity sha512-k3yNC6bgdKSpZEfw96BkpgUWZfVxXuK2ZGSgD68QQ54grcRYirN7nhK1TykZSV2jLDcdbCvVq7YUAp1js57Gpw==
   dependencies:
     react-icons "^2.2.7"
-    react-swipeable "^4.3.0"
 
 "@project-r/template-newsletter@^1.5.0":
   version "1.5.0"
@@ -3101,11 +3100,6 @@ detect-newline@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/detect-newline/-/detect-newline-2.1.0.tgz#f41f1c10be4b00e87b5f13da680759f2c5bfd3e2"
   integrity sha1-9B8cEL5LAOh7XxPaaAdZ8sW/0+I=
-
-detect-passive-events@^1.0.4:
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/detect-passive-events/-/detect-passive-events-1.0.4.tgz#6ed477e6e5bceb79079735dcd357789d37f9a91a"
-  integrity sha1-btR35uW863kHlzXc01d4nTf5qRo=
 
 dicer@0.3.0, dicer@^0.3.0:
   version "0.3.0"
@@ -7802,7 +7796,7 @@ prompts@^2.0.1:
     kleur "^3.0.2"
     sisteransi "^1.0.0"
 
-prop-types@^15.5.10, prop-types@^15.5.8, prop-types@^15.6.1, prop-types@^15.6.2:
+prop-types@^15.5.10, prop-types@^15.6.1, prop-types@^15.6.2:
   version "15.7.2"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.7.2.tgz#52c41e75b8c87e72b9d9360e0206b99dcbffa6c5"
   integrity sha512-8QQikdH7//R2vurIJSutZ1smHYTcLpRWEOlHnzcWHmBYrOGUysKwSsrC89BCiFj3CbrfJ/nXFdJepOVrY1GCHQ==
@@ -8011,14 +8005,6 @@ react-is@^16.8.1, react-is@^16.8.4:
   version "16.8.6"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.8.6.tgz#5bbc1e2d29141c9fbdfed456343fe2bc430a6a16"
   integrity sha512-aUk3bHfZ2bRSVFFbbeVS4i+lNPZr3/WM5jT2J5omUVV1zzcs1nAaf3l51ctA5FFvCRbhrH0bdAsRRQddFJZPtA==
-
-react-swipeable@^4.3.0:
-  version "4.3.2"
-  resolved "https://registry.yarnpkg.com/react-swipeable/-/react-swipeable-4.3.2.tgz#8bacfd17f74bd24bdd770fc522739dbdc9a9d493"
-  integrity sha512-DPZ5FbefHk2XtbLIMqa7LKwqDPHRezPrcBVg4M2beeRohlmEK2hGsYj81lReEnX6AChOJZtYBvBSxGIIwpG38A==
-  dependencies:
-    detect-passive-events "^1.0.4"
-    prop-types "^15.5.8"
 
 react@^16.4.0:
   version "16.8.6"
