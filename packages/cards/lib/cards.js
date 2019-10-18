@@ -128,13 +128,26 @@ const filterCards = async (cards, { filters = {} }, context) => {
     ))
   }
 
-  // { partyParents: [ <partyParent 1>, ...<partyParent n> ]}
-  if (filteredCards.length > 0 && filters.partyParents) {
-    filteredCards = filteredCards.filter(card => (
-      card.payload &&
-      card.payload.partyParent &&
-      filters.partyParents.includes(card.payload.partyParent)
-    ))
+  // { candidacies: [ <election 1>, ...<election n> ] }
+  if (filteredCards.length > 0 && filters.candidacies) {
+    filteredCards = filteredCards.filter(card => {
+      return filters.candidacies.every(election => (
+        card.payload &&
+        card.payload[election] &&
+        card.payload[election].candidacy
+      ))
+    })
+  }
+
+  // { elects: [ <election 1>, ...<election n> ] }
+  if (filteredCards.length > 0 && filters.elects) {
+    filteredCards = filteredCards.filter(card => {
+      return filters.elects.every(election => (
+        card.payload &&
+        card.payload[election] &&
+        card.payload[election].elected
+      ))
+    })
   }
 
   // { subscribedByMe: <Boolean> }

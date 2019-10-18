@@ -5,7 +5,6 @@ const getAggregationKeyValue = (card, key) => {
   switch (key) {
     case 'party': return _.get(card, 'payload.party')
     case 'fraction': return _.get(card, 'payload.fraction')
-    case 'partyParent': return _.get(card, 'payload.partyParent')
   }
 }
 
