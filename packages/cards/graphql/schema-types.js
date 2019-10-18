@@ -16,6 +16,7 @@ input CardFiltersInput {
   fractions: [String!]
   candidacies: [String!]
   elects: [String!]
+  elected: Boolean
   subscribedByMe: Boolean
   mustHave: [CardFiltersMustHaveInput!]
 }

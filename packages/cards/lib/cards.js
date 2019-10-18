@@ -150,6 +150,17 @@ const filterCards = async (cards, { filters = {} }, context) => {
     })
   }
 
+  // { elected: <Boolean> }
+  if (filteredCards.length > 0 && filters.elected) {
+    filteredCards = filteredCards.filter(card => {
+      return ['nationalCouncil', 'councilOfStates'].some(election => (
+        card.payload &&
+        card.payload[election] &&
+        card.payload[election].elected
+      ))
+    })
+  }
+
   // { subscribedByMe: <Boolean> }
   if (filteredCards.length > 0 && filters.subscribedByMe) {
     if (context.user) {
