@@ -51,6 +51,9 @@ type CardConnection {
 enum CardAggregationKeys {
   party
   fraction
+  election
+  nationalCouncilElection
+  councilOfStatesElection
 }
 
 type CardAggregation {
