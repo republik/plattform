@@ -11,9 +11,13 @@ const argv = yargs
   .option('data-url', { alias: 'd', required: true, coerce: url.parse })
   .option('mapping-url', { alias: 'm', required: true, coerce: url.parse })
   .option('mock', { alias: 't', default: false })
+  .option('force', { alias: 'f', default: false })
+  .option('slack-channel', { alias: 'c', default: 'C8NH13Q1W' }) // #comments-dev
   .argv
 
 const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
+const Redis = require('@orbiting/backend-modules-base/lib/Redis')
+const { publish } = require('@orbiting/backend-modules-slack')
 
 const districtMap = {
   'Aargau': 'Aargau',
@@ -62,7 +66,9 @@ const sanitize = (string) => {
 
 const maybeTrue = (probability) => Math.random() < probability
 
-PgDb.connect().then(async pgdb => {
+Promise.props({ pgdb: PgDb.connect(), redis: Redis.connect() }).then(async (connections) => {
+  const { pgdb, redis } = connections
+
   if (argv.mock) {
     console.warn('WARNING: Data mocking enabled, remove --mock flag.')
   }
@@ -76,7 +82,7 @@ PgDb.connect().then(async pgdb => {
       return res.text()
     })
 
-  const { kandidierende } = JSON.parse(dataRaw.trim())
+  const { timestamp, kandidierende } = JSON.parse(dataRaw.trim())
 
   /**
     {
@@ -92,6 +98,16 @@ PgDb.connect().then(async pgdb => {
 
       return res.json()
     })
+
+  const redisKey = 'cards:script:import-bfs-sr-data'
+  const lastKnownTimestamp = await redis.getAsync(redisKey)
+
+  if (lastKnownTimestamp === timestamp && !argv.mock && !argv.force) {
+    console.log('Data timestamp same, skipping update. Force update with --force.')
+    return connections
+  }
+
+  await redis.setAsync(redisKey, timestamp)
 
   const cardGroups = await pgdb.public.cardGroups.findAll()
   const cards = (await pgdb.public.cards.findAll())
@@ -179,7 +195,7 @@ PgDb.connect().then(async pgdb => {
         if (argv.mock) {
           secondBallotNecessary = false
           elected = false
-          votes = Math.round(Math.random() * 10000)
+          votes = Math.round(Math.random() * 2500000)
 
           if (mock.elects > 0 && maybeTrue(mock.probability)) {
             elected = true
@@ -212,8 +228,38 @@ PgDb.connect().then(async pgdb => {
 
   console.log('Done.', { stats, matched: kandidierende.filter(k => k._matched).length })
 
-  await pgdb.close()
-}).catch(e => {
-  console.error(e)
-  process.exit(1)
+  if (argv.slackChannel && !argv.mock) {
+    const dataStats = await pgdb.queryOne(`
+      SELECT
+        COUNT(*)
+          FILTER (WHERE (payload->'councilOfStates'->>'elected')::bool = TRUE) "countCouncilOfStatesMembers",
+        COUNT(DISTINCT name)
+          FILTER (WHERE (payload->'councilOfStates'->>'elected')::bool = TRUE) "countCouncilOfStatesCantons",
+        json_agg(DISTINCT name)
+          FILTER (WHERE (payload->'councilOfStates'->>'elected')::bool = TRUE) "listCouncilOfStatesCantons"
+
+        FROM cards
+        JOIN "cardGroups" ON cards."cardGroupId" = "cardGroups".id
+      ;
+    `)
+
+    const content = [
+      `:ballot_box_with_ballot: *Daten-Update via Bundesamt für Statistik*`,
+      '',
+      `${dataStats.countCouncilOfStatesMembers} gewählte Ständeratsmitglieder`,
+      dataStats.listCouncilOfStatesCantons && `_${dataStats.countCouncilOfStatesCantons} Kantone ausgezählt:_ ${dataStats.listCouncilOfStatesCantons.join(', ')}`
+    ].filter(Boolean).join('\n')
+
+    await publish(argv.slackChannel, content)
+  }
+
+  return connections
 })
+  .then(async ({ pgdb, redis }) => {
+    await PgDb.disconnect(pgdb)
+    await Redis.disconnect(redis)
+  })
+  .catch(e => {
+    console.error(e)
+    process.exit(1)
+  })
