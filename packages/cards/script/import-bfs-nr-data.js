@@ -257,10 +257,10 @@ Promise.props({ pgdb: PgDb.connect(), redis: Redis.connect() }).then(async (conn
     `)
 
     const content = [
-      `:ballot_box_with_ballot: *Nationalrat Daten-Update vom Bundesamt für Statistik*`,
+      `:ballot_box_with_ballot: *Nationalrat Update* (Daten vom Bundesamt für Statistik)`,
       '',
       `${dataStats.countNationalCouncilMembers} gewählte Mitglieder für den Nationalrat`,
-      dataStats.listNationalCouncilCantons && `_${dataStats.countNationalCouncilCantons} Kantone ausgezählt:_ ${dataStats.listNationalCouncilCantons.join(', ')}`
+      dataStats.listNationalCouncilCantons && `${dataStats.countNationalCouncilCantons} Kantone: ${dataStats.listNationalCouncilCantons.join(', ')}`
     ].filter(Boolean).join('\n')
 
     const currentHash = crypto.createHash('md5').update(content).digest('hex')
@@ -268,7 +268,7 @@ Promise.props({ pgdb: PgDb.connect(), redis: Redis.connect() }).then(async (conn
     const redisKey = 'cards:script:import-bfs-nr-data:hash-slack'
     const previousHash = await redis.getAsync(redisKey)
 
-    if (previousHash !== currentHash) {
+    if (previousHash !== currentHash + 1) {
       console.log(`Slack hash different to before: ${currentHash}. Posting.`)
       await publish(argv.slackChannel, content)
     } else {

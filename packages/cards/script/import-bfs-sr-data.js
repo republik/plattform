@@ -247,7 +247,7 @@ Promise.props({ pgdb: PgDb.connect(), redis: Redis.connect() }).then(async (conn
         json_agg(DISTINCT name)
           FILTER (WHERE
             (payload->'councilOfStates'->>'elected')::bool = TRUE
-            AND (payload->'councilOfStates'->>'votes')::integer > 0
+            AND (payload->'councilOfStates'->>'votes')::integer >= 0
           ) "listCouncilOfStatesCantons"
 
         FROM cards
@@ -256,10 +256,10 @@ Promise.props({ pgdb: PgDb.connect(), redis: Redis.connect() }).then(async (conn
     `)
 
     const content = [
-      `:ballot_box_with_ballot: *Ständerat Daten-Update vom Bundesamt für Statistik*`,
+      `:ballot_box_with_ballot: *Update Ständerat* (Daten vom Bundesamt für Statistik)`,
       '',
       `${dataStats.countCouncilOfStatesMembers} gewählte Mitglieder für den Ständerat`,
-      dataStats.listCouncilOfStatesCantons && `_${dataStats.countCouncilOfStatesCantons} Kantone ausgezählt:_ ${dataStats.listCouncilOfStatesCantons.join(', ')}`
+      dataStats.listCouncilOfStatesCantons && `Kantone: ${dataStats.listCouncilOfStatesCantons.join(', ')}`
     ].filter(Boolean).join('\n')
 
     const currentHash = crypto.createHash('md5').update(content).digest('hex')
@@ -267,7 +267,7 @@ Promise.props({ pgdb: PgDb.connect(), redis: Redis.connect() }).then(async (conn
     const redisKey = 'cards:script:import-bfs-sr-data:hash-slack'
     const previousHash = await redis.getAsync(redisKey)
 
-    if (previousHash !== currentHash) {
+    if (previousHash !== currentHash + 1) {
       console.log(`Slack hash different to before: ${currentHash}. Posting.`)
       await publish(argv.slackChannel, content)
     } else {
