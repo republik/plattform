@@ -82,7 +82,19 @@ Promise.props({ pgdb: PgDb.connect(), redis: Redis.connect() }).then(async (conn
       return res.text()
     })
 
+  console.log('Data fetched.')
+
   const { timestamp, kandidierende } = JSON.parse(dataRaw.trim())
+
+  const redisKey = 'cards:script:import-bfs-sr-data'
+  const lastKnownTimestamp = await redis.getAsync(redisKey)
+
+  if (lastKnownTimestamp === timestamp && !argv.mock && !argv.force) {
+    console.log(`Data timestamp same (${timestamp}), skipping update. Force update with "--force true".`)
+    return connections
+  }
+
+  await redis.setAsync(redisKey, timestamp)
 
   /**
     {
@@ -99,15 +111,7 @@ Promise.props({ pgdb: PgDb.connect(), redis: Redis.connect() }).then(async (conn
       return res.json()
     })
 
-  const redisKey = 'cards:script:import-bfs-sr-data'
-  const lastKnownTimestamp = await redis.getAsync(redisKey)
-
-  if (lastKnownTimestamp === timestamp && !argv.mock && !argv.force) {
-    console.log('Data timestamp same, skipping update. Force update with --force.')
-    return connections
-  }
-
-  await redis.setAsync(redisKey, timestamp)
+  console.log('Mapping fetched.')
 
   const cardGroups = await pgdb.public.cardGroups.findAll()
   const cards = (await pgdb.public.cards.findAll())
