@@ -268,7 +268,7 @@ Promise.props({ pgdb: PgDb.connect(), redis: Redis.connect() }).then(async (conn
     const redisKey = 'cards:script:import-bfs-nr-data:hash-slack'
     const previousHash = await redis.getAsync(redisKey)
 
-    if (previousHash !== currentHash + 1) {
+    if (previousHash !== currentHash) {
       console.log(`Slack hash different to before: ${currentHash}. Posting.`)
       await publish(argv.slackChannel, content)
     } else {
