@@ -86,15 +86,20 @@ Promise.props({ pgdb: PgDb.connect(), redis: Redis.connect() }).then(async (conn
 
   const { timestamp, kandidierende } = JSON.parse(dataRaw.trim())
 
-  const redisKey = 'cards:script:import-bfs-sr-data'
-  const lastKnownTimestamp = await redis.getAsync(redisKey)
+  console.log(`Data timestamp: ${timestamp}`)
 
-  if (lastKnownTimestamp === timestamp && !argv.mock && !argv.force) {
-    console.log(`Data timestamp same (${timestamp}), skipping update. Force update with "--force true".`)
+  const currentHash = crypto.createHash('md5').update(JSON.stringify(kandidierende)).digest('hex')
+
+  const redisKey = 'cards:script:import-bfs-sr-data:hash-kandidierende'
+  const previousHash = await redis.getAsync(redisKey)
+
+  if (previousHash === currentHash && !argv.mock && !argv.force) {
+    console.log(`Data hash same (${previousHash}), skipping update. Force update with "--force true".`)
     return connections
   }
 
-  await redis.setAsync(redisKey, timestamp)
+  console.log(`Data hash different to before: ${currentHash}. Updating.`)
+  await redis.setAsync(redisKey, currentHash)
 
   /**
     {
