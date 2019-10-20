@@ -245,7 +245,10 @@ Promise.props({ pgdb: PgDb.connect(), redis: Redis.connect() }).then(async (conn
         COUNT(DISTINCT name)
           FILTER (WHERE (payload->'councilOfStates'->>'elected')::bool = TRUE) "countCouncilOfStatesCantons",
         json_agg(DISTINCT name)
-          FILTER (WHERE (payload->'councilOfStates'->>'elected')::bool = TRUE) "listCouncilOfStatesCantons"
+          FILTER (WHERE
+            (payload->'councilOfStates'->>'elected')::bool = TRUE
+            AND (payload->'councilOfStates'->>'votes')::integer > 0
+          ) "listCouncilOfStatesCantons"
 
         FROM cards
         JOIN "cardGroups" ON cards."cardGroupId" = "cardGroups".id
@@ -253,9 +256,9 @@ Promise.props({ pgdb: PgDb.connect(), redis: Redis.connect() }).then(async (conn
     `)
 
     const content = [
-      `:ballot_box_with_ballot: *Daten-Update via Bundesamt für Statistik*`,
+      `:ballot_box_with_ballot: *Ständerat Daten-Update vom Bundesamt für Statistik*`,
       '',
-      `${dataStats.countCouncilOfStatesMembers} gewählte Ständeratsmitglieder`,
+      `${dataStats.countCouncilOfStatesMembers} gewählte Mitglieder für den Ständerat`,
       dataStats.listCouncilOfStatesCantons && `_${dataStats.countCouncilOfStatesCantons} Kantone ausgezählt:_ ${dataStats.listCouncilOfStatesCantons.join(', ')}`
     ].filter(Boolean).join('\n')
 

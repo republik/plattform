@@ -246,7 +246,10 @@ Promise.props({ pgdb: PgDb.connect(), redis: Redis.connect() }).then(async (conn
         COUNT(DISTINCT name)
           FILTER (WHERE (payload->'nationalCouncil'->>'elected')::bool = TRUE) "countNationalCouncilCantons",
         json_agg(DISTINCT name)
-          FILTER (WHERE (payload->'nationalCouncil'->>'elected')::bool = TRUE) "listNationalCouncilCantons"
+          FILTER (WHERE
+            (payload->'nationalCouncil'->>'elected')::bool = TRUE
+            AND (payload->'nationalCouncil'->>'votes')::integer > 0
+          ) "listNationalCouncilCantons"
 
         FROM cards
         JOIN "cardGroups" ON cards."cardGroupId" = "cardGroups".id
@@ -254,9 +257,9 @@ Promise.props({ pgdb: PgDb.connect(), redis: Redis.connect() }).then(async (conn
     `)
 
     const content = [
-      `:ballot_box_with_ballot: *Daten-Update via Bundesamt für Statistik*`,
+      `:ballot_box_with_ballot: *Nationalrat Daten-Update vom Bundesamt für Statistik*`,
       '',
-      `${dataStats.countNationalCouncilMembers} gewählte Nationalratsmitglieder`,
+      `${dataStats.countNationalCouncilMembers} gewählte Mitglieder für den Nationalrat`,
       dataStats.listNationalCouncilCantons && `_${dataStats.countNationalCouncilCantons} Kantone ausgezählt:_ ${dataStats.listNationalCouncilCantons.join(', ')}`
     ].filter(Boolean).join('\n')
 
