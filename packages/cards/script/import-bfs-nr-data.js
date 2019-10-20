@@ -160,7 +160,7 @@ Promise.props({ pgdb: PgDb.connect(), redis: Redis.connect() }).then(async (conn
         }
       */
 
-      const { cardId } = bfsMapping.find(b => b.bfsUid === bfsUid)
+      const { cardId } = bfsMapping.find(b => b.bfsUid === bfsUid) || {}
       const mappedCards = cards.filter(c => c.id === cardId)
       const bfsUidCards = cards.filter(c => c.payload.meta.bfsUid === bfsUid)
 
