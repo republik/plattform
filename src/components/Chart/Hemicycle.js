@@ -24,15 +24,9 @@ const styles = {
   }),
   labelStrong: css({
     ...sansSerifMedium14,
-    [onlyS]: {
-      ...sansSerifMedium12,
-    },
   }),
   label: css({
     ...sansSerifRegular14,
-    [onlyS]: {
-      ...sansSerifRegular12,
-    },
   }),
 }
 
@@ -135,7 +129,7 @@ const Hemicycle = ({
           <g transform={`translate(${w >> 1},${hemicycleOffset})`}>
             {primaryAngles.map(d => {
               const datum = primaryVals.find(g => g.label === d[2])
-              const fill = legendColorMap[datum[color].toUpperCase()]
+              const fill = legendColorMap[datum[color].toUpperCase()] || '#A09E9C'
               return (
                 <>
                   <path
@@ -163,12 +157,12 @@ const Hemicycle = ({
                   legendColorMap[datum[color].toUpperCase()]
                 const x =
                   hemicycleHeight *
-                  (isMajorParty ? 0.75 : 1.1) *
+                  (isMajorParty ? 0.75 : 1.05) *
                   Math.sin((d[0] + d[1]) / 2)
                 const y = Math.max(
                   -hemicycleOffset,
                   -hemicycleHeight *
-                    (isMajorParty ? 0.75 : 1.15) *
+                    (isMajorParty ? 0.78 : 1.15) *
                     Math.cos((d[0] + d[1]) / 2),
                 )
 
@@ -210,7 +204,7 @@ const Hemicycle = ({
               })}
             {secondaryAngles.map(d => {
               const datum = secondaryVals.find(g => g.label === d[2])
-              const fill = legendColorMap[datum[color].toUpperCase()]
+              const fill = legendColorMap[datum[color].toUpperCase()] || '#A09E9C'
               return (
                 <>
                   <path
