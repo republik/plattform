@@ -14,6 +14,9 @@ type Card {
 input CardFiltersInput {
   parties: [String!]
   fractions: [String!]
+  candidacies: [String!]
+  elects: [String!]
+  elected: Boolean
   subscribedByMe: Boolean
   mustHave: [CardFiltersMustHaveInput!]
 }
@@ -49,7 +52,9 @@ type CardConnection {
 enum CardAggregationKeys {
   party
   fraction
-  partyParent
+  election
+  nationalCouncilElection
+  councilOfStatesElection
 }
 
 type CardAggregation {

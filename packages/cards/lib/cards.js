@@ -1,5 +1,5 @@
 const shuffleSeed = require('shuffle-seed')
-const { ascending } = require('d3-array')
+const { ascending, descending } = require('d3-array')
 
 const { paginate: { paginator } } = require('@orbiting/backend-modules-utils')
 const { Subscriptions } = require('@orbiting/backend-modules-subscriptions')
@@ -98,7 +98,17 @@ const buildDeck = (cards, seed, focus = [], smartspider = []) => {
       .filter(c => c._distance < 100)
       .sort((a, b) => ascending(a._distance, b._distance))
 
-  const shuffledCards = shuffleSeed.shuffle(deck, seed)
+  const shuffledCards =
+    shuffleSeed
+      .shuffle(deck, seed)
+      .sort((a, b) => descending(
+        (a.payload.nationalCouncil.votes || 0) + (a.payload.councilOfStates.votes || 0),
+        (b.payload.nationalCouncil.votes || 0) + (b.payload.councilOfStates.votes || 0)
+      ))
+      .sort((a, b) => descending(
+        a.payload.nationalCouncil.elected || a.payload.councilOfStates.elected || 0,
+        b.payload.nationalCouncil.elected || b.payload.councilOfStates.elected || 0
+      ))
 
   return removeDuplicates([
     ...focusCards,
@@ -128,13 +138,37 @@ const filterCards = async (cards, { filters = {} }, context) => {
     ))
   }
 
-  // { partyParents: [ <partyParent 1>, ...<partyParent n> ]}
-  if (filteredCards.length > 0 && filters.partyParents) {
-    filteredCards = filteredCards.filter(card => (
-      card.payload &&
-      card.payload.partyParent &&
-      filters.partyParents.includes(card.payload.partyParent)
-    ))
+  // { candidacies: [ <election 1>, ...<election n> ] }
+  if (filteredCards.length > 0 && filters.candidacies) {
+    filteredCards = filteredCards.filter(card => {
+      return filters.candidacies.every(election => (
+        card.payload &&
+        card.payload[election] &&
+        card.payload[election].candidacy
+      ))
+    })
+  }
+
+  // { elects: [ <election 1>, ...<election n> ] }
+  if (filteredCards.length > 0 && filters.elects) {
+    filteredCards = filteredCards.filter(card => {
+      return filters.elects.every(election => (
+        card.payload &&
+        card.payload[election] &&
+        card.payload[election].elected
+      ))
+    })
+  }
+
+  // { elected: <Boolean> }
+  if (filteredCards.length > 0 && filters.elected) {
+    filteredCards = filteredCards.filter(card => {
+      return ['nationalCouncil', 'councilOfStates'].some(election => (
+        card.payload &&
+        card.payload[election] &&
+        card.payload[election].elected
+      ))
+    })
   }
 
   // { subscribedByMe: <Boolean> }
