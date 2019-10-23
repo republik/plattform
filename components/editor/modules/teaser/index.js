@@ -7,15 +7,6 @@ import shortId from 'shortid'
 
 import { getSerializer, getSubmodules } from './serializer'
 
-import {
-  getIndex,
-  getParent,
-  insert,
-  moveUp,
-  moveDown,
-  remove
-} from './actions'
-
 import { TeaserButton, TeaserInlineUI, TeaserForm } from './ui'
 
 export const getData = data => ({
@@ -107,8 +98,6 @@ const teaserPlugin = options => {
         return compiledTeaser
       }
 
-      const UI = TeaserInlineUI(options)
-
       const teaser = editor.value.blocks.reduce(
         (memo, node) =>
           memo || editor.value.document.getFurthest(node.key, matchBlock(TYPE)),
@@ -118,16 +107,10 @@ const teaserPlugin = options => {
       const isSelected = teaser === node && !editor.value.isBlurred
 
       return ([
-        <UI
+        isSelected && <TeaserInlineUI
           key='ui'
-          isSelected={isSelected}
-          nodeKey={node.key}
-          getIndex={getIndex(editor)}
-          getParent={getParent(editor)}
-          moveUp={moveUp(editor)}
-          moveDown={moveDown(editor)}
-          insert={insert(editor)}
-          remove={remove(editor)}
+          node={node}
+          editor={editor}
         />,
         compiledTeaser
       ])

@@ -19,6 +19,8 @@ import ArrowRightIcon from 'react-icons/lib/md/arrow-forward'
 import ArrowUpIcon from 'react-icons/lib/md/arrow-upward'
 import ArrowDownIcon from 'react-icons/lib/md/arrow-downward'
 import CloseIcon from 'react-icons/lib/md/close'
+import MoveIntoIcon from 'react-icons/lib/md/subdirectory-arrow-right'
+import MoveToEndIcon from 'react-icons/lib/md/vertical-align-bottom'
 
 import UIForm from '../../UIForm'
 import ImageInput from '../../utils/ImageInput'
@@ -66,11 +68,7 @@ const styles = {
     top: 0,
     left: 0,
     right: 0,
-    height: '0px',
     overflow: 'hidden'
-  }),
-  uiOpen: css({
-    height: 'auto'
   }),
   uiInlineRow: css({
     backgroundColor: '#fff',
@@ -558,42 +556,52 @@ const MoveUpButton = props =>
 const MoveDownButton = props =>
   <span {...buttonStyles.mark} {...props}><ArrowDownIcon size={24} /></span>
 
-export const TeaserInlineUI = options =>
-  ({ remove, isSelected, nodeKey, getIndex, getParent, moveUp, moveDown, ...props }) => {
-    const uiStyles = css(styles.ui, isSelected ? styles.uiOpen : {})
+export const TeaserInlineUI = ({ editor, node, removable = true }) => {
+  const parentNode = parent(editor.state.value, node.key)
+  const index = parentNode.nodes.indexOf(node)
 
-    const parent = getParent(nodeKey)
-    const index = getIndex(nodeKey)
-    const isFirstChild = index === 0
-    const isLastChild = index === parent.nodes.size - 1
-    const isOnlyChild = parent.nodes.size === 1
+  const isFirstChild = index === 0
+  const isLastChild = index === parentNode.nodes.size - 1
+  const isOnlyChild = parentNode.nodes.size === 1
 
-    const removeHandler = event => {
-      event.preventDefault()
-      remove(nodeKey)
-    }
+  const removeHandler = event => {
+    event.preventDefault()
+    editor.change(t => t.removeNodeByKey(node.key))
+  }
 
-    const moveUpHandler = event => {
-      event.preventDefault()
-      moveUp(nodeKey, getParent(nodeKey).key, getIndex(nodeKey))
-    }
+  const moveUpHandler = event => {
+    event.preventDefault()
+    editor.change(t => t.moveNodeByKey(node.key, parentNode.key, index - 1))
+  }
 
-    const moveDownHandler = event => {
-      event.preventDefault()
-      moveDown(nodeKey, getParent(nodeKey).key, getIndex(nodeKey))
-    }
+  const moveDownHandler = event => {
+    event.preventDefault()
+    editor.change(t => t.moveNodeByKey(node.key, parentNode.key, index + 1))
+  }
 
-    return (
-      <div contentEditable={false} {...styles.uiContainer}>
-        <div contentEditable={false} {...uiStyles}>
-          <div>
-            <P {...styles.uiInlineRow}>
-              {!isOnlyChild && remove && <RemoveButton onMouseDown={removeHandler} />}
-              {!isFirstChild && <MoveUpButton onMouseDown={moveUpHandler} />}
-              {!isLastChild && <MoveDownButton onMouseDown={moveDownHandler} />}
-            </P>
-          </div>
+  const isBeforeEnd = false
+  const isBeforeGroup = false
+
+  return (
+    <div contentEditable={false} {...styles.uiContainer}>
+      <div contentEditable={false} {...styles.ui}>
+        <div>
+          <P {...styles.uiInlineRow}>
+            {!isOnlyChild && removable &&
+              <RemoveButton onMouseDown={removeHandler} />}
+            {!isFirstChild &&
+              <MoveUpButton onMouseDown={moveUpHandler} />}
+            {!isLastChild &&
+              <MoveDownButton onMouseDown={moveDownHandler} />}
+            {isBeforeGroup && <span {...buttonStyles.mark}>
+              <MoveIntoIcon size={24} />
+            </span>}
+            {isBeforeEnd && <span {...buttonStyles.mark}>
+              <MoveToEndIcon size={24} />
+            </span>}
+          </P>
         </div>
       </div>
-    )
-  }
+    </div>
+  )
+}
