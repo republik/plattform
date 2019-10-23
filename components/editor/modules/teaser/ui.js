@@ -14,6 +14,8 @@ import { getNewBlock } from './'
 
 import { getSubmodules } from './serializer'
 
+import ArrowLeftIcon from 'react-icons/lib/md/arrow-back'
+import ArrowRightIcon from 'react-icons/lib/md/arrow-forward'
 import ArrowUpIcon from 'react-icons/lib/md/arrow-upward'
 import ArrowDownIcon from 'react-icons/lib/md/arrow-downward'
 import CloseIcon from 'react-icons/lib/md/close'
@@ -495,8 +497,47 @@ export const TeaserForm = ({ subModuleResolver, ...options }) => {
         )
       }
 
+      const isTile = !!options.rule.editorOptions.teaserType.match(/tile/i)
+
+      const group = parent(value, teaser.key)
+      const existingIndex = group.nodes.indexOf(teaser)
+
+      const createMoveNode = (diff = 1) => () => {
+        onChange(
+          value
+            .change()
+            .moveNodeByKey(
+              teaser.key,
+              group.key,
+              Math.min(
+                Math.max(0, existingIndex + diff),
+                group.nodes.size
+              )
+            )
+        )
+      }
+
       return <div>
-        <Label>{options.rule.editorOptions.formTitle || 'Teaser'}</Label>
+        <Label>{options.rule.editorOptions.formTitle || 'Teaser'}</Label><br />
+        {isTile && <>
+          <span
+            {...buttonStyles.action}
+            data-visible
+            data-disabled={existingIndex === 0}
+            onMouseDown={createMoveNode(-1)}
+          >
+            <ArrowLeftIcon />
+          </span>
+          {' bewegen '}
+          <span
+            {...buttonStyles.action}
+            data-visible
+            data-disabled={existingIndex === group.nodes.size - 1}
+            onMouseDown={createMoveNode(+1)}
+          >
+            <ArrowRightIcon />
+          </span>
+        </>}
         {!options.rule.editorOptions.formOptions.includes('noAdapt') && <RepoSearch
           value={null}
           label='Von Artikel übernehmen'
