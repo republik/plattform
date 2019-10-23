@@ -547,14 +547,8 @@ export const TeaserForm = ({ subModuleResolver, ...options }) => {
   )
 }
 
-const RemoveButton = props =>
-  <span {...buttonStyles.mark} {...props}><CloseIcon size={24} /></span>
-
-const MoveUpButton = props =>
-  <span {...buttonStyles.mark} {...props}><ArrowUpIcon size={24} /></span>
-
-const MoveDownButton = props =>
-  <span {...buttonStyles.mark} {...props}><ArrowDownIcon size={24} /></span>
+const MarkButton = props =>
+  <span {...buttonStyles.mark} {...props} />
 
 export const TeaserInlineUI = ({ editor, node, removable = true }) => {
   const parentNode = parent(editor.state.value, node.key)
@@ -569,17 +563,13 @@ export const TeaserInlineUI = ({ editor, node, removable = true }) => {
     editor.change(t => t.removeNodeByKey(node.key))
   }
 
-  const moveUpHandler = event => {
+  const moveHandler = dir => event => {
     event.preventDefault()
-    editor.change(t => t.moveNodeByKey(node.key, parentNode.key, index - 1))
+    editor.change(t => t.moveNodeByKey(node.key, parentNode.key, index + dir))
   }
 
-  const moveDownHandler = event => {
-    event.preventDefault()
-    editor.change(t => t.moveNodeByKey(node.key, parentNode.key, index + 1))
-  }
+  const endIndex = parentNode.nodes.findIndex(n => n.data.get('id') === 'end')
 
-  const isBeforeEnd = false
   const isBeforeGroup = false
 
   return (
@@ -588,17 +578,25 @@ export const TeaserInlineUI = ({ editor, node, removable = true }) => {
         <div>
           <P {...styles.uiInlineRow}>
             {!isOnlyChild && removable &&
-              <RemoveButton onMouseDown={removeHandler} />}
+              <MarkButton onMouseDown={removeHandler}>
+                <CloseIcon size={24} />
+              </MarkButton>}
             {!isFirstChild &&
-              <MoveUpButton onMouseDown={moveUpHandler} />}
+              <MarkButton onMouseDown={moveHandler(-1)}>
+                <ArrowUpIcon size={24} />
+              </MarkButton>}
             {!isLastChild &&
-              <MoveDownButton onMouseDown={moveDownHandler} />}
-            {isBeforeGroup && <span {...buttonStyles.mark}>
-              <MoveIntoIcon size={24} />
-            </span>}
-            {isBeforeEnd && <span {...buttonStyles.mark}>
-              <MoveToEndIcon size={24} />
-            </span>}
+              <MarkButton onMouseDown={moveHandler(+1)}>
+                <ArrowDownIcon size={24} />
+              </MarkButton>}
+            {isBeforeGroup &&
+              <MarkButton>
+                <MoveIntoIcon size={24} />
+              </MarkButton>}
+            {endIndex !== -1 && index < endIndex &&
+              <MarkButton onMouseDown={moveHandler(endIndex - index)}>
+                <MoveToEndIcon size={24} />
+              </MarkButton>}
           </P>
         </div>
       </div>
