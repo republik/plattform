@@ -786,6 +786,7 @@ const createSchema = ({
   titleBlockRule,
   titleBlockPrepend = null,
   titleBlockAppend = null,
+  titleBlockAfter = null,
   repoPrefix = 'article-',
   series = true,
   Link = DefaultLink,
@@ -844,7 +845,7 @@ const createSchema = ({
           addProgressProps(dynamicComponent),
           titleBlockRule || {
             matchMdast: matchZone('TITLE'),
-            component: ({children, format, ...props}) => (
+            component: ({children, format, ...props}) => <>
               <TitleBlock {...props} format={format} Link={Link}>
                 {titleBlockPrepend}
                 {format && format.meta && (
@@ -859,7 +860,8 @@ const createSchema = ({
                 {children}
                 {titleBlockAppend}
               </TitleBlock>
-            ),
+              {titleBlockAfter}
+            </>,
             props: (node, index, parent, { ancestors }) => ({
               center: node.data.center,
               format: ancestors[ancestors.length - 1].format

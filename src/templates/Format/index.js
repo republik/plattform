@@ -21,6 +21,7 @@ const createSchema = ({
   series = false,
   titleBlockPrepend = null,
   titleBlockAppend = null,
+  titleBlockAfter = null,
   titleBlockRule,
   getPath = ({ slug }) => `/format/${(slug || '').split('/').pop()}`,
   ...args
@@ -58,13 +59,14 @@ const createSchema = ({
     series,
     titleBlockRule: titleBlockRule || {
       matchMdast: matchZone('TITLE'),
-      component: ({children, ...props}) => (
+      component: ({children, ...props}) => <>
         <TitleBlock {...props} center Link={Link}>
           {titleBlockPrepend}
           {children}
           {titleBlockAppend}
         </TitleBlock>
-      ),
+        {titleBlockAfter}
+      </>,
       editorModule: 'title',
       editorOptions: {
         coverType: COVER_TYPE
