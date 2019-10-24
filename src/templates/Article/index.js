@@ -860,7 +860,6 @@ const createSchema = ({
                 {children}
                 {titleBlockAppend}
               </TitleBlock>
-              {titleBlockAfter}
             </>,
             props: (node, index, parent, { ancestors }) => ({
               center: node.data.center,
