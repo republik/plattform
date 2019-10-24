@@ -108,12 +108,19 @@ class Form extends Component {
             </Checkbox>
           } else {
             let renderInput
-            if (key.match(/description|quote/i)) {
+            if (key.match(/description|quote|shortTitle/i)) {
               renderInput = ({ ref, ...inputProps }) => (
                 <AutosizeInput {...styles.autoSize}
                   {...inputProps}
                   inputRef={ref} />
               )
+              if (key === 'shortTitle') {
+                const defaultOnChange = onInputChange(key)
+                onChange = (_, inputValue) => {
+                  const value = (inputValue || '').replace(/\n/g, '')
+                  defaultOnChange(_, value)
+                }
+              }
             } else if (key.match(/date/i)) {
               renderInput = ({ ref, ...inputProps }) => (
                 <MaskedInput

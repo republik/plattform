@@ -5,13 +5,6 @@ import { matchBlock } from '../../utils'
 
 import createUi from './ui'
 import { TeaserInlineUI } from '../teaser/ui'
-import {
-  getIndex,
-  getParent,
-  insert,
-  moveUp,
-  moveDown
-} from '../teaser/actions'
 
 export default ({ rule, subModules, TYPE }) => {
   const zone = {
@@ -58,7 +51,6 @@ export default ({ rule, subModules, TYPE }) => {
   })
 
   const Preview = rule.component
-  const UI = TeaserInlineUI({})
 
   return {
     TYPE,
@@ -76,16 +68,11 @@ export default ({ rule, subModules, TYPE }) => {
           const isSelected = editor.value.blocks.some(block => block.key === node.key) && !editor.value.isBlurred
 
           return <>
-            <UI
-              key='ui'
-              isSelected={isSelected}
-              nodeKey={node.key}
-              getIndex={getIndex(editor)}
-              getParent={getParent(editor)}
-              moveUp={moveUp(editor)}
-              moveDown={moveDown(editor)}
-              insert={insert(editor)}
-            />
+            {isSelected && <TeaserInlineUI
+              node={node}
+              editor={editor}
+              removable={false}
+            />}
             <Preview attributes={attributes} {...node.data.toJS()} />
           </>
         },

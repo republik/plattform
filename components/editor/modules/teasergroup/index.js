@@ -4,15 +4,6 @@ import React from 'react'
 import { matchBlock } from '../../utils'
 import shortId from 'shortid'
 
-import {
-  getIndex,
-  getParent,
-  insert,
-  moveUp,
-  moveDown,
-  remove
-} from '../teaser/actions'
-
 import { TeaserInlineUI } from '../teaser/ui'
 import { TeaserGroupButton, TeaserGroupForm } from './ui'
 
@@ -113,7 +104,6 @@ const teaserGroupPlugin = options => {
       if (!matchBlock(TYPE)(node)) {
         return
       }
-      const UI = TeaserInlineUI(options)
 
       const teaser = editor.value.blocks.reduce(
         (memo, node) =>
@@ -124,16 +114,10 @@ const teaserGroupPlugin = options => {
       const isSelected = teaser === node && !editor.value.isBlurred
 
       return ([
-        <UI
+        isSelected && <TeaserInlineUI
           key='ui'
-          isSelected={isSelected}
-          nodeKey={node.key}
-          getIndex={getIndex(editor)}
-          getParent={getParent(editor)}
-          moveUp={moveUp(editor)}
-          moveDown={moveDown(editor)}
-          insert={insert(editor)}
-          remove={remove(editor)}
+          node={node}
+          editor={editor}
         />,
         <TeaserGroup key='teaser' {...node.data.toJS()} attributes={attributes}>
           {children}

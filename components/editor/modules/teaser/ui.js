@@ -8,15 +8,21 @@ import {
 } from '../../utils'
 import { allBlocks, parent, childIndex, depth } from '../../utils/selection'
 
+import shortId from 'shortid'
+
 import { Block, Text } from 'slate'
 
 import { getNewBlock } from './'
 
 import { getSubmodules } from './serializer'
 
+import ArrowLeftIcon from 'react-icons/lib/md/arrow-back'
+import ArrowRightIcon from 'react-icons/lib/md/arrow-forward'
 import ArrowUpIcon from 'react-icons/lib/md/arrow-upward'
 import ArrowDownIcon from 'react-icons/lib/md/arrow-downward'
 import CloseIcon from 'react-icons/lib/md/close'
+import MoveIntoIcon from 'react-icons/lib/md/subdirectory-arrow-right'
+import MoveToEndIcon from 'react-icons/lib/md/vertical-align-bottom'
 
 import UIForm from '../../UIForm'
 import ImageInput from '../../utils/ImageInput'
@@ -64,11 +70,7 @@ const styles = {
     top: 0,
     left: 0,
     right: 0,
-    height: '0px',
     overflow: 'hidden'
-  }),
-  uiOpen: css({
-    height: 'auto'
   }),
   uiInlineRow: css({
     backgroundColor: '#fff',
@@ -495,8 +497,47 @@ export const TeaserForm = ({ subModuleResolver, ...options }) => {
         )
       }
 
+      const isTile = !!options.rule.editorOptions.teaserType.match(/tile/i)
+
+      const group = parent(value, teaser.key)
+      const existingIndex = group.nodes.indexOf(teaser)
+
+      const createMoveNode = (diff = 1) => () => {
+        onChange(
+          value
+            .change()
+            .moveNodeByKey(
+              teaser.key,
+              group.key,
+              Math.min(
+                Math.max(0, existingIndex + diff),
+                group.nodes.size
+              )
+            )
+        )
+      }
+
       return <div>
-        <Label>{options.rule.editorOptions.formTitle || 'Teaser'}</Label>
+        <Label>{options.rule.editorOptions.formTitle || 'Teaser'}</Label><br />
+        {isTile && <>
+          <span
+            {...buttonStyles.action}
+            data-visible
+            data-disabled={existingIndex === 0}
+            onMouseDown={createMoveNode(-1)}
+          >
+            <ArrowLeftIcon />
+          </span>
+          {' bewegen '}
+          <span
+            {...buttonStyles.action}
+            data-visible
+            data-disabled={existingIndex === group.nodes.size - 1}
+            onMouseDown={createMoveNode(+1)}
+          >
+            <ArrowRightIcon />
+          </span>
+        </>}
         {!options.rule.editorOptions.formOptions.includes('noAdapt') && <RepoSearch
           value={null}
           label='Von Artikel übernehmen'
@@ -508,51 +549,98 @@ export const TeaserForm = ({ subModuleResolver, ...options }) => {
   )
 }
 
-const RemoveButton = props =>
-  <span {...buttonStyles.mark} {...props}><CloseIcon size={24} /></span>
+const MarkButton = props =>
+  <span {...buttonStyles.mark} {...props} />
 
-const MoveUpButton = props =>
-  <span {...buttonStyles.mark} {...props}><ArrowUpIcon size={24} /></span>
+export const TeaserInlineUI = ({ editor, node, removable = true }) => {
+  const parentNode = parent(editor.state.value, node.key)
+  const index = parentNode.nodes.indexOf(node)
 
-const MoveDownButton = props =>
-  <span {...buttonStyles.mark} {...props}><ArrowDownIcon size={24} /></span>
+  const isFirstChild = index === 0
+  const isLastChild = index === parentNode.nodes.size - 1
+  const isOnlyChild = parentNode.nodes.size === 1
 
-export const TeaserInlineUI = options =>
-  ({ remove, isSelected, nodeKey, getIndex, getParent, moveUp, moveDown, ...props }) => {
-    const uiStyles = css(styles.ui, isSelected ? styles.uiOpen : {})
+  const removeHandler = event => {
+    event.preventDefault()
+    editor.change(t => t.removeNodeByKey(node.key))
+  }
 
-    const parent = getParent(nodeKey)
-    const index = getIndex(nodeKey)
-    const isFirstChild = index === 0
-    const isLastChild = index === parent.nodes.size - 1
-    const isOnlyChild = parent.nodes.size === 1
+  const moveHandler = dir => event => {
+    event.preventDefault()
+    editor.change(t => t.moveNodeByKey(node.key, parentNode.key, index + dir))
+  }
 
-    const removeHandler = event => {
-      event.preventDefault()
-      remove(nodeKey)
-    }
+  const endIndex = parentNode.nodes.findIndex(n => n.data.get('id') === 'end')
 
-    const moveUpHandler = event => {
-      event.preventDefault()
-      moveUp(nodeKey, getParent(nodeKey).key, getIndex(nodeKey))
-    }
+  const nextNode = parentNode.nodes.get(index + 1)
+  const intoTarget = nextNode && nextNode.type === 'CAROUSEL' && node.type !== 'CAROUSEL' && nextNode.nodes.get(1)
 
-    const moveDownHandler = event => {
-      event.preventDefault()
-      moveDown(nodeKey, getParent(nodeKey).key, getIndex(nodeKey))
-    }
+  const copyIntoHandler = event => {
+    event.preventDefault()
 
-    return (
-      <div contentEditable={false} {...styles.uiContainer}>
-        <div contentEditable={false} {...uiStyles}>
-          <div>
-            <P {...styles.uiInlineRow}>
-              {!isOnlyChild && remove && <RemoveButton onMouseDown={removeHandler} />}
-              {!isFirstChild && <MoveUpButton onMouseDown={moveUpHandler} />}
-              {!isLastChild && <MoveDownButton onMouseDown={moveDownHandler} />}
-            </P>
-          </div>
+    const sourceNodes = node.data.get('module') === 'teasergroup'
+      ? node.nodes
+      : [node]
+
+    const template = intoTarget.nodes.get(0)
+
+    editor.change(t => {
+      sourceNodes.filter(n => n.text.trim()).forEach(sourceNode => {
+        const data = template.data.merge({
+          id: shortId(),
+          formatUrl: sourceNode.data.get('url'),
+          formatColor: sourceNode.data.get('formatColor'),
+          url: sourceNode.data.get('url'),
+          image: sourceNode.data.get('image'),
+          byline: sourceNode.data.get('byline'),
+          kind: sourceNode.data.get('kind')
+        })
+        t.insertNodeByKey(intoTarget.key, 0, Block.create({
+          type: template.type,
+          data: data,
+          nodes: template.nodes.map((tn, i) => {
+            const sourceChild = sourceNode.nodes.get(i)
+            return Block.create({
+              type: tn.type,
+              data: data.remove('id').remove('module'),
+              nodes: sourceChild
+                ? sourceChild.toJSON().nodes
+                : []
+            })
+          })
+        }))
+      })
+    })
+  }
+
+  return (
+    <div contentEditable={false} {...styles.uiContainer}>
+      <div contentEditable={false} {...styles.ui}>
+        <div>
+          <P {...styles.uiInlineRow}>
+            {!isOnlyChild && removable &&
+              <MarkButton onMouseDown={removeHandler}>
+                <CloseIcon size={24} />
+              </MarkButton>}
+            {!isFirstChild &&
+              <MarkButton onMouseDown={moveHandler(-1)}>
+                <ArrowUpIcon size={24} />
+              </MarkButton>}
+            {!isLastChild &&
+              <MarkButton onMouseDown={moveHandler(+1)}>
+                <ArrowDownIcon size={24} />
+              </MarkButton>}
+            {!!intoTarget && intoTarget.nodes.size > 0 &&
+              <MarkButton onMouseDown={copyIntoHandler} title='In die nächste Gruppe kopieren'>
+                <MoveIntoIcon size={24} />
+              </MarkButton>}
+            {endIndex !== -1 && index < endIndex &&
+              <MarkButton onMouseDown={moveHandler(endIndex - index)} title='Nach «The End»'>
+                <MoveToEndIcon size={24} />
+              </MarkButton>}
+          </P>
         </div>
       </div>
-    )
-  }
+    </div>
+  )
+}

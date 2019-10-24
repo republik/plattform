@@ -9,15 +9,6 @@ import { buttonStyles, matchBlock } from '../../utils'
 
 import { TeaserInlineUI, TeaserForm } from '../teaser/ui'
 
-import {
-  getIndex,
-  getParent,
-  insert,
-  moveUp,
-  moveDown,
-  remove
-} from '../teaser/actions'
-
 const getData = data => ({
   module: 'teasergroup', // used by publicator internally
   url: null,
@@ -66,7 +57,6 @@ const getSubmodules = ({ subModules }) => {
 
 const FrontDossierPlugin = options => {
   const Group = options.rule.component
-  const UI = TeaserInlineUI(options)
 
   return {
     renderNode ({ node, children, attributes, editor }) {
@@ -76,20 +66,13 @@ const FrontDossierPlugin = options => {
         undefined
       )
 
-      const isSelected = teaser === node && !editor.value.isBlurred
-
       if (matchBlock(options.TYPE)(node)) {
+        const isSelected = teaser === node && !editor.value.isBlurred
         return [
-          <UI
+          isSelected && <TeaserInlineUI
             key='ui'
-            isSelected={isSelected}
-            nodeKey={node.key}
-            getIndex={getIndex(editor)}
-            getParent={getParent(editor)}
-            moveUp={moveUp(editor)}
-            moveDown={moveDown(editor)}
-            insert={insert(editor)}
-            remove={remove(editor)}
+            node={node}
+            editor={editor}
           />,
           <Group {...node.data.toJS()} key='content' attributes={attributes}>{children}</Group>
         ]
