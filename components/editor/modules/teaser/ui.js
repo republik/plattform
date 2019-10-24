@@ -573,11 +573,7 @@ export const TeaserInlineUI = ({ editor, node, removable = true }) => {
   const endIndex = parentNode.nodes.findIndex(n => n.data.get('id') === 'end')
 
   const nextNode = parentNode.nodes.get(index + 1)
-  const intoTarget = nextNode && !nextNode.isVoid && node.type !== 'CAROUSEL' && nextNode.data.get('module') === 'teasergroup' && (
-    nextNode.type === 'CAROUSEL'
-      ? nextNode.nodes.get(1)
-      : nextNode
-  )
+  const intoTarget = nextNode && nextNode.type === 'CAROUSEL' && node.type !== 'CAROUSEL' && nextNode.nodes.get(1)
 
   const copyIntoHandler = event => {
     event.preventDefault()
