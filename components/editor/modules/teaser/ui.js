@@ -8,6 +8,8 @@ import {
 } from '../../utils'
 import { allBlocks, parent, childIndex, depth } from '../../utils/selection'
 
+import shortId from 'shortid'
+
 import { Block, Text } from 'slate'
 
 import { getNewBlock } from './'
@@ -570,7 +572,50 @@ export const TeaserInlineUI = ({ editor, node, removable = true }) => {
 
   const endIndex = parentNode.nodes.findIndex(n => n.data.get('id') === 'end')
 
-  const isBeforeGroup = false
+  const nextNode = parentNode.nodes.get(index + 1)
+  const intoTarget = nextNode && !nextNode.isVoid && node.type !== 'CAROUSEL' && nextNode.data.get('module') === 'teasergroup' && (
+    nextNode.type === 'CAROUSEL'
+      ? nextNode.nodes.get(1)
+      : nextNode
+  )
+
+  const copyIntoHandler = event => {
+    event.preventDefault()
+
+    const sourceNodes = node.data.get('module') === 'teasergroup'
+      ? node.nodes
+      : [node]
+
+    const template = intoTarget.nodes.get(0)
+
+    editor.change(t => {
+      sourceNodes.filter(n => n.text.trim()).forEach(sourceNode => {
+        const data = template.data.merge({
+          id: shortId(),
+          formatUrl: sourceNode.data.get('url'),
+          formatColor: sourceNode.data.get('formatColor'),
+          url: sourceNode.data.get('url'),
+          image: sourceNode.data.get('image'),
+          byline: sourceNode.data.get('byline'),
+          kind: sourceNode.data.get('kind')
+        })
+        t.insertNodeByKey(intoTarget.key, 0, Block.create({
+          type: template.type,
+          data: data,
+          nodes: template.nodes.map((tn, i) => {
+            const sourceChild = sourceNode.nodes.get(i)
+            return Block.create({
+              type: tn.type,
+              data: data.remove('id').remove('module'),
+              nodes: sourceChild
+                ? sourceChild.toJSON().nodes
+                : []
+            })
+          })
+        }))
+      })
+    })
+  }
 
   return (
     <div contentEditable={false} {...styles.uiContainer}>
@@ -589,12 +634,12 @@ export const TeaserInlineUI = ({ editor, node, removable = true }) => {
               <MarkButton onMouseDown={moveHandler(+1)}>
                 <ArrowDownIcon size={24} />
               </MarkButton>}
-            {isBeforeGroup &&
-              <MarkButton>
+            {!!intoTarget && intoTarget.nodes.size > 0 &&
+              <MarkButton onMouseDown={copyIntoHandler} title='In die nächste Gruppe kopieren'>
                 <MoveIntoIcon size={24} />
               </MarkButton>}
             {endIndex !== -1 && index < endIndex &&
-              <MarkButton onMouseDown={moveHandler(endIndex - index)}>
+              <MarkButton onMouseDown={moveHandler(endIndex - index)} title='Nach «The End»'>
                 <MoveToEndIcon size={24} />
               </MarkButton>}
           </P>
