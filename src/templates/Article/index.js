@@ -786,7 +786,7 @@ const createSchema = ({
   titleBlockRule,
   titleBlockPrepend = null,
   titleBlockAppend = null,
-  titleBlockAfter = null,
+  titleMargin = true,
   repoPrefix = 'article-',
   series = true,
   Link = DefaultLink,
@@ -846,7 +846,7 @@ const createSchema = ({
           titleBlockRule || {
             matchMdast: matchZone('TITLE'),
             component: ({children, format, ...props}) => <>
-              <TitleBlock {...props} format={format} Link={Link}>
+              <TitleBlock {...props} format={format} Link={Link} margin={titleMargin}>
                 {titleBlockPrepend}
                 {format && format.meta && (
                   <Editorial.Format color={format.meta.color || colors[format.meta.kind]} contentEditable={false}>
