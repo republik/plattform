@@ -37,22 +37,22 @@ const styles = {
   })
 }
 
-const Checked = ({ disabled }) =>
+const Checked = ({ disabled, black }) =>
   <svg width="18" height="18" viewBox="0 0 18 18">
     <path
       d="M0 0h18v18H0V0zm7 14L2 9.192l1.4-1.346L7 11.308 14.6 4 16 5.346 7 14z"
-      fill={disabled ? colors.disabled : colors.primary}
+      fill={(disabled && colors.disabled) || (black && '#000000') || colors.primary}
       fillRule="evenodd"
     />
   </svg>
 
-export default ({ children, name, checked, disabled, onChange }) =>
+export default ({ children, name, checked, disabled, onChange, black }) =>
   <label
     {...(disabled ? merge(styles.label, styles.labelDisabled) : styles.label)}
   >
     <span {...styles.box}>
       {checked
-        ? <Checked disabled={disabled} />
+        ? <Checked disabled={disabled} black={black} />
         : <span
             {...(disabled
               ? merge(styles.unchecked, styles.disabled)

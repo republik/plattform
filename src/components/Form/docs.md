@@ -163,6 +163,12 @@ state: {checked: false}
 </Checkbox>
 ```
 
+```react
+<Checkbox black checked onChange={() => {}}>
+  Ich akzeptiere
+</Checkbox>
+```
+
 ## Radio
 
 ```react
