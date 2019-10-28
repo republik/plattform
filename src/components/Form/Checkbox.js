@@ -15,6 +15,9 @@ const styles = {
   labelDisabled: css({
     color: colors.disabled
   }),
+  labelError: css({
+    color: colors.error
+  }),
   input: css({
     display: 'none'
   }),
@@ -31,6 +34,9 @@ const styles = {
   uncheckedBlack: css({
     borderColor: '#000000'
   }),
+  uncheckedError: css({
+    borderColor: colors.error
+  }),
   box: css({
     display: 'inline-block',
     padding: '3px 3px 3px 0',
@@ -40,23 +46,28 @@ const styles = {
   })
 }
 
-const Checked = ({ disabled, black }) =>
+const Checked = ({ disabled, black, error }) =>
   <svg width="18" height="18" viewBox="0 0 18 18">
     <path
       d="M0 0h18v18H0V0zm7 14L2 9.192l1.4-1.346L7 11.308 14.6 4 16 5.346 7 14z"
-      fill={(disabled && colors.disabled) || (black && '#000000') || colors.primary}
+      fill={(disabled && colors.disabled) || (error && colors.error) || (black && '#000000') || colors.primary}
       fillRule="evenodd"
     />
   </svg>
 
-export default ({ children, name, checked, disabled, onChange, black }) =>
+export default ({ children, name, checked, disabled, onChange, black, error }) =>
   <label
-    {...(disabled ? merge(styles.label, styles.labelDisabled) : styles.label)}
+    {...merge(styles.label, disabled && styles.labelDisabled, error && styles.labelError)}
   >
     <span {...styles.box}>
       {checked
-        ? <Checked disabled={disabled} black={black} />
-        : <span {...merge(styles.unchecked, black && styles.uncheckedBlack, disabled && styles.disabled)} />}
+        ? <Checked disabled={disabled} black={black} error={error} />
+        : <span {...merge(
+          styles.unchecked,
+          disabled && styles.disabled,
+          error && styles.uncheckedError,
+          black && styles.uncheckedBlack
+        )} />}
     </span>
     <input
       {...styles.input}

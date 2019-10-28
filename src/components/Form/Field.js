@@ -194,16 +194,15 @@ class Field extends Component {
     const valueIsPresent = value !== undefined && value !== null && String(value).length !== 0
     const labelStyle = (isFocused || valueIsPresent || hasError)
       ? merge(
-          labelTextStyle, labelTextTopStyle,
+          labelTextStyle, labelTextTopStyle, colorStyle,
           isFocused && labelTextFocusedStyle,
-          hasError && labelTextErrorStyle,
-          colorStyle
+          hasError && labelTextErrorStyle
         )
       : merge(labelTextStyle, colorStyle)
     const incStyle = hasIncrease ? fieldIncStyle : undefined
     const iconStyle = icon ? fieldIconStyle : undefined
     const fStyle = hasError
-      ? merge(fieldStyle, fieldErrorStyle, incStyle, colorStyle, iconStyle)
+      ? merge(fieldStyle, colorStyle, fieldErrorStyle, incStyle, iconStyle)
       : merge(fieldStyle, incStyle, colorStyle, iconStyle)
 
     return (

@@ -37,11 +37,20 @@ export const linkRule = css(linkStyle)
 
 export const linkBlackStyle = css({
   ...underline,
-  cursor: 'pointer',
   color: '#000000',
   '@media (hover)': {
     ':hover': {
       color: colors.text
+    }
+  }
+})
+
+export const linkErrorStyle = css({
+  ...underline,
+  color: colors.error,
+  '@media (hover)': {
+    ':hover': {
+      color: colors.error
     }
   }
 })
