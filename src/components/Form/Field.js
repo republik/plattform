@@ -64,7 +64,8 @@ const containerStyle = css({
   fontFamily: fontFamilies.sansSerifRegular,
   fontSize: 22,
   lineHeight: `${lineHeight}px`,
-  marginBottom: 15
+  marginBottom: 15,
+  cursor: 'text'
 })
 const labelTextStyle = css({
   position: 'absolute',
