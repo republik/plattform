@@ -65,8 +65,8 @@ export default ({ children, name, checked, disabled, onChange, black, error }) =
         : <span {...merge(
           styles.unchecked,
           disabled && styles.disabled,
-          error && styles.uncheckedError,
-          black && styles.uncheckedBlack
+          black && styles.uncheckedBlack,
+          error && styles.uncheckedError
         )} />}
     </span>
     <input

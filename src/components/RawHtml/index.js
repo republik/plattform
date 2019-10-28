@@ -22,7 +22,7 @@ const styles = {
 }
 
 const RawHtml = ({type, dangerouslySetInnerHTML, black, error}) => createElement(type, {
-  ...merge(styles.default, error && styles.error, black && styles.black),
+  ...merge(styles.default, black && styles.black, error && styles.error),
   dangerouslySetInnerHTML
 })
 
