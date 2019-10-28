@@ -194,8 +194,8 @@ class Field extends Component {
     const valueIsPresent = value !== undefined && value !== null && String(value).length !== 0
     const labelStyle = (isFocused || valueIsPresent || hasError)
       ? merge(
-          labelTextStyle, labelTextTopStyle, colorStyle,
-          isFocused && labelTextFocusedStyle,
+          labelTextStyle, labelTextTopStyle,
+          isFocused && labelTextFocusedStyle, colorStyle,
           hasError && labelTextErrorStyle
         )
       : merge(labelTextStyle, colorStyle)
