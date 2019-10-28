@@ -785,7 +785,6 @@ const createSchema = ({
   ],
   titleBlockRule,
   titleBlockPrepend = null,
-  titleBlockAppend = null,
   titleMargin = true,
   repoPrefix = 'article-',
   series = true,
@@ -858,7 +857,6 @@ const createSchema = ({
                   </Editorial.Format>
                 )}
                 {children}
-                {titleBlockAppend}
               </TitleBlock>
             </>,
             props: (node, index, parent, { ancestors }) => ({
