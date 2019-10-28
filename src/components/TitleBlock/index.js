@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'
 import { MAX_WIDTH, PADDING, BREAKOUT } from '../Center'
 import { css, merge } from 'glamor'
 import { mUp } from '../../theme/mediaQueries'
-import { container } from 'glamor/ous'
 
 const styles = {
   container: css({
