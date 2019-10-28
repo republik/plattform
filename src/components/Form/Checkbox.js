@@ -28,6 +28,9 @@ const styles = {
   disabled: css({
     border: `1px solid ${colors.disabled}`
   }),
+  uncheckedBlack: css({
+    borderColor: '#000000'
+  }),
   box: css({
     display: 'inline-block',
     padding: '3px 3px 3px 0',
@@ -53,11 +56,7 @@ export default ({ children, name, checked, disabled, onChange, black }) =>
     <span {...styles.box}>
       {checked
         ? <Checked disabled={disabled} black={black} />
-        : <span
-            {...(disabled
-              ? merge(styles.unchecked, styles.disabled)
-              : styles.unchecked)}
-          />}
+        : <span {...merge(styles.unchecked, black && styles.uncheckedBlack, disabled && styles.disabled)} />}
     </span>
     <input
       {...styles.input}

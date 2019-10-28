@@ -8,6 +8,7 @@ import * as _Interaction from './Interaction'
 import * as _Scribble from './Scribble'
 import { css } from 'glamor'
 import { convertStyleToRem } from './utils'
+import { underline } from '../../lib/styleMixins'
 
 // Namespaced exports.
 export const Editorial = {..._Editorial}
@@ -34,7 +35,16 @@ export const linkStyle = {
 }
 export const linkRule = css(linkStyle)
 
-export const linkBlackStyle = _Editorial.link
+export const linkBlackStyle = css({
+  ...underline,
+  cursor: 'pointer',
+  color: '#000000',
+  '@media (hover)': {
+    ':hover': {
+      color: colors.text
+    }
+  }
+})
 
 const styles = {
   h1: css({

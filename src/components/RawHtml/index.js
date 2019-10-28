@@ -11,6 +11,7 @@ const styles = {
     }
   }),
   black: css({
+    color: '#000000',
     '& a': linkBlackStyle
   })
 }
