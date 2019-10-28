@@ -34,6 +34,8 @@ export const linkStyle = {
 }
 export const linkRule = css(linkStyle)
 
+export const linkBlackStyle = _Editorial.link
+
 const styles = {
   h1: css({
     ...fontStyles.serifBold36,

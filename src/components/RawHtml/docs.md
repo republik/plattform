@@ -27,3 +27,13 @@ By default the HTML is rendered inside a `<span>` element. The `type` property c
   }}
 />
 ```
+
+```react|span-6
+<RawHtml
+  black
+  type={Interaction.H1}
+  dangerouslySetInnerHTML={{
+    __html: '<b>Bold</b> und <a href="#">Link</a>'
+  }}
+/>
+```

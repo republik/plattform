@@ -2,7 +2,7 @@ A `<TitleBlock />` is a container for an article's title elements like headline,
 
 Supported props:
 - `center`: bool, large centered title block
-
+ 
 
 ```react
 <TitleBlock>

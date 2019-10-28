@@ -1,6 +1,6 @@
 import { createElement } from 'react'
-import { css } from 'glamor'
-import { linkStyle } from '../Typography'
+import { css, merge } from 'glamor'
+import { linkBlackStyle, linkStyle } from '../Typography'
 import PropTypes from 'prop-types'
 
 const styles = {
@@ -9,11 +9,14 @@ const styles = {
     '& ul, & ol': {
       overflow: 'hidden'
     }
+  }),
+  black: css({
+    '& a': linkBlackStyle
   })
 }
 
-const RawHtml = ({type, dangerouslySetInnerHTML}) => createElement(type, {
-  ...styles.default,
+const RawHtml = ({type, dangerouslySetInnerHTML, black}) => createElement(type, {
+  ...merge(styles.default, black && styles.black),
   dangerouslySetInnerHTML
 })
 
