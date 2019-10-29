@@ -43,7 +43,14 @@ const buttonStyle = css(plainButtonRule, {
     backgroundColor: '#fff',
     color: colors.disabled,
     borderColor: colors.disabled,
-    cursor: 'default'
+    cursor: 'default',
+    '@media (hover)': {
+      ':hover': {
+        backgroundColor: '#fff',
+        color: colors.disabled,
+        borderColor: colors.disabled
+      }
+    }
   }
 })
 const linkStyle = css({
@@ -59,8 +66,8 @@ const primaryStyle = css({
   color: '#fff',
   '@media (hover)': {
     ':hover': {
-      backgroundColor: colors.secondary,
-      borderColor: colors.secondary
+      backgroundColor: colors.primaryBright,
+      borderColor: colors.primaryBright
     },
   },
   ':active': {

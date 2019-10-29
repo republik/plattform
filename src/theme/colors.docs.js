@@ -9,7 +9,8 @@ ${<Fragment>
     {`import { colors } from '@project-r/styleguide'`}
   </CodeSpecimen>
   <ColorSpecimen span={3} name='primary' value={colors.primary} />
-  <ColorSpecimen span={2} name='secondary' value={colors.secondary} />
+  <ColorSpecimen span={1} name='primaryBright' value={colors.primaryBright} />
+  <ColorSpecimen span={1} name='secondary' value={colors.secondary} />
   <ColorSpecimen span={1} name='disabled' value={colors.disabled} />
   <ColorSpecimen span={3} name='primaryBg' value={colors.primaryBg} />
   <ColorSpecimen span={2} name='secondaryBg' value={colors.secondaryBg} />
