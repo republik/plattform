@@ -98,12 +98,6 @@ ReactDOM.render(
               path: '/colors',
               title: 'Colors',
               component: require('./theme/colors.docs.js')
-            },
-            {
-              path: '/grid',
-              title: 'Grid',
-              imports: require('./components/Grid'),
-              src: require('./components/Grid/docs.md')
             }
           ]
         },
@@ -118,6 +112,12 @@ ReactDOM.render(
                 InlineSpinner: require('./components/Spinner').InlineSpinner
               },
               src: require('./components/Spinner/docs.md')
+            },
+            {
+              path: '/components/container',
+              title: 'Container',
+              imports: require('./components/Grid'),
+              src: require('./components/Grid/docs.md')
             },
             {
               path: '/components/loader',
