@@ -170,16 +170,24 @@ ${<TableSpecimen rows={options} />}
 
 export default () => (
   <Fragment>
+    {markdown`
+\`\`\`code|lang-jsx
+import { Chart, ChartTitle, ChartLead } from '@project-r/styleguide/chart'
+\`\`\`
+
+The charts are also available as simple, importable functions on [observablehq.com](https://observablehq.com/@republik/charts).
+
+## Credits
+
+This chart system for initially developed at Interactive Things for [«Gut leben in Deutschland»](https://github.com/gut-leben-in-deutschland/bericht). _License: [MIT](https://github.com/orbiting/styleguide/blob/master/src/components/Chart/LICENSE)_
+
+It also incoperates color platte for Swiss parties created by [SRF Data](https://github.com/srfdata/swiss-party-colors). _License: [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/)_
+
+    `}
     {allProps}
     {markdown`
 ## Default Props
     `}
     {chartPages}
-    {markdown`
-### Credits
-
-- [Interactive Things: «Gut leben in Deutschland»](https://github.com/gut-leben-in-deutschland/bericht)
-- [SRF Data: Swiss party colors](https://github.com/srfdata/swiss-party-colors)
-    `}
   </Fragment>
 )
