@@ -2,8 +2,11 @@
 
 - empower the developers to be fast
 - document the available components
-- keep styles consistent
+- keep styles and interaction behaviour consistent
   - even between different code bases
+- enable division of labor
+  - isolate the implementation and documentation of components
+  - e.g. a new teaser can be implemented without knowing all the inner workings of the CMS
 
 ## General
 
