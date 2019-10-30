@@ -8,7 +8,7 @@ The development started on March 5th 2017 for the crowdfunding of [republik.ch](
 
 It's currently primarly used to power our web and cms frontends—[republik-frontend](https://github.com/orbiting/republik-frontend) and [publikator-frontend](https://github.com/orbiting/publikator-frontend).
 
-Beyond that it provides some definitions to our backend and app. Was used in various prototypes and the charts are available on [observablehq.com](https://observablehq.com/@republik/charts) for story prototyping.
+Beyond that it provides some definitions to our [backends](https://github.com/orbiting/backends) and [app](https://github.com/orbiting/app), was used in various prototypes and the charts are available on [observablehq.com](https://observablehq.com/@republik/charts) for story prototyping.
 
 ## License
 

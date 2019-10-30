@@ -1,3 +1,10 @@
+## Goals
+
+- empower the developers to be fast
+- document the available components
+- keep styles consistent
+  - even between different code bases
+
 ## General
 
 1. All development should happen in branches and merged via a pull request.
