@@ -17,3 +17,12 @@ module.exports.detect = (ua) => {
 
   return info.toString()
 }
+
+module.exports.isApp = (ua) => {
+  if (ua) {
+    const match = ua.match(appRegex)
+    return !!match
+  }
+
+  return false
+}

@@ -6,6 +6,7 @@ const Promise = require('bluebird')
 const debug = require('debug')('auth:lib:Users')
 const { sendMailTemplate, moveNewsletterSubscriptions } = require('@orbiting/backend-modules-mail')
 const t = require('./t')
+const useragent = require('./useragent')
 const { newAuthError } = require('./AuthError')
 const {
   ensureAllRequiredConsents,
@@ -149,12 +150,13 @@ const signIn = async (_email, context, pgdb, req, consents, _tokenType) => {
   })
 
   const { email } = (user || { email: _email })
+  const isApp = useragent.isApp(req.headers['user-agent'])
 
   const { EMAIL_TOKEN, EMAIL_CODE } = TokenTypes
   // check if tokenType is enabled as firstFactor
   // email is always enabled
   const enabledTokenTypes = await enabledFirstFactors(email, pgdb)
-  let tokenType = _tokenType
+  let tokenType = _tokenType || (isApp && EMAIL_TOKEN)
   if (!tokenType || tokenType !== EMAIL_TOKEN) {
     if (!tokenType) {
       tokenType = enabledTokenTypes[0]
