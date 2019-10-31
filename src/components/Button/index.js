@@ -108,17 +108,6 @@ const whiteStyle = css({
     color: '#000'
   }
 })
-const blackPrimaryStyle = css({
-  backgroundColor: '#000',
-  borderColor: '#000',
-  color: '#fff',
-  '@media (hover)': {
-    ':hover': {
-      backgroundColor: colors.secondary,
-      borderColor: colors.secondary
-    }
-  }
-})
 const blockStyle = css({
   display: 'block',
   width: '100%'
@@ -151,7 +140,6 @@ const Button = ({
     dimmed && dimmedStyle,
     black && blackStyle,
     white && whiteStyle,
-    black && primary && blackPrimaryStyle,
     block && blockStyle,
     big && bigStyle,
     spacedOut && marginBottomStyle,

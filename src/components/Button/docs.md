@@ -140,18 +140,6 @@ To fit, e.g. in a header, it's permissible to set an explicit height.
 </Button>
 ```
 
-```react|span-3
-<Button black primary>
-  Schwarz
-</Button>
-```
-
-```react|span-3
-<Button black primary simulate='hover'>
-  Schwarz
-</Button>
-```
-
 ```react|span-3,dark
 <Button white>
   Weiss
