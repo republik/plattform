@@ -3,6 +3,9 @@ import { css, merge, simulate } from 'glamor'
 import colors from '../../theme/colors'
 import { fontFamilies } from '../../theme/fonts'
 import { pxToRem } from '../Typography/utils'
+import { lab } from 'd3-color'
+
+const primaryColor = lab(colors.primary)
 
 export const plainButtonRule = css({
   border: 'none',
@@ -66,8 +69,8 @@ const primaryStyle = css({
   color: '#fff',
   '@media (hover)': {
     ':hover': {
-      backgroundColor: colors.primaryBright,
-      borderColor: colors.primaryBright
+      backgroundColor: primaryColor.darker(0.7),
+      borderColor: primaryColor.darker(0.7)
     },
   },
   ':active': {
