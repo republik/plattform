@@ -70,7 +70,7 @@ const colors = {
     text: '#f0f0f0',
     lightText: '#828282',
     divider: '#5b5b5b',
-    error: '#ff5724'
+    error: 'rgb(239,69,51)'
   },
   ...getJson('COLORS')
 }

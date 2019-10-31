@@ -101,6 +101,15 @@ const whiteStyle = css({
     color: 'rgba(255,255,255,0.8)'
   }
 })
+const fieldErrorWhiteStyle = css({
+  borderColor: colors.negative.error,
+  ':focus': {
+    borderColor: colors.negative.error
+  }
+})
+const labelTextErrorWhiteStyle = css({
+  color: colors.negative.error
+})
 const blackStyle = css({
   backgroundColor: 'transparent',
   color: '#000',
@@ -128,6 +137,9 @@ const iconWrapperStyle = css({
   position: 'absolute',
   right: 3,
   top: lineHeight + 5
+})
+const iconWrapperStyleWhite = css({
+  color: '#ffffff'
 })
 
 const ArrowUp = ({size, fill, ...props}) => (
@@ -196,13 +208,14 @@ class Field extends Component {
       ? merge(
           labelTextStyle, labelTextTopStyle,
           isFocused && labelTextFocusedStyle, colorStyle,
-          hasError && labelTextErrorStyle
+          hasError && labelTextErrorStyle,
+          hasError && this.props.white && labelTextErrorWhiteStyle
         )
       : merge(labelTextStyle, colorStyle)
     const incStyle = hasIncrease ? fieldIncStyle : undefined
     const iconStyle = icon ? fieldIconStyle : undefined
     const fStyle = hasError
-      ? merge(fieldStyle, colorStyle, fieldErrorStyle, incStyle, iconStyle)
+      ? merge(fieldStyle, colorStyle, fieldErrorStyle, this.props.white && fieldErrorWhiteStyle, incStyle, iconStyle)
       : merge(fieldStyle, incStyle, colorStyle, iconStyle)
 
     return (
@@ -267,7 +280,7 @@ class Field extends Component {
             }} />
         )}
         {icon && (
-          <span {...iconWrapperStyle}>{icon}</span>
+          <span {...merge(iconWrapperStyle, this.props.white && iconWrapperStyleWhite)}>{icon}</span>
         )}
       </label>
     )

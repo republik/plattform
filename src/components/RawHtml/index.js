@@ -1,6 +1,6 @@
 import { createElement } from 'react'
 import { css, merge } from 'glamor'
-import { linkBlackStyle, linkErrorStyle, linkStyle } from '../Typography'
+import { linkBlackStyle, linkErrorStyle, linkErrorStyleNegative, linkStyle } from '../Typography'
 import PropTypes from 'prop-types'
 import colors from '../../theme/colors'
 
@@ -15,14 +15,26 @@ const styles = {
     color: '#000000',
     '& a': linkBlackStyle
   }),
+  white: css({
+    color: colors.negative.text,
+  }),
   error: css({
     color: colors.error,
     '& a': linkErrorStyle
+  }),
+  errorWhite: css({
+    color: colors.negative.error,
+    '& a': linkErrorStyleNegative
   })
 }
 
-const RawHtml = ({type, dangerouslySetInnerHTML, black, error}) => createElement(type, {
-  ...merge(styles.default, black && styles.black, error && styles.error),
+const RawHtml = ({type, dangerouslySetInnerHTML, black, white, error}) => createElement(type, {
+  ...merge(
+    styles.default,
+    black && styles.black,
+    white && styles.white,
+    error && styles.error,
+    error && white && styles.errorWhite),
   dangerouslySetInnerHTML
 })
 

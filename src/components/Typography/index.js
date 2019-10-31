@@ -55,6 +55,16 @@ export const linkErrorStyle = css({
   }
 })
 
+export const linkErrorStyleNegative = css({
+  ...underline,
+  color: colors.negative.error,
+  '@media (hover)': {
+    ':hover': {
+      color: colors.negative.error
+    }
+  }
+})
+
 const styles = {
   h1: css({
     ...fontStyles.serifBold36,
