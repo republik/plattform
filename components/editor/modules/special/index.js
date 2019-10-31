@@ -1,3 +1,4 @@
+import React from 'react'
 import { colors } from '@project-r/styleguide'
 import { Block } from 'slate'
 
@@ -10,78 +11,87 @@ export default ({ rule, subModules, TYPE }) => {
   const zone = {
     match: matchBlock(TYPE),
     matchMdast: rule.matchMdast,
-    fromMdast: (node) => {
+    fromMdast: node => {
       return {
         kind: 'block',
         type: TYPE,
         data: {
           identifier: node.identifier,
-          ...node.data
+          ...node.data,
         },
-        isVoid: true
+        isVoid: true,
       }
     },
-    toMdast: (object) => {
+    toMdast: object => {
       const { identifier, ...data } = object.data
       return {
         type: 'zone',
         identifier,
         data: data,
-        children: []
+        children: [],
       }
-    }
+    },
   }
 
-  const newBlock = () => Block.fromJSON(
-    zone.fromMdast({
-      type: 'zone',
-      identifier: 'SPECIAL',
-      data: {}
-    })
-  )
+  const newBlock = () =>
+    Block.fromJSON(
+      zone.fromMdast({
+        type: 'zone',
+        identifier: 'SPECIAL',
+        data: {},
+      }),
+    )
 
   const serializer = new MarkdownSerializer({
-    rules: [
-      zone
-    ]
+    rules: [zone],
   })
 
   return {
     TYPE,
     helpers: {
       serializer,
-      newBlock
+      newBlock,
     },
     changes: {},
     ui: createUi({ TYPE, newBlock, rule }),
     plugins: [
       {
-        renderNode ({ node, children, editor: { value }, attributes }) {
+        renderNode({
+          node,
+          children,
+          editor: { value },
+          attributes,
+        }) {
           if (!zone.match(node)) return
 
-          const active = value.blocks.some(block => block.key === node.key)
+          const active = value.blocks.some(
+            block => block.key === node.key,
+          )
           return (
-            <div style={{
-              width: '100%',
-              height: '20vh',
-              paddingTop: '8vh',
-              textAlign: 'center',
-              backgroundColor: colors.primaryBg,
-              transition: 'outline-color 0.2s',
-              outline: '4px solid transparent',
-              outlineColor: active ? colors.primary : 'transparent',
-              marginBottom: 10
-            }} {...attributes}>
+            <div
+              style={{
+                width: '100%',
+                height: '20vh',
+                paddingTop: '8vh',
+                textAlign: 'center',
+                backgroundColor: colors.primaryBg,
+                transition: 'outline-color 0.2s',
+                outline: '4px solid transparent',
+                outlineColor: active ? colors.primary : 'transparent',
+                marginBottom: 10,
+              }}
+              {...attributes}
+            >
               {node.data.get('identifier') || 'Special'}
             </div>
           )
         },
         schema: {
           [TYPE]: {
-            isVoid: true
-          }
-        }
-      }
-    ]
+            isVoid: true,
+          },
+        },
+      },
+    ],
   }
 }

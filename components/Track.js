@@ -6,17 +6,18 @@ import { parse, format } from 'url'
 import withMe from '../lib/withMe'
 import track from '../lib/piwik'
 
-import {
-  PUBLIC_BASE_URL
-} from '../lib/settings'
+import { PUBLIC_BASE_URL } from '../lib/settings'
 
 const trackRoles = me =>
   track([
     'setCustomDimension',
     1,
     me
-      ? [].concat(me.roles).sort().join(' ') || 'none'
-      : 'guest'
+      ? []
+          .concat(me.roles)
+          .sort()
+          .join(' ') || 'none'
+      : 'guest',
   ])
 
 const trackPageView = url => {
@@ -42,10 +43,13 @@ const trackPageView = url => {
 }
 
 class Track extends Component {
-  componentDidMount () {
+  componentDidMount() {
     trackRoles(this.props.me)
     trackPageView(window.location.href)
-    Router.events.on('routeChangeComplete', this.onRouteChangeComplete)
+    Router.events.on(
+      'routeChangeComplete',
+      this.onRouteChangeComplete,
+    )
   }
   onRouteChangeComplete = url => {
     // give pages time to set correct page title
@@ -55,13 +59,16 @@ class Track extends Component {
       trackPageView(`${PUBLIC_BASE_URL}${url}`)
     }, 600)
   }
-  componentWillUnmount () {
-    Router.events.off('routeChangeComplete', this.onRouteChangeComplete)
+  componentWillUnmount() {
+    Router.events.off(
+      'routeChangeComplete',
+      this.onRouteChangeComplete,
+    )
   }
-  componentWillReceiveProps ({ me }) {
+  UNSAFE_componentWillReceiveProps({ me }) {
     if (
       me !== this.props.me &&
-      ((!me || !this.props.me) || me.email !== this.props.me.email)
+      (!me || !this.props.me || me.email !== this.props.me.email)
     ) {
       // start new visit with potentially different roles
       track(['appendToTrackingUrl', 'new_visit=1'])
@@ -69,7 +76,7 @@ class Track extends Component {
       trackRoles(me)
     }
   }
-  render () {
+  render() {
     return null
   }
 }

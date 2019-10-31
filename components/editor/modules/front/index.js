@@ -1,3 +1,4 @@
+import React from 'react'
 import MarkdownSerializer from 'slate-mdast-serializer'
 import { parse } from '@orbiting/remark-preset'
 import { Set, is } from 'immutable'
@@ -12,14 +13,14 @@ export default ({ rule, subModules, TYPE }) => {
       return Set()
     }
     return nodes.reduce(
-      (set, node) => set
-        .add(node.data && (
-          node.data.get
-            ? node.data.get('url')
-            : node.data.url
-        ))
-        .concat(extractUrls(node.nodes)),
-      Set()
+      (set, node) =>
+        set
+          .add(
+            node.data &&
+              (node.data.get ? node.data.get('url') : node.data.url),
+          )
+          .concat(extractUrls(node.nodes)),
+      Set(),
     )
   }
   const extractRepoIds = nodes =>
@@ -31,8 +32,10 @@ export default ({ rule, subModules, TYPE }) => {
       })
       .filter(Boolean)
 
-  const getAutoFeedData = (doc) => {
-    const liveTeaserFeedIndex = doc.nodes.findIndex(matchLiveTeaserFeed)
+  const getAutoFeedData = doc => {
+    const liveTeaserFeedIndex = doc.nodes.findIndex(
+      matchLiveTeaserFeed,
+    )
 
     if (liveTeaserFeedIndex !== -1) {
       const liveTeaserFeed = doc.nodes.get
@@ -43,19 +46,23 @@ export default ({ rule, subModules, TYPE }) => {
 
       return {
         priorRepoIds,
-        liveTeaserFeed
+        liveTeaserFeed,
       }
     }
   }
 
   const childSerializer = new MarkdownSerializer({
-    rules: subModules.reduce(
-      (a, m) => a.concat(
-        m.helpers && m.helpers.serializer &&
-        m.helpers.serializer.rules
-      ),
-      []
-    ).filter(Boolean)
+    rules: subModules
+      .reduce(
+        (a, m) =>
+          a.concat(
+            m.helpers &&
+              m.helpers.serializer &&
+              m.helpers.serializer.rules,
+          ),
+        [],
+      )
+      .filter(Boolean),
   })
 
   let invisibleNodes
@@ -70,13 +77,14 @@ export default ({ rule, subModules, TYPE }) => {
         document: {
           data: node.meta,
           kind: 'document',
-          nodes: childSerializer.fromMdast(visibleNodes)
+          nodes: childSerializer.fromMdast(visibleNodes),
         },
-        kind: 'value'
+        kind: 'value',
       }
       const feedData = getAutoFeedData(res.document)
       if (feedData) {
-        feedData.liveTeaserFeed.data.priorRepoIds = feedData.priorRepoIds
+        feedData.liveTeaserFeed.data.priorRepoIds =
+          feedData.priorRepoIds
       }
       return res
     },
@@ -84,18 +92,21 @@ export default ({ rule, subModules, TYPE }) => {
       return {
         type: 'root',
         meta: object.data,
-        children: childSerializer.toMdast(object.nodes).concat(invisibleNodes)
+        children: childSerializer
+          .toMdast(object.nodes)
+          .concat(invisibleNodes),
       }
-    }
+    },
   }
 
   const serializer = new MarkdownSerializer({
-    rules: [
-      documentRule
-    ]
+    rules: [documentRule],
   })
 
-  const newDocument = ({ title, template }) => serializer.deserialize(parse(`
+  const newDocument = ({ title, template }) =>
+    serializer.deserialize(
+      parse(
+        `
 ---
 template: ${template}
 ---
@@ -172,8 +183,9 @@ An article by [Christof Moser](), 31 December 2017
 
 <hr/></section>
 
-`.trim()
-  ))
+`.trim(),
+      ),
+    )
 
   const Container = rule.component
 
@@ -181,25 +193,35 @@ An article by [Christof Moser](), 31 December 2017
     TYPE,
     helpers: {
       serializer,
-      newDocument
+      newDocument,
     },
     changes: {},
     plugins: [
       {
-        renderEditor: ({ children }) => <Container>{children}</Container>,
-        onChange: (change) => {
+        renderEditor: ({ children }) => (
+          <Container>{children}</Container>
+        ),
+        onChange: change => {
           const feedData = getAutoFeedData(change.value.document)
 
           if (feedData) {
-            if (!is(feedData.liveTeaserFeed.data.get('priorRepoIds'), feedData.priorRepoIds)) {
+            if (
+              !is(
+                feedData.liveTeaserFeed.data.get('priorRepoIds'),
+                feedData.priorRepoIds,
+              )
+            ) {
               change.setNodeByKey(feedData.liveTeaserFeed.key, {
-                data: feedData.liveTeaserFeed.data.set('priorRepoIds', feedData.priorRepoIds)
+                data: feedData.liveTeaserFeed.data.set(
+                  'priorRepoIds',
+                  feedData.priorRepoIds,
+                ),
               })
               return change
             }
           }
-        }
-      }
-    ]
+        },
+      },
+    ],
   }
 }

@@ -1,9 +1,10 @@
+import React from 'react'
 import { Radio, Label } from '@project-r/styleguide'
 
 import {
   buttonStyles,
   createPropertyForm,
-  matchBlock
+  matchBlock,
 } from '../../utils'
 
 import injectBlock from '../../utils/injectBlock'
@@ -19,7 +20,7 @@ const addFigure = options => {
   return (value, onChange, figureGroupNode) => event => {
     event.preventDefault()
     const index = figureGroupNode.nodes.findLastIndex(
-      n => n.type === figureModule.TYPE
+      n => n.type === figureModule.TYPE,
     )
     onChange(
       value
@@ -27,8 +28,8 @@ const addFigure = options => {
         .insertNodeByKey(
           figureGroupNode.key,
           index + 1,
-          figureModule.helpers.newBlock()
-        )
+          figureModule.helpers.newBlock(),
+        ),
     )
   }
 }
@@ -42,9 +43,9 @@ const unwrapFigures = options => {
         .filter(n => n.type === figureModule.TYPE)
         .reduce(
           (t, child) => t.unwrapNodeByKey(child.key),
-          value.change()
+          value.change(),
         )
-        .removeNodeByKey(figureGroupNode.key)
+        .removeNodeByKey(figureGroupNode.key),
     )
   }
 }
@@ -102,11 +103,11 @@ export const FigureGroupForm = options => {
         (memo, node) =>
           memo ||
           value.document.getFurthest(node.key, matchBlock(TYPE)),
-        undefined
+        undefined,
       )
 
       return !figureGroup
-    }
+    },
   })(({ disabled, onChange, value }) => {
     if (disabled) {
       return null
@@ -116,7 +117,7 @@ export const FigureGroupForm = options => {
       (memo, node) =>
         memo ||
         value.document.getFurthest(node.key, matchBlock(TYPE)),
-      undefined
+      undefined,
     )
 
     const handlerFactory = createOnFieldChange(
@@ -124,7 +125,7 @@ export const FigureGroupForm = options => {
         onChange(change)
       },
       value,
-      figureGroup
+      figureGroup,
     )
     return (
       <div>
@@ -146,7 +147,11 @@ export const FigureGroupForm = options => {
             value={3}
             checked={figureGroup.data.get('slideshow') === 3}
             onChange={event =>
-              handlerFactory('slideshow', null, Number(event.target.value))
+              handlerFactory(
+                'slideshow',
+                null,
+                Number(event.target.value),
+              )
             }
           >
             3 Zeilen Vorschau
@@ -155,7 +160,11 @@ export const FigureGroupForm = options => {
             value={2}
             checked={figureGroup.data.get('slideshow') === 2}
             onChange={event =>
-              handlerFactory('slideshow', null, Number(event.target.value))
+              handlerFactory(
+                'slideshow',
+                null,
+                Number(event.target.value),
+              )
             }
           >
             2 Zeilen Vorschau
@@ -164,20 +173,26 @@ export const FigureGroupForm = options => {
             value={1}
             checked={figureGroup.data.get('slideshow') === 1}
             onChange={event =>
-              handlerFactory('slideshow', null, Number(event.target.value))
+              handlerFactory(
+                'slideshow',
+                null,
+                Number(event.target.value),
+              )
             }
           >
             1 Zeile Vorschau
           </Radio>
         </UIForm>
         <p style={{ margin: '10px 0' }}>
-          <Label>Ausrichtung</Label><br />
+          <Label>Ausrichtung</Label>
+          <br />
           {[
             { label: 'Klein', size: 'narrow' },
             { label: 'Normal', size: 'normal' },
-            { label: 'Gross', size: 'breakout' }
+            { label: 'Gross', size: 'breakout' },
           ].map((size, i) => {
-            const checked = figureGroup.data.get('size', 'breakout') === size.size
+            const checked =
+              figureGroup.data.get('size', 'breakout') === size.size
 
             return [
               <Radio
@@ -187,16 +202,18 @@ export const FigureGroupForm = options => {
                   event.preventDefault()
                   if (checked) return
 
-                  let change = value.change()
+                  let change = value
+                    .change()
                     .setNodeByKey(figureGroup.key, {
-                      data: figureGroup.data.set('size', size.size)
+                      data: figureGroup.data.set('size', size.size),
                     })
 
                   onChange(change)
-                }}>
+                }}
+              >
                 {size.label}
               </Radio>,
-              <br key={`br${i}`} />
+              <br key={`br${i}`} />,
             ]
           })}
         </p>
@@ -205,11 +222,7 @@ export const FigureGroupForm = options => {
           {...buttonStyles.insert}
           data-disabled={disabled}
           data-visible
-          onMouseDown={addFigureHandler(
-            value,
-            onChange,
-            figureGroup
-          )}
+          onMouseDown={addFigureHandler(value, onChange, figureGroup)}
         >
           Bild hinzufügen
         </span>
@@ -220,7 +233,7 @@ export const FigureGroupForm = options => {
           onMouseDown={unwrapFiguresHandler(
             value,
             onChange,
-            figureGroup
+            figureGroup,
           )}
         >
           Bildergruppe auflösen
@@ -234,12 +247,12 @@ export const FigureGroupButton = options => {
   const figureButtonClickHandler = (
     disabled,
     value,
-    onChange
+    onChange,
   ) => event => {
     event.preventDefault()
     if (!disabled) {
       onChange(
-        value.change().call(injectBlock, getNewBlock(options)())
+        value.change().call(injectBlock, getNewBlock(options)()),
       )
     }
   }
@@ -257,7 +270,7 @@ export const FigureGroupButton = options => {
         onMouseDown={figureButtonClickHandler(
           disabled,
           value,
-          onChange
+          onChange,
         )}
       >
         {options.rule.editorOptions.insertButtonText}
