@@ -26,8 +26,8 @@ ${<Fragment>
 ### Negative colors
 
 ${<Fragment>
-  <ColorSpecimen span={3} name='negative.containerBg' value={colors.negative.containerBg} />
-  <ColorSpecimen span={2} name='negative.primaryBg' value={colors.negative.primaryBg} />
+  <ColorSpecimen span={1} name='negative.containerBg' value={colors.negative.containerBg} />
+  <ColorSpecimen span={1} name='negative.primaryBg' value={colors.negative.primaryBg} />
   <ColorSpecimen span={1} name='negative.divider' value={colors.negative.divider} />
   <ColorSpecimen span={1} name='negative.text' value={colors.negative.text} />
   <ColorSpecimen span={1} name='negative.lightText' value={colors.negative.lightText} />
