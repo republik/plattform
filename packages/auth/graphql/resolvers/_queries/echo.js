@@ -11,6 +11,7 @@ module.exports = async (_, args, { req }) => {
   return {
     ipAddress: ip,
     userAgent: useragent.detect(ua),
+    isApp: useragent.isApp(ua),
     country,
     countryFlag: countryCode ? flag(countryCode) : '🏴',
     city

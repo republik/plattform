@@ -94,6 +94,7 @@ input RequiredUserFields {
 type RequestInfo {
   ipAddress: String!
   userAgent: String
+  isApp: Boolean!
   country: String
   countryFlag: String
   city: String
