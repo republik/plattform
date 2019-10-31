@@ -131,9 +131,9 @@ const styles = {
   })
 }
 
-export const A = ({children, ...props}) => (
-  <a {...props} {...linkRule}>{children}</a>
-)
+export const A = React.forwardRef(({children, ...props}, ref) => (
+  <a {...props} {...linkRule} ref={ref}>{children}</a>
+))
 
 export const H1 = ({children, ...props}) => (
   <h1 {...props} {...styles.h1}>{children}</h1>

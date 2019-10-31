@@ -213,11 +213,11 @@ export const link = css({
     }
   }
 })
-export const A = ({ children, attributes, ...props }) => (
-  <a {...attributes} {...props} {...link}>
+export const A = React.forwardRef(({ children, attributes, ...props }, ref) => (
+  <a {...attributes} {...props} {...link} ref={ref}>
     {children}
   </a>
-)
+))
 
 const note = css({
   ...convertStyleToRem(styles.sansSerifRegular12),
