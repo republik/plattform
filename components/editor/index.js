@@ -25,7 +25,7 @@ import createTeaserModule from './modules/teaser'
 import createTeaserGroupModule from './modules/teasergroup'
 import {
   createEmbedVideoModule,
-  createEmbedTwitterModule
+  createEmbedTwitterModule,
 } from './modules/embed'
 import createBlockQuoteModule from './modules/blockquote'
 import createLogbookModule from './modules/logbook'
@@ -89,7 +89,7 @@ const moduleCreators = {
   chartCanvas: createChartCanvasModule,
   dynamiccomponent: createDynamicComponentModule,
   liveteaser: createLiveTeaserModule,
-  button: createButtonModule
+  button: createButtonModule,
 }
 const initModule = (rule, context = {}) => {
   const { editorModule, editorOptions = {} } = rule
@@ -106,7 +106,7 @@ const initModule = (rule, context = {}) => {
       TYPE,
       rule,
       subModules: subModules,
-      context
+      context,
     })
 
     module.TYPE = TYPE
@@ -116,46 +116,53 @@ const initModule = (rule, context = {}) => {
     return module
   }
 }
-const getAllModules = module => [module].concat(
-  (module.subModules || []).reduce(
-    (collector, subModule) => collector.concat(
-      getAllModules(subModule)
+const getAllModules = module =>
+  [module].concat(
+    (module.subModules || []).reduce(
+      (collector, subModule) =>
+        collector.concat(getAllModules(subModule)),
+      [],
     ),
-    []
   )
-)
-export const getFromModules = (modules, accessor) => modules.reduce(
-  (collector, m) => collector.concat(accessor(m)),
-  []
-).filter(Boolean)
+export const getFromModules = (modules, accessor) =>
+  modules
+    .reduce((collector, m) => collector.concat(accessor(m)), [])
+    .filter(Boolean)
 
 const styles = {
   container: css({
     width: '100%',
-    position: 'relative'
+    position: 'relative',
   }),
   document: {
-    width: '100%'
-  }
+    width: '100%',
+  },
 }
 
 const Container = ({ children }) => (
-  <div {...styles.container}>{ children }</div>
+  <div {...styles.container}>{children}</div>
 )
 
 const Document = ({ children, readOnly }) => (
-  <div {...styles.document} style={readOnly ? {
-    pointerEvents: 'none',
-    opacity: 0.6
-  } : {}}>
-    { children }
+  <div
+    {...styles.document}
+    style={
+      readOnly
+        ? {
+            pointerEvents: 'none',
+            opacity: 0.6,
+          }
+        : {}
+    }
+  >
+    {children}
   </div>
 )
 
 class Editor extends Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
-    this.onChange = (change) => {
+    this.onChange = change => {
       const { value, onChange, onDocumentChange } = this.props
 
       if (change.value !== value) {
@@ -173,52 +180,57 @@ class Editor extends Component {
     const rootRule = schema.rules[0]
     const rootModule = initModule(rootRule, {
       mdastSchema: schema,
-      meta: props.meta
+      meta: props.meta,
     })
 
     this.serializer = rootModule.helpers.serializer
     this.newDocument = rootModule.helpers.newDocument
 
     const allModules = getAllModules(rootModule)
-    const uniqModules = allModules.filter((m, i, a) => a.findIndex(mm => mm.TYPE === m.TYPE) === i)
+    const uniqModules = allModules.filter(
+      (m, i, a) => a.findIndex(mm => mm.TYPE === m.TYPE) === i,
+    )
 
     this.uniqModules = uniqModules
-    this.plugins = [
-      ...getFromModules(uniqModules, m => m.plugins)
-    ]
+    this.plugins = [...getFromModules(uniqModules, m => m.plugins)]
 
     this.slateRef = ref => {
       this.slate = ref
     }
   }
-  componentWillReceiveProps (nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (nextProps.schema !== this.props.schema) {
       throw new Error('changing schema is not supported')
     }
   }
-  render () {
+  render() {
     const { value, readOnly } = this.props
     return (
       <Container>
-        <Loader loading={!value} render={() =>
-          <Document readOnly={readOnly}>
-            <SlateEditor
-              ref={this.slateRef}
-              value={value}
-              onChange={this.onChange}
-              plugins={this.plugins}
-              readOnly={readOnly} />
-          </Document>
-        } />
-        { /* A full slate instance to normalize
+        <Loader
+          loading={!value}
+          render={() => (
+            <Document readOnly={readOnly}>
+              <SlateEditor
+                ref={this.slateRef}
+                value={value}
+                onChange={this.onChange}
+                plugins={this.plugins}
+                readOnly={readOnly}
+              />
+            </Document>
+          )}
+        />
+        {/* A full slate instance to normalize
                initially loaded docs but ignoring
-               change events from it */ }
+               change events from it */}
         {!value && (
           <SlateEditor
             ref={this.slateRef}
             value={this.newDocument({ title: 'Loading...' })}
             plugins={this.plugins}
-            readOnly />
+            readOnly
+          />
         )}
       </Container>
     )
@@ -229,12 +241,12 @@ Editor.propTypes = {
   value: PropTypes.object,
   readOnly: PropTypes.bool,
   onChange: PropTypes.func,
-  onDocumentChange: PropTypes.func
+  onDocumentChange: PropTypes.func,
 }
 
 Editor.defaultProps = {
   onChange: () => true,
-  onDocumentChange: () => true
+  onDocumentChange: () => true,
 }
 
 export default Editor
