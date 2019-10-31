@@ -18,7 +18,8 @@
     "react/display-name": 0,
     "react/prop-types": 0,
     "no-unused-vars": "warn",
-    "no-empty": "warn"
+    "no-empty": "warn",
+    "no-control-regex": "warn"
   },
   "settings": {
     "react": {
