@@ -1,7 +1,6 @@
 import React from "react";
 import test from "tape";
 import setupData from "../../../utils/setupData";
-import RouterProvider from "../../../utils/RouterProvider";
 import { mount } from "../../../utils/enzyme";
 
 import { RouterContext } from "next/router";
