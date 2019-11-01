@@ -1,8 +1,9 @@
-const elasticsearch = require('elasticsearch')
+const { Client } = require('elasticsearch')
 
 const connect = () =>
-  new elasticsearch.Client({
-    host: process.env.ELASTIC_URL || 'localhost:9200'
+  new Client({
+    host: process.env.ELASTIC_URL || 'localhost:9200',
+    apiVersion: '6.3'
   })
 
 const disconnect = client =>
