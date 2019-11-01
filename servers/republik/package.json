@@ -30,7 +30,7 @@
     "throng": "^4.0.0",
     "unified": "^7.0.0",
     "uuid": "^3.2.1",
-    "yargs": "^13.2.4"
+    "yargs": "^14.2.0"
   },
   "scripts": {
     "dev": "NODE_ENV=development nodemon $NODE_DEBUG_OPTION -w ../../packages -w express -w graphql -w lib -w modules -w .env -w package.json -w ../yarn.lock -w server.js -w index.js index.js",

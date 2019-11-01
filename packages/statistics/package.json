@@ -21,6 +21,6 @@
   },
   "dependencies": {
     "moment": "^2.24.0",
-    "yargs": "^13.3.0"
+    "yargs": "^14.2.0"
   }
 }

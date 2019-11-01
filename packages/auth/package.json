@@ -33,7 +33,7 @@
     "geoip-database": "^1.0.19",
     "is-uuid": "^1.0.2",
     "kraut": "^0.1.1",
-    "maxmind": "^3.0.3",
+    "maxmind": "^4.0.0",
     "otp": "^0.1.3",
     "passport": "^0.4.0",
     "pogi": "^2.5.8",
@@ -42,6 +42,6 @@
     "rw": "^1.3.3",
     "useragent": "^2.3.0",
     "uuid": "^3.2.1",
-    "validator": "^10.2.0"
+    "validator": "^12.0.0"
   }
 }
