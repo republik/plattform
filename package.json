@@ -62,8 +62,10 @@
     "husky": "^0.14.3",
     "immutable": "^3.8.2",
     "isomorphic-unfetch": "^3.0.0",
+    "lint-staged": "^9.4.2",
     "lodash": "^4.17.15",
     "mdast-react-render": "^1.1.0",
+    "prettier": "^1.18.2",
     "prop-types": "^15.6.0",
     "react": "^16.8.6",
     "react-autocomplete": "^1.4.1",
@@ -106,7 +108,14 @@
     "eject": "react-scripts eject",
     "semantic-release": "semantic-release",
     "commitmsg": "validate-commit-msg",
+    "precommit": "lint-staged",
     "translations": "gsheets --key=1sMS5u4SIFY2loAmx8jftDXqTbq2RheJLY7FBeXSm1Tc --title=live --pretty --out src/lib/translations.json"
+  },
+  "lint-staged": {
+    "*.js": [
+      "prettier --write",
+      "git add"
+    ]
   },
   "config": {
     "commitizen": {
