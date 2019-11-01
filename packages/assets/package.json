@@ -27,7 +27,7 @@
     "debug": "^4.1.1",
     "file-type-stream2": "^1.0.2",
     "isomorphic-unfetch": "^3.0.0",
-    "sharp": "^0.22.1",
+    "sharp": "^0.23.2",
     "stream-to-array": "^2.3.0"
   }
 }
