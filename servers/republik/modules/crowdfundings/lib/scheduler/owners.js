@@ -81,6 +81,7 @@ const getBuckets = async ({ now }, context) => {
       m."userId" != :PARKING_USER_ID
       AND m.active = true
       AND m.renew = true
+      AND m."autoPay" = false
   `, {
     PARKING_USER_ID
   })
