@@ -21,6 +21,6 @@
   },
   "dependencies": {
     "moment": "^2.22.2",
-    "redlock": "^4.0.0"
+    "redlock": "^4.1.0"
   }
 }
