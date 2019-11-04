@@ -19,7 +19,7 @@ const {
 const { upsert: repoCacheUpsert } = require('./cache/upsert')
 
 const lockKey = 'locks:scheduling'
-const ttl = 2000
+const ttl = 1000 * 10 // 10 seconds
 const channelKey = 'scheduling'
 
 let singleton
@@ -110,7 +110,7 @@ const init = async () => {
         console.log(`scheduler: publishing ${repoId}`)
 
         const newRef = ref.replace('scheduled-', '')
-        const newRefs = [ newRef ]
+        const newRefs = [newRef]
 
         const { lib: { Documents: { createPublish } } } =
           require('@orbiting/backend-modules-search')
