@@ -19,7 +19,7 @@ const {
 const { upsert: repoCacheUpsert } = require('./cache/upsert')
 
 const lockKey = 'locks:scheduling'
-const ttl = 1000 * 10 // 10 seconds
+const ttl = 1000 * 60 * 2 // 2 minutes
 const channelKey = 'scheduling'
 
 let singleton
