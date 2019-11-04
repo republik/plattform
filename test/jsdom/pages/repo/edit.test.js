@@ -1,8 +1,9 @@
 import React from 'react'
 import test from 'tape'
 import setupData from '../../../utils/setupData'
-import RouterProvider from '../../../utils/RouterProvider'
 import { mount } from '../../../utils/enzyme'
+
+import { RouterContext } from 'next/router'
 
 import { t } from '../../../../lib/withT'
 import { parse } from '@orbiting/remark-preset'
@@ -34,19 +35,18 @@ const testData = setupData({
   }
 })
 
-const EditorPageWithTestData = testData.withData(
-  EditorPage
-)
+const EditorPageWithTestData = testData.withData(EditorPage)
+
+const router = {
+  query: {
+    repoId: 'orbiting/test',
+    commitId: '1'
+  }
+}
 
 test('EditorPage is write-able', assert => {
-  const router = {
-    query: {
-      repoId: 'orbiting/test',
-      commitId: '1'
-    }
-  }
   const wrapper = mount(
-    <RouterProvider router={router}>
+    <RouterContext.Provider value={router}>
       <EditorPageWithTestData
         t={t}
         me={me}
@@ -107,16 +107,12 @@ Text
           })
         }}
       />
-    </RouterProvider>
+    </RouterContext.Provider>
   )
 
   const page = wrapper.find(EditorPage).instance()
 
-  assert.equal(
-    page.state.readOnly,
-    false,
-    'is not readOnly when alone'
-  )
+  assert.equal(page.state.readOnly, false, 'is not readOnly when alone')
 
   assert.end()
 })
