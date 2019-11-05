@@ -23,7 +23,7 @@ if (GITHUB_GRAPHQL_RATELIMIT) {
 
   limiter = new Bottleneck({
     maxConcurrent: 1,
-    minTime: 100,
+    minTime: 200,
     trackDoneStatus: true,
     id: 'github-graphql-limiter',
 
@@ -68,8 +68,8 @@ module.exports = async () => {
       if (!options.headers) {
         options.headers = {}
       }
-      options.headers['Authorization'] = `Bearer ${installationToken.token}`
-      options.headers['Accept'] = 'application/vnd.github.machine-man-preview+json'
+      options.headers.Authorization = `Bearer ${installationToken.token}`
+      options.headers.Accept = 'application/vnd.github.machine-man-preview+json'
       next()
     })
 
@@ -80,7 +80,14 @@ module.exports = async () => {
     })
 
     // Log limit if near rate limit
-    githubApolloFetch.useAfter(({ response: { headers } }, next) => {
+    githubApolloFetch.useAfter(({ response }, next) => {
+      const { headers, raw, parsed } = response
+
+      if (!parsed || !parsed.data) {
+        console.error('GitHub GraphQL Error: Missing data prop', { raw, parsed })
+        throw new Error('GitHub GraphQL Error: Missing data prop')
+      }
+
       const ratelimit = {
         limit: headers.get('x-ratelimit-limit'),
         remaining: headers.get('x-ratelimit-remaining'),
@@ -95,7 +102,7 @@ module.exports = async () => {
             resetDate: new Date(ratelimit.reset * 1000).toString()
           })
         } else {
-          console.error(`GitHub GraphQL Rate Limit reached. Reset at ${new Date(ratelimit.reset * 1000).toString()}.`)
+          console.error(`GitHub GraphQL Error: Rate Limit reached. Reset at ${new Date(ratelimit.reset * 1000).toString()}.`)
         }
       }
 
@@ -112,7 +119,7 @@ module.exports = async () => {
   })
 
   const githubRest = new GitHubApi({
-    previews: [ 'machine-man-preview', 'mercy-preview' ],
+    previews: ['machine-man-preview', 'mercy-preview'],
     auth: installationToken.token
   })
 
