@@ -61,7 +61,7 @@ export const commentContext = {
   title: 'Der Crowdfunding-Code gegen die Frankenstein-Monster-Strategie',
   description: (
     <span>
-      Ein Artikel von <Editorial.A href="/foo">Christof Moser</Editorial.A>
+      Ein Artikel von <Editorial.A href='/foo'>Christof Moser</Editorial.A>
     </span>
   )
 }

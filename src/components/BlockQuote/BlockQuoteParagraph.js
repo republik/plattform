@@ -29,11 +29,7 @@ const styles = {
 
 const BlockQuoteParagraph = ({ children, attributes }) => {
   return (
-    <p
-      {...attributes}
-      {...styles.quote}
-      {...fontRule}
-    >
+    <p {...attributes} {...styles.quote} {...fontRule}>
       {children}
     </p>
   )

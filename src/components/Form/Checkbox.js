@@ -46,33 +46,55 @@ const styles = {
   })
 }
 
-const Checked = ({ disabled, black, error }) =>
-  <svg width="18" height="18" viewBox="0 0 18 18">
+const Checked = ({ disabled, black, error }) => (
+  <svg width='18' height='18' viewBox='0 0 18 18'>
     <path
-      d="M0 0h18v18H0V0zm7 14L2 9.192l1.4-1.346L7 11.308 14.6 4 16 5.346 7 14z"
-      fill={(disabled && colors.disabled) || (error && colors.error) || (black && '#000000') || colors.primary}
-      fillRule="evenodd"
+      d='M0 0h18v18H0V0zm7 14L2 9.192l1.4-1.346L7 11.308 14.6 4 16 5.346 7 14z'
+      fill={
+        (disabled && colors.disabled) ||
+        (error && colors.error) ||
+        (black && '#000000') ||
+        colors.primary
+      }
+      fillRule='evenodd'
     />
   </svg>
+)
 
-export default ({ children, name, checked, disabled, onChange, black, error }) =>
+export default ({
+  children,
+  name,
+  checked,
+  disabled,
+  onChange,
+  black,
+  error
+}) => (
   <label
-    {...merge(styles.label, disabled && styles.labelDisabled, error && styles.labelError)}
+    {...merge(
+      styles.label,
+      disabled && styles.labelDisabled,
+      error && styles.labelError
+    )}
   >
     <span {...styles.box}>
-      {checked
-        ? <Checked disabled={disabled} black={black} error={error} />
-        : <span {...merge(
-          styles.unchecked,
-          disabled && styles.disabled,
-          black && styles.uncheckedBlack,
-          error && styles.uncheckedError
-        )} />}
+      {checked ? (
+        <Checked disabled={disabled} black={black} error={error} />
+      ) : (
+        <span
+          {...merge(
+            styles.unchecked,
+            disabled && styles.disabled,
+            black && styles.uncheckedBlack,
+            error && styles.uncheckedError
+          )}
+        />
+      )}
     </span>
     <input
       {...styles.input}
       name={name}
-      type="checkbox"
+      type='checkbox'
       checked={checked}
       disabled={disabled}
       onChange={event => {
@@ -81,3 +103,4 @@ export default ({ children, name, checked, disabled, onChange, black, error }) =
     />
     {children}
   </label>
+)

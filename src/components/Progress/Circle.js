@@ -11,32 +11,35 @@ const styles = {
   })
 }
 
-
 class Circle extends Component {
   constructor(props) {
     super(props)
-    
+
     const { radius, strokeWidth } = this.props
     this.normalizedRadius = radius - strokeWidth / 2
     this.circumference = this.normalizedRadius * 2 * Math.PI
   }
-  
+
   render() {
-    const { progress, radius, stroke, strokeWidth, strokePlaceholder } = this.props
-    const strokeDashoffset = this.circumference - progress / 100 * this.circumference
-  
+    const {
+      progress,
+      radius,
+      stroke,
+      strokeWidth,
+      strokePlaceholder
+    } = this.props
+    const strokeDashoffset =
+      this.circumference - (progress / 100) * this.circumference
+
     return (
-      <svg
-        height={ radius * 2 }
-        width={ radius * 2 }
-       >
+      <svg height={radius * 2} width={radius * 2}>
         {strokePlaceholder && (
           <circle
             {...styles.circle}
             stroke={strokePlaceholder}
-            fill="transparent"
+            fill='transparent'
             strokeWidth={strokeWidth}
-            style={{strokeDashoffset}}
+            style={{ strokeDashoffset }}
             r={this.normalizedRadius}
             cx={radius}
             cy={radius}
@@ -45,14 +48,14 @@ class Circle extends Component {
         <circle
           {...styles.circle}
           stroke={stroke}
-          fill="transparent"
+          fill='transparent'
           strokeWidth={strokeWidth}
           strokeDasharray={this.circumference + ' ' + this.circumference}
-          style={{strokeDashoffset}}
+          style={{ strokeDashoffset }}
           r={this.normalizedRadius}
           cx={radius}
           cy={radius}
-         />
+        />
       </svg>
     )
   }

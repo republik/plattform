@@ -4,18 +4,15 @@ import PropTypes from 'prop-types'
 import Field from './Field'
 
 const getErrors = (fields, values) => {
-  return fields.reduce(
-    (acumulator, {name, validator}) => {
-      if (validator) {
-        acumulator[name] = validator(values[name])
-      }
-      return acumulator
-    },
-    {}
-  )
+  return fields.reduce((acumulator, { name, validator }) => {
+    if (validator) {
+      acumulator[name] = validator(values[name])
+    }
+    return acumulator
+  }, {})
 }
 
-const fieldsState = ({field, value, error, dirty}) => ({
+const fieldsState = ({ field, value, error, dirty }) => ({
   values: {
     [field]: value
   },
@@ -27,7 +24,7 @@ const fieldsState = ({field, value, error, dirty}) => ({
   }
 })
 
-const mergeFields = ({values, errors, dirty}) => (state) => ({
+const mergeFields = ({ values, errors, dirty }) => state => ({
   values: {
     ...state.values,
     ...values
@@ -42,39 +39,46 @@ const mergeFields = ({values, errors, dirty}) => (state) => ({
   }
 })
 
-const mergeField = (field) => (state) => mergeFields(
-  fieldsState(field)
-)(state)
+const mergeField = field => state => mergeFields(fieldsState(field))(state)
 
 class FieldSet extends Component {
-  componentDidMount () {
-    const {fields, values: initialValues, onChange} = this.props
+  componentDidMount() {
+    const { fields, values: initialValues, onChange } = this.props
 
-    const values = fields.reduce(
-      (acumulator, {name}) => {
-        acumulator[name] = initialValues[name] || ''
-        return acumulator
-      },
-      {}
-    )
+    const values = fields.reduce((acumulator, { name }) => {
+      acumulator[name] = initialValues[name] || ''
+      return acumulator
+    }, {})
     const errors = getErrors(fields, values)
 
-    onChange({
-      values,
-      errors
-    }, true)
+    onChange(
+      {
+        values,
+        errors
+      },
+      true
+    )
   }
-  render () {
+  render() {
     const {
       fields,
-      values, errors, dirty,
+      values,
+      errors,
+      dirty,
       onChange,
       additionalFieldProps
     } = this.props
     return (
       <Fragment>
         {fields.map(field => {
-          const { label, type, autoComplete, name, validator, explanation } = field
+          const {
+            label,
+            type,
+            autoComplete,
+            name,
+            validator,
+            explanation
+          } = field
 
           return (
             <Fragment key={name}>
@@ -91,14 +95,17 @@ class FieldSet extends Component {
                     values: {
                       [name]: value
                     },
-                    errors: validator ? {
-                      [name]: validator(value)
-                    } : {},
+                    errors: validator
+                      ? {
+                          [name]: validator(value)
+                        }
+                      : {},
                     dirty: {
                       [name]: shouldValidate
                     }
                   })
-                }} />
+                }}
+              />
               {explanation}
             </Fragment>
           )
@@ -110,14 +117,16 @@ class FieldSet extends Component {
 
 FieldSet.propTypes = {
   additionalFieldProps: PropTypes.func.isRequired,
-  fields: PropTypes.arrayOf(PropTypes.shape({
-    label: PropTypes.string.isRequired,
-    name: PropTypes.string.isRequired,
-    type: PropTypes.string,
-    validator: PropTypes.func,
-    autoComplete: PropTypes.string,
-    explanation: PropTypes.node
-  })).isRequired,
+  fields: PropTypes.arrayOf(
+    PropTypes.shape({
+      label: PropTypes.string.isRequired,
+      name: PropTypes.string.isRequired,
+      type: PropTypes.string,
+      validator: PropTypes.func,
+      autoComplete: PropTypes.string,
+      explanation: PropTypes.node
+    })
+  ).isRequired,
   onFieldChange: PropTypes.func
 }
 

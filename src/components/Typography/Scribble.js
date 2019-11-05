@@ -5,7 +5,12 @@ import { mUp } from '../../theme/mediaQueries'
 import colors from '../../theme/colors'
 import { convertStyleToRem } from './utils'
 
-export { List, UnorderedList as UL, OrderedList as OL, ListItem as LI } from '../List'
+export {
+  List,
+  UnorderedList as UL,
+  OrderedList as OL,
+  ListItem as LI
+} from '../List'
 
 const headline = css({
   ...convertStyleToRem(styles.cursiveTitle30),

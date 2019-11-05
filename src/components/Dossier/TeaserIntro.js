@@ -53,7 +53,15 @@ const styles = {
   })
 }
 
-const TeaserIntro = ({ children, attributes, image, alt, onClick, byline, t }) => {
+const TeaserIntro = ({
+  children,
+  attributes,
+  image,
+  alt,
+  onClick,
+  byline,
+  t
+}) => {
   return (
     <div
       {...attributes}
@@ -69,7 +77,9 @@ const TeaserIntro = ({ children, attributes, image, alt, onClick, byline, t }) =
             {...FigureImage.utils.getResizedSrcs(image, 750)}
             alt={alt}
           />
-          {byline && <FigureByline position='rightCompact'>{byline}</FigureByline>}
+          {byline && (
+            <FigureByline position='rightCompact'>{byline}</FigureByline>
+          )}
         </div>
       )}
       <div {...merge(styles.content, image ? styles.contentWithImage : {})}>

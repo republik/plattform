@@ -13,12 +13,8 @@ import * as fontStyles from './components/Typography/styles'
 
 import { fontFaces } from './theme/fonts'
 import { createFormatter } from './lib/translate'
-import {
-  DiscussionContext
-} from './components/Discussion/DiscussionContext'
-import {
-  createSampleDiscussionContextValue
-} from './components/Discussion/DiscussionContext.docs'
+import { DiscussionContext } from './components/Discussion/DiscussionContext'
+import { createSampleDiscussionContextValue } from './components/Discussion/DiscussionContext.docs'
 
 simulations(true)
 // prevent speedy in catalog
@@ -43,14 +39,14 @@ const t = createFormatter(require('./lib/translations.json').data)
 ReactDOM.render(
   <DiscussionContext.Provider value={createSampleDiscussionContextValue({ t })}>
     <Catalog
-      title="Style Guide"
+      title='Style Guide'
       theme={theme}
       useBrowserHistory
       responsiveSizes={[
         { name: 'Mobile', width: 320, height: 480 },
         { name: 'Desktop small', width: 800, height: 600 },
         { name: 'Desktop large', width: 1095, height: 800 },
-        { name: 'Desktop xlarge', width: 2560, height: 800 },
+        { name: 'Desktop xlarge', width: 2560, height: 800 }
       ]}
       specimens={{
         'remove-react-source': () => {
@@ -260,11 +256,15 @@ ReactDOM.render(
                   },
                   {
                     value: '5',
-                    text: 'Fussballspielende Redaktionspizzaliebhaberin Elementa',
-                    element: <span>
-                      <small>Fussballspielende</small><br />
-                      Redaktionspizzaliebhaberin Elementa
-                    </span>
+                    text:
+                      'Fussballspielende Redaktionspizzaliebhaberin Elementa',
+                    element: (
+                      <span>
+                        <small>Fussballspielende</small>
+                        <br />
+                        Redaktionspizzaliebhaberin Elementa
+                      </span>
+                    )
                   }
                 ],
                 VirtualDropdownInternal: {

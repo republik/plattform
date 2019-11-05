@@ -25,14 +25,20 @@ const styles = {
 }
 
 const DebateComment = ({ highlight, preview, href, onClick }) => (
-  <a {...styles.base} {...styles[highlight ? 'highlight' : 'preview']} href={href} onClick={onClick}>
+  <a
+    {...styles.base}
+    {...styles[highlight ? 'highlight' : 'preview']}
+    href={href}
+    onClick={onClick}
+  >
     {highlight
       ? inQuotes(highlight)
-      : preview && <React.Fragment>
-        {preview.string}
-        {preview.more && <React.Fragment>&nbsp;…</React.Fragment>}
-      </React.Fragment>
-    }
+      : preview && (
+          <React.Fragment>
+            {preview.string}
+            {preview.more && <React.Fragment>&nbsp;…</React.Fragment>}
+          </React.Fragment>
+        )}
   </a>
 )
 

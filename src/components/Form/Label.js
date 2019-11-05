@@ -1,8 +1,8 @@
 import React from 'react'
-import {css, merge} from 'glamor'
+import { css, merge } from 'glamor'
 
 import colors from '../../theme/colors'
-import {sansSerifRegular21} from '../Typography/styles'
+import { sansSerifRegular21 } from '../Typography/styles'
 import { convertStyleToRem, pxToRem } from '../Typography/utils'
 
 const borderWidth = 1
@@ -14,7 +14,7 @@ const styles = {
     width: '100%',
     paddingTop: pxToRem(labelHeight),
     position: 'relative',
-    display: 'block',
+    display: 'block'
   }),
   labelText: css({
     ...convertStyleToRem(sansSerifRegular21),
@@ -26,7 +26,7 @@ const styles = {
   labelTextTop: css({
     top: 5,
     fontSize: pxToRem(14),
-    lineHeight: pxToRem(15),
+    lineHeight: pxToRem(15)
   }),
   labelTextFocused: css({
     color: colors.primary
@@ -67,7 +67,7 @@ const styles = {
   }),
   selectArrow: css({
     position: 'absolute',
-    right: 0  ,
+    right: 0,
     top: pxToRem(28),
     pointerEvents: 'none',
     fill: colors.disabled
@@ -97,7 +97,7 @@ const styles = {
   })
 }
 
-export const Label = ({top, focus, error, text, black, white, children}) => {
+export const Label = ({ top, focus, error, text, black, white, children }) => {
   const labelTextStyle = merge(
     styles.labelText,
     top && styles.labelTextTop,
@@ -115,22 +115,49 @@ export const Label = ({top, focus, error, text, black, white, children}) => {
   )
 }
 
-export const LSpan = ({black, white, ...props}) =>
-  <span {...merge(styles.field, black && styles.black, white && styles.white)} {...props} />
+export const LSpan = ({ black, white, ...props }) => (
+  <span
+    {...merge(styles.field, black && styles.black, white && styles.white)}
+    {...props}
+  />
+)
 
-export const LButton = ({black, white, ...props}) =>
-  <button {...merge(styles.field, black && styles.black, white && styles.white)} {...props} />
+export const LButton = ({ black, white, ...props }) => (
+  <button
+    {...merge(styles.field, black && styles.black, white && styles.white)}
+    {...props}
+  />
+)
 
-export const LInput = ({black, white, ...props}) =>
-  <input {...merge(styles.field, black && styles.black, white && styles.white)} {...props} />
+export const LInput = ({ black, white, ...props }) => (
+  <input
+    {...merge(styles.field, black && styles.black, white && styles.white)}
+    {...props}
+  />
+)
 
-export const LSelect = ({black, white, ...props}) => [
-  <select key='select' {...merge(
-    styles.field, styles.select,
-    black && styles.black,
-    white && styles.white
-  )} {...props} />,
-  <svg key='arrow' {...merge(styles.selectArrow, black && styles.selectArrowBlack, white && styles.selectArrowWhite)} width={30} height={30} viewBox='0 0 24 24'>
+export const LSelect = ({ black, white, ...props }) => [
+  <select
+    key='select'
+    {...merge(
+      styles.field,
+      styles.select,
+      black && styles.black,
+      white && styles.white
+    )}
+    {...props}
+  />,
+  <svg
+    key='arrow'
+    {...merge(
+      styles.selectArrow,
+      black && styles.selectArrowBlack,
+      white && styles.selectArrowWhite
+    )}
+    width={30}
+    height={30}
+    viewBox='0 0 24 24'
+  >
     <path d='M7.41 7.84L12 12.42l4.59-4.58L18 9.25l-6 6-6-6z' />
   </svg>
 ]

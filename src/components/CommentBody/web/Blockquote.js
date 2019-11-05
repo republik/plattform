@@ -12,7 +12,7 @@ const styles = {
     margin: '20px auto',
     padding: '15px',
     [mUp]: {
-      padding: '25px',
+      padding: '25px'
     }
   }),
   paragraph: css({
@@ -31,21 +31,17 @@ const styles = {
   })
 }
 
-
 export const BlockQuoteParagraph = ({ children }) => (
-  <p {...styles.paragraph}>
-    {children}
-  </p>
+  <p {...styles.paragraph}>{children}</p>
 )
 
 export const BlockQuoteNested = ({ children }) => (
-  <div {...styles.blockquote} style={{borderLeft: `2px solid ${colors.divider}`}}>
+  <div
+    {...styles.blockquote}
+    style={{ borderLeft: `2px solid ${colors.divider}` }}
+  >
     {children}
   </div>
 )
 
-export default ({ children }) => (
-  <div {...styles.blockquote}>
-    {children}
-  </div>
-)
+export default ({ children }) => <div {...styles.blockquote}>{children}</div>

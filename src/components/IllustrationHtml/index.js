@@ -13,11 +13,10 @@ const styles = {
   })
 }
 
-const escapeRegExp = string =>
-  string.replace(/[-[\]/{}()*+?.\\^$|]/g, "\\$&")
+const escapeRegExp = string => string.replace(/[-[\]/{}()*+?.\\^$|]/g, '\\$&')
 
 class IllustrationHtml extends Component {
-  constructor (...args) {
+  constructor(...args) {
     super(...args)
 
     this.setRef = ref => {
@@ -43,17 +42,17 @@ class IllustrationHtml extends Component {
       }
     }
   }
-  componentDidMount () {
+  componentDidMount() {
     window.addEventListener('resize', this.resize)
     this.resize()
   }
-  componentDidUpdate () {
+  componentDidUpdate() {
     this.resize()
   }
-  componentWillUnmount () {
+  componentWillUnmount() {
     window.removeEventListener('resize', this.resize)
   }
-  render () {
+  render() {
     const { code, images } = this.props
 
     let resolvedCode = code
@@ -63,23 +62,26 @@ class IllustrationHtml extends Component {
         image.url
       )
     })
-    return <div
-      {...styles.ai2html}
-      ref={this.setRef}
-      dangerouslySetInnerHTML={{
-        __html: resolvedCode
-      }}
-    />
+    return (
+      <div
+        {...styles.ai2html}
+        ref={this.setRef}
+        dangerouslySetInnerHTML={{
+          __html: resolvedCode
+        }}
+      />
+    )
   }
 }
 
-
 IllustrationHtml.propTypes = {
   code: PropTypes.string.isRequired,
-  images: PropTypes.arrayOf(PropTypes.shape({
-    url: PropTypes.string.isRequired,
-    ref: PropTypes.string.isRequired
-  })).isRequired
+  images: PropTypes.arrayOf(
+    PropTypes.shape({
+      url: PropTypes.string.isRequired,
+      ref: PropTypes.string.isRequired
+    })
+  ).isRequired
 }
 
 export default IllustrationHtml

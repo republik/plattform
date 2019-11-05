@@ -24,7 +24,7 @@ const baseChartPropTypes = {
   TimeBar: timeBarPropTypes,
   Line: linePropTypes,
   ScatterPlot: scatterPlotPropTypes,
-  GenericMap: genericMapPropTypes,
+  GenericMap: genericMapPropTypes
 }
 
 const charts = Object.keys(ReactCharts)
@@ -34,7 +34,7 @@ const props = Object.keys(baseChartPropTypes).reduce((all, chart) => {
   const props = Object.keys(propTypes).map(key => ({
     key,
     type: propTypeNames.get(propTypes[key]),
-    chart,
+    chart
   }))
 
   return all.concat(props)
@@ -52,15 +52,14 @@ const IGNORE_KEYS = [
   'description',
   'filter',
   // functions
-  'getProjection',
+  'getProjection'
 ]
 
 const propByName = groupBy(props, d => d.key)
   .filter(group => IGNORE_KEYS.indexOf(group.key) === -1)
   .sort(
     (a, b) =>
-      descending(a.values.length, b.values.length) ||
-      ascending(a.key, b.key),
+      descending(a.values.length, b.values.length) || ascending(a.key, b.key)
   )
 
 const examples = {
@@ -79,7 +78,7 @@ const examples = {
   band: '`confidence95`',
   domain: '`[2005, 2015]`',
   height: '`300`',
-  sizeRangeMax: '`20`',
+  sizeRangeMax: '`20`'
 }
 const comments = {
   color: 'column name',
@@ -101,11 +100,11 @@ const comments = {
   columns: 'number of columns, normally 1 up to 4',
   domain: 'same format as your data',
   height: 'higher than 320 is usually bad on mobile',
-  sizeRangeMax: 'max radius plotted',
+  sizeRangeMax: 'max radius plotted'
 }
 const manualType = {
   colorRange: 'array, string',
-  xTicks: 'array',
+  xTicks: 'array'
 }
 
 const options = propByName.map(({ key, values }) => ({
@@ -118,7 +117,7 @@ const options = propByName.map(({ key, values }) => ({
       .filter(deduplicate)
       .join(', ') || manualType[key],
   Charts: values.map(d => d.chart).join(', '),
-  Comment: comments[key],
+  Comment: comments[key]
 }))
 
 if (process.env.NODE_ENV === 'production') {
@@ -138,7 +137,7 @@ const chartPages = charts.map(key => {
   }
 
   const keys = Object.keys(defaultProps).filter(
-    key => IGNORE_KEYS.indexOf(key) === -1,
+    key => IGNORE_KEYS.indexOf(key) === -1
   )
 
   if (!keys.length) {
@@ -153,7 +152,7 @@ const chartPages = charts.map(key => {
     <TableSpecimen
       rows={keys.map(key => ({
         Name: key,
-        Value: `\`${JSON.stringify(defaultProps[key])}\``,
+        Value: `\`${JSON.stringify(defaultProps[key])}\``
       }))}
     />
   )}
@@ -171,9 +170,9 @@ ${<TableSpecimen rows={options} />}
 export default () => (
   <Fragment>
     {markdown`
-\`\`\`code|lang-jsx
+~~~code|lang-jsx
 import { Chart, ChartTitle, ChartLead } from '@project-r/styleguide/chart'
-\`\`\`
+~~~
 
 The charts are also available as simple, importable functions on [observablehq.com](https://observablehq.com/@republik/charts).
 
@@ -182,7 +181,6 @@ The charts are also available as simple, importable functions on [observablehq.c
 This chart system for initially developed at Interactive Things for [«Gut leben in Deutschland»](https://github.com/gut-leben-in-deutschland/bericht). _License: [MIT](https://github.com/orbiting/styleguide/blob/master/src/components/Chart/LICENSE)_
 
 It also incoperates color platte for Swiss parties created by [SRF Data](https://github.com/srfdata/swiss-party-colors). _License: [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/)_
-
     `}
     {allProps}
     {markdown`

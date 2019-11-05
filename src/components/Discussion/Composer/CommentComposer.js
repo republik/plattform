@@ -56,7 +56,8 @@ const styles = {
  * particular, this allows the frontend to directly display the CommentComposer
  * if there is text stored in localStorage.
  */
-export const commentComposerStorageKey = discussionId => `commentComposerText:${discussionId}`
+export const commentComposerStorageKey = discussionId =>
+  `commentComposerText:${discussionId}`
 
 export const CommentComposer = props => {
   const { t, isRoot, hideHeader, onClose, onCloseLabel, onSubmitLabel } = props
@@ -132,36 +133,41 @@ export const CommentComposer = props => {
    *
    * This also enables us to show a loading indicator.
    */
-  const [{ loading, error }, setSubmit] = React.useState({ loading: false, error: undefined })
+  const [{ loading, error }, setSubmit] = React.useState({
+    loading: false,
+    error: undefined
+  })
   const onSubmit = () => {
     if (root.current) {
       setSubmit({ loading: true, error })
-      props.onSubmit({ text, tags: tagValue ? [tagValue] : undefined }).then(({ ok, error }) => {
-        /*
-         * We may have been umounted in the meantime, so we use 'root.current' as a signal that
-         * we have been so we can avoid calling React setState functions which generate warnings.
-         *
-         * In the case of success, we keep 'loading' true, to keep the onSubmit button disabled.
-         * Otherwise it might become active again before our controller closes us, allowing the
-         * user to click it again.
-         */
+      props
+        .onSubmit({ text, tags: tagValue ? [tagValue] : undefined })
+        .then(({ ok, error }) => {
+          /*
+           * We may have been umounted in the meantime, so we use 'root.current' as a signal that
+           * we have been so we can avoid calling React setState functions which generate warnings.
+           *
+           * In the case of success, we keep 'loading' true, to keep the onSubmit button disabled.
+           * Otherwise it might become active again before our controller closes us, allowing the
+           * user to click it again.
+           */
 
-        if (ok) {
-          try {
-            localStorage.removeItem(localStorageKey)
-          } catch (e) {
-            /* Ignore */
-          }
+          if (ok) {
+            try {
+              localStorage.removeItem(localStorageKey)
+            } catch (e) {
+              /* Ignore */
+            }
 
-          if (root.current) {
-            setSubmit({ loading: true, error: undefined })
+            if (root.current) {
+              setSubmit({ loading: true, error: undefined })
+            }
+          } else {
+            if (root.current) {
+              setSubmit({ loading: false, error })
+            }
           }
-        } else {
-          if (root.current) {
-            setSubmit({ loading: false, error })
-          }
-        }
-      })
+        })
     }
   }
 
@@ -170,7 +176,11 @@ export const CommentComposer = props => {
       <div {...styles.background}>
         {!hideHeader && (
           <div style={{ borderBottom: '1px solid white' }}>
-            <Header t={t} displayAuthor={displayAuthor} onClick={actions.openDiscussionPreferences} />
+            <Header
+              t={t}
+              displayAuthor={displayAuthor}
+              onClick={actions.openDiscussionPreferences}
+            />
           </div>
         )}
 
@@ -188,11 +198,13 @@ export const CommentComposer = props => {
           {...(text === '' ? styles.textAreaEmpty : {})}
           placeholder={t('styleguide/CommentComposer/placeholder')}
           value={text}
-          rows="1"
+          rows='1'
           onChange={onChangeText}
         />
 
-        {maxLength && <MaxLengthIndicator maxLength={maxLength} length={text.length} />}
+        {maxLength && (
+          <MaxLengthIndicator maxLength={maxLength} length={text.length} />
+        )}
       </div>
 
       <Actions
@@ -220,7 +232,12 @@ CommentComposer.propTypes = {
 
 const MaxLengthIndicator = ({ maxLength, length }) => {
   const remaining = maxLength - length
-  const color = remaining < 0 ? colors.error : remaining < 21 ? colors.text : colors.lightText
+  const color =
+    remaining < 0
+      ? colors.error
+      : remaining < 21
+      ? colors.text
+      : colors.lightText
 
   if (remaining > maxLength * 0.33) {
     return null

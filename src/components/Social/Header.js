@@ -11,7 +11,7 @@ import { convertStyleToRem, pxToRem } from '../Typography/utils'
 export const profilePictureSize = 40
 export const profilePictureMargin = 10
 const profilePictureBorderSize = 5
-const profilePictureBoxSize = profilePictureSize + 2 * profilePictureBorderSize;
+const profilePictureBoxSize = profilePictureSize + 2 * profilePictureBorderSize
 
 const styles = {
   root: css({
@@ -25,8 +25,11 @@ const styles = {
     flexGrow: 0,
     flexShrink: 0,
     height: `${pxToRem(profilePictureBoxSize)}`,
-    margin: `${pxToRem(-profilePictureBorderSize)} ${pxToRem(-profilePictureBorderSize +
-      profilePictureMargin)} ${pxToRem(-profilePictureBorderSize)} ${pxToRem(-profilePictureBorderSize)}`,
+    margin: `${pxToRem(-profilePictureBorderSize)} ${pxToRem(
+      -profilePictureBorderSize + profilePictureMargin
+    )} ${pxToRem(-profilePictureBorderSize)} ${pxToRem(
+      -profilePictureBorderSize
+    )}`,
     border: `${pxToRem(profilePictureBorderSize)} solid white`
   }),
   meta: css({
@@ -103,7 +106,7 @@ export const Header = ({ url, userProfileImageUrl, name, handle, date }) => {
   return (
     <div {...styles.root}>
       <UserLink handle={cleanHandle}>
-        <img {...styles.profilePicture} src={userProfileImageUrl} alt="" />
+        <img {...styles.profilePicture} src={userProfileImageUrl} alt='' />
       </UserLink>
       <Link href={url}>
         <TwitterIcon {...styles.icon} />

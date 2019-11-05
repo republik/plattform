@@ -19,10 +19,7 @@ const styles = {
 
 const BlockQuote = ({ children, attributes }) => {
   return (
-    <div
-      {...styles.container}
-      {...attributes}
-    >
+    <div {...styles.container} {...attributes}>
       {children}
     </div>
   )

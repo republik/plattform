@@ -25,13 +25,10 @@ import ColorLegend from './ColorLegend'
 
 const intervals = Object.keys(d3Intervals)
   .filter(key => key.match(/^time/) && key !== 'timeInterval')
-  .reduce(
-    (all, key) => {
-      all[key.replace(/^time/, '').toLowerCase()] = d3Intervals[key]
-      return all
-    },
-    {}
-  )
+  .reduce((all, key) => {
+    all[key.replace(/^time/, '').toLowerCase()] = d3Intervals[key]
+    return all
+  }, {})
 
 const X_TICK_HEIGHT = 3
 const AXIS_BOTTOM_HEIGHT = 24
@@ -78,7 +75,7 @@ const styles = {
   })
 }
 
-const TimeBarChart = (props) => {
+const TimeBarChart = props => {
   const {
     values,
     width,
@@ -100,13 +97,15 @@ const TimeBarChart = (props) => {
   const xParser = timeParse(props.timeParse)
   const xParserFormat = timeFormat(props.timeParse)
   const xNormalizer = d => xParserFormat(xParser(d))
-  data = data.filter(d => d.value && d.value.length > 0).map(d => {
-    return {
-      datum: d,
-      x: xNormalizer(d[props.x]),
-      value: +d.value
-    }
-  })
+  data = data
+    .filter(d => d.value && d.value.length > 0)
+    .map(d => {
+      return {
+        datum: d,
+        x: xNormalizer(d[props.x]),
+        value: +d.value
+      }
+    })
 
   const colorAccessor = d => d.datum[props.color]
   const colorValues = []
@@ -117,31 +116,32 @@ const TimeBarChart = (props) => {
 
   let colorRange = props.colorRanges[props.colorRange] || props.colorRange
   if (!colorRange) {
-    colorRange = colorValues.length > 3
-      ? props.colorRanges.discrete
-      : props.colorRanges.sequential3
+    colorRange =
+      colorValues.length > 3
+        ? props.colorRanges.discrete
+        : props.colorRanges.sequential3
   }
   const color = scaleOrdinal(colorRange).domain(colorValues)
 
-  const bars = groupBy(data, d => d.x).map(({values: segments, key: x}) => ({
+  const bars = groupBy(data, d => d.x).map(({ values: segments, key: x }) => ({
     segments,
-    up: segments.filter(segment => segment.value > 0).reduce(
-      (sum, segment) => sum + segment.value,
-      0
-    ),
-    down: segments.filter(segment => segment.value < 0).reduce(
-      (sum, segment) => sum + segment.value,
-      0
-    ),
+    up: segments
+      .filter(segment => segment.value > 0)
+      .reduce((sum, segment) => sum + segment.value, 0),
+    down: segments
+      .filter(segment => segment.value < 0)
+      .reduce((sum, segment) => sum + segment.value, 0),
     x
   }))
 
-  const innerHeight = props.height - (mini ? paddingTop + AXIS_BOTTOM_HEIGHT : 0)
+  const innerHeight =
+    props.height - (mini ? paddingTop + AXIS_BOTTOM_HEIGHT : 0)
   const y = scaleLinear()
-    .domain(props.domain ? props.domain : [
-      Math.min(0, min(bars, d => d.down)),
-      max(bars, d => d.up)
-    ])
+    .domain(
+      props.domain
+        ? props.domain
+        : [Math.min(0, min(bars, d => d.down)), max(bars, d => d.up)]
+    )
     .range([innerHeight, 0])
 
   if (!props.domain) {
@@ -158,7 +158,7 @@ const TimeBarChart = (props) => {
       const baseValue = isPositive ? upValue : downValue
       const y0 = y(baseValue)
       const y1 = y(baseValue + segment.value)
-      const size = segment.height = Math.abs(y0 - y1)
+      const size = (segment.height = Math.abs(y0 - y1))
       if (isPositive) {
         upPos -= size
         segment.y = upPos
@@ -171,9 +171,15 @@ const TimeBarChart = (props) => {
     })
   })
 
-  const yAxis = calculateAxis(props.numberFormat, tLabel, y.domain(), tLabel(props.unit), {
-    ticks: props.yTicks
-  })
+  const yAxis = calculateAxis(
+    props.numberFormat,
+    tLabel,
+    y.domain(),
+    tLabel(props.unit),
+    {
+      ticks: props.yTicks
+    }
+  )
   const yTicks = props.yTicks || yAxis.ticks
   // ensure highest value is last
   // - the last value is labled with the unit
@@ -184,9 +190,8 @@ const TimeBarChart = (props) => {
     .concat(
       xAnnotations
         .reduce(
-          (years, annotation) => years.concat(
-            annotation.x, annotation.x1, annotation.x2
-          ),
+          (years, annotation) =>
+            years.concat(annotation.x, annotation.x1, annotation.x2),
           []
         )
         .filter(Boolean)
@@ -205,11 +210,9 @@ const TimeBarChart = (props) => {
     .round(true)
 
   let xDomain = xValues
-  const interval = intervals[props.xInterval] || (
-    props.x === 'year' &&
-    props.timeParse === '%Y' &&
-    intervals.year
-  )
+  const interval =
+    intervals[props.xInterval] ||
+    (props.x === 'year' && props.timeParse === '%Y' && intervals.year)
   if (interval) {
     const gapsNeeded = Math.max(
       Math.ceil(
@@ -218,22 +221,16 @@ const TimeBarChart = (props) => {
       ),
       2 // at least 2 bars
     )
-    xDomain = xValues.reduce(
-      (values, value, index, all) => {
-        values.push(value)
-        const next = interval.offset(xParser(value), props.xIntervalStep)
-        if (
-          all.indexOf(xParserFormat(next)) === -1 &&
-          index !== all.length - 1
-        ) {
-          for (let i = 0; i < gapsNeeded; i++) {
-            values.push(`GAP|${value}|${i}`)
-          }
+    xDomain = xValues.reduce((values, value, index, all) => {
+      values.push(value)
+      const next = interval.offset(xParser(value), props.xIntervalStep)
+      if (all.indexOf(xParserFormat(next)) === -1 && index !== all.length - 1) {
+        for (let i = 0; i < gapsNeeded; i++) {
+          values.push(`GAP|${value}|${i}`)
         }
-        return values
-      },
-      []
-    )
+      }
+      return values
+    }, [])
 
     x.domain(xDomain).round(true)
   }
@@ -250,38 +247,32 @@ const TimeBarChart = (props) => {
     if (barStep >= xValues[0].length * 12) {
       xTicks = xValues
     } else {
-      xTicks = [
-        xValues[0],
-        xValues[xValues.length - 1]
-      ].filter(deduplicate)
+      xTicks = [xValues[0], xValues[xValues.length - 1]].filter(deduplicate)
     }
   }
 
   const xDomainLast = xDomain[xDomain.length - 1]
   const baseTick = y.domain()[0]
-  const baseLines = xDomain.reduce(
-    (lines, xValue) => {
-      let previousLine = lines[lines.length - 1]
-      let x1 = previousLine ? previousLine.x2 : 0
-      let x2 = xValue === xDomainLast ? width : x(xValue) + barStep
-      const gap = xValue.split('|')[0] === 'GAP'
-      if (gap) {
-        x2 -= barPadding
-      }
+  const baseLines = xDomain.reduce((lines, xValue) => {
+    let previousLine = lines[lines.length - 1]
+    let x1 = previousLine ? previousLine.x2 : 0
+    let x2 = xValue === xDomainLast ? width : x(xValue) + barStep
+    const gap = xValue.split('|')[0] === 'GAP'
+    if (gap) {
+      x2 -= barPadding
+    }
 
-      if (previousLine && previousLine.gap === gap) {
-        previousLine.x2 = x2
-      } else {
-        lines.push({
-          x1,
-          x2,
-          gap
-        })
-      }
-      return lines
-    },
-    []
-  )
+    if (previousLine && previousLine.gap === gap) {
+      previousLine.x2 = x2
+    } else {
+      lines.push({
+        x1,
+        x2,
+        gap
+      })
+    }
+    return lines
+  }, [])
 
   const xFormat = timeFormat(props.timeFormat || props.timeParse)
 
@@ -290,131 +281,177 @@ const TimeBarChart = (props) => {
       <svg width={width} height={innerHeight + paddingTop + AXIS_BOTTOM_HEIGHT}>
         <desc>{description}</desc>
         <g transform={`translate(0,${paddingTop})`}>
-          {
-            xAnnotations.filter(annotation => annotation.ghost).map((annotation, i) => (
-              <rect key={`ghost-${i}`}
+          {xAnnotations
+            .filter(annotation => annotation.ghost)
+            .map((annotation, i) => (
+              <rect
+                key={`ghost-${i}`}
                 x={x(xNormalizer(annotation.x))}
                 y={y(annotation.value)}
                 width={barWidth}
                 height={y(0) - y(annotation.value)}
                 shapeRendering='crispEdges'
-                fill={colors.divider} />
-            ))
-          }
-          {
-            bars.map(bar => {
-              return (
-                <g key={bar.x} transform={`translate(${x(bar.x)},0)`}>
-                  {
-                    bar.segments.map((segment, i) => (
-                      <rect key={i}
-                        y={segment.y}
-                        width={barWidth}
-                        height={segment.height}
-                        shapeRendering='crispEdges'
-                        fill={color(colorAccessor(segment))} />
-                    ))
-                  }
-                </g>
-              )
-            })
-          }
+                fill={colors.divider}
+              />
+            ))}
+          {bars.map(bar => {
+            return (
+              <g key={bar.x} transform={`translate(${x(bar.x)},0)`}>
+                {bar.segments.map((segment, i) => (
+                  <rect
+                    key={i}
+                    y={segment.y}
+                    width={barWidth}
+                    height={segment.height}
+                    shapeRendering='crispEdges'
+                    fill={color(colorAccessor(segment))}
+                  />
+                ))}
+              </g>
+            )
+          })}
           <g transform={`translate(0,${innerHeight})`}>
-            {
-              baseLines.map((line, i) => {
-                return <line
+            {baseLines.map((line, i) => {
+              return (
+                <line
                   key={i}
                   x1={line.x1}
                   x2={line.x2}
                   {...styles.axisXLine}
                   strokeDasharray={line.gap ? '2 2' : 'none'}
                   style={{
-                    stroke: baseTick !== 0
-                      ? colors.divider : undefined
-                  }} />
-              })
-            }
-            {
-              xTicks.map(tick => {
-                return (
-                  <g key={tick} transform={`translate(${x(tick) + Math.round(barWidth / 2)},0)`}>
-                    <line {...styles.axisXLine} y2={X_TICK_HEIGHT} />
-                    <text {...styles.axisLabel} y={X_TICK_HEIGHT + 5} dy='0.6em' textAnchor='middle'>
-                      {xFormat(xParser(tick))}
-                    </text>
-                  </g>
-                )
-              })
-            }
-          </g>
-          {
-            yTicks.map((tick, i) => (
-              <g key={tick} transform={`translate(0,${y(tick)})`}>
-                {tick !== baseTick && <line
-                  {...styles.axisYLine}
-                  style={{
-                    stroke: tick === 0
-                      ? baseLineColor : undefined
+                    stroke: baseTick !== 0 ? colors.divider : undefined
                   }}
-                  x2={width} />
-                }
-                <text {...styles.axisLabel} dy='-3px'>
-                  {yAxis.axisFormat(tick, last(yTicks, i))}
-                </text>
-              </g>
-            ))
-          }
-          {
-            yAnnotations.map((annotation, i) => (
-              <g key={`y-annotation-${i}`} transform={`translate(0,${y(annotation.value)})`}>
-                <line x1={0} x2={width} {...styles.annotationLine} />
-                <circle r='3.5' cx={annotation.x ? x(xNormalizer(annotation.x)) : 4} {...styles.annotationCircle} />
-                <text x={width} textAnchor='end' dy={annotation.dy || '-0.4em'} {...styles.annotationText}>{tLabel(annotation.label)} {yAxis.format(annotation.value)}</text>
-              </g>
-            ))
-          }
-          {
-            xAnnotations.map((annotation, i) => {
-              const range = annotation.x1 !== undefined && annotation.x2 !== undefined
-              const x1 = range
-                ? x(xNormalizer(annotation.x1))
-                : x(xNormalizer(annotation.x))
-              const x2 = range
-                ? x(xNormalizer(annotation.x2)) + barWidth
-                : x1 + Math.max(barWidth, 8)
-              const compact = width < 500
-              let tx = x1
-              if (compact) {
-                tx -= range ? 0 : barWidth * 2
-              } else {
-                tx += (x2 - x1) / 2
-              }
-              const textAnchor = compact ? 'start' : 'middle'
+                />
+              )
+            })}
+            {xTicks.map(tick => {
               return (
-                <g key={`x-annotation-${i}`} transform={`translate(0,${y(annotation.value)})`}>
-                  <line x1={x1} x2={x2} {...(range ? styles.annotationLine : styles.annotationLineValue)} />
-                  <circle r='3.5' cx={x1} {...styles.annotationCircle} />
-                  {range && <circle r='3.5' cx={x2} {...styles.annotationCircle} />}
-                  <text x={tx} textAnchor={textAnchor} dy='-1.8em' {...styles.annotationText}>
-                    {tLabel(annotation.label)}
-                  </text>
-                  <text x={tx} textAnchor={textAnchor} dy='-0.5em' {...styles.annotationValue}>
-                    {tLabel(annotation.valuePrefix)}{yAxis.format(annotation.value)}
+                <g
+                  key={tick}
+                  transform={`translate(${x(tick) +
+                    Math.round(barWidth / 2)},0)`}
+                >
+                  <line {...styles.axisXLine} y2={X_TICK_HEIGHT} />
+                  <text
+                    {...styles.axisLabel}
+                    y={X_TICK_HEIGHT + 5}
+                    dy='0.6em'
+                    textAnchor='middle'
+                  >
+                    {xFormat(xParser(tick))}
                   </text>
                 </g>
               )
-            })
-          }
+            })}
+          </g>
+          {yTicks.map((tick, i) => (
+            <g key={tick} transform={`translate(0,${y(tick)})`}>
+              {tick !== baseTick && (
+                <line
+                  {...styles.axisYLine}
+                  style={{
+                    stroke: tick === 0 ? baseLineColor : undefined
+                  }}
+                  x2={width}
+                />
+              )}
+              <text {...styles.axisLabel} dy='-3px'>
+                {yAxis.axisFormat(tick, last(yTicks, i))}
+              </text>
+            </g>
+          ))}
+          {yAnnotations.map((annotation, i) => (
+            <g
+              key={`y-annotation-${i}`}
+              transform={`translate(0,${y(annotation.value)})`}
+            >
+              <line x1={0} x2={width} {...styles.annotationLine} />
+              <circle
+                r='3.5'
+                cx={annotation.x ? x(xNormalizer(annotation.x)) : 4}
+                {...styles.annotationCircle}
+              />
+              <text
+                x={width}
+                textAnchor='end'
+                dy={annotation.dy || '-0.4em'}
+                {...styles.annotationText}
+              >
+                {tLabel(annotation.label)} {yAxis.format(annotation.value)}
+              </text>
+            </g>
+          ))}
+          {xAnnotations.map((annotation, i) => {
+            const range =
+              annotation.x1 !== undefined && annotation.x2 !== undefined
+            const x1 = range
+              ? x(xNormalizer(annotation.x1))
+              : x(xNormalizer(annotation.x))
+            const x2 = range
+              ? x(xNormalizer(annotation.x2)) + barWidth
+              : x1 + Math.max(barWidth, 8)
+            const compact = width < 500
+            let tx = x1
+            if (compact) {
+              tx -= range ? 0 : barWidth * 2
+            } else {
+              tx += (x2 - x1) / 2
+            }
+            const textAnchor = compact ? 'start' : 'middle'
+            return (
+              <g
+                key={`x-annotation-${i}`}
+                transform={`translate(0,${y(annotation.value)})`}
+              >
+                <line
+                  x1={x1}
+                  x2={x2}
+                  {...(range
+                    ? styles.annotationLine
+                    : styles.annotationLineValue)}
+                />
+                <circle r='3.5' cx={x1} {...styles.annotationCircle} />
+                {range && (
+                  <circle r='3.5' cx={x2} {...styles.annotationCircle} />
+                )}
+                <text
+                  x={tx}
+                  textAnchor={textAnchor}
+                  dy='-1.8em'
+                  {...styles.annotationText}
+                >
+                  {tLabel(annotation.label)}
+                </text>
+                <text
+                  x={tx}
+                  textAnchor={textAnchor}
+                  dy='-0.5em'
+                  {...styles.annotationValue}
+                >
+                  {tLabel(annotation.valuePrefix)}
+                  {yAxis.format(annotation.value)}
+                </text>
+              </g>
+            )
+          })}
         </g>
       </svg>
       <div>
-        {!mini && <ColorLegend inline values={(
-          []
-            .concat(props.colorLegend && (props.colorLegendValues || colorValues).map(colorValue => (
-              {color: color(colorValue), label: tLabel(colorValue)}
-            )))
-            .filter(Boolean)
-        )}/>}
+        {!mini && (
+          <ColorLegend
+            inline
+            values={[]
+              .concat(
+                props.colorLegend &&
+                  (props.colorLegendValues || colorValues).map(colorValue => ({
+                    color: color(colorValue),
+                    label: tLabel(colorValue)
+                  }))
+              )
+              .filter(Boolean)}
+          />
+        )}
         {children}
       </div>
     </div>
@@ -438,23 +475,29 @@ export const propTypes = {
   }).isRequired,
   domain: PropTypes.arrayOf(PropTypes.number),
   yTicks: PropTypes.arrayOf(PropTypes.number),
-  yAnnotations: PropTypes.arrayOf(PropTypes.shape({
-    value: PropTypes.number.isRequired,
-    label: PropTypes.string.isRequired,
-    x: PropTypes.string,
-    dy: PropTypes.string
-  })).isRequired,
+  yAnnotations: PropTypes.arrayOf(
+    PropTypes.shape({
+      value: PropTypes.number.isRequired,
+      label: PropTypes.string.isRequired,
+      x: PropTypes.string,
+      dy: PropTypes.string
+    })
+  ).isRequired,
   timeParse: PropTypes.string.isRequired,
   timeFormat: PropTypes.string,
   xBandPadding: PropTypes.number.isRequired,
   x: PropTypes.string.isRequired,
   xInterval: PropTypes.oneOf(Object.keys(intervals)),
-  xTicks: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.number, PropTypes.string])),
-  xAnnotations: PropTypes.arrayOf(PropTypes.shape({
-    value: PropTypes.number.isRequired,
-    label: PropTypes.string,
-    x: PropTypes.string
-  })).isRequired,
+  xTicks: PropTypes.arrayOf(
+    PropTypes.oneOfType([PropTypes.number, PropTypes.string])
+  ),
+  xAnnotations: PropTypes.arrayOf(
+    PropTypes.shape({
+      value: PropTypes.number.isRequired,
+      label: PropTypes.string,
+      x: PropTypes.string
+    })
+  ).isRequired,
   unit: PropTypes.string,
   numberFormat: PropTypes.string.isRequired,
   filter: PropTypes.string,

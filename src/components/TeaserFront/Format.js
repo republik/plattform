@@ -3,10 +3,7 @@ import PropTypes from 'prop-types'
 import { css } from 'glamor'
 import { lab } from 'd3-color'
 import { mUp, tUp } from './mediaQueries'
-import {
-  sansSerifMedium16,
-  sansSerifMedium20
-} from '../Typography/styles'
+import { sansSerifMedium16, sansSerifMedium20 } from '../Typography/styles'
 import { convertStyleToRem } from '../Typography/utils'
 
 const format = css({
@@ -21,17 +18,24 @@ const format = css({
 const Format = ({ children, color, collapsedColor }) => {
   const labColor = lab(color)
   const labCollapsedColor = lab(collapsedColor || color)
-  const mixColorStyle = collapsedColor && css({
-    color: labCollapsedColor.l > 50
-      ? labCollapsedColor.darker(0.6)
-      : labCollapsedColor.brighter(3.0),
-    [tUp]: {
-      color: labColor.l > 50 ? labColor.darker(2.0) : labColor.brighter(3.0),
-    }
-  })
+  const mixColorStyle =
+    collapsedColor &&
+    css({
+      color:
+        labCollapsedColor.l > 50
+          ? labCollapsedColor.darker(0.6)
+          : labCollapsedColor.brighter(3.0),
+      [tUp]: {
+        color: labColor.l > 50 ? labColor.darker(2.0) : labColor.brighter(3.0)
+      }
+    })
 
   return (
-    <p {...format} {...(mixColorStyle ? mixColorStyle : undefined)} style={!mixColorStyle ? {color} : undefined}>
+    <p
+      {...format}
+      {...(mixColorStyle ? mixColorStyle : undefined)}
+      style={!mixColorStyle ? { color } : undefined}
+    >
       {children}
     </p>
   )

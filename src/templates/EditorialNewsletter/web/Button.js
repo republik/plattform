@@ -1,7 +1,15 @@
 import React from 'react'
 import Button from '../../../components/Button'
 
-export default ({ children, href, title, target, primary, block, attributes }) => (
+export default ({
+  children,
+  href,
+  title,
+  target,
+  primary,
+  block,
+  attributes
+}) => (
   <>
     <Button
       href={href}
@@ -10,7 +18,8 @@ export default ({ children, href, title, target, primary, block, attributes }) =
       primary={primary}
       block={block}
       {...attributes}
-      spacedOut>
+      spacedOut
+    >
       {children}
     </Button>
     {!block && <br />}

@@ -14,7 +14,7 @@ const styles = {
     position: 'relative'
   }),
   maxWidth: css({
-    display: 'block',
+    display: 'block'
   })
 }
 
@@ -29,22 +29,30 @@ class Image extends Component {
       aspectRatio
     } = this.props
 
-    const image = isFinite(aspectRatio)
-      ? (
-        <span
-          {...attributes}
-          {...styles.aspectRatio}
-          style={{paddingBottom: `${100 / aspectRatio}%`, backgroundImage: `url(${src})`}}
-          role="img"
-          aria-label={alt}
-          >
-        </span>
-      )
-      : <img {...attributes} {...styles.image} src={src} srcSet={srcSet} alt={alt} />
+    const image = isFinite(aspectRatio) ? (
+      <span
+        {...attributes}
+        {...styles.aspectRatio}
+        style={{
+          paddingBottom: `${100 / aspectRatio}%`,
+          backgroundImage: `url(${src})`
+        }}
+        role='img'
+        aria-label={alt}
+      ></span>
+    ) : (
+      <img
+        {...attributes}
+        {...styles.image}
+        src={src}
+        srcSet={srcSet}
+        alt={alt}
+      />
+    )
 
     if (maxWidth) {
       return (
-        <span {...styles.maxWidth} style={{maxWidth}}>
+        <span {...styles.maxWidth} style={{ maxWidth }}>
           {image}
         </span>
       )
@@ -60,6 +68,5 @@ Image.propTypes = {
   maxWidth: PropTypes.number,
   aspectRatio: PropTypes.number
 }
-
 
 export default Image

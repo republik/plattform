@@ -2,9 +2,9 @@ import test from 'tape'
 import timeago from './timeago'
 import { createFormatter } from './translate'
 
-const t = createFormatter(require('./translations.json').data);
+const t = createFormatter(require('./translations.json').data)
 
-[
+;[
   [
     'now', // test name
     new Date(2018, 0, 11), // "now"
@@ -47,18 +47,8 @@ const t = createFormatter(require('./translations.json').data);
     new Date(2017, 4, 31),
     'vor 7 Monaten'
   ],
-  [
-    'a year ago',
-    new Date(2018, 0, 11),
-    new Date(2017, 0, 1),
-    'vor einem Jahr'
-  ],
-  [
-    '3 years ago',
-    new Date(2018, 0, 11),
-    new Date(2015, 0, 11),
-    'vor 3 Jahren'
-  ],
+  ['a year ago', new Date(2018, 0, 11), new Date(2017, 0, 1), 'vor einem Jahr'],
+  ['3 years ago', new Date(2018, 0, 11), new Date(2015, 0, 11), 'vor 3 Jahren'],
   [
     '11 years ago',
     new Date(2018, 0, 11),
@@ -67,10 +57,7 @@ const t = createFormatter(require('./translations.json').data);
   ]
 ].map(([title, now, date, expected]) => {
   test(`timeago.${title}`, assert => {
-    assert.equal(
-      timeago(t, (now - date) / 1000),
-      expected
-    )
+    assert.equal(timeago(t, (now - date) / 1000), expected)
     assert.end()
   })
 })

@@ -2,7 +2,10 @@ import React from 'react'
 import Paragraph, { Link, Br } from './email/Paragraph'
 import { H2 } from './email/Headlines'
 import HR from './email/HR'
-import Blockquote, { BlockquoteText, BlockquoteSource } from './email/Blockquote'
+import Blockquote, {
+  BlockquoteText,
+  BlockquoteSource
+} from './email/Blockquote'
 import List, { ListItem } from './email/List'
 
 import {
@@ -13,15 +16,9 @@ import {
   matchImageParagraph
 } from 'mdast-react-render/lib/utils'
 
-import {
-  FigureImage
-} from '../../components/Figure'
+import { FigureImage } from '../../components/Figure'
 
-import {
-  getDatePath,
-  matchFigure,
-  extractImage
-} from '../Article/utils'
+import { getDatePath, matchFigure, extractImage } from '../Article/utils'
 
 const matchLast = (node, index, parent) => index === parent.children.length - 1
 
@@ -84,7 +81,9 @@ const createNewsletterSchema = ({
       link,
       {
         matchMdast: matchType('strong'),
-        component: ({attributes, children}) => <strong {...attributes}>{children}</strong>,
+        component: ({ attributes, children }) => (
+          <strong {...attributes}>{children}</strong>
+        ),
         editorModule: 'mark',
         editorOptions: {
           type: 'STRONG',
@@ -93,7 +92,9 @@ const createNewsletterSchema = ({
       },
       {
         matchMdast: matchType('emphasis'),
-        component: ({attributes, children}) => <em {...attributes}>{children}</em>,
+        component: ({ attributes, children }) => (
+          <em {...attributes}>{children}</em>
+        ),
         editorModule: 'mark',
         editorOptions: {
           type: 'EMPHASIS',
@@ -135,9 +136,7 @@ const createNewsletterSchema = ({
     editorOptions: {
       pixelNote: 'Auflösung: min. 1200x (proportionaler Schnitt)',
       insertButtonText: 'Bild',
-      insertTypes: [
-        'PARAGRAPH'
-      ],
+      insertTypes: ['PARAGRAPH'],
       type: 'CENTERFIGURE'
     },
     rules: [
@@ -149,10 +148,7 @@ const createNewsletterSchema = ({
           const displayWidth = 600
 
           return {
-            ...FigureImage.utils.getResizedSrcs(
-              src,
-              displayWidth
-            ),
+            ...FigureImage.utils.getResizedSrcs(src, displayWidth),
             alt: node.children[0].alt
           }
         },
@@ -165,10 +161,7 @@ const createNewsletterSchema = ({
 
   const cover = {
     matchMdast: (node, index, parent) => {
-      return (
-        matchFigure(node) &&
-        index === 0
-      )
+      return matchFigure(node) && index === 0
     },
     component: Cover,
     editorModule: 'figure',
@@ -187,11 +180,7 @@ const createNewsletterSchema = ({
           const setMaxWidth = parent.data.size !== undefined
 
           return {
-            ...FigureImage.utils.getResizedSrcs(
-              src,
-              displayWidth,
-              setMaxWidth
-            ),
+            ...FigureImage.utils.getResizedSrcs(src, displayWidth, setMaxWidth),
             alt: node.children[0].alt
           }
         },
@@ -222,11 +211,13 @@ const createNewsletterSchema = ({
             matchMdast: () => false,
             editorModule: 'meta',
             editorOptions: {
-              customFields: [{
-                label: 'Format',
-                key: 'format',
-                ref: 'repo'
-              }],
+              customFields: [
+                {
+                  label: 'Format',
+                  key: 'format',
+                  ref: 'repo'
+                }
+              ],
               additionalFields: ['emailSubject']
             }
           },
@@ -235,7 +226,7 @@ const createNewsletterSchema = ({
             matchMdast: matchZone('CENTER'),
             component: Center,
             editorModule: 'center',
-            props: (mdast, index, parent, {ancestors}) => ({
+            props: (mdast, index, parent, { ancestors }) => ({
               meta: ancestors[ancestors.length - 1].meta || {}
             }),
             rules: [
@@ -255,10 +246,8 @@ const createNewsletterSchema = ({
                 matchMdast: matchZone('BUTTON'),
                 component: Button,
                 props: (node, index, parent, { ancestors }) => {
-                  const link = (
-                    node.children[0] &&
-                    node.children[0].children[0]
-                  ) || {}
+                  const link =
+                    (node.children[0] && node.children[0].children[0]) || {}
 
                   return {
                     ...node.data,
@@ -269,11 +258,13 @@ const createNewsletterSchema = ({
                 rules: globalInlines.concat({
                   matchMdast: matchParagraph,
                   component: ({ children }) => children,
-                  rules: [{
-                    matchMdast: matchType('link'),
-                    component: ({ children }) => children,
-                    rules: globalInlines
-                  }]
+                  rules: [
+                    {
+                      matchMdast: matchType('link'),
+                      component: ({ children }) => children,
+                      rules: globalInlines
+                    }
+                  ]
                 }),
                 editorModule: 'button'
               },
@@ -335,9 +326,7 @@ const createNewsletterSchema = ({
                 editorModule: 'line',
                 editorOptions: {
                   insertButtonText: 'Trennlinie',
-                  insertTypes: [
-                    'PARAGRAPH'
-                  ]
+                  insertTypes: ['PARAGRAPH']
                 },
                 isVoid: true
               }

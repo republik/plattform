@@ -33,10 +33,10 @@ const createSchema = ({
         label: 'Ebene',
         key: 'kind',
         items: [
-          {value: 'editorial', text: 'Editorial'},
-          {value: 'meta', text: 'Meta'},
-          {value: 'scribble', text: 'Ameise'},
-          {value: 'opinion', text: 'Kolumne'}
+          { value: 'editorial', text: 'Editorial' },
+          { value: 'meta', text: 'Meta' },
+          { value: 'scribble', text: 'Ameise' },
+          { value: 'opinion', text: 'Kolumne' }
         ]
       },
       {
@@ -58,12 +58,14 @@ const createSchema = ({
     series,
     titleBlockRule: titleBlockRule || {
       matchMdast: matchZone('TITLE'),
-      component: ({children, ...props}) => <>
-        <TitleBlock {...props} center Link={Link} margin={titleMargin}>
-          {titleBlockPrepend}
-          {children}
-        </TitleBlock>
-      </>,
+      component: ({ children, ...props }) => (
+        <>
+          <TitleBlock {...props} center Link={Link} margin={titleMargin}>
+            {titleBlockPrepend}
+            {children}
+          </TitleBlock>
+        </>
+      ),
       editorModule: 'title',
       editorOptions: {
         coverType: COVER_TYPE
@@ -99,7 +101,13 @@ const createSchema = ({
         <FormatTag
           label={props.title}
           count={17}
-          color={props.color ? props.color : props.kind ? colors[props.kind] : undefined}
+          color={
+            props.color
+              ? props.color
+              : props.kind
+              ? colors[props.kind]
+              : undefined
+          }
         />
       </div>
     ),

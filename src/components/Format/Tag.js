@@ -32,14 +32,12 @@ const styles = {
 }
 
 class FormatTag extends Component {
-  render () {
+  render() {
     const { label, count, color } = this.props
     return (
       <div {...styles.container} style={{ color }}>
         {label}
-        {count !== undefined && (
-          <span {...styles.count}>{count}</span>
-        )}
+        {count !== undefined && <span {...styles.count}>{count}</span>}
       </div>
     )
   }

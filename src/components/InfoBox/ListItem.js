@@ -1,9 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import {
-  sansSerifRegular15,
-  sansSerifRegular18
-} from '../Typography/styles'
+import { sansSerifRegular15, sansSerifRegular18 } from '../Typography/styles'
 import colors from '../../theme/colors'
 import { css } from 'glamor'
 import { mUp } from '../../theme/mediaQueries'
@@ -27,8 +24,7 @@ const styles = {
   })
 }
 
-
-const ListItem = ({ children, attributes = {}, style={} }) => (
+const ListItem = ({ children, attributes = {}, style = {} }) => (
   <li {...styles.li} {...attributes} {...textAttributes} style={style}>
     {children}
   </li>

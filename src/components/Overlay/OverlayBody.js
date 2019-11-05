@@ -1,7 +1,7 @@
 import React from 'react'
-import {css} from 'glamor'
-import {mUp} from '../../theme/mediaQueries'
-import {height} from './OverlayToolbar'
+import { css } from 'glamor'
+import { mUp } from '../../theme/mediaQueries'
+import { height } from './OverlayToolbar'
 
 const overlayBodyStyle = css({
   padding: `${height + 20}px 20px`,
@@ -14,7 +14,6 @@ const overlayBodyStyle = css({
   }
 })
 
-const OverlayBody = props =>
-  <div {...overlayBodyStyle} {...props} />
+const OverlayBody = props => <div {...overlayBodyStyle} {...props} />
 
 export default OverlayBody

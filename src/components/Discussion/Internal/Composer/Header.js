@@ -2,7 +2,10 @@ import React from 'react'
 import { css } from 'glamor'
 import MdCheck from 'react-icons/lib/md/check'
 import colors from '../../../../theme/colors'
-import { sansSerifMedium16, sansSerifRegular14 } from '../../../Typography/styles'
+import {
+  sansSerifMedium16,
+  sansSerifRegular14
+} from '../../../Typography/styles'
 import { ellipsize } from '../../../../lib/styleMixins'
 import { convertStyleToRem, pxToRem } from '../../../Typography/utils'
 
@@ -95,18 +98,29 @@ const styles = {
   })
 }
 
-export const Header = ({ t, displayAuthor: { profilePicture, name, credential }, onClick }) => (
+export const Header = ({
+  t,
+  displayAuthor: { profilePicture, name, credential },
+  onClick
+}) => (
   <button {...styles.button} onClick={onClick}>
     <div {...styles.root}>
-      {profilePicture && <img {...styles.profilePicture} src={profilePicture} alt="" />}
+      {profilePicture && (
+        <img {...styles.profilePicture} src={profilePicture} alt='' />
+      )}
       <div {...styles.center}>
         <div {...styles.name}>{name}</div>
         <div {...styles.meta}>
           {(() => {
             if (credential) {
               return (
-                <div {...styles.credential} {...(credential.verified ? styles.credentialVerified : {})}>
-                  <div {...styles.descriptionText}>{credential.description}</div>
+                <div
+                  {...styles.credential}
+                  {...(credential.verified ? styles.credentialVerified : {})}
+                >
+                  <div {...styles.descriptionText}>
+                    {credential.description}
+                  </div>
                   {credential.verified && <MdCheck {...styles.verifiedCheck} />}
                 </div>
               )
@@ -128,11 +142,11 @@ export const Header = ({ t, displayAuthor: { profilePicture, name, credential },
 )
 
 const EditIcon = () => (
-  <svg width="24px" height="24px" viewBox="0 0 24 24">
-    <circle fill="currentColor" cx="12" cy="12" r="12" />
+  <svg width='24px' height='24px' viewBox='0 0 24 24'>
+    <circle fill='currentColor' cx='12' cy='12' r='12' />
     <path
-      d="M6,15.5003472 L6,18 L8.49965283,18 L15.8719622,10.6276906 L13.3723094,8.12803777 L6,15.5003472 Z M17.8050271,8.69462575 C18.064991,8.43466185 18.064991,8.01472018 17.8050271,7.75475628 L16.2452437,6.19497292 C15.9852798,5.93500903 15.5653381,5.93500903 15.3053743,6.19497292 L14.0855437,7.4148035 L16.5851965,9.91445633 L17.8050271,8.69462575 Z"
-      fill="white"
+      d='M6,15.5003472 L6,18 L8.49965283,18 L15.8719622,10.6276906 L13.3723094,8.12803777 L6,15.5003472 Z M17.8050271,8.69462575 C18.064991,8.43466185 18.064991,8.01472018 17.8050271,7.75475628 L16.2452437,6.19497292 C15.9852798,5.93500903 15.5653381,5.93500903 15.3053743,6.19497292 L14.0855437,7.4148035 L16.5851965,9.91445633 L17.8050271,8.69462575 Z'
+      fill='white'
     />
   </svg>
 )

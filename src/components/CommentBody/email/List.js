@@ -8,9 +8,14 @@ const listStyle = {
 }
 
 export const ListItem = ({ children }) => (
-  <li style={paragraphStyle}>{ children }</li>
+  <li style={paragraphStyle}>{children}</li>
 )
 
-export default ({ children, data }) => data.ordered
-  ? <ol start={data.start} style={ listStyle }>{ children }</ol>
-  : <ul style={ listStyle }>{ children }</ul>
+export default ({ children, data }) =>
+  data.ordered ? (
+    <ol start={data.start} style={listStyle}>
+      {children}
+    </ol>
+  ) : (
+    <ul style={listStyle}>{children}</ul>
+  )

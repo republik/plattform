@@ -66,33 +66,46 @@ const interactionP = css({
   margin: 0
 })
 
-
-export const Headline = ({children, ...props}) => (
-  <h1 {...props} {...interactionHeadline}>{children}</h1>
+export const Headline = ({ children, ...props }) => (
+  <h1 {...props} {...interactionHeadline}>
+    {children}
+  </h1>
 )
 
-export const H1 = ({children, ...props}) => (
-  <h1 {...props} {...interactionH1}>{children}</h1>
+export const H1 = ({ children, ...props }) => (
+  <h1 {...props} {...interactionH1}>
+    {children}
+  </h1>
 )
 
-export const H2 = ({children, ...props}) => (
-  <h2 {...props} {...interactionH2}>{children}</h2>
+export const H2 = ({ children, ...props }) => (
+  <h2 {...props} {...interactionH2}>
+    {children}
+  </h2>
 )
 
-export const H3 = ({children, ...props}) => (
-  <h3 {...props} {...interactionH3}>{children}</h3>
+export const H3 = ({ children, ...props }) => (
+  <h3 {...props} {...interactionH3}>
+    {children}
+  </h3>
 )
 
-export const P = ({children, ...props}) => (
-  <p {...props} {...interactionP} {...fontRule}>{children}</p>
+export const P = ({ children, ...props }) => (
+  <p {...props} {...interactionP} {...fontRule}>
+    {children}
+  </p>
 )
 
 const emphasis = css(fontStyles.sansSerifMedium)
-export const Emphasis = ({children, attributes, ...props}) => (
-  <strong {...props} {...attributes} {...emphasis}>{children}</strong>
+export const Emphasis = ({ children, attributes, ...props }) => (
+  <strong {...props} {...attributes} {...emphasis}>
+    {children}
+  </strong>
 )
 
 const cursive = css(fontStyles.sansSerifItalic)
-export const Cursive = ({children, attributes, ...props}) => (
-  <em {...props} {...attributes} {...cursive}>{children}</em>
+export const Cursive = ({ children, attributes, ...props }) => (
+  <em {...props} {...attributes} {...cursive}>
+    {children}
+  </em>
 )

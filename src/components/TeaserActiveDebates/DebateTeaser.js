@@ -62,9 +62,15 @@ export const DebateTeaser = ({
    */
   const links = {
     Profile: ({ displayAuthor, ...props }) => (
-      <CommentLink {...props} discussion={discussion} displayAuthor={displayAuthor} />
+      <CommentLink
+        {...props}
+        discussion={discussion}
+        displayAuthor={displayAuthor}
+      />
     ),
-    Comment: ({ comment, ...props }) => <CommentLink {...props} discussion={discussion} commentId={comment.id} />
+    Comment: ({ comment, ...props }) => (
+      <CommentLink {...props} discussion={discussion} commentId={comment.id} />
+    )
   }
   const discussionContextValue = {
     discussion,
@@ -88,7 +94,10 @@ export const DebateTeaser = ({
           />
         </DiscussionLink>
         {discussion.comments.nodes.map((comment, i, all) => (
-          <div key={comment.id} style={{ marginBottom: i !== all.length - 1 ? 30 : 0 }}>
+          <div
+            key={comment.id}
+            style={{ marginBottom: i !== all.length - 1 ? 30 : 0 }}
+          >
             <links.Comment comment={comment} passHref>
               <ActiveDebateComment
                 t={t}

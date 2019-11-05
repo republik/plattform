@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import {css} from 'glamor'
+import { css } from 'glamor'
 import Radio from '../../../Form/Radio'
 import { mUp } from '../../../../theme/mediaQueries'
 
@@ -38,7 +38,8 @@ export const Tags = ({ tags, value, onChange }) => {
             <Radio
               value={tag}
               checked={value === tag}
-              onChange={event => onChange(event.target.value)}>
+              onChange={event => onChange(event.target.value)}
+            >
               {tag}
             </Radio>
           </div>
@@ -47,7 +48,6 @@ export const Tags = ({ tags, value, onChange }) => {
     )
   }
 }
-
 
 Tags.propTypes = {
   tags: PropTypes.arrayOf(PropTypes.string),

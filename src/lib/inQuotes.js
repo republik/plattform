@@ -5,10 +5,7 @@ const defaultMarks = {
   innerClosing: '›'
 }
 
-export const inQuotes = (
-  str,
-  marks = defaultMarks
-) => {
+export const inQuotes = (str, marks = defaultMarks) => {
   let quotedStr = str.trim()
   if (
     quotedStr.startsWith(marks.outerOpening) &&

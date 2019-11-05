@@ -19,7 +19,7 @@ const styles = {
     color: 'inherit',
     textDecoration: 'none'
   }),
-  bar : css({
+  bar: css({
     marginTop: 10
   })
 }
@@ -59,51 +59,48 @@ export const TeaserFeed = ({
   Link = DefaultLink
 }) => {
   const formatMeta = (format && format.meta) || {}
-  const Headline = (
-    formatMeta.kind === 'meta' ||
-    metaKind === 'meta' ||
-    template === 'format'
-  )
-    ? Headlines.Interaction
-    : formatMeta.kind === 'scribble' || metaKind === 'scribble'
+  const Headline =
+    formatMeta.kind === 'meta' || metaKind === 'meta' || template === 'format'
+      ? Headlines.Interaction
+      : formatMeta.kind === 'scribble' || metaKind === 'scribble'
       ? Headlines.Scribble
       : Headlines.Editorial
   const borderColor = formatMeta.title
-    ? (formatMeta.color || colors[formatMeta.kind])
+    ? formatMeta.color || colors[formatMeta.kind]
     : template === 'format'
-      ? (metaColor || colors[metaKind])
-      : undefined
+    ? metaColor || colors[metaKind]
+    : undefined
   const titleColor = metaColor
     ? metaColor
     : template === 'format'
-      ? borderColor
-      : undefined
+    ? borderColor
+    : undefined
 
   return (
     <Container format={format} color={borderColor} Link={Link}>
-      <Headline style={{color: titleColor}}>
+      <Headline style={{ color: titleColor }}>
         <Link href={path} passHref>
-          <a {...styles.link} href={path}>{title}</a>
+          <a {...styles.link} href={path}>
+            {title}
+          </a>
         </Link>
       </Headline>
-      {!!description && <Lead>
-        <Link href={path} passHref>
-          <a {...styles.link} href={path}>{description}</a>
-        </Link>
-      </Lead>}
+      {!!description && (
+        <Lead>
+          <Link href={path} passHref>
+            <a {...styles.link} href={path}>
+              {description}
+            </a>
+          </Link>
+        </Lead>
+      )}
 
       <Credit>
-        {credits && credits.length > 0 ? (
-          renderMdast(credits, creditSchema)
-        ) : (
-          !!publishDate && dateFormat(new Date(publishDate))
-        )}
+        {credits && credits.length > 0
+          ? renderMdast(credits, creditSchema)
+          : !!publishDate && dateFormat(new Date(publishDate))}
       </Credit>
-      {bar && (
-        <div {...styles.bar}>
-          {bar}
-        </div>
-      )}
+      {bar && <div {...styles.bar}>{bar}</div>}
       {prepublication && <InternalOnlyTag t={t} />}
     </Container>
   )

@@ -10,7 +10,7 @@ const styles = {
   container: css({
     margin: '40px auto',
     [mUp]: {
-      margin: '60px auto',
+      margin: '60px auto'
     }
   }),
   containerFloat: css({
@@ -23,7 +23,7 @@ const styles = {
   }),
   figure: css({
     '& figure': {
-      width: IMAGE_SIZE,
+      width: IMAGE_SIZE
     },
     [mUp]: {
       paddingLeft: 170,
@@ -53,7 +53,8 @@ const getBreakoutSize = (size, hasFigure) => {
 
 const PullQuote = ({ children, attributes, hasFigure, size }) => {
   const textAlign = !hasFigure && size === 'narrow' ? 'center' : 'inherit'
-  const containerStyle = size === 'float' ? styles.containerFloat : styles.container
+  const containerStyle =
+    size === 'float' ? styles.containerFloat : styles.container
 
   return (
     <Breakout attributes={attributes} size={getBreakoutSize(size, hasFigure)}>

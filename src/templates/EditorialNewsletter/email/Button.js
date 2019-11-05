@@ -2,7 +2,14 @@ import React from 'react'
 import colors from '../../../theme/colors'
 import { fontFamilies } from '../../../theme/fonts'
 
-export const Button = ({ href, title, primary, block, children, attributes }) => {
+export const Button = ({
+  href,
+  title,
+  primary,
+  block,
+  children,
+  attributes
+}) => {
   const styles = {
     fontSize: '20px',
     fontFamily: fontFamilies.sansSerifRegular,
@@ -18,45 +25,45 @@ export const Button = ({ href, title, primary, block, children, attributes }) =>
   }
 
   const tableStylesSecondary = {
-    backgroundColor: '#ffffff',
+    backgroundColor: '#ffffff'
   }
 
-  return (<>
-      <table
-        width="100%"
-        border="0"
-        cellSpacing="0"
-        cellPadding="0">
+  return (
+    <>
+      <table width='100%' border='0' cellSpacing='0' cellPadding='0'>
         <tbody>
-        <tr>
-          <td>
-            <table
-              width={block ? '100%' : undefined}
-              border={primary? 0 : `1px solid ${colors.secondary}`}
-              cellSpacing="0"
-              cellPadding={primary ? '18' : '17'}
-              style={{...primary ? tableStylesPrimary : tableStylesSecondary, borderCollapse: 'collapse'}}>
-              <tbody>
-              <tr>
-                <td
-                  width={block ? '100%' : undefined}
-                  align="center">
-                  <a
-                    href={href}
-                    title={title}
-                    {...attributes}
-                    style={{ ...styles, ...block && { width: '100%' } }}>
-                    {children}
-                  </a>
-                </td>
-              </tr>
-              </tbody>
-            </table>
-          </td>
-        </tr>
+          <tr>
+            <td>
+              <table
+                width={block ? '100%' : undefined}
+                border={primary ? 0 : `1px solid ${colors.secondary}`}
+                cellSpacing='0'
+                cellPadding={primary ? '18' : '17'}
+                style={{
+                  ...(primary ? tableStylesPrimary : tableStylesSecondary),
+                  borderCollapse: 'collapse'
+                }}
+              >
+                <tbody>
+                  <tr>
+                    <td width={block ? '100%' : undefined} align='center'>
+                      <a
+                        href={href}
+                        title={title}
+                        {...attributes}
+                        style={{ ...styles, ...(block && { width: '100%' }) }}
+                      >
+                        {children}
+                      </a>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </td>
+          </tr>
         </tbody>
       </table>
-      <br/>
+      <br />
     </>
   )
 }

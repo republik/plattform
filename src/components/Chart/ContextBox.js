@@ -25,14 +25,14 @@ const boxStyle = css({
 
 const boxPosition = {
   top: {
-    center: css({transform: 'translateX(-50%) translateY(-100%)'}),
-    left: css({transform: 'translateX(-15%) translateY(-100%)'}),
-    right: css({transform: 'translateX(-85%) translateY(-100%)'})
+    center: css({ transform: 'translateX(-50%) translateY(-100%)' }),
+    left: css({ transform: 'translateX(-15%) translateY(-100%)' }),
+    right: css({ transform: 'translateX(-85%) translateY(-100%)' })
   },
   below: {
-    center: css({transform: 'translateX(-50%) translateY(0)'}),
-    left: css({transform: 'translateX(-15%) translateY(0)'}),
-    right: css({transform: 'translateX(-85%) translateY(0)'})
+    center: css({ transform: 'translateX(-50%) translateY(0)' }),
+    left: css({ transform: 'translateX(-15%) translateY(0)' }),
+    right: css({ transform: 'translateX(-85%) translateY(0)' })
   }
 }
 
@@ -47,14 +47,26 @@ const notchStyle = css({
 
 const notchPosition = {
   top: {
-    center: css({bottom: -8, transform: 'translateX(-50%)', left: '50%'}),
-    left: css({bottom: -8, transform: 'translateX(-50%)', left: '15%'}),
-    right: css({bottom: -8, transform: 'translateX(50%)', right: '15%'})
+    center: css({ bottom: -8, transform: 'translateX(-50%)', left: '50%' }),
+    left: css({ bottom: -8, transform: 'translateX(-50%)', left: '15%' }),
+    right: css({ bottom: -8, transform: 'translateX(50%)', right: '15%' })
   },
   below: {
-    center: css({top: -8, transform: 'translateX(-50%) rotate(180deg)', left: '50%'}),
-    left: css({top: -8, transform: 'translateX(-50%) rotate(180deg)', left: '15%'}),
-    right: css({top: -8, transform: 'translateX(50%) rotate(180deg)', right: '15%'})
+    center: css({
+      top: -8,
+      transform: 'translateX(-50%) rotate(180deg)',
+      left: '50%'
+    }),
+    left: css({
+      top: -8,
+      transform: 'translateX(-50%) rotate(180deg)',
+      left: '15%'
+    }),
+    right: css({
+      top: -8,
+      transform: 'translateX(50%) rotate(180deg)',
+      right: '15%'
+    })
   }
 }
 
@@ -72,16 +84,18 @@ const labeledValueStyle = css({
   }
 })
 
-export const ContextBoxValue = ({label, children}) => {
+export const ContextBoxValue = ({ label, children }) => {
   if (!children) {
     return null
   }
   return (
     <div {...labeledValueStyle} {...Interaction.fontRule}>
-      {!!label && <Fragment>
-        <strong>{label}</strong>
-        <br />
-      </Fragment>}
+      {!!label && (
+        <Fragment>
+          <strong>{label}</strong>
+          <br />
+        </Fragment>
+      )}
       {children}
     </div>
   )
@@ -92,7 +106,13 @@ ContextBoxValue.propTypes = {
   children: PropTypes.node
 }
 
-const ContextBox = ({orientation: yOrientation, x, y, contextWidth, children}) => {
+const ContextBox = ({
+  orientation: yOrientation,
+  x,
+  y,
+  contextWidth,
+  children
+}) => {
   const maxWidth = Math.min(400, contextWidth)
   let xOrientation = 'center'
   if (contextWidth - x < maxWidth / 2) {
@@ -102,14 +122,16 @@ const ContextBox = ({orientation: yOrientation, x, y, contextWidth, children}) =
   }
 
   return (
-    <div {...boxStyle}
+    <div
+      {...boxStyle}
       className={boxPosition[yOrientation][xOrientation]}
-      style={{left: x, top: y, maxWidth}}>
-      <div>
-        {children}
-      </div>
-      <div {...notchStyle}
-        className={notchPosition[yOrientation][xOrientation]} />
+      style={{ left: x, top: y, maxWidth }}
+    >
+      <div>{children}</div>
+      <div
+        {...notchStyle}
+        className={notchPosition[yOrientation][xOrientation]}
+      />
     </div>
   )
 }

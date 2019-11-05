@@ -22,9 +22,9 @@ const createSchema = ({
         label: 'Anonymity',
         key: 'discussionAnonymity',
         items: [
-          {value: 'ALLOWED', text: 'Erlaubt'},
-          {value: 'ENFORCED', text: 'Zwingend'},
-          {value: 'FORBIDDEN', text: 'Verboten'}
+          { value: 'ALLOWED', text: 'Erlaubt' },
+          { value: 'ENFORCED', text: 'Zwingend' },
+          { value: 'FORBIDDEN', text: 'Verboten' }
         ]
       },
       {
@@ -38,7 +38,7 @@ const createSchema = ({
         ref: 'repo'
       },
       {
-      label: 'Diskussion geschlossen',
+        label: 'Diskussion geschlossen',
         key: 'discussionClosed',
         ref: 'bool'
       },

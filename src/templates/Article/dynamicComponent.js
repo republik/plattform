@@ -2,21 +2,23 @@ import React from 'react'
 
 import DynamicComponent from '../../components/DynamicComponent'
 import ErrorBoundary from '../../components/ErrorBoundary'
-import {
-  Figure
-} from '../../components/Figure'
+import { Figure } from '../../components/Figure'
 
-import {
-  matchZone
-} from 'mdast-react-render/lib/utils'
+import { matchZone } from 'mdast-react-render/lib/utils'
 
-const createDynamicComponent = ({t, dynamicComponentRequire, insertButtonText, type}) => ({
+const createDynamicComponent = ({
+  t,
+  dynamicComponentRequire,
+  insertButtonText,
+  type
+}) => ({
   matchMdast: matchZone('DYNAMIC_COMPONENT'),
-  component: ({showException, raw = false, size, attributes, ...props}) => {
+  component: ({ showException, raw = false, size, attributes, ...props }) => {
     const content = (
       <ErrorBoundary
         showException={showException}
-        failureMessage={t('styleguide/DynamicComponent/error')}>
+        failureMessage={t('styleguide/DynamicComponent/error')}
+      >
         <DynamicComponent size={size} {...props} />
       </ErrorBoundary>
     )
@@ -25,9 +27,11 @@ const createDynamicComponent = ({t, dynamicComponentRequire, insertButtonText, t
       return content
     }
 
-    return <Figure size={size} attributes={attributes}>
-      {content}
-    </Figure>
+    return (
+      <Figure size={size} attributes={attributes}>
+        {content}
+      </Figure>
+    )
   },
   props: node => {
     const html = node.children.find(c => c.type === 'code' && c.lang === 'html')
@@ -44,9 +48,7 @@ const createDynamicComponent = ({t, dynamicComponentRequire, insertButtonText, t
   editorModule: 'dynamiccomponent',
   editorOptions: {
     type,
-    insertTypes: [
-      'PARAGRAPH'
-    ],
+    insertTypes: ['PARAGRAPH'],
     insertButtonText
   },
   isVoid: true

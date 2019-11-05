@@ -1,4 +1,4 @@
-import SG, {getJson} from './env'
+import SG, { getJson } from './env'
 
 const FONT_STYLES = getJson('FONT_STYLES')
 
@@ -15,13 +15,10 @@ export const fontFamilies = {
   cursiveTitle: 'sans-serif',
   ...getJson('FONT_FAMILIES'),
   // FONT_STYLES supersedes FONT_FAMILIES
-  ...Object.keys(FONT_STYLES).reduce(
-    (fams, key) => {
-      fams[key] = FONT_STYLES[key].fontFamily
-      return fams
-    },
-    {}
-  )
+  ...Object.keys(FONT_STYLES).reduce((fams, key) => {
+    fams[key] = FONT_STYLES[key].fontFamily
+    return fams
+  }, {})
 }
 
 export const fontStyles = {

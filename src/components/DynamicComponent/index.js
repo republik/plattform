@@ -30,13 +30,14 @@ export const createRequire = (whitelist = DEFAULT_WHITELIST) => {
 }
 
 class DynamicComponent extends Component {
-  constructor (...args) {
+  constructor(...args) {
     super(...args)
 
     this.state = {}
   }
-  componentDidMount () {
-    this.props.require(this.props.src)
+  componentDidMount() {
+    this.props
+      .require(this.props.src)
       .then(module => {
         this.setState({
           LoadedComponent: module.hasOwnProperty('default')
@@ -45,36 +46,35 @@ class DynamicComponent extends Component {
         })
       })
       .catch(error => {
-        this.setState({error})
+        this.setState({ error })
       })
   }
-  render () {
+  render() {
     const { LoadedComponent } = this.state
 
-    const error = this.state.error || (
-      !this.props.src && new Error('Missing src')
-    )
+    const error =
+      this.state.error || (!this.props.src && new Error('Missing src'))
     if (error) {
       throw error
     }
 
     if (LoadedComponent) {
-      return <LoadedComponent
-        require={this.props.require}
-        {...this.props.props} />
+      return (
+        <LoadedComponent require={this.props.require} {...this.props.props} />
+      )
     }
 
     const { html, loaderProps } = this.props
     if (html) {
-      return <div
-        dangerouslySetInnerHTML={{
-          __html: html
-        }}
-      />
+      return (
+        <div
+          dangerouslySetInnerHTML={{
+            __html: html
+          }}
+        />
+      )
     }
-    return <Loader
-      {...loaderProps}
-      loading />
+    return <Loader {...loaderProps} loading />
   }
 }
 

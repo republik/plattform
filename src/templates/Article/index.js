@@ -3,10 +3,7 @@ import React from 'react'
 import Container from './Container'
 import Center from '../../components/Center'
 import Button from '../../components/Button'
-import {
-  BlockQuote,
-  BlockQuoteParagraph
-} from '../../components/BlockQuote'
+import { BlockQuote, BlockQuoteParagraph } from '../../components/BlockQuote'
 import TitleBlock from '../../components/TitleBlock'
 import { HR } from '../../components/Typography'
 import * as Editorial from '../../components/Typography/Editorial'
@@ -88,7 +85,9 @@ const link = {
 const paragraphFormatting = [
   {
     matchMdast: matchType('strong'),
-    component: ({attributes, children}) => <strong {...attributes}>{children}</strong>,
+    component: ({ attributes, children }) => (
+      <strong {...attributes}>{children}</strong>
+    ),
     editorModule: 'mark',
     editorOptions: {
       type: 'STRONG',
@@ -97,7 +96,9 @@ const paragraphFormatting = [
   },
   {
     matchMdast: matchType('emphasis'),
-    component: ({attributes, children}) => <em {...attributes}>{children}</em>,
+    component: ({ attributes, children }) => (
+      <em {...attributes}>{children}</em>
+    ),
     editorModule: 'mark',
     editorOptions: {
       type: 'EMPHASIS',
@@ -106,23 +107,20 @@ const paragraphFormatting = [
   }
 ]
 
-
 const paragraphRules = [
   ...globalInlines,
   ...paragraphFormatting,
   {
     ...link,
-    rules: [
-      ...globalInlines,
-      ...paragraphFormatting
-    ]
+    rules: [...globalInlines, ...paragraphFormatting]
   }
 ]
 
 const getProgressId = (node, index, parent, { ancestors }) => {
   if (parent.identifier === 'CENTER') {
     const rootNode = ancestors[ancestors.length - 1]
-    const indexOfParent = rootNode && rootNode.children.length && rootNode.children.indexOf(parent)
+    const indexOfParent =
+      rootNode && rootNode.children.length && rootNode.children.indexOf(parent)
     return indexOfParent + '-' + index
   }
   if (index > 0) {
@@ -137,20 +135,22 @@ const getProgressId = (node, index, parent, { ancestors }) => {
 
 const getProgressProps = (node, index, parent, { ancestors }) => {
   const progressId = getProgressId(node, index, parent, { ancestors })
-  return progressId ? {
-    attributes: {
-      'data-pos': progressId
-    }
-  } : {}
+  return progressId
+    ? {
+        attributes: {
+          'data-pos': progressId
+        }
+      }
+    : {}
 }
 
 const addProgressProps = rule => ({
   ...rule,
   props: rule.props
     ? (...args) => ({
-      ...rule.props(...args),
-      ...getProgressProps(...args)
-    })
+        ...rule.props(...args),
+        ...getProgressProps(...args)
+      })
     : getProgressProps
 })
 
@@ -195,23 +195,20 @@ const figureImage = {
 
     const src = extractImage(node)
     const displayWidth = getDisplayWidth(ancestors)
-    const enableGallery = meta.gallery && (parent.data ? !parent.data.excludeFromGallery : true)
+    const enableGallery =
+      meta.gallery && (parent.data ? !parent.data.excludeFromGallery : true)
 
     const group = ancestors.find(matchZone('FIGUREGROUP'))
 
     let gallerySize, aboveTheFold
     if (group && group.data.slideshow) {
-      const {
-        slideshow,
-        columns
-      } = group.data
+      const { slideshow, columns } = group.data
 
       const index = group.children.indexOf(parent)
       const numFigs = group.children.filter(matchFigure).length
 
       const galleryCover =
-        index === slideshow * columns - 1 &&
-        numFigs > slideshow * columns
+        index === slideshow * columns - 1 && numFigs > slideshow * columns
 
       gallerySize = galleryCover ? numFigs : undefined
 
@@ -223,10 +220,7 @@ const figureImage = {
     }
 
     return {
-      ...FigureImage.utils.getResizedSrcs(
-        src,
-        displayWidth,
-      ),
+      ...FigureImage.utils.getResizedSrcs(src, displayWidth),
       alt: node.children[0].alt,
       enableGallery,
       gallerySize,
@@ -255,24 +249,19 @@ const figureCaption = {
     isStatic: true,
     placeholder: 'Legende'
   },
-  rules: [
-    figureByLine,
-    link,
-    ...globalInlines
-  ]
+  rules: [figureByLine, link, ...globalInlines]
 }
 
 const figure = {
   matchMdast: matchFigure,
-  component: ({hidden, ...rest}) => {
+  component: ({ hidden, ...rest }) => {
     const fig = <Figure {...rest} />
     if (hidden) {
       return <noscript>{fig}</noscript>
-    } 
+    }
     return fig
   },
   props: (node, index, parent, { ancestors }) => {
-    
     const group = ancestors.find(matchZone('FIGUREGROUP'))
 
     let hidden = false
@@ -284,7 +273,7 @@ const figure = {
 
     return {
       hidden,
-      size: node.data.size,
+      size: node.data.size
     }
   },
   editorModule: 'figure',
@@ -321,10 +310,7 @@ const figure = {
       }
     ]
   },
-  rules: [
-    figureImage,
-    figureCaption
-  ]
+  rules: [figureImage, figureCaption]
 }
 
 const centerFigureCaption = {
@@ -353,15 +339,10 @@ const centerFigure = {
   editorOptions: {
     ...figure.editorOptions,
     insertButtonText: 'Bild',
-    insertTypes: [
-      'PARAGRAPH'
-    ],
+    insertTypes: ['PARAGRAPH'],
     type: 'CENTERFIGURE'
   },
-  rules: [
-    figureImage,
-    centerFigureCaption
-  ]
+  rules: [figureImage, centerFigureCaption]
 }
 
 const createInfoBox = ({ t }) => ({
@@ -371,20 +352,15 @@ const createInfoBox = ({ t }) => ({
     t,
     size: node.data.size,
     collapsable: node.data.collapsable,
-    figureSize: node.children.find(
-      matchFigure
-    )
-      ? node.data.figureSize ||
-        INFOBOX_DEFAULT_IMAGE_SIZE
+    figureSize: node.children.find(matchFigure)
+      ? node.data.figureSize || INFOBOX_DEFAULT_IMAGE_SIZE
       : undefined,
     figureFloat: node.data.figureFloat
   }),
   editorModule: 'infobox',
   editorOptions: {
     insertButtonText: 'Infobox',
-    insertTypes: [
-      'PARAGRAPH'
-    ]
+    insertTypes: ['PARAGRAPH']
   },
   rules: [
     {
@@ -392,10 +368,12 @@ const createInfoBox = ({ t }) => ({
       props: node => ({
         slug: slug(mdastToString(node))
       }),
-      component: ({ children, slug }) => <InfoBoxTitle>
-        <a {...styles.anchor} id={slug} />
-        {children}
-      </InfoBoxTitle>,
+      component: ({ children, slug }) => (
+        <InfoBoxTitle>
+          <a {...styles.anchor} id={slug} />
+          {children}
+        </InfoBoxTitle>
+      ),
       editorModule: 'headline',
       editorOptions: {
         type: 'INFOH',
@@ -416,9 +394,7 @@ const createInfoBox = ({ t }) => ({
         afterType: 'INFOP',
         insertAfterType: 'INFOBOX',
         formatButtonText: 'Infobox Zwischentitel',
-        formatTypes: [
-          'INFOP'
-        ]
+        formatTypes: ['INFOP']
       },
       rules: globalInlines
     },
@@ -429,9 +405,7 @@ const createInfoBox = ({ t }) => ({
         type: 'INFOLIST',
         formatButtonText: 'Infobox Liste',
         formatButtonTextOrdered: 'Infobox Aufzählung',
-        formatTypes: [
-          'INFOP'
-        ]
+        formatTypes: ['INFOP']
       },
       rules: [
         {
@@ -490,14 +464,17 @@ const createInfoBox = ({ t }) => ({
 const blockQuote = {
   matchMdast: matchZone('BLOCKQUOTE'),
   props: node => {
-    return ({
-      isEmpty: node.children &&
-      node.children.length === 1 && !node.children[0].children
-    })
+    return {
+      isEmpty:
+        node.children &&
+        node.children.length === 1 &&
+        !node.children[0].children
+    }
   },
-  component: ({ isEmpty, node, children, attributes }) => (
-    isEmpty ? null : <BlockQuote attributes={attributes}>{children}</BlockQuote>
-  ),
+  component: ({ isEmpty, node, children, attributes }) =>
+    isEmpty ? null : (
+      <BlockQuote attributes={attributes}>{children}</BlockQuote>
+    ),
   editorModule: 'blockquote',
   editorOptions: {
     insertButtonText: 'Block-Zitat'
@@ -534,27 +511,21 @@ const pullQuote = {
   component: PullQuote,
   props: (node, index, parent, { ancestors }) => ({
     size: node.data.size,
-    hasFigure: !!node.children.find(
-      matchFigure
-    )
+    hasFigure: !!node.children.find(matchFigure)
   }),
   editorModule: 'quote',
   editorOptions: {
     insertButtonText: 'Zitat',
-    insertTypes: [
-      'PARAGRAPH'
-    ]
+    insertTypes: ['PARAGRAPH']
   },
   rules: [
     figure,
     {
       matchMdast: (node, index, parent) =>
         matchParagraph(node) &&
-        (
-          index === 0 ||
+        (index === 0 ||
           (index === 1 && matchFigure(parent.children[0])) ||
-          !matchLast(node, index, parent)
-        ),
+          !matchLast(node, index, parent)),
       component: PullQuoteText,
       editorModule: 'paragraph',
       editorOptions: {
@@ -565,8 +536,7 @@ const pullQuote = {
     },
     {
       matchMdast: (node, index, parent) =>
-        matchParagraph(node) &&
-        matchLast(node, index, parent),
+        matchParagraph(node) && matchLast(node, index, parent),
       component: PullQuoteSource,
       editorModule: 'paragraph',
       editorOptions: {
@@ -584,41 +554,42 @@ const pullQuote = {
 export const COVER_TYPE = 'COVERFIGURE'
 export const DYNAMICCOMPONENT_TYPE = 'DYNAMICCOMPONENT'
 
-const mdastToString = node => node
-  ? (
-    node.value ||
-    (node.children && node.children.map(mdastToString).join('')) ||
-    ''
-  )
-  : ''
+const mdastToString = node =>
+  node
+    ? node.value ||
+      (node.children && node.children.map(mdastToString).join('')) ||
+      ''
+    : ''
 
 const createCover = ({ onAudioCoverClick }) => ({
-  matchMdast: (node, index) => (
-    matchFigure(node) &&
-    index === 0
-  ),
+  matchMdast: (node, index) => matchFigure(node) && index === 0,
   component: FigureCover,
   props: (node, index, parent, { ancestors }) => {
     let text
     const rootNode = ancestors[ancestors.length - 1]
     const meta = rootNode.meta
-    const headline = ((
-      rootNode.children.find(matchZone('TITLE')) || {}
-    ).children || []).find(matchHeading(1))
+    const headline = (
+      (rootNode.children.find(matchZone('TITLE')) || {}).children || []
+    ).find(matchHeading(1))
 
     if (meta.coverText && headline) {
-      const Headline = (
-        rootNode.format && rootNode.format.meta && rootNode.format.meta.kind === 'meta'
+      const Headline =
+        rootNode.format &&
+        rootNode.format.meta &&
+        rootNode.format.meta.kind === 'meta'
+          ? Interaction.Headline
+          : Editorial.Headline
+      const element = (
+        <Headline
+          style={{
+            color: meta.coverText.color,
+            fontSize: meta.coverText.fontSize,
+            lineHeight: meta.coverText.lineHeight || 1.03
+          }}
+        >
+          {mdastToString(headline)}
+        </Headline>
       )
-        ? Interaction.Headline
-        : Editorial.Headline
-      const element = <Headline style={{
-        color: meta.coverText.color,
-        fontSize: meta.coverText.fontSize,
-        lineHeight: meta.coverText.lineHeight || 1.03
-      }}>
-        {mdastToString(headline)}
-      </Headline>
 
       text = {
         element,
@@ -641,8 +612,7 @@ const createCover = ({ onAudioCoverClick }) => ({
     gallery: false,
     afterType: 'PARAGRAPH',
     insertAfterType: 'CENTER',
-    pixelNote:
-      'Auflösung: min. 2000x (proportionaler Schnitt)',
+    pixelNote: 'Auflösung: min. 2000x (proportionaler Schnitt)',
     sizes: [
       {
         label: 'Edge to Edge',
@@ -650,15 +620,15 @@ const createCover = ({ onAudioCoverClick }) => ({
       },
       {
         label: 'Gross',
-        props: {size: 'breakout'}
+        props: { size: 'breakout' }
       },
       {
         label: 'Zentriert',
-        props: {size: 'center'}
+        props: { size: 'center' }
       },
       {
         label: 'Klein',
-        props: {size: 'tiny'}
+        props: { size: 'tiny' }
       }
     ]
   },
@@ -668,20 +638,16 @@ const createCover = ({ onAudioCoverClick }) => ({
       component: FigureImage,
       props: (node, index, parent, { ancestors }) => {
         const src = extractImage(node)
-        const displayWidth =
-          FIGURE_SIZES[parent.data.size] || 1500
+        const displayWidth = FIGURE_SIZES[parent.data.size] || 1500
         const setMaxWidth = parent.data.size !== undefined
 
         const rootNode = ancestors[ancestors.length - 1]
         const meta = rootNode ? rootNode.meta : {}
-        const enableGallery = meta.gallery && (parent.data ? !parent.data.excludeFromGallery : true)
+        const enableGallery =
+          meta.gallery && (parent.data ? !parent.data.excludeFromGallery : true)
 
         return {
-          ...FigureImage.utils.getResizedSrcs(
-            src,
-            displayWidth,
-            setMaxWidth
-          ),
+          ...FigureImage.utils.getResizedSrcs(src, displayWidth, setMaxWidth),
           enableGallery,
           aboveTheFold: true,
           alt: node.children[0].alt
@@ -728,7 +694,6 @@ const logbook = {
       rules: [...globalInlines, link]
     }
   ]
-
 }
 
 const mdastPlaceholder = '\u2063'
@@ -801,7 +766,7 @@ const createSchema = ({
     Link
   })
 
-  const cover = createCover({onAudioCoverClick})
+  const cover = createCover({ onAudioCoverClick })
   const dynamicComponent = createDynamicComponent({
     t,
     dynamicComponentRequire,
@@ -828,37 +793,49 @@ const createSchema = ({
             editorOptions: {
               series,
               customFields: customMetaFields,
-              teaser: previewTeaser || (props => (
-                <div
-                  style={{
-                    backgroundColor: '#fff',
-                    padding: '30px 30px 1px'
-                  }}
-                >
-                  <TeaserFeed {...props} />
-                </div>
-              ))
+              teaser:
+                previewTeaser ||
+                (props => (
+                  <div
+                    style={{
+                      backgroundColor: '#fff',
+                      padding: '30px 30px 1px'
+                    }}
+                  >
+                    <TeaserFeed {...props} />
+                  </div>
+                ))
             }
           },
           cover,
           addProgressProps(dynamicComponent),
           titleBlockRule || {
             matchMdast: matchZone('TITLE'),
-            component: ({children, format, ...props}) => <>
-              <TitleBlock {...props} format={format} Link={Link} margin={titleMargin}>
-                {titleBlockPrepend}
-                {format && format.meta && (
-                  <Editorial.Format color={format.meta.color || colors[format.meta.kind]} contentEditable={false}>
-                    <Link href={format.meta.path} passHref>
-                      <a {...styles.link} href={format.meta.path}>
-                        {format.meta.title}
-                      </a>
-                    </Link>
-                  </Editorial.Format>
-                )}
-                {children}
-              </TitleBlock>
-            </>,
+            component: ({ children, format, ...props }) => (
+              <>
+                <TitleBlock
+                  {...props}
+                  format={format}
+                  Link={Link}
+                  margin={titleMargin}
+                >
+                  {titleBlockPrepend}
+                  {format && format.meta && (
+                    <Editorial.Format
+                      color={format.meta.color || colors[format.meta.kind]}
+                      contentEditable={false}
+                    >
+                      <Link href={format.meta.path} passHref>
+                        <a {...styles.link} href={format.meta.path}>
+                          {format.meta.title}
+                        </a>
+                      </Link>
+                    </Editorial.Format>
+                  )}
+                  {children}
+                </TitleBlock>
+              </>
+            ),
             props: (node, index, parent, { ancestors }) => ({
               center: node.data.center,
               format: ancestors[ancestors.length - 1].format
@@ -872,20 +849,23 @@ const createSchema = ({
               {
                 matchMdast: matchHeading(1),
                 component: ({ children, attributes, format, coverText }) => {
-                  const Headline = (
+                  const Headline =
                     format && format.meta && format.meta.kind === 'meta'
-                  )
-                    ? Interaction.Headline
-                    : format && format.meta && format.meta.kind === 'scribble'
+                      ? Interaction.Headline
+                      : format && format.meta && format.meta.kind === 'scribble'
                       ? Scribble.Headline
                       : Editorial.Headline
 
-                  const element = <Headline attributes={attributes}>{children}</Headline>
+                  const element = (
+                    <Headline attributes={attributes}>{children}</Headline>
+                  )
 
                   if (coverText) {
-                    return <CoverTextTitleBlockHeadline>
-                      {element}
-                    </CoverTextTitleBlockHeadline>
+                    return (
+                      <CoverTextTitleBlockHeadline>
+                        {element}
+                      </CoverTextTitleBlockHeadline>
+                    )
                   }
 
                   return element
@@ -908,10 +888,11 @@ const createSchema = ({
               },
               {
                 matchMdast: matchHeading(2),
-                component: ({ children, attributes, ...props }) =>
+                component: ({ children, attributes, ...props }) => (
                   <Editorial.Subject attributes={attributes} {...props}>
                     {children}
-                  </Editorial.Subject>,
+                  </Editorial.Subject>
+                ),
                 editorModule: 'headline',
                 editorOptions: {
                   type: 'SUBJECT',
@@ -926,12 +907,9 @@ const createSchema = ({
                   const numHeadings = parent.children.filter(
                     child => child.type === 'heading'
                   ).length
-                  return (
-                    matchParagraph(node) &&
-                    index === numHeadings
-                  )
+                  return matchParagraph(node) && index === numHeadings
                 },
-                component: ({children, ...props}) => {
+                component: ({ children, ...props }) => {
                   if (
                     children &&
                     children.length === 1 &&
@@ -978,10 +956,12 @@ const createSchema = ({
                 props: node => ({
                   slug: slug(mdastToString(node))
                 }),
-                component: ({ children, slug }) => <Editorial.Subhead>
-                  <a {...styles.anchor} id={slug} />
-                  {children}
-                </Editorial.Subhead>,
+                component: ({ children, slug }) => (
+                  <Editorial.Subhead>
+                    <a {...styles.anchor} id={slug} />
+                    {children}
+                  </Editorial.Subhead>
+                ),
                 editorModule: 'headline',
                 editorOptions: {
                   type: 'H2',
@@ -1005,20 +985,19 @@ const createSchema = ({
                 editorModule: 'figuregroup',
                 editorOptions: {
                   insertButtonText: 'Bildergruppe',
-                  insertTypes: [
-                    'PARAGRAPH'
-                  ]
+                  insertTypes: ['PARAGRAPH']
                 }
               },
               {
                 matchMdast: matchZone('BUTTON'),
-                component: ({ children, ...props }) =>
-                  <Button {...props} spacedOut>{children}</Button>,
+                component: ({ children, ...props }) => (
+                  <Button {...props} spacedOut>
+                    {children}
+                  </Button>
+                ),
                 props: (node, index, parent, { ancestors }) => {
-                  const link = (
-                    node.children[0] &&
-                    node.children[0].children[0]
-                  ) || {}
+                  const link =
+                    (node.children[0] && node.children[0].children[0]) || {}
 
                   return {
                     ...node.data,
@@ -1029,11 +1008,13 @@ const createSchema = ({
                 rules: globalInlines.concat({
                   matchMdast: matchParagraph,
                   component: ({ children }) => children,
-                  rules: [{
-                    matchMdast: matchType('link'),
-                    component: ({ children }) => children,
-                    rules: globalInlines
-                  }]
+                  rules: [
+                    {
+                      matchMdast: matchType('link'),
+                      component: ({ children }) => children,
+                      rules: globalInlines
+                    }
+                  ]
                 }),
                 editorModule: 'button'
               },
@@ -1044,9 +1025,7 @@ const createSchema = ({
                 editorModule: 'line',
                 editorOptions: {
                   insertButtonText: 'Trennlinie',
-                  insertTypes: [
-                    'PARAGRAPH'
-                  ]
+                  insertTypes: ['PARAGRAPH']
                 },
                 isVoid: true
               },
@@ -1077,11 +1056,7 @@ const createSchema = ({
                 component: ({ attributes, data, url }) => {
                   if (data.forceAudio && data.src) {
                     return (
-                      <AudioPlayer
-                        attributes={attributes}
-                        {...data}
-                        t={t}
-                      />
+                      <AudioPlayer attributes={attributes} {...data} t={t} />
                     )
                   }
                   if (data.src) {
@@ -1170,9 +1145,7 @@ const createSchema = ({
                 editorModule: 'chart',
                 editorOptions: {
                   insertButtonText: 'Chart',
-                  insertTypes: [
-                    'PARAGRAPH'
-                  ]
+                  insertTypes: ['PARAGRAPH']
                 },
                 rules: [
                   {
@@ -1201,10 +1174,11 @@ const createSchema = ({
                   },
                   {
                     matchMdast: matchType('code'),
-                    component: ({showException, ...props}) => (
+                    component: ({ showException, ...props }) => (
                       <ErrorBoundary
                         showException={showException}
-                        failureMessage={t('styleguide/charts/error')}>
+                        failureMessage={t('styleguide/charts/error')}
+                      >
                         <CsvChart {...props} />
                       </ErrorBoundary>
                     ),
@@ -1224,7 +1198,7 @@ const createSchema = ({
                       matchParagraph(node) && matchLast(node, index, parent),
                     component: Editorial.Note,
                     props: () => ({
-                      style: {marginTop: 10}
+                      style: { marginTop: 10 }
                     }),
                     editorModule: 'paragraph',
                     editorOptions: {
@@ -1246,12 +1220,13 @@ const createSchema = ({
                 component: IllustrationHtml,
                 props: node => {
                   const code = node.children.find(c => c.type === 'code')
-                  const deepNodes = node.children.reduce(
-                    (children, child) => children
-                      .concat(child)
-                      .concat(child.children),
-                    []
-                  ).filter(Boolean)
+                  const deepNodes = node.children
+                    .reduce(
+                      (children, child) =>
+                        children.concat(child).concat(child.children),
+                      []
+                    )
+                    .filter(Boolean)
                   const images = deepNodes.filter(matchImage).map(image => ({
                     ref: image.alt,
                     url: image.url
@@ -1263,9 +1238,7 @@ const createSchema = ({
                 },
                 editorModule: 'html',
                 editorOptions: {
-                  insertTypes: [
-                    'PARAGRAPH'
-                  ],
+                  insertTypes: ['PARAGRAPH'],
                   insertButtonText: 'HTML Illustration'
                 },
                 isVoid: true

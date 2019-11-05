@@ -26,10 +26,7 @@ const Autocomplete = ({
       {...{
         onChange,
         selectedItem: value,
-        onInputValueChange: nextFilter =>
-          onFilterChange(
-            nextFilter || ''
-          ),
+        onInputValueChange: nextFilter => onFilterChange(nextFilter || ''),
         itemToString,
         inputValue: filter
       }}
@@ -55,17 +52,14 @@ const Autocomplete = ({
                       ...fieldProps,
                       autoComplete,
                       placeholder: selectedItem
-                          ? itemToString(selectedItem)
-                          : ''
+                        ? itemToString(selectedItem)
+                        : ''
                     })}
                   />
                 )}
               />
-              {isOpen &&
-              items.length > 0 ? (
-                <ItemsContainer
-                  isOpen={isOpen}
-                >
+              {isOpen && items.length > 0 ? (
+                <ItemsContainer isOpen={isOpen}>
                   <Items
                     {...{
                       items,
@@ -97,8 +91,7 @@ Autocomplete.propTypes = {
   }),
   filter: PropTypes.string,
   onChange: PropTypes.func.isRequired,
-  onFilterChange:
-    PropTypes.func.isRequired,
+  onFilterChange: PropTypes.func.isRequired,
   icon: PropTypes.object,
   autoComplete: PropTypes.string
 }

@@ -1,5 +1,5 @@
 import React from 'react'
-import {css} from 'glamor'
+import { css } from 'glamor'
 
 const containerStyle = css({
   display: 'block',
@@ -8,8 +8,8 @@ const containerStyle = css({
   left: '50%'
 })
 const spin = css.keyframes({
-  '0%': {opacity: 1},
-  '100%': {opacity: 0.15}
+  '0%': { opacity: 1 },
+  '100%': { opacity: 0.15 }
 })
 const barStyle = css({
   display: 'block',
@@ -23,22 +23,19 @@ const barStyle = css({
   left: '-10%'
 })
 
-export const Spinner = ({size}) => {
+export const Spinner = ({ size }) => {
   let bars = []
   for (let i = 0; i < 12; i++) {
     let style = {}
-    style.WebkitAnimationDelay = style.animationDelay =
-      (i - 12) / 10 + 's'
+    style.WebkitAnimationDelay = style.animationDelay = (i - 12) / 10 + 's'
     style.WebkitTransform = style.transform =
-      'rotate(' + (i * 30) + 'deg) translate(146%)'
+      'rotate(' + i * 30 + 'deg) translate(146%)'
 
-    bars.push(
-      <span {...barStyle} style={style} key={i} />
-    )
+    bars.push(<span {...barStyle} style={style} key={i} />)
   }
 
   return (
-    <span {...containerStyle} style={{width: size, height: size}}>
+    <span {...containerStyle} style={{ width: size, height: size }}>
       {bars}
     </span>
   )
@@ -49,8 +46,8 @@ const inlineBlock = css({
   display: 'inline-block'
 })
 
-export const InlineSpinner = ({size}) => (
-  <span {...inlineBlock} style={{width: size, height: size}}>
+export const InlineSpinner = ({ size }) => (
+  <span {...inlineBlock} style={{ width: size, height: size }}>
     <Spinner size={size} />
   </span>
 )

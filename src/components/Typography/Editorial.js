@@ -8,7 +8,12 @@ import colors from '../../theme/colors'
 import { fontRule as interactionFontRule } from './Interaction'
 import { convertStyleToRem, pxToRem } from './utils'
 
-export { List, UnorderedList as UL, OrderedList as OL, ListItem as LI } from '../List'
+export {
+  List,
+  UnorderedList as UL,
+  OrderedList as OL,
+  ListItem as LI
+} from '../List'
 
 export const fontRule = css({
   ...fontStyles.serifRegular,
@@ -94,7 +99,7 @@ const subjectWithChildren = css({
   ...subjectStyle,
   paddingRight: '.2em',
   '&::after': {
-    content: " "
+    content: ' '
   }
 })
 
@@ -133,7 +138,7 @@ const format = css({
 })
 
 export const Format = ({ children, color, attributes, ...props }) => (
-  <p {...attributes} {...props} {...format} style={{color}}>
+  <p {...attributes} {...props} {...format} style={{ color }}>
     {children}
   </p>
 )

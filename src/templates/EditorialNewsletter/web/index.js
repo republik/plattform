@@ -13,7 +13,6 @@ import {
 } from '../../../components/Figure'
 import { Sub, Sup } from '../../../components/Typography'
 
-
 const createSchema = ({ ...args } = {}) => {
   return createNewsletterSchema({
     Container,

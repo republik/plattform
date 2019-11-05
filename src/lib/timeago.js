@@ -16,10 +16,7 @@ export default (t, diff) => {
   }
 
   const spec = specs[Math.min(i, specs.length - 1)]
-  return t.pluralize(
-    spec.key,
-    {
-      count: Math[spec.fn || 'floor'](diff)
-    }
-  )
+  return t.pluralize(spec.key, {
+    count: Math[spec.fn || 'floor'](diff)
+  })
 }

@@ -15,18 +15,21 @@ export const createFormatter = translations => {
   }, {})
 
   const formatter = (key, replacements, missingValue) => {
-    let message = index[key] || (missingValue !== undefined ? missingValue : `TK(${key})`)
+    let message =
+      index[key] || (missingValue !== undefined ? missingValue : `TK(${key})`)
     if (replacements) {
       Object.keys(replacements).forEach(replacementKey => {
-        message = message.replace(`{${replacementKey}}`, replacements[replacementKey])
+        message = message.replace(
+          `{${replacementKey}}`,
+          replacements[replacementKey]
+        )
       })
     }
     return message
   }
 
-  const firstKey = keys => (
+  const firstKey = keys =>
     keys.find(k => index[k] !== undefined) || keys[keys.length - 1]
-  )
   const pluralizationKeys = (baseKey, replacements) => [
     `${baseKey}/${replacements.count}`,
     `${baseKey}/other`

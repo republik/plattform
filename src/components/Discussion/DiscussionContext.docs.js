@@ -79,7 +79,8 @@ export const createSampleDiscussionContextValue = ({ t }) => ({
     /**
      * Fetch more comments.
      */
-    fetchMoreComments: ({ parentId, after, appendAfter }) => Promise.resolve({ ok: true }),
+    fetchMoreComments: ({ parentId, after, appendAfter }) =>
+      Promise.resolve({ ok: true }),
 
     shareComment: commentId => Promise.resolve({ ok: true }),
     openDiscussionPreferences: () => Promise.resolve({ ok: true })
@@ -99,7 +100,9 @@ export const createSampleDiscussionContextValue = ({ t }) => ({
    * can use these components.
    */
   links: {
-    Profile: ({ displayAuthor, passHref, ...props }) => <React.Fragment {...props} />,
+    Profile: ({ displayAuthor, passHref, ...props }) => (
+      <React.Fragment {...props} />
+    ),
     Comment: ({ comment, passHref, ...props }) => <React.Fragment {...props} />
   },
 

@@ -1,5 +1,5 @@
 import React from 'react'
-import {css} from 'glamor'
+import { css } from 'glamor'
 import SG from '../../theme/env'
 
 const VIEWBOX = SG.LOGO_VIEWBOX || '0 0 4 1.5'
@@ -16,7 +16,7 @@ const styles = {
     position: 'relative',
     height: 0,
     width: '100%',
-    paddingBottom: `${HEIGHT / WIDTH * 100}%`
+    paddingBottom: `${(HEIGHT / WIDTH) * 100}%`
   }),
   svg: css({
     position: 'absolute',
@@ -27,14 +27,14 @@ const styles = {
   })
 }
 
-const LogoSvg = ({width, height, fill, ...props}) => (
+const LogoSvg = ({ width, height, fill, ...props }) => (
   <svg {...props} width={width} height={height} viewBox={VIEWBOX}>
     {GRADIENT && <defs dangerouslySetInnerHTML={{ __html: GRADIENT }} />}
     <path fill={GRADIENT ? 'url(#logo-gradient)' : fill} d={PATH} />
   </svg>
 )
 
-const Logo = (props) => {
+const Logo = props => {
   let width
   let height
   if (props.width) {
@@ -51,9 +51,7 @@ const Logo = (props) => {
     )
   }
 
-  return (
-    <LogoSvg width={width} height={height} fill={props.fill} />
-  )
+  return <LogoSvg width={width} height={height} fill={props.fill} />
 }
 
 Logo.defaultProps = {

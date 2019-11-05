@@ -1,10 +1,5 @@
-import {
-  imageSizeInfo,
-  imageResizeUrl
-} from 'mdast-react-render/lib/utils'
-import {
-  MAX_WIDTH_MOBILE
-} from '../Center'
+import { imageSizeInfo, imageResizeUrl } from 'mdast-react-render/lib/utils'
+import { MAX_WIDTH_MOBILE } from '../Center'
 
 export const getResizedSrcs = (src, displayWidth, setMaxWidth = true) => {
   if (!src) {
@@ -44,26 +39,17 @@ export const getResizedSrcs = (src, displayWidth, setMaxWidth = true) => {
     maxWidth
   )
 
-  const resizedSrc = imageResizeUrl(
-    src,
-    `${defaultWidth}x`
-  )
+  const resizedSrc = imageResizeUrl(src, `${defaultWidth}x`)
 
   const isHighRes = defaultWidth * 2 <= maxWidth
   // add high res image
   const srcSet = [
     Math.round(defaultWidth * 0.5),
     defaultWidth,
-    defaultWidth < maxWidth && (isHighRes
-      ? defaultWidth * 2
-      : maxWidth
-    )
+    defaultWidth < maxWidth && (isHighRes ? defaultWidth * 2 : maxWidth)
   ]
     .filter(Boolean)
-    .map(size => [
-      imageResizeUrl(src, `${size}x`),
-      `${size}w`
-    ].join(' '))
+    .map(size => [imageResizeUrl(src, `${size}x`), `${size}w`].join(' '))
     .join(',')
 
   return {

@@ -10,15 +10,17 @@ const styles = {
 }
 
 class DocumentContainer extends Component {
-  constructor (props, ...args) {
+  constructor(props, ...args) {
     super(props, ...args)
 
     this.subscriptions = []
     this.subscribe = f => this.subscriptions.push(f)
     this.unsubscribe = f => {
-      this.subscriptions = this.subscriptions.filter(subscription => subscription !== f)
+      this.subscriptions = this.subscriptions.filter(
+        subscription => subscription !== f
+      )
     }
-    this.makeMetaContext = ({meta}) => ({
+    this.makeMetaContext = ({ meta }) => ({
       meta: {
         ...(meta.toJS ? meta.toJS() : meta),
         subscribe: this.subscribe,
@@ -27,14 +29,11 @@ class DocumentContainer extends Component {
     })
     this.state = this.makeMetaContext(props)
   }
-  componentWillReceiveProps (nextProps) {
+  componentWillReceiveProps(nextProps) {
     if (nextProps.meta !== this.props.meta) {
-      this.setState(
-        this.makeMetaContext(nextProps),
-        () => {
-          this.subscriptions.forEach(f => f())
-        }
-      )
+      this.setState(this.makeMetaContext(nextProps), () => {
+        this.subscriptions.forEach(f => f())
+      })
     }
   }
   getChildContext() {
@@ -43,11 +42,9 @@ class DocumentContainer extends Component {
       meta
     }
   }
-  render () {
+  render() {
     const { children } = this.props
-    return <article {...styles.container}>
-      {children}
-    </article>
+    return <article {...styles.container}>{children}</article>
   }
 }
 
@@ -62,18 +59,18 @@ const getComponentDisplayName = Component =>
 
 export const withMeta = ComposedComponent => {
   class WithMeta extends Component {
-    constructor (...args) {
+    constructor(...args) {
       super(...args)
 
       this.subscription = () => this.forceUpdate()
     }
-    componentDidMount () {
+    componentDidMount() {
       this.context.meta.subscribe(this.subscription)
     }
-    componentWillUnmount () {
+    componentWillUnmount() {
       this.context.meta.unsubscribe(this.subscription)
     }
-    render () {
+    render() {
       const { meta } = this.context
       return <ComposedComponent meta={meta} {...this.props} />
     }

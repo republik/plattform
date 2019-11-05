@@ -35,7 +35,7 @@ const styles = {
     ...convertStyleToRem(sansSerifRegular12),
     margin: '10px 0',
     [mUp]: {
-      ...convertStyleToRem(sansSerifRegular15),
+      ...convertStyleToRem(sansSerifRegular15)
     },
     '& ~ &': {
       marginTop: -5
@@ -43,20 +43,18 @@ const styles = {
   })
 }
 
-const Paragraph = ({ children }) => (
-  <p {...styles.p}>{children}</p>
-)
+const Paragraph = ({ children }) => <p {...styles.p}>{children}</p>
 
 export const Heading = ({ children }) => (
-  <Paragraph><strong>{children}</strong></Paragraph>
+  <Paragraph>
+    <strong>{children}</strong>
+  </Paragraph>
 )
 
 export const Definition = ({ children }) => (
   <p {...styles.definition}>{children}</p>
 )
 
-export const Code = ({ children }) => (
-  <code {...styles.code}>{children}</code>
-)
+export const Code = ({ children }) => <code {...styles.code}>{children}</code>
 
 export default Paragraph

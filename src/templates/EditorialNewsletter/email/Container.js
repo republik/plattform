@@ -8,10 +8,10 @@ import { Editorial } from '../../../components/Typography'
 export default ({ children, attributes = {}, meta }) => (
   <html>
     <head>
-      <meta charSet="UTF-8" />
-      <meta httpEquiv="x-ua-compatible" content="IE=edge" />
-      <meta name="viewport" content="width=device-width,initial-scale=1" />
-      <Mso gte="15">
+      <meta charSet='UTF-8' />
+      <meta httpEquiv='x-ua-compatible' content='IE=edge' />
+      <meta name='viewport' content='width=device-width,initial-scale=1' />
+      <Mso gte='15'>
         {`
         <xml>
           <o:officedocumentsettings>
@@ -23,7 +23,7 @@ export default ({ children, attributes = {}, meta }) => (
       </Mso>
       <title>*|MC:SUBJECT|*</title>
       <style
-        type="text/css"
+        type='text/css'
         dangerouslySetInnerHTML={{
           __html: `
         ${SG.FONT_FACES}
@@ -41,7 +41,7 @@ export default ({ children, attributes = {}, meta }) => (
           <td>
     `}
       </Mso>
-      <table border="0" cellPadding="0" cellSpacing="0" width="100%">
+      <table border='0' cellPadding='0' cellSpacing='0' width='100%'>
         <tbody>
           <Header meta={meta} />
           {children}

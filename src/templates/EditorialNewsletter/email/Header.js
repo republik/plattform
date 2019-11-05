@@ -6,17 +6,17 @@ export default ({ meta }) => {
   return (
     <tr>
       <td
-        align="center"
-        valign="top"
+        align='center'
+        valign='top'
         style={{ borderBottom: `1px solid ${colors.divider}` }}
       >
         <a
           href={`https://www.republik.ch${path ? path : `/${slug}`}`}
-          title="Im Web lesen"
+          title='Im Web lesen'
         >
           <img
-            height="79"
-            src="https://www.republik.ch/static/logo_republik_newsletter.png"
+            height='79'
+            src='https://www.republik.ch/static/logo_republik_newsletter.png'
             style={{
               border: 0,
               width: '180px !important',
@@ -24,8 +24,8 @@ export default ({ meta }) => {
               margin: 0,
               maxWidth: '100% !important'
             }}
-            width="180"
-            alt="REPUBLIK"
+            width='180'
+            alt='REPUBLIK'
           />
         </a>
       </td>

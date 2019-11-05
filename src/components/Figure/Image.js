@@ -31,14 +31,17 @@ const styles = {
     }
   }),
   maxWidth: css({
-    display: 'block',
+    display: 'block'
   })
 }
 
-const GalleryButton = ({gallerySize, onClick}) => {
+const GalleryButton = ({ gallerySize, onClick }) => {
   return (
     <div {...styles.galleryButton} onClick={onClick}>
-      <span style={{paddingRight: 10}}><GalleryIcon color='#fff' /></span>{`${gallerySize} Bilder`}
+      <span style={{ paddingRight: 10 }}>
+        <GalleryIcon color='#fff' />
+      </span>
+      {`${gallerySize} Bilder`}
     </div>
   )
 }
@@ -57,33 +60,56 @@ class Image extends Component {
       gallerySize
     } = this.props
 
-    const onClick =  enableGallery ? () => this.context.toggleGallery && this.context.toggleGallery(src) : () => {}
+    const onClick = enableGallery
+      ? () => this.context.toggleGallery && this.context.toggleGallery(src)
+      : () => {}
 
     const size = sizeProp || (sizeProp === undefined && imageSizeInfo(src))
     const aspectRatio = size ? size.width / size.height : undefined
 
-    const image = isFinite(aspectRatio)
-      ? <LazyImage attributes={attributes} visible={aboveTheFold}
-          aspectRatio={aspectRatio}
-          src={src} srcSet={srcSet} alt={alt} onClick={onClick} />
-      : <img {...attributes} {...styles.image}
-          src={src} srcSet={srcSet} alt={alt} onClick={onClick} />
+    const image = isFinite(aspectRatio) ? (
+      <LazyImage
+        attributes={attributes}
+        visible={aboveTheFold}
+        aspectRatio={aspectRatio}
+        src={src}
+        srcSet={srcSet}
+        alt={alt}
+        onClick={onClick}
+      />
+    ) : (
+      <img
+        {...attributes}
+        {...styles.image}
+        src={src}
+        srcSet={srcSet}
+        alt={alt}
+        onClick={onClick}
+      />
+    )
 
     let wrappedImage = image
 
     if (maxWidth) {
-      wrappedImage = 
-        <span {...styles.maxWidth} style={{maxWidth}}>
+      wrappedImage = (
+        <span {...styles.maxWidth} style={{ maxWidth }}>
           {wrappedImage}
         </span>
+      )
     }
-    wrappedImage =
+    wrappedImage = (
       <>
         {wrappedImage}
-        { gallerySize > 0 && <GalleryButton gallerySize={gallerySize} onClick={onClick} /> }
+        {gallerySize > 0 && (
+          <GalleryButton gallerySize={gallerySize} onClick={onClick} />
+        )}
       </>
+    )
     return (
-      <div {...styles.imageContainer} style={{cursor: enableGallery ? 'zoom-in' : undefined }}>
+      <div
+        {...styles.imageContainer}
+        style={{ cursor: enableGallery ? 'zoom-in' : undefined }}
+      >
         {wrappedImage}
       </div>
     )
@@ -101,11 +127,11 @@ Image.propTypes = {
   maxWidth: PropTypes.number,
   aboveTheFold: PropTypes.bool,
   enableGallery: PropTypes.bool,
-  gallerySize: PropTypes.number,
+  gallerySize: PropTypes.number
 }
 
-Image.contextTypes = {
-  toggleGallery: PropTypes.func,
+Image.contextTypes = {
+  toggleGallery: PropTypes.func
 }
 
 Image.utils = {

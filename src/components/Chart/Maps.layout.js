@@ -53,7 +53,7 @@ export default (props, geoJson) => {
   const numberFormat = getFormat(props.numberFormat, t)
   let domain
   let colorScale
-  let colorAccessor = choropleth ? (d => d.value) : (d => d[color] || 0)
+  let colorAccessor = choropleth ? d => d.value : d => d[color] || 0
   let colorValues
   let colorRange = props.colorRanges[props.colorRange] || props.colorRange
 
@@ -67,13 +67,12 @@ export default (props, geoJson) => {
     }))
 
     if (!colorRange) {
-      colorRange = colorValues.length > 3
-        ? props.colorRanges.discrete
-        : props.colorRanges.sequential3
+      colorRange =
+        colorValues.length > 3
+          ? props.colorRanges.discrete
+          : props.colorRanges.sequential3
     }
-    colorScale
-      .domain(domain)
-      .range(colorRange)
+    colorScale.domain(domain).range(colorRange)
   } else {
     const dataValues = data.map(d => d.value)
     const valuesExtent = props.extent || extent(dataValues)
@@ -89,9 +88,7 @@ export default (props, geoJson) => {
       domain = valuesExtent
     }
 
-    colorScale
-      .domain(domain)
-      .range(colorRange || props.colorRanges.sequential)
+    colorScale.domain(domain).range(colorRange || props.colorRanges.sequential)
 
     colorValues = colorScale.range().map(value => {
       const extent = colorScale.invertExtent(value)
@@ -101,20 +98,24 @@ export default (props, geoJson) => {
       ]
       return {
         value: safeExtent[0],
-        label: `${numberFormat(safeExtent[0])} ${tLabel('bis')} ${numberFormat(safeExtent[1])}`
+        label: `${numberFormat(safeExtent[0])} ${tLabel('bis')} ${numberFormat(
+          safeExtent[1]
+        )}`
       }
     })
   }
 
   const projection = props.getProjection()
   const geoPathGenerator = geoPath().projection(projection)
-  const projectPoint = typeof projection === 'function'
-    ? projection
-    : coordinates => geoPathGenerator({type: 'Point', coordinates})
-      .split('m')[0]
-      .slice(1)
-      .split(',')
-      .map(d => +d)
+  const projectPoint =
+    typeof projection === 'function'
+      ? projection
+      : coordinates =>
+          geoPathGenerator({ type: 'Point', coordinates })
+            .split('m')[0]
+            .slice(1)
+            .split(',')
+            .map(d => +d)
 
   const paddingTop = mini ? 15 : PADDING_TOP
   const paddingBottom = mini ? 0 : PADDING_BOTTOM
@@ -123,7 +124,7 @@ export default (props, geoJson) => {
 
   if (props.height) {
     const height = props.height
-    innerHeight = mini ? (height - paddingTop - paddingBottom) : height
+    innerHeight = mini ? height - paddingTop - paddingBottom : height
     mapWidth = innerHeight * props.widthRatio
   } else {
     mapWidth = width
@@ -138,14 +139,20 @@ export default (props, geoJson) => {
 
   const columnPadding = mini ? 12 : COLUMN_PADDING
   const possibleColumns = Math.floor(width / (mapWidth + columnPadding))
-  const columns = possibleColumns >= props.columns ? props.columns : Math.max(possibleColumns, 1)
+  const columns =
+    possibleColumns >= props.columns
+      ? props.columns
+      : Math.max(possibleColumns, 1)
 
   const padding = (width - mapWidth) / 2
 
   const leftAlign = props.leftAlign || columns > 1 || mini
   if (leftAlign) {
     const projectionTranslate = projection.translate()
-    projection.translate([projectionTranslate[0] - padding, projectionTranslate[1]])
+    projection.translate([
+      projectionTranslate[0] - padding,
+      projectionTranslate[1]
+    ])
   }
 
   const colorLegendValues = colorValues
@@ -153,10 +160,14 @@ export default (props, geoJson) => {
       label: color.label,
       color: colorScale(color.value)
     }))
-    .concat(missingDataLegend ? {
-      label: missingDataLegend,
-      color: props.missingDataColor
-    } : [])
+    .concat(
+      missingDataLegend
+        ? {
+            label: missingDataLegend,
+            color: props.missingDataColor
+          }
+        : []
+    )
 
   const geotiffs = {}
   const geotiff = props.geotiff
@@ -176,29 +187,37 @@ export default (props, geoJson) => {
   }
   let groupedData
   if (props.columnFilter) {
-    groupedData = props.columnFilter.map(({test, title, geotiff: columnGeotiff}) => {
-      const filter = unsafeDatumFn(test)
-      geotiffs[title] = mapGeotiff(columnGeotiff)
-      return {
-        key: title,
-        values: data.filter(d => filter(d.datum))
+    groupedData = props.columnFilter.map(
+      ({ test, title, geotiff: columnGeotiff }) => {
+        const filter = unsafeDatumFn(test)
+        geotiffs[title] = mapGeotiff(columnGeotiff)
+        return {
+          key: title,
+          values: data.filter(d => filter(d.datum))
+        }
       }
-    })
+    )
     data = groupedData.reduce((all, group) => all.concat(group.values), [])
   } else {
     groupedData = groupBy(data, d => d.datum[props.column])
   }
   // allow empty data for geotiff
   if (groupedData.length === 0) {
-    groupedData = [{key: '', values: []}]
+    groupedData = [{ key: '', values: [] }]
   }
 
   let groups = groupedData.map(g => g.key)
   runSort(props.columnSort, groups)
 
   const columnHeight = innerHeight + paddingTop + paddingBottom
-  const gx = scaleOrdinal().domain(groups).range(range(columns).map(d => d * (mapWidth + columnPadding)))
-  const gy = scaleOrdinal().domain(groups).range(range(groups.length).map(d => Math.floor(d / columns) * columnHeight))
+  const gx = scaleOrdinal()
+    .domain(groups)
+    .range(range(columns).map(d => d * (mapWidth + columnPadding)))
+  const gy = scaleOrdinal()
+    .domain(groups)
+    .range(
+      range(groups.length).map(d => Math.floor(d / columns) * columnHeight)
+    )
   const rows = Math.ceil(groups.length / columns)
 
   const paddingLeft = leftAlign ? 0 : padding
@@ -216,7 +235,8 @@ export default (props, geoJson) => {
         properties: feature.properties
       }
     })
-    compositionBorderPath = geoJson.compositionBorders && geoPathGenerator(geoJson.compositionBorders)
+    compositionBorderPath =
+      geoJson.compositionBorders && geoPathGenerator(geoJson.compositionBorders)
 
     if (choropleth) {
       groupedData = groupedData.map(({ values, key: groupTitle }) => {
@@ -224,15 +244,23 @@ export default (props, geoJson) => {
         groupData.forEach(d => {
           d.feature = featuresWithPaths.find(f => f.id === d.featureId)
           if (!ignoreMissingFeature && !d.feature) {
-            throw new Error(`No feature for data ${d.featureId} ${groupTitle ? ` (${groupTitle})` : ''} ${d.value}`)
+            throw new Error(
+              `No feature for data ${d.featureId} ${
+                groupTitle ? ` (${groupTitle})` : ''
+              } ${d.value}`
+            )
           }
         })
 
-        featuresWithPaths.forEach((feature) => {
+        featuresWithPaths.forEach(feature => {
           const d = groupData.find(datum => datum.featureId === feature.id)
           if (!d) {
             if (missingDataLegend === undefined) {
-              throw new Error(`No data for feature ${feature.id} ${groupTitle ? ` (${groupTitle})` : ''}`)
+              throw new Error(
+                `No data for feature ${feature.id} ${
+                  groupTitle ? ` (${groupTitle})` : ''
+                }`
+              )
             }
             groupData.push({
               feature,

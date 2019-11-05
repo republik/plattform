@@ -3,14 +3,8 @@ import PropTypes from 'prop-types'
 import { css } from 'glamor'
 import colors from '../../theme/colors'
 import { mUp } from '../../theme/mediaQueries'
-import {
-  linkStyle,
-  linkRule
-} from '../Typography'
-import {
-  sansSerifRegular15,
-  sansSerifRegular18
-} from '../Typography/styles'
+import { linkStyle, linkRule } from '../Typography'
+import { sansSerifRegular15, sansSerifRegular18 } from '../Typography/styles'
 import { Figure, FigureImage, FigureCaption } from '../Figure'
 import { Header } from './Header'
 import PlayIcon from 'react-icons/lib/md/play-arrow'
@@ -78,7 +72,11 @@ const Tweet = ({
       {image && (
         <Figure>
           <a href={url} {...styles.mediaContainer}>
-            {playable && <span {...styles.playIcon}><PlayIcon/></span>}
+            {playable && (
+              <span {...styles.playIcon}>
+                <PlayIcon />
+              </span>
+            )}
             <FigureImage src={image} alt='' />
           </a>
           {more && (

@@ -11,9 +11,9 @@ import { convertStyleToRem } from './utils'
 import { underline } from '../../lib/styleMixins'
 
 // Namespaced exports.
-export const Editorial = {..._Editorial}
-export const Interaction = {..._Interaction}
-export const Scribble = {..._Scribble}
+export const Editorial = { ..._Editorial }
+export const Interaction = { ..._Interaction }
+export const Scribble = { ..._Scribble }
 
 // Direct exports.
 export const fontStyles = {
@@ -69,7 +69,7 @@ const styles = {
   h1: css({
     ...fontStyles.serifBold36,
     [mUp]: {
-      ...fontStyles.serifBold52,
+      ...fontStyles.serifBold52
     },
     color: colors.text,
     margin: '30px 0 20px 0',
@@ -103,7 +103,7 @@ const styles = {
     color: colors.text,
     ...fontStyles.serifRegular16,
     [mUp]: {
-      ...fontStyles.serifRegular21,
+      ...fontStyles.serifRegular21
     },
     margin: '20px 0 20px 0',
     ':first-child': {
@@ -127,32 +127,44 @@ const styles = {
   }),
   quote: css({
     ...fontStyles.sansSerifRegular21,
-    color: colors.text,
+    color: colors.text
   })
 }
 
-export const A = React.forwardRef(({children, ...props}, ref) => (
-  <a {...props} {...linkRule} ref={ref}>{children}</a>
+export const A = React.forwardRef(({ children, ...props }, ref) => (
+  <a {...props} {...linkRule} ref={ref}>
+    {children}
+  </a>
 ))
 
-export const H1 = ({children, ...props}) => (
-  <h1 {...props} {...styles.h1}>{children}</h1>
+export const H1 = ({ children, ...props }) => (
+  <h1 {...props} {...styles.h1}>
+    {children}
+  </h1>
 )
 
-export const H2 = ({children, ...props}) => (
-  <h2 {...props} {...styles.h2}>{children}</h2>
+export const H2 = ({ children, ...props }) => (
+  <h2 {...props} {...styles.h2}>
+    {children}
+  </h2>
 )
 
-export const Lead = ({children, ...props}) => (
-  <p {...props} {...styles.lead}>{children}</p>
+export const Lead = ({ children, ...props }) => (
+  <p {...props} {...styles.lead}>
+    {children}
+  </p>
 )
 
-export const P = ({children, ...props}) => (
-  <p {...props} {...styles.p}>{children}</p>
+export const P = ({ children, ...props }) => (
+  <p {...props} {...styles.p}>
+    {children}
+  </p>
 )
 
-export const Label = ({children, ...props}) => (
-  <span {...props} {...styles.label}>{children}</span>
+export const Label = ({ children, ...props }) => (
+  <span {...props} {...styles.label}>
+    {children}
+  </span>
 )
 
 const subSupStyles = {
@@ -172,16 +184,21 @@ const subSupStyles = {
   })
 }
 
-export const Sub = ({children, attributes}) =>
-  <sub {...attributes} {...subSupStyles.base} {...subSupStyles.sub}>{children}</sub>
+export const Sub = ({ children, attributes }) => (
+  <sub {...attributes} {...subSupStyles.base} {...subSupStyles.sub}>
+    {children}
+  </sub>
+)
 
-export const Sup = ({children, attributes}) =>
-  <sup {...attributes} {...subSupStyles.base} {...subSupStyles.sup}>{children}</sup>
+export const Sup = ({ children, attributes }) => (
+  <sup {...attributes} {...subSupStyles.base} {...subSupStyles.sup}>
+    {children}
+  </sup>
+)
 
-export const HR = ({attributes}) =>
-  <hr {...attributes} {...styles.hr} />
+export const HR = ({ attributes }) => <hr {...attributes} {...styles.hr} />
 
-export const Quote = ({children, source, ...props}) => (
+export const Quote = ({ children, source, ...props }) => (
   <blockquote {...props} {...styles.quote}>
     <div>«{children}»</div>
     {!!source && <cite>{source}</cite>}

@@ -11,8 +11,10 @@ import colors from '../../theme/colors'
 import { underline } from '../../lib/styleMixins'
 
 import {
-  calculateAxis, groupBy,
-  runSort, sortPropType,
+  calculateAxis,
+  groupBy,
+  runSort,
+  sortPropType,
   transparentAxisStroke,
   circleFill,
   deduplicate,
@@ -134,7 +136,7 @@ const styles = {
   })
 }
 
-const BarChart = (props) => {
+const BarChart = props => {
   const {
     values,
     width,
@@ -152,21 +154,29 @@ const BarChart = (props) => {
     link
   } = props
 
-  const possibleColumns = Math.floor(width / (props.minInnerWidth + COLUMN_PADDING))
-  const columns = possibleColumns >= props.columns ? props.columns : Math.max(possibleColumns, 1)
-  const columnWidth = Math.floor((width - (COLUMN_PADDING * (columns - 1))) / columns) - 1
+  const possibleColumns = Math.floor(
+    width / (props.minInnerWidth + COLUMN_PADDING)
+  )
+  const columns =
+    possibleColumns >= props.columns
+      ? props.columns
+      : Math.max(possibleColumns, 1)
+  const columnWidth =
+    Math.floor((width - COLUMN_PADDING * (columns - 1)) / columns) - 1
 
-  // filter and map data to clean objects 
+  // filter and map data to clean objects
   let data = values
   if (props.filter) {
     const filter = unsafeDatumFn(props.filter)
     data = data.filter(filter)
   }
-  data = data.filter(d => d.value && d.value.length > 0).map(d => ({
-    datum: d,
-    label: d[props.y],
-    value: +d.value
-  }))
+  data = data
+    .filter(d => d.value && d.value.length > 0)
+    .map(d => ({
+      datum: d,
+      label: d[props.y],
+      value: +d.value
+    }))
   // compute category
   if (props.category) {
     const categorize = unsafeDatumFn(props.category)
@@ -180,7 +190,7 @@ const BarChart = (props) => {
   // group data into columns
   let groupedData
   if (props.columnFilter) {
-    groupedData = props.columnFilter.map(({test, title}) => {
+    groupedData = props.columnFilter.map(({ test, title }) => {
       const filter = unsafeDatumFn(test)
       return {
         key: title,
@@ -205,7 +215,10 @@ const BarChart = (props) => {
   runSort(props.colorSort, colorValues)
   let colorRange = props.colorRanges[props.colorRange] || props.colorRange
   if (!colorRange) {
-    colorRange = colorValues.length > 3 ? props.colorRanges.discrete : props.colorRanges.sequential3
+    colorRange =
+      colorValues.length > 3
+        ? props.colorRanges.discrete
+        : props.colorRanges.sequential3
   }
   const color = scaleOrdinal(colorRange).domain(colorValues)
 
@@ -219,7 +232,7 @@ const BarChart = (props) => {
   const barStyle = inlineBarStyle
     ? BAR_STYLES.inline
     : BAR_STYLES[props.barStyle]
-  groupedData = groupedData.map(({values: groupData, key: title}) => {
+  groupedData = groupedData.map(({ values: groupData, key: title }) => {
     let gY = 0
     if (title) {
       gY += COLUMN_TITLE_HEIGHT
@@ -228,17 +241,13 @@ const BarChart = (props) => {
     let firstBarY
     let stackedBars = groupBy(groupData, d => d.label)
     let marginBottom = 0
-    const bars = stackedBars.map(({values: segments}) => {
+    const bars = stackedBars.map(({ values: segments }) => {
       const first = segments[0]
       const style = inlineBarStyle
         ? barStyle[
-          first.datum[inlineSecondaryLabel]
-            ? 'withSecondary' : 'normal'
-        ]
-        : barStyle[
-          highlight(first.datum)
-            ? 'highlighted' : 'normal'
-        ]
+            first.datum[inlineSecondaryLabel] ? 'withSecondary' : 'normal'
+          ]
+        : barStyle[highlight(first.datum) ? 'highlighted' : 'normal']
 
       gY += marginBottom
       let labelY = gY
@@ -286,11 +295,10 @@ const BarChart = (props) => {
   })
 
   // setup x scale
-  const xDomain = props.domain ||
-    [
-      Math.min(0, min(groupedData.map(d => d.min))),
-      Math.max(0, max(groupedData.map(d => d.max)))
-    ]
+  const xDomain = props.domain || [
+    Math.min(0, min(groupedData.map(d => d.min))),
+    Math.max(0, max(groupedData.map(d => d.max)))
+  ]
   const x = scaleLinear()
     .domain(xDomain)
     .range([0, columnWidth])
@@ -298,9 +306,15 @@ const BarChart = (props) => {
     x.nice(3)
   }
 
-  const xAxis = calculateAxis(props.numberFormat, tLabel, x.domain(), undefined, {
-    ticks: props.xTicks
-  })
+  const xAxis = calculateAxis(
+    props.numberFormat,
+    tLabel,
+    x.domain(),
+    undefined,
+    {
+      ticks: props.xTicks
+    }
+  )
 
   // stack bars
   groupedData.forEach(group => {
@@ -311,11 +325,10 @@ const BarChart = (props) => {
       bar.segments.forEach((d, i) => {
         d.color = color(colorAccessor(d))
         const size = x(d.value) - xZero
-        d.x = size > 0
-          ? Math.floor(xPosPositiv)
-          : Math.ceil(xPosNegativ + size)
+        d.x = size > 0 ? Math.floor(xPosPositiv) : Math.ceil(xPosNegativ + size)
 
-        d.width = Math.ceil(Math.abs(size)) + (size && last(bar.segments, i) ? 1 : 0)
+        d.width =
+          Math.ceil(Math.abs(size)) + (size && last(bar.segments, i) ? 1 : 0)
         if (size > 0) {
           xPosPositiv += size
         } else {
@@ -330,17 +343,19 @@ const BarChart = (props) => {
 
   // rows and columns
   let yPos = 0
-  groupBy(groupedData, (d, i) => Math.floor(i / columns)).forEach(({values: groups}) => {
-    const height = max(groups.map(d => d.height))
+  groupBy(groupedData, (d, i) => Math.floor(i / columns)).forEach(
+    ({ values: groups }) => {
+      const height = max(groups.map(d => d.height))
 
-    groups.forEach((group, column) => {
-      group.groupHeight = height
-      group.y = yPos
-      group.x = column * (columnWidth + COLUMN_PADDING)
-    })
+      groups.forEach((group, column) => {
+        group.groupHeight = height
+        group.y = yPos
+        group.x = column * (columnWidth + COLUMN_PADDING)
+      })
 
-    yPos += height + (hasXTicks ? AXIS_BOTTOM_HEIGHT : 0)
-  })
+      yPos += height + (hasXTicks ? AXIS_BOTTOM_HEIGHT : 0)
+    }
+  )
 
   const isLollipop = props.barStyle === 'lollipop'
 
@@ -349,172 +364,230 @@ const BarChart = (props) => {
   const colorLegendValues = []
     .concat(
       props.colorLegend &&
-      (
-        props.colorLegendValues ||
-        colorValues
-      ).map(colorValue => (
-        {color: color(colorValue), label: colorValue}
-      ))
+        (props.colorLegendValues || colorValues).map(colorValue => ({
+          color: color(colorValue),
+          label: colorValue
+        }))
     )
-    .concat(!mini && band && bandLegend && {label: (
-      <span {...styles.bandLegend}>
-        <span {...styles.bandBar} />
-        {` ${bandLegend}`}
-      </span>
-    )})
+    .concat(
+      !mini &&
+        band &&
+        bandLegend && {
+          label: (
+            <span {...styles.bandLegend}>
+              <span {...styles.bandBar} />
+              {` ${bandLegend}`}
+            </span>
+          )
+        }
+    )
     .filter(Boolean)
 
   return (
     <>
       <svg width={width} height={yPos}>
         <desc>{description}</desc>
-        {
-          groupedData.map(group => {
-            return (
-              <g key={`group${group.title || 1}`} transform={`translate(${group.x},${group.y})`}>
-                <text dy='1.5em' {...styles.groupTitle}>{group.title}</text>
-                {
-                  group.bars.map(bar => {
-                    const href = bar.first.datum[link]
-                    let barLabel = <text {...styles.barLabel} {...(href && styles.barLabelLink)}
-                      y={bar.labelY}
-                      dy='0.9em'
-                      x={x(0) + (highlightZero ? (bar.max <= 0 ? -2 : 2) : 0)}
-                      textAnchor={bar.max <= 0 ? 'end' : 'start'}>
-                      {subsup.svg(bar.first.label)}
-                    </text>
-                    if (href) {
-                      // disable a11y rule because it does not understand that this a tag is an svg tag
-                      // eslint-disable-next-line jsx-a11y/anchor-is-valid
-                      barLabel = <a xlinkHref={href}>{barLabel}</a>
-                    }
-                    return (
-                      <g key={`bar${bar.y}`}>
-                        {barLabel}
-                        {
-                          bar.segments.map((segment, i) => {
-                            const isLast = last(bar.segments, i)
-                            const valueTextStartAnchor = (
-                              (segment.value >= 0 && isLast) ||
-                              (segment.value < 0 && i !== 0)
-                            )
-                            const inlineFill = getTextColor(segment.color)
-                            const inlineEndAnchor = isLast && i !== 0
-
-                            return (
-                              <g key={`seg${i}`} transform={`translate(0,${bar.y})`}>
-                                <rect x={segment.x} fill={segment.color} width={segment.width} height={bar.height} />
-                                {(inlineValue || inlineLabel) && (
-                                  <Fragment>
-                                    <text {...styles.inlineLabel}
-                                      x={segment.x + (inlineEndAnchor ? segment.width - 5 : 5)}
-                                      y={bar.style.inlineTop}
-                                      dy='1em'
-                                      fontSize={bar.style.fontSize}
-                                      fill={inlineFill}
-                                      textAnchor={inlineEndAnchor
-                                        ? 'end'
-                                        : 'start'}>
-                                      {subsup.svg([
-                                        inlineValue && xAxis.format(segment.value),
-                                        inlineValueUnit && inlineValueUnit,
-                                        inlineLabel && segment.datum[inlineLabel]
-                                      ].join(' '))}
-                                    </text>
-                                    {inlineSecondaryLabel && (
-                                      <text {...styles.inlineLabel}
-                                        x={segment.x + (inlineEndAnchor ? segment.width - 5 : 5)}
-                                        y={bar.style.inlineTop + bar.style.fontSize + 5}
-                                        dy='1em'
-                                        fontSize={bar.style.secondaryFontSize}
-                                        fill={inlineFill}
-                                        textAnchor={inlineEndAnchor
-                                          ? 'end'
-                                          : 'start'}>
-                                        {subsup.svg(segment.datum[inlineSecondaryLabel])}
-                                      </text>
-                                    )}
-                                  </Fragment>
-                                )}
-                                {isLollipop && band &&
-                                  <rect
-                                    rx={bar.style.popHeight / 2} ry={bar.style.popHeight / 2}
-                                    x={x(+segment.datum[`${band}_lower`])}
-                                    y={(bar.height / 2) - (bar.style.popHeight / 2)}
-                                    width={x(+segment.datum[`${band}_upper`]) - x(+segment.datum[`${band}_lower`])}
-                                    height={bar.style.popHeight}
-                                    fill={segment.color}
-                                    fillOpacity='0.3' />
-                                }
-                                {isLollipop && <circle
-                                  cx={segment.x + segment.width}
-                                  cy={bar.height / 2}
-                                  r={Math.floor(bar.style.popHeight - (bar.style.stroke / 2)) / 2}
-                                  fill={circleFill}
-                                  stroke={segment.color}
-                                  strokeWidth={bar.style.stroke} />}
-                                {showBarValues && (<text
-                                  {...styles.barLabel}
-                                  x={valueTextStartAnchor
-                                    ? segment.x + segment.width + 4
-                                    : segment.x + (segment.value >= 0 ? segment.width : 0) - 4}
-                                  textAnchor={valueTextStartAnchor
-                                    ? 'start'
-                                    : 'end'}
-                                  y={bar.height / 2}
-                                  dy='.35em'
-                                >
-                                 {xAxis.format(segment.value)}
-                                </text>)}
-                              </g>
-                            )
-                          })
-                        }
-                      </g>
-                    )
-                  })
+        {groupedData.map(group => {
+          return (
+            <g
+              key={`group${group.title || 1}`}
+              transform={`translate(${group.x},${group.y})`}
+            >
+              <text dy='1.5em' {...styles.groupTitle}>
+                {group.title}
+              </text>
+              {group.bars.map(bar => {
+                const href = bar.first.datum[link]
+                let barLabel = (
+                  <text
+                    {...styles.barLabel}
+                    {...(href && styles.barLabelLink)}
+                    y={bar.labelY}
+                    dy='0.9em'
+                    x={x(0) + (highlightZero ? (bar.max <= 0 ? -2 : 2) : 0)}
+                    textAnchor={bar.max <= 0 ? 'end' : 'start'}
+                  >
+                    {subsup.svg(bar.first.label)}
+                  </text>
+                )
+                if (href) {
+                  // disable a11y rule because it does not understand that this a tag is an svg tag
+                  // eslint-disable-next-line jsx-a11y/anchor-is-valid
+                  barLabel = <a xlinkHref={href}>{barLabel}</a>
                 }
-                {hasXTicks && <g transform={`translate(0,${group.groupHeight + AXIS_BOTTOM_PADDING})`}>
-                  {
-                    xTicks.map((tick, i) => {
-                      let textAnchor = 'middle'
-                      const isLast = last(xTicks, i)
-                      if (isLast) {
-                        textAnchor = 'end'
-                      }
-                      if (i === 0) {
-                        textAnchor = 'start'
-                      }
-                      const highlightTick = tick === 0 && highlightZero
+                return (
+                  <g key={`bar${bar.y}`}>
+                    {barLabel}
+                    {bar.segments.map((segment, i) => {
+                      const isLast = last(bar.segments, i)
+                      const valueTextStartAnchor =
+                        (segment.value >= 0 && isLast) ||
+                        (segment.value < 0 && i !== 0)
+                      const inlineFill = getTextColor(segment.color)
+                      const inlineEndAnchor = isLast && i !== 0
+
                       return (
-                        <g key={`tick${tick}`} transform={`translate(${x(tick)},0)`}>
-                          <line {...styles.axisXLine}
-                            y1={-AXIS_BOTTOM_PADDING - group.groupHeight + group.firstBarY}
-                            y2={-AXIS_BOTTOM_PADDING}
-                            style={{
-                              stroke: highlightTick ? baseLineColor : undefined
-                            }} />
-                          <text {...styles.axisLabel}
-                            y={X_TICK_TEXT_MARGIN}
-                            dy='0.6em'
-                            textAnchor={textAnchor}
-                            style={{
-                              fill: highlightTick ? colors.text : undefined
-                            }}>
-                            {xAxis.axisFormat(tick, isLast)}
-                          </text>
+                        <g key={`seg${i}`} transform={`translate(0,${bar.y})`}>
+                          <rect
+                            x={segment.x}
+                            fill={segment.color}
+                            width={segment.width}
+                            height={bar.height}
+                          />
+                          {(inlineValue || inlineLabel) && (
+                            <Fragment>
+                              <text
+                                {...styles.inlineLabel}
+                                x={
+                                  segment.x +
+                                  (inlineEndAnchor ? segment.width - 5 : 5)
+                                }
+                                y={bar.style.inlineTop}
+                                dy='1em'
+                                fontSize={bar.style.fontSize}
+                                fill={inlineFill}
+                                textAnchor={inlineEndAnchor ? 'end' : 'start'}
+                              >
+                                {subsup.svg(
+                                  [
+                                    inlineValue && xAxis.format(segment.value),
+                                    inlineValueUnit && inlineValueUnit,
+                                    inlineLabel && segment.datum[inlineLabel]
+                                  ].join(' ')
+                                )}
+                              </text>
+                              {inlineSecondaryLabel && (
+                                <text
+                                  {...styles.inlineLabel}
+                                  x={
+                                    segment.x +
+                                    (inlineEndAnchor ? segment.width - 5 : 5)
+                                  }
+                                  y={
+                                    bar.style.inlineTop + bar.style.fontSize + 5
+                                  }
+                                  dy='1em'
+                                  fontSize={bar.style.secondaryFontSize}
+                                  fill={inlineFill}
+                                  textAnchor={inlineEndAnchor ? 'end' : 'start'}
+                                >
+                                  {subsup.svg(
+                                    segment.datum[inlineSecondaryLabel]
+                                  )}
+                                </text>
+                              )}
+                            </Fragment>
+                          )}
+                          {isLollipop && band && (
+                            <rect
+                              rx={bar.style.popHeight / 2}
+                              ry={bar.style.popHeight / 2}
+                              x={x(+segment.datum[`${band}_lower`])}
+                              y={bar.height / 2 - bar.style.popHeight / 2}
+                              width={
+                                x(+segment.datum[`${band}_upper`]) -
+                                x(+segment.datum[`${band}_lower`])
+                              }
+                              height={bar.style.popHeight}
+                              fill={segment.color}
+                              fillOpacity='0.3'
+                            />
+                          )}
+                          {isLollipop && (
+                            <circle
+                              cx={segment.x + segment.width}
+                              cy={bar.height / 2}
+                              r={
+                                Math.floor(
+                                  bar.style.popHeight - bar.style.stroke / 2
+                                ) / 2
+                              }
+                              fill={circleFill}
+                              stroke={segment.color}
+                              strokeWidth={bar.style.stroke}
+                            />
+                          )}
+                          {showBarValues && (
+                            <text
+                              {...styles.barLabel}
+                              x={
+                                valueTextStartAnchor
+                                  ? segment.x + segment.width + 4
+                                  : segment.x +
+                                    (segment.value >= 0 ? segment.width : 0) -
+                                    4
+                              }
+                              textAnchor={
+                                valueTextStartAnchor ? 'start' : 'end'
+                              }
+                              y={bar.height / 2}
+                              dy='.35em'
+                            >
+                              {xAxis.format(segment.value)}
+                            </text>
+                          )}
                         </g>
                       )
-                    })
-                  }
-                </g>}
-              </g>
-            )
-          })
-        }
+                    })}
+                  </g>
+                )
+              })}
+              {hasXTicks && (
+                <g
+                  transform={`translate(0,${group.groupHeight +
+                    AXIS_BOTTOM_PADDING})`}
+                >
+                  {xTicks.map((tick, i) => {
+                    let textAnchor = 'middle'
+                    const isLast = last(xTicks, i)
+                    if (isLast) {
+                      textAnchor = 'end'
+                    }
+                    if (i === 0) {
+                      textAnchor = 'start'
+                    }
+                    const highlightTick = tick === 0 && highlightZero
+                    return (
+                      <g
+                        key={`tick${tick}`}
+                        transform={`translate(${x(tick)},0)`}
+                      >
+                        <line
+                          {...styles.axisXLine}
+                          y1={
+                            -AXIS_BOTTOM_PADDING -
+                            group.groupHeight +
+                            group.firstBarY
+                          }
+                          y2={-AXIS_BOTTOM_PADDING}
+                          style={{
+                            stroke: highlightTick ? baseLineColor : undefined
+                          }}
+                        />
+                        <text
+                          {...styles.axisLabel}
+                          y={X_TICK_TEXT_MARGIN}
+                          dy='0.6em'
+                          textAnchor={textAnchor}
+                          style={{
+                            fill: highlightTick ? colors.text : undefined
+                          }}
+                        >
+                          {xAxis.axisFormat(tick, isLast)}
+                        </text>
+                      </g>
+                    )
+                  })}
+                </g>
+              )}
+            </g>
+          )
+        })}
       </svg>
-      <div style={{ marginTop: !hasXTicks && colorLegendValues.length ? 3 : 0 }}>
-        <ColorLegend inline values={colorLegendValues}/>
+      <div
+        style={{ marginTop: !hasXTicks && colorLegendValues.length ? 3 : 0 }}
+      >
+        <ColorLegend inline values={colorLegendValues} />
         {children}
       </div>
     </>
@@ -535,10 +608,12 @@ export const propTypes = {
   sort: sortPropType,
   column: PropTypes.string,
   columnSort: sortPropType,
-  columnFilter: PropTypes.arrayOf(PropTypes.shape({
-    title: PropTypes.string.isRequired,
-    test: PropTypes.string.isRequired
-  })),
+  columnFilter: PropTypes.arrayOf(
+    PropTypes.shape({
+      title: PropTypes.string.isRequired,
+      test: PropTypes.string.isRequired
+    })
+  ),
   highlight: PropTypes.string,
   stroke: PropTypes.string,
   color: PropTypes.string,

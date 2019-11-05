@@ -88,13 +88,17 @@ const styles = {
 
 export const Actions = ({ t, comment, onReply, onEdit }) => {
   const { published, userCanEdit, downVotes, upVotes, userVote } = comment
-  const { isAdmin, discussion, actions, clock } = React.useContext(DiscussionContext)
+  const { isAdmin, discussion, actions, clock } = React.useContext(
+    DiscussionContext
+  )
   const { displayAuthor, userWaitUntil } = discussion
 
   const onShare = () => actions.shareComment(comment)
 
   const canUnpublish = (isAdmin || userCanEdit) && published
-  const onUnpublish = canUnpublish ? () => actions.unpublishComment(comment) : undefined
+  const onUnpublish = canUnpublish
+    ? () => actions.unpublishComment(comment)
+    : undefined
 
   /*
    * The onClick functions are wired up such that when the user clicks a particular button twice,
@@ -105,18 +109,29 @@ export const Actions = ({ t, comment, onReply, onEdit }) => {
     if (!displayAuthor) {
       return { onUpvote: undefined, onDownvote: undefined }
     } else if (userVote === 'UP') {
-      return { onUpvote: () => actions.unvoteComment(comment), onDownvote: () => actions.downvoteComment(comment) }
+      return {
+        onUpvote: () => actions.unvoteComment(comment),
+        onDownvote: () => actions.downvoteComment(comment)
+      }
     } else if (userVote === 'DOWN') {
-      return { onUpvote: () => actions.upvoteComment(comment), onDownvote: () => actions.unvoteComment(comment) }
+      return {
+        onUpvote: () => actions.upvoteComment(comment),
+        onDownvote: () => actions.unvoteComment(comment)
+      }
     } else {
-      return { onUpvote: () => actions.upvoteComment(comment), onDownvote: () => actions.downvoteComment(comment) }
+      return {
+        onUpvote: () => actions.upvoteComment(comment),
+        onDownvote: () => actions.downvoteComment(comment)
+      }
     }
   })()
 
   const replyBlockedMessage = (() => {
     const waitUntilDate = userWaitUntil && new Date(userWaitUntil)
     if (waitUntilDate && waitUntilDate > clock.now) {
-      return t('styleguide/CommentComposer/wait', { time: formatTimeRelative(waitUntilDate, clock) })
+      return t('styleguide/CommentComposer/wait', {
+        time: formatTimeRelative(waitUntilDate, clock)
+      })
     }
   })()
 
@@ -124,25 +139,39 @@ export const Actions = ({ t, comment, onReply, onEdit }) => {
     <div {...styles.root}>
       {onReply && (
         <IconButton
-          type="left"
+          type='left'
           disabled={!!replyBlockedMessage}
           onClick={onReply}
           title={replyBlockedMessage || t('styleguide/CommentActions/answer')}
         >
-          <ReplyIcon fill={replyBlockedMessage ? colors.disabled : colors.text} />
+          <ReplyIcon
+            fill={replyBlockedMessage ? colors.disabled : colors.text}
+          />
         </IconButton>
       )}
       {userCanEdit && onEdit && (
-        <IconButton type="left" onClick={onEdit} title={t('styleguide/CommentActions/edit')}>
+        <IconButton
+          type='left'
+          onClick={onEdit}
+          title={t('styleguide/CommentActions/edit')}
+        >
           <EditIcon />
         </IconButton>
       )}
       {onUnpublish && (
-        <IconButton type="left" onClick={onUnpublish} title={t('styleguide/CommentActions/unpublish')}>
+        <IconButton
+          type='left'
+          onClick={onUnpublish}
+          title={t('styleguide/CommentActions/unpublish')}
+        >
           <UnpublishIcon />
         </IconButton>
       )}
-      <IconButton type="left" onClick={onShare} title={t('styleguide/CommentActions/share')}>
+      <IconButton
+        type='left'
+        onClick={onShare}
+        title={t('styleguide/CommentActions/share')}
+      >
         <ShareIcon />
       </IconButton>
       <div {...styles.votes}>
@@ -154,11 +183,23 @@ export const Actions = ({ t, comment, onReply, onEdit }) => {
           >
             <MdKeyboardArrowUp />
           </IconButton>
-          <span title={t.pluralize('styleguide/CommentActions/upvote/count', { count: upVotes })}>{upVotes}</span>
+          <span
+            title={t.pluralize('styleguide/CommentActions/upvote/count', {
+              count: upVotes
+            })}
+          >
+            {upVotes}
+          </span>
         </div>
         <div {...styles.voteDivider}>/</div>
         <div {...styles.vote}>
-          <span title={t.pluralize('styleguide/CommentActions/downvote/count', { count: downVotes })}>{downVotes}</span>
+          <span
+            title={t.pluralize('styleguide/CommentActions/downvote/count', {
+              count: downVotes
+            })}
+          >
+            {downVotes}
+          </span>
           <IconButton
             type={userVote === 'DOWN' ? 'selectedVote' : 'vote'}
             onClick={onDownvote}
@@ -173,7 +214,13 @@ export const Actions = ({ t, comment, onReply, onEdit }) => {
 }
 
 const IconButton = ({ type, onClick, title, children }) => (
-  <button {...styles.iconButton} {...styles[`${type}Button`]} title={title} disabled={!onClick} onClick={onClick}>
+  <button
+    {...styles.iconButton}
+    {...styles[`${type}Button`]}
+    title={title}
+    disabled={!onClick}
+    onClick={onClick}
+  >
     {children}
   </button>
 )

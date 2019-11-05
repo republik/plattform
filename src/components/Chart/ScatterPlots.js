@@ -21,9 +21,7 @@ import {
   getFormat
 } from './utils'
 
-import {
-  sansSerifRegular12, sansSerifMedium12
-} from '../Typography/styles'
+import { sansSerifRegular12, sansSerifMedium12 } from '../Typography/styles'
 
 import colors from '../../theme/colors'
 import { intersperse } from '../../lib/helpers'
@@ -56,12 +54,11 @@ const styles = {
 }
 
 class ScatterPlot extends Component {
-  constructor (...args) {
+  constructor(...args) {
     super(...args)
     this.state = {
       hover: []
     }
-
   }
   setContainerRef = ref => {
     this.container = ref
@@ -75,23 +72,25 @@ class ScatterPlot extends Component {
       this.setState({ left, top })
     }
   }
-  componentDidMount () {
+  componentDidMount() {
     window.addEventListener('resize', this.measure)
-    this.hoverRect.addEventListener('touchstart', this.focus, { passive: false })
+    this.hoverRect.addEventListener('touchstart', this.focus, {
+      passive: false
+    })
     this.hoverRect.addEventListener('touchmove', this.focus)
     this.hoverRect.addEventListener('touchend', this.blur)
     this.measure()
   }
-  componentDidUpdate () {
+  componentDidUpdate() {
     this.measure()
   }
-  componentWillUnmount () {
+  componentWillUnmount() {
     this.hoverRect.removeEventListener('touchstart', this.focus)
     this.hoverRect.removeEventListener('touchmove', this.focus)
     this.hoverRect.removeEventListener('touchend', this.blur)
     window.removeEventListener('resize', this.measure)
   }
-  focus = (event) => {
+  focus = event => {
     const { top, left } = this.state
     if (top === undefined || left === undefined || !this.symbols) {
       return
@@ -110,10 +109,10 @@ class ScatterPlot extends Component {
     const withDistance = this.symbols.map(symbol => {
       return {
         symbol,
-        distance: Math.sqrt(
-          Math.pow(symbol.cx - focusX, 2) +
-          Math.pow(symbol.cy - focusY, 2)
-        ) - symbol.r
+        distance:
+          Math.sqrt(
+            Math.pow(symbol.cx - focusX, 2) + Math.pow(symbol.cy - focusY, 2)
+          ) - symbol.r
       }
     })
 
@@ -134,7 +133,7 @@ class ScatterPlot extends Component {
   blur = () => {
     this.setState({ hover: [] })
   }
-  renderHover ({ width, height, xFormat, yFormat }) {
+  renderHover({ width, height, xFormat, yFormat }) {
     const { hover, hoverTouch } = this.state
 
     if (!hover.length) {
@@ -142,7 +141,10 @@ class ScatterPlot extends Component {
     }
 
     const { props } = this
-    const sizeFormat = getFormat(props.sizeNumberFormat || props.numberFormat, props.tLabel)
+    const sizeFormat = getFormat(
+      props.sizeNumberFormat || props.numberFormat,
+      props.tLabel
+    )
 
     const { cx, cy, r } = hover.sort((a, b) => ascending(a.cy, b.cy))[0]
     const top = hoverTouch || cy > height / 3
@@ -152,37 +154,51 @@ class ScatterPlot extends Component {
         orientation={top ? 'top' : 'below'}
         x={cx}
         y={cy + (top ? -yOffset : yOffset)}
-        contextWidth={width}>
+        contextWidth={width}
+      >
         {hover.map(({ value }, i) => (
-          <ContextBoxValue key={`${value.datum[props.label]}${i}`}
-            label={value.datum[props.label]}>
-            {intersperse([]
-              .concat(
-                value.datum[props.detail] && value.datum[props.detail]
-                  .split('\n')
-                  .map((d, i) => <Fragment key={`d${i}`}>
-                    {subsup(d)}
-                  </Fragment>)
+          <ContextBoxValue
+            key={`${value.datum[props.label]}${i}`}
+            label={value.datum[props.label]}
+          >
+            {intersperse(
+              []
+                .concat(
+                  value.datum[props.detail] &&
+                    value.datum[props.detail]
+                      .split('\n')
+                      .map((d, i) => (
+                        <Fragment key={`d${i}`}>{subsup(d)}</Fragment>
+                      ))
+                )
+                .concat([
+                  props.yShowValue && (
+                    <Fragment key='y'>
+                      {yFormat(value.y)} {subsup(props.yUnit)}
+                    </Fragment>
+                  ),
+                  props.xShowValue && (
+                    <Fragment key='x'>
+                      {xFormat(value.x)} {subsup(props.xUnit)}
+                    </Fragment>
+                  ),
+                  props.sizeShowValue && (
+                    <Fragment key='size'>
+                      {sizeFormat(value.size)} {subsup(props.sizeUnit)}
+                    </Fragment>
+                  )
+                ])
+                .filter(Boolean),
+              (item, index) => (
+                <br key={`br${index}`} />
               )
-              .concat([
-                props.yShowValue && <Fragment key='y'>
-                  {yFormat(value.y)} {subsup(props.yUnit)}
-                </Fragment>,
-                props.xShowValue && <Fragment key='x'>
-                  {xFormat(value.x)} {subsup(props.xUnit)}
-                </Fragment>,
-                props.sizeShowValue && <Fragment key='size'>
-                  {sizeFormat(value.size)} {subsup(props.sizeUnit)}
-                </Fragment>
-              ])
-              .filter(Boolean), (item, index) => <br key={`br${index}`} />
             )}
           </ContextBoxValue>
         ))}
       </ContextBox>
     )
   }
-  render () {
+  render() {
     const { props } = this
     const {
       width,
@@ -197,26 +213,29 @@ class ScatterPlot extends Component {
     } = props
 
     const data = values
-      .filter(d => (
-        d[props.x] && d[props.x].length > 0 &&
-        d[props.y] && d[props.y].length > 0
-      ))
+      .filter(
+        d =>
+          d[props.x] &&
+          d[props.x].length > 0 &&
+          d[props.y] &&
+          d[props.y].length > 0
+      )
       .map(d => {
         const size = d[props.size]
         return {
           datum: d,
           x: +d[props.x],
           y: +d[props.y],
-          size: size === undefined
-            ? 1
-            : +d[props.size] || 0
+          size: size === undefined ? 1 : +d[props.size] || 0
         }
       })
 
     const { paddingTop, paddingRight, paddingBottom, paddingLeft } = props
 
     const innerWidth = props.width - paddingLeft - paddingRight
-    const height = props.height || (innerWidth * props.heightRatio) + paddingTop + paddingBottom
+    const height =
+      props.height ||
+      innerWidth * props.heightRatio + paddingTop + paddingBottom
     const innerHeight = height - paddingTop - paddingBottom
 
     // setup x axis
@@ -230,20 +249,28 @@ class ScatterPlot extends Component {
     const x = scales[props.xScale]()
       .domain(extent(xValues))
       .range([paddingLeft, paddingLeft + innerWidth])
-    const xNice = props.xNice === undefined
-      ? Math.min(Math.max(Math.round(innerWidth / 150), 3), 5)
-      : props.xNice
+    const xNice =
+      props.xNice === undefined
+        ? Math.min(Math.max(Math.round(innerWidth / 150), 3), 5)
+        : props.xNice
     if (xNice) {
       x.nice(xNice)
     }
-    const xAxis = calculateAxis(props.xNumberFormat || props.numberFormat, tLabel, x.domain(), undefined, {
-      ticks: props.xLines
-        ? props.xLines.map(line => line.tick)
-        : props.xTicks
-    }) // xUnit is rendered separately
-    const xLines = props.xLines || (
-      props.xTicks || (props.xScale === 'log' ? get3EqualDistTicks(x) : xAxis.ticks)
-    ).map(tick => ({ tick }))
+    const xAxis = calculateAxis(
+      props.xNumberFormat || props.numberFormat,
+      tLabel,
+      x.domain(),
+      undefined,
+      {
+        ticks: props.xLines ? props.xLines.map(line => line.tick) : props.xTicks
+      }
+    ) // xUnit is rendered separately
+    const xLines =
+      props.xLines ||
+      (
+        props.xTicks ||
+        (props.xScale === 'log' ? get3EqualDistTicks(x) : xAxis.ticks)
+      ).map(tick => ({ tick }))
     // ensure highest value is last: the last value is labled with the unit
     xLines.sort((a, b) => ascending(a.tick, b.tick))
 
@@ -258,20 +285,28 @@ class ScatterPlot extends Component {
     const y = scales[props.yScale]()
       .domain(extent(yValues))
       .range([innerHeight + paddingTop, paddingTop])
-    const yNice = props.yNice === undefined
-      ? Math.min(Math.max(Math.round(innerHeight / 150), 3), 5)
-      : props.yNice
+    const yNice =
+      props.yNice === undefined
+        ? Math.min(Math.max(Math.round(innerHeight / 150), 3), 5)
+        : props.yNice
     if (yNice) {
       y.nice(yNice)
     }
-    const yAxis = calculateAxis(props.yNumberFormat || props.numberFormat, tLabel, y.domain(), tLabel(props.yUnit), {
-      ticks: props.yLines
-        ? props.yLines.map(line => line.tick)
-        : props.yTicks
-    })
-    const yLines = props.yLines || (
-      props.yTicks || (props.yScale === 'log' ? get3EqualDistTicks(y) : yAxis.ticks)
-    ).map(tick => ({ tick }))
+    const yAxis = calculateAxis(
+      props.yNumberFormat || props.numberFormat,
+      tLabel,
+      y.domain(),
+      tLabel(props.yUnit),
+      {
+        ticks: props.yLines ? props.yLines.map(line => line.tick) : props.yTicks
+      }
+    )
+    const yLines =
+      props.yLines ||
+      (
+        props.yTicks ||
+        (props.yScale === 'log' ? get3EqualDistTicks(y) : yAxis.ticks)
+      ).map(tick => ({ tick }))
     // ensure highest value is last: the last value is labled with the unit
     yLines.sort((a, b) => ascending(a.tick, b.tick))
     const maxYLine = yLines[yLines.length - 1]
@@ -294,9 +329,10 @@ class ScatterPlot extends Component {
 
     let colorRange = props.colorRanges[props.colorRange] || props.colorRange
     if (!colorRange) {
-      colorRange = colorValues.length > 3
-        ? props.colorRanges.discrete
-        : props.colorRanges.sequential3
+      colorRange =
+        colorValues.length > 3
+          ? props.colorRanges.discrete
+          : props.colorRanges.sequential3
     }
     const color = scaleOrdinal(colorRange).domain(colorValues)
 
@@ -317,122 +353,167 @@ class ScatterPlot extends Component {
         <svg width={width} height={height} ref={this.setContainerRef}>
           <desc>{description}</desc>
           {this.symbols.map((symbol, i) => (
-            <circle key={symbol.key}
+            <circle
+              key={symbol.key}
               style={{ opacity }}
               fill={color(colorAccessor(symbol.value))}
               cx={symbol.cx}
               cy={symbol.cy}
-              r={symbol.r} />
+              r={symbol.r}
+            />
           ))}
-          {(inlineLabel || inlineSecondaryLabel) && this.symbols
-            .filter(({ value: { datum } }) => datum[inlineLabel] || datum[inlineSecondaryLabel])
-            .map((symbol, i) => {
-              const { datum } = symbol.value
-              const primary = datum[inlineLabel]
-              const secondary = datum[inlineSecondaryLabel]
-              const pos = datum[inlineLabelPosition] || 'center'
-              let textAnchor = 'middle'
-              let yOffset = 0
-              let xOffset = 0
-              if (pos === 'left') {
-                textAnchor = 'end'
-                xOffset = -(symbol.r + 5)
-              }
-              if (pos === 'right') {
-                textAnchor = 'start'
-                xOffset = symbol.r + 5
-              }
-              if (pos === 'top' || pos === 'bottom') {
-                yOffset = symbol.r + 5 + (primary && secondary ? 15 : 7)
-                if (pos === 'top') {
-                  yOffset = -yOffset
-                }
-              }
-
-              return (
-                <g
-                  key={`inlineLabel${symbol.key}`}
-                  textAnchor={textAnchor}
-                  transform={`translate(${symbol.cx + xOffset},${symbol.cy + yOffset})`}>
-                  {primary && <text {...styles.inlineLabel} dy={secondary ? '-0.3em' : '0.4em'}>
-                    {subsup.svg(primary)}
-                  </text>}
-                  {secondary && <text {...styles.inlineSecondaryLabel} dy={primary ? '0.9em' : '0.4em'}>
-                    {subsup.svg(secondary)}
-                  </text>}
-                </g>
+          {(inlineLabel || inlineSecondaryLabel) &&
+            this.symbols
+              .filter(
+                ({ value: { datum } }) =>
+                  datum[inlineLabel] || datum[inlineSecondaryLabel]
               )
-            })
-          }
+              .map((symbol, i) => {
+                const { datum } = symbol.value
+                const primary = datum[inlineLabel]
+                const secondary = datum[inlineSecondaryLabel]
+                const pos = datum[inlineLabelPosition] || 'center'
+                let textAnchor = 'middle'
+                let yOffset = 0
+                let xOffset = 0
+                if (pos === 'left') {
+                  textAnchor = 'end'
+                  xOffset = -(symbol.r + 5)
+                }
+                if (pos === 'right') {
+                  textAnchor = 'start'
+                  xOffset = symbol.r + 5
+                }
+                if (pos === 'top' || pos === 'bottom') {
+                  yOffset = symbol.r + 5 + (primary && secondary ? 15 : 7)
+                  if (pos === 'top') {
+                    yOffset = -yOffset
+                  }
+                }
+
+                return (
+                  <g
+                    key={`inlineLabel${symbol.key}`}
+                    textAnchor={textAnchor}
+                    transform={`translate(${symbol.cx + xOffset},${symbol.cy +
+                      yOffset})`}
+                  >
+                    {primary && (
+                      <text
+                        {...styles.inlineLabel}
+                        dy={secondary ? '-0.3em' : '0.4em'}
+                      >
+                        {subsup.svg(primary)}
+                      </text>
+                    )}
+                    {secondary && (
+                      <text
+                        {...styles.inlineSecondaryLabel}
+                        dy={primary ? '0.9em' : '0.4em'}
+                      >
+                        {subsup.svg(secondary)}
+                      </text>
+                    )}
+                  </g>
+                )
+              })}
           {this.state.hover.map((symbol, i) => (
-            <circle key={`hover${symbol.key}`}
+            <circle
+              key={`hover${symbol.key}`}
               fill='none'
               stroke='#000'
               cx={symbol.cx}
               cy={symbol.cy}
-              r={symbol.r} />
+              r={symbol.r}
+            />
           ))}
-          {
-            yLines.map(({ tick, label, base }, i) => (
-              <g key={tick} transform={`translate(${yLinesPaddingLeft},${y(tick)})`}>
-                <line {...styles.axisLine} x2={width - paddingRight - yLinesPaddingLeft} style={{
-                  stroke: base || (base === undefined && tick === 0)
-                    ? baseLineColor
-                    : undefined
-                }} />
-                <text {...styles.axisLabel} dy='-3px'>
-                  {subsup.svg(label || yAxis.axisFormat(tick, last(yLines, i)))}
-                </text>
-              </g>
-            ))
-          }
-          {
-            xLines.map(({ tick, label, textAnchor, base }, i) => {
-              if (!textAnchor) {
-                textAnchor = 'middle'
-                if (last(xLines, i)) {
-                  textAnchor = 'end'
-                }
-                if (i === 0 && paddingLeft < 20) {
-                  textAnchor = 'start'
-                }
+          {yLines.map(({ tick, label, base }, i) => (
+            <g
+              key={tick}
+              transform={`translate(${yLinesPaddingLeft},${y(tick)})`}
+            >
+              <line
+                {...styles.axisLine}
+                x2={width - paddingRight - yLinesPaddingLeft}
+                style={{
+                  stroke:
+                    base || (base === undefined && tick === 0)
+                      ? baseLineColor
+                      : undefined
+                }}
+              />
+              <text {...styles.axisLabel} dy='-3px'>
+                {subsup.svg(label || yAxis.axisFormat(tick, last(yLines, i)))}
+              </text>
+            </g>
+          ))}
+          {xLines.map(({ tick, label, textAnchor, base }, i) => {
+            if (!textAnchor) {
+              textAnchor = 'middle'
+              if (last(xLines, i)) {
+                textAnchor = 'end'
               }
-              return (
-                <g key={`x${tick}`} transform={`translate(${x(tick)},${paddingTop + innerHeight + X_TICK_HEIGHT})`}>
-                  <line {...styles.axisLine}
-                    y2={-((maxYLine ? y(y.domain()[0]) - y(maxYLine.tick) : innerHeight) + X_TICK_HEIGHT)}
-                    style={{
-                      stroke: base || (base === undefined && tick === 0)
+              if (i === 0 && paddingLeft < 20) {
+                textAnchor = 'start'
+              }
+            }
+            return (
+              <g
+                key={`x${tick}`}
+                transform={`translate(${x(tick)},${paddingTop +
+                  innerHeight +
+                  X_TICK_HEIGHT})`}
+              >
+                <line
+                  {...styles.axisLine}
+                  y2={
+                    -(
+                      (maxYLine
+                        ? y(y.domain()[0]) - y(maxYLine.tick)
+                        : innerHeight) + X_TICK_HEIGHT
+                    )
+                  }
+                  style={{
+                    stroke:
+                      base || (base === undefined && tick === 0)
                         ? baseLineColor
                         : undefined
-                    }} />
-                  <text {...styles.axisLabel} y={5} dy='0.6em' textAnchor={textAnchor}>
-                    {subsup.svg(label || xAxis.axisFormat(tick, last(xLines, i)))}
-                  </text>
-                </g>
-              )
-            })
-          }
+                  }}
+                />
+                <text
+                  {...styles.axisLabel}
+                  y={5}
+                  dy='0.6em'
+                  textAnchor={textAnchor}
+                >
+                  {subsup.svg(label || xAxis.axisFormat(tick, last(xLines, i)))}
+                </text>
+              </g>
+            )
+          })}
           <text
             x={paddingLeft + innerWidth}
             y={paddingTop + innerHeight + 28 + X_TICK_HEIGHT}
             textAnchor='end'
-            {...styles.axisLabel}>
+            {...styles.axisLabel}
+          >
             {props.xUnit}
           </text>
-          <rect fill='transparent'
+          <rect
+            fill='transparent'
             width={width}
             height={height}
             onMouseEnter={this.focus}
             onMouseMove={this.focus}
-            onMouseLeave={this.blur} 
+            onMouseLeave={this.blur}
             ref={
               /* touch events are added via ref for { passive: false } on touchstart
                * react does not support setting passive, which defaults to true in newer browsers
                * https://github.com/facebook/react/issues/6436
                */
               this.setHoverRectRef
-            } />
+            }
+          />
         </svg>
         {this.renderHover({
           width,
@@ -440,19 +521,18 @@ class ScatterPlot extends Component {
           xFormat: xAxis.format,
           yFormat: yAxis.format
         })}
-        <ColorLegend inline values={(
-          []
+        <ColorLegend
+          inline
+          values={[]
             .concat(
               props.colorLegend &&
-              (
-                props.colorLegendValues ||
-                colorValues
-              ).map(colorValue => (
-                {color: color(colorValue), label: colorValue}
-              ))
+                (props.colorLegendValues || colorValues).map(colorValue => ({
+                  color: color(colorValue),
+                  label: colorValue
+                }))
             )
-            .filter(Boolean)
-        )} />
+            .filter(Boolean)}
+        />
         {children}
       </div>
     )
@@ -470,12 +550,14 @@ export const propTypes = {
   xUnit: PropTypes.string,
   xNice: PropTypes.number,
   xTicks: PropTypes.arrayOf(PropTypes.number),
-  xLines: PropTypes.arrayOf(PropTypes.shape({
-    tick: PropTypes.number.isRequired,
-    label: PropTypes.string,
-    base: PropTypes.bool,
-    textAnchor: PropTypes.string
-  }).isRequired),
+  xLines: PropTypes.arrayOf(
+    PropTypes.shape({
+      tick: PropTypes.number.isRequired,
+      label: PropTypes.string,
+      base: PropTypes.bool,
+      textAnchor: PropTypes.string
+    }).isRequired
+  ),
   xScale: PropTypes.oneOf(Object.keys(scales)),
   xNumberFormat: PropTypes.string,
   xShowValue: PropTypes.bool.isRequired,
@@ -483,11 +565,13 @@ export const propTypes = {
   yUnit: PropTypes.string,
   yNice: PropTypes.number,
   yTicks: PropTypes.arrayOf(PropTypes.number),
-  yLines: PropTypes.arrayOf(PropTypes.shape({
-    tick: PropTypes.number.isRequired,
-    label: PropTypes.string,
-    base: PropTypes.bool
-  }).isRequired),
+  yLines: PropTypes.arrayOf(
+    PropTypes.shape({
+      tick: PropTypes.number.isRequired,
+      label: PropTypes.string,
+      base: PropTypes.bool
+    }).isRequired
+  ),
   yScale: PropTypes.oneOf(Object.keys(scales)),
   yNumberFormat: PropTypes.string,
   yShowValue: PropTypes.bool.isRequired,

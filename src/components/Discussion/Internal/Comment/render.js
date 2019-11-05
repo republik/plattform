@@ -21,4 +21,5 @@ const MissingNode = ({ node, children }) => {
   )
 }
 
-export const renderCommentMdast = content => renderMdast(content, schema, { MissingNode })
+export const renderCommentMdast = content =>
+  renderMdast(content, schema, { MissingNode })

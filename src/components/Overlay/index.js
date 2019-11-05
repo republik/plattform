@@ -1,7 +1,7 @@
-export {default as Overlay} from './Overlay'
+export { default as Overlay } from './Overlay'
 export {
   OverlayToolbar,
   OverlayToolbarClose,
   OverlayToolbarConfirm
 } from './OverlayToolbar'
-export {default as OverlayBody} from './OverlayBody'
+export { default as OverlayBody } from './OverlayBody'

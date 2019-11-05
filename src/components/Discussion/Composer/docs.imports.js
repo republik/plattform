@@ -17,7 +17,10 @@ const t = createFormatter(require('../../../lib/translations.json').data)
 const someText = 'Das Tückische beim Crowdfunding ist, dass der Ansturm'
 
 export const CommentComposerPlayground = () => {
-  const [{ counter, mode, initialText, tagRequired, maxLength }, dispatch] = React.useReducer(
+  const [
+    { counter, mode, initialText, tagRequired, maxLength },
+    dispatch
+  ] = React.useReducer(
     (state, action) => {
       if ('start' in action) {
         return {
@@ -42,7 +45,13 @@ export const CommentComposerPlayground = () => {
 
       return state
     },
-    { counter: 1, mode: 'composer', initialText: someText, tagValue: undefined, tagRequired: true }
+    {
+      counter: 1,
+      mode: 'composer',
+      initialText: someText,
+      tagValue: undefined,
+      tagRequired: true
+    }
   )
 
   const discussionContextValue = {
@@ -95,16 +104,30 @@ export const CommentComposerPlayground = () => {
       {mode === 'initial' && (
         <div style={{ margin: 20 }}>
           <div style={{ textAlign: 'center', margin: 20 }}>
-            <Editorial.Lead>To get started, select in which initial state the composer should appear.</Editorial.Lead>
+            <Editorial.Lead>
+              To get started, select in which initial state the composer should
+              appear.
+            </Editorial.Lead>
           </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}
+          >
             <div style={{ margin: 4 }}>
               <Button
                 primary
                 onClick={() => {
                   dispatch({
-                    start: { initialText: undefined, tagValue: undefined, tagRequired: false, maxLength: undefined }
+                    start: {
+                      initialText: undefined,
+                      tagValue: undefined,
+                      tagRequired: false,
+                      maxLength: undefined
+                    }
                   })
                 }}
               >
@@ -115,7 +138,14 @@ export const CommentComposerPlayground = () => {
               <Button
                 primary
                 onClick={() => {
-                  dispatch({ start: { initialText: someText, tagValue: 'Wunsch', tagRequired: true, maxLength: 60 } })
+                  dispatch({
+                    start: {
+                      initialText: someText,
+                      tagValue: 'Wunsch',
+                      tagRequired: true,
+                      maxLength: 60
+                    }
+                  })
                 }}
               >
                 Prefilled
@@ -128,17 +158,26 @@ export const CommentComposerPlayground = () => {
       {mode === 'wait' && (
         <div style={{ marginTop: 40, marginBottom: 20 }}>
           <div style={{ textAlign: 'center', margin: 20 }}>
-            <Editorial.Lead>Does the backend accept or reject the comment?</Editorial.Lead>
+            <Editorial.Lead>
+              Does the backend accept or reject the comment?
+            </Editorial.Lead>
           </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}
+          >
             <div style={{ margin: 4 }}>
               <Button
                 primary
                 onClick={() => {
                   dispatch({
                     reject: {
-                      reason: 'Sie sind zu früh. Bitte warten Sie, zwei Minuten bevor Sie wieder kommentieren.'
+                      reason:
+                        'Sie sind zu früh. Bitte warten Sie, zwei Minuten bevor Sie wieder kommentieren.'
                     }
                   })
                 }}

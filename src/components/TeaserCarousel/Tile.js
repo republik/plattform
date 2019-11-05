@@ -115,7 +115,7 @@ const Tile = ({
       : false
 
   return (
-    <div {...tileStyle} onClick={onClick} className="tile">
+    <div {...tileStyle} onClick={onClick} className='tile'>
       <div {...containerStyle}>
         {/* Image */}
         {imageProps && !isPortrait && (

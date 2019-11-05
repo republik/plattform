@@ -4,8 +4,7 @@ export const oneComment = {
   createdAt: '2000-01-01',
   updatedAt: new Date().toISOString(),
   preview: {
-    string:
-      'Ohnein. Jetzt springt auch die "Republik" auf den Zug!',
+    string: 'Ohnein. Jetzt springt auch die "Republik" auf den Zug!',
     more: true,
     __typename: 'Preview'
   },
@@ -268,8 +267,7 @@ export const activeDebates = {
             createdAt: '2000-01-01',
             updatedAt: new Date().toISOString(),
             preview: {
-              string:
-                'Ohnein. Jetzt springt auch die "Republik" auf den Zug!',
+              string: 'Ohnein. Jetzt springt auch die "Republik" auf den Zug!',
               more: true,
               __typename: 'Preview'
             },
@@ -474,8 +472,7 @@ export const activeDebatesWithoutHighlight = {
             createdAt: '2000-01-01',
             updatedAt: new Date().toISOString(),
             preview: {
-              string:
-                'Ohnein. Jetzt springt auch die "Republik" auf den Zug!',
+              string: 'Ohnein. Jetzt springt auch die "Republik" auf den Zug!',
               more: true,
               __typename: 'Preview'
             },

@@ -48,7 +48,7 @@ const styles = {
     padding: '15px 15px 40px 15px',
     [mUp]: {
       padding: '40px 5%',
-      width: '60%',
+      width: '60%'
     },
     [dUp]: {
       padding: '40px 5%'
@@ -103,11 +103,20 @@ const Split = ({
 }) => {
   const background = bgColor || ''
   const flexDirection = reverse ? 'row-reverse' : ''
-  const bylinePosition = feuilleton ? 'belowFeuilleton' : portrait ? reverse ? 'left' : 'right' : 'below'
+  const bylinePosition = feuilleton
+    ? 'belowFeuilleton'
+    : portrait
+    ? reverse
+      ? 'left'
+      : 'right'
+    : 'below'
   return (
     <div
       {...attributes}
-      {...css(feuilleton ? styles.containerFeuilleton : styles.container, portrait ? styles.containerPortrait : {})}
+      {...css(
+        feuilleton ? styles.containerFeuilleton : styles.container,
+        portrait ? styles.containerPortrait : {}
+      )}
       onClick={onClick}
       style={{
         background,
@@ -121,15 +130,25 @@ const Split = ({
           portrait ? styles.imageContainerPortrait : {}
         )}
       >
-        <FigureImage aboveTheFold={aboveTheFold} {...FigureImage.utils.getResizedSrcs(image, 750)} alt={alt} />
-        {byline && <FigureByline position={bylinePosition} style={{color}}>{byline}</FigureByline>}
+        <FigureImage
+          aboveTheFold={aboveTheFold}
+          {...FigureImage.utils.getResizedSrcs(image, 750)}
+          alt={alt}
+        />
+        {byline && (
+          <FigureByline position={bylinePosition} style={{ color }}>
+            {byline}
+          </FigureByline>
+        )}
       </div>
       <div
         {...css(
           styles.content,
           portrait
             ? styles.contentPortrait
-            : reverse ? styles.contentReverse : {}
+            : reverse
+            ? styles.contentReverse
+            : {}
         )}
       >
         <Text color={color} center={center} feuilleton={feuilleton}>

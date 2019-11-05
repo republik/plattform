@@ -88,7 +88,7 @@ const styles = {
     textAlign: 'center'
   }),
   button: css({
-    ...buttonStyle,
+    ...buttonStyle
   }),
   download: css({
     position: 'absolute',
@@ -130,7 +130,7 @@ const styles = {
     height: '30px',
     color: colors.text,
     [mUp]: {
-      fontSize: '19px',
+      fontSize: '19px'
     }
   }),
   time: css({
@@ -167,7 +167,7 @@ const styles = {
     lineHeight: '25px',
     [mUp]: {
       ...sansSerifRegular15,
-      lineHeight: '25px',
+      lineHeight: '25px'
     }
   }),
   retry: css(linkRule, {
@@ -210,9 +210,8 @@ class AudioPlayer extends Component {
       }
       const progress = audio.currentTime / audio.duration
       this.props.onProgress && this.props.onProgress(progress, audio)
-      this.context.saveMediaProgress && this.context.saveMediaProgress(
-        this.props, audio
-      )
+      this.context.saveMediaProgress &&
+        this.context.saveMediaProgress(this.props, audio)
       this.setState({
         progress,
         buffered: audio.buffered
@@ -388,10 +387,7 @@ class AudioPlayer extends Component {
     // iOS won't fire canPlay, so rely on meta data.
     this.audio.addEventListener('loadedmetadata', this.onCanPlay)
 
-    Promise.all([
-      this.getStartTime(),
-      this.isSeekable
-    ]).then(([startTime]) => {
+    Promise.all([this.getStartTime(), this.isSeekable]).then(([startTime]) => {
       if (startTime !== undefined) {
         this.setTime(startTime)
       }
@@ -440,11 +436,17 @@ class AudioPlayer extends Component {
       controlsPadding,
       autoPlay
     } = this.props
-    const { playEnabled, playing, progress, loading, buffered, sourceError } = this.state
+    const {
+      playEnabled,
+      playing,
+      progress,
+      loading,
+      buffered,
+      sourceError
+    } = this.state
     const isVideo = src.mp4 || src.hls
     const leftIconsWidth =
-      SIZE.rewind + SIZE.play +
-      (download ? SIZE.download + ICON_SPACING : 0)
+      SIZE.rewind + SIZE.play + (download ? SIZE.download + ICON_SPACING : 0)
     const rightIconsWidth = closeHandler ? SIZE.close : 0
     const uiTextStyle = {
       maxWidth: `calc(100% - ${leftIconsWidth + rightIconsWidth + 20}px)`,
@@ -455,45 +457,86 @@ class AudioPlayer extends Component {
     let timeRanges = []
     if (buffered && buffered.length) {
       for (let i = 0; i < buffered.length; i++) {
-        timeRanges.push({start: buffered.start(i), end: buffered.end(i)})
+        timeRanges.push({ start: buffered.start(i), end: buffered.end(i) })
       }
     }
 
     return (
-      <div {...merge(styles.wrapper, breakoutStyles[size])}
+      <div
+        {...merge(styles.wrapper, breakoutStyles[size])}
         ref={this.containerRef}
-        style={{...style, height: `${height}px`}}
+        style={{ ...style, height: `${height}px` }}
         tabIndex='0'
         role='region'
-        aria-label={t('styleguide/AudioPlayer/aria')}>
-        {!isVideo && <audio
-          preload={autoPlay ? 'auto' : undefined}
-          {...styles.audio}
-          {...attributes}
-          ref={this.ref}
-          onLoadedMetadata={this.onCanPlay}
-          crossOrigin="anonymous"
+        aria-label={t('styleguide/AudioPlayer/aria')}
+      >
+        {!isVideo && (
+          <audio
+            preload={autoPlay ? 'auto' : undefined}
+            {...styles.audio}
+            {...attributes}
+            ref={this.ref}
+            onLoadedMetadata={this.onCanPlay}
+            crossOrigin='anonymous'
+          >
+            {src.mp3 && (
+              <source
+                src={src.mp3}
+                type='audio/mpeg'
+                onError={this.onSourceError}
+              />
+            )}
+            {src.aac && (
+              <source
+                src={src.aac}
+                type='audio/mp4'
+                onError={this.onSourceError}
+              />
+            )}
+            {src.ogg && (
+              <source
+                src={src.ogg}
+                type='audio/ogg'
+                onError={this.onSourceError}
+              />
+            )}
+          </audio>
+        )}
+        {isVideo && (
+          <video
+            preload={autoPlay ? 'auto' : undefined}
+            {...styles.audio}
+            {...attributes}
+            ref={this.ref}
+            onLoadedMetadata={this.onCanPlay}
+            crossOrigin='anonymous'
+            playsInline
+            webkit-playsinline=''
+          >
+            {src.hls && (
+              <source
+                src={src.hls}
+                type='application/x-mpegURL'
+                onError={this.onSourceError}
+              />
+            )}
+            {src.mp4 && (
+              <source
+                src={src.mp4}
+                type='video/mp4'
+                onError={this.onSourceError}
+              />
+            )}
+          </video>
+        )}
+        <div
+          {...styles.controls}
+          style={{
+            top: Math.ceil((height - CONTROLS_HEIGHT) / 2),
+            left: controlsPadding,
+            right: controlsPadding
+          }}
         >
-          {src.mp3 && <source src={src.mp3} type="audio/mpeg" onError={this.onSourceError} />}
-          {src.aac && <source src={src.aac} type="audio/mp4" onError={this.onSourceError} />}
-          {src.ogg && <source src={src.ogg} type="audio/ogg" onError={this.onSourceError} />}
-        </audio>}
-        {isVideo && <video
-          preload={autoPlay ? 'auto' : undefined}
-          {...styles.audio}
-          {...attributes}
-          ref={this.ref}
-          onLoadedMetadata={this.onCanPlay}
-          crossOrigin="anonymous"
-          playsInline
-          webkit-playsinline=""
-        >
-          {src.hls && <source src={src.hls} type="application/x-mpegURL" onError={this.onSourceError} />}
-          {src.mp4 && <source src={src.mp4} type="video/mp4" onError={this.onSourceError} />}
-        </video>}
-        <div {...styles.controls} style={
-          {top: Math.ceil((height - CONTROLS_HEIGHT) / 2), left: controlsPadding, right: controlsPadding}
-        }>
           <div {...styles.buttons}>
             <button
               {...styles.button}
@@ -501,21 +544,33 @@ class AudioPlayer extends Component {
               title={t(`styleguide/AudioPlayer/${playing ? 'pause' : 'play'}`)}
               aria-live='assertive'
             >
-              {!playing && <Play size={SIZE.play} fill={playEnabled ? '#000' : colors.disabled} />}
-              {playing && <Pause size={SIZE.play} fill="#000" />}
+              {!playing && (
+                <Play
+                  size={SIZE.play}
+                  fill={playEnabled ? '#000' : colors.disabled}
+                />
+              )}
+              {playing && <Pause size={SIZE.play} fill='#000' />}
             </button>
             <button
               {...styles.button}
               onClick={playEnabled ? () => this.setTime(0) : null}
               title={t('styleguide/AudioPlayer/rewind')}
             >
-              <Rewind size={SIZE.rewind} fill={(playEnabled && progress > 0) ? '#000' : colors.disabled}/>
+              <Rewind
+                size={SIZE.rewind}
+                fill={playEnabled && progress > 0 ? '#000' : colors.disabled}
+              />
             </button>
           </div>
           {download && (
             <div {...styles.download}>
               {playEnabled && (
-                <a href={src.mp3 || src.aac || src.mp4} download title={t('styleguide/AudioPlayer/download')}>
+                <a
+                  href={src.mp3 || src.aac || src.mp4}
+                  download
+                  title={t('styleguide/AudioPlayer/download')}
+                >
                   <Download size={SIZE.download} fill={'#000'} />
                 </a>
               )}
@@ -525,12 +580,21 @@ class AudioPlayer extends Component {
             </div>
           )}
           {closeHandler && (
-            <button title={t('styleguide/AudioPlayer/close')} {...styles.close} onClick={closeHandler}>
+            <button
+              title={t('styleguide/AudioPlayer/close')}
+              {...styles.close}
+              onClick={closeHandler}
+            >
               <Close size={SIZE.close} fill={'#000'} />
             </button>
           )}
           <div {...styles.uiText} style={uiTextStyle}>
-            {loading && <InlineSpinner size={25} title={t('styleguide/AudioPlayer/loading')} />}
+            {loading && (
+              <InlineSpinner
+                size={25}
+                title={t('styleguide/AudioPlayer/loading')}
+              />
+            )}
             <div {...styles.time} tabIndex='0'>
               {this.formattedCurrentTime && this.formattedCurrentTime}
               {this.formattedCurrentTime && this.formattedDuration && ' / '}
@@ -546,7 +610,11 @@ class AudioPlayer extends Component {
             )}
           </div>
         </div>
-        <div {...(scrubberPosition === 'bottom' ? styles.scrubberBottom : styles.scrubberTop)}>
+        <div
+          {...(scrubberPosition === 'bottom'
+            ? styles.scrubberBottom
+            : styles.scrubberTop)}
+        >
           <div {...styles.progress} style={{ width: `${progress * 100}%` }} />
           <div
             {...styles.scrub}
@@ -558,15 +626,13 @@ class AudioPlayer extends Component {
           />
           <div {...styles.buffer}>
             {this.audio &&
-              timeRanges.map(({start, end}, index) => (
+              timeRanges.map(({ start, end }, index) => (
                 <span
                   key={index}
                   {...styles.timeRange}
                   style={{
-                    left: `${start / this.audio.duration * 100}%`,
-                    width: `${(end - start) /
-                      this.audio.duration *
-                      100}%`
+                    left: `${(start / this.audio.duration) * 100}%`,
+                    width: `${((end - start) / this.audio.duration) * 100}%`
                   }}
                 />
               ))}
@@ -584,7 +650,7 @@ AudioPlayer.propTypes = {
     aac: PropTypes.string,
     ogg: PropTypes.string,
     hls: PropTypes.string,
-    mp4: PropTypes.string,
+    mp4: PropTypes.string
   }),
   autoPlay: PropTypes.bool,
   size: PropTypes.oneOf(Object.keys(breakoutStyles)),
@@ -609,7 +675,7 @@ AudioPlayer.defaultProps = {
   controlsPadding: 0
 }
 
-AudioPlayer.contextTypes = {
+AudioPlayer.contextTypes = {
   getMediaProgress: PropTypes.func,
   saveMediaProgress: PropTypes.func
 }

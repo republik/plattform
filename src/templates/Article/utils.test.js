@@ -6,17 +6,11 @@ import {
   INFOBOX_DEFAULT_IMAGE_SIZE
 } from '../../components/InfoBox'
 
-import {
-  PULLQUOTE_IMAGE_SIZE
-} from '../../components/PullQuote'
+import { PULLQUOTE_IMAGE_SIZE } from '../../components/PullQuote'
 
-import {
-  FIGURE_SIZES
-} from '../../components/Figure'
+import { FIGURE_SIZES } from '../../components/Figure'
 
-import {
-  getDisplayWidth
-} from './utils'
+import { getDisplayWidth } from './utils'
 
 const parseFirst = string => parse(string).children[0]
 
@@ -30,9 +24,7 @@ test('article.utils.getDisplayWidth: infobox', assert => {
   `)
 
   assert.equal(
-    getDisplayWidth(
-      [regularInfobox]
-    ),
+    getDisplayWidth([regularInfobox]),
     INFOBOX_IMAGE_SIZES[INFOBOX_DEFAULT_IMAGE_SIZE]
   )
 
@@ -52,16 +44,10 @@ test('article.utils.getDisplayWidth: infobox', assert => {
 <hr /></section>
   `)
 
-  assert.equal(
-    getDisplayWidth(
-      [mInfobox]
-    ),
-    INFOBOX_IMAGE_SIZES['M']
-  )
+  assert.equal(getDisplayWidth([mInfobox]), INFOBOX_IMAGE_SIZES['M'])
 
   assert.end()
 })
-
 
 test('article.utils.getDisplayWidth: pull quote', assert => {
   const pullQuote = parseFirst(`
@@ -78,16 +64,10 @@ _Foto: Laurent Burst_
 <hr /></section>
   `)
 
-  assert.equal(
-    getDisplayWidth(
-      [pullQuote]
-    ),
-    PULLQUOTE_IMAGE_SIZE
-  )
+  assert.equal(getDisplayWidth([pullQuote]), PULLQUOTE_IMAGE_SIZE)
 
   assert.end()
 })
-
 
 test('article.utils.getDisplayWidth: figure', assert => {
   const rootNode = parse(`
@@ -107,13 +87,10 @@ _Foto: Laurent Burst_
   const figure = center.children[0]
 
   assert.equal(
-    getDisplayWidth(
-      [figure, center, rootNode]
-    ),
+    getDisplayWidth([figure, center, rootNode]),
     FIGURE_SIZES.center,
     'center figure'
   )
-
 
   const breakoutFigure = parseFirst(`
 <section><h6>FIGURE</h6>
@@ -129,9 +106,7 @@ Etwas Böses _Foto: Laurent Burst_
 <hr /></section>
   `)
   assert.equal(
-    getDisplayWidth(
-      [breakoutFigure, center, rootNode]
-    ),
+    getDisplayWidth([breakoutFigure, center, rootNode]),
     FIGURE_SIZES.breakout,
     'center figure'
   )
@@ -148,9 +123,7 @@ _Foto: Laurent Burst_
   const e2eFigure = e2eFigureRootNode.children[0]
 
   assert.equal(
-    getDisplayWidth(
-      [e2eFigure, e2eFigureRootNode]
-    ),
+    getDisplayWidth([e2eFigure, e2eFigureRootNode]),
     1200,
     'e2e figure'
   )

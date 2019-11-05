@@ -1,9 +1,9 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import {css, merge, simulate} from 'glamor'
+import { css, merge, simulate } from 'glamor'
 import colors from '../../theme/colors'
-import {fontFamilies} from '../../theme/fonts'
-import {mUp} from '../../theme/mediaQueries'
+import { fontFamilies } from '../../theme/fonts'
+import { mUp } from '../../theme/mediaQueries'
 
 const xPadding = 0
 const yPadding = 9 // (40 - 22) / 2
@@ -81,7 +81,7 @@ const labelTextTopStyle = css({
   [mUp]: {
     top: 5,
     fontSize: 14,
-    lineHeight: '15px',
+    lineHeight: '15px'
   }
 })
 const labelTextFocusedStyle = css({
@@ -142,21 +142,35 @@ const iconWrapperStyleWhite = css({
   color: '#ffffff'
 })
 
-const ArrowUp = ({size, fill, ...props}) => (
-  <svg {...props} fill={fill} {...arrowUpStyle} width={size} height={size} viewBox='0 0 24 24'>
+const ArrowUp = ({ size, fill, ...props }) => (
+  <svg
+    {...props}
+    fill={fill}
+    {...arrowUpStyle}
+    width={size}
+    height={size}
+    viewBox='0 0 24 24'
+  >
     <path d='M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z' />
     <path d='M0 0h24v24H0z' fill='none' />
   </svg>
 )
-const ArrowDown = ({size, fill, ...props}) => (
-  <svg {...props} fill={fill} {...arrowDownStyle} width={size} height={size} viewBox='0 0 24 24'>
+const ArrowDown = ({ size, fill, ...props }) => (
+  <svg
+    {...props}
+    fill={fill}
+    {...arrowDownStyle}
+    width={size}
+    height={size}
+    viewBox='0 0 24 24'
+  >
     <path d='M7.41 7.84L12 12.42l4.59-4.58L18 9.25l-6 6-6-6z' />
     <path d='M0 0h24v24H0z' fill='none' />
   </svg>
 )
 
 class Field extends Component {
-  constructor (props, context) {
+  constructor(props, context) {
     super(props, context)
     this.state = {
       isFocused: false,
@@ -164,14 +178,17 @@ class Field extends Component {
       isDirty: false,
       value: ''
     }
-    this.inputRef = ref => this.input = ref
+    this.inputRef = ref => (this.input = ref)
   }
-  render () {
+  render() {
     const {
       onChange,
-      name, autoComplete,
-      type, simulate: sim,
-      label, error,
+      name,
+      autoComplete,
+      type,
+      simulate: sim,
+      label,
+      error,
       renderInput,
       onInc,
       onDec,
@@ -180,17 +197,16 @@ class Field extends Component {
     } = this.props
 
     let simulationClassName
-    let {isFocused} = this.state
+    let { isFocused } = this.state
     if (sim) {
       isFocused = sim.indexOf('focus') !== -1
       simulationClassName = simulate(sim).toString()
     }
 
-    const {isValidating, isDirty} = this.state
+    const { isValidating, isDirty } = this.state
 
-    const value = this.props.value !== undefined
-      ? this.props.value
-      : this.state.value
+    const value =
+      this.props.value !== undefined ? this.props.value : this.state.value
 
     let colorStyle
     if (this.props.black) {
@@ -203,19 +219,30 @@ class Field extends Component {
     const hasIncrease = !!onInc
     const hasDecrease = !!onDec
     const hasError = !!error
-    const valueIsPresent = value !== undefined && value !== null && String(value).length !== 0
-    const labelStyle = (isFocused || valueIsPresent || hasError)
-      ? merge(
-          labelTextStyle, labelTextTopStyle,
-          isFocused && labelTextFocusedStyle, colorStyle,
-          hasError && labelTextErrorStyle,
-          hasError && this.props.white && labelTextErrorWhiteStyle
-        )
-      : merge(labelTextStyle, colorStyle)
+    const valueIsPresent =
+      value !== undefined && value !== null && String(value).length !== 0
+    const labelStyle =
+      isFocused || valueIsPresent || hasError
+        ? merge(
+            labelTextStyle,
+            labelTextTopStyle,
+            isFocused && labelTextFocusedStyle,
+            colorStyle,
+            hasError && labelTextErrorStyle,
+            hasError && this.props.white && labelTextErrorWhiteStyle
+          )
+        : merge(labelTextStyle, colorStyle)
     const incStyle = hasIncrease ? fieldIncStyle : undefined
     const iconStyle = icon ? fieldIconStyle : undefined
     const fStyle = hasError
-      ? merge(fieldStyle, colorStyle, fieldErrorStyle, this.props.white && fieldErrorWhiteStyle, incStyle, iconStyle)
+      ? merge(
+          fieldStyle,
+          colorStyle,
+          fieldErrorStyle,
+          this.props.white && fieldErrorWhiteStyle,
+          incStyle,
+          iconStyle
+        )
       : merge(fieldStyle, incStyle, colorStyle, iconStyle)
 
     return (
@@ -226,61 +253,69 @@ class Field extends Component {
           autoComplete,
           type,
           ref: this.inputRef,
-          onChange: (event) => {
+          onChange: event => {
             let v = event.target.value
             if (onChange) {
               onChange(event, v, isValidating)
-              this.setState(() => ({isDirty: true}))
+              this.setState(() => ({ isDirty: true }))
             } else {
-              this.setState(() => ({isDirty: true, value: v}))
+              this.setState(() => ({ isDirty: true, value: v }))
             }
           },
           value,
-          onFocus: () => this.setState(() => ({isFocused: true})),
-          onBlur: (event) => {
+          onFocus: () => this.setState(() => ({ isFocused: true })),
+          onBlur: event => {
             const v = event.target.value
             if (!isValidating && onChange && isDirty) {
               onChange(event, v, true)
             }
-            this.setState((state) => ({
+            this.setState(state => ({
               isFocused: false,
               isValidating: state.isDirty
             }))
           },
-          className: [
-            fStyle.toString(),
-            simulationClassName
-          ].filter(Boolean).join(' ')
+          className: [fStyle.toString(), simulationClassName]
+            .filter(Boolean)
+            .join(' ')
         })}
         <span {...labelStyle}>{error || label}</span>
         {!disabled && hasDecrease && (
           <ArrowDown
             fill={isFocused ? colors.primary : colors.disabled}
             size={fieldHeight / 2}
-            onClick={(e) => {
+            onClick={e => {
               e.preventDefault()
               e.stopPropagation()
               onDec()
               if (this.input) {
                 this.input.focus()
               }
-            }} />
+            }}
+          />
         )}
         {!disabled && hasIncrease && (
           <ArrowUp
             fill={isFocused ? colors.primary : colors.disabled}
             size={fieldHeight / 2}
-            onClick={(e) => {
+            onClick={e => {
               e.preventDefault()
               e.stopPropagation()
               onInc()
               if (this.input) {
                 this.input.focus()
               }
-            }} />
+            }}
+          />
         )}
         {icon && (
-          <span {...merge(iconWrapperStyle, this.props.white && iconWrapperStyleWhite)}>{icon}</span>
+          <span
+            {...merge(
+              iconWrapperStyle,
+              this.props.white && iconWrapperStyleWhite
+            )}
+          >
+            {icon}
+          </span>
         )}
       </label>
     )
@@ -295,9 +330,7 @@ Field.propTypes = {
 }
 
 Field.defaultProps = {
-  renderInput: props => (
-    <input {...props} />
-  )
+  renderInput: props => <input {...props} />
 }
 
 export default Field

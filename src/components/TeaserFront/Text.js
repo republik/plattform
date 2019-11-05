@@ -57,7 +57,6 @@ const styles = {
       ...positionHalfWidth,
       bottom: `${TEXT_PADDING}px`,
       left: `${TEXT_PADDING}px`
-      
     }
   }),
   bottomright: css({
@@ -106,18 +105,23 @@ const Text = ({
   margin,
   feuilleton
 }) => {
-  const textAlignStyle = feuilleton && !center
-    ? styles.centerMobileOnly
-    : center ? styles.center : undefined
+  const textAlignStyle =
+    feuilleton && !center
+      ? styles.centerMobileOnly
+      : center
+      ? styles.center
+      : undefined
   const rootStyles = position ? styles.rootPosition : {}
   const middleStyles = position === 'middle' ? styles.rootMiddle : {}
 
-  const colorStyle = collapsedColor && css({
-    color: collapsedColor,
-    [tUp]: {
-      color
-    }
-  })
+  const colorStyle =
+    collapsedColor &&
+    css({
+      color: collapsedColor,
+      [tUp]: {
+        color
+      }
+    })
 
   return (
     <div {...rootStyles} {...middleStyles}>

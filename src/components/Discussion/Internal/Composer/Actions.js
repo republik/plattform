@@ -75,18 +75,30 @@ const styles = {
   })
 }
 
-export const Actions = ({ t, onClose, onCloseLabel, onSubmit, onSubmitLabel }) => {
+export const Actions = ({
+  t,
+  onClose,
+  onCloseLabel,
+  onSubmit,
+  onSubmitLabel
+}) => {
   const { composerSecondaryActions } = React.useContext(DiscussionContext)
 
   return (
     <div {...styles.root}>
-      {composerSecondaryActions && <div {...styles.secondaryActions}>{composerSecondaryActions}</div>}
+      {composerSecondaryActions && (
+        <div {...styles.secondaryActions}>{composerSecondaryActions}</div>
+      )}
 
       <div {...styles.mainActions}>
         <button {...styles.closeButton} onClick={onClose}>
           {onCloseLabel || t('styleguide/CommentComposer/cancel')}
         </button>
-        <button {...styles.submitButton} onClick={onSubmit} disabled={!onSubmit}>
+        <button
+          {...styles.submitButton}
+          onClick={onSubmit}
+          disabled={!onSubmit}
+        >
           {onSubmitLabel || t('styleguide/CommentComposer/answer')}
         </button>
       </div>

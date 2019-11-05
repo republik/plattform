@@ -1,10 +1,8 @@
-const ENV = (
-  typeof window !== 'undefined' &&
-  (
-    window.ENV ||
-    (window.__NEXT_DATA__ && window.__NEXT_DATA__.env)
-  )
-) || process.env || {}
+const ENV =
+  (typeof window !== 'undefined' &&
+    (window.ENV || (window.__NEXT_DATA__ && window.__NEXT_DATA__.env))) ||
+  process.env ||
+  {}
 
 const SG_ENV = {}
 
@@ -19,4 +17,4 @@ Object.keys(ENV).forEach(key => {
 
 export default SG_ENV
 
-export const getJson = key => ((SG_ENV[key] && JSON.parse(SG_ENV[key])) || {})
+export const getJson = key => (SG_ENV[key] && JSON.parse(SG_ENV[key])) || {}

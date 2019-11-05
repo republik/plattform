@@ -1,4 +1,3 @@
-
 import React from 'react'
 
 import {
@@ -8,7 +7,6 @@ import {
 } from 'mdast-react-render/lib/utils'
 
 import { HR } from '../../components/Typography'
-
 
 const createCommentSchema = ({
   BlockCode,
@@ -25,10 +23,11 @@ const createCommentSchema = ({
   Paragraph,
   StrikeThrough
 } = {}) => {
-
   const ellipsizeHref = (href = '') => {
     if (href.length > 50) {
-      return href.substr(0, 35) + '…' + href.substr(href.length - 10, href.length);
+      return (
+        href.substr(0, 35) + '…' + href.substr(href.length - 10, href.length)
+      )
     }
     return href
   }
@@ -46,7 +45,8 @@ const createCommentSchema = ({
 
   const SafeA = ({ children, text, href, ...props }) => {
     const screenedHref = screenHref(href)
-    const ellipsizedHref = children && children[0] === href && ellipsizeHref(screenedHref.safe)
+    const ellipsizedHref =
+      children && children[0] === href && ellipsizeHref(screenedHref.safe)
     return (
       <Link {...props} href={screenedHref.safe}>
         {text || ellipsizedHref || children}
@@ -85,11 +85,15 @@ const createCommentSchema = ({
         url: node.url,
         referenceType: node.referenceType
       }),
-      component: ({children, identifier, url, referenceType}) => {
+      component: ({ children, identifier, url, referenceType }) => {
         if (referenceType === 'shortcut') {
           return <span>[{identifier}]</span>
         } else {
-          return <span>{children} [{identifier}]</span>
+          return (
+            <span>
+              {children} [{identifier}]
+            </span>
+          )
         }
       }
     },
@@ -99,17 +103,19 @@ const createCommentSchema = ({
         identifier: node.identifier,
         alt: node.alt
       }),
-      component: ({identifier, alt}) => (
-        <span>{alt} [{identifier}]</span>
+      component: ({ identifier, alt }) => (
+        <span>
+          {alt} [{identifier}]
+        </span>
       )
     },
     {
       matchMdast: matchType('emphasis'),
-      component: ({children}) => <em>{children}</em>
+      component: ({ children }) => <em>{children}</em>
     },
     {
       matchMdast: matchType('strong'),
-      component: ({children}) => <strong>{children}</strong>
+      component: ({ children }) => <strong>{children}</strong>
     },
     {
       matchMdast: matchType('delete'),
@@ -127,8 +133,8 @@ const createCommentSchema = ({
       props: node => ({
         value: node.value
       }),
-      component: ({value}) => <span>{value}</span>
-    },
+      component: ({ value }) => <span>{value}</span>
+    }
   ]
 
   const heading = {
@@ -139,9 +145,7 @@ const createCommentSchema = ({
   const paragraph = {
     matchMdast: matchParagraph,
     component: Paragraph,
-    rules: [
-      ...globalInlines
-    ]
+    rules: [...globalInlines]
   }
 
   const blockCode = {
@@ -149,7 +153,7 @@ const createCommentSchema = ({
     props: node => ({
       value: node.value
     }),
-    component: ({value}) => <BlockCode>{value}</BlockCode>
+    component: ({ value }) => <BlockCode>{value}</BlockCode>
   }
 
   const list = {
@@ -179,9 +183,9 @@ const createCommentSchema = ({
   const blockLevelHtml = {
     matchMdast: matchType('html'),
     props: node => ({
-        value: node.value
-      }),
-    component: ({value}) => <Paragraph>{value}</Paragraph>
+      value: node.value
+    }),
+    component: ({ value }) => <Paragraph>{value}</Paragraph>
   }
 
   const definition = {
@@ -190,17 +194,17 @@ const createCommentSchema = ({
       identifier: node.identifier,
       url: node.url
     }),
-    component: ({identifier, url}) => (
-      <Definition>[{identifier}] <SafeA href={url}>{url}</SafeA></Definition>
+    component: ({ identifier, url }) => (
+      <Definition>
+        [{identifier}] <SafeA href={url}>{url}</SafeA>
+      </Definition>
     )
   }
 
   const blockquoteParagraph = {
     matchMdast: matchParagraph,
     component: BlockQuoteParagraph,
-    rules: [
-      ...globalInlines
-    ]
+    rules: [...globalInlines]
   }
 
   const blockQuoteNested = {

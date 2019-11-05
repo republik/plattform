@@ -1,8 +1,8 @@
 /*
  * extracted from https://raw.githubusercontent.com/srfdata/swiss-party-colors/master/definitions.json
- * swiss-party-colors by SRF Data is licensed under a 
+ * swiss-party-colors by SRF Data is licensed under a
  * Creative Commons Namensnennung - Attribution-ShareAlike 4.0 International (CC BY-SA 4.0).
-*/
+ */
 export const swissPartyColors = {
   EAG: '#AD4F89',
   PDA: '#BF3939',

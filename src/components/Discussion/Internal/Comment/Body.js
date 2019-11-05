@@ -25,7 +25,9 @@ const styles = {
 }
 
 export const Body = ({ t, comment, context }) => {
-  const { discussion, highlightedCommentId } = React.useContext(DiscussionContext)
+  const { discussion, highlightedCommentId } = React.useContext(
+    DiscussionContext
+  )
   const { collapsable } = discussion
   const { published, content, userCanEdit, adminUnpublished } = comment
 
@@ -40,26 +42,40 @@ export const Body = ({ t, comment, context }) => {
       )}
       {content && renderCommentMdast(content)}
     </>
-   )
-  const bodyNode = collapsable && !isHighlighted
-    ? <Collapsable
+  )
+  const bodyNode =
+    collapsable && !isHighlighted ? (
+      <Collapsable
         t={t}
         collapsable={collapsable && !isHighlighted}
-        style={{ opacity: published ? 1 : 0.5 }}>
+        style={{ opacity: published ? 1 : 0.5 }}
+      >
         {body}
       </Collapsable>
-    : body
+    ) : (
+      body
+    )
 
   return (
     <>
-      {!published && <div {...styles.unpublished}>{t('styleguide/comment/unpublished')}</div>}
+      {!published && (
+        <div {...styles.unpublished}>{t('styleguide/comment/unpublished')}</div>
+      )}
       {bodyNode}
       {userCanEdit &&
         (() => {
           if (adminUnpublished) {
-            return <Label {...styles.margin}>{t('styleguide/comment/adminUnpublished')}</Label>
+            return (
+              <Label {...styles.margin}>
+                {t('styleguide/comment/adminUnpublished')}
+              </Label>
+            )
           } else if (!published) {
-            return <Label {...styles.margin}>{t('styleguide/comment/unpublished/userCanEdit')}</Label>
+            return (
+              <Label {...styles.margin}>
+                {t('styleguide/comment/unpublished/userCanEdit')}
+              </Label>
+            )
           } else {
             return null
           }

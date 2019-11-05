@@ -12,7 +12,7 @@ export const CoverImage = ({ src, alt }) => {
     <img
       src={src}
       alt={alt}
-      border="0"
+      border='0'
       style={{
         margin: 0,
         padding: 0,
@@ -26,7 +26,7 @@ export const CoverImage = ({ src, alt }) => {
 
 export default ({ children }) => (
   <tr>
-    <td align="center" valign="top" className="cover">
+    <td align='center' valign='top' className='cover'>
       {children}
     </td>
   </tr>

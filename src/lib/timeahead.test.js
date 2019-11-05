@@ -2,9 +2,9 @@ import test from 'tape'
 import timeahead from './timeahead'
 import { createFormatter } from './translate'
 
-const t = createFormatter(require('./translations.json').data);
+const t = createFormatter(require('./translations.json').data)
 
-[
+;[
   [
     'now', // test name
     new Date(2018, 0, 11), // "now"
@@ -79,10 +79,7 @@ const t = createFormatter(require('./translations.json').data);
   ]
 ].map(([title, now, date, expected]) => {
   test(`timeahead.${title}`, assert => {
-    assert.equal(
-      timeahead(t, (now - date) / 1000),
-      expected
-    )
+    assert.equal(timeahead(t, (now - date) / 1000), expected)
     assert.end()
   })
 })

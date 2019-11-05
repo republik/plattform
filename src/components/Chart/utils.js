@@ -7,18 +7,15 @@ import colors from '../../theme/colors'
 
 export const groupBy = (array, key) => {
   const keys = []
-  const object = array.reduce(
-    (o, item, index) => {
-      const k = key(item, index) || ''
-      if (!o[k]) {
-        o[k] = []
-        keys.push(k)
-      }
-      o[k].push(item)
-      return o
-    },
-    {}
-  )
+  const object = array.reduce((o, item, index) => {
+    const k = key(item, index) || ''
+    if (!o[k]) {
+      o[k] = []
+      keys.push(k)
+    }
+    o[k].push(item)
+    return o
+  }, {})
 
   return keys.map(k => ({
     key: k,
@@ -32,28 +29,26 @@ export const runSort = (cmd, array, accessor = d => d) => {
   if (cmd !== 'none') {
     const compare = cmd === 'descending' ? descending : ascending
     const original = [].concat(array)
-    array.sort((a, b) => 
-      compare(accessor(a), accessor(b)) ||
-      ascending(original.indexOf(a), original.indexOf(b)) // stable sort
+    array.sort(
+      (a, b) =>
+        compare(accessor(a), accessor(b)) ||
+        ascending(original.indexOf(a), original.indexOf(b)) // stable sort
     )
   }
 }
 
 export const sortBy = (array, accessor) =>
-  [].concat(array)
-    .sort((a, b) =>
+  [].concat(array).sort(
+    (a, b) =>
       ascending(accessor(a), accessor(b)) ||
       ascending(array.indexOf(a), array.indexOf(b)) // stable sort
-    )
+  )
 
 export const measure = onMeasure => {
   let ref
   let rafHandle
   const update = () => {
-    onMeasure(
-      ref,
-      ref.getBoundingClientRect()
-    )
+    onMeasure(ref, ref.getBoundingClientRect())
   }
   return newRef => {
     ref = newRef
@@ -132,16 +127,18 @@ export const getFormat = (numberFormat, tLabel) => {
 
 export const last = (array, index) => array.length - 1 === index
 
-export const calculateAxis = (numberFormat, tLabel, domain, unit = '', {
-  ticks: predefinedTicks
-} = {}) => {
+export const calculateAxis = (
+  numberFormat,
+  tLabel,
+  domain,
+  unit = '',
+  { ticks: predefinedTicks } = {}
+) => {
   const [min, max] = domain
   const step = (max - min) / 2
   const ticks = predefinedTicks || [
     min,
-    min < 0 && max > 0
-      ? 0
-      : min + step,
+    min < 0 && max > 0 ? 0 : min + step,
     max
   ]
   const format = swissNumbers.format
@@ -153,33 +150,44 @@ export const calculateAxis = (numberFormat, tLabel, domain, unit = '', {
   if (specifier.type === '%') {
     let fullStep = +(step * 100).toFixed(specifier.precision)
     let fullMax = +(max * 100).toFixed(specifier.precision)
-    specifier.precision = precisionFixed((fullStep - Math.floor(fullStep)) || (fullMax - Math.floor(fullMax)))
+    specifier.precision = precisionFixed(
+      fullStep - Math.floor(fullStep) || fullMax - Math.floor(fullMax)
+    )
     lastFormat = format(specifier.toString())
     specifier.type = 'f'
     const regularFormatInner = format(specifier.toString())
-    regularFormat = (value) => regularFormatInner(value * 100)
+    regularFormat = value => regularFormatInner(value * 100)
   } else if (specifier.type === 's') {
     const magnitude = d3Max([max - (min > 0 ? min : 0), min].map(Math.abs))
     let pow = formatPow(tLabel, Math.max(0, min) + magnitude / 2)
     specifier.precision = precisionFixed(
       ticks.reduce(
-        (precision, value) => precision || pow.scale(value) - Math.floor(pow.scale(value)),
+        (precision, value) =>
+          precision || pow.scale(value) - Math.floor(pow.scale(value)),
         0
       )
     )
 
     lastFormat = sFormat(tLabel, specifier.precision, pow, 'f')
-    regularFormat = sFormat(tLabel, specifier.precision, {scale: pow.scale, suffix: ''}, 'f')
+    regularFormat = sFormat(
+      tLabel,
+      specifier.precision,
+      { scale: pow.scale, suffix: '' },
+      'f'
+    )
   } else {
     specifier.precision = d3Max(
-      ticks.map((tick, i) => Math.max(
-        i && precisionFixed(tick - ticks[i - 1]),
-        precisionFixed(tick - Math.floor(tick))
-      ))
+      ticks.map((tick, i) =>
+        Math.max(
+          i && precisionFixed(tick - ticks[i - 1]),
+          precisionFixed(tick - Math.floor(tick))
+        )
+      )
     )
     lastFormat = regularFormat = format(specifier.toString())
   }
-  const axisFormat = (value, isLast) => isLast ? `${lastFormat(value)} ${unit}` : regularFormat(value)
+  const axisFormat = (value, isLast) =>
+    isLast ? `${lastFormat(value)} ${unit}` : regularFormat(value)
 
   return {
     ticks,
@@ -188,7 +196,7 @@ export const calculateAxis = (numberFormat, tLabel, domain, unit = '', {
   }
 }
 
-export const get3EqualDistTicks = (scale) => {
+export const get3EqualDistTicks = scale => {
   const range = scale.range()
   return [
     scale.invert(range[0]),
@@ -197,39 +205,46 @@ export const get3EqualDistTicks = (scale) => {
   ]
 }
 
-const subSupSplitter = (createTag) => {
+const subSupSplitter = createTag => {
   return input => {
     if (!input) {
       return input
     }
-    return input.split(/(<sub>|<sup>)([^<]+)<\/su[bp]>/g).reduce(
-      (elements, text, i) => {
+    return input
+      .split(/(<sub>|<sup>)([^<]+)<\/su[bp]>/g)
+      .reduce((elements, text, i) => {
         if (text === '<sub>' || text === '<sup>') {
           elements.nextElement = text.replace('<', '').replace('>', '')
         } else {
           if (elements.nextElement) {
-            elements.push(createTag(elements.nextElement, elements.nextElement + i, text))
+            elements.push(
+              createTag(elements.nextElement, elements.nextElement + i, text)
+            )
             elements.nextElement = null
           } else {
             elements.push(text)
           }
         }
         return elements
-      },
-      []
-    )
+      }, [])
   }
 }
 
-export const subsup = subSupSplitter((tag, key, text) => createElement(tag, {key}, text))
+export const subsup = subSupSplitter((tag, key, text) =>
+  createElement(tag, { key }, text)
+)
 subsup.svg = subSupSplitter((tag, key, text) => {
   const dy = tag === 'sub' ? '0.25em' : '-0.5em'
-  return <Fragment key={key}>
-    <tspan dy={dy} fontSize='75%'>{text}</tspan>
-    {/* reset dy: https://stackoverflow.com/a/33711370 */}
-    {/* adds a zero width space */}
-    <tspan dy={`-${dy}`}>{'\u200b'}</tspan>
-  </Fragment>
+  return (
+    <Fragment key={key}>
+      <tspan dy={dy} fontSize='75%'>
+        {text}
+      </tspan>
+      {/* reset dy: https://stackoverflow.com/a/33711370 */}
+      {/* adds a zero width space */}
+      <tspan dy={`-${dy}`}>{'\u200b'}</tspan>
+    </Fragment>
+  )
 })
 
 export const transparentAxisStroke = 'rgba(0,0,0,0.17)'
@@ -237,7 +252,6 @@ export const circleFill = '#fff'
 export const baseLineColor = colors.text
 
 export const deduplicate = (d, i, all) => all.indexOf(d) === i
-
 
 // This is unsafe
 // - all props that are passed to unsafeDatumFn should not be user defined

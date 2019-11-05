@@ -14,7 +14,10 @@ import { serifRegular14, sansSerifRegular14 } from '../Typography/styles'
 import { CommentBodyParagraph } from '../CommentBody/web'
 import { Context, Header } from '../Discussion/Internal/Comment'
 import RawHtml from '../RawHtml/'
-import { DiscussionContext, formatTimeRelative } from '../Discussion/DiscussionContext'
+import {
+  DiscussionContext,
+  formatTimeRelative
+} from '../Discussion/DiscussionContext'
 
 const styles = {
   root: css({
@@ -116,9 +119,15 @@ export const CommentTeaser = ({
     clock,
     links: {
       Profile: ({ displayAuthor, ...props }) => (
-        <Link {...props} discussion={discussion} displayAuthor={displayAuthor} />
+        <Link
+          {...props}
+          discussion={discussion}
+          displayAuthor={displayAuthor}
+        />
       ),
-      Comment: ({ comment, ...props }) => <Link {...props} discussion={discussion} commentId={comment.id} />
+      Comment: ({ comment, ...props }) => (
+        <Link {...props} discussion={discussion} commentId={comment.id} />
+      )
     }
   }
 
@@ -139,7 +148,10 @@ export const CommentTeaser = ({
             }
           />
         )}
-        <div {...styles.body} style={{ marginTop: displayAuthor || tag ? undefined : 0 }}>
+        <div
+          {...styles.body}
+          style={{ marginTop: displayAuthor || tag ? undefined : 0 }}
+        >
           <CommentBodyParagraph>
             <Link commentId={id} discussion={discussion} passHref>
               <a {...styles.link}>
@@ -170,26 +182,39 @@ export const CommentTeaser = ({
               paddingRight: newPage ? `${ICON_SIZE + 5}px` : undefined
             }}
           >
-            {t.elements(`styleguide/CommentTeaser/${parentIds && parentIds.length ? 'reply' : 'comment'}/link`, {
-              link: (
-                <Link key={`link-${id}`} commentId={id} discussion={discussion} passHref>
-                  <a {...linkRule}>
-                    {inQuotes(discussion.title)}
-                    {newPage && (
-                      <span {...styles.icon}>
-                        <NewPage size={ICON_SIZE} fill={colors.disabled} />
-                      </span>
-                    )}
-                  </a>
-                </Link>
-              )
-            })}
+            {t.elements(
+              `styleguide/CommentTeaser/${
+                parentIds && parentIds.length ? 'reply' : 'comment'
+              }/link`,
+              {
+                link: (
+                  <Link
+                    key={`link-${id}`}
+                    commentId={id}
+                    discussion={discussion}
+                    passHref
+                  >
+                    <a {...linkRule}>
+                      {inQuotes(discussion.title)}
+                      {newPage && (
+                        <span {...styles.icon}>
+                          <NewPage size={ICON_SIZE} fill={colors.disabled} />
+                        </span>
+                      )}
+                    </a>
+                  </Link>
+                )
+              }
+            )}
           </div>
           {!displayAuthor && (
             <div {...styles.timeago}>
               <Link commentId={id} discussion={discussion} passHref>
                 <a {...styles.linkUnderline} suppressHydrationWarning>
-                  {formatTimeRelative(new Date(createdAt), {...clock, direction: 'past'})}
+                  {formatTimeRelative(new Date(createdAt), {
+                    ...clock,
+                    direction: 'past'
+                  })}
                 </a>
               </Link>
             </div>

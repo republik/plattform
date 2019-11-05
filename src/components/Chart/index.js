@@ -13,7 +13,12 @@ import Hemicycle from './Hemicycle'
 import colors from '../../theme/colors'
 
 import { mUp } from '../../theme/mediaQueries'
-import { sansSerifMedium19, sansSerifMedium22, sansSerifRegular16, sansSerifRegular19 } from '../Typography/styles'
+import {
+  sansSerifMedium19,
+  sansSerifMedium22,
+  sansSerifRegular16,
+  sansSerifRegular19
+} from '../Typography/styles'
 import { fontRule } from '../Typography/Interaction'
 import { convertStyleToRem, pxToRem } from '../Typography/utils'
 import { swissPartyColors } from './colorMaps'
@@ -28,10 +33,16 @@ export const ReactCharts = {
   GenericMap,
   ProjectedMap,
   SwissMap,
-  Hemicycle,
+  Hemicycle
 }
 
-const createRanges = ({neutral, sequential, sequential3, opposite3, discrete}) => {
+const createRanges = ({
+  neutral,
+  sequential,
+  sequential3,
+  opposite3,
+  discrete
+}) => {
   const oppositeReversed = [].concat(opposite3).reverse()
   return {
     diverging1: [sequential3[1], opposite3[1]],
@@ -73,12 +84,16 @@ const styles = {
   })
 }
 
-export const ChartTitle = ({children, ...props}) => (
-  <h3 {...props} {...styles.h}>{children}</h3>
+export const ChartTitle = ({ children, ...props }) => (
+  <h3 {...props} {...styles.h}>
+    {children}
+  </h3>
 )
 
-export const ChartLead = ({children, ...props}) => (
-  <p {...props} {...styles.p} {...fontRule}>{children}</p>
+export const ChartLead = ({ children, ...props }) => (
+  <p {...props} {...styles.p} {...fontRule}>
+    {children}
+  </p>
 )
 
 class Chart extends Component {
@@ -88,30 +103,35 @@ class Chart extends Component {
     this.state = {
       width: 290
     }
-    this.measure = measure((ref, {width}) => {
+    this.measure = measure((ref, { width }) => {
       if (width !== this.state.width) {
-        this.setState({width})
+        this.setState({ width })
       }
     })
   }
   render() {
-    const {width: fixedWidth, config, tLabel} = this.props
+    const { width: fixedWidth, config, tLabel } = this.props
 
     const width = fixedWidth || this.state.width
     const ReactChart = ReactCharts[config.type]
 
     return (
-      <div ref={fixedWidth ? undefined : this.measure} style={{
-        maxWidth: config.maxWidth
-      }}>
+      <div
+        ref={fixedWidth ? undefined : this.measure}
+        style={{
+          maxWidth: config.maxWidth
+        }}
+      >
         {!!width && (
-          <ReactChart {...config}
+          <ReactChart
+            {...config}
             tLabel={tLabel}
             colorRanges={colorRanges}
             colorMaps={colorMaps}
             width={width}
             values={this.props.values}
-            description={config.description} />
+            description={config.description}
+          />
         )}
       </div>
     )

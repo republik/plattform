@@ -105,7 +105,7 @@ const Tile = ({
       // on the parent component <TileRow />
       // with CSS children selectors, they depend
       // on the column number given as prop.
-      className="tile"
+      className='tile'
     >
       {imageProps && (
         <div
@@ -122,7 +122,7 @@ const Tile = ({
               {...(onlyImage ? styles.onlyImage : styles.image)}
             />
             {byline && (
-              <FigureByline position="rightCompact" style={{ color }}>
+              <FigureByline position='rightCompact' style={{ color }}>
                 {byline}
               </FigureByline>
             )}

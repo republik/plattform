@@ -82,7 +82,7 @@ const styles = {
       '@media (hover)': {
         ':hover::before': {
           background: colors.primary
-        },
+        }
       },
       ...(drawLineEnd && {
         '::after': {
@@ -123,7 +123,10 @@ export const CommentList = ({ t, parentId = null, comments }) => {
 
   const numMoreComments = (() => {
     const countComments = ({ totalCount = 0 } = {}) => totalCount
-    const availableCount = nodes.reduce((a, { comments }) => a + 1 + countComments(comments), 0)
+    const availableCount = nodes.reduce(
+      (a, { comments }) => a + 1 + countComments(comments),
+      0
+    )
     return totalCount - availableCount
   })()
 
@@ -132,7 +135,12 @@ export const CommentList = ({ t, parentId = null, comments }) => {
       {nodes.map(comment => (
         <CommentNode key={comment.id} t={t} comment={comment} />
       ))}
-      <LoadMore t={t} visualDepth={0} count={numMoreComments} onClick={loadMore} />
+      <LoadMore
+        t={t}
+        visualDepth={0}
+        count={numMoreComments}
+        onClick={loadMore}
+      />
     </>
   )
 }
@@ -221,14 +229,32 @@ const CommentNode = ({ t, comment }) => {
   if (isExpanded) {
     return (
       <div ref={root} data-comment-id={id} {...rootStyle}>
-        {!nestLimitExceeded && <button {...styles.verticalToggle({ drawLineEnd })} onClick={toggleReplies} />}
-        <div {...(mode === 'view' && isHighlighted ? styles.highlightContainer : {})}>
+        {!nestLimitExceeded && (
+          <button
+            {...styles.verticalToggle({ drawLineEnd })}
+            onClick={toggleReplies}
+          />
+        )}
+        <div
+          {...(mode === 'view' && isHighlighted
+            ? styles.highlightContainer
+            : {})}
+        >
           {{
             view: () => (
               <div {...styles.commentWrapper({ isExpanded })}>
-                <Comment.Header t={t} comment={comment} isExpanded={isExpanded} onToggle={toggleReplies} />
+                <Comment.Header
+                  t={t}
+                  comment={comment}
+                  isExpanded={isExpanded}
+                  onToggle={toggleReplies}
+                />
                 <div style={{ marginTop: 12 }}>
-                  <Comment.Body t={t} comment={comment} context={tags[0] ? { title: tags[0] } : undefined} />
+                  <Comment.Body
+                    t={t}
+                    comment={comment}
+                    context={tags[0] ? { title: tags[0] } : undefined}
+                  />
                 </div>
               </div>
             ),
@@ -290,8 +316,16 @@ const CommentNode = ({ t, comment }) => {
   } else {
     return (
       <div ref={root} data-comment-id={id} {...rootStyle}>
-        <button {...styles.verticalToggle({ drawLineEnd })} onClick={toggleReplies} />
-        <Comment.Header t={t} comment={comment} isExpanded={isExpanded} onToggle={toggleReplies} />
+        <button
+          {...styles.verticalToggle({ drawLineEnd })}
+          onClick={toggleReplies}
+        />
+        <Comment.Header
+          t={t}
+          comment={comment}
+          isExpanded={isExpanded}
+          onToggle={toggleReplies}
+        />
       </div>
     )
   }

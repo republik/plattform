@@ -38,33 +38,45 @@ const styles = {
     height: 8
   }),
   circle: css({
-    borderRadius: '50%',
+    borderRadius: '50%'
   })
 }
 
-const ColorLegend = ({title, shape, values, maxWidth, inline}) => {
+const ColorLegend = ({ title, shape, values, maxWidth, inline }) => {
   if (!values.length && !title) {
     return null
   }
   return (
-    <div {...merge(styles.container, inline && styles.inlineContainer)} style={{maxWidth}}>
+    <div
+      {...merge(styles.container, inline && styles.inlineContainer)}
+      style={{ maxWidth }}
+    >
       {!!title && <div {...styles.title}>{title}</div>}
-      {
-        values.map((value, i) => {
-          let text = value.label
+      {values.map((value, i) => {
+        let text = value.label
 
-          return (
-            <div key={i} {...merge(styles.label, inline && styles.inlineLabel, !!value.color && styles.labelWithColor)}>
-              {!!value.color && (
-                <div
-                  {...merge(styles.color, styles[shape === 'square' ? 'square' : 'circle'])}
-                  style={{backgroundColor: value.color}} />
-              )}
-              {text}{' '}
-            </div>
-          )
-        })
-      }
+        return (
+          <div
+            key={i}
+            {...merge(
+              styles.label,
+              inline && styles.inlineLabel,
+              !!value.color && styles.labelWithColor
+            )}
+          >
+            {!!value.color && (
+              <div
+                {...merge(
+                  styles.color,
+                  styles[shape === 'square' ? 'square' : 'circle']
+                )}
+                style={{ backgroundColor: value.color }}
+              />
+            )}
+            {text}{' '}
+          </div>
+        )
+      })}
     </div>
   )
 }
@@ -72,10 +84,12 @@ const ColorLegend = ({title, shape, values, maxWidth, inline}) => {
 ColorLegend.propTypes = {
   title: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
   shape: PropTypes.oneOf(['square', 'circle', 'marker']),
-  values: PropTypes.arrayOf(PropTypes.shape({
-    color: PropTypes.string,
-    label: PropTypes.oneOfType([PropTypes.string, PropTypes.node]).isRequired
-  })),
+  values: PropTypes.arrayOf(
+    PropTypes.shape({
+      color: PropTypes.string,
+      label: PropTypes.oneOfType([PropTypes.string, PropTypes.node]).isRequired
+    })
+  ),
   maxWidth: PropTypes.number,
   inline: PropTypes.bool
 }

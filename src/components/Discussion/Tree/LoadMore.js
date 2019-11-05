@@ -47,7 +47,7 @@ const styles = {
       },
       ':hover::before': {
         background: colors.secondary
-      },
+      }
     },
     '& > span': {
       position: 'relative'
@@ -81,7 +81,13 @@ LoadMore.propTypes = {
  * This component is exported only so that we can document it in the styleguide.
  */
 export const LoadMore1 = ({ t, alternative, count, onClick }) => (
-  <button {...styles.root} {...alternative && styles.alternative} onClick={onClick}>
-    <span>{t.pluralize('styleguide/CommentTreeLoadMore/label', { count })}</span>
+  <button
+    {...styles.root}
+    {...(alternative && styles.alternative)}
+    onClick={onClick}
+  >
+    <span>
+      {t.pluralize('styleguide/CommentTreeLoadMore/label', { count })}
+    </span>
   </button>
 )

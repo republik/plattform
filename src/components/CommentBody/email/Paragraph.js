@@ -45,9 +45,7 @@ export const StrikeThrough = ({ children }) => (
   <span style={strikeThroughStyle}>{children}</span>
 )
 
-export const Code = ({ children }) => (
-  <code style={codeStyle}>{children}</code>
-)
+export const Code = ({ children }) => <code style={codeStyle}>{children}</code>
 
 export const Definition = ({ children }) => (
   <p style={definitionStyle}>{children}</p>
@@ -58,5 +56,7 @@ export const Paragraph = ({ children }) => (
 )
 
 export const Heading = ({ children }) => (
-  <Paragraph><strong>{children}</strong></Paragraph>
+  <Paragraph>
+    <strong>{children}</strong>
+  </Paragraph>
 )

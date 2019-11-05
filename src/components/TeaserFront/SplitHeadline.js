@@ -71,7 +71,7 @@ const styles = {
     }
   }),
   editorial: css({
-    ...convertStyleToRem(serifTitle20),
+    ...convertStyleToRem(serifTitle20)
   }),
   interaction: css({
     ...convertStyleToRem(sansSerifMedium20)

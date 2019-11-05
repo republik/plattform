@@ -11,12 +11,8 @@ import {
   matchImageParagraph
 } from 'mdast-react-render/lib/utils'
 
-import {
-  FIGURE_SIZES
-} from '../../components/Figure'
-import {
-  PULLQUOTE_IMAGE_SIZE
-} from '../../components/PullQuote'
+import { FIGURE_SIZES } from '../../components/Figure'
+import { PULLQUOTE_IMAGE_SIZE } from '../../components/PullQuote'
 import {
   INFOBOX_IMAGE_SIZES,
   INFOBOX_DEFAULT_IMAGE_SIZE
@@ -26,14 +22,14 @@ export const matchInfoBox = matchZone('INFOBOX')
 export const matchQuote = matchZone('QUOTE')
 export const matchFigure = matchZone('FIGURE')
 
-export const matchLast = (node, index, parent) => index === parent.children.length - 1
+export const matchLast = (node, index, parent) =>
+  index === parent.children.length - 1
 export const matchTeaser = matchZone('TEASER')
 export const matchTeaserGroup = matchZone('TEASERGROUP')
-export const matchTeaserType = teaserType =>
-  node => matchTeaser(node) && node.data.teaserType === teaserType
-export const extractImage = node => matchImageParagraph(node)
-  ? node.children[0].url
-  : undefined
+export const matchTeaserType = teaserType => node =>
+  matchTeaser(node) && node.data.teaserType === teaserType
+export const extractImage = node =>
+  matchImageParagraph(node) ? node.children[0].url : undefined
 
 export const getDisplayWidth = ancestors => {
   const infobox = ancestors.find(matchInfoBox)
@@ -111,6 +107,5 @@ export const styles = {
 
 const slugDateFormat = timeFormat('%Y/%m/%d')
 
-export const getDatePath = ({ publishDate, slug }) => (
+export const getDatePath = ({ publishDate, slug }) =>
   `/${slugDateFormat(publishDate)}/${(slug || '').split('/').pop()}`
-)

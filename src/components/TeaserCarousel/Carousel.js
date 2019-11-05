@@ -11,36 +11,37 @@ const styles = {
   })
 }
 
-export const Carousel = ({
-  bgColor,
-  color,
-  outline,
-  bigger,
-  children
-}) => {
+export const Carousel = ({ bgColor, color, outline, bigger, children }) => {
   const row = children && children[1]
   const nTiles = row && React.Children.count(row.props && row.props.children)
 
-  return <CarouselContext.Provider value={{
-    bigger,
-    outline,
-    bgColor,
-    color
-  }}>
-    <section {...styles.carousel} style={{
-      backgroundColor: bgColor,
-      color: color ? color : 'inherit'
-    }}>
-      <div style={{
-        margin: '0 auto',
-        maxWidth: nTiles
-          ? nTiles * TILE_MAX_WIDTH
-          : undefined
-      }}>
-        {children}
-      </div>
-    </section>
-  </CarouselContext.Provider>
+  return (
+    <CarouselContext.Provider
+      value={{
+        bigger,
+        outline,
+        bgColor,
+        color
+      }}
+    >
+      <section
+        {...styles.carousel}
+        style={{
+          backgroundColor: bgColor,
+          color: color ? color : 'inherit'
+        }}
+      >
+        <div
+          style={{
+            margin: '0 auto',
+            maxWidth: nTiles ? nTiles * TILE_MAX_WIDTH : undefined
+          }}
+        >
+          {children}
+        </div>
+      </section>
+    </CarouselContext.Provider>
+  )
 }
 
 export default React.memo(Carousel)

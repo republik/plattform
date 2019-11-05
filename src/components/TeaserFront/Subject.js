@@ -13,7 +13,7 @@ const subjectStyle = {
   ...sansSerifRegular19,
   lineHeight: '27px',
   [mUp]: {
-    ...sansSerifRegular23,
+    ...sansSerifRegular23
   }
 }
 
@@ -34,17 +34,16 @@ const Subject = ({ children, color, collapsedColor, columns }) => {
   const labCompactColor = lab(collapsedColor || color)
 
   const style = css({
-    color: labCompactColor.l > 50
-      ? labCompactColor.darker(2)
-      : labCompactColor.brighter(3),
+    color:
+      labCompactColor.l > 50
+        ? labCompactColor.darker(2)
+        : labCompactColor.brighter(3),
     '&::after': {
-      content: !!children.length ? " " : undefined
+      content: !!children.length ? ' ' : undefined
     },
     paddingRight: !!children.length ? '.2em' : 0,
     [tUp]: {
-      color: labColor.l > 50
-        ? labColor.darker(2)
-        : labColor.brighter(3),
+      color: labColor.l > 50 ? labColor.darker(2) : labColor.brighter(3)
     }
   })
   return (

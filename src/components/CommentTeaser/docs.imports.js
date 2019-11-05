@@ -1,1 +1,1 @@
-export {default as CommentTeaser} from './CommentTeaser'
+export { default as CommentTeaser } from './CommentTeaser'

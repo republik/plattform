@@ -19,7 +19,11 @@ const styles = {
 }
 
 export const Source = ({ children, attributes }) => {
-  return <cite {...styles.cite} {...attributes}>{children}</cite>
+  return (
+    <cite {...styles.cite} {...attributes}>
+      {children}
+    </cite>
+  )
 }
 
 Source.propTypes = {

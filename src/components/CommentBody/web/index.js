@@ -1,6 +1,4 @@
-export {
-  default as CommentBodyBlockCode
-} from './BlockCode'
+export { default as CommentBodyBlockCode } from './BlockCode'
 
 export {
   default as CommentBodyBlockQuote,
@@ -8,9 +6,7 @@ export {
   BlockQuoteParagraph as CommentBodyBlockQuoteParagraph
 } from './Blockquote'
 
-export {
-  default as CommentBodyContainer
-} from './Container'
+export { default as CommentBodyContainer } from './Container'
 
 export {
   default as CommentBodyList,

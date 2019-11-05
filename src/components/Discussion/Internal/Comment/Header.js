@@ -2,7 +2,10 @@ import React from 'react'
 import { css } from 'glamor'
 import MdCheck from 'react-icons/lib/md/check'
 import colors from '../../../../theme/colors'
-import { sansSerifMedium16, sansSerifRegular14 } from '../../../Typography/styles'
+import {
+  sansSerifMedium16,
+  sansSerifRegular14
+} from '../../../Typography/styles'
 import { onlyS } from '../../../../theme/mediaQueries'
 
 import { ellipsize, underline } from '../../../../lib/styleMixins'
@@ -40,7 +43,7 @@ export const headerActionStyle = ({ isExpanded }) =>
     '@media (hover)': {
       ':hover': {
         color: colors.text
-      },
+      }
     },
     '& svg': {
       display: 'inline-block',
@@ -166,7 +169,13 @@ const titleDate = string => dateTimeFormat(new Date(string))
 export const Header = ({ t, comment, isExpanded, onToggle }) => {
   const { clock, links } = React.useContext(DiscussionContext)
 
-  const { displayAuthor, updatedAt, createdAt, comments, parentIds = [] } = comment
+  const {
+    displayAuthor,
+    updatedAt,
+    createdAt,
+    comments,
+    parentIds = []
+  } = comment
   const { profilePicture, name, credential } = displayAuthor
   const isUpdated = updatedAt && updatedAt !== createdAt
 
@@ -181,7 +190,7 @@ export const Header = ({ t, comment, isExpanded, onToggle }) => {
           return (
             <links.Profile displayAuthor={displayAuthor} passHref>
               <a {...styles.link}>
-                <img {...styles.profilePicture} src={profilePicture} alt="" />
+                <img {...styles.profilePicture} src={profilePicture} alt='' />
               </a>
             </links.Profile>
           )
@@ -205,9 +214,22 @@ export const Header = ({ t, comment, isExpanded, onToggle }) => {
           {credential && (
             <div
               {...styles.credential}
-              title={credential.verified ? t('styleguide/comment/header/verifiedCredential', undefined, '') : undefined}
+              title={
+                credential.verified
+                  ? t(
+                      'styleguide/comment/header/verifiedCredential',
+                      undefined,
+                      ''
+                    )
+                  : undefined
+              }
             >
-              <div {...styles.descriptionText} style={{ color: credential.verified ? colors.text : colors.lightText }}>
+              <div
+                {...styles.descriptionText}
+                style={{
+                  color: credential.verified ? colors.text : colors.lightText
+                }}
+              >
                 {credential.description}
               </div>
               {credential.verified && <MdCheck {...styles.verifiedCheck} />}
@@ -217,7 +239,10 @@ export const Header = ({ t, comment, isExpanded, onToggle }) => {
           <div {...styles.timeago} title={titleDate(createdAt)}>
             <links.Comment comment={comment} passHref>
               <a {...styles.linkUnderline} suppressHydrationWarning>
-                {formatTimeRelative(new Date(createdAt), { ...clock, direction: 'past' })}
+                {formatTimeRelative(new Date(createdAt), {
+                  ...clock,
+                  direction: 'past'
+                })}
               </a>
             </links.Comment>
           </div>
@@ -233,7 +258,9 @@ export const Header = ({ t, comment, isExpanded, onToggle }) => {
         <button {...headerActionStyle({ isExpanded })} onClick={onToggle}>
           {!isExpanded && comments && comments.totalCount > 0 && (
             <div {...styles.expandCount}>
-              {t.pluralize('styleguide/comment/header/expandCount', { count: comments.totalCount + 1 })}
+              {t.pluralize('styleguide/comment/header/expandCount', {
+                count: comments.totalCount + 1
+              })}
             </div>
           )}
           {isExpanded ? <IcCollapse /> : <IcExpand />}
@@ -244,16 +271,32 @@ export const Header = ({ t, comment, isExpanded, onToggle }) => {
 }
 
 const IcExpand = () => (
-  <svg width="20px" height="20px" viewBox="0 0 20 20">
-    <rect stroke="currentColor" strokeWidth="2" fill="white" x="1" y="1" width="18" height="18" />
-    <rect fill="currentColor" x="9" y="6" width="2" height="8" />
-    <rect fill="currentColor" x="6" y="9" width="8" height="2" />
+  <svg width='20px' height='20px' viewBox='0 0 20 20'>
+    <rect
+      stroke='currentColor'
+      strokeWidth='2'
+      fill='white'
+      x='1'
+      y='1'
+      width='18'
+      height='18'
+    />
+    <rect fill='currentColor' x='9' y='6' width='2' height='8' />
+    <rect fill='currentColor' x='6' y='9' width='8' height='2' />
   </svg>
 )
 
 const IcCollapse = () => (
-  <svg width="20px" height="20px" viewBox="0 0 20 20">
-    <rect stroke="currentColor" strokeWidth="2" fill="white" x="1" y="1" width="18" height="18" />
-    <rect fill="currentColor" x="6" y="9" width="8" height="2" />
+  <svg width='20px' height='20px' viewBox='0 0 20 20'>
+    <rect
+      stroke='currentColor'
+      strokeWidth='2'
+      fill='white'
+      x='1'
+      y='1'
+      width='18'
+      height='18'
+    />
+    <rect fill='currentColor' x='6' y='9' width='8' height='2' />
   </svg>
 )

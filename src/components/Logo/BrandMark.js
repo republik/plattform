@@ -1,5 +1,5 @@
 import React from 'react'
-import {css} from 'glamor'
+import { css } from 'glamor'
 import SG from '../../theme/env'
 
 const VIEWBOX = SG.BRAND_MARK_VIEWBOX || '0 0 4 4'
@@ -14,14 +14,22 @@ const ppViewBox = [
   WIDTH + WIDTH * 0.44,
   HEIGHT + HEIGHT * 0.44
 ]
-export const DEFAULT_PROFILE_PICTURE = `data:image/svg+xml,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="${ppViewBox.join(' ')}"><rect x="${ppViewBox[0]}" y="${ppViewBox[1]}" width="${ppViewBox[2]}" height="${ppViewBox[3]}" fill="#E1E7E5" /><path fill="#fff" d="${PATH}" /></svg>`)}`
+export const DEFAULT_PROFILE_PICTURE = `data:image/svg+xml,${encodeURIComponent(
+  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${ppViewBox.join(
+    ' '
+  )}"><rect x="${ppViewBox[0]}" y="${ppViewBox[1]}" width="${
+    ppViewBox[2]
+  }" height="${
+    ppViewBox[3]
+  }" fill="#E1E7E5" /><path fill="#fff" d="${PATH}" /></svg>`
+)}`
 
 const styles = {
   container: css({
     position: 'relative',
     height: 0,
     width: '100%',
-    paddingBottom: `${HEIGHT / WIDTH * 100}%`
+    paddingBottom: `${(HEIGHT / WIDTH) * 100}%`
   }),
   svg: css({
     position: 'absolute',
@@ -32,7 +40,7 @@ const styles = {
   })
 }
 
-const R = ({fill}) => (
+const R = ({ fill }) => (
   <div {...styles.container}>
     <svg {...styles.svg} viewBox={VIEWBOX}>
       <path fill={fill} d={PATH} />

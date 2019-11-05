@@ -32,17 +32,19 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
-    minWidth: 0,
+    minWidth: 0
   })
 }
 
 export const CommentComposerPlaceholder = ({ t, displayAuthor, onClick }) => (
   <div {...styles.root} onClick={onClick}>
     {displayAuthor.profilePicture && (
-      <img {...styles.profilePicture} src={displayAuthor.profilePicture} alt='' />
+      <img
+        {...styles.profilePicture}
+        src={displayAuthor.profilePicture}
+        alt=''
+      />
     )}
-    <div {...styles.meta}>
-      {t('styleguide/CommentComposer/placeholder')}
-    </div>
+    <div {...styles.meta}>{t('styleguide/CommentComposer/placeholder')}</div>
   </div>
 )

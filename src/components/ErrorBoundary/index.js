@@ -8,21 +8,23 @@ class ErrorBoundary extends PureComponent {
 
     this.state = {}
   }
-  componentDidCatch (error) {
+  componentDidCatch(error) {
     this.setState({ error })
   }
-  render () {
+  render() {
     const { children, failureMessage, showException } = this.props
     const { error } = this.state
     if (error) {
       return (
         <Fragment>
-          <P style={{color: colors.error, margin: '20px 0'}}>
+          <P style={{ color: colors.error, margin: '20px 0' }}>
             {failureMessage}
           </P>
-          {showException && <P style={{color: colors.error, margin: '20px 0'}}>
-            {error.toString()}
-          </P>}
+          {showException && (
+            <P style={{ color: colors.error, margin: '20px 0' }}>
+              {error.toString()}
+            </P>
+          )}
         </Fragment>
       )
     }

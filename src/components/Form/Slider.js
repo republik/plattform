@@ -99,15 +99,19 @@ const styles = {
 }
 
 const Slider = ({ label, fullWidth, inactive, onChange, ...props }) => (
-  <label {...merge(
-    styles.label,
-    fullWidth ? styles.fullWidth : null)}>
-    {label && <><Label>{label}</Label><br /></>}
+  <label {...merge(styles.label, fullWidth ? styles.fullWidth : null)}>
+    {label && (
+      <>
+        <Label>{label}</Label>
+        <br />
+      </>
+    )}
     <input
       {...merge(
         styles.slider,
         inactive && styles.sliderInactive,
-        fullWidth && styles.fullWidth)}
+        fullWidth && styles.fullWidth
+      )}
       type='range'
       {...props}
       onChange={e => onChange(e, +e.target.value)}

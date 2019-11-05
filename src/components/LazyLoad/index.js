@@ -20,7 +20,7 @@ const onScroll = rafDebounce(checkVisible)
 
 const onResize = rafDebounce(() => {
   const scrollY = window.pageYOffset
-  
+
   instances.all.forEach(instance => {
     if (instance.ref) {
       const rect = instance.ref.getBoundingClientRect()
@@ -29,7 +29,7 @@ const onResize = rafDebounce(() => {
       instance.y = undefined
     }
   })
-  
+
   checkVisible()
 })
 
@@ -66,14 +66,12 @@ class LazyLoad extends Component {
   componentWillUnmount() {
     instances.rm(this)
   }
-  render () {
+  render() {
     const { children, attributes, style } = this.props
     const visible = this.props.visible || this.state.visible
     return (
       <span ref={this.setRef} {...attributes} style={style}>
-        {visible ? children : <noscript>
-          {children}
-        </noscript>}
+        {visible ? children : <noscript>{children}</noscript>}
       </span>
     )
   }

@@ -12,7 +12,7 @@ const styles = {
     textAlign: 'center',
     [mUp]: {
       ...convertStyleToRem(sansSerifMedium20),
-      margin: '100px 0 70px 0',
+      margin: '100px 0 70px 0'
     }
   })
 }

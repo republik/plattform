@@ -36,9 +36,7 @@ import {
   TeaserCarouselLead
 } from '../../components/TeaserCarousel'
 
-import {
-  TeaserSectionTitle
-} from '../../components/TeaserShared'
+import { TeaserSectionTitle } from '../../components/TeaserShared'
 
 import {
   matchTeaser,
@@ -54,17 +52,18 @@ import createLiveTeasers from './liveTeasers'
 
 export const subject = {
   matchMdast: matchHeading(2),
-  component: ({ children, attributes, ...props }) =>
+  component: ({ children, attributes, ...props }) => (
     <TeaserFrontSubject attributes={attributes} {...props}>
       {children}
-    </TeaserFrontSubject>,
+    </TeaserFrontSubject>
+  ),
   props: (node, index, parent, { ancestors }) => {
     const teaserGroup = ancestors.find(matchTeaserGroup)
     const teaser = ancestors.find(matchTeaser)
     return {
       color: teaser && teaser.data.color,
       collapsedColor: teaser && teaser.data.feuilleton && '#000',
-      columns:  teaserGroup ? teaserGroup.data.columns : undefined
+      columns: teaserGroup ? teaserGroup.data.columns : undefined
     }
   },
   editorModule: 'headline',
@@ -79,15 +78,12 @@ export const subject = {
 
 const DefaultLink = ({ children }) => children
 
-const createSchema = ({
-  Link = DefaultLink,
-  t = () => '',
-  ...rest
-} = {}) => {
+const createSchema = ({ Link = DefaultLink, t = () => '', ...rest } = {}) => {
   const credit = {
     matchMdast: matchParagraph,
-    component: ({ children, attributes }) =>
-      <TeaserFrontCredit attributes={attributes}>{children}</TeaserFrontCredit>,
+    component: ({ children, attributes }) => (
+      <TeaserFrontCredit attributes={attributes}>{children}</TeaserFrontCredit>
+    ),
     editorModule: 'paragraph',
     editorOptions: {
       type: 'FRONTCREDIT',
@@ -103,20 +99,16 @@ const createSchema = ({
           return {
             title: node.title,
             href: node.url,
-            color: teaser
-              ? teaser.data.color
-              : colors.primary,
-            collapsedColor: teaser && teaser.data.feuilleton
-              ? '#000'
-              : undefined
+            color: teaser ? teaser.data.color : colors.primary,
+            collapsedColor:
+              teaser && teaser.data.feuilleton ? '#000' : undefined
           }
         },
-        component: ({ children, data, ...props }) =>
+        component: ({ children, data, ...props }) => (
           <Link href={props.href} passHref>
-            <TeaserFrontCreditLink {...props}>
-              {children}
-            </TeaserFrontCreditLink>
-          </Link>,
+            <TeaserFrontCreditLink {...props}>{children}</TeaserFrontCreditLink>
+          </Link>
+        ),
         editorModule: 'link',
         editorOptions: {
           type: 'FRONTLINK'
@@ -127,24 +119,21 @@ const createSchema = ({
 
   const title = (type, Headline) => ({
     matchMdast: matchHeading(1),
-    component: ({ children, href, ...props }) =>
+    component: ({ children, href, ...props }) => (
       <Link href={href} passHref>
         <a {...styles.link} href={href}>
           <Headline {...props}>{children}</Headline>
         </a>
-      </Link>,
-    props (node, index, parent, { ancestors }) {
+      </Link>
+    ),
+    props(node, index, parent, { ancestors }) {
       const teaser = ancestors.find(matchTeaser)
       const teaserGroup = ancestors.find(matchTeaserGroup)
       return {
         kind: parent.data.kind,
         titleSize: parent.data.titleSize,
-        href: teaser
-          ? teaser.data.url
-          : undefined,
-        columns: teaserGroup
-          ? teaserGroup.data.columns
-          : undefined
+        href: teaser ? teaser.data.url : undefined,
+        columns: teaserGroup ? teaserGroup.data.columns : undefined
       }
     },
     editorModule: 'headline',
@@ -159,14 +148,15 @@ const createSchema = ({
 
   const lead = {
     matchMdast: matchHeading(4),
-    component: ({ children, attributes, ...props }) =>
+    component: ({ children, attributes, ...props }) => (
       <TeaserFrontLead attributes={attributes} {...props}>
         {children}
-      </TeaserFrontLead>,
+      </TeaserFrontLead>
+    ),
     props: (node, index, parent, { ancestors }) => {
       const teaserGroup = ancestors.find(matchTeaserGroup)
       return {
-        columns:  teaserGroup ? teaserGroup.data.columns : undefined
+        columns: teaserGroup ? teaserGroup.data.columns : undefined
       }
     },
     editorModule: 'headline',
@@ -181,24 +171,29 @@ const createSchema = ({
 
   const format = {
     matchMdast: matchHeading(6),
-    component: ({ children, attributes, href, color, collapsedColor }) =>
+    component: ({ children, attributes, href, color, collapsedColor }) => (
       <TeaserFrontFormat color={color} collapsedColor={collapsedColor}>
         <Link href={href} passHref>
           <a href={href} {...styles.link}>
             {children}
           </a>
         </Link>
-      </TeaserFrontFormat>,
-    props (node, index, parent, { ancestors }) {
+      </TeaserFrontFormat>
+    ),
+    props(node, index, parent, { ancestors }) {
       const teaser = ancestors.find(matchTeaser)
       return {
-        href: teaser
-          ? teaser.data.formatUrl
-          : undefined,
-        color: teaser && teaser.data.feuilleton ? (teaser.data.color || colors.feuilleton) : undefined,
-        collapsedColor: teaser && teaser.data.feuilleton && teaser.data.teaserType === 'frontImage'
-          ? '#000'
-          : undefined
+        href: teaser ? teaser.data.formatUrl : undefined,
+        color:
+          teaser && teaser.data.feuilleton
+            ? teaser.data.color || colors.feuilleton
+            : undefined,
+        collapsedColor:
+          teaser &&
+          teaser.data.feuilleton &&
+          teaser.data.teaserType === 'frontImage'
+            ? '#000'
+            : undefined
       }
     },
     editorModule: 'headline',
@@ -246,22 +241,22 @@ const createSchema = ({
     },
     rules: [
       skipMdastImage,
-      title(
-        'FRONTIMAGETITLE',
-        ({ children, attributes, kind, titleSize }) => {
-          const Component = kind === 'editorial'
+      title('FRONTIMAGETITLE', ({ children, attributes, kind, titleSize }) => {
+        const Component =
+          kind === 'editorial'
             ? TeaserFrontImageHeadline.Editorial
             : TeaserFrontImageHeadline.Interaction
-          const sizes = {
-            medium: titleSize === 'medium',
-            large: titleSize === 'large',
-            small: titleSize === 'small'
-          }
-          return <Component attributes={attributes} {...sizes}>
+        const sizes = {
+          medium: titleSize === 'medium',
+          large: titleSize === 'large',
+          small: titleSize === 'small'
+        }
+        return (
+          <Component attributes={attributes} {...sizes}>
             {children}
           </Component>
-        }
-      ),
+        )
+      }),
       subject,
       lead,
       format,
@@ -304,21 +299,21 @@ const createSchema = ({
     },
     rules: [
       skipMdastImage,
-      title(
-        'FRONTSPLITTITLE',
-        ({ children, attributes, kind, titleSize }) => {
-          const Component = kind === 'editorial'
+      title('FRONTSPLITTITLE', ({ children, attributes, kind, titleSize }) => {
+        const Component =
+          kind === 'editorial'
             ? TeaserFrontSplitHeadline.Editorial
             : TeaserFrontSplitHeadline.Interaction
-          const sizes = {
-            medium: titleSize === 'medium',
-            large: titleSize === 'large'
-          }
-          return <Component attributes={attributes} {...sizes}>
+        const sizes = {
+          medium: titleSize === 'medium',
+          large: titleSize === 'large'
+        }
+        return (
+          <Component attributes={attributes} {...sizes}>
             {children}
           </Component>
-        }
-      ),
+        )
+      }),
       subject,
       lead,
       format,
@@ -335,7 +330,7 @@ const createSchema = ({
         </TeaserFrontTypo>
       </Link>
     ),
-    props (node) {
+    props(node) {
       return node.data
     },
     editorModule: 'teaser',
@@ -354,22 +349,22 @@ const createSchema = ({
     },
     rules: [
       skipMdastImage,
-      title(
-        'FRONTTYPOTITLE',
-        ({ children, attributes, kind, titleSize }) => {
-          const Component = kind === 'editorial'
-          ? TeaserFrontTypoHeadline.Editorial
-          : TeaserFrontTypoHeadline.Interaction
-          const sizes = {
-            medium: titleSize === 'medium',
-            large: titleSize === 'large',
-            small: titleSize === 'small'
-          }
-          return <Component attributes={attributes} {...sizes}>
+      title('FRONTTYPOTITLE', ({ children, attributes, kind, titleSize }) => {
+        const Component =
+          kind === 'editorial'
+            ? TeaserFrontTypoHeadline.Editorial
+            : TeaserFrontTypoHeadline.Interaction
+        const sizes = {
+          medium: titleSize === 'medium',
+          large: titleSize === 'large',
+          small: titleSize === 'small'
+        }
+        return (
+          <Component attributes={attributes} {...sizes}>
             {children}
           </Component>
-        }
-      ),
+        )
+      }),
       subject,
       lead,
       format,
@@ -386,7 +381,7 @@ const createSchema = ({
         </TeaserFrontTile>
       </Link>
     ),
-    props: (node, index, parent, {ancestors}) => {
+    props: (node, index, parent, { ancestors }) => {
       const aboveTheFold = ancestors[1].children.indexOf(ancestors[0]) < 2
       return {
         image: extractImage(node.children[0]),
@@ -418,11 +413,12 @@ const createSchema = ({
       title(
         'FRONTTILETITLE',
         ({ children, attributes, kind, titleSize, columns }) => {
-          const Component = kind === 'editorial'
-          ? TeaserFrontTileHeadline.Editorial
-          : kind === 'scribble'
-            ? TeaserFrontTileHeadline.Scribble
-            : TeaserFrontTileHeadline.Interaction
+          const Component =
+            kind === 'editorial'
+              ? TeaserFrontTileHeadline.Editorial
+              : kind === 'scribble'
+              ? TeaserFrontTileHeadline.Scribble
+              : TeaserFrontTileHeadline.Interaction
           const sizes = {
             medium: titleSize === 'medium'
           }
@@ -440,13 +436,13 @@ const createSchema = ({
     ]
   }
 
-
   const carouselSubject = {
     matchMdast: matchHeading(2),
-    component: ({ children, attributes, ...props }) =>
+    component: ({ children, attributes, ...props }) => (
       <TeaserCarouselSubject attributes={attributes} {...props}>
         {children}
-      </TeaserCarouselSubject>,
+      </TeaserCarouselSubject>
+    ),
     props: (node, index, parent, { ancestors }) => {
       const teaser = ancestors.find(matchTeaser)
       return {
@@ -464,10 +460,11 @@ const createSchema = ({
   }
   const carouselTileLead = {
     matchMdast: matchHeading(4),
-    component: ({ children, attributes }) =>
+    component: ({ children, attributes }) => (
       <TeaserCarouselLead attributes={attributes}>
         {children}
-      </TeaserCarouselLead>,
+      </TeaserCarouselLead>
+    ),
     editorModule: 'headline',
     editorOptions: {
       type: 'CAROUSELLEAD',
@@ -481,23 +478,20 @@ const createSchema = ({
 
   const carouselFormat = {
     matchMdast: matchHeading(6),
-    component: ({ children, attributes, href, formatColor }) =>
+    component: ({ children, attributes, href, formatColor }) => (
       <TeaserCarouselFormat color={formatColor}>
         <Link href={href} passHref>
           <a href={href} {...styles.link}>
             {children}
           </a>
         </Link>
-      </TeaserCarouselFormat>,
-    props (node, index, parent, { ancestors }) {
+      </TeaserCarouselFormat>
+    ),
+    props(node, index, parent, { ancestors }) {
       const teaser = ancestors.find(matchTeaser)
       return {
-        href: teaser
-          ? teaser.data.formatUrl
-          : undefined,
-        formatColor: teaser 
-          ? teaser.data.formatColor
-          : undefined
+        href: teaser ? teaser.data.formatUrl : undefined,
+        formatColor: teaser ? teaser.data.formatColor : undefined
       }
     },
     editorModule: 'headline',
@@ -549,21 +543,15 @@ const createSchema = ({
     },
     rules: [
       skipMdastImage,
-      title(
-        'CAROUSELTILETITLE',
-        ({ children, attributes, kind }) => {
-          const Component = kind === 'editorial'
-          ? TeaserCarouselHeadline.Editorial
-          : kind === 'scribble'
+      title('CAROUSELTILETITLE', ({ children, attributes, kind }) => {
+        const Component =
+          kind === 'editorial'
+            ? TeaserCarouselHeadline.Editorial
+            : kind === 'scribble'
             ? TeaserCarouselHeadline.Scribble
             : TeaserCarouselHeadline.Interaction
-          return (
-            <Component attributes={attributes}>
-              {children}
-            </Component>
-          )
-        }
-      ),
+        return <Component attributes={attributes}>{children}</Component>
+      }),
       carouselSubject,
       carouselTileLead,
       carouselFormat,
@@ -574,25 +562,27 @@ const createSchema = ({
   const carouselRow = {
     matchMdast: matchZone('TEASERGROUP'),
     component: ({ children, attributes, ...props }) => {
-      return <TeaserCarouselRow attributes={attributes} {...props}>
-        {children}
-      </TeaserCarouselRow>
+      return (
+        <TeaserCarouselRow attributes={attributes} {...props}>
+          {children}
+        </TeaserCarouselRow>
+      )
     },
     editorModule: 'articleGroup',
     editorOptions: {
       type: 'CAROUSELROW'
     },
-    rules: [
-      carouselTile
-    ]
+    rules: [carouselTile]
   }
 
   const carousel = {
     matchMdast: matchTeaserType('carousel'),
     component: ({ children, attributes, ...props }) => {
-      return <TeaserCarousel attributes={attributes} {...props}>
-        {children}
-      </TeaserCarousel>
+      return (
+        <TeaserCarousel attributes={attributes} {...props}>
+          {children}
+        </TeaserCarousel>
+      )
     },
     props: node => ({
       ...node.data
@@ -603,13 +593,7 @@ const createSchema = ({
       teaserType: 'carousel',
       insertButtonText: 'Carousel',
       formTitle: 'Carousel',
-      formOptions: [
-        'noAdapt',
-        'color',
-        'bgColor',
-        'outline',
-        'bigger'
-      ],
+      formOptions: ['noAdapt', 'color', 'bgColor', 'outline', 'bigger'],
       defaultValues: {
         outline: '#D7D7D7'
       }
@@ -640,12 +624,17 @@ const createSchema = ({
       {
         matchMdast: matchType('root'),
         // the document is not a node in slate and doesn't need attributes
-        component: ({ children }) =>
-          <div style={{
-            width: '100%', overflow: 'hidden', backgroundColor: '#fff'
-          }}>
+        component: ({ children }) => (
+          <div
+            style={{
+              width: '100%',
+              overflow: 'hidden',
+              backgroundColor: '#fff'
+            }}
+          >
             {children}
-          </div>,
+          </div>
+        ),
         editorModule: 'front',
         rules: [
           {
@@ -664,18 +653,18 @@ const createSchema = ({
               mobileColumns: node.data.mobileColumns
             }),
             component: ({ children, attributes, ...props }) => {
-              return <TeaserFrontTileRow attributes={attributes} {...props}>
-                {children}
-              </TeaserFrontTileRow>
+              return (
+                <TeaserFrontTileRow attributes={attributes} {...props}>
+                  {children}
+                </TeaserFrontTileRow>
+              )
             },
             editorModule: 'teasergroup',
             editorOptions: {
               type: 'FRONTTILEROW',
               insertButton: 'Front Tile Row'
             },
-            rules: [
-              frontTileTeaser
-            ]
+            rules: [frontTileTeaser]
           },
           carousel,
           ...createLiveTeasers({

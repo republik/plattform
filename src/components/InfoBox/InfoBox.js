@@ -14,54 +14,57 @@ export const IMAGE_SIZES = {
 export const DEFAULT_IMAGE_SIZE = 'S'
 
 const textAttribute = 'data-infobox-text'
-export const textAttributes = {[textAttribute]: true}
+export const textAttributes = { [textAttribute]: true }
 
-const figureChildStyles = Object.keys(IMAGE_SIZES).reduce((styles, key) => {
-  const size = IMAGE_SIZES[key]
-  styles[key] = css({
-    '& figure': {
-      width: size,
-      maxWidth: '100%'
-    }
-  })
-  return styles
-}, {
-  absolute: css({
-    [onlyS]: {
+const figureChildStyles = Object.keys(IMAGE_SIZES).reduce(
+  (styles, key) => {
+    const size = IMAGE_SIZES[key]
+    styles[key] = css({
       '& figure': {
-        maxWidth: MAX_WIDTH_MOBILE
+        width: size,
+        maxWidth: '100%'
       }
-    },
-    [mUp]: {
-      position: 'relative',
-      minHeight: IMAGE_SIZES.S,
+    })
+    return styles
+  },
+  {
+    absolute: css({
+      [onlyS]: {
+        '& figure': {
+          maxWidth: MAX_WIDTH_MOBILE
+        }
+      },
+      [mUp]: {
+        position: 'relative',
+        minHeight: IMAGE_SIZES.S,
+        '& figure': {
+          position: 'absolute',
+          left: 0,
+          margin: '0 15px 15px 0',
+          top: 0
+        }
+      }
+    }),
+    float: css({
       '& figure': {
-        position: 'absolute',
-        left: 0,
-        margin: '0 15px 15px 0',
-        top: 0
+        float: 'left',
+        margin: '10px 15px 5px 0',
+        width: '99px'
+      },
+      // Micro clearfix hack to avoid surrounding text floating into info boxes
+      // with image and very short text.
+      '&::before': {
+        content: ' ',
+        display: 'table'
+      },
+      '&::after': {
+        content: ' ',
+        display: 'table',
+        clear: 'both'
       }
-    }
-  }),
-  float: css({
-    '& figure': {
-      float: 'left',
-      margin: '10px 15px 5px 0',
-      width: '99px'
-    },
-    // Micro clearfix hack to avoid surrounding text floating into info boxes
-    // with image and very short text.
-    '&::before': {
-      content: ' ',
-      display: 'table'
-    },
-    '&::after': {
-      content: ' ',
-      display: 'table',
-      clear: 'both'
-    }
-  })
-})
+    })
+  }
+)
 const textChildStyles = Object.keys(IMAGE_SIZES).reduce((styles, key) => {
   const size = IMAGE_SIZES[key]
   styles[key] = css({
@@ -101,7 +104,16 @@ const getBreakoutSize = (size, hasFigure) => {
   return size
 }
 
-const InfoBox = ({ t, children, attributes, size, figureSize, figureFloat, collapsable, collapsableEditorPreview }) => {
+const InfoBox = ({
+  t,
+  children,
+  attributes,
+  size,
+  figureSize,
+  figureFloat,
+  collapsable,
+  collapsableEditorPreview
+}) => {
   let styles = {}
   const float = figureFloat || size === 'float'
   if (figureSize) {
@@ -123,17 +135,21 @@ const InfoBox = ({ t, children, attributes, size, figureSize, figureFloat, colla
     ...(size === 'float' ? floatStyle : defaultStyle)
   }
 
-  const content = collapsable
-    ? <Collapsable t={t} height={{ mobile: 230, desktop: 230 }} editorPreview={collapsableEditorPreview}>
+  const content = collapsable ? (
+    <Collapsable
+      t={t}
+      height={{ mobile: 230, desktop: 230 }}
+      editorPreview={collapsableEditorPreview}
+    >
       {children}
     </Collapsable>
-    : children
+  ) : (
+    children
+  )
 
   return (
     <Breakout attributes={attributes} size={getBreakoutSize(size, figureSize)}>
-      <section {...styles}>
-        {content}
-      </section>
+      <section {...styles}>{content}</section>
     </Breakout>
   )
 }

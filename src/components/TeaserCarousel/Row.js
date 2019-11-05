@@ -10,9 +10,7 @@ import { PADDING, TILE_MARGIN_RIGHT } from './constants'
 import CarouselContext from './Context'
 import { color } from 'd3-color'
 
-import {
-  plainButtonRule
-} from '../Button'
+import { plainButtonRule } from '../Button'
 
 const styles = {
   container: css({
@@ -70,7 +68,7 @@ const styles = {
 export const Row = ({ children }) => {
   const context = useContext(CarouselContext)
   const overflow = useRef()
-  const [{left, right}, setArrows] = useState({ left: false, right: false })
+  const [{ left, right }, setArrows] = useState({ left: false, right: false })
   const lightBg = useMemo(() => {
     const bg = color(context.bgColor)
     bg.opacity = 0.7
@@ -121,7 +119,7 @@ export const Row = ({ children }) => {
       </div>
       <button
         {...styles.arrow}
-        {...left && styles.arrowHoverable}
+        {...(left && styles.arrowHoverable)}
         style={{ left: 0, backgroundColor: lightBg }}
         onClick={() => {
           const scroller = overflow.current
@@ -138,12 +136,13 @@ export const Row = ({ children }) => {
               ...getTop()
             }
           })
-        }}>
+        }}
+      >
         <ChevronLeft size={50} fill={context.color} />
       </button>
       <button
         {...styles.arrow}
-        {...right && styles.arrowHoverable}
+        {...(right && styles.arrowHoverable)}
         style={{ right: 0, backgroundColor: lightBg }}
         onClick={() => {
           const scroller = overflow.current
@@ -154,17 +153,20 @@ export const Row = ({ children }) => {
           })
 
           // scroll all the way at the end
-          const newRightEdge = scroller.scrollLeft + target.getBoundingClientRect().left + clientWidth
+          const newRightEdge =
+            scroller.scrollLeft +
+            target.getBoundingClientRect().left +
+            clientWidth
           scrollIntoView(target, {
             time: 400,
             align: {
               left: 0,
-              leftOffset: newRightEdge >= scroller.scrollWidth
-                ? 0 : PADDING,
+              leftOffset: newRightEdge >= scroller.scrollWidth ? 0 : PADDING,
               ...getTop()
             }
           })
-        }}>
+        }}
+      >
         <ChevronRight size={50} fill={context.color} />
       </button>
     </div>

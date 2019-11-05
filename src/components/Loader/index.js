@@ -24,11 +24,9 @@ const styles = {
 
 const ErrorMessage = ({ error }) => (
   <P style={{ color: colors.error }}>
-    {error.graphQLErrors && error.graphQLErrors.length ? (
-      error.graphQLErrors.map(e => e.message).join(', ')
-    ) : (
-      error.toString()
-    )}
+    {error.graphQLErrors && error.graphQLErrors.length
+      ? error.graphQLErrors.map(e => e.message).join(', ')
+      : error.toString()}
   </P>
 )
 
@@ -56,7 +54,14 @@ class Loader extends Component {
   }
   render() {
     const { visible } = this.state
-    const { style, message, loading, error, render, ErrorContainer } = this.props
+    const {
+      style,
+      message,
+      loading,
+      error,
+      render,
+      ErrorContainer
+    } = this.props
 
     if (loading && !visible) {
       return <Spacer style={style} />
@@ -81,7 +86,7 @@ class Loader extends Component {
 Loader.defaultProps = {
   delay: 500,
   render: () => null,
-  ErrorContainer: ({children}) => children
+  ErrorContainer: ({ children }) => children
 }
 
 export default Loader

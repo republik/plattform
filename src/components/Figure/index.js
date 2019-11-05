@@ -5,16 +5,9 @@ import { css, merge } from 'glamor'
 import AudioIcon from 'react-icons/lib/md/volume-up'
 
 import { mUp } from '../../theme/mediaQueries'
-import {
-  breakoutStyles,
-  MAX_WIDTH,
-  PADDING,
-  BREAKOUT_SIZES
-} from '../Center'
+import { breakoutStyles, MAX_WIDTH, PADDING, BREAKOUT_SIZES } from '../Center'
 
-import {
-  plainButtonRule
-} from '../Button'
+import { plainButtonRule } from '../Button'
 
 export { default as FigureImage } from './Image'
 export { default as FigureCaption } from './Caption'
@@ -51,7 +44,7 @@ const styles = {
   coverBreakout: css({
     margin: '30px auto 20px auto',
     maxWidth: MAX_WIDTH + PADDING * 2,
-    padding: PADDING,
+    padding: PADDING
   }),
   coverText: css({
     position: 'absolute',
@@ -89,7 +82,7 @@ const styles = {
       marginLeft: -75,
       marginTop: -75,
       width: 150,
-      height: 150,
+      height: 150
     },
     '@media (hover)': {
       ':hover': {
@@ -148,7 +141,7 @@ Figure.propTypes = {
   attributes: PropTypes.object
 }
 
-const textPosStyle = ({anchor, offset}) => {
+const textPosStyle = ({ anchor, offset }) => {
   if (anchor === 'middle') {
     return {
       position: 'absolute',
@@ -171,37 +164,53 @@ const textPosStyle = ({anchor, offset}) => {
   }
 }
 
-export const CoverTextTitleBlockHeadline = ({children, attributes}) =>
-  <div {...attributes} {...styles.coverTextTitleBlockHeadline}>{children}</div>
+export const CoverTextTitleBlockHeadline = ({ children, attributes }) => (
+  <div {...attributes} {...styles.coverTextTitleBlockHeadline}>
+    {children}
+  </div>
+)
 
 const AudioButton = ({ color, backgroundColor, onClick }) => {
   const pulse = css.keyframes({
-    '0%': {boxShadow: `0 0 0 0 ${backgroundColor}`},
-    '70%': {boxShadow: `0 0 0 10px transparent`},
-    '100%': {boxShadow: `0 0 0 0 transparent`},
+    '0%': { boxShadow: `0 0 0 0 ${backgroundColor}` },
+    '70%': { boxShadow: `0 0 0 10px transparent` },
+    '100%': { boxShadow: `0 0 0 0 transparent` }
   })
 
   return (
-    <button {...styles.coverAudio} onClick={onClick} style={{
-      color,
-      backgroundColor
-    }} {...css({
-      animation: `${pulse} 2s 3`
-    })}>
+    <button
+      {...styles.coverAudio}
+      onClick={onClick}
+      style={{
+        color,
+        backgroundColor
+      }}
+      {...css({
+        animation: `${pulse} 2s 3`
+      })}
+    >
       <AudioIcon />
     </button>
   )
 }
 
-export const FigureCover = ({size, text, audio, ...props}) => {
-  const sizeStyle = size ? size === 'breakout' ? styles.coverBreakout : styles.coverSize : undefined
-  return <div {...styles.cover} {...sizeStyle}>
-    <Figure size={size} {...props} />
-    {text && <div style={textPosStyle(text)} {...styles.coverText}>
-      {text.element}
-    </div>}
-    {audio && <AudioButton {...audio} />}
-  </div>
+export const FigureCover = ({ size, text, audio, ...props }) => {
+  const sizeStyle = size
+    ? size === 'breakout'
+      ? styles.coverBreakout
+      : styles.coverSize
+    : undefined
+  return (
+    <div {...styles.cover} {...sizeStyle}>
+      <Figure size={size} {...props} />
+      {text && (
+        <div style={textPosStyle(text)} {...styles.coverText}>
+          {text.element}
+        </div>
+      )}
+      {audio && <AudioButton {...audio} />}
+    </div>
+  )
 }
 
 export const FigureGroup = ({ children, attributes, columns, size, data }) => {
@@ -227,4 +236,3 @@ FigureGroup.propTypes = {
 FigureGroup.defaultProps = {
   columns: 2
 }
-

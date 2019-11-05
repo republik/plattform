@@ -6,39 +6,50 @@ import colors from '../../theme/colors'
 import { underline } from '../../lib/styleMixins'
 import { tUp } from './mediaQueries'
 
-const CreditLink = ({ attributes, children, color, collapsedColor, ...props }) => {
+const CreditLink = ({
+  attributes,
+  children,
+  color,
+  collapsedColor,
+  ...props
+}) => {
   const labColor = lab(color)
   const labCollapsedColor = collapsedColor && lab(collapsedColor)
 
-  const baseColorStyle = color ? {
-    color,
-    '@media (hover)': {
-      ':hover': {
-        color: labColor.l > 50
-          ? labColor.darker(0.6)
-          : labColor.brighter(3)
+  const baseColorStyle = color
+    ? {
+        color,
+        '@media (hover)': {
+          ':hover': {
+            color: labColor.l > 50 ? labColor.darker(0.6) : labColor.brighter(3)
+          }
+        }
       }
-    }
-  } : {
-    color: colors.text,
-    '@media (hover)': {
-      ':hover': {
-        color: colors.lightText
+    : {
+        color: colors.text,
+        '@media (hover)': {
+          ':hover': {
+            color: colors.lightText
+          }
+        }
       }
-    }
-  }
 
-  const colorStyle = labCollapsedColor ? {
-    color: collapsedColor,
-    '@media (hover)': {
-      ':hover': {
-        color: labCollapsedColor.l > 50 ? labCollapsedColor.darker(0.6) : labCollapsedColor.brighter(3)
-      },
-    },
-    [tUp]: {
-      ...baseColorStyle
-    }
-  } : baseColorStyle
+  const colorStyle = labCollapsedColor
+    ? {
+        color: collapsedColor,
+        '@media (hover)': {
+          ':hover': {
+            color:
+              labCollapsedColor.l > 50
+                ? labCollapsedColor.darker(0.6)
+                : labCollapsedColor.brighter(3)
+          }
+        },
+        [tUp]: {
+          ...baseColorStyle
+        }
+      }
+    : baseColorStyle
 
   const style = css({
     ...underline,

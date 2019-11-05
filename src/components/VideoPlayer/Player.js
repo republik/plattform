@@ -28,7 +28,7 @@ const styles = {
     top: 0,
     right: 0,
     bottom: 0,
-    left: 0,  
+    left: 0,
     zIndex: zIndex.foreground,
     backgroundColor: '#000',
     display: 'flex',
@@ -105,7 +105,7 @@ const styles = {
     cursor: 'pointer',
     display: 'flex',
     alignItems: 'center',
-    height: 24,
+    height: 24
   }),
   iconsRight: css({
     position: 'absolute',
@@ -117,7 +117,7 @@ const styles = {
   time: css({
     color: '#fff',
     padding: 6,
-    ...sansSerifRegular18,
+    ...sansSerifRegular18
   }),
   scrub: css({
     zIndex: ZINDEX_VIDEOPLAYER_SCRUB,
@@ -150,9 +150,8 @@ class VideoPlayer extends Component {
       }
       const progress = video.currentTime / video.duration
       this.props.onProgress && this.props.onProgress(progress, video)
-      this.context.saveMediaProgress && this.context.saveMediaProgress(
-        this.props, video
-      )
+      this.context.saveMediaProgress &&
+        this.context.saveMediaProgress(this.props, video)
       this.setState({ progress })
     }
     this.syncProgress = () => {
@@ -269,7 +268,7 @@ class VideoPlayer extends Component {
     this.setInstanceState = state => {
       this.setState(state)
     }
-    this.handleKeyDown = (event) => {
+    this.handleKeyDown = event => {
       if (
         event.key === 'k' ||
         (!this.state.isFull && event.keyCode === 32) // 32: spacebar
@@ -287,7 +286,7 @@ class VideoPlayer extends Component {
         this.toggleFullscreen(event)
       }
     }
-    this.toggleFullscreen = (e) => {
+    this.toggleFullscreen = e => {
       e.preventDefault()
       e.stopPropagation()
       const { fullscreen, isFull } = this.state
@@ -392,10 +391,7 @@ class VideoPlayer extends Component {
 
     this.setTextTracksMode()
 
-    Promise.all([
-      this.getStartTime(),
-      this.isSeekable
-    ]).then(([startTime]) => {
+    Promise.all([this.getStartTime(), this.isSeekable]).then(([startTime]) => {
       if (startTime !== undefined) {
         this.setTime(startTime)
       }
@@ -426,26 +422,44 @@ class VideoPlayer extends Component {
     this.state.fullscreen && this.state.fullscreen.dispose()
   }
   render() {
-    const { src, showPlay, size, forceMuted, autoPlay, loop, cinemagraph, attributes = {} } = this.props
-    const { playing, progress, muted, subtitles, loading, fullscreen, isFull } = this.state
+    const {
+      src,
+      showPlay,
+      size,
+      forceMuted,
+      autoPlay,
+      loop,
+      cinemagraph,
+      attributes = {}
+    } = this.props
+    const {
+      playing,
+      progress,
+      muted,
+      subtitles,
+      loading,
+      fullscreen,
+      isFull
+    } = this.state
 
-    const cinemagraphAttributes = cinemagraph ? {
-      loop: true,
-      muted: true,
-      autoPlay: true,
-      playsInline: true,
-      'webkit-playsinline': ''
-    } : {}
+    const cinemagraphAttributes = cinemagraph
+      ? {
+          loop: true,
+          muted: true,
+          autoPlay: true,
+          playsInline: true,
+          'webkit-playsinline': ''
+        }
+      : {}
 
     const fullWindow = this.props.fullWindow || !fullscreen
     const enableRewind = this.video && this.video.currentTime > 0.1
 
     return (
-      <div {...(
-        fullWindow && isFull
+      <div
+        {...(fullWindow && isFull
           ? styles.fullWindow
-          : merge(styles.wrapper, breakoutStyles[size])
-      )}
+          : merge(styles.wrapper, breakoutStyles[size]))}
         onClick={this.captureFocus}
       >
         <video
@@ -460,18 +474,18 @@ class VideoPlayer extends Component {
           controls={isFull && !fullWindow}
           controlsList={isFull ? 'nodownload' : undefined}
           onLoadedMetadata={this.onLoadedMetaData}
-          crossOrigin="anonymous"
+          crossOrigin='anonymous'
           poster={src.thumbnail}
-          tabIndex="0"
+          tabIndex='0'
           onKeyDown={this.handleKeyDown}
         >
-          <source src={src.hls} type="application/x-mpegURL" />
-          <source src={src.mp4} type="video/mp4" />
+          <source src={src.hls} type='application/x-mpegURL' />
+          <source src={src.mp4} type='video/mp4' />
           {!!src.subtitles && (
             <track
-              label="Deutsch"
-              kind="subtitles"
-              srcLang="de"
+              label='Deutsch'
+              kind='subtitles'
+              srcLang='de'
               src={src.subtitles}
               default
             />
@@ -491,18 +505,27 @@ class VideoPlayer extends Component {
             <Play />
           </div>
           <div {...styles.iconsLeft}>
-            <div onClick={e => { e.stopPropagation(); enableRewind && this.setTime(0)}}>
+            <div
+              onClick={e => {
+                e.stopPropagation()
+                enableRewind && this.setTime(0)
+              }}
+            >
               <Rewind disabled={!enableRewind} />
             </div>
             <div {...styles.time}>
-              {`${getFormattedTime(this.video ? this.video.currentTime : '0:00')} / ${getFormattedTime(this.video ? this.video.duration : '–:––')}`}
+              {`${getFormattedTime(
+                this.video ? this.video.currentTime : '0:00'
+              )} / ${getFormattedTime(
+                this.video ? this.video.duration : '–:––'
+              )}`}
             </div>
           </div>
           <div {...styles.iconsRight}>
             {loading && <InlineSpinner size={25} />}{' '}
             {!!src.subtitles && (
               <span
-                role="button"
+                role='button'
                 title={`Untertitel ${subtitles ? 'an' : 'aus'}`}
                 onClick={e => {
                   e.preventDefault()
@@ -519,40 +542,47 @@ class VideoPlayer extends Component {
                 <Subtitles off={!subtitles} />
               </span>
             )}{' '}
-            {forceMuted === undefined && !cinemagraph && <span
-              role="button"
-              title={`Audio ${muted ? 'aus' : 'an'}`}
-              onClick={e => {
-                e.preventDefault()
-                e.stopPropagation()
-                this.setMuted(!muted)
-              }}
-            >
-              <Volume off={muted} />
-            </span>}
+            {forceMuted === undefined && !cinemagraph && (
+              <span
+                role='button'
+                title={`Audio ${muted ? 'aus' : 'an'}`}
+                onClick={e => {
+                  e.preventDefault()
+                  e.stopPropagation()
+                  this.setMuted(!muted)
+                }}
+              >
+                <Volume off={muted} />
+              </span>
+            )}
             <span
-              role="button"
-              title="Vollbild"
+              role='button'
+              title='Vollbild'
               onClick={this.toggleFullscreen}
             >
               <Fullscreen off={!isFull} />
             </span>
           </div>
         </div>
-        {!cinemagraph && <Fragment>
-          <div {...styles.progress} style={{
-            width: `${progress * 100}%`,
-            bottom: fullWindow && !playing ? 0 : undefined
-          }} />
-          <div
-            {...styles.scrub}
-            ref={this.scrubRef}
-            onTouchStart={this.scrubStart}
-            onTouchMove={this.scrub}
-            onTouchEnd={this.scrubEnd}
-            onMouseDown={this.scrubStart}
-          />
-        </Fragment>}
+        {!cinemagraph && (
+          <Fragment>
+            <div
+              {...styles.progress}
+              style={{
+                width: `${progress * 100}%`,
+                bottom: fullWindow && !playing ? 0 : undefined
+              }}
+            />
+            <div
+              {...styles.scrub}
+              ref={this.scrubRef}
+              onTouchStart={this.scrubStart}
+              onTouchMove={this.scrub}
+              onTouchEnd={this.scrubEnd}
+              onMouseDown={this.scrubStart}
+            />
+          </Fragment>
+        )}
       </div>
     )
   }
@@ -567,12 +597,12 @@ VideoPlayer.propTypes = {
       const value = props[propName]
       if (value && value.match(/^https?:/)) {
         return new Error(
-`Invalid prop \`${propName}\` supplied to
+          `Invalid prop \`${propName}\` supplied to
 \`${componentName}\`. Subtitles should be loaded from a relative or absolute path.
 CrossOrigin subtitles do not work in older browsers.'`
-        );
+        )
       }
-    },
+    }
   }),
   size: PropTypes.oneOf(Object.keys(breakoutStyles)),
   showPlay: PropTypes.bool,
@@ -587,7 +617,7 @@ CrossOrigin subtitles do not work in older browsers.'`
   onFull: PropTypes.func
 }
 
-VideoPlayer.contextTypes = {
+VideoPlayer.contextTypes = {
   getMediaProgress: PropTypes.func,
   saveMediaProgress: PropTypes.func
 }

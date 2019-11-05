@@ -18,13 +18,13 @@ const styles = {
     margin: 0,
     marginBottom: 6,
     [mUp]: {
-      marginBottom: 8,
+      marginBottom: 8
     }
   }),
   editorial: css({
     ...convertStyleToRem(serifTitle20),
     [mUp]: {
-      ...convertStyleToRem(serifTitle22),
+      ...convertStyleToRem(serifTitle22)
     }
   }),
   interaction: css({
@@ -37,16 +37,25 @@ const styles = {
   scribble: css({
     ...convertStyleToRem(cursiveTitle20),
     [mUp]: {
-      ...convertStyleToRem(cursiveTitle22),
+      ...convertStyleToRem(cursiveTitle22)
     }
   })
 }
 
-export const Editorial = ({ children, style }) => 
-  <h1 {...styles.base} {...styles.editorial} style={style}>{children}</h1>
+export const Editorial = ({ children, style }) => (
+  <h1 {...styles.base} {...styles.editorial} style={style}>
+    {children}
+  </h1>
+)
 
-export const Interaction = ({ children, style }) => 
-  <h1 {...styles.base} {...styles.interaction} style={style}>{children}</h1>
+export const Interaction = ({ children, style }) => (
+  <h1 {...styles.base} {...styles.interaction} style={style}>
+    {children}
+  </h1>
+)
 
-export const Scribble = ({ children, style }) => 
-  <h1 {...styles.base} {...styles.scribble} style={style}>{children}</h1>
+export const Scribble = ({ children, style }) => (
+  <h1 {...styles.base} {...styles.scribble} style={style}>
+    {children}
+  </h1>
+)

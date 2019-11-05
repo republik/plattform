@@ -28,8 +28,6 @@ const styles = {
 
 export default ({ children }) => (
   <pre {...styles.pre}>
-    <code {...styles.code}>
-      {children}
-    </code>
+    <code {...styles.code}>{children}</code>
   </pre>
 )

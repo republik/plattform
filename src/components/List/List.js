@@ -27,7 +27,7 @@ const styles = {
   orderedList: css({
     paddingLeft: '1.7em',
     '& > li': {
-      paddingLeft: `${MARGIN}px`,
+      paddingLeft: `${MARGIN}px`
     }
   }),
   li: css({
@@ -106,7 +106,7 @@ OrderedList.defaultProps = {
   start: 1
 }
 
-export const ListItem = ({ children, attributes = {}, style={} }) => (
+export const ListItem = ({ children, attributes = {}, style = {} }) => (
   <li {...styles.li} {...attributes} style={style}>
     {children}
   </li>
@@ -118,6 +118,11 @@ ListItem.propTypes = {
   style: PropTypes.object
 }
 
-export const List = ({ children, data, attributes = {} }) => data.ordered
-  ? <OrderedList start={data.start} compact={data.compact} {...attributes}>{ children }</OrderedList>
-  : <UnorderedList compact={data.compact}>{ children }</UnorderedList>
+export const List = ({ children, data, attributes = {} }) =>
+  data.ordered ? (
+    <OrderedList start={data.start} compact={data.compact} {...attributes}>
+      {children}
+    </OrderedList>
+  ) : (
+    <UnorderedList compact={data.compact}>{children}</UnorderedList>
+  )

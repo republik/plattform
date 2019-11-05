@@ -2,7 +2,6 @@ import React from 'react'
 import { css } from 'glamor'
 import PropTypes from 'prop-types'
 
-
 export const PADDING = 15
 
 export const MAX_WIDTH = 665
@@ -28,10 +27,9 @@ const floatStyle = {
   width: '100%'
 }
 
-export const breakoutUp = `@media only screen and (min-width: ${
-  MAX_WIDTH +
+export const breakoutUp = `@media only screen and (min-width: ${MAX_WIDTH +
   BREAKOUT * 2 +
-  PADDING * 2 + 
+  PADDING * 2 +
   PADDING}px)`
 
 const styles = {

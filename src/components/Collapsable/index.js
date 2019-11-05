@@ -1,3 +1,1 @@
-export {
-  default as Collapsable
-} from './Collapsable'
+export { default as Collapsable } from './Collapsable'

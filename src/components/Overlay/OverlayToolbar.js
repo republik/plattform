@@ -1,11 +1,11 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import {css} from 'glamor'
+import { css } from 'glamor'
 import MdClose from 'react-icons/lib/md/close'
 
 import colors from '../../theme/colors'
-import {mUp} from '../../theme/mediaQueries'
-import {sansSerifRegular16} from '../Typography/styles'
+import { mUp } from '../../theme/mediaQueries'
+import { sansSerifRegular16 } from '../Typography/styles'
 
 export const height = 48
 
@@ -48,7 +48,7 @@ const styles = {
 
     [mUp]: {
       width: '48px',
-      flexBasis: '48px',
+      flexBasis: '48px'
     }
   }),
   confirm: css({
@@ -67,19 +67,19 @@ const styles = {
     padding: '0 12px',
 
     [mUp]: {
-      padding: '0 20px',
+      padding: '0 20px'
     }
   })
 }
 
-export const OverlayToolbar = ({children}) => (
+export const OverlayToolbar = ({ children }) => (
   <div {...styles.root}>{children}</div>
 )
 OverlayToolbar.propTypes = {
   children: PropTypes.node.isRequired
 }
 
-export const OverlayToolbarClose = ({onClick}) => (
+export const OverlayToolbarClose = ({ onClick }) => (
   <button {...styles.close} onClick={onClick}>
     <MdClose />
   </button>
@@ -88,7 +88,7 @@ OverlayToolbarClose.propTypes = {
   onClick: PropTypes.func.isRequired
 }
 
-export const OverlayToolbarConfirm = ({label, onClick}) => (
+export const OverlayToolbarConfirm = ({ label, onClick }) => (
   <button {...styles.confirm} onClick={onClick}>
     {label}
   </button>

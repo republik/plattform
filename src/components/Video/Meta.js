@@ -109,7 +109,7 @@ export const Meta = ({
   return (
     <div {...styles.root}>
       <Link href={userUrl}>
-        <img {...styles.profilePicture} src={userProfileImageUrl} alt="" />
+        <img {...styles.profilePicture} src={userProfileImageUrl} alt='' />
       </Link>
       <Link href={url}>
         <Icon {...styles.icon} />

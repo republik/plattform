@@ -3,7 +3,7 @@
 export const BreakPoints = {
   mobile: 640,
   tablet: 1174,
-  desktop: 1400,
+  desktop: 1400
 }
 
 export const mUp = `@media only screen and (min-width: ${BreakPoints.mobile}px)`

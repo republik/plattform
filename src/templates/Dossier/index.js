@@ -1,8 +1,6 @@
 import React from 'react'
 
-import {
-  DossierTag
-} from '../../components/Dossier'
+import { DossierTag } from '../../components/Dossier'
 
 import createArticleSchema from '../Article'
 
@@ -23,7 +21,7 @@ const createSchema = ({
     getPath,
     titleBlockPrepend: [
       titleBlockPrepend,
-      <DossierTag attributes={{contentEditable: false}}>
+      <DossierTag attributes={{ contentEditable: false }}>
         {dossierLabel}
       </DossierTag>
     ],

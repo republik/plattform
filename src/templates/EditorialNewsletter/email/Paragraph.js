@@ -25,5 +25,8 @@ export const Link = ({ children, href, title }) => (
 
 // emails normally don't do glamor but
 // Editorial.fontRule is manually injected in ./Container
-export default ({ children }) =>
-  <p style={paragraphStyle} className={Editorial.fontRule}>{children}</p>
+export default ({ children }) => (
+  <p style={paragraphStyle} className={Editorial.fontRule}>
+    {children}
+  </p>
+)

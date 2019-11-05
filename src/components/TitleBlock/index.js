@@ -24,17 +24,16 @@ const styles = {
   })
 }
 
-const TitleBlock = ({
-  children,
-  attributes,
-  center,
-  margin
-}) => {
+const TitleBlock = ({ children, attributes, center, margin }) => {
   return (
-    <section {...attributes} {...merge(styles.container, margin && styles.containerMargin)} style={{
-      textAlign: center ? 'center' : undefined,
-      maxWidth: center ? MAX_WIDTH + BREAKOUT + PADDING : undefined
-    }}>
+    <section
+      {...attributes}
+      {...merge(styles.container, margin && styles.containerMargin)}
+      style={{
+        textAlign: center ? 'center' : undefined,
+        maxWidth: center ? MAX_WIDTH + BREAKOUT + PADDING : undefined
+      }}
+    >
       {children}
     </section>
   )

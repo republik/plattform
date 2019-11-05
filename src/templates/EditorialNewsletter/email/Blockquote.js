@@ -21,19 +21,13 @@ const sourceStyle = {
 }
 
 export default ({ children }) => (
-  <blockquote style={blockquoteStyle}>
-    {children}
-  </blockquote>
+  <blockquote style={blockquoteStyle}>{children}</blockquote>
 )
 
 export const BlockquoteText = ({ children }) => (
-  <p style={textStyle}>
-    {children}
-  </p>
+  <p style={textStyle}>{children}</p>
 )
 
 export const BlockquoteSource = ({ children }) => (
-  <cite style={sourceStyle}>
-    {children}
-  </cite>
+  <cite style={sourceStyle}>{children}</cite>
 )

@@ -9,7 +9,7 @@ import {
   sansSerifMedium12,
   sansSerifMedium14,
   sansSerifRegular12,
-  sansSerifRegular14,
+  sansSerifRegular14
 } from '../Typography/styles'
 import { onlyS } from '../../theme/mediaQueries'
 import colors from '../../theme/colors'
@@ -20,14 +20,14 @@ import { getTextColor } from './utils'
 const styles = {
   axis: css({
     ...sansSerifRegular12,
-    fill: colors.lightText,
+    fill: colors.lightText
   }),
   labelStrong: css({
-    ...sansSerifMedium14,
+    ...sansSerifMedium14
   }),
   label: css({
-    ...sansSerifRegular14,
-  }),
+    ...sansSerifRegular14
+  })
 }
 
 const arc = d3arc()
@@ -55,13 +55,13 @@ const Hemicycle = ({
   group,
   color,
   colorMaps,
-  colorMap,
+  colorMap
 }) => {
   const margins = {
     top: 0,
     right: 0,
     bottom: 0,
-    left: 0,
+    left: 0
   }
 
   const legendColorMap = colorMaps[colorMap] || colorMap
@@ -76,7 +76,7 @@ const Hemicycle = ({
 
   const [primaryVals, secondaryVals] = partition(
     values,
-    v => v[group] === primaryGroupLabel,
+    v => v[group] === primaryGroupLabel
   )
   const secondaryGroupLabel =
     secondaryVals.length > 0 && secondaryVals[0][group]
@@ -112,24 +112,21 @@ const Hemicycle = ({
             stroke={'rgba(0,0,0,0.17)'}
           />
           {middleAnnotation && (
-            <text
-              {...styles.axis}
-              x={5}
-              y={0}
-              alignmentBaseline="hanging"
-            >
+            <text {...styles.axis} x={5} y={0} alignmentBaseline='hanging'>
               {middleAnnotation}
             </text>
           )}
         </g>
         <g
-          transform={`translate(${(margins.left + sidePadding) >>
-            1},${margins.top})`}
+          transform={`translate(${(margins.left + sidePadding) >> 1},${
+            margins.top
+          })`}
         >
           <g transform={`translate(${w >> 1},${hemicycleOffset})`}>
             {primaryAngles.map(d => {
               const datum = primaryVals.find(g => g.label === d[2])
-              const fill = legendColorMap[datum[color].toUpperCase()] || '#A09E9C'
+              const fill =
+                legendColorMap[datum[color].toUpperCase()] || '#A09E9C'
               return (
                 <>
                   <path
@@ -138,23 +135,18 @@ const Hemicycle = ({
                       outerRadius: outerRadiusPrimary,
                       innerRadius: innerRadiusPrimary,
                       startAngle: d[0],
-                      endAngle: d[1] + 0.001,
+                      endAngle: d[1] + 0.001
                     })}
                   />
                 </>
               )
             })}
             {primaryAngles
-              .filter(
-                (d, i) =>
-                  primaryVals[i].value >= inlineLabelThreshold,
-              )
+              .filter((d, i) => primaryVals[i].value >= inlineLabelThreshold)
               .map(d => {
-                const isMajorParty =
-                  Math.abs(d[1] - d[0]) > MAX_ARC / 10
+                const isMajorParty = Math.abs(d[1] - d[0]) > MAX_ARC / 10
                 const datum = primaryVals.find(g => g.label === d[2])
-                const fill =
-                  legendColorMap[datum[color].toUpperCase()]
+                const fill = legendColorMap[datum[color].toUpperCase()]
                 const x =
                   hemicycleHeight *
                   (isMajorParty ? 0.75 : 1.05) *
@@ -163,7 +155,7 @@ const Hemicycle = ({
                   -hemicycleOffset,
                   -hemicycleHeight *
                     (isMajorParty ? 0.78 : 1.15) *
-                    Math.cos((d[0] + d[1]) / 2),
+                    Math.cos((d[0] + d[1]) / 2)
                 )
 
                 const textAnchor =
@@ -180,10 +172,8 @@ const Hemicycle = ({
                       x={0}
                       y={0}
                       textAnchor={textAnchor}
-                      alignmentBaseline="hanging"
-                      fill={
-                        isMajorParty ? getTextColor(fill) : '#000'
-                      }
+                      alignmentBaseline='hanging'
+                      fill={isMajorParty ? getTextColor(fill) : '#000'}
                     >
                       {d[2]}
                     </text>
@@ -192,10 +182,8 @@ const Hemicycle = ({
                       x={0}
                       y={labelheight * 0.9}
                       textAnchor={textAnchor}
-                      alignmentBaseline="hanging"
-                      fill={
-                        isMajorParty ? getTextColor(fill) : '#000'
-                      }
+                      alignmentBaseline='hanging'
+                      fill={isMajorParty ? getTextColor(fill) : '#000'}
                     >
                       {datum.value}
                     </text>
@@ -204,7 +192,8 @@ const Hemicycle = ({
               })}
             {secondaryAngles.map(d => {
               const datum = secondaryVals.find(g => g.label === d[2])
-              const fill = legendColorMap[datum[color].toUpperCase()] || '#A09E9C'
+              const fill =
+                legendColorMap[datum[color].toUpperCase()] || '#A09E9C'
               return (
                 <>
                   <path
@@ -213,26 +202,21 @@ const Hemicycle = ({
                       outerRadius: outerRadiusSecondary,
                       innerRadius: innerRadiusSecondary,
                       startAngle: d[0],
-                      endAngle: d[1] + 0.001,
+                      endAngle: d[1] + 0.001
                     })}
                   />
                 </>
               )
             })}
           </g>
-          <text
-            {...styles.labelStrong}
-            x={0}
-            y={h}
-            textAnchor="start"
-          >
+          <text {...styles.labelStrong} x={0} y={h} textAnchor='start'>
             {primaryGroupLabel}
           </text>
           <text
             {...styles.labelStrong}
             x={hemicycleWidth * 0.3}
             y={h}
-            textAnchor="start"
+            textAnchor='start'
           >
             {secondaryGroupLabel}
           </text>
@@ -240,7 +224,7 @@ const Hemicycle = ({
             {...styles.label}
             x={hemicycleWidth >> 1}
             y={h - labelheight}
-            textAnchor="middle"
+            textAnchor='middle'
           >
             {`${primaryValsTotal} ${unit || ''}`}
           </text>
@@ -253,7 +237,7 @@ const Hemicycle = ({
             .filter(v => v.value < inlineLabelThreshold)
             .map(v => ({
               color: legendColorMap[v[color].toUpperCase()],
-              label: `${v.label}: ${v.value}`,
+              label: `${v.label}: ${v.value}`
             }))}
         />
       </div>
@@ -274,9 +258,9 @@ Hemicycle.propTypes = {
   values: PropTypes.arrayOf(
     PropTypes.shape({
       label: PropTypes.string.isRequired,
-      value: PropTypes.number.isRequired,
-    }),
-  ).isRequired,
+      value: PropTypes.number.isRequired
+    })
+  ).isRequired
 }
 
 Hemicycle.defaultProps = {
@@ -285,7 +269,7 @@ Hemicycle.defaultProps = {
   values: [],
   inlineLabelThreshold: 10,
   padding: 0,
-  colorMap: 'swissPartyColors',
+  colorMap: 'swissPartyColors'
 }
 
 export default Hemicycle

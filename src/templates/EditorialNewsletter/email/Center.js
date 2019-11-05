@@ -17,7 +17,7 @@ export default ({ children, meta }) => {
   const { slug, path } = meta
   return (
     <tr>
-      <td align="center" valign="top">
+      <td align='center' valign='top'>
         <Mso>
           {`
       <table cellspacing="0" cellpadding="0" border="0" width="600">
@@ -26,11 +26,11 @@ export default ({ children, meta }) => {
         `}
         </Mso>
         <table
-          align="center"
-          border="0"
-          cellPadding="0"
-          cellSpacing="0"
-          width="100%"
+          align='center'
+          border='0'
+          cellPadding='0'
+          cellSpacing='0'
+          width='100%'
           style={{
             maxWidth: 600,
             color: '#000',
@@ -40,16 +40,16 @@ export default ({ children, meta }) => {
         >
           <tbody>
             <tr>
-              <td style={{ padding: 20 }} className="body_content">
+              <td style={{ padding: 20 }} className='body_content'>
                 {children}
               </td>
             </tr>
             <tr>
               <td style={{ padding: 20 }}>
-                <a href="https://www.republik.ch/" style={linkStyle}>
+                <a href='https://www.republik.ch/' style={linkStyle}>
                   <img
-                    height="79"
-                    src="https://www.republik.ch/static/logo_republik_newsletter.png"
+                    height='79'
+                    src='https://www.republik.ch/static/logo_republik_newsletter.png'
                     style={{
                       border: 0,
                       width: '180px !important',
@@ -57,12 +57,13 @@ export default ({ children, meta }) => {
                       margin: 0,
                       maxWidth: '100% !important'
                     }}
-                    width="180"
-                    alt=""
+                    width='180'
+                    alt=''
                   />
                 </a>
                 <p style={{ ...paragraphStyle, marginTop: 0 }}>
-                  Republik AG<br />
+                  Republik AG
+                  <br />
                   Sihlhallenstrasse 1<br />
                   8004 Zürich
                 </p>
@@ -76,16 +77,13 @@ export default ({ children, meta }) => {
                   </a>
                   <br />
                   <a
-                    href="https://www.republik.ch/konto#newsletter"
+                    href='https://www.republik.ch/konto#newsletter'
                     style={footerLinkStyle}
                   >
                     Newsletter-Einstellungen anpassen
                   </a>
                   <br />
-                  <a
-                    href="*|UNSUB|*"
-                    style={footerLinkStyle}
-                  >
+                  <a href='*|UNSUB|*' style={footerLinkStyle}>
                     Von allen Newslettern abmelden
                   </a>
                 </p>

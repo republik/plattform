@@ -71,7 +71,7 @@ const primaryStyle = css({
     ':hover': {
       backgroundColor: primaryColor.darker(0.7),
       borderColor: primaryColor.darker(0.7)
-    },
+    }
   },
   ':active': {
     backgroundColor: '#000',
@@ -93,7 +93,7 @@ const blackStyle = css({
       backgroundColor: '#000',
       borderColor: '#000',
       color: '#fff'
-    },
+    }
   },
   ':active': {
     backgroundColor: '#000',
@@ -110,7 +110,7 @@ const whiteStyle = css({
       backgroundColor: '#fff',
       borderColor: '#fff',
       color: '#000'
-    },
+    }
   },
   ':active': {
     backgroundColor: '#fff',
@@ -139,8 +139,23 @@ const marginLeftStyle = css({
 })
 
 const Button = ({
-  onClick, type, children, primary, dimmed, black, white, spacedOut,
-  big, block, style, disabled, href, title, target, simulate: sim, attributes
+  onClick,
+  type,
+  children,
+  primary,
+  dimmed,
+  black,
+  white,
+  spacedOut,
+  big,
+  block,
+  style,
+  disabled,
+  href,
+  title,
+  target,
+  simulate: sim,
+  attributes
 }) => {
   const simulations = sim ? simulate(sim) : {}
   const styles = merge(
@@ -159,18 +174,21 @@ const Button = ({
   const Element = href ? 'a' : 'button'
 
   return (
-    <Element onClick={onClick}
-             href={href}
-             title={title}
-             type={type}
-             style={style}
-             disabled={disabled}
-             target={target}
-             {...attributes}
-             {...styles}
-             {...simulations}>
+    <Element
+      onClick={onClick}
+      href={href}
+      title={title}
+      type={type}
+      style={style}
+      disabled={disabled}
+      target={target}
+      {...attributes}
+      {...styles}
+      {...simulations}
+    >
       {children}
-    </Element>)
+    </Element>
+  )
 }
 
 export default Button

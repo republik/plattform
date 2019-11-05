@@ -11,7 +11,7 @@ const styles = {
     minHeight: '15px',
     textAlign: 'center',
     [mUp]: {
-      ...sansSerifRegular21,
+      ...sansSerifRegular21
     },
     '& > a': {
       color: colors.text
@@ -25,7 +25,11 @@ const styles = {
 }
 
 const More = ({ children, attributes }) => {
-  return <p {...styles.more} {...attributes}>{children}</p>
+  return (
+    <p {...styles.more} {...attributes}>
+      {children}
+    </p>
+  )
 }
 
 export default More

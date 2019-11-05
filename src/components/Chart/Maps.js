@@ -11,17 +11,13 @@ import { css } from 'glamor'
 import memoize from 'lodash/memoize'
 import { feature as topojsonFeature, mesh as topojsonMesh } from 'topojson'
 
-import {
-  subsup,
-} from './utils'
+import { subsup } from './utils'
 
 import Loader from '../Loader'
 
 import ContextBox, { ContextBoxValue } from './ContextBox'
 
-import {
-  sansSerifMedium14
-} from '../Typography/styles'
+import { sansSerifMedium14 } from '../Typography/styles'
 
 import colors from '../../theme/colors'
 
@@ -37,7 +33,7 @@ const styles = {
     WebkitTapHighlightColor: 'rgba(0, 0, 0, 0)'
   }),
   pointGroup: css({
-    userSelect: 'none',
+    userSelect: 'none'
   })
 }
 
@@ -47,20 +43,33 @@ const symbolShapes = {
 }
 const shapes = Object.keys(symbolShapes).concat('marker')
 
-const Points = ({ data, colorScale, colorAccessor, project, shape, sizeRangeMax, hoverPoint, setHoverPoint, opacity }) => {
-  const valueAccessor = d => isNaN(d.value) ? 1 : d.value
+const Points = ({
+  data,
+  colorScale,
+  colorAccessor,
+  project,
+  shape,
+  sizeRangeMax,
+  hoverPoint,
+  setHoverPoint,
+  opacity
+}) => {
+  const valueAccessor = d => (isNaN(d.value) ? 1 : d.value)
 
   const marker = shape === 'marker'
   let symbolPath
   if (!marker) {
-    const size = scaleLinear().domain([0, max(data.map(d => valueAccessor(d)))]).range([0, sizeRangeMax])
+    const size = scaleLinear()
+      .domain([0, max(data.map(d => valueAccessor(d)))])
+      .range([0, sizeRangeMax])
     symbolPath = symbol()
       .type(symbolShapes[shape])
       .size(d => size(valueAccessor(d)))
   }
 
   const displayData = React.useMemo(
-    () => [...data].sort((a,b) => descending(valueAccessor(a), valueAccessor(b))), 
+    () =>
+      [...data].sort((a, b) => descending(valueAccessor(a), valueAccessor(b))),
     [data]
   )
 
@@ -74,8 +83,8 @@ const Points = ({ data, colorScale, colorAccessor, project, shape, sizeRangeMax,
           pos = pos.map(Math.round)
         }
         return (
-          <g 
-            key={i} 
+          <g
+            key={i}
             transform={`translate(${pos.join(',')})`}
             onMouseEnter={() => setHoverPoint(d)}
             onTouchStart={() => setHoverPoint(d)}
@@ -83,15 +92,40 @@ const Points = ({ data, colorScale, colorAccessor, project, shape, sizeRangeMax,
             onTouchEnd={() => setHoverPoint(null)}
             {...styles.pointGroup}
           >
-            {marker && <circle cy={-MARKER_HEIGHT} r={MARKER_RADIUS} fill={color} stroke='white' strokeWidth='1' />}
-            {marker && <line y2={-MARKER_HEIGHT} stroke={color} strokeWidth='2' shapeRendering='crispEdges' />}
+            {marker && (
+              <circle
+                cy={-MARKER_HEIGHT}
+                r={MARKER_RADIUS}
+                fill={color}
+                stroke='white'
+                strokeWidth='1'
+              />
+            )}
+            {marker && (
+              <line
+                y2={-MARKER_HEIGHT}
+                stroke={color}
+                strokeWidth='2'
+                shapeRendering='crispEdges'
+              />
+            )}
             {!marker && (
               <>
-                {hoverPoint === d && <path d={symbolPath(d)} fill='none' stroke='#000' strokeWidth='1' />}
-                <path d={symbolPath(d)} fill={color}
+                {hoverPoint === d && (
+                  <path
+                    d={symbolPath(d)}
+                    fill='none'
+                    stroke='#000'
+                    strokeWidth='1'
+                  />
+                )}
+                <path
+                  d={symbolPath(d)}
+                  fill={color}
                   style={{
                     opacity
-                  }} />
+                  }}
+                />
               </>
             )}
           </g>
@@ -130,7 +164,8 @@ const getStateFromFeaturesData = (features, data) => {
     loading: false,
     geoJson: {
       features: geoJsonFeatures,
-      compositionBorders: features.compositionBorders &&
+      compositionBorders:
+        features.compositionBorders &&
         topojsonMesh(data, data.objects[features.compositionBorders])
     }
   }
@@ -139,12 +174,13 @@ const getStateFromFeaturesData = (features, data) => {
 export class GenericMap extends Component {
   constructor(props) {
     super(props)
-    this.state = props.features && fetchJsonCacheData.has(props.features.url)
-      ? getStateFromFeaturesData(
-        props.features,
-        fetchJsonCacheData.get(props.features.url)
-      )
-      : { loading: !!props.features }
+    this.state =
+      props.features && fetchJsonCacheData.has(props.features.url)
+        ? getStateFromFeaturesData(
+            props.features,
+            fetchJsonCacheData.get(props.features.url)
+          )
+        : { loading: !!props.features }
     this.state.layout = layout(props, this.state.geoJson)
   }
   componentDidMount() {
@@ -159,100 +195,101 @@ export class GenericMap extends Component {
         })
     }
   }
-  componentDidUpdate (prevProps, prevState) {
+  componentDidUpdate(prevProps, prevState) {
     if (prevProps !== this.props || prevState.geoJson !== this.state.geoJson) {
       this.setState({
         layout: layout(this.props, this.state.geoJson)
       })
     }
   }
-  componentWillUnmount () {
+  componentWillUnmount() {
     fetchJsonCacheData.clear()
     fetchJson.cache.clear()
   }
-  setHoverPoint = (point) => {
-    this.setState({hoverPoint: point})
+  setHoverPoint = point => {
+    this.setState({ hoverPoint: point })
   }
   renderTooltips() {
     const props = this.props
-    const {
-      width,
-      tLabel,
-      missingDataLegend
-    } = props
+    const { width, tLabel, missingDataLegend } = props
 
-    const {
-      paddingTop,
-      gx,
-      gy,
-      groupedData,
-      numberFormat
-    } = this.state.layout
+    const { paddingTop, gx, gy, groupedData, numberFormat } = this.state.layout
 
     const { hoverFeature, title } = this.state
 
-    return !!hoverFeature && groupedData.map(({ values: groupData, key: groupTitle }) => {
-      return groupData.filter(datum => datum.feature === hoverFeature).map((d, i) => {
-        const [[x0, y0], [x1]] = d.feature.bounds()
-        const ordinalValue = d.datum && d.datum[props.color]
-        return (
-          <ContextBox
-            key={d.feature.id}
-            orientation='top'
-            x={gx(groupTitle) + x0 + (x1 - x0) / 2}
-            y={gy(groupTitle) + paddingTop + y0 - 15}
-            contextWidth={width}>
-            <ContextBoxValue
-              label={title === groupTitle
-                ? hoverFeature.properties.name
-                : tLabel(groupTitle)}>
-              {groupTitle && title === groupTitle && <Fragment>
-                {tLabel(groupTitle)}<br />
-              </Fragment>}
-              {d.empty
-                ? missingDataLegend
-                : <Fragment>
-                  {d.value ? `${numberFormat(d.value)} ${props.unit}` : ''}
-                  {!!d.value && ordinalValue && <br />}
-                  {ordinalValue}
-                </Fragment>}
-            </ContextBoxValue>
-          </ContextBox>
-        )
+    return (
+      !!hoverFeature &&
+      groupedData.map(({ values: groupData, key: groupTitle }) => {
+        return groupData
+          .filter(datum => datum.feature === hoverFeature)
+          .map((d, i) => {
+            const [[x0, y0], [x1]] = d.feature.bounds()
+            const ordinalValue = d.datum && d.datum[props.color]
+            return (
+              <ContextBox
+                key={d.feature.id}
+                orientation='top'
+                x={gx(groupTitle) + x0 + (x1 - x0) / 2}
+                y={gy(groupTitle) + paddingTop + y0 - 15}
+                contextWidth={width}
+              >
+                <ContextBoxValue
+                  label={
+                    title === groupTitle
+                      ? hoverFeature.properties.name
+                      : tLabel(groupTitle)
+                  }
+                >
+                  {groupTitle && title === groupTitle && (
+                    <Fragment>
+                      {tLabel(groupTitle)}
+                      <br />
+                    </Fragment>
+                  )}
+                  {d.empty ? (
+                    missingDataLegend
+                  ) : (
+                    <Fragment>
+                      {d.value ? `${numberFormat(d.value)} ${props.unit}` : ''}
+                      {!!d.value && ordinalValue && <br />}
+                      {ordinalValue}
+                    </Fragment>
+                  )}
+                </ContextBoxValue>
+              </ContextBox>
+            )
+          })
       })
-    })
+    )
   }
   renderPointTooltip() {
     const {
       hoverPoint,
-      layout: {
-        projectPoint,
-        numberFormat
-      }
+      layout: { projectPoint, numberFormat }
     } = this.state
-    const {
-      width,
-      pointLabel,
-      pointAttributes,
-      unit,
-    } = this.props
-    
+    const { width, pointLabel, pointAttributes, unit } = this.props
+
     if (!hoverPoint) {
       return null
     }
 
-    const [ x, y ] = projectPoint([hoverPoint.datum.lon, hoverPoint.datum.lat])
+    const [x, y] = projectPoint([hoverPoint.datum.lon, hoverPoint.datum.lat])
 
-    const value = hoverPoint.datum.value !== undefined && (
-      isNaN(hoverPoint.datum.value) 
+    const value =
+      hoverPoint.datum.value !== undefined &&
+      (isNaN(hoverPoint.datum.value)
         ? String(hoverPoint.datum.value).trim()
-        : numberFormat(hoverPoint.datum.value)
-    )
+        : numberFormat(hoverPoint.datum.value))
 
     const body = pointAttributes.map(t => {
       const val = hoverPoint.datum[t]
       if (val) {
-        return (<Fragment key={t}>{subsup(val)}<br/></Fragment>)
+        return (
+          <Fragment key={t}>
+            {subsup(val)}
+            <br />
+          </Fragment>
+        )
       } else {
         return null
       }
@@ -260,12 +297,7 @@ export class GenericMap extends Component {
 
     if (value || body.length > 0 || hoverPoint.datum[pointLabel]) {
       return (
-        <ContextBox
-          orientation="top"
-          x={x}
-          y={y}
-          contextWidth={width}
-        >
+        <ContextBox orientation='top' x={x} y={y} contextWidth={width}>
           <ContextBoxValue label={hoverPoint.datum[pointLabel]}>
             {value && (
               <>
@@ -277,7 +309,7 @@ export class GenericMap extends Component {
             {body}
           </ContextBoxValue>
         </ContextBox>
-      )        
+      )
     }
     return null
   }
@@ -294,10 +326,8 @@ export class GenericMap extends Component {
       missingDataColor,
       opacity
     } = props
-    const {
-      loading, error, geoJson, hoverPoint
-    } = state
-    
+    const { loading, error, geoJson, hoverPoint } = state
+
     const {
       paddingTop,
       paddingLeft,
@@ -321,17 +351,17 @@ export class GenericMap extends Component {
 
     let legendStyle
     if (
-      ((mapSpace * colorLegendSize) - paddingLeft >= props.colorLegendMinWidth) ||
+      mapSpace * colorLegendSize - paddingLeft >= props.colorLegendMinWidth ||
       mini
     ) {
       legendStyle = {
         position: 'absolute',
         top: mini ? 12 : paddingTop,
-        left: paddingLeft + (mapSpace * (1 - colorLegendSize)),
+        left: paddingLeft + mapSpace * (1 - colorLegendSize),
         right: 0
       }
     } else {
-      legendStyle = {paddingLeft: paddingLeft}
+      legendStyle = { paddingLeft: paddingLeft }
     }
 
     const { hoverFeature } = this.state
@@ -339,106 +369,127 @@ export class GenericMap extends Component {
     const hasGeoJson = !!geoJson
 
     return (
-      <div style={{position: 'relative'}}>
+      <div style={{ position: 'relative' }}>
         <svg width={width} height={columnHeight * rows}>
           <desc>{description}</desc>
-            {
-              groupedData.map(({ values: groupData, key: title }) => {
-                const geotiff = geotiffs[title]
-                return (
-                  <g key={title || 1} transform={`translate(${gx(title)},${gy(title)})`}>
-                    <text
-                      dy='1.5em' x={paddingLeft + (mapWidth / 2)}
-                      textAnchor='middle'
-                      {...styles.columnTitle}>
-                      {tLabel(title)}
-                    </text>
-                    <g transform={`translate(0,${paddingTop})`}>
-                      {
-                        !choropleth && featuresWithPaths.map((feature) => {
-                          return (
-                            <path key={feature.id}
-                              fill={FEATURE_BG}
-                              stroke='white'
-                              strokeWidth={1}
-                              d={feature.path} />
-                          )
-                        })
-                      }
-                      {
-                        choropleth && hasGeoJson && groupData.map(d => {
-                          const {feature} = d
-                          if (!feature) {
-                            return null
-                          }
-                          let fill
-                          if (d.empty) {
-                            fill = missingDataColor
-                          } else {
-                            fill = colorScale(colorAccessor(d))
-                          }
-                          return (
-                            <path key={feature.id}
-                              fill={fill}
-                              d={feature.path}
-                              {...styles.interactivePath}
-                              onTouchStart={() => this.setState({hoverFeature: feature, title})}
-                              onTouchEnd={() => this.setState({hoverFeature: undefined, title: undefined})}
-                              onMouseEnter={() => this.setState({hoverFeature: feature, title})}
-                              onMouseLeave={() => this.setState({hoverFeature: undefined, title: undefined})} />
-                          )
-                        })
-                      }
-                      {
-                        hasTooltips && featuresWithPaths
-                          .filter(feature => feature.id === hoverFeature.id)
-                          .map(feature => (
-                            <path key={`stroke-${feature.id}`}
-                              fill='none'
-                              pointerEvents='none'
-                              stroke='black'
-                              strokeWidth={1}
-                              d={feature.path} />
-                          ))
-                      }
-                      {
-                        geotiff && (
-                          <image {...geotiff} />
-                        )
-                      }
-                      {compositionBorderPath &&
+          {groupedData.map(({ values: groupData, key: title }) => {
+            const geotiff = geotiffs[title]
+            return (
+              <g
+                key={title || 1}
+                transform={`translate(${gx(title)},${gy(title)})`}
+              >
+                <text
+                  dy='1.5em'
+                  x={paddingLeft + mapWidth / 2}
+                  textAnchor='middle'
+                  {...styles.columnTitle}
+                >
+                  {tLabel(title)}
+                </text>
+                <g transform={`translate(0,${paddingTop})`}>
+                  {!choropleth &&
+                    featuresWithPaths.map(feature => {
+                      return (
                         <path
+                          key={feature.id}
+                          fill={FEATURE_BG}
+                          stroke='white'
+                          strokeWidth={1}
+                          d={feature.path}
+                        />
+                      )
+                    })}
+                  {choropleth &&
+                    hasGeoJson &&
+                    groupData.map(d => {
+                      const { feature } = d
+                      if (!feature) {
+                        return null
+                      }
+                      let fill
+                      if (d.empty) {
+                        fill = missingDataColor
+                      } else {
+                        fill = colorScale(colorAccessor(d))
+                      }
+                      return (
+                        <path
+                          key={feature.id}
+                          fill={fill}
+                          d={feature.path}
+                          {...styles.interactivePath}
+                          onTouchStart={() =>
+                            this.setState({ hoverFeature: feature, title })
+                          }
+                          onTouchEnd={() =>
+                            this.setState({
+                              hoverFeature: undefined,
+                              title: undefined
+                            })
+                          }
+                          onMouseEnter={() =>
+                            this.setState({ hoverFeature: feature, title })
+                          }
+                          onMouseLeave={() =>
+                            this.setState({
+                              hoverFeature: undefined,
+                              title: undefined
+                            })
+                          }
+                        />
+                      )
+                    })}
+                  {hasTooltips &&
+                    featuresWithPaths
+                      .filter(feature => feature.id === hoverFeature.id)
+                      .map(feature => (
+                        <path
+                          key={`stroke-${feature.id}`}
                           fill='none'
+                          pointerEvents='none'
                           stroke='black'
                           strokeWidth={1}
-                          d={compositionBorderPath} />}
-                      {props.points && (
-                        <Points
-                          data={data}
-                          colorScale={colorScale}
-                          colorAccessor={colorAccessor}
-                          domain={domain}
-                          project={projectPoint}
-                          shape={props.shape}
-                          sizeRangeMax={props.sizeRangeMax}
-                          hoverPoint={hoverPoint}
-                          setHoverPoint={this.setHoverPoint}
-                          opacity={opacity}
+                          d={feature.path}
                         />
-                      )}
-                    </g>
-                  </g>
-                )
-              })
-            }
+                      ))}
+                  {geotiff && <image {...geotiff} />}
+                  {compositionBorderPath && (
+                    <path
+                      fill='none'
+                      stroke='black'
+                      strokeWidth={1}
+                      d={compositionBorderPath}
+                    />
+                  )}
+                  {props.points && (
+                    <Points
+                      data={data}
+                      colorScale={colorScale}
+                      colorAccessor={colorAccessor}
+                      domain={domain}
+                      project={projectPoint}
+                      shape={props.shape}
+                      sizeRangeMax={props.sizeRangeMax}
+                      hoverPoint={hoverPoint}
+                      setHoverPoint={this.setHoverPoint}
+                      opacity={opacity}
+                    />
+                  )}
+                </g>
+              </g>
+            )
+          })}
         </svg>
         {(!hasGeoJson || !!error) && (
-          <div style={{
-            position: 'absolute',
-            left: paddingLeft,
-            top: paddingTop,
-            width: mapSpace
-          }}>
+          <div
+            style={{
+              position: 'absolute',
+              left: paddingLeft,
+              top: paddingTop,
+              width: mapSpace
+            }}
+          >
             <Loader loading={loading} error={error} />
           </div>
         )}
@@ -447,12 +498,16 @@ export class GenericMap extends Component {
             {!!props.geotiffLegendTitle && (
               <ColorLegend
                 title={tLabel(props.geotiffLegendTitle)}
-                values={props.geotiffLegend} />
+                values={props.geotiffLegend}
+              />
             )}
-            {!!props.colorLegend && <ColorLegend
-              title={tLabel(props.legendTitle)}
-              shape={props.shape}
-              values={colorLegendValues} />}
+            {!!props.colorLegend && (
+              <ColorLegend
+                title={tLabel(props.legendTitle)}
+                shape={props.shape}
+                values={colorLegendValues}
+              />
+            )}
           </div>
           {children}
         </div>
@@ -465,9 +520,7 @@ export class GenericMap extends Component {
 
 const geotiffShape = PropTypes.shape({
   url: PropTypes.string.isRequired,
-  bbox: PropTypes.arrayOf(
-    PropTypes.arrayOf(PropTypes.array.isRequired)
-  )
+  bbox: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.array.isRequired))
 })
 const featuresShape = PropTypes.shape({
   object: PropTypes.string.isRequired,
@@ -488,11 +541,13 @@ export const propTypes = {
   mini: PropTypes.bool,
   column: PropTypes.string,
   columnSort: PropTypes.oneOf(['none', 'descending']),
-  columnFilter: PropTypes.arrayOf(PropTypes.shape({
-    title: PropTypes.string.isRequired,
-    test: PropTypes.string.isRequired,
-    geotiff: geotiffShape
-  })),
+  columnFilter: PropTypes.arrayOf(
+    PropTypes.shape({
+      title: PropTypes.string.isRequired,
+      test: PropTypes.string.isRequired,
+      geotiff: geotiffShape
+    })
+  ),
   columns: PropTypes.number.isRequired,
   thresholds: PropTypes.arrayOf(PropTypes.number),
   extent: PropTypes.arrayOf(PropTypes.number),
@@ -510,10 +565,12 @@ export const propTypes = {
   features: featuresShape,
   geotiff: geotiffShape,
   geotiffLegendTitle: PropTypes.string,
-  geotiffLegend: PropTypes.arrayOf(PropTypes.shape({
-    color: PropTypes.string.isRequired,
-    label: PropTypes.string.isRequired
-  })),
+  geotiffLegend: PropTypes.arrayOf(
+    PropTypes.shape({
+      color: PropTypes.string.isRequired,
+      label: PropTypes.string.isRequired
+    })
+  ),
   legendTitle: PropTypes.string,
   unit: PropTypes.string,
   numberFormat: PropTypes.string.isRequired,
@@ -554,8 +611,6 @@ GenericMap.defaultProps = {
   opacity: 0.6
 }
 
-
-
 export const ProjectedMap = props => <GenericMap {...props} />
 
 ProjectedMap.defaultProps = {
@@ -567,7 +622,8 @@ ProjectedMap.base = 'GenericMap'
 export const SwissMap = props => <GenericMap {...props} />
 
 SwissMap.defaultProps = {
-  getProjection: () => geoMercator().rotate([-7.439583333333333, -46.95240555555556]),
+  getProjection: () =>
+    geoMercator().rotate([-7.439583333333333, -46.95240555555556]),
   heightRatio: 0.63
 }
 

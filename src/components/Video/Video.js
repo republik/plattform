@@ -18,7 +18,7 @@ const styles = {
     marginBottom: 36,
     [mUp]: {
       marginTop: 45,
-      marginBottom: 45,
+      marginBottom: 45
     }
   }),
   thumbnail: css({
@@ -89,7 +89,7 @@ const Embed = ({ id, platform, aspectRatio, title }) => {
       <iframe
         {...styles.embedIframe}
         src={src}
-        frameBorder="0"
+        frameBorder='0'
         title={title}
         allowFullScreen
       />
@@ -132,31 +132,34 @@ class Video extends Component {
     const { embedIframe } = this.state
 
     return (
-      <figure {...attributes} {...merge(styles.container, breakoutStyles[size])}>
-          {!embedIframe && (
-            <a {...styles.thumbnail} onClick={this.handleClick}>
-              <span {...styles.playIcon}>
-                <PlayIcon />
-              </span>
-              <span {...styles.playNote}>
-                {t('styleguide/video/dnt/note', {
-                  player: t(`styleguide/video/dnt/player/${platform}`),
-                  platform: t(`styleguide/video/dnt/player/${platform}`)
-                })}
-              </span>
-              <Image src={thumbnail} alt="" aspectRatio={aspectRatio} />
-            </a>
-          )}
-          {embedIframe && (
-            <Embed
-              id={id}
-              platform={platform}
-              aspectRatio={aspectRatio}
-              title={title}
-            />
-          )}
-          <FigureCaption>{title}</FigureCaption>
-          {showMeta && (
+      <figure
+        {...attributes}
+        {...merge(styles.container, breakoutStyles[size])}
+      >
+        {!embedIframe && (
+          <a {...styles.thumbnail} onClick={this.handleClick}>
+            <span {...styles.playIcon}>
+              <PlayIcon />
+            </span>
+            <span {...styles.playNote}>
+              {t('styleguide/video/dnt/note', {
+                player: t(`styleguide/video/dnt/player/${platform}`),
+                platform: t(`styleguide/video/dnt/player/${platform}`)
+              })}
+            </span>
+            <Image src={thumbnail} alt='' aspectRatio={aspectRatio} />
+          </a>
+        )}
+        {embedIframe && (
+          <Embed
+            id={id}
+            platform={platform}
+            aspectRatio={aspectRatio}
+            title={title}
+          />
+        )}
+        <FigureCaption>{title}</FigureCaption>
+        {showMeta && (
           <Meta
             url={url}
             platform={platform}

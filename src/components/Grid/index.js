@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import {css} from 'glamor'
+import { css } from 'glamor'
 
 export const GUTTER = 42
 export const CONTENT_PADDING = 15
@@ -27,7 +27,7 @@ const styles = {
   })
 }
 
-export const Container = ({children, ...props}) => (
+export const Container = ({ children, ...props }) => (
   <div {...props} {...styles.container}>
     {children}
   </div>
@@ -38,7 +38,7 @@ Container.propTypes = {
   className: PropTypes.any
 }
 
-export const NarrowContainer = ({children, ...props}) => (
+export const NarrowContainer = ({ children, ...props }) => (
   <div {...props} {...styles.narrowContainer}>
     {children}
   </div>

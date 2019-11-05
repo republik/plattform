@@ -1,7 +1,6 @@
 {
   "name": "styleguide",
-  "scripts": {
-  },
+  "scripts": {},
   "env": {
     "REACT_APP_SG_BRAND_MARK_PATH": {
       "required": true
@@ -25,11 +24,8 @@
       "required": true
     }
   },
-  "formation": {
-  },
-  "addons": [
-
-  ],
+  "formation": {},
+  "addons": [],
   "buildpacks": [
     {
       "url": "https://github.com/mars/create-react-app-buildpack"

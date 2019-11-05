@@ -3,7 +3,11 @@ import { css } from 'glamor'
 import colors from '../../../../theme/colors'
 import { ellipsize } from '../../../../lib/styleMixins'
 import { mUp } from '../../../../theme/mediaQueries'
-import { sansSerifMedium14, sansSerifMedium16, sansSerifRegular14 } from '../../../Typography/styles'
+import {
+  sansSerifMedium14,
+  sansSerifMedium16,
+  sansSerifRegular14
+} from '../../../Typography/styles'
 import { convertStyleToRem } from '../../../Typography/utils'
 
 const styles = {
@@ -37,14 +41,8 @@ const styles = {
 export const Context = ({ title, description }) => (
   <div {...styles.root}>
     <div {...styles.meta}>
-      <div {...styles.title}>
-        {title}
-      </div>
-      {description && (
-        <div {...styles.description}>
-          {description}
-        </div>
-      )}
+      <div {...styles.title}>{title}</div>
+      {description && <div {...styles.description}>{description}</div>}
     </div>
   </div>
 )

@@ -18,7 +18,7 @@ const containerStyle = {
 }
 
 const textContainerStyle = {
-  overflow: 'hidden',  // Hides unpositioned content on mobile.
+  overflow: 'hidden', // Hides unpositioned content on mobile.
   padding: '15px 15px 40px 15px',
   [mUp]: {
     padding: '40px 15% 70px 15%'
@@ -72,26 +72,47 @@ const ImageBlock = ({
 }) => {
   const background = bgColor || ''
   return (
-    <div {...attributes} {...(feuilleton ? styles.containerFeuilleton : styles.container)} onClick={onClick} style={{
-      background,
-      cursor: onClick ? 'pointer' : 'default'
-    }}>
-      <div style={{position: 'relative', fontSize: 0}}>
-        <FigureImage aboveTheFold={aboveTheFold} {...FigureImage.utils.getResizedSrcs(image, 1500, false)} alt={alt} />
-        {byline && <FigureByline position={onlyImage ? 'leftInsideOnlyImage' : 'leftInside'} style={{color}}>
-          {byline}
-        </FigureByline>}
+    <div
+      {...attributes}
+      {...(feuilleton ? styles.containerFeuilleton : styles.container)}
+      onClick={onClick}
+      style={{
+        background,
+        cursor: onClick ? 'pointer' : 'default'
+      }}
+    >
+      <div style={{ position: 'relative', fontSize: 0 }}>
+        <FigureImage
+          aboveTheFold={aboveTheFold}
+          {...FigureImage.utils.getResizedSrcs(image, 1500, false)}
+          alt={alt}
+        />
+        {byline && (
+          <FigureByline
+            position={onlyImage ? 'leftInsideOnlyImage' : 'leftInside'}
+            style={{ color }}
+          >
+            {byline}
+          </FigureByline>
+        )}
       </div>
-      {!onlyImage && <div {...(feuilleton ? styles.textContainerFeuilleton : styles.textContainer)}>
-        <Text
-          position={textPosition}
-          color={color}
-          collapsedColor={feuilleton && colors.text}
-          center={center}
-          feuilleton={feuilleton}>
-          {children}
-        </Text>
-      </div>}
+      {!onlyImage && (
+        <div
+          {...(feuilleton
+            ? styles.textContainerFeuilleton
+            : styles.textContainer)}
+        >
+          <Text
+            position={textPosition}
+            color={color}
+            collapsedColor={feuilleton && colors.text}
+            center={center}
+            feuilleton={feuilleton}
+          >
+            {children}
+          </Text>
+        </div>
+      )}
     </div>
   )
 }
