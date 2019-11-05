@@ -2,6 +2,7 @@ import { createElement } from 'react'
 import { css, merge } from 'glamor'
 import {
   linkBlackStyle,
+  linkWhiteStyle,
   linkErrorStyle,
   linkErrorStyleNegative,
   linkStyle
@@ -21,7 +22,8 @@ const styles = {
     '& a': linkBlackStyle
   }),
   white: css({
-    color: colors.negative.text
+    color: colors.negative.text,
+    '& a': linkWhiteStyle
   }),
   error: css({
     color: colors.error,

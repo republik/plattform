@@ -45,6 +45,16 @@ export const linkBlackStyle = css({
   }
 })
 
+export const linkWhiteStyle = css({
+  ...underline,
+  color: colors.negative.text,
+  '@media (hover)': {
+    ':hover': {
+      color: colors.negative.lightText
+    }
+  }
+})
+
 export const linkErrorStyle = css({
   ...underline,
   color: colors.error,
