@@ -20,10 +20,10 @@
   },
   "homepage": "https://github.com/orbiting/backends#readme",
   "devDependencies": {
-    "dotenv": "^7.0.0"
+    "dotenv": "^8.2.0"
   },
   "dependencies": {
     "apn": "^2.2.0",
-    "firebase-admin": "^7.3.0"
+    "firebase-admin": "^8.7.0"
   }
 }
