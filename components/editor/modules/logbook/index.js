@@ -43,8 +43,9 @@ const fromMdast = options => {
         type: titleModule.TYPE
       }]
 
-    const deserializedCredits = (credits && creditsModule.helpers.serializer.fromMdast(credits)) ||
-      [{
+    const deserializedCredits = credits && credits.length
+      ? creditsModule.helpers.serializer.fromMdast(credits)
+      : [{
         kind: 'block',
         type: creditsModule.TYPE
       }]
@@ -160,7 +161,7 @@ export const createLogbookButton = options => createBlockButton({
       data-active={active}
       data-disabled={disabled}
       data-visible={visible}
-      >
+    >
       {options.rule.editorOptions.insertButtonText}
     </span>
   }
