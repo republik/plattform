@@ -29,7 +29,10 @@ const coverModule = createCoverModule({
   rule: {
     matchMdast: node => node.type === 'zone' && node.identifier === TYPE
   },
-  subModules: [titleModule, paragraphModule]
+  subModules: [
+    titleModule,
+    paragraphModule
+  ]
 })
 
 const serializer = coverModule.helpers.serializer

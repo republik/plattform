@@ -24,11 +24,21 @@ const styles = {
   })
 }
 
-export default ({ children, getWidth = defaultGetWidth }) => {
-  const wrappedChildren = React.Children.map(children, (child, index) => (
-    <div key={`input-${index}`} {...styles.span} style={{ width: getWidth() }}>
-      {child}
+export default ({ children, getWidth = defaultGetWidth, ...props }) => {
+  const wrappedChildren = React.Children.map(
+    children,
+    (child, index) => (
+      <div
+        key={`input-${index}`}
+        {...styles.span}
+        style={{width: getWidth()}}>
+        {child}
+      </div>
+    )
+  )
+  return (
+    <div {...styles.grid}>
+      {wrappedChildren}
     </div>
-  ))
-  return <div {...styles.grid}>{wrappedChildren}</div>
+  )
 }

@@ -1,7 +1,5 @@
 export default (change, block) => {
-  const {
-    value: { startBlock, endBlock }
-  } = change
+  const { value: {startBlock, endBlock} } = change
   if (startBlock === endBlock && !startBlock.text) {
     change.replaceNodeByKey(startBlock.key, block)
 

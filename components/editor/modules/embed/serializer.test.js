@@ -1,5 +1,7 @@
 import test from 'tape'
-import { matchZone } from 'mdast-react-render/lib/utils'
+import {
+  matchZone
+} from 'mdast-react-render/lib/utils'
 import { parse, stringify } from '@orbiting/remark-preset'
 
 import { createEmbedVideoModule, createEmbedTwitterModule } from './'
@@ -102,17 +104,13 @@ test('embedTwitter serialization', assert => {
   assert.deepEqual(embed.data.toJS(), {
     __typename: 'TwitterEmbed',
     id: '930363029669203969',
-    text:
-      'Good luck against Argentina later, @alexiwobi https://t.co/mm9us0b7JC',
+    text: 'Good luck against Argentina later, @alexiwobi https://t.co/mm9us0b7JC',
     userId: '34613288',
     userName: 'Arsenal FC',
     userScreenName: 'Arsenal',
     url: 'https://twitter.com/Arsenal/status/930363029669203969'
   })
 
-  assert.equal(
-    stringify(embedTwitterSerializer.serialize(value)).trimRight(),
-    md
-  )
+  assert.equal(stringify(embedTwitterSerializer.serialize(value)).trimRight(), md)
   assert.end()
 })

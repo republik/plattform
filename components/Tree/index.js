@@ -27,7 +27,7 @@ const styles = {
     padding: '0 10px',
     overflow: 'hidden',
     position: 'relative',
-    paddingTop: 20
+    paddingTop: 20,
   }),
   commitNode: css({
     backgroundColor: '#000',
@@ -39,60 +39,59 @@ const styles = {
     zIndex: 2,
     width: `${NODE_SIZE}px`,
     ':hover': {
-      margin: `-${(NODE_SIZE_HOVER - NODE_SIZE) / 2}px 0 0 -${(NODE_SIZE_HOVER -
-        NODE_SIZE) /
-        2}px`,
+      margin: `-${(NODE_SIZE_HOVER - NODE_SIZE) /
+        2}px 0 0 -${(NODE_SIZE_HOVER - NODE_SIZE) / 2}px`,
       height: `${NODE_SIZE_HOVER}px`,
-      width: `${NODE_SIZE_HOVER}px`
-    }
+      width: `${NODE_SIZE_HOVER}px`,
+    },
   }),
   nodeLink: {
     display: 'inline-block',
     height: `${NODE_SIZE}px`,
     position: 'absolute',
-    width: `${NODE_SIZE}px`
+    width: `${NODE_SIZE}px`,
   },
   list: css({
     listStyle: 'none',
     margin: 0,
     padding: 0,
     minWidth: `${LIST_MIN_WIDTH}px`,
-    zIndex: 1
+    zIndex: 1,
   }),
   listItem: css({
     fontSize: '13px',
     marginBottom: '5px',
-    position: 'relative'
+    position: 'relative',
   }),
   listItemWrapper: css({
     width: '100%',
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
   }),
   svg: css({
     position: 'absolute',
     top: 0,
-    zIndex: 1
+    zIndex: 1,
   }),
   checkIcon: {
     backgroundColor: '#fff',
-    margin: `0 5px 1px -${MILESTONEICON_SIZE + 6}px`
+    margin: `0 5px 1px -${MILESTONEICON_SIZE + 6}px`,
   },
   milestoneLabel: css({
-    fontWeight: 'bold'
+    fontWeight: 'bold',
   }),
   milestone: css({
     display: 'block',
-    paddingLeft: `${MILESTONEICON_SIZE + 6}px`
+    paddingLeft: `${MILESTONEICON_SIZE + 6}px`,
   }),
   link: css({
     color: 'inherit',
     textDecoration: 'none',
     ':hover': {
-      color: '#000'
-    }
-  })
+      color: '#000',
+    },
+  }),
 }
 
 class Tree extends Component {
@@ -102,7 +101,7 @@ class Tree extends Component {
     this.state = {
       commits: null,
       links: null,
-      parentNodes: null
+      parentNodes: null,
     }
     this.measure = this.measure.bind(this)
   }
@@ -141,7 +140,7 @@ class Tree extends Component {
         width: Math.ceil(rect.width),
         height: Math.ceil(rect.height),
         top: Math.ceil(rect.top - containerRect.top),
-        left: Math.ceil(rect.left - containerRect.left)
+        left: Math.ceil(rect.left - containerRect.left),
       }
     })
 
@@ -158,8 +157,10 @@ class Tree extends Component {
       NODE_SIZE / 2 + 2,
       Math.min(
         80,
-        Math.floor((width - Math.max(width / 2, LIST_MIN_WIDTH)) / numSlots)
-      )
+        Math.floor(
+          (width - Math.max(width / 2, LIST_MIN_WIDTH)) / numSlots,
+        ),
+      ),
     )
     if (slotWidth !== this.state.slotWidth) {
       this.setState({ slotWidth })
@@ -186,11 +187,14 @@ class Tree extends Component {
   layout() {
     const { slotWidth } = this.state
 
-    this.state.commits.forEach(({ data, nodeRef }) => {
-      nodeRef.style.left = `${data.slotIndex * slotWidth + slotWidth / 2}px`
-      nodeRef.style.top = `${data.measurements.top +
-        Math.floor(data.measurements.height / 2)}px`
-    })
+    this.state.commits.forEach(
+      ({ data, author, nodeRef, milestones }, i) => {
+        nodeRef.style.left = `${data.slotIndex * slotWidth +
+          slotWidth / 2}px`
+        nodeRef.style.top = `${data.measurements.top +
+          Math.floor(data.measurements.height / 2)}px`
+      },
+    )
 
     // Draw connections.
     const adjustment = NODE_SIZE / 2
@@ -230,9 +234,18 @@ class Tree extends Component {
 
   render() {
     const { repoId, t, localStorageCommitIds = [] } = this.props
-    const { width, height, slotWidth, commits, links, numSlots } = this.state
+    const {
+      width,
+      height,
+      slotWidth,
+      commits,
+      links,
+      numSlots,
+    } = this.state
 
-    const paddingLeft = slotWidth ? numSlots * slotWidth + NODE_SIZE : 0
+    const paddingLeft = slotWidth
+      ? numSlots * slotWidth + NODE_SIZE
+      : 0
 
     return (
       <div
@@ -240,8 +253,8 @@ class Tree extends Component {
         style={{
           maxWidth: Math.max(
             CONTAINER_MAX_WIDTH,
-            CONTAINER_MAX_WIDTH / 2 + paddingLeft
-          )
+            CONTAINER_MAX_WIDTH / 2 + paddingLeft,
+          ),
         }}
         ref={ref => {
           this.containerRef = ref
@@ -252,13 +265,18 @@ class Tree extends Component {
             style={{
               height,
               width: numSlots * slotWidth,
-              left: slotWidth / 2
+              left: slotWidth / 2,
             }}
             {...styles.svg}
           >
             {links &&
               links.map((path, i) => (
-                <path key={i} strokeWidth='1' stroke='#000' ref={path.setRef} />
+                <path
+                  key={i}
+                  strokeWidth="1"
+                  stroke="#000"
+                  ref={path.setRef}
+                />
               ))}
           </svg>
         )}
@@ -269,7 +287,8 @@ class Tree extends Component {
               const treeColors = this.getColor(commit.author.email)
               const hasLocalVersion =
                 localStorageCommitIds.indexOf(commit.id) !== -1
-              const hightlight = hasLocalVersion || commit.milestones.length
+              const hightlight =
+                hasLocalVersion || commit.milestones.length
               return (
                 <li
                   key={commit.id}
@@ -278,7 +297,7 @@ class Tree extends Component {
                     backgroundColor: hightlight
                       ? treeColors.highlightColor
                       : undefined,
-                    paddingLeft
+                    paddingLeft,
                   }}
                   {...styles.listItem}
                 >
@@ -287,17 +306,17 @@ class Tree extends Component {
                       padding: 5,
                       backgroundColor: !hightlight
                         ? treeColors.backgroundColor
-                        : undefined
+                        : undefined,
                     }}
                     {...styles.listItemWrapper}
                   >
                     <div>
                       <Interaction.P>
                         <Link
-                          route='repo/edit'
+                          route="repo/edit"
                           params={{
                             repoId: repoId.split('/'),
-                            commitId: commit.id
+                            commitId: commit.id,
                           }}
                         >
                           <a {...styles.link}>{commit.message}</a>
@@ -313,7 +332,7 @@ class Tree extends Component {
                       {hasLocalVersion && (
                         <span {...styles.milestone}>
                           <LocalIcon
-                            color='#000'
+                            color="#000"
                             size={MILESTONEICON_SIZE}
                             style={styles.checkIcon}
                           />
@@ -326,13 +345,13 @@ class Tree extends Component {
                         <span {...styles.milestone} key={i}>
                           {milestone.immutable ? (
                             <TagIcon
-                              color='#000'
+                              color="#000"
                               size={MILESTONEICON_SIZE}
                               style={styles.checkIcon}
                             />
                           ) : (
                             <CheckIcon
-                              color='#000'
+                              color="#000"
                               size={MILESTONEICON_SIZE}
                               style={styles.checkIcon}
                             />
@@ -341,7 +360,7 @@ class Tree extends Component {
                             {t(
                               `checklist/labels/${milestone.name}`,
                               undefined,
-                              milestone.name
+                              milestone.name,
                             )}{' '}
                           </span>
                           {milestone.author.name}
@@ -350,13 +369,15 @@ class Tree extends Component {
                       <Interaction.P>
                         <Label>
                           <Link
-                            route='repo/publish'
+                            route="repo/publish"
                             params={{
                               repoId: repoId.split('/'),
-                              commitId: commit.id
+                              commitId: commit.id,
                             }}
                           >
-                            <a {...styles.link}>{t('tree/commit/publish')}</a>
+                            <a {...styles.link}>
+                              {t('tree/commit/publish')}
+                            </a>
                           </Link>
                         </Label>
                       </Interaction.P>
@@ -368,7 +389,7 @@ class Tree extends Component {
                             still not sure how it's constructed though */}
                           <a
                             href={`https://github.com/${repoId}/commit/${commit.id}?short_path=75b25ca`}
-                            target='_blank'
+                            target="_blank"
                             {...styles.link}
                           >
                             <GithubIcon />
@@ -391,15 +412,16 @@ class Tree extends Component {
                 key={commit.id}
                 ref={commit.setNodeRef}
                 style={{
-                  backgroundColor: this.getColor(commit.author.email).color
+                  backgroundColor: this.getColor(commit.author.email)
+                    .color,
                 }}
                 {...styles.commitNode}
               >
                 <Link
-                  route='repo/edit'
+                  route="repo/edit"
                   params={{
                     repoId: repoId.split('/'),
-                    commitId: commit.id
+                    commitId: commit.id,
                   }}
                 >
                   <a {...css(styles.nodeLink)} />

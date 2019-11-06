@@ -17,31 +17,35 @@ export default ({
   isDisabled = () => false,
   isVisible = () => true,
   reducer
-}) => Component => {
-  const ActionButton = props => {
-    const {
-      isDisabled: propsIsDisabled,
-      isVisible: propsIsVisible,
-      ...propsToPass
-    } = props
-    const visible = propsIsVisible
-      ? propsIsVisible(props, isVisible(props))
-      : isVisible(props)
-    const disabled = propsIsDisabled
-      ? propsIsDisabled(props, isDisabled(props))
-      : isDisabled(props)
-    const onMouseDown = !disabled ? reducer(props) : preventDefault
-    return (
-      <Component
-        {...propsToPass}
-        disabled={disabled}
-        visible={visible}
-        onMouseDown={onMouseDown}
+}) =>
+  Component => {
+    const ActionButton = props => {
+      const {
+        onChange,
+        isDisabled: propsIsDisabled,
+        isVisible: propsIsVisible,
+        ...propsToPass
+      } = props
+      const visible = propsIsVisible
+        ? propsIsVisible(props, isVisible(props))
+        : isVisible(props)
+      const disabled = propsIsDisabled
+        ? propsIsDisabled(props, isDisabled(props))
+        : isDisabled(props)
+      const onMouseDown = !disabled
+      ? reducer(props)
+      : preventDefault
+      return (
+        <Component
+          {...propsToPass}
+          disabled={disabled}
+          visible={visible}
+          onMouseDown={onMouseDown}
       />
-    )
-  }
-  ActionButton.propTypes = propTypes
-  ActionButton.defaultProps = defaultProps
+      )
+    }
+    ActionButton.propTypes = propTypes
+    ActionButton.defaultProps = defaultProps
 
-  return ActionButton
-}
+    return ActionButton
+  }

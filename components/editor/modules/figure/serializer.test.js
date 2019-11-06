@@ -33,7 +33,10 @@ const captionModule = createCaptionModule({
     matchMdast: node => node.type === 'paragraph',
     editorOptions: {}
   },
-  subModules: [bylineModule, boldModule]
+  subModules: [
+    bylineModule,
+    boldModule
+  ]
 })
 captionModule.name = 'figureCaption'
 
@@ -43,7 +46,10 @@ const figureModule = createFigureModule({
     matchMdast: node => node.type === 'zone' && node.identifier === TYPE,
     editorOptions: {}
   },
-  subModules: [imageModule, captionModule]
+  subModules: [
+    imageModule,
+    captionModule
+  ]
 })
 
 const serializer = figureModule.helpers.serializer

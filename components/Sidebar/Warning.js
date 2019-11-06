@@ -13,5 +13,9 @@ const styles = {
 }
 
 export default ({ message }) => {
-  return <div {...styles.warning}>{message}</div>
+  return (
+    <div {...styles.warning}>
+      {message}
+    </div>
+  )
 }

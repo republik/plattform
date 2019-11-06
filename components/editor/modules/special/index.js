@@ -7,7 +7,7 @@ import MarkdownSerializer from 'slate-mdast-serializer'
 
 import createUi from './ui'
 
-export default ({ rule, TYPE }) => {
+export default ({ rule, subModules, TYPE }) => {
   const zone = {
     match: matchBlock(TYPE),
     matchMdast: rule.matchMdast,
@@ -17,9 +17,9 @@ export default ({ rule, TYPE }) => {
         type: TYPE,
         data: {
           identifier: node.identifier,
-          ...node.data
+          ...node.data,
         },
-        isVoid: true
+        isVoid: true,
       }
     },
     toMdast: object => {
@@ -28,9 +28,9 @@ export default ({ rule, TYPE }) => {
         type: 'zone',
         identifier,
         data: data,
-        children: []
+        children: [],
       }
-    }
+    },
   }
 
   const newBlock = () =>
@@ -38,28 +38,35 @@ export default ({ rule, TYPE }) => {
       zone.fromMdast({
         type: 'zone',
         identifier: 'SPECIAL',
-        data: {}
-      })
+        data: {},
+      }),
     )
 
   const serializer = new MarkdownSerializer({
-    rules: [zone]
+    rules: [zone],
   })
 
   return {
     TYPE,
     helpers: {
       serializer,
-      newBlock
+      newBlock,
     },
     changes: {},
     ui: createUi({ TYPE, newBlock, rule }),
     plugins: [
       {
-        renderNode({ node, editor: { value }, attributes }) {
+        renderNode({
+          node,
+          children,
+          editor: { value },
+          attributes,
+        }) {
           if (!zone.match(node)) return
 
-          const active = value.blocks.some(block => block.key === node.key)
+          const active = value.blocks.some(
+            block => block.key === node.key,
+          )
           return (
             <div
               style={{
@@ -71,7 +78,7 @@ export default ({ rule, TYPE }) => {
                 transition: 'outline-color 0.2s',
                 outline: '4px solid transparent',
                 outlineColor: active ? colors.primary : 'transparent',
-                marginBottom: 10
+                marginBottom: 10,
               }}
               {...attributes}
             >
@@ -81,10 +88,10 @@ export default ({ rule, TYPE }) => {
         },
         schema: {
           [TYPE]: {
-            isVoid: true
-          }
-        }
-      }
-    ]
+            isVoid: true,
+          },
+        },
+      },
+    ],
   }
 }

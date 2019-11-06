@@ -1,20 +1,33 @@
 import React from 'react'
 
 import injectBlock from '../../utils/injectBlock'
-import { buttonStyles } from '../../utils'
+import {
+  buttonStyles
+} from '../../utils'
 
-export default ({ newBlock, editorOptions }) => {
-  const { insertButtonText, insertTypes = [] } = editorOptions || {}
+export default ({TYPE, CANVAS_TYPE, newBlock, editorOptions}) => {
+  const {
+    insertButtonText,
+    insertTypes = []
+  } = editorOptions || {}
 
   const insertHandler = (disabled, value, onChange) => event => {
     event.preventDefault()
     if (!disabled) {
-      return onChange(value.change().call(injectBlock, newBlock()))
+      return onChange(
+        value
+          .change()
+          .call(
+            injectBlock,
+            newBlock()
+          )
+      )
     }
   }
   const InsertButton = ({ value, onChange }) => {
-    const disabled =
-      value.isBlurred || !value.blocks.every(n => insertTypes.includes(n.type))
+    const disabled = value.isBlurred || !value.blocks.every(
+      n => insertTypes.includes(n.type)
+    )
 
     return (
       <span
@@ -22,7 +35,7 @@ export default ({ newBlock, editorOptions }) => {
         data-disabled={disabled}
         data-visible
         onMouseDown={insertHandler(disabled, value, onChange)}
-      >
+        >
         {insertButtonText}
       </span>
     )

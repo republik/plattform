@@ -12,73 +12,78 @@ import EmbedLoader from './EmbedLoader'
 import gql from 'graphql-tag'
 
 export const getVideoEmbed = gql`
-  query getVideoEmbed($id: ID!, $embedType: EmbedType!) {
-    embed(id: $id, embedType: $embedType) {
-      __typename
-      ... on YoutubeEmbed {
-        platform
-        id
-        createdAt
-        retrievedAt
-        userName
-        userUrl
+query getVideoEmbed($id: ID!, $embedType: EmbedType!) {
+  embed(id: $id, embedType: $embedType) {
+    __typename
+    ... on YoutubeEmbed {
+      platform
+      id
+      createdAt
+      retrievedAt
+      userName
+      userUrl
+      thumbnail
+      title
+      userName
+      userProfileImageUrl
+      aspectRatio
+      durationMs
+      mediaId
+    }
+    ... on VimeoEmbed {
+      platform
+      id
+      createdAt
+      retrievedAt
+      userName
+      userUrl
+      thumbnail
+      title
+      userName
+      userProfileImageUrl
+      aspectRatio
+      src {
+        mp4
+        hls
         thumbnail
-        title
-        userName
-        userProfileImageUrl
-        aspectRatio
-        durationMs
-        mediaId
       }
-      ... on VimeoEmbed {
-        platform
-        id
-        createdAt
-        retrievedAt
-        userName
-        userUrl
-        thumbnail
-        title
-        userName
-        userProfileImageUrl
-        aspectRatio
-        src {
-          mp4
-          hls
-          thumbnail
-        }
-        durationMs
-        mediaId
-      }
+      durationMs
+      mediaId
     }
   }
+}
 `
 
 export const getTwitterEmbed = gql`
-  query getTwitterEmbed($id: ID!, $embedType: EmbedType!) {
-    embed(id: $id, embedType: $embedType) {
-      __typename
-      ... on TwitterEmbed {
-        id
-        createdAt
-        retrievedAt
-        text
-        html
-        userId
-        userName
-        userScreenName
-        userProfileImageUrl
-        image
-        more
-        playable
-      }
+query getTwitterEmbed($id: ID!, $embedType: EmbedType!) {
+  embed(id: $id, embedType: $embedType) {
+    __typename
+    ... on TwitterEmbed {
+      id
+      createdAt
+      retrievedAt
+      text
+      html
+      userId
+      userName
+      userScreenName
+      userProfileImageUrl
+      image
+      more
+      playable
     }
   }
+}
 `
 
-const fromMdast = ({ TYPE }) => node => {
+const fromMdast = ({ TYPE }) => (
+  node
+) => {
   const deepNodes = node.children.reduce(
-    (children, child) => children.concat(child).concat(child.children),
+    (children, child) =>
+      children
+        .concat(child)
+        .concat(child.children),
     []
   )
   const link = findOrCreate(deepNodes, {
@@ -95,8 +100,13 @@ const fromMdast = ({ TYPE }) => node => {
   }
 }
 
-const toMdast = ({ TYPE }) => node => {
-  const { url, ...data } = node.data
+const toMdast = ({ TYPE }) => (
+  node
+) => {
+  const {
+    url,
+    ...data
+  } = node.data
   return {
     type: 'zone',
     identifier: TYPE,
@@ -126,7 +136,8 @@ const getSerializer = options =>
     rules: [
       {
         match: matchBlock(options.TYPE),
-        matchMdast: options.rule.matchMdast,
+        matchMdast:
+          options.rule.matchMdast,
         fromMdast: fromMdast(options),
         toMdast: toMdast(options)
       }
@@ -138,14 +149,18 @@ const embedPlugin = ({ query, ...options }) => {
   const Component = withApollo(EmbedLoader(query, Embed))
 
   return {
-    renderNode(props) {
-      const { node } = props
+    renderNode (props) {
+      const {
+        node
+      } = props
 
       if (!matchBlock(options.TYPE)(node)) {
         return
       }
 
-      return <Component {...props} />
+      return (
+        <Component {...props} />
+      )
     },
     schema: {
       blocks: {
@@ -170,7 +185,9 @@ const moduleFactory = ({ query, matchUrl, getQueryParams }) => options => {
       embedFromUrlPlugin({
         matchUrl,
         getQueryParams,
-        matchSource: matchBlock(rule.editorOptions.lookupType.toUpperCase()),
+        matchSource: matchBlock(
+          rule.editorOptions.lookupType.toUpperCase()
+        ),
         TYPE
       })
     ]
@@ -186,7 +203,8 @@ const YOUTUBE_REGEX = /^http(?:s?):\/\/(?:www\.)?youtu(?:be\.com\/watch\?v=|\.be
 // One capturing group at match[1] that catches the video id
 const VIMEO_REGEX = /^(?:http|https)?:\/\/(?:www\.)?vimeo.com\/(?:channels\/(?:\w+\/)?|groups\/(?:[^/]*)\/videos\/|)(\d+)(?:|\/\?)$/
 
-const matchVideoUrl = url => YOUTUBE_REGEX.test(url) || VIMEO_REGEX.test(url)
+const matchVideoUrl = url =>
+  YOUTUBE_REGEX.test(url) || VIMEO_REGEX.test(url)
 
 const getVideoQueryParams = url => {
   if (YOUTUBE_REGEX.test(url)) {
@@ -204,7 +222,8 @@ const getVideoQueryParams = url => {
   throw new Error(`No valid video embed URL: ${url}`)
 }
 
-const matchTwitterUrl = url => TWITTER_REGEX.test(url)
+const matchTwitterUrl = url =>
+  TWITTER_REGEX.test(url)
 
 const getTwitterQueryParams = url => {
   if (TWITTER_REGEX.test(url)) {

@@ -4,7 +4,9 @@ import PropTypes from 'prop-types'
 
 import AutosizeInput from 'react-textarea-autosize'
 
-import { Field } from '@project-r/styleguide'
+import {
+  Field
+} from '@project-r/styleguide'
 
 const styles = {
   autoSize: css({
@@ -17,31 +19,26 @@ const styles = {
   })
 }
 
-export const renderAutoSize = ({ onBlur, onPaste } = {}) => ({
-  ref,
-  onBlur: fieldOnBlur,
-  ...inputProps
-}) => (
-  <AutosizeInput
-    {...styles.autoSize}
-    {...inputProps}
-    onBlur={e => {
-      onBlur && onBlur(e)
-      fieldOnBlur && fieldOnBlur(e)
-    }}
-    onPaste={onPaste}
-    inputRef={ref}
-  />
-)
+export const renderAutoSize = ({onBlur, onPaste} = {}) =>
+  ({ref, onBlur: fieldOnBlur, ...inputProps}) => (
+    <AutosizeInput {...styles.autoSize}
+      {...inputProps}
+      onBlur={(e) => {
+        onBlur && onBlur(e)
+        fieldOnBlur && fieldOnBlur(e)
+      }}
+      onPaste={onPaste}
+      inputRef={ref} />
+  )
 
 class JSONField extends Component {
-  constructor(...args) {
+  constructor (...args) {
     super(...args)
     this.state = {
       value: undefined
     }
     this.renderInput = renderAutoSize({
-      onBlur: e => {
+      onBlur: (e) => {
         const value = e.target.value
         if (!value) {
           return
@@ -49,9 +46,7 @@ class JSONField extends Component {
         let data
         try {
           data = JSON.parse(value)
-        } catch (e) {
-          // NOOP
-        }
+        } catch (e) {}
         if (data) {
           this.setState({
             value: undefined
@@ -60,32 +55,29 @@ class JSONField extends Component {
       }
     })
   }
-  render() {
+  render () {
     const { label, value, onChange } = this.props
     const stateValue = this.state.value
     return (
       <Field
         label={label}
-        value={
-          stateValue === undefined ? JSON.stringify(value, null, 2) : stateValue
-        }
+        value={stateValue === undefined
+          ? JSON.stringify(value, null, 2)
+          : stateValue}
         renderInput={this.renderInput}
         onChange={(_, value) => {
           let data
           try {
             data = JSON.parse(value)
-          } catch (e) {
-            // NOOP
-          }
+          } catch (e) {}
           if (data) {
             onChange(data)
           }
 
           if (this.state.value !== value) {
-            this.setState({ value })
+            this.setState({value})
           }
-        }}
-      />
+        }} />
     )
   }
 }

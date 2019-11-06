@@ -1,7 +1,13 @@
 import React, { Fragment } from 'react'
 import { Set, Map } from 'immutable'
 
-import { A, Label, Radio, Field, Dropdown } from '@project-r/styleguide'
+import {
+  A,
+  Label,
+  Radio,
+  Field,
+  Dropdown,
+} from '@project-r/styleguide'
 
 import MetaForm from '../../utils/MetaForm'
 import withT from '../../../../lib/withT'
@@ -9,11 +15,13 @@ import withT from '../../../../lib/withT'
 import RepoSelect from './RepoSelect'
 import UIForm from '../../UIForm'
 
-export default withT(({ t, editor, node }) => {
-  const coverTextAnchors = [null, 'top', 'middle', 'bottom'].map(value => ({
-    value,
-    text: t(`metaData/series/coverText/anchor/${value}`)
-  }))
+export default withT(({ t, editor, node, onInputChange }) => {
+  const coverTextAnchors = [null, 'top', 'middle', 'bottom'].map(
+    value => ({
+      value,
+      text: t(`metaData/series/coverText/anchor/${value}`),
+    }),
+  )
 
   const value = node.data.get('series')
   const onChange = key => newValue => {
@@ -22,7 +30,7 @@ export default withT(({ t, editor, node }) => {
         data:
           newValue !== null
             ? node.data.set(key, newValue)
-            : node.data.remove(key)
+            : node.data.remove(key),
       })
     })
   }
@@ -50,7 +58,9 @@ export default withT(({ t, editor, node }) => {
           event.preventDefault()
           onSeriesChange({
             title: '',
-            episodes: [{ title: '', publishDate: '', document: null }]
+            episodes: [
+              { title: '', publishDate: '', document: null },
+            ],
           })
         }}
       >
@@ -73,7 +83,7 @@ export default withT(({ t, editor, node }) => {
   const onEpisodeChange = episodes => {
     onSeriesChange({
       ...value,
-      episodes: episodes
+      episodes: episodes,
     })
   }
 
@@ -99,8 +109,8 @@ export default withT(({ t, editor, node }) => {
                     value === 'middle'
                       ? ''
                       : (coverText && coverText.offset) || '5%',
-                  color: (coverText && coverText.color) || '#fff'
-                }
+                  color: (coverText && coverText.color) || '#fff',
+                },
               )
             }
           />
@@ -112,7 +122,7 @@ export default withT(({ t, editor, node }) => {
               onChange={(_, color) => {
                 onChange('coverText')({
                   ...coverText,
-                  color
+                  color,
                 })
               }}
             />
@@ -125,7 +135,7 @@ export default withT(({ t, editor, node }) => {
               onChange={(_, fontSize) => {
                 onChange('coverText')({
                   ...coverText,
-                  fontSize
+                  fontSize,
                 })
               }}
             />
@@ -138,7 +148,7 @@ export default withT(({ t, editor, node }) => {
               onChange={(_, offset) => {
                 onChange('coverText')({
                   ...coverText,
-                  offset
+                  offset,
                 })
               }}
             />
@@ -159,7 +169,7 @@ export default withT(({ t, editor, node }) => {
           style={{
             backgroundColor: '#fff',
             padding: '5px 10px 10px',
-            marginTop: 5
+            marginTop: 5,
           }}
         >
           <Field
@@ -168,13 +178,18 @@ export default withT(({ t, editor, node }) => {
             onChange={(_, title) => {
               onSeriesChange({
                 ...value,
-                title: title
+                title: title,
               })
             }}
           />
           {episodes.map((episode, i) => {
             const { document: episodeDoc, ...values } = episode
-            const keys = Set(['label', 'title', 'image', 'publishDate'])
+            const keys = Set([
+              'label',
+              'title',
+              'image',
+              'publishDate',
+            ])
             const defaultValues = Map(keys.map(key => [key, '']))
 
             const onEpisodeFieldChange = key => (_, keyValue) => {
@@ -183,20 +198,23 @@ export default withT(({ t, editor, node }) => {
                   .slice(0, i)
                   .concat({
                     ...episode,
-                    [key]: keyValue
+                    [key]: keyValue,
                   })
-                  .concat(episodes.slice(i + 1))
+                  .concat(episodes.slice(i + 1)),
               )
             }
             return (
               <Fragment key={episode.title}>
-                <Label>{t('metaData/series/episodes/label')}</Label> &nbsp;{' '}
+                <Label>{t('metaData/series/episodes/label')}</Label>{' '}
+                &nbsp;{' '}
                 <A
-                  href='#remove'
+                  href="#remove"
                   onClick={e => {
                     e.preventDefault()
                     onEpisodeChange(
-                      episodes.slice(0, i).concat(episodes.slice(i + 1))
+                      episodes
+                        .slice(0, i)
+                        .concat(episodes.slice(i + 1)),
                     )
                   }}
                 >
@@ -219,15 +237,15 @@ export default withT(({ t, editor, node }) => {
             )
           })}
           <A
-            href='#remove'
+            href="#remove"
             onClick={e => {
               e.preventDefault()
               onEpisodeChange(
                 episodes.concat({
                   title: '',
                   publishDate: '',
-                  document: null
-                })
+                  document: null,
+                }),
               )
             }}
           >

@@ -26,8 +26,7 @@ const Index = ({ router: { query } }) => {
           orderField={orderField}
           orderDirection={orderDirection}
           phase={query.phase}
-          search={query.q}
-        />
+          search={query.q} />
       </Frame.Body>
     </Frame>
   )

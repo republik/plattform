@@ -12,7 +12,7 @@ import {
 import injectBlock from '../../utils/injectBlock'
 import MetaForm from '../../utils/MetaForm'
 
-export default ({ TYPE, newBlock }) => {
+export default ({ TYPE, newBlock, rule }) => {
   const SpecialButton = createActionButton({
     isDisabled: ({ value }) => {
       return value.isBlurred
@@ -20,48 +20,60 @@ export default ({ TYPE, newBlock }) => {
     reducer: ({ value, onChange }) => event => {
       event.preventDefault()
 
-      return onChange(value.change().call(injectBlock, newBlock()))
+      return onChange(
+        value
+          .change()
+          .call(
+            injectBlock,
+            newBlock()
+          )
+      )
     }
-  })(({ disabled, visible, ...props }) => (
-    <span
-      {...buttonStyles.insert}
-      {...props}
-      data-disabled={disabled}
-      data-visible={visible}
-    >
-      Special
-    </span>
-  ))
+  })(
+    ({ disabled, visible, ...props }) =>
+      <span
+        {...buttonStyles.insert}
+        {...props}
+        data-disabled={disabled}
+        data-visible={visible}
+      >
+        Special
+      </span>
+  )
 
   const Form = ({ disabled, value, onChange }) => {
     if (disabled) {
       return null
     }
-    return (
-      <div>
-        <Label>Special</Label>
-        {value.blocks.filter(matchBlock(TYPE)).map((node, i) => {
-          const onInputChange = key => (_, inputValue) => {
-            onChange(
-              value.change().setNodeByKey(node.key, {
-                data: inputValue
-                  ? node.data.set(key, inputValue)
-                  : node.data.remove(key)
-              })
+    return <div>
+      <Label>Special</Label>
+      {
+        value.blocks
+          .filter(matchBlock(TYPE))
+          .map((node, i) => {
+            const onInputChange = key => (_, inputValue) => {
+              onChange(
+                value
+                  .change()
+                  .setNodeByKey(node.key, {
+                    data: inputValue
+                      ? node.data.set(key, inputValue)
+                      : node.data.remove(key)
+                  })
+              )
+            }
+            return (
+              <MetaForm
+                key={`special-${i}`}
+                data={Map({
+                  identifier: ''
+                }).merge(node.data)}
+                onInputChange={onInputChange}
+              />
             )
-          }
-          return (
-            <MetaForm
-              key={`special-${i}`}
-              data={Map({
-                identifier: ''
-              }).merge(node.data)}
-              onInputChange={onInputChange}
-            />
-          )
-        })}
-      </div>
-    )
+          })
+      }
+    </div>
   }
 
   const SpecialForm = createPropertyForm({

@@ -10,11 +10,13 @@ import { TeaserGroupButton, TeaserGroupForm } from './ui'
 export const getData = data => ({
   columns: 2,
   id: (data && data.id) || shortId(),
-  ...(data || {})
+  ...data || {}
 })
 
 export const getNewBlock = options => () => {
-  const [teaserModule] = options.subModules
+  const [
+    teaserModule
+  ] = options.subModules
 
   const data = getData({
     teaserType: options.rule.editorOptions.teaserType
@@ -26,16 +28,29 @@ export const getNewBlock = options => () => {
       ...data,
       module: 'teasergroup'
     },
-    nodes: [teaserModule.helpers.newItem(), teaserModule.helpers.newItem()]
+    nodes: [
+      teaserModule.helpers.newItem(),
+      teaserModule.helpers.newItem()
+    ]
   })
 }
 
-export const fromMdast = ({ TYPE, subModules }) => node => {
-  const [teaserModule] = subModules
+export const fromMdast = ({
+  TYPE,
+  subModules
+}) => (node,
+  index,
+  parent,
+  {
+    visitChildren,
+    context
+  }
+) => {
+  const [ teaserModule ] = subModules
 
   const teaserSerializer = teaserModule.helpers.serializer
 
-  const { ...data } = getData(node.data)
+  const { module, ...data } = getData(node.data)
 
   const result = {
     kind: 'block',
@@ -44,18 +59,31 @@ export const fromMdast = ({ TYPE, subModules }) => node => {
       ...data,
       module: 'teasergroup'
     },
-    nodes: node.children.map(v => teaserSerializer.fromMdast(v))
+    nodes: node.children.map(
+      v => teaserSerializer.fromMdast(v)
+    )
   }
   return result
 }
 
-export const toMdast = ({ subModules }) => node => {
-  const [teaserModule] = subModules
+export const toMdast = ({
+  TYPE,
+  subModules
+}) => (
+  node,
+  index,
+  parent,
+  {
+    visitChildren,
+    context
+  }
+) => {
+  const [ teaserModule ] = subModules
 
   const mdastChildren = node.nodes.map(v =>
     teaserModule.helpers.serializer.toMdast(v)
   )
-  const { ...data } = node.data
+  const { module, ...data } = node.data
   return {
     type: 'zone',
     identifier: 'TEASERGROUP',
@@ -69,10 +97,10 @@ const teaserGroupPlugin = options => {
 
   const TeaserGroup = rule.component
 
-  const [teaserModule] = options.subModules
+  const [ teaserModule ] = options.subModules
 
   return {
-    renderNode({ editor, node, attributes, children }) {
+    renderNode ({ editor, node, attributes, children }) {
       if (!matchBlock(TYPE)(node)) {
         return
       }
@@ -85,14 +113,18 @@ const teaserGroupPlugin = options => {
 
       const isSelected = teaser === node && !editor.value.isBlurred
 
-      return [
-        isSelected && <TeaserInlineUI key='ui' node={node} editor={editor} />,
+      return ([
+        isSelected && <TeaserInlineUI
+          key='ui'
+          node={node}
+          editor={editor}
+        />,
         <TeaserGroup key='teaser' {...node.data.toJS()} attributes={attributes}>
           {children}
         </TeaserGroup>
-      ]
+      ])
     },
-    validateNode(node) {
+    validateNode (node, ...args) {
       if (!matchBlock(TYPE)(node)) {
         return
       }
@@ -106,12 +138,7 @@ const teaserGroupPlugin = options => {
         return change => change.removeNodeByKey(keyToRemove)
       } else {
         const keyToInsertAt = node.key
-        return change =>
-          change.insertNodeByKey(
-            keyToInsertAt,
-            1,
-            teaserModule.helpers.newItem()
-          )
+        return change => change.insertNodeByKey(keyToInsertAt, 1, teaserModule.helpers.newItem())
       }
     },
     schema: {
@@ -133,7 +160,8 @@ const getSerializer = options => {
     rules: [
       {
         match: matchBlock(options.TYPE),
-        matchMdast: options.rule.matchMdast,
+        matchMdast:
+          options.rule.matchMdast,
         fromMdast: fromMdast(options),
         toMdast: toMdast(options)
       }
@@ -147,9 +175,15 @@ export default options => ({
     newItem: getNewBlock(options)
   },
   rule: getSerializer(options).rules[0],
-  plugins: [teaserGroupPlugin(options)],
+  plugins: [
+    teaserGroupPlugin(options)
+  ],
   ui: {
-    insertButtons: [TeaserGroupButton(options)],
-    forms: [TeaserGroupForm(options)]
+    insertButtons: [
+      TeaserGroupButton(options)
+    ],
+    forms: [
+      TeaserGroupForm(options)
+    ]
   }
 })
