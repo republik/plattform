@@ -24,9 +24,9 @@ export default ({ rule, subModules, TYPE }) => {
 
   const figureImage = {
     match: matchBlock(TYPE),
-    matchMdast: (node) => node.type === 'image',
-    fromMdast: (node) => {
-      return ({
+    matchMdast: node => node.type === 'image',
+    fromMdast: node => {
+      return {
         kind: 'block',
         type: TYPE,
         data: {
@@ -35,9 +35,9 @@ export default ({ rule, subModules, TYPE }) => {
         },
         isVoid: true,
         nodes: []
-      })
+      }
     },
-    toMdast: (object) => ({
+    toMdast: object => ({
       type: 'image',
       alt: object.data.alt,
       url: object.data.src
@@ -45,9 +45,7 @@ export default ({ rule, subModules, TYPE }) => {
   }
 
   const serializer = new MarkdownSerializer({
-    rules: [
-      figureImage
-    ]
+    rules: [figureImage]
   })
 
   return {
@@ -58,17 +56,19 @@ export default ({ rule, subModules, TYPE }) => {
     changes: {},
     plugins: [
       {
-        renderNode (props) {
+        renderNode(props) {
           const { node, editor, attributes } = props
           if (node.type !== TYPE) return
-          const active = editor.value.blocks.some(block => block.key === node.key)
+          const active = editor.value.blocks.some(
+            block => block.key === node.key
+          )
 
           return (
-            <span
-              {...styles.border}
-              {...attributes}
-              data-active={active}>
-              <Image src={node.data.get('src') || gray2x1} alt={node.data.get('alt')} />
+            <span {...styles.border} {...attributes} data-active={active}>
+              <Image
+                src={node.data.get('src') || gray2x1}
+                alt={node.data.get('alt')}
+              />
             </span>
           )
         },

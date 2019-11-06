@@ -15,42 +15,30 @@ test('mark serialization', assert => {
   assert.equal(node.text, 'Hello WorldYou')
 
   const textKey = node.getFirstText().key
-  const helloMarks = value
-    .change()
-    .select({
-      anchorKey: textKey,
-      anchorOffset: 0,
-      focusKey: textKey,
-      focusOffset: 4
-    })
-    .value
-    .marks
+  const helloMarks = value.change().select({
+    anchorKey: textKey,
+    anchorOffset: 0,
+    focusKey: textKey,
+    focusOffset: 4
+  }).value.marks
   assert.equal(helloMarks.size, 1)
   assert.equal(helloMarks.first().type, 'EMPHASIS')
 
-  const worldMarks = value
-    .change()
-    .select({
-      anchorKey: textKey,
-      anchorOffset: 5,
-      focusKey: textKey,
-      focusOffset: 10
-    })
-    .value
-    .marks
+  const worldMarks = value.change().select({
+    anchorKey: textKey,
+    anchorOffset: 5,
+    focusKey: textKey,
+    focusOffset: 10
+  }).value.marks
   assert.equal(worldMarks.size, 1)
   assert.equal(worldMarks.first().type, 'DELETE')
 
-  const youMarks = value
-    .change()
-    .select({
-      anchorKey: textKey,
-      anchorOffset: 11,
-      focusKey: textKey,
-      focusOffset: 13
-    })
-    .value
-    .marks
+  const youMarks = value.change().select({
+    anchorKey: textKey,
+    anchorOffset: 11,
+    focusKey: textKey,
+    focusOffset: 13
+  }).value.marks
   assert.equal(youMarks.size, 1)
   assert.equal(youMarks.first().type, 'STRONG')
 

@@ -29,13 +29,16 @@ const getSubmodules = ({ subModules }) => {
   }
 }
 
-const getRules = subModules => subModules.reduce(
-  (a, m) => a.concat(
-    m.helpers && m.helpers.serializer &&
-    m.helpers.serializer.rules
-  ),
-  []
-).filter(Boolean)
+const getRules = subModules =>
+  subModules
+    .reduce(
+      (a, m) =>
+        a.concat(
+          m.helpers && m.helpers.serializer && m.helpers.serializer.rules
+        ),
+      []
+    )
+    .filter(Boolean)
 
 const fromMdast = options => {
   return (node, index, parent, rest) => {
@@ -65,7 +68,7 @@ const fromMdast = options => {
           }
         }
       )
-    // enhance all immediate children with data
+      // enhance all immediate children with data
       .map(node => ({ ...node, data: { ...node.data, ...data } }))
     const result = {
       kind: 'block',
@@ -80,7 +83,7 @@ const fromMdast = options => {
   }
 }
 
-const toMdast = (options) => {
+const toMdast = options => {
   return (node, index, parent, rest) => {
     const { subModules } = options
     const { visitChildren, context } = rest
@@ -124,8 +127,7 @@ const getSerializer = options =>
     rules: [
       {
         match: matchBlock(options.TYPE),
-        matchMdast:
-          options.rule.matchMdast,
+        matchMdast: options.rule.matchMdast,
         fromMdast: fromMdast(options),
         toMdast: toMdast(options)
       }
@@ -146,15 +148,11 @@ const getData = data => ({
   portrait: true,
   showImage: true,
   onlyImage: false,
-  ...data || {}
+  ...(data || {})
 })
 
 const getNewBlock = options => () => {
-  const {
-    formatModule,
-    titleModule,
-    leadModule
-  } = getSubmodules(options)
+  const { formatModule, titleModule, leadModule } = getSubmodules(options)
 
   const data = getData()
 
@@ -195,14 +193,15 @@ const introPlugin = options => {
   const Intro = rule.component
 
   return {
-    renderNode ({ editor, node, attributes, children }) {
+    renderNode({ editor, node, attributes, children }) {
       if (!matchBlock(TYPE)(node)) {
         return
       }
 
-      const image = node.data.get('showImage') === true
-        ? node.data.get('image') || '/static/placeholder.png'
-        : null
+      const image =
+        node.data.get('showImage') === true
+          ? node.data.get('image') || '/static/placeholder.png'
+          : null
 
       return (
         <Intro {...node.data.toJS()} image={image} attributes={attributes}>
@@ -219,13 +218,9 @@ export default options => ({
     serializer: getSerializer(options),
     newItem: getNewBlock(options)
   },
-  plugins: [
-    introPlugin(options)
-  ],
+  plugins: [introPlugin(options)],
   ui: {
     insertButtons: [],
-    forms: [
-      TeaserForm({ subModuleResolver: getSubmodules, ...options })
-    ]
+    forms: [TeaserForm({ subModuleResolver: getSubmodules, ...options })]
   }
 })

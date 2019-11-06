@@ -14,11 +14,7 @@ import { GITHUB_ORG, REPO_PREFIX } from '../../../lib/settings'
 //               }
 //             }
 export const filterRepos = gql`
-  query searchRepo(
-    $after: String
-    $search: String
-    $template: String
-  ) {
+  query searchRepo($after: String, $search: String, $template: String) {
     repos: reposSearch(
       first: 10
       after: $after
@@ -66,12 +62,12 @@ const ConnectedAutoComplete = graphql(filterRepos, {
   skip: props => !props.filter,
   options: ({ search, template }) => ({
     fetchPolicy: 'network-only',
-    variables: { search: search, template: template },
+    variables: { search: search, template: template }
   }),
   props: props => {
     if (props.data.loading) return { data: props.data, items: [] }
     const {
-      data: { repos: { nodes = [] } = {} },
+      data: { repos: { nodes = [] } = {} }
     } = props
     return {
       data: props.data,
@@ -79,22 +75,22 @@ const ConnectedAutoComplete = graphql(filterRepos, {
         value: v,
         text:
           v.latestCommit.document.meta.title ||
-          v.id.replace([GITHUB_ORG, REPO_PREFIX || ''].join('/'), ''),
-      })),
+          v.id.replace([GITHUB_ORG, REPO_PREFIX || ''].join('/'), '')
+      }))
     }
-  },
+  }
 })(props => {
   const showLoader = props.data && props.data.loading
   return (
     <span style={{ position: 'relative', display: 'block' }}>
-      <Autocomplete key="autocomplete" {...props} />
+      <Autocomplete key='autocomplete' {...props} />
       {!!showLoader && (
         <span
           style={{
             position: 'absolute',
             top: '21px',
             right: '0px',
-            zIndex: 500,
+            zIndex: 500
           }}
         >
           <InlineSpinner size={35} />
@@ -114,20 +110,17 @@ export default class RepoSearch extends Component {
       items: [],
       filter: '',
       search: '',
-      value: safeValue(props.value),
+      value: safeValue(props.value)
     }
 
     this.filterChangeHandler = this.filterChangeHandler.bind(this)
     this.changeHandler = this.changeHandler.bind(this)
-    this.setSearchValue = debounce(
-      this.setSearchValue.bind(this),
-      500,
-    )
+    this.setSearchValue = debounce(this.setSearchValue.bind(this), 500)
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
     this.setState({
-      value: safeValue(nextProps.value),
+      value: safeValue(nextProps.value)
     })
   }
 
@@ -137,16 +130,16 @@ export default class RepoSearch extends Component {
 
   setSearchValue() {
     this.setState({
-      search: this.state.filter,
+      search: this.state.filter
     })
   }
 
   filterChangeHandler(value) {
     this.setState(
       state => ({
-        filter: value,
+        filter: value
       }),
-      this.setSearchValue,
+      this.setSearchValue
     )
   }
 
@@ -154,9 +147,9 @@ export default class RepoSearch extends Component {
     this.setState(
       state => ({
         value: null,
-        filter: null,
+        filter: null
       }),
-      () => this.props.onChange(value),
+      () => this.props.onChange(value)
     )
   }
 

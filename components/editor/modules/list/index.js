@@ -28,7 +28,7 @@ export default ({ rule, subModules, TYPE }) => {
 
   const list = {
     match: matchBlock(TYPE),
-    matchMdast: (node) => node.type === 'list',
+    matchMdast: node => node.type === 'list',
     fromMdast: (node, index, parent, rest) => ({
       kind: 'block',
       type: TYPE,
@@ -40,41 +40,40 @@ export default ({ rule, subModules, TYPE }) => {
       nodes: itemSerializer.fromMdast(node.children, 0, node, rest)
     }),
     toMdast: (object, index, parent, rest) => {
-      const res = ({
+      const res = {
         type: 'list',
         loose: !object.data.compact,
         ordered: object.data.ordered,
         start: object.data.start || 1,
         children: itemSerializer.toMdast(object.nodes, 0, object, rest)
-      })
+      }
       return res
     }
   }
 
   const serializer = new MarkdownSerializer({
-    rules: [
-      list
-    ]
+    rules: [list]
   })
 
-  const newBlock = ({ ordered = false, compact = true }) => Block.fromJSON(
-    list.fromMdast({
-      ordered,
-      loose: !compact,
-      children: [
-        {
-          type: 'listItem',
-          children: [
-            {
-              type: 'paragraph',
-              children: []
-            }
-          ]
-        }
-      ],
-      data: {}
-    })
-  )
+  const newBlock = ({ ordered = false, compact = true }) =>
+    Block.fromJSON(
+      list.fromMdast({
+        ordered,
+        loose: !compact,
+        children: [
+          {
+            type: 'listItem',
+            children: [
+              {
+                type: 'paragraph',
+                children: []
+              }
+            ]
+          }
+        ],
+        data: {}
+      })
+    )
 
   return {
     TYPE,
@@ -111,27 +110,31 @@ export default ({ rule, subModules, TYPE }) => {
           if (node.type !== TYPE) return
           return (
             <List attributes={attributes} data={node.data.toJS()}>
-              { children }
+              {children}
             </List>
           )
         },
-        onKeyDown (event, change) {
+        onKeyDown(event, change) {
           const isBackspace = event.key === 'Backspace'
           if (event.key !== 'Enter' && !isBackspace) return
 
           const { value } = change
-          const inList = value.document.getClosest(value.startBlock.key, matchBlock(TYPE))
+          const inList = value.document.getClosest(
+            value.startBlock.key,
+            matchBlock(TYPE)
+          )
           if (!inList) return
 
           event.preventDefault()
 
-          const inItem = value.document.getClosest(value.startBlock.key, matchBlock(LI))
+          const inItem = value.document.getClosest(
+            value.startBlock.key,
+            matchBlock(LI)
+          )
           const isEmpty = !inItem || !inItem.text
 
           if (isEmpty && (!isBackspace || inList.nodes.size === 1)) {
-            return change
-              .unwrapBlock(TYPE)
-              .unwrapBlock(LI)
+            return change.unwrapBlock(TYPE).unwrapBlock(LI)
           }
 
           if (isBackspace) {
@@ -147,9 +150,7 @@ export default ({ rule, subModules, TYPE }) => {
         schema: {
           blocks: {
             [TYPE]: {
-              nodes: [
-                { types: [LI] }
-              ],
+              nodes: [{ types: [LI] }],
               normalize: (change, reason, { child }) => {
                 if (reason === 'child_type_invalid') {
                   if (child.kind === 'block') {

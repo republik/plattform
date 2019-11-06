@@ -13,9 +13,7 @@ import withT from '../../../lib/withT'
 import ImageInput from './ImageInput'
 
 const dateFormat = '%d.%m.%Y %H:%M'
-const dateMask = dateFormat
-  .replace('%Y', '1111')
-  .replace(/%(d|m|H|M)/g, '11')
+const dateMask = dateFormat.replace('%Y', '1111').replace(/%(d|m|H|M)/g, '11')
 const parseDate = timeParse(dateFormat)
 const formatDate = timeFormat(dateFormat)
 
@@ -30,31 +28,31 @@ const styles = {
     ':after': {
       content: '""',
       display: 'table',
-      clear: 'both',
-    },
+      clear: 'both'
+    }
   }),
   span: css({
     float: 'left',
     paddingLeft: `${GUTTER / 2}px`,
     paddingRight: `${GUTTER / 2}px`,
     minHeight: 1,
-    width: '50%',
+    width: '50%'
   }),
   autoSize: css({
     minHeight: 40,
     paddingTop: '7px !important',
-    paddingBottom: '6px !important',
+    paddingBottom: '6px !important'
   }),
   mask: css({
     '::placeholder': {
-      color: 'transparent',
+      color: 'transparent'
     },
     ':focus': {
       '::placeholder': {
-        color: '#ccc',
-      },
-    },
-  }),
+        color: '#ccc'
+      }
+    }
+  })
 }
 
 class Form extends Component {
@@ -85,7 +83,7 @@ class Form extends Component {
       data,
       notes = Map(),
       getWidth = defaultGetWidth,
-      black,
+      black
     } = this.props
 
     return (
@@ -100,7 +98,7 @@ class Form extends Component {
             if (key.match(/image|src/i)) {
               input = (
                 <ImageInput
-                  maxWidth="100%"
+                  maxWidth='100%'
                   label={label}
                   src={value}
                   onChange={onInputChange(key)}
@@ -129,10 +127,7 @@ class Form extends Component {
                 if (key === 'shortTitle') {
                   const defaultOnChange = onInputChange(key)
                   onChange = (_, inputValue) => {
-                    const value = (inputValue || '').replace(
-                      /\n/g,
-                      '',
-                    )
+                    const value = (inputValue || '').replace(/\n/g, '')
                     defaultOnChange(_, value)
                   }
                 }
@@ -162,15 +157,14 @@ class Form extends Component {
                     {
                       [key]: {
                         formatted: inputValue,
-                        value:
-                          parsedValue !== value ? parsedValue : value,
-                      },
+                        value: parsedValue !== value ? parsedValue : value
+                      }
                     },
                     () => {
                       if (parsedValue !== value) {
                         onInputChange(key)(_, parsedValue)
                       }
-                    },
+                    }
                   )
                 }
               }
@@ -187,26 +181,20 @@ class Form extends Component {
             }
             const isShort = !!key.match(/short/i)
             return (
-              <div
-                key={key}
-                {...styles.span}
-                style={{ width: getWidth(key) }}
-              >
+              <div key={key} {...styles.span} style={{ width: getWidth(key) }}>
                 {input}
                 {(notes.get(key) || isShort) && (
                   <Label
                     style={{
                       display: 'block',
                       marginBottom: 10,
-                      marginTop: -10,
+                      marginTop: -10
                     }}
                   >
                     {notes.get(key)}{' '}
-                    {isShort &&
-                    formattedValue &&
-                    formattedValue.length
+                    {isShort && formattedValue && formattedValue.length
                       ? t('metaData/field/short/count', {
-                          count: formattedValue.length,
+                          count: formattedValue.length
                         })
                       : ' '}
                   </Label>

@@ -6,7 +6,7 @@ import createUi from './ui'
 import { matchBlock } from '../../utils'
 import { createRemoveEmptyKeyHandler } from '../../utils/keyHandlers'
 
-export default ({rule, subModules, TYPE}) => {
+export default ({ rule, subModules, TYPE }) => {
   const canvasModule = subModules.find(m => m.name === 'chartCanvas')
   if (!canvasModule) {
     throw new Error('Missing chartCanvas submodule')
@@ -15,13 +15,15 @@ export default ({rule, subModules, TYPE}) => {
   const CANVAS_TYPE = canvasModule.TYPE
 
   const childSerializer = new MarkdownSerializer({
-    rules: subModules.reduce(
-      (a, m) => a.concat(
-        m.helpers && m.helpers.serializer &&
-        m.helpers.serializer.rules
-      ),
-      []
-    ).filter(Boolean)
+    rules: subModules
+      .reduce(
+        (a, m) =>
+          a.concat(
+            m.helpers && m.helpers.serializer && m.helpers.serializer.rules
+          ),
+        []
+      )
+      .filter(Boolean)
   })
 
   const Container = rule.component
@@ -49,29 +51,29 @@ export default ({rule, subModules, TYPE}) => {
     }
   }
   const serializer = new MarkdownSerializer({
-    rules: [
-      serializerRule
-    ]
+    rules: [serializerRule]
   })
 
   const random = () => Math.round(Math.random() * 10) / 10
-  const newBlock = () => Block.create({
-    type: TYPE,
-    nodes: subModules.map(m => Block.create({
-      type: m.TYPE,
-      data: m.TYPE === CANVAS_TYPE
-        ? {
-          isNew: true,
-          config: {type: 'Bar', y: 'label'},
-          values: `label,value\nA,${random()}\nB,${random()}`
-        }
-        : undefined
-    }))
-  })
+  const newBlock = () =>
+    Block.create({
+      type: TYPE,
+      nodes: subModules.map(m =>
+        Block.create({
+          type: m.TYPE,
+          data:
+            m.TYPE === CANVAS_TYPE
+              ? {
+                  isNew: true,
+                  config: { type: 'Bar', y: 'label' },
+                  values: `label,value\nA,${random()}\nB,${random()}`
+                }
+              : undefined
+        })
+      )
+    })
 
-  const isEmpty = node => (
-    !node.text.trim()
-  )
+  const isEmpty = node => !node.text.trim()
 
   return {
     TYPE,
@@ -87,12 +89,10 @@ export default ({rule, subModules, TYPE}) => {
     }),
     plugins: [
       {
-        renderNode ({ editor, node, children, attributes }) {
+        renderNode({ editor, node, children, attributes }) {
           if (!serializerRule.match(node)) return
           return (
-            <Container
-              size={node.data.get('size')}
-              attributes={attributes}>
+            <Container size={node.data.get('size')} attributes={attributes}>
               {children}
             </Container>
           )
@@ -107,23 +107,17 @@ export default ({rule, subModules, TYPE}) => {
                 min: 1,
                 max: 1
               })),
-              normalize: (change, reason, {node, index, child}) => {
+              normalize: (change, reason, { node, index, child }) => {
                 if (
                   reason === 'child_required' ||
-                  (
-                    reason === 'child_type_invalid' &&
+                  (reason === 'child_type_invalid' &&
                     subModules.find(m => m.TYPE === child.type) &&
-                    node.nodes.filter(matchBlock(child.type)).size === 1
-                  )
+                    node.nodes.filter(matchBlock(child.type)).size === 1)
                 ) {
-                  change.insertNodeByKey(
-                    node.key,
-                    index,
-                    {
-                      kind: 'block',
-                      type: subModules[index].TYPE
-                    }
-                  )
+                  change.insertNodeByKey(node.key, index, {
+                    kind: 'block',
+                    type: subModules[index].TYPE
+                  })
                 }
                 if (reason === 'child_unknown') {
                   change.unwrapNodeByKey(child.key)

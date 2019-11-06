@@ -9,10 +9,10 @@ import createUi from './ui'
 export default ({ rule, subModules, TYPE }) => {
   const inlineSerializer = new MarkdownSerializer({
     rules: subModules.reduce(
-      (a, m) => a.concat(
-        m.helpers && m.helpers.serializer &&
-        m.helpers.serializer.rules
-      ),
+      (a, m) =>
+        a.concat(
+          m.helpers && m.helpers.serializer && m.helpers.serializer.rules
+        ),
       []
     )
   })
@@ -21,10 +21,7 @@ export default ({ rule, subModules, TYPE }) => {
     match: matchBlock(TYPE),
     matchMdast: rule.matchMdast,
     fromMdast: (node, index, parent, rest) => {
-      const link = (
-        node.children[0] &&
-        node.children[0].children[0]
-      ) || {}
+      const link = (node.children[0] && node.children[0].children[0]) || {}
 
       return {
         kind: 'block',
@@ -67,9 +64,7 @@ export default ({ rule, subModules, TYPE }) => {
   }
 
   const serializer = new MarkdownSerializer({
-    rules: [
-      schemaRule
-    ]
+    rules: [schemaRule]
   })
 
   const Component = rule.component
@@ -89,7 +84,7 @@ export default ({ rule, subModules, TYPE }) => {
     ui: createUi({ TYPE }),
     plugins: [
       {
-        renderNode ({ node, children, attributes }) {
+        renderNode({ node, children, attributes }) {
           if (!schemaRule.match(node)) return
 
           return (
@@ -99,7 +94,7 @@ export default ({ rule, subModules, TYPE }) => {
           )
         },
         onKeyDown: (...args) => {
-          const [ event ] = args
+          const [event] = args
 
           const isEnter = event.key === 'Enter'
           if (isEnter) return staticHandle(...args)
@@ -114,9 +109,7 @@ export default ({ rule, subModules, TYPE }) => {
               ],
               normalize: (change, reason, { node, index, child }) => {
                 if (reason === 'child_kind_invalid') {
-                  change.unwrapBlockByKey(
-                    child.key
-                  )
+                  change.unwrapBlockByKey(child.key)
                 }
               }
             }

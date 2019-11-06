@@ -22,19 +22,19 @@ const styles = {
   })
 }
 
-export default ({rule, subModules, TYPE}) => {
+export default ({ rule, subModules, TYPE }) => {
   const Component = rule.component
 
   const schemaRule = {
     match: matchBlock(TYPE),
     matchMdast: rule.matchMdast,
     fromMdast: () => {
-      return ({
+      return {
         kind: 'block',
         type: TYPE,
         isVoid: true,
         nodes: []
-      })
+      }
     },
     toMdast: () => ({
       type: 'thematicBreak'
@@ -42,42 +42,35 @@ export default ({rule, subModules, TYPE}) => {
   }
 
   const serializer = new MarkdownSerializer({
-    rules: [
-      schemaRule
-    ]
+    rules: [schemaRule]
   })
 
-  const {
-    insertButtonText,
-    insertTypes = []
-  } = rule.editorOptions || {}
+  const { insertButtonText, insertTypes = [] } = rule.editorOptions || {}
 
   const insertButtonClickHandler = (value, onChange) => event => {
     event.preventDefault()
 
     return onChange(
-      value
-        .change()
-        .call(
-          injectBlock,
-          Block.fromJSON(schemaRule.fromMdast())
-        )
+      value.change().call(injectBlock, Block.fromJSON(schemaRule.fromMdast()))
     )
   }
-  const InsertButton = insertButtonText && (({ value, onChange }) => {
-    const disabled = value.isBlurred ||
-      !value.blocks.every(n => insertTypes.includes(n.type))
-    return (
-      <span
-        {...buttonStyles.insert}
-        data-disabled={disabled}
-        data-visible
-        onMouseDown={insertButtonClickHandler(value, onChange)}
+  const InsertButton =
+    insertButtonText &&
+    (({ value, onChange }) => {
+      const disabled =
+        value.isBlurred ||
+        !value.blocks.every(n => insertTypes.includes(n.type))
+      return (
+        <span
+          {...buttonStyles.insert}
+          data-disabled={disabled}
+          data-visible
+          onMouseDown={insertButtonClickHandler(value, onChange)}
         >
-        {insertButtonText}
-      </span>
-    )
-  })
+          {insertButtonText}
+        </span>
+      )
+    })
 
   return {
     TYPE,
@@ -86,21 +79,18 @@ export default ({rule, subModules, TYPE}) => {
     },
     changes: {},
     ui: {
-      insertButtons: [
-        InsertButton
-      ]
+      insertButtons: [InsertButton]
     },
     plugins: [
       {
-        renderNode (props) {
+        renderNode(props) {
           const { node, editor, attributes } = props
           if (node.type !== TYPE) return
-          const active = editor.value.blocks.some(block => block.key === node.key)
+          const active = editor.value.blocks.some(
+            block => block.key === node.key
+          )
           return (
-            <span
-              {...styles.border}
-              {...attributes}
-              data-active={active}>
+            <span {...styles.border} {...attributes} data-active={active}>
               <Component />
             </span>
           )

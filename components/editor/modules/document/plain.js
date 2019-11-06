@@ -15,16 +15,20 @@ export default ({ rule, subModules, TYPE }) => {
   }
   const titleModule = subModules.find(m => m.name === 'title')
   const figureModule = subModules.find(m => m.name === 'figure')
-  const dynamicComponentModule = subModules.find(m => m.name === 'dynamiccomponent')
+  const dynamicComponentModule = subModules.find(
+    m => m.name === 'dynamiccomponent'
+  )
 
   const childSerializer = new MarkdownSerializer({
-    rules: subModules.reduce(
-      (a, m) => a.concat(
-        m.helpers && m.helpers.serializer &&
-        m.helpers.serializer.rules
-      ),
-      []
-    ).filter(Boolean)
+    rules: subModules
+      .reduce(
+        (a, m) =>
+          a.concat(
+            m.helpers && m.helpers.serializer && m.helpers.serializer.rules
+          ),
+        []
+      )
+      .filter(Boolean)
   })
 
   const autoMeta = documentNode => {
@@ -39,8 +43,11 @@ export default ({ rule, subModules, TYPE }) => {
       .set('feed', true)
       .set('gallery', true)
 
-    const title = titleModule && documentNode.nodes
-      .find(n => n.type === titleModule.TYPE && n.kind === 'block')
+    const title =
+      titleModule &&
+      documentNode.nodes.find(
+        n => n.type === titleModule.TYPE && n.kind === 'block'
+      )
     if (title) {
       const headline = title.nodes.first()
       const headlineText = headline ? headline.text : ''
@@ -58,9 +65,7 @@ export default ({ rule, subModules, TYPE }) => {
       newData = newData.set('collapsable', true)
     }
 
-    return data.equals(newData)
-      ? null
-      : newData
+    return data.equals(newData) ? null : newData
   }
 
   const documentRule = {
@@ -83,9 +88,7 @@ export default ({ rule, subModules, TYPE }) => {
         })
       }
 
-      const newData = autoMeta(
-        SlateDocument.fromJSON(documentNode)
-      )
+      const newData = autoMeta(SlateDocument.fromJSON(documentNode))
       if (newData) {
         documentNode.data = newData.toJS()
       }
@@ -105,33 +108,39 @@ export default ({ rule, subModules, TYPE }) => {
   }
 
   const serializer = new MarkdownSerializer({
-    rules: [
-      documentRule
-    ]
+    rules: [documentRule]
   })
 
   const newDocument = ({ title, template }, me) =>
-    serializer.deserialize(parse(`---
+    serializer.deserialize(
+      parse(`---
 template: ${template}
 ---
-${titleModule ? `
+${
+  titleModule
+    ? `
 <section><h6>${titleModule.TYPE}</h6>
 
 # ${title}
 
 Lead
 
-Von ${me ? `[${me.name}](/~${me.id})` : '[Autor](<>)'}, ${pubDateFormat(new Date())}
+Von ${me ? `[${me.name}](/~${me.id})` : '[Autor](<>)'}, ${pubDateFormat(
+        new Date()
+      )}
 
 <hr/></section>
 
-` : ''}
+`
+    : ''
+}
 <section><h6>${centerModule.TYPE}</h6>
 
 ${titleModule ? 'Text' : title}
 
 <hr/></section>
-`))
+`)
+    )
 
   const Container = rule.component
 
@@ -147,12 +156,15 @@ ${titleModule ? 'Text' : title}
         renderEditor: ({ children, value }) => (
           <Container meta={value.document.data}>{children}</Container>
         ),
-        validateNode: (node) => {
+        validateNode: node => {
           if (node.kind !== 'document') return
 
-          const adjacentCenter = node.nodes.find((n, i) => (
-            i && n.type === centerModule.TYPE && node.nodes.get(i - 1).type === centerModule.TYPE
-          ))
+          const adjacentCenter = node.nodes.find(
+            (n, i) =>
+              i &&
+              n.type === centerModule.TYPE &&
+              node.nodes.get(i - 1).type === centerModule.TYPE
+          )
           if (!adjacentCenter) return
 
           return change => {
@@ -163,13 +175,19 @@ ${titleModule ? 'Text' : title}
           document: {
             nodes: [
               dynamicComponentModule && {
-                types: [dynamicComponentModule.TYPE], min: 0, max: 1
+                types: [dynamicComponentModule.TYPE],
+                min: 0,
+                max: 1
               },
               figureModule && {
-                types: [figureModule.TYPE], min: 0, max: 1
+                types: [figureModule.TYPE],
+                min: 0,
+                max: 1
               },
               titleModule && {
-                types: [titleModule.TYPE], min: 1, max: 1
+                types: [titleModule.TYPE],
+                min: 1,
+                max: 1
               },
               {
                 types: subModules
@@ -190,53 +208,42 @@ ${titleModule ? 'Text' : title}
             },
             normalize: (change, reason, { node, index, child }) => {
               if (reason === 'child_required') {
-                change.insertNodeByKey(
-                  node.key,
-                  index,
-                  {
-                    kind: 'block',
-                    type: !titleModule || node.nodes.find(n => n.type === titleModule.TYPE)
+                change.insertNodeByKey(node.key, index, {
+                  kind: 'block',
+                  type:
+                    !titleModule ||
+                    node.nodes.find(n => n.type === titleModule.TYPE)
                       ? centerModule.TYPE
                       : titleModule.TYPE
-                  }
-                )
+                })
               }
               if (reason === 'child_type_invalid') {
-                change.setNodeByKey(
-                  child.key,
-                  {
-                    type: index === 0 && titleModule
+                change.setNodeByKey(child.key, {
+                  type:
+                    index === 0 && titleModule
                       ? titleModule.TYPE
                       : centerModule.TYPE
-                  }
-                )
+                })
               }
-              if (reason === 'first_child_kind_invalid' || reason === 'first_child_type_invalid') {
-                change.insertNodeByKey(
-                  node.key,
-                  0,
-                  {
-                    kind: 'block',
-                    type: titleModule
-                      ? titleModule.TYPE
-                      : figureModule.TYPE
-                  }
-                )
+              if (
+                reason === 'first_child_kind_invalid' ||
+                reason === 'first_child_type_invalid'
+              ) {
+                change.insertNodeByKey(node.key, 0, {
+                  kind: 'block',
+                  type: titleModule ? titleModule.TYPE : figureModule.TYPE
+                })
               }
               if (reason === 'last_child_type_invalid') {
-                change.insertNodeByKey(
-                  node.key,
-                  node.nodes.size,
-                  {
-                    kind: 'block',
-                    type: centerModule.TYPE
-                  }
-                )
+                change.insertNodeByKey(node.key, node.nodes.size, {
+                  kind: 'block',
+                  type: centerModule.TYPE
+                })
               }
             }
           }
         },
-        onChange: (change) => {
+        onChange: change => {
           const newData = autoMeta(change.value.document)
 
           if (newData) {

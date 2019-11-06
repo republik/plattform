@@ -4,16 +4,14 @@ import MarkdownSerializer from 'slate-mdast-serializer'
 
 import createUi from './ui'
 
-export default ({rule, subModules, TYPE}) => {
+export default ({ rule, subModules, TYPE }) => {
   const Link = rule.component
-  const {
-    formatTypes
-  } = rule.editorOptions || {}
+  const { formatTypes } = rule.editorOptions || {}
 
   const link = {
     match: matchInline(TYPE),
     matchMdast: rule.matchMdast,
-    fromMdast: (node, index, parent, {visitChildren, context}) => ({
+    fromMdast: (node, index, parent, { visitChildren, context }) => ({
       kind: 'inline',
       type: TYPE,
       data: {
@@ -23,7 +21,7 @@ export default ({rule, subModules, TYPE}) => {
       },
       nodes: visitChildren(node)
     }),
-    toMdast: (object, index, parent, {visitChildren}) => ({
+    toMdast: (object, index, parent, { visitChildren }) => ({
       type: 'link',
       title: object.data.title,
       url: object.data.href,
@@ -32,9 +30,7 @@ export default ({rule, subModules, TYPE}) => {
   }
 
   const serializer = new MarkdownSerializer({
-    rules: [
-      link
-    ]
+    rules: [link]
   })
 
   return {
@@ -46,7 +42,7 @@ export default ({rule, subModules, TYPE}) => {
     ui: createUi({ TYPE, parentTypes: formatTypes }),
     plugins: [
       {
-        renderNode ({node, children, attributes}) {
+        renderNode({ node, children, attributes }) {
           if (!link.match(node)) return
           return (
             <Link {...node.data.toJS()} attributes={attributes}>

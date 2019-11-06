@@ -1,4 +1,3 @@
-
 export const phases = [
   {
     key: 'draft',
@@ -33,7 +32,13 @@ export const phases = [
   {
     key: 'ready',
     color: 'MediumSeaGreen',
-    milestones: ['proofReadingOk', 'numbersOk', 'imagesOk', 'factCheckOk', 'finalControl']
+    milestones: [
+      'proofReadingOk',
+      'numbersOk',
+      'imagesOk',
+      'factCheckOk',
+      'finalControl'
+    ]
   },
   {
     key: 'scheduled',
@@ -49,9 +54,7 @@ export const phases = [
   }
 ]
 
-export const milestoneNames = phases.reduce(
-  (all, phase) => all.concat(phase.milestones),
-  []
-)
+export const milestoneNames = phases
+  .reduce((all, phase) => all.concat(phase.milestones), [])
   .filter(Boolean)
   .filter((name, index, all) => all.indexOf(name) === index)

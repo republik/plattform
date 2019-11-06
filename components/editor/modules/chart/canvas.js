@@ -7,14 +7,14 @@ import { focusPrevious } from '../../utils/keyHandlers'
 
 import EditOverlay from './EditOverlay'
 
-export default ({rule, subModules, TYPE}) => {
+export default ({ rule, subModules, TYPE }) => {
   const CsvChart = withT(rule.component)
 
   const mdastRule = {
     match: matchBlock(TYPE),
     matchMdast: rule.matchMdast,
     fromMdast: (node, index, parent) => {
-      return ({
+      return {
         kind: 'block',
         type: TYPE,
         data: {
@@ -23,18 +23,16 @@ export default ({rule, subModules, TYPE}) => {
         },
         isVoid: true,
         nodes: []
-      })
+      }
     },
-    toMdast: (object) => ({
+    toMdast: object => ({
       type: 'code',
       value: object.data.values
     })
   }
 
   const serializer = new MarkdownSerializer({
-    rules: [
-      mdastRule
-    ]
+    rules: [mdastRule]
   })
 
   return {
@@ -45,7 +43,7 @@ export default ({rule, subModules, TYPE}) => {
     changes: {},
     plugins: [
       {
-        onKeyDown (event, change) {
+        onKeyDown(event, change) {
           const isBackspace = event.key === 'Backspace'
           if (!isBackspace) return
 
@@ -54,27 +52,26 @@ export default ({rule, subModules, TYPE}) => {
             return focusPrevious(change)
           }
         },
-        renderNode (props) {
+        renderNode(props) {
           const { node } = props
           if (node.type !== TYPE) return
 
           const config = node.data.get('config') || {}
           const values = node.data.get('values')
 
-          const chart = <CsvChart
-            key={JSON.stringify({
-              values,
-              config
-            })}
-            showException
-            values={values}
-            config={config} />
-
-          return (
-            <EditOverlay
-              {...props}
-              preview={chart} />
+          const chart = (
+            <CsvChart
+              key={JSON.stringify({
+                values,
+                config
+              })}
+              showException
+              values={values}
+              config={config}
+            />
           )
+
+          return <EditOverlay {...props} preview={chart} />
         },
         schema: {
           blocks: {

@@ -26,7 +26,7 @@ export default ({ rule, subModules, TYPE }) => {
       return null
     }
     const cover = documentNode.nodes.find(
-      n => n.type === coverModule.TYPE && n.kind === 'block',
+      n => n.type === coverModule.TYPE && n.kind === 'block'
     )
     if (!cover) {
       return null
@@ -54,22 +54,22 @@ export default ({ rule, subModules, TYPE }) => {
         node.children,
         {
           type: 'zone',
-          identifier: coverModule.TYPE,
+          identifier: coverModule.TYPE
         },
         {
-          children: [],
-        },
+          children: []
+        }
       )
 
       let center = findOrCreate(
         node.children,
         {
           type: 'zone',
-          identifier: centerModule.TYPE,
+          identifier: centerModule.TYPE
         },
         {
-          children: [],
-        },
+          children: []
+        }
       )
 
       const centerIndex = node.children.indexOf(center)
@@ -87,7 +87,7 @@ export default ({ rule, subModules, TYPE }) => {
       if (before.length || after.length) {
         center = {
           ...center,
-          children: [...before, ...center.children, ...after],
+          children: [...before, ...center.children, ...after]
         }
       }
 
@@ -96,8 +96,8 @@ export default ({ rule, subModules, TYPE }) => {
         kind: 'document',
         nodes: [
           coverSerializer.fromMdast(cover, 0, node, rest),
-          centerSerializer.fromMdast(center, 1, node, rest),
-        ],
+          centerSerializer.fromMdast(center, 1, node, rest)
+        ]
       }
 
       const newData = autoMeta(SlateDocument.fromJSON(documentNode))
@@ -107,18 +107,18 @@ export default ({ rule, subModules, TYPE }) => {
 
       return {
         document: documentNode,
-        kind: 'value',
+        kind: 'value'
       }
     },
     toMdast: (object, index, parent, rest) => {
       const cover = findOrCreate(object.nodes, {
         kind: 'block',
-        type: coverModule.TYPE,
+        type: coverModule.TYPE
       })
       const center = findOrCreate(
         object.nodes,
         { kind: 'block', type: centerModule.TYPE },
-        { nodes: [] },
+        { nodes: [] }
       )
       const centerIndex = object.nodes.indexOf(center)
       object.nodes.forEach((node, index) => {
@@ -131,14 +131,14 @@ export default ({ rule, subModules, TYPE }) => {
         meta: object.data,
         children: [
           coverSerializer.toMdast(cover, 0, object, rest),
-          centerSerializer.toMdast(center, 1, object, rest),
-        ],
+          centerSerializer.toMdast(center, 1, object, rest)
+        ]
       }
-    },
+    }
   }
 
   const serializer = new MarkdownSerializer({
-    rules: [documentRule],
+    rules: [documentRule]
   })
 
   const newDocument = ({ title }) =>
@@ -155,8 +155,8 @@ export default ({ rule, subModules, TYPE }) => {
 Ladies and Gentlemen,
 
 <hr/></section>
-`,
-      ),
+`
+      )
     )
 
   const Container = rule.component
@@ -165,14 +165,12 @@ Ladies and Gentlemen,
     TYPE,
     helpers: {
       serializer,
-      newDocument,
+      newDocument
     },
     changes: {},
     plugins: [
       {
-        renderEditor: ({ children }) => (
-          <Container>{children}</Container>
-        ),
+        renderEditor: ({ children }) => <Container>{children}</Container>,
         schema: {
           document: {
             nodes: [
@@ -180,31 +178,25 @@ Ladies and Gentlemen,
                 types: [coverModule.TYPE],
                 kinds: ['block'],
                 min: 1,
-                max: 1,
+                max: 1
               },
               {
                 types: [centerModule.TYPE],
                 kinds: ['block'],
                 min: 1,
-                max: 1,
-              },
+                max: 1
+              }
             ],
             normalize: (change, reason, { node, index, child }) => {
               if (reason === 'child_required') {
                 change.insertNodeByKey(node.key, index, {
                   kind: 'block',
-                  type:
-                    index === 0
-                      ? coverModule.TYPE
-                      : centerModule.TYPE,
+                  type: index === 0 ? coverModule.TYPE : centerModule.TYPE
                 })
               }
               if (reason === 'child_type_invalid') {
                 change.setNodeByKey(child.key, {
-                  type:
-                    index === 0
-                      ? coverModule.TYPE
-                      : centerModule.TYPE,
+                  type: index === 0 ? coverModule.TYPE : centerModule.TYPE
                 })
               }
               if (reason === 'child_unknown') {
@@ -212,20 +204,20 @@ Ladies and Gentlemen,
                   change.mergeNodeByKey(child.key)
                 }
               }
-            },
-          },
+            }
+          }
         },
         onChange: change => {
           const newData = autoMeta(change.value.document)
 
           if (newData) {
             change.setNodeByKey(change.value.document.key, {
-              data: newData,
+              data: newData
             })
             return change
           }
-        },
-      },
-    ],
+        }
+      }
+    ]
   }
 }

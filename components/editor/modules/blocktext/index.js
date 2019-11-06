@@ -11,12 +11,8 @@ export default ({ rule, subModules, TYPE }) => {
   }
   const paragraphSerializer = paragraphModule.helpers.serializer
 
-  const {
-    mdastType = 'blockquote',
-    formatButtonText,
-    identifier,
-    isStatic
-  } = rule.editorOptions || {}
+  const { mdastType = 'blockquote', formatButtonText, identifier, isStatic } =
+    rule.editorOptions || {}
 
   const schemaRule = {
     match: matchBlock(TYPE),
@@ -36,14 +32,13 @@ export default ({ rule, subModules, TYPE }) => {
   }
 
   const serializer = new MarkdownSerializer({
-    rules: [
-      schemaRule
-    ]
+    rules: [schemaRule]
   })
 
   const Component = rule.component
 
-  const staticHandler = isStatic && createStaticKeyHandler({ TYPE, rule: rule || {} })
+  const staticHandler =
+    isStatic && createStaticKeyHandler({ TYPE, rule: rule || {} })
 
   return {
     TYPE,
@@ -54,10 +49,10 @@ export default ({ rule, subModules, TYPE }) => {
     changes: {},
     ui: {
       blockFormatButtons: [
-        formatButtonText && createBlockButton({
-          type: TYPE
-        })(
-          ({ active, disabled, visible, ...props }) =>
+        formatButtonText &&
+          createBlockButton({
+            type: TYPE
+          })(({ active, disabled, visible, ...props }) => (
             <span
               {...buttonStyles.block}
               {...props}
@@ -67,22 +62,18 @@ export default ({ rule, subModules, TYPE }) => {
             >
               {formatButtonText}
             </span>
-        )
+          ))
       ]
     },
     plugins: [
       {
-        renderNode ({ node, children, attributes }) {
+        renderNode({ node, children, attributes }) {
           if (!schemaRule.match(node)) return
 
-          return (
-            <Component attributes={attributes}>
-              {children}
-            </Component>
-          )
+          return <Component attributes={attributes}>{children}</Component>
         },
-        onKeyDown (...args) {
-          const [ event, change ] = args
+        onKeyDown(...args) {
+          const [event, change] = args
 
           const isBackspace = event.key === 'Backspace'
           const isEnter = event.key === 'Enter'
@@ -100,8 +91,7 @@ export default ({ rule, subModules, TYPE }) => {
           const isEmpty = !value.startBlock.text
 
           if (isEmpty && (!isBackspace || inBlock.nodes.size === 1)) {
-            return change
-              .unwrapBlock()
+            return change.unwrapBlock()
           }
 
           if (isBackspace) {
@@ -112,8 +102,7 @@ export default ({ rule, subModules, TYPE }) => {
             return staticHandler(...args)
           }
 
-          return change
-            .splitBlock(2)
+          return change.splitBlock(2)
         },
         schema: {
           blocks: {
@@ -127,16 +116,12 @@ export default ({ rule, subModules, TYPE }) => {
               ],
               normalize: (change, reason, { node, index, child }) => {
                 if (reason === 'child_type_invalid') {
-                  change.setNodeByKey(
-                    child.key,
-                    { type: paragraphModule.TYPE }
-                  )
+                  change.setNodeByKey(child.key, { type: paragraphModule.TYPE })
                 }
                 if (reason === 'child_kind_invalid') {
-                  change.wrapBlockByKey(
-                    child.key,
-                    { type: paragraphModule.TYPE }
-                  )
+                  change.wrapBlockByKey(child.key, {
+                    type: paragraphModule.TYPE
+                  })
                 }
               }
             }

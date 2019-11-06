@@ -32,7 +32,7 @@ const styles = {
 }
 
 class CommitHistory extends Component {
-  render () {
+  render() {
     const { repoId, commitId, commits, maxItems, t } = this.props
 
     const numItems = maxItems || 3
@@ -74,6 +74,4 @@ class CommitHistory extends Component {
   }
 }
 
-export default compose(
-  withT
-)(CommitHistory)
+export default compose(withT)(CommitHistory)

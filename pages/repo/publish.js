@@ -10,7 +10,13 @@ import PublishForm from '../../components/Publication/PublishForm'
 
 import withT from '../../lib/withT'
 
-const Page = ({ router: { query: { repoId, commitId } }, data, t }) => {
+const Page = ({
+  router: {
+    query: { repoId, commitId }
+  },
+  data,
+  t
+}) => {
   return (
     <Frame>
       <Frame.Header>

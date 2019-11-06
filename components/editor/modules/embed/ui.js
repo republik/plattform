@@ -53,34 +53,44 @@ export default ({ TYPE, editorOptions }) => {
                     ]
                   })}
                   <br />
-                  {!!src && src.hls && <Fragment>
-                    <div style={{ margin: '10px 0' }}>
-                      <Checkbox
-                        checked={block.data.get('forceAudio')}
-                        onChange={event => {
-                          const checked = block.data.get('forceAudio')
-                          let change = value.change().setNodeByKey(block.key, {
-                            data: block.data.merge({forceAudio: !checked})
-                          })
-                          onChange(change)
-                        }}>
-                        nur Audio
-                      </Checkbox>
-                    </div>
-                    <div style={{ margin: '10px 0' }}>
-                      <Checkbox
-                        checked={block.data.get('cinemagraph')}
-                        onChange={event => {
-                          const checked = block.data.get('cinemagraph')
-                          let change = value.change().setNodeByKey(block.key, {
-                            data: block.data.merge({cinemagraph: !checked})
-                          })
-                          onChange(change)
-                        }}>
-                        Cinemagraph
-                      </Checkbox>
-                    </div>
-                  </Fragment>}
+                  {!!src && src.hls && (
+                    <Fragment>
+                      <div style={{ margin: '10px 0' }}>
+                        <Checkbox
+                          checked={block.data.get('forceAudio')}
+                          onChange={event => {
+                            const checked = block.data.get('forceAudio')
+                            let change = value
+                              .change()
+                              .setNodeByKey(block.key, {
+                                data: block.data.merge({ forceAudio: !checked })
+                              })
+                            onChange(change)
+                          }}
+                        >
+                          nur Audio
+                        </Checkbox>
+                      </div>
+                      <div style={{ margin: '10px 0' }}>
+                        <Checkbox
+                          checked={block.data.get('cinemagraph')}
+                          onChange={event => {
+                            const checked = block.data.get('cinemagraph')
+                            let change = value
+                              .change()
+                              .setNodeByKey(block.key, {
+                                data: block.data.merge({
+                                  cinemagraph: !checked
+                                })
+                              })
+                            onChange(change)
+                          }}
+                        >
+                          Cinemagraph
+                        </Checkbox>
+                      </div>
+                    </Fragment>
+                  )}
                 </p>
               )}
             </div>

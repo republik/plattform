@@ -18,7 +18,7 @@ const styles = {
 }
 
 class LoadingBar extends Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
 
     this.state = {
@@ -26,7 +26,7 @@ class LoadingBar extends Component {
       progress: 0
     }
   }
-  onRouteChangeStart = (url) => {
+  onRouteChangeStart = url => {
     clearTimeout(this.timeout)
     this.setState({ loading: true, progress: 0.02 })
 
@@ -43,18 +43,18 @@ class LoadingBar extends Component {
     clearTimeout(this.timeout)
     this.setState({ loading: false })
   }
-  componentDidMount () {
+  componentDidMount() {
     Router.events.on('routeChangeStart', this.onRouteChangeStart)
     Router.events.on('routeChangeComplete', this.onRouteChangeComplete)
     Router.events.on('routeChangeError', this.onRouteChangeError)
   }
-  componentWillUnmount () {
+  componentWillUnmount() {
     clearTimeout(this.timeout)
     Router.events.off('routeChangeStart', this.onRouteChangeStart)
     Router.events.off('routeChangeComplete', this.onRouteChangeComplete)
     Router.events.off('routeChangeError', this.onRouteChangeError)
   }
-  componentDidUpdate () {
+  componentDidUpdate() {
     if (this.state.loading) {
       clearTimeout(this.timeout)
       this.timeout = setTimeout(() => {
@@ -76,7 +76,7 @@ class LoadingBar extends Component {
       }, 200)
     }
   }
-  render () {
+  render() {
     const { loading, progress } = this.state
     return (
       <div

@@ -7,17 +7,14 @@ import createActionButton from './createActionButton'
 test('utils.createActionButton', assert => {
   assert.plan(7)
 
-  const Button = () => (
-    <span />
-  )
+  const Button = () => <span />
 
   const onChange = spy()
 
   const ActionButton = createActionButton({
     isDisabled: ({ value }) => value.disabled,
     isVisible: ({ value }) => value.visible,
-    reducer: props => event =>
-      props.onChange(props, event)
+    reducer: props => event => props.onChange(props, event)
   })(Button)
 
   const wrapper = shallow(
@@ -41,11 +38,7 @@ test('utils.createActionButton', assert => {
 
   wrapper.find('Button').simulate('mousedown', { foo: 'bar' })
 
-  assert.equal(
-    onChange.callCount,
-    1,
-    'calls `options.reducer` upon mousedown'
-  )
+  assert.equal(onChange.callCount, 1, 'calls `options.reducer` upon mousedown')
 
   assert.equal(
     onChange.calledWith(

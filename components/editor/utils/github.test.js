@@ -4,7 +4,9 @@ import { extract, setOrg } from './github'
 setOrg('republik-test')
 
 test('utils.github.extract', assert => {
-  const autoSlug = extract('https://github.com/republik-test/article-es-ist-dezember?autoSlug')
+  const autoSlug = extract(
+    'https://github.com/republik-test/article-es-ist-dezember?autoSlug'
+  )
   assert.equal(autoSlug.id, 'republik-test/article-es-ist-dezember')
   assert.equal(autoSlug.name, 'article-es-ist-dezember')
   assert.equal(autoSlug.query, 'autoSlug')

@@ -17,7 +17,7 @@ const trackRoles = me =>
           .concat(me.roles)
           .sort()
           .join(' ') || 'none'
-      : 'guest',
+      : 'guest'
   ])
 
 const trackPageView = url => {
@@ -46,10 +46,7 @@ class Track extends Component {
   componentDidMount() {
     trackRoles(this.props.me)
     trackPageView(window.location.href)
-    Router.events.on(
-      'routeChangeComplete',
-      this.onRouteChangeComplete,
-    )
+    Router.events.on('routeChangeComplete', this.onRouteChangeComplete)
   }
   onRouteChangeComplete = url => {
     // give pages time to set correct page title
@@ -60,10 +57,7 @@ class Track extends Component {
     }, 600)
   }
   componentWillUnmount() {
-    Router.events.off(
-      'routeChangeComplete',
-      this.onRouteChangeComplete,
-    )
+    Router.events.off('routeChangeComplete', this.onRouteChangeComplete)
   }
   UNSAFE_componentWillReceiveProps({ me }) {
     if (

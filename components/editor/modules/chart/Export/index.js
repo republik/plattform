@@ -2,10 +2,7 @@ import React, { Component, Fragment } from 'react'
 import { css } from 'glamor'
 import { rgb } from 'd3-color'
 
-import {
-  Label,
-  A
-} from '@project-r/styleguide'
+import { Label, A } from '@project-r/styleguide'
 
 import {
   downloadBlobOnClick,
@@ -37,13 +34,13 @@ const styles = {
 }
 
 class Export extends Component {
-  constructor (...args) {
+  constructor(...args) {
     super(...args)
     this.state = {
       color: DEFAULT_BG
     }
   }
-  render () {
+  render() {
     const { chart } = this.props
     const { color } = this.state
     const rgbColor = rgb(color)
@@ -53,56 +50,89 @@ class Export extends Component {
 
     return (
       <Fragment>
-        <Label>Export</Label><br />
-        <A href='#' download='chart.svg' onClick={downloadBlobOnClick(() => {
-          return new window.Blob([
-            getSvgNode(chart).outerHTML
-          ], {type: 'text/svg'})
-        })}>
-          SVG
-        </A><br /><br />
-        <Label>Abstract Teaser</Label><br />
-        <A href='#' download='teaser.svg' onClick={downloadBlobOnClick(() => {
-          return new window.Blob([
-            getAbstractSvg(chart).svg.outerHTML
-          ], {type: 'text/svg'})
-        })}>
+        <Label>Export</Label>
+        <br />
+        <A
+          href='#'
+          download='chart.svg'
+          onClick={downloadBlobOnClick(() => {
+            return new window.Blob([getSvgNode(chart).outerHTML], {
+              type: 'text/svg'
+            })
+          })}
+        >
           SVG
         </A>
-        {' '}
-        <A href='#' download='teaser.png' onClick={downloadPngOnClick(() => {
-          return getAbstractSvg(chart)
-        })}>
+        <br />
+        <br />
+        <Label>Abstract Teaser</Label>
+        <br />
+        <A
+          href='#'
+          download='teaser.svg'
+          onClick={downloadBlobOnClick(() => {
+            return new window.Blob([getAbstractSvg(chart).svg.outerHTML], {
+              type: 'text/svg'
+            })
+          })}
+        >
+          SVG
+        </A>{' '}
+        <A
+          href='#'
+          download='teaser.png'
+          onClick={downloadPngOnClick(() => {
+            return getAbstractSvg(chart)
+          })}
+        >
           PNG
         </A>
         <br />
-        <Label>mit Hintergrund: <input {...styles.input}
-          value={color}
-          style={rgbColor.displayable() ? {
-            color: textColor(rgbColor),
-            backgroundColor: color,
-            borderColor: 'transparent'
-          } : undefined}
-          onBlur={e => {
-            !rgb(e.target.value).displayable() && this.setState({
-              color: DEFAULT_BG
-            })
-          }}
-          onChange={e => {
-            this.setState({color: e.target.value})
-          }} />
-        </Label><br />
-        <A href='#' download='sm.svg' onClick={downloadBlobOnClick(() => {
-          return new window.Blob([
-            backgrounder(getAbstractSvg(chart)).svg.outerHTML
-          ], {type: 'text/svg'})
-        })}>
+        <Label>
+          mit Hintergrund:{' '}
+          <input
+            {...styles.input}
+            value={color}
+            style={
+              rgbColor.displayable()
+                ? {
+                    color: textColor(rgbColor),
+                    backgroundColor: color,
+                    borderColor: 'transparent'
+                  }
+                : undefined
+            }
+            onBlur={e => {
+              !rgb(e.target.value).displayable() &&
+                this.setState({
+                  color: DEFAULT_BG
+                })
+            }}
+            onChange={e => {
+              this.setState({ color: e.target.value })
+            }}
+          />
+        </Label>
+        <br />
+        <A
+          href='#'
+          download='sm.svg'
+          onClick={downloadBlobOnClick(() => {
+            return new window.Blob(
+              [backgrounder(getAbstractSvg(chart)).svg.outerHTML],
+              { type: 'text/svg' }
+            )
+          })}
+        >
           SVG
-        </A>
-        {' '}
-        <A href='#' download='sm.png' onClick={downloadPngOnClick(() => {
-          return backgrounder(getAbstractSvg(chart))
-        })}>
+        </A>{' '}
+        <A
+          href='#'
+          download='sm.png'
+          onClick={downloadPngOnClick(() => {
+            return backgrounder(getAbstractSvg(chart))
+          })}
+        >
           PNG
         </A>
       </Fragment>

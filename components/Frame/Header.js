@@ -1,9 +1,7 @@
 import React from 'react'
 import { css } from 'glamor'
 
-import {
-  colors
-} from '@project-r/styleguide'
+import { colors } from '@project-r/styleguide'
 
 import LoadingBar from './LoadingBar'
 import { HEADER_HEIGHT, ZINDEX_HEADER } from './constants'
@@ -36,9 +34,7 @@ const styles = {
 }
 
 export const Section = ({ align, children }) => (
-  <div {...styles[align || 'left']}>
-    {children}
-  </div>
+  <div {...styles[align || 'left']}>{children}</div>
 )
 
 export const Header = ({ children, barStyle }) => (

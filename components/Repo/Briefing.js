@@ -3,9 +3,7 @@ import { css } from 'glamor'
 
 import BriefingIcon from 'react-icons/lib/md/work'
 
-import {
-  colors
-} from '@project-r/styleguide'
+import { colors } from '@project-r/styleguide'
 
 const loading = css.keyframes({
   'from, to': {
@@ -25,35 +23,34 @@ const styles = {
 }
 
 class Briefing extends Component {
-  constructor (...args) {
+  constructor(...args) {
     super(...args)
     this.state = {}
   }
-  render () {
+  render() {
     const { value, onChange } = this.props
     return (
-      <a {...styles.processing} href={value}
+      <a
+        {...styles.processing}
+        href={value}
         data-processing={this.state.editing}
-        onClick={(e) => {
+        onClick={e => {
           if (value && !e.altKey) {
             return
           }
           e.preventDefault()
-          const next = window.prompt(
-            'Briefing URL anpassen:',
-            value || ''
-          )
+          const next = window.prompt('Briefing URL anpassen:', value || '')
           if (next === null) {
             // cancel
             return
           }
-          this.setState({editing: true})
-          const finishEditing = () =>
-            this.setState({editing: undefined})
+          this.setState({ editing: true })
+          const finishEditing = () => this.setState({ editing: undefined })
           onChange(next || null)
             .then(finishEditing)
             .catch(finishEditing)
-        }}>
+        }}
+      >
         <BriefingIcon color={value ? colors.primary : '#eee'} />
       </a>
     )

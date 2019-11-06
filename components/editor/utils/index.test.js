@@ -13,13 +13,13 @@ test('utils.match', assert => {
   assert.equal(
     match('foo')('bar')({ kind: 'bar', type: 'bar' }),
     false,
-    'returns false if kind doesn\'t match the premise'
+    "returns false if kind doesn't match the premise"
   )
 
   assert.equal(
     match('foo')('bar')({ kind: 'foo', type: 'foo' }),
     false,
-    'returns false if type doesn\'t match the premise'
+    "returns false if type doesn't match the premise"
   )
 })
 

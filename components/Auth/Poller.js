@@ -33,33 +33,33 @@ const styles = {
 }
 
 class Poller extends Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
-    const now = (new Date()).getTime()
+    const now = new Date().getTime()
     this.state = {
       now,
       start: now
     }
     this.tick = () => {
       clearTimeout(this.tickTimeout)
-      this.tickTimeout = setTimeout(
-        () => {
-          this.setState(() => ({
-            now: (new Date()).getTime()
-          }))
-          this.tick()
-        },
-        1000
-      )
+      this.tickTimeout = setTimeout(() => {
+        this.setState(() => ({
+          now: new Date().getTime()
+        }))
+        this.tick()
+      }, 1000)
     }
   }
-  componentDidMount () {
+  componentDidMount() {
     this.props.data.startPolling(1000)
     this.tick()
     this.setState({ cookiesDisabled: !navigator.cookieEnabled })
   }
-  componentDidUpdate () {
-    const { data: { me }, onSuccess } = this.props
+  componentDidUpdate() {
+    const {
+      data: { me },
+      onSuccess
+    } = this.props
     if (me) {
       clearTimeout(this.tickTimeout)
       const elapsedMs = this.state.now - this.state.start
@@ -68,11 +68,14 @@ class Poller extends Component {
       onSuccess && onSuccess(me, elapsedMs)
     }
   }
-  componentWillUnmount () {
+  componentWillUnmount() {
     clearTimeout(this.tickTimeout)
   }
-  render () {
-    const { data: { error, me }, t } = this.props
+  render() {
+    const {
+      data: { error, me },
+      t
+    } = this.props
     if (me) {
       return null
     }
@@ -85,9 +88,12 @@ class Poller extends Component {
       return (
         <Fragment>
           <ErrorMessage error={t('cookies/disabled/error')} />
-          <RawHtml type={Interaction.P} dangerouslySetInnerHTML={{
-            __html: t('cookies/disabled/error/explanation')
-          }} />
+          <RawHtml
+            type={Interaction.P}
+            dangerouslySetInnerHTML={{
+              __html: t('cookies/disabled/error/explanation')
+            }}
+          />
         </Fragment>
       )
     }
@@ -101,85 +107,98 @@ class Poller extends Component {
       onTokenTypeChange
     } = this.props
 
-    const {
-      showPhraseHint
-    } = this.state
+    const { showPhraseHint } = this.state
 
     const Icon = Icons[tokenType]
 
-    return (<Fragment>
-      <H3>
-        {!!Icon && <Icon fill='inherit' size='1.2em' style={{
-          verticalAlign: 'baseline',
-          marginRight: 6,
-          marginBottom: '-0.2em'
-        }} />}
-        {t(`signIn/polling/${tokenType}/title`)}
-      </H3>
-      <RawHtml
-        type={P}
-        {...styles.group}
-        dangerouslySetInnerHTML={{
-          __html: t(`signIn/polling/${tokenType}/text`)
-        }}
-      />
-      {!!onTokenTypeChange && alternativeFirstFactors.map(altTokenType => (
-        <P key={altTokenType} {...styles.group}>
-          <Label>
-            <a {...linkRule}
-              href='#'
-              onClick={(e) => {
-                e.preventDefault()
-                onTokenTypeChange(altTokenType)
+    return (
+      <Fragment>
+        <H3>
+          {!!Icon && (
+            <Icon
+              fill='inherit'
+              size='1.2em'
+              style={{
+                verticalAlign: 'baseline',
+                marginRight: 6,
+                marginBottom: '-0.2em'
               }}
-            >
-              {t(`signIn/polling/switch/${altTokenType}`)}
-            </a>
-          </Label>
+            />
+          )}
+          {t(`signIn/polling/${tokenType}/title`)}
+        </H3>
+        <RawHtml
+          type={P}
+          {...styles.group}
+          dangerouslySetInnerHTML={{
+            __html: t(`signIn/polling/${tokenType}/text`)
+          }}
+        />
+        {!!onTokenTypeChange &&
+          alternativeFirstFactors.map(altTokenType => (
+            <P key={altTokenType} {...styles.group}>
+              <Label>
+                <a
+                  {...linkRule}
+                  href='#'
+                  onClick={e => {
+                    e.preventDefault()
+                    onTokenTypeChange(altTokenType)
+                  }}
+                >
+                  {t(`signIn/polling/switch/${altTokenType}`)}
+                </a>
+              </Label>
+            </P>
+          ))}
+        <P {...styles.group}>
+          <Label>{t('signIn/polling/email')}</Label>
+          <br />
+          {email}
+          <br />
+          {!!onCancel && (
+            <Label>
+              <a
+                {...linkRule}
+                href='#'
+                onClick={e => {
+                  e.preventDefault()
+                  onCancel()
+                }}
+              >
+                {t('signIn/polling/cancel')}
+              </a>
+            </Label>
+          )}
         </P>
-      ))}
-      <P {...styles.group}>
-        <Label>{t('signIn/polling/email')}</Label><br />
-        {email}<br />
-        {!!onCancel && (
-          <Label>
-            <a {...linkRule}
-              href='#'
-              onClick={(e) => {
-                e.preventDefault()
-                onCancel()
-              }}
-            >
-              {t('signIn/polling/cancel')}
-            </a>
-          </Label>
-        )}
-      </P>
-      <P {...styles.group}>
-        <Label>{t('signIn/polling/phrase')}</Label><br />
-        {phrase}
-      </P>
-      <P {...styles.hint}>
-        {!showPhraseHint && (
-          <Label>
-            <a {...linkRule}
-              href='#'
-              onClick={(e) => {
-                e.preventDefault()
-                this.setState({ showPhraseHint: true })
-              }}
-            >
-              {t('signIn/polling/phrase/hint/show')}
-            </a>
-          </Label>
-        )}
-        {showPhraseHint && (
-          <Label {...styles.hint}>
-            {t(`signIn/polling/phrase/${tokenType}/hint`)}
-          </Label>
-        )}
-      </P>
-    </Fragment>)
+        <P {...styles.group}>
+          <Label>{t('signIn/polling/phrase')}</Label>
+          <br />
+          {phrase}
+        </P>
+        <P {...styles.hint}>
+          {!showPhraseHint && (
+            <Label>
+              <a
+                {...linkRule}
+                href='#'
+                onClick={e => {
+                  e.preventDefault()
+                  this.setState({ showPhraseHint: true })
+                }}
+              >
+                {t('signIn/polling/phrase/hint/show')}
+              </a>
+            </Label>
+          )}
+          {showPhraseHint && (
+            <Label {...styles.hint}>
+              {t(`signIn/polling/phrase/${tokenType}/hint`)}
+            </Label>
+          )}
+        </P>
+      </Fragment>
+    )
   }
 }
 

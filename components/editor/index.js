@@ -25,7 +25,7 @@ import createTeaserModule from './modules/teaser'
 import createTeaserGroupModule from './modules/teasergroup'
 import {
   createEmbedVideoModule,
-  createEmbedTwitterModule,
+  createEmbedTwitterModule
 } from './modules/embed'
 import createBlockQuoteModule from './modules/blockquote'
 import createLogbookModule from './modules/logbook'
@@ -89,7 +89,7 @@ const moduleCreators = {
   chartCanvas: createChartCanvasModule,
   dynamiccomponent: createDynamicComponentModule,
   liveteaser: createLiveTeaserModule,
-  button: createButtonModule,
+  button: createButtonModule
 }
 const initModule = (rule, context = {}) => {
   const { editorModule, editorOptions = {} } = rule
@@ -106,7 +106,7 @@ const initModule = (rule, context = {}) => {
       TYPE,
       rule,
       subModules: subModules,
-      context,
+      context
     })
 
     module.TYPE = TYPE
@@ -119,10 +119,9 @@ const initModule = (rule, context = {}) => {
 const getAllModules = module =>
   [module].concat(
     (module.subModules || []).reduce(
-      (collector, subModule) =>
-        collector.concat(getAllModules(subModule)),
-      [],
-    ),
+      (collector, subModule) => collector.concat(getAllModules(subModule)),
+      []
+    )
   )
 export const getFromModules = (modules, accessor) =>
   modules
@@ -132,16 +131,14 @@ export const getFromModules = (modules, accessor) =>
 const styles = {
   container: css({
     width: '100%',
-    position: 'relative',
+    position: 'relative'
   }),
   document: {
-    width: '100%',
-  },
+    width: '100%'
+  }
 }
 
-const Container = ({ children }) => (
-  <div {...styles.container}>{children}</div>
-)
+const Container = ({ children }) => <div {...styles.container}>{children}</div>
 
 const Document = ({ children, readOnly }) => (
   <div
@@ -150,7 +147,7 @@ const Document = ({ children, readOnly }) => (
       readOnly
         ? {
             pointerEvents: 'none',
-            opacity: 0.6,
+            opacity: 0.6
           }
         : {}
     }
@@ -180,7 +177,7 @@ class Editor extends Component {
     const rootRule = schema.rules[0]
     const rootModule = initModule(rootRule, {
       mdastSchema: schema,
-      meta: props.meta,
+      meta: props.meta
     })
 
     this.serializer = rootModule.helpers.serializer
@@ -188,7 +185,7 @@ class Editor extends Component {
 
     const allModules = getAllModules(rootModule)
     const uniqModules = allModules.filter(
-      (m, i, a) => a.findIndex(mm => mm.TYPE === m.TYPE) === i,
+      (m, i, a) => a.findIndex(mm => mm.TYPE === m.TYPE) === i
     )
 
     this.uniqModules = uniqModules
@@ -241,12 +238,12 @@ Editor.propTypes = {
   value: PropTypes.object,
   readOnly: PropTypes.bool,
   onChange: PropTypes.func,
-  onDocumentChange: PropTypes.func,
+  onDocumentChange: PropTypes.func
 }
 
 Editor.defaultProps = {
   onChange: () => true,
-  onDocumentChange: () => true,
+  onDocumentChange: () => true
 }
 
 export default Editor

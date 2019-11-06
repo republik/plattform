@@ -6,7 +6,7 @@ import withApolloClient from '../lib/apollo/withApolloClient'
 import Track from '../components/Track'
 
 class WebApp extends App {
-  render () {
+  render() {
     const { Component, pageProps, apolloClient, serverContext } = this.props
     return (
       <ApolloProvider client={apolloClient}>

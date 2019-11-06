@@ -21,51 +21,62 @@ const styles = {
 }
 
 const EditButton = ({ onClick }) => (
-  <div {...styles.editButton}
-    role='button'
-    onClick={onClick}>
+  <div {...styles.editButton} role='button' onClick={onClick}>
     <MdEdit />
   </div>
 )
 
 class OverlayFormManager extends Component {
-  constructor (...args) {
+  constructor(...args) {
     super(...args)
     this.state = {
       showModal: false
     }
   }
-  render () {
+  render() {
     const {
-      editor, node, attributes,
-      onChange, showEditButton,
-      component, preview, extra, children
+      editor,
+      node,
+      attributes,
+      onChange,
+      showEditButton,
+      component,
+      preview,
+      extra,
+      children
     } = this.props
     const startEditing = () => {
-      this.setState({showModal: true})
+      this.setState({ showModal: true })
     }
     const showModal = this.state.showModal || node.data.get('isNew')
 
-    return <div {...attributes} style={{position: 'relative'}}
-      onDoubleClick={startEditing}>
-      {showEditButton && <EditButton onClick={startEditing} />}
-      {showModal && (
-        <OverlayForm
-          preview={preview}
-          extra={extra}
-          onClose={() => {
-            this.setState({showModal: false})
-            node.data.get('isNew') && editor.change(change => {
-              change.setNodeByKey(node.key, {
-                data: node.data.delete('isNew')
-              })
-            })
-          }}>
-          {children({data: node.data, onChange})}
-        </OverlayForm>
-      )}
-      {component || preview}
-    </div>
+    return (
+      <div
+        {...attributes}
+        style={{ position: 'relative' }}
+        onDoubleClick={startEditing}
+      >
+        {showEditButton && <EditButton onClick={startEditing} />}
+        {showModal && (
+          <OverlayForm
+            preview={preview}
+            extra={extra}
+            onClose={() => {
+              this.setState({ showModal: false })
+              node.data.get('isNew') &&
+                editor.change(change => {
+                  change.setNodeByKey(node.key, {
+                    data: node.data.delete('isNew')
+                  })
+                })
+            }}
+          >
+            {children({ data: node.data, onChange })}
+          </OverlayForm>
+        )}
+        {component || preview}
+      </div>
+    )
   }
 }
 

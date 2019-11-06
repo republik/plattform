@@ -4,12 +4,7 @@ import { Block } from 'slate'
 
 import shortId from 'shortid'
 
-import {
-  allBlocks,
-  parent,
-  childIndex,
-  depth,
-} from '../../utils/selection'
+import { allBlocks, parent, childIndex, depth } from '../../utils/selection'
 
 import { buttonStyles, matchBlock } from '../../utils'
 
@@ -19,7 +14,7 @@ const getData = data => ({
   module: 'teasergroup', // used by publicator internally
   url: null,
   id: (data && data.id) || shortId(),
-  ...data,
+  ...data
 })
 
 const getNewBlock = options => {
@@ -27,7 +22,7 @@ const getNewBlock = options => {
     headlineModule,
     introTeaserModule,
     articleCollectionModule,
-    outroTextModule,
+    outroTextModule
   } = getSubmodules(options)
 
   return () =>
@@ -36,32 +31,29 @@ const getNewBlock = options => {
       type: options.TYPE,
       data: getData({
         teaserType:
-          options.rule.editorOptions.teaserType ||
-          'frontArticleCollection',
-        ...options.rule.editorOptions.defaultValues,
+          options.rule.editorOptions.teaserType || 'frontArticleCollection',
+        ...options.rule.editorOptions.defaultValues
       }),
       nodes: [
         headlineModule && {
           kind: 'block',
-          type: headlineModule.TYPE,
+          type: headlineModule.TYPE
         },
         introTeaserModule && introTeaserModule.helpers.newItem(),
         articleCollectionModule.helpers.newItem(),
         outroTextModule && {
           kind: 'block',
-          type: outroTextModule.TYPE,
-        },
-      ].filter(Boolean),
+          type: outroTextModule.TYPE
+        }
+      ].filter(Boolean)
     })
 }
 
 const getSubmodules = ({ subModules }) => {
   const headlineModule = subModules.find(m => m.name === 'headline')
-  const introTeaserModule = subModules.find(
-    m => m.name === 'dossierIntro',
-  )
+  const introTeaserModule = subModules.find(m => m.name === 'dossierIntro')
   const articleCollectionModule = subModules.find(
-    m => m.name === 'articleGroup',
+    m => m.name === 'articleGroup'
   )
   const outroTextModule = subModules.find(m => m.name === 'paragraph')
 
@@ -69,7 +61,7 @@ const getSubmodules = ({ subModules }) => {
     headlineModule,
     introTeaserModule,
     articleCollectionModule,
-    outroTextModule,
+    outroTextModule
   }
 }
 
@@ -81,44 +73,30 @@ const FrontDossierPlugin = options => {
       const teaser = editor.value.blocks.reduce(
         (memo, node) =>
           memo ||
-          editor.value.document.getFurthest(
-            node.key,
-            matchBlock(options.TYPE),
-          ),
-        undefined,
+          editor.value.document.getFurthest(node.key, matchBlock(options.TYPE)),
+        undefined
       )
 
       if (matchBlock(options.TYPE)(node)) {
         const isSelected = teaser === node && !editor.value.isBlurred
         return [
-          isSelected && (
-            <TeaserInlineUI key="ui" node={node} editor={editor} />
-          ),
-          <Group
-            {...node.data.toJS()}
-            key="content"
-            attributes={attributes}
-          >
+          isSelected && <TeaserInlineUI key='ui' node={node} editor={editor} />,
+          <Group {...node.data.toJS()} key='content' attributes={attributes}>
             {children}
-          </Group>,
+          </Group>
         ]
       }
-    },
+    }
   }
 }
 
 const FrontDossierButton = options => {
-  const articleDossierButtonClickHandler = (
-    value,
-    onChange,
-  ) => event => {
+  const articleDossierButtonClickHandler = (value, onChange) => event => {
     event.preventDefault()
     const nodes = allBlocks(value)
       .filter(n => depth(value, n.key) < 2)
       .filter(n => {
-        return ['teaser', 'teasergroup'].includes(
-          n.data.get('module'),
-        )
+        return ['teaser', 'teasergroup'].includes(n.data.get('module'))
       })
     const node = nodes.first()
     onChange(
@@ -127,8 +105,8 @@ const FrontDossierButton = options => {
         .insertNodeByKey(
           parent(value, node.key).key,
           childIndex(value, node.key),
-          getNewBlock(options)(),
-        ),
+          getNewBlock(options)()
+        )
     )
   }
 
@@ -139,10 +117,7 @@ const FrontDossierButton = options => {
         {...buttonStyles.insert}
         data-visible
         data-disabled={disabled}
-        onMouseDown={articleDossierButtonClickHandler(
-          value,
-          onChange,
-        )}
+        onMouseDown={articleDossierButtonClickHandler(value, onChange)}
       >
         {options.rule.editorOptions.insertButtonText}
       </span>
@@ -156,13 +131,11 @@ const getSerializer = options => {
       .reduce(
         (a, m) =>
           a.concat(
-            m.helpers &&
-              m.helpers.serializer &&
-              m.helpers.serializer.rules,
+            m.helpers && m.helpers.serializer && m.helpers.serializer.rules
           ),
-        [],
+        []
       )
-      .filter(Boolean),
+      .filter(Boolean)
   })
 
   const { outroTextModule } = getSubmodules(options)
@@ -181,14 +154,14 @@ const getSerializer = options => {
           ) {
             children.push({
               type: 'paragraph',
-              children: [],
+              children: []
             })
           }
           return {
             kind: 'block',
             type: options.TYPE,
             data: getData(node.data),
-            nodes: childSerializer.fromMdast(children, 0, node, rest),
+            nodes: childSerializer.fromMdast(children, 0, node, rest)
           }
         },
         toMdast: (object, index, parent, rest) => {
@@ -197,29 +170,24 @@ const getSerializer = options => {
             type: 'zone',
             identifier: 'TEASER',
             data,
-            children: childSerializer.toMdast(
-              object.nodes,
-              0,
-              object,
-              rest,
-            ),
+            children: childSerializer.toMdast(object.nodes, 0, object, rest)
           }
-        },
-      },
-    ],
+        }
+      }
+    ]
   })
 }
 
 export default options => ({
   helpers: {
     serializer: getSerializer(options),
-    newBlock: getNewBlock(options),
+    newBlock: getNewBlock(options)
   },
   plugins: [FrontDossierPlugin(options)],
   ui: {
     insertButtons: [FrontDossierButton(options)],
     forms: options.rule.editorOptions.formOptions
       ? [TeaserForm({ subModuleResolver: getSubmodules, ...options })]
-      : [],
-  },
+      : []
+  }
 })

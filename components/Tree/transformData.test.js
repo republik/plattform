@@ -115,7 +115,7 @@ test('components.Tree.transformData', assert => {
     assert.equal(link.destinationId, destinationId, 'link destinationId')
   }
 
-  const {commits, links} = transformData({
+  const { commits, links } = transformData({
     commits: mockCommits,
     milestones: []
   })

@@ -21,7 +21,7 @@ const styles = {
 
 export default (query, Component) => {
   class EmbedLoader extends React.Component {
-    constructor (props, ...args) {
+    constructor(props, ...args) {
       super(props, ...args)
       const { node } = props
       const hasId = node.data.has('id')
@@ -32,7 +32,7 @@ export default (query, Component) => {
       }
     }
 
-    componentDidMount () {
+    componentDidMount() {
       const { loading, error } = this.state
       if (!loading || error) {
         return
@@ -60,7 +60,7 @@ export default (query, Component) => {
         .catch(error => this.setState({ error, loading: false }))
     }
 
-    render () {
+    render() {
       const { loading, error } = this.state
       const { client, t, ...props } = this.props
       const { node, editor } = props

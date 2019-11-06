@@ -7,9 +7,7 @@ import createFormatButton from './createFormatButton'
 test('utils.createFormatButton', assert => {
   assert.plan(9)
 
-  const Button = () => (
-    <span />
-  )
+  const Button = () => <span />
 
   const onChange = spy()
 
@@ -17,8 +15,7 @@ test('utils.createFormatButton', assert => {
     isDisabled: ({ value }) => value.disabled,
     isActive: ({ value }) => value.active,
     isVisible: ({ value }) => value.visible,
-    reducer: props => event =>
-      props.onChange(props, event)
+    reducer: props => event => props.onChange(props, event)
   })(Button)
 
   const wrapper = shallow(
@@ -48,11 +45,7 @@ test('utils.createFormatButton', assert => {
 
   wrapper.find('Button').simulate('mousedown', { foo: 'bar' })
 
-  assert.equal(
-    onChange.callCount,
-    1,
-    'calls `options.reducer` upon mousedown'
-  )
+  assert.equal(onChange.callCount, 1, 'calls `options.reducer` upon mousedown')
 
   assert.equal(
     onChange.calledWith(
@@ -66,7 +59,9 @@ test('utils.createFormatButton', assert => {
     'calls `options.reducer` with props and the mousedown event'
   )
 
-  const disabledWrapper = shallow(<FormatButton value={{ active: true, disabled: true }} />)
+  const disabledWrapper = shallow(
+    <FormatButton value={{ active: true, disabled: true }} />
+  )
   const preventDefault = spy()
   disabledWrapper.find('Button').simulate('mousedown', { preventDefault })
 

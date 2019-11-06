@@ -2,7 +2,7 @@ import React from 'react'
 
 import MetaData from './ui'
 
-export default ({rule, TYPE, context = {}}) => {
+export default ({ rule, TYPE, context = {} }) => {
   const options = rule.editorOptions || {}
 
   return {
@@ -11,14 +11,17 @@ export default ({rule, TYPE, context = {}}) => {
     changes: {},
     plugins: [
       {
-        renderEditor ({value, children}, editor) {
+        renderEditor({ value, children }, editor) {
           return (
             <div>
               {children}
-              <MetaData value={value} editor={editor}
+              <MetaData
+                value={value}
+                editor={editor}
                 {...options}
                 mdastSchema={context.mdastSchema}
-                contextMeta={context.meta} />
+                contextMeta={context.meta}
+              />
             </div>
           )
         }

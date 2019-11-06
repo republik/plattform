@@ -5,7 +5,13 @@ import { matchImageParagraph } from 'mdast-react-render/lib/utils'
 import { getData } from './'
 
 export const getSubmodules = ({ subModules }) => {
-  const [titleModule, subjectModule, leadModule, formatModule, paragraphModule] = subModules
+  const [
+    titleModule,
+    subjectModule,
+    leadModule,
+    formatModule,
+    paragraphModule
+  ] = subModules
 
   if (!titleModule) {
     throw new Error('Missing headline submodule')
@@ -27,11 +33,9 @@ export const getSubmodules = ({ subModules }) => {
     throw new Error('Missing paragraph submodule')
   }
 
-  const linkModule = paragraphModule.subModules.find(
-    subModule => {
-      return subModule.name === 'link'
-    }
-  )
+  const linkModule = paragraphModule.subModules.find(subModule => {
+    return subModule.name === 'link'
+  })
 
   if (!linkModule) {
     throw new Error('Missing link module in paragraph submodule')
@@ -47,19 +51,19 @@ export const getSubmodules = ({ subModules }) => {
   }
 }
 
-const getRules = subModules => subModules.reduce(
-  (a, m) => a.concat(
-    m.helpers && m.helpers.serializer &&
-    m.helpers.serializer.rules
-  ),
-  []
-).filter(Boolean)
+const getRules = subModules =>
+  subModules
+    .reduce(
+      (a, m) =>
+        a.concat(
+          m.helpers && m.helpers.serializer && m.helpers.serializer.rules
+        ),
+      []
+    )
+    .filter(Boolean)
 
-const fromMdast = ({
-  TYPE,
-  subModules,
-  rule
-}) => (node,
+const fromMdast = ({ TYPE, subModules, rule }) => (
+  node,
   index,
   parent,
   rest
@@ -88,26 +92,23 @@ const fromMdast = ({
     })
   }
 
-  const nodes = childSerializer.fromMdast(
-    children,
-    0,
-    node,
-    {
+  const nodes = childSerializer
+    .fromMdast(children, 0, node, {
       context: {
         ...rest.context,
         // pass link color to link through context
         color: data.color
       }
-    }
-  )
+    })
     // enhance all immediate children with data
     .map(node => {
-      const articleTilePatches = data.teaserType === 'articleTile' && node.type === 'FRONTSUBJECT'
-        ? {
-          columns: 3,
-          color: '#000'
-        }
-        : undefined
+      const articleTilePatches =
+        data.teaserType === 'articleTile' && node.type === 'FRONTSUBJECT'
+          ? {
+              columns: 3,
+              color: '#000'
+            }
+          : undefined
       return {
         ...node,
         data: {
@@ -130,17 +131,11 @@ const fromMdast = ({
   return result
 }
 
-const toMdast = ({
-  TYPE,
-  subModules
-}) => (
+const toMdast = ({ TYPE, subModules }) => (
   node,
   index,
   parent,
-  {
-    visitChildren,
-    context
-  }
+  { visitChildren, context }
 ) => {
   const args = [
     {
@@ -178,9 +173,10 @@ export const getSerializer = options =>
   new MarkdownSerializer({
     rules: [
       {
-        match: node => matchBlock(options.TYPE)(node) || matchBlock(`${options.TYPE}_VOID`)(node),
-        matchMdast:
-          options.rule.matchMdast,
+        match: node =>
+          matchBlock(options.TYPE)(node) ||
+          matchBlock(`${options.TYPE}_VOID`)(node),
+        matchMdast: options.rule.matchMdast,
         fromMdast: fromMdast(options),
         toMdast: toMdast(options)
       }

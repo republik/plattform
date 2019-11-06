@@ -7,17 +7,18 @@ import { matchBlock, createBlockButton, buttonStyles } from '../../utils'
 
 const getNewItem = options => {
   const [blocktextModule, captionModule] = options.subModules
-  return () => Block.create({
-    kind: 'block',
-    type: options.TYPE,
-    nodes: [
-      Block.create({
-        kind: 'block',
-        type: blocktextModule.TYPE
-      }),
-      captionModule.helpers.newBlock()
-    ]
-  })
+  return () =>
+    Block.create({
+      kind: 'block',
+      type: options.TYPE,
+      nodes: [
+        Block.create({
+          kind: 'block',
+          type: blocktextModule.TYPE
+        }),
+        captionModule.helpers.newBlock()
+      ]
+    })
 }
 
 const getSubmodules = ({ subModules }) => {
@@ -44,27 +45,28 @@ const fromMdast = options => {
       ? blocktextModule.helpers.serializer.fromMdast(blockquotes)
       : [{ kind: 'block', type: blocktextModule.TYPE }]
 
-    const serializedCaption = captionModule.helpers.serializer.fromMdast(caption.length ? caption : ([{
-      type: 'paragraph',
-      children: [
-        { type: 'text', value: '' },
-        {
-          type: 'emphasis',
-          children: [
-            { type: 'text', value: '' }
+    const serializedCaption = captionModule.helpers.serializer.fromMdast(
+      caption.length
+        ? caption
+        : [
+            {
+              type: 'paragraph',
+              children: [
+                { type: 'text', value: '' },
+                {
+                  type: 'emphasis',
+                  children: [{ type: 'text', value: '' }]
+                }
+              ]
+            }
           ]
-        }
-      ]
-    }]))
+    )
 
     return {
       kind: 'block',
       type: options.TYPE,
       data: node.data,
-      nodes: [
-        ...serializedBlockQuotes,
-        ...serializedCaption
-      ]
+      nodes: [...serializedBlockQuotes, ...serializedCaption]
     }
   }
 }
@@ -108,19 +110,20 @@ const blockQuotePlugin = options => {
       if (!matchBlock(options.TYPE)(node)) {
         return
       }
-      return <BlockQuote attributes={attributes}>
-        {children}
-      </BlockQuote>
+      return <BlockQuote attributes={attributes}>{children}</BlockQuote>
     },
     schema: {
       blocks: {
         [options.TYPE]: {
           nodes: [
             {
-              types: [blocktextModule.TYPE], min: 1
+              types: [blocktextModule.TYPE],
+              min: 1
             },
             {
-              types: [captionModule.TYPE], min: 1, max: 1
+              types: [captionModule.TYPE],
+              min: 1,
+              max: 1
             }
           ]
         }
@@ -129,44 +132,35 @@ const blockQuotePlugin = options => {
   }
 }
 
-const createBlockQuoteButton = options => createBlockButton({
-  type: options.TYPE,
-  reducer: props =>
-    event => {
+const createBlockQuoteButton = options =>
+  createBlockButton({
+    type: options.TYPE,
+    reducer: props => event => {
       const { onChange, value } = props
       event.preventDefault()
 
-      return onChange(
-        value
-          .change()
-          .call(
-            injectBlock,
-            getNewItem(options)()
-          )
-      )
+      return onChange(value.change().call(injectBlock, getNewItem(options)()))
     }
-})(
-  ({ active, disabled, visible, ...props }) => {
-    return <span
-      {...buttonStyles.block}
-      {...props}
-      data-active={active}
-      data-disabled={disabled}
-      data-visible={visible}
-    >
-      {options.rule.editorOptions.insertButtonText}
-    </span>
-  }
-)
+  })(({ active, disabled, visible, ...props }) => {
+    return (
+      <span
+        {...buttonStyles.block}
+        {...props}
+        data-active={active}
+        data-disabled={disabled}
+        data-visible={visible}
+      >
+        {options.rule.editorOptions.insertButtonText}
+      </span>
+    )
+  })
 
 export default options => ({
   helpers: {
     serializer: getSerializer(options),
     newBlock: getNewItem(options)
   },
-  plugins: [
-    blockQuotePlugin(options)
-  ],
+  plugins: [blockQuotePlugin(options)],
   ui: {
     insertButtons: [createBlockQuoteButton(options)]
   }

@@ -9,9 +9,7 @@ import MarkdownSerializer from 'slate-mdast-serializer'
 
 import createUi from './ui'
 
-import {
-  matchImage
-} from 'mdast-react-render/lib/utils'
+import { matchImage } from 'mdast-react-render/lib/utils'
 
 const styles = {
   border: css({
@@ -26,21 +24,19 @@ const styles = {
   })
 }
 
-export default ({rule, subModules, TYPE}) => {
-  const {
-    identifier = 'HTML'
-  } = rule.editorOptions || {}
+export default ({ rule, subModules, TYPE }) => {
+  const { identifier = 'HTML' } = rule.editorOptions || {}
 
   const mdastRule = {
     match: matchBlock(TYPE),
     matchMdast: rule.matchMdast,
-    fromMdast: (node) => {
-      const deepNodes = node.children.reduce(
-        (children, child) => children
-          .concat(child)
-          .concat(child.children),
-        []
-      ).filter(Boolean)
+    fromMdast: node => {
+      const deepNodes = node.children
+        .reduce(
+          (children, child) => children.concat(child).concat(child.children),
+          []
+        )
+        .filter(Boolean)
       const images = deepNodes.filter(matchImage).map(image => ({
         ref: image.alt,
         url: image.url
@@ -48,51 +44,50 @@ export default ({rule, subModules, TYPE}) => {
 
       const code = node.children.find(c => c.type === 'code')
 
-      return ({
+      return {
         kind: 'block',
         type: TYPE,
         data: {
           images,
-          code: code
-            ? code.value
-            : ''
+          code: code ? code.value : ''
         },
         isVoid: true,
         nodes: []
-      })
+      }
     },
-    toMdast: (object) => {
+    toMdast: object => {
       const { images, code } = object.data
       return {
         type: 'zone',
         identifier,
-        children: images.map(({ref, url}) => ({
-          type: 'image',
-          url,
-          alt: ref
-        })).concat({
-          type: 'code',
-          lang: 'html',
-          value: code
-        })
+        children: images
+          .map(({ ref, url }) => ({
+            type: 'image',
+            url,
+            alt: ref
+          }))
+          .concat({
+            type: 'code',
+            lang: 'html',
+            value: code
+          })
       }
     }
   }
 
   const serializer = new MarkdownSerializer({
-    rules: [
-      mdastRule
-    ]
+    rules: [mdastRule]
   })
 
   const Html = rule.component
 
-  const newBlock = () => Block.fromJSON(
-    mdastRule.fromMdast({
-      children: [],
-      data: {}
-    })
-  )
+  const newBlock = () =>
+    Block.fromJSON(
+      mdastRule.fromMdast({
+        children: [],
+        data: {}
+      })
+    )
 
   return {
     TYPE,
@@ -108,18 +103,21 @@ export default ({rule, subModules, TYPE}) => {
     }),
     plugins: [
       {
-        renderNode (props) {
+        renderNode(props) {
           const { node, editor, attributes } = props
           if (node.type !== TYPE) return
-          const active = editor.value.blocks.some(block => block.key === node.key)
+          const active = editor.value.blocks.some(
+            block => block.key === node.key
+          )
           return (
-            <span
-              {...styles.border}
-              {...attributes}
-              data-active={active}>
+            <span {...styles.border} {...attributes} data-active={active}>
               <Html
-                code={node.data.get('code') || `<img width="100%" src="${gray2x1}" />`}
-                images={node.data.get('images')} />
+                code={
+                  node.data.get('code') ||
+                  `<img width="100%" src="${gray2x1}" />`
+                }
+                images={node.data.get('images')}
+              />
             </span>
           )
         },

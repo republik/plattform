@@ -13,13 +13,11 @@ export default ({ rule, subModules, TYPE }) => {
       .reduce(
         (a, m) =>
           a.concat(
-            m.helpers &&
-              m.helpers.serializer &&
-              m.helpers.serializer.rules,
+            m.helpers && m.helpers.serializer && m.helpers.serializer.rules
           ),
-        [],
+        []
       )
-      .filter(Boolean),
+      .filter(Boolean)
   })
 
   const center = {
@@ -28,22 +26,17 @@ export default ({ rule, subModules, TYPE }) => {
     fromMdast: (node, index, parent, rest) => ({
       kind: 'block',
       type: TYPE,
-      nodes: childSerializer.fromMdast(node.children, 0, node, rest),
+      nodes: childSerializer.fromMdast(node.children, 0, node, rest)
     }),
     toMdast: (object, index, parent, rest) => ({
       type: 'zone',
       identifier: TYPE,
-      children: childSerializer.toMdast(
-        object.nodes,
-        0,
-        object,
-        rest,
-      ),
-    }),
+      children: childSerializer.toMdast(object.nodes, 0, object, rest)
+    })
   }
 
   const serializer = new MarkdownSerializer({
-    rules: [center],
+    rules: [center]
   })
 
   const Center = rule.component
@@ -51,7 +44,7 @@ export default ({ rule, subModules, TYPE }) => {
   return {
     TYPE,
     helpers: {
-      serializer,
+      serializer
     },
     changes: {},
     plugins: [
@@ -67,42 +60,41 @@ export default ({ rule, subModules, TYPE }) => {
               nodes: [
                 {
                   kinds: ['block'],
-                  types: subModules.map(m => m.TYPE),
-                },
+                  types: subModules.map(m => m.TYPE)
+                }
               ],
               last: {
-                types: [paragraphModule.TYPE],
+                types: [paragraphModule.TYPE]
               },
               normalize: (change, reason, { node, index, child }) => {
                 if (reason === 'child_type_invalid') {
                   return change.setNodeByKey(child.key, {
-                    type: paragraphModule.TYPE,
+                    type: paragraphModule.TYPE
                   })
                 }
                 if (reason === 'child_kind_invalid') {
                   return change.wrapBlockByKey(child.key, {
-                    type: paragraphModule.TYPE,
+                    type: paragraphModule.TYPE
                   })
                 }
                 if (reason === 'last_child_type_invalid') {
                   if (child.kind === 'text') {
                     return change.wrapBlockByKey(child.key, {
                       kind: 'block',
-                      type: paragraphModule.TYPE,
+                      type: paragraphModule.TYPE
                     })
                   }
-                  return change.insertNodeByKey(
-                    node.key,
-                    node.nodes.size,
-                    { kind: 'block', type: paragraphModule.TYPE },
-                  )
+                  return change.insertNodeByKey(node.key, node.nodes.size, {
+                    kind: 'block',
+                    type: paragraphModule.TYPE
+                  })
                 }
                 throw reason
-              },
-            },
-          },
-        },
-      },
-    ],
+              }
+            }
+          }
+        }
+      }
+    ]
   }
 }

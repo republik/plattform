@@ -5,21 +5,21 @@ import { findNode } from '../../utils/serialization'
 import { matchBlock } from '../../utils'
 import createUi from './ui'
 
-export default ({rule, subModules, TYPE}) => {
+export default ({ rule, subModules, TYPE }) => {
   const editorOptions = rule.editorOptions || {}
 
-  const {
-    identifier = 'TITLE'
-  } = editorOptions
+  const { identifier = 'TITLE' } = editorOptions
 
   const childSerializer = new MarkdownSerializer({
-    rules: subModules.reduce(
-      (a, m) => a.concat(
-        m.helpers && m.helpers.serializer &&
-        m.helpers.serializer.rules
-      ),
-      []
-    ).filter(Boolean)
+    rules: subModules
+      .reduce(
+        (a, m) =>
+          a.concat(
+            m.helpers && m.helpers.serializer && m.helpers.serializer.rules
+          ),
+        []
+      )
+      .filter(Boolean)
   })
 
   const Container = rule.component
@@ -28,13 +28,10 @@ export default ({rule, subModules, TYPE}) => {
     match: matchBlock(TYPE),
     matchMdast: rule.matchMdast,
     fromMdast: (node, index, parent, rest) => {
-      const subject = findNode(
-        node.children,
-        {type: 'heading', depth: 2}
-      )
+      const subject = findNode(node.children, { type: 'heading', depth: 2 })
 
       // if there's no subject yet, add one after the headline.
-      const writableNode = {...node, children: [...node.children]}
+      const writableNode = { ...node, children: [...node.children] }
       if (!subject) {
         writableNode.children.splice(1, 0, {
           type: 'heading',
@@ -43,12 +40,17 @@ export default ({rule, subModules, TYPE}) => {
         })
       }
 
-      let nodes = childSerializer.fromMdast(writableNode.children, 0, writableNode, rest)
+      let nodes = childSerializer.fromMdast(
+        writableNode.children,
+        0,
+        writableNode,
+        rest
+      )
       const { format } = rest.context
       if (format) {
         // enhance all immediate children with format
         // - needed for headline
-        nodes = nodes.map(node => ({...node, data: {...node.data, format}}))
+        nodes = nodes.map(node => ({ ...node, data: { ...node.data, format } }))
       }
 
       return {
@@ -63,7 +65,7 @@ export default ({rule, subModules, TYPE}) => {
     },
     toMdast: (object, index, parent, rest) => {
       // omit format
-      const {format, ...data} = object.data
+      const { format, ...data } = object.data
       return {
         type: 'zone',
         identifier,
@@ -74,9 +76,7 @@ export default ({rule, subModules, TYPE}) => {
   }
 
   const serializer = new MarkdownSerializer({
-    rules: [
-      serializerRule
-    ]
+    rules: [serializerRule]
   })
 
   return {
@@ -92,7 +92,7 @@ export default ({rule, subModules, TYPE}) => {
     }),
     plugins: [
       {
-        renderNode ({node, children, attributes}) {
+        renderNode({ node, children, attributes }) {
           if (!serializerRule.match(node)) return
           return (
             <Container {...node.data.toJS()} attributes={attributes}>
@@ -109,32 +109,22 @@ export default ({rule, subModules, TYPE}) => {
                 min: 1,
                 max: 1
               })),
-              normalize: (change, reason, {node, index, child}) => {
+              normalize: (change, reason, { node, index, child }) => {
                 if (reason === 'child_required') {
-                  change.insertNodeByKey(
-                    node.key,
-                    index,
-                    {
-                      kind: 'block',
-                      type: subModules[index].TYPE
-                    }
-                  )
+                  change.insertNodeByKey(node.key, index, {
+                    kind: 'block',
+                    type: subModules[index].TYPE
+                  })
                 }
                 if (reason === 'child_kind_invalid') {
-                  change.wrapBlockByKey(
-                    child.key,
-                    {
-                      type: subModules[index].TYPE
-                    }
-                  )
+                  change.wrapBlockByKey(child.key, {
+                    type: subModules[index].TYPE
+                  })
                 }
                 if (reason === 'child_type_invalid') {
-                  change.setNodeByKey(
-                    child.key,
-                    {
-                      type: subModules[index].TYPE
-                    }
-                  )
+                  change.setNodeByKey(child.key, {
+                    type: subModules[index].TYPE
+                  })
                 }
                 if (reason === 'child_unknown') {
                   if (index >= subModules.length) {

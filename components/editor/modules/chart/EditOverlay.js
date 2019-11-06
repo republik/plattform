@@ -4,19 +4,15 @@ import { tsvParse, csvFormat } from 'd3-dsv'
 import OverlayFormManager from '../../utils/OverlayFormManager'
 import JSONField, { renderAutoSize } from '../../utils/JSONField'
 
-import {
-  Interaction,
-  Label,
-  Field,
-  Radio
-} from '@project-r/styleguide'
+import { Interaction, Label, Field, Radio } from '@project-r/styleguide'
 
 import Export from './Export'
 
-export default (props) => (
-  <OverlayFormManager {...props}
+export default props => (
+  <OverlayFormManager
+    {...props}
     extra={<Export chart={props.preview} />}
-    onChange={(data) => {
+    onChange={data => {
       props.editor.change(change => {
         const size = data.get('config', {}).size
         const parent = change.value.document.getParent(props.node.key)
@@ -29,14 +25,16 @@ export default (props) => (
           data
         })
       })
-    }}>
+    }}
+  >
     {({ data, onChange }) => {
       const config = data.get('config') || {}
 
       return (
         <Fragment>
           <Interaction.P>
-            <Label>Size</Label><br />
+            <Label>Size</Label>
+            <br />
             {[
               { label: 'Normal', size: undefined },
               { label: 'Klein', size: 'narrow' },
@@ -46,32 +44,49 @@ export default (props) => (
               const checked = config.size === size
               return (
                 <Fragment key={size || label}>
-                  <Radio checked={checked} onChange={() => {
-                    if (!checked) {
-                      onChange(data.set('config', { ...config, size }))
-                    }
-                  }} style={{ whiteSpace: 'nowrap', marginRight: 10 }}>
+                  <Radio
+                    checked={checked}
+                    onChange={() => {
+                      if (!checked) {
+                        onChange(data.set('config', { ...config, size }))
+                      }
+                    }}
+                    style={{ whiteSpace: 'nowrap', marginRight: 10 }}
+                  >
                     {label || size}
-                  </Radio>
-                  {' '}
+                  </Radio>{' '}
                 </Fragment>
               )
             })}
           </Interaction.P>
           <Interaction.P>
-            <Label>Typ</Label><br />
-            {['Bar', 'TimeBar', 'Lollipop', 'Line', 'Slope', 'ScatterPlot', 'ProjectedMap', 'SwissMap', 'Hemicycle'].map(type => {
+            <Label>Typ</Label>
+            <br />
+            {[
+              'Bar',
+              'TimeBar',
+              'Lollipop',
+              'Line',
+              'Slope',
+              'ScatterPlot',
+              'ProjectedMap',
+              'SwissMap',
+              'Hemicycle'
+            ].map(type => {
               const checked = config.type === type
               return (
                 <Fragment key={type}>
-                  <Radio checked={checked} onChange={() => {
-                    if (!checked) {
-                      onChange(data.set('config', { ...config, type }))
-                    }
-                  }} style={{ whiteSpace: 'nowrap', marginRight: 10 }}>
+                  <Radio
+                    checked={checked}
+                    onChange={() => {
+                      if (!checked) {
+                        onChange(data.set('config', { ...config, type }))
+                      }
+                    }}
+                    style={{ whiteSpace: 'nowrap', marginRight: 10 }}
+                  >
                     {type}
-                  </Radio>
-                  {' '}
+                  </Radio>{' '}
                 </Fragment>
               )
             })}
@@ -80,9 +95,10 @@ export default (props) => (
             <JSONField
               label='JSON Config'
               value={config}
-              onChange={(value) => {
+              onChange={value => {
                 onChange(data.set('config', value))
-              }} />
+              }}
+            />
           </Interaction.P>
           <Interaction.P>
             <Field
@@ -90,7 +106,7 @@ export default (props) => (
               name='values'
               value={data.get('values')}
               renderInput={renderAutoSize({
-                onPaste: (e) => {
+                onPaste: e => {
                   const clipboardData = e.clipboardData || window.clipboardData
                   let parsedTsv
                   try {
@@ -104,7 +120,8 @@ export default (props) => (
               })}
               onChange={(_, value) => {
                 onChange(data.set('values', value))
-              }} />
+              }}
+            />
           </Interaction.P>
         </Fragment>
       )

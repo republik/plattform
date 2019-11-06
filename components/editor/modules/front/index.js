@@ -16,11 +16,10 @@ export default ({ rule, subModules, TYPE }) => {
       (set, node) =>
         set
           .add(
-            node.data &&
-              (node.data.get ? node.data.get('url') : node.data.url),
+            node.data && (node.data.get ? node.data.get('url') : node.data.url)
           )
           .concat(extractUrls(node.nodes)),
-      Set(),
+      Set()
     )
   }
   const extractRepoIds = nodes =>
@@ -33,9 +32,7 @@ export default ({ rule, subModules, TYPE }) => {
       .filter(Boolean)
 
   const getAutoFeedData = doc => {
-    const liveTeaserFeedIndex = doc.nodes.findIndex(
-      matchLiveTeaserFeed,
-    )
+    const liveTeaserFeedIndex = doc.nodes.findIndex(matchLiveTeaserFeed)
 
     if (liveTeaserFeedIndex !== -1) {
       const liveTeaserFeed = doc.nodes.get
@@ -46,7 +43,7 @@ export default ({ rule, subModules, TYPE }) => {
 
       return {
         priorRepoIds,
-        liveTeaserFeed,
+        liveTeaserFeed
       }
     }
   }
@@ -56,13 +53,11 @@ export default ({ rule, subModules, TYPE }) => {
       .reduce(
         (a, m) =>
           a.concat(
-            m.helpers &&
-              m.helpers.serializer &&
-              m.helpers.serializer.rules,
+            m.helpers && m.helpers.serializer && m.helpers.serializer.rules
           ),
-        [],
+        []
       )
-      .filter(Boolean),
+      .filter(Boolean)
   })
 
   let invisibleNodes
@@ -77,14 +72,13 @@ export default ({ rule, subModules, TYPE }) => {
         document: {
           data: node.meta,
           kind: 'document',
-          nodes: childSerializer.fromMdast(visibleNodes),
+          nodes: childSerializer.fromMdast(visibleNodes)
         },
-        kind: 'value',
+        kind: 'value'
       }
       const feedData = getAutoFeedData(res.document)
       if (feedData) {
-        feedData.liveTeaserFeed.data.priorRepoIds =
-          feedData.priorRepoIds
+        feedData.liveTeaserFeed.data.priorRepoIds = feedData.priorRepoIds
       }
       return res
     },
@@ -92,15 +86,13 @@ export default ({ rule, subModules, TYPE }) => {
       return {
         type: 'root',
         meta: object.data,
-        children: childSerializer
-          .toMdast(object.nodes)
-          .concat(invisibleNodes),
+        children: childSerializer.toMdast(object.nodes).concat(invisibleNodes)
       }
-    },
+    }
   }
 
   const serializer = new MarkdownSerializer({
-    rules: [documentRule],
+    rules: [documentRule]
   })
 
   const newDocument = ({ title, template }) =>
@@ -183,8 +175,8 @@ An article by [Christof Moser](), 31 December 2017
 
 <hr/></section>
 
-`.trim(),
-      ),
+`.trim()
+      )
     )
 
   const Container = rule.component
@@ -193,14 +185,12 @@ An article by [Christof Moser](), 31 December 2017
     TYPE,
     helpers: {
       serializer,
-      newDocument,
+      newDocument
     },
     changes: {},
     plugins: [
       {
-        renderEditor: ({ children }) => (
-          <Container>{children}</Container>
-        ),
+        renderEditor: ({ children }) => <Container>{children}</Container>,
         onChange: change => {
           const feedData = getAutoFeedData(change.value.document)
 
@@ -208,20 +198,20 @@ An article by [Christof Moser](), 31 December 2017
             if (
               !is(
                 feedData.liveTeaserFeed.data.get('priorRepoIds'),
-                feedData.priorRepoIds,
+                feedData.priorRepoIds
               )
             ) {
               change.setNodeByKey(feedData.liveTeaserFeed.key, {
                 data: feedData.liveTeaserFeed.data.set(
                   'priorRepoIds',
-                  feedData.priorRepoIds,
-                ),
+                  feedData.priorRepoIds
+                )
               })
               return change
             }
           }
-        },
-      },
-    ],
+        }
+      }
+    ]
   }
 }

@@ -7,8 +7,8 @@ export default initialState => {
     initialState,
     {},
     {
-      API_URL: 'http://localhost/graphql',
-    },
+      API_URL: 'http://localhost/graphql'
+    }
   )
   const withData = ComposedComponent => props => (
     <ApolloProvider client={client}>
@@ -18,6 +18,6 @@ export default initialState => {
 
   return {
     client,
-    withData,
+    withData
   }
 }

@@ -27,7 +27,7 @@ const styles = {
 }
 
 class ColorPicker extends Component {
-  constructor (...args) {
+  constructor(...args) {
     super(...args)
     this.state = {
       displayColorPicker: false
@@ -36,15 +36,15 @@ class ColorPicker extends Component {
     this.closeHandler = this.closeHandler.bind(this)
   }
 
-  clickHandler () {
+  clickHandler() {
     this.setState({ displayColorPicker: !this.state.displayColorPicker })
   }
 
-  closeHandler () {
+  closeHandler() {
     this.setState({ displayColorPicker: false })
   }
 
-  render () {
+  render() {
     return (
       <div style={{ marginBottom: 5 }}>
         <Label>{this.props.label}</Label>
@@ -55,8 +55,10 @@ class ColorPicker extends Component {
               backgroundColor: this.props.value,
               ...styles.button
             }}
-          >{!this.props.value && '❌'}</span>
-          {!!this.props.value &&
+          >
+            {!this.props.value && '❌'}
+          </span>
+          {!!this.props.value && (
             <span
               onClick={() => {
                 this.props.onChange(undefined)
@@ -64,23 +66,23 @@ class ColorPicker extends Component {
               style={{
                 ...styles.button,
                 borderColor: 'transparent'
-              }}>
+              }}
+            >
               ❌
             </span>
-          }
+          )}
         </div>
-        {
-          this.state.displayColorPicker &&
+        {this.state.displayColorPicker && (
           <div style={styles.popover}>
             <div style={styles.cover} onClick={this.closeHandler} />
             <ChromePicker
               color={this.props.value || '#7C7070'}
-              onChange={(value) => {
+              onChange={value => {
                 this.props.onChange(value.hex)
               }}
             />
           </div>
-        }
+        )}
       </div>
     )
   }

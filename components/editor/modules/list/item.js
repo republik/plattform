@@ -16,35 +16,25 @@ export default ({ rule, subModules, TYPE }) => {
     fromMdast: (node, index, parent, rest) => ({
       kind: 'block',
       type: TYPE,
-      nodes: paragraphSerializer.fromMdast(
-        node.children,
-        0,
-        node,
-        rest,
-      ),
+      nodes: paragraphSerializer.fromMdast(node.children, 0, node, rest)
     }),
     toMdast: (object, index, parent, rest) => ({
       type: 'listItem',
       loose: !parent.data.compact,
-      children: paragraphSerializer.toMdast(
-        object.nodes,
-        0,
-        object,
-        rest,
-      ),
-    }),
+      children: paragraphSerializer.toMdast(object.nodes, 0, object, rest)
+    })
   }
 
   const ListItem = rule.component
 
   const serializer = new MarkdownSerializer({
-    rules: [listItem],
+    rules: [listItem]
   })
 
   return {
     TYPE,
     helpers: {
-      serializer,
+      serializer
     },
     changes: {},
     plugins: [
@@ -65,11 +55,11 @@ export default ({ rule, subModules, TYPE }) => {
                     change.wrapBlockByKey(child.key, PARAGRAPH)
                   }
                 }
-              },
-            },
-          },
-        },
-      },
-    ],
+              }
+            }
+          }
+        }
+      }
+    ]
   }
 }

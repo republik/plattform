@@ -4,34 +4,52 @@ import withT from '../../lib/withT'
 import { Button, A, colors, mediaQueries } from '@project-r/styleguide'
 
 const Text = ({
-  t, isNew, readOnly, hasUncommittedChanges,
+  t,
+  isNew,
+  readOnly,
+  hasUncommittedChanges,
   didUnlock,
-  onRevert, onLock
+  onRevert,
+  onLock
 }) => {
   if (isNew) {
     return t('commit/status/new/short')
   }
   if (hasUncommittedChanges) {
-    return <A href='#' onClick={onRevert}>
-      {t('commit/revert')}
-    </A>
+    return (
+      <A href='#' onClick={onRevert}>
+        {t('commit/revert')}
+      </A>
+    )
   }
   if (readOnly) {
     return t('commit/status/readOnly')
   }
   if (didUnlock) {
-    return <A href='#' onClick={onLock}>
-      {t('commit/lock')}
-    </A>
+    return (
+      <A href='#' onClick={onLock}>
+        {t('commit/lock')}
+      </A>
+    )
   }
   return t('commit/status/committed')
 }
 
-const CommitButton = (props) => {
-  const { t, hasUncommittedChanges, isNew, readOnly, onCommit, onUnlock } = props
+const CommitButton = props => {
+  const {
+    t,
+    hasUncommittedChanges,
+    isNew,
+    readOnly,
+    onCommit,
+    onUnlock
+  } = props
   return (
     <div {...css({ width: 100, [mediaQueries.mUp]: { width: 180 } })}>
-      <div style={{ textAlign: 'center', marginTop: 7 }} {...css({ fontSize: 10, [mediaQueries.mUp]: { fontSize: 14 } })}>
+      <div
+        style={{ textAlign: 'center', marginTop: 7 }}
+        {...css({ fontSize: 10, [mediaQueries.mUp]: { fontSize: 14 } })}
+      >
         <Text {...props} />
       </div>
       <Button
