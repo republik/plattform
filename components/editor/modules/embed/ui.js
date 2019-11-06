@@ -2,7 +2,7 @@ import React, { Fragment } from 'react'
 import { Checkbox, Radio, Label } from '@project-r/styleguide'
 import { createPropertyForm } from '../../utils'
 
-export default ({ TYPE, editorOptions }) => {
+export default ({ editorOptions }) => {
   const isVideoBlock = block => block.type === 'EMBEDVIDEO'
   const { sizes = [] } = editorOptions || {}
 
@@ -53,34 +53,44 @@ export default ({ TYPE, editorOptions }) => {
                     ]
                   })}
                   <br />
-                  {!!src && src.hls && <Fragment>
-                    <div style={{ margin: '10px 0' }}>
-                      <Checkbox
-                        checked={block.data.get('forceAudio')}
-                        onChange={event => {
-                          const checked = block.data.get('forceAudio')
-                          let change = value.change().setNodeByKey(block.key, {
-                            data: block.data.merge({forceAudio: !checked})
-                          })
-                          onChange(change)
-                        }}>
-                        nur Audio
-                      </Checkbox>
-                    </div>
-                    <div style={{ margin: '10px 0' }}>
-                      <Checkbox
-                        checked={block.data.get('cinemagraph')}
-                        onChange={event => {
-                          const checked = block.data.get('cinemagraph')
-                          let change = value.change().setNodeByKey(block.key, {
-                            data: block.data.merge({cinemagraph: !checked})
-                          })
-                          onChange(change)
-                        }}>
-                        Cinemagraph
-                      </Checkbox>
-                    </div>
-                  </Fragment>}
+                  {!!src && src.hls && (
+                    <Fragment>
+                      <div style={{ margin: '10px 0' }}>
+                        <Checkbox
+                          checked={block.data.get('forceAudio')}
+                          onChange={() => {
+                            const checked = block.data.get('forceAudio')
+                            let change = value
+                              .change()
+                              .setNodeByKey(block.key, {
+                                data: block.data.merge({ forceAudio: !checked })
+                              })
+                            onChange(change)
+                          }}
+                        >
+                          nur Audio
+                        </Checkbox>
+                      </div>
+                      <div style={{ margin: '10px 0' }}>
+                        <Checkbox
+                          checked={block.data.get('cinemagraph')}
+                          onChange={() => {
+                            const checked = block.data.get('cinemagraph')
+                            let change = value
+                              .change()
+                              .setNodeByKey(block.key, {
+                                data: block.data.merge({
+                                  cinemagraph: !checked
+                                })
+                              })
+                            onChange(change)
+                          }}
+                        >
+                          Cinemagraph
+                        </Checkbox>
+                      </div>
+                    </Fragment>
+                  )}
                 </p>
               )}
             </div>

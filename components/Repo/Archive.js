@@ -22,18 +22,21 @@ const RepoArchive = ({ repoId, t }) => {
   return (
     <Mutation mutation={ARCHIVE_REPO} variables={{ repoId }}>
       {archiveRepo => (
-        <A href='#' onClick={e => {
-          e.preventDefault()
-          if (window.confirm(t('repo/archive/confirm', { repoId }))) {
-            archiveRepo()
-              .then(() => {
-                Router.pushRoute('index')
-              })
-              .catch((error) => {
-                window.alert(errorToString(error))
-              })
-          }
-        }}>
+        <A
+          href='#'
+          onClick={e => {
+            e.preventDefault()
+            if (window.confirm(t('repo/archive/confirm', { repoId }))) {
+              archiveRepo()
+                .then(() => {
+                  Router.pushRoute('index')
+                })
+                .catch(error => {
+                  window.alert(errorToString(error))
+                })
+            }
+          }}
+        >
           {t('repo/archive/button')}
         </A>
       )}
@@ -41,4 +44,7 @@ const RepoArchive = ({ repoId, t }) => {
   )
 }
 
-export default compose(withT, withRouter)(RepoArchive)
+export default compose(
+  withT,
+  withRouter
+)(RepoArchive)

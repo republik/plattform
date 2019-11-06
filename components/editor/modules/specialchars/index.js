@@ -46,11 +46,11 @@ const longDashClickHandler = (value, onChange) => event => {
   event.preventDefault()
 
   const before = ensureSpace(
-    value.startText.characters.get(value.selection.startOffset - 1),
+    value.startText.characters.get(value.selection.startOffset - 1)
   )
 
   const after = ensureSpace(
-    value.endText.characters.get(value.selection.endOffset),
+    value.endText.characters.get(value.selection.endOffset)
   )
 
   if (value.isCollapsed) {
@@ -58,17 +58,17 @@ const longDashClickHandler = (value, onChange) => event => {
   }
 
   const innerBefore = ensureSpace(
-    value.startText.characters.get(value.selection.startOffset),
+    value.startText.characters.get(value.selection.startOffset)
   )
 
   const innerAfter = ensureSpace(
-    value.endText.characters.get(value.selection.endOffset - 1),
+    value.endText.characters.get(value.selection.endOffset - 1)
   )
 
   return onChange(
     value
       .change()
-      .wrapText(`${before}–${innerBefore}`, `${innerAfter}–${after}`),
+      .wrapText(`${before}–${innerBefore}`, `${innerAfter}–${after}`)
   )
 }
 
@@ -137,7 +137,7 @@ export default ({ TYPE }) => ({
       SingleGuillemetButton,
       LongDashButton,
       NBSPButton,
-      SoftHyphenButton,
-    ],
-  },
+      SoftHyphenButton
+    ]
+  }
 })

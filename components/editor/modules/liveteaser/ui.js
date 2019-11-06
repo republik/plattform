@@ -3,11 +3,7 @@ import React from 'react'
 import { Label } from '@project-r/styleguide'
 import { Map } from 'immutable'
 
-import {
-  matchBlock,
-  createPropertyForm,
-  buttonStyles
-} from '../../utils'
+import { matchBlock, createPropertyForm, buttonStyles } from '../../utils'
 
 import { allBlocks, parent, childIndex, depth } from '../../utils/selection'
 
@@ -25,19 +21,18 @@ export default ({ TYPE, newBlock, rule = {}, zone }) => {
       })
     const node = nodes.first()
     onChange(
-      value.change().insertNodeByKey(
-        parent(value, node.key).key,
-        childIndex(value, node.key),
-        newBlock()
-      )
+      value
+        .change()
+        .insertNodeByKey(
+          parent(value, node.key).key,
+          childIndex(value, node.key),
+          newBlock()
+        )
     )
   }
 
   const InsertButton = ({ value, onChange }) => {
-    const disabled = (
-      value.isBlurred ||
-      value.isExpanded
-    )
+    const disabled = value.isBlurred || value.isExpanded
     if (value.document.nodes.find(zone.match)) {
       return null
     }
@@ -57,44 +52,38 @@ export default ({ TYPE, newBlock, rule = {}, zone }) => {
     if (disabled) {
       return null
     }
-    return <div>
-      <Label>Live Teaser</Label>
-      {
-        value.blocks
-          .filter(matchBlock(TYPE))
-          .map((node, i) => {
-            const onInputChange = key => (_, inputValue) => {
-              onChange(
-                value
-                  .change()
-                  .setNodeByKey(node.key, {
-                    data: inputValue
-                      ? node.data.set(key, inputValue)
-                      : node.data.remove(key)
-                  })
-              )
-            }
-
-            const { form = [] } = editorOptions
-
-            return (
-              <MetaForm
-                key={`liveteaser-${i}`}
-                data={Map(
-                  form.map(field => [field.key, ''])
-                ).merge(
-                  node.data
-                    .remove('id')
-                    .remove('module')
-                    .remove('priorRepoIds')
-                )}
-                notes={Map(form.map(field => [field.key, field.note]))}
-                onInputChange={onInputChange}
-              />
+    return (
+      <div>
+        <Label>Live Teaser</Label>
+        {value.blocks.filter(matchBlock(TYPE)).map((node, i) => {
+          const onInputChange = key => (_, inputValue) => {
+            onChange(
+              value.change().setNodeByKey(node.key, {
+                data: inputValue
+                  ? node.data.set(key, inputValue)
+                  : node.data.remove(key)
+              })
             )
-          })
-      }
-    </div>
+          }
+
+          const { form = [] } = editorOptions
+
+          return (
+            <MetaForm
+              key={`liveteaser-${i}`}
+              data={Map(form.map(field => [field.key, ''])).merge(
+                node.data
+                  .remove('id')
+                  .remove('module')
+                  .remove('priorRepoIds')
+              )}
+              notes={Map(form.map(field => [field.key, field.note]))}
+              onInputChange={onInputChange}
+            />
+          )
+        })}
+      </div>
+    )
   }
 
   return {
@@ -105,8 +94,6 @@ export default ({ TYPE, newBlock, rule = {}, zone }) => {
         }
       })(Form)
     ],
-    insertButtons: editorOptions.insertButtonText
-      ? [InsertButton]
-      : []
+    insertButtons: editorOptions.insertButtonText ? [InsertButton] : []
   }
 }

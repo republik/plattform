@@ -45,11 +45,16 @@ const styles = {
   })
 }
 
-const FBPreview = ({data}) => (
+const FBPreview = ({ data }) => (
   <div {...styles.fbContainer}>
-    <div {...styles.fbImage} style={{
-      backgroundImage: `url(${data.get('facebookImage') || data.get('image') || gray2x1})`
-    }} />
+    <div
+      {...styles.fbImage}
+      style={{
+        backgroundImage: `url(${data.get('facebookImage') ||
+          data.get('image') ||
+          gray2x1})`
+      }}
+    />
     <div {...styles.fbText}>
       <div {...styles.fbTitle}>
         {data.get('facebookTitle') || data.get('title')}
@@ -57,9 +62,7 @@ const FBPreview = ({data}) => (
       <div {...styles.fbDescription}>
         {data.get('facebookDescription') || data.get('description')}
       </div>
-      <div {...styles.fbDomain}>
-        republik.ch
-      </div>
+      <div {...styles.fbDomain}>republik.ch</div>
     </div>
   </div>
 )

@@ -20,7 +20,9 @@ const styles = {
 const RepoArchivedBanner = ({ t }) => {
   return (
     <div {...styles.container}>
-      <Interaction.H3 {...styles.notice}>{t('repo/archived/notice')}</Interaction.H3>
+      <Interaction.H3 {...styles.notice}>
+        {t('repo/archived/notice')}
+      </Interaction.H3>
     </div>
   )
 }

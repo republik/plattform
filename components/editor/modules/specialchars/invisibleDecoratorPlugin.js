@@ -52,7 +52,7 @@ const createDecoration = (key, index, type) => ({
 
 export default () => {
   return {
-    renderMark ({mark, children, attributes}) {
+    renderMark({ mark, children, attributes }) {
       if (styles[mark.type]) {
         return (
           <span {...attributes} {...styles[mark.type]}>
@@ -61,7 +61,7 @@ export default () => {
         )
       }
     },
-    decorateNode (node) {
+    decorateNode(node) {
       if (node.kind !== 'block') return
       const texts = node.nodes.filter(child => child.kind === 'text')
       if (!texts.size) return

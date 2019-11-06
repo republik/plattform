@@ -51,11 +51,16 @@ const styles = {
   })
 }
 
-const TwitterPreview = ({data}) => (
+const TwitterPreview = ({ data }) => (
   <div {...styles.twitterContainer}>
-    <div {...styles.twitterImage} style={{
-      backgroundImage: `url(${data.get('twitterImage') || data.get('image') || gray2x1})`
-    }} />
+    <div
+      {...styles.twitterImage}
+      style={{
+        backgroundImage: `url(${data.get('twitterImage') ||
+          data.get('image') ||
+          gray2x1})`
+      }}
+    />
     <div {...styles.twitterText}>
       <div {...styles.twitterTitle}>
         {data.get('twitterTitle') || data.get('title')}
@@ -63,9 +68,7 @@ const TwitterPreview = ({data}) => (
       <div {...styles.twitterDescription}>
         {data.get('twitterDescription') || data.get('description')}
       </div>
-      <div {...styles.twitterDomain}>
-        republik.ch
-      </div>
+      <div {...styles.twitterDomain}>republik.ch</div>
     </div>
   </div>
 )

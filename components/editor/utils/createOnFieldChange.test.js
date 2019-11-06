@@ -3,7 +3,7 @@ import createOnFieldChange from './createOnFieldChange'
 import { Value } from 'slate'
 
 const rawDoc = {
-  'nodes': [
+  nodes: [
     {
       kind: 'block',
       type: 'paragraph',
@@ -70,7 +70,14 @@ test('utils.createOnFieldChange: handler called without value', assert => {
     )
   }
 
-  createOnFieldChange(onChange, initialState, paragraphNodeWithData, 'foo', null, undefined)
+  createOnFieldChange(
+    onChange,
+    initialState,
+    paragraphNodeWithData,
+    'foo',
+    null,
+    undefined
+  )
 })
 
 test('utils.createOnFieldChange: partial application', assert => {
@@ -82,14 +89,7 @@ test('utils.createOnFieldChange: partial application', assert => {
 
   const args = [onChange, initialState, paragraphNode, 'foo', null, 'bar']
 
-  const result = args.reduce(
-    (fn, arg) => fn(arg),
-    createOnFieldChange
-  )
+  const result = args.reduce((fn, arg) => fn(arg), createOnFieldChange)
 
-  assert.equal(
-    typeof result !== 'function',
-    true,
-    'works'
-  )
+  assert.equal(typeof result !== 'function', true, 'works')
 })

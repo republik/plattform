@@ -1,11 +1,7 @@
 import React from 'react'
 import { compose } from 'react-apollo'
 import Router, { withRouter } from 'next/router'
-import {
-  BrandMark,
-  Interaction,
-  mediaQueries
-} from '@project-r/styleguide'
+import { BrandMark, Interaction, mediaQueries } from '@project-r/styleguide'
 import { css } from 'glamor'
 import withT from '../../lib/withT'
 
@@ -47,12 +43,12 @@ export const Nav = ({ t, router, children }) => {
   const onLogoClick = e => {
     if (
       e.currentTarget.nodeName === 'A' &&
-    (e.metaKey ||
-      e.ctrlKey ||
-      e.shiftKey ||
-      (e.nativeEvent && e.nativeEvent.which === 2))
+      (e.metaKey ||
+        e.ctrlKey ||
+        e.shiftKey ||
+        (e.nativeEvent && e.nativeEvent.which === 2))
     ) {
-    // ignore click for new tab / new window behavior
+      // ignore click for new tab / new window behavior
       return
     }
     e.preventDefault()
@@ -67,14 +63,16 @@ export const Nav = ({ t, router, children }) => {
     <div {...styles.nav}>
       <a
         {...styles.logo}
-        {...!!children && styles.logoWithChildren}
+        {...(!!children && styles.logoWithChildren)}
         href='/'
         onClick={onLogoClick}
       >
         <BrandMark />
       </a>
       <Interaction.H2 style={{ display: 'inline-block' }}>
-        <a href='/' onClick={onLogoClick} {...styles.appLink}>{t('app/name')}</a>
+        <a href='/' onClick={onLogoClick} {...styles.appLink}>
+          {t('app/name')}
+        </a>
       </Interaction.H2>
       <br />
       {children}
@@ -82,4 +80,7 @@ export const Nav = ({ t, router, children }) => {
   )
 }
 
-export default compose(withT, withRouter)(Nav)
+export default compose(
+  withT,
+  withRouter
+)(Nav)

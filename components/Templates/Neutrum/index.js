@@ -3,7 +3,7 @@ import {
   matchType,
   matchZone,
   matchHeading,
-  matchParagraph,
+  matchParagraph
 } from 'mdast-react-render/lib/utils'
 
 import {
@@ -14,7 +14,7 @@ import {
   NarrowContainer,
   Tweet,
   Video,
-  Editorial,
+  Editorial
 } from '@project-r/styleguide'
 
 const Br = () => <br />
@@ -41,70 +41,70 @@ const paragraph = {
   ),
   editorModule: 'paragraph',
   editorOptions: {
-    formatButtonText: 'Paragraph',
+    formatButtonText: 'Paragraph'
   },
   rules: [
     {
       matchMdast: matchType('break'),
       component: Br,
-      isVoid: true,
+      isVoid: true
     },
     {
       matchMdast: matchType('strong'),
       component: Strong,
       editorModule: 'mark',
       editorOptions: {
-        type: 'strong',
-      },
+        type: 'strong'
+      }
     },
     {
       matchMdast: matchType('emphasis'),
       component: Em,
       editorModule: 'mark',
       editorOptions: {
-        type: 'emphasis',
-      },
+        type: 'emphasis'
+      }
     },
     {
       matchMdast: matchType('delete'),
       component: Del,
       editorModule: 'mark',
       editorOptions: {
-        type: 'delete',
-      },
+        type: 'delete'
+      }
     },
     {
       matchMdast: matchType('sub'),
       component: Sub,
       editorModule: 'mark',
       editorOptions: {
-        type: 'sub',
-      },
+        type: 'sub'
+      }
     },
     {
       matchMdast: matchType('sup'),
       component: Sup,
       editorModule: 'mark',
       editorOptions: {
-        type: 'sup',
-      },
+        type: 'sup'
+      }
     },
     {
       matchMdast: matchType('link'),
       props: node => ({
         data: {
           title: node.title,
-          href: node.url,
-        },
+          href: node.url
+        }
       }),
       component: ({ children, data, attributes = {} }) => (
         <A href={data.href} title={data.title} {...attributes}>
           {children}
         </A>
       ),
-      editorModule: 'link',
-    },
-  ],
+      editorModule: 'link'
+    }
+  ]
 }
 
 const schema = {
@@ -121,14 +121,12 @@ const schema = {
       rules: [
         {
           matchMdast: () => false,
-          editorModule: 'meta',
+          editorModule: 'meta'
         },
         {
           matchMdast: matchZone('TITLE'),
           component: ({ children, attributes = {} }) => (
-            <NarrowContainer {...attributes}>
-              {children}
-            </NarrowContainer>
+            <NarrowContainer {...attributes}>{children}</NarrowContainer>
           ),
           editorModule: 'title',
           rules: [
@@ -141,17 +139,15 @@ const schema = {
               editorOptions: {
                 type: 'h1',
                 placeholder: 'Titel',
-                depth: 1,
-              },
-            },
-          ],
+                depth: 1
+              }
+            }
+          ]
         },
         {
           matchMdast: matchZone('CENTER'),
           component: ({ children, attributes = {} }) => (
-            <NarrowContainer {...attributes}>
-              {children}
-            </NarrowContainer>
+            <NarrowContainer {...attributes}>{children}</NarrowContainer>
           ),
           editorModule: 'center',
           rules: [
@@ -160,16 +156,16 @@ const schema = {
               component: props => <Tweet {...props.data} />,
               editorModule: 'embedTwitter',
               editorOptions: {
-                lookupType: 'paragraph',
-              },
+                lookupType: 'paragraph'
+              }
             },
             {
               matchMdast: matchZone('EMBEDVIDEO'),
               component: props => <Video {...props.data} />,
               editorModule: 'embedVideo',
               editorOptions: {
-                lookupType: 'paragraph',
-              },
+                lookupType: 'paragraph'
+              }
             },
             paragraph,
             {
@@ -181,8 +177,8 @@ const schema = {
               editorOptions: {
                 type: 'h2',
                 depth: 2,
-                formatButtonText: 'Zwischentitel',
-              },
+                formatButtonText: 'Zwischentitel'
+              }
             },
             {
               matchMdast: matchType('list'),
@@ -190,8 +186,8 @@ const schema = {
               props: node => ({
                 data: {
                   ordered: node.ordered,
-                  start: node.start,
-                },
+                  start: node.start
+                }
               }),
               editorModule: 'list',
               rules: [
@@ -199,18 +195,18 @@ const schema = {
                   matchMdast: matchType('listItem'),
                   component: Editorial.LI,
                   editorModule: 'listItem',
-                  rules: [paragraph],
-                },
-              ],
-            },
-          ],
+                  rules: [paragraph]
+                }
+              ]
+            }
+          ]
         },
         {
-          editorModule: 'specialchars',
-        },
-      ],
-    },
-  ],
+          editorModule: 'specialchars'
+        }
+      ]
+    }
+  ]
 }
 
 export default schema

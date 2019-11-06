@@ -40,16 +40,19 @@ const styles = {
 }
 
 class OverlayForm extends Component {
-  constructor (...args) {
+  constructor(...args) {
     super(...args)
     this.rootDiv = document.createElement('div')
     document.body.appendChild(this.rootDiv)
   }
-  render () {
+  render() {
     const { onClose, preview, extra, children } = this.props
 
     return ReactDOM.createPortal(
-      <Overlay onClose={onClose} mUpStyle={{maxWidth: '80vw', marginTop: '5vh'}}>
+      <Overlay
+        onClose={onClose}
+        mUpStyle={{ maxWidth: '80vw', marginTop: '5vh' }}
+      >
         <OverlayToolbar>
           <OverlayToolbarClose onClick={onClose} />
         </OverlayToolbar>
@@ -60,10 +63,8 @@ class OverlayForm extends Component {
             <br />
             {extra}
           </div>
-          <div {...styles.edit}>
-            {children}
-          </div>
-          <br style={{clear: 'both'}} />
+          <div {...styles.edit}>{children}</div>
+          <br style={{ clear: 'both' }} />
         </OverlayBody>
       </Overlay>,
       this.rootDiv

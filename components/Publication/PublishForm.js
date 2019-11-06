@@ -36,27 +36,28 @@ import { getSchema } from '../../components/Templates'
 import RepoArchivedBanner from '../../components/Repo/ArchivedBanner'
 
 export const publish = gql`
-mutation publish(
-  $repoId: ID!,
-  $commitId: ID!,
-  $prepublication: Boolean!,
-  $scheduledAt: DateTime,
-  $updateMailchimp: Boolean!,
-  $ignoreUnresolvedRepoIds: Boolean
-) {
-  publish(
-    repoId: $repoId,
-    commitId: $commitId,
-    prepublication: $prepublication,
-    scheduledAt: $scheduledAt,
-    updateMailchimp: $updateMailchimp,
-    ignoreUnresolvedRepoIds: $ignoreUnresolvedRepoIds) {
-    unresolvedRepoIds
-    publication {
-      name
+  mutation publish(
+    $repoId: ID!
+    $commitId: ID!
+    $prepublication: Boolean!
+    $scheduledAt: DateTime
+    $updateMailchimp: Boolean!
+    $ignoreUnresolvedRepoIds: Boolean
+  ) {
+    publish(
+      repoId: $repoId
+      commitId: $commitId
+      prepublication: $prepublication
+      scheduledAt: $scheduledAt
+      updateMailchimp: $updateMailchimp
+      ignoreUnresolvedRepoIds: $ignoreUnresolvedRepoIds
+    ) {
+      unresolvedRepoIds
+      publication {
+        name
+      }
     }
   }
-}
 `
 
 const timeFormat = swissTime.format('%d. %B %Y, %H:%M Uhr')
@@ -154,7 +155,7 @@ const PREVIEW_SIZES = [
 ]
 
 class PublishForm extends Component {
-  constructor (...args) {
+  constructor(...args) {
     super(...args)
 
     this.state = {
@@ -164,325 +165,399 @@ class PublishForm extends Component {
       size: PREVIEW_SIZES[0]
     }
   }
-  render () {
+  render() {
     const { t, data, repoId } = this.props
     const {
-      prepublication, updateMailchimp, scheduled, scheduledAt,
+      prepublication,
+      updateMailchimp,
+      scheduled,
+      scheduledAt,
       publishing
     } = this.state
     const { loading, error, repo } = data
 
     return (
       <div>
-        <Loader loading={loading} error={error} render={() => {
-          const { isArchived, commit, commit: { document: { meta } } } = repo
+        <Loader
+          loading={loading}
+          error={error}
+          render={() => {
+            const {
+              isArchived,
+              commit,
+              commit: {
+                document: { meta }
+              }
+            } = repo
 
-          if (isArchived) {
-            return <RepoArchivedBanner />
-          }
+            if (isArchived) {
+              return <RepoArchivedBanner />
+            }
 
-          const schema = getSchema(meta.template)
+            const schema = getSchema(meta.template)
 
-          const errors = [
-            (meta.template !== 'front' && !meta.slug) && t('publish/validation/slug/empty'),
-            (updateMailchimp && !meta.emailSubject) && t('publish/validation/emailSubject/empty')
-          ].filter(Boolean)
-
-          const warnings = meta.template !== 'front'
-            ? [
-              !meta.title && t('publish/validation/title/empty'),
-              !meta.description && t('publish/validation/description/empty'),
-              !meta.facebookImage && !meta.image && t('publish/validation/facebookImage/empty'),
-              !meta.twitterImage && !meta.image && t('publish/validation/twitterImage/empty')
+            const errors = [
+              meta.template !== 'front' &&
+                !meta.slug &&
+                t('publish/validation/slug/empty'),
+              updateMailchimp &&
+                !meta.emailSubject &&
+                t('publish/validation/emailSubject/empty')
             ].filter(Boolean)
-            : []
 
-          const hasErrors = errors.length > 0
+            const warnings =
+              meta.template !== 'front'
+                ? [
+                    !meta.title && t('publish/validation/title/empty'),
+                    !meta.description &&
+                      t('publish/validation/description/empty'),
+                    !meta.facebookImage &&
+                      !meta.image &&
+                      t('publish/validation/facebookImage/empty'),
+                    !meta.twitterImage &&
+                      !meta.image &&
+                      t('publish/validation/twitterImage/empty')
+                  ].filter(Boolean)
+                : []
 
-          const {
-            size
-          } = this.state
+            const hasErrors = errors.length > 0
 
-          const scheduledAtDate = scheduledAtParser(scheduledAt)
-          const scheduledAtError = scheduledAtDate === null && t('publish/label/scheduledAt')
+            const { size } = this.state
 
-          const designatedPublishDate = repo.meta.publishDate
-            ? new Date(repo.meta.publishDate)
-            : scheduled ? scheduledAtDate : new Date()
+            const scheduledAtDate = scheduledAtParser(scheduledAt)
+            const scheduledAtError =
+              scheduledAtDate === null && t('publish/label/scheduledAt')
 
-          return (
-            <div>
-              <Label>{t('publish/commit/selected')}</Label>
-              <Interaction.P>
-                {commit.message}
-              </Interaction.P>
-              <Label>
-                {commit.author.name}<br />
-                {timeFormat(new Date(commit.date))}
-              </Label>
-              <Interaction.P>
+            const designatedPublishDate = repo.meta.publishDate
+              ? new Date(repo.meta.publishDate)
+              : scheduled
+              ? scheduledAtDate
+              : new Date()
+
+            return (
+              <div>
+                <Label>{t('publish/commit/selected')}</Label>
+                <Interaction.P>{commit.message}</Interaction.P>
                 <Label>
-                  <Link
-                    route='repo/tree'
-                    params={{
-                      repoId: repoId.split('/')
-                    }}
-                  >
-                    <a {...linkRule}>
-                      {t('publish/commit/change')}
-                    </a>
-                  </Link>
+                  {commit.author.name}
+                  <br />
+                  {timeFormat(new Date(commit.date))}
                 </Label>
-              </Interaction.P>
+                <Interaction.P>
+                  <Label>
+                    <Link
+                      route='repo/tree'
+                      params={{
+                        repoId: repoId.split('/')
+                      }}
+                    >
+                      <a {...linkRule}>{t('publish/commit/change')}</a>
+                    </Link>
+                  </Label>
+                </Interaction.P>
 
-              <br /><br />
+                <br />
+                <br />
 
-              <Label>
-                {t('publish/meta/date/label')}
-              </Label>
-              <Interaction.P>
-                {timeFormat(designatedPublishDate)}
-              </Interaction.P>
-              <Label>
-                {t('publish/meta/path/label')}
-              </Label>
-              <Interaction.P>
-                {FRONTEND_BASE_URL.replace(/https?:\/\/(www\.)?/, '')}
-                {schema.getPath
-                  ? schema.getPath({
-                    ...meta,
-                    publishDate: designatedPublishDate
-                  })
-                  : `/${meta.slug}`}
-              </Interaction.P>
+                <Label>{t('publish/meta/date/label')}</Label>
+                <Interaction.P>
+                  {timeFormat(designatedPublishDate)}
+                </Interaction.P>
+                <Label>{t('publish/meta/path/label')}</Label>
+                <Interaction.P>
+                  {FRONTEND_BASE_URL.replace(/https?:\/\/(www\.)?/, '')}
+                  {schema.getPath
+                    ? schema.getPath({
+                        ...meta,
+                        publishDate: designatedPublishDate
+                      })
+                    : `/${meta.slug}`}
+                </Interaction.P>
 
-              <br /><br />
+                <br />
+                <br />
 
-              {hasErrors && (
-                <span>
-                  <Interaction.P style={{ color: colors.error }}>
-                    {t('publish/validation/hasErrors')}
-                  </Interaction.P>
-                  <ul style={{ color: colors.error }}>
-                    {errors.map((error, i) => (
-                      <li key={i}>
-                        <Interaction.P style={{ color: colors.error }}>
-                          {error}
-                        </Interaction.P>
-                      </li>
-                    ))}
-                  </ul>
-                  <br /><br />
-                </span>
-              )}
-              {warnings.length > 0 && (
-                <span>
-                  <Interaction.P style={{ color: colors.social }}>
-                    {t('publish/validation/hasWarnings')}
-                  </Interaction.P>
-                  <ul style={{ color: colors.social }}>
-                    {warnings.map((warning, i) => (
-                      <li key={i}>
-                        <Interaction.P style={{ color: colors.social }}>
-                          {warning}
-                        </Interaction.P>
-                      </li>
-                    ))}
-                  </ul>
-                  <br /><br />
-                </span>
-              )}
+                {hasErrors && (
+                  <span>
+                    <Interaction.P style={{ color: colors.error }}>
+                      {t('publish/validation/hasErrors')}
+                    </Interaction.P>
+                    <ul style={{ color: colors.error }}>
+                      {errors.map((error, i) => (
+                        <li key={i}>
+                          <Interaction.P style={{ color: colors.error }}>
+                            {error}
+                          </Interaction.P>
+                        </li>
+                      ))}
+                    </ul>
+                    <br />
+                    <br />
+                  </span>
+                )}
+                {warnings.length > 0 && (
+                  <span>
+                    <Interaction.P style={{ color: colors.social }}>
+                      {t('publish/validation/hasWarnings')}
+                    </Interaction.P>
+                    <ul style={{ color: colors.social }}>
+                      {warnings.map((warning, i) => (
+                        <li key={i}>
+                          <Interaction.P style={{ color: colors.social }}>
+                            {warning}
+                          </Interaction.P>
+                        </li>
+                      ))}
+                    </ul>
+                    <br />
+                    <br />
+                  </span>
+                )}
 
-              <Checkbox checked={prepublication} onChange={(_, value) => {
-                this.setState({
-                  prepublication: value
-                })
-              }}>
-                {t('publish/label/prepublication')}
-              </Checkbox>
-              <br />
-              <br />
-              {schema.emailTemplate && (<div>
-                <Checkbox checked={updateMailchimp} onChange={(_, value) => {
-                  this.setState({
-                    updateMailchimp: value
-                  })
-                }}>
-                  {t('publish/label/updateMailchimp')}
+                <Checkbox
+                  checked={prepublication}
+                  onChange={(_, value) => {
+                    this.setState({
+                      prepublication: value
+                    })
+                  }}
+                >
+                  {t('publish/label/prepublication')}
                 </Checkbox>
                 <br />
                 <br />
-              </div>)}
-              <Checkbox checked={scheduled} onChange={(_, value) => {
-                if (value && !scheduledAt) {
-                  const now = new Date()
-                  let nextDate
-                  if (repo.meta.publishDate && new Date(repo.meta.publishDate) > now) {
-                    nextDate = new Date(repo.meta.publishDate)
-                  } else {
-                    nextDate = now
-                    if (nextDate.getHours() > 4) {
-                      nextDate.setDate(nextDate.getDate() + 1)
-                    }
-                    nextDate.setHours(5)
-                    nextDate.setMinutes(0)
-                  }
-                  this.setState({ scheduledAt: scheduledAtFormater(nextDate) })
-                }
-
-                this.setState({
-                  scheduled: value
-                })
-              }}>
-                {t('publish/label/scheduled')}
-              </Checkbox>
-
-              {scheduled && <Field
-                renderInput={(inputProps) => (
-                  <MaskedInput
-                    {...inputProps}
-                    {...styles.mask}
-                    placeholderChar={'_'}
-                    mask={'11.11.1111 11:11'} />
-                )}
-                label={t('publish/label/scheduledAt')}
-                value={scheduledAt}
-                error={scheduledAtError}
-                onChange={(_, value) => {
-                  this.setState({
-                    scheduledAt: value
-                  })
-                }} />}
-
-              <br /><br /><br />
-
-              {publishing ? (
-                <div style={{ textAlign: 'center' }}>
-                  <InlineSpinner />
-                </div>
-              ) : (
-                <div>
-                  {!!this.state.error && (
-                    <ErrorMessage error={this.state.error} />
-                  )}
-                  {!!this.state.unresolvedRepoIds && (
-                    <Fragment>
-                      <ErrorMessage error={t('publish/error/unresolvedRepoIds')} />
-                      <ul>
-                        {this.state.unresolvedRepoIds.map(repoId => (
-                          <li key={repoId}>
-                            <Link
-                              route='repo/tree'
-                              params={{
-                                repoId: repoId.split('/')
-                              }}
-                            >
-                              <a {...linkRule}>
-                                {repoId.replace(`${GITHUB_ORG}/`, '')}
-                              </a>
-                            </Link>
-                          </li>
-                        ))}
-                      </ul>
-                      {updateMailchimp || meta.template === 'editorialNewsletter'
-                        ? <ErrorMessage error={t('publish/error/unresolvedRepoIds/template')} />
-                        : <Checkbox checked={!!this.state.ignoreUnresolvedRepoIds} onChange={(_, value) => {
-                          this.setState({
-                            ignoreUnresolvedRepoIds: value
-                          })
-                        }}>
-                          {t('publish/error/unresolvedRepoIds/ignore')}
-                        </Checkbox>}
-                      <br /><br />
-                    </Fragment>
-                  )}
-                  <Button block primary disabled={hasErrors} onClick={() => {
-                    if (scheduled && scheduledAtError) {
-                      return
-                    }
-                    this.setState(() => ({ publishing: true }))
-                    this.props.publish({
-                      repoId,
-                      commitId: commit.id,
-                      prepublication,
-                      updateMailchimp,
-                      scheduledAt: scheduled ? scheduledAtDate : undefined,
-                      ignoreUnresolvedRepoIds: this.state.ignoreUnresolvedRepoIds
-                    }).then((response) => {
-                      const publish = response.data.publish
-                      if (publish.publication) {
-                        Router.pushRoute('repo/tree', {
-                          repoId: repoId.split('/')
-                        })
-                      } else {
+                {schema.emailTemplate && (
+                  <div>
+                    <Checkbox
+                      checked={updateMailchimp}
+                      onChange={(_, value) => {
                         this.setState({
-                          publishing: false,
-                          ignoreUnresolvedRepoIds: undefined,
-                          unresolvedRepoIds: publish.unresolvedRepoIds
+                          updateMailchimp: value
                         })
-                      }
-                    }).catch((error) => {
-                      this.setState(() => ({
-                        publishing: false,
-                        unresolvedRepoIds: undefined,
-                        ignoreUnresolvedRepoIds: undefined,
-                        error: error
-                      }))
-                    })
-                  }}>
-                    {t('publish/trigger')}
-                  </Button>
-                </div>
-              )}
-              <br /><br />
-              <Interaction.H2>{t('publish/preview/title')}</Interaction.H2>
-
-              <Interaction.P>
-                {intersperse(
-                  PREVIEW_SIZES.map(previewSize => {
-                    const label = t(
-                      `publish/preview/${previewSize.label}`,
-                      undefined,
-                      previewSize.label
-                    )
-                    if (previewSize === size) {
-                      return label
-                    }
-                    return (
-                      <A
-                        key={label}
-                        href='#'
-                        onClick={e => {
-                          e.preventDefault()
-                          this.setState({ size: previewSize })
-                        }}
-                      >
-                        {label}
-                      </A>
-                    )
-                  }),
-                  () => ' '
+                      }}
+                    >
+                      {t('publish/label/updateMailchimp')}
+                    </Checkbox>
+                    <br />
+                    <br />
+                  </div>
                 )}
-              </Interaction.P>
+                <Checkbox
+                  checked={scheduled}
+                  onChange={(_, value) => {
+                    if (value && !scheduledAt) {
+                      const now = new Date()
+                      let nextDate
+                      if (
+                        repo.meta.publishDate &&
+                        new Date(repo.meta.publishDate) > now
+                      ) {
+                        nextDate = new Date(repo.meta.publishDate)
+                      } else {
+                        nextDate = now
+                        if (nextDate.getHours() > 4) {
+                          nextDate.setDate(nextDate.getDate() + 1)
+                        }
+                        nextDate.setHours(5)
+                        nextDate.setMinutes(0)
+                      }
+                      this.setState({
+                        scheduledAt: scheduledAtFormater(nextDate)
+                      })
+                    }
 
-              <IFrame size={size} style={{
-                // transition: 'padding 400ms, border-radius 400ms, width 400ms',
-                paddingLeft: PADDING_X,
-                paddingRight: PADDING_X,
-                paddingTop: size.paddingTop,
-                paddingBottom: size.paddingBottom,
-                borderRadius: size.borderRadius,
-                backgroundColor: '#eee',
-                width: size.width + PADDING_X * 2
-              }}>
-                {renderMdast({
-                  ...commit.document.content,
-                  format: commit.document.meta.format
-                }, schema)}
-              </IFrame>
-            </div>
-          )
-        }} />
+                    this.setState({
+                      scheduled: value
+                    })
+                  }}
+                >
+                  {t('publish/label/scheduled')}
+                </Checkbox>
+
+                {scheduled && (
+                  <Field
+                    renderInput={inputProps => (
+                      <MaskedInput
+                        {...inputProps}
+                        {...styles.mask}
+                        placeholderChar={'_'}
+                        mask={'11.11.1111 11:11'}
+                      />
+                    )}
+                    label={t('publish/label/scheduledAt')}
+                    value={scheduledAt}
+                    error={scheduledAtError}
+                    onChange={(_, value) => {
+                      this.setState({
+                        scheduledAt: value
+                      })
+                    }}
+                  />
+                )}
+
+                <br />
+                <br />
+                <br />
+
+                {publishing ? (
+                  <div style={{ textAlign: 'center' }}>
+                    <InlineSpinner />
+                  </div>
+                ) : (
+                  <div>
+                    {!!this.state.error && (
+                      <ErrorMessage error={this.state.error} />
+                    )}
+                    {!!this.state.unresolvedRepoIds && (
+                      <Fragment>
+                        <ErrorMessage
+                          error={t('publish/error/unresolvedRepoIds')}
+                        />
+                        <ul>
+                          {this.state.unresolvedRepoIds.map(repoId => (
+                            <li key={repoId}>
+                              <Link
+                                route='repo/tree'
+                                params={{
+                                  repoId: repoId.split('/')
+                                }}
+                              >
+                                <a {...linkRule}>
+                                  {repoId.replace(`${GITHUB_ORG}/`, '')}
+                                </a>
+                              </Link>
+                            </li>
+                          ))}
+                        </ul>
+                        {updateMailchimp ||
+                        meta.template === 'editorialNewsletter' ? (
+                          <ErrorMessage
+                            error={t(
+                              'publish/error/unresolvedRepoIds/template'
+                            )}
+                          />
+                        ) : (
+                          <Checkbox
+                            checked={!!this.state.ignoreUnresolvedRepoIds}
+                            onChange={(_, value) => {
+                              this.setState({
+                                ignoreUnresolvedRepoIds: value
+                              })
+                            }}
+                          >
+                            {t('publish/error/unresolvedRepoIds/ignore')}
+                          </Checkbox>
+                        )}
+                        <br />
+                        <br />
+                      </Fragment>
+                    )}
+                    <Button
+                      block
+                      primary
+                      disabled={hasErrors}
+                      onClick={() => {
+                        if (scheduled && scheduledAtError) {
+                          return
+                        }
+                        this.setState(() => ({ publishing: true }))
+                        this.props
+                          .publish({
+                            repoId,
+                            commitId: commit.id,
+                            prepublication,
+                            updateMailchimp,
+                            scheduledAt: scheduled
+                              ? scheduledAtDate
+                              : undefined,
+                            ignoreUnresolvedRepoIds: this.state
+                              .ignoreUnresolvedRepoIds
+                          })
+                          .then(response => {
+                            const publish = response.data.publish
+                            if (publish.publication) {
+                              Router.pushRoute('repo/tree', {
+                                repoId: repoId.split('/')
+                              })
+                            } else {
+                              this.setState({
+                                publishing: false,
+                                ignoreUnresolvedRepoIds: undefined,
+                                unresolvedRepoIds: publish.unresolvedRepoIds
+                              })
+                            }
+                          })
+                          .catch(error => {
+                            this.setState(() => ({
+                              publishing: false,
+                              unresolvedRepoIds: undefined,
+                              ignoreUnresolvedRepoIds: undefined,
+                              error: error
+                            }))
+                          })
+                      }}
+                    >
+                      {t('publish/trigger')}
+                    </Button>
+                  </div>
+                )}
+                <br />
+                <br />
+                <Interaction.H2>{t('publish/preview/title')}</Interaction.H2>
+
+                <Interaction.P>
+                  {intersperse(
+                    PREVIEW_SIZES.map(previewSize => {
+                      const label = t(
+                        `publish/preview/${previewSize.label}`,
+                        undefined,
+                        previewSize.label
+                      )
+                      if (previewSize === size) {
+                        return label
+                      }
+                      return (
+                        <A
+                          key={label}
+                          href='#'
+                          onClick={e => {
+                            e.preventDefault()
+                            this.setState({ size: previewSize })
+                          }}
+                        >
+                          {label}
+                        </A>
+                      )
+                    }),
+                    () => ' '
+                  )}
+                </Interaction.P>
+
+                <IFrame
+                  size={size}
+                  style={{
+                    // transition: 'padding 400ms, border-radius 400ms, width 400ms',
+                    paddingLeft: PADDING_X,
+                    paddingRight: PADDING_X,
+                    paddingTop: size.paddingTop,
+                    paddingBottom: size.paddingBottom,
+                    borderRadius: size.borderRadius,
+                    backgroundColor: '#eee',
+                    width: size.width + PADDING_X * 2
+                  }}
+                >
+                  {renderMdast(
+                    {
+                      ...commit.document.content,
+                      format: commit.document.meta.format
+                    },
+                    schema
+                  )}
+                </IFrame>
+              </div>
+            )
+          }}
+        />
       </div>
     )
   }
@@ -492,24 +567,25 @@ export default compose(
   withT,
   graphql(publish, {
     props: ({ mutate, ownProps }) => ({
-      publish: variables => mutate({
-        variables,
-        refetchQueries: [
-          {
-            query: getRepoHistory,
-            variables: {
-              repoId: ownProps.repoId,
-              first: COMMIT_LIMIT
+      publish: variables =>
+        mutate({
+          variables,
+          refetchQueries: [
+            {
+              query: getRepoHistory,
+              variables: {
+                repoId: ownProps.repoId,
+                first: COMMIT_LIMIT
+              }
+            },
+            {
+              query: getRepoWithPublications,
+              variables: {
+                repoId: ownProps.repoId
+              }
             }
-          },
-          {
-            query: getRepoWithPublications,
-            variables: {
-              repoId: ownProps.repoId
-            }
-          }
-        ]
-      })
+          ]
+        })
     })
   }),
   graphql(getRepoWithCommit)

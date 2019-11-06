@@ -25,7 +25,7 @@ export const getData = data => ({
   showImage: true,
   onlyImage: false,
   id: (data && data.id) || shortId(),
-  ...data || {}
+  ...(data || {})
 })
 
 export const getNewBlock = options => () => {
@@ -79,20 +79,23 @@ const teaserPlugin = options => {
   const Teaser = rule.component
 
   return {
-    renderNode ({ editor, node, attributes, children }) {
+    renderNode({ editor, node, attributes, children }) {
       if (!matchBlock(TYPE)(node) && !matchBlock(`${TYPE}_VOID`)(node)) {
         return
       }
 
-      const image = node.data.get('showImage') === true
-        ? node.data.get('image') || '/static/placeholder.png'
-        : null
+      const image =
+        node.data.get('showImage') === true
+          ? node.data.get('image') || '/static/placeholder.png'
+          : null
 
       const data = node.data.toJS()
 
-      const compiledTeaser = <Teaser key='teaser' {...data} image={image} attributes={attributes}>
-        {children}
-      </Teaser>
+      const compiledTeaser = (
+        <Teaser key='teaser' {...data} image={image} attributes={attributes}>
+          {children}
+        </Teaser>
+      )
 
       if (options.rule.editorOptions.showUI === false) {
         return compiledTeaser
@@ -106,14 +109,10 @@ const teaserPlugin = options => {
 
       const isSelected = teaser === node && !editor.value.isBlurred
 
-      return ([
-        isSelected && <TeaserInlineUI
-          key='ui'
-          node={node}
-          editor={editor}
-        />,
+      return [
+        isSelected && <TeaserInlineUI key='ui' node={node} editor={editor} />,
         compiledTeaser
-      ])
+      ]
     },
     onKeyDown: createRemoveEmptyKeyHandler({
       TYPE,
@@ -123,21 +122,17 @@ const teaserPlugin = options => {
 }
 
 export default options => {
-  return ({
+  return {
     helpers: {
       serializer: getSerializer(options),
       newItem: getNewBlock(options)
     },
-    plugins: [
-      teaserPlugin(options)
-    ],
+    plugins: [teaserPlugin(options)],
     ui: {
-      insertButtons: options.rule.editorOptions.insertButtonText ? [
-        TeaserButton(options)
-      ] : [],
-      forms: [
-        TeaserForm(options)
-      ]
+      insertButtons: options.rule.editorOptions.insertButtonText
+        ? [TeaserButton(options)]
+        : [],
+      forms: [TeaserForm(options)]
     }
-  })
+  }
 }

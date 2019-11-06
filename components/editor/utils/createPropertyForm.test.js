@@ -6,19 +6,13 @@ import createPropertyForm from './createPropertyForm'
 test('utils.createPropertyForm', assert => {
   assert.plan(1)
 
-  const Form = () => (
-    <span />
-  )
+  const Form = () => <span />
 
   const PropertyForm = createPropertyForm({
     isDisabled: ({ value }) => value.disabled
   })(Form)
 
-  const wrapper = shallow(
-    <PropertyForm
-      value={{ disabled: true }}
-    />
-  )
+  const wrapper = shallow(<PropertyForm value={{ disabled: true }} />)
 
   assert.equal(
     wrapper.find('[disabled=true]').exists(),

@@ -8,9 +8,7 @@ export const Body = ({ raw, children }) => (
       children
     ) : (
       <NarrowContainer>
-        <div style={{ paddingTop: 40, paddingBottom: 20 }}>
-          {children}
-        </div>
+        <div style={{ paddingTop: 40, paddingBottom: 20 }}>{children}</div>
       </NarrowContainer>
     )}
   </div>

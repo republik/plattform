@@ -8,61 +8,45 @@ const Sidebar = ({
   blockFormatButtons,
   insertButtons,
   propertyForms,
-  value, onChange
+  value,
+  onChange
 }) => (
   <div>
     <Interaction.P>
       <Label>Text</Label>
       <br />
       {textFormatButtons.map((Button, i) => (
-        <Button
-          key={`text-fmt-${i}`}
-          value={value}
-          onChange={onChange}
-          />
-        ))
-      }
+        <Button key={`text-fmt-${i}`} value={value} onChange={onChange} />
+      ))}
     </Interaction.P>
     <Interaction.P>
       <Label>Block</Label>
-      {
-        blockFormatButtons.map((Button, i) => (
-          <Button
-            key={`block-fmt-${i}`}
-            value={value}
-            onChange={onChange}
-          />
-        ))
-      }
+      {blockFormatButtons.map((Button, i) => (
+        <Button key={`block-fmt-${i}`} value={value} onChange={onChange} />
+      ))}
     </Interaction.P>
     <Interaction.P>
       <Label>Einfügen</Label>
-      {
-        insertButtons.map((Button, i) => (
-          <Button
-            key={`insert-${i}`}
-            value={value}
-            onChange={onChange}
-          />
-        ))
-      }
+      {insertButtons.map((Button, i) => (
+        <Button key={`insert-${i}`} value={value} onChange={onChange} />
+      ))}
     </Interaction.P>
-    <div style={{marginTop: 10, paddingTop: 20, borderTop: `1px solid ${colors.divider}`}}>
-      {
-        propertyForms.map((Form, i) => (
-          <Form
-            key={`form-${i}`}
-            value={value}
-            onChange={onChange}
-            />
-        ))
-      }
+    <div
+      style={{
+        marginTop: 10,
+        paddingTop: 20,
+        borderTop: `1px solid ${colors.divider}`
+      }}
+    >
+      {propertyForms.map((Form, i) => (
+        <Form key={`form-${i}`} value={value} onChange={onChange} />
+      ))}
     </div>
   </div>
 )
 
 class UISidebar extends Component {
-  constructor (props, ...args) {
+  constructor(props, ...args) {
     super(props, ...args)
 
     const { uniqModules } = props.editorRef
@@ -82,13 +66,10 @@ class UISidebar extends Component {
       m => m.ui && m.ui.insertButtons
     )
 
-    this.propertyForms = getFromModules(
-      uniqModules,
-      m => m.ui && m.ui.forms
-    )
+    this.propertyForms = getFromModules(uniqModules, m => m.ui && m.ui.forms)
   }
 
-  render () {
+  render() {
     if (!this.props.value) {
       return null
     }
@@ -99,7 +80,8 @@ class UISidebar extends Component {
         insertButtons={this.insertButtons}
         propertyForms={this.propertyForms}
         value={this.props.value}
-        onChange={this.props.onChange} />
+        onChange={this.props.onChange}
+      />
     )
   }
 }

@@ -14,9 +14,12 @@ import { t } from '../../lib/withT'
 import dynamicComponentRequire from '../editor/modules/dynamiccomponent/require'
 import * as withFrontData from './withFrontData'
 
-const NoOpLink = ({ children }) => React.cloneElement(React.Children.only(children), {
-  onClick: e => { e.preventDefault() }
-})
+const NoOpLink = ({ children }) =>
+  React.cloneElement(React.Children.only(children), {
+    onClick: e => {
+      e.preventDefault()
+    }
+  })
 
 const schemas = {
   // first is default schema for the editor

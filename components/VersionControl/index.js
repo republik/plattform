@@ -55,15 +55,15 @@ const styles = {
 }
 
 class EditSidebar extends Component {
-  componentDidMount () {
+  componentDidMount() {
     this.subscribe()
   }
 
-  componentDidUpdate () {
+  componentDidUpdate() {
     this.subscribe()
   }
 
-  subscribe () {
+  subscribe() {
     if (!this.props.isNew && !this.unsubscribe && this.props.data.repo) {
       this.unsubscribe = this.props.data.subscribeToMore({
         document: repoSubscription,
@@ -82,12 +82,10 @@ class EditSidebar extends Component {
                 ...prev.repo,
                 commits: {
                   ...prev.repo.commits,
-                  nodes: [
-                    ...commits.nodes,
-                    ...prev.repo.commits.nodes
-                  ].filter(({ id }, i, all) =>
-                  // deduplicate by id
-                    i === all.findIndex(repo => repo.id === id)
+                  nodes: [...commits.nodes, ...prev.repo.commits.nodes].filter(
+                    ({ id }, i, all) =>
+                      // deduplicate by id
+                      i === all.findIndex(repo => repo.id === id)
                   )
                 }
               }
@@ -100,18 +98,12 @@ class EditSidebar extends Component {
     }
   }
 
-  componentWillUnmount () {
+  componentWillUnmount() {
     this.unsubscribe && this.unsubscribe()
   }
 
-  render () {
-    const {
-      t,
-      commit,
-      hasUncommittedChanges,
-      isNew,
-      data = {}
-    } = this.props
+  render() {
+    const { t, commit, hasUncommittedChanges, isNew, data = {} } = this.props
     const { loading, error, repo } = data
 
     if (isNew) {

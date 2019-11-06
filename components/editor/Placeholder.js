@@ -1,7 +1,7 @@
 import React from 'react'
 import { css } from 'glamor'
 
-export default ({children}) => {
+export default ({ children }) => {
   const style = {
     position: 'absolute',
     top: '0px',
@@ -24,12 +24,12 @@ const styles = {
     pointerEvents: 'none',
     opacity: 0.333,
     ':empty::before': {
-      'content': 'attr(data-text)'
+      content: 'attr(data-text)'
     }
   })
 }
 
-export const Inline = ({children}) => {
+export const Inline = ({ children }) => {
   return (
     <span {...styles.inline} data-text={children} contentEditable={false} />
   )

@@ -6,7 +6,7 @@ import createMarkButton from './createMarkButton'
 import { Value } from 'slate'
 
 const rawDoc = {
-  'nodes': [
+  nodes: [
     {
       kind: 'block',
       type: 'paragraph',
@@ -62,14 +62,11 @@ test('utils.createMarkButton: blurred', assert => {
   assert.plan(1)
   const value = initialState
 
-  const wrapper = shallow(
-    <MarkButton
-      value={value}
-    />
-  )
+  const wrapper = shallow(<MarkButton value={value} />)
 
   assert.equal(
-    !wrapper.find('Button').prop('active') && wrapper.find('Button').prop('disabled'),
+    !wrapper.find('Button').prop('active') &&
+      wrapper.find('Button').prop('disabled'),
     true,
     'renders as disabled and inactive'
   )
@@ -86,17 +83,13 @@ test('utils.createMarkButton: focused cursor on text without marks', assert => {
       focusKey: initialState.document.nodes.get(0).nodes.first().key,
       focusOffset: 2
     })
-    .focus()
-    .value
+    .focus().value
 
-  const wrapper = shallow(
-    <MarkButton
-      value={value}
-    />
-  )
+  const wrapper = shallow(<MarkButton value={value} />)
 
   assert.equal(
-    !wrapper.find('Button').prop('active') && wrapper.find('Button').prop('disabled'),
+    !wrapper.find('Button').prop('active') &&
+      wrapper.find('Button').prop('disabled'),
     true,
     'renders as disabled and inactive'
   )
@@ -120,17 +113,13 @@ test('utils.createMarkButton: focused cursor on text with the given mark', asser
       focusKey: initialState.document.nodes.get(1).nodes.first().key,
       focusOffset: 4
     })
-    .focus()
-    .value
+    .focus().value
 
-  const wrapper = shallow(
-    <MarkButton
-      value={value}
-    />
-  )
+  const wrapper = shallow(<MarkButton value={value} />)
 
   assert.equal(
-    wrapper.find('Button').prop('active') && !wrapper.find('Button').prop('disabled'),
+    wrapper.find('Button').prop('active') &&
+      !wrapper.find('Button').prop('disabled'),
     true,
     'renders as enabled and active'
   )
@@ -147,17 +136,13 @@ test('utils.createMarkButton: selection containing text without any marks', asse
       focusKey: initialState.document.nodes.get(1).nodes.first().key,
       focusOffset: 6
     })
-    .focus()
-    .value
+    .focus().value
 
-  const wrapper = shallow(
-    <MarkButton
-      value={value}
-    />
-  )
+  const wrapper = shallow(<MarkButton value={value} />)
 
   assert.equal(
-    !wrapper.find('Button').prop('active') && !wrapper.find('Button').prop('disabled'),
+    !wrapper.find('Button').prop('active') &&
+      !wrapper.find('Button').prop('disabled'),
     true,
     'renders as enabled and inactive'
   )
@@ -172,14 +157,9 @@ test('utils.createMarkButton: selection containing text with offset 0', assert =
       focusKey: initialState.document.nodes.get(1).nodes.first().key,
       focusOffset: 6
     })
-    .focus()
-    .value
+    .focus().value
 
-  const wrapper = shallow(
-    <MarkButton
-      value={value}
-    />
-  )
+  const wrapper = shallow(<MarkButton value={value} />)
 
   assert.equal(
     wrapper.find('Button').prop('disabled'),
@@ -208,17 +188,13 @@ test('utils.createMarkButton: selection containing text with the given mark', as
       focusKey: initialState.document.nodes.get(1).nodes.first().key,
       focusOffset: 8
     })
-    .focus()
-    .value
+    .focus().value
 
-  const wrapper = shallow(
-    <MarkButton
-      value={value}
-    />
-  )
+  const wrapper = shallow(<MarkButton value={value} />)
 
   assert.equal(
-    wrapper.find('Button').prop('active') && !wrapper.find('Button').prop('disabled'),
+    wrapper.find('Button').prop('active') &&
+      !wrapper.find('Button').prop('disabled'),
     true,
     'renders as enabled and active'
   )
@@ -235,8 +211,7 @@ test('utils.createMarkButton: action on selection containing text without any ma
       focusKey: initialState.document.nodes.get(1).nodes.first().key,
       focusOffset: 6
     })
-    .focus()
-    .value
+    .focus().value
 
   const onChange = change => {
     assert.equal(
@@ -250,12 +225,7 @@ test('utils.createMarkButton: action on selection containing text without any ma
     preventDefault: spy()
   }
 
-  const wrapper = shallow(
-    <MarkButton
-      value={value}
-      onChange={onChange}
-    />
-  )
+  const wrapper = shallow(<MarkButton value={value} onChange={onChange} />)
 
   wrapper.find('Button').simulate('mousedown', event)
 })
@@ -278,8 +248,7 @@ test('utils.createMarkButton: action on cursor over a text with marks', assert =
       focusKey: initialState.document.nodes.get(1).nodes.first().key,
       focusOffset: 4
     })
-    .focus()
-    .value
+    .focus().value
 
   const onChange = change => {
     assert.equal(
@@ -293,12 +262,7 @@ test('utils.createMarkButton: action on cursor over a text with marks', assert =
     preventDefault: spy()
   }
 
-  const wrapper = shallow(
-    <MarkButton
-      value={value}
-      onChange={onChange}
-    />
-  )
+  const wrapper = shallow(<MarkButton value={value} onChange={onChange} />)
 
   wrapper.find('Button').simulate('mousedown', event)
 })
@@ -316,8 +280,7 @@ test('utils.createMarkButton: action on selection containing mixed ranges with m
     })
     .toggleMark('bold')
     .moveOffsetsTo(4, 10)
-    .focus()
-    .value
+    .focus().value
 
   const onChange = change => {
     assert.equal(
@@ -331,15 +294,11 @@ test('utils.createMarkButton: action on selection containing mixed ranges with m
     preventDefault: spy()
   }
 
-  const wrapper = shallow(
-    <MarkButton
-      value={value}
-      onChange={onChange}
-    />
-  )
+  const wrapper = shallow(<MarkButton value={value} onChange={onChange} />)
 
   assert.equal(
-    wrapper.find('Button').prop('active') && !wrapper.find('Button').prop('disabled'),
+    wrapper.find('Button').prop('active') &&
+      !wrapper.find('Button').prop('disabled'),
     true,
     'renders as enabled and active'
   )
@@ -361,8 +320,7 @@ test('utils.createMarkButton: action on selection containing only ranges with th
     .toggleMark('bold')
     .moveStart(1)
     .moveEnd(-1)
-    .focus()
-    .value
+    .focus().value
 
   const onChange = change => {
     assert.equal(
@@ -376,15 +334,11 @@ test('utils.createMarkButton: action on selection containing only ranges with th
     preventDefault: spy()
   }
 
-  const wrapper = shallow(
-    <MarkButton
-      value={value}
-      onChange={onChange}
-    />
-  )
+  const wrapper = shallow(<MarkButton value={value} onChange={onChange} />)
 
   assert.equal(
-    wrapper.find('Button').prop('active') && !wrapper.find('Button').prop('disabled'),
+    wrapper.find('Button').prop('active') &&
+      !wrapper.find('Button').prop('disabled'),
     true,
     'renders as enabled and active'
   )

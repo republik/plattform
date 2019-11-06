@@ -3,7 +3,14 @@ import { css } from 'glamor'
 import { Map, Set } from 'immutable'
 import { nest } from 'd3-collection'
 
-import { Interaction, Dropdown, Field, Checkbox, Label, colors } from '@project-r/styleguide'
+import {
+  Interaction,
+  Dropdown,
+  Field,
+  Checkbox,
+  Label,
+  colors
+} from '@project-r/styleguide'
 
 import withT from '../../../../lib/withT'
 import slugify from '../../../../lib/utils/slug'
@@ -33,9 +40,19 @@ const styles = {
   })
 }
 
-const getWidth = key => key.match(/title|feed|emailSubject/i) ? '100%' : ''
+const getWidth = key => (key.match(/title|feed|emailSubject/i) ? '100%' : '')
 
-const MetaData = ({ value, editor, mdastSchema, contextMeta, series, additionalFields = [], customFields = [], teaser: Teaser, t }) => {
+const MetaData = ({
+  value,
+  editor,
+  mdastSchema,
+  contextMeta,
+  series,
+  additionalFields = [],
+  customFields = [],
+  teaser: Teaser,
+  t
+}) => {
   const node = value.document
 
   const genericKeys = Set([
@@ -46,19 +63,14 @@ const MetaData = ({ value, editor, mdastSchema, contextMeta, series, additionalF
     'image',
     'description'
   ])
-  const genericDefaultValues = Map(genericKeys.map(key => [
-    key,
-    key === 'feed' ? false : ''
-  ]))
+  const genericDefaultValues = Map(
+    genericKeys.map(key => [key, key === 'feed' ? false : ''])
+  )
   const genericData = genericDefaultValues.merge(
     node.data.filter((_, key) => genericKeys.has(key))
   )
 
-  const fbKeys = Set([
-    'facebookTitle',
-    'facebookImage',
-    'facebookDescription'
-  ])
+  const fbKeys = Set(['facebookTitle', 'facebookImage', 'facebookDescription'])
   const fbDefaultValues = Map(fbKeys.map(key => [key, '']))
   const fbData = fbDefaultValues.merge(
     node.data.filter((_, key) => fbKeys.has(key))
@@ -77,24 +89,24 @@ const MetaData = ({ value, editor, mdastSchema, contextMeta, series, additionalF
   const onInputChange = key => (_, inputValue) => {
     const newData = node.data.remove('auto')
     editor.change(change => {
-      change
-        .setNodeByKey(node.key, {
-          data: inputValue || inputValue === false
+      change.setNodeByKey(node.key, {
+        data:
+          inputValue || inputValue === false
             ? newData.set(key, inputValue)
             : newData.remove(key)
-        })
+      })
     })
   }
 
   const dataAsJs = node.data.toJS()
-  const customFieldsByRef = nest().key(d => d ? d.ref : 'field').object(customFields)
+  const customFieldsByRef = nest()
+    .key(d => (d ? d.ref : 'field'))
+    .object(customFields)
 
   return (
     <div {...styles.container}>
       <div {...styles.center}>
-        <Interaction.H2>
-          {t('metaData/title')}
-        </Interaction.H2>
+        <Interaction.H2>{t('metaData/title')}</Interaction.H2>
         <br />
         <SlugField
           black
@@ -102,109 +114,161 @@ const MetaData = ({ value, editor, mdastSchema, contextMeta, series, additionalF
           value={node.data.get('slug')}
           onChange={onInputChange('slug')}
         />
-        {mdastSchema && mdastSchema.getPath &&
-          <Label>{t('metaData/field/slug/note', {
-            path: mdastSchema.getPath({
-              ...dataAsJs,
-              publishDate: contextMeta.publishDate
-                ? new Date(contextMeta.publishDate)
-                : new Date(),
-              slug: slugify(dataAsJs.slug || '')
-            })
-          })}<br /><br /></Label>}
-        <MetaForm data={genericData} onInputChange={onInputChange} black getWidth={getWidth} />
-        {
-          (customFieldsByRef['bool'] || []).map(customField => {
-            return (
-              <div key={customField.key} {...styles.bool}>
-                <Checkbox checked={node.data.get(customField.key)} onChange={onInputChange(customField.key)}>
-                  {customField.label}
-                </Checkbox>
-              </div>
-            )
-          })
-        }
+        {mdastSchema && mdastSchema.getPath && (
+          <Label>
+            {t('metaData/field/slug/note', {
+              path: mdastSchema.getPath({
+                ...dataAsJs,
+                publishDate: contextMeta.publishDate
+                  ? new Date(contextMeta.publishDate)
+                  : new Date(),
+                slug: slugify(dataAsJs.slug || '')
+              })
+            })}
+            <br />
+            <br />
+          </Label>
+        )}
+        <MetaForm
+          data={genericData}
+          onInputChange={onInputChange}
+          black
+          getWidth={getWidth}
+        />
+        {(customFieldsByRef['bool'] || []).map(customField => {
+          return (
+            <div key={customField.key} {...styles.bool}>
+              <Checkbox
+                checked={node.data.get(customField.key)}
+                onChange={onInputChange(customField.key)}
+              >
+                {customField.label}
+              </Checkbox>
+            </div>
+          )
+        })}
         <UIForm getWidth={() => '50%'}>
-          {
-            (customFieldsByRef['repo'] || []).map(customField => {
-              const label = customField.label || t(`metaData/field/${customField.key}`, undefined, customField.key)
-              const value = node.data.get(customField.key)
-              const onChange = onInputChange(customField.key)
-              return (
-                <RepoSelect key={customField.key}
-                  label={label}
-                  value={value}
-                  template={customField.key}
-                  onChange={customField.key === 'format'
+          {(customFieldsByRef['repo'] || []).map(customField => {
+            const label =
+              customField.label ||
+              t(`metaData/field/${customField.key}`, undefined, customField.key)
+            const value = node.data.get(customField.key)
+            const onChange = onInputChange(customField.key)
+            return (
+              <RepoSelect
+                key={customField.key}
+                label={label}
+                value={value}
+                template={customField.key}
+                onChange={
+                  customField.key === 'format'
                     ? (_, __, item) => {
-                      editor.change(change => {
-                        change
-                          .setNodeByKey(node.key, {
+                        editor.change(change => {
+                          change.setNodeByKey(node.key, {
                             data: item
-                              ? node.data.set('format', `https://github.com/${item.value.id}`)
+                              ? node.data.set(
+                                  'format',
+                                  `https://github.com/${item.value.id}`
+                                )
                               : node.data.remove('format')
                           })
-                        let titleNode = change.value.document
-                          .findDescendant(node => node.type === 'TITLE')
-                        if (titleNode) {
-                          const format = item
-                            ? item.value.latestCommit.document
-                            : undefined
-                          change.setNodeByKey(titleNode.key, {
-                            data: { format }
-                          })
-                          titleNode.nodes.forEach(node => {
-                            change.setNodeByKey(node.key, {
+                          let titleNode = change.value.document.findDescendant(
+                            node => node.type === 'TITLE'
+                          )
+                          if (titleNode) {
+                            const format = item
+                              ? item.value.latestCommit.document
+                              : undefined
+                            change.setNodeByKey(titleNode.key, {
                               data: { format }
                             })
-                          })
-                        }
-                      })
-                    }
-                    : onChange}
-                />
-              )
-            })
-          }
+                            titleNode.nodes.forEach(node => {
+                              change.setNodeByKey(node.key, {
+                                data: { format }
+                              })
+                            })
+                          }
+                        })
+                      }
+                    : onChange
+                }
+              />
+            )
+          })}
           {customFields.map(customField => {
-            const label = customField.label || t(`metaData/field/${customField.key}`, undefined, customField.key)
+            const label =
+              customField.label ||
+              t(`metaData/field/${customField.key}`, undefined, customField.key)
             const value = node.data.get(customField.key)
             const onChange = onInputChange(customField.key)
             if (customField.items) {
-              return <Dropdown key={customField.key}
-                black
-                items={customField.items}
-                label={label}
-                value={value}
-                onChange={item => onChange(undefined, item.value)} />
+              return (
+                <Dropdown
+                  key={customField.key}
+                  black
+                  items={customField.items}
+                  label={label}
+                  value={value}
+                  onChange={item => onChange(undefined, item.value)}
+                />
+              )
             }
 
             if (!customField.ref) {
-              return <Field key={customField.key}
-                black
-                label={label}
-                value={value}
-                onChange={onChange} />
+              return (
+                <Field
+                  key={customField.key}
+                  black
+                  label={label}
+                  value={value}
+                  onChange={onChange}
+                />
+              )
             }
           })}
         </UIForm>
         {!!series && <SeriesForm editor={editor} node={node} />}
-        {!!Teaser && (<div>
-          <Label>{t('metaData/preview')}</Label><br />
-          <Teaser {...dataAsJs} credits={undefined} />
-        </div>)}
-        <br /><br /><br />
-        <MetaForm data={fbData} onInputChange={onInputChange} black getWidth={getWidth} />
-        <Label>{t('metaData/preview')}</Label><br />
+        {!!Teaser && (
+          <div>
+            <Label>{t('metaData/preview')}</Label>
+            <br />
+            <Teaser {...dataAsJs} credits={undefined} />
+          </div>
+        )}
+        <br />
+        <br />
+        <br />
+        <MetaForm
+          data={fbData}
+          onInputChange={onInputChange}
+          black
+          getWidth={getWidth}
+        />
+        <Label>{t('metaData/preview')}</Label>
+        <br />
         <FBPreview data={node.data} />
-        <br /><br /><br />
-        <MetaForm data={twitterData} onInputChange={onInputChange} black getWidth={getWidth} />
-        <Label>{t('metaData/preview')}</Label><br />
+        <br />
+        <br />
+        <br />
+        <MetaForm
+          data={twitterData}
+          onInputChange={onInputChange}
+          black
+          getWidth={getWidth}
+        />
+        <Label>{t('metaData/preview')}</Label>
+        <br />
         <TwitterPreview data={node.data} />
-        <br /><br /><br />
+        <br />
+        <br />
+        <br />
         <AudioForm editor={editor} node={node} onInputChange={onInputChange} />
-        <br /><br /><br />
-        <br /><br /><br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
       </div>
     </div>
   )

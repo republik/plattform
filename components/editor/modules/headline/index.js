@@ -2,11 +2,7 @@ import React from 'react'
 
 import MarkdownSerializer from 'slate-mdast-serializer'
 import Placeholder from '../../Placeholder'
-import {
-  matchBlock,
-  createBlockButton,
-  buttonStyles
-} from '../../utils'
+import { matchBlock, createBlockButton, buttonStyles } from '../../utils'
 import {
   createStaticKeyHandler,
   createInsertAfterKeyHandler
@@ -24,46 +20,31 @@ export default ({ rule, subModules, TYPE }) => {
   const inlineSerializer = new MarkdownSerializer({
     rules: subModules
       .reduce(
-        (a, m) => a.concat(
-          m.helpers && m.helpers.serializer &&
-          m.helpers.serializer.rules
-        ),
+        (a, m) =>
+          a.concat(
+            m.helpers && m.helpers.serializer && m.helpers.serializer.rules
+          ),
         []
-      ).filter(Boolean)
+      )
+      .filter(Boolean)
   })
 
   const title = {
     match: matchBlock(TYPE),
-    matchMdast: node =>
-      node.type === 'heading' && node.depth === depth,
-    fromMdast: (
-      node,
-      index,
-      parent,
-      rest
-    ) => {
-      return ({
+    matchMdast: node => node.type === 'heading' && node.depth === depth,
+    fromMdast: (node, index, parent, rest) => {
+      return {
         kind: 'block',
         type: TYPE,
         nodes: inlineSerializer.fromMdast(node.children, 0, node, rest)
-      })
+      }
     },
-    toMdast: (
-      object,
-      index,
-      parent,
-      rest
-    ) => {
-      return ({
+    toMdast: (object, index, parent, rest) => {
+      return {
         type: 'heading',
         depth,
-        children: inlineSerializer.toMdast(
-          object.nodes,
-          0,
-          object,
-          rest
-        )
-      })
+        children: inlineSerializer.toMdast(object.nodes, 0, object, rest)
+      }
     }
   }
 
@@ -110,7 +91,7 @@ export default ({ rule, subModules, TYPE }) => {
 
             return <Placeholder>{placeholder}</Placeholder>
           }),
-        renderNode ({ node, children, attributes }) {
+        renderNode({ node, children, attributes }) {
           if (!title.match(node)) return
 
           return (

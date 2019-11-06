@@ -58,15 +58,14 @@ const styles = {
 
 const checkEmail = ({ value, shouldValidate, t }) => ({
   email: value,
-  error: (
+  error:
     (value.trim().length <= 0 && t('signIn/email/error/empty')) ||
-    (!isEmail(value) && t('signIn/email/error/invalid'))
-  ),
+    (!isEmail(value) && t('signIn/email/error/invalid')),
   dirty: shouldValidate
 })
 
 class SignIn extends Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
 
     this.state = {
@@ -79,12 +78,12 @@ class SignIn extends Component {
       success: undefined
     }
 
-    this.onFormSubmit = (event) => {
+    this.onFormSubmit = event => {
       event.preventDefault()
       this.signIn()
     }
 
-    this.signIn = (tokenType) => {
+    this.signIn = tokenType => {
       const { loading, error, email } = this.state
       const { signIn, context, acceptedConsents } = this.props
 
@@ -99,12 +98,7 @@ class SignIn extends Component {
 
       this.setState(() => ({ loading: true }))
 
-      signIn(
-        email,
-        context,
-        acceptedConsents,
-        tokenType
-      )
+      signIn(email, context, acceptedConsents, tokenType)
         .then(({ data }) => {
           this.setState(() => ({
             polling: true,
@@ -123,11 +117,11 @@ class SignIn extends Component {
     }
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this.setState({ cookiesDisabled: !navigator.cookieEnabled })
   }
 
-  componentWillUnmount () {
+  componentWillUnmount() {
     if (this.state.polling) {
       const data = this.props.client.readQuery({ query: meQuery })
       if (data.me) {
@@ -136,7 +130,7 @@ class SignIn extends Component {
     }
   }
 
-  reloadOnSuccess () {
+  reloadOnSuccess() {
     const { context, noReload } = this.props
     // only immediately reload if not in a context like faq or purchase
     if (!context && !noReload) {
@@ -147,19 +141,26 @@ class SignIn extends Component {
     }
   }
 
-  render () {
+  render() {
     const { t, label, beforeForm } = this.props
     const {
-      phrase, tokenType, alternativeFirstFactors,
-      polling, loading, success,
-      error, dirty, email,
+      phrase,
+      tokenType,
+      alternativeFirstFactors,
+      polling,
+      loading,
+      success,
+      error,
+      dirty,
+      email,
       serverError
     } = this.state
 
     if (polling) {
-      return loading
-        ? <InlineSpinner size={26} />
-        : <Poller
+      return loading ? (
+        <InlineSpinner size={26} />
+      ) : (
+        <Poller
           tokenType={tokenType}
           phrase={phrase}
           email={email}
@@ -169,10 +170,10 @@ class SignIn extends Component {
               polling: false
             }))
           }}
-          onTokenTypeChange={(altTokenType) => {
+          onTokenTypeChange={altTokenType => {
             this.signIn(altTokenType)
           }}
-          onSuccess={(me) => {
+          onSuccess={me => {
             this.setState(() => ({
               polling: false,
               success: t('signIn/success', {
@@ -180,7 +181,9 @@ class SignIn extends Component {
               })
             }))
             this.reloadOnSuccess()
-          }} />
+          }}
+        />
+      )
     }
     if (success) {
       return <span>{success}</span>
@@ -190,9 +193,12 @@ class SignIn extends Component {
       return (
         <Fragment>
           <ErrorMessage error={t('cookies/disabled/error')} />
-          <RawHtml type={Interaction.P} dangerouslySetInnerHTML={{
-            __html: t('cookies/disabled/error/explanation')
-          }} />
+          <RawHtml
+            type={Interaction.P}
+            dangerouslySetInnerHTML={{
+              __html: t('cookies/disabled/error/explanation')
+            }}
+          />
         </Fragment>
       )
     }
@@ -209,19 +215,25 @@ class SignIn extends Component {
                 label={t('signIn/email/label')}
                 error={dirty && error}
                 onChange={(_, value, shouldValidate) => {
-                  this.setState(checkEmail({
-                    t,
-                    value,
-                    shouldValidate
-                  }))
+                  this.setState(
+                    checkEmail({
+                      t,
+                      value,
+                      shouldValidate
+                    })
+                  )
                 }}
-                value={email} />
+                value={email}
+              />
             </div>
             <div {...styles.button}>
-              {loading ? <InlineSpinner /> : <Button
-                block
-                type='submit'
-                disabled={loading}>{label || t('signIn/button')}</Button>}
+              {loading ? (
+                <InlineSpinner />
+              ) : (
+                <Button block type='submit' disabled={loading}>
+                  {label || t('signIn/button')}
+                </Button>
+              )}
             </div>
           </div>
         </form>
@@ -248,13 +260,23 @@ SignIn.propTypes = {
 }
 
 const signInMutation = gql`
-mutation signIn($email: String!, $context: String, $consents: [String!], $tokenType: SignInTokenType) {
-  signIn(email: $email, context: $context, consents: $consents, tokenType: $tokenType) {
-    phrase
-    tokenType
-    alternativeFirstFactors
+  mutation signIn(
+    $email: String!
+    $context: String
+    $consents: [String!]
+    $tokenType: SignInTokenType
+  ) {
+    signIn(
+      email: $email
+      context: $context
+      consents: $consents
+      tokenType: $tokenType
+    ) {
+      phrase
+      tokenType
+      alternativeFirstFactors
+    }
   }
-}
 `
 
 export const withSignIn = graphql(signInMutation, {

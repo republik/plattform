@@ -20,11 +20,11 @@ const styles = {
 }
 
 class BaseCommit extends Component {
-  render () {
+  render() {
     const { commit, commits, repoId, t } = this.props
 
     const commitsBehind = [...commits]
-      .sort(function (a, b) {
+      .sort(function(a, b) {
         return descending(new Date(a.date), new Date(b.date))
       })
       .map(c => c.id)

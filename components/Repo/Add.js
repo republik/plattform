@@ -7,7 +7,8 @@ import withT from '../../lib/withT'
 
 import {
   Interaction,
-  Field, Button,
+  Field,
+  Button,
   Dropdown,
   mediaQueries
 } from '@project-r/styleguide'
@@ -17,8 +18,9 @@ import { GITHUB_ORG, TEMPLATES, REPO_PREFIX } from '../../lib/settings'
 let templateKeys = Object.keys(schemas)
 if (TEMPLATES) {
   const allowedTemplates = TEMPLATES.split(',')
-  templateKeys = templateKeys
-    .filter(key => allowedTemplates.indexOf(key) !== -1)
+  templateKeys = templateKeys.filter(
+    key => allowedTemplates.indexOf(key) !== -1
+  )
 }
 
 const styles = {
@@ -54,28 +56,24 @@ const styles = {
 }
 
 class RepoAdd extends Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
     this.state = {
       title: '',
       template: ''
     }
   }
-  getSlug (title) {
+  getSlug(title) {
     const { template } = this.state
     const schema = schemas[template]
-    const prefix = [
-      REPO_PREFIX,
-      schema && schema.repoPrefix
-    ].filter(Boolean).join('')
-    const slug = [
-      prefix,
-      slugify(title)
-    ].join('')
+    const prefix = [REPO_PREFIX, schema && schema.repoPrefix]
+      .filter(Boolean)
+      .join('')
+    const slug = [prefix, slugify(title)].join('')
 
     return slug
   }
-  onSubmit (event) {
+  onSubmit(event) {
     event.preventDefault()
 
     const { title, template, error } = this.state
@@ -94,7 +92,7 @@ class RepoAdd extends Component {
       window.scrollTo(0, 0)
     })
   }
-  handleTitle (value, shouldValidate) {
+  handleTitle(value, shouldValidate) {
     const { t } = this.props
 
     const slug = this.getSlug(value)
@@ -102,13 +100,12 @@ class RepoAdd extends Component {
       slug,
       title: value,
       dirty: shouldValidate,
-      error: (
+      error:
         (value.trim().length <= 0 && t('repo/add/titleField/error')) ||
         (slug.length > 100 && t('repo/add/titleField/error/tooLong'))
-      )
     })
   }
-  render () {
+  render() {
     const { t } = this.props
     const { title, template, dirty, error } = this.state
 
@@ -120,19 +117,24 @@ class RepoAdd extends Component {
     return (
       <div {...styles.new}>
         <Interaction.H2>{t('repo/add/title')}</Interaction.H2>
-        <form {...styles.form} onSubmit={e => this.onSubmit(e)} onKeyPress={e => {
-          if (e.key === 'Enter') {
-            this.onSubmit(e)
-          }
-        }}>
+        <form
+          {...styles.form}
+          onSubmit={e => this.onSubmit(e)}
+          onKeyPress={e => {
+            if (e.key === 'Enter') {
+              this.onSubmit(e)
+            }
+          }}
+        >
           <div {...styles.select}>
             <Dropdown
               label='Vorlage'
               items={templateOptions}
               value={template}
               onChange={item => {
-                this.setState({template: item.value})
-              }} />
+                this.setState({ template: item.value })
+              }}
+            />
           </div>
           <div {...styles.input}>
             <Field

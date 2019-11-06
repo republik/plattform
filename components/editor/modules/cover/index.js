@@ -5,7 +5,7 @@ import { gray2x1 } from '../../utils/placeholder'
 import { createCoverForm } from './ui'
 import MarkdownSerializer from 'slate-mdast-serializer'
 
-export default ({rule, subModules, TYPE}) => {
+export default ({ rule, subModules, TYPE }) => {
   const titleModule = subModules.find(m => m.name === 'headline')
   if (!titleModule) {
     throw new Error('Missing headline submodule')
@@ -28,33 +28,27 @@ export default ({rule, subModules, TYPE}) => {
     fromMdast: (node, index, parent, rest) => {
       // fault tolerant because markdown could have been edited outside
       const deepNodes = node.children.reduce(
-        (children, child) => children
-          .concat(child)
-          .concat(child.children),
+        (children, child) => children.concat(child).concat(child.children),
         []
       )
-      const image = findOrCreate(deepNodes, {type: 'image'})
+      const image = findOrCreate(deepNodes, { type: 'image' })
       const imageParagraph = node.children.find(
         child => child.children && child.children.indexOf(image) !== -1
       )
       const title = findOrCreate(
         node.children,
-        {type: 'heading', depth: 1},
-        {children: []}
+        { type: 'heading', depth: 1 },
+        { children: [] }
       )
 
-      const lead = (
-        node.children.find(child => child.type === 'paragraph' && child !== imageParagraph) ||
-        findOrCreate(
-          node.children,
-          {type: 'blockquote'},
-          {children: []}
-        ).children[0] ||
-        ({
+      const lead = node.children.find(
+        child => child.type === 'paragraph' && child !== imageParagraph
+      ) ||
+        findOrCreate(node.children, { type: 'blockquote' }, { children: [] })
+          .children[0] || {
           type: 'paragraph',
           children: []
-        })
-      )
+        }
 
       return {
         kind: 'block',
@@ -80,18 +74,26 @@ export default ({rule, subModules, TYPE}) => {
             url: object.data.src
           },
           titleSerializer.toMdast(
-            findOrCreate(object.nodes, {
-              kind: 'block',
-              type: titleModule.TYPE
-            }, {nodes: []}),
+            findOrCreate(
+              object.nodes,
+              {
+                kind: 'block',
+                type: titleModule.TYPE
+              },
+              { nodes: [] }
+            ),
             1,
             ...args
           ),
           leadSerializer.toMdast(
-            findOrCreate(object.nodes, {
-              kind: 'block',
-              type: leadModule.TYPE
-            }, {nodes: []}),
+            findOrCreate(
+              object.nodes,
+              {
+                kind: 'block',
+                type: leadModule.TYPE
+              },
+              { nodes: [] }
+            ),
             2,
             ...args
           )
@@ -101,9 +103,7 @@ export default ({rule, subModules, TYPE}) => {
   }
 
   const serializer = new MarkdownSerializer({
-    rules: [
-      cover
-    ]
+    rules: [cover]
   })
 
   return {
@@ -113,19 +113,20 @@ export default ({rule, subModules, TYPE}) => {
     },
     changes: {},
     ui: {
-      forms: [
-        createCoverForm(TYPE)
-      ]
+      forms: [createCoverForm(TYPE)]
     },
     plugins: [
       {
-        renderNode ({node, children, attributes}) {
+        renderNode({ node, children, attributes }) {
           if (!cover.match(node)) return
           return (
-            <Cover data={{
-              src: node.data.get('src') || gray2x1,
-              alt: node.data.get('alt')
-            }} attributes={attributes}>
+            <Cover
+              data={{
+                src: node.data.get('src') || gray2x1,
+                alt: node.data.get('alt')
+              }}
+              attributes={attributes}
+            >
               {children}
             </Cover>
           )
@@ -145,28 +146,17 @@ export default ({rule, subModules, TYPE}) => {
                   max: 1
                 }
               ],
-              normalize: (change, reason, {node, index, child}) => {
+              normalize: (change, reason, { node, index, child }) => {
                 if (reason === 'child_required') {
-                  change.insertNodeByKey(
-                    node.key,
-                    index,
-                    {
-                      kind: 'block',
-                      type: index === 0
-                        ? titleModule.TYPE
-                        : leadModule.TYPE
-                    }
-                  )
+                  change.insertNodeByKey(node.key, index, {
+                    kind: 'block',
+                    type: index === 0 ? titleModule.TYPE : leadModule.TYPE
+                  })
                 }
                 if (reason === 'child_type_invalid') {
-                  change.setNodeByKey(
-                    child.key,
-                    {
-                      type: index === 0
-                        ? titleModule.TYPE
-                        : leadModule.TYPE
-                    }
-                  )
+                  change.setNodeByKey(child.key, {
+                    type: index === 0 ? titleModule.TYPE : leadModule.TYPE
+                  })
                 }
                 if (reason === 'child_unknown') {
                   if (index > 1) {

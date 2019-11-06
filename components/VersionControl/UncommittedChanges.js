@@ -36,12 +36,8 @@ export const getUncommittedChanges = gql`
 `
 
 export const uncommittedChangesSubscription = gql`
-  subscription onUncommitedChange(
-    $repoId: ID!
-  ) {
-    uncommittedChanges(
-      repoId: $repoId
-    ) {
+  subscription onUncommitedChange($repoId: ID!) {
+    uncommittedChanges(repoId: $repoId) {
       repoId
       action
       user {
@@ -86,19 +82,19 @@ styles.emptyBox = merge(styles.box, {
   border: `1px solid ${colors.divider}`
 })
 
-export const withUncommitedChanges = ({ options } = {}) => (WrappedComponent) => {
+export const withUncommitedChanges = ({ options } = {}) => WrappedComponent => {
   class UncommittedChanges extends Component {
-    constructor (...args) {
+    constructor(...args) {
       super(...args)
       this.state = {}
     }
-    componentDidMount () {
+    componentDidMount() {
       this.subscribe()
     }
-    componentDidUpdate () {
+    componentDidUpdate() {
       this.subscribe()
     }
-    subscribe () {
+    subscribe() {
       if (!this.unsubscribe && this.props.data.repo) {
         this.unsubscribe = this.props.subscribe({
           onError: error => {
@@ -115,10 +111,10 @@ export const withUncommitedChanges = ({ options } = {}) => (WrappedComponent) =>
         })
       }
     }
-    componentWillUnmount () {
+    componentWillUnmount() {
       this.unsubscribe && this.unsubscribe()
     }
-    render () {
+    render() {
       const {
         data: { loading, error, repo },
         ownProps
@@ -131,21 +127,19 @@ export const withUncommitedChanges = ({ options } = {}) => (WrappedComponent) =>
             error: this.state.subscriptionError || error,
             users: (repo && repo.uncommittedChanges) || []
           }}
-          {...ownProps} />
+          {...ownProps}
+        />
       )
     }
   }
 
   return compose(
     graphql(getUncommittedChanges, {
-      options: (props) => ({
+      options: props => ({
         fetchPolicy: 'network-only',
         pollInterval: process.browser && UNCOMMITTED_CHANGES_POLL_INTERVAL_MS,
         variables: props,
-        ...(typeof options === 'function'
-          ? options(props)
-          : options
-        )
+        ...(typeof options === 'function' ? options(props) : options)
       }),
       props: ({ data, ownProps }) => {
         return {
@@ -168,10 +162,10 @@ export const withUncommitedChanges = ({ options } = {}) => (WrappedComponent) =>
                 const action = subscriptionData.data.uncommittedChanges.action
                 if (action === 'create') {
                   const newUser = subscriptionData.data.uncommittedChanges.user
-                  if (!uncommittedChanges.find(user => user.id === newUser.id)) {
-                    uncommittedChanges = uncommittedChanges.concat(
-                      newUser
-                    )
+                  if (
+                    !uncommittedChanges.find(user => user.id === newUser.id)
+                  ) {
+                    uncommittedChanges = uncommittedChanges.concat(newUser)
                   }
                 } else if (action === 'delete') {
                   uncommittedChanges = uncommittedChanges.filter(
@@ -199,95 +193,116 @@ export const withUncommitedChanges = ({ options } = {}) => (WrappedComponent) =>
 
 const Initials = ({ uncommittedChanges, t }) => (
   <div {...styles.container}>
-    {!!uncommittedChanges.loading && <span {...styles.emptyBox}>
-      <Spinner size={20} />
-    </span>}
-    {!!uncommittedChanges.error && <span {...styles.emptyBox} title={errorToString(uncommittedChanges.error)}>
-      <OfflineIcon size={20} color={colors.error} style={{ marginBottom: 6 }} />
-    </span>}
-    {uncommittedChanges.users.length
-      ? uncommittedChanges.users.map(user =>
+    {!!uncommittedChanges.loading && (
+      <span {...styles.emptyBox}>
+        <Spinner size={20} />
+      </span>
+    )}
+    {!!uncommittedChanges.error && (
+      <span
+        {...styles.emptyBox}
+        title={errorToString(uncommittedChanges.error)}
+      >
+        <OfflineIcon
+          size={20}
+          color={colors.error}
+          style={{ marginBottom: 6 }}
+        />
+      </span>
+    )}
+    {uncommittedChanges.users.length ? (
+      uncommittedChanges.users.map(user => (
         <span key={user.id} {...css(styles.initials)} title={user.email}>
           {getInitials(user)}
         </span>
-      )
-      : (
-        <span {...styles.emptyBox}
-          title={t('uncommittedChanges/empty')} />
-      )
-    }
+      ))
+    ) : (
+      <span {...styles.emptyBox} title={t('uncommittedChanges/empty')} />
+    )}
   </div>
 )
 
 const Tags = ({ uncommittedChanges }) => (
   <div {...styles.container} style={{ margin: '40px 0' }}>
-    {uncommittedChanges.users.map(user =>
+    {uncommittedChanges.users.map(user => (
       <div key={user.id} style={{ marginRight: 4, textAlign: 'center' }}>
-        <div {...css(styles.initials)} style={{ display: 'inline-block' }} title={user.email}>
+        <div
+          {...css(styles.initials)}
+          style={{ display: 'inline-block' }}
+          title={user.email}
+        >
           {getInitials(user)}
-        </div><br />
-        <Label>
-          {user.name}
-        </Label>
+        </div>
+        <br />
+        <Label>{user.name}</Label>
       </div>
-    )
-    }
+    ))}
   </div>
 )
 
-export const joinUsers = (users, t) => users.map(user => user.name)
-  .reduce((string, name, index, array) => [string, name].join(
-    t(
-      `uncommittedChanges/users/separator/${
-        index === array.length - 1 ? 'last' : 'other'
-      }`
+export const joinUsers = (users, t) =>
+  users
+    .map(user => user.name)
+    .reduce((string, name, index, array) =>
+      [string, name].join(
+        t(
+          `uncommittedChanges/users/separator/${
+            index === array.length - 1 ? 'last' : 'other'
+          }`
+        )
+      )
     )
-  ))
 
-export const ActiveInterruptionOverlay = withT(({
-  uncommittedChanges,
-  interruptingUsers,
-  onRevert,
-  onAcknowledged,
-  t
-}) =>
-  <Overlay onClose={() => {}} mUpStyle={{ minHeight: 0 }}>
-    <OverlayBody style={{ padding: 20 }}>
-      <Interaction.P>
-        {t.pluralize('uncommittedChanges/interruption/text', {
-          count: interruptingUsers.length,
-          interruptingUsers: joinUsers(interruptingUsers, t)
-        })}
-      </Interaction.P>
-      <Tags uncommittedChanges={uncommittedChanges} />
-      <Interaction.P>
-        {t('uncommittedChanges/interruption/note')}
-      </Interaction.P>
-      <p>
-        <Button primary block onClick={onAcknowledged} style={{
-          backgroundColor: warningColor,
-          borderColor: warningColor
-        }}>
-          {t('uncommittedChanges/acknowledged')}
-        </Button>
-      </p>
-      <p>
-        <A href='#' style={{ display: 'block', textAlign: 'center' }} onClick={onRevert}>
-          {t('uncommittedChanges/revert')}
-        </A>
-      </p>
-    </OverlayBody>
-  </Overlay>
+export const ActiveInterruptionOverlay = withT(
+  ({ uncommittedChanges, interruptingUsers, onRevert, onAcknowledged, t }) => (
+    <Overlay onClose={() => {}} mUpStyle={{ minHeight: 0 }}>
+      <OverlayBody style={{ padding: 20 }}>
+        <Interaction.P>
+          {t.pluralize('uncommittedChanges/interruption/text', {
+            count: interruptingUsers.length,
+            interruptingUsers: joinUsers(interruptingUsers, t)
+          })}
+        </Interaction.P>
+        <Tags uncommittedChanges={uncommittedChanges} />
+        <Interaction.P>
+          {t('uncommittedChanges/interruption/note')}
+        </Interaction.P>
+        <p>
+          <Button
+            primary
+            block
+            onClick={onAcknowledged}
+            style={{
+              backgroundColor: warningColor,
+              borderColor: warningColor
+            }}
+          >
+            {t('uncommittedChanges/acknowledged')}
+          </Button>
+        </p>
+        <p>
+          <A
+            href='#'
+            style={{ display: 'block', textAlign: 'center' }}
+            onClick={onRevert}
+          >
+            {t('uncommittedChanges/revert')}
+          </A>
+        </p>
+      </OverlayBody>
+    </Overlay>
+  )
 )
 
-export const UncommittedChanges = ({ uncommittedChanges, t }) => (
-  !!uncommittedChanges.users.length && <Fragment>
-    <div style={{ textAlign: 'center', fontSize: '14px', marginTop: 7 }}>
-      <Label key='label'>{t('uncommittedChanges/title')}</Label>
-    </div>
-    <Initials uncommittedChanges={uncommittedChanges} t={t} />
-  </Fragment>
-)
+export const UncommittedChanges = ({ uncommittedChanges, t }) =>
+  !!uncommittedChanges.users.length && (
+    <Fragment>
+      <div style={{ textAlign: 'center', fontSize: '14px', marginTop: 7 }}>
+        <Label key='label'>{t('uncommittedChanges/title')}</Label>
+      </div>
+      <Initials uncommittedChanges={uncommittedChanges} t={t} />
+    </Fragment>
+  )
 
 export default compose(
   withT,
