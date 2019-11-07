@@ -1,4 +1,5 @@
 import React, { PureComponent } from 'react'
+import ReactDOM from 'react-dom'
 import PropTypes from 'prop-types'
 import { css, merge } from 'glamor'
 import zIndex from '../../theme/zIndex'
@@ -42,6 +43,7 @@ class Overlay extends PureComponent {
   constructor(props) {
     super(props)
     this.state = { isVisible: false }
+    this.el = document.createElement('div')
   }
 
   componentDidMount() {
@@ -55,6 +57,7 @@ class Overlay extends PureComponent {
     // Does not work on iOS, additionally blocking touchmove events would work
     // but also prevent overflowing overlays from scrolling
     document.body.style.overflow = 'hidden'
+    document.body.appendChild(this.el)
   }
 
   componentWillUnmount() {
@@ -62,10 +65,14 @@ class Overlay extends PureComponent {
 
     // Remove scroll block
     document.body.style.overflow = ''
+    document.body.removeChild(this.el)
   }
 
   render() {
-    return <OverlayRenderer {...this.props} isVisible={this.state.isVisible} />
+    return ReactDOM.createPortal(
+      <OverlayRenderer {...this.props} isVisible={this.state.isVisible} />,
+      this.el
+    )
   }
 }
 
