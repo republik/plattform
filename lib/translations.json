@@ -1,5 +1,5 @@
 {
-  "updated": "2019-09-15T22:03:14.378Z",
+  "updated": "2019-11-07T12:48:00.299Z",
   "title": "live",
   "data": [
     {
@@ -199,6 +199,10 @@
       "value": "Korrektorat"
     },
     {
+      "key": "repo/phase/cr",
+      "value": "CR"
+    },
+    {
       "key": "repo/phase/finalControl",
       "value": "Endkontrolle"
     },
@@ -309,6 +313,10 @@
     {
       "key": "checklist/labels/finalEditing",
       "value": "Go Abschlussredaktion"
+    },
+    {
+      "key": "checklist/labels/startCR",
+      "value": "Go CR"
     },
     {
       "key": "checklist/labels/startConception",

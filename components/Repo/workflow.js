@@ -15,6 +15,11 @@ export const phases = [
     milestones: ['finalEditing']
   },
   {
+    key: 'cr',
+    color: 'Chocolate',
+    milestones: ['startCR']
+  },
+  {
     key: 'production',
     color: 'Tomato',
     milestones: ['startProduction']
