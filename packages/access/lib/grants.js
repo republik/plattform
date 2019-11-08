@@ -128,7 +128,7 @@ const grant = async (granter, campaignId, email, message, t, pgdb, mail) => {
   return grant
 }
 
-const claim = async (voucherCode, user, t, pgdb, mail) => {
+const claim = async (voucherCode, payload, user, t, pgdb, mail) => {
   const sanatizedVoucherCode = voucherCode.trim().toUpperCase()
 
   const grantByVoucherCode = await findByVoucherCode(
@@ -140,7 +140,7 @@ const claim = async (voucherCode, user, t, pgdb, mail) => {
     throw new Error(t('api/access/claim/404'))
   }
 
-  const grant = await beginGrant(grantByVoucherCode, user, pgdb)
+  const grant = await beginGrant(grantByVoucherCode, payload, user, pgdb)
   await eventsLib.log(grant, 'grant', pgdb)
 
   const campaign = await pgdb.public.accessCampaigns
@@ -199,7 +199,7 @@ const revoke = async (id, user, t, pgdb) => {
   return result
 }
 
-const request = async (granter, campaignId, t, pgdb, mail) => {
+const request = async (granter, campaignId, payload, t, pgdb, mail) => {
   const campaign = await campaignsLib.findOne(campaignId, pgdb)
 
   if (!campaign) {
@@ -227,6 +227,7 @@ const request = async (granter, campaignId, t, pgdb, mail) => {
       voucherCode: null,
       beginBefore: addInterval(moment(), campaign.grantClaimableInterval)
     }),
+    payload,
     granter,
     pgdb
   )
@@ -437,14 +438,14 @@ const findInvalid = async (pgdb) => {
   const now = moment()
   return pgdb.public.accessGrants.find({
     or: [
-      { and: [{ 'endAt': null }, { 'beginBefore <': now }] },
+      { and: [{ endAt: null }, { 'beginBefore <': now }] },
       { 'endAt <': now }
     ],
     invalidatedAt: null
   })
 }
 
-const beginGrant = async (grant, recipient, pgdb) => {
+const beginGrant = async (grant, payload, recipient, pgdb) => {
   const campaign = await campaignsLib.findOne(grant.accessCampaignId, pgdb)
   const now = moment()
   const beginAt = now.clone()
@@ -454,6 +455,7 @@ const beginGrant = async (grant, recipient, pgdb) => {
     recipientUserId: recipient.id,
     beginAt,
     endAt,
+    payload: { ...grant.payload, ...payload },
     updatedAt: now
   }
   const result = await pgdb.public.accessGrants.updateAndGetOne(
