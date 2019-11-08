@@ -20,7 +20,7 @@ const init = async ({
     throw new Error(`missing input, scheduler ${name}`)
   }
   if (runIntervalSecs < lockTtlSecs) {
-    console.error(`lockTtlSecs bigger than runIntervalSecs`, { runIntervalSecs, lockTtlSecs })
+    console.error('lockTtlSecs bigger than runIntervalSecs', { runIntervalSecs, lockTtlSecs })
     throw new Error(`lockTtlSecs bigger than runIntervalSecs, scheduler ${name}`)
   }
   if (dryRun) {
@@ -124,6 +124,7 @@ const init = async ({
   }
 
   return {
+    run,
     close
   }
 }
