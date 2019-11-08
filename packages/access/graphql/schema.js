@@ -25,7 +25,10 @@ type mutations {
   """
   Claim a granted membership with a voucher code
   """
-  claimAccess(voucherCode: String!): AccessGrant!
+  claimAccess(
+    voucherCode: String!
+    payload: AccessGrantPayloadInput
+  ): AccessGrant!
 
   """
   Request access for one-self
@@ -33,6 +36,7 @@ type mutations {
   requestAccess(
     "An ID of an existing AccessCampaign"
     campaignId: ID!
+    payload: AccessGrantPayloadInput
   ): AccessGrant!
 }
 

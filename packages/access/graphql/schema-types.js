@@ -72,6 +72,16 @@ type AccessGrant {
 }
 
 """
+Payload on a grant
+"""
+input AccessGrantPayloadInput {
+  documentId: ID
+  repoId: ID
+  variation: String
+  position: String
+}
+
+"""
 Entity describing an event that occured, linked to an AccessGrant
 """
 type AccessEvent {
