@@ -27,7 +27,7 @@ type mutations {
   """
   claimAccess(
     voucherCode: String!
-    payload: AccessGrantPayloadInput
+    payload: JSON
   ): AccessGrant!
 
   """
@@ -36,7 +36,7 @@ type mutations {
   requestAccess(
     "An ID of an existing AccessCampaign"
     campaignId: ID!
-    payload: AccessGrantPayloadInput
+    payload: JSON
   ): AccessGrant!
 }
 
