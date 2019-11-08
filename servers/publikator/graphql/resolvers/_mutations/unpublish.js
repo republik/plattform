@@ -1,6 +1,5 @@
 const { Roles: { ensureUserHasRole } } = require('@orbiting/backend-modules-auth')
 
-const { channelKey } = require('../../../lib/PublicationScheduler')
 const { deleteRef } = require('../../../lib/github')
 const {
   latestPublications: getLatestPublications,
@@ -50,8 +49,6 @@ module.exports = async (
     meta: await getRepoMeta({ id: repoId }),
     publications: await getLatestPublications({ id: repoId })
   }, context)
-
-  await redis.publishAsync(channelKey, 'refresh')
 
   await pubsub.publish('repoUpdate', {
     repoUpdate: {
