@@ -244,7 +244,7 @@ const denySession = async ({ pgdb, token, email: emailFromQuery, me }) => {
 
   const transaction = await pgdb.transactionBegin()
   try {
-    // log in the session and delete token
+    // expire session and tokens
     await transaction.public.sessions.updateOne({
       id: session.id
     }, {
@@ -267,7 +267,9 @@ const denySession = async ({ pgdb, token, email: emailFromQuery, me }) => {
       }),
       // mark this token as denied
       transaction.public.tokens.updateOne({
-        ...token
+        sessionId: session.id,
+        type: token.type,
+        payload: token.payload
       }, {
         expireAction: 'deny'
       })
@@ -420,7 +422,7 @@ const authorizeSession = async ({ pgdb, tokens, email: emailFromQuery, signInHoo
   }
 
   try {
-    // log in the session and delete token
+    // log in the session and expire tokens
     await transaction.public.sessions.updateOne({
       id: session.id
     }, {
@@ -440,10 +442,12 @@ const authorizeSession = async ({ pgdb, tokens, email: emailFromQuery, signInHoo
         updatedAt: new Date(),
         expiresAt: new Date()
       }),
-      // mark this tokens as authorized
+      // mark used tokens as authorized
       ...tokens.map(token =>
         transaction.public.tokens.updateOne({
-          ...token
+          sessionId: session.id,
+          type: token.type,
+          payload: token.payload
         }, {
           expireAction: 'authorize'
         })
