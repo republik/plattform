@@ -71,7 +71,7 @@ input SearchGenericFilterInput {
 
 type SearchConnection {
   nodes: [SearchNode!]!
-  aggregations: [SearchAggregation!]!
+  aggregations(keys: [String!]): [SearchAggregation!]!
   pageInfo: SearchPageInfo!
   totalCount: Int!
   # used to (anonymously) track subsequent searches
