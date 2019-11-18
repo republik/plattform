@@ -4,6 +4,7 @@ import { Map, Set } from 'immutable'
 import { nest } from 'd3-collection'
 
 import {
+  A,
   Interaction,
   Dropdown,
   Field,
@@ -145,6 +146,62 @@ const MetaData = ({
                 {customField.label}
               </Checkbox>
             </div>
+          )
+        })}
+        <br />
+        {(customFieldsByRef['repos'] || []).map(customField => {
+          const label =
+            customField.label ||
+            t(`metaData/field/${customField.key}`, undefined, customField.key)
+          const values = node.data.get(customField.key) || ['']
+          const onChange = onInputChange(customField.key)
+          return (
+            <>
+              <br />
+              <UIForm getWidth={() => '100%'}>
+                <Label>
+                  {label}
+                  <br />
+                </Label>{' '}
+                {values.map((v, i) => {
+                  return (
+                    <div>
+                      <Field
+                        key={i}
+                        value={v}
+                        onChange={e => {
+                          const nextValue = e.target.value
+                          const nextValues = [...values]
+                          nextValues[i] = nextValue
+                          onChange(undefined, nextValues)
+                        }}
+                      />
+                      <A
+                        href='#remove'
+                        onClick={e => {
+                          e.preventDefault()
+                          const nextValues = [...values]
+                          nextValues.splice(i, 1)
+                          onChange(undefined, nextValues)
+                        }}
+                      >
+                        Format entfernen
+                      </A>
+                    </div>
+                  )
+                })}
+                <A
+                  href='#add'
+                  onClick={e => {
+                    e.preventDefault()
+                    onChange(undefined, [...values, ''])
+                  }}
+                >
+                  Format hinzufügen
+                </A>
+              </UIForm>
+              <br />
+            </>
           )
         })}
         <UIForm getWidth={() => '50%'}>

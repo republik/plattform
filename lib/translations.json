@@ -1,5 +1,5 @@
 {
-  "updated": "2019-11-07T12:48:00.299Z",
+  "updated": "2019-11-13T13:46:44.798Z",
   "title": "live",
   "data": [
     {
@@ -165,6 +165,10 @@
     {
       "key": "repo/add/template/format",
       "value": "Format"
+    },
+    {
+      "key": "repo/add/template/section",
+      "value": "Rubrik"
     },
     {
       "key": "repo/add/template/discussion",
