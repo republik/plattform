@@ -384,9 +384,64 @@ RS,Serbien,
 </div>
 ```
 
+### GeoTIFF
+
+```react
+<div>
+  <ChartTitle></ChartTitle>
+  <CsvChart
+    config={{
+      "type": "ProjectedMap",
+      "heightRatio": 0.63,
+      "features": {
+        "url": "/static/geo/epsg2056-projected-ch-cantons-wo-lakes.json",
+        "object": "cantons"
+      },
+      "geotiffLegendTitle": "Solar-Potential",
+      "geotiffLegend": [
+        {"color": "rgb(255,190,0)", "label": "Urban"},
+        {"color": "rgb(255,120,0)", "label": "Berg"}
+      ],
+      "colorLegend": false,
+      "geotiff": {
+        "url": "/static/geo/solar.png",
+        "bbox": [[
+          131,23
+        ], [
+          842,465
+        ]]
+      }
+    }}
+    values={``}
+  />
+</div>
+```
+
+#### Generate PNG
+
+```
+# project to swiss grid
+gdalwarp -t_srs EPSG:2056 pixels_only.tif projected.tif -overwrite -ts 1260 0
+# color pixels
+printf "0 0 0 0 0\n1 255 190 0 255\n2 255 120 0 255" > colors.txt
+gdaldem color-relief -alpha -nearest_color_entry projected.tif colors.txt colored.png
+# scale and trim & repage (optional, skip if its aligns untrimmt)
+convert -trim +repage colored.png solar.png
+```
+
+#### Get BBOX
+
+Get bounds of a GeoTIFF:
+
+```
+gdalinfo pixels_only.tif -json
+```
+
+However for a `ProjectedMap` it's probably easiest to get the topojson bounds with [the info command on mapshaper.org](https://mapshaper.org/) and then tweak it to perfectally align, only necessary if the pixel do not cover the full extent. For other map types you can use wgs84 bounds. Note currently rotated projections are not supported for geotiff alignment – you can't use `SwissMap` with it's rotated mercator.
+
 ## SwissMap
 
-`features.url` is expected to point to an topojson file with WGS84 coordinates (EPSG:4326). A rotated mercator projection is used to look like CH1903 while also allowing to plot regular coordinates and use `projection.fitSize` for responsive design.
+A rotated mercator projection is used to look like CH1903 while also allowing to plot regular coordinates. `features.url` is expected to point to an topojson file with WGS84 coordinates (EPSG:4326). If no WGS84 coordinates are needed it's better to use an `ProjectedMap` with a preprojected swiss grid. 
 
 Convert a CH1903 shape file:
 
@@ -470,6 +525,57 @@ JU,0.257
 </div>
 ```
 
+#### Without Lakes
+
+```react
+<div>
+  <ChartTitle>Fonds zur Beschaffung des Kampfflugzeugs Gripen</ChartTitle>
+  <CsvChart
+    config={{
+      "type": "SwissMap",
+      "legendTitle": "Jastimmen",
+      "unit": "Jastimmen",
+      "choropleth": true,
+      "numberFormat": ".0%",
+      "thresholds": [0.3,0.4,0.5,0.6,0.7],
+      "colorRange": ["rgb(103,0,13)", "rgb(187,21,26)", "rgb(239,69,51)", "rgb(75,151,201)", "rgb(24,100,170)", "rgb(8,48,107)"],
+      "features": {
+        "url": "/static/geo/ch-cantons-wo-lakes.json",
+        "object": "cantons"
+      }
+    }}
+    values={`
+feature,value
+ZH,0.487
+BE,0.491
+LU,0.543
+UR,0.624
+SZ,0.615
+OW,0.638
+NW,0.682
+GL,0.599
+ZG,0.6
+FR,0.406
+SO,0.503
+BS,0.323
+BL,0.425
+SH,0.494
+AR,0.511
+AI,0.608
+SG,0.5
+GR,0.507
+AG,0.519
+TG,0.556
+TI,0.453
+VD,0.349
+VS,0.381
+NE,0.309
+GE,0.322
+JU,0.257
+    `.trim()} />
+  <Editorial.Note>Quelle: <Editorial.A href="https://www.bk.admin.ch/ch/d/pore/va/20140518/can584.html">Bundeskanzlei</Editorial.A></Editorial.Note>
+</div>
+```
 
 ### Municipalities Example
 
@@ -494,58 +600,3 @@ JU,0.257
   <Editorial.Note>Quelle: <Editorial.A href="https://www.haupt.ch/Verlag/Buecher/Natur/Umwelt-Oekologie/Zersiedelung-messen-und-begrenzen.html">Fachbuch «Zersiedelung messen und begrenzen»</Editorial.A>, <Editorial.A href="https://www.bfs.admin.ch/bfs/de/home/dienstleistungen/geostat/geodaten-bundesstatistik/administrative-grenzen/generalisierte-gemeindegrenzen.html">BFS</Editorial.A></Editorial.Note>
 </div>
 ```
-
-### GeoTIFF Example
-
-```react
-<div>
-  <ChartTitle></ChartTitle>
-  <CsvChart
-    config={{
-      "type": "ProjectedMap",
-      "heightRatio": 0.63,
-      "features": {
-        "url": "/static/geo/epsg2056-projected-ch-cantons-wo-lakes.json",
-        "object": "cantons"
-      },
-      "geotiffLegendTitle": "Solar-Potential",
-      "geotiffLegend": [
-        {"color": "rgb(255,190,0)", "label": "Urban"},
-        {"color": "rgb(255,120,0)", "label": "Berg"}
-      ],
-      "colorLegend": false,
-      "geotiff": {
-        "url": "/static/geo/solar.png",
-        "bbox": [[
-          131,23
-        ], [
-          842,465
-        ]]
-      }
-    }}
-    values={``}
-  />
-</div>
-```
-
-#### Generate PNG
-
-```
-# project to swiss grid
-gdalwarp -t_srs EPSG:2056 pixels_only.tif projected.tif -overwrite -ts 1260 0
-# color pixels
-printf "0 0 0 0 0\n1 255 190 0 255\n2 255 120 0 255" > colors.txt
-gdaldem color-relief -alpha -nearest_color_entry projected.tif colors.txt colored.png
-# scale and trim & repage (optional, skip if its aligns untrimmt)
-convert -trim +repage colored.png solar.png
-```
-
-#### Get BBOX
-
-Get bounds of a GeoTIFF:
-
-```
-gdalinfo pixels_only.tif -json
-```
-
-However for a `ProjectedMap` it's probably easiest to get the topojson bounds with [the info command on mapshaper.org](https://mapshaper.org/) and then tweak it to perfectally align, only necessary if the pixel do not cover the full extent. For other map types you can use wgs84 bounds. Note currently rotated projections are not supported for geotiff alignment – you can't use `SwissMap` with it's rotated mercator.
