@@ -6,7 +6,6 @@ const { grants } = require('@orbiting/backend-modules-access')
 const { transformUser, AccessToken } = require('@orbiting/backend-modules-auth')
 const { timeFormat, formatPriceChf } =
   require('@orbiting/backend-modules-formats')
-const { findLastMembershipPledge } = require('@orbiting/backend-modules-utils')
 
 const { getLastEndDate } = require('./utils')
 const { count: memberStatsCount } = require('../../../lib/memberStats')
@@ -372,7 +371,7 @@ mail.prepareMembershipOwnerNotice = async ({ user, endDate, graceEndDate, cancel
   const membershipId = user.membershipId || false
   const sequenceNumber = user.membershipSequenceNumber || false
 
-  const { total, card } = await findLastMembershipPledge(membershipId, pgdb)
+  const autoPayPreferences = user.lastPledge && user.lastPledge.autoPayPreferences
 
   return ({
     to: user.email,
@@ -420,17 +419,17 @@ mail.prepareMembershipOwnerNotice = async ({ user, endDate, graceEndDate, cancel
         name: 'sequence_number',
         content: sequenceNumber
       },
-      total && {
-        name: 'last_pledge_total',
-        content: formatPriceChf(total / 100)
+      autoPayPreferences && {
+        name: 'autopay_total',
+        content: formatPriceChf(autoPayPreferences.total / 100)
       },
-      card && {
-        name: 'card_brand',
-        content: card.brand
+      autoPayPreferences && {
+        name: 'autopay_card_brand',
+        content: autoPayPreferences.card.brand
       },
-      card && {
-        name: 'card_last4',
-        content: card.last4
+      autoPayPreferences && {
+        name: 'autopay_card_last4',
+        content: autoPayPreferences.card.last4
       }
     ]
   })
