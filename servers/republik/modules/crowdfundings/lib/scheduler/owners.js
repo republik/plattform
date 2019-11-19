@@ -33,23 +33,50 @@ const getMaxEndDate = (now, daysBeforeEndDate) =>
 const createBuckets = (now) => [
   {
     templateName: 'membership_owner_prolong_notice',
-    minEndDate: getMinEndDate(now, 22),
-    maxEndDate: getMaxEndDate(now, DAYS_BEFORE_END_DATE),
-    onlyMembershipTypes: ['ABO'],
+    endDate: [
+      getMinEndDate(now, 22),
+      getMaxEndDate(now, DAYS_BEFORE_END_DATE)
+    ],
+    conditions: {
+      membershipType: ['ABO'],
+      autoPay: false
+    },
     users: []
   },
   {
     templateName: 'membership_owner_prolong_notice_7',
-    minEndDate: getMinEndDate(now, 5),
-    maxEndDate: getMaxEndDate(now, 7),
-    onlyMembershipTypes: ['ABO'],
+    endDate: [
+      getMinEndDate(now, 5),
+      getMaxEndDate(now, 7)
+    ],
+    conditions: {
+      membershipType: ['ABO'],
+      autoPay: false
+    },
     users: []
   },
   {
     templateName: 'membership_owner_prolong_notice_0',
-    minEndDate: getMinEndDate(now, -3),
-    maxEndDate: getMaxEndDate(now, 0),
-    onlyMembershipTypes: ['ABO'],
+    endDate: [
+      getMinEndDate(now, -3),
+      getMaxEndDate(now, 0)
+    ],
+    conditions: {
+      membershipType: ['ABO'],
+      autoPay: false
+    },
+    users: []
+  },
+  {
+    templateName: 'membership_owner_autopay_notice_5',
+    endDate: [
+      moment(now).add(1, 'days'),
+      moment(now).add(5, 'days')
+    ],
+    conditions: {
+      membershipType: ['ABO', 'BENEFACTOR_ABO'],
+      autoPay: true
+    },
     users: []
   }
 ]
@@ -70,6 +97,7 @@ const getBuckets = async ({ now }, context) => {
       m.id AS "membershipId",
       m."sequenceNumber" AS "membershipSequenceNumber",
       m."graceInterval" AS "membershipGraceInterval",
+      m."autoPay" AS "membershipAutoPay",
       mt.name AS "membershipType"
     FROM
       memberships m
@@ -81,7 +109,6 @@ const getBuckets = async ({ now }, context) => {
       m."userId" != :PARKING_USER_ID
       AND m.active = true
       AND m.renew = true
-      AND m."autoPay" = false
   `, {
     PARKING_USER_ID
   })
@@ -91,6 +118,7 @@ const getBuckets = async ({ now }, context) => {
         membershipId: user.membershipId,
         membershipSequenceNumber: user.membershipSequenceNumber,
         membershipGraceInterval: user.membershipGraceInterval,
+        membershipAutoPay: user.membershipAutoPay,
         membershipType: user.membershipType
       }))
     )
@@ -105,8 +133,7 @@ const getBuckets = async ({ now }, context) => {
   }, STATS_INTERVAL_SECS * 1000)
 
   const buckets = createBuckets(now)
-
-  debug('buckets %O', buckets)
+  buckets.forEach(bucket => debug('bucket %O', bucket))
 
   await Promise.each(
     users,
@@ -125,8 +152,17 @@ const getBuckets = async ({ now }, context) => {
           // Don't add user to bucket if user.membershipType does not equal
           // any of memberships listed in bucket.onlyMembershipTypes.
           if (
-            bucket.onlyMembershipTypes &&
-            !bucket.onlyMembershipTypes.includes(user.membershipType)
+            bucket.conditions.membershipType &&
+            !bucket.conditions.membershipType.includes(user.membershipType)
+          ) {
+            return false
+          }
+
+          // Don't add user to bucket if user.membershipAutopay does not equal
+          // autoPay flag
+          if (
+            [true, false].includes(bucket.conditions.autoPay) &&
+            bucket.conditions.autoPay !== user.membershipAutoPay
           ) {
             return false
           }
@@ -134,8 +170,8 @@ const getBuckets = async ({ now }, context) => {
           // Add user to bucket if prolongBeforeDate is between
           // bucket.minEndDate and bucket.maxEndDate
           if (
-            prolongBeforeDate.isAfter(bucket.minEndDate) &&
-            prolongBeforeDate.isBefore(bucket.maxEndDate)
+            prolongBeforeDate.isAfter(bucket.endDate[0]) &&
+            prolongBeforeDate.isBefore(bucket.endDate[1])
           ) {
             bucket.users.push({
               user,
@@ -161,7 +197,7 @@ const getBuckets = async ({ now }, context) => {
 
 const inform = async (args, context) => {
   const buckets = await getBuckets(args, context)
-  debug('buckets: %o', buckets.map(b => ({ ...b, users: b.users.length })))
+  buckets.forEach(bucket => debug('bucket: %o', { ...bucket, users: bucket.users.length }))
 
   return Promise.each(
     buckets,
