@@ -70,8 +70,6 @@ const init = async (_context) => {
         debug('scheduled documents found', docs.length)
       }
 
-      // await new Promise(resolve => setTimeout(() => resolve(), 1000 * 4))
-
       await Promise.each(docs, async doc => {
         // repos:republik/article-briefing-aus-bern-14/scheduled-publication
         const repoId = doc.meta.repoId
