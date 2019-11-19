@@ -8,7 +8,7 @@ const {
   timeScheduler
 } = require('@orbiting/backend-modules-schedulers')
 
-const lockTtlSecs = 5 * 60 // 10min
+const lockTtlSecs = 60 * 5 // 5 mins
 
 const { inform: informGivers } = require('./givers')
 const { inform: informCancellers } = require('./winbacks')
@@ -41,13 +41,12 @@ const init = async (_context) => {
   )
 
   schedulers.push(
-    timeScheduler.init({
+    intervalScheduler.init({
       name: 'memberships-owners',
       context,
       runFunc: informOwners,
       lockTtlSecs,
-      runAtTime: '06:30',
-      runInitially: DEV
+      runIntervalSecs: 60 * 10
     })
   )
 
