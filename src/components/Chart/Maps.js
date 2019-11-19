@@ -520,7 +520,7 @@ export class GenericMap extends Component {
 
 const geotiffShape = PropTypes.shape({
   url: PropTypes.string.isRequired,
-  bbox: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.array.isRequired))
+  bbox: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.number.isRequired))
 })
 const featuresShape = PropTypes.shape({
   object: PropTypes.string.isRequired,

@@ -494,3 +494,58 @@ JU,0.257
   <Editorial.Note>Quelle: <Editorial.A href="https://www.haupt.ch/Verlag/Buecher/Natur/Umwelt-Oekologie/Zersiedelung-messen-und-begrenzen.html">Fachbuch «Zersiedelung messen und begrenzen»</Editorial.A>, <Editorial.A href="https://www.bfs.admin.ch/bfs/de/home/dienstleistungen/geostat/geodaten-bundesstatistik/administrative-grenzen/generalisierte-gemeindegrenzen.html">BFS</Editorial.A></Editorial.Note>
 </div>
 ```
+
+### GeoTIFF Example
+
+```react
+<div>
+  <ChartTitle></ChartTitle>
+  <CsvChart
+    config={{
+      "type": "ProjectedMap",
+      "heightRatio": 0.63,
+      "features": {
+        "url": "/static/geo/epsg2056-projected-ch-cantons-wo-lakes.json",
+        "object": "cantons"
+      },
+      "geotiffLegendTitle": "Solar-Potential",
+      "geotiffLegend": [
+        {"color": "rgb(255,190,0)", "label": "Urban"},
+        {"color": "rgb(255,120,0)", "label": "Berg"}
+      ],
+      "colorLegend": false,
+      "geotiff": {
+        "url": "/static/geo/solar.png",
+        "bbox": [[
+          131,23
+        ], [
+          842,465
+        ]]
+      }
+    }}
+    values={``}
+  />
+</div>
+```
+
+#### Generate PNG
+
+```
+# project to swiss grid
+gdalwarp -t_srs EPSG:2056 pixels_only.tif projected.tif -overwrite -ts 1260 0
+# color pixels
+printf "0 0 0 0 0\n1 255 190 0 255\n2 255 120 0 255" > colors.txt
+gdaldem color-relief -alpha -nearest_color_entry projected.tif colors.txt colored.png
+# scale and trim & repage (optional, skip if its aligns untrimmt)
+convert -trim +repage colored.png solar.png
+```
+
+#### Get BBOX
+
+Get bounds of a GeoTIFF:
+
+```
+gdalinfo pixels_only.tif -json
+```
+
+However for a `ProjectedMap` it's probably easiest to get the topojson bounds with [the info command on mapshaper.org](https://mapshaper.org/) and then tweak it to perfectally align, only necessary if the pixel do not cover the full extent. For other map types you can use wgs84 bounds. Note currently rotated projections are not supported for geotiff alignment – you can't use `SwissMap` with it's rotated mercator.
