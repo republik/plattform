@@ -22,11 +22,15 @@ const formatDate = (date) =>
 
 const getMinEndDate = (now, daysBeforeEndDate) =>
   moment(now)
+    .subtract(6, 'hours')
+    .subtract(30, 'minutes')
     .add(daysBeforeEndDate, 'days')
     .startOf('day')
 
 const getMaxEndDate = (now, daysBeforeEndDate) =>
   moment(now)
+    .subtract(6, 'hours')
+    .subtract(30, 'minutes')
     .add(daysBeforeEndDate, 'days')
     .endOf('day')
 
