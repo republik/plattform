@@ -35,11 +35,16 @@
                 <tr>
                   <td style="padding:20px;">
                     <p>Guten Tag</p>
-                    <p><strong>Heute endete Ihr Republik-Abonnement.</strong> Herzlichen Dank für Ihr Interesse und Ihre Unterstützung!</p>
-                    <p>
-                      Wir würden uns sehr freuen, wenn Sie zu einem späteren Zeitpunkt wieder bei uns vorbeischauten.<br />
-	                    Sie sind jederzeit willkommen und können <a href="{{link_account_abos}}">Ihr Monatsabo hier ganz einfach wieder aktivieren</a>.
-                    </p>
+                    {{#if is_automatic_overdue_cancel}}
+                      <p>Leider konnten wir wiederholt Ihr Republik-Monatsabonnement nicht Ihrer Kreditkarte belasten und haben nun Ihr Monatsabonnement deaktiviert.</p>
+                      <p>Sie haben jederzeit die Möglichkeit, erneut ein Monatsabonnement oder Jahresmitgliedschaft abzuschliessen.</p>
+                    {{else}}
+                      <p><strong>Heute endete Ihr Republik-Abonnement.</strong> Herzlichen Dank für Ihr Interesse und Ihre Unterstützung!</p>
+                      <p>
+                        Wir würden uns sehr freuen, wenn Sie zu einem späteren Zeitpunkt wieder bei uns vorbeischauten.<br />
+                        Sie sind jederzeit willkommen und können <a href="{{link_account_abos}}">Ihr Monatsabo hier ganz einfach wieder aktivieren</a>.
+                      </p>
+                    {{/if}}
                     <p>Herzlich</p>
                     <p>Ihre Crew der Republik</p>
                   </td>

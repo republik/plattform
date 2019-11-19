@@ -1,6 +1,9 @@
+const _ = { get: require('lodash/get') }
+
+const { sendMailTemplate } = require('@orbiting/backend-modules-mail')
+
 const { enforceSubscriptions } = require('../../../Mail')
 const activateYearlyMembership = require('../../../activateYearlyMembership')
-const { sendMailTemplate } = require('@orbiting/backend-modules-mail')
 
 module.exports = {
   eventTypes: ['customer.subscription.updated', 'customer.subscription.deleted'],
@@ -77,10 +80,19 @@ module.exports = {
               subject: t('api/email/subscription/deactivated/subject'),
               templateName: 'subscription_end',
               globalMergeVars: [
-                { name: 'NAME',
+                {
+                  name: 'name',
                   content: [user.firstName, user.lastName]
                     .filter(Boolean)
                     .join(' ')
+                },
+                /**
+                 * `overdue_cancel` should be true, if a a subscription is deleted past due
+                 * and event was fired automatic (not via API).
+                 */
+                {
+                  name: 'is_automatic_overdue_cancel',
+                  content: !!_.get(event, 'data.object.cancel_at_period_end') && !_.get(event, 'data.request.id')
                 }
               ]
             }, { pgdb })
