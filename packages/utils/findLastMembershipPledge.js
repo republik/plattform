@@ -6,7 +6,7 @@ module.exports = async (membershipId, pgdb) => {
     return false
   }
 
-  // Find pledgeOptions, in which autoPay-flag is set
+  // Find pledgeOptions
   const relatedPledgeOptions = await pgdb.public.pledgeOptions.find(
     {
       or: [
