@@ -6,9 +6,9 @@ const { grants } = require('@orbiting/backend-modules-access')
 const { transformUser, AccessToken } = require('@orbiting/backend-modules-auth')
 const { timeFormat, formatPriceChf } =
   require('@orbiting/backend-modules-formats')
+const { findLastMembershipPledge } = require('@orbiting/backend-modules-utils')
 
 const { getLastEndDate } = require('./utils')
-
 const { count: memberStatsCount } = require('../../../lib/memberStats')
 
 const dateFormat = timeFormat('%x')
@@ -133,17 +133,23 @@ mail.sendMembershipProlongConfirmation = async ({
     to: membership.user.email,
     fromEmail: process.env.DEFAULT_MAIL_FROM_ADDRESS,
     subject: t(
-      `api/email/membership_prolong_notice/subject`
+      'api/email/membership_prolong_notice/subject'
     ),
-    templateName: `membership_prolong_notice`,
+    templateName: 'membership_prolong_notice',
     mergeLanguage: 'handlebars',
     globalMergeVars: [
-      { name: 'name',
-        content: safeMembershipUser.name },
-      { name: 'pledger_name',
-        content: safePledger.name },
-      { name: 'end_date',
-        content: dateFormat(getLastEndDate(additionalPeriods)) }
+      {
+        name: 'name',
+        content: safeMembershipUser.name
+      },
+      {
+        name: 'pledger_name',
+        content: safePledger.name
+      },
+      {
+        name: 'end_date',
+        content: dateFormat(getLastEndDate(additionalPeriods))
+      }
     ]
   }, { pgdb })
 }
@@ -208,16 +214,20 @@ mail.sendMembershipCancellation = async ({ email, name, endDate, membershipType,
     templateName: 'membership_cancel_notice',
     mergeLanguage: 'handlebars',
     globalMergeVars: [
-      { name: 'name',
+      {
+        name: 'name',
         content: name
       },
-      { name: 'end_date',
+      {
+        name: 'end_date',
         content: dateFormat(endDate)
       },
-      { name: 'membership_type',
+      {
+        name: 'membership_type',
         content: membershipType.name
       },
-      { name: 'reason_given',
+      {
+        name: 'reason_given',
         content: !!reasonGiven
       }
     ]
@@ -238,15 +248,17 @@ mail.sendMembershipDeactivated = async ({ membership, pgdb, t }) => {
     subject: t.first([
       `api/email/${templateName}/sequenceNumber/${!!sequenceNumber}/subject`,
       `api/email/${templateName}/subject`,
-      `api/email/membership_deactivated/subject`
+      'api/email/membership_deactivated/subject'
     ], { sequenceNumber }),
     templateName,
     mergeLanguage: 'handlebars',
     globalMergeVars: [
-      { name: 'prolong_url',
+      {
+        name: 'prolong_url',
         content: `${FRONTEND_BASE_URL}/angebote?package=PROLONG&token=${customPledgeToken}`
       },
-      { name: 'sequence_number',
+      {
+        name: 'sequence_number',
         content: sequenceNumber
       }
     ]
@@ -281,19 +293,24 @@ mail.prepareMembershipGiversProlongNotice = async ({ userId, membershipIds, info
     templateName: 'membership_giver_prolong_notice',
     mergeLanguage: 'handlebars',
     globalMergeVars: [
-      { name: 'name',
+      {
+        name: 'name',
         content: user.name
       },
-      { name: 'prolong_url',
+      {
+        name: 'prolong_url',
         content: `${FRONTEND_BASE_URL}/angebote?package=PROLONG&membershipIds=${membershipIds.join('~')}&token=${customPledgeToken}`
       },
-      { name: 'gifted_memberships_count',
+      {
+        name: 'gifted_memberships_count',
         content: memberships.length
       },
-      { name: 'inform_claimers_days',
+      {
+        name: 'inform_claimers_days',
         content: informClaimersDays
       },
-      { name: 'options',
+      {
+        name: 'options',
         content: memberships
           .map(membership => {
             const olabel =
@@ -318,38 +335,44 @@ mail.prepareMembershipWinback = async ({ userId, cancellationCategory, cancelled
     to: user.email,
     subject: t.first([
       `api/email/membership_winback_${cancellationCategory}/subject`,
-      `api/email/membership_winback/subject`
+      'api/email/membership_winback/subject'
     ]),
     templateName: `membership_winback_${cancellationCategory}`,
     mergeLanguage: 'handlebars',
     globalMergeVars: [
-      { name: 'name',
+      {
+        name: 'name',
         content: user.name
       },
-      { name: 'prolong_url',
+      {
+        name: 'prolong_url',
         content: `${FRONTEND_BASE_URL}/angebote?package=PROLONG&token=${customPledgeToken}`
       },
-      { name: 'prolong_url_reduced',
+      {
+        name: 'prolong_url_reduced',
         content: `${FRONTEND_BASE_URL}/angebote?package=PROLONG&token=${customPledgeToken}&userPrice=1`
       },
-      { name: 'cancelled_at',
+      {
+        name: 'cancelled_at',
         content: dateFormat(cancelledAt)
       }
     ]
   })
 }
 
-mail.prepareMembershipOwnerNotice = async ({ user, endDate, graceEndDate, cancelUntilDate, templateName }, { t }) => {
+mail.prepareMembershipOwnerNotice = async ({ user, endDate, graceEndDate, cancelUntilDate, templateName }, { pgdb, t }) => {
   const customPledgeToken = AccessToken.generateForUser(user, 'CUSTOM_PLEDGE')
 
   const formattedEndDate = dateFormat(endDate)
   const formattedGraceEndDate = dateFormat(graceEndDate)
 
-  const timeLeft = moment(endDate).diff(moment())
+  const timeLeft = moment(endDate).startOf('day').diff(moment().startOf('day'))
   const daysLeft = Math.max(1, Math.ceil(moment.duration(timeLeft).as('days')))
 
   const membershipId = user.membershipId || false
   const sequenceNumber = user.membershipSequenceNumber || false
+
+  const { total, card } = await findLastMembershipPledge(membershipId, pgdb)
 
   return ({
     to: user.email,
@@ -363,31 +386,51 @@ mail.prepareMembershipOwnerNotice = async ({ user, endDate, graceEndDate, cancel
     templateName,
     mergeLanguage: 'handlebars',
     globalMergeVars: [
-      { name: 'name',
+      {
+        name: 'name',
         content: user.name
       },
-      { name: 'prolong_url',
+      {
+        name: 'prolong_url',
         content: `${FRONTEND_BASE_URL}/angebote?package=PROLONG&token=${customPledgeToken}`
       },
-      { name: 'cancel_url',
+      {
+        name: 'cancel_url',
         content: membershipId
           ? `${FRONTEND_BASE_URL}/abgang?membershipId=${membershipId}`
           : `${FRONTEND_BASE_URL}/konto#abos`
       },
-      { name: 'end_date',
+      {
+        name: 'end_date',
         content: formattedEndDate
       },
-      { name: 'grace_end_date',
+      {
+        name: 'grace_end_date',
         content: formattedGraceEndDate
       },
-      { name: 'days_left',
+      {
+        name: 'days_left',
         content: daysLeft
       },
-      { name: 'cancel_until_date',
+      {
+        name: 'cancel_until_date',
         content: dateFormat(cancelUntilDate)
       },
-      { name: 'sequence_number',
+      {
+        name: 'sequence_number',
         content: sequenceNumber
+      },
+      total && {
+        name: 'last_pledge_total',
+        content: formatPriceChf(total / 100)
+      },
+      card && {
+        name: 'card_brand',
+        content: card.brand
+      },
+      card && {
+        name: 'card_last4',
+        content: card.last4
       }
     ]
   })
@@ -513,7 +556,8 @@ mail.getPledgeMergeVars = async (
 
   return [
     // Purchase itself
-    { name: 'options',
+    {
+      name: 'options',
       content: pledgeOptions
         // Filter "pseudo" pledge options without a reward
         .filter(pledgeOption => pledgeOption.packageOption.reward)
@@ -562,61 +606,77 @@ mail.getPledgeMergeVars = async (
           }
         })
     },
-    { name: 'discount',
+    {
+      name: 'discount',
       content: discount
     },
-    { name: 'discount_formatted',
+    {
+      name: 'discount_formatted',
       content: formatPriceChf(discount)
     },
-    { name: 'donation',
+    {
+      name: 'donation',
       content: donation
     },
-    { name: 'donation_formatted',
+    {
+      name: 'donation_formatted',
       content: formatPriceChf(donation)
     },
-    { name: 'total',
+    {
+      name: 'total',
       content: total
     },
-    { name: 'total_formatted',
+    {
+      name: 'total_formatted',
       content: formatPriceChf(total)
     },
 
     // Payment
-    { name: 'payment_method',
-      content: payment.method },
+    {
+      name: 'payment_method',
+      content: payment.method
+    },
     ...payment
       ? [
-        { name: 'HRID',
+        {
+          name: 'HRID',
           content: payment.hrid
         },
-        { name: 'due_date',
+        {
+          name: 'due_date',
           content: dateFormat(payment.dueDate)
         },
-        { name: 'paymentslip',
+        {
+          name: 'paymentslip',
           content: payment.method === 'PAYMENTSLIP'
         },
-        { name: 'not_paymentslip',
+        {
+          name: 'not_paymentslip',
           content: payment.method !== 'PAYMENTSLIP'
         }
       ]
       : [],
-    { name: 'waiting_for_payment',
+    {
+      name: 'waiting_for_payment',
       content: pledge.status === 'WAITING_FOR_PAYMENT'
     },
 
     // Helpers
-    { name: 'name',
+    {
+      name: 'name',
       content: [user.firstName, user.lastName]
         .filter(Boolean)
         .join(' ')
         .trim()
     },
-    { name: 'voucher_codes',
+    {
+      name: 'voucher_codes',
       content: ['ABO_GIVE', 'ABO_GIVE_MONTHS'].includes(package_.name)
         ? memberships.map(m => m.voucherCode).join(', ')
         : null
     },
-    { name: 'goodies_count',
+    {
+      name: 'goodies_count',
       content: pledgeOptions
         // Filter "pseudo" pledge options without a reward
         .filter(
@@ -626,7 +686,8 @@ mail.getPledgeMergeVars = async (
         )
         .reduce((agg, pledgeOption) => agg + pledgeOption.amount, 0)
     },
-    { name: 'address',
+    {
+      name: 'address',
       content: address
         ? `<span>${address.name}<br/>
   ${address.line1}<br/>
@@ -635,17 +696,20 @@ mail.getPledgeMergeVars = async (
   ${address.country}</span>`
         : null
     },
-    { name: 'pledger_memberships_count',
+    {
+      name: 'pledger_memberships_count',
       content: pledgerMemberships.length
     },
-    { name: 'gifted_memberships_count',
+    {
+      name: 'gifted_memberships_count',
       content: giftedMemberships.length
     },
     {
       name: 'republik_memberships_count',
       content: await memberStatsCount({ pgdb })
     },
-    { name: 'link_claim',
+    {
+      name: 'link_claim',
       content: `${FRONTEND_BASE_URL}/abholen`
     }
   ]
