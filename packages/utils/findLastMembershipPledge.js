@@ -35,14 +35,13 @@ module.exports = async (membershipId, pgdb) => {
     { orderBy: { createdAt: 'DESC' }, limit: 1 }
   )
 
-  // Used card in payment (if available)
-  const card =
-    payment.pspPayload &&
-    payment.pspPayload.source &&
-    payment.pspPayload.source.card
-
   return {
-    ...pledge,
-    card
+    pledge,
+    autoPayPreferences: {
+      card: payment.pspPayload &&
+        payment.pspPayload.source &&
+        payment.pspPayload.source.card,
+      total: pledge.total
+    }
   }
 }
