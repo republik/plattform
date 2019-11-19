@@ -155,6 +155,7 @@ const MetaData = ({
             t(`metaData/field/${customField.key}`, undefined, customField.key)
           const values = node.data.get(customField.key) || []
           const onChange = onInputChange(customField.key)
+          const lastValueEmpty = values[values.length - 1] === ''
           return (
             <div key={customField.key}>
               <br />
@@ -177,15 +178,27 @@ const MetaData = ({
                     />
                   )
                 })}
-                <A
-                  href='#add'
-                  onClick={e => {
-                    e.preventDefault()
-                    onChange(undefined, [...values, ''])
-                  }}
-                >
-                  Format hinzufügen
-                </A>
+                {lastValueEmpty ? (
+                  <A
+                    href='#cancel'
+                    onClick={e => {
+                      e.preventDefault()
+                      onChange(undefined, values.slice(0, values.length - 1))
+                    }}
+                  >
+                    Abbrechen
+                  </A>
+                ) : (
+                  <A
+                    href='#add'
+                    onClick={e => {
+                      e.preventDefault()
+                      onChange(undefined, [...values, ''])
+                    }}
+                  >
+                    Format hinzufügen
+                  </A>
+                )}
               </UIForm>
               <br />
             </div>
