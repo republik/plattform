@@ -4,7 +4,7 @@ const Promise = require('bluebird')
 
 const { transformUser } = require('@orbiting/backend-modules-auth')
 const { sendMailTemplate } = require('@orbiting/backend-modules-mail')
-const { applyPgInterval: { add: addInterval } } = require('@orbiting/backend-modules-utils')
+const { applyPgInterval: { add: addInterval }, findLastMembershipPledge } = require('@orbiting/backend-modules-utils')
 
 const {
   prolongBeforeDate: getProlongBeforeDate
@@ -33,49 +33,56 @@ const getMaxEndDate = (now, daysBeforeEndDate) =>
 const createBuckets = (now) => [
   {
     templateName: 'membership_owner_prolong_notice',
-    endDate: [
-      getMinEndDate(now, 22),
-      getMaxEndDate(now, DAYS_BEFORE_END_DATE)
-    ],
-    conditions: {
-      membershipType: ['ABO'],
-      autoPay: false
+    endDate: {
+      min: getMinEndDate(now, 22),
+      max: getMaxEndDate(now, DAYS_BEFORE_END_DATE)
+    },
+    predicate: ({ id: userId, membershipType, membershipAutoPay, lastPledge: { pledge } }) => {
+      return ['ABO'].includes(membershipType) && (
+        membershipAutoPay === false ||
+        (membershipAutoPay === true && userId !== pledge.userId)
+      )
     },
     users: []
   },
   {
     templateName: 'membership_owner_prolong_notice_7',
-    endDate: [
-      getMinEndDate(now, 5),
-      getMaxEndDate(now, 7)
-    ],
-    conditions: {
-      membershipType: ['ABO'],
-      autoPay: false
+    endDate: {
+      min: getMinEndDate(now, 5),
+      max: getMaxEndDate(now, 7)
+    },
+    predicate: ({ id: userId, membershipType, membershipAutoPay, lastPledge: { pledge } }) => {
+      return ['ABO'].includes(membershipType) && (
+        membershipAutoPay === false ||
+        (membershipAutoPay === true && userId !== pledge.userId)
+      )
     },
     users: []
   },
   {
     templateName: 'membership_owner_prolong_notice_0',
-    endDate: [
-      getMinEndDate(now, -3),
-      getMaxEndDate(now, 0)
-    ],
-    conditions: {
-      membershipType: ['ABO'],
-      autoPay: false
+    endDate: {
+      min: getMinEndDate(now, -3),
+      max: getMaxEndDate(now, 0)
+    },
+    predicate: ({ id: userId, membershipType, membershipAutoPay, lastPledge: { pledge } }) => {
+      return ['ABO'].includes(membershipType) && (
+        membershipAutoPay === false ||
+        (membershipAutoPay === true && userId !== pledge.userId)
+      )
     },
     users: []
   },
   {
     templateName: 'membership_owner_autopay_notice_5',
-    endDate: [
-      moment(now).add(1, 'days'),
-      moment(now).add(5, 'days')
-    ],
-    conditions: {
-      membershipType: ['ABO', 'BENEFACTOR_ABO'],
-      autoPay: true
+    endDate: {
+      min: moment(now).add(1, 'days'),
+      max: moment(now).add(5, 'days')
+    },
+    predicate: ({ id: userId, membershipType, membershipAutoPay, lastPledge: { pledge } }) => {
+      return ['ABO', 'BENEFACTOR'].includes(membershipType) &&
+        membershipAutoPay === true &&
+        userId === pledge.userId
     },
     users: []
   }
@@ -109,6 +116,7 @@ const getBuckets = async ({ now }, context) => {
       m."userId" != :PARKING_USER_ID
       AND m.active = true
       AND m.renew = true
+    ORDER BY RANDOM()
   `, {
     PARKING_USER_ID
   })
@@ -148,40 +156,22 @@ const getBuckets = async ({ now }, context) => {
       stats.numNeedProlongProgress++
 
       if (prolongBeforeDate) {
-        const dropped = buckets.some(bucket => {
-          // Don't add user to bucket if user.membershipType does not equal
-          // any of memberships listed in bucket.onlyMembershipTypes.
-          if (
-            bucket.conditions.membershipType &&
-            !bucket.conditions.membershipType.includes(user.membershipType)
-          ) {
-            return false
+        const results = await Promise.map(buckets, async bucket => {
+          if (prolongBeforeDate.isBetween(bucket.endDate.min, bucket.endDate.max)) {
+            if (!user.lastPledge) {
+              user.lastPledge = await findLastMembershipPledge(user.membershipId, pgdb)
+            }
+
+            if (bucket.predicate(user)) {
+              bucket.users.push({ user, prolongBeforeDate })
+              return true
+            }
           }
 
-          // Don't add user to bucket if user.membershipAutopay does not equal
-          // autoPay flag
-          if (
-            [true, false].includes(bucket.conditions.autoPay) &&
-            bucket.conditions.autoPay !== user.membershipAutoPay
-          ) {
-            return false
-          }
-
-          // Add user to bucket if prolongBeforeDate is between
-          // bucket.minEndDate and bucket.maxEndDate
-          if (
-            prolongBeforeDate.isAfter(bucket.endDate[0]) &&
-            prolongBeforeDate.isBefore(bucket.endDate[1])
-          ) {
-            bucket.users.push({
-              user,
-              prolongBeforeDate
-            })
-            return true
-          }
           return false
-        })
-        if (dropped) {
+        }, { concurrency: 1 })
+
+        if (results.some(Boolean)) {
           stats.numNeedProlong++
         }
       }
