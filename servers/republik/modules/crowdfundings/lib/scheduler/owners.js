@@ -141,7 +141,14 @@ const getBuckets = async ({ now }, context) => {
   }, STATS_INTERVAL_SECS * 1000)
 
   const buckets = createBuckets(now)
-  buckets.forEach(bucket => debug('bucket %O', bucket))
+  buckets.forEach(bucket => debug('bucket: %o', {
+    ...bucket,
+    endDate: {
+      min: bucket.endDate.min.toISOString(),
+      max: bucket.endDate.max.toISOString()
+    },
+    users: bucket.users.length
+  }))
 
   await Promise.each(
     users,
@@ -187,7 +194,14 @@ const getBuckets = async ({ now }, context) => {
 
 const inform = async (args, context) => {
   const buckets = await getBuckets(args, context)
-  buckets.forEach(bucket => debug('bucket: %o', { ...bucket, users: bucket.users.length }))
+  buckets.forEach(bucket => debug('bucket: %o', {
+    ...bucket,
+    endDate: {
+      min: bucket.endDate.min.toISOString(),
+      max: bucket.endDate.max.toISOString()
+    },
+    users: bucket.users.length
+  }))
 
   return Promise.each(
     buckets,
