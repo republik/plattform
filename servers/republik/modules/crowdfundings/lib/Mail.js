@@ -419,15 +419,15 @@ mail.prepareMembershipOwnerNotice = async ({ user, endDate, graceEndDate, cancel
         name: 'sequence_number',
         content: sequenceNumber
       },
-      autoPayPreferences && {
+      autoPayPreferences && autoPayPreferences.total && {
         name: 'autopay_total',
         content: formatPriceChf(autoPayPreferences.total / 100)
       },
-      autoPayPreferences && {
+      autoPayPreferences && autoPayPreferences.card && {
         name: 'autopay_card_brand',
         content: autoPayPreferences.card.brand
       },
-      autoPayPreferences && {
+      autoPayPreferences && autoPayPreferences.card && {
         name: 'autopay_card_last4',
         content: autoPayPreferences.card.last4
       }
