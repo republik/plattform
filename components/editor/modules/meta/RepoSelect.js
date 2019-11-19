@@ -10,7 +10,6 @@ import { RepoLink } from '../../utils/github'
 
 const styles = {
   value: css({
-    height: 60,
     marginBottom: 12,
     borderBottom: '1px solid #000',
     paddingRight: 20,
@@ -41,8 +40,12 @@ export default ({ label, template, value, onChange }) => {
   if (value) {
     return (
       <div {...styles.value}>
-        <Label style={{ color: '#000' }}>{label}</Label>
-        <br />
+        {label && (
+          <>
+            <Label style={{ color: '#000' }}>{label}</Label>
+            <br />
+          </>
+        )}
         <div {...styles.valueText}>
           <RepoLink
             value={value}

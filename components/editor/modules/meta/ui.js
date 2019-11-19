@@ -153,10 +153,10 @@ const MetaData = ({
           const label =
             customField.label ||
             t(`metaData/field/${customField.key}`, undefined, customField.key)
-          const values = node.data.get(customField.key) || ['']
+          const values = node.data.get(customField.key) || []
           const onChange = onInputChange(customField.key)
           return (
-            <>
+            <div key={customField.key}>
               <br />
               <UIForm getWidth={() => '100%'}>
                 <Label>
@@ -165,29 +165,16 @@ const MetaData = ({
                 </Label>{' '}
                 {values.map((v, i) => {
                   return (
-                    <div>
-                      <Field
-                        key={i}
-                        value={v}
-                        onChange={e => {
-                          const nextValue = e.target.value
-                          const nextValues = [...values]
-                          nextValues[i] = nextValue
-                          onChange(undefined, nextValues)
-                        }}
-                      />
-                      <A
-                        href='#remove'
-                        onClick={e => {
-                          e.preventDefault()
-                          const nextValues = [...values]
-                          nextValues.splice(i, 1)
-                          onChange(undefined, nextValues)
-                        }}
-                      >
-                        Format entfernen
-                      </A>
-                    </div>
+                    <RepoSelect
+                      key={`${customField.key}-${i}`}
+                      value={v}
+                      template={customField.template}
+                      onChange={(_, document) => {
+                        const nextValues = [...values]
+                        nextValues[i] = document
+                        onChange(undefined, nextValues)
+                      }}
+                    />
                   )
                 })}
                 <A
@@ -201,7 +188,7 @@ const MetaData = ({
                 </A>
               </UIForm>
               <br />
-            </>
+            </div>
           )
         })}
         <UIForm getWidth={() => '50%'}>
