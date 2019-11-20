@@ -14,9 +14,13 @@ const { getMeta } = require('../../lib/meta')
 
 const getDocuments = require('./_queries/documents')
 
-const { lib: { webp: {
-  addSuffix: addWebpSuffix
-} } } = require('@orbiting/backend-modules-assets')
+const {
+  lib: {
+    webp: {
+      addSuffix: addWebpSuffix
+    }
+  }
+} = require('@orbiting/backend-modules-assets')
 
 const {
   extractIdsFromNode,
@@ -176,7 +180,11 @@ module.exports = {
       doc.meta.template === 'format' &&
       doc.meta.repoId
 
-    if (!hasDossierRepoId && !hasFormatRepoId) {
+    const hasSectionRepoId =
+      doc.meta.template === 'section' &&
+      doc.meta.repoId
+
+    if (!hasDossierRepoId && !hasFormatRepoId && !hasSectionRepoId) {
       return {
         pageInfo: {
           endCursor: null,
@@ -195,6 +203,10 @@ module.exports = {
 
     if (hasFormatRepoId) {
       args.format = doc.id
+    }
+
+    if (hasSectionRepoId) {
+      args.section = doc.id
     }
 
     return getDocuments(doc, args, context, info)

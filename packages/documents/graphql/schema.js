@@ -11,9 +11,11 @@ type queries {
     # not used
     dossier: String
     format: String
+    section: String
     template: String
     hasDossier: Boolean
     hasFormat: Boolean
+    hasSection: Boolean
     first: Int
     last: Int
     before: String
