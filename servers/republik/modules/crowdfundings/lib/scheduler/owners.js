@@ -84,7 +84,7 @@ const createBuckets = (now) => [
       max: moment(now).add(5, 'days')
     },
     predicate: ({ id: userId, membershipType, membershipAutoPay, lastPledge: { pledge } }) => {
-      return ['ABO', 'BENEFACTOR'].includes(membershipType) &&
+      return ['ABO', 'BENEFACTOR_ABO'].includes(membershipType) &&
         membershipAutoPay === true &&
         userId === pledge.userId
     },
