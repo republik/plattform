@@ -11,6 +11,7 @@ type queries {
     # not used
     dossier: String
     format: String
+    formats: [String!]
     section: String
     template: String
     hasDossier: Boolean

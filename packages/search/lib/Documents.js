@@ -57,9 +57,15 @@ const documentIdParser = value => {
 
   // decoded = <org>/<repoName>/<commitId>/<versionName>
   //                 ^^^^^^^^^^
-  const repoName = decoded.split('/').slice(1, 2)
+  const repoName =
+    decoded.split('/')[1] ||
+    value.split('/')[1] // fallback for plain repo ids
 
   return getResourceUrls(repoName)
+}
+
+const documentIdsParser = values => {
+  return values.reduce((all, value) => all.concat(documentIdParser(value)), [])
 }
 
 const getResourceUrls = repoName => {
@@ -93,6 +99,10 @@ const schema = {
     criteria: termCriteriaBuilder('meta.format'),
     agg: valueCountAggBuilder('meta.format'),
     parser: documentIdParser
+  },
+  formats: {
+    criteria: termCriteriaBuilder('meta.format'),
+    parser: documentIdsParser
   },
   hasFormat: {
     criteria: hasCriteriaBuilder('meta.format'),
