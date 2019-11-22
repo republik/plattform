@@ -1,5 +1,5 @@
 {
-  "updated": "2019-11-18T13:02:39.176Z",
+  "updated": "2019-11-22T12:00:32.421Z",
   "title": "live",
   "data": [
     {
@@ -287,6 +287,10 @@
       "value": "Spende"
     },
     {
+      "key": "api/payment/invoice/item/goodie/TABLEBOOK",
+      "value": "Buch «Republik bei Stromausfall»"
+    },
+    {
       "key": "api/payment/invoice/item/goodie/NOTEBOOK",
       "value": "Notizbuch"
     },
@@ -373,6 +377,14 @@
     {
       "key": "api/email/option/goodie/totebag/other",
       "value": "Taschen"
+    },
+    {
+      "key": "api/email/option/goodie/tablebook/1",
+      "value": "Buch «Republik bei Stromausfall»"
+    },
+    {
+      "key": "api/email/option/goodie/tablebook/other",
+      "value": "Bücher «Republik bei Stromausfall»"
     },
     {
       "key": "api/email/option/membershiptype/abo/1",
