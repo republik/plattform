@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import ReactDOM from 'react-dom'
 import PropTypes from 'prop-types'
 import { css, merge } from 'glamor'
@@ -39,41 +39,55 @@ const styles = {
   })
 }
 
-class Overlay extends PureComponent {
-  constructor(props) {
-    super(props)
-    this.state = { isVisible: false }
-    this.el = document.createElement('div')
+const ssrAttribute = 'data-overlay-ssr'
+
+const Overlay = props => {
+  const rootDom = useRef()
+  const isDomAvailable = typeof document !== 'undefined'
+  if (isDomAvailable && !rootDom.current) {
+    rootDom.current = document.createElement('div')
   }
 
-  componentDidMount() {
-    // This timeout may not be required, but the fade-in won't work without
-    // this inside the catalog.
-    this.fadeInTimeout = setTimeout(() => {
-      this.setState({ isVisible: true })
-    })
+  const [ssrMode, setSsrMode] = useState(
+    () =>
+      !isDomAvailable ||
+      (isDomAvailable &&
+        document.querySelectorAll(`[${ssrAttribute}]`).length > 0)
+  )
+  const [isVisible, setIsVisible] = useState(ssrMode)
 
+  useEffect(() => {
+    const fadeInTimeout = setTimeout(() => {
+      setIsVisible(true)
+    })
     // The code below is used to block scrolling of the page behind the overlay.
     // Does not work on iOS, additionally blocking touchmove events would work
     // but also prevent overflowing overlays from scrolling
     document.body.style.overflow = 'hidden'
-    document.body.appendChild(this.el)
-  }
+    document.body.appendChild(rootDom.current)
 
-  componentWillUnmount() {
-    clearTimeout(this.fadeInTimeout)
+    return () => {
+      clearTimeout(fadeInTimeout)
 
-    // Remove scroll block
-    document.body.style.overflow = ''
-    document.body.removeChild(this.el)
-  }
+      // Remove scroll block
+      document.body.style.overflow = ''
+      document.body.removeChild(rootDom.current)
+    }
+  }, [])
+  useEffect(() => {
+    if (ssrMode) {
+      setSsrMode(false)
+    }
+  }, [ssrMode])
 
-  render() {
-    return ReactDOM.createPortal(
-      <OverlayRenderer {...this.props} isVisible={this.state.isVisible} />,
-      this.el
-    )
+  const element = (
+    <OverlayRenderer {...props} isVisible={isVisible} ssr={ssrMode} />
+  )
+
+  if (!ssrMode) {
+    return ReactDOM.createPortal(element, rootDom.current)
   }
+  return element
 }
 
 Overlay.propTypes = {
@@ -85,32 +99,31 @@ export default Overlay
 
 // This is the actual Overlay component that is rendered. We export this so we
 // can document the overlay in the catalog without affecting 'document.body'.
-export class OverlayRenderer extends PureComponent {
-  constructor(props) {
-    super(props)
-
-    // This event handler is attached to the background of the overlay.
-    this.close = e => {
-      if (e.target === e.currentTarget) {
-        this.props.onClose()
-      }
+export const OverlayRenderer = ({
+  isVisible,
+  mUpStyle,
+  children,
+  onClose,
+  ssr
+}) => {
+  const close = e => {
+    if (e.target === e.currentTarget) {
+      onClose()
     }
   }
 
-  render() {
-    const { isVisible, mUpStyle, children } = this.props
-    return (
-      <div
-        {...styles.root}
-        style={{ opacity: isVisible ? 1 : 0 }}
-        onClick={this.close}
-      >
-        <div {...merge(styles.inner, mUpStyle && { [mUp]: mUpStyle })}>
-          {children}
-        </div>
+  return (
+    <div
+      {...styles.root}
+      {...{ [ssrAttribute]: true }}
+      style={{ opacity: isVisible ? 1 : 0 }}
+      onClick={close}
+    >
+      <div {...merge(styles.inner, mUpStyle && { [mUp]: mUpStyle })}>
+        {children}
       </div>
-    )
-  }
+    </div>
+  )
 }
 
 OverlayRenderer.propTypes = {
