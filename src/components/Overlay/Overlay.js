@@ -59,7 +59,7 @@ const Overlay = props => {
   useEffect(() => {
     const fadeInTimeout = setTimeout(() => {
       setIsVisible(true)
-    })
+    }, 33)
     // The code below is used to block scrolling of the page behind the overlay.
     // Does not work on iOS, additionally blocking touchmove events would work
     // but also prevent overflowing overlays from scrolling
@@ -81,7 +81,7 @@ const Overlay = props => {
   }, [ssrMode])
 
   const element = (
-    <OverlayRenderer {...props} isVisible={isVisible} ssr={ssrMode} />
+    <OverlayRenderer {...props} isVisible={isVisible} ssrMode={ssrMode} />
   )
 
   if (!ssrMode) {
@@ -104,7 +104,7 @@ export const OverlayRenderer = ({
   mUpStyle,
   children,
   onClose,
-  ssr
+  ssrMode
 }) => {
   const close = e => {
     if (e.target === e.currentTarget) {
@@ -115,7 +115,7 @@ export const OverlayRenderer = ({
   return (
     <div
       {...styles.root}
-      {...{ [ssrAttribute]: true }}
+      {...(ssrMode && { [ssrAttribute]: true })}
       style={{ opacity: isVisible ? 1 : 0 }}
       onClick={close}
     >
