@@ -1,5 +1,6 @@
 const debug = require('debug')('crowdfundings:lib:Mail')
 const moment = require('moment')
+const { ascending, descending } = require('d3-array')
 
 const { createMail, sendMailTemplate } = require('@orbiting/backend-modules-mail')
 const { grants } = require('@orbiting/backend-modules-access')
@@ -522,24 +523,23 @@ mail.getPledgeMergeVars = async (
   })
 
   pledgeOptions
-    // Sort by packageOption.order in an ascending manner
-    .sort(
-      (a, b) =>
-        a.packageOption &&
-        b.packageOption &&
-        a.packageOption.order > b.packageOption.order ? 1 : 0
-    )
+    // Sort by price
+    .sort((a, b) => descending(a.price, b.price))
     // Sort by sequenceNumber in an ascending manner
-    .sort(
-      (a, b) =>
-        a.membership &&
-        b.membership &&
-        a.membership.sequenceNumber < b.membership.sequenceNumber ? 1 : 0
-    )
+    .sort((a, b) => ascending(
+      a.membership && a.membership.sequenceNumber,
+      b.membership && b.membership.sequenceNumber
+    ))
     // Sort by userID, own ones up top.
-    .sort(
-      (a, b) => a.membership && a.membership.userId !== pledge.userId ? 1 : 0
-    )
+    .sort((a, b) => descending(
+      a.membership && a.membership.userId === user.id,
+      b.membership && b.membership.userId === user.id
+    ))
+    // Sort by packageOption.order in an ascending manner
+    .sort((a, b) => ascending(
+      a.packageOption && a.packageOption.order,
+      b.packageOption && b.packageOption.order
+    ))
 
   const pledgerMemberships = memberships
     .filter(membership => pledge.userId === membership.userId)
