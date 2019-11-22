@@ -89,7 +89,8 @@ module.exports = {
     const cache = createCache({
       prefix: `User:${user.id}`,
       key: `prolongBeforeDate-${ignoreClaimedMemberships}`,
-      ttl: QUERY_CACHE_TTL_SECONDS
+      ttl: QUERY_CACHE_TTL_SECONDS,
+      disabled: DISABLE_RESOLVER_USER_CACHE
     }, context)
 
     return cache.cache(async function () {
@@ -249,7 +250,8 @@ module.exports = {
     const cache = createCache({
       prefix: `User:${user.id}`,
       key: 'isBonusEligable',
-      ttl: QUERY_CACHE_TTL_SECONDS
+      ttl: QUERY_CACHE_TTL_SECONDS,
+      disabled: DISABLE_RESOLVER_USER_CACHE
     }, context)
 
     return cache.cache(async function () {
