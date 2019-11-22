@@ -1037,3 +1037,140 @@ Damit das Layout nun nicht nackt im Raume steht und sich klein und leer vorkommt
 
 `}</Markdown>
 ```
+
+### Carousel
+
+```react|noSource
+<Markdown schema={schema}>{`
+
+<section><h6>CENTER</h6>
+
+Der Nahe Osten ist eine geographische Bezeichnung, die heute im Allgemeinen für arabische Staaten Vorderasiens und Israel benutzt wird. Insbesondere die Region des Fruchtbaren Halbmondes und die Arabische Halbinsel gehören zum Nahen Osten. Häufig werden außerdem Zypern, die Türkei, Ägypten und der Iran dazugezählt.
+
+<hr /></section>
+
+<section><h6>TEASER</h6>
+
+\`\`\`
+{
+  "url": null,
+  "id": "0eJJ9PrMZ",
+  "color": "#fff",
+  "bgColor": "SandyBrown",
+  "bigger": true,
+  "teaserType": "carousel"
+}
+\`\`\`
+
+## Drei Menschen
+
+<section><h6>TEASERGROUP</h6>
+
+<section><h6>TEASER</h6>
+
+\`\`\`
+{
+  "reverse": false,
+  "color": null,
+  "teaserType": "articleTile",
+  "byline": null,
+  "onlyImage": false,
+  "url": null,
+  "kind": "editorial",
+  "center": false,
+  "textPosition": "topleft",
+  "titleSize": "standard",
+  "id": "jOf1niuibE",
+  "portrait": true,
+  "showImage": true
+}
+\`\`\`
+
+![](/static/barbara_villiger.jpg?size=1000x1000)
+
+###### 
+
+# Aleyna
+
+## 
+
+#### Der helle Stern
+
+<hr /></section>
+
+<section><h6>TEASER</h6>
+
+\`\`\`
+{
+  "reverse": false,
+  "color": null,
+  "teaserType": "articleTile",
+  "byline": null,
+  "onlyImage": false,
+  "url": null,
+  "kind": "editorial",
+  "center": false,
+  "textPosition": "topleft",
+  "titleSize": "standard",
+  "id": "bg7gbWTCva",
+  "portrait": true,
+  "showImage": true
+}
+\`\`\`
+
+![](/static/brigitte_meyer.jpg?size=1000x1000)
+
+###### 
+
+# Mara
+
+## 
+
+#### Die schöne Bildchefin
+
+<hr /></section>
+
+<section><h6>TEASER</h6>
+
+\`\`\`
+{
+  "reverse": false,
+  "color": null,
+  "teaserType": "articleTile",
+  "byline": null,
+  "onlyImage": false,
+  "url": null,
+  "kind": "editorial",
+  "center": false,
+  "textPosition": "topleft",
+  "titleSize": "standard",
+  "id": "QI76z3ymJz",
+  "portrait": true,
+  "showImage": true
+}
+\`\`\`
+
+![](/static/christof_moser.jpg?size=500x500)
+
+###### 
+
+# Tarek
+
+## 
+
+#### Der bittersüsse Chefredaktor
+
+<hr /></section>
+
+<hr /></section>
+
+<hr /></section>
+
+<section><h6>CENTER</h6>
+
+Reise planen: Flug mit einer Dauer von rund 4 Stunden.
+
+<hr /></section>
+
+`}</Markdown>
+```
