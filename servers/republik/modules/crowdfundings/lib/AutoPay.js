@@ -5,6 +5,7 @@ const { applyPgInterval: { add: addInterval } } = require('@orbiting/backend-mod
 const createCharge = require('./payments/stripe/createCharge')
 const { getCustomPackages } = require('./User')
 const { getLastEndDate } = require('./utils')
+const createCache = require('./cache')
 
 const suggest = async (membershipId, pgdb) => {
   // Find membership
@@ -105,7 +106,7 @@ const suggest = async (membershipId, pgdb) => {
   }
 }
 
-const prolong = async (suggestion, pgdb) => {
+const prolong = async (suggestion, pgdb, redis) => {
   const transaction = await pgdb.transactionBegin()
 
   try {
@@ -156,6 +157,10 @@ const prolong = async (suggestion, pgdb) => {
           return { ...sanitizedPeriod, pledgeId: suggestion.pledgeId }
         })
     )
+
+    // Invalidate User resolver cache
+    const cache = createCache({ prefix: `User:${suggestion.userId}` }, { redis })
+    cache.invalidate()
 
     // Insert charge attempt
     const chargeAttempt = await transaction.public.chargeAttempts.insertAndGet({

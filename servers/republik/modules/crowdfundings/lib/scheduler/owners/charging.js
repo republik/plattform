@@ -9,7 +9,7 @@ const { prolong: autoPayProlong } = require('../../AutoPay')
 const { SLACK_CHANNEL_AUTOPAY } = process.env
 
 module.exports = async (user, bucket, context) => {
-  const { pgdb, mail, t } = context
+  const { pgdb, redis, mail, t } = context
 
   const anchorDate = user.prolongBeforeDate
   const { membershipId, autoPay } = user.user
@@ -58,7 +58,7 @@ module.exports = async (user, bucket, context) => {
 
   if (doAttemptCharge) {
     debug('attempt to charge #%i, membershipId: %s', previousAttempts.length + 1, autoPay.membershipId)
-    const chargeAttempt = await autoPayProlong(autoPay, pgdb)
+    const chargeAttempt = await autoPayProlong(autoPay, pgdb, redis)
 
     const isNextAttemptLast = previousAttempts.length + 2 === attempts.lengthd
     const payload = {
