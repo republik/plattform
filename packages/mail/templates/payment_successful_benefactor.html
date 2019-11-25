@@ -49,20 +49,31 @@
                     <p>Stellen Sie dafür bitte sicher, dass Sie Ihre Adresse unter <a href="{{link_account_account}}">{{link_account}}</a> korrekt eingetragen haben.</p>
 
                     {{#if goodies_count}}
-                      {{#if `goodies_count == 1`}}
-                        <p>Sie haben sich zu Ihrer Gönnermitgliedschaft noch ein Republik-Objekt gegönnt. Auch dieses werden wir Ihnen innerhalb der nächsten Tage per Post zustellen.</p>
-                      {{elseif `goodies_count > 1`}}
-                        <p>Sie haben sich zu Ihrer Gönnermitgliedschaft noch mehrere Republik-Objekte gegönnt. Auch diese werden wir Ihnen innerhalb der nächsten Tage per Post zustellen.</p>
-                      {{/if}}
+                      <p>
+                        {{#if `goodies_count == 1`}}
+                          Sie haben sich zu Ihrer Gönner-Mitgliedschaft noch ein Republik-Objekt gegönnt.
+                        {{elseif `goodies_count > 1`}}
+                          Sie haben sich zu Ihrer Gönner-Mitgliedschaft noch mehrere Republik-Objekte gegönnt.
+                        {{/if}}
+
+                        {{#if goodies_has_tablebook}}
+                          Versandstart für «Republik bei Stromausfall» ist der 13. Dezember.
+                        {{/if}}
+                        {{#if goodies_has_totebag}}
+                          Notizbücher oder Taschen liefern wir innerhalb von 7 Werktagen.
+                        {{elseif goodies_has_notebook}}
+                          Notizbücher oder Taschen liefern wir innerhalb von 7 Werktagen.
+                        {{/if}}
+                      </p>
+
                       <ul>
                         {{#options}}
                           {{#if `this.otype == "Goodie"`}}
-                          <li>
-                            {{this.oamount}} {{this.olabel}}
-                          </li>
+                            <li>{{this.oamount}} {{this.olabel}}</li>
                           {{/if}}
                         {{/options}}
                       </ul>
+                      <p><strong>Stellen Sie dafür bitte sicher, dass Sie Ihre Adresse unter <a href="{{link_account_account}}">{{link_account}}</a> korrekt eingetragen haben.</strong></p>
                     {{/if}}
                     
                     {{#if `total > 1000`}}
