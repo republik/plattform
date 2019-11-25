@@ -44,13 +44,23 @@
                       <p>Um den Gutscheincode einzulösen, muss der neue Besitzer oder die neue Besitzerin nur auf die Seite <a href="{{link_claim}}">{{link_claim}}</a> gehen. Und den Code dort eingeben.</p>
 
                       {{#if goodies_count}}
-                        {{#if `goodies_count == 1`}}
-                          <p>Auch Ihr bestelltes Republik-Objekt eignet sich perfekt für die Code-Übergabe. 
-                            Wir werden es Ihnen innerhalb der nächsten 7 Werktage per Post zustellen.</p>
-                        {{elseif `goodies_count > 1`}}
-                          <p>Auch Ihre bestellten Republik-Objekte eignen sich perfekt für die Code-Übergabe. 
-                            Wir werden sie Ihnen innerhalb der nächsten 7 Werktage per Post zustellen.</p>
-                        {{/if}}
+                        <p>
+                          {{#if `goodies_count == 1`}}
+                            Auch Ihr bestelltes Republik-Objekt eignet sich perfekt für die Code-Übergabe.
+                          {{elseif `goodies_count > 1`}}
+                            Auch Ihre bestellten Republik-Objekte eignen sich perfekt für die Code-Übergabe.
+                          {{/if}}
+                          
+                          {{#if goodies_has_tablebook}}
+                            Versandstart für «Republik bei Stromausfall» ist der 13. Dezember.
+                          {{/if}}
+                          {{#if goodies_has_totebag}}
+                            Notizbücher oder Taschen liefern wir innerhalb von 7 Werktagen.
+                          {{elseif goodies_has_notebook}}
+                            Notizbücher oder Taschen liefern wir innerhalb von 7 Werktagen.
+                          {{/if}}
+                        </p>
+
                         <ul>
                           {{#options}}
                             {{#if `this.otype == "Goodie"`}}

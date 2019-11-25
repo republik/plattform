@@ -139,6 +139,14 @@ module.exports = async (_, args, context) => {
         throw new Error(t('api/unexpected'))
       }
 
+      if (pko.disabled) {
+        logger.error(
+          'option must be enabled',
+          { req: req._log(), args, plo, pko }
+        )
+        throw new Error(t('api/unexpected'))
+      }
+
       if (!(pko.minAmount <= plo.amount && plo.amount <= pko.maxAmount)) {
         logger.error(
           `amount in option (templateId: ${plo.templateId}) out of range`,
@@ -306,7 +314,7 @@ module.exports = async (_, args, context) => {
     })
     if (userHasActiveMembership || userHasMonthlyMembership) {
       const pledgeOptionsTree = await getPledgeOptionsTree(pledge.options, transaction)
-      for (let plo of pledgeOptionsTree) {
+      for (const plo of pledgeOptionsTree) {
         if (
           plo.packageOption.reward &&
           plo.packageOption.reward.membershipType &&

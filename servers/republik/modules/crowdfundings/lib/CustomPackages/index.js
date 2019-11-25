@@ -2,6 +2,7 @@ const debug = require('debug')('crowdfundings:lib:CustomPackages')
 const moment = require('moment')
 const uuid = require('uuid/v4')
 const Promise = require('bluebird')
+const { ascending, descending } = require('d3-array')
 
 const { applyPgInterval: { add: addInterval } } = require('@orbiting/backend-modules-utils')
 
@@ -92,7 +93,14 @@ const evaluate = async ({
 }) => {
   debug('evaluate')
 
-  const { reward, membershipType: packageOptionMembershipType } = packageOption
+  if (packageOption.reward.type !== 'MembershipType') {
+    return {
+      ...packageOption,
+      templateId: packageOption.id
+    }
+  }
+
+  const { membershipType: packageOptionMembershipType } = packageOption
   const { membershipType, membershipPeriods } = membership
   const now = moment()
 
@@ -102,7 +110,7 @@ const evaluate = async ({
     package: package_,
     id: [packageOption.id, membership.id].join('-'),
     membership,
-    optionGroup: reward.type === 'MembershipType' ? membership.id : false,
+    optionGroup: membership.id,
     additionalPeriods: []
   }
 
@@ -200,23 +208,21 @@ const evaluate = async ({
     }
   })
 
-  if (reward.type === 'MembershipType') {
-    // If membership stems from ABO_GIVE_MONTHS package, default ABO option
-    if (membership.pledge.package.name === 'ABO_GIVE_MONTHS') {
-      if (packageOption.membershipType.name === 'ABO') {
-        payload.defaultAmount = 1
-      }
+  // If membership stems from ABO_GIVE_MONTHS package, default ABO option
+  if (membership.pledge.package.name === 'ABO_GIVE_MONTHS') {
+    if (packageOption.membershipType.name === 'ABO') {
+      payload.defaultAmount = 1
+    }
+  } else {
+    if (membership.userId === package_.user.id) {
+      // If options is to extend membership, set defaultAmount to 1 if reward
+      // of current packageOption evaluated is same as in evaluated
+      // membership.
+      payload.defaultAmount =
+        packageOption.rewardId === membershipType.rewardId ? 1 : 0
     } else {
-      if (membership.userId === package_.user.id) {
-        // If options is to extend membership, set defaultAmount to 1 if reward
-        // of current packageOption evaluated is same as in evaluated
-        // membership.
-        payload.defaultAmount =
-          packageOption.rewardId === membershipType.rewardId ? 1 : 0
-      } else {
-        // If user does not own membership, set userPrice to false
-        payload.userPrice = false
-      }
+      // If user does not own membership, set userPrice to false
+      payload.userPrice = false
     }
   }
 
@@ -229,7 +235,7 @@ const getCustomOptions = async (package_) => {
 
   const { packageOptions } = package_
 
-  const results = []
+  const options = []
 
   await Promise.map(package_.user.memberships, membership => {
     return Promise.map(packageOptions, async packageOption => {
@@ -246,30 +252,44 @@ const getCustomOptions = async (package_) => {
         return false
       }
 
-      results.push(await evaluate({ package_, packageOption, membership }))
+      const evaluatedOption = await evaluate({ package_, packageOption, membership })
+
+      // Add option if there it is not in options already, determine
+      // by option.id.
+      if (!options.find(option => option.id === evaluatedOption.id)) {
+        options.push(evaluatedOption)
+      }
     })
   })
 
-  return results
+  // If there is no MembershipType reward left, return an empty array.
+  if (!options.filter(Boolean).find(option => option.reward.type === 'MembershipType')) {
+    return []
+  }
+
+  return options
     .filter(Boolean)
     // Sort by price
-    .sort((a, b) => a.price > b.price ? 1 : 0)
+    .sort((a, b) => descending(a.price, b.price))
     // Sort by defaultAmount
-    .sort((a, b) => a.defaultAmount < b.defaultAmount ? 1 : 0)
+    .sort((a, b) => descending(a.defaultAmount, b.defaultAmount))
     // Sort by sequenceNumber in an ascending manner
-    .sort(
-      (a, b) =>
-        a.membership.sequenceNumber < b.membership.sequenceNumber ? 1 : 0
-    )
+    .sort((a, b) => ascending(
+      a.membership && a.membership.sequenceNumber,
+      b.membership && b.membership.sequenceNumber
+    ))
     // Sort by membership "endDate", ascending
-    .sort((a, b) => {
-      const aDate = getLastEndDate(a.membership.membershipPeriods)
-      const bDate = getLastEndDate(b.membership.membershipPeriods)
-
-      return aDate < bDate ? 1 : 0
-    })
+    .sort((a, b) => ascending(
+      a.membership && getLastEndDate(a.membership.membershipPeriods),
+      b.membership && getLastEndDate(b.membership.membershipPeriods)
+    ))
     // Sort by userID, own ones up top.
-    .sort((a, b) => a.membership.userId !== package_.user.id ? 1 : 0)
+    .sort((a, b) => descending(
+      a.membership && a.membership.userId === package_.user.id,
+      b.membership && b.membership.userId === package_.user.id
+    ))
+    // Sort by sortOrder at lat
+    .sort((a, b) => ascending(a.order, b.order))
 }
 
 /*
@@ -354,13 +374,16 @@ const resolvePackages = async ({ packages, pledger = {}, pgdb }) => {
 
   const allPackageOptions =
     await pgdb.public.packageOptions.find({
-      packageId: packages.map(package_ => package_.id)
+      packageId: packages.map(package_ => package_.id),
+      disabled: false
     })
 
   const allRewards =
-    await pgdb.public.rewards.find({
-      id: allPackageOptions.map(option => option.rewardId)
-    })
+    allPackageOptions.length > 0
+      ? await pgdb.public.rewards.find({
+        id: allPackageOptions.map(option => option.rewardId)
+      })
+      : []
 
   const allGoodies =
     allRewards.length > 0
