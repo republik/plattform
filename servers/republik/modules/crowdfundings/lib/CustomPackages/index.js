@@ -19,8 +19,7 @@ const OPTIONS_REQUIRE_CLAIMER = ['BENEFACTOR_ABO']
 const findEligableMemberships = ({
   memberships,
   user,
-  ignoreClaimedMemberships = false,
-  ignoreAutoPayFlag = false
+  ignoreClaimedMemberships = false
 }) =>
   memberships.filter(m => {
     const isCurrentClaimer = m.userId === user.id
@@ -38,8 +37,6 @@ const findEligableMemberships = ({
       ['ABO_GIVE', 'ABO_GIVE_MONTHS'].includes(m.pledge.package.name) &&
       m.active
 
-    const isAutoPay = !!m.autoPay
-
     debug({
       id: m.id,
       membershipTypeName: m.membershipType.name,
@@ -49,14 +46,12 @@ const findEligableMemberships = ({
       isCurrentClaimer,
       isExtendable,
       isClaimedMembership,
-      isSelfClaimed,
-      isAutoPay
+      isSelfClaimed
     })
 
     return isCurrentClaimer &&
       (isExtendable || isClaimedMembership || isSelfClaimed) &&
-      (!ignoreClaimedMemberships || !isClaimedMembership) &&
-      (ignoreAutoPayFlag || !isAutoPay)
+      (!ignoreClaimedMemberships || !isClaimedMembership)
   })
 
 const findDormantMemberships = ({ memberships, user }) =>
