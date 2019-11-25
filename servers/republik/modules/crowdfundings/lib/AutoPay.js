@@ -32,11 +32,15 @@ const suggest = async (membershipId, pgdb) => {
     return false
   }
 
-  // Find latest pledge
+  // Find latest successful pledge
   const pledge = await pgdb.public.pledges.findOne(
     { id: relatedPledgeOptions.map(po => po.pledgeId), status: 'SUCCESSFUL' },
     { orderBy: { createdAt: 'DESC' }, limit: 1 }
   )
+
+  if (!pledge) {
+    return false
+  }
 
   // to get membership-related rewardId
   const membershipTypes = await pgdb.public.membershipTypes.findAll()
@@ -54,18 +58,16 @@ const suggest = async (membershipId, pgdb) => {
         packageOption: membershipPackageOptions.find(po => po.id === pledgeOption.templateId)
       }))
 
-  const withOtherRewards = pledgeOptions.filter(po => !po.packageOption).length > 1
-  const withOtherMemberships = pledgeOptions.filter(po => !!po.packageOption).length > 1
   const membershipPledgeOptions = pledgeOptions.filter(po => !!po.packageOption)
 
-  const rewardId = membershipPledgeOptions > 1
+  const rewardId = membershipPledgeOptions.length > 1
     ? membershipPledgeOptions.find(po => po.membershipId === membershipId).packageOption.rewardId
     : membershipPledgeOptions[0].packageOption.rewardId
 
-  // Find latest pledge payments
+  // Find pledge payments
   const pledgePayments = await pgdb.public.pledgePayments.find({ pledgeId: pledge.id })
 
-  // Find latest pledge payment
+  // Find latest payment
   const payment = await pgdb.public.payments.findOne(
     { id: pledgePayments.map(p => p.paymentId) },
     { orderBy: { createdAt: 'DESC' }, limit: 1 }
@@ -99,9 +101,7 @@ const suggest = async (membershipId, pgdb) => {
         payment.pspPayload.source &&
         payment.pspPayload.source.card,
       withDiscount: pledge.donation < 0,
-      withDonation: pledge.donation > 0,
-      withOtherMemberships,
-      withOtherRewards
+      withDonation: pledge.donation > 0
     }
   }
 }
