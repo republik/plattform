@@ -121,8 +121,8 @@ const createBuckets = (now) => [
   {
     name: 'membership_owner_autopay',
     endDate: {
-      min: moment(now).add(-30, 'days'),
-      max: moment(now).add(30, 'days') // + 14 days to be sure
+      min: moment(now).add(-14, 'days'),
+      max: moment(now).add(0, 'days')
     },
     predicate: ({ id: userId, membershipType, membershipAutoPay, autoPay }) => {
       return ['ABO', 'BENEFACTOR_ABO'].includes(membershipType) &&
