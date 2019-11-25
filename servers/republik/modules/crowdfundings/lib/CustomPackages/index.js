@@ -55,8 +55,8 @@ const findEligableMemberships = ({
 
     return isCurrentClaimer &&
       (isExtendable || isClaimedMembership || isSelfClaimed) &&
-      (!ignoreClaimedMemberships || (ignoreClaimedMemberships && !isClaimedMembership)) &&
-      (ignoreAutoPayFlag || (!ignoreAutoPayFlag && !isAutoPay))
+      (!ignoreClaimedMemberships || !isClaimedMembership) &&
+      (ignoreAutoPayFlag || !isAutoPay)
   })
 
 const findDormantMemberships = ({ memberships, user }) =>
