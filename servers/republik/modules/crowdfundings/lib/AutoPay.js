@@ -86,6 +86,7 @@ const suggest = async (membershipId, pgdb) => {
       pledgeId: pledge.id,
       companyId: prolongPackage.companyId,
       membershipId: membership.id,
+      membershipType: membershipTypes.find(mt => mt.rewardId === rewardId).name,
       currentPeriods: membershipPeriods,
       endDate,
       graceEndDate: addInterval(endDate, membership.graceInterval),
@@ -95,7 +96,7 @@ const suggest = async (membershipId, pgdb) => {
       card: payment.pspPayload &&
         payment.pspPayload.source &&
         payment.pspPayload.source.card,
-      withReduction: pledge.donation < 0,
+      withDiscount: pledge.donation < 0,
       withDonation: pledge.donation > 0,
       withOtherMemberships,
       withOtherRewards
