@@ -3,6 +3,7 @@ const moment = require('moment')
 const { ascending } = require('d3-array')
 
 const { publish: slackPublish } = require('@orbiting/backend-modules-slack')
+const { formatPrice } = require('@orbiting/backend-modules-formats')
 
 const { prolong: autoPayProlong } = require('../../AutoPay')
 
@@ -86,21 +87,29 @@ module.exports = async (user, bucket, context) => {
       console.warn(e)
     }
 
-    if (chargeAttempt.status !== 'SUCCESS') {
-      try {
+    try {
+      if (chargeAttempt.status === 'SUCCESS') {
         await slackPublish(
           SLACK_CHANNEL_AUTOPAY,
           [
-            `AutoPay schlug fehl: _${chargeAttempt.error.message}_`,
-            `UserId: ${autoPay.userId}`,
-            `MembershipId: ${autoPay.membershipId}`,
-            `Betrag: ${autoPay.total / 100}`,
-            `Versuch: ${payload.attemptNumber}`
+            `:white_check_mark: Automatische Abbuchung erfolgreich (${payload.attemptNumber}. Versuch):`,
+            `Betrag: ${formatPrice(autoPay.total)}, membershipId: ${membershipId}`,
+            `https://admin.republik.ch/users/${autoPay.userId}`
           ].join('\n')
         )
-      } catch (e) {
-        console.warn(e)
+      } else {
+        await slackPublish(
+          SLACK_CHANNEL_AUTOPAY,
+          [
+            `:x: Fehler bei automatischer Abbuchung (${payload.attemptNumber}. Versuch):`,
+            `*${chargeAttempt.error.name}: ${chargeAttempt.error.message}*`,
+            `Betrag: ${formatPrice(autoPay.total)}, membershipId: ${membershipId}`,
+            `https://admin.republik.ch/users/${autoPay.userId}`
+          ].join('\n')
+        )
       }
+    } catch (e) {
+      console.warn(e)
     }
   }
 }
