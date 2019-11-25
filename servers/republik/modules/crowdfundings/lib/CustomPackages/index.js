@@ -370,13 +370,16 @@ const resolvePackages = async ({ packages, pledger = {}, pgdb }) => {
 
   const allPackageOptions =
     await pgdb.public.packageOptions.find({
-      packageId: packages.map(package_ => package_.id)
+      packageId: packages.map(package_ => package_.id),
+      disabled: false
     })
 
   const allRewards =
-    await pgdb.public.rewards.find({
-      id: allPackageOptions.map(option => option.rewardId)
-    })
+    allPackageOptions.length > 0
+      ? await pgdb.public.rewards.find({
+        id: allPackageOptions.map(option => option.rewardId)
+      })
+      : []
 
   const allGoodies =
     allRewards.length > 0
