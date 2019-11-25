@@ -419,6 +419,22 @@ mail.prepareMembershipOwnerNotice = async ({ user, endDate, graceEndDate, cancel
         name: 'sequence_number',
         content: sequenceNumber
       },
+      autoPay && autoPay.membershipType && {
+        name: 'autopay_membership_type',
+        content: autoPay.membershipType
+      },
+      autoPay && autoPay.withDiscount && {
+        name: 'autopay_with_discount',
+        content: autoPay.withDiscount
+      },
+      autoPay && autoPay.withDonation && {
+        name: 'autopay_with_donation',
+        content: autoPay.withDonation
+      },
+      autoPay && autoPay.defaultPrice && {
+        name: 'autopay_default_price',
+        content: formatPriceChf(autoPay.defaultPrice / 100)
+      },
       autoPay && autoPay.total && {
         name: 'autopay_total',
         content: formatPriceChf(autoPay.total / 100)
