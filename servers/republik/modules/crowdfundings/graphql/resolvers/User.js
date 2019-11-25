@@ -80,18 +80,24 @@ module.exports = {
     }
     return null
   },
-  async prolongBeforeDate (user, { ignoreClaimedMemberships = false }, context) {
+  async prolongBeforeDate (
+    user,
+    {
+      ignoreClaimedMemberships = false,
+      ignoreAutoPayFlag = false
+    },
+    context
+  ) {
     const { pgdb, user: me } = context
     debug('prolongBeforeDate')
 
     Roles.ensureUserIsMeOrInRoles(user, me, ['admin', 'supporter'])
 
-    const cache = createCache({
-      prefix: `User:${user.id}`,
-      key: `prolongBeforeDate-${ignoreClaimedMemberships}`,
-      ttl: QUERY_CACHE_TTL_SECONDS,
-      disabled: DISABLE_RESOLVER_USER_CACHE
-    }, context)
+    const cache = createMembershipCache(
+      user,
+      `prolongBeforeDate-${ignoreClaimedMemberships}-${ignoreAutoPayFlag}`,
+      context
+    )
 
     return cache.cache(async function () {
       let memberships = await pgdb.public.memberships.find({
@@ -120,7 +126,8 @@ module.exports = {
       const eligableMemberships = findEligableMemberships({
         memberships,
         user,
-        ignoreClaimedMemberships
+        ignoreClaimedMemberships,
+        ignoreAutoPayFlag
       })
 
       if (hasDormantMembership({ user, memberships: eligableMemberships })) {
@@ -247,12 +254,7 @@ module.exports = {
 
     Roles.ensureUserIsMeOrInRoles(user, me, ['admin', 'supporter'])
 
-    const cache = createCache({
-      prefix: `User:${user.id}`,
-      key: 'isBonusEligable',
-      ttl: QUERY_CACHE_TTL_SECONDS,
-      disabled: DISABLE_RESOLVER_USER_CACHE
-    }, context)
+    const cache = createMembershipCache(user, 'isBonusEligable', context)
 
     return cache.cache(async function () {
       const allPeriods = (await getCustomPackages({ user, pgdb }))

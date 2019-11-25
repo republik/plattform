@@ -200,7 +200,7 @@ const getBuckets = async ({ now }, context) => {
     async (user) => {
       const prolongBeforeDate = await getProlongBeforeDate(
         user,
-        { ignoreClaimedMemberships: false },
+        { ignoreAutoPayFlag: true },
         { ...context, user }
       )
         .then(date => date && moment(date))

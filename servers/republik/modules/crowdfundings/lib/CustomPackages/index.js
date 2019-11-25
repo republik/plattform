@@ -16,7 +16,12 @@ const EXTENDABLE_PACKAGE_NAMES = ['ABO', 'BENEFACTOR']
 const OPTIONS_REQUIRE_CLAIMER = ['BENEFACTOR_ABO']
 
 // for a user to prolong
-const findEligableMemberships = ({ memberships, user, ignoreClaimedMemberships = false }) =>
+const findEligableMemberships = ({
+  memberships,
+  user,
+  ignoreClaimedMemberships = false,
+  ignoreAutoPayFlag = false
+}) =>
   memberships.filter(m => {
     const isCurrentClaimer = m.userId === user.id
 
@@ -33,6 +38,8 @@ const findEligableMemberships = ({ memberships, user, ignoreClaimedMemberships =
       ['ABO_GIVE', 'ABO_GIVE_MONTHS'].includes(m.pledge.package.name) &&
       m.active
 
+    const isAutoPay = !!m.autoPay
+
     debug({
       id: m.id,
       membershipTypeName: m.membershipType.name,
@@ -42,12 +49,14 @@ const findEligableMemberships = ({ memberships, user, ignoreClaimedMemberships =
       isCurrentClaimer,
       isExtendable,
       isClaimedMembership,
-      isSelfClaimed
+      isSelfClaimed,
+      isAutoPay
     })
 
     return isCurrentClaimer &&
       (isExtendable || isClaimedMembership || isSelfClaimed) &&
-      (!ignoreClaimedMemberships || (ignoreClaimedMemberships && !isClaimedMembership))
+      (!ignoreClaimedMemberships || (ignoreClaimedMemberships && !isClaimedMembership)) &&
+      (ignoreAutoPayFlag || (!ignoreAutoPayFlag && !isAutoPay))
   })
 
 const findDormantMemberships = ({ memberships, user }) =>
@@ -96,7 +105,7 @@ const evaluate = async ({
     ...packageOption,
     templateId: packageOption.id,
     package: package_,
-    id: [ packageOption.id, membership.id ].join('-'),
+    id: [packageOption.id, membership.id].join('-'),
     membership,
     optionGroup: reward.type === 'MembershipType' ? membership.id : false,
     additionalPeriods: []
