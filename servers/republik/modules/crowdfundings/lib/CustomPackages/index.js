@@ -17,7 +17,11 @@ const EXTENDABLE_PACKAGE_NAMES = ['ABO', 'BENEFACTOR']
 const OPTIONS_REQUIRE_CLAIMER = ['BENEFACTOR_ABO']
 
 // for a user to prolong
-const findEligableMemberships = ({ memberships, user, ignoreClaimedMemberships = false }) =>
+const findEligableMemberships = ({
+  memberships,
+  user,
+  ignoreClaimedMemberships = false
+}) =>
   memberships.filter(m => {
     const isCurrentClaimer = m.userId === user.id
 
@@ -48,7 +52,7 @@ const findEligableMemberships = ({ memberships, user, ignoreClaimedMemberships =
 
     return isCurrentClaimer &&
       (isExtendable || isClaimedMembership || isSelfClaimed) &&
-      (!ignoreClaimedMemberships || (ignoreClaimedMemberships && !isClaimedMembership))
+      (!ignoreClaimedMemberships || !isClaimedMembership)
   })
 
 const findDormantMemberships = ({ memberships, user }) =>

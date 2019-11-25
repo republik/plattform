@@ -1,5 +1,5 @@
 {
-  "updated": "2019-11-22T12:00:32.421Z",
+  "updated": "2019-11-22T18:14:52.758Z",
   "title": "live",
   "data": [
     {
@@ -563,7 +563,7 @@
       "value": "Ihre Abonnementsrechnung"
     },
     {
-      "key": "api/email/membership_owner_autopay_notice_5/subject",
+      "key": "api/email/membership_owner_autopay_notice/subject",
       "value": "Ihre Mitgliedschaft erneuert sich automatisch"
     },
     {
@@ -1633,6 +1633,30 @@
     {
       "key": "profile/cards/needed",
       "value": "Ihr Profil ist im Moment einer Wahltindär-Karte zugeordnet und kann im Moment nicht zurückgenommen werden."
+    },
+    {
+      "key": "api/email/membership_owner_autopay_successful/subject",
+      "value": "Ihre Mitgliedschaft wurde erfolgreich verlängert"
+    },
+    {
+      "key": "api/email/membership_owner_autopay_failed/subject",
+      "value": "Jahresbeitrag: Abbuchung fehlgeschlagen"
+    },
+    {
+      "key": "api/email/membership_owner_autopay_failed_1/subject",
+      "value": "Jahresbeitrag: Abbuchung fehlgeschlagen"
+    },
+    {
+      "key": "api/email/membership_owner_autopay_failed_2/subject",
+      "value": "Jahresbeitrag: Abbuchung erneut fehlgeschlagen"
+    },
+    {
+      "key": "api/email/membership_owner_autopay_failed_3/subject",
+      "value": "Jahresbeitrag: Abbuchung erneut fehlgeschlagen"
+    },
+    {
+      "key": "api/email/membership_owner_autopay_failed_4/subject",
+      "value": "Jahresbeitrag: Automatische Abbuchung nicht möglich"
     }
   ]
 }

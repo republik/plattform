@@ -1,11 +1,13 @@
 const getClients = require('./clients')
 const crypto = require('crypto')
+const { descending } = require('d3-array')
 
 module.exports = async ({
   amount,
   userId,
   companyId,
-  sourceId, // optional - if empty default_source is used
+  sourceId, // optional - if empty, default_source is used
+  fingerprint, // optional - if empty, default_source is used
   threeDSecure = false,
   pgdb
 }) => {
@@ -24,7 +26,7 @@ module.exports = async ({
     throw new Error(`could not find stripeCustomer for userId: ${userId} companyId: ${companyId}`)
   }
 
-  if (sourceId) {
+  if (sourceId || fingerprint) {
     let _sourceId
     // in case of 3D secure, we have to use the special source directly.
     // It's card source was attached to the customer ind payPledge
@@ -35,13 +37,18 @@ module.exports = async ({
         customer.id
       )
 
-      const originalSourceChecksum = crypto
+      const originalSourceChecksum = sourceId && crypto
         .createHash('sha1')
         .update(sourceId)
         .digest('hex')
 
-      const source = stripeCustomer.sources.data.find(s =>
+      if (stripeCustomer.deleted) {
+        throw new Error('createCharge found a deleted user')
+      }
+
+      const source = stripeCustomer.sources.data.sort((a, b) => descending(a.created, b.created)).find(s =>
         s.id === sourceId ||
+        (s.card && s.card.fingerprint === fingerprint) ||
         (s.metadata && s.metadata.original_source_checksum &&
           s.metadata.original_source_checksum === originalSourceChecksum)
       )

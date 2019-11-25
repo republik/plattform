@@ -38,9 +38,26 @@
                       Sehr geehrte Dame<br />
                       Sehr geehrter Herr
                     </p>
-                    <p>Am {{end_date}} erneuert sich Ihre Mitgliedschaft um ein weiteres Jahr. Bei Ihrem letzten Kauf haben Sie angegeben, dass Sie uns erlauben, Ihre hinterlegte Kreditkarte automatisch zu belasten.</p>
+                    <p>Am {{end_date}} erneuert sich Ihre Mitgliedschaft um ein weiteres Jahr. Herzlichen Dank für Ihre Unterstützung. Wir sind sehr froh, Sie an Bord zu wissen.</p>
+                    <p>Bei Ihrem letzten Kauf haben Sie angegeben, dass Sie uns erlauben, Ihre hinterlegte Kreditkarte automatisch zu belasten.</p>
                     <p>Diese E-Mail informiert Sie darüber, dass wir das in {{days_left}} Tagen tatsächlich und unverfroren tun werden: Ihre {{autopay_card_brand}}-Kreditkarte mit den Endziffern {{autopay_card_last4}} belasten wir am {{end_date}} mit {{autopay_total}}.</p>
-                    <p>Bis dahin können Sie, falls gewünscht, <a href="{{prolong_url}}">eine andere Kreditkarte hinterlegen</a>, <a href="{{prolong_url}}">eine andere Zahlungsart wählen</a> oder <a href="{{link_account_abos}}">im Konto die Mitgliedschaft verwalten</a>.</p>
+                    {{#if `autopay_membership_type == "BENEFACTOR_ABO"`}}
+                      {{#if autopay_with_donation}}
+                        <p>Dieser Beitrag kommt zustande, weil Sie die Republik im letzten Jahr grosszügigerweise mit einer Gönner-Mitgliedschaft und einer zusätzlichen Spende unterstützt haben. Durch Sie ist unsere Unabhängigkeit, unsere Werbefreiheit, ja unsere Existenz erst möglich. Wir bedanken uns von ganzem Herzen und hoffen, dass Sie sich und uns treu bleiben und weiterhin in kompromisslosen Journalismus investieren. Sollten Sie es sich anders überlegen, können Sie <a href="{{prolong_url}}">Ihre Mitgliedschaft beziehungsweise die Höhe Ihres Spendenbeitrags vor der Abbuchung noch anpassen</a>.</p>
+                      {{else}}
+                        <p>Dieser Beitrag kommt zustande, weil Sie die Republik im letzten Jahr grosszügigerweise mit einer Gönner-Mitgliedschaft unterstützt haben. Durch Sie ist unsere Unabhängigkeit, unsere Werbefreiheit, ja unsere Existenz erst möglich. Wir bedanken uns von ganzem Herzen und hoffen, dass Sie sich und uns treu bleiben und weiterhin in kompromisslosen Journalismus investieren. Sollten Sie es sich anders überlegen, können Sie <a href="{{prolong_url}}">Ihre Mitgliedschaft beziehungsweise die Höhe Ihres Spendenbeitrags vor der Abbuchung noch anpassen</a>.</p>
+                      {{/if}}
+                    {{else}}
+                      {{#if autopay_with_discount}}
+                        <p>Sie haben im letzten Jahr einen reduzierten Beitrag für Ihre Mitgliedschaft bezahlt. Da unsere Unabhängigkeit und Werbefreiheit, ja unsere Existenz von der Unterstützung unserer Verlegerinnen abhängt, wäre es grandios, wenn Sie <a href="{{prolong_url}}">Ihre Mitgliedschaft auf den regulären Beitrag von {{autopay_default_price}} anpassen</a> könnten.</p>
+                      {{elseif autopay_with_donation}}
+                        <p>Dieser Beitrag kommt zustande, weil Sie die Republik im letzten Jahr grosszügigerweise mit einer zusätzlichen Spende unterstützt haben. Durch Sie ist unsere Unabhängigkeit, unsere Werbefreiheit, ja unsere Existenz erst möglich. Wir bedanken uns von ganzem Herzen und hoffen, dass Sie sich und uns treu bleiben und weiterhin in kompromisslosen Journalismus investieren. Sollten Sie es sich anders überlegen, können Sie <a href="{{prolong_url}}">Ihre Mitgliedschaft beziehungsweise die Höhe Ihres Spendenbeitrags vor der Abbuchung noch anpassen</a>. </p>
+                      {{else}}
+                        <p>Sie haben sich im letzten Jahr für eine reguläre Mitgliedschaft entschieden. 
+Sollten Sie dieses Mal noch mehr in kompromisslosen, unabhängigen und werbefreien Journalismus investieren wollen und können, passen Sie doch <a href="{{prolong_url}}">Ihren Mitgliedsbeitrag vor der Abbuchung noch an</a>. Jede Spende macht einen Unterschied.</p>
+                      {{/if}}
+                    {{/if}}
+                    <p>Ausserdem können Sie bis zur Abbuchung falls gewünscht <a href="{{prolong_url}}">eine andere Kreditkarte hinterlegen, eine andere Zahlungsart wählen</a> oder <a href="{{cancel_url}}">Ihre Mitgliedschaft kündigen</a>.</p>
                     <p>Wir melden uns erneut, sobald Ihr Abonnement erfolgreich verlängert wurde. In der Zwischenzeit können Sie sich bei Fragen unter <a href="mailto:kontakt@republik.ch">kontakt@republik.ch</a> melden.</p>
                     <p>Herzlich</p>
                     <p>Ihre Crew der Republik</p>

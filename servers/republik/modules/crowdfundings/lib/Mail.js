@@ -372,7 +372,7 @@ mail.prepareMembershipOwnerNotice = async ({ user, endDate, graceEndDate, cancel
   const membershipId = user.membershipId || false
   const sequenceNumber = user.membershipSequenceNumber || false
 
-  const autoPayPreferences = user.lastPledge && user.lastPledge.autoPayPreferences
+  const autoPay = user.autoPay
 
   return ({
     to: user.email,
@@ -420,20 +420,105 @@ mail.prepareMembershipOwnerNotice = async ({ user, endDate, graceEndDate, cancel
         name: 'sequence_number',
         content: sequenceNumber
       },
-      autoPayPreferences && autoPayPreferences.total && {
+      autoPay && autoPay.membershipType && {
+        name: 'autopay_membership_type',
+        content: autoPay.membershipType
+      },
+      autoPay && autoPay.withDiscount && {
+        name: 'autopay_with_discount',
+        content: autoPay.withDiscount
+      },
+      autoPay && autoPay.withDonation && {
+        name: 'autopay_with_donation',
+        content: autoPay.withDonation
+      },
+      autoPay && autoPay.defaultPrice && {
+        name: 'autopay_default_price',
+        content: formatPriceChf(autoPay.defaultPrice / 100)
+      },
+      autoPay && autoPay.total && {
         name: 'autopay_total',
-        content: formatPriceChf(autoPayPreferences.total / 100)
+        content: formatPriceChf(autoPay.total / 100)
       },
-      autoPayPreferences && autoPayPreferences.card && {
+      autoPay && autoPay.card && {
         name: 'autopay_card_brand',
-        content: autoPayPreferences.card.brand
+        content: autoPay.card.brand
       },
-      autoPayPreferences && autoPayPreferences.card && {
+      autoPay && autoPay.card && {
         name: 'autopay_card_last4',
-        content: autoPayPreferences.card.last4
+        content: autoPay.card.last4
       }
     ]
   })
+}
+
+mail.sendMembershipOwnerAutoPay = async ({ autoPay, payload, pgdb, t }) => {
+  const user = await pgdb.public.users.findOne({ id: autoPay.userId })
+  const customPledgeToken = AccessToken.generateForUser(user, 'CUSTOM_PLEDGE')
+  const version = payload.chargeAttemptStatus === 'SUCCESS' ? 'successful' : 'failed'
+  const templateName = `membership_owner_autopay_${version}`
+  const subject = t.first([
+    `api/email/${templateName}_${payload.attemptNumber}/subject`,
+    `api/email/${templateName}/subject`
+  ])
+
+  return sendMailTemplate({
+    to: user.email,
+    fromEmail: process.env.DEFAULT_MAIL_FROM_ADDRESS,
+    subject,
+    templateName,
+    mergeLanguage: 'handlebars',
+    globalMergeVars: [
+      {
+        name: 'prolong_url',
+        content: `${FRONTEND_BASE_URL}/angebote?package=PROLONG&token=${customPledgeToken}`
+      },
+      {
+        name: 'prolong_url_reduced',
+        content: `${FRONTEND_BASE_URL}/angebote?package=PROLONG&token=${customPledgeToken}&userPrice=1`
+      },
+      {
+        name: 'end_date',
+        content: dateFormat(autoPay.endDate)
+      },
+      {
+        name: 'grace_end_date',
+        content: dateFormat(autoPay.graceEndDate)
+      },
+      {
+        name: 'prolonged_end_date',
+        content: dateFormat(autoPay.prolongedEndDate)
+      },
+      {
+        name: 'autopay_total',
+        content: formatPriceChf(autoPay.total / 100)
+      },
+      autoPay.card && {
+        name: 'autopay_card_brand',
+        content: autoPay.card.brand
+      },
+      autoPay.card && {
+        name: 'autopay_card_last4',
+        content: autoPay.card.last4
+      },
+      {
+        name: 'attempt_number',
+        content: payload.attemptNumber
+      },
+      {
+        name: 'attempt_is_last',
+        content: payload.isLastAttempt
+      },
+      {
+        name: 'attempt_next_is_last',
+        content: payload.isNextAttemptLast
+      },
+      !payload.isLastAttempt && payload.nextAttemptDate && {
+        name: 'attempt_next_at',
+        content: dateFormat(payload.nextAttemptDate)
+      }
+    ]
+  }, { pgdb })
 }
 
 /**
