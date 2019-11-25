@@ -12,7 +12,7 @@ module.exports = async (user, bucket, context) => {
   const { pgdb, redis, mail, t } = context
 
   const anchorDate = user.prolongBeforeDate
-  const { membershipId, autoPay } = user.user
+  const { membershipId } = user.user
 
   // A list of dates after a charge attempts should be executed.
   const attempts = [
@@ -33,7 +33,7 @@ module.exports = async (user, bucket, context) => {
 
   // Back off, if attempts exceed amount of planned dates
   if (previousAttempts.length >= attempts.length) {
-    debug('backing off, allowed attempts exhausted, membershipId: %s', autoPay.membershipId)
+    debug('backing off, allowed attempts exhausted, membershipId: %s', membershipId)
     return
   }
 
@@ -46,7 +46,7 @@ module.exports = async (user, bucket, context) => {
       debug(
         'backing off, most recent attempt too recent, wait until %s, membershipId: %s',
         waitUntil.toISOString(),
-        autoPay.membershipId
+        membershipId
       )
       return
     }
@@ -57,8 +57,8 @@ module.exports = async (user, bucket, context) => {
   const doAttemptCharge = attempts.some((date, index) => moment().isAfter(date) && previousAttempts.length === index)
 
   if (doAttemptCharge) {
-    debug('attempt to charge #%i, membershipId: %s', previousAttempts.length + 1, autoPay.membershipId)
-    const chargeAttempt = await autoPayProlong(autoPay, pgdb, redis)
+    debug('attempt to charge #%i, membershipId: %s', previousAttempts.length + 1, membershipId)
+    const { suggestion: autoPay, chargeAttempt } = await autoPayProlong(membershipId, pgdb, redis)
 
     const isNextAttemptLast = previousAttempts.length + 2 === attempts.length
     const payload = {
@@ -72,23 +72,21 @@ module.exports = async (user, bucket, context) => {
       ))
     }
 
-    if (chargeAttempt.status === 'SUCCESS') {
-      debug('successful charge attempt #%i, membershipId: %s', previousAttempts.length + 1, autoPay.membershipId)
+    debug(
+      chargeAttempt.status === 'SUCCESS'
+        ? 'successful charge attempt #%i, membershipId: %s'
+        : 'failed charge attempt #%i, membershipId: %s',
+      previousAttempts.length + 1,
+      membershipId
+    )
 
-      try {
-        await mail.sendMembershipOwnerAutoPay({ autoPay, payload, pgdb, t })
-      } catch (e) {
-        console.warn(e)
-      }
-    } else {
-      debug('failed charge attempt #%i, membershipId: %s', previousAttempts.length + 1, autoPay.membershipId)
+    try {
+      await mail.sendMembershipOwnerAutoPay({ autoPay, payload, pgdb, t })
+    } catch (e) {
+      console.warn(e)
+    }
 
-      try {
-        await mail.sendMembershipOwnerAutoPay({ autoPay, payload, pgdb, t })
-      } catch (e) {
-        console.warn(e)
-      }
-
+    if (chargeAttempt.status !== 'SUCCESS') {
       try {
         await slackPublish(
           SLACK_CHANNEL_AUTOPAY,

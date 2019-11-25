@@ -106,12 +106,13 @@ const suggest = async (membershipId, pgdb) => {
   }
 }
 
-const prolong = async (suggestion, pgdb, redis) => {
+const prolong = async (membershipId, pgdb, redis) => {
   const transaction = await pgdb.transactionBegin()
+  const suggestion = await suggest(membershipId, pgdb)
 
   try {
     if (!suggestion) {
-      throw new Error('suggestion argument missing')
+      throw new Error('suggestion missing')
     }
 
     if (!suggestion.card) {
@@ -182,7 +183,7 @@ const prolong = async (suggestion, pgdb, redis) => {
       }
     )
 
-    return chargeAttempt
+    return { suggestion, chargeAttempt }
   } catch (e) {
     // Keep it together
     await transaction.transactionRollback()
@@ -204,13 +205,15 @@ const prolong = async (suggestion, pgdb, redis) => {
       }
     )
 
-    return pgdb.public.chargeAttempts.insertAndGet({
+    const chargeAttempt = await pgdb.public.chargeAttempts.insertAndGet({
       membershipId: suggestion.membershipId,
       total: suggestion.total,
       status: 'ERROR',
       error,
       createdAt: new Date()
     })
+
+    return { suggestion, chargeAttempt }
   }
 }
 
