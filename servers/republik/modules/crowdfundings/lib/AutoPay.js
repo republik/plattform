@@ -76,9 +76,10 @@ const suggest = async (membershipId, pgdb) => {
   // Pick package and options which may be used to submit and autopayment
   const user = await pgdb.public.users.findOne({ id: membership.userId })
   const prolongPackage = (await getCustomPackages({ user, pgdb })).find(p => p.name === 'PROLONG')
+
   const prolongOption = prolongPackage && prolongPackage.options
-    .filter(option => option.membership.id === membershipId)
-    .filter(option => option.membershipType.rewardId === rewardId)
+    .filter(option => option.membership && option.membership.id === membershipId)
+    .filter(option => option.membershipType && option.membershipType.rewardId === rewardId)
     .shift()
 
   const endDate = getLastEndDate(membershipPeriods)
