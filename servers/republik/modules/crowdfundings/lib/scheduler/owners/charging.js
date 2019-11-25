@@ -24,7 +24,7 @@ module.exports = async (user, bucket, context) => {
 
   // Minutes to wait before potential next attempt scheduled.
   // This is a safety measure.
-  const backOffMinutes = 0 // 1 minute apart
+  const backOffMinutes = 60 * 24 // 1 day apart
 
   const previousAttempts = await pgdb.public.chargeAttempts.find(
     { membershipId, 'createdAt >=': anchorDate },
@@ -53,7 +53,7 @@ module.exports = async (user, bucket, context) => {
   }
 
   // Do attempt to charge if (attempt) date is after now and attempt index
-  // matches amount of previous attempts. @TODO: Explain a little more.
+  // matches amount of previous attempts.
   const doAttemptCharge = attempts.some((date, index) => moment().isAfter(date) && previousAttempts.length === index)
 
   if (doAttemptCharge) {
