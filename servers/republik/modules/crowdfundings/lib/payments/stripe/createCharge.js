@@ -42,6 +42,10 @@ module.exports = async ({
         .update(sourceId)
         .digest('hex')
 
+      if (stripeCustomer.deleted) {
+        throw new Error('createCharge found a deleted user')
+      }
+
       const source = stripeCustomer.sources.data.sort((a, b) => descending(a.created, b.created)).find(s =>
         s.id === sourceId ||
         (s.card && s.card.fingerprint === fingerprint) ||
