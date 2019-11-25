@@ -553,6 +553,20 @@ mail.getPledgeMergeVars = async (
   const donation = pledge.donation > 0 ? pledge.donation / 100 : 0
   const total = pledge.total / 100
 
+  const hasGoodies = rewardGoodies.map(goodie => {
+    return {
+      name: `goodies_has_${goodie.name.toLowerCase()}`,
+      content: !!pledgeOptions
+        .filter(
+          pledgeOption =>
+            pledgeOption.packageOption.reward &&
+            pledgeOption.packageOption.reward.name === goodie.name &&
+            pledgeOption.amount > 0
+        )
+        .length
+    }
+  })
+
   return [
     // Purchase itself
     {
@@ -685,6 +699,7 @@ mail.getPledgeMergeVars = async (
         )
         .reduce((agg, pledgeOption) => agg + pledgeOption.amount, 0)
     },
+    ...hasGoodies, // goodies_has_[goodies.name]
     {
       name: 'address',
       content: address

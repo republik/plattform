@@ -44,28 +44,44 @@
                       <p>Wir schicken Ihnen, unserer neusten Verlegerin, unserem neusten Verleger, auch regelmässig Neuigkeiten aus Redaktion und Verlag: zu Vorhaben, Hintergründen, Entscheidungen und Fehlern. Sie können Kritik üben und Vorschläge machen. Und sich mit Ihren {{republik_memberships_count}} Kolleginnen und Kollegen in der Verlagsetage austauschen.</p>
                     {{/if}}
           
+                    <ul>
+                      {{#options}}
+                        <li>
+                          {{#if `this.oamount > 1`}}
+                            {{this.oamount}} {{this.olabel}} à {{this.oprice_formatted}}: {{this.ototal_formatted}}
+                          {{else}}
+                            {{this.oamount}} {{this.olabel}}: {{this.ototal_formatted}}
+                          {{/if}}
+                        </li>
+                      {{/options}}
+                      {{#if discount}}
+                        <li>Gewünschte Preisreduktion: –{{discount_formatted}}</li>
+                      {{/if}}
+                      {{#if donation}}
+                        <li>Spende: {{donation_formatted}}</li>
+                      {{/if}}
+                      <li>
+                        <strong>Total: {{total_formatted}}</strong>
+                      </li>
+                    </ul>
+                    
                     {{#if goodies_count}}
                       <p>
-                        <strong>Informationen zu Ihrer Bestellung:</strong><br />
                         {{#if `goodies_count == 1`}}
-                          Sie haben sich zu Ihrer Mitgliedschaft noch ein Republik-Objekt gegönnt.<br />
-                          Wir werden es Ihnen innerhalb der nächsten 7 Werktage per Post zustellen.
+                          Sie haben sich zu Ihrer Mitgliedschaft noch ein Republik-Objekt gegönnt.
                         {{elseif `goodies_count > 1`}}
-                          Sie haben sich zu Ihrer Mitgliedschaft noch mehrere Republik-Objekte gegönnt.<br />
-                          Wir werden sie Ihnen innerhalb der nächsten 7 Werktage per Post zustellen.
+                          Sie haben sich zu Ihrer Mitgliedschaft noch mehrere Republik-Objekte gegönnt.
+                        {{/if}}
+
+                        {{#if goodies_has_tablebook}}
+                          Versandstart für «Republik bei Stromausfall» ist der 13. Dezember. Bestellungen bis zum 18. Dezember können noch vor Weihnachten geliefert werden.
+                        {{/if}}
+                        {{#if goodies_has_totebag}}
+                          Notizbücher oder Taschen liefern wir innerhalb von 7 Werktagen.
+                        {{elseif goodies_has_notebook}}
+                          Notizbücher oder Taschen liefern wir innerhalb von 7 Werktagen.
                         {{/if}}
                       </p>
-
-                      <ul>
-                        {{#options}}
-                          {{#if `this.otype == "Goodie"`}}
-                          <li>
-                            {{this.oamount}} {{this.olabel}}
-                          </li>
-                          {{/if}}
-                        {{/options}}
-                      </ul>
-
                       <p><strong>Stellen Sie dafür bitte sicher, dass Sie Ihre Adresse unter <a href="{{link_account_account}}">{{link_account}}</a> korrekt eingetragen haben.</strong></p>
                     {{/if}}
                     

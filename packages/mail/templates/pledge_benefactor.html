@@ -73,26 +73,49 @@
                       <p><strong>Bitte vergessen Sie nicht, {{HRID}} in das Feld «Betreff» des Einzahlungsscheins zu schreiben, sonst funktioniert die Zuordnung nicht. Danke!</strong></p>
                     {{/if}}
 
+                    <ul>
+                      {{#options}}
+                        <li>
+                          {{#if `this.oamount > 1`}}
+                            {{this.oamount}} {{this.olabel}} à {{this.oprice_formatted}}: {{this.ototal_formatted}}
+                          {{else}}
+                            {{this.oamount}} {{this.olabel}}: {{this.ototal_formatted}}
+                          {{/if}}
+                        </li>
+                      {{/options}}
+                      {{#if discount}}
+                        <li>Gewünschte Preisreduktion: –{{discount_formatted}}</li>
+                      {{/if}}
+                      {{#if donation}}
+                        <li>Spende: {{donation_formatted}}</li>
+                      {{/if}}
+                      <li>
+                        <strong>Total: {{total_formatted}}</strong>
+                      </li>
+                    </ul>
+                    
                     {{#unless waiting_for_payment}}
                       {{#if goodies_count}}
-                        {{#if `goodies_count == 1`}}
-                          <p>Sie haben sich zu Ihrer Mitgliedschaft auch ein Republik-Objekt gegönnt. Wir werden es Ihnen innerhalb der nächsten 7 Werktage per Post zustellen.</p>
-                        {{elseif `goodies_count > 1`}}
-                          <p>Sie haben sich zu Ihrer Mitgliedschaft noch mehrere Republik-Objekte gegönnt. Wir werden sie Ihnen innerhalb der nächsten 7 Werktage per Post zustellen.</p>
-                        {{/if}}
-                        <ul>
-                        {{#options}}
-                          {{#if `this.otype == "Goodie"`}}
-                          <li>
-                            {{this.oamount}} {{this.olabel}}
-                          </li>
+                        <p>
+                          {{#if `goodies_count == 1`}}
+                            Sie haben sich zu Ihrer Gönner-Mitgliedschaft noch ein Republik-Objekt gegönnt.
+                          {{elseif `goodies_count > 1`}}
+                            Sie haben sich zu Ihrer Gönner-Mitgliedschaft noch mehrere Republik-Objekte gegönnt.
                           {{/if}}
-                        {{/options}}
-                        </ul>
+
+                          {{#if goodies_has_tablebook}}
+                            Versandstart für «Republik bei Stromausfall» ist der 13. Dezember. Bestellungen bis zum 18. Dezember können noch vor Weihnachten geliefert werden.
+                          {{/if}}
+                          {{#if goodies_has_totebag}}
+                            Notizbücher oder Taschen liefern wir innerhalb von 7 Werktagen.
+                          {{elseif goodies_has_notebook}}
+                            Notizbücher oder Taschen liefern wir innerhalb von 7 Werktagen.
+                          {{/if}}
+                        </p>
+                        <p><strong>Stellen Sie dafür bitte sicher, dass Sie Ihre Adresse unter <a href="{{link_account_account}}">{{link_account}}</a> korrekt eingetragen haben.</strong></p>
                       {{/if}}
                     {{/unless}}
 
-                    
                     <p>Vielen Dank!<br />
                       Und viel Vergnügen beim Start mit der Republik.</p>
                     <p>Ihre Crew der Republik</p>

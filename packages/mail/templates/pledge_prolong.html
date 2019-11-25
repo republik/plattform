@@ -66,7 +66,11 @@
                     <ul>
                       {{#options}}
                         <li>
-                          {{this.olabel}}: {{this.ototal_formatted}}
+                          {{#if `this.oamount > 1`}}
+                            {{this.oamount}} {{this.olabel}} à {{this.oprice_formatted}}: {{this.ototal_formatted}}
+                          {{else}}
+                            {{this.oamount}} {{this.olabel}}: {{this.ototal_formatted}}
+                          {{/if}}
                         </li>
                       {{/options}}
                       {{#if discount}}
@@ -94,6 +98,28 @@
                     {{elseif `gifted_memberships_count > 1`}}
                       <p>Vielen Dank, dass Sie die Republik anderen zukommen lassen: Sie verlängern auch Ihre Geschenkabonnemente. Wir haben die Beschenkten darüber per E-Mail informiert.</p>
                     {{/if}}
+
+                    {{#unless waiting_for_payment}}
+                      {{#if goodies_count}}
+                        <p>
+                          {{#if `goodies_count == 1`}}
+                            Sie haben sich noch ein Republik-Objekt gegönnt.
+                          {{elseif `goodies_count > 1`}}
+                            Sie haben sich noch mehrere Republik-Objekte gegönnt.
+                          {{/if}}
+
+                          {{#if goodies_has_tablebook}}
+                            Versandstart für «Republik bei Stromausfall» ist der 13. Dezember. Bestellungen bis zum 18. Dezember können noch vor Weihnachten geliefert werden.
+                          {{/if}}
+                          {{#if goodies_has_totebag}}
+                            Notizbücher oder Taschen liefern wir innerhalb von 7 Werktagen.
+                          {{elseif goodies_has_notebook}}
+                            Notizbücher oder Taschen liefern wir innerhalb von 7 Werktagen.
+                          {{/if}}
+                        </p>
+                        <p><strong>Stellen Sie dafür bitte sicher, dass Sie Ihre Adresse unter <a href="{{link_account_account}}">{{link_account}}</a> korrekt eingetragen haben.</strong></p>
+                      {{/if}}
+                    {{/unless}}
 
                     <p>Herzlich</p>
                     <p>Ihre Crew der Republik</p>
