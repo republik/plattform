@@ -60,7 +60,7 @@ module.exports = async (user, bucket, context) => {
     debug('attempt to charge #%i, membershipId: %s', previousAttempts.length + 1, autoPay.membershipId)
     const chargeAttempt = await autoPayProlong(autoPay, pgdb, redis)
 
-    const isNextAttemptLast = previousAttempts.length + 2 === attempts.lengthd
+    const isNextAttemptLast = previousAttempts.length + 2 === attempts.length
     const payload = {
       chargeAttemptStatus: chargeAttempt.status,
       attemptNumber: previousAttempts.length + 1,
