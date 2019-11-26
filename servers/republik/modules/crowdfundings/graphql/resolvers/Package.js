@@ -11,7 +11,7 @@ module.exports = {
 
     const packageOptions =
       await pgdb.public.packageOptions.find(
-        { packageId: package_.id },
+        { packageId: package_.id, disabled: false },
         { orderBy: { order: 'asc' } }
       )
 

@@ -1,5 +1,6 @@
 const debug = require('debug')('crowdfundings:lib:Mail')
 const moment = require('moment')
+const { ascending, descending } = require('d3-array')
 
 const { createMail, sendMailTemplate } = require('@orbiting/backend-modules-mail')
 const { grants } = require('@orbiting/backend-modules-access')
@@ -371,7 +372,7 @@ mail.prepareMembershipOwnerNotice = async ({ user, endDate, graceEndDate, cancel
   const membershipId = user.membershipId || false
   const sequenceNumber = user.membershipSequenceNumber || false
 
-  const autoPayPreferences = user.lastPledge && user.lastPledge.autoPayPreferences
+  const autoPay = user.autoPay
 
   return ({
     to: user.email,
@@ -419,20 +420,105 @@ mail.prepareMembershipOwnerNotice = async ({ user, endDate, graceEndDate, cancel
         name: 'sequence_number',
         content: sequenceNumber
       },
-      autoPayPreferences && autoPayPreferences.total && {
+      autoPay && autoPay.membershipType && {
+        name: 'autopay_membership_type',
+        content: autoPay.membershipType
+      },
+      autoPay && autoPay.withDiscount && {
+        name: 'autopay_with_discount',
+        content: autoPay.withDiscount
+      },
+      autoPay && autoPay.withDonation && {
+        name: 'autopay_with_donation',
+        content: autoPay.withDonation
+      },
+      autoPay && autoPay.defaultPrice && {
+        name: 'autopay_default_price',
+        content: formatPriceChf(autoPay.defaultPrice / 100)
+      },
+      autoPay && autoPay.total && {
         name: 'autopay_total',
-        content: formatPriceChf(autoPayPreferences.total / 100)
+        content: formatPriceChf(autoPay.total / 100)
       },
-      autoPayPreferences && autoPayPreferences.card && {
+      autoPay && autoPay.card && {
         name: 'autopay_card_brand',
-        content: autoPayPreferences.card.brand
+        content: autoPay.card.brand
       },
-      autoPayPreferences && autoPayPreferences.card && {
+      autoPay && autoPay.card && {
         name: 'autopay_card_last4',
-        content: autoPayPreferences.card.last4
+        content: autoPay.card.last4
       }
     ]
   })
+}
+
+mail.sendMembershipOwnerAutoPay = async ({ autoPay, payload, pgdb, t }) => {
+  const user = await pgdb.public.users.findOne({ id: autoPay.userId })
+  const customPledgeToken = AccessToken.generateForUser(user, 'CUSTOM_PLEDGE')
+  const version = payload.chargeAttemptStatus === 'SUCCESS' ? 'successful' : 'failed'
+  const templateName = `membership_owner_autopay_${version}`
+  const subject = t.first([
+    `api/email/${templateName}_${payload.attemptNumber}/subject`,
+    `api/email/${templateName}/subject`
+  ])
+
+  return sendMailTemplate({
+    to: user.email,
+    fromEmail: process.env.DEFAULT_MAIL_FROM_ADDRESS,
+    subject,
+    templateName,
+    mergeLanguage: 'handlebars',
+    globalMergeVars: [
+      {
+        name: 'prolong_url',
+        content: `${FRONTEND_BASE_URL}/angebote?package=PROLONG&token=${customPledgeToken}`
+      },
+      {
+        name: 'prolong_url_reduced',
+        content: `${FRONTEND_BASE_URL}/angebote?package=PROLONG&token=${customPledgeToken}&userPrice=1`
+      },
+      {
+        name: 'end_date',
+        content: dateFormat(autoPay.endDate)
+      },
+      {
+        name: 'grace_end_date',
+        content: dateFormat(autoPay.graceEndDate)
+      },
+      {
+        name: 'prolonged_end_date',
+        content: dateFormat(autoPay.prolongedEndDate)
+      },
+      {
+        name: 'autopay_total',
+        content: formatPriceChf(autoPay.total / 100)
+      },
+      autoPay.card && {
+        name: 'autopay_card_brand',
+        content: autoPay.card.brand
+      },
+      autoPay.card && {
+        name: 'autopay_card_last4',
+        content: autoPay.card.last4
+      },
+      {
+        name: 'attempt_number',
+        content: payload.attemptNumber
+      },
+      {
+        name: 'attempt_is_last',
+        content: payload.isLastAttempt
+      },
+      {
+        name: 'attempt_next_is_last',
+        content: payload.isNextAttemptLast
+      },
+      !payload.isLastAttempt && payload.nextAttemptDate && {
+        name: 'attempt_next_at',
+        content: dateFormat(payload.nextAttemptDate)
+      }
+    ]
+  }, { pgdb })
 }
 
 /**
@@ -522,24 +608,23 @@ mail.getPledgeMergeVars = async (
   })
 
   pledgeOptions
-    // Sort by packageOption.order in an ascending manner
-    .sort(
-      (a, b) =>
-        a.packageOption &&
-        b.packageOption &&
-        a.packageOption.order > b.packageOption.order ? 1 : 0
-    )
+    // Sort by price
+    .sort((a, b) => descending(a.price, b.price))
     // Sort by sequenceNumber in an ascending manner
-    .sort(
-      (a, b) =>
-        a.membership &&
-        b.membership &&
-        a.membership.sequenceNumber < b.membership.sequenceNumber ? 1 : 0
-    )
+    .sort((a, b) => ascending(
+      a.membership && a.membership.sequenceNumber,
+      b.membership && b.membership.sequenceNumber
+    ))
     // Sort by userID, own ones up top.
-    .sort(
-      (a, b) => a.membership && a.membership.userId !== pledge.userId ? 1 : 0
-    )
+    .sort((a, b) => descending(
+      a.membership && a.membership.userId === user.id,
+      b.membership && b.membership.userId === user.id
+    ))
+    // Sort by packageOption.order in an ascending manner
+    .sort((a, b) => ascending(
+      a.packageOption && a.packageOption.order,
+      b.packageOption && b.packageOption.order
+    ))
 
   const pledgerMemberships = memberships
     .filter(membership => pledge.userId === membership.userId)
@@ -552,6 +637,20 @@ mail.getPledgeMergeVars = async (
   const discount = pledge.donation < 0 ? (0 - pledge.donation) / 100 : 0
   const donation = pledge.donation > 0 ? pledge.donation / 100 : 0
   const total = pledge.total / 100
+
+  const hasGoodies = rewardGoodies.map(goodie => {
+    return {
+      name: `goodies_has_${goodie.name.toLowerCase()}`,
+      content: !!pledgeOptions
+        .filter(
+          pledgeOption =>
+            pledgeOption.packageOption.reward &&
+            pledgeOption.packageOption.reward.name === goodie.name &&
+            pledgeOption.amount > 0
+        )
+        .length
+    }
+  })
 
   return [
     // Purchase itself
@@ -685,6 +784,7 @@ mail.getPledgeMergeVars = async (
         )
         .reduce((agg, pledgeOption) => agg + pledgeOption.amount, 0)
     },
+    ...hasGoodies, // goodies_has_[goodies.name]
     {
       name: 'address',
       content: address

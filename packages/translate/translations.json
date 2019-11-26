@@ -1,5 +1,5 @@
 {
-  "updated": "2019-11-18T13:02:39.176Z",
+  "updated": "2019-11-22T18:14:52.758Z",
   "title": "live",
   "data": [
     {
@@ -287,6 +287,10 @@
       "value": "Spende"
     },
     {
+      "key": "api/payment/invoice/item/goodie/TABLEBOOK",
+      "value": "Buch «Republik bei Stromausfall»"
+    },
+    {
       "key": "api/payment/invoice/item/goodie/NOTEBOOK",
       "value": "Notizbuch"
     },
@@ -373,6 +377,14 @@
     {
       "key": "api/email/option/goodie/totebag/other",
       "value": "Taschen"
+    },
+    {
+      "key": "api/email/option/goodie/tablebook/1",
+      "value": "Buch «Republik bei Stromausfall»"
+    },
+    {
+      "key": "api/email/option/goodie/tablebook/other",
+      "value": "Bücher «Republik bei Stromausfall»"
     },
     {
       "key": "api/email/option/membershiptype/abo/1",
@@ -551,7 +563,7 @@
       "value": "Ihre Abonnementsrechnung"
     },
     {
-      "key": "api/email/membership_owner_autopay_notice_5/subject",
+      "key": "api/email/membership_owner_autopay_notice/subject",
       "value": "Ihre Mitgliedschaft erneuert sich automatisch"
     },
     {
@@ -1621,6 +1633,30 @@
     {
       "key": "profile/cards/needed",
       "value": "Ihr Profil ist im Moment einer Wahltindär-Karte zugeordnet und kann im Moment nicht zurückgenommen werden."
+    },
+    {
+      "key": "api/email/membership_owner_autopay_successful/subject",
+      "value": "Ihre Mitgliedschaft wurde erfolgreich verlängert"
+    },
+    {
+      "key": "api/email/membership_owner_autopay_failed/subject",
+      "value": "Jahresbeitrag: Abbuchung fehlgeschlagen"
+    },
+    {
+      "key": "api/email/membership_owner_autopay_failed_1/subject",
+      "value": "Jahresbeitrag: Abbuchung fehlgeschlagen"
+    },
+    {
+      "key": "api/email/membership_owner_autopay_failed_2/subject",
+      "value": "Jahresbeitrag: Abbuchung erneut fehlgeschlagen"
+    },
+    {
+      "key": "api/email/membership_owner_autopay_failed_3/subject",
+      "value": "Jahresbeitrag: Abbuchung erneut fehlgeschlagen"
+    },
+    {
+      "key": "api/email/membership_owner_autopay_failed_4/subject",
+      "value": "Jahresbeitrag: Automatische Abbuchung nicht möglich"
     }
   ]
 }

@@ -12,7 +12,7 @@ const lockTtlSecs = 60 * 5 // 5 mins
 
 const { inform: informGivers } = require('./givers')
 const { inform: informCancellers } = require('./winbacks')
-const { inform: informOwners } = require('./owners')
+const { run: membershipsOwnersHandler } = require('./owners')
 const { deactivate } = require('./deactivate')
 const { changeover } = require('./changeover')
 
@@ -44,7 +44,7 @@ const init = async (_context) => {
     intervalScheduler.init({
       name: 'memberships-owners',
       context,
-      runFunc: informOwners,
+      runFunc: membershipsOwnersHandler,
       lockTtlSecs,
       runIntervalSecs: 60 * 10
     })
