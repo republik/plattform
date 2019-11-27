@@ -79,9 +79,17 @@ const FrontDossierPlugin = options => {
 
       if (matchBlock(options.TYPE)(node)) {
         const isSelected = teaser === node && !editor.value.isBlurred
+
+        const row = node.nodes.get(1)
+
         return [
           isSelected && <TeaserInlineUI key='ui' node={node} editor={editor} />,
-          <Group {...node.data.toJS()} key='content' attributes={attributes}>
+          <Group
+            tileCount={row && row.nodes.size}
+            {...node.data.toJS()}
+            key='content'
+            attributes={attributes}
+          >
             {children}
           </Group>
         ]
