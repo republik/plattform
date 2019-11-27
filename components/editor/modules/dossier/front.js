@@ -93,12 +93,30 @@ const FrontDossierPlugin = options => {
 const FrontDossierButton = options => {
   const articleDossierButtonClickHandler = (value, onChange) => event => {
     event.preventDefault()
-    const nodes = allBlocks(value)
-      .filter(n => depth(value, n.key) < 2)
-      .filter(n => {
-        return ['teaser', 'teasergroup'].includes(n.data.get('module'))
-      })
-    const node = nodes.first()
+    const blocks = allBlocks(value)
+    const rootBlocks = blocks.filter(n => depth(value, n.key) === 1)
+    const teasers = rootBlocks.filter(n => {
+      return ['teaser', 'teasergroup'].includes(n.data.get('module'))
+    })
+    if (!teasers.size) {
+      // not in teaser document
+      const currentBlock = blocks.first()
+      const currentRootBlock = rootBlocks.first()
+      onChange(
+        value
+          .change()
+          .splitBlockAtRange(value.selection, depth(value, currentBlock.key), {
+            normalize: false
+          })
+          .insertNodeByKey(
+            parent(value, currentRootBlock.key).key,
+            childIndex(value, currentRootBlock.key) + 1,
+            getNewBlock(options)()
+          )
+      )
+      return
+    }
+    const node = teasers.first()
     onChange(
       value
         .change()
