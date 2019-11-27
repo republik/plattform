@@ -1,4 +1,4 @@
-import { css } from 'glamor'
+import { css, merge } from 'glamor'
 import PropTypes from 'prop-types'
 import React from 'react'
 import { TeaserCarouselArticleCount } from '.'
@@ -87,14 +87,19 @@ const Tile = ({
   const outline = rest.outline || context.outline
   const bigger = rest.bigger || context.bigger
 
-  const tileStyle = css(styles.tile, {
-    border: outline ? `1px solid ${outline}` : 'none',
-    color,
-    backgroundColor: bgColor,
-    cursor: onClick ? 'pointer' : 'default',
-    padding: bigger ? '0 0 40px 0' : '30px 15px',
-    alignItems: bigger ? 'flex-start' : 'center'
-  })
+  const tileStyle = merge(
+    styles.tile,
+    {
+      border: outline ? `1px solid ${outline}` : 'none',
+      color,
+      backgroundColor: bgColor,
+      cursor: onClick ? 'pointer' : 'default',
+      padding: bigger ? '0 0 20px 0' : '30px 15px',
+      alignItems: bigger ? 'flex-start' : 'center'
+    },
+    context.tileCount < 3 && { width: `${100 / context.tileCount}%` },
+    context.tileMaxWidth && { maxWidth: context.tileMaxWidth }
+  )
 
   const containerStyle = css(styles.container, {
     margin: bigger ? '0' : '0 auto'

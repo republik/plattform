@@ -5,6 +5,7 @@ Supported props:
 - `bgColor` (string): The background color (default: `#000`).
 - `outline` (string): The default outline color for cards.
 - `bigger` (bool): use bigger style for cards
+- `article` (bool): margin and smaller max width for tiles (optimised to align with article column)
 
 Below 4 tiles, each tile will use 33% of the space available, up to a maximum of 450 pixels.
 

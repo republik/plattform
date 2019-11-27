@@ -1062,41 +1062,9 @@ Der Nahe Osten ist eine geographische Bezeichnung, die heute im Allgemeinen für
 }
 \`\`\`
 
-## Drei Menschen
+## Zwei Menschen
 
 <section><h6>TEASERGROUP</h6>
-
-<section><h6>TEASER</h6>
-
-\`\`\`
-{
-  "reverse": false,
-  "color": null,
-  "teaserType": "articleTile",
-  "byline": null,
-  "onlyImage": false,
-  "url": null,
-  "kind": "editorial",
-  "center": false,
-  "textPosition": "topleft",
-  "titleSize": "standard",
-  "id": "jOf1niuibE",
-  "portrait": true,
-  "showImage": true
-}
-\`\`\`
-
-![](/static/barbara_villiger.jpg?size=1000x1000)
-
-###### 
-
-# Aleyna
-
-## 
-
-#### Der helle Stern
-
-<hr /></section>
 
 <section><h6>TEASER</h6>
 
@@ -1126,7 +1094,7 @@ Der Nahe Osten ist eine geographische Bezeichnung, die heute im Allgemeinen für
 
 ## 
 
-#### Die schöne Bildchefin
+#### Die weitsichtige Bildchefin
 
 <hr /></section>
 

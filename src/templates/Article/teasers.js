@@ -443,7 +443,7 @@ const createTeasers = ({ t, Link }) => {
     matchMdast: matchTeaserType('carousel'),
     component: ({ children, attributes, ...props }) => {
       return (
-        <TeaserCarousel attributes={attributes} {...props}>
+        <TeaserCarousel attributes={attributes} article {...props}>
           {children}
         </TeaserCarousel>
       )
@@ -455,7 +455,7 @@ const createTeasers = ({ t, Link }) => {
     editorOptions: {
       type: 'CAROUSEL',
       teaserType: 'carousel',
-      insertButtonText: 'Carousel',
+      insertButtonText: 'Karussell',
       formTitle: 'Carousel',
       formOptions: ['noAdapt', 'color', 'bgColor', 'outline', 'bigger'],
       defaultValues: {
