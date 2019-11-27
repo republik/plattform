@@ -6,8 +6,9 @@ module.exports = async (__, args, context, info) => {
     first: args.first,
     after: args.after,
     before: args.before,
+    unrestricted: args.unrestricted,
     filter: {
-      ..._.omit(args, ['first', 'after', 'before']),
+      ..._.omit(args, ['first', 'after', 'before', 'unrestricted']),
       type: 'Document'
     },
     sort: {

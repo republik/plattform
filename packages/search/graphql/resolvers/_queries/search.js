@@ -79,24 +79,30 @@ const createShould = function (
 
     if (searchTerm) {
       must = [
-        { multi_match: {
-          query: searchTerm,
-          type: 'best_fields',
-          fields
-        } }
+        {
+          multi_match: {
+            query: searchTerm,
+            type: 'best_fields',
+            fields
+          }
+        }
       ]
 
       should = [
-        { multi_match: {
-          query: searchTerm,
-          type: 'phrase',
-          fields
-        } },
-        { multi_match: {
-          query: searchTerm,
-          type: 'cross_fields',
-          fields
-        } }
+        {
+          multi_match: {
+            query: searchTerm,
+            type: 'phrase',
+            fields
+          }
+        },
+        {
+          multi_match: {
+            query: searchTerm,
+            type: 'cross_fields',
+            fields
+          }
+        }
       ]
     }
 
@@ -159,7 +165,7 @@ const createHighlight = (indicesList) => {
   return { fields }
 }
 
-const defaultExcludes = [ 'contentString', 'resolved' ]
+const defaultExcludes = ['contentString', 'resolved']
 const createQuery = (
   searchTerm, filter, sort, indicesList, user, scheduledAt, withoutChildren, withoutAggs, ignorePrepublished
 ) => ({
@@ -175,11 +181,11 @@ const createQuery = (
   stored_fields: ['contentString.count'],
   ...withoutAggs ? {} : { aggs: extractAggs(documentSchema) },
   _source: {
-    'excludes': [
+    excludes: [
       ...defaultExcludes,
       ...withoutChildren
-        ? [ 'content.children' ]
-        : [ ]
+        ? ['content.children']
+        : []
     ]
   }
 })
@@ -301,14 +307,14 @@ const parseOptions = (options) => {
 
 const MAX_NODES = 10000 // Limit, but exceedingly high
 
-const getFirst = (first, filter, user, recursive) => {
+const getFirst = (first, filter, user, recursive, unrestricted) => {
   // we only restrict the nodes array
   // making totalCount always available
   // querying a single document by path is always allowed
   const path = getFilterValue(filter, 'path')
   const repoId = getFilterValue(filter, 'repoId')
   const oneRepoId = repoId && (!Array.isArray(repoId) || repoId.length === 1)
-  if (DOCUMENTS_RESTRICT_TO_ROLES && !recursive && !path && !oneRepoId) {
+  if (DOCUMENTS_RESTRICT_TO_ROLES && !recursive && !path && !oneRepoId && !unrestricted) {
     const roles = DOCUMENTS_RESTRICT_TO_ROLES.split(',')
     if (!userIsInRoles(user, roles)) {
       return 0
@@ -348,6 +354,7 @@ const search = async (__, args, context, info) => {
     after,
     before,
     recursive = false,
+    unrestricted = false,
     scheduledAt,
     ignorePrepublished,
     trackingId = uuid(),
@@ -398,7 +405,7 @@ const search = async (__, args, context, info) => {
 
   debug('filter', JSON.stringify(filter))
 
-  const first = getFirst(_first, filter, user, recursive)
+  const first = getFirst(_first, filter, user, recursive, unrestricted)
 
   const indicesList = getIndicesList(filter)
   const query = {
@@ -410,7 +417,7 @@ const search = async (__, args, context, info) => {
   debug('ES query', JSON.stringify(query))
 
   let result = await cache.get(query)
-  let cacheHIT = !!result
+  const cacheHIT = !!result
   if (!result) {
     result = await elastic.search(query)
     await cache.set(query, result, options)

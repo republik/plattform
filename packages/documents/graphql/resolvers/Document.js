@@ -207,6 +207,7 @@ module.exports = {
 
     if (hasSectionRepoId) {
       args.section = doc.id
+      args.unrestricted = true
     }
 
     return getDocuments(doc, args, context, info)
