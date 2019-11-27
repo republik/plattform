@@ -36,10 +36,12 @@ const styles = {
   center: css({
     maxWidth: MAX_WIDTH + PADDING * 2,
     margin: '0 auto',
-    padding: PADDING
-  }),
-  clear: css({
-    clear: 'both'
+    padding: PADDING,
+    '&:after': {
+      content: '""',
+      display: 'table',
+      clear: 'both'
+    }
   })
 }
 
@@ -99,7 +101,6 @@ export const breakoutStyles = {
 const Center = ({ children, attributes = {}, ...props }) => (
   <div {...styles.center} {...attributes} {...props}>
     {children}
-    <div {...styles.clear} />
   </div>
 )
 
