@@ -141,6 +141,7 @@ const init = async ({
   }
 
   return {
+    run,
     close
   }
 }
