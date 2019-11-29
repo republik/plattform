@@ -35,7 +35,7 @@ const getMaxEndDate = (now, daysBeforeEndDate) =>
     .endOf('day')
 
 const createBuckets = (now) => [
-  {
+  /* {
     name: 'membership_owner_prolong_notice',
     endDate: {
       min: getMinEndDate(now, 22),
@@ -78,7 +78,7 @@ const createBuckets = (now) => [
       templateName: 'membership_owner_prolong_notice_7'
     },
     handler: mailings
-  },
+  }, */
   {
     name: 'membership_owner_prolong_notice_0',
     endDate: {
