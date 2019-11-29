@@ -8,9 +8,11 @@ const {
 } = require('../../../../servers/publikator/graphql/resolvers/Repo')
 const { document: getDocument } = require('../../../../servers/publikator/graphql/resolvers/Commit')
 const { prepareMetaForPublish } = require('../../../../servers/publikator/lib/Document')
-const { lib: {
-  Repo: { uploadImages }
-} } = require('@orbiting/backend-modules-assets')
+const {
+  lib: {
+    Repo: { uploadImages }
+  }
+} = require('@orbiting/backend-modules-assets')
 
 const { getElasticDoc, createPublish, findTemplates, getResourceUrls } = require('../../lib/Documents')
 
@@ -25,14 +27,14 @@ const {
 } = process.env
 
 const getContext = (payload) => {
-  let loaders = {}
+  const loaders = {}
   const context = {
     ...payload,
     loaders,
     user: {
       name: 'publikator-pullelasticsearch',
       email: 'ruggedly@republik.ch',
-      roles: [ 'editor' ]
+      roles: ['editor']
     }
   }
   Object.keys(loaderBuilders).forEach(key => {
@@ -95,6 +97,11 @@ const after = async ({ indexName, type: indexType, elastic, pgdb }) => {
   await upsertResolvedMeta(
     { indexName, entities: formats, type: 'format', elastic }
   )
+
+  const sections = await findTemplates(elastic, 'section')
+  await upsertResolvedMeta(
+    { indexName, entities: sections, type: 'section', elastic }
+  )
 }
 
 const iterateRepos = async (context, callback) => {
@@ -121,7 +128,7 @@ const iterateRepos = async (context, callback) => {
     )
       .then(arr => arr.filter(arr2 => arr2.length > 0))
 
-    for (let publications of allLatestPublications) {
+    for (const publications of allLatestPublications) {
       const repo = repos.nodes.find(r => r.id === publications[0].repo.id)
       const repoMeta = await getRepoMeta(repo)
       await callback(repo, repoMeta, publications)
@@ -161,7 +168,7 @@ module.exports = {
         { refName: 'prepublication' }
       )
 
-      for (let publication of publications) {
+      for (const publication of publications) {
         const {
           commit,
           meta: { scheduledAt },

@@ -72,38 +72,58 @@ module.exports = {
             // return all editorialNewsletters with feed:true or everything
             // that is not editorialNewsletters. Brainfuck.
             should: [
-              { bool: { must: [
-                { term: { 'meta.template': 'editorialNewsletter' } },
-                { term: { 'meta.feed': true } }
-              ] } },
-              { bool: { must_not: [
-                { term: { 'meta.template': 'editorialNewsletter' } }
-              ] } }
+              {
+                bool: {
+                  must: [
+                    { term: { 'meta.template': 'editorialNewsletter' } },
+                    { term: { 'meta.feed': true } }
+                  ]
+                }
+              },
+              {
+                bool: {
+                  must_not: [
+                    { term: { 'meta.template': 'editorialNewsletter' } }
+                  ]
+                }
+              }
             ]
           }
         }
 
         if (PREVIEW_MAIL_REPO_ID) {
           // Allow repo w/ preview email to be retrieved nomatter other filter
-          filter.bool.should.push({ bool: { must: [
-            { term: { 'meta.repoId': PREVIEW_MAIL_REPO_ID } }
-          ] } })
+          filter.bool.should.push({
+            bool: {
+              must: [
+                { term: { 'meta.repoId': PREVIEW_MAIL_REPO_ID } }
+              ]
+            }
+          })
         }
       }
     },
     rolebasedFilter: {
       // Default filter
-      default: () => ({ bool: { must: [
-        { term: { '__state.published': true } }
-      ] } }),
+      default: () => ({
+        bool: {
+          must: [
+            { term: { '__state.published': true } }
+          ]
+        }
+      }),
 
       // Adopted filter when role "editor" is present
       editor: ({ scheduledAt, ignorePrepublished, id, ids } = {}) => {
         const should = [
-          { bool: { must: [
-            { term: { '__state.published': true } },
-            { term: { '__state.prepublished': true } }
-          ] } }
+          {
+            bool: {
+              must: [
+                { term: { '__state.published': true } },
+                { term: { '__state.prepublished': true } }
+              ]
+            }
+          }
         ]
 
         if (scheduledAt) {
@@ -122,27 +142,43 @@ module.exports = {
         }
 
         if (!ignorePrepublished) {
-          should.push({ bool: { must: [
-            { term: { '__state.published': false } },
-            { term: { '__state.prepublished': true } }
-          ] } })
+          should.push({
+            bool: {
+              must: [
+                { term: { '__state.published': false } },
+                { term: { '__state.prepublished': true } }
+              ]
+            }
+          })
         }
 
         if (id) {
-          should.push({ bool: { must: [
-            { term: { _id: id } }
-          ] } })
+          should.push({
+            bool: {
+              must: [
+                { term: { _id: id } }
+              ]
+            }
+          })
         }
 
         if (ids) {
-          should.push({ bool: { must: [
-            { terms: { _id: ids } }
-          ] } })
+          should.push({
+            bool: {
+              must: [
+                { terms: { _id: ids } }
+              ]
+            }
+          })
         }
 
-        return { bool: { must: [
-          { bool: { should } }
-        ] } }
+        return {
+          bool: {
+            must: [
+              { bool: { should } }
+            ]
+          }
+        }
       }
     }
   },
@@ -186,6 +222,35 @@ module.exports = {
           properties: {
             meta: {
               properties: {
+                section: {
+                  properties: {
+                    meta: {
+                      properties: {
+                        title: {
+                          type: 'text',
+                          analyzer: 'german',
+                          fields: {
+                            keyword: {
+                              type: 'keyword',
+                              normalizer: 'republik_strict',
+                              ignore_above: 256
+                            }
+                          }
+                        },
+                        description: {
+                          type: 'text',
+                          analyzer: 'german'
+                        },
+                        kind: {
+                          type: 'keyword'
+                        },
+                        template: {
+                          type: 'keyword'
+                        }
+                      }
+                    }
+                  }
+                },
                 format: {
                   properties: {
                     meta: {
@@ -329,6 +394,9 @@ module.exports = {
               type: 'keyword'
             },
             format: {
+              type: 'keyword'
+            },
+            section: {
               type: 'keyword'
             },
             kind: {

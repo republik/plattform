@@ -1,5 +1,5 @@
 {
-  "updated": "2019-11-22T18:14:52.758Z",
+  "updated": "2019-11-29T15:54:14.128Z",
   "title": "live",
   "data": [
     {
@@ -905,6 +905,10 @@
     {
       "key": "api/search/aggs/template/front",
       "value": "Front"
+    },
+    {
+      "key": "api/search/aggs/template/section",
+      "value": "Rubriken"
     },
     {
       "key": "api/search/aggs/textLength",

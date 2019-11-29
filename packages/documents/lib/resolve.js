@@ -1,5 +1,5 @@
 const checkEnv = require('check-env')
-const { parse } = require('url')
+const { URL } = require('url')
 const visit = require('unist-util-visit')
 const { Roles: { userIsInRoles } } = require('@orbiting/backend-modules-auth')
 
@@ -15,7 +15,7 @@ const {
   DOCUMENTS_LINKS_RESTRICTED
 } = process.env
 
-const PUBLIC_HOSTNAME = parse(FRONTEND_BASE_URL).hostname
+const PUBLIC_HOSTNAME = (new URL(FRONTEND_BASE_URL)).hostname
 
 const getRepoId = (url, requireQuery) => {
   checkEnv([
@@ -29,7 +29,7 @@ const getRepoId = (url, requireQuery) => {
     hostname,
     pathname,
     query
-  } = parse(String(url))
+  } = new URL(String(url), FRONTEND_BASE_URL)
   if (!pathname) { // empty for mailto
     return
   }
@@ -68,7 +68,7 @@ const extractUserUrl = url => {
   if (!url) {
     return
   }
-  const urlObject = parse(String(url))
+  const urlObject = new URL(String(url), FRONTEND_BASE_URL)
   if (
     urlObject.hostname &&
     urlObject.hostname !== PUBLIC_HOSTNAME
@@ -163,6 +163,9 @@ const contentUrlResolver = (doc, allDocuments = [], usernames = [], errors, urlP
         node.data.urlMeta = {
           repoId: linkedDoc.meta.repoId,
           publishDate: linkedDoc.meta.publishDate,
+          section: linkedDoc.meta.template === 'section'
+            ? linkedDoc.meta.repoId
+            : getRepoId(linkedDoc.meta.section),
           format: linkedDoc.meta.template === 'format'
             ? linkedDoc.meta.repoId
             : getRepoId(linkedDoc.meta.format),

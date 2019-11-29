@@ -16,8 +16,10 @@ const getPath = (docMeta) => {
   const cleanedSlug = slug && slug.indexOf('/') > -1
     ? new RegExp(/.*\/(.*)/g).exec(slug)[1] // ignore everything before the last /
     : slug
+
   switch (template) {
     case 'front':
+    case 'section':
       return `/${cleanedSlug || ''}`
     case 'dossier':
       return `/dossier/${cleanedSlug}`
