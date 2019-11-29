@@ -6,17 +6,11 @@ module.exports = {
   search: {
     termFields: {
       content: {
+        boost: 0.5,
         highlight: {}
       },
-      'resolved.user.firstName': {},
-      'resolved.user.lastName': {},
-      'resolved.user.name': {
-        boost: 1.5
-      },
-      'resolved.user.credential': {},
-      'resolved.user.username': {},
-      'resolved.user.twitterHandle': {},
-      'resolved.user.facebookId': {}
+      'resolved.user.name': {},
+      'resolved.user.credential': {}
     },
     filter: {
       default: () => ({

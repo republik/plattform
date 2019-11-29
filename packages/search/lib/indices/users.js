@@ -5,12 +5,6 @@ module.exports = {
   name: type.toLowerCase(),
   search: {
     termFields: {
-      firstName: {
-        highlight: {}
-      },
-      lastName: {
-        highlight: {}
-      },
       name: {
         boost: 2,
         highlight: {}
@@ -22,12 +16,6 @@ module.exports = {
         highlight: {}
       },
       statement: {
-        highlight: {}
-      },
-      twitterHandle: {
-        highlight: {}
-      },
-      facebookId: {
         highlight: {}
       },
       'resolved.credential': {}
