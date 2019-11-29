@@ -2,6 +2,7 @@ import React from 'react'
 
 import colors from '../../theme/colors'
 import { FormatTag } from '../../components/Format'
+import SectionTitle from '../../components/TeaserShared/SectionTitle'
 import TitleBlock from '../../components/TitleBlock'
 import * as Interaction from '../../components/Typography/Interaction'
 
@@ -22,11 +23,11 @@ const createSchema = ({
   titleBlockPrepend = null,
   titleMargin = true,
   titleBlockRule,
-  getPath = ({ slug }) => `/format/${(slug || '').split('/').pop()}`,
+  getPath = ({ slug }) => `/${(slug || '').split('/').pop()}`,
   ...args
 } = {}) => {
   return createArticleSchema({
-    repoPrefix: 'format-',
+    repoPrefix: 'section-',
     getPath,
     customMetaFields: [
       {
@@ -44,18 +45,8 @@ const createSchema = ({
         key: 'color'
       },
       {
-        label: 'Dossier',
-        key: 'dossier',
-        ref: 'repo'
-      },
-      {
         label: 'Diskussion',
         key: 'discussion',
-        ref: 'repo'
-      },
-      {
-        label: 'Rubrik',
-        key: 'section',
         ref: 'repo'
       },
       ...customMetaFields
@@ -103,17 +94,14 @@ const createSchema = ({
           padding: '30px'
         }}
       >
-        <FormatTag
-          label={props.title}
-          count={17}
-          color={
-            props.color
-              ? props.color
-              : props.kind
-              ? colors[props.kind]
-              : undefined
-          }
-        />
+        <SectionTitle
+          href='/'
+          onClick={e => {
+            e.preventDefault()
+          }}
+        >
+          {props.title}
+        </SectionTitle>
       </div>
     ),
     ...args

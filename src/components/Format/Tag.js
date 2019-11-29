@@ -3,30 +3,30 @@ import PropTypes from 'prop-types'
 import { css } from 'glamor'
 
 import {
-  sansSerifMedium12,
   sansSerifMedium14,
   sansSerifMedium16,
-  sansSerifMedium19
+  sansSerifMedium18,
+  sansSerifMedium20
 } from '../Typography/styles'
 import { mUp } from '../../theme/mediaQueries'
 
 const styles = {
   container: css({
-    ...sansSerifMedium16,
+    ...sansSerifMedium18,
     display: 'inline-block',
     padding: 0,
     margin: '0 10px 5px 0',
     [mUp]: {
-      ...sansSerifMedium19,
+      ...sansSerifMedium20,
       margin: '0 20px 5px 0'
     }
   }),
   count: css({
-    ...sansSerifMedium12,
+    ...sansSerifMedium14,
     color: '#b4b4b4',
     marginLeft: 5,
     [mUp]: {
-      ...sansSerifMedium14
+      ...sansSerifMedium16
     }
   })
 }

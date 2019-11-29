@@ -621,6 +621,16 @@ ReactDOM.render(
               src: require('./templates/Comment/docs.md')
             },
             {
+              path: '/templates/section',
+              title: 'Section',
+              imports: {
+                schema: require('./templates/Section').default(),
+                ...require('./templates/docs'),
+                renderMdast: require('mdast-react-render').renderMdast
+              },
+              src: require('./templates/Section/docs.md')
+            },
+            {
               path: '/templates/format',
               title: 'Format',
               imports: {
