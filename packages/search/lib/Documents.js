@@ -340,6 +340,7 @@ const addRelatedDocs = async ({
     // TODO get keys from packages/documents/lib/resolve.js
     repoIds.push(getRepoId(meta.dossier))
     repoIds.push(getRepoId(meta.format))
+    repoIds.push(getRepoId(meta.section))
     repoIds.push(getRepoId(meta.discussion))
     if (meta.series) {
       // If a string, probably a series master (tbc.)
