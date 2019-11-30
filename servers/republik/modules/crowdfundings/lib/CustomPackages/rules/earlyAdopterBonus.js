@@ -13,12 +13,12 @@ module.exports = ({ package_, packageOption, membership, payload, now }) => {
       'membership.createdAt not within early adopter range (< %s)',
       MEMBERSHIP_CREATED_BEFORE
     )
-    return
+    return true
   }
 
   if (membership.pledge.userId !== package_.user.id) {
     debug('membership not pledged by user. rule does not apply.')
-    return
+    return true
   }
 
   if (!PACKAGE_ELIGABLE.includes(membership.pledge.package.name)) {
@@ -26,7 +26,7 @@ module.exports = ({ package_, packageOption, membership, payload, now }) => {
       'package "%s" is not eligable for early adopter bonus',
       membership.pledge.package.name
     )
-    return
+    return true
   }
 
   if (payload.additionalPeriods.length === 0) {
@@ -34,7 +34,7 @@ module.exports = ({ package_, packageOption, membership, payload, now }) => {
       'no additional periods found. rule does not apply.',
       payload.additionalPeriods.length
     )
-    return
+    return true
   }
 
   if (membership.membershipPeriods.length >= 3) {
@@ -42,7 +42,7 @@ module.exports = ({ package_, packageOption, membership, payload, now }) => {
       'too many membership periods found. rule does not apply.',
       payload.additionalPeriods.length
     )
-    return
+    return true
   }
 
   const { beginDate, endDate } =
@@ -56,7 +56,7 @@ module.exports = ({ package_, packageOption, membership, payload, now }) => {
       'bonus not positive (%d). rule does not apply.',
       Math.floor(bonus.asDays())
     )
-    return
+    return true
   }
 
   bonus.add(1, 'day')
@@ -72,4 +72,6 @@ module.exports = ({ package_, packageOption, membership, payload, now }) => {
     createdAt: now,
     updatedAt: now
   })
+
+  return true
 }

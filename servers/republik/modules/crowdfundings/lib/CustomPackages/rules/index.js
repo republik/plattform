@@ -1,3 +1,4 @@
 module.exports = {
-  earlyAdopterBonus: require('./earlyAdopterBonus')
+  earlyAdopterBonus: require('./earlyAdopterBonus'),
+  endTooFarAway: require('./endTooFarAway')
 }
