@@ -339,6 +339,10 @@
       "value": "Danke für Ihr grosses Herz und Ihren kühlen Kopf"
     },
     {
+      "key": "api/email/pledge_tablebook/subject",
+      "value": "Ihre Bestellung: «Republik bei Stromausfall»"
+    },
+    {
       "key": "api/email/payment_successful_abo/subject",
       "value": "Vielen Dank! Wir haben Ihre Zahlung erhalten."
     },
@@ -360,6 +364,10 @@
     },
     {
       "key": "api/email/payment_successful_prolong/subject",
+      "value": "Vielen Dank! Wir haben Ihre Zahlung erhalten."
+    },
+    {
+      "key": "api/email/payment_successful_tablebook/subject",
       "value": "Vielen Dank! Wir haben Ihre Zahlung erhalten."
     },
     {
