@@ -221,6 +221,7 @@ const metaFieldResolver = (meta, allDocuments = [], errors) => {
     series,
     dossier: resolver(meta.dossier),
     format: resolver(meta.format),
+    section: resolver(meta.section),
     discussion: resolver(meta.discussion)
   }
 }
