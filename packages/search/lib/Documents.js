@@ -330,6 +330,10 @@ const addRelatedDocs = async ({
       const extractedIds = extractIdsFromNode(doc.content, doc.repoId)
       userIds = userIds.concat(extractedIds.users)
       repoIds = repoIds.concat(extractedIds.repos)
+    } else {
+      const extractedIds = extractIdsFromNode({ children: doc.meta.credits }, doc.repoId)
+      userIds = userIds.concat(extractedIds.users)
+      repoIds = repoIds.concat(extractedIds.repos)
     }
     // from meta
     const meta = doc.content.meta
