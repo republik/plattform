@@ -11,7 +11,8 @@ const getPeriodEndingLast =
         return currentValue.endDate > accumulator.endDate
           ? currentValue
           : accumulator
-      }
+      },
+      false
     )
 
 // Finds endDate furthest away in a series of membershipPeriods
