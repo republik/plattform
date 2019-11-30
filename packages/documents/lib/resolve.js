@@ -1,5 +1,4 @@
 const checkEnv = require('check-env')
-const { URL } = require('url')
 const visit = require('unist-util-visit')
 const { Roles: { userIsInRoles } } = require('@orbiting/backend-modules-auth')
 
@@ -28,7 +27,7 @@ const getRepoId = (url, requireQuery) => {
   const {
     hostname,
     pathname,
-    query
+    searchParams
   } = new URL(String(url), FRONTEND_BASE_URL)
   if (!pathname) { // empty for mailto
     return
@@ -41,7 +40,7 @@ const getRepoId = (url, requireQuery) => {
   ) {
     return
   }
-  if (requireQuery && query !== requireQuery) {
+  if (requireQuery && !searchParams.has(requireQuery)) {
     return
   }
   pathSegments[0] = GITHUB_LOGIN
