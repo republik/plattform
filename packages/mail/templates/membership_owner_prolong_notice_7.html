@@ -12,55 +12,63 @@
       </o:officedocumentsettings>
     </xml>
     <![endif]-->
+    <style type="text/css">
+      {{sg_font_faces}}
+    </style>
+    <style type="text/css">
+      p {
+        color:#282828;font-size:17px;line-height:24px;
+        {{sg_font_style_sans_serif_regular}}
+      }
+      p strong {
+        {{sg_font_style_sans_serif_medium}}
+      }
+    </style>
   </head>
   <body style="margin: 0; padding: 0; background-color: #fff;">
     <table border="0" cellpadding="0" cellspacing="0" width="100%">
       <tbody>
         <tr>
           <td align="center" valign="top">
-            <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width:640px;color:#444;font-size:18px;font-family:Times, 'Times New Roman', serif;">
+            <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width:640px;color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}">
               <tbody>
                 <tr>
                   <td style="padding:20px;">
-                    <p>Ein Jahr, {{name}},</p>
-                    <p>haben wir nun gemeinsam durchlaufen. Sie als Verlegerin und Leser, wir als Ihr Expeditionsteam mit der doppelten Aufgabe:</p>
-                    <ol>
-                      <li>ein neues Medienmodell zu entwickeln;</li>
-                      <li>Ihnen jeden Morgen den neuesten Stand unseres Irrtums zu liefern.</li>
-                    </ol>
-                    <p>Es war ein turbulentes Jahr. Wir hoffen, dass das Unternehmen auf dem richtigen Weg ist. Und wir Ihnen immer wieder Klarheit oder Vergnügen geliefert haben. Und von Zeit zu Zeit eine brauchbare Idee oder Irritation.</p>
-                    <p>Aber nun stellt sich die Frage: <a href="{{prolong_url}}">Möchten Sie Ihr Abo verlängern?</a>
+                    <p>Guten Tag</p>
+                    <p>Wie Sie wissen, erneuert sich Ihre Mitgliedschaft schon am {{end_date}} um ein weiteres Jahr.</p>
+                    <p>Wir freuen uns, Sie weiterhin an Bord zu haben, denn die Republik und die Idee hinter unserem gemeinsamen Projekt brauchen Sie.</p>
+                    <p>Ganz gleich, ob Sie uns einmal pro Woche, einmal pro Monat oder einmal pro Jahr lesen – mit Ihrem Beitrag stärken Sie kritischen Journalismus, die vierte Gewalt und die Demokratie.
+                    <p>Wie Sie wissen, finanziert sich die Republik als unabhängiges und werbefreies Magazin ausschliesslich über ihre Leserinnen und Leser.</p>
+                    <p>
+                      Sie haben die Wahl:<br />
+                      Sie bleiben an Bord und investieren weiter in die Republik und ihre Idee.<br />
+                      <a href="{{prolong_url}}">Hierfür müssen Sie nur die Rechnung für ein weiteres Jahr Mitgliedschaft bezahlen.</a>
                     </p>
-                    <p>Oder wollen Sie uns vergessen, verlassen, <a href="{{frontend_base_url}}/konto#abos">kündigen</a>? Wir würden das sehr bedauern. Denn es wäre traurig, Ihnen das Falsche geliefert und Sie enttäuscht zu haben. Und dazu brauchen wir Sie auch im nächsten Jahr an Bord, damit das Schiff auf Kurs bleibt.</p>
-                    <p>Aber wir stellen Ihnen die Frage trotzdem so schroff, weil <b>sich Ihr Abonnement in exakt {{days_left}} Tagen verlängert,</b> falls Sie uns nicht kündigen.</p>
-                    <p>Denn wir wollen Sie nicht übers Ohr hauen.</p>
-                    <p>Sondern Ihnen – wie Sie es als Verlegerin, als Leser gewohnt sind – mit der üblichen Offenheit den Grund für das Abonnementsmodell erklären:</p>
-                    <p>Das Entscheidende am Abonnement ist die Automatik seiner Verlängerung. Denn diese kann den Unterschied zwischen Leben und Tod machen. Nicht nur bei einer jungen Publikation wie der Republik. Sondern auch in weit ernsteren Fällen wie bei der Organspende. Beim Psychologen Daniel Kahneman findet sich etwa folgende Statistik:</p>
-                    <p><b>Deutschland:</b> 12 % Organspender.</p>
-                    <p><b>Österreich:</b> über 99 % Organspender.</p>
-                    <p>Der Unterschied ist: In Deutschland muss man aktiv bestätigen, dass man Organspenderin werden will. In Österreich muss man das aktiv ablehnen.</p>
-                    <p>Deshalb ist ein Abonnementsmodell für uns überlebenswichtig. Weil schon wenige Menschen mehr oder weniger an Bord einen grossen Unterschied machen.</p>
-                    <p>Aber dieses System ist nur dann fair, wenn man Ihnen die Möglichkeit gibt, die Verlängerung so einfach wie möglich zu kündigen.</p>
-                    <p>Das tun wir hier erneut: <a href="{{frontend_base_url}}/konto#abos">Falls Sie uns verlassen wollen, klicken Sie hier</a>.</p>
-                    <p>Aber Sie können natürlich auch das Gegenteil tun: <a href="{{prolong_url}}">Falls Sie uns ein Jahr länger Ihr Vertrauen schenken wollen, klicken Sie hier</a>.</p>
-                    <p>Dann sind wir glücklich.</p>
-                    <p>Es wäre schön, Sie auch im nächsten Jahr an Deck zu haben. Und wir werden hart daran arbeiten, Sie mit neuen Ideen, Recherchen und Irrtümern zu überraschen.</p>
-                    <p>Und wir versprechen, dass wir Sie als unsere Verlegerin, unseren Verleger nicht übers Ohr hauen werden. Und Ihnen gegenüber weiter aufrichtig sind, was immer wir tun.</p>
-                    <p>Mit grossem Dank für das letzte Jahr,</p>
+                    <p>Oder: Sie kündigen Ihre Mitgliedschaft bis zum {{cancel_until_date}}. <a href="{{link_account_abos}}">Das können Sie hier tun</a>.</p>
+                    <p>Wie auch immer Sie entscheiden: Wir hoffen, dass wir Sie im vergangenen Jahr immer wieder erfolgreich informiert, unterhalten, geärgert und beglückt haben.</p>
+                    <p>Falls Sie Fragen haben, beantworten wir diese sehr gerne unter <a href="mailto:kontakt@republik.ch">kontakt@republik.ch</a>.</p>
+                    <p>Herzlich</p>
                     <p>Ihre Crew der Republik</p>
-                    <p>PS: Sollten Sie den Termin aus irgendeinem Grund verpassen, keine Sorge: Wir werden uns kulant zeigen.</p>
-                    <p>PPS: Falls Sie Fragen haben, schreiben Sie unserem vorbildlich höflichen Support-Team: <a href="mailto:kontakt@republik.ch">kontakt@republik.ch</a>.</p>
                   </td>
                 </tr>
                 <tr>
                   <td style="padding:20px;">
-                    <p>
-                      <img height="79" src="https://gallery.mailchimp.com/650c1ec9003c7d8567eef4c5e/images/feb6bdde-83da-4211-bcf8-b09d3d3d012a.png" style="border: 0px  ; width: 180px !important; height: 79px !important; margin: 0px;" width="180" alt="feb6bdde-83da-4211-bcf8-b09d3d3d012a.png">
+                    <p style="font-size:14px;line-height:20px;{{sg_font_style_sans_serif_regular}}">
+                      Die Republik ist ein unabhängiges und werbefreies digitales Magazin für Politik, Wirtschaft, Gesellschaft und Kultur. 
+                      Es wird von seinen Leserinnen und Lesern finanziert und erscheint von Montag bis Samstag mit täglich ein bis drei neuen Beiträgen. In der App, auf der Website und als Newsletter.
+                    </p>
+                    <p style="color:#282828;font-size:14px;line-height:20px;{{sg_font_style_sans_serif_regular}}">
+                      <img height="79" src="{{frontend_base_url}}/static/logo_republik_newsletter.png" style="border:0px;width:180px !important; height:79px !important;margin:0px;" width="180" alt="">
                       <br>
                       Republik AG<br>
-                      Sihlhallenstrasse 1<br>
-                      8004 Zürich<br>
-                      Schweiz<br><a href="mailto:kontakt@republik.ch">kontakt@republik.ch</a>
+                      Sihlhallenstrasse 1, CH-8004 Zürich<br>
+                      <a href="{{frontend_base_url}}">www.republik.ch</a><br>
+                      <a href="mailto:kontakt@republik.ch">kontakt@republik.ch</a>
+                    </p>
+                    <p style="font-size:14px;line-height:20px;{{sg_font_style_sans_serif_regular}}">
+                        <a href="{{link_manifest}}">Unser Manifest</a><br />
+                        <a href="{{link_imprint}}">Das Impressum</a><br />
+                        <a href="{{link_faq}}">Häufig gestellte Fragen</a>
                     </p>
                   </td>
                 </tr>

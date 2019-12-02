@@ -8,9 +8,11 @@ const {
 } = require('../../../../servers/publikator/graphql/resolvers/Repo')
 const { document: getDocument } = require('../../../../servers/publikator/graphql/resolvers/Commit')
 const { prepareMetaForPublish } = require('../../../../servers/publikator/lib/Document')
-const { lib: {
-  Repo: { uploadImages }
-} } = require('@orbiting/backend-modules-assets')
+const {
+  lib: {
+    Repo: { uploadImages }
+  }
+} = require('@orbiting/backend-modules-assets')
 
 const { getElasticDoc, createPublish, findTemplates, getResourceUrls } = require('../../lib/Documents')
 
@@ -25,14 +27,14 @@ const {
 } = process.env
 
 const getContext = (payload) => {
-  let loaders = {}
+  const loaders = {}
   const context = {
     ...payload,
     loaders,
     user: {
       name: 'publikator-pullelasticsearch',
       email: 'ruggedly@republik.ch',
-      roles: [ 'editor' ]
+      roles: ['editor']
     }
   }
   Object.keys(loaderBuilders).forEach(key => {
@@ -85,7 +87,7 @@ const upsertResolvedMeta = (
   }))
 }
 
-const after = async ({indexName, type: indexType, elastic, pgdb}) => {
+const after = async ({ indexName, type: indexType, elastic, pgdb }) => {
   const dossiers = await findTemplates(elastic, 'dossier')
   await upsertResolvedMeta(
     { indexName, entities: dossiers, type: 'dossier', elastic }
@@ -94,6 +96,11 @@ const after = async ({indexName, type: indexType, elastic, pgdb}) => {
   const formats = await findTemplates(elastic, 'format')
   await upsertResolvedMeta(
     { indexName, entities: formats, type: 'format', elastic }
+  )
+
+  const sections = await findTemplates(elastic, 'section')
+  await upsertResolvedMeta(
+    { indexName, entities: sections, type: 'section', elastic }
   )
 }
 
@@ -121,7 +128,7 @@ const iterateRepos = async (context, callback) => {
     )
       .then(arr => arr.filter(arr2 => arr2.length > 0))
 
-    for (let publications of allLatestPublications) {
+    for (const publications of allLatestPublications) {
       const repo = repos.nodes.find(r => r.id === publications[0].repo.id)
       const repoMeta = await getRepoMeta(repo)
       await callback(repo, repoMeta, publications)
@@ -131,7 +138,7 @@ const iterateRepos = async (context, callback) => {
 
 module.exports = {
   before: () => {},
-  insert: async ({indexName, type: indexType, elastic, pgdb, redis}) => {
+  insert: async ({ indexName, type: indexType, elastic, pgdb, redis }) => {
     if (!AWS_ACCESS_KEY_ID || !AWS_SECRET_ACCESS_KEY) {
       console.warn('missing AWS_ACCESS_KEY_ID and/or AWS_SECRET_ACCESS_KEY skipping image uploads!')
     }
@@ -161,12 +168,13 @@ module.exports = {
         { refName: 'prepublication' }
       )
 
-      for (let publication of publications) {
+      for (const publication of publications) {
         const {
           commit,
           meta: { scheduledAt },
           refName,
-          name: versionName
+          name: versionName,
+          date
         } = publication
 
         const isPrepublication = refName.indexOf('prepublication') > -1
@@ -188,6 +196,7 @@ module.exports = {
           repoId: repo.id,
           repoMeta,
           scheduledAt,
+          lastPublishedAt: isScheduled ? scheduledAt : date,
           prepublication: isPrepublication,
           doc,
           now,

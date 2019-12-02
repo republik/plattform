@@ -1,4 +1,6 @@
 const debug = require('debug')('votings:lib:queries')
+const pick = require('lodash/pick')
+const isEqual = require('lodash/isEqual')
 
 const tableMapping = {
   votings: {
@@ -83,24 +85,43 @@ const buildQueries = (tableName) => {
     return result && result[0]
   }
 
-  const userSubmitDate = async (id, userId, pgdb) => {
+  const findByGroupSlug = async (groupSlug, pgdb) => {
+    const result = await pgdb.query(findQuery(`
+      WHERE
+        e."groupSlug" = :groupSlug
+    `), {
+      groupSlug
+    })
+    return result
+  }
+
+  const userSubmitDate = async (id, userId, context) => {
+    const { pgdb, loaders: { QuestionnaireSubmissions } } = context
     if (!userId) {
       return null
     }
-    const ballot = await pgdb.public[table.ballotsTable].findFirst({
-      userId: userId,
-      [table.foreignKey]: id
-    })
+    let ballot
+    if (table.ballotsTable === 'questionnaireSubmissions') {
+      ballot = await QuestionnaireSubmissions.byKeyObj.load({
+        userId,
+        [table.foreignKey]: id
+      })
+    } else {
+      ballot = await pgdb.public[table.ballotsTable].findFirst({
+        userId,
+        [table.foreignKey]: id
+      })
+    }
     if (!ballot) {
       return null
     }
     return ballot.updatedAt
   }
-  const userHasSubmitted = async (id, userId, pgdb) => {
+  const userHasSubmitted = async (id, userId, context) => {
     if (!userId) {
       return false
     }
-    return !!(await userSubmitDate(id, userId, pgdb))
+    return !!(await userSubmitDate(id, userId, context))
   }
 
   const numSubmitted = async (id, pgdb) => {
@@ -116,9 +137,46 @@ const buildQueries = (tableName) => {
     })
   }
 
+  const numSubmittedByGroup = async (groupSlug, pgdb) => {
+    return pgdb.queryOneField(`
+      SELECT
+        COUNT(DISTINCT(b."userId"))
+      FROM
+        "${table.ballotsTable}" b
+      JOIN
+        "${table.name}" e
+        ON b."${table.foreignKey}" = e.id
+      WHERE
+        e."groupSlug" = :groupSlug
+    `, {
+      groupSlug
+    })
+  }
+
+  const haveSameRestrictions = (entityA, entityB) => {
+    const maxAllowedMemberships = Math.max(
+      entityA.allowedMemberships ? entityA.allowedMemberships.length : 0,
+      entityB.allowedMemberships ? entityB.allowedMemberships.length : 0
+    )
+    const compareFields = [
+      'allowEmptyBallots',
+      'allowedRoles',
+      ...Array(maxAllowedMemberships).fill(1).map((_, i) => `allowedMemberships[${i}].membershipTypeId`),
+      ...Array(maxAllowedMemberships).fill(1).map((_, i) => `allowedMemberships[${i}].createdBefore`)
+    ]
+    return isEqual(
+      pick(entityA, compareFields),
+      pick(entityB, compareFields)
+    )
+  }
+
   const countEligibles = async (entity, userId, pgdb) => {
     const allowedRoles = entity.allowedRoles && entity.allowedRoles.length > 0
     const allowedMemberships = entity.allowedMemberships && entity.allowedMemberships.length > 0
+
+    if (!allowedRoles && !allowedMemberships && userId) {
+      return 1
+    }
 
     const options = {
       ...allowedRoles ? { roles: entity.allowedRoles } : {},
@@ -152,7 +210,7 @@ const buildQueries = (tableName) => {
       ${where && where.length && 'WHERE ' + where}
     `
 
-    debug('countEligibles', query, options, {entity, userId})
+    debug('countEligibles', query, options, { entity, userId })
     return pgdb.queryOneField(query, options)
   }
 
@@ -180,7 +238,9 @@ const buildQueries = (tableName) => {
     submitted: await numSubmitted(entity.id, pgdb)
   })
 
-  const ensureReadyToSubmit = async (entity, userId, now = new Date(), pgdb, t) => {
+  const ensureReadyToSubmit = async (entity, userId, now = new Date(), context) => {
+    const { pgdb, t } = context
+
     if (!entity) {
       throw new Error(t(`api/${table.translationsKey}/404`))
     }
@@ -194,7 +254,7 @@ const buildQueries = (tableName) => {
       throw new Error(t(`api/${table.translationsKey}/notEligible`))
     }
 
-    if (await userHasSubmitted(entity.id, userId, pgdb)) {
+    if (await userHasSubmitted(entity.id, userId, context)) {
       throw new Error(t(`api/${table.translationsKey}/alreadySubmitted`))
     }
   }
@@ -206,9 +266,12 @@ const buildQueries = (tableName) => {
     find,
     findById,
     findBySlug,
+    findByGroupSlug,
     userSubmitDate,
     userHasSubmitted,
     numSubmitted,
+    numSubmittedByGroup,
+    haveSameRestrictions,
     numEligible,
     isEligible,
     turnout,

@@ -1,5 +1,5 @@
 {
-  "name": "@orbiting/backend-modules-db-migrations",
+  "name": "@orbiting/backend-modules-migrations",
   "version": "0.0.1",
   "description": "all postgresql migration for orbiting",
   "repository": {
@@ -25,6 +25,7 @@
   },
   "dependencies": {
     "db-migrate": "^0.11.5",
-    "db-migrate-pg": "^0.5.0"
+    "db-migrate-pg": "^1.0.0",
+    "yargs": "^14.2.0"
   }
 }

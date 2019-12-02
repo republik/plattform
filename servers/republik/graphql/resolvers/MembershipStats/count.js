@@ -7,7 +7,7 @@ module.exports = (_, args, { pgdb }) =>
     FROM
       memberships m
     WHERE
-      m."userId" != :excludeUserId AND
+      ${PARKING_USER_ID ? 'm."userId" != :excludeUserId AND' : ''}
       m.active = true
   `, {
     excludeUserId: PARKING_USER_ID

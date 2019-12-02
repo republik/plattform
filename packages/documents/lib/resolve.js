@@ -1,5 +1,4 @@
 const checkEnv = require('check-env')
-const { parse } = require('url')
 const visit = require('unist-util-visit')
 const { Roles: { userIsInRoles } } = require('@orbiting/backend-modules-auth')
 
@@ -15,7 +14,7 @@ const {
   DOCUMENTS_LINKS_RESTRICTED
 } = process.env
 
-const PUBLIC_HOSTNAME = parse(FRONTEND_BASE_URL).hostname
+const PUBLIC_HOSTNAME = (new URL(FRONTEND_BASE_URL)).hostname
 
 const getRepoId = (url, requireQuery) => {
   checkEnv([
@@ -28,8 +27,8 @@ const getRepoId = (url, requireQuery) => {
   const {
     hostname,
     pathname,
-    query
-  } = parse(String(url))
+    searchParams
+  } = new URL(String(url), FRONTEND_BASE_URL)
   if (!pathname) { // empty for mailto
     return
   }
@@ -41,7 +40,7 @@ const getRepoId = (url, requireQuery) => {
   ) {
     return
   }
-  if (requireQuery && query !== requireQuery) {
+  if (requireQuery && !searchParams.has(requireQuery)) {
     return
   }
   pathSegments[0] = GITHUB_LOGIN
@@ -68,7 +67,7 @@ const extractUserUrl = url => {
   if (!url) {
     return
   }
-  const urlObject = parse(String(url))
+  const urlObject = new URL(String(url), FRONTEND_BASE_URL)
   if (
     urlObject.hostname &&
     urlObject.hostname !== PUBLIC_HOSTNAME
@@ -77,7 +76,7 @@ const extractUserUrl = url => {
     return
   }
   return extractUserPath(
-    `${urlObject.path}${urlObject.hash || ''}`
+    `${urlObject.pathname}${urlObject.search}${urlObject.hash}`
   )
 }
 
@@ -108,7 +107,8 @@ const createUrlReplacer = (allDocuments = [], usernames = [], errors = [], urlPr
   const linkedDoc = allDocuments
     .find(d => d.meta.repoId === repoId)
   if (linkedDoc) {
-    return urlPrefix + linkedDoc.content.meta.path + searchString
+    const hash = url.split('#')[1]
+    return `${urlPrefix}${linkedDoc.content.meta.path}${searchString}${hash ? `#${hash}` : ''}`
   } else {
     errors.push(repoId)
   }
@@ -160,7 +160,11 @@ const contentUrlResolver = (doc, allDocuments = [], usernames = [], errors, urlP
         // - assigns a publishDate to an teaser
         // - highlights all teasers of a format or series
         node.data.urlMeta = {
+          repoId: linkedDoc.meta.repoId,
           publishDate: linkedDoc.meta.publishDate,
+          section: linkedDoc.meta.template === 'section'
+            ? linkedDoc.meta.repoId
+            : getRepoId(linkedDoc.meta.section),
           format: linkedDoc.meta.template === 'format'
             ? linkedDoc.meta.repoId
             : getRepoId(linkedDoc.meta.format),
@@ -217,6 +221,7 @@ const metaFieldResolver = (meta, allDocuments = [], errors) => {
     series,
     dossier: resolver(meta.dossier),
     format: resolver(meta.format),
+    section: resolver(meta.section),
     discussion: resolver(meta.discussion)
   }
 }

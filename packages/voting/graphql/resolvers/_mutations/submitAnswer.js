@@ -2,15 +2,18 @@ const { ensureSignedIn } = require('@orbiting/backend-modules-auth')
 const {
   findById,
   ensureReadyToSubmit,
-  transformQuestion
+  transformQuestion,
+  updateResultIncrementally
 } = require('../../../lib/Questionnaire')
 const {
   validateAnswer
 } = require('../../../lib/Question')
 
-module.exports = async (_, { answer: { id, questionId, payload } }, context) => {
+module.exports = async (_, { answer }, context) => {
   const { pgdb, user: me, t, req } = context
   ensureSignedIn(req, t)
+
+  const { id, questionId, payload } = answer
 
   const transaction = await pgdb.transactionBegin()
   try {
@@ -21,7 +24,7 @@ module.exports = async (_, { answer: { id, questionId, payload } }, context) => 
     }
 
     const questionnaire = await findById(question.questionnaireId, transaction)
-    await ensureReadyToSubmit(questionnaire, me.id, now, transaction, t)
+    await ensureReadyToSubmit(questionnaire, me.id, now, { ...context, pgdb: transaction })
 
     // check client generated ID
     const existingAnswer = await transaction.public.answers.findOne({ id })
@@ -38,6 +41,12 @@ module.exports = async (_, { answer: { id, questionId, payload } }, context) => 
       userId: me.id,
       questionId
     })
+    if (
+      (existingAnswer && existingAnswer.submitted) ||
+      (sameAnswer && sameAnswer.submitted)
+    ) {
+      throw new Error(t('api/questionnaire/answer/immutable'))
+    }
     if (sameAnswer) {
       await transaction.public.answers.deleteOne({ id: sameAnswer.id })
     }
@@ -63,6 +72,19 @@ module.exports = async (_, { answer: { id, questionId, payload } }, context) => 
       )
     }
 
+    if (emptyAnswer && questionnaire.noEmptyAnswers) {
+      throw new Error(t('api/questionnaire/answer/empty'))
+    }
+
+    if (questionnaire.updateResultIncrementally) {
+      await updateResultIncrementally(
+        questionnaire.id,
+        answer,
+        transaction,
+        context
+      )
+    }
+
     // write
     const findQuery = { id }
     if (emptyAnswer) {
@@ -85,7 +107,8 @@ module.exports = async (_, { answer: { id, questionId, payload } }, context) => 
           questionId,
           questionnaireId: questionnaire.id,
           userId: me.id,
-          payload
+          payload,
+          submitted: questionnaire.submitAnswersImmediately
         })
       }
     }

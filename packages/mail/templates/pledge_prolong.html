@@ -12,22 +12,41 @@
       </o:officedocumentsettings>
     </xml>
     <![endif]-->
+    <style type="text/css">
+      {{sg_font_faces}}
+    </style>
+    <style type="text/css">
+      p {
+        color:#282828;font-size:17px;line-height:24px;
+        {{sg_font_style_sans_serif_regular}}
+      }
+      p strong {
+        {{sg_font_style_sans_serif_medium}}
+      }
+    </style>
   </head>
   <body style="margin: 0; padding: 0; background-color: #fff;">
     <table border="0" cellpadding="0" cellspacing="0" width="100%">
       <tbody>
         <tr>
           <td align="center" valign="top">
-            <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width:640px;color:#444;font-size:18px;font-family:Times, 'Times New Roman', serif;">
+            <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width:640px;color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}">
               <tbody>
                 <tr>
                   <td style="padding:20px;">
-                    <p><b>{{name}}, willkommen im zweiten Jahr der Republik!</b>
-                    </p>
-                    <p>Es ist schön, dass Sie weiterhin dabei sind! Hier die wichtigsten Informationen über Ihre Verlängerung.</p>
+                    <p>Guten Tag</p>
+                    
+                    {{#if `pledger_memberships_count > 0`}}
+                      <p>Schön, sind Sie weiterhin Teil unseres einzigartigen Projektes gegen den Zynismus, den Vormarsch der Autoritären und gegen die Diktatur der Angst.</p> 
+                      <p>Mit Ihrer Mitgliedschaft erhalten Sie von Montag bis Samstag ein hochwertiges digitales Magazin. Sie unterstützen aber auch eine wirklich unabhängige vierte Gewalt.</p>
+                      <p>Denn: Die Republik steht für die Verteidigung der demokratischen Institutionen und die Werte der Aufklärung: für Treue zu Fakten, für Lösungen von Fall zu Fall, für Offenheit gegenüber Kritik, für Respektlosigkeit gegenüber der Macht und Respekt vor dem Menschen.</p>
+                    {{/if}}
+                    
+                    <p>Hier die wichtigsten Informationen über Ihre Verlängerung.</p>
+
                     {{#if `payment_method == "PAYMENTSLIP"`}}
-                      <p>Sie haben Banküberweisung als Weg der Zahlung gewählt.<br>
-                        Bitte überweisen Sie {{total_formatted}} an:
+                      <p>Sie haben Banküberweisung als Weg der Zahlung gewählt.<br />
+                        Bitte überweisen Sie {{total_formatted}} bis spätestens {{due_date}}. an:
                       </p>
                       <p>PC 61-11760-6<br>
                         IBAN: CH50 0900 0000 6101 1760 6<br>
@@ -39,17 +58,19 @@
                         Sihlhallenstrasse 1<br>
                         8004 Zürich
                       </p>
-                      <p>Bis spätestens {{due_date}}.</p>
-                      <p><b>Und hier das Wichtigste. Vergessen Sie nicht, folgende Botschaft in das Feld «Betreff» des Einzahlungsscheins zu schreiben: {{HRID}}<br>
-                        (Sonst funktioniert die Zuordnung nicht.)</b>
-                      </p>
+                      <p><strong>Bitte vergessen Sie nicht, {{HRID}} in das Feld «Betreff» des Einzahlungsscheins zu schreiben, sonst funktioniert die Zuordnung nicht. Danke!</strong></p>
                     {{else}}
                       <p>Ihre Zahlung in Höhe von {{total_formatted}} ist erfolgreich bei uns eingegangen, herzlichen Dank!</p>
                     {{/if}}
+                      
                     <ul>
                       {{#options}}
                         <li>
-                          {{this.olabel}}: {{this.ototal_formatted}}
+                          {{#if `this.oamount > 1`}}
+                            {{this.oamount}} {{this.olabel}} à {{this.oprice_formatted}}: {{this.ototal_formatted}}
+                          {{else}}
+                            {{this.oamount}} {{this.olabel}}: {{this.ototal_formatted}}
+                          {{/if}}
                         </li>
                       {{/options}}
                       {{#if discount}}
@@ -59,35 +80,70 @@
                         <li>Spende: {{donation_formatted}}</li>
                       {{/if}}
                       <li>
-                        <b>Total: {{total_formatted}}</b>
+                        <strong>Total: {{total_formatted}}</strong>
                       </li>
                     </ul>
+                      
                     {{#if discount}}
                       <p>Wir haben Ihre Begründung für die Preisreduktion erhalten. Vielen Dank für Ihre Offenheit. Wir freuen uns, dass Sie an Bord sind!</p>
                     {{/if}}
+                    
                     {{#if donation}}
-                      <p>Ihnen ist die Republik mehr wert. {{donation_formatted}}, um genau zu sein. Herzlichen Dank für Ihre grosszügige Spende.</p>
+                      <p>Ihnen ist die Republik mehr wert. {{donation_formatted}}, um genau zu sein. <br />
+                        Herzlichen Dank für Ihre grosszügige Spende!</p>
                     {{/if}}
+
                     {{#if `gifted_memberships_count == 1`}}
-                      <p>Gratulation für Ihre Grossherzigkeit: Sie verlängern auch das Geschenkabonnement. Wir haben die Beschenkte darüber per E-Mail informiert.</p>
+                      <p>Vielen Dank, dass Sie die Republik anderen zukommen lassen: Sie verlängern auch das Geschenkabonnement. Wir haben die Beschenkte darüber per E-Mail informiert.</p>
                     {{elseif `gifted_memberships_count > 1`}}
-                      <p>Gratulation für Ihre Grossherzigkeit: Sie verlängern auch Ihre Geschenkabonnemente. Wir haben die Beschenkten darüber per E-Mail informiert.</p>
+                      <p>Vielen Dank, dass Sie die Republik anderen zukommen lassen: Sie verlängern auch Ihre Geschenkabonnemente. Wir haben die Beschenkten darüber per E-Mail informiert.</p>
                     {{/if}}
-                    <p>Ihre Crew von Project R und der Republik</p>
+
+                    {{#unless waiting_for_payment}}
+                      {{#if goodies_count}}
+                        <p>
+                          {{#if `goodies_count == 1`}}
+                            Sie haben sich noch ein Republik-Objekt gegönnt.
+                          {{elseif `goodies_count > 1`}}
+                            Sie haben sich noch mehrere Republik-Objekte gegönnt.
+                          {{/if}}
+
+                          {{#if goodies_has_tablebook}}
+                            Versandstart für «Republik bei Stromausfall» ist der 13. Dezember.
+                          {{/if}}
+                          {{#if goodies_has_totebag}}
+                            Notizbücher oder Taschen liefern wir innerhalb von 7 Werktagen.
+                          {{elseif goodies_has_notebook}}
+                            Notizbücher oder Taschen liefern wir innerhalb von 7 Werktagen.
+                          {{/if}}
+                        </p>
+                        <p><strong>Stellen Sie dafür bitte sicher, dass Sie Ihre Adresse unter <a href="{{link_account_account}}">{{link_account}}</a> korrekt eingetragen haben.</strong></p>
+                      {{/if}}
+                    {{/unless}}
+
+                    <p>Herzlich</p>
+                    <p>Ihre Crew der Republik</p>
                   </td>
                 </tr>
                 <tr>
                   <td style="padding:20px;">
-                    <p>
-                      <img height="79" src="https://gallery.mailchimp.com/650c1ec9003c7d8567eef4c5e/images/feb6bdde-83da-4211-bcf8-b09d3d3d012a.png" style="border: 0px  ; width: 180px !important; height: 79px !important; margin: 0px;" width="180" alt="feb6bdde-83da-4211-bcf8-b09d3d3d012a.png">
+                    <p style="font-size:14px;line-height:20px;{{sg_font_style_sans_serif_regular}}">Die Republik ist ein unabhängiges und werbefreies digitales Magazin für Politik, Wirtschaft, Gesellschaft und Kultur. Es wird von seinen Leserinnen und Lesern finanziert und erscheint von Montag bis Samstag mit täglich ein bis drei neuen Beiträgen. In der App, auf der Website und als Newsletter.</p>
+                  <p style="color:#282828;font-size:14px;line-height:20px;{{sg_font_style_sans_serif_regular}}">
+                      <img height="79" src="{{frontend_base_url}}/static/logo_republik_newsletter.png" style="border:0px;width:180px !important; height:79px !important;margin:0px;" width="180" alt="">
                       <br>
                       Republik AG<br>
-                      Sihlhallenstrasse 1<br>
-                      8004 Zürich<br>
-                      Schweiz<br><a href="mailto:kontakt@republik.ch">kontakt@republik.ch</a>
+                      Sihlhallenstrasse 1, CH-8004 Zürich<br>
+                      <a href="{{frontend_base_url}}">www.republik.ch</a><br>
+                      <a href="mailto:kontakt@republik.ch">kontakt@republik.ch</a>
+                    </p>
+                    <p style="font-size:14px;line-height:20px;{{sg_font_style_sans_serif_regular}}">
+                        <a href="{{link_manifest}}">Unser Manifest</a><br />
+                        <a href="{{link_imprint}}">Das Impressum</a><br />
+                        <a href="{{link_faq}}">Häufig gestellte Fragen</a>
                     </p>
                   </td>
                 </tr>
+                
               </tbody>
             </table>
           </td>

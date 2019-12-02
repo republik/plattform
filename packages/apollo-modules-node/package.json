@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "graphql": "^14.2.1",
+    "lodash.clone": "^4.5.0",
     "lodash.merge": "^4.6.1",
     "lodash.pickby": "^4.6.0"
   }

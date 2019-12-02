@@ -12,61 +12,80 @@
       </o:officedocumentsettings>
     </xml>
     <![endif]-->
+    <style type="text/css">
+      {{sg_font_faces}}
+    </style>
+    <style type="text/css">
+      p {
+        color:#282828;font-size:17px;line-height:24px;
+        {{sg_font_style_sans_serif_regular}}
+      }
+      p strong {
+        {{sg_font_style_sans_serif_medium}}
+      }
+    </style>
   </head>
   <body style="margin: 0; padding: 0; background-color: #fff;">
     <table border="0" cellpadding="0" cellspacing="0" width="100%">
       <tbody>
         <tr>
           <td align="center" valign="top">
-            <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width:640px;color:#444;font-size:18px;font-family:Times, 'Times New Roman', serif;">
+            <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width:640px;color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}">
               <tbody>
                 <tr>
                   <td style="padding:20px;">
-                    <p>Sehr geehrte Verlegerin, sehr geehrter Verleger</p>
-                    <p>Sie haben sich entschieden, das digitale Magazin «Republik» von Project R zu unterstützen. Mit Ihrer Mitgliedschaft tragen Sie entscheidend dazu bei, ein neues Modell für unabhängigen Journalismus zu entwickeln. Dafür danken wir Ihnen herzlich!</p>
-                    <p>Falls sich unsere Buchhaltung nicht irrt, ist Ihr angekündigter Abonnements- oder Unterstützungsbeitrag in der Höhe von CHF *|TOTAL|* noch ausstehend. Dürfen wir Sie freundlich bitten, den Betrag in den nächsten Tagen zu überweisen?</p>
-                    <p>Bitte geben Sie bei der Zahlung Ihren Namen und den folgenden Code als Zahlungszweck an (so können wir Ihre Zahlung zuordnen): <strong>*|HRID|*</strong>
-                    </p>
-                    *|IF:COMPANY_NAME=REPUBLIK|*
-                    <p>
-                      PC 61-229215-3<br>
-                      IBAN: CH23 0900 0000 6122 9215 3<br>
-                      BIC: POFICHBEXXX
-                    </p>
-                    <p>lautend auf:<br><strong>Republik AG</strong>
-                      <br>
-                      Sihlhallenstrasse 1<br>
-                      8004 Zürich
-                    </p>
-                    *|END:IF|*
-                    *|IF:COMPANY_NAME=PROJECT_R|*
-                    <p>
-                      PC 61-11760-6<br>
-                      IBAN: CH50 0900 0000 6101 1760 6<br>
-                      BIC: POFICHBEXXX
-                    </p>
-                    <p>lautend auf:<br><strong>Project R Genossenschaft</strong>
-                      <br>
-                      Sihlhallenstrasse 1<br>
-                      8004 Zürich
-                    </p>
-                    *|END:IF|*
-                    <p>Sollte sich Ihre Zahlung mit dieser Zahlungserinnerung kreuzen, erachten Sie unser E-Mail als gegenstandslos. Haben Sie sonst Fragen, melden Sie sich jederzeit via <a href="mailto:kontakt@republik.ch">kontakt@republik.ch</a>.</p>
-                    <p>Herzlichen Dank nochmals für Ihr Vertrauen! Wir freuen uns, Ihnen guten Journalismus zu liefern.</p>
-                    <p>Mit freundlichen Grüssen,</p>
-                    <p>die Crew von Project R und Republik</p>
-                    <p>PS: Keine Sorge, wir werden Sie nicht länger mit Zahlungserinnerungen belästigen. Sie haben nun 30 Tage Zeit, den Betrag zu überweisen. Anschliessend vermuten wir, dass Sie die Republik nicht mehr lesen möchten, und deaktivieren Ihr Abo und Ihre Mitgliedschaft.</p>
+                    <p>Guten Tag</p>
+                    <p>Schön, dass Sie die Republik unterstützen wollen.</p>
+                    <p>Falls sich unsere Buchhaltung nicht irrt, ist Ihr Mitgliedschafts- oder Unterstützungsbeitrag in der Höhe von CHF {{TOTAL}} aber weiterhin ausstehend.<br />
+                      Dürfen wir Sie freundlich bitten, den Betrag in den nächsten Tagen zu überweisen? Unser Projekt ist auf Ihren Beitrag angewiesen.</p>
+                    <p>Bitte geben Sie bei der Zahlung Ihren Namen und den folgenden Code als Zahlungszweck an (so können wir Ihre Zahlung zuordnen): <strong>{{HRID}}</strong></p>
+                    {{#if `COMPANY_NAME == "REPUBLIK"`}}
+                      <p>
+                        PC 61-229215-3<br>
+                        IBAN: CH23 0900 0000 6122 9215 3<br>
+                        BIC: POFICHBEXXX
+                      </p>
+                      <p>lautend auf:<br><strong>Republik AG</strong>
+                        <br>
+                        Sihlhallenstrasse 1<br>
+                        8004 Zürich
+                      </p>
+                    {{/if}}
+                    {{#if `COMPANY_NAME == "PROJECT_R"`}}
+                      <p>
+                        PC 61-11760-6<br>
+                        IBAN: CH50 0900 0000 6101 1760 6<br>
+                        BIC: POFICHBEXXX
+                      </p>
+                      <p>lautend auf:<br><strong>Project R Genossenschaft</strong>
+                        <br>
+                        Sihlhallenstrasse 1<br>
+                        8004 Zürich
+                      </p>
+                    {{/if}}
+                    <p>Sollte sich Ihre Zahlung mit dieser Zahlungserinnerung kreuzen, erachten Sie unsere E-Mail als gegenstandslos. Haben Sie sonst Fragen, melden Sie sich jederzeit unter <a href="mailto:kontakt@republik.ch">kontakt@republik.ch</a>.</p>
+                    <p>Wenn wir Ihre Zahlung in den nächsten 30 Tagen nicht erhalten, gehen wir davon aus, dass Sie die Republik nicht mehr lesen möchten, und deaktivieren Ihr Abo und Ihre Mitgliedschaft.</p>
+                    <p>Herzlich<br />Ihre Crew der Republik</p>
                   </td>
                 </tr>
                 <tr>
                   <td style="padding:20px;">
-                    <p>
-                      <img height="79" src="https://gallery.mailchimp.com/650c1ec9003c7d8567eef4c5e/images/feb6bdde-83da-4211-bcf8-b09d3d3d012a.png" style="border: 0px  ; width: 180px !important; height: 79px !important; margin: 0px;" width="180" alt="feb6bdde-83da-4211-bcf8-b09d3d3d012a.png">
+                    <p style="font-size:14px;line-height:20px;{{sg_font_style_sans_serif_regular}}">
+                      Die Republik ist ein unabhängiges und werbefreies digitales Magazin für Politik, Wirtschaft, Gesellschaft und Kultur. 
+                      Es wird von seinen Leserinnen und Lesern finanziert und erscheint von Montag bis Samstag mit täglich ein bis drei neuen Beiträgen. In der App, auf der Website und als Newsletter.
+                    </p>
+                    <p style="color:#282828;font-size:14px;line-height:20px;{{sg_font_style_sans_serif_regular}}">
+                      <img height="79" src="{{frontend_base_url}}/static/logo_republik_newsletter.png" style="border:0px;width:180px !important; height:79px !important;margin:0px;" width="180" alt="">
                       <br>
                       Republik AG<br>
-                      Sihlhallenstrasse 1<br>
-                      8004 Zürich<br>
-                      Schweiz<br><a href="mailto:kontakt@republik.ch">kontakt@republik.ch</a>
+                      Sihlhallenstrasse 1, CH-8004 Zürich<br>
+                      <a href="{{frontend_base_url}}">www.republik.ch</a><br>
+                      <a href="mailto:kontakt@republik.ch">kontakt@republik.ch</a>
+                    </p>
+                    <p style="font-size:14px;line-height:20px;{{sg_font_style_sans_serif_regular}}">
+                      <a href="{{link_manifest}}">Unser Manifest</a><br />
+                      <a href="{{link_imprint}}">Das Impressum</a><br />
+                      <a href="{{link_faq}}">Häufig gestellte Fragen</a>
                     </p>
                   </td>
                 </tr>

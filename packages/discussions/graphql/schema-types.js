@@ -1,5 +1,11 @@
 module.exports = `
 
+type Credential {
+  description: String!
+  verified: Boolean!
+  isListed: Boolean!
+}
+
 extend type User {
   comments(
     after: String
@@ -39,7 +45,7 @@ type DiscussionRules {
 type DiscussionPreferences {
   anonymity: Boolean!
   credential: Credential
-  notifications: DiscussionNotificationOption!
+  notifications: DiscussionNotificationOption
 }
 input DiscussionPreferencesInput {
   anonymity: Boolean
@@ -147,7 +153,8 @@ type DisplayUser {
   credential: Credential
   profilePicture: String
   anonymity: Boolean!
-  username: String
+  slug: String
+  username: String @deprecated(reason: "use \`slug\` instead")
 }
 
 type Preview {

@@ -57,9 +57,15 @@ const documentIdParser = value => {
 
   // decoded = <org>/<repoName>/<commitId>/<versionName>
   //                 ^^^^^^^^^^
-  const repoName = decoded.split('/').slice(1, 2)
+  const repoName =
+    decoded.split('/')[1] ||
+    value.split('/')[1] // fallback for plain repo ids
 
   return getResourceUrls(repoName)
+}
+
+const documentIdsParser = values => {
+  return values.reduce((all, value) => all.concat(documentIdParser(value)), [])
 }
 
 const getResourceUrls = repoName => {
@@ -94,9 +100,22 @@ const schema = {
     agg: valueCountAggBuilder('meta.format'),
     parser: documentIdParser
   },
+  formats: {
+    criteria: termCriteriaBuilder('meta.format'),
+    parser: documentIdsParser
+  },
   hasFormat: {
     criteria: hasCriteriaBuilder('meta.format'),
     agg: existsCountAggBuilder('meta.format')
+  },
+  section: {
+    criteria: termCriteriaBuilder('meta.section'),
+    agg: valueCountAggBuilder('meta.section'),
+    parser: documentIdParser
+  },
+  hasSection: {
+    criteria: hasCriteriaBuilder('meta.section'),
+    agg: existsCountAggBuilder('meta.section')
   },
   kind: termEntry('resolved.meta.format.meta.kind'),
   repoId: {
@@ -147,25 +166,37 @@ const schema = {
     options: {
       filter: {
         bool: {
-          must: { exists: {
-            field: 'contentString.count'
-          } },
-          must_not: { terms: {
-            'meta.template': ['format', 'discussion']
-          } }
+          must: {
+            exists: {
+              field: 'contentString.count'
+            }
+          },
+          must_not: {
+            terms: {
+              'meta.template': ['format', 'discussion']
+            }
+          }
         }
       },
       ranges: [
-        { key: 'short',
-          to: getWordsPerMinute() * SHORT_DURATION_MINS },
-        { key: 'medium',
+        {
+          key: 'short',
+          to: getWordsPerMinute() * SHORT_DURATION_MINS
+        },
+        {
+          key: 'medium',
           from: getWordsPerMinute() * SHORT_DURATION_MINS,
-          to: getWordsPerMinute() * MIDDLE_DURATION_MINS },
-        { key: 'long',
+          to: getWordsPerMinute() * MIDDLE_DURATION_MINS
+        },
+        {
+          key: 'long',
           from: getWordsPerMinute() * MIDDLE_DURATION_MINS,
-          to: getWordsPerMinute() * LONG_DURATION_MINS },
-        { key: 'epic',
-          from: getWordsPerMinute() * LONG_DURATION_MINS }
+          to: getWordsPerMinute() * LONG_DURATION_MINS
+        },
+        {
+          key: 'epic',
+          from: getWordsPerMinute() * LONG_DURATION_MINS
+        }
       ]
     }
   }
@@ -299,12 +330,17 @@ const addRelatedDocs = async ({
       const extractedIds = extractIdsFromNode(doc.content, doc.repoId)
       userIds = userIds.concat(extractedIds.users)
       repoIds = repoIds.concat(extractedIds.repos)
+    } else {
+      const extractedIds = extractIdsFromNode({ children: doc.meta.credits }, doc.repoId)
+      userIds = userIds.concat(extractedIds.users)
+      repoIds = repoIds.concat(extractedIds.repos)
     }
     // from meta
     const meta = doc.content.meta
     // TODO get keys from packages/documents/lib/resolve.js
     repoIds.push(getRepoId(meta.dossier))
     repoIds.push(getRepoId(meta.format))
+    repoIds.push(getRepoId(meta.section))
     repoIds.push(getRepoId(meta.discussion))
     if (meta.series) {
       // If a string, probably a series master (tbc.)
@@ -410,7 +446,7 @@ const switchState = async function (elastic, state, repoId, docId) {
           ],
           should: queries,
           must_not: [
-            { term: { '_id': docId } }
+            { term: { _id: docId } }
           ]
         }
       },
@@ -444,7 +480,7 @@ const resetScheduledAt = async function (
             { term: { 'meta.prepublication': isPrepublication } }
           ],
           must_not: [
-            { term: { '_id': docId } }
+            { term: { _id: docId } }
           ]
         }
       },
@@ -701,13 +737,21 @@ const findPublished = async function (elastic, repoId) {
         bool: {
           must: [
             { term: { 'meta.repoId': repoId } },
-            { bool: { should: [
-              { term: { '__state.published': true } },
-              { bool: { must: [
-                { term: { 'meta.prepublication': false } },
-                { exists: { field: 'meta.scheduledAt' } }
-              ] } }
-            ] } }
+            {
+              bool: {
+                should: [
+                  { term: { '__state.published': true } },
+                  {
+                    bool: {
+                      must: [
+                        { term: { 'meta.prepublication': false } },
+                        { exists: { field: 'meta.scheduledAt' } }
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
           ]
         }
       }

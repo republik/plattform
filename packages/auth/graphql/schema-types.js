@@ -75,6 +75,7 @@ enum QRCodeErrorCorrectionLevel {
 
 enum SignInTokenType {
   EMAIL_TOKEN
+  EMAIL_CODE
   TOTP
   SMS
   APP
@@ -93,6 +94,7 @@ input RequiredUserFields {
 type RequestInfo {
   ipAddress: String!
   userAgent: String
+  isApp: Boolean!
   country: String
   countryFlag: String
   city: String
@@ -124,5 +126,6 @@ type SignInNotification {
 
 enum AccessTokenScope {
   CUSTOM_PLEDGE
+  CLAIM_CARD
 }
 `

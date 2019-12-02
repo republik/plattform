@@ -37,8 +37,7 @@ module.exports = {
         bool: {
           must: [
             { term: { __type: type } },
-            { term: { hasPublicProfile: true } },
-            { term: { verified: true } }
+            { term: { hasPublicProfile: true } }
           ]
         }
       })

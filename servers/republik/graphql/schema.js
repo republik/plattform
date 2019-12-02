@@ -14,23 +14,23 @@ type queries {
     search: String
     # user id, legacy testimonial id or username to inject as first result
     focus: String
-  ): UserConnection!
+  ): StatementUserConnection!
   nextStatement(
     sequenceNumber: Int!,
     orderDirection: OrderDirection!
-  ): User!
+  ): StatementUser!
 
   greeting: Greeting
   faqs: [Faq!]!
   events: [Event!]!
   updates: [Update!]!
   employees(
-    """
-    shuffle and limit the result to the specified count
-    - one famous female and one famous male is boosted
-    - ensures unique users
-    """
+    "shuffle and limit the result to the specified count"
     shuffle: Int
+    "boost one famous female and one famous male employee"
+    withBoosted: Boolean
+    "return employees with an onboarding greeting"
+    withGreeting: Boolean
   ): [Employee!]!
   mediaResponses: [MediaResponse!]!
   membershipStats: MembershipStats!

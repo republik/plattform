@@ -21,6 +21,8 @@ module.exports = async (_, args, context, info) => {
     first: limit = 40,
     offset = 0,
     discussionId,
+    discussionIds = [],
+    toDepth,
     focusId,
     lastId
   } = options
@@ -29,14 +31,20 @@ module.exports = async (_, args, context, info) => {
     throw new Error(t('api/discussion/args/first/tooBig', { max: MAX_LIMIT }))
   }
 
-  const numComments = await pgdb.public.comments.count(
-    {
-      discussionId,
-      published: true,
-      adminUnpublished: false
-    },
-    { skipUndefined: true }
-  )
+  discussionIds.push(discussionId)
+
+  const discussions =
+    await pgdb.public.discussions.find({
+      ...(discussionIds.filter(Boolean).length > 0) && { id: discussionIds },
+      ...(discussionIds.filter(Boolean).length === 0) && { hidden: false }
+    })
+
+  const numComments = await pgdb.public.comments.count({
+    discussionId: discussions.map(d => d.id),
+    ...(toDepth >= 0) && { 'depth <=': toDepth },
+    published: true,
+    adminUnpublished: false
+  })
 
   let sortKey = getSortKey(orderBy)
   // there is no score in the db
@@ -58,7 +66,8 @@ module.exports = async (_, args, context, info) => {
     FROM
       comments
     WHERE
-      ${discussionId ? '"discussionId" = :discussionId AND' : ''}
+      ARRAY["discussionId"] && :discussionIds AND
+      ${toDepth >= 0 ? '"depth" <= :toDepth AND' : ''}
       "published" = true AND
       "adminUnpublished" = false
     ORDER BY
@@ -68,7 +77,8 @@ module.exports = async (_, args, context, info) => {
     LIMIT :limit
     OFFSET :offset
   `, {
-    discussionId,
+    discussionIds: discussions.map(d => d.id),
+    toDepth,
     focusId: focusId || null,
     lastId: lastId || null,
     limit,
@@ -83,13 +93,16 @@ module.exports = async (_, args, context, info) => {
     : null
 
   return {
-    id: `${discussionId || 'comments'}{offset || ''}`,
+    id: `${discussionId || 'comments'}${offset || ''}`,
     totalCount: numComments,
     directTotalCount: numComments,
     pageInfo: {
       hasNextPage: !!endCursor,
       endCursor
     },
-    nodes: comments
+    nodes: comments,
+    focus: focusId && comments.length && focusId === comments[0].id
+      ? comments[0]
+      : null
   }
 }

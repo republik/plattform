@@ -12,13 +12,25 @@
       </o:officedocumentsettings>
     </xml>
     <![endif]-->
+    <style type="text/css">
+      {{sg_font_faces}}
+    </style>
+    <style type="text/css">
+      p {
+        color:#282828;font-size:17px;line-height:24px;
+        {{sg_font_style_sans_serif_regular}}
+      }
+      p strong {
+        {{sg_font_style_sans_serif_medium}}
+      }
+    </style>
   </head>
   <body style="margin: 0; padding: 0; background-color: #fff;">
     <table border="0" cellpadding="0" cellspacing="0" width="100%">
       <tbody>
         <tr>
           <td align="center" valign="top">
-            <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width:640px;color:#444;font-size:18px;font-family:Times, 'Times New Roman', serif;">
+            <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width:640px;color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}">
               <tbody>
                 <tr>
                   <td style="padding:20px;">
@@ -28,7 +40,7 @@
                           <table border="0" cellspacing="0" cellpadding="0">
                             <tr>
                               <td align="center" bgcolor="#3CAD00">
-                                <a href="{{prolong_url}}" style="font-size:20px;font-family:Helvetica, Arial, sans-serif;color:#ffffff;text-decoration:none;border-radius:0;padding:15px 30px 15px 30px;border:1px solid #3CAD00;display:inline-block;">Abonnement reaktivieren</a>
+                                <a href="{{prolong_url}}" style="font-size:20px;{{sg_font_style_sans_serif_regular}}color:#ffffff;text-decoration:none;border-radius:0;padding:15px 30px 15px 30px;border:1px solid #3CAD00;display:inline-block;">Mitgliedschaft jetzt reaktivieren</a>
                               </td>
                             </tr>
                           </table>
@@ -37,36 +49,37 @@
                     </table>
                     <br>
                     <hr>
-                    <p>
-                      Sehr geehrte Frau Verlegerin<br>
-                      Sehr geehrter Herr Verleger<br>
-                      Liebe Nummer {{sequence_number}}
-                    </p>
-                    <p>Verlassen Sie uns? Nach nur einem Jahr?</p>
-                    <p>Wir fragen Sie das, weil Sie die Abonnementsrechnung noch nicht bezahlt haben.</p>
-                    <p>Vielleicht haben Sie alle bisherigen warnenden E-Mails übersehen. Dann ist das kein Drama. <a href="{{prolong_url}}">Reaktivieren Sie jetzt Ihr Abonnement</a>. (Es dauert höchstens drei Minuten.)</p>
-                    <p>Denn unser seelenloser Buchhaltungscomputer hat Sie soeben aus der Republik-Verlagsetage gelöscht.</p>
-                    <p>Das tut uns doppelt weh.</p>
-                    <p>Zum Ersten ist die Republik noch immer ein sehr junges Projekt. Und ein verletzliches. Denn bis jetzt steht erst der Rohbau. Wir haben das Magazin längst nicht fertig entwickelt. Und brauchen im zweiten Jahr dazu jede Frau, jeden Mann an Deck, die wir bekommen können.</p>
-                    <p>Zum Zweiten fehlen Sie uns. Denn uns liegt eine möglichst breite Debatte am Herzen. Und dabei brauchen wir die verschiedensten Köpfe. Nicht zuletzt auch die skeptischen. Und die beschäftigten, die keine Zeit verschwendet haben, unsere vorherigen warnenden E-Mails zu lesen.</p>
-                    <p>Ersetzbar sind Sie sowieso nicht. Egal wie viele Leute wir an Bord haben – ohne Sie wird es in der Verlagsetage der Republik nie mehr eine <b>Nr. {{sequence_number}}</b> geben.</p>
-                    <p>Deshalb: <a href="{{prolong_url}}">Kommen Sie zurück in die Verlagsetage</a>.</p>
-                    <p>Mit Dank für das erste Jahr! Und mit der Hoffnung auf ein zweites.</p>
-                    <p>Ihre Crew der Republik und von Project R</p>
-                    <p>PS: Sollte uns beim Zahlungseingang ein Irrtum unterlaufen sein, schicken Sie ein kurzes Mail an: <a href="mailto:kontakt@republik.ch">kontakt@republik.ch</a>.</p>
-                    <p>PPS: Was auch immer passiert: <a href="{{account_abo_url}}">Wir behalten Ihre Nummer {{sequence_number}} (und Ihr Profil)</a> im Hintergrund frisch – für den Tag, wenn Sie wieder an Bord sind.</p>
-                    <p>PPPS: Sollten Sie einen finanziellen Engpass oder sonst ein Problem haben, schreiben Sie uns: <a href="mailto:kontakt@republik.ch">kontakt@republik.ch</a>. Wir finden dann eine Lösung.</p>
+                    <p>Guten Tag</p>
+                    <p>Schade, sind Sie nicht mehr Teil der Republik und der Idee hinter unserem Projekt!</p>
+                    <p>Wir haben Ihnen in den letzten Wochen mehrere E-Mails für die Verlängerung oder Kündigung Ihrer Mitgliedschaft geschickt. Aber darauf noch keine Antwort erhalten. Einen Zahlungseingang für die Verlängerung Ihrer Mitgliedschaft können wir bis heute auch nicht verzeichnen.</p>
+                    <p>Deshalb verlieren Ihre Zugangsdaten ab sofort leider ihre Gültigkeit.</p>
+                    <p>Wenn Sie schlicht alle E-Mails übersehen haben – <a href="{{prolong_url}}">reaktivieren Sie einfach jetzt schnell Ihre Mitgliedschaft</a>. Das dauert nicht einmal drei Minuten.</p>
+                    <p>Falls Sie nur einfach nicht mehr Teil der Project R Genossenschaft sein wollen, aber gerne weiterhin Zugriff aufs Magazin haben möchten, gibt es die Möglichkeit, <a href="{{link_offer_monthly_abo}}">ein (unbegrenztes) Monatsabo zu kaufen</a>. Das kostet nur CHF 22.– im Monat, wird Ihrer Kreditkarte belastet und verlängert sich auch automatisch – kann dabei aber jederzeit und ohne Frist gekündigt werden.</p>
+                    <p>Auch mit diesem Abo erhalten Sie viel Kontext und Vertiefung und stärken den kritischen Journalismus, die vierte Gewalt und unser Projekt gegen den Zynismus und die Diktatur der Angst. Einfach ohne dass Sie Teil unserer Genossenschaft sind.</p>
+                    <p>Und wenn Sie einen finanziellen Engpass haben, schreiben Sie uns auf <a href="mailto:kontakt@republik.ch">kontakt@republik.ch</a>. Wir finden eine Lösung!</p>
+                    <p>Sollte uns hingegen ein Fehler unterlaufen sein, nehmen Sie bitte ebenfalls so schnell wie möglich Kontakt mit uns auf: <a href="mailto:kontakt@republik.ch">kontakt@republik.ch</a>.</p>
+                    <p>Herzlich</p>
+                    <p>Ihre Crew der Republik</p>
                   </td>
                 </tr>
                 <tr>
                   <td style="padding:20px;">
-                    <p>
-                      <img height="79" src="https://gallery.mailchimp.com/650c1ec9003c7d8567eef4c5e/images/feb6bdde-83da-4211-bcf8-b09d3d3d012a.png" style="border: 0px  ; width: 180px !important; height: 79px !important; margin: 0px;" width="180" alt="feb6bdde-83da-4211-bcf8-b09d3d3d012a.png">
+                    <p style="font-size:14px;line-height:20px;{{sg_font_style_sans_serif_regular}}">
+                      Die Republik ist ein unabhängiges und werbefreies digitales Magazin für Politik, Wirtschaft, Gesellschaft und Kultur. 
+                      Es wird von seinen Leserinnen und Lesern finanziert und erscheint von Montag bis Samstag mit täglich ein bis drei neuen Beiträgen. In der App, auf der Website und als Newsletter.
+                    </p>
+                    <p style="color:#282828;font-size:14px;line-height:20px;{{sg_font_style_sans_serif_regular}}">
+                      <img height="79" src="{{frontend_base_url}}/static/logo_republik_newsletter.png" style="border:0px;width:180px !important; height:79px !important;margin:0px;" width="180" alt="">
                       <br>
                       Republik AG<br>
-                      Sihlhallenstrasse 1<br>
-                      8004 Zürich<br>
-                      Schweiz<br><a href="mailto:kontakt@republik.ch">kontakt@republik.ch</a>
+                      Sihlhallenstrasse 1, CH-8004 Zürich<br>
+                      <a href="{{frontend_base_url}}">www.republik.ch</a><br>
+                      <a href="mailto:kontakt@republik.ch">kontakt@republik.ch</a>
+                    </p>
+                    <p style="font-size:14px;line-height:20px;{{sg_font_style_sans_serif_regular}}">
+                        <a href="{{link_manifest}}">Unser Manifest</a><br />
+                        <a href="{{link_imprint}}">Das Impressum</a><br />
+                        <a href="{{link_faq}}">Häufig gestellte Fragen</a>
                     </p>
                   </td>
                 </tr>

@@ -20,7 +20,7 @@
   },
   "homepage": "https://github.com/orbiting/backends#readme",
   "devDependencies": {
-    "dotenv": "^7.0.0"
+    "dotenv": "^8.2.0"
   },
   "dependencies": {
     "apollo-modules-node": "^0.1.4",

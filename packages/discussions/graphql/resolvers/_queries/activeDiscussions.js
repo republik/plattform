@@ -1,6 +1,6 @@
 const moment = require('moment')
 
-module.exports = async (_, { lastDays = 5 }, { pgdb }) =>
+module.exports = async (_, { lastDays = 5, first = 10 }, { pgdb }) =>
   pgdb.query(`
     SELECT
       COUNT(*) as count,
@@ -9,13 +9,16 @@ module.exports = async (_, { lastDays = 5 }, { pgdb }) =>
     JOIN
       discussions d
       ON c."discussionId" = d.id
+      AND d.hidden = false
+      AND d.closed = false
     WHERE
-      c."createdAt" > :minDate AND
-      d.closed = false
+      c."createdAt" > :minDate
     GROUP BY d.id
     ORDER BY 1 DESC
+    LIMIT :first
   `, {
-    minDate: moment().subtract(lastDays, 'days')
+    minDate: moment().subtract(lastDays, 'days'),
+    first
   })
     .then(result => result
       .map(result => ({

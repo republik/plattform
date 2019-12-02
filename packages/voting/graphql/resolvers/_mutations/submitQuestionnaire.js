@@ -5,7 +5,7 @@ const {
 } = require('../../../lib/Questionnaire')
 
 module.exports = async (_, { id: questionnaireId }, context) => {
-  const { pgdb, user: me, t, req } = context
+  const { pgdb, user: me, t, req, loaders } = context
   ensureSignedIn(req, t)
 
   const transaction = await pgdb.transactionBegin()
@@ -13,19 +13,26 @@ module.exports = async (_, { id: questionnaireId }, context) => {
     const now = new Date()
 
     const questionnaire = await findById(questionnaireId, transaction)
-    await ensureReadyToSubmit(questionnaire, me.id, now, transaction, t)
+    await ensureReadyToSubmit(questionnaire, me.id, now, { ...context, pgdb: transaction })
 
-    await transaction.public.answers.update(
-      {
-        questionnaireId,
-        userId: me.id
-      },
-      { submitted: true }
-    )
+    if (!questionnaire.submitAnswersImmediately) {
+      await transaction.public.answers.update(
+        {
+          questionnaireId,
+          userId: me.id
+        },
+        { submitted: true }
+      )
+    }
 
     await transaction.public.questionnaireSubmissions.insert({
       questionnaireId,
       userId: me.id
+    })
+
+    await loaders.QuestionnaireSubmissions.byKeyObj.clear({
+      userId: me.id,
+      questionnaireId
     })
 
     await transaction.transactionCommit()

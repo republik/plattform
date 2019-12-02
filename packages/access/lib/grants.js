@@ -4,7 +4,10 @@ const validator = require('validator')
 const Promise = require('bluebird')
 
 const { Roles } = require('@orbiting/backend-modules-auth')
-const { applyPgInterval: { add: addInterval } } = require('@orbiting/backend-modules-utils')
+const {
+  applyPgInterval: { add: addInterval },
+  hasUserActiveMembership
+} = require('@orbiting/backend-modules-utils')
 
 const campaignsLib = require('./campaigns')
 const constraints = require('./constraints')
@@ -83,7 +86,7 @@ const grant = async (granter, campaignId, email, message, t, pgdb, mail) => {
 
   const campaign = await campaignsLib.findOne(campaignId, pgdb)
 
-  if (campaign === undefined) {
+  if (!campaign) {
     throw new Error(t(
       'api/access/grant/campaign/error',
       { campaignId }
@@ -93,7 +96,12 @@ const grant = async (granter, campaignId, email, message, t, pgdb, mail) => {
   const result = await evaluateConstraints(granter, campaign, email, t, pgdb)
 
   if (result.errors.length > 0) {
-    throw new Error(result.errors.shift())
+    const error = result.errors.shift()
+    console.error(
+      error,
+      { granter: granter.id, campaign: campaign.id, email }
+    )
+    throw new Error(error)
   }
 
   if (message && message.length > 255) {
@@ -120,7 +128,7 @@ const grant = async (granter, campaignId, email, message, t, pgdb, mail) => {
   return grant
 }
 
-const claim = async (voucherCode, user, t, pgdb, mail) => {
+const claim = async (voucherCode, payload, user, t, pgdb, mail) => {
   const sanatizedVoucherCode = voucherCode.trim().toUpperCase()
 
   const grantByVoucherCode = await findByVoucherCode(
@@ -132,8 +140,13 @@ const claim = async (voucherCode, user, t, pgdb, mail) => {
     throw new Error(t('api/access/claim/404'))
   }
 
-  const grant = await beginGrant(grantByVoucherCode, user, pgdb)
+  const grant = await beginGrant(grantByVoucherCode, payload, user, pgdb)
   await eventsLib.log(grant, 'grant', pgdb)
+
+  const campaign = await pgdb.public.accessCampaigns
+    .findOne({ id: grant.accessCampaignId })
+  const { subscribeToEditorialNewsletters = true } = campaign.config
+
   const hasRoleChanged =
     await membershipsLib.addMemberRole(grant, user, pgdb)
 
@@ -141,18 +154,13 @@ const claim = async (voucherCode, user, t, pgdb, mail) => {
     await mail.enforceSubscriptions({
       userId: user.id,
       pgdb,
-      subscribeToEditorialNewsletters: true
+      subscribeToEditorialNewsletters
     })
   }
 
-  const hasMembership =
-    await membershipsLib.hasUserActiveMembership(user, pgdb)
-
-  if (!hasMembership) {
+  if (!(await hasUserActiveMembership(user, pgdb))) {
     const granter = await pgdb.public.users
       .findOne({ id: grant.granterUserId })
-    const campaign = await pgdb.public.accessCampaigns
-      .findOne({ id: grant.accessCampaignId })
 
     await mailLib.sendRecipientOnboarding(granter, campaign, user, grant, t, pgdb)
   }
@@ -191,6 +199,63 @@ const revoke = async (id, user, t, pgdb) => {
   return result
 }
 
+const request = async (granter, campaignId, payload, t, pgdb, mail) => {
+  const campaign = await campaignsLib.findOne(campaignId, pgdb)
+
+  if (!campaign) {
+    throw new Error(t(
+      'api/access/request/campaign/error',
+      { campaignId }
+    ))
+  }
+
+  const result = await evaluateConstraints(granter, campaign, granter.email, t, pgdb)
+
+  if (result.errors.length > 0) {
+    const error = result.errors.shift()
+    console.error(
+      error,
+      { granter: granter.id, campaign: campaign.id, email: granter.email }
+    )
+    throw new Error(error)
+  }
+
+  const grant = await beginGrant(
+    await pgdb.public.accessGrants.insertAndGet({
+      granterUserId: granter.id,
+      accessCampaignId: campaign.id,
+      voucherCode: null,
+      beginBefore: addInterval(moment(), campaign.grantClaimableInterval)
+    }),
+    payload,
+    granter,
+    pgdb
+  )
+
+  await eventsLib.log(grant, 'request', pgdb)
+
+  const { subscribeToEditorialNewsletters = true } = campaign.config
+
+  const hasRoleChanged =
+    await membershipsLib.addMemberRole(grant, granter, pgdb)
+
+  if (hasRoleChanged) {
+    await mail.enforceSubscriptions({
+      userId: granter.id,
+      pgdb,
+      subscribeToEditorialNewsletters
+    })
+  }
+
+  if (!(await hasUserActiveMembership(granter, pgdb))) {
+    await mailLib.sendRecipientOnboarding(granter, campaign, granter, grant, t, pgdb)
+  }
+
+  debug('request', { grant })
+
+  return grant
+}
+
 const invalidate = async (grant, reason, t, pgdb, mail) => {
   const now = moment()
   const updateFields = {
@@ -225,10 +290,7 @@ const invalidate = async (grant, reason, t, pgdb, mail) => {
         })
       }
 
-      const hasMembership =
-        await membershipsLib.hasUserActiveMembership(recipient, pgdb)
-
-      if (!hasMembership) {
+      if (!(await hasUserActiveMembership(recipient, pgdb))) {
         const granter = await pgdb.public.users
           .findOne({ id: grant.granterUserId })
         const campaign = await pgdb.public.accessCampaigns
@@ -263,18 +325,13 @@ const followUp = async (campaign, grant, t, pgdb, mail) => {
   const recipient =
     await pgdb.public.users.findOne({ id: grant.recipientUserId })
 
-  if (recipient) {
-    const hasMembership =
-      await membershipsLib.hasUserActiveMembership(recipient, pgdb)
+  if (recipient && !(await hasUserActiveMembership(recipient, pgdb))) {
+    const granter = await pgdb.public.users
+      .findOne({ id: grant.granterUserId })
 
-    if (!hasMembership) {
-      const granter = await pgdb.public.users
-        .findOne({ id: grant.granterUserId })
-
-      await mailLib.sendRecipientFollowup(
-        granter, campaign, recipient, grant, t, pgdb
-      )
-    }
+    await mailLib.sendRecipientFollowup(
+      granter, campaign, recipient, grant, t, pgdb
+    )
   }
 
   debug('followUp', {
@@ -381,14 +438,14 @@ const findInvalid = async (pgdb) => {
   const now = moment()
   return pgdb.public.accessGrants.find({
     or: [
-      { and: [{ 'endAt': null }, { 'beginBefore <': now }] },
+      { and: [{ endAt: null }, { 'beginBefore <': now }] },
       { 'endAt <': now }
     ],
     invalidatedAt: null
   })
 }
 
-const beginGrant = async (grant, recipient, pgdb) => {
+const beginGrant = async (grant, payload, recipient, pgdb) => {
   const campaign = await campaignsLib.findOne(grant.accessCampaignId, pgdb)
   const now = moment()
   const beginAt = now.clone()
@@ -398,6 +455,7 @@ const beginGrant = async (grant, recipient, pgdb) => {
     recipientUserId: recipient.id,
     beginAt,
     endAt,
+    payload: { ...grant.payload, ...payload },
     updatedAt: now
   }
   const result = await pgdb.public.accessGrants.updateAndGetOne(
@@ -438,6 +496,7 @@ module.exports = {
   insert,
   grant,
   claim,
+  request,
   revoke,
   invalidate,
   followUp,

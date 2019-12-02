@@ -1,0 +1,27 @@
+{
+  "name": "@orbiting/backend-modules-cards",
+  "version": "1.0.0",
+  "description": "User cards for swiping and machting",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/orbiting/backends.git"
+  },
+  "author": "Patrick Venetz <patrick.venetz@republik.ch>",
+  "license": "AGPL-3.0",
+  "bugs": {
+    "url": "https://github.com/orbiting/backends/issues"
+  },
+  "homepage": "https://github.com/orbiting/backends#readme",
+  "dependencies": {
+    "bluebird": "^3.5.5",
+    "d3": "^5.12.0",
+    "d3-array": "^2.3.1",
+    "d3-dsv": "^1.1.1",
+    "lodash": "^4.17.15",
+    "node-fetch": "^2.6.0",
+    "recursive-readdir": "^2.2.2",
+    "shuffle-seed": "^1.1.6",
+    "yargs": "^14.0.0"
+  }
+}

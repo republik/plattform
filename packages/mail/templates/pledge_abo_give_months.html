@@ -12,81 +12,115 @@
       </o:officedocumentsettings>
     </xml>
     <![endif]-->
+    <style type="text/css">
+      {{sg_font_faces}}
+    </style>
+    <style type="text/css">
+      p {
+        color:#282828;font-size:17px;line-height:24px;
+        {{sg_font_style_sans_serif_regular}}
+      }
+      p strong {
+        {{sg_font_style_sans_serif_medium}}
+      }
+    </style>
   </head>
   <body style="margin: 0; padding: 0; background-color: #fff;">
     <table border="0" cellpadding="0" cellspacing="0" width="100%">
       <tbody>
         <tr>
           <td align="center" valign="top">
-            <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width:640px;color:#444;font-size:18px;font-family:Times, 'Times New Roman', serif;">
+            <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width:640px;color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}">
               <tbody>
                 <tr>
                   <td style="padding:20px;">
-                    <p>{{name}}, Gratulation für Ihre Grosszügigkeit: Sie verschenken die Republik.</p>
-                    {{#if `payment_method != "PAYMENTSLIP"`}}
-                      <p>Ihre Zahlung ist erfolgreich bei uns eingegangen, herzlichen Dank!</p>
-                    {{/if}}
-                    {{#if `payment_method == "PAYMENTSLIP"`}}
-                      <p>Sie haben Banküberweisung als Zahlungsmethode gewählt.</p>
-                      <p>Bitte überweisen Sie {{total_formatted}} an:</p>
-                      <p>
-                        PC 61-229215-3<br>
-                        IBAN: CH23 0900 0000 6122 9215 3 <br>
-                        BIC: POFICHBEXXX
-                      </p>
-                      <p>
-                        lautend auf:<br>
-                        Republik AG<br>
-                        Sihlhallenstrasse 1<br>
-                        8004 Zürich
-                      </p>
-                      <p>bis spätestens {{due_date}}.</p>
-                      <p>
-                        <b>Und hier das Wichtigste. Vergessen Sie nicht, folgende Botschaft in das Feld «Betreff» des Einzahlungsscheins zu schreiben: {{HRID}}</b>
-                        <br>
-                        (Sonst funktioniert die Zuordnung nicht.)
-                      </p>
-                      {{#if waiting_for_payment}}
-                        <p>Da der Gesamtbetrag Ihrer Bestellung die magische Grenze von CHF 1000.– übersteigt, schicken wir Ihnen die Gutscheincodes direkt nach Zahlungseingang.</p>
-                      {{/if}}
-                    {{/if}}
-
+                    <p>Guten Tag</p>
+                    <p>Vielen Dank, dass Sie die Verbreitung der Republik mit einem Geschenkabonnement unterstützen!</p>
+                    
                     {{#if voucher_codes}}
-                      <p><b>Für jedes Geschenk-Monats-Abo erhalten Sie hier einen 6-Zeichen-Code.</b></p>
-                      <p><b>{{voucher_codes}}</b></p>
+                      <p>Für jedes Geschenkabonnement erhalten Sie nachfolgend einen Gutscheincode.</p>
+                      <p><strong>{{voucher_codes}}</strong></p>
                       <p>Sie können diesen der Person Ihrer Wahl mit einem Mittel Ihrer Wahl überreichen: sofort per Mail, traditionell per Briefpost oder originell als Schrift auf einem Kuchen.</p>
-                      <p>Um das Geschenk einzulösen, muss der neue Besitzer, die neue Besitzerin des Codes auf die Seite <a href="{{link_claim}}">{{link_claim}}</a> gehen. Und die sechs Zeichen dort eintippen.</p>
+                      <p>Um den Gutscheincode einzulösen, muss der neue Besitzer oder die neue Besitzerin nur auf die Seite <a href="{{link_claim}}">{{link_claim}}</a> gehen. Und den Code dort eingeben.</p>
+
                       {{#if goodies_count}}
-                        {{#if `goodies_count == 1`}}
-                          <p>Auch Ihr bestelltes Republik-Objekt eignet sich perfekt für die Code-Übergabe. Sie werden es innerhalb der nächsten 7 Werktage per Post zugestellt bekommen.</p>
-                        {{elseif `goodies_count > 1`}}
-                          <p>Auch Ihre bestellten Republik-Objekte eignen sich perfekt für die Code-Übergabe. Sie werden diese innerhalb der nächsten 7 Werktage per Post zugestellt bekommen.</p>
-                        {{/if}}
+                        <p>
+                          {{#if `goodies_count == 1`}}
+                            Auch Ihr bestelltes Republik-Objekt eignet sich perfekt für die Code-Übergabe.
+                          {{elseif `goodies_count > 1`}}
+                            Auch Ihre bestellten Republik-Objekte eignen sich perfekt für die Code-Übergabe.
+                          {{/if}}
+                          
+                          {{#if goodies_has_tablebook}}
+                            Versandstart für «Republik bei Stromausfall» ist der 13. Dezember.
+                          {{/if}}
+                          {{#if goodies_has_totebag}}
+                            Notizbücher oder Taschen liefern wir innerhalb von 7 Werktagen.
+                          {{elseif goodies_has_notebook}}
+                            Notizbücher oder Taschen liefern wir innerhalb von 7 Werktagen.
+                          {{/if}}
+                        </p>
+
                         <ul>
                           {{#options}}
                             {{#if `this.otype == "Goodie"`}}
-                            <li>
-                              {{this.oamount}} {{this.olabel}}
-                            </li>
+                              <li>{{this.oamount}} {{this.olabel}}</li>
                             {{/if}}
                           {{/options}}
                         </ul>
-                        <p><b>Stellen Sie dafür bitte sicher, dass Sie Ihre Adresse unter <a href="{{link_account_account}}">{{link_account}}</a> korrekt eingetragen haben.</b></p>
+                        <p><strong>Stellen Sie dafür bitte sicher, dass Sie Ihre Adresse unter <a href="{{link_account_account}}">{{link_account}}</a> korrekt eingetragen haben.</strong></p>
                       {{/if}}
                     {{/if}}
-                    <p>Vielen Dank!</p>
-                    <p>Ihre Crew von Project R und Republik</p>
+
+                    <p><strong>Informationen zur Zahlung Ihres Geschenkabonnements:</strong></p>
+
+                    {{#if `payment_method != "PAYMENTSLIP"`}}
+                      <p>Ihre Zahlung ist erfolgreich bei uns eingegangen, herzlichen Dank!</p>
+                    {{/if}}
+                    
+                    {{#if `payment_method == "PAYMENTSLIP"`}}
+                      <p>Sie haben eine Banküberweisung als Zahlungsweg gewählt.</p>
+                      <p>Bitte überweisen Sie {{total_formatted}} bis spätestens {{due_date}} an:</p>
+                      <p>PC 61-11760-6<br>
+                        IBAN: CH50 0900 0000 6101 1760 6<br>
+                        BIC: POFICHBEXXX
+                      </p>
+                      <p>
+                        lautend auf:
+                      </p>
+                      <p>
+                        Project R Genossenschaft<br>
+                        Sihlhallenstrasse 1<br>
+                        8004 Zürich
+                      </p>
+                      <p><strong>Bitte vergessen Sie nicht, {{HRID}} in das Feld «Betreff» des Einzahlungsscheins zu schreiben, sonst funktioniert die Zuordnung nicht. Danke!</strong></p>
+                    {{/if}}
+
+                    {{#if waiting_for_payment}}<br>
+                      <p><strong>Da der Gesamtbetrag Ihrer Bestellung die magische Grenze von CHF 1000.– übersteigt, erhalten Sie die Gutscheincodes erst nach Zahlungseingang.</strong></p>
+                    {{/if}}
+                    
+                    <p>Vielen Dank!<br />
+                      Und viel Freude beim Verschenken der Republik.
+                    </p>
+                    <p>Ihre Crew der Republik</p>
                   </td>
                 </tr>
                 <tr>
                   <td style="padding:20px;">
-                    <p>
-                      <img height="79" src="https://gallery.mailchimp.com/650c1ec9003c7d8567eef4c5e/images/feb6bdde-83da-4211-bcf8-b09d3d3d012a.png" style="border: 0px  ; width: 180px !important; height: 79px !important; margin: 0px;" width="180" alt="feb6bdde-83da-4211-bcf8-b09d3d3d012a.png">
+                      <p style="font-size:14px;line-height:20px;{{sg_font_style_sans_serif_regular}}">Die Republik ist ein unabhängiges und werbefreies digitales Magazin für Politik, Wirtschaft, Gesellschaft und Kultur. Es wird von seinen Leserinnen und Lesern finanziert und erscheint von Montag bis Samstag mit täglich ein bis drei neuen Beiträgen. In der App, auf der Website und als Newsletter.</p>
+                      <p style="color:#282828;font-size:14px;line-height:20px;{{sg_font_style_sans_serif_regular}}">
+                      <img height="79" src="{{frontend_base_url}}/static/logo_republik_newsletter.png" style="border:0px;width:180px !important; height:79px !important;margin:0px;" width="180" alt="">
                       <br>
                       Republik AG<br>
-                      Sihlhallenstrasse 1<br>
-                      8004 Zürich<br>
-                      Schweiz<br><a href="mailto:kontakt@republik.ch">kontakt@republik.ch</a>
+                      Sihlhallenstrasse 1, CH-8004 Zürich<br>
+                      <a href="{{frontend_base_url}}">www.republik.ch</a><br>
+                      <a href="mailto:kontakt@republik.ch">kontakt@republik.ch</a>
+                    </p>
+                    <p style="font-size:14px;line-height:20px;{{sg_font_style_sans_serif_regular}}">
+                        <a href="{{link_manifest}}">Unser Manifest</a><br />
+                        <a href="{{link_imprint}}">Das Impressum</a><br />
+                        <a href="{{link_faq}}">Häufig gestellte Fragen</a>
                     </p>
                   </td>
                 </tr>

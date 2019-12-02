@@ -4,14 +4,14 @@ const { ensureSignedIn } = require('@orbiting/backend-modules-auth')
 
 const { claim } = require('../../../lib/grants')
 
-module.exports = async (_, { voucherCode }, { req, user, pgdb, t, mail }) => {
-  debug('begin', { voucherCode, user: user.id })
+module.exports = async (_, { voucherCode, payload }, { req, user, pgdb, t, mail }) => {
   ensureSignedIn(req)
+  debug('begin', { voucherCode, user: user.id })
 
   const transaction = await pgdb.transactionBegin()
 
   try {
-    const result = await claim(voucherCode, user, t, transaction, mail)
+    const result = await claim(voucherCode, payload, user, t, transaction, mail)
     await transaction.transactionCommit()
 
     debug('commit', { voucherCode, user: user.id })

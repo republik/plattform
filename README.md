@@ -67,6 +67,16 @@ brew services start elasticsearch
 </p>
 </details>
 
+#### Docker Kibana accessing an native Elasticsearch
+
+```bash
+docker run -p 5601:5601 -e ELASTICSEARCH_HOSTS=http://host.docker.internal:9200 docker.elastic.co/kibana/kibana-oss:6.7.0
+```
+
+Note:
+- Elasticsearch and Kibana versions must match, ckeck ES version at `http://localhost:9200/`
+- `ELASTICSEARCH_HOSTS` must be accessible [within docker](https://nickjanetakis.com/blog/docker-tip-65-get-your-docker-hosts-ip-address-from-in-a-container).
+
 ### 2. ENVs
 
 Copy the `.env.example` files to `.env` (in root and server/\*/). The default values should be enough to get started.

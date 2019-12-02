@@ -12,35 +12,59 @@
       </o:officedocumentsettings>
     </xml>
     <![endif]-->
+    <style type="text/css">
+      {{sg_font_faces}}
+    </style>
+    <style type="text/css">
+      p {
+        color:#282828;font-size:17px;line-height:24px;
+        {{sg_font_style_sans_serif_regular}}
+      }
+      p strong {
+        {{sg_font_style_sans_serif_medium}}
+      }
+    </style>
   </head>
   <body style="margin: 0; padding: 0; background-color: #fff;">
     <table border="0" cellpadding="0" cellspacing="0" width="100%">
       <tbody>
         <tr>
           <td align="center" valign="top">
-            <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width:640px;color:#444;font-size:18px;font-family:Times, 'Times New Roman', serif;">
+            <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width:640px;color:#444;font-size:18px;{{sg_font_style_sans_serif_regular}}">
               <tbody>
                 <tr>
                   <td style="padding:20px;">
-                    <p>Guten Tag, *|NAME|*</p>
-                    <p>Es ist Zeit, Abschied zu nehmen. Leider endet Ihr Abonnement heute. Wir danken Ihnen für Ihre Teilnahme an der Republik!</p>
-                    <p>Wir hoffen, dass es Ihnen bei uns gefallen hat. Und würden uns sehr freuen, wenn wir Sie bald wieder bei uns begrüssen dürfen. Sie können Ihr Monatsabo hier jederzeit wieder aktivieren: <a href="https://www.republik.ch/konto">www.republik.ch/konto</a>
-                    </p>
-                    <p>Sollten Sie Fragen haben oder Hilfe benötigen, melden Sie sich bitte bei unserer Erste-Hilfe-Abteilung unter <a href="mailto:kontakt@republik.ch">kontakt@republik.ch</a>.</p>
-                    <p>Eine gute Zeit, noch einmal mit Dank und auf ein baldiges Wiedersehen!</p>
-                    <p>Ihre Crew von der Republik und Project R</p>
+                    <p>Guten Tag</p>
+                    {{#if is_automatic_overdue_cancel}}
+                      <p>Leider konnten wir <a href="{{link_account_abos}}">Ihr Republik-Monatsabonnement</a> wiederholt nicht von Ihrer Kreditkarte abbuchen und mussten es aus diesem Grund deaktivieren.</p>
+                      <p>Wir danken Ihnen herzlich für Ihr Interesse und Ihre Unterstützung! Und wir würden uns sehr freuen, wenn Sie zu einem späteren Zeitpunkt wieder bei uns vorbeischauten. Sie haben jederzeit die Möglichkeit, erneut ein <a href="{{link_offer_monthly_abo}}">Monatsabonnement</a> oder eine <a href="{{link_offer_abo}}">Jahresmitgliedschaft</a> abzuschliessen.</p>
+                      <p>Falls Sie Fragen haben, helfen wir Ihnen gerne weiter unter <a href="kontakt@republik.ch">kontakt@republik.ch</a>.</p>
+                    {{else}}
+                      <p><strong>Heute endete Ihr Republik-Abonnement.</strong> Herzlichen Dank für Ihr Interesse und Ihre Unterstützung!</p>
+                      <p>Wir würden uns sehr freuen, wenn Sie zu einem späteren Zeitpunkt wieder bei uns vorbeischauten.<br />Sie sind jederzeit willkommen und können <a href="{{link_account_abos}}">Ihr Monatsabo hier ganz einfach wieder aktivieren</a>.</p>
+                    {{/if}}
+                    <p>Herzlich</p>
+                    <p>Ihre Crew der Republik</p>
                   </td>
                 </tr>
                 <tr>
                   <td style="padding:20px;">
-                    <p>
-                      <img height="79" src="https://gallery.mailchimp.com/650c1ec9003c7d8567eef4c5e/images/feb6bdde-83da-4211-bcf8-b09d3d3d012a.png" style="border: 0px  ; width: 180px !important; height: 79px !important; margin: 0px;" width="180" alt="feb6bdde-83da-4211-bcf8-b09d3d3d012a.png">
+                    <p style="font-size:14px;line-height:20px;{{sg_font_style_sans_serif_regular}}">
+                      Die Republik ist ein unabhängiges und werbefreies digitales Magazin für Politik, Wirtschaft, Gesellschaft und Kultur. 
+                      Es wird von seinen Leserinnen und Lesern finanziert und erscheint von Montag bis Samstag mit täglich ein bis drei neuen Beiträgen. In der App, auf der Website und als Newsletter.
+                    </p>
+                    <p style="color:#282828;font-size:14px;line-height:20px;{{sg_font_style_sans_serif_regular}}">
+                      <img height="79" src="{{frontend_base_url}}/static/logo_republik_newsletter.png" style="border:0px;width:180px !important; height:79px !important;margin:0px;" width="180" alt="">
                       <br>
-                      Republik<br>
-                      c/o Project R Genossenschaft<br>
-                      Sihlhallenstrasse 1<br>
-                      8004 Zürich<br>
-                      Schweiz<br><a href="mailto:kontakt@republik.ch">kontakt@republik.ch</a>
+                      Republik AG<br>
+                      Sihlhallenstrasse 1, CH-8004 Zürich<br>
+                      <a href="{{frontend_base_url}}">www.republik.ch</a><br>
+                      <a href="mailto:kontakt@republik.ch">kontakt@republik.ch</a>
+                    </p>
+                    <p style="font-size:14px;line-height:20px;{{sg_font_style_sans_serif_regular}}">
+                        <a href="{{link_manifest}}">Unser Manifest</a><br />
+                        <a href="{{link_imprint}}">Das Impressum</a><br />
+                        <a href="{{link_faq}}">Häufig gestellte Fragen</a>
                     </p>
                   </td>
                 </tr>

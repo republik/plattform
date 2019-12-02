@@ -12,37 +12,56 @@
       </o:officedocumentsettings>
     </xml>
     <![endif]-->
+    <style type="text/css">
+      {{sg_font_faces}}
+    </style>
+    <style type="text/css">
+      p {
+        color:#282828;font-size:17px;line-height:24px;
+        {{sg_font_style_sans_serif_regular}}
+      }
+      p strong {
+        {{sg_font_style_sans_serif_medium}}
+      }
+    </style>
   </head>
   <body style="margin: 0; padding: 0; background-color: #fff;">
     <table border="0" cellpadding="0" cellspacing="0" width="100%">
       <tbody>
         <tr>
           <td align="center" valign="top">
-            <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width:640px;color:#444;font-size:18px;font-family:Times, 'Times New Roman', serif;">
+            <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width:640px;color:#444;font-size:18px;{{sg_font_style_sans_serif_regular}}">
               <tbody>
                 <tr>
                   <td style="padding:20px;">
-                    <p>*|NAME|*, willkommen zurück!</p>
-                    <p>Wie schön, dass Sie wieder an Bord sind!</p>
-                    <p>Sie haben Ihr Monatsabonnement wieder aktiviert. Und können ab sofort <a href="https://www.republik.ch/anmelden">das gesamte Magazin lesen</a>, an sämtlichen Debatten teilnehmen, <a href="https://www.republik.ch/~me">eine öffentliche Profilseite aufschalten</a> und Beiträge mit Ihren Freunden oder Feinden teilen. Ausserdem erhalten Sie mit diesem Mail wieder Ihren Status als Verlegerin oder Verleger zurück.</p>
-                    <p>Hier noch nebenbei das Geschäftliche: Wir werden die von Ihnen angegebene Kreditkarte jeden Monat mit 22 Franken belasten. Hier ist Ihre <a href="https://www.republik.ch/konto">persönliche Übersicht</a> über Ihr Abo bei uns, und da können Sie das Abo kündigen oder auch eine andere Kreditkarte angeben, sollte das nötig sein.</p>
-                    <p>Hier gehts zum Magazin: <a href="https://www.republik.ch/anmelden">www.republik.ch/anmelden</a>
-                    </p>
-                    <p>Willkommen zurück in der Verlagsetage – wir freuen uns sehr, Sie wieder dabei zu haben!</p>
-                    <p>Herzlich</p>
-                    <p>Ihre Crew von der Republik und Project R</p>
+                    <p>Guten Tag</p>
+                    <p>Schön, sind Sie wieder dabei! Wir freuen uns sehr, Sie wieder bei der Republik zu haben.</p>
+                    <p>Sie können ab sofort <a href="{{link_signin}}">das Magazin lesen</a>, an <a href="{{link_dialog}}">sämtlichen Debatten teilnehmen</a>, eine <a href="{{link_profile}}">öffentliche Profilseite aufschalten</a> und Beiträge mit Ihren Freunden oder Feinden teilen. Ausserdem erhalten Sie mit dieser E-Mail auch Ihren Status als Verlegerin oder Verleger zurück.</p>
+                    <p>Die von Ihnen angegebene Kreditkarte belasten wir monatlich mit CHF 22.–.<br />
+                      Ihre <a href="{{link_account}}">persönliche Übersicht zu Ihrem Abonnement finden Sie hier</a>.</p>
+                    <p>Am gleichen Ort können Sie alle Einstellungen vornehmen (und z. B. Kreditkarteninformationen ändern) oder das Abo auch wieder jederzeit kündigen. Was wir natürlich nicht hoffen.</p>
+                    <p>Vielen Dank! Und viel Vergnügen beim Neustart mit der Republik.</p>
+                    <p>Ihre Crew der Republik</p>
                   </td>
                 </tr>
                 <tr>
                   <td style="padding:20px;">
-                    <p>
-                      <img height="79" src="https://gallery.mailchimp.com/650c1ec9003c7d8567eef4c5e/images/feb6bdde-83da-4211-bcf8-b09d3d3d012a.png" style="border: 0px  ; width: 180px !important; height: 79px !important; margin: 0px;" width="180" alt="feb6bdde-83da-4211-bcf8-b09d3d3d012a.png">
+                    <p style="font-size:14px;line-height:20px;{{sg_font_style_sans_serif_regular}}">
+                      Die Republik ist ein unabhängiges und werbefreies digitales Magazin für Politik, Wirtschaft, Gesellschaft und Kultur. 
+                      Es wird von seinen Leserinnen und Lesern finanziert und erscheint von Montag bis Samstag mit täglich ein bis drei neuen Beiträgen. In der App, auf der Website und als Newsletter.
+                    </p>
+                    <p style="color:#282828;font-size:14px;line-height:20px;{{sg_font_style_sans_serif_regular}}">
+                      <img height="79" src="{{frontend_base_url}}/static/logo_republik_newsletter.png" style="border:0px;width:180px !important; height:79px !important;margin:0px;" width="180" alt="">
                       <br>
-                      Republik<br>
-                      c/o Project R Genossenschaft<br>
-                      Sihlhallenstrasse 1<br>
-                      8004 Zürich<br>
-                      Schweiz<br><a href="mailto:kontakt@republik.ch">kontakt@republik.ch</a>
+                      Republik AG<br>
+                      Sihlhallenstrasse 1, CH-8004 Zürich<br>
+                      <a href="{{frontend_base_url}}">www.republik.ch</a><br>
+                      <a href="mailto:kontakt@republik.ch">kontakt@republik.ch</a>
+                    </p>
+                    <p style="font-size:14px;line-height:20px;{{sg_font_style_sans_serif_regular}}">
+                        <a href="{{link_manifest}}">Unser Manifest</a><br />
+                        <a href="{{link_imprint}}">Das Impressum</a><br />
+                        <a href="{{link_faq}}">Häufig gestellte Fragen</a>
                     </p>
                   </td>
                 </tr>

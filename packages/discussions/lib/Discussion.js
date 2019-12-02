@@ -21,7 +21,9 @@ const upsert = async (id, settings = {}, { pgdb, loaders }, legacyDiscussionId) 
       settings,
       { skipUndefined: true }
     )
-    await loaders.Discussion.clear(id)
+    if (id) {
+      await loaders.Discussion.clear(id)
+    }
     if (legacyDiscussionId) {
       await loaders.Discussion.clear(legacyDiscussionId)
     }

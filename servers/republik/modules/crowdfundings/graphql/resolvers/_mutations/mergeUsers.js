@@ -1,5 +1,5 @@
 const logger = console
-const {ascending} = require('d3-array')
+const { ascending } = require('d3-array')
 const { Roles } = require('@orbiting/backend-modules-auth')
 const uniq = require('lodash/uniq')
 const { transformUser } = require('@orbiting/backend-modules-auth')
@@ -7,22 +7,23 @@ const { Redirections: {
   upsert: upsertRedirection
 } } = require('@orbiting/backend-modules-redirections')
 const { publishMonitor } = require('../../../../../lib/slack')
+const uuid = require('uuid/v4')
 
 module.exports = async (_, args, context) => {
-  const {pgdb, req, t, mail: { moveNewsletterSubscriptions }} = context
+  const { pgdb, req, t, mail: { moveNewsletterSubscriptions } } = context
   Roles.ensureUserHasRole(req.user, 'supporter')
 
-  const {targetUserId, sourceUserId} = args
+  const { targetUserId, sourceUserId } = args
 
   const now = new Date()
   const transaction = await pgdb.transactionBegin()
   try {
-    const targetUser = await transaction.public.users.findOne({id: targetUserId})
+    const targetUser = await transaction.public.users.findOne({ id: targetUserId })
     if (!targetUser) {
       logger.error('target user not found', { req: req._log(), targetUserId })
       throw new Error(t('api/users/404'))
     }
-    const sourceUser = await transaction.public.users.findOne({id: sourceUserId})
+    const sourceUser = await transaction.public.users.findOne({ id: sourceUserId })
     if (!sourceUser) {
       logger.error('source user not found', { req: req._log(), sourceUserId })
       throw new Error(t('api/users/404'))
@@ -49,7 +50,7 @@ module.exports = async (_, args, context) => {
     await transaction.public.users.updateOne(
       { id: sourceUser.id },
       {
-        testimonialId: null,
+        testimonialId: uuid(),
         username: null
       }
     )
@@ -76,7 +77,9 @@ module.exports = async (_, args, context) => {
       statement: statementUser && statementUser.statement,
       isListed: statementUser && statementUser.isListed,
       isAdminUnlisted: statementUser && statementUser.isAdminUnlisted,
-      testimonialId: statementUser && statementUser.testimonialId,
+      testimonialId: statementUser
+        ? statementUser.testimonialId
+        : users.map(u => u.testimonialId).filter(Boolean)[0],
       portraitUrl: statementUser
         ? statementUser.portraitUrl
         : users.map(u => u.portraitUrl).filter(Boolean)[0],
@@ -113,17 +116,50 @@ module.exports = async (_, args, context) => {
       await transaction.public.ballots.update(from, to)
     }
     await transaction.public.stripeCustomers.update(from, to)
-    await transaction.public.discussionPreferences.update(from, to)
     await transaction.public.comments.update(from, to)
     await transaction.public.credentials.update(from, to)
     await transaction.public.consents.update(from, to)
 
-    let sessions = await transaction.public.sessions.find({'sess @>': {passport: {user: sourceUser.id}}})
+    const sourceDPs = await transaction.public.discussionPreferences.find(from)
+    if (sourceDPs.length) {
+      const targetDPs = await transaction.public.discussionPreferences.find({
+        userId: targetUser.id,
+        discussionId: sourceDPs.map(dp => dp.discussionId)
+      })
+
+      if (targetDPs.length) {
+        const moveSourceDPs = sourceDPs
+          .filter(sourceDP => {
+            const targetDP = targetDPs.find(dp => dp.discussionId === sourceDP.discussionId)
+            if (!targetDP) {
+              return true
+            }
+            if (targetDP.anonymous) {
+              return false
+            }
+            if (sourceDP.anonymous || (sourceDP.credentialId && !targetDP.credentialId)) {
+              return true
+            }
+            return false
+          })
+          .filter(Boolean)
+        if (moveSourceDPs.length) {
+          await transaction.public.discussionPreferences.update(
+            { id: moveSourceDPs.map(dp => dp.id) },
+            { userId: targetUser.id }
+          )
+        }
+      } else {
+        await transaction.public.discussionPreferences.update(from, to)
+      }
+    }
+
+    let sessions = await transaction.public.sessions.find({ 'sess @>': { passport: { user: sourceUser.id } } })
     for (let session of sessions) {
       const sess = Object.assign({}, session.sess, {
-        passport: {user: targetUser.id}
+        passport: { user: targetUser.id }
       })
-      await transaction.public.sessions.updateOne({ id: session.id }, {sess})
+      await transaction.public.sessions.updateOne({ id: session.id }, { sess })
     }
     await transaction.public.eventLog.update(from, to)
 
@@ -132,11 +168,11 @@ module.exports = async (_, args, context) => {
       .filter(u => u.addressId && u.addressId !== newUser.addressId)
       .map(u => u.addressId)
     if (addressIds.length) {
-      await transaction.public.addresses.deleteOne({id: addressIds[0]})
+      await transaction.public.addresses.deleteOne({ id: addressIds[0] })
     }
 
     // remove old user
-    await transaction.public.users.deleteOne({id: sourceUser.id})
+    await transaction.public.users.deleteOne({ id: sourceUser.id })
     await transaction.transactionCommit()
 
     try {
@@ -155,5 +191,5 @@ module.exports = async (_, args, context) => {
     throw e
   }
 
-  return transformUser(await pgdb.public.users.findOne({id: targetUserId}))
+  return transformUser(await pgdb.public.users.findOne({ id: targetUserId }))
 }

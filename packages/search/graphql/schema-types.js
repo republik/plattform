@@ -48,9 +48,12 @@ input SearchFilterInput {
   hasDossier: Boolean
   # repoId
   format: String
+  # repoIds
+  formats: [String!]
   hasFormat: Boolean
   template: String
   publishedAt: DateRangeInput
+  scheduledAt: DateRangeInput
   userId: ID
   author: String
   discussion: Boolean

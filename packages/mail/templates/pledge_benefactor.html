@@ -12,82 +12,130 @@
       </o:officedocumentsettings>
     </xml>
     <![endif]-->
+    <style type="text/css">
+      {{sg_font_faces}}
+    </style>
+    <style type="text/css">
+      p {
+        color:#282828;font-size:17px;line-height:24px;
+        {{sg_font_style_sans_serif_regular}}
+      }
+      p strong {
+        {{sg_font_style_sans_serif_medium}}
+      }
+    </style>
   </head>
   <body style="margin: 0; padding: 0; background-color: #fff;">
     <table border="0" cellpadding="0" cellspacing="0" width="100%">
       <tbody>
         <tr>
           <td align="center" valign="top">
-            <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width:640px;color:#444;font-size:18px;font-family:Times, 'Times New Roman', serif;">
+            <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width:640px;color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}">
               <tbody>
                 <tr>
                   <td style="padding:20px;">
-                    <p>{{name}}, willkommen an Bord!</p>
-                    <p>Schön, sind Sie dabei. Danke für Ihr aussergewöhnliches Investment in unser Magazin.</p>
-                    {{#unless waiting_for_payment}}
-                      <p>Um uns für Ihre Unterstützung zu revanchieren, schicken wir Ihnen postwendend das Gönner-Paket mit Manifest, dem exklusiven Republik-Anstecker in Gold sowie einer signierten Ausgabe von Constantin Seibts Buch «<a href="https://keinundaber.ch/de/literary-work/deadline/">Deadline – Wie man besser schreibt</a>» zu.</p>
+                    <p>Guten Tag</p>
+                    <p>Und willkommen an Bord!<br />
+                      Herzlichen Dank für Ihr aussergewöhnliches Investment in unser Magazin und die Republik-Idee.</p>
+            
+                    {{#if waiting_for_payment}}
+                      <p>Wir sind Ihnen sehr dankbar für Ihren grosszügigen Beitrag. Da er CHF 1000.– übersteigt, können Ihre Mitgliedschaft und Ihr Zugang erst nach Zahlungseingang aktiviert werden. Sie erhalten eine Bestätigung, wenn die Transaktion erfolgreich bei uns angekommen ist.</p>
+                    {{else}}
+                      <p>Sie können ab sofort <a href="{{link_signin}}">das Magazin lesen</a>, an <a href="{{link_dialog}}">sämtlichen Debatten teilnehmen</a>, eine <a href="{{link_profile}}">öffentliche Profilseite aufschalten</a> und Beiträge mit Ihren Freunden oder Feinden teilen.</p>
+                      <p>Falls Sie Fragen zur Inbetriebnahme des Magazins haben:<br /><a href="{{link_manual}}">Hier finden Sie die Gebrauchsanleitung</a>, die die wichtigsten davon klärt.</p>
+                      <p>Wir schicken Ihnen, unserer neusten Verlegerin, unserem neusten Verleger, auch regelmässig Neuigkeiten aus Redaktion und Verlag: zu Vorhaben, Hintergründen, Entscheidungen und Fehlern. Sie können Kritik üben und Vorschläge machen. Und sich mit Ihren {{republik_memberships_count}} Kolleginnen und Kollegen in der Verlagsetage austauschen.</p>
+                      
+                      <p>Um uns für Ihre besonders grosse Unterstützung ein kleines bisschen zu revanchieren, schicken wir Ihnen postwendend das Gönner-Paket mit Manifest, dem exklusiven Republik-Anstecker in Gold sowie einer signierten Ausgabe von Constantin Seibts Buch «<a href="https://keinundaber.ch/de/literary-work/deadline/">Deadline – Wie man besser schreibt</a>» zu.
                       <p>Stellen Sie dafür bitte sicher, dass Sie Ihre Adresse unter <a href="{{link_account_account}}">{{link_account}}</a> korrekt eingetragen haben.</p>
-                      <p><b>Hier die wichtigsten Informationen über Ihre Teilnahme.</b></p>
-                    {{/unless}}
+                    {{/if}}
+          
+                    <p><strong>Informationen zur Zahlung Ihres Abonnements und Ihrer Gönnerschaft:</strong></p>
+
                     {{#if `payment_method != "PAYMENTSLIP"`}}
                       <p>Ihre Zahlung ist erfolgreich bei uns eingegangen, herzlichen Dank!</p>
                     {{/if}}
+
                     {{#if `payment_method == "PAYMENTSLIP"`}}
-                      <p>Sie haben Banküberweisung als Weg der Zahlung gewählt.</p>
-                      <p>Bitte überweisen Sie {{total_formatted}} an:</p>
+                      <p>Sie haben eine Banküberweisung als Zahlungsweg gewählt.</p>
+                      <p>Bitte überweisen Sie {{total_formatted}} bis spätestens {{due_date}} an:</p>
                       <p>PC 61-11760-6<br>
                         IBAN: CH50 0900 0000 6101 1760 6<br>
                         BIC: POFICHBEXXX
                       </p>
                       <p>
-                        lautend auf:</p>
+                        lautend auf:
+                      </p>
                       <p>
                         Project R Genossenschaft<br>
                         Sihlhallenstrasse 1<br>
                         8004 Zürich
                       </p>
-                      <p>bis spätestens {{due_date}}.</p>
-                      <p><b>Und hier das Wichtigste. Vergessen Sie nicht, folgende Botschaft in das Feld «Betreff» des Einzahlungsscheins zu schreiben: {{HRID}}</b>
-                        <br>
-                        (Sonst funktioniert die Zuordnung nicht.)
-                      </p>
+                      <p><strong>Bitte vergessen Sie nicht, {{HRID}} in das Feld «Betreff» des Einzahlungsscheins zu schreiben, sonst funktioniert die Zuordnung nicht. Danke!</strong></p>
                     {{/if}}
-                    {{#if waiting_for_payment}}
-                      <p><b>Da der Gesamtbetrag Ihrer Bestellung die magische Grenze von CHF 1000.– übersteigt, kann Ihre Mitgliedschaft und Ihr Zugang erst nach Zahlungseingang aktiviert werden. Sie erhalten eine Bestätigung, sobald die Transaktion erfolgreich bei uns angekommen ist.</b></p>
-                    {{else}}
-                      <p>Sie können ab sofort unser <a href="{{link_signin}}">Magazin lesen</a>, an <a href="{{link_dialog}}">sämtlichen Debatten teilnehmen</a>, eine <a href="{{link_profile}}">öffentliche Profilseite aufschalten</a> und Beiträge mit Ihren Freunden oder Feinden teilen.</p>
-                      <p>Ausserdem freuen wir uns, Sie ab sofort als unsere neueste Verlegerin, unseren neuesten Verleger begrüssen zu können. Sie haben damit das Recht auf die interessantesten Neuigkeiten aus Redaktion und Verlag: zu Vorhaben, Hintergründen, Entscheidungen und Fehlern. Sie können Kritik üben und gelegentlich Vorschläge machen. Und sich mit Ihren {{republik_memberships_count}} Kolleginnen und Kollegen in der Verlagsetage austauschen.</p>
-                      <p>Falls Sie Fragen zur Inbetriebnahme des Magazins haben: Hier finden Sie die <a href="{{frontend_base_url}}/2018/01/13/gebrauchsanleitung">Gebrauchsanleitung</a>, in der die wichtigsten davon geklärt werden.</p>
-                      {{#if goodies_count}}
-                        {{#if `goodies_count == 1`}}
-                        <p>Sie haben sich zu Ihrer Gönner-Mitgliedschaft auch noch ein Republik-Objekt gegönnt. Sie werden es innerhalb der nächsten 7 Werktage per Post zugestellt bekommen.</p>
-                        {{elseif `goodies_count > 1`}}
-                        <p>Sie haben sich zu Ihrer Gönner-Mitgliedschaft auch noch mehrere Republik-Objekte gegönnt. Sie werden diese innerhalb der nächsten 7 Werktage per Post zugestellt bekommen.</p>
-                        {{/if}}
-                        <ul>
-                          {{#options}}
-                            {{#if `this.otype == "Goodie"`}}
-                            <li>
-                              {{this.oamount}} {{this.olabel}}
-                            </li>
-                            {{/if}}
-                          {{/options}}
-                        </ul>
+
+                    <ul>
+                      {{#options}}
+                        <li>
+                          {{#if `this.oamount > 1`}}
+                            {{this.oamount}} {{this.olabel}} à {{this.oprice_formatted}}: {{this.ototal_formatted}}
+                          {{else}}
+                            {{this.oamount}} {{this.olabel}}: {{this.ototal_formatted}}
+                          {{/if}}
+                        </li>
+                      {{/options}}
+                      {{#if discount}}
+                        <li>Gewünschte Preisreduktion: –{{discount_formatted}}</li>
                       {{/if}}
-                    {{/if}}
-                    <p>Vielen Dank!</p>
-                    <p>Ihre Crew von Project R und der Republik</p>
+                      {{#if donation}}
+                        <li>Spende: {{donation_formatted}}</li>
+                      {{/if}}
+                      <li>
+                        <strong>Total: {{total_formatted}}</strong>
+                      </li>
+                    </ul>
+                    
+                    {{#unless waiting_for_payment}}
+                      {{#if goodies_count}}
+                        <p>
+                          {{#if `goodies_count == 1`}}
+                            Sie haben sich zu Ihrer Gönner-Mitgliedschaft noch ein Republik-Objekt gegönnt.
+                          {{elseif `goodies_count > 1`}}
+                            Sie haben sich zu Ihrer Gönner-Mitgliedschaft noch mehrere Republik-Objekte gegönnt.
+                          {{/if}}
+
+                          {{#if goodies_has_tablebook}}
+                            Versandstart für «Republik bei Stromausfall» ist der 13. Dezember.
+                          {{/if}}
+                          {{#if goodies_has_totebag}}
+                            Notizbücher oder Taschen liefern wir innerhalb von 7 Werktagen.
+                          {{elseif goodies_has_notebook}}
+                            Notizbücher oder Taschen liefern wir innerhalb von 7 Werktagen.
+                          {{/if}}
+                        </p>
+                        <p><strong>Stellen Sie dafür bitte sicher, dass Sie Ihre Adresse unter <a href="{{link_account_account}}">{{link_account}}</a> korrekt eingetragen haben.</strong></p>
+                      {{/if}}
+                    {{/unless}}
+
+                    <p>Vielen Dank!<br />
+                      Und viel Vergnügen beim Start mit der Republik.</p>
+                    <p>Ihre Crew der Republik</p>
                   </td>
                 </tr>
                 <tr>
                   <td style="padding:20px;">
-                    <p>
-                      <img height="79" src="https://gallery.mailchimp.com/650c1ec9003c7d8567eef4c5e/images/feb6bdde-83da-4211-bcf8-b09d3d3d012a.png" style="border: 0px  ; width: 180px !important; height: 79px !important; margin: 0px;" width="180" alt="feb6bdde-83da-4211-bcf8-b09d3d3d012a.png">
+                    <p style="font-size:14px;line-height:20px;{{sg_font_style_sans_serif_regular}}">Die Republik ist ein unabhängiges und werbefreies digitales Magazin für Politik, Wirtschaft, Gesellschaft und Kultur. Es wird von seinen Leserinnen und Lesern finanziert und erscheint von Montag bis Samstag mit täglich ein bis drei neuen Beiträgen. In der App, auf der Website und als Newsletter.</p>
+                    <p style="color:#282828;font-size:14px;line-height:20px;{{sg_font_style_sans_serif_regular}}">
+                      <img height="79" src="{{frontend_base_url}}/static/logo_republik_newsletter.png" style="border:0px;width:180px !important; height:79px !important;margin:0px;" width="180" alt="">
                       <br>
                       Republik AG<br>
-                      Sihlhallenstrasse 1<br>
-                      8004 Zürich<br>
-                      Schweiz<br><a href="mailto:kontakt@republik.ch">kontakt@republik.ch</a>
+                      Sihlhallenstrasse 1, CH-8004 Zürich<br>
+                      <a href="{{frontend_base_url}}">www.republik.ch</a><br>
+                      <a href="mailto:kontakt@republik.ch">kontakt@republik.ch</a>
+                    </p>
+                    <p style="font-size:14px;line-height:20px;{{sg_font_style_sans_serif_regular}}">
+                        <a href="{{link_manifest}}">Unser Manifest</a><br />
+                        <a href="{{link_imprint}}">Das Impressum</a><br />
+                        <a href="{{link_faq}}">Häufig gestellte Fragen</a>
                     </p>
                   </td>
                 </tr>

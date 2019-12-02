@@ -4,14 +4,15 @@ const {
   ensureReadyToSubmit
 } = require('../../../lib/Voting')
 
-module.exports = async (_, { votingId, optionId }, { pgdb, user: me, t, req }) => {
+module.exports = async (_, { votingId, optionId }, context) => {
+  const { pgdb, user: me, t, req } = context
   ensureSignedIn(req, t)
 
   const transaction = await pgdb.transactionBegin()
   try {
     const now = new Date()
     const voting = await findById(votingId, transaction)
-    await ensureReadyToSubmit(voting, me.id, now, transaction, t)
+    await ensureReadyToSubmit(voting, me.id, now, { ...context, pgdb: transaction })
 
     if (optionId) {
       const votingOption = await transaction.public.votingOptions.findOne({ id: optionId })

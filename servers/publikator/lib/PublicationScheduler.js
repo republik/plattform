@@ -1,9 +1,12 @@
-const CronJob = require('cron').CronJob
-const Redlock = require('redlock')
-const debug = require('debug')('publikator:lib:publicationScheduler')
-const Redis = require('@orbiting/backend-modules-base/lib/Redis')
+const debug = require('debug')('publikator:lib:scheduler')
+const Promise = require('bluebird')
+
 const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
-const Elasticsearch = require('@orbiting/backend-modules-base/lib/Elasticsearch')
+const Redis = require('@orbiting/backend-modules-base/lib/Redis')
+const Elastic = require('@orbiting/backend-modules-base/lib/Elasticsearch')
+const {
+  intervalScheduler
+} = require('@orbiting/backend-modules-schedulers')
 const indices = require('@orbiting/backend-modules-search/lib/indices')
 const index = indices.dict.documents
 const { getIndexAlias } = require('@orbiting/backend-modules-search/lib/utils')
@@ -18,34 +21,21 @@ const {
 } = require('./github')
 const { upsert: repoCacheUpsert } = require('./cache/upsert')
 
-const lockKey = 'locks:scheduling'
-const ttl = 2000
-const channelKey = 'scheduling'
+const lockTtlSecs = 10 // 10 seconds
 
-let singleton
-
-const redlock = (redis) =>
-  new Redlock(
-    [redis],
-    {
-      driftFactor: 0.01, // time in ms
-      retryCount: 10,
-      retryDelay: 600,
-      retryJitter: 200
-    }
-  )
-
-const getSchedulableDocuments = async (elastic) => {
+const getScheduledDocuments = async (elastic) => {
   const response = await elastic.search({
     index: getIndexAlias(index.name, 'read'),
-    size: 1,
+    size: lockTtlSecs, // Amount publishing 1 document a second
     body: {
       sort: { 'meta.scheduledAt': 'asc' },
       query: {
         bool: {
           must: [
             { term: { __type: 'Document' } },
-            { exists: { field: 'meta.scheduledAt' } }
+            { range: { 'meta.scheduledAt': { lte: new Date() } } },
+            { term: { '__state.published': false } },
+            { term: { '__state.prepublished': false } }
           ]
         }
       }
@@ -55,52 +45,32 @@ const getSchedulableDocuments = async (elastic) => {
   return response.hits.hits.map(hit => hit._source)
 }
 
-const init = async () => {
+const init = async (_context) => {
   debug('init')
 
-  if (singleton) {
-    throw new Error('publicationScheduler must not be initiated twice!')
-  }
-  singleton = 'init'
-
-  const elastic = await Elasticsearch.connect()
-  const redis = await Redis.connect()
   const pgdb = await PgDb.connect()
+  const redis = Redis.connect()
+  const elastic = Elastic.connect()
+  const context = {
+    ..._context,
+    pgdb,
+    redis,
+    elastic
+  }
 
-  const context = { elastic, redis, pgdb }
+  const scheduler = await intervalScheduler.init({
+    name: 'publication',
+    context,
+    runFunc: async (args, context) => {
+      const { elastic } = context
 
-  // subscribe to messages
-  const subClient = await redis.duplicate()
-  subClient.on('message', async (channel, message) => {
-    debug('incoming', { channel, message })
-    if (message === 'refresh') {
-      await refresh()
-    }
-  })
-  await subClient.subscribeAsync(channelKey)
+      const docs = await getScheduledDocuments(elastic)
 
-  let nextJob
+      if (docs.length > 0) {
+        debug('scheduled documents found', docs.length)
+      }
 
-  const run = async (_lock) => {
-    const lock = _lock || await redlock(redis).lock(lockKey, ttl)
-
-    const docs = await getSchedulableDocuments(elastic)
-
-    if (docs.length > 0) {
-      const doc = docs.shift()
-
-      const delta = new Date(doc.meta.scheduledAt) - new Date()
-
-      debug(
-        'publishing...', {
-          repoId: doc.meta.repoId,
-          versionName: doc.versionName,
-          scheduledAt: doc.meta.scheduledAt,
-          delta
-        }
-      )
-
-      if (delta < 10 * 1000) { // max 10sec early
+      await Promise.each(docs, async doc => {
         // repos:republik/article-briefing-aus-bern-14/scheduled-publication
         const repoId = doc.meta.repoId
         const prepublication = doc.meta.prepublication
@@ -110,7 +80,7 @@ const init = async () => {
         console.log(`scheduler: publishing ${repoId}`)
 
         const newRef = ref.replace('scheduled-', '')
-        const newRefs = [ newRef ]
+        const newRefs = [newRef]
 
         const { lib: { Documents: { createPublish } } } =
           require('@orbiting/backend-modules-search')
@@ -162,91 +132,19 @@ const init = async () => {
             refs: newRefs
           }
         )
-      } else {
-        console.error('Error: publicationScheduler was timed wrong.')
-      }
-    }
-
-    nextJob = null
-    await refresh(lock)
-
-    if (!_lock) {
-      await lock.unlock().catch((err) => { console.error(err) })
-    }
-  }
-
-  const refresh = async (_lock) => {
-    const lock = _lock || await redlock(redis).lock(lockKey, ttl)
-    const docs = await getSchedulableDocuments(elastic)
-
-    if (docs.length > 0) {
-      const doc = docs.shift()
-      const delta = new Date(doc.meta.scheduledAt) - new Date()
-
-      if (delta < 10 * 1000) { // max 10sec early
-        console.log('scheduler: unpublished documents found. catching up...')
-        await run()
-      } else {
-        debug(
-          'scheduled', {
-            repoId: doc.meta.repoId,
-            versionName: doc.versionName,
-            scheduledAt: doc.meta.scheduledAt
-          }
-        )
-
-        const nextScheduledAt = new Date(doc.meta.scheduledAt)
-        if (nextJob && nextJob.nextDate() > nextScheduledAt) {
-          nextJob.stop()
-          nextJob = null
-        }
-
-        if (!nextJob) {
-          nextJob = new CronJob(
-            nextScheduledAt,
-            run,
-            null,
-            true
-          )
-        }
-      }
-    } else if (nextJob) {
-      debug('no more scheduled documents found. removing scheduled job')
-
-      nextJob.stop()
-      nextJob = null
-    } else {
-      debug('no scheduled documents found')
-    }
-
-    if (!_lock) {
-      await lock.unlock().catch((err) => { console.error(err) })
-    }
-  }
+      })
+    },
+    lockTtlSecs,
+    runIntervalSecs: lockTtlSecs
+  })
 
   const close = async () => {
-    if (nextJob) {
-      nextJob.stop()
-      nextJob = null
-    }
-
-    // wait for job to finish
-    await redlock(redis).lock(lockKey, ttl * 10)
-
-    await subClient.unsubscribeAsync()
-
+    await scheduler.close()
     await Promise.all([
-      subClient.quit(),
-      Redis.disconnect(redis),
-      Elasticsearch.disconnect(elastic),
-      PgDb.disconnect(pgdb)
+      PgDb.disconnect(pgdb),
+      Redis.disconnect(redis)
     ])
-
-    singleton = null
   }
-
-  // An initial run
-  await refresh()
 
   return {
     close
@@ -254,6 +152,5 @@ const init = async () => {
 }
 
 module.exports = {
-  channelKey,
   init
 }

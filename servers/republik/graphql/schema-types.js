@@ -1,11 +1,5 @@
 module.exports = `
 
-type Credential {
-  description: String!
-  verified: Boolean!
-  isListed: Boolean!
-}
-
 enum AccessRole {
   ADMIN
   EDITOR
@@ -13,11 +7,12 @@ enum AccessRole {
   PUBLIC
 }
 
+# deprecated: use ImageProperties instead
 enum PortraitSize {
-  # 384x384 deprecated(reason: "use ImageProperties instead")
-  SMALL
-  # 1000x1000 deprecated(reason: "use ImageProperties instead")
-  SHARE
+  # 384x384
+  SMALL @deprecated(reason: "use \`ImageProperties\` instead")
+  # 1000x1000
+  SHARE @deprecated(reason: "use \`ImageProperties\` instead")
   # original, in color
   # not exposed
   # ORIGINAL
@@ -33,6 +28,8 @@ input ImageProperties {
 }
 
 extend type User {
+  slug: String
+
   address: Address
   hasAddress: Boolean
   credentials: [Credential!]!
@@ -41,8 +38,7 @@ extend type User {
 
   # url to portrait image
   portrait(
-    # deprecated(reason: "use ImageProperties instead"),
-    size: PortraitSize
+    size: PortraitSize # deprecated: "use ImageProperties instead"
     properties: ImageProperties
   ): String
 
@@ -185,6 +181,7 @@ type Employee {
   subgroup: String
   name: String
   title: String
+  greeting: String
   user: User
 }
 
@@ -235,5 +232,24 @@ type MembershipPeriodStatsDay {
   date: Date!
   cancelCount: Int!
   prolongCount: Int!
+}
+
+type StatementUserConnection {
+  totalCount: Int!
+  pageInfo: PageInfo
+  nodes: [StatementUser!]!
+}
+type StatementUser {
+  id: ID!
+  name: String!
+  slug: String
+  portrait(
+    properties: ImageProperties
+  ): String
+  statement: String
+  credentials: [Credential!]!
+  updatedAt: DateTime!
+  sequenceNumber: Int
+  hasPublicProfile: Boolean!
 }
 `

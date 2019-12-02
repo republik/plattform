@@ -5,14 +5,15 @@ const {
   ensureReadyToSubmit
 } = require('../../../lib/Election')
 
-module.exports = async (_, { electionId, candidacyIds }, { pgdb, user: me, t, req }) => {
+module.exports = async (_, { electionId, candidacyIds }, context) => {
+  const { pgdb, user: me, t, req } = context
   ensureSignedIn(req, t)
 
   const transaction = await pgdb.transactionBegin()
   try {
     const now = new Date()
     const election = await findById(electionId, pgdb)
-    await ensureReadyToSubmit(election, me.id, now, transaction, t)
+    await ensureReadyToSubmit(election, me.id, now, { ...context, pgdb: transaction })
 
     // check legitimacy of candidacyIds
     if (candidacyIds.length > 0) {

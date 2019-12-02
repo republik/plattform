@@ -12,36 +12,58 @@
       </o:officedocumentsettings>
     </xml>
     <![endif]-->
+    <style type="text/css">
+      {{sg_font_faces}}
+    </style>
+    <style type="text/css">
+      p {
+        color:#282828;font-size:17px;line-height:24px;
+        {{sg_font_style_sans_serif_regular}}
+      }
+      p strong {
+        {{sg_font_style_sans_serif_medium}}
+      }
+    </style>
   </head>
   <body style="margin: 0; padding: 0; background-color: #fff;">
     <table border="0" cellpadding="0" cellspacing="0" width="100%">
       <tbody>
         <tr>
           <td align="center" valign="top">
-            <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width:640px;color:#444;font-size:18px;font-family:Times, 'Times New Roman', serif;">
+            <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width:640px;color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}">
               <tbody>
                 <tr>
                   <td style="padding:20px;">
-                    <p>Guten Tag, *|NAME|*</p>
-                    <p>Sie haben ein Monatsabonnement. Aber leider ist beim Versuch, Ihre Kreditkarte zu belasten, etwas schiefgegangen. Ist sie möglicherweise abgelaufen? Oder hat unser Monatsabonnement nicht mehr in Ihre Limite gepasst?</p>
-                    <p>Wir danken Ihnen dafür, dass Sie sicherstellen, dass Ihre Kreditkarte wieder belastbar ist. Falls Sie eine andere Kreditkarte verwenden wollen, können Sie die nötigen Änderungen hier jederzeit vornehmen: <a href="https://www.republik.ch/konto">www.republik.ch/konto</a>
+                    <p>Guten Tag</p>
+                    <p>Leider konnten wir Ihr Republik-Monatsabonnement nicht Ihrer Kreditkarte belasten.</p>
+                    <p>Ist sie eventuell abgelaufen?<br />
+                      Wir danken Ihnen dafür, dass Sie sicherstellen, dass Ihre Kreditkarte wieder belastbar ist.</p>
+                    <p>Falls Sie eine andere Kreditkarte verwenden wollen, können Sie die nötigen Änderungen hier jederzeit vornehmen: <a href="{{link_account}}">www.republik.ch/konto</a></p>
+                    <p>Wenn wir Ihre Karte weiterhin nicht belasten können, gehen wir davon aus, dass Sie die Republik nicht mehr lesen möchten, und deaktivieren Ihr Abonnement.</p>
+                    <p>Haben Sie Fragen? Unter <a href="mailto:kontakt@republik.ch">kontakt@republik.ch</a> helfen wir Ihnen gerne weiter.</p>
+                    <p>Herzlich<br />
+                      Ihre Crew der Republik
                     </p>
-                    <p>Falls wir Ihre Kreditkarte nicht belasten können, stoppt Ihr Abonnement und Sie können die Beiträge der Republik nicht mehr lesen.</p>
-                    <p>Haben Sie Fragen oder brauchen Sie Hilfe? Unter <a href="mailto:kontakt@republik.ch">kontakt@republik.ch</a> helfen wir Ihnen gerne weiter.</p>
-                    <p>Mit Dank für Ihre Mühe und den besten Grüssen!</p>
-                    <p>Ihre Crew von der Republik und Project R</p>
                   </td>
                 </tr>
                 <tr>
                   <td style="padding:20px;">
-                    <p>
-                      <img height="79" src="https://gallery.mailchimp.com/650c1ec9003c7d8567eef4c5e/images/feb6bdde-83da-4211-bcf8-b09d3d3d012a.png" style="border: 0px  ; width: 180px !important; height: 79px !important; margin: 0px;" width="180" alt="feb6bdde-83da-4211-bcf8-b09d3d3d012a.png">
+                    <p style="font-size:14px;line-height:20px;{{sg_font_style_sans_serif_regular}}">
+                      Die Republik ist ein unabhängiges und werbefreies digitales Magazin für Politik, Wirtschaft, Gesellschaft und Kultur. 
+                      Es wird von seinen Leserinnen und Lesern finanziert und erscheint von Montag bis Samstag mit täglich ein bis drei neuen Beiträgen. In der App, auf der Website und als Newsletter.
+                    </p>
+                    <p style="color:#282828;font-size:14px;line-height:20px;{{sg_font_style_sans_serif_regular}}">
+                      <img height="79" src="{{frontend_base_url}}/static/logo_republik_newsletter.png" style="border:0px;width:180px !important; height:79px !important;margin:0px;" width="180" alt="">
                       <br>
-                      Republik<br>
-                      c/o Project R Genossenschaft<br>
-                      Sihlhallenstrasse 1<br>
-                      8004 Zürich<br>
-                      Schweiz<br><a href="mailto:kontakt@republik.ch">kontakt@republik.ch</a>
+                      Republik AG<br>
+                      Sihlhallenstrasse 1, CH-8004 Zürich<br>
+                      <a href="{{frontend_base_url}}">www.republik.ch</a><br>
+                      <a href="mailto:kontakt@republik.ch">kontakt@republik.ch</a>
+                    </p>
+                    <p style="font-size:14px;line-height:20px;{{sg_font_style_sans_serif_regular}}">
+                        <a href="{{link_manifest}}">Unser Manifest</a><br />
+                        <a href="{{link_imprint}}">Das Impressum</a><br />
+                        <a href="{{link_faq}}">Häufig gestellte Fragen</a>
                     </p>
                   </td>
                 </tr>

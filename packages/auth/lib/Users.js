@@ -2,9 +2,11 @@ const querystring = require('querystring')
 const validator = require('validator')
 const { parse, format } = require('libphonenumber-js')
 const isUUID = require('is-uuid')
+const Promise = require('bluebird')
 const debug = require('debug')('auth:lib:Users')
 const { sendMailTemplate, moveNewsletterSubscriptions } = require('@orbiting/backend-modules-mail')
 const t = require('./t')
+const useragent = require('./useragent')
 const { newAuthError } = require('./AuthError')
 const {
   ensureAllRequiredConsents,
@@ -38,6 +40,7 @@ const TwoFactorAlreadyEnabledError = newAuthError('2fa-already-enabled', 'api/au
 const SecondFactorNotReadyError = newAuthError('2f-not-ready', 'api/auth/2f-not-ready')
 const SecondFactorHasToBeDisabledError = newAuthError('second-factor-has-to-be-disabled', 'api/auth/second-factor-has-to-be-disabled')
 const SessionTokenValidationFailed = newAuthError('token-validation-failed', 'api/token/invalid')
+const AuthorizationRateLimitError = newAuthError('authorize-rate-limit-tokens-email', 'api/auth/errorAuthorizationRateLimit')
 
 const {
   AUTO_LOGIN_REGEX,
@@ -147,16 +150,20 @@ const signIn = async (_email, context, pgdb, req, consents, _tokenType) => {
   })
 
   const { email } = (user || { email: _email })
+  const isApp = useragent.isApp(req.headers['user-agent'])
 
-  const { EMAIL_TOKEN } = TokenTypes
+  const { EMAIL_TOKEN, EMAIL_CODE } = TokenTypes
   // check if tokenType is enabled as firstFactor
   // email is always enabled
   const enabledTokenTypes = await enabledFirstFactors(email, pgdb)
-  let tokenType = _tokenType
+  let tokenType = _tokenType || (isApp && EMAIL_TOKEN)
   if (!tokenType || tokenType !== EMAIL_TOKEN) {
     if (!tokenType) {
       tokenType = enabledTokenTypes[0]
-    } else if (enabledTokenTypes.indexOf(tokenType) === -1) {
+    } else if (
+      enabledTokenTypes.indexOf(tokenType) === -1 &&
+      tokenType !== EMAIL_CODE
+    ) {
       throw new TokenTypeNotEnabledError({ tokenType })
     }
   }
@@ -237,7 +244,7 @@ const denySession = async ({ pgdb, token, email: emailFromQuery, me }) => {
 
   const transaction = await pgdb.transactionBegin()
   try {
-    // log in the session and delete token
+    // expire session and tokens
     await transaction.public.sessions.updateOne({
       id: session.id
     }, {
@@ -260,7 +267,9 @@ const denySession = async ({ pgdb, token, email: emailFromQuery, me }) => {
       }),
       // mark this token as denied
       transaction.public.tokens.updateOne({
-        ...token
+        sessionId: session.id,
+        type: token.type,
+        payload: token.payload
       }, {
         expireAction: 'deny'
       })
@@ -275,7 +284,82 @@ const denySession = async ({ pgdb, token, email: emailFromQuery, me }) => {
   return true
 }
 
+const auditAuthorizeAttempts = async ({ pgdb, email, maxAttempts = 10 }) => {
+  const transaction = await pgdb.transactionBegin()
+
+  try {
+    const sessions = await transaction.query(`
+      SELECT
+        s.*,
+        MAX(t."expiresAt") AS "tokenExpiresAt"
+      FROM
+        sessions s
+      JOIN tokens t
+        ON t."sessionId" = s.id
+      WHERE
+        t.email = :email
+        AND t."expiresAt" >= now()
+
+      GROUP BY s.sid
+    `, { email })
+
+    if (sessions.length === 0) {
+      await transaction.transactionCommit()
+      return
+    }
+
+    // Find token which expires next over all sessions
+    const nextExpireAt = sessions
+      .reduce((acc, curr) => acc.tokenExpiresAt > curr.tokenExpiresAt ? curr : acc)
+      .tokenExpiresAt
+
+    const minsNextExpireAt = Math.ceil((nextExpireAt - new Date()) / 1000 / 60)
+
+    await Promise.map(sessions, async session => {
+      await transaction.public.sessions.updateOne(
+        { id: session.id },
+        {
+          sess: {
+            ...session.sess,
+            authorizeAttempts: ++session.sess.authorizeAttempts || 1
+          }
+        }
+      )
+
+      if (session.sess.authorizeAttempts > maxAttempts) {
+        throw new AuthorizationRateLimitError(
+          {
+            email,
+            authorizeAttempts: session.sess.authorizeAttempts,
+            maxAttempts
+          },
+          {
+            mins: minsNextExpireAt
+          }
+        )
+      }
+    })
+
+    await transaction.transactionCommit()
+  } catch (e) {
+    await transaction.transactionRollback()
+
+    if (e.type === 'authorize-rate-limit-tokens-email') {
+      throw e
+    }
+
+    console.error(e)
+
+    throw new AuthorizationRateLimitError({
+      email,
+      maxAttempts
+    })
+  }
+}
+
 const authorizeSession = async ({ pgdb, tokens, email: emailFromQuery, signInHooks = [], consents = [], requiredFields = [], req, me }) => {
+  await auditAuthorizeAttempts({ pgdb, email: emailFromQuery })
+
   // validate the challenges
   const existingUser = await pgdb.public.users.findOne({ email: emailFromQuery })
   const tokenTypes = []
@@ -297,9 +381,13 @@ const authorizeSession = async ({ pgdb, tokens, email: emailFromQuery, signInHoo
       throw new SessionTokenValidationFailed({ email: emailFromQuery })
     }
 
-    const validated = await validateChallenge(token.type, { pgdb, session, user: existingUser, me }, token)
+    const validated = await validateChallenge(
+      token.type,
+      { pgdb, session, email: emailFromQuery, user: existingUser, req, me },
+      token
+    )
     if (!validated) {
-      console.error('wrong token')
+      console.error('unable to validate token')
       throw new SessionTokenValidationFailed({ email: emailFromQuery, ...token })
     }
     tokenTypes.push(token.type)
@@ -334,7 +422,7 @@ const authorizeSession = async ({ pgdb, tokens, email: emailFromQuery, signInHoo
   }
 
   try {
-    // log in the session and delete token
+    // log in the session and expire tokens
     await transaction.public.sessions.updateOne({
       id: session.id
     }, {
@@ -354,10 +442,12 @@ const authorizeSession = async ({ pgdb, tokens, email: emailFromQuery, signInHoo
         updatedAt: new Date(),
         expiresAt: new Date()
       }),
-      // mark this tokens as authorized
+      // mark used tokens as authorized
       ...tokens.map(token =>
         transaction.public.tokens.updateOne({
-          ...token
+          sessionId: session.id,
+          type: token.type,
+          payload: token.payload
         }, {
           expireAction: 'authorize'
         })
@@ -498,7 +588,7 @@ const updateUserEmail = async ({ pgdb, user, email }) => {
     await transaction.public.sessions.delete(
       {
         'sess @>': {
-          passport: {user: user.id}
+          passport: { user: user.id }
         }
       })
     await transaction.public.users.updateOne(
@@ -596,5 +686,6 @@ module.exports = {
   SecondFactorHasToBeDisabledError,
   TwoFactorAlreadyDisabledError,
   TwoFactorAlreadyEnabledError,
-  SecondFactorNotReadyError
+  SecondFactorNotReadyError,
+  AuthorizationRateLimitError
 }

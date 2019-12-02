@@ -3,6 +3,7 @@ const moment = require('moment')
 const Promise = require('bluebird')
 
 const { ensureSignedIn } = require('@orbiting/backend-modules-auth')
+const { hasUserActiveMembership } = require('@orbiting/backend-modules-utils')
 
 const cancelMembership = require('./cancelMembership')
 const createCache = require('../../../lib/cache')
@@ -35,12 +36,7 @@ module.exports = async (_, args, context) => {
 
     pledgerId = membership.userId
 
-    const activeMemberships = await transaction.public.memberships.find({
-      userId: req.user.id,
-      active: true
-    })
-
-    const hasActiveMembership = activeMemberships.length > 0
+    const hasActiveMembership = await hasUserActiveMembership(req.user, transaction)
 
     // transfer new membership, and remove voucherCode
     await transaction.public.memberships.updateOne(

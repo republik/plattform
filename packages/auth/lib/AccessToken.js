@@ -11,9 +11,13 @@ const MissingPackageGrant = newAuthError('missing-package-grant', 'api/auth/acce
 const DATE_FORMAT = 'YYYY-MM-DD'
 
 const scopeConfigs = {
-  'CUSTOM_PLEDGE': {
+  CUSTOM_PLEDGE: {
     exposeFields: ['email', 'hasAddress', 'hasChargableSource', 'customPackages'],
-    pledgePackages: ['PROLONG'],
+    pledgePackages: ['PROLONG', 'TABLEBOOK'],
+    ttlDays: 90
+  },
+  CLAIM_CARD: {
+    exposeFields: ['email', 'cards'],
     ttlDays: 90
   }
 }

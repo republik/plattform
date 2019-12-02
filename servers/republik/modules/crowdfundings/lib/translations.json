@@ -1,5 +1,5 @@
 {
-  "updated": "2019-04-05T14:21:41.914Z",
+  "updated": "2019-08-30T17:55:22.851Z",
   "title": "live",
   "data": [
     {
@@ -217,6 +217,10 @@
     {
       "key": "api/pledge/resolve/status",
       "value": "Der Pledge muss im status PAID_INVESTIGATE sein um gelöst werden zu können."
+    },
+    {
+      "key": "api/pledge/resolve/status/successful",
+      "value": "Der Pledge muss im Status SUCCESSFUL sein um nachgeprüft werden zu können."
     },
     {
       "key": "api/pledge/resolve/multiplePayments",

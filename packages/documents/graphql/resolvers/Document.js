@@ -14,9 +14,13 @@ const { getMeta } = require('../../lib/meta')
 
 const getDocuments = require('./_queries/documents')
 
-const { lib: { webp: {
-  addSuffix: addWebpSuffix
-} } } = require('@orbiting/backend-modules-assets')
+const {
+  lib: {
+    webp: {
+      addSuffix: addWebpSuffix
+    }
+  }
+} = require('@orbiting/backend-modules-assets')
 
 const {
   extractIdsFromNode,
@@ -45,6 +49,13 @@ const addTeaserContentHash = (nodes) => {
 }
 
 module.exports = {
+  repoId (doc, args, context) {
+    return doc.repoId || Buffer.from(doc.id, 'base64')
+      .toString('utf-8')
+      .split('/')
+      .slice(0, 2)
+      .join('/')
+  },
   content (doc, { urlPrefix, searchString, webp }, context, info) {
     // we only do auto slugging when in a published documents context
     // - this is easiest detectable by _all being present from documents resolver
@@ -169,7 +180,11 @@ module.exports = {
       doc.meta.template === 'format' &&
       doc.meta.repoId
 
-    if (!hasDossierRepoId && !hasFormatRepoId) {
+    const hasSectionRepoId =
+      doc.meta.template === 'section' &&
+      doc.meta.repoId
+
+    if (!hasDossierRepoId && !hasFormatRepoId && !hasSectionRepoId) {
       return {
         pageInfo: {
           endCursor: null,
@@ -188,6 +203,11 @@ module.exports = {
 
     if (hasFormatRepoId) {
       args.format = doc.id
+    }
+
+    if (hasSectionRepoId) {
+      args.section = doc.id
+      args.unrestricted = true
     }
 
     return getDocuments(doc, args, context, info)

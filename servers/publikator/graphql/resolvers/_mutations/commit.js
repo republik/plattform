@@ -10,6 +10,7 @@ const superb = require('superb')
 const superheroes = require('superheroes')
 const sleep = require('await-sleep')
 const sharp = require('sharp')
+const slugify = require('slugify')
 const {
   createGithubClients,
   commitNormalizer,
@@ -31,7 +32,10 @@ const extractImage = async (url, images) => {
     } catch (e) { /* console.log('ignoring image node with url:' + url) */ }
     if (blob) {
       const meta = await sharp(blob).metadata()
-      const suffix = blob.type.split('/')[1]
+      // image/jpeg -> jpeg
+      // image/png -> png
+      // image/svg+xml -> svg
+      const suffix = blob.type.split('/')[1].split('+')[0]
       const hash = hashObject(blob)
       const path = `images/${hash}.${suffix}`
       const url = `${path}?size=${meta.width}x${meta.height}`
@@ -250,9 +254,11 @@ module.exports = async (_, args, context) => {
       force: !parentId
     })
   } else {
-    branch = `${superb.random()}-${superheroes.random().toLowerCase()}`
-      .replace(/\s/g, '-')
-      .replace(/\./g, '-')
+    branch = slugify(
+      `${superb.random()}-${superheroes.random()}`
+        .replace(/\./g, '-')
+        .toLowerCase()
+    )
     await githubRest.gitdata.createRef({
       owner: login,
       repo: repoName,
