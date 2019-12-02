@@ -87,8 +87,8 @@ module.exports = {
                     .join(' ')
                 },
                 /**
-                 * `overdue_cancel` should be true, if a a subscription is deleted past due
-                 * and event was fired automatic (not via API).
+                 * `is_automatic_overdue_cancel` should be true, if a a subscription is deleted past
+                 * due and event was fired automatic (not via API).
                  */
                 {
                   name: 'is_automatic_overdue_cancel',
