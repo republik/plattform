@@ -2,7 +2,7 @@ const debug = require('debug')('crowdfundings:lib:CustomPackages:rule:endTooFarA
 
 const { getLastEndDate } = require('../../utils')
 
-const HORIZON_MONTHS = 3
+const HORIZON_MONTHS = 4
 
 module.exports = ({ package_, packageOption, membership, payload, now }) => {
   const activeMembership = package_.user.memberships.find(m => m.active)
