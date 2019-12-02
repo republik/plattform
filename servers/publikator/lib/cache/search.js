@@ -15,10 +15,10 @@ const getSort = (args) => {
 
   // see https://developer.github.com/v4/enum/repositoryorderfield/
   const map = {
-    'CREATED_AT': 'createdAt',
-    'NAME': 'name.keyword',
-    'PUSHED_AT': 'latestCommit.date',
-    'UPDATED_AT': 'updatedAt'
+    CREATED_AT: 'createdAt',
+    NAME: 'name.keyword',
+    PUSHED_AT: 'latestCommit.date',
+    UPDATED_AT: 'updatedAt'
     // 'STARGAZERS' is not implemented. Keeping in sync is hard.
   }
 
@@ -74,6 +74,7 @@ const find = async (args, { elastic }) => {
     'contentMeta.facebookDescription',
     'contentMeta.facebookTitle',
     'contentMeta.format',
+    'contentMeta.section',
     'contentMeta.seriesMaster.episodes.document',
     'contentMeta.seriesMaster.episodes.label',
     'contentMeta.seriesMaster.episodes.title',

@@ -60,7 +60,9 @@ module.exports = {
       'resolved.meta.format.meta.title.keyword': {
         boost: 6
       },
-      'resolved.meta.format.meta.description': {}
+      'resolved.meta.format.meta.description': {},
+      'resolved.meta.section.meta.title.keyword': {},
+      'resolved.meta.section.meta.description': {}
     },
     filter: {
       default: () => {

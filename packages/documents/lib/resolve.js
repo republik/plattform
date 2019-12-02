@@ -76,7 +76,7 @@ const extractUserUrl = url => {
     return
   }
   return extractUserPath(
-    `${urlObject.path}${urlObject.hash || ''}`
+    `${urlObject.pathname}${urlObject.search}${urlObject.hash}`
   )
 }
 
@@ -221,6 +221,7 @@ const metaFieldResolver = (meta, allDocuments = [], errors) => {
     series,
     dossier: resolver(meta.dossier),
     format: resolver(meta.format),
+    section: resolver(meta.section),
     discussion: resolver(meta.discussion)
   }
 }

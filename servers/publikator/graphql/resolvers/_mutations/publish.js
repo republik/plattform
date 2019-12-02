@@ -376,6 +376,17 @@ module.exports = async (
     resolved.meta.format = formats.pop()
   }
 
+  if (doc.content.meta.section) {
+    const sections = await findTemplates(
+      elastic,
+      'section',
+      doc.content.meta.section
+    )
+
+    if (!resolved.meta) resolved.meta = {}
+    resolved.meta.section = sections.pop()
+  }
+
   // publish to elasticsearch
   const elasticDoc = getElasticDoc({
     indexName: getIndexAlias(indexType.toLowerCase(), 'write'),

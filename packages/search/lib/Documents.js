@@ -330,12 +330,17 @@ const addRelatedDocs = async ({
       const extractedIds = extractIdsFromNode(doc.content, doc.repoId)
       userIds = userIds.concat(extractedIds.users)
       repoIds = repoIds.concat(extractedIds.repos)
+    } else {
+      const extractedIds = extractIdsFromNode({ children: doc.meta.credits }, doc.repoId)
+      userIds = userIds.concat(extractedIds.users)
+      repoIds = repoIds.concat(extractedIds.repos)
     }
     // from meta
     const meta = doc.content.meta
     // TODO get keys from packages/documents/lib/resolve.js
     repoIds.push(getRepoId(meta.dossier))
     repoIds.push(getRepoId(meta.format))
+    repoIds.push(getRepoId(meta.section))
     repoIds.push(getRepoId(meta.discussion))
     if (meta.series) {
       // If a string, probably a series master (tbc.)
