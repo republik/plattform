@@ -93,136 +93,150 @@ const evaluate = async ({
 }) => {
   debug('evaluate')
 
-  if (packageOption.reward.type !== 'MembershipType') {
-    return {
-      ...packageOption,
-      templateId: packageOption.id
-    }
-  }
-
   const { membershipType: packageOptionMembershipType } = packageOption
   const { membershipType, membershipPeriods } = membership
+
   const now = moment()
 
   const payload = {
     ...packageOption,
+    ...packageOption.reward.type === 'MembershipType' && { id: [packageOption.id, membership.id].join('-') },
     templateId: packageOption.id,
     package: package_,
-    id: [packageOption.id, membership.id].join('-'),
     membership,
     optionGroup: membership.id,
     additionalPeriods: []
   }
 
-  // Is user membership next to another active user membership?
-  // If there is an active membership, user should only be able to extend
-  // the active membership
-  if (
-    !membership.active &&
-    membership.user.id === package_.user.id &&
-    package_.user.memberships.find(m => m.active)
-  ) {
-    debug('membership next to an active membership')
-    return false
-  }
+  if (packageOption.reward.type === 'MembershipType') {
+    // Is user membership next to another active user membership?
+    // If there is an active membership, user should only be able to extend
+    // the active membership
+    if (
+      !membership.active &&
+      membership.user.id === package_.user.id &&
+      package_.user.memberships.find(m => m.active)
+    ) {
+      debug('membership next to an active membership')
+      return false
+    }
 
-  // Can membership.membershipType be extended?
-  // Not all membershipTypes can be extended
-  if (!EXTENDABLE_MEMBERSHIP_TYPES.includes(membershipType.name)) {
-    debug('not extenable membershipType "%s"', membershipType.name)
-    return false
-  }
+    // Can membership.membershipType be extended?
+    // Not all membershipTypes can be extended
+    if (!EXTENDABLE_MEMBERSHIP_TYPES.includes(membershipType.name)) {
+      debug('not extenable membershipType "%s"', membershipType.name)
+      return false
+    }
 
-  // Check whether option requires user to be current claimer of membership.
-  if (
-    packageOption.membershipType &&
-    OPTIONS_REQUIRE_CLAIMER.includes(packageOption.membershipType.name) &&
-    membership.userId !== package_.user.id
-  ) {
-    debug(
-      'only owner can extend membership w/ membershipType "%s"',
-      packageOption.membershipType.name
+    // Check whether option requires user to be current claimer of membership.
+    if (
+      packageOption.membershipType &&
+      OPTIONS_REQUIRE_CLAIMER.includes(packageOption.membershipType.name) &&
+      membership.userId !== package_.user.id
+    ) {
+      debug(
+        'only owner can extend membership w/ membershipType "%s"',
+        packageOption.membershipType.name
+      )
+      return false
+    }
+
+    // Has membership any membershipPeriods?
+    // Indicates whether a membership is or was active. Only those can be
+    // extended.
+    if (membershipPeriods.length === 0) {
+      debug('membership has no membershipPeriods')
+      return false
+    }
+
+    let lastEndDate = getPeriodEndingLast(membershipPeriods).endDate
+
+    // A membership can be renewed 364 days before it ends at the most
+    if (!lenient && moment(lastEndDate).isAfter(now.clone().add(364, 'days'))) {
+      debug('membership lasts more than 364 days', lastEndDate)
+      return false
+    }
+
+    const lastEndDateWithGracePeriod = addInterval(
+      lastEndDate,
+      membership.graceInterval
     )
-    return false
+
+    /**
+     * Usually, we want to extend an existing series of periods. We therefor
+     * suggest a new period which start where the last one ends.
+     *
+     * In some cases this is not desired, and requires to set `lastEndDate`
+     * to `now` if...
+     * a) ... membership is active and `lastEndDate` plus a grace period is over
+     * b) ... membership is inactive and `lastEndDate` is over
+     *
+     */
+    if (
+      (membership.active && lastEndDateWithGracePeriod < now) ||
+      (!membership.active && lastEndDate < now)
+    ) {
+      lastEndDate = now
+    }
+
+    // Add a regular period this packageOption would cause.
+    const beginEnd = {
+      beginDate: lastEndDate,
+      endDate: moment(lastEndDate).add(
+        packageOptionMembershipType.defaultPeriods, packageOptionMembershipType.interval
+      )
+    }
+
+    payload.additionalPeriods.push({
+      id: uuid(),
+      membershipId: membership.id,
+      kind: 'REGULAR',
+      createdAt: now,
+      updatedAt: now,
+      ...beginEnd
+    })
+
+    // If membership stems from ABO_GIVE_MONTHS package, default ABO option
+    if (membership.pledge.package.name === 'ABO_GIVE_MONTHS') {
+      console.log(packageOption)
+      if (packageOption.membershipType.name === 'ABO') {
+        payload.defaultAmount = 1
+      }
+    } else {
+      if (membership.userId === package_.user.id) {
+        // If options is to extend membership, set defaultAmount to 1 if reward
+        // of current packageOption evaluated is same as in evaluated
+        // membership.
+        payload.defaultAmount =
+          packageOption.rewardId === membershipType.rewardId ? 1 : 0
+      } else {
+        // If user does not own membership, set userPrice to false
+        payload.userPrice = false
+      }
+    }
   }
 
-  // Has membership any membershipPeriods?
-  // Indicates whether a membership is or was active. Only those can be
-  // extended.
-  if (membershipPeriods.length === 0) {
-    debug('membership has no membershipPeriods')
-    return false
-  }
-
-  let lastEndDate = getPeriodEndingLast(membershipPeriods).endDate
-
-  // A membership can be renewed 364 days before it ends at the most
-  if (!lenient && moment(lastEndDate).isAfter(now.clone().add(364, 'days'))) {
-    debug('membership lasts more than 364 days', lastEndDate)
-    return false
-  }
-
-  const lastEndDateWithGracePeriod = addInterval(
-    lastEndDate,
-    membership.graceInterval
-  )
-
-  /**
-   * Usually, we want to extend an existing series of periods. We therefor
-   * suggest a new period which start where the last one ends.
-   *
-   * In some cases this is not desired, and requires to set `lastEndDate`
-   * to `now` if...
-   * a) ... membership is active and `lastEndDate` plus a grace period is over
-   * b) ... membership is inactive and `lastEndDate` is over
-   *
-   */
-  if (
-    (membership.active && lastEndDateWithGracePeriod < now) ||
-    (!membership.active && lastEndDate < now)
-  ) {
-    lastEndDate = now
-  }
-
-  // Add a regular period this packageOption would cause.
-  const beginEnd = {
-    beginDate: lastEndDate,
-    endDate: moment(lastEndDate).add(
-      packageOptionMembershipType.defaultPeriods, packageOptionMembershipType.interval
-    )
-  }
-
-  payload.additionalPeriods.push({
-    id: uuid(),
-    membershipId: membership.id,
-    kind: 'REGULAR',
-    createdAt: now,
-    updatedAt: now,
-    ...beginEnd
-  })
-
-  // Apply package rules
-  await Promise.each(package_.rules, rule => {
+  // Apply package rules. Rules may pass or not, and may mutate payload.
+  const passed = await Promise.map(package_.rules, rule => {
     if (rules[rule]) {
       return rules[rule]({ package_, packageOption, membership, payload, now })
     }
+
+    // If a rule is not available, do not pass.
+    return false
   })
 
-  // If membership stems from ABO_GIVE_MONTHS package, default ABO option
-  if (membership.pledge.package.name === 'ABO_GIVE_MONTHS') {
-    if (packageOption.membershipType.name === 'ABO') {
-      payload.defaultAmount = 1
-    }
-  } else {
-    if (membership.userId === package_.user.id) {
-      // If options is to extend membership, set defaultAmount to 1 if reward
-      // of current packageOption evaluated is same as in evaluated
-      // membership.
-      payload.defaultAmount =
-        packageOption.rewardId === membershipType.rewardId ? 1 : 0
-    } else {
-      // If user does not own membership, set userPrice to false
-      payload.userPrice = false
+  // Check if all rules passed
+  if (passed.length > 0 && passed.some(r => !r)) {
+    debug('one or more rules did not pass')
+    return false
+  }
+
+  // Return bare packageOption w/ templateId if not a MembershipType reward.
+  if (packageOption.reward.type !== 'MembershipType') {
+    return {
+      ...packageOption,
+      templateId: packageOption.id
     }
   }
 
@@ -237,10 +251,13 @@ const getCustomOptions = async (package_) => {
 
   const options = []
 
+  const hasMembershipTypePackageOptions = !!packageOptions.filter(option => option.reward.type === 'MembershipType').length
+
   await Promise.map(package_.user.memberships, membership => {
     return Promise.map(packageOptions, async packageOption => {
       const { user } = package_
       if (
+        hasMembershipTypePackageOptions &&
         membership.active &&
         membership.userId === user.id &&
         hasDormantMembership({
@@ -256,14 +273,16 @@ const getCustomOptions = async (package_) => {
 
       // Add option if there it is not in options already, determine
       // by option.id.
-      if (!options.find(option => option.id === evaluatedOption.id)) {
+      if (evaluatedOption && !options.find(option => option.id === evaluatedOption.id)) {
         options.push(evaluatedOption)
       }
     })
   })
 
-  // If there is no MembershipType reward left, return an empty array.
-  if (!options.filter(Boolean).find(option => option.reward.type === 'MembershipType')) {
+  if (
+    hasMembershipTypePackageOptions &&
+    !options.filter(Boolean).find(option => option.reward.type === 'MembershipType')
+  ) {
     return []
   }
 
