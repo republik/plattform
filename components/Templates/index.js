@@ -6,6 +6,7 @@ import neutrumSchema from './Neutrum'
 import createArticleSchema from '@project-r/styleguide/lib/templates/Article'
 import createFrontSchema from '@project-r/styleguide/lib/templates/Front'
 import createFormatSchema from '@project-r/styleguide/lib/templates/Format'
+import createSectionSchema from '@project-r/styleguide/lib/templates/Section'
 import createDiscussionSchema from '@project-r/styleguide/lib/templates/Discussion'
 import createDossierSchema from '@project-r/styleguide/lib/templates/Dossier'
 
@@ -36,6 +37,7 @@ const schemas = {
     ...withFrontData
   }),
   format: createFormatSchema({ t, dynamicComponentRequire }),
+  section: createSectionSchema({ t, dynamicComponentRequire }),
   discussion: createDiscussionSchema({ t, dynamicComponentRequire }),
   dossier: createDossierSchema({ t, dynamicComponentRequire })
 }
