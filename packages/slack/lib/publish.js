@@ -35,7 +35,8 @@ const postMessage = async (message) => {
       })
   } else {
     console.warn(
-      `Slack cannot publish: missing SLACK_API_TOKEN or channel.`
+      'Slack cannot publish: missing SLACK_API_TOKEN or channel.',
+      { message }
     )
   }
 }
