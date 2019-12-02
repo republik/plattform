@@ -216,9 +216,7 @@ const evaluate = async ({
     }
   }
 
-  // Apply package rules.
-  // Will return whether a rule did pass or not.
-  // It may alter payload.
+  // Apply package rules. Rules may pass or not, and may mutate payload.
   const passed = await Promise.map(package_.rules, rule => {
     if (rules[rule]) {
       return rules[rule]({ package_, packageOption, membership, payload, now })
@@ -228,10 +226,13 @@ const evaluate = async ({
     return false
   })
 
+  // Check if all rules passed
   if (passed.length > 0 && passed.some(r => !r)) {
+    debug('one or more rules did not pass')
     return false
   }
 
+  // Return bare packageOption w/ templateId if not a MembershipType reward.
   if (packageOption.reward.type !== 'MembershipType') {
     return {
       ...packageOption,
