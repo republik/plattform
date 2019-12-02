@@ -49,18 +49,22 @@ module.exports = {
         })
       }
 
-      await sendMailTemplate({
-        to: user.email,
-        subject: t('api/email/subscription/payment/failed/subject'),
-        templateName: 'subscription_failed',
-        globalMergeVars: [
-          { name: 'NAME',
-            content: [user.firstName, user.lastName]
-              .filter(Boolean)
-              .join(' ')
-          }
-        ]
-      }, { pgdb })
+      const hasNextPaymentAttempt = !!_.get(event, 'data.object.next_payment_attempt')
+      if (hasNextPaymentAttempt) {
+        await sendMailTemplate({
+          to: user.email,
+          subject: t('api/email/subscription/payment/failed/subject'),
+          templateName: 'subscription_failed',
+          globalMergeVars: [
+            {
+              name: 'NAME',
+              content: [user.firstName, user.lastName]
+                .filter(Boolean)
+                .join(' ')
+            }
+          ]
+        }, { pgdb })
+      }
     }
   }
 }
