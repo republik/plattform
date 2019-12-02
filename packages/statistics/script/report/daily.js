@@ -62,7 +62,7 @@ const argv = yargs
   })
   .check(argv => {
     if (!argv.date && !argv.relativeDate) {
-      return `Check options. Either provide date, or relative date.`
+      return 'Check options. Either provide date, or relative date.'
     }
 
     return true
@@ -113,7 +113,7 @@ const getUrls = async ({ date, limit }, { pgdb }) => {
     LIMIT :limit
   `, { limit: left > 0 ? left : 0 })
 
-  return [ ...urlsOnDate, ...urlsBeforeDate ]
+  return [...urlsOnDate, ...urlsBeforeDate]
     .sort((a, b) => descending(a.publishDate, b.publishDate))
 }
 
@@ -146,7 +146,7 @@ const getBlock = ({ url, daysPublished, document: { meta }, indexes, distributio
 }
 
 const getRandomQuote = async ({ pgdb }) => {
-  const results = await pgdb.query(`SELECT * FROM "statisticsQuotes" ORDER BY RANDOM() LIMIT 1`)
+  const results = await pgdb.query('SELECT * FROM "statisticsQuotes" ORDER BY RANDOM() LIMIT 1')
 
   if (results.length !== 1) {
     return {}
@@ -165,7 +165,7 @@ Promise.all([PgDb.connect(), Elasticsearch.connect()]).spread(async (pgdb, elast
   const { limit, idSite, indexYear, channel, dryRun } = argv
   const date = argv.date || argv.relativeDate
 
-  debug('Generate and post report %o', { date, limit, indexYear, dryRun })
+  debug('Generate and post report %o', { date: date.toISOString(), limit, indexYear: indexYear.toISOString(), dryRun })
 
   try {
     const config = {
@@ -204,23 +204,25 @@ Promise.all([PgDb.connect(), Elasticsearch.connect()]).spread(async (pgdb, elast
           memberVisitors: memberSegmented.p50.nb_uniq_visitors
         }
 
+        // calculated based on pageviews
         const sources = {
-          'Newsletter': unsegmented['campaign.newsletter.referrals'],
-          'Kampagnen': unsegmented['campaign.referrals'] - unsegmented['campaign.newsletter.referrals'],
+          Newsletter: unsegmented['campaign.newsletter.referrals'],
+          Kampagnen: unsegmented['campaign.referrals'] - unsegmented['campaign.newsletter.referrals'],
 
-          'Twitter': unsegmented['social.twitter.referrals'],
-          'Facebook': unsegmented['social.facebook.referrals'],
-          'Instagram': unsegmented['social.instagram.referrals'],
-          'LinkedIn': unsegmented['social.linkedin.referrals'],
+          Twitter: unsegmented['social.twitter.referrals'],
+          Facebook: unsegmented['social.facebook.referrals'],
+          Instagram: unsegmented['social.instagram.referrals'],
+          LinkedIn: unsegmented['social.linkedin.referrals'],
           'andere sozialen Netwerke': unsegmented['social.referrals'] - unsegmented['social.twitter.referrals'] - unsegmented['social.facebook.referrals'] - unsegmented['social.instagram.referrals'] - unsegmented['social.linkedin.referrals'],
 
-          'Suchmaschinen': unsegmented['search.visits'],
+          Suchmaschinen: unsegmented['search.visits'],
           'Dritt-Webseiten': unsegmented['website.referrals'],
           'Republik-Webseite': unsegmented['previousPages.referrals'],
 
-          'Direkt': unsegmented['direct.visits']
+          Direkt: unsegmented['direct.visits']
         }
 
+        // unsegmented.pageviews contains loops—reloads, we ignore them and calculate our own total
         const allSources = Object.keys(sources).reduce((acc, curr) => acc + sources[curr], 0)
 
         /**
@@ -277,7 +279,7 @@ Promise.all([PgDb.connect(), Elasticsearch.connect()]).spread(async (pgdb, elast
               type: 'mrkdwn',
               text: [
                 `*Beiträge von ${date.format('dddd, DD.MM.YYYY')}*`,
-                `Alle Beiträge, die veröffentlicht wurden.`
+                'Alle Beiträge, die veröffentlicht wurden.'
               ].join('\n')
             }
           }
@@ -295,7 +297,7 @@ Promise.all([PgDb.connect(), Elasticsearch.connect()]).spread(async (pgdb, elast
             text: {
               type: 'mrkdwn',
               text: [
-                `*Frühere Beiträge*`,
+                '*Frühere Beiträge*',
                 `Einige Beiträge, die auch am ${date.format('DD.MM.')} aufgerufen, aber früher veröffentlicht wurden.`
               ].join('\n')
             }
@@ -317,8 +319,6 @@ Promise.all([PgDb.connect(), Elasticsearch.connect()]).spread(async (pgdb, elast
           ]
         }
       )
-
-      console.log(blocks)
 
       await postMessage({
         channel,

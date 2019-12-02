@@ -29,12 +29,10 @@ const findByPaths = async ({ paths = [], props = ['meta'] }, { elastic }) => {
 module.exports = (_, { elastic }) => ({
   pluck:
     async (rows) => {
-      const pluckedRows = [ ...rows ]
+      const pluckedRows = [...rows]
       const paths = rows.map(({ url }) => toPath(url))
 
       const documents = await findByPaths({ paths }, { elastic })
-
-      console.log(documents)
 
       documents.map(document => {
         const index = pluckedRows.findIndex(({ url }) => toPath(url) === document.meta.path)
