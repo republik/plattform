@@ -76,7 +76,7 @@ const extractUserUrl = url => {
     return
   }
   return extractUserPath(
-    `${urlObject.pathname}${urlObject.hash || ''}`
+    `${urlObject.pathname}${urlObject.search}${urlObject.hash}`
   )
 }
 
