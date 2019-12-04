@@ -331,8 +331,8 @@ const getCustomOptions = async (package_) => {
     }
   }
 */
-const resolvePackages = async ({ packages, pledger = {}, pgdb }) => {
-  debug('resolvePackages', packages.length)
+const resolvePackages = async ({ packages, pledger = {}, strict = false, pgdb }) => {
+  debug('resolvePackages', { packages: packages.length, strict })
 
   if (packages.length === 0) {
     debug('no packages to resolve')
@@ -391,10 +391,15 @@ const resolvePackages = async ({ packages, pledger = {}, pgdb }) => {
 
   Object.assign(pledger, { memberships })
 
+  const now = moment()
+
   const allPackageOptions =
     await pgdb.public.packageOptions.find({
       packageId: packages.map(package_ => package_.id),
-      disabled: false
+      and: [
+        { or: [{ 'disabledAt >': now }, { disabledAt: null }] },
+        strict && { or: [{ 'hiddenAt >': now }, { hiddenAt: null }] }
+      ].filter(Boolean)
     })
 
   const allRewards =
