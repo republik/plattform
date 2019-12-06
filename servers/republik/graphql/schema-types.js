@@ -205,9 +205,14 @@ type MembershipStats {
     # default: [ABO]
     membershipTypes: [String!]
   ): MembershipPeriodStats!
+  """
+  Returns membership evolution in monthly buckets.
+  """
   evolution(
-    minDate: Date!
-    maxDate: Date!
+    "Minimum month (YYYY-MM)"
+    min: YearMonthDate!
+    "Maximum month (YYYY-MM)"
+    max: YearMonthDate!
   ): MembershipStatsEvolution!
 }
 type MemberStats {
@@ -258,9 +263,13 @@ type StatementUser {
 }
 
 type RevenueStats {
+  """
+  Returns surplus, an amount of money payments exceeds their pledge values ("revenue").
+  Example: [pledge total] - [memerships] - [goodies] = [surplus].
+  """
   surplus(
-    minDate: Date!
-    maxDate: Date!
+    min: DateTime!
+    max: DateTime
   ): RevenueStatsSurplus!
 }
 
@@ -275,13 +284,21 @@ type MembershipStatsEvolution {
 }
 
 type MembershipStatsEvolutionBucket {
+  "Date label (YYYY-MM)"
   label: String!
+  "Amount of active memberships at end of month"
   active: Int!
+  "Amount of active memberships at end of month with a donation"
   activeWithDonation: Int!
+  "Amount of active memberships at end of month without a donation"
   activeWithoutDonation: Int!
+  "Amount of active memberships formally expired but pending for renewal"
   renewalPending: Int!
+  "Amount of memberships ending due to cancellation"
   lossCancelled: Int!
+  "Amount of memberships ending due to expiration"
   lossExpired: Int!
+  "Amount of memberships gained during month"
   new: Int!
 }
 

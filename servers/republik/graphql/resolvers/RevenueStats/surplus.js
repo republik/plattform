@@ -3,10 +3,10 @@ const debug = require('debug')('republik:resolvers:RevenueStats:surplus')
 
 const { resolveCacheFirst } = require('@orbiting/backend-modules-utils')
 
-const getTotalFn = (minDate, maxDate, pgdb) => async () => {
+const getTotalFn = (min, max, pgdb) => async () => {
   debug(
     'query for: %o',
-    { minDate: minDate.toISOString(), maxDate: maxDate.toISOString() }
+    { min: min.toISOString(), max: max.toISOString() }
   )
 
   const result = await pgdb.query(`
@@ -51,7 +51,7 @@ const getTotalFn = (minDate, maxDate, pgdb) => async () => {
         WHERE
           (pay.total >= 24000 OR p.donation > 0) AND
           pay.status = 'PAID' AND
-          pay."createdAt" AT TIME ZONE 'Europe/Zurich' BETWEEN :minDate AND :maxDate
+          pay."createdAt" BETWEEN :min AND :max
         GROUP BY pay.id, p.id, po.id, pom.id, pog.id
       )
 
@@ -71,7 +71,7 @@ const getTotalFn = (minDate, maxDate, pgdb) => async () => {
     SELECT COALESCE(SUM("surplusTotal"), 0) "total"
     FROM "totals"
     LIMIT 1
-  `, { minDate, maxDate })
+  `, { min, max })
 
   debug('query result: %o', result)
 
@@ -81,11 +81,11 @@ const getTotalFn = (minDate, maxDate, pgdb) => async () => {
 module.exports = async (_, args, context) => {
   const { pgdb } = context
 
-  const minDate = moment(args.minDate)
-  const maxDate = moment(args.maxDate).endOf('day')
+  const min = moment(args.min)
+  const max = moment(args.max)
 
   return resolveCacheFirst(
-    getTotalFn(minDate, maxDate, pgdb),
+    getTotalFn(min, max, pgdb),
     { key: `revenue-stats:surplus:${JSON.stringify(args)}` },
     context
   )

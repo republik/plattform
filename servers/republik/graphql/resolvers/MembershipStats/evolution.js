@@ -3,10 +3,10 @@ const debug = require('debug')('republik:resolvers:MembershipStats:overview')
 
 const { resolveCacheFirst } = require('@orbiting/backend-modules-utils')
 
-const getBuckets = (minDate, maxDate, pgdb) => async () => {
+const getBuckets = (min, max, pgdb) => async () => {
   debug(
     'query for: %o',
-    { minDate: minDate.toISOString(), maxDate: maxDate.toISOString() }
+    { min: min.toISOString(), max: max.toISOString() }
   )
 
   const result = await pgdb.query(`
@@ -46,8 +46,8 @@ const getBuckets = (minDate, maxDate, pgdb) => async () => {
         unit + '1 month'::interval - '1 second'::interval "last" 
     
       FROM generate_series(
-        :minDate::date AT TIME ZONE 'Europe/Zurich',
-        :maxDate::date AT TIME ZONE 'Europe/Zurich',
+        :min::date,
+        :max::date,
         '1 month'
       ) unit
     )
@@ -104,7 +104,7 @@ const getBuckets = (minDate, maxDate, pgdb) => async () => {
       
     GROUP BY 1
     ORDER BY 1
-  `, { minDate, maxDate })
+  `, { min, max })
 
   debug('query result: %o', result)
 
@@ -114,11 +114,11 @@ const getBuckets = (minDate, maxDate, pgdb) => async () => {
 module.exports = async (_, args, context) => {
   const { pgdb } = context
 
-  const minDate = moment(args.minDate)
-  const maxDate = moment(args.maxDate).endOf('day')
+  const min = moment(args.min).startOf('month')
+  const max = moment(args.max).endOf('month')
 
   return resolveCacheFirst(
-    getBuckets(minDate, maxDate, pgdb),
+    getBuckets(min, max, pgdb),
     { key: `membership-stats:overview:${JSON.stringify(args)}` },
     context
   )
