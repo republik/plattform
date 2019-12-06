@@ -198,7 +198,6 @@ const evaluate = async ({
 
     // If membership stems from ABO_GIVE_MONTHS package, default ABO option
     if (membership.pledge.package.name === 'ABO_GIVE_MONTHS') {
-      console.log(packageOption)
       if (packageOption.membershipType.name === 'ABO') {
         payload.defaultAmount = 1
       }
