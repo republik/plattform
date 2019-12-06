@@ -84,28 +84,30 @@ const styles = {
           background: colors.primary
         }
       },
-      ...(drawLineEnd && {
-        '::after': {
-          display: 'block',
-          content: '""',
-          position: 'absolute',
-          width: `${config.verticalLineWidth + 2 * 2}px`,
-          height: `${config.verticalLineWidth + 2 * 2}px`,
-          bottom: -2 - config.verticalLineWidth / 2,
-          borderRadius: '100%',
-          left: (config.indentSizeS - config.verticalLineWidth) / 2 - 2,
-          background: colors.divider,
+      ...(drawLineEnd
+        ? {
+            '::after': {
+              display: 'block',
+              content: '""',
+              position: 'absolute',
+              width: `${config.verticalLineWidth + 2 * 2}px`,
+              height: `${config.verticalLineWidth + 2 * 2}px`,
+              bottom: -2 - config.verticalLineWidth / 2,
+              borderRadius: '100%',
+              left: (config.indentSizeS - config.verticalLineWidth) / 2 - 2,
+              background: colors.divider,
 
-          [mUp]: {
-            left: (config.indentSizeM - config.verticalLineWidth) / 2 - 2
+              [mUp]: {
+                left: (config.indentSizeM - config.verticalLineWidth) / 2 - 2
+              }
+            },
+            '@media (hover)': {
+              ':hover::after': {
+                background: colors.primary
+              }
+            }
           }
-        },
-        '@media (hover)': {
-          ':hover::after': {
-            background: colors.primary
-          }
-        }
-      })
+        : {})
     })
 }
 
