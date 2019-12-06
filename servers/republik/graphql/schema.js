@@ -35,6 +35,7 @@ type queries {
   mediaResponses: [MediaResponse!]!
   membershipStats: MembershipStats!
   memberStats: MemberStats!
+  revenueStats: RevenueStats!
 }
 
 type mutations {

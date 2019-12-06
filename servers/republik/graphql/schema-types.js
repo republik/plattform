@@ -205,6 +205,10 @@ type MembershipStats {
     # default: [ABO]
     membershipTypes: [String!]
   ): MembershipPeriodStats!
+  evolution(
+    minDate: Date!
+    maxDate: Date!
+  ): MembershipStatsEvolution!
 }
 type MemberStats {
   count: Int!
@@ -252,4 +256,33 @@ type StatementUser {
   sequenceNumber: Int
   hasPublicProfile: Boolean!
 }
+
+type RevenueStats {
+  surplus(
+    minDate: Date!
+    maxDate: Date!
+  ): RevenueStatsSurplus!
+}
+
+type RevenueStatsSurplus {
+  total: Int!
+  updatedAt: DateTime!
+}
+
+type MembershipStatsEvolution {
+  buckets: [MembershipStatsEvolutionBucket!]
+  updatedAt: DateTime!
+}
+
+type MembershipStatsEvolutionBucket {
+  label: String!
+  active: Int!
+  activeWithDonation: Int!
+  activeWithoutDonation: Int!
+  renewalPending: Int!
+  lossCancelled: Int!
+  lossExpired: Int!
+  new: Int!
+}
+
 `
