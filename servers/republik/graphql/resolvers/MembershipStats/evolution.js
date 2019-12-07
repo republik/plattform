@@ -36,15 +36,15 @@ WITH "minMaxDates" AS (
   GROUP BY pm."membershipId", pm.donation
 ), range AS (
   SELECT
-    to_char(unit, 'YYYY-MM') "label",
-    unit "first",
-    unit + '1 month'::interval - '1 second'::interval "last",
+    to_char(unit::timestamp with time zone at time zone 'Europe/Zurich', 'YYYY-MM') "label",
+    unit::timestamp with time zone "first",
+    (unit + '1 month'::interval - '1 second'::interval)::timestamp with time zone "last",
     :min::timestamp with time zone "veryFirst",
-    (:max::date + '1 month'::interval - '1 second'::interval)::timestamp with time zone "veryLast"
+    :max::timestamp with time zone "veryLast"
 
   FROM generate_series(
-    :min::date,
-    :max::date,
+    :min::timestamp,
+    :max::timestamp,
     '1 month'
   ) unit
 )
@@ -145,8 +145,6 @@ FROM range, "minMaxDates"
 LEFT JOIN "membershipDonation"
   ON "membershipDonation"."membershipId" = "minMaxDates".id
 
-WHERE "maxEndDate" < :min::date OR "minBeginDate" > :max::date + '1 month'::interval - '1 second'::interval
-
 GROUP BY 1
 ORDER BY 1
 `
@@ -167,8 +165,8 @@ const getBuckets = (min, max, pgdb) => async () => {
 module.exports = async (_, args, context) => {
   const { pgdb } = context
 
-  const min = moment(args.min).startOf('month')
-  const max = moment(args.max).endOf('month')
+  const min = moment(args.min)
+  const max = moment(args.max)
 
   const fingerprint = crypto
     .createHash('md5')
