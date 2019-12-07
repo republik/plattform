@@ -155,7 +155,7 @@ type Membership {
   initialInterval: MembershipTypeInterval!
   initialPeriods: Int!
   periods: [MembershipPeriod]!
-  needsProlong: Boolean!
+  canProlong: Boolean!
   endDate: DateTime
   graceEndDate: DateTime
   overdue: Boolean!
