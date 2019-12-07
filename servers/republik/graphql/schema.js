@@ -14,6 +14,8 @@ type queries {
     search: String
     # user id, legacy testimonial id or username to inject as first result
     focus: String
+    "Return statements of users which have a membership beyond this date"
+    membershipAfter: DateTime
   ): StatementUserConnection!
   nextStatement(
     sequenceNumber: Int!,
