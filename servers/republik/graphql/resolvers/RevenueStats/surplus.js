@@ -108,7 +108,7 @@ module.exports = async (_, args, context) => {
 
   return resolveCacheFirst(
     getTotalFn(min, max, pgdb),
-    { key: `revenue-stats:surplus:${JSON.stringify(fingerprint)}`, disabled: true },
+    { key: `revenue-stats:surplus:${JSON.stringify(fingerprint)}` },
     context
   )
 }
