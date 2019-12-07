@@ -9,7 +9,6 @@ extend type User {
   activeMembership: Membership
 
   paymentSources: [PaymentSource!]!
-  hasChargableSource: Boolean
 
   # Custom-tailored packages available for User
   customPackages(crowdfundingName: String): [Package!]

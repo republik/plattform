@@ -12,7 +12,7 @@ const DATE_FORMAT = 'YYYY-MM-DD'
 
 const scopeConfigs = {
   CUSTOM_PLEDGE: {
-    exposeFields: ['email', 'hasAddress', 'hasChargableSource', 'customPackages'],
+    exposeFields: ['email', 'hasAddress', 'paymentSources', 'customPackages'],
     pledgePackages: ['PROLONG', 'TABLEBOOK'],
     ttlDays: 90
   },
