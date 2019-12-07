@@ -52,7 +52,7 @@ module.exports = {
         const pickedMembershipIds =
           customPackages.map(p => p.options.map(o => o.membership && o.membership.id))
         const prolongableMembershipIds =
-          _(pickedMembershipIds).flattenDeep().uniq().value()
+          _(pickedMembershipIds).flattenDeep().uniq().value().filter(Boolean)
 
         return prolongableMembershipIds.includes(membership.id)
       })
