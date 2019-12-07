@@ -16,6 +16,11 @@ const scopeConfigs = {
     pledgePackages: ['PROLONG', 'TABLEBOOK'],
     ttlDays: 90
   },
+  CUSTOM_PLEDGE_EXTENDED: {
+    exposeFields: ['email', 'hasAddress', 'paymentSources', 'customPackages'],
+    pledgePackages: ['PROLONG'],
+    ttlDays: 120
+  },
   CLAIM_CARD: {
     exposeFields: ['email', 'cards'],
     ttlDays: 90
