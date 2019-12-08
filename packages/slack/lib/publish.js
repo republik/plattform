@@ -27,4 +27,19 @@ const publish = async (channel, content) => {
   }
 }
 
+const postMessage = async (message) => {
+  if (webClient) {
+    await webClient.chat.postMessage(message)
+      .catch((e) => {
+        console.error(e)
+      })
+  } else {
+    console.warn(
+      'Slack cannot publish: missing SLACK_API_TOKEN or channel.',
+      { message }
+    )
+  }
+}
+
 module.exports = publish
+module.exports.postMessage = postMessage
