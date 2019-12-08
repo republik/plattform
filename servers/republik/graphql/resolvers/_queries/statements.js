@@ -4,8 +4,22 @@ const {
   transformUser
 } = require('@orbiting/backend-modules-auth')
 
+const fragmentWithMinMaxDates = `
+  WITH "minMaxDates" AS (
+    SELECT m."userId", MAX(mp."endDate") "maxEndDate"
+    FROM "membershipPeriods" mp
+    JOIN "memberships" m ON m.id = mp."membershipId"
+    GROUP BY 1
+  )
+`
+
+const fragmentJoinMinMaxDates = `
+  JOIN "minMaxDates" mmd
+    ON mmd."userId" = u.id AND "maxEndDate" >= :membershipAfter
+`
+
 module.exports = async (_, args, { pgdb, t }) => {
-  const { first, after, search, focus } = args
+  const { first, after, search, focus, membershipAfter } = args
   const seed = args.seed || Math.random() * 2 - 1
 
   if (first > 100) {
@@ -71,18 +85,13 @@ module.exports = async (_, args, { pgdb, t }) => {
 
   if (search) {
     const userRows = await pgdb.query(`
+      ${membershipAfter ? fragmentWithMinMaxDates : ''}
+
       SELECT DISTINCT
         u.id
       FROM
         users u
-      JOIN memberships m
-        ON m.id = (
-          SELECT id
-          FROM memberships
-          WHERE "userId" = u.id
-          ORDER BY "sequenceNumber" ASC
-          LIMIT 1
-        )
+      ${membershipAfter ? fragmentJoinMinMaxDates : ''}
       LEFT JOIN
         credentials c
         ON c."userId" = u.id AND c."isListed" = true
@@ -90,7 +99,7 @@ module.exports = async (_, args, { pgdb, t }) => {
         u."isListed" = true
         AND u."isAdminUnlisted" = false
         AND u."portraitUrl" is not null
-        AND u.roles @> '["member"]'
+        ${!membershipAfter ? 'AND u.roles @> \'["member"]\'' : ''}
         AND (
           u."firstName" % :search OR
           u."lastName" % :search OR
@@ -98,12 +107,14 @@ module.exports = async (_, args, { pgdb, t }) => {
           u."lastName" ILIKE :searchLike OR
           c.description % :search OR
           c.description ILIKE :searchLike
-        );
-    `, { search, searchLike: search + '%', seed })
+        )
+    `, { search, searchLike: search + '%', seed, membershipAfter })
 
     return results(userRows)
   } else {
     const userRows = await pgdb.query(`
+      ${membershipAfter ? fragmentWithMinMaxDates : ''}
+
       SELECT id
       FROM (
         SELECT
@@ -116,17 +127,16 @@ module.exports = async (_, args, { pgdb, t }) => {
           null,
           u.id
         FROM users u
-        JOIN memberships m
-          ON m.id = (SELECT id FROM memberships WHERE "userId" = u.id ORDER BY "sequenceNumber" ASC LIMIT 1)
+        ${membershipAfter ? fragmentJoinMinMaxDates : ''}
         WHERE
           u."isListed" = true
           AND u."isAdminUnlisted" = false
           AND u."portraitUrl" is not null
-          AND u.roles @> '["member"]'
+          ${!membershipAfter ? 'AND u.roles @> \'["member"]\'' : ''}
         OFFSET 1
       ) s
-      ORDER BY random();
-    `, { seed })
+      ORDER BY random()
+    `, { seed, membershipAfter })
 
     return results(userRows)
   }

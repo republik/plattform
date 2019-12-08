@@ -34,30 +34,25 @@ module.exports = {
 
     const latest = await pgdb.public.membershipPeriods.findFirst({
       membershipId: membership.id
-    }, {fields: '"endDate"', orderBy: ['endDate desc']})
+    }, { fields: '"endDate"', orderBy: ['endDate desc'] })
     return !!(
       membership.active &&
       membership.latestPaymentFailedAt &&
       membership.latestPaymentFailedAt > latest.endDate
     )
   },
-  async needsProlong (membership, args, context) {
+  async canProlong (membership, args, context) {
     const { pgdb } = context
-    // Prolong not needed if a) membership is inactive, b) membership is not set
-    // to be renewed or c) membership is set to "auto pay".
-    if (!membership.active || !membership.renew || membership.autoPay) {
-      return false
-    }
 
-    return createMembershipCache(membership, 'needsProlong', context)
+    return createMembershipCache(membership, 'canProlong', context)
       .cache(async () => {
         const user = await pgdb.public.users.findOne({ id: membership.userId })
         const customPackages = await getCustomPackages({ user, pgdb })
 
         const pickedMembershipIds =
-          customPackages.map(p => p.options.map(o => o.membership.id))
+          customPackages.map(p => p.options.map(o => o.membership && o.membership.id))
         const prolongableMembershipIds =
-          _(pickedMembershipIds).flattenDeep().uniq().value()
+          _(pickedMembershipIds).flattenDeep().uniq().value().filter(Boolean)
 
         return prolongableMembershipIds.includes(membership.id)
       })
@@ -119,7 +114,7 @@ module.exports = {
   async periods (membership, args, { pgdb }) {
     return pgdb.public.membershipPeriods.find({
       membershipId: membership.id
-    }, {orderBy: ['endDate desc']})
+    }, { orderBy: ['endDate desc'] })
   },
   async user (membership, args, { user: me, pgdb }) {
     const user = await pgdb.public.users.findOne({ id: membership.userId })

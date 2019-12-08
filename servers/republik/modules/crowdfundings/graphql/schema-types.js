@@ -9,7 +9,6 @@ extend type User {
   activeMembership: Membership
 
   paymentSources: [PaymentSource!]!
-  hasChargableSource: Boolean
 
   # Custom-tailored packages available for User
   customPackages(crowdfundingName: String): [Package!]
@@ -155,7 +154,7 @@ type Membership {
   initialInterval: MembershipTypeInterval!
   initialPeriods: Int!
   periods: [MembershipPeriod]!
-  needsProlong: Boolean!
+  canProlong: Boolean!
   endDate: DateTime
   graceEndDate: DateTime
   overdue: Boolean!

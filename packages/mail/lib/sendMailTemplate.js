@@ -112,7 +112,11 @@ const envMergeVars = [
   },
   {
     name: 'link_offer_donate',
-    content: `${FRONTEND_BASE_URL}/angebote?package=BENEFACTOR`
+    content: `${FRONTEND_BASE_URL}/angebote?package=DONATE`
+  },
+  {
+    name: 'link_offer_abo_give',
+    content: `${FRONTEND_BASE_URL}/angebote?package=ABO_GIVE`
   },
   {
     name: 'link_offer_reduced_ausbildung',
@@ -133,6 +137,10 @@ const envMergeVars = [
   {
     name: 'link_listen',
     content: `${FRONTEND_BASE_URL}/vorgelesen`
+  },
+  {
+    name: 'link_cockpit',
+    content: `${FRONTEND_BASE_URL}/cockpit`
   },
   {
     name: 'link_projectr',

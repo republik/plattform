@@ -205,6 +205,15 @@ type MembershipStats {
     # default: [ABO]
     membershipTypes: [String!]
   ): MembershipPeriodStats!
+  """
+  Returns membership evolution in monthly buckets.
+  """
+  evolution(
+    "Minimum month (YYYY-MM)"
+    min: YearMonthDate!
+    "Maximum month (YYYY-MM)"
+    max: YearMonthDate!
+  ): MembershipStatsEvolution!
 }
 type MemberStats {
   count: Int!
@@ -252,4 +261,65 @@ type StatementUser {
   sequenceNumber: Int
   hasPublicProfile: Boolean!
 }
+
+type RevenueStats {
+  """
+  Returns surplus, an amount of money payments exceeds their pledge values ("revenue").
+  Example: [pledge total] - [memerships] - [goodies] = [surplus].
+  """
+  surplus(
+    min: DateTime!
+    max: DateTime
+  ): RevenueStatsSurplus!
+}
+
+type RevenueStatsSurplus {
+  total: Int!
+  updatedAt: DateTime!
+}
+
+type MembershipStatsEvolution {
+  buckets: [MembershipStatsEvolutionBucket!]
+  updatedAt: DateTime!
+}
+
+type MembershipStatsEvolutionBucket {
+  "Date label (YYYY-MM)"
+  label: String!
+  "Amount of active memberships at beginning of month"
+  carryover: Int!
+
+
+  "Amount of memberships gained during month"
+  new: Int!
+  "Amount of memberships gained during month with a donation"
+  newWithDonation: Int!
+  "Amount of memberships gained during month without a donation"
+  newWithoutDonation: Int!
+
+  "Amount of active memberships ought to renewed"
+  renewal: Int!
+  "Amount of active memberships formally expired but pending for renewal"
+  renewalPending: Int!
+
+  "Amount of subscriptions ought to renewed"
+  subscriptionsRenewal: Int!
+  "Amount of subscriptions formally expired but pending for renewal"
+  subscriptionsRenewalPending: Int!
+
+  "Amount of memberships ending"
+  loss: Int!
+  "Amount of memberships ending due to cancellation"
+  lossCancelled: Int!
+  "Amount of memberships ending due to expiration"
+  lossExpired: Int!
+
+  "Amount of active memberships at end of month"
+  active: Int!
+  "Amount of active memberships at end of month with a donation"
+  activeWithDonation: Int!
+  "Amount of active memberships at end of month without a donation"
+  activeWithoutDonation: Int!
+}
+
 `

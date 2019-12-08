@@ -15,7 +15,6 @@ const {
 const createCache = require('../../lib/cache')
 const { getLastEndDate } = require('../../lib/utils')
 const getStripeClients = require('../../lib/payments/stripe/clients')
-const { isExpired } = require('./PaymentSource')
 
 const { DISABLE_RESOLVER_USER_CACHE } = process.env
 const QUERY_CACHE_TTL_SECONDS = 60 * 60 * 24 // 1 day
@@ -186,24 +185,13 @@ module.exports = {
     return []
   },
   async paymentSources (user, args, { pgdb, user: me }) {
-    if (Roles.userIsMeOrInRoles(user, me, ['admin'])) {
+    if (
+      Roles.userIsMeOrInRoles(user, me, ['admin']) ||
+      isFieldExposed(user, 'paymentSources')
+    ) {
       return getPaymentSources(user, pgdb)
     }
     return []
-  },
-  async hasChargableSource (user, args, context) {
-    const { pgdb, user: me } = context
-    if (
-      Roles.userIsMeOrInRoles(user, me, ['admin']) ||
-      isFieldExposed(user, 'hasChargableSource')
-    ) {
-      return getPaymentSources(user, pgdb)
-        .then(sources =>
-          !!sources
-            .filter(source => !isExpired(source, {}, context))
-            .length
-        )
-    }
   },
   async checkMembershipSubscriptions (user, args, { pgdb, user: me }) {
     Roles.ensureUserIsMeOrInRoles(user, me, ['supporter'])
