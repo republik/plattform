@@ -1,7 +1,7 @@
 {
-  "name": "@orbiting/backend-modules-statistics",
+  "name": "@orbiting/backend-modules-matomo",
   "version": "0.0.1",
-  "description": "Statistical data",
+  "description": "Access to Matomo API",
   "main": "index.js",
   "repository": {
     "type": "git",
@@ -20,11 +20,9 @@
     "link": "yarn link"
   },
   "dependencies": {
+    "@zeit/fetch-retry": "^4.0.0",
     "bluebird": "^3.5.4",
-    "d3-array": "^2.0.3",
     "debug": "^4.1.1",
-    "mdast-util-to-string": "^1.0.5",
-    "moment": "^2.24.0",
-    "yargs": "^14.2.0"
+    "node-fetch": "^2.3.0"
   }
 }

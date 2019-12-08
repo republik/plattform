@@ -139,9 +139,9 @@ module.exports = async (_, args, context) => {
         throw new Error(t('api/unexpected'))
       }
 
-      if (pko.disabled) {
+      if (pko.disabledAt && pko.disabledAt <= new Date()) {
         logger.error(
-          'option must be enabled',
+          `option must be enabled (disabledAt: ${pko.disabledAt.toISOString()})`,
           { req: req._log(), args, plo, pko }
         )
         throw new Error(t('api/unexpected'))
