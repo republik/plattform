@@ -10,7 +10,7 @@ const canAccessBasics = (user, me) => (
 )
 
 const exposeProfileField = (key, format) => (user, args, { pgdb, user: me }) => {
-  if (canAccessBasics(user, me)) {
+  if (canAccessBasics(user, me) || isFieldExposed(user, key)) {
     return format
       ? format(user._raw[key] || user[key], args)
       : user._raw[key] || user[key]
@@ -85,7 +85,7 @@ module.exports = {
   },
   portrait (user, args, { user: me, req, allowAccess = false }) {
     if (allowAccess || canAccessBasics(user, me)) {
-      let { portraitUrl } = user._raw
+      const { portraitUrl } = user._raw
       if (!portraitUrl) {
         return portraitUrl
       }
