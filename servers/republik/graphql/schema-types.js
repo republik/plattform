@@ -284,42 +284,39 @@ type MembershipStatsEvolution {
 }
 
 type MembershipStatsEvolutionBucket {
-  "Date label (YYYY-MM)"
-  label: String!
-  "Amount of active memberships at beginning of month"
-  carryover: Int!
+  "Bucket key (YYYY-MM)"
+  key: String!
 
+  "Amount of active memberships at beginning of month"
+  activeBeginningOfMonth: Int!
 
   "Amount of memberships gained during month"
-  new: Int!
-  "Amount of memberships gained during month with a donation"
-  newWithDonation: Int!
-  "Amount of memberships gained during month without a donation"
-  newWithoutDonation: Int!
+  gaining: Int!
+  "Amount of memberships gained during month with donation"
+  gainingWithDonation: Int!
+  "Amount of memberships gained during month without donation"
+  gainingWithoutDonation: Int!
 
-  "Amount of active memberships ought to renewed"
-  renewal: Int!
-  "Amount of active memberships formally expired but pending for renewal"
-  renewalPending: Int!
-
-  "Amount of subscriptions ought to renewed"
-  subscriptionsRenewal: Int!
-  "Amount of subscriptions formally expired but pending for renewal"
-  subscriptionsRenewalPending: Int!
-
-  "Amount of memberships ending"
-  loss: Int!
-  "Amount of memberships ending due to cancellation"
-  lossCancelled: Int!
-  "Amount of memberships ending due to expiration"
-  lossExpired: Int!
+  "Amount of memberships ending during month"
+  ending: Int!
+  "Amount of memberships ending during month but still prolongable"
+  prolongable: Int!
+  "Amount of memberships ended during month due to expiration"
+  expired: Int!
+  "Amount of memberships ended during month due to cancellation"
+  cancelled: Int!
 
   "Amount of active memberships at end of month"
-  active: Int!
+  activeEndOfMonth: Int!
   "Amount of active memberships at end of month with a donation"
-  activeWithDonation: Int!
+  activeEndOfMonthWithDonation: Int!
   "Amount of active memberships at end of month without a donation"
-  activeWithoutDonation: Int!
+  activeEndOfMonthWithoutDonation: Int!
+
+  "Amount of all memberships pending at end of month (ending but still prolongable)"
+  pending: Int!
+  "Amount of all subscriptions (e.g. MONTHLY_ABO) pending at end of month (ending but still prolongable)"
+  pendingSubscriptionsOnly: Int!
 }
 
 `
