@@ -12,7 +12,7 @@ const Promise = require('bluebird')
  */
 module.exports = async (fn, options, context) => {
   const { redis } = context
-  const { namespace = 'cache:', key, ttl = 60, disabled = false } = options
+  const { namespace = 'cache:', key, ttl = 60 * 60, cacheOnly = false, disabled = false } = options
 
   const qualifiedKey = `${namespace}:${key}`
   const debug = originDebug.extend(key)
@@ -45,6 +45,14 @@ module.exports = async (fn, options, context) => {
       debug('reject cache, due to %s', e.toString())
       throw e
     }
+  }
+
+  if (cacheOnly) {
+    const result = await getCache()
+
+    debug('result: %o', result)
+
+    return result
   }
 
   const result = await Promise.any([

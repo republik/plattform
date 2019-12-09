@@ -213,6 +213,7 @@ type MembershipStats {
     min: YearMonthDate!
     "Maximum month (YYYY-MM)"
     max: YearMonthDate!
+    cacheOnly: Boolean
   ): MembershipStatsEvolution!
 }
 type MemberStats {
@@ -270,6 +271,7 @@ type RevenueStats {
   surplus(
     min: DateTime!
     max: DateTime
+    cacheOnly: Boolean
   ): RevenueStatsSurplus!
 }
 

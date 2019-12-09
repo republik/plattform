@@ -1,6 +1,6 @@
 const moment = require('moment')
 const debug = require('debug')('republik:resolvers:MembershipStats:overview')
-const crypto = require('crypto')
+// const crypto = require('crypto')
 
 const { resolveCacheFirst } = require('@orbiting/backend-modules-utils')
 
@@ -159,18 +159,22 @@ const getBuckets = (min, max, pgdb) => async () => {
 
 module.exports = async (_, args, context) => {
   const { pgdb } = context
+  const { cacheOnly = true } = args
 
   const min = moment(args.min)
   const max = moment(args.max)
 
-  const fingerprint = crypto
+  /* const fingerprint = crypto
     .createHash('md5')
     .update(JSON.stringify({ args, query }))
-    .digest('hex')
+    .digest('hex') */
 
   return resolveCacheFirst(
     getBuckets(min, max, pgdb),
-    { key: `membership-stats:overview:${fingerprint}`, disabled: true }, // @TODO! Remove disable flag
+    {
+      key: 'membership-stats:overview',
+      cacheOnly
+    },
     context
   )
 }

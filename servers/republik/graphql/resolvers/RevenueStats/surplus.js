@@ -1,6 +1,6 @@
 const moment = require('moment')
 const debug = require('debug')('republik:resolvers:RevenueStats:surplus')
-const crypto = require('crypto')
+// const crypto = require('crypto')
 const Promise = require('bluebird')
 
 const { resolveCacheFirst } = require('@orbiting/backend-modules-utils')
@@ -97,18 +97,22 @@ const getTotalFn = (min, max, pgdb) => async () => {
 
 module.exports = async (_, args, context) => {
   const { pgdb } = context
+  const { cacheOnly = true } = args
 
   const min = moment(args.min)
   const max = moment(args.max)
 
-  const fingerprint = crypto
+  /* const fingerprint = crypto
     .createHash('md5')
     .update(JSON.stringify({ args, query }))
-    .digest('hex')
+    .digest('hex') */
 
   return resolveCacheFirst(
     getTotalFn(min, max, pgdb),
-    { key: `revenue-stats:surplus:${JSON.stringify(fingerprint)}` },
+    {
+      key: 'revenue-stats:surplus',
+      cacheOnly
+    },
     context
   )
 }
