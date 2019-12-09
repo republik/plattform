@@ -36,11 +36,8 @@ WITH "minMaxDates" AS (
   GROUP BY pm."membershipId", pm.donation
 ), range AS (
   SELECT
-    to_char(unit::timestamp with time zone at time zone 'Europe/Zurich', 'YYYY-MM') "label",
     unit::timestamp with time zone "first",
-    (unit + '1 month'::interval - '1 second'::interval)::timestamp with time zone "last",
-    :min::timestamp with time zone "veryFirst",
-    :max::timestamp with time zone "veryLast"
+    (unit + '1 month'::interval - '1 second'::interval)::timestamp with time zone "last"
 
   FROM generate_series(
     :min::timestamp,
@@ -50,95 +47,93 @@ WITH "minMaxDates" AS (
 )
 
 SELECT
-  "label",
-  
+  to_char("first", 'YYYY-MM') "key",
+
   COUNT(*) FILTER (
-    WHERE "minBeginDate" < "first"
-    AND "maxEndDate" >= "first"
-  ) "carryover",
+    WHERE "maxEndDate" >= "first"
+    AND "minBeginDate" < "first"
+  ) "activeBeginningOfMonth",
 
   COUNT(*) FILTER (
     WHERE "minBeginDate" >= "first"
     AND "minBeginDate" <= "last"
-  ) "new",
+  ) "gaining",
 
   COUNT(*) FILTER (
     WHERE "minBeginDate" >= "first"
     AND "minBeginDate" <= "last"
     AND "membershipDonation"."membershipId" IS NOT NULL
-  ) "newWithDonation",
-
+  ) "gainingWithDonation",
+  
   COUNT(*) FILTER (
     WHERE "minBeginDate" >= "first"
     AND "minBeginDate" <= "last"
     AND "membershipDonation"."membershipId" IS NULL
-  ) "newWithoutDonation",
+  ) "gainingWithoutDonation",
 
   COUNT(*) FILTER (
     WHERE "maxEndDate" >= "first"
     AND "maxEndDate" <= "last"
-    AND renew = TRUE
-    AND active = TRUE
-    AND "membershipTypeName" NOT IN ('MONTHLY_ABO')
-  ) "renewal",
-  
-  COUNT(*) FILTER (
-    WHERE "maxEndDate" >= "veryFirst"
-    AND "maxEndDate" <= "last"
-    AND renew = TRUE
-    AND active = TRUE
-    AND "membershipTypeName" NOT IN ('MONTHLY_ABO')
-  ) "renewalPending",
+    
+  ) "ending",
 
   COUNT(*) FILTER (
     WHERE "maxEndDate" >= "first"
     AND "maxEndDate" <= "last"
-    AND active = TRUE
-    AND "membershipTypeName"  IN ('MONTHLY_ABO')
-  ) "subscriptionsRenewal",
-
-  COUNT(*) FILTER (
-    WHERE "maxEndDate" >= "veryFirst"
-    AND "maxEndDate" <= "last"
-    AND active = TRUE
-    AND "membershipTypeName" IN ('MONTHLY_ABO')
-  ) "subscriptionsRenewalPending",
-
-  COUNT(*) FILTER (
-    WHERE "maxEndDate" >= "first"
-    AND "maxEndDate" <= "last"
-    AND (renew = FALSE OR (renew = TRUE AND active = FALSE))
-  ) "loss",
-  
-  COUNT(*) FILTER (
-    WHERE "maxEndDate" >= "first"
-    AND "maxEndDate" <= "last"
-    AND renew = FALSE
-  ) "lossCancelled",
+    AND (
+      active = TRUE
+      AND renew = TRUE
+    )
+  ) "prolongable",
 
   COUNT(*) FILTER (
     WHERE "maxEndDate" >= "first"
     AND "maxEndDate" <= "last"
     AND renew = TRUE
     AND active = FALSE
-  ) "lossExpired",
+  ) "expired",
+  
+  COUNT(*) FILTER (
+    WHERE "maxEndDate" >= "first"
+    AND "maxEndDate" <= "last"
+    AND renew = FALSE
+  ) "cancelled",
 
   COUNT(*) FILTER (
-    WHERE "minBeginDate" < "last"
-    AND "maxEndDate" >= "last"
-  ) "active",
-
+    WHERE "maxEndDate" >= "last"
+    AND "minBeginDate" < "last"
+  ) "activeEndOfMonth",
+  
   COUNT(*) FILTER (
-    WHERE "minBeginDate" < "last"
-    AND "maxEndDate" >= "last"
+    WHERE "maxEndDate" >= "last"
+    AND "minBeginDate" < "last"
     AND "membershipDonation"."membershipId" IS NOT NULL
-  ) "activeWithDonation",
-
+  ) "activeEndOfMonthWithDonation",
+  
   COUNT(*) FILTER (
-    WHERE "minBeginDate" < "last"
-    AND "maxEndDate" >= "last"
+    WHERE "maxEndDate" >= "last"
+    AND "minBeginDate" < "last"
     AND "membershipDonation"."membershipId" IS NULL
-  ) "activeWithoutDonation"
+  ) "activeEndOfMonthWithoutDonation",
+  
+  COUNT(*) FILTER (
+    WHERE "maxEndDate" >= :min::timestamp
+    AND "maxEndDate" <= "last"
+    AND (
+      active = TRUE
+      AND renew = TRUE
+    )
+  ) "pending",
+  
+  COUNT(*) FILTER (
+    WHERE "maxEndDate" >= :min::timestamp
+    AND "maxEndDate" <= "last"
+    AND (
+      active = TRUE
+      AND renew = TRUE
+    )
+    AND "membershipTypeName" IN ('MONTHLY_ABO')
+  ) "pendingSubscriptionsOnly"
 
 FROM range, "minMaxDates"
 
@@ -175,7 +170,7 @@ module.exports = async (_, args, context) => {
 
   return resolveCacheFirst(
     getBuckets(min, max, pgdb),
-    { key: `membership-stats:overview:${fingerprint}` },
+    { key: `membership-stats:overview:${fingerprint}`, disabled: true }, // @TODO! Remove disable flag
     context
   )
 }
