@@ -22,6 +22,7 @@ import FBPreview from './FBPreview'
 import TwitterPreview from './TwitterPreview'
 import RepoSelect from './RepoSelect'
 import SeriesForm from './SeriesForm'
+import PaynotesForm from './PaynotesForm'
 import AudioForm from './AudioForm'
 import UIForm from '../../UIForm'
 
@@ -49,6 +50,7 @@ const MetaData = ({
   mdastSchema,
   contextMeta,
   series,
+  paynote,
   additionalFields = [],
   customFields = [],
   teaser: Teaser,
@@ -285,6 +287,7 @@ const MetaData = ({
           })}
         </UIForm>
         {!!series && <SeriesForm editor={editor} node={node} />}
+        {!!paynote && <PaynotesForm editor={editor} node={node} />}
         {!!Teaser && (
           <div>
             <Label>{t('metaData/preview')}</Label>

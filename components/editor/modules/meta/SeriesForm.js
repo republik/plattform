@@ -219,7 +219,7 @@ export default withT(({ t, editor, node, onInputChange }) => {
             )
           })}
           <A
-            href='#remove'
+            href='#add'
             onClick={e => {
               e.preventDefault()
               onEpisodeChange(
