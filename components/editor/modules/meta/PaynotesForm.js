@@ -58,12 +58,12 @@ export default withT(({ t, editor, node }) => {
     e.preventDefault()
     const templatePaynote = {
       isTrynote: false,
-      titleTop: '',
-      bodyTop: '',
-      ctaTop: '',
-      titleBottom: '',
-      bodyBottom: '',
-      ctaBottom: ''
+      beforeTitle: '',
+      beforeBody: '',
+      beforeButton: '',
+      afterTitle: '',
+      afterBody: '',
+      afterButton: ''
     }
     onPaynotesChange(paynotes.concat(templatePaynote))
   }

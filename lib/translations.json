@@ -1,5 +1,5 @@
 {
-  "updated": "2019-12-11T15:30:20.487Z",
+  "updated": "2019-12-11T16:53:55.306Z",
   "title": "live",
   "data": [
     {
@@ -623,27 +623,27 @@
       "value": "Buy Republik"
     },
     {
-      "key": "metaData/paynote/form/titleTop",
+      "key": "metaData/paynote/form/before/title",
       "value": "Title"
     },
     {
-      "key": "metaData/paynote/form/bodyTop",
+      "key": "metaData/paynote/form/before/body",
       "value": "Body"
     },
     {
-      "key": "metaData/paynote/form/ctaTop",
+      "key": "metaData/paynote/form/before/button",
       "value": "Call to action"
     },
     {
-      "key": "metaData/paynote/form/titleBottom",
+      "key": "metaData/paynote/form/after/title",
       "value": "Footer title\n"
     },
     {
-      "key": "metaData/paynote/form/bodyBottom",
+      "key": "metaData/paynote/form/after/body",
       "value": "Footer body"
     },
     {
-      "key": "metaData/paynote/form/ctaBottom",
+      "key": "metaData/paynote/form/after/button",
       "value": "Footer call to action"
     },
     {

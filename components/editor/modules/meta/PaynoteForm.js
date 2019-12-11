@@ -34,17 +34,17 @@ const SelectPaynoteType = withT(({ t, isTrynote, setTrynote }) => {
 
 export default withT(({ t, data, onInputChange }) => {
   const hasDifferentBottomFields = () =>
-    data.titleTop !== data.titleBottom ||
-    data.bodyTop !== data.bodyBottom ||
-    data.ctaTop !== data.ctaBottom
+    data.beforeTitle !== data.afterTitle ||
+    data.beforeBody !== data.afterBody ||
+    data.beforeButton !== data.afterButton
 
   const [bottomFields, showBottomFields] = useState(hasDifferentBottomFields)
 
   const resetBottomFields = () =>
     onInputChange({
-      titleBottom: data.titleTop,
-      bodyBottom: data.bodyTop,
-      ctaBottom: data.ctaTop
+      afterTitle: data.beforeTitle,
+      afterBody: data.beforeBody,
+      afterButton: data.beforeButton
     })
 
   return (
@@ -54,30 +54,30 @@ export default withT(({ t, data, onInputChange }) => {
         setTrynote={isTrynote => {
           onInputChange({
             isTrynote,
-            ctaTop: '',
-            ctaBottom: ''
+            beforeButton: '',
+            afterButton: ''
           })
         }}
       />
       <Field
-        label={t('metaData/paynote/form/titleTop')}
-        name='titleTop'
-        value={data.titleTop}
+        label={t('metaData/paynote/form/before/title')}
+        name='beforeTitle'
+        value={data.beforeTitle}
         onChange={(e, value) =>
           onInputChange({
-            titleTop: value,
-            titleBottom: bottomFields ? data.titleBottom : value
+            beforeTitle: value,
+            afterTitle: bottomFields ? data.afterTitle : value
           })
         }
       />
       <Field
-        label={t('metaData/paynote/form/bodyTop')}
-        name='bodyTop'
-        value={data.bodyTop}
+        label={t('metaData/paynote/form/before/body')}
+        name='beforeBody'
+        value={data.beforeBody}
         onChange={(e, value) =>
           onInputChange({
-            bodyTop: value,
-            bodyBottom: bottomFields ? data.bodyBottom : value
+            beforeBody: value,
+            afterBody: bottomFields ? data.afterBody : value
           })
         }
         renderInput={({ ref, ...inputProps }) => (
@@ -86,13 +86,13 @@ export default withT(({ t, data, onInputChange }) => {
       />
       {!data.isTrynote && (
         <Field
-          label={t('metaData/paynote/form/ctaTop')}
-          name='ctaTop'
-          value={data.ctaTop}
+          label={t('metaData/paynote/form/before/button')}
+          name='beforeButton'
+          value={data.beforeButton}
           onChange={(e, value) =>
             onInputChange({
-              ctaTop: value,
-              ctaBottom: bottomFields ? data.ctaBottom : value
+              beforeButton: value,
+              afterButton: bottomFields ? data.afterButton : value
             })
           }
         />
@@ -111,22 +111,22 @@ export default withT(({ t, data, onInputChange }) => {
       {bottomFields && (
         <>
           <Field
-            label={t('metaData/paynote/form/titleBottom')}
-            name='titleBottom'
-            value={data.titleBottom}
+            label={t('metaData/paynote/form/after/title')}
+            name='afterTitle'
+            value={data.afterTitle}
             onChange={(e, value) =>
               onInputChange({
-                titleBottom: value
+                afterTitle: value
               })
             }
           />
           <Field
-            label={t('metaData/paynote/form/bodyBottom')}
-            name='bodyBottom'
-            value={data.bodyBottom}
+            label={t('metaData/paynote/form/after/body')}
+            name='afterBody'
+            value={data.afterBody}
             onChange={(e, value) =>
               onInputChange({
-                bodyBottom: value
+                afterBody: value
               })
             }
             renderInput={({ ref, ...inputProps }) => (
@@ -139,12 +139,12 @@ export default withT(({ t, data, onInputChange }) => {
           />
           {!data.isTrynote && (
             <Field
-              label={t('metaData/paynote/form/ctaBottom')}
-              name='ctaBottom'
-              value={data.ctaBottom}
+              label={t('metaData/paynote/form/after/button')}
+              name='afterButton'
+              value={data.afterButton}
               onChange={(e, value) =>
                 onInputChange({
-                  ctaBottom: value
+                  afterButton: value
                 })
               }
             />
