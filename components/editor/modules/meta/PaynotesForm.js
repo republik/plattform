@@ -2,8 +2,8 @@ import React, { Fragment } from 'react'
 
 import { A, Label } from '@project-r/styleguide'
 
-import MetaForm from '../../utils/MetaForm'
 import withT from '../../../../lib/withT'
+import PaynoteForm from './PaynoteForm'
 
 const PAYNOTE_KEY = 'paynotes'
 
@@ -40,13 +40,13 @@ export default withT(({ t, editor, node }) => {
     onPaynotesChange(paynotes.slice(0, i).concat(paynotes.slice(i + 1)))
   }
 
-  const editPaynote = (i, paynote) => key => (_, value) => {
+  const editPaynote = (i, paynote) => newAttrs => {
     onPaynotesChange(
       paynotes
         .slice(0, i)
         .concat({
           ...paynote,
-          [key]: value
+          ...newAttrs
         })
         .concat(paynotes.slice(i + 1))
     )
@@ -75,10 +75,9 @@ export default withT(({ t, editor, node }) => {
                 remove paynote
               </A>
               <br />
-              <MetaForm
+              <PaynoteForm
                 data={paynote}
                 onInputChange={editPaynote(i, paynote)}
-                getWidth={() => '50%'}
               />
             </Fragment>
           )
