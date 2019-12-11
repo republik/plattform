@@ -54,8 +54,8 @@ export default withT(({ t, data, onInputChange }) => {
         setTrynote={isTrynote => {
           onInputChange({
             isTrynote,
-            ctaTop: isTrynote ? '' : data.ctaTop,
-            ctaBottom: isTrynote ? '' : data.ctaBottom
+            ctaTop: '',
+            ctaBottom: ''
           })
         }}
       />
