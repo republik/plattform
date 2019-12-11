@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import { css } from 'glamor'
 import AutosizeInput from 'react-textarea-autosize'
 
-import { Field, Label, Checkbox, Radio } from '@project-r/styleguide'
+import { Field, Checkbox, Radio } from '@project-r/styleguide'
 import withT from '../../../../lib/withT'
 
 const styles = {
