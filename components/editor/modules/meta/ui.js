@@ -50,7 +50,7 @@ const MetaData = ({
   mdastSchema,
   contextMeta,
   series,
-  paynote,
+  paynotes,
   additionalFields = [],
   customFields = [],
   teaser: Teaser,
@@ -325,7 +325,7 @@ const MetaData = ({
         <br />
         <br />
         <br />
-        {!!paynote && <PaynotesForm editor={editor} node={node} />}
+        {!!paynotes && <PaynotesForm editor={editor} node={node} />}
         <br />
         <br />
         <br />

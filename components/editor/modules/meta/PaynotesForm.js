@@ -3,16 +3,26 @@ import React from 'react'
 import { A, Label } from '@project-r/styleguide'
 import MdClose from 'react-icons/lib/md/close'
 import MdAdd from 'react-icons/lib/md/add'
+import MdInfoOutline from 'react-icons/lib/md/info-outline'
 import { css } from 'glamor'
 
 import withT from '../../../../lib/withT'
 import PaynoteForm from './PaynoteForm'
 
 const styles = {
+  title: css({
+    display: 'block',
+    marginBottom: 5
+  }),
+  container: css({
+    backgroundColor: '#fff',
+    padding: '5px 10px 15px',
+    marginBottom: 5
+  }),
   header: css({
     paddingBottom: 15
   }),
-  title: css({
+  label: css({
     paddingTop: 5,
     display: 'inline-block'
   }),
@@ -20,7 +30,11 @@ const styles = {
     float: 'right'
   }),
   add: css({
+    marginTop: 10,
     fontSize: 14
+  }),
+  help: css({
+    margin: '0 0 10px'
   })
 }
 
@@ -79,21 +93,12 @@ export default withT(({ t, editor, node }) => {
         </A>
       ) : (
         <>
-          <Label style={{ display: 'block', marginBottom: 5 }}>
-            Custom Paynotes
-          </Label>
+          <Label {...styles.title}>Custom Paynotes</Label>
           {paynotes.map((paynote, i) => {
             return (
-              <div
-                key={i}
-                style={{
-                  backgroundColor: '#fff',
-                  padding: '5px 10px 10px',
-                  marginBottom: 5
-                }}
-              >
+              <div key={i} {...styles.container}>
                 <div {...styles.header}>
-                  <Label {...styles.title}>Paynote {i + 1}</Label>
+                  <Label {...styles.label}>Paynote {i + 1}</Label>
                   <A
                     href='#remove'
                     onClick={removePaynote(i)}
@@ -109,6 +114,12 @@ export default withT(({ t, editor, node }) => {
               </div>
             )
           })}
+          <p {...styles.help}>
+            <small>
+              <MdInfoOutline /> Show member count with <b>{'{count}'}</b> and
+              bold text with <b>{'<b>bold tags</b>'}</b>.
+            </small>
+          </p>
           <A href='#add' onClick={addPaynote} {...styles.add}>
             <MdAdd /> new paynote
           </A>

@@ -1,8 +1,10 @@
 import React, { useState } from 'react'
+
+import { css } from 'glamor'
+import AutosizeInput from 'react-textarea-autosize'
+
 import { Field, Checkbox, Radio } from '@project-r/styleguide'
 import withT from '../../../../lib/withT'
-import AutosizeInput from 'react-textarea-autosize'
-import { css } from 'glamor'
 
 const styles = {
   autoSize: css({
