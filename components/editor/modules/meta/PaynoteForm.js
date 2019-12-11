@@ -33,7 +33,12 @@ const SelectPaynoteType = withT(({ t, isTrynote, setTrynote }) => {
 })
 
 export default withT(({ t, data, onInputChange }) => {
-  const [bottomFields, showBottomFields] = useState(false)
+  const hasDifferentBottomFields = () =>
+    data.titleTop !== data.titleBottom ||
+    data.bodyTop !== data.bodyBottom ||
+    data.ctaTop !== data.ctaBottom
+
+  const [bottomFields, showBottomFields] = useState(hasDifferentBottomFields)
 
   const resetBottomFields = () =>
     onInputChange({
@@ -46,7 +51,13 @@ export default withT(({ t, data, onInputChange }) => {
     <div>
       <SelectPaynoteType
         isTrynote={data.isTrynote}
-        setTrynote={value => onInputChange({ isTrynote: value })}
+        setTrynote={isTrynote => {
+          onInputChange({
+            isTrynote,
+            ctaTop: isTrynote ? '' : data.ctaTop,
+            ctaBottom: isTrynote ? '' : data.ctaBottom
+          })
+        }}
       />
       <Field
         label='title'
