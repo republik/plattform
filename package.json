@@ -19,7 +19,7 @@
     "lint": "eslint --fix .",
     "precommit": "npm run test:unit && lint-staged",
     "translations": "gsheets --key=1qPubCKz2YzbcFkRfF0MrgRqD0KLsgRPxoZfG5G3tHOA --title=live --pretty --out lib/translations.json",
-    "sg:link": "./scripts/sg_link.sh" , "preinstall": "npm run sg:unlink",
+    "sg:link": "./scripts/sg_link.sh",
     "sg:unlink": "./scripts/sg_unlink.sh"
   },
   "repository": {
