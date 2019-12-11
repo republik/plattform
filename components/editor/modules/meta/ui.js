@@ -287,7 +287,6 @@ const MetaData = ({
           })}
         </UIForm>
         {!!series && <SeriesForm editor={editor} node={node} />}
-        {!!paynote && <PaynotesForm editor={editor} node={node} />}
         {!!Teaser && (
           <div>
             <Label>{t('metaData/preview')}</Label>
@@ -326,6 +325,7 @@ const MetaData = ({
         <br />
         <br />
         <br />
+        {!!paynote && <PaynotesForm editor={editor} node={node} />}
         <br />
         <br />
         <br />

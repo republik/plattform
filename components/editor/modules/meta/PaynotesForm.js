@@ -1,9 +1,28 @@
-import React, { Fragment } from 'react'
+import React from 'react'
 
 import { A, Label } from '@project-r/styleguide'
+import MdClose from 'react-icons/lib/md/close'
+import MdAdd from 'react-icons/lib/md/add'
+import { css } from 'glamor'
 
 import withT from '../../../../lib/withT'
 import PaynoteForm from './PaynoteForm'
+
+const styles = {
+  header: css({
+    paddingBottom: 15
+  }),
+  title: css({
+    paddingTop: 5,
+    display: 'inline-block'
+  }),
+  close: css({
+    float: 'right'
+  }),
+  add: css({
+    fontSize: 14
+  })
+}
 
 const PAYNOTE_KEY = 'paynotes'
 
@@ -23,7 +42,7 @@ export default withT(({ t, editor, node }) => {
 
   const addPaynote = e => {
     e.preventDefault()
-    const newPaynote = {
+    const templatePaynote = {
       isTrynote: false,
       titleTop: '',
       bodyTop: '',
@@ -32,7 +51,7 @@ export default withT(({ t, editor, node }) => {
       bodyBottom: '',
       ctaBottom: ''
     }
-    onPaynotesChange(paynotes.concat(newPaynote))
+    onPaynotesChange(paynotes.concat(templatePaynote))
   }
 
   const removePaynote = i => e => {
@@ -54,37 +73,47 @@ export default withT(({ t, editor, node }) => {
 
   return (
     <>
-      <Label>{paynotes.length} custom paynotes</Label>
-      <br />
-      <A href='#add' onClick={addPaynote}>
-        new paynote
-      </A>
-      <br />
-      <div
-        style={{
-          backgroundColor: '#fff',
-          padding: '5px 10px 10px',
-          marginTop: 5
-        }}
-      >
-        {paynotes.map((paynote, i) => {
-          return (
-            <Fragment key={i}>
-              <Label>Paynote {i + 1}</Label> &nbsp;{' '}
-              <A href='#remove' onClick={removePaynote(i)}>
-                remove paynote
-              </A>
-              <br />
-              <PaynoteForm
-                data={paynote}
-                onInputChange={editPaynote(i, paynote)}
-              />
-            </Fragment>
-          )
-        })}
-      </div>
-      <br />
-      <br />
+      {!paynotes.length ? (
+        <A href='#add' onClick={addPaynote}>
+          <MdAdd /> Add custom paynotes
+        </A>
+      ) : (
+        <>
+          <Label style={{ display: 'block', marginBottom: 5 }}>
+            Custom Paynotes
+          </Label>
+          {paynotes.map((paynote, i) => {
+            return (
+              <div
+                key={i}
+                style={{
+                  backgroundColor: '#fff',
+                  padding: '5px 10px 10px',
+                  marginBottom: 5
+                }}
+              >
+                <div {...styles.header}>
+                  <Label {...styles.title}>Paynote {i + 1}</Label>
+                  <A
+                    href='#remove'
+                    onClick={removePaynote(i)}
+                    {...styles.close}
+                  >
+                    <MdClose size={20} fill='#000' />
+                  </A>
+                </div>
+                <PaynoteForm
+                  data={paynote}
+                  onInputChange={editPaynote(i, paynote)}
+                />
+              </div>
+            )
+          })}
+          <A href='#add' onClick={addPaynote} {...styles.add}>
+            <MdAdd /> new paynote
+          </A>
+        </>
+      )}
     </>
   )
 })

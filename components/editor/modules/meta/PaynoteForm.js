@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Field, Checkbox, Label, Radio } from '@project-r/styleguide'
+import { Field, Checkbox, Radio } from '@project-r/styleguide'
 import withT from '../../../../lib/withT'
 import AutosizeInput from 'react-textarea-autosize'
 import { css } from 'glamor'
@@ -18,12 +18,12 @@ const SelectPaynoteType = withT(({ t, isTrynote, setTrynote }) => {
     <>
       <Radio
         checked={!isTrynote}
-        onChange={e => setTrynote(e, false)}
+        onChange={() => setTrynote(false)}
         style={{ marginRight: 30 }}
       >
         buynote
       </Radio>
-      <Radio checked={!!isTrynote} onChange={e => setTrynote(e, true)}>
+      <Radio checked={!!isTrynote} onChange={() => setTrynote(true)}>
         trynote
       </Radio>
     </>
@@ -71,17 +71,21 @@ export default withT(({ t, data, onInputChange }) => {
           <AutosizeInput {...inputProps} {...styles.autoSize} inputRef={ref} />
         )}
       />
-      <Field
-        label='cta'
-        name='ctaTop'
-        value={data.ctaTop}
-        onChange={(e, value) =>
-          onInputChange({
-            ctaTop: value,
-            ctaBottom: bottomFields ? data.ctaBottom : value
-          })
-        }
-      />
+      {!data.isTrynote && (
+        <Field
+          label='cta'
+          name='ctaTop'
+          value={data.ctaTop}
+          onChange={(e, value) =>
+            onInputChange({
+              ctaTop: value,
+              ctaBottom: bottomFields ? data.ctaBottom : value
+            })
+          }
+        />
+      )}
+      <br />
+      <br />
       <Checkbox
         checked={bottomFields}
         onChange={(_, value) => {
@@ -89,12 +93,12 @@ export default withT(({ t, data, onInputChange }) => {
           !value && resetBottomFields()
         }}
       >
-        edit bottom paynote text
+        different footer text
       </Checkbox>
       {bottomFields && (
         <>
           <Field
-            label='title bottom'
+            label='footer title'
             name='titleBottom'
             value={data.titleBottom}
             onChange={(e, value) =>
@@ -104,7 +108,7 @@ export default withT(({ t, data, onInputChange }) => {
             }
           />
           <Field
-            label='body bottom'
+            label='footer body'
             name='bodyBottom'
             value={data.bodyBottom}
             onChange={(e, value) =>
@@ -120,16 +124,18 @@ export default withT(({ t, data, onInputChange }) => {
               />
             )}
           />
-          <Field
-            label='cta bottom'
-            name='ctaBottom'
-            value={data.ctaBottom}
-            onChange={(e, value) =>
-              onInputChange({
-                ctaBottom: value
-              })
-            }
-          />
+          {!data.isTrynote && (
+            <Field
+              label='footer cta'
+              name='ctaBottom'
+              value={data.ctaBottom}
+              onChange={(e, value) =>
+                onInputChange({
+                  ctaBottom: value
+                })
+              }
+            />
+          )}
         </>
       )}
     </div>
