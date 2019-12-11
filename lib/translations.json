@@ -1,5 +1,5 @@
 {
-  "updated": "2019-11-13T13:46:44.798Z",
+  "updated": "2019-12-11T15:30:20.487Z",
   "title": "live",
   "data": [
     {
@@ -439,6 +439,10 @@
       "value": "Bildbeschrieb"
     },
     {
+      "key": "metaData/field/formats",
+      "value": "Formate"
+    },
+    {
       "key": "metaData/field/label",
       "value": "Label"
     },
@@ -589,6 +593,62 @@
     {
       "key": "metaData/series/coverText/fontSize",
       "value": "Schriftgrösse"
+    },
+    {
+      "key": "metaData/paynotes/add",
+      "value": "Add custom paynotes"
+    },
+    {
+      "key": "metaData/paynotes/title",
+      "value": "Custom paynotes"
+    },
+    {
+      "key": "metaData/paynotes/single",
+      "value": "Paynote"
+    },
+    {
+      "key": "metaData/paynotes/new",
+      "value": "new paynote"
+    },
+    {
+      "key": "metaData/paynotes/help",
+      "value": "Render members count with <b>{count}</b> and bold text with <b>&lt;b&gt;bold tags&lt;/b&gt;</b>."
+    },
+    {
+      "key": "metaData/paynote/form/trynote",
+      "value": "Try Republik"
+    },
+    {
+      "key": "metaData/paynote/form/buynote",
+      "value": "Buy Republik"
+    },
+    {
+      "key": "metaData/paynote/form/titleTop",
+      "value": "Title"
+    },
+    {
+      "key": "metaData/paynote/form/bodyTop",
+      "value": "Body"
+    },
+    {
+      "key": "metaData/paynote/form/ctaTop",
+      "value": "Call to action"
+    },
+    {
+      "key": "metaData/paynote/form/titleBottom",
+      "value": "Footer title\n"
+    },
+    {
+      "key": "metaData/paynote/form/bodyBottom",
+      "value": "Footer body"
+    },
+    {
+      "key": "metaData/paynote/form/ctaBottom",
+      "value": "Footer call to action"
+    },
+    {
+      "key": "metaData/paynote/form/hasDifferentPaynotes",
+      "value": "different footer text"
     },
     {
       "key": "metaData/field/url",

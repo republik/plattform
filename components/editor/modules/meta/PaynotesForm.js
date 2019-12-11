@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { A, Label } from '@project-r/styleguide'
+import { A, Label, RawHtml } from '@project-r/styleguide'
 import MdClose from 'react-icons/lib/md/close'
 import MdAdd from 'react-icons/lib/md/add'
 import MdInfoOutline from 'react-icons/lib/md/info-outline'
@@ -89,16 +89,18 @@ export default withT(({ t, editor, node }) => {
     <>
       {!paynotes.length ? (
         <A href='#add' onClick={addPaynote}>
-          <MdAdd /> Add custom paynotes
+          <MdAdd /> {t('metaData/paynotes/add')}
         </A>
       ) : (
         <>
-          <Label {...styles.title}>Custom Paynotes</Label>
+          <Label {...styles.title}>{t('metaData/paynotes/title')}</Label>
           {paynotes.map((paynote, i) => {
             return (
               <div key={i} {...styles.container}>
                 <div {...styles.header}>
-                  <Label {...styles.label}>Paynote {i + 1}</Label>
+                  <Label {...styles.label}>
+                    {t('metaData/paynotes/single')} {i + 1}
+                  </Label>
                   <A
                     href='#remove'
                     onClick={removePaynote(i)}
@@ -116,12 +118,16 @@ export default withT(({ t, editor, node }) => {
           })}
           <p {...styles.help}>
             <small>
-              <MdInfoOutline /> Show member count with <b>{'{count}'}</b> and
-              bold text with <b>{'<b>bold tags</b>'}</b>.
+              <MdInfoOutline style={{ verticalAlign: 'sub' }} />{' '}
+              <RawHtml
+                dangerouslySetInnerHTML={{
+                  __html: t('metaData/paynotes/help')
+                }}
+              />
             </small>
           </p>
           <A href='#add' onClick={addPaynote} {...styles.add}>
-            <MdAdd /> new paynote
+            <MdAdd /> {t('metaData/paynotes/new')}
           </A>
         </>
       )}

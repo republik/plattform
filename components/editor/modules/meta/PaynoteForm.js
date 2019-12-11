@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import { css } from 'glamor'
 import AutosizeInput from 'react-textarea-autosize'
 
-import { Field, Checkbox, Radio } from '@project-r/styleguide'
+import { Field, Label, Checkbox, Radio } from '@project-r/styleguide'
 import withT from '../../../../lib/withT'
 
 const styles = {
@@ -23,10 +23,10 @@ const SelectPaynoteType = withT(({ t, isTrynote, setTrynote }) => {
         onChange={() => setTrynote(false)}
         style={{ marginRight: 30 }}
       >
-        buynote
+        {t('metaData/paynote/form/buynote')}
       </Radio>
       <Radio checked={!!isTrynote} onChange={() => setTrynote(true)}>
-        trynote
+        {t('metaData/paynote/form/trynote')}
       </Radio>
     </>
   )
@@ -60,7 +60,7 @@ export default withT(({ t, data, onInputChange }) => {
         }}
       />
       <Field
-        label='title'
+        label={t('metaData/paynote/form/titleTop')}
         name='titleTop'
         value={data.titleTop}
         onChange={(e, value) =>
@@ -71,7 +71,7 @@ export default withT(({ t, data, onInputChange }) => {
         }
       />
       <Field
-        label='body'
+        label={t('metaData/paynote/form/bodyTop')}
         name='bodyTop'
         value={data.bodyTop}
         onChange={(e, value) =>
@@ -86,7 +86,7 @@ export default withT(({ t, data, onInputChange }) => {
       />
       {!data.isTrynote && (
         <Field
-          label='cta'
+          label={t('metaData/paynote/form/ctaTop')}
           name='ctaTop'
           value={data.ctaTop}
           onChange={(e, value) =>
@@ -106,12 +106,12 @@ export default withT(({ t, data, onInputChange }) => {
           !value && resetBottomFields()
         }}
       >
-        different footer text
+        {t('metaData/paynote/form/hasDifferentPaynotes')}
       </Checkbox>
       {bottomFields && (
         <>
           <Field
-            label='footer title'
+            label={t('metaData/paynote/form/titleBottom')}
             name='titleBottom'
             value={data.titleBottom}
             onChange={(e, value) =>
@@ -121,7 +121,7 @@ export default withT(({ t, data, onInputChange }) => {
             }
           />
           <Field
-            label='footer body'
+            label={t('metaData/paynote/form/bodyBottom')}
             name='bodyBottom'
             value={data.bodyBottom}
             onChange={(e, value) =>
@@ -139,7 +139,7 @@ export default withT(({ t, data, onInputChange }) => {
           />
           {!data.isTrynote && (
             <Field
-              label='footer cta'
+              label={t('metaData/paynote/form/ctaBottom')}
               name='ctaBottom'
               value={data.ctaBottom}
               onChange={(e, value) =>
