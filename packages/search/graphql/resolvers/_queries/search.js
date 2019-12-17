@@ -34,6 +34,7 @@ const { getIndexAlias, getDateIndex } = require('../../../lib/utils')
 
 const reduceFilters = filterReducer(documentSchema)
 const createElasticFilter = elasticFilterBuilder(documentSchema)
+const schemaAggregations = extractAggs(documentSchema)
 
 const getFieldList = require('@orbiting/graphql-list-fields')
 
@@ -79,25 +80,16 @@ const createShould = function (
 
     if (searchTerm) {
       must = [
-        { multi_match: {
-          query: searchTerm,
-          type: 'best_fields',
-          fields
-        } }
+        {
+          simple_query_string: {
+            query: searchTerm,
+            fields,
+            default_operator: 'AND'
+          }
+        }
       ]
 
-      should = [
-        { multi_match: {
-          query: searchTerm,
-          type: 'phrase',
-          fields
-        } },
-        { multi_match: {
-          query: searchTerm,
-          type: 'cross_fields',
-          fields
-        } }
-      ]
+      should = []
     }
 
     const rolebasedFilterArgs = Object.assign(
@@ -159,7 +151,7 @@ const createHighlight = (indicesList) => {
   return { fields }
 }
 
-const defaultExcludes = [ 'contentString', 'resolved' ]
+const defaultExcludes = ['contentString', 'resolved']
 const createQuery = (
   searchTerm, filter, sort, indicesList, user, scheduledAt, withoutChildren, withoutAggs, ignorePrepublished
 ) => ({
@@ -173,13 +165,13 @@ const createQuery = (
   sort: createSort(sort),
   highlight: createHighlight(indicesList),
   stored_fields: ['contentString.count'],
-  ...withoutAggs ? {} : { aggs: extractAggs(documentSchema) },
+  ...withoutAggs ? {} : { aggs: schemaAggregations },
   _source: {
-    'excludes': [
+    excludes: [
       ...defaultExcludes,
       ...withoutChildren
-        ? [ 'content.children' ]
-        : [ ]
+        ? ['content.children']
+        : []
     ]
   }
 })
@@ -410,7 +402,7 @@ const search = async (__, args, context, info) => {
   debug('ES query', JSON.stringify(query))
 
   let result = await cache.get(query)
-  let cacheHIT = !!result
+  const cacheHIT = !!result
   if (!result) {
     result = await elastic.search(query)
     await cache.set(query, result, options)
