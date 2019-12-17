@@ -91,6 +91,7 @@ Promise.props({ pgdb: PgDb.connect() }).then(async (connections) => {
       name: [user.firstName, user.lastName].join(' '),
       email: user.email,
       location: address && [address.city, address.country].join(', '),
+      postalCode: address && address.postalCode,
       ...questions.reduce(
         (flat, question) => {
           const answer = answers.find(a => a.question === question)
