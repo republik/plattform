@@ -47,10 +47,34 @@ const {
 
 const DEV = process.env.NODE_ENV && process.env.NODE_ENV !== 'production'
 
+const FUZZINESS_WORD_LENGTH_THRESHOLD = 5
+
 const deepMergeArrays = function (objValue, srcValue) {
   if (_.isArray(objValue)) {
     return objValue.concat(srcValue)
   }
+}
+
+const getSimpleQueryStringQuery = (searchTerm) => {
+  const sanitizedSearchTerm = searchTerm.trim()
+
+  if (sanitizedSearchTerm.match(/[+|\-"*()~]/g)) {
+    return sanitizedSearchTerm
+  }
+
+  // split search term and stitch together with fuzzy per word
+  const fuzzySearchTerm = sanitizedSearchTerm
+    .split(/\s/)
+    .map(term => term.length >= FUZZINESS_WORD_LENGTH_THRESHOLD ? `${term}~` : term)
+    .join(' ')
+
+  debug('getSimpleQueryStringQuery', {
+    searchTerm,
+    sanitizedSearchTerm,
+    fuzzySearchTerm
+  })
+
+  return fuzzySearchTerm
 }
 
 const createShould = function (
@@ -63,8 +87,6 @@ const createShould = function (
     let must = {
       match_all: {}
     }
-
-    let should = []
 
     let fields = Object.keys(search.termFields)
 
@@ -82,14 +104,12 @@ const createShould = function (
       must = [
         {
           simple_query_string: {
-            query: searchTerm,
+            query: getSimpleQueryStringQuery(searchTerm),
             fields,
             default_operator: 'AND'
           }
         }
       ]
-
-      should = []
     }
 
     const rolebasedFilterArgs = Object.assign(
@@ -127,7 +147,6 @@ const createShould = function (
     queries.push({
       bool: {
         must,
-        should,
         filter
       }
     })
