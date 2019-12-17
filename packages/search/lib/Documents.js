@@ -115,9 +115,8 @@ const schema = {
     criteria: termCriteriaBuilder('milestoneCommitId')
   },
   userId: {
-    ...termEntry('meta.credits.url'),
-    parser: (value) => `/~${value}`,
-    noIndexTypeImplication: true
+    criteria: termCriteriaBuilder('meta.credits.url'),
+    parser: (value) => `/~${value}`
   },
   publishedAt: {
     criteria: dateRangeCriteriaBuilder('meta.publishDate'),
@@ -129,9 +128,7 @@ const schema = {
   },
   feed: countEntry('meta.feed'),
   discussion: {
-    criteria: hasCriteriaBuilder('meta.discussionId'),
-    agg: valueCountAggBuilder('meta.discussionId'),
-    noIndexTypeImplication: true
+    criteria: termCriteriaBuilder('meta.discussionId')
   },
   audioSource: {
     criteria: hasCriteriaBuilder('meta.audioSource'),
@@ -147,25 +144,37 @@ const schema = {
     options: {
       filter: {
         bool: {
-          must: { exists: {
-            field: 'contentString.count'
-          } },
-          must_not: { terms: {
-            'meta.template': ['format', 'discussion']
-          } }
+          must: {
+            exists: {
+              field: 'contentString.count'
+            }
+          },
+          must_not: {
+            terms: {
+              'meta.template': ['format', 'discussion']
+            }
+          }
         }
       },
       ranges: [
-        { key: 'short',
-          to: getWordsPerMinute() * SHORT_DURATION_MINS },
-        { key: 'medium',
+        {
+          key: 'short',
+          to: getWordsPerMinute() * SHORT_DURATION_MINS
+        },
+        {
+          key: 'medium',
           from: getWordsPerMinute() * SHORT_DURATION_MINS,
-          to: getWordsPerMinute() * MIDDLE_DURATION_MINS },
-        { key: 'long',
+          to: getWordsPerMinute() * MIDDLE_DURATION_MINS
+        },
+        {
+          key: 'long',
           from: getWordsPerMinute() * MIDDLE_DURATION_MINS,
-          to: getWordsPerMinute() * LONG_DURATION_MINS },
-        { key: 'epic',
-          from: getWordsPerMinute() * LONG_DURATION_MINS }
+          to: getWordsPerMinute() * LONG_DURATION_MINS
+        },
+        {
+          key: 'epic',
+          from: getWordsPerMinute() * LONG_DURATION_MINS
+        }
       ]
     }
   }
@@ -410,7 +419,7 @@ const switchState = async function (elastic, state, repoId, docId) {
           ],
           should: queries,
           must_not: [
-            { term: { '_id': docId } }
+            { term: { _id: docId } }
           ]
         }
       },
@@ -444,7 +453,7 @@ const resetScheduledAt = async function (
             { term: { 'meta.prepublication': isPrepublication } }
           ],
           must_not: [
-            { term: { '_id': docId } }
+            { term: { _id: docId } }
           ]
         }
       },
@@ -701,13 +710,21 @@ const findPublished = async function (elastic, repoId) {
         bool: {
           must: [
             { term: { 'meta.repoId': repoId } },
-            { bool: { should: [
-              { term: { '__state.published': true } },
-              { bool: { must: [
-                { term: { 'meta.prepublication': false } },
-                { exists: { field: 'meta.scheduledAt' } }
-              ] } }
-            ] } }
+            {
+              bool: {
+                should: [
+                  { term: { '__state.published': true } },
+                  {
+                    bool: {
+                      must: [
+                        { term: { 'meta.prepublication': false } },
+                        { exists: { field: 'meta.scheduledAt' } }
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
           ]
         }
       }
