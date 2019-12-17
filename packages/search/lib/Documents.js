@@ -13,6 +13,8 @@ const {
   }
 } = require('@orbiting/backend-modules-documents/lib')
 
+const { mdastToString } = require('@orbiting/backend-modules-utils')
+
 const {
   termEntry,
   countEntry,
@@ -34,7 +36,7 @@ const {
 
 const createCache = require('./cache')
 
-const { getIndexAlias } = require('./utils')
+const { getIndexAlias, mdastFilter } = require('./utils')
 
 const SHORT_DURATION_MINS = 5
 const MIDDLE_DURATION_MINS = 15
@@ -198,9 +200,6 @@ const schema = {
     }
   }
 }
-
-const mdastToString = require('mdast-util-to-string')
-const { mdastFilter } = require('./utils.js')
 
 const getElasticDoc = (
   { doc, commitId, versionName, milestoneCommitId, resolved }
