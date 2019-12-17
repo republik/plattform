@@ -15,7 +15,6 @@ const {
 const createCache = require('../../lib/cache')
 const { getLastEndDate } = require('../../lib/utils')
 const getStripeClients = require('../../lib/payments/stripe/clients')
-const { isExpired } = require('./PaymentSource')
 
 const { DISABLE_RESOLVER_USER_CACHE } = process.env
 const QUERY_CACHE_TTL_SECONDS = 60 * 60 * 24 // 1 day
@@ -80,17 +79,24 @@ module.exports = {
     }
     return null
   },
-  async prolongBeforeDate (user, { ignoreClaimedMemberships = false }, context) {
+  async prolongBeforeDate (
+    user,
+    {
+      ignoreClaimedMemberships = false,
+      ignoreAutoPayFlag = false
+    },
+    context
+  ) {
     const { pgdb, user: me } = context
     debug('prolongBeforeDate')
 
     Roles.ensureUserIsMeOrInRoles(user, me, ['admin', 'supporter'])
 
-    const cache = createCache({
-      prefix: `User:${user.id}`,
-      key: `prolongBeforeDate-${ignoreClaimedMemberships}`,
-      ttl: QUERY_CACHE_TTL_SECONDS
-    }, context)
+    const cache = createMembershipCache(
+      user,
+      `prolongBeforeDate-${ignoreClaimedMemberships}-${ignoreAutoPayFlag}`,
+      context
+    )
 
     return cache.cache(async function () {
       let memberships = await pgdb.public.memberships.find({
@@ -112,7 +118,6 @@ module.exports = {
         activeMembership.membershipType.name === 'ABO_GIVE_MONTHS'
       ) {
         debug('active membership type "ABO_GIVE_MONTHS", return prolongBeforeDate: null')
-
         return null
       }
 
@@ -129,7 +134,6 @@ module.exports = {
 
       if (eligableMemberships.length < 1) {
         debug('found no prolongable membership, return prolongBeforeDate: null')
-
         return null
       }
 
@@ -146,6 +150,13 @@ module.exports = {
         return null
       }
 
+      const lastEndDate = moment(getLastEndDate(allMembershipPeriods))
+
+      if (!ignoreAutoPayFlag && activeMembership.autoPay && lastEndDate > moment().subtract(1, 'day')) {
+        debug('active membership set to auto-pay and not overdue, return prolongBeforeDate: null')
+        return null
+      }
+
       const hasPendingPledges =
         !!activeMembership && await pgdb.public.query(`
           SELECT "pledges".* FROM "pledges"
@@ -158,11 +169,8 @@ module.exports = {
           ;
         `, { activeMembershipId: activeMembership.id })
 
-      const now = moment()
-      const lastEndDate = moment(getLastEndDate(allMembershipPeriods))
-
       // Check if there are pending pledges, and last end date is not in future.
-      if (hasPendingPledges.length > 0 && lastEndDate > now) {
+      if (hasPendingPledges.length > 0 && lastEndDate > moment()) {
         debug('pending pledge and not overdue, return prolongBeforeDate: null')
         return null
       }
@@ -177,24 +185,13 @@ module.exports = {
     return []
   },
   async paymentSources (user, args, { pgdb, user: me }) {
-    if (Roles.userIsMeOrInRoles(user, me, ['admin'])) {
+    if (
+      Roles.userIsMeOrInRoles(user, me, ['admin']) ||
+      isFieldExposed(user, 'paymentSources')
+    ) {
       return getPaymentSources(user, pgdb)
     }
     return []
-  },
-  async hasChargableSource (user, args, context) {
-    const { pgdb, user: me } = context
-    if (
-      Roles.userIsMeOrInRoles(user, me, ['admin']) ||
-      isFieldExposed(user, 'hasChargableSource')
-    ) {
-      return getPaymentSources(user, pgdb)
-        .then(sources =>
-          !!sources
-            .filter(source => !isExpired(source, {}, context))
-            .length
-        )
-    }
   },
   async checkMembershipSubscriptions (user, args, { pgdb, user: me }) {
     Roles.ensureUserIsMeOrInRoles(user, me, ['supporter'])
@@ -246,11 +243,7 @@ module.exports = {
 
     Roles.ensureUserIsMeOrInRoles(user, me, ['admin', 'supporter'])
 
-    const cache = createCache({
-      prefix: `User:${user.id}`,
-      key: 'isBonusEligable',
-      ttl: QUERY_CACHE_TTL_SECONDS
-    }, context)
+    const cache = createMembershipCache(user, 'isBonusEligable', context)
 
     return cache.cache(async function () {
       const allPeriods = (await getCustomPackages({ user, pgdb }))

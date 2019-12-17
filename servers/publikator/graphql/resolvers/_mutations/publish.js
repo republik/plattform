@@ -10,7 +10,6 @@ const {
   upsertRef,
   deleteRef
 } = require('../../../lib/github')
-const { channelKey } = require('../../../lib/PublicationScheduler')
 const {
   createCampaign,
   updateCampaignContent,
@@ -39,9 +38,11 @@ const {
     }
   }
 } = require('@orbiting/backend-modules-documents')
-const { lib: {
-  Repo: { uploadImages }
-} } = require('@orbiting/backend-modules-assets')
+const {
+  lib: {
+    Repo: { uploadImages }
+  }
+} = require('@orbiting/backend-modules-assets')
 const uniq = require('lodash/uniq')
 const { upsert: repoCacheUpsert } = require('../../../lib/cache/upsert')
 
@@ -150,9 +151,9 @@ module.exports = async (
   const resolvedDoc = JSON.parse(JSON.stringify(doc))
 
   const utmParams = {
-    'utm_source': 'newsletter',
-    'utm_medium': 'email',
-    'utm_campaign': repoId
+    utm_source: 'newsletter',
+    utm_medium: 'email',
+    utm_campaign: repoId
   }
 
   const searchString = '?' + querystring.stringify(utmParams)
@@ -335,7 +336,7 @@ module.exports = async (
       gitOps = gitOps.concat(
         upsertRef(
           repoId,
-          `tags/prepublication`,
+          'tags/prepublication',
           milestone.sha
         )
       )
@@ -375,6 +376,17 @@ module.exports = async (
     resolved.meta.format = formats.pop()
   }
 
+  if (doc.content.meta.section) {
+    const sections = await findTemplates(
+      elastic,
+      'section',
+      doc.content.meta.section
+    )
+
+    if (!resolved.meta) resolved.meta = {}
+    resolved.meta.section = sections.pop()
+  }
+
   // publish to elasticsearch
   const elasticDoc = getElasticDoc({
     indexName: getIndexAlias(indexType.toLowerCase(), 'write'),
@@ -398,8 +410,6 @@ module.exports = async (
     meta: repoMeta,
     publications: await getLatestPublications({ id: repoId })
   }, context)
-
-  await redis.publishAsync(channelKey, 'refresh')
 
   // release for nice view on github
   // this is optional, the release is not read back again

@@ -293,14 +293,14 @@ const parseOptions = (options) => {
 
 const MAX_NODES = 10000 // Limit, but exceedingly high
 
-const getFirst = (first, filter, user, recursive) => {
+const getFirst = (first, filter, user, recursive, unrestricted) => {
   // we only restrict the nodes array
   // making totalCount always available
   // querying a single document by path is always allowed
   const path = getFilterValue(filter, 'path')
   const repoId = getFilterValue(filter, 'repoId')
   const oneRepoId = repoId && (!Array.isArray(repoId) || repoId.length === 1)
-  if (DOCUMENTS_RESTRICT_TO_ROLES && !recursive && !path && !oneRepoId) {
+  if (DOCUMENTS_RESTRICT_TO_ROLES && !recursive && !path && !oneRepoId && !unrestricted) {
     const roles = DOCUMENTS_RESTRICT_TO_ROLES.split(',')
     if (!userIsInRoles(user, roles)) {
       return 0
@@ -340,6 +340,7 @@ const search = async (__, args, context, info) => {
     after,
     before,
     recursive = false,
+    unrestricted = false,
     scheduledAt,
     ignorePrepublished,
     trackingId = uuid(),
@@ -390,7 +391,7 @@ const search = async (__, args, context, info) => {
 
   debug('filter', JSON.stringify(filter))
 
-  const first = getFirst(_first, filter, user, recursive)
+  const first = getFirst(_first, filter, user, recursive, unrestricted)
 
   const indicesList = getIndicesList(filter)
   const query = {

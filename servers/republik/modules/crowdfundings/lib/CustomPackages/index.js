@@ -2,6 +2,7 @@ const debug = require('debug')('crowdfundings:lib:CustomPackages')
 const moment = require('moment')
 const uuid = require('uuid/v4')
 const Promise = require('bluebird')
+const { ascending, descending } = require('d3-array')
 
 const { applyPgInterval: { add: addInterval } } = require('@orbiting/backend-modules-utils')
 
@@ -16,7 +17,11 @@ const EXTENDABLE_PACKAGE_NAMES = ['ABO', 'BENEFACTOR']
 const OPTIONS_REQUIRE_CLAIMER = ['BENEFACTOR_ABO']
 
 // for a user to prolong
-const findEligableMemberships = ({ memberships, user, ignoreClaimedMemberships = false }) =>
+const findEligableMemberships = ({
+  memberships,
+  user,
+  ignoreClaimedMemberships = false
+}) =>
   memberships.filter(m => {
     const isCurrentClaimer = m.userId === user.id
 
@@ -47,7 +52,7 @@ const findEligableMemberships = ({ memberships, user, ignoreClaimedMemberships =
 
     return isCurrentClaimer &&
       (isExtendable || isClaimedMembership || isSelfClaimed) &&
-      (!ignoreClaimedMemberships || (ignoreClaimedMemberships && !isClaimedMembership))
+      (!ignoreClaimedMemberships || !isClaimedMembership)
   })
 
 const findDormantMemberships = ({ memberships, user }) =>
@@ -88,115 +93,109 @@ const evaluate = async ({
 }) => {
   debug('evaluate')
 
-  const { reward, membershipType: packageOptionMembershipType } = packageOption
+  const { membershipType: packageOptionMembershipType } = packageOption
   const { membershipType, membershipPeriods } = membership
+
   const now = moment()
 
   const payload = {
     ...packageOption,
+    ...packageOption.reward.type === 'MembershipType' && { id: [packageOption.id, membership.id].join('-') },
     templateId: packageOption.id,
     package: package_,
-    id: [ packageOption.id, membership.id ].join('-'),
     membership,
-    optionGroup: reward.type === 'MembershipType' ? membership.id : false,
+    optionGroup: membership.id,
     additionalPeriods: []
   }
 
-  // Is user membership next to another active user membership?
-  // If there is an active membership, user should only be able to extend
-  // the active membership
-  if (
-    !membership.active &&
-    membership.user.id === package_.user.id &&
-    package_.user.memberships.find(m => m.active)
-  ) {
-    debug('membership next to an active membership')
-    return false
-  }
-
-  // Can membership.membershipType be extended?
-  // Not all membershipTypes can be extended
-  if (!EXTENDABLE_MEMBERSHIP_TYPES.includes(membershipType.name)) {
-    debug('not extenable membershipType "%s"', membershipType.name)
-    return false
-  }
-
-  // Check whether option requires user to be current claimer of membership.
-  if (
-    packageOption.membershipType &&
-    OPTIONS_REQUIRE_CLAIMER.includes(packageOption.membershipType.name) &&
-    membership.userId !== package_.user.id
-  ) {
-    debug(
-      'only owner can extend membership w/ membershipType "%s"',
-      packageOption.membershipType.name
-    )
-    return false
-  }
-
-  // Has membership any membershipPeriods?
-  // Indicates whether a membership is or was active. Only those can be
-  // extended.
-  if (membershipPeriods.length === 0) {
-    debug('membership has no membershipPeriods')
-    return false
-  }
-
-  let lastEndDate = getPeriodEndingLast(membershipPeriods).endDate
-
-  // A membership can be renewed 364 days before it ends at the most
-  if (!lenient && moment(lastEndDate).isAfter(now.clone().add(364, 'days'))) {
-    debug('membership lasts more than 364 days', lastEndDate)
-    return false
-  }
-
-  const lastEndDateWithGracePeriod = addInterval(
-    lastEndDate,
-    membership.graceInterval
-  )
-
-  /**
-   * Usually, we want to extend an existing series of periods. We therefor
-   * suggest a new period which start where the last one ends.
-   *
-   * In some cases this is not desired, and requires to set `lastEndDate`
-   * to `now` if...
-   * a) ... membership is active and `lastEndDate` plus a grace period is over
-   * b) ... membership is inactive and `lastEndDate` is over
-   *
-   */
-  if (
-    (membership.active && lastEndDateWithGracePeriod < now) ||
-    (!membership.active && lastEndDate < now)
-  ) {
-    lastEndDate = now
-  }
-
-  // Add a regular period this packageOption would cause.
-  const beginEnd = {
-    beginDate: lastEndDate,
-    endDate: moment(lastEndDate).add(
-      packageOptionMembershipType.defaultPeriods, packageOptionMembershipType.interval
-    )
-  }
-
-  payload.additionalPeriods.push({
-    id: uuid(),
-    membershipId: membership.id,
-    kind: 'REGULAR',
-    createdAt: now,
-    updatedAt: now,
-    ...beginEnd
-  })
-
-  // Apply package rules
-  await Promise.each(package_.rules, rule => {
-    if (rules[rule]) {
-      return rules[rule]({ package_, packageOption, membership, payload, now })
+  if (packageOption.reward.type === 'MembershipType') {
+    // Is user membership next to another active user membership?
+    // If there is an active membership, user should only be able to extend
+    // the active membership
+    if (
+      !membership.active &&
+      membership.user.id === package_.user.id &&
+      package_.user.memberships.find(m => m.active)
+    ) {
+      debug('membership next to an active membership')
+      return false
     }
-  })
 
-  if (reward.type === 'MembershipType') {
+    // Can membership.membershipType be extended?
+    // Not all membershipTypes can be extended
+    if (!EXTENDABLE_MEMBERSHIP_TYPES.includes(membershipType.name)) {
+      debug('not extenable membershipType "%s"', membershipType.name)
+      return false
+    }
+
+    // Check whether option requires user to be current claimer of membership.
+    if (
+      packageOption.membershipType &&
+      OPTIONS_REQUIRE_CLAIMER.includes(packageOption.membershipType.name) &&
+      membership.userId !== package_.user.id
+    ) {
+      debug(
+        'only owner can extend membership w/ membershipType "%s"',
+        packageOption.membershipType.name
+      )
+      return false
+    }
+
+    // Has membership any membershipPeriods?
+    // Indicates whether a membership is or was active. Only those can be
+    // extended.
+    if (membershipPeriods.length === 0) {
+      debug('membership has no membershipPeriods')
+      return false
+    }
+
+    let lastEndDate = getPeriodEndingLast(membershipPeriods).endDate
+
+    // A membership can be renewed 364 days before it ends at the most
+    if (!lenient && moment(lastEndDate).isAfter(now.clone().add(364, 'days'))) {
+      debug('membership lasts more than 364 days', lastEndDate)
+      return false
+    }
+
+    const lastEndDateWithGracePeriod = addInterval(
+      lastEndDate,
+      membership.graceInterval
+    )
+
+    /**
+     * Usually, we want to extend an existing series of periods. We therefor
+     * suggest a new period which start where the last one ends.
+     *
+     * In some cases this is not desired, and requires to set `lastEndDate`
+     * to `now` if...
+     * a) ... membership is active and `lastEndDate` plus a grace period is over
+     * b) ... membership is inactive and `lastEndDate` is over
+     *
+     */
+    if (
+      (membership.active && lastEndDateWithGracePeriod < now) ||
+      (!membership.active && lastEndDate < now)
+    ) {
+      lastEndDate = now
+    }
+
+    // Add a regular period this packageOption would cause.
+    const beginEnd = {
+      beginDate: lastEndDate,
+      endDate: moment(lastEndDate).add(
+        packageOptionMembershipType.defaultPeriods, packageOptionMembershipType.interval
+      )
+    }
+
+    payload.additionalPeriods.push({
+      id: uuid(),
+      membershipId: membership.id,
+      kind: 'REGULAR',
+      createdAt: now,
+      updatedAt: now,
+      ...beginEnd
+    })
+
     // If membership stems from ABO_GIVE_MONTHS package, default ABO option
     if (membership.pledge.package.name === 'ABO_GIVE_MONTHS') {
       if (packageOption.membershipType.name === 'ABO') {
@@ -216,6 +215,30 @@ const evaluate = async ({
     }
   }
 
+  // Apply package rules. Rules may pass or not, and may mutate payload.
+  const passed = await Promise.map(package_.rules, rule => {
+    if (rules[rule]) {
+      return rules[rule]({ package_, packageOption, membership, payload, now })
+    }
+
+    // If a rule is not available, do not pass.
+    return false
+  })
+
+  // Check if all rules passed
+  if (passed.length > 0 && passed.some(r => !r)) {
+    debug('one or more rules did not pass')
+    return false
+  }
+
+  // Return bare packageOption w/ templateId if not a MembershipType reward.
+  if (packageOption.reward.type !== 'MembershipType') {
+    return {
+      ...packageOption,
+      templateId: packageOption.id
+    }
+  }
+
   return payload
 }
 
@@ -225,12 +248,15 @@ const getCustomOptions = async (package_) => {
 
   const { packageOptions } = package_
 
-  const results = []
+  const options = []
+
+  const hasMembershipTypePackageOptions = !!packageOptions.filter(option => option.reward.type === 'MembershipType').length
 
   await Promise.map(package_.user.memberships, membership => {
     return Promise.map(packageOptions, async packageOption => {
       const { user } = package_
       if (
+        hasMembershipTypePackageOptions &&
         membership.active &&
         membership.userId === user.id &&
         hasDormantMembership({
@@ -242,30 +268,46 @@ const getCustomOptions = async (package_) => {
         return false
       }
 
-      results.push(await evaluate({ package_, packageOption, membership }))
+      const evaluatedOption = await evaluate({ package_, packageOption, membership })
+
+      // Add option if there it is not in options already, determine
+      // by option.id.
+      if (evaluatedOption && !options.find(option => option.id === evaluatedOption.id)) {
+        options.push(evaluatedOption)
+      }
     })
   })
 
-  return results
+  if (
+    hasMembershipTypePackageOptions &&
+    !options.filter(Boolean).find(option => option.reward.type === 'MembershipType')
+  ) {
+    return []
+  }
+
+  return options
     .filter(Boolean)
     // Sort by price
-    .sort((a, b) => a.price > b.price ? 1 : 0)
+    .sort((a, b) => descending(a.price, b.price))
     // Sort by defaultAmount
-    .sort((a, b) => a.defaultAmount < b.defaultAmount ? 1 : 0)
+    .sort((a, b) => descending(a.defaultAmount, b.defaultAmount))
     // Sort by sequenceNumber in an ascending manner
-    .sort(
-      (a, b) =>
-        a.membership.sequenceNumber < b.membership.sequenceNumber ? 1 : 0
-    )
+    .sort((a, b) => ascending(
+      a.membership && a.membership.sequenceNumber,
+      b.membership && b.membership.sequenceNumber
+    ))
     // Sort by membership "endDate", ascending
-    .sort((a, b) => {
-      const aDate = getLastEndDate(a.membership.membershipPeriods)
-      const bDate = getLastEndDate(b.membership.membershipPeriods)
-
-      return aDate < bDate ? 1 : 0
-    })
+    .sort((a, b) => ascending(
+      a.membership && getLastEndDate(a.membership.membershipPeriods),
+      b.membership && getLastEndDate(b.membership.membershipPeriods)
+    ))
     // Sort by userID, own ones up top.
-    .sort((a, b) => a.membership.userId !== package_.user.id ? 1 : 0)
+    .sort((a, b) => descending(
+      a.membership && a.membership.userId === package_.user.id,
+      b.membership && b.membership.userId === package_.user.id
+    ))
+    // Sort by sortOrder at lat
+    .sort((a, b) => ascending(a.order, b.order))
 }
 
 /*
@@ -288,8 +330,8 @@ const getCustomOptions = async (package_) => {
     }
   }
 */
-const resolvePackages = async ({ packages, pledger = {}, pgdb }) => {
-  debug('resolvePackages', packages.length)
+const resolvePackages = async ({ packages, pledger = {}, strict = false, pgdb }) => {
+  debug('resolvePackages', { packages: packages.length, strict })
 
   if (packages.length === 0) {
     debug('no packages to resolve')
@@ -348,15 +390,23 @@ const resolvePackages = async ({ packages, pledger = {}, pgdb }) => {
 
   Object.assign(pledger, { memberships })
 
+  const now = moment()
+
   const allPackageOptions =
     await pgdb.public.packageOptions.find({
-      packageId: packages.map(package_ => package_.id)
+      packageId: packages.map(package_ => package_.id),
+      and: [
+        { or: [{ 'disabledAt >': now }, { disabledAt: null }] },
+        strict && { or: [{ 'hiddenAt >': now }, { hiddenAt: null }] }
+      ].filter(Boolean)
     })
 
   const allRewards =
-    await pgdb.public.rewards.find({
-      id: allPackageOptions.map(option => option.rewardId)
-    })
+    allPackageOptions.length > 0
+      ? await pgdb.public.rewards.find({
+        id: allPackageOptions.map(option => option.rewardId)
+      })
+      : []
 
   const allGoodies =
     allRewards.length > 0
@@ -381,25 +431,25 @@ const resolvePackages = async ({ packages, pledger = {}, pgdb }) => {
     allRewards[index] = Object.assign({}, reward, membershipType, goodie)
   })
 
-  return Promise
-    .map(packages, async package_ => {
-      const packageOptions = allPackageOptions
-        .filter(packageOption => packageOption.packageId === package_.id)
-        .map(packageOption => {
-          const reward = allRewards
-            .find(reward => packageOption.rewardId === reward.rewardId)
-          const membershipType = allMembershipTypes.find(
-            membershipType => packageOption.rewardId === membershipType.rewardId
-          )
+  const resolvedPackages = await Promise.map(packages, async package_ => {
+    const packageOptions = allPackageOptions
+      .filter(packageOption => packageOption.packageId === package_.id)
+      .map(packageOption => {
+        const reward = allRewards
+          .find(reward => packageOption.rewardId === reward.rewardId)
+        const membershipType = allMembershipTypes.find(
+          membershipType => packageOption.rewardId === membershipType.rewardId
+        )
 
-          return { ...packageOption, reward, membershipType }
-        })
+        return { ...packageOption, reward, membershipType }
+      })
 
-      Object.assign(package_, { packageOptions, user: pledger })
+    Object.assign(package_, { packageOptions, user: pledger })
 
-      return package_
-    })
-    .filter(Boolean)
+    return package_
+  })
+
+  return resolvedPackages.sort((a, b) => ascending(a.order, b.order))
 }
 
 const resolveMemberships = async ({ memberships, pgdb }) => {

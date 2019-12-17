@@ -49,11 +49,15 @@
                     <p>Um den Geschenkcode einzulösen, muss der neue Besitzer oder die neue Besitzerin nur auf die Seite <a href="{{link_claim}}">{{link_claim}}</a> gehen. Und ihn dort eingeben.</p>
 
                     {{#if goodies_count}}
-                      {{#if `goodies_count == 1`}}
-                        <p>Auch Ihr bestelltes Republik-Objekt eignet sich perfekt für die Code-Übergabe. Wir werden es Ihnen innerhalb der nächsten 7 Werktage per Post zustellen.</p>
-                      {{elseif `goodies_count > 1`}}
-                        <p>Auch Ihre bestellten Republik-Objekte eignen sich perfekt für die Code-Übergabe. Wir werden sie Ihnen innerhalb der nächsten 7 Werktage per Post zustellen.</p>
-                      {{/if}}
+                      <p>
+                        {{#if `goodies_count == 1`}}
+                          Auch Ihr bestelltes Republik-Objekt eignet sich perfekt für die Code-Übergabe.
+                        {{elseif `goodies_count > 1`}}
+                          Auch Ihre bestellten Republik-Objekte eignen sich perfekt für die Code-Übergabe.
+                        {{/if}}
+
+                        Bücher und Taschen liefern wir innerhalb von 7 Werktagen.
+                      </p>
 
                       <ul>
                         {{#options}}

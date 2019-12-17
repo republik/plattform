@@ -1,0 +1,94 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="x-ua-compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <!--[if gte mso 15]>
+    <xml>
+      <o:officedocumentsettings>
+        <o:allowpng />
+        <o:pixelsperinch>96</o:pixelsperinch>
+      </o:officedocumentsettings>
+    </xml>
+    <![endif]-->
+    <style type="text/css">
+      {{sg_font_faces}}
+    </style>
+    <style type="text/css">
+      p {
+        color:#282828;font-size:17px;line-height:24px;
+        {{sg_font_style_sans_serif_regular}}
+      }
+      p strong {
+        {{sg_font_style_sans_serif_medium}}
+      }
+    </style>
+  </head>
+  <body style="margin: 0; padding: 0; background-color: #fff;">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tbody>
+        <tr>
+          <td align="center" valign="top">
+            <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width:640px;color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}">
+              <tbody>
+                <tr>
+                  <td style="padding:20px;">
+                    <p>
+                      Sehr geehrte Dame<br />
+                      Sehr geehrter Herr
+                    </p>
+                    <p>Am {{end_date}} erneuert sich Ihre Mitgliedschaft um ein weiteres Jahr. Herzlichen Dank für Ihre Unterstützung. Wir sind sehr froh, Sie an Bord zu wissen.</p>
+                    <p>Bei Ihrem letzten Kauf haben Sie angegeben, dass Sie uns erlauben, Ihre hinterlegte Kreditkarte automatisch zu belasten.</p>
+                    <p>Diese E-Mail informiert Sie darüber, dass wir das in {{days_left}} Tagen tatsächlich und unverfroren tun werden: Ihre {{autopay_card_brand}}-Kreditkarte mit den Endziffern {{autopay_card_last4}} belasten wir am {{end_date}} mit {{autopay_total}}.</p>
+                    {{#if `autopay_membership_type == "BENEFACTOR_ABO"`}}
+                      {{#if autopay_with_donation}}
+                        <p>Dieser Beitrag kommt zustande, weil Sie die Republik im letzten Jahr grosszügigerweise mit einer Gönner-Mitgliedschaft und einer zusätzlichen Spende unterstützt haben. Durch Sie ist unsere Unabhängigkeit, unsere Werbefreiheit, ja unsere Existenz erst möglich. Wir bedanken uns von ganzem Herzen und hoffen, dass Sie sich und uns treu bleiben und weiterhin in kompromisslosen Journalismus investieren. Sollten Sie es sich anders überlegen, können Sie <a href="{{prolong_url}}">Ihre Mitgliedschaft beziehungsweise die Höhe Ihres Spendenbeitrags vor der Abbuchung noch anpassen</a>.</p>
+                      {{else}}
+                        <p>Dieser Beitrag kommt zustande, weil Sie die Republik im letzten Jahr grosszügigerweise mit einer Gönner-Mitgliedschaft unterstützt haben. Durch Sie ist unsere Unabhängigkeit, unsere Werbefreiheit, ja unsere Existenz erst möglich. Wir bedanken uns von ganzem Herzen und hoffen, dass Sie sich und uns treu bleiben und weiterhin in kompromisslosen Journalismus investieren. Sollten Sie es sich anders überlegen, können Sie <a href="{{prolong_url}}">Ihre Mitgliedschaft beziehungsweise die Höhe Ihres Spendenbeitrags vor der Abbuchung noch anpassen</a>.</p>
+                      {{/if}}
+                    {{else}}
+                      {{#if autopay_with_discount}}
+                        <p>Sie haben im letzten Jahr einen reduzierten Beitrag für Ihre Mitgliedschaft bezahlt. Da unsere Unabhängigkeit und Werbefreiheit, ja unsere Existenz von der Unterstützung unserer Verlegerinnen abhängt, wäre es grandios, wenn Sie <a href="{{prolong_url}}">Ihre Mitgliedschaft auf den regulären Beitrag von {{autopay_default_price}} anpassen</a> könnten.</p>
+                      {{elseif autopay_with_donation}}
+                        <p>Dieser Beitrag kommt zustande, weil Sie die Republik im letzten Jahr grosszügigerweise mit einer zusätzlichen Spende unterstützt haben. Durch Sie ist unsere Unabhängigkeit, unsere Werbefreiheit, ja unsere Existenz erst möglich. Wir bedanken uns von ganzem Herzen und hoffen, dass Sie sich und uns treu bleiben und weiterhin in kompromisslosen Journalismus investieren. Sollten Sie es sich anders überlegen, können Sie <a href="{{prolong_url}}">Ihre Mitgliedschaft beziehungsweise die Höhe Ihres Spendenbeitrags vor der Abbuchung noch anpassen</a>. </p>
+                      {{else}}
+                        <p>Sie haben sich im letzten Jahr für eine reguläre Mitgliedschaft entschieden. 
+Sollten Sie dieses Mal noch mehr in kompromisslosen, unabhängigen und werbefreien Journalismus investieren wollen und können, passen Sie doch <a href="{{prolong_url}}">Ihren Mitgliedsbeitrag vor der Abbuchung noch an</a>. Jede Spende macht einen Unterschied.</p>
+                      {{/if}}
+                    {{/if}}
+                    <p>Ausserdem können Sie bis zur Abbuchung falls gewünscht <a href="{{prolong_url}}">eine andere Kreditkarte hinterlegen, eine andere Zahlungsart wählen</a> oder <a href="{{cancel_url}}">Ihre Mitgliedschaft kündigen</a>.</p>
+                    <p>Wir melden uns erneut, sobald Ihr Abonnement erfolgreich verlängert wurde. In der Zwischenzeit können Sie sich bei Fragen unter <a href="mailto:kontakt@republik.ch">kontakt@republik.ch</a> melden.</p>
+                    <p>Herzlich</p>
+                    <p>Ihre Crew der Republik</p>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding:20px;">
+                    <p style="font-size:14px;line-height:20px;{{sg_font_style_sans_serif_regular}}">
+                      Die Republik ist ein unabhängiges und werbefreies digitales Magazin für Politik, Wirtschaft, Gesellschaft und Kultur. 
+                      Es wird von seinen Leserinnen und Lesern finanziert und erscheint von Montag bis Samstag mit täglich ein bis drei neuen Beiträgen. In der App, auf der Website und als Newsletter.
+                    </p>
+                    <p style="color:#282828;font-size:14px;line-height:20px;{{sg_font_style_sans_serif_regular}}">
+                      <img height="79" src="{{frontend_base_url}}/static/logo_republik_newsletter.png" style="border:0px;width:180px !important; height:79px !important;margin:0px;" width="180" alt="">
+                      <br>
+                      Republik AG<br>
+                      Sihlhallenstrasse 1, CH-8004 Zürich<br>
+                      <a href="{{frontend_base_url}}">www.republik.ch</a><br>
+                      <a href="mailto:kontakt@republik.ch">kontakt@republik.ch</a>
+                    </p>
+                    <p style="font-size:14px;line-height:20px;{{sg_font_style_sans_serif_regular}}">
+                        <a href="{{link_manifest}}">Unser Manifest</a><br />
+                        <a href="{{link_imprint}}">Das Impressum</a><br />
+                        <a href="{{link_faq}}">Häufig gestellte Fragen</a>
+                    </p>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </body>
+</html>

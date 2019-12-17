@@ -20,6 +20,10 @@
     "link": "yarn link"
   },
   "dependencies": {
+    "bluebird": "^3.5.4",
+    "d3-array": "^2.0.3",
+    "debug": "^4.1.1",
+    "mdast-util-to-string": "^1.0.5",
     "moment": "^2.24.0",
     "yargs": "^14.2.0"
   }

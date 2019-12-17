@@ -60,7 +60,9 @@ module.exports = {
       'resolved.meta.format.meta.title.keyword': {
         boost: 3
       },
-      'resolved.meta.format.meta.description': {}
+      'resolved.meta.format.meta.description': {},
+      'resolved.meta.section.meta.title.keyword': {},
+      'resolved.meta.section.meta.description': {}
     },
     filter: {
       default: () => {
@@ -222,6 +224,35 @@ module.exports = {
           properties: {
             meta: {
               properties: {
+                section: {
+                  properties: {
+                    meta: {
+                      properties: {
+                        title: {
+                          type: 'text',
+                          analyzer: 'german',
+                          fields: {
+                            keyword: {
+                              type: 'keyword',
+                              normalizer: 'republik_strict',
+                              ignore_above: 256
+                            }
+                          }
+                        },
+                        description: {
+                          type: 'text',
+                          analyzer: 'german'
+                        },
+                        kind: {
+                          type: 'keyword'
+                        },
+                        template: {
+                          type: 'keyword'
+                        }
+                      }
+                    }
+                  }
+                },
                 format: {
                   properties: {
                     meta: {
@@ -365,6 +396,9 @@ module.exports = {
               type: 'keyword'
             },
             format: {
+              type: 'keyword'
+            },
+            section: {
               type: 'keyword'
             },
             kind: {

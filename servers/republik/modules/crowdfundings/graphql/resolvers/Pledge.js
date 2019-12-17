@@ -1,4 +1,5 @@
 const { Roles, transformUser } = require('@orbiting/backend-modules-auth')
+const { ascending, descending } = require('d3-array')
 
 module.exports = {
   async options (pledge, args, { pgdb, user: me }) {
@@ -43,17 +44,15 @@ module.exports = {
           { id }
         )
       })
-      .sort(
-        (a, b) =>
-          a.order &&
-          b.order &&
-          a.order > b.order ? 1 : 0
-      )
+      // Sort by price
+      .sort((a, b) => descending(a.price, b.price))
+      // Sort by packageOption.order
+      .sort((a, b) => ascending(a.order, b.order))
   },
-  async package (pledge, args, {pgdb}) {
-    return pgdb.public.packages.findOne({id: pledge.packageId})
+  async package (pledge, args, { pgdb }) {
+    return pgdb.public.packages.findOne({ id: pledge.packageId })
   },
-  async user (pledge, args, {pgdb}) {
+  async user (pledge, args, { pgdb }) {
     const user = transformUser(await pgdb.public.users.findOne({
       id: pledge.userId
     }))
@@ -72,7 +71,7 @@ module.exports = {
       return []
     }
 
-    const pledgePayments = await pgdb.public.pledgePayments.find({pledgeId: pledge.id})
+    const pledgePayments = await pgdb.public.pledgePayments.find({ pledgeId: pledge.id })
     return pledgePayments.length
       ? pgdb.public.payments.find(
         { id: pledgePayments.map(pp => pp.paymentId) },
@@ -87,10 +86,10 @@ module.exports = {
       return []
     }
 
-    const memberships = await pgdb.public.memberships.find({pledgeId: pledge.id})
+    const memberships = await pgdb.public.memberships.find({ pledgeId: pledge.id })
     if (!memberships.length) return []
     // augment memberships with claimer's names
-    const users = await pgdb.public.users.find({id: memberships.map(m => m.userId)})
+    const users = await pgdb.public.users.find({ id: memberships.map(m => m.userId) })
     return memberships.map(membership => {
       if (membership.userId !== pledge.userId) { // membership was vouchered to somebody else
         const user = users.find(u => u.id === membership.userId)

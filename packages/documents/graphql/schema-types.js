@@ -47,6 +47,7 @@ type Meta {
   kind: String
   color: String
   series: Series
+  section: Document
   format: Document
   dossier: Document
 

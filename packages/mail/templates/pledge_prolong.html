@@ -37,7 +37,7 @@
                     <p>Guten Tag</p>
                     
                     {{#if `pledger_memberships_count > 0`}}
-                      <p>Schön, sind Sie weiterhin Teil unseres einzigartigen Projektes gegen den Zynismus, den Vormarsch der Autoritären und gegen die Diktatur der Angst.</p> 
+                      <p>Danke für Ihr Vertrauen. Mit Ihrer Verlängerung haben Sie bereits ein Stück Zukunft der Republik gesichert.</p> 
                       <p>Mit Ihrer Mitgliedschaft erhalten Sie von Montag bis Samstag ein hochwertiges digitales Magazin. Sie unterstützen aber auch eine wirklich unabhängige vierte Gewalt.</p>
                       <p>Denn: Die Republik steht für die Verteidigung der demokratischen Institutionen und die Werte der Aufklärung: für Treue zu Fakten, für Lösungen von Fall zu Fall, für Offenheit gegenüber Kritik, für Respektlosigkeit gegenüber der Macht und Respekt vor dem Menschen.</p>
                     {{/if}}
@@ -66,7 +66,11 @@
                     <ul>
                       {{#options}}
                         <li>
-                          {{this.olabel}}: {{this.ototal_formatted}}
+                          {{#if `this.oamount > 1`}}
+                            {{this.oamount}} {{this.olabel}} à {{this.oprice_formatted}}: {{this.ototal_formatted}}
+                          {{else}}
+                            {{this.oamount}} {{this.olabel}}: {{this.ototal_formatted}}
+                          {{/if}}
                         </li>
                       {{/options}}
                       {{#if discount}}
@@ -94,6 +98,21 @@
                     {{elseif `gifted_memberships_count > 1`}}
                       <p>Vielen Dank, dass Sie die Republik anderen zukommen lassen: Sie verlängern auch Ihre Geschenkabonnemente. Wir haben die Beschenkten darüber per E-Mail informiert.</p>
                     {{/if}}
+
+                    {{#unless waiting_for_payment}}
+                      {{#if goodies_count}}
+                        <p>
+                          {{#if `goodies_count == 1`}}
+                            Sie haben sich noch ein Republik-Objekt gegönnt.
+                          {{elseif `goodies_count > 1`}}
+                            Sie haben sich noch mehrere Republik-Objekte gegönnt.
+                          {{/if}}
+
+                          Bücher und Taschen liefern wir innerhalb von 7 Werktagen.
+                        </p>
+                        <p><strong>Stellen Sie dafür bitte sicher, dass Sie Ihre Adresse unter <a href="{{link_account_account}}">{{link_account}}</a> korrekt eingetragen haben.</strong></p>
+                      {{/if}}
+                    {{/unless}}
 
                     <p>Herzlich</p>
                     <p>Ihre Crew der Republik</p>

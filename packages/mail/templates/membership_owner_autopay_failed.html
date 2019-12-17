@@ -1,0 +1,92 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="x-ua-compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <!--[if gte mso 15]>
+    <xml>
+      <o:officedocumentsettings>
+        <o:allowpng />
+        <o:pixelsperinch>96</o:pixelsperinch>
+      </o:officedocumentsettings>
+    </xml>
+    <![endif]-->
+    <style type="text/css">
+      {{sg_font_faces}}
+    </style>
+    <style type="text/css">
+      p {
+        color:#282828;font-size:17px;line-height:24px;
+        {{sg_font_style_sans_serif_regular}}
+      }
+      p strong {
+        {{sg_font_style_sans_serif_medium}}
+      }
+    </style>
+  </head>
+  <body style="margin: 0; padding: 0; background-color: #fff;">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tbody>
+        <tr>
+          <td align="center" valign="top">
+            <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width:640px;color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}">
+              <tbody>
+                <tr>
+                  <td style="padding:20px;">
+                    <p>
+                      Sehr geehrte Dame<br />
+                      Sehr geehrter Herr
+                    </p>
+                    {{#if `attempt_number == 3`}}
+                      <p>Ihre Mitgliedschaft erneuerte sich am {{end_date}} um ein weiteres Jahr. Bedauerlicherweise konnten wir erneut den Jahresbeitrag von {{autopay_total}} Ihrer hinterlegten {{autopay_card_brand}}-Kreditkarte mit den Endziffern {{autopay_card_last4}} nicht belasten.</p>
+                      <p>Wir unternehmen am {{attempt_next_at}} einen letzten Versuch und bitten Sie, bis dahin <a href="{{prolong_url}}">Ihre Kreditkartendaten hier gegebenenfalls zu aktualisieren</a>.</p>
+                      <p>Am Geld soll es jedoch nicht scheitern: Seit jeher wollen wir unsere Arbeit auch allen Leserinnen mit knappem Budget zugänglich machen. Wir haben Verständnis, wenn es für {{autopay_total}} nicht reicht, wollen Sie aber nicht verlieren. Sie haben die Möglichkeit, die <a href="{{prolong_url_reduced}}">Höhe Ihres Mitgliederbeitrags selbst zu bestimmen</a>.</p>
+                    {{elseif `attempt_number == 4`}}
+                      <p>Ihre Mitgliedschaft erneuerte sich am {{end_date}} um ein weiteres Jahr. Trotz mehrfachen Versuchen konnten wir den Jahresbeitrag von {{autopay_total}} Ihrer hinterlegten {{autopay_card_brand}}-Kreditkarte mit den Endziffern {{autopay_card_last4}} nicht belasten.</p>
+                      <p>Wir sehen uns daher zu unserem grossen Bedauern gezwungen, Ihre Mitgliedschaft am {{grace_end_date}} zu deaktivieren.</p>
+                      <p>Wollen Sie dies verhindern, können Sie <a href="{{prolong_url}}">den ausstehenden Jahresbeitrag begleichen</a>, wenn Sie möchten, auch mit einer anderen Zahlungsart.</p>
+                    {{else}}
+                      <p>Ihre Mitgliedschaft erneuerte sich am {{end_date}} um ein weiteres Jahr. Bei Ihrem letzten Kauf haben Sie angegeben, dass Sie uns erlauben, Ihre hinterlegte Kreditkarte automatisch zu belasten. Bedauerlicherweise konnten wir den Jahresbeitrag von {{autopay_total}} von Ihrer hinterlegten {{autopay_card_brand}}-Kreditkarte mit den Endziffern {{autopay_card_last4}} nicht abbuchen.</p>
+                      {{#if attempt_is_last}}
+                        <p>Wir sehen uns daher zu unserem grossen Bedauern gezwungen, Ihre Mitgliedschaft am {{grace_end_date}} zu deaktivieren.</p>
+                      {{elseif attempt_next_is_last}}
+                        <p>Wir unternehmen am {{attempt_next_at}} einen letzten Versuch und bitten Sie, bis dahin <a href="{{prolong_url}}">Ihre Kreditkartendaten hier gegebenenfalls zu aktualisieren</a>.</p>
+                      {{else}}
+                        <p>Wir unternehmen am {{attempt_next_at}} erneut einen Versuch und bitten Sie, bis dahin nötigenfalls <a href="{{prolong_url}}">eine neue Kreditkarte zu erfassen</a>.</p>
+                      {{/if}}
+                      <p>Vielleicht ziehen Sie inzwischen auch eine andere Zahlungsart vor? <a href="{{prolong_url}}">Sie können auch eine andere Zahlungsart angeben</a>.</p>
+                    {{/if}}
+                    <p>Herzlich</p>
+                    <p>Ihre Crew der Republik</p>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding:20px;">
+                    <p style="font-size:14px;line-height:20px;{{sg_font_style_sans_serif_regular}}">
+                      Die Republik ist ein unabhängiges und werbefreies digitales Magazin für Politik, Wirtschaft, Gesellschaft und Kultur. 
+                      Es wird von seinen Leserinnen und Lesern finanziert und erscheint von Montag bis Samstag mit täglich ein bis drei neuen Beiträgen. In der App, auf der Website und als Newsletter.
+                    </p>
+                    <p style="color:#282828;font-size:14px;line-height:20px;{{sg_font_style_sans_serif_regular}}">
+                      <img height="79" src="{{frontend_base_url}}/static/logo_republik_newsletter.png" style="border:0px;width:180px !important; height:79px !important;margin:0px;" width="180" alt="">
+                      <br>
+                      Republik AG<br>
+                      Sihlhallenstrasse 1, CH-8004 Zürich<br>
+                      <a href="{{frontend_base_url}}">www.republik.ch</a><br>
+                      <a href="mailto:kontakt@republik.ch">kontakt@republik.ch</a>
+                    </p>
+                    <p style="font-size:14px;line-height:20px;{{sg_font_style_sans_serif_regular}}">
+                        <a href="{{link_manifest}}">Unser Manifest</a><br />
+                        <a href="{{link_imprint}}">Das Impressum</a><br />
+                        <a href="{{link_faq}}">Häufig gestellte Fragen</a>
+                    </p>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </body>
+</html>

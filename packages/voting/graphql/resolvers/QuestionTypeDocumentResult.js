@@ -13,6 +13,7 @@ module.exports = {
     const withoutContent = fields.indexOf('content') === -1
     const relatedDocsNamespaces = [
       'meta.series',
+      'meta.section',
       'meta.format',
       'meta.dossier',
       'meta.discussion'

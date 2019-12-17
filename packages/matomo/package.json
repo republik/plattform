@@ -1,0 +1,28 @@
+{
+  "name": "@orbiting/backend-modules-matomo",
+  "version": "0.0.1",
+  "description": "Access to Matomo API",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/orbiting/backends.git"
+  },
+  "author": "Patrick Venetz <patrick.venetz@republik.ch>",
+  "license": "AGPL-3.0",
+  "publishConfig": {
+    "access": "public"
+  },
+  "bugs": {
+    "url": "https://github.com/orbiting/backends/issues"
+  },
+  "homepage": "https://github.com/orbiting/backends#readme",
+  "scripts": {
+    "link": "yarn link"
+  },
+  "dependencies": {
+    "@zeit/fetch-retry": "^4.0.0",
+    "bluebird": "^3.5.4",
+    "debug": "^4.1.1",
+    "node-fetch": "^2.3.0"
+  }
+}
