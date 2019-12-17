@@ -65,7 +65,15 @@ const getSimpleQueryStringQuery = (searchTerm) => {
   // split search term and stitch together with fuzzy per word
   const fuzzySearchTerm = sanitizedSearchTerm
     .split(/\s/)
-    .map(term => term.length >= FUZZINESS_WORD_LENGTH_THRESHOLD ? `${term}~` : term)
+    .map(term => {
+      if (term.length >= FUZZINESS_WORD_LENGTH_THRESHOLD * 2) {
+        return `${term}~2`
+      } else if (term.length >= FUZZINESS_WORD_LENGTH_THRESHOLD) {
+        return `${term}~1`
+      }
+
+      return term
+    })
     .join(' ')
 
   debug('getSimpleQueryStringQuery', {
