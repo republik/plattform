@@ -49,10 +49,15 @@ const createCache = ({ options }) => async function (payloadFunction) {
     return payloadFunction()
   }
 
-  let data = await this.get()
+  let data
+  if (!options.forceRecache) {
+    data = await this.get()
 
-  if (data) {
-    return data.payload
+    if (data) {
+      return data.payload
+    }
+  } else {
+    console.log('forceRecache')
   }
 
   data = { payload: await payloadFunction() }
@@ -66,7 +71,7 @@ const createInvalidate = ({ options, redis }) => async function () {
   debug('crowdfundings:cache')('INVALIDATE')
   await redis
     .evalAsync(
-      `return redis.call('del', unpack(redis.call('keys', ARGV[1])))`,
+      'return redis.call(\'del\', unpack(redis.call(\'keys\', ARGV[1])))',
       0,
       `${namespace}:${options.prefix}*`
     )

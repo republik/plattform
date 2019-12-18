@@ -16,6 +16,9 @@ const { run: membershipsOwnersHandler } = require('./owners')
 const { deactivate } = require('./deactivate')
 const { changeover } = require('./changeover')
 
+const surplus = require('../../../../graphql/resolvers/RevenueStats/surplus')
+const evolution = require('../../../../graphql/resolvers/MembershipStats/evolution')
+
 const init = async (_context) => {
   debug('init')
 
@@ -74,6 +77,22 @@ const init = async (_context) => {
       runIntervalSecs: 60 * 10
     })
   )
+
+  // remove after campaign
+  schedulers.push(
+    intervalScheduler.init({
+      name: 'stats-cache',
+      context,
+      runFunc: (args, context) =>
+        Promise.all([
+          surplus(null, { min: '2019-12-01', forceRecache: true }, context),
+          evolution(null, { min: '2019-12', max: '2020-03', forceRecache: true }, context)
+        ]),
+      lockTtlSecs: 5,
+      runIntervalSecs: 7
+    })
+  )
+  //
 
   const close = async () => {
     await Promise.all(
