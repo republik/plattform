@@ -5,12 +5,18 @@ module.exports = {
   name: type.toLowerCase(),
   search: {
     termFields: {
-      content: {
+      contentString: {
         boost: 0.5,
-        highlight: {}
+        highlight: {
+          boundary_scanner_locale: 'de-CH',
+          fragment_size: 300
+        }
       },
-      'resolved.user.name': {},
-      'resolved.user.credential': {}
+      'resolved.user.name': {
+        highlight: {
+          number_of_fragments: 0
+        }
+      }
     },
     filter: {
       default: () => ({
@@ -84,6 +90,23 @@ module.exports = {
         },
         userId: {
           type: 'keyword'
+        },
+
+        contentString: {
+          type: 'text',
+          analyzer: 'german',
+          fielddata: true,
+          fields: {
+            count: {
+              type: 'token_count',
+              analyzer: 'standard',
+              store: true
+            },
+            keyword: {
+              type: 'keyword',
+              ignore_above: 256
+            }
+          }
         },
         content: {
           type: 'text',

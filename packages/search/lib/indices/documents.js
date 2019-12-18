@@ -39,6 +39,12 @@ module.exports = {
           number_of_fragments: 0
         }
       },
+      'meta.shortTitle': {
+        boost: 2,
+        highlight: {
+          number_of_fragments: 0
+        }
+      },
       'meta.description': {
         boost: 2,
         highlight: {
@@ -52,17 +58,20 @@ module.exports = {
         }
       },
       contentString: {
-        highlight: {}
+        highlight: {
+          boundary_scanner_locale: 'de-CH',
+          fragment_size: 300
+        }
       },
-      content: {
-        highlight: {}
+      'resolved.meta.dossier.meta.title.keyword': {
+        boost: 3
       },
       'resolved.meta.format.meta.title.keyword': {
         boost: 3
       },
-      'resolved.meta.format.meta.description': {},
-      'resolved.meta.section.meta.title.keyword': {},
-      'resolved.meta.section.meta.description': {}
+      'resolved.meta.section.meta.title.keyword': {
+        boost: 3
+      }
     },
     filter: {
       default: () => {
@@ -353,6 +362,10 @@ module.exports = {
               type: 'keyword'
             },
             title: {
+              type: 'text',
+              analyzer: 'german'
+            },
+            shortTitle: {
               type: 'text',
               analyzer: 'german'
             },
