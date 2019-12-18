@@ -16,6 +16,8 @@ Data props:
 - `description`
 - `credits`
 - `publishDate`
+- `highlight`
+- `highlightLabel`
 
 Only using title is great for compact feeds:
 
@@ -114,4 +116,23 @@ Only using title is great for compact feeds:
     {type: 'link', url: 'https://republik.ch/~moser', children: [{type: 'text', value: 'Christof Moser'}]},
     {type: 'text', value: ', 31.12.2017'},
   ]} />
+```
+
+Add an excerpt of the content using the highlight prop (if `highlightLabel` is omitted no label will be displayed).
+
+```react
+<TeaserFeed
+  title='The quick brown fox jumps over the lazy dog'
+  highlight='Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores.'
+  highlightLabel='My highlight'
+  credits={[
+    {type: 'text', value: 'An article by '},
+    {type: 'link', url: 'https://republik.ch/~moser', children: [{type: 'text', value: 'Christof Moser'}]},
+    {type: 'text', value: ', 31.12.2017'},
+  ]}
+  bar={<span>
+    <BookmarkIcon size={22} style={{ margin: '0 5px 0 -4px'}} />
+    <AudioIcon size={22} />
+  </span>}
+/>
 ```
