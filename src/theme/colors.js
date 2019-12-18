@@ -37,6 +37,7 @@ const colors = {
   feuilleton: '#555555',
   scribble: '#ef4533',
   neutral: '#bbb',
+  highlight: '#FFFFCC',
   sequential: [
     'rgb(8, 48, 107)',
     'rgb(8, 61, 126)',
