@@ -1,5 +1,5 @@
 {
-  "updated": "2019-12-11T16:53:55.306Z",
+  "updated": "2019-12-18T10:35:36.549Z",
   "title": "live",
   "data": [
     {
@@ -603,8 +603,12 @@
       "value": "Custom paynotes"
     },
     {
-      "key": "metaData/paynotes/single",
-      "value": "Paynote"
+      "key": "metaData/paynotes/before",
+      "value": "Paynote {index} - before"
+    },
+    {
+      "key": "metaData/paynotes/after",
+      "value": "Paynote {index} - after"
     },
     {
       "key": "metaData/paynotes/new",
@@ -615,6 +619,22 @@
       "value": "Render members count with <b>{count}</b> and bold text with <b>&lt;b&gt;bold tags&lt;/b&gt;</b>."
     },
     {
+      "key": "metaData/paynote/form/cta/label",
+      "value": "Call to action"
+    },
+    {
+      "key": "metaData/paynote/form/cta/0",
+      "value": "trial form"
+    },
+    {
+      "key": "metaData/paynote/form/cta/1",
+      "value": "button"
+    },
+    {
+      "key": "metaData/paynote/form/cta/2",
+      "value": "none"
+    },
+    {
       "key": "metaData/paynote/form/trynote",
       "value": "Try Republik"
     },
@@ -623,32 +643,20 @@
       "value": "Buy Republik"
     },
     {
-      "key": "metaData/paynote/form/before/title",
+      "key": "metaData/paynote/form/title",
       "value": "Title"
     },
     {
-      "key": "metaData/paynote/form/before/body",
+      "key": "metaData/paynote/form/body",
       "value": "Body"
     },
     {
-      "key": "metaData/paynote/form/before/button",
-      "value": "Call to action"
+      "key": "metaData/paynote/form/button/label",
+      "value": "Button label"
     },
     {
-      "key": "metaData/paynote/form/after/title",
-      "value": "Footer title\n"
-    },
-    {
-      "key": "metaData/paynote/form/after/body",
-      "value": "Footer body"
-    },
-    {
-      "key": "metaData/paynote/form/after/button",
-      "value": "Footer call to action"
-    },
-    {
-      "key": "metaData/paynote/form/hasDifferentPaynotes",
-      "value": "different footer text"
+      "key": "metaData/paynote/form/button/link",
+      "value": "Button link\n"
     },
     {
       "key": "metaData/field/url",

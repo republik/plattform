@@ -19,13 +19,6 @@ const styles = {
     padding: '5px 10px 15px',
     marginBottom: 5
   }),
-  header: css({
-    paddingBottom: 15
-  }),
-  label: css({
-    paddingTop: 5,
-    display: 'inline-block'
-  }),
   close: css({
     float: 'right'
   }),
@@ -57,15 +50,20 @@ export default withT(({ t, editor, node }) => {
   const addPaynote = e => {
     e.preventDefault()
     const templatePaynote = {
-      isTrynote: false,
-      beforeTitle: '',
-      beforeBody: '',
-      beforeButton: '',
-      afterTitle: '',
-      afterBody: '',
-      afterButton: ''
+      title: '',
+      body: '',
+      cta: 'trialForm',
+      button: {
+        label: '',
+        link: '/angebote'
+      }
     }
-    onPaynotesChange(paynotes.concat(templatePaynote))
+    onPaynotesChange(
+      paynotes.concat({
+        before: templatePaynote,
+        after: templatePaynote
+      })
+    )
   }
 
   const removePaynote = i => e => {
@@ -73,14 +71,19 @@ export default withT(({ t, editor, node }) => {
     onPaynotesChange(paynotes.slice(0, i).concat(paynotes.slice(i + 1)))
   }
 
-  const editPaynote = (i, paynote) => newAttrs => {
+  const editPaynote = (i, paynote, position) => newAttrs => {
+    const editedPaynote = {
+      ...paynote,
+      [position]: {
+        ...paynote[position],
+        ...newAttrs
+      }
+    }
+
     onPaynotesChange(
       paynotes
         .slice(0, i)
-        .concat({
-          ...paynote,
-          ...newAttrs
-        })
+        .concat(editedPaynote)
         .concat(paynotes.slice(i + 1))
     )
   }
@@ -97,21 +100,19 @@ export default withT(({ t, editor, node }) => {
           {paynotes.map((paynote, i) => {
             return (
               <div key={i} {...styles.container}>
-                <div {...styles.header}>
-                  <Label {...styles.label}>
-                    {t('metaData/paynotes/single')} {i + 1}
-                  </Label>
-                  <A
-                    href='#remove'
-                    onClick={removePaynote(i)}
-                    {...styles.close}
-                  >
-                    <MdClose size={20} fill='#000' />
-                  </A>
-                </div>
+                <A href='#remove' onClick={removePaynote(i)} {...styles.close}>
+                  <MdClose size={20} fill='#000' />
+                </A>
                 <PaynoteForm
-                  data={paynote}
-                  onInputChange={editPaynote(i, paynote)}
+                  data={paynote.before}
+                  name={t('metaData/paynotes/before', { index: i + 1 })}
+                  onInputChange={editPaynote(i, paynote, 'before')}
+                />
+                <br />
+                <PaynoteForm
+                  data={paynote.after}
+                  name={t('metaData/paynotes/after', { index: i + 1 })}
+                  onInputChange={editPaynote(i, paynote, 'after')}
                 />
               </div>
             )

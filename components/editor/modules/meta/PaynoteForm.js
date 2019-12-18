@@ -1,9 +1,9 @@
-import React, { useState } from 'react'
+import React from 'react'
 
 import { css } from 'glamor'
 import AutosizeInput from 'react-textarea-autosize'
 
-import { Field, Checkbox, Radio } from '@project-r/styleguide'
+import { Field, Radio, Label, colors } from '@project-r/styleguide'
 import withT from '../../../../lib/withT'
 
 const styles = {
@@ -12,143 +12,98 @@ const styles = {
     paddingTop: '7px !important',
     paddingBottom: '6px !important',
     background: 'transparent'
+  }),
+  title: css({
+    padding: '5px 0',
+    fontWeight: 'bold'
+  }),
+  ctaLabel: css({
+    display: 'block',
+    paddingBottom: 5
   })
 }
 
-const SelectPaynoteType = withT(({ t, isTrynote, setTrynote }) => {
+const SelectCta = withT(({ t, cta, setCta }) => {
+  const options = ['trialForm', 'button', undefined]
+
   return (
     <>
-      <Radio
-        checked={!isTrynote}
-        onChange={() => setTrynote(false)}
-        style={{ marginRight: 30 }}
-      >
-        {t('metaData/paynote/form/buynote')}
-      </Radio>
-      <Radio checked={!!isTrynote} onChange={() => setTrynote(true)}>
-        {t('metaData/paynote/form/trynote')}
-      </Radio>
+      <Label {...styles.ctaLabel}>{t('metaData/paynote/form/cta/label')}</Label>
+      {options.map((option, i) => (
+        <Radio
+          key={i}
+          checked={cta === option}
+          onChange={() => setCta(option)}
+          style={{ marginRight: 30 }}
+        >
+          {t(`metaData/paynote/form/cta/${i}`)}
+        </Radio>
+      ))}
     </>
   )
 })
 
-export default withT(({ t, data, onInputChange }) => {
-  const hasDifferentBottomFields = () =>
-    data.beforeTitle !== data.afterTitle ||
-    data.beforeBody !== data.afterBody ||
-    data.beforeButton !== data.afterButton
-
-  const [bottomFields, showBottomFields] = useState(hasDifferentBottomFields)
-
-  const resetBottomFields = () =>
-    onInputChange({
-      afterTitle: data.beforeTitle,
-      afterBody: data.beforeBody,
-      afterButton: data.beforeButton
-    })
-
+export default withT(({ t, data, name, onInputChange }) => {
   return (
     <div>
-      <SelectPaynoteType
-        isTrynote={data.isTrynote}
-        setTrynote={isTrynote => {
-          onInputChange({
-            isTrynote,
-            beforeButton: '',
-            afterButton: ''
-          })
-        }}
-      />
+      <Label {...styles.title}>{name}</Label>
       <Field
-        label={t('metaData/paynote/form/before/title')}
-        name='beforeTitle'
-        value={data.beforeTitle}
+        label={t('metaData/paynote/form/title')}
+        name='title'
+        value={data.title}
         onChange={(e, value) =>
           onInputChange({
-            beforeTitle: value,
-            afterTitle: bottomFields ? data.afterTitle : value
+            title: value
           })
         }
       />
       <Field
-        label={t('metaData/paynote/form/before/body')}
-        name='beforeBody'
-        value={data.beforeBody}
+        label={t('metaData/paynote/form/body')}
+        name='body'
+        value={data.body}
         onChange={(e, value) =>
           onInputChange({
-            beforeBody: value,
-            afterBody: bottomFields ? data.afterBody : value
+            body: value
           })
         }
         renderInput={({ ref, ...inputProps }) => (
           <AutosizeInput {...inputProps} {...styles.autoSize} inputRef={ref} />
         )}
       />
-      {!data.isTrynote && (
-        <Field
-          label={t('metaData/paynote/form/before/button')}
-          name='beforeButton'
-          value={data.beforeButton}
-          onChange={(e, value) =>
-            onInputChange({
-              beforeButton: value,
-              afterButton: bottomFields ? data.afterButton : value
-            })
-          }
-        />
-      )}
-      <br />
-      <br />
-      <Checkbox
-        checked={bottomFields}
-        onChange={(_, value) => {
-          showBottomFields(value)
-          !value && resetBottomFields()
+      <SelectCta
+        cta={data.cta}
+        setCta={cta => {
+          onInputChange({ cta })
         }}
-      >
-        {t('metaData/paynote/form/hasDifferentPaynotes')}
-      </Checkbox>
-      {bottomFields && (
+      />
+      {data.cta === 'button' && (
         <>
           <Field
-            label={t('metaData/paynote/form/after/title')}
-            name='afterTitle'
-            value={data.afterTitle}
+            label={t('metaData/paynote/form/button/label')}
+            name='buttonText'
+            value={data.button.label}
             onChange={(e, value) =>
               onInputChange({
-                afterTitle: value
+                button: {
+                  ...data.button,
+                  label: value
+                }
               })
             }
           />
           <Field
-            label={t('metaData/paynote/form/after/body')}
-            name='afterBody'
-            value={data.afterBody}
+            label={t('metaData/paynote/form/button/link')}
+            name='button/text'
+            value={data.button.link}
             onChange={(e, value) =>
               onInputChange({
-                afterBody: value
+                button: {
+                  ...data.button,
+                  link: value
+                }
               })
             }
-            renderInput={({ ref, ...inputProps }) => (
-              <AutosizeInput
-                {...inputProps}
-                {...styles.autoSize}
-                inputRef={ref}
-              />
-            )}
           />
-          {!data.isTrynote && (
-            <Field
-              label={t('metaData/paynote/form/after/button')}
-              name='afterButton'
-              value={data.afterButton}
-              onChange={(e, value) =>
-                onInputChange({
-                  afterButton: value
-                })
-              }
-            />
-          )}
         </>
       )}
     </div>
