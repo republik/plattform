@@ -13,8 +13,6 @@ const {
   }
 } = require('@orbiting/backend-modules-documents/lib')
 
-const { mdastToString } = require('@orbiting/backend-modules-utils')
-
 const {
   termEntry,
   countEntry,
@@ -36,7 +34,7 @@ const {
 
 const createCache = require('./cache')
 
-const { getIndexAlias, mdastFilter } = require('./utils')
+const { getIndexAlias, mdastContentToString } = require('./utils')
 
 const SHORT_DURATION_MINS = 5
 const MIDDLE_DURATION_MINS = 15
@@ -218,12 +216,7 @@ const getElasticDoc = (
     meta, // doc.meta === doc.content.meta
     resolved: !_.isEmpty(resolved) ? resolved : undefined,
     content: doc.content,
-    contentString: mdastToString(
-      mdastFilter(
-        doc.content,
-        node => node.type === 'code'
-      )
-    )
+    contentString: mdastContentToString(doc.content)
   }
 }
 
@@ -292,6 +285,8 @@ const loadLinkedMetaData = async ({
     : await search(null, {
       recursive: true,
       withoutContent: true,
+      withoutAggs: true,
+      withoutRelatedDocs: true,
       scheduledAt,
       ignorePrepublished,
       first: sanitizedRepoIds.length * 2,

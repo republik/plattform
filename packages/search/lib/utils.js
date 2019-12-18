@@ -1,5 +1,7 @@
 const _ = require('lodash')
 
+const { mdastToString } = require('@orbiting/backend-modules-utils')
+
 const ES_INDEX_PREFIX = process.env.ES_INDEX_PREFIX || 'republik'
 
 /**
@@ -66,9 +68,23 @@ const mdastFilter = function (node, predicate = () => false) {
   }
 }
 
+const mdastContentToString = mdast =>
+  mdastToString(
+    mdastFilter(
+      mdast,
+      node =>
+        node.type === 'code' ||
+        ['TITLE', 'ARTICLECOLLECTION', 'INFOBOX', 'FIGURE', 'NOTE'].includes(node.identifier)
+    ),
+    '\n'
+  )
+    // .replace(/\u00AD/g, '') // 0x00AD = Soft Hyphen (SHY)
+    .trim()
+
 module.exports = {
   getIndexAlias,
   getDateTimeIndex,
   getDateIndex,
-  mdastFilter
+  mdastFilter,
+  mdastContentToString
 }

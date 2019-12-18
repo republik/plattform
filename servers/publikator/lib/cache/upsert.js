@@ -1,6 +1,6 @@
 const debug = require('debug')('publikator:cache:upsert')
+
 const utils = require('@orbiting/backend-modules-search/lib/utils')
-const { mdastToString } = require('@orbiting/backend-modules-utils')
 
 /**
  * Builds ElasticSearch routing object, to find documents in an {index} of a
@@ -16,12 +16,7 @@ const getPath = (id) => ({
 })
 
 const getContentString = (mdast) => {
-  const contentString = mdast && mdastToString(
-    utils.mdastFilter(
-      mdast,
-      node => node.type === 'code'
-    )
-  )
+  const contentString = mdast && utils.mdastContentToString(mdast)
 
   if (!contentString) {
     return
