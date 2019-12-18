@@ -11,6 +11,7 @@ import { timeFormat } from '../../lib/timeFormat'
 import { Editorial } from '../Typography'
 
 import { matchType } from 'mdast-react-render/lib/utils'
+import Highlight from './Highlight'
 
 const dateFormat = timeFormat('%d.%m.%Y')
 
@@ -51,6 +52,8 @@ export const TeaserFeed = ({
   path,
   title,
   description,
+  highlight,
+  highlightLabel,
   credits,
   publishDate,
   prepublication,
@@ -94,12 +97,20 @@ export const TeaserFeed = ({
           </Link>
         </Lead>
       )}
-
       <Credit>
         {credits && credits.length > 0
           ? renderMdast(credits, creditSchema)
           : !!publishDate && dateFormat(new Date(publishDate))}
       </Credit>
+      {!!highlight && (
+        <Highlight label={highlightLabel}>
+          <Link href={path} passHref>
+            <a {...styles.link} href={path}>
+              {highlight}
+            </a>
+          </Link>
+        </Highlight>
+      )}
       {bar && <div {...styles.bar}>{bar}</div>}
       {prepublication && <InternalOnlyTag t={t} />}
     </Container>
