@@ -1,13 +1,14 @@
 version: "3.4"
 services:
   traefik:
-    image: traefik
+    image: traefik:v2.1
     network_mode: "host"
     ports:
       - "80:80"     # The HTTP port
       - "8080:8080" # The Web UI
     volumes:
       - ./.docker-config/traefik/traefik.toml:/etc/traefik/traefik.toml
+      - ./.docker-config/traefik/traefik-provider.toml:/etc/traefik/traefik-provider.toml
 
   bind:
     image: cytopia/bind

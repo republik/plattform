@@ -1,0 +1,34 @@
+[http]
+  [http.routers]
+    [http.routers.api]
+      entryPoints = ["web"]
+      rule = "Host(`api.republik.test`)"
+      service = "api"
+    [http.routers.assets-api]
+      entryPoints = ["web"]
+      rule = "Host(`assets.republik.test`)"
+      service = "assets-api"
+    [http.routers.frontend]
+      entryPoints = ["web"]
+      rule = "Host(`republik.test`)"
+      service = "frontend"
+    [http.routers.admin-frontend]
+      entryPoints = ["web"]
+      rule = "Host(`admin.republik.test`)"
+      service = "admin-frontend"
+    [http.routers.publikator-frontend]
+      entryPoints = ["web"]
+      rule = "Host(`publikator.republik.test`)"
+      service = "publikator-frontend"
+
+  [http.services]
+    [[http.services.api.loadBalancer.servers]]
+      url = "http://localhost:5000"
+    [[http.services.assets-api.loadBalancer.servers]]
+      url = "http://localhost:5020"
+    [[http.services.frontend.loadBalancer.servers]]
+      url = "http://localhost:3010"
+    [[http.services.admin-frontend.loadBalancer.servers]]
+      url = "http://localhost:3002"
+    [[http.services.publikator-frontend.loadBalancer.servers]]
+      url = "http://localhost:3005"
