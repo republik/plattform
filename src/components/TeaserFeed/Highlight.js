@@ -7,16 +7,16 @@ import { convertStyleToRem } from '../Typography/utils'
 import {
   sansSerifMedium14,
   sansSerifMedium16,
-  serifRegular17,
-  serifRegular19
+  sansSerifRegular16,
+  sansSerifRegular18
 } from '../Typography/styles'
 
 const styles = {
   main: css({
-    ...convertStyleToRem(serifRegular17),
+    ...convertStyleToRem(sansSerifRegular16),
     margin: '10px 0 5px 0',
     [mUp]: {
-      ...convertStyleToRem(serifRegular19)
+      ...convertStyleToRem(sansSerifRegular18)
     },
     color: colors.text
   }),
