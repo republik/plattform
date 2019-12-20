@@ -8,7 +8,7 @@ const {
 const getSortKey = require('../../../lib/sortKey')
 
 const assembleTree = (_comment, _comments) => {
-  let coveredComments = []
+  const coveredComments = []
 
   const _assembleTree = (comment, comments, depth = -1) => {
     const parentId = comment.id || null
@@ -132,7 +132,7 @@ const cutTreeX = (comment, maxDepth, depth = -1) => {
 // the returned array has the same order as the tree
 // removes nested children
 const flattenTreeHorizontally = (_comment) => {
-  let comments = []
+  const comments = []
   const _flattenTree = (comment, first) => {
     if (!first) { // exclude root
       comments.push(comment)
@@ -149,7 +149,7 @@ const flattenTreeHorizontally = (_comment) => {
 // in the returned array lower depth comes first
 // doesn't remove nested children
 const flattenTreeVertically = (_comment) => {
-  let comments = []
+  const comments = []
   const _flattenTree = comment => {
     if (comment.comments.nodes.length > 0) {
       comments.push(...comment.comments.nodes)
@@ -278,7 +278,7 @@ module.exports = async (discussion, args, context, info) => {
     tree.comments.nodes = tree.comments.nodes.filter(c => exceptIds.indexOf(c.id) === -1)
   }
 
-  let coveredComments = flattenTreeVertically(tree)
+  const coveredComments = flattenTreeVertically(tree)
     .map((c, index) => ({ // remember index for stable sort
       ...c,
       index
@@ -305,6 +305,10 @@ module.exports = async (discussion, args, context, info) => {
         })
     }
     if (first) {
+      if (maxDepth != null) {
+        filterComments = filterComments
+          .filter(c => c.depth < maxDepth)
+      }
       filterComments = filterComments
         .slice(0, first)
     }
