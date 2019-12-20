@@ -1,6 +1,9 @@
 const _ = require('lodash')
 
+const { remark } = require('@orbiting/backend-modules-discussions/lib')
+
 const bulk = require('../../lib/indexPgTable')
+const { mdastContentToString } = require('../utils')
 
 const transform = function (row) {
   const user = _.find(this.payload.users, { id: row.userId })
@@ -60,6 +63,8 @@ const transform = function (row) {
   row.__sort = {
     date: row.createdAt
   }
+
+  row.contentString = mdastContentToString(remark.parse(row.content))
 
   return row
 }

@@ -1,4 +1,5 @@
 const debug = require('debug')('publikator:cache:upsert')
+
 const utils = require('@orbiting/backend-modules-search/lib/utils')
 
 /**
@@ -15,12 +16,7 @@ const getPath = (id) => ({
 })
 
 const getContentString = (mdast) => {
-  const contentString = mdast && utils.mdastPlain(
-    utils.mdastFilter(
-      mdast,
-      node => node.type === 'code'
-    )
-  )
+  const contentString = mdast && utils.mdastContentToString(mdast)
 
   if (!contentString) {
     return

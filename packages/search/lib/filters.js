@@ -16,9 +16,11 @@ const hasCriteriaBuilder = (fieldName) =>
     clause: not || (!value) ? 'must_not' : 'must',
     filter: [
       filter || { match_all: {} },
-      { exists: {
-        field: fieldName
-      } }
+      {
+        exists: {
+          field: fieldName
+        }
+      }
     ]
   })
 
@@ -27,12 +29,14 @@ const dateRangeCriteriaBuilder = (fieldName) =>
     clause: not ? 'must_not' : 'must',
     filter: [
       filter || { match_all: {} },
-      { range: {
-        [fieldName]: {
-          ...range.from ? { gte: range.from } : {},
-          ...range.to ? { lte: range.to } : {}
+      {
+        range: {
+          [fieldName]: {
+            ...range.from ? { gte: range.from } : {},
+            ...range.to ? { lte: range.to } : {}
+          }
         }
-      } }
+      }
     ]
   })
 
@@ -44,12 +48,14 @@ const rangeCriteriaBuilder = (fieldName) =>
       clause: 'must',
       filter: [
         filter || { match_all: {} },
-        { range: {
-          [fieldName]: {
-            gte: range.from || undefined,
-            lte: range.to || undefined
+        {
+          range: {
+            [fieldName]: {
+              gte: range.from || undefined,
+              lte: range.to || undefined
+            }
           }
-        } }
+        }
       ]
     }
   }
@@ -97,8 +103,7 @@ const filterReducer = (schema) => (filters) => {
 
       if (key !== 'type' &&
         !typeFilter &&
-        (not === undefined || !not) &&
-        !schemaEntry.noIndexTypeImplication
+        (not === undefined || !not)
       ) {
         if (impliedType && impliedType !== schema.__type) {
           throw new Error('filterReducer: filter imply contradicting types', filters, schema)
@@ -149,38 +154,40 @@ const getFilterValue = (filter, key) => {
 
 // converts a filter obj to elastic syntax
 const elasticFilterBuilder = (schema) => (filterInput) => {
-  return { bool: Object.keys(filterInput).reduce(
-    (boolFilter, hash) => {
-      const { key, value, options } = filterInput[hash]
+  return {
+    bool: Object.keys(filterInput).reduce(
+      (boolFilter, hash) => {
+        const { key, value, options } = filterInput[hash]
 
-      const schemaEntry = schema[key]
-      if (!schemaEntry) {
-        throw new Error(`Missing schemaEntry for filter: ${key}`)
-      }
+        const schemaEntry = schema[key]
+        if (!schemaEntry) {
+          throw new Error(`Missing schemaEntry for filter: ${key}`)
+        }
 
-      const criteria = schemaEntry.criteria
-      if (!criteria) {
-        throw new Error(`Missing criteria for filter: ${key}`)
-      }
+        const criteria = schemaEntry.criteria
+        if (!criteria) {
+          throw new Error(`Missing criteria for filter: ${key}`)
+        }
 
-      const created = criteria(
-        value,
-        Object.assign(
-          {},
-          schemaEntry.options,
-          options
+        const created = criteria(
+          value,
+          Object.assign(
+            {},
+            schemaEntry.options,
+            options
+          )
         )
-      )
 
-      boolFilter[created.clause] = [
-        ...(boolFilter[created.clause] || []),
-        created.filter
-      ]
+        boolFilter[created.clause] = [
+          ...(boolFilter[created.clause] || []),
+          created.filter
+        ]
 
-      return boolFilter
-    },
-    {}
-  ) }
+        return boolFilter
+      },
+      {}
+    )
+  }
 }
 
 module.exports = {

@@ -34,6 +34,7 @@ const { getIndexAlias, getDateIndex } = require('../../../lib/utils')
 
 const reduceFilters = filterReducer(documentSchema)
 const createElasticFilter = elasticFilterBuilder(documentSchema)
+const schemaAggregations = extractAggs(documentSchema)
 
 const getFieldList = require('@orbiting/graphql-list-fields')
 
@@ -46,10 +47,42 @@ const {
 
 const DEV = process.env.NODE_ENV && process.env.NODE_ENV !== 'production'
 
+const FUZZINESS_WORD_LENGTH_THRESHOLD = 5
+
 const deepMergeArrays = function (objValue, srcValue) {
   if (_.isArray(objValue)) {
     return objValue.concat(srcValue)
   }
+}
+
+const getSimpleQueryStringQuery = (searchTerm) => {
+  const sanitizedSearchTerm = searchTerm.trim()
+
+  if (sanitizedSearchTerm.match(/[+|\-"*()~]/g)) {
+    return sanitizedSearchTerm
+  }
+
+  // split search term and stitch together with fuzzy per word
+  const fuzzySearchTerm = sanitizedSearchTerm
+    .split(/\s/)
+    .map(term => {
+      if (term.length >= FUZZINESS_WORD_LENGTH_THRESHOLD * 2) {
+        return `${term}~2`
+      } else if (term.length >= FUZZINESS_WORD_LENGTH_THRESHOLD) {
+        return `${term}~1`
+      }
+
+      return term
+    })
+    .join(' ')
+
+  debug('getSimpleQueryStringQuery', {
+    searchTerm,
+    sanitizedSearchTerm,
+    fuzzySearchTerm
+  })
+
+  return fuzzySearchTerm
 }
 
 const createShould = function (
@@ -62,8 +95,6 @@ const createShould = function (
     let must = {
       match_all: {}
     }
-
-    let should = []
 
     let fields = Object.keys(search.termFields)
 
@@ -80,27 +111,11 @@ const createShould = function (
     if (searchTerm) {
       must = [
         {
-          multi_match: {
-            query: searchTerm,
-            type: 'best_fields',
-            fields
-          }
-        }
-      ]
-
-      should = [
-        {
-          multi_match: {
-            query: searchTerm,
-            type: 'phrase',
-            fields
-          }
-        },
-        {
-          multi_match: {
-            query: searchTerm,
-            type: 'cross_fields',
-            fields
+          simple_query_string: {
+            query: getSimpleQueryStringQuery(searchTerm),
+            fields,
+            default_operator: 'AND',
+            analyzer: 'german'
           }
         }
       ]
@@ -141,7 +156,6 @@ const createShould = function (
     queries.push({
       bool: {
         must,
-        should,
         filter
       }
     })
@@ -157,7 +171,7 @@ const createHighlight = (indicesList) => {
   indicesList.forEach(({ search }) => {
     Object.keys(search.termFields).forEach((field) => {
       if (search.termFields[field].highlight) {
-        fields[field] = search.termFields[field].highlight
+        fields[field] = { ...search.termFields[field].highlight, order: 'score' }
       }
     })
   })
@@ -179,7 +193,7 @@ const createQuery = (
   sort: createSort(sort),
   highlight: createHighlight(indicesList),
   stored_fields: ['contentString.count'],
-  ...withoutAggs ? {} : { aggs: extractAggs(documentSchema) },
+  ...withoutAggs ? {} : { aggs: schemaAggregations },
   _source: {
     excludes: [
       ...defaultExcludes,

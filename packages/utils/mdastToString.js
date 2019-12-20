@@ -11,17 +11,17 @@ module.exports = toString
 /* Get the text content of a node.  If the node itself
  * does not expose plain-text fields, `toString` will
  * recursivly try its children. */
-function toString (node) {
+function toString (node, glue = ' ') {
   return (
     valueOf(node) ||
     (
       node.children &&
       node.children
-        .map(toString)
-        .concat(node.type === 'paragraph' ? ' ' : '')
+        .map(child => toString(child, glue))
+        .concat(['paragraph', 'heading'].includes(node.type) ? glue : '')
         .join('')
     ) ||
-    (node.type === 'break' ? ' ' : '')
+    (node.type === 'break' ? glue : '')
   )
 }
 

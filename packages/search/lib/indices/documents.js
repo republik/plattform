@@ -34,7 +34,13 @@ module.exports = {
   search: {
     termFields: {
       'meta.title': {
-        boost: 3,
+        boost: 2,
+        highlight: {
+          number_of_fragments: 0
+        }
+      },
+      'meta.shortTitle': {
+        boost: 2,
         highlight: {
           number_of_fragments: 0
         }
@@ -46,23 +52,26 @@ module.exports = {
         }
       },
       'meta.authors': {
-        boost: 2,
+        boost: 3,
         highlight: {
           number_of_fragments: 0
         }
       },
       contentString: {
-        highlight: {}
+        highlight: {
+          boundary_scanner_locale: 'de-CH',
+          fragment_size: 300
+        }
       },
-      content: {
-        highlight: {}
+      'resolved.meta.dossier.meta.title': {
+        boost: 3
       },
-      'resolved.meta.format.meta.title.keyword': {
-        boost: 6
+      'resolved.meta.format.meta.title': {
+        boost: 3
       },
-      'resolved.meta.format.meta.description': {},
-      'resolved.meta.section.meta.title.keyword': {},
-      'resolved.meta.section.meta.description': {}
+      'resolved.meta.section.meta.title': {
+        boost: 3
+      }
     },
     filter: {
       default: () => {
@@ -353,6 +362,10 @@ module.exports = {
               type: 'keyword'
             },
             title: {
+              type: 'text',
+              analyzer: 'german'
+            },
+            shortTitle: {
               type: 'text',
               analyzer: 'german'
             },

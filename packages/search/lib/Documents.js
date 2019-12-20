@@ -34,7 +34,7 @@ const {
 
 const createCache = require('./cache')
 
-const { getIndexAlias } = require('./utils')
+const { getIndexAlias, mdastContentToString } = require('./utils')
 
 const SHORT_DURATION_MINS = 5
 const MIDDLE_DURATION_MINS = 15
@@ -134,9 +134,8 @@ const schema = {
     criteria: termCriteriaBuilder('milestoneCommitId')
   },
   userId: {
-    ...termEntry('meta.credits.url'),
-    parser: (value) => `/~${value}`,
-    noIndexTypeImplication: true
+    criteria: termCriteriaBuilder('meta.credits.url'),
+    parser: (value) => `/~${value}`
   },
   publishedAt: {
     criteria: dateRangeCriteriaBuilder('meta.publishDate'),
@@ -148,9 +147,7 @@ const schema = {
   },
   feed: countEntry('meta.feed'),
   discussion: {
-    criteria: hasCriteriaBuilder('meta.discussionId'),
-    agg: valueCountAggBuilder('meta.discussionId'),
-    noIndexTypeImplication: true
+    criteria: termCriteriaBuilder('meta.discussionId')
   },
   audioSource: {
     criteria: hasCriteriaBuilder('meta.audioSource'),
@@ -202,9 +199,6 @@ const schema = {
   }
 }
 
-const mdastToString = require('mdast-util-to-string')
-const { mdastFilter } = require('./utils.js')
-
 const getElasticDoc = (
   { doc, commitId, versionName, milestoneCommitId, resolved }
 ) => {
@@ -222,12 +216,7 @@ const getElasticDoc = (
     meta, // doc.meta === doc.content.meta
     resolved: !_.isEmpty(resolved) ? resolved : undefined,
     content: doc.content,
-    contentString: mdastToString(
-      mdastFilter(
-        doc.content,
-        node => node.type === 'code'
-      )
-    )
+    contentString: mdastContentToString(doc.content)
   }
 }
 
@@ -296,6 +285,8 @@ const loadLinkedMetaData = async ({
     : await search(null, {
       recursive: true,
       withoutContent: true,
+      withoutAggs: true,
+      withoutRelatedDocs: true,
       scheduledAt,
       ignorePrepublished,
       first: sanitizedRepoIds.length * 2,

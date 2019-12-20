@@ -1,5 +1,7 @@
 const _ = require('lodash')
 
+const { mdastToString } = require('@orbiting/backend-modules-utils')
+
 const ES_INDEX_PREFIX = process.env.ES_INDEX_PREFIX || 'republik'
 
 /**
@@ -66,43 +68,23 @@ const mdastFilter = function (node, predicate = () => false) {
   }
 }
 
-/**
- * Converts an mdast tree into a plain text string. It is based on
- * https://github.com/syntax-tree/mdast-util-to-string but glues strings with
- * a space instead of nothing.
- *
- * @param  {Object} node                  mdast Object
- * @param  {String} [parentSeparator=' '] String to glue paragraphs with
- * @return {String}                       Plain text
- */
-const mdastPlain = function (node, parentSeparator = ' ') {
-  const valueOf =
-    node &&
-    node.value
-      ? node.value
-      : node.alt
-        ? node.alt
-        : node.title
-
-  const separator = node && node.type === 'paragraph'
-    ? ''
-    : parentSeparator
-
-  return (
-    valueOf ||
-    (node.children &&
-      node.children
-        .map(child => mdastPlain(child, separator))
-        .join(separator)
-        .trim()) ||
-    ''
+const mdastContentToString = mdast =>
+  mdastToString(
+    mdastFilter(
+      mdast,
+      node =>
+        node.type === 'code' ||
+        ['TITLE', 'ARTICLECOLLECTION', 'INFOBOX', 'FIGURE', 'NOTE'].includes(node.identifier)
+    ),
+    '\n'
   )
-}
+    .replace(/\u00AD/g, '') // 0x00AD = Soft Hyphen (SHY)
+    .trim()
 
 module.exports = {
   getIndexAlias,
   getDateTimeIndex,
   getDateIndex,
   mdastFilter,
-  mdastPlain
+  mdastContentToString
 }

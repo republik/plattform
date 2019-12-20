@@ -4,7 +4,8 @@ const termsAggBuilder = (fieldPath) => (key, { filter } = {}) => ({
     aggs: {
       terms: {
         terms: {
-          field: fieldPath
+          field: fieldPath,
+          min_doc_count: 0
         }
       }
     }
@@ -30,9 +31,11 @@ const trueCountAggBuilder = (fieldPath) => (key, { filter } = {}) => ({
       bool: {
         must: [
           filter || { match_all: {} },
-          { term: {
-            [fieldPath]: true
-          } }
+          {
+            term: {
+              [fieldPath]: true
+            }
+          }
         ]
       }
     }
@@ -45,9 +48,11 @@ const existsCountAggBuilder = (fieldPath) => (key, { filter } = {}) => ({
       bool: {
         must: [
           filter || { match_all: {} },
-          { exists: {
-            field: fieldPath
-          } }
+          {
+            exists: {
+              field: fieldPath
+            }
+          }
         ]
       }
     }
