@@ -92,7 +92,6 @@ const init = async (_context) => {
       runIntervalSecs: 8
     })
   )
-  //
 
   const close = async () => {
     await Promise.all(
