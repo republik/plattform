@@ -63,13 +63,13 @@ module.exports = {
           fragment_size: 300
         }
       },
-      'resolved.meta.dossier.meta.title.keyword': {
+      'resolved.meta.dossier.meta.title': {
         boost: 3
       },
-      'resolved.meta.format.meta.title.keyword': {
+      'resolved.meta.format.meta.title': {
         boost: 3
       },
-      'resolved.meta.section.meta.title.keyword': {
+      'resolved.meta.section.meta.title': {
         boost: 3
       }
     },
