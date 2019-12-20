@@ -4,6 +4,8 @@ const debug = require('debug')('republik:resolvers:MembershipStats:overview')
 const createCache = require('../../../modules/crowdfundings/lib/cache')
 const QUERY_CACHE_TTL_SECONDS = 60 * 5 // 5 min
 
+const dateFormat = 'YYYY-MM-DD'
+
 const query = `
 WITH "minMaxDates" AS (
   SELECT m.id, m.active, m.renew, m."autoPay", mt.name "membershipTypeName", MIN(mp."beginDate") "minBeginDate", MAX(mp."endDate") "maxEndDate"
@@ -36,8 +38,8 @@ WITH "minMaxDates" AS (
   GROUP BY pm."membershipId", pm.donation
 ), range AS (
   SELECT
-    unit::timestamp with time zone "first",
-    (unit + '1 month'::interval - '1 second'::interval)::timestamp with time zone "last"
+    unit at time zone :TZ "first",
+    (unit + '1 month'::interval - '1 second'::interval) at time zone :TZ "last"
 
   FROM generate_series(
     :min::timestamp,
@@ -47,7 +49,7 @@ WITH "minMaxDates" AS (
 )
 
 SELECT
-  to_char("first", 'YYYY-MM') "key",
+  to_char("first" at time zone :TZ, 'YYYY-MM') "key",
 
   COUNT(*) FILTER (
     WHERE "maxEndDate" >= "first"
@@ -150,7 +152,14 @@ const getBucketsFn = (min, max, pgdb) => async () => {
     { min: min.toISOString(), max: max.toISOString() }
   )
 
-  const result = await pgdb.query(query, { min, max })
+  const result = await pgdb.query(
+    query,
+    {
+      min: min.format(dateFormat),
+      max: max.format(dateFormat),
+      TZ: process.env.TZ || 'Europe/Zurich'
+    }
+  )
 
   debug('query result: %o', result)
 
@@ -163,7 +172,6 @@ module.exports = async (_, args, context) => {
   const min = moment(args.min)
   const max = moment(args.max)
 
-  const dateFormat = 'YYYY-MM-DD'
   const queryId = `${min.format(dateFormat)}-${max.format(dateFormat)}`
 
   return createCache({
