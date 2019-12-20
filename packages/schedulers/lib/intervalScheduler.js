@@ -5,6 +5,7 @@ const LOCK_RETRY_COUNT = 3
 const LOCK_RETRY_DELAY = 600
 const LOCK_RETRY_JITTER = 200
 const MIN_TTL_MS = LOCK_RETRY_COUNT * (LOCK_RETRY_DELAY + LOCK_RETRY_JITTER)
+const TTL_EXP_MS = MIN_TTL_MS * 1.5
 
 const init = async ({
   name,
@@ -64,6 +65,7 @@ const init = async ({
   const run = async () => {
     try {
       const lock = await redlock().lock(lockKey, 1000 * lockTtlSecs)
+      const beginTime = process.hrtime.bigint()
 
       const extendLockInterval = setInterval(
         () =>
@@ -87,11 +89,14 @@ const init = async ({
 
       // wait until other processes exceeded waiting time
       // then give up lock
-      await Promise.delay(MIN_TTL_MS * 1.5).then(
-        () => lock.unlock()
-          .then(() => { debug('unlocked') })
-          .catch(e => { console.warn('unlocking failed', e) })
-      )
+      const blockLockMs = BigInt(TTL_EXP_MS) * 1000n - process.hrtime.bigint() - beginTime
+      if (blockLockMs > 0) {
+        await Promise.delay(blockLockMs).then(
+          () => lock.unlock()
+            .then(() => { debug('unlocked') })
+            .catch(e => { console.warn('unlocking failed', e) })
+        )
+      }
 
       debug('run completed')
     } catch (e) {
