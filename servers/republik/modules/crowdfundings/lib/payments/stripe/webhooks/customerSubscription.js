@@ -92,7 +92,10 @@ module.exports = {
                  */
                 {
                   name: 'is_automatic_overdue_cancel',
-                  content: !!_.get(event, 'data.object.cancel_at_period_end') && !_.get(event, 'data.request.id')
+                  content:
+                    !!existingMembership.renew &&
+                    !!_.get(event, 'data.object.cancel_at_period_end') &&
+                    !_.get(event, 'data.request.id')
                 }
               ]
             }, { pgdb })
