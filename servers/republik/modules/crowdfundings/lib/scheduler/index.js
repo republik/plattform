@@ -88,8 +88,8 @@ const init = async (_context) => {
           surplus(null, { min: '2019-12-01', forceRecache: true }, context),
           evolution(null, { min: '2019-12', max: '2020-03', forceRecache: true }, context)
         ]),
-      lockTtlSecs: 5,
-      runIntervalSecs: 7
+      lockTtlSecs: 6,
+      runIntervalSecs: 8
     })
   )
   //

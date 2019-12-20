@@ -2,7 +2,7 @@ const moment = require('moment')
 const debug = require('debug')('republik:resolvers:MembershipStats:overview')
 
 const createCache = require('../../../modules/crowdfundings/lib/cache')
-const QUERY_CACHE_TTL_SECONDS = 10
+const QUERY_CACHE_TTL_SECONDS = 20
 
 const query = `
 WITH "minMaxDates" AS (
@@ -145,8 +145,8 @@ ORDER BY 1
 `
 
 const getBucketsFn = (min, max, pgdb) => async () => {
-  console.log(
-    'query for buckets: %o',
+  debug(
+    'query for: %o',
     { min: min.toISOString(), max: max.toISOString() }
   )
 
@@ -163,7 +163,6 @@ module.exports = async (_, args, context) => {
   const min = moment(args.min)
   const max = moment(args.max)
 
-  // const queryId = `${Math.floor(min.unix()/QUERY_CACHE_TTL_SECONDS)}-${Math.floor(max.unix()/QUERY_CACHE_TTL_SECONDS)}`
   const dateFormat = 'YYYY-MM-DD'
   const queryId = `${min.format(dateFormat)}-${max.format(dateFormat)}`
 

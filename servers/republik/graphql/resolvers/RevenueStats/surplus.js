@@ -3,7 +3,7 @@ const debug = require('debug')('republik:resolvers:RevenueStats:surplus')
 const Promise = require('bluebird')
 
 const createCache = require('../../../modules/crowdfundings/lib/cache')
-const QUERY_CACHE_TTL_SECONDS = 10
+const QUERY_CACHE_TTL_SECONDS = 20
 
 const query = `
 WITH "totals" AS (

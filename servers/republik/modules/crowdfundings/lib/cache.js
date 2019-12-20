@@ -8,7 +8,7 @@ const getRedisKey = ({ prefix, key }) =>
 const createGet = ({ options, redis }) => async function () {
   const key = getRedisKey(options)
   const payload = await redis.getAsync(key)
-  debug('crowdfundings:cache:get')(
+  debug(
     `${payload ? 'HIT' : 'MISS'} %s`,
     key
   )
@@ -56,8 +56,6 @@ const createCache = ({ options }) => async function (payloadFunction) {
     if (data) {
       return data.payload
     }
-  } else {
-    console.log('forceRecache')
   }
 
   data = { payload: await payloadFunction() }
