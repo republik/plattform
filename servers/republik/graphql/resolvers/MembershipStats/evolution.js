@@ -1,8 +1,8 @@
 const moment = require('moment')
 const debug = require('debug')('republik:resolvers:MembershipStats:overview')
-// const crypto = require('crypto')
 
-const { resolveCacheFirst } = require('@orbiting/backend-modules-utils')
+const createCache = require('../../../modules/crowdfundings/lib/cache')
+const QUERY_CACHE_TTL_SECONDS = 60 * 5 // 5 min
 
 const query = `
 WITH "minMaxDates" AS (
@@ -23,7 +23,7 @@ WITH "minMaxDates" AS (
       AND (pom.id IS NOT NULL OR pm.id IS NOT NULL)
       AND p.status != 'DRAFT'
   )
-  
+
   SELECT pm.donation, pm."membershipId"
   FROM (
     SELECT "membershipId", MAX("createdAt") AS "createdAt"
@@ -64,7 +64,7 @@ SELECT
     AND "minBeginDate" <= "last"
     AND "membershipDonation"."membershipId" IS NOT NULL
   ) "gainingWithDonation",
-  
+
   COUNT(*) FILTER (
     WHERE "minBeginDate" >= "first"
     AND "minBeginDate" <= "last"
@@ -74,7 +74,7 @@ SELECT
   COUNT(*) FILTER (
     WHERE "maxEndDate" >= "first"
     AND "maxEndDate" <= "last"
-    
+
   ) "ending",
 
   COUNT(*) FILTER (
@@ -92,7 +92,7 @@ SELECT
     AND renew = TRUE
     AND active = FALSE
   ) "expired",
-  
+
   COUNT(*) FILTER (
     WHERE "maxEndDate" >= "first"
     AND "maxEndDate" <= "last"
@@ -103,19 +103,19 @@ SELECT
     WHERE "maxEndDate" >= "last"
     AND "minBeginDate" < "last"
   ) "activeEndOfMonth",
-  
+
   COUNT(*) FILTER (
     WHERE "maxEndDate" >= "last"
     AND "minBeginDate" < "last"
     AND "membershipDonation"."membershipId" IS NOT NULL
   ) "activeEndOfMonthWithDonation",
-  
+
   COUNT(*) FILTER (
     WHERE "maxEndDate" >= "last"
     AND "minBeginDate" < "last"
     AND "membershipDonation"."membershipId" IS NULL
   ) "activeEndOfMonthWithoutDonation",
-  
+
   COUNT(*) FILTER (
     WHERE "maxEndDate" >= :min::timestamp
     AND "maxEndDate" <= "last"
@@ -124,7 +124,7 @@ SELECT
       AND renew = TRUE
     )
   ) "pending",
-  
+
   COUNT(*) FILTER (
     WHERE "maxEndDate" >= :min::timestamp
     AND "maxEndDate" <= "last"
@@ -144,7 +144,7 @@ GROUP BY 1
 ORDER BY 1
 `
 
-const getBuckets = (min, max, pgdb) => async () => {
+const getBucketsFn = (min, max, pgdb) => async () => {
   debug(
     'query for: %o',
     { min: min.toISOString(), max: max.toISOString() }
@@ -159,22 +159,18 @@ const getBuckets = (min, max, pgdb) => async () => {
 
 module.exports = async (_, args, context) => {
   const { pgdb } = context
-  const { cacheOnly = true } = args
 
   const min = moment(args.min)
   const max = moment(args.max)
 
-  /* const fingerprint = crypto
-    .createHash('md5')
-    .update(JSON.stringify({ args, query }))
-    .digest('hex') */
+  const dateFormat = 'YYYY-MM-DD'
+  const queryId = `${min.format(dateFormat)}-${max.format(dateFormat)}`
 
-  return resolveCacheFirst(
-    getBuckets(min, max, pgdb),
-    {
-      key: 'membership-stats:overview',
-      cacheOnly
-    },
-    context
-  )
+  return createCache({
+    prefix: 'MembershipStats:evolution',
+    key: queryId,
+    ttl: QUERY_CACHE_TTL_SECONDS,
+    forceRecache: args.forceRecache
+  }, context)
+    .cache(getBucketsFn(min, max, pgdb))
 }

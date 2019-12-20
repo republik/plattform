@@ -1,9 +1,9 @@
 const moment = require('moment')
 const debug = require('debug')('republik:resolvers:RevenueStats:surplus')
-// const crypto = require('crypto')
 const Promise = require('bluebird')
 
-const { resolveCacheFirst } = require('@orbiting/backend-modules-utils')
+const createCache = require('../../../modules/crowdfundings/lib/cache')
+const QUERY_CACHE_TTL_SECONDS = 60 * 5 // 5 min
 
 const query = `
 WITH "totals" AS (
@@ -60,7 +60,7 @@ WITH "totals" AS (
     rd."paymentTotal" - COALESCE(SUM(rd."membershipTotal"), 0) - COALESCE(SUM(rd."goodieTotal"), 0) "surplusTotal"
 
   FROM "resolvedData" rd
-  
+
   GROUP BY rd."paymentId", rd."paymentCreatedAt", rd."paymentTotal"
 )
 
@@ -97,22 +97,18 @@ const getTotalFn = (min, max, pgdb) => async () => {
 
 module.exports = async (_, args, context) => {
   const { pgdb } = context
-  const { cacheOnly = true } = args
 
   const min = moment(args.min)
   const max = moment(args.max)
 
-  /* const fingerprint = crypto
-    .createHash('md5')
-    .update(JSON.stringify({ args, query }))
-    .digest('hex') */
+  const dateFormat = 'YYYY-MM-DD'
+  const queryId = `${min.format(dateFormat)}-${max.format(dateFormat)}`
 
-  return resolveCacheFirst(
-    getTotalFn(min, max, pgdb),
-    {
-      key: 'revenue-stats:surplus',
-      cacheOnly
-    },
-    context
-  )
+  return createCache({
+    prefix: 'RevenueStats:surplus',
+    key: queryId,
+    ttl: QUERY_CACHE_TTL_SECONDS,
+    forceRecache: args.forceRecache
+  }, context)
+    .cache(getTotalFn(min, max, pgdb))
 }

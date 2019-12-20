@@ -75,6 +75,7 @@
   "standard": {
     "env": [
       "jest"
-    ]
+    ],
+    "globals": [ "BigInt" ]
   }
 }
