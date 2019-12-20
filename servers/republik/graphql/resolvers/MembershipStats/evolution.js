@@ -2,7 +2,7 @@ const moment = require('moment')
 const debug = require('debug')('republik:resolvers:MembershipStats:overview')
 
 const createCache = require('../../../modules/crowdfundings/lib/cache')
-const QUERY_CACHE_TTL_SECONDS = 20
+const QUERY_CACHE_TTL_SECONDS = 60 * 5 // 5 min
 
 const query = `
 WITH "minMaxDates" AS (
@@ -167,7 +167,7 @@ module.exports = async (_, args, context) => {
   const queryId = `${min.format(dateFormat)}-${max.format(dateFormat)}`
 
   return createCache({
-    prefix: 'MembershipStats-evolution',
+    prefix: 'MembershipStats:evolution',
     key: queryId,
     ttl: QUERY_CACHE_TTL_SECONDS,
     forceRecache: args.forceRecache
