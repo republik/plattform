@@ -8,7 +8,7 @@ const getRedisKey = ({ prefix, key }) =>
 const createGet = ({ options, redis }) => async function () {
   const key = getRedisKey(options)
   const payload = await redis.getAsync(key)
-  debug(
+  debug('crowdfundings:cache:get')(
     `${payload ? 'HIT' : 'MISS'} %s`,
     key
   )
