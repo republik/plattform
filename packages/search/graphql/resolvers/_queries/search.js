@@ -114,7 +114,8 @@ const createShould = function (
           simple_query_string: {
             query: getSimpleQueryStringQuery(searchTerm),
             fields,
-            default_operator: 'AND'
+            default_operator: 'AND',
+            analyzer: 'german'
           }
         }
       ]
@@ -170,7 +171,7 @@ const createHighlight = (indicesList) => {
   indicesList.forEach(({ search }) => {
     Object.keys(search.termFields).forEach((field) => {
       if (search.termFields[field].highlight) {
-        fields[field] = search.termFields[field].highlight
+        fields[field] = { ...search.termFields[field].highlight, order: 'score' }
       }
     })
   })

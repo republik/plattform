@@ -78,7 +78,7 @@ const mdastContentToString = mdast =>
     ),
     '\n'
   )
-    // .replace(/\u00AD/g, '') // 0x00AD = Soft Hyphen (SHY)
+    .replace(/\u00AD/g, '') // 0x00AD = Soft Hyphen (SHY)
     .trim()
 
 module.exports = {
