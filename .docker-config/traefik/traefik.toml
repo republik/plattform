@@ -1,44 +1,31 @@
-[file]
-
-defaultEntryPoints = ["http"]
 [entryPoints]
-  [entryPoints.http]
-  address = ":80"
+  [entryPoints.web]
+    address = ":80"
 
-[backends]
-  [backends.republik_api]
-    [backends.republik_api.servers.server1]
+[providers]
+  [providers.file]
+    filename = "/etc/traefik/traefik-provider.toml"
+
+[http.routers]
+  [http.routers.router0]
+    entryPoints = ["web"]
+    rule = "Host(`api.republik.test`)"
+    service = "s1"
+  [http.routers.frontend]
+    entryPoints = ["web"]
+    rule = "Host(`republik.test`)"
+    service = "frontend"
+
+[http.services]
+  [[http.services.s1.loadBalancer.servers]]
     url = "http://localhost:5000"
-  [backends.republik_assets_api]
-    [backends.republik_assets_api.servers.server1]
-    url = "http://localhost:5020"
-  [backends.republik_frontend]
-    [backends.republik_frontend.servers.server1]
+  [[http.services.frontend.loadBalancer.servers]]
     url = "http://localhost:3010"
-  [backends.republik_frontend_admin]
-    [backends.republik_frontend_admin.servers.server1]
-    url = "http://localhost:3002"
-
-[frontends]
-  [frontends.republik_api]
-  backend = "republik_api"
-    [frontends.republik_api.routes.default]
-    rule = "Host:api.republik.test"
-  [frontends.republik_assets_api]
-  backend = "republik_assets_api"
-    [frontends.republik_assets_api.routes.default]
-    rule = "Host:assets.republik.test"
-  [frontends.republik_frontend]
-  backend = "republik_frontend"
-    [frontends.republik_frontend.routes.default]
-    rule = "Host:republik.test"
-  [frontends.republik_frontend_admin]
-  backend = "republik_frontend_admin"
-    [frontends.republik_frontend_admin.routes.default]
-    rule = "Host:admin.republik.test"
 
 [api]
-  entryPoint = "traefik"
+  insecure = true
   dashboard = true
   debug = true
 
+# [log]
+#   level = "DEBUG"
