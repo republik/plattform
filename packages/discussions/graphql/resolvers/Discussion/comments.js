@@ -305,10 +305,11 @@ module.exports = async (discussion, args, context, info) => {
         })
     }
     if (first) {
-      if (maxDepth != null) {
-        filterComments = filterComments
-          .filter(c => c.depth < maxDepth)
-      }
+      // ToDo: Fix in combination with parentId
+      // if (maxDepth != null) {
+      //   filterComments = filterComments
+      //     .filter(c => c.depth < maxDepth)
+      // }
       filterComments = filterComments
         .slice(0, first)
     }
