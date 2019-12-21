@@ -306,10 +306,13 @@ module.exports = async (discussion, args, context, info) => {
     }
     if (first) {
       // ToDo: Fix in combination with parentId
-      // if (maxDepth != null) {
-      //   filterComments = filterComments
-      //     .filter(c => c.depth < maxDepth)
-      // }
+      if (maxDepth != null) {
+        const maxDepthAbsolute = (parentId && tree.comments && tree.comments.nodes[0])
+          ? tree.comments.nodes[0].depth + maxDepth
+          : maxDepth
+        filterComments = filterComments
+          .filter(c => c.depth < maxDepthAbsolute)
+      }
       filterComments = filterComments
         .slice(0, first)
     }
