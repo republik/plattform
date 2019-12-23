@@ -57,7 +57,10 @@ const createSet = (redis) => async (query, payload, options = {}) => {
 
 const createInvalidate = (redis) => async () => {
   debug('search:cache')('INVALIDATE')
-  await redis.evalAsync(`return redis.call('del', unpack(redis.call('keys', ARGV[1])))`, 0, `${keyPrefix}*`)
+  await redis.scanMap({
+    pattern: `${keyPrefix}*`,
+    mapFn: (key, client) => client.delAsync(key)
+  })
     .catch(() => {})// fails if no keys are matched
 }
 
