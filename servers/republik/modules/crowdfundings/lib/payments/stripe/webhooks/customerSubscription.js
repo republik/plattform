@@ -31,6 +31,10 @@ module.exports = {
         throw new Error('pledge for customer.subscription event not found! subscriptionId:' + subscription.id)
       }
 
+      const existingMembership = await transaction.public.memberships.findFirst({
+        pledgeId
+      })
+
       if (subscription.cancel_at_period_end) {
         await transaction.public.memberships.update({
           pledgeId
@@ -49,57 +53,51 @@ module.exports = {
 
       // Possible values are trialing, active, past_due, canceled, or unpaid
       // https://stripe.com/docs/api/node#subscription_object
-      if (subscription.status === 'canceled') {
-        const existingMembership = await transaction.public.memberships.findFirst({
+      if (subscription.status === 'canceled' && existingMembership) {
+        await transaction.public.memberships.update({
           pledgeId
+        }, {
+          active: false,
+          renew: false,
+          updatedAt: new Date()
         })
-        // membership might have been moved by cancelPledge
-        if (existingMembership) {
-          await transaction.public.memberships.update({
-            pledgeId
-          }, {
-            active: false,
-            renew: false,
-            updatedAt: new Date()
+
+        const nextMembership = await activateYearlyMembership(
+          await transaction.public.memberships.find({
+            userId: existingMembership.userId
+          }),
+          transaction
+        )
+
+        if (existingMembership.active && !nextMembership) {
+          const user = await transaction.public.users.findOne({
+            id: pledge.userId
           })
 
-          const nextMembership = await activateYearlyMembership(
-            await transaction.public.memberships.find({
-              userId: existingMembership.userId
-            }),
-            transaction
-          )
-
-          if (existingMembership.active && !nextMembership) {
-            const user = await transaction.public.users.findOne({
-              id: pledge.userId
-            })
-
-            await sendMailTemplate({
-              to: user.email,
-              subject: t('api/email/subscription/deactivated/subject'),
-              templateName: 'subscription_end',
-              globalMergeVars: [
-                {
-                  name: 'name',
-                  content: [user.firstName, user.lastName]
-                    .filter(Boolean)
-                    .join(' ')
-                },
-                /**
-                 * `is_automatic_overdue_cancel` should be true, if a a subscription is deleted past
-                 * due and event was fired automatic (not via API).
-                 */
-                {
-                  name: 'is_automatic_overdue_cancel',
-                  content:
-                    !!existingMembership.renew &&
-                    !!_.get(event, 'data.object.cancel_at_period_end') &&
-                    !_.get(event, 'data.request.id')
-                }
-              ]
-            }, { pgdb })
-          }
+          await sendMailTemplate({
+            to: user.email,
+            subject: t('api/email/subscription/deactivated/subject'),
+            templateName: 'subscription_end',
+            globalMergeVars: [
+              {
+                name: 'name',
+                content: [user.firstName, user.lastName]
+                  .filter(Boolean)
+                  .join(' ')
+              },
+              /**
+               * `is_automatic_overdue_cancel` should be true, if a a subscription is deleted past
+               * due and event was fired automatic (not via API).
+               */
+              {
+                name: 'is_automatic_overdue_cancel',
+                content:
+                  !!existingMembership.renew &&
+                  !!_.get(event, 'data.object.cancel_at_period_end') &&
+                  !_.get(event, 'data.request.id')
+              }
+            ]
+          }, { pgdb })
         }
       }
       await transaction.transactionCommit()
