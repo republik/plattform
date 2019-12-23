@@ -67,12 +67,10 @@ const createCache = ({ options }) => async function (payloadFunction) {
 
 const createInvalidate = ({ options, redis }) => async function () {
   debug('crowdfundings:cache')('INVALIDATE')
-  await redis
-    .evalAsync(
-      'return redis.call(\'del\', unpack(redis.call(\'keys\', ARGV[1])))',
-      0,
-      `${namespace}:${options.prefix}*`
-    )
+  await redis.scanMap({
+    pattern: `${namespace}:${options.prefix}*`,
+    mapFn: (client, key) => client.delAsync(key)
+  })
     .catch(() => {})// fails if no keys are matched
 }
 
