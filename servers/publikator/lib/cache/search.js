@@ -67,7 +67,7 @@ const getSourceFilter = () => ({
  * @return {Promise}      [description]
  */
 const find = async (args, { elastic }) => {
-  debug(args)
+  debug('args: %o', args)
 
   const fields = [
     'contentMeta.description',
