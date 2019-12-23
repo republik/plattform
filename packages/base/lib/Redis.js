@@ -15,10 +15,15 @@ const connect = () => {
   client.__shortExpireSeconds = 3 * 24 * 60 * 60 // 3 days
 
   // Paginate through keys and apply async mapFn(key, client)
-  client.scanMap = async ({
-    pattern = '*',
-    mapFn = () => {}
-  }) => {
+  client.scanMap = async ({ pattern, mapFn }) => {
+    if (!pattern) {
+      throw new Error('argument pattern missing')
+    }
+
+    if (!mapFn) {
+      throw new Error('argument mapFn missing')
+    }
+
     let nextCursor = '0'
 
     do {
