@@ -17,26 +17,23 @@ const connect = () => {
   // Paginate through keys and apply async mapFn(client, key)
   client.scanMap = async ({
     pattern = '*',
-    mapFn = () => {},
-    cursor = 0,
-    results = []
+    mapFn = () => {}
   }) => {
-    debug('scanMap iteration: %o', { cursor, pattern })
-    const [nextCursor, keys] = await client.scanAsync([cursor, 'MATCH', pattern])
+    let nextCursor = 0
 
-    debug('scanMap, scanned page: %o', { cursor, pattern, nextCursor: nextCursor !== '0', keys: keys.length })
+    do {
+      debug('scanMap iteration: %o', { cursor: nextCursor, pattern })
 
-    const pageResults = await Promise.map(keys, mapFn.bind(this, client))
+      await client.scanAsync([nextCursor, 'MATCH', pattern])
+        .then(async ([cursor, keys]) => {
+          nextCursor = cursor
 
-    results = [...results, ...pageResults]
+          return Promise.map(keys, mapFn.bind(null, client))
+        })
+    } while (nextCursor !== '0') // nextCursor is "0" if scan is completed.
 
-    // nextCursor is "0" if scan is completed.
-    if (!!nextCursor && nextCursor !== '0') {
-      return client.scanMap({ pattern, mapFn, cursor: nextCursor, results })
-    }
-
-    debug('scanMap reached full iteration: %o', { results: results && results.length })
-    return results
+    debug('scanMap reached full iteration')
+    return true
   }
 
   return client
