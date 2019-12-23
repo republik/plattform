@@ -14,22 +14,18 @@ const connect = () => {
   client.__defaultExpireSeconds = 3 * 7 * 24 * 60 * 60 // 3 weeks
   client.__shortExpireSeconds = 3 * 24 * 60 * 60 // 3 days
 
-  // Paginate through keys and apply async mapFn(client, key)
+  // Paginate through keys and apply async mapFn(key, client)
   client.scanMap = async ({
     pattern = '*',
     mapFn = () => {}
   }) => {
-    let nextCursor = 0
+    let nextCursor = '0'
 
     do {
       debug('scanMap iteration: %o', { cursor: nextCursor, pattern })
-
-      await client.scanAsync([nextCursor, 'MATCH', pattern])
-        .then(async ([cursor, keys]) => {
-          nextCursor = cursor
-
-          return Promise.map(keys, mapFn.bind(null, client))
-        })
+      const [cursor = '0', keys] = await client.scanAsync([nextCursor, 'MATCH', pattern])
+      nextCursor = cursor
+      await Promise.map(keys, key => mapFn(key, client))
     } while (nextCursor !== '0') // nextCursor is "0" if scan is completed.
 
     debug('scanMap reached full iteration')

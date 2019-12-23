@@ -59,7 +59,7 @@ const createInvalidate = (redis) => async () => {
   debug('search:cache')('INVALIDATE')
   await redis.scanMap({
     pattern: `${keyPrefix}*`,
-    mapFn: (client, key) => client.delAsync(key)
+    mapFn: (key, client) => client.delAsync(key)
   })
     .catch(() => {})// fails if no keys are matched
 }

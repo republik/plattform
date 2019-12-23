@@ -69,7 +69,7 @@ const createInvalidate = ({ options, redis }) => async function () {
   debug('crowdfundings:cache')('INVALIDATE')
   await redis.scanMap({
     pattern: `${namespace}:${options.prefix}*`,
-    mapFn: (client, key) => client.delAsync(key)
+    mapFn: (key, client) => client.delAsync(key)
   })
     .catch(() => {})// fails if no keys are matched
 }
