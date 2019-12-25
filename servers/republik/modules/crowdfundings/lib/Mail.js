@@ -395,6 +395,10 @@ mail.prepareMembershipOwnerNotice = async ({ user, endDate, graceEndDate, cancel
         content: `${FRONTEND_BASE_URL}/angebote?package=PROLONG&token=${customPledgeToken}`
       },
       {
+        name: 'cockpit_url',
+        content: `${FRONTEND_BASE_URL}/angebote?goto=cockpit&token=${customPledgeToken}`
+      },
+      {
         name: 'cancel_url',
         content: membershipId
           ? `${FRONTEND_BASE_URL}/abgang?membershipId=${membershipId}`

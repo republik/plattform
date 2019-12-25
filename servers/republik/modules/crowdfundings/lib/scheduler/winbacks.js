@@ -36,7 +36,10 @@ const winbackCanBeSentForCancellationDate = (createdAt) => {
 const getCancellations = async ({ now }, { pgdb }) => {
   const { maxCancelledAt, minCancelledAt } = getCancelledAtMinMax(now)
 
-  debug('get users for: %o', { maxCancelledAt, minCancelledAt })
+  debug('get users for: %o', {
+    maxCancelledAt: maxCancelledAt.toISOString(),
+    minCancelledAt: minCancelledAt.toISOString()
+  })
 
   const cancellations = await pgdb.query(`
     SELECT
