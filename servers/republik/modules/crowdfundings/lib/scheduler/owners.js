@@ -38,7 +38,7 @@ const createBuckets = (now) => [
   {
     name: 'membership_owner_prolong_notice',
     endDate: {
-      min: getMinEndDate(now, 22),
+      min: getMinEndDate(now, 13),
       max: getMaxEndDate(now, DAYS_BEFORE_END_DATE)
     },
     predicate: ({ id: userId, membershipType, membershipAutoPay, autoPay }) => {
