@@ -25,7 +25,10 @@ const getUsers = async ({ now }, { pgdb }) => {
   const maxEndDate = moment(now)
     .add(DAYS_BEFORE_END_DATE, 'days')
     .endOf('day')
-  debug('get users for: %o', {minEndDate, maxEndDate})
+  debug('get users for: %o', {
+    minEndDate: minEndDate.toISOString(),
+    maxEndDate: maxEndDate.toISOString()
+  })
 
   const users = await pgdb.query(`
     WITH dormant_membership_user_ids AS (
@@ -127,7 +130,7 @@ const inform = async (args, context) => {
         context,
         {
           onceFor: {
-            type: `membership_giver_prolong_notice`,
+            type: 'membership_giver_prolong_notice',
             userId,
             keys: lastEndDates
               .map(date => `lastEndDate:${formatDate(date)}`)
