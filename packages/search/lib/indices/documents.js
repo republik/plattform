@@ -51,11 +51,8 @@ module.exports = {
           number_of_fragments: 0
         }
       },
-      'meta.authors': {
-        boost: 3,
-        highlight: {
-          number_of_fragments: 0
-        }
+      'meta.creditsString': {
+        boost: 3
       },
       contentString: {
         highlight: {
@@ -396,6 +393,10 @@ module.exports = {
             },
             feed: {
               type: 'boolean'
+            },
+            creditsString: {
+              type: 'text',
+              analyzer: 'german'
             },
             credits: {
               ...mdastPartial
