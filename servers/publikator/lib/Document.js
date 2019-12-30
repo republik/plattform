@@ -6,6 +6,7 @@ const mp3Duration = require('@rocka/mp3-duration')
 const fetch = require('isomorphic-unfetch')
 
 const { timeFormat } = require('@orbiting/backend-modules-formats')
+const { mdastToString } = require('@orbiting/backend-modules-utils')
 const {
   Redirections: { upsert: upsertRedirection }
 } = require('@orbiting/backend-modules-redirections')
@@ -87,6 +88,8 @@ const prepareMetaForPublish = async ({
     }
   })
 
+  const creditsString = mdastToString({ children: credits })
+
   const { audioSourceMp3, audioSourceAac, audioSourceOgg } = doc.content.meta
   let durationMs = 0
   if (audioSourceMp3) {
@@ -148,6 +151,7 @@ const prepareMetaForPublish = async ({
     lastPublishedAt: lastPublishedAt || now,
     prepublication,
     scheduledAt,
+    creditsString,
     credits,
     audioSource,
     authors,

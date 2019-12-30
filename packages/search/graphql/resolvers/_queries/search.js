@@ -82,7 +82,7 @@ const getSimpleQueryStringQuery = (searchTerm) => {
     fuzzySearchTerm
   })
 
-  return fuzzySearchTerm
+  return `(${sanitizedSearchTerm}) | ("${sanitizedSearchTerm}") | (${fuzzySearchTerm})`
 }
 
 const createShould = function (
