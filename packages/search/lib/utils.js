@@ -74,7 +74,7 @@ const mdastContentToString = mdast =>
       mdast,
       node =>
         node.type === 'code' ||
-        ['TITLE', 'ARTICLECOLLECTION', 'INFOBOX', 'FIGURE', 'NOTE'].includes(node.identifier)
+        ['TITLE', 'ARTICLECOLLECTION', 'INFOBOX', 'FIGURE', 'NOTE', 'HTML'].includes(node.identifier)
     ),
     '\n'
   )
