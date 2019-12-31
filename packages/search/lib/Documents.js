@@ -788,6 +788,9 @@ const findTemplates = async function (elastic, template, repoId) {
 }
 
 module.exports = {
+  SHORT_DURATION_MINS,
+  MIDDLE_DURATION_MINS,
+  LONG_DURATION_MINS,
   schema,
   getElasticDoc,
   extractIdsFromNode,
