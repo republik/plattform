@@ -41,7 +41,7 @@ const fieldErrorStyle = css({
     borderColor: colors.error
   }
 })
-const fieldIncStyle = css({
+const noBrowserIconStyle = css({
   '::-ms-clear': {
     display: 'none'
   },
@@ -232,7 +232,8 @@ class Field extends Component {
             hasError && this.props.white && labelTextErrorWhiteStyle
           )
         : merge(labelTextStyle, colorStyle)
-    const incStyle = hasIncrease ? fieldIncStyle : undefined
+    const browserIconStyle =
+      hasIncrease || icon ? noBrowserIconStyle : undefined
     const iconStyle = icon ? fieldIconStyle : undefined
     const fStyle = hasError
       ? merge(
@@ -240,10 +241,10 @@ class Field extends Component {
           colorStyle,
           fieldErrorStyle,
           this.props.white && fieldErrorWhiteStyle,
-          incStyle,
+          browserIconStyle,
           iconStyle
         )
-      : merge(fieldStyle, incStyle, colorStyle, iconStyle)
+      : merge(fieldStyle, browserIconStyle, colorStyle, iconStyle)
 
     return (
       <label {...containerStyle}>
