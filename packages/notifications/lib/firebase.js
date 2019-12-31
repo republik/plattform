@@ -18,7 +18,7 @@ const DEV = process.env.NODE_ENV && process.env.NODE_ENV !== 'production'
 
 let initialized
 if (!FIREBASE_PROJECT_ID || !FIREBASE_CLIENT_EMAIL || !FIREBASE_PRIVATE_KEY || !FIREBASE_DATABASE_URL) {
-  console.log('missing env FIREBASE_*, sending push notifications via firebase will not work')
+  console.warn('missing env FIREBASE_*, sending push notifications via firebase will not work')
 } else {
   // singleton
   firebase.initializeApp({
@@ -40,7 +40,7 @@ const publish = async (args, pgdb) => {
     return
   }
   if (!initialized) {
-    throw new Error(`mssing env FIREBASE_*, can't publish`)
+    throw new Error('mssing env FIREBASE_*, can\'t publish')
   }
 
   const { tokens, title, body, url, icon, type, ttl, priority } = args
