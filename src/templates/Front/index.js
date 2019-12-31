@@ -601,11 +601,16 @@ const createSchema = ({ Link = DefaultLink, t = () => '', ...rest } = {}) => {
     rules: [
       {
         matchMdast: matchHeading(2),
-        component: ({ children, attributes }) => (
-          <TeaserSectionTitle attributes={attributes}>
-            {children}
-          </TeaserSectionTitle>
+        component: ({ url, children, attributes }) => (
+          <Link href={url} passHref>
+            <TeaserSectionTitle attributes={attributes}>
+              {children}
+            </TeaserSectionTitle>
+          </Link>
         ),
+        props: (node, index, parent) => ({
+          url: parent.data.url
+        }),
         editorModule: 'headline',
         editorOptions: {
           type: 'CAROUSELTITLE',
