@@ -231,7 +231,7 @@ query getFrontDiscussions($lastDays: Int!, $first: Int!, $highlightId: ID) {
     discussion {
       id
       ...DiscussionMetaData
-      comments(first: 3) {
+      comments(first: 3, orderBy: DATE, orderDirection: DESC) {
         totalCount
         nodes {
           id
