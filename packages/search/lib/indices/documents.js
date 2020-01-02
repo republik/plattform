@@ -1,3 +1,6 @@
+const { meta: { getWordsPerMinute } } = require('@orbiting/backend-modules-documents/lib')
+const { MIDDLE_DURATION_MINS } = require('../Documents')
+
 const keywordPartial = {
   fields: {
     keyword: {
@@ -70,6 +73,45 @@ module.exports = {
         boost: 3
       }
     },
+    functionScore: (query) => ({
+      query,
+      functions: [
+        {
+          filter: {
+            match: {
+              'meta.isSeriesMaster': true
+            }
+          },
+          weight: 20
+        },
+        {
+          filter: {
+            match: {
+              'meta.isSeriesEpisode': true
+            }
+          },
+          weight: 10
+        },
+        {
+          filter: {
+            range: {
+              'contentString.count': {
+                gte: getWordsPerMinute() * MIDDLE_DURATION_MINS
+              }
+            }
+          },
+          weight: 5
+        },
+        {
+          filter: {
+            match: {
+              'meta.template': 'editorialNewsletter'
+            }
+          },
+          weight: 0.1
+        }
+      ]
+    }),
     filter: {
       default: () => {
         const filter = {

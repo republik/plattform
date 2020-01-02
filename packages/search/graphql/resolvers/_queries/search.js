@@ -109,16 +109,19 @@ const createShould = function (
     })
 
     if (searchTerm) {
-      must = [
-        {
-          simple_query_string: {
-            query: getSimpleQueryStringQuery(searchTerm),
-            fields,
-            default_operator: 'AND',
-            analyzer: 'german'
-          }
+      const query = {
+        simple_query_string: {
+          query: getSimpleQueryStringQuery(searchTerm),
+          fields,
+          default_operator: 'AND',
+          analyzer: 'german'
         }
-      ]
+      }
+
+      must = [
+        query,
+        search.functionScore && { function_score: search.functionScore(query) }
+      ].filter(Boolean)
     }
 
     const rolebasedFilterArgs = Object.assign(
