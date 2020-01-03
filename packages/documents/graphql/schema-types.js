@@ -89,6 +89,7 @@ type Document {
     last: Int
     before: ID
     after: ID
+    feed: Boolean
   ): DocumentConnection!
 
   embeds(types: [EmbedType!]): [Embed!]!
