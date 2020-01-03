@@ -33,6 +33,7 @@ const resolveRepoId = field => async (meta, args, context) => {
 
 module.exports = {
   format: resolveRepoId('format'),
+  section: resolveRepoId('section'),
   dossier: resolveRepoId('dossier'),
   series: resolveRepoId('series')
 }
