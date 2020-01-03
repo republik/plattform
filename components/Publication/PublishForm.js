@@ -102,6 +102,18 @@ export const getRepoWithCommit = gql`
             twitterImage
             twitterTitle
             format {
+              id
+              repoId
+              meta {
+                path
+                title
+                color
+                kind
+              }
+            }
+            section {
+              id
+              repoId
               meta {
                 path
                 title
@@ -549,7 +561,8 @@ class PublishForm extends Component {
                   {renderMdast(
                     {
                       ...commit.document.content,
-                      format: commit.document.meta.format
+                      format: commit.document.meta.format,
+                      section: commit.document.meta.section
                     },
                     schema
                   )}

@@ -479,8 +479,9 @@ export class EditorPage extends Component {
 
       const json = {
         ...commit.document.content,
-        // add format to root mdast node
-        format: commit.document.meta.format
+        // add format & section to root mdast node
+        format: commit.document.meta.format,
+        section: commit.document.meta.section
       }
 
       committedEditorState = this.editor.serializer.deserialize(json)

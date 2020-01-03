@@ -35,6 +35,7 @@ const feedQuery = gql`
               color
               format {
                 id
+                repoId
                 meta {
                   path
                   title

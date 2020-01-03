@@ -211,6 +211,8 @@ const MetaData = ({
               t(`metaData/field/${customField.key}`, undefined, customField.key)
             const value = node.data.get(customField.key)
             const onChange = onInputChange(customField.key)
+            const rootDocDataKeys = ['format', 'section']
+
             return (
               <RepoSelect
                 key={customField.key}
@@ -218,30 +220,30 @@ const MetaData = ({
                 value={value}
                 template={customField.key}
                 onChange={
-                  customField.key === 'format'
+                  rootDocDataKeys.includes(customField.key)
                     ? (_, __, item) => {
                         editor.change(change => {
                           change.setNodeByKey(node.key, {
                             data: item
                               ? node.data.set(
-                                  'format',
+                                  customField.key,
                                   `https://github.com/${item.value.id}`
                                 )
-                              : node.data.remove('format')
+                              : node.data.remove(customField.key)
                           })
                           let titleNode = change.value.document.findDescendant(
                             node => node.type === 'TITLE'
                           )
                           if (titleNode) {
-                            const format = item
+                            const doc = item
                               ? item.value.latestCommit.document
                               : undefined
                             change.setNodeByKey(titleNode.key, {
-                              data: { format }
+                              data: { [customField.key]: doc }
                             })
                             titleNode.nodes.forEach(node => {
                               change.setNodeByKey(node.key, {
-                                data: { format }
+                                data: { [customField.key]: doc }
                               })
                             })
                           }
