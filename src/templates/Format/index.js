@@ -4,8 +4,10 @@ import colors from '../../theme/colors'
 import { FormatTag } from '../../components/Format'
 import TitleBlock from '../../components/TitleBlock'
 import * as Interaction from '../../components/Typography/Interaction'
+import * as Editorial from '../../components/Typography/Editorial'
 
 import createArticleSchema, { COVER_TYPE } from '../Article'
+import { styles } from '../Article/utils'
 
 import {
   matchZone,
@@ -63,14 +65,30 @@ const createSchema = ({
     series,
     titleBlockRule: titleBlockRule || {
       matchMdast: matchZone('TITLE'),
-      component: ({ children, ...props }) => (
+      component: ({ children, section, ...props }) => (
         <>
           <TitleBlock {...props} center Link={Link} margin={titleMargin}>
             {titleBlockPrepend}
+            {section && section.meta && (
+              <Editorial.Format
+                color={section.meta.color || colors[section.meta.kind]}
+                contentEditable={false}
+              >
+                <Link href={section.meta.path} passHref>
+                  <a {...styles.link} href={section.meta.path}>
+                    {section.meta.title}
+                  </a>
+                </Link>
+              </Editorial.Format>
+            )}
             {children}
           </TitleBlock>
         </>
       ),
+      props: (node, index, parent, { ancestors }) => ({
+        ...node.data,
+        section: ancestors[ancestors.length - 1].section
+      }),
       editorModule: 'title',
       editorOptions: {
         coverType: COVER_TYPE
