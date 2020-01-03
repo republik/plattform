@@ -47,7 +47,6 @@ export default ({ rule, subModules, TYPE }) => {
         rest
       )
       const { format, section } = rest.context
-      console.log(format, section)
       if (format || section) {
         // enhance all immediate children with format and section
         // - needed for headline
