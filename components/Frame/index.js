@@ -21,7 +21,7 @@ css.global('body', {
 const Frame = ({ t, children }) => (
   <main>
     <Head>
-      <title>Project R – {t('app/name')}</title>
+      <title>{t('app/name')}</title>
     </Head>
     {children}
   </main>

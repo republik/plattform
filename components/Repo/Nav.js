@@ -1,4 +1,5 @@
 import React from 'react'
+import Head from 'next/head'
 import { compose } from 'react-apollo'
 import { withRouter } from 'next/router'
 import { Link } from '../../lib/routes'
@@ -33,6 +34,11 @@ const Nav = ({ router, route, isNew, t }) => {
 
   return (
     <span>
+      <Head>
+        <title>
+          {route.split('/')[1]}: {params.repoId[1]} – Publikator
+        </title>
+      </Head>
       {intersperse(
         menu.map(item => {
           const label = t(`repo/nav/${item.key}`)
