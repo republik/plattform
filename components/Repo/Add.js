@@ -60,7 +60,7 @@ class RepoAdd extends Component {
     super(props)
     this.state = {
       title: '',
-      template: ''
+      template: templateKeys.includes('article') ? 'article' : templateKeys[0]
     }
   }
   getSlug(title) {
