@@ -78,6 +78,14 @@ module.exports = {
       functions: [
         {
           filter: {
+            terms: {
+              'meta.template': ['format', 'section', 'dossier']
+            }
+          },
+          weight: 20
+        },
+        {
+          filter: {
             match: {
               'meta.isSeriesMaster': true
             }
