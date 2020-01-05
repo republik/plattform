@@ -6,7 +6,9 @@ module.exports = async (__, args, context, info) => {
     first: args.first,
     after: args.after,
     before: args.before,
-    unrestricted: args.unrestricted,
+    unrestricted: args.unrestricted !== undefined
+      ? args.unrestricted
+      : args.template === 'section' ? true : undefined,
     filter: {
       ..._.omit(args, ['first', 'after', 'before', 'unrestricted']),
       type: 'Document'
