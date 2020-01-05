@@ -75,16 +75,9 @@ export {
   TeaserFrontCreditLink
 } from './components/TeaserFront'
 export { FormatTag } from './components/Format'
-export {
-  TeaserFrontDossier,
-  TeaserFrontDossierIntro,
-  TeaserFrontDossierHeadline,
-  TeaserFrontDossierLead,
-  // Components below aren't teaser-specific.
-  DossierTag,
-  DossierSubheader,
-  DossierTileHeadline
-} from './components/Dossier'
+
+export { TeaserSectionTitle } from './components/TeaserShared'
+
 export { ProgressCircle } from './components/Progress'
 export { Spinner, InlineSpinner } from './components/Spinner'
 export {
