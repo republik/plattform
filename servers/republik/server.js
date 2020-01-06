@@ -1,6 +1,11 @@
-const { server: Server } = require('@orbiting/backend-modules-base')
 const { merge } = require('apollo-modules-node')
+const cluster = require('cluster')
+
+const { NotifyListener: SearchNotifyListener } = require('@orbiting/backend-modules-search')
+const { server: Server } = require('@orbiting/backend-modules-base')
 const { t } = require('@orbiting/backend-modules-translate')
+const auth = require('@orbiting/backend-modules-auth')
+const SlackGreeter = require('@orbiting/backend-modules-slack/lib/SlackGreeter')
 
 const { graphql: documents } = require('@orbiting/backend-modules-documents')
 const { graphql: redirections } = require('@orbiting/backend-modules-redirections')
@@ -12,6 +17,7 @@ const { graphql: collections } = require('@orbiting/backend-modules-collections'
 const { graphql: crowdsourcing } = require('@orbiting/backend-modules-crowdsourcing')
 const { graphql: subscriptions } = require('@orbiting/backend-modules-subscriptions')
 const { graphql: cards } = require('@orbiting/backend-modules-cards')
+const { graphql: mail } = require('@orbiting/backend-modules-mail')
 
 const loaderBuilders = {
   ...require('@orbiting/backend-modules-voting/loaders'),
@@ -25,13 +31,9 @@ const loaderBuilders = {
 
 const { AccessScheduler, graphql: access } = require('@orbiting/backend-modules-access')
 const { PreviewScheduler, preview: previewLib } = require('@orbiting/backend-modules-preview')
+
 const MembershipScheduler = require('./modules/crowdfundings/lib/scheduler')
-
-const mail = require('./modules/crowdfundings/lib/Mail')
-const cluster = require('cluster')
-
-const SlackGreeter = require('@orbiting/backend-modules-slack/lib/SlackGreeter')
-const { NotifyListener: SearchNotifyListener } = require('@orbiting/backend-modules-search')
+const crowdfundingsMail = require('./modules/crowdfundings/lib/Mail')
 
 const {
   LOCAL_ASSETS_SERVER,
@@ -76,14 +78,16 @@ const run = async (workerId, config) => {
       collections,
       crowdsourcing,
       subscriptions,
-      cards
+      cards,
+      mail
     ]
   )
 
   // middlewares
   const middlewares = [
     require('./modules/crowdfundings/express/paymentWebhooks'),
-    require('./express/gsheets')
+    require('./express/gsheets'),
+    require('@orbiting/backend-modules-mail/express/Mandrill/webhook')
   ]
 
   if (MAIL_EXPRESS_RENDER) {
@@ -92,7 +96,7 @@ const run = async (workerId, config) => {
 
   if (LOCAL_ASSETS_SERVER) {
     const { express } = require('@orbiting/backend-modules-assets')
-    for (let key of Object.keys(express)) {
+    for (const key of Object.keys(express)) {
       middlewares.push(express[key])
     }
   }
@@ -100,7 +104,7 @@ const run = async (workerId, config) => {
   // signin hooks
   const signInHooks = [
     ({ userId, pgdb }) =>
-      mail.sendPledgeConfirmations({ userId, pgdb, t }),
+      crowdfundingsMail.sendPledgeConfirmations({ userId, pgdb, t }),
     ({ userId, isNew, contexts, pgdb }) =>
       previewLib.begin({ userId, contexts, pgdb, t })
   ]
@@ -111,7 +115,8 @@ const run = async (workerId, config) => {
       ...defaultContext,
       t,
       signInHooks,
-      mail,
+      mail: crowdfundingsMail,
+      auth,
       loaders
     }
     Object.keys(loaderBuilders).forEach(key => {
@@ -160,7 +165,7 @@ const runOnce = async (...args) => {
       { ACCESS_SCHEDULER, DEV }
     )
   } else {
-    accessScheduler = await AccessScheduler.init({ t, mail })
+    accessScheduler = await AccessScheduler.init({ t, mail: crowdfundingsMail })
   }
 
   let previewScheduler
@@ -169,7 +174,7 @@ const runOnce = async (...args) => {
       { PREVIEW_SCHEDULER, DEV }
     )
   } else {
-    previewScheduler = await PreviewScheduler.init({ t, mail })
+    previewScheduler = await PreviewScheduler.init({ t, mail: crowdfundingsMail })
   }
 
   let membershipScheduler
@@ -178,7 +183,7 @@ const runOnce = async (...args) => {
       { MEMBERSHIP_SCHEDULER, DEV }
     )
   } else {
-    membershipScheduler = await MembershipScheduler.init({ t, mail })
+    membershipScheduler = await MembershipScheduler.init({ t, mail: crowdfundingsMail })
   }
 
   const close = async () => {
