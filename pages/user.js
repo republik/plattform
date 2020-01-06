@@ -22,7 +22,8 @@ import LatestActivity from '../components/Users/LatestActivity'
 import EventLog from '../components/Users/EventLog'
 import Access from '../components/Users/Access'
 import Sessions from '../components/Users/Sessions'
-import Actions from '../components/Users/Actions';
+import Actions from '../components/Users/Actions'
+import MailLog from '../components/Users/MailLog'
 
 const styles = {
   row: css({
@@ -41,6 +42,9 @@ const styles = {
 const SectionSwitch = ({ userId, section }) => {
   if (section === 'access-grants') {
     return <Access userId={userId} />
+  }
+  if (section === 'maillog') {
+    return <MailLog userId={userId} />
   }
   if (section === 'sessions') {
     return <Fragment>
