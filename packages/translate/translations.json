@@ -1,5 +1,5 @@
 {
-  "updated": "2019-11-29T15:54:14.128Z",
+  "updated": "2020-01-07T13:39:13.292Z",
   "title": "live",
   "data": [
     {
@@ -532,7 +532,7 @@
     },
     {
       "key": "api/email/membership_giver_prolong_notice/subject",
-      "value": "Ihre verschenkten Abonnements"
+      "value": "Ihre verschenkten Mitgliedschaften"
     },
     {
       "key": "api/email/membership_winback_NO_TIME/subject",
@@ -564,7 +564,7 @@
     },
     {
       "key": "api/email/membership_owner_prolong_notice_7/subject",
-      "value": "Möchten Sie Ihr Abo verlängern oder die Republik verlassen? Entscheiden Sie sich bis {endDate}"
+      "value": "Möchten Sie Ihre Mitgliedschaft verlängern oder die Republik verlassen? Entscheiden Sie sich bis {endDate}"
     },
     {
       "key": "api/email/membership_owner_prolong_notice_0/sequenceNumber/true/subject",
@@ -580,15 +580,15 @@
     },
     {
       "key": "api/email/membership_deactivated_abo_uncancelled/sequenceNumber/true/subject",
-      "value": "Ihr Abonnement Nr. {sequenceNumber} wurde deaktiviert"
+      "value": "Ihre Mitgliedschaft Nr. {sequenceNumber} wurde deaktiviert"
     },
     {
       "key": "api/email/membership_deactivated_benefactor_abo_uncancelled/sequenceNumber/true/subject",
-      "value": "Ihr Abonnement Nr. {sequenceNumber} wurde deaktiviert"
+      "value": "Ihre Mitgliedschaft Nr. {sequenceNumber} wurde deaktiviert"
     },
     {
       "key": "api/email/membership_deactivated/subject",
-      "value": "Ihr Abonnement wurde deaktiviert"
+      "value": "Ihre Mitgliedschaft wurde deaktiviert"
     },
     {
       "key": "api/discussion/404",
