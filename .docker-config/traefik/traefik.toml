@@ -6,22 +6,6 @@
   [providers.file]
     filename = "/etc/traefik/traefik-provider.toml"
 
-[http.routers]
-  [http.routers.router0]
-    entryPoints = ["web"]
-    rule = "Host(`api.republik.test`)"
-    service = "s1"
-  [http.routers.frontend]
-    entryPoints = ["web"]
-    rule = "Host(`republik.test`)"
-    service = "frontend"
-
-[http.services]
-  [[http.services.s1.loadBalancer.servers]]
-    url = "http://localhost:5000"
-  [[http.services.frontend.loadBalancer.servers]]
-    url = "http://localhost:3010"
-
 [api]
   insecure = true
   dashboard = true

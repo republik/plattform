@@ -35,6 +35,6 @@
     [[http.services.frontend.loadBalancer.servers]]
       url = "http://localhost:3010"
     [[http.services.admin-frontend.loadBalancer.servers]]
-      url = "http://localhost:3002"
+      url = "http://localhost:3006"
     [[http.services.publikator-frontend.loadBalancer.servers]]
       url = "http://localhost:3005"
