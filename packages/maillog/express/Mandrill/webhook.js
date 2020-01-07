@@ -10,6 +10,14 @@ const {
 } = process.env
 
 module.exports = async (server, pgdb) => {
+  server.head(
+    '/maillog/mandrill/webhook',
+    bodyParser.urlencoded({ extended: true }),
+    async (req, res) => {
+      return res.sendStatus(200)
+    }
+  )
+
   server.post(
     '/maillog/mandrill/webhook',
     bodyParser.urlencoded({ extended: true }),
@@ -31,7 +39,7 @@ module.exports = async (server, pgdb) => {
         debug('signature invalid: %o', { webhook: signatureWebhook, expected: signatureExpected })
         console.warn('Mandrill/webhook: signature invalid')
 
-        return res.sendStatus(200)
+        return res.sendStatus(401)
       }
 
       try {
