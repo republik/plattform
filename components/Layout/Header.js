@@ -85,6 +85,14 @@ export default ({ ...props }) => {
               Users
             </a>
           </Link>
+          <Link route="maillog" params={searchParams}>
+            <a
+              className={`${link}`}
+              style={navLinkStyles}
+            >
+              E-Mails
+            </a>
+          </Link>
           <Link route="payments" params={searchParams}>
             <a
               className={`${link}`}

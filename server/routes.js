@@ -3,6 +3,7 @@ const routes = createRoutes()
 
 routes
   .add('users')
+  .add('maillog')
   .add('payments')
   .add('postfinance-payments')
   .add('merge-users')

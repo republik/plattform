@@ -10,6 +10,7 @@ import {
 } from '@project-r/styleguide'
 
 import routes from '../../server/routes'
+import { REPUBLIK_FRONTEND_URL } from '../../server/constants'
 
 import { Section } from '../Display/utils'
 const { Link } = routes
@@ -94,6 +95,20 @@ const Subnav = ({ userId, section }) => (
         Access Grants
       </a>
     </Link>
+    <Link
+      route='user'
+      params={{
+        userId,
+        section: 'maillog'
+      }}
+    >
+      <a
+        {...styles.navLink}
+        data-active={section === 'maillog'}
+      >
+        E-Mails
+      </a>
+    </Link>
   </div>
 )
 
@@ -128,7 +143,9 @@ export default ({ userId, section }) => {
                 ),
                 user.username && (
                   <span key="username">
-                    {user.username}
+                    <A key="profile" href={`${REPUBLIK_FRONTEND_URL}/~${user.username}`} target="_blank">
+                      {user.username}
+                    </A>
                   </span>
                 )
               ]
