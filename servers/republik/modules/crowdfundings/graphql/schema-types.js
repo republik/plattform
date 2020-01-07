@@ -304,6 +304,7 @@ enum CancellationCategoryType {
   TOO_EXPENSIVE
   NO_MONEY
   NO_TIME
+  UNCERTAIN_FUTURE
   EDITORIAL
   OTHER
   VOID

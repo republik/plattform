@@ -523,6 +523,10 @@
       "value": "Mehrere (der obigen) Gründe"
     },
     {
+      "key": "api/membership/cancel/category/UNCERTAIN_FUTURE",
+      "value": "Unsichere Zukunft der Republik"
+    },
+    {
       "key": "api/email/membership_cancel_notice/subject",
       "value": "Bestätigung Ihrer Kündigung"
     },
