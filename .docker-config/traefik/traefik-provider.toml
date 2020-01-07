@@ -4,6 +4,10 @@
       entryPoints = ["web"]
       rule = "Host(`api.republik.test`)"
       service = "api"
+    [http.routers.publikator-api]
+      entryPoints = ["web"]
+      rule = "Host(`api.publikator.republik.test`)"
+      service = "publikator-api"
     [http.routers.assets-api]
       entryPoints = ["web"]
       rule = "Host(`assets.republik.test`)"
@@ -24,6 +28,8 @@
   [http.services]
     [[http.services.api.loadBalancer.servers]]
       url = "http://localhost:5000"
+    [[http.services.publikator-api.loadBalancer.servers]]
+      url = "http://localhost:5010"
     [[http.services.assets-api.loadBalancer.servers]]
       url = "http://localhost:5020"
     [[http.services.frontend.loadBalancer.servers]]
