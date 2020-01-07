@@ -4,6 +4,7 @@ const INTERESTID_NOT_FOUND_ERROR = 'INTERESTID_NOT_FOUND_ERROR'
 const EMAIL_REQUIRED_ERROR = 'EMAIL_REQUIRED_ERROR'
 const SUBSCRIPTION_CONFIG_MISSING_ERROR = 'SUBSCRIPTION_CONFIG_MISSING_ERROR'
 const SUBSCRIPTION_HANDLER_MISSING_ERROR = 'SUBSCRIPTION_HANDLER_MISSING_ERROR'
+const SEND_ERROR = 'SEND_ERROR'
 
 class MailError extends Error {
   constructor (type, meta) {
@@ -50,11 +51,18 @@ class EmailRequiredMailError extends MailError {
   }
 }
 
+class SendMailError extends MailError {
+  constructor (meta) {
+    super(SEND_ERROR, meta)
+  }
+}
+
 module.exports = {
   NewsletterMemberMailError,
   RolesNotEligibleMailError,
   InterestIdNotFoundMailError,
   EmailRequiredMailError,
   SubscriptionConfigurationMissingMailError,
-  SubscriptionHandlerMissingMailError
+  SubscriptionHandlerMissingMailError,
+  SendMailError
 }

@@ -3,7 +3,9 @@ const debug = require('debug')('mail:lib:sendMailTemplate')
 const fs = require('fs')
 const path = require('path')
 
+const NodemailerInterface = require('../NodemailerInterface')
 const MandrillInterface = require('../MandrillInterface')
+
 const { send } = require('./mailLog')
 const shouldSendMessage = require('../utils/shouldSendMessage')
 const sendResultNormalizer = require('../utils/sendResultNormalizer')
@@ -158,6 +160,7 @@ if (SG_FONT_FACES) {
     content: SG_FONT_FACES
   })
 }
+
 if (SG_FONT_STYLES) {
   try {
     const styles = JSON.parse(SG_FONT_STYLES)
@@ -220,11 +223,25 @@ module.exports = async (mail, context, log) => {
 
   const sendFunc = sendResultNormalizer(
     shouldSend,
-    () => MandrillInterface({ logger: console }).send(
-      message,
-      !message.html ? mail.templateName : false,
-      []
-    )
+    () => {
+      // Backup method to send emails
+      const nodemailer = NodemailerInterface({ logger: console })
+      if (nodemailer.isUsable(mail, message)) {
+        return nodemailer.send(message)
+      }
+
+      // Default method to send emails
+      const mandrill = MandrillInterface({ logger: console })
+      if (mandrill.isUsable(mail, message)) {
+        return mandrill.send(
+          message,
+          !message.html ? mail.templateName : false,
+          []
+        )
+      }
+
+      return [{ error: 'No mailing interface usable', status: 'error' }]
+    }
   )
 
   return send({
