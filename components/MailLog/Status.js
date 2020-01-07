@@ -7,6 +7,7 @@ import {
   colors,
   Interaction,
   A,
+  Label,
   Overlay,
   OverlayToolbar,
   OverlayToolbarClose,
@@ -54,13 +55,18 @@ export default class Status extends Component {
 
     return (
       <>
-        {!['sent', 'sent-simulated'].includes(status) && (
+        {status !== 'sent' && error && (
           <div>
             <A href='#' onClick={this.openHandler}>
               <span {...styles.error}>
                 <MdError size='1.2em' {...styles.icon} /> Problem
               </span>
             </A>
+          </div>
+        )}
+        {status !== 'sent' && !error && (
+          <div>
+            <Label>{status}</Label>
           </div>
         )}
         {isOpen && (
