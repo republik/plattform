@@ -11,10 +11,9 @@ module.exports = (context) => ({
       )
   ),
   byIdOrEmail: createDataLoader(
-    async arrays => {
-      const values = arrays.flat().filter(Boolean)
-      const ids = values.flat().filter(isUuid)
-      const emails = values.flat().filter(v => !isUuid(v))
+    async values => {
+      const ids = values.filter(isUuid)
+      const emails = values.filter(v => !ids.includes(v))
 
       const or = [
         ids.length > 0 && { id: ids },
@@ -28,10 +27,10 @@ module.exports = (context) => ({
       return context.pgdb.public.users.find({ or }).then(users => users.map(transformUser))
     },
     null,
-    (array, rows) => rows.find(row => {
-      const values = array.filter(Boolean).map(value => value.toLowerCase())
-      return values.includes(row._raw.id) || values.includes(row._raw.email.toLowerCase())
-    })
+    (value, rows) => rows.find(row => (
+      row._raw.id === value ||
+      row._raw.email.toLowerCase() === value.toLowerCase()
+    ))
   ),
   credential: createDataLoader(ids =>
     context.pgdb.public.credentials.find({ id: ids })

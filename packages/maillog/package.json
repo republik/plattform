@@ -1,0 +1,26 @@
+{
+  "name": "@orbiting/backend-modules-maillog",
+  "version": "0.0.1",
+  "private": true,
+  "description": "GraphQL API to query maiLog",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/orbiting/backends.git"
+  },
+  "author": "Patrick Venetz <patrick.venetz@republik.ch>",
+  "license": "AGPL-3.0",
+  "publishConfig": {
+    "access": "public"
+  },
+  "bugs": {
+    "url": "https://github.com/orbiting/backends/issues"
+  },
+  "homepage": "https://github.com/orbiting/backends#readme",
+  "dependencies": {
+    "bluebird": "^3.7.2",
+    "body-parser": "^1.19.0",
+    "debug": "^4.1.1",
+    "moment": "^2.24.0"
+  }
+}

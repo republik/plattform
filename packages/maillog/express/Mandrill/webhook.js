@@ -1,4 +1,4 @@
-const debug = require('debug')('mail:express:Mandrill:webhook')
+const debug = require('debug')('maillog:express:Mandrill:webhook')
 const crypto = require('crypto')
 const Promise = require('bluebird')
 
@@ -11,7 +11,7 @@ const {
 
 module.exports = async (server, pgdb) => {
   server.post(
-    '/mail/mandrill/webhook',
+    '/maillog/mandrill/webhook',
     bodyParser.urlencoded({ extended: true }),
     async (req, res) => {
       const signatureWebhook = req.header('X-Mandrill-Signature')
