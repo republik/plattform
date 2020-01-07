@@ -1,7 +1,10 @@
-const { server: Server } = require('@orbiting/backend-modules-base')
 const { merge } = require('apollo-modules-node')
-const { t } = require('@orbiting/backend-modules-translate')
+const cluster = require('cluster')
 
+const { NotifyListener: SearchNotifyListener } = require('@orbiting/backend-modules-search')
+const { server: Server } = require('@orbiting/backend-modules-base')
+const { t } = require('@orbiting/backend-modules-translate')
+const SlackGreeter = require('@orbiting/backend-modules-slack/lib/SlackGreeter')
 const { graphql: documents } = require('@orbiting/backend-modules-documents')
 const { graphql: redirections } = require('@orbiting/backend-modules-redirections')
 const { graphql: search } = require('@orbiting/backend-modules-search')
@@ -12,6 +15,7 @@ const { graphql: collections } = require('@orbiting/backend-modules-collections'
 const { graphql: crowdsourcing } = require('@orbiting/backend-modules-crowdsourcing')
 const { graphql: subscriptions } = require('@orbiting/backend-modules-subscriptions')
 const { graphql: cards } = require('@orbiting/backend-modules-cards')
+const { graphql: maillog } = require('@orbiting/backend-modules-maillog')
 
 const loaderBuilders = {
   ...require('@orbiting/backend-modules-voting/loaders'),
@@ -25,13 +29,9 @@ const loaderBuilders = {
 
 const { AccessScheduler, graphql: access } = require('@orbiting/backend-modules-access')
 const { PreviewScheduler, preview: previewLib } = require('@orbiting/backend-modules-preview')
+
 const MembershipScheduler = require('./modules/crowdfundings/lib/scheduler')
-
 const mail = require('./modules/crowdfundings/lib/Mail')
-const cluster = require('cluster')
-
-const SlackGreeter = require('@orbiting/backend-modules-slack/lib/SlackGreeter')
-const { NotifyListener: SearchNotifyListener } = require('@orbiting/backend-modules-search')
 
 const {
   LOCAL_ASSETS_SERVER,
@@ -76,14 +76,16 @@ const run = async (workerId, config) => {
       collections,
       crowdsourcing,
       subscriptions,
-      cards
+      cards,
+      maillog
     ]
   )
 
   // middlewares
   const middlewares = [
     require('./modules/crowdfundings/express/paymentWebhooks'),
-    require('./express/gsheets')
+    require('./express/gsheets'),
+    require('@orbiting/backend-modules-maillog/express/Mandrill/webhook')
   ]
 
   if (MAIL_EXPRESS_RENDER) {
@@ -92,7 +94,7 @@ const run = async (workerId, config) => {
 
   if (LOCAL_ASSETS_SERVER) {
     const { express } = require('@orbiting/backend-modules-assets')
-    for (let key of Object.keys(express)) {
+    for (const key of Object.keys(express)) {
       middlewares.push(express[key])
     }
   }
