@@ -1,6 +1,7 @@
 const fetch = require('isomorphic-unfetch')
 const checkEnv = require('check-env')
 const crypto = require('crypto')
+const debug = require('debug')('mail:MailchimpInterface')
 const { NewsletterMemberMailError } = require('./errors')
 
 const {
@@ -30,7 +31,7 @@ const MailchimpInterface = ({ logger }) => {
       return this.buildApiUrl(`/members/${hash}`)
     },
     async fetchAuthenticated (method, url, request = {}) {
-      logger.log(`mailchimp -> ${method} ${url}`)
+      debug(`${method} ${url}`)
       const options = {
         method,
         headers: {
@@ -50,7 +51,7 @@ const MailchimpInterface = ({ logger }) => {
         const response = await this.fetchAuthenticated('GET', url)
         const json = await response.json()
         if (response.status >= MINIMUM_HTTP_RESPONSE_STATUS_ERROR) {
-          logger.error(`mailchimp -> could not get member: ${email} ${json.detail}`)
+          debug(`could not get member: ${email} ${json.detail}`)
           return null
         }
         return json
@@ -66,7 +67,7 @@ const MailchimpInterface = ({ logger }) => {
         const response = await this.fetchAuthenticated('PUT', url, request)
         const json = await response.json()
         if (response.status >= MINIMUM_HTTP_RESPONSE_STATUS_ERROR) {
-          logger.error(`mailchimp -> could not update member: ${email} ${json.detail}`)
+          debug(`could not update member: ${email} ${json.detail}`)
           return null
         }
         return json
@@ -80,7 +81,7 @@ const MailchimpInterface = ({ logger }) => {
       try {
         const response = await this.fetchAuthenticated('DELETE', url)
         if (response.status >= MINIMUM_HTTP_RESPONSE_STATUS_ERROR) {
-          logger.error(`mailchimp -> could not delete member: ${email}`)
+          debug(`could not delete member: ${email}`)
           return null
         }
         return true
@@ -93,9 +94,9 @@ const MailchimpInterface = ({ logger }) => {
 }
 
 MailchimpInterface.MemberStatus = {
-  'Subscribed': 'subscribed',
-  'Pending': 'pending',
-  'Unsubscribed': 'unsubscribed'
+  Subscribed: 'subscribed',
+  Pending: 'pending',
+  Unsubscribed: 'unsubscribed'
 }
 
 module.exports = MailchimpInterface
