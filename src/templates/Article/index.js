@@ -753,6 +753,7 @@ const createSchema = ({
   titleMargin = true,
   repoPrefix = 'article-',
   series = true,
+  darkMode = true,
   Link = DefaultLink,
   getPath = getDatePath,
   t = () => '',
@@ -792,6 +793,7 @@ const createSchema = ({
             editorModule: 'meta',
             editorOptions: {
               series,
+              darkMode,
               customFields: customMetaFields,
               teaser:
                 previewTeaser ||

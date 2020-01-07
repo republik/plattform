@@ -20,6 +20,7 @@ const createSchema = ({
   Link = DefaultLink,
   customMetaFields = [],
   series = false,
+  darkMode = false,
   titleBlockPrepend = null,
   titleMargin = true,
   titleBlockRule,
@@ -52,6 +53,7 @@ const createSchema = ({
       ...customMetaFields
     ],
     series,
+    darkMode,
     titleBlockRule: titleBlockRule || {
       matchMdast: matchZone('TITLE'),
       component: ({ children, ...props }) => (

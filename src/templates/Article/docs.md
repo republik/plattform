@@ -12,6 +12,7 @@ const schema = createArticleSchema({
 - `documentEditorOptions`, forward options to the document editor module
 - `customMetaFields`, passed to `customFields` of the `meta` module. Default to repo refs for discussion, format and dossier.
 - `series`, allow to form series via meta data
+- `darkMode`, allow to set the article in dark mode
 - `titleBlockPrepend`, prepend React elements—e.g. a dossier tag—to the title block
 - `titleBlockRule`, overwrite the whole title block, prepend and append are no longer applied
 - `titleMargin`, automatically adds some margin below the title, default `true`

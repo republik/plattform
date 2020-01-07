@@ -17,6 +17,7 @@ Defaults:
 - `getPath`, `/dossier/:slug`
 - `customMetaFields`, always adds repo ref for `discussion`
 - `series`, false
+- `darkMode`, false
 
 # Example
 
