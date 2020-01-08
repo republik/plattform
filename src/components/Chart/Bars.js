@@ -151,6 +151,7 @@ const BarChart = props => {
     inlineValueUnit,
     inlineLabel,
     inlineSecondaryLabel,
+    inlineLabelPosition,
     link
   } = props
 
@@ -424,7 +425,27 @@ const BarChart = props => {
                         (segment.value >= 0 && isLast) ||
                         (segment.value < 0 && i !== 0)
                       const inlineFill = getTextColor(segment.color)
-                      const inlineEndAnchor = isLast && i !== 0
+                      const isLastSegment = isLast && i !== 0
+
+                      const inlinePos =
+                        segment.datum[inlineLabelPosition] ||
+                        (segment.value >= 0
+                          ? isLastSegment
+                            ? 'right'
+                            : 'left'
+                          : isLastSegment
+                          ? 'left'
+                          : 'right')
+                      let iTextAnchor = 'middle'
+                      let iXOffset = segment.width / 2
+                      if (inlinePos === 'right') {
+                        iTextAnchor = 'end'
+                        iXOffset = segment.width - 5
+                      }
+                      if (inlinePos === 'left') {
+                        iTextAnchor = 'start'
+                        iXOffset = 5
+                      }
 
                       return (
                         <g key={`seg${i}`} transform={`translate(0,${bar.y})`}>
@@ -438,15 +459,12 @@ const BarChart = props => {
                             <Fragment>
                               <text
                                 {...styles.inlineLabel}
-                                x={
-                                  segment.x +
-                                  (inlineEndAnchor ? segment.width - 5 : 5)
-                                }
+                                x={segment.x + iXOffset}
                                 y={bar.style.inlineTop}
                                 dy='1em'
                                 fontSize={bar.style.fontSize}
                                 fill={inlineFill}
-                                textAnchor={inlineEndAnchor ? 'end' : 'start'}
+                                textAnchor={iTextAnchor}
                               >
                                 {subsup.svg(
                                   [
@@ -459,17 +477,14 @@ const BarChart = props => {
                               {inlineSecondaryLabel && (
                                 <text
                                   {...styles.inlineLabel}
-                                  x={
-                                    segment.x +
-                                    (inlineEndAnchor ? segment.width - 5 : 5)
-                                  }
+                                  x={segment.x + iXOffset}
                                   y={
                                     bar.style.inlineTop + bar.style.fontSize + 5
                                   }
                                   dy='1em'
                                   fontSize={bar.style.secondaryFontSize}
                                   fill={inlineFill}
-                                  textAnchor={inlineEndAnchor ? 'end' : 'start'}
+                                  textAnchor={iTextAnchor}
                                 >
                                   {subsup.svg(
                                     segment.datum[inlineSecondaryLabel]
@@ -635,6 +650,7 @@ export const propTypes = {
   inlineValueUnit: PropTypes.string,
   inlineLabel: PropTypes.string,
   inlineSecondaryLabel: PropTypes.string,
+  inlineLabelPosition: PropTypes.string,
   tLabel: PropTypes.func.isRequired,
   description: PropTypes.string,
   showBarValues: PropTypes.bool
