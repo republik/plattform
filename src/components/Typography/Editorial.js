@@ -4,9 +4,9 @@ import { css } from 'glamor'
 import { mUp } from '../../theme/mediaQueries'
 import { fontStyles } from '../../theme/fonts'
 import { underline } from '../../lib/styleMixins'
-import colors from '../../theme/colors'
 import { fontRule as interactionFontRule } from './Interaction'
 import { convertStyleToRem, pxToRem } from './utils'
+import { useColorContext } from '../Colors/useColorContext'
 
 export {
   List,
@@ -32,7 +32,6 @@ const headline = css({
     },
     margin: '0 0 12px 0'
   },
-  color: colors.text,
   ':first-child': {
     marginTop: 0
   },
@@ -41,11 +40,17 @@ const headline = css({
   }
 })
 
-export const Headline = ({ children, attributes, ...props }) => (
-  <h1 {...attributes} {...props} {...headline}>
-    {children}
-  </h1>
-)
+export const Headline = ({ children, attributes, ...props }) => {
+  const colorScheme = useColorContext()
+  const colors = css({
+    color: colorScheme.text
+  })
+  return (
+    <h1 {...attributes} {...props} {...headline} {...colors}>
+      {children}
+    </h1>
+  )
+}
 
 const subhead = css({
   ...convertStyleToRem(styles.serifBold19),
@@ -53,15 +58,20 @@ const subhead = css({
   [mUp]: {
     ...convertStyleToRem(styles.serifBold24),
     margin: '46px 0 12px 0'
-  },
-  color: colors.text
+  }
 })
 
-export const Subhead = ({ children, attributes, ...props }) => (
-  <h2 {...attributes} {...props} {...subhead}>
-    {children}
-  </h2>
-)
+export const Subhead = ({ children, attributes, ...props }) => {
+  const colorScheme = useColorContext()
+  const colors = css({
+    color: colorScheme.text
+  })
+  return (
+    <h2 {...attributes} {...props} {...subhead} {...colors}>
+      {children}
+    </h2>
+  )
+}
 
 const lead = css({
   ...convertStyleToRem(styles.serifRegular19),
@@ -70,15 +80,20 @@ const lead = css({
   [mUp]: {
     ...convertStyleToRem(styles.serifRegular23),
     margin: '0 0 20px 0'
-  },
-  color: colors.text
+  }
 })
 
-export const Lead = ({ children, attributes, ...props }) => (
-  <p {...attributes} {...props} {...lead} {...fontRule}>
-    {children}
-  </p>
-)
+export const Lead = ({ children, attributes, ...props }) => {
+  const colorScheme = useColorContext()
+  const colors = css({
+    color: colorScheme.text
+  })
+  return (
+    <p {...attributes} {...props} {...lead} {...colors} {...fontRule}>
+      {children}
+    </p>
+  )
+}
 
 const subjectStyle = {
   color: '#8c8c8c',
@@ -118,15 +133,21 @@ const credit = css({
   [mUp]: {
     ...convertStyleToRem(styles.sansSerifRegular15),
     margin: '20px 0 0 0'
-  },
-  color: colors.text
+  }
 })
 
-export const Credit = ({ children, attributes, ...props }) => (
-  <p {...attributes} {...props} {...credit}>
-    {children}
-  </p>
-)
+export const Credit = ({ children, attributes, ...props }) => {
+  const colorScheme = useColorContext()
+  const colors = css({
+    color: colorScheme.text
+  })
+
+  return (
+    <p {...attributes} {...props} {...credit} {...colors}>
+      {children}
+    </p>
+  )
+}
 
 const format = css({
   ...convertStyleToRem(styles.sansSerifMedium16),
@@ -144,7 +165,6 @@ export const Format = ({ children, color, attributes, ...props }) => (
 )
 
 const paragraph = css({
-  color: colors.text,
   margin: '22px 0 22px 0',
   ...convertStyleToRem(styles.serifRegular17),
   [mUp]: {
@@ -161,11 +181,17 @@ const paragraph = css({
     marginTop: 0
   }
 })
-export const P = ({ children, attributes, ...props }) => (
-  <p {...attributes} {...props} {...paragraph} {...fontRule}>
-    {children}
-  </p>
-)
+export const P = ({ children, attributes, ...props }) => {
+  const colorScheme = useColorContext()
+  const colors = css({
+    color: colorScheme.text
+  })
+  return (
+    <p {...attributes} {...props} {...paragraph} {...colors} {...fontRule}>
+      {children}
+    </p>
+  )
+}
 
 const question = css({
   ...convertStyleToRem(styles.serifBold17),
@@ -174,14 +200,19 @@ const question = css({
     ...convertStyleToRem(styles.serifBold19),
     lineHeight: '30px',
     margin: '46px 0 -18px 0'
-  },
-  color: colors.text
+  }
 })
-export const Question = ({ children, attributes, ...props }) => (
-  <p {...attributes} {...props} {...question} {...fontRule}>
-    {children}
-  </p>
-)
+export const Question = ({ children, attributes, ...props }) => {
+  const colorScheme = useColorContext()
+  const colors = css({
+    color: colorScheme.text
+  })
+  return (
+    <p {...attributes} {...props} {...question} {...colors} {...fontRule}>
+      {children}
+    </p>
+  )
+}
 
 export const Answer = P
 
@@ -210,19 +241,24 @@ export const StrikeThrough = ({ children, attributes, ...props }) => (
 
 export const link = css({
   ...underline,
-  cursor: 'pointer',
-  color: colors.text,
-  '@media (hover)': {
-    ':hover': {
-      color: colors.lightText
-    }
-  }
+  cursor: 'pointer'
 })
-export const A = React.forwardRef(({ children, attributes, ...props }, ref) => (
-  <a {...attributes} {...props} {...link} ref={ref}>
-    {children}
-  </a>
-))
+export const A = React.forwardRef(({ children, attributes, ...props }, ref) => {
+  const [colorScheme] = useColorContext()
+  const colors = css({
+    color: colorScheme.text,
+    '@media (hover)': {
+      ':hover': {
+        color: colorScheme.lightText
+      }
+    }
+  })
+  return (
+    <a {...attributes} {...props} {...link} {...colors} ref={ref}>
+      {children}
+    </a>
+  )
+})
 
 const note = css({
   ...convertStyleToRem(styles.sansSerifRegular12),

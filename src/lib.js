@@ -36,6 +36,8 @@ export { VideoPlayer } from './components/VideoPlayer'
 export { default as LazyLoad } from './components/LazyLoad'
 export { default as LazyImage } from './components/LazyLoad/Image'
 export { Collapsable } from './components/Collapsable'
+export { default as ColorContext } from './components/Colors/ColorContext'
+export { useColorContext } from './components/Colors/useColorContext'
 export {
   InfoBox,
   InfoBoxText,

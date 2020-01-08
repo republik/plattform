@@ -1,12 +1,25 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { css } from 'glamor'
+import { useColorContext } from '../../components/Colors/useColorContext'
 
 const styles = {
   container: css({
-    display: 'block',
-    backgroundColor: '#fff'
+    display: 'block'
   })
+}
+
+const ArticleContainer = ({ children }) => {
+  const [colorScheme] = useColorContext()
+  const colors = css({
+    backgroundColor: colorScheme.containerBg
+  })
+
+  return (
+    <article {...styles.container} {...colors}>
+      {children}
+    </article>
+  )
 }
 
 class DocumentContainer extends Component {
@@ -44,7 +57,7 @@ class DocumentContainer extends Component {
   }
   render() {
     const { children } = this.props
-    return <article {...styles.container}>{children}</article>
+    return <ArticleContainer>{children}</ArticleContainer>
   }
 }
 
