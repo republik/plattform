@@ -8,7 +8,7 @@ export default withT(({ t, data, onChange }) => {
   return (
     <div style={{ marginTop: 10 }}>
       <Checkbox checked={data.get(DARK_MODE_KEY)} onChange={onChange}>
-        Dark mode
+        {t('metaData/darkMode')}
       </Checkbox>
     </div>
   )

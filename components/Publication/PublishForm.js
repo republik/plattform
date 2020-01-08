@@ -557,6 +557,10 @@ class PublishForm extends Component {
                     backgroundColor: '#eee',
                     width: size.width + PADDING_X * 2
                   }}
+                  dark={
+                    commit.document.content &&
+                    commit.document.content.meta.darkMode
+                  }
                 >
                   {renderMdast(
                     {
