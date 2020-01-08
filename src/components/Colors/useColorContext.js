@@ -1,13 +1,17 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState, useEffect } from 'react'
 import ColorContext from './ColorContext'
 import colors from '../../theme/colors'
 
 export const useColorContext = () => {
-  const colorScheme = useContext(ColorContext)
-  return [
-    {
+  const colorContext = useContext(ColorContext)
+  const [colorScheme, setColorScheme] = useState({})
+
+  useEffect(() => {
+    setColorScheme({
       ...colors,
-      ...colorScheme
-    }
-  ]
+      ...colorContext
+    })
+  }, [colorContext])
+
+  return [colorScheme]
 }
