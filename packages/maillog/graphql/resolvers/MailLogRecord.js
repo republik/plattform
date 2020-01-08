@@ -11,6 +11,7 @@ module.exports = {
     record.status.toLowerCase(),
   error: record =>
     (record.mandrillLastEvent && record.mandrillLastEvent.msg && record.mandrillLastEvent.msg.diag) ||
+    (record.mandrillLastEvent && record.mandrillLastEvent.msg && record.mandrillLastEvent.msg.bounce_description) ||
     (record.result && record.result.reject_reason) ||
     (record.result && record.result.error) ||
     (record.error && record.error.message) ||
