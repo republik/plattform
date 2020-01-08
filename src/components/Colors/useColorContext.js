@@ -4,7 +4,7 @@ import colors from '../../theme/colors'
 
 export const useColorContext = () => {
   const colorContext = useContext(ColorContext)
-  const [colorScheme, setColorScheme] = useState({})
+  const [colorScheme, setColorScheme] = useState(colors)
 
   useEffect(() => {
     setColorScheme({

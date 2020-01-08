@@ -41,7 +41,7 @@ const headline = css({
 })
 
 export const Headline = ({ children, attributes, ...props }) => {
-  const colorScheme = useColorContext()
+  const [colorScheme] = useColorContext()
   const colors = css({
     color: colorScheme.text
   })
@@ -62,7 +62,7 @@ const subhead = css({
 })
 
 export const Subhead = ({ children, attributes, ...props }) => {
-  const colorScheme = useColorContext()
+  const [colorScheme] = useColorContext()
   const colors = css({
     color: colorScheme.text
   })
@@ -84,7 +84,7 @@ const lead = css({
 })
 
 export const Lead = ({ children, attributes, ...props }) => {
-  const colorScheme = useColorContext()
+  const [colorScheme] = useColorContext()
   const colors = css({
     color: colorScheme.text
   })
@@ -137,7 +137,7 @@ const credit = css({
 })
 
 export const Credit = ({ children, attributes, ...props }) => {
-  const colorScheme = useColorContext()
+  const [colorScheme] = useColorContext()
   const colors = css({
     color: colorScheme.text
   })
@@ -182,7 +182,7 @@ const paragraph = css({
   }
 })
 export const P = ({ children, attributes, ...props }) => {
-  const colorScheme = useColorContext()
+  const [colorScheme] = useColorContext()
   const colors = css({
     color: colorScheme.text
   })
@@ -203,7 +203,7 @@ const question = css({
   }
 })
 export const Question = ({ children, attributes, ...props }) => {
-  const colorScheme = useColorContext()
+  const [colorScheme] = useColorContext()
   const colors = css({
     color: colorScheme.text
   })

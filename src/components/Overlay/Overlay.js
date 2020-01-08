@@ -4,6 +4,8 @@ import PropTypes from 'prop-types'
 import { css, merge } from 'glamor'
 import zIndex from '../../theme/zIndex'
 import { mUp } from '../../theme/mediaQueries'
+import colors from '../../theme/colors'
+import ColorContext from '../Colors/ColorContext'
 
 const styles = {
   root: css({
@@ -28,7 +30,7 @@ const styles = {
     boxShadow: '0 0 6px rgba(0,0,0,.2)',
     overflowY: 'auto',
     WebkitOverflowScrolling: 'touch',
-
+    color: colors.text,
     [mUp]: {
       maxWidth: '600px',
       minHeight: '60vh',
@@ -119,9 +121,11 @@ export const OverlayRenderer = ({
       style={{ opacity: isVisible ? 1 : 0 }}
       onClick={close}
     >
-      <div {...merge(styles.inner, mUpStyle && { [mUp]: mUpStyle })}>
-        {children}
-      </div>
+      <ColorContext.Provider value={colors}>
+        <div {...merge(styles.inner, mUpStyle && { [mUp]: mUpStyle })}>
+          {children}
+        </div>
+      </ColorContext.Provider>
     </div>
   )
 }
