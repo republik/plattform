@@ -65,7 +65,7 @@ const SectionSwitch = ({ userId, section }) => {
     </div>
     <div {...styles.fifty}>
       <AuthSettings userId={userId} />
-      <LatestActivity userId={userId} />
+      <MailLog userId={userId} narrow={2} />
       <AdminNotes userId={userId} />
     </div>
     <div {...styles.fifty}>

@@ -4,26 +4,24 @@ import gql from 'graphql-tag'
 import withT from '../../lib/withT'
 
 import {
-  Label,
   Loader,
   A
 } from '@project-r/styleguide'
 
 import {
-  displayDateTime,
   Section,
   SectionTitle
 } from '../Display/utils'
 
-import { tableStyles } from '../Tables/utils'
-import routes from '../../server/routes'
 import List from './List'
 
-const { Link } = routes
-
 const GET_MAILLOG = gql`
-query getMailLog {
-  mailLog(first: 100) {
+query getMailLog($after: String) {
+  mailLog(first: 100, after: $after) {
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
     nodes {
       id
       email
@@ -48,7 +46,18 @@ query getMailLog {
 
 const Page = withT(({ userId }) => {
   return (
-    <Query query={GET_MAILLOG} variables={{id: userId}}>{({loading, error, data}) => {
+    <Query query={GET_MAILLOG} variables={{id: userId}}>{({loading, error, data, fetchMore}) => {
+      const fetchMoreNodes = () => fetchMore({
+        variables: { after: data.mailLog.pageInfo.endCursor },
+        updateQuery: (previousResult, { fetchMoreResult }) => ({
+          mailLog: {
+            __typename: previousResult.mailLog.__typename,
+            nodes: [ ...previousResult.mailLog.nodes, ...fetchMoreResult.mailLog.nodes ],
+            pageInfo: fetchMoreResult.mailLog.pageInfo
+          }
+        })
+      })
+
       return (
         <Loader
           loading={loading}
@@ -59,6 +68,9 @@ const Page = withT(({ userId }) => {
                 E-Mails
               </SectionTitle>
               <List nodes={data.mailLog.nodes} />
+              {data.mailLog.pageInfo.endCursor && (
+                <A href='#' onClick={fetchMoreNodes}>mehr</A>
+              )}
             </Section>
           }
         />
