@@ -12,8 +12,8 @@ module.exports = (mail, message) => {
     ? console.log
     : a => {}
 
-  // don't send in dev, expect SEND_MAILS is true
-  // don't send mails if SEND_MAILS is false
+  // don't schedule in dev, expect SEND_MAILS is true
+  // don't schedule mails if SEND_MAILS is false
   if (SEND_MAILS === 'false' || (DEV && SEND_MAILS !== 'true')) {
     logger('\n\nSEND_MAILS prevented mail from being scheduled')
     return false
