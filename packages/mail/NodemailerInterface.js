@@ -4,7 +4,7 @@ const { SendMailError } = require('./errors')
 
 const {
   SEND_MAILS_NODEMAILER_CONNECTION_URL,
-  SEND_MAILS_NODEMAILER_REGEX
+  SEND_MAILS_NODEMAILER_TEMPLATE_REGEX
 } = process.env
 
 const transporter =
@@ -30,8 +30,8 @@ module.exports = () => {
     isUsable (mail) {
       return !!(
         transporter &&
-        SEND_MAILS_NODEMAILER_REGEX &&
-        new RegExp(SEND_MAILS_NODEMAILER_REGEX, 'ig').test(mail.templateName)
+        SEND_MAILS_NODEMAILER_TEMPLATE_REGEX &&
+        new RegExp(SEND_MAILS_NODEMAILER_TEMPLATE_REGEX, 'ig').test(mail.templateName)
       )
     },
     async send (message) {
