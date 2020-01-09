@@ -76,7 +76,8 @@ const colors = {
     divider: '#5b5b5b',
     fill: '#FFF',
     lightFill: '#555',
-    error: 'rgb(239,69,51)'
+    error: 'rgb(239,69,51)',
+    disabled: '#242424'
   },
   ...getJson('COLORS')
 }
