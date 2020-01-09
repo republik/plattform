@@ -16,11 +16,7 @@ type queries {
   adminUsers(
     limit: Int!,
     offset: Int,
-    orderBy: OrderBy,
     search: String,
-    dateRangeFilter: DateRangeFilter,
-    stringArrayFilter: StringArrayFilter,
-    booleanFilter: BooleanFilter
   ): Users!
 
   # required role: supporter

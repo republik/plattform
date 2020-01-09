@@ -1,99 +1,140 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
-const {dateRangeFilterWhere,
-  stringArrayFilterWhere,
-  booleanFilterWhere,
-  andFilters
-} = require('../../../lib/Filters')
 const { transformUser } = require('@orbiting/backend-modules-auth')
 
 // Lower threshold requires word(s) to be more similar
 const WORD_SIMILARITY_THRESHOLD = 0.6
 
-module.exports = async (
-  _,
-  { limit, offset = 0, orderBy, search, dateRangeFilter, stringArrayFilter, booleanFilter },
-  { pgdb, user }
-) => {
+// List of patters a search is matched against (test)
+const patterns = [
+  {
+    name: 'email address',
+    test: /(?<word>\S*@\S+)/i,
+    query: `
+      SELECT
+        u.email <->> :word AS word_sim,
+        u.id "userId"
+      FROM users u
+    `,
+    threshold: 0.3
+  },
+  {
+    name: 'payment HR-ID',
+    test: /^hrid:(?<word>\S+)/i,
+    query: `
+      SELECT
+        pay."hrid" <->> :word AS word_sim,
+        p."userId"
+      FROM "payments" pay
+      JOIN "pledgePayments" pp ON pay.id = pp."paymentId"
+      JOIN "pledges" p ON pp."pledgeId" = p.id
+    `
+  },
+  {
+    name: 'membership voucher code',
+    test: /^code:(?<word>\S+)/i,
+    query: `
+      SELECT
+        m."voucherCode" <->> :word AS word_sim,
+        m."userId"
+      FROM "memberships" m
+      WHERE m."voucherCode" IS NOT NULL
+    `
+  },
+  {
+    name: 'membership sequence number',
+    test: /^abo:(?<word>\d+)/i,
+    query: `
+      SELECT
+        m."sequenceNumber"::text <->> :word AS word_sim,
+        m."userId"
+      FROM "memberships" m
+    `,
+    threshold: 0.2
+  },
+  {
+    name: 'access grant code',
+    test: /^probe:(?<word>\S+)/i,
+    query: `
+      SELECT
+        ag."voucherCode" <->> :word AS word_sim,
+        coalesce(ag."recipientUserId", ag."granterUserId") "userId"
+      FROM "accessGrants" ag
+      WHERE ag."voucherCode" IS NOT NULL
+    `
+  },
+  {
+    name: 'user full name',
+    test: /(?<word>.+)/i,
+    query: `
+        SELECT
+        concat_ws(' ', u."firstName", u."lastName") <->> :word AS word_sim,
+        u.id "userId"
+      FROM users u
+      WHERE u."firstName" IS NOT NULL
+        OR u."lastName" IS NOT NULL
+    `
+  }
+]
+
+module.exports = async (_, { limit, offset = 0, search }, { pgdb, user }) => {
   Roles.ensureUserHasRole(user, 'supporter')
 
-  const queryFilters = !!(dateRangeFilter || stringArrayFilter || booleanFilter) &&
-    andFilters([
-      dateRangeFilterWhere(dateRangeFilter, 'u'),
-      stringArrayFilterWhere(stringArrayFilter, 'u'),
-      booleanFilterWhere(booleanFilter, 'u')
-    ])
+  const pattern = search && patterns.reduce(
+    (chosen, pattern) => {
+      // Skip if a pattern matched already
+      if (chosen) {
+        return chosen
+      }
 
-  const queryOrderBy = search
-    ? 'word_sim'
-    : orderBy
-      ? `u."${orderBy.field}" ${orderBy.direction}`
-      : 'u."createdAt" ASC'
+      const match = search.match(pattern.test)
+      if (match) {
+        return {
+          ...pattern,
+          match
+        }
+      }
+    },
+    null
+  )
 
-  let items = !(search || queryFilters)
-    ? await pgdb.public.users.findAll({
-      orderBy: orderBy
-        ? `"${orderBy.field}" ${orderBy.direction}`
-        : '"createdAt" ASC'
-    })
-    : await pgdb.query(`
-      WITH raw AS (
-        SELECT
-          u.*
-          ${search ? `,
-            concat_ws(' ',
-              u."firstName"::text,
-              u."lastName"::text,
-              u.email::text,
-              u.username::text,
-              string_agg(DISTINCT concat_ws(' ', a.name, a.line1, a.line2, 'plz:' || a."postalCode", a.city, a.country), ' '::text),
-              string_agg(DISTINCT 'nr:' || m."sequenceNumber"::text, ' '::text),
-              string_agg(DISTINCT 'voucher:' || m."voucherCode"::text, ' '::text),
-              string_agg(DISTINCT 'hrid:' || pay.hrid, ' '::text),
-              string_agg(DISTINCT 'pspid:' || pay."pspId", ' '::text),
-              string_agg(DISTINCT 'access:' || agg."voucherCode", ' '::text),
-              string_agg(DISTINCT 'access:' || agr."voucherCode", ' '::text)
-            ) <->> :search AS word_sim
-          ` : ', 0::float AS word_sim'}
-        FROM
-          users u
-        LEFT JOIN
-          addresses a
-          ON a.id = u."addressId"
-        LEFT JOIN
-          memberships m
-          ON m."userId" = u.id
-        LEFT JOIN
-          "pledges" p
-          ON p."userId" = u.id
-        LEFT JOIN
-          "pledgePayments" ppay
-          ON ppay."pledgeId" = p.id
-        LEFT JOIN
-          "payments" pay
-          ON pay.id = ppay."paymentId"
-        LEFT JOIN
-          "accessGrants" agg
-          ON agg."granterUserId" = u.id
-        LEFT JOIN
-          "accessGrants" agr
-          ON agr."recipientUserId" = u.id
-        ${queryFilters ? `WHERE ${queryFilters}` : ''}
-        GROUP BY
-          u.id
-        ${queryOrderBy ? `ORDER BY ${queryOrderBy}` : ''}
-      )
-        SELECT * FROM raw
-        WHERE
-          word_sim < :WORD_SIMILARITY_THRESHOLD
-     `, {
-      search: search ? search.trim() : null,
-      fromDate: dateRangeFilter ? dateRangeFilter.from : null,
-      toDate: dateRangeFilter ? dateRangeFilter.to : null,
-      stringArray: stringArrayFilter ? stringArrayFilter.values : null,
-      booleanValue: booleanFilter ? booleanFilter.value : null,
-      WORD_SIMILARITY_THRESHOLD
-    })
-  const count = items.length
-  items = items.slice(offset, offset + limit).map(transformUser)
-  return { items, count }
+  if (pattern) {
+    const { query, threshold, match: { groups: { word } } } = pattern
+
+    const users = await pgdb.query(
+      `
+        WITH "groupedByUser" AS (
+          WITH query AS (
+            ${query}
+          )
+          
+          SELECT MIN(word_sim) word_sim, "userId"
+          FROM query
+          GROUP BY "userId"
+        )
+        
+        SELECT g.word_sim, u.*
+        FROM "groupedByUser" g
+        JOIN users u ON g."userId" = u.id AND u."deletedAt" IS NULL
+        WHERE g.word_sim < :threshold
+        ORDER BY g.word_sim, u."createdAt" ASC
+      `,
+      {
+        word,
+        threshold: threshold || WORD_SIMILARITY_THRESHOLD
+      }
+    )
+
+    return {
+      items: users.slice(offset, offset + limit).map(transformUser),
+      count: users.length
+    }
+  }
+
+  return {
+    items: (await pgdb.public.users.find(
+      { deletedAt: null },
+      { orderBy: { createdAt: 'DESC' }, limit, offset })
+    ).map(transformUser),
+    count: await pgdb.public.users.count()
+  }
 }
