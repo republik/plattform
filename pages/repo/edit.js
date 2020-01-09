@@ -41,10 +41,11 @@ import { getSchema } from '../../components/Templates'
 import { API_UNCOMMITTED_CHANGES_URL } from '../../lib/settings'
 import * as fragments from '../../lib/graphql/fragments'
 
-import { colors } from '@project-r/styleguide'
+import { ColorContext, colors } from '@project-r/styleguide'
 import SettingsIcon from 'react-icons/lib/fa/cogs'
 
 import createDebug from 'debug'
+import { DARK_MODE_KEY } from '../../components/editor/modules/meta/DarkModeForm'
 
 const commitMutation = gql`
   mutation commit(
@@ -666,6 +667,7 @@ export class EditorPage extends Component {
     const isNew = commitId === 'new'
     const error = data.error || this.state.error
     const showLoading = committing || loading || (!schema && !error)
+    const dark = editorState && editorState.document.data.get(DARK_MODE_KEY)
 
     const sidebarPrependChildren = [
       ...warnings
@@ -763,15 +765,17 @@ export class EditorPage extends Component {
                     }
                   />
                 )}
-                <Editor
-                  ref={this.editorRef}
-                  schema={schema}
-                  meta={repo ? repo.meta : {}}
-                  value={editorState}
-                  onChange={this.changeHandler}
-                  onDocumentChange={this.documentChangeHandler}
-                  readOnly={readOnly}
-                />
+                <ColorContext.Provider value={dark && colors.negative}>
+                  <Editor
+                    ref={this.editorRef}
+                    schema={schema}
+                    meta={repo ? repo.meta : {}}
+                    value={editorState}
+                    onChange={this.changeHandler}
+                    onDocumentChange={this.documentChangeHandler}
+                    readOnly={readOnly}
+                  />
+                </ColorContext.Provider>
               </div>
             )}
           />
