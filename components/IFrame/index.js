@@ -3,6 +3,7 @@ import { styleSheet } from 'glamor'
 import Frame from 'react-frame-component'
 import PropTypes from 'prop-types'
 import createDebug from 'debug'
+import { ColorContext, colors } from '@project-r/styleguide'
 
 const debug = createDebug('publikator:iframe')
 
@@ -43,7 +44,7 @@ class IFrame extends Component {
     }
   }
   render() {
-    const { size, style, children } = this.props
+    const { size, style, children, dark } = this.props
     const { width, css } = this.state
 
     const scale = width ? Math.min(1, width / size.width) : 1
@@ -68,7 +69,9 @@ class IFrame extends Component {
               height: size.height
             }}
           >
-            {children}
+            <ColorContext.Provider value={dark && colors.negative}>
+              {children}
+            </ColorContext.Provider>
           </Frame>
         </div>
       </div>

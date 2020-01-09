@@ -1,5 +1,5 @@
 {
-  "updated": "2019-11-13T13:46:44.798Z",
+  "updated": "2020-01-08T15:50:32.259Z",
   "title": "live",
   "data": [
     {
@@ -439,6 +439,10 @@
       "value": "Bildbeschrieb"
     },
     {
+      "key": "metaData/field/formats",
+      "value": "Formate"
+    },
+    {
       "key": "metaData/field/label",
       "value": "Label"
     },
@@ -591,6 +595,70 @@
       "value": "Schriftgrösse"
     },
     {
+      "key": "metaData/paynotes/add",
+      "value": "Add custom paynotes"
+    },
+    {
+      "key": "metaData/paynotes/title",
+      "value": "Custom paynotes"
+    },
+    {
+      "key": "metaData/paynotes/before",
+      "value": "Paynote {index} - before"
+    },
+    {
+      "key": "metaData/paynotes/after",
+      "value": "Paynote {index} - after"
+    },
+    {
+      "key": "metaData/paynotes/new",
+      "value": "new paynote"
+    },
+    {
+      "key": "metaData/paynotes/help",
+      "value": "Render members count with <b>{count}</b> and bold text with <b>&lt;b&gt;bold tags&lt;/b&gt;</b>."
+    },
+    {
+      "key": "metaData/paynote/form/cta/label",
+      "value": "Call to action"
+    },
+    {
+      "key": "metaData/paynote/form/cta/0",
+      "value": "trial form"
+    },
+    {
+      "key": "metaData/paynote/form/cta/1",
+      "value": "button"
+    },
+    {
+      "key": "metaData/paynote/form/cta/2",
+      "value": "none"
+    },
+    {
+      "key": "metaData/paynote/form/trynote",
+      "value": "Try Republik"
+    },
+    {
+      "key": "metaData/paynote/form/buynote",
+      "value": "Buy Republik"
+    },
+    {
+      "key": "metaData/paynote/form/title",
+      "value": "Title"
+    },
+    {
+      "key": "metaData/paynote/form/body",
+      "value": "Body"
+    },
+    {
+      "key": "metaData/paynote/form/button/label",
+      "value": "Button label"
+    },
+    {
+      "key": "metaData/paynote/form/button/link",
+      "value": "Button link\n"
+    },
+    {
       "key": "metaData/field/url",
       "value": "URL"
     },
@@ -625,6 +693,10 @@
     {
       "key": "metaData/field/gallery",
       "value": "Bilder als Galerie"
+    },
+    {
+      "key": "metaData/darkMode",
+      "value": "Dark Mode"
     },
     {
       "key": "uncommittedChanges/unlock/confirm/1",

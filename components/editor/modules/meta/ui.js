@@ -24,6 +24,7 @@ import RepoSelect from './RepoSelect'
 import SeriesForm from './SeriesForm'
 import AudioForm from './AudioForm'
 import UIForm from '../../UIForm'
+import DarkModeForm, { DARK_MODE_KEY } from './DarkModeForm'
 
 const styles = {
   container: css({
@@ -49,6 +50,7 @@ const MetaData = ({
   mdastSchema,
   contextMeta,
   series,
+  darkMode,
   additionalFields = [],
   customFields = [],
   teaser: Teaser,
@@ -293,6 +295,12 @@ const MetaData = ({
             <br />
             <Teaser {...dataAsJs} credits={undefined} />
           </div>
+        )}
+        {!!darkMode && (
+          <DarkModeForm
+            data={node.data}
+            onChange={onInputChange(DARK_MODE_KEY)}
+          />
         )}
         <br />
         <br />
