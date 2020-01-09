@@ -5,6 +5,7 @@ import { css } from 'glamor'
 import { mUp } from '../../theme/mediaQueries'
 import { PADDING } from '../Center'
 import { convertStyleToRem, pxToRem } from '../Typography/utils'
+import { useColorContext } from '../Colors/useColorContext'
 
 const styles = {
   caption: css({
@@ -20,8 +21,13 @@ const styles = {
 }
 
 export const Caption = ({ children, attributes }) => {
+  const [colorScheme] = useColorContext()
+  const colors = css({
+    color: colorScheme.text
+  })
+
   return (
-    <figcaption {...attributes} {...styles.caption}>
+    <figcaption {...attributes} {...styles.caption} {...colors}>
       {children}
     </figcaption>
   )
