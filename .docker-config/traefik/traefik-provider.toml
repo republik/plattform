@@ -24,6 +24,10 @@
       entryPoints = ["web"]
       rule = "Host(`publikator.republik.test`)"
       service = "publikator-frontend"
+    [http.routers.styleguide]
+      entryPoints = ["web"]
+      rule = "Host(`styleguide.republik.test`)"
+      service = "styleguide"
 
   [http.services]
     [[http.services.api.loadBalancer.servers]]
@@ -38,3 +42,5 @@
       url = "http://localhost:3006"
     [[http.services.publikator-frontend.loadBalancer.servers]]
       url = "http://localhost:3005"
+    [[http.services.styleguide.loadBalancer.servers]]
+      url = "http://localhost:3003"
