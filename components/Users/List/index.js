@@ -2,20 +2,18 @@ import React, { Fragment } from 'react'
 import { graphql } from 'react-apollo'
 import gql from 'graphql-tag'
 import InfiniteScroller from 'react-infinite-scroller'
-import { Loader } from '@project-r/styleguide'
 
-import DateRange from '../../Form/DateRange'
+import { Loader, Interaction } from '@project-r/styleguide'
 
 import {
-  serializeOrderBy,
-  deserializeOrderBy,
   createChangeHandler
 } from '../../Tables/utils'
 
 import Table from './Table'
 import TableForm from './TableForm'
 
-const USERS_LIMIT = 200
+const { P } = Interaction
+const USERS_LIMIT = 100
 
 const Users = props => {
   const {
@@ -33,15 +31,7 @@ const Users = props => {
 
   return (
     <Fragment>
-      <TableForm
-        defaultSearch={params.search}
-        onSearch={changeHandler('search')}
-        dateRange={params.dateRange}
-        onDateRange={changeHandler(
-          'dateRange',
-          DateRange.serialize
-        )}
-      />
+      <TableForm defaultSearch={params.search} onSearch={changeHandler('search')} />
       <Loader
         error={data.error}
         loading={data.loading}
@@ -51,14 +41,14 @@ const Users = props => {
             hasMore={users.count > users.items.length}
             useWindow={false}
           >
-            <Table
-              items={users.items}
-              sort={deserializeOrderBy(params.orderBy)}
-              onSort={changeHandler(
-                'orderBy',
-                serializeOrderBy
-              )}
-            />
+            {users.count > 0 ? (
+              <Table items={users.items} />
+            ) : (
+              <div style={{ padding: '1em' }}>
+                <P>Nope. Njet. Nichts. Nada.</P>
+                <P>Schon mal probiert, nach etwas Besserem zu suchen?</P>
+              </div>
+            )}
           </InfiniteScroller>
         )}
       />
@@ -70,15 +60,11 @@ const usersQuery = gql`
   query users(
     $limit: Int!
     $offset: Int
-    $orderBy: OrderBy
     $search: String
-    $dateRange: DateRangeFilter
   ) {
     users: adminUsers(
       limit: $limit
       offset: $offset
-      orderBy: $orderBy
-      dateRangeFilter: $dateRange
       search: $search
     ) {
       count
@@ -102,13 +88,11 @@ const usersQuery = gql`
 `
 
 export default graphql(usersQuery, {
-  options: ({ params: { orderBy, dateRange, search } }) => {
+  options: ({ params: { search } }) => {
     return {
       variables: {
         limit: USERS_LIMIT,
         offset: 0,
-        orderBy: deserializeOrderBy(orderBy),
-        dateRange: DateRange.parse(dateRange),
         search
       }
     }
