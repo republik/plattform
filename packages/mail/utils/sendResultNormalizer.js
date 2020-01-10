@@ -1,7 +1,14 @@
 const sleep = require('await-sleep')
 
-module.exports = (shouldSend, sendFunc) =>
+module.exports = (shouldSchedule = false, shouldSend = true, sendFunc) =>
   async () => {
+    if (shouldSchedule) {
+      return {
+        result: { status: 'scheduled' },
+        status: 'SCHEDULED'
+      }
+    }
+
     let results
     if (shouldSend) {
       try {
