@@ -1,18 +1,12 @@
 import React from 'react'
+
 import { Label } from '@project-r/styleguide'
+
 import { Link } from '../../../server/routes'
-
 import { displayDate } from '../../Display/utils'
+import { tableStyles as styles } from '../../Tables/utils'
 
-import {
-  tableStyles as styles,
-  createSortHandler,
-  createSortIndicator
-} from '../../Tables/utils'
-
-export default ({ items, sort, onSort, ...props }) => {
-  const sortHandler = createSortHandler(sort || {}, onSort)
-  const indicator = createSortIndicator(sort || {})
+export default ({ items,...props }) => {
   return (
     <table {...props} {...styles.table}>
       <colgroup>
@@ -24,46 +18,28 @@ export default ({ items, sort, onSort, ...props }) => {
       </colgroup>
       <thead>
         <tr {...styles.headRow}>
-          <th
-            {...styles.interactive}
-            {...styles.left}
-            onClick={sortHandler('email')}
-          >
-            <Label>Email {indicator('email')}</Label>
+          <th {...styles.left}>
+            <Label>Email</Label>
           </th>
-          <th
-            {...styles.interactive}
-            {...styles.left}
-            onClick={sortHandler('firstName')}
-          >
-            <Label>First name{indicator('firstName')}</Label>
+          <th {...styles.left}>
+            <Label>First name</Label>
           </th>
-          <th
-            {...styles.interactive}
-            {...styles.left}
-            onClick={sortHandler('lastName')}
-          >
-            <Label>Last name{indicator('lastName')}</Label>
+          <th {...styles.left}>
+            <Label>Last name</Label>
           </th>
           <th>
             <Label>Active Membership</Label>
           </th>
-          <th
-            {...styles.interactive}
-            onClick={sortHandler('createdAt')}
-          >
-            <Label>Created{indicator('createdAt')}</Label>
+          <th>
+            <Label>Created</Label>
           </th>
         </tr>
       </thead>
       <tbody>
-        {items.map((user, index) => (
-          <tr key={`user-${index}`} {...styles.row}>
+        {items.map((user) => (
+          <tr key={`user-${user.id}`} {...styles.row}>
             <td>
-              <Link
-                route='user'
-                params={{ userId: user.id }}
-              >
+              <Link route='user' params={{ userId: user.id }}>
                 <a {...styles.link}>
                   {user.email}
                 </a>
