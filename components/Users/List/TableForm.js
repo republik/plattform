@@ -18,7 +18,7 @@ export default withDebouncedSearch(({ search, onSearch }) => {
           label='Suche'
           type='text'
           value={search}
-          onChange={(e) => onSearch(e.target.value)} />
+          onChange={(event, value) => event.type === 'change' && onSearch(value)} />
         <Label>
           Suche nach ·&nbsp;
           <A href='#' onClick={() => onSearchFor('abo')}>Abo-Nr. (abo:…)</A> ·&nbsp;
