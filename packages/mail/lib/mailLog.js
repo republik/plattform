@@ -25,7 +25,7 @@ const wasSent = (onceFor, { pgdb }) => {
     )
   return pgdb.public.mailLog.count({
     ...conditions,
-    status: 'SENT'
+    status: ['SENT', 'SCHEDULED']
   })
     .then(count => count > 0)
 }
