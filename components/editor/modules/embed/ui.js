@@ -91,14 +91,14 @@ export default ({ TYPE, editorOptions }) => {
                       </div>
                       <div style={{ margin: '10px 0' }}>
                         <Checkbox
-                          checked={block.data.get('isPrimary')}
+                          checked={block.data.get('primary')}
                           onChange={event => {
-                            const checked = block.data.get('isPrimary')
+                            const checked = block.data.get('primary')
                             let change = value
                               .change()
                               .setNodeByKey(block.key, {
                                 data: block.data.merge({
-                                  isPrimary: !checked
+                                  primary: !checked
                                 })
                               })
                             onChange(change)
