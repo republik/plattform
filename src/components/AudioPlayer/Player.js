@@ -17,7 +17,7 @@ import Rewind from 'react-icons/lib/md/skip-previous'
 import Close from 'react-icons/lib/md/close'
 import Download from 'react-icons/lib/md/file-download'
 
-import globalState from './globalState'
+import globalState from '../../lib/globalMediaState'
 
 const ZINDEX_AUDIOPLAYER_ICONS = 6
 const ZINDEX_AUDIOPLAYER_SCRUB = 3

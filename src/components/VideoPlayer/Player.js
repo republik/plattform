@@ -16,7 +16,7 @@ import { sansSerifRegular18 } from '../Typography/styles'
 import { getFormattedTime } from '../AudioPlayer/Player'
 
 import warn from '../../lib/warn'
-import globalState from '../AudioPlayer/globalState'
+import globalState, { parseTimeHash } from '../../lib/globalMediaState'
 
 const ZINDEX_VIDEOPLAYER_ICONS = 6
 const ZINDEX_VIDEOPLAYER_SCRUB = 3
@@ -143,12 +143,18 @@ class VideoPlayer extends Component {
       isFull: false
     }
 
+    this.getCurrentTime = () => {
+      if (this.pendingTime !== undefined) {
+        return this.pendingTime
+      }
+      return this.video ? this.video.currentTime : 0
+    }
     this.updateProgress = () => {
       const { video } = this
       if (!video) {
         return
       }
-      const progress = video.currentTime / video.duration
+      const progress = this.getCurrentTime() / video.duration
       this.props.onProgress && this.props.onProgress(progress, video)
       this.context.saveMediaProgress &&
         this.context.saveMediaProgress(this.props, video)
@@ -174,6 +180,16 @@ class VideoPlayer extends Component {
         playing: true,
         loading: false
       }))
+      if (this.pendingTime !== undefined) {
+        // ensure it starts playing at the right time
+        // - iOS ignores currentTime calls before it initially started
+        setTimeout(() => {
+          if (Math.abs(this.video.currentTime - this.pendingTime) > 0.5) {
+            this.video.currentTime = this.pendingTime
+          }
+          this.pendingTime = undefined
+        }, 16)
+      }
       this.syncProgress()
       this.props.onPlay && this.props.onPlay()
     }
@@ -183,6 +199,7 @@ class VideoPlayer extends Component {
       }))
       clearTimeout(this.readTimeout)
       this.props.onPause && this.props.onPause()
+      this.pendingTime = undefined
     }
     this.onLoadStart = () => {
       this.setState(() => ({
@@ -190,7 +207,8 @@ class VideoPlayer extends Component {
       }))
     }
     this.setTime = (time = 0) => {
-      if (this.video && this.video.currentTime !== time) {
+      this.pendingTime = time
+      if (this.video) {
         this.video.currentTime = time
         this.updateProgress()
       }
@@ -200,7 +218,8 @@ class VideoPlayer extends Component {
     })
     this.onCanPlay = () => {
       this.setState(() => ({
-        loading: false
+        loading: false,
+        startTimeSet: true
       }))
       this.onSeekable()
     }
@@ -244,8 +263,7 @@ class VideoPlayer extends Component {
           1,
           Math.max((currentEvent.clientX - rect.left) / rect.width, 0)
         )
-        video.currentTime = video.duration * progress
-        this.updateProgress()
+        this.setTime(video.duration * progress)
       }
     }
     this.scrubStart = event => {
@@ -267,6 +285,15 @@ class VideoPlayer extends Component {
     }
     this.setInstanceState = state => {
       this.setState(state)
+    }
+    this.setInstanceState.setTime = time => {
+      if (this.props.primary) {
+        this.setTime(time)
+        if (this.video && this.video.paused) {
+          this.captureFocus()
+          this.play()
+        }
+      }
     }
     this.handleKeyDown = event => {
       if (
@@ -347,6 +374,13 @@ class VideoPlayer extends Component {
     }
   }
   getStartTime() {
+    if (this.props.primary) {
+      const timeFromHash = parseTimeHash(window.location.hash)
+      if (timeFromHash) {
+        return Promise.resolve(timeFromHash)
+      }
+    }
+
     if (this.context.getMediaProgress) {
       return this.context.getMediaProgress(this.props).catch(() => {
         return undefined // ignore errors
@@ -391,9 +425,12 @@ class VideoPlayer extends Component {
 
     this.setTextTracksMode()
 
-    Promise.all([this.getStartTime(), this.isSeekable]).then(([startTime]) => {
+    this.getStartTime().then(startTime => {
       if (startTime !== undefined) {
         this.setTime(startTime)
+        this.isSeekable.then(() => {
+          this.setTime(startTime)
+        })
       }
     })
     if (this.video && !this.video.paused) {
@@ -453,7 +490,7 @@ class VideoPlayer extends Component {
       : {}
 
     const fullWindow = this.props.fullWindow || !fullscreen
-    const enableRewind = this.video && this.video.currentTime > 0.1
+    const enableRewind = this.getCurrentTime() > 0.1
 
     return (
       <div
@@ -514,11 +551,9 @@ class VideoPlayer extends Component {
               <Rewind disabled={!enableRewind} />
             </div>
             <div {...styles.time}>
-              {`${getFormattedTime(
-                this.video ? this.video.currentTime : '0:00'
-              )} / ${getFormattedTime(
-                this.video ? this.video.duration : '–:––'
-              )}`}
+              {`${getFormattedTime(this.getCurrentTime())} / ${
+                this.video ? getFormattedTime(this.video.duration) : '–:––'
+              }`}
             </div>
           </div>
           <div {...styles.iconsRight}>
@@ -614,7 +649,9 @@ CrossOrigin subtitles do not work in older browsers.'`
   attributes: PropTypes.object,
   // mandate full window instead of fullscreen API
   fullWindow: PropTypes.bool,
-  onFull: PropTypes.func
+  onFull: PropTypes.func,
+  // listen to url and global setTime
+  primary: PropTypes.bool
 }
 
 VideoPlayer.contextTypes = {

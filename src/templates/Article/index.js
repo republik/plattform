@@ -1,4 +1,5 @@
 import React from 'react'
+import scrollIntoView from 'scroll-into-view'
 
 import Container from './Container'
 import Center from '../../components/Center'
@@ -43,6 +44,7 @@ import { Tweet } from '../../components/Social'
 import { Video } from '../../components/Video'
 import { VideoPlayer } from '../../components/VideoPlayer'
 import { AudioPlayer } from '../../components/AudioPlayer'
+import globalMediaState, { parseTimeHash } from '../../lib/globalMediaState'
 
 import {
   matchType,
@@ -77,7 +79,39 @@ const link = {
     title: node.title,
     href: node.url
   }),
-  component: Editorial.A,
+  component: props => {
+    const { href } = props
+    // workaround app issues with hash url by handling them ourselves and preventing the default behaviour
+    if (href && href.slice(0, 3) === '#t=') {
+      return (
+        <Editorial.A
+          {...props}
+          onClick={e => {
+            const time = parseTimeHash(href)
+            if (time !== false) {
+              e.preventDefault()
+              globalMediaState.setTime(time)
+            }
+          }}
+        />
+      )
+    }
+    if (href && href[0] === '#') {
+      return (
+        <Editorial.A
+          {...props}
+          onClick={e => {
+            const ele = document.getElementById(href.substr(1))
+            if (ele) {
+              e.preventDefault()
+              scrollIntoView(ele, { time: 0, align: { top: 0 } })
+            }
+          }}
+        />
+      )
+    }
+    return <Editorial.A {...props} />
+  },
   editorModule: 'link',
   rules: globalInlines
 }
