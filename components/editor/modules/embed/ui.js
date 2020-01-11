@@ -89,6 +89,24 @@ export default ({ TYPE, editorOptions }) => {
                           Cinemagraph
                         </Checkbox>
                       </div>
+                      <div style={{ margin: '10px 0' }}>
+                        <Checkbox
+                          checked={block.data.get('primary')}
+                          onChange={event => {
+                            const checked = block.data.get('primary')
+                            let change = value
+                              .change()
+                              .setNodeByKey(block.key, {
+                                data: block.data.merge({
+                                  primary: !checked
+                                })
+                              })
+                            onChange(change)
+                          }}
+                        >
+                          Primäres Video
+                        </Checkbox>
+                      </div>
                     </Fragment>
                   )}
                 </p>
