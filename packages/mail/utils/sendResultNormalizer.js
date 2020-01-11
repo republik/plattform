@@ -22,7 +22,7 @@ module.exports = (shouldSchedule = false, shouldSend = true, sendFunc) =>
         }
       }
     } else {
-      await sleep(250)
+      await sleep(150)
       return {
         result: { status: 'sent-simulated' },
         status: 'SENT'
