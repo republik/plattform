@@ -9,7 +9,7 @@ const cancelMembership = require('./cancelMembership')
 const createCache = require('../../../lib/cache')
 
 module.exports = async (_, args, context) => {
-  const { pgdb, req, t, mail, mail: { enforceSubscriptions } } = context
+  const { pgdb, req, t, mail: { enforceSubscriptions } } = context
   ensureSignedIn(req)
 
   let pledgerId
@@ -67,6 +67,9 @@ module.exports = async (_, args, context) => {
         beginDate,
         endDate
       })
+
+      const cache = createCache({ prefix: `User:${req.user.id}` }, context)
+      cache.invalidate()
     } else {
       // Cancel active memberships.
       await Promise.map(
@@ -86,13 +89,10 @@ module.exports = async (_, args, context) => {
               suppressWinback: true
             }
           },
-          { req, t, pgdb: transaction, mail }
+          { ...context, pgdb: transaction }
         )
       )
     }
-
-    const cache = createCache({ prefix: `User:${req.user.id}` }, context)
-    cache.invalidate()
 
     // commit transaction
     await transaction.transactionCommit()

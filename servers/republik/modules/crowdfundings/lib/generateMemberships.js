@@ -11,24 +11,24 @@ const omit = require('lodash/omit')
 const MONTHLY_ABO_UPGRADE_PKGS = ['ABO', 'BENEFACTOR']
 
 module.exports = async (pledgeId, pgdb, t, req, redis) => {
-  const pledge = await pgdb.public.pledges.findOne({id: pledgeId})
-  const user = await pgdb.public.users.findOne({id: pledge.userId})
+  const pledge = await pgdb.public.pledges.findOne({ id: pledgeId })
+  const user = await pgdb.public.users.findOne({ id: pledge.userId })
 
   // check if pledge really has no memberships yet
-  if (await pgdb.public.memberships.count({pledgeId: pledge.id})) {
+  if (await pgdb.public.memberships.count({ pledgeId: pledge.id })) {
     console.error('tried to generate memberships for a pledge which already has memberships', { pledge })
     throw new Error(t('api/unexpected'))
   }
 
   // get ingredients
-  const pkg = await pgdb.public.packages.findOne({id: pledge.packageId})
+  const pkg = await pgdb.public.packages.findOne({ id: pledge.packageId })
 
   let hasRewards = false
   const pledgeOptions = await getPledgeOptionsTree(
-    await pgdb.public.pledgeOptions.find({pledgeId: pledge.id}),
+    await pgdb.public.pledgeOptions.find({ pledgeId: pledge.id }),
     pgdb
   )
-  for (let plo of pledgeOptions) {
+  for (const plo of pledgeOptions) {
     if (plo.packageOption.reward) {
       hasRewards = true
     }
@@ -213,7 +213,7 @@ module.exports = async (pledgeId, pgdb, t, req, redis) => {
           suppressWinback: true
         }
       },
-      { req, t, pgdb, mail }
+      { req, t, pgdb, redis, mail }
     ))
   }
 
