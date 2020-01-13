@@ -76,6 +76,7 @@ module.exports = async (_, args, context) => {
         await transaction.public.memberships.find({
           'id !=': membership.id,
           userId: req.user.id,
+          active: true,
           renew: true
         }),
         m => cancelMembership(
