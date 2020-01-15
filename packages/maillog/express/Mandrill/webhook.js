@@ -20,7 +20,10 @@ module.exports = async (server, pgdb) => {
 
   server.post(
     '/maillog/mandrill/webhook',
-    bodyParser.urlencoded({ extended: true }),
+    bodyParser.urlencoded({
+      extended: true,
+      limit: '1mb'
+    }),
     async (req, res) => {
       const signatureWebhook = req.header('X-Mandrill-Signature')
 
