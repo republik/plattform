@@ -47,7 +47,12 @@
                       <p>Wir sehen uns daher zu unserem grossen Bedauern gezwungen, Ihre Mitgliedschaft am {{grace_end_date}} zu deaktivieren.</p>
                       <p>Wollen Sie dies verhindern, können Sie <a href="{{prolong_url}}">den ausstehenden Jahresbeitrag begleichen</a>, wenn Sie möchten, auch mit einer anderen Zahlungsart.</p>
                     {{else}}
-                      <p>Ihre Mitgliedschaft erneuerte sich am {{end_date}} um ein weiteres Jahr. Bei Ihrem letzten Kauf haben Sie angegeben, dass Sie uns erlauben, Ihre hinterlegte Kreditkarte automatisch zu belasten. Bedauerlicherweise konnten wir den Jahresbeitrag von {{autopay_total}} von Ihrer hinterlegten {{autopay_card_brand}}-Kreditkarte mit den Endziffern {{autopay_card_last4}} nicht abbuchen.</p>
+                      {{#if `attempt_number == 1`}}
+                        <p>Aufgrund einer Fehlkonfiguration haben Sie heute früh eine Abonnementsrechnung erhalten, obwohl Sie uns bei Ihrem letzten Kauf angegeben haben, dass wir Ihre Kreditkarte automatisch belasten dürfen. Wir bitten Sie um Entschuldigung.</p>
+                        <p>Inzwischen haben wir versucht, Ihre Kreditkarte zu belasten: Bedauerlicherweise konnten wir den Jahresbeitrag von {{autopay_total}} von Ihrer hinterlegten {{autopay_card_brand}}-Kreditkarte mit den Endziffern {{autopay_card_last4}} nicht abbuchen.</p>
+                      {{else}}
+                        <p>Ihre Mitgliedschaft erneuerte sich am {{end_date}} um ein weiteres Jahr. Bei Ihrem letzten Kauf haben Sie angegeben, dass Sie uns erlauben, Ihre hinterlegte Kreditkarte automatisch zu belasten. Bedauerlicherweise konnten wir den Jahresbeitrag von {{autopay_total}} von Ihrer hinterlegten {{autopay_card_brand}}-Kreditkarte mit den Endziffern {{autopay_card_last4}} nicht abbuchen.</p>
+                      {{/if}}
                       {{#if attempt_is_last}}
                         <p>Wir sehen uns daher zu unserem grossen Bedauern gezwungen, Ihre Mitgliedschaft am {{grace_end_date}} zu deaktivieren.</p>
                       {{elseif attempt_next_is_last}}
