@@ -14,7 +14,8 @@ const mailings = require('./owners/mailings')
 const charging = require('./owners/charging')
 
 const {
-  PARKING_USER_ID
+  PARKING_USER_ID,
+  MEMBERSHIP_SCHEDULER_USER_LIMIT = 100
 } = process.env
 
 const STATS_INTERVAL_SECS = 3
@@ -163,8 +164,10 @@ const getBuckets = async ({ now }, context) => {
       AND m.active = true
       AND m.renew = true
     ORDER BY RANDOM()
+    LIMIT :MEMBERSHIP_SCHEDULER_USER_LIMIT
   `, {
-    PARKING_USER_ID
+    PARKING_USER_ID,
+    MEMBERSHIP_SCHEDULER_USER_LIMIT
   })
     .then(users => users
       .map(user => ({
