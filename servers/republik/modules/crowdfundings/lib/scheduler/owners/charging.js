@@ -64,6 +64,7 @@ module.exports = async (user, bucket, context) => {
     const isNextAttemptLast = previousAttempts.length + 2 === attempts.length
     const payload = {
       chargeAttemptStatus: chargeAttempt.status,
+      chargeAttemptError: chargeAttempt.error,
       attemptNumber: previousAttempts.length + 1,
       isLastAttempt: previousAttempts.length + 1 === attempts.length,
       isNextAttemptLast,

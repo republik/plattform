@@ -457,6 +457,15 @@ mail.prepareMembershipOwnerNotice = async ({ user, endDate, graceEndDate, cancel
 }
 
 mail.sendMembershipOwnerAutoPay = async ({ autoPay, payload, pgdb, t }) => {
+  // Ditch sending email if it's not a card_error
+  if (
+    payload.chargeAttemptStatus !== 'SUCCESS' &&
+    payload.chargeAttemptError &&
+    (!payload.chargeAttemptError.raw || payload.chargeAttemptError.raw.type !== 'card_error')
+  ) {
+    return
+  }
+
   const user = await pgdb.public.users.findOne({ id: autoPay.userId })
   const customPledgeToken = AccessToken.generateForUser(user, 'CUSTOM_PLEDGE')
   const version = payload.chargeAttemptStatus === 'SUCCESS' ? 'successful' : 'failed'
