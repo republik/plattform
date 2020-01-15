@@ -20,7 +20,10 @@ module.exports = async (server, pgdb) => {
 
   server.post(
     '/maillog/mandrill/webhook',
-    bodyParser.urlencoded({ extended: true }),
+    bodyParser.urlencoded({
+      extended: true,
+      limit: '1mb'
+    }),
     async (req, res) => {
       const signatureWebhook = req.header('X-Mandrill-Signature')
 
@@ -51,17 +54,28 @@ module.exports = async (server, pgdb) => {
           const record = await pgdb.public.mailLog.findOne({ 'result->>\'_id\'': event._id })
 
           if (record) {
-            debug(
-              'update record.id %s with event._id %s: %s',
-              record.id,
-              event._id,
-              event.event
-            )
+            if (
+              !record.mandrillLastEvent ||
+              (record.mandrillLastEvent && record.mandrillLastEvent.ts < event.ts)
+            ) {
+              debug(
+                'update record.id %s with event._id %s: %s',
+                record.id,
+                event._id,
+                event.event
+              )
 
-            await pgdb.public.mailLog.updateOne(
-              { id: record.id },
-              { mandrillLastEvent: event, updatedAt: new Date() }
-            )
+              await pgdb.public.mailLog.updateOne(
+                { id: record.id },
+                { mandrillLastEvent: event, updatedAt: new Date() }
+              )
+            } else {
+              debug(
+                'not updating record.id %s received event (%s) is older than mandrillLastEvent',
+                record.id,
+                event._id
+              )
+            }
           } else {
             debug('event._id %s not found', event._id)
           }
