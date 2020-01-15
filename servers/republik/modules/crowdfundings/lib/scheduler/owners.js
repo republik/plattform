@@ -43,7 +43,7 @@ const createBuckets = (now) => [
       max: getMaxEndDate(now, DAYS_BEFORE_END_DATE)
     },
     predicate: ({ id: userId, membershipType, membershipAutoPay, autoPay }) => {
-      return ['ABO'].includes(membershipType) && (
+      return ['ABO', 'BENEFACTOR_ABO'].includes(membershipType) && (
         membershipAutoPay === false ||
         (
           membershipAutoPay === true && (
@@ -65,7 +65,7 @@ const createBuckets = (now) => [
       max: getMaxEndDate(now, 7)
     },
     predicate: ({ id: userId, membershipType, membershipAutoPay, autoPay }) => {
-      return ['ABO'].includes(membershipType) && (
+      return ['ABO', 'BENEFACTOR_ABO'].includes(membershipType) && (
         membershipAutoPay === false ||
         (
           membershipAutoPay === true && (
@@ -87,7 +87,7 @@ const createBuckets = (now) => [
       max: getMaxEndDate(now, 0)
     },
     predicate: ({ id: userId, membershipType, membershipAutoPay, autoPay }) => {
-      return ['ABO'].includes(membershipType) && (
+      return ['ABO', 'BENEFACTOR_ABO'].includes(membershipType) && (
         membershipAutoPay === false ||
         (
           membershipAutoPay === true && (
