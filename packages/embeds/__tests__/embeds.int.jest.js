@@ -89,7 +89,7 @@ describe('embeds authorized', () => {
   beforeEach(() => {
     global.testUser = {
       email: 'alice.smith@test.project-r.construction',
-      roles: [ 'editor' ]
+      roles: ['editor']
     }
   })
 

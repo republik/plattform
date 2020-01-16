@@ -1,8 +1,8 @@
 const { Roles: { ensureUserHasRole } } = require('@orbiting/backend-modules-auth')
-const { getTweetById } = require('../../../lib/embeds/twitter')
-const { getYoutubeVideoById } = require('../../../lib/embeds/youtube')
-const { getVimeoVideoById } = require('../../../lib/embeds/vimeo')
-const { getDocumentCloudDocById } = require('../../../lib/embeds/documentcloud')
+const { getTweetById } = require('../../../lib/twitter')
+const { getYoutubeVideoById } = require('../../../lib/youtube')
+const { getVimeoVideoById } = require('../../../lib/vimeo')
+const { getDocumentCloudDocById } = require('../../../lib/documentcloud')
 
 const getEmbedData = ({ id, embedType }, t) => {
   switch (embedType) {

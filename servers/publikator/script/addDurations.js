@@ -12,7 +12,7 @@
 const transformPublications = require('./lib/transformPublications')
 const visit = require('unist-util-visit')
 
-const getEmbed = require('../graphql/resolvers/_queries/embed')
+const getEmbed = require('@orbiting/backend-modules-embeds/graphql/resolvers/_queries/embed')
 
 const platformToEmbedType = {
   vimeo: 'VimeoEmbed',

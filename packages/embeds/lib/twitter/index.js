@@ -1,6 +1,6 @@
 const Autolinker = require('autolinker')
 const fetch = require('isomorphic-unfetch')
-const {format} = require('url')
+const { format } = require('url')
 const oauth = require('./oauth')
 
 let bearerToken
