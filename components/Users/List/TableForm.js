@@ -24,7 +24,8 @@ export default withDebouncedSearch(({ search, onSearch }) => {
           <A href='#' onClick={() => onSearchFor('abo')}>Abo-Nr. (abo:…)</A> ·&nbsp;
           <A href='#' onClick={() => onSearchFor('code')}>Geschenkabo-Code (code:…)</A> ·&nbsp;
           <A href='#' onClick={() => onSearchFor('probe')}>Probelesen-Code. (probe:…)</A> ·&nbsp;
-          <A href='#' onClick={() => onSearchFor('hrid')}>Payment HR-ID (hrid:…)</A>
+          <A href='#' onClick={() => onSearchFor('hrid')}>Payment HR-ID (hrid:…)</A> ·&nbsp;
+          <A href='#' onClick={() => onSearchFor('adr')}>Adresse (adr:…)</A>
         </Label>
       </div>
     </div>
