@@ -89,7 +89,7 @@ const init = async ({
 
       // wait until other processes exceeded waiting time
       // then give up lock
-      const blockLockMs = BigInt(TTL_EXP_MS) * 1000n - process.hrtime.bigint() - beginTime
+      const blockLockMs = BigInt(TTL_EXP_MS) * BigInt(1000) - process.hrtime.bigint() - beginTime
       if (blockLockMs > 0) {
         await Promise.delay(blockLockMs).then(
           () => lock.unlock()
