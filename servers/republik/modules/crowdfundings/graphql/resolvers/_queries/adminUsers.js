@@ -18,6 +18,27 @@ const patterns = [
     threshold: 0.3
   },
   {
+    name: 'address',
+    test: /^adr:(?<word>.+)/i,
+    query: `
+      SELECT
+        replace(
+          concat_ws(
+            ' ',
+            CASE WHEN concat_ws(' ', u."firstName", u."lastName") = a.name 
+              THEN a.name
+              ELSE concat_ws(' ', u."firstName", u."lastName", a.name)
+            END,
+            a.line1, a.line2, a."postalCode", a.city, a.country),
+          '  ',
+          ' '
+        ) <->> :word AS word_sim,
+        u.id "userId"
+      FROM "users" u
+      JOIN "addresses" a ON u."addressId" = a.id
+    `
+  },
+  {
     name: 'payment HR-ID',
     test: /^hrid:(?<word>\S+)/i,
     query: `
