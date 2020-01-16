@@ -34,7 +34,7 @@ module.exports = async () => {
     {
       method: 'POST',
       headers: {
-        'Authorization': `Basic ${credentials}`,
+        Authorization: `Basic ${credentials}`,
         'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
         'Content-Length': 29,
         'Accept-Encoding': 'gzip'

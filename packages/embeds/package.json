@@ -1,0 +1,27 @@
+{
+  "name": "@orbiting/backend-modules-embeds",
+  "version": "0.0.1",
+  "private": true,
+  "description": "query external resources",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/orbiting/backends.git"
+  },
+  "author": "Patrick Recher <patrick.recher@republik.ch>",
+  "license": "AGPL-3.0",
+  "publishConfig": {
+    "access": "public"
+  },
+  "bugs": {
+    "url": "https://github.com/orbiting/backends/issues"
+  },
+  "homepage": "https://github.com/orbiting/backends#readme",
+  "dependencies": {
+    "apollo-modules-node": "^0.1.4",
+    "autolinker": "^3.0.5",
+    "d3-array": "^2.0.3",
+    "isomorphic-unfetch": "^3.0.0",
+    "moment": "^2.24.0"
+  }
+}

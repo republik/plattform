@@ -6,6 +6,7 @@ const { graphql: documents } = require('@orbiting/backend-modules-documents')
 const { graphql: search } = require('@orbiting/backend-modules-search')
 const { graphql: auth } = require('@orbiting/backend-modules-auth')
 const { graphql: discussions } = require('@orbiting/backend-modules-discussions')
+const { graphql: embeds } = require('@orbiting/backend-modules-embeds')
 
 const loaderBuilders = {
   ...require('@orbiting/backend-modules-discussions/loaders'),
@@ -50,7 +51,8 @@ const run = async (workerId, config) => {
       documents,
       search,
       auth,
-      discussions
+      discussions,
+      embeds
     ]
   )
 
@@ -73,7 +75,7 @@ const run = async (workerId, config) => {
 
   if (LOCAL_ASSETS_SERVER) {
     const { express } = require('@orbiting/backend-modules-assets')
-    for (let key of Object.keys(express)) {
+    for (const key of Object.keys(express)) {
       middlewares.push(express[key])
     }
   }

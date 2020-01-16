@@ -33,19 +33,18 @@ const processRepoImageUrlsInMeta = (mdast, fn) => {
   }
 }
 
-// TODO migrate if embeds moved into it's own module
-const embedImageKeys = ['userProfileImageUrl', 'image', 'thumbnail']
+const { imageKeys: embedImageKeys } = require('@orbiting/backend-modules-embeds')
 
 const processImageUrlsInContent = (mdast, fn) => {
   visit(mdast, 'zone', node => {
     if (node.data && node.identifier.indexOf('EMBED') > -1) {
-      for (let key of embedImageKeys) {
+      for (const key of embedImageKeys) {
         if (node.data[key]) {
           node.data[key] = fn(node.data[key])
         }
       }
       if (typeof node.data.src === 'object') {
-        for (let key of embedImageKeys) {
+        for (const key of embedImageKeys) {
           if (node.data.src && node.data.src[key]) {
             node.data.src[key] = fn(node.data.src[key])
           }

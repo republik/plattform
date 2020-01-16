@@ -12,7 +12,6 @@
     "@rocka/mp3-duration": "^2.0.0",
     "apollo-fetch": "^0.7.0",
     "apollo-modules-node": "^0.1.4",
-    "autolinker": "^3.0.5",
     "await-sleep": "0.0.1",
     "bluebird": "^3.5.1",
     "check-env": "^1.3.0",
