@@ -575,6 +575,10 @@
       "value": "Ihre Abonnementsrechnung"
     },
     {
+      "key": "api/email/membership_owner_prolong_winback_7/subject",
+      "value": "Ihr Mitgliedschaftsbeitrag ist überfällig"
+    },
+    {
       "key": "api/email/membership_owner_autopay_notice/subject",
       "value": "Ihre Mitgliedschaft erneuert sich automatisch"
     },
