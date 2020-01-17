@@ -198,6 +198,8 @@ type Comment {
   hotness: Float!
 
   tags: [String!]!
+
+  contentLinkPreviews: [LinkPreview]!
 }
 
 enum MutationType {

@@ -73,4 +73,18 @@ type DocumentCloudEmbed {
   url: String!
 }
 
+type LinkPreview {
+  url: String!
+  title: String!
+  description: String
+  image(
+    properties: ImageProperties
+  ): String
+  siteName: String
+  siteImage(
+    properties: ImageProperties
+  ): String
+  retrievedAt: DateTime!
+}
+
 `
