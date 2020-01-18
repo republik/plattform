@@ -103,6 +103,28 @@ const createBuckets = (now) => [
     handler: mailings
   },
   {
+    name: 'membership_owner_prolong_winback_7',
+    endDate: {
+      min: getMinEndDate(now, -10),
+      max: getMaxEndDate(now, -7)
+    },
+    predicate: ({ id: userId, membershipType, membershipAutoPay, autoPay }) => {
+      return ['ABO', 'BENEFACTOR_ABO'].includes(membershipType) && (
+        membershipAutoPay === false ||
+        (
+          membershipAutoPay === true && (
+            !autoPay ||
+            (autoPay && userId !== autoPay.userId)
+          )
+        )
+      )
+    },
+    payload: {
+      templateName: 'membership_owner_prolong_winback_7'
+    },
+    handler: mailings
+  },
+  {
     name: 'membership_owner_autopay_notice',
     endDate: {
       min: moment(now).add(1, 'days'),
