@@ -21,14 +21,19 @@ if (!DISPLAY_AUTHOR_SECRET) {
 
 const textForComment = async ({ userId, content, published, adminUnpublished, discussionId }, context) => {
   const me = context && context.user
-  let text = (!published || adminUnpublished) && (!me || !userId || userId !== me.id)
-    ? null
-    : content
-  if (text && !Roles.userIsInRoles(me, ['member'])) {
-    const namesToClip = await context.loaders.Discussion.byIdCommenterNamesToClip.load(discussionId)
-    text = clipNamesInText(namesToClip, text)
+  const isPublished = !!(published && !adminUnpublished)
+  const isMine = !!(me && userId && userId === me.id)
+  if (isMine) {
+    return content
   }
-  return text
+  if (!isPublished) {
+    return null
+  }
+  if (!Roles.userIsInRoles(me, ['member'])) {
+    const namesToClip = await context.loaders.Discussion.byIdCommenterNamesToClip.load(discussionId)
+    return clipNamesInText(namesToClip, content)
+  }
+  return content
 }
 
 /**
