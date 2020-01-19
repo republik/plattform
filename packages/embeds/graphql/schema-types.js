@@ -77,13 +77,9 @@ type LinkPreview {
   url: String!
   title: String!
   description: String
-  image(
-    properties: ImageProperties
-  ): String
+  imageUrl: String
   siteName: String
-  siteImage(
-    properties: ImageProperties
-  ): String
+  siteImageUrl: String
   retrievedAt: DateTime!
 }
 

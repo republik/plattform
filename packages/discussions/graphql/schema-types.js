@@ -199,7 +199,7 @@ type Comment {
 
   tags: [String!]!
 
-  contentLinkPreviews: [LinkPreview]!
+  linkPreview: LinkPreview
 }
 
 enum MutationType {
