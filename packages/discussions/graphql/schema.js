@@ -24,6 +24,14 @@ type queries {
     focusId: ID
     lastId: ID
   ): CommentConnection!
+
+  commentPreview(
+    id: ID
+    discussionId: ID!
+    parentId: ID
+    content: String!
+    tags: [String!]
+  ): Comment!
 }
 
 type mutations {

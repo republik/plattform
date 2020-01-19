@@ -1,5 +1,5 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
-const hotness = require('../../../lib/hotness')
+const { transform } = require('../../../lib/Comment')
 const setDiscussionPreferences = require('../../../lib/setDiscussionPreferences')
 const userCanComment = require('../Discussion/userCanComment')
 const userWaitUntil = require('../Discussion/userWaitUntil')
@@ -67,17 +67,6 @@ module.exports = async (_, args, context) => {
       throw new Error(t('api/comment/tooLong', { maxLength: discussion.maxLength }))
     }
 
-    let parentIds
-    if (parentId) {
-      const parent = await transaction.public.comments.findOne({
-        id: parentId
-      })
-      if (!parent) {
-        throw new Error(t('api/comment/parent/404'))
-      }
-      parentIds = [...(parent.parentIds || []), parentId]
-    }
-
     // check tags
     if (!parentId && discussion.tagRequired && (!tags || tags.length === 0)) {
       throw new Error(t('api/comment/tagRequired'))
@@ -100,18 +89,20 @@ module.exports = async (_, args, context) => {
       })
     }
 
-    const comment = await transaction.public.comments.insertAndGet({
-      ...id ? { id } : { },
-      discussionId: discussion.id,
-      parentIds,
-      depth: (parentIds && parentIds.length) || 0,
-      userId,
-      content,
-      hotness: hotness(0, 0, (new Date().getTime())),
-      tags
-    }, {
-      skipUndefined: true
-    })
+    const comment = await transaction.public.comments.insertAndGet(
+      await transform.create(
+        {
+          id,
+          discussionId: discussion.id,
+          parentId,
+          userId,
+          content,
+          tags,
+          now: args.now
+        },
+        context
+      )
+    )
 
     try {
       await notify(comment, discussion, context)
@@ -121,10 +112,12 @@ module.exports = async (_, args, context) => {
 
     await transaction.transactionCommit()
 
-    await pubsub.publish('comment', { comment: {
-      mutation: 'CREATED',
-      node: comment
-    } })
+    await pubsub.publish('comment', {
+      comment: {
+        mutation: 'CREATED',
+        node: comment
+      }
+    })
 
     slack.publishComment(comment, discussion, context)
 

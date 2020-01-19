@@ -1,5 +1,6 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
 const slack = require('../../../lib/slack')
+const { transform } = require('../../../lib/Comment')
 
 module.exports = async (_, args, context) => {
   const { pgdb, user, t, pubsub, loaders } = context
@@ -26,9 +27,7 @@ module.exports = async (_, args, context) => {
       throw new Error(t('api/comment/notYours'))
     }
 
-    const discussion = await transaction.public.discussions.findOne({
-      id: comment.discussionId
-    })
+    const discussion = await loaders.Discussion.byId.load(comment.discussionId)
 
     if (discussion.closed) {
       throw new Error(t('api/comment/closed'))
@@ -38,24 +37,23 @@ module.exports = async (_, args, context) => {
       throw new Error(t('api/comment/tooLong', { maxLength: discussion.maxLength }))
     }
 
-    const newComment = await transaction.public.comments.updateAndGetOne({
-      id: comment.id
-    }, {
-      content,
-      tags,
-      published: true,
-      updatedAt: new Date()
-    }, {
-      skipUndefined: true
-    })
+    const newComment = await transaction.public.comments.updateAndGetOne(
+      { id: comment.id },
+      transform.edit({
+        content,
+        tags
+      })
+    )
 
     await transaction.transactionCommit()
     loaders.Comment.byId.clear(comment.id)
 
-    await pubsub.publish('comment', { comment: {
-      mutation: 'UPDATED',
-      node: newComment
-    }})
+    await pubsub.publish('comment', {
+      comment: {
+        mutation: 'UPDATED',
+        node: newComment
+      }
+    })
 
     await slack.publishCommentUpdate(newComment, comment, discussion, context)
 
