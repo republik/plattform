@@ -80,7 +80,7 @@ type LinkPreview {
   imageUrl: String
   siteName: String
   siteImageUrl: String
-  retrievedAt: DateTime!
+  updatedAt: DateTime!
 }
 
 `

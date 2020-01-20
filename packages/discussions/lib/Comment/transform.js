@@ -1,4 +1,5 @@
 const hotness = require('../hotness')
+const { linkPreview: { getLinkPreviewUrlFromText } } = require('@orbiting/backend-modules-embeds')
 
 const create = async (
   {
@@ -31,6 +32,7 @@ const create = async (
     depth: (parentIds && parentIds.length) || 0,
     userId,
     content,
+    linkPreviewUrl: getLinkPreviewUrlFromText(content) || null,
     hotness: hotness(0, 0, (now.getTime())),
     ...tags ? { tags } : {},
     createdAt: now,
@@ -44,6 +46,7 @@ const edit = ({
   now = new Date()
 }) => ({
   content,
+  linkPreviewUrl: getLinkPreviewUrlFromText(content) || null,
   ...tags ? { tags } : {},
   published: true,
   updatedAt: now

@@ -19,6 +19,8 @@ if (!DISPLAY_AUTHOR_SECRET) {
   throw new Error('missing required DISPLAY_AUTHOR_SECRET')
 }
 
+const { linkPreview: { getLinkPreviewByUrl } } = require('@orbiting/backend-modules-embeds')
+
 const textForComment = async ({ userId, content, published, adminUnpublished, discussionId }, context) => {
   const me = context && context.user
   const isPublished = !!(published && !adminUnpublished)
@@ -100,6 +102,9 @@ module.exports = {
     }
     return mdastToHumanString(remark.parse(text), length)
   },
+
+  linkPreview: ({ linkPreviewUrl }, args, context) =>
+    getLinkPreviewByUrl(linkPreviewUrl, context),
 
   score: comment =>
     comment.upVotes - comment.downVotes,
