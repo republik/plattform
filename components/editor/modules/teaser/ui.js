@@ -161,9 +161,7 @@ const cloneWithRepoData = options => (node, repoData) => {
       }),
       Block.create({
         type: subjectModule.TYPE,
-        data: isArticleTile
-          ? data.set('columns', 3).set('color', '#000')
-          : data,
+        data: isArticleTile ? data.set('columns', 3) : data,
         nodes: meta.subject ? [Text.create(meta.subject)] : []
       }),
       Block.create({
