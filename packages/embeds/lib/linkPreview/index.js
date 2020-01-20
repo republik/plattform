@@ -3,7 +3,9 @@ const getUrls = require('get-urls')
 const cheerio = require('cheerio')
 const moment = require('moment')
 const debug = require('debug')('linkPreview')
+const AbortController = require('abort-controller')
 
+const REQUEST_TIMEOUT_SECS = 10
 const TTL_DB_ENTRIES_SECS = 6 * 60 * 60 // 6h
 const MAX_REQUEST_URL_EACH_SECS = 30
 const REDIS_PREFIX = 'embeds:linkPreview:throttle'
@@ -19,15 +21,34 @@ const getBaseUrl = (url) => {
 }
 
 const getContentForUrl = async (url) => {
+  const controller = new AbortController()
+  const timeout = setTimeout(
+    () => { controller.abort() },
+    REQUEST_TIMEOUT_SECS * 1000
+  )
+
   const response = await fetch(
     url,
-    { method: 'GET' }
+    {
+      method: 'GET',
+      signal: controller.signal
+    }
   )
     .then(res => res.text())
     .catch(error => {
-      debug('Error getting preview with url %s %o', url, error)
-      return null
+      if (error.name === 'AbortError') {
+        debug('TimeoutError: request to: %s failed', url)
+      } else {
+        debug(error.toString())
+      }
     })
+    .finally(() => {
+      clearTimeout(timeout)
+    })
+
+  if (!response) {
+    return
+  }
 
   const $ = cheerio.load(response)
   const meta = $('meta')
