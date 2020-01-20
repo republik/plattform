@@ -11,13 +11,13 @@ const argv = yargs
     default: 'PROJECT_R'
   })
   .option('begin', {
-    alias: 'f',
+    alias: 'b',
     describe: '(day in) first month e.g. 2019-02-01',
     coerce: moment,
     default: moment().subtract(1, 'month')
   })
   .option('end', {
-    alias: 'f',
+    alias: 'e',
     describe: '(day in) last month e.g. 2019-03-01',
     coerce: moment,
     default: moment().subtract(1, 'month')
@@ -30,10 +30,7 @@ const METHODS = ['PAYMENTSLIP', 'STRIPE', 'POSTFINANCECARD', 'PAYPAL']
 
 const currency = new Intl.NumberFormat('de-DE', { minimumFractionDigits: 2, useGrouping: false })
 
-const evaluateCompanyMonth = async (company, date, pgdb) => {
-  const begin = moment(date).startOf('month')
-  const end = begin.clone().add(1, 'month')
-
+const evaluateCompanyMonth = async (company, begin, end, pgdb) => {
   const query = `
     SELECT
       pay.id,
@@ -352,10 +349,11 @@ const evaluateCompanyMonth = async (company, date, pgdb) => {
 }
 
 PgDb.connect().then(async pgdb => {
-  console.log(`Entität\tMonat\tZahlungsart\tAggregation\tAnzahl\tBetrag in CHF`)
+  console.log('Entität\tMonat\tZahlungsart\tAggregation\tAnzahl\tBetrag in CHF')
 
-  for (let date = argv.begin.clone().startOf('month'); date <= argv.end; date.add(1, 'month')) {
-    await evaluateCompanyMonth(argv.company, date, pgdb)
+  for (const begin = argv.begin.clone().startOf('month'); begin <= argv.end; begin.add(1, 'month')) {
+    const end = begin.clone().add(1, 'month')
+    await evaluateCompanyMonth(argv.company, begin, end, pgdb)
   }
 
   await pgdb.close()
