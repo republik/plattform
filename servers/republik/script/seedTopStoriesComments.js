@@ -7,6 +7,7 @@ const { t } = require('@orbiting/backend-modules-translate')
 const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
 const Redis = require('@orbiting/backend-modules-base/lib/Redis')
 const RedisPubSub = require('@orbiting/backend-modules-base/lib/RedisPubSub')
+const Elasticsearch = require('@orbiting/backend-modules-base/lib/Elasticsearch')
 const loaderBuilders = {
   ...require('@orbiting/backend-modules-discussions/loaders'),
   ...require('@orbiting/backend-modules-auth/loaders'),
@@ -100,7 +101,8 @@ const createGraphQLContext = (defaultContext) => {
 Promise.props({
   pgdb: PgDb.connect(),
   redis: Redis.connect(),
-  pubsub: RedisPubSub.connect()
+  pubsub: RedisPubSub.connect(),
+  elastic: Elasticsearch.connect()
 }).then(async (connections) => {
   const { pgdb, redis, pubsub, elastic } = connections
   const context = createGraphQLContext({ pgdb, redis, pubsub, elastic })
@@ -138,6 +140,7 @@ Promise.props({
     await PgDb.disconnect(pgdb)
     await Redis.disconnect(redis)
     await RedisPubSub.disconnect(pubsub)
+    await Elasticsearch.disconnect(elastic)
   }).catch(e => {
     console.error(e)
     process.exit(1)
