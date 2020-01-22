@@ -4,6 +4,8 @@ const cheerio = require('cheerio')
 const moment = require('moment')
 const debug = require('debug')('linkPreview')
 const AbortController = require('abort-controller')
+const { createUrlPrefixer } = require('@orbiting/backend-modules-assets/lib/urlPrefixing')
+const proxyUrl = createUrlPrefixer()
 
 const REQUEST_TIMEOUT_SECS = 10
 const TTL_DB_ENTRIES_SECS = 6 * 60 * 60 // 6h
@@ -82,12 +84,12 @@ const getContentForUrl = async (url) => {
           const size = parseInt(sizes.split('x')[0])
           if (size && size > maxSize) {
             maxSize = size
-            obj.icon = new URL(href, baseUrl)
+            obj.icon = new URL(href, baseUrl).toString()
           }
         }
       }
       if (rel === 'shortcut icon') {
-        obj[rel] = new URL(href, baseUrl)
+        obj[rel] = new URL(href, baseUrl).toString()
       }
     }
   })
@@ -98,12 +100,17 @@ const getContentForUrl = async (url) => {
     return
   }
 
+  const siteImage = obj.icon || obj['shortcut icon']
+  // TODO check if site image is data url
+  // don't proxy republik urls
+  const siteImageUrl = proxyUrl(siteImage)
+
   return {
     title: title,
     description: obj['og:description'],
-    imageUrl: obj['og:image'],
+    imageUrl: proxyUrl(obj['og:image']),
     siteName: obj['og:site_name'] || new URL(url).hostname,
-    siteImageUrl: obj.icon || obj['shortcut icon']
+    siteImageUrl
   }
 }
 
