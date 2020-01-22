@@ -116,13 +116,32 @@ export const CommentComposer = props => {
     }
   })
 
+  const [preview, setPreview] = React.useState()
+  const textRef = React.useRef()
+
   const onChangeText = ev => {
-    setText(ev.target.value)
+    const nextText = ev.target.value
+    setText(nextText)
+    textRef.current = nextText
     try {
       localStorage.setItem(localStorageKey, ev.target.value)
     } catch (e) {
       /* Ignore errors */
     }
+
+    // check if previewComment is set
+    actions
+      .previewComment({ content: nextText, discussionId: id })
+      .then(nextPreview => {
+        if (textRef.current === nextText) {
+          setPreview(nextPreview)
+        }
+      })
+      .catch(() => {
+        if (textRef.current === nextText) {
+          setPreview(null)
+        }
+      })
   }
 
   const [tagValue, setTagValue] = React.useState(props.tagValue)
@@ -206,6 +225,10 @@ export const CommentComposer = props => {
           <MaxLengthIndicator maxLength={maxLength} length={text.length} />
         )}
       </div>
+
+      {!!preview && preview.linkPreview && (
+        <img src={preview.linkPreview.imageUrl} width='200' />
+      )}
 
       <Actions
         t={t}
