@@ -6,6 +6,7 @@ import { FigureByline, FigureImage } from '../Figure'
 import LazyLoad from '../LazyLoad'
 import { mUp } from './mediaQueries'
 import Text from './Text'
+import { useColorContext } from '../Colors/useColorContext'
 
 const IMAGE_SIZE = {
   small: 220,
@@ -81,7 +82,9 @@ const Tile = ({
   aboveTheFold,
   onlyImage
 }) => {
-  const background = bgColor || ''
+  const [colorScheme] = useColorContext()
+  const background = bgColor || colorScheme.containerBg
+  const textColor = color || colorScheme.text
   const justifyContent =
     align === 'top' ? 'flex-start' : align === 'bottom' ? 'flex-end' : ''
   const imageProps =
@@ -122,7 +125,10 @@ const Tile = ({
               {...(onlyImage ? styles.onlyImage : styles.image)}
             />
             {byline && (
-              <FigureByline position='rightCompact' style={{ color }}>
+              <FigureByline
+                position='rightCompact'
+                style={{ color: textColor }}
+              >
                 {byline}
               </FigureByline>
             )}
@@ -131,7 +137,7 @@ const Tile = ({
       )}
       {!onlyImage && (
         <div {...styles.textContainer}>
-          <Text color={color} maxWidth={'600px'} margin={'0 auto'}>
+          <Text color={textColor} maxWidth={'600px'} margin={'0 auto'}>
             {children}
           </Text>
         </div>

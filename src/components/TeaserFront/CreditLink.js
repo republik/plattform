@@ -2,9 +2,12 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { lab } from 'd3-color'
 import { css } from 'glamor'
-import colors from '../../theme/colors'
 import { underline } from '../../lib/styleMixins'
 import { tUp } from './mediaQueries'
+import { useColorContext } from '../Colors/useColorContext'
+
+const getHoverColor = labColor =>
+  labColor.l > 50 ? labColor.darker(0.6) : labColor.brighter(3)
 
 const CreditLink = ({
   attributes,
@@ -13,36 +16,27 @@ const CreditLink = ({
   collapsedColor,
   ...props
 }) => {
-  const labColor = lab(color)
+  const [colorScheme] = useColorContext()
+  const textColor = color ? color : colorScheme.text
+  const labColor = lab(textColor)
   const labCollapsedColor = collapsedColor && lab(collapsedColor)
+  const hoverColor = color ? getHoverColor(labColor) : colorScheme.lightText
 
-  const baseColorStyle = color
-    ? {
-        color,
-        '@media (hover)': {
-          ':hover': {
-            color: labColor.l > 50 ? labColor.darker(0.6) : labColor.brighter(3)
-          }
-        }
+  const baseColorStyle = {
+    color: textColor,
+    '@media (hover)': {
+      ':hover': {
+        color: hoverColor
       }
-    : {
-        color: colors.text,
-        '@media (hover)': {
-          ':hover': {
-            color: colors.lightText
-          }
-        }
-      }
+    }
+  }
 
   const colorStyle = labCollapsedColor
     ? {
         color: collapsedColor,
         '@media (hover)': {
           ':hover': {
-            color:
-              labCollapsedColor.l > 50
-                ? labCollapsedColor.darker(0.6)
-                : labCollapsedColor.brighter(3)
+            color: getHoverColor(labCollapsedColor)
           }
         },
         [tUp]: {
@@ -67,10 +61,6 @@ CreditLink.propTypes = {
   children: PropTypes.node.isRequired,
   color: PropTypes.string,
   collapsedColor: PropTypes.string
-}
-
-CreditLink.defaultProps = {
-  color: colors.primary
 }
 
 export default CreditLink

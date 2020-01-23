@@ -160,8 +160,7 @@ const createTeasers = ({ t, Link }) => {
         props: node => {
           return {
             title: node.title,
-            href: node.url,
-            color: colors.text
+            href: node.url
           }
         },
         component: ({ children, data, ...props }) => (

@@ -5,6 +5,7 @@ import colors from '../../theme/colors'
 import { breakoutUp } from '../Center'
 import { mUp } from './mediaQueries'
 import { sizeSmall, sizeMedium } from './Tile'
+import { useColorContext } from '../Colors/useColorContext'
 
 const styles = {
   base: css({
@@ -107,14 +108,10 @@ const styles = {
     }
   }),
   autoColumns: css({
-    '& .tile': {
-      borderTop: `1px solid ${colors.divider}`
-    },
     [mUp]: {
       flexWrap: 'wrap',
       '& .tile': {
         width: '50%',
-        borderLeft: `1px solid ${colors.divider}`,
         borderTop: 'none',
         margin: '0 0 50px 0',
         padding: '20px 0'
@@ -129,9 +126,6 @@ const styles = {
     [breakoutUp]: {
       '& .tile': {
         width: '33.33%'
-      },
-      '& .tile:nth-child(2n+1)': {
-        borderLeft: `1px solid ${colors.divider}`
       },
       '& .tile:nth-child(3n+1)': {
         borderLeft: 'none'
@@ -151,11 +145,30 @@ export const TeaserFrontTileRow = ({
   mobileReverse,
   mobileColumns
 }) => {
+  const [colorScheme] = useColorContext()
+  const autoBorders = css({
+    '& .tile': {
+      borderTop: `1px solid ${colorScheme.divider}`
+    },
+    [mUp]: {
+      '& .tile': {
+        borderLeft: `1px solid ${colorScheme.divider}`
+      }
+    },
+    [breakoutUp]: {
+      '& .tile:nth-child(2n+1)': {
+        borderLeft: `1px solid ${colorScheme.divider}`
+      }
+    }
+  })
+
   const rowStyles = merge(
     styles.base,
     !autoColumns && styles[`col${columns}`],
     mobileReverse && styles.mobileReverse,
-    autoColumns ? styles.autoColumns : styles[`mobileCol${mobileColumns}`]
+    autoColumns
+      ? merge(autoBorders, styles.autoColumns)
+      : styles[`mobileCol${mobileColumns}`]
   )
   return (
     <div role='group' {...attributes} {...rowStyles}>

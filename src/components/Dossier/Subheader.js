@@ -3,6 +3,7 @@ import { css } from 'glamor'
 import { mUp } from '../TeaserFront/mediaQueries'
 import { sansSerifMedium16, sansSerifMedium20 } from '../Typography/styles'
 import { convertStyleToRem } from '../Typography/utils'
+import { useColorContext } from '../Colors/useColorContext'
 
 const styles = {
   subheader: css({
@@ -18,7 +19,16 @@ const styles = {
 }
 
 const Subheader = ({ children }) => {
-  return <h2 {...styles.subheader}>{children}</h2>
+  const [colorScheme] = useColorContext()
+  const colors = css({
+    color: colorScheme.text
+  })
+
+  return (
+    <h2 {...styles.subheader} {...colors}>
+      {children}
+    </h2>
+  )
 }
 
 export default Subheader
