@@ -105,8 +105,7 @@ const fromMdast = ({ TYPE, subModules, rule }) => (
       const articleTilePatches =
         data.teaserType === 'articleTile' && node.type === 'FRONTSUBJECT'
           ? {
-              columns: 3,
-              color: '#000'
+              columns: 3
             }
           : undefined
       return {

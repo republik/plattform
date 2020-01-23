@@ -12,8 +12,6 @@ import { TeaserButton, TeaserInlineUI, TeaserForm } from './ui'
 export const getData = data => ({
   url: null,
   textPosition: 'topleft',
-  color: '#000',
-  bgColor: '#fff',
   center: false,
   image: null,
   byline: null,
