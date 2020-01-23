@@ -32,19 +32,20 @@ module.exports = async (_, args, context, info) => {
   }
 
   discussionIds.push(discussionId)
+  const filterByDiscussionIds = discussionIds.filter(Boolean).length > 0
 
-  const discussions =
-    await pgdb.public.discussions.find({
-      ...(discussionIds.filter(Boolean).length > 0) && { id: discussionIds },
-      ...(discussionIds.filter(Boolean).length === 0) && { hidden: false }
-    })
-
-  const numComments = await pgdb.public.comments.count({
-    discussionId: discussions.map(d => d.id),
-    ...(toDepth >= 0) && { 'depth <=': toDepth },
-    published: true,
-    adminUnpublished: false
-  })
+  const queryWhere = `
+    ${filterByDiscussionIds ? 'ARRAY[c."discussionId"] && :discussionIds AND' : ''}
+    ${toDepth >= 0 ? 'c."depth" <= :toDepth AND' : ''}
+    c."published" = true AND
+    c."adminUnpublished" = false
+  `
+  const queryJoin = filterByDiscussionIds ? '' : `
+    JOIN
+      discussions d ON
+        c."discussionId" = d.id AND
+        d.hidden = false
+  `
 
   let sortKey = getSortKey(orderBy)
   // there is no score in the db
@@ -52,38 +53,47 @@ module.exports = async (_, args, context, info) => {
     sortKey = 'upVotes" - "downVotes'
   }
 
-  const comments = await pgdb.query(`
-    SELECT
-      *,
-      CASE
-        WHEN id = :focusId THEN 1
-        ELSE 0
-      END AS "focus",
-      CASE
-        WHEN id = :lastId THEN 1
-        ELSE 0
-      END AS "last"
-    FROM
-      comments
-    WHERE
-      ARRAY["discussionId"] && :discussionIds AND
-      ${toDepth >= 0 ? '"depth" <= :toDepth AND' : ''}
-      "published" = true AND
-      "adminUnpublished" = false
-    ORDER BY
-      "focus" DESC,
-      "last" ASC,
-      "${sortKey}" ${orderDirection === 'DESC' ? 'DESC' : 'ASC'}
-    LIMIT :limit
-    OFFSET :offset
-  `, {
-    discussionIds: discussions.map(d => d.id),
-    toDepth,
-    focusId: focusId || null,
-    lastId: lastId || null,
-    limit,
-    offset
-  })
+  const [numComments, comments] = await Promise.all([
+    pgdb.queryOneField(`
+      SELECT
+        COUNT(*)
+      FROM
+        comments c
+      ${queryJoin}
+      WHERE
+        ${queryWhere}
+    `),
+    pgdb.query(`
+      SELECT
+        c.*,
+        CASE
+          WHEN c.id = :focusId THEN 1
+          ELSE 0
+        END AS "focus",
+        CASE
+          WHEN c.id = :lastId THEN 1
+          ELSE 0
+        END AS "last"
+      FROM
+        comments c
+      ${queryJoin}
+      WHERE
+        ${queryWhere}
+      ORDER BY
+        "focus" DESC,
+        "last" ASC,
+        c."${sortKey}" ${orderDirection === 'DESC' ? 'DESC' : 'ASC'}
+      LIMIT :limit
+      OFFSET :offset
+    `, {
+      discussionIds,
+      toDepth,
+      focusId: focusId || null,
+      lastId: lastId || null,
+      limit,
+      offset
+    })
+  ])
 
   const endCursor = (offset + limit) < numComments
     ? Buffer.from(JSON.stringify({
