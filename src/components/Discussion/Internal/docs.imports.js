@@ -54,6 +54,12 @@ export const comments = {
   comment6: {
     ...allComments.comment1,
     parentIds: Array.from({ length: 8 }, (_, i) => `6.${i}`)
+  },
+
+  // Comment with Preview
+  comment7: {
+    ...allComments.comment2,
+    linkPreview: allComments.linkPreview1
   }
 }
 

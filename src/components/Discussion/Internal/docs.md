@@ -6,6 +6,18 @@ Components on this page are not exported from the styleguide. This documentation
 
 # Comment
 
+#### Link Preview
+
+_TODO: put further down that list_
+
+Visualisation of the link preview attached to the comment – if applicable.
+
+```react|noSource,span-3
+<Comment.LinkPreview
+  comment={comments.comment7}
+/>
+```
+
 #### Header
 
 ```react|noSource,span-2
