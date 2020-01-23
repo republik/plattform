@@ -78,6 +78,8 @@ export const CommentComposer = props => {
    */
   const root = React.useRef()
   const [textarea, textareaRef] = React.useState(null)
+  const textRef = React.useRef()
+  const [preview, setPreview] = React.useState(null)
 
   /*
    * Focus the textarea upon mount.
@@ -102,6 +104,25 @@ export const CommentComposer = props => {
    */
   const localStorageKey = commentComposerStorageKey(id)
 
+  const fetchPreview = text => {
+    if (!actions || !actions.previewComment) {
+      return setPreview(null)
+    }
+    textRef.current = text
+    actions
+      .previewComment({ content: text, discussionId: id })
+      .then(nextPreview => {
+        if (textRef.current === text) {
+          setPreview(nextPreview)
+        }
+      })
+      .catch(() => {
+        if (textRef.current === text) {
+          setPreview(null)
+        }
+      })
+  }
+
   const [text, setText] = React.useState(() => {
     if (props.initialText) {
       return props.initialText
@@ -116,32 +137,18 @@ export const CommentComposer = props => {
     }
   })
 
-  const [preview, setPreview] = React.useState()
-  const textRef = React.useRef()
+  React.useEffect(() => {
+    fetchPreview(text)
+  }, [text])
 
   const onChangeText = ev => {
     const nextText = ev.target.value
     setText(nextText)
-    textRef.current = nextText
     try {
       localStorage.setItem(localStorageKey, ev.target.value)
     } catch (e) {
       /* Ignore errors */
     }
-
-    // check if previewComment is set
-    actions
-      .previewComment({ content: nextText, discussionId: id })
-      .then(nextPreview => {
-        if (textRef.current === nextText) {
-          setPreview(nextPreview)
-        }
-      })
-      .catch(() => {
-        if (textRef.current === nextText) {
-          setPreview(null)
-        }
-      })
   }
 
   const [tagValue, setTagValue] = React.useState(props.tagValue)
