@@ -26,15 +26,11 @@ const styles = {
     margin: '0 -7px 12px -7px',
     background: colors.primaryBg
   }),
-  boardContainerDesktop: css({
-    display: 'flex',
-    marginLeft: -10,
-    marginRight: -10,
-    marginBottom: 50
-  }),
-  boardColumnDesktop: css({
-    flex: 1,
-    padding: 10
+  boardColumn: css({
+    [mUp]: {
+      flex: 1,
+      padding: 10
+    }
   }),
   commentWrapper: ({ isExpanded }) =>
     css({
@@ -52,7 +48,7 @@ const styles = {
         }
       }
     }),
-  root: ({ isExpanded, nestLimitExceeded, depth }) =>
+  root: ({ isExpanded, nestLimitExceeded, depth, board }) =>
     css({
       position: 'relative',
       margin: depth === 1 ? 0 : `10px 0 ${isExpanded ? 24 : 16}px`,
@@ -61,7 +57,11 @@ const styles = {
       paddingLeft: nestLimitExceeded || depth < 1 ? 0 : config.indentSizeS,
 
       [mUp]: {
-        paddingLeft: nestLimitExceeded || depth < 1 ? 0 : config.indentSizeM
+        paddingLeft: nestLimitExceeded || depth < 1 ? 0 : config.indentSizeM,
+        display: board ? 'flex' : null,
+        marginLeft: board ? -10 : null,
+        marginRight: board ? -10 : null,
+        marginBottom: board ? 50 : null
       }
     }),
   verticalToggle: ({ drawLineEnd }) =>
@@ -253,11 +253,7 @@ const CommentNode = ({ t, comment, isDesktop, board }) => {
    */
   const drawLineEnd = false
 
-  const rootStyle = merge(
-    styles.root({ isExpanded, nestLimitExceeded, depth }),
-    board && isDesktop && styles.boardContainerDesktop
-  )
-  const columnStyle = board && isDesktop ? styles.boardColumnDesktop : {}
+  const rootStyle = styles.root({ isExpanded, nestLimitExceeded, depth, board })
   const verticalToggleStyle = isRoot
     ? null
     : styles.verticalToggle({ drawLineEnd })
@@ -269,15 +265,15 @@ const CommentNode = ({ t, comment, isDesktop, board }) => {
           <button {...verticalToggleStyle} onClick={toggleReplies} />
         )}
         {board && isDesktop && (
-          <div {...columnStyle}>
+          <div {...styles.boardColumn}>
             <Comment.LinkPreview comment={comment} />
           </div>
         )}
         <div
-          {...(mode === 'view' && isHighlighted
-            ? styles.highlightContainer
-            : {})}
-          {...columnStyle}
+          {...merge(
+            mode === 'view' && isHighlighted ? styles.highlightContainer : {},
+            board ? styles.boardColumn : null
+          )}
         >
           {{
             view: () => (
