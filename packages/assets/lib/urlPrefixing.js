@@ -48,6 +48,13 @@ module.exports = {
   },
 
   createUrlPrefixer: _public => url => {
+    const urlObject = new URL(url)
+    if (
+      urlObject.protocol === 'data:' ||
+      urlObject.origin === ASSETS_SERVER_BASE_URL
+    ) {
+      return url
+    }
     return `${ASSETS_SERVER_BASE_URL}/proxy?` + querystring.stringify({
       [originalKey]: url,
       mac: authenticate(url)
