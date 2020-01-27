@@ -148,8 +148,14 @@ module.exports = async ({
       }
     }
 
-    // gzipped content can't be piped
-    if (!pipeline && !returnResult && headers && headers.get('Content-Length') && !headers.get('Content-Encoding')) { // shortcut
+
+    if (
+      !pipeline &&
+      !returnResult &&
+      headers &&
+      headers.get('Content-Length') &&
+      !headers.get('Content-Encoding') // gzipped content can't be piped
+    ) { // shortcut
       res.set('Content-Length', headers.get('Content-Length'))
       passThrough.pipe(res)
     } else {
