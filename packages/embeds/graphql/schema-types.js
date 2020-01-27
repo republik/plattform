@@ -78,6 +78,7 @@ type LinkPreview {
   title: String!
   description: String
   imageUrl: String
+  imageAlt: String
   siteName: String
   siteImageUrl: String
   updatedAt: DateTime!

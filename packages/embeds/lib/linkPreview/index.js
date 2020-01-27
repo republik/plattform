@@ -109,6 +109,7 @@ const getContentForUrl = async (url) => {
     title: title,
     description: obj['og:description'],
     imageUrl: proxyUrl(obj['og:image']),
+    ...(obj['og:image:alt'] ? { imageAlt: obj['og:image:alt'] } : {}),
     siteName: obj['og:site_name'] || new URL(url).hostname,
     siteImageUrl
   }
