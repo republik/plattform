@@ -201,6 +201,7 @@ module.exports = async (discussion, args, context, info) => {
     exceptIds = [],
     focusId,
     parentId,
+    includeParent = false,
     flatDepth,
     tag
   } = options
@@ -225,8 +226,8 @@ module.exports = async (discussion, args, context, info) => {
     }
   }
 
-  const tree = parentId
-    ? { id: parentId }
+  let tree = parentId
+    ? comments.find(c => c.id === parentId)
     : {}
 
   // prepare sort
@@ -264,6 +265,9 @@ module.exports = async (discussion, args, context, info) => {
   }
 
   assembleTree(tree, comments)
+  if (parentId && includeParent) {
+    tree = { comments: { nodes: [tree] } }
+  }
   measureTree(tree)
   deepSortTree(
     tree,

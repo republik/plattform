@@ -125,6 +125,7 @@ type Discussion {
     flatDepth: Int
     # filter root-level by tag (ignored for answers)
     tag: String
+    includeParent: Boolean
   ): CommentConnection!
   rules: DiscussionRules!
   # only null for guests (not signedIn)
