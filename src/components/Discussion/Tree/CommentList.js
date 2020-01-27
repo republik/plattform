@@ -324,9 +324,12 @@ const CommentNode = ({ t, comment, isDesktop, board }) => {
           <Comment.Actions
             t={t}
             comment={comment}
-            onExpand={() => {
-              actions.fetchMoreComments({ parentId: id, after: {} })
-            }}
+            onExpand={
+              board &&
+              (() => {
+                actions.fetchMoreComments({ parentId: id, after: {} })
+              })
+            }
             onReply={
               !board &&
               (() => {
