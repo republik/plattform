@@ -7,6 +7,10 @@ const AbortController = require('abort-controller')
 const { createUrlPrefixer } = require('@orbiting/backend-modules-assets/lib/urlPrefixing')
 const proxyUrl = createUrlPrefixer()
 
+const {
+  LINK_PREVIEW_USER_AGENT
+} = process.env
+
 const REQUEST_TIMEOUT_SECS = 10
 const TTL_DB_ENTRIES_SECS = 6 * 60 * 60 // 6h
 const MAX_REQUEST_URL_EACH_SECS = 30
@@ -28,7 +32,10 @@ const fetchWithTimeout = (url, method = 'GET') => {
     url,
     {
       method,
-      signal: controller.signal
+      signal: controller.signal,
+      headers: {
+        'User-Agent': LINK_PREVIEW_USER_AGENT
+      }
     }
   )
     .catch(error => {
