@@ -103,7 +103,7 @@ const getContentForUrl = async (url) => {
   const siteImage = obj.icon || obj['shortcut icon']
   // TODO check if site image is data url
   // don't proxy republik urls
-  const siteImageUrl = proxyUrl(siteImage)
+  const siteImageUrl = siteImage && proxyUrl(siteImage)
 
   return {
     title: title,
