@@ -128,7 +128,8 @@ export const CommentList = ({
   t,
   parentId = null,
   comments,
-  board = false
+  board = false,
+  rootCommentOverlay = false
 }) => {
   const { actions } = React.useContext(DiscussionContext)
   const isDesktop = useMediaQuery(mUp)
@@ -160,6 +161,7 @@ export const CommentList = ({
           comment={comment}
           isDesktop={isDesktop}
           board={board}
+          rootCommentOverlay={rootCommentOverlay}
         />
       ))}
       <LoadMore
@@ -176,7 +178,7 @@ export const CommentList = ({
  * The Comment component manages the expand/collapse state of its children. It also manages
  * the editor for the comment itself, and composer for replies.
  */
-const CommentNode = ({ t, comment, isDesktop, board }) => {
+const CommentNode = ({ t, comment, isDesktop, board, rootCommentOverlay }) => {
   const { highlightedCommentId, actions } = React.useContext(DiscussionContext)
   const { id, parentIds, tags, text, comments } = comment
 
@@ -282,7 +284,9 @@ const CommentNode = ({ t, comment, isDesktop, board }) => {
                   t={t}
                   comment={comment}
                   isExpanded={isExpanded}
-                  onToggle={!board && toggleReplies}
+                  onToggle={
+                    !board && !(isRoot && rootCommentOverlay) && toggleReplies
+                  }
                 />
                 <div style={{ marginTop: 12 }}>
                   <Comment.Body
@@ -290,7 +294,7 @@ const CommentNode = ({ t, comment, isDesktop, board }) => {
                     comment={comment}
                     context={tags[0] ? { title: tags[0] } : undefined}
                   />
-                  {board && !isDesktop && (
+                  {((board && !isDesktop) || rootCommentOverlay) && (
                     <Comment.LinkPreview comment={comment} />
                   )}
                 </div>
