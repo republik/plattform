@@ -25,6 +25,19 @@ Two root-level components and one more that can be loaded.
 />
 ```
 
+### Example with link preview
+
+```react|noSource
+<CommentList
+  t={t}
+  comments={{
+    totalCount: 2,
+    directTotalCount: 2,
+    nodes: [comments.comment10, comments.comment11]
+  }}
+/>
+```
+
 ### Complex Discussion Tree
 
 ```react|noSource

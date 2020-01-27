@@ -257,6 +257,7 @@ const CommentNode = ({ t, comment }) => {
                     comment={comment}
                     context={tags[0] ? { title: tags[0] } : undefined}
                   />
+                  <Comment.LinkPreview comment={comment} />
                 </div>
               </div>
             ),
