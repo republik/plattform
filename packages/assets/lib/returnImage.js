@@ -70,7 +70,7 @@ module.exports = async ({
 
   // forward filtered headers
   if (headers) {
-    for (let key of pipeHeaders) {
+    for (const key of pipeHeaders) {
       const value = headers.get(key)
       if (value) {
         res.set(key, value)
@@ -148,7 +148,8 @@ module.exports = async ({
       }
     }
 
-    if (!pipeline && !returnResult && headers && headers.get('Content-Length')) { // shortcut
+    // gzipped content can't be piped
+    if (!pipeline && !returnResult && headers && headers.get('Content-Length') && !headers.get('Content-Encoding')) { // shortcut
       res.set('Content-Length', headers.get('Content-Length'))
       passThrough.pipe(res)
     } else {
