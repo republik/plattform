@@ -9,6 +9,9 @@ import {
 import { mUp } from '../../../../theme/mediaQueries'
 
 const styles = {
+  link: css({
+    textDecoration: 'none'
+  }),
   container: css({
     border: `1px solid ${colors.divider}`,
     marginTop: 15,
@@ -57,18 +60,19 @@ export const LinkPreview = ({ comment }) => {
     linkPreview: { url, title, description, imageUrl, siteName, siteImageUrl }
   } = comment
 
-  // <a href={url} target='_blank'>
   return (
-    <div {...styles.container}>
-      <img src={imageUrl} alt={title} {...styles.image} />
-      <div {...styles.text}>
-        <Interaction.P {...styles.paragraph}>
-          <img src={siteImageUrl} {...styles.siteImage} />
-          {siteName}
-        </Interaction.P>
-        <Interaction.H3 {...styles.title}>{title}</Interaction.H3>
-        <Interaction.P {...styles.paragraph}>{description}</Interaction.P>
+    <a href={url} target='_blank' {...styles.link}>
+      <div {...styles.container}>
+        <img src={imageUrl} alt={title} {...styles.image} />
+        <div {...styles.text}>
+          <Interaction.P {...styles.paragraph}>
+            <img src={siteImageUrl} {...styles.siteImage} />
+            {siteName}
+          </Interaction.P>
+          <Interaction.H3 {...styles.title}>{title}</Interaction.H3>
+          <Interaction.P {...styles.paragraph}>{description}</Interaction.P>
+        </div>
       </div>
-    </div>
+    </a>
   )
 }
