@@ -3,6 +3,7 @@ import { css } from 'glamor'
 import MdKeyboardArrowDown from 'react-icons/lib/md/keyboard-arrow-down'
 import MdKeyboardArrowUp from 'react-icons/lib/md/keyboard-arrow-up'
 // options: speaker-notes-off, block, clear, visibility-off, remove-circle
+import CommentCountIcon from './CommentCountIcon'
 import UnpublishIcon from 'react-icons/lib/md/visibility-off'
 import EditIcon from 'react-icons/lib/md/edit'
 import ReplyIcon from 'react-icons/lib/md/reply'
@@ -143,7 +144,10 @@ export const Actions = ({ t, comment, onExpand, onReply, onEdit }) => {
           onClick={onExpand}
           title={t('styleguide/CommentActions/answer')}
         >
-          <ReplyIcon />
+          <CommentCountIcon
+            count={comment.comments && comment.comments.totalCount}
+            small={true}
+          />
         </IconButton>
       )}
       {onReply && (
