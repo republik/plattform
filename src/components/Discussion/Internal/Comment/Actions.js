@@ -11,6 +11,7 @@ import ShareIcon from 'react-icons/lib/md/share'
 import colors from '../../../../theme/colors'
 import { sansSerifMedium14 } from '../../../Typography/styles'
 import { DiscussionContext, formatTimeRelative } from '../../DiscussionContext'
+import { mUp } from '../../../../theme/mediaQueries'
 
 const buttonStyle = {
   outline: 'none',
@@ -35,7 +36,11 @@ const styles = {
   votes: css({
     display: 'flex',
     justifyContent: 'space-between',
-    alignItems: 'center'
+    alignItems: 'center',
+    marginLeft: 'auto',
+    [mUp]: {
+      marginLeft: 0
+    }
   }),
   vote: css({
     display: 'flex',
