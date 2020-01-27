@@ -47,8 +47,7 @@ const styles = {
     }
   }),
   title: css({
-    marginBottom: '0.3rem',
-    marginTop: '0.1rem',
+    margin: '0.5rem 0',
     lineHeight: '1.35rem'
   })
 }
@@ -63,14 +62,18 @@ export const LinkPreview = ({ comment }) => {
   return (
     <a href={url} target='_blank' {...styles.link}>
       <div {...styles.container}>
-        <img src={imageUrl} alt={title} {...styles.image} />
+        {imageUrl && <img src={imageUrl} alt={title} {...styles.image} />}
         <div {...styles.text}>
-          <Interaction.P {...styles.paragraph}>
-            <img src={siteImageUrl} {...styles.siteImage} />
-            {siteName}
-          </Interaction.P>
+          {siteName && (
+            <Interaction.P {...styles.paragraph}>
+              {siteImageUrl && <img src={siteImageUrl} {...styles.siteImage} />}
+              {siteName}
+            </Interaction.P>
+          )}
           <Interaction.H3 {...styles.title}>{title}</Interaction.H3>
-          <Interaction.P {...styles.paragraph}>{description}</Interaction.P>
+          {description && (
+            <Interaction.P {...styles.paragraph}>{description}</Interaction.P>
+          )}
         </div>
       </div>
     </a>
