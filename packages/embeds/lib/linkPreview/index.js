@@ -17,26 +17,20 @@ const getLinkPreviewUrlFromText = (text) => {
   return urls[urls.length - 1]
 }
 
-const getBaseUrl = (url) => {
-  const parsedUrl = new URL(url)
-  return `${parsedUrl.protocol}//${parsedUrl.hostname}`
-}
-
-const getContentForUrl = async (url) => {
+const fetchWithTimeout = (url, method = 'GET') => {
   const controller = new AbortController()
   const timeout = setTimeout(
     () => { controller.abort() },
     REQUEST_TIMEOUT_SECS * 1000
   )
 
-  const response = await fetch(
+  return fetch(
     url,
     {
-      method: 'GET',
+      method,
       signal: controller.signal
     }
   )
-    .then(res => res.text())
     .catch(error => {
       if (error.name === 'AbortError') {
         debug('TimeoutError: request to: %s failed', url)
@@ -47,12 +41,10 @@ const getContentForUrl = async (url) => {
     .finally(() => {
       clearTimeout(timeout)
     })
+}
 
-  if (!response) {
-    return
-  }
-
-  const $ = cheerio.load(response)
+const parseMetaAndLink = (html, baseUrl) => {
+  const $ = cheerio.load(html)
   const meta = $('meta')
   const obj = {}
   Object.keys(meta).forEach(key => {
@@ -67,7 +59,6 @@ const getContentForUrl = async (url) => {
   })
 
   // add biggest icon and favicon to obj
-  const baseUrl = getBaseUrl(url)
   const link = $('link')
   let maxSize = 0
   Object.keys(link).forEach(key => {
@@ -94,17 +85,53 @@ const getContentForUrl = async (url) => {
     }
   })
 
-  const title = obj['og:title'] || $('title').text()
+  if (!obj['og:title']) {
+    obj['og:title'] = $('title').text()
+  }
 
-  if (!title) {
+  return obj
+}
+
+const getSiteImage = async (url, baseUrl) => {
+  // try well-known favicon
+  const faviconUrl = `${baseUrl}/favicon.ico`
+  const faviconExists = await fetchWithTimeout(faviconUrl, 'HEAD')
+    .then(res => res.status === 200)
+  if (faviconExists) {
+    return faviconUrl
+  }
+
+  // try meta data of origin
+  const response = await fetchWithTimeout(baseUrl)
+    .then(res => res.text())
+
+  if (!response) {
+    return
+  }
+  const obj = parseMetaAndLink(response, baseUrl)
+  return obj.icon || obj['shortcut icon']
+}
+
+const getContentForUrl = async (url) => {
+  const response = await fetchWithTimeout(url)
+    .then(res => res.text())
+
+  if (!response) {
     return
   }
 
-  const siteImage = obj.icon || obj['shortcut icon']
+  const baseUrl = new URL(url).origin
+  const obj = parseMetaAndLink(response, baseUrl)
+
+  if (!obj['og:title']) {
+    return
+  }
+
+  const siteImage = obj.icon || obj['shortcut icon'] || await getSiteImage(url, baseUrl)
   const siteImageUrl = siteImage && proxyUrl(siteImage)
 
   return {
-    title: title,
+    title: obj['og:title'],
     description: obj['og:description'],
     imageUrl: proxyUrl(obj['og:image']),
     imageAlt: obj['og:image:alt'],
