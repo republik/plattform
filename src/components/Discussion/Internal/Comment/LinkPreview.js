@@ -41,6 +41,7 @@ const styles = {
     }
   }),
   paragraph: css({
+    marginTop: '0.2rem',
     ...sansSerifRegular13,
     [mUp]: {
       ...sansSerifRegular15
