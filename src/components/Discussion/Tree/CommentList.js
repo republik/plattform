@@ -1,5 +1,5 @@
 import React from 'react'
-import { css } from 'glamor'
+import { css, merge } from 'glamor'
 import scrollIntoView from 'scroll-into-view'
 
 import colors from '../../../theme/colors'
@@ -9,6 +9,7 @@ import { LoadMore } from './LoadMore'
 import * as Comment from '../Internal/Comment'
 import * as config from '../config'
 import { mUp } from '../../../theme/mediaQueries'
+import { useMediaQuery } from '../../../lib/useMediaQuery'
 
 const buttonStyle = {
   display: 'block',
@@ -24,6 +25,16 @@ const styles = {
     padding: '7px 7px 0 7px',
     margin: '0 -7px 12px -7px',
     background: colors.primaryBg
+  }),
+  boardContainerDesktop: css({
+    display: 'flex',
+    marginLeft: -10,
+    marginRight: -10,
+    marginBottom: 50
+  }),
+  boardColumnDesktop: css({
+    flex: 1,
+    padding: 10
   }),
   commentWrapper: ({ isExpanded }) =>
     css({
@@ -41,14 +52,16 @@ const styles = {
         }
       }
     }),
-  root: ({ isExpanded, nestLimitExceeded }) =>
+  root: ({ isExpanded, nestLimitExceeded, depth }) =>
     css({
       position: 'relative',
-      margin: `10px 0 ${isExpanded ? 24 : 16}px`,
-      paddingLeft: nestLimitExceeded ? 0 : config.indentSizeS,
+      margin: depth === 1 ? 0 : `10px 0 ${isExpanded ? 24 : 16}px`,
+      paddingTop: depth === 1 ? 10 : 0,
+      paddingBottom: depth === 1 ? (isExpanded ? 24 : 16) : 0,
+      paddingLeft: nestLimitExceeded || depth < 1 ? 0 : config.indentSizeS,
 
       [mUp]: {
-        paddingLeft: nestLimitExceeded ? 0 : config.indentSizeM
+        paddingLeft: nestLimitExceeded || depth < 1 ? 0 : config.indentSizeM
       }
     }),
   verticalToggle: ({ drawLineEnd }) =>
@@ -111,8 +124,14 @@ const styles = {
     })
 }
 
-export const CommentList = ({ t, parentId = null, comments }) => {
+export const CommentList = ({
+  t,
+  parentId = null,
+  comments,
+  board = false
+}) => {
   const { actions } = React.useContext(DiscussionContext)
+  const isDesktop = useMediaQuery(mUp)
 
   const { nodes = [], totalCount = 0, pageInfo } = comments
   const { endCursor } = pageInfo || {}
@@ -135,7 +154,13 @@ export const CommentList = ({ t, parentId = null, comments }) => {
   return (
     <>
       {nodes.map(comment => (
-        <CommentNode key={comment.id} t={t} comment={comment} />
+        <CommentNode
+          key={comment.id}
+          t={t}
+          comment={comment}
+          isDesktop={isDesktop}
+          board={board}
+        />
       ))}
       <LoadMore
         t={t}
@@ -151,12 +176,14 @@ export const CommentList = ({ t, parentId = null, comments }) => {
  * The Comment component manages the expand/collapse state of its children. It also manages
  * the editor for the comment itself, and composer for replies.
  */
-const CommentNode = ({ t, comment }) => {
+const CommentNode = ({ t, comment, isDesktop, board }) => {
   const { highlightedCommentId, actions } = React.useContext(DiscussionContext)
   const { id, parentIds, tags, text, comments } = comment
 
   const isHighlighted = id === highlightedCommentId
-  const nestLimitExceeded = parentIds.length > config.nestLimit
+  const depth = parentIds.length
+  const nestLimitExceeded = depth > config.nestLimit
+  const isRoot = depth === 0
 
   const root = React.useRef()
 
@@ -226,21 +253,31 @@ const CommentNode = ({ t, comment }) => {
    */
   const drawLineEnd = false
 
-  const rootStyle = styles.root({ isExpanded, nestLimitExceeded })
+  const rootStyle = merge(
+    styles.root({ isExpanded, nestLimitExceeded, depth }),
+    board && isDesktop && styles.boardContainerDesktop
+  )
+  const columnStyle = board && isDesktop ? styles.boardColumnDesktop : {}
+  const verticalToggleStyle = isRoot
+    ? null
+    : styles.verticalToggle({ drawLineEnd })
 
   if (isExpanded) {
     return (
       <div ref={root} data-comment-id={id} {...rootStyle}>
-        {!nestLimitExceeded && (
-          <button
-            {...styles.verticalToggle({ drawLineEnd })}
-            onClick={toggleReplies}
-          />
+        {!nestLimitExceeded && !board && (
+          <button {...verticalToggleStyle} onClick={toggleReplies} />
+        )}
+        {board && isDesktop && (
+          <div {...columnStyle}>
+            <Comment.LinkPreview comment={comment} />
+          </div>
         )}
         <div
           {...(mode === 'view' && isHighlighted
             ? styles.highlightContainer
             : {})}
+          {...columnStyle}
         >
           {{
             view: () => (
@@ -249,7 +286,7 @@ const CommentNode = ({ t, comment }) => {
                   t={t}
                   comment={comment}
                   isExpanded={isExpanded}
-                  onToggle={toggleReplies}
+                  onToggle={!board && toggleReplies}
                 />
                 <div style={{ marginTop: 12 }}>
                   <Comment.Body
@@ -257,14 +294,16 @@ const CommentNode = ({ t, comment }) => {
                     comment={comment}
                     context={tags[0] ? { title: tags[0] } : undefined}
                   />
-                  <Comment.LinkPreview comment={comment} />
+                  {board && !isDesktop && (
+                    <Comment.LinkPreview comment={comment} />
+                  )}
                 </div>
               </div>
             ),
             edit: () => (
               <CommentComposer
                 t={t}
-                isRoot={parentIds.length === 0}
+                isRoot={isRoot}
                 initialText={text}
                 tagValue={tags[0]}
                 onClose={closeEditor}
@@ -285,9 +324,15 @@ const CommentNode = ({ t, comment }) => {
           <Comment.Actions
             t={t}
             comment={comment}
-            onReply={() => {
-              dispatch({ showReplyComposer: {} })
+            onExpand={() => {
+              actions.fetchMoreComments({ parentId: id, after: {} })
             }}
+            onReply={
+              !board &&
+              (() => {
+                dispatch({ showReplyComposer: {} })
+              })
+            }
             onEdit={() => {
               dispatch({ editComment: {} })
             }}
@@ -313,16 +358,13 @@ const CommentNode = ({ t, comment }) => {
           </div>
         )}
 
-        <CommentList t={t} parentId={id} comments={comments} />
+        {!board && <CommentList t={t} parentId={id} comments={comments} />}
       </div>
     )
   } else {
     return (
       <div ref={root} data-comment-id={id} {...rootStyle}>
-        <button
-          {...styles.verticalToggle({ drawLineEnd })}
-          onClick={toggleReplies}
-        />
+        <button {...verticalToggleStyle} onClick={toggleReplies} />
         <Comment.Header
           t={t}
           comment={comment}

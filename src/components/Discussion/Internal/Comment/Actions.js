@@ -86,7 +86,7 @@ const styles = {
   })
 }
 
-export const Actions = ({ t, comment, onReply, onEdit }) => {
+export const Actions = ({ t, comment, onExpand, onReply, onEdit }) => {
   const { published, userCanEdit, downVotes, upVotes, userVote } = comment
   const { isAdmin, discussion, actions, clock } = React.useContext(
     DiscussionContext
@@ -137,6 +137,15 @@ export const Actions = ({ t, comment, onReply, onEdit }) => {
 
   return (
     <div {...styles.root}>
+      {onExpand && (
+        <IconButton
+          type='left'
+          onClick={onExpand}
+          title={t('styleguide/CommentActions/answer')}
+        >
+          <ReplyIcon />
+        </IconButton>
+      )}
       {onReply && (
         <IconButton
           type='left'

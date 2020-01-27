@@ -6,11 +6,15 @@ import {
   sansSerifRegular13,
   sansSerifRegular15
 } from '../../../Typography/styles'
-import { mediaQueries } from '../../../../lib'
+import { mUp } from '../../../../theme/mediaQueries'
 
 const styles = {
   container: css({
-    border: `1px solid ${colors.divider}`
+    border: `1px solid ${colors.divider}`,
+    marginTop: 15,
+    [mUp]: {
+      marginTop: 0
+    }
   }),
   image: css({
     borderBottom: `1px solid ${colors.divider}`,
@@ -26,7 +30,7 @@ const styles = {
     height: 12,
     marginTop: 3,
     marginRight: 3,
-    [mediaQueries.mUp]: {
+    [mUp]: {
       width: 15,
       height: 15,
       marginTop: 5,
@@ -35,13 +39,14 @@ const styles = {
   }),
   paragraph: css({
     ...sansSerifRegular13,
-    [mediaQueries.mUp]: {
+    [mUp]: {
       ...sansSerifRegular15
     }
   }),
   title: css({
     marginBottom: '0.3rem',
-    marginTop: '0.1rem'
+    marginTop: '0.1rem',
+    lineHeight: '1.35rem'
   })
 }
 

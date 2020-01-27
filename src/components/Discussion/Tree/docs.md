@@ -30,6 +30,7 @@ Two root-level components and one more that can be loaded.
 ```react|noSource
 <CommentList
   t={t}
+  board
   comments={{
     totalCount: 2,
     directTotalCount: 2,

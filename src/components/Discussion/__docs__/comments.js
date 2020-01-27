@@ -43,7 +43,10 @@ export const mkComment = (
       (a, node) => a + 1 + node.comments.totalCount,
       extraCount
     ),
-    nodes: children
+    nodes: children.map(child => {
+      child.parentIds = child.id.split('.').slice(0, -1)
+      return child
+    })
   },
   linkPreview: linkPreview ? linkPreview1 : null
 })
