@@ -7,11 +7,9 @@ export const linkPreview1 = {
   title: 'Das perfekte Bordell',
   description:
     'Sexarbeiterinnen werden bis heute an den Rand der Gesellschaft gedrängt, bemitleidet oder gar verachtet. Es ist höchste Zeit für einen neuen Umgang mit der Prostitution.',
-  imageUrl:
-    'http://localhost:5020/proxy?originalURL=https%3A%2F%2Fcdn.repub.ch%2Fs3%2Frepublik-assets%2Fgithub%2Frepublik%2Farticle-das-perfekte-bordell%2Fimages%2Fc8df2dd6fc7e3fb8fd6a1b9a607947298ef5b522.jpeg%3Fsize%3D1984x992&mac=d48c0afdf66a2e56372c8781b4069a3b9c79302968e10c6ec0470185ae902464',
+  imageUrl: '/static/bordell.jpeg',
   siteName: 'republik.ch',
-  siteImageUrl:
-    'http://localhost:5020/proxy?originalURL=https%3A%2F%2Fwww.republik.ch%2Fstatic%2Fapple-touch-icon.png&mac=8c3a32e9ffd81a19940082e0beead4eb7586c1bb49b902a424d2fa68597338bd'
+  siteImageUrl: '/static/apple-touch-icon.png'
 }
 
 export const mkComment = (
