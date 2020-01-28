@@ -204,6 +204,8 @@ type Comment {
   userReportedAt: DateTime
   numReports: Int
 
+  contentLength: Int
+
   linkPreview: LinkPreview
 
   mentioningDocument: DocumentLink

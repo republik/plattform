@@ -48,6 +48,9 @@ module.exports = {
   },
 
   createUrlPrefixer: _public => url => {
+    if (url === undefined || url === null) {
+      return url
+    }
     const urlObject = new URL(url)
     if (
       urlObject.protocol === 'data:' ||

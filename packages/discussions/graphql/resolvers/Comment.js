@@ -141,6 +141,14 @@ module.exports = {
     }
   },
 
+  contentLength: async (comment, args, context) => {
+    const text = await textForComment(comment, true, context)
+    if (!text) {
+      return null
+    }
+    return text.length
+  },
+
   score: comment =>
     comment.upVotes - comment.downVotes,
 

@@ -130,14 +130,14 @@ const getSiteImage = async (url, baseUrl) => {
   // try well-known favicon
   const faviconUrl = `${baseUrl}/favicon.ico`
   const faviconExists = await fetchWithTimeout(faviconUrl, 'HEAD')
-    .then(res => res.status === 200)
+    .then(res => res && res.status === 200)
   if (faviconExists) {
     return faviconUrl
   }
 
   // try meta data of origin
   const response = await fetchWithTimeout(baseUrl)
-    .then(res => res.text())
+    .then(res => res && res.status === 200 && res.text())
 
   if (!response) {
     return
@@ -148,7 +148,7 @@ const getSiteImage = async (url, baseUrl) => {
 
 const getContentForUrl = async (url) => {
   const response = await fetchWithTimeout(url)
-    .then(res => res.text())
+    .then(res => res && res.status === 200 && res.text())
 
   if (!response) {
     return
@@ -162,7 +162,7 @@ const getContentForUrl = async (url) => {
   }
 
   const siteImage = obj.icon || obj['shortcut icon'] || await getSiteImage(url, baseUrl)
-  const siteImageUrl = siteImage && proxyUrl(siteImage)
+  const siteImageUrl = proxyUrl(siteImage)
 
   return {
     title: obj['og:title'],
