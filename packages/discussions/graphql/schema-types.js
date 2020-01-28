@@ -201,6 +201,8 @@ type Comment {
   tags: [String!]!
 
   linkPreview: LinkPreview
+
+  mentioningDocument: DocumentLink
 }
 
 enum MutationType {

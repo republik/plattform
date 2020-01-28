@@ -125,7 +125,7 @@ Promise.props({
         discussionId: discussion.id,
         parentId: null,
         content: comment.content,
-        createdAt: comment.createdAt
+        now: new Date(comment.createdAt)
       },
       {
         ...context,
@@ -133,6 +133,17 @@ Promise.props({
       }
     )
   })
+
+  const comment = await pgdb.public.comments.findFirst({
+    discussionId: discussion.id
+  })
+  await pgdb.public.comments.updateOne(
+    { id: comment.id },
+    {
+      repoId: 'republik-dev/article-das-reaktionaerste-land-der-welt',
+      documentFragmentId: 'ein-struktureller-wahnsinn'
+    }
+  )
 
   return connections
 })

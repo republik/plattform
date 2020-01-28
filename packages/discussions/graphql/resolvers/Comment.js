@@ -235,5 +235,21 @@ module.exports = {
   },
 
   tags: (comment) =>
-    comment.tags || []
+    comment.tags || [],
+
+  mentioningDocument: async ({
+    repoId,
+    documentFragmentId: fragmentId
+  }, args, { loaders }) => {
+    if (!repoId) {
+      return null
+    }
+    const doc = await loaders.Document.byRepoId.load(repoId)
+    if (doc) {
+      return {
+        document: doc,
+        fragmentId
+      }
+    }
+  }
 }
