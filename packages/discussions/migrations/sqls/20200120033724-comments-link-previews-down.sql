@@ -1,5 +1,5 @@
 ALTER TABLE "comments"
   DROP COLUMN "linkPreviewUrl",
-  DROP COLUMN "repoId",
-  DROP COLUMN "documentFragmentId"
+  DROP COLUMN IF EXISTS "repoId",
+  DROP COLUMN IF EXISTS "documentFragmentId"
 ;
