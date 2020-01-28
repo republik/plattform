@@ -50,6 +50,10 @@ const styles = {
   title: css({
     margin: '0.5rem 0',
     lineHeight: '1.35rem'
+  }),
+  topStory: css({
+    color: 'red',
+    textTransform: 'uppercase'
   })
 }
 
@@ -57,6 +61,7 @@ export const LinkPreview = ({ comment }) => {
   if (!comment || !comment.linkPreview) return null
 
   const {
+    mentioningDocument,
     linkPreview: {
       url,
       title,
@@ -75,6 +80,9 @@ export const LinkPreview = ({ comment }) => {
           <img src={imageUrl} alt={imageAlt || title} {...styles.image} />
         )}
         <div {...styles.text}>
+          {mentioningDocument && (
+            <span {...styles.topStory}>!!TOP STORY!!</span>
+          )}
           {siteName && (
             <Interaction.P {...styles.paragraph}>
               {siteImageUrl && <img src={siteImageUrl} {...styles.siteImage} />}

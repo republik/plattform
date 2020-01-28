@@ -18,6 +18,14 @@ Visualisation of the link preview attached to the comment – if applicable.
 />
 ```
 
+With top story pick:
+
+```react|noSource,span-3
+<Comment.LinkPreview
+  comment={comments.comment8}
+/>
+```
+
 #### Header
 
 ```react|noSource,span-2

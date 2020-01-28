@@ -60,6 +60,13 @@ export const comments = {
   comment7: {
     ...allComments.comment2,
     linkPreview: allComments.linkPreview1
+  },
+
+  // Comment with Preview and Top Story
+  comment8: {
+    ...allComments.comment2,
+    linkPreview: allComments.linkPreview1,
+    mentioningDocument: allComments.mentioningDocument
   }
 }
 

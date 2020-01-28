@@ -13,6 +13,15 @@ export const linkPreview1 = {
   siteImageUrl: '/static/apple-touch-icon.png'
 }
 
+export const mentioningDocument = {
+  document: {
+    meta: {
+      path: '/2019/02/18/das-reaktionaerste-land-der-welt'
+    }
+  },
+  fragmentId: 'ein-struktureller-wahnsinn'
+}
+
 export const mkComment = (
   n,
   children,
