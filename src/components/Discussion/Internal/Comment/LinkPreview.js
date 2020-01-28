@@ -57,13 +57,23 @@ export const LinkPreview = ({ comment }) => {
   if (!comment || !comment.linkPreview) return null
 
   const {
-    linkPreview: { url, title, description, imageUrl, siteName, siteImageUrl }
+    linkPreview: {
+      url,
+      title,
+      description,
+      imageUrl,
+      imageAlt,
+      siteName,
+      siteImageUrl
+    }
   } = comment
 
   return (
     <a href={url} target='_blank' {...styles.link}>
       <div {...styles.container}>
-        {imageUrl && <img src={imageUrl} alt={title} {...styles.image} />}
+        {imageUrl && (
+          <img src={imageUrl} alt={imageAlt || title} {...styles.image} />
+        )}
         <div {...styles.text}>
           {siteName && (
             <Interaction.P {...styles.paragraph}>

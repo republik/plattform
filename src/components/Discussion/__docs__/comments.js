@@ -8,6 +8,7 @@ export const linkPreview1 = {
   description:
     'Sexarbeiterinnen werden bis heute an den Rand der Gesellschaft gedrängt, bemitleidet oder gar verachtet. Es ist höchste Zeit für einen neuen Umgang mit der Prostitution.',
   imageUrl: '/static/bordell.jpeg',
+  imageAlt: 'Stadtbordell',
   siteName: 'republik.ch',
   siteImageUrl: '/static/apple-touch-icon.png'
 }
