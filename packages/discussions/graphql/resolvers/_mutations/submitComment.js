@@ -98,7 +98,8 @@ module.exports = async (_, args, context) => {
           userId,
           content,
           tags,
-          now: args.now
+          now: args.now,
+          isBoard: discussion.isBoard
         },
         context
       )

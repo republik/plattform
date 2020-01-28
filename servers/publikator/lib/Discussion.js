@@ -10,6 +10,7 @@ const upsert = async (docMeta, context, legacyDiscussionId) => {
     discussionAnonymity,
     discussionClosed = null,
     collapsable = null,
+    board = null,
     tags,
     tagRequired
   } = docMeta
@@ -36,6 +37,9 @@ const upsert = async (docMeta, context, legacyDiscussionId) => {
       : { },
     ...collapsable !== null
       ? { collapsable: !!collapsable }
+      : { },
+    ...board !== null
+      ? { isBoard: !!board }
       : { },
     tags: tags ? tags.trim().split(',') : null,
     tagRequired: !!tagRequired

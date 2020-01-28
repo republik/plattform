@@ -28,7 +28,8 @@ const create = async (
     userId,
     content,
     tags,
-    now = new Date()
+    now = new Date(),
+    isBoard
   },
   {
     loaders,
@@ -44,8 +45,12 @@ const create = async (
     parentIds = [...(parent.parentIds || []), parentId]
   }
 
-  const linkPreviewUrl = getLinkPreviewUrlFromText(content) || null
-  const newContent = clipUrlFromContent(content, linkPreviewUrl)
+  const linkPreviewUrl = isBoard
+    ? getLinkPreviewUrlFromText(content) || null
+    : null
+  const newContent = isBoard && linkPreviewUrl
+    ? clipUrlFromContent(content, linkPreviewUrl)
+    : content
 
   return {
     ...id ? { id } : { },
@@ -65,12 +70,19 @@ const create = async (
 const edit = ({
   content,
   tags,
-  now = new Date()
+  now = new Date(),
+  isBoard
 }) => {
-  const linkPreviewUrl = getLinkPreviewUrlFromText(content) || null
+  const linkPreviewUrl = isBoard
+    ? getLinkPreviewUrlFromText(content) || null
+    : null
+  const newContent = isBoard && linkPreviewUrl
+    ? clipUrlFromContent(content, linkPreviewUrl)
+    : content
+
   return {
-    content: clipUrlFromContent(content, linkPreviewUrl),
     linkPreviewUrl,
+    content: newContent,
     ...tags ? { tags } : {},
     published: true,
     updatedAt: now

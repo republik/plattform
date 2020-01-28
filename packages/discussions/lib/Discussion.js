@@ -43,6 +43,11 @@ const upsert = async (id, settings = {}, { pgdb, loaders }, legacyDiscussionId) 
         settings.collapsable !== null &&
         settings.collapsable !== discussion.collapsable
       ) ||
+      (
+        settings.isBoard !== undefined &&
+        settings.isBoard !== null &&
+        settings.isBoard !== discussion.isBoard
+      ) ||
       (settings.tagRequired !== undefined && settings.tagRequired !== discussion.tagRequired) ||
       (settings.tags && settings.tags !== (discussion.tags || []).join(',')) ||
       (!discussion.repoId && id && !idIsUUID && legacyDiscussionId) // to save repoId to existing discussions
