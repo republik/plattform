@@ -12,26 +12,33 @@ module.exports = async (_, args, context) => {
   Roles.ensureUserHasRole(user, 'member')
 
   const {
-    id
+    // TODO remove if FE is ready
+    id = uuid(),
+    discussionId
   } = args
 
-  const comment = id && await loaders.Comment.byId.load(id)
-
-  if (id && !comment) {
-    throw new Error(t('api/comment/404'))
+  const discussion = await loaders.Discussion.byId.load(discussionId)
+  if (!discussion) {
+    throw new Error(t('api/discussion/404'))
   }
+
+  const comment = id && await loaders.Comment.byId.load(id)
 
   if (comment) {
     return {
       ...comment,
-      ...transform.edit(args)
+      ...transform.edit({
+        ...args,
+        isBoard: discussion.isBoard
+      })
     }
   } else {
     return transform.create(
       {
         ...args,
-        id: uuid(),
-        userId: user.id
+        id,
+        userId: user.id,
+        isBoard: discussion.isBoard
       },
       context
     )
