@@ -55,15 +55,12 @@ const textForComment = async (
 
   const isPublished = !!(published && !adminUnpublished)
   const isMine = !!(me && userId && userId === me.id)
-  if (isMine) {
-    return content
-  }
-  if (!isPublished) {
+  if (!isMine && !isPublished) {
     return null
   }
 
   let newContent = content
-  if (!Roles.userIsInRoles(me, ['member'])) {
+  if (!isMine && !Roles.userIsInRoles(me, ['member'])) {
     const namesToClip = await context.loaders.Discussion.byIdCommenterNamesToClip.load(discussionId)
     newContent = clipNamesInText(namesToClip, content)
   }
