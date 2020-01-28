@@ -25,15 +25,15 @@ if (!DISPLAY_AUTHOR_SECRET) {
   throw new Error('missing required DISPLAY_AUTHOR_SECRET')
 }
 
-const showLinkPreviewForComment = async ({ linkPreviewUrl, discussionId, depth }, context) => {
+const linkPreviewForComment = async ({ linkPreviewUrl, discussionId, depth }, context) => {
   if (!linkPreviewUrl) {
-    return false
+    return null
   }
   const discussion = await context.loaders.Discussion.byId.load(discussionId)
   if (discussion && discussion.isBoard && depth === 0) {
-    return true
+    return getLinkPreviewByUrl(linkPreviewUrl, context)
   }
-  return false
+  return null
 }
 
 const textForComment = async (
@@ -64,7 +64,7 @@ const textForComment = async (
     const namesToClip = await context.loaders.Discussion.byIdCommenterNamesToClip.load(discussionId)
     newContent = clipNamesInText(namesToClip, content)
   }
-  if (prettify && await showLinkPreviewForComment(comment, context)) {
+  if (prettify && !!await linkPreviewForComment(comment, context)) {
     newContent = clipUrlFromText(content, linkPreviewUrl)
   }
   return newContent
@@ -135,11 +135,8 @@ module.exports = {
     return mdastToHumanString(remark.parse(text), length)
   },
 
-  linkPreview: async (comment, args, context) => {
-    if (await showLinkPreviewForComment(comment, context)) {
-      return getLinkPreviewByUrl(comment.linkPreviewUrl, context)
-    }
-  },
+  linkPreview: async (comment, args, context) =>
+    linkPreviewForComment(comment, context),
 
   contentLength: async (comment, args, context) => {
     const text = await textForComment(comment, true, context)
@@ -274,6 +271,7 @@ module.exports = {
       }
     }
 
+    // TODO: why throw here? any why not api/comment/noChildren?
     throw new Error(t('api/unexpected'))
   },
 

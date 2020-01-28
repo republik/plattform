@@ -6,6 +6,7 @@ const debug = require('debug')('linkPreview')
 const AbortController = require('abort-controller')
 const { createUrlPrefixer } = require('@orbiting/backend-modules-assets/lib/urlPrefixing')
 const proxyUrl = createUrlPrefixer()
+const Redlock = require('redlock')
 
 const {
   LINK_PREVIEW_USER_AGENT
@@ -15,6 +16,20 @@ const REQUEST_TIMEOUT_SECS = 10
 const TTL_DB_ENTRIES_SECS = 6 * 60 * 60 // 6h
 const MAX_REQUEST_URL_EACH_SECS = 30
 const REDIS_PREFIX = 'embeds:linkPreview:throttle'
+
+const LOCK_RETRY_DELAY_MS = 1000
+const LOCK_RETRY_COUNT = 4 * ((REQUEST_TIMEOUT_SECS * 1000) / LOCK_RETRY_DELAY_MS)
+const LOCK_TTL_MS = LOCK_RETRY_COUNT * REQUEST_TIMEOUT_SECS * 1000
+
+const redlock = (redis) => {
+  return new Redlock(
+    [redis],
+    {
+      retryCount: LOCK_RETRY_COUNT,
+      retryDelay: LOCK_RETRY_DELAY_MS
+    }
+  )
+}
 
 const getLinkPreviewUrlFromText = (text) => {
   const urls = [
@@ -174,16 +189,11 @@ const getContentForUrl = async (url) => {
   }
 }
 
-const transformDBEntry = (dbEntry) => ({
-  ...dbEntry,
-  ...dbEntry.content
-})
-
-const fetchLinkPreview = async ({ url, existingLinkPreview }, context) => {
+const fetchLinkPreview = async ({ url, doUpdate = false }, context) => {
   debug(
-    'fetchLinkPreview url: %s existingLinkPreview: %s',
+    'fetchLinkPreview url: %s doUpdate: %s',
     url,
-    !!existingLinkPreview
+    doUpdate
   )
 
   const {
@@ -192,14 +202,25 @@ const fetchLinkPreview = async ({ url, existingLinkPreview }, context) => {
     loaders
   } = context
 
+  const redisKey = `${REDIS_PREFIX}:${url.toLowerCase()}`
+  const lockKey = `locks:${redisKey}`
+
+  const lock = await redlock(redis).lock(lockKey, LOCK_TTL_MS)
+
+  const existingLinkPreview = await loaders.LinkPreview.byUrl.load(url)
+  if (!doUpdate && existingLinkPreview) {
+    await lock.unlock()
+    return existingLinkPreview
+  }
+
   // throttle
-  const redisKey = `${REDIS_PREFIX}:${url}`
   const throttled = await redis.getAsync(redisKey)
   if (throttled) {
     debug('throttle prevented url from beeing fetched %s', url)
+    await lock.unlock()
     return null
   }
-  redis.setAsync(
+  await redis.setAsync(
     redisKey,
     1,
     'EX', MAX_REQUEST_URL_EACH_SECS
@@ -207,15 +228,14 @@ const fetchLinkPreview = async ({ url, existingLinkPreview }, context) => {
 
   const content = await getContentForUrl(url)
 
+  let dbEntry
   if (content) {
     if (!existingLinkPreview) {
-      const dbEntry = await pgdb.public.linkPreviews.insertAndGet({
+      dbEntry = await pgdb.public.linkPreviews.insertAndGet({
         url,
         hostname: new URL(url).hostname,
         content
       })
-      loaders.LinkPreview.byUrl.clear(url)
-      return transformDBEntry(dbEntry)
     } else {
       await pgdb.public.linkPreviews.updateOne(
         { id: existingLinkPreview.id },
@@ -224,15 +244,24 @@ const fetchLinkPreview = async ({ url, existingLinkPreview }, context) => {
           updatedAt: new Date()
         }
       )
-      loaders.LinkPreview.byUrl.clear(url)
     }
+    await loaders.LinkPreview.byUrl.clear(url)
   }
+
+  await lock.unlock()
+
+  return dbEntry
 }
 
 const getLinkPreviewByUrl = async (url, context) => {
   if (!url || !url.trim().length) {
     return null
   }
+
+  const transformDBEntry = (dbEntry) => ({
+    ...dbEntry,
+    ...dbEntry.content
+  })
 
   const {
     loaders
@@ -242,14 +271,18 @@ const getLinkPreviewByUrl = async (url, context) => {
 
   const now = moment()
   if (linkPreview) {
-    if (now.diff(moment(linkPreview.updatedAt), 'seconds') > TTL_DB_ENTRIES_SECS) {
+    if (
+      now.diff(moment(linkPreview.updatedAt), 'seconds') > TTL_DB_ENTRIES_SECS
+    ) {
       // no await -> done in background
-      fetchLinkPreview({ url, existingLinkPreview: linkPreview }, context)
+      fetchLinkPreview({ url, doUpdate: true }, context)
     }
     return transformDBEntry(linkPreview)
   }
 
-  return fetchLinkPreview({ url }, context)
+  return transformDBEntry(
+    await fetchLinkPreview({ url }, context)
+  )
 }
 
 module.exports = {
