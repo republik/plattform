@@ -1,25 +1,6 @@
 const hotness = require('../hotness')
 const { linkPreview: { getLinkPreviewUrlFromText } } = require('@orbiting/backend-modules-embeds')
 
-const clipUrlFromContent = (content, url) => {
-  if (!url || !content) {
-    return content
-  }
-  const index = content.indexOf(url)
-  if (index === 0) {
-    return content.replace(url, '')
-      .trim()
-  }
-  if (
-    index === content.length - url.length ||
-    index === content.length - url.length - 1 // trailing slash
-  ) {
-    return content.substring(0, index)
-      .trim()
-  }
-  return content
-}
-
 const create = async (
   {
     id,
@@ -28,8 +9,7 @@ const create = async (
     userId,
     content,
     tags,
-    now = new Date(),
-    isBoard
+    now = new Date()
   },
   {
     loaders,
@@ -45,21 +25,14 @@ const create = async (
     parentIds = [...(parent.parentIds || []), parentId]
   }
 
-  const linkPreviewUrl = isBoard
-    ? getLinkPreviewUrlFromText(content) || null
-    : null
-  const newContent = isBoard && linkPreviewUrl
-    ? clipUrlFromContent(content, linkPreviewUrl)
-    : content
-
   return {
     ...id ? { id } : { },
     discussionId,
     ...parentIds ? { parentIds } : {},
     depth: (parentIds && parentIds.length) || 0,
     userId,
-    linkPreviewUrl,
-    content: newContent,
+    linkPreviewUrl: getLinkPreviewUrlFromText(content) || null,
+    content,
     hotness: hotness(0, 0, (now.getTime())),
     ...tags ? { tags } : {},
     createdAt: now,
@@ -70,24 +43,14 @@ const create = async (
 const edit = ({
   content,
   tags,
-  now = new Date(),
-  isBoard
-}) => {
-  const linkPreviewUrl = isBoard
-    ? getLinkPreviewUrlFromText(content) || null
-    : null
-  const newContent = isBoard && linkPreviewUrl
-    ? clipUrlFromContent(content, linkPreviewUrl)
-    : content
-
-  return {
-    linkPreviewUrl,
-    content: newContent,
-    ...tags ? { tags } : {},
-    published: true,
-    updatedAt: now
-  }
-}
+  now = new Date()
+}) => ({
+  linkPreviewUrl: getLinkPreviewUrlFromText(content) || null,
+  content,
+  ...tags ? { tags } : {},
+  published: true,
+  updatedAt: now
+})
 
 module.exports = {
   create,

@@ -11,6 +11,12 @@ const {
 } = require('../../../../servers/republik/graphql/resolvers/User')
 const remark = require('../../lib/remark')
 const { clipNamesInText } = require('../../lib/nameClipper')
+const {
+  linkPreview: {
+    getLinkPreviewByUrl,
+    clipUrlFromText
+  }
+} = require('@orbiting/backend-modules-embeds')
 
 const {
   DISPLAY_AUTHOR_SECRET
@@ -19,10 +25,34 @@ if (!DISPLAY_AUTHOR_SECRET) {
   throw new Error('missing required DISPLAY_AUTHOR_SECRET')
 }
 
-const { linkPreview: { getLinkPreviewByUrl } } = require('@orbiting/backend-modules-embeds')
+const showLinkPreviewForComment = async ({ linkPreviewUrl, discussionId, depth }, context) => {
+  if (!linkPreviewUrl) {
+    return false
+  }
+  const discussion = await context.loaders.Discussion.byId.load(discussionId)
+  if (discussion && discussion.isBoard && depth === 0) {
+    return true
+  }
+  return false
+}
 
-const textForComment = async ({ userId, content, published, adminUnpublished, discussionId }, context) => {
-  const me = context && context.user
+const textForComment = async (
+  comment,
+  prettify = false,
+  context
+) => {
+  const {
+    userId,
+    content,
+    published,
+    adminUnpublished,
+    discussionId,
+    linkPreviewUrl
+  } = comment
+  const {
+    user: me
+  } = context
+
   const isPublished = !!(published && !adminUnpublished)
   const isMine = !!(me && userId && userId === me.id)
   if (isMine) {
@@ -31,11 +61,16 @@ const textForComment = async ({ userId, content, published, adminUnpublished, di
   if (!isPublished) {
     return null
   }
+
+  let newContent = content
   if (!Roles.userIsInRoles(me, ['member'])) {
     const namesToClip = await context.loaders.Discussion.byIdCommenterNamesToClip.load(discussionId)
-    return clipNamesInText(namesToClip, content)
+    newContent = clipNamesInText(namesToClip, content)
   }
-  return content
+  if (prettify && await showLinkPreviewForComment(comment, context)) {
+    newContent = clipUrlFromText(content, linkPreviewUrl)
+  }
+  return newContent
 }
 
 /**
@@ -85,7 +120,7 @@ module.exports = {
       : null,
 
   content: async (comment, args, context) => {
-    const text = await textForComment(comment, context)
+    const text = await textForComment(comment, true, context)
     if (!text) {
       return text
     }
@@ -93,18 +128,21 @@ module.exports = {
   },
 
   text: (comment, args, context) =>
-    textForComment(comment, context),
+    textForComment(comment, false, context),
 
   preview: async (comment, { length = 500 }, context) => {
-    const text = await textForComment(comment, context)
+    const text = await textForComment(comment, true, context)
     if (!text) {
       return null
     }
     return mdastToHumanString(remark.parse(text), length)
   },
 
-  linkPreview: ({ linkPreviewUrl }, args, context) =>
-    getLinkPreviewByUrl(linkPreviewUrl, context),
+  linkPreview: async (comment, args, context) => {
+    if (await showLinkPreviewForComment(comment, context)) {
+      return getLinkPreviewByUrl(comment.linkPreviewUrl, context)
+    }
+  },
 
   score: comment =>
     comment.upVotes - comment.downVotes,

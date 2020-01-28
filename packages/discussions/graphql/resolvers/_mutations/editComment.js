@@ -41,8 +41,7 @@ module.exports = async (_, args, context) => {
       { id: comment.id },
       transform.edit({
         content,
-        tags,
-        isBoard: discussion.isBoard
+        tags
       })
     )
 

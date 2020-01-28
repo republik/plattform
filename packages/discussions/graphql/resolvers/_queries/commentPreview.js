@@ -27,18 +27,14 @@ module.exports = async (_, args, context) => {
   if (comment) {
     return {
       ...comment,
-      ...transform.edit({
-        ...args,
-        isBoard: discussion.isBoard
-      })
+      ...transform.edit(args)
     }
   } else {
     return transform.create(
       {
         ...args,
         id,
-        userId: user.id,
-        isBoard: discussion.isBoard
+        userId: user.id
       },
       context
     )

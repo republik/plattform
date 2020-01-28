@@ -29,6 +29,25 @@ const getLinkPreviewUrlFromText = (text) => {
   return urls[urls.length - 1]
 }
 
+const clipUrlFromText = (content, url) => {
+  if (!url || !content) {
+    return content
+  }
+  const index = content.indexOf(url)
+  if (index === 0) {
+    return content.replace(url, '')
+      .trim()
+  }
+  if (
+    index === content.length - url.length ||
+    index === content.length - url.length - 1 // trailing slash
+  ) {
+    return content.substring(0, index)
+      .trim()
+  }
+  return content
+}
+
 const fetchWithTimeout = (url, method = 'GET') => {
   const controller = new AbortController()
   const timeout = setTimeout(
@@ -235,5 +254,6 @@ const getLinkPreviewByUrl = async (url, context) => {
 
 module.exports = {
   getLinkPreviewUrlFromText,
+  clipUrlFromText,
   getLinkPreviewByUrl
 }
