@@ -28,6 +28,11 @@ const createSchema = ({
         ]
       },
       {
+        label: 'Board',
+        key: 'board',
+        ref: 'bool'
+      },
+      {
         label: 'Format',
         key: 'format',
         ref: 'repo'
