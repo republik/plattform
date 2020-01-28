@@ -58,6 +58,11 @@ const styles = {
       paddingTop: depth === 1 ? 10 : 0,
       paddingBottom: depth === 1 ? (isExpanded ? 24 : 16) : 0,
       paddingLeft: nestLimitExceeded || depth < 1 ? 0 : config.indentSizeS,
+      background: 'white',
+      '&.depth-1:last-of-type': {
+        paddingBottom: 0,
+        marginBottom: isExpanded ? 24 : 16
+      },
 
       [mUp]: {
         paddingLeft: nestLimitExceeded || depth < 1 ? 0 : config.indentSizeM,
@@ -265,7 +270,12 @@ const CommentNode = ({ t, comment, isDesktop, board, rootCommentOverlay }) => {
 
   if (isExpanded) {
     return (
-      <div ref={root} data-comment-id={id} {...rootStyle}>
+      <div
+        ref={root}
+        data-comment-id={id}
+        {...rootStyle}
+        className={`depth-${depth}`}
+      >
         {!nestLimitExceeded && !board && (
           <button {...verticalToggleStyle} onClick={toggleReplies} />
         )}
@@ -368,7 +378,15 @@ const CommentNode = ({ t, comment, isDesktop, board, rootCommentOverlay }) => {
           </div>
         )}
 
-        {!board && <CommentList t={t} parentId={id} comments={comments} />}
+        {!board && (
+          <CommentList
+            t={t}
+            parentId={id}
+            comments={comments}
+            isDesktop={isDesktop}
+            rootCommentOverlay={rootCommentOverlay}
+          />
+        )}
       </div>
     )
   } else {
