@@ -17,7 +17,15 @@ const MAX_REQUEST_URL_EACH_SECS = 30
 const REDIS_PREFIX = 'embeds:linkPreview:throttle'
 
 const getLinkPreviewUrlFromText = (text) => {
-  const urls = [...getUrls(text)]
+  const urls = [
+    ...getUrls(
+      text,
+      {
+        stripWWW: false,
+        sortQueryParameters: false
+      }
+    )
+  ]
   return urls[urls.length - 1]
 }
 

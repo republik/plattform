@@ -1,6 +1,25 @@
 const hotness = require('../hotness')
 const { linkPreview: { getLinkPreviewUrlFromText } } = require('@orbiting/backend-modules-embeds')
 
+const clipUrlFromContent = (content, url) => {
+  if (!url || !content) {
+    return content
+  }
+  const index = content.indexOf(url)
+  if (index === 0) {
+    return content.replace(url, '')
+      .trim()
+  }
+  if (
+    index === content.length - url.length ||
+    index === content.length - url.length - 1 // trailing slash
+  ) {
+    return content.substring(0, index)
+      .trim()
+  }
+  return content
+}
+
 const create = async (
   {
     id,
@@ -25,14 +44,17 @@ const create = async (
     parentIds = [...(parent.parentIds || []), parentId]
   }
 
+  const linkPreviewUrl = getLinkPreviewUrlFromText(content) || null
+  const newContent = clipUrlFromContent(content, linkPreviewUrl)
+
   return {
     ...id ? { id } : { },
     discussionId,
     ...parentIds ? { parentIds } : {},
     depth: (parentIds && parentIds.length) || 0,
     userId,
-    content,
-    linkPreviewUrl: getLinkPreviewUrlFromText(content) || null,
+    linkPreviewUrl,
+    content: newContent,
     hotness: hotness(0, 0, (now.getTime())),
     ...tags ? { tags } : {},
     createdAt: now,
@@ -44,13 +66,16 @@ const edit = ({
   content,
   tags,
   now = new Date()
-}) => ({
-  content,
-  linkPreviewUrl: getLinkPreviewUrlFromText(content) || null,
-  ...tags ? { tags } : {},
-  published: true,
-  updatedAt: now
-})
+}) => {
+  const linkPreviewUrl = getLinkPreviewUrlFromText(content) || null
+  return {
+    content: clipUrlFromContent(content, linkPreviewUrl),
+    linkPreviewUrl,
+    ...tags ? { tags } : {},
+    published: true,
+    updatedAt: now
+  }
+}
 
 module.exports = {
   create,
