@@ -286,5 +286,16 @@ module.exports = {
         fragmentId
       }
     }
-  }
+  },
+
+  userReportedAt: ({ reports }, args, { user: me }) =>
+    me && reports && reports.reduce(
+      (acc, r) => acc || (r.userId === me.id) ? r.reportedAt : null,
+      null
+    ),
+
+  numReports: ({ reports }, args, { user: me }) =>
+    Roles.userIsInRoles(me, ['editor', 'admin'])
+      ? reports ? reports.length : 0
+      : null
 }

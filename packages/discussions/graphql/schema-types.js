@@ -201,6 +201,9 @@ type Comment {
 
   tags: [String!]!
 
+  userReportedAt: DateTime
+  numReports: Int
+
   linkPreview: LinkPreview
 
   mentioningDocument: DocumentLink

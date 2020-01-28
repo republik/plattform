@@ -11,11 +11,12 @@ if (SLACK_API_TOKEN) {
   console.warn('Posting to slack disabled: missing SLACK_API_TOKEN')
 }
 
-const publish = async (channel, content) => {
+const publish = async (channel, content, options = {}) => {
   if (webClient && channel) {
     await webClient.chat.postMessage({
       channel,
-      text: content
+      text: content,
+      ...options
     })
       .catch((e) => {
         console.error(e)

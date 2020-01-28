@@ -1,5 +1,5 @@
 {
-  "updated": "2020-01-07T13:39:13.292Z",
+  "updated": "2020-01-28T17:33:27.322Z",
   "title": "live",
   "data": [
     {
@@ -685,6 +685,10 @@
     {
       "key": "api/comment/invalidTags",
       "value": "Die folgenden Tags stehen in dieser Diskussion nicht zur Verfügung: {invalidTags}"
+    },
+    {
+      "key": "api/comment/report/notYours",
+      "value": "Sie können Ihre eigenen Beiträge nicht melden."
     },
     {
       "key": "api/discussion/tagRequiredButNoTags",
