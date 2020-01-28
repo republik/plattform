@@ -1,5 +1,5 @@
 {
-  "updated": "2019-09-01T00:03:08.188Z",
+  "updated": "2020-01-28T11:42:27.654Z",
   "title": "live",
   "data": [
     {
@@ -25,6 +25,10 @@
     {
       "key": "styleguide/CommentComposer/etiquette",
       "value": "Etikette"
+    },
+    {
+      "key": "styleguide/CommentActions/expand",
+      "value": "Kommentaren"
     },
     {
       "key": "styleguide/CommentActions/answer",

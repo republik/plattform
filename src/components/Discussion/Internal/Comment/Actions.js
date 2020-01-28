@@ -147,7 +147,7 @@ export const Actions = ({ t, comment, onExpand, onReply, onEdit }) => {
         <IconButton
           type='left'
           onClick={onExpand}
-          title={t('styleguide/CommentActions/answer')}
+          title={t('styleguide/CommentActions/expand')}
         >
           <CommentCountIcon
             count={comment.comments && comment.comments.totalCount}

@@ -32,6 +32,9 @@ const styles = {
       padding: 10
     }
   }),
+  modalRoot: css({
+    marginBottom: 15
+  }),
   commentWrapper: ({ isExpanded }) =>
     css({
       /*
@@ -274,7 +277,8 @@ const CommentNode = ({ t, comment, isDesktop, board, rootCommentOverlay }) => {
         <div
           {...merge(
             mode === 'view' && isHighlighted ? styles.highlightContainer : {},
-            board ? styles.boardColumn : null
+            board ? styles.boardColumn : null,
+            isRoot && rootCommentOverlay ? styles.modalRoot : null
           )}
         >
           {{
@@ -294,8 +298,11 @@ const CommentNode = ({ t, comment, isDesktop, board, rootCommentOverlay }) => {
                     comment={comment}
                     context={tags[0] ? { title: tags[0] } : undefined}
                   />
-                  {((board && !isDesktop) || rootCommentOverlay) && (
-                    <Comment.LinkPreview comment={comment} />
+                  {((board && !isDesktop) ||
+                    (rootCommentOverlay && isRoot)) && (
+                    <div style={{ marginTop: rootCommentOverlay ? 15 : null }}>
+                      <Comment.LinkPreview comment={comment} />
+                    </div>
                   )}
                 </div>
               </div>
