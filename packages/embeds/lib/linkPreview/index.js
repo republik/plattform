@@ -86,7 +86,7 @@ const parseMetaAndLink = (html, baseUrl) => {
 
   // add biggest icon and favicon to obj
   const link = $('link')
-  let maxSize = 0
+  let minSize = Number.MAX_SAFE_INTEGER
   Object.keys(link).forEach(key => {
     if (
       link[key].attribs !== undefined &&
@@ -99,9 +99,9 @@ const parseMetaAndLink = (html, baseUrl) => {
         const sizes = link[key].attribs.sizes
         if (sizes) {
           const size = parseInt(sizes.split('x')[0])
-          if (size && size > maxSize) {
-            maxSize = size
-            obj.icon = new URL(href, baseUrl).toString()
+          if (size && size < minSize) {
+            minSize = size
+            obj.iconSmall = new URL(href, baseUrl).toString()
           }
         }
       }
@@ -135,7 +135,7 @@ const getSiteImage = async (url, baseUrl) => {
     return
   }
   const obj = parseMetaAndLink(response, baseUrl)
-  return obj.icon || obj['shortcut icon']
+  return obj['shortcut icon'] || obj.iconSmall
 }
 
 const getContentForUrl = async (url) => {
@@ -153,8 +153,10 @@ const getContentForUrl = async (url) => {
     return
   }
 
-  const siteImage = obj.icon || obj['shortcut icon'] || await getSiteImage(url, baseUrl)
-  const siteImageUrl = proxyUrl(siteImage)
+  const siteImage =
+    obj['shortcut icon'] ||
+    obj.iconSmall ||
+    await getSiteImage(url, baseUrl)
 
   return {
     title: obj['og:title'],
@@ -162,7 +164,7 @@ const getContentForUrl = async (url) => {
     imageUrl: proxyUrl(obj['og:image']),
     imageAlt: obj['og:image:alt'],
     siteName: obj['og:site_name'] || new URL(url).hostname,
-    siteImageUrl
+    siteImageUrl: siteImage ? proxyUrl(siteImage) : null
   }
 }
 
