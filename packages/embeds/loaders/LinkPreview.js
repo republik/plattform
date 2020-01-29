@@ -4,6 +4,6 @@ module.exports = (context) => ({
   byUrl: createDataLoader(
     urls => context.pgdb.public.linkPreviews.find({ url: urls }),
     null,
-    (key, rows) => rows.find(row => row.url === key)
+    (key, rows) => rows.find(row => row.url.toLowerCase() === key.toLowerCase())
   )
 })

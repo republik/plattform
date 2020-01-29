@@ -17,9 +17,11 @@ const TTL_DB_ENTRIES_SECS = 6 * 60 * 60 // 6h
 const MAX_REQUEST_URL_EACH_SECS = 30
 const REDIS_PREFIX = 'embeds:linkPreview:throttle'
 
-const LOCK_RETRY_DELAY_MS = 1000
-const LOCK_RETRY_COUNT = 4 * ((REQUEST_TIMEOUT_SECS * 1000) / LOCK_RETRY_DELAY_MS)
-const LOCK_TTL_MS = LOCK_RETRY_COUNT * REQUEST_TIMEOUT_SECS * 1000
+const LOCK_RETRY_DELAY_MS = 600
+const LOCK_RETRY_COUNT = Math.ceil(
+  3 * ((REQUEST_TIMEOUT_SECS * 1000) / LOCK_RETRY_DELAY_MS)
+)
+const LOCK_TTL_MS = LOCK_RETRY_COUNT * LOCK_RETRY_DELAY_MS
 
 const redlock = (redis) => {
   return new Redlock(
@@ -206,51 +208,49 @@ const fetchLinkPreview = async ({ url, doUpdate = false }, context) => {
   const lockKey = `locks:${redisKey}`
 
   const lock = await redlock(redis).lock(lockKey, LOCK_TTL_MS)
-
-  const existingLinkPreview = await loaders.LinkPreview.byUrl.load(url)
-  if (!doUpdate && existingLinkPreview) {
-    await lock.unlock()
-    return existingLinkPreview
-  }
-
-  // throttle
-  const throttled = await redis.getAsync(redisKey)
-  if (throttled) {
-    debug('throttle prevented url from beeing fetched %s', url)
-    await lock.unlock()
-    return null
-  }
-  await redis.setAsync(
-    redisKey,
-    1,
-    'EX', MAX_REQUEST_URL_EACH_SECS
-  )
-
-  const content = await getContentForUrl(url)
-
-  let dbEntry
-  if (content) {
-    if (!existingLinkPreview) {
-      dbEntry = await pgdb.public.linkPreviews.insertAndGet({
-        url,
-        hostname: new URL(url).hostname,
-        content
-      })
-    } else {
-      await pgdb.public.linkPreviews.updateOne(
-        { id: existingLinkPreview.id },
-        {
-          content,
-          updatedAt: new Date()
-        }
-      )
+  try {
+    const existingLinkPreview = await loaders.LinkPreview.byUrl.load(url)
+    if (!doUpdate && existingLinkPreview) {
+      return existingLinkPreview
     }
-    await loaders.LinkPreview.byUrl.clear(url)
+
+    // throttle
+    const throttled = await redis.getAsync(redisKey)
+    if (throttled) {
+      debug('throttle prevented url from beeing fetched %s', url)
+      return null
+    }
+    await redis.setAsync(
+      redisKey,
+      1,
+      'EX', MAX_REQUEST_URL_EACH_SECS
+    )
+
+    const content = await getContentForUrl(url)
+
+    if (content) {
+      let dbEntry
+      if (!existingLinkPreview) {
+        dbEntry = await pgdb.public.linkPreviews.insertAndGet({
+          url,
+          hostname: new URL(url).hostname,
+          content
+        })
+      } else {
+        await pgdb.public.linkPreviews.updateOne(
+          { id: existingLinkPreview.id },
+          {
+            content,
+            updatedAt: new Date()
+          }
+        )
+      }
+      await loaders.LinkPreview.byUrl.clear(url)
+      return dbEntry
+    }
+  } finally {
+    await lock.unlock()
   }
-
-  await lock.unlock()
-
-  return dbEntry
 }
 
 const getLinkPreviewByUrl = async (url, context) => {
@@ -280,9 +280,10 @@ const getLinkPreviewByUrl = async (url, context) => {
     return transformDBEntry(linkPreview)
   }
 
-  return transformDBEntry(
-    await fetchLinkPreview({ url }, context)
-  )
+  const dbEntry = await fetchLinkPreview({ url }, context)
+  return dbEntry
+    ? transformDBEntry(dbEntry)
+    : null
 }
 
 module.exports = {
