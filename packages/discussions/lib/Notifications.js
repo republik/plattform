@@ -11,9 +11,6 @@ const appNotifications = require('@orbiting/backend-modules-notifications/lib/ap
 
 const { sendMailTemplate } = require('@orbiting/backend-modules-mail')
 
-const { Subscriptions } = require('@orbiting/backend-modules-subscriptions')
-const uniqWith = require('lodash/uniqWith')
-
 const {
   DEFAULT_MAIL_FROM_ADDRESS,
   DEFAULT_MAIL_FROM_NAME,
@@ -50,7 +47,7 @@ const submitComment = async (comment, discussion, context) => {
     context
   )
 
-  const discussionNotificationUsers = await pgdb.query(`
+  const notifyUsers = await pgdb.query(`
       -- commenters in discussion
       SELECT
         u.*
@@ -102,49 +99,6 @@ const submitComment = async (comment, discussion, context) => {
   })
     .then(users => users.map(transformUser))
 
-  let discussionNotificationSubscribers = []
-
-  const commenterSubscribers = displayAuthor.anonymity
-    ? []
-    : await Subscriptions.getSubscribersForObject(
-      'User',
-      comment.userId,
-      'COMMENTS',
-      context
-    )
-
-  if (commenterSubscribers.length > 0) {
-    const subscriberDiscussionPreferences =
-      await pgdb.public.discussionPreferences.find({
-        userId: commenterSubscribers.map(s => s.id),
-        discussionId: comment.discussionId
-      })
-
-    discussionNotificationSubscribers =
-      commenterSubscribers.filter(subscriber => {
-        const subscriberDiscussionPreference =
-          subscriberDiscussionPreferences.find(({ userId }) => userId === subscriber.id)
-
-        const notificationOption =
-          subscriberDiscussionPreference &&
-          subscriberDiscussionPreference.notificationOption !== 'NONE'
-
-        if ([true, false].includes(notificationOption)) {
-          return notificationOption
-        }
-
-        return subscriber._raw.defaultDiscussionNotificationOption !== 'NONE'
-      })
-  }
-
-  const notifyUsers = uniqWith(
-    [
-      ...discussionNotificationUsers,
-      ...discussionNotificationSubscribers
-    ].filter(Boolean),
-    (a, b) => a.id === b.id
-  )
-
   if (notifyUsers.length > 0) {
     const contentMdast = await getContent(comment, null, context)
     const htmlContent = renderEmail(contentMdast, commentSchema, { doctype: '' })
@@ -171,16 +125,18 @@ const submitComment = async (comment, discussion, context) => {
       .map(u => u.id)
 
     if (webUserIds.length > 0) {
-      await pubsub.publish('webNotification', { webNotification: {
-        title: isTopLevelComment
-          ? t('api/comment/notification/new/web/subject', subjectParams)
-          : t('api/comment/notification/answer/web/subject', subjectParams),
-        body: `${displayAuthor.name}: ${shortBody}`,
-        icon,
-        url: commentUrl,
-        userIds: webUserIds,
-        tag: comment.id
-      } })
+      await pubsub.publish('webNotification', {
+        webNotification: {
+          title: isTopLevelComment
+            ? t('api/comment/notification/new/web/subject', subjectParams)
+            : t('api/comment/notification/answer/web/subject', subjectParams),
+          body: `${displayAuthor.name}: ${shortBody}`,
+          icon,
+          url: commentUrl,
+          userIds: webUserIds,
+          tag: comment.id
+        }
+      })
     }
 
     // notify APP
@@ -215,33 +171,42 @@ const submitComment = async (comment, discussion, context) => {
             : t('api/comment/notification/answer/email/subject', subjectParams),
           templateName: 'cf_comment_notification_new',
           globalMergeVars: [
-            { name: 'NAME',
+            {
+              name: 'NAME',
               content: u.name
             },
-            { name: 'COMMENTER_NAME',
+            {
+              name: 'COMMENTER_NAME',
               content: displayAuthor.name
             },
-            { name: 'DISCUSSION_TITLE',
+            {
+              name: 'DISCUSSION_TITLE',
               content: discussion.title
             },
-            { name: 'DISCUSSION_URL',
+            {
+              name: 'DISCUSSION_URL',
               content: discussionUrl
             },
-            { name: 'DISCUSSION_MUTE_URL',
+            {
+              name: 'DISCUSSION_MUTE_URL',
               content: muteUrl
             },
-            { name: 'CONTENT',
+            {
+              name: 'CONTENT',
               content: htmlContent
             },
-            { name: 'URL',
+            {
+              name: 'URL',
               content: commentUrl
             },
             ...displayAuthor.credential
               ? [
-                { name: 'CREDENTIAL_DESCRIPTION',
+                {
+                  name: 'CREDENTIAL_DESCRIPTION',
                   content: displayAuthor.credential.description
                 },
-                { name: 'CREDENTIAL_VERIFIED',
+                {
+                  name: 'CREDENTIAL_VERIFIED',
                   content: displayAuthor.credential.verified
                 }
               ]
