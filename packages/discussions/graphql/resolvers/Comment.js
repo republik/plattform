@@ -128,7 +128,7 @@ module.exports = {
     textForComment(comment, false, context),
 
   preview: async (comment, { length = 500 }, context) => {
-    const text = await textForComment(comment, true, context)
+    const text = await textForComment(comment, false, context)
     if (!text) {
       return null
     }
