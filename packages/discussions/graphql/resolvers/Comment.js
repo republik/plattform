@@ -138,13 +138,10 @@ module.exports = {
   linkPreview: async (comment, args, context) =>
     linkPreviewForComment(comment, context),
 
-  contentLength: async (comment, args, context) => {
-    const text = await textForComment(comment, true, context)
-    if (!text) {
-      return null
-    }
-    return text.length
-  },
+  contentLength: ({ content, linkPreviewUrl, userId }, args, { user: me }) =>
+    (me && me.id === userId)
+      ? content.length - (linkPreviewUrl.length || 0)
+      : null,
 
   score: comment =>
     comment.upVotes - comment.downVotes,

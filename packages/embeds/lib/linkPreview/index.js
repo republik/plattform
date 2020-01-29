@@ -50,17 +50,11 @@ const clipUrlFromText = (content, url) => {
   if (!url || !content) {
     return content
   }
-  const index = content.indexOf(url)
-  if (index === 0) {
-    return content.replace(url, '')
-      .trim()
-  }
   if (
-    index === content.length - url.length ||
-    index === content.length - url.length - 1 // trailing slash
+    content.length === url.length ||
+    content.length === (url.length + 1)
   ) {
-    return content.substring(0, index)
-      .trim()
+    return ''
   }
   return content
 }
