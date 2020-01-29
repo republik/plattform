@@ -1,9 +1,8 @@
-const fetch = require('isomorphic-unfetch')
 const getUrls = require('get-urls')
 const cheerio = require('cheerio')
 const moment = require('moment')
 const debug = require('debug')('linkPreview')
-const AbortController = require('abort-controller')
+const { fetchWithTimeout } = require('@orbiting/backend-modules-utils')
 const { createUrlPrefixer } = require('@orbiting/backend-modules-assets/lib/urlPrefixing')
 const proxyUrl = createUrlPrefixer()
 const Redlock = require('redlock')
@@ -33,6 +32,17 @@ const redlock = (redis) => {
   )
 }
 
+const fetch = (url, method = 'GET') => fetchWithTimeout(
+  url,
+  {
+    method,
+    headers: {
+      'User-Agent': LINK_PREVIEW_USER_AGENT
+    }
+  },
+  REQUEST_TIMEOUT_SECS
+)
+
 const getLinkPreviewUrlFromText = (text) => {
   const urls = [
     ...getUrls(
@@ -57,35 +67,6 @@ const clipUrlFromText = (content, url) => {
     return ''
   }
   return content
-}
-
-const fetchWithTimeout = (url, method = 'GET') => {
-  const controller = new AbortController()
-  const timeout = setTimeout(
-    () => { controller.abort() },
-    REQUEST_TIMEOUT_SECS * 1000
-  )
-
-  return fetch(
-    url,
-    {
-      method,
-      signal: controller.signal,
-      headers: {
-        'User-Agent': LINK_PREVIEW_USER_AGENT
-      }
-    }
-  )
-    .catch(error => {
-      if (error.name === 'AbortError') {
-        debug('TimeoutError: request to: %s failed', url)
-      } else {
-        debug(error.toString())
-      }
-    })
-    .finally(() => {
-      clearTimeout(timeout)
-    })
 }
 
 const parseMetaAndLink = (html, baseUrl) => {
@@ -140,14 +121,14 @@ const parseMetaAndLink = (html, baseUrl) => {
 const getSiteImage = async (url, baseUrl) => {
   // try well-known favicon
   const faviconUrl = `${baseUrl}/favicon.ico`
-  const faviconExists = await fetchWithTimeout(faviconUrl, 'HEAD')
+  const faviconExists = await fetch(faviconUrl, 'HEAD')
     .then(res => res && res.status === 200)
   if (faviconExists) {
     return faviconUrl
   }
 
   // try meta data of origin
-  const response = await fetchWithTimeout(baseUrl)
+  const response = await fetch(baseUrl)
     .then(res => res && res.status === 200 && res.text())
 
   if (!response) {
@@ -158,7 +139,7 @@ const getSiteImage = async (url, baseUrl) => {
 }
 
 const getContentForUrl = async (url) => {
-  const response = await fetchWithTimeout(url)
+  const response = await fetch(url)
     .then(res => res && res.status === 200 && res.text())
 
   if (!response) {
