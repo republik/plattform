@@ -189,7 +189,7 @@ export default withT(({ t, editor, node, onInputChange }) => {
               )
             }
             return (
-              <Fragment key={episode.title}>
+              <Fragment key={`episode-${i}`}>
                 <Label>{t('metaData/series/episodes/label')}</Label> &nbsp;{' '}
                 <A
                   href='#remove'

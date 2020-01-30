@@ -46,11 +46,14 @@ export default ({ rule, subModules, TYPE }) => {
         writableNode,
         rest
       )
-      const { format } = rest.context
-      if (format) {
-        // enhance all immediate children with format
+      const { format, section } = rest.context
+      if (format || section) {
+        // enhance all immediate children with format and section
         // - needed for headline
-        nodes = nodes.map(node => ({ ...node, data: { ...node.data, format } }))
+        nodes = nodes.map(node => ({
+          ...node,
+          data: { ...node.data, format, section }
+        }))
       }
 
       return {
@@ -58,14 +61,15 @@ export default ({ rule, subModules, TYPE }) => {
         type: TYPE,
         data: {
           ...node.data,
-          format
+          format,
+          section
         },
         nodes
       }
     },
     toMdast: (object, index, parent, rest) => {
-      // omit format
-      const { format, ...data } = object.data
+      // omit format and section
+      const { format, section, ...data } = object.data
       return {
         type: 'zone',
         identifier,

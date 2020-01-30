@@ -1,5 +1,5 @@
 {
-  "updated": "2019-12-18T10:35:36.549Z",
+  "updated": "2020-01-30T20:21:49.605Z",
   "title": "live",
   "data": [
     {
@@ -693,6 +693,10 @@
     {
       "key": "metaData/field/gallery",
       "value": "Bilder als Galerie"
+    },
+    {
+      "key": "metaData/darkMode",
+      "value": "Dark Mode"
     },
     {
       "key": "uncommittedChanges/unlock/confirm/1",

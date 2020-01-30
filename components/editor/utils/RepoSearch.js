@@ -50,6 +50,15 @@ export const filterRepos = gql`
                   kind
                 }
               }
+              section {
+                id
+                repoId
+                meta {
+                  title
+                  color
+                  kind
+                }
+              }
             }
           }
         }
