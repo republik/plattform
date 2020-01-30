@@ -58,11 +58,12 @@ const styles = {
 }
 
 export const LinkPreview = ({ comment }) => {
-  if (!comment || !comment.linkPreview) return null
+  if (!comment || !comment.embed || comment.embed.__typename !== 'LinkPreview')
+    return null
 
   const {
     mentioningDocument,
-    linkPreview: {
+    embed: {
       url,
       title,
       description,

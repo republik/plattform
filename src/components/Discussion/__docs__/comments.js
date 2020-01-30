@@ -10,7 +10,8 @@ export const linkPreview1 = {
   imageUrl: '/static/bordell.jpeg',
   imageAlt: 'Stadtbordell',
   siteName: 'republik.ch',
-  siteImageUrl: '/static/apple-touch-icon.png'
+  siteImageUrl: '/static/apple-touch-icon.png',
+  __typename: 'LinkPreview'
 }
 
 export const mentioningDocument = {
@@ -56,7 +57,7 @@ export const mkComment = (
       return child
     })
   },
-  linkPreview: linkPreview ? linkPreview1 : null
+  embed: linkPreview ? linkPreview1 : null
 })
 
 export const comment0 = mkComment('0', [])
