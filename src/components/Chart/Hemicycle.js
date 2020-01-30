@@ -6,12 +6,10 @@ import ColorLegend from './ColorLegend'
 import { sum } from 'd3-array'
 
 import {
-  sansSerifMedium12,
   sansSerifMedium14,
   sansSerifRegular12,
   sansSerifRegular14
 } from '../Typography/styles'
-import { onlyS } from '../../theme/mediaQueries'
 import colors from '../../theme/colors'
 
 import { arc as d3arc } from 'd3-shape'

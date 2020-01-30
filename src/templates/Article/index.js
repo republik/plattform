@@ -788,6 +788,7 @@ const createSchema = ({
   repoPrefix = 'article-',
   series = true,
   darkMode = true,
+  paynotes = true,
   Link = DefaultLink,
   getPath = getDatePath,
   t = () => '',
@@ -828,6 +829,7 @@ const createSchema = ({
             editorOptions: {
               series,
               darkMode,
+              paynotes,
               customFields: customMetaFields,
               teaser:
                 previewTeaser ||

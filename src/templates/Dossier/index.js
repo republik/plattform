@@ -12,6 +12,7 @@ const createSchema = ({
   customMetaFields = [],
   series = false,
   darkMode,
+  paynotes = true,
   Link = DefaultLink,
   titleBlockPrepend = null,
   getPath = ({ slug }) => `/dossier/${(slug || '').split('/').pop()}`,
@@ -36,6 +37,7 @@ const createSchema = ({
     ],
     series,
     darkMode,
+    paynotes,
     Link,
     ...args
   })

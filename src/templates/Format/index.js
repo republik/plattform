@@ -22,6 +22,7 @@ const createSchema = ({
   customMetaFields = [],
   series = false,
   darkMode = false,
+  paynotes = false,
   titleBlockPrepend = null,
   titleMargin = true,
   titleBlockRule,
@@ -65,6 +66,7 @@ const createSchema = ({
     ],
     series,
     darkMode,
+    paynotes,
     titleBlockRule: titleBlockRule || {
       matchMdast: matchZone('TITLE'),
       component: ({ children, section, ...props }) => (
