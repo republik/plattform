@@ -16,17 +16,18 @@ jobs:
     - run: npm test
     - run: npm run build:lib
     - run: npm pack
-    - name: upload to S3
-      uses: actions/aws/cli
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: eu-central-1
+    - name: Upload S3
       env:
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         PKG_NAME: project-r-styleguide
         S3_PATH: republik-assets-dev/npm
-      with:
-        args: s3 cp $PKG_NAME-0.0.0-development.tgz s3://$S3_PATH/$PKG_NAME-`echo
-          ${{ github.ref }} | cut -d/ -f3`-`echo ${{ github.sha }} | cut -c-7`.tgz
-          --acl public-read
+      run: |
+        aws s3 cp $PKG_NAME-0.0.0-development.tgz s3://$S3_PATH/$PKG_NAME-`echo ${{ github.ref }} | cut -d/ -f3`-`echo ${{ github.sha }} | cut -c-7`.tgz --acl public-read
     - name: notify on slack
       uses: Ilshidur/action-slack@master
       env:
