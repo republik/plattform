@@ -11,12 +11,8 @@ const {
 } = require('../../../../servers/republik/graphql/resolvers/User')
 const remark = require('../../lib/remark')
 const { clipNamesInText } = require('../../lib/nameClipper')
-const {
-  linkPreview: {
-    getLinkPreviewByUrl,
-    clipUrlFromText
-  }
-} = require('@orbiting/backend-modules-embeds')
+const { clipUrlInText } = require('../../lib/urlClipper')
+const { getEmbedByUrl } = require('@orbiting/backend-modules-embeds')
 
 const {
   DISPLAY_AUTHOR_SECRET
@@ -25,13 +21,13 @@ if (!DISPLAY_AUTHOR_SECRET) {
   throw new Error('missing required DISPLAY_AUTHOR_SECRET')
 }
 
-const linkPreviewForComment = async ({ linkPreviewUrl, discussionId, depth }, context) => {
-  if (!linkPreviewUrl) {
+const embedForComment = async ({ embedUrl, discussionId, depth }, context) => {
+  if (!embedUrl) {
     return null
   }
   const discussion = await context.loaders.Discussion.byId.load(discussionId)
   if (discussion && discussion.isBoard && depth === 0) {
-    return getLinkPreviewByUrl(linkPreviewUrl, context)
+    return getEmbedByUrl(embedUrl, context)
   }
   return null
 }
@@ -47,7 +43,7 @@ const textForComment = async (
     published,
     adminUnpublished,
     discussionId,
-    linkPreviewUrl
+    embedUrl
   } = comment
   const {
     user: me
@@ -64,8 +60,8 @@ const textForComment = async (
     const namesToClip = await context.loaders.Discussion.byIdCommenterNamesToClip.load(discussionId)
     newContent = clipNamesInText(namesToClip, content)
   }
-  if (prettify && !!await linkPreviewForComment(comment, context)) {
-    newContent = clipUrlFromText(content, linkPreviewUrl)
+  if (prettify && !!await embedForComment(comment, context)) {
+    newContent = clipUrlInText(embedUrl, content)
   }
   return newContent
 }
@@ -135,12 +131,12 @@ module.exports = {
     return mdastToHumanString(remark.parse(text), length)
   },
 
-  linkPreview: async (comment, args, context) =>
-    linkPreviewForComment(comment, context),
+  embed: async (comment, args, context) =>
+    embedForComment(comment, context),
 
-  contentLength: ({ content, linkPreviewUrl, userId }, args, { user: me }) =>
+  contentLength: ({ content, embedUrl, userId }, args, { user: me }) =>
     (me && me.id === userId)
-      ? content.length - (linkPreviewUrl.length || 0)
+      ? content.length - (embedUrl ? embedUrl.length : 0)
       : null,
 
   score: comment =>

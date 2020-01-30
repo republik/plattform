@@ -1,3 +1,3 @@
 module.exports = {
-  LinkPreview: require('./LinkPreview')
+  Embed: require('./Embed')
 }

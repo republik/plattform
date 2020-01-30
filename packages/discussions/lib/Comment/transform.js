@@ -1,5 +1,15 @@
 const hotness = require('../hotness')
-const { linkPreview: { getLinkPreviewUrlFromText } } = require('@orbiting/backend-modules-embeds')
+const { getUrls: { getUrlsFromText } } = require('@orbiting/backend-modules-utils')
+
+const getUrls = (content) => {
+  const urls = getUrlsFromText(content) || null
+  return {
+    urls,
+    embedUrl: urls && urls.length
+      ? urls[urls.length - 1]
+      : null
+  }
+}
 
 const create = async (
   {
@@ -31,8 +41,8 @@ const create = async (
     ...parentIds ? { parentIds } : {},
     depth: (parentIds && parentIds.length) || 0,
     userId,
-    linkPreviewUrl: getLinkPreviewUrlFromText(content) || null,
     content,
+    ...getUrls(content),
     hotness: hotness(0, 0, (now.getTime())),
     ...tags ? { tags } : {},
     createdAt: now,
@@ -45,8 +55,8 @@ const edit = ({
   tags,
   now = new Date()
 }) => ({
-  linkPreviewUrl: getLinkPreviewUrlFromText(content) || null,
   content,
+  ...getUrls(content),
   ...tags ? { tags } : {},
   published: true,
   updatedAt: now

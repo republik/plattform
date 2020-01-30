@@ -1,5 +1,6 @@
 ALTER TABLE "comments"
-  ADD COLUMN "linkPreviewUrl" citext,
+  ADD COLUMN "urls" citext,
+  ADD COLUMN "embedUrl" citext,
   ADD COLUMN "repoId" text,
   ADD COLUMN "documentFragmentId" text
 ;

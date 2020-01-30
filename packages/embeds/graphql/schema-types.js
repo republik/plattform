@@ -22,6 +22,7 @@ type TwitterEmbed {
   image: String
   more: String
   playable: Boolean!
+  url: String!
 }
 
 type YoutubeEmbed implements PlayableMedia {

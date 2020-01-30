@@ -83,7 +83,28 @@ https://www.nzz.ch/amp/schweiz/klimaaktivisten-wegen-protest-bei-der-credit-suis
     username: 'bhamilton.irvine',
     createdAt: '2020-01-16T14:50:00.000Z',
     content: 'Spannend. https://www.tagesanzeiger.ch/schweiz/standard/Frauen-erobern-die-Stadt--per-Verkehrsschild/story/14617235'
+  },
+  {
+    username: 'ofuchs',
+    createdAt: '2020-01-29T15:47:00.000Z',
+    content: 'top-story: https://twitter.com/juliacarriew/status/1222511450930835456?s=19'
+  },
+  {
+    username: 'ofuchs',
+    createdAt: '2020-01-29T16:53:00.000Z',
+    content: 'https://twitter.com/kriscoratti/status/1222281539100250114?s=09 cc. @elia'
   }
+  /* TODO fix slow urls
+  {
+    username: 'pae',
+    createdAt: '2020-01-30T12:17:00.000Z',
+    content: `Das Unicode-Konsortium hat gestern 117 neuen Emojis zugelassen.
+Darunter ein Fondue Caquelon!
+https://blog.emojipedia.org/117-new-emojis-in-final-list-for-2020/
+https://unicode.org/emoji/charts-13.0/emoji-released.html#1fad5
+https://www.unicode.org/L2/L2018/18328-fondue-emoji.pdf`
+  }
+  */
 ]
 
 const createGraphQLContext = (defaultContext) => {
@@ -112,6 +133,12 @@ Promise.props({
     repoId: 'republik-dev/discussion-top-stories-test'
   })
   await pgdb.public.comments.delete({ discussionId: discussion.id })
+  if (!discussion.isBoard) {
+    await pgdb.public.discussions.updateOne(
+      { id: discussion.id },
+      { isBoard: true }
+    )
+  }
 
   await Promise.each(comments, async (comment) => {
     const user = await pgdb.public.users.findOne({ username: comment.username })

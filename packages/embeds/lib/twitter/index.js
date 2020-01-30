@@ -82,7 +82,6 @@ const getTweetById = async (id, t) => {
 
 module.exports = {
   getTweetById,
-  // manually keep in sync with backend-modules/packages/documents/lib/process.js
-  // until embeds are in their own module
-  imageKeys: ['userProfileImageUrl', 'image']
+  imageKeys: ['userProfileImageUrl', 'image'],
+  REGEX: /^https?:\/\/twitter\.com\/(?:#!\/)?\w+\/status(?:es)?\/(\d+)/
 }

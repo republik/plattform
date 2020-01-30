@@ -206,10 +206,12 @@ type Comment {
 
   contentLength: Int
 
-  linkPreview: LinkPreview
+  embed: CommentEmbed
 
   mentioningDocument: DocumentLink
 }
+
+union CommentEmbed = LinkPreview | TwitterEmbed
 
 enum MutationType {
   CREATED
