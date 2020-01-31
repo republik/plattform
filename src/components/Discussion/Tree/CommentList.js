@@ -281,7 +281,7 @@ const CommentNode = ({ t, comment, isDesktop, board, rootCommentOverlay }) => {
         )}
         {board && isDesktop && (
           <div {...styles.boardColumn}>
-            <Comment.LinkPreview comment={comment} />
+            <Comment.Embed comment={comment} />
           </div>
         )}
         <div
@@ -311,7 +311,7 @@ const CommentNode = ({ t, comment, isDesktop, board, rootCommentOverlay }) => {
                   {((board && !isDesktop) ||
                     (rootCommentOverlay && isRoot)) && (
                     <div style={{ marginTop: rootCommentOverlay ? 15 : null }}>
-                      <Comment.LinkPreview comment={comment} />
+                      <Comment.Embed comment={comment} />
                     </div>
                   )}
                 </div>

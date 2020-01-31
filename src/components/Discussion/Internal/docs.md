@@ -13,7 +13,7 @@ _TODO: put further down that list_
 Visualisation of the link preview attached to the comment – if applicable.
 
 ```react|noSource,span-3
-<Comment.LinkPreview
+<Comment.Embed
   comment={comments.comment7}
 />
 ```
@@ -21,7 +21,7 @@ Visualisation of the link preview attached to the comment – if applicable.
 With top story pick:
 
 ```react|noSource,span-3
-<Comment.LinkPreview
+<Comment.Embed
   comment={comments.comment8}
 />
 ```

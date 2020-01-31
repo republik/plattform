@@ -10,7 +10,7 @@ import { serifRegular16, sansSerifRegular12 } from '../../Typography/styles'
 import { Header, Tags, Actions, Error } from '../Internal/Composer'
 import { DiscussionContext } from '../DiscussionContext'
 import { convertStyleToRem } from '../../Typography/utils'
-import { LinkPreview } from '../Internal/Comment'
+import { Embed } from '../Internal/Comment'
 
 const styles = {
   root: css({}),
@@ -234,7 +234,7 @@ export const CommentComposer = props => {
         )}
       </div>
 
-      <LinkPreview comment={preview} />
+      <Embed comment={preview} />
 
       <Actions
         t={t}

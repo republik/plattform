@@ -57,22 +57,29 @@ const styles = {
   })
 }
 
-export const LinkPreview = ({ comment }) => {
-  if (!comment || !comment.embed || comment.embed.__typename !== 'LinkPreview')
-    return null
+const normalizeEmbed = embed => ({
+  ...embed,
+  imageUrl: embed.imageUrl || embed.image,
+  header: embed.siteName || embed.userName,
+  headerImageUrl: embed.siteImageUrl || embed.userProfileImageUrl,
+  body: embed.description || embed.text
+})
+
+export const Embed = ({ comment }) => {
+  if (!comment || !comment.embed) return null
+
+  const { mentioningDocument, embed } = comment
 
   const {
-    mentioningDocument,
-    embed: {
-      url,
-      title,
-      description,
-      imageUrl,
-      imageAlt,
-      siteName,
-      siteImageUrl
-    }
-  } = comment
+    url,
+    title,
+    imageUrl,
+    header,
+    headerImageUrl,
+    body,
+    imageAlt,
+    __typename
+  } = normalizeEmbed(embed)
 
   return (
     <a href={url} target='_blank' {...styles.link}>
@@ -84,15 +91,21 @@ export const LinkPreview = ({ comment }) => {
           {mentioningDocument && (
             <span {...styles.topStory}>!!TOP STORY!!</span>
           )}
-          {siteName && (
+          {header && (
             <Interaction.P {...styles.paragraph}>
-              {siteImageUrl && <img src={siteImageUrl} {...styles.siteImage} />}
-              {siteName}
+              {headerImageUrl && (
+                <img src={headerImageUrl} {...styles.siteImage} />
+              )}
+              {header}
             </Interaction.P>
           )}
-          <Interaction.H3 {...styles.title}>{title}</Interaction.H3>
-          {description && (
-            <Interaction.P {...styles.paragraph}>{description}</Interaction.P>
+          {title && <Interaction.H3 {...styles.title}>{title}</Interaction.H3>}
+          {body && (
+            <div>
+              {body.split('\n').map(part => (
+                <Interaction.P {...styles.paragraph}>{part}</Interaction.P>
+              ))}
+            </div>
           )}
         </div>
       </div>
