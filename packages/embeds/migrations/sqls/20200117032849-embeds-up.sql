@@ -1,7 +1,7 @@
 CREATE TABLE "embeds" (
   "id"          uuid primary key not null default uuid_generate_v4(),
   "url"         citext not null unique,
-  "host"    text not null,
+  "host"        text not null,
   "type"        text not null,
   "typeId"      text,
   "content"     jsonb not null,
