@@ -95,9 +95,7 @@ const fetchEmbed = async ({ url, doUpdate = false }, context) => {
       'EX', MAX_REQUEST_URL_EACH_SECS
     )
 
-    console.log('fetching ' + url)
     const { type, content } = await fetchContent(url)
-    console.log('done fetching')
 
     if (content) {
       let dbEntry
