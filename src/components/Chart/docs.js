@@ -96,6 +96,7 @@ const comments = {
   numberFormat:
     'see [d3-format](https://github.com/d3/d3-format#locale_format)',
   xTicks: 'same format as your x data',
+  xScale: '`"linear"`,  \nlines: `"ordinal"`, `"time"`,  \n scatter: `"log"`',
   category: 'js expression, data row available as `datum`',
   columns: 'number of columns, normally 1 up to 4',
   domain: 'same format as your data',

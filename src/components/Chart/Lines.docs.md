@@ -5605,7 +5605,12 @@ year,value
 
 ## Linear Scale
 
-Generally we should use line charts to display developments over time. The default time scale and the ordinal options should be use for that. But sometimes we might want to reproduce a chart done elsewhere to illustrate a point. You may use `"xScale": "linear"`, `"xNumberFormat"` and `"xUnit"` for that. See an example below.
+This should rarely be used. Generally we should use line charts to display developments over time. The default time scale and the ordinal option should be use.
+
+Known valid use cases:
+- reproduce a chart done elsewhere and then explain why it is bad
+
+If you have a valid case: set `"xScale": "linear"`, `"xNumberFormat"` if differen from the general `"numberFormat"` and make sure to set an `"xUnit"` – make the readers notice that those numbers are not years.
 
 ```react
 <div>

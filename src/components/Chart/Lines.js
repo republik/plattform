@@ -555,7 +555,9 @@ export const propTypes = {
   width: PropTypes.number.isRequired,
   mini: PropTypes.bool,
   x: PropTypes.string.isRequired,
+  xUnit: PropTypes.string,
   xScale: PropTypes.oneOf(['time', 'ordinal', 'linear']),
+  xNumberFormat: PropTypes.string,
   xSort: sortPropType,
   xTicks: PropTypes.arrayOf(
     PropTypes.oneOfType([PropTypes.string, PropTypes.number])
