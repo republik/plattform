@@ -8,7 +8,8 @@ svg g[fill="#FFFFFF"] {
   font-size: 18px;
 }
 
-pre[class*="HighlightedCode"] {
+/* code area of catalog */
+pre.css-o6vvb1 {
   max-height: 800px;
   overflow: auto;
 }
