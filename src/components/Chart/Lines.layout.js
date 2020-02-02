@@ -24,8 +24,9 @@ export {
 
 const COLUMN_TITLE_HEIGHT = 24
 const AXIS_TOP_HEIGHT = 24
-const AXIS_BOTTOM_HEIGHT = 24
+export const AXIS_BOTTOM_HEIGHT = 24
 const AXIS_BOTTOM_CUTOFF_HEIGHT = 40
+const AXIS_BOTTOM_XUNIT_HEIGHT = 12
 
 export const Y_CONNECTOR = 6
 export const Y_CONNECTOR_PADDING = 4
@@ -55,6 +56,8 @@ export default props => {
   let xParser = x => x
   if (props.xScale === 'time') {
     xParser = timeParse(props.timeParse)
+  } else if (props.xScale === 'linear') {
+    xParser = x => +x
   }
   data = data
     .filter(d => d.value && d.value.length > 0)
@@ -99,7 +102,10 @@ export default props => {
   }
   const yCutHeight = mini ? 25 : AXIS_BOTTOM_CUTOFF_HEIGHT
   const paddingTop = AXIS_TOP_HEIGHT + (props.column ? COLUMN_TITLE_HEIGHT : 0)
-  const paddingBottom = AXIS_BOTTOM_HEIGHT + (yCut ? yCutHeight : 0)
+  const paddingBottom =
+    AXIS_BOTTOM_HEIGHT +
+    (yCut ? yCutHeight : 0) +
+    (props.xUnit ? AXIS_BOTTOM_XUNIT_HEIGHT : 0)
   const innerHeight = mini
     ? props.height - paddingTop - paddingBottom
     : props.height

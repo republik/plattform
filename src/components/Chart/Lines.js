@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { css } from 'glamor'
 
 import { range, min, max } from 'd3-array'
-import { scaleOrdinal, scalePoint, scaleTime } from 'd3-scale'
+import { scaleOrdinal, scalePoint, scaleTime, scaleLinear } from 'd3-scale'
 import { line as lineShape, area as areaShape } from 'd3-shape'
 import { timeYear } from 'd3-time'
 
@@ -20,6 +20,7 @@ import layout, {
   VALUE_FONT,
   Y_CONNECTOR,
   Y_CONNECTOR_PADDING,
+  AXIS_BOTTOM_HEIGHT,
   yScales
 } from './Lines.layout'
 
@@ -31,7 +32,8 @@ import {
   runSort,
   sortPropType,
   sortBy,
-  baseLineColor
+  baseLineColor,
+  getFormat
 } from './utils'
 import ColorLegend from './ColorLegend'
 
@@ -130,6 +132,7 @@ const LineGroup = props => {
     xTicks,
     xAccessor,
     xFormat,
+    xUnit,
     width,
     yCut,
     yCutHeight,
@@ -197,6 +200,16 @@ const LineGroup = props => {
           </g>
         )
       })}
+      {xUnit && (
+        <text
+          x={width}
+          y={height + AXIS_BOTTOM_HEIGHT + X_TICK_HEIGHT * 2}
+          textAnchor='end'
+          {...styles.axisLabel}
+        >
+          {xUnit}
+        </text>
+      )}
       {linesWithLayout.map(
         (
           {
@@ -406,33 +419,41 @@ const LineChart = props => {
   const columnWidth = Math.floor(width / columns) - 1
   const innerWidth = columnWidth - paddingLeft - paddingRight
 
-  const xValues = data.map(xAccessor)
+  let xTicks = props.xTicks && props.xTicks.map(xParser)
+  const xValues = data.map(xAccessor).concat(xTicks || [])
   let x
-  let xTicks
   let xFormat = d => d
   if (props.xScale === 'time') {
     xFormat = timeFormat(props.timeFormat)
     const xTimes = xValues.map(d => d.getTime())
     const domainTime = [min(xTimes), max(xTimes)]
     const domain = domainTime.map(d => new Date(d))
-    let yearInteval = Math.round(timeYear.count(domain[0], domain[1]) / 3)
-
-    let time1 = timeYear.offset(domain[0], yearInteval).getTime()
-    let time2 = timeYear.offset(domain[1], -yearInteval).getTime()
-
     x = scaleTime().domain(domain)
-    xTicks = [
-      domainTime[0],
-      sortBy(xTimes, d => Math.abs(d - time1))[0],
-      sortBy(xTimes, d => Math.abs(d - time2))[0],
-      domainTime[1]
-    ]
-      .filter(deduplicate)
-      .map(d => new Date(d))
+
+    if (!xTicks) {
+      let yearInteval = Math.round(timeYear.count(domain[0], domain[1]) / 3)
+
+      let time1 = timeYear.offset(domain[0], yearInteval).getTime()
+      let time2 = timeYear.offset(domain[1], -yearInteval).getTime()
+
+      xTicks = [
+        domainTime[0],
+        sortBy(xTimes, d => Math.abs(d - time1))[0],
+        sortBy(xTimes, d => Math.abs(d - time2))[0],
+        domainTime[1]
+      ]
+        .filter(deduplicate)
+        .map(d => new Date(d))
+    }
+  } else if (props.xScale === 'linear') {
+    const domain = [min(xValues), max(xValues)]
+    x = scaleLinear().domain(domain)
+    xTicks = xTicks || domain
+    xFormat = getFormat(props.xNumberFormat || props.numberFormat, props.tLabel)
   } else {
-    let domain = xValues.filter(deduplicate)
+    const domain = xValues.filter(deduplicate)
     x = scalePoint().domain(domain)
-    if (domain.length > 5) {
+    if (!xTicks && domain.length > 5) {
       let maxIndex = domain.length - 1
       xTicks = [
         domain[0],
@@ -440,15 +461,12 @@ const LineChart = props => {
         domain[Math.round(maxIndex * 0.66)],
         domain[maxIndex]
       ].filter(deduplicate)
-    } else {
+    } else if (!xTicks) {
       xTicks = domain
     }
   }
   if (mini) {
     xTicks = [xTicks[0], xTicks[xTicks.length - 1]]
-  }
-  if (props.xTicks) {
-    xTicks = props.xTicks.map(xParser)
   }
   x.range([0, innerWidth])
 
@@ -489,6 +507,7 @@ const LineChart = props => {
                 xTicks={xTicks}
                 xAccessor={xAccessor}
                 xFormat={xFormat}
+                xUnit={props.xUnit}
                 y={y}
                 yTicks={props.yTicks || yAxis.ticks}
                 yAxisFormat={yAxis.axisFormat}
@@ -536,7 +555,7 @@ export const propTypes = {
   width: PropTypes.number.isRequired,
   mini: PropTypes.bool,
   x: PropTypes.string.isRequired,
-  xScale: PropTypes.oneOf(['time', 'ordinal']),
+  xScale: PropTypes.oneOf(['time', 'ordinal', 'linear']),
   xSort: sortPropType,
   xTicks: PropTypes.arrayOf(
     PropTypes.oneOfType([PropTypes.string, PropTypes.number])

@@ -5603,6 +5603,119 @@ year,value
 </div>
 ```
 
+## Linear Scale
+
+Generally we should use line charts to display developments over time. The default time scale and the ordinal options should be use for that. But sometimes we might want to reproduce a chart done elsewhere to illustrate a point. You may use `"xScale": "linear"`, `"xNumberFormat"` and `"xUnit"` for that. See an example below.
+
+```react
+<div>
+  <ChartTitle>Die Darstellung im Büchlein</ChartTitle>
+  <ChartLead>Steuertarif nach Einkommenshöhe</ChartLead>
+  <CsvChart
+    config={{
+      "type": "Line",
+      "x": "inc",
+      "numberFormat": ".0%",
+      "yNice": 0,
+      "height": 220,
+      "xSort": "none",
+      "color": "group",
+      "colorRange": [
+        "#7f7f7f",
+        "#d62728",
+        "#1f77b4"
+      ],
+      "colorSort": "none",
+      "column": "category",
+      "size": "narrow",
+      "xScale": "linear",
+      "xNumberFormat": ",",
+      "xUnit": "Einkommen in Franken",
+      "xTicks": [
+        0,
+        200000,
+        500000,
+        1000000
+      ]
+    }}
+    values={`
+inc,group,category,value
+0,bisher,Entlastungsinitiative,0
+20000,bisher,Entlastungsinitiative,0.02
+40000,bisher,Entlastungsinitiative,0.037
+60000,bisher,Entlastungsinitiative,0.049
+80000,bisher,Entlastungsinitiative,0.059
+100000,bisher,Entlastungsinitiative,0.066
+120000,bisher,Entlastungsinitiative,0.072
+140000,bisher,Entlastungsinitiative,0.077
+160000,bisher,Entlastungsinitiative,0.081
+200000,bisher,Entlastungsinitiative,0.089
+250000,bisher,Entlastungsinitiative,0.096
+300000,bisher,Entlastungsinitiative,0.103
+400000,bisher,Entlastungsinitiative,0.111
+500000,bisher,Entlastungsinitiative,0.116
+600000,bisher,Entlastungsinitiative,0.119
+800000,bisher,Entlastungsinitiative,0.123
+1000000,bisher,Entlastungsinitiative,0.126
+0,neu,Entlastungsinitiative,0
+20000,neu,Entlastungsinitiative,0.001
+40000,neu,Entlastungsinitiative,0.028
+60000,neu,Entlastungsinitiative,0.045
+80000,neu,Entlastungsinitiative,0.057
+100000,neu,Entlastungsinitiative,0.066
+120000,neu,Entlastungsinitiative,0.074
+140000,neu,Entlastungsinitiative,0.082
+160000,neu,Entlastungsinitiative,0.088
+200000,neu,Entlastungsinitiative,0.102
+250000,neu,Entlastungsinitiative,0.117
+300000,neu,Entlastungsinitiative,0.127
+400000,neu,Entlastungsinitiative,0.14
+500000,neu,Entlastungsinitiative,0.147
+600000,neu,Entlastungsinitiative,0.152
+800000,neu,Entlastungsinitiative,0.159
+1000000,neu,Entlastungsinitiative,0.163
+0,bisher,Mittelstandsinitiative,0
+20000,bisher,Mittelstandsinitiative,0.02
+40000,bisher,Mittelstandsinitiative,0.037
+60000,bisher,Mittelstandsinitiative,0.049
+80000,bisher,Mittelstandsinitiative,0.059
+100000,bisher,Mittelstandsinitiative,0.066
+120000,bisher,Mittelstandsinitiative,0.072
+140000,bisher,Mittelstandsinitiative,0.077
+160000,bisher,Mittelstandsinitiative,0.081
+200000,bisher,Mittelstandsinitiative,0.089
+250000,bisher,Mittelstandsinitiative,0.096
+300000,bisher,Mittelstandsinitiative,0.103
+400000,bisher,Mittelstandsinitiative,0.111
+500000,bisher,Mittelstandsinitiative,0.116
+600000,bisher,Mittelstandsinitiative,0.119
+800000,bisher,Mittelstandsinitiative,0.123
+1000000,bisher,Mittelstandsinitiative,0.126
+0,neu ,Mittelstandsinitiative,0
+20000,neu ,Mittelstandsinitiative,0.013
+40000,neu ,Mittelstandsinitiative,0.032
+60000,neu ,Mittelstandsinitiative,0.044
+80000,neu ,Mittelstandsinitiative,0.053
+100000,neu ,Mittelstandsinitiative,0.061
+120000,neu ,Mittelstandsinitiative,0.067
+140000,neu ,Mittelstandsinitiative,0.073
+160000,neu ,Mittelstandsinitiative,0.078
+200000,neu ,Mittelstandsinitiative,0.085
+250000,neu ,Mittelstandsinitiative,0.093
+300000,neu ,Mittelstandsinitiative,0.099
+400000,neu ,Mittelstandsinitiative,0.105
+500000,neu ,Mittelstandsinitiative,0.109
+600000,neu ,Mittelstandsinitiative,0.112
+800000,neu ,Mittelstandsinitiative,0.115
+1000000,neu ,Mittelstandsinitiative,0.117
+    `.trim()}
+  />
+  <Editorial.Note>
+    Steuerbelastung für Allein­stehende bei der einfachen Staats­steuer inklusive Kirchen­steuer. Lesebeispiel: Bei einem steuer­baren Einkommen von 200’000 Franken beträgt der Steuer­tarif 8,9 Prozent. Quelle: <Editorial.A href="https://wahlen-abstimmungen.zh.ch/internet/justiz_inneres/wahlen-abstimmungen/de/service/shared/aktuelle-abstimmung/2-aktuelle-abstimmung-kantonal/_jcr_content/contentPar/downloadlist/downloaditems/2205_1544179949713.spooler.download.1576484211868.pdf/Abstimmungszeitung_9_Februar_2020.pdf">Kanton Zürich</Editorial.A>
+  </Editorial.Note>
+</div>
+```
+
 ## Log Scale
 
 Use it wisely, mostly to reveal percentual changes, like slowing growth, and thereby [putting changes into perspective](https://www.youtube.com/watch?v=skACYvfwMJw). In most cases you should define custom ticks with `yTicks` when using `"yScale": "log"` and set `"yNice": 0`. It is good pratice to set ticks that reveal the log effect. We also automatically label it explicitly.
