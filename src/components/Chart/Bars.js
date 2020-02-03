@@ -293,8 +293,8 @@ const BarChart = props => {
 
   // setup x scale
   const xDomain = props.domain || [
-    Math.min(0, min(groupedData.map(d => d.min))),
-    Math.max(0, max(groupedData.map(d => d.max)))
+    Math.min(0, min(groupedData.map(d => d.min).concat(props.xTicks || []))),
+    Math.max(0, max(groupedData.map(d => d.max).concat(props.xTicks || [])))
   ]
   const x = scaleLinear()
     .domain(xDomain)
@@ -335,7 +335,7 @@ const BarChart = props => {
     })
   })
 
-  const xTicks = props.xTicks || xAxis.ticks
+  const xTicks = props.xTicks || showBarValues ? [] : xAxis.ticks
   const hasXTicks = !inlineValue && !!xTicks.length
 
   // rows and columns
@@ -506,7 +506,7 @@ const BarChart = props => {
                           )}
                           {isLollipop && (
                             <circle
-                              cx={segment.x + segment.width}
+                              cx={segment.x + segment.width - 1}
                               cy={bar.height / 2}
                               r={
                                 Math.floor(
@@ -523,7 +523,10 @@ const BarChart = props => {
                               {...styles.barLabel}
                               x={
                                 valueTextStartAnchor
-                                  ? segment.x + segment.width + 4
+                                  ? segment.x +
+                                    segment.width +
+                                    4 +
+                                    (isLollipop ? 8 : 0)
                                   : segment.x +
                                     (segment.value >= 0 ? segment.width : 0) -
                                     4

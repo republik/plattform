@@ -27,3 +27,21 @@ Altersgruppen,über 74 Jahre,2014,0.133,0.120,0.146
   <Editorial.Note>Quelle: Berechnungen des DIW Berlin, SOEPv32.1.</Editorial.Note>
 </div>
 ```
+
+```react
+<div>
+  <ChartTitle>Erneuerungsrate</ChartTitle>
+  <CsvChart
+    config={{
+      "type": "Lollipop",
+      "numberFormat": ".0%",
+      "y": "label",
+      "showBarValues": true
+    }}
+    values={`
+label,value
+Januar 2019,0.61
+Januar 2020,0.75
+    `.trim()} />
+</div>
+```
