@@ -61,7 +61,16 @@ export const commentComposerStorageKey = discussionId =>
   `commentComposerText:${discussionId}`
 
 export const CommentComposer = props => {
-  const { t, isRoot, hideHeader, onClose, onCloseLabel, onSubmitLabel } = props
+  const {
+    t,
+    isRoot,
+    hideHeader,
+    onClose,
+    onCloseLabel,
+    onSubmitLabel,
+    parentId,
+    commentId
+  } = props
 
   /*
    * Get the discussion metadata and action callbacks from the DiscussionContext.
@@ -111,7 +120,12 @@ export const CommentComposer = props => {
     }
     textRef.current = text
     actions
-      .previewComment({ content: text, discussionId: id })
+      .previewComment({
+        content: text,
+        discussionId: id,
+        parentId,
+        id: commentId
+      })
       .then(nextPreview => {
         if (textRef.current === text) {
           setPreview(nextPreview)

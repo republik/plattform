@@ -321,6 +321,7 @@ const CommentNode = ({ t, comment, isDesktop, board, rootCommentOverlay }) => {
               <CommentComposer
                 t={t}
                 isRoot={isRoot}
+                commentId={comment.id}
                 initialText={text}
                 tagValue={tags[0]}
                 onClose={closeEditor}
@@ -364,6 +365,7 @@ const CommentNode = ({ t, comment, isDesktop, board, rootCommentOverlay }) => {
             <CommentComposer
               t={t}
               isRoot={false /* Replies can never be root comments */}
+              parentId={comment.id}
               onClose={closeReplyComposer}
               onSubmit={({ text, tags }) =>
                 actions.submitComment(comment, text, tags).then(result => {
