@@ -1,6 +1,7 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
 const { transform } = require('../../../lib/Comment')
 const uuid = require('uuid/v4')
+const Promise = require('bluebird')
 
 module.exports = async (_, args, context) => {
   const {
@@ -14,15 +15,18 @@ module.exports = async (_, args, context) => {
   const {
     // TODO remove if FE is ready
     id = uuid(),
-    discussionId
+    discussionId,
+    parentId
   } = args
 
-  const discussion = await loaders.Discussion.byId.load(discussionId)
+  const [discussion, comment, parent] = await Promise.all([
+    loaders.Discussion.byId.load(discussionId),
+    id && loaders.Comment.byId.load(id),
+    parentId && loaders.Comment.byId.load(parentId)
+  ])
   if (!discussion) {
     throw new Error(t('api/discussion/404'))
   }
-
-  const comment = id && await loaders.Comment.byId.load(id)
 
   if (comment) {
     return {
@@ -33,6 +37,7 @@ module.exports = async (_, args, context) => {
     return transform.create(
       {
         ...args,
+        ...(parent ? { depth: parent.depth + 1 } : {}),
         id,
         userId: user.id
       },
