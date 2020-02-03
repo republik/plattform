@@ -245,7 +245,7 @@ module.exports = async (discussion, args, context, info) => {
     ? Number.MAX_SAFE_INTEGER
     : Number.MIN_SAFE_INTEGER
   const sortKey = getSortKey(orderBy)
-  const bubbleSort = sortKey !== 'createdAt' // bubbling values for sort is disabled for createdAt
+  const bubbleSort = sortKey !== 'createdAt' && sortKey !== 'hotness' // bubbling values for sort is disabled for createdAt and hotness
 
   const compare =
     (a, b) => // topValue set by deepSortTree // index for stable sort
