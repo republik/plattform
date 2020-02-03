@@ -25,6 +25,8 @@ import {
 } from './utils'
 import ColorLegend from './ColorLegend'
 
+import { getColorMapper } from './colorMaps'
+
 const COLUMN_PADDING = 20
 const COLUMN_TITLE_HEIGHT = 30
 const BAR_LABEL_HEIGHT = 15
@@ -214,14 +216,8 @@ const BarChart = props => {
     .filter(Boolean)
     .filter(deduplicate)
   runSort(props.colorSort, colorValues)
-  let colorRange = props.colorRanges[props.colorRange] || props.colorRange
-  if (!colorRange) {
-    colorRange =
-      colorValues.length > 3
-        ? props.colorRanges.discrete
-        : props.colorRanges.sequential3
-  }
-  const color = scaleOrdinal(colorRange).domain(colorValues)
+
+  const color = getColorMapper(props, colorValues)
 
   const highlight = props.highlight
     ? unsafeDatumFn(props.highlight)
@@ -633,6 +629,7 @@ export const propTypes = {
   stroke: PropTypes.string,
   color: PropTypes.string,
   colorRange: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
+  colorMap: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
   colorSort: sortPropType,
   colorLegend: PropTypes.bool,
   colorLegendValues: PropTypes.arrayOf(PropTypes.string),

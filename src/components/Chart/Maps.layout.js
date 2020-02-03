@@ -11,6 +11,8 @@ import {
   deduplicate
 } from './utils'
 
+import { getColorMapper } from './colorMaps'
+
 export const MARKER_HEIGHT = 20
 export const MARKER_RADIUS = 5.5
 
@@ -58,7 +60,6 @@ export default (props, geoJson) => {
   let colorRange = props.colorRanges[props.colorRange] || props.colorRange
 
   if (props.color) {
-    colorScale = scaleOrdinal()
     colorAccessor = d => d.datum[props.color]
     domain = data.map(colorAccessor).filter(deduplicate)
     colorValues = domain.map(value => ({
@@ -66,13 +67,7 @@ export default (props, geoJson) => {
       value
     }))
 
-    if (!colorRange) {
-      colorRange =
-        colorValues.length > 3
-          ? props.colorRanges.discrete
-          : props.colorRanges.sequential3
-    }
-    colorScale.domain(domain).range(colorRange)
+    colorScale = getColorMapper(props, colorRange)
   } else {
     const dataValues = data.map(d => d.value)
     const valuesExtent = props.extent || extent(dataValues)

@@ -11,6 +11,7 @@ import { propTypes as timeBarPropTypes } from './TimeBars'
 import { propTypes as linePropTypes } from './Lines'
 import { propTypes as scatterPlotPropTypes } from './ScatterPlots'
 import { propTypes as genericMapPropTypes } from './Maps'
+import { propTypes as hemicyclePropTypes } from './Hemicycle'
 
 const propTypeNames = new Map()
 Object.keys(PropTypes).forEach(key => {
@@ -24,7 +25,8 @@ const baseChartPropTypes = {
   TimeBar: timeBarPropTypes,
   Line: linePropTypes,
   ScatterPlot: scatterPlotPropTypes,
-  GenericMap: genericMapPropTypes
+  GenericMap: genericMapPropTypes,
+  Hemicycle: hemicyclePropTypes
 }
 
 const charts = Object.keys(ReactCharts)

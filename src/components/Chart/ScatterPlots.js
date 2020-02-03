@@ -21,6 +21,8 @@ import {
   getFormat
 } from './utils'
 
+import { getColorMapper } from './colorMaps'
+
 import { sansSerifRegular12, sansSerifMedium12 } from '../Typography/styles'
 
 import colors from '../../theme/colors'
@@ -334,7 +336,7 @@ class ScatterPlot extends Component {
           ? props.colorRanges.discrete
           : props.colorRanges.sequential3
     }
-    const color = scaleOrdinal(colorRange).domain(colorValues)
+    const color = getColorMapper(props, colorValues)
 
     this.symbols = data.map((value, i) => {
       return {
@@ -585,6 +587,7 @@ export const propTypes = {
     sequential3: PropTypes.array.isRequired,
     discrete: PropTypes.array.isRequired
   }).isRequired,
+  colorMap: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
   colorSort: sortPropType,
   size: PropTypes.string.isRequired,
   sizeRangeMax: PropTypes.number.isRequired,

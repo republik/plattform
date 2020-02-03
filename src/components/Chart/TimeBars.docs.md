@@ -473,7 +473,10 @@ Note: You should specify the `xInterval` prop when you have gaps in your data. A
     config={{
       "type": "TimeBar",
       "color": "type",
-      "colorRange": ["#90AA00", "#542785"],
+      "colorMap": {
+        "Überschuss": "#90AA00",
+        "Defizit": "#542785"
+      },
       "xTicks": [1990, 2000, 2010, 2016],
       "yTicks": [10000000000, 5000000000, 0, -5000000000, -10000000000],
       "numberFormat": ".3s"

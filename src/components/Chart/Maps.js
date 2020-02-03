@@ -560,6 +560,7 @@ export const propTypes = {
     discrete: PropTypes.array.isRequired,
     sequential: PropTypes.array.isRequired
   }).isRequired,
+  colorMap: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
   shape: PropTypes.oneOf(shapes).isRequired,
   sizeRangeMax: PropTypes.number,
   features: featuresShape,

@@ -3,7 +3,7 @@ import React from 'react'
 import { css } from 'glamor'
 
 import { max, min, ascending } from 'd3-array'
-import { scaleLinear, scaleOrdinal, scaleBand } from 'd3-scale'
+import { scaleLinear, scaleBand } from 'd3-scale'
 import * as d3Intervals from 'd3-time'
 
 import { sansSerifRegular12, sansSerifMedium12 } from '../Typography/styles'
@@ -20,6 +20,8 @@ import {
   last,
   baseLineColor
 } from './utils'
+
+import { getColorMapper } from './colorMaps'
 
 import ColorLegend from './ColorLegend'
 
@@ -114,14 +116,7 @@ const TimeBarChart = props => {
     .filter(Boolean)
     .filter(deduplicate)
 
-  let colorRange = props.colorRanges[props.colorRange] || props.colorRange
-  if (!colorRange) {
-    colorRange =
-      colorValues.length > 3
-        ? props.colorRanges.discrete
-        : props.colorRanges.sequential3
-  }
-  const color = scaleOrdinal(colorRange).domain(colorValues)
+  const color = getColorMapper(props, colorValues)
 
   const bars = groupBy(data, d => d.x).map(({ values: segments, key: x }) => ({
     segments,
@@ -473,6 +468,7 @@ export const propTypes = {
     sequential3: PropTypes.array.isRequired,
     discrete: PropTypes.array.isRequired
   }).isRequired,
+  colorMap: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
   domain: PropTypes.arrayOf(PropTypes.number),
   yTicks: PropTypes.arrayOf(PropTypes.number),
   yAnnotations: PropTypes.arrayOf(

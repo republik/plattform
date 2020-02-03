@@ -583,6 +583,7 @@ export const propTypes = {
     sequential3: PropTypes.array.isRequired,
     discrete: PropTypes.array.isRequired
   }).isRequired,
+  colorMap: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
   colorLegend: PropTypes.bool,
   colorLegendValues: PropTypes.arrayOf(PropTypes.string),
   category: PropTypes.string,

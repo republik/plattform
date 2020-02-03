@@ -1,9 +1,11 @@
+import { scaleOrdinal } from 'd3-scale'
+
 /*
  * extracted from https://raw.githubusercontent.com/srfdata/swiss-party-colors/master/definitions.json
  * swiss-party-colors by SRF Data is licensed under a
  * Creative Commons Namensnennung - Attribution-ShareAlike 4.0 International (CC BY-SA 4.0).
  */
-export const swissPartyColors = {
+const swissPartyColors = {
   EAG: '#AD4F89',
   PDA: '#BF3939',
   AL: '#A83232',
@@ -51,4 +53,28 @@ export const swissPartyColors = {
   FPS: '#9D9D9D',
   NONE: '#B8B8B8',
   OTHER: '#B8B8B8'
+}
+
+const colorMaps = { swissPartyColors }
+
+export const getColorMapper = (props, colorValues = []) => {
+  const colorMapProp = props.colorMap
+  if (colorMapProp) {
+    const colorMap =
+      colorMaps[colorMapProp] ||
+      Object.keys(colorMapProp).reduce((map, key) => {
+        map[key.toUpperCase()] = colorMapProp[key]
+        return map
+      }, {})
+
+    return (value = '') => colorMap[value.toUpperCase()] || '#E0E0E0'
+  }
+  let colorRange = props.colorRanges[props.colorRange] || props.colorRange
+  if (!colorRange) {
+    colorRange =
+      colorValues.length > 3
+        ? props.colorRanges.discrete
+        : props.colorRanges.sequential3
+  }
+  return scaleOrdinal(colorRange).domain(colorValues)
 }

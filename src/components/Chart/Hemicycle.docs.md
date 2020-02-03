@@ -81,7 +81,6 @@ SVP,2015,65
       "colorMap": {
         "ABCD": "red",
         "EFGH": "orange",
-        "IJKL": "yellow",
         "MNOP": "green",
         "QRST": "blue"
       }

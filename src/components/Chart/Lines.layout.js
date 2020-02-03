@@ -13,6 +13,8 @@ import {
   unsafeDatumFn
 } from './utils'
 
+import { getColorMapper } from './colorMaps'
+
 import {
   sansSerifMedium12 as VALUE_FONT,
   sansSerifRegular12 as LABEL_FONT
@@ -143,7 +145,7 @@ export default props => {
         ? props.colorRanges.discrete
         : props.colorRanges.sequential3
   }
-  const color = scaleOrdinal(colorRange).domain(colorValues)
+  const color = getColorMapper(props, colorValues)
 
   const yAxis = calculateAxis(
     props.numberFormat,

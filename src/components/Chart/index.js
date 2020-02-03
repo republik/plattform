@@ -21,7 +21,6 @@ import {
 } from '../Typography/styles'
 import { fontRule } from '../Typography/Interaction'
 import { convertStyleToRem, pxToRem } from '../Typography/utils'
-import { swissPartyColors } from './colorMaps'
 
 export const ReactCharts = {
   Bar,
@@ -56,8 +55,6 @@ const createRanges = ({
 }
 
 const colorRanges = createRanges(colors)
-
-const colorMaps = { swissPartyColors }
 
 const styles = {
   h: css({
@@ -127,7 +124,6 @@ class Chart extends Component {
             {...config}
             tLabel={tLabel}
             colorRanges={colorRanges}
-            colorMaps={colorMaps}
             width={width}
             values={this.props.values}
             description={config.description}

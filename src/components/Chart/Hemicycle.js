@@ -15,6 +15,8 @@ import colors from '../../theme/colors'
 import { arc as d3arc } from 'd3-shape'
 import { getTextColor } from './utils'
 
+import { getColorMapper } from './colorMaps'
+
 const styles = {
   axis: css({
     ...sansSerifRegular12,
@@ -43,18 +45,18 @@ const calcSectorAngles = (vals = []) => {
   }, [])
 }
 
-const Hemicycle = ({
-  values,
-  width,
-  unit,
-  inlineLabelThreshold,
-  middleAnnotation,
-  padding,
-  group,
-  color,
-  colorMaps,
-  colorMap
-}) => {
+const Hemicycle = props => {
+  const {
+    values,
+    width,
+    unit,
+    inlineLabelThreshold,
+    middleAnnotation,
+    padding,
+    group,
+    color: colorProp,
+    colorMap
+  } = props
   const margins = {
     top: 0,
     right: 0,
@@ -62,7 +64,7 @@ const Hemicycle = ({
     left: 0
   }
 
-  const legendColorMap = colorMaps[colorMap] || colorMap
+  const color = getColorMapper(props)
 
   const primaryGroupLabel = values.length > 0 && values[0][group]
 
@@ -123,8 +125,7 @@ const Hemicycle = ({
           <g transform={`translate(${w >> 1},${hemicycleOffset})`}>
             {primaryAngles.map(d => {
               const datum = primaryVals.find(g => g.label === d[2])
-              const fill =
-                legendColorMap[datum[color].toUpperCase()] || '#A09E9C'
+              const fill = color(datum[colorProp])
               return (
                 <>
                   <path
@@ -144,7 +145,7 @@ const Hemicycle = ({
               .map(d => {
                 const isMajorParty = Math.abs(d[1] - d[0]) > MAX_ARC / 10
                 const datum = primaryVals.find(g => g.label === d[2])
-                const fill = legendColorMap[datum[color].toUpperCase()]
+                const fill = color(datum[colorProp])
                 const x =
                   hemicycleHeight *
                   (isMajorParty ? 0.75 : 1.05) *
@@ -190,8 +191,7 @@ const Hemicycle = ({
               })}
             {secondaryAngles.map(d => {
               const datum = secondaryVals.find(g => g.label === d[2])
-              const fill =
-                legendColorMap[datum[color].toUpperCase()] || '#A09E9C'
+              const fill = color(datum[colorProp])
               return (
                 <>
                   <path
@@ -234,7 +234,7 @@ const Hemicycle = ({
           values={primaryVals
             .filter(v => v.value < inlineLabelThreshold)
             .map(v => ({
-              color: legendColorMap[v[color].toUpperCase()],
+              color: color(v[colorProp]),
               label: `${v.label}: ${v.value}`
             }))}
         />
@@ -243,7 +243,7 @@ const Hemicycle = ({
   )
 }
 
-Hemicycle.propTypes = {
+export const propTypes = {
   width: PropTypes.number.isRequired,
   unit: PropTypes.string,
   padding: PropTypes.number,
@@ -252,7 +252,6 @@ Hemicycle.propTypes = {
   group: PropTypes.string,
   color: PropTypes.string,
   colorMap: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
-  colorMaps: PropTypes.object.isRequired,
   values: PropTypes.arrayOf(
     PropTypes.shape({
       label: PropTypes.string.isRequired,
@@ -260,6 +259,8 @@ Hemicycle.propTypes = {
     })
   ).isRequired
 }
+
+Hemicycle.propTypes = propTypes
 
 Hemicycle.defaultProps = {
   color: 'label',
