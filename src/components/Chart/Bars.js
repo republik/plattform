@@ -33,6 +33,7 @@ const BAR_LABEL_HEIGHT = 15
 const AXIS_BOTTOM_HEIGHT = 20
 const AXIS_BOTTOM_PADDING = 8
 const X_TICK_TEXT_MARGIN = 0
+const LOLLIPOP_PADDING = 7 // half of max pop height
 
 const BAR_STYLES = {
   lollipop: {
@@ -335,8 +336,10 @@ const BarChart = props => {
     })
   })
 
-  const xTicks = props.xTicks || showBarValues ? [] : xAxis.ticks
+  const xTicks = props.xTicks || (showBarValues ? [] : xAxis.ticks)
   const hasXTicks = !inlineValue && !!xTicks.length
+
+  const isLollipop = props.barStyle === 'lollipop'
 
   // rows and columns
   let yPos = 0
@@ -350,11 +353,12 @@ const BarChart = props => {
         group.x = column * (columnWidth + COLUMN_PADDING)
       })
 
-      yPos += height + (hasXTicks ? AXIS_BOTTOM_HEIGHT : 0)
+      yPos +=
+        height +
+        (hasXTicks ? AXIS_BOTTOM_HEIGHT : 0) +
+        (isLollipop ? LOLLIPOP_PADDING : 0)
     }
   )
-
-  const isLollipop = props.barStyle === 'lollipop'
 
   const highlightZero = xTicks.indexOf(0) !== -1 && xTicks[0] !== 0
 
@@ -571,16 +575,23 @@ const BarChart = props => {
                           y1={
                             -AXIS_BOTTOM_PADDING -
                             group.groupHeight +
-                            group.firstBarY
+                            group.firstBarY -
+                            (isLollipop ? LOLLIPOP_PADDING : 0)
                           }
-                          y2={-AXIS_BOTTOM_PADDING}
+                          y2={
+                            -AXIS_BOTTOM_PADDING +
+                            (isLollipop ? LOLLIPOP_PADDING : 0)
+                          }
                           style={{
                             stroke: highlightTick ? baseLineColor : undefined
                           }}
                         />
                         <text
                           {...styles.axisLabel}
-                          y={X_TICK_TEXT_MARGIN}
+                          y={
+                            X_TICK_TEXT_MARGIN +
+                            (isLollipop ? LOLLIPOP_PADDING : 0)
+                          }
                           dy='0.6em'
                           textAnchor={textAnchor}
                           style={{
