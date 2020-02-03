@@ -54,8 +54,7 @@ const Hemicycle = props => {
     middleAnnotation,
     padding,
     group,
-    color: colorProp,
-    colorMap
+    color: colorProp
   } = props
   const margins = {
     top: 0,

@@ -1,5 +1,5 @@
 import { timeParse } from 'd3-time-format'
-import { scaleLinear, scaleLog, scaleOrdinal } from 'd3-scale'
+import { scaleLinear, scaleLog } from 'd3-scale'
 import { min, max } from 'd3-array'
 
 import { createTextGauger } from '../../lib/textGauger'

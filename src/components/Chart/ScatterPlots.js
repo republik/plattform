@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { css } from 'glamor'
 
 import ColorLegend from './ColorLegend'
-import { scaleLinear, scaleLog, scaleOrdinal, scaleSqrt } from 'd3-scale'
+import { scaleLinear, scaleLog, scaleSqrt } from 'd3-scale'
 import { extent, ascending, min, max } from 'd3-array'
 
 import ContextBox, { ContextBoxValue } from './ContextBox'

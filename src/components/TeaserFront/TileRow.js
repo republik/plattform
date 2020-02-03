@@ -1,7 +1,6 @@
 import { css, merge } from 'glamor'
 import PropTypes from 'prop-types'
 import React from 'react'
-import colors from '../../theme/colors'
 import { breakoutUp } from '../Center'
 import { mUp } from './mediaQueries'
 import { sizeSmall, sizeMedium } from './Tile'

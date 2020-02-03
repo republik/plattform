@@ -2,7 +2,7 @@ import React, { Fragment } from 'react'
 import PropTypes from 'prop-types'
 import { css } from 'glamor'
 
-import { scaleLinear, scaleOrdinal } from 'd3-scale'
+import { scaleLinear } from 'd3-scale'
 import { max, min } from 'd3-array'
 
 import { sansSerifRegular12, sansSerifMedium14 } from '../Typography/styles'
