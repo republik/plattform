@@ -13,8 +13,7 @@ module.exports = async (_, args, context) => {
   Roles.ensureUserHasRole(user, 'member')
 
   const {
-    // TODO remove if FE is ready
-    id = uuid(),
+    id,
     discussionId,
     parentId
   } = args
@@ -38,7 +37,7 @@ module.exports = async (_, args, context) => {
       {
         ...args,
         ...(parent ? { depth: parent.depth + 1 } : {}),
-        id,
+        id: uuid(),
         userId: user.id
       },
       context
