@@ -284,7 +284,7 @@ module.exports = {
       return {
         document: doc,
         fragmentId,
-        iconUrl: `${FRONTEND_BASE_URL}/static/top-story-batch.png`
+        iconUrl: `${FRONTEND_BASE_URL}/static/top-story-badge.png`
       }
     }
   },
