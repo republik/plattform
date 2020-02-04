@@ -9,7 +9,6 @@ import {
   sansSerifMedium18
 } from '../../../Typography/styles'
 import { mUp } from '../../../../theme/mediaQueries'
-import Badge from './Badge'
 import { linkStyle } from '../../../Typography'
 
 import { fontStyles } from '../../../../theme/fonts'
@@ -102,10 +101,11 @@ export const Embed = ({ comment }) => {
           )}
           {mentioningDocument && (
             <div {...styles.topStory}>
-              <Badge
-                url={`${mentioningDocument.document.meta.path}#${mentioningDocument.fragmentId}`}
-                badgeUrl={mentioningDocument.iconUrl}
-              />
+              <a
+                href={`${mentioningDocument.document.meta.path}#${mentioningDocument.fragmentId}`}
+              >
+                <img src={mentioningDocument.iconUrl} />
+              </a>
             </div>
           )}
         </div>
