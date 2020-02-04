@@ -287,6 +287,9 @@ module.exports = {
     }
   },
 
+  userCanReport: ({ userId }, args, { user: me }) =>
+    me && me.id !== userId,
+
   userReportedAt: ({ reports }, args, { user: me }) =>
     me && reports && reports.reduce(
       (acc, r) => acc || (r.userId === me.id) ? r.reportedAt : null,

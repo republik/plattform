@@ -201,6 +201,7 @@ type Comment {
 
   tags: [String!]!
 
+  userCanReport: Boolean!
   userReportedAt: DateTime
   numReports: Int
 
