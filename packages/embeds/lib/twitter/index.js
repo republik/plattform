@@ -83,7 +83,7 @@ const getTweetById = async (id, t) => {
       sanitizedText,
       { mention: 'twitter' }
     )
-      .replace(/\n/g, '</br>')
+      .replace(/\n/g, '<br/>')
     : null
 
   return {
