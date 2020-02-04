@@ -12,3 +12,8 @@ ALTER TABLE "comments"
 ALTER TABLE "discussions"
   DROP COLUMN IF EXISTS "isBoard"
 ;
+
+DROP INDEX IF EXISTS "comments_urls_idx";
+DROP INDEX IF EXISTS "comments_embedUrl_idx";
+DROP INDEX IF EXISTS "comments_mentioningRepoId_idx";
+DROP INDEX IF EXISTS "comments_mentioningFragmentId_idx";
