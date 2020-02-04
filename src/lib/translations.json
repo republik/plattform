@@ -1,5 +1,5 @@
 {
-  "updated": "2020-01-28T11:42:27.654Z",
+  "updated": "2020-02-03T22:54:12.518Z",
   "title": "live",
   "data": [
     {
@@ -41,6 +41,10 @@
     {
       "key": "styleguide/CommentActions/edit",
       "value": "bearbeiten"
+    },
+    {
+      "key": "styleguide/CommentActions/report",
+      "value": "melden"
     },
     {
       "key": "styleguide/CommentActions/upvote",

@@ -5,6 +5,7 @@ import MdKeyboardArrowUp from 'react-icons/lib/md/keyboard-arrow-up'
 // options: speaker-notes-off, block, clear, visibility-off, remove-circle
 import CommentCountIcon from './CommentCountIcon'
 import UnpublishIcon from 'react-icons/lib/md/visibility-off'
+import ReportIcon from 'react-icons/lib/md/flag'
 import EditIcon from 'react-icons/lib/md/edit'
 import ReplyIcon from 'react-icons/lib/md/reply'
 import ShareIcon from 'react-icons/lib/md/share'
@@ -12,6 +13,7 @@ import colors from '../../../../theme/colors'
 import { sansSerifMedium14 } from '../../../Typography/styles'
 import { DiscussionContext, formatTimeRelative } from '../../DiscussionContext'
 import { mUp } from '../../../../theme/mediaQueries'
+import { sansSerifMedium16 } from '../../../Typography/styles'
 
 const buttonStyle = {
   outline: 'none',
@@ -89,11 +91,37 @@ const styles = {
     ...buttonStyle,
     fontSize: '18px',
     padding: '0 7px'
+  }),
+  text: css({
+    display: 'inline-block',
+    textOverflow: 'ellipsis',
+    overflow: 'hidden',
+    verticalAlign: 'middle',
+    color: colors.text,
+    marginTop: -1,
+    paddingLeft: 4,
+    ...sansSerifMedium14
   })
 }
 
-export const Actions = ({ t, comment, onExpand, onReply, onEdit }) => {
-  const { published, userCanEdit, downVotes, upVotes, userVote } = comment
+export const Actions = ({
+  t,
+  comment,
+  onExpand,
+  onReply,
+  onEdit,
+  onReport
+}) => {
+  const {
+    published,
+    userCanEdit,
+    downVotes,
+    upVotes,
+    userVote,
+    numReports,
+    userReportedAt,
+    userCanReport
+  } = comment
   const { isAdmin, discussion, actions, clock } = React.useContext(
     DiscussionContext
   )
@@ -183,6 +211,19 @@ export const Actions = ({ t, comment, onExpand, onReply, onEdit }) => {
           title={t('styleguide/CommentActions/unpublish')}
         >
           <UnpublishIcon />
+        </IconButton>
+      )}
+      {userCanReport && onReport && (
+        <IconButton
+          type='left'
+          disabled={userReportedAt}
+          onClick={onReport}
+          title={t('styleguide/CommentActions/report')}
+        >
+          <span>
+            <ReportIcon fill={userReportedAt ? colors.disabled : colors.text} />
+            {numReports > 0 && <span {...styles.text}>{numReports}</span>}
+          </span>
         </IconButton>
       )}
       <IconButton

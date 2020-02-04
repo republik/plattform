@@ -279,11 +279,6 @@ const CommentNode = ({ t, comment, isDesktop, board, rootCommentOverlay }) => {
         {!nestLimitExceeded && !board && (
           <button {...verticalToggleStyle} onClick={toggleReplies} />
         )}
-        {board && isDesktop && (
-          <div {...styles.boardColumn}>
-            <Comment.Embed comment={comment} />
-          </div>
-        )}
         <div
           {...merge(
             mode === 'view' && isHighlighted ? styles.highlightContainer : {},
@@ -357,8 +352,17 @@ const CommentNode = ({ t, comment, isDesktop, board, rootCommentOverlay }) => {
             onEdit={() => {
               dispatch({ editComment: {} })
             }}
+            onReport={() => {
+              actions.reportComment(comment)
+            }}
           />
         </div>
+
+        {board && isDesktop && (
+          <div {...styles.boardColumn}>
+            <Comment.Embed comment={comment} />
+          </div>
+        )}
 
         {showReplyComposer && (
           <div style={{ marginBottom: 30 }}>

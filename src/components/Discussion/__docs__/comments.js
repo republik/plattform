@@ -15,6 +15,7 @@ export const linkPreview1 = {
 }
 
 export const mentioningDocument = {
+  iconUrl: '/static/top-story-badge.png',
   document: {
     meta: {
       path: '/2019/02/18/das-reaktionaerste-land-der-welt'
