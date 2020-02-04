@@ -78,18 +78,21 @@ const getTweetById = async (id, t) => {
   // revert twitter url shortening
   const text = response.full_text || response.text
   const sanitizedText = expandUrls(text, response.entities)
+  const html = sanitizedText
+    ? Autolinker.link(
+      sanitizedText,
+      { mention: 'twitter' }
+    )
+      .replace(/\n\n/g, '</br>')
+      .replace(/\n/g, '</br>')
+    : null
 
   return {
     id: response.id_str,
     createdAt: new Date(response.created_at),
     retrievedAt: new Date(),
     text: sanitizedText,
-    html: Autolinker.link(
-      sanitizedText,
-      {
-        mention: 'twitter'
-      }
-    ),
+    html,
     userId: response.user.id_str,
     userName: response.user.name,
     userScreenName: response.user.screen_name,
