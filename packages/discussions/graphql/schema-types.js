@@ -209,10 +209,16 @@ type Comment {
 
   embed: CommentEmbed
 
-  mentioningDocument: DocumentLink
+  mentioningDocument: MentioningDocument
 }
 
 union CommentEmbed = LinkPreview | TwitterEmbed
+
+type MentioningDocument {
+  document: Document!
+  fragmentId: String
+  iconUrl: String!
+}
 
 enum MutationType {
   CREATED

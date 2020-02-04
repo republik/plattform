@@ -168,8 +168,8 @@ Promise.props({
   await pgdb.public.comments.updateOne(
     { id: comment.id },
     {
-      repoId: 'republik-dev/article-das-reaktionaerste-land-der-welt',
-      documentFragmentId: 'ein-struktureller-wahnsinn'
+      mentioningRepoId: 'republik-dev/article-das-reaktionaerste-land-der-welt',
+      mentioningFragmentId: 'ein-struktureller-wahnsinn'
     }
   )
 

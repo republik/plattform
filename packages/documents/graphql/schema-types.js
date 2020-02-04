@@ -140,9 +140,4 @@ interface PlayableMedia {
   mediaId: ID!
   durationMs: Int!
 }
-
-type DocumentLink {
-  document: Document!
-  fragmentId: String
-}
 `

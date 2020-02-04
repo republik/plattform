@@ -1,8 +1,8 @@
 ALTER TABLE "comments"
   DROP COLUMN "urls",
   DROP COLUMN "embedUrl",
-  DROP COLUMN IF EXISTS "repoId",
-  DROP COLUMN IF EXISTS "documentFragmentId"
+  DROP COLUMN IF EXISTS "mentioningRepoId",
+  DROP COLUMN IF EXISTS "mentioningFragmentId"
 ;
 
 ALTER TABLE "comments"

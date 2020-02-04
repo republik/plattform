@@ -15,7 +15,8 @@ const { clipUrlInText } = require('../../lib/urlClipper')
 const { getEmbedByUrl } = require('@orbiting/backend-modules-embeds')
 
 const {
-  DISPLAY_AUTHOR_SECRET
+  DISPLAY_AUTHOR_SECRET,
+  FRONTEND_BASE_URL
 } = process.env
 if (!DISPLAY_AUTHOR_SECRET) {
   throw new Error('missing required DISPLAY_AUTHOR_SECRET')
@@ -272,17 +273,18 @@ module.exports = {
     comment.tags || [],
 
   mentioningDocument: async ({
-    repoId,
-    documentFragmentId: fragmentId
+    mentioningRepoId,
+    mentioningFragmentId: fragmentId
   }, args, { loaders }) => {
-    if (!repoId) {
+    if (!mentioningRepoId) {
       return null
     }
-    const doc = await loaders.Document.byRepoId.load(repoId)
+    const doc = await loaders.Document.byRepoId.load(mentioningRepoId)
     if (doc) {
       return {
         document: doc,
-        fragmentId
+        fragmentId,
+        iconUrl: `${FRONTEND_BASE_URL}/static/top-story-batch.png`
       }
     }
   },
