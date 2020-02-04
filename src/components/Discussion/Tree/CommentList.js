@@ -29,7 +29,8 @@ const styles = {
   boardColumn: css({
     [mUp]: {
       flex: 1,
-      padding: 10
+      padding: 10,
+      width: '50%',
     }
   }),
   modalRoot: css({

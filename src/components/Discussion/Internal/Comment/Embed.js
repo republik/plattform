@@ -33,7 +33,7 @@ const styles = {
     width: '100%'
   }),
   text: css({
-    marginTop: 5,
+    marginTop: 3,
     padding: '0.1rem 10px 10px 10px'
   }),
   siteImage: css({
@@ -44,7 +44,7 @@ const styles = {
     verticalAlign: 'middle'
   }),
   paragraph: css({
-    marginTop: '0.2rem',
+    marginTop: '0.1rem',
     ...sansSerifRegular13,
     [mUp]: {
       ...sansSerifRegular15
