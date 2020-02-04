@@ -394,6 +394,9 @@ const TimeBarChart = props => {
               tx += (x2 - x1) / 2
             }
             const textAnchor = compact ? 'start' : 'middle'
+
+            const isBottom = annotation.position === 'bottom'
+
             return (
               <g
                 key={`x-annotation-${i}`}
@@ -413,7 +416,7 @@ const TimeBarChart = props => {
                 <text
                   x={tx}
                   textAnchor={textAnchor}
-                  dy='-1.8em'
+                  dy={isBottom ? '2.7em' : '-1.8em'}
                   {...styles.annotationText}
                 >
                   {tLabel(annotation.label)}
@@ -421,7 +424,7 @@ const TimeBarChart = props => {
                 <text
                   x={tx}
                   textAnchor={textAnchor}
-                  dy='-0.5em'
+                  dy={isBottom ? '1.4em' : '-0.5em'}
                   {...styles.annotationValue}
                 >
                   {tLabel(annotation.valuePrefix)}

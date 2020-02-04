@@ -577,8 +577,16 @@ year,typ,value
     "type": "TimeBar",
     "x": "month",
     "timeParse": "%Y-%m",
+    "colorRange": ["#ff7f0e"],
+    "domain": [0,5.5],
+    "numberFormat": ".1f",
+    "yTicks": [0, 2.5, 5],
     "xInterval": "month",
-    "xIntervalStep": 6
+    "xIntervalStep": 6,
+    "xAnnotations": [
+      {"x1": "2019-07", "x2": "2019-07","value": 5,"label": "Ziel 2020"}, 
+      {"x1": "2019-07", "x2": "2019-07","value": 4,"label": "Stand jetzt","position": "bottom"}
+    ]
   }}
   values={`
 month,value
