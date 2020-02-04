@@ -4,9 +4,15 @@ import { css } from 'glamor'
 import colors from '../../../../theme/colors'
 import {
   sansSerifRegular13,
-  sansSerifRegular15
+  sansSerifRegular15,
+  sansSerifMedium16,
+  sansSerifMedium18
 } from '../../../Typography/styles'
 import { mUp } from '../../../../theme/mediaQueries'
+import Badge from './Badge'
+import { linkStyle } from '../../../Typography'
+
+import { fontStyles } from '../../../../theme/fonts'
 
 const styles = {
   link: css({
@@ -19,39 +25,45 @@ const styles = {
       marginTop: 0
     }
   }),
+  imageContainer: css({
+    position: 'relative'
+  }),
   image: css({
     borderBottom: `1px solid ${colors.divider}`,
     width: '100%'
   }),
   text: css({
+    marginTop: 5,
     padding: '0.1rem 10px 10px 10px'
   }),
   siteImage: css({
-    borderRadius: '100%',
-    float: 'left',
-    width: 12,
-    height: 12,
-    marginTop: 3,
-    marginRight: 3,
-    [mUp]: {
-      width: 15,
-      height: 15,
-      marginTop: 5,
-      marginRight: 5
-    }
+    width: 19,
+    height: 19,
+    marginRight: 5,
+    marginBottom: 3,
+    verticalAlign: 'middle'
   }),
   paragraph: css({
     marginTop: '0.2rem',
     ...sansSerifRegular13,
     [mUp]: {
       ...sansSerifRegular15
-    }
+    },
+    '& a': linkStyle
   }),
   title: css({
-    margin: '0.5rem 0',
-    lineHeight: '1.35rem'
+    margin: '0.3rem 0 0.5rem 0',
+    ...sansSerifMedium16,
+    [mUp]: {
+      ...sansSerifMedium18,
+      lineHeight: '1.3rem'
+    },
+    lineHeight: '1.3rem'
   }),
   topStory: css({
+    position: 'absolute',
+    top: -30,
+    right: -15,
     color: 'red',
     textTransform: 'uppercase'
   })
@@ -60,9 +72,9 @@ const styles = {
 const normalizeEmbed = embed => ({
   ...embed,
   imageUrl: embed.imageUrl || embed.image,
-  header: embed.siteName || embed.userName,
+  header: embed.siteName || `${embed.userName} @${embed.userScreenName}`,
   headerImageUrl: embed.siteImageUrl || embed.userProfileImageUrl,
-  body: embed.description || embed.text
+  body: embed.description || embed.html
 })
 
 export const Embed = ({ comment }) => {
@@ -84,13 +96,20 @@ export const Embed = ({ comment }) => {
   return (
     <a href={url} target='_blank' {...styles.link}>
       <div {...styles.container}>
-        {imageUrl && (
-          <img src={imageUrl} alt={imageAlt || title} {...styles.image} />
-        )}
-        <div {...styles.text}>
-          {mentioningDocument && (
-            <span {...styles.topStory}>!!TOP STORY!!</span>
+        <div {...styles.imageContainer}>
+          {imageUrl && (
+            <img src={imageUrl} alt={imageAlt || title} {...styles.image} />
           )}
+          {mentioningDocument && (
+            <div {...styles.topStory}>
+              <Badge
+                url={`${mentioningDocument.document.meta.path}#${mentioningDocument.fragmentId}`}
+                badgeUrl={mentioningDocument.iconUrl}
+              />
+            </div>
+          )}
+        </div>
+        <div {...styles.text}>
           {header && (
             <Interaction.P {...styles.paragraph}>
               {headerImageUrl && (
@@ -99,13 +118,12 @@ export const Embed = ({ comment }) => {
               {header}
             </Interaction.P>
           )}
-          {title && <Interaction.H3 {...styles.title}>{title}</Interaction.H3>}
+          {title && <Interaction.P {...styles.title}>{title}</Interaction.P>}
           {body && (
-            <div>
-              {body.split('\n').map(part => (
-                <Interaction.P {...styles.paragraph}>{part}</Interaction.P>
-              ))}
-            </div>
+            <Interaction.P
+              {...styles.paragraph}
+              dangerouslySetInnerHTML={{ __html: body }}
+            ></Interaction.P>
           )}
         </div>
       </div>

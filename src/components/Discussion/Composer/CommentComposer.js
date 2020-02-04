@@ -73,13 +73,6 @@ export const CommentComposer = props => {
   } = props
 
   /*
-   * Get the discussion metadata and action callbacks from the DiscussionContext.
-   */
-  const { discussion, actions } = React.useContext(DiscussionContext)
-  const { id, tags, rules, displayAuthor } = discussion
-  const { maxLength } = rules
-
-  /*
    * Refs
    *
    * We have one ref that is pointing to the root elment of the comment composer, and
@@ -90,6 +83,29 @@ export const CommentComposer = props => {
   const [textarea, textareaRef] = React.useState(null)
   const textRef = React.useRef()
   const [preview, setPreview] = React.useState(null)
+
+  /*
+   * Get the discussion metadata and action callbacks from the DiscussionContext.
+   */
+  const { discussion, actions } = React.useContext(DiscussionContext)
+  const { id, tags, rules, displayAuthor } = discussion
+  const { maxLength } = rules
+
+  const [text, setText] = React.useState(() => {
+    if (props.initialText) {
+      return props.initialText
+    } else if (typeof localStorage !== 'undefined') {
+      try {
+        return localStorage.getItem(localStorageKey) || ''
+      } catch (e) {
+        return ''
+      }
+    } else {
+      return ''
+    }
+  })
+
+  const textLength = preview ? preview.contentLength : text.length
 
   /*
    * Focus the textarea upon mount.
@@ -137,20 +153,6 @@ export const CommentComposer = props => {
         }
       })
   }
-
-  const [text, setText] = React.useState(() => {
-    if (props.initialText) {
-      return props.initialText
-    } else if (typeof localStorage !== 'undefined') {
-      try {
-        return localStorage.getItem(localStorageKey) || ''
-      } catch (e) {
-        return ''
-      }
-    } else {
-      return ''
-    }
-  })
 
   React.useEffect(() => {
     fetchPreview(text)
@@ -244,7 +246,7 @@ export const CommentComposer = props => {
         />
 
         {maxLength && (
-          <MaxLengthIndicator maxLength={maxLength} length={text.length} />
+          <MaxLengthIndicator maxLength={maxLength} length={textLength} />
         )}
       </div>
 
@@ -254,7 +256,7 @@ export const CommentComposer = props => {
         t={t}
         onClose={onClose}
         onCloseLabel={onCloseLabel}
-        onSubmit={loading ? undefined : onSubmit}
+        onSubmit={loading || textLength > maxLength ? undefined : onSubmit}
         onSubmitLabel={onSubmitLabel}
       />
 
