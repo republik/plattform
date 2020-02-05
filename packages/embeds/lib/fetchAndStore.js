@@ -35,12 +35,12 @@ const redlock = (redis) => {
   )
 }
 
-const fetchContent = async (url) => {
+const fetchContent = async (url, { t }) => {
   if (twitter.REGEX.test(url)) {
     const tweetId = twitter.REGEX.exec(url)[1]
     return {
       type: 'TwitterEmbed',
-      content: await twitter.getTweetById(tweetId)
+      content: await twitter.getTweetById(tweetId, t)
     }
   }
   return {
@@ -95,7 +95,7 @@ const fetchEmbed = async ({ url, doUpdate = false }, context) => {
       'EX', MAX_REQUEST_URL_EACH_SECS
     )
 
-    const { type, content } = await fetchContent(url)
+    const { type, content } = await fetchContent(url, context)
 
     if (content) {
       let dbEntry
