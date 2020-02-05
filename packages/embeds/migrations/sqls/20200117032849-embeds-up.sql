@@ -3,7 +3,7 @@ CREATE TABLE "embeds" (
   "url"         citext not null unique,
   "host"        text not null,
   "type"        text not null,
-  "typeId"      text,
+  "contentId"   text,
   "content"     jsonb not null,
   "createdAt"   timestamptz default now(),
   "updatedAt"   timestamptz default now()
@@ -11,4 +11,4 @@ CREATE TABLE "embeds" (
 
 CREATE INDEX "embeds_urls_idx" ON embeds("url");
 CREATE INDEX "embeds_type_idx" ON embeds("type");
-CREATE INDEX "embeds_type_id_idx" ON embeds("typeId");
+CREATE INDEX "embeds_content_id_idx" ON embeds("contentId");

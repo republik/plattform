@@ -103,7 +103,7 @@ const fetchEmbed = async ({ url, doUpdate = false }, context) => {
           url,
           host: new URL(url).hostname,
           type,
-          typeId: content.id,
+          contentId: content.id,
           content
         })
       } else {
