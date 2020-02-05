@@ -183,7 +183,7 @@ export const Actions = ({
           />
         </IconButton>
       )}
-      {onReply && (
+      {onReply && !!displayAuthor  && (
         <IconButton
           type='left'
           disabled={!!replyBlockedMessage}

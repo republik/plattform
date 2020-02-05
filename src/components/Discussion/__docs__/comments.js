@@ -14,6 +14,22 @@ export const linkPreview1 = {
   __typename: 'LinkPreview'
 }
 
+export const linkPreview2 = {
+  id: '1217356328047403008',
+  url: 'https://twitter.com/RepublikMagazin/status/1217356328047403008',
+  text:
+    '@tpreusse @adfichter Helfen Sie mit, die nächsten #2JahreRepublik zu ermöglichen? So langsam finden wir, das lohnt sich. 😉\n\nhttp://www.republik.ch/cockpit',
+  html:
+    '<a href="https://twitter.com/tpreusse" target="_blank" rel="noopener noreferrer">@tpreusse</a> <a href="https://twitter.com/adfichter" target="_blank" rel="noopener noreferrer">@adfichter</a> Helfen Sie mit, die nächsten #2JahreRepublik zu ermöglichen? So langsam finden wir, das lohnt sich. 😉<br/><br/><a href="http://www.republik.ch/cockpit" target="_blank" rel="noopener noreferrer">republik.ch/cockpit</a>',
+  userName: 'Republik',
+  userScreenName: 'RepublikMagazin',
+  userProfileImageUrl:
+    '/static/twitter_icon.jpg',
+  image: '/static/tweet_preview.jpg',
+  createdAt: '2020-01-15T08:02:20.000Z',
+  __typename: 'TwitterEmbed'
+}
+
 export const mentioningDocument = {
   iconUrl: '/static/top-story-badge.png',
   document: {

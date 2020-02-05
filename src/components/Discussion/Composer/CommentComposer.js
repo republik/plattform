@@ -11,6 +11,7 @@ import { Header, Tags, Actions, Error } from '../Internal/Composer'
 import { DiscussionContext } from '../DiscussionContext'
 import { convertStyleToRem } from '../../Typography/utils'
 import { Embed } from '../Internal/Comment'
+import debounce from 'lodash/debounce'
 
 const styles = {
   root: css({}),
@@ -130,29 +131,32 @@ export const CommentComposer = props => {
    */
   const localStorageKey = commentComposerStorageKey(id)
 
-  const fetchPreview = text => {
-    if (!actions || !actions.previewComment) {
-      return setPreview(null)
-    }
-    textRef.current = text
-    actions
-      .previewComment({
-        content: text,
-        discussionId: id,
-        parentId,
-        id: commentId
-      })
-      .then(nextPreview => {
-        if (textRef.current === text) {
-          setPreview(nextPreview)
-        }
-      })
-      .catch(() => {
-        if (textRef.current === text) {
-          setPreview(null)
-        }
-      })
-  }
+  const fetchPreview = React.useCallback(
+    debounce(text => {
+      if (!actions || !actions.previewComment) {
+        return setPreview(null)
+      }
+      textRef.current = text
+      actions
+        .previewComment({
+          content: text,
+          discussionId: id,
+          parentId,
+          id: commentId
+        })
+        .then(nextPreview => {
+          if (textRef.current === text) {
+            setPreview(nextPreview)
+          }
+        })
+        .catch(() => {
+          if (textRef.current === text) {
+            setPreview(null)
+          }
+        })
+    }, 400),
+    [textRef]
+  )
 
   React.useEffect(() => {
     fetchPreview(text)

@@ -8,9 +8,7 @@ Components on this page are not exported from the styleguide. This documentation
 
 #### Link Preview
 
-_TODO: put further down that list_
-
-Visualisation of the link preview attached to the comment – if applicable.
+Visualisation of the link preview attached to the comment.
 
 ```react|noSource,span-3
 <Comment.Embed
@@ -18,11 +16,17 @@ Visualisation of the link preview attached to the comment – if applicable.
 />
 ```
 
+```react|noSource,span-3
+<Comment.Embed
+  comment={comments.comment8}
+/>
+```
+
 With top story pick:
 
 ```react|noSource,span-3
 <Comment.Embed
-  comment={comments.comment8}
+  comment={comments.comment9}
 />
 ```
 

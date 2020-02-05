@@ -62,8 +62,14 @@ export const comments = {
     embed: allComments.linkPreview1
   },
 
-  // Comment with Preview and Top Story
+  // Comment with Tweet
   comment8: {
+    ...allComments.comment2,
+    embed: allComments.linkPreview2
+  },
+
+  // Comment with Preview and Top Story
+  comment9: {
     ...allComments.comment2,
     embed: allComments.linkPreview1,
     mentioningDocument: allComments.mentioningDocument

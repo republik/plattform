@@ -30,13 +30,13 @@ const styles = {
     [mUp]: {
       flex: 1,
       padding: 10,
-      width: '50%',
+      width: '50%'
     }
   }),
   modalRoot: css({
     marginBottom: 15
   }),
-  hiddenToggle: css({display: 'none'}),
+  hiddenToggle: css({ display: 'none' }),
   commentWrapper: ({ isExpanded }) =>
     css({
       /*
@@ -190,7 +190,7 @@ export const CommentList = ({
  */
 const CommentNode = ({ t, comment, isDesktop, board, rootCommentOverlay }) => {
   const { highlightedCommentId, actions } = React.useContext(DiscussionContext)
-  const { id, parentIds, tags, text, comments } = comment
+  const { id, parentIds, tags, text, comments, displayAuthor } = comment
 
   const isHighlighted = id === highlightedCommentId
   const depth = parentIds.length
@@ -230,7 +230,11 @@ const CommentNode = ({ t, comment, isDesktop, board, rootCommentOverlay }) => {
         return state
       }
     },
-    { mode: 'view', isExpanded: true, showReplyComposer: (isRoot && !!rootCommentOverlay) }
+    {
+      mode: 'view',
+      isExpanded: true,
+      showReplyComposer: !!displayAuthor && isRoot && !!rootCommentOverlay
+    }
   )
 
   /*
@@ -400,7 +404,7 @@ const CommentNode = ({ t, comment, isDesktop, board, rootCommentOverlay }) => {
   } else {
     return (
       <div ref={root} data-comment-id={id} {...rootStyle}>
-          <button {...verticalToggleStyle} onClick={toggleReplies} />
+        <button {...verticalToggleStyle} onClick={toggleReplies} />
         <Comment.Header
           t={t}
           comment={comment}
