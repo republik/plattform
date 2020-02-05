@@ -36,6 +36,7 @@ const styles = {
   modalRoot: css({
     marginBottom: 15
   }),
+  hiddenToggle: css({display: 'none'}),
   commentWrapper: ({ isExpanded }) =>
     css({
       /*
@@ -229,7 +230,7 @@ const CommentNode = ({ t, comment, isDesktop, board, rootCommentOverlay }) => {
         return state
       }
     },
-    { mode: 'view', isExpanded: true, showReplyComposer: false }
+    { mode: 'view', isExpanded: true, showReplyComposer: (isRoot && !!rootCommentOverlay) }
   )
 
   /*
@@ -266,7 +267,7 @@ const CommentNode = ({ t, comment, isDesktop, board, rootCommentOverlay }) => {
 
   const rootStyle = styles.root({ isExpanded, nestLimitExceeded, depth, board })
   const verticalToggleStyle = isRoot
-    ? null
+    ? styles.hiddenToggle
     : styles.verticalToggle({ drawLineEnd })
 
   if (isExpanded) {
@@ -399,7 +400,7 @@ const CommentNode = ({ t, comment, isDesktop, board, rootCommentOverlay }) => {
   } else {
     return (
       <div ref={root} data-comment-id={id} {...rootStyle}>
-        <button {...verticalToggleStyle} onClick={toggleReplies} />
+          <button {...verticalToggleStyle} onClick={toggleReplies} />
         <Comment.Header
           t={t}
           comment={comment}
