@@ -13,7 +13,7 @@ module.exports =
     'depth': 0,
     'published': true,
     'adminUnpublished': false,
-    'reportedBy': null,
+    'reports': null,
     'createdAt': '2017-12-27T00:32:14.257Z',
     'updatedAt': '2017-12-27T00:32:14.257Z'
   },
@@ -30,7 +30,7 @@ module.exports =
     'depth': 0,
     'published': true,
     'adminUnpublished': false,
-    'reportedBy': null,
+    'reports': null,
     'createdAt': '2017-12-27T00:32:18.850Z',
     'updatedAt': '2017-12-27T00:32:18.850Z'
   },
@@ -52,7 +52,7 @@ module.exports =
     'depth': 0,
     'published': true,
     'adminUnpublished': false,
-    'reportedBy': null,
+    'reports': null,
     'createdAt': '2017-12-27T00:32:20.982Z',
     'updatedAt': '2017-12-27T00:32:20.982Z'
   },
@@ -69,7 +69,7 @@ module.exports =
     'depth': 0,
     'published': true,
     'adminUnpublished': false,
-    'reportedBy': null,
+    'reports': null,
     'createdAt': '2017-12-27T00:32:23.885Z',
     'updatedAt': '2017-12-27T00:32:23.885Z'
   },
@@ -86,7 +86,7 @@ module.exports =
     'depth': 0,
     'published': true,
     'adminUnpublished': false,
-    'reportedBy': null,
+    'reports': null,
     'createdAt': '2017-12-27T00:32:26.107Z',
     'updatedAt': '2017-12-27T00:32:26.107Z'
   },
@@ -103,7 +103,7 @@ module.exports =
     'depth': 0,
     'published': true,
     'adminUnpublished': false,
-    'reportedBy': null,
+    'reports': null,
     'createdAt': '2017-12-27T00:32:29.318Z',
     'updatedAt': '2017-12-27T00:32:29.318Z'
   }
