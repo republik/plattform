@@ -84,8 +84,7 @@ const fetchEmbed = async ({ url, doUpdate = false }, context) => {
     }
 
     // throttle
-    const throttled = await redis.getAsync(redisKey)
-    if (throttled) {
+    if (await redis.getAsync(redisKey)) {
       debug('throttle prevented url from beeing fetched %s', url)
       return null
     }

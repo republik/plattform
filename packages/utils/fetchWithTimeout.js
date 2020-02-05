@@ -1,19 +1,22 @@
 const fetch = require('isomorphic-unfetch')
 const AbortController = require('abort-controller')
-const debug = require('debug')('fetch')
+const debug = require('debug')('utils:fetchWithTimeout')
 
 const fetchWithTimeout = (
   url,
-  options = {},
-  timeoutSecs
+  options = {}
 ) => {
-  if (!url || !timeoutSecs) {
+  if (!url) {
     throw new Error('missing argument!')
   }
 
+  const {
+    timeoutSecs = 30
+  } = options
+
   const controller = new AbortController()
   const timeout = setTimeout(
-    () => { controller.abort() },
+    () => controller.abort(),
     timeoutSecs * 1000
   )
 

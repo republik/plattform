@@ -13,9 +13,9 @@ const fetch = (url, method = 'GET') => fetchWithTimeout(
     method,
     headers: {
       'User-Agent': LINK_PREVIEW_USER_AGENT
-    }
-  },
-  REQUEST_TIMEOUT_SECS
+    },
+    timeoutSecs: REQUEST_TIMEOUT_SECS
+  }
 )
 
 const parseMetaAndLink = (html, baseUrl) => {
