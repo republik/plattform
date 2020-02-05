@@ -1,8 +1,11 @@
 const hotness = require('../hotness')
 const { getUrls: { getUrlsFromText } } = require('@orbiting/backend-modules-utils')
 
+const MD_URL_REGEX = /\[.*?\]\((.*?)\)/gm
+
 const getUrls = (content) => {
-  const urls = getUrlsFromText(content) || null
+  const text = content.replace(MD_URL_REGEX, (match, url) => url)
+  const urls = getUrlsFromText(text) || null
   return {
     urls,
     embedUrl: urls && urls.length
