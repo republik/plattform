@@ -108,7 +108,7 @@ export const Embed = ({ comment }) => {
 
   return (
     <div {...styles.container}>
-      <a href={url} target='_blank' {...styles.link}></a>
+      <a href={url} {...styles.link}></a>
       <div {...styles.imageContainer}>
         {imageUrl && (
           <img src={imageUrl} alt={imageAlt || title} {...styles.image} />
