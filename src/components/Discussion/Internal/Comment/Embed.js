@@ -85,7 +85,7 @@ const dateFormat = timeFormat('%d.%m.%Y %H:%M')
 const normalizeEmbed = embed => ({
   ...embed,
   imageUrl: embed.imageUrl || embed.image,
-  header: embed.siteName || `${embed.userName} @${embed.userScreenName}`,
+  header: embed.siteName || embed.userName,
   headerImageUrl: embed.siteImageUrl || embed.userProfileImageUrl,
   body: embed.description || embed.html
 })
@@ -129,7 +129,7 @@ export const Embed = ({ comment }) => {
             {headerImageUrl && (
               <img src={headerImageUrl} {...styles.siteImage} />
             )}
-            <strong>{header}</strong>
+            <strong>{header}</strong> {embed.userScreenName &&` @${embed.userScreenName}`}
           </Interaction.P>
         )}
         {title && <Interaction.P {...styles.title}>{title}</Interaction.P>}
@@ -141,7 +141,7 @@ export const Embed = ({ comment }) => {
         )}
         {embed.userScreenName && (
           <Interaction.P {...styles.paragraph}>
-            <TwitterIcon size={20} fill={colors.disabled} /> {dateFormat(new Date(embed.createdAt))}
+            <TwitterIcon size={19} fill={colors.disabled} /> {dateFormat(new Date(embed.createdAt))}
           </Interaction.P>
         )}
       </div>
