@@ -290,7 +290,7 @@ module.exports = {
   },
 
   userCanReport: ({ userId }, args, { user: me }) =>
-    me && me.id !== userId,
+    !!(me && me.id !== userId),
 
   userReportedAt: ({ reports }, args, { user: me }) =>
     me && reports && reports.reduce(
