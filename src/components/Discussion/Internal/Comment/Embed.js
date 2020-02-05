@@ -10,30 +10,38 @@ import {
 } from '../../../Typography/styles'
 import { mUp } from '../../../../theme/mediaQueries'
 import { linkStyle } from '../../../Typography'
+import TwitterIcon from 'react-icons/lib/fa/twitter'
 
-import { fontStyles } from '../../../../theme/fonts'
+import { timeFormat } from '../../../../lib/timeFormat'
 
 const styles = {
   link: css({
-    textDecoration: 'none'
+    textDecoration: 'none',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0
   }),
   container: css({
     border: `1px solid ${colors.divider}`,
+    position: 'relative',
     marginTop: 15,
     [mUp]: {
       marginTop: 0
     }
   }),
-  imageContainer: css({
-    position: 'relative'
-  }),
+  imageContainer: css({}),
   image: css({
     borderBottom: `1px solid ${colors.divider}`,
     width: '100%'
   }),
   text: css({
     marginTop: 3,
-    padding: '0.1rem 10px 10px 10px'
+    padding: '0.1rem 10px 10px 10px',
+    zIndex: 1,
+    pointerEvents: 'none',
+    position: 'relative'
   }),
   siteImage: css({
     width: 19,
@@ -43,12 +51,15 @@ const styles = {
     verticalAlign: 'middle'
   }),
   paragraph: css({
-    marginTop: '0.1rem',
+    marginTop: '0.3rem',
     ...sansSerifRegular13,
     [mUp]: {
       ...sansSerifRegular15
     },
-    '& a': linkStyle,
+    '& a': {
+      ...linkStyle,
+      pointerEvents: 'all'
+    }
   }),
   title: css({
     margin: '0.3rem 0 0.5rem 0',
@@ -67,6 +78,9 @@ const styles = {
     textTransform: 'uppercase'
   })
 }
+
+const dateFormat = timeFormat('%d.%m.%Y %H:%M')
+
 
 const normalizeEmbed = embed => ({
   ...embed,
@@ -93,40 +107,44 @@ export const Embed = ({ comment }) => {
   } = normalizeEmbed(embed)
 
   return (
-    <a href={url} target='_blank' {...styles.link}>
-      <div {...styles.container}>
-        <div {...styles.imageContainer}>
-          {imageUrl && (
-            <img src={imageUrl} alt={imageAlt || title} {...styles.image} />
-          )}
-          {mentioningDocument && (
-            <div {...styles.topStory}>
-              <a
-                href={`${mentioningDocument.document.meta.path}#${mentioningDocument.fragmentId}`}
-              >
-                <img src={mentioningDocument.iconUrl} width={120} height={120} />
-              </a>
-            </div>
-          )}
-        </div>
-        <div {...styles.text}>
-          {header && (
-            <Interaction.P {...styles.paragraph}>
-              {headerImageUrl && (
-                <img src={headerImageUrl} {...styles.siteImage} />
-              )}
-              <strong>{header}</strong>
-            </Interaction.P>
-          )}
-          {title && <Interaction.P {...styles.title}>{title}</Interaction.P>}
-          {body && (
-            <Interaction.P
-              {...styles.paragraph}
-              dangerouslySetInnerHTML={{ __html: body }}
-            ></Interaction.P>
-          )}
-        </div>
+    <div {...styles.container}>
+      <a href={url} target='_blank' {...styles.link}></a>
+      <div {...styles.imageContainer}>
+        {imageUrl && (
+          <img src={imageUrl} alt={imageAlt || title} {...styles.image} />
+        )}
+        {mentioningDocument && (
+          <div {...styles.topStory}>
+            <a
+              href={`${mentioningDocument.document.meta.path}#${mentioningDocument.fragmentId}`}
+            >
+              <img src={mentioningDocument.iconUrl} width={120} height={120} />
+            </a>
+          </div>
+        )}
       </div>
-    </a>
+      <div {...styles.text}>
+        {header && (
+          <Interaction.P {...styles.paragraph}>
+            {headerImageUrl && (
+              <img src={headerImageUrl} {...styles.siteImage} />
+            )}
+            <strong>{header}</strong>
+          </Interaction.P>
+        )}
+        {title && <Interaction.P {...styles.title}>{title}</Interaction.P>}
+        {body && (
+          <Interaction.P
+            {...styles.paragraph}
+            dangerouslySetInnerHTML={{ __html: body }}
+          ></Interaction.P>
+        )}
+        {embed.userScreenName && (
+          <Interaction.P {...styles.paragraph}>
+            <TwitterIcon size={20} fill={colors.disabled} /> {dateFormat(new Date(embed.createdAt))}
+          </Interaction.P>
+        )}
+      </div>
+    </div>
   )
 }
