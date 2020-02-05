@@ -23,12 +23,13 @@ const parseMetaAndLink = (html, baseUrl) => {
   const meta = $('meta')
   const obj = {}
   Object.keys(meta).forEach(key => {
-    if (meta[key].attribs !== undefined) {
-      if (meta[key].attribs.property && meta[key].attribs.content) {
-        obj[meta[key].attribs.property] = meta[key].attribs.content
+    const { attribs } = meta[key] || {}
+    if (attribs) {
+      if (attribs.property && attribs.content) {
+        obj[attribs.property] = attribs.content
       }
-      if (meta[key].attribs.name && meta[key].attribs.content) {
-        obj[meta[key].attribs.name] = meta[key].attribs.content
+      if (attribs.name && attribs.content) {
+        obj[attribs.name] = attribs.content
       }
     }
   })
@@ -37,15 +38,12 @@ const parseMetaAndLink = (html, baseUrl) => {
   const link = $('link')
   let minSize = Number.MAX_SAFE_INTEGER
   Object.keys(link).forEach(key => {
-    if (
-      link[key].attribs !== undefined &&
-      link[key].attribs.rel &&
-      link[key].attribs.href
-    ) {
-      const rel = link[key].attribs.rel
-      const href = link[key].attribs.href
+    const { attribs } = meta[key] || {}
+    if (attribs && attribs.rel && attribs.href) {
+      const rel = attribs.rel
+      const href = attribs.href
       if (rel.indexOf('icon') > 0) {
-        const sizes = link[key].attribs.sizes
+        const sizes = attribs.sizes
         if (sizes) {
           const size = parseInt(sizes.split('x')[0])
           if (size && size < minSize) {
