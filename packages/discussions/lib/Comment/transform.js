@@ -46,7 +46,7 @@ const create = async (
     userId,
     content,
     ...getUrls(content),
-    hotness: hotness(0, 0, (now.getTime())),
+    hotness: hotness(0, 0, now.getTime()),
     ...tags ? { tags } : {},
     createdAt: now,
     updatedAt: now
