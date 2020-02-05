@@ -24,7 +24,7 @@ const parseMetaAndLink = (html, baseUrl) => {
   const obj = {}
   Object.keys(meta).forEach(key => {
     const { attribs } = meta[key] || {}
-    if (attribs) {
+    if (attribs !== undefined) {
       if (attribs.property && attribs.content) {
         obj[attribs.property] = attribs.content
       }
@@ -39,7 +39,11 @@ const parseMetaAndLink = (html, baseUrl) => {
   let minSize = Number.MAX_SAFE_INTEGER
   Object.keys(link).forEach(key => {
     const { attribs } = meta[key] || {}
-    if (attribs && attribs.rel && attribs.href) {
+    if (
+      attribs !== undefined &&
+      attribs.rel &&
+      attribs.href
+    ) {
       const { rel, href, sizes } = attribs
       if (rel.indexOf('icon') > 0 && sizes) {
         const size = parseInt(sizes.split('x')[0])
