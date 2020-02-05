@@ -1,4 +1,5 @@
 module.exports = {
   earlyAdopterBonus: require('./earlyAdopterBonus'),
-  endTooFarAway: require('./endTooFarAway')
+  endTooFarAway: require('./endTooFarAway'),
+  hasActiveMembership: require('./hasActiveMembership')
 }
