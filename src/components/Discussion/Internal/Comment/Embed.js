@@ -72,7 +72,7 @@ const styles = {
   }),
   topStory: css({
     position: 'absolute',
-    top: -25,
+    top: -10,
     right: -10,
     color: 'red',
     textTransform: 'uppercase'
@@ -118,7 +118,7 @@ export const Embed = ({ comment }) => {
             <a
               href={`${mentioningDocument.document.meta.path}#${mentioningDocument.fragmentId}`}
             >
-              <img src={mentioningDocument.iconUrl} width={120} height={120} />
+              <img src={mentioningDocument.iconUrl} width={125} height={125} />
             </a>
           </div>
         )}
