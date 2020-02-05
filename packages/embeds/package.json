@@ -22,7 +22,6 @@
     "autolinker": "^3.0.5",
     "cheerio": "^1.0.0-rc.3",
     "d3-array": "^2.0.3",
-    "get-urls": "^9.2.0",
     "isomorphic-unfetch": "^3.0.0",
     "moment": "^2.24.0"
   }
