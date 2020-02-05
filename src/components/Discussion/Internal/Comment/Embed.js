@@ -48,16 +48,16 @@ const styles = {
     [mUp]: {
       ...sansSerifRegular15
     },
-    '& a': linkStyle
+    '& a': linkStyle,
   }),
   title: css({
     margin: '0.3rem 0 0.5rem 0',
     ...sansSerifMedium16,
     [mUp]: {
       ...sansSerifMedium18,
-      lineHeight: '1.3rem'
+      lineHeight: '1.4rem'
     },
-    lineHeight: '1.3rem'
+    lineHeight: '1.4rem'
   }),
   topStory: css({
     position: 'absolute',
@@ -115,7 +115,7 @@ export const Embed = ({ comment }) => {
               {headerImageUrl && (
                 <img src={headerImageUrl} {...styles.siteImage} />
               )}
-              {header}
+              <strong>{header}</strong>
             </Interaction.P>
           )}
           {title && <Interaction.P {...styles.title}>{title}</Interaction.P>}
