@@ -216,8 +216,6 @@ const CommentNode = ({ t, discussion, comment, isDesktop, board, rootCommentOver
    *  - toggleReplies
    */
 
-    console.log(displayAuthor)
-
   const [{ mode, isExpanded, showReplyComposer }, dispatch] = React.useReducer(
     (state, action) => {
       if ('editComment' in action) {

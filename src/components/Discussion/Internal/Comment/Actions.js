@@ -40,9 +40,6 @@ const styles = {
     justifyContent: 'space-between',
     alignItems: 'center',
     marginLeft: 'auto',
-    [mUp]: {
-      marginLeft: 0
-    }
   }),
   vote: css({
     display: 'flex',
