@@ -196,7 +196,7 @@ describe('embeds authorized', () => {
     expect(result.data.embed).toEqual({
       __typename: 'TwitterEmbed',
       id: '931088218279366656',
-      text: 'What’s the manager’s message to the fans ahead of #AFCvTHFC?\n\n“Just to support the team and stand with us for the 90 minutes”\n\n#WeAreTheArsenal🔴 https://t.co/GQM6lFfcVr',
+      text: 'What’s the manager’s message to the fans ahead of #AFCvTHFC?\n\n“Just to support the team and stand with us for the 90 minutes”\n\n#WeAreTheArsenal🔴 https://pbs.twimg.com/tweet_video_thumb/DOvjvs3WAAAZ3ow.jpg',
       userName: 'Arsenal'
     })
   }, 30000)
