@@ -7,4 +7,8 @@ CREATE TABLE "embeds" (
   "content"     jsonb not null,
   "createdAt"   timestamptz default now(),
   "updatedAt"   timestamptz default now()
-)
+);
+
+CREATE INDEX "embeds_urls_idx" ON embeds("url");
+CREATE INDEX "embeds_type_idx" ON embeds("type");
+CREATE INDEX "embeds_type_id_idx" ON embeds("typeId");
