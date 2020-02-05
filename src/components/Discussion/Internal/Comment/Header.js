@@ -176,7 +176,8 @@ export const Header = ({ t, comment, isExpanded, onToggle }) => {
     comments,
     parentIds = []
   } = comment
-  const { profilePicture, name, credential } = displayAuthor
+  const { profilePicture, name, credential } = displayAuthor || {}
+
   const isUpdated = updatedAt && updatedAt !== createdAt
 
   return (

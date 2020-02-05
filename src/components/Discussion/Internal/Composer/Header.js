@@ -100,46 +100,53 @@ const styles = {
 
 export const Header = ({
   t,
-  displayAuthor: { profilePicture, name, credential },
+  displayAuthor,
   onClick
-}) => (
-  <button {...styles.button} onClick={onClick}>
-    <div {...styles.root}>
-      {profilePicture && (
-        <img {...styles.profilePicture} src={profilePicture} alt='' />
-      )}
-      <div {...styles.center}>
-        <div {...styles.name}>{name}</div>
-        <div {...styles.meta}>
-          {(() => {
-            if (credential) {
-              return (
-                <div
-                  {...styles.credential}
-                  {...(credential.verified ? styles.credentialVerified : {})}
-                >
-                  <div {...styles.descriptionText}>
-                    {credential.description}
+}) => {
+
+  const { profilePicture, name, credential } = displayAuthor || {}
+
+  return (
+    <button {...styles.button} onClick={onClick}>
+      <div {...styles.root}>
+        {profilePicture && (
+          <img {...styles.profilePicture} src={profilePicture} alt='' />
+        )}
+        <div {...styles.center}>
+          <div {...styles.name}>{name}</div>
+          <div {...styles.meta}>
+            {(() => {
+              if (credential) {
+                return (
+                  <div
+                    {...styles.credential}
+                    {...(credential.verified ? styles.credentialVerified : {})}
+                  >
+                    <div {...styles.descriptionText}>
+                      {credential.description}
+                    </div>
+                    {credential.verified && (
+                      <MdCheck {...styles.verifiedCheck} />
+                    )}
                   </div>
-                  {credential.verified && <MdCheck {...styles.verifiedCheck} />}
-                </div>
-              )
-            } else {
-              return (
-                <div {...styles.credential} {...styles.credentialMissing}>
-                  {t('styleguide/comment/header/credentialMissing')}
-                </div>
-              )
-            }
-          })()}
+                )
+              } else {
+                return (
+                  <div {...styles.credential} {...styles.credentialMissing}>
+                    {t('styleguide/comment/header/credentialMissing')}
+                  </div>
+                )
+              }
+            })()}
+          </div>
+        </div>
+        <div {...styles.action}>
+          <EditIcon />
         </div>
       </div>
-      <div {...styles.action}>
-        <EditIcon />
-      </div>
-    </div>
-  </button>
-)
+    </button>
+  )
+}
 
 const EditIcon = () => (
   <svg width='24px' height='24px' viewBox='0 0 24 24'>

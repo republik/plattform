@@ -28,7 +28,7 @@ const styles = {
   }),
   boardColumn: css({
     [mUp]: {
-      flex: 1,
+      flex: '1 0 auto',
       padding: 10,
       width: '50%'
     }
@@ -141,7 +141,7 @@ export const CommentList = ({
   board = false,
   rootCommentOverlay = false
 }) => {
-  const { actions } = React.useContext(DiscussionContext)
+  const { actions, discussion } = React.useContext(DiscussionContext)
   const isDesktop = useMediaQuery(mUp)
 
   const { nodes = [], totalCount = 0, pageInfo } = comments
@@ -172,6 +172,7 @@ export const CommentList = ({
           isDesktop={isDesktop}
           board={board}
           rootCommentOverlay={rootCommentOverlay}
+          discussion={discussion}
         />
       ))}
       <LoadMore
@@ -188,10 +189,10 @@ export const CommentList = ({
  * The Comment component manages the expand/collapse state of its children. It also manages
  * the editor for the comment itself, and composer for replies.
  */
-const CommentNode = ({ t, comment, isDesktop, board, rootCommentOverlay }) => {
+const CommentNode = ({ t, discussion, comment, isDesktop, board, rootCommentOverlay }) => {
   const { highlightedCommentId, actions } = React.useContext(DiscussionContext)
-  const { id, parentIds, tags, text, comments, displayAuthor } = comment
-
+  const { id, parentIds, tags, text, comments } = comment
+  const { displayAuthor } = discussion
   const isHighlighted = id === highlightedCommentId
   const depth = parentIds.length
   const nestLimitExceeded = depth > config.nestLimit
@@ -214,6 +215,9 @@ const CommentNode = ({ t, comment, isDesktop, board, rootCommentOverlay }) => {
    *  - showReplyComposer / closeReplyComposer
    *  - toggleReplies
    */
+
+    console.log(displayAuthor)
+
   const [{ mode, isExpanded, showReplyComposer }, dispatch] = React.useReducer(
     (state, action) => {
       if ('editComment' in action) {
