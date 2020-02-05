@@ -4,7 +4,7 @@ const clipUrlInText = (url, content) => {
   }
   if (
     content.length === url.length ||
-    content.length === (url.length + 1)
+    content.length === (url.length + 1) //trailing slash removed by get-urls
   ) {
     return ''
   }
