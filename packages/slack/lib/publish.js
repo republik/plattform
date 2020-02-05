@@ -14,9 +14,9 @@ if (SLACK_API_TOKEN) {
 const publish = async (channel, content, options = {}) => {
   if (webClient && channel) {
     await webClient.chat.postMessage({
+      ...options,
       channel,
-      text: content,
-      ...options
+      text: content
     })
       .catch((e) => {
         console.error(e)
