@@ -40,16 +40,12 @@ const parseMetaAndLink = (html, baseUrl) => {
   Object.keys(link).forEach(key => {
     const { attribs } = meta[key] || {}
     if (attribs && attribs.rel && attribs.href) {
-      const rel = attribs.rel
-      const href = attribs.href
-      if (rel.indexOf('icon') > 0) {
-        const sizes = attribs.sizes
-        if (sizes) {
-          const size = parseInt(sizes.split('x')[0])
-          if (size && size < minSize) {
-            minSize = size
-            obj.iconSmall = new URL(href, baseUrl).toString()
-          }
+      const { rel, href, sizes } = attribs
+      if (rel.indexOf('icon') > 0 && sizes) {
+        const size = parseInt(sizes.split('x')[0])
+        if (size && size < minSize) {
+          minSize = size
+          obj.iconSmall = new URL(href, baseUrl).toString()
         }
       }
       if (rel === 'shortcut icon') {
@@ -93,7 +89,7 @@ const getLinkPreviewByUrl = async (url) => {
     return
   }
 
-  const baseUrl = new URL(url).origin
+  const { origin: baseUrl, hostname } = new URL(url)
   const obj = parseMetaAndLink(response, baseUrl)
 
   if (!obj['og:title']) {
@@ -105,7 +101,7 @@ const getLinkPreviewByUrl = async (url) => {
     description: obj['og:description'],
     imageUrl: obj['og:image'],
     imageAlt: obj['og:image:alt'],
-    siteName: obj['og:site_name'] || new URL(url).hostname,
+    siteName: obj['og:site_name'] || hostname,
     siteImageUrl: (
       obj['shortcut icon'] ||
       obj.iconSmall ||

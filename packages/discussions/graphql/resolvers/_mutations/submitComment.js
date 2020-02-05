@@ -131,6 +131,9 @@ module.exports = async (_, args, context) => {
       }),
       slack.publishComment(newComment, discussion, context)
     ])
+      .catch(e => {
+        console.error(e)
+      })
   }
 
   return newComment

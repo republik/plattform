@@ -11,7 +11,7 @@ const expandUrls = (text, entities) => {
     for (const e of entities[type]) {
       newText = newText.replace(
         e.url,
-        e.media_url_https ? e.media_url_https : e.expanded_url
+        e.media_url_https || e.expanded_url
       )
     }
   }

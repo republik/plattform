@@ -36,7 +36,7 @@ module.exports = async (_, args, context) => {
     return transform.create(
       {
         ...args,
-        ...(parent ? { depth: parent.depth + 1 } : {}),
+        ...parent ? { depth: parent.depth + 1 } : {},
         id: uuid(),
         userId: user.id
       },
