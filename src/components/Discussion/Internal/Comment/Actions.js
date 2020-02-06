@@ -1,5 +1,5 @@
 import React from 'react'
-import { css } from 'glamor'
+import { css, merge } from 'glamor'
 import MdKeyboardArrowDown from 'react-icons/lib/md/keyboard-arrow-down'
 import MdKeyboardArrowUp from 'react-icons/lib/md/keyboard-arrow-up'
 // options: speaker-notes-off, block, clear, visibility-off, remove-circle
@@ -12,17 +12,6 @@ import ShareIcon from 'react-icons/lib/md/share'
 import colors from '../../../../theme/colors'
 import { sansSerifMedium14 } from '../../../Typography/styles'
 import { DiscussionContext, formatTimeRelative } from '../../DiscussionContext'
-
-const buttonStyle = {
-  outline: 'none',
-  WebkitAppearance: 'none',
-  background: 'transparent',
-  border: 'none',
-  padding: '0',
-  display: 'block',
-  cursor: 'pointer',
-  height: '100%'
-}
 
 const styles = {
   root: css({
@@ -49,7 +38,14 @@ const styles = {
     padding: '0 2px'
   }),
   iconButton: css({
-    ...buttonStyle,
+    outline: 'none',
+    WebkitAppearance: 'none',
+    background: 'transparent',
+    border: 'none',
+    padding: '0',
+    display: 'block',
+    cursor: 'pointer',
+    height: '100%',
     color: colors.text,
     '& svg': {
       margin: '0 auto'
@@ -83,7 +79,6 @@ const styles = {
     }
   }),
   leftButton: css({
-    ...buttonStyle,
     fontSize: '18px',
     padding: '0 7px'
   }),
@@ -275,8 +270,7 @@ export const Actions = ({
 
 const IconButton = ({ type, onClick, title, children }) => (
   <button
-    {...styles.iconButton}
-    {...styles[`${type}Button`]}
+    {...merge(styles.iconButton, styles[`${type}Button`])}
     title={title}
     disabled={!onClick}
     onClick={onClick}
