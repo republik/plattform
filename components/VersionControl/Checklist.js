@@ -15,7 +15,7 @@ import { milestoneNames } from '../Repo/workflow'
 
 const timeFormat = swissTime.format('%d. %B %Y, %H:%M Uhr')
 
-export const placeMilestone = gql`
+const placeMilestone = gql`
   mutation placeMilestone(
     $repoId: ID!
     $commitId: ID!
@@ -34,7 +34,7 @@ export const placeMilestone = gql`
   ${fragments.MilestoneWithCommit}
 `
 
-export const removeMilestone = gql`
+const removeMilestone = gql`
   mutation removeMilestone($repoId: ID!, $name: String!) {
     removeMilestone(repoId: $repoId, name: $name)
   }
@@ -211,11 +211,16 @@ export default compose(
               query: getMilestones,
               variables
             })
-            data.repo.milestones.push(placeMilestone)
             proxy.writeQuery({
               query: getMilestones,
               variables,
-              data
+              data: {
+                ...data,
+                repo: {
+                  ...data.repo,
+                  milestones: data.repo.milestones.concat(placeMilestone)
+                }
+              }
             })
           }
         })
@@ -237,15 +242,20 @@ export default compose(
               query: getMilestones,
               variables
             })
-            if (removeMilestone) {
-              data.repo.milestones = data.repo.milestones.filter(
-                milestone => milestone.name !== name
-              )
-            }
             proxy.writeQuery({
               query: getMilestones,
               variables,
-              data
+              data: {
+                ...data,
+                repo: {
+                  ...data.repo,
+                  milestones: removeMilestone
+                    ? data.repo.milestones.filter(
+                        milestone => milestone.name !== name
+                      )
+                    : data.repo.milestones
+                }
+              }
             })
           },
           refetchQueries: [

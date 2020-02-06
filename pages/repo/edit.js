@@ -101,28 +101,6 @@ const getLatestCommit = gql`
   ${fragments.SimpleCommit}
 `
 
-const getRepoHistory = gql`
-  query repoWithHistory($repoId: ID!, $first: Int!, $after: String) {
-    repo(id: $repoId) {
-      id
-      commits(first: $first, after: $after) {
-        pageInfo {
-          hasNextPage
-          endCursor
-        }
-        nodes {
-          ...SimpleCommit
-        }
-      }
-      milestones {
-        ...SimpleMilestone
-      }
-    }
-  }
-  ${fragments.SimpleMilestone}
-  ${fragments.SimpleCommit}
-`
-
 const debug = createDebug('publikator:pages:edit')
 const TEST = process.env.NODE_ENV === 'test'
 
@@ -902,16 +880,7 @@ export default compose(
               },
               data
             })
-          },
-          refetchQueries: [
-            {
-              query: getRepoHistory,
-              variables: {
-                repoId: router.query.repoId,
-                first: 20
-              }
-            }
-          ]
+          }
         })
     })
   }),
