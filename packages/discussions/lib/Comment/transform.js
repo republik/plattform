@@ -22,6 +22,8 @@ const create = async (
     userId,
     content,
     tags,
+    published = true,
+    adminUnpublished = false,
     now = new Date()
   },
   {
@@ -48,6 +50,8 @@ const create = async (
     ...getUrls(content),
     hotness: hotness(0, 0, now.getTime()),
     ...tags ? { tags } : {},
+    published,
+    adminUnpublished,
     createdAt: now,
     updatedAt: now
   }
