@@ -5,6 +5,19 @@ const oauth = require('./oauth')
 
 let bearerToken
 
+const expandUrls = (text, entities) => {
+  let newText = `${text}`
+  for (const type in entities) {
+    for (const e of entities[type]) {
+      newText = newText.replace(
+        e.url,
+        e.media_url_https || e.expanded_url
+      )
+    }
+  }
+  return newText
+}
+
 const getTweetById = async (id, t) => {
   if (!bearerToken) {
     bearerToken = await oauth()
@@ -62,14 +75,23 @@ const getTweetById = async (id, t) => {
       })) ||
     undefined
 
+  // revert twitter url shortening
+  const text = response.full_text || response.text
+  const sanitizedText = expandUrls(text, response.entities)
+  const html = sanitizedText
+    ? Autolinker.link(
+      sanitizedText,
+      { mention: 'twitter' }
+    )
+      .replace(/\n/g, '<br/>')
+    : null
+
   return {
     id: response.id_str,
     createdAt: new Date(response.created_at),
     retrievedAt: new Date(),
-    text: response.full_text || response.text,
-    html: Autolinker.link(response.full_text || response.text, {
-      mention: 'twitter'
-    }),
+    text: sanitizedText,
+    html,
     userId: response.user.id_str,
     userName: response.user.name,
     userScreenName: response.user.screen_name,
@@ -82,7 +104,6 @@ const getTweetById = async (id, t) => {
 
 module.exports = {
   getTweetById,
-  // manually keep in sync with backend-modules/packages/documents/lib/process.js
-  // until embeds are in their own module
-  imageKeys: ['userProfileImageUrl', 'image']
+  imageKeys: ['userProfileImageUrl', 'image'],
+  REGEX: /^https?:\/\/twitter\.com\/(?:#!\/)?\w+\/status(?:es)?\/(\d+)/
 }

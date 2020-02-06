@@ -8,6 +8,7 @@ const { getDiscussionUrl } = require('./Notifications')
 
 const {
   SLACK_CHANNEL_COMMENTS,
+  SLACK_CHANNEL_COMMENTS_REPORTS,
   FRONTEND_BASE_URL
 } = process.env
 
@@ -45,4 +46,20 @@ exports.publishCommentUnpublish = async (user, update, comment, discussion, cont
 
   const content = `${action} in <${await getCommentLink(comment, discussion, context)}|${discussion.title}>:\n${comment.content}`
   return publish(SLACK_CHANNEL_COMMENTS, content)
+}
+
+exports.publishCommentReport = async (user, comment, discussion, context) => {
+  const author = await getDisplayAuthor(comment, {}, context)
+
+  const action = `:bomb: *${user.name}* reported comment by *${getProfileLink(author)}*`
+  const content = `${action} in <${await getCommentLink(comment, discussion, context)}|${discussion.title}> (${comment.reports.length}. report):\n${comment.content}`
+
+  return publish(
+    SLACK_CHANNEL_COMMENTS_REPORTS,
+    content,
+    {
+      unfurl_links: true,
+      unfurl_media: true
+    }
+  )
 }

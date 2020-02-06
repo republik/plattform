@@ -22,6 +22,7 @@ type TwitterEmbed {
   image: String
   more: String
   playable: Boolean!
+  url: String!
 }
 
 type YoutubeEmbed implements PlayableMedia {
@@ -71,6 +72,17 @@ type DocumentCloudEmbed {
   thumbnail: String!
   title: String!
   url: String!
+}
+
+type LinkPreview {
+  url: String!
+  title: String!
+  description: String
+  imageUrl: String
+  imageAlt: String
+  siteName: String!
+  siteImageUrl: String
+  updatedAt: DateTime!
 }
 
 `

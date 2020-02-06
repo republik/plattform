@@ -24,6 +24,14 @@ type queries {
     focusId: ID
     lastId: ID
   ): CommentConnection!
+
+  commentPreview(
+    id: ID
+    discussionId: ID!
+    parentId: ID
+    content: String!
+    tags: [String!]
+  ): Comment!
 }
 
 type mutations {
@@ -63,7 +71,7 @@ type mutations {
   upvoteComment(id: ID!): Comment!
   downvoteComment(id: ID!): Comment!
   unvoteComment(id: ID!): Comment!
-  reportComment(id: ID!): Boolean!
+  reportComment(id: ID!): Comment!
 
   setDiscussionPreferences(
     id: ID!

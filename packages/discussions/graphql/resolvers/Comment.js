@@ -11,24 +11,72 @@ const {
 } = require('../../../../servers/republik/graphql/resolvers/User')
 const remark = require('../../lib/remark')
 const { clipNamesInText } = require('../../lib/nameClipper')
+const { stripUrlFromText } = require('../../lib/urlStripper')
+const { getEmbedByUrl } = require('@orbiting/backend-modules-embeds')
 
 const {
-  DISPLAY_AUTHOR_SECRET
+  DISPLAY_AUTHOR_SECRET,
+  FRONTEND_BASE_URL
 } = process.env
 if (!DISPLAY_AUTHOR_SECRET) {
   throw new Error('missing required DISPLAY_AUTHOR_SECRET')
 }
 
-const textForComment = async ({ userId, content, published, adminUnpublished, discussionId }, context) => {
-  const me = context && context.user
-  let text = (!published || adminUnpublished) && (!me || !userId || userId !== me.id)
-    ? null
-    : content
-  if (text && !Roles.userIsInRoles(me, ['member'])) {
-    const namesToClip = await context.loaders.Discussion.byIdCommenterNamesToClip.load(discussionId)
-    text = clipNamesInText(namesToClip, text)
+const embedForComment = async (
+  {
+    embedUrl,
+    discussionId,
+    depth,
+    published,
+    adminUnpublished
+  },
+  context
+) => {
+  if (!embedUrl) {
+    return null
   }
-  return text
+  if (!(published && !adminUnpublished)) {
+    return null
+  }
+  const discussion = await context.loaders.Discussion.byId.load(discussionId)
+  if (discussion && discussion.isBoard && depth === 0) {
+    return getEmbedByUrl(embedUrl, context)
+  }
+  return null
+}
+
+const textForComment = async (
+  comment,
+  prettify = false,
+  context
+) => {
+  const {
+    userId,
+    content,
+    published,
+    adminUnpublished,
+    discussionId,
+    embedUrl
+  } = comment
+  const {
+    user: me
+  } = context
+
+  const isPublished = !!(published && !adminUnpublished)
+  const isMine = !!(me && userId && userId === me.id)
+  if (!isMine && !isPublished) {
+    return null
+  }
+
+  let newContent = content
+  if (!isMine && !Roles.userIsInRoles(me, ['member'])) {
+    const namesToClip = await context.loaders.Discussion.byIdCommenterNamesToClip.load(discussionId)
+    newContent = clipNamesInText(namesToClip, content)
+  }
+  if (prettify && !!await embedForComment(comment, context)) {
+    newContent = stripUrlFromText(embedUrl, content)
+  }
+  return newContent
 }
 
 /**
@@ -78,7 +126,7 @@ module.exports = {
       : null,
 
   content: async (comment, args, context) => {
-    const text = await textForComment(comment, context)
+    const text = await textForComment(comment, true, context)
     if (!text) {
       return text
     }
@@ -86,15 +134,23 @@ module.exports = {
   },
 
   text: (comment, args, context) =>
-    textForComment(comment, context),
+    textForComment(comment, false, context),
 
   preview: async (comment, { length = 500 }, context) => {
-    const text = await textForComment(comment, context)
+    const text = await textForComment(comment, false, context)
     if (!text) {
       return null
     }
     return mdastToHumanString(remark.parse(text), length)
   },
+
+  embed: async (comment, args, context) =>
+    embedForComment(comment, context),
+
+  contentLength: ({ content, embedUrl, userId }, args, { user: me }) =>
+    (me && me.id === userId)
+      ? content.length - (embedUrl ? embedUrl.length : 0)
+      : null,
 
   score: comment =>
     comment.upVotes - comment.downVotes,
@@ -221,9 +277,41 @@ module.exports = {
       }
     }
 
+    // TODO: why throw here? any why not api/comment/noChildren?
     throw new Error(t('api/unexpected'))
   },
 
   tags: (comment) =>
-    comment.tags || []
+    comment.tags || [],
+
+  mentioningDocument: async ({
+    mentioningRepoId,
+    mentioningFragmentId: fragmentId
+  }, args, { loaders }) => {
+    if (!mentioningRepoId) {
+      return null
+    }
+    const doc = await loaders.Document.byRepoId.load(mentioningRepoId)
+    if (doc) {
+      return {
+        document: doc,
+        fragmentId,
+        iconUrl: `${FRONTEND_BASE_URL}/static/top-story-badge.png`
+      }
+    }
+  },
+
+  userCanReport: ({ userId }, args, { user: me }) =>
+    !!(me && me.id !== userId),
+
+  userReportedAt: ({ reports }, args, { user: me }) =>
+    me && reports && reports.reduce(
+      (acc, r) => acc || (r.userId === me.id) ? r.reportedAt : null,
+      null
+    ),
+
+  numReports: ({ reports }, args, { user: me }) =>
+    Roles.userIsInRoles(me, ['editor', 'admin'])
+      ? reports ? reports.length : 0
+      : null
 }

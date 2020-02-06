@@ -100,6 +100,7 @@ type Discussion {
 
   closed: Boolean!
   collapsable: Boolean!
+  isBoard: Boolean!
   comments(
     # get children of this parent
     parentId: ID
@@ -125,6 +126,7 @@ type Discussion {
     flatDepth: Int
     # filter root-level by tag (ignored for answers)
     tag: String
+    includeParent: Boolean
   ): CommentConnection!
   rules: DiscussionRules!
   # only null for guests (not signedIn)
@@ -198,6 +200,24 @@ type Comment {
   hotness: Float!
 
   tags: [String!]!
+
+  userCanReport: Boolean!
+  userReportedAt: DateTime
+  numReports: Int
+
+  contentLength: Int
+
+  embed: CommentEmbed
+
+  mentioningDocument: MentioningDocument
+}
+
+union CommentEmbed = LinkPreview | TwitterEmbed
+
+type MentioningDocument {
+  document: Document!
+  fragmentId: String
+  iconUrl: String!
 }
 
 enum MutationType {

@@ -67,7 +67,10 @@ const deepSortTree = (comment, ascDesc, sortKey, topValue, topIds, bubbleSort = 
           ascDesc(a.topValue || a[sortKey], b.topValue || b[sortKey])
       )
     }
-    if (comment[sortKey]) { // root is a fake comment, doesn't have [sortKey]
+    if (
+      comment[sortKey] && // root is a fake comment, doesn't have [sortKey]
+      (comment.topValue === undefined || comment.topValue === null)
+    ) {
       const firstChild = comment.comments.nodes[0]
       comment.topValue = topIds && topIds.includes(comment.id)
         ? topValue
@@ -201,6 +204,7 @@ module.exports = async (discussion, args, context, info) => {
     exceptIds = [],
     focusId,
     parentId,
+    includeParent = false,
     flatDepth,
     tag
   } = options
@@ -210,9 +214,10 @@ module.exports = async (discussion, args, context, info) => {
     discussionId: discussion.id
   })
     .then(comments => comments
-      .map(c => ({
+      .map(c => ({ // precompute
         ...c,
-        score: c.upVotes - c.downVotes // precompute
+        score: c.upVotes - c.downVotes,
+        isPublished: (c.published && !c.adminUnpublished)
       }))
     )
   const discussionTotalCount = comments.length
@@ -225,8 +230,8 @@ module.exports = async (discussion, args, context, info) => {
     }
   }
 
-  const tree = parentId
-    ? { id: parentId }
+  let tree = parentId
+    ? comments.find(c => c.id === parentId)
     : {}
 
   // prepare sort
@@ -236,12 +241,24 @@ module.exports = async (discussion, args, context, info) => {
   const topValue = orderDirection === 'ASC'
     ? Number.MIN_SAFE_INTEGER
     : Number.MAX_SAFE_INTEGER
+  const bottomValue = orderDirection === 'ASC'
+    ? Number.MAX_SAFE_INTEGER
+    : Number.MIN_SAFE_INTEGER
   const sortKey = getSortKey(orderBy)
-  const bubbleSort = sortKey !== 'createdAt' // bubbling values for sort is disabled for createdAt
+  const bubbleSort = sortKey !== 'createdAt' && sortKey !== 'hotness' // bubbling values for sort is disabled for createdAt and hotness
 
   const compare =
-    (a, b) => // topValue set  by deepSortTree // index for stable sort
+    (a, b) => // topValue set by deepSortTree // index for stable sort
       ascDesc(a.topValue || a[sortKey], b.topValue || b[sortKey]) || ascending(a.index, b.index)
+
+  // put unpublished to bottom
+  if (discussion.isBoard) {
+    comments.forEach(c => {
+      if (c.depth === 0 && !c.isPublished) {
+        c.topValue = bottomValue
+      }
+    })
+  }
 
   let focusComment
   let topIds
@@ -264,6 +281,9 @@ module.exports = async (discussion, args, context, info) => {
   }
 
   assembleTree(tree, comments)
+  if (parentId && includeParent) {
+    tree = { comments: { nodes: [tree] } }
+  }
   measureTree(tree)
   deepSortTree(
     tree,

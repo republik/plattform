@@ -4,10 +4,10 @@ const crypto = require('crypto')
 const checkEnv = require('check-env')
 const { getS3UrlForGithubPath } = require('./Repo')
 
-checkEnv[
+checkEnv([
   'ASSETS_SERVER_BASE_URL',
   'ASSETS_HMAC_KEY'
-]
+])
 
 const {
   ASSETS_SERVER_BASE_URL,
@@ -48,6 +48,16 @@ module.exports = {
   },
 
   createUrlPrefixer: _public => url => {
+    if (url === undefined || url === null) {
+      return url
+    }
+    const urlObject = new URL(url)
+    if (
+      urlObject.protocol === 'data:' ||
+      urlObject.origin === ASSETS_SERVER_BASE_URL
+    ) {
+      return url
+    }
     return `${ASSETS_SERVER_BASE_URL}/proxy?` + querystring.stringify({
       [originalKey]: url,
       mac: authenticate(url)
@@ -57,7 +67,7 @@ module.exports = {
   unprefixUrl: _url => {
     try {
       const url = new URL(_url)
-      if (url.hash.length > 0) { //repo prefixed
+      if (url.hash.length > 0) { // repo prefixed
         const hash = querystring.parse(url.hash.substring(1))
         const originalUrl = hash[originalKey]
         if (originalUrl) {
