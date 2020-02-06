@@ -285,7 +285,11 @@ export const CommentComposer = props => {
         t={t}
         onClose={onClose}
         onCloseLabel={onCloseLabel}
-        onSubmit={loading || textLength > maxLength ? undefined : onSubmit}
+        onSubmit={
+          loading || (maxLength && textLength > maxLength)
+            ? undefined
+            : onSubmit
+        }
         onSubmitLabel={onSubmitLabel}
       />
 
