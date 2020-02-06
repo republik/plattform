@@ -22,8 +22,20 @@ if (!DISPLAY_AUTHOR_SECRET) {
   throw new Error('missing required DISPLAY_AUTHOR_SECRET')
 }
 
-const embedForComment = async ({ embedUrl, discussionId, depth }, context) => {
+const embedForComment = async (
+  {
+    embedUrl,
+    discussionId,
+    depth,
+    published,
+    adminUnpublished
+  },
+  context
+) => {
   if (!embedUrl) {
+    return null
+  }
+  if (!(published && !adminUnpublished)) {
     return null
   }
   const discussion = await context.loaders.Discussion.byId.load(discussionId)
