@@ -11,7 +11,7 @@ const {
 } = require('../../../../servers/republik/graphql/resolvers/User')
 const remark = require('../../lib/remark')
 const { clipNamesInText } = require('../../lib/nameClipper')
-const { clipUrlInText } = require('../../lib/urlClipper')
+const { stripUrlFromText } = require('../../lib/urlStripper')
 const { getEmbedByUrl } = require('@orbiting/backend-modules-embeds')
 
 const {
@@ -74,7 +74,7 @@ const textForComment = async (
     newContent = clipNamesInText(namesToClip, content)
   }
   if (prettify && !!await embedForComment(comment, context)) {
-    newContent = clipUrlInText(embedUrl, content)
+    newContent = stripUrlFromText(embedUrl, content)
   }
   return newContent
 }

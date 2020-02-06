@@ -1,10 +1,10 @@
-const clipUrlInText = (url, content) => {
+const stripUrlFromText = (url, content) => {
   if (!url || !content) {
     return content
   }
   if (
     content.length === url.length ||
-    content.length === (url.length + 1) //trailing slash removed by get-urls
+    content.length === (url.length + 1) // trailing slash removed by get-urls
   ) {
     return ''
   }
@@ -12,5 +12,5 @@ const clipUrlInText = (url, content) => {
 }
 
 module.exports = {
-  clipUrlInText
+  stripUrlFromText
 }
