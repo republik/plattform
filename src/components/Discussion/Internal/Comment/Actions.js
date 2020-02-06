@@ -39,7 +39,7 @@ const styles = {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginLeft: 'auto',
+    marginLeft: 'auto'
   }),
   vote: css({
     display: 'flex',
@@ -166,6 +166,12 @@ export const Actions = ({
     }
   })()
 
+  const handleReport = () => {
+    if (window.confirm(t('styleguide/CommentActions/reportMessage'))) {
+      onReport()
+    }
+  }
+
   return (
     <div {...styles.root}>
       {onExpand && (
@@ -180,7 +186,7 @@ export const Actions = ({
           />
         </IconButton>
       )}
-      {onReply && !!displayAuthor  && (
+      {onReply && !!displayAuthor && (
         <IconButton
           type='left'
           disabled={!!replyBlockedMessage}
@@ -214,7 +220,7 @@ export const Actions = ({
         <IconButton
           type='left'
           disabled={userReportedAt}
-          onClick={onReport}
+          onClick={handleReport}
           title={t('styleguide/CommentActions/report')}
         >
           <span>

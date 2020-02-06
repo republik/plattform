@@ -1,5 +1,5 @@
 {
-  "updated": "2020-02-04T16:32:50.477Z",
+  "updated": "2020-02-06T12:45:18.393Z",
   "title": "live",
   "data": [
     {
@@ -45,6 +45,10 @@
     {
       "key": "styleguide/CommentActions/report",
       "value": "Anstössigen Inhalt melden"
+    },
+    {
+      "key": "styleguide/CommentActions/reportMessage",
+      "value": "Sind Sie sicher, dass dieser Beitrag gegen die Etikette verstösst und Sie dies melden möchten?"
     },
     {
       "key": "styleguide/CommentActions/upvote",
