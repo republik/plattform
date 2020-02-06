@@ -29,7 +29,7 @@ const styles = {
     marginTop: 15,
     [mUp]: {
       marginTop: 0
-    }
+    },
   }),
   imageContainer: css({}),
   image: css({
@@ -41,7 +41,8 @@ const styles = {
     padding: '0.1rem 10px 10px 10px',
     zIndex: 1,
     pointerEvents: 'none',
-    position: 'relative'
+    position: 'relative',
+    overflowX: 'hidden'
   }),
   siteImage: css({
     width: 19,

@@ -56,7 +56,7 @@ const styles = {
   root: ({ isExpanded, nestLimitExceeded, depth, board }) =>
     css({
       position: 'relative',
-      margin: depth === 1 ? 0 : `10px 0 ${isExpanded ? 24 : 16}px`,
+      margin: depth === 1 ? 0 : `10px 0 ${isExpanded ? 44 : 36}px`,
       paddingTop: depth === 1 ? 10 : 0,
       paddingBottom: depth === 1 ? (isExpanded ? 24 : 16) : 0,
       paddingLeft: nestLimitExceeded || depth < 1 ? 0 : config.indentSizeS,

@@ -13,6 +13,8 @@ import { convertStyleToRem } from '../../Typography/utils'
 import { Embed } from '../Internal/Comment'
 import debounce from 'lodash/debounce'
 
+import Loader from '../../Loader'
+
 const styles = {
   root: css({}),
   background: css({
@@ -83,7 +85,10 @@ export const CommentComposer = props => {
   const root = React.useRef()
   const [textarea, textareaRef] = React.useState(null)
   const textRef = React.useRef()
-  const [preview, setPreview] = React.useState(null)
+  const [preview, setPreview] = React.useState({
+    loading: false,
+    comment: null
+  })
 
   /*
    * Get the discussion metadata and action callbacks from the DiscussionContext.
@@ -106,7 +111,9 @@ export const CommentComposer = props => {
     }
   })
 
-  const textLength = preview ? preview.contentLength : text.length
+  const textLength = preview.comment
+    ? preview.comment.contentLength
+    : text.length
 
   /*
    * Focus the textarea upon mount.
@@ -134,9 +141,18 @@ export const CommentComposer = props => {
   const fetchPreview = React.useCallback(
     debounce(text => {
       if (!actions || !actions.previewComment) {
-        return setPreview(null)
+        return setPreview({
+          loading: false,
+          comment: null
+        })
       }
       textRef.current = text
+      setPreview(preview => ({
+        ...preview,
+        loading:
+          (!preview.comment || !preview.comment.embed) &&
+          text.indexOf('http') > -1
+      }))
       actions
         .previewComment({
           content: text,
@@ -146,16 +162,22 @@ export const CommentComposer = props => {
         })
         .then(nextPreview => {
           if (textRef.current === text) {
-            setPreview(nextPreview)
+            setPreview({
+              comment: nextPreview,
+              loading: false
+            })
           }
         })
         .catch(() => {
           if (textRef.current === text) {
-            setPreview(null)
+            setPreview({
+              comment: null,
+              loading: false
+            })
           }
         })
-    }, 400),
-    [textRef]
+    }, 100),
+    []
   )
 
   React.useEffect(() => {
@@ -254,7 +276,10 @@ export const CommentComposer = props => {
         )}
       </div>
 
-      <Embed comment={preview} />
+      <Loader
+        loading={preview.loading}
+        render={() => <Embed comment={preview.comment} />}
+      />
 
       <Actions
         t={t}
