@@ -100,7 +100,7 @@ const submitComment = async (comment, discussion, context) => {
     .then(users => users.map(transformUser))
 
   if (notifyUsers.length > 0) {
-    const contentMdast = await getContent(comment, null, context)
+    const contentMdast = await getContent(comment, { strip: false }, context)
     const htmlContent = renderEmail(contentMdast, commentSchema, { doctype: '' })
 
     const preview = await getPreview(comment, { length: 128 }, context)
