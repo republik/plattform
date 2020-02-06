@@ -87,7 +87,11 @@ const normalizeEmbed = embed => ({
   imageUrl: embed.imageUrl || embed.image,
   header: embed.siteName || embed.userName,
   headerImageUrl: embed.siteImageUrl || embed.userProfileImageUrl,
-  body: embed.description || embed.html
+  html:
+    embed.__typename === 'TwitterEmbed' &&
+    embed.html &&
+    embed.html.replace(/\s*target="_blank"/g, ''),
+  body: embed.description
 })
 
 export const Embed = ({ comment }) => {
@@ -102,6 +106,7 @@ export const Embed = ({ comment }) => {
     header,
     headerImageUrl,
     body,
+    html,
     imageAlt
   } = normalizeEmbed(embed)
 
@@ -143,11 +148,14 @@ export const Embed = ({ comment }) => {
           </Interaction.P>
         )}
         {title && <Interaction.P {...styles.title}>{title}</Interaction.P>}
-        {body && (
+        {html && (
           <Interaction.P
             {...styles.paragraph}
-            dangerouslySetInnerHTML={{ __html: body }}
-          ></Interaction.P>
+            dangerouslySetInnerHTML={{ __html: html }}
+          />
+        )}
+        {!html && body && (
+          <Interaction.P {...styles.paragraph}>{body}</Interaction.P>
         )}
         {embed.userScreenName && (
           <Interaction.P {...styles.paragraph}>
