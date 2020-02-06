@@ -12,8 +12,6 @@ import ShareIcon from 'react-icons/lib/md/share'
 import colors from '../../../../theme/colors'
 import { sansSerifMedium14 } from '../../../Typography/styles'
 import { DiscussionContext, formatTimeRelative } from '../../DiscussionContext'
-import { mUp } from '../../../../theme/mediaQueries'
-import { sansSerifMedium16 } from '../../../Typography/styles'
 
 const buttonStyle = {
   outline: 'none',

@@ -182,7 +182,7 @@ export const CommentComposer = props => {
 
   React.useEffect(() => {
     fetchPreview(text)
-  }, [text])
+  }, [text, fetchPreview])
 
   const onChangeText = ev => {
     const nextText = ev.target.value

@@ -1,6 +1,4 @@
-import React, { Component } from 'react'
-import PropTypes from 'prop-types'
-import { css } from 'glamor'
+import React from 'react'
 import { useColorContext } from '../../components/Colors/useColorContext'
 
 const ArticleContainer = ({ children }) => {

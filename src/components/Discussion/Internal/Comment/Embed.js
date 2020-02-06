@@ -29,7 +29,7 @@ const styles = {
     marginTop: 15,
     [mUp]: {
       marginTop: 0
-    },
+    }
   }),
   imageContainer: css({}),
   image: css({
@@ -82,7 +82,6 @@ const styles = {
 
 const dateFormat = timeFormat('%d.%m.%Y %H:%M')
 
-
 const normalizeEmbed = embed => ({
   ...embed,
   imageUrl: embed.imageUrl || embed.image,
@@ -103,8 +102,7 @@ export const Embed = ({ comment }) => {
     header,
     headerImageUrl,
     body,
-    imageAlt,
-    __typename
+    imageAlt
   } = normalizeEmbed(embed)
 
   return (
@@ -117,9 +115,19 @@ export const Embed = ({ comment }) => {
         {mentioningDocument && (
           <div {...styles.topStory}>
             <a
-              href={`${mentioningDocument.document.meta.path}#${mentioningDocument.fragmentId}`}
+              href={[
+                mentioningDocument.document.meta.path,
+                mentioningDocument.fragmentId
+              ]
+                .filter(Boolean)
+                .join('#')}
             >
-              <img src={mentioningDocument.iconUrl} width={125} height={125} />
+              <img
+                src={mentioningDocument.iconUrl}
+                alt=''
+                width={125}
+                height={125}
+              />
             </a>
           </div>
         )}
@@ -128,9 +136,10 @@ export const Embed = ({ comment }) => {
         {header && (
           <Interaction.P {...styles.paragraph}>
             {headerImageUrl && (
-              <img src={headerImageUrl} {...styles.siteImage} />
+              <img src={headerImageUrl} alt='' {...styles.siteImage} />
             )}
-            <strong>{header}</strong> {embed.userScreenName &&` @${embed.userScreenName}`}
+            <strong>{header}</strong>{' '}
+            {embed.userScreenName && ` @${embed.userScreenName}`}
           </Interaction.P>
         )}
         {title && <Interaction.P {...styles.title}>{title}</Interaction.P>}
@@ -142,7 +151,8 @@ export const Embed = ({ comment }) => {
         )}
         {embed.userScreenName && (
           <Interaction.P {...styles.paragraph}>
-            <TwitterIcon size={19} fill={colors.disabled} /> {dateFormat(new Date(embed.createdAt))}
+            <TwitterIcon size={19} fill={colors.disabled} />{' '}
+            {dateFormat(new Date(embed.createdAt))}
           </Interaction.P>
         )}
       </div>
