@@ -6,5 +6,6 @@ module.exports = {
   mdastToString: require('./mdastToString'),
   hasUserActiveMembership: require('./hasUserActiveMembership'),
   fetchWithTimeout: require('./fetchWithTimeout'),
-  getUrls: require('./getUrls')
+  getUrls: require('./getUrls'),
+  truncate: require('./truncate')
 }
