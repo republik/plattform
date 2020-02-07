@@ -33,6 +33,17 @@ const styles = {
       width: '50%'
     }
   }),
+  showMUp: css({
+    display: 'none',
+    [mUp]: {
+      display: 'block'
+    }
+  }),
+  hideMUp: css({
+    [mUp]: {
+      display: 'none'
+    }
+  }),
   modalRoot: css({
     marginBottom: 15
   }),
@@ -142,7 +153,6 @@ export const CommentList = ({
   rootCommentOverlay = false
 }) => {
   const { actions, discussion } = React.useContext(DiscussionContext)
-  const isDesktop = useMediaQuery(mUp)
 
   const { nodes = [], totalCount = 0, pageInfo } = comments
   const { endCursor } = pageInfo || {}
@@ -169,7 +179,6 @@ export const CommentList = ({
           key={comment.id}
           t={t}
           comment={comment}
-          isDesktop={isDesktop}
           board={board}
           rootCommentOverlay={rootCommentOverlay}
           discussion={discussion}
@@ -189,7 +198,7 @@ export const CommentList = ({
  * The Comment component manages the expand/collapse state of its children. It also manages
  * the editor for the comment itself, and composer for replies.
  */
-const CommentNode = ({ t, discussion, comment, isDesktop, board, rootCommentOverlay }) => {
+const CommentNode = ({ t, discussion, comment, board, rootCommentOverlay }) => {
   const { highlightedCommentId, actions } = React.useContext(DiscussionContext)
   const { id, parentIds, tags, text, comments } = comment
   const { displayAuthor } = discussion
@@ -311,9 +320,11 @@ const CommentNode = ({ t, discussion, comment, isDesktop, board, rootCommentOver
                     comment={comment}
                     context={tags[0] ? { title: tags[0] } : undefined}
                   />
-                  {((board && !isDesktop) ||
-                    (rootCommentOverlay && isRoot)) && (
-                    <div style={{ marginTop: rootCommentOverlay ? 15 : null }}>
+                  {(board || (rootCommentOverlay && isRoot)) && (
+                    <div
+                      {...styles.hideMUp}
+                      style={{ marginTop: rootCommentOverlay ? 15 : null }}
+                    >
                       <Comment.Embed comment={comment} />
                     </div>
                   )}
@@ -366,8 +377,8 @@ const CommentNode = ({ t, discussion, comment, isDesktop, board, rootCommentOver
           />
         </div>
 
-        {board && isDesktop && (
-          <div {...styles.boardColumn}>
+        {board && (
+          <div {...styles.boardColumn} {...styles.showMUp}>
             <Comment.Embed comment={comment} />
           </div>
         )}
@@ -397,7 +408,6 @@ const CommentNode = ({ t, discussion, comment, isDesktop, board, rootCommentOver
             t={t}
             parentId={id}
             comments={comments}
-            isDesktop={isDesktop}
             rootCommentOverlay={rootCommentOverlay}
           />
         )}
