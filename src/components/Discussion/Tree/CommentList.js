@@ -243,7 +243,11 @@ const CommentNode = ({ t, discussion, comment, board, rootCommentOverlay }) => {
     {
       mode: 'view',
       isExpanded: true,
-      showReplyComposer: !!displayAuthor && isRoot && !!rootCommentOverlay
+      showReplyComposer:
+        !!displayAuthor &&
+        isRoot &&
+        !!rootCommentOverlay &&
+        !(comments && comments.nodes && comments.nodes.length)
     }
   )
 
