@@ -80,18 +80,21 @@ const DefaultLink = ({ children }) => children
 
 export const CommentTeaser = ({
   t,
-  id,
-  displayAuthor,
-  preview,
-  highlights,
-  createdAt,
   Link = DefaultLink,
-  discussion,
-  tags,
-  parentIds,
   onClick,
-  newPage
+  newPage,
+  ...comment
 }) => {
+  const {
+    id,
+    discussion,
+    tags,
+    parentIds,
+    displayAuthor,
+    preview,
+    highlights,
+    createdAt
+  } = comment
   const isDesktop = useMediaQuery(mUp)
 
   const highlight = get(highlights, '[0].fragments[0]', '').trim()
@@ -127,7 +130,7 @@ export const CommentTeaser = ({
         />
       ),
       Comment: ({ comment, ...props }) => (
-        <Link {...props} discussion={discussion} commentId={comment.id} />
+        <Link {...props} discussion={discussion} comment={comment} />
       )
     }
   }, [Link, discussion])
@@ -150,7 +153,7 @@ export const CommentTeaser = ({
         {tag && (
           <Context
             title={
-              <Link commentId={id} discussion={discussion} passHref>
+              <Link comment={comment} discussion={discussion} passHref>
                 <a {...styles.link}>{tag}</a>
               </Link>
             }
@@ -161,7 +164,7 @@ export const CommentTeaser = ({
           style={{ marginTop: displayAuthor || tag ? undefined : 0 }}
         >
           <CommentBodyParagraph>
-            <Link commentId={id} discussion={discussion} passHref>
+            <Link comment={comment} discussion={discussion} passHref>
               <a {...styles.link}>
                 {!!preview && !highlight && (
                   <Fragment>
@@ -198,7 +201,7 @@ export const CommentTeaser = ({
                 link: (
                   <Link
                     key={`link-${id}`}
-                    commentId={id}
+                    comment={comment}
                     discussion={discussion}
                     passHref
                   >
@@ -217,7 +220,7 @@ export const CommentTeaser = ({
           </div>
           {!displayAuthor && (
             <div {...styles.timeago}>
-              <Link commentId={id} discussion={discussion} passHref>
+              <Link comment={comment} discussion={discussion} passHref>
                 <a {...styles.linkUnderline} suppressHydrationWarning>
                   {formatTimeRelative(new Date(createdAt), {
                     ...clock,
