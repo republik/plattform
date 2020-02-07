@@ -93,7 +93,7 @@ const mustFetch = (embed, now) => {
 const isValid = (embed) =>
   embed && embed.content && !embed.disappeared
 
-const fetchEmbed = async ({ url }, context) => {
+const fetchEmbed = async ({ url, forceRefetch = false }, context) => {
   const {
     pgdb,
     redis,
@@ -106,7 +106,7 @@ const fetchEmbed = async ({ url }, context) => {
   try {
     const existingEmbed = await pgdb.public.embeds.findOne({ url })
 
-    if (!mustFetch(existingEmbed)) {
+    if (!mustFetch(existingEmbed) && !forceRefetch) {
       debug(`return early: someone else did good work (${url})`)
       return existingEmbed
     }
@@ -173,7 +173,7 @@ const fetchEmbed = async ({ url }, context) => {
   }
 }
 
-const getEmbedByUrl = async (url, context) => {
+const getEmbedByUrl = async (url, context, forceRefetch = false) => {
   if (!url || !url.trim().length) {
     return null
   }
@@ -193,7 +193,7 @@ const getEmbedByUrl = async (url, context) => {
 
   const now = moment()
   const doFetch = mustFetch(embed, now)
-  if (isValid(embed)) {
+  if (isValid(embed) && !forceRefetch) {
     if (doFetch) {
       // no await -> done in background
       fetchEmbed({ url }, context)
@@ -201,8 +201,8 @@ const getEmbedByUrl = async (url, context) => {
     return transformDBEntry(embed)
   }
 
-  if (doFetch) {
-    return fetchEmbed({ url }, context)
+  if (doFetch || forceRefetch) {
+    return fetchEmbed({ url, forceRefetch }, context)
       .then(embed => isValid(embed)
         ? transformDBEntry(embed)
         : null
