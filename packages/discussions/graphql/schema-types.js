@@ -207,12 +207,11 @@ type Comment {
 
   contentLength: Int
 
-  embed: CommentEmbed
+  embed: CachedEmbed
 
   mentioningDocument: MentioningDocument
 }
 
-union CommentEmbed = LinkPreview | TwitterEmbed
 
 type MentioningDocument {
   document: Document!

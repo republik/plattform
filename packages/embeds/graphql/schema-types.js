@@ -8,6 +8,7 @@ enum EmbedType {
 }
 
 union Embed = TwitterEmbed | YoutubeEmbed | VimeoEmbed | DocumentCloudEmbed
+union CachedEmbed = LinkPreview | TwitterEmbed
 
 type TwitterEmbed {
   id: ID!

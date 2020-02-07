@@ -6,6 +6,7 @@ const {
 } = process.env
 
 const REQUEST_TIMEOUT_SECS = 10
+const MAX_NUM_REQUESTS = 3
 
 const fetch = (url, method = 'GET') => fetchWithTimeout(
   url,
@@ -40,7 +41,7 @@ const parseMetaAndLink = (html, baseUrl) => {
   Object.keys(link).forEach(key => {
     const { attribs } = meta[key] || {}
     if (
-      attribs !== undefined &&
+      attribs !== undefined &&
       attribs.rel &&
       attribs.href
     ) {
@@ -117,5 +118,6 @@ const getLinkPreviewByUrl = async (url) => {
 module.exports = {
   getLinkPreviewByUrl,
   imageKeys: ['siteImageUrl', 'imageUrl'],
-  REQUEST_TIMEOUT_SECS
+  REQUEST_TIMEOUT_SECS,
+  MAX_NUM_REQUESTS
 }

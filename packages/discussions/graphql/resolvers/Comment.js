@@ -47,7 +47,7 @@ const embedForComment = async (
 
 const textForComment = async (
   comment,
-  prettify = false,
+  strip = false,
   context
 ) => {
   const {
@@ -73,7 +73,7 @@ const textForComment = async (
     const namesToClip = await context.loaders.Discussion.byIdCommenterNamesToClip.load(discussionId)
     newContent = clipNamesInText(namesToClip, content)
   }
-  if (prettify && !!await embedForComment(comment, context)) {
+  if (strip && !!await embedForComment(comment, context)) {
     newContent = stripUrlFromText(embedUrl, content)
   }
   return newContent
@@ -126,7 +126,10 @@ module.exports = {
       : null,
 
   content: async (comment, args, context) => {
-    const text = await textForComment(comment, true, context)
+    const strip = args && args.strip !== null
+      ? args.strip
+      : false
+    const text = await textForComment(comment, strip, context)
     if (!text) {
       return text
     }
