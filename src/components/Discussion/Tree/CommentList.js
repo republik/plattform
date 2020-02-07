@@ -9,7 +9,6 @@ import { LoadMore } from './LoadMore'
 import * as Comment from '../Internal/Comment'
 import * as config from '../config'
 import { mUp } from '../../../theme/mediaQueries'
-import { useMediaQuery } from '../../../lib/useMediaQuery'
 
 const buttonStyle = {
   display: 'block',
