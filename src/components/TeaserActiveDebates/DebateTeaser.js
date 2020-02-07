@@ -69,7 +69,7 @@ export const DebateTeaser = ({
       />
     ),
     Comment: ({ comment, ...props }) => (
-      <CommentLink {...props} discussion={discussion} commentId={comment.id} />
+      <CommentLink {...props} discussion={discussion} comment={comment} />
     )
   }
   const discussionContextValue = {
