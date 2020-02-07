@@ -380,6 +380,16 @@ const TimeBarChart = props => {
           {xAnnotations.map((annotation, i) => {
             const range =
               annotation.x1 !== undefined && annotation.x2 !== undefined
+
+            if (
+              annotation.ghost &&
+              !annotation.valuePrefix &&
+              !annotation.label &&
+              !annotation.position
+            ) {
+              return null
+            }
+
             const x1 = range
               ? x(xNormalizer(annotation.x1))
               : x(xNormalizer(annotation.x))

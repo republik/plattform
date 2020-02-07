@@ -572,28 +572,36 @@ year,typ,value
 - `xIntervalStep`: Int
 
 ```react
-<CsvChart
-  config={{
-    "type": "TimeBar",
-    "x": "month",
-    "timeParse": "%Y-%m",
-    "colorRange": ["#ff7f0e"],
-    "domain": [0,5.5],
-    "numberFormat": ".1f",
-    "yTicks": [0, 2.5, 5],
-    "xInterval": "month",
-    "xIntervalStep": 6,
-    "xAnnotations": [
-      {"x1": "2019-07", "x2": "2019-07","value": 5,"label": "Ziel 2020"}, 
-      {"x1": "2019-07", "x2": "2019-07","value": 4,"label": "Stand jetzt","position": "bottom"}
-    ]
-  }}
-  values={`
+<div>
+  <ChartTitle>Every 6 Month</ChartTitle>
+  <CsvChart
+    config={{
+      "type": "TimeBar",
+      "x": "month",
+      "timeParse": "%Y-%m",
+      "timeFormat": "%Y Q%q",
+      "colorRange": ["#ff7f0e"],
+      "domain": [0,7.5],
+      "numberFormat": ".1f",
+      "yTicks": [0, 2.5, 5, 7.5],
+      "xTicks": ["2018-01", "2019-07", "2021-07", "2022-01", "2022-07"],
+      "xInterval": "month",
+      "xIntervalStep": 6,
+      "xAnnotations": [
+        {"x1": "2019-07", "x2": "2019-07","value": 5,"label": "Ziel 2020"}, 
+        {"x1": "2019-07", "x2": "2019-07","value": 4,"label": "Stand jetzt","position": "bottom"},
+        {"x": "2022-01", "value": 7, "ghost": true}
+      ]
+    }}
+    values={`
 month,value
 2018-01,1
 2018-07,2
 2019-01,3
 2019-07,4
-  `.trim()} />
+2021-07,6
+2022-07,8
+    `.trim()} />
+</div>
 ```
 
