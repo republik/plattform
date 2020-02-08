@@ -11,7 +11,7 @@ import { Header, Tags, Actions, Error } from '../Internal/Composer'
 import { DiscussionContext } from '../DiscussionContext'
 import { convertStyleToRem } from '../../Typography/utils'
 import { Embed } from '../Internal/Comment'
-import debounce from 'lodash/debounce'
+import { useDebounce } from '../../../lib/useDebounce'
 
 import Loader from '../../Loader'
 
@@ -94,7 +94,7 @@ export const CommentComposer = props => {
    * Get the discussion metadata and action callbacks from the DiscussionContext.
    */
   const { discussion, actions } = React.useContext(DiscussionContext)
-  const { id, tags, rules, displayAuthor } = discussion
+  const { id: discussionId, tags, rules, displayAuthor } = discussion
   const { maxLength } = rules
 
   const [text, setText] = React.useState(() => {
@@ -136,53 +136,56 @@ export const CommentComposer = props => {
    * provided through props. This way the user won't lose their text if the browser
    * crashes or if they inadvertently close the composer.
    */
-  const localStorageKey = commentComposerStorageKey(id)
+  const localStorageKey = commentComposerStorageKey(discussionId)
 
-  const fetchPreview = React.useCallback(
-    debounce(text => {
-      if (!actions || !actions.previewComment) {
-        return setPreview({
-          loading: false,
-          comment: null
-        })
-      }
-      textRef.current = text
-      setPreview(preview => ({
-        ...preview,
-        loading:
-          (!preview.comment || !preview.comment.embed) &&
-          text.indexOf('http') > -1
-      }))
-      actions
-        .previewComment({
-          content: text,
-          discussionId: id,
-          parentId,
-          id: commentId
-        })
-        .then(nextPreview => {
-          if (textRef.current === text) {
-            setPreview({
-              comment: nextPreview,
-              loading: false
-            })
-          }
-        })
-        .catch(() => {
-          if (textRef.current === text) {
-            setPreview({
-              comment: null,
-              loading: false
-            })
-          }
-        })
-    }, 100),
-    []
-  )
-
+  const previewCommentAction = actions.previewComment
+  const [slowText] = useDebounce(text, 400)
+  textRef.current = text
   React.useEffect(() => {
-    fetchPreview(text)
-  }, [text, fetchPreview])
+    if (!isRoot || !previewCommentAction) {
+      return
+    }
+    if (!slowText || slowText.indexOf('http') === -1) {
+      setPreview({
+        comment: null,
+        loading: false
+      })
+      return
+    }
+    setPreview(preview => ({
+      ...preview,
+      loading: true
+    }))
+    previewCommentAction({
+      content: slowText,
+      discussionId,
+      parentId,
+      id: commentId
+    })
+      .then(nextPreview => {
+        if (textRef.current === slowText) {
+          setPreview({
+            comment: nextPreview,
+            loading: false
+          })
+        }
+      })
+      .catch(() => {
+        if (textRef.current === slowText) {
+          setPreview({
+            comment: null,
+            loading: false
+          })
+        }
+      })
+  }, [
+    slowText,
+    previewCommentAction,
+    isRoot,
+    discussionId,
+    commentId,
+    parentId
+  ])
 
   const onChangeText = ev => {
     const nextText = ev.target.value
@@ -277,7 +280,7 @@ export const CommentComposer = props => {
       </div>
 
       <Loader
-        loading={preview.loading}
+        loading={preview.loading && !(preview.comment && preview.comment.embed)}
         render={() => <Embed comment={preview.comment} />}
       />
 
