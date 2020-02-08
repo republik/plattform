@@ -66,31 +66,31 @@ const styles = {
   root: ({ isExpanded, nestLimitExceeded, depth, board }) =>
     css({
       position: 'relative',
-      margin: depth === 1 ? 0 : `10px 0 ${isExpanded ? 44 : 36}px`,
-      paddingTop: depth === 1 ? 10 : 0,
-      paddingBottom: depth === 1 ? (isExpanded ? 24 : 16) : 0,
+      margin: `10px 0 ${(isExpanded ? 24 : 16) + (depth === 0 ? 20 : 0)}px`,
       paddingLeft: nestLimitExceeded || depth < 1 ? 0 : config.indentSizeS,
       background: 'white',
-      '&.depth-1:last-of-type': {
-        paddingBottom: 0,
-        marginBottom: isExpanded ? 24 : 16
-      },
 
       [mUp]: {
         paddingLeft: nestLimitExceeded || depth < 1 ? 0 : config.indentSizeM,
-        display: board ? 'flex' : null,
-        marginLeft: board ? -10 : null,
-        marginRight: board ? -10 : null,
-        marginBottom: board ? 50 : null
+        ...(board
+          ? {
+              display: 'flex',
+              marginLeft: -10,
+              marginRight: -10,
+              marginBottom: 50
+            }
+          : {})
       }
     }),
-  verticalToggle: ({ drawLineEnd }) =>
+  verticalToggle: ({ drawLineEnd, depth, isExpanded, isLast }) =>
     css({
       ...buttonStyle,
       position: 'absolute',
       top: 0,
       left: -((config.indentSizeS - config.verticalLineWidth) / 2),
-      bottom: drawLineEnd ? 20 : 0,
+      bottom:
+        (drawLineEnd ? 20 : 0) -
+        (depth === 1 && !isLast ? (isExpanded ? 24 : 16) : 0),
       width: config.indentSizeS,
 
       [mUp]: {
@@ -173,7 +173,7 @@ export const CommentList = ({
 
   return (
     <>
-      {nodes.map(comment => (
+      {nodes.map((comment, i) => (
         <CommentNode
           key={comment.id}
           t={t}
@@ -181,6 +181,7 @@ export const CommentList = ({
           board={board}
           rootCommentOverlay={rootCommentOverlay}
           discussion={discussion}
+          isLast={i === nodes.length - 1}
         />
       ))}
       <LoadMore
@@ -197,7 +198,14 @@ export const CommentList = ({
  * The Comment component manages the expand/collapse state of its children. It also manages
  * the editor for the comment itself, and composer for replies.
  */
-const CommentNode = ({ t, discussion, comment, board, rootCommentOverlay }) => {
+const CommentNode = ({
+  t,
+  discussion,
+  comment,
+  board,
+  rootCommentOverlay,
+  isLast
+}) => {
   const { highlightedCommentId, actions } = React.useContext(DiscussionContext)
   const { id, parentIds, tags, text, comments } = comment
   const { displayAuthor } = discussion
@@ -284,19 +292,13 @@ const CommentNode = ({ t, discussion, comment, board, rootCommentOverlay }) => {
   const drawLineEnd = false
 
   const rootStyle = styles.root({ isExpanded, nestLimitExceeded, depth, board })
-  const verticalToggleStyle = isRoot
-    ? styles.hiddenToggle
-    : styles.verticalToggle({ drawLineEnd })
+  const verticalToggleStyle =
+    !isRoot && styles.verticalToggle({ isExpanded, depth, drawLineEnd, isLast })
 
   if (isExpanded) {
     return (
-      <div
-        ref={root}
-        data-comment-id={id}
-        {...rootStyle}
-        className={`depth-${depth}`}
-      >
-        {!nestLimitExceeded && !board && (
+      <div ref={root} data-comment-id={id} {...rootStyle}>
+        {!nestLimitExceeded && !board && verticalToggleStyle && (
           <button {...verticalToggleStyle} onClick={toggleReplies} />
         )}
         <div
@@ -419,7 +421,9 @@ const CommentNode = ({ t, discussion, comment, board, rootCommentOverlay }) => {
   } else {
     return (
       <div ref={root} data-comment-id={id} {...rootStyle}>
-        <button {...verticalToggleStyle} onClick={toggleReplies} />
+        {verticalToggleStyle && (
+          <button {...verticalToggleStyle} onClick={toggleReplies} />
+        )}
         <Comment.Header
           t={t}
           comment={comment}
