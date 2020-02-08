@@ -94,7 +94,7 @@ export const CommentComposer = props => {
    * Get the discussion metadata and action callbacks from the DiscussionContext.
    */
   const { discussion, actions } = React.useContext(DiscussionContext)
-  const { id: discussionId, tags, rules, displayAuthor } = discussion
+  const { id: discussionId, tags, rules, displayAuthor, isBoard } = discussion
   const { maxLength } = rules
 
   const [text, setText] = React.useState(() => {
@@ -142,7 +142,7 @@ export const CommentComposer = props => {
   const [slowText] = useDebounce(text, 400)
   textRef.current = text
   React.useEffect(() => {
-    if (!isRoot || !previewCommentAction) {
+    if (!isBoard || !isRoot || !previewCommentAction) {
       return
     }
     if (!slowText || slowText.indexOf('http') === -1) {
@@ -184,7 +184,8 @@ export const CommentComposer = props => {
     isRoot,
     discussionId,
     commentId,
-    parentId
+    parentId,
+    isBoard
   ])
 
   const onChangeText = ev => {
