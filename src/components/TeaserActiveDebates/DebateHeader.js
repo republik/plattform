@@ -19,23 +19,25 @@ const styles = {
   })
 }
 
-const DebateHeader = ({ title, commentCount, href, onClick }) => {
-  return (
-    <div {...styles.header}>
-      {title && (
-        <a href={href} onClick={onClick} {...styles.title}>
-          {title}
-        </a>
-      )}
-      <IconLink
-        href={href}
-        onClick={onClick}
-        discussionCommentsCount={commentCount}
-        small
-      />
-    </div>
-  )
-}
+const DebateHeader = React.forwardRef(
+  ({ title, commentCount, href, onClick }, ref) => {
+    return (
+      <div {...styles.header} ref={ref}>
+        {title && (
+          <a href={href} onClick={onClick} {...styles.title}>
+            {title}
+          </a>
+        )}
+        <IconLink
+          href={href}
+          onClick={onClick}
+          discussionCommentsCount={commentCount}
+          small
+        />
+      </div>
+    )
+  }
+)
 
 export default DebateHeader
 

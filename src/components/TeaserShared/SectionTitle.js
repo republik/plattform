@@ -43,18 +43,20 @@ const styles = {
   })
 }
 
-const SectionTitle = ({ children, small, onClick, href }) => {
-  const style = small ? styles.small : styles.container
-  return href ? (
-    <a href={href} onClick={onClick} {...style} {...styles.link}>
-      {children}
-      {<ChevronRight />}
-    </a>
-  ) : (
-    <span onClick={onClick} {...style}>
-      {children}
-    </span>
-  )
-}
+const SectionTitle = React.forwardRef(
+  ({ children, small, onClick, href }, ref) => {
+    const style = small ? styles.small : styles.container
+    return href ? (
+      <a href={href} onClick={onClick} {...style} {...styles.link} ref={ref}>
+        {children}
+        {<ChevronRight />}
+      </a>
+    ) : (
+      <span onClick={onClick} {...style} ref={ref}>
+        {children}
+      </span>
+    )
+  }
+)
 
 export default SectionTitle

@@ -24,22 +24,25 @@ const styles = {
   })
 }
 
-const DebateComment = ({ highlight, preview, href, onClick }) => (
-  <a
-    {...styles.base}
-    {...styles[highlight ? 'highlight' : 'preview']}
-    href={href}
-    onClick={onClick}
-  >
-    {highlight
-      ? inQuotes(highlight)
-      : preview && (
-          <React.Fragment>
-            {preview.string}
-            {preview.more && <React.Fragment>&nbsp;…</React.Fragment>}
-          </React.Fragment>
-        )}
-  </a>
+const DebateComment = React.forwardRef(
+  ({ highlight, preview, href, onClick }, ref) => (
+    <a
+      {...styles.base}
+      {...styles[highlight ? 'highlight' : 'preview']}
+      href={href}
+      onClick={onClick}
+      ref={ref}
+    >
+      {highlight
+        ? inQuotes(highlight)
+        : preview && (
+            <React.Fragment>
+              {preview.string}
+              {preview.more && <React.Fragment>&nbsp;…</React.Fragment>}
+            </React.Fragment>
+          )}
+    </a>
+  )
 )
 
 export default DebateComment
