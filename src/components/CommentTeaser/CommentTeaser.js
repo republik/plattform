@@ -117,29 +117,11 @@ export const CommentTeaser = ({
     t,
     isDesktop
   }
-  // stable component function identities to avoid unnecessary rerender
-  /* eslint-disable react-hooks/exhaustive-deps */
-  // eslint does not detect JSX Link as necessary dependecy
-  const links = React.useMemo(() => {
-    return {
-      Profile: ({ displayAuthor, ...props }) => (
-        <Link
-          {...props}
-          discussion={discussion}
-          displayAuthor={displayAuthor}
-        />
-      ),
-      Comment: ({ comment, ...props }) => (
-        <Link {...props} discussion={discussion} comment={comment} />
-      )
-    }
-  }, [Link, discussion])
-  /* eslint-enable react-hooks/exhaustive-deps */
 
   const discussionContextValue = {
     discussion,
     clock,
-    links
+    Link
   }
 
   return (

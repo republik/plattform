@@ -60,18 +60,6 @@ export const DebateTeaser = ({
    * A reduced version of DiscussionContext value, just enough so we can render
    * the Comment Header component.
    */
-  const links = {
-    Profile: ({ displayAuthor, ...props }) => (
-      <CommentLink
-        {...props}
-        discussion={discussion}
-        displayAuthor={displayAuthor}
-      />
-    ),
-    Comment: ({ comment, ...props }) => (
-      <CommentLink {...props} discussion={discussion} comment={comment} />
-    )
-  }
   const discussionContextValue = {
     discussion,
     clock: {
@@ -79,7 +67,7 @@ export const DebateTeaser = ({
       isDesktop,
       t
     },
-    links
+    Link: CommentLink
   }
 
   return (
@@ -98,14 +86,14 @@ export const DebateTeaser = ({
             key={comment.id}
             style={{ marginBottom: i !== all.length - 1 ? 30 : 0 }}
           >
-            <links.Comment comment={comment} passHref>
+            <CommentLink discussion={discussion} comment={comment} passHref>
               <ActiveDebateComment
                 t={t}
                 id={comment.id}
                 highlight={comment.highlight ? comment.highlight : undefined}
                 preview={comment.preview}
               />
-            </links.Comment>
+            </CommentLink>
             <UserProfile t={t} comment={comment} isExpanded={true} />
           </div>
         ))}

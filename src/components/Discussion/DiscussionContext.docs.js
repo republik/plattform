@@ -96,15 +96,11 @@ export const createSampleDiscussionContextValue = ({ t }) => ({
   },
 
   /**
-   * When components need to create links to other parts of the website, they
-   * can use these components.
+   * When components need to create links to other parts of the website, they can use this component.
    */
-  links: {
-    Profile: ({ displayAuthor, passHref, ...props }) => (
-      <React.Fragment {...props} />
-    ),
-    Comment: ({ comment, passHref, ...props }) => <React.Fragment {...props} />
-  },
+  Link: ({ displayAuthor, discussion, comment, passHref, ...props }) => (
+    <React.Fragment {...props} />
+  ),
 
   /**
    * React Element that will be placed into the secondary actions slot of the

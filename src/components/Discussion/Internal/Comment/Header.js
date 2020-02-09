@@ -167,7 +167,7 @@ const dateTimeFormat = timeFormat('%d. %B %Y %H:%M')
 const titleDate = string => dateTimeFormat(new Date(string))
 
 export const Header = ({ t, comment, isExpanded, onToggle }) => {
-  const { clock, links } = React.useContext(DiscussionContext)
+  const { clock, discussion, Link } = React.useContext(DiscussionContext)
 
   const {
     displayAuthor,
@@ -176,7 +176,7 @@ export const Header = ({ t, comment, isExpanded, onToggle }) => {
     comments,
     parentIds = []
   } = comment
-  const { profilePicture, name, credential } = displayAuthor || {}
+  const { profilePicture, name, credential } = displayAuthor || {}
 
   const isUpdated = updatedAt && updatedAt !== createdAt
 
@@ -189,11 +189,11 @@ export const Header = ({ t, comment, isExpanded, onToggle }) => {
             return null
           }
           return (
-            <links.Profile displayAuthor={displayAuthor} passHref>
+            <Link displayAuthor={displayAuthor} passHref>
               <a {...styles.link}>
                 <img {...styles.profilePicture} src={profilePicture} alt='' />
               </a>
-            </links.Profile>
+            </Link>
           )
         } else if (n === 0) {
           return null
@@ -208,9 +208,9 @@ export const Header = ({ t, comment, isExpanded, onToggle }) => {
         }
       })()}
       <div {...styles.center}>
-        <links.Profile displayAuthor={displayAuthor} passHref>
+        <Link displayAuthor={displayAuthor} passHref>
           <a {...styles.name}>{name}</a>
-        </links.Profile>
+        </Link>
         <div {...styles.meta}>
           {credential && (
             <div
@@ -238,14 +238,14 @@ export const Header = ({ t, comment, isExpanded, onToggle }) => {
           )}
           {credential && <div style={{ whiteSpace: 'pre' }}>{' · '}</div>}
           <div {...styles.timeago} title={titleDate(createdAt)}>
-            <links.Comment comment={comment} passHref>
+            <Link discussion={discussion} comment={comment} passHref>
               <a {...styles.linkUnderline} suppressHydrationWarning>
                 {formatTimeRelative(new Date(createdAt), {
                   ...clock,
                   direction: 'past'
                 })}
               </a>
-            </links.Comment>
+            </Link>
           </div>
           {isUpdated && (
             <div {...styles.timeago} title={titleDate(updatedAt)}>
