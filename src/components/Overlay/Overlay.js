@@ -7,6 +7,8 @@ import { mUp } from '../../theme/mediaQueries'
 import colors from '../../theme/colors'
 import ColorContext from '../Colors/ColorContext'
 
+import { useBodyScrollLock } from '../../lib/useBodyScrollLock'
+
 const styles = {
   root: css({
     position: 'fixed',
@@ -43,51 +45,6 @@ const styles = {
 
 const ssrAttribute = 'data-overlay-ssr'
 
-let numberBodyLocks = 0
-const lockBodyScroll = () => {
-  let pageYOffset
-  if (!numberBodyLocks) {
-    // The code below is used to block scrolling of the page behind the overlay.
-    document.body.style.overflow = 'hidden'
-    // does not work on iOS
-    // therefore we additionally make the body unscrollable with position fixed
-    if (navigator.userAgent && navigator.userAgent.match(/iPad|iPhone|iPod/)) {
-      // The trick is to add position:fixed to the body element.
-      // This scrolls the page to the top, to counter that we shift
-      // the whole page up by the appropriate offset and restore the scroll offset
-      // when the overlay is dismissed.
-      pageYOffset = window.pageYOffset
-      document.documentElement.style.top = `-${pageYOffset}px`
-      document.documentElement.style.position = 'relative'
-      document.body.style.position = 'fixed'
-      document.body.style.left = '0'
-      document.body.style.right = '0'
-    }
-  }
-
-  numberBodyLocks += 1
-
-  return () => {
-    numberBodyLocks -= 1
-    if (numberBodyLocks) {
-      return
-    }
-
-    // Remove scroll block
-    document.body.style.overflow = ''
-
-    if (pageYOffset) {
-      // Remove scroll block and scroll page back to its original Y-offset.
-      document.documentElement.style.top = ''
-      document.documentElement.style.position = ''
-      document.body.style.position = ''
-      document.body.style.left = ''
-      document.body.style.right = ''
-      window.scrollTo(0, pageYOffset)
-    }
-  }
-}
-
 const Overlay = props => {
   const rootDom = useRef()
   const isDomAvailable = typeof document !== 'undefined'
@@ -108,13 +65,10 @@ const Overlay = props => {
       setIsVisible(true)
     }, 33)
 
-    const unlockBody = lockBodyScroll()
     document.body.appendChild(rootDom.current)
 
     return () => {
       clearTimeout(fadeInTimeout)
-
-      unlockBody()
       document.body.removeChild(rootDom.current)
     }
   }, [])
@@ -150,6 +104,7 @@ export const OverlayRenderer = ({
   onClose,
   ssrMode
 }) => {
+  const [ref] = useBodyScrollLock()
   const close = e => {
     if (e.target === e.currentTarget) {
       onClose()
@@ -164,7 +119,10 @@ export const OverlayRenderer = ({
       onClick={close}
     >
       <ColorContext.Provider value={colors}>
-        <div {...merge(styles.inner, mUpStyle && { [mUp]: mUpStyle })}>
+        <div
+          {...merge(styles.inner, mUpStyle && { [mUp]: mUpStyle })}
+          ref={ref}
+        >
           {children}
         </div>
       </ColorContext.Provider>
