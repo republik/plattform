@@ -25,7 +25,6 @@ module.exports = (upVotes, downVotes, timestamp) => {
 
   const seconds = timestamp / 1000.0 - 1493190000 // republik epoch
   const hotness = (sign * order + orderReactions + (seconds / HOTNESS_TIME_DENOMINATOR)).toFixed(7)
-  // console.log({seconds, score, order, sec: (seconds/HOTNESS_TIME_DENOMINATOR).toFixed(3), hotness})
   debug({
     sign,
     order,
