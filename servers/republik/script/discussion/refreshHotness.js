@@ -22,6 +22,8 @@ Promise.props({
     discussionId
   })
     .then(cs => cs
+      .sort((a, b) => descending(a.createdAt, b.createdAt))
+      .map((c, i) => ({ ...c, timeIndex: i }))
       .sort((a, b) => descending(a.hotness, b.hotness))
       .map((c, i) => ({ ...c, oldIndex: i }))
     )
@@ -51,21 +53,26 @@ Promise.props({
       createdAt,
       hotness,
       oldHotness,
-      oldIndex
+      oldIndex,
+      timeIndex
     }, index) => {
       console.log({
         score: upVotes - downVotes,
         age: moment(createdAt).from(now),
-        oldHotness,
+        c: moment(createdAt).toString(),
+        // oldHotness,
         hotness,
-        diffHotness: hotness - oldHotness,
-        oldIndex,
+        // diffHotness: hotness - oldHotness,
+        // oldIndex,
         index,
-        diffIndex: index - oldIndex
+        // diffIndex: index - oldIndex,
+        timeIndex,
+        diffTimeIndex: timeIndex - index
       })
     })
 
   console.log(`${comments.length} comments updated`)
+  console.log({ HOTNESS_TIME_DENOMINATOR: process.env.HOTNESS_TIME_DENOMINATOR })
 
   return connections
 })
