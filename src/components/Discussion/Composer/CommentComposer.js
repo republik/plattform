@@ -72,7 +72,8 @@ export const CommentComposer = props => {
     onCloseLabel,
     onSubmitLabel,
     parentId,
-    commentId
+    commentId,
+    autoFocus = true
   } = props
 
   /*
@@ -122,14 +123,14 @@ export const CommentComposer = props => {
    * the viewport.
    */
   React.useEffect(() => {
-    if (textarea) {
+    if (textarea && autoFocus) {
       textarea.focus()
 
       if (window.innerWidth < mBreakPoint) {
         scrollIntoView(root.current, { align: { top: 0, topOffset: 60 } })
       }
     }
-  }, [textarea])
+  }, [textarea, autoFocus])
 
   /*
    * Synchronize the text with localStorage, and restore it from there if not otherwise

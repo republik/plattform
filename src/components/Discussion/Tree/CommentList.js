@@ -232,14 +232,21 @@ const CommentNode = ({
    *  - toggleReplies
    */
 
-  const [{ mode, isExpanded, showReplyComposer }, dispatch] = React.useReducer(
+  const [
+    { mode, isExpanded, showReplyComposer, replyComposerAutoFocus },
+    dispatch
+  ] = React.useReducer(
     (state, action) => {
       if ('editComment' in action) {
         return { ...state, mode: 'edit' }
       } else if ('closeEditor' in action) {
         return { ...state, mode: 'view' }
       } else if ('showReplyComposer' in action) {
-        return { ...state, showReplyComposer: true }
+        return {
+          ...state,
+          showReplyComposer: true,
+          replyComposerAutoFocus: true
+        }
       } else if ('closeReplyComposer' in action) {
         return { ...state, showReplyComposer: false }
       } else if ('toggleReplies' in action) {
@@ -251,6 +258,7 @@ const CommentNode = ({
     {
       mode: 'view',
       isExpanded: true,
+      replyComposerAutoFocus: false,
       showReplyComposer:
         !!displayAuthor &&
         isRoot &&
@@ -395,6 +403,7 @@ const CommentNode = ({
               isRoot={false /* Replies can never be root comments */}
               parentId={comment.id}
               onClose={closeReplyComposer}
+              autoFocus={replyComposerAutoFocus}
               onSubmit={({ text, tags }) =>
                 actions.submitComment(comment, text, tags).then(result => {
                   if (result.ok) {
