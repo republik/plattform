@@ -19,8 +19,9 @@ export const useBodyScrollLock = (lock = true) => {
       warn('[useBodyScrollLock]', 'ref is not assigned')
       return
     }
+    const targetElement = ref.current
     if (!numberScrollLocks) {
-      disableBodyScroll(ref.current)
+      disableBodyScroll(targetElement)
     }
 
     numberScrollLocks += 1
@@ -31,7 +32,7 @@ export const useBodyScrollLock = (lock = true) => {
         return
       }
 
-      enableBodyScroll(ref.current)
+      enableBodyScroll(targetElement)
     }
   }, [shouldLock])
 
