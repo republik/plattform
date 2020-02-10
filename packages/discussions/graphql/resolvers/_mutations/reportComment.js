@@ -60,7 +60,9 @@ module.exports = async (_, args, context) => {
 
   if (newComment) {
     await loaders.Comment.byId.clear(commentId)
-    slack.publishCommentReport(me, newComment, discussion, context)
+    if (newComment.reports.length > 1) {
+      slack.publishCommentReport(me, newComment, discussion, context)
+    }
   }
 
   return newComment || comment
