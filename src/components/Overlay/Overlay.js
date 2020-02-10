@@ -68,12 +68,36 @@ const Overlay = props => {
     document.body.style.overflow = 'hidden'
     document.body.appendChild(rootDom.current)
 
+    let pageYOffset
+    if (navigator.userAgent && navigator.userAgent.match(/iPad|iPhone|iPod/)) {
+      // The trick is to add overflow:hidden and position:relative to the body
+      // element. The later scrolls the page to the top, to counter that we shift
+      // the whole page up by the appropriate offset and restore the scroll offset
+      // when the overlay is dismissed.
+      pageYOffset = window.pageYOffset
+      document.documentElement.style.top = `-${pageYOffset}px`
+      document.documentElement.style.position = 'relative'
+      document.body.style.position = 'fixed'
+      document.body.style.left = '0'
+      document.body.style.right = '0'
+    }
+
     return () => {
       clearTimeout(fadeInTimeout)
 
       // Remove scroll block
       document.body.style.overflow = ''
       document.body.removeChild(rootDom.current)
+
+      if (pageYOffset) {
+        // Remove scroll block and scroll page back to its original Y-offset.
+        document.documentElement.style.top = ''
+        document.documentElement.style.position = ''
+        document.body.style.position = ''
+        document.body.style.left = ''
+        document.body.style.right = ''
+        window.scrollTo(0, pageYOffset)
+      }
     }
   }, [])
   useEffect(() => {
