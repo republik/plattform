@@ -1,3 +1,5 @@
+export const lockAfterMilestones = ['startProduction', 'startProofReading']
+
 export const phases = [
   {
     key: 'draft',

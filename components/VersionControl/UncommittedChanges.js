@@ -14,15 +14,26 @@ import {
 } from '@project-r/styleguide'
 import { getInitials } from '../../lib/utils/name'
 import withT from '../../lib/withT'
+import withMe from '../../lib/withMe'
+import { GHOST_PRODUCER } from '../../lib/settings'
 import { errorToString } from '../../lib/utils/errors'
-import { UNCOMMITTED_CHANGES_POLL_INTERVAL_MS } from '../../lib/settings'
+import {
+  UNCOMMITTED_CHANGES_POLL_INTERVAL_MS,
+  MILESTONES_POLL_INTERVAL_MS
+} from '../../lib/settings'
 import OfflineIcon from 'react-icons/lib/md/signal-wifi-off' // portable-wifi-off
 
 import createDebug from 'debug'
 
-const debug = createDebug('publikator:uncommittedChanges')
+import { getMilestones } from './Checklist'
+import { lockAfterMilestones } from '../Repo/workflow'
 
-export const getUncommittedChanges = gql`
+import { parseJSONObject } from '../../lib/safeJSON'
+
+const debug = createDebug('publikator:uncommittedChanges')
+const ghostProducer = parseJSONObject(GHOST_PRODUCER)
+
+const getUncommittedChanges = gql`
   query getUncommittedChanges($repoId: ID!) {
     repo(id: $repoId) {
       id
@@ -35,7 +46,7 @@ export const getUncommittedChanges = gql`
   }
 `
 
-export const uncommittedChangesSubscription = gql`
+const uncommittedChangesSubscription = gql`
   subscription onUncommitedChange($repoId: ID!) {
     uncommittedChanges(repoId: $repoId) {
       repoId
@@ -117,15 +128,32 @@ export const withUncommitedChanges = ({ options } = {}) => WrappedComponent => {
     render() {
       const {
         data: { loading, error, repo },
+        milestones,
+        me,
         ownProps
       } = this.props
+
+      const users = [].concat((repo && repo.uncommittedChanges) || [])
+
+      const reachedLockPhase =
+        milestones &&
+        milestones.find(m => lockAfterMilestones.indexOf(m.name) !== -1)
+      const meIsProducer = me && me.roles.find(role => role === 'producer')
+      if (
+        reachedLockPhase &&
+        !meIsProducer &&
+        ghostProducer &&
+        ghostProducer.id
+      ) {
+        users.push(ghostProducer)
+      }
 
       return (
         <WrappedComponent
           uncommittedChanges={{
             loading,
             error: this.state.subscriptionError || error,
-            users: (repo && repo.uncommittedChanges) || []
+            users
           }}
           {...ownProps}
         />
@@ -134,10 +162,22 @@ export const withUncommitedChanges = ({ options } = {}) => WrappedComponent => {
   }
 
   return compose(
+    withMe,
+    graphql(getMilestones, {
+      options: ({ repoId, router }) => ({
+        pollInterval: MILESTONES_POLL_INTERVAL_MS,
+        variables: {
+          repoId: repoId || router.query.repoId
+        }
+      }),
+      props: ({ data }) => ({
+        milestones: data.repo && data.repo.milestones
+      })
+    }),
     graphql(getUncommittedChanges, {
       options: props => ({
         fetchPolicy: 'network-only',
-        pollInterval: process.browser && UNCOMMITTED_CHANGES_POLL_INTERVAL_MS,
+        pollInterval: UNCOMMITTED_CHANGES_POLL_INTERVAL_MS,
         variables: props,
         ...(typeof options === 'function' ? options(props) : options)
       }),

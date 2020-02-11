@@ -7,7 +7,7 @@
   "description": "",
   "main": "server/index.js",
   "scripts": {
-    "dev": "nodemon --watch server --watch app --watch lib/routes.js server/index.js",
+    "dev": "nodemon --watch server --watch app --watch .env --watch lib/routes.js server/index.js",
     "start": "node server/index.js",
     "build": "next build",
     "heroku-postbuild": "npm run build",
@@ -67,7 +67,7 @@
   },
   "dependencies": {
     "@orbiting/remark-preset": "^1.2.4",
-    "@project-r/styleguide": "^8.26.0",
+    "@project-r/styleguide": "^8.28.9",
     "@project-r/template-newsletter": "^1.5.0",
     "apollo-cache-inmemory": "^1.6.3",
     "apollo-client": "^2.6.4",
