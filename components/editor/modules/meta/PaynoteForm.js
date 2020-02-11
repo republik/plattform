@@ -3,7 +3,7 @@ import React from 'react'
 import { css } from 'glamor'
 import AutosizeInput from 'react-textarea-autosize'
 
-import { Field, Radio, Label, colors } from '@project-r/styleguide'
+import { Field, Radio, Label } from '@project-r/styleguide'
 import withT from '../../../../lib/withT'
 
 const styles = {
@@ -12,10 +12,6 @@ const styles = {
     paddingTop: '7px !important',
     paddingBottom: '6px !important',
     background: 'transparent'
-  }),
-  title: css({
-    padding: '5px 0',
-    fontWeight: 'bold'
   }),
   ctaLabel: css({
     display: 'block',
@@ -43,10 +39,9 @@ const SelectCta = withT(({ t, cta, setCta }) => {
   )
 })
 
-export default withT(({ t, data, name, onInputChange }) => {
+export default withT(({ t, data, onInputChange }) => {
   return (
     <div>
-      <Label {...styles.title}>{name}</Label>
       <Field
         label={t('metaData/paynote/form/title')}
         name='title'
@@ -80,7 +75,7 @@ export default withT(({ t, data, name, onInputChange }) => {
         <>
           <Field
             label={t('metaData/paynote/form/button/label')}
-            name='buttonText'
+            name='buttonLabel'
             value={data.button.label}
             onChange={(e, value) =>
               onInputChange({
@@ -93,12 +88,53 @@ export default withT(({ t, data, name, onInputChange }) => {
           />
           <Field
             label={t('metaData/paynote/form/button/link')}
-            name='button/text'
+            name='buttonLink'
             value={data.button.link}
             onChange={(e, value) =>
               onInputChange({
                 button: {
                   ...data.button,
+                  link: value
+                }
+              })
+            }
+          />
+          <br />
+          <br />
+          <Field
+            label={t('metaData/paynote/form/secondary/label')}
+            name='secondaryPrefix'
+            value={data.secondary.prefix}
+            onChange={(e, value) =>
+              onInputChange({
+                secondary: {
+                  ...data.secondary,
+                  prefix: value
+                }
+              })
+            }
+          />
+          <Field
+            label={t('metaData/paynote/form/secondary/label')}
+            name='secondaryLabel'
+            value={data.secondary.label}
+            onChange={(e, value) =>
+              onInputChange({
+                secondary: {
+                  ...data.secondary,
+                  label: value
+                }
+              })
+            }
+          />
+          <Field
+            label={t('metaData/paynote/form/secondary/link')}
+            name='secondaryLink'
+            value={data.secondary.link}
+            onChange={(e, value) =>
+              onInputChange({
+                secondary: {
+                  ...data.secondary,
                   link: value
                 }
               })

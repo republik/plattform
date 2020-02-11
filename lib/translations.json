@@ -1,5 +1,5 @@
 {
-  "updated": "2020-01-30T20:21:49.605Z",
+  "updated": "2020-02-11T13:29:06.786Z",
   "title": "live",
   "data": [
     {
@@ -603,12 +603,16 @@
       "value": "Custom paynotes"
     },
     {
+      "key": "metaData/paynotes/index",
+      "value": "Paynote #{index}"
+    },
+    {
       "key": "metaData/paynotes/before",
-      "value": "Paynote {index} - before"
+      "value": "Beginning of article"
     },
     {
       "key": "metaData/paynotes/after",
-      "value": "Paynote {index} - after"
+      "value": "End of article"
     },
     {
       "key": "metaData/paynotes/new",
@@ -617,6 +621,18 @@
     {
       "key": "metaData/paynotes/help",
       "value": "Render members count with <b>{count}</b> and bold text with <b>&lt;b&gt;bold tags&lt;/b&gt;</b>."
+    },
+    {
+      "key": "metaData/paynote/form/target/title",
+      "value": "Target"
+    },
+    {
+      "key": "metaData/paynote/form/target/hasActiveMembership",
+      "value": "active members"
+    },
+    {
+      "key": "metaData/paynote/form/target/isEligibleForTrial",
+      "value": "eligible for trial"
     },
     {
       "key": "metaData/paynote/form/cta/label",
@@ -657,6 +673,18 @@
     {
       "key": "metaData/paynote/form/button/link",
       "value": "Button link\n"
+    },
+    {
+      "key": "metaData/paynote/form/secondary/prefix",
+      "value": "Secondary prefix (optional)"
+    },
+    {
+      "key": "metaData/paynote/form/secondary/label",
+      "value": "Secondary label (optional)"
+    },
+    {
+      "key": "metaData/paynote/form/secondary/link",
+      "value": "Secondary link (optional)"
     },
     {
       "key": "metaData/field/url",

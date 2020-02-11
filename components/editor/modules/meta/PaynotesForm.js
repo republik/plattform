@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { A, Label, RawHtml } from '@project-r/styleguide'
+import { A, Checkbox, Label, RawHtml } from '@project-r/styleguide'
 import MdClose from 'react-icons/lib/md/close'
 import MdAdd from 'react-icons/lib/md/add'
 import MdInfoOutline from 'react-icons/lib/md/info-outline'
@@ -8,16 +8,21 @@ import { css } from 'glamor'
 
 import withT from '../../../../lib/withT'
 import PaynoteForm from './PaynoteForm'
+import { DARK_MODE_KEY } from './DarkModeForm'
 
 const styles = {
   title: css({
     display: 'block',
     marginBottom: 5
   }),
+  subtitle: css({
+    padding: '5px 0',
+    fontWeight: 'bold'
+  }),
   container: css({
     backgroundColor: '#fff',
     padding: '5px 10px 15px',
-    marginBottom: 5
+    marginBottom: 15
   }),
   close: css({
     float: 'right'
@@ -28,10 +33,55 @@ const styles = {
   }),
   help: css({
     margin: '0 0 10px'
+  }),
+  checkbox: css({
+    display: 'inline-block',
+    marginRight: 10
   })
 }
 
 const PAYNOTE_KEY = 'paynotes'
+const TARGETS = ['hasActiveMembership', 'isEligibleForTrial']
+
+const DEFAULT_TARGET = {
+  hasActiveMembership: false,
+  isEligibleForTrial: true
+}
+
+const DEFAULT_PAYNOTE = {
+  title: '',
+  body: '',
+  cta: 'trialForm',
+  button: {
+    label: 'Ich bin am Bord',
+    link: '/angebote'
+  },
+  secondary: {
+    prefix: 'Noch nicht überzeugt?',
+    label: 'Jetzt probelesen',
+    link: '/probelesen'
+  }
+}
+
+const TargetForm = withT(({ t, data, onInputChange }) => (
+  <div>
+    <Label style={{ display: 'block', paddingBottom: 5 }}>
+      {t('metaData/paynote/form/target/title')}
+    </Label>
+    {TARGETS.map((target, i) => {
+      return (
+        <div key={i} {...styles.checkbox}>
+          <Checkbox
+            checked={data[target]}
+            onChange={(e, value) => onInputChange({ [target]: value })}
+          >
+            {t(`metaData/paynote/form/target/${target}`)}
+          </Checkbox>
+        </div>
+      )
+    })}
+  </div>
+))
 
 export default withT(({ t, editor, node }) => {
   const paynotes = node.data.get(PAYNOTE_KEY) || []
@@ -49,19 +99,11 @@ export default withT(({ t, editor, node }) => {
 
   const addPaynote = e => {
     e.preventDefault()
-    const templatePaynote = {
-      title: '',
-      body: '',
-      cta: 'trialForm',
-      button: {
-        label: '',
-        link: '/angebote'
-      }
-    }
     onPaynotesChange(
       paynotes.concat({
-        before: templatePaynote,
-        after: templatePaynote
+        target: DEFAULT_TARGET,
+        before: DEFAULT_PAYNOTE,
+        after: DEFAULT_PAYNOTE
       })
     )
   }
@@ -71,11 +113,11 @@ export default withT(({ t, editor, node }) => {
     onPaynotesChange(paynotes.slice(0, i).concat(paynotes.slice(i + 1)))
   }
 
-  const editPaynote = (i, paynote, position) => newAttrs => {
+  const editPaynote = (i, paynote, attr) => newAttrs => {
     const editedPaynote = {
       ...paynote,
-      [position]: {
-        ...paynote[position],
+      [attr]: {
+        ...paynote[attr],
         ...newAttrs
       }
     }
@@ -103,15 +145,32 @@ export default withT(({ t, editor, node }) => {
                 <A href='#remove' onClick={removePaynote(i)} {...styles.close}>
                   <MdClose size={20} fill='#000' />
                 </A>
+                <div>
+                  <Label {...styles.subtitle}>
+                    {t('metaData/paynotes/index', { index: i + 1 })}
+                  </Label>
+                  <br />
+                  <br />
+                  <TargetForm
+                    data={paynote.target}
+                    onInputChange={editPaynote(i, paynote, 'target')}
+                  />
+                </div>
+                <br />
+                <Label {...styles.subtitle}>
+                  {t('metaData/paynotes/before')}
+                </Label>
                 <PaynoteForm
                   data={paynote.before}
-                  name={t('metaData/paynotes/before', { index: i + 1 })}
                   onInputChange={editPaynote(i, paynote, 'before')}
                 />
                 <br />
+                <br />
+                <Label {...styles.subtitle}>
+                  {t('metaData/paynotes/after')}
+                </Label>
                 <PaynoteForm
                   data={paynote.after}
-                  name={t('metaData/paynotes/after', { index: i + 1 })}
                   onInputChange={editPaynote(i, paynote, 'after')}
                 />
               </div>
