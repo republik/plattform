@@ -21,7 +21,10 @@ export const useBodyScrollLock = (lock = true) => {
     }
     const targetElement = ref.current
     if (!numberScrollLocks) {
-      disableBodyScroll(targetElement)
+      disableBodyScroll(targetElement, {
+        allowTouchMove: el =>
+          el.tagName === 'INPUT' && el.type && el.type.toLowerCase() === 'range'
+      })
     }
 
     numberScrollLocks += 1

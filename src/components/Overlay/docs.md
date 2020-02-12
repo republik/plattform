@@ -32,7 +32,7 @@ span: 4
 The overlay opens with a short fade-in animation upon being mounted. Following is an example how to open the overlay in response to a button press.
 
 ```react
-state: {isOpen: false}
+state: {isOpen: false, sliderValue}
 ---
 <div style={{padding: '20px', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
   <Button primary onClick={() => {setState({isOpen: true})}}>
@@ -49,6 +49,15 @@ state: {isOpen: false}
         <Interaction.P style={{height: '100vh'}}>
           This is a placeholder to make the overlay content taller than the viewport
           so that we can test the overflow behavior.
+        </Interaction.P>
+        <Interaction.P>
+          And a slider to test that it is still usable on iOS with the body scroll lock.
+          <Slider
+           fullWidth
+           value={state.sliderValue}
+           min='1'
+           max='100'
+           onChange={(_, sliderValue) => setState({sliderValue})} />
         </Interaction.P>
         <Interaction.P>
           The End.

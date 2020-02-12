@@ -75,9 +75,15 @@ const Overlay = props => {
       setSsrMode(false)
     }
   }, [ssrMode])
+  const [innerRef] = useBodyScrollLock()
 
   const element = (
-    <OverlayRenderer {...props} isVisible={isVisible} ssrMode={ssrMode} />
+    <OverlayRenderer
+      {...props}
+      innerRef={innerRef}
+      isVisible={isVisible}
+      ssrMode={ssrMode}
+    />
   )
 
   if (!ssrMode) {
@@ -100,9 +106,9 @@ export const OverlayRenderer = ({
   mUpStyle,
   children,
   onClose,
-  ssrMode
+  ssrMode,
+  innerRef
 }) => {
-  const [ref] = useBodyScrollLock()
   const close = e => {
     if (e.target === e.currentTarget) {
       onClose()
@@ -119,7 +125,7 @@ export const OverlayRenderer = ({
       <ColorContext.Provider value={colors}>
         <div
           {...merge(styles.inner, mUpStyle && { [mUp]: mUpStyle })}
-          ref={ref}
+          ref={innerRef}
         >
           {children}
         </div>

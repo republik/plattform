@@ -149,7 +149,11 @@ ReactDOM.render(
             {
               path: '/components/overlay',
               title: 'Overlay',
-              imports: { t, ...require('./components/Overlay/docs.imports') },
+              imports: {
+                t,
+                ...require('./components/Overlay/docs.imports'),
+                Slider: require('./components/Form/Slider.js')
+              },
               src: require('./components/Overlay/docs.md')
             },
             {
