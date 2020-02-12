@@ -133,15 +133,16 @@ const styles = {
     width: '100%',
     position: 'relative'
   }),
-  document: {
+  document: css({
+    display: 'block',
     width: '100%'
-  }
+  })
 }
 
 const Container = ({ children }) => <div {...styles.container}>{children}</div>
 
 const Document = ({ children, readOnly }) => (
-  <div
+  <article
     {...styles.document}
     style={
       readOnly
@@ -153,7 +154,7 @@ const Document = ({ children, readOnly }) => (
     }
   >
     {children}
-  </div>
+  </article>
 )
 
 class Editor extends Component {
