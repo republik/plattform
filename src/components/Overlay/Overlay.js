@@ -50,6 +50,7 @@ const Overlay = props => {
   const isDomAvailable = typeof document !== 'undefined'
   if (isDomAvailable && !rootDom.current) {
     rootDom.current = document.createElement('div')
+    document.body.appendChild(rootDom.current)
   }
 
   const [ssrMode, setSsrMode] = useState(
@@ -64,9 +65,6 @@ const Overlay = props => {
     const fadeInTimeout = setTimeout(() => {
       setIsVisible(true)
     }, 33)
-
-    document.body.appendChild(rootDom.current)
-
     return () => {
       clearTimeout(fadeInTimeout)
       document.body.removeChild(rootDom.current)
