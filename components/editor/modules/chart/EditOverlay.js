@@ -91,38 +91,34 @@ export default props => (
               )
             })}
           </Interaction.P>
-          <Interaction.P>
-            <JSONField
-              label='JSON Config'
-              value={config}
-              onChange={value => {
-                onChange(data.set('config', value))
-              }}
-            />
-          </Interaction.P>
-          <Interaction.P>
-            <Field
-              label='CSV Data'
-              name='values'
-              value={data.get('values')}
-              renderInput={renderAutoSize({
-                onPaste: e => {
-                  const clipboardData = e.clipboardData || window.clipboardData
-                  let parsedTsv
-                  try {
-                    parsedTsv = tsvParse(clipboardData.getData('Text'))
-                  } catch (e) {}
-                  if (parsedTsv && parsedTsv.columns.length > 1) {
-                    e.preventDefault()
-                    onChange(data.set('values', csvFormat(parsedTsv)))
-                  }
+          <JSONField
+            label='JSON Config'
+            value={config}
+            onChange={value => {
+              onChange(data.set('config', value))
+            }}
+          />
+          <Field
+            label='CSV Data'
+            name='values'
+            value={data.get('values')}
+            renderInput={renderAutoSize({
+              onPaste: e => {
+                const clipboardData = e.clipboardData || window.clipboardData
+                let parsedTsv
+                try {
+                  parsedTsv = tsvParse(clipboardData.getData('Text'))
+                } catch (e) {}
+                if (parsedTsv && parsedTsv.columns.length > 1) {
+                  e.preventDefault()
+                  onChange(data.set('values', csvFormat(parsedTsv)))
                 }
-              })}
-              onChange={(_, value) => {
-                onChange(data.set('values', value))
-              }}
-            />
-          </Interaction.P>
+              }
+            })}
+            onChange={(_, value) => {
+              onChange(data.set('values', value))
+            }}
+          />
         </Fragment>
       )
     }}
