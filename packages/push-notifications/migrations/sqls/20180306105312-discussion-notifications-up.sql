@@ -17,12 +17,3 @@ ALTER TABLE "users"
   ADD COLUMN "defaultDiscussionNotificationOption"         "discussionNotificationOption" NOT NULL DEFAULT 'MY_CHILDREN',
   ADD COLUMN "discussionNotificationChannels"              jsonb NOT NULL DEFAULT '["WEB", "EMAIL"]'
 ;
-
---create table "notifications" (
---  "id"                  uuid primary key not null default uuid_generate_v4(),
---  "userId"              uuid not null references "users",
---  "read"                boolean not null default false,
---  "commentId"           uuid references "comments",
---  "createdAt"           timestamptz default now(),
---  "updatedAt"           timestamptz default now()
---);

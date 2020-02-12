@@ -41,10 +41,10 @@ PgDb.connect().then(async pgdb => {
     if (!user) {
       throw new Error(`user with email (${email}) not found!`)
     }
-    userIds = [ user.id ]
+    userIds = [user.id]
   }
 
-  console.log('publishing...', {userIds, message})
+  console.log('publishing...', { userIds, message })
 
   await publish(userIds, message, { pgdb })
 }).then(() => {

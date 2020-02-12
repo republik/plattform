@@ -9,7 +9,7 @@ module.exports = {
     return filtered(
       pubsub.asyncIterator('webNotification'),
       (update) =>
-        update.webNotification.userIds.indexOf(user.id) > -1
+        update.userIds.indexOf(user.id) > -1
     )()
   }
 }

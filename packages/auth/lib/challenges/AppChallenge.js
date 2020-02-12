@@ -3,7 +3,7 @@ const uuid = require('uuid/v4')
 const t = require('../t')
 
 const { newAuthError } = require('../AuthError')
-const { app } = require('@orbiting/backend-modules-notifications/lib')
+const { app } = require('@orbiting/backend-modules-push-notifications/lib')
 const { encode } = require('@orbiting/backend-modules-base64u')
 
 const UserMissingError = newAuthError('app-challenge-user-missing', 'api/users/404')

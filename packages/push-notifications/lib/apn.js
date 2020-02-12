@@ -38,7 +38,7 @@ const publish = async (args, pgdb) => {
     return
   }
   if (!provider) {
-    throw new Error(`mssing env APN_*, can't publish`)
+    throw new Error('mssing env APN_*, can\'t publish')
   }
 
   const { tokens, title, body, url, icon, type, ttl } = args

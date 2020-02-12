@@ -56,7 +56,8 @@ const send = async ({
   context
 }) => {
   if (!sendFunc || !message || !email || !context || !context.pgdb) {
-    throw new Error('missing input', { sendFunc, message, email, context })
+    console.error('missing input', { sendFunc, message, email, context })
+    throw new Error('missing input')
   }
 
   if (onceFor) {
