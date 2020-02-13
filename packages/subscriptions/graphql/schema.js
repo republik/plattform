@@ -1,7 +1,17 @@
 module.exports = `
 
 schema {
+  query: queries
   mutation: mutations
+}
+
+type queries {
+  notifications(
+    first: Int
+    last: Int
+    before: String
+    after: String
+  ): NotificationConnection
 }
 
 type mutations {
@@ -9,7 +19,7 @@ type mutations {
   subscribe(
     objectId: ID!
     type: SubscriptionObjectType!
-    filters: [SubscriptionEvent!]
+    filters: [EventObjectType!]
   ): Subscription!
 
   unsubscribe(

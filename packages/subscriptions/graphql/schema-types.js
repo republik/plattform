@@ -33,10 +33,11 @@ extend type Discussion {
   ): SubscriptionConnection!
 }
 
-enum SubscriptionEvent {
-  COMMENTS
-  DOCUMENTS
+enum EventObjectType {
+  Comment
+  Document
 }
+union EventObject = Comment | Document
 
 enum SubscriptionObjectType {
   User
@@ -49,7 +50,7 @@ type Subscription {
   id: ID!
   object: SubscriptionObject!
   subject: User!
-  filters: [SubscriptionEvent!]
+  filters: [EventObjectType!]
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -67,6 +68,38 @@ type SubscriptionPageInfo {
   endCursor: String
   hasPreviousPage: Boolean!
   startCursor: String
+}
+
+type NotificationConnection {
+  totalCount: Int!
+  pageInfo: NotificationPageInfo!
+  nodes: [Notification!]!
+}
+
+type NotificationPageInfo {
+  hasNextPage: Boolean!
+  endCursor: String
+  hasPreviousPage: Boolean!
+  startCursor: String
+}
+
+type Notification {
+  id: ID!
+  eventObjectType: EventObjectType!
+  eventObject: EventObject!
+  subscription: Subscription
+  content: NotificationContent!
+  channels: [DiscussionNotificationChannel]!
+  mailLogRecord: MailLogRecord
+  readAt: DateTime
+  createdAt: DateTime!
+}
+
+type NotificationContent {
+  title: String!
+  body: String!
+  url: String!
+  icon: String!
 }
 
 
