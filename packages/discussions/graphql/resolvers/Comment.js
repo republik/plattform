@@ -16,7 +16,7 @@ const { getEmbedByUrl } = require('@orbiting/backend-modules-embeds')
 
 const {
   DISPLAY_AUTHOR_SECRET,
-  FRONTEND_BASE_URL
+  ASSETS_SERVER_BASE_URL
 } = process.env
 if (!DISPLAY_AUTHOR_SECRET) {
   throw new Error('missing required DISPLAY_AUTHOR_SECRET')
@@ -299,7 +299,7 @@ module.exports = {
       return {
         document: doc,
         fragmentId,
-        iconUrl: `${FRONTEND_BASE_URL}/static/top-story-badge.png`
+        iconUrl: `${ASSETS_SERVER_BASE_URL}/s3/republik-assets/assets/top-storys/top-story-badge.png`
       }
     }
   },
