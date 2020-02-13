@@ -51,7 +51,7 @@ const styles = {
 export class IconLink extends Component {
   render() {
     const { href, onClick, discussionCommentsCount, style, small } = this.props
-    const size = small ? 22 : 24
+    const dimension = small ? 22 : 24
     const fontSize = small ? '15px' : undefined
     const lineHeight = small ? '20px' : undefined
     const patchedStyle = {
@@ -62,7 +62,7 @@ export class IconLink extends Component {
     return (
       <a href={href} onClick={onClick} {...styles.link} style={patchedStyle}>
         <span {...styles.icon}>
-          <Icon size={size} fill={colors.primary} />
+          <Icon size={dimension} fill={colors.primary} />
         </span>
         {discussionCommentsCount > 0 && (
           <span
@@ -86,7 +86,7 @@ IconLink.propTypes = {
   small: PropTypes.bool
 }
 
-const Icon = ({ size, fill }) => (
+export const Icon = ({ size, fill }) => (
   <svg
     width={size}
     height={size}

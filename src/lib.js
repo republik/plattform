@@ -63,6 +63,7 @@ export {
 export { Tweet } from './components/Social'
 export { Video } from './components/Video'
 export { TeaserFeed } from './components/TeaserFeed'
+export { TeaserNotification } from './components/TeaserNotification'
 export {
   TeaserFrontImage,
   TeaserFrontImageHeadline,

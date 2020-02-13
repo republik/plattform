@@ -585,6 +585,15 @@ ReactDOM.render(
                 ...require('./components/TeaserShared')
               },
               src: require('./components/TeaserShared/docs.md')
+            },
+            {
+              path: '/teasernotification',
+              title: 'TeaserNotification',
+              imports: {
+                css,
+                ...require('./components/TeaserNotification')
+              },
+              src: require('./components/TeaserNotification/docs.md')
             }
           ]
         },
