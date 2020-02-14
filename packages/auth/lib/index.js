@@ -5,6 +5,7 @@ module.exports = {
   checkUsername: require('./checkUsername'),
   Consents: require('./Consents'),
   ensureSignedIn: require('./ensureSignedIn'),
+  ensureUser: require('./ensureUser'),
   Fields: require('./Fields'),
   geoForIP: require('./geoForIP'),
   Roles: require('./Roles'),

@@ -52,8 +52,9 @@ module.exports = (
             return createContext()
           }
           const cookies = cookie.parse(cookiesRaw)
-          const sid = cookieParser.signedCookie(
-            cookies['connect.sid'],
+          const authCookie = cookies['connect.sid']
+          const sid = authCookie && cookieParser.signedCookie(
+            authCookie,
             process.env.SESSION_SECRET
           )
           const session = sid && await pgdb.public.sessions.findOne({ sid })
