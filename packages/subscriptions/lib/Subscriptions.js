@@ -1,9 +1,10 @@
 const { transformUser } = require('@orbiting/backend-modules-auth')
+const { getObjectByIdAndType } = require('./genericObject')
 
 const objectTypes = ({
-  'User': 'objectUserId',
-  'Document': 'objectDocumentId',
-  'Discussion': 'objectDiscussionId'
+  User: 'objectUserId',
+  Document: 'objectDocumentId',
+  Discussion: 'objectDiscussionId'
 })
 
 const upsertSubscription = async (args, context) => {
@@ -65,21 +66,15 @@ const removeSubscription = async (id, context) => {
 }
 
 const getObject = async (subscription, context) => {
-  const { loaders, t } = context
-
   const { objectType: type } = subscription
 
-  if (type !== 'User') {
-    throw new Error(t('api/subscriptions/type/notSupported'))
-  }
-
-  const userId = subscription[objectTypes[type]]
-
-  const obj = await loaders.User.byId.load(userId)
-  return {
-    __typename: type,
-    ...obj
-  }
+  return getObjectByIdAndType(
+    {
+      id: subscription[objectTypes[type]],
+      type
+    },
+    context
+  )
 }
 
 const getSubject = (subscription, context) => {

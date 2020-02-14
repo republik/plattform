@@ -57,27 +57,34 @@ const send = async (args, context) => {
   const webUserIds = notifications
     .filter(n => n.channels.indexOf('WEB') > -1)
     .map(n => n.user.id)
-  if (webUserIds.length > 0) {
-    await pubsub.publish('webNotification', {
-      webNotification: content.app,
-      userIds: webUserIds
-    })
-  }
-
   const appUserIds = notifications
     .filter(n => n.channels.indexOf('APP') > -1)
     .map(n => n.user.id)
-  if (appUserIds.length > 0) {
-    await pushNotifications.publish(appUserIds, content.app, context)
-  }
 
-  await Promise.all(
-    notifications
-      .filter(n => n.channels.indexOf('EMAIL') > -1)
-      .map(n =>
+  const emailNotifications = notifications
+    .filter(n => n.channels.indexOf('EMAIL') > -1)
+
+  await Promise.all([
+    webUserIds.length && (
+      pubsub.publish('webNotification', {
+        webNotification: content.app,
+        userIds: webUserIds
+      })
+    ),
+    appUserIds.length && (
+      pushNotifications.publish(appUserIds, content.app, context)
+    ),
+    emailNotifications.length && (
+      Promise.all(emailNotifications.map(n =>
         sendMailTemplate(content.mail(n.user), context)
-      )
-  )
+      ))
+    ),
+    Promise.all(notifications.map(n =>
+      pubsub.publish('notification', {
+        notification: n
+      })
+    ))
+  ].filter(Boolean))
 }
 
 module.exports = send

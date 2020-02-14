@@ -3,6 +3,7 @@ module.exports = `
 schema {
   query: queries
   mutation: mutations
+  subscription: subscriptions
 }
 
 type queries {
@@ -25,5 +26,14 @@ type mutations {
   unsubscribe(
     subscriptionId: ID!
   ): Subscription!
+
+  markNotificationAsRead(id: ID!): Notification!
+  markAllNotificationsAsRead: [Notification!]!
+
+}
+
+type subscriptions {
+  webNotification: WebNotification!
+  notification: Notification!
 }
 `

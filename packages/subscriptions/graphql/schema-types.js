@@ -72,21 +72,13 @@ type SubscriptionPageInfo {
 
 type NotificationConnection {
   totalCount: Int!
-  pageInfo: NotificationPageInfo!
+  pageInfo: SubscriptionPageInfo!
   nodes: [Notification!]!
-}
-
-type NotificationPageInfo {
-  hasNextPage: Boolean!
-  endCursor: String
-  hasPreviousPage: Boolean!
-  startCursor: String
 }
 
 type Notification {
   id: ID!
-  eventObjectType: EventObjectType!
-  eventObject: EventObject!
+  object: EventObject!
   subscription: Subscription
   content: NotificationContent!
   channels: [DiscussionNotificationChannel]!

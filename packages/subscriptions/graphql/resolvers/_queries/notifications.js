@@ -1,7 +1,8 @@
 const { ensureSignedIn } = require('@orbiting/backend-modules-auth')
-const Promise = require('bluebird')
+const { paginate } = require('@orbiting/backend-modules-utils')
 
-// TODO this is all total WIP
+const MAX_RECORDS = 1000
+
 module.exports = async (_, args, context) => {
   const {
     req,
@@ -10,43 +11,21 @@ module.exports = async (_, args, context) => {
   } = context
   ensureSignedIn(req)
 
-  const notifications = await pgdb.query(`
-    SELECT
-      n.*,
-      jsonb_agg(e.*) as events
-    FROM
-      notifications n
-    JOIN
-      events e
-      ON n."eventId" = e.id
-    WHERE
-      n."userId" = :userId
-    GROUP BY
-      n.id
-  `, {
-    userId: me.id
-  })
-
-  const nodes = await Promise.map(
-    notifications,
-    async (n) => {
-      const event = n.events[0]
-      const eventObject = await pgdb.public.comments.findOne({ id: event.objectId })
-      return {
-        ...n,
-        eventObjectType: event.objectType,
-        eventObject: {
-          ...eventObject,
-          __typename: 'Comment'
-        }
-      }
+  const nodes = await pgdb.public.notifications.find(
+    {
+      userId: me.id
+    },
+    {
+      orderBy: { createdAt: 'DESC' },
+      limit: MAX_RECORDS
     }
   )
 
-  return {
-    hasNextPage: false,
-    hasPreviousPage: false,
-    totalCount: nodes.length,
+  return paginate(
+    {
+      ...args,
+      first: Math.min(args.first || 100, 100)
+    },
     nodes
-  }
+  )
 }
