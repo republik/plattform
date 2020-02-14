@@ -11,5 +11,11 @@ module.exports = {
         },
         context
       ))
+  },
+  mailLogRecord ({ mailLogId }, args, { loaders }) {
+    if (!mailLogId) {
+      return null
+    }
+    return loaders.MailLog.byId.load(mailLogId)
   }
 }

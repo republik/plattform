@@ -75,8 +75,16 @@ const send = async (args, context) => {
       pushNotifications.publish(appUserIds, content.app, context)
     ),
     emailNotifications.length && (
-      Promise.all(emailNotifications.map(n =>
-        sendMailTemplate(content.mail(n.user), context)
+      Promise.all(emailNotifications.map(notification =>
+        sendMailTemplate(content.mail(notification.user), context)
+          .then(result => {
+            if (result && result.mailLogId) {
+              return pgdb.public.notifications.updateOne(
+                { id: notification.id },
+                { mailLogId: result.mailLogId }
+              )
+            }
+          })
       ))
     ),
     Promise.all(notifications.map(n =>

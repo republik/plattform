@@ -106,7 +106,7 @@ const send = async ({
     context
   )
 
-  return { result, status, error }
+  return { result, status, error, mailLogId: logEntry.id }
 }
 
 module.exports = {
