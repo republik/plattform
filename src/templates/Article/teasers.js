@@ -45,6 +45,7 @@ import { DossierSubheader, DossierTileHeadline } from '../../components/Dossier'
 import { subject } from '../Front'
 
 import { Breakout } from '../../components/Center'
+import RawHtml from '../../components/RawHtml'
 
 import * as Editorial from '../../components/Typography/Editorial'
 
@@ -59,7 +60,7 @@ const articleTileSubject = {
   }
 }
 
-const createTeasers = ({ t, Link }) => {
+const createTeasers = ({ t, Link, plattformUnauthorizedZoneText }) => {
   const teaserTitle = (type, Headline) => ({
     matchMdast: matchHeading(1),
     component: ({ children, href, ...props }) => (
@@ -485,23 +486,32 @@ const createTeasers = ({ t, Link }) => {
     carousel,
     articleCollection: {
       matchMdast: matchZone('ARTICLECOLLECTION'),
-      component: ({ children, attributes, unauthorized, unauthorizedText }) =>
-        unauthorized ? (
-          unauthorizedText ? (
-            <Interaction.P
-              style={{
-                backgroundColor: colors.primaryBg,
-                padding: '10px 20px'
-              }}
-            >
-              {unauthorizedText}
-            </Interaction.P>
-          ) : null
-        ) : (
+      component: ({ children, attributes, unauthorized, unauthorizedText }) => {
+        if (unauthorized) {
+          if (unauthorizedText) {
+            const text = plattformUnauthorizedZoneText || unauthorizedText
+            return (
+              <div
+                style={{
+                  backgroundColor: colors.primaryBg,
+                  padding: '10px 20px'
+                }}
+              >
+                <RawHtml
+                  type={Interaction.P}
+                  dangerouslySetInnerHTML={{ __html: text }}
+                />
+              </div>
+            )
+          }
+          return null
+        }
+        return (
           <Breakout size='breakout' attributes={attributes}>
             {children}
           </Breakout>
-        ),
+        )
+      },
       props: node => ({
         unauthorized: node.data.membersOnly && !node.children.length,
         unauthorizedText: node.data.unauthorizedText

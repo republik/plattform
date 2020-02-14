@@ -792,6 +792,7 @@ const createSchema = ({
   Link = DefaultLink,
   getPath = getDatePath,
   t = () => '',
+  plattformUnauthorizedZoneText,
   dynamicComponentRequire,
   previewTeaser,
   getVideoPlayerProps = props => props,
@@ -799,7 +800,8 @@ const createSchema = ({
 } = {}) => {
   const teasers = createTeasers({
     t,
-    Link
+    Link,
+    plattformUnauthorizedZoneText
   })
 
   const cover = createCover({ onAudioCoverClick })
