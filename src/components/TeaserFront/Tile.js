@@ -80,7 +80,8 @@ const Tile = ({
   bgColor,
   align,
   aboveTheFold,
-  onlyImage
+  onlyImage,
+  singleColumn
 }) => {
   const [colorScheme] = useColorContext()
   const background = bgColor || colorScheme.containerBg
@@ -136,8 +137,12 @@ const Tile = ({
         </div>
       )}
       {!onlyImage && (
-        <div {...styles.textContainer}>
-          <Text color={textColor} maxWidth={'600px'} margin={'0 auto'}>
+        <div {...(singleColumn ? {} : styles.textContainer)}>
+          <Text
+            color={textColor}
+            maxWidth={singleColumn ? undefined : '600px'}
+            margin={'0 auto'}
+          >
             {children}
           </Text>
         </div>

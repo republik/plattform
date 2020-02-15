@@ -135,6 +135,7 @@ const styles = {
   }),
   time: css({
     ...ellipsize,
+    fontFeatureSettings: '"tnum" 1, "kern" 1',
     fontSize: '19px'
   }),
   scrub: css({

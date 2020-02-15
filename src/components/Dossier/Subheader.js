@@ -7,25 +7,33 @@ import { useColorContext } from '../Colors/useColorContext'
 
 const styles = {
   subheader: css({
-    width: '100%',
     ...convertStyleToRem(sansSerifMedium16),
+    [mUp]: {
+      ...convertStyleToRem(sansSerifMedium20)
+    }
+  }),
+  spaced: css({
+    width: '100%',
     margin: '70px 0 30px 0',
     textAlign: 'center',
     [mUp]: {
-      ...convertStyleToRem(sansSerifMedium20),
       margin: '100px 0 70px 0'
     }
   })
 }
 
-const Subheader = ({ children }) => {
+const Subheader = ({ children, singleColumn }) => {
   const [colorScheme] = useColorContext()
   const colors = css({
     color: colorScheme.text
   })
 
   return (
-    <h2 {...styles.subheader} {...colors}>
+    <h2
+      {...styles.subheader}
+      {...(singleColumn ? {} : styles.spaced)}
+      {...colors}
+    >
       {children}
     </h2>
   )

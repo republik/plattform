@@ -140,6 +140,7 @@ export const TeaserFrontTileRow = ({
   children,
   attributes,
   columns,
+  singleColumn,
   autoColumns,
   mobileReverse,
   mobileColumns
@@ -163,10 +164,23 @@ export const TeaserFrontTileRow = ({
 
   const rowStyles = merge(
     styles.base,
-    !autoColumns && styles[`col${columns}`],
+    !singleColumn && !autoColumns && styles[`col${columns}`],
     mobileReverse && styles.mobileReverse,
     autoColumns
       ? merge(autoBorders, styles.autoColumns)
+      : singleColumn
+      ? css({
+          '& .tile': {
+            textAlign: 'left',
+            borderTop: `1px solid ${colorScheme.divider}`,
+            [mUp]: {
+              padding: '25px 0'
+            }
+          },
+          [mUp]: {
+            flexWrap: 'wrap'
+          }
+        })
       : styles[`mobileCol${mobileColumns}`]
   )
   return (

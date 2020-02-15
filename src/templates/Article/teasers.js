@@ -109,19 +109,25 @@ const createTeasers = ({ t, Link, plattformUnauthorizedZoneText }) => {
 
   const teaserFormat = {
     matchMdast: matchHeading(6),
-    component: ({ children, attributes, formatColor, href }) => (
-      <Editorial.Format attributes={attributes} color={formatColor}>
-        <Link href={href} passHref>
-          <a href={href} {...styles.link}>
-            {children}
-          </a>
-        </Link>
-      </Editorial.Format>
-    ),
+    component: ({ children, attributes, formatColor, href, hasChildren }) => {
+      if (!hasChildren) {
+        return null
+      }
+      return (
+        <Editorial.Format attributes={attributes} color={formatColor}>
+          <Link href={href} passHref>
+            <a href={href} {...styles.link}>
+              {children}
+            </a>
+          </Link>
+        </Editorial.Format>
+      )
+    },
     props(node, index, parent, { ancestors }) {
       const teaser = ancestors.find(matchTeaser)
       const data = teaser && teaser.data
       return {
+        hasChildren: node.children.length,
         formatColor: data
           ? data.formatColor
             ? data.formatColor
@@ -178,16 +184,26 @@ const createTeasers = ({ t, Link, plattformUnauthorizedZoneText }) => {
     ]
   }
 
+  const getSingleColumn = ancestors => {
+    const collection = ancestors.find(matchZone('ARTICLECOLLECTION'))
+    return collection && collection.data.singleColumn
+  }
+
   const articleTile = {
     matchMdast: matchTeaserType('articleTile'),
-    component: ({ children, attributes, ...props }) => (
+    component: ({ children, attributes, singleColumn, ...props }) => (
       <Link href={props.url}>
-        <TeaserFrontTile attributes={attributes} {...props}>
+        <TeaserFrontTile
+          singleColumn={singleColumn}
+          attributes={attributes}
+          {...props}
+        >
           {children}
         </TeaserFrontTile>
       </Link>
     ),
-    props: node => ({
+    props: (node, index, parent, { ancestors }) => ({
+      singleColumn: getSingleColumn(ancestors),
       image: extractImage(node.children[0]),
       ...node.data
     }),
@@ -220,13 +236,21 @@ const createTeasers = ({ t, Link, plattformUnauthorizedZoneText }) => {
     matchMdast: node => {
       return matchZone('TEASERGROUP')(node)
     },
-    component: ({ children, attributes, ...props }) => {
+    component: ({ children, attributes, singleColumn, ...props }) => {
       return (
-        <TeaserFrontTileRow autoColumns attributes={attributes} {...props}>
+        <TeaserFrontTileRow
+          autoColumns={!singleColumn}
+          singleColumn={singleColumn}
+          attributes={attributes}
+          {...props}
+        >
           {children}
         </TeaserFrontTileRow>
       )
     },
+    props: (node, index, parent, { ancestors }) => ({
+      singleColumn: getSingleColumn(ancestors)
+    }),
     editorModule: 'articleGroup',
     editorOptions: {
       type: 'ARTICLETILEROW'
@@ -486,7 +510,13 @@ const createTeasers = ({ t, Link, plattformUnauthorizedZoneText }) => {
     carousel,
     articleCollection: {
       matchMdast: matchZone('ARTICLECOLLECTION'),
-      component: ({ children, attributes, unauthorized, unauthorizedText }) => {
+      component: ({
+        children,
+        attributes,
+        unauthorized,
+        unauthorizedText,
+        singleColumn
+      }) => {
         if (unauthorized) {
           if (unauthorizedText) {
             const text = plattformUnauthorizedZoneText || unauthorizedText
@@ -507,14 +537,18 @@ const createTeasers = ({ t, Link, plattformUnauthorizedZoneText }) => {
           return null
         }
         return (
-          <Breakout size='breakout' attributes={attributes}>
+          <Breakout
+            size={singleColumn ? 'normal' : 'breakout'}
+            attributes={attributes}
+          >
             {children}
           </Breakout>
         )
       },
       props: node => ({
         unauthorized: node.data.membersOnly && !node.children.length,
-        unauthorizedText: node.data.unauthorizedText
+        unauthorizedText: node.data.unauthorizedText,
+        singleColumn: node.data.singleColumn
       }),
       editorModule: 'articleCollection',
       editorOptions: {
@@ -526,11 +560,17 @@ const createTeasers = ({ t, Link, plattformUnauthorizedZoneText }) => {
       rules: [
         {
           matchMdast: matchHeading(2),
-          component: ({ children, attributes }) => (
-            <DossierSubheader attributes={attributes}>
+          component: ({ children, attributes, singleColumn }) => (
+            <DossierSubheader
+              singleColumn={singleColumn}
+              attributes={attributes}
+            >
               {children}
             </DossierSubheader>
           ),
+          props: (node, index, parent, { ancestors }) => ({
+            singleColumn: getSingleColumn(ancestors)
+          }),
           editorModule: 'headline',
           editorOptions: {
             type: 'ARTICLECOLLECTIONSUBHEADER',
