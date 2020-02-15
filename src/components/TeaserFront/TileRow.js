@@ -173,6 +173,7 @@ export const TeaserFrontTileRow = ({
           '& .tile': {
             textAlign: 'left',
             borderTop: `1px solid ${colorScheme.divider}`,
+            padding: '25px 0',
             [mUp]: {
               padding: '25px 0'
             }
