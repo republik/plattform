@@ -850,6 +850,15 @@ ReactDOM.render(
                 ...require('./components/Typography'),
                 ...require('./lib/inQuotes')
               }
+            },
+            {
+              path: '/dev/useHeaderHeight',
+              title: 'useHeaderHeight',
+              src: require('./lib/useHeaderHeight.docs.md'),
+              imports: {
+                ...require('./lib/useHeaderHeight'),
+                css
+              }
             }
           ]
         }

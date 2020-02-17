@@ -3,7 +3,7 @@ import React from 'react'
 const DEFAULT_CONFIG = [{ minWidth: 0, headerHeight: 0 }]
 
 const HeaderHeightContext = React.createContext({
-  value: 0,
+  value: DEFAULT_CONFIG[0].headerHeight,
   rules: []
 })
 
@@ -13,7 +13,9 @@ export const useHeaderHeight = () => {
 }
 
 export const HeaderHeightProvider = ({ children, config = DEFAULT_CONFIG }) => {
-  const [headerHeightValue, setHeaderHeightValue] = React.useState(0)
+  const [headerHeightValue, setHeaderHeightValue] = React.useState(
+    config[0].headerHeight
+  )
 
   const rules = React.useMemo(
     () =>
@@ -27,7 +29,7 @@ export const HeaderHeightProvider = ({ children, config = DEFAULT_CONFIG }) => {
   const handleResize = () => {
     if (window) {
       const nextHeaderHeightValue = config.reduce((acc, cur) => {
-        if (window.innerWidth >= cur.minWidth && cur.minWidth >= acc) {
+        if (window.innerWidth >= cur.minWidth) {
           return cur.headerHeight
         } else {
           return acc
