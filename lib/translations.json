@@ -1,5 +1,5 @@
 {
-  "updated": "2020-02-18T10:20:15.430Z",
+  "updated": "2020-02-18T12:44:20.968Z",
   "title": "live",
   "data": [
     {
@@ -620,7 +620,7 @@
     },
     {
       "key": "metaData/paynotes/help",
-      "value": "Anzahl Mitglieder mit <b>{count}</b> und gefettet mit <b>&lt;b&gt;B-Tags&lt;/b&gt;</b>.<br />Für einen neuen Paragraf, können Sie <b>&#92;n&#92;n</b> verwenden."
+      "value": "Anzahl Mitglieder mit <b>{count}</b> und B-Tags für <b>&lt;b&gt;gefettet&lt;/b&gt;</b>. Für einen neuen Paragraf, eine leere Zeile – doppelter Umbruch."
     },
     {
       "key": "metaData/paynote/form/target/title",
