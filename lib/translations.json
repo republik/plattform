@@ -1,5 +1,5 @@
 {
-  "updated": "2020-01-08T15:50:32.259Z",
+  "updated": "2020-02-18T12:44:20.968Z",
   "title": "live",
   "data": [
     {
@@ -596,67 +596,83 @@
     },
     {
       "key": "metaData/paynotes/add",
-      "value": "Add custom paynotes"
+      "value": "Spezialangefertigte Störer hinzufügen"
     },
     {
       "key": "metaData/paynotes/title",
-      "value": "Custom paynotes"
+      "value": "Spezialangefertigte Störer"
+    },
+    {
+      "key": "metaData/paynotes/index",
+      "value": "Störer #{index}"
     },
     {
       "key": "metaData/paynotes/before",
-      "value": "Paynote {index} - before"
+      "value": "Am Anfang"
     },
     {
       "key": "metaData/paynotes/after",
-      "value": "Paynote {index} - after"
+      "value": "Am Ende"
     },
     {
       "key": "metaData/paynotes/new",
-      "value": "new paynote"
+      "value": "Neuer Störer"
     },
     {
       "key": "metaData/paynotes/help",
-      "value": "Render members count with <b>{count}</b> and bold text with <b>&lt;b&gt;bold tags&lt;/b&gt;</b>."
+      "value": "Anzahl Mitglieder mit <b>{count}</b> und B-Tags für <b>&lt;b&gt;gefettet&lt;/b&gt;</b>. Für einen neuen Paragraf, eine leere Zeile – doppelter Umbruch."
+    },
+    {
+      "key": "metaData/paynote/form/target/title",
+      "value": "Ziel"
+    },
+    {
+      "key": "metaData/paynote/form/target/hasActiveMembership",
+      "value": "Aktive Mitglieder"
+    },
+    {
+      "key": "metaData/paynote/form/target/isEligibleForTrial",
+      "value": "Probelesen berechtigt"
     },
     {
       "key": "metaData/paynote/form/cta/label",
-      "value": "Call to action"
+      "value": "Aktivierung"
     },
     {
       "key": "metaData/paynote/form/cta/0",
-      "value": "trial form"
+      "value": "Probelesen"
     },
     {
       "key": "metaData/paynote/form/cta/1",
-      "value": "button"
+      "value": "Button"
     },
     {
       "key": "metaData/paynote/form/cta/2",
-      "value": "none"
+      "value": "Keine"
     },
     {
-      "key": "metaData/paynote/form/trynote",
-      "value": "Try Republik"
-    },
-    {
-      "key": "metaData/paynote/form/buynote",
-      "value": "Buy Republik"
-    },
-    {
-      "key": "metaData/paynote/form/title",
-      "value": "Title"
-    },
-    {
-      "key": "metaData/paynote/form/body",
-      "value": "Body"
+      "key": "metaData/paynote/form/content",
+      "value": "Inhalt"
     },
     {
       "key": "metaData/paynote/form/button/label",
-      "value": "Button label"
+      "value": "Label"
     },
     {
       "key": "metaData/paynote/form/button/link",
-      "value": "Button link\n"
+      "value": "Link"
+    },
+    {
+      "key": "metaData/paynote/form/secondary/prefix",
+      "value": "Sekundärer Präfix (optional)"
+    },
+    {
+      "key": "metaData/paynote/form/secondary/label",
+      "value": "Sekundäres Label (optional)"
+    },
+    {
+      "key": "metaData/paynote/form/secondary/link",
+      "value": "Sekundärer Link (optional)"
     },
     {
       "key": "metaData/field/url",

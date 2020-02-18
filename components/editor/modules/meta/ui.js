@@ -22,6 +22,7 @@ import FBPreview from './FBPreview'
 import TwitterPreview from './TwitterPreview'
 import RepoSelect from './RepoSelect'
 import SeriesForm from './SeriesForm'
+import PaynotesForm from './PaynotesForm'
 import AudioForm from './AudioForm'
 import UIForm from '../../UIForm'
 import DarkModeForm, { DARK_MODE_KEY } from './DarkModeForm'
@@ -51,6 +52,7 @@ const MetaData = ({
   contextMeta,
   series,
   darkMode,
+  paynotes,
   additionalFields = [],
   customFields = [],
   teaser: Teaser,
@@ -333,6 +335,7 @@ const MetaData = ({
         <br />
         <br />
         <br />
+        {!!paynotes && <PaynotesForm editor={editor} node={node} />}
         <br />
         <br />
         <br />
