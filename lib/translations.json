@@ -1,5 +1,5 @@
 {
-  "updated": "2020-02-11T13:29:06.786Z",
+  "updated": "2020-02-18T00:11:40.085Z",
   "title": "live",
   "data": [
     {
@@ -596,95 +596,87 @@
     },
     {
       "key": "metaData/paynotes/add",
-      "value": "Add custom paynotes"
+      "value": "Spezialangefertigte Störer hinzufügen"
     },
     {
       "key": "metaData/paynotes/title",
-      "value": "Custom paynotes"
+      "value": "Spezialangefertigte Störer"
     },
     {
       "key": "metaData/paynotes/index",
-      "value": "Paynote #{index}"
+      "value": "Störer #{index}"
     },
     {
       "key": "metaData/paynotes/before",
-      "value": "Beginning of article"
+      "value": "Am Anfang"
     },
     {
       "key": "metaData/paynotes/after",
-      "value": "End of article"
+      "value": "Am Ende"
     },
     {
       "key": "metaData/paynotes/new",
-      "value": "new paynote"
+      "value": "Neuer Störer"
     },
     {
       "key": "metaData/paynotes/help",
-      "value": "Render members count with <b>{count}</b> and bold text with <b>&lt;b&gt;bold tags&lt;/b&gt;</b>."
+      "value": "Anzahl Mitglieder mit <b>{count}</b> und gefettet mit <b>&lt;b&gt;B-Tags&lt;/b&gt;</b>."
     },
     {
       "key": "metaData/paynote/form/target/title",
-      "value": "Target"
+      "value": "Ziel"
     },
     {
       "key": "metaData/paynote/form/target/hasActiveMembership",
-      "value": "active members"
+      "value": "Aktive Mitglieder"
     },
     {
       "key": "metaData/paynote/form/target/isEligibleForTrial",
-      "value": "eligible for trial"
+      "value": "Gäste"
     },
     {
       "key": "metaData/paynote/form/cta/label",
-      "value": "Call to action"
+      "value": "Aktivierung"
     },
     {
       "key": "metaData/paynote/form/cta/0",
-      "value": "trial form"
+      "value": "Probelesen"
     },
     {
       "key": "metaData/paynote/form/cta/1",
-      "value": "button"
+      "value": "Button"
     },
     {
       "key": "metaData/paynote/form/cta/2",
-      "value": "none"
-    },
-    {
-      "key": "metaData/paynote/form/trynote",
-      "value": "Try Republik"
-    },
-    {
-      "key": "metaData/paynote/form/buynote",
-      "value": "Buy Republik"
+      "value": "Keine"
     },
     {
       "key": "metaData/paynote/form/title",
-      "value": "Title"
+      "value": "Titel"
     },
     {
       "key": "metaData/paynote/form/body",
-      "value": "Body"
+      "value": "Text"
     },
     {
       "key": "metaData/paynote/form/button/label",
-      "value": "Button label"
+      "value": "Label"
     },
     {
       "key": "metaData/paynote/form/button/link",
-      "value": "Button link\n"
+      "value": "Link"
     },
     {
       "key": "metaData/paynote/form/secondary/prefix",
-      "value": "Secondary prefix (optional)"
+      "value": "Sekundärer Präfix (optional)"
     },
     {
       "key": "metaData/paynote/form/secondary/label",
-      "value": "Secondary label (optional)"
+      "value": "Sekundäres Label (optional)"
     },
     {
       "key": "metaData/paynote/form/secondary/link",
-      "value": "Secondary link (optional)"
+      "value": "Sekundärer Link (optional)"
     },
     {
       "key": "metaData/field/url",
