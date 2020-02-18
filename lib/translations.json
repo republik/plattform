@@ -1,5 +1,5 @@
 {
-  "updated": "2020-02-18T00:11:40.085Z",
+  "updated": "2020-02-18T00:18:27.704Z",
   "title": "live",
   "data": [
     {
@@ -632,7 +632,7 @@
     },
     {
       "key": "metaData/paynote/form/target/isEligibleForTrial",
-      "value": "Gäste"
+      "value": "Probelesen berechtigt"
     },
     {
       "key": "metaData/paynote/form/cta/label",
