@@ -49,17 +49,16 @@ const DEFAULT_TARGET = {
 }
 
 const DEFAULT_PAYNOTE = {
-  title: '',
-  body: '',
-  cta: 'trialForm',
+  content: '',
+  cta: undefined,
   button: {
-    label: 'Ich bin am Bord',
-    link: '/angebote'
+    label: '',
+    link: ''
   },
   secondary: {
-    prefix: 'Noch nicht überzeugt?',
-    label: 'Jetzt probelesen',
-    link: '/probelesen'
+    prefix: '',
+    label: '',
+    link: ''
   }
 }
 

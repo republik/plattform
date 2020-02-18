@@ -43,22 +43,12 @@ export default withT(({ t, data, onInputChange }) => {
   return (
     <div>
       <Field
-        label={t('metaData/paynote/form/title')}
-        name='title'
-        value={data.title}
+        label={t('metaData/paynote/form/content')}
+        name='content'
+        value={data.content}
         onChange={(e, value) =>
           onInputChange({
-            title: value
-          })
-        }
-      />
-      <Field
-        label={t('metaData/paynote/form/body')}
-        name='body'
-        value={data.body}
-        onChange={(e, value) =>
-          onInputChange({
-            body: value
+            content: value
           })
         }
         renderInput={({ ref, ...inputProps }) => (
@@ -102,7 +92,7 @@ export default withT(({ t, data, onInputChange }) => {
           <br />
           <br />
           <Field
-            label={t('metaData/paynote/form/secondary/label')}
+            label={t('metaData/paynote/form/secondary/prefix')}
             name='secondaryPrefix'
             value={data.secondary.prefix}
             onChange={(e, value) =>
