@@ -357,6 +357,14 @@ const Form = withT(({ node, onChange, onTypeChange, options, t }) => {
           Grösser (e.g. Serien)
         </Checkbox>
       )}
+      {options.includes('grid') && (
+        <Checkbox
+          checked={node.data.get('grid') || false}
+          onChange={onChange('grid')}
+        >
+          Grid
+        </Checkbox>
+      )}
       {options.includes('showImage') && (
         <Checkbox
           checked={node.data.get('showImage')}
