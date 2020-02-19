@@ -15,6 +15,14 @@ const upsertSubscription = async (args, context) => {
     throw new Error(t('api/subscriptions/notYourself'))
   }
 
+  const object = await getObjectByIdAndType(
+    { id: objectId, type },
+    context
+  )
+  if (!object) {
+    throw new Error(t('api/subscription/object/404', { id: objectId }))
+  }
+
   const findProps = {
     userId,
     objectType: type,
@@ -67,11 +75,10 @@ const removeSubscription = async (id, context) => {
 
 const getObject = async (subscription, context) => {
   const { objectType: type } = subscription
-
   return getObjectByIdAndType(
     {
       id: subscription[objectTypes[type]],
-      type
+      type: subscription.objectType
     },
     context
   )

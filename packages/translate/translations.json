@@ -1,5 +1,5 @@
 {
-  "updated": "2020-02-14T19:33:31.356Z",
+  "updated": "2020-02-14T22:05:26.886Z",
   "title": "live",
   "data": [
     {
@@ -1417,6 +1417,10 @@
     {
       "key": "api/notification/notYours",
       "value": "Sie können nur Ihre eigenen Benachrichtigungen bearbeiten."
+    },
+    {
+      "key": "api/subscription/object/404",
+      "value": "Das gewünschte Object konnte nicht gefunden werden. (id: {id})"
     },
     {
       "key": "api/signIn",

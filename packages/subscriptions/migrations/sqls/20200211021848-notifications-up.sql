@@ -1,12 +1,12 @@
 CREATE DOMAIN event_object_type AS TEXT
 CHECK(
-  VALUE IN ('Comment')
+  VALUE IN ('Comment', 'Document')
 );
 
 CREATE TABLE "events" (
   "id"              uuid PRIMARY KEY NOT NULL DEFAULT uuid_generate_v4(),
   "objectType"      event_object_type NOT NULL,
-  "objectId"        uuid NOT NULL,
+  "objectId"        text NOT NULL,
   "createdAt"       timestamptz default now(),
   "updatedAt"       timestamptz default now()
 );

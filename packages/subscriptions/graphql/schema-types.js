@@ -24,6 +24,21 @@ extend type User {
   subscribedByMe: Subscription
 }
 
+extend type Document {
+  # subject: user
+  # object: this.document
+  subscribedBy(
+    first: Int
+    last: Int
+    before: String
+    after: String
+  ): SubscriptionConnection!
+
+  # subject: me
+  # object: this.document
+  subscribedByMe: Subscription
+}
+
 extend type Discussion {
   userSubscriptionsForCommenters(
     first: Int
@@ -41,7 +56,7 @@ union EventObject = Comment | Document
 
 enum SubscriptionObjectType {
   User
-  #Document
+  Document
   #Discussion
 }
 union SubscriptionObject = Document | User | Discussion
@@ -91,7 +106,7 @@ type NotificationContent {
   title: String!
   body: String!
   url: String!
-  icon: String!
+  icon: String
 }
 
 

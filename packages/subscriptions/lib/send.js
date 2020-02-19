@@ -20,7 +20,7 @@ const send = async (args, context) => {
     pubsub,
     t
   } = context
-  if (!args.event || !args.event || !args.users || !args.content || !args.content.app || !args.content.mail) {
+  if (!args.event || !users || !content || !content.app) {
     console.error('missing arg')
     throw new Error(t('api/unexpected'))
   }
@@ -61,7 +61,7 @@ const send = async (args, context) => {
     .filter(n => n.channels.indexOf('APP') > -1)
     .map(n => n.user.id)
 
-  const emailNotifications = notifications
+  const emailNotifications = content.mail && notifications
     .filter(n => n.channels.indexOf('EMAIL') > -1)
 
   await Promise.all([
@@ -74,7 +74,7 @@ const send = async (args, context) => {
     appUserIds.length && (
       pushNotifications.publish(appUserIds, content.app, context)
     ),
-    emailNotifications.length && (
+    emailNotifications && emailNotifications.length && (
       Promise.all(emailNotifications.map(notification =>
         sendMailTemplate(content.mail(notification.user), context)
           .then(result => {
