@@ -63,9 +63,7 @@ const styles = {
   })
 }
 
-// $0.scrollLeft .scrollWidth
-
-export const Row = ({ children }) => {
+const Row = ({ children }) => {
   const context = useContext(CarouselContext)
   const overflow = useRef()
   const [{ left, right }, setArrows] = useState({ left: false, right: false })

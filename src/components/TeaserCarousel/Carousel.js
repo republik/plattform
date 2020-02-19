@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import React from 'react'
 
 import CarouselContext, { defaultValue } from './Context'
-import { PADDING, TILE_MAX_WIDTH } from './constants'
+import { PADDING, TILE_MAX_WIDTH, TILE_GRID_PADDING } from './constants'
 
 import { MAX_WIDTH } from '../Center'
 
@@ -20,13 +20,16 @@ export const Carousel = ({
   bigger,
   children,
   tileCount: tileCountFromProps,
-  article
+  article,
+  grid
 }) => {
   const row = children && children[1]
   const tileCount =
     tileCountFromProps ||
     (row && React.Children.count(row.props && row.props.children))
-  const tileMaxWidth = article
+  const tileMaxWidth = grid
+    ? 0
+    : article
     ? MAX_WIDTH / 2 // optimised to align with article column
     : TILE_MAX_WIDTH
 
@@ -38,7 +41,8 @@ export const Carousel = ({
         bgColor,
         color,
         tileCount,
-        tileMaxWidth
+        tileMaxWidth,
+        grid
       }}
     >
       <section
@@ -52,7 +56,11 @@ export const Carousel = ({
         <div
           style={{
             margin: '0 auto',
-            maxWidth: tileCount ? tileCount * tileMaxWidth : undefined
+            maxWidth: grid
+              ? TILE_MAX_WIDTH * 5
+              : tileCount
+              ? tileCount * tileMaxWidth
+              : undefined
           }}
         >
           {children}

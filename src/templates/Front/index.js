@@ -28,7 +28,7 @@ import {
 
 import {
   TeaserCarousel,
-  TeaserCarouselRow,
+  TeaserCarouselTileContainer,
   TeaserCarouselTile,
   TeaserCarouselFormat,
   TeaserCarouselHeadline,
@@ -563,9 +563,9 @@ const createSchema = ({ Link = DefaultLink, t = () => '', ...rest } = {}) => {
     matchMdast: matchZone('TEASERGROUP'),
     component: ({ children, attributes, ...props }) => {
       return (
-        <TeaserCarouselRow attributes={attributes} {...props}>
+        <TeaserCarouselTileContainer attributes={attributes} {...props}>
           {children}
-        </TeaserCarouselRow>
+        </TeaserCarouselTileContainer>
       )
     },
     editorModule: 'articleGroup',

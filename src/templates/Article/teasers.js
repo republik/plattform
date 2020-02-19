@@ -30,7 +30,7 @@ import {
 
 import {
   TeaserCarousel,
-  TeaserCarouselRow,
+  TeaserCarouselTileContainer,
   TeaserCarouselTile,
   TeaserCarouselFormat,
   TeaserCarouselHeadline,
@@ -451,9 +451,9 @@ const createTeasers = ({ t, Link, plattformUnauthorizedZoneText }) => {
     matchMdast: matchZone('TEASERGROUP'),
     component: ({ children, attributes, ...props }) => {
       return (
-        <TeaserCarouselRow attributes={attributes} {...props}>
+        <TeaserCarouselTileContainer attributes={attributes} {...props}>
           {children}
-        </TeaserCarouselRow>
+        </TeaserCarouselTileContainer>
       )
     },
     editorModule: 'articleGroup',
@@ -481,7 +481,7 @@ const createTeasers = ({ t, Link, plattformUnauthorizedZoneText }) => {
       teaserType: 'carousel',
       insertButtonText: 'Karussell',
       formTitle: 'Carousel',
-      formOptions: ['noAdapt', 'color', 'bgColor', 'outline', 'bigger'],
+      formOptions: ['noAdapt', 'color', 'bgColor', 'outline', 'bigger', 'grid'],
       defaultValues: {
         outline: '#D7D7D7'
       }

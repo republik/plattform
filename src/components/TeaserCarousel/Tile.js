@@ -9,12 +9,19 @@ import { serifRegular16, serifRegular18 } from '../Typography/styles'
 
 import CarouselContext from './Context'
 
-import { TILE_MARGIN_RIGHT, TILE_MAX_WIDTH } from './constants'
+import {
+  PADDING,
+  TILE_MARGIN_RIGHT,
+  TILE_MAX_WIDTH,
+  TILE_GRID_PADDING
+} from './constants'
 
 const IMAGE_SIZE = {
   maxWidth: 160,
   maxHeight: 120
 }
+
+const GRID_MIN_WIDTH = 240
 
 const styles = {
   tile: css({
@@ -32,6 +39,33 @@ const styles = {
       ...serifRegular18,
       lineHeight: '24px',
       minWidth: 248
+    }
+  }),
+  grid: css({
+    marginRight: 0,
+    paddingLeft: TILE_GRID_PADDING,
+    paddingRight: TILE_GRID_PADDING,
+    minWidth: GRID_MIN_WIDTH,
+    maxWidth: 'none',
+    [mUp]: {
+      minWidth: GRID_MIN_WIDTH
+    },
+    width: '100%',
+    [`@media only screen and (min-width: ${PADDING * 2 +
+      GRID_MIN_WIDTH * 2}px)`]: {
+      width: '50%'
+    },
+    [`@media only screen and (min-width: ${PADDING * 2 +
+      GRID_MIN_WIDTH * 3}px)`]: {
+      width: '33.33%'
+    },
+    [`@media only screen and (min-width: ${PADDING * 2 +
+      GRID_MIN_WIDTH * 4}px)`]: {
+      width: '25%'
+    },
+    [`@media only screen and (min-width: ${PADDING * 2 +
+      GRID_MIN_WIDTH * 5}px)`]: {
+      width: '20%'
     }
   }),
 
@@ -98,6 +132,7 @@ const Tile = ({
       alignItems: bigger ? 'flex-start' : 'center'
     },
     context.tileCount < 3 && { width: `${100 / context.tileCount}%` },
+    context.grid && styles.grid,
     context.tileMaxWidth && { maxWidth: context.tileMaxWidth }
   )
 

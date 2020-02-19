@@ -20,7 +20,7 @@ The media queries are defined in [`FrontTile`](/teaserfronttile).
   }}>
     Rezensionen
   </TeaserSectionTitle>
-  <TeaserCarouselRow>
+  <TeaserCarouselTileContainer>
     <TeaserCarouselTile
       image='/static/carousel/test.png?size=4682x3512'
       onClick={() => console.log("click on first tile")}
@@ -95,14 +95,14 @@ The media queries are defined in [`FrontTile`](/teaserfronttile).
         Von <Editorial.A  color='#000' href='#'>Daniel Binswanger</Editorial.A >, 05.07.2019
       </Editorial.Credit>
     </TeaserCarouselTile>
-  </TeaserCarouselRow>
+  </TeaserCarouselTileContainer>
 </TeaserCarousel>
 ```
 
 ```react|span-6
 <TeaserCarousel outline='#D7D7D7'>
  <TeaserSectionTitle>Kolumnen</TeaserSectionTitle>
-  <TeaserCarouselRow>
+  <TeaserCarouselTileContainer>
 
     <TeaserCarouselTile image='/static/carousel/binswanger.png?size=2480x2521' onClick={() => console.log("click on first tile")}>
       <TeaserCarouselFormat color='#00B4FF'>
@@ -136,7 +136,7 @@ The media queries are defined in [`FrontTile`](/teaserfronttile).
       </Editorial.Credit>
     </TeaserCarouselTile>
 
- </TeaserCarouselRow>
+ </TeaserCarouselTileContainer>
 </TeaserCarousel>
 ```
 
@@ -144,7 +144,7 @@ The media queries are defined in [`FrontTile`](/teaserfronttile).
 <TeaserCarousel bgColor='#000' color='#fff' bigger>
   <TeaserSectionTitle>Serien</TeaserSectionTitle>
 
-  <TeaserCarouselRow>
+  <TeaserCarouselTileContainer>
     <TeaserCarouselTile
       image='/static/carousel/murdoch.png?size=496x372'
       count={12}
@@ -192,16 +192,13 @@ The media queries are defined in [`FrontTile`](/teaserfronttile).
       </TeaserCarouselHeadline.Editorial>
     </TeaserCarouselTile>
 
-  </TeaserCarouselRow>
+  </TeaserCarouselTileContainer>
 </TeaserCarousel>
 ```
 
-### `<TeaserCarouselRow />`
-This is the container that overflows the screen width, and triggers horizontal scrolling.
-
 ### `<TeaserCarouselTile />`
 
-A Carousel has `TeaserCarouselTile` as direct children of a `TeaserCarouselRow`. They can also be customized.
+A Carousel has `TeaserCarouselTile` as direct children of a `TeaserCarouselTileContainer`. They can also be customized.
 Supported props:
 - `bigger` (boolean): if `true`, the image will be top aligned and used the full width of the tile.
 - `color` (string): The text color (default: `#fff`).
@@ -366,4 +363,62 @@ Supported props:
     color='#fff'
   />
 </div>
+```
+
+### Grid
+
+```react|responsive
+<TeaserCarousel bgColor='#000' color='#fff' article grid bigger>
+  <TeaserSectionTitle>Serien</TeaserSectionTitle>
+
+  <TeaserCarouselTileContainer>
+    <TeaserCarouselTile
+      image='/static/carousel/murdoch.png?size=496x372'
+      count={12}
+      byline='Joan Wong'
+    >
+    <TeaserCarouselHeadline.Editorial>
+      Die Dynastie Murdoch
+    </TeaserCarouselHeadline.Editorial>
+
+    </TeaserCarouselTile>
+      <TeaserCarouselTile
+      image='/static/carousel/homestory.png?size=496x372'
+      count={6}
+      byline='Doug Chayka'
+    >
+      <TeaserCarouselHeadline.Editorial>
+        Homestory
+      </TeaserCarouselHeadline.Editorial>
+    </TeaserCarouselTile>
+
+    <TeaserCarouselTile
+      image='/static/carousel/eth.png?size=496x372'
+      count={8}
+    >
+      <TeaserCarouselHeadline.Editorial>
+        Der Fall ETH
+      </TeaserCarouselHeadline.Editorial>
+    </TeaserCarouselTile>
+
+    <TeaserCarouselTile
+      image='/static/carousel/mike.png?size=496x372'
+      count={24}
+    >
+      <TeaserCarouselHeadline.Editorial>
+        «Am Limit»: Die Geschichte von Mike
+      </TeaserCarouselHeadline.Editorial>
+    </TeaserCarouselTile>
+
+    <TeaserCarouselTile
+      image='/static/carousel/strahlen.png?size=496x372'
+      count={10}
+    >
+      <TeaserCarouselHeadline.Editorial>
+        Geheimnisvolle Strahlen
+      </TeaserCarouselHeadline.Editorial>
+    </TeaserCarouselTile>
+
+  </TeaserCarouselTileContainer>
+</TeaserCarousel>
 ```
