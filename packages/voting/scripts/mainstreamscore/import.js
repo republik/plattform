@@ -54,6 +54,7 @@ PgDb.connect().then(async pgdb => {
             questionnaireId: questionnaire.id,
             order: counter++,
             text: d.Frage,
+            ...d.Gruppe ? { metadata: { group: d.Gruppe } } : {},
             type: 'Choice',
             typePayload: {
               cardinality: 1,
