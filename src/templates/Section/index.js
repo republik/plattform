@@ -27,6 +27,7 @@ const createSchema = ({
   ...args
 } = {}) => {
   return createArticleSchema({
+    Link,
     repoPrefix: 'section-',
     getPath,
     customMetaFields: [
@@ -58,7 +59,7 @@ const createSchema = ({
       matchMdast: matchZone('TITLE'),
       component: ({ children, ...props }) => (
         <>
-          <TitleBlock {...props} center Link={Link} margin={titleMargin}>
+          <TitleBlock {...props} center margin={titleMargin}>
             {titleBlockPrepend}
             {children}
           </TitleBlock>

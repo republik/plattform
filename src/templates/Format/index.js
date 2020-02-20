@@ -30,6 +30,7 @@ const createSchema = ({
   ...args
 } = {}) => {
   return createArticleSchema({
+    Link,
     repoPrefix: 'format-',
     getPath,
     customMetaFields: [
@@ -71,7 +72,7 @@ const createSchema = ({
       matchMdast: matchZone('TITLE'),
       component: ({ children, section, ...props }) => (
         <>
-          <TitleBlock {...props} center Link={Link} margin={titleMargin}>
+          <TitleBlock {...props} center margin={titleMargin}>
             {titleBlockPrepend}
             {section && section.meta && (
               <Editorial.Format

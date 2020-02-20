@@ -853,12 +853,7 @@ const createSchema = ({
             matchMdast: matchZone('TITLE'),
             component: ({ children, format, ...props }) => (
               <>
-                <TitleBlock
-                  {...props}
-                  format={format}
-                  Link={Link}
-                  margin={titleMargin}
-                >
+                <TitleBlock {...props} format={format} margin={titleMargin}>
                   {titleBlockPrepend}
                   {format && format.meta && (
                     <Editorial.Format
