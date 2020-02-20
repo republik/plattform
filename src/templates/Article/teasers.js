@@ -109,8 +109,8 @@ const createTeasers = ({ t, Link, plattformUnauthorizedZoneText }) => {
 
   const teaserFormat = {
     matchMdast: matchHeading(6),
-    component: ({ children, attributes, formatColor, href, hasChildren }) => {
-      if (!hasChildren) {
+    component: ({ children, attributes, formatColor, href, empty }) => {
+      if (empty) {
         return null
       }
       return (
@@ -127,7 +127,7 @@ const createTeasers = ({ t, Link, plattformUnauthorizedZoneText }) => {
       const teaser = ancestors.find(matchTeaser)
       const data = teaser && teaser.data
       return {
-        hasChildren: node.children.length,
+        empty: !node.children.length,
         formatColor: data
           ? data.formatColor
             ? data.formatColor
