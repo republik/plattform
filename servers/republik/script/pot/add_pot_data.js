@@ -55,7 +55,7 @@ Promise.props({
     })
 
     // insert DONATE_POT
-    await txn.public.packages.insert({
+    const donatePkg = await txn.public.packages.insertAndGet({
       name: 'DONATE_POT',
       crowdfundingId: crowdfunding.id,
       companyId: company.id,
@@ -64,6 +64,23 @@ Promise.props({
       group: 'GIVE',
       createdAt: now,
       updatedAt: now
+    })
+
+    await txn.public.packageOptions.insert({
+      packageId: donatePkg.id,
+      rewardId: null,
+      minAmount: 1,
+      maxAmount: 1,
+      defaultAmount: 1,
+      price: 0,
+      userPrice: true,
+      minUserPrice: 0,
+      vat: 0,
+      order: 100,
+      disabled: false,
+      hiddenAt: null,
+      disabledAt: null,
+      accessGranted: false
     })
 
     console.log('finished.')
