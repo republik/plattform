@@ -35,17 +35,24 @@ Promise.props({
     })
       .then(rows => rows.map(r => r.id))
 
-    // enable givePot on ABO_GIVE
-    await txn.public.packageOptions.updateOne(
+    // enable accessGranted for ABO_GIVE
+    const existingPkgOption = await txn.public.packageOptions.updateAndGetOne(
       {
         packageId: givePkg.id,
-        rewardId: membershipRewardIds
+        rewardId: membershipRewardIds,
+        accessGranted: false
       },
       {
-        givePot: true,
-        updatedAt: now
+        minAmount: 0
       }
     )
+    delete existingPkgOption.id
+    await txn.public.packageOptions.insert({
+      ...existingPkgOption,
+      accessGranted: true,
+      createdAt: now,
+      updatedAt: now
+    })
 
     // insert DONATE_POT
     await txn.public.packages.insert({

@@ -100,7 +100,7 @@ type PackageOption {
   autoPay: Boolean
   additionalPeriods: [MembershipPeriod!]
 
-  givePot: Boolean
+  accessGranted: Boolean
 }
 
 input PackageOptionInput {
@@ -113,8 +113,6 @@ input PackageOptionInput {
   # via custom packages
   membershipId: ID
   autoPay: Boolean
-
-  givePot: Boolean
 }
 
 type Goodie {
@@ -155,7 +153,7 @@ type Membership {
   active: Boolean!
   renew: Boolean!
   autoPay: Boolean!
-  givePot: Boolean!
+  accessGranted: Boolean!
   initialInterval: MembershipTypeInterval!
   initialPeriods: Int!
   periods: [MembershipPeriod]!

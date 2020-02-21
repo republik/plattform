@@ -148,11 +148,11 @@ module.exports = async (pledgeId, pgdb, t, req, redis) => {
             pledgeId: pledge.id,
             membershipTypeId: membershipType.id,
             reducedPrice,
-            voucherable: !reducedPrice && !plo.givePot,
+            voucherable: !reducedPrice && !plo.packageOption.accessGranted,
             active: false,
             renew: false,
             autoPay: plo.autoPay || false,
-            givePot: plo.givePot || false,
+            accessGranted: plo.packageOption.accessGranted || false,
             initialInterval: membershipType.interval,
             initialPeriods: plo.periods,
             createdAt: now,
@@ -164,7 +164,7 @@ module.exports = async (pledgeId, pgdb, t, req, redis) => {
             !membershipPeriod &&
             !userHasActiveMembership &&
             pkg.isAutoActivateUserMembership &&
-            !plo.givePot
+            !plo.packageOption.accessGranted
           ) {
             membershipPeriod = {
               pledgeOptionId: plo.id,

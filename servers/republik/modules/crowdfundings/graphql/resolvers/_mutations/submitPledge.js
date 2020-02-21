@@ -190,14 +190,6 @@ module.exports = async (_, args, context) => {
           throw new Error(t('api/unexpected'))
         }
       }
-
-      if (!pko.givePot && plo.givePot) {
-        logger.error(
-          `givePot in option (templateId: ${plo.templateId}) is disabled`,
-          { req: req._log(), args, plo, pko }
-        )
-        throw new Error(t('api/unexpected'))
-      }
     })
 
     // check if crowdfunding is still open
