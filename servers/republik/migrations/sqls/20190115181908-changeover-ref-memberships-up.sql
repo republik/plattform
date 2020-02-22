@@ -1,4 +1,3 @@
 ALTER TABLE "memberships"
-  ADD COLUMN "succeedingMembershipId" uuid references "memberships"(id),
-  DROP COLUMN "potPledgeId"
+  ADD COLUMN "succeedingMembershipId" uuid references "memberships"(id)
 ;
