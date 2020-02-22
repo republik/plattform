@@ -24,18 +24,18 @@ Promise.props({
       name: 'PROJECT_R'
     })
 
+    const membershipRewardIds = await txn.public.rewards.find({
+      type: 'MembershipType'
+    })
+      .then(rows => rows.map(r => r.id))
+
     const givePkg = await txn.public.packages.findOne({
       name: 'ABO_GIVE',
       crowdfundingId: crowdfunding.id,
       companyId: company.id
     })
 
-    const membershipRewardIds = await txn.public.rewards.find({
-      type: 'MembershipType'
-    })
-      .then(rows => rows.map(r => r.id))
-
-    // enable accessGranted for ABO_GIVE
+    // copy ABO_GIVE option with accessGranted
     const existingPkgOption = await txn.public.packageOptions.updateAndGetOne(
       {
         packageId: givePkg.id,
@@ -43,18 +43,45 @@ Promise.props({
         accessGranted: false
       },
       {
-        minAmount: 0
+        minAmount: 0,
+        updatedAt: now
       }
     )
     delete existingPkgOption.id
-    await txn.public.packageOptions.insert({
+    const givePkgOption = await txn.public.packageOptions.insertAndGet({
       ...existingPkgOption,
       accessGranted: true,
       createdAt: now,
       updatedAt: now
     })
 
-    // insert DONATE_POT
+    // create pot
+    const potUser = await txn.public.users.findOne({
+      email: 'komplizen@republik.ch'
+    })
+    // pot pledge doesn't have any payment
+    const potPledge = await txn.public.pledges.insertAndGet({
+      packageId: givePkg.id,
+      userId: potUser.id,
+      status: 'SUCCESSFUL',
+      reason: 'membership pot',
+      total: 0,
+      donation: 0,
+      sendConfirmMail: false,
+      createdAt: now,
+      updatedAt: now
+    })
+    const potPledgeOption = await txn.public.pledgeOptions.insertAndGet({
+      pledgeId: potPledge.id,
+      templateId: givePkgOption.id,
+      amount: 0,
+      periods: givePkgOption.periods,
+      price: givePkgOption.price,
+      createdAt: now,
+      updatedAt: now
+    })
+
+    // insert DONATE_POT package
     const donatePkg = await txn.public.packages.insertAndGet({
       name: 'DONATE_POT',
       crowdfundingId: crowdfunding.id,
@@ -65,7 +92,6 @@ Promise.props({
       createdAt: now,
       updatedAt: now
     })
-
     await txn.public.packageOptions.insert({
       packageId: donatePkg.id,
       rewardId: null,
@@ -77,10 +103,8 @@ Promise.props({
       minUserPrice: 0,
       vat: 0,
       order: 100,
-      disabled: false,
-      hiddenAt: null,
-      disabledAt: null,
-      accessGranted: false
+      accessGranted: true,
+      potPledgeOptionId: potPledgeOption.id
     })
 
     console.log('finished.')

@@ -346,6 +346,7 @@ module.exports = async (_, args, context) => {
 
       const pko = packageOptions.find((pko) => pko.id === plo.templateId)
       plo.vat = pko.vat
+      plo.potPledgeOptionId = pko.potPledgeOptionId
 
       if (
         pko.reward &&
@@ -353,6 +354,12 @@ module.exports = async (_, args, context) => {
         !plo.periods
       ) {
         plo.periods = pko.reward.defaultPeriods
+      }
+
+      // the FE doesn't distribute the surplus / donation amout to pledgeOptions
+      // DONATE* packages always only have one packageOption
+      if (pledgeOptions.length === 1) {
+        plo.total = newPledge.total
       }
 
       return transaction.public.pledgeOptions.insertAndGet(plo)

@@ -7,6 +7,7 @@ const debug = require('debug')('crowdfundings:memberships')
 const mail = require('./Mail')
 const Promise = require('bluebird')
 const omit = require('lodash/omit')
+const membershipPot = require('./membershipPot')
 
 const MONTHLY_ABO_UPGRADE_PKGS = ['ABO', 'BENEFACTOR']
 
@@ -34,6 +35,10 @@ module.exports = async (pledgeId, pgdb, t, req, redis) => {
     }
   }
   if (!hasRewards) { // it's a donation-only pledge
+    await membershipPot.generateMemberships(
+      pledgeOptions,
+      { pgdb }
+    )
     return
   }
 
@@ -196,7 +201,9 @@ module.exports = async (pledgeId, pgdb, t, req, redis) => {
   debug('generateMemberships membershipPeriod %O', membershipPeriod)
   debug('generateMemberships memberships %O', memberships)
 
-  await pgdb.public.memberships.insert(memberships)
+  if (memberships.length) {
+    await pgdb.public.memberships.insert(memberships)
+  }
 
   if (cancelableMemberships.length > 0 && req) {
     debug(

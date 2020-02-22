@@ -3,5 +3,12 @@ ALTER TABLE "memberships"
 ;
 
 ALTER TABLE "packageOptions"
-  DROP COLUMN "accessGranted"
+  DROP COLUMN "accessGranted",
+  DROP COLUMN "potPledgeOptionId"
+;
+
+ALTER TABLE "pledgeOptions"
+  DROP COLUMN "accessGranted",
+  DROP COLUMN "potPledgeOptionId",
+  DROP COLUMN "total"
 ;
