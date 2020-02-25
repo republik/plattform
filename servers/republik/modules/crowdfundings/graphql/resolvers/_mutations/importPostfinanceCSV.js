@@ -155,7 +155,6 @@ module.exports = async (_, args, { pgdb, req, t, redis }) => {
     } = await matchPayments(transaction, t, redis)
 
     await transaction.transactionCommit()
-
     const result = `
 importPostfinanceCSV result:
 num new payments: ${numPaymentsAfter - numPaymentsBefore}
