@@ -416,4 +416,11 @@ type PostfinancePayments {
   items: [PostfinancePayment!]!
   count: Int!
 }
+
+type MembershipPotStats {
+  totalDonated: Int!
+  donatedAmountOfMemberships: Int!
+  generatedAmountOfMemberships: Int!
+  surplusAmountOfDonatedMemberships: Int!
+}
 `
