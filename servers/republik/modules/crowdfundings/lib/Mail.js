@@ -665,6 +665,15 @@ mail.getPledgeMergeVars = async (
     }
   })
 
+  const voucherCodes = ['ABO_GIVE', 'ABO_GIVE_MONTHS'].includes(package_.name)
+    ? memberships.map(m => m.voucherCode).filter(Boolean)
+    : null
+  const formattedVoucherCodes = voucherCodes && voucherCodes.length
+    ? voucherCodes.join(', ')
+    : null
+
+  const accessGranted = memberships.findIndex(m => !!m.accessGranted) > -1
+
   return [
     // Purchase itself
     {
@@ -782,9 +791,11 @@ mail.getPledgeMergeVars = async (
     },
     {
       name: 'voucher_codes',
-      content: ['ABO_GIVE', 'ABO_GIVE_MONTHS'].includes(package_.name)
-        ? memberships.map(m => m.voucherCode).join(', ')
-        : null
+      content: formattedVoucherCodes
+    },
+    {
+      name: 'access_granted',
+      content: accessGranted
     },
     {
       name: 'goodies_count',

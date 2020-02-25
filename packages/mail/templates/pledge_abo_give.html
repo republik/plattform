@@ -65,6 +65,10 @@
                       {{/if}}
                     {{/if}}
 
+                    {{#if access_granted}}
+                      <p>Sie haben sich entschieden, dass wir die Mitglieschaft für Sie verschenken dürfen. Dafür gleich nochmals ein Dankeschön! Wir werden Sie informieren, sobald Ihr Geschenk eingelöst wird.</p>
+                    {{/if}}
+
                     <p><strong>Informationen zur Zahlung Ihrer Geschenkmitgliedschaft:</strong></p>
 
                     {{#if `payment_method != "PAYMENTSLIP"`}}
