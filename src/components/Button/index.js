@@ -138,57 +138,63 @@ const marginLeftStyle = css({
   }
 })
 
-const Button = ({
-  onClick,
-  type,
-  children,
-  primary,
-  dimmed,
-  black,
-  white,
-  spacedOut,
-  big,
-  block,
-  style,
-  disabled,
-  href,
-  title,
-  target,
-  simulate: sim,
-  attributes
-}) => {
-  const simulations = sim ? simulate(sim) : {}
-  const styles = merge(
-    buttonStyle,
-    href && linkStyle,
-    primary && primaryStyle,
-    dimmed && dimmedStyle,
-    black && blackStyle,
-    white && whiteStyle,
-    block && blockStyle,
-    big && bigStyle,
-    spacedOut && marginBottomStyle,
-    spacedOut && !block && marginLeftStyle
-  )
+const Button = React.forwardRef(
+  (
+    {
+      onClick,
+      type,
+      children,
+      primary,
+      dimmed,
+      black,
+      white,
+      spacedOut,
+      big,
+      block,
+      style,
+      disabled,
+      href,
+      title,
+      target,
+      simulate: sim,
+      attributes
+    },
+    ref
+  ) => {
+    const simulations = sim ? simulate(sim) : {}
+    const styles = merge(
+      buttonStyle,
+      href && linkStyle,
+      primary && primaryStyle,
+      dimmed && dimmedStyle,
+      black && blackStyle,
+      white && whiteStyle,
+      block && blockStyle,
+      big && bigStyle,
+      spacedOut && marginBottomStyle,
+      spacedOut && !block && marginLeftStyle
+    )
 
-  const Element = href ? 'a' : 'button'
+    const Element = href ? 'a' : 'button'
 
-  return (
-    <Element
-      onClick={onClick}
-      href={href}
-      title={title}
-      type={type}
-      style={style}
-      disabled={disabled}
-      target={target}
-      {...attributes}
-      {...styles}
-      {...simulations}
-    >
-      {children}
-    </Element>
-  )
-}
+    return (
+      <Element
+        onClick={onClick}
+        href={href}
+        title={title}
+        type={type}
+        style={style}
+        disabled={disabled}
+        target={target}
+        {...attributes}
+        {...styles}
+        {...simulations}
+        ref={ref}
+      >
+        {children}
+      </Element>
+    )
+  }
+)
 
 export default Button
