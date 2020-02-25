@@ -148,6 +148,7 @@ type Membership {
   voucherCode: String
   reducedPrice: Boolean!
   claimerName: String
+  giverName: String
   user: User!
   sequenceNumber: Int
   active: Boolean!

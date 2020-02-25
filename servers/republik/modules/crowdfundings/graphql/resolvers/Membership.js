@@ -135,5 +135,19 @@ module.exports = {
         })
         )
       )
+  },
+  async giverName (membership, args, context) {
+    const { pgdb, loaders, user: me } = context
+    const pledge =
+      membership.pledge ||
+      await pgdb.public.pledges.findOne({
+        id: membership.pledgeId
+      })
+
+    const user = await loaders.User.byId.load(pledge.userId)
+    if (user.id === me.id) {
+      return null
+    }
+    return user.name
   }
 }
