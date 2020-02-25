@@ -28,5 +28,8 @@ num payments successfull: ${numPaymentsSuccessful}
     throw e
   } finally {
     await refreshAllPots()
+      .catch(e => {
+        console.error('error after payPledge', e)
+      })
   }
 }

@@ -216,7 +216,7 @@ const getAllStats = async (context) => {
   `)
 
   return Promise.map(
-    potPledgeOptions.filter(Boolean),
+    potPledgeOptions,
     (potPledgeOption) => getStats(potPledgeOption, pgdb)
   )
 }

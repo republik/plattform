@@ -3,7 +3,6 @@ const logger = console
 const generateMemberships = require('../../../lib/generateMemberships')
 const { sendPaymentSuccessful } = require('../../../lib/Mail')
 const { refreshPotForPledgeId } = require('../../../lib/membershipPot')
-const Promise = require('bluebird')
 
 module.exports = async (_, args, { pgdb, req, t, redis }) => {
   Roles.ensureUserHasRole(req.user, 'supporter')
@@ -11,7 +10,7 @@ module.exports = async (_, args, { pgdb, req, t, redis }) => {
   const { paymentId, status, reason } = args
   const now = new Date()
 
-  let newPledge
+  let updatedPledge
   const transaction = await pgdb.transactionBegin()
   try {
     const payment = await transaction.public.payments.findOne({ id: paymentId })
@@ -75,7 +74,7 @@ module.exports = async (_, args, { pgdb, req, t, redis }) => {
       }))[0]
 
       if (pledge.status !== 'SUCCESSFUL') {
-        newPledge = await transaction.public.pledges.updateAndGetOne({
+        updatedPledge = await transaction.public.pledges.updateAndGetOne({
           id: pledge.id
         }, {
           status: 'SUCCESSFUL',
@@ -103,10 +102,8 @@ module.exports = async (_, args, { pgdb, req, t, redis }) => {
     throw e
   }
 
-  if (newPledge) {
-    await Promise.all([
-      refreshPotForPledgeId(newPledge.id, { pgdb })
-    ])
+  if (updatedPledge) {
+    await refreshPotForPledgeId(updatedPledge.id, { pgdb })
       .catch(e => {
         console.error('error after payPledge', e)
       })

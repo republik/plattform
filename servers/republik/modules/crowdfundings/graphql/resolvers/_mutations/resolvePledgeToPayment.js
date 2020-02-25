@@ -14,7 +14,7 @@ module.exports = async (_, args, { pgdb, req, t, mail: { enforceSubscriptions },
   const now = new Date()
 
   let pledge
-  let newPledge
+  let updatedPledge
   const transaction = await pgdb.transactionBegin()
   try {
     pledge = await transaction.public.pledges.findOne({ id: pledgeId })
@@ -79,7 +79,7 @@ module.exports = async (_, args, { pgdb, req, t, mail: { enforceSubscriptions },
     const donation = newTotal - pledgeRegularTotal
 
     const prefixedReason = 'Support: ' + reason
-    newPledge = await transaction.public.pledges.updateAndGetOne({
+    updatedPledge = await transaction.public.pledges.updateAndGetOne({
       id: pledge.id
     }, {
       status: 'SUCCESSFUL',
@@ -110,13 +110,13 @@ module.exports = async (_, args, { pgdb, req, t, mail: { enforceSubscriptions },
     throw e
   }
 
-  if (newPledge) {
+  if (updatedPledge) {
     await Promise.all([
-      enforceSubscriptions({ pgdb, userId: newPledge.userId }),
-      refreshPotForPledgeId(newPledge.id, { pgdb }),
+      enforceSubscriptions({ pgdb, userId: updatedPledge.userId }),
+      refreshPotForPledgeId(updatedPledge.id, { pgdb }),
       publishMonitor(
         req.user,
-        `resolvePledgeToPayment pledgeId: ${pledge.id} pledge.total:${pledge.total / 100} newTotal:${newPledge.total / 100}`
+        `resolvePledgeToPayment pledgeId: ${pledge.id} pledge.total:${pledge.total / 100} newTotal:${updatedPledge.total / 100}`
       )
     ])
       .catch(e => {

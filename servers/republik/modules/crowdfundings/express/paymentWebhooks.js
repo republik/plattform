@@ -83,7 +83,7 @@ module.exports = async (server, pgdb, t, redis) => {
     }
 
     const pledgeId = body.orderID
-    let newPledge
+    let updatedPledge
     const transaction = await pgdb.transactionBegin()
     try {
       // load pledge
@@ -119,7 +119,7 @@ module.exports = async (server, pgdb, t, redis) => {
           }
 
           // update pledge status
-          newPledge = await transaction.public.pledges.updateAndGetOne({
+          updatedPledge = await transaction.public.pledges.updateAndGetOne({
             id: pledge.id
           }, {
             status: pledgeStatus,
@@ -134,10 +134,10 @@ module.exports = async (server, pgdb, t, redis) => {
       throw e
     }
 
-    if (newPledge) {
+    if (updatedPledge) {
       await Promise.all([
-        sendPledgeConfirmations({ userId: newPledge.userId, pgdb, t }),
-        refreshPotForPledgeId(newPledge.id, { pgdb })
+        sendPledgeConfirmations({ userId: updatedPledge.userId, pgdb, t }),
+        refreshPotForPledgeId(updatedPledge.id, { pgdb })
       ])
         .catch(e => {
           console.error('error after payPledge', e)
@@ -165,7 +165,7 @@ module.exports = async (server, pgdb, t, redis) => {
       if (body.payment_status === 'Completed') {
         const pledgeId = body.item_name
 
-        let newPledge
+        let updatedPledge
         const transaction = await pgdb.transactionBegin()
         try {
           // load pledge
@@ -200,7 +200,7 @@ module.exports = async (server, pgdb, t, redis) => {
               }
 
               // update pledge status
-              newPledge = await transaction.public.pledges.updateAndGetOne({
+              updatedPledge = await transaction.public.pledges.updateAndGetOne({
                 id: pledge.id
               }, {
                 status: pledgeStatus,
@@ -215,10 +215,10 @@ module.exports = async (server, pgdb, t, redis) => {
           throw e
         }
 
-        if (newPledge) {
+        if (updatedPledge) {
           await Promise.all([
-            sendPledgeConfirmations({ userId: newPledge.userId, pgdb, t }),
-            refreshPotForPledgeId(newPledge.id, { pgdb })
+            sendPledgeConfirmations({ userId: updatedPledge.userId, pgdb, t }),
+            refreshPotForPledgeId(updatedPledge.id, { pgdb })
           ])
             .catch(e => {
               console.error('error after payPledge', e)

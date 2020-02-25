@@ -15,7 +15,7 @@ module.exports = async (_, args, context) => {
   const { pledgeId } = pledgePayment
 
   let user
-  let newPledge
+  let updatedPledge
   const transaction = await pgdb.transactionBegin()
   try {
     // load pledge
@@ -135,7 +135,7 @@ module.exports = async (_, args, context) => {
       }
 
       // update pledge status
-      newPledge = await transaction.public.pledges.updateAndGetOne({
+      updatedPledge = await transaction.public.pledges.updateAndGetOne({
         id: pledge.id
       }, {
         status: pledgeStatus,
@@ -151,18 +151,18 @@ module.exports = async (_, args, context) => {
     throw e
   }
 
-  if (newPledge) {
+  if (updatedPledge) {
     await Promise.all([
       user && user.verified && (
         sendPledgeConfirmations({ userId: user.id, pgdb, t })
       ),
-      newPledge.status === 'SUCCESSFUL' && (
+      updatedPledge.status === 'SUCCESSFUL' && (
         refreshPotForPledgeId(pledgeId, context)
       ),
-      newPledge.status === 'PAID_INVESTIGATE' && (
+      updatedPledge.status === 'PAID_INVESTIGATE' && (
         slack.publishPledge(
           user,
-          newPledge,
+          updatedPledge,
           'PAID_INVESTIGATE'
         )
       )
