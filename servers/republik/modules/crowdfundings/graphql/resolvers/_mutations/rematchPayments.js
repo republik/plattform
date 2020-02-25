@@ -1,7 +1,8 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
 const matchPayments = require('../../../lib/payments/matchPayments')
+const { refreshAllPots } = require('../../../lib/membershipPot')
 
-module.exports = async (_, args, {pgdb, req, t, redis}) => {
+module.exports = async (_, args, { pgdb, req, t, redis }) => {
   Roles.ensureUserHasRole(req.user, 'supporter')
 
   const transaction = await pgdb.transactionBegin()
@@ -25,5 +26,7 @@ num payments successfull: ${numPaymentsSuccessful}
     await transaction.transactionRollback()
     console.info('transaction rollback', { req: req._log(), args, error: e })
     throw e
+  } finally {
+    await refreshAllPots()
   }
 }

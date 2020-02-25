@@ -3,8 +3,10 @@ const logger = console
 const payPledgePF = require('../lib/payments/postfinance/payPledge')
 const payPledgePaypal = require('../lib/payments/paypal/payPledge')
 const generateMemberships = require('../lib/generateMemberships')
+const { refreshPotForPledgeId } = require('../lib/membershipPot')
 const { sendPledgeConfirmations } = require('../lib/Mail')
 const debug = require('debug')('crowdfundings:webhooks:all')
+const Promise = require('bluebird')
 
 const getWebhookHandler = require('../lib/payments/stripe/webhookHandler')
 
@@ -45,14 +47,14 @@ module.exports = async (server, pgdb, t, redis) => {
 
   // https://stripe.com/docs/webhooks
   server.post('/payments/stripe',
-    bodyParser.raw({type: '*/*'}),
+    bodyParser.raw({ type: '*/*' }),
     async (req, res) => {
       return handleStripeWebhook(req, res, false)
     }
   )
 
   server.post('/payments/stripe/connected',
-    bodyParser.raw({type: '*/*'}),
+    bodyParser.raw({ type: '*/*' }),
     async (req, res) => {
       return handleStripeWebhook(req, res, true)
     }
@@ -81,9 +83,8 @@ module.exports = async (server, pgdb, t, redis) => {
     }
 
     const pledgeId = body.orderID
-
+    let newPledge
     const transaction = await pgdb.transactionBegin()
-    let userId
     try {
       // load pledge
       // FOR UPDATE to wait on other transactions
@@ -98,7 +99,6 @@ module.exports = async (server, pgdb, t, redis) => {
 
       if (pledge && pledge.status !== 'SUCCESSFUL') {
         debug('pf run payPledgePF via webhook')
-        userId = pledge.userId
 
         const pspPayload = {
           ...body
@@ -107,7 +107,7 @@ module.exports = async (server, pgdb, t, redis) => {
           pledgeId: pledge.id,
           total: pledge.total,
           pspPayload,
-          userId,
+          userId: pledge.userId,
           transaction,
           t,
           logger
@@ -119,7 +119,7 @@ module.exports = async (server, pgdb, t, redis) => {
           }
 
           // update pledge status
-          await transaction.public.pledges.updateOne({
+          newPledge = await transaction.public.pledges.updateAndGetOne({
             id: pledge.id
           }, {
             status: pledgeStatus,
@@ -134,15 +134,20 @@ module.exports = async (server, pgdb, t, redis) => {
       throw e
     }
 
-    if (userId) {
-      // send mail immediately
-      await sendPledgeConfirmations({ userId, pgdb, t })
+    if (newPledge) {
+      await Promise.all([
+        sendPledgeConfirmations({ userId: newPledge.userId, pgdb, t }),
+        refreshPotForPledgeId(newPledge.id, { pgdb })
+      ])
+        .catch(e => {
+          console.error('error after payPledge', e)
+        })
     }
   })
 
   // https://developer.paypal.com/docs/integration/direct/webhooks/rest-webhooks/
   server.post('/payments/paypal',
-    bodyParser.urlencoded({extended: true}),
+    bodyParser.urlencoded({ extended: true }),
     async (req, res) => {
       const { body } = req
       await pgdb.public.paymentsLog.insert({
@@ -160,8 +165,8 @@ module.exports = async (server, pgdb, t, redis) => {
       if (body.payment_status === 'Completed') {
         const pledgeId = body.item_name
 
+        let newPledge
         const transaction = await pgdb.transactionBegin()
-        let userId
         try {
           // load pledge
           // FOR UPDATE to wait on other transactions
@@ -175,8 +180,6 @@ module.exports = async (server, pgdb, t, redis) => {
           }))[0]
 
           if (pledge && pledge.status !== 'SUCCESSFUL') {
-            userId = pledge.userId
-
             const pspPayload = {
               ...body,
               tx: body.txn_id, // normalize with redirect params
@@ -197,7 +200,7 @@ module.exports = async (server, pgdb, t, redis) => {
               }
 
               // update pledge status
-              await transaction.public.pledges.updateOne({
+              newPledge = await transaction.public.pledges.updateAndGetOne({
                 id: pledge.id
               }, {
                 status: pledgeStatus,
@@ -212,9 +215,14 @@ module.exports = async (server, pgdb, t, redis) => {
           throw e
         }
 
-        if (userId) {
-          // send mail immediately
-          await sendPledgeConfirmations({ userId, pgdb, t })
+        if (newPledge) {
+          await Promise.all([
+            sendPledgeConfirmations({ userId: newPledge.userId, pgdb, t }),
+            refreshPotForPledgeId(newPledge.id, { pgdb })
+          ])
+            .catch(e => {
+              console.error('error after payPledge', e)
+            })
         }
       }
     })

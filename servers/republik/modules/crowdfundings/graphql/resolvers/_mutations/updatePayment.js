@@ -2,16 +2,19 @@ const { Roles } = require('@orbiting/backend-modules-auth')
 const logger = console
 const generateMemberships = require('../../../lib/generateMemberships')
 const { sendPaymentSuccessful } = require('../../../lib/Mail')
+const { refreshPotForPledgeId } = require('../../../lib/membershipPot')
+const Promise = require('bluebird')
 
 module.exports = async (_, args, { pgdb, req, t, redis }) => {
   Roles.ensureUserHasRole(req.user, 'supporter')
 
   const { paymentId, status, reason } = args
   const now = new Date()
-  const transaction = await pgdb.transactionBegin()
 
+  let newPledge
+  const transaction = await pgdb.transactionBegin()
   try {
-    const payment = await transaction.public.payments.findOne({id: paymentId})
+    const payment = await transaction.public.payments.findOne({ id: paymentId })
     if (!payment) {
       logger.error('payment not found', { req: req._log(), args })
       throw new Error(t('api/payment/404'))
@@ -71,8 +74,8 @@ module.exports = async (_, args, { pgdb, req, t, redis }) => {
         paymentId
       }))[0]
 
-      if (pledge.reason !== 'SUCCESSFUL') {
-        await transaction.public.pledges.updateOne({
+      if (pledge.status !== 'SUCCESSFUL') {
+        newPledge = await transaction.public.pledges.updateAndGetOne({
           id: pledge.id
         }, {
           status: 'SUCCESSFUL',
@@ -100,5 +103,14 @@ module.exports = async (_, args, { pgdb, req, t, redis }) => {
     throw e
   }
 
-  return pgdb.public.payments.findOne({id: paymentId})
+  if (newPledge) {
+    await Promise.all([
+      refreshPotForPledgeId(newPledge.id, { pgdb })
+    ])
+      .catch(e => {
+        console.error('error after payPledge', e)
+      })
+  }
+
+  return pgdb.public.payments.findOne({ id: paymentId })
 }

@@ -1,17 +1,23 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
 const logger = console
-const {minTotal, regularTotal} = require('../../../lib/Pledge')
+const { minTotal, regularTotal } = require('../../../lib/Pledge')
 const generateMemberships = require('../../../lib/generateMemberships')
 const { sendPaymentSuccessful } = require('../../../lib/Mail')
 const { publishMonitor } = require('../../../../../lib/slack')
+const { refreshPotForPledgeId } = require('../../../lib/membershipPot')
+const Promise = require('bluebird')
 
 module.exports = async (_, args, { pgdb, req, t, mail: { enforceSubscriptions }, redis }) => {
   Roles.ensureUserHasRole(req.user, 'supporter')
+
   const { pledgeId, reason } = args
   const now = new Date()
+
+  let pledge
+  let newPledge
   const transaction = await pgdb.transactionBegin()
   try {
-    const pledge = await transaction.public.pledges.findOne({id: pledgeId})
+    pledge = await transaction.public.pledges.findOne({ id: pledgeId })
     if (!pledge) {
       logger.error('pledge not found', { req: req._log(), pledgeId })
       throw new Error(t('api/pledge/404'))
@@ -73,7 +79,7 @@ module.exports = async (_, args, { pgdb, req, t, mail: { enforceSubscriptions },
     const donation = newTotal - pledgeRegularTotal
 
     const prefixedReason = 'Support: ' + reason
-    await transaction.public.pledges.updateOne({
+    newPledge = await transaction.public.pledges.updateAndGetOne({
       id: pledge.id
     }, {
       status: 'SUCCESSFUL',
@@ -98,18 +104,25 @@ module.exports = async (_, args, { pgdb, req, t, mail: { enforceSubscriptions },
     await sendPaymentSuccessful({ pledgeId: pledge.id, pgdb: transaction, t })
 
     await transaction.transactionCommit()
-
-    enforceSubscriptions({ pgdb, userId: pledge.userId })
-
-    await publishMonitor(
-      req.user,
-      `resolvePledgeToPayment pledgeId: ${pledge.id} pledge.total:${pledge.total} newTotal:${newTotal}`
-    )
   } catch (e) {
     await transaction.transactionRollback()
     logger.info('transaction rollback', { req: req._log(), args, error: e })
     throw e
   }
 
-  return pgdb.public.pledges.findOne({id: pledgeId})
+  if (newPledge) {
+    await Promise.all([
+      enforceSubscriptions({ pgdb, userId: newPledge.userId }),
+      refreshPotForPledgeId(newPledge.id, { pgdb }),
+      publishMonitor(
+        req.user,
+        `resolvePledgeToPayment pledgeId: ${pledge.id} pledge.total:${pledge.total / 100} newTotal:${newPledge.total / 100}`
+      )
+    ])
+      .catch(e => {
+        console.error('error after payPledge', e)
+      })
+  }
+
+  return pgdb.public.pledges.findOne({ id: pledgeId })
 }

@@ -75,7 +75,8 @@ Promise.props({
       pledgeId: potPledge.id,
       templateId: givePkgOption.id,
       amount: 0,
-      periods: givePkgOption.periods,
+      periods: 1,
+      total: 0,
       price: givePkgOption.price,
       createdAt: now,
       updatedAt: now
