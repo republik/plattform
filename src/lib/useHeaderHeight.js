@@ -26,8 +26,8 @@ export const HeaderHeightProvider = ({ children, config = DEFAULT_CONFIG }) => {
     [config]
   )
 
-  const handleResize = () => {
-    if (window) {
+  React.useEffect(() => {
+    const handleResize = () => {
       const nextHeaderHeightValue = config.reduce((acc, cur) => {
         if (window.innerWidth >= cur.minWidth) {
           return cur.headerHeight
@@ -39,15 +39,12 @@ export const HeaderHeightProvider = ({ children, config = DEFAULT_CONFIG }) => {
         setHeaderHeightValue(nextHeaderHeightValue)
       }
     }
-  }
-
-  React.useEffect(() => {
     handleResize()
     window.addEventListener('resize', handleResize)
     return () => {
       window.removeEventListener('resize', handleResize)
     }
-  }, [])
+  }, [config, headerHeightValue])
 
   return (
     <HeaderHeightContext.Provider value={{ value: headerHeightValue, rules }}>

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import React from 'react'
 
 import CarouselContext, { defaultValue } from './Context'
-import { PADDING, TILE_MAX_WIDTH, TILE_GRID_PADDING } from './constants'
+import { PADDING, TILE_MAX_WIDTH } from './constants'
 
 import { MAX_WIDTH } from '../Center'
 

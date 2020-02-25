@@ -1,5 +1,4 @@
 import React, { useContext } from 'react'
-import { css } from 'glamor'
 
 import CarouselContext from './Context'
 import Grid from './Grid'
