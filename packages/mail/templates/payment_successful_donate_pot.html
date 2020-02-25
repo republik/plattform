@@ -36,54 +36,14 @@
                   <td style="padding:20px;">
                     <p>Guten Tag</p>
                     <p>
-                      <strong>Ihre Zahlung ist erfolgreich bei uns eingegangen.<br />
-                        Herzlichen Dank, dass Sie die Republik mit einer Geschenkmitgliedschaft unterstützen!</strong>
+                      <strong>Herzlichen Dank für Ihre Spende von {{total_formatted}}.<br />
+                      Die Zahlung ist erfolgreich bei uns eingegangen.</strong>
                     </p>
-
-                    {{#if voucher_codes}}
-                      <p>
-                        <strong>Für jede Geschenkmitgliedschaft erhalten Sie nachfolgend einen 6-Zeichen-Code.</strong>
-                      </p>
-                      <p>
-                        <strong>{{voucher_codes}}</strong>
-                      </p>
-                      <p>Sie können diesen der beschenkten Person mit einem Mittel Ihrer Wahl überreichen: sofort per E-Mail, traditionell per Briefpost oder originell als Schrift auf einem Kuchen.</p>
-                      <p>Um den Geschenkcode einzulösen, muss der neue Besitzer oder die neue Besitzerin nur auf die Seite <a href="{{link_claim}}">{{link_claim}}</a> gehen. Und ihn dort eingeben.</p>
-                    {{/if}}
-
-                    {{#if access_granted}}
-                      <p>Sie haben sich entschieden, dass wir die Mitglieschaft für Sie verschenken dürfen. Dafür gleich nochmals ein Dankeschön! Wir werden Sie informieren, sobald Ihr Geschenk eingelöst wird.</p>
-                    {{/if}}
-
-                    {{#if goodies_count}}
-                      <p>
-                        {{#if `goodies_count == 1`}}
-                          Auch Ihr bestelltes Republik-Objekt eignet sich perfekt für die Code-Übergabe.
-                        {{elseif `goodies_count > 1`}}
-                          Auch Ihre bestellten Republik-Objekte eignen sich perfekt für die Code-Übergabe.
-                        {{/if}}
-
-                        Bücher und Taschen liefern wir innerhalb von 7 Werktagen.
-                      </p>
-
-                      <ul>
-                        {{#options}}
-                          {{#if `this.otype == "Goodie"`}}
-                          <li>
-                            {{this.oamount}} {{this.olabel}}
-                          </li>
-                          {{/if}}
-                        {{/options}}
-                      </ul>
-
-                      <p><strong>Stellen Sie dafür bitte sicher, dass Sie Ihre Adresse unter <a href="{{link_account_account}}">{{link_account}}</a> korrekt eingetragen haben.</strong></p>
-                    {{/if}}
 
                     <p>
-                      Vielen Dank!<br />
-                      Und viel Freude beim Verschenken der Republik.
+                      Herzlich<br />
+                      Ihre Crew der Republik
                     </p>
-                    <p>Ihre Crew der Republik</p>
                   </td>
                 </tr>
                 <tr>
