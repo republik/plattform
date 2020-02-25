@@ -28,6 +28,10 @@
       entryPoints = ["web"]
       rule = "Host(`styleguide.republik.test`)"
       service = "styleguide"
+    [http.routers.misc]
+      entryPoints = ["web"]
+      rule = "Host(`misc.republik.test`)"
+      service = "misc"
 
   [http.services]
     [[http.services.api.loadBalancer.servers]]
@@ -44,3 +48,5 @@
       url = "http://localhost:3005"
     [[http.services.styleguide.loadBalancer.servers]]
       url = "http://localhost:3003"
+    [[http.services.misc.loadBalancer.servers]]
+      url = "http://localhost:3000"
