@@ -1,5 +1,5 @@
 const { Roles, transformUser } = require('@orbiting/backend-modules-auth')
-const cancelSubscription = require('../../../lib/payments/stripe/cancelSubscription')
+const cancelMembership = require('../../../lib/cancelMembership')
 const createCache = require('../../../lib/cache')
 const slack = require('../../../../../lib/slack')
 const { label: getLabel } = require('../CancellationCategory')
@@ -34,9 +34,14 @@ module.exports = async (_, args, context) => {
       membershipId
     })
       .then(result => result[0])
+
     if (!membership) {
       throw new Error(t('api/membership/404'))
     }
+
+    const user = await transaction.public.users.findOne({ id: membership.userId }).then(transformUser)
+    Roles.ensureUserIsMeOrInRoles(user, req.user, ['supporter'])
+
     if (membership.active === false) {
       throw new Error(t('api/membership/cancel/isInactive'))
     }
@@ -44,28 +49,22 @@ module.exports = async (_, args, context) => {
       throw new Error(t('api/membership/cancel/notRenewing'))
     }
 
-    const user = transformUser(
-      await transaction.public.users.findOne({ id: membership.userId })
-    )
-    Roles.ensureUserIsMeOrInRoles(user, req.user, ['supporter'])
-
-    const membershipType = await transaction.public.membershipTypes.findOne({
+    membership.membershipType = await pgdb.public.membershipTypes.findOne({
       id: membership.membershipTypeId
     })
 
-    if (membershipType.name === 'MONTHLY_ABO' && !membership.subscriptionId) {
-      throw new Error(t('api/membership/pleaseWait'))
+    const cancelledMembership = await cancelMembership(
+      membership,
+      details,
+      { immediately },
+      t,
+      transaction
+    )
+
+    if (!pgdb.isTransactionActive()) {
+      await transaction.transactionCommit()
     }
 
-    const newMembership = await transaction.public.memberships.updateAndGetOne({
-      id: membershipId
-    }, {
-      renew: false,
-      active: immediately
-        ? false
-        : membership.active,
-      updatedAt: new Date()
-    })
     // determine endDate
     const endDate = await pgdb.queryOneField(`
       SELECT MAX("endDate")
@@ -75,34 +74,12 @@ module.exports = async (_, args, context) => {
       membershipId
     })
 
-    await transaction.public.membershipCancellations.insert({
-      membershipId: newMembership.id,
-      reason: details.reason,
-      category: details.type,
-      suppressConfirmation: !!details.suppressConfirmation,
-      suppressWinback: !!details.suppressWinback,
-      cancelledViaSupport: user.id !== req.user.id
-    })
-
-    if (membership.subscriptionId) {
-      await cancelSubscription({
-        id: membership.subscriptionId,
-        companyId: membershipType.companyId,
-        immediately,
-        pgdb: transaction
-      })
-    }
-
-    if (!pgdb.isTransactionActive()) {
-      await transaction.transactionCommit()
-    }
-
     if (!details.suppressConfirmation) {
       await mail.sendMembershipCancellation({
         email: user.email,
         name: user.name,
         endDate,
-        membershipType,
+        membershipType: membership.membershipType,
         reasonGiven: details.reason && details.reason.length > 1,
         t,
         pgdb
@@ -111,7 +88,7 @@ module.exports = async (_, args, context) => {
 
     await slack.publishMembership(
       user,
-      membershipType.name,
+      membership.membershipType.name,
       'cancelMembership',
       {
         ...details,
@@ -123,7 +100,7 @@ module.exports = async (_, args, context) => {
     const cache = createCache({ prefix: `User:${user.id}` }, context)
     cache.invalidate()
 
-    return newMembership
+    return cancelledMembership
   } catch (e) {
     if (!pgdb.isTransactionActive()) {
       await transaction.transactionRollback()
