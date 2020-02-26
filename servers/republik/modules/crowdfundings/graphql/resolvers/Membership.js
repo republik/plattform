@@ -144,10 +144,10 @@ module.exports = {
         id: membership.pledgeId
       })
 
-    const user = await loaders.User.byId.load(pledge.userId)
-    if (user.id === me.id) {
+    if (!me || membership.userId !== me.id || pledge.userId === me.id) {
       return null
     }
-    return user.name
+    return loaders.User.byId.load(pledge.userId)
+      .then(u => u && u.name)
   }
 }
