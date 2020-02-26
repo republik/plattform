@@ -1,17 +1,22 @@
 const debug = require('debug')('access:lib:perks:giftMembership')
 
+const { hasUserActiveMembership } = require('@orbiting/backend-modules-utils')
+
 const memberships = require('../memberships')
 const activateMembership = require('../../../../servers/republik/modules/crowdfundings/lib/activateMembership')
 
 const give = async (campaign, grant, recipient, settings, t, pgdb) => {
+  const hasActiveMembership = await hasUserActiveMembership(recipient, pgdb)
+
+  if (hasActiveMembership) {
+    throw new Error(t('api/access/perk/giftMembership/hasActiveMembership/error'))
+  }
+
   const giftableMemberships = await memberships.findGiftableMemberships(pgdb)
 
   if (giftableMemberships.length === 0) {
-    throw new Error(t('Unable to find a giftable membership'))
+    throw new Error(t('api/access/perk/giftMembership/noGiftableMemberships/error'))
   }
-
-  // @TODO: Nur wenn nicht schon ein nadere MItgliedschaft da ist,
-  // die aber kein Monatsabonnement ist.
 
   // @TODO: More logic here, to sort anonymous memberships at end of line.
   const electedMembership = giftableMemberships.shift()

@@ -1147,6 +1147,14 @@
       "value": "Sie müssen zwingend eine gültige Empfänger-E-Mail-Adresse angeben."
     },
     {
+      "key": "api/access/perk/giftMembership/hasActiveMembership/error",
+      "value": "Sie haben bereits eine aktive Mitgliedschaft und können diesen Code nicht einlösen."
+    },
+    {
+      "key": "api/access/perk/giftMembership/noGiftableMemberships/error",
+      "value": "Derzeit stehen keine Mitgliedschaften zur Verfügung. Versuchen Sie es später erneut."
+    },
+    {
       "key": "api/access/resolvers/AccessGrant/status/invalidated",
       "value": "nicht mehr gültig"
     },
