@@ -14,4 +14,8 @@ ALTER TABLE "pledgeOptions"
   ADD COLUMN "total" int
 ;
 
+ALTER TABLE "pledges"
+  ADD COLUMN "messageToClaimers" text
+;
+
 CREATE INDEX "pledge_option_pot_pledge_option_id_idx" ON "pledgeOptions"("potPledgeOptionId");

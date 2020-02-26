@@ -339,6 +339,7 @@ module.exports = async (_, args, context) => {
       total: pledge.total,
       donation: donation,
       reason: pledge.reason,
+      messageToClaimers: pledge.messageToClaimers,
       status: 'DRAFT'
     }
     newPledge = await transaction.public.pledges.insertAndGet(newPledge)

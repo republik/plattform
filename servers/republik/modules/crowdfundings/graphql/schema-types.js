@@ -149,6 +149,7 @@ type Membership {
   reducedPrice: Boolean!
   claimerName: String
   giverName: String
+  messageToClaimers: String
   user: User!
   sequenceNumber: Int
   active: Boolean!
@@ -229,6 +230,7 @@ input PledgeInput {
   total: Int!
   user: UserInput!
   reason: String
+  messageToClaimers: String
   accessToken: ID
 }
 

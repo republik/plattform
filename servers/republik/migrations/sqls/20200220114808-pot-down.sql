@@ -16,3 +16,7 @@ ALTER TABLE "pledgeOptions"
   DROP COLUMN "total"
 ;
 
+ALTER TABLE "pledges"
+  DROP COLUMN "messageToClaimers"
+;
+
