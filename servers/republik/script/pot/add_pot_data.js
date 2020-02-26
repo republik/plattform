@@ -51,6 +51,8 @@ Promise.props({
     const givePkgOption = await txn.public.packageOptions.insertAndGet({
       ...existingPkgOption,
       accessGranted: true,
+      order: 110,
+      defaultAmount: 0,
       createdAt: now,
       updatedAt: now
     })
