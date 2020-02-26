@@ -41,12 +41,9 @@ beforeEach(async () => {
   const { pgdb } = global.instance.context
 
   await resetCustomers(pgdb) // delete customers from stripe
-
-  await pgdb.public.users.truncate({ cascade: true })
   await pgdb.public.sessions.truncate({ cascade: true })
-  await pgdb.public.payments.truncate({ cascade: true })
-  await pgdb.public.pledgePayments.truncate({ cascade: true })
-  await pgdb.public.pledges.truncate({ cascade: true })
+  await pgdb.public.users.truncate({ cascade: true })
+  await seedCrowdfundings(global.instance.context.pgdb, true)
 
   global.instance.apolloFetch = global.instance.createApolloFetch()
 })
