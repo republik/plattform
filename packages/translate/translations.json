@@ -1139,6 +1139,14 @@
       "value": "Sie können derzeit keinen Zugriff teilen, da Ihr Konto auf einer schwarzen Liste aufgeführt ist."
     },
     {
+      "key": "api/access/constraint/requireUnpromisedMembership/error",
+      "value": "Sie können derzeit keine Mitgliedschaft mehr vergeben, da das Kontingent ausgeschöpft ist."
+    },
+    {
+      "key": "api/access/constraint/requireEmail/error",
+      "value": "Sie müssen zwingend eine gültige Empfänger-E-Mail-Adresse angeben."
+    },
+    {
       "key": "api/access/resolvers/AccessGrant/status/invalidated",
       "value": "nicht mehr gültig"
     },

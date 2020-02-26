@@ -1,6 +1,5 @@
 const debug = require('debug')('access:lib:grants')
 const moment = require('moment')
-const validator = require('validator')
 const Promise = require('bluebird')
 
 const { Roles } = require('@orbiting/backend-modules-auth')
@@ -103,13 +102,6 @@ const insert = async (granter, campaignId, grants = [], pgdb) => {
 }
 
 const grant = async (granter, campaignId, email, message, t, pgdb, mail) => {
-  if (!validator.isEmail(email)) {
-    throw new Error(t(
-      'api/access/grant/email/error',
-      { email }
-    ))
-  }
-
   const campaign = await campaignsLib.findOne(campaignId, pgdb)
 
   if (!campaign) {
@@ -149,7 +141,9 @@ const grant = async (granter, campaignId, email, message, t, pgdb, mail) => {
 
   debug('invite, row inserted', { grant })
 
-  await mailLib.sendRecipientInvitation(granter, campaign, grant, t, pgdb)
+  if (grant.email) {
+    await mailLib.sendRecipientInvitation(granter, campaign, grant, t, pgdb)
+  }
 
   return grant
 }

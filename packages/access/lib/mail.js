@@ -266,7 +266,7 @@ const getGlobalMergeVars = async (
     },
     {
       name: 'link_claim_prefilled',
-      content: `${FRONTEND_BASE_URL}/abholen?code=${grant.voucherCode}&email=${base64u.encode(email)}&context=access`
+      content: `${FRONTEND_BASE_URL}/abholen?code=${grant.voucherCode}&email=${email ? base64u.encode(email) : ''}&context=access`
     }
   ]
 }

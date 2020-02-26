@@ -12,7 +12,7 @@ type mutations {
     "An ID of an existing AccessCampaign"
     campaignId: ID!,
     "Recipient of a membership should be granted to"
-    email: String!
+    email: String
     "An optional message to the recipient"
     message: String
   ): AccessGrant!
