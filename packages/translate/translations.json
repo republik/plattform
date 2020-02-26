@@ -535,6 +535,10 @@
       "value": "Ihre verschenkten Mitgliedschaften"
     },
     {
+      "key": "api/email/membership_giver_claim_notice/subject",
+      "value": "Geschenk-Mitgliedschaft von {recipientName} eingelöst"
+    },
+    {
       "key": "api/email/membership_winback_NO_TIME/subject",
       "value": "Das Beste der Republik"
     },
@@ -1055,8 +1059,16 @@
       "value": "Einladung von {granterName}"
     },
     {
+      "key": "api/access/email/recipient/invitation_gifted_membership/subject",
+      "value": "Ihre Geschenk-Mitgliedschaft"
+    },
+    {
       "key": "api/access/email/recipient/onboarding/subject",
       "value": "Ihr Republik-Testzugang: Willkommen!"
+    },
+    {
+      "key": "api/access/email/recipient/onboarding_gifted_membership/subject",
+      "value": "Willkommen an Bord"
     },
     {
       "key": "api/access/email/recipient/expired/subject",
@@ -1065,6 +1077,10 @@
     {
       "key": "api/access/email/recipient/followup/subject",
       "value": "Zeit für eine Entscheidung"
+    },
+    {
+      "key": "api/access/email/granter/claim_notice/subject",
+      "value": "Gechenk-Mitgliedschaft von {recipientName} eingelöst"
     },
     {
       "key": "api/access/grant/email/error",
