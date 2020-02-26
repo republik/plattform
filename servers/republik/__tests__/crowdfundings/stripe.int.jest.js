@@ -269,7 +269,6 @@ describe('payPledge', () => {
 
   test('Multiple failed payments on MONTHLY_ABO pledge with STRIPE', async () => {
     const { pledgeId } = await prepareNewPledge({ templateId: '00000000-0000-0000-0008-000000000002' })
-    await resetCustomers(pgDatabase())
     const source = await createSource({ card: Cards.Visa, pledgeId })
     const result = await payPledge({
       pledgeId,
