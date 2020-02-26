@@ -29,11 +29,11 @@ afterAll(async () => {
 beforeEach(async () => {
   const { pgdb } = global.instance.context
 
-  await pgdb.public.users.truncate({ cascade: true })
+  // the following line empties all tables with a relationship to users
+  // this also deletes packageOptions, thus seed again
   await pgdb.public.sessions.truncate({ cascade: true })
-  await pgdb.public.payments.truncate({ cascade: true })
-  await pgdb.public.pledgePayments.truncate({ cascade: true })
-  await pgdb.public.pledges.truncate({ cascade: true })
+  await pgdb.public.users.truncate({ cascade: true })
+  await seedCrowdfundings(global.instance.context.pgdb, true)
 
   global.instance.apolloFetch = global.instance.createApolloFetch()
 })
@@ -45,11 +45,11 @@ const pgDatabase = () =>
 describe('submitPledge', () => {
   test('default pledge with ABO package', async () => {
     const result = await submitPledge({
-      'total': 24000,
-      'options': [{
-        'amount': 1,
-        'price': 24000,
-        'templateId': '00000000-0000-0000-0008-000000000001'
+      total: 24000,
+      options: [{
+        amount: 1,
+        price: 24000,
+        templateId: '00000000-0000-0000-0008-000000000001'
       }]
     })
     expect(result.errors).toBeFalsy()
@@ -67,11 +67,11 @@ describe('submitPledge', () => {
 
     console.log('submit pledge again with the same e-mail address')
     const result2 = await submitPledge({
-      'total': 24000,
-      'options': [{
-        'amount': 1,
-        'price': 24000,
-        'templateId': '00000000-0000-0000-0008-000000000001'
+      total: 24000,
+      options: [{
+        amount: 1,
+        price: 24000,
+        templateId: '00000000-0000-0000-0008-000000000001'
       }]
     })
     expect(result2.errors).toBeFalsy()
@@ -86,11 +86,11 @@ describe('submitPledge', () => {
 
   test('pledge with ABO package and donation', async () => {
     const result = await submitPledge({
-      'total': 40000,
-      'options': [{
-        'amount': 1,
-        'price': 24000,
-        'templateId': '00000000-0000-0000-0008-000000000001'
+      total: 40000,
+      options: [{
+        amount: 1,
+        price: 24000,
+        templateId: '00000000-0000-0000-0008-000000000001'
       }]
     })
     expect(result.errors).toBeFalsy()
@@ -104,11 +104,11 @@ describe('submitPledge', () => {
 
   test('pledge with ABO package and userPrice', async () => {
     const result = await submitPledge({
-      'total': 10000,
-      'options': [{
-        'amount': 1,
-        'price': 24000,
-        'templateId': '00000000-0000-0000-0008-000000000001'
+      total: 10000,
+      options: [{
+        amount: 1,
+        price: 24000,
+        templateId: '00000000-0000-0000-0008-000000000001'
       }],
       reason: 'testing the reason'
     })
@@ -122,13 +122,12 @@ describe('submitPledge', () => {
   })
 
   test('pledge with userPrice but no reason', async () => {
-    pgDatabase().public.pledges.truncate({ cascade: true })
     const result = await submitPledge({
-      'total': 10000,
-      'options': [{
-        'amount': 1,
-        'price': 24000,
-        'templateId': '00000000-0000-0000-0008-000000000001'
+      total: 10000,
+      options: [{
+        amount: 1,
+        price: 24000,
+        templateId: '00000000-0000-0000-0008-000000000001'
       }]
     })
     expect(result.errors).toBeTruthy()
@@ -136,11 +135,11 @@ describe('submitPledge', () => {
 
   test('pledge with ABO package and userPrice too low (minUserPrice = 1000) is not possible', async () => {
     const result = await submitPledge({
-      'total': 999,
-      'options': [{
-        'amount': 1,
-        'price': 999,
-        'templateId': '00000000-0000-0000-0008-000000000001'
+      total: 999,
+      options: [{
+        amount: 1,
+        price: 999,
+        templateId: '00000000-0000-0000-0008-000000000001'
       }]
     })
     expect(result.errors).toBeTruthy()
@@ -148,11 +147,11 @@ describe('submitPledge', () => {
 
   test('pledge with 2 x ABO (maxAmount = 1) is not possible', async () => {
     const result = await submitPledge({
-      'total': 40000,
-      'options': [{
-        'amount': 2,
-        'price': 24000,
-        'templateId': '00000000-0000-0000-0008-000000000001'
+      total: 40000,
+      options: [{
+        amount: 2,
+        price: 24000,
+        templateId: '00000000-0000-0000-0008-000000000001'
       }]
     })
     expect(result.errors).toBeTruthy()
@@ -160,15 +159,15 @@ describe('submitPledge', () => {
 
   test('pledge with PATRON and 1 x SWEETS (minAmount = 2) is not possible', async () => {
     const result = await submitPledge({
-      'total': 103000,
-      'options': [{
-        'amount': 1,
-        'price': 100000,
-        'templateId': '00000000-0000-0000-0008-000000000003'
+      total: 103000,
+      options: [{
+        amount: 1,
+        price: 100000,
+        templateId: '00000000-0000-0000-0008-000000000003'
       }, {
-        'amount': 1,
-        'price': 3000,
-        'templateId': '00000000-0000-0000-0008-000000000004'
+        amount: 1,
+        price: 3000,
+        templateId: '00000000-0000-0000-0008-000000000004'
       }]
     })
     expect(result.errors).toBeTruthy()
@@ -176,11 +175,11 @@ describe('submitPledge', () => {
 
   test('pledge with PATRON package (userPrice = false) and a total that is lower than the price is not possible', async () => {
     const result = await submitPledge({
-      'total': 99999,
-      'options': [{
-        'amount': 1,
-        'price': 10000,
-        'templateId': '00000000-0000-0000-0008-000000000003'
+      total: 99999,
+      options: [{
+        amount: 1,
+        price: 10000,
+        templateId: '00000000-0000-0000-0008-000000000003'
       }]
     })
     expect(result.errors).toBeTruthy()
@@ -188,15 +187,15 @@ describe('submitPledge', () => {
 
   test('pledge with mixed PATRON package options and ABO package option is not possible', async () => {
     const result = await submitPledge({
-      'total': 100000,
-      'options': [{
-        'amount': 1,
-        'price': 100000,
-        'templateId': '00000000-0000-0000-0008-000000000002'
+      total: 100000,
+      options: [{
+        amount: 1,
+        price: 100000,
+        templateId: '00000000-0000-0000-0008-000000000002'
       }, {
-        'amount': 1,
-        'price': 20000,
-        'templateId': '00000000-0000-0000-0008-000000000001'
+        amount: 1,
+        price: 20000,
+        templateId: '00000000-0000-0000-0008-000000000001'
       }]
     })
     expect(result.errors).toBeTruthy()
@@ -445,7 +444,7 @@ describe('cancelPledge', () => {
       pledgeId
     })
     expect(result.errors).toBeFalsy()
-    expect(result.data).toEqual({cancelPledge: null})
+    expect(result.data).toEqual({ cancelPledge: null })
     // check that payment is CANCELLED as well!
     const pledgePayment = await pgDatabase().public.pledgePayments.findOne({ pledgeId })
     expect(pledgePayment).toBeFalsy()

@@ -23,7 +23,7 @@ module.exports = async (_, args, context) => {
     const { pledge, consents } = args
     debug('submitPledge %O', pledge)
 
-    const pledgeOptions = pledge.options.filter(o => o.amount > 0)
+    const pledgeOptions = pledge.options.filter(o => o.amount > 0 && o.templateId)
 
     // Check if there are any options left viable to process
     if (pledgeOptions.length === 0) {
@@ -39,10 +39,13 @@ module.exports = async (_, args, context) => {
       id: pledgeOptions.map(plo => plo.templateId)
     })
 
+    const rewardIds = packageOptions.map(option => option.rewardId)
     const rewards =
-      await pgdb.public.rewards.find({
-        id: packageOptions.map(option => option.rewardId)
-      })
+      rewardIds.length > 0
+        ? await pgdb.public.rewards.find({
+          id: rewardIds
+        })
+        : []
 
     const goodies =
       rewards.length > 0

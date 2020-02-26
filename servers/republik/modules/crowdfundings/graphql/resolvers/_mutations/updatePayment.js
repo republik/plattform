@@ -4,8 +4,8 @@ const generateMemberships = require('../../../lib/generateMemberships')
 const { sendPaymentSuccessful } = require('../../../lib/Mail')
 const { refreshPotForPledgeId } = require('../../../lib/membershipPot')
 
-module.exports = async (_, args, { pgdb, req, t, redis }) => {
-  Roles.ensureUserHasRole(req.user, 'supporter')
+module.exports = async (_, args, { pgdb, req, t, redis, user: me }) => {
+  Roles.ensureUserHasRole(me, 'supporter')
 
   const { paymentId, status, reason } = args
   const now = new Date()
