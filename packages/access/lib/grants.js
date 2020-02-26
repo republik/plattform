@@ -129,10 +129,14 @@ const grant = async (granter, campaignId, email, message, t, pgdb, mail) => {
     ))
   }
 
+  const voucherCodeLength = campaign.config.voucherCodeLength || VOUCHER_CODE_LENGTH
+  const voucherCode = await pgdb.queryOneField(`SELECT make_hrid('"accessGrants"', 'voucherCode', ${voucherCodeLength})`)
+
   const grant = await pgdb.public.accessGrants.insertAndGet({
     granterUserId: granter.id,
     email,
     message,
+    voucherCode,
     accessCampaignId: campaign.id,
     beginBefore: addInterval(moment(), campaign.grantClaimableInterval)
   })
