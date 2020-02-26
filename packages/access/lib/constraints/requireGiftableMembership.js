@@ -1,21 +1,21 @@
-const debug = require('debug')('access:lib:constraints:requireUnpromisedMembership')
+const debug = require('debug')('access:lib:constraints:requireGiftableMembership')
 
 const memberships = require('../memberships')
 
 /**
- * Checks if there are more (unpromised) memberships than there are unclaimed
- * access grants. An unpromised membership is a membership still to be gifted.
+ * Checks if there are more giftable memberships than there are unclaimed
+ * access grants.
  *
  * Story: User can only get an access grant if a membership is to be gifted.
  *
- * @example: {"requireUnpromisedMembership": {}}
+ * @example: {"requireGiftableMembership": {}}
  */
 
 const isGrantable = async (args, context) => {
   const { settings, granter, campaign } = args
   const { pgdb } = context
 
-  const unpromisedMemberships = await memberships.findUnpromisedMemberships(pgdb)
+  const giftableMemberships = await memberships.findGiftableMemberships(pgdb)
 
   const unclaimedAccessGrants = await pgdb.query(`
     SELECT ag.id
@@ -28,7 +28,7 @@ const isGrantable = async (args, context) => {
       AND ag."invalidatedAt" IS NULL
   `)
 
-  const isLimitReached = unpromisedMemberships.length <= unclaimedAccessGrants.length
+  const isLimitReached = giftableMemberships.length <= unclaimedAccessGrants.length
 
   debug(
     'isGrantable',
@@ -36,7 +36,7 @@ const isGrantable = async (args, context) => {
       granter: granter.id,
       settings,
       campaign,
-      unpromisedMemberships: unpromisedMemberships.length,
+      giftableMemberships: giftableMemberships.length,
       unclaimedAccessGrants: unclaimedAccessGrants.length,
       isLimitReached
     }

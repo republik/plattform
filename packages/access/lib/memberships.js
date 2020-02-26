@@ -54,7 +54,7 @@ const removeMemberRole = async (grant, user, findFn, pgdb) => {
   return false
 }
 
-const findUnpromisedMemberships = async (pgdb) =>
+const findGiftableMemberships = async (pgdb) =>
   pgdb.query(`
     SELECT m.*
 
@@ -74,5 +74,5 @@ const findUnpromisedMemberships = async (pgdb) =>
 module.exports = {
   addMemberRole,
   removeMemberRole,
-  findUnpromisedMemberships
+  findGiftableMemberships
 }
