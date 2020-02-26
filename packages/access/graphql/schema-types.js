@@ -49,6 +49,8 @@ type AccessGrant {
   voucherCode: String
   "Entity who received granted membership (Admin only)"
   recipient: User
+  "Name or email address of entity who received granted access"
+  recipientName: String
   "Sharing period must begin before"
   beginBefore: DateTime!
   "Beginning of sharing period"

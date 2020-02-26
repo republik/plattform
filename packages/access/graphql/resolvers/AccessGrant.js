@@ -38,6 +38,15 @@ module.exports = {
 
     return transformUser(recipient)
   },
+  recipientName: async (grant, args, { user: me, t, pgdb }) => {
+    const recipient =
+      await pgdb.public.users.findOne({ id: grant.recipientUserId })
+
+    const safeUser = transformUser(recipient)
+
+    return safeUser.name ||
+      t('api/access/resolvers/AccessGrant/tallDarkStranger')
+  },
   status: (grant, args, { user: me, t }) => {
     if (!Roles.userIsInRoles(me, PRIVILEDGED_ROLES)) {
       return null
