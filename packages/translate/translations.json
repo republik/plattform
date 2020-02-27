@@ -1681,6 +1681,18 @@
     {
       "key": "api/email/membership_owner_autopay_failed_4/subject",
       "value": "Jahresbeitrag: Automatische Abbuchung nicht möglich"
+    },
+    {
+      "key": "api/payment/invoice/item/package/DONATE_POT",
+      "value": "Spende in den Mitgliedschafts-Topf"
+    },
+    {
+      "key": "api/email/pledge_donate_pot/subject",
+      "value": "Vielen Dank für Ihre Spende in den Mitgliedschafts-Topf"
+    },
+    {
+      "key": "api/email/payment_successful_donate_pot/subject",
+      "value": "Vielen Dank! Wir haben Ihre Zahlung erhalten."
     }
   ]
 }

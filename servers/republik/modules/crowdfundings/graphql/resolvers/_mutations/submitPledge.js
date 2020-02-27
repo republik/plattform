@@ -23,7 +23,7 @@ module.exports = async (_, args, context) => {
     const { pledge, consents } = args
     debug('submitPledge %O', pledge)
 
-    const pledgeOptions = pledge.options.filter(o => o.amount > 0)
+    const pledgeOptions = pledge.options.filter(o => o.amount > 0 && o.templateId)
 
     // Check if there are any options left viable to process
     if (pledgeOptions.length === 0) {
@@ -39,10 +39,13 @@ module.exports = async (_, args, context) => {
       id: pledgeOptions.map(plo => plo.templateId)
     })
 
+    const rewardIds = packageOptions.map(option => option.rewardId)
     const rewards =
-      await pgdb.public.rewards.find({
-        id: packageOptions.map(option => option.rewardId)
-      })
+      rewardIds.length > 0
+        ? await pgdb.public.rewards.find({
+          id: rewardIds
+        })
+        : []
 
     const goodies =
       rewards.length > 0
@@ -336,6 +339,7 @@ module.exports = async (_, args, context) => {
       total: pledge.total,
       donation: donation,
       reason: pledge.reason,
+      messageToClaimers: pledge.messageToClaimers,
       status: 'DRAFT'
     }
     newPledge = await transaction.public.pledges.insertAndGet(newPledge)
@@ -346,6 +350,7 @@ module.exports = async (_, args, context) => {
 
       const pko = packageOptions.find((pko) => pko.id === plo.templateId)
       plo.vat = pko.vat
+      plo.potPledgeOptionId = pko.potPledgeOptionId
 
       if (
         pko.reward &&
@@ -353,6 +358,12 @@ module.exports = async (_, args, context) => {
         !plo.periods
       ) {
         plo.periods = pko.reward.defaultPeriods
+      }
+
+      // the FE doesn't distribute the surplus / donation amout to pledgeOptions
+      // DONATE* packages always only have one packageOption
+      if (pledgeOptions.length === 1) {
+        plo.total = newPledge.total
       }
 
       return transaction.public.pledgeOptions.insertAndGet(plo)

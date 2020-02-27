@@ -135,5 +135,26 @@ module.exports = {
         })
         )
       )
+  },
+  async giverName (membership, args, context) {
+    const { loaders, user: me } = context
+    const pledge =
+      membership.pledge ||
+      await loaders.Pledge.byId.load(membership.pledgeId)
+
+    if (me && (membership.userId === me.id || pledge.userId === me.id)) {
+      return loaders.User.byId.load(pledge.userId)
+        .then(u => u && u.name)
+    }
+  },
+  async messageToClaimers (membership, args, context) {
+    const { loaders, user: me } = context
+    const pledge =
+      membership.pledge ||
+      await loaders.Pledge.byId.load(membership.pledgeId)
+
+    if (me && (membership.userId === me.id || pledge.userId === me.id)) {
+      return pledge.messageToClaimers
+    }
   }
 }
