@@ -69,15 +69,42 @@ FROM "totals"
 LIMIT 1
 `
 
+const normalPaymentsQuery = `
+SELECT
+  SUM(pay.total) "total"
+FROM
+  payments pay
+WHERE
+  pay.status = 'PAID' AND
+  pay."createdAt" > :min AND
+  pay."createdAt" <= :max
+`
+
 const getTotalFn = (min, max, pgdb) => async () => {
   debug(
     'query for: %o',
     { min: min.toISOString(), max: max.toISOString() }
   )
 
-  const { records, additionals } = await Promise.props({
-    records: await pgdb.query(query, { min, max }),
-    additionals: await pgdb.public.gsheets.findOneFieldOnly({ name: 'revenueStatsSurplusAdditionals' }, 'data')
+  const switchDate = await pgdb.public.gsheets.findOneFieldOnly({
+    name: 'RevenueStatsSwitchDate'
+  }, 'data')
+    .then(obj => obj && moment(obj))
+
+  const maxSurplus = switchDate || max
+
+  const { records, additionals, normalPayments } = await Promise.props({
+    records: await pgdb.query(query, {
+      min,
+      max: maxSurplus
+    }),
+    additionals: await pgdb.public.gsheets.findOneFieldOnly({
+      name: 'revenueStatsSurplusAdditionals'
+    }, 'data'),
+    normalPayments: switchDate && await pgdb.queryOne(normalPaymentsQuery, {
+      min: maxSurplus,
+      max
+    })
   })
 
   const result = { total: 0, ...records[0] }
@@ -91,6 +118,11 @@ const getTotalFn = (min, max, pgdb) => async () => {
   })
 
   debug('query result including addtionals: %o', result)
+
+  if (normalPayments && normalPayments.total) {
+    result.total += normalPayments.total
+    debug('query result including normal payments: %o', result)
+  }
 
   return { ...result, updatedAt: new Date() }
 }
