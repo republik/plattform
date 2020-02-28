@@ -23,8 +23,5 @@ module.exports = {
         id: membershipId
       })
     }
-  },
-  optionGroup ({ optionGroup, rewardId }) {
-    return optionGroup || rewardId
   }
 }
