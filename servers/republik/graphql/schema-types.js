@@ -214,6 +214,11 @@ type MembershipStats {
     "Maximum month (YYYY-MM)"
     max: YearMonthDate!
   ): MembershipStatsEvolution!
+
+  countRange(
+    min: DateTime!
+    max: DateTime!
+  ): Int!
 }
 type MemberStats {
   count: Int!
