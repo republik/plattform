@@ -14,7 +14,7 @@ import {
   TextButton
 } from '../Display/utils'
 
-const ROLES = ['editor', 'producer', 'supporter', 'accountant', 'admin']
+const ROLES = ['editor', 'producer', 'supporter', 'accountant', 'admin', 'accomplice']
 
 const GET_ROLES = gql`
   query user($id: String) {
