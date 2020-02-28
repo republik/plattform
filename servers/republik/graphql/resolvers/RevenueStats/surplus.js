@@ -94,7 +94,7 @@ WITH "totals" AS (
   GROUP BY rd."paymentId", rd."paymentCreatedAt", rd."paymentTotal", rd."packageName", mas."pledgeId", mas."numActive"
   --ORDER BY rd."paymentCreatedAt" DESC
 )
-SELECT SUM("surplusTotal") "total"
+SELECT COALESCE(SUM("surplusTotal"), 0)::int "total"
 FROM "totals"
 WHERE "surplusTotal" > 0
 `
