@@ -20,7 +20,7 @@ module.exports = async (_, args, { pgdb }) => {
     } else {
       const boostedEmployees = shuffle([
         shuffledEmployees.find(({ famous, gender }) => famous && gender === 'f'),
-        shuffledEmployees.find(({ famous, gender }) => famous && gender === 'f')
+        shuffledEmployees.find(({ famous, gender }) => famous && gender === 'm')
       ])
       const otherEmployees = shuffledEmployees.filter(e => !boostedEmployees.includes(e))
 
