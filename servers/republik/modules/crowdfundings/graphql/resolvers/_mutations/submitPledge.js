@@ -351,6 +351,7 @@ module.exports = async (_, args, context) => {
       const pko = packageOptions.find((pko) => pko.id === plo.templateId)
       plo.vat = pko.vat
       plo.potPledgeOptionId = pko.potPledgeOptionId
+      plo.accessGranted = pko.accessGranted
 
       if (
         pko.reward &&
