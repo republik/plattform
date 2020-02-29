@@ -41,6 +41,33 @@ const getQuestions = async (questionnaire, args = {}, pgdb) => {
     .then(questions => questions.map(q => transformQuestion(q, questionnaireWithTurnout)))
 
   if (args.shuffle) {
+    // +1 for weights > 0
+    const getWeight = (question) => question && question.metadata && question.metadata.weight + 1
+
+    // use weighted shuffle
+    if (getWeight(questions[0]) !== null) {
+      const sum = questions.reduce(
+        (agg, q) => agg + getWeight(q),
+        0
+      )
+
+      const pick = () => {
+        let threshold = Math.floor(Math.random() * sum) + 1
+        for (const q of questions) {
+          threshold -= getWeight(q)
+          if (threshold <= 0) {
+            return q
+          }
+        }
+      }
+
+      const result = []
+      for (let n = 0; n < args.shuffle; n++) {
+        result.push(pick())
+      }
+      return result
+    }
+
     return shuffle(questions)
       .slice(0, args.shuffle)
   }
