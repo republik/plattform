@@ -536,7 +536,7 @@
     },
     {
       "key": "api/email/membership_giver_claim_notice/subject",
-      "value": "{recipientName} hat soeben Ihre Geschenk-Mitgliedschaft eingelöst"
+      "value": "Geschenk-Mitgliedschaft von {recipientName} eingelöst"
     },
     {
       "key": "api/email/membership_winback_NO_TIME/subject",
@@ -1080,7 +1080,11 @@
     },
     {
       "key": "api/access/email/granter/claim_notice/subject",
-      "value": "Gechenk-Mitgliedschaft von {recipientName} eingelöst"
+      "value": "Republik-Testzugang von {recipientName} aktiviert"
+    },
+    {
+      "key": "api/access/email/granter/claim_notice_gifted_membership/subject",
+      "value": "Geschenk-Mitgliedschaft von {recipientName} eingelöst"
     },
     {
       "key": "api/access/grant/email/error",
