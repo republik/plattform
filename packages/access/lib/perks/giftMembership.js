@@ -10,6 +10,10 @@ const give = async (campaign, grant, recipient, settings, t, pgdb) => {
     throw new Error(t('api/access/perk/giftMembership/grantRevoked/error'))
   }
 
+  if (grant.granter.id === recipient.id) {
+    throw new Error(t('api/access/perk/giftMembership/selfClaim/error'))
+  }
+
   const hasActiveMembership = await hasUserActiveMembership(recipient, pgdb)
 
   if (hasActiveMembership) {
