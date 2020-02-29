@@ -26,6 +26,7 @@ type AccessCampaign {
     withInvalidated: Boolean
   ): [AccessGrant!]!
   slots: AccessCampaignSlots!
+  perks: AccessCampaignPerks!
   "Begin of campaign"
   beginAt: DateTime!
   "End of campaign"
@@ -89,5 +90,12 @@ type AccessCampaignSlots {
   total: Int!
   free: Int!
   used: Int!
+}
+
+"""
+Entity describing available perks
+"""
+type AccessCampaignPerks {
+  giftableMemberships: Int
 }
 `

@@ -99,6 +99,9 @@ const mergeConstraintPayloads = campaigns =>
         total: 0,
         used: 0,
         free: 0
+      },
+      perks: {
+        giftableMemberships: null
       }
     }
 

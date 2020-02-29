@@ -11,10 +11,7 @@ const memberships = require('../memberships')
  * @example: {"requireGiftableMembership": {}}
  */
 
-const isGrantable = async (args, context) => {
-  const { settings, granter, campaign } = args
-  const { pgdb } = context
-
+const getCounts = async ({ campaign }, { pgdb }) => {
   const giftableMemberships = await memberships.findGiftableMemberships(pgdb)
 
   const unclaimedAccessGrants = await pgdb.query(`
@@ -29,7 +26,16 @@ const isGrantable = async (args, context) => {
       AND ag."invalidatedAt" IS NULL
   `)
 
-  const isLimitReached = giftableMemberships.length <= unclaimedAccessGrants.length
+  return {
+    giftableMemberships: giftableMemberships.length,
+    unclaimedAccessGrants: unclaimedAccessGrants.length
+  }
+}
+
+const isGrantable = async (args, context) => {
+  const { settings, granter, campaign } = args
+
+  const { giftableMemberships, unclaimedAccessGrants } = await getCounts(args, context)
 
   debug(
     'isGrantable',
@@ -37,20 +43,29 @@ const isGrantable = async (args, context) => {
       granter: granter.id,
       settings,
       campaign,
-      giftableMemberships: giftableMemberships.length,
-      unclaimedAccessGrants: unclaimedAccessGrants.length,
-      isLimitReached
+      giftableMemberships,
+      unclaimedAccessGrants,
+      isGrantable: giftableMemberships > unclaimedAccessGrants
     }
   )
 
-  return !isLimitReached
+  // Is grantable if there are more memberships to gift than unclaimed access grants.
+  return giftableMemberships > unclaimedAccessGrants
 }
 
-const getMeta = async (args, context) => ({
-  visible: true,
-  grantable: await isGrantable(args, context),
-  payload: {}
-})
+const getMeta = async (args, context) => {
+  const { giftableMemberships, unclaimedAccessGrants } = await getCounts(args, context)
+
+  return {
+    visible: true,
+    grantable: await isGrantable(args, context),
+    payload: {
+      perks: {
+        giftableMemberships: giftableMemberships - unclaimedAccessGrants
+      }
+    }
+  }
+}
 
 module.exports = {
   isGrantable,
