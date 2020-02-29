@@ -1152,7 +1152,7 @@
     },
     {
       "key": "api/access/perk/giftMembership/hasActiveMembership/error",
-      "value": "Sie haben bereits eine aktive Mitgliedschaft und können diesen Code nicht einlösen."
+      "value": "Sie haben bereits eine aktive Mitgliedschaft und können deshalb diesen Code nicht einlösen."
     },
     {
       "key": "api/access/perk/giftMembership/noGiftableMemberships/error",
