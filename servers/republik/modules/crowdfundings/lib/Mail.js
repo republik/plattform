@@ -536,20 +536,23 @@ mail.sendMembershipOwnerAutoPay = async ({ autoPay, payload, pgdb, t }) => {
 
 mail.sendMembershipClaimNotice = async ({ membership }, { pgdb, t }) => {
   const pledge = await pgdb.public.pledges.findOne({ id: membership.pledgeId })
-  const giver = await pgdb.public.users.findOne({ id: pledge.userId })
-  // const claimer = await pgdb.public.users.findOne({ id: membership.userId })
+  const pledger = await pgdb.public.users.findOne({ id: pledge.userId })
+  const claimer = await pgdb.public.users.findOne({ id: membership.userId }).then(transformUser)
 
   return sendMailTemplate({
-    to: giver.email,
+    to: pledger.email,
     fromEmail: process.env.DEFAULT_MAIL_FROM_ADDRESS,
     subject: t(
       'api/email/membership_giver_claim_notice/subject',
-      { recipientName: 'Nutzerin' } // @TODO: Add (safe?) claimer Name
+      { recipientName: claimer.name }
     ),
     templateName: 'membership_giver_claim_notice',
     mergeLanguage: 'handlebars',
     globalMergeVars: [
-      // @TODO: Enrich with variables required to notify user.
+      {
+        name: 'recipient_name',
+        content: claimer.name
+      }
     ]
   }, { pgdb })
 }
