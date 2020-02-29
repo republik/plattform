@@ -35,12 +35,10 @@
                 <tr>
                   <td style="padding:20px;">
                     <p>Guten Tag</p>
-                    <p>
-                      <strong>Ihre Zahlung ist erfolgreich bei uns eingegangen.<br />
-                        Herzlichen Dank, dass Sie die Republik mit einer Geschenk-Mitgliedschaft unterstützen!</strong>
-                    </p>
+                    <p><strong>Ihre Zahlung ist erfolgreich bei uns eingegangen.<strong></p>
 
                     {{#if voucher_codes}}
+                      <p>Herzlichen Dank, dass Sie die Republik mit einer Geschenk-Mitgliedschaft unterstützen!</strong></p>
                       <p>
                         <strong>Für jede Geschenk-Mitgliedschaft erhalten Sie nachfolgend einen 6-Zeichen-Code.</strong>
                       </p>
@@ -52,7 +50,14 @@
                     {{/if}}
 
                     {{#if `num_access_granted_memberships > 0`}}
-                      <p>Sie haben sich entschieden, dass wir die Mitgliedschaft für Sie verschenken dürfen. Dafür gleich nochmals ein Dankeschön! Wir werden nun eine passende Empfängerin für Ihr Geschenk suchen und Sie informieren, sobald die Mitgliedschaft eingelöst wird.</p>
+                      {{#if `num_access_granted_memberships == 1`}}
+                        <p><strong>Vielen Dank, dass Sie die Verbreitung der Republik mit einer Wachstums-Mitgliedschaft unterstützen!</strong></p>
+                        <p>Wir werden nun, zusammen mit unseren Komplizen, eine passende Empfängerin für Ihr Geschenk suchen und Sie informieren, sobald die Mitgliedschaft eingelöst wird.</p>
+                      {{/if}}
+                      {{#if `num_access_granted_memberships > 1`}}
+                        <p><strong>Vielen Dank, dass Sie die Verbreitung der Republik mit gleich mehreren Wachstums-Mitgliedschaften unterstützen!</strong></p>
+                        <p>Wir werden nun, zusammen mit unseren Komplizen, passende Empfängerinnen für Ihr Geschenk suchen und Sie informieren, wann immer eine Mitgliedschaft eingelöst wird.</p>
+                      {{/if}}
                     {{/if}}
 
                     {{#if goodies_count}}
