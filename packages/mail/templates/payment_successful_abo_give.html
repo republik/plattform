@@ -51,8 +51,8 @@
                       <p>Um den Geschenkcode einzulösen, muss der neue Besitzer oder die neue Besitzerin nur auf die Seite <a href="{{link_claim}}">{{link_claim}}</a> gehen. Und ihn dort eingeben.</p>
                     {{/if}}
 
-                    {{#if access_granted}}
-                      <p>Sie haben sich entschieden, dass wir die Mitglieschaft für Sie verschenken dürfen. Dafür gleich nochmals ein Dankeschön! Wir werden Sie informieren, sobald Ihr Geschenk eingelöst wird.</p>
+                    {{#if `num_access_granted_memberships > 0`}}
+                      <p>Sie haben sich entschieden, dass wir die Mitglieschaft für Sie verschenken dürfen. Dafür gleich nochmals ein Dankeschön! Wir werden nun eine passende Empfängerin für Ihr Geschenk suchen und Sie informieren, sobald die Mitglieschaft eingelöst wird.</p>
                     {{/if}}
 
                     {{#if goodies_count}}
@@ -80,8 +80,10 @@
                     {{/if}}
 
                     <p>
-                      Vielen Dank!<br />
-                      Und viel Freude beim Verschenken der Republik.
+                      Vielen Dank!
+                      {{#if voucher_codes}}
+                        <br />Und viel Freude beim Verschenken der Republik.
+                      {{/if}}
                     </p>
                     <p>Ihre Crew der Republik</p>
                   </td>

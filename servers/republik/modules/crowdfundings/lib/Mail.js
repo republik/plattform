@@ -692,7 +692,7 @@ mail.getPledgeMergeVars = async (
     ? voucherCodes.join(', ')
     : null
 
-  const accessGranted = memberships.findIndex(m => !!m.accessGranted) > -1
+  const numAccessGrantedMemberships = memberships.filter(m => !!m.accessGranted).length
 
   return [
     // Purchase itself
@@ -814,8 +814,8 @@ mail.getPledgeMergeVars = async (
       content: formattedVoucherCodes
     },
     {
-      name: 'access_granted',
-      content: accessGranted
+      name: 'num_access_granted_memberships',
+      content: numAccessGrantedMemberships
     },
     {
       name: 'goodies_count',
