@@ -20,7 +20,6 @@ module.exports = async (membership, user, t, pgdb) => {
       // active.
       active: !hasActiveMembership,
       renew: !hasActiveMembership,
-      accessGranted: false,
       updatedAt: now
     }
   )
