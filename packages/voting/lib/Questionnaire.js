@@ -3,6 +3,7 @@ const queries = buildQueries('questionnaires')
 
 const { resultForArchive } = require('./Question')
 const finalizeLib = require('./finalize.js')
+const { shuffle } = require('d3-array')
 
 const transformQuestion = (q, questionnaire) => ({
   ...q.typePayload,
@@ -29,7 +30,8 @@ const getQuestions = async (questionnaire, args = {}, pgdb) => {
     turnout,
     ...questionnaire
   }
-  return pgdb.public.questions.find(
+
+  const questions = await pgdb.public.questions.find(
     {
       questionnaireId: questionnaire.id,
       ...orderFilter ? { order: orderFilter } : {}
@@ -37,6 +39,12 @@ const getQuestions = async (questionnaire, args = {}, pgdb) => {
     { orderBy: { order: 'asc' } }
   )
     .then(questions => questions.map(q => transformQuestion(q, questionnaireWithTurnout)))
+
+  if (args.shuffle) {
+    return shuffle(questions)
+      .slice(0, args.shuffle)
+  }
+  return questions
 }
 
 const getQuestionsWithResults = async (questionnaire, context) => {
@@ -88,7 +96,7 @@ const updateResultIncrementally = async (questionnaireId, answer, transaction, c
     .then(r => r && r[0])
 
   if (!questionnaire) {
-    throw new Error(t(`api/questionnaire/404`))
+    throw new Error(t('api/questionnaire/404'))
   }
 
   let { result } = questionnaire

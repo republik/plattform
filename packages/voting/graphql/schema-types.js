@@ -209,7 +209,12 @@ type Questionnaire {
   allowedMemberships: [VotingMembershipRequirement!]
   allowedRoles: [String!]
 
-  questions(orderFilter: [Int!]): [QuestionInterface!]!
+  questions(
+    "select questions by order field"
+    orderFilter: [Int!]
+    "shuffle and limit the result to the specified count"
+    shuffle: Int
+  ): [QuestionInterface!]!
 
   turnout: QuestionnaireTurnout
 }
