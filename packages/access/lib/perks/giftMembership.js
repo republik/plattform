@@ -1,11 +1,12 @@
 const debug = require('debug')('access:lib:perks:giftMembership')
 
+const { transformUser } = require('@orbiting/backend-modules-auth')
 const { hasUserActiveMembership } = require('@orbiting/backend-modules-utils')
 
 const memberships = require('../memberships')
 const activateMembership = require('../../../../servers/republik/modules/crowdfundings/lib/activateMembership')
 
-const give = async (campaign, grant, recipient, settings, t, pgdb) => {
+const give = async (campaign, grant, recipient, settings, t, pgdb, mail) => {
   if (grant.revokedAt) {
     throw new Error(t('api/access/perk/giftMembership/grantRevoked/error'))
   }
@@ -29,12 +30,24 @@ const give = async (campaign, grant, recipient, settings, t, pgdb) => {
   // @TODO: More logic here, to sort anonymous memberships at end of line.
   const electedMembership = giftableMemberships.shift()
 
-  await activateMembership(electedMembership, recipient, t, pgdb)
+  const membership = await activateMembership(electedMembership, recipient, t, pgdb)
 
   debug('give', {
-    electedMembership: electedMembership.id,
+    electedMembership: membership.id,
+    pledger: electedMembership.pledgeUserId,
     recipient: recipient.id
   })
+
+  // @TODO: Render anon if pledger is from pod-thingy.
+  const pledger = await pgdb.public.users.findOne({ id: electedMembership.pledgeUserId }).then(transformUser)
+
+  await mail.sendMembershipClaimNotice({ membership }, { pgdb, t })
+
+  return {
+    ...electedMembership,
+    ...membership,
+    pledger
+  }
 }
 
 module.exports = {

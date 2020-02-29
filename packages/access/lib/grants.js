@@ -53,7 +53,7 @@ const evaluateConstraints = async (granter, campaign, email, t, pgdb) => {
   return { errors }
 }
 
-const grantPerks = async (grant, recipient, campaign, t, pgdb) =>
+const grantPerks = async (grant, recipient, campaign, t, pgdb, mail) =>
   Promise.map(
     campaign.config.perks || [],
     async perk => {
@@ -64,7 +64,7 @@ const grantPerks = async (grant, recipient, campaign, t, pgdb) =>
       }
 
       const settings = perk[name]
-      await perks[name].give(campaign, grant, recipient, settings, t, pgdb)
+      const result = await perks[name].give(campaign, grant, recipient, settings, t, pgdb, mail)
 
       debug('grantPerks', {
         accessCampaignId: campaign.id,
@@ -73,7 +73,7 @@ const grantPerks = async (grant, recipient, campaign, t, pgdb) =>
         settings
       })
 
-      return { name, settings }
+      return { name, settings, result }
     },
     { concurrency: 1 }
   )
@@ -169,8 +169,17 @@ const claim = async (voucherCode, payload, user, t, pgdb, mail) => {
 
   const { granter, recipient, campaign } = grant
 
-  const perks = await grantPerks(grant, recipient, campaign, t, pgdb)
-  await Promise.map(perks, perk => eventsLib.log(grant, `perk.${perk.name}`, pgdb))
+  const perks = await grantPerks(grant, recipient, campaign, t, pgdb, mail)
+  if (perks.length > 0) {
+    grant.perks = {}
+
+    await Promise.map(perks, perk => {
+      const { name, ...other } = perk
+      grant.perks[perk.name] = other
+
+      eventsLib.log(grant, `perk.${name}`, pgdb)
+    })
+  }
 
   const subscribeToEditorialNewsletters =
     perks.some(({ settings }) => !!settings.subscribeToEditorialNewsletters) ||
@@ -259,8 +268,17 @@ const request = async (granter, campaignId, payload, t, pgdb, mail) => {
 
   await eventsLib.log(grant, 'request', pgdb)
 
-  const perks = await grantPerks(grant, granter, campaign, t, pgdb)
-  await Promise.map(perks, perk => eventsLib.log(grant, `perk.${perk.name}`, pgdb))
+  const perks = await grantPerks(grant, granter, campaign, t, pgdb, mail)
+  if (perks.length > 0) {
+    grant.perks = {}
+
+    await Promise.map(perks, perk => {
+      const { name, ...other } = perk
+      grant.perks[perk.name] = other
+
+      eventsLib.log(grant, `perk.${name}`, pgdb)
+    })
+  }
 
   const subscribeToEditorialNewsletters =
     perks.some(({ settings }) => !!settings.subscribeToEditorialNewsletters) ||

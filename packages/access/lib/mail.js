@@ -40,7 +40,7 @@ const sendRecipientInvitation = async (granter, campaign, grant, t, pgdb) => {
 const sendGranterClaimNotice =
   async (granter, campaign, recipient, grant, t, pgdb) =>
     sendMail(
-      recipient.email,
+      granter.email,
       'granter',
       'claim_notice',
       {
@@ -177,6 +177,19 @@ const getGlobalMergeVars = async (
 
   const email = recipient ? recipient.email : grant.email
 
+  const pledgerName =
+    grant.perks &&
+    grant.perks.giftMembership &&
+    grant.perks.giftMembership.result &&
+    grant.perks.giftMembership.result.pledger &&
+    grant.perks.giftMembership.result.pledger.name
+
+  const pledgeMessageToClaimers =
+    grant.perks &&
+    grant.perks.giftMembership &&
+    grant.perks.giftMembership.result &&
+    grant.perks.giftMembership.result.pledgeMessageToClaimers
+
   return [
     // Grant,
     {
@@ -267,8 +280,18 @@ const getGlobalMergeVars = async (
     {
       name: 'link_claim_prefilled',
       content: `${FRONTEND_BASE_URL}/abholen?code=${grant.voucherCode}&email=${email ? base64u.encode(email) : ''}&context=access`
+    },
+
+    // Perk "gift membership"
+    pledgerName && {
+      name: 'pledger_name',
+      content: pledgerName
+    },
+    pledgeMessageToClaimers && {
+      name: 'message_to_claimer',
+      content: escape(pledgeMessageToClaimers).replace(/\n/g, '<br />')
     }
-  ]
+  ].filter(Boolean)
 }
 
 const getConfigEmails = (party, template, campaign) => {

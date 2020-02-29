@@ -56,10 +56,13 @@ const removeMemberRole = async (grant, user, findFn, pgdb) => {
 
 const findGiftableMemberships = async (pgdb) =>
   pgdb.query(`
-    SELECT m.*
+    SELECT
+      m.*,
+      p."userId" "pledgeUserId",
+      p."messageToClaimers" "pledgeMessageToClaimers"
 
     FROM "memberships" m
-    JOIN "pledges" p ON p."userId" = m."userId"
+    JOIN "pledges" p ON p."userId" = m."userId" AND p.id = m."pledgeId"
 
     LEFT JOIN "membershipPeriods" mp ON mp."membershipId" = m.id
 
@@ -67,7 +70,7 @@ const findGiftableMemberships = async (pgdb) =>
       m."accessGranted" IS TRUE
       AND mp IS NULL
 
-    GROUP BY m.id
+    GROUP BY m.id, p.id
     ORDER BY m."createdAt"
   `)
 
