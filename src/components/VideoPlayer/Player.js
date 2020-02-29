@@ -207,8 +207,14 @@ class VideoPlayer extends Component {
       }))
     }
     this.setTime = (time = 0) => {
+      clearTimeout(this.pendingTimeTimeout)
       this.pendingTime = time
       if (this.video) {
+        if (!this.video.paused) {
+          this.pendingTimeTimeout = setTimeout(() => {
+            this.pendingTime = undefined
+          }, 50)
+        }
         this.video.currentTime = time
         this.updateProgress()
       }
