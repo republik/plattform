@@ -53,9 +53,11 @@ module.exports = async (_, args, context) => {
       id: membership.membershipTypeId
     })
 
+    const cancelledViaSupport = user.id !== req.user.id || details.cancelledViaSupport
+
     const cancelledMembership = await cancelMembership(
       membership,
-      details,
+      { ...details, cancelledViaSupport },
       { immediately },
       t,
       transaction
