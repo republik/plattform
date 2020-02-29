@@ -42,10 +42,10 @@
 
                     {{#if pledger_name}}
                       {{#unless message_to_claimer}}
-                        <p>Sie wurden beschenkt von <strong>{pledger_name}</strong>.</p>
+                        <p>Sie wurden beschenkt von <strong>{{pledger_name}}</strong>.</p>
                       {{/unless}}
                       {{#if message_to_claimer}}
-                        <p>Die grosszügige Person, die Ihnen die Mitgliedschaft geschenkt hat, heisst <strong>{pledger_name}</strong> und hat Ihnen folgende Nachricht hinterlassen:</p>
+                        <p>Die grosszügige Person, die Ihnen die Mitgliedschaft geschenkt hat, heisst <strong>{{pledger_name}}</strong> und hat Ihnen folgende Nachricht hinterlassen:</p>
                         <blockquote style="color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}">{{{message_to_claimer}}}</blockquote>
                       {{/if}}
                     {{/if}}
