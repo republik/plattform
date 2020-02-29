@@ -127,7 +127,7 @@ const sendMail = async (
     fromEmail: process.env.DEFAULT_MAIL_FROM_ADDRESS,
     subject: t(
       `api/access/email/${party}/${actualTemplate}/subject`,
-      getTranslationVars(granter)
+      getTranslationVars(granter, recipient)
     ),
     templateName: `access_${party}_${actualTemplate}`,
     globalMergeVars: await getGlobalMergeVars(
@@ -157,11 +157,13 @@ const getHumanInterval = (interval, t) =>
     .join(` ${t('api/access/period/join')} `)
     .trim()
 
-const getTranslationVars = (granter) => {
+const getTranslationVars = (granter, recipient) => {
   const safeGranter = transformUser(granter)
+  const safeRecipient = transformUser(recipient)
 
   return {
-    granterName: safeGranter.name || safeGranter.email
+    granterName: safeGranter.name || safeGranter.email,
+    recipientName: safeRecipient.name || safeRecipient.email
   }
 }
 
