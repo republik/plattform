@@ -1139,7 +1139,7 @@
       "value": "Sie können derzeit keinen Zugriff teilen, da Ihr Konto auf einer schwarzen Liste aufgeführt ist."
     },
     {
-      "key": "api/access/constraint/requireUnpromisedMembership/error",
+      "key": "api/access/constraint/requireGiftableMembership/error",
       "value": "Sie können derzeit keine Mitgliedschaft mehr vergeben, da das Kontingent ausgeschöpft ist."
     },
     {
@@ -1153,6 +1153,14 @@
     {
       "key": "api/access/perk/giftMembership/noGiftableMemberships/error",
       "value": "Derzeit stehen keine Mitgliedschaften zur Verfügung. Versuchen Sie es später erneut."
+    },
+    {
+      "key": "api/access/perk/giftMembership/grantRevoked/error",
+      "value": "Ihr Gutscheincode ist leider ungültig. Da hat sich vielleicht ein Vertipper eingeschlichen, oder der Gutscheincode ist bereits abgelaufen."
+    },
+    {
+      "key": "api/access/perk/giftMembership/selfClaim/error",
+      "value": "Sie können diese Mitgliedschaft nicht auf Ihr eigenes Konto einlösen."
     },
     {
       "key": "api/access/resolvers/AccessGrant/status/invalidated",
