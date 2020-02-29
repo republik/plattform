@@ -25,6 +25,7 @@ const isGrantable = async (args, context) => {
     WHERE
       ag."accessCampaignId" = '${campaign.id}'
       AND ag."beginAt" IS NULL
+      AND ag."revokedAt" IS NULL
       AND ag."invalidatedAt" IS NULL
   `)
 

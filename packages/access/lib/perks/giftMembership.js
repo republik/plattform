@@ -6,6 +6,10 @@ const memberships = require('../memberships')
 const activateMembership = require('../../../../servers/republik/modules/crowdfundings/lib/activateMembership')
 
 const give = async (campaign, grant, recipient, settings, t, pgdb) => {
+  if (grant.revokedAt) {
+    throw new Error(t('api/access/perk/giftMembership/grantRevoked/error'))
+  }
+
   const hasActiveMembership = await hasUserActiveMembership(recipient, pgdb)
 
   if (hasActiveMembership) {
