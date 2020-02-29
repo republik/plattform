@@ -536,7 +536,7 @@
     },
     {
       "key": "api/email/membership_giver_claim_notice/subject",
-      "value": "Geschenk-Mitgliedschaft von {recipientName} eingelöst"
+      "value": "{recipientName} hat soeben Ihre Geschenk-Mitgliedschaft eingelöst"
     },
     {
       "key": "api/email/membership_winback_NO_TIME/subject",
@@ -1724,15 +1724,27 @@
     },
     {
       "key": "api/payment/invoice/item/package/DONATE_POT",
-      "value": "Spende in den Mitgliedschafts-Topf"
+      "value": "Wachstums-Spende"
     },
     {
       "key": "api/email/pledge_donate_pot/subject",
-      "value": "Vielen Dank für Ihre Spende in den Mitgliedschafts-Topf"
+      "value": "Vielen Dank, dass Sie uns Wachstum spenden."
     },
     {
       "key": "api/email/payment_successful_donate_pot/subject",
       "value": "Vielen Dank! Wir haben Ihre Zahlung erhalten."
+    },
+    {
+      "key": "api/email/access_granter_claim_notice/subject",
+      "value": "Die von Ihnen finanzierte Mitgliedschaft wurde soeben eingelöst."
+    },
+    {
+      "key": "api/email/access_recipient_invitation_gifted_membership/subject",
+      "value": "Glückwunsch: eine Jahresmitgliedschaft liegt für Sie bereit."
+    },
+    {
+      "key": "api/email/access_recipient_onboarding_gifted_membership/subject",
+      "value": "Willkommen bei der Republik"
     }
   ]
 }
