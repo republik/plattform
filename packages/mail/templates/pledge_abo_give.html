@@ -41,7 +41,7 @@
 
                     {{#if voucher_codes}}
                       {{#unless waiting_for_payment}}
-                      <p>Vielen Dank, dass Sie die Verbreitung der Republik mit einer Geschenk-Mitgliedschaft unterstützen!</p>
+                        <p>Vielen Dank, dass Sie die Verbreitung der Republik mit einer Geschenk-Mitgliedschaft unterstützen!</p>
                       {{/unless}}
 
                       <p>Für jede Geschenk-Mitgliedschaft erhalten Sie nachfolgend einen Gutscheincode.</p>
@@ -73,12 +73,12 @@
 
                     {{#if `num_access_granted_memberships > 0`}}
                       {{#if `num_access_granted_memberships == 1`}}
-                        <p>Vielen Dank, dass Sie die Verbreitung der Republik mit einer Wachstums-Mitgliedschaft unterstützen!</p>
+                        <p><strong>Vielen Dank, dass Sie die Verbreitung der Republik {{#if voucher_codes}}zusätzlich {{/if}}mit einer Wachstums-Mitgliedschaft unterstützen!</strong></p>
                         <p>Wir werden nun, zusammen mit unseren Komplizen, eine passende Empfängerin für Ihr Geschenk suchen und Sie informieren, sobald die Mitgliedschaft eingelöst wird.</p>
                       {{/if}}
                       {{#if `num_access_granted_memberships > 1`}}
-                        <p>Vielen Dank, dass Sie die Verbreitung der Republik mit gleich mehreren Wachstums-Mitgliedschaften unterstützen!</p>
-                        <p>Wir werden nun, zusammen mit unseren Komplizen, passende Empfängerinnen für Ihr Geschenk suchen und Sie informieren, sobald eine Mitgliedschaft eingelöst wird.</p>
+                        <p><strong>Vielen Dank, dass Sie die Verbreitung der Republik {{#if voucher_codes}}zusätzlich {{/if}}mit gleich mehreren Wachstums-Mitgliedschaften unterstützen!</strong></p>
+                        <p>Wir werden nun, zusammen mit unseren Komplizen, passende Empfängerinnen für Ihr Geschenk suchen und Sie informieren, wann immer eine Mitgliedschaft eingelöst wird.</p>
                       {{/if}}
                     {{/if}}
 
