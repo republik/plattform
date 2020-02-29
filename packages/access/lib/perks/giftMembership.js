@@ -5,8 +5,9 @@ const { hasUserActiveMembership } = require('@orbiting/backend-modules-utils')
 
 const memberships = require('../memberships')
 const activateMembership = require('../../../../servers/republik/modules/crowdfundings/lib/activateMembership')
+const createCache = require('../../../../servers/republik/modules/crowdfundings/lib/cache')
 
-const give = async (campaign, grant, recipient, settings, t, pgdb, mail) => {
+const give = async (campaign, grant, recipient, settings, t, pgdb, redis, mail) => {
   if (grant.revokedAt) {
     throw new Error(t('api/access/perk/giftMembership/grantRevoked/error'))
   }
@@ -31,6 +32,8 @@ const give = async (campaign, grant, recipient, settings, t, pgdb, mail) => {
   const electedMembership = giftableMemberships.shift()
 
   const membership = await activateMembership(electedMembership, recipient, t, pgdb)
+
+  createCache({ prefix: `User:${recipient.id}` }, { redis }).invalidate()
 
   debug('give', {
     electedMembership: membership.id,

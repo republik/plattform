@@ -53,7 +53,7 @@ const evaluateConstraints = async (granter, campaign, email, t, pgdb) => {
   return { errors }
 }
 
-const grantPerks = async (grant, recipient, campaign, t, pgdb, mail) =>
+const grantPerks = async (grant, recipient, campaign, t, pgdb, redis, mail) =>
   Promise.map(
     campaign.config.perks || [],
     async perk => {
@@ -64,7 +64,7 @@ const grantPerks = async (grant, recipient, campaign, t, pgdb, mail) =>
       }
 
       const settings = perk[name]
-      const result = await perks[name].give(campaign, grant, recipient, settings, t, pgdb, mail)
+      const result = await perks[name].give(campaign, grant, recipient, settings, t, pgdb, redis, mail)
 
       debug('grantPerks', {
         accessCampaignId: campaign.id,
@@ -152,7 +152,7 @@ const grant = async (granter, campaignId, email, message, t, pgdb, mail) => {
   return grant
 }
 
-const claim = async (voucherCode, payload, user, t, pgdb, mail) => {
+const claim = async (voucherCode, payload, user, t, pgdb, redis, mail) => {
   const sanatizedVoucherCode = voucherCode.trim().toUpperCase()
 
   const grantByVoucherCode = await findByVoucherCode(
@@ -169,7 +169,7 @@ const claim = async (voucherCode, payload, user, t, pgdb, mail) => {
 
   const { granter, recipient, campaign } = grant
 
-  const perks = await grantPerks(grant, recipient, campaign, t, pgdb, mail)
+  const perks = await grantPerks(grant, recipient, campaign, t, pgdb, redis, mail)
   if (perks.length > 0) {
     grant.perks = {}
 
@@ -233,7 +233,7 @@ const revoke = async (id, user, t, pgdb) => {
   return result
 }
 
-const request = async (granter, campaignId, payload, t, pgdb, mail) => {
+const request = async (granter, campaignId, payload, t, pgdb, redis, mail) => {
   const campaign = await campaignsLib.findOne(campaignId, pgdb)
 
   if (!campaign) {
@@ -268,7 +268,7 @@ const request = async (granter, campaignId, payload, t, pgdb, mail) => {
 
   await eventsLib.log(grant, 'request', pgdb)
 
-  const perks = await grantPerks(grant, granter, campaign, t, pgdb, mail)
+  const perks = await grantPerks(grant, granter, campaign, t, pgdb, redis, mail)
   if (perks.length > 0) {
     grant.perks = {}
 
