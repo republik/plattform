@@ -163,7 +163,7 @@ const getTranslationVars = (granter, recipient) => {
 
   return {
     granterName: safeGranter.name || safeGranter.email,
-    recipientName: safeRecipient.name || safeRecipient.email
+    recipientName: safeRecipient && (safeRecipient.name || safeRecipient.email)
   }
 }
 
