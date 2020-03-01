@@ -491,8 +491,11 @@ const findInvalid = async (pgdb) => {
 }
 
 const beginGrant = async (grant, payload, recipient, pgdb) => {
-  const campaign = await campaignsLib.findOne(grant.accessCampaignId, pgdb)
-  const granter = await pgdb.public.users.findOne({ id: grant.granterUserId })
+  const [campaign, granter] = await Promise.all([
+    campaignsLib.findOne(grant.accessCampaignId, pgdb),
+    pgdb.public.users.findOne({ id: grant.granterUserId })
+  ])
+  
 
   const now = moment()
   const beginAt = now.clone()

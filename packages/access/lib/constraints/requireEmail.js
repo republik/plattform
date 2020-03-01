@@ -3,7 +3,7 @@ const debug = require('debug')('access:lib:constraints:requireEmail')
 const validator = require('validator')
 
 /**
- * Checks if an email address is provided and failes if email address is
+ * Checks if an email address is provided and fails if email address is
  * missing or invalid.
  *
  * @example: {"requireEmail": {}}

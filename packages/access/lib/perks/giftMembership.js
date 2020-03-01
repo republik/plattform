@@ -28,7 +28,6 @@ const give = async (campaign, grant, recipient, settings, t, pgdb, redis, mail) 
     throw new Error(t('api/access/perk/giftMembership/noGiftableMemberships/error'))
   }
 
-  // @TODO: More logic here, to sort anonymous memberships at end of line.
   const electedMembership = giftableMemberships.shift()
 
   const membership = await activateMembership(electedMembership, recipient, t, pgdb)

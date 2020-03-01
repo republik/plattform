@@ -71,7 +71,7 @@ const findGiftableMemberships = async (pgdb) =>
       AND mp IS NULL
 
     GROUP BY m.id, p.id
-    ORDER BY m."createdAt"
+    ORDER BY m."potPledgeOptionId" DESC, m."createdAt" ASC
   `)
 
 module.exports = {
