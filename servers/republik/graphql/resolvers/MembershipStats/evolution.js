@@ -163,6 +163,24 @@ const getBucketsFn = (min, max, pgdb) => async () => {
 
   debug('query result: %o', result)
 
+  const switchBucket = result.find(b => b.key === '2020-03')
+  if (switchBucket) {
+    const { activeEndOfMonth, pendingSubscriptionsOnly } = switchBucket
+    const total = activeEndOfMonth + pendingSubscriptionsOnly
+    if (total >= 19000) {
+      const existingDate = await pgdb.public.gsheets.findOneFieldOnly({
+        name: 'RevenueStatsSwitchDate'
+      }, 'data')
+      if (!existingDate) {
+        await pgdb.public.gsheets.insert({
+          name: 'RevenueStatsSwitchDate',
+          data: new Date()
+        })
+          .catch(e => {})
+      }
+    }
+  }
+
   return { buckets: result, updatedAt: new Date() }
 }
 
