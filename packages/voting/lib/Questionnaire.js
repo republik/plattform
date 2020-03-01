@@ -45,7 +45,8 @@ const getQuestions = async (questionnaire, args = {}, pgdb) => {
     const getWeight = (question) => question && question.metadata && question.metadata.weight + 1
 
     // use weighted shuffle
-    if (getWeight(questions[0]) !== null) {
+    const firstWeight = getWeight(questions[0])
+    if (firstWeight !== null && firstWeight !== undefined && firstWeight !== false) {
       const sum = questions.reduce(
         (agg, q) => agg + getWeight(q),
         0
