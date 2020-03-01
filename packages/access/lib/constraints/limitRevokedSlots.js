@@ -9,13 +9,11 @@ const debug = require('debug')('access:lib:constraints:limitRevokedSlots')
  * @example: {"limitRevokedSlots": {"slots": 4}}
  */
 
-const getSlots = async (
-  { settings, granter, campaign },
-  { pgdb }
-) => {
-  const slots = settings.slots
+const isGrantable = async (args, context) => {
+  const { settings, granter, campaign } = args
+  const { pgdb } = context
 
-  const usedSlots = await pgdb.query(`
+  const revokedSlots = await pgdb.query(`
     SELECT "accessGrants".id
 
     FROM "accessGrants"
@@ -27,29 +25,17 @@ const getSlots = async (
       AND "accessGrants"."invalidatedAt" IS NULL
   `)
 
-  return {
-    total: slots,
-    used: usedSlots.length,
-    free: slots - usedSlots.length
-  }
-}
-
-const isGrantable = async (args, context) => {
-  const { settings, granter, campaign } = args
-
-  const slots = await getSlots(args, context)
-
   debug(
     'isGrantable',
     {
       granter: granter.id,
       settings,
       campaign,
-      slots
+      revokedSlots: revokedSlots.length
     }
   )
 
-  return slots.free > 0
+  return settings.slots > revokedSlots.length
 }
 
 const getMeta = async (args, context) => ({

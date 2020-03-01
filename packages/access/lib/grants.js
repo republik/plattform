@@ -1,6 +1,5 @@
 const debug = require('debug')('access:lib:grants')
 const moment = require('moment')
-const validator = require('validator')
 const Promise = require('bluebird')
 
 const { Roles } = require('@orbiting/backend-modules-auth')
@@ -11,6 +10,7 @@ const {
 
 const campaignsLib = require('./campaigns')
 const constraints = require('./constraints')
+const perks = require('./perks')
 const eventsLib = require('./events')
 const mailLib = require('./mail')
 const membershipsLib = require('./memberships')
@@ -22,19 +22,19 @@ const evaluateConstraints = async (granter, campaign, email, t, pgdb) => {
 
   for (const constraint of campaign.constraints) {
     const name = Object.keys(constraint).shift()
-    const settings = constraint[name]
 
     if (!constraints[name]) {
       throw new Error(`Unable to evalute contraint "${name}"`)
     }
 
+    const settings = constraint[name]
     const valid = await constraints[name].isGrantable(
       { settings, granter, email, campaign },
       { pgdb }
     )
 
     debug('evaluateConstraints', {
-      name: campaign.name,
+      accessCampaignId: campaign.id,
       constraint: name,
       settings,
       valid
@@ -52,6 +52,31 @@ const evaluateConstraints = async (granter, campaign, email, t, pgdb) => {
 
   return { errors }
 }
+
+const grantPerks = async (grant, recipient, campaign, t, pgdb, redis, mail) =>
+  Promise.map(
+    campaign.config.perks || [],
+    async perk => {
+      const name = Object.keys(perk).shift()
+
+      if (!perks[name]) {
+        throw new Error(`Unable to find perk "${name}"`)
+      }
+
+      const settings = perk[name]
+      const result = await perks[name].give(campaign, grant, recipient, settings, t, pgdb, redis, mail)
+
+      debug('grantPerks', {
+        accessCampaignId: campaign.id,
+        perk: name,
+        recipient: recipient.id,
+        settings
+      })
+
+      return { name, settings, result }
+    },
+    { concurrency: 1 }
+  )
 
 const insert = async (granter, campaignId, grants = [], pgdb) => {
   const campaign = await campaignsLib.findOne(campaignId, pgdb)
@@ -77,13 +102,6 @@ const insert = async (granter, campaignId, grants = [], pgdb) => {
 }
 
 const grant = async (granter, campaignId, email, message, t, pgdb, mail) => {
-  if (!validator.isEmail(email)) {
-    throw new Error(t(
-      'api/access/grant/email/error',
-      { email }
-    ))
-  }
-
   const campaign = await campaignsLib.findOne(campaignId, pgdb)
 
   if (!campaign) {
@@ -111,10 +129,14 @@ const grant = async (granter, campaignId, email, message, t, pgdb, mail) => {
     ))
   }
 
+  const voucherCodeLength = campaign.config.voucherCodeLength || VOUCHER_CODE_LENGTH
+  const voucherCode = await pgdb.queryOneField(`SELECT make_hrid('"accessGrants"', 'voucherCode', ${voucherCodeLength})`)
+
   const grant = await pgdb.public.accessGrants.insertAndGet({
     granterUserId: granter.id,
     email,
     message,
+    voucherCode,
     accessCampaignId: campaign.id,
     beginBefore: addInterval(moment(), campaign.grantClaimableInterval)
   })
@@ -123,12 +145,14 @@ const grant = async (granter, campaignId, email, message, t, pgdb, mail) => {
 
   debug('invite, row inserted', { grant })
 
-  await mailLib.sendRecipientInvitation(granter, campaign, grant, t, pgdb)
+  if (grant.email) {
+    await mailLib.sendRecipientInvitation(granter, campaign, grant, t, pgdb)
+  }
 
   return grant
 }
 
-const claim = async (voucherCode, payload, user, t, pgdb, mail) => {
+const claim = async (voucherCode, payload, user, t, pgdb, redis, mail) => {
   const sanatizedVoucherCode = voucherCode.trim().toUpperCase()
 
   const grantByVoucherCode = await findByVoucherCode(
@@ -143,27 +167,37 @@ const claim = async (voucherCode, payload, user, t, pgdb, mail) => {
   const grant = await beginGrant(grantByVoucherCode, payload, user, pgdb)
   await eventsLib.log(grant, 'grant', pgdb)
 
-  const campaign = await pgdb.public.accessCampaigns
-    .findOne({ id: grant.accessCampaignId })
-  const { subscribeToEditorialNewsletters = true } = campaign.config
+  const { granter, recipient, campaign } = grant
 
-  const hasRoleChanged =
-    await membershipsLib.addMemberRole(grant, user, pgdb)
+  const perks = await grantPerks(grant, recipient, campaign, t, pgdb, redis, mail)
+  if (perks.length > 0) {
+    grant.perks = {}
 
-  if (hasRoleChanged) {
-    await mail.enforceSubscriptions({
-      userId: user.id,
-      pgdb,
-      subscribeToEditorialNewsletters
+    await Promise.map(perks, perk => {
+      const { name, ...other } = perk
+      grant.perks[perk.name] = other
+
+      eventsLib.log(grant, `perk.${name}`, pgdb)
     })
   }
 
-  if (!(await hasUserActiveMembership(user, pgdb))) {
-    const granter = await pgdb.public.users
-      .findOne({ id: grant.granterUserId })
+  const subscribeToEditorialNewsletters =
+    perks.some(({ settings }) => !!settings.subscribeToEditorialNewsletters) ||
+    await membershipsLib.addMemberRole(grant, recipient, pgdb)
 
-    await mailLib.sendRecipientOnboarding(granter, campaign, user, grant, t, pgdb)
+  await mail.enforceSubscriptions({
+    userId: recipient.id,
+    pgdb,
+    subscribeToEditorialNewsletters
+  })
+
+  const { enabled: onboardingEnabled = false } = mailLib.getConfigEmails('recipient', 'onboarding', campaign) || {}
+
+  if (!(await hasUserActiveMembership(recipient, pgdb)) || !!onboardingEnabled) {
+    await mailLib.sendRecipientOnboarding(granter, campaign, recipient, grant, t, pgdb)
   }
+
+  await mailLib.sendGranterClaimNotice(granter, campaign, recipient, grant, t, pgdb)
 
   debug('grant', { grant })
 
@@ -199,7 +233,7 @@ const revoke = async (id, user, t, pgdb) => {
   return result
 }
 
-const request = async (granter, campaignId, payload, t, pgdb, mail) => {
+const request = async (granter, campaignId, payload, t, pgdb, redis, mail) => {
   const campaign = await campaignsLib.findOne(campaignId, pgdb)
 
   if (!campaign) {
@@ -234,24 +268,35 @@ const request = async (granter, campaignId, payload, t, pgdb, mail) => {
 
   await eventsLib.log(grant, 'request', pgdb)
 
-  const { subscribeToEditorialNewsletters = true } = campaign.config
+  const perks = await grantPerks(grant, granter, campaign, t, pgdb, redis, mail)
+  if (perks.length > 0) {
+    grant.perks = {}
 
-  const hasRoleChanged =
-    await membershipsLib.addMemberRole(grant, granter, pgdb)
+    await Promise.map(perks, perk => {
+      const { name, ...other } = perk
+      grant.perks[perk.name] = other
 
-  if (hasRoleChanged) {
-    await mail.enforceSubscriptions({
-      userId: granter.id,
-      pgdb,
-      subscribeToEditorialNewsletters
+      eventsLib.log(grant, `perk.${name}`, pgdb)
     })
   }
 
-  if (!(await hasUserActiveMembership(granter, pgdb))) {
+  const subscribeToEditorialNewsletters =
+    perks.some(({ settings }) => !!settings.subscribeToEditorialNewsletters) ||
+    await membershipsLib.addMemberRole(grant, granter, pgdb)
+
+  await mail.enforceSubscriptions({
+    userId: grant.granter.id,
+    pgdb,
+    subscribeToEditorialNewsletters
+  })
+
+  const { enabled: onboardingEnabled = false } = mailLib.getConfigEmails('recipient', 'onboarding', campaign) || {}
+
+  if (!(await hasUserActiveMembership(granter, pgdb)) || !!onboardingEnabled) {
     await mailLib.sendRecipientOnboarding(granter, campaign, granter, grant, t, pgdb)
   }
 
-  debug('request', { grant })
+  await mailLib.sendGranterClaimNotice(granter, campaign, granter, grant, t, pgdb)
 
   return grant
 }
@@ -446,7 +491,12 @@ const findInvalid = async (pgdb) => {
 }
 
 const beginGrant = async (grant, payload, recipient, pgdb) => {
-  const campaign = await campaignsLib.findOne(grant.accessCampaignId, pgdb)
+  const [campaign, granter] = await Promise.all([
+    campaignsLib.findOne(grant.accessCampaignId, pgdb),
+    pgdb.public.users.findOne({ id: grant.granterUserId })
+  ])
+  
+
   const now = moment()
   const beginAt = now.clone()
   const endAt = addInterval(beginAt, campaign.grantPeriodInterval)
@@ -469,7 +519,7 @@ const beginGrant = async (grant, payload, recipient, pgdb) => {
     result
   })
 
-  return result
+  return { ...result, granter, recipient, campaign }
 }
 
 const findEmptyFollowup = async (campaign, pgdb) => {

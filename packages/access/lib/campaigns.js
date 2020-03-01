@@ -45,7 +45,7 @@ const findForGranter = async (granter, { withPast, pgdb }) => {
   const campaigns =
     await Promise.map(
       withPast ? await findAll(pgdb) : await findAvailable(pgdb),
-      getContraintMeta.bind(null, granter, pgdb)
+      getConstraintMeta.bind(null, granter, pgdb)
     )
       .then(filterInvisibleCampaigns)
       .then(mergeConstraintPayloads)
@@ -65,11 +65,16 @@ module.exports = {
  * Not exposed functions
  */
 
-const getContraintMeta = async (granter, pgdb, campaign) => {
+const getConstraintMeta = async (granter, pgdb, campaign) => {
   const constraintMeta = []
 
   for (const constraint of campaign.constraints) {
     const name = Object.keys(constraint).shift() // Name of constraint
+
+    if (!constraints[name]) {
+      throw new Error(`Unable to find constraint "${name}"`)
+    }
+
     const settings = constraint[name] // Settings of constraint
     const meta = await constraints[name].getMeta(
       { settings, granter, campaign },
@@ -79,7 +84,7 @@ const getContraintMeta = async (granter, pgdb, campaign) => {
     constraintMeta.push(meta)
   }
 
-  return {...campaign, constraintMeta}
+  return { ...campaign, constraintMeta }
 }
 
 const filterInvisibleCampaigns = campaigns =>
@@ -94,6 +99,9 @@ const mergeConstraintPayloads = campaigns =>
         total: 0,
         used: 0,
         free: 0
+      },
+      perks: {
+        giftableMemberships: null
       }
     }
 
@@ -101,5 +109,5 @@ const mergeConstraintPayloads = campaigns =>
       Object.assign(payload, meta.payload)
     })
 
-    return {...campaign, ...payload}
+    return { ...campaign, ...payload }
   })

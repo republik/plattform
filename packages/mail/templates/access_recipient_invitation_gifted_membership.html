@@ -35,32 +35,37 @@
                 <tr>
                   <td style="padding:20px;">
                     <p>Guten Tag</p>
-                    <p>Herzlichen Dank für Ihre grosszügige Wachstums-Spende!<p>
 
-                    <p>Pro 240 Franken, die so zusammenkommen, schenken wir einer ausgewählten Person eine Mitgliedschaft.</p>
-                    <p>Mit Ihrem Geld fördern Sie das Wachstum der Republik – und damit auch eine unabhängige vierte Gewalt als zentrale Institution unserer Demokratie.</p>
+                    <p>Die Republik ist ein neues, unabhängiges und werbefreies digitales Magazin für Politik, Wirtschaft, Gesellschaft und Kultur. Sie wird finanziert von ihren Leserinnen und Lesern. Um eine Zukunft zu haben, muss die Republik bekannter werden und viele neue Leserinnen begeistern.</p>
+                    <p>Im Rahmen der Wachstums-Kampagne diesen März finanzieren unsere Leserinnen Geschenk-Mitgliedschaften in der Hoffnung, dass dies zu einem langfristigen Wachstum beiträgt.</p>
 
-                    <p>Wichtige Informationen zu den Zahlungsformalitäten Ihrer Spende:</p>
+                    <p>Herzlichen Glückwunsch! Sie wurden von <strong>{{GRANTER_NAME}}</strong> ausgewählt und erhalten damit eine Jahresmitgliedschaft, im Wert von 240 Franken, geschenkt!</p>
 
-                    {{#if `payment_method == "PAYMENTSLIP"`}}
-                      <p>Sie haben den Weg der Banküberweisung für Ihre Spende gewählt.<br />
-                        Bitte überweisen Sie {{total_formatted}} an:
-                      </p>
-                      <p>PC 61-11760-6<br>
-                        IBAN: CH50 0900 0000 6101 1760 6<br>
-                        BIC: POFICHBEXXX
-                      </p>
-                      <p>lautend auf:<br>
-                        Project R Genossenschaft<br>
-                        Sihlhallenstrasse 1<br>
-                        8004 Zürich
-                      </p>
-                      <p><strong>Bitte vergessen Sie nicht, {{HRID}} in das Feld «Betreff» des Einzahlungsscheins zu schreiben, sonst funktioniert die Zuordnung nicht. Danke!</strong></p>
-                    {{else}}
-                      <p>Ihre Spende von {{total_formatted}} ist erfolgreich bei uns eingegangen, vielen Dank!</p>
+                    {{#if GRANTER_MESSAGE}}
+                      <p>{{GRANTER_NAME}} hat uns eine Nachricht für Sie mitgegeben:</p>
+                      <blockquote style="color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}">{{{GRANTER_MESSAGE}}}</blockquote>
                     {{/if}}
 
-                    <p>Herzlich</p>
+                    <p>Um Ihre Jahresmitgliedschaft in Empfang zu nehmen, melden Sie sich einfach vor dem {{GRANT_BEGIN_BEFORE}} hier an:</p>
+                    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td>
+                          <table border="0" cellspacing="0" cellpadding="0">
+                            <tr>
+                              <td align="center" bgcolor="#3CAD00">
+                                <a href="{{LINK_CLAIM_PREFILLED}}" style="font-size:20px;{{sg_font_style_sans_serif_regular}}color:#ffffff;text-decoration:none;border-radius:0;padding:15px 30px 15px 30px;border:1px solid #3CAD00;display:inline-block;">Jetzt aktivieren</a>
+                              </td>
+                            </tr>
+                          </table>
+                        </td>
+                      </tr>
+                    </table>
+                    <p>Falls dieser Button nicht funktioniert: Öffnen Sie bitte <a href="{{LINK_CLAIM_PREFILLED}}">{{LINK_CLAIM_CONTEXTLESS}}</a>, und geben Sie dann Ihren Namen, Ihre E-Mail-Adresse und den folgenden Gutscheincode ein: <span style="font-family:monospace;">{{GRANT_VOUCHER_CODE}}</span>
+                    </p>
+
+                    <p>Sollten Sie schon in den nächsten Tagen oder Monaten so überzeugt sein, dass Sie der Republik-Community etwas zurückgeben wollen: Sie können jederzeit eine Mitgliedschaft oder ein Monatsabo verschenken. Entweder direkt an einen Ihrer Freunde. Oder Sie überlassen das Verschenken uns, so, wie es die Person, die Ihre Mitgliedschaft finanziert hat, auch tat.</p>
+
+                    <p>Viel Spass bei der Lektüre! Herzlich</p>
                     <p>Ihre Crew der Republik</p>
                   </td>
                 </tr>

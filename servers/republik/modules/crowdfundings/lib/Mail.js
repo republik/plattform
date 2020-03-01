@@ -534,6 +534,29 @@ mail.sendMembershipOwnerAutoPay = async ({ autoPay, payload, pgdb, t }) => {
   }, { pgdb })
 }
 
+mail.sendMembershipClaimNotice = async ({ membership }, { pgdb, t }) => {
+  const pledge = await pgdb.public.pledges.findOne({ id: membership.pledgeId })
+  const pledger = await pgdb.public.users.findOne({ id: pledge.userId })
+  const claimer = await pgdb.public.users.findOne({ id: membership.userId }).then(transformUser)
+
+  return sendMailTemplate({
+    to: pledger.email,
+    fromEmail: process.env.DEFAULT_MAIL_FROM_ADDRESS,
+    subject: t(
+      'api/email/membership_giver_claim_notice/subject',
+      { recipientName: claimer.name }
+    ),
+    templateName: 'membership_giver_claim_notice',
+    mergeLanguage: 'handlebars',
+    globalMergeVars: [
+      {
+        name: 'recipient_name',
+        content: claimer.name
+      }
+    ]
+  }, { pgdb })
+}
+
 /**
  * Attempts to fetch a pledge and related data, and generates a series of merge
  * variables.
@@ -672,7 +695,7 @@ mail.getPledgeMergeVars = async (
     ? voucherCodes.join(', ')
     : null
 
-  const accessGranted = memberships.findIndex(m => !!m.accessGranted) > -1
+  const numAccessGrantedMemberships = memberships.filter(m => !!m.accessGranted).length
 
   return [
     // Purchase itself
@@ -794,8 +817,8 @@ mail.getPledgeMergeVars = async (
       content: formattedVoucherCodes
     },
     {
-      name: 'access_granted',
-      content: accessGranted
+      name: 'num_access_granted_memberships',
+      content: numAccessGrantedMemberships
     },
     {
       name: 'goodies_count',
