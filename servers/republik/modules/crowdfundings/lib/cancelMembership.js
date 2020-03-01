@@ -36,7 +36,7 @@ module.exports = async (membership, details, options, t, pgdb) => {
   if (updatedMembership.subscriptionId) {
     await cancelSubscription({
       id: updatedMembership.subscriptionId,
-      companyId: updatedMembership.companyId,
+      companyId: membership.membershipType.companyId,
       immediately,
       pgdb
     })
