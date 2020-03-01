@@ -9,8 +9,8 @@ module.exports = {
 
     debug('packageOption.reward missing, querying')
     return Promise.all([
-      pgdb.public.goodies.find({rewardId: packageOption.rewardId}),
-      pgdb.public.membershipTypes.find({rewardId: packageOption.rewardId})
+      pgdb.public.goodies.find({ rewardId: packageOption.rewardId }),
+      pgdb.public.membershipTypes.find({ rewardId: packageOption.rewardId })
     ])
       .then((arr) => arr[0].concat(arr[1])[0])
   },

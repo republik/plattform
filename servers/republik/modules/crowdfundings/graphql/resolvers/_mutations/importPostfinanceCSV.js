@@ -3,6 +3,7 @@ const debug = require('debug')('crowdfundings:importPostfinanceCSV')
 const matchPayments = require('../../../lib/payments/matchPayments')
 const { dsvFormat } = require('d3-dsv')
 const csvParse = dsvFormat(';').parse
+const { refreshAllPots } = require('../../../lib/membershipPot')
 
 const parsePostfinanceExport = async (inputFile, pgdb) => {
   const fields = [
@@ -154,7 +155,6 @@ module.exports = async (_, args, { pgdb, req, t, redis }) => {
     } = await matchPayments(transaction, t, redis)
 
     await transaction.transactionCommit()
-
     const result = `
 importPostfinanceCSV result:
 num new payments: ${numPaymentsAfter - numPaymentsBefore}
@@ -168,5 +168,10 @@ num payments successfull: ${numPaymentsSuccessful}
     await transaction.transactionRollback()
     console.info('transaction rollback', { req: req._log(), args, error: e })
     throw e
+  } finally {
+    await refreshAllPots()
+      .catch(e => {
+        console.error('error after payPledge', e)
+      })
   }
 }

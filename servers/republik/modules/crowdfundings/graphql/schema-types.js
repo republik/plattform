@@ -99,6 +99,8 @@ type PackageOption {
   membership: Membership
   autoPay: Boolean
   additionalPeriods: [MembershipPeriod!]
+
+  accessGranted: Boolean
 }
 
 input PackageOptionInput {
@@ -146,11 +148,14 @@ type Membership {
   voucherCode: String
   reducedPrice: Boolean!
   claimerName: String
+  giverName: String
+  messageToClaimers: String
   user: User!
   sequenceNumber: Int
   active: Boolean!
   renew: Boolean!
   autoPay: Boolean!
+  accessGranted: Boolean!
   initialInterval: MembershipTypeInterval!
   initialPeriods: Int!
   periods: [MembershipPeriod]!
@@ -225,6 +230,7 @@ input PledgeInput {
   total: Int!
   user: UserInput!
   reason: String
+  messageToClaimers: String
   accessToken: ID
 }
 
@@ -412,5 +418,12 @@ type PostfinancePayment {
 type PostfinancePayments {
   items: [PostfinancePayment!]!
   count: Int!
+}
+
+type MembershipPotStats {
+  totalDonated: Int!
+  donatedAmountOfMemberships: Int!
+  generatedAmountOfMemberships: Int!
+  surplusAmountOfDonatedMemberships: Int!
 }
 `

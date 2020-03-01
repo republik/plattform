@@ -41,12 +41,9 @@ beforeEach(async () => {
   const { pgdb } = global.instance.context
 
   await resetCustomers(pgdb) // delete customers from stripe
-
-  await pgdb.public.users.truncate({ cascade: true })
   await pgdb.public.sessions.truncate({ cascade: true })
-  await pgdb.public.payments.truncate({ cascade: true })
-  await pgdb.public.pledgePayments.truncate({ cascade: true })
-  await pgdb.public.pledges.truncate({ cascade: true })
+  await pgdb.public.users.truncate({ cascade: true })
+  await seedCrowdfundings(global.instance.context.pgdb, true)
 
   global.instance.apolloFetch = global.instance.createApolloFetch()
 })
@@ -272,7 +269,6 @@ describe('payPledge', () => {
 
   test('Multiple failed payments on MONTHLY_ABO pledge with STRIPE', async () => {
     const { pledgeId } = await prepareNewPledge({ templateId: '00000000-0000-0000-0008-000000000002' })
-    await resetCustomers(pgDatabase())
     const source = await createSource({ card: Cards.Visa, pledgeId })
     const result = await payPledge({
       pledgeId,
