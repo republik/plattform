@@ -53,7 +53,8 @@ PgDb.connect().then(async pgdb => {
           sheet.data.map(d => ({
             questionnaireId: questionnaire.id,
             order: counter++,
-            text: d['Frage'],
+            text: d.Frage,
+            ...d.Gruppe ? { metadata: { group: d.Gruppe } } : {},
             type: 'Choice',
             typePayload: {
               cardinality: 1,

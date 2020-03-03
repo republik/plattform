@@ -1,17 +1,23 @@
 const logger = console
 const { sendPledgeConfirmations } = require('../../../lib/Mail')
 const generateMemberships = require('../../../lib/generateMemberships')
+const { refreshPotForPledgeId } = require('../../../lib/membershipPot')
 const payPledgePaymentslip = require('../../../lib/payments/paymentslip/payPledge')
 const payPledgePaypal = require('../../../lib/payments/paypal/payPledge')
 const payPledgePostfinance = require('../../../lib/payments/postfinance/payPledge')
 const payPledgeStripe = require('../../../lib/payments/stripe/payPledge')
 const slack = require('../../../../../lib/slack')
+const Promise = require('bluebird')
 
-module.exports = async (_, args, {pgdb, req, t, redis}) => {
+module.exports = async (_, args, context) => {
+  const { pgdb, req, t, redis } = context
+  const { pledgePayment } = args
+  const { pledgeId } = pledgePayment
+
+  let user
+  let updatedPledge
   const transaction = await pgdb.transactionBegin()
   try {
-    const { pledgePayment } = args
-
     // load pledge
     // FOR UPDATE to wait on other transactions
     const pledge = (await transaction.query(`
@@ -20,10 +26,10 @@ module.exports = async (_, args, {pgdb, req, t, redis}) => {
       WHERE id = :pledgeId
       FOR UPDATE
     `, {
-      pledgeId: pledgePayment.pledgeId
+      pledgeId
     }))[0]
     if (!pledge) {
-      logger.error(`pledge (${pledgePayment.pledgeId}) not found`, { req: req._log(), args, pledge })
+      logger.error(`pledge (${pledgeId}) not found`, { req: req._log(), args, pledge })
       throw new Error(t('api/unexpected'))
     }
     if (pledge.status === 'SUCCESSFUL') {
@@ -56,7 +62,7 @@ module.exports = async (_, args, {pgdb, req, t, redis}) => {
     }
 
     // load user
-    const user = await transaction.public.users.findOne({id: pledge.userId})
+    user = await transaction.public.users.findOne({ id: pledge.userId })
 
     // check if paymentMethod is allowed
     // check by MembershipType would be more precise
@@ -129,46 +135,44 @@ module.exports = async (_, args, {pgdb, req, t, redis}) => {
       }
 
       // update pledge status
-      await transaction.public.pledges.updateOne({
+      updatedPledge = await transaction.public.pledges.updateAndGetOne({
         id: pledge.id
       }, {
-        status: pledgeStatus
+        status: pledgeStatus,
+        sendConfirmMail: true
       })
-
-      if (pledgeStatus === 'PAID_INVESTIGATE') {
-        await slack.publishPledge(
-          user,
-          pledge,
-          'PAID_INVESTIGATE'
-        )
-      }
     }
-
-    // send a confirmation email for this pledge
-    await transaction.public.pledges.updateOne({
-      id: pledge.id
-    }, {
-      sendConfirmMail: true
-    })
 
     // commit transaction
     await transaction.transactionCommit()
-
-    if (user.verified) {
-      try {
-        // if the user is signed in, send mail immediately
-        await sendPledgeConfirmations({ userId: pledge.userId, pgdb, t })
-      } catch (e) {
-        console.warn('error in payPledge after transactionCommit', e)
-      }
-    }
-
-    return {
-      pledgeId: pledge.id
-    }
   } catch (e) {
     await transaction.transactionRollback()
     logger.info('transaction rollback', { req: req._log(), error: e })
     throw e
+  }
+
+  if (updatedPledge) {
+    await Promise.all([
+      user && user.verified && (
+        sendPledgeConfirmations({ userId: user.id, pgdb, t })
+      ),
+      updatedPledge.status === 'SUCCESSFUL' && (
+        refreshPotForPledgeId(pledgeId, context)
+      ),
+      updatedPledge.status === 'PAID_INVESTIGATE' && (
+        slack.publishPledge(
+          user,
+          updatedPledge,
+          'PAID_INVESTIGATE'
+        )
+      )
+    ])
+      .catch(e => {
+        console.error('error after payPledge', e)
+      })
+  }
+
+  return {
+    pledgeId
   }
 }

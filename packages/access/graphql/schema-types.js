@@ -26,6 +26,7 @@ type AccessCampaign {
     withInvalidated: Boolean
   ): [AccessGrant!]!
   slots: AccessCampaignSlots!
+  perks: AccessCampaignPerks!
   "Begin of campaign"
   beginAt: DateTime!
   "End of campaign"
@@ -49,6 +50,8 @@ type AccessGrant {
   voucherCode: String
   "Entity who received granted membership (Admin only)"
   recipient: User
+  "Name or email address of entity who received granted access"
+  recipientName: String
   "Sharing period must begin before"
   beginBefore: DateTime!
   "Beginning of sharing period"
@@ -87,5 +90,12 @@ type AccessCampaignSlots {
   total: Int!
   free: Int!
   used: Int!
+}
+
+"""
+Entity describing available perks
+"""
+type AccessCampaignPerks {
+  giftableMemberships: Int
 }
 `

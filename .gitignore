@@ -67,3 +67,5 @@ servers/republik/seeds/seeds.json
 servers/republik/seeds/comments.json
 servers/republik/local/
 servers/publikator/seeds/seeds.json
+.vim
+local

@@ -54,7 +54,28 @@ const removeMemberRole = async (grant, user, findFn, pgdb) => {
   return false
 }
 
+const findGiftableMemberships = async (pgdb) =>
+  pgdb.query(`
+    SELECT
+      m.*,
+      p."userId" "pledgeUserId",
+      p."messageToClaimers" "pledgeMessageToClaimers"
+
+    FROM "memberships" m
+    JOIN "pledges" p ON p."userId" = m."userId" AND p.id = m."pledgeId"
+
+    LEFT JOIN "membershipPeriods" mp ON mp."membershipId" = m.id
+
+    WHERE
+      m."accessGranted" IS TRUE
+      AND mp IS NULL
+
+    GROUP BY m.id, p.id
+    ORDER BY m."potPledgeOptionId" DESC, m."createdAt" ASC
+  `)
+
 module.exports = {
   addMemberRole,
-  removeMemberRole
+  removeMemberRole,
+  findGiftableMemberships
 }

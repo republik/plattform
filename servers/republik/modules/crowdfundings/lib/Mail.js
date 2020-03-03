@@ -534,6 +534,29 @@ mail.sendMembershipOwnerAutoPay = async ({ autoPay, payload, pgdb, t }) => {
   }, { pgdb })
 }
 
+mail.sendMembershipClaimNotice = async ({ membership }, { pgdb, t }) => {
+  const pledge = await pgdb.public.pledges.findOne({ id: membership.pledgeId })
+  const pledger = await pgdb.public.users.findOne({ id: pledge.userId })
+  const claimer = await pgdb.public.users.findOne({ id: membership.userId }).then(transformUser)
+
+  return sendMailTemplate({
+    to: pledger.email,
+    fromEmail: process.env.DEFAULT_MAIL_FROM_ADDRESS,
+    subject: t(
+      'api/email/membership_giver_claim_notice/subject',
+      { recipientName: claimer.name }
+    ),
+    templateName: 'membership_giver_claim_notice',
+    mergeLanguage: 'handlebars',
+    globalMergeVars: [
+      {
+        name: 'recipient_name',
+        content: claimer.name
+      }
+    ]
+  }, { pgdb })
+}
+
 /**
  * Attempts to fetch a pledge and related data, and generates a series of merge
  * variables.
@@ -665,6 +688,15 @@ mail.getPledgeMergeVars = async (
     }
   })
 
+  const voucherCodes = ['ABO_GIVE', 'ABO_GIVE_MONTHS'].includes(package_.name)
+    ? memberships.map(m => m.voucherCode).filter(Boolean)
+    : null
+  const formattedVoucherCodes = voucherCodes && voucherCodes.length
+    ? voucherCodes.join(', ')
+    : null
+
+  const numAccessGrantedMemberships = memberships.filter(m => !!m.accessGranted).length
+
   return [
     // Purchase itself
     {
@@ -782,9 +814,11 @@ mail.getPledgeMergeVars = async (
     },
     {
       name: 'voucher_codes',
-      content: ['ABO_GIVE', 'ABO_GIVE_MONTHS'].includes(package_.name)
-        ? memberships.map(m => m.voucherCode).join(', ')
-        : null
+      content: formattedVoucherCodes
+    },
+    {
+      name: 'num_access_granted_memberships',
+      content: numAccessGrantedMemberships
     },
     {
       name: 'goodies_count',

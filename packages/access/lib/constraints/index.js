@@ -9,7 +9,9 @@ module.exports = {
   recipientInNoSlot: require('./recipientInNoSlot'),
   recipientIsGranter: require('./recipientIsGranter'),
   recipientNotGranter: require('./recipientNotGranter'),
+  requireEmail: require('./requireEmail'),
   requireExistingGrants: require('./requireExistingGrants'),
+  requireGiftableMembership: require('./requireGiftableMembership'),
   requirePackage: require('./requirePackage'),
   requireRole: require('./requireRole')
 }

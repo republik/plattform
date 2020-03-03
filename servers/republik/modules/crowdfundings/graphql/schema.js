@@ -45,6 +45,8 @@ type queries {
   paymentsCSV(companyName: String!, paymentIds: [ID!]): String!
 
   cancellationCategories(showMore: Boolean): [CancellationCategory!]!
+
+  membershipPotStats: MembershipPotStats!
 }
 
 type mutations {
