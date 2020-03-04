@@ -4,12 +4,12 @@ const { timeParse } = require('d3-time-format')
 const parser = timeParse('%Y-%m-%d %H %Z')
 
 const connect = ({ applicationName = 'backends' } = {}) => {
-  const { DATABASE_URL, DATABSE_MAX_CONNECTIONS = null } = process.env
+  const { DATABASE_URL, DATABASE_MAX_CONNECTIONS = null } = process.env
 
   return PgDb.connect({
     application_name: applicationName,
     connectionString: DATABASE_URL,
-    max: DATABSE_MAX_CONNECTIONS
+    max: DATABASE_MAX_CONNECTIONS
   })
     .then(async (pgdb) => {
       // custom date parser
