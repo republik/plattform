@@ -1,0 +1,58 @@
+Guten Tag
+
+Seit dem {{GRANT_BEGIN}} durften wir Sie für ein weiteres Mal als Leserin oder
+Leser an Bord der Republik haben. 
+
+Hat Ihnen unser Magazin gefallen?
+
+Finden Sie unsere Idee eines unabhängigen und werbefreien digitalen Magazins für
+Politik, Wirtschaft, Gesellschaft und Kultur auch unterstützenswert?
+
+Wie Sie wissen, ist die Republik werbefrei und wird von ihren Leserinnen und
+Lesern finanziert.
+
+Als Magazin bieten wir Einordnung und Vertiefung anstelle einer Flut von
+Nachrichten. In der Republik sind aber auch inhaltliche Debatten mit
+Expertinnen, Lesern und Journalistinnen mehr als nur ein demokratischer Traum.
+Mit verschiedenen Veranstaltungen zu Politik, Gesellschaft und Kultur und in
+unserer Genossenschaft sind wir und schaffen wir Gemeinschaft, ermöglichen wir
+Austausch und Verbindungen.
+
+Wir sind ein Projekt gegen den Zynismus, den Vormarsch der Autoritären und gegen
+die Diktatur der Angst. Wir stehen für die Verteidigung der demokratischen
+Institutionen und die Werte der Aufklärung: für Treue zu Fakten, für Lösungen
+von Fall zu Fall, für Offenheit gegenüber Kritik, für Unverfrorenheit gegenüber
+der Macht und Respekt vor dem Menschen.
+
+Wir würden uns sehr freuen, Sie wieder als Leserin oder Leser, als Verlegerin
+oder Verleger und als Mitglied der Republik-Community willkommen zu heissen. Sie
+haben hierfür verschiedene Möglichkeiten:
+
+Mit einem Jahres-, Gönner- oder Ausbildungsabonnement erhalten Sie das digitale
+Magazin und werden Mitglied der Project R Genossenschaft, die das grösste
+Aktienpaket an der Republik hält. Wenn Sie nicht Teil der Genossenschaft sein
+wollen, sondern nur Zugriff aufs Magazin haben möchten, schliessen Sie am besten
+einfach ein (unbegrenztes) Monatsabo ab.
+
+Hier finden Sie die Abonnemente und Mitgliedschaften in der Übersicht
+[{{link_offers_overview}}]. 
+
+Wir freuen uns auf Sie!
+
+Herzlich
+Ihre Crew der Republik
+
+Die Republik ist ein unabhängiges und werbefreies digitales Magazin für Politik,
+Wirtschaft, Gesellschaft und Kultur. Es wird von seinen Leserinnen und Lesern
+finanziert und erscheint von Montag bis Samstag mit täglich ein bis drei neuen
+Beiträgen. In der App, auf der Website und als Newsletter.
+
+
+Republik AG
+Sihlhallenstrasse 1, CH-8004 Zürich
+www.republik.ch [{{frontend_base_url}}]
+kontakt@republik.ch 
+
+Unser Manifest [{{link_manifest}}]
+Das Impressum [{{link_imprint}}]
+Häufig gestellte Fragen [{{link_faq}}]

@@ -1,0 +1,62 @@
+Sehr geehrte Dame
+Sehr geehrter Herr
+
+Vielen Dank für Ihre Bestellung. Hier die wichtigsten Informationen dazu:
+
+* 
+* {{#if `this.oamount > 1`}} {{this.oamount}} {{this.olabel}} à
+  {{this.oprice_formatted}}: {{this.ototal_formatted}} {{else}}
+  {{this.oamount}} {{this.olabel}}: {{this.ototal_formatted}} {{/if}} 
+* 
+* Gewünschte Preisreduktion: –{{discount_formatted}}
+* 
+* Spende: {{donation_formatted}}
+* 
+*  Total: {{total_formatted}} 
+
+Bücher liefern wir innerhalb von 7 Werktagen. {{#if waiting_for_payment}}Der
+Versand erfolgt erst nach Zahlungseingang.{{/if}}
+
+Stellen Sie bitte sicher, dass Sie Ihre Adresse unter {{link_account}}
+[{{link_account_account}}] korrekt eingetragen haben.
+
+{{#if `payment_method == "PAYMENTSLIP"`}} Sie haben eine Banküberweisung als
+Zahlungsweg gewählt.
+
+Bitte überweisen Sie {{total_formatted}} bis spätestens {{due_date}} an:
+
+PC 61-11760-6
+IBAN: CH50 0900 0000 6101 1760 6
+BIC: POFICHBEXXX
+Mitteilung: {{HRID}}
+
+lautend auf:
+
+Project R Genossenschaft
+Sihlhallenstrasse 1
+8004 Zürich
+
+Vergessen Sie nicht, {{HRID}} in das Feld «Betreff» des Einzahlungsscheins zu
+schreiben, sonst funktioniert die Zuordnung nicht. Danke!
+
+{{else}} Wir wünschen Ihnen anregende Lektüre mit der «Republik bei
+Stromausfall».
+
+{{/if}} Herzlich
+
+Ihre Crew der Republik
+
+Die Republik ist ein unabhängiges und werbefreies digitales Magazin für Politik,
+Wirtschaft, Gesellschaft und Kultur. Es wird von seinen Leserinnen und Lesern
+finanziert und erscheint von Montag bis Samstag mit täglich ein bis drei neuen
+Beiträgen. In der App, auf der Website und als Newsletter. 
+
+
+Republik AG
+Sihlhallenstrasse 1, CH-8004 Zürich
+www.republik.ch [{{frontend_base_url}}]
+kontakt@republik.ch 
+
+Unser Manifest [{{link_manifest}}]
+Das Impressum [{{link_imprint}}]
+Häufig gestellte Fragen [{{link_faq}}]

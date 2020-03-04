@@ -1,0 +1,67 @@
+Guten Tag
+
+Ihre Zahlung ist erfolgreich bei uns eingegangen.
+
+{{#if voucher_codes}} Herzlichen Dank, dass Sie die Republik mit einer
+Geschenk-Mitgliedschaft unterstützen!
+
+Für jede Geschenk-Mitgliedschaft erhalten Sie nachfolgend einen 6-Zeichen-Code. 
+
+{{voucher_codes}} 
+
+Sie können diesen der beschenkten Person mit einem Mittel Ihrer Wahl
+überreichen: sofort per E-Mail, traditionell per Briefpost oder originell als
+Schrift auf einem Kuchen.
+
+Um den Geschenkcode einzulösen, muss der neue Besitzer oder die neue Besitzerin
+nur auf die Seite {{link_claim}} [{{link_claim}}] gehen. Und ihn dort eingeben.
+
+{{/if}} {{#if goodies_count}} {{#if `goodies_count == 1`}} Auch Ihr bestelltes
+Republik-Objekt eignet sich perfekt für die Code-Übergabe. {{elseif
+`goodies_count > 1`}} Auch Ihre bestellten Republik-Objekte eignen sich perfekt
+für die Code-Übergabe. {{/if}} Bücher und Taschen liefern wir innerhalb von 7
+Werktagen. 
+
+* 
+* {{this.oamount}} {{this.olabel}} 
+* 
+
+Stellen Sie dafür bitte sicher, dass Sie Ihre Adresse unter {{link_account}}
+[{{link_account_account}}] korrekt eingetragen haben.
+
+{{/if}} {{#if `num_access_granted_memberships > 0`}} {{#if
+`num_access_granted_memberships == 1`}} Vielen Dank, dass Sie die Verbreitung
+der Republik {{#if voucher_codes}}zusätzlich {{/if}}mit einer
+Wachstums-Mitgliedschaft unterstützen!
+
+Wir werden nun, zusammen mit unseren Komplizen, eine passende Empfängerin für
+Ihr Geschenk suchen und Sie informieren, sobald die Mitgliedschaft eingelöst
+wird.
+
+{{/if}} {{#if `num_access_granted_memberships > 1`}} Vielen Dank, dass Sie die
+Verbreitung der Republik {{#if voucher_codes}}zusätzlich {{/if}}mit gleich
+mehreren Wachstums-Mitgliedschaften unterstützen!
+
+Wir werden nun, zusammen mit unseren Komplizen, passende Empfängerinnen für Ihr
+Geschenk suchen und Sie informieren, wann immer eine Mitgliedschaft eingelöst
+wird.
+
+{{/if}} {{/if}} Vielen Dank! {{#if voucher_codes}} 
+Und viel Freude beim Verschenken der Republik. {{/if}} 
+
+Ihre Crew der Republik
+
+Die Republik ist ein unabhängiges und werbefreies digitales Magazin für Politik,
+Wirtschaft, Gesellschaft und Kultur. Es wird von seinen Leserinnen und Lesern
+finanziert und erscheint von Montag bis Samstag mit täglich ein bis drei neuen
+Beiträgen. In der App, auf der Website und als Newsletter. 
+
+
+Republik AG
+Sihlhallenstrasse 1, CH-8004 Zürich
+www.republik.ch [{{frontend_base_url}}]
+kontakt@republik.ch 
+
+Unser Manifest [{{link_manifest}}]
+Das Impressum [{{link_imprint}}]
+Häufig gestellte Fragen [{{link_faq}}]

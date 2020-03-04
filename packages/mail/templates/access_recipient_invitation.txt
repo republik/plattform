@@ -1,0 +1,76 @@
+Guten Tag
+
+{{#unless RECIPIENT_HAS_MEMBERSHIPS}} {{#if `RECIPIENT_EMAIL != GRANTER_EMAIL`}} 
+{{GRANTER_NAME}} ({{GRANTER_EMAIL}} [{{GRANTER_EMAIL}}]) hat die Republik – ein
+neues, unabhängiges und werbefreies digitales Magazin für Politik, Wirtschaft,
+Gesellschaft und Kultur – mit Ihnen geteilt. 
+
+{{#if GRANTER_MESSAGE}} Und uns eine Nachricht für Sie mitgegeben:
+
+> {{{GRANTER_MESSAGE}}}
+{{/if}} {{/if}} {{#if `RECIPIENT_EMAIL != GRANTER_EMAIL`}} Für
+{{CAMPAIGN_PERIOD}} sind Sie jetzt Gast an Bord der Republik. Und können unser
+Magazin entdecken, es lesen, sehen und hören.
+
+{{/if}} Die Republik erscheint von Montag bis Samstag mit täglich ein bis drei
+neuen Beiträgen. In der Republik-App [{{link_manual}}], auf der Website
+[{{link_signin}}] und als Newsletter.
+
+Als Magazin bieten wir Einordnung und Vertiefung anstelle einer Flut von
+Nachrichten. Wir recherchieren, um Missstände aufzudecken, oft monatelang. Und
+diskutieren über drängende Fragen der Gegenwart.
+
+Die Republik ist aber noch mehr als ein Magazin. In der Republik sind
+inhaltliche Debatten mit Expertinnen, Lesern und Journalistinnen mehr als nur
+ein demokratischer Traum. Mit verschiedenen Veranstaltungen zu Politik,
+Gesellschaft und Kultur und in unserer Genossenschaft sind wir und schaffen wir
+Gemeinschaft, ermöglichen wir Austausch und Verbindungen.
+
+Wir sind ein Projekt gegen den Zynismus, den Vormarsch der Autoritären und gegen
+die Diktatur der Angst. Wir stehen für die Verteidigung der demokratischen
+Institutionen und die Werte der Aufklärung: für Treue zu Fakten, für Lösungen
+von Fall zu Fall, für Offenheit gegenüber Kritik, für Respektlosigkeit gegenüber
+der Macht und Respekt vor dem Menschen.
+
+Um die Republik näher kennenzulernen, melden Sie sich einfach vor dem
+{{GRANT_BEGIN_BEFORE}} hier an:
+
+Jetzt anmelden [{{LINK_CLAIM_PREFILLED}}] Falls dieser Button nicht
+funktioniert: Öffnen Sie bitte {{LINK_CLAIM_CONTEXTLESS}}
+[{{LINK_CLAIM_PREFILLED}}], und geben Sie dann Ihren Namen, Ihre E-Mail-Adresse
+und den folgenden Gutscheincode ein: {{GRANT_VOUCHER_CODE}} 
+
+{{/unless}} {{#if RECIPIENT_HAS_MEMBERSHIPS}} Sie erhalten diese E-Mail im
+Rahmen unserer Aktion «{{CAMPAIGN_TITLE}}».
+
+{{#if `RECIPIENT_EMAIL != GRANTER_EMAIL`}} {{GRANTER_NAME}} geht davon aus, dass
+Sie noch kein Republik-Abo besitzen. Dabei befinden Sie sich als Besitzerin oder
+Besitzer eines Abos bereits an Bord – vielen Dank dafür!
+
+{{else}} Sie haben aber bereits ein gültiges Abo – vielen Dank dafür!
+
+{{/if}} {{#if RECIPIENT_HAS_CAMPAIGNS}} Sie können Ihr Abo auch mit anderen Personen teilen [{{LINK_ACCOUNT_SHARE}}].
+Die Empfänger erhalten eine persönliche Einladung per E-Mail.
+
+Zugriff teilen [{{LINK_ACCOUNT_SHARE}}] {{/if}} {{/if}} Bei Fragen und Anliegen
+stehen wir Ihnen gerne unter kontakt@republik.ch zur
+Verfügung.
+
+Wir wünschen Ihnen viel Freude beim Lesen und Ausprobieren!
+
+Ihre Crew der Republik
+
+Die Republik ist ein unabhängiges und werbefreies digitales Magazin für Politik,
+Wirtschaft, Gesellschaft und Kultur. Es wird von seinen Leserinnen und Lesern
+finanziert und erscheint von Montag bis Samstag mit täglich ein bis drei neuen
+Beiträgen. In der App, auf der Website und als Newsletter.
+
+
+Republik AG
+Sihlhallenstrasse 1, CH-8004 Zürich
+www.republik.ch [{{frontend_base_url}}]
+kontakt@republik.ch 
+
+Unser Manifest [{{link_manifest}}]
+Das Impressum [{{link_imprint}}]
+Häufig gestellte Fragen [{{link_faq}}]

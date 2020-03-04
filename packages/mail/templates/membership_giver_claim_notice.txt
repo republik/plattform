@@ -1,0 +1,27 @@
+Guten Tag
+
+Heute ist es so weit!
+
+Die von Ihnen finanzierte Geschenk-Mitgliedschaft wurde soeben eingelöst. Dank
+Ihnen ist {{recipient_name}} nun ein Jahr lang Mitglied bei der Project R
+Genossenschaft und hat damit Zugang zur Republik.
+
+Im Namen der Republik und der Beschenkten möchten wir Ihnen nochmals herzlich
+danken.
+
+Ihre Crew der Republik
+
+Die Republik ist ein unabhängiges und werbefreies digitales Magazin für Politik,
+Wirtschaft, Gesellschaft und Kultur. Es wird von seinen Leserinnen und Lesern
+finanziert und erscheint von Montag bis Samstag mit täglich ein bis drei neuen
+Beiträgen. In der App, auf der Website und als Newsletter. 
+
+
+Republik AG
+Sihlhallenstrasse 1, CH-8004 Zürich
+www.republik.ch [{{frontend_base_url}}]
+kontakt@republik.ch 
+
+Unser Manifest [{{link_manifest}}]
+Das Impressum [{{link_imprint}}]
+Häufig gestellte Fragen [{{link_faq}}]

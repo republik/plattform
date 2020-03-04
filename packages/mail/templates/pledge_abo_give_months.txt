@@ -1,0 +1,77 @@
+Guten Tag
+
+Vielen Dank, dass Sie die Verbreitung der Republik mit einem Geschenkabonnement
+unterstützen!
+
+{{#if voucher_codes}} Für jedes Geschenkabonnement erhalten Sie nachfolgend
+einen Gutscheincode.
+
+{{voucher_codes}}
+
+Sie können diesen der Person Ihrer Wahl mit einem Mittel Ihrer Wahl überreichen:
+sofort per Mail, traditionell per Briefpost oder originell als Schrift auf einem
+Kuchen.
+
+Um den Gutscheincode einzulösen, muss der neue Besitzer oder die neue Besitzerin
+nur auf die Seite {{link_claim}} [{{link_claim}}] gehen. Und den Code dort
+eingeben.
+
+{{#if goodies_count}} {{#if `goodies_count == 1`}} Auch Ihr bestelltes
+Republik-Objekt eignet sich perfekt für die Code-Übergabe. {{elseif
+`goodies_count > 1`}} Auch Ihre bestellten Republik-Objekte eignen sich perfekt
+für die Code-Übergabe. {{/if}} Bücher und Taschen liefern wir innerhalb von 7
+Werktagen. 
+
+* 
+* {{this.oamount}} {{this.olabel}}
+* 
+
+Stellen Sie dafür bitte sicher, dass Sie Ihre Adresse unter {{link_account}}
+[{{link_account_account}}] korrekt eingetragen haben.
+
+{{/if}} {{/if}} Informationen zur Zahlung Ihres Geschenkabonnements:
+
+{{#if `payment_method != "PAYMENTSLIP"`}} Ihre Zahlung ist erfolgreich bei uns
+eingegangen, herzlichen Dank!
+
+{{/if}} {{#if `payment_method == "PAYMENTSLIP"`}} Sie haben eine Banküberweisung
+als Zahlungsweg gewählt.
+
+Bitte überweisen Sie {{total_formatted}} bis spätestens {{due_date}} an:
+
+PC 61-11760-6
+IBAN: CH50 0900 0000 6101 1760 6
+BIC: POFICHBEXXX 
+
+lautend auf: 
+
+Project R Genossenschaft
+Sihlhallenstrasse 1
+8004 Zürich 
+
+Bitte vergessen Sie nicht, {{HRID}} in das Feld «Betreff» des Einzahlungsscheins
+zu schreiben, sonst funktioniert die Zuordnung nicht. Danke!
+
+{{/if}} {{#if waiting_for_payment}}
+Da der Gesamtbetrag Ihrer Bestellung die magische Grenze von CHF 1000.–
+übersteigt, erhalten Sie die Gutscheincodes erst nach Zahlungseingang.
+
+{{/if}} Vielen Dank!
+Und viel Freude beim Verschenken der Republik. 
+
+Ihre Crew der Republik
+
+Die Republik ist ein unabhängiges und werbefreies digitales Magazin für Politik,
+Wirtschaft, Gesellschaft und Kultur. Es wird von seinen Leserinnen und Lesern
+finanziert und erscheint von Montag bis Samstag mit täglich ein bis drei neuen
+Beiträgen. In der App, auf der Website und als Newsletter.
+
+
+Republik AG
+Sihlhallenstrasse 1, CH-8004 Zürich
+www.republik.ch [{{frontend_base_url}}]
+kontakt@republik.ch 
+
+Unser Manifest [{{link_manifest}}]
+Das Impressum [{{link_imprint}}]
+Häufig gestellte Fragen [{{link_faq}}]
