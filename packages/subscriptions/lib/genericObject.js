@@ -1,3 +1,5 @@
+const { getParsedDocumentId } = require('../../search/lib/Documents')
+
 const getObjectByIdAndType = ({ id, type }, { loaders, t }) => {
   const normalize = obj => {
     if (!obj) {
@@ -13,7 +15,8 @@ const getObjectByIdAndType = ({ id, type }, { loaders, t }) => {
       .then(normalize)
   }
   if (type === 'Document') {
-    return loaders.Document.byRepoId.load(id)
+    const { repoId } = getParsedDocumentId(id)
+    return loaders.Document.byRepoId.load(repoId)
       .then(normalize)
   }
   throw new Error(t('api/subscriptions/type/notSupported'))
