@@ -10,7 +10,7 @@ const findAvailable = async (pgdb) => {
   const campaigns = await pgdb.public.accessCampaigns.find({
     'beginAt <=': now,
     'endAt >': now
-  })
+  }, { orderBy: { beginAt: 'desc' } })
 
   return campaigns
 }
@@ -19,7 +19,7 @@ const findAll = async (pgdb) => {
   debug('findAll')
   const campaigns = await pgdb.public.accessCampaigns.find({
     'beginAt <=': moment()
-  })
+  }, { orderBy: { beginAt: 'desc' } })
 
   return campaigns
 }
