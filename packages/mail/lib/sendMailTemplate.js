@@ -27,16 +27,19 @@ const {
   ASSETS_SERVER_BASE_URL
 } = process.env
 
-const getTemplate = (name) => {
-  const templatePath = path.resolve(`${__dirname}/../templates/${name}.html`)
+const getTemplates = (name) => {
+  const htmlPath = path.resolve(`${__dirname}/../templates/${name}.html`)
+  const textPath = path.resolve(`${__dirname}/../templates/${name}.txt`)
 
-  if (!fs.existsSync(templatePath)) {
-    debug(`template "${name}" not found in templates folder`, { templatePath })
+  if (!fs.existsSync(htmlPath)) {
+    debug(`template "${name}" not found in templates folder`, { htmlPath })
     return false
   }
 
-  const contents = fs.readFileSync(templatePath, 'utf8')
-  return contents
+  return {
+    html: fs.readFileSync(htmlPath, 'utf8'),
+    text: (fs.existsSync(textPath) && fs.readFileSync(textPath, 'utf8')) || null
+  }
 }
 
 const envMergeVars = [
@@ -210,7 +213,7 @@ module.exports = async (mail, context, log) => {
     subject: mail.subject,
     from_email: mail.fromEmail || DEFAULT_MAIL_FROM_ADDRESS,
     from_name: mail.fromName || DEFAULT_MAIL_FROM_NAME,
-    html: getTemplate(mail.templateName),
+    ...getTemplates(mail.templateName),
     merge_language: mail.mergeLanguage || 'handlebars',
     global_merge_vars: mergeVars,
     auto_text: true,
@@ -253,5 +256,5 @@ module.exports = async (mail, context, log) => {
   })
 }
 
-module.exports.getTemplate = getTemplate
+module.exports.getTemplates = getTemplates
 module.exports.envMergeVars = envMergeVars
