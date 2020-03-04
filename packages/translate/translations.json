@@ -535,6 +535,10 @@
       "value": "Ihre verschenkten Mitgliedschaften"
     },
     {
+      "key": "api/email/membership_giver_claim_notice/subject",
+      "value": "Geschenk-Mitgliedschaft von {recipientName} eingelöst"
+    },
+    {
       "key": "api/email/membership_winback_NO_TIME/subject",
       "value": "Das Beste der Republik"
     },
@@ -1047,8 +1051,16 @@
       "value": "Einladung von {granterName}"
     },
     {
+      "key": "api/access/email/recipient/invitation_gifted_membership/subject",
+      "value": "Ihre Geschenk-Mitgliedschaft"
+    },
+    {
       "key": "api/access/email/recipient/onboarding/subject",
       "value": "Ihr Republik-Testzugang: Willkommen!"
+    },
+    {
+      "key": "api/access/email/recipient/onboarding_gifted_membership/subject",
+      "value": "Willkommen an Bord"
     },
     {
       "key": "api/access/email/recipient/expired/subject",
@@ -1057,6 +1069,14 @@
     {
       "key": "api/access/email/recipient/followup/subject",
       "value": "Zeit für eine Entscheidung"
+    },
+    {
+      "key": "api/access/email/granter/claim_notice/subject",
+      "value": "Republik-Testzugang von {recipientName} aktiviert"
+    },
+    {
+      "key": "api/access/email/granter/claim_notice_gifted_membership/subject",
+      "value": "Geschenk-Mitgliedschaft von {recipientName} eingelöst"
     },
     {
       "key": "api/access/grant/email/error",
@@ -1113,6 +1133,30 @@
     {
       "key": "api/access/constraint/granterBlacklist/error",
       "value": "Sie können derzeit keinen Zugriff teilen, da Ihr Konto auf einer schwarzen Liste aufgeführt ist."
+    },
+    {
+      "key": "api/access/constraint/requireGiftableMembership/error",
+      "value": "Sie können derzeit keine Mitgliedschaft mehr vergeben, da das Kontingent ausgeschöpft ist."
+    },
+    {
+      "key": "api/access/constraint/requireEmail/error",
+      "value": "Sie müssen zwingend eine gültige Empfänger-E-Mail-Adresse angeben."
+    },
+    {
+      "key": "api/access/perk/giftMembership/hasActiveMembership/error",
+      "value": "Sie haben bereits eine aktive Mitgliedschaft und können deshalb diesen Code nicht einlösen."
+    },
+    {
+      "key": "api/access/perk/giftMembership/noGiftableMemberships/error",
+      "value": "Derzeit stehen keine Mitgliedschaften zur Verfügung. Versuchen Sie es später erneut."
+    },
+    {
+      "key": "api/access/perk/giftMembership/grantRevoked/error",
+      "value": "Ihr Gutscheincode ist leider ungültig. Da hat sich vielleicht ein Vertipper eingeschlichen, oder der Gutscheincode ist bereits abgelaufen."
+    },
+    {
+      "key": "api/access/perk/giftMembership/selfClaim/error",
+      "value": "Sie können diese Mitgliedschaft nicht auf Ihr eigenes Konto einlösen."
     },
     {
       "key": "api/access/resolvers/AccessGrant/status/invalidated",
@@ -1685,6 +1729,30 @@
     {
       "key": "api/email/membership_owner_autopay_failed_4/subject",
       "value": "Jahresbeitrag: Automatische Abbuchung nicht möglich"
+    },
+    {
+      "key": "api/payment/invoice/item/package/DONATE_POT",
+      "value": "Wachstums-Spende"
+    },
+    {
+      "key": "api/email/pledge_donate_pot/subject",
+      "value": "Vielen Dank, dass Sie uns Wachstum spenden."
+    },
+    {
+      "key": "api/email/payment_successful_donate_pot/subject",
+      "value": "Vielen Dank! Wir haben Ihre Zahlung erhalten."
+    },
+    {
+      "key": "api/email/access_granter_claim_notice/subject",
+      "value": "Die von Ihnen finanzierte Mitgliedschaft wurde soeben eingelöst."
+    },
+    {
+      "key": "api/email/access_recipient_invitation_gifted_membership/subject",
+      "value": "Glückwunsch: eine Jahresmitgliedschaft liegt für Sie bereit."
+    },
+    {
+      "key": "api/email/access_recipient_onboarding_gifted_membership/subject",
+      "value": "Willkommen bei der Republik"
     }
   ]
 }

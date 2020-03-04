@@ -38,7 +38,7 @@ module.exports = async (_, args, context) => {
   const now = new Date()
   const transaction = externalTransaction || await pgdb.transactionBegin()
   try {
-    const pledge = await transaction.public.pledges.findOne({id: pledgeId})
+    const pledge = await transaction.public.pledges.findOne({ id: pledgeId })
     if (!pledge) {
       logger.error('pledge not found', { req: req._log(), pledgeId })
       throw new Error(t('api/pledge/404'))
@@ -63,7 +63,7 @@ module.exports = async (_, args, context) => {
         throw new Error(t('api/pledge/cancel/tooLate', { maxDays }))
       }
 
-      await transaction.public.pledges.updateOne({id: pledgeId}, {
+      await transaction.public.pledges.updateOne({ id: pledgeId }, {
         status: 'CANCELLED',
         updatedAt: now
       })
@@ -86,7 +86,7 @@ module.exports = async (_, args, context) => {
       pledgeId
     })
 
-    for (let payment of payments) {
+    for (const payment of payments) {
       let newStatus
       switch (payment.status) {
         case 'WAITING':
@@ -116,6 +116,11 @@ module.exports = async (_, args, context) => {
       evaluatePledges,
       async ({ _raw: { id }, periods: evaluatedPeriods }) => {
         await updateMembershipPeriods({ evaluatedPeriods }, { pgdb: transaction })
+
+        // Delete membership if there are no periods
+        if (evaluatedPeriods.length === 0) {
+          return transaction.public.memberships.deleteOne({ id })
+        }
 
         // determine endDate
         const inPast = !!(await transaction.queryOneField(`
@@ -162,5 +167,5 @@ module.exports = async (_, args, context) => {
     throw e
   }
 
-  return pgdb.public.pledges.findOne({id: pledgeId})
+  return pgdb.public.pledges.findOne({ id: pledgeId })
 }

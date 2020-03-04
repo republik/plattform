@@ -148,10 +148,11 @@ module.exports = async (pledgeId, pgdb, t, req, redis) => {
             pledgeId: pledge.id,
             membershipTypeId: membershipType.id,
             reducedPrice,
-            voucherable: !reducedPrice,
+            voucherable: !reducedPrice && !plo.packageOption.accessGranted,
             active: false,
             renew: false,
             autoPay: plo.autoPay || false,
+            accessGranted: plo.packageOption.accessGranted || false,
             initialInterval: membershipType.interval,
             initialPeriods: plo.periods,
             createdAt: now,
@@ -162,7 +163,8 @@ module.exports = async (pledgeId, pgdb, t, req, redis) => {
             c === 0 &&
             !membershipPeriod &&
             !userHasActiveMembership &&
-            pkg.isAutoActivateUserMembership
+            pkg.isAutoActivateUserMembership &&
+            !plo.packageOption.accessGranted
           ) {
             membershipPeriod = {
               pledgeOptionId: plo.id,
@@ -194,7 +196,9 @@ module.exports = async (pledgeId, pgdb, t, req, redis) => {
   debug('generateMemberships membershipPeriod %O', membershipPeriod)
   debug('generateMemberships memberships %O', memberships)
 
-  await pgdb.public.memberships.insert(memberships)
+  if (memberships.length) {
+    await pgdb.public.memberships.insert(memberships)
+  }
 
   if (cancelableMemberships.length > 0 && req) {
     debug(

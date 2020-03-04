@@ -106,6 +106,12 @@ const bootstrapEnv = () => {
   if (!process.env.DEFAULT_MAIL_FROM_NAME) {
     process.env.DEFAULT_MAIL_FROM_NAME = 'Test'
   }
+  if (!process.env.ASSETS_SERVER_BASE_URL) {
+    process.env.ASSETS_SERVER_BASE_URL = 'http://localhost:5020'
+  }
+  if (!process.env.FRONTEND_BASE_URL) {
+    process.env.FRONTEND_BASE_URL = 'http://localhost:3000'
+  }
 }
 
 module.exports = {

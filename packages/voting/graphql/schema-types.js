@@ -209,7 +209,12 @@ type Questionnaire {
   allowedMemberships: [VotingMembershipRequirement!]
   allowedRoles: [String!]
 
-  questions(orderFilter: [Int!]): [QuestionInterface!]!
+  questions(
+    "select questions by order field"
+    orderFilter: [Int!]
+    "shuffle and limit the result to the specified count"
+    shuffle: Int
+  ): [QuestionInterface!]!
 
   turnout: QuestionnaireTurnout
 }
@@ -224,6 +229,7 @@ interface QuestionInterface {
   questionnaire: Questionnaire!
   order: Int!
   text: String
+  metadata: JSON
   userAnswer: Answer
   turnout: QuestionTurnout!
 }
@@ -238,6 +244,7 @@ type QuestionTypeText implements QuestionInterface {
   questionnaire: Questionnaire!
   order: Int!
   text: String
+  metadata: JSON
   userAnswer: Answer
   turnout: QuestionTurnout!
 
@@ -249,6 +256,7 @@ type QuestionTypeDocument implements QuestionInterface {
   questionnaire: Questionnaire!
   order: Int!
   text: String
+  metadata: JSON
   userAnswer: Answer
   turnout: QuestionTurnout!
 
@@ -271,6 +279,7 @@ type QuestionTypeRange implements QuestionInterface {
   questionnaire: Questionnaire!
   order: Int!
   text: String
+  metadata: JSON
   userAnswer: Answer
   turnout: QuestionTurnout!
 
@@ -301,6 +310,7 @@ type QuestionTypeChoice implements QuestionInterface {
   questionnaire: Questionnaire!
   order: Int!
   text: String
+  metadata: JSON
   userAnswer: Answer
   turnout: QuestionTurnout!
 
