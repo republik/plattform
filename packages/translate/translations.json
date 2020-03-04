@@ -536,7 +536,7 @@
     },
     {
       "key": "api/email/membership_giver_claim_notice/subject",
-      "value": "Geschenk-Mitgliedschaft von {recipientName} eingelöst"
+      "value": "Geschenk von {recipientName} eingelöst"
     },
     {
       "key": "api/email/membership_winback_NO_TIME/subject",
