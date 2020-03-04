@@ -1,10 +1,16 @@
 const { PgDb } = require('pogi')
-const {timeParse} = require('d3-time-format')
+const { timeParse } = require('d3-time-format')
 
 const parser = timeParse('%Y-%m-%d %H %Z')
 
-const connect = () =>
-  PgDb.connect({ connectionString: process.env.DATABASE_URL })
+const connect = ({ applicationName = 'backends' } = {}) => {
+  const { DATABASE_URL, DATABSE_MAX_CONNECTIONS = null } = process.env
+
+  return PgDb.connect({
+    application_name: applicationName,
+    connectionString: DATABASE_URL,
+    max: DATABSE_MAX_CONNECTIONS
+  })
     .then(async (pgdb) => {
       // custom date parser
       // parse db dates as 12:00 Zulu
@@ -17,6 +23,7 @@ const connect = () =>
 
       return pgdb
     })
+}
 
 const disconnect = pgdb =>
   pgdb.close()

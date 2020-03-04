@@ -17,7 +17,7 @@ module.exports = async ({
   inserts: doInserts = true,
   flush: doFlush = false
 }) => {
-  const pgdb = await PgDb.connect()
+  const pgdb = await PgDb.connect({ applicationName: 'backends search pullElasticsearch' })
   const elastic = Elasticsearch.connect()
   const redis = Redis.connect()
 

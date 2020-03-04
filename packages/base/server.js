@@ -6,11 +6,6 @@ const compression = require('compression')
 const timeout = require('connect-timeout')
 const helmet = require('helmet')
 
-const PgDb = require('./lib/PgDb')
-const Redis = require('./lib/Redis')
-const RedisPubSub = require('./lib/RedisPubSub')
-const Elasticsearch = require('./lib/Elasticsearch')
-
 const graphql = require('./express/graphql')
 const graphiql = require('./express/graphiql')
 
@@ -41,9 +36,12 @@ const start = async (
   graphqlSchema,
   middlewares,
   t,
-  _createGraphqlContext = identity => identity,
+  connectionContext,
+  createGraphqlContext = identity => identity,
   workerId
 ) => {
+  const { pgdb, redis } = connectionContext
+
   const server = express()
   const httpServer = createServer(server)
 
@@ -99,12 +97,6 @@ const start = async (
     server.use('*', cors(corsOptions))
   }
 
-  // connect to dbs
-  const pgdb = await PgDb.connect()
-  const redis = Redis.connect()
-  const pubsub = RedisPubSub.connect()
-  const elasticsearch = Elasticsearch.connect()
-
   // Once DB is available, setup sessions and routes for authentication
   const auth = Auth.configure({
     server,
@@ -113,14 +105,6 @@ const start = async (
     cookieName: COOKIE_NAME,
     dev: DEV,
     pgdb
-  })
-
-  const createGraphqlContext = (context) => _createGraphqlContext({
-    ...context,
-    pgdb,
-    redis,
-    pubsub,
-    elastic: elasticsearch
   })
 
   graphql(
@@ -133,7 +117,7 @@ const start = async (
 
   graphiql(server)
 
-  for (let middleware of middlewares) {
+  for (const middleware of middlewares) {
     await middleware(server, pgdb, t, redis)
   }
 
@@ -143,19 +127,11 @@ const start = async (
       console.log('server already closed')
       return
     }
+
     closed = true
 
     httpServer.close()
-
-    await auth.close()
-
-    // disconnect dbs
-    await Promise.all([
-      PgDb.disconnect(pgdb),
-      Redis.disconnect(redis),
-      RedisPubSub.disconnect(pubsub),
-      Elasticsearch.disconnect(elasticsearch)
-    ])
+    auth.close()
   }
 
   const result = {

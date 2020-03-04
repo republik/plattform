@@ -1,9 +1,5 @@
 const debug = require('debug')('publikator:lib:scheduler')
 const Promise = require('bluebird')
-
-const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
-const Redis = require('@orbiting/backend-modules-base/lib/Redis')
-const Elastic = require('@orbiting/backend-modules-base/lib/Elasticsearch')
 const {
   intervalScheduler
 } = require('@orbiting/backend-modules-schedulers')
@@ -45,24 +41,14 @@ const getScheduledDocuments = async (elastic) => {
   return response.hits.hits.map(hit => hit._source)
 }
 
-const init = async (_context) => {
+const init = async (context) => {
   debug('init')
-
-  const pgdb = await PgDb.connect()
-  const redis = Redis.connect()
-  const elastic = Elastic.connect()
-  const context = {
-    ..._context,
-    pgdb,
-    redis,
-    elastic
-  }
 
   const scheduler = await intervalScheduler.init({
     name: 'publication',
     context,
     runFunc: async (args, context) => {
-      const { elastic } = context
+      const { pgdb, redis, elastic } = context
 
       const docs = await getScheduledDocuments(elastic)
 
@@ -140,10 +126,6 @@ const init = async (_context) => {
 
   const close = async () => {
     await scheduler.close()
-    await Promise.all([
-      PgDb.disconnect(pgdb),
-      Redis.disconnect(redis)
-    ])
   }
 
   return {

@@ -1,4 +1,7 @@
-const { server: Server } = require('@orbiting/backend-modules-base')
+const {
+  server: Server,
+  lib: { PgDb, Redis, RedisPubSub, Elasticsearch }
+} = require('@orbiting/backend-modules-base')
 const { merge } = require('apollo-modules-node')
 const { t } = require('@orbiting/backend-modules-translate')
 
@@ -22,7 +25,9 @@ const cluster = require('cluster')
 const {
   LOCAL_ASSETS_SERVER,
   NODE_ENV,
-  PUBLICATION_SCHEDULER
+  PUBLICATION_SCHEDULER,
+  SERVER = 'publikator',
+  DYNO
 } = process.env
 
 const DEV = NODE_ENV && NODE_ENV !== 'production'
@@ -56,10 +61,28 @@ const run = async (workerId, config) => {
     ]
   )
 
+  const applicationName = [
+    'backends',
+    SERVER,
+    DYNO,
+    'worker',
+    workerId && `workerId:${workerId}`
+  ]
+    .filter(Boolean)
+    .join(' ')
+
+  const connectionContext = {
+    pgdb: await PgDb.connect({ applicationName }),
+    redis: Redis.connect(),
+    pubsub: RedisPubSub.connect(),
+    elastic: Elasticsearch.connect()
+  }
+
   const createGraphQLContext = (defaultContext) => {
     const loaders = {}
     const context = {
       ...defaultContext,
+      ...connectionContext,
       t,
       loaders
     }
@@ -84,6 +107,7 @@ const run = async (workerId, config) => {
     graphqlSchema,
     middlewares,
     t,
+    connectionContext,
     createGraphQLContext,
     workerId,
     config
@@ -107,13 +131,30 @@ const runOnce = async (...args) => {
     throw new Error('runOnce must only be called on cluster.isMaster')
   }
 
+  const applicationName = [
+    'backends',
+    SERVER,
+    DYNO,
+    'master'
+  ]
+    .filter(Boolean)
+    .join(' ')
+
+  const context = {
+    pgdb: await PgDb.connect({ applicationName }),
+    redis: Redis.connect(),
+    pubsub: RedisPubSub.connect(),
+    elastic: Elasticsearch.connect(),
+    t
+  }
+
   let publicationScheduler
   if (PUBLICATION_SCHEDULER === 'false' || (DEV && PUBLICATION_SCHEDULER !== 'true')) {
     console.log('PUBLICATION_SCHEDULER prevented scheduler from begin started',
       { PUBLICATION_SCHEDULER, DEV }
     )
   } else {
-    publicationScheduler = await PublicationScheduler.init()
+    publicationScheduler = await PublicationScheduler.init(context)
       .catch(error => {
         console.log(error)
         throw new Error(error)
