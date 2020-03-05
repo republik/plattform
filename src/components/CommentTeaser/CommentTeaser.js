@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react'
-import { css } from 'glamor'
+import { css, merge } from 'glamor'
 import get from 'lodash/get'
 
 import NewPage from 'react-icons/lib/md/open-in-new'
@@ -24,6 +24,11 @@ const styles = {
     borderTop: `1px solid ${colors.text}`,
     margin: '0 0 40px 0',
     paddingTop: 10
+  }),
+  rootFocus: css({
+    backgroundColor: colors.primaryBg,
+    paddingBottom: 40,
+    marginBottom: 0
   }),
   header: css({
     marginBottom: 10
@@ -83,6 +88,7 @@ export const CommentTeaser = ({
   Link = DefaultLink,
   onClick,
   newPage,
+  focus,
   ...comment
 }) => {
   const {
@@ -126,7 +132,7 @@ export const CommentTeaser = ({
 
   return (
     <DiscussionContext.Provider value={discussionContextValue}>
-      <div id={id} {...styles.root}>
+      <div id={id} {...merge(styles.root, focus && styles.rootFocus)}>
         {displayAuthor && (
           <div {...styles.header}>
             <Header t={t} comment={{ id, displayAuthor, createdAt }} />

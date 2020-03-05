@@ -11,6 +11,7 @@ Props:
 - `createdAt`: The comment's creation timestamp.
 - `timeago`: A function that renders a human-readable version of `createdAt`.
 - `newPage`: Whether to display a "new page" icon.
+- `focus`: Adds a background to the teaser
 - `Link`: A Next.js like `<Link />` component, receiving these props:
   - `commentId`: string
   - `displayAuthor`: object
@@ -145,6 +146,28 @@ Props:
   }}
   preview={{
     string: "FrankensteinSuperLangesMonsterWortOverflowVerhinderungsStrategieFrankensteinSuperLangesMonsterWortOverflowVerhinderungsStrategie ist word-wrap: break-word."
+  }}
+  parentIds={["somecommentid"]}
+  timeago={isoString => 'gerade eben'}
+  discussion={{
+    title: "Der Crowdfunding-Code gegen die Frankenstein-Monster-Strategie"
+  }}
+  t={t}
+/>
+```
+
+```react|noSource,span-3
+<CommentTeaser
+  focus={true}
+  id="X"
+  createdAt="2019-01-01"
+  displayAuthor={{
+    profilePicture: '/static/profilePicture1.png',
+    name: 'Christof Moser',
+    credential: {description: 'Journalist', verified: true}
+  }}
+  preview={{
+    string: "Die Zeitungskäufe von Christoph Blocher, die Selbstideologisierung der NZZ, die <em>Frankenstein</em>-Monster-Strategie der Tamedia."
   }}
   parentIds={["somecommentid"]}
   timeago={isoString => 'gerade eben'}
