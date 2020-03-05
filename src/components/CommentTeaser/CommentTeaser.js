@@ -89,6 +89,7 @@ export const CommentTeaser = ({
   onClick,
   newPage,
   focus,
+  menu,
   ...comment
 }) => {
   const {
@@ -135,7 +136,11 @@ export const CommentTeaser = ({
       <div id={id} {...merge(styles.root, focus && styles.rootFocus)}>
         {displayAuthor && (
           <div {...styles.header}>
-            <Header t={t} comment={{ id, displayAuthor, createdAt }} />
+            <Header
+              t={t}
+              comment={{ id, displayAuthor, createdAt }}
+              menu={menu}
+            />
           </div>
         )}
         {tag && (

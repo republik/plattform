@@ -1,6 +1,7 @@
 import React from 'react'
 import { css } from 'glamor'
 import MdCheck from 'react-icons/lib/md/check'
+import MoreIcon from 'react-icons/lib/md/more-vert'
 import colors from '../../../../theme/colors'
 import {
   sansSerifMedium16,
@@ -14,6 +15,7 @@ import { timeFormat } from '../../../../lib/timeFormat'
 import { DiscussionContext, formatTimeRelative } from '../../DiscussionContext'
 import * as config from '../../config'
 import { convertStyleToRem, pxToRem } from '../../../Typography/utils'
+import Callout from '../../../Callout'
 
 export const profilePictureSize = 40
 export const profilePictureMargin = 10
@@ -160,13 +162,37 @@ const styles = {
     [onlyS]: {
       display: 'none'
     }
+  }),
+  menu: css({
+    position: 'relative',
+    marginRight: 10,
+    cursor: 'pointer'
   })
 }
 
 const dateTimeFormat = timeFormat('%d. %B %Y %H:%M')
 const titleDate = string => dateTimeFormat(new Date(string))
 
-export const Header = ({ t, comment, isExpanded, onToggle }) => {
+const Menu = ({ menu }) => {
+  const [showMenu, setMenu] = React.useState(false)
+
+  return menu ? (
+    <div {...styles.menu}>
+      <MoreIcon
+        width='calc(1em + 7px)'
+        onClick={e => {
+          e.stopPropagation()
+          setMenu(!showMenu)
+        }}
+      />
+      <Callout expanded={showMenu} setExpanded={setMenu}>
+        {menu}
+      </Callout>
+    </div>
+  ) : null
+}
+
+export const Header = ({ t, comment, menu, isExpanded, onToggle }) => {
   const { clock, discussion, Link } = React.useContext(DiscussionContext)
 
   const {
@@ -267,6 +293,7 @@ export const Header = ({ t, comment, isExpanded, onToggle }) => {
           {isExpanded ? <IcCollapse /> : <IcExpand />}
         </button>
       )}
+      <Menu menu={menu} />
     </div>
   )
 }

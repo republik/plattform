@@ -67,7 +67,16 @@ const styles = {
   })
 }
 
-const Callout = ({ expanded, children }) => {
+const Callout = ({ expanded, setExpanded, children }) => {
+  const handleClick = () => setExpanded(false)
+
+  React.useEffect(() => {
+    window.addEventListener('click', handleClick)
+    return () => {
+      window.removeEventListener('click', handleClick)
+    }
+  }, [])
+
   return expanded ? (
     <div {...styles.calloutContainer}>
       <div {...styles.callout} onClick={e => e.stopPropagation()}>
