@@ -35,9 +35,12 @@
                 <tr>
                   <td style="padding:20px;">
                     <p>Guten Tag</p>
-                    <p>Heute ist es so weit!</p>
-                    <p>Die von Ihnen finanzierte Geschenk-Mitgliedschaft wurde soeben eingelöst. Dank Ihnen ist <strong>{{recipient_name}}</strong> nun ein Jahr lang Mitglied bei der Project R Genossenschaft und hat damit Zugang zur Republik.</p>
-                    <p>Im Namen der Republik und der Beschenkten möchten wir Ihnen nochmals herzlich danken.</p>
+                    {{#if `membership_type_interval == "month"`}}
+                      <p>Das von Ihnen finanzierte Monats-Abo als Geschenk wurde soeben eingelöst: Dank Ihnen hat <strong>{{recipient_name}}</strong> Zugang zur Republik.</p>
+                    {{else}}
+                      <p>Die von Ihnen finanzierte Mitgliedschaft als Geschenk wurde soeben eingelöst: Dank Ihnen ist <strong>{{recipient_name}}</strong> nun ein Mitglied bei der Project R Genossenschaft und hat Zugang zur Republik.</p>
+                    {{/if}}
+                    <p>Herzlich</p>
                     <p>Ihre Crew der Republik</p>
                   </td>
                 </tr>
