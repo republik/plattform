@@ -1,13 +1,14 @@
 Guten Tag
 
-Heute ist es so weit!
+{{#if `membership_type_interval == "month"`}} Das von Ihnen finanzierte
+Monats-Abo als Geschenk wurde soeben eingelöst: Dank Ihnen hat 
+{{recipient_name}} Zugang zur Republik.
 
-Die von Ihnen finanzierte Geschenk-Mitgliedschaft wurde soeben eingelöst. Dank
-Ihnen ist {{recipient_name}} nun ein Jahr lang Mitglied bei der Project R
-Genossenschaft und hat damit Zugang zur Republik.
+{{else}} Die von Ihnen finanzierte Mitgliedschaft als Geschenk wurde soeben
+eingelöst: Dank Ihnen ist {{recipient_name}} nun ein Mitglied bei der Project R
+Genossenschaft und hat Zugang zur Republik.
 
-Im Namen der Republik und der Beschenkten möchten wir Ihnen nochmals herzlich
-danken.
+{{/if}} Herzlich
 
 Ihre Crew der Republik
 
