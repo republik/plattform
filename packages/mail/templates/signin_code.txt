@@ -3,7 +3,9 @@ Guten Tag
 Geben Sie zur Bestätigung Ihres Logins bitte folgende Ziffern auf der
 Republik-Website ein:
 
-{{code}} Die Bestätigungsziffern sind nur einmal gültig. Sie können die E-Mail
+{{code}}
+
+Die Bestätigungsziffern sind nur einmal gültig. Sie können die E-Mail
 anschliessend löschen.
 
 Wenn Sie diese E-Mail öfters unaufgefordert erhalten, wenden Sie sich bitte an 
