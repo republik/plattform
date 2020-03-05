@@ -37,6 +37,7 @@ export { default as globalMediaState } from './lib/globalMediaState'
 export { default as LazyLoad } from './components/LazyLoad'
 export { default as LazyImage } from './components/LazyLoad/Image'
 export { Collapsable } from './components/Collapsable'
+export { default as Callout } from './components/Callout'
 export { default as ColorContext } from './components/Colors/ColorContext'
 export { useColorContext } from './components/Colors/useColorContext'
 export {

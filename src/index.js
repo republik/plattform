@@ -216,6 +216,14 @@ ReactDOM.render(
                 ...require('./components/Collapsable')
               },
               src: require('./components/Collapsable/docs.md')
+            },
+            {
+              path: '/callout',
+              title: 'Callout',
+              imports: {
+                Callout: require('./components/Callout')
+              },
+              src: require('./components/Callout/docs.md')
             }
           ]
         },
