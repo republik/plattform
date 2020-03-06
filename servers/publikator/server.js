@@ -110,6 +110,7 @@ const run = async (workerId, config) => {
 
   const close = () => {
     return server.close()
+      .then(() => ConnectionContext.close(connectionContext))
   }
 
   process.once('SIGTERM', close)
