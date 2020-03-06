@@ -7,7 +7,7 @@ const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
 const Questionnaire = require('@orbiting/backend-modules-voting/lib/Questionnaire')
 const submitAnswer = require('@orbiting/backend-modules-voting/graphql/resolvers/_mutations/submitAnswer')
 const moment = require('moment')
-const uuid = require('uuid/v4')
+const { v4: uuid } = require('uuid')
 const { t } = require('@orbiting/backend-modules-translate')
 const { loaderBuilders } = require('../../../../servers/republik/server')
 

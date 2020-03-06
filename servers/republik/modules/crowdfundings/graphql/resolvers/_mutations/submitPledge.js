@@ -1,6 +1,6 @@
 const logger = console
 const postfinanceSHA = require('../../../lib/payments/postfinance/sha')
-const uuid = require('uuid/v4')
+const { v4: uuid } = require('uuid')
 const { minTotal, regularTotal, getPledgeOptionsTree } = require('../../../lib/Pledge')
 const { resolvePackages, getCustomOptions } = require('../../../lib/CustomPackages')
 const debug = require('debug')('crowdfundings:pledge')

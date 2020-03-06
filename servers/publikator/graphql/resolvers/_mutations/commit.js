@@ -18,11 +18,15 @@ const {
   getHeads,
   gitAuthor
 } = require('../../../lib/github')
-const { lib: { process: {
-  processRepoImageUrlsInContent,
-  processRepoImageUrlsInMeta,
-  processImageUrlsInContent
-} } } = require('@orbiting/backend-modules-documents')
+const {
+  lib: {
+    process: {
+      processRepoImageUrlsInContent,
+      processRepoImageUrlsInMeta,
+      processImageUrlsInContent
+    }
+  }
+} = require('@orbiting/backend-modules-documents')
 
 const extractImage = async (url, images) => {
   if (url) {
@@ -151,7 +155,7 @@ module.exports = async (_, args, context) => {
   let success = false
   let count = 20
   while (success === false) {
-    markdownBlob = await githubRest.gitdata.createBlob({
+    markdownBlob = await githubRest.git.createBlob({
       owner: login,
       repo: repoName,
       content: markdown,
@@ -176,7 +180,7 @@ module.exports = async (_, args, context) => {
 
   // images -> blobs
   await Promise.all(images.map(({ blob }) => {
-    return githubRest.gitdata.createBlob({
+    return githubRest.git.createBlob({
       owner: login,
       repo: repoName,
       content: blob.toString('base64'),
@@ -188,7 +192,7 @@ module.exports = async (_, args, context) => {
   let parentCommit
   if (parentId) { // otherwise initial commit
     // load base_tree
-    parentCommit = await githubRest.gitdata.getCommit({
+    parentCommit = await githubRest.git.getCommit({
       owner: login,
       repo: repoName,
       commit_sha: parentId
@@ -196,7 +200,7 @@ module.exports = async (_, args, context) => {
       .then(result => result.data)
   }
 
-  const tree = await githubRest.gitdata.createTree({
+  const tree = await githubRest.git.createTree({
     owner: login,
     repo: repoName,
     ...(parentCommit ? { base_tree: parentCommit.tree.sha } : {}),
@@ -218,7 +222,7 @@ module.exports = async (_, args, context) => {
   })
     .then(result => result.data)
 
-  const commit = await githubRest.gitdata.createCommit({
+  const commit = await githubRest.git.createCommit({
     owner: login,
     repo: repoName,
     message,
@@ -246,7 +250,7 @@ module.exports = async (_, args, context) => {
   let branch
   if (headParent) { // fast-forward
     branch = headParent.name
-    await githubRest.gitdata.updateRef({
+    await githubRest.git.updateRef({
       owner: login,
       repo: repoName,
       ref: 'heads/' + headParent.name,
@@ -259,7 +263,7 @@ module.exports = async (_, args, context) => {
         .replace(/\./g, '-')
         .toLowerCase()
     )
-    await githubRest.gitdata.createRef({
+    await githubRest.git.createRef({
       owner: login,
       repo: repoName,
       ref: `refs/heads/${branch}`,

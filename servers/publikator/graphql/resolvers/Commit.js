@@ -1,14 +1,20 @@
 const { createGithubClients } = require('../../lib/github')
 const MDAST = require('@orbiting/remark-preset')
-const { lib: {
-  createRepoUrlPrefixer,
-  createUrlPrefixer
-} } = require('@orbiting/backend-modules-assets')
-const { lib: { process: {
-  processRepoImageUrlsInContent,
-  processRepoImageUrlsInMeta,
-  processImageUrlsInContent
-} } } = require('@orbiting/backend-modules-documents')
+const {
+  lib: {
+    createRepoUrlPrefixer,
+    createUrlPrefixer
+  }
+} = require('@orbiting/backend-modules-assets')
+const {
+  lib: {
+    process: {
+      processRepoImageUrlsInContent,
+      processRepoImageUrlsInMeta,
+      processImageUrlsInContent
+    }
+  }
+} = require('@orbiting/backend-modules-documents')
 const debug = require('debug')('publikator:commit')
 
 module.exports = {
@@ -81,7 +87,7 @@ module.exports = {
 
       let blobResult, error
       try {
-        blobResult = await githubRest.gitdata.getBlob(blobParams)
+        blobResult = await githubRest.git.getBlob(blobParams)
       } catch (e) {
         error = e
         blobResult = null

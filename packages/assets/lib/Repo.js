@@ -1,6 +1,8 @@
-const { lib: {
-  clients: createGithubClients
-} } = require('@orbiting/backend-modules-github')
+const {
+  lib: {
+    clients: createGithubClients
+  }
+} = require('@orbiting/backend-modules-github')
 const {
   upload: uploadS3,
   getHead
@@ -39,7 +41,7 @@ const uploadImages = async (repoId, paths) => {
       let error
 
       try {
-        result = await githubRest.gitdata.getBlob({
+        result = await githubRest.git.getBlob({
           owner,
           repo,
           file_sha: blobSha

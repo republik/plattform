@@ -2,7 +2,7 @@ const { createApolloFetch } = require('apollo-fetch')
 const Bottleneck = require('bottleneck')
 const debug = require('debug')('github:clients')
 
-const GitHubApi = require('@octokit/rest')
+const { Octokit } = require('@octokit/rest')
 
 const appAuth = require('./appAuth')
 
@@ -118,7 +118,7 @@ module.exports = async () => {
     next()
   })
 
-  const githubRest = new GitHubApi({
+  const githubRest = new Octokit({
     previews: ['machine-man-preview', 'mercy-preview'],
     auth: installationToken.token
   })

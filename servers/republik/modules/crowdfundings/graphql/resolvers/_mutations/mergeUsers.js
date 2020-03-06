@@ -3,11 +3,13 @@ const { ascending } = require('d3-array')
 const { Roles } = require('@orbiting/backend-modules-auth')
 const uniq = require('lodash/uniq')
 const { transformUser } = require('@orbiting/backend-modules-auth')
-const { Redirections: {
-  upsert: upsertRedirection
-} } = require('@orbiting/backend-modules-redirections')
+const {
+  Redirections: {
+    upsert: upsertRedirection
+  }
+} = require('@orbiting/backend-modules-redirections')
 const { publishMonitor } = require('../../../../../lib/slack')
-const uuid = require('uuid/v4')
+const { v4: uuid } = require('uuid')
 
 module.exports = async (_, args, context) => {
   const { pgdb, req, t, mail: { moveNewsletterSubscriptions } } = context
@@ -154,8 +156,8 @@ module.exports = async (_, args, context) => {
       }
     }
 
-    let sessions = await transaction.public.sessions.find({ 'sess @>': { passport: { user: sourceUser.id } } })
-    for (let session of sessions) {
+    const sessions = await transaction.public.sessions.find({ 'sess @>': { passport: { user: sourceUser.id } } })
+    for (const session of sessions) {
       const sess = Object.assign({}, session.sess, {
         passport: { user: targetUser.id }
       })

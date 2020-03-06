@@ -2,7 +2,7 @@
   "name": "assets-backend",
   "version": "0.0.1",
   "engines": {
-    "node": "12.x"
+    "node": "13.x"
   },
   "private": true,
   "license": "AGPL-3.0",
@@ -18,6 +18,6 @@
     "start": "node index.js"
   },
   "devDependencies": {
-    "nodemon": "^1.19.0"
+    "nodemon": "^2.0.2"
   }
 }
