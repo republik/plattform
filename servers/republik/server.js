@@ -3,7 +3,7 @@ const cluster = require('cluster')
 
 const {
   server: Server,
-  lib: { PgDb, Redis, RedisPubSub, Elasticsearch }
+  lib: { ConnectionContext }
 } = require('@orbiting/backend-modules-base')
 const { NotifyListener: SearchNotifyListener } = require('@orbiting/backend-modules-search')
 const { t } = require('@orbiting/backend-modules-translate')
@@ -126,12 +126,7 @@ const run = async (workerId, config) => {
     .filter(Boolean)
     .join(' ')
 
-  const connectionContext = {
-    pgdb: await PgDb.connect({ applicationName }),
-    redis: Redis.connect(),
-    pubsub: RedisPubSub.connect(),
-    elastic: Elasticsearch.connect()
-  }
+  const connectionContext = await ConnectionContext.create(applicationName)
 
   const createGraphQLContext = (defaultContext) => {
     const loaders = {}
@@ -161,6 +156,7 @@ const run = async (workerId, config) => {
 
   const close = () => {
     return server.close()
+      .then(() => ConnectionContext.close(connectionContext))
   }
 
   process.once('SIGTERM', close)
@@ -187,10 +183,7 @@ const runOnce = async (...args) => {
     .join(' ')
 
   const context = {
-    pgdb: await PgDb.connect({ applicationName }),
-    redis: Redis.connect(),
-    pubsub: RedisPubSub.connect(),
-    elastic: Elasticsearch.connect(),
+    ...await ConnectionContext.create(applicationName),
     t,
     mail
   }
@@ -230,11 +223,14 @@ const runOnce = async (...args) => {
   }
 
   const close = async () => {
-    slackGreeter && await slackGreeter.close()
-    searchNotifyListener && await searchNotifyListener.close()
-    accessScheduler && await accessScheduler.close()
-    previewScheduler && await previewScheduler.close()
-    membershipScheduler && await membershipScheduler.close()
+    await Promise.all([
+      slackGreeter && slackGreeter.close(),
+      searchNotifyListener && searchNotifyListener.close(),
+      accessScheduler && accessScheduler.close(),
+      previewScheduler && previewScheduler.close(),
+      membershipScheduler && membershipScheduler.close()
+    ].filter(Boolean))
+    await ConnectionContext.close(context)
   }
 
   process.once('SIGTERM', close)
