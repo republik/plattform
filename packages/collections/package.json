@@ -20,6 +20,6 @@
     "link": "yarn link"
   },
   "dependencies": {
-    "dataloader": "^1.4.0"
+    "dataloader": "^2.0.0"
   }
 }

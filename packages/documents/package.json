@@ -20,7 +20,7 @@
     "link": "yarn link"
   },
   "dependencies": {
-    "@project-r/styleguide": "^8.12.0",
+    "@project-r/styleguide": "^9.5.4",
     "@project-r/template-newsletter": "^1.5.0",
     "apollo-modules-node": "^0.1.4",
     "check-env": "^1.3.0",

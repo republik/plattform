@@ -29,7 +29,7 @@
     "leaked-handles": "^5.2.0",
     "lodash": "^4.17.5",
     "mdast-util-to-string": "^1.0.4",
-    "redis": "^2.8.0",
+    "redis": "^3.0.2",
     "redlock": "^4.1.0",
     "rw": "^1.3.3",
     "sharp": "^0.24.1",
@@ -39,7 +39,7 @@
     "supervillains": "^3.0.0",
     "throng": "^4.0.0",
     "unist-util-visit": "^2.0.0",
-    "yargs": "^14.2.0"
+    "yargs": "^15.1.0"
   },
   "scripts": {
     "dev": "NODE_ENV=development nodemon $NODE_DEBUG_OPTION -w ../../packages -w graphql -w lib -w express -w .env -w package.json -w ../yarn.lock -w server.js -w index.js index.js",
@@ -48,7 +48,7 @@
   },
   "devDependencies": {
     "gsheets": "^2.0.0",
-    "nodemon": "^1.19.0",
+    "nodemon": "^2.0.2",
     "ws": "^7.0.0"
   }
 }

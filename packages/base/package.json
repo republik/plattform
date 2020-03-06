@@ -38,6 +38,6 @@
     "graphql-redis-subscriptions": "^2.1.0",
     "helmet": "^3.13.0",
     "pogi": "^2.5.8",
-    "redis": "^2.8.0"
+    "redis": "^3.0.2"
   }
 }

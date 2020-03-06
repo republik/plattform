@@ -7,7 +7,7 @@
   "private": true,
   "license": "AGPL-3.0",
   "dependencies": {
-    "@project-r/styleguide": "^8.12.0",
+    "@project-r/styleguide": "^9.5.4",
     "apollo-modules-node": "^0.1.4",
     "d3-array": "^2.0.3",
     "d3-dsv": "^1.0.8",
@@ -30,7 +30,7 @@
     "throng": "^4.0.0",
     "unified": "^8.4.1",
     "uuid": "^7.0.2",
-    "yargs": "^14.2.0"
+    "yargs": "^15.1.0"
   },
   "scripts": {
     "dev": "NODE_ENV=development nodemon $NODE_DEBUG_OPTION -w ../../packages -w express -w graphql -w lib -w modules -w .env -w package.json -w ../yarn.lock -w server.js -w index.js index.js",
@@ -43,7 +43,7 @@
   "devDependencies": {
     "apollo-fetch": "^0.7.0",
     "istanbul": "^1.1.0-alpha.1",
-    "nodemon": "^1.19.0",
+    "nodemon": "^2.0.2",
     "snoowrap": "^1.15.2",
     "tap-diff": "^0.1.1",
     "zero-fill": "^2.2.3"
