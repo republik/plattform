@@ -1,6 +1,6 @@
 const debug = require('debug')('crowdfundings:lib:CustomPackages')
 const moment = require('moment')
-const uuid = require('uuid/v4')
+const { v4: uuid } = require('uuid')
 const Promise = require('bluebird')
 const { ascending, descending } = require('d3-array')
 

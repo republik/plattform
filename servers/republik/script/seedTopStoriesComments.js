@@ -15,7 +15,7 @@ const loaderBuilders = {
   ...require('@orbiting/backend-modules-documents/loaders'),
   ...require('@orbiting/backend-modules-embeds/loaders')
 }
-const uuid = require('uuid/v4')
+const { v4: uuid } = require('uuid')
 
 const submitComment = require('../../../packages/discussions/graphql/resolvers/_mutations/submitComment')
 

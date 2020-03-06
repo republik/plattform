@@ -27,7 +27,7 @@ const {
 const { transformUser } = require('@orbiting/backend-modules-auth')
 
 const _ = require('lodash')
-const uuid = require('uuid/v4')
+const { v4: uuid } = require('uuid')
 
 const indices = require('../../../lib/indices')
 const { getIndexAlias, getDateIndex } = require('../../../lib/utils')
