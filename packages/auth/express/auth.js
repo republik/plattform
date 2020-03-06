@@ -37,13 +37,16 @@ exports.configure = ({
 
   basicAuthMiddleware(server)
 
+  // Sessions store for express-session
+  const store = new PgSession({
+    tableName: 'sessions',
+    pool: pgdb.pool
+  })
+
   // Configure sessions
   server.use(session({
     secret,
-    store: new PgSession({
-      tableName: 'sessions',
-      pool: pgdb.pool
-    }),
+    store,
     resave: false,
     rolling: true,
     saveUninitialized: false,
@@ -90,7 +93,9 @@ exports.configure = ({
     return next()
   })
 
-  const close = () => {}
+  const close = () => {
+    return store.close()
+  }
 
   return {
     close

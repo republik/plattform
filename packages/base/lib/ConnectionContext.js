@@ -18,6 +18,7 @@ const close = ({ pgdb, redis, pubsub, elastic }) => Promise.all([
   RedisPubSub.disconnect(pubsub),
   Elasticsearch.disconnect(elastic)
 ])
+  .catch(e => console.warn('error in connection close:', e))
 
 module.exports = {
   create,
