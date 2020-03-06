@@ -21,7 +21,6 @@
     "data-uri-to-buffer": "^3.0.0",
     "debug": "^4.1.1",
     "deep-diff": "^1.0.1",
-    "file-type": "^12.4.0",
     "github": "^14.0.0",
     "isomorphic-unfetch": "^3.0.0",
     "istanbul": "1.1.0-alpha.1",
