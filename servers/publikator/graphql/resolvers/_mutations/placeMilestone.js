@@ -20,7 +20,7 @@ module.exports = async (
   debug({ repoId, commitId, name, message })
 
   const [login, repoName] = repoId.split('/')
-  const tag = await githubRest.gitdata.createTag({
+  const tag = await githubRest.git.createTag({
     owner: login,
     repo: repoName,
     tag: name,
@@ -31,7 +31,7 @@ module.exports = async (
   })
     .then(result => result.data)
 
-  await githubRest.gitdata.createRef({
+  await githubRest.git.createRef({
     owner: login,
     repo: repoName,
     ref: `refs/tags/${name}`,

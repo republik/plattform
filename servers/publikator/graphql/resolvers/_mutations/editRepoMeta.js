@@ -51,7 +51,7 @@ module.exports = async (_, args, context) => {
       .then(c => c.id)
 
   const [login, repoName] = repoId.split('/')
-  const newTag = await githubRest.gitdata.createTag({
+  const newTag = await githubRest.git.createTag({
     owner: login,
     repo: repoName,
     tag: TAG_NAME,

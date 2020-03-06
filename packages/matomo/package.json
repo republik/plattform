@@ -20,8 +20,8 @@
     "link": "yarn link"
   },
   "dependencies": {
-    "@zeit/fetch-retry": "^4.0.0",
-    "bluebird": "^3.5.4",
+    "@zeit/fetch-retry": "^5.0.0",
+    "bluebird": "^3.7.2",
     "debug": "^4.1.1",
     "node-fetch": "^2.3.0"
   }
