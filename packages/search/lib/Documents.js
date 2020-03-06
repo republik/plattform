@@ -121,6 +121,9 @@ const schema = {
   repoId: {
     criteria: termCriteriaBuilder('meta.repoId')
   },
+  repoIds: {
+    criteria: termCriteriaBuilder('meta.repoId')
+  },
   path: {
     criteria: termCriteriaBuilder('meta.path.keyword')
   },
