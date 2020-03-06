@@ -2,7 +2,7 @@
   "name": "assets-backend",
   "version": "0.0.1",
   "engines": {
-    "node": "12.x"
+    "node": "13.x"
   },
   "private": true,
   "license": "AGPL-3.0",
