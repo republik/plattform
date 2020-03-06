@@ -1,8 +1,7 @@
 const DEV = process.env.NODE_ENV && process.env.NODE_ENV !== 'production'
 
 const debug = require('debug')('crowdfundings:lib:scheduler')
-const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
-const Redis = require('@orbiting/backend-modules-base/lib/Redis')
+
 const {
   intervalScheduler,
   timeScheduler
@@ -20,16 +19,8 @@ const surplus = require('../../../../graphql/resolvers/RevenueStats/surplus')
 const evolution = require('../../../../graphql/resolvers/MembershipStats/evolution')
 const countRange = require('../../../../graphql/resolvers/MembershipStats/countRange')
 
-const init = async (_context) => {
+const init = async (context) => {
   debug('init')
-
-  const pgdb = await PgDb.connect()
-  const redis = Redis.connect()
-  const context = {
-    ..._context,
-    pgdb,
-    redis
-  }
 
   const schedulers = []
 
@@ -96,13 +87,7 @@ const init = async (_context) => {
   )
 
   const close = async () => {
-    await Promise.all(
-      schedulers.map(scheduler => scheduler.close())
-    )
-    await Promise.all([
-      PgDb.disconnect(pgdb),
-      Redis.disconnect(redis)
-    ])
+    await Promise.each(schedulers, scheduler => scheduler.close())
   }
 
   return {
