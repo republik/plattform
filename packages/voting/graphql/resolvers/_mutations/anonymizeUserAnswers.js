@@ -3,7 +3,7 @@ const {
   findById,
   ensureReadyToSubmit
 } = require('../../../lib/Questionnaire')
-const uuid = require('uuid/v4')
+const { v4: uuid } = require('uuid')
 
 module.exports = async (_, { questionnaireId }, context) => {
   const { pgdb, user: me, t, req, loaders } = context

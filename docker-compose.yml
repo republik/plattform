@@ -30,7 +30,7 @@ services:
     ports:
       - 5601:5601
     depends_on:
-      -  elastic
+      - elastic
 
   redis:
     image: redis:alpine
@@ -41,6 +41,8 @@ services:
 
   postgres:
     image: postgres:10
+    environment:
+      - POSTGRES_HOST_AUTH_METHOD=trust
     volumes:
       - ./docker-data/postgres:/var/lib/postgresql/data
     ports:

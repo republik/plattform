@@ -535,6 +535,7 @@ mail.sendMembershipOwnerAutoPay = async ({ autoPay, payload, pgdb, t }) => {
 }
 
 mail.sendMembershipClaimNotice = async ({ membership }, { pgdb, t }) => {
+  const membershipType = await pgdb.public.membershipTypes.findOne({ id: membership.membershipTypeId })
   const pledge = await pgdb.public.pledges.findOne({ id: membership.pledgeId })
   const pledger = await pgdb.public.users.findOne({ id: pledge.userId })
   const claimer = await pgdb.public.users.findOne({ id: membership.userId }).then(transformUser)
@@ -552,6 +553,14 @@ mail.sendMembershipClaimNotice = async ({ membership }, { pgdb, t }) => {
       {
         name: 'recipient_name',
         content: claimer.name
+      },
+      {
+        name: 'membership_type',
+        content: membershipType.name
+      },
+      {
+        name: 'membership_type_interval',
+        content: membershipType.interval
       }
     ]
   }, { pgdb })

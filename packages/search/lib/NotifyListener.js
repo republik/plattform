@@ -1,10 +1,6 @@
 require('@orbiting/backend-modules-env').config()
 
 const debug = require('debug')('search:lib:notifyListener')
-const { Client: PGClient } = require('pg')
-
-const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
-const Elasticsearch = require('@orbiting/backend-modules-base/lib/Elasticsearch')
 
 const mappings = require('./indices')
 const inserts = require('./inserts')
@@ -45,7 +41,7 @@ const cascadeUpdateConfig = {
 
 const updateCascade = async function (
   { table, rows },
-  { pogiClient, esClient }
+  { pgdb, elastic }
 ) {
   if (cascadeUpdateConfig[table]) {
     debug('found cascade configuration')
@@ -55,7 +51,7 @@ const updateCascade = async function (
         const sources =
           config.via === 'id'
             ? rows.map(row => ({ id: row.id }))
-            : await pogiClient.public[table].find({ id: rows.map(row => row.id) })
+            : await pgdb.public[table].find({ id: rows.map(row => row.id) })
 
         const sourceIds = sources.map(source => source[config.via])
 
@@ -63,7 +59,7 @@ const updateCascade = async function (
           return
         }
 
-        const updateRows = await pogiClient.public[config.table]
+        const updateRows = await pgdb.public[config.table]
           .find(
             { [config.where]: sourceIds },
             { fields: ['id'] }
@@ -74,7 +70,7 @@ const updateCascade = async function (
             rows: updateRows,
             payload: JSON.stringify({ table: config.table })
           },
-          { pogiClient, esClient }
+          { pgdb, elastic }
         )
       })
     )
@@ -83,11 +79,11 @@ const updateCascade = async function (
 
 const notificationHandler = async (
   { rows = false, payload: originalPayload },
-  { pogiClient, esClient }
+  { pgdb, elastic }
 ) => {
   const notificationHandleId = ++stats.notifications
 
-  const tx = await pogiClient.transactionBegin()
+  const tx = await pgdb.transactionBegin()
 
   try {
     const { table } = JSON.parse(originalPayload)
@@ -133,8 +129,8 @@ const notificationHandler = async (
       await insert({
         indexName: getIndexAlias(name, 'write'),
         type,
-        pgdb: pogiClient,
-        elastic: esClient,
+        pgdb,
+        elastic,
         resource: {
           table: tx.public[table],
           where: { id: updateIds.length > 0 ? updateIds : null },
@@ -143,7 +139,7 @@ const notificationHandler = async (
       })
     }
 
-    await updateCascade({ table, rows }, { pogiClient, esClient })
+    await updateCascade({ table, rows }, { pgdb, elastic })
 
     // No delete if rows are provided from outside
     await tx.public.notifyTableChangeQueue
@@ -166,7 +162,7 @@ const run = async (workQueue, context) => {
 }
 
 let singleton
-const start = async function () {
+const start = async function ({ pgdb, elastic }) {
   if (singleton) {
     // this is just a precautionary measure, the limitation could be lifted
     // without the need to change other code here
@@ -174,20 +170,17 @@ const start = async function () {
   }
   singleton = 'init'
 
-  const pogiClient = await PgDb.connect()
-  const esClient = await Elasticsearch.connect()
-  const pgClient = new PGClient({
-    connectionString: process.env.DATABASE_URL
-  })
-  await pgClient.connect()
-
   let closing = false
+
   let runPromise
   const workQueue = []
 
-  await pgClient.on(
+  const cxt = await pgdb.dedicatedConnectionBegin()
+
+  await cxt.connection.query('LISTEN change')
+  await cxt.connection.on(
     'notification',
-    async (input) => {
+    async input => {
       if (closing) {
         return
       }
@@ -195,12 +188,12 @@ const start = async function () {
       workQueue.push(input)
 
       if (!runPromise) {
-        runPromise = run(workQueue, { pogiClient, esClient })
+        runPromise = run(workQueue, { pgdb, elastic })
           .then(() => { runPromise = null })
       }
     }
   )
-  await pgClient.query('LISTEN change')
+
   debug('listening')
 
   const close = async () => {
@@ -208,11 +201,7 @@ const start = async function () {
     workQueue.length = 0 // empty queue
     runPromise && await runPromise
 
-    await Promise.all([
-      pgClient.end(),
-      PgDb.disconnect(pogiClient),
-      Elasticsearch.disconnect(esClient)
-    ])
+    await cxt.dedicatedConnectionEnd()
 
     singleton = null
   }

@@ -1,8 +1,10 @@
 const { descending } = require('d3-array')
-const { lib: {
-  clients: createGithubClients,
-  utils: { gitAuthor }
-} } = require('@orbiting/backend-modules-github')
+const {
+  lib: {
+    clients: createGithubClients,
+    utils: { gitAuthor }
+  }
+} = require('@orbiting/backend-modules-github')
 const { getRepos } = require('./getRepos')
 const uniqWith = require('lodash/uniqWith')
 const debug = require('debug')('publikator:github')
@@ -267,8 +269,8 @@ module.exports = {
         commitsUntil: after
       }
     })
-    const hasNextPage = heads.some(({target}) => target.history.pageInfo.hasNextPage)
-    const totalCount = heads.reduce((total, {target}) => total + target.history.totalCount, 0)
+    const hasNextPage = heads.some(({ target }) => target.history.pageInfo.hasNextPage)
+    const totalCount = heads.reduce((total, { target }) => total + target.history.totalCount, 0)
 
     const commits = heads
       .map(({ target }) =>
@@ -420,7 +422,7 @@ module.exports = {
     const [login, repoName] = repoId.split('/')
     const { githubRest } = await createGithubClients()
 
-    return githubRest.gitdata.updateRef({
+    return githubRest.git.updateRef({
       owner: login,
       repo: repoName,
       ref,
@@ -428,7 +430,7 @@ module.exports = {
     })
       .catch(e => {
         if (e.message === 'Reference does not exist') {
-          return githubRest.gitdata.createRef({
+          return githubRest.git.createRef({
             owner: login,
             repo: repoName,
             ref: `refs/${ref}`,
@@ -442,7 +444,7 @@ module.exports = {
   deleteRef: async (repoId, ref, silent) => {
     const [login, repoName] = repoId.split('/')
     const { githubRest } = await createGithubClients()
-    return githubRest.gitdata.deleteRef({
+    return githubRest.git.deleteRef({
       owner: login,
       repo: repoName,
       ref

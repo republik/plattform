@@ -41,6 +41,7 @@ enum DocumentTextLengths {
 input SearchFilterInput {
   id: ID
   ids: [ID!]
+  repoIds: [ID!]
   type: SearchTypes
   feed: Boolean
   # repoId

@@ -24,6 +24,13 @@ type AudioSource implements PlayableMedia {
   durationMs: Int!
 }
 
+type Podcast {
+  podigeeSlug: String
+  spotifyUrl: String
+  googleUrl: String
+  appleUrl: String
+}
+
 type Meta {
   title: String
   shortTitle: String
@@ -53,6 +60,7 @@ type Meta {
 
   credits: JSON
   audioSource: AudioSource
+  podcast: Podcast
 
   estimatedReadingMinutes: Int
   totalMediaMinutes: Int

@@ -145,7 +145,7 @@ const commit = async ({
   const { commit } = result.data
   expect(commit.id).toBeTruthy()
   expect(commit.repo.id).toBe(variables.repoId)
-  expect(commit.parentIds).toEqual(variables.parentId ? [ variables.parentId ] : [ ])
+  expect(commit.parentIds).toEqual(variables.parentId ? [variables.parentId] : [])
   expect(commit.message).toBe(variables.message)
   expect(commit.date).toBeTruthy()
   expect(commit.author.email).toBe(user.email)
@@ -471,7 +471,7 @@ const getRefs = async (repoId) => {
   const [owner, repo] = repoId.split('/')
   return Promise.all([
     ...allRefs.map(ref =>
-      githubRest.gitdata.getRef({
+      githubRest.git.getRef({
         owner,
         repo,
         ref: `tags/${ref}`

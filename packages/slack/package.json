@@ -21,6 +21,6 @@
   },
   "dependencies": {
     "@slack/rtm-api": "^5.0.1",
-    "@slack/web-api": "^5.0.1"
+    "@slack/web-api": "^5.8.0"
   }
 }
