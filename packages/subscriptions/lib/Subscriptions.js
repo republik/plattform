@@ -26,7 +26,7 @@ const upsertSubscription = async (args, context) => {
   const findProps = {
     userId,
     objectType: type,
-    [objectTypes[type]]: objectId
+    [objectTypes[type]]: object.objectId || objectId //normalized id by getObjectByIdAndType
   }
   const updateProps = {
     filters: filters && filters.length ? filters : null

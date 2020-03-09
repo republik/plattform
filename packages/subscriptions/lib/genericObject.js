@@ -17,6 +17,7 @@ const getObjectByIdAndType = ({ id, type }, { loaders, t }) => {
   if (type === 'Document') {
     const { repoId } = getParsedDocumentId(id)
     return loaders.Document.byRepoId.load(repoId)
+      .then( o => ({...o, objectId: repoId }))
       .then(normalize)
   }
   throw new Error(t('api/subscriptions/type/notSupported'))
