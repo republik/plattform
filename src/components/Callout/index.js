@@ -82,14 +82,17 @@ const Callout = ({ toggleRef, expanded, setExpanded, children }) => {
     }
   }, [])
 
-  return expanded ? (
-    <div {...styles.calloutContainer}>
+  return (
+    <div
+      {...styles.calloutContainer}
+      style={{ display: expanded ? 'block' : 'none' }}
+    >
       <div {...styles.callout} onClick={e => e.stopPropagation()}>
         <div {...styles.arrow} />
         {children}
       </div>
     </div>
-  ) : null
+  )
 }
 
 export default Callout

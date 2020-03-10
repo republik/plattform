@@ -10,6 +10,7 @@ Supported props:
   - `passHref` Boolean, indicates this will eventually end in an a tag and you may overwrite href
 - `bar`: an optional React element for actions.
 - `prepublication`: Whether the teaser is for a prepublished article.
+- `menu`: callout menu
 
 Data props:
 - `title`
@@ -83,6 +84,19 @@ Only using title is great for compact feeds:
     {type: 'link', url: 'https://republik.ch/~moser', children: [{type: 'text', value: 'Christof Moser'}]},
     {type: 'text', value: ', 31.12.2017'},
   ]} />
+```
+
+```react
+<TeaserFeed kind='meta' format={{meta: {title: 'Format'}}}
+  title='The quick brown fox jumps over the lazy dog'
+  description='Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores.'
+  credits={[
+    {type: 'text', value: 'An article by '},
+    {type: 'link', url: 'https://republik.ch/~moser', children: [{type: 'text', value: 'Christof Moser'}]},
+    {type: 'text', value: ', 31.12.2017'},
+  ]}
+  menu={<span>Test</span>}
+ />
 ```
 
 ```react

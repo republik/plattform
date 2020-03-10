@@ -12,6 +12,7 @@ import { Editorial } from '../Typography'
 
 import { matchType } from 'mdast-react-render/lib/utils'
 import Highlight from './Highlight'
+import CalloutMenu from '../Callout/CalloutMenu'
 
 const dateFormat = timeFormat('%d.%m.%Y')
 
@@ -22,6 +23,12 @@ const styles = {
   }),
   bar: css({
     marginTop: 10
+  }),
+  menu: css({
+    position: 'absolute',
+    right: 10,
+    top: 10,
+    cursor: 'pointer'
   })
 }
 
@@ -59,7 +66,8 @@ export const TeaserFeed = ({
   prepublication,
   bar,
   t,
-  Link = DefaultLink
+  Link = DefaultLink,
+  menu
 }) => {
   const formatMeta = (format && format.meta) || {}
   const Headline =
@@ -81,6 +89,7 @@ export const TeaserFeed = ({
 
   return (
     <Container format={format} color={borderColor} Link={Link}>
+      {menu && <CalloutMenu menu={menu} styles={styles.menu} />}
       <Headline style={{ color: titleColor }}>
         <Link href={path} passHref>
           <a {...styles.link} href={path}>
