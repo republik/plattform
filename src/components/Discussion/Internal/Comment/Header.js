@@ -16,6 +16,7 @@ import { DiscussionContext, formatTimeRelative } from '../../DiscussionContext'
 import * as config from '../../config'
 import { convertStyleToRem, pxToRem } from '../../../Typography/utils'
 import Callout from '../../../Callout'
+import uuid from 'uuid/v4'
 
 export const profilePictureSize = 40
 export const profilePictureMargin = 10
@@ -176,17 +177,17 @@ const titleDate = string => dateTimeFormat(new Date(string))
 
 const Menu = ({ menu }) => {
   const [showMenu, setMenu] = React.useState(false)
+  const toggleRef = React.useRef()
 
   return menu ? (
-    <div {...styles.menu}>
+    <div id={uuid()} ref={toggleRef} {...styles.menu}>
       <MoreIcon
         width='calc(1em + 7px)'
-        onClick={e => {
-          e.stopPropagation()
+        onClick={() => {
           setMenu(!showMenu)
         }}
       />
-      <Callout expanded={showMenu} setExpanded={setMenu}>
+      <Callout toggleRef={toggleRef} expanded={showMenu} setExpanded={setMenu}>
         {menu}
       </Callout>
     </div>
