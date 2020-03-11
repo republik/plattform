@@ -15,7 +15,7 @@ module.exports = async (
   debug({ repoId, name })
 
   const [login, repoName] = repoId.split('/')
-  await githubRest.gitdata.deleteRef({
+  await githubRest.git.deleteRef({
     owner: login,
     repo: repoName,
     ref: `tags/${name}`

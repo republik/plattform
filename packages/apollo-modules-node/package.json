@@ -16,7 +16,7 @@
     "link": "yarn link"
   },
   "dependencies": {
-    "graphql": "^14.2.1",
+    "graphql": "^14.6.0",
     "lodash.clone": "^4.5.0",
     "lodash.merge": "^4.6.1",
     "lodash.pickby": "^4.6.0"

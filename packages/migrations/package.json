@@ -26,6 +26,6 @@
   "dependencies": {
     "db-migrate": "^0.11.5",
     "db-migrate-pg": "^1.0.0",
-    "yargs": "^14.2.0"
+    "yargs": "^15.1.0"
   }
 }

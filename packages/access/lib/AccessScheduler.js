@@ -1,9 +1,6 @@
 const Redlock = require('redlock')
 const debug = require('debug')('access:lib:accessScheduler')
 
-const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
-const Redis = require('@orbiting/backend-modules-base/lib/Redis')
-
 const campaignsLib = require('./campaigns')
 const grantsLib = require('./grants')
 
@@ -16,11 +13,8 @@ const schedulerLock = (redis) => new Redlock([redis])
 /**
  * Function to initialize scheduler. Provides scheduling.
  */
-const init = async ({ t, mail }) => {
+const init = async ({ pgdb, redis, t, mail }) => {
   debug('init')
-
-  const pgdb = await PgDb.connect()
-  const redis = Redis.connect()
 
   let timeout
 
@@ -62,15 +56,9 @@ const init = async ({ t, mail }) => {
   await run()
 
   const close = async () => {
-    const lock = await schedulerLock(redis)
-      .lock(LOCK_KEY, 1000 * intervalSecs * 2)
-
+    const lock = await schedulerLock(redis).lock(LOCK_KEY, 1000 * intervalSecs * 2)
     clearTimeout(timeout)
-    await PgDb.disconnect(pgdb)
-
-    await lock.unlock()
-      .catch((err) => { console.error(err) })
-    await Redis.disconnect(redis)
+    await lock.unlock().catch((err) => { console.error(err) })
   }
 
   return {

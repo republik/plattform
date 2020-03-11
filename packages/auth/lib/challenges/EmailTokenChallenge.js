@@ -1,5 +1,5 @@
 const querystring = require('querystring')
-const uuid = require('uuid/v4')
+const { v4: uuid } = require('uuid')
 const t = require('../t')
 
 const { sendMailTemplate } = require('@orbiting/backend-modules-mail')
@@ -24,7 +24,7 @@ module.exports = {
   },
   startChallenge: async ({ email, context, token, country, phrase, pgdb }) => {
     const geoString = (country === 'Schweiz')
-      ? `der Schweiz`
+      ? 'der Schweiz'
       : country
 
     const verificationUrl =
@@ -43,13 +43,16 @@ module.exports = {
       subject: t('api/signin/mail/subject', { phrase }),
       templateName: 'signin',
       globalMergeVars: [
-        { name: 'LOCATION',
+        {
+          name: 'LOCATION',
           content: geoString
         },
-        { name: 'SECRET_WORDS',
+        {
+          name: 'SECRET_WORDS',
           content: phrase
         },
-        { name: 'LOGIN_LINK',
+        {
+          name: 'LOGIN_LINK',
           content: verificationUrl
         }
       ]

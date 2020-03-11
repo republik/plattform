@@ -1,6 +1,6 @@
 const debug = require('debug')('crowdfundings:lib:CustomPackages:rule:earlyUserBonus')
 const moment = require('moment')
-const uuid = require('uuid/v4')
+const { v4: uuid } = require('uuid')
 
 const { getPeriodEndingLast } = require('../../utils')
 

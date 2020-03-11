@@ -34,14 +34,14 @@ exports.configure = ({
   if (pgdb === null) {
     throw new Error('pgdb option must be a connected pogi instance')
   }
-  // Sessions store for express-session (defaults to connect-pg-simple using DATABASE_URL)
-  const store = new PgSession({
-    tableName: 'sessions',
-    conString: process.env.DATABASE_URL
-  })
-  const Users = pgdb.public.users
 
   basicAuthMiddleware(server)
+
+  // Sessions store for express-session
+  const store = new PgSession({
+    tableName: 'sessions',
+    pool: pgdb.pool
+  })
 
   // Configure sessions
   server.use(session({
@@ -70,9 +70,7 @@ exports.configure = ({
   })
 
   passport.deserializeUser(async function (id, next) {
-    const user = transformUser(
-      await Users.findOne({ id })
-    )
+    const user = await pgdb.public.users.findOne({ id }).then(transformUser)
 
     if (!user) {
       return next('user not found!')

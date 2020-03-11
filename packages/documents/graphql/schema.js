@@ -12,6 +12,7 @@ type queries {
     dossier: String
     format: String
     formats: [String!]
+    repoIds: [ID!]
     section: String
     template: String
     hasDossier: Boolean

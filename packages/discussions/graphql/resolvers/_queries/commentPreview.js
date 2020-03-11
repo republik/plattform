@@ -1,6 +1,6 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
 const { transform } = require('../../../lib/Comment')
-const uuid = require('uuid/v4')
+const { v4: uuid } = require('uuid')
 const Promise = require('bluebird')
 
 module.exports = async (_, args, context) => {

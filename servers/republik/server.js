@@ -1,8 +1,11 @@
 const { merge } = require('apollo-modules-node')
 const cluster = require('cluster')
 
+const {
+  server: Server,
+  lib: { ConnectionContext }
+} = require('@orbiting/backend-modules-base')
 const { NotifyListener: SearchNotifyListener } = require('@orbiting/backend-modules-search')
-const { server: Server } = require('@orbiting/backend-modules-base')
 const { t } = require('@orbiting/backend-modules-translate')
 const SlackGreeter = require('@orbiting/backend-modules-slack/lib/SlackGreeter')
 const { graphql: documents } = require('@orbiting/backend-modules-documents')
@@ -43,7 +46,9 @@ const {
   NODE_ENV,
   ACCESS_SCHEDULER,
   PREVIEW_SCHEDULER,
-  MEMBERSHIP_SCHEDULER
+  MEMBERSHIP_SCHEDULER,
+  SERVER = 'republik',
+  DYNO
 } = process.env
 
 const DEV = NODE_ENV && NODE_ENV !== 'production'
@@ -111,10 +116,23 @@ const run = async (workerId, config) => {
       previewLib.begin({ userId, contexts, pgdb, t })
   ]
 
+  const applicationName = [
+    'backends',
+    SERVER,
+    DYNO,
+    'worker',
+    workerId && `workerId:${workerId}`
+  ]
+    .filter(Boolean)
+    .join(' ')
+
+  const connectionContext = await ConnectionContext.create(applicationName)
+
   const createGraphQLContext = (defaultContext) => {
     const loaders = {}
     const context = {
       ...defaultContext,
+      ...connectionContext,
       t,
       signInHooks,
       mail,
@@ -130,6 +148,7 @@ const run = async (workerId, config) => {
     graphqlSchema,
     middlewares,
     t,
+    connectionContext,
     createGraphQLContext,
     workerId,
     config
@@ -137,6 +156,7 @@ const run = async (workerId, config) => {
 
   const close = () => {
     return server.close()
+      .then(() => ConnectionContext.close(connectionContext))
   }
 
   process.once('SIGTERM', close)
@@ -153,11 +173,26 @@ const runOnce = async (...args) => {
     throw new Error('runOnce must only be called on cluster.isMaster')
   }
 
+  const applicationName = [
+    'backends',
+    SERVER,
+    DYNO,
+    'master'
+  ]
+    .filter(Boolean)
+    .join(' ')
+
+  const context = {
+    ...await ConnectionContext.create(applicationName),
+    t,
+    mail
+  }
+
   const slackGreeter = await SlackGreeter.start()
 
   let searchNotifyListener
   if (SEARCH_PG_LISTENER && SEARCH_PG_LISTENER !== 'false') {
-    searchNotifyListener = await SearchNotifyListener.start()
+    searchNotifyListener = await SearchNotifyListener.start(context)
   }
 
   let accessScheduler
@@ -166,7 +201,7 @@ const runOnce = async (...args) => {
       { ACCESS_SCHEDULER, DEV }
     )
   } else {
-    accessScheduler = await AccessScheduler.init({ t, mail })
+    accessScheduler = await AccessScheduler.init(context)
   }
 
   let previewScheduler
@@ -175,7 +210,7 @@ const runOnce = async (...args) => {
       { PREVIEW_SCHEDULER, DEV }
     )
   } else {
-    previewScheduler = await PreviewScheduler.init({ t, mail })
+    previewScheduler = await PreviewScheduler.init(context)
   }
 
   let membershipScheduler
@@ -184,15 +219,18 @@ const runOnce = async (...args) => {
       { MEMBERSHIP_SCHEDULER, DEV }
     )
   } else {
-    membershipScheduler = await MembershipScheduler.init({ t, mail })
+    membershipScheduler = await MembershipScheduler.init(context)
   }
 
   const close = async () => {
-    slackGreeter && await slackGreeter.close()
-    searchNotifyListener && await searchNotifyListener.close()
-    accessScheduler && await accessScheduler.close()
-    previewScheduler && await previewScheduler.close()
-    membershipScheduler && await membershipScheduler.close()
+    await Promise.all([
+      slackGreeter && slackGreeter.close(),
+      searchNotifyListener && searchNotifyListener.close(),
+      accessScheduler && accessScheduler.close(),
+      previewScheduler && previewScheduler.close(),
+      membershipScheduler && membershipScheduler.close()
+    ].filter(Boolean))
+    await ConnectionContext.close(context)
   }
 
   process.once('SIGTERM', close)
