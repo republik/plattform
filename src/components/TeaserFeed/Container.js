@@ -21,7 +21,8 @@ const styles = {
     paddingBottom: 30,
     marginBottom: 0,
     [mUp]: {
-      paddingBottom: 40
+      paddingBottom: 40,
+      marginBottom: 0
     }
   }),
   link: css({
