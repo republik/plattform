@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { css } from 'glamor'
+import { css, merge } from 'glamor'
 import { mUp } from '../../theme/mediaQueries'
 import { Format } from './Format'
 import colors from '../../theme/colors'
@@ -16,15 +16,26 @@ const styles = {
       paddingTop: '10px'
     }
   }),
+  mainFocus: css({
+    backgroundColor: colors.primaryBg,
+    paddingBottom: 30,
+    marginBottom: 0,
+    [mUp]: {
+      paddingBottom: 40
+    }
+  }),
   link: css({
     color: 'inherit',
     textDecoration: 'none'
   })
 }
 
-const Teaser = ({ children, color, format, interaction, Link }) => {
+const Teaser = ({ children, color, format, interaction, Link, focus }) => {
   return (
-    <div {...styles.main} style={{ borderColor: color }}>
+    <div
+      {...merge(styles.main, focus && styles.mainFocus)}
+      style={{ borderColor: color }}
+    >
       {format && format.meta && (
         <Format color={color}>
           <Link href={format.meta.path} passHref>

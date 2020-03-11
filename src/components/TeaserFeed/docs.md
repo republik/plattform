@@ -11,6 +11,7 @@ Supported props:
 - `bar`: an optional React element for actions.
 - `prepublication`: Whether the teaser is for a prepublished article.
 - `menu`: callout menu
+- `focus`: highlight the teaser
 
 Data props:
 - `title`
@@ -137,16 +138,12 @@ Add an excerpt of the content using the highlight prop (if `highlightLabel` is o
 ```react
 <TeaserFeed
   title='The quick brown fox jumps over the lazy dog'
-  highlight='Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores.'
-  highlightLabel='My highlight'
+  description='Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores.'
   credits={[
     {type: 'text', value: 'An article by '},
     {type: 'link', url: 'https://republik.ch/~moser', children: [{type: 'text', value: 'Christof Moser'}]},
     {type: 'text', value: ', 31.12.2017'},
   ]}
-  bar={<span>
-    <BookmarkIcon size={22} style={{ margin: '0 5px 0 -4px'}} />
-    <AudioIcon size={22} />
-  </span>}
+  focus
 />
 ```

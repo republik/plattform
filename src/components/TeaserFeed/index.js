@@ -67,7 +67,8 @@ export const TeaserFeed = ({
   bar,
   t,
   Link = DefaultLink,
-  menu
+  menu,
+  focus
 }) => {
   const formatMeta = (format && format.meta) || {}
   const Headline =
@@ -88,7 +89,7 @@ export const TeaserFeed = ({
     : undefined
 
   return (
-    <Container format={format} color={borderColor} Link={Link}>
+    <Container focus={focus} format={format} color={borderColor} Link={Link}>
       {menu && <CalloutMenu menu={menu} styles={styles.menu} />}
       <Headline style={{ color: titleColor }}>
         <Link href={path} passHref>
