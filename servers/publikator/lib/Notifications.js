@@ -46,7 +46,7 @@ const notifyPublish = async (repoId, context) => {
         content: {
           app: {
             title: 'Neues Dokument publiziert',
-            body: `${doc.meta.title}: neu`,
+            body: `${doc.meta.title}`,
             url: `${FRONTEND_BASE_URL}${doc.meta.path}`,
             type: 'document',
             tag: docRepoId

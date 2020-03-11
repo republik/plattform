@@ -17,5 +17,8 @@ module.exports = {
       return null
     }
     return loaders.MailLog.byId.load(mailLogId)
+  },
+  subscription ({ subscriptionId }, args, { loaders }) {
+    return loaders.Subscription.byId.load(subscriptionId)
   }
 }
