@@ -19,6 +19,9 @@ module.exports = {
     return loaders.MailLog.byId.load(mailLogId)
   },
   subscription ({ subscriptionId }, args, { loaders }) {
+    if (!subscriptionId) {
+      return null
+    }
     return loaders.Subscription.byId.load(subscriptionId)
   }
 }
