@@ -67,14 +67,20 @@ const styles = {
   })
 }
 
+const getTargetId = target => {
+  if (target.id) return target.id
+  if (!target.parentElement) return null
+  if (target.parentElement.id) return target.parentElement.id
+  if (!target.parentElement.parentElement) return null
+  if (target.parentElement.parentElement.id)
+    return target.parentElement.parentElement.id
+  if (!target.parentElement.parentElement.parentElement) return null
+  return target.parentElement.parentElement.parentElement.id
+}
+
 const Callout = ({ toggleRef, expanded, setExpanded, children }) => {
   const handleClick = e => {
-    const targetId =
-      e.target.id ||
-      e.target.parentElement.id ||
-      e.target.parentElement.parentElement.id ||
-      e.target.parentElement.parentElement.parentElement.id
-    if (!toggleRef || toggleRef.current.id !== targetId) {
+    if (!toggleRef || toggleRef.current.id !== getTargetId(e.target)) {
       e.stopPropagation()
       setExpanded(false)
     }
