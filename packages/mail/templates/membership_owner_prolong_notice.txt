@@ -1,0 +1,61 @@
+Guten Tag
+
+Ihre Mitgliedschaft erneuert sich am {{end_date}}.
+
+Wir freuen uns, Sie weiterhin an Bord zu haben, denn die Republik und die Idee
+hinter unserem gemeinsamen Projekt brauchen Sie!
+
+Und das gilt derzeit ganz besonders, denn: Die Republik befindet sich in einem
+Kampf um ihre Zukunft. Wir müssen bis zum 31. März 19’000 Mitglieder sein und
+eine zweite Anschubfinanzierung finden. Bleiben Sie an Bord, tragen Sie daher
+direkt zum Erhalt der Republik bei.
+
+Sehen Sie hier den Stand der Dinge, lesen Sie, wie wir das schaffen möchten und
+was Sie sonst noch tun können [{{cockpit_url}}]. Und sollten Sie ihn verpasst
+haben, können Sie hier unseren wichtigsten Newsletter seit dem Start der
+Republik
+[https://project-r.construction/newsletter/2019-12-09-der-wichtigste-newsletter] 
+nochmals nachlesen.
+
+Ganz gleich, ob Sie uns einmal pro Woche, einmal pro Monat oder einmal pro Jahr
+lesen – mit Ihrem Beitrag stärken Sie kritischen Journalismus, die vierte Gewalt
+und die Demokratie.
+
+Jetzt erneuern [{{prolong_url}}] Als Magazin bieten wir Einordnung und
+Vertiefung anstelle einer Flut von Nachrichten. Wir recherchieren, um Missstände
+aufzudecken, oft monatelang. Und diskutieren über drängende Fragen der
+Gegenwart.
+
+Die Republik ist aber noch mehr. Wir sind ein Projekt gegen den Zynismus, den
+Vormarsch der Autoritären und gegen die Diktatur der Angst. Und stehen für die
+Verteidigung der demokratischen Institutionen und die Werte der Aufklärung.
+
+Wie Sie wissen, finanziert sich die Republik als unabhängiges und werbefreies
+Magazin über ihre Leserinnen und Leser.
+
+Nun haben Sie die Wahl:
+Sie bleiben an Bord und investieren damit weiter in die Republik und ihre Idee.
+[{{prolong_url}}]
+Sie kündigen Ihre Mitgliedschaft bis zum {{cancel_until_date}}. 
+
+Wie auch immer Sie entscheiden: Wir hoffen, dass wir Sie im vergangenen Jahr
+immer wieder erfolgreich informiert, unterhalten, geärgert und beglückt haben.
+
+Herzlich
+
+Ihre Crew der Republik
+
+Die Republik ist ein unabhängiges und werbefreies digitales Magazin für Politik,
+Wirtschaft, Gesellschaft und Kultur. Es wird von seinen Leserinnen und Lesern
+finanziert und erscheint von Montag bis Samstag mit täglich ein bis drei neuen
+Beiträgen. In der App, auf der Website und als Newsletter. 
+
+
+Republik AG
+Sihlhallenstrasse 1, CH-8004 Zürich
+www.republik.ch [{{frontend_base_url}}]
+kontakt@republik.ch 
+
+Unser Manifest [{{link_manifest}}]
+Das Impressum [{{link_imprint}}]
+Häufig gestellte Fragen [{{link_faq}}]

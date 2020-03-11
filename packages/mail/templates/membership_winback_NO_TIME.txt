@@ -1,0 +1,53 @@
+Guten Tag
+
+Sie haben sich entschieden, Ihre Mitgliedschaft zu künden.
+Schade, sind Sie nicht mehr Teil der Republik und der Idee hinter unserem
+gemeinsamen Projekt! Umso mehr, da die Republik sich derzeit in einem Kampf um
+ihre Zukunft [{{link_cockpit}}] befindet. Wir müssen bis zum 31. März 19’000
+Mitglieder sein und eine zweite Anschubfinanzierung finden. Die Hintergründe
+können Sie in unserem wichtigsten Newsletter seit dem Start der Republik
+[https://project-r.construction/newsletter/2019-12-09-der-wichtigste-newsletter] 
+nochmals nachlesen. 
+
+Bei Ihrer Kündigung haben Sie angegeben, dass Sie keine Zeit für die Lektüre
+haben.
+
+Darum in aller Kürze: Die Republik ist mehr als ein Magazin. Wir sind ein
+Projekt gegen den Zynismus, den Vormarsch der Autoritären und gegen die Diktatur
+der Angst. Und stehen für die Verteidigung der demokratischen Institutionen und
+die Werte der Aufklärung. Und wir können nicht bestehen ohne unsere Leserinnen.
+
+Wir haben deshalb einen Vorschlag für Sie: Die Republik weiterhin lesen können
+[{{prolong_url}}] – und nur den Samstagsnewsletter bestellen? Mit diesem
+erhalten Sie einmal in der Woche die besten Artikel der vergangenen Tage ins
+Postfach.
+
+Auch wenn Sie wenig zum Lesen kommen, leisten Sie so einen wichtigen Beitrag zur
+Medienvielfalt der Schweiz.
+
+Oder: Vielleicht wollen oder können Sie die Idee hinter diesem Projekt einfach 
+mit einer Spende unterstützen? [{{link_offer_donate}}]
+
+Wir würden uns sehr freuen, Sie weiter bei uns an Bord zu wissen.
+
+In jedem Fall gilt: Vielen Dank für Ihr Interesse und Ihre Unterstützung bis
+heute!
+
+Herzlich
+
+Ihre Crew der Republik
+
+Die Republik ist ein unabhängiges und werbefreies digitales Magazin für Politik,
+Wirtschaft, Gesellschaft und Kultur. Es wird von seinen Leserinnen und Lesern
+finanziert und erscheint von Montag bis Samstag mit täglich ein bis drei neuen
+Beiträgen. In der App, auf der Website und als Newsletter. 
+
+
+Republik AG
+Sihlhallenstrasse 1, CH-8004 Zürich
+www.republik.ch [{{frontend_base_url}}]
+kontakt@republik.ch 
+
+Unser Manifest [{{link_manifest}}]
+Das Impressum [{{link_imprint}}]
+Häufig gestellte Fragen [{{link_faq}}]

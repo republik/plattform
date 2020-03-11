@@ -1,0 +1,28 @@
+Sehr geehrte Dame
+Sehr geehrter Herr 
+
+Wir haben Ihre Mitgliedschaft automatisch um ein weiteres Jahr verlängert und
+dafür Ihre {{autopay_card_brand}}-Kreditkarte mit den Endziffern
+{{autopay_card_last4}} mit {{autopay_total}} belastet. Wir bedanken uns für Ihre
+Treue und Ihr Vertrauen.
+
+Ihre Mitgliedschaft läuft neu bis zum {{prolonged_end_date}}.
+
+Herzlich
+
+Ihre Crew der Republik
+
+Die Republik ist ein unabhängiges und werbefreies digitales Magazin für Politik,
+Wirtschaft, Gesellschaft und Kultur. Es wird von seinen Leserinnen und Lesern
+finanziert und erscheint von Montag bis Samstag mit täglich ein bis drei neuen
+Beiträgen. In der App, auf der Website und als Newsletter. 
+
+
+Republik AG
+Sihlhallenstrasse 1, CH-8004 Zürich
+www.republik.ch [{{frontend_base_url}}]
+kontakt@republik.ch 
+
+Unser Manifest [{{link_manifest}}]
+Das Impressum [{{link_imprint}}]
+Häufig gestellte Fragen [{{link_faq}}]

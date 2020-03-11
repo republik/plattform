@@ -1,0 +1,43 @@
+Guten Tag
+
+Willkommen an Bord!
+Wir freuen uns sehr, Sie bei der Republik begrüssen zu dürfen. 
+
+Sie können ab sofort das Magazin lesen [{{link_signin}}], an sämtlichen Debatten
+teilnehmen [{{link_dialog}}], eine öffentliche Profilseite aufschalten
+[{{link_profile}}] und Beiträge mit Ihren Freunden oder Feinden teilen.
+
+Falls Sie Fragen zur Inbetriebnahme des Magazins haben:
+Hier finden Sie die Gebrauchsanleitung [{{link_manual}}], die die wichtigsten
+davon klärt.
+
+Wir schicken Ihnen, unserer neusten Verlegerin, unserem neusten Verleger, auch
+regelmässig Neuigkeiten aus Redaktion und Verlag: zu Vorhaben, Hintergründen,
+Entscheidungen und Fehlern. Sie können Kritik üben und Vorschläge machen. Und
+sich mit Ihren {{republik_memberships_count}} Kolleginnen und Kollegen in der
+Verlagsetage austauschen.
+
+Die von Ihnen angegebene Kreditkarte belasten wir monatlich mit CHF 22.–. Unter 
+Konto [{{link_account}}] finden Sie Ihre persönliche Übersicht zu Ihrem
+Abonnement [{{link_account_abos}}]. Am gleichen Ort können Sie alle
+Einstellungen vornehmen (z. B. Kreditkarteninformationen ändern) oder das Abo
+jederzeit kündigen. Was wir natürlich nicht hoffen.
+
+Viel Vergnügen beim Start mit der Republik.
+
+Ihre Crew der Republik
+
+Die Republik ist ein unabhängiges und werbefreies digitales Magazin für Politik,
+Wirtschaft, Gesellschaft und Kultur. Es wird von seinen Leserinnen und Lesern
+finanziert und erscheint von Montag bis Samstag mit täglich ein bis drei neuen
+Beiträgen. In der App, auf der Website und als Newsletter.
+
+
+Republik AG
+Sihlhallenstrasse 1, CH-8004 Zürich
+www.republik.ch [{{frontend_base_url}}]
+kontakt@republik.ch 
+
+Unser Manifest [{{link_manifest}}]
+Das Impressum [{{link_imprint}}]
+Häufig gestellte Fragen [{{link_faq}}]
