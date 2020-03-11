@@ -14,7 +14,13 @@ const notifyPublish = async (repoId, context) => {
   const doc = await loaders.Document.byRepoId.load(repoId)
   const docRepoId = doc.meta.repoId
 
-  const subscriptionDoc = doc
+  // eg. https://github.com/republik/format-aus-der-redaktion
+  const formatRepoId = doc.meta.format && doc.meta.format.split('github.com/')[1]
+  if (!formatRepoId) {
+    return
+  }
+
+  const subscriptionDoc = await loaders.Document.byRepoId.load(formatRepoId)
   const subscriptionRepoId = subscriptionDoc.meta.repoId
 
   const subscribers = await Subscriptions.getSubscribersForObject(
