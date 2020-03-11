@@ -69,9 +69,14 @@ const styles = {
 
 const Callout = ({ toggleRef, expanded, setExpanded, children }) => {
   const handleClick = e => {
-    if (!toggleRef || toggleRef.current.id !== e.target.parentElement.id) {
-      setExpanded(false)
+    const targetId =
+      e.target.id ||
+      e.target.parentElement.id ||
+      e.target.parentElement.parentElement.id ||
+      e.target.parentElement.parentElement.parentElement.id
+    if (!toggleRef || toggleRef.current.id !== targetId) {
       e.stopPropagation()
+      setExpanded(false)
     }
   }
 
