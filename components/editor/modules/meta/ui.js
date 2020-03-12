@@ -15,6 +15,7 @@ import {
 
 import withT from '../../../../lib/withT'
 import slugify from '../../../../lib/utils/slug'
+import { FRONTEND_BASE_URL } from '../../../../lib/settings'
 
 import MetaForm from '../../utils/MetaForm'
 import SlugField from '../../utils/SlugField'
@@ -122,6 +123,7 @@ const MetaData = ({
         {mdastSchema && mdastSchema.getPath && (
           <Label>
             {t('metaData/field/slug/note', {
+              base: FRONTEND_BASE_URL.replace(/https?:\/\/(www\.)?/, ''),
               path: mdastSchema.getPath({
                 ...dataAsJs,
                 publishDate: contextMeta.publishDate
@@ -131,6 +133,15 @@ const MetaData = ({
               })
             })}
             <br />
+            {!!dataAsJs.path && (
+              <>
+                {t('metaData/field/slug/pathNote', {
+                  base: FRONTEND_BASE_URL.replace(/https?:\/\/(www\.)?/, ''),
+                  path: dataAsJs.path
+                })}
+                <br />
+              </>
+            )}
             <br />
           </Label>
         )}

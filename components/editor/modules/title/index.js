@@ -46,13 +46,13 @@ export default ({ rule, subModules, TYPE }) => {
         writableNode,
         rest
       )
-      const { format, section } = rest.context
-      if (format || section) {
+      const { format, section, meta } = rest.context
+      if (format || section || meta) {
         // enhance all immediate children with format and section
         // - needed for headline
         nodes = nodes.map(node => ({
           ...node,
-          data: { ...node.data, format, section }
+          data: { ...node.data, meta, format, section }
         }))
       }
 
@@ -61,6 +61,7 @@ export default ({ rule, subModules, TYPE }) => {
         type: TYPE,
         data: {
           ...node.data,
+          meta,
           format,
           section
         },

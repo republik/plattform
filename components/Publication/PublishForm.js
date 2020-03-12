@@ -198,7 +198,7 @@ class PublishForm extends Component {
               isArchived,
               commit,
               commit: {
-                document: { meta }
+                document: { meta, content }
               }
             } = repo
 
@@ -278,12 +278,13 @@ class PublishForm extends Component {
                 <Label>{t('publish/meta/path/label')}</Label>
                 <Interaction.P>
                   {FRONTEND_BASE_URL.replace(/https?:\/\/(www\.)?/, '')}
-                  {schema.getPath
-                    ? schema.getPath({
-                        ...meta,
-                        publishDate: designatedPublishDate
-                      })
-                    : `/${meta.slug}`}
+                  {content.meta.path ||
+                    (schema.getPath
+                      ? schema.getPath({
+                          ...meta,
+                          publishDate: designatedPublishDate
+                        })
+                      : `/${meta.slug}`)}
                 </Interaction.P>
 
                 <br />

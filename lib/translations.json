@@ -1,5 +1,5 @@
 {
-  "updated": "2020-02-18T12:44:20.968Z",
+  "updated": "2020-03-12T23:31:24.729Z",
   "title": "live",
   "data": [
     {
@@ -428,7 +428,11 @@
     },
     {
       "key": "metaData/field/slug/note",
-      "value": "Ergibt folgende URL: republik.ch{path}"
+      "value": "Ergibt folgende URL: {base}{path}"
+    },
+    {
+      "key": "metaData/field/slug/pathNote",
+      "value": "Es ist aber ein fixer Pfad festgelegt: {base}{path}"
     },
     {
       "key": "metaData/field/src",
