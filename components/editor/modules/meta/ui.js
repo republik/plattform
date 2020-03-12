@@ -123,7 +123,9 @@ const MetaData = ({
         {mdastSchema && mdastSchema.getPath && (
           <Label>
             {t('metaData/field/slug/note', {
-              base: FRONTEND_BASE_URL.replace(/https?:\/\/(www\.)?/, ''),
+              base: FRONTEND_BASE_URL
+                ? FRONTEND_BASE_URL.replace(/https?:\/\/(www\.)?/, '')
+                : '',
               path: mdastSchema.getPath({
                 ...dataAsJs,
                 publishDate: contextMeta.publishDate
