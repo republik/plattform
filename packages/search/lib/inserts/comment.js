@@ -1,6 +1,6 @@
 const _ = require('lodash')
 
-const { remark } = require('@orbiting/backend-modules-discussions/lib')
+const { remark } = require('@orbiting/backend-modules-utils')
 
 const bulk = require('../../lib/indexPgTable')
 const { mdastContentToString } = require('../utils')

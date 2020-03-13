@@ -54,7 +54,8 @@ extend type User {
   pgpPublicKeyId: String
   emailAccessRole: AccessRole
 
-  biography: String
+  biography: String @deprecated(reason: "use biographyMdast instead")
+  biographyMdast: JSON
   facebookId: String
   twitterHandle: String
   publicUrl: String
