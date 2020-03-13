@@ -255,12 +255,16 @@ const MetaData = ({
                             const doc = item
                               ? item.value.latestCommit.document
                               : undefined
+                            const newData = {
+                              ...titleNode.data.toJS(),
+                              [customField.key]: doc
+                            }
                             change.setNodeByKey(titleNode.key, {
-                              data: { [customField.key]: doc }
+                              data: newData
                             })
                             titleNode.nodes.forEach(node => {
                               change.setNodeByKey(node.key, {
-                                data: { [customField.key]: doc }
+                                data: newData
                               })
                             })
                           }

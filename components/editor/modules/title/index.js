@@ -46,7 +46,9 @@ export default ({ rule, subModules, TYPE }) => {
         writableNode,
         rest
       )
-      const { format, section, meta } = rest.context
+      const { format, section } = rest.context
+      // skip coverText for now
+      const { coverText, ...meta } = rest.context.meta
       if (format || section || meta) {
         // enhance all immediate children with format and section
         // - needed for headline
