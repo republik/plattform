@@ -1,0 +1,62 @@
+Guten Tag
+
+Schön, dass Sie die Republik unterstützen.
+
+Mit Ihrer Mitgliedschaft erhalten Sie sechsmal pro Woche ein unabhängiges und
+werbefreies digitales Magazin für Politik, Wirtschaft, Gesellschaft und Kultur.
+
+Sie fördern aber auch eine wirklich unabhängige vierte Gewalt als zentrale
+Institution unserer Demokratie.
+
+Denn: Die Republik steht für die Verteidigung der demokratischen Institutionen
+und die Werte der Aufklärung. Für Treue zu Fakten, für Lösungen von Fall zu
+Fall, für Offenheit gegenüber Kritik, für Respektlosigkeit gegenüber der Macht
+und Respekt vor dem Menschen.
+
+Falls sich unsere Buchhaltung nicht irrt, ist allerdings Ihr Mitgliedschafts-
+oder Unterstützungsbeitrag in der Höhe von CHF {{TOTAL}} noch ausstehend.
+Dürfen wir Sie freundlich bitten, den Betrag in den nächsten Tagen zu
+überweisen?
+
+Bitte geben Sie bei der Zahlung Ihren Namen und den folgenden Code als
+Zahlungszweck an (so können wir Ihre Zahlung zuordnen): {{HRID}}
+
+{{#if `COMPANY_NAME == "REPUBLIK"`}} PC 61-229215-3
+IBAN: CH23 0900 0000 6122 9215 3
+BIC: POFICHBEXXX 
+
+lautend auf:
+Republik AG 
+Sihlhallenstrasse 1
+8004 Zürich 
+
+{{/if}} {{#if `COMPANY_NAME == "PROJECT_R"`}} PC 61-11760-6
+IBAN: CH50 0900 0000 6101 1760 6
+BIC: POFICHBEXXX 
+
+lautend auf:
+Project R Genossenschaft 
+Sihlhallenstrasse 1
+8004 Zürich 
+
+{{/if}} Sollte sich Ihre Überweisung mit dieser Zahlungserinnerung kreuzen,
+erachten Sie unsere E-Mail als gegenstandslos. Haben Sie sonst Fragen, melden
+Sie sich jederzeit unter kontakt@republik.ch.
+
+Herzlich
+Ihre Crew der Republik
+
+Die Republik ist ein unabhängiges und werbefreies digitales Magazin für Politik,
+Wirtschaft, Gesellschaft und Kultur. Es wird von seinen Leserinnen und Lesern
+finanziert und erscheint von Montag bis Samstag mit täglich ein bis drei neuen
+Beiträgen. In der App, auf der Website und als Newsletter. 
+
+
+Republik AG
+Sihlhallenstrasse 1, CH-8004 Zürich
+www.republik.ch [{{frontend_base_url}}]
+kontakt@republik.ch 
+
+Unser Manifest [{{link_manifest}}]
+Das Impressum [{{link_imprint}}]
+Häufig gestellte Fragen [{{link_faq}}]

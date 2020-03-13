@@ -1,0 +1,33 @@
+Guten Tag
+
+Wir schicken Ihnen Zugriffsanfragen neu per Push-Nachricht in der Republik-App.
+Öffnen Sie dazu einfach Ihre App und bestätigen Sie dort die Anfrage.
+
+Diese E-Mail schicken wir Ihnen nur noch dieses eine Mal. Es dient lediglich
+Ihrer Information.
+
+Möchten Sie Ihre Zugriffsanfragen auch weiterhin lieber via E-Mail bestätigen?
+Dann können Sie in Ihrem Konto [https://www.republik.ch/konto#anmeldung] 
+«E-Mail» als bevorzugtes Anmeldeverfahren auswählen.
+
+Bei Fragen helfen wir Ihnen gerne unter kontakt@republik.ch
+[kontakt@republik.ch] weiter.
+
+Herzlich
+
+Ihre Crew der Republik
+
+Die Republik ist ein unabhängiges und werbefreies digitales Magazin für Politik,
+Wirtschaft, Gesellschaft und Kultur. Es wird von seinen Leserinnen und Lesern
+finanziert und erscheint von Montag bis Samstag mit täglich ein bis drei neuen
+Beiträgen. In der App, auf der Website und als Newsletter. 
+
+
+Republik AG
+Sihlhallenstrasse 1, CH-8004 Zürich
+www.republik.ch [{{frontend_base_url}}]
+kontakt@republik.ch 
+
+Unser Manifest [{{link_manifest}}]
+Das Impressum [{{link_imprint}}]
+Häufig gestellte Fragen [{{link_faq}}]

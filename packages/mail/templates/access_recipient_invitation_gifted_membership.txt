@@ -1,0 +1,50 @@
+Guten Tag
+
+Die Republik ist ein neues, unabhängiges und werbefreies digitales Magazin für
+Politik, Wirtschaft, Gesellschaft und Kultur. Sie wird finanziert von ihren
+Leserinnen und Lesern. Um eine Zukunft zu haben, muss die Republik bekannter
+werden und viele neue Leserinnen begeistern.
+
+Im Rahmen der Wachstums-Kampagne diesen März finanzieren unsere Leserinnen
+Geschenk-Mitgliedschaften in der Hoffnung, dass dies zu einem langfristigen
+Wachstum beiträgt.
+
+Herzlichen Glückwunsch! Sie wurden von {{GRANTER_NAME}} ausgewählt und erhalten
+damit eine Jahresmitgliedschaft, im Wert von 240 Franken, geschenkt!
+
+{{#if GRANTER_MESSAGE}} {{GRANTER_NAME}} hat uns eine Nachricht für Sie
+mitgegeben:
+
+> {{{GRANTER_MESSAGE}}}
+{{/if}} Um Ihre Jahresmitgliedschaft in Empfang zu nehmen, melden Sie sich
+einfach vor dem {{GRANT_BEGIN_BEFORE}} hier an:
+
+Jetzt aktivieren [{{LINK_CLAIM_PREFILLED}}] Falls dieser Button nicht
+funktioniert: Öffnen Sie bitte {{LINK_CLAIM_CONTEXTLESS}}
+[{{LINK_CLAIM_PREFILLED}}], und geben Sie dann Ihren Namen, Ihre E-Mail-Adresse
+und den folgenden Gutscheincode ein: {{GRANT_VOUCHER_CODE}} 
+
+Sollten Sie schon in den nächsten Tagen oder Monaten so überzeugt sein, dass Sie
+der Republik-Community etwas zurückgeben wollen: Sie können jederzeit eine
+Mitgliedschaft oder ein Monatsabo verschenken. Entweder direkt an einen Ihrer
+Freunde. Oder Sie überlassen das Verschenken uns, so, wie es die Person, die
+Ihre Mitgliedschaft finanziert hat, auch tat.
+
+Viel Spass bei der Lektüre! Herzlich
+
+Ihre Crew der Republik
+
+Die Republik ist ein unabhängiges und werbefreies digitales Magazin für Politik,
+Wirtschaft, Gesellschaft und Kultur. Es wird von seinen Leserinnen und Lesern
+finanziert und erscheint von Montag bis Samstag mit täglich ein bis drei neuen
+Beiträgen. In der App, auf der Website und als Newsletter.
+
+
+Republik AG
+Sihlhallenstrasse 1, CH-8004 Zürich
+www.republik.ch [{{frontend_base_url}}]
+kontakt@republik.ch 
+
+Unser Manifest [{{link_manifest}}]
+Das Impressum [{{link_imprint}}]
+Häufig gestellte Fragen [{{link_faq}}]
