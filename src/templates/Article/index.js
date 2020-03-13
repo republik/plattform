@@ -885,7 +885,8 @@ const createSchema = ({
                 matchMdast: matchHeading(1),
                 component: ({ children, attributes, format, meta }) => {
                   const kind =
-                    (format && format.meta && format.meta.kind) || meta.kind
+                    (format && format.meta && format.meta.kind) ||
+                    (meta && meta.kind)
 
                   const Headline =
                     kind === 'meta'
@@ -898,7 +899,7 @@ const createSchema = ({
                     <Headline attributes={attributes}>{children}</Headline>
                   )
 
-                  if (meta.coverText) {
+                  if (meta && meta.coverText) {
                     return (
                       <CoverTextTitleBlockHeadline>
                         {element}
