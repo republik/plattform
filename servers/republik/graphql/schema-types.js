@@ -54,7 +54,7 @@ extend type User {
   pgpPublicKeyId: String
   emailAccessRole: AccessRole
 
-  # as raw text, use `biographyContent` to get mdast
+  # as raw text, use \`biographyContent\` to get mdast
   biography: String
   # biography as mdast
   biographyContent: JSON

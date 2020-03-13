@@ -48,7 +48,7 @@ module.exports = {
   username: exposeProfileField('username'),
   badges: exposeProfileField('badges'),
   biography: exposeProfileField('biography'),
-  biographyMdast: exposeProfileField('biography', (bio) => bio && remark.parse(bio)),
+  biographyContent: exposeProfileField('biography', (bio) => bio && remark.parse(bio)),
   facebookId: exposeProfileField('facebookId'),
   twitterHandle: exposeProfileField('twitterHandle'),
   publicUrl: exposeProfileField('publicUrl'),
