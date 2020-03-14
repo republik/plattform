@@ -179,7 +179,10 @@ export const TeaserFrontTileRow = ({
             }
           },
           [mUp]: {
-            flexWrap: 'wrap'
+            flexWrap: 'wrap',
+            '& .tile': {
+              alignItems: 'start'
+            }
           }
         })
       : styles[`mobileCol${mobileColumns}`]
