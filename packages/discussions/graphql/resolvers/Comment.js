@@ -1,7 +1,7 @@
 const crypto = require('crypto')
 
 const { Roles } = require('@orbiting/backend-modules-auth')
-const { mdastToString } = require('@orbiting/backend-modules-utils')
+const { mdastToString, remark } = require('@orbiting/backend-modules-utils')
 
 // TODO don't require from servers
 const {
@@ -9,7 +9,6 @@ const {
   name: getName,
   slug: getSlug
 } = require('../../../../servers/republik/graphql/resolvers/User')
-const remark = require('../../lib/remark')
 const { clipNamesInText } = require('../../lib/nameClipper')
 const { stripUrlFromText } = require('../../lib/urlStripper')
 const { getEmbedByUrl } = require('@orbiting/backend-modules-embeds')
