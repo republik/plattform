@@ -743,6 +743,10 @@
       "value": "Sie haben keine Berechtigung, diesen Newsletter zu abonnieren."
     },
     {
+      "key": "api/newsletters/request/COVID19/subject",
+      "value": "Bestätigen Sie Ihre Anmeldung zum COVID-19 Newsletter."
+    },
+    {
       "key": "api/statements/maxNodes",
       "value": "Sie können maximal 100 Statements auf einmal abfragen"
     },

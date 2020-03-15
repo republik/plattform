@@ -92,6 +92,12 @@ type mutations {
     consents: [String!]
   ): NewsletterSubscription!
 
+  requestNewsletterSubscription(
+    email: String!
+    name: NewsletterName!
+    context: String!
+  ): Boolean!
+
   submitQuestion(question: String!): MutationResult
 
   # max every 12h
