@@ -20,7 +20,8 @@ module.exports = async (_, args, context) => {
     subscribed,
     email,
     mac,
-    consents: _consents = []
+    consents: _consents = [],
+    ignoreMemberUnsubscribed = false
   } = args
 
   // only allow PRIVACY consent via this endpint
@@ -71,7 +72,7 @@ module.exports = async (_, args, context) => {
   if (subscribed) {
     await saveConsents({
       userId: user.id,
-      consents: [ consentName ],
+      consents: [consentName],
       req,
       pgdb
     })
@@ -90,7 +91,8 @@ module.exports = async (_, args, context) => {
       {
         user,
         name,
-        subscribed
+        subscribed,
+        ignoreMemberUnsubscribed
       },
       context
     )
