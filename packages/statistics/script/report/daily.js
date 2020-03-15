@@ -16,7 +16,7 @@ const Data = require('../../lib/matomo/data')
 const Indexes = require('../../lib/matomo/indexes')
 const Documents = require('../../lib/elastic/documents')
 
-const { MATOMO_SITE_ID } = process.env
+const { MATOMO_SITE_ID, FRONTEND_BASE_URL } = process.env
 
 moment.locale('de-CH')
 
@@ -156,10 +156,10 @@ const getRandomQuote = async ({ pgdb }) => {
 }
 
 const getUltradashboardDailyReportLink = (date) =>
-  `https://ultradashboard.republik.ch/public/dashboard/fe40beaf-f7bb-49f1-900e-257785478f1d?datum=${date.format('YYYY-MM-DD')}`
+  `${FRONTEND_BASE_URL}/ud/daily?datum=${date.format('YYYY-MM-DD')}`
 
 const getUltradashboardUrlReportLink = (url) =>
-  `https://ultradashboard.republik.ch/public/dashboard/aa39d4c2-a4bc-4911-8a8d-7b23a1d82425?url=${url}`
+  `${FRONTEND_BASE_URL}/ud/report?url=${url}`
 
 Promise.all([PgDb.connect(), Elasticsearch.connect()]).spread(async (pgdb, elastic) => {
   const { limit, idSite, indexYear, channel, dryRun } = argv
