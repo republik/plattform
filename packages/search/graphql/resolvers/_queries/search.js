@@ -42,6 +42,7 @@ const createCache = require('../../../lib/cache')
 
 const {
   DOCUMENTS_RESTRICT_TO_ROLES,
+  DOCUMENTS_UNRESTRICTED_REPO_IDS,
   SEARCH_TRACK = false
 } = process.env
 
@@ -329,9 +330,20 @@ const getFirst = (first, filter, user, recursive, unrestricted) => {
   // making totalCount always available
   // querying a single document by path is always allowed
   const path = getFilterValue(filter, 'path')
+
   const repoId = getFilterValue(filter, 'repoId')
   const oneRepoId = repoId && (!Array.isArray(repoId) || repoId.length === 1)
-  if (DOCUMENTS_RESTRICT_TO_ROLES && !recursive && !path && !oneRepoId && !unrestricted) {
+
+  const format = getFilterValue(filter, 'format')
+  const whitelisted = format && format.length && DOCUMENTS_UNRESTRICTED_REPO_IDS && DOCUMENTS_UNRESTRICTED_REPO_IDS
+    .split(',')
+    .some(repoId =>
+      format.some(f =>
+        new RegExp(`.*${repoId}$`).test(f)
+      )
+    )
+
+  if (DOCUMENTS_RESTRICT_TO_ROLES && !recursive && !path && !oneRepoId && !whitelisted && !unrestricted) {
     const roles = DOCUMENTS_RESTRICT_TO_ROLES.split(',')
     if (!userIsInRoles(user, roles)) {
       return 0
