@@ -337,11 +337,7 @@ const getFirst = (first, filter, user, recursive, unrestricted) => {
   const format = getFilterValue(filter, 'format')
   const whitelisted = format && format.length && DOCUMENTS_UNRESTRICTED_REPO_IDS && DOCUMENTS_UNRESTRICTED_REPO_IDS
     .split(',')
-    .some(repoId =>
-      format.some(f =>
-        new RegExp(`.*${repoId}$`).test(f)
-      )
-    )
+    .some(repoId => format.some(new RegExp(`.*${repoId}$`).test)
 
   if (DOCUMENTS_RESTRICT_TO_ROLES && !recursive && !path && !oneRepoId && !whitelisted && !unrestricted) {
     const roles = DOCUMENTS_RESTRICT_TO_ROLES.split(',')
