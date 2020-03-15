@@ -31,9 +31,6 @@
   "config": {
     "commitizen": {
       "path": "cz-conventional-changelog"
-    },
-    "validate-commit-msg": {
-      "helpMessage": "Commit message violates the rules defined for this project. Please, execute `yarn run commit` to generate a correct commit message with `commitizen`"
     }
   },
   "dependencies": {},
@@ -46,8 +43,7 @@
     "jest": "^24.3.1",
     "jest-environment-node": "^24.7.1",
     "lint-staged": "^10.0.8",
-    "standard": "^14.3.1",
-    "validate-commit-msg": "^2.11.1"
+    "standard": "^14.3.1"
   },
   "scripts": {
     "start": "if [ -z \"$SERVER\" ]; then >&2 echo \"Missing ENV var: SERVER. Possible values are: republik, publikator, assets.\" && exit 1; else cd servers/$SERVER && yarn run start; fi",
@@ -55,7 +51,6 @@
     "precommit": "lint-staged",
     "cloc": "find . -name '*.js' -not -path \"*/node_modules*\" -not -path \"./node_modules*\" | xargs wc -l",
     "commit": "git-cz",
-    "commitmsg": "validate-commit-msg",
     "roleUser": "node packages/auth/script/roleUser",
     "roleUsers": "node packages/auth/script/roleUsers",
     "translations": "cd packages/translate && yarn translations && cd -",
