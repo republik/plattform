@@ -42,7 +42,7 @@ const createCache = require('../../../lib/cache')
 
 const {
   DOCUMENTS_RESTRICT_TO_ROLES,
-  DOCUMENTS_UNRESTRICTED_REPO_IDS,
+  DOCUMENTS_UNRESTRICTED_CHILDREN_REPO_IDS,
   SEARCH_TRACK = false
 } = process.env
 
@@ -325,7 +325,7 @@ const parseOptions = (options) => {
 
 const MAX_NODES = 10000 // Limit, but exceedingly high
 
-const getFirst = (first, filter, user, recursive, unrestricted) => {
+const getFirst = (first, filter, user, recursive, forceUnrestricted) => {
   // we only restrict the nodes array
   // making totalCount always available
   // querying a single document by path is always allowed
@@ -335,11 +335,19 @@ const getFirst = (first, filter, user, recursive, unrestricted) => {
   const oneRepoId = repoId && (!Array.isArray(repoId) || repoId.length === 1)
 
   const format = getFilterValue(filter, 'format')
-  const whitelisted = format && format.length && DOCUMENTS_UNRESTRICTED_REPO_IDS && DOCUMENTS_UNRESTRICTED_REPO_IDS
-    .split(',')
-    .some(repoId => format.some(new RegExp(`.*${repoId}$`).test)
+  const unrestricted =
+    format &&
+    format.length &&
+    DOCUMENTS_UNRESTRICTED_CHILDREN_REPO_IDS &&
+    DOCUMENTS_UNRESTRICTED_CHILDREN_REPO_IDS
+      .split(',')
+      .some(repoId =>
+        format.some(f =>
+          new RegExp(`.*${repoId}$`).test(f)
+        )
+      )
 
-  if (DOCUMENTS_RESTRICT_TO_ROLES && !recursive && !path && !oneRepoId && !whitelisted && !unrestricted) {
+  if (DOCUMENTS_RESTRICT_TO_ROLES && !recursive && !path && !oneRepoId && !unrestricted && !forceUnrestricted) {
     const roles = DOCUMENTS_RESTRICT_TO_ROLES.split(',')
     if (!userIsInRoles(user, roles)) {
       return 0
