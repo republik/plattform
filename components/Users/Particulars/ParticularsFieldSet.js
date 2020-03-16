@@ -34,9 +34,7 @@ const fields = t => [
       const parsedDate = birthdayParse(value)
 
       return (
-        (value.trim().length <= 0 &&
-          t('merci/updateMe/birthday/error/empty')) ||
-        parsedDate === null ||
+        (value.trim().length && parsedDate === null) ||
         (parsedDate > new Date() &&
           t('merci/updateMe/birthday/error/invalid')) ||
         (parsedDate < new Date(1798, 3, 12) &&

@@ -11,15 +11,11 @@ export const COUNTRIES = [
 export const fields = t => [
   {
     label: t('me/addressForm/name/label'),
-    name: 'name',
-    validator: value =>
-      !value && t('me/addressForm/name/error/empty')
+    name: 'name'
   },
   {
     label: t('me/addressForm/line1/label'),
-    name: 'line1',
-    validator: value =>
-      !value && t('me/addressForm/line1/error/empty')
+    name: 'line1'
   },
   {
     label: t('me/addressForm/line2/label'),
@@ -27,21 +23,15 @@ export const fields = t => [
   },
   {
     label: t('me/addressForm/postalCode/label'),
-    name: 'postalCode',
-    validator: value =>
-      !value && t('me/addressForm/postalCode/error/empty')
+    name: 'postalCode'
   },
   {
     label: t('me/addressForm/city/label'),
-    name: 'city',
-    validator: value =>
-      !value && t('me/addressForm/city/error/empty')
+    name: 'city'
   },
   {
     label: t('me/addressForm/country/label'),
-    name: 'country',
-    validator: value =>
-      !value && t('me/addressForm/country/error/empty')
+    name: 'country'
   }
 ]
 
