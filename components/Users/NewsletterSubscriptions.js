@@ -147,7 +147,8 @@ const NewsletterSubscriptions = ({ t, userId }) => (
           render={() => {
             const { user } = data
             const {
-              subscriptions
+              subscriptions,
+              status
             } = user.newsletterSettings
             const hasNonEligibleSubscription = subscriptions.some(
               newsletter => !newsletter.isEligible
@@ -158,10 +159,10 @@ const NewsletterSubscriptions = ({ t, userId }) => (
                 <SectionTitle>
                   Abonnierte Newsletter
                 </SectionTitle>
+                Status: {status}<br />
                 {hasNonEligibleSubscription &&
                   'Es können nur User mit aktiver Membership die Republik-Newsletter abonnieren.'}
-                {!hasNonEligibleSubscription &&
-                  subscriptions.map(
+                {subscriptions.map(
                     (subscription, index) => (
                       <UpdateSubscription
                         t={t}

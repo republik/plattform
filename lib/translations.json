@@ -747,6 +747,14 @@
       "value": "unregelmässig"
     },
     {
+      "key": "account/newsletterSubscriptions/COVID19/label",
+      "value": "Republik – Das tägliche Covid-19-Update"
+    },
+    {
+      "key": "account/newsletterSubscriptions/COVID19/frequency",
+      "value": "montags bis freitags um 19 Uhr"
+    },
+    {
       "key": "account/authSettings/title",
       "value": "Anmeldung"
     },
