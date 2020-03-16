@@ -31,6 +31,11 @@ type Podcast {
   appleUrl: String
 }
 
+type Newsletter {
+  name: String
+  free: Boolean
+}
+
 type Meta {
   title: String
   shortTitle: String
@@ -61,6 +66,8 @@ type Meta {
   credits: JSON
   audioSource: AudioSource
   podcast: Podcast
+
+  newsletter: Newsletter
 
   estimatedReadingMinutes: Int
   totalMediaMinutes: Int
