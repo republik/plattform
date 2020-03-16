@@ -8,15 +8,6 @@ Wir haben Ihre Kündigung erfasst: Ihr Abonnement läuft noch theoretisch bis zu
 
 Herzlichen Dank für Ihr Interesse und Ihre Unterstützung im vergangenen Jahr!
 
-Die Republik befindet sich derzeit in einem Kampf um ihre Zukunft: Wir müssen
-bis zum 31. März 19’000 Mitglieder sein und eine zweite Anschub­finanzierung
-finden. Sehen Sie hier den Stand der Dinge, lesen Sie, wie wir das schaffen
-möchten und was Sie tun können [{{link_cockpit}}].
-
-Wir verstehen, dass Sie nicht mehr Teil des Projektes sein möchten, doch würden
-wir uns sehr freuen, wenn Sie uns mit einer Spende [{{link_offer_donate}}] oder 
-einem Geschenk-Abo [{{link_offer_abo_give}}] unterstützen würden.
-
 {{#if reason_given}} Auch für Ihre Kündigungs­begründung, aus der wir lernen
 können.
 
