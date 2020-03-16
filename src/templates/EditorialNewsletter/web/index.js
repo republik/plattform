@@ -12,9 +12,12 @@ import {
   FigureByline
 } from '../../../components/Figure'
 import { Sub, Sup } from '../../../components/Typography'
+import { P, Subhead } from '../../../components/Typography/Editorial'
 
 const createSchema = ({ ...args } = {}) => {
   return createNewsletterSchema({
+    H2: Subhead,
+    Paragraph: P,
     Container,
     Cover: FigureCover,
     CoverImage: FigureImage,

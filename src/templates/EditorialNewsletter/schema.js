@@ -23,6 +23,8 @@ import { getDatePath, matchFigure, extractImage } from '../Article/utils'
 const matchLast = (node, index, parent) => index === parent.children.length - 1
 
 const createNewsletterSchema = ({
+  H2,
+  Paragraph,
   Container,
   Cover,
   CoverImage,
