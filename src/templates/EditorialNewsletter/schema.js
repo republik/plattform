@@ -1,6 +1,5 @@
 import React from 'react'
-import Paragraph, { Link, Br } from './email/Paragraph'
-import { H2 } from './email/Headlines'
+import { Link, Br } from './email/Paragraph'
 import HR from './email/HR'
 import Blockquote, {
   BlockquoteText,
@@ -35,7 +34,9 @@ const createNewsletterSchema = ({
   Byline,
   Sub,
   Sup,
-  Button
+  Button,
+  List,
+  ListItem
 } = {}) => {
   const globalInlines = [
     {

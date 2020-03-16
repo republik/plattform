@@ -13,6 +13,7 @@ import {
 } from '../../../components/Figure'
 import { Sub, Sup } from '../../../components/Typography'
 import { P, Subhead } from '../../../components/Typography/Editorial'
+import { List, ListItem } from '../../../components/List'
 
 const createSchema = ({ ...args } = {}) => {
   return createNewsletterSchema({
@@ -29,6 +30,8 @@ const createSchema = ({ ...args } = {}) => {
     Sub,
     Sup,
     Button: Button,
+    List,
+    ListItem,
     ...args
   })
 }

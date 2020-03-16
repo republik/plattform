@@ -8,6 +8,7 @@ import Center from './Center'
 import Figure, { Image, Caption, Byline } from './Figure'
 import { Sub, Sup } from './SubSup'
 import { Button } from './Button'
+import List, { ListItem } from './List'
 
 const createSchema = ({ ...args } = {}) => {
   return createNewsletterSchema({
@@ -24,6 +25,8 @@ const createSchema = ({ ...args } = {}) => {
     Sub,
     Sup,
     Button,
+    List,
+    ListItem,
     ...args
   })
 }
