@@ -67,7 +67,7 @@
   },
   "dependencies": {
     "@orbiting/remark-preset": "^1.2.4",
-    "@project-r/styleguide": "https://s3.eu-central-1.amazonaws.com/republik-assets-dev/npm/project-r-styleguide-nl-lists-1df503c.tgz",
+    "@project-r/styleguide": "https://s3.eu-central-1.amazonaws.com/republik-assets-dev/npm/project-r-styleguide-nl-lists-30d8330.tgz",
     "@project-r/template-newsletter": "^1.5.0",
     "apollo-cache-inmemory": "^1.6.3",
     "apollo-client": "^2.6.4",
