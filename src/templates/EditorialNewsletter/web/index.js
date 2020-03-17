@@ -1,8 +1,10 @@
+import React from 'react'
 import createNewsletterSchema from '../schema'
 
 import Container from './Container'
 import StyledFigure from './Figure'
 import Button from './Button'
+import ListP from './ListP'
 
 import Center from '../../../components/Center'
 import {
@@ -32,6 +34,7 @@ const createSchema = ({ ...args } = {}) => {
     Button: Button,
     List,
     ListItem,
+    ListP,
     ...args
   })
 }

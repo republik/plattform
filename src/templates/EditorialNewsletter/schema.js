@@ -5,7 +5,6 @@ import Blockquote, {
   BlockquoteText,
   BlockquoteSource
 } from './email/Blockquote'
-import List, { ListItem } from './email/List'
 
 import {
   matchType,
@@ -36,7 +35,8 @@ const createNewsletterSchema = ({
   Sup,
   Button,
   List,
-  ListItem
+  ListItem,
+  ListP
 } = {}) => {
   const globalInlines = [
     {
@@ -72,39 +72,41 @@ const createNewsletterSchema = ({
     editorModule: 'link'
   }
 
-  const paragraph = {
-    matchMdast: matchParagraph,
-    component: Paragraph,
-    editorModule: 'paragraph',
-    editorOptions: {
-      formatButtonText: 'Paragraph'
-    },
-    rules: [
-      ...globalInlines,
-      link,
-      {
-        matchMdast: matchType('strong'),
-        component: ({ attributes, children }) => (
-          <strong {...attributes}>{children}</strong>
-        ),
-        editorModule: 'mark',
-        editorOptions: {
-          type: 'STRONG',
-          mdastType: 'strong'
-        }
+  const paragraph = customComponent => {
+    return {
+      matchMdast: matchParagraph,
+      component: customComponent || Paragraph,
+      editorModule: 'paragraph',
+      editorOptions: {
+        formatButtonText: 'Paragraph'
       },
-      {
-        matchMdast: matchType('emphasis'),
-        component: ({ attributes, children }) => (
-          <em {...attributes}>{children}</em>
-        ),
-        editorModule: 'mark',
-        editorOptions: {
-          type: 'EMPHASIS',
-          mdastType: 'emphasis'
+      rules: [
+        ...globalInlines,
+        link,
+        {
+          matchMdast: matchType('strong'),
+          component: ({ attributes, children }) => (
+            <strong {...attributes}>{children}</strong>
+          ),
+          editorModule: 'mark',
+          editorOptions: {
+            type: 'STRONG',
+            mdastType: 'strong'
+          }
+        },
+        {
+          matchMdast: matchType('emphasis'),
+          component: ({ attributes, children }) => (
+            <em {...attributes}>{children}</em>
+          ),
+          editorModule: 'mark',
+          editorOptions: {
+            type: 'EMPHASIS',
+            mdastType: 'emphasis'
+          }
         }
-      }
-    ]
+      ]
+    }
   }
 
   const figureCaption = {
@@ -233,7 +235,7 @@ const createNewsletterSchema = ({
               meta: ancestors[ancestors.length - 1].meta || {}
             }),
             rules: [
-              paragraph,
+              paragraph(),
               figure,
               {
                 matchMdast: matchHeading(2),
@@ -289,7 +291,7 @@ const createNewsletterSchema = ({
                       type: 'QUOTEP',
                       placeholder: 'Zitat'
                     },
-                    rules: [paragraph]
+                    rules: [paragraph()]
                   },
                   {
                     matchMdast: (node, index, parent) =>
@@ -300,7 +302,7 @@ const createNewsletterSchema = ({
                       type: 'QUOTECITE',
                       placeholder: 'Quellenangabe / Autor'
                     },
-                    rules: [paragraph]
+                    rules: [paragraph()]
                   }
                 ]
               },
@@ -319,7 +321,7 @@ const createNewsletterSchema = ({
                     matchMdast: matchType('listItem'),
                     component: ListItem,
                     editorModule: 'listItem',
-                    rules: [paragraph]
+                    rules: [paragraph(ListP)]
                   }
                 ]
               },
