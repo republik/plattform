@@ -29,16 +29,22 @@ export default ({ rule, subModules, TYPE }) => {
   const list = {
     match: matchBlock(TYPE),
     matchMdast: node => node.type === 'list',
-    fromMdast: (node, index, parent, rest) => ({
-      kind: 'block',
-      type: TYPE,
-      data: {
-        ordered: node.ordered,
-        start: node.start,
-        compact: !node.loose
-      },
-      nodes: itemSerializer.fromMdast(node.children, 0, node, rest)
-    }),
+    fromMdast: (node, index, parent, rest) => {
+      const isNewsletter =
+        rest.context &&
+        rest.context.meta &&
+        rest.context.meta.template === 'editorialNewsletter'
+      return {
+        kind: 'block',
+        type: TYPE,
+        data: {
+          ordered: node.ordered,
+          start: node.start,
+          compact: !node.loose && !isNewsletter
+        },
+        nodes: itemSerializer.fromMdast(node.children, 0, node, rest)
+      }
+    },
     toMdast: (object, index, parent, rest) => {
       const res = {
         type: 'list',
