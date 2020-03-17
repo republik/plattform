@@ -72,7 +72,7 @@ const createNewsletterSchema = ({
     editorModule: 'link'
   }
 
-  const paragraph = customComponent => {
+  const createParagraphRule = customComponent => {
     return {
       matchMdast: matchParagraph,
       component: customComponent || Paragraph,
@@ -108,6 +108,9 @@ const createNewsletterSchema = ({
       ]
     }
   }
+
+  const paragraph = createParagraphRule()
+  const listParagraph = createParagraphRule(ListP)
 
   const figureCaption = {
     matchMdast: matchParagraph,
@@ -235,7 +238,7 @@ const createNewsletterSchema = ({
               meta: ancestors[ancestors.length - 1].meta || {}
             }),
             rules: [
-              paragraph(),
+              paragraph,
               figure,
               {
                 matchMdast: matchHeading(2),
@@ -291,7 +294,7 @@ const createNewsletterSchema = ({
                       type: 'QUOTEP',
                       placeholder: 'Zitat'
                     },
-                    rules: [paragraph()]
+                    rules: [paragraph]
                   },
                   {
                     matchMdast: (node, index, parent) =>
@@ -302,7 +305,7 @@ const createNewsletterSchema = ({
                       type: 'QUOTECITE',
                       placeholder: 'Quellenangabe / Autor'
                     },
-                    rules: [paragraph()]
+                    rules: [paragraph]
                   }
                 ]
               },
@@ -321,7 +324,7 @@ const createNewsletterSchema = ({
                     matchMdast: matchType('listItem'),
                     component: ListItem,
                     editorModule: 'listItem',
-                    rules: [paragraph(ListP)]
+                    rules: [listParagraph]
                   }
                 ]
               },
