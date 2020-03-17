@@ -98,6 +98,26 @@ At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergr
 `}</Markdown>
 ```
 
+### With Covid-19 Logo
+
+```react|noSource
+<Markdown schema={emailSchema}>{`
+\-\-\-
+format: 'https://github.com/republik/format-covid-19-uhr-newsletter'
+\-\-\-
+
+<section><h6>CENTER</h6>
+
+Ladies and Gentlemen,
+
+At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. **Lorem ipsum** dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua ...
+
+<hr /></section>
+
+`.trim()}</Markdown>
+```
+
+
 ## Web schema
 
 ```code|lang-jsx

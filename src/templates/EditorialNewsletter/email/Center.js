@@ -49,15 +49,15 @@ export default ({ children, meta }) => {
                 <a href='https://www.republik.ch/' style={linkStyle}>
                   <img
                     height='79'
+                    width='178'
                     src='https://www.republik.ch/static/logo_republik_newsletter.png'
                     style={{
                       border: 0,
-                      width: '180px !important',
+                      width: '178px !important',
                       height: '79px !important',
                       margin: 0,
                       maxWidth: '100% !important'
                     }}
-                    width='180'
                     alt=''
                   />
                 </a>

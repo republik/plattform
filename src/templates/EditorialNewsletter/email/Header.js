@@ -2,7 +2,11 @@ import React from 'react'
 import colors from '../../../theme/colors'
 
 export default ({ meta }) => {
-  const { slug, path } = meta
+  const { slug, path, format } = meta
+
+  const isCovid19 =
+    format && format.indexOf('format-covid-19-uhr-newsletter') !== -1
+
   return (
     <tr>
       <td
@@ -16,15 +20,17 @@ export default ({ meta }) => {
         >
           <img
             height='79'
-            src='https://www.republik.ch/static/logo_republik_newsletter.png'
+            width={isCovid19 ? 217 : 178}
+            src={`https://www.republik.ch/static/logo_republik_newsletter${
+              isCovid19 ? '_covid19' : ''
+            }.png`}
             style={{
               border: 0,
-              width: '180px !important',
+              width: `${isCovid19 ? 217 : 178}px !important`,
               height: '79px !important',
               margin: 0,
               maxWidth: '100% !important'
             }}
-            width='180'
             alt='REPUBLIK'
           />
         </a>
