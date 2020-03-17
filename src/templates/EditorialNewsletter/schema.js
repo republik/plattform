@@ -78,7 +78,8 @@ const createNewsletterSchema = ({
       component: customComponent || Paragraph,
       editorModule: 'paragraph',
       editorOptions: {
-        formatButtonText: 'Paragraph'
+        formatButtonText: 'Paragraph',
+        type: customComponent ? 'LISTP' : undefined
       },
       rules: [
         ...globalInlines,
