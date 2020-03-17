@@ -61,7 +61,7 @@ const getMeta = async (args, context) => {
     grantable: await isGrantable(args, context),
     payload: {
       perks: {
-        giftableMemberships: giftableMemberships - unclaimedAccessGrants
+        giftableMemberships: Math.max(giftableMemberships - unclaimedAccessGrants, 0)
       }
     }
   }

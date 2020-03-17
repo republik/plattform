@@ -1,0 +1,55 @@
+Guten Tag
+
+Und willkommen an Bord!
+Wir freuen uns sehr, Sie bei der Republik begrüssen zu dürfen.
+
+Ihre Mitgliedschaft wurde von unseren Verlegerinnen finanziert in der Hoffnung,
+dass Sie die Republik kennen und schätzen lernen und hoffentlich zu einem treuen
+Mitglied der Republik werden.
+
+{{#if pledger_name}} {{#unless message_to_claimer}} Die grosszügige Person, die
+Ihnen die Mitgliedschaft geschenkt hat, heisst {{pledger_name}}.
+
+{{/unless}} {{#if message_to_claimer}} Die grosszügige Person, die Ihnen die
+Mitgliedschaft geschenkt hat, heisst {{pledger_name}} und hat Ihnen folgende
+Nachricht hinterlassen:
+
+> {{{message_to_claimer}}}
+{{/if}} {{/if}} Nachfolgend finden Sie die wichtigsten Informationen zur
+Republik:
+
+Die Republik erscheint von Montag bis Samstag mit täglich ein bis drei neuen
+Beiträgen. In der Republik-App [{{link_app}}], auf der Website
+[{{frontend_base_url}}] und als Newsletter.
+
+Sie können ab sofort das Magazin lesen [{{link_signin}}], an sämtlichen Debatten
+teilnehmen [{{link_dialog}}] und Beiträge mit Ihren Freunden oder Feinden
+teilen.
+
+Haben Sie Fragen oder brauchen Sie Hilfe? Unter kontakt@republik.ch
+[kontakt@republik.ch] helfen wir Ihnen gerne weiter.
+
+Sollten Sie schon in den nächsten Tagen oder Monaten so überzeugt sein, dass Sie
+der Republik-Community etwas zurückgeben wollen: Sie können jederzeit eine
+Mitgliedschaft oder ein Monatsabo verschenken. Entweder direkt an einen Ihrer
+Freunde. Oder Sie überlassen das Verschenken uns, so, wie es die Person, die
+Ihre Mitgliedschaft finanziert hat, auch tat.
+
+Und nun wünschen wir Ihnen viel Freude mit der Republik.
+
+Ihre Crew der Republik
+
+Die Republik ist ein unabhängiges und werbefreies digitales Magazin für Politik,
+Wirtschaft, Gesellschaft und Kultur. Es wird von seinen Leserinnen und Lesern
+finanziert und erscheint von Montag bis Samstag mit täglich ein bis drei neuen
+Beiträgen. In der App, auf der Website und als Newsletter.
+
+
+Republik AG
+Sihlhallenstrasse 1, CH-8004 Zürich
+www.republik.ch [{{frontend_base_url}}]
+kontakt@republik.ch 
+
+Unser Manifest [{{link_manifest}}]
+Das Impressum [{{link_imprint}}]
+Häufig gestellte Fragen [{{link_faq}}]

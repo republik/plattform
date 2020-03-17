@@ -1,0 +1,40 @@
+Guten Tag
+
+Heute erneuert sich Ihre Mitgliedschaft – und Ihr Engagement für unser
+gemeinsames Projekt gegen den Zynismus, den Vormarsch der Autoritären und gegen
+die Diktatur der Angst um ein Jahr.
+
+Ihr Mitgliedsbeitrag ist fällig:
+
+Jetzt bezahlen [{{prolong_url}}] Hierfür müssen Sie nur noch die Rechnung für
+das nächste Jahr bezahlen, was mit einem Klick in drei Minuten erledigt ist.
+[{{prolong_url}}]
+
+Sollten Sie das nicht tun, verlieren Ihre Zugangsdaten am {{grace_end_date}}
+leider ihre Gültigkeit.
+
+Sie wollen die Republik nicht mehr unterstützen? Jetzt kündigen [{{cancel_url}}]
+.
+
+Und sollte uns ein Fehler unterlaufen sein, schreiben Sie uns auf 
+kontakt@republik.ch.
+
+Mit grossem Dank für das letzte Jahr!
+Und in Vorfreude auf ein neues.
+
+Ihre Crew der Republik
+
+Die Republik ist ein unabhängiges und werbefreies digitales Magazin für Politik,
+Wirtschaft, Gesellschaft und Kultur. Es wird von seinen Leserinnen und Lesern
+finanziert und erscheint von Montag bis Samstag mit täglich ein bis drei neuen
+Beiträgen. In der App, auf der Website und als Newsletter. 
+
+
+Republik AG
+Sihlhallenstrasse 1, CH-8004 Zürich
+www.republik.ch [{{frontend_base_url}}]
+kontakt@republik.ch 
+
+Unser Manifest [{{link_manifest}}]
+Das Impressum [{{link_imprint}}]
+Häufig gestellte Fragen [{{link_faq}}]

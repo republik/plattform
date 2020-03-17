@@ -1,7 +1,8 @@
 const checkEnv = require('check-env')
 const debug = require('debug')('mail:lib:sendMailTemplate')
-const fs = require('fs')
+const fs = require('fs').promises
 const path = require('path')
+const Promise = require('bluebird')
 
 const shouldScheduleMessage = require('../utils/shouldScheduleMessage')
 const shouldSendMessage = require('../utils/shouldSendMessage')
@@ -27,17 +28,17 @@ const {
   ASSETS_SERVER_BASE_URL
 } = process.env
 
-const getTemplate = (name) => {
-  const templatePath = path.resolve(`${__dirname}/../templates/${name}.html`)
-
-  if (!fs.existsSync(templatePath)) {
-    debug(`template "${name}" not found in templates folder`, { templatePath })
-    return false
-  }
-
-  const contents = fs.readFileSync(templatePath, 'utf8')
-  return contents
+const getTemplate = async (filehandler) => {
+  const template = await filehandler.readFile({ encoding: 'utf8' }).catch(() => null)
+  await filehandler.close()
+  return template
 }
+
+const getTemplates = async (name) =>
+  Promise.props({
+    html: fs.open(path.resolve(`${__dirname}/../templates/${name}.html`)).then(getTemplate).catch(() => null),
+    text: fs.open(path.resolve(`${__dirname}/../templates/${name}.txt`)).then(getTemplate).catch(() => null)
+  })
 
 const envMergeVars = [
   {
@@ -205,19 +206,22 @@ module.exports = async (mail, context, log) => {
     ...envMergeVars
   ].filter(Boolean)
 
+  const { html, text } = await getTemplates(mail.templateName)
+
   const message = {
     to: [{ email: mail.to }],
     subject: mail.subject,
     from_email: mail.fromEmail || DEFAULT_MAIL_FROM_ADDRESS,
     from_name: mail.fromName || DEFAULT_MAIL_FROM_NAME,
-    html: getTemplate(mail.templateName),
+    html,
+    text,
     merge_language: mail.mergeLanguage || 'handlebars',
     global_merge_vars: mergeVars,
-    auto_text: true,
+    auto_text: !text,
     tags
   }
 
-  debug({ ...message, html: !!message.html })
+  debug({ ...message, html: !!message.html, text: !!message.text})
 
   const sendFunc = sendResultNormalizer(
     shouldScheduleMessage(mail, message),
@@ -246,12 +250,12 @@ module.exports = async (mail, context, log) => {
   return send({
     log,
     sendFunc,
-    message: { ...message, html: !!message.html },
+    message: { ...message, html: !!message.html, text: !!message.text },
     email: message.to[0].email,
     template: mail.templateName,
     context
   })
 }
 
-module.exports.getTemplate = getTemplate
+module.exports.getTemplates = getTemplates
 module.exports.envMergeVars = envMergeVars

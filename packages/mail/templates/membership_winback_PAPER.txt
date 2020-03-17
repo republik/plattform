@@ -1,0 +1,41 @@
+Guten Tag
+
+Sie haben sich entschieden, Ihre Mitgliedschaft zu künden.
+Schade, sind Sie nicht mehr Teil der Republik und der Idee hinter unserem
+gemeinsamen Projekt! 
+
+Bei Ihrer Kündigung haben Sie angegeben, dass Sie lieber auf Papier lesen
+beziehungsweise nicht gerne am Bildschirm.
+
+Eine gedruckte Republik ist zurzeit zwar nicht in Planung. Vielleicht wird es
+aber einmal eine Best-of-Ausgabe geben. Wenn Sie nichts dagegen haben, melden
+wir uns dann wieder bei Ihnen.
+
+Als Alternative zur Bildschirmlektüre haben wir übrigens bereits mehr als 100
+Audiobeiträge verfügbar und planen, dieses Angebot auszubauen. Hier finden Sie
+eine Auswahl an Audiobeiträgen [{{link_listen}}].
+
+Wir würden uns sehr freuen, wenn Sie zu einem späteren Zeitpunkt wieder bei uns
+vorbeischauten. Sie sind jederzeit willkommen.
+
+In jedem Fall gilt: Vielen Dank für Ihr Interesse und Ihre Unterstützung bis
+heute!
+
+Herzlich
+
+Ihre Crew der Republik
+
+Die Republik ist ein unabhängiges und werbefreies digitales Magazin für Politik,
+Wirtschaft, Gesellschaft und Kultur. Es wird von seinen Leserinnen und Lesern
+finanziert und erscheint von Montag bis Samstag mit täglich ein bis drei neuen
+Beiträgen. In der App, auf der Website und als Newsletter. 
+
+
+Republik AG
+Sihlhallenstrasse 1, CH-8004 Zürich
+www.republik.ch [{{frontend_base_url}}]
+kontakt@republik.ch 
+
+Unser Manifest [{{link_manifest}}]
+Das Impressum [{{link_imprint}}]
+Häufig gestellte Fragen [{{link_faq}}]

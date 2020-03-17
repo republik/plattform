@@ -86,10 +86,17 @@ type mutations {
     userId: ID,
     name: NewsletterName!
     subscribed: Boolean!
+    ignoreMemberUnsubscribed: Boolean
     email: String,
     mac: String,
     consents: [String!]
   ): NewsletterSubscription!
+
+  requestNewsletterSubscription(
+    email: String!
+    name: NewsletterName!
+    context: String!
+  ): Boolean!
 
   submitQuestion(question: String!): MutationResult
 

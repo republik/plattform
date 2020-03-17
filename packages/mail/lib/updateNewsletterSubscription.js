@@ -3,11 +3,14 @@ const {
   InterestIdNotFoundMailError,
   RolesNotEligibleMailError,
   SubscriptionHandlerMissingMailError
- } = require('../errors')
+} = require('../errors')
 const logger = console
 
 module.exports = async ({
-  user, name, subscribed
+  user,
+  name,
+  subscribed,
+  ignoreMemberUnsubscribed = false
 }, NewsletterSubscription) => {
   if (!NewsletterSubscription) throw new SubscriptionHandlerMissingMailError()
 
@@ -32,7 +35,11 @@ module.exports = async ({
 
   const mailchimp = MailchimpInterface({ logger })
   const member = await mailchimp.getMember(email)
-  if (member && member.status !== MailchimpInterface.MemberStatus.Subscribed) {
+  if (
+    member &&
+    member.status !== MailchimpInterface.MemberStatus.Subscribed &&
+    !ignoreMemberUnsubscribed
+  ) {
     // If a user subscribes to a newsletter but their status is not subscribed,
     // we need to set their status to 'pending' which triggers a new confirmation email
     // from mailchimp to re-subscribe.

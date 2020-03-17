@@ -1,0 +1,33 @@
+Guten Tag
+
+Am {{grace_end_date}} verlieren Ihre Zugangsdaten zu republik.ch ihre
+Gültigkeit, da Ihre Mitgliedschaft ausgelaufen ist.
+
+Um dies zu verhindern, können Sie einfach die Rechnung für das nächste Jahr
+bezahlen, was mit einem Klick in drei Minuten erledigt ist [{{prolong_url}}].
+
+Sollte uns ein Fehler unterlaufen sein, schreiben Sie uns auf 
+kontakt@republik.ch.
+
+Und sollten Sie einen finanziellen Engpass haben, schreiben Sie uns ebenso auf 
+kontakt@republik.ch. Wir finden eine Lösung.
+
+Mit grossem Dank für das letzte Jahr!
+Und in Vorfreude auf ein neues. 
+
+Ihre Crew der Republik
+
+Die Republik ist ein unabhängiges und werbefreies digitales Magazin für Politik,
+Wirtschaft, Gesellschaft und Kultur. Es wird von seinen Leserinnen und Lesern
+finanziert und erscheint von Montag bis Samstag mit täglich ein bis drei neuen
+Beiträgen. In der App, auf der Website und als Newsletter. 
+
+
+Republik AG
+Sihlhallenstrasse 1, CH-8004 Zürich
+www.republik.ch [{{frontend_base_url}}]
+kontakt@republik.ch 
+
+Unser Manifest [{{link_manifest}}]
+Das Impressum [{{link_imprint}}]
+Häufig gestellte Fragen [{{link_faq}}]

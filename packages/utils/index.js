@@ -7,5 +7,6 @@ module.exports = {
   hasUserActiveMembership: require('./hasUserActiveMembership'),
   fetchWithTimeout: require('./fetchWithTimeout'),
   getUrls: require('./getUrls'),
-  truncate: require('./truncate')
+  truncate: require('./truncate'),
+  remark: require('./remark')
 }

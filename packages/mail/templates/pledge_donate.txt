@@ -1,0 +1,52 @@
+Guten Tag
+
+Herzlichen Dank für Ihre grosszügige Spende!
+Und die Unterstützung unseres einzigartigen Projektes gegen den Zynismus, den
+Vormarsch der Autoritären und gegen die Diktatur der Angst.
+
+Die Republik steht für die Werte der Aufklärung: für Treue zu Fakten, für
+Lösungen von Fall zu Fall, für Offenheit gegenüber Kritik, für Respektlosigkeit
+gegenüber der Macht und Respekt vor dem Menschen.
+
+Mit Ihrem Geld fördern Sie die Republik – und damit auch eine unabhängige vierte
+Gewalt als zentrale Institution unserer Demokratie.
+
+Wichtige Informationen zu den Zahlungsformalitäten Ihrer Spende:
+
+{{#if `payment_method == "PAYMENTSLIP"`}} Sie haben den Weg der Banküberweisung
+für Ihre Spende gewählt.
+Bitte überweisen Sie {{total_formatted}} an: 
+
+PC 61-11760-6
+IBAN: CH50 0900 0000 6101 1760 6
+BIC: POFICHBEXXX 
+
+lautend auf:
+Project R Genossenschaft
+Sihlhallenstrasse 1
+8004 Zürich 
+
+Bitte vergessen Sie nicht, {{HRID}} in das Feld «Betreff» des Einzahlungsscheins
+zu schreiben, sonst funktioniert die Zuordnung nicht. Danke!
+
+{{else}} Ihre Spende von {{total_formatted}} ist erfolgreich bei uns
+eingegangen, vielen Dank!
+
+{{/if}} Herzlich
+
+Ihre Crew der Republik
+
+Die Republik ist ein unabhängiges und werbefreies digitales Magazin für Politik,
+Wirtschaft, Gesellschaft und Kultur. Es wird von seinen Leserinnen und Lesern
+finanziert und erscheint von Montag bis Samstag mit täglich ein bis drei neuen
+Beiträgen. In der App, auf der Website und als Newsletter.
+
+
+Republik AG
+Sihlhallenstrasse 1, CH-8004 Zürich
+www.republik.ch [{{frontend_base_url}}]
+kontakt@republik.ch 
+
+Unser Manifest [{{link_manifest}}]
+Das Impressum [{{link_imprint}}]
+Häufig gestellte Fragen [{{link_faq}}]

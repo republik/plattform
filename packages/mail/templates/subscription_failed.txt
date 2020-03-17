@@ -1,0 +1,35 @@
+Guten Tag
+
+Leider konnten wir Ihr Republik-Monatsabonnement nicht Ihrer Kreditkarte
+belasten.
+
+Ist sie eventuell abgelaufen?
+Wir danken Ihnen dafür, dass Sie sicherstellen, dass Ihre Kreditkarte wieder
+belastbar ist.
+
+Falls Sie eine andere Kreditkarte verwenden wollen, können Sie die nötigen
+Änderungen hier jederzeit vornehmen: www.republik.ch/konto [{{link_account}}]
+
+Wenn wir Ihre Karte weiterhin nicht belasten können, gehen wir davon aus, dass
+Sie die Republik nicht mehr lesen möchten, und deaktivieren Ihr Abonnement.
+
+Haben Sie Fragen? Unter kontakt@republik.ch helfen wir
+Ihnen gerne weiter.
+
+Herzlich
+Ihre Crew der Republik 
+
+Die Republik ist ein unabhängiges und werbefreies digitales Magazin für Politik,
+Wirtschaft, Gesellschaft und Kultur. Es wird von seinen Leserinnen und Lesern
+finanziert und erscheint von Montag bis Samstag mit täglich ein bis drei neuen
+Beiträgen. In der App, auf der Website und als Newsletter. 
+
+
+Republik AG
+Sihlhallenstrasse 1, CH-8004 Zürich
+www.republik.ch [{{frontend_base_url}}]
+kontakt@republik.ch 
+
+Unser Manifest [{{link_manifest}}]
+Das Impressum [{{link_imprint}}]
+Häufig gestellte Fragen [{{link_faq}}]

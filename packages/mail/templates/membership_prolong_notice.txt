@@ -1,0 +1,32 @@
+Guten Tag
+
+Willkommen zu einem weiteren Jahr Republik!
+
+Sie wurden zum wiederholten Male beschenkt.
+{{#if pledger_name}} {{pledger_name}} hat soeben Ihre Mitgliedschaft um ein Jahr
+verlängert. {{else}} Jemand hat soeben Ihre Mitgliedschaft um ein Jahr
+verlängert. {{/if}} 
+
+Das neue Ablaufdatum Ihrer Mitgliedschaft: {{end_date}} 
+
+Wir bedanken uns bei {{#if pledger_name}}{{pledger_name}} fürs Verschenken – und
+bei {{/if}}Ihnen fürs Lesen, Teilhaben, Teilen und Mitdiskutieren.
+
+Herzlich
+
+Ihre Crew der Republik
+
+Die Republik ist ein unabhängiges und werbefreies digitales Magazin für Politik,
+Wirtschaft, Gesellschaft und Kultur. Es wird von seinen Leserinnen und Lesern
+finanziert und erscheint von Montag bis Samstag mit täglich ein bis drei neuen
+Beiträgen. In der App, auf der Website und als Newsletter. 
+
+
+Republik AG
+Sihlhallenstrasse 1, CH-8004 Zürich
+www.republik.ch [{{frontend_base_url}}]
+kontakt@republik.ch 
+
+Unser Manifest [{{link_manifest}}]
+Das Impressum [{{link_imprint}}]
+Häufig gestellte Fragen [{{link_faq}}]

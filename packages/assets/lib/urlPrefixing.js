@@ -30,7 +30,7 @@ module.exports = {
       throw new Error('createRepoUrlPrefixer needs a repoId')
     }
     return path => {
-      if (path && path.indexOf('images/') > -1) {
+      if (path && path.indexOf('images/') === 0) {
         let url
         if (_public) {
           url = new URL(getS3UrlForGithubPath(repoId, path))

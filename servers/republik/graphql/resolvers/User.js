@@ -2,6 +2,7 @@ const { Roles, AccessToken: { isFieldExposed } } = require('@orbiting/backend-mo
 const { age } = require('../../lib/age')
 const { getKeyId } = require('../../lib/pgp')
 const querystring = require('querystring')
+const { remark } = require('@orbiting/backend-modules-utils')
 
 const { isEligible } = require('../../lib/profile')
 
@@ -47,6 +48,7 @@ module.exports = {
   username: exposeProfileField('username'),
   badges: exposeProfileField('badges'),
   biography: exposeProfileField('biography'),
+  biographyContent: exposeProfileField('biography', (bio) => bio && remark.parse(bio)),
   facebookId: exposeProfileField('facebookId'),
   twitterHandle: exposeProfileField('twitterHandle'),
   publicUrl: exposeProfileField('publicUrl'),

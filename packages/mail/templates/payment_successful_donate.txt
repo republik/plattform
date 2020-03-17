@@ -1,0 +1,29 @@
+Guten Tag
+
+Herzlichen Dank für Ihre Spende von {{total_formatted}}.
+Die Zahlung ist erfolgreich bei uns eingegangen. 
+
+Mit Ihrem Geld fördern Sie die Republik – und damit eine wirklich unabhängige
+vierte Gewalt als zentrale Institution unserer Demokratie.
+
+Die Republik steht für die Werte der Aufklärung: für Treue zu Fakten, für
+Lösungen von Fall zu Fall, für Offenheit gegenüber Kritik, für Respektlosigkeit
+gegenüber der Macht und Respekt vor dem Menschen.
+
+Herzlich
+Ihre Crew der Republik 
+
+Die Republik ist ein unabhängiges und werbefreies digitales Magazin für Politik,
+Wirtschaft, Gesellschaft und Kultur. Es wird von seinen Leserinnen und Lesern
+finanziert und erscheint von Montag bis Samstag mit täglich ein bis drei neuen
+Beiträgen. In der App, auf der Website und als Newsletter. 
+
+
+Republik AG
+Sihlhallenstrasse 1, CH-8004 Zürich
+www.republik.ch [{{frontend_base_url}}]
+kontakt@republik.ch 
+
+Unser Manifest [{{link_manifest}}]
+Das Impressum [{{link_imprint}}]
+Häufig gestellte Fragen [{{link_faq}}]

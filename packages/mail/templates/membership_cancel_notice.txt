@@ -1,0 +1,34 @@
+Guten Tag
+
+Schade, sind Sie nicht mehr Teil der Republik und der Idee hinter unserem
+gemeinsamen Projekt.
+
+Wir haben Ihre Kündigung erfasst: Ihr Abonnement läuft noch theoretisch bis zum
+{{end_date}} und wird nicht erneuert.
+
+Herzlichen Dank für Ihr Interesse und Ihre Unterstützung im vergangenen Jahr!
+
+{{#if reason_given}} Auch für Ihre Kündigungs­begründung, aus der wir lernen
+können.
+
+{{/if}} Wir würden uns sehr freuen, wenn Sie zu einem späteren Zeitpunkt wieder
+bei uns vorbeischauten. Sie sind jederzeit willkommen.
+
+Herzlich
+
+Ihre Crew der Republik
+
+Die Republik ist ein unabhängiges und werbefreies digitales Magazin für Politik,
+Wirtschaft, Gesellschaft und Kultur. Es wird von seinen Leserinnen und Lesern
+finanziert und erscheint von Montag bis Samstag mit täglich ein bis drei neuen
+Beiträgen. In der App, auf der Website und als Newsletter. 
+
+
+Republik AG
+Sihlhallenstrasse 1, CH-8004 Zürich
+www.republik.ch [{{frontend_base_url}}]
+kontakt@republik.ch 
+
+Unser Manifest [{{link_manifest}}]
+Das Impressum [{{link_imprint}}]
+Häufig gestellte Fragen [{{link_faq}}]
