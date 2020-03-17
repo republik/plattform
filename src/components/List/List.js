@@ -39,6 +39,9 @@ const styles = {
     [mUp]: {
       ...convertStyleToRem(serifRegular19)
     },
+    '& p': {
+      margin: '1em 0 1em 0'
+    },
     '& p:last-child': {
       marginBottom: 0
     },
