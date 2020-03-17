@@ -72,7 +72,7 @@ export default ({ rule, subModules, TYPE }) => {
     },
     toMdast: (object, index, parent, rest) => {
       // omit format and section
-      const { format, section, ...data } = object.data
+      const { format, section, meta, ...data } = object.data
       return {
         type: 'zone',
         identifier,
