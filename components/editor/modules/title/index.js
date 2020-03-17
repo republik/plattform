@@ -63,7 +63,6 @@ export default ({ rule, subModules, TYPE }) => {
         type: TYPE,
         data: {
           ...node.data,
-          meta,
           format,
           section
         },
