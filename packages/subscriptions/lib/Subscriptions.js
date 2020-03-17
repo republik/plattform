@@ -1,5 +1,6 @@
 const { transformUser } = require('@orbiting/backend-modules-auth')
 const { getObjectByIdAndType } = require('./genericObject')
+const Promise = require('bluebird')
 
 const objectTypes = ({
   User: 'objectUserId',
@@ -7,8 +8,19 @@ const objectTypes = ({
   Discussion: 'objectDiscussionId'
 })
 
+const buildObjectFindProps = ({ id, type }, t) => {
+  const objectColumn = objectTypes[type]
+  if (!objectColumn) {
+    throw new Error(t('api/unexpected'))
+  }
+  return {
+    objectType: type,
+    [objectColumn]: id
+  }
+}
+
 const upsertSubscription = async (args, context) => {
-  const { pgdb, t } = context
+  const { pgdb, loaders, t } = context
   const { userId, objectId, type, filters } = args
 
   if (type === 'User' && userId === objectId) {
@@ -25,10 +37,13 @@ const upsertSubscription = async (args, context) => {
 
   const findProps = {
     userId,
-    objectType: type,
-    [objectTypes[type]]: object.objectId || objectId //normalized id by getObjectByIdAndType
+    ...buildObjectFindProps({
+      id: object.objectId || objectId, // normalized id by getObjectByIdAndType
+      type
+    }, t)
   }
   const updateProps = {
+    active: true,
     filters: filters && filters.length ? filters : null
   }
 
@@ -60,16 +75,28 @@ const upsertSubscription = async (args, context) => {
     throw new Error(t('api/unexpected'))
   }
 
+  await Promise.all([
+    loaders.Subscription.byId.clear(subscription.id),
+    loaders.Subscription.byUserId.clear(subscription.userId)
+  ])
+
   return subscription
 }
 
-const removeSubscription = async (id, context) => {
-  const { pgdb, t } = context
+const unsubscribe = async (id, context) => {
+  const { pgdb, loaders, t } = context
 
-  const subscription = await pgdb.public.subscriptions.deleteAndGetOne({ id })
+  const subscription = await pgdb.public.subscriptions.updateAndGetOne(
+    { id },
+    { active: false }
+  )
   if (!subscription) {
     throw new Error(t('api/subscriptions/404'))
   }
+  await Promise.all([
+    loaders.Subscription.byId.clear(subscription.id),
+    loaders.Subscription.byUserId.clear(subscription.userId)
+  ])
   return subscription
 }
 
@@ -89,29 +116,57 @@ const getSubject = (subscription, context) => {
   return loaders.User.byId.load(subscription.userId)
 }
 
-const getSubscriptionByUserForObject = (
+const getActiveSubscriptionsByUser = (
   userId,
-  type,
-  objectId,
-  context
+  { loaders }
 ) => {
-  const { pgdb } = context
-  return pgdb.public.subscriptions.findFirst({
-    userId,
-    objectType: type,
-    [objectTypes[type]]: objectId
+  return loaders.Subscription.byUserId.load(userId)
+    .then(subs => subs.filter(sub => sub.active))
+}
+
+const getActiveSubscriptionsForObject = (
+  {
+    type,
+    id
+  },
+  { pgdb, t }
+) => {
+  return pgdb.public.subscriptions.find({
+    active: true,
+    ...buildObjectFindProps({
+      id,
+      type
+    }, t)
   })
 }
 
-const getSubscriptionsByUserForObjects = (
+const getActiveSubscriptionByUserForObject = (
   userId,
-  type,
-  objectIds,
-  filter,
-  context
+  {
+    type,
+    id
+  },
+  { pgdb, t }
 ) => {
-  const { pgdb, t } = context
+  return pgdb.public.subscriptions.findFirst({
+    userId,
+    active: true,
+    ...buildObjectFindProps({
+      id,
+      type
+    }, t)
+  })
+}
 
+const getActiveSubscriptionsByUserForObjects = (
+  userId,
+  {
+    type,
+    ids,
+    filter
+  },
+  { pgdb, t }
+) => {
   const objectColumn = objectTypes[type]
   if (!objectColumn) {
     throw new Error(t('api/unexpected'))
@@ -124,25 +179,26 @@ const getSubscriptionsByUserForObjects = (
       subscriptions s
     WHERE
       s."userId" = :userId AND
+      s."active" = true AND
       s."objectType" = :type AND
       ARRAY[s."${objectColumn}"] && :objectIds
       ${filter ? 'AND (s.filters IS NULL OR s.filters ? :filter)' : ''}
   `, {
     userId,
     type,
-    objectIds,
+    objectIds: ids,
     filter
   })
 }
 
-const getSubscribersForObject = (
-  type,
-  objectId,
-  filter,
-  context
+const getActiveSubscribersForObject = (
+  {
+    type,
+    id,
+    filter
+  },
+  { pgdb, t }
 ) => {
-  const { pgdb, t } = context
-
   const objectColumn = objectTypes[type]
   if (!objectColumn) {
     throw new Error(t('api/unexpected'))
@@ -157,12 +213,13 @@ const getSubscribersForObject = (
       users u
       ON s."userId" = u.id
     WHERE
+      s."active" = true AND
       s."objectType" = :type AND
       s."${objectColumn}" = :objectId
       ${filter ? 'AND (s.filters IS NULL OR s.filters ? :filter)' : ''}
   `, {
     type,
-    objectId,
+    objectId: id,
     filter
   })
     .then(users => users.map(transformUser))
@@ -170,10 +227,12 @@ const getSubscribersForObject = (
 
 module.exports = {
   upsertSubscription,
-  removeSubscription,
+  unsubscribe,
   getObject,
   getSubject,
-  getSubscriptionByUserForObject,
-  getSubscriptionsByUserForObjects,
-  getSubscribersForObject
+  getActiveSubscriptionsByUser,
+  getActiveSubscriptionsForObject,
+  getActiveSubscriptionByUserForObject,
+  getActiveSubscriptionsByUserForObjects,
+  getActiveSubscribersForObject
 }

@@ -23,10 +23,12 @@ const notifyPublish = async (repoId, context) => {
   const subscriptionDoc = await loaders.Document.byRepoId.load(formatRepoId)
   const subscriptionRepoId = subscriptionDoc.meta.repoId
 
-  const subscribers = await Subscriptions.getSubscribersForObject(
-    'Document',
-    subscriptionRepoId,
-    'Document',
+  const subscribers = await Subscriptions.getActiveSubscribersForObject(
+    {
+      type: 'Document',
+      id: subscriptionRepoId,
+      filter: 'Document'
+    },
     context
   )
   console.log({ subscribers })

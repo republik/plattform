@@ -3,6 +3,10 @@ CHECK(
   VALUE IN ('Comment', 'Document')
 );
 
+ALTER TABLE "subscriptions"
+  ADD COLUMN "active" boolean NOT NULL DEFAULT true
+;
+
 CREATE TABLE "events" (
   "id"              uuid PRIMARY KEY NOT NULL DEFAULT uuid_generate_v4(),
   "objectType"      event_object_type NOT NULL,

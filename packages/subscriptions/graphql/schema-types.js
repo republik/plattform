@@ -66,6 +66,7 @@ type Subscription {
   object: SubscriptionObject!
   subject: User!
   filters: [EventObjectType!]
+  active: Boolean!
   createdAt: DateTime!
   updatedAt: DateTime!
 }

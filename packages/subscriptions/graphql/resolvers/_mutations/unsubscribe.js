@@ -1,5 +1,5 @@
 const { ensureSignedIn } = require('@orbiting/backend-modules-auth')
-const { removeSubscription } = require('../../../lib/Subscriptions')
+const { unsubscribe } = require('../../../lib/Subscriptions')
 
 module.exports = async (_, args, context) => {
   const { user: me, t, req, loaders: { Subscription } } = context
@@ -14,5 +14,5 @@ module.exports = async (_, args, context) => {
     throw new Error(t('api/subscriptions/notAllowed'))
   }
 
-  return removeSubscription(subscriptionId, context)
+  return unsubscribe(subscriptionId, context)
 }
