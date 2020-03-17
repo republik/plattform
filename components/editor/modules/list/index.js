@@ -31,6 +31,7 @@ export default ({ rule, subModules, TYPE }) => {
     matchMdast: node => node.type === 'list',
     fromMdast: (node, index, parent, rest) => {
       const isNewsletter =
+        rest &&
         rest.context &&
         rest.context.meta &&
         rest.context.meta.template === 'editorialNewsletter'
