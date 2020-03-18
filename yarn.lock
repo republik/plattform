@@ -611,10 +611,10 @@
     stringify-entities "^1.3.1"
     unified "^6.1.5"
 
-"@project-r/styleguide@^9.5.4":
-  version "9.5.4"
-  resolved "https://registry.yarnpkg.com/@project-r/styleguide/-/styleguide-9.5.4.tgz#3c5a50506f5d6d26a76edf1a009324c5a93bce71"
-  integrity sha512-BUL/q2eSrrFeEYOg7NdXNKRQzmGIjMY5wIHrO2+uQQd5vbWNftSVGDRVvAA8Nf6F90LcEyG8qE8t7TGnKNhF1A==
+"@project-r/styleguide@^9.9.0":
+  version "9.9.0"
+  resolved "https://registry.yarnpkg.com/@project-r/styleguide/-/styleguide-9.9.0.tgz#629e4e00ec8462e5d616df462eb7d8913d80eee8"
+  integrity sha512-AhCDNk+OpcL1TiyWanVi5Vd4yUGowpIKC/fcMXjZPrmJPqsppFpPnIBA1Jx/tOJQYTTfRd/SFCtP5PlgVFqN/g==
   dependencies:
     body-scroll-lock "^2.6.4"
     react-icons "^2.2.7"
