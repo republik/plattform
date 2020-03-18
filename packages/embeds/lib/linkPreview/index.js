@@ -46,7 +46,7 @@ const parseMetaAndLink = (html, baseUrl) => {
       attribs.href
     ) {
       const { rel, href, sizes } = attribs
-      if (rel.indexOf('icon') > 0 && sizes) {
+      if (rel.indexOf('icon') > -1 && sizes) {
         const size = parseInt(sizes.split('x')[0])
         if (size && size < minSize) {
           minSize = size
@@ -101,17 +101,19 @@ const getLinkPreviewByUrl = async (url) => {
     return
   }
 
+  const ogImage = obj['og:image']
+  const siteImage =
+    obj['shortcut icon'] ||
+    obj.iconSmall ||
+    await getSiteImage(url, baseUrl)
+
   return {
     title: obj['og:title'],
     description: obj['og:description'],
-    imageUrl: obj['og:image'],
+    imageUrl: ogImage && new URL(ogImage, baseUrl).toString(),
     imageAlt: obj['og:image:alt'],
     siteName: obj['og:site_name'] || hostname,
-    siteImageUrl: (
-      obj['shortcut icon'] ||
-      obj.iconSmall ||
-      await getSiteImage(url, baseUrl)
-    )
+    siteImageUrl: siteImage && new URL(siteImage, baseUrl).toString()
   }
 }
 
