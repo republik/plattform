@@ -271,7 +271,9 @@ const Form = ({
           <ul style={{ color: colors.error }}>
             {errors.map((error, i) => (
               <li key={i}>
-                <Interaction.P style={{ color: colors.error }}>
+                <Interaction.P
+                  style={{ color: colors.error, wordBreak: 'break-all' }}
+                >
                   {error}
                 </Interaction.P>
               </li>
@@ -289,7 +291,9 @@ const Form = ({
           <ul style={{ color: colors.social }}>
             {warnings.map((warning, i) => (
               <li key={i}>
-                <Interaction.P style={{ color: colors.social }}>
+                <Interaction.P
+                  style={{ color: colors.social, wordBreak: 'break-all' }}
+                >
                   {warning}
                 </Interaction.P>
               </li>
@@ -310,7 +314,7 @@ const Form = ({
                 setState({ showLinks: !state.showLinks })
               }}
             >
-              Im Text sind {links.length} Links
+              {t.pluralize('publish/validation/links', { count: links.length })}
             </Editorial.A>
           </Interaction.P>
           {state.showLinks && (
@@ -319,15 +323,22 @@ const Form = ({
                 <li key={i}>
                   <Interaction.P
                     style={{
-                      color: link.error
+                      wordBreak: 'break-all',
+                      color: link.errors.length
                         ? colors.error
-                        : link.warning
+                        : link.warnings.length
                         ? colors.social
                         : undefined
                     }}
                   >
-                    [{link.text}](
-                    <Editorial.A href={link.url}>{link.url}</Editorial.A>)
+                    {t.elements('publish/validation/link', {
+                      text: link.text,
+                      link: (
+                        <Editorial.A key='link' href={link.url}>
+                          {link.url}
+                        </Editorial.A>
+                      )
+                    })}
                   </Interaction.P>
                 </li>
               ))}

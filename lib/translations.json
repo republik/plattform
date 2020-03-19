@@ -1,5 +1,5 @@
 {
-  "updated": "2020-03-19T13:45:16.081Z",
+  "updated": "2020-03-19T17:54:22.769Z",
   "title": "live",
   "data": [
     {
@@ -896,11 +896,51 @@
     },
     {
       "key": "publish/label/notifySubscribers/1",
-      "value": "~{count} Benachrichtigung senden"
+      "value": "Benachrichtigung senden: ~{count} Empfangende"
     },
     {
       "key": "publish/label/notifySubscribers/other",
-      "value": "~{count} Benachrichtigungen senden"
+      "value": "Benachrichtigungen senden: ~{count} Empfangende"
+    },
+    {
+      "key": "publish/validation/links/1",
+      "value": "Im Text ist ein Link enthalten."
+    },
+    {
+      "key": "publish/validation/links/other",
+      "value": "Im Text sind {count} Links enthalten."
+    },
+    {
+      "key": "publish/validation/link",
+      "value": "[{text}]({link})"
+    },
+    {
+      "key": "publish/validation/link/error",
+      "value": "Ungültiger Link: [{text}]({link}) – {reason}"
+    },
+    {
+      "key": "publish/validation/link/warning",
+      "value": "Suspekter Link: [{text}]({link}) – {reason}"
+    },
+    {
+      "key": "publish/validation/link/issue/empty",
+      "value": "leerer URL"
+    },
+    {
+      "key": "publish/validation/link/issue/relative",
+      "value": "relative Links sind unzulässig, ging «https://» vergessen?"
+    },
+    {
+      "key": "publish/validation/link/issue/webp",
+      "value": ".webp-Dateien funktionieren nicht überall."
+    },
+    {
+      "key": "publish/validation/link/issue/wwwws",
+      "value": "richtige Anzahl Ws?"
+    },
+    {
+      "key": "publish/validation/link/issue/profiles",
+      "value": "Profile sollten immer via ID verlinkt werden."
     },
     {
       "key": "publish/validation/hasErrors",

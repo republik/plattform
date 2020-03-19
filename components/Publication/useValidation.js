@@ -4,6 +4,8 @@ import isUUID from 'is-uuid'
 import { parse } from 'url'
 import { FRONTEND_BASE_URL } from '../../lib/settings'
 
+import { Editorial } from '@project-r/styleguide'
+
 const mdastToString = node =>
   node
     ? node.value ||
@@ -18,11 +20,11 @@ const useValidation = ({ meta, content, t, updateMailchimp }) => {
     const all = []
     visit(content, 'link', node => {
       const urlObject = parse(node.url)
-      let error // to start we only do warning
-      let warning
+      const warnings = []
+      const errors = []
 
       if (!node.url || !node.url.trim()) {
-        warning = 'leerer URL' // error
+        errors.push('empty')
       } else {
         if (urlObject.path) {
           if (
@@ -31,11 +33,10 @@ const useValidation = ({ meta, content, t, updateMailchimp }) => {
             urlObject.path[0] !== '#' &&
             urlObject.path[0] !== '?'
           ) {
-            warning =
-              'relative Links sind unzulässig, ging «https://» vergessen?' // error
+            errors.push('relative')
           }
           if (urlObject.pathname.endsWith('.webp')) {
-            warning = '.webp-Dateien funktionieren nicht überall.'
+            warnings.push('webp')
           }
           if (
             (!urlObject.protocol || FRONTEND_HOSTNAME === urlObject.hostname) &&
@@ -43,7 +44,7 @@ const useValidation = ({ meta, content, t, updateMailchimp }) => {
           ) {
             const slug = urlObject.pathname.split('~')[1]
             if (!isUUID.v4(slug)) {
-              warning = 'Profile sollten immer via ID verlinkt werden'
+              warnings.push('profiles')
             }
           }
         }
@@ -52,7 +53,7 @@ const useValidation = ({ meta, content, t, updateMailchimp }) => {
             urlObject.hostname.startsWith('ww.') ||
             urlObject.hostname.startsWith('wwww.')
           ) {
-            warning = 'richtige Anzahl Ws?'
+            warnings.push('wwwws')
           }
         }
       }
@@ -60,8 +61,8 @@ const useValidation = ({ meta, content, t, updateMailchimp }) => {
       all.push({
         url: node.url,
         text: mdastToString(node),
-        error,
-        warning
+        warnings,
+        errors
       })
     })
     return all
@@ -74,15 +75,7 @@ const useValidation = ({ meta, content, t, updateMailchimp }) => {
     updateMailchimp &&
       !meta.emailSubject &&
       t('publish/validation/emailSubject/empty')
-  ]
-    .filter(Boolean)
-    .concat(
-      links
-        .filter(link => link.error)
-        .map(
-          link => `Ungültiger Link: [${link.text}](${link.url}) – ${link.error}`
-        )
-    )
+  ].filter(Boolean)
 
   const warnings = []
     .concat(
@@ -101,10 +94,45 @@ const useValidation = ({ meta, content, t, updateMailchimp }) => {
     )
     .concat(
       links
-        .filter(link => link.warning)
-        .map(
-          link =>
-            `Suspekter Link: [${link.text}](${link.url}) – ${link.warning}`
+        .filter(({ warnings }) => warnings.length)
+        .reduce(
+          (all, link) =>
+            all.concat(
+              link.warnings.map(warning =>
+                t.elements('publish/validation/link/warning', {
+                  text: link.text,
+                  link: (
+                    <Editorial.A key='link' href={link.url}>
+                      {link.url}
+                    </Editorial.A>
+                  ),
+                  reason: t(`publish/validation/link/issue/${warning}`)
+                })
+              )
+            ),
+          []
+        )
+    )
+    // to start we do not block any publication
+    .concat(
+      links
+        .filter(({ errors }) => errors.length)
+        .reduce(
+          (all, link) =>
+            all.concat(
+              link.errors.map(error =>
+                t.elements('publish/validation/link/error', {
+                  text: link.text,
+                  link: (
+                    <Editorial.A key='link' href={link.url}>
+                      {link.url}
+                    </Editorial.A>
+                  ),
+                  reason: t(`publish/validation/link/issue/${error}`)
+                })
+              )
+            ),
+          []
         )
     )
 
