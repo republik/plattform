@@ -1,5 +1,18 @@
 module.exports = `
 
+enum EventObjectType {
+  Comment
+  Document
+}
+union EventObject = Comment | Document
+
+enum SubscriptionObjectType {
+  User
+  Document
+  #Discussion
+}
+union SubscriptionObject = Document | User | Discussion
+
 extend type User {
   # subject: this.user
   # object: union
@@ -8,6 +21,7 @@ extend type User {
     last: Int
     before: String
     after: String
+    objectType: SubscriptionObjectType
   ): SubscriptionConnection!
 
   # subject: user
@@ -52,19 +66,6 @@ extend type Discussion {
     after: String
   ): SubscriptionConnection!
 }
-
-enum EventObjectType {
-  Comment
-  Document
-}
-union EventObject = Comment | Document
-
-enum SubscriptionObjectType {
-  User
-  Document
-  #Discussion
-}
-union SubscriptionObject = Document | User | Discussion
 
 type Subscription {
   id: ID!

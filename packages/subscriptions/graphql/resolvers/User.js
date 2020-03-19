@@ -20,8 +20,14 @@ const createSubscriptionConnection = (nodes, args, user, me) => {
 module.exports = {
   async subscribedTo (user, args, context) {
     const { user: me } = context
+    const { objectType } = args
     return createSubscriptionConnection(
-      await getActiveSubscriptionsForUser(user.id, context),
+      await getActiveSubscriptionsForUser(user.id, context)
+        .then(subs => {
+          return objectType
+            ? subs.filter(sub => sub.objectType === objectType)
+            : subs
+        }),
       args,
       user,
       me
