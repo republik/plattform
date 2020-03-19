@@ -1,5 +1,5 @@
 import React from 'react'
-import { css } from 'glamor'
+import { merge, css } from 'glamor'
 import { mUp } from '../../theme/mediaQueries'
 import colors from '../../theme/colors'
 
@@ -45,6 +45,10 @@ const styles = {
       display: 'block'
     }
   }),
+  arrowLeft: css({
+    left: 31,
+    right: 'auto'
+  }),
   callout: css({
     zIndex: 1,
     position: 'absolute',
@@ -64,6 +68,12 @@ const styles = {
       padding: 10,
       animation: 'none'
     }
+  }),
+  calloutLeft: css({
+    [mUp]: {
+      left: -50,
+      right: 'auto'
+    }
   })
 }
 
@@ -78,7 +88,13 @@ const getTargetId = target => {
   return target.parentElement.parentElement.parentElement.id
 }
 
-const Callout = ({ toggleRef, expanded, setExpanded, children }) => {
+const Callout = ({
+  toggleRef,
+  expanded,
+  setExpanded,
+  children,
+  leftAligned
+}) => {
   const handleClick = e => {
     if (!toggleRef || toggleRef.current.id !== getTargetId(e.target)) {
       e.stopPropagation()
@@ -98,8 +114,11 @@ const Callout = ({ toggleRef, expanded, setExpanded, children }) => {
       {...styles.calloutContainer}
       style={{ display: expanded ? 'block' : 'none' }}
     >
-      <div {...styles.callout} onClick={e => e.stopPropagation()}>
-        <div {...styles.arrow} />
+      <div
+        {...merge(styles.callout, leftAligned && styles.calloutLeft)}
+        onClick={e => e.stopPropagation()}
+      >
+        <div {...merge(styles.arrow, leftAligned && styles.arrowLeft)} />
         {children}
       </div>
     </div>
