@@ -86,7 +86,7 @@ IconLink.propTypes = {
   small: PropTypes.bool
 }
 
-export const Icon = ({ size, fill }) => (
+const Icon = ({ size, fill }) => (
   <svg
     width={size}
     height={size}
