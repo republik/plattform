@@ -1,4 +1,8 @@
-const { getObject, getSubject } = require('../../lib/Subscriptions')
+const {
+  getObject,
+  getSubject,
+  subscriptionIsEligibleForNotifications
+} = require('../../lib/Subscriptions')
 
 module.exports = {
   subject (subscription, args, context) {
@@ -6,5 +10,11 @@ module.exports = {
   },
   object (subscription, args, context) {
     return getObject(subscription, context)
+  },
+  isEligibleForNotifications (subscription, args, context) {
+    return subscriptionIsEligibleForNotifications(
+      subscription,
+      context
+    )
   }
 }

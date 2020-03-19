@@ -32,20 +32,22 @@ const send = async (args, context) => {
   const notifications = await Promise.map(
     users,
     async (user) => {
-      const subscription = await getSubscriptionsForUserAndObject(
-        user.id,
-        {
-          type: args.subscription.objectType,
-          id: args.subscription.objectId
-        },
-        context
-      )
-        .then(subs => {
-          if (subs.length > 1) {
-            throw new Error(t('api/unexpected'))
-          }
-          return subs
-        })
+      const subscription = user.__subscription ||
+        await getSubscriptionsForUserAndObject(
+          user.id,
+          {
+            type: args.subscription.objectType,
+            id: args.subscription.objectId
+          },
+          context
+        )
+          .then(subs => {
+            if (subs.length > 1) {
+              throw new Error(t('api/unexpected'))
+            }
+            return subs
+          })
+
       const notification = await pgdb.public.notifications.insertAndGet({
         eventId: event.id,
         userId: user.id,
@@ -55,6 +57,7 @@ const send = async (args, context) => {
         ),
         content: args.content.app
       })
+
       return {
         ...notification,
         user

@@ -27,7 +27,10 @@ const getRepoIdsForDoc = (doc, includeParents) => ([
 module.exports = {
   async subscribedBy (doc, args, context) {
     const { user: me } = context
-    const { includeParents } = args
+    const {
+      includeParents,
+      onlyEligibles
+    } = args
 
     const repoIds = getRepoIdsForDoc(doc, includeParents)
 
@@ -38,7 +41,10 @@ module.exports = {
           type: 'Document',
           ids: repoIds
         },
-        context
+        context,
+        {
+          onlyEligibles
+        }
       ),
       args,
       me

@@ -16,7 +16,7 @@ const uuidForObject = (obj) => {
     .digest('hex')
 
   // fill randoms array with 16 numbers (0-255) => 16 bytes
-  // 2 bytes of sha1 ignored
+  // last 2 bytes of sha1 ignored
   const randoms = []
   let i = 0
   while (i < hash.length && randoms.length < 16) {

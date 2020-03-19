@@ -1,7 +1,10 @@
-const { transformUser } = require('@orbiting/backend-modules-auth')
 const { getObjectByIdAndType } = require('./genericObject')
 const Promise = require('bluebird')
 const { uuidForObject } = require('@orbiting/backend-modules-utils')
+const {
+  isUserUnrestricted,
+  includesUnrestrictedChildRepoId
+} = require('@orbiting/backend-modules-documents/lib/restrictions')
 
 const objectTypes = ({
   User: 'objectUserId',
@@ -162,14 +165,24 @@ const getSubject = (subscription, context) => {
 
 const getSubscriptionsForUser = (
   userId,
-  { loaders },
-  { includeNotActive = false } = {}
+  context,
+  {
+    includeNotActive = false,
+    onlyEligibles = false
+  } = {}
 ) => {
+  const { loaders } = context
+
   return loaders.Subscription.byUserId.load(userId)
     .then(
       subs => includeNotActive
         ? subs
         : subs.filter(sub => sub.active)
+    )
+    .then(
+      subs => onlyEligibles
+        ? filterEligibleSubscriptions(subs, context)
+        : subs
     )
 }
 
@@ -180,7 +193,10 @@ const getSubscriptionsForUserAndObject = (
     id
   },
   context,
-  { includeNotActive = false } = {}
+  {
+    includeNotActive = false,
+    onlyEligibles = false
+  } = {}
 ) => {
   const { user: me, pgdb, t } = context
   if (!id) {
@@ -194,7 +210,7 @@ const getSubscriptionsForUserAndObject = (
     }, t)
   }
   if (userId && userId === me.id) {
-    return getSubscriptionsForUser(userId, context, { includeNotActive })
+    return getSubscriptionsForUser(userId, context, { includeNotActive, onlyEligibles })
       .then(subs => subs
         .filter(sub => Object.keys(findProps).every(
           key => findProps[key] === sub[key]
@@ -205,6 +221,11 @@ const getSubscriptionsForUserAndObject = (
     ...userId ? { userId } : {},
     ...findProps
   })
+    .then(
+      subs => onlyEligibles
+        ? filterEligibleSubscriptions(subs, context)
+        : subs
+    )
 }
 
 const getSubscriptionsForUserAndObjects = (
@@ -215,7 +236,10 @@ const getSubscriptionsForUserAndObjects = (
     filter
   },
   context,
-  { includeNotActive = false } = {}
+  {
+    includeNotActive = false,
+    onlyEligibles = false
+  } = {}
 ) => {
   const { pgdb, t } = context
   const objectColumn = objectTypes[type]
@@ -237,7 +261,10 @@ const getSubscriptionsForUserAndObjects = (
         id: ids[0]
       },
       context,
-      { includeNotActive }
+      {
+        includeNotActive,
+        onlyEligibles
+      }
     )
   }
 
@@ -258,13 +285,22 @@ const getSubscriptionsForUserAndObjects = (
     objectIds: ids,
     filter
   })
+    .then(
+      subs => onlyEligibles
+        ? filterEligibleSubscriptions(subs, context)
+        : subs
+    )
 }
 
+/*
 const getActiveSubscribersForObject = (
   {
     type,
     id,
     filter
+  },
+  {
+    requireRoles
   },
   { pgdb, t }
 ) => {
@@ -273,6 +309,7 @@ const getActiveSubscribersForObject = (
     throw new Error(t('api/unexpected'))
   }
 
+  console.log({requireRoles, id})
   return pgdb.query(`
     SELECT
       u.*
@@ -282,16 +319,43 @@ const getActiveSubscribersForObject = (
       users u
       ON s."userId" = u.id
     WHERE
-      s."active" = true AND
       s."objectType" = :type AND
-      s."${objectColumn}" = :objectId
-      ${filter ? 'AND (s.filters IS NULL OR s.filters ? :filter)' : ''}
+      s."${objectColumn}" = :objectId AND
+      ${filter ? '(s.filters IS NULL OR s.filters ? :filter) AND' : ''}
+      ${requireRoles ? 'u.roles ?| :roles AND' : ''}
+      s."active" = true
   `, {
     type,
     objectId: id,
-    filter
+    filter,
+    ...requireRoles ? { roles: requireRoles } : {},
   })
     .then(users => users.map(transformUser))
+}
+*/
+
+const subscriptionIsEligibleForNotifications = async (
+  subscription,
+  context
+) => {
+  const [user, object] = await Promise.all([
+    getSubject(subscription, context),
+    getObject(subscription, context)
+  ])
+  if (object.__typename === 'Document') {
+    return (
+      isUserUnrestricted(user) ||
+      includesUnrestrictedChildRepoId([object.objectId])
+    )
+  }
+  return true
+}
+
+const filterEligibleSubscriptions = (subscriptions, context) => {
+  return Promise.filter(
+    subscriptions,
+    sub => subscriptionIsEligibleForNotifications(sub, context)
+  )
 }
 
 module.exports = {
@@ -306,5 +370,7 @@ module.exports = {
   getSubscriptionsForUserAndObject,
   getSubscriptionsForUserAndObjects,
 
-  getActiveSubscribersForObject
+  // getActiveSubscribersForObject,
+
+  subscriptionIsEligibleForNotifications
 }

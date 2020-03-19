@@ -47,6 +47,7 @@ extend type Document {
     before: String
     after: String
     includeParents: Boolean
+    onlyEligibles: Boolean
   ): SubscriptionConnection!
 
   # subject: me
@@ -73,6 +74,7 @@ type Subscription {
   subject: User!
   filters: [EventObjectType!]
   active: Boolean!
+  isEligibleForNotifications: Boolean!
   createdAt: DateTime!
   updatedAt: DateTime!
 }
