@@ -43,6 +43,7 @@ export const publish = gql`
     $scheduledAt: DateTime
     $updateMailchimp: Boolean!
     $ignoreUnresolvedRepoIds: Boolean
+    $notifySubscribers: Boolean
   ) {
     publish(
       repoId: $repoId
@@ -51,6 +52,7 @@ export const publish = gql`
       scheduledAt: $scheduledAt
       updateMailchimp: $updateMailchimp
       ignoreUnresolvedRepoIds: $ignoreUnresolvedRepoIds
+      notifySubscribers: $notifySubscribers
     ) {
       unresolvedRepoIds
       publication {
@@ -122,6 +124,9 @@ export const getRepoWithCommit = gql`
               }
             }
           }
+          subscribedBy(includeParents: true) {
+            totalCount
+          }
         }
       }
     }
@@ -174,6 +179,7 @@ class PublishForm extends Component {
       prepublication: true,
       scheduled: false,
       updateMailchimp: false,
+      notifySubscribers: false,
       size: PREVIEW_SIZES[0]
     }
   }
@@ -182,6 +188,7 @@ class PublishForm extends Component {
     const {
       prepublication,
       updateMailchimp,
+      notifySubscribers,
       scheduled,
       scheduledAt,
       publishing
@@ -339,6 +346,24 @@ class PublishForm extends Component {
                 </Checkbox>
                 <br />
                 <br />
+                {!prepublication && (
+                  <div>
+                    <Checkbox
+                      checked={notifySubscribers}
+                      onChange={(_, value) => {
+                        this.setState({
+                          notifySubscribers: value
+                        })
+                      }}
+                    >
+                      {t.pluralize('publish/label/notifySubscribers', {
+                        count: commit.document.subscribedBy.totalCount
+                      })}
+                    </Checkbox>
+                    <br />
+                    <br />
+                  </div>
+                )}
                 {schema.emailTemplate && (
                   <div>
                     <Checkbox
@@ -480,6 +505,7 @@ class PublishForm extends Component {
                             commitId: commit.id,
                             prepublication,
                             updateMailchimp,
+                            notifySubscribers,
                             scheduledAt: scheduled
                               ? scheduledAtDate
                               : undefined,
