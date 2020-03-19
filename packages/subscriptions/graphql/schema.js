@@ -29,7 +29,6 @@ type mutations {
 
   markNotificationAsRead(id: ID!): Notification!
   markAllNotificationsAsRead: [Notification!]!
-
 }
 
 type subscriptions {
