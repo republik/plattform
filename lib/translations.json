@@ -1,5 +1,5 @@
 {
-  "updated": "2020-03-19T17:54:22.769Z",
+  "updated": "2020-03-19T18:41:09.906Z",
   "title": "live",
   "data": [
     {
@@ -901,6 +901,10 @@
     {
       "key": "publish/label/notifySubscribers/other",
       "value": "Benachrichtigungen senden: ~{count} Empfangende"
+    },
+    {
+      "key": "publish/label/notifySubscribers/disabled",
+      "value": "(keine für interne Publikationen)"
     },
     {
       "key": "publish/validation/links/1",

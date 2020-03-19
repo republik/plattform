@@ -183,10 +183,14 @@ const Form = ({
   },
   publish
 }) => {
+  const hasBeenPublished = !!repo.latestPublications.find(
+    pub => !pub.prepublication && pub.live
+  )
   const [state, setCompleteState] = useState({
     prepublication: true,
     scheduled: false,
-    updateMailchimp: false
+    updateMailchimp: false,
+    notifySubscribers: !hasBeenPublished
   })
   const setState = newState =>
     setCompleteState(state => ({ ...state, ...newState }))
@@ -360,24 +364,24 @@ const Form = ({
       </Checkbox>
       <br />
       <br />
-      {!prepublication && (
-        <div>
-          <Checkbox
-            checked={notifySubscribers}
-            onChange={(_, value) => {
-              setState({
-                notifySubscribers: value
-              })
-            }}
-          >
-            {t.pluralize('publish/label/notifySubscribers', {
-              count: commit.document.subscribedBy.totalCount
-            })}
-          </Checkbox>
-          <br />
-          <br />
-        </div>
-      )}
+      <Checkbox
+        disabled={prepublication}
+        checked={notifySubscribers}
+        onChange={(_, value) => {
+          setState({
+            notifySubscribers: value
+          })
+        }}
+      >
+        {t.pluralize('publish/label/notifySubscribers', {
+          count: prepublication ? 0 : commit.document.subscribedBy.totalCount
+        })}
+        {prepublication && (
+          <> {t('publish/label/notifySubscribers/disabled')}</>
+        )}
+      </Checkbox>
+      <br />
+      <br />
       {schema.emailTemplate && (
         <div>
           <Checkbox
@@ -511,7 +515,7 @@ const Form = ({
                 commitId: commit.id,
                 prepublication,
                 updateMailchimp,
-                notifySubscribers,
+                notifySubscribers: notifySubscribers && !prepublication,
                 scheduledAt: scheduled ? scheduledAtDate : undefined,
                 ignoreUnresolvedRepoIds: state.ignoreUnresolvedRepoIds
               })
