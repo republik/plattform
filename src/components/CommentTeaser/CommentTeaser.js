@@ -22,13 +22,9 @@ import {
 const styles = {
   root: css({
     borderTop: `1px solid ${colors.text}`,
-    margin: '0 0 40px 0',
-    paddingTop: 10
-  }),
-  rootFocus: css({
-    backgroundColor: colors.primaryBg,
-    paddingBottom: 40,
-    marginBottom: 0
+    margin: 0,
+    paddingTop: 10,
+    paddingBottom: 40
   }),
   header: css({
     marginBottom: 10
@@ -88,7 +84,7 @@ export const CommentTeaser = ({
   Link = DefaultLink,
   onClick,
   newPage,
-  focus,
+  highlighted,
   menu,
   ...comment
 }) => {
@@ -133,7 +129,11 @@ export const CommentTeaser = ({
 
   return (
     <DiscussionContext.Provider value={discussionContextValue}>
-      <div id={id} {...merge(styles.root, focus && styles.rootFocus)}>
+      <div
+        id={id}
+        {...styles.root}
+        style={{ backgroundColor: highlighted ? colors.primaryBg : undefined }}
+      >
         {displayAuthor && (
           <div {...styles.header}>
             <Header

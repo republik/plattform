@@ -165,8 +165,7 @@ const styles = {
   menu: css({
     position: 'relative',
     marginRight: 10,
-    top: -8,
-    cursor: 'pointer'
+    top: -8
   })
 }
 

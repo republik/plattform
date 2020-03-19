@@ -11,7 +11,7 @@ Props:
 - `createdAt`: The comment's creation timestamp.
 - `timeago`: A function that renders a human-readable version of `createdAt`.
 - `newPage`: Whether to display a "new page" icon.
-- `focus`: Adds a background to the teaser
+- `highlighted`: Adds a background to the teaser
 - `menu`: Adds a more icon to the right and a callout menu
 - `Link`: A Next.js like `<Link />` component, receiving these props:
   - `commentId`: string
@@ -159,7 +159,7 @@ Props:
 
 ```react|noSource,span-3
 <CommentTeaser
-  focus={true}
+  highlighted
   id="X"
   createdAt="2019-01-01"
   displayAuthor={{

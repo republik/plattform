@@ -11,7 +11,7 @@ Supported props:
 - `bar`: an optional React element for actions.
 - `prepublication`: Whether the teaser is for a prepublished article.
 - `menu`: callout menu
-- `highlighted`: highlight the teaser
+- `highlighted`: highlights the teaser
 
 Data props:
 - `title`
