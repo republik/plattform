@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { css, merge } from 'glamor'
+import { css } from 'glamor'
 import { mUp } from '../../theme/mediaQueries'
 import { Format } from './Format'
 import colors from '../../theme/colors'
@@ -8,21 +8,13 @@ import colors from '../../theme/colors'
 const styles = {
   main: css({
     borderTop: `1px solid ${colors.text}`,
-    paddingTop: '8px',
-    position: 'relative',
-    margin: '0 0 30px 0',
-    [mUp]: {
-      margin: '0 0 40px 0',
-      paddingTop: '10px'
-    }
-  }),
-  mainFocus: css({
-    backgroundColor: colors.primaryBg,
+    paddingTop: 8,
     paddingBottom: 30,
-    marginBottom: 0,
+    position: 'relative',
+    margin: 0,
     [mUp]: {
       paddingBottom: 40,
-      marginBottom: 0
+      paddingTop: '10px'
     }
   }),
   link: css({
@@ -31,11 +23,21 @@ const styles = {
   })
 }
 
-const Teaser = ({ children, color, format, interaction, Link, focus }) => {
+const Teaser = ({
+  children,
+  color,
+  format,
+  interaction,
+  Link,
+  highlighted
+}) => {
   return (
     <div
-      {...merge(styles.main, focus && styles.mainFocus)}
-      style={{ borderColor: color }}
+      {...styles.main}
+      style={{
+        borderColor: color,
+        backgroundColor: highlighted ? colors.primaryBg : undefined
+      }}
     >
       {format && format.meta && (
         <Format color={color}>

@@ -27,8 +27,7 @@ const styles = {
   menu: css({
     position: 'absolute',
     right: 10,
-    top: 10,
-    cursor: 'pointer'
+    top: 10
   })
 }
 
@@ -68,7 +67,7 @@ export const TeaserFeed = ({
   t,
   Link = DefaultLink,
   menu,
-  focus
+  highlighted
 }) => {
   const formatMeta = (format && format.meta) || {}
   const Headline =
@@ -89,7 +88,12 @@ export const TeaserFeed = ({
     : undefined
 
   return (
-    <Container focus={focus} format={format} color={borderColor} Link={Link}>
+    <Container
+      highlighted={highlighted}
+      format={format}
+      color={borderColor}
+      Link={Link}
+    >
       {menu && <CalloutMenu menu={menu} styles={styles.menu} />}
       <Headline style={{ color: titleColor }}>
         <Link href={path} passHref>
