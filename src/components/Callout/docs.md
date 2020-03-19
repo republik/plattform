@@ -13,9 +13,9 @@ state: {showMenu: false}
             onClick={() => {setState({showMenu: !state.showMenu})}}>
     <MoreIcon />
     </button>
-    <Callout expanded={state.showMenu} setExpanded={expanded => {setState({showMenu: expanded})}}>
+    { state.showMenu && (<Callout onClose={() => {setState({showMenu: false})}}>
         <span>Test</span>
-    </Callout>
+    </Callout>) }
 </div>
 ```
 
@@ -28,10 +28,9 @@ state: {showMenu: false}
             onClick={() => {setState({showMenu: !state.showMenu})}}>
     <MoreIcon />
     </button>
-    <Callout expanded={state.showMenu} 
-             leftAligned
-             setExpanded={expanded => {setState({showMenu: expanded})}}>
+    { state.showMenu && (<Callout leftAligned
+             onClose={() => {setState({showMenu: false})}}>
         <span>Test</span>
-    </Callout>
+    </Callout>) }
 </div>
 ```

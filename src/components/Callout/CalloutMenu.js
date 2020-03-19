@@ -18,9 +18,11 @@ const CalloutMenu = ({ menu, styles }) => {
       >
         <MoreIcon width='calc(1em + 7px)' />
       </button>
-      <Callout toggleRef={toggleRef} expanded={showMenu} setExpanded={setMenu}>
-        {menu}
-      </Callout>
+      {showMenu && (
+        <Callout toggleRef={toggleRef} onClose={setMenu(false)}>
+          {menu}
+        </Callout>
+      )}
     </div>
   ) : null
 }

@@ -88,17 +88,11 @@ const getTargetId = target => {
   return target.parentElement.parentElement.parentElement.id
 }
 
-const Callout = ({
-  toggleRef,
-  expanded,
-  setExpanded,
-  children,
-  leftAligned
-}) => {
+const Callout = ({ toggleRef, onClose, children, leftAligned }) => {
   const handleClick = e => {
     if (!toggleRef || toggleRef.current.id !== getTargetId(e.target)) {
       e.stopPropagation()
-      setExpanded(false)
+      onClose()
     }
   }
 
@@ -110,10 +104,7 @@ const Callout = ({
   }, [])
 
   return (
-    <div
-      {...styles.calloutContainer}
-      style={{ display: expanded ? 'block' : 'none' }}
-    >
+    <div {...styles.calloutContainer}>
       <div
         {...merge(styles.callout, leftAligned && styles.calloutLeft)}
         onClick={e => e.stopPropagation()}
