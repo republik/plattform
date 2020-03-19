@@ -271,9 +271,7 @@ const Form = ({
           <ul style={{ color: colors.error }}>
             {errors.map((error, i) => (
               <li key={i}>
-                <Interaction.P
-                  style={{ color: colors.error, wordBreak: 'break-all' }}
-                >
+                <Interaction.P style={{ color: colors.error }}>
                   {error}
                 </Interaction.P>
               </li>
@@ -291,9 +289,7 @@ const Form = ({
           <ul style={{ color: colors.social }}>
             {warnings.map((warning, i) => (
               <li key={i}>
-                <Interaction.P
-                  style={{ color: colors.social, wordBreak: 'break-all' }}
-                >
+                <Interaction.P style={{ color: colors.social }}>
                   {warning}
                 </Interaction.P>
               </li>
@@ -323,7 +319,6 @@ const Form = ({
                 <li key={i}>
                   <Interaction.P
                     style={{
-                      wordBreak: 'break-all',
                       color: link.errors.length
                         ? colors.error
                         : link.warnings.length
@@ -334,7 +329,11 @@ const Form = ({
                     {t.elements('publish/validation/link', {
                       text: link.text,
                       link: (
-                        <Editorial.A key='link' href={link.url}>
+                        <Editorial.A
+                          key='link'
+                          href={link.url}
+                          style={{ wordBreak: 'break-all' }}
+                        >
                           {link.url}
                         </Editorial.A>
                       )

@@ -102,7 +102,11 @@ const useValidation = ({ meta, content, t, updateMailchimp }) => {
                 t.elements('publish/validation/link/warning', {
                   text: link.text,
                   link: (
-                    <Editorial.A key='link' href={link.url}>
+                    <Editorial.A
+                      key='link'
+                      href={link.url}
+                      style={{ wordBreak: 'break-all' }}
+                    >
                       {link.url}
                     </Editorial.A>
                   ),
@@ -124,7 +128,11 @@ const useValidation = ({ meta, content, t, updateMailchimp }) => {
                 t.elements('publish/validation/link/error', {
                   text: link.text,
                   link: (
-                    <Editorial.A key='link' href={link.url}>
+                    <Editorial.A
+                      key='link'
+                      href={link.url}
+                      style={{ wordBreak: 'break-all' }}
+                    >
                       {link.url}
                     </Editorial.A>
                   ),
