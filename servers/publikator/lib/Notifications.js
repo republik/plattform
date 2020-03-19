@@ -47,22 +47,6 @@ const notifyPublish = async (repoId, context) => {
       __subscription: sub
     })
   )
-  /*
-  const isUnrestricted = includesUnrestrictedChildRepoId([formatRepoId])
-
-  const subscribers = await Subscriptions.getActiveSubscribersForObject(
-    {
-      type: 'Document',
-      id: subscriptionRepoId,
-      filter: 'Document'
-    },
-    {
-      requireRoles: isUnrestricted ? null : restrictToRoles()
-    },
-    context
-  )
-  */
-  console.log({ subscribers })
 
   if (subscribers.length > 0) {
     await sendNotification(

@@ -292,48 +292,6 @@ const getSubscriptionsForUserAndObjects = (
     )
 }
 
-/*
-const getActiveSubscribersForObject = (
-  {
-    type,
-    id,
-    filter
-  },
-  {
-    requireRoles
-  },
-  { pgdb, t }
-) => {
-  const objectColumn = objectTypes[type]
-  if (!objectColumn) {
-    throw new Error(t('api/unexpected'))
-  }
-
-  console.log({requireRoles, id})
-  return pgdb.query(`
-    SELECT
-      u.*
-    FROM
-      subscriptions s
-    JOIN
-      users u
-      ON s."userId" = u.id
-    WHERE
-      s."objectType" = :type AND
-      s."${objectColumn}" = :objectId AND
-      ${filter ? '(s.filters IS NULL OR s.filters ? :filter) AND' : ''}
-      ${requireRoles ? 'u.roles ?| :roles AND' : ''}
-      s."active" = true
-  `, {
-    type,
-    objectId: id,
-    filter,
-    ...requireRoles ? { roles: requireRoles } : {},
-  })
-    .then(users => users.map(transformUser))
-}
-*/
-
 const subscriptionIsEligibleForNotifications = async (
   subscription,
   context
@@ -369,8 +327,6 @@ module.exports = {
   getSubscriptionsForUser,
   getSubscriptionsForUserAndObject,
   getSubscriptionsForUserAndObjects,
-
-  // getActiveSubscribersForObject,
 
   subscriptionIsEligibleForNotifications
 }
