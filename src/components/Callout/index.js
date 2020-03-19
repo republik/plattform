@@ -77,43 +77,16 @@ const styles = {
   })
 }
 
-const getTargetId = target => {
-  if (target.id) return target.id
-  if (!target.parentElement) return null
-  if (target.parentElement.id) return target.parentElement.id
-  if (!target.parentElement.parentElement) return null
-  if (target.parentElement.parentElement.id)
-    return target.parentElement.parentElement.id
-  if (!target.parentElement.parentElement.parentElement) return null
-  return target.parentElement.parentElement.parentElement.id
-}
-
-const Callout = ({ toggleRef, onClose, children, leftAligned }) => {
-  const handleClick = e => {
-    if (!toggleRef || toggleRef.current.id !== getTargetId(e.target)) {
-      e.stopPropagation()
-      onClose()
-    }
-  }
-
-  React.useEffect(() => {
-    window.addEventListener('click', handleClick)
-    return () => {
-      window.removeEventListener('click', handleClick)
-    }
-  }, [])
-
-  return (
-    <div {...styles.calloutContainer}>
-      <div
-        {...merge(styles.callout, leftAligned && styles.calloutLeft)}
-        onClick={e => e.stopPropagation()}
-      >
-        <div {...merge(styles.arrow, leftAligned && styles.arrowLeft)} />
-        {children}
-      </div>
+const Callout = ({ children, leftAligned, onClose }) => (
+  <div {...styles.calloutContainer} onClick={onClose}>
+    <div
+      {...merge(styles.callout, leftAligned && styles.calloutLeft)}
+      onClick={e => e.stopPropagation()}
+    >
+      <div {...merge(styles.arrow, leftAligned && styles.arrowLeft)} />
+      {children}
     </div>
-  )
-}
+  </div>
+)
 
 export default Callout
