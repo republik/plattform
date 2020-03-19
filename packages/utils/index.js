@@ -8,5 +8,6 @@ module.exports = {
   fetchWithTimeout: require('./fetchWithTimeout'),
   getUrls: require('./getUrls'),
   truncate: require('./truncate'),
-  remark: require('./remark')
+  remark: require('./remark'),
+  uuidForObject: require('./uuidForObject')
 }

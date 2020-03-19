@@ -1,5 +1,6 @@
 const {
-  getSubscriptionsForUserAndObjects
+  getSubscriptionsForUserAndObjects,
+  getSimulatedSubscriptionForUserAndObject
 } = require('../../lib/Subscriptions')
 const { paginate } = require('@orbiting/backend-modules-utils')
 const { Roles } = require('@orbiting/backend-modules-auth')
@@ -47,6 +48,10 @@ module.exports = {
     const { user: me } = context
     const { includeParents } = args
 
+    if (!me) {
+      return paginate(args, [])
+    }
+
     const repoIds = getRepoIdsForDoc(doc, includeParents)
 
     return getSubscriptionsForUserAndObjects(
@@ -60,6 +65,21 @@ module.exports = {
         includeNotActive: true
       }
     )
-      .then(res => res[0]) // with includeParents there are going to be multiple subscriptions as soon as more than just format parents are subscribable
+      .then(subs => {
+        if (subs.length) {
+          // with includeParents there are going to be multiple subscriptions as soon as more than just format parents are subscribeable
+          return subs[0]
+        }
+        if (repoIds.length > 1) { // otherwise no parent and no need to simulate
+          return getSimulatedSubscriptionForUserAndObject(
+            me.id,
+            {
+              type: 'Document',
+              id: repoIds[repoIds.length - 1] // format is always last
+            },
+            context
+          )
+        }
+      })
   }
 }

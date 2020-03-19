@@ -1,6 +1,7 @@
 const { transformUser } = require('@orbiting/backend-modules-auth')
 const { getObjectByIdAndType } = require('./genericObject')
 const Promise = require('bluebird')
+const { uuidForObject } = require('@orbiting/backend-modules-utils')
 
 const objectTypes = ({
   User: 'objectUserId',
@@ -19,26 +20,64 @@ const buildObjectFindProps = ({ id, type }, t) => {
   }
 }
 
+const getIdForSubscription = ({
+  userId,
+  objectId,
+  type
+}) => {
+  return uuidForObject({
+    userId,
+    objectId,
+    type
+  })
+}
+const getSimulatedSubscriptionForUserAndObject = (
+  userId,
+  {
+    type,
+    id
+  },
+  { t },
+  now = new Date()
+) => ({
+  id: getIdForSubscription({
+    userId,
+    objectId: id,
+    type
+  }),
+  userId,
+  ...buildObjectFindProps({
+    id,
+    type
+  }, t),
+  active: false,
+  filters: null,
+  createdAt: now,
+  updatedAt: now
+})
+
 const upsertSubscription = async (args, context) => {
   const { pgdb, loaders, t } = context
-  const { userId, objectId, type, filters } = args
+  const { userId, type, filters } = args
 
-  if (type === 'User' && userId === objectId) {
+  if (type === 'User' && userId === args.objectId) {
     throw new Error(t('api/subscriptions/notYourself'))
   }
 
   const object = await getObjectByIdAndType(
-    { id: objectId, type },
+    { id: args.objectId, type },
     context
   )
   if (!object) {
-    throw new Error(t('api/subscription/object/404', { id: objectId }))
+    throw new Error(t('api/subscription/object/404', { id: args.objectId }))
   }
+  // normalized id by getObjectByIdAndType
+  const objectId = object.objectId || args.objectId
 
   const findProps = {
     userId,
     ...buildObjectFindProps({
-      id: object.objectId || objectId, // normalized id by getObjectByIdAndType
+      id: objectId,
       type
     }, t)
   }
@@ -63,6 +102,11 @@ const upsertSubscription = async (args, context) => {
       )
     } else {
       subscription = await transaction.public.subscriptions.insertAndGet({
+        id: getIdForSubscription({
+          userId,
+          objectId,
+          type
+        }),
         ...findProps,
         ...updateProps
       })
@@ -255,6 +299,8 @@ module.exports = {
   unsubscribe,
   getObject,
   getSubject,
+
+  getSimulatedSubscriptionForUserAndObject,
 
   getSubscriptionsForUser,
   getSubscriptionsForUserAndObject,
