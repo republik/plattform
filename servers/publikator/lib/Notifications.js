@@ -1,6 +1,7 @@
 const { Subscriptions } = require('@orbiting/backend-modules-subscriptions')
 
 const { sendNotification } = require('@orbiting/backend-modules-subscriptions')
+const { getRepoId } = require('@orbiting/backend-modules-documents/lib/resolve')
 
 const {
   FRONTEND_BASE_URL
@@ -15,7 +16,7 @@ const notifyPublish = async (repoId, context) => {
   const docRepoId = doc.meta.repoId
 
   // eg. https://github.com/republik/format-aus-der-redaktion
-  const formatRepoId = doc.meta.format && doc.meta.format.split('github.com/')[1]
+  const formatRepoId = getRepoId(doc.meta.format)
   if (!formatRepoId) {
     return
   }

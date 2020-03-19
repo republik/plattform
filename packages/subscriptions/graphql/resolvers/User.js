@@ -1,7 +1,6 @@
 const {
-  getActiveSubscriptionsByUser,
-  getActiveSubscribersForObject,
-  getActiveSubscriptionByUserForObject
+  getActiveSubscriptionsForUser,
+  getActiveSubscriptionsForUserAndObject
 } = require('../../lib/Subscriptions')
 const { paginate } = require('@orbiting/backend-modules-utils')
 const { Roles } = require('@orbiting/backend-modules-auth')
@@ -22,7 +21,7 @@ module.exports = {
   async subscribedTo (user, args, context) {
     const { user: me } = context
     return createSubscriptionConnection(
-      await getActiveSubscriptionsByUser(user.id, context),
+      await getActiveSubscriptionsForUser(user.id, context),
       args,
       user,
       me
@@ -31,7 +30,8 @@ module.exports = {
   async subscribedBy (user, args, context) {
     const { user: me } = context
     return createSubscriptionConnection(
-      await getActiveSubscribersForObject(
+      await getActiveSubscriptionsForUserAndObject(
+        null,
         {
           type: 'User',
           id: user.id
@@ -48,7 +48,7 @@ module.exports = {
     if (!me) {
       return
     }
-    return getActiveSubscriptionByUserForObject(
+    return getActiveSubscriptionsForUserAndObject(
       me.id,
       {
         type: 'User',
@@ -56,5 +56,6 @@ module.exports = {
       },
       context
     )
+      .then(res => res[0])
   }
 }

@@ -32,11 +32,16 @@ extend type Document {
     last: Int
     before: String
     after: String
+    includeParents: Boolean
   ): SubscriptionConnection!
 
   # subject: me
   # object: this.document
-  subscribedByMe: Subscription
+  # this method will return [Subscription] as soon
+  # as more than formats can be subscribed
+  subscribedByMe(
+    includeParents: Boolean
+  ): Subscription
 }
 
 extend type Discussion {

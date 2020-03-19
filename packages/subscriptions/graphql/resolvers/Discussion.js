@@ -1,5 +1,5 @@
 const {
-  getActiveSubscriptionsByUserForObjects
+  getActiveSubscriptionsForUserAndObjects
 } = require('../../lib/Subscriptions')
 const { paginate } = require('@orbiting/backend-modules-utils')
 
@@ -11,7 +11,7 @@ module.exports = {
     }
 
     const commenterIds = await Discussion.byIdCommenterIds.load(discussion.id)
-    const subscriptions = await getActiveSubscriptionsByUserForObjects(
+    const subscriptions = await getActiveSubscriptionsForUserAndObjects(
       me.id,
       {
         type: 'User',

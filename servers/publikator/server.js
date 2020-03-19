@@ -14,7 +14,8 @@ const { graphql: embeds } = require('@orbiting/backend-modules-embeds')
 const loaderBuilders = {
   ...require('@orbiting/backend-modules-discussions/loaders'),
   ...require('@orbiting/backend-modules-documents/loaders'),
-  ...require('@orbiting/backend-modules-auth/loaders')
+  ...require('@orbiting/backend-modules-auth/loaders'),
+  ...require('@orbiting/backend-modules-subscriptions/loaders')
 }
 
 const PublicationScheduler = require('./lib/PublicationScheduler')

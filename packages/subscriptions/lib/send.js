@@ -1,5 +1,5 @@
 const Promise = require('bluebird')
-const { getActiveSubscriptionByUserForObject } = require('./Subscriptions')
+const { getActiveSubscriptionsForUserAndObject } = require('./Subscriptions')
 const { sendMailTemplate } = require('@orbiting/backend-modules-mail')
 const pushNotifications = require('@orbiting/backend-modules-push-notifications/lib/app')
 
@@ -32,7 +32,7 @@ const send = async (args, context) => {
   const notifications = await Promise.map(
     users,
     async (user) => {
-      const subscription = await getActiveSubscriptionByUserForObject(
+      const subscription = await getActiveSubscriptionsForUserAndObject(
         user.id,
         {
           type: args.subscription.objectType,
@@ -40,6 +40,12 @@ const send = async (args, context) => {
         },
         context
       )
+        .then(subs => {
+          if (subs.length > 1) {
+            throw new Error(t('api/unexpected'))
+          }
+          return subs
+        })
       const notification = await pgdb.public.notifications.insertAndGet({
         eventId: event.id,
         userId: user.id,

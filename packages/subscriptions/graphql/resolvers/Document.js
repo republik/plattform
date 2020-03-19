@@ -1,9 +1,9 @@
 const {
-  getActiveSubscriptionsForObject,
-  getActiveSubscriptionByUserForObject
+  getActiveSubscriptionsForUserAndObjects
 } = require('../../lib/Subscriptions')
 const { paginate } = require('@orbiting/backend-modules-utils')
 const { Roles } = require('@orbiting/backend-modules-auth')
+const { getRepoId } = require('@orbiting/backend-modules-documents/lib/resolve')
 
 const createSubscriptionConnection = (nodes, args, me) => {
   const connection = paginate(args, nodes)
@@ -14,21 +14,24 @@ const createSubscriptionConnection = (nodes, args, me) => {
   return connection
 }
 
-const getRepoId = doc =>
-  doc && doc.meta && doc.meta.repoId
+const getRepoIdsForDoc = (doc, includeParents) => ([
+  doc.meta && doc.meta.repoId,
+  includeParents && getRepoId(doc.meta.format)
+].filter(Boolean))
 
 module.exports = {
   async subscribedBy (doc, args, context) {
     const { user: me } = context
-    const repoId = getRepoId(doc)
-    if (!repoId) {
-      return
-    }
+    const { includeParents } = args
+
+    const repoIds = getRepoIdsForDoc(doc, includeParents)
+
     return createSubscriptionConnection(
-      await getActiveSubscriptionsForObject(
+      await getActiveSubscriptionsForUserAndObjects(
+        null,
         {
           type: 'Document',
-          id: repoId
+          ids: repoIds
         },
         context
       ),
@@ -38,20 +41,18 @@ module.exports = {
   },
   async subscribedByMe (doc, args, context) {
     const { user: me } = context
-    if (!me) {
-      return
-    }
-    const repoId = getRepoId(doc)
-    if (!repoId) {
-      return
-    }
-    return getActiveSubscriptionByUserForObject(
+    const { includeParents } = args
+
+    const repoIds = getRepoIdsForDoc(doc, includeParents)
+
+    return getActiveSubscriptionsForUserAndObjects(
       me.id,
       {
         type: 'Document',
-        id: repoId
+        ids: repoIds
       },
       context
     )
+      .then(res => res[0]) // with includeParents there are going to be multiple subscriptions as soon as more than just format parents are subscribable
   }
 }

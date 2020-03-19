@@ -116,7 +116,7 @@ const getSubject = (subscription, context) => {
   return loaders.User.byId.load(subscription.userId)
 }
 
-const getActiveSubscriptionsByUser = (
+const getActiveSubscriptionsForUser = (
   userId,
   { loaders }
 ) => {
@@ -124,52 +124,69 @@ const getActiveSubscriptionsByUser = (
     .then(subs => subs.filter(sub => sub.active))
 }
 
-const getActiveSubscriptionsForObject = (
-  {
-    type,
-    id
-  },
-  { pgdb, t }
-) => {
-  return pgdb.public.subscriptions.find({
-    active: true,
-    ...buildObjectFindProps({
-      id,
-      type
-    }, t)
-  })
-}
-
-const getActiveSubscriptionByUserForObject = (
+const getActiveSubscriptionsForUserAndObject = (
   userId,
   {
     type,
     id
   },
-  { pgdb, t }
+  context
 ) => {
-  return pgdb.public.subscriptions.findFirst({
-    userId,
+  const { user: me, pgdb, t } = context
+  if (!id) {
+    throw new Error(t('api/unexpected'))
+  }
+  const findProps = {
     active: true,
     ...buildObjectFindProps({
       id,
       type
     }, t)
+  }
+  if (userId && userId === me.id) {
+    return getActiveSubscriptionsForUser(userId, context)
+      .then(subs => subs
+        .filter(sub => Object.keys(findProps).every(
+          key => findProps[key] === sub[key]
+        ))
+      )
+  }
+  return pgdb.public.subscriptions.find({
+    ...userId ? { userId } : {},
+    ...findProps
   })
 }
 
-const getActiveSubscriptionsByUserForObjects = (
+const getActiveSubscriptionsForUserAndObjects = (
   userId,
   {
     type,
     ids,
     filter
   },
-  { pgdb, t }
+  context
 ) => {
+  const { pgdb, t } = context
   const objectColumn = objectTypes[type]
-  if (!objectColumn) {
+  if (
+    !objectColumn
+  ) {
     throw new Error(t('api/unexpected'))
+  }
+
+  if (!ids || !ids.length) {
+    return []
+  }
+
+  if (ids.length === 1) {
+    return getActiveSubscriptionsForUserAndObject(
+      userId,
+      {
+        type,
+        id: ids[0]
+      },
+      context
+    )
   }
 
   return pgdb.query(`
@@ -178,13 +195,13 @@ const getActiveSubscriptionsByUserForObjects = (
     FROM
       subscriptions s
     WHERE
-      s."userId" = :userId AND
-      s."active" = true AND
+      ${userId ? 's."userId" = :userId AND' : ''}
       s."objectType" = :type AND
-      ARRAY[s."${objectColumn}"] && :objectIds
-      ${filter ? 'AND (s.filters IS NULL OR s.filters ? :filter)' : ''}
+      ARRAY[s."${objectColumn}"] && :objectIds AND
+      ${filter ? '(s.filters IS NULL OR s.filters ? :filter) AND' : ''}
+      s."active" = true
   `, {
-    userId,
+    ...userId ? { userId } : {},
     type,
     objectIds: ids,
     filter
@@ -230,9 +247,10 @@ module.exports = {
   unsubscribe,
   getObject,
   getSubject,
-  getActiveSubscriptionsByUser,
-  getActiveSubscriptionsForObject,
-  getActiveSubscriptionByUserForObject,
-  getActiveSubscriptionsByUserForObjects,
+
+  getActiveSubscriptionsForUser,
+  getActiveSubscriptionsForUserAndObject,
+  getActiveSubscriptionsForUserAndObjects,
+
   getActiveSubscribersForObject
 }
