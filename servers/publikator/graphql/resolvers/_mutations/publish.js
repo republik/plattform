@@ -305,8 +305,7 @@ module.exports = async (
       scheduledAt,
       updateMailchimp,
       notifySubscribers
-    },
-    t('api/github/yaml/warning')
+    }
   )
 
   const milestone = await placeMilestone(
