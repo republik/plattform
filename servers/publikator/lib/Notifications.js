@@ -20,7 +20,6 @@ const notifyPublish = async (repoId, context) => {
   const doc = await loaders.Document.byRepoId.load(repoId)
   const docRepoId = doc.meta.repoId
 
-  // eg. https://github.com/republik/format-aus-der-redaktion
   const formatRepoId = getRepoId(doc.meta.format)
   if (!formatRepoId) {
     return
