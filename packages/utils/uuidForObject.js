@@ -9,8 +9,6 @@ const uuidForObject = (obj) => {
     .map(key => `${key}=${obj[key]}`)
     .join(';')
 
-  console.log({ objString })
-
   // sha1 is 20 bytes long
   const hash = crypto
     .createHash('sha1')
