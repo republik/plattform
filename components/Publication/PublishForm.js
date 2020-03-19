@@ -127,7 +127,7 @@ export const getRepoWithCommit = gql`
               }
             }
           }
-          subscribedBy(includeParents: true) {
+          subscribedBy(includeParents: true, onlyEligibles: true) {
             totalCount
           }
         }
