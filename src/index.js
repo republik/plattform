@@ -221,7 +221,9 @@ ReactDOM.render(
               path: '/callout',
               title: 'Callout',
               imports: {
-                Callout: require('./components/Callout')
+                Callout: require('./components/Callout'),
+                MoreIcon: require('react-icons/lib/md/more-vert'),
+                plainButtonRule: require('./components/Button').plainButtonRule
               },
               src: require('./components/Callout/docs.md')
             }
