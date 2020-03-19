@@ -14,9 +14,13 @@ const createSubscriptionConnection = (nodes, args, me) => {
   return connection
 }
 
+// _meta is present on unpublished docs
+// { repo { publication { commit { document } } } }
 const getRepoIdsForDoc = (doc, includeParents) => ([
-  doc.meta && doc.meta.repoId,
-  includeParents && getRepoId(doc.meta.format)
+  (doc.meta && doc.meta.repoId) || (doc._meta && doc._meta.repoId),
+  includeParents && getRepoId(
+    (doc.meta && doc.meta.format) || (doc._meta && doc._meta.format)
+  )
 ].filter(Boolean))
 
 module.exports = {

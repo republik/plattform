@@ -68,6 +68,8 @@ type mutations {
     updateMailchimp: Boolean!
 
     ignoreUnresolvedRepoIds: Boolean
+
+    notifySubscribers: Boolean
   ): PublishResponse!
 
   unpublish(

@@ -65,6 +65,7 @@ module.exports = async (
     prepublication,
     scheduledAt: _scheduledAt,
     updateMailchimp = false,
+    notifySubscribers = false,
     ignoreUnresolvedRepoIds = false
   },
   context
@@ -302,7 +303,8 @@ module.exports = async (
   const message = yaml.stringify(
     {
       scheduledAt,
-      updateMailchimp
+      updateMailchimp,
+      notifySubscribers
     },
     t('api/github/yaml/warning')
   )
@@ -473,7 +475,7 @@ module.exports = async (
   ]
   purgeUrls(purgeQueries.map(q => `/pdf${newPath}.pdf${q}`))
 
-  if (!prepublication) {
+  if (notifySubscribers && !prepublication) {
     await notifyPublish(repoId, context)
   }
 
