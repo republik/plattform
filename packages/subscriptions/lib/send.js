@@ -1,5 +1,5 @@
 const Promise = require('bluebird')
-const { getActiveSubscriptionsForUserAndObject } = require('./Subscriptions')
+const { getSubscriptionsForUserAndObject } = require('./Subscriptions')
 const { sendMailTemplate } = require('@orbiting/backend-modules-mail')
 const pushNotifications = require('@orbiting/backend-modules-push-notifications/lib/app')
 
@@ -32,7 +32,7 @@ const send = async (args, context) => {
   const notifications = await Promise.map(
     users,
     async (user) => {
-      const subscription = await getActiveSubscriptionsForUserAndObject(
+      const subscription = await getSubscriptionsForUserAndObject(
         user.id,
         {
           type: args.subscription.objectType,

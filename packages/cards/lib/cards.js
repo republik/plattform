@@ -174,7 +174,7 @@ const filterCards = async (cards, { filters = {} }, context) => {
   // { subscribedByMe: <Boolean> }
   if (filteredCards.length > 0 && filters.subscribedByMe) {
     if (context.user) {
-      const subscriptions = await Subscriptions.getActiveSubscriptionsForUserAndObjects(
+      const subscriptions = await Subscriptions.getSubscriptionsForUserAndObjects(
         context.user.id,
         {
           type: 'User',

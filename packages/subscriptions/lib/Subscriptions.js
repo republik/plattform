@@ -116,35 +116,41 @@ const getSubject = (subscription, context) => {
   return loaders.User.byId.load(subscription.userId)
 }
 
-const getActiveSubscriptionsForUser = (
+const getSubscriptionsForUser = (
   userId,
-  { loaders }
+  { loaders },
+  { includeNotActive = false } = {}
 ) => {
   return loaders.Subscription.byUserId.load(userId)
-    .then(subs => subs.filter(sub => sub.active))
+    .then(
+      subs => includeNotActive
+        ? subs
+        : subs.filter(sub => sub.active)
+    )
 }
 
-const getActiveSubscriptionsForUserAndObject = (
+const getSubscriptionsForUserAndObject = (
   userId,
   {
     type,
     id
   },
-  context
+  context,
+  { includeNotActive = false } = {}
 ) => {
   const { user: me, pgdb, t } = context
   if (!id) {
     throw new Error(t('api/unexpected'))
   }
   const findProps = {
-    active: true,
+    ...includeNotActive ? {} : { active: true },
     ...buildObjectFindProps({
       id,
       type
     }, t)
   }
   if (userId && userId === me.id) {
-    return getActiveSubscriptionsForUser(userId, context)
+    return getSubscriptionsForUser(userId, context, { includeNotActive })
       .then(subs => subs
         .filter(sub => Object.keys(findProps).every(
           key => findProps[key] === sub[key]
@@ -157,14 +163,15 @@ const getActiveSubscriptionsForUserAndObject = (
   })
 }
 
-const getActiveSubscriptionsForUserAndObjects = (
+const getSubscriptionsForUserAndObjects = (
   userId,
   {
     type,
     ids,
     filter
   },
-  context
+  context,
+  { includeNotActive = false } = {}
 ) => {
   const { pgdb, t } = context
   const objectColumn = objectTypes[type]
@@ -179,13 +186,14 @@ const getActiveSubscriptionsForUserAndObjects = (
   }
 
   if (ids.length === 1) {
-    return getActiveSubscriptionsForUserAndObject(
+    return getSubscriptionsForUserAndObject(
       userId,
       {
         type,
         id: ids[0]
       },
-      context
+      context,
+      { includeNotActive }
     )
   }
 
@@ -196,10 +204,10 @@ const getActiveSubscriptionsForUserAndObjects = (
       subscriptions s
     WHERE
       ${userId ? 's."userId" = :userId AND' : ''}
-      s."objectType" = :type AND
       ARRAY[s."${objectColumn}"] && :objectIds AND
       ${filter ? '(s.filters IS NULL OR s.filters ? :filter) AND' : ''}
-      s."active" = true
+      ${includeNotActive ? '' : 's."active" = true AND'}
+      s."objectType" = :type
   `, {
     ...userId ? { userId } : {},
     type,
@@ -248,9 +256,9 @@ module.exports = {
   getObject,
   getSubject,
 
-  getActiveSubscriptionsForUser,
-  getActiveSubscriptionsForUserAndObject,
-  getActiveSubscriptionsForUserAndObjects,
+  getSubscriptionsForUser,
+  getSubscriptionsForUserAndObject,
+  getSubscriptionsForUserAndObjects,
 
   getActiveSubscribersForObject
 }

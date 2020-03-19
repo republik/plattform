@@ -1,5 +1,5 @@
 const {
-  getActiveSubscriptionsForUserAndObjects
+  getSubscriptionsForUserAndObjects
 } = require('../../lib/Subscriptions')
 const { paginate } = require('@orbiting/backend-modules-utils')
 const { Roles } = require('@orbiting/backend-modules-auth')
@@ -31,7 +31,7 @@ module.exports = {
     const repoIds = getRepoIdsForDoc(doc, includeParents)
 
     return createSubscriptionConnection(
-      await getActiveSubscriptionsForUserAndObjects(
+      await getSubscriptionsForUserAndObjects(
         null,
         {
           type: 'Document',
@@ -49,13 +49,16 @@ module.exports = {
 
     const repoIds = getRepoIdsForDoc(doc, includeParents)
 
-    return getActiveSubscriptionsForUserAndObjects(
+    return getSubscriptionsForUserAndObjects(
       me.id,
       {
         type: 'Document',
         ids: repoIds
       },
-      context
+      context,
+      {
+        includeNotActive: true
+      }
     )
       .then(res => res[0]) // with includeParents there are going to be multiple subscriptions as soon as more than just format parents are subscribable
   }
