@@ -1,5 +1,5 @@
 {
-  "updated": "2020-03-19T02:43:54.017Z",
+  "updated": "2020-03-19T13:45:16.081Z",
   "title": "live",
   "data": [
     {
@@ -896,11 +896,11 @@
     },
     {
       "key": "publish/label/notifySubscribers/1",
-      "value": "{count} Benachrichtigung senden"
+      "value": "~{count} Benachrichtigung senden"
     },
     {
       "key": "publish/label/notifySubscribers/other",
-      "value": "{count} Benachrichtigungen senden"
+      "value": "~{count} Benachrichtigungen senden"
     },
     {
       "key": "publish/validation/hasErrors",
