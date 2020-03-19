@@ -95,6 +95,7 @@
     "immutable": "^3.8.2",
     "immutable-treeutils": "^1.2.0",
     "is-url": "^1.2.4",
+    "is-uuid": "^1.0.2",
     "isomorphic-unfetch": "^3.0.0",
     "js-yaml": "^3.13.1",
     "lodash.debounce": "^4.0.8",
@@ -124,6 +125,7 @@
     "subscriptions-transport-ws": "^0.9.15",
     "topojson": "^3.0.2",
     "unified": "^7.0.0",
+    "unist-util-visit": "^2.0.2",
     "validator": "^10.11.0"
   }
 }
