@@ -79,6 +79,10 @@ const publish = async (args, pgdb) => {
       await deleteSessionForDevices(staleTokens, pgdb)
       debug('deleted sessions for stale firebase device tokens', staleTokens)
     }
+    return {
+      staleTokens,
+      goodTokens: tokens.filter(t => staleTokens.indexOf(t) === -1)
+    }
   } else {
     debug('no receipients found for publish: %O', args)
   }

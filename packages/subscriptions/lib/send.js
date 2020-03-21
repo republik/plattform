@@ -97,6 +97,7 @@ const send = async (args, context) => {
   const emailNotifications = content.mail && notifications
     .filter(n => n.channels.indexOf('EMAIL') > -1)
 
+  // this actual sending could be done async
   await Promise.all([
     webUserIds.length && (
       pubsub.publish('webNotification', {
@@ -106,6 +107,20 @@ const send = async (args, context) => {
     ),
     appUserIds.length && (
       pushNotifications.publish(appUserIds, content.app, context)
+        .then(results =>
+          Promise.map(
+            results,
+            ({ userId, numSuccessful, numFailed }) => {
+              return pgdb.public.notifications.updateOne(
+                { id: notifications.find(n => n.userId === userId).id },
+                {
+                  appPushesSuccessful: numSuccessful,
+                  appPushesFailed: numFailed
+                }
+              )
+            }
+          )
+        )
     ),
     emailNotifications && emailNotifications.length && (
       Promise.all(emailNotifications.map(notification =>

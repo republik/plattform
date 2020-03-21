@@ -21,24 +21,27 @@ CREATE TABLE "events" (
 --CREATE INDEX IF NOT EXISTS "events_object_id_idx" ON "events"("objectId");
 
 CREATE TABLE "notifications" (
-  "id"              uuid PRIMARY KEY NOT NULL DEFAULT uuid_generate_v4(),
-  "eventId"         uuid NOT NULL references "events",
+  "id"                  uuid PRIMARY KEY NOT NULL DEFAULT uuid_generate_v4(),
+  "eventId"             uuid NOT NULL references "events",
   -- denormalized
-  "eventObjectType" event_object_type NOT NULL,
-  "eventObjectId"   text NOT NULL,
+  "eventObjectType"     event_object_type NOT NULL,
+  "eventObjectId"       text NOT NULL,
 
-  "userId"          uuid NOT NULL references "users",
+  "userId"              uuid NOT NULL references "users",
 
-  "subscriptionId"  uuid references "subscriptions",
+  "subscriptionId"      uuid references "subscriptions",
 
-  "channels"        jsonb,
+  "channels"            jsonb,
 
-  "content"         jsonb,
-  "readAt"          timestamptz,
-  "mailLogId"       uuid references "mailLog",
+  "content"             jsonb,
+  "readAt"              timestamptz,
 
-  "createdAt"       timestamptz default now(),
-  "updatedAt"       timestamptz default now()
+  "mailLogId"           uuid references "mailLog",
+  "appPushesSuccessful" int NOT NULL DEFAULT 0,
+  "appPushesFailed"     int NOT NULL DEFAULT 0,
+
+  "createdAt"           timestamptz default now(),
+  "updatedAt"           timestamptz default now()
 );
 
 CREATE INDEX IF NOT EXISTS "notifications_event_id_idx" ON "notifications"("eventId");
