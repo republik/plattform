@@ -316,6 +316,22 @@ const filterEligibleSubscriptions = (subscriptions, context) => {
   )
 }
 
+const getUnreadNotificationsForUserAndObject = (
+  userId,
+  {
+    type,
+    id
+  },
+  { loaders }
+) => {
+  return loaders.Notification.byKeyObj.load({
+    userId,
+    eventObjectType: type,
+    eventObjectId: id,
+    readAt: null
+  })
+}
+
 module.exports = {
   upsertSubscription,
   unsubscribe,
@@ -328,5 +344,6 @@ module.exports = {
   getSubscriptionsForUserAndObject,
   getSubscriptionsForUserAndObjects,
 
-  subscriptionIsEligibleForNotifications
+  subscriptionIsEligibleForNotifications,
+  getUnreadNotificationsForUserAndObject
 }

@@ -57,6 +57,12 @@ extend type Document {
   subscribedByMe(
     includeParents: Boolean
   ): Subscription
+
+  unreadNotification: Notification
+}
+
+extend type Comment {
+  unreadNotification: Notification
 }
 
 extend type Discussion {

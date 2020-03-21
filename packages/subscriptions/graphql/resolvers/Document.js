@@ -1,6 +1,7 @@
 const {
   getSubscriptionsForUserAndObjects,
-  getSimulatedSubscriptionForUserAndObject
+  getSimulatedSubscriptionForUserAndObject,
+  getUnreadNotificationsForUserAndObject
 } = require('../../lib/Subscriptions')
 const { paginate } = require('@orbiting/backend-modules-utils')
 const { Roles } = require('@orbiting/backend-modules-auth')
@@ -73,7 +74,8 @@ module.exports = {
     )
       .then(subs => {
         if (subs.length) {
-          // with includeParents there are going to be multiple subscriptions as soon as more than just format parents are subscribeable
+          // with includeParents there are going to be multiple subscriptions
+          // as soon as more than just format parents are subscribeable
           return subs[0]
         }
         if (repoIds.length > 1) { // otherwise no parent and no need to simulate
@@ -87,5 +89,22 @@ module.exports = {
           )
         }
       })
+  },
+  async unreadNotification (doc, args, context) {
+    const { user: me } = context
+
+    const repoIds = getRepoIdsForDoc(doc, false)
+    if (!me || !repoIds || !repoIds.length) {
+      return null
+    }
+
+    return getUnreadNotificationsForUserAndObject(
+      me.id,
+      {
+        type: 'Document',
+        id: repoIds[0]
+      },
+      context
+    )
   }
 }

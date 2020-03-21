@@ -9,7 +9,8 @@ module.exports = async (_, args, context) => {
     user: me,
     t,
     pubsub,
-    req
+    req,
+    loaders
   } = context
 
   ensureSignedIn(req)
@@ -30,6 +31,7 @@ module.exports = async (_, args, context) => {
     { id },
     { readAt: new Date() }
   )
+  loaders.Notifications.byKeyObj.clearAll()
 
   await pubsub.publish('notification', {
     notification: newNotification

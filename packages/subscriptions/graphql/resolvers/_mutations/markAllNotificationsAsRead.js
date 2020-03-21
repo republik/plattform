@@ -6,7 +6,8 @@ module.exports = async (_, args, context) => {
     pgdb,
     user: me,
     pubsub,
-    req
+    req,
+    loaders
   } = context
 
   ensureSignedIn(req)
@@ -26,6 +27,7 @@ module.exports = async (_, args, context) => {
       readAt: new Date()
     }
   )
+  loaders.Notifications.byKeyObj.clearAll()
 
   await Promise.all(newNotifications.map(n =>
     pubsub.publish('notification', {

@@ -25,8 +25,12 @@ const send = async (args, context) => {
     throw new Error(t('api/unexpected'))
   }
 
+  const now = new Date()
+  // TODO warp with transaction
   const event = await pgdb.public.events.insertAndGet({
-    ...args.event
+    ...args.event,
+    createdAt: now,
+    updatedAt: now
   })
 
   const notifications = await Promise.map(
@@ -50,12 +54,16 @@ const send = async (args, context) => {
 
       const notification = await pgdb.public.notifications.insertAndGet({
         eventId: event.id,
+        eventObjectType: args.event.objectType,
+        eventObjectId: args.event.objectId,
         userId: user.id,
         subscriptionId: subscription && subscription.id,
         channels: getChannelsForUser(
           user, args.subscription, subscription
         ),
-        content: args.content.app
+        content: args.content.app,
+        createdAt: now,
+        updatedAt: now
       })
 
       return {
@@ -64,6 +72,7 @@ const send = async (args, context) => {
       }
     }
   )
+  // TODO warp with transaction
 
   const webUserIds = notifications
     .filter(n => n.channels.indexOf('WEB') > -1)
