@@ -26,53 +26,66 @@ const send = async (args, context) => {
   }
 
   const now = new Date()
-  // TODO warp with transaction
-  const event = await pgdb.public.events.insertAndGet({
-    ...args.event,
-    createdAt: now,
-    updatedAt: now
-  })
 
-  const notifications = await Promise.map(
-    users,
-    async (user) => {
-      const subscription = user.__subscription ||
-        await getSubscriptionsForUserAndObject(
-          user.id,
-          {
-            type: args.subscription.objectType,
-            id: args.subscription.objectId
-          },
-          context
-        )
-          .then(subs => {
-            if (subs.length > 1) {
-              throw new Error(t('api/unexpected'))
-            }
-            return subs
-          })
+  let notifications
+  const transaction = await pgdb.transactionBegin()
+  try {
+    const event = await transaction.public.events.insertAndGet({
+      ...args.event,
+      createdAt: now,
+      updatedAt: now
+    })
 
-      const notification = await pgdb.public.notifications.insertAndGet({
-        eventId: event.id,
-        eventObjectType: args.event.objectType,
-        eventObjectId: args.event.objectId,
-        userId: user.id,
-        subscriptionId: subscription && subscription.id,
-        channels: getChannelsForUser(
-          user, args.subscription, subscription
-        ),
-        content: args.content.app,
-        createdAt: now,
-        updatedAt: now
-      })
+    notifications = await Promise.map(
+      users,
+      async (user) => {
+        const subscription = user.__subscription ||
+          await getSubscriptionsForUserAndObject(
+            user.id,
+            {
+              type: args.subscription.objectType,
+              id: args.subscription.objectId
+            },
+            context
+          )
+            .then(subs => {
+              if (subs.length > 1) {
+                throw new Error(t('api/unexpected'))
+              }
+              return subs
+            })
 
-      return {
-        ...notification,
-        user
+        const notification = await transaction.public.notifications.insertAndGet({
+          eventId: event.id,
+          eventObjectType: args.event.objectType,
+          eventObjectId: args.event.objectId,
+          userId: user.id,
+          subscriptionId: subscription && subscription.id,
+          channels: getChannelsForUser(
+            user, args.subscription, subscription
+          ),
+          content: args.content.app,
+          createdAt: now,
+          updatedAt: now
+        })
+
+        return {
+          ...notification,
+          user
+        }
       }
-    }
-  )
-  // TODO warp with transaction
+    )
+
+    await transaction.transactionCommit()
+  } catch (e) {
+    await transaction.transactionRollback()
+    console.error('rollback!', e)
+    throw new Error(t('api/unexpected'))
+  }
+
+  if (!notifications) {
+    return
+  }
 
   const webUserIds = notifications
     .filter(n => n.channels.indexOf('WEB') > -1)
