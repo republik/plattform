@@ -46,3 +46,4 @@ CREATE INDEX IF NOT EXISTS "notifications_event_object_type_idx" ON "notificatio
 CREATE INDEX IF NOT EXISTS "notifications_event_object_id_idx" ON "notifications"("eventObjectId");
 CREATE INDEX IF NOT EXISTS "notifications_user_id_idx" ON "notifications"("userId");
 CREATE INDEX IF NOT EXISTS "notifications_read_at_idx" ON "notifications"("readAt");
+CREATE INDEX IF NOT EXISTS "notifications_created_at_idx" ON "notifications"("createdAt");

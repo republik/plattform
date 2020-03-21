@@ -90,21 +90,24 @@ module.exports = {
         }
       })
   },
-  async unreadNotification (doc, args, context) {
+  async unreadNotifications (doc, args, context) {
     const { user: me } = context
 
     const repoIds = getRepoIdsForDoc(doc, false)
     if (!me || !repoIds || !repoIds.length) {
-      return null
+      return paginate(args, [])
     }
 
-    return getUnreadNotificationsForUserAndObject(
-      me.id,
-      {
-        type: 'Document',
-        id: repoIds[0]
-      },
-      context
+    return paginate(
+      args,
+      await getUnreadNotificationsForUserAndObject(
+        me.id,
+        {
+          type: 'Document',
+          id: repoIds[0]
+        },
+        context
+      )
     )
   }
 }

@@ -15,7 +15,7 @@ const getCacheKey = (key) => {
   throw new Error('invalid key')
 }
 
-const defaultFind = (key, rows) => {
+const defaultFind = (key, rows, { many } = {}) => {
   if (typeof key === 'string') {
     return rows.find(
       row => row.id === key
@@ -23,27 +23,33 @@ const defaultFind = (key, rows) => {
   }
   if (typeof key === 'object') {
     const keyFields = Object.keys(key)
-    return rows.find(
-      row => keyFields.every(keyField => row[keyField] === key[keyField])
-    )
+    const matchRow = row =>
+      keyFields.every(keyField => row[keyField] === key[keyField])
+    if (many) {
+      return rows.filter(matchRow)
+    }
+    return rows.find(matchRow)
   }
   throw new Error('invalid key')
 }
 
-module.exports = (loader, options = {}, find = defaultFind) =>
-  new DataLoader(
+module.exports = (loader, options, find = defaultFind) => {
+  const { many, ...dlOptions } = options || {}
+
+  return new DataLoader(
     (keys) =>
       loader(keys)
         .then(rows => Promise.all(rows)) // allow loaders to return array of promises
         .then(rows =>
           keys.map(
-            key => find(key, rows)
+            key => find(key, rows, { many })
           )
         )
     ,
     {
       cacheKeyFn: getCacheKey,
       maxBatchSize: 1000,
-      ...options
+      ...dlOptions
     }
   )
+}

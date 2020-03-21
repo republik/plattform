@@ -58,11 +58,11 @@ extend type Document {
     includeParents: Boolean
   ): Subscription
 
-  unreadNotification: Notification
+  unreadNotifications: NotificationConnection
 }
 
 extend type Comment {
-  unreadNotification: Notification
+  unreadNotifications: NotificationConnection
 }
 
 extend type Discussion {

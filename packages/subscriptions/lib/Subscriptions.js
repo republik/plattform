@@ -324,7 +324,8 @@ const getUnreadNotificationsForUserAndObject = (
   },
   { loaders }
 ) => {
-  return loaders.Notification.byKeyObj.load({
+  // the keys provided to load may match multiple notifications
+  return loaders.Notification.byKeyObj({ many: true }).load({
     userId,
     eventObjectType: type,
     eventObjectId: id,
