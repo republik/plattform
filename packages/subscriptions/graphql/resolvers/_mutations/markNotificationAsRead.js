@@ -27,15 +27,15 @@ module.exports = async (_, args, context) => {
     return notification
   }
 
-  const newNotification = await pgdb.public.notifications.updateAndGetOne(
+  const updatedNotification = await pgdb.public.notifications.updateAndGetOne(
     { id },
     { readAt: new Date() }
   )
   loaders.Notifications.byKeyObj().clearAll()
 
   await pubsub.publish('notification', {
-    notification: newNotification
+    notification: updatedNotification
   })
 
-  return newNotification
+  return updatedNotification
 }

@@ -69,7 +69,7 @@ const getParsedDocumentId = id => {
   const [org, repoName, commitId, versionName] = decoded.split('/')
 
   return {
-    repoName: repoName,
+    repoName,
     org,
     repoId: repoName && org && `${org}/${repoName}`,
     commitId,

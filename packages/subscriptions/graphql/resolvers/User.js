@@ -23,11 +23,11 @@ module.exports = {
     const { objectType } = args
     return createSubscriptionConnection(
       await getSubscriptionsForUser(user.id, context)
-        .then(subs => {
-          return objectType
+        .then(
+          subs => objectType
             ? subs.filter(sub => sub.objectType === objectType)
             : subs
-        }),
+        ),
       args,
       user,
       me

@@ -21,7 +21,7 @@ module.exports = async (_, args, context) => {
     return notifications
   }
 
-  const newNotifications = await pgdb.public.notifications.updateAndGet(
+  const updatedNotifications = await pgdb.public.notifications.updateAndGet(
     { id: notifications.map(n => n.id) },
     {
       readAt: new Date()
@@ -29,11 +29,11 @@ module.exports = async (_, args, context) => {
   )
   loaders.Notifications.byKeyObj().clearAll()
 
-  await Promise.all(newNotifications.map(n =>
+  await Promise.all(updatedNotifications.map(n =>
     pubsub.publish('notification', {
       notification: n
     })
   ))
 
-  return newNotifications
+  return updatedNotifications
 }
