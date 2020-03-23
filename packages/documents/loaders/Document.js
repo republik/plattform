@@ -11,7 +11,8 @@ module.exports = (context) => ({
             repoId: repoIds,
             type: 'Document'
           },
-          first: repoIds.length * 2
+          first: repoIds.length * 2,
+          unrestricted: true
         },
         context
       )
