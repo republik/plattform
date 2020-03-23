@@ -366,7 +366,7 @@ const Form = ({
       <br />
       <Checkbox
         disabled={prepublication}
-        checked={notifySubscribers}
+        checked={!prepublication && notifySubscribers}
         onChange={(_, value) => {
           setState({
             notifySubscribers: value
@@ -374,11 +374,8 @@ const Form = ({
         }}
       >
         {t.pluralize('publish/label/notifySubscribers', {
-          count: prepublication ? 0 : commit.document.subscribedBy.totalCount
+          count: commit.document.subscribedBy.totalCount
         })}
-        {prepublication && (
-          <> {t('publish/label/notifySubscribers/disabled')}</>
-        )}
       </Checkbox>
       <br />
       <br />
