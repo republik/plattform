@@ -3,9 +3,9 @@ const {
     getSubscriptionsForUserAndObject
   }
 } = require('@orbiting/backend-modules-subscriptions')
-
 const { sendNotification } = require('@orbiting/backend-modules-subscriptions')
 const { getRepoId } = require('@orbiting/backend-modules-documents/lib/resolve')
+const { inQuotes } = require('@project-r/styleguide/lib/lib/inQuotes')
 const Promise = require('bluebird')
 
 const {
@@ -14,7 +14,8 @@ const {
 
 const notifyPublish = async (repoId, context) => {
   const {
-    loaders
+    loaders,
+    t
   } = context
 
   const doc = await loaders.Document.byRepoId.load(repoId)
@@ -61,8 +62,9 @@ const notifyPublish = async (repoId, context) => {
         users: subscribers,
         content: {
           app: {
-            title: 'Neues Dokument publiziert',
-            body: `${doc.meta.title}`,
+            title: t('api/notifications/doc/title', { title: inQuotes(subscriptionDoc.meta.title) }
+            ),
+            body: doc.meta.shortTitle || [doc.meta.title, doc.meta.description].join(' - '),
             url: `${FRONTEND_BASE_URL}${doc.meta.path}`,
             type: 'document',
             tag: docRepoId
