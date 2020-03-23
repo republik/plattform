@@ -1,6 +1,6 @@
 const run = require('../run.js')
 
-const dir = 'packages/notifications/migrations/sqls'
+const dir = 'packages/push-notifications/migrations/sqls'
 const file = '20180306105312-discussion-notifications'
 
 exports.up = (db) =>
