@@ -1,10 +1,13 @@
 const debug = require('debug')('search:graphql:resolvers:_queries:search')
 const {
   Roles: {
-    userHasRole,
-    userIsInRoles
+    userHasRole
   }
 } = require('@orbiting/backend-modules-auth')
+const {
+  isUserUnrestricted,
+  includesUnrestrictedChildRepoId
+} = require('@orbiting/backend-modules-documents/lib/restrictions')
 const {
   schema: documentSchema,
   addRelatedDocs
@@ -41,8 +44,6 @@ const getFieldList = require('@orbiting/graphql-list-fields')
 const createCache = require('../../../lib/cache')
 
 const {
-  DOCUMENTS_RESTRICT_TO_ROLES,
-  DOCUMENTS_UNRESTRICTED_CHILDREN_REPO_IDS,
   SEARCH_TRACK = false
 } = process.env
 
@@ -335,23 +336,10 @@ const getFirst = (first, filter, user, recursive, forceUnrestricted) => {
   const oneRepoId = repoId && (!Array.isArray(repoId) || repoId.length === 1)
 
   const format = getFilterValue(filter, 'format')
-  const unrestricted =
-    format &&
-    format.length &&
-    DOCUMENTS_UNRESTRICTED_CHILDREN_REPO_IDS &&
-    DOCUMENTS_UNRESTRICTED_CHILDREN_REPO_IDS
-      .split(',')
-      .some(repoId =>
-        format.some(f =>
-          new RegExp(`.*${repoId}$`).test(f)
-        )
-      )
+  const unrestricted = includesUnrestrictedChildRepoId(format)
 
-  if (DOCUMENTS_RESTRICT_TO_ROLES && !recursive && !path && !oneRepoId && !unrestricted && !forceUnrestricted) {
-    const roles = DOCUMENTS_RESTRICT_TO_ROLES.split(',')
-    if (!userIsInRoles(user, roles)) {
-      return 0
-    }
+  if (!isUserUnrestricted(user) && !recursive && !path && !oneRepoId && !unrestricted && !forceUnrestricted) {
+    return 0
   }
 
   if (first > MAX_NODES) {

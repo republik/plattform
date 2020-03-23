@@ -38,7 +38,7 @@ const publish = async (args, pgdb) => {
     return
   }
   if (!provider) {
-    throw new Error(`mssing env APN_*, can't publish`)
+    throw new Error('mssing env APN_*, can\'t publish')
   }
 
   const { tokens, title, body, url, icon, type, ttl } = args
@@ -73,6 +73,10 @@ const publish = async (args, pgdb) => {
     if (staleTokens.length > 0) {
       await deleteSessionForDevices(staleTokens, pgdb)
       debug('deleted sessions for stale APN device tokens', staleTokens)
+    }
+    return {
+      staleTokens,
+      goodTokens: tokens.filter(t => staleTokens.indexOf(t) === -1)
     }
   } else {
     debug('no receipients found for publish: %O', args)

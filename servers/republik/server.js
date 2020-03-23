@@ -11,7 +11,7 @@ const SlackGreeter = require('@orbiting/backend-modules-slack/lib/SlackGreeter')
 const { graphql: documents } = require('@orbiting/backend-modules-documents')
 const { graphql: redirections } = require('@orbiting/backend-modules-redirections')
 const { graphql: search } = require('@orbiting/backend-modules-search')
-const { graphql: notifications } = require('@orbiting/backend-modules-notifications')
+const { graphql: notifications } = require('@orbiting/backend-modules-push-notifications')
 const { graphql: voting } = require('@orbiting/backend-modules-voting')
 const { graphql: discussions } = require('@orbiting/backend-modules-discussions')
 const { graphql: collections } = require('@orbiting/backend-modules-collections')
@@ -27,6 +27,7 @@ const loaderBuilders = {
   ...require('@orbiting/backend-modules-documents/loaders'),
   ...require('@orbiting/backend-modules-auth/loaders'),
   ...require('@orbiting/backend-modules-collections/loaders'),
+  ...require('@orbiting/backend-modules-maillog/loaders'),
   ...require('@orbiting/backend-modules-subscriptions/loaders'),
   ...require('@orbiting/backend-modules-cards/loaders'),
   ...require('@orbiting/backend-modules-embeds/loaders'),

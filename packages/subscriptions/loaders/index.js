@@ -1,3 +1,5 @@
 module.exports = {
-  Subscription: require('./Subscription')
+  Subscription: require('./Subscription'),
+  Event: require('./Event'),
+  Notification: require('./Notification')
 }

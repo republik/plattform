@@ -16,6 +16,7 @@ const {
   deleteRef
 } = require('./github')
 const { upsert: repoCacheUpsert } = require('./cache/upsert')
+const { notifyPublish } = require('./Notifications')
 
 const lockTtlSecs = 10 // 10 seconds
 
@@ -104,11 +105,18 @@ const init = async (context) => {
             console.error(e)
           })
 
+        // flush dataloaders
+        await context.loaders.Document.byRepoId.clear(repoId)
+
         await repoCacheUpsert({
           id: repoId,
           meta: await getRepoMeta({ id: repoId }),
           publications: await getLatestPublications({ id: repoId })
         }, context)
+
+        if (!prepublication) {
+          await notifyPublish(repoId, context)
+        }
 
         debug(
           'published', {

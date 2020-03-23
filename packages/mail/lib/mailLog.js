@@ -56,7 +56,8 @@ const send = async ({
   context
 }) => {
   if (!sendFunc || !message || !email || !context || !context.pgdb) {
-    throw new Error('missing input', { sendFunc, message, email, context })
+    console.error('missing input', { sendFunc, message, email, context })
+    throw new Error('missing input')
   }
 
   if (onceFor) {
@@ -105,7 +106,7 @@ const send = async ({
     context
   )
 
-  return { result, status, error }
+  return { result, status, error, mailLogId: logEntry.id }
 }
 
 module.exports = {

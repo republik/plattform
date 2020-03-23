@@ -83,15 +83,6 @@ type NewsletterSubscription {
   isEligible: Boolean!
 }
 
-type WebNotification {
-  title: String!
-  body: String!
-  icon: String!
-  url: String!
-  # see https://developer.mozilla.org/en-US/docs/Web/API/Notification/tag
-  tag: String!
-}
-
 type PageInfo {
   endCursor: String
   hasNextPage: Boolean!

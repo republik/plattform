@@ -118,7 +118,7 @@ const buildDeck = (cards, seed, focus = [], smartspider = []) => {
 }
 
 const filterCards = async (cards, { filters = {} }, context) => {
-  let filteredCards = [ ...cards ]
+  let filteredCards = [...cards]
 
   // { parties: [ <party 1>, ...<party n> ]}
   if (filters.parties) {
@@ -174,11 +174,13 @@ const filterCards = async (cards, { filters = {} }, context) => {
   // { subscribedByMe: <Boolean> }
   if (filteredCards.length > 0 && filters.subscribedByMe) {
     if (context.user) {
-      const subscriptions = await Subscriptions.getSubscriptionsByUserForObjects(
+      const subscriptions = await Subscriptions.getSubscriptionsForUserAndObjects(
         context.user.id,
-        'User',
-        filteredCards.map(card => card.userId),
-        'COMMENTS',
+        {
+          type: 'User',
+          ids: filteredCards.map(card => card.userId),
+          filter: 'COMMENTS'
+        },
         context
       )
 

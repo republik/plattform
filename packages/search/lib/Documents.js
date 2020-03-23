@@ -52,15 +52,33 @@ const indexRef = {
 const getDocumentId = ({ repoId, commitId, versionName }) =>
   Buffer.from(`${repoId}/${commitId}/${versionName}`).toString('base64')
 
-const documentIdParser = value => {
-  const decoded = Buffer.from(value, 'base64').toString('utf8')
-
+const getParsedDocumentId = id => {
   // decoded = <org>/<repoName>/<commitId>/<versionName>
   //                 ^^^^^^^^^^
-  const repoName =
-    decoded.split('/')[1] ||
-    value.split('/')[1] // fallback for plain repo ids
+  const decoded = Buffer.from(id, 'base64').toString('utf8')
 
+  if (decoded.indexOf('/') === -1) { // id is repoId
+    const [org, repoName] = id.split('/')
+    return {
+      repoId: id,
+      org,
+      repoName
+    }
+  }
+
+  const [org, repoName, commitId, versionName] = decoded.split('/')
+
+  return {
+    repoName,
+    org,
+    repoId: repoName && org && `${org}/${repoName}`,
+    commitId,
+    versionName
+  }
+}
+
+const documentIdParser = value => {
+  const { repoName } = getParsedDocumentId(value)
   return getResourceUrls(repoName)
 }
 
@@ -809,5 +827,6 @@ module.exports = {
   findPublished,
   findTemplates,
   getResourceUrls,
-  getDocumentId
+  getDocumentId,
+  getParsedDocumentId
 }

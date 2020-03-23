@@ -106,6 +106,5 @@ type mutations {
 
 type subscriptions {
   greeting: Greeting!
-  webNotification: WebNotification!
 }
 `

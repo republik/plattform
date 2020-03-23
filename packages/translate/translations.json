@@ -1,5 +1,5 @@
 {
-  "updated": "2020-01-28T17:33:27.322Z",
+  "updated": "2020-03-23T20:34:06.306Z",
   "title": "live",
   "data": [
     {
@@ -663,16 +663,8 @@
       "value": "Neue Antwort von {authorName} in «{discussionName}»"
     },
     {
-      "key": "api/comment/notification/new/web/subject",
-      "value": "Neuer Beitrag in «{discussionName}»"
-    },
-    {
-      "key": "api/comment/notification/answer/web/subject",
-      "value": "Neue Antwort in «{discussionName}»"
-    },
-    {
-      "key": "api/comment/notification/new/web/icon",
-      "value": "https://cdn.republik.space/frontend/static/apple-touch-icon.png"
+      "key": "api/comment/notification/new/app/icon",
+      "value": "https://cdn.repub.ch/frontend/static/apple-touch-icon.png"
     },
     {
       "key": "api/comment/notification/new/app/subject",
@@ -1467,6 +1459,18 @@
       "value": "Sie können sich nicht selber folgen."
     },
     {
+      "key": "api/notification/404",
+      "value": "Die Benachrichtigung konnte nicht gefunden werden."
+    },
+    {
+      "key": "api/notification/notYours",
+      "value": "Sie können nur Ihre eigenen Benachrichtigungen bearbeiten."
+    },
+    {
+      "key": "api/subscription/object/404",
+      "value": "Das gewünschte Object konnte nicht gefunden werden. (id: {id})"
+    },
+    {
       "key": "api/signIn",
       "value": "Sie müssen sich zuerst anmelden."
     },
@@ -1753,6 +1757,10 @@
     {
       "key": "api/email/access_recipient_onboarding_gifted_membership/subject",
       "value": "Willkommen bei der Republik"
+    },
+    {
+      "key": "api/notifications/doc/title",
+      "value": "{title} jetzt online"
     }
   ]
 }

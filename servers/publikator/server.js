@@ -10,11 +10,14 @@ const { graphql: search } = require('@orbiting/backend-modules-search')
 const { graphql: auth } = require('@orbiting/backend-modules-auth')
 const { graphql: discussions } = require('@orbiting/backend-modules-discussions')
 const { graphql: embeds } = require('@orbiting/backend-modules-embeds')
+const { graphql: maillog } = require('@orbiting/backend-modules-maillog')
+const { graphql: subscriptions } = require('@orbiting/backend-modules-subscriptions')
 
 const loaderBuilders = {
   ...require('@orbiting/backend-modules-discussions/loaders'),
   ...require('@orbiting/backend-modules-documents/loaders'),
-  ...require('@orbiting/backend-modules-auth/loaders')
+  ...require('@orbiting/backend-modules-auth/loaders'),
+  ...require('@orbiting/backend-modules-subscriptions/loaders')
 }
 
 const PublicationScheduler = require('./lib/PublicationScheduler')
@@ -57,7 +60,9 @@ const run = async (workerId, config) => {
       search,
       auth,
       discussions,
-      embeds
+      embeds,
+      subscriptions,
+      maillog
     ]
   )
 

@@ -1,3 +1,4 @@
 module.exports = {
-  Subscriptions: require('./Subscriptions')
+  Subscriptions: require('./Subscriptions'),
+  sendNotification: require('./send')
 }

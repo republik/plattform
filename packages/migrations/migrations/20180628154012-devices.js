@@ -1,6 +1,6 @@
 const run = require('../run.js')
 
-const dir = 'packages/notifications/migrations/sqls'
+const dir = 'packages/push-notifications/migrations/sqls'
 const file = '20180628154012-devices'
 
 exports.up = (db) =>

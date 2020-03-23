@@ -48,6 +48,8 @@ const { upsert: repoCacheUpsert } = require('../../../lib/cache/upsert')
 
 const { purgeUrls } = require('@orbiting/backend-modules-keyCDN')
 
+const { notifyPublish } = require('../../../lib/Notifications')
+
 const {
   FRONTEND_BASE_URL,
   PIWIK_URL_BASE,
@@ -63,6 +65,7 @@ module.exports = async (
     prepublication,
     scheduledAt: _scheduledAt,
     updateMailchimp = false,
+    notifySubscribers = false,
     ignoreUnresolvedRepoIds = false
   },
   context
@@ -300,9 +303,9 @@ module.exports = async (
   const message = yaml.stringify(
     {
       scheduledAt,
-      updateMailchimp
-    },
-    t('api/github/yaml/warning')
+      updateMailchimp,
+      notifySubscribers
+    }
   )
 
   const milestone = await placeMilestone(
@@ -405,6 +408,9 @@ module.exports = async (
   await after()
   await sleep(2 * 1000)
 
+  // flush dataloaders
+  await context.loaders.Document.byRepoId.clear(repoId)
+
   await repoCacheUpsert({
     id: repoId,
     meta: repoMeta,
@@ -467,6 +473,10 @@ module.exports = async (
     '?download=1&images=0'
   ]
   purgeUrls(purgeQueries.map(q => `/pdf${newPath}.pdf${q}`))
+
+  if (notifySubscribers && !prepublication) {
+    await notifyPublish(repoId, context)
+  }
 
   return {
     unresolvedRepoIds,
