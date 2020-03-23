@@ -9,7 +9,6 @@ union EventObject = Comment | Document
 enum SubscriptionObjectType {
   User
   Document
-  #Discussion
 }
 union SubscriptionObject = Document | User | Discussion
 
