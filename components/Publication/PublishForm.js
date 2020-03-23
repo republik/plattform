@@ -46,6 +46,7 @@ const publishMutation = gql`
     $scheduledAt: DateTime
     $updateMailchimp: Boolean!
     $ignoreUnresolvedRepoIds: Boolean
+    $notifySubscribers: Boolean
   ) {
     publish(
       repoId: $repoId
@@ -54,6 +55,7 @@ const publishMutation = gql`
       scheduledAt: $scheduledAt
       updateMailchimp: $updateMailchimp
       ignoreUnresolvedRepoIds: $ignoreUnresolvedRepoIds
+      notifySubscribers: $notifySubscribers
     ) {
       unresolvedRepoIds
       publication {
@@ -125,6 +127,9 @@ export const getRepoWithCommit = gql`
               }
             }
           }
+          subscribedBy(includeParents: true, onlyEligibles: true) {
+            totalCount
+          }
         }
       }
     }
@@ -178,10 +183,14 @@ const Form = ({
   },
   publish
 }) => {
+  const hasBeenPublished = !!repo.latestPublications.find(
+    pub => !pub.prepublication && pub.live
+  )
   const [state, setCompleteState] = useState({
     prepublication: true,
     scheduled: false,
-    updateMailchimp: false
+    updateMailchimp: false,
+    notifySubscribers: !hasBeenPublished
   })
   const setState = newState =>
     setCompleteState(state => ({ ...state, ...newState }))
@@ -189,6 +198,7 @@ const Form = ({
   const {
     prepublication,
     updateMailchimp,
+    notifySubscribers,
     scheduled,
     scheduledAt,
     publishing
@@ -304,7 +314,7 @@ const Form = ({
                 setState({ showLinks: !state.showLinks })
               }}
             >
-              Im Text sind {links.length} Links
+              {t.pluralize('publish/validation/links', { count: links.length })}
             </Editorial.A>
           </Interaction.P>
           {state.showLinks && (
@@ -313,15 +323,25 @@ const Form = ({
                 <li key={i}>
                   <Interaction.P
                     style={{
-                      color: link.error
+                      color: link.errors.length
                         ? colors.error
-                        : link.warning
+                        : link.warnings.length
                         ? colors.social
                         : undefined
                     }}
                   >
-                    [{link.text}](
-                    <Editorial.A href={link.url}>{link.url}</Editorial.A>)
+                    {t.elements('publish/validation/link', {
+                      text: link.text,
+                      link: (
+                        <Editorial.A
+                          key='link'
+                          href={link.url}
+                          style={{ wordBreak: 'break-all' }}
+                        >
+                          {link.url}
+                        </Editorial.A>
+                      )
+                    })}
                   </Interaction.P>
                 </li>
               ))}
@@ -341,6 +361,21 @@ const Form = ({
         }}
       >
         {t('publish/label/prepublication')}
+      </Checkbox>
+      <br />
+      <br />
+      <Checkbox
+        disabled={prepublication}
+        checked={!prepublication && notifySubscribers}
+        onChange={(_, value) => {
+          setState({
+            notifySubscribers: value
+          })
+        }}
+      >
+        {t.pluralize('publish/label/notifySubscribers', {
+          count: commit.document.subscribedBy.totalCount
+        })}
       </Checkbox>
       <br />
       <br />
@@ -477,6 +512,7 @@ const Form = ({
                 commitId: commit.id,
                 prepublication,
                 updateMailchimp,
+                notifySubscribers: notifySubscribers && !prepublication,
                 scheduledAt: scheduled ? scheduledAtDate : undefined,
                 ignoreUnresolvedRepoIds: state.ignoreUnresolvedRepoIds
               })
