@@ -31,7 +31,7 @@ module.exports = async (_, args, context) => {
     { id },
     { readAt: new Date() }
   )
-  loaders.Notifications.byKeyObj().clearAll()
+  loaders.Notification.byKeyObj().clearAll()
 
   await pubsub.publish('notification', {
     notification: updatedNotification

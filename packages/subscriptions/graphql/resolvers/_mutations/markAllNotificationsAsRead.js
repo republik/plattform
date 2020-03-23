@@ -27,7 +27,7 @@ module.exports = async (_, args, context) => {
       readAt: new Date()
     }
   )
-  loaders.Notifications.byKeyObj().clearAll()
+  loaders.Notification.byKeyObj().clearAll()
 
   await Promise.all(updatedNotifications.map(n =>
     pubsub.publish('notification', {
