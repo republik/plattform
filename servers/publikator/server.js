@@ -141,10 +141,15 @@ const runOnce = async (...args) => {
     .filter(Boolean)
     .join(' ')
 
+  const loaders = {}
   const context = {
     ...await ConnectionContext.create(applicationName),
-    t
+    t,
+    loaders
   }
+  Object.keys(loaderBuilders).forEach(key => {
+    loaders[key] = loaderBuilders[key](context)
+  })
 
   let publicationScheduler
   if (PUBLICATION_SCHEDULER === 'false' || (DEV && PUBLICATION_SCHEDULER !== 'true')) {

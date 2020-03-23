@@ -62,6 +62,7 @@ const init = async (context) => {
         const repoId = doc.meta.repoId
         const prepublication = doc.meta.prepublication
         const scheduledAt = doc.meta.scheduledAt
+        const notifySubscribers = doc.meta.notifySubscribers
 
         const ref = `scheduled-${prepublication ? 'prepublication' : 'publication'}`
         console.log(`scheduler: publishing ${repoId}`)
@@ -114,8 +115,11 @@ const init = async (context) => {
           publications: await getLatestPublications({ id: repoId })
         }, context)
 
-        if (!prepublication) {
+        if (notifySubscribers && !prepublication) {
           await notifyPublish(repoId, context)
+            .catch(e => {
+              console.error('error in notifyPublish', e)
+            })
         }
 
         debug(

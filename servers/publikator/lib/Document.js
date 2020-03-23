@@ -43,6 +43,7 @@ const prepareMetaForPublish = async ({
   scheduledAt,
   lastPublishedAt,
   prepublication,
+  notifySubscribers,
   doc,
   now = new Date(),
   context
@@ -154,6 +155,7 @@ const prepareMetaForPublish = async ({
     lastPublishedAt: lastPublishedAt || now,
     prepublication,
     scheduledAt,
+    notifySubscribers,
     creditsString,
     credits,
     audioSource,
