@@ -206,6 +206,7 @@ module.exports = async (
     repoMeta,
     scheduledAt,
     prepublication,
+    notifySubscribers,
     doc,
     now,
     context
@@ -474,7 +475,7 @@ module.exports = async (
   ]
   purgeUrls(purgeQueries.map(q => `/pdf${newPath}.pdf${q}`))
 
-  if (notifySubscribers && !prepublication) {
+  if (notifySubscribers && !prepublication && !scheduledAt) {
     await notifyPublish(repoId, context)
   }
 
