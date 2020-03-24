@@ -59,7 +59,7 @@ module.exports = {
     const { includeParents } = args
 
     if (!me) {
-      return paginate(args, [])
+      return null
     }
 
     const repoIds = getRepoIdsForDoc(doc, includeParents)
