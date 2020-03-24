@@ -18,7 +18,7 @@ module.exports = async (_, args, context) => {
 
   const mac = authenticate(email, name, true, t)
 
-  const confirmLink = `${FRONTEND_BASE_URL}/mitteilung?type=newsletter-subscription&name=${name}&subscribed=1&email=${base64u.encode(email)}&mac=${mac}&context=${newsletterContext}`
+  const confirmLink = `${FRONTEND_BASE_URL}/mitteilung?type=newsletter&name=${name}&subscribed=1&email=${base64u.encode(email)}&mac=${mac}&context=${newsletterContext}`
 
   const { status } = await sendMailTemplate({
     to: email,
