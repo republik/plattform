@@ -25,6 +25,9 @@ const getRepoIdsForDoc = (doc, includeParents) => ([
   )
 ].filter(Boolean))
 
+const getTemplate = (doc) =>
+  (doc.meta && doc.meta.template) || (doc._meta && doc._meta.template)
+
 module.exports = {
   async subscribedBy (doc, args, context) {
     const { user: me } = context
@@ -56,7 +59,7 @@ module.exports = {
     const { includeParents } = args
 
     if (!me) {
-      return paginate(args, [])
+      return null
     }
 
     const repoIds = getRepoIdsForDoc(doc, includeParents)
@@ -78,7 +81,7 @@ module.exports = {
           // as soon as more than just format parents are subscribeable
           return subs[0]
         }
-        if (repoIds.length > 1) { // otherwise no parent and no need to simulate
+        if (repoIds.length > 1 || getTemplate(doc) === 'format') {
           return getSimulatedSubscriptionForUserAndObject(
             me.id,
             {

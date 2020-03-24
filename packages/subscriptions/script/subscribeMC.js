@@ -60,7 +60,8 @@ Promise.resolve().then(async () => {
       email: line['E-Mail-Adresse'],
       newsletters: {
         daily: line['Republik NL'].indexOf('Täglich') > -1,
-        weekly: line['Republik NL'].indexOf('Wochenende') > -1
+        weekly: line['Republik NL'].indexOf('Wochenende') > -1,
+        covid19: line['Republik NL'].indexOf('COVID19') > -1
       }
     }))
 
@@ -95,6 +96,14 @@ Promise.resolve().then(async () => {
               type: 'Document',
               objectId: 'republik/format-wochenende-newsletter'
               // objectId: 'republik-dev/format-wochenende-newsletter'
+            },
+            context
+          ),
+          user.newsletters.covid19 && upsertSubscription(
+            {
+              userId: user.id,
+              type: 'Document',
+              objectId: 'republik/format-covid-19-uhr-newsletter'
             },
             context
           )
