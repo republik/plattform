@@ -13,34 +13,28 @@ test('NewsletterSubscription -> correct flags', async () => {
   const sub1 = NewsletterSubscription.buildSubscription('user_x', INTEREST_ID_MEMBER_RESTRICTED, true, ['member'])
   expect({
     name: sub1.name,
-    subscribed: sub1.subscribed,
-    isEligible: sub1.isEligible
+    subscribed: sub1.subscribed
   }).toEqual({
     name: 'MEMBER',
-    subscribed: true,
-    isEligible: true
+    subscribed: true
   })
 
   const sub2 = NewsletterSubscription.buildSubscription('user_x', INTEREST_ID_MEMBER_RESTRICTED, true, [])
   expect({
     name: sub2.name,
-    subscribed: sub2.subscribed,
-    isEligible: sub2.isEligible
+    subscribed: sub2.subscribed
   }).toEqual({
     name: 'MEMBER',
-    subscribed: true,
-    isEligible: false
+    subscribed: true
   })
 
   const sub3 = NewsletterSubscription.buildSubscription('user_x', INTEREST_ID_PUBLIC, false, [])
   expect({
     name: sub3.name,
-    subscribed: sub3.subscribed,
-    isEligible: sub3.isEligible
+    subscribed: sub3.subscribed
   }).toEqual({
     name: 'PUBLIC',
-    subscribed: false,
-    isEligible: true
+    subscribed: false
   })
 })
 
@@ -55,19 +49,4 @@ test('NewsletterSubscription -> single interest', async () => {
   expect(interestId).toEqual(interestConfiguration[1].interestId)
   const interest = NewsletterSubscription.interestConfiguration(interestId)
   expect(interest).toEqual(interestConfiguration[1])
-})
-
-test('NewsletterSubscription -> single interest', async () => {
-  const NewsletterSubscription = createNewsletterSubscription(interestConfiguration)
-  const interestIdPublic = NewsletterSubscription.interestIdByName('PUBLIC')
-  const interestIdMember = NewsletterSubscription.interestIdByName('MEMBER')
-
-  expect(
-    NewsletterSubscription.isEligibleForInterestId(interestIdPublic, ['member'])
-  ).toBeTruthy()
-  expect(NewsletterSubscription.isEligibleForInterestId(interestIdPublic, [])).toBeTruthy()
-  expect(
-    NewsletterSubscription.isEligibleForInterestId(interestIdMember, ['member'])
-  ).toBeTruthy()
-  expect(NewsletterSubscription.isEligibleForInterestId(interestIdMember, [])).toBeFalsy()
 })

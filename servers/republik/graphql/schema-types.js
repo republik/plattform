@@ -80,7 +80,7 @@ type NewsletterSubscription {
   id: ID!
   name: String!
   subscribed: Boolean!
-  isEligible: Boolean!
+  isEligible: Boolean! @deprecated
 }
 
 type PageInfo {

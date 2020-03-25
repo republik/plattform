@@ -28,23 +28,19 @@ const {
 const mail = createMail([
   {
     name: 'DAILY',
-    interestId: MAILCHIMP_INTEREST_NEWSLETTER_DAILY,
-    roles: ['member']
+    interestId: MAILCHIMP_INTEREST_NEWSLETTER_DAILY
   },
   {
     name: 'WEEKLY',
-    interestId: MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY,
-    roles: ['member']
+    interestId: MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY
   },
   {
     name: 'PROJECTR',
-    interestId: MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR,
-    roles: []
+    interestId: MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR
   },
   {
     name: 'COVID19',
-    interestId: MAILCHIMP_INTEREST_NEWSLETTER_COVID19,
-    roles: []
+    interestId: MAILCHIMP_INTEREST_NEWSLETTER_COVID19
   }
 ])
 
@@ -121,7 +117,7 @@ mail.enforceSubscriptions = async ({
     pgdb
   })
 
-  const sanitizedUser = user || { email, roles: [] }
+  const sanitizedUser = user || { email }
   return mail.updateNewsletterSubscriptions({ user: sanitizedUser, interests, ...rest })
 }
 
