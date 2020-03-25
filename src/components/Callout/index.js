@@ -52,20 +52,21 @@ const styles = {
   callout: css({
     zIndex: 1,
     position: 'absolute',
-    background: 'white',
+    //background: 'white',
     border: `1px solid ${colors.divider}`,
     left: 0,
     bottom: -400,
     right: 0,
     padding: 15,
+    background: 'red',
     animation: `0.3s ${slideUp} 0.2s forwards`,
+    textAlign: 'left',
     [mUp]: {
       right: -10,
       left: 'auto',
       bottom: 'auto',
       top: 40,
-      width: 175,
-      padding: 10,
+      padding: '10px 30px 10px 10px',
       animation: 'none'
     }
   }),
