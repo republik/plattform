@@ -13,8 +13,8 @@ const hasAncestor = (node, predicate) => {
   return false
 }
 
-const CalloutMenu = ({ menu, styles, icon, leftAligned }) => {
-  const [showMenu, setMenu] = React.useState(false)
+const CalloutMenu = ({ menu, styles, icon, leftAligned, open }) => {
+  const [showMenu, setMenu] = React.useState(open)
   const toggleRef = React.useRef()
 
   const handleClick = e => {

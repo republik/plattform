@@ -2,7 +2,7 @@
 
 Callout styles for desktop and mobile.
 
-- `'expanded'`: boolean
+- `'open'`: boolean
 - `'leftAligned''`: boolean, flips the callout position on desktop
 
 ```react|responsive
@@ -15,5 +15,12 @@ Callout styles for desktop and mobile.
 ```react|responsive
 <div style={{ position: 'relative', display: 'inline-block', top: 100, left: '40%'}}>
     <CalloutMenu menu={<span>Test</span>} leftAligned />
+</div>
+```
+
+### Callout open
+```react|responsive
+<div style={{ position: 'relative', display: 'inline-block', top: 100, left: '40%'}}>
+    <CalloutMenu menu={<span>Test</span>} open />
 </div>
 ```
