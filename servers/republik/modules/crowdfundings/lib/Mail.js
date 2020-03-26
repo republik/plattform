@@ -45,7 +45,8 @@ const mail = createMail([
   },
   {
     name: 'ACCOMPLICE',
-    interestId: MAILCHIMP_INTEREST_NEWSLETTER_ACCOMPLICE
+    interestId: MAILCHIMP_INTEREST_NEWSLETTER_ACCOMPLICE,
+    visibleToRoles: ['accomplice']
   }
 ])
 
