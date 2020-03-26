@@ -25,10 +25,10 @@ module.exports = async (_, args, { pgdb, signInHooks, user: me }) => {
     throw new Error(t('api/users/404'))
   }
 
-  if (userHasRole(user, role) {
+  if (userHasRole(user, role)) {
     return user
   }
-  
+
   return addUserToRole(user.id, role, pgdb)
-  return transformUser(returnedUser)
+    .then(transformUser)
 }

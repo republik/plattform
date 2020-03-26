@@ -28,7 +28,7 @@ module.exports = async (_, args, { pgdb, signInHooks, user: me }) => {
   if (!userHasRole(user, role)) {
     return user
   }
-  
+
   return removeUserFromRole(user.id, role, pgdb)
-  return transformUser(returnedUser)
+    .then(transformUser)
 }

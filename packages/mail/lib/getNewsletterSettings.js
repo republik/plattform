@@ -22,7 +22,7 @@ module.exports = async ({
     // return all possible interests / subscriptions
     const status = ''
     const subscriptions = supportedInterestConfigs
-      .filter(({ visibleToRoles = [] }) => !visibleToRoles.length
+      .filter(({ visibleToRoles = [] }) => !visibleToRoles.length)
       .map(({ interestId }) => NewsletterSubscription.buildSubscription(
         user.id,
         interestId,
