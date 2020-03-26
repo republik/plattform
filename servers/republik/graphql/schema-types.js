@@ -126,6 +126,7 @@ enum NewsletterName {
   WEEKLY
   PROJECTR
   COVID19
+  ACCOMPLICE
 }
 
 type Video {
