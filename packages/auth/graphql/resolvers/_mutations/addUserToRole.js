@@ -18,14 +18,17 @@ module.exports = async (_, args, { pgdb, signInHooks, user: me }) => {
     ensureUserHasRole(me, 'admin')
   }
 
-  const user = await pgdb.public.users.findOne({ id: userId })
+  const user = me.id !== userId
+    ? await pgdb.public.users.findOne({ id: userId })
+    : me
   if (!user) {
     throw new Error(t('api/users/404'))
   }
 
-  const returnedUser = userHasRole(user, role)
-    ? user
-    : (await addUserToRole(userId, role, pgdb))
-
+  if (userHasRole(user, role) {
+    return user
+  }
+  
+  return addUserToRole(user.id, role, pgdb)
   return transformUser(returnedUser)
 }
