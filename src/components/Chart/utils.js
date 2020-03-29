@@ -122,6 +122,17 @@ export const getFormat = (numberFormat, tLabel) => {
   if (specifier.type === 's') {
     return sFormat(tLabel, specifier.precision)
   }
+  if (specifier.comma) {
+    const numberFormat5 = swissNumbers.format(specifier.toString())
+    specifier.comma = false
+    const numberFormat4 = swissNumbers.format(specifier)
+    return value => {
+      if (String(Math.round(value)).length > 4) {
+        return numberFormat5(value)
+      }
+      return numberFormat4(value)
+    }
+  }
   return swissNumbers.format(specifier)
 }
 
@@ -184,7 +195,7 @@ export const calculateAxis = (
         )
       )
     )
-    lastFormat = regularFormat = format(specifier.toString())
+    lastFormat = regularFormat = getFormat(specifier.toString())
   }
   const axisFormat = (value, isLast) =>
     isLast ? `${lastFormat(value)} ${unit}` : regularFormat(value)
