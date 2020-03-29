@@ -6002,3 +6002,111 @@ year,category,value
 </div>
 ```
 
+## Color Legends
+
+Normally color legends are avoided in favor of inline labeling if there is sufficient space. You can force them by passing `"colorLegend": true`. And explicity provide color labels you want to show with `"colorLegendValues": ["positiv Getestete", "bereits Infizierte"]`. This is always necessary if they are filtered out by a `labelFilter`.
+
+```react
+<div>
+  <ChartTitle>Die Testkurve hinkt hinterher</ChartTitle>
+  <CsvChart
+    config={{
+      "type": "Line",
+      "height": 240,
+      "sort": "none",
+      "color": "type",
+      "colorSort": "none",
+      "unit": "Personen",
+      "numberFormat": ",.0f",
+      "x": "date",
+      "timeParse": "%Y-%m-%d",
+      "timeFormat": "%d.%m.",
+      "colorMap": {
+        "positiv Getestete": "rgba(31, 119, 180, 1)",
+        "hochgerechnet Positive": "rgba(31, 119, 180, 0.9)",
+        "infiziert": "rgba(127,191,123, 1)",
+        "bereits Infizierte": "rgba(127,191,123, 0.9)",
+        "auf der Intensivstation": "rgba(175,141,195, 1)"
+      },
+      "labelFilter": "false",
+      "colorLegend": true,
+      "colorLegendValues": [
+        "positiv Getestete",
+        "bereits Infizierte"
+      ],
+      "stroke": "datum.type !== \"positiv Getestete\"",
+      "yNice": 0,
+      "yTicks": [
+        0,
+        2500,
+        5000,
+        7500,
+        10000,
+        12500
+      ],
+      "xTicks": [
+        "2020-03-01",
+        "2020-03-16",
+        "2020-03-26"
+      ],
+      "paddingRight": 160,
+      "yAnnotations": [
+        {
+          "x": "2020-03-16",
+          "value": 13801,
+          "label": "bereits vor 10 Tagen infiziert",
+          "dy": "-0.7em"
+        }
+      ]
+    }}
+    values={`
+type,date,value,value_lower,value_upper
+positiv Getestete,2020-03-01,70,70,70
+positiv Getestete,2020-03-02,102,102,102
+positiv Getestete,2020-03-03,135,135,135
+positiv Getestete,2020-03-04,195,195,195
+positiv Getestete,2020-03-05,254,254,254
+positiv Getestete,2020-03-06,327,327,327
+positiv Getestete,2020-03-07,376,376,376
+positiv Getestete,2020-03-08,438,438,438
+positiv Getestete,2020-03-09,623,623,623
+positiv Getestete,2020-03-10,823,823,823
+positiv Getestete,2020-03-11,1135,1135,1135
+positiv Getestete,2020-03-12,1461,1461,1461
+positiv Getestete,2020-03-13,1873,1873,1873
+positiv Getestete,2020-03-14,2294,2294,2294
+positiv Getestete,2020-03-15,2611,2611,2611
+positiv Getestete,2020-03-16,3611,3611,3611
+positiv Getestete,2020-03-17,4583,4583,4583
+positiv Getestete,2020-03-18,5734,5734,5734
+positiv Getestete,2020-03-19,6572,6572,6572
+positiv Getestete,2020-03-20,7716,7716,7716
+positiv Getestete,2020-03-21,8413,8413,8413
+positiv Getestete,2020-03-22,8948,8948,8948
+positiv Getestete,2020-03-23,10416,10416,10416
+positiv Getestete,2020-03-24,11664,11664,11664
+positiv Getestete,2020-03-25,12726,12726,12726
+positiv Getestete,2020-03-26,13801,13801,13801
+bereits Infizierte,2020-03-01,1135,1135,1135
+bereits Infizierte,2020-03-02,1461,1461,1461
+bereits Infizierte,2020-03-03,1873,1873,1873
+bereits Infizierte,2020-03-04,2294,2294,2294
+bereits Infizierte,2020-03-05,2611,2611,2611
+bereits Infizierte,2020-03-06,3611,3611,3611
+bereits Infizierte,2020-03-07,4583,4583,4583
+bereits Infizierte,2020-03-08,5734,5734,5734
+bereits Infizierte,2020-03-09,6572,6572,6572
+bereits Infizierte,2020-03-10,7716,7716,7716
+bereits Infizierte,2020-03-11,8413,8413,8413
+bereits Infizierte,2020-03-12,8948,8948,8948
+bereits Infizierte,2020-03-13,10416,10416,10416
+bereits Infizierte,2020-03-14,11664,11664,11664
+bereits Infizierte,2020-03-15,12726,12726,12726
+bereits Infizierte,2020-03-16,13801,13801,13801
+    `.trim()}
+    />
+  <Editorial.Note>
+    Quelle: BAG Situationsberichtes als XLS bis zum 26. März (aufsummiert, Stand 29. March 08:00)
+  </Editorial.Note>
+</div>
+```

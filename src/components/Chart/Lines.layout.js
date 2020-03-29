@@ -225,7 +225,17 @@ export default props => {
       }
     })
 
-  let colorLegend = !mini && colorValues.length > 0 && !endLabel
+  // transform all color values (always visible on small screens) and group titles for display
+  const colorValuesForLegend = (
+    props.colorLegendValues ||
+    data.filter(d => labelFilter(d.datum)).map(colorAccessor)
+  )
+    .filter(deduplicate)
+    .filter(Boolean)
+  runSort(props.colorSort, colorValuesForLegend)
+
+  let colorLegend =
+    !mini && colorValuesForLegend.length > 0 && (!endLabel || props.colorLegend)
   let paddingLeft = 0
   let paddingRight = 0
 
@@ -269,15 +279,6 @@ export default props => {
       paddingLeft = props.paddingLeft + whiteSpacePadding
     }
   }
-
-  // transform all color values (always visible on small screens) and group titles for display
-  const colorValuesForLegend = (
-    props.colorLegendValues ||
-    data.filter(d => labelFilter(d.datum)).map(colorAccessor)
-  )
-    .filter(deduplicate)
-    .filter(Boolean)
-  runSort(props.colorSort, colorValuesForLegend)
 
   const colorLegendValues = colorValuesForLegend.map(value => ({
     color: color(value),
