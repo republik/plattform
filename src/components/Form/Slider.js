@@ -2,7 +2,6 @@ import React from 'react'
 import { css, merge } from 'glamor'
 import colors from '../../theme/colors'
 import { fontStyles } from '../../theme/fonts'
-import { mUp } from '../../theme/mediaQueries'
 import { Label } from '../Typography'
 
 const thumbSize = 24

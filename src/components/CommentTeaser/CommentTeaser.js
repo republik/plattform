@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react'
-import { css, merge } from 'glamor'
+import { css } from 'glamor'
 import get from 'lodash/get'
 
 import NewPage from 'react-icons/lib/md/open-in-new'

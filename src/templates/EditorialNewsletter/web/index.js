@@ -1,4 +1,3 @@
-import React from 'react'
 import createNewsletterSchema from '../schema'
 
 import Container from './Container'
