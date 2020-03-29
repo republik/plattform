@@ -268,14 +268,11 @@ export default props => {
       paddingRight = endValueSize + whiteSpacePadding
     }
     if (endLabel) {
-      const endLabelSize =
+      const endLabelWidth =
         props.endLabelWidth !== undefined
           ? props.endLabelWidth
-          : Math.ceil(max(endLabelSizes))
-      if (
-        startValueSize + endValueSize + endLabelSize >
-        props.width - props.minInnerWidth
-      ) {
+          : endValueSize + Math.ceil(max(endLabelSizes))
+      if (startValueSize + endLabelWidth > props.width - props.minInnerWidth) {
         colorLegend = true
         groupedData.forEach(({ values: lines }) => {
           lines.forEach(line => {
@@ -286,7 +283,7 @@ export default props => {
         if (startValue) {
           paddingLeft = startValueSize + whiteSpacePadding
         }
-        paddingRight = endValueSize + endLabelSize + whiteSpacePadding
+        paddingRight = endLabelWidth + whiteSpacePadding
       }
     }
     if (props.paddingRight !== undefined) {
