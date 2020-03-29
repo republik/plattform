@@ -547,7 +547,6 @@ export const propTypes = {
   width: PropTypes.number.isRequired,
   height: PropTypes.number,
   heightRatio: PropTypes.number,
-  paddingLeft: PropTypes.number.isRequired,
   x: PropTypes.string.isRequired,
   xUnit: PropTypes.string,
   xNice: PropTypes.number,
@@ -600,7 +599,11 @@ export const propTypes = {
   inlineSecondaryLabel: PropTypes.string,
   detail: PropTypes.string,
   tLabel: PropTypes.func.isRequired,
-  description: PropTypes.string
+  description: PropTypes.string,
+  paddingTop: PropTypes.number.isRequired,
+  paddingRight: PropTypes.number.isRequired,
+  paddingBottom: PropTypes.number.isRequired,
+  paddingLeft: PropTypes.number.isRequired
 }
 
 ScatterPlot.propTypes = propTypes

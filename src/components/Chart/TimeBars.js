@@ -502,9 +502,14 @@ export const propTypes = {
   ),
   xAnnotations: PropTypes.arrayOf(
     PropTypes.shape({
+      valuePrefix: PropTypes.string,
       value: PropTypes.number.isRequired,
       label: PropTypes.string,
-      x: PropTypes.string
+      x: PropTypes.string,
+      x1: PropTypes.string,
+      x2: PropTypes.string,
+      ghost: PropTypes.bool,
+      position: PropTypes.oneOf(['top', 'bottom'])
     })
   ).isRequired,
   unit: PropTypes.string,

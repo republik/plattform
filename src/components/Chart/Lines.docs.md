@@ -6050,12 +6050,13 @@ Normally color legends are avoided in favor of inline labeling if there is suffi
         "2020-03-26"
       ],
       "paddingRight": 160,
-      "yAnnotations": [
+      "paddingTop": 10,
+      "xAnnotations": [
         {
-          "x": "2020-03-16",
+          "x1": "2020-03-16",
+          "x2": "2020-03-26",
           "value": 13801,
-          "label": "bereits vor 10 Tagen infiziert",
-          "dy": "-0.7em"
+          "label": "bereits vor 10 Tagen infiziert"
         }
       ]
     }}

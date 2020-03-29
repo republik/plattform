@@ -9,6 +9,7 @@ import { timeYear } from 'd3-time'
 
 import {
   sansSerifRegular12,
+  sansSerifMedium12,
   sansSerifMedium14,
   sansSerifMedium22
 } from '../Typography/styles'
@@ -71,6 +72,10 @@ const styles = {
   annotationText: css({
     fill: colors.text,
     ...sansSerifRegular12
+  }),
+  annotationValue: css({
+    fill: colors.text,
+    ...sansSerifMedium12
   }),
   value: css({
     ...VALUE_FONT,
@@ -137,6 +142,7 @@ const LineGroup = props => {
     yCut,
     yCutHeight,
     yAnnotations,
+    xAnnotations,
     band,
     endDy
   } = props
@@ -333,6 +339,59 @@ const LineGroup = props => {
           </text>
         </g>
       ))}
+      {xAnnotations.map((annotation, i) => {
+        const range = annotation.x1 !== undefined && annotation.x2 !== undefined
+
+        const x1 = range ? x(annotation.x1) : x(annotation.x)
+        const x2 = range && x(annotation.x2)
+
+        const compact = width < 500
+        let tx = x1
+        if (compact) {
+          tx -= 0
+        } else {
+          tx += range ? (x2 - x1) / 2 : 0
+        }
+        const textAnchor = compact ? 'start' : 'middle'
+
+        const isBottom = annotation.position === 'bottom'
+
+        return (
+          <g
+            key={`x-annotation-${i}`}
+            transform={`translate(0,${y(annotation.value)})`}
+          >
+            {range && (
+              <line
+                x1={x1}
+                x2={x2}
+                {...(range
+                  ? styles.annotationLine
+                  : styles.annotationLineValue)}
+              />
+            )}
+            <circle r='3.5' cx={x1} {...styles.annotationCircle} />
+            {range && <circle r='3.5' cx={x2} {...styles.annotationCircle} />}
+            <text
+              x={tx}
+              textAnchor={textAnchor}
+              dy={isBottom ? '2.7em' : '-1.8em'}
+              {...styles.annotationText}
+            >
+              {annotation.label}
+            </text>
+            <text
+              x={tx}
+              textAnchor={textAnchor}
+              dy={isBottom ? '1.4em' : '-0.5em'}
+              {...styles.annotationValue}
+            >
+              {annotation.valuePrefix}
+              {annotation.formattedValue}
+            </text>
+          </g>
+        )
+      })}
     </g>
   )
 }
@@ -393,6 +452,7 @@ const LineChart = props => {
     yCut,
     yCutHeight,
     yAnnotations,
+    xAnnotations,
     colorLegend,
     colorLegendValues,
     paddingLeft,
@@ -515,6 +575,7 @@ const LineChart = props => {
                 yCut={yCut}
                 yCutHeight={yCutHeight}
                 yAnnotations={yAnnotations}
+                xAnnotations={xAnnotations}
                 endDy={endDy}
                 width={innerWidth}
               />
@@ -598,6 +659,7 @@ export const propTypes = {
   minInnerWidth: PropTypes.number.isRequired,
   columns: PropTypes.number.isRequired,
   height: PropTypes.number.isRequired,
+  paddingTop: PropTypes.number,
   paddingRight: PropTypes.number,
   paddingLeft: PropTypes.number,
   unit: PropTypes.string,
@@ -609,6 +671,17 @@ export const propTypes = {
       label: PropTypes.string,
       x: PropTypes.string,
       dy: PropTypes.string
+    })
+  ),
+  xAnnotations: PropTypes.arrayOf(
+    PropTypes.shape({
+      valuePrefix: PropTypes.string,
+      value: PropTypes.number.isRequired,
+      label: PropTypes.string,
+      x: PropTypes.string,
+      x1: PropTypes.string,
+      x2: PropTypes.string,
+      position: PropTypes.oneOf(['top', 'bottom'])
     })
   ),
   tLabel: PropTypes.func.isRequired,

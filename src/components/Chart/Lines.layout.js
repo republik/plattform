@@ -49,7 +49,7 @@ export const yScales = {
 }
 
 export default props => {
-  const { values, mini, yAnnotations, tLabel } = props
+  const { values, mini, yAnnotations, xAnnotations, tLabel } = props
   let data = values
   if (props.filter) {
     const filter = unsafeDatumFn(props.filter)
@@ -103,7 +103,10 @@ export default props => {
     yCut = tLabel('Logarithmische Skala')
   }
   const yCutHeight = mini ? 25 : AXIS_BOTTOM_CUTOFF_HEIGHT
-  const paddingTop = AXIS_TOP_HEIGHT + (props.column ? COLUMN_TITLE_HEIGHT : 0)
+  const paddingTop =
+    AXIS_TOP_HEIGHT +
+    (props.column ? COLUMN_TITLE_HEIGHT : 0) +
+    (props.paddingTop || 0)
   const paddingBottom =
     AXIS_BOTTOM_HEIGHT +
     (yCut ? yCutHeight : 0) +
@@ -116,6 +119,9 @@ export default props => {
   let yValues = data.map(d => d.value)
   if (yAnnotations) {
     yValues = yValues.concat(yAnnotations.map(d => d.value))
+  }
+  if (xAnnotations) {
+    yValues = yValues.concat(xAnnotations.map(d => d.value))
   }
   if (props.yTicks) {
     yValues = yValues.concat(props.yTicks)
@@ -288,8 +294,14 @@ export default props => {
   const translatedYAnnotations = (yAnnotations || []).map(d => ({
     formattedValue: yFormat(d.value),
     ...d,
-    label: d.label,
     x: d.x ? xParser(d.x) : undefined
+  }))
+  const translatedXAnnotations = (xAnnotations || []).map(d => ({
+    formattedValue: yFormat(d.value),
+    ...d,
+    x: d.x ? xParser(d.x) : undefined,
+    x1: d.x1 ? xParser(d.x1) : undefined,
+    x2: d.x2 ? xParser(d.x2) : undefined
   }))
 
   return {
@@ -302,6 +314,7 @@ export default props => {
     yCut,
     yCutHeight,
     yAnnotations: translatedYAnnotations,
+    xAnnotations: translatedXAnnotations,
     colorLegend,
     colorLegendValues,
     paddingLeft,
