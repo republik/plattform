@@ -2,9 +2,10 @@ import React from 'react'
 import { css, merge } from 'glamor'
 import colors from '../../theme/colors'
 import { fontStyles } from '../../theme/fonts'
+import { mUp } from '../../theme/mediaQueries'
 import { Label } from '../Typography'
 
-const thumbSize = 20
+const thumbSize = 24
 const trackHeight = 4
 
 const thumbStyle = {
@@ -18,7 +19,7 @@ const thumbStyle = {
 }
 
 const trackStyle = {
-  background: colors.secondaryBg,
+  background: colors.divider,
   height: trackHeight
 }
 
@@ -35,9 +36,9 @@ const styles = {
     background: 'transparent',
     outline: 'none',
     width: 260,
-    padding: '4px 0',
+    padding: '15px 0',
     marginTop: 0,
-    marginRight: 10,
+    marginRight: 0,
     marginBottom: 0,
     marginLeft: 0,
     verticalAlign: 'middle',
