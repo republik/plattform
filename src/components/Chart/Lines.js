@@ -260,7 +260,7 @@ const LineGroup = props => {
                   </text>
                 </g>
               )}
-              {band && (
+              {band && line.find(d => d.datum[`${band}_lower`]) && (
                 <path fill={lineColor} fillOpacity='0.2' d={bandArea(line)} />
               )}
               <path

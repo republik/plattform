@@ -49,7 +49,7 @@ export const yScales = {
 }
 
 export default props => {
-  const { values, mini, yAnnotations, xAnnotations, tLabel } = props
+  const { values, mini, yAnnotations, xAnnotations, tLabel, band } = props
   let data = values
   if (props.filter) {
     const filter = unsafeDatumFn(props.filter)
@@ -122,6 +122,12 @@ export default props => {
   }
   if (xAnnotations) {
     yValues = yValues.concat(xAnnotations.map(d => d.value))
+  }
+  if (band) {
+    const dataWithBand = data.filter(d => d.datum[`${band}_lower`])
+    yValues = yValues
+      .concat(dataWithBand.map(d => +d.datum[`${band}_lower`]))
+      .concat(dataWithBand.map(d => +d.datum[`${band}_upper`]))
   }
   if (props.yTicks) {
     yValues = yValues.concat(props.yTicks)
