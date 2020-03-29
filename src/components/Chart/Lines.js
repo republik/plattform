@@ -345,21 +345,25 @@ const LineGroup = props => {
         const x1 = range ? x(annotation.x1) : x(annotation.x)
         const x2 = range && x(annotation.x2)
 
-        const compact = width < 500
         const fullWidth = width + (props.paddingRight || 0)
+        let textAnchor = 'middle'
+        if (
+          x1 + (range ? x2 - x1 : 0) / 2 + annotation.labelSize / 2 >
+          fullWidth
+        ) {
+          textAnchor = 'end'
+          if ((range ? x2 : x1) - annotation.labelSize < 0) {
+            textAnchor = 'start'
+          }
+        }
         let tx = x1
-        let textAnchor = compact ? 'start' : 'middle'
-        if (compact) {
-          if (
-            range &&
-            annotation.label &&
-            x1 + annotation.label.length * 6 > fullWidth
-          ) {
-            textAnchor = 'end'
+        if (range) {
+          if (textAnchor === 'end') {
             tx = x2
           }
-        } else {
-          tx += range ? (x2 - x1) / 2 : 0
+          if (textAnchor === 'middle') {
+            tx = x1 + (x2 - x1) / 2
+          }
         }
 
         const isBottom = annotation.position === 'bottom'
