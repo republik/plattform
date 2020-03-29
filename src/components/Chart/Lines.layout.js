@@ -266,7 +266,10 @@ export default props => {
       paddingRight = endValueSize + whiteSpacePadding
     }
     if (endLabel) {
-      const endLabelSize = Math.ceil(max(endLabelSizes))
+      const endLabelSize =
+        props.endLabelWidth !== undefined
+          ? props.endLabelWidth
+          : Math.ceil(max(endLabelSizes))
       if (
         startValueSize + endValueSize + endLabelSize >
         props.width - props.minInnerWidth

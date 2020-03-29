@@ -346,13 +346,21 @@ const LineGroup = props => {
         const x2 = range && x(annotation.x2)
 
         const compact = width < 500
+        const fullWidth = width + (props.paddingRight || 0)
         let tx = x1
+        let textAnchor = compact ? 'start' : 'middle'
         if (compact) {
-          tx -= 0
+          if (
+            range &&
+            annotation.label &&
+            x1 + annotation.label.length * 6 > fullWidth
+          ) {
+            textAnchor = 'end'
+            tx = x2
+          }
         } else {
           tx += range ? (x2 - x1) / 2 : 0
         }
-        const textAnchor = compact ? 'start' : 'middle'
 
         const isBottom = annotation.position === 'bottom'
 
@@ -578,6 +586,7 @@ const LineChart = props => {
                 xAnnotations={xAnnotations}
                 endDy={endDy}
                 width={innerWidth}
+                paddingRight={paddingRight}
               />
             </g>
           )
@@ -655,6 +664,7 @@ export const propTypes = {
   filter: PropTypes.string,
   startValue: PropTypes.bool.isRequired,
   endLabel: PropTypes.bool.isRequired,
+  endLabelWidth: PropTypes.number,
   endDy: PropTypes.string.isRequired,
   minInnerWidth: PropTypes.number.isRequired,
   columns: PropTypes.number.isRequired,

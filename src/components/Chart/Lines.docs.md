@@ -6006,6 +6006,8 @@ year,category,value
 
 Normally color legends are avoided in favor of inline labeling if there is sufficient space. You can force them by passing `"colorLegend": true`. And explicity provide color labels you want to show with `"colorLegendValues": ["positiv Getestete", "bereits Infizierte"]`. This is always necessary if they are filtered out by a `labelFilter`.
 
+Also if you have multiple charts after each other with varying end labels you can use `endLabelWidth` to manual specify and align end label spacing.
+
 ```react
 <div>
   <ChartTitle>Die Testkurve hinkt hinterher</ChartTitle>
@@ -6049,7 +6051,7 @@ Normally color legends are avoided in favor of inline labeling if there is suffi
         "2020-03-16",
         "2020-03-26"
       ],
-      "paddingRight": 160,
+      "endLabelWidth": 160,
       "paddingTop": 10,
       "xAnnotations": [
         {
