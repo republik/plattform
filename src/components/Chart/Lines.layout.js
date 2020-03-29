@@ -247,7 +247,9 @@ export default props => {
   runSort(props.colorSort, colorValuesForLegend)
 
   let colorLegend =
-    !mini && colorValuesForLegend.length > 0 && (!endLabel || props.colorLegend)
+    !mini &&
+    colorValuesForLegend.length > 0 &&
+    (!endLabel || props.colorLegend === true)
   let paddingLeft = 0
   let paddingRight = 0
 

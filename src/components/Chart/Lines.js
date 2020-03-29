@@ -597,7 +597,9 @@ const LineChart = props => {
           <ColorLegend
             inline
             values={[]
-              .concat(props.colorLegend && colorLegend && colorLegendValues)
+              .concat(
+                props.colorLegend !== false && colorLegend && colorLegendValues
+              )
               .concat(
                 !mini &&
                   band &&
@@ -717,7 +719,6 @@ Line.defaultProps = {
   minInnerWidth: 110,
   columns: 1,
   height: 240,
-  colorLegend: true,
   yNice: 3
 }
 
@@ -738,7 +739,6 @@ Slope.defaultProps = {
   minInnerWidth: 90,
   columns: 2,
   height: 240,
-  colorLegend: true,
   yNice: 3
 }
 
