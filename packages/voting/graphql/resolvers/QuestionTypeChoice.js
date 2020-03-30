@@ -1,6 +1,10 @@
 const { resultChoice } = require('../../lib/Question')
 
 module.exports = {
+  options (question) {
+    return question.options
+      .filter(o => !o.hidden)
+  },
   async result (question, args, context) {
     if (question.result !== undefined) {
       const { payload } = question.result
