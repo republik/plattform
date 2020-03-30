@@ -16,7 +16,7 @@ module.exports = async (_, args, context) => {
     t
   } = context
 
-  if (['COVID19'].includes(name)) {
+  if (!['COVID19'].includes(name)) {
     throw new Error(t('api/newsletters/request/notSupported'))
   }
 
