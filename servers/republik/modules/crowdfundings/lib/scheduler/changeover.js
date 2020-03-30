@@ -145,6 +145,8 @@ const changeover = async (
           {
             active: true,
             renew: activeMembership.renew,
+            voucherCode: null,
+            voucherable: false,
             updatedAt: now
           }
         )
