@@ -16,7 +16,7 @@ const { deactivate } = require('./deactivate')
 const { changeover } = require('./changeover')
 
 const surplus = require('../../../../graphql/resolvers/RevenueStats/surplus')
-const evolution = require('../../../../graphql/resolvers/MembershipStats/evolution')
+const { populate: populateMembershipStatsEvolution } = require('../../../../lib/MembershipStats/evolution')
 const countRange = require('../../../../graphql/resolvers/MembershipStats/countRange')
 
 const init = async (context) => {
@@ -78,7 +78,7 @@ const init = async (context) => {
       runFunc: (args, context) =>
         Promise.all([
           surplus(null, { min: '2019-12-01', forceRecache: true }, context),
-          evolution(null, { min: '2019-12', max: '2020-03', forceRecache: true }, context),
+          populateMembershipStatsEvolution(context),
           countRange(null, { min: '2020-02-29T23:00:00Z', max: '2020-03-31T23:00:00Z', forceRecache: true }, context)
         ]),
       lockTtlSecs: 6,
