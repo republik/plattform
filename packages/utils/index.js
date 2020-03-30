@@ -9,5 +9,6 @@ module.exports = {
   getUrls: require('./getUrls'),
   truncate: require('./truncate'),
   remark: require('./remark'),
-  uuidForObject: require('./uuidForObject')
+  uuidForObject: require('./uuidForObject'),
+  cache: require('./cache')
 }
