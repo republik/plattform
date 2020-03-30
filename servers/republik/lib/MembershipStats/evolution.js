@@ -1,4 +1,5 @@
 const debug = require('debug')('republik:lib:MembershipStats:evolution')
+const moment = require('moment')
 
 const { cache: { create } } = require('@orbiting/backend-modules-utils')
 
@@ -160,13 +161,16 @@ const populate = async (context) => {
   const { pgdb } = context
 
   // Determine range we've to generate data for
-  const [{ min, max }] = await pgdb.query(`
+  const [{ minBeginDate, maxEndDate }] = await pgdb.query(`
     SELECT
-      MIN("beginDate") "min",
-      MAX("endDate") "max"
-    
+      MIN("beginDate") "minBeginDate",
+      MAX("endDate") "maxEndDate"
+
     FROM "membershipPeriods"
   `)
+
+  const min = moment(minBeginDate).startOf('month').format('YYYY-MM-DD')
+  const max = moment(maxEndDate).startOf('month').format('YYYY-MM-DD')
 
   // Generate date for range
   const result = await pgdb.query(query, { min, max, TZ: process.env.TZ || 'Europe/Zurich' })
