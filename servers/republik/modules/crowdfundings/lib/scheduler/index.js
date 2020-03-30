@@ -70,7 +70,6 @@ const init = async (context) => {
     })
   )
 
-  // remove after campaign
   schedulers.push(
     intervalScheduler.init({
       name: 'stats-cache',
@@ -81,8 +80,8 @@ const init = async (context) => {
           populateMembershipStatsEvolution(context),
           countRange(null, { min: '2020-02-29T23:00:00Z', max: '2020-03-31T23:00:00Z', forceRecache: true }, context)
         ]),
-      lockTtlSecs: 6,
-      runIntervalSecs: 8
+      lockTtlSecs: 10,
+      runIntervalSecs: 60
     })
   )
 
