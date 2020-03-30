@@ -5,11 +5,9 @@ module.exports = new GraphQLScalarType({
   name: 'YearMonthDate',
   description: 'YearMonthDate (format YYYY-MM)',
   parseValue (value) {
-    console.log(value)
     return new Date(`${value}-01`)
   },
   serialize (value) {
-    console.log(value)
     const date = (typeof value) === 'string'
       ? new Date(`${value}-01`)
       : value
