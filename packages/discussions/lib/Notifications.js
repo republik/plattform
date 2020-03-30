@@ -1,13 +1,15 @@
+const htmlToText = require('html-to-text')
+const { renderEmail } = require('mdast-react-render/lib/email')
+
+const { transformUser } = require('@orbiting/backend-modules-auth')
+const commentSchema = require('@project-r/styleguide/lib/templates/Comment/email').default()
+const { sendNotification } = require('@orbiting/backend-modules-subscriptions')
+
 const {
   displayAuthor: getDisplayAuthor,
   content: getContent,
   preview: getPreview
 } = require('../graphql/resolvers/Comment')
-const { transformUser } = require('@orbiting/backend-modules-auth')
-
-const commentSchema = require('@project-r/styleguide/lib/templates/Comment/email').default()
-const { renderEmail } = require('mdast-react-render/lib/email')
-const { sendNotification } = require('@orbiting/backend-modules-subscriptions')
 
 const {
   DEFAULT_MAIL_FROM_ADDRESS,
@@ -29,18 +31,12 @@ const getDiscussionUrl = async (discussion, context) => {
 }
 
 const submitComment = async (comment, discussion, context) => {
-  const {
-    pgdb,
-    t
-  } = context
+  const { pgdb, t } = context
+  const { id, parentIds, discussionId, userId } = comment
 
   const displayAuthor = await getDisplayAuthor(
     comment,
-    {
-      portrait: {
-        webp: false
-      }
-    },
+    { portrait: { webp: false } },
     context
   )
 
@@ -90,15 +86,16 @@ const submitComment = async (comment, discussion, context) => {
         -- exclude commenter
         u.id != :userId
   `, {
-    discussionId: comment.discussionId,
-    parentIds: comment.parentIds,
-    userId: comment.userId
+    discussionId,
+    parentIds,
+    userId
   })
     .then(users => users.map(transformUser))
 
   if (notifyUsers.length > 0) {
     const contentMdast = await getContent(comment, { strip: false }, context)
-    const htmlContent = renderEmail(contentMdast, commentSchema, { doctype: '' })
+    const contentHtml = renderEmail(contentMdast, commentSchema, { doctype: '' })
+    const contentPlain = htmlToText.fromString(contentHtml)
 
     const preview = await getPreview(comment, { length: 128 }, context)
     const shortBody = preview.more
@@ -106,14 +103,14 @@ const submitComment = async (comment, discussion, context) => {
       : preview.string
 
     const discussionUrl = await getDiscussionUrl(discussion, context)
-    const commentUrl = `${discussionUrl}${discussionUrl.indexOf('?') === -1 ? '?' : '&'}focus=${comment.id}`
+    const commentUrl = `${discussionUrl}${discussionUrl.indexOf('?') === -1 ? '?' : '&'}focus=${id}`
     const muteUrl = `${discussionUrl}${discussionUrl.indexOf('?') === -1 ? '?' : '&'}mute=1`
 
     const subjectParams = {
       authorName: displayAuthor.name,
       discussionName: discussion.title
     }
-    const isTopLevelComment = !comment.parentIds || comment.parentIds.length === 0
+    const isTopLevelComment = !parentIds || parentIds.length === 0
     const icon = displayAuthor.profilePicture || t('api/comment/notification/new/app/icon')
 
     await sendNotification(
@@ -124,7 +121,7 @@ const submitComment = async (comment, discussion, context) => {
         },
         event: {
           objectType: 'Comment',
-          objectId: comment.id
+          objectId: id
         },
         users: notifyUsers,
         content: {
@@ -136,7 +133,7 @@ const submitComment = async (comment, discussion, context) => {
             url: commentUrl,
             icon,
             type: 'discussion',
-            tag: comment.id
+            tag: id
           },
           mail: (u) => ({
             to: u.email,
@@ -168,8 +165,12 @@ const submitComment = async (comment, discussion, context) => {
                 content: muteUrl
               },
               {
-                name: 'CONTENT',
-                content: htmlContent
+                name: 'CONTENT_HTML',
+                content: contentHtml
+              },
+              {
+                name: 'CONTENT_PLAIN',
+                content: contentPlain
               },
               {
                 name: 'URL',

@@ -1,8 +1,13 @@
 {{COMMENTER_NAME}} schreibt:
 
-{{{CONTENT}}} Den Beitrag im Kontext auf republik.ch anzeigen [{{URL}}]. Dort können Sie
-antworten und weiter debattieren.
+---
 
+{{CONTENT_PLAIN}}
+
+---
+
+Den Beitrag im Kontext auf republik.ch anzeigen [{{URL}}]. Dort können Sie
+antworten und weiter debattieren.
 
 Sie erhalten diese E-Mail, weil Sie an der Debatte «{{DISCUSSION_TITLE}}
 [{{DISCUSSION_URL}}]» teilgenommen haben und/oder Benachrichtigungen für diese
