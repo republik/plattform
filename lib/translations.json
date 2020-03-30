@@ -755,6 +755,14 @@
       "value": "montags bis freitags um 19 Uhr"
     },
     {
+      "key": "account/newsletterSubscriptions/ACCOMPLICE/label",
+      "value": "Republik – Der Komplizen-Newsletter"
+    },
+    {
+      "key": "account/newsletterSubscriptions/ACCOMPLICE/frequency",
+      "value": "unregelmässig"
+    },
+    {
       "key": "account/authSettings/title",
       "value": "Anmeldung"
     },
