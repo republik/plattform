@@ -25,17 +25,16 @@ const { createMail: _createMail } = require('./lib')
 const MailchimpInterface = require('./MailchimpInterface')
 
 const createMail = () => _createMail([
-  { name: 'DAILY', interestId: process.env.MAILCHIMP_INTEREST_NEWSLETTER_DAILY, roles: ['member'] },
-  { name: 'WEEKLY', interestId: process.env.MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY, roles: ['member'] },
-  { name: 'PROJECTR', interestId: process.env.MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR, roles: [] }
+  { name: 'DAILY', interestId: process.env.MAILCHIMP_INTEREST_NEWSLETTER_DAILY },
+  { name: 'WEEKLY', interestId: process.env.MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY },
+  { name: 'PROJECTR', interestId: process.env.MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR }
 ])
 
 // the mail address needs to stay the same while doing all the tests
 const randomString = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
 
-const user = (role) => ({
-  email: `${randomString}@test.project-r.construction`,
-  roles: role ? [role] : []
+const user = () => ({
+  email: `${randomString}@test.project-r.construction`
 })
 
 test('get some member data without configuring mail first', async () => {
@@ -56,18 +55,6 @@ test('member user settings which does not exist on mailchimp', async () => {
   expect(subscribedSubscriptions.length).toBe(0)
 })
 
-test('illegible role for interest', async () => {
-  const { updateNewsletterSubscription } = createMail()
-  expect(
-    // updateNewsletterSubscription returns a promise
-    updateNewsletterSubscription({
-      user: user(),
-      name: 'DAILY',
-      subscribed: true
-    })
-  ).rejects.toThrow()
-})
-
 test('single-subscription: change interest settings of user which is not subscribed', async () => {
   const { updateNewsletterSubscription, getNewsletterSettings } = createMail()
   const settings = await updateNewsletterSubscription({
@@ -76,7 +63,6 @@ test('single-subscription: change interest settings of user which is not subscri
     subscribed: true
   })
   expect(settings.subscribed).toBe(true)
-  expect(settings.isEligible).toBe(true)
   expect(settings.name).toBe('DAILY')
 
   const member = await getNewsletterSettings({ user: user('member') })
@@ -109,7 +95,6 @@ test('single-subscribe: unsubscribe from 1 interest', async () => {
     subscribed: false
   })
   expect(settings.subscribed).toBe(false)
-  expect(settings.isEligible).toBe(true)
   expect(settings.name).toBe('PROJECTR')
 
   const member = await getNewsletterSettings({ user: user() })
@@ -133,7 +118,6 @@ test('resubscribe after unsubscription', async () => {
     subscribed: true
   })
   expect(settings.subscribed).toBe(true)
-  expect(settings.isEligible).toBe(true)
   expect(settings.name).toBe('PROJECTR')
 
   const member = await getNewsletterSettings({ user: user() })

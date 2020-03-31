@@ -1,12 +1,9 @@
-const intersect = (arr1, arr2) => [...new Set(arr1)].filter(num => new Set(arr2).has(num))
-
 const createNewsletterSubscription = (interestConfigurationMap) => ({
-  buildSubscription (userId, interestId, subscribed, roles) {
-    const interstConfiguration = this.interestConfiguration(interestId)
-    const name = interstConfiguration.name
+  buildSubscription (userId, interestId, subscribed) {
+    const interestConfiguration = this.interestConfiguration(interestId)
+    const name = interestConfiguration.name
     const id = Buffer.from(userId + name).toString('base64')
-    const isEligible = this.isEligibleForInterestId(interestId, roles)
-    return { name, id, subscribed, isEligible }
+    return { name, id, subscribed }
   },
 
   allInterestConfigurations () {
@@ -25,17 +22,6 @@ const createNewsletterSubscription = (interestConfigurationMap) => ({
     return interestConfigurationMap
       .filter(({ interestId: currentInterestId }) => currentInterestId === interestId)
       .reduce((last, interest) => interest, {})
-  },
-
-  requiredRolesForInterest (interestId) {
-    const interest = this.interestConfiguration(interestId)
-    return interest.roles || []
-  },
-
-  isEligibleForInterestId (interestId, roles) {
-    const requiredRoles = this.requiredRolesForInterest(interestId)
-    if (requiredRoles.length === 0) return true
-    return intersect(requiredRoles, roles).length > 0
   }
 })
 

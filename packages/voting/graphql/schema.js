@@ -48,7 +48,7 @@ type mutations {
 
 
   submitAnswer(answer: AnswerInput!): QuestionInterface!
-  # delete all answers
+  # delete all my unsubmitted answers
   resetQuestionnaire(id: ID!): Questionnaire!
   submitQuestionnaire(id: ID!): Questionnaire!
   finalizeQuestionnaire(
@@ -56,5 +56,7 @@ type mutations {
     dry: Boolean!
   ): JSON!
   anonymizeUserAnswers(questionnaireId: ID!): Questionnaire!
+  # admins only
+  refreshQuestionnaireResult(slug: String!): Questionnaire
 }
 `

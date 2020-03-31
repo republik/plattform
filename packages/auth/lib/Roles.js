@@ -96,6 +96,20 @@ const userIsMeOrProfileVisible = (user, me) => (
   )
 )
 
+const {
+  SELF_CLAIMABLE_ROLES
+} = process.env
+
+const isRoleClaimableByMe = (role, me) => (
+  me &&
+  role &&
+  SELF_CLAIMABLE_ROLES &&
+  SELF_CLAIMABLE_ROLES.length &&
+  SELF_CLAIMABLE_ROLES
+    .split(',')
+    .some(r => r === role)
+)
+
 module.exports = {
   roles,
   specialRoles,
@@ -108,5 +122,6 @@ module.exports = {
   userIsMeOrProfileVisible,
   ensureUserIsInRoles,
   addUserToRole,
-  removeUserFromRole
+  removeUserFromRole,
+  isRoleClaimableByMe
 }

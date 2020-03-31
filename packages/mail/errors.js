@@ -1,5 +1,4 @@
 const NEWSLETTER_MEMBER_ERROR = 'NEWSLETTER_MEMBER_ERROR'
-const ROLES_NOT_ELIGIBLE_ERROR = 'ROLES_NOT_ELIGIBLE_ERROR'
 const INTERESTID_NOT_FOUND_ERROR = 'INTERESTID_NOT_FOUND_ERROR'
 const EMAIL_REQUIRED_ERROR = 'EMAIL_REQUIRED_ERROR'
 const SUBSCRIPTION_CONFIG_MISSING_ERROR = 'SUBSCRIPTION_CONFIG_MISSING_ERROR'
@@ -33,12 +32,6 @@ class NewsletterMemberMailError extends MailError {
   }
 }
 
-class RolesNotEligibleMailError extends MailError {
-  constructor (meta) {
-    super(ROLES_NOT_ELIGIBLE_ERROR, meta)
-  }
-}
-
 class InterestIdNotFoundMailError extends MailError {
   constructor (meta) {
     super(INTERESTID_NOT_FOUND_ERROR, meta)
@@ -59,7 +52,6 @@ class SendMailError extends MailError {
 
 module.exports = {
   NewsletterMemberMailError,
-  RolesNotEligibleMailError,
   InterestIdNotFoundMailError,
   EmailRequiredMailError,
   SubscriptionConfigurationMissingMailError,

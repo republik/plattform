@@ -20,6 +20,7 @@ const getQuestions = async (questionnaire, args = {}, pgdb) => {
         questionnaire
       }))
       .filter(question => !orderFilter || orderFilter.indexOf(question.order) > -1)
+      .filter(question => !question.hidden)
   }
   // add turnout to questionnaire for downstream resolvers
   const turnout =
@@ -34,7 +35,8 @@ const getQuestions = async (questionnaire, args = {}, pgdb) => {
   const questions = await pgdb.public.questions.find(
     {
       questionnaireId: questionnaire.id,
-      ...orderFilter ? { order: orderFilter } : {}
+      ...orderFilter ? { order: orderFilter } : {},
+      hidden: false
     },
     { orderBy: { order: 'asc' } }
   )
@@ -164,10 +166,38 @@ const updateResultIncrementally = async (questionnaireId, answer, transaction, c
   )
 }
 
+const refreshResult = async (questionnaireId, transaction, context) => {
+  const { t } = context
+
+  const questionnaire = await transaction.query(`
+    SELECT *
+    FROM questionnaires
+    WHERE id = :questionnaireId
+    FOR UPDATE
+  `, {
+    questionnaireId
+  })
+    .then(r => r && r[0])
+
+  if (!questionnaire) {
+    throw new Error(t('api/questionnaire/404'))
+  }
+
+  const result = await getResult(questionnaire, { ...context, pgdb: transaction })
+
+  result.updatedAt = new Date()
+
+  return transaction.public.questionnaires.updateAndGetOne(
+    { id: questionnaireId },
+    { result }
+  )
+}
+
 module.exports = {
   ...queries,
   transformQuestion,
   getQuestions,
   finalize,
-  updateResultIncrementally
+  updateResultIncrementally,
+  refreshResult
 }

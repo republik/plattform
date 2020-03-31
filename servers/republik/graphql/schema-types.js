@@ -80,7 +80,7 @@ type NewsletterSubscription {
   id: ID!
   name: String!
   subscribed: Boolean!
-  isEligible: Boolean!
+  isEligible: Boolean! @deprecated(reason: "Eligability is handeld elsewhere. Subscription changes are always possible.")
 }
 
 type PageInfo {
@@ -126,6 +126,7 @@ enum NewsletterName {
   WEEKLY
   PROJECTR
   COVID19
+  ACCOMPLICE
 }
 
 type Video {

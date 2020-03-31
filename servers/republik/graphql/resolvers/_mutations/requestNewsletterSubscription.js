@@ -16,6 +16,10 @@ module.exports = async (_, args, context) => {
     t
   } = context
 
+  if (!['COVID19'].includes(name)) {
+    throw new Error(t('api/newsletters/request/notSupported'))
+  }
+
   const mac = authenticate(email, name, true, t)
 
   const confirmLink = `${FRONTEND_BASE_URL}/mitteilung?type=newsletter&name=${name}&subscribed=1&email=${base64u.encode(email)}&mac=${mac}&context=${newsletterContext}`

@@ -5,12 +5,14 @@ const logger = console
 module.exports = async ({
   user
 }, NewsletterSubscription) => {
+  // circumvent circle dependency
+  const { Roles: { userIsInRoles } } = require('@orbiting/backend-modules-auth')
+
   const { email, roles } = user
   if (!NewsletterSubscription) throw new SubscriptionHandlerMissingMailError()
 
-  const supportedInterestIds = NewsletterSubscription
+  const supportedInterestConfigs = NewsletterSubscription
     .allInterestConfigurations()
-    .map(({ interestId }) => interestId)
 
   const mailchimp = MailchimpInterface({ logger })
   const member = await mailchimp.getMember(email)
@@ -19,8 +21,9 @@ module.exports = async ({
     // member could not be retrieved
     // return all possible interests / subscriptions
     const status = ''
-    const subscriptions = supportedInterestIds
-      .map((interestId) => NewsletterSubscription.buildSubscription(
+    const subscriptions = supportedInterestConfigs
+      .filter(({ visibleToRoles }) => !visibleToRoles || !visibleToRoles.length)
+      .map(({ interestId }) => NewsletterSubscription.buildSubscription(
         user.id,
         interestId,
         false,
@@ -31,13 +34,16 @@ module.exports = async ({
 
   const status = member.status
   const subscriptions = []
-  supportedInterestIds.forEach(interestId => {
-    // only return already configured interests / subscriptions
-    if (interestId in member.interests) {
+  supportedInterestConfigs.forEach(({ interestId, visibleToRoles }) => {
+    // only return visible interests
+    const subscribed = status === MailchimpInterface.MemberStatus.Subscribed
+      ? !!member.interests[interestId]
+      : false
+    if (subscribed || !visibleToRoles || !visibleToRoles.length || userIsInRoles(user, visibleToRoles)) {
       subscriptions.push(NewsletterSubscription.buildSubscription(
         user.id,
         interestId,
-        status === MailchimpInterface.MemberStatus.Subscribed ? member.interests[interestId] : false,
+        subscribed,
         roles
       ))
     }

@@ -1,7 +1,6 @@
 const MailchimpInterface = require('../MailchimpInterface')
 const {
   InterestIdNotFoundMailError,
-  RolesNotEligibleMailError,
   SubscriptionHandlerMissingMailError
 } = require('../errors')
 const logger = console
@@ -14,15 +13,11 @@ module.exports = async ({
 }, NewsletterSubscription) => {
   if (!NewsletterSubscription) throw new SubscriptionHandlerMissingMailError()
 
-  const { roles, email } = user
+  const { email } = user
   const interestId = NewsletterSubscription.interestIdByName(name)
 
   if (!interestId) {
     throw new InterestIdNotFoundMailError({ name })
-  }
-
-  if (!NewsletterSubscription.isEligibleForInterestId(interestId, roles)) {
-    throw new RolesNotEligibleMailError({ roles, interestId })
   }
 
   const body = {
@@ -46,5 +41,5 @@ module.exports = async ({
     body.status = MailchimpInterface.MemberStatus.Pending
   }
   await mailchimp.updateMember(email, body)
-  return NewsletterSubscription.buildSubscription(user.id, interestId, subscribed, roles)
+  return NewsletterSubscription.buildSubscription(user.id, interestId, subscribed)
 }
