@@ -22,7 +22,7 @@ module.exports = async ({
     // return all possible interests / subscriptions
     const status = ''
     const subscriptions = supportedInterestConfigs
-      .filter(({ visibleToRoles = [] }) => !visibleToRoles.length)
+      .filter(({ visibleToRoles }) => !visibleToRoles || !visibleToRoles.length)
       .map(({ interestId }) => NewsletterSubscription.buildSubscription(
         user.id,
         interestId,
@@ -39,7 +39,7 @@ module.exports = async ({
     const subscribed = status === MailchimpInterface.MemberStatus.Subscribed
       ? !!member.interests[interestId]
       : false
-    if (subscribed || userIsInRoles(user, visibleToRoles)) {
+    if (subscribed || !visibleToRoles || !visibleToRoles.length || userIsInRoles(user, visibleToRoles)) {
       subscriptions.push(NewsletterSubscription.buildSubscription(
         user.id,
         interestId,
