@@ -101,7 +101,7 @@ module.exports = async ({
     }
 
     // requests to github always return Content-Type: text/plain, let's fix that
-    if (mime && headers.get('Content-Type') === 'text/plain') {
+    if (mime && headers && headers.get('Content-Type') === 'text/plain') {
       res.set('Content-Type', mime)
     }
     res.set('Cache-Tag',
