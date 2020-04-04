@@ -1,26 +1,27 @@
 ## Callout
 
-Callout styles for desktop and mobile.
+A fixed callout animating in from the bottom on mobile and a in place callout on desktop.
 
-- `'open'`: boolean
-- `'leftAligned''`: boolean, flips the callout position on desktop
+- `initiallyOpen`: boolean, note: after a click outside of it, it hides again
+- `icon`: React element
+- `align`: `left` (default) or `right`, alignment on desktop
 
 ```react|responsive
-<div style={{ position: 'relative', display: 'inline-block', top: 100, left: '40%'}}>
-    <CalloutMenu menu={<span>Test</span>} />
+<div style={{ padding: 20 }}>
+  <CalloutMenu icon={<NotificationIcon size={24} />} initiallyOpen>
+    Hello&nbsp;World
+  </CalloutMenu>
 </div>
 ```
 
-### Left aligned
-```react|responsive
-<div style={{ position: 'relative', display: 'inline-block', top: 100, left: '40%'}}>
-    <CalloutMenu menu={<span>Test</span>} leftAligned />
-</div>
-```
+### Right Aligned
 
-### Callout open
-```react|responsive
-<div style={{ position: 'relative', display: 'inline-block', top: 100, left: '40%'}}>
-    <CalloutMenu menu={<span>Test</span>} open />
+```react
+<div style={{ padding: 20 }}>
+  <div style={{ float: 'right' }}>
+    <CalloutMenu align='right'>
+      Hello&nbsp;World
+    </CalloutMenu>
+  </div>
 </div>
 ```

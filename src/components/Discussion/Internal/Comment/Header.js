@@ -58,7 +58,7 @@ const styles = {
   root: ({ isExpanded }) =>
     css({
       display: 'flex',
-      alignItems: 'center'
+      alignItems: 'flex-start'
     }),
   profilePicture: css({
     display: 'block',
@@ -161,11 +161,6 @@ const styles = {
     [onlyS]: {
       display: 'none'
     }
-  }),
-  menu: css({
-    position: 'relative',
-    marginRight: 10,
-    top: -8
   })
 }
 
@@ -273,7 +268,7 @@ export const Header = ({ t, comment, menu, isExpanded, onToggle }) => {
           {isExpanded ? <IcCollapse /> : <IcExpand />}
         </button>
       )}
-      <CalloutMenu menu={menu} styles={styles.menu} />
+      {menu && <CalloutMenu align='right'>{menu}</CalloutMenu>}
     </div>
   )
 }

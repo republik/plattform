@@ -4,6 +4,7 @@ import { css } from 'glamor'
 import { mUp } from '../../theme/mediaQueries'
 import { Format } from './Format'
 import colors from '../../theme/colors'
+import CalloutMenu from '../Callout/CalloutMenu'
 
 const styles = {
   main: css({
@@ -29,7 +30,8 @@ const Teaser = ({
   format,
   interaction,
   Link,
-  highlighted
+  highlighted,
+  menu
 }) => {
   return (
     <div
@@ -39,6 +41,15 @@ const Teaser = ({
         backgroundColor: highlighted ? colors.primaryBg : undefined
       }}
     >
+      {menu && (
+        <div
+          style={{
+            float: 'right'
+          }}
+        >
+          <CalloutMenu align='right'>{menu}</CalloutMenu>
+        </div>
+      )}
       {format && format.meta && (
         <Format color={color}>
           <Link href={format.meta.path} passHref>

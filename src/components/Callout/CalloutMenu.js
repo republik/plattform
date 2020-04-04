@@ -13,8 +13,8 @@ const hasAncestor = (node, predicate) => {
   return false
 }
 
-const CalloutMenu = ({ menu, styles, icon, leftAligned, open }) => {
-  const [showMenu, setMenu] = React.useState(open)
+const CalloutMenu = ({ children, icon, align, initiallyOpen }) => {
+  const [showMenu, setMenu] = React.useState(initiallyOpen)
   const toggleRef = React.useRef()
 
   const handleClick = e => {
@@ -31,8 +31,11 @@ const CalloutMenu = ({ menu, styles, icon, leftAligned, open }) => {
     }
   }, [showMenu])
 
-  return menu ? (
-    <div ref={toggleRef} {...styles}>
+  return (
+    <div
+      ref={toggleRef}
+      style={{ display: 'inline-block', position: 'relative' }}
+    >
       <button
         {...plainButtonRule}
         onClick={() => {
@@ -42,12 +45,12 @@ const CalloutMenu = ({ menu, styles, icon, leftAligned, open }) => {
         {icon || <MoreIcon width='calc(1em + 7px)' />}
       </button>
       {showMenu && (
-        <Callout onClose={() => setMenu(false)} leftAligned={leftAligned}>
-          {menu}
+        <Callout onClose={() => setMenu(false)} align={align}>
+          {children}
         </Callout>
       )}
     </div>
-  ) : null
+  )
 }
 
 export default CalloutMenu

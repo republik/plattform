@@ -221,7 +221,8 @@ ReactDOM.render(
               path: '/callout',
               title: 'Callout',
               imports: {
-                CalloutMenu: require('./components/Callout/CalloutMenu')
+                CalloutMenu: require('./components/Callout/CalloutMenu'),
+                NotificationIcon: require('react-icons/lib/md/notifications')
               },
               src: require('./components/Callout/docs.md')
             }

@@ -1,7 +1,9 @@
 import React from 'react'
-import { merge, css } from 'glamor'
+import { css } from 'glamor'
+import PropTypes from 'prop-types'
 import { mUp } from '../../theme/mediaQueries'
 import colors from '../../theme/colors'
+import zIndex from '../../theme/zIndex'
 
 const slideUp = css.keyframes({
   from: {
@@ -15,39 +17,34 @@ const slideUp = css.keyframes({
 const styles = {
   calloutContainer: css({
     position: 'fixed',
-    top: 45,
+    top: 0,
     right: 0,
     bottom: 0,
     left: 0,
-    zIndex: 12,
+    zIndex: zIndex.callout,
     background: 'rgba(0,0,0,0.5)',
     [mUp]: {
       position: 'absolute',
-      top: 0,
-      left: 'auto',
+      top: '100%',
+      left: '50%',
+      right: '50%',
       bottom: 'auto',
-      right: 0,
       background: 'none'
     }
   }),
   arrow: css({
-    transform: 'rotate(-45deg)',
-    background: colors.containerBg,
-    borderTop: `1px solid ${colors.divider}`,
-    borderRight: `1px solid ${colors.divider}`,
-    width: 12,
-    height: 12,
-    position: 'absolute',
-    top: -7,
-    right: 15,
     display: 'none',
     [mUp]: {
-      display: 'block'
+      display: 'block',
+      transform: 'rotate(-45deg)',
+      background: colors.containerBg,
+      borderTop: `1px solid ${colors.divider}`,
+      borderRight: `1px solid ${colors.divider}`,
+      width: 12,
+      height: 12,
+      position: 'absolute',
+      top: -7
     }
-  }),
-  arrowLeft: css({
-    left: 31,
-    right: 'auto'
   }),
   callout: css({
     zIndex: 1,
@@ -61,32 +58,51 @@ const styles = {
     animation: `0.3s ${slideUp} 0.2s forwards`,
     textAlign: 'left',
     [mUp]: {
-      right: -10,
-      left: 'auto',
       bottom: 'auto',
-      top: 40,
-      padding: '10px 30px 10px 10px',
+      top: 20,
+      padding: 10,
       animation: 'none'
     }
   }),
-  calloutLeft: css({
-    [mUp]: {
-      left: -50,
-      right: 'auto'
-    }
-  })
+  right: {
+    callout: css({
+      [mUp]: {
+        right: -20,
+        left: 'auto'
+      }
+    }),
+    arrow: css({
+      right: 14
+    })
+  },
+  left: {
+    callout: css({
+      [mUp]: {
+        left: -20,
+        right: 'auto'
+      }
+    }),
+    arrow: css({
+      left: 14
+    })
+  }
 }
 
-const Callout = ({ children, leftAligned, onClose }) => (
+const Callout = ({ children, align = 'left', onClose }) => (
   <div {...styles.calloutContainer} onClick={onClose}>
     <div
-      {...merge(styles.callout, leftAligned && styles.calloutLeft)}
+      {...styles.callout}
+      {...styles[align].callout}
       onClick={e => e.stopPropagation()}
     >
-      <div {...merge(styles.arrow, leftAligned && styles.arrowLeft)} />
+      <div {...styles.arrow} {...styles[align].arrow} />
       {children}
     </div>
   </div>
 )
+
+Callout.propTypes = {
+  align: PropTypes.oneOf(['left', 'right'])
+}
 
 export default Callout
