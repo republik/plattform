@@ -53,11 +53,9 @@ const getDocumentId = ({ repoId, commitId, versionName }) =>
   Buffer.from(`${repoId}/${commitId}/${versionName}`).toString('base64')
 
 const getParsedDocumentId = id => {
-  // decoded = <org>/<repoName>/<commitId>/<versionName>
-  //                 ^^^^^^^^^^
-  const decoded = Buffer.from(id, 'base64').toString('utf8')
+  const isBase64 = Buffer.from(id, 'base64').toString('base64') === id
 
-  if (decoded.indexOf('/') === -1) { // id is repoId
+  if (!isBase64) { // id is repoId
     const [org, repoName] = id.split('/')
     return {
       repoId: id,
@@ -65,6 +63,10 @@ const getParsedDocumentId = id => {
       repoName
     }
   }
+
+  // decoded = <org>/<repoName>/<commitId>/<versionName>
+  //                 ^^^^^^^^^^
+  const decoded = Buffer.from(id, 'base64').toString('utf8')
 
   const [org, repoName, commitId, versionName] = decoded.split('/')
 
