@@ -22,29 +22,36 @@ const getRepoId = (url, requireQuery) => {
   ])
 
   if (!url) {
-    return
+    return {}
   }
-  const {
-    hostname,
-    pathname,
-    searchParams
-  } = new URL(String(url), FRONTEND_BASE_URL)
+
+  const parsedUrl = new URL(String(url), FRONTEND_BASE_URL)
+  const { hostname, pathname } = parsedUrl
+
   if (!pathname) { // empty for mailto
-    return
+    return { parsedUrl }
   }
+
   const pathSegments = pathname.split('/').filter(Boolean)
   if (
     hostname !== 'github.com' ||
     pathSegments.length !== 2 ||
     !GITHUB_ORGS.split(',').includes(pathSegments[0])
   ) {
-    return
+    return { parsedUrl }
   }
-  if (requireQuery && !searchParams.has(requireQuery)) {
-    return
+
+  if (requireQuery && !parsedUrl.searchParams.has(requireQuery)) {
+    return { parsedUrl }
   }
+
+  // Remove {requireQuery} key-value from {parsedUrl.searchParams}.
+  // Value should not be propagated, as this fn acted on it.
+  parsedUrl.searchParams.delete(requireQuery)
+
   pathSegments[0] = GITHUB_LOGIN
-  return pathSegments.join('/')
+
+  return { repoId: pathSegments.join('/'), parsedUrl }
 }
 
 const userPath = /^\/~([^/?#]+)/
@@ -97,28 +104,52 @@ const createUrlReplacer = (allDocuments = [], usernames = [], errors = [], urlPr
     }
   }
 
-  const repoId = getRepoId(url, 'autoSlug')
+  const { repoId, parsedUrl } = getRepoId(url, 'autoSlug')
+  // {url} lacks {repoId} and is nothing to resolve further.
   if (!repoId) {
     return url
   }
+
+  // Return early if {stripDocLinks} argument is set as nothing has to be resolved.
   if (stripDocLinks) {
     return ''
   }
+
   const linkedDoc = allDocuments
     .find(d => d.meta.repoId === repoId)
+
   if (linkedDoc) {
-    const hash = url.split('#')[1]
-    return `${urlPrefix}${linkedDoc.content.meta.path}${searchString}${hash ? `#${hash}` : ''}`
+    // Stitch and parse simple URL version including arguments {urlPrefix}, {searchString}
+    const resolvedUrl = new URL(
+      `${urlPrefix}${linkedDoc.content.meta.path}${searchString}`,
+      FRONTEND_BASE_URL
+    )
+
+    // Replace {parsedUrl.hash} with {resolvedUrl.hash}
+    resolvedUrl.hash = parsedUrl.hash
+
+    // Merge {parsedUrl.searchParams} into {resolvedUrl.searchParams}
+    // parsedUrl overwrites same keys in resolvedUrl.
+    // resolvedUrl may contain searchParams from parsed {searchString}.
+    parsedUrl.searchParams.forEach((value, name) => resolvedUrl.searchParams.set(name, value))
+
+    // If {urlPrefix} is set, return stringified {resolvedUrl}.
+    if (urlPrefix) {
+      return resolvedUrl.toString()
+    }
+
+    // If {urlPrefix} is not set, replace {FRONTEND_BASE_URL} to return relative URLs.
+    return resolvedUrl.toString().replace(new RegExp(`^${FRONTEND_BASE_URL}`), '')
   } else {
     errors.push(repoId)
   }
-  // autoSlug links pointing to
-  // not published or missing documents are stripped
+
+  // autoSlug links pointing to not published or missing documents are stripped
   return ''
 }
 
 const createResolver = (allDocuments, errors = []) => url => {
-  const repoId = getRepoId(url)
+  const { repoId } = getRepoId(url)
   if (!repoId) {
     return null
   }
@@ -164,13 +195,13 @@ const contentUrlResolver = (doc, allDocuments = [], usernames = [], errors, urlP
           publishDate: linkedDoc.meta.publishDate,
           section: linkedDoc.meta.template === 'section'
             ? linkedDoc.meta.repoId
-            : getRepoId(linkedDoc.meta.section),
+            : getRepoId(linkedDoc.meta.section).repoId,
           format: linkedDoc.meta.template === 'format'
             ? linkedDoc.meta.repoId
-            : getRepoId(linkedDoc.meta.format),
+            : getRepoId(linkedDoc.meta.format).repoId,
           series: linkedDoc.meta.series ? (
             typeof linkedDoc.meta.series === 'string'
-              ? getRepoId(linkedDoc.meta.series)
+              ? getRepoId(linkedDoc.meta.series).repoId
               : linkedDoc.meta.repoId
           ) : undefined
         }

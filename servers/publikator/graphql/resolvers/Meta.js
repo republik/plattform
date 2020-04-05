@@ -14,7 +14,7 @@ const resolveRepoId = field => async (meta, args, context) => {
     return meta[field]
   }
 
-  const repoId = resolve.getRepoId(meta[field])
+  const { repoId } = resolve.getRepoId(meta[field])
   if (!repoId) {
     return null
   }

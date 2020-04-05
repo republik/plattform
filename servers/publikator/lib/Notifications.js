@@ -21,7 +21,7 @@ const notifyPublish = async (repoId, context) => {
   const doc = await loaders.Document.byRepoId.load(repoId)
   const docRepoId = doc.meta.repoId
 
-  const formatRepoId = getRepoId(doc.meta.format)
+  const { repoId: formatRepoId } = getRepoId(doc.meta.format)
   if (!formatRepoId) {
     return
   }
@@ -62,8 +62,7 @@ const notifyPublish = async (repoId, context) => {
         users: subscribers,
         content: {
           app: {
-            title: t('api/notifications/doc/title', { title: inQuotes(subscriptionDoc.meta.title) }
-            ),
+            title: t('api/notifications/doc/title', { title: inQuotes(subscriptionDoc.meta.title) }),
             body: doc.meta.shortTitle || [doc.meta.title, doc.meta.description].join(' - '),
             url: `${FRONTEND_BASE_URL}${doc.meta.path}`,
             type: 'document',
