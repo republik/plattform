@@ -1,16 +1,14 @@
 const { getObjectByIdAndType } = require('../../lib/genericObject')
 
 module.exports = {
-  object ({ eventId }, args, context) {
-    const { loaders } = context
-    return loaders.Event.byId.load(eventId)
-      .then(e => getObjectByIdAndType(
-        {
-          id: e.objectId,
-          type: e.objectType
-        },
-        context
-      ))
+  object ({ eventObjectType, eventObjectId }, args, context) {
+    return getObjectByIdAndType(
+      {
+        id: eventObjectId,
+        type: eventObjectType
+      },
+      context
+    )
   },
   mailLogRecord ({ mailLogId }, args, { loaders }) {
     if (!mailLogId) {
