@@ -246,8 +246,8 @@ const extractIdsFromNode = (haystack, contextRepoId) => {
   const users = []
   visit(haystack, 'zone', node => {
     if (node.data) {
-      repos.push(getRepoId(node.data.url))
-      repos.push(getRepoId(node.data.formatUrl))
+      repos.push(getRepoId(node.data.url).repoId)
+      repos.push(getRepoId(node.data.formatUrl).repoId)
     }
   })
   visit(haystack, 'link', node => {
@@ -264,7 +264,7 @@ const extractIdsFromNode = (haystack, contextRepoId) => {
         )
       }
     }
-    const repoId = getRepoId(node.url, 'autoSlug')
+    const { repoId } = getRepoId(node.url, 'autoSlug')
     if (repoId) {
       repos.push(repoId)
     }
@@ -350,20 +350,20 @@ const addRelatedDocs = async ({
     // from meta
     const meta = doc.content.meta
     // TODO get keys from packages/documents/lib/resolve.js
-    repoIds.push(getRepoId(meta.dossier))
-    repoIds.push(getRepoId(meta.format))
-    repoIds.push(getRepoId(meta.section))
-    repoIds.push(getRepoId(meta.discussion))
+    repoIds.push(getRepoId(meta.dossier).repoId)
+    repoIds.push(getRepoId(meta.format).repoId)
+    repoIds.push(getRepoId(meta.section).repoId)
+    repoIds.push(getRepoId(meta.discussion).repoId)
     if (meta.series) {
       // If a string, probably a series master (tbc.)
       if (typeof meta.series === 'string') {
-        const seriesRepoId = getRepoId(meta.series)
+        const { repoId: seriesRepoId } = getRepoId(meta.series)
         if (seriesRepoId) {
           seriesRepoIds.push(seriesRepoId)
         }
       } else {
         meta.series.episodes && meta.series.episodes.forEach(episode => {
-          repoIds.push(getRepoId(episode.document))
+          repoIds.push(getRepoId(episode.document).repoId)
         })
       }
     }
@@ -386,8 +386,8 @@ const addRelatedDocs = async ({
     seriesRelatedDocs.forEach(doc => {
       const meta = doc.content.meta
       meta.series.episodes && meta.series.episodes.forEach(episode => {
-        debug(getRepoId(episode.document))
-        repoIds.push(getRepoId(episode.document))
+        debug(getRepoId(episode.document).repoId)
+        repoIds.push(getRepoId(episode.document).repoId)
       })
     })
   }

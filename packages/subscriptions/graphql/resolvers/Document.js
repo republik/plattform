@@ -22,7 +22,7 @@ const getRepoIdsForDoc = (doc, includeParents) => ([
   (doc.meta && doc.meta.repoId) || (doc._meta && doc._meta.repoId),
   includeParents && getRepoId(
     (doc.meta && doc.meta.format) || (doc._meta && doc._meta.format)
-  )
+  ).repoId
 ].filter(Boolean))
 
 const getTemplate = (doc) =>
