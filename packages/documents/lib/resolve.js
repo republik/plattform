@@ -29,7 +29,7 @@ const getRepoId = (url, requireQuery) => {
   const { hostname, pathname, searchParams } = parsedUrl
 
   if (!pathname) { // empty for mailto
-    return {}
+    return { parsedUrl }
   }
 
   const pathSegments = pathname.split('/').filter(Boolean)
@@ -38,11 +38,11 @@ const getRepoId = (url, requireQuery) => {
     pathSegments.length !== 2 ||
     !GITHUB_ORGS.split(',').includes(pathSegments[0])
   ) {
-    return {}
+    return { parsedUrl }
   }
 
   if (requireQuery && !searchParams.has(requireQuery)) {
-    return {}
+    return { parsedUrl }
   }
 
   searchParams.delete(requireQuery)
