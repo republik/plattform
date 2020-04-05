@@ -26,7 +26,7 @@ const getRepoId = (url, requireQuery) => {
   }
 
   const parsedUrl = new URL(String(url), FRONTEND_BASE_URL)
-  const { hostname, pathname, searchParams } = parsedUrl
+  const { hostname, pathname } = parsedUrl
 
   if (!pathname) { // empty for mailto
     return { parsedUrl }
@@ -41,11 +41,13 @@ const getRepoId = (url, requireQuery) => {
     return { parsedUrl }
   }
 
-  if (requireQuery && !searchParams.has(requireQuery)) {
+  if (requireQuery && !parsedUrl.searchParams.has(requireQuery)) {
     return { parsedUrl }
   }
 
-  searchParams.delete(requireQuery)
+  // Remove {requireQuery} key-value from {parsedUrl.searchParams}.
+  // Value should not be propagated, as this fn acted on it.
+  parsedUrl.searchParams.delete(requireQuery)
 
   pathSegments[0] = GITHUB_LOGIN
 
