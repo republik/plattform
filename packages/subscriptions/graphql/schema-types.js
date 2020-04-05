@@ -107,7 +107,7 @@ type NotificationConnection {
 
 type Notification {
   id: ID!
-  object: EventObject!
+  object: EventObject
   subscription: Subscription
   content: NotificationContent!
   channels: [DiscussionNotificationChannel]!
