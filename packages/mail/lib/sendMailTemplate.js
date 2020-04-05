@@ -79,7 +79,7 @@ const envMergeVars = [
   },
   {
     name: 'link_account_share',
-    content: `${FRONTEND_BASE_URL}/konto#teilen`
+    content: `${FRONTEND_BASE_URL}/teilen`
   },
   {
     name: 'link_account_account',
@@ -87,7 +87,7 @@ const envMergeVars = [
   },
   {
     name: 'link_account_notifications',
-    content: `${FRONTEND_BASE_URL}/konto#benachrichtigungen`
+    content: `${FRONTEND_BASE_URL}/benachrichtigungen/einstellungen`
   },
   {
     name: 'link_profile',
@@ -221,7 +221,7 @@ module.exports = async (mail, context, log) => {
     tags
   }
 
-  debug({ ...message, html: !!message.html, text: !!message.text})
+  debug({ ...message, html: !!message.html, text: !!message.text })
 
   const sendFunc = sendResultNormalizer(
     shouldScheduleMessage(mail, message),
