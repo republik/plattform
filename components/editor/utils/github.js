@@ -42,7 +42,7 @@ export const RepoLink = ({
   if (!info) {
     return invalid(info)
   }
-  if (autoSlug && info.query !== 'autoSlug') {
+  if (autoSlug && !info.query.match(/(^|&)autoSlug([=&#].+)?$/)) {
     return invalid(info)
   }
   return (
