@@ -123,7 +123,7 @@ const createUrlReplacer = (allDocuments = [], usernames = [], errors = [], urlPr
       FRONTEND_BASE_URL
     )
 
-    // Add {parsedUrl.hash} to {resolvedUrl.hash}, incase there is one provided.
+    // Replace {parsedUrl.hash} with {resolvedUrl.hash}
     resolvedUrl.hash = parsedUrl.hash
 
     // Merge {parsedUrl.searchParams} into {resolvedUrl.searchParams}
