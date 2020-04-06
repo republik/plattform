@@ -65,7 +65,9 @@ const notifyPublish = async (repoId, context) => {
             title: t('api/notifications/doc/title', { title: inQuotes(subscriptionDoc.meta.title) }),
             body: doc.meta.shortTitle || [doc.meta.title, doc.meta.description].join(' - '),
             url: `${FRONTEND_BASE_URL}${doc.meta.path}`,
-            type: 'document',
+            // change when APP allows to open url of other types
+            // https://github.com/orbiting/app/blob/master/src/services/pushNotificationsProvider.ios.js#L59
+            type: 'discussion',
             tag: docRepoId
           }
         }
