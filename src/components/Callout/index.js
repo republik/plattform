@@ -54,10 +54,10 @@ const styles = {
     left: 0,
     bottom: -400,
     right: 0,
-    padding: '15px 15px 55px',
+    padding: '15px 15px 80px',
     animation: `0.3s ${slideUp} 0.2s forwards`,
     textAlign: 'left',
-    boxShadow: 'inset 0px -30px 30px -20px rgba(156, 156, 156, 0.6)',
+    boxShadow: 'inset 0px -50px 50px -30px rgba(0, 0, 0, 0.3)',
     [mUp]: {
       bottom: 'auto',
       top: 20,
