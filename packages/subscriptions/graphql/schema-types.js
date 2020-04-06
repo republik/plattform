@@ -101,6 +101,7 @@ type SubscriptionPageInfo {
 
 type NotificationConnection {
   totalCount: Int!
+  unreadCount: Int!
   pageInfo: SubscriptionPageInfo!
   nodes: [Notification!]!
 }

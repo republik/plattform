@@ -9,7 +9,8 @@ module.exports = (
     before: _before,
     only
   },
-  nodes
+  nodes,
+  additionalProps = {}
 ) => {
   const after = _after && decode(_after)
   const before = _before && decode(_before)
@@ -45,6 +46,7 @@ module.exports = (
 
   return {
     totalCount,
+    ...additionalProps,
     pageInfo: {
       hasNextPage,
       endCursor: hasNextPage ? encode(endCursor) : null,
