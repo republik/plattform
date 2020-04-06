@@ -1,7 +1,7 @@
 const {
   getUnreadNotificationsForUserAndObject
 } = require('../../lib/Subscriptions')
-const { paginate } = require('@orbiting/backend-modules-utils')
+const paginate = require('../../lib/paginateNotificationConnection')
 
 module.exports = {
   async unreadNotifications (comment, args, context) {

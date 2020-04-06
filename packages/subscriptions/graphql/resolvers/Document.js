@@ -3,7 +3,7 @@ const {
   getSimulatedSubscriptionForUserAndObject,
   getUnreadNotificationsForUserAndObject
 } = require('../../lib/Subscriptions')
-const { paginate } = require('@orbiting/backend-modules-utils')
+const paginate = require('../../lib/paginateNotificationConnection')
 const { Roles } = require('@orbiting/backend-modules-auth')
 const { getRepoId } = require('@orbiting/backend-modules-documents/lib/resolve')
 

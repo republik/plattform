@@ -1,5 +1,5 @@
 const { ensureSignedIn } = require('@orbiting/backend-modules-auth')
-const { paginate } = require('@orbiting/backend-modules-utils')
+const paginate = require('../../../lib/paginateNotificationConnection')
 
 const MAX_RECORDS = 1000
 
