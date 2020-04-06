@@ -61,6 +61,7 @@ const styles = {
     [mUp]: {
       bottom: 'auto',
       top: 20,
+      left: 'auto',
       padding: 10,
       animation: 'none',
       boxShadow: 'none'
