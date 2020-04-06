@@ -46,11 +46,13 @@ const fetchContent = async (url, { t }) => {
     return {
       type: 'TwitterEmbed',
       content: await twitter.getTweetById(tweetId, t)
+        .catch(e => { return null })
     }
   }
   return {
     type: 'LinkPreview',
     content: await linkPreview.getLinkPreviewByUrl(url)
+      .catch(e => { return null })
   }
 }
 
@@ -113,7 +115,6 @@ const fetchEmbed = async ({ url, forceRefetch = false }, context) => {
 
     const now = moment()
     const { type, content } = await fetchContent(url, context)
-      .catch(e => {})
 
     if (!existingEmbed) {
       debug(`saving result of first try content: ${!!content} (${url})`)
