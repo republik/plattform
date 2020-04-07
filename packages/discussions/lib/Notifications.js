@@ -34,6 +34,10 @@ const submitComment = async (comment, discussion, context, testUsers) => {
   const { pgdb, t } = context
   const { id, parentIds, discussionId, userId } = comment
 
+  if (testUsers && !Array.isArray(testUsers)) {
+    throw new Error(t('api/unexpected'))
+  }
+
   const displayAuthor = await getDisplayAuthor(
     comment,
     { portrait: { webp: false } },

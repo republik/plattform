@@ -18,6 +18,10 @@ const notifyPublish = async (repoId, context, testUsers) => {
     t
   } = context
 
+  if (testUsers && !Array.isArray(testUsers)) {
+    throw new Error(t('api/unexpected'))
+  }
+
   const doc = await loaders.Document.byRepoId.load(repoId)
   const docRepoId = doc.meta.repoId
 
