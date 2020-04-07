@@ -6,7 +6,7 @@ module.exports = async (_, args, context) => {
 
   const {
     commentId,
-    docRepoId
+    repoId
   } = args
   const {
     user: me,
@@ -16,8 +16,8 @@ module.exports = async (_, args, context) => {
 
   ensureUser(me)
 
-  if (!commentId && !docRepoId) {
-    throw new Error('commentId and/or docRepoId must be specified')
+  if (!commentId && !repoId) {
+    throw new Error('commentId and/or repoId must be specified')
   }
 
   if (commentId) {
@@ -34,9 +34,9 @@ module.exports = async (_, args, context) => {
     )
   }
 
-  if (docRepoId) {
+  if (repoId) {
     await notifyPublish(
-      docRepoId,
+      repoId,
       context,
       [me]
     )

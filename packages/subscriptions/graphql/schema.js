@@ -41,7 +41,7 @@ type mutations {
   sendTestNotification(
     commentId: ID
     # repoId of document belonging to a format
-    docRepoId: ID
+    repoId: ID
   ): Boolean!
 }
 
