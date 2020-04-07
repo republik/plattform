@@ -30,9 +30,13 @@ const getDiscussionUrl = async (discussion, context) => {
   return `${FRONTEND_BASE_URL}${discussion.path}`
 }
 
-const submitComment = async (comment, discussion, context) => {
+const submitComment = async (comment, discussion, context, testUsers) => {
   const { pgdb, t } = context
   const { id, parentIds, discussionId, userId } = comment
+
+  if (testUsers && !Array.isArray(testUsers)) {
+    throw new Error(t('api/unexpected'))
+  }
 
   const displayAuthor = await getDisplayAuthor(
     comment,
@@ -40,7 +44,7 @@ const submitComment = async (comment, discussion, context) => {
     context
   )
 
-  const notifyUsers = await pgdb.query(`
+  const notifyUsers = testUsers || await pgdb.query(`
       -- commenters in discussion
       SELECT
         u.*

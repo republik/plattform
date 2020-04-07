@@ -12,11 +12,15 @@ const {
   FRONTEND_BASE_URL
 } = process.env
 
-const notifyPublish = async (repoId, context) => {
+const notifyPublish = async (repoId, context, testUsers) => {
   const {
     loaders,
     t
   } = context
+
+  if (testUsers && !Array.isArray(testUsers)) {
+    throw new Error(t('api/unexpected'))
+  }
 
   const doc = await loaders.Document.byRepoId.load(repoId)
   const docRepoId = doc.meta.repoId
@@ -29,18 +33,20 @@ const notifyPublish = async (repoId, context) => {
   const subscriptionDoc = await loaders.Document.byRepoId.load(formatRepoId)
   const subscriptionRepoId = subscriptionDoc.meta.repoId
 
-  const subscriptions = await getSubscriptionsForUserAndObject(
-    null,
-    {
-      type: 'Document',
-      id: subscriptionRepoId
-    },
-    context,
-    {
-      onlyEligibles: true
-    }
-  )
-  const subscribers = await Promise.map(
+  const subscriptions = testUsers
+    ? null
+    : await getSubscriptionsForUserAndObject(
+      null,
+      {
+        type: 'Document',
+        id: subscriptionRepoId
+      },
+      context,
+      {
+        onlyEligibles: true
+      }
+    )
+  const subscribers = testUsers || await Promise.map(
     subscriptions,
     async (sub) => ({
       ...await loaders.User.byId.load(sub.userId),
