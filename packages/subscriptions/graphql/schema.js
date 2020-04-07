@@ -29,6 +29,20 @@ type mutations {
 
   markNotificationAsRead(id: ID!): Notification!
   markAllNotificationsAsRead: [Notification!]!
+
+  sendTestPushNotification(
+    title: String
+    body: String
+    url: String
+    type: String
+    tag: String
+  ): Boolean!
+
+  sendTestNotification(
+    commentId: ID
+    # repoId of document belonging to a format
+    docRepoId: ID
+  ): Boolean!
 }
 
 type subscriptions {
