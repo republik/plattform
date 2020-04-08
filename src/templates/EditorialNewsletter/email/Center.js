@@ -5,6 +5,13 @@ import HR from './HR'
 import { Mso } from 'mdast-react-render/lib/email'
 import colors from '../../../theme/colors'
 
+const footerParagraphStyle = {
+  color: colors.text,
+  fontFamily: fontFamilies.sansSerifRegular,
+  fontSize: '15px',
+  lineHeight: '30px'
+}
+
 const footerLinkStyle = {
   ...linkStyle,
   color: colors.text,
@@ -58,7 +65,7 @@ export default ({ children, meta }) => {
                       margin: 0,
                       maxWidth: '100% !important'
                     }}
-                    alt=''
+                    alt='REPUBLIK'
                   />
                 </a>
                 <p style={{ ...paragraphStyle, marginTop: 0 }}>
@@ -68,23 +75,25 @@ export default ({ children, meta }) => {
                   8004 Zürich
                 </p>
                 <HR />
-                <p>
+                <p style={footerParagraphStyle}>
                   <a
                     href={`https://www.republik.ch${path ? path : `/${slug}`}`}
                     style={footerLinkStyle}
                   >
                     Im Web lesen
                   </a>
-                  <br />
+                </p>
+                <p style={footerParagraphStyle}>
+                  Um{' '}
                   <a
                     href='https://www.republik.ch/konto#newsletter'
                     style={footerLinkStyle}
                   >
-                    Newsletter-Einstellungen anpassen
+                    Ihre Newsletter-Einstellungen einzusehen und anzupassen
                   </a>
-                  <br />
+                  , öffnen Sie «Konto» in der Republik-App oder auf republik.ch.{' '}
                   <a href='*|UNSUB|*' style={footerLinkStyle}>
-                    Von allen Newslettern abmelden
+                    Alle Newsletter sofort pausieren
                   </a>
                 </p>
               </td>
