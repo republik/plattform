@@ -11,8 +11,6 @@ const { hasUserActiveMembership } = require('@orbiting/backend-modules-utils')
 const campaignsLib = require('./campaigns')
 const eventsLib = require('./events')
 
-const { count: memberStatsCount } = require('../../../servers/republik/lib/memberStats')
-
 const dateFormat = timeFormat('%x')
 
 const { FRONTEND_BASE_URL } = process.env
@@ -266,12 +264,6 @@ const getGlobalMergeVars = async (
     {
       name: 'campaign_period',
       content: getHumanInterval(campaign.grantPeriodInterval, t)
-    },
-
-    // Republik
-    {
-      name: 'republik_memberships_count',
-      content: await memberStatsCount({ pgdb })
     },
 
     // Links
