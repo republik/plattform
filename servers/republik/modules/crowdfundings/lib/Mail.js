@@ -9,7 +9,6 @@ const { timeFormat, formatPriceChf } =
   require('@orbiting/backend-modules-formats')
 
 const { getLastEndDate } = require('./utils')
-const { count: memberStatsCount } = require('../../../lib/memberStats')
 
 const dateFormat = timeFormat('%x')
 
@@ -866,10 +865,6 @@ mail.getPledgeMergeVars = async (
     {
       name: 'gifted_memberships_count',
       content: giftedMemberships.length
-    },
-    {
-      name: 'republik_memberships_count',
-      content: await memberStatsCount({ pgdb })
     },
     {
       name: 'link_claim',

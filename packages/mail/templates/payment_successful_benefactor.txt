@@ -14,8 +14,7 @@ davon klärt.
 Wir schicken Ihnen, unserer neusten Verlegerin, unserem neusten Verleger, auch
 regelmässig Neuigkeiten aus Redaktion und Verlag: zu Vorhaben, Hintergründen,
 Entscheidungen und Fehlern. Sie können Kritik üben und Vorschläge machen. Und
-sich mit Ihren {{republik_memberships_count}} Kolleginnen und Kollegen in der
-Verlagsetage austauschen.
+sich mit Ihren Kolleginnen und Kollegen in der Verlagsetage austauschen.
 
 {{/if}} Um uns für Ihre besonders grosse Unterstützung ein kleines bisschen zu
 revanchieren, schicken wir Ihnen postwendend das Gönnerpaket mit Manifest, dem
