@@ -26,7 +26,7 @@ import * as fragments from '../../lib/graphql/fragments'
 import CurrentPublications from '../../components/Publication/Current'
 import UncommittedChanges from '../../components/VersionControl/UncommittedChanges'
 
-export const COMMIT_LIMIT = 20
+export const COMMIT_LIMIT = 40
 export const getRepoHistory = gql`
   query repoWithHistory($repoId: ID!, $first: Int!, $after: String) {
     repo(id: $repoId) {
