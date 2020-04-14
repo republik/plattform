@@ -94,7 +94,6 @@ const evaluateCompanyMonth = async (company, begin, end, pgdb) => {
         .filter(i => i.createdAt >= begin && i.createdAt < end)
         .filter(i => i.companyName === company)
         .filter(i => i.method === method)
-        .filter(i => i.packageName !== 'DONATE')
         .filter(i => i.type === 'MembershipType')
 
       results.Mitgliedschaften = {
@@ -114,7 +113,6 @@ const evaluateCompanyMonth = async (company, begin, end, pgdb) => {
         .filter(i => i.updatedAt >= begin && i.updatedAt < end)
         .filter(i => i.companyName === company)
         .filter(i => i.method === method)
-        .filter(i => i.packageName !== 'DONATE')
         .filter(i => i.type === 'MembershipType')
         .filter(i => ['CANCELLED', 'REFUNDED'].includes(i.status))
 
@@ -193,11 +191,11 @@ const evaluateCompanyMonth = async (company, begin, end, pgdb) => {
         .filter(i => i.createdAt >= begin && i.createdAt < end)
         .filter(i => i.companyName === company)
         .filter(i => i.method === method)
-        .filter(i => i.donation > 0 || i.packageName === 'DONATE')
+        .filter(i => i.donation > 0 || ['DONATE', 'DONATE_POT'].includes(i.packageName))
 
       results.Spenden = {
         Betrag: Spenden
-          .map(m => m.packageName === 'DONATE' ? m.total : m.donation)
+          .map(m => ['DONATE', 'DONATE_POT'].includes(m.packageName) ? m.total : m.donation)
           .reduce((p, c) => p + c, 0) / 100
       }
 
@@ -209,12 +207,12 @@ const evaluateCompanyMonth = async (company, begin, end, pgdb) => {
         .filter(i => i.updatedAt >= begin && i.updatedAt < end)
         .filter(i => i.companyName === company)
         .filter(i => i.method === method)
-        .filter(i => i.donation > 0 || i.packageName === 'DONATE')
+        .filter(i => i.donation > 0 || ['DONATE', 'DONATE_POT'].includes(i.packageName))
         .filter(i => ['CANCELLED', 'REFUNDED'].includes(i.status))
 
       results.StornierteSpenden = {
         Betrag: StornierteSpenden
-          .map(m => m.packageName === 'DONATE' ? m.total : m.donation)
+          .map(m => ['DONATE', 'DONATE_POT'].includes(m.packageName) ? m.total : m.donation)
           .reduce((p, c) => p - c, 0) / 100
       }
     } // if (company === 'PROJECT_R')
