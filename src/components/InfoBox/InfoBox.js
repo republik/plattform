@@ -138,7 +138,7 @@ const InfoBox = ({
   const content = collapsable ? (
     <Collapsable
       t={t}
-      height={{ mobile: 230, desktop: 230 }}
+      height={{ mobile: 121, desktop: 151 }}
       editorPreview={collapsableEditorPreview}
     >
       {children}
