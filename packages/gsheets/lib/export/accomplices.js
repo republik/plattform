@@ -13,7 +13,6 @@ const getRows = async (pgdb) => {
     { includeHidden: true },
     pgdb
   )
-    console.log(questions)
 
   const submissions = await pgdb.query(`
     SELECT
