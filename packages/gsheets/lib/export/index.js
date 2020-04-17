@@ -38,6 +38,7 @@ module.exports = async (key, pgdb) => {
   })
 
   const newSheet = await doc.addSheet({
+    // colons in spreadsheet titles are not allowed
     title: `${moment().format('DD.MM.YYYY HH_mm_ss')}`,
     headerValues: Object.keys(rows[0])
   })
