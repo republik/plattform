@@ -1,0 +1,46 @@
+const { GoogleSpreadsheet } = require('google-spreadsheet')
+const moment = require('moment')
+
+const {
+  GSHEETS_EXPORT,
+  GOOGLE_SERVICE_ACCOUNT_EMAIL,
+  GOOGLE_PRIVATE_KEY
+} = process.env
+
+const mapping = GSHEETS_EXPORT && JSON.parse(GSHEETS_EXPORT)
+
+
+module.exports = async (key, pgdb) => {
+  if (!key) {
+    throw new Error('key param missing')
+  }
+  if (!mapping) {
+    throw new Error('mapping missing, check GSHEETS_EXPORT env var')
+  }
+
+  const name = mapping[key]
+  if (!name) {
+    throw new Error('invalid key')
+  }
+
+  const { getRows } = require(`./${name}`)
+  const rows = await getRows(pgdb)
+  if (!rows || !rows.length) {
+    throw new Error('no data to export found')
+  }
+
+  const doc = new GoogleSpreadsheet(key)
+
+  await doc.useServiceAccountAuth({
+    client_email: GOOGLE_SERVICE_ACCOUNT_EMAIL,
+    private_key: GOOGLE_PRIVATE_KEY
+      .replace(/@/g, '\n')
+  })
+
+  const newSheet = await doc.addSheet({
+    title: `${moment().format('DD.MM.YYYY HH_mm_ss')}`,
+    headerValues: Object.keys(rows[0])
+  })
+
+  await newSheet.addRows(rows)
+}
