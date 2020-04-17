@@ -1,6 +1,6 @@
 const run = require('../run.js')
 
-const dir = 'servers/republik/migrations/crowdfunding/sqls'
+const dir = 'packages/gsheets/migrations/sqls'
 const file = '20170418122049-gsheets'
 
 exports.up = (db) =>

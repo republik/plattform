@@ -20,6 +20,7 @@ const { graphql: subscriptions } = require('@orbiting/backend-modules-subscripti
 const { graphql: cards } = require('@orbiting/backend-modules-cards')
 const { graphql: maillog } = require('@orbiting/backend-modules-maillog')
 const { graphql: embeds } = require('@orbiting/backend-modules-embeds')
+const { graphql: gsheets } = require('@orbiting/backend-modules-gsheets')
 
 const loaderBuilders = {
   ...require('@orbiting/backend-modules-voting/loaders'),
@@ -87,14 +88,15 @@ const run = async (workerId, config) => {
       subscriptions,
       cards,
       maillog,
-      embeds
+      embeds,
+      gsheets
     ]
   )
 
   // middlewares
   const middlewares = [
     require('./modules/crowdfundings/express/paymentWebhooks'),
-    require('./express/gsheets'),
+    require('@orbiting/backend-modules-gsheets/express/gsheets'),
     require('@orbiting/backend-modules-maillog/express/Mandrill/webhook')
   ]
 
