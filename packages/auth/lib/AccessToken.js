@@ -24,6 +24,10 @@ const scopeConfigs = {
   CLAIM_CARD: {
     exposeFields: ['email', 'cards'],
     ttlDays: 90
+  },
+  AUTHORIZE_SESSION: {
+    authorizeSession: true,
+    ttlDays: 7
   }
 }
 
@@ -119,9 +123,17 @@ const ensureCanPledgePackage = (user, packageName) => {
   }
 }
 
+const hasAuthorizeSession = (user) =>
+  !!(
+    user &&
+    user._scopeConfig &&
+    user._scopeConfig.authorizeSession
+  )
+
 module.exports = {
   generateForUser,
   getUserByAccessToken,
   isFieldExposed,
-  ensureCanPledgePackage
+  ensureCanPledgePackage,
+  hasAuthorizeSession
 }

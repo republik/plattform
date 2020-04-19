@@ -28,6 +28,7 @@ const {
   validateChallenge,
   TokenTypes
 } = require('./challenges')
+const { getUserByAccessToken, hasAuthorizeSession } = require('./AccessToken')
 
 const EmailInvalidError = newAuthError('email-invalid', 'api/email/invalid')
 const EmailAlreadyAssignedError = newAuthError('email-already-assigned', 'api/email/change/exists')
@@ -112,7 +113,7 @@ const enabledFirstFactors = async (email, pgdb) => {
 // not restricted to enabledTokenTypes
 const setPreferredFirstFactor = async (user, tokenType = null, pgdb) => {
   const { APP, EMAIL_TOKEN } = TokenTypes
-  const availableTokenTypes = [ APP, EMAIL_TOKEN ]
+  const availableTokenTypes = [APP, EMAIL_TOKEN]
   if (tokenType && availableTokenTypes.indexOf(tokenType) === -1) {
     throw new TokenTypeNotEnabledError({ tokenType })
   }
@@ -125,7 +126,7 @@ const setPreferredFirstFactor = async (user, tokenType = null, pgdb) => {
   )
 }
 
-const signIn = async (_email, context, pgdb, req, consents, _tokenType) => {
+const signIn = async (_email, context, pgdb, req, consents, _tokenType, accessToken) => {
   if (req.user) {
     // req is authenticated
     return {
@@ -152,17 +153,33 @@ const signIn = async (_email, context, pgdb, req, consents, _tokenType) => {
   const { email } = (user || { email: _email })
   const isApp = useragent.isApp(req.headers['user-agent'])
 
-  const { EMAIL_TOKEN, EMAIL_CODE } = TokenTypes
+  const { EMAIL_TOKEN, EMAIL_CODE, AUTHORIZE_TOKEN } = TokenTypes
+
   // check if tokenType is enabled as firstFactor
   // email is always enabled
   const enabledTokenTypes = await enabledFirstFactors(email, pgdb)
+
+  // Default to EMAIL_TOKEN if app is signin in
   let tokenType = _tokenType || (isApp && EMAIL_TOKEN)
+
+  // Overwrite to AUTHORIZE_TOKEN if accessToken is valid
+  if (accessToken) {
+    const accessTokenUser = await getUserByAccessToken(accessToken, { pgdb })
+    const canAuthorize = hasAuthorizeSession(accessTokenUser)
+
+    if (canAuthorize && user && user.id === accessTokenUser.id) {
+      tokenType = AUTHORIZE_TOKEN
+    }
+  }
+
+  // Default to 1st record in {enabledTokenTypes}, or
+  // check if tokenType is EMAIL_CODE or AUTHORIZE_TOKEN
   if (!tokenType || tokenType !== EMAIL_TOKEN) {
     if (!tokenType) {
       tokenType = enabledTokenTypes[0]
     } else if (
-      enabledTokenTypes.indexOf(tokenType) === -1 &&
-      tokenType !== EMAIL_CODE
+      !enabledTokenTypes.includes(tokenType) &&
+      ![EMAIL_CODE, AUTHORIZE_TOKEN].includes(tokenType)
     ) {
       throw new TokenTypeNotEnabledError({ tokenType })
     }
@@ -176,6 +193,7 @@ const signIn = async (_email, context, pgdb, req, consents, _tokenType) => {
       pgdb,
       session,
       email,
+      accessToken,
       context
     })
     if (shouldAutoLogin({ email })) {
@@ -484,7 +502,7 @@ const authorizeSession = async ({ pgdb, tokens, email: emailFromQuery, signInHoo
       )
     )
   } catch (e) {
-    console.warn(`sign in hook failed in authorizeSession`, e)
+    console.warn('sign in hook failed in authorizeSession', e)
   }
 
   return user
@@ -611,7 +629,8 @@ const updateUserEmail = async ({ pgdb, user, email }) => {
     subject: t('api/email/change/confirmation/subject'),
     templateName: 'cf_email_change_old_address',
     globalMergeVars: [
-      { name: 'EMAIL',
+      {
+        name: 'EMAIL',
         content: email
       }
     ]
@@ -623,7 +642,8 @@ const updateUserEmail = async ({ pgdb, user, email }) => {
     subject: t('api/email/change/confirmation/subject'),
     templateName: 'cf_email_change_new_address',
     globalMergeVars: [
-      { name: 'LOGIN_LINK',
+      {
+        name: 'LOGIN_LINK',
         content: `${FRONTEND_BASE_URL}/konto?${querystring.stringify({ email })}`
       }
     ]
