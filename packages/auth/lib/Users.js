@@ -162,24 +162,32 @@ const signIn = async (_email, context, pgdb, req, consents, _tokenType, accessTo
   // Default to EMAIL_TOKEN if app is signin in
   let tokenType = _tokenType || (isApp && EMAIL_TOKEN)
 
-  // Overwrite to AUTHORIZE_TOKEN if accessToken is valid
-  if (accessToken) {
-    const accessTokenUser = await getUserByAccessToken(accessToken, { pgdb })
-    const canAuthorize = hasAuthorizeSession(accessTokenUser)
+  // Access Token Bag is shlepped through to authorize a session
+  const accessTokenBag = {
+    accessToken, // accessToken passed via argument
+    user: null, // user linked to accessToken
+    canAuthorize: false, // if accessToken is enabled to authorize sessions
+    isValid: false, // if accessToken is valid (can authrize and requesting user is access token user)
+    token: null // generated token
+  }
 
-    if (canAuthorize && user && user.id === accessTokenUser.id) {
-      tokenType = AUTHORIZE_TOKEN
+  if (accessTokenBag.accessToken) {
+    accessTokenBag.user = await getUserByAccessToken(accessTokenBag.accessToken, { pgdb })
+    accessTokenBag.canAuthorize = hasAuthorizeSession(accessTokenBag.user)
+
+    if (accessTokenBag.canAuthorize && user && user.id === accessTokenBag.user.id) {
+      accessTokenBag.isValid = true
     }
   }
 
   // Default to 1st record in {enabledTokenTypes}, or
-  // check if tokenType is EMAIL_CODE or AUTHORIZE_TOKEN
+  // check if tokenType is EMAIL_CODE
   if (!tokenType || tokenType !== EMAIL_TOKEN) {
     if (!tokenType) {
       tokenType = enabledTokenTypes[0]
     } else if (
       !enabledTokenTypes.includes(tokenType) &&
-      ![EMAIL_CODE, AUTHORIZE_TOKEN].includes(tokenType)
+      ![EMAIL_CODE].includes(tokenType)
     ) {
       throw new TokenTypeNotEnabledError({ tokenType })
     }
@@ -189,13 +197,34 @@ const signIn = async (_email, context, pgdb, req, consents, _tokenType, accessTo
     const init = await initiateSession({ req, pgdb, email, consents })
     const { country, phrase, session } = init
 
-    const token = await generateNewToken(tokenType, {
+    // If {accessTokenBag.isValid} is true, try to generate a token and
+    // place it in accessTokenBag.token.
+    if (accessTokenBag.isValid) {
+      try {
+        accessTokenBag.token = await generateNewToken(AUTHORIZE_TOKEN, {
+          pgdb,
+          session,
+          email,
+          accessToken,
+          context
+        })
+        tokenType = AUTHORIZE_TOKEN
+      } catch (e) {
+        // Fail silently.
+        debug(e.message)
+      }
+    }
+
+    // Either user obtained token in {accessTokenBag.token}, or generate a new
+    // token (because {accessTokenBag.token} is empty)
+    const token = accessTokenBag.token || await generateNewToken(tokenType, {
       pgdb,
       session,
       email,
       accessToken,
       context
     })
+
     if (shouldAutoLogin({ email })) {
       setTimeout(async () => {
         console.warn(`🔓💥 Auto Login for ${email} due to AUTO_LOGIN_REGEX`)
