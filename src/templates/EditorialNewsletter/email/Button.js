@@ -25,7 +25,8 @@ export const Button = ({
   }
 
   const tableStylesSecondary = {
-    backgroundColor: '#ffffff'
+    backgroundColor: '#ffffff',
+    border: `1px solid ${colors.secondary}`
   }
 
   return (
@@ -36,7 +37,7 @@ export const Button = ({
             <td>
               <table
                 width={block ? '100%' : undefined}
-                border={primary ? 0 : `1px solid ${colors.secondary}`}
+                border={primary ? '0' : '1'}
                 cellSpacing='0'
                 cellPadding={primary ? '18' : '17'}
                 style={{
