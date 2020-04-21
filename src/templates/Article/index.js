@@ -159,6 +159,7 @@ const getProgressId = (node, index, parent, { ancestors }) => {
     // Do not add Progress ID for last element of last center component, if elements are infoboxes or articlecollections
     if (
       index === parent.children.length - 1 &&
+      rootNode &&
       indexOfParent === rootNode.children.length - 1
     ) {
       if (
