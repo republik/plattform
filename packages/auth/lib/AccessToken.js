@@ -9,8 +9,6 @@ const MissingScopeError = newAuthError('missing-scope', 'api/auth/accessToken/sc
 const MissingKeyError = newAuthError('missing-key', 'api/auth/accessToken/key/404')
 const MissingPackageGrant = newAuthError('missing-package-grant', 'api/auth/accessToken/pledgePackages/notAllowed')
 
-const DATE_FORMAT = 'YYYY-MM-DD'
-
 const scopeConfigs = {
   CUSTOM_PLEDGE: {
     exposeFields: ['email', 'firstName', 'lastName', 'hasAddress', 'paymentSources', 'customPackages'],
@@ -29,7 +27,8 @@ const scopeConfigs = {
   AUTHORIZE_SESSION: {
     rolesIssuer: ['admin', 'supporter'],
     authorizeSession: true,
-    ttlDays: 7
+    ttlDays: 7,
+    expireAtFormat: 'YYYY-MM-DDTHH:mm:ss.SSSZZ'
   }
 }
 
@@ -51,22 +50,21 @@ const getHmac = (payload, key) => {
     .digest('hex')
 }
 
-const getPayload = ({ userId, scope, expiresAt }) => {
-  const expiresAtFormatted = moment(expiresAt).format(DATE_FORMAT)
-  return `${userId}/${scope}/${expiresAtFormatted}`
-}
+const getPayload = ({ userId, scope, expiresAt }) => `${userId}/${scope}/${expiresAt}`
 
 const generateForUser = (user, scope) => {
   const key = user.accessKey || user._raw.accessKey
   if (!key) {
     throw new MissingKeyError()
   }
-  const scopeConfig = getScopeConfig(scope)
+  const { ttlDays, expireAtFormat = 'YYYY-MM-DD' } = getScopeConfig(scope)
+
   const payload = getPayload({
     userId: user.id,
     scope,
-    expiresAt: moment().add(scopeConfig.ttlDays, 'days')
+    expiresAt: moment().add(ttlDays, 'days').format(expireAtFormat)
   })
+
   return base64u.encode(`${payload}/${getHmac(payload, key)}`)
 }
 
@@ -86,14 +84,13 @@ const issueForUser = (issuer, user, scope) => {
 }
 
 const resolve = async (token, { pgdb }) => {
-  const [userId, scope, _expiresAt, hmac] = base64u.decode(token).split('/')
-  if (userId && scope && _expiresAt && hmac) {
-    const expiresAt = moment(_expiresAt, DATE_FORMAT)
+  const [userId, scope, expiresAt, hmac] = base64u.decode(token).split('/')
+  if (userId && scope && expiresAt && hmac) {
     const payload = getPayload({ userId, scope, expiresAt })
     const key = await pgdb.public.users.findOneFieldOnly({ id: userId }, 'accessKey')
     if (key && getHmac(payload, key) === hmac) {
       const scopeConfig = getScopeConfig(scope)
-      return { userId, scope, scopeConfig, expiresAt, hmac }
+      return { userId, scope, scopeConfig, expiresAt: moment(expiresAt), hmac }
     }
   }
   return null
