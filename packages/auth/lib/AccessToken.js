@@ -4,6 +4,7 @@ const moment = require('moment')
 const transformUser = require('./transformUser')
 
 const { newAuthError } = require('./AuthError')
+const { userIsInRoles } = require('./Roles')
 const MissingScopeError = newAuthError('missing-scope', 'api/auth/accessToken/scope/404')
 const MissingKeyError = newAuthError('missing-key', 'api/auth/accessToken/key/404')
 const MissingPackageGrant = newAuthError('missing-package-grant', 'api/auth/accessToken/pledgePackages/notAllowed')
@@ -26,6 +27,7 @@ const scopeConfigs = {
     ttlDays: 90
   },
   AUTHORIZE_SESSION: {
+    rolesIssuer: ['admin', 'supporter'],
     authorizeSession: true,
     ttlDays: 7
   }
@@ -66,6 +68,21 @@ const generateForUser = (user, scope) => {
     expiresAt: moment().add(scopeConfig.ttlDays, 'days')
   })
   return base64u.encode(`${payload}/${getHmac(payload, key)}`)
+}
+
+const issueForUser = (issuer, user, scope) => {
+  if (!issuer) {
+    return null
+  }
+
+  const { rolesIssuer: roles } = getScopeConfig(scope)
+
+  // If scope can issued only be some roles, check if role is present
+  if (roles && !userIsInRoles(issuer, roles)) {
+    return null
+  }
+
+  return generateForUser(user, scope)
 }
 
 const resolve = async (token, { pgdb }) => {
@@ -132,6 +149,7 @@ const hasAuthorizeSession = (user) =>
 
 module.exports = {
   generateForUser,
+  issueForUser,
   getUserByAccessToken,
   isFieldExposed,
   ensureCanPledgePackage,

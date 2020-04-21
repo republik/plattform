@@ -99,7 +99,7 @@ module.exports = {
 
   accessToken: (user, { scope }, { user: me }) => {
     if (Roles.userIsMeOrInRoles(user, me, DEFAULT_USER_ACCESS_ROLES)) {
-      return AccessToken.generateForUser(user, scope)
+      return AccessToken.issueForUser(me, user, scope)
     }
   },
   hasConsentedTo: (user, { name }, { pgdb, user: me }) => {
