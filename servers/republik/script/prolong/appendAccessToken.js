@@ -47,7 +47,7 @@ PgDb.connect().then(async pgdb => {
 
     return {
       ...row,
-      CP_TOKEN: token
+      CP_ATOKEN: token
     }
   }, { concurrency: 1 })
 
