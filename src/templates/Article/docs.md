@@ -915,6 +915,8 @@ Damit das Layout nun nicht nackt im Raume steht und sich klein und leer vorkommt
 
 ### Article Collection
 
+Note: collections at the end of a document do not get a `progressId` to avoid – they are usually further reading collections that should not count towards the reading progress.
+
 ```react|noSource
 <Markdown schema={schema}>{`
 
@@ -961,6 +963,18 @@ Damit das Layout nun nicht nackt im Raume steht und sich klein und leer vorkommt
 Von [Simon Schmid](/~eca9ee2c-4678-4f63-8564-651293df2b97), 14.11.2018
 
 <hr /></section>
+
+<hr /></section>
+
+<hr /></section>
+
+Damit das Layout nun nicht nackt im Raume steht und sich klein und leer vorkommt, springe ich ein: der Blindtext.
+
+<section><h6>ARTICLECOLLECTION</h6>
+
+## 
+
+<section><h6>TEASERGROUP</h6>
 
 <section><h6>TEASER</h6>
 
@@ -1032,12 +1046,11 @@ Von [Barbara Villiger Heilig](/~5f45d6a3-ff52-4e67-9925-92447f43d2e1 "Barbara Vi
 
 <hr /></section>
 
-Damit das Layout nun nicht nackt im Raume steht und sich klein und leer vorkommt, springe ich ein: der Blindtext.
-
 <hr /></section>
 
 `}</Markdown>
 ```
+
 
 ### Carousel
 
