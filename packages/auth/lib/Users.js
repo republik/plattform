@@ -162,24 +162,6 @@ const signIn = async (_email, context, pgdb, req, consents, _tokenType, accessTo
   // Default to EMAIL_TOKEN if app is signin in
   let tokenType = _tokenType || (isApp && EMAIL_TOKEN)
 
-  // Access Token Bag is shlepped through to authorize a session
-  const accessTokenBag = {
-    accessToken, // accessToken passed via argument
-    user: null, // user linked to accessToken
-    canAuthorize: false, // if accessToken is enabled to authorize sessions
-    isValid: false, // if accessToken is valid (can authrize and requesting user is access token user)
-    token: null // generated token
-  }
-
-  if (accessTokenBag.accessToken) {
-    accessTokenBag.user = await getUserByAccessToken(accessTokenBag.accessToken, { pgdb })
-    accessTokenBag.canAuthorize = hasAuthorizeSession(accessTokenBag.user)
-
-    if (accessTokenBag.canAuthorize && user && user.id === accessTokenBag.user.id) {
-      accessTokenBag.isValid = true
-    }
-  }
-
   // Default to 1st record in {enabledTokenTypes}, or
   // check if tokenType is EMAIL_CODE
   if (!tokenType || tokenType !== EMAIL_TOKEN) {
@@ -197,31 +179,36 @@ const signIn = async (_email, context, pgdb, req, consents, _tokenType, accessTo
     const init = await initiateSession({ req, pgdb, email, consents })
     const { country, phrase, session } = init
 
-    // If {accessTokenBag.isValid} is true, try to generate a token and
-    // place it in accessTokenBag.token.
-    if (accessTokenBag.isValid) {
-      try {
-        accessTokenBag.token = await generateNewToken(AUTHORIZE_TOKEN, {
-          pgdb,
-          session,
-          email,
-          accessToken,
-          context
-        })
-        tokenType = AUTHORIZE_TOKEN
-      } catch (e) {
-        // Fail silently.
-        debug(e.message)
+    let authorizeToken = null
+
+    // Check {accessToken} and if is valid, try to generate a token in {authorizeToken}
+    if (accessToken) {
+      const accessTokenUser = await getUserByAccessToken(accessToken, { pgdb })
+
+      // Check if scope has authorizeSession prop and requesting user matches accessToken user
+      if (hasAuthorizeSession(accessTokenUser) && user && user.id === accessTokenUser.id) {
+        try {
+          authorizeToken = await generateNewToken(AUTHORIZE_TOKEN, {
+            pgdb,
+            session,
+            email,
+            accessToken,
+            context
+          })
+          tokenType = AUTHORIZE_TOKEN
+        } catch (e) {
+          // Fail silently
+          debug(e.message)
+        }
       }
     }
 
-    // Either user obtained token in {accessTokenBag.token}, or generate a new
-    // token (because {accessTokenBag.token} is empty)
-    const token = accessTokenBag.token || await generateNewToken(tokenType, {
+    // Either user obtained token in {authorizeToken}, or generate a new
+    // token (because {authorizeSessionToken} is empty)
+    const token = authorizeToken || await generateNewToken(tokenType, {
       pgdb,
       session,
       email,
-      accessToken,
       context
     })
 
