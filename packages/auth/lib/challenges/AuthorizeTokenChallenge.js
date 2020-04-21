@@ -1,23 +1,31 @@
 const { newAuthError } = require('../AuthError')
 
-const TokensExceededError = newAuthError('email-code-challenge-tokens-exceeded', 'api/auth/authorizeToken/tokensExceeded')
+const AccessTokenMissingError = newAuthError(
+  'authorize-token-challenge-access-token-missing',
+  'api/auth/authorizeToken/accessTokenMissing'
+)
+const TokensExceededError = newAuthError(
+  'authorize-token-challenge-tokens-exceeded',
+  'api/auth/authorizeToken/tokensExceeded'
+)
 
-const MAX_VALID_TOKENS = 5
-const TTL = 1000 * 60 * 10 // 10 minutes
+const MAX_VALID_TOKENS = 1
+const TTL = 1000 * 60 // 1 minute
 const Type = 'AUTHORIZE_TOKEN'
 
 module.exports = {
   Type,
-  generateNewToken: async ({ email, accessToken, pgdb }) => {
-    const existingPayloads = (await pgdb.public.tokens.find(
-      {
-        type: Type,
-        email,
-        'expireAction !=': null,
-        'sessionId !=': null
-      }
-    ))
-      .map(token => token.payload)
+  generateNewToken: async ({ email, accessToken: payload, pgdb }) => {
+    if (!payload) {
+      console.error('Unable to generate a new token: Access token is missing.')
+      throw new AccessTokenMissingError({ email })
+    }
+
+    const existingPayloads = await pgdb.public.tokens.find({
+      type: Type,
+      email,
+      payload
+    })
 
     if (existingPayloads.length >= MAX_VALID_TOKENS) {
       console.error('Unable to generate a new token: Found too many valid tokens.')
@@ -25,9 +33,9 @@ module.exports = {
     }
 
     const expiresAt = new Date(new Date().getTime() + TTL)
-    return { payload: accessToken, expiresAt }
+    return { payload, expiresAt }
   },
-  startChallenge: async () => {}, // accessToken is generated and validated elsewhere
+  startChallenge: () => {}, // accessToken is generated and validated elsewhere
   validateChallenge: async ({ email, session, req, pgdb }, { payload }) => {
     if (session.sid !== req.sessionID) {
       console.warn('Faild validation, sessions did not match', { email })

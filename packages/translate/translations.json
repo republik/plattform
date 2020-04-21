@@ -1639,6 +1639,14 @@
       "value": "Kollision des zu generierenden Codes"
     },
     {
+      "key": "api/auth/authorizeToken/accessTokenMissing",
+      "value": "Access Token fehlt"
+    },
+    {
+      "key": "api/auth/authorizeToken/tokensExceeded",
+      "value": "Anzahl der gleichzeitig gültigen Tokens überschritten"
+    },
+    {
       "key": "api/commit/parentId/required",
       "value": "Please provide a parentId to commit to the existing repo \"{repoId}\"."
     },

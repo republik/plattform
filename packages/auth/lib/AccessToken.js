@@ -27,7 +27,7 @@ const scopeConfigs = {
   AUTHORIZE_SESSION: {
     rolesIssuer: ['admin', 'supporter'],
     authorizeSession: true,
-    ttlDays: 7,
+    ttlDays: 5,
     expireAtFormat: 'YYYY-MM-DDTHH:mm:ss.SSSZZ'
   }
 }
