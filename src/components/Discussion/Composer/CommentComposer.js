@@ -98,6 +98,12 @@ export const CommentComposer = props => {
   const { id: discussionId, tags, rules, displayAuthor, isBoard } = discussion
   const { maxLength } = rules
 
+  /*
+   * Synchronize the text with localStorage, and restore it from there if not otherwise
+   * provided through props. This way the user won't lose their text if the browser
+   * crashes or if they inadvertently close the composer.
+   */
+  const localStorageKey = commentComposerStorageKey(discussionId)
   const [text, setText] = React.useState(() => {
     if (props.initialText) {
       return props.initialText
@@ -131,13 +137,6 @@ export const CommentComposer = props => {
       }
     }
   }, [textarea, autoFocus])
-
-  /*
-   * Synchronize the text with localStorage, and restore it from there if not otherwise
-   * provided through props. This way the user won't lose their text if the browser
-   * crashes or if they inadvertently close the composer.
-   */
-  const localStorageKey = commentComposerStorageKey(discussionId)
 
   const previewCommentAction = actions.previewComment
   const [slowText] = useDebounce(text, 400)
