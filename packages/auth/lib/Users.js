@@ -153,7 +153,7 @@ const signIn = async (_email, context, pgdb, req, consents, _tokenType, accessTo
   const { email } = (user || { email: _email })
   const isApp = useragent.isApp(req.headers['user-agent'])
 
-  const { EMAIL_TOKEN, EMAIL_CODE, AUTHORIZE_TOKEN } = TokenTypes
+  const { EMAIL_TOKEN, EMAIL_CODE, ACCESS_TOKEN } = TokenTypes
 
   // check if tokenType is enabled as firstFactor
   // email is always enabled
@@ -179,23 +179,23 @@ const signIn = async (_email, context, pgdb, req, consents, _tokenType, accessTo
     const init = await initiateSession({ req, pgdb, email, consents })
     const { country, phrase, session } = init
 
-    let authorizeToken = null
+    let token = null
 
-    // Check {accessToken} and if valid, try to generate a token in {authorizeToken}
+    // Check {accessToken} and if valid, try to generate a token
     if (accessToken) {
       const accessTokenUser = await getUserByAccessToken(accessToken, { pgdb })
 
       // Check if scope has authorizeSession prop and requesting user matches accessToken user
       if (hasAuthorizeSession(accessTokenUser) && user && user.id === accessTokenUser.id) {
         try {
-          authorizeToken = await generateNewToken(AUTHORIZE_TOKEN, {
+          token = await generateNewToken(ACCESS_TOKEN, {
             pgdb,
             session,
             email,
             accessToken,
             context
           })
-          tokenType = AUTHORIZE_TOKEN
+          tokenType = ACCESS_TOKEN
         } catch (e) {
           // Fail silently
           debug(e.message)
@@ -203,13 +203,14 @@ const signIn = async (_email, context, pgdb, req, consents, _tokenType, accessTo
       }
     }
 
-    // Either user obtained token in {authorizeToken}, or generate a new token.
-    const token = authorizeToken || await generateNewToken(tokenType, {
-      pgdb,
-      session,
-      email,
-      context
-    })
+    if (!token) {
+      token = await generateNewToken(tokenType, {
+        pgdb,
+        session,
+        email,
+        context
+      })
+    }
 
     if (shouldAutoLogin({ email })) {
       setTimeout(async () => {

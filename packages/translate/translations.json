@@ -1639,11 +1639,11 @@
       "value": "Kollision des zu generierenden Codes"
     },
     {
-      "key": "api/auth/authorizeToken/accessTokenMissing",
+      "key": "api/auth/accessToken/accessTokenMissing",
       "value": "Access Token fehlt"
     },
     {
-      "key": "api/auth/authorizeToken/tokensExceeded",
+      "key": "api/auth/accessToken/tokensExceeded",
       "value": "Anzahl der gleichzeitig gültigen Tokens überschritten"
     },
     {

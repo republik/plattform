@@ -3,7 +3,7 @@ const EmailCodeChallenge = require('./EmailCodeChallenge')
 const TOTPChallenge = require('./TOTPChallenge')
 const SMSCodeChallenge = require('./SMSCodeChallenge')
 const AppChallenge = require('./AppChallenge')
-const AuthorizeTokenChallenge = require('./AuthorizeTokenChallenge')
+const AccessTokenChallenge = require('./AccessTokenChallenge')
 
 const { newAuthError } = require('../AuthError')
 
@@ -19,7 +19,7 @@ const TokenTypeMap = {
   [TOTPChallenge.Type]: TOTPChallenge,
   [SMSCodeChallenge.Type]: SMSCodeChallenge,
   [AppChallenge.Type]: AppChallenge,
-  [AuthorizeTokenChallenge.Type]: AuthorizeTokenChallenge
+  [AccessTokenChallenge.Type]: AccessTokenChallenge
 }
 
 const TokenTypes = Object

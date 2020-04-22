@@ -76,7 +76,7 @@ enum QRCodeErrorCorrectionLevel {
 enum SignInTokenType {
   EMAIL_TOKEN
   EMAIL_CODE
-  AUTHORIZE_TOKEN
+  ACCESS_TOKEN
   TOTP
   SMS
   APP

@@ -2,22 +2,22 @@ const { newAuthError } = require('../AuthError')
 
 const AccessTokenMissingError = newAuthError(
   'authorize-token-challenge-access-token-missing',
-  'api/auth/authorizeToken/accessTokenMissing'
+  'api/auth/accessToken/accessTokenMissing'
 )
 const TokensExceededError = newAuthError(
   'authorize-token-challenge-tokens-exceeded',
-  'api/auth/authorizeToken/tokensExceeded'
+  'api/auth/accessToken/tokensExceeded'
 )
 
 const MAX_VALID_TOKENS = 1
 const TTL = 1000 * 60 // 1 minute
-const Type = 'AUTHORIZE_TOKEN'
+const Type = 'ACCESS_TOKEN'
 
 module.exports = {
   Type,
   generateNewToken: async ({ email, accessToken: payload, pgdb }) => {
     if (!payload) {
-      console.error('Unable to generate a new token: Access token is missing.')
+      console.error('Unable to generate a new token: accessToken is missing.')
       throw new AccessTokenMissingError({ email })
     }
 
