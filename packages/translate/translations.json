@@ -1499,6 +1499,10 @@
       "value": "Zu viele Anmeldeversuche. Probieren Sie es in {mins} Minuten erneut."
     },
     {
+      "key": "api/auth/errorAccessToken",
+      "value": "Access Token kann nicht verwendet werden"
+    },
+    {
       "key": "api/signin/mail/subject",
       "value": "Zugriff bestätigen: {phrase}"
     },

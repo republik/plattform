@@ -7,7 +7,7 @@ const debug = require('debug')('auth:lib:Users')
 const { sendMailTemplate, moveNewsletterSubscriptions } = require('@orbiting/backend-modules-mail')
 const t = require('./t')
 const useragent = require('./useragent')
-const { newAuthError } = require('./AuthError')
+const AuthError = require('./AuthError')
 const {
   ensureAllRequiredConsents,
   saveConsents
@@ -30,9 +30,12 @@ const {
 } = require('./challenges')
 const { getUserByAccessToken, hasAuthorizeSession } = require('./AccessToken')
 
+const { newAuthError } = AuthError
+
 const EmailInvalidError = newAuthError('email-invalid', 'api/email/invalid')
 const EmailAlreadyAssignedError = newAuthError('email-already-assigned', 'api/email/change/exists')
 const TokenTypeNotEnabledError = newAuthError('token-type-not-enabled', 'api/auth/tokenType/notEnabled')
+const AccessTokenInvalidError = newAuthError('access-token-type-invalid', 'api/auth/errorAccessToken')
 const SessionInitializationFailedError = newAuthError('session-initialization-failed', 'api/auth/errorSavingSession')
 const UserNotFoundError = newAuthError('user-not-found', 'api/users/404')
 const AuthorizationFailedError = newAuthError('authorization-failed', 'api/auth/authorization-failed')
@@ -169,7 +172,7 @@ const signIn = async (_email, context, pgdb, req, consents, _tokenType, accessTo
       tokenType = enabledTokenTypes[0]
     } else if (
       !enabledTokenTypes.includes(tokenType) &&
-      ![EMAIL_CODE].includes(tokenType)
+      ![EMAIL_CODE, ACCESS_TOKEN].includes(tokenType)
     ) {
       throw new TokenTypeNotEnabledError({ tokenType })
     }
@@ -197,9 +200,14 @@ const signIn = async (_email, context, pgdb, req, consents, _tokenType, accessTo
           })
           tokenType = ACCESS_TOKEN
         } catch (e) {
-          // Fail silently
           debug(e.message)
+
+          if (tokenType === ACCESS_TOKEN) {
+            throw e
+          }
         }
+      } else if (tokenType === ACCESS_TOKEN) {
+        throw new AccessTokenInvalidError()
       }
     }
 
@@ -241,9 +249,14 @@ const signIn = async (_email, context, pgdb, req, consents, _tokenType, accessTo
       expiresAt: token.expiresAt,
       alternativeFirstFactors: enabledTokenTypes.filter(tt => tt !== tokenType)
     }
-  } catch (error) {
-    console.error(error)
-    throw new SessionInitializationFailedError({ error })
+  } catch (e) {
+    console.error(e)
+
+    if (e instanceof AuthError) {
+      throw e
+    }
+
+    throw new SessionInitializationFailedError({ error: e })
   }
 }
 
