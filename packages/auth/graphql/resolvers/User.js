@@ -32,7 +32,7 @@ module.exports = {
   },
   roles (user, args, { user: me }) {
     if (
-      Roles.userIsMeOrInRoles(user, me, ['admin'])
+      Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter'])
     ) {
       return user.roles
     }
