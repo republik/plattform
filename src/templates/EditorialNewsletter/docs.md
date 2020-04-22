@@ -108,9 +108,15 @@ format: 'https://github.com/republik/format-covid-19-uhr-newsletter'
 
 <section><h6>CENTER</h6>
 
-Ladies and Gentlemen,
+Liebe Leserinnen, liebe Leser
 
 At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. **Lorem ipsum** dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua ...
+
+Bleiben Sie umsichtig, bleiben Sie freundlich, bleiben Sie gesund.
+
+Philipp Albrecht, Elia Blülle, Dennis Bühler, Oliver Fuchs und Cinzia Venafro
+
+**PS:** Haben Sie Fragen und Feedback, schreiben Sie an: covid19@republik.ch.
 
 <hr /></section>
 
