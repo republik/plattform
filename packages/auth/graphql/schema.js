@@ -39,6 +39,7 @@ type mutations {
     context: String,
     consents: [String!],
     tokenType: SignInTokenType,
+    # accessToken w/ scope AUTHORIZE_SESSION
     accessToken: ID
   ): SignInResponse!
   signOut: Boolean!

@@ -181,7 +181,7 @@ const signIn = async (_email, context, pgdb, req, consents, _tokenType, accessTo
 
     let authorizeToken = null
 
-    // Check {accessToken} and if is valid, try to generate a token in {authorizeToken}
+    // Check {accessToken} and if valid, try to generate a token in {authorizeToken}
     if (accessToken) {
       const accessTokenUser = await getUserByAccessToken(accessToken, { pgdb })
 
@@ -203,8 +203,7 @@ const signIn = async (_email, context, pgdb, req, consents, _tokenType, accessTo
       }
     }
 
-    // Either user obtained token in {authorizeToken}, or generate a new
-    // token (because {authorizeSessionToken} is empty)
+    // Either user obtained token in {authorizeToken}, or generate a new token.
     const token = authorizeToken || await generateNewToken(tokenType, {
       pgdb,
       session,
