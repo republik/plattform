@@ -2,9 +2,10 @@ const crypto = require('crypto')
 const base64u = require('@orbiting/backend-modules-base64u')
 const moment = require('moment')
 const transformUser = require('./transformUser')
+const debug = require('debug')('auth:lib:AccessToken')
 
 const { newAuthError } = require('./AuthError')
-const { userIsInRoles } = require('./Roles')
+const { userIsMeOrInRoles, userIsInRoles } = require('./Roles')
 const MissingScopeError = newAuthError('missing-scope', 'api/auth/accessToken/scope/404')
 const MissingKeyError = newAuthError('missing-key', 'api/auth/accessToken/key/404')
 const MissingPackageGrant = newAuthError('missing-package-grant', 'api/auth/accessToken/pledgePackages/notAllowed')
@@ -25,7 +26,7 @@ const scopeConfigs = {
     ttlDays: 90
   },
   AUTHORIZE_SESSION: {
-    rolesIssuer: ['admin', 'supporter'],
+    requiredRolesToGenerate: ['admin', 'supporter'],
     authorizeSession: true,
     ttlDays: 5,
     expireAtFormat: 'YYYY-MM-DDTHH:mm:ss.SSSZZ'
@@ -68,15 +69,23 @@ const generateForUser = (user, scope) => {
   return base64u.encode(`${payload}/${getHmac(payload, key)}`)
 }
 
-const issueForUser = (issuer, user, scope) => {
-  if (!issuer) {
+const generateForUserByUser = (user, scope, me, roles) => {
+  // If either argument is missing, return null
+  if (!user || !scope || !me || !roles) {
+    debug('arguments missing')
     return null
   }
 
-  const { rolesIssuer: roles } = getScopeConfig(scope)
+  // If user is not me or user is not in roles, return null
+  if (!userIsMeOrInRoles(user, me, roles)) {
+    debug('user is not me, or me is missing roles', { roles })
+    return null
+  }
 
-  // If scope can issued only be some roles, check if role is present
-  if (roles && !userIsInRoles(issuer, roles)) {
+  // If roles to generate are required and me is not in roles, return null
+  const { requiredRolesToGenerate } = getScopeConfig(scope)
+  if (requiredRolesToGenerate && !userIsInRoles(me, requiredRolesToGenerate)) {
+    debug('scope requires roles, but me is missing them', { scope, requiredRolesToGenerate })
     return null
   }
 
@@ -146,7 +155,7 @@ const hasAuthorizeSession = (user) =>
 
 module.exports = {
   generateForUser,
-  issueForUser,
+  generateForUserByUser,
   getUserByAccessToken,
   isFieldExposed,
   ensureCanPledgePackage,
