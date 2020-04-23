@@ -10,5 +10,6 @@ module.exports = {
   truncate: require('./truncate'),
   remark: require('./remark'),
   uuidForObject: require('./uuidForObject'),
-  cache: require('./cache')
+  cache: require('./cache'),
+  slugify: require('./slugify')
 }

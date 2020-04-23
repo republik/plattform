@@ -12,7 +12,10 @@ const transformQuestion = (q, questionnaire) => ({
 })
 
 const getQuestions = async (questionnaire, args = {}, pgdb) => {
-  const { orderFilter } = args
+  const {
+    orderFilter,
+    includeHidden = false
+  } = args
   if (questionnaire.result) {
     return questionnaire.result.questions
       .map(question => ({
@@ -20,7 +23,7 @@ const getQuestions = async (questionnaire, args = {}, pgdb) => {
         questionnaire
       }))
       .filter(question => !orderFilter || orderFilter.indexOf(question.order) > -1)
-      .filter(question => !question.hidden)
+      .filter(question => includeHidden || !question.hidden)
   }
   // add turnout to questionnaire for downstream resolvers
   const turnout =
@@ -36,7 +39,7 @@ const getQuestions = async (questionnaire, args = {}, pgdb) => {
     {
       questionnaireId: questionnaire.id,
       ...orderFilter ? { order: orderFilter } : {},
-      hidden: false
+      ...includeHidden ? {} : { hidden: false }
     },
     { orderBy: { order: 'asc' } }
   )

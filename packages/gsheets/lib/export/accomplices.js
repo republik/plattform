@@ -1,23 +1,18 @@
-#!/usr/bin/env node
-require('@orbiting/backend-modules-env').config()
-
-const Promise = require('bluebird')
-const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
 const { ascending } = require('d3-array')
-const { tsvFormat } = require('d3-dsv')
-
 const Questionnaire = require('@orbiting/backend-modules-voting/lib/Questionnaire')
 
-Promise.props({ pgdb: PgDb.connect() }).then(async (connections) => {
-  const { pgdb } = connections
-
+const getRows = async (pgdb) => {
   const slug = '1-minute'
   const questionnaire = await Questionnaire.findBySlug(slug, pgdb)
   if (!questionnaire) {
     throw new Error(`questionnaire with slug (${slug}) not found`)
   }
 
-  const questions = await Questionnaire.getQuestions(questionnaire, {}, pgdb)
+  const questions = await Questionnaire.getQuestions(
+    questionnaire,
+    { includeHidden: true },
+    pgdb
+  )
 
   const submissions = await pgdb.query(`
     SELECT
@@ -42,10 +37,9 @@ Promise.props({ pgdb: PgDb.connect() }).then(async (connections) => {
   })
 
   const questionKeys = {
-    'Um die Zukunft der Republik sicherzustellen, muss sie bekannter werden, und mehr Menschen müssen sie abonnieren. Helfen Sie mit?': 'support',
-    'Auf welchen Kanälen könnten Sie Freunden und Bekannten die Republik empfehlen? Was können Sie sich vorstellen?': 'channels',
+    'Möchten Sie die Republik als Komplizin unterstützen?': 'support',
     'Die Republik will besser werden: Wollen Sie sich an unserer Was-brauchen-Sie-wirklich-wenn-Sie-nicht-höflich-sein-wollen-Debatte im Februar 2020 beteiligen?': 'Debatte im Februar',
-    'Wie dürfen wir Sie kontaktieren?': 'contactVia'
+    'Wie dürfen wir Sie kontaktieren? Wählen Sie so viele Optionen, wie Sie wollen.': 'contactVia'
   }
 
   const data = submissions.map(submission => {
@@ -130,14 +124,9 @@ Promise.props({ pgdb: PgDb.connect() }).then(async (connections) => {
     }
   }).filter(Boolean)
 
-  console.log(tsvFormat(data))
+  return data
+}
 
-  return connections
-})
-  .then(async ({ pgdb }) => {
-    await PgDb.disconnect(pgdb)
-  })
-  .catch(e => {
-    console.error(e)
-    process.exit(1)
-  })
+module.exports = {
+  getRows
+}

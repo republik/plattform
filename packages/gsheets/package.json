@@ -1,0 +1,27 @@
+{
+  "name": "@orbiting/backend-modules-gsheets",
+  "version": "0.0.1",
+  "private": true,
+  "description": "import from and export to gsheets",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/orbiting/backends.git"
+  },
+  "author": "Patrick Recher <patrick.recher@republik.ch>",
+  "license": "AGPL-3.0",
+  "publishConfig": {
+    "access": "public"
+  },
+  "bugs": {
+    "url": "https://github.com/orbiting/backends/issues"
+  },
+  "homepage": "https://github.com/orbiting/backends#readme",
+  "dependencies": {
+    "d3-array": "^2.4.0",
+    "express": "^4.17.1",
+    "google-spreadsheet": "^3.0.11",
+    "gsheets": "^2.0.0",
+    "moment": "^2.24.0"
+  }
+}
