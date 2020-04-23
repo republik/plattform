@@ -5,8 +5,9 @@ module.exports = async (_, args, { pgdb, req }) => {
     email,
     context,
     consents,
-    tokenType
+    tokenType,
+    accessToken
   } = args
 
-  return signIn(email, context, pgdb, req, consents, tokenType)
+  return signIn(email, context, pgdb, req, consents, tokenType, accessToken)
 }

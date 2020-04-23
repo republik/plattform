@@ -1499,6 +1499,10 @@
       "value": "Zu viele Anmeldeversuche. Probieren Sie es in {mins} Minuten erneut."
     },
     {
+      "key": "api/auth/errorAccessToken",
+      "value": "Access Token kann nicht verwendet werden"
+    },
+    {
       "key": "api/signin/mail/subject",
       "value": "Zugriff bestätigen: {phrase}"
     },
@@ -1637,6 +1641,14 @@
     {
       "key": "api/auth/emailCode/collison",
       "value": "Kollision des zu generierenden Codes"
+    },
+    {
+      "key": "api/auth/accessToken/accessTokenMissing",
+      "value": "Access Token fehlt"
+    },
+    {
+      "key": "api/auth/accessToken/tokensExceeded",
+      "value": "Anzahl der gleichzeitig gültigen Tokens überschritten"
     },
     {
       "key": "api/commit/parentId/required",

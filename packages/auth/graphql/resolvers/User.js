@@ -32,7 +32,7 @@ module.exports = {
   },
   roles (user, args, { user: me }) {
     if (
-      Roles.userIsMeOrInRoles(user, me, ['admin'])
+      Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter'])
     ) {
       return user.roles
     }
@@ -97,11 +97,9 @@ module.exports = {
   isUserOfCurrentSession: (user, args, { user: me }) =>
     !!(me && user.id === me.id),
 
-  accessToken: (user, { scope }, { user: me }) => {
-    if (Roles.userIsMeOrInRoles(user, me, DEFAULT_USER_ACCESS_ROLES)) {
-      return AccessToken.generateForUser(user, scope)
-    }
-  },
+  accessToken: (user, { scope }, { user: me }) =>
+    AccessToken.generateForUserByUser(user, scope, me, DEFAULT_USER_ACCESS_ROLES),
+
   hasConsentedTo: (user, { name }, { pgdb, user: me }) => {
     if (Roles.userIsMeOrInRoles(user, me, DEFAULT_USER_ACCESS_ROLES)) {
       return Consents.statusForPolicyForUser({

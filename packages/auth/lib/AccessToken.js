@@ -2,13 +2,13 @@ const crypto = require('crypto')
 const base64u = require('@orbiting/backend-modules-base64u')
 const moment = require('moment')
 const transformUser = require('./transformUser')
+const debug = require('debug')('auth:lib:AccessToken')
 
 const { newAuthError } = require('./AuthError')
+const { userIsMeOrInRoles, userIsInRoles } = require('./Roles')
 const MissingScopeError = newAuthError('missing-scope', 'api/auth/accessToken/scope/404')
 const MissingKeyError = newAuthError('missing-key', 'api/auth/accessToken/key/404')
 const MissingPackageGrant = newAuthError('missing-package-grant', 'api/auth/accessToken/pledgePackages/notAllowed')
-
-const DATE_FORMAT = 'YYYY-MM-DD'
 
 const scopeConfigs = {
   CUSTOM_PLEDGE: {
@@ -24,6 +24,12 @@ const scopeConfigs = {
   CLAIM_CARD: {
     exposeFields: ['email', 'cards'],
     ttlDays: 90
+  },
+  AUTHORIZE_SESSION: {
+    requiredRolesToGenerate: ['admin', 'supporter'],
+    authorizeSession: true,
+    ttlDays: 5,
+    expireAtFormat: 'YYYY-MM-DDTHH:mm:ss.SSSZZ'
   }
 }
 
@@ -45,34 +51,55 @@ const getHmac = (payload, key) => {
     .digest('hex')
 }
 
-const getPayload = ({ userId, scope, expiresAt }) => {
-  const expiresAtFormatted = moment(expiresAt).format(DATE_FORMAT)
-  return `${userId}/${scope}/${expiresAtFormatted}`
-}
+const getPayload = ({ userId, scope, expiresAt }) => `${userId}/${scope}/${expiresAt}`
 
 const generateForUser = (user, scope) => {
   const key = user.accessKey || user._raw.accessKey
   if (!key) {
     throw new MissingKeyError()
   }
-  const scopeConfig = getScopeConfig(scope)
+  const { ttlDays, expireAtFormat = 'YYYY-MM-DD' } = getScopeConfig(scope)
+
   const payload = getPayload({
     userId: user.id,
     scope,
-    expiresAt: moment().add(scopeConfig.ttlDays, 'days')
+    expiresAt: moment().add(ttlDays, 'days').format(expireAtFormat)
   })
+
   return base64u.encode(`${payload}/${getHmac(payload, key)}`)
 }
 
+const generateForUserByUser = (user, scope, me, roles) => {
+  // If either argument is missing, return null
+  if (!user || !scope || !me || !roles) {
+    debug('arguments missing')
+    return null
+  }
+
+  // If user is not me or user is not in roles, return null
+  if (!userIsMeOrInRoles(user, me, roles)) {
+    debug('user is not me, or me is missing roles', { roles })
+    return null
+  }
+
+  // If roles to generate are required and me is not in roles, return null
+  const { requiredRolesToGenerate } = getScopeConfig(scope)
+  if (requiredRolesToGenerate && !userIsInRoles(me, requiredRolesToGenerate)) {
+    debug('scope requires roles, but me is missing them', { scope, requiredRolesToGenerate })
+    return null
+  }
+
+  return generateForUser(user, scope)
+}
+
 const resolve = async (token, { pgdb }) => {
-  const [userId, scope, _expiresAt, hmac] = base64u.decode(token).split('/')
-  if (userId && scope && _expiresAt && hmac) {
-    const expiresAt = moment(_expiresAt, DATE_FORMAT)
+  const [userId, scope, expiresAt, hmac] = base64u.decode(token).split('/')
+  if (userId && scope && expiresAt && hmac) {
     const payload = getPayload({ userId, scope, expiresAt })
     const key = await pgdb.public.users.findOneFieldOnly({ id: userId }, 'accessKey')
     if (key && getHmac(payload, key) === hmac) {
       const scopeConfig = getScopeConfig(scope)
-      return { userId, scope, scopeConfig, expiresAt, hmac }
+      return { userId, scope, scopeConfig, expiresAt: moment(expiresAt), hmac }
     }
   }
   return null
@@ -119,9 +146,18 @@ const ensureCanPledgePackage = (user, packageName) => {
   }
 }
 
+const hasAuthorizeSession = (user) =>
+  !!(
+    user &&
+    user._scopeConfig &&
+    user._scopeConfig.authorizeSession
+  )
+
 module.exports = {
   generateForUser,
+  generateForUserByUser,
   getUserByAccessToken,
   isFieldExposed,
-  ensureCanPledgePackage
+  ensureCanPledgePackage,
+  hasAuthorizeSession
 }
