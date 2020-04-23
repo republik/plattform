@@ -9,10 +9,9 @@ const {
 
 const mapping = GSHEETS_EXPORT && JSON.parse(GSHEETS_EXPORT)
 
-
 module.exports = async (key, pgdb) => {
   if (!key) {
-    throw new Error('key param missing')
+    throw new Error('key argument missing')
   }
   if (!mapping) {
     throw new Error('mapping missing, check GSHEETS_EXPORT env var')
@@ -29,19 +28,24 @@ module.exports = async (key, pgdb) => {
     throw new Error('no data to export found')
   }
 
-  const doc = new GoogleSpreadsheet(key)
+  try {
+    const doc = new GoogleSpreadsheet(key)
 
-  await doc.useServiceAccountAuth({
-    client_email: GOOGLE_SERVICE_ACCOUNT_EMAIL,
-    private_key: GOOGLE_PRIVATE_KEY
-      .replace(/@/g, '\n')
-  })
+    await doc.useServiceAccountAuth({
+      client_email: GOOGLE_SERVICE_ACCOUNT_EMAIL,
+      private_key: GOOGLE_PRIVATE_KEY
+        .replace(/@/g, '\n')
+    })
 
-  const newSheet = await doc.addSheet({
-    // colons in spreadsheet titles are not allowed
-    title: `${moment().format('DD.MM.YYYY HH_mm_ss')}`,
-    headerValues: Object.keys(rows[0])
-  })
+    const newSheet = await doc.addSheet({
+      // colons in spreadsheet titles are not allowed
+      title: `${moment().format('DD.MM.YYYY HH_mm_ss')}`,
+      headerValues: Object.keys(rows[0])
+    })
 
-  await newSheet.addRows(rows)
+    return newSheet.addRows(rows)
+  } catch (e) {
+    console.log(e)
+    throw new Error('failed to update gsheet, check server logs')
+  }
 }
