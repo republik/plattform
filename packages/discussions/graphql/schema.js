@@ -23,6 +23,7 @@ type queries {
     toDepth: Int
     focusId: ID
     lastId: ID
+    featured: Boolean
   ): CommentConnection!
 
   commentPreview(
@@ -79,6 +80,12 @@ type mutations {
   ): Discussion!
 
   updateDiscussion(id: ID!, closed: Boolean): Discussion!
+
+  # requires role: editor
+  featureComment(
+    id: ID!
+    content: String!
+  ): Comment!
 }
 
 type subscriptions {

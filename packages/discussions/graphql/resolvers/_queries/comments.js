@@ -24,7 +24,8 @@ module.exports = async (_, args, context, info) => {
     discussionIds = [],
     toDepth,
     focusId,
-    lastId
+    lastId,
+    featured
   } = options
 
   if (limit > MAX_LIMIT) {
@@ -37,6 +38,7 @@ module.exports = async (_, args, context, info) => {
   const queryWhere = `
     ${filterByDiscussionIds ? 'ARRAY[c."discussionId"] && :discussionIds AND' : ''}
     ${toDepth >= 0 ? 'c."depth" <= :toDepth AND' : ''}
+    ${featured ? 'c."featuredAt" IS NOT NULL AND' : '' }
     c."published" = true AND
     c."adminUnpublished" = false
   `
