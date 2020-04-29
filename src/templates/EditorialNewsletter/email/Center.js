@@ -6,7 +6,7 @@ import { Mso } from 'mdast-react-render/lib/email'
 import colors from '../../../theme/colors'
 
 import { Button } from './Button'
-import Paragraph, { Link } from './Paragraph'
+import Paragraph from './Paragraph'
 
 const footerParagraphStyle = {
   color: colors.text,
@@ -65,12 +65,14 @@ export default ({ children, meta }) => {
                       Jetzt kostenlos 14 Tage lang testen. Alle Newsletter, alle
                       Beiträge, alle Podcasts, alle Debatten entdecken – auf der
                       Website und in der App. Gratis, unverbindlich und ohne
-                      Werbung, finanziert von unseren Leserinnen:{' '}
-                      <Link href='https://www.republik.ch/probelesen?campaign=covid-19-uhr-newsletter&email=*|EMAILB64U|*&token=*|AS_ATOKEN|*'>
-                        Jetzt ausprobieren
-                      </Link>
-                      .
+                      Werbung, finanziert von unseren Leserinnen.
                     </Paragraph>
+                    <Button
+                      primary
+                      href='https://www.republik.ch/probelesen?campaign=covid-19-uhr-newsletter&email=*|EMAILB64U|*&token=*|AS_ATOKEN|*'
+                    >
+                      Jetzt ausprobieren
+                    </Button>
                     *|END:INTERESTED|*
                   </>
                 )}
