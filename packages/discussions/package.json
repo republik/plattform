@@ -20,7 +20,7 @@
     "link": "yarn link"
   },
   "dependencies": {
-    "@project-r/styleguide": "^9.15.0",
+    "@project-r/styleguide": "^9.15.1",
     "dataloader": "^2.0.0"
   }
 }
