@@ -152,13 +152,23 @@ export default ({ rule, subModules, TYPE }) => {
 
             return <Placeholder>{placeholder}</Placeholder>
           }),
-        renderNode({ node, children, attributes }) {
+        renderNode({ node, children, attributes, editor }) {
           if (!paragraph.match(node)) return
+
+          const parent = editor.value.document.getParent(node.key)
+          const rootIndex = editor.value.document.nodes.indexOf(parent)
 
           // #TODO: Either data attribute or spread
           return (
             <Paragraph
-              attributes={{ ...attributes, style: { position: 'relative' } }}
+              attributes={{
+                ...attributes,
+                style: { position: 'relative' },
+                ['data-pos']:
+                  rootIndex !== -1
+                    ? `${rootIndex}-${parent.nodes.indexOf(node)}`
+                    : undefined
+              }}
               data={node.data.toJS()}
               {...node.data.toJS()}
             >
