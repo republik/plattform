@@ -156,7 +156,12 @@ export default ({ rule, subModules, TYPE }) => {
           if (!paragraph.match(node)) return
 
           const parent = editor.value.document.getParent(node.key)
-          const rootIndex = editor.value.document.nodes.indexOf(parent)
+          // align with FE, renders title block (and cover) separately
+          const titleBlockIndex = editor.value.document.nodes.findIndex(
+            n => n.type === 'TITLE'
+          )
+          const rootIndex =
+            editor.value.document.nodes.indexOf(parent) - (titleBlockIndex + 1)
 
           // #TODO: Either data attribute or spread
           return (
@@ -165,7 +170,7 @@ export default ({ rule, subModules, TYPE }) => {
                 ...attributes,
                 style: { position: 'relative' },
                 ['data-pos']:
-                  rootIndex !== -1
+                  rootIndex >= 0
                     ? `${rootIndex}-${parent.nodes.indexOf(node)}`
                     : undefined
               }}
