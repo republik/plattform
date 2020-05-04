@@ -2,21 +2,13 @@ const moment = require('moment')
 
 const { Roles } = require('@orbiting/backend-modules-auth')
 
+const { getTemplate, getSubject, getStatus, getError } = require('../../lib/record')
+
 module.exports = {
-  template: record => record.info && record.info.template,
-  subject: record => record.info && record.info.message && record.info.message.subject,
-  status: record =>
-    (record.mandrillLastEvent && record.mandrillLastEvent.msg.state) ||
-    (record.result && record.result.status) ||
-    record.status.toLowerCase(),
-  error: record =>
-    (record.mandrillLastEvent && record.mandrillLastEvent.msg && record.mandrillLastEvent.msg.diag) ||
-    (record.mandrillLastEvent && record.mandrillLastEvent.msg && record.mandrillLastEvent.msg.bounce_description) ||
-    (record.result && record.result.reject_reason) ||
-    (record.result && record.result.error) ||
-    (record.error && record.error.message) ||
-    (record.error && record.error.meta && record.error.meta.error && record.error.meta.error.type) ||
-    (record.error && record.error.meta && record.error.meta.response),
+  template: getTemplate,
+  subject: getSubject,
+  status: getStatus,
+  error: getError,
   user: async (record, args, { loaders }) => loaders.User.byIdOrEmail.load(record.userId || record.email),
   mandrill: (record, args, { user: me }) => {
     if (!Roles.userIsInRoles(me, ['admin', 'supporter'])) {
