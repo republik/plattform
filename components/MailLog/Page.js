@@ -5,19 +5,22 @@ import withT from '../../lib/withT'
 
 import {
   Loader,
-  A
+  A,
+  P,
+  Interaction
 } from '@project-r/styleguide'
 
 import {
   Section,
-  SectionTitle
+  SectionTitle,
+  SectionNav
 } from '../Display/utils'
 
 import List from './List'
 
 const GET_MAILLOG = gql`
-query getMailLog($after: String) {
-  mailLog(first: 100, after: $after) {
+query getMailLog($after: String, $errornous: Boolean) {
+  mailLog(first: 100, after: $after, filters: { errornous: $errornous }) {
     pageInfo {
       hasNextPage
       endCursor
@@ -44,11 +47,18 @@ query getMailLog($after: String) {
 }
 `
 
-const Page = withT(({ userId }) => {
+const Page = withT(({ params, onChange }) => {
+  const { errornous = false } = params
+
+  const toggleFilterErrornous = e => {
+    e.preventDefault()
+    onChange({ ...params, errornous: !errornous ? true : null })
+  }
+
   return (
-    <Query query={GET_MAILLOG} variables={{id: userId}}>{({loading, error, data, fetchMore}) => {
+    <Query query={GET_MAILLOG} variables={{ errornous: !!errornous }}>{({ loading, error, data, fetchMore }) => {
       const fetchMoreNodes = () => fetchMore({
-        variables: { after: data.mailLog.pageInfo.endCursor },
+        variables: { after: data.mailLog.pageInfo.endCursor, errornous },
         updateQuery: (previousResult, { fetchMoreResult }) => ({
           mailLog: {
             __typename: previousResult.mailLog.__typename,
@@ -65,8 +75,11 @@ const Page = withT(({ userId }) => {
           render={() =>
             <Section>
               <SectionTitle>
-                E-Mails
+                E-Mails {errornous && '(problematische Zustellungen)'}
               </SectionTitle>
+              <SectionNav>
+                <A href='#' onClick={toggleFilterErrornous}>{errornous ? 'Alle E-Mails' : 'Nur problematische Zustellungen'}</A>
+              </SectionNav>
               <List nodes={data.mailLog.nodes} />
               {data.mailLog.pageInfo.endCursor && (
                 <A href='#' onClick={fetchMoreNodes}>mehr</A>
