@@ -2,6 +2,10 @@ const fetch = require('isomorphic-unfetch')
 const checkEnv = require('check-env')
 const crypto = require('crypto')
 const debug = require('debug')('mail:MailchimpInterface')
+const { omitBy, isNil } = require('lodash')
+
+const base64u = require('@orbiting/backend-modules-base64u')
+
 const { NewsletterMemberMailError } = require('./errors')
 
 const {
@@ -29,6 +33,13 @@ const MailchimpInterface = ({ logger }) => {
         .digest('hex')
 
       return this.buildApiUrl(`/members/${hash}`)
+    },
+    buildBatchesApiUrl (id) {
+      // returns {MAILCHIMP_URL}/3.0/batches[/{id}]
+      return [
+        `${MAILCHIMP_URL}/3.0/batches`,
+        id && `/${id}` // optional /{id} part
+      ].filter(Boolean).join('')
     },
     async fetchAuthenticated (method, url, request = {}) {
       debug(`${method} ${url}`)
@@ -63,8 +74,18 @@ const MailchimpInterface = ({ logger }) => {
     async updateMember (email, data) {
       const url = this.buildMembersApiUrl(email)
       try {
-        const request = { body: JSON.stringify(data) }
-        const response = await this.fetchAuthenticated('PUT', url, request)
+        // Build PUT request, and drop props where value is null or undefined to avoid
+        // malformatted error responses from API.
+        const body = {
+          ...data,
+          ...data.interests && { interests: omitBy(data.interests, isNil) },
+          merge_fields: {
+            ...data.merge_fields && omitBy(data.merge_fields, isNil),
+            EMAILB64U: base64u.encode(email)
+          }
+        }
+        debug('MailchimpInterface.updateMember PUT', { body })
+        const response = await this.fetchAuthenticated('PUT', url, { body: JSON.stringify(body) })
         const json = await response.json()
         if (response.status >= MINIMUM_HTTP_RESPONSE_STATUS_ERROR) {
           debug(`could not update member: ${email} ${json.detail}`)
@@ -89,6 +110,34 @@ const MailchimpInterface = ({ logger }) => {
         logger.error(`mailchimp -> exception: ${error.message}`)
         throw new NewsletterMemberMailError({ error, email })
       }
+    },
+    async postBatch (operations) {
+      const preparedOperations = operations.map(operation => {
+        const { subscriberHash, ...rest } = operation
+
+        return {
+          ...rest,
+
+          // stringify body if not a sstring just yet
+          ...typeof operation.body !== 'string' && { body: JSON.stringify(operation.body) },
+
+          // when subscriber hash is provided, overwrite path to member resource
+          ...subscriberHash && {
+            path: `/lists/${MAILCHIMP_MAIN_LIST_ID}/members/${subscriberHash}`
+          }
+        }
+      })
+
+      return this.fetchAuthenticated(
+        'POST',
+        this.buildBatchesApiUrl(),
+        { body: JSON.stringify({ operations: preparedOperations }) })
+    },
+    async getBatch (id) {
+      return this.fetchAuthenticated(
+        'GET',
+        this.buildBatchesApiUrl(id)
+      )
     }
   }
 }
