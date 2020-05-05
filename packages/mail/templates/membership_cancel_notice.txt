@@ -6,7 +6,7 @@ gemeinsamen Projekt.
 Wir haben Ihre Kündigung erfasst: Ihr Abonnement läuft noch theoretisch bis zum
 {{end_date}} und wird nicht erneuert.
 
-Herzlichen Dank für Ihr Interesse und Ihre Unterstützung im vergangenen Jahr!
+Herzlichen Dank für Ihr Interesse und Ihre Unterstützung bis hierhin!
 
 {{#if reason_given}} Auch für Ihre Kündigungs­begründung, aus der wir lernen
 können.
