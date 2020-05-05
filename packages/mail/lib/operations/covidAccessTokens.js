@@ -1,27 +1,37 @@
 const Promise = require('bluebird')
+const crypto = require('crypto')
 
 const { transformUser, AccessToken } = require('@orbiting/backend-modules-auth')
 const { encode } = require('@orbiting/backend-modules-base64u')
 
+const md5 = data => crypto.createHash('md5').update(data).digest('hex')
+
 module.exports = async ({ pgdb }) => {
-  const users = await pgdb.query(`
-    WITH "grantsAndRevokes" AS (
-      SELECT c."userId"
-      FROM "consents" c
-      WHERE c.policy = 'NEWSLETTER_COVID19'
-    )
-    
-    SELECT u.*, md5(lower(u.email)) "__subscriberHash", COUNT(*) % 2 > 0 "__subscribed"
-    FROM "grantsAndRevokes" gr
-    JOIN "users" u ON u.id = gr."userId"
-    WHERE u.verified = TRUE
-    GROUP BY u.id
-    ORDER BY RANDOM()
+  const consents = await pgdb.query(`
+    SELECT c."userId", c.record
+    FROM "consents" c
+    JOIN "users" u ON u.id = c."userId"
+      AND u.verified = TRUE
+      AND u."deletedAt" IS NULL
+    WHERE c.policy = 'NEWSLETTER_COVID19'
+    ORDER BY c."createdAt"
   `)
-    .then(users => users.filter(u => !!u.__subscribed).map(transformUser))
+
+  const userIds = new Set()
+
+  consents.map(consent => {
+    if (consent.record === 'GRANT') {
+      userIds.add(consent.userId)
+    } else if (consent.record === 'REVOKE') {
+      userIds.delete(consent.userId)
+    }
+  })
+
+  const users = await pgdb.public.users.find({ id: Array.from(userIds) })
+    .then(u => u.map(transformUser))
 
   const operations = await Promise.map(users, user => ({
-    subscriberHash: user._raw.__subscriberHash,
+    subscriberHash: md5(user.email.toLowerCase()),
     method: 'PATCH',
     body: {
       merge_fields: {
@@ -29,9 +39,7 @@ module.exports = async ({ pgdb }) => {
         AS_ATOKEN: AccessToken.generateForUser(user, 'AUTHORIZE_SESSION')
       }
     }
-  }), { concurrency: 1 })
-
-  console.log(users.length, operations.length)
+  }))
 
   return operations
 }
