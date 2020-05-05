@@ -2,12 +2,12 @@ const { paginate: { paginator } } = require('@orbiting/backend-modules-utils')
 
 const { getError } = require('./record')
 
-const getFilterFns = ({ errornous }) => {
+const getFilterFns = ({ hasError }) => {
   const stack = []
 
-  if (errornous === true) {
+  if (hasError === true) {
     stack.push(record => !!getError(record))
-  } else if (errornous === false) {
+  } else if (hasError === false) {
     stack.push(record => !getError(record))
   }
 

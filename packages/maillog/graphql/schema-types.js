@@ -1,7 +1,7 @@
 module.exports = `
 
 input MaiLogFiltersInput {
-  errornous: Boolean
+  hasError: Boolean
 }
 
 type MailLogConnection {
