@@ -20,7 +20,11 @@ const paginate = (records, args) => paginator(
   ({ filters = {} }) => {
     const filterFns = getFilterFns(filters)
 
-    return records.filter(record => filterFns.every(filterFn => filterFn(record)))
+    if (filterFns.length) {
+      return records.filter(record => filterFns.every(filterFn => filterFn(record)))
+    }
+
+    return records
   }
 )
 
