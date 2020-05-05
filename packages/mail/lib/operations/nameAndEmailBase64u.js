@@ -6,7 +6,7 @@ module.exports = async ({ pgdb }) => {
   const users = await pgdb.query(`
     SELECT u."firstName", u."lastName", md5(lower(u.email)) "__subscriberHash"
     FROM "users" u
-    WHERE u.verified = TRUE
+    WHERE u.verified = TRUE AND u."deletedAt" IS NULL
     ORDER BY RANDOM()
   `)
 
@@ -20,9 +20,7 @@ module.exports = async ({ pgdb }) => {
         EMAILB64U: encode(user.email)
       }
     }
-  }), { concurrency: 1 })
-
-  console.log(users.length, operations.length)
+  }))
 
   return operations
 }
