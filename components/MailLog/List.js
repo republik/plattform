@@ -5,7 +5,7 @@ import {
 
 import routes from '../../server/routes'
 
-import { displayDateTime } from '../Display/utils'
+import { displayDateTime, displayDate } from '../Display/utils'
 import { tableStyles } from '../Tables/utils'
 
 import Status from './Status'
@@ -38,14 +38,17 @@ const List = ({ nodes, narrow = false }) => (
             <td {...tableStyles.paddedCell}>
               {mail.user 
                 ? <>
-                  <Link
-                    route='user'
-                    params={{userId: mail.user.id}}
-                    passHref>
-                    <A>
-                      {`${mail.user.name} (${mail.email})`}
-                    </A>
-                  </Link>
+                  <div>
+                    <Link
+                      route='user'
+                      params={{userId: mail.user.id}}
+                      passHref>
+                      <A>
+                        {`${mail.user.name} (${mail.email})`}
+                      </A>
+                    </Link>
+                  </div>
+                  <Label>Created: {displayDate(mail.user.createdAt)}</Label>
                 </>
                 : mail.email
               }

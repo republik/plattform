@@ -36,6 +36,9 @@ export const displayStyles = {
     top: '10px',
     right: '20px'
   }),
+  sectionNav: css({
+    margin: '0 0 15px 0'
+  }),
   hFlexBox: css({
     display: 'flex',
     flexDirection: 'row',
@@ -108,6 +111,10 @@ export const SectionTitle = props => (
 
 export const SectionSubhead = props => (
   <h5 {...props} {...displayStyles.sectionSubhead} />
+)
+
+export const SectionNav = props => (
+  <nav {...props} {...displayStyles.sectionNav} />
 )
 
 export const SectionMenu = props => (
