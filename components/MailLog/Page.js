@@ -18,7 +18,7 @@ import List from './List'
 
 const GET_MAILLOG = gql`
 query getMailLog($after: String, $hasError: Boolean) {
-  mailLog(first: 20, after: $after, filters: { hasError: $hasError }) {
+  mailLog(first: 100, after: $after, filters: { hasError: $hasError }) {
     pageInfo {
       hasNextPage
       endCursor
