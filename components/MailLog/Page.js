@@ -39,6 +39,7 @@ query getMailLog($after: String, $hasError: Boolean) {
       user {
         id
         name
+        createdAt
       }
     }
   }
