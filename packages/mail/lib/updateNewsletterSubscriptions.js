@@ -1,23 +1,26 @@
 const MailchimpInterface = require('../MailchimpInterface')
 const {
   SubscriptionHandlerMissingMailError
- } = require('../errors')
+} = require('../errors')
 const logger = console
 
-module.exports = async ({
-  user, interests
-}, NewsletterSubscription) => {
+module.exports = async ({ user, interests }, NewsletterSubscription) => {
   if (!NewsletterSubscription) throw new SubscriptionHandlerMissingMailError()
 
-  const { email, roles } = user
+  const { email, firstName, lastName, roles } = user
 
-  const mailchimp = MailchimpInterface({ logger })
-  const member = await mailchimp.getMember(email)
   const body = {
     email_address: email,
     status_if_new: MailchimpInterface.MemberStatus.Subscribed,
-    interests
+    interests,
+    merge_fields: {
+      FNAME: firstName || '',
+      LNAME: lastName || ''
+    }
   }
+
+  const mailchimp = MailchimpInterface({ logger })
+  const member = await mailchimp.getMember(email)
   if (member && member.status !== MailchimpInterface.MemberStatus.Unsubscribed) {
     // if a user is unsubscribed we don't update a status
     body.status = MailchimpInterface.MemberStatus.Subscribed

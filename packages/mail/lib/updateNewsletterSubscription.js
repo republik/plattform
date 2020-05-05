@@ -40,6 +40,8 @@ module.exports = async ({
     // from mailchimp to re-subscribe.
     body.status = MailchimpInterface.MemberStatus.Pending
   }
+
   await mailchimp.updateMember(email, body)
+
   return NewsletterSubscription.buildSubscription(user.id, interestId, subscribed)
 }
