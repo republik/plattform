@@ -4,11 +4,11 @@ Guten Tag
 wiederholt nicht von Ihrer Kreditkarte abbuchen und mussten es aus diesem Grund
 deaktivieren.
 
-Wir danken Ihnen herzlich für Ihr bisheriges Interesse und Ihre Unterstützung!
-Und wir würden uns sehr freuen, wenn Sie zu einem späteren Zeitpunkt wieder bei
-uns vorbeischauten. Sie haben jederzeit die Möglichkeit, erneut ein 
-Monatsabonnement [{{link_offer_monthly_abo}}] oder eine Jahresmitgliedschaft
-[{{link_offer_abo}}] abzuschliessen.
+Wir danken Ihnen herzlich für Ihr bisheriges Interesse und Ihre Unterstützung
+bis hierhin! Und wir würden uns sehr freuen, wenn Sie zu einem späteren
+Zeitpunkt wieder bei uns vorbeischauten. Sie haben jederzeit die Möglichkeit,
+erneut ein Monatsabonnement [{{link_offer_monthly_abo}}] oder eine 
+Jahresmitgliedschaft [{{link_offer_abo}}] abzuschliessen.
 
 Falls Sie Fragen haben, helfen wir Ihnen gerne weiter unter kontakt@republik.ch
 [kontakt@republik.ch].
