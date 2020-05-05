@@ -1,5 +1,9 @@
 module.exports = `
 
+input MaiLogFiltersInput {
+  hasError: Boolean
+}
+
 type MailLogConnection {
   totalCount: Int!
   pageInfo: MailLogPageInfo!
@@ -38,6 +42,7 @@ extend type User {
     last: Int
     before: String
     after: String
+    filters: MaiLogFiltersInput
   ): MailLogConnection
 }
 

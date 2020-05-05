@@ -10,6 +10,7 @@ type queries {
     last: Int
     before: String
     after: String
+    filters: MaiLogFiltersInput
   ): MailLogConnection
 }
 

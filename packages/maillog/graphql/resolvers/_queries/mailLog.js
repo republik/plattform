@@ -1,5 +1,6 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
-const { paginate: { paginator } } = require('@orbiting/backend-modules-utils')
+
+const { paginate } = require('../../../lib/paginate')
 
 const MAX_RECORDS = 5000
 
@@ -8,5 +9,5 @@ module.exports = async (_, args, { pgdb, user: me }) => {
 
   const records = await pgdb.public.mailLog.findAll({ orderBy: { createdAt: 'DESC' }, limit: MAX_RECORDS })
 
-  return paginator({ first: 100, ...args }, a => a, () => records)
+  return paginate(records, args)
 }
