@@ -32,6 +32,9 @@ const argv = yargs
     description: 'status interval (in seconds)',
     default: 4
   })
+  .option('dry-run', {
+    default: true
+  })
   .argv
 
 Promise.props({ pgdb: PgDb.connect() }).then(async connections => {
@@ -41,6 +44,13 @@ Promise.props({ pgdb: PgDb.connect() }).then(async connections => {
 
   if (!operations.length) {
     console.warn(`type of operations "${argv.type}" yielded in no operations`)
+    return connections
+  }
+
+  console.log({ type: argv.type, operations: operations.length })
+
+  if (argv.dryRun) {
+    console.warn('WARNING: In dry-run-mode, not posting operations to MailChimp. Disable with --no-dry-run')
     return connections
   }
 
