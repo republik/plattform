@@ -44,8 +44,36 @@ const getYoutubeVideoById = async id => {
       return error
     })
 
+  /*
+    thumbnails is an object with one or more props, each containing url, width, height:
+
+    {
+      "default": {
+        "url": "https://i.ytimg.com/vi/RVeuOL1DKN0/default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "https://i.ytimg.com/vi/RVeuOL1DKN0/mqdefault.jpg",
+        "width": 320,
+        "height": 180
+      },
+      [...]
+    }
+  */
   const thumbnails = response.items[0].snippet.thumbnails
-  const thumbnail = thumbnails.maxres ? thumbnails.maxres.url : thumbnails.standard.url
+
+  // Pick thumbnail with most area
+  const bestThumbnailSize = Object.keys(thumbnails).reduce((prev, curr) => {
+    const { width: prevWidth = 0, height: prevHeight = 0 } = thumbnails[prev] || {}
+    const { width: currWidth = 0, height: currHeight = 0 } = thumbnails[curr] || {}
+
+    if (prevWidth * prevHeight < currWidth * currHeight) {
+      return curr
+    }
+
+    return prev
+  })
 
   return {
     platform: 'youtube',
@@ -55,7 +83,7 @@ const getYoutubeVideoById = async id => {
     title: response.items[0].snippet.title,
     userUrl: `https://www.youtube.com/channel/${channelId}`,
     userName: response.items[0].snippet.channelTitle,
-    thumbnail: thumbnail,
+    thumbnail: thumbnails[bestThumbnailSize].url,
     userProfileImageUrl: channelResponse
       ? channelResponse.items[0].snippet.thumbnails.default.url
       : '',
