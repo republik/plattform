@@ -121,9 +121,7 @@ type Notification {
 
 type NotificationContent {
   title: String!
-  body: String!
   url: String!
-  icon: String
 }
 
 type WebNotification {
