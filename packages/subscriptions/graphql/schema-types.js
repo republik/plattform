@@ -75,7 +75,7 @@ extend type Discussion {
 
 type Subscription {
   id: ID!
-  object: SubscriptionObject!
+  object: SubscriptionObject
   subject: User!
   filters: [EventObjectType!]
   active: Boolean!
