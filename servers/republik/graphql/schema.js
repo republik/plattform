@@ -87,9 +87,6 @@ type mutations {
   ): Boolean!
 
   submitQuestion(question: String!): MutationResult
-
-  # max every 12h
-  requestPreview: MutationResult!
 }
 
 type subscriptions {

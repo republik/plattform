@@ -146,9 +146,6 @@ module.exports = {
         portraitUrl: {
           type: 'keyword'
         },
-        previewsSentAt: {
-          type: 'date'
-        },
         publicUrl: {
           type: 'keyword'
         },

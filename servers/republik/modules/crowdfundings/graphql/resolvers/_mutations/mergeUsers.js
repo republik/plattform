@@ -96,8 +96,6 @@ module.exports = async (_, args, context) => {
       createdAt: users.map(u => u.createdAt).sort((a, b) => ascending(a.createdAt, b.createdAt))[0],
       updatedAt: now
     })
-    // ignored:
-    //  previewsSentAt
 
     if (sourceUser.username && targetUser.username) {
       await upsertRedirection({
