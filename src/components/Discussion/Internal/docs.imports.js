@@ -73,6 +73,19 @@ export const comments = {
     ...allComments.comment2,
     embed: allComments.linkPreview1,
     mentioningDocument: allComments.mentioningDocument
+  },
+
+  withAdminActions: {
+    ...allComments.comment2,
+    content: exampleShortMdast,
+    userCanReport: true,
+    userVote: undefined
+  },
+  featured: {
+    ...allComments.comment2,
+    content: exampleShortMdast,
+    featuredText: '[…] entweder am Anfang […] oder nie.',
+    featuredAt: '2020-05-10T20:02:20.000Z'
   }
 }
 

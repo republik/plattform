@@ -1,5 +1,5 @@
 {
-  "updated": "2020-02-06T12:45:18.393Z",
+  "updated": "2020-05-10T19:56:53.981Z",
   "title": "live",
   "data": [
     {
@@ -28,7 +28,11 @@
     },
     {
       "key": "styleguide/CommentActions/expand",
-      "value": "Kommentaren"
+      "value": "Kommentare anschauen"
+    },
+    {
+      "key": "styleguide/CommentActions/share",
+      "value": "Beitrag teilen"
     },
     {
       "key": "styleguide/CommentActions/answer",
@@ -81,6 +85,14 @@
     {
       "key": "styleguide/CommentActions/downvote/count/other",
       "value": "{count} Gegenstimmen"
+    },
+    {
+      "key": "styleguide/CommentActions/feature",
+      "value": "Beitrag hervorheben"
+    },
+    {
+      "key": "styleguide/CommentActions/featured",
+      "value": "Am {date} um {time} Uhr redaktionell hervorgehobenes Zitat: {text}"
     },
     {
       "key": "styleguide/CommentTeaser/comment/link",
@@ -194,10 +206,6 @@
     {
       "key": "styleguide/charts/error",
       "value": "Diese Visualisierung ist kaputt."
-    },
-    {
-      "key": "styleguide/templates/unauthorizedZone",
-      "value": "Inhalt nur für Mitglieder."
     },
     {
       "key": "styleguide/DynamicComponent/error",

@@ -5,12 +5,16 @@ import React from 'react'
  * shape of the context value. This value is provided to all components in
  * the documentation pages.
  */
-export const createSampleDiscussionContextValue = ({ t }) => ({
+export const createSampleDiscussionContextValue = ({
+  t,
+  isAdmin = false,
+  actions = {}
+}) => ({
   /**
    * Admin users have elevated priviledges, they can for example unpublish
    * any comment.
    */
-  isAdmin: false,
+  isAdmin,
 
   /**
    * The Discussion object, straight from the GraphQL server.
@@ -83,7 +87,9 @@ export const createSampleDiscussionContextValue = ({ t }) => ({
       Promise.resolve({ ok: true }),
 
     shareComment: commentId => Promise.resolve({ ok: true }),
-    openDiscussionPreferences: () => Promise.resolve({ ok: true })
+    openDiscussionPreferences: () => Promise.resolve({ ok: true }),
+
+    ...actions
   },
 
   /**

@@ -9,9 +9,14 @@ import ReportIcon from 'react-icons/lib/md/flag'
 import EditIcon from 'react-icons/lib/md/edit'
 import ReplyIcon from 'react-icons/lib/md/reply'
 import ShareIcon from 'react-icons/lib/md/share'
+import FeaturedIcon from 'react-icons/lib/md/star-outline'
 import colors from '../../../../theme/colors'
 import { sansSerifMedium14 } from '../../../Typography/styles'
 import { DiscussionContext, formatTimeRelative } from '../../DiscussionContext'
+import { timeFormat } from '../../../../lib/timeFormat'
+
+const dateFormat = timeFormat('%d.%m.%Y')
+const hmFormat = timeFormat('%H:%M')
 
 const styles = {
   root: css({
@@ -110,7 +115,9 @@ export const Actions = ({
     userVote,
     numReports,
     userReportedAt,
-    userCanReport
+    userCanReport,
+    featuredAt,
+    featuredText
   } = comment
   const { isAdmin, discussion, actions, clock } = React.useContext(
     DiscussionContext
@@ -209,6 +216,13 @@ export const Actions = ({
           <UnpublishIcon />
         </IconButton>
       )}
+      <IconButton
+        type='left'
+        onClick={onShare}
+        title={t('styleguide/CommentActions/share')}
+      >
+        <ShareIcon />
+      </IconButton>
       {userCanReport && onReport && (
         <IconButton
           type='left'
@@ -222,14 +236,26 @@ export const Actions = ({
           </span>
         </IconButton>
       )}
-      <IconButton
-        type='left'
-        onClick={onShare}
-        title={t('styleguide/CommentActions/share')}
-      >
-        <ShareIcon />
-      </IconButton>
       <div {...styles.votes}>
+        {!!(featuredText || actions.featureComment) && (
+          <IconButton
+            type='left'
+            title={
+              featuredAt
+                ? t('styleguide/CommentActions/featured', {
+                    date: dateFormat(new Date(featuredAt)),
+                    time: hmFormat(new Date(featuredAt)),
+                    text: featuredText
+                  })
+                : t('styleguide/CommentActions/feature')
+            }
+            onClick={
+              actions.featureComment && (() => actions.featureComment(comment))
+            }
+          >
+            <FeaturedIcon fill={featuredText ? colors.primary : undefined} />
+          </IconButton>
+        )}
         <div {...styles.vote}>
           <IconButton
             type={userVote === 'UP' ? 'selectedVote' : 'vote'}

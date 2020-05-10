@@ -343,6 +343,7 @@ ReactDOM.render(
               title: 'Internal',
               imports: {
                 t,
+                createSampleDiscussionContextValue,
                 ...require('./components/Discussion/Internal/docs.imports')
               },
               src: require('./components/Discussion/Internal/docs.md')

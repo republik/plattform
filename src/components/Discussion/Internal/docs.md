@@ -211,6 +211,39 @@ The buttons / icons below the comment. The reply button is disabled if the discu
   onEdit={() => {}}
 />
 ```
+
+```react|noSource,span-2
+<DiscussionContext.Provider
+  value={createSampleDiscussionContextValue({ 
+    t,
+    isAdmin: true,
+    actions: {
+      featureComment: () => Promise.resolve({ ok: true })
+    }
+  })}
+>
+  <Comment.Actions
+    t={t}
+    comment={comments.withAdminActions}
+    onUnpublish={() => {}}
+    onReport={() => {}}
+    onReply={() => {}}
+    onEdit={() => {}}
+  />
+</DiscussionContext.Provider>
+```
+
+```react|noSource,span-2
+<Comment.Actions
+  t={t}
+  comment={comments.featured}
+  onUnpublish={() => {}}
+  onReport={() => {}}
+  onReply={() => {}}
+  onEdit={() => {}}
+/>
+```
+
 ```react|noSource,span-2
 <Comment.IconLink
   href={""}
