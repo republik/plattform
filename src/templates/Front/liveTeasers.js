@@ -184,12 +184,8 @@ const createLiveTeasers = ({
             note: 'Anzahl Debatten, default 4'
           },
           {
-            key: 'highlightId',
-            note: 'Kommentar-ID (focus-Wert im URL)'
-          },
-          {
-            key: 'highlightQuote',
-            note: 'Zitat aus dem Kommentar'
+            key: 'featured',
+            note: 'Anzahl Beiträge, 0 für keine, default 1'
           }
         ]
       }

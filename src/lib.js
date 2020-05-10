@@ -151,3 +151,7 @@ export { usePrevious } from './lib/usePrevious'
 export { useDebounce } from './lib/useDebounce'
 export { useBodyScrollLock, isBodyScrollLocked } from './lib/useBodyScrollLock'
 export { HeaderHeightProvider, useHeaderHeight } from './lib/useHeaderHeight'
+
+export {
+  default as ActiveDebateTeaser
+} from './components/TeaserActiveDebates/DebateTeaser'

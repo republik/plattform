@@ -123,32 +123,32 @@ ActiveDebates.propTypes = {
 
 ActiveDebates.data = {
   config: {
-    options: ({ lastDays = 3, first = 4, highlightId }) => ({
+    options: ({ lastDays = 3, first = 4, featured = 1 }) => ({
       variables: {
         lastDays: +lastDays,
         first: +first,
-        highlightId
+        featured: +featured
       }
     }),
-    props: ({ data, ownProps: { highlightQuote, first = 4 } }) => {
+    props: ({ data, ownProps: { first = 4 } }) => {
       let discussions
       if (!data.loading && !data.error) {
         discussions = data.activeDiscussions.map(a => a.discussion)
-        const hasHighlight = !!data.highlight.focus
-        if (hasHighlight) {
+
+        data.featured.nodes.forEach(featuredComment => {
           const highlightComment = {
-            ...data.highlight.focus,
-            highlight: highlightQuote,
+            ...featuredComment,
+            highlight: featuredComment.featuredText,
             discussion: undefined
           }
           // ensure first discussion is the one with the highlight
           let highlightDiscussion = discussions.find(
-            d => d.id === data.highlight.focus.discussion.id
+            d => d.id === featuredComment.discussion.id
           )
           if (highlightDiscussion) {
             discussions.splice(discussions.indexOf(highlightDiscussion), 1)
           } else {
-            highlightDiscussion = data.highlight.focus.discussion
+            highlightDiscussion = featuredComment.discussion
           }
           discussions.unshift({
             ...highlightDiscussion,
@@ -159,10 +159,10 @@ ActiveDebates.data = {
               )
             }
           })
-        }
+        })
 
         const seenNames = new Set()
-        let remainingComments = +first + hasHighlight
+        let remainingComments = +first + data.featured.nodes.length
 
         discussions = discussions.reduce((all, discussion, i) => {
           let remainingCommentsPerDiscussion = i === 0 ? 2 : 1
@@ -207,15 +207,16 @@ ActiveDebates.data = {
     }
   },
   query: `
-query getFrontDiscussions($lastDays: Int!, $first: Int!, $highlightId: ID) {
-  highlight: comments(first: 1, focusId: $highlightId) {
+query getFrontDiscussions($lastDays: Int!, $first: Int!, $featured: Int!) {
+  featured: comments(orderBy: FEATURED_AT, orderDirection: DESC, first: $featured, featured: true) {
     id
-    focus {
+    nodes {
       id
       displayAuthor {
         id
         ...AuthorMetaData
       }
+      featuredText
       createdAt
       updatedAt
       discussion {
