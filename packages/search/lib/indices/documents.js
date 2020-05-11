@@ -29,8 +29,6 @@ const mdastPartial = {
 
 const type = 'Document'
 
-const { PREVIEW_MAIL_REPO_ID } = process.env
-
 module.exports = {
   type,
   name: type.toLowerCase(),
@@ -121,45 +119,13 @@ module.exports = {
       ]
     }),
     filter: {
-      default: () => {
-        const filter = {
-          bool: {
-            must: [
-              { term: { __type: type } }
-            ],
-            // return all editorialNewsletters with feed:true or everything
-            // that is not editorialNewsletters. Brainfuck.
-            should: [
-              {
-                bool: {
-                  must: [
-                    { term: { 'meta.template': 'editorialNewsletter' } },
-                    { term: { 'meta.feed': true } }
-                  ]
-                }
-              },
-              {
-                bool: {
-                  must_not: [
-                    { term: { 'meta.template': 'editorialNewsletter' } }
-                  ]
-                }
-              }
-            ]
-          }
+      default: () => ({
+        bool: {
+          must: [
+            { term: { __type: type } }
+          ]
         }
-
-        if (PREVIEW_MAIL_REPO_ID) {
-          // Allow repo w/ preview email to be retrieved nomatter other filter
-          filter.bool.should.push({
-            bool: {
-              must: [
-                { term: { 'meta.repoId': PREVIEW_MAIL_REPO_ID } }
-              ]
-            }
-          })
-        }
-      }
+      })
     },
     rolebasedFilter: {
       // Default filter

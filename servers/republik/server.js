@@ -36,7 +36,6 @@ const loaderBuilders = {
 }
 
 const { AccessScheduler, graphql: access } = require('@orbiting/backend-modules-access')
-const { PreviewScheduler, preview: previewLib } = require('@orbiting/backend-modules-preview')
 
 const MembershipScheduler = require('./modules/crowdfundings/lib/scheduler')
 const mail = require('./modules/crowdfundings/lib/Mail')
@@ -47,7 +46,6 @@ const {
   SEARCH_PG_LISTENER,
   NODE_ENV,
   ACCESS_SCHEDULER,
-  PREVIEW_SCHEDULER,
   MEMBERSHIP_SCHEDULER,
   SERVER = 'republik',
   DYNO
@@ -114,9 +112,7 @@ const run = async (workerId, config) => {
   // signin hooks
   const signInHooks = [
     ({ userId, pgdb }) =>
-      mail.sendPledgeConfirmations({ userId, pgdb, t }),
-    ({ userId, isNew, contexts, pgdb }) =>
-      previewLib.begin({ userId, contexts, pgdb, t })
+      mail.sendPledgeConfirmations({ userId, pgdb, t })
   ]
 
   const applicationName = [
@@ -207,15 +203,6 @@ const runOnce = async (...args) => {
     accessScheduler = await AccessScheduler.init(context)
   }
 
-  let previewScheduler
-  if (PREVIEW_SCHEDULER === 'false' || (DEV && PREVIEW_SCHEDULER !== 'true')) {
-    console.log('PREVIEW_SCHEDULER prevented scheduler from begin started',
-      { PREVIEW_SCHEDULER, DEV }
-    )
-  } else {
-    previewScheduler = await PreviewScheduler.init(context)
-  }
-
   let membershipScheduler
   if (MEMBERSHIP_SCHEDULER === 'false' || (DEV && MEMBERSHIP_SCHEDULER !== 'true')) {
     console.log('MEMBERSHIP_SCHEDULER prevented scheduler from begin started',
@@ -230,7 +217,6 @@ const runOnce = async (...args) => {
       slackGreeter && slackGreeter.close(),
       searchNotifyListener && searchNotifyListener.close(),
       accessScheduler && accessScheduler.close(),
-      previewScheduler && previewScheduler.close(),
       membershipScheduler && membershipScheduler.close()
     ].filter(Boolean))
     await ConnectionContext.close(context)

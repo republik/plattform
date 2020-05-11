@@ -130,7 +130,6 @@
     "CHROMIUM_LAMBDA_URL": {
       "required": true
     },
-    "PREVIEW_MAIL_REPO_ID": "",
     "PUBLIC_ASSETS_HOSTNAME": {
       "required": true
     },

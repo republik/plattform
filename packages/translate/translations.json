@@ -783,26 +783,6 @@
       "value": "Danke für Ihre Frage"
     },
     {
-      "key": "api/preview/mail/404",
-      "value": "Das Preview-Mail steht zur Zeit nicht zur Verfügung. Bitte versuchen Sie es später nochmal."
-    },
-    {
-      "key": "api/preview/mail/subject",
-      "value": "Preview Mail"
-    },
-    {
-      "key": "api/preview/mail/tooEarly",
-      "value": "Das Preview-Mail kann nur einmal pro Tag angefordert werden, bitte versuchen Sie es morgen nochmals."
-    },
-    {
-      "key": "api/preview/email/onboarding/subject",
-      "value": "Probelesen der Republik"
-    },
-    {
-      "key": "api/preview/email/followup/subject",
-      "value": "Zeit für eine Entscheidung"
-    },
-    {
       "key": "profile/generic/tooLong",
       "value": "{key}, maximal {max} Zeichen"
     },
