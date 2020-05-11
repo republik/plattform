@@ -2,15 +2,15 @@ Guten Tag
 
 Die Republik ist ein neues, unabhängiges und werbefreies digitales Magazin für
 Politik, Wirtschaft, Gesellschaft und Kultur. Sie wird finanziert von ihren
-Leserinnen und Lesern. Um eine Zukunft zu haben, muss die Republik bekannter
-werden und viele neue Leserinnen begeistern.
+Leserinnen und Lesern.
 
-Im Rahmen der Wachstums-Kampagne diesen März finanzieren unsere Leserinnen
+Um eine Zukunft zu haben, muss die Republik bekannter werden und viele neue
+Leserinnen begeistern. Unsere Leserinnen finanzieren daher
 Geschenk-Mitgliedschaften in der Hoffnung, dass dies zu einem langfristigen
 Wachstum beiträgt.
 
-Herzlichen Glückwunsch! Sie wurden von {{GRANTER_NAME}} ausgewählt und erhalten
-damit eine Jahresmitgliedschaft, im Wert von 240 Franken, geschenkt!
+Sie wurden von {{GRANTER_NAME}} ausgewählt und erhalten damit eine
+Jahresmitgliedschaft, im Wert von 240 Franken, geschenkt!
 
 {{#if GRANTER_MESSAGE}} {{GRANTER_NAME}} hat uns eine Nachricht für Sie
 mitgegeben:

@@ -1,5 +1,6 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
-const { paginate: { paginator } } = require('@orbiting/backend-modules-utils')
+
+const { paginate } = require('../../lib/paginate')
 
 module.exports = {
   async mailLog (user, args, { pgdb, user: me }) {
@@ -14,6 +15,6 @@ module.exports = {
       ]
     }, { orderBy: { createdAt: 'DESC' } })
 
-    return paginator({ first: 100, ...args }, a => a, () => records)
+    return paginate(records, args)
   }
 }

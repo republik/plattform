@@ -40,7 +40,7 @@ services:
       - ./docker-data/redis:/data
 
   postgres:
-    image: postgres:10
+    image: postgres:12
     environment:
       - POSTGRES_HOST_AUTH_METHOD=trust
     volumes:

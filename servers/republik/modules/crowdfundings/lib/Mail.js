@@ -122,8 +122,11 @@ mail.enforceSubscriptions = async ({
     pgdb
   })
 
-  const sanitizedUser = user || { email }
-  return mail.updateNewsletterSubscriptions({ user: sanitizedUser, interests, ...rest })
+  return mail.updateNewsletterSubscriptions({
+    user: user || { email },
+    interests,
+    ...rest
+  })
 }
 
 mail.sendMembershipProlongConfirmation = async ({

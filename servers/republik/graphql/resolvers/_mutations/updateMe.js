@@ -12,10 +12,12 @@ const {
   isInCandidacyInElectionPhase,
   hasCards
 } = require('../../../lib/profile')
-const { Redirections: {
-  upsert: upsertRedirection,
-  delete: deleteRedirection
-} } = require('@orbiting/backend-modules-redirections')
+const {
+  Redirections: {
+    upsert: upsertRedirection,
+    delete: deleteRedirection
+  }
+} = require('@orbiting/backend-modules-redirections')
 
 const { lib: { Portrait } } = require('@orbiting/backend-modules-assets')
 const { ensureStringLength } = require('@orbiting/backend-modules-utils')
@@ -50,7 +52,7 @@ const createEnsureStringLengthForProfile = (values, t) => (key, translationKey, 
   )
 
 module.exports = async (_, args, context) => {
-  const { pgdb, req, user: me, t } = context
+  const { pgdb, req, user: me, t, mail } = context
   ensureSignedIn(req)
 
   const {
@@ -249,7 +251,10 @@ module.exports = async (_, args, context) => {
     }
 
     await transaction.transactionCommit()
+
     const updatedUser = await pgdb.public.users.findOne({ id: me.id })
+    await mail.updateMergeFields({ user: updatedUser })
+
     return transformUser(updatedUser)
   } catch (e) {
     await transaction.transactionRollback()
