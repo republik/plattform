@@ -1,4 +1,5 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
+const slack = require('../../../lib/slack')
 
 module.exports = async (_, args, context) => {
   const {
@@ -19,6 +20,7 @@ module.exports = async (_, args, context) => {
   if (!comment) {
     throw new Error(t('api/comment/404'))
   }
+  const discussion = await loaders.Discussion.byId.load(comment.discussionId)
 
   const newComment = await pgdb.public.comments.updateAndGetOne(
     { id },
@@ -35,7 +37,15 @@ module.exports = async (_, args, context) => {
         mutation: 'UPDATED',
         node: newComment
       }
-    })
+    }),
+    slack.publishCommentFeatured(
+      me,
+      newComment,
+      discussion,
+      content,
+      !!content,
+      context
+    )
   ])
     .catch(e => {
       console.error(e)
