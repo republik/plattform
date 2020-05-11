@@ -213,7 +213,6 @@ type Comment {
   mentioningDocument: MentioningDocument
 
   featuredAt: DateTime
-  featuredContent: JSON
   featuredText: String
 }
 

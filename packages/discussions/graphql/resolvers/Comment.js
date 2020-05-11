@@ -138,11 +138,6 @@ module.exports = {
   text: (comment, args, context) =>
     textForComment(comment, false, context),
 
-  featuredContent: ({ published, adminUnpublished, featuredAt, featuredContent }) =>
-    published && !adminUnpublished && featuredAt && featuredContent
-      ? remark.parse(featuredContent)
-      : null,
-
   featuredText: ({ published, adminUnpublished, featuredAt, featuredContent }) =>
     published && !adminUnpublished && featuredAt && featuredContent
       ? featuredContent
