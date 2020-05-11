@@ -82,9 +82,10 @@ type mutations {
   updateDiscussion(id: ID!, closed: Boolean): Discussion!
 
   # requires role: editor
+  # content = null: unfeature comment
   featureComment(
     id: ID!
-    content: String!
+    content: String
   ): Comment!
 }
 

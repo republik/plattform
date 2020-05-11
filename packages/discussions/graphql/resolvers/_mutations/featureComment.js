@@ -11,7 +11,7 @@ module.exports = async (_, args, context) => {
     t,
     loaders,
     pubsub
-  } = context
+  } = context
 
   Roles.ensureUserHasRole(me, 'editor')
 
@@ -23,8 +23,8 @@ module.exports = async (_, args, context) => {
   const newComment = await pgdb.public.comments.updateAndGetOne(
     { id },
     {
-      featuredAt: new Date(),
-      featuredContent: content
+      featuredAt: content ? new Date() : null,
+      featuredContent: content || null
     }
   )
 
@@ -35,7 +35,7 @@ module.exports = async (_, args, context) => {
         mutation: 'UPDATED',
         node: newComment
       }
-    }),
+    })
   ])
     .catch(e => {
       console.error(e)
