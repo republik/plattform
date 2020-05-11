@@ -123,25 +123,6 @@ module.exports = {
         bool: {
           must: [
             { term: { __type: type } }
-          ],
-          // return all editorialNewsletters with feed:true or everything
-          // that is not editorialNewsletters. Brainfuck.
-          should: [
-            {
-              bool: {
-                must: [
-                  { term: { 'meta.template': 'editorialNewsletter' } },
-                  { term: { 'meta.feed': true } }
-                ]
-              }
-            },
-            {
-              bool: {
-                must_not: [
-                  { term: { 'meta.template': 'editorialNewsletter' } }
-                ]
-              }
-            }
           ]
         }
       })
