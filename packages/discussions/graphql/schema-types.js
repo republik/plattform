@@ -58,6 +58,7 @@ enum DiscussionOrder {
   VOTES
   HOT
   REPLIES
+  FEATURED_AT
 }
 
 type DiscussionPageInfo {
@@ -210,6 +211,9 @@ type Comment {
   embed: CachedEmbed
 
   mentioningDocument: MentioningDocument
+
+  featuredAt: DateTime
+  featuredText: String
 }
 
 

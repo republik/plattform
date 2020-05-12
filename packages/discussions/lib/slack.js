@@ -8,7 +8,7 @@ const { getDiscussionUrl } = require('./Notifications')
 
 const {
   SLACK_CHANNEL_COMMENTS,
-  SLACK_CHANNEL_COMMENTS_REPORTS,
+  SLACK_CHANNEL_COMMENTS_ADMIN,
   FRONTEND_BASE_URL
 } = process.env
 
@@ -45,7 +45,10 @@ exports.publishCommentUnpublish = async (user, update, comment, discussion, cont
     : `:put_litter_in_its_place: *${getProfileLink(author)}* unpublished`
 
   const content = `${action} in <${await getCommentLink(comment, discussion, context)}|${discussion.title}>:\n${comment.content}`
-  return publish(SLACK_CHANNEL_COMMENTS, content)
+  return publish(
+    update.adminUnpublished ? SLACK_CHANNEL_COMMENTS_ADMIN : SLACK_CHANNEL_COMMENTS,
+    content
+  )
 }
 
 exports.publishCommentReport = async (user, comment, discussion, context) => {
@@ -55,11 +58,32 @@ exports.publishCommentReport = async (user, comment, discussion, context) => {
   const content = `${action} in <${await getCommentLink(comment, discussion, context)}|${discussion.title}> (${comment.reports.length}. report):\n${comment.content}`
 
   return publish(
-    SLACK_CHANNEL_COMMENTS_REPORTS,
+    SLACK_CHANNEL_COMMENTS_ADMIN,
     content,
     {
       unfurl_links: true,
       unfurl_media: true
+    }
+  )
+}
+
+exports.publishCommentFeatured = async (user, comment, discussion, featuredText, featured, context) => {
+  const author = await getDisplayAuthor(comment, {}, context)
+
+  const action = featured
+    ? `:star: *${user.name}* featured comment by *${getProfileLink(author)}*`
+    : `:face_palm: *${user.name}* un-featured comment by *${getProfileLink(author)}*`
+
+  const content = featured
+    ? `${action} from <${await getCommentLink(comment, discussion, context)}|${discussion.title}>:\n${featuredText}`
+    : `${action} from <${await getCommentLink(comment, discussion, context)}|${discussion.title}>`
+
+  return publish(
+    SLACK_CHANNEL_COMMENTS_ADMIN,
+    content,
+    {
+      unfurl_links: false,
+      unfurl_media: false
     }
   )
 }

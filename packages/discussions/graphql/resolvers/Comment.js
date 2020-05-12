@@ -138,6 +138,11 @@ module.exports = {
   text: (comment, args, context) =>
     textForComment(comment, false, context),
 
+  featuredText: ({ published, adminUnpublished, featuredAt, featuredContent }) =>
+    published && !adminUnpublished && featuredAt && featuredContent
+      ? featuredContent
+      : null,
+
   preview: async (comment, { length = 500 }, context) => {
     const text = await textForComment(comment, false, context)
     if (!text) {

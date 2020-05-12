@@ -2,7 +2,8 @@ const sortKeyMap = {
   'DATE': 'createdAt',
   'VOTES': 'score',
   'HOT': 'hotness',
-  'REPLIES': 'totalRepliesCount'
+  'REPLIES': 'totalRepliesCount',
+  'FEATURED_AT': 'featuredAt'
 }
 
 // never return key unfiltered here as this would
