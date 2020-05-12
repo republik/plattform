@@ -18,6 +18,7 @@
   "homepage": "https://github.com/orbiting/backends#readme",
   "scripts": {
     "link": "yarn link",
-    "translations": "gsheets --key=1ZzaC_F7KKP5nSP36n6D9Q6wyTHeP037TBg4kF41jgS4 --title=live --pretty --out ./translations.json"
+    "translations-raw": "gsheets --key=1ZzaC_F7KKP5nSP36n6D9Q6wyTHeP037TBg4kF41jgS4 --title=live --pretty --out ./translations.json",
+    "translations": "npm run translations-raw && git add -p ./translations.json && git checkout -- ./translations.json"
   }
 }
