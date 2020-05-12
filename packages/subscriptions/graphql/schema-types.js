@@ -75,7 +75,7 @@ extend type Discussion {
 
 type Subscription {
   id: ID!
-  object: SubscriptionObject!
+  object: SubscriptionObject
   subject: User!
   filters: [EventObjectType!]
   active: Boolean!
@@ -121,9 +121,7 @@ type Notification {
 
 type NotificationContent {
   title: String!
-  body: String!
   url: String!
-  icon: String
 }
 
 type WebNotification {

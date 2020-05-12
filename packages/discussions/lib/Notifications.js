@@ -30,6 +30,49 @@ const getDiscussionUrl = async (discussion, context) => {
   return `${FRONTEND_BASE_URL}${discussion.path}`
 }
 
+const getCommentInfo = async (comment, discussion, context) => {
+  const { t } = context
+
+  const {
+    displayAuthor,
+    preview,
+    discussionUrl,
+    contentMdast
+  } = await Promise.props({
+    displayAuthor: getDisplayAuthor(
+      comment,
+      { portrait: { webp: false } },
+      context
+    ),
+    preview: getPreview(comment, { length: 128 }, context),
+    discussionUrl: getDiscussionUrl(discussion, context),
+    contentMdast: getContent(comment, { strip: false }, context)
+  })
+
+  const contentHtml = renderEmail(contentMdast, commentSchema, { doctype: '' })
+  const contentPlain = htmlToText.fromString(contentHtml)
+
+  const { parentIds } = comment
+
+  return {
+    displayAuthor,
+    discussionUrl,
+    contentHtml,
+    contentPlain,
+    shortBody: preview.more
+      ? `${preview.string}...`
+      : preview.string,
+    commentUrl: `${discussionUrl}${discussionUrl.indexOf('?') === -1 ? '?' : '&'}focus=${comment.id}`,
+    muteUrl: `${discussionUrl}${discussionUrl.indexOf('?') === -1 ? '?' : '&'}mute=1`,
+    subjectParams: {
+      authorName: displayAuthor.name,
+      discussionName: discussion.title
+    },
+    isTopLevelComment: !parentIds || parentIds.length === 0,
+    icon: displayAuthor.profilePicture || t('api/comment/notification/new/app/icon')
+  }
+}
+
 const submitComment = async (comment, discussion, context, testUsers) => {
   const { pgdb, t } = context
   const { id, parentIds, discussionId, userId } = comment
@@ -37,12 +80,6 @@ const submitComment = async (comment, discussion, context, testUsers) => {
   if (testUsers && !Array.isArray(testUsers)) {
     throw new Error(t('api/unexpected'))
   }
-
-  const displayAuthor = await getDisplayAuthor(
-    comment,
-    { portrait: { webp: false } },
-    context
-  )
 
   const notifyUsers = testUsers || await pgdb.query(`
       -- commenters in discussion
@@ -97,25 +134,18 @@ const submitComment = async (comment, discussion, context, testUsers) => {
     .then(users => users.map(transformUser))
 
   if (notifyUsers.length > 0) {
-    const contentMdast = await getContent(comment, { strip: false }, context)
-    const contentHtml = renderEmail(contentMdast, commentSchema, { doctype: '' })
-    const contentPlain = htmlToText.fromString(contentHtml)
-
-    const preview = await getPreview(comment, { length: 128 }, context)
-    const shortBody = preview.more
-      ? `${preview.string}...`
-      : preview.string
-
-    const discussionUrl = await getDiscussionUrl(discussion, context)
-    const commentUrl = `${discussionUrl}${discussionUrl.indexOf('?') === -1 ? '?' : '&'}focus=${id}`
-    const muteUrl = `${discussionUrl}${discussionUrl.indexOf('?') === -1 ? '?' : '&'}mute=1`
-
-    const subjectParams = {
-      authorName: displayAuthor.name,
-      discussionName: discussion.title
-    }
-    const isTopLevelComment = !parentIds || parentIds.length === 0
-    const icon = displayAuthor.profilePicture || t('api/comment/notification/new/app/icon')
+    const {
+      displayAuthor,
+      discussionUrl,
+      contentHtml,
+      contentPlain,
+      shortBody,
+      commentUrl,
+      muteUrl,
+      subjectParams,
+      isTopLevelComment,
+      icon
+    } = await getCommentInfo(comment, discussion, context)
 
     await sendNotification(
       {
