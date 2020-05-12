@@ -4,6 +4,7 @@ const { renderEmail } = require('mdast-react-render/lib/email')
 const { transformUser } = require('@orbiting/backend-modules-auth')
 const commentSchema = require('@project-r/styleguide/lib/templates/Comment/email').default()
 const { sendNotification } = require('@orbiting/backend-modules-subscriptions')
+const Promise = require('bluebird')
 
 const {
   displayAuthor: getDisplayAuthor,
