@@ -169,9 +169,9 @@ num payments successfull: ${numPaymentsSuccessful}
     console.info('transaction rollback', { req: req._log(), args, error: e })
     throw e
   } finally {
-    await refreshAllPots()
+    await refreshAllPots({ pgdb })
       .catch(e => {
-        console.error('error after payPledge', e)
+        console.error('error after matchPayments', e)
       })
   }
 }
