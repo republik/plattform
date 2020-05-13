@@ -39,13 +39,13 @@ als Zahlungsweg gewählt.
 
 Bitte überweisen Sie {{total_formatted}} bis spätestens {{due_date}} an:
 
-PC 61-11760-6
-IBAN: CH50 0900 0000 6101 1760 6
+PC 61-229215-3
+IBAN: CH23 0900 0000 6122 9215 3 
 BIC: POFICHBEXXX 
 
-lautend auf: 
+lautend auf:
 
-Project R Genossenschaft
+Republik AG
 Sihlhallenstrasse 1
 8004 Zürich 
 
