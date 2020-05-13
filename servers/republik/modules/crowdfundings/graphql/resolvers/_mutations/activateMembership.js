@@ -18,7 +18,7 @@ module.exports = async (_, args, { pgdb, req, t, user: me, mail: { enforceSubscr
 
     const membership = await transaction.public.memberships.findOne({ id: membershipId })
     if (!membership) {
-      throw new Error(t('api/membership/activate/404'))
+      throw new Error(t('api/membership/404'))
     }
 
     if (membership.active) {

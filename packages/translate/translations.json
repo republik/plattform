@@ -27,12 +27,8 @@
       "value": "Mitgliedschaft ist bereits aktiv."
     },
     {
-      "key": "api/membership/activate/404",
-      "value": "Mitgliedschaft nicht gefunden."
-    },
-    {
       "key": "api/membership/activate/userMissing",
-      "value": "Nutzer an Mitgliedschaft nicht gefunden."
+      "value": "Besitzer der Mitgliedschaft nicht gefunden."
     },
     {
       "key": "api/membership/claim/alreadyHave",
