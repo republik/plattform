@@ -26,7 +26,8 @@ IBAN: CH23 0900 0000 6122 9215 3
 BIC: POFICHBEXXX 
 
 lautend auf:
-Republik AG 
+
+Republik AG
 Sihlhallenstrasse 1
 8004 Zürich 
 
@@ -35,7 +36,8 @@ IBAN: CH50 0900 0000 6101 1760 6
 BIC: POFICHBEXXX 
 
 lautend auf:
-Project R Genossenschaft 
+
+Project R Genossenschaft
 Sihlhallenstrasse 1
 8004 Zürich 
 
