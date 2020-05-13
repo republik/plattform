@@ -510,7 +510,10 @@ const BarChart = props => {
                           )}
                           {isLollipop && (
                             <circle
-                              cx={segment.x + segment.width - 1}
+                              cx={
+                                segment.x +
+                                (segment.value >= 0 ? segment.width - 1 : 0)
+                              }
                               cy={bar.height / 2}
                               r={
                                 Math.floor(
@@ -533,7 +536,8 @@ const BarChart = props => {
                                     (isLollipop ? 8 : 0)
                                   : segment.x +
                                     (segment.value >= 0 ? segment.width : 0) -
-                                    4
+                                    4 -
+                                    (isLollipop ? 8 : 0)
                               }
                               textAnchor={
                                 valueTextStartAnchor ? 'start' : 'end'

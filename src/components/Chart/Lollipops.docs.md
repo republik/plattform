@@ -45,3 +45,35 @@ Januar 2020,0.75
     `.trim()} />
 </div>
 ```
+
+## Negative Values
+
+```react
+<div>
+  <ChartTitle>Branchen, die zum Stillstand kamen</ChartTitle>
+  <CsvChart
+    config={{
+      "type": "Lollipop",
+      "y": "branche",
+      "sort": "none",
+      "numberFormat": "+.0%",
+      "domain": [
+        -1.1,
+        0
+      ],
+      "colorRange": [
+        "#6A3D9A"
+      ],
+      "showBarValues": true,
+      "band": "band"
+    }}
+    values={`
+branche,value,band_lower,band_upper
+Persönliche Dienstleistungen,-0.875,-0.950,-0.800
+Gastgewerbe und Beherbergung,-0.875,-0.950,-0.800
+Luftfahrt,-0.950,-1.000,-0.900
+"Kunst, Unterhaltung und Erholung",-0.950,-1.000,-0.900
+Reisebüros,-0.975,-1.000,-0.950
+    `.trim()} />
+</div>
+```
