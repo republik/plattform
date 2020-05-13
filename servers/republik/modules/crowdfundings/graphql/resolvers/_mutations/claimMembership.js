@@ -24,10 +24,6 @@ module.exports = async (_, args, context) => {
       throw new Error(t('api/membership/claim/invalidToken'))
     }
 
-    // A user can not claim a membership he owns.
-    if (membership.userId === req.user.id) {
-      throw new Error(t('api/membership/claim/ownerIsClaimer'))
-    }
     activatedMembership = await activateMembership(membership, req.user, t, transaction)
 
     const cache = createCache({ prefix: `User:${req.user.id}` }, context)
@@ -43,7 +39,10 @@ module.exports = async (_, args, context) => {
 
   if (activatedMembership) {
     try {
-      await enforceSubscriptions({ pgdb, userId: activatedMembership.userId })
+      if (activatedMembership.active && activatedMembership.userId !== req.user.id) {
+        await enforceSubscriptions({ pgdb, userId: activatedMembership.userId })
+      }
+
       await enforceSubscriptions({
         pgdb,
         userId: req.user.id,
@@ -54,10 +53,12 @@ module.exports = async (_, args, context) => {
       logger.error('newsletter subscription changes failed', { req: req._log(), args, error: e })
     }
 
-    try {
-      await sendMembershipClaimNotice({ membership: activatedMembership }, { pgdb, t })
-    } catch (e) {
-      logger.error('mail.sendMembershipClaimNotice failed', { req: req._log(), args, error: e })
+    if (activatedMembership.userId !== req.user.id) {
+      try {
+        await sendMembershipClaimNotice({ membership: activatedMembership }, { pgdb, t })
+      } catch (e) {
+        logger.error('mail.sendMembershipClaimNotice failed', { req: req._log(), args, error: e })
+      }
     }
   }
 
