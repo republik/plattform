@@ -57,6 +57,10 @@ type mutations {
   # adds a new paymentSource and makes it the default
   addPaymentSource(sourceId: String!, pspPayload: JSON!): [PaymentSource!]!
 
+  # Activate an existing membership.
+  # required role: supporter
+  activateMembership(id: ID!): Membership!
+
   cancelMembership(
     id: ID!
     immediately: Boolean
@@ -72,9 +76,7 @@ type mutations {
   # if canceled !immediately and subscription is still running, it is
   # reactivated.
   # YEARLYs are activated and a new membershipPeriod is inserted
-  reactivateMembership(
-    id: ID!
-  ): Membership!
+  reactivateMembership(id: ID!): Membership!
 
   # required role: supporter
   updateUser(firstName: String, lastName: String, birthday: Date, phoneNumber: String, address: AddressInput, userId: ID!): User!

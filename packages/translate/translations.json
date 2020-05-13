@@ -19,6 +19,22 @@
       "value": "Die von Ihnen eingegebene E-Mail-Adresse ist schon besetzt. Wir können Ihren Kauf daher nicht übertragen. Bitte melden Sie sich bei kontakt@republik.ch. (Pledge E-Mail: {pledgeEmail}, gewünschte E-Mail: {targetEmail})"
     },
     {
+      "key": "api/membership/activate/hasPeriods",
+      "value": "Mitgliedschaft enthält bereits Perioden, kann nicht aktiviert werden."
+    },
+    {
+      "key": "api/membership/activate/alreadyActive",
+      "value": "Mitgliedschaft ist bereits aktiv."
+    },
+    {
+      "key": "api/membership/activate/userMissing",
+      "value": "Besitzer der Mitgliedschaft nicht gefunden."
+    },
+    {
+      "key": "api/membership/activate/missingActivatedMembership",
+      "value": "Aktivieren der Mitgliedschaft schlug fehl."
+    },
+    {
       "key": "api/membership/claim/alreadyHave",
       "value": "Sie können keinen Gutscheincode einlösen, weil Sie schon eine Mitgliedschaft haben."
     },
