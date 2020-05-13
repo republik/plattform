@@ -31,35 +31,36 @@ module.exports = async (_, args, { pgdb, req, t, user: me, mail: { enforceSubscr
     }
 
     activatedMembership = await activateMembership(membership, user, t, pgdb)
-
-    try {
-      if (activatedMembership.active) {
-        await enforceSubscriptions({
-          pgdb,
-          userId: activatedMembership.userId,
-          subscribeToEditorialNewsletters: true
-        })
-      }
-    } catch (e) {
-      // ignore issues with newsletter subscriptions
-      console.warn('newsletter subscription changes failed', { req: req._log(), args, error: e })
-    }
-
-    try {
-      const { id, sequenceNumber, userId } = activatedMembership
-      await publishMonitor(
-        req.user,
-        `activateMembership (id: ${id}) #${sequenceNumber}\n{ADMIN_FRONTEND_BASE_URL}/users/${userId}`
-      )
-    } catch (e) {
-      // swallow slack message
-      console.warn('publish to slack failed', { req: req._log(), args, error: e })
-    }
-
-    return activatedMembership
   } catch (e) {
     console.error('activateMembership', e, { req: req._log() })
     await transaction.transactionRollback()
     throw e
   }
+
+  const { active, id, sequenceNumber, userId } = activatedMembership
+
+  try {
+    if (active) {
+      await enforceSubscriptions({
+        pgdb,
+        userId,
+        subscribeToEditorialNewsletters: true
+      })
+    }
+  } catch (e) {
+    // ignore issues with newsletter subscriptions
+    console.warn('newsletter subscription changes failed', { req: req._log(), args, error: e })
+  }
+
+  try {
+    await publishMonitor(
+      req.user,
+      `activateMembership (id: ${id}) #${sequenceNumber}\n{ADMIN_FRONTEND_BASE_URL}/users/${userId}`
+    )
+  } catch (e) {
+    // swallow slack message
+    console.warn('publish to slack failed', { req: req._log(), args, error: e })
+  }
+
+  return activatedMembership
 }
