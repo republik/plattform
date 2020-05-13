@@ -1,5 +1,5 @@
 {
-  "updated": "2020-03-23T19:59:31.950Z",
+  "updated": "2020-05-13T10:56:00.234Z",
   "title": "live",
   "data": [
     {
@@ -699,12 +699,8 @@
       "value": "Erste X"
     },
     {
-      "key": "metaData/field/highlightId",
-      "value": "Hervorgehobene ID"
-    },
-    {
-      "key": "metaData/field/highlightQuote",
-      "value": "Hervorgehobenes Zitat"
+      "key": "metaData/field/featured",
+      "value": "Hervorgehobene"
     },
     {
       "key": "metaData/field/excludeFromGallery",
