@@ -31,6 +31,10 @@
       "value": "Besitzer der Mitgliedschaft nicht gefunden."
     },
     {
+      "key": "api/membership/activate/missingActivatedMembership",
+      "value": "Aktivieren der Mitgliedschaft schlug fehl."
+    },
+    {
       "key": "api/membership/claim/alreadyHave",
       "value": "Sie können keinen Gutscheincode einlösen, weil Sie schon eine Mitgliedschaft haben."
     },

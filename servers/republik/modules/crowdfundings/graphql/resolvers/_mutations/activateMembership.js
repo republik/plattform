@@ -30,7 +30,12 @@ module.exports = async (_, args, { pgdb, req, t, user: me, mail: { enforceSubscr
       throw new Error(t('api/membership/activate/userMissing'))
     }
 
-    activatedMembership = await activateMembership(membership, user, t, pgdb)
+    activatedMembership = await activateMembership(membership, user, t, transaction)
+    if (!activatedMembership) {
+      throw new Error(t('api/membership/activate/missingActivatedMembership'))
+    }
+
+    await transaction.transactionCommit()
   } catch (e) {
     console.error('activateMembership', e, { req: req._log() })
     await transaction.transactionRollback()
