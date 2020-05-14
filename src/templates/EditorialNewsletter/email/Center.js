@@ -5,8 +5,6 @@ import HR from './HR'
 import { Mso } from 'mdast-react-render/lib/email'
 import colors from '../../../theme/colors'
 
-import Paragraph, { Link } from './Paragraph'
-
 const footerParagraphStyle = {
   color: colors.text,
   fontFamily: fontFamilies.sansSerifRegular,
@@ -24,9 +22,6 @@ const footerLinkStyle = {
 
 export default ({ children, meta }) => {
   const { slug, path, format } = meta
-
-  const isCovid19 =
-    format && format.indexOf('format-covid-19-uhr-newsletter') !== -1
 
   return (
     <tr>
@@ -55,23 +50,6 @@ export default ({ children, meta }) => {
             <tr>
               <td style={{ padding: 20 }} className='body_content'>
                 {children}
-                {isCovid19 && (
-                  <>
-                    *|INTERESTED:Customer:Member,Geteilter Zugriff|* *|ELSE:|*
-                    <Paragraph>
-                      <strong>Sie finden diesen Newsletter brauchbar …</strong>
-                      <br />… und möchten mehr davon? Schliessen Sie für CHF 22
-                      ein Monatsabo ab. Alle Newsletter, alle Beiträge, alle
-                      Podcasts, alle Debatten – auf der Website und in der App.
-                      Jederzeit kündbar.{' '}
-                      <Link href='https://www.republik.ch/angebote?package=MONTHLY_ABO&utm_source=newsletter&utm_medium=email&utm_campaign=covid-19-uhr-newsletter'>
-                        Jetzt ausprobieren
-                      </Link>
-                      .
-                    </Paragraph>
-                    *|END:INTERESTED|*
-                  </>
-                )}
               </td>
             </tr>
             <tr>
