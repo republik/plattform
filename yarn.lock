@@ -612,9 +612,9 @@
     unified "^6.1.5"
 
 "@project-r/styleguide@^9.16.0":
-  version "9.17.1"
-  resolved "https://registry.yarnpkg.com/@project-r/styleguide/-/styleguide-9.17.1.tgz#94bfd72485a94c0546094e8e318a107f32b8703a"
-  integrity sha512-2hxL8OVScu5i3BAWd/c/aITNVdLDvMnKWl8MOIBvsow3Bg9b9OMVPFdFO2q2WpfFNd3XJOIrRE7E9vUlqa8Clw==
+  version "9.17.2"
+  resolved "https://registry.yarnpkg.com/@project-r/styleguide/-/styleguide-9.17.2.tgz#d1b145c60c99a80257bfa0430b8fd7996d58e9df"
+  integrity sha512-efnI1CQ3y7yHPjBjVeAdt2QEb4pA5ar6nSGKR/qOB1lPlsEkxAOgVZZVoTKJAnl2R3rgrFnai2WCFk+loZTe6g==
   dependencies:
     body-scroll-lock "2.6.4"
     react-icons "^2.2.7"
