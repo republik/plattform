@@ -1,24 +1,5 @@
 import React from 'react'
 import colors from '../../../theme/colors'
-import { fontFamilies } from '../../../theme/fonts'
-
-import { linkStyle } from './Paragraph'
-
-const ctaParagraphStyle = {
-  color: colors.text,
-  margin: '10px',
-  fontFamily: fontFamilies.sansSerifRegular,
-  fontSize: '16px',
-  lineHeight: '30px'
-}
-
-const ctaLinkStyle = {
-  ...linkStyle,
-  color: colors.text,
-  fontFamily: fontFamilies.sansSerifRegular,
-  fontSize: '16px',
-  lineHeight: '30px'
-}
 
 export default ({ meta }) => {
   const { slug, path, format } = meta
@@ -32,9 +13,7 @@ export default ({ meta }) => {
         <td
           align='center'
           valign='top'
-          style={{
-            borderBottom: !isCovid19 ? `1px solid ${colors.divider}` : undefined
-          }}
+          style={{ borderBottom: `1px solid ${colors.divider}` }}
         >
           <a
             href={`https://www.republik.ch${path ? path : `/${slug}`}`}
@@ -58,30 +37,6 @@ export default ({ meta }) => {
           </a>
         </td>
       </tr>
-      {isCovid19 && (
-        <>
-          *|INTERESTED:Customer:Member,Geteilter Zugriff|* *|ELSE:|*
-          *|IFNOT:COVID19_AG|*
-          <tr>
-            <td
-              align='center'
-              valign='top'
-              style={{ backgroundColor: colors.primaryBg }}
-            >
-              <p style={ctaParagraphStyle}>
-                Neugierig auf die ganze Republik?{' '}
-                <a
-                  href='https://www.republik.ch/probelesen?campaign=covid-19-uhr-newsletter&email=*|EMAILB64U|*&token=*|AS_ATOKEN|*'
-                  style={ctaLinkStyle}
-                >
-                  Jetzt ausprobieren
-                </a>
-              </p>
-            </td>
-          </tr>
-          *|END:IF|* *|END:INTERESTED|*
-        </>
-      )}
     </>
   )
 }

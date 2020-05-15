@@ -1,9 +1,10 @@
 import React from 'react'
 import { fontFamilies } from '../../../theme/fonts'
-import { paragraphStyle, linkStyle } from './Paragraph'
 import HR from './HR'
 import { Mso } from 'mdast-react-render/lib/email'
 import colors from '../../../theme/colors'
+
+import Paragraph, { paragraphStyle, linkStyle, Link } from './Paragraph'
 
 const footerParagraphStyle = {
   color: colors.text,
@@ -22,6 +23,9 @@ const footerLinkStyle = {
 
 export default ({ children, meta }) => {
   const { slug, path, format } = meta
+
+  const isCovid19 =
+    format && format.indexOf('format-covid-19-uhr-newsletter') !== -1
 
   return (
     <tr>
@@ -50,6 +54,25 @@ export default ({ children, meta }) => {
             <tr>
               <td style={{ padding: 20 }} className='body_content'>
                 {children}
+                {isCovid19 && (
+                  <>
+                    *|INTERESTED:Customer:Member,Geteilter Zugriff|* *|ELSE:|*
+                    *|IFNOT:COVID19_AG|*
+                    <Paragraph>
+                      <strong>Neugierig auf die ganze Republik?</strong>
+                      <br />
+                      Jetzt kostenlos 14 Tage lang testen. Alle Newsletter, alle
+                      Beiträge, alle Podcasts, alle Debatten entdecken – auf der
+                      Website und in der App. Gratis, unverbindlich und ohne
+                      Werbung, finanziert von unseren Leserinnen:{' '}
+                      <Link href='https://www.republik.ch/probelesen?campaign=covid-19-uhr-newsletter&email=*|EMAILB64U|*&token=*|AS_ATOKEN|*'>
+                        Jetzt ausprobieren
+                      </Link>
+                      .
+                    </Paragraph>
+                    *|END:IF|* *|END:INTERESTED|*
+                  </>
+                )}
               </td>
             </tr>
             <tr>
