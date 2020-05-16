@@ -101,7 +101,7 @@ const NBSPButton = ({ value, onChange }) => {
       data-visible
       onMouseDown={nbspClickHandler(value, onChange)}
     >
-      Dauerleerzeichen (␣)
+      Dauerleerzeichen (<span style={{ color: '#1E90FF' }}>␣</span>)
     </span>
   )
 }
@@ -121,7 +121,7 @@ const SoftHyphenButton = ({ value, onChange }) => {
       data-visible
       onMouseDown={softHyphenClickHandler(value, onChange)}
     >
-      Weiches Trennzeichen (‧)
+      Weiches Trennzeichen (<span style={{ color: '#1E90FF' }}>‧</span>)
     </span>
   )
 }

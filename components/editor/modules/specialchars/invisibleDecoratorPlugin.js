@@ -21,11 +21,13 @@ const styles = {
   }),
   [HYPHEN_TYPE]: css({
     ':before': {
+      color: '#1E90FF',
       content: '‧' // HYPHENATION POINT \u2027
     }
   }),
   [NBSP_TYPE]: css({
     ':before': {
+      color: '#1E90FF',
       marginRight: '-0.25em',
       content: '␣' // OPEN BOX \u2423
     }
