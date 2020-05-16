@@ -72,6 +72,24 @@ export const filterAndOrderRepos = gql`
               template
               title
               credits
+              series {
+                title
+              }
+              section {
+                meta {
+                  title
+                }
+              }
+              format {
+                meta {
+                  title
+                }
+              }
+              dossier {
+                meta {
+                  title
+                }
+              }
             }
           }
         }
@@ -391,17 +409,33 @@ class RepoList extends Component {
                     }
                   } = repo
 
+                  const label =
+                    (meta.series && meta.series.title) ||
+                    (meta.section &&
+                      meta.section.meta &&
+                      meta.section.meta.title) ||
+                    (meta.format &&
+                      meta.format.meta &&
+                      meta.format.meta.title) ||
+                    (meta.dossier &&
+                      meta.dossier.meta &&
+                      meta.dossier.meta.title) ||
+                    (meta.template !== 'article' &&
+                      t(
+                        `repo/add/template/${meta.template}`,
+                        null,
+                        meta.template
+                      ))
+
                   return (
                     <Tr key={id}>
                       <Td>
-                        <Label>
-                          {t(
-                            `repo/add/template/${meta.template}`,
-                            null,
-                            meta.template
-                          )}
-                        </Label>
-                        {meta.template && <br />}
+                        {label && (
+                          <>
+                            <Label>{label}</Label>
+                            <br />
+                          </>
+                        )}
                         <Link
                           route='repo/tree'
                           params={{ repoId: id.split('/') }}
