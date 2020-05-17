@@ -1,26 +1,30 @@
 import React from 'react'
 import { css } from 'glamor'
 
+const INVALID_CONTROL_TYPE = 'SPECIALCHARS_INVALID_CONTROL'
 const INVALID_TYPE = 'SPECIALCHARS_INVALID'
 const HYPHEN_TYPE = 'SPECIALCHARS_HYPHEN'
 const NBSP_TYPE = 'SPECIALCHARS_NBSP'
 
 const CHARS = [
-  ['\u2028', INVALID_TYPE],
-  ['\u0308', INVALID_TYPE],
-  ['\u2022', INVALID_TYPE],
-  ['\u2027', INVALID_TYPE],
-  ['\u2423', INVALID_TYPE],
-  ['\u00ad', HYPHEN_TYPE],
-  ['\u00a0', NBSP_TYPE]
+  ['\u2028', INVALID_CONTROL_TYPE], // LINE SEPARATOR
+  ['\u0308', INVALID_TYPE], // COMBINING DIAERESIS
+  ['\u2022', INVALID_TYPE], // BULLET
+  ['\u2027', INVALID_TYPE], // HYPHENATION POINT
+  ['\u2423', INVALID_TYPE], // OPEN BOX
+  ['\u00ad', HYPHEN_TYPE], // SOFT HYPHEN
+  ['\u00a0', NBSP_TYPE] // NO-BREAK SPACE
 ]
 
 const styles = {
-  [INVALID_TYPE]: css({
+  [INVALID_CONTROL_TYPE]: css({
     ':before': {
       color: 'red',
       content: '•' // BULLET \u2022
     }
+  }),
+  [INVALID_TYPE]: css({
+    color: 'red'
   }),
   [HYPHEN_TYPE]: css({
     ':before': {
