@@ -8,6 +8,9 @@ const NBSP_TYPE = 'SPECIALCHARS_NBSP'
 const CHARS = [
   ['\u2028', INVALID_TYPE],
   ['\u0308', INVALID_TYPE],
+  ['\u2022', INVALID_TYPE],
+  ['\u2027', INVALID_TYPE],
+  ['\u2423', INVALID_TYPE],
   ['\u00ad', HYPHEN_TYPE],
   ['\u00a0', NBSP_TYPE]
 ]
@@ -21,11 +24,13 @@ const styles = {
   }),
   [HYPHEN_TYPE]: css({
     ':before': {
+      color: '#1E90FF',
       content: '‧' // HYPHENATION POINT \u2027
     }
   }),
   [NBSP_TYPE]: css({
     ':before': {
+      color: '#1E90FF',
       marginRight: '-0.25em',
       content: '␣' // OPEN BOX \u2423
     }
