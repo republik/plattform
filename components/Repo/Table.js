@@ -76,16 +76,19 @@ export const filterAndOrderRepos = gql`
                 title
               }
               section {
+                id
                 meta {
                   title
                 }
               }
               format {
+                id
                 meta {
                   title
                 }
               }
               dossier {
+                id
                 meta {
                   title
                 }
