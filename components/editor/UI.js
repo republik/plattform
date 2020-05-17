@@ -34,6 +34,7 @@ const Sidebar = ({
     <div
       style={{
         marginTop: 10,
+        marginBottom: 250,
         paddingTop: 20,
         borderTop: `1px solid ${colors.divider}`
       }}
