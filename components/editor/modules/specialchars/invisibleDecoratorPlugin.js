@@ -9,7 +9,7 @@ const CHARS = [
   ['\u2028', INVALID_TYPE],
   ['\u0308', INVALID_TYPE],
   ['\u2022', INVALID_TYPE],
-  ['\u2423', INVALID_TYPE],
+  ['\u2027', INVALID_TYPE],
   ['\u2423', INVALID_TYPE],
   ['\u00ad', HYPHEN_TYPE],
   ['\u00a0', NBSP_TYPE]
