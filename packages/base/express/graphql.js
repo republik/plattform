@@ -34,7 +34,10 @@ module.exports = (
         : user
     })
     // prime User dataloader with me
-    if (context.user && context.loaders && context.loaders.User) {
+    if (
+      context.user && context.user.id && // global.testUser has no id
+      context.loaders && context.loaders.User
+    ) {
       context.loaders.User.byId.prime(
         context.user.id,
         context.user
