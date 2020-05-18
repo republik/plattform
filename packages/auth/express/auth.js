@@ -1,5 +1,4 @@
 const session = require('express-session')
-const passport = require('passport')
 const PgSession = require('connect-pg-simple')(session)
 
 const transformUser = require('../lib/transformUser')
@@ -40,7 +39,8 @@ exports.configure = ({
   // Sessions store for express-session
   const store = new PgSession({
     tableName: 'sessions',
-    pool: pgdb.pool
+    pool: pgdb.pool,
+    pruneSessionInterval: 60 * 10 // 10mins
   })
 
   // Configure sessions
@@ -64,26 +64,19 @@ exports.configure = ({
     server.set('trust proxy', 1)
   }
 
-  // Tell Passport how to seralize/deseralize user accounts
-  passport.serializeUser(function (user, next) {
-    next(null, user.id)
-  })
-
-  passport.deserializeUser(async function (id, next) {
-    const user = await pgdb.public.users.findOne({ id }).then(transformUser)
-
-    if (!user) {
-      return next('user not found!')
+  // set user on req
+  server.use( async (req, res, next) => {
+    if (
+      req.session &&
+      req.session.passport &&
+      req.session.passport.user
+    ) {
+      req.user = await pgdb.public.users.findOne({
+        id: req.session.passport.user
+      })
+        .then(transformUser)
     }
 
-    next(null, user)
-  })
-
-  // Initialise Passport
-  server.use(passport.initialize())
-  server.use(passport.session())
-
-  server.use(function (req, res, next) {
     // Check if a user has more than one role and let session expire after a
     // shorter period of time
     if (req.user && userIsInRoles(req.user, specialRoles)) {

@@ -7,7 +7,6 @@ type Session {
   email: String!
   expiresAt: DateTime!
   country: String
-  countryFlag: String
   city: String
   isCurrent: Boolean!
   phrase: String
@@ -97,7 +96,6 @@ type RequestInfo {
   userAgent: String
   isApp: Boolean!
   country: String
-  countryFlag: String
   city: String
 }
 
