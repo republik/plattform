@@ -83,17 +83,20 @@ SELECT
   COUNT(*) FILTER (
     WHERE "maxEndDate" >= "first"
     AND "maxEndDate" <= LEAST(NOW(), "last")
+    AND active = FALSE
   ) "ended",
 
   COUNT(*) FILTER (
     WHERE "maxEndDate" >= "first"
     AND "maxEndDate" <= LEAST(NOW(), "last")
+    AND active = FALSE
     AND renew = TRUE
   ) "expired",
 
   COUNT(*) FILTER (
     WHERE "maxEndDate" >= "first"
     AND "maxEndDate" <= LEAST(NOW(), "last")
+    AND active = FALSE
     AND renew = FALSE
   ) "cancelled",
 
@@ -101,6 +104,13 @@ SELECT
     WHERE "maxEndDate" >= LEAST(NOW(), "last")
     AND "minBeginDate" < LEAST(NOW(), "last")
   ) "active",
+
+  COUNT(*) FILTER (
+    WHERE "maxEndDate" >= :min::timestamp
+    AND "maxEndDate" <= LEAST(NOW(), "last")
+    AND active = TRUE
+    AND renew = TRUE
+  ) "overdue",
 
   -- Data to end of month
 

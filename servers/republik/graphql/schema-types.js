@@ -265,6 +265,8 @@ type MembershipStatsEvolutionBucket {
   cancelled: Int!
   "Amount of memberships which are active (periods)"
   active: Int!
+  "Amount of memberships which are overdue"
+  overdue: Int!
 
   "Amount of memberships ended during month"
   endedEndOfMonth: Int!
