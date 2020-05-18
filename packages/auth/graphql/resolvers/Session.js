@@ -1,4 +1,3 @@
-const { flag, code } = require('country-emoji')
 const useragent = require('../../lib/useragent')
 
 module.exports = {
@@ -17,11 +16,6 @@ module.exports = {
   country (session) {
     const { geo = {} } = session.sess
     return geo.country
-  },
-  countryFlag (session) {
-    const { geo = {} } = session.sess
-    const countryCode = geo.countryEN ? code(geo.countryEN) : null
-    return countryCode ? flag(countryCode) : '🏴'
   },
   city (session) {
     const { geo = {} } = session.sess
