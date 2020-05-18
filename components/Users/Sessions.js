@@ -26,7 +26,6 @@ const sessionQuery = gql`
         expiresAt
         city
         country
-        countryFlag
         ipAddress
         userAgent
       }
