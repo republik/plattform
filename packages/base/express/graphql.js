@@ -26,12 +26,22 @@ module.exports = (
     }
   })
 
-  const createContext = ({ user, ...context } = {}) => createGraphqlContext({
-    ...context,
-    user: (global && global.testUser !== undefined)
-      ? global.testUser
-      : user
-  })
+  const createContext = ({ user, ...rest } = {}) => {
+    const context = createGraphqlContext({
+      ...rest,
+      user: (global && global.testUser !== undefined)
+        ? global.testUser
+        : user
+    })
+    // prime User dataloader with me
+    if (context.user && context.loaders && context.loaders.User) {
+      context.loaders.User.byId.prime(
+        context.user.id,
+        context.user
+      )
+    }
+    return context
+  }
 
   const apolloServer = new ApolloServer({
     schema: executableSchema,
