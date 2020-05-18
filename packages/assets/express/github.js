@@ -37,6 +37,7 @@ module.exports = (server) => {
       .pop()
       .split('.')[0]
 
+    let status
     const result = await fetch(`https://api.github.com/repos/${login}/${repoName}/git/blobs/${blobSha}`, {
       method: 'GET',
       headers: {
@@ -46,13 +47,21 @@ module.exports = (server) => {
       }
     })
       .catch(error => {
-        if (error.code === 404) {
-          res.status(404).end()
-        } else {
-          console.error(error)
-          res.status(500).end()
-        }
+        status = error.code
       })
+
+    status = status || result.status
+    if (status !== 200) {
+      if (status !== 404) {
+        console.error('assets:github error:', {
+          url: result.url,
+          status,
+          statusText: result.statusText
+        })
+      }
+      res.status(status).end()
+      return
+    }
 
     return returnImage({
       response: res,
