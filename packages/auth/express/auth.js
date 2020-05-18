@@ -39,7 +39,8 @@ exports.configure = ({
   // Sessions store for express-session
   const store = new PgSession({
     tableName: 'sessions',
-    pool: pgdb.pool
+    pool: pgdb.pool,
+    pruneSessionInterval: 60 * 10 // 10mins
   })
 
   // Configure sessions
