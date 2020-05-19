@@ -78,27 +78,58 @@ SELECT
 
   ) "ending",
 
+  -- Data up until now
+
+  COUNT(*) FILTER (
+    WHERE "maxEndDate" >= "first"
+    AND "maxEndDate" <= LEAST(NOW(), "last")
+    AND active = FALSE
+  ) "ended",
+
+  COUNT(*) FILTER (
+    WHERE "maxEndDate" >= "first"
+    AND "maxEndDate" <= LEAST(NOW(), "last")
+    AND active = FALSE
+    AND renew = TRUE
+  ) "expired",
+
+  COUNT(*) FILTER (
+    WHERE "maxEndDate" >= "first"
+    AND "maxEndDate" <= LEAST(NOW(), "last")
+    AND active = FALSE
+    AND renew = FALSE
+  ) "cancelled",
+
+  COUNT(*) FILTER (
+    WHERE "maxEndDate" >= LEAST(NOW(), "last")
+    AND "minBeginDate" < LEAST(NOW(), "last")
+  ) "active",
+
+  COUNT(*) FILTER (
+    WHERE "maxEndDate" >= :min::timestamp
+    AND "maxEndDate" <= LEAST(NOW(), "last")
+    AND active = TRUE
+    AND renew = TRUE
+  ) "overdue",
+
+  -- Data to end of month
+
   COUNT(*) FILTER (
     WHERE "maxEndDate" >= "first"
     AND "maxEndDate" <= "last"
-    AND (
-      active = TRUE
-      AND renew = TRUE
-    )
-  ) "prolongable",
+  ) "endedEndOfMonth",
 
   COUNT(*) FILTER (
     WHERE "maxEndDate" >= "first"
     AND "maxEndDate" <= "last"
     AND renew = TRUE
-    AND active = FALSE
-  ) "expired",
+  ) "expiredEndOfMonth",
 
   COUNT(*) FILTER (
     WHERE "maxEndDate" >= "first"
     AND "maxEndDate" <= "last"
     AND renew = FALSE
-  ) "cancelled",
+  ) "cancelledEndOfMonth",
 
   COUNT(*) FILTER (
     WHERE "maxEndDate" >= "last"
@@ -117,22 +148,27 @@ SELECT
     AND "membershipDonation"."membershipId" IS NULL
   ) "activeEndOfMonthWithoutDonation",
 
+  -- Data based on membership active state
+
+  COUNT(*) FILTER (
+    WHERE "maxEndDate" >= "first"
+    AND "maxEndDate" <= "last"
+    AND active = TRUE
+    AND renew = TRUE
+  ) "prolongable",
+
   COUNT(*) FILTER (
     WHERE "maxEndDate" >= :min::timestamp
     AND "maxEndDate" <= "last"
-    AND (
-      active = TRUE
-      AND renew = TRUE
-    )
+    AND active = TRUE
+    AND renew = TRUE
   ) "pending",
 
   COUNT(*) FILTER (
     WHERE "maxEndDate" >= :min::timestamp
     AND "maxEndDate" <= "last"
-    AND (
-      active = TRUE
-      AND renew = TRUE
-    )
+    AND active = TRUE
+    AND renew = TRUE
     AND "membershipTypeName" IN ('MONTHLY_ABO')
   ) "pendingSubscriptionsOnly"
 
@@ -155,7 +191,7 @@ const createCache = (context) => create(
   context
 )
 
-const populate = async (context) => {
+const populate = async (context, resultFn) => {
   debug('populate')
 
   const { pgdb } = context
@@ -174,6 +210,10 @@ const populate = async (context) => {
 
   // Generate date for range
   const result = await pgdb.query(query, { min, max, TZ: process.env.TZ || 'Europe/Zurich' })
+
+  if (resultFn) {
+    return resultFn(result)
+  }
 
   // Cache said data.
   await createCache(context).set({ result, updatedAt: new Date() })
