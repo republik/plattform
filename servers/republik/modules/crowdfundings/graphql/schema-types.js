@@ -181,6 +181,7 @@ type MembershipPeriod {
   kind: MembershipPeriodKind!
   beginDate: DateTime!
   endDate: DateTime!
+  isCurrent: Boolean!
   createdAt: DateTime!
   updatedAt: DateTime!
 }
