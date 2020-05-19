@@ -112,9 +112,17 @@ module.exports = {
     return pledge
   },
   async periods (membership, args, { pgdb }) {
-    return pgdb.public.membershipPeriods.find({
-      membershipId: membership.id
-    }, { orderBy: ['endDate desc'] })
+    const periods = await pgdb.public.membershipPeriods.find(
+      { membershipId: membership.id },
+      { orderBy: { endDate: 'DESC' } }
+    )
+
+    const now = new Date()
+
+    return periods.map(period => ({
+      ...period,
+      isCurrent: membership.active && period.beginDate < now && period.endDate > now
+    }))
   },
   async user (membership, args, { user: me, pgdb }) {
     const user = await pgdb.public.users.findOne({ id: membership.userId })
