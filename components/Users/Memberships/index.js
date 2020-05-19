@@ -1,6 +1,8 @@
 import { Fragment } from 'react'
+import { css } from 'glamor'
 import { Query } from 'react-apollo'
 import gql from 'graphql-tag'
+import { MdChevronLeft as CurrentIcon } from 'react-icons/md'
 
 import { Label, Loader, A, Checkbox } from '@project-r/styleguide'
 
@@ -17,6 +19,7 @@ import {
 import { tableStyles } from '../../Tables/utils'
 import { Link } from '../../../server/routes'
 
+
 import { REPUBLIK_FRONTEND_URL } from '../../../server/constants'
 
 import MoveMembership from './MoveMembership'
@@ -24,6 +27,14 @@ import CancelMembership from './CancelMembership'
 import ReactivateMembership from './ReactivateMembership'
 
 import { intersperse } from '../../../lib/helpers'
+
+const styles = {
+  icon: css({
+    verticalAlign: 'baseline',
+    marginRight: 3,
+    marginBottom: '-0.2em'
+  })
+}
 
 const GET_MEMBERSHIPS = gql`
   query memberships($userId: String!) {
@@ -51,6 +62,7 @@ const GET_MEMBERSHIPS = gql`
         periods {
           beginDate
           endDate
+          isCurrent
         }
         cancellations {
           id
@@ -119,6 +131,8 @@ const MembershipCard = ({ membership, ...props }) => {
           Erstellt am{' '}
           {displayDateTime(membership.createdAt)}
         </Label>
+        <br />
+        <Label>ID: {membership.id}</Label>
       </td>
       <td {...tableStyles.paddedCell}>
         {getState(membership)}
@@ -174,12 +188,8 @@ const MembershipDetails = ({ userId, membership, ...props }) => {
                 <DT>Laufzeiten</DT>
                 {membership.periods.map((period, i) => (
                   <DD key={`period-${i}`}>
-                  {displayDate(
-                    new Date(period.beginDate)
-                  ).concat(
-                    ' - ',
-                    displayDate(new Date(period.endDate))
-                  )}
+                    {displayDate(new Date(period.beginDate))} – {displayDate(new Date(period.endDate))}
+                    {period.isCurrent && <CurrentIcon size='1.1em' {...styles.icon} />}
                   </DD>
                 ))}
               </Fragment>

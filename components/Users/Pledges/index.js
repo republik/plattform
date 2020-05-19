@@ -121,6 +121,8 @@ const PledgeCard = ({ pledge, ...props }) => {
         <Label>
           Erstellt am {displayDateTime(pledge.createdAt)}
         </Label>
+        <br />
+        <Label>ID: {pledge.id}</Label>
       </td>
       <td {...tableStyles.paddedCell}>
         {chfFormat(pledge.total / 100)}
@@ -297,6 +299,8 @@ const PaymentDetails = ({ payment, ...props}) => {
         {' - '} {payment.status}
       </SectionSubhead>
       <Label>Erstellt am {displayDateTime(new Date(payment.createdAt))}</Label>
+      <br />
+      <Label>ID: {payment.id}</Label>
       <div {...displayStyles.hFlexBox}>
         <div>
           <DL>
@@ -360,6 +364,7 @@ const MembershipDetails = ({ membership, ...props }) => {
         {membership.type.name.split('_').join(' ')} #
         {membership.sequenceNumber}{' '}
       </SectionSubhead>
+      <Label>ID: {membership.id}</Label>
       {!!membership.voucherCode && (
         <DL>
           <DT>Voucher Code</DT>
