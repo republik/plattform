@@ -167,6 +167,13 @@ type MembershipStats {
     max: YearMonthDate!
   ): MembershipStatsEvolution!
 
+  lastSeen(
+    "Minimum month (YYYY-MM)"
+    min: YearMonthDate!
+    "Maximum month (YYYY-MM)"
+    max: YearMonthDate!
+  ): MembershipStatsLastSeen!
+
   countRange(
     min: DateTime!
     max: DateTime!
@@ -288,6 +295,17 @@ type MembershipStatsEvolutionBucket {
   pending: Int!
   "Amount of all subscriptions (e.g. MONTHLY_ABO) pending at end of month (ending but still prolongable)"
   pendingSubscriptionsOnly: Int!
+}
+
+type MembershipStatsLastSeen {
+  buckets: [MembershipStatsLastSeenBucket!]
+  updatedAt: DateTime!
+}
+
+type MembershipStatsLastSeenBucket {
+  "Bucket key (YYYY-MM)"
+  key: String!
+  users: Int!
 }
 
 `
