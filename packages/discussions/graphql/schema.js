@@ -33,6 +33,8 @@ type queries {
     content: String!
     tags: [String!]
   ): Comment!
+
+  discussionsStats: DiscussionsStats!
 }
 
 type mutations {
