@@ -55,11 +55,11 @@ const getContentStrings = (mdast) => {
       }).trim()
 
       const lead = mdastToString({
-        children: [node.children.filter(n => n.type === 'paragraph')[0]]
+        children: [node.children.filter(n => n.type === 'paragraph')[0]].filter(Boolean)
       }).trim()
 
       const credits = mdastToString({
-        children: [node.children.filter(n => n.type === 'paragraph')[1]]
+        children: [node.children.filter(n => n.type === 'paragraph')[1]].filter(Boolean)
       }).trim()
 
       Object.assign(
