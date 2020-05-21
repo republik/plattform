@@ -37,9 +37,13 @@ const getContentString = (mdast) => {
 }
 
 const getContentStrings = (mdast) => {
+  if (!mdast) {
+    return
+  }
+
   const contentStrings = {}
 
-  const text = mdast && mdastContentToString(mdast)
+  const text = mdastContentToString(mdast)
   if (text) {
     contentStrings.text = text
   }
