@@ -550,10 +550,7 @@ const RepoListWithQuery = compose(
       variables: {
         search:
           search && search.length >= SEARCH_MIN_LENGTH ? search : undefined,
-        orderBy:
-          search && search.length >= SEARCH_MIN_LENGTH
-            ? undefined
-            : { field: 'PUSHED_AT', direction: 'DESC' }
+        orderBy: { field: 'PUSHED_AT', direction: 'DESC' }
       }
     }),
     props: ({ data, ownProps }) => ({
