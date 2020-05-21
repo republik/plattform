@@ -52,6 +52,7 @@ const getSourceFilter = () => ({
     excludes: [
       'contentMeta',
       'contentString',
+      'contentStrings',
       'createdAt',
       'name',
       'updatedAt'
@@ -79,13 +80,19 @@ const find = async (args, { elastic }) => {
     'contentMeta.seriesMaster.episodes.label',
     'contentMeta.seriesMaster.episodes.title',
     'contentMeta.seriesMaster.title',
+    'contentMeta.shortTitle',
     'contentMeta.slug',
     'contentMeta.subject',
     'contentMeta.template',
-    'contentMeta.title^2',
+    'contentMeta.title',
     'contentMeta.twitterDescription',
     'contentMeta.twitterTitle',
     'contentString',
+    'contentStrings.credits',
+    'contentStrings.lead',
+    'contentStrings.subject',
+    'contentStrings.text',
+    'contentStrings.title',
     'name'
   ]
 
