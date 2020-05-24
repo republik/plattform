@@ -1,5 +1,5 @@
 {
-  "updated": "2020-03-23T20:34:06.306Z",
+  "updated": "2020-05-24T13:10:16.770Z",
   "title": "live",
   "data": [
     {
@@ -1693,6 +1693,18 @@
     {
       "key": "api/publish/disabled",
       "value": "Artikel können im Moment weder veröffentlicht noch zurückgezogen werden. Bitte versuche es in ein paar Minuten noch einmal, ansonsten kontaktiere bitte die IT."
+    },
+    {
+      "key": "api/publish/error/createCampaign",
+      "value": "Kampagne auf MailChimp konnte nicht angelegt werden."
+    },
+    {
+      "key": "api/publish/error/updateCampaign",
+      "value": "Kampagne auf MailChimp konnte nicht aktualisiert werden."
+    },
+    {
+      "key": "api/publish/error/updateCampaignContent",
+      "value": "Kampagne auf MailChimp konnte nicht aktualisiert werden."
     },
     {
       "key": "api/archive/error/published",
