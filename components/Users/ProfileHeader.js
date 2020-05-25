@@ -124,8 +124,9 @@ export default ({ userId, section }) => {
             error={isInitialLoading && error}
             render={() => {
               const { user } = data
+              const name = [user.firstName, user.lastName].filter(Boolean).join(' ')
               const byline = [
-                user.email && (
+                user.email && name && (
                   <A
                     key="mail"
                     href={`mailto:${user.email}`}
@@ -141,32 +142,32 @@ export default ({ userId, section }) => {
                     {user.phoneNumber}
                   </A>
                 ),
-                user.username && (
-                  <span key="username">
-                    <A key="profile" href={`${REPUBLIK_FRONTEND_URL}/~${user.username}`} target="_blank">
-                      {user.username}
-                    </A>
-                  </span>
-                )
+                <span key="profile">
+                  <A key="profile-link" href={`${REPUBLIK_FRONTEND_URL}/~${user.username || user.id}`} target="_blank">
+                    {user.username || 'Profil-Seite'}
+                  </A>
+                </span>
               ]
                 .filter(Boolean)
                 .reduce((acc, v) => [...acc, ' | ', v], [])
                 .slice(1)
               return (
                 <Section {...styles.header}>
-                  <div>
-                    <img
-                      src={user.portrait}
-                      {...styles.portrait}
-                    />
+                  <div style={{clear: 'both', margin: '0 2px'}}>
+                    {user.portrait && (
+                      <img
+                        src={user.portrait}
+                        {...styles.portrait}
+                      />
+                    )}
                     <Interaction.H3>
-                      {user.firstName} {user.lastName}
+                      {name || user.email}
                     </Interaction.H3>
                     <div {...styles.byline}>
                       {byline}
                     </div>
                   </div>
-                  <div  style={{clear: 'both', margin: '10px 0'}}>
+                  <div style={{clear: 'both', margin: '10px 0'}}>
                     <Subnav
                     userId={userId}
                     section={section}
