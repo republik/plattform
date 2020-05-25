@@ -55,7 +55,7 @@ const HeaderSection = compose(
 
 const logoStyles = {
   width: '50px',
-  marginLeft: '5px',
+  marginLeft: '15px',
   display: 'inline-block'
 }
 
@@ -69,7 +69,7 @@ export default ({ ...props }) => {
   const searchParams = props.search ? { search: props.search } : {}
   return (
     <Header {...props}>
-      <HeaderSection flex="0 0 70px">
+      <HeaderSection flex="0 0 85px">
         <span style={logoStyles}>
           <BrandMark />
         </span>

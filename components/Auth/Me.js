@@ -11,9 +11,7 @@ const Me = ({ me, t, email }) => (
   <div>
     {me ? (
       <div>
-        {t('me/signedinAs', {
-          nameOrEmail: me.name || me.email
-        })}
+        {me.name || me.email}
         <br />
         <SignOut />
       </div>

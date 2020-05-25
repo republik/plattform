@@ -5,7 +5,7 @@ import { fontFamilies } from '@project-r/styleguide'
 export default ({ children }) => (
   <main>
     <Head>
-      <title>Project R — Admin Interface</title>
+      <title>Admin</title>
       <meta
         name="viewport"
         content="initial-scale=1.0, width=device-width"
