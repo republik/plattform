@@ -70,9 +70,6 @@
     },
     "LOGDNA_KEY": "",
     "MAILCHIMP_API_KEY": "",
-    "MAILCHIMP_FROM_NAME": {
-      "required": true
-    },
     "MAILCHIMP_INTEREST_MEMBER": {
       "required": true
     },
@@ -92,9 +89,6 @@
       "required": true
     },
     "MAILCHIMP_MAIN_LIST_ID": {
-      "required": true
-    },
-    "MAILCHIMP_REPLY_TO": {
       "required": true
     },
     "MAILCHIMP_URL": {

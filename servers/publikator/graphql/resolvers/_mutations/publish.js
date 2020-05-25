@@ -12,6 +12,7 @@ const {
 } = require('../../../lib/github')
 const {
   createCampaign,
+  updateCampaign,
   updateCampaignContent,
   getCampaign
 } = require('../../../lib/mailchimp')
@@ -253,10 +254,6 @@ module.exports = async (
   // fail early if mailchimp not available
   let campaignId
   if (updateMailchimp) {
-    const { title, emailSubject } = doc.content.meta
-    if (!title || !emailSubject) {
-      throw new Error('updateMailchimp missing title or subject', { title, emailSubject })
-    }
     const campaignKey = `repos:${repoId}/mailchimp/campaignId`
     campaignId = await redis.getAsync(campaignKey)
     redis.expireAsync(repoId, redis.__defaultExpireSeconds)
@@ -272,11 +269,13 @@ module.exports = async (
       }
     }
     if (!campaignId) {
-      const createResponse = await createCampaign({ title, subject: emailSubject })
-      const { id, status } = createResponse
-      if (status !== 'save') {
-        throw new Error('Mailchimp: could not create campaign', createResponse)
-      }
+      const { id } = await createCampaign()
+        .then(response => response.json())
+        .catch(error => {
+          console.error(error)
+          throw new Error(t('api/publish/error/createCampaign'))
+        })
+
       campaignId = id
       await redis.setAsync(campaignKey, campaignId, 'EX', redis.__defaultExpireSeconds)
       await editRepoMeta(null, {
@@ -433,15 +432,39 @@ module.exports = async (
 
   // do the mailchimp update
   if (campaignId) {
+    // Update campaign configuration
+    const { title, emailSubject, path } = doc.content.meta
+    if (!title || !emailSubject) {
+      throw new Error('Mailchimp: missing title or subject', { title, emailSubject })
+    }
+
+    await updateCampaign({
+      campaignId,
+      campaignConfig: {
+        key:
+          resolved.meta &&
+          resolved.meta.format &&
+          resolved.meta.format.meta &&
+          resolved.meta.format.meta.repoId,
+        subject_line: emailSubject,
+        title
+      }
+    })
+      .catch(error => {
+        console.error(error)
+        throw new Error(t('api/publish/error/updateCampaign'))
+      })
+
+    // Update campaign content (HTML)
     let html = getHTML(resolvedDoc)
 
     if (PIWIK_URL_BASE && PIWIK_SITE_ID) {
       const openBeacon = `${PIWIK_URL_BASE}/piwik.php?${querystring.stringify({
         idsite: PIWIK_SITE_ID,
-        url: FRONTEND_BASE_URL + doc.content.meta.path,
+        url: FRONTEND_BASE_URL + path,
         rec: 1,
         bots: 1,
-        action_name: `Email: ${doc.content.meta.emailSubject}`,
+        action_name: `Email: ${emailSubject}`,
         ...utmParams
       })}&_id=*|DATE:ymd|**|UNIQID|*`
       html = html.replace(
@@ -450,13 +473,11 @@ module.exports = async (
       )
     }
 
-    const updateResponse = await updateCampaignContent({
-      campaignId,
-      html
-    })
-    if (updateResponse.status) {
-      throw new Error('Mailchimp: could not update campaign', updateResponse)
-    }
+    await updateCampaignContent({ campaignId, html })
+      .catch(error => {
+        console.error(error)
+        throw new Error(t('api/publish/error/updateCampaignContent'))
+      })
   }
 
   await pubsub.publish('repoUpdate', {
