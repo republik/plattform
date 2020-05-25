@@ -3,7 +3,7 @@ const fetch = require('isomorphic-unfetch')
 const { MAILCHIMP_URL, MAILCHIMP_API_KEY } = process.env
 
 module.exports = async () => {
-  return fetch(`${MAILCHIMP_URL}/campaigns`, {
+  return fetch(`${MAILCHIMP_URL}/3.0/campaigns`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

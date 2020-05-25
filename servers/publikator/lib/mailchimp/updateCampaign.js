@@ -37,7 +37,7 @@ module.exports = async ({ campaignId, campaignConfig = {} }) => {
 
   debug('%o', { campaignId, campaignConfig, config, body })
 
-  return fetch(`${MAILCHIMP_URL}/campaigns/${campaignId}`, {
+  return fetch(`${MAILCHIMP_URL}/3.0/campaigns/${campaignId}`, {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',

@@ -6,7 +6,7 @@ const {
 } = process.env
 
 module.exports = async ({ campaignId, html }) => {
-  return fetch(`${MAILCHIMP_URL}/campaigns/${campaignId}/content`, {
+  return fetch(`${MAILCHIMP_URL}/3.0/campaigns/${campaignId}/content`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
