@@ -131,19 +131,25 @@ module.exports = async (_, args, context) => {
 
         // Check if memebership should be cancelled when latest end date is now in past
         if (inPast) {
+          const cancelableMembership = await transaction.public.memberships.findOne({ id })
+
+          const details = {
+            type: 'SYSTEM',
+            reason: 'Auto Cancellation (cancelPledge)',
+            suppressConfirmation: true,
+            suppressWinback: true
+          }
+
+          const options = {
+            immediately: cancelImmediately
+          }
+
           await cancelMembership(
-            null,
-            {
-              id,
-              immediately: cancelImmediately,
-              details: {
-                type: 'SYSTEM',
-                reason: 'Auto Cancellation (cancelPledge)',
-                suppressConfirmation: true,
-                suppressWinback: true
-              }
-            },
-            { ...context, pgdb: transaction }
+            cancelableMembership,
+            details,
+            options,
+            t,
+            transaction
           )
         }
       }
