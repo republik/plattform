@@ -1,8 +1,12 @@
+const debug = require('debug')('crowdfundings:cancelMembership')
+
 const cancelSubscription = require('./payments/stripe/cancelSubscription')
 
 module.exports = async (membership, details, options, t, pgdb) => {
   const { reason, type, suppressConfirmation, suppressWinback, cancelledViaSupport } = details
   const { immediately } = options
+
+  debug('%o', { membership: membership.id, details, options })
 
   if (!membership.membershipType) {
     membership.membershipType = await pgdb.public.membershipTypes.findOne({
