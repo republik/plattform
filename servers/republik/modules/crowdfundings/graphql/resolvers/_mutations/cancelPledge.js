@@ -1,12 +1,13 @@
 const logger = console
-const Promise = require('bluebird')
-const { Roles } = require('@orbiting/backend-modules-auth')
-const cancelMembership = require('./cancelMembership')
 
 const moment = require('moment')
-const { publishMonitor } = require('../../../../../lib/slack')
+const Promise = require('bluebird')
+
+const { Roles } = require('@orbiting/backend-modules-auth')
 
 const { evaluatePledge, updateMembershipPeriods } = require('../../../lib/Pledge/cancel')
+const { publishMonitor } = require('../../../../../lib/slack')
+const cancelMembership = require('../../../lib/cancelMembership')
 
 const {
   PARKING_PLEDGE_ID,
