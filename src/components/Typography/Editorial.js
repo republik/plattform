@@ -269,8 +269,20 @@ const note = css({
   }
 })
 
-export const Note = ({ children, attributes, ...props }) => (
-  <p {...attributes} {...props} {...note} {...interactionFontRule}>
-    {children}
-  </p>
-)
+export const Note = ({ children, attributes, ...props }) => {
+  const [colorScheme] = useColorContext()
+  const colors = css({
+    color: colorScheme.text
+  })
+  return (
+    <p
+      {...attributes}
+      {...props}
+      {...note}
+      {...colors}
+      {...interactionFontRule}
+    >
+      {children}
+    </p>
+  )
+}
