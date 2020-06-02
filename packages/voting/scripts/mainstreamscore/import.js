@@ -50,20 +50,39 @@ PgDb.connect().then(async pgdb => {
 
         let counter = 0
         await pgdb.public.questions.insert(
-          sheet.data.map(d => ({
-            questionnaireId: questionnaire.id,
-            order: counter++,
-            text: d.Frage,
-            ...d.Gruppe ? { metadata: { group: d.Gruppe } } : {},
-            type: 'Choice',
-            typePayload: {
-              cardinality: 1,
-              options: [
-                { label: 'Ja', value: 'true' },
-                { label: 'Nein', value: 'false' }
-              ]
+          sheet.data.map(d => {
+            const type = d.Type ? d.Type : 'Choice'
+
+            let typePayload
+            if (type === 'Choice') {
+              typePayload = {
+                cardinality: 1,
+                options: [
+                  { label: 'Ja', value: 'true' },
+                  { label: 'Nein', value: 'false' }
+                ]
+              }
+            } else if (type === 'Range') {
+              typePayload = {
+                kind: 'continous',
+                ticks: [
+                  {"label": "unnötig", "value": 0},
+                  {"label": "zwingend", "value": 1}
+                ]
+              }
+            } else {
+              throw new Error(`unknown type ${type}`)
             }
-          }))
+
+            return {
+              questionnaireId: questionnaire.id,
+              order: counter++,
+              text: d.Frage,
+              ...d.Gruppe ? { metadata: { group: d.Gruppe } } : {},
+              type,
+              typePayload
+            }
+          })
         )
 
         console.log(`imported ${slug} with ${counter} questions`)

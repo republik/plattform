@@ -96,31 +96,37 @@ PgDb.connect().then(async pgdb => {
         (user) => {
           const { id: userId } = user
 
-          // bias
-          const optionIndex = Math.round(Math.random() * 4) !== 4
-            ? getBias(qIndex) // bias
-            : Math.round(Math.random())
+          let payload
+          if (q.type === 'Choice') {
+            // bias
+            const optionIndex = Math.round(Math.random() * 4) !== 4
+              ? getBias(qIndex) // bias
+              : Math.round(Math.random())
 
-          // totaly random
-          // const optionIndex = Math.round(Math.random())
+            // totaly random
+            // const optionIndex = Math.round(Math.random())
 
-          // const option = q.options[optionIndex]
-          const option = q.options[optionIndex]
+            // const option = q.options[optionIndex]
+            const option = q.options[optionIndex]
 
-          // fixed
-          // const fixedValue = answerValues.charAt(qIndex) === '1' ? 'true' : 'false'
+            // fixed
+            // const fixedValue = answerValues.charAt(qIndex) === '1' ? 'true' : 'false'
 
-          /*
-          return pgdb.public.answers.insert({
-            questionId: q.id,
-            questionnaireId: questionnaire.id,
-            userId,
-            payload: { value: [option.value] },
-            //payload: { value: [fixedValue] },
-            submitted: true,
-            createdAt: moment(usersStartDate[userId]).add(qIndex * 2, 'seconds').toDate()
-          })
-          */
+            /*
+            return pgdb.public.answers.insert({
+              questionId: q.id,
+              questionnaireId: questionnaire.id,
+              userId,
+              payload: { value: [option.value] },
+              //payload: { value: [fixedValue] },
+              submitted: true,
+              createdAt: moment(usersStartDate[userId]).add(qIndex * 2, 'seconds').toDate()
+            })
+            */
+            payload = { value: [option.value] }
+          } else {
+            payload = { value: Math.round(Math.random() * 1000)/1000 }
+          }
 
           return submitAnswer(
             null,
@@ -129,7 +135,7 @@ PgDb.connect().then(async pgdb => {
                 id: uuid(),
                 questionId: q.id,
                 userId,
-                payload: { value: [option.value] }
+                payload
               }
             },
             {
