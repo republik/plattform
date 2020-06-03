@@ -250,15 +250,20 @@ const buildQueries = (tableName) => {
     if (entity.endDate < now) {
       throw new Error(t(`api/${table.translationsKey}/tooLate`))
     }
-    const [resultIsEligible, resultUserHasSubmitted] = await Promise.all([
-      isEligible(userId, entity, pgdb),
-      userHasSubmitted(entity.id, userId, context)
-    ])
-    if (!resultIsEligible) {
-      throw new Error(t(`api/${table.translationsKey}/notEligible`))
-    }
-    if (resultUserHasSubmitted) {
-      throw new Error(t(`api/${table.translationsKey}/alreadySubmitted`))
+
+    if (userId) {
+      const [resultIsEligible, resultUserHasSubmitted] = await Promise.all([
+        isEligible(userId, entity, pgdb),
+        userHasSubmitted(entity.id, userId, context)
+      ])
+      if (!resultIsEligible) {
+        throw new Error(t(`api/${table.translationsKey}/notEligible`))
+      }
+      if (resultUserHasSubmitted) {
+        throw new Error(t(`api/${table.translationsKey}/alreadySubmitted`))
+      }
+    } else if (!entity.unattributedAnswers) {
+      throw new Error(t(`api/${table.translationsKey}/noUnattributedAnswers`))
     }
   }
 
