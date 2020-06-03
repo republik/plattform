@@ -69,9 +69,10 @@ const resultHistogram = (result, { ticks }, context) => {
       d3.ticks(extent[0], extent[1], numTicks).slice(0, -1)
     )(values)
 
-  return bins.map(bin => ({
-    ...bin,
-    count: bin.length
+  return bins.map(({ x0, x1, length }) => ({
+    x0,
+    x1,
+    count: length
   }))
 }
 
