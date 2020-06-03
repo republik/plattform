@@ -6,9 +6,15 @@ import { max, min, ascending } from 'd3-array'
 import { scaleLinear, scaleBand } from 'd3-scale'
 import * as d3Intervals from 'd3-time'
 
-import { sansSerifRegular12, sansSerifMedium12 } from '../Typography/styles'
+import {
+  sansSerifMedium12 as VALUE_FONT,
+  sansSerifRegular12 as LABEL_FONT
+} from '../Typography/styles'
+
 import colors from '../../theme/colors'
 import { timeFormat, timeParse } from '../../lib/timeFormat'
+
+import { createTextGauger } from '../../lib/textGauger'
 
 import {
   calculateAxis,
@@ -35,9 +41,18 @@ const intervals = Object.keys(d3Intervals)
 const X_TICK_HEIGHT = 3
 const AXIS_BOTTOM_HEIGHT = 24
 
+const valueGauger = createTextGauger(VALUE_FONT, {
+  dimension: 'width',
+  html: true
+})
+const labelGauger = createTextGauger(LABEL_FONT, {
+  dimension: 'width',
+  html: true
+})
+
 const styles = {
   axisLabel: css({
-    ...sansSerifRegular12,
+    ...LABEL_FONT,
     fill: colors.text
   }),
   axisYLine: css({
@@ -69,11 +84,11 @@ const styles = {
   }),
   annotationValue: css({
     fill: colors.text,
-    ...sansSerifMedium12
+    ...VALUE_FONT
   }),
   annotationText: css({
     fill: colors.text,
-    ...sansSerifRegular12
+    ...LABEL_FONT
   })
 }
 
@@ -390,23 +405,40 @@ const TimeBarChart = props => {
               return null
             }
 
+            const labelText = tLabel(annotation.label)
+            const valueText = [
+              tLabel(annotation.valuePrefix),
+              yAxis.format(annotation.value)
+            ]
+              .filter(Boolean)
+              .join('')
+            const textSize = Math.max(
+              labelGauger(labelText || ''),
+              valueGauger(valueText)
+            )
+
             const x1 = range
               ? x(xNormalizer(annotation.x1))
               : x(xNormalizer(annotation.x))
             const x2 = range
               ? x(xNormalizer(annotation.x2)) + barWidth
               : x1 + Math.max(barWidth, 8)
-            const compact = width < 500
-            let tx = x1
-            if (compact) {
-              tx -= range ? 0 : barWidth * 2
-            } else {
-              tx += (x2 - x1) / 2
+
+            let textAnchor = 'middle'
+            if (x1 + (x2 - x1) / 2 + textSize / 2 > width) {
+              textAnchor = 'end'
+              if ((range ? x2 : x1) - textSize < 0) {
+                textAnchor = 'start'
+              }
             }
-            const textAnchor = compact ? 'start' : 'middle'
-
+            let tx = x1
+            if (textAnchor === 'end') {
+              tx = x2
+            }
+            if (textAnchor === 'middle') {
+              tx = x1 + (x2 - x1) / 2
+            }
             const isBottom = annotation.position === 'bottom'
-
             return (
               <g
                 key={`x-annotation-${i}`}
@@ -429,7 +461,7 @@ const TimeBarChart = props => {
                   dy={isBottom ? '2.7em' : '-1.8em'}
                   {...styles.annotationText}
                 >
-                  {tLabel(annotation.label)}
+                  {labelText}
                 </text>
                 <text
                   x={tx}
@@ -437,8 +469,7 @@ const TimeBarChart = props => {
                   dy={isBottom ? '1.4em' : '-0.5em'}
                   {...styles.annotationValue}
                 >
-                  {tLabel(annotation.valuePrefix)}
-                  {yAxis.format(annotation.value)}
+                  {valueText}
                 </text>
               </g>
             )

@@ -24,7 +24,7 @@ export const createTextGauger = memoize(
     }
     const element = document.createElement('span')
     element.style.fontFamily = fontFamily
-    element.style.fontSize = fontSize
+    element.style.fontSize = `${fontSize}px`
     element.style.lineHeight = lineHeight
     measurementDiv().appendChild(element)
     if (html) {

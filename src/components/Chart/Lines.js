@@ -373,15 +373,7 @@ const LineGroup = props => {
             key={`x-annotation-${i}`}
             transform={`translate(0,${y(annotation.value)})`}
           >
-            {range && (
-              <line
-                x1={x1}
-                x2={x2}
-                {...(range
-                  ? styles.annotationLine
-                  : styles.annotationLineValue)}
-              />
-            )}
+            {range && <line x1={x1} x2={x2} {...styles.annotationLine} />}
             <circle r='3.5' cx={x1} {...styles.annotationCircle} />
             {range && <circle r='3.5' cx={x2} {...styles.annotationCircle} />}
             <text

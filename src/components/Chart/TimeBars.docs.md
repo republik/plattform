@@ -15,7 +15,7 @@ Vertical bars are a nice line chart alternative for change over time of one (sta
         {"x": "2020","value": 748700000,"label": "Ziel 2020","ghost": true}, 
         {"x": "2050","value": 249600000,"label": "Ziel 2050","valuePrefix": "max: ","ghost": true}
       ],
-      "padding": 55
+      "padding": 18
     }}
     values={`
 gas,year,value
@@ -605,3 +605,148 @@ month,value
 </div>
 ```
 
+### Annotations
+
+Annotations try to automatically adjust themselves to the available space. `padding` should be at least half the width of the edge `xTicks` and can be used to prevent overlap with `yTicks`.
+
+```react
+<div>
+  <ChartTitle>Ein historischer Einbruch</ChartTitle>
+  <ChartLead>Jährliches Wirtschafts­wachstum in den USA</ChartLead>
+  <CsvChart
+    config={{
+      "type": "TimeBar",
+      "numberFormat": "+.1%",
+      "padding": 14,
+      "height": 300,
+      "domain": [
+        -0.2,
+        0.2
+      ],
+      "yTicks": [
+        -0.2,
+        -0.1,
+        0,
+        0.1,
+        0.2
+      ],
+      "xTicks": [
+        1930,
+        1950,
+        1975,
+        2000
+      ],
+      "color": "color",
+      "colorRange": [
+        "#ff7f0e",
+        "#1f77b4"
+      ],
+      "colorLegend": false,
+      "xAnnotations": [
+        {
+          "x": "2020",
+          "value": -0.056,
+          "label": "Prognose 2020",
+          "position": "bottom"
+        }
+      ]
+    }}
+    values={`
+year,value,color
+1930,-0.085,negativ
+1931,-0.064,negativ
+1932,-0.129,negativ
+1933,-0.012,negativ
+1934,0.108,positiv
+1935,0.089,positiv
+1936,0.129,positiv
+1937,0.051,positiv
+1938,-0.033,negativ
+1939,0.08,positiv
+1940,0.088,positiv
+1941,0.177,positiv
+1942,0.189,positiv
+1943,0.17,positiv
+1944,0.08,positiv
+1945,-0.01,negativ
+1946,-0.116,negativ
+1947,-0.011,negativ
+1948,0.041,positiv
+1949,-0.006,negativ
+1950,0.087,positiv
+1951,0.08,positiv
+1952,0.041,positiv
+1953,0.047,positiv
+1954,-0.006,negativ
+1955,0.071,positiv
+1956,0.021,positiv
+1957,0.021,positiv
+1958,-0.007,negativ
+1959,0.069,positiv
+1960,0.026,positiv
+1961,0.026,positiv
+1962,0.061,positiv
+1963,0.044,positiv
+1964,0.058,positiv
+1965,0.065,positiv
+1966,0.066,positiv
+1967,0.027,positiv
+1968,0.049,positiv
+1969,0.031,positiv
+1970,0.002,positiv
+1971,0.033,positiv
+1972,0.053,positiv
+1973,0.056,positiv
+1974,-0.005,negativ
+1975,-0.002,negativ
+1976,0.054,positiv
+1977,0.046,positiv
+1978,0.055,positiv
+1979,0.032,positiv
+1980,-0.003,negativ
+1981,0.025,positiv
+1982,-0.018,negativ
+1983,0.046,positiv
+1984,0.072,positiv
+1985,0.042,positiv
+1986,0.035,positiv
+1987,0.035,positiv
+1988,0.042,positiv
+1989,0.037,positiv
+1990,0.019,positiv
+1991,-0.001,negativ
+1992,0.035,positiv
+1993,0.028,positiv
+1994,0.04,positiv
+1995,0.027,positiv
+1996,0.038,positiv
+1997,0.044,positiv
+1998,0.045,positiv
+1999,0.048,positiv
+2000,0.041,positiv
+2001,0.01,positiv
+2002,0.017,positiv
+2003,0.029,positiv
+2004,0.038,positiv
+2005,0.035,positiv
+2006,0.029,positiv
+2007,0.019,positiv
+2008,-0.001,negativ
+2009,-0.025,negativ
+2010,0.026,positiv
+2011,0.016,positiv
+2012,0.022,positiv
+2013,0.018,positiv
+2014,0.025,positiv
+2015,0.029,positiv
+2016,0.016,positiv
+2017,0.024,positiv
+2018,0.029,positiv
+2019,0.023,positiv
+2020,-0.056,negativ
+    `.trim()} />
+  <Editorial.Note style={{marginTop: 10}}>
+    Quellen: <Editorial.A href='https://apps.bea.gov/iTable/iTable.cfm?reqid=19&step=2#reqid=19&step=2&isuri=1&1921=survey'>Bureau of Economic Analysis (BEA)</Editorial.A>, <Editorial.A href='https://www.cbo.gov/publication/56335'>CBO</Editorial.A>
+  </Editorial.Note>
+</div>
+```
