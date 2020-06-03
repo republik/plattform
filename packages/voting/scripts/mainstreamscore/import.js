@@ -79,6 +79,7 @@ PgDb.connect().then(async pgdb => {
               order: counter++,
               text: d.Frage,
               ...d.Gruppe ? { metadata: { group: d.Gruppe } } : {},
+              ...d.histogramTicks ? { metadata: { histogramTicks: d.histogramTicks } } : {},
               type,
               typePayload
             }
