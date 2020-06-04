@@ -131,7 +131,6 @@ class Tree extends Component {
 
   measure() {
     const { commits, numSlots } = this.state
-    console.log(commits)
 
     if (!commits || !this.containerRef) return
     const containerRect = this.containerRef.getBoundingClientRect()
