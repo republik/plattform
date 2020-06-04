@@ -107,7 +107,7 @@ const mockCommits = [
 test('components.Tree.transformData', assert => {
   const assertCommit = (commit, id, slotIndex) => {
     assert.equal(commit.id, id, 'commit id')
-    assert.equal(commit.data.slotIndex, slotIndex, 'commit slotIndex')
+    assert.equal(commit.data.slotIndex, slotIndex, 'commit slotIndex ' + id)
   }
 
   const assertLink = (link, sourceId, destinationId) => {
@@ -123,9 +123,9 @@ test('components.Tree.transformData', assert => {
   // Verify the commits' order and assigned slotIndeces.
   assertCommit(commits[0], 'id10', 2)
   assertCommit(commits[1], 'id9', 2)
-  assertCommit(commits[2], 'id8', 1)
-  assertCommit(commits[3], 'id6', 2)
-  assertCommit(commits[4], 'id7', 1)
+  assertCommit(commits[2], 'id8', 2)
+  assertCommit(commits[3], 'id6', 1)
+  assertCommit(commits[4], 'id7', 2)
   assertCommit(commits[5], 'id5', 0)
   assertCommit(commits[6], 'id3', 0)
   assertCommit(commits[7], 'id4', 2)

@@ -49,9 +49,6 @@ export const transformData = props => {
     commit.setNodeRef = ref => {
       commit.nodeRef = ref
     }
-    commit.setMilestoneBarRef = ref => {
-      commit.milestoneBarRef = ref
-    }
     commit.data = {
       slotIndex: null
     }
@@ -79,8 +76,7 @@ export const transformData = props => {
     }
   })
 
-  assignSlots(commits, parentNodes)
-
+  assignSlots({ commits, parentNodes, links })
   return {
     commits: commits,
     numSlots: max(commits, commit => commit.data.slotIndex + 1),
@@ -90,32 +86,6 @@ export const transformData = props => {
   }
 }
 
-const getPaths = (commits, parentNodes) => {
-  // Walks and collects all possible upward paths on the tree.
-  let paths = []
-  let pathsToWalk = [[commits[0].id]]
-
-  do {
-    let path = pathsToWalk[0]
-    let nextId = path.pop()
-    do {
-      let children = parentNodes.get(nextId)
-      path.push(nextId)
-      nextId = null
-      if (children && !!children.length) {
-        nextId = children.pop()
-        children.forEach(child => {
-          pathsToWalk.push([...path, child])
-        })
-      }
-    } while (nextId)
-    paths.push(path)
-    pathsToWalk.shift()
-  } while (pathsToWalk.length)
-
-  return paths
-}
-
 const getOrderedPaths = paths => {
   // TODO: More sophisticated ordering.
   return paths.sort(function(a, b) {
@@ -123,9 +93,43 @@ const getOrderedPaths = paths => {
   })
 }
 
-const assignSlots = (commits, parentNodes) => {
-  let paths = getPaths(commits, parentNodes)
+const reducePaths = ({ links }) => {
+  // following assumtions are made
+  // - links are sorted by ascending creation date
+  // - sourceId is the parent—older id
+  const rawLinks = links.map(({ sourceId, destinationId }) => [
+    sourceId,
+    destinationId
+  ])
+
+  return rawLinks.reduce((paths, link) => {
+    const endPaths = paths.filter(path =>
+      link.some(id => id === path[path.length - 1])
+    )
+    if (endPaths.length) {
+      endPaths.forEach(endPath => {
+        endPath.push(link[1])
+      })
+    } else {
+      const middlePath = paths.find(path =>
+        link.some(id => path.some(pathId => pathId === id))
+      )
+      if (middlePath) {
+        paths.push(
+          middlePath.slice(0, middlePath.indexOf(link[0])).concat(link)
+        )
+      } else {
+        paths.push([...link])
+      }
+    }
+    return paths
+  }, [])
+}
+
+const assignSlots = ({ commits, parentNodes, links }) => {
+  let paths = reducePaths({ links })
   let orderedPaths = getOrderedPaths(paths)
+
   commits.sort(function(a, b) {
     return descending(new Date(a.date), new Date(b.date))
   })
