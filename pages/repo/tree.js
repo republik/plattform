@@ -86,13 +86,13 @@ const styles = {
 }
 
 class EditorPage extends Component {
-  componentDidMount() {
-    this.subscribe()
-  }
-
-  componentDidUpdate() {
-    this.subscribe()
-  }
+  //   componentDidMount() {
+  //     this.subscribe()
+  //   }
+  //
+  //   componentDidUpdate() {
+  //     this.subscribe()
+  //   }
 
   subscribe() {
     if (!this.unsubscribe && this.props.data.repo) {
@@ -149,6 +149,7 @@ class EditorPage extends Component {
     const { router, commits, hasMore, fetchMore } = this.props
     const { loading, error, repo } = this.props.data
     const { repoId } = router.query
+    console.log(commits)
 
     const localStorageCommitIds = getLocalStorageKeys()
       .filter(key => key.startsWith(repoId))
