@@ -17,7 +17,7 @@ const timeFormat = swissTime.format('%d. %B %Y, %H:%M Uhr')
 const CONTAINER_MAX_WIDTH = 800
 const NODE_SIZE = 12
 const NODE_SIZE_HOVER = 16
-const LIST_MIN_WIDTH = 250
+const LIST_MIN_WIDTH = 300
 const MILESTONEICON_SIZE = 16
 
 const styles = {
@@ -131,6 +131,7 @@ class Tree extends Component {
 
   measure() {
     const { commits, numSlots } = this.state
+    console.log(commits)
 
     if (!commits || !this.containerRef) return
     const containerRect = this.containerRef.getBoundingClientRect()
@@ -157,7 +158,7 @@ class Tree extends Component {
     const slotWidth = Math.max(
       NODE_SIZE / 2 + 2,
       Math.min(
-        80,
+        20,
         Math.floor((width - Math.max(width / 2, LIST_MIN_WIDTH)) / numSlots)
       )
     )

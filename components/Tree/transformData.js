@@ -80,7 +80,6 @@ export const transformData = props => {
   })
 
   assignSlots(commits, parentNodes)
-
   return {
     commits: commits,
     numSlots: max(commits, commit => commit.data.slotIndex + 1),
@@ -92,27 +91,39 @@ export const transformData = props => {
 
 const getPaths = (commits, parentNodes) => {
   // Walks and collects all possible upward paths on the tree.
+  let start = 0
+  let skip = false
   let paths = []
-  let pathsToWalk = [[commits[0].id]]
-
+  let pathsToWalk = [[commits[start].id]]
+  let lastCommit = commits[commits.length - 1].id
+  // console.log(commits)
   do {
     let path = pathsToWalk[0]
     let nextId = path.pop()
     do {
       let children = parentNodes.get(nextId)
+      // console.log(parentNodes)
       path.push(nextId)
       nextId = null
       if (children && !!children.length) {
+        skip = true
         nextId = children.pop()
         children.forEach(child => {
           pathsToWalk.push([...path, child])
         })
+      } else {
+        // if it's not the last commit and no parent is found,
+        // we need to jump one forward and continue
+        if (!children && path.pop() !== lastCommit && !skip) {
+          start = start + 1
+          nextId = commits[start].id || null
+          pathsToWalk.push([nextId])
+        }
       }
     } while (nextId)
     paths.push(path)
     pathsToWalk.shift()
   } while (pathsToWalk.length)
-
   return paths
 }
 
@@ -126,9 +137,11 @@ const getOrderedPaths = paths => {
 const assignSlots = (commits, parentNodes) => {
   let paths = getPaths(commits, parentNodes)
   let orderedPaths = getOrderedPaths(paths)
+
   commits.sort(function(a, b) {
     return descending(new Date(a.date), new Date(b.date))
   })
+  console.log(orderedPaths.length)
 
   commits.forEach(commit => {
     orderedPaths.some((orderedPath, i) => {
