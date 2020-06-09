@@ -8,7 +8,7 @@ cache:
 notifications:
   email: false
 addons:
-  postgresql: "9.6"
+  postgresql: "12.2"
 services:
   - elasticsearch
   - postgresql
