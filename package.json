@@ -5,7 +5,7 @@
   "license": "AGPL-3.0",
   "version": "1.0.0",
   "engines": {
-    "node": "13.x",
+    "node": "14.x",
     "yarn": "^1.19.0"
   },
   "private": true,

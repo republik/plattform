@@ -7985,37 +7985,42 @@ pg-connection-string@0.1.3:
   resolved "https://registry.yarnpkg.com/pg-connection-string/-/pg-connection-string-0.1.3.tgz#da1847b20940e42ee1492beaf65d49d91b245df7"
   integrity sha1-2hhHsglA5C7hSSvq9l1J2RskXfc=
 
-pg-cursor@^2.1.6:
-  version "2.1.6"
-  resolved "https://registry.yarnpkg.com/pg-cursor/-/pg-cursor-2.1.6.tgz#1cca3f30525a7d02c39ffb4d48383a55f963beb5"
-  integrity sha512-61En061/NFsfKOY0EvIdcl1l2FDvoeFSD2RLe57qA0rX0TbNxQ1TK9JOZaTTKrxk6L8opiHAv/IRAoHFMacKEQ==
+pg-connection-string@^2.2.3:
+  version "2.2.3"
+  resolved "https://registry.yarnpkg.com/pg-connection-string/-/pg-connection-string-2.2.3.tgz#48e1158ec37eaa82e98dbcb7307103ec303fe0e7"
+  integrity sha512-I/KCSQGmOrZx6sMHXkOs2MjddrYcqpza3Dtsy0AjIgBr/bZiPJRK9WhABXN1Uy1UDazRbi9gZEzO2sAhL5EqiQ==
+
+pg-cursor@^2.2.1:
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/pg-cursor/-/pg-cursor-2.2.1.tgz#f0f35f9e729889d795c8191141a6b15c5f8b18a7"
+  integrity sha512-C0DKcb8do7Mv9tTQvrB+hxPYgJ6FCKnu1CjPMb0txYHW+zULpOH0B01MNtjQA4nrhHJ4Qs1Nf58BGEc158wXIA==
 
 pg-int8@1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/pg-int8/-/pg-int8-1.0.1.tgz#943bd463bf5b71b4170115f80f8efc9a0c0eb78c"
   integrity sha512-WCtabS6t3c8SkpDBUlb1kjOs7l66xsGdKpIPZsg4wR+B3+u9UAum2odSsF9tnvxg80h4ZxLWMy4pRjOsFIqQpw==
 
-pg-packet-stream@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/pg-packet-stream/-/pg-packet-stream-1.1.0.tgz#e45c3ae678b901a2873af1e17b92d787962ef914"
-  integrity sha512-kRBH0tDIW/8lfnnOyTwKD23ygJ/kexQVXZs7gEyBljw4FYqimZFxnMMx50ndZ8In77QgfGuItS5LLclC2TtjYg==
-
-pg-pool@^2.0.10:
-  version "2.0.10"
-  resolved "https://registry.yarnpkg.com/pg-pool/-/pg-pool-2.0.10.tgz#842ee23b04e86824ce9d786430f8365082d81c4a"
-  integrity sha512-qdwzY92bHf3nwzIUcj+zJ0Qo5lpG/YxchahxIN8+ZVmXqkahKXsnl2aiJPHLYN9o5mB/leG+Xh6XKxtP7e0sjg==
-
 pg-pool@^2.0.4:
   version "2.0.7"
   resolved "https://registry.yarnpkg.com/pg-pool/-/pg-pool-2.0.7.tgz#f14ecab83507941062c313df23f6adcd9fd0ce54"
   integrity sha512-UiJyO5B9zZpu32GSlP0tXy8J2NsJ9EFGFfz5v6PSbdz/1hBLX1rNiiy5+mAm5iJJYwfCv4A0EBcQLGWwjbpzZw==
 
-pg-query-stream@^3.0.3:
-  version "3.0.3"
-  resolved "https://registry.yarnpkg.com/pg-query-stream/-/pg-query-stream-3.0.3.tgz#3f3c739d88218ace802ce3f00ab212b258296235"
-  integrity sha512-b3AgKU03eu+qYMNmdNw0N0Z0JtjY0AnsJbhxmW6ILQ6TitGZpDWv5FCUh9f7Mx2G31EzfsiQ+RfXaOHvYK24qA==
+pg-pool@^3.2.1:
+  version "3.2.1"
+  resolved "https://registry.yarnpkg.com/pg-pool/-/pg-pool-3.2.1.tgz#5f4afc0f58063659aeefa952d36af49fa28b30e0"
+  integrity sha512-BQDPWUeKenVrMMDN9opfns/kZo4lxmSWhIqo+cSAF7+lfi9ZclQbr9vfnlNaPr8wYF3UYjm5X0yPAhbcgqNOdA==
+
+pg-protocol@^1.2.4:
+  version "1.2.4"
+  resolved "https://registry.yarnpkg.com/pg-protocol/-/pg-protocol-1.2.4.tgz#3139cac0e51347f1e21e03954b1bb9fe2c20962e"
+  integrity sha512-/8L/G+vW/VhWjTGXpGh8XVkXOFx1ZDY+Yuz//Ab8CfjInzFkreI+fDG3WjCeSra7fIZwAFxzbGptNbm8xSXenw==
+
+pg-query-stream@^3.1.1:
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/pg-query-stream/-/pg-query-stream-3.1.1.tgz#f73c5d5252dd0728bbf7f67e53c1ac09713ea245"
+  integrity sha512-jkIgIzBPWEHqePfA5dKbjsN9dCFIlGnLQ3pEIhU10OhgyOmi0CuP8cGLNgCbCnbbtZEaSuyCAYpe/rtwYMoL9w==
   dependencies:
-    pg-cursor "^2.1.6"
+    pg-cursor "^2.2.1"
 
 pg-types@^2.1.0:
   version "2.2.0"
@@ -8039,16 +8044,16 @@ pg-types@~2.0.0:
     postgres-date "~1.0.4"
     postgres-interval "^1.1.0"
 
-pg@7.18.2:
-  version "7.18.2"
-  resolved "https://registry.yarnpkg.com/pg/-/pg-7.18.2.tgz#4e219f05a00aff4db6aab1ba02f28ffa4513b0bb"
-  integrity sha512-Mvt0dGYMwvEADNKy5PMQGlzPudKcKKzJds/VbOeZJpb6f/pI3mmoXX0JksPgI3l3JPP/2Apq7F36O63J7mgveA==
+pg@8.2.1:
+  version "8.2.1"
+  resolved "https://registry.yarnpkg.com/pg/-/pg-8.2.1.tgz#f5a81f5e2025182fbe701514d3e1a43e68a616ac"
+  integrity sha512-DKzffhpkWRr9jx7vKxA+ur79KG+SKw+PdjMb1IRhMiKI9zqYUGczwFprqy+5Veh/DCcFs1Y6V8lRLN5I1DlleQ==
   dependencies:
     buffer-writer "2.0.0"
     packet-reader "1.0.0"
-    pg-connection-string "0.1.3"
-    pg-packet-stream "^1.1.0"
-    pg-pool "^2.0.10"
+    pg-connection-string "^2.2.3"
+    pg-pool "^3.2.1"
+    pg-protocol "^1.2.4"
     pg-types "^2.1.0"
     pgpass "1.x"
     semver "4.3.2"
@@ -8183,17 +8188,17 @@ pn@^1.1.0:
   resolved "https://registry.yarnpkg.com/pn/-/pn-1.1.0.tgz#e2f4cef0e219f463c179ab37463e4e1ecdccbafb"
   integrity sha512-2qHaIQr2VLRFoxe2nASzsV6ef4yOOH+Fi9FBOVH6cqeSgUnoyySPZkxzLuzd+RYOQTRpROA0ztTMqxROKSb/nA==
 
-pogi@^2.7.2:
-  version "2.7.2"
-  resolved "https://registry.yarnpkg.com/pogi/-/pogi-2.7.2.tgz#6e815221e9fcaa1719acfecc4a3b1f8ea1c1daa0"
-  integrity sha512-RDpKpRrpRBES+B92+ONt4J4qedA8YTDp2Ewg9yO8FUR4eq1mpbpjqI3sKvGLQbTWuPmeIzhVw6eP1rCGP+eXYg==
+pogi@^2.9.1:
+  version "2.9.1"
+  resolved "https://registry.yarnpkg.com/pogi/-/pogi-2.9.1.tgz#16eedb1f43fee858edf03863cc5648b730cf6f6d"
+  integrity sha512-ve/Kr5sp1c8vK2Cx8q+SCqeWAzHCFhmF4BtI3L9P/MFkzbocMeuz4OvEV7gcNFtWwrczia7+Fz+n5BmCBfwqvA==
   dependencies:
     handlebars "^4.7.3"
     lodash "^4.17.15"
     minimatch "^3.0.4"
     moment "^2.15.1"
-    pg "7.18.2"
-    pg-query-stream "^3.0.3"
+    pg "8.2.1"
+    pg-query-stream "^3.1.1"
     through "~2.3.8"
     tslib "^1.11.0"
 
