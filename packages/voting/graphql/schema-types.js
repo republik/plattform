@@ -209,6 +209,9 @@ type Questionnaire {
   allowedMemberships: [VotingMembershipRequirement!]
   allowedRoles: [String!]
 
+  # enables anonymous submissions via submitAnswerUnattributed mutation
+  unattributedAnswers: Boolean
+
   questions(
     "select questions by order field"
     orderFilter: [Int!]
@@ -237,6 +240,7 @@ interface QuestionInterface {
 type QuestionTurnout {
   submitted: Int!
   skipped: Int!
+  unattributed: Int!
 }
 
 type QuestionTypeText implements QuestionInterface {

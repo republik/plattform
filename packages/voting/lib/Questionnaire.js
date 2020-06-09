@@ -152,20 +152,20 @@ const updateResultIncrementally = async (questionnaireId, answer, transaction, c
     throw new Error(t('api/unexpected'))
   }
   turnout.submitted += 1
+  turnout.unattributed += 1
 
   if (question.type === 'Choice') {
     const optionPayload = (question.result.payload || [])
       .find(p => p.option.value == answer.payload.value) // eslint-disable-line eqeqeq
 
     if (!optionPayload) {
-      console.error('optionPayload not found', payload)
+      console.error('optionPayload not found', optionPayload)
       throw new Error(t('api/unexpected'))
     }
 
     optionPayload.count += 1
-  }
-  else if (question.type === 'Range') {
-    //payload is null on first getResult
+  } else if (question.type === 'Range') {
+    // payload is null on first getResult
     const { values = [] } = question.result.payload || {}
 
     question.result.payload = rangeResultForValues(

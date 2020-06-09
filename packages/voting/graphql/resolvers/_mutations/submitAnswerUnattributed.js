@@ -31,7 +31,7 @@ module.exports = async (_, { answer, pseudonym }, context) => {
     }
     const sameQuestionAnswer = await transaction.public.answers.findOne({
       'id !=': id,
-      pseudonym: pseudonym,
+      pseudonym,
       questionId
     })
     if (sameQuestionAnswer) {
@@ -68,7 +68,7 @@ module.exports = async (_, { answer, pseudonym }, context) => {
       pseudonym,
       unattributed: true,
       submitted: true,
-      payload,
+      payload
     })
 
     await transaction.transactionCommit()
