@@ -119,6 +119,12 @@ const finalize = async (questionnaire, args, context) => {
 
 const updateResultIncrementally = async (questionnaireId, answer, transaction, context) => {
   const { t } = context
+  if (!answer.submitted) {
+    // call updateResultIncrementally for each submitted (updated) answer in
+    // _mutations/submitQuestionnaire.js
+    console.error('updateResultIncrementally requires submitAnswersImmediately')
+    throw new Error(t('api/unexpected'))
+  }
   const questionnaire = await transaction.query(`
     SELECT *
     FROM questionnaires
@@ -152,7 +158,9 @@ const updateResultIncrementally = async (questionnaireId, answer, transaction, c
     throw new Error(t('api/unexpected'))
   }
   turnout.submitted += 1
-  turnout.unattributed += 1
+  if (answer.unattributed) {
+    turnout.unattributed += 1
+  }
 
   if (question.type === 'Choice') {
     const optionPayload = (question.result.payload || [])

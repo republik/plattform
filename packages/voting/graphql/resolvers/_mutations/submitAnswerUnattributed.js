@@ -51,10 +51,17 @@ module.exports = async (_, { answer, pseudonym }, context) => {
       payload
     )
 
+    const submitted = true
+    const unattributed = true
+
     if (questionnaire.updateResultIncrementally) {
       await updateResultIncrementally(
         questionnaire.id,
-        answer,
+        {
+          ...answer,
+          submitted,
+          unattributed
+        },
         transaction,
         context
       )
@@ -66,8 +73,8 @@ module.exports = async (_, { answer, pseudonym }, context) => {
       questionnaireId: questionnaire.id,
       userId: null,
       pseudonym,
-      unattributed: true,
-      submitted: true,
+      unattributed,
+      submitted,
       payload
     })
 
