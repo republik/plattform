@@ -2,12 +2,12 @@
   "name": "republik-backend",
   "version": "0.0.1",
   "engines": {
-    "node": "13.x"
+    "node": "14.x"
   },
   "private": true,
   "license": "AGPL-3.0",
   "dependencies": {
-    "@project-r/styleguide": "^9.16.0",
+    "@project-r/styleguide": "^9.17.4",
     "apollo-modules-node": "^0.1.4",
     "d3-array": "^2.4.0",
     "d3-dsv": "^1.2.0",
@@ -19,17 +19,17 @@
     "is-uuid": "^1.0.2",
     "isomorphic-unfetch": "^3.0.0",
     "lodash": "^4.17.11",
-    "moment": "^2.22.2",
-    "openpgp": "^4.10.1",
-    "remark-breaks": "^1.0.0",
-    "remark-parse": "^7.0.2",
-    "sharp": "^0.24.1",
+    "moment": "^2.26.0",
+    "openpgp": "^4.10.4",
+    "remark-breaks": "^1.0.5",
+    "remark-parse": "^8.0.2",
+    "sharp": "^0.25.3",
     "slugify": "^1.4.0",
-    "stripe": "^7.11.0",
+    "stripe": "^8.61.0",
     "throng": "^4.0.0",
-    "unified": "^8.4.2",
-    "uuid": "^7.0.2",
-    "yargs": "^15.1.0"
+    "unified": "^9.0.0",
+    "uuid": "^8.1.0",
+    "yargs": "^15.3.1"
   },
   "scripts": {
     "dev": "NODE_ENV=development nodemon $NODE_DEBUG_OPTION -w ../../packages -w express -w graphql -w lib -w modules -w .env -w package.json -w ../yarn.lock -w server.js -w index.js index.js",
@@ -42,7 +42,7 @@
   "devDependencies": {
     "apollo-fetch": "^0.7.0",
     "istanbul": "^1.1.0-alpha.1",
-    "nodemon": "^2.0.2",
+    "nodemon": "^2.0.4",
     "snoowrap": "^1.21.0",
     "tap-diff": "^0.1.1",
     "zero-fill": "^2.2.3"

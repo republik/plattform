@@ -1,26 +1,28 @@
 const { URL } = require('url')
 const querystring = require('querystring')
 const crypto = require('crypto')
-const checkEnv = require('check-env')
 const { getS3UrlForGithubPath } = require('./Repo')
-
-checkEnv([
-  'ASSETS_SERVER_BASE_URL',
-  'ASSETS_HMAC_KEY'
-])
 
 const {
   ASSETS_SERVER_BASE_URL,
   ASSETS_HMAC_KEY
 } = process.env
 
+if (!ASSETS_HMAC_KEY) {
+  console.warn('missing env ASSETS_HMAC_KEY, proxying urls will not work')
+}
+
 const originalKey = 'originalURL'
 
-const authenticate = url =>
-  crypto
+const authenticate = url => {
+  if (!ASSETS_HMAC_KEY) {
+    throw new Error('missing ASSETS_HMAC_KEY')
+  }
+  return crypto
     .createHmac('sha256', ASSETS_HMAC_KEY)
     .update(url)
     .digest('hex')
+}
 
 module.exports = {
   authenticate,
