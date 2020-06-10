@@ -20,6 +20,7 @@ services:
 env:
   global:
     - PGPORT=5433
+    - PGVERSION=12
     - NODE_ENV=development
     - PORT=5020
     - SEND_MAILS=false
