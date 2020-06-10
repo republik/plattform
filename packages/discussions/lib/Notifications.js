@@ -2,7 +2,7 @@ const htmlToText = require('html-to-text')
 const { renderEmail } = require('mdast-react-render/lib/email')
 
 const { transformUser } = require('@orbiting/backend-modules-auth')
-const commentSchema = require('@project-r/styleguide/lib/templates/Comment/email').default()
+const { commentSchema } = require('@orbiting/backend-modules-styleguide')
 const { sendNotification } = require('@orbiting/backend-modules-subscriptions')
 const Promise = require('bluebird')
 

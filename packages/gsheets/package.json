@@ -22,6 +22,6 @@
     "express": "^4.17.1",
     "google-spreadsheet": "^3.0.11",
     "gsheets": "^2.0.0",
-    "moment": "^2.24.0"
+    "moment": "^2.26.0"
   }
 }
