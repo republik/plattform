@@ -23,8 +23,8 @@
     "bluebird": "^3.7.2",
     "d3-array": "^2.4.0",
     "debug": "^4.1.1",
-    "mdast-util-to-string": "^1.0.8",
-    "moment": "^2.24.0",
-    "yargs": "^15.1.0"
+    "mdast-util-to-string": "^1.1.0",
+    "moment": "^2.26.0",
+    "yargs": "^15.3.1"
   }
 }

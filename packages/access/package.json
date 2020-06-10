@@ -22,8 +22,8 @@
   "dependencies": {
     "debug": "^4.1.1",
     "escape-html": "^1.0.3",
-    "moment": "^2.22.2",
+    "moment": "^2.26.0",
     "redlock": "^4.1.0",
-    "yargs": "^15.1.0"
+    "yargs": "^15.3.1"
   }
 }
