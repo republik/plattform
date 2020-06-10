@@ -6,7 +6,7 @@
   "version": "1.0.0",
   "engines": {
     "node": "14.x",
-    "yarn": "^1.19.0"
+    "yarn": "^1.22.4"
   },
   "private": true,
   "main": "index.js",

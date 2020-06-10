@@ -59,7 +59,7 @@ On macOS with [homebrew](https://brew.sh/):
 brew install postgresql redis nvm elasticsearch
 nvm install 12
 nvm alias default 12
-npm install -g yarn@1.16
+npm install -g yarn@1.22
 brew services start postgresql
 brew services start redis
 brew services start elasticsearch
