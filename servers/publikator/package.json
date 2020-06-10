@@ -2,7 +2,7 @@
   "name": "publikator-backend",
   "version": "0.0.1",
   "engines": {
-    "node": "13.x"
+    "node": "14.x"
   },
   "private": true,
   "license": "AGPL-3.0",
@@ -42,7 +42,7 @@
     "yargs": "^15.1.0"
   },
   "scripts": {
-    "dev": "NODE_ENV=development nodemon $NODE_DEBUG_OPTION -w ../../packages -w graphql -w lib -w express -w .env -w package.json -w ../yarn.lock -w server.js -w index.js index.js",
+    "dev": "NODE_ENV=development nodemon $NODE_DEBUG_OPTION --trace-warnings -w ../../packages -w graphql -w lib -w express -w .env -w package.json -w ../yarn.lock -w server.js -w index.js index.js",
     "inspect": "NODE_DEBUG_OPTION=--inspect yarn run dev",
     "start": "node index.js"
   },
