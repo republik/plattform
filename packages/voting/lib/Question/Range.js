@@ -54,7 +54,7 @@ const resultHistogram = (result, { ticks }, context) => {
   }
   const { questionTicks, values, histogram } = result
   // cached histogram in result, see resultForValues
-  if (histogram && histogram.ticks === ticks) {
+  if (histogram && (histogram.ticks === ticks || !ticks)) {
     return histogram.bins
   }
 
