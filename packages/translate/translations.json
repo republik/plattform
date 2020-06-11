@@ -1379,6 +1379,10 @@
       "value": "Fehler: updateResultIncrementally wird nur von Fragen des Typs 'Choice' unterstützt."
     },
     {
+      "key": "api/questionnaire/noUnattributedAnswers",
+      "value": "Dieser Fragebogen unterstützt keine anonymen Eingaben."
+    },
+    {
       "key": "timeAhead/justNow/other",
       "value": "in weniger als einer Minute"
     },

@@ -1,8 +1,9 @@
-const { buildQueries } = require('./queries.js')
+const { buildQueries } = require('./queries')
 const queries = buildQueries('questionnaires')
 
 const { resultForArchive } = require('./Question')
-const finalizeLib = require('./finalize.js')
+const { resultForValues: rangeResultForValues } = require('./Question/Range')
+const finalizeLib = require('./finalize')
 const { shuffle } = require('d3-array')
 
 const transformQuestion = (q, questionnaire) => ({
@@ -118,6 +119,12 @@ const finalize = async (questionnaire, args, context) => {
 
 const updateResultIncrementally = async (questionnaireId, answer, transaction, context) => {
   const { t } = context
+  if (!answer.submitted) {
+    // call updateResultIncrementally for each submitted (updated) answer in
+    // _mutations/submitQuestionnaire.js
+    console.error('updateResultIncrementally requires submitAnswersImmediately')
+    throw new Error(t('api/unexpected'))
+  }
   const questionnaire = await transaction.query(`
     SELECT *
     FROM questionnaires
@@ -141,26 +148,41 @@ const updateResultIncrementally = async (questionnaireId, answer, transaction, c
   if (!question) {
     throw new Error(t('api/questionnaire/question/404'))
   }
-  if (question.type !== 'Choice') {
+  if (!['Choice', 'Range'].includes(question.type)) {
     throw new Error(t('api/questionnaire/answer/updateResultIncrementally/choiceOnly'))
   }
 
-  const { payload, turnout } = question.result
-  if (!payload || !turnout) {
-    console.error('result payload or turnout not found')
+  const { turnout } = question.result
+  if (!turnout) {
+    console.error('result turnout not found')
     throw new Error(t('api/unexpected'))
   }
-
-  const optionPayload = payload
-    .find(p => p.option.value == answer.payload.value) // eslint-disable-line eqeqeq
-
-  if (!optionPayload) {
-    console.error('optionPayload not found', payload)
-    throw new Error(t('api/unexpected'))
-  }
-
   turnout.submitted += 1
-  optionPayload.count += 1
+  if (answer.unattributed) {
+    turnout.unattributed += 1
+  }
+
+  if (question.type === 'Choice') {
+    const optionPayload = (question.result.payload || [])
+      .find(p => p.option.value == answer.payload.value) // eslint-disable-line eqeqeq
+
+    if (!optionPayload) {
+      console.error('optionPayload not found', optionPayload)
+      throw new Error(t('api/unexpected'))
+    }
+
+    optionPayload.count += 1
+  } else if (question.type === 'Range') {
+    // payload is null on first getResult
+    const { values = [] } = question.result.payload || {}
+
+    question.result.payload = rangeResultForValues(
+      question,
+      [...values, answer.payload.value],
+      context
+    )
+  }
+
   result.updatedAt = new Date()
 
   await transaction.public.questionnaires.updateOne(
