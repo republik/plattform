@@ -40,7 +40,7 @@ docker-compose up [-d]
 We recommend you install the postgresql client tools on your machine to interact with the database. The tests scripts also depend on the clients being installed.
 ```
 # linux
-sudo apt install postgresql-client-10
+sudo apt install postgresql-client-12
 ```
 
 When postgresql in running in docker client tools like `psql` or `createdb`/`dropdb` don't automatically connect to it. They try to access postgresql via a local socket, when instead you want them to connect via network to localhost. To make your life easier, you can add the following environment variables to `~/.bashrc` / `~/.zshrc` so the client tools connect to localhost per default.
@@ -57,8 +57,8 @@ As an alternative to docker(-compose) you can install the external-services nati
 On macOS with [homebrew](https://brew.sh/):
 ```
 brew install postgresql redis nvm elasticsearch
-nvm install 12
-nvm alias default 12
+nvm install 14
+nvm alias default 14
 npm install -g yarn@1.22
 brew services start postgresql
 brew services start redis
