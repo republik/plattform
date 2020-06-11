@@ -2,7 +2,7 @@
 
 This repo contains all the backend code in use at Republik. For easier development the previously separate repos [republik-backend](https://github.com/orbiting/republik-backend), [publikator-backend](https://github.com/orbiting/publikator-backend), [assets-backend](https://github.com/orbiting/assets-backend) and [backend-modules](https://github.com/orbiting/backend-modules) where merged into this monorepo.
 
-For a guide on how to start the the frontends see: [docs/how-to-run](https://github.com/orbiting/docs/blob/master/guides/how-to-run.md)
+For a guide on how to start the frontends see: [docs/how-to-run](https://github.com/orbiting/docs/blob/master/guides/how-to-run.md)
 
 ## Components
 
