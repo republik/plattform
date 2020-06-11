@@ -161,6 +161,37 @@ Context:
 />
 ```
 
+```react|responsive
+<div 
+  style={{
+    position: 'fixed',
+    width: '100%',
+    maxWidth: 414,
+    bottom: 44,
+    right: 0,
+    padding: '0 16px',
+    zIndex: 50,
+    transition: 'all ease-out 0.3s',
+}}>
+  <div style={{backgroundColor: 'white', boxShadow: '0 0 15px rgba(0,0,0,0.1)'}}>
+    <AudioPlayer
+      src={{
+        mp3: 'https://cdn.repub.ch/s3/republik-assets/assets/audio-artikel/republik_diktator_fichter.mp3'
+      }}
+      title="Audio Title Long"
+      fixed
+      timePosition='left'
+      t={t}
+      closeHandler={() => {console.log('Close button clicked')}}
+      download
+      scrubberPosition='bottom'
+      height={68}
+      controlsPadding={18}
+    />
+  </div>
+</div>
+```
+
 The `<AudioPlayer />` may also be used to play from video sources when visual content doesn't matter.
 
 ```react
