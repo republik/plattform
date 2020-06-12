@@ -5,6 +5,7 @@ import colors from '../../theme/colors'
 import { mUp } from '../../theme/mediaQueries'
 import { fontStyles } from '../../theme/fonts'
 import { convertStyleToRem } from './utils'
+import { useColorContext } from '../Colors/useColorContext'
 
 export const fontRule = css({
   ...fontStyles.sansSerifRegular,
@@ -21,7 +22,6 @@ const interactionHeadline = css({
   [mUp]: {
     ...convertStyleToRem(styles.sansSerifMedium58)
   },
-  color: colors.text,
   ':first-child': {
     marginTop: 0
   },
@@ -35,7 +35,6 @@ const interactionH1 = css({
   [mUp]: {
     ...convertStyleToRem(styles.sansSerifMedium40)
   },
-  color: colors.text,
   margin: 0
 })
 
@@ -44,7 +43,6 @@ const interactionH2 = css({
   [mUp]: {
     ...convertStyleToRem(styles.sansSerifMedium30)
   },
-  color: colors.text,
   margin: 0
 })
 
@@ -53,12 +51,10 @@ const interactionH3 = css({
   [mUp]: {
     ...convertStyleToRem(styles.sansSerifMedium22)
   },
-  color: colors.text,
   margin: 0
 })
 
 const interactionP = css({
-  color: colors.text,
   ...convertStyleToRem(styles.sansSerifRegular16),
   [mUp]: {
     ...convertStyleToRem(styles.sansSerifRegular21)
@@ -66,35 +62,70 @@ const interactionP = css({
   margin: 0
 })
 
-export const Headline = ({ children, ...props }) => (
-  <h1 {...props} {...interactionHeadline}>
-    {children}
-  </h1>
-)
+export const Headline = ({ children, ...props }) => {
+  const [
+    {
+      rules: { textColor }
+    }
+  ] = useColorContext()
+  return (
+    <h1 {...props} {...interactionHeadline} {...textColor}>
+      {children}
+    </h1>
+  )
+}
 
-export const H1 = ({ children, ...props }) => (
-  <h1 {...props} {...interactionH1}>
-    {children}
-  </h1>
-)
+export const H1 = ({ children, ...props }) => {
+  const [
+    {
+      rules: { textColor }
+    }
+  ] = useColorContext()
+  return (
+    <h1 {...props} {...interactionH1} {...textColor}>
+      {children}
+    </h1>
+  )
+}
 
-export const H2 = ({ children, ...props }) => (
-  <h2 {...props} {...interactionH2}>
-    {children}
-  </h2>
-)
+export const H2 = ({ children, ...props }) => {
+  const [
+    {
+      rules: { textColor }
+    }
+  ] = useColorContext()
+  return (
+    <h2 {...props} {...interactionH2} {...textColor}>
+      {children}
+    </h2>
+  )
+}
 
-export const H3 = ({ children, ...props }) => (
-  <h3 {...props} {...interactionH3}>
-    {children}
-  </h3>
-)
+export const H3 = ({ children, ...props }) => {
+  const [
+    {
+      rules: { textColor }
+    }
+  ] = useColorContext()
+  return (
+    <h3 {...props} {...interactionH3} {...textColor}>
+      {children}
+    </h3>
+  )
+}
 
-export const P = ({ children, ...props }) => (
-  <p {...props} {...interactionP} {...fontRule}>
-    {children}
-  </p>
-)
+export const P = ({ children, ...props }) => {
+  const [
+    {
+      rules: { textColor }
+    }
+  ] = useColorContext()
+  return (
+    <p {...props} {...interactionP} {...fontRule} {...textColor}>
+      {children}
+    </p>
+  )
+}
 
 const emphasis = css(fontStyles.sansSerifMedium)
 export const Emphasis = ({ children, attributes, ...props }) => (

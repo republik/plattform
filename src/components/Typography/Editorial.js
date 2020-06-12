@@ -41,12 +41,13 @@ const headline = css({
 })
 
 export const Headline = ({ children, attributes, ...props }) => {
-  const [colorScheme] = useColorContext()
-  const colors = css({
-    color: colorScheme.text
-  })
+  const [
+    {
+      rules: { textColor }
+    }
+  ] = useColorContext()
   return (
-    <h1 {...attributes} {...props} {...headline} {...colors}>
+    <h1 {...attributes} {...props} {...headline} {...textColor}>
       {children}
     </h1>
   )
@@ -62,12 +63,13 @@ const subhead = css({
 })
 
 export const Subhead = ({ children, attributes, ...props }) => {
-  const [colorScheme] = useColorContext()
-  const colors = css({
-    color: colorScheme.text
-  })
+  const [
+    {
+      rules: { textColor }
+    }
+  ] = useColorContext()
   return (
-    <h2 {...attributes} {...props} {...subhead} {...colors}>
+    <h2 {...attributes} {...props} {...subhead} {...textColor}>
       {children}
     </h2>
   )
@@ -84,12 +86,13 @@ const lead = css({
 })
 
 export const Lead = ({ children, attributes, ...props }) => {
-  const [colorScheme] = useColorContext()
-  const colors = css({
-    color: colorScheme.text
-  })
+  const [
+    {
+      rules: { textColor }
+    }
+  ] = useColorContext()
   return (
-    <p {...attributes} {...props} {...lead} {...colors} {...fontRule}>
+    <p {...attributes} {...props} {...lead} {...textColor} {...fontRule}>
       {children}
     </p>
   )
@@ -137,13 +140,14 @@ const credit = css({
 })
 
 export const Credit = ({ children, attributes, ...props }) => {
-  const [colorScheme] = useColorContext()
-  const colors = css({
-    color: colorScheme.text
-  })
+  const [
+    {
+      rules: { textColor }
+    }
+  ] = useColorContext()
 
   return (
-    <p {...attributes} {...props} {...credit} {...colors}>
+    <p {...attributes} {...props} {...credit} {...textColor}>
       {children}
     </p>
   )
@@ -182,12 +186,13 @@ const paragraph = css({
   }
 })
 export const P = ({ children, attributes, ...props }) => {
-  const [colorScheme] = useColorContext()
-  const colors = css({
-    color: colorScheme.text
-  })
+  const [
+    {
+      rules: { textColor }
+    }
+  ] = useColorContext()
   return (
-    <p {...attributes} {...props} {...paragraph} {...colors} {...fontRule}>
+    <p {...attributes} {...props} {...paragraph} {...textColor} {...fontRule}>
       {children}
     </p>
   )
@@ -203,12 +208,13 @@ const question = css({
   }
 })
 export const Question = ({ children, attributes, ...props }) => {
-  const [colorScheme] = useColorContext()
-  const colors = css({
-    color: colorScheme.text
-  })
+  const [
+    {
+      rules: { textColor }
+    }
+  ] = useColorContext()
   return (
-    <p {...attributes} {...props} {...question} {...colors} {...fontRule}>
+    <p {...attributes} {...props} {...question} {...textColor} {...fontRule}>
       {children}
     </p>
   )
@@ -270,16 +276,17 @@ const note = css({
 })
 
 export const Note = ({ children, attributes, ...props }) => {
-  const [colorScheme] = useColorContext()
-  const colors = css({
-    color: colorScheme.text
-  })
+  const [
+    {
+      rules: { textColor }
+    }
+  ] = useColorContext()
   return (
     <p
       {...attributes}
       {...props}
       {...note}
-      {...colors}
+      {...textColor}
       {...interactionFontRule}
     >
       {children}
