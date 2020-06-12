@@ -5743,6 +5743,7 @@ Use it wisely, mostly to reveal percentual changes, like slowing growth, and the
       "yNice": 0,
       "yAnnotations": [{
         "value": 100,
+        "unit": "Punkte",
         "x": "1939"
       }],
       "xTicks": [
@@ -6058,6 +6059,7 @@ Also if you have multiple charts after each other with varying end labels you ca
           "x1": "2020-03-16",
           "x2": "2020-03-26",
           "value": 13801,
+          "unit": " Personen",
           "label": "bereits vor 10 Tagen infiziert"
         }
       ]

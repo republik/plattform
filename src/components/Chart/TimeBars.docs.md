@@ -11,7 +11,7 @@ Vertical bars are a nice line chart alternative for change over time of one (sta
       "unit": "Tonnen",
       "numberFormat": ".3s",
       "xAnnotations": [
-        {"x1": "2008","x2": "2012","value": 973619338.97,"label": "Kyoto-Protokoll"},
+        {"x1": "2008","x2": "2012","value": 973619338.97,"unit": "Tonnen","label": "Kyoto-Protokoll"},
         {"x": "2020","value": 748700000,"label": "Ziel 2020","ghost": true}, 
         {"x": "2050","value": 249600000,"label": "Ziel 2050","valuePrefix": "max: ","ghost": true}
       ],
@@ -583,12 +583,13 @@ year,typ,value
       "colorRange": ["#ff7f0e"],
       "domain": [0,7.5],
       "numberFormat": ".1f",
+      "unit": "imaginäre Punkte",
       "yTicks": [0, 2.5, 5, 7.5],
       "xTicks": ["2018-01", "2019-07", "2021-07", "2022-01", "2022-07"],
       "xInterval": "month",
       "xIntervalStep": 6,
       "xAnnotations": [
-        {"x1": "2019-07", "x2": "2019-07","value": 5,"label": "Ziel 2020"}, 
+        {"x1": "2019-07", "x2": "2019-07","value": 5, "unit": "Punkte", "label": "Ziel 2020"}, 
         {"x1": "2019-07", "x2": "2019-07","value": 4,"label": "Stand jetzt","position": "bottom"},
         {"x": "2022-01", "value": 7, "ghost": true}
       ]

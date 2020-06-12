@@ -335,7 +335,7 @@ const LineGroup = props => {
             dy={annotation.dy || '-0.4em'}
             {...styles.annotationText}
           >
-            {annotation.label} {annotation.formattedValue}
+            {annotation.label} {annotation.formattedValue} {annotation.unit}
           </text>
         </g>
       ))}
@@ -391,7 +391,7 @@ const LineGroup = props => {
               {...styles.annotationValue}
             >
               {annotation.valuePrefix}
-              {annotation.formattedValue}
+              {annotation.formattedValue} {annotation.unit}
             </text>
           </g>
         )
@@ -676,6 +676,7 @@ export const propTypes = {
   yAnnotations: PropTypes.arrayOf(
     PropTypes.shape({
       value: PropTypes.number.isRequired,
+      unit: PropTypes.string,
       label: PropTypes.string,
       x: PropTypes.string,
       dy: PropTypes.string
@@ -685,6 +686,7 @@ export const propTypes = {
     PropTypes.shape({
       valuePrefix: PropTypes.string,
       value: PropTypes.number.isRequired,
+      unit: PropTypes.string,
       label: PropTypes.string,
       x: PropTypes.string,
       x1: PropTypes.string,

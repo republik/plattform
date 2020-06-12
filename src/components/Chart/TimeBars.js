@@ -388,7 +388,8 @@ const TimeBarChart = props => {
                 dy={annotation.dy || '-0.4em'}
                 {...styles.annotationText}
               >
-                {tLabel(annotation.label)} {yAxis.format(annotation.value)}
+                {tLabel(annotation.label)} {yAxis.format(annotation.value)}{' '}
+                {tLabel(annotation.unit)}
               </text>
             </g>
           ))}
@@ -408,7 +409,9 @@ const TimeBarChart = props => {
             const labelText = tLabel(annotation.label)
             const valueText = [
               tLabel(annotation.valuePrefix),
-              yAxis.format(annotation.value)
+              yAxis.format(annotation.value),
+              annotation.unit ? ' ' : '',
+              tLabel(annotation.unit)
             ]
               .filter(Boolean)
               .join('')
@@ -518,6 +521,7 @@ export const propTypes = {
   yAnnotations: PropTypes.arrayOf(
     PropTypes.shape({
       value: PropTypes.number.isRequired,
+      unit: PropTypes.string,
       label: PropTypes.string.isRequired,
       x: PropTypes.string,
       dy: PropTypes.string
@@ -535,6 +539,7 @@ export const propTypes = {
     PropTypes.shape({
       valuePrefix: PropTypes.string,
       value: PropTypes.number.isRequired,
+      unit: PropTypes.string,
       label: PropTypes.string,
       x: PropTypes.string,
       x1: PropTypes.string,
