@@ -1,12 +1,12 @@
-const debug = require('debug')('access:lib:constraints:granterBlacklist')
+const debug = require('debug')('access:lib:constraints:granterBlocklist')
 
 /**
  * Constraint checks if granter's user ID is in constraint's settings.userIds[].
  * If found, contraint fails. Contraint will hinder display of campaign.
  *
- * Story: A blacklisted granter can't grant access.
+ * Story: A blocklisted granter can't grant access.
  *
- * @example: {"granterBlacklist": {"userIds": ["id1", "id2",... "idn"]}}
+ * @example: {"granterBlocklist": {"userIds": ["id1", "id2",... "idn"]}}
  */
 
 const isGrantable = async (args, context) => {

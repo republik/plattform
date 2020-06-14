@@ -26,7 +26,7 @@ module.exports = {
         ].join('')
       },
       {
-        label: 'Check Blacklist',
+        label: 'Check Blocklist',
         url: `https://mandrillapp.com/settings/rejections?q=${record.email}`
       }
     ].filter(Boolean)

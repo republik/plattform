@@ -156,7 +156,7 @@ LOCAL_IP=192.168.1.88
 ```
 - in `backends/servers/republik/.env`
 ```
-CORS_WHITELIST_URL=http://republik.test
+CORS_ALLOWLIST_URL=http://republik.test
 COOKIE_DOMAIN=.republik.test
 ```
 - in `republik-frontend/.env`

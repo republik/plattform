@@ -4,7 +4,7 @@ const { parse } = require('url')
 const debug = require('debug')('screenshot')
 
 const {
-  URL_WHITELIST,
+  URL_ALLOWLIST,
   PUPPETEER_WS_ENDPOINT
 } = process.env
 
@@ -13,10 +13,10 @@ const DEFAULT_HEIGHT = 1
 const DEFAULT_SCALE_FACTOR = 1
 const FORMATS = ['png', 'jpeg']
 
-if (!URL_WHITELIST) {
-  console.warn('missing env URL_WHITELIST, the /render endpoint will not work')
+if (!URL_ALLOWLIST) {
+  console.warn('missing env URL_ALLOWLIST, the /render endpoint will not work')
 }
-const whitelistedUrls = URL_WHITELIST && URL_WHITELIST.split(',')
+const allowlistedUrls = URL_ALLOWLIST && URL_ALLOWLIST.split(',')
 
 const getBrowser = async () => {
   if (chromium.headless) {
@@ -70,8 +70,8 @@ module.exports = async (req, res) => {
   }
 
   const allowed =
-    (URL_WHITELIST && URL_WHITELIST === 'all') ||
-    (whitelistedUrls && !!whitelistedUrls.find(whiteUrl => url.indexOf(whiteUrl) === 0))
+    (URL_ALLOWLIST && URL_ALLOWLIST === 'all') ||
+    (allowlistedUrls && !!allowlistedUrls.find(allowUrl => url.indexOf(allowUrl) === 0))
 
   if (!allowed) {
     console.warn('forbidden render url requested: ' + url)
