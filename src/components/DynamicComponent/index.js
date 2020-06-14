@@ -9,14 +9,14 @@ import Loader from '../Loader'
 
 import SG from '../../theme/env'
 
-const DEFAULT_WHITELIST = (SG.DYNAMIC_COMPONENT_BASE_URLS || '')
+const DEFAULT_ALLOW_LIST = (SG.DYNAMIC_COMPONENT_BASE_URLS || '')
   .split(',')
   .filter(Boolean)
 
-export const createRequire = (whitelist = DEFAULT_WHITELIST) => {
-  const whitelisted = ['/', './'].concat(whitelist)
+export const createRequire = (allowList = DEFAULT_ALLOW_LIST) => {
+  const allowed = ['/', './'].concat(allowList)
   return requireFrom(name => {
-    if (whitelisted.some(base => name.startsWith(base))) {
+    if (allowed.some(base => name.startsWith(base))) {
       return name
     }
     return `./${name}`

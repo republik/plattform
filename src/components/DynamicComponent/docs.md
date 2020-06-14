@@ -21,9 +21,9 @@ By default modules can only be loaded from relative or absolute paths. Following
 - `@project-r/styleguide` (everything exposed in `lib.js`)
 - `@project-r/styleguide/chart` (everything exposed in `chart.js`)
 
-Set a `SG_DYNAMIC_COMPONENT_BASE_URLS` environment variable with comma-separated base urls to whitelist CDNs.
+Set a `SG_DYNAMIC_COMPONENT_BASE_URLS` environment variable with comma-separated base urls to allow CDN hosts.
 
-You may also pass a custom `require` function as a prop with additional provided dependencies or custom whitelisting logic. A `createRequire(whitelist)` utility is available to extend the default.
+You may also pass a custom `require` function as a prop with additional provided dependencies or custom allow list logic. A `createRequire(allowList)` utility is available to extend the default.
 
 ## SSR
 
