@@ -618,20 +618,20 @@ class AudioPlayer extends Component {
             </button>
           )}
           <div {...styles.uiText} style={uiTextStyle}>
-            {true && (
+            {loading && (
               <InlineSpinner
                 size={25}
                 title={t('styleguide/AudioPlayer/loading')}
               />
             )}
-            {false && title && fixed && (
+            {!loading && title && fixed && (
               <div {...styles.time}>
                 <Link style={{ color: colors.text }} href={sourcePath} passHref>
                   {title}
                 </Link>
               </div>
             )}
-            {false && (
+            {!loading && (
               <div {...styles.time} style={timeTextStyle} tabIndex='0'>
                 {this.formattedCurrentTime && this.formattedCurrentTime}
                 {this.formattedCurrentTime && this.formattedDuration && ' / '}
