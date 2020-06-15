@@ -476,7 +476,7 @@ class AudioPlayer extends Component {
       maxWidth: `calc(100% - ${leftIconsWidth + rightIconsWidth + 20}px)`,
       left: timePosition === 'left' ? leftIconsWidth + 10 : 'auto',
       right: timePosition === 'right' ? rightIconsWidth + 10 : 'auto',
-      top: true ? '0px' : fixed ? '-12px' : '1px'
+      top: loading ? '0px' : fixed ? '-12px' : '1px'
     }
     const timeTextStyle = {
       fontSize: fixed ? '16px' : '19px',
@@ -626,8 +626,10 @@ class AudioPlayer extends Component {
             )}
             {!loading && title && fixed && (
               <div {...styles.time}>
-                <Link style={{ color: colors.text }} href={sourcePath} passHref>
-                  {title}
+                <Link href={sourcePath} passHref>
+                  <A style={{ color: colors.text }} href={sourcePath}>
+                    {title}
+                  </A>
                 </Link>
               </div>
             )}
