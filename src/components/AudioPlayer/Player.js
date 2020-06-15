@@ -193,6 +193,8 @@ const styles = {
   })
 }
 
+const DefaultLink = ({ children }) => children
+
 export const getFormattedTime = secs => {
   let totalSeconds = secs
   let hours = Math.floor(totalSeconds / 3600)
@@ -455,7 +457,8 @@ class AudioPlayer extends Component {
       autoPlay,
       title,
       fixed,
-      sourcePath
+      sourcePath,
+      Link = DefaultLink
     } = this.props
     const {
       playEnabled,
@@ -473,7 +476,7 @@ class AudioPlayer extends Component {
       maxWidth: `calc(100% - ${leftIconsWidth + rightIconsWidth + 20}px)`,
       left: timePosition === 'left' ? leftIconsWidth + 10 : 'auto',
       right: timePosition === 'right' ? rightIconsWidth + 10 : 'auto',
-      top: fixed ? '-12px' : '1px'
+      top: loading ? '0px' : fixed ? '-12px' : '1px'
     }
     const timeTextStyle = {
       fontSize: fixed ? '16px' : '19px',
@@ -617,22 +620,25 @@ class AudioPlayer extends Component {
           <div {...styles.uiText} style={uiTextStyle}>
             {loading && (
               <InlineSpinner
+                style={{ position: 'absolute' }}
                 size={25}
                 title={t('styleguide/AudioPlayer/loading')}
               />
             )}
             {!loading && title && fixed && (
               <div {...styles.time}>
-                <A style={{ color: colors.text }} href={sourcePath}>
+                <Link style={{ color: colors.text }} href={sourcePath} passHref>
                   {title}
-                </A>
+                </Link>
               </div>
             )}
-            <div {...styles.time} style={timeTextStyle} tabIndex='0'>
-              {this.formattedCurrentTime && this.formattedCurrentTime}
-              {this.formattedCurrentTime && this.formattedDuration && ' / '}
-              {this.formattedDuration && this.formattedDuration}
-            </div>
+            {!loading && (
+              <div {...styles.time} style={timeTextStyle} tabIndex='0'>
+                {this.formattedCurrentTime && this.formattedCurrentTime}
+                {this.formattedCurrentTime && this.formattedDuration && ' / '}
+                {this.formattedDuration && this.formattedDuration}
+              </div>
+            )}
             {sourceError && !loading && (
               <div {...styles.sourceError}>
                 {t('styleguide/AudioPlayer/sourceError')}{' '}
