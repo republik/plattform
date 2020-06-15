@@ -476,7 +476,7 @@ class AudioPlayer extends Component {
       maxWidth: `calc(100% - ${leftIconsWidth + rightIconsWidth + 20}px)`,
       left: timePosition === 'left' ? leftIconsWidth + 10 : 'auto',
       right: timePosition === 'right' ? rightIconsWidth + 10 : 'auto',
-      top: loading ? '0px' : fixed ? '-12px' : '1px'
+      top: true ? '0px' : fixed ? '-12px' : '1px'
     }
     const timeTextStyle = {
       fontSize: fixed ? '16px' : '19px',
@@ -618,21 +618,20 @@ class AudioPlayer extends Component {
             </button>
           )}
           <div {...styles.uiText} style={uiTextStyle}>
-            {loading && (
+            {true && (
               <InlineSpinner
-                style={{ position: 'absolute' }}
                 size={25}
                 title={t('styleguide/AudioPlayer/loading')}
               />
             )}
-            {!loading && title && fixed && (
+            {false && title && fixed && (
               <div {...styles.time}>
                 <Link style={{ color: colors.text }} href={sourcePath} passHref>
                   {title}
                 </Link>
               </div>
             )}
-            {!loading && (
+            {false && (
               <div {...styles.time} style={timeTextStyle} tabIndex='0'>
                 {this.formattedCurrentTime && this.formattedCurrentTime}
                 {this.formattedCurrentTime && this.formattedDuration && ' / '}
