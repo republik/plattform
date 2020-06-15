@@ -1,11 +1,11 @@
 module.exports = {
-  granterBlocklist: require('./granterBlocklist'),
+  granterDenylist: require('./granterDenylist'),
   limitGrants: require('./limitGrants'),
   limitRevokedSlots: require('./limitRevokedSlots'),
   limitSlots: require('./limitSlots'),
   notGrantable: require('./notGrantable'),
   notVisible: require('./notVisible'),
-  recipientBlocklist: require('./recipientBlocklist'),
+  recipientDenylist: require('./recipientDenylist'),
   recipientInNoSlot: require('./recipientInNoSlot'),
   recipientIsGranter: require('./recipientIsGranter'),
   recipientNotGranter: require('./recipientNotGranter'),
