@@ -16,7 +16,6 @@ const hashQuery = (query) =>
 const createGet = (redis) => async (query) => {
   const redisKey = getRedisKey(query)
   const payload = await redis.getAsync(redisKey)
-  redis.expireAsync(redisKey, redis.__shortExpireSeconds)
   debug('search:cache:get')(`${payload ? 'HIT' : 'MISS'} %O`, query)
   return payload
     ? JSON.parse(payload)
