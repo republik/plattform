@@ -33,7 +33,7 @@ GITHUB_APP_KEY=
 # base url used on /frontend
 FRONTEND_BASE_URL=http://localhost:3010
 
-# allowliste buckets with regions for /s3
+# allowlist buckets with regions for /s3
 AWS_BUCKET_ALLOWLIST=republik-assets:eu-central-1
 ```
 
