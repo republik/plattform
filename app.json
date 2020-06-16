@@ -23,7 +23,7 @@
     "CLUSTER": {
       "required": true
     },
-    "CORS_WHITELIST_URL": {
+    "CORS_ALLOWLIST_URL": {
       "required": true
     },
     "DEBUG": "*",

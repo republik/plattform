@@ -1,13 +1,13 @@
 const { returnImage, s3 } = require('../lib')
 const {
-  AWS_BUCKET_WHITELIST
+  AWS_BUCKET_ALLOWLIST
 } = process.env
 
 let buckets = {}
-if (!AWS_BUCKET_WHITELIST) {
-  console.warn('missing env AWS_BUCKET_WHITELIST, the /:bucket/:path* endpoint will not work')
+if (!AWS_BUCKET_ALLOWLIST) {
+  console.warn('missing env AWS_BUCKET_ALLOWLIST, the /:bucket/:path* endpoint will not work')
 } else {
-  buckets = AWS_BUCKET_WHITELIST
+  buckets = AWS_BUCKET_ALLOWLIST
     .split(',')
     .reduce(
       (agg, val) => {
@@ -25,7 +25,7 @@ module.exports = (server) => {
       path
     } = req.params
 
-    if (!AWS_BUCKET_WHITELIST || !buckets[bucket]) {
+    if (!AWS_BUCKET_ALLOWLIST || !buckets[bucket]) {
       console.warn(`unauthorized s3 url requested: ${bucket}/${path}`)
       return res.status(403).end()
     }

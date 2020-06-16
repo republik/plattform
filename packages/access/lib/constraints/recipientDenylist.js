@@ -1,4 +1,4 @@
-const debug = require('debug')('access:lib:constraints:recipientBlacklist')
+const debug = require('debug')('access:lib:constraints:recipientDenylist')
 
 /**
  * Constraint checks if recipient's email address is to be found in
@@ -6,7 +6,7 @@ const debug = require('debug')('access:lib:constraints:recipientBlacklist')
  *
  * Story: An email address should be prevent to receive any access grants.
  *
- * @example: {"recipientBlacklist": {"emails": ["email@domain.tld", "a@b.c"]}}
+ * @example: {"recipientDenylist": {"emails": ["email@domain.tld", "a@b.c"]}}
  */
 
 const isGrantable = async (args, context) => {
