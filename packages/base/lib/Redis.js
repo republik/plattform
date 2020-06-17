@@ -10,19 +10,19 @@ const getConnectionOptions = () => {
     REDIS_URL = 'redis://127.0.0.1:6379'
   } = process.env
 
-  const isHerokuRedis = Object.keys(process.env)
-    .filter( k => k.startsWith('HEROKU_REDIS') && process.env[k] === REDIS_URL)
-    .length > 0
 
   const url = new URL(REDIS_URL)
-  if (url.password && !isHerokuRedis && url.hostname.indexOf('amazonaws') > -1) {
-    console.info('REDIS_URL uses authentication which infers TLS. For heroku redis you must increment the port by 1')
+  const isHerokuRedis = url.hostname.indexOf('amazonaws.com') > -1
+
+  const incrementPort = url.password && isHerokuRedis
+  if (incrementPort) {
+    console.info("REDIS_URL looks like it's from heroku, automatically incrementing the port by 1")
   }
 
   const connectionOptions = {
     // heroku provides TLS on port + 1
     // https://devcenter.heroku.com/articles/securing-heroku-redis
-    port: isHerokuRedis ? Number(url.port)+1 : Number(url.port),
+    port: incrementPort ? Number(url.port)+1 : Number(url.port),
     host: url.hostname,
     db: url.path?.split('/')[1] || 0,
     ...url.password ? {
