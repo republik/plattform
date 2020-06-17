@@ -2,6 +2,11 @@ const crypto = require('crypto')
 const debug = require('debug')
 const { getIndexAlias } = require('./utils')
 
+const {
+  SEARCH_CACHE_QUERY = false,
+  SEARCH_CACHE_DISABLE
+} = process.env
+
 const keyPrefix = 'search:cache:'
 
 const getRedisKey = (query) =>
@@ -14,40 +19,49 @@ const hashQuery = (query) =>
     .digest('hex')
 
 const createGet = (redis) => async (query) => {
-  const redisKey = getRedisKey(query)
-  const payload = await redis.getAsync(redisKey)
-  debug('search:cache:get')(`${payload ? 'HIT' : 'MISS'} %O`, query)
-  return payload
-    ? JSON.parse(payload)
-    : payload
-}
-
-const isEligible = (query, options) => {
-  if (
-    !options.scheduledAt &&
-    query.index &&
-    query.index.length === 1 &&
-    query.index[0] === getIndexAlias('document', 'read')
-  ) {
-    return true
+  if (SEARCH_CACHE_DISABLE) {
+    return
   }
-  return false
+
+  const payload = await redis.getAsync(
+    getRedisKey(query)
+  )
+
+  debug('search:cache:get')(`${payload ? 'HIT' : 'MISS'} %O`, query)
+
+  if (payload) {
+    try {
+      return JSON.parse(payload).data
+    } catch(e) {
+      console.warn(e, query)
+    }
+  }
 }
 
-const createSet = (redis) => async (query, payload, options = {}) => {
+const createSet = (redis) => async (query, data, options = {}) => {
+  if (SEARCH_CACHE_DISABLE) {
+    return
+  }
   if (isEligible(query, options)) {
-    let payloadString
+    let payload
     try {
-      payloadString = JSON.stringify(payload)
+      payload = JSON.stringify({
+        data,
+        ...SEARCH_CACHE_QUERY ? { query } : {}
+      })
     } catch (e) {
-      console.info(e, query)
+      console.warn(e, query)
     }
-    if (payloadString) {
+    if (payload) {
       debug('search:cache:set')('PUT %O', query)
       return redis.setAsync(
+        // we don't expire the key because:
+        // - we flush the cache on publish which happens often (daily)
+        // - we run eviction policy: volatile-lru, let it take care of overspill
+        // - the data doesn't expire, old is valid, no need for redis to check
+        // - we don't need to keep the cache small and want to cache aggressively
         getRedisKey(query),
-        payloadString,
-        'EX', redis.__shortExpireSeconds
+        payload
       )
     }
   }
@@ -61,6 +75,17 @@ const createInvalidate = (redis) => async () => {
     mapFn: (key, client) => client.delAsync(key)
   })
     .catch(() => {})// fails if no keys are matched
+}
+
+const isEligible = (query, options) => {
+  if (
+    !options.scheduledAt &&
+    query?.index?.length === 1 &&
+    query.index[0] === getIndexAlias('document', 'read')
+  ) {
+    return true
+  }
+  return false
 }
 
 module.exports = (redis) => ({
