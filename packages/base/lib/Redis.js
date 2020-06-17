@@ -5,14 +5,42 @@ const Promise = require('bluebird')
 Promise.promisifyAll(redis.RedisClient.prototype)
 Promise.promisifyAll(redis.Multi.prototype)
 
-const connect = () => {
-  const url = process.env.REDIS_URL
+const getConnectionOptions = () => {
+  const {
+    REDIS_URL = 'redis://127.0.0.1:6379'
+  } = process.env
 
-  debug('connecting client', { url })
-  const client = redis.createClient({
-    url,
+  const isHerokuRedis = Object.keys(process.env)
+    .filter( k => k.startsWith('HEROKU_REDIS') && process.env[k] === REDIS_URL)
+    .length > 0
+
+  const url = new URL(REDIS_URL)
+  if (url.password && !isHerokuRedis && url.hostname.indexOf('amazonaws') > -1) {
+    console.info('REDIS_URL uses authentication which infers TLS. For heroku redis you must increment the port by 1')
+  }
+
+  const connectionOptions = {
+    // heroku provides TLS on port + 1
+    // https://devcenter.heroku.com/articles/securing-heroku-redis
+    port: isHerokuRedis ? Number(url.port)+1 : Number(url.port),
+    host: url.hostname,
+    db: url.path?.split('/')[1] || 0,
+    ...url.password ? {
+      username: url.username,
+      password: url.password,
+      tls: {
+        rejectUnauthorized: false,
+        requestCert: true,
+      },
+    } : {},
     detect_buffers: true
-  })
+  }
+  debug('redis connectionOptions', connectionOptions, { REDIS_URL, isHerokuRedis })
+  return connectionOptions
+}
+
+const connect = () => {
+  const client = redis.createClient(getConnectionOptions())
 
   client.__defaultExpireSeconds = 3 * 7 * 24 * 60 * 60 // 3 weeks
   client.__shortExpireSeconds = 3 * 24 * 60 * 60 // 3 days
@@ -47,6 +75,7 @@ const disconnect = client =>
   client.quit()
 
 module.exports = {
+  getConnectionOptions,
   connect,
-  disconnect
+  disconnect,
 }
