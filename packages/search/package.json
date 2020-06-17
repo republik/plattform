@@ -25,6 +25,7 @@
     "check-env": "^1.3.0",
     "elasticsearch": "^15.0.0",
     "lodash": "^4.17.10",
+    "snappy": "^6.3.4",
     "yargs": "^15.3.1"
   }
 }
