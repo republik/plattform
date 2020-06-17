@@ -35,13 +35,14 @@ const createGet = (redis) => async (query) => {
   debug('search:cache:get')(`${payload ? 'HIT' : 'MISS'} %O`, query)
 
   if (payload) {
-    if (SEARCH_CACHE_COMPRESSION) {
-      payload = snappy.uncompressSync(payload)
-    }
     try {
+      if (SEARCH_CACHE_COMPRESSION) {
+        payload = snappy.uncompressSync(payload)
+      }
       return JSON.parse(payload).data
     } catch(e) {
-      console.warn(e, query)
+      console.warn('Error while loading from search cache, removing key!', e, { redisKey, query })
+      await redis.delAsync(redisKey)
     }
   }
 }
