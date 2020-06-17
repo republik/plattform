@@ -9,7 +9,7 @@ const {
   SEARCH_CACHE_COMPRESSION = false
 } = process.env
 
-const keyPrefix = 'search:cache:'
+const keyPrefix = `search:cache:${SEARCH_CACHE_COMPRESSION ? 'compressed:' : 'uncompressed'}`
 
 const getRedisKey = (query) =>
   `${keyPrefix}${hashQuery(query)}`
