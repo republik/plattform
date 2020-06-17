@@ -35,9 +35,10 @@ export default ({
       // We always subtract 1px to prevent against rounding issues that can lead
       // to the background color shining through at the bottom of the image.
       paddingBottom: `calc(${100 / aspectRatio}% - 1px)`,
-      backgroundColor: src.match(/\.png(\.webp)?(\?|$)/)
-        ? 'transparent'
-        : undefined
+      backgroundColor:
+        src.match(/\.png(\.webp)?(\?|$)/) || src.match(/\.gif(\?|$)/)
+          ? 'transparent'
+          : undefined
     }}
   >
     <img
