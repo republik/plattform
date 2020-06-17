@@ -1,10 +1,12 @@
 const crypto = require('crypto')
 const debug = require('debug')
 const { getIndexAlias } = require('./utils')
+const snappy = require('snappy')
 
 const {
   SEARCH_CACHE_QUERY = false,
-  SEARCH_CACHE_DISABLE
+  SEARCH_CACHE_DISABLE = false,
+  SEARCH_CACHE_COMPRESSION = false
 } = process.env
 
 const keyPrefix = 'search:cache:'
@@ -23,13 +25,19 @@ const createGet = (redis) => async (query) => {
     return
   }
 
-  const payload = await redis.getAsync(
-    getRedisKey(query)
+  const redisKey = getRedisKey(query)
+  let payload = await redis.getAsync(
+    SEARCH_CACHE_COMPRESSION
+      ? Buffer.from(redisKey)
+      : redisKey
   )
 
   debug('search:cache:get')(`${payload ? 'HIT' : 'MISS'} %O`, query)
 
   if (payload) {
+    if (SEARCH_CACHE_COMPRESSION) {
+      payload = snappy.uncompressSync(payload)
+    }
     try {
       return JSON.parse(payload).data
     } catch(e) {
@@ -49,6 +57,9 @@ const createSet = (redis) => async (query, data, options = {}) => {
         data,
         ...SEARCH_CACHE_QUERY ? { query } : {}
       })
+      if (SEARCH_CACHE_COMPRESSION) {
+        payload = snappy.compressSync(payload)
+      }
     } catch (e) {
       console.warn(e, query)
     }

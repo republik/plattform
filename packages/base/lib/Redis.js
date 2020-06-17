@@ -9,7 +9,10 @@ const connect = () => {
   const url = process.env.REDIS_URL
 
   debug('connecting client', { url })
-  const client = redis.createClient(url)
+  const client = redis.createClient({
+    url,
+    detect_buffers: true
+  })
 
   client.__defaultExpireSeconds = 3 * 7 * 24 * 60 * 60 // 3 weeks
   client.__shortExpireSeconds = 3 * 24 * 60 * 60 // 3 days
