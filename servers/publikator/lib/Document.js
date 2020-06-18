@@ -132,6 +132,19 @@ const prepareMetaForPublish = async ({
     .filter(c => c.type === 'link')
     .map(a => a.children[0].value)
 
+  const authorUserIds = credits
+    .filter(c => c.type === 'link')
+    .map(({ url }) => {
+      if (url.startsWith('/~')) {
+        return url.substring(2)
+      } else {
+        (
+          console.warn(`invalid author link encountered: ${url} in path: ${path}`)
+        )
+      }
+    })
+    .filter(Boolean)
+
   const isSeriesMaster = typeof docMeta.series === 'object'
   const isSeriesEpisode = typeof docMeta.series === 'string'
   // map series episodes to the key seriesEpisodes to have consistent types
@@ -160,6 +173,7 @@ const prepareMetaForPublish = async ({
     credits,
     audioSource,
     authors,
+    authorUserIds,
     isSeriesMaster,
     isSeriesEpisode,
     seriesEpisodes,

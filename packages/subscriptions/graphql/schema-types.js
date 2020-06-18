@@ -54,8 +54,13 @@ extend type Document {
   # this method will return [Subscription] as soon
   # as more than formats can be subscribed
   subscribedByMe(
+    first: Int
+    last: Int
+    before: String
+    after: String
     includeParents: Boolean
-  ): Subscription
+    includeAuthors: Boolean
+  ): SubscriptionConnection!
 
   unreadNotifications: NotificationConnection
 }

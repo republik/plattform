@@ -3,7 +3,8 @@ const {
   getSimulatedSubscriptionForUserAndObject,
   getUnreadNotificationsForUserAndObject
 } = require('../../lib/Subscriptions')
-const paginate = require('../../lib/paginateNotificationConnection')
+const paginateNotifications = require('../../lib/paginateNotificationConnection')
+const { paginate } = require('@orbiting/backend-modules-utils')
 const { Roles } = require('@orbiting/backend-modules-auth')
 const { getRepoId } = require('@orbiting/backend-modules-documents/lib/resolve')
 
@@ -56,15 +57,17 @@ module.exports = {
   },
   async subscribedByMe (doc, args, context) {
     const { user: me } = context
-    const { includeParents } = args
+    const { includeParents, includeAuthors } = args
 
     if (!me) {
       return null
     }
 
+    const subscriptions = []
+
     const repoIds = getRepoIdsForDoc(doc, includeParents)
 
-    return getSubscriptionsForUserAndObjects(
+    const docSubscription = await getSubscriptionsForUserAndObjects(
       me.id,
       {
         type: 'Document',
@@ -92,16 +95,50 @@ module.exports = {
           )
         }
       })
+    if (docSubscription) {
+      subscriptions.push(docSubscription)
+    }
+
+    // TODO: reindex all docs to provide authorUserIds?
+    if (includeAuthors && doc.meta.authorUserIds) {
+      const authorSubscriptions = await getSubscriptionsForUserAndObjects(
+        me.id,
+        {
+          type: 'User',
+          ids: doc.meta.authorUserIds
+        },
+        context,
+        {
+          includeNotActive: true
+        }
+      )
+      authorSubscriptions.forEach(s => subscriptions.push(s))
+
+      // simulate other author's connections
+      const userIds = authorSubscriptions.map(s => s.objectUserId)
+      doc.meta.authorUserIds
+        .filter(id => !userIds.includes(id))
+        .map(id => getSimulatedSubscriptionForUserAndObject(
+          me.id,
+          {
+            type: 'User',
+            id
+          },
+          context
+        ))
+        .forEach(sub => subscriptions.push(sub))
+    }
+    return paginate(args, subscriptions)
   },
   async unreadNotifications (doc, args, context) {
     const { user: me } = context
 
     const repoIds = getRepoIdsForDoc(doc, false)
     if (!me || !repoIds || !repoIds.length) {
-      return paginate(args, [])
+      return paginateNotifications(args, [])
     }
 
-    return paginate(
+    return paginateNotifications(
       args,
       await getUnreadNotificationsForUserAndObject(
         me.id,
