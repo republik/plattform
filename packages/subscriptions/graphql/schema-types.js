@@ -51,8 +51,6 @@ extend type Document {
 
   # subject: me
   # object: this.document
-  # this method will return [Subscription] as soon
-  # as more than formats can be subscribed
   subscribedByMe(
     first: Int
     last: Int
