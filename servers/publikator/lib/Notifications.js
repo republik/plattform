@@ -1,6 +1,7 @@
 const {
   Subscriptions: {
-    getSubscriptionsForUserAndObject
+    getSubscriptionsForUserAndObject,
+    getSubscriptionsForUserAndObjects
   }
 } = require('@orbiting/backend-modules-subscriptions')
 const { sendNotification } = require('@orbiting/backend-modules-subscriptions')
@@ -11,6 +12,54 @@ const Promise = require('bluebird')
 const {
   FRONTEND_BASE_URL
 } = process.env
+
+const getFormatSubscriptions = async (doc, formatDoc, context) => {
+  if (!formatDoc) {
+    return
+  }
+
+  return getSubscriptionsForUserAndObject(
+    null,
+    {
+      type: 'Document',
+      id: formatDoc.meta.repoId
+    },
+    context,
+    {
+      onlyEligibles: true
+    }
+  )
+}
+
+const getAuthorSubscriptions = (doc, context) => {
+  const { authorUserIds } = doc.meta
+  if (!authorUserIds) {
+    return
+  }
+
+  return getSubscriptionsForUserAndObjects(
+    null,
+    {
+      type: 'User',
+      ids: authorUserIds,
+      filter: 'Document'
+    },
+    context,
+    {
+      onlyEligibles: true
+    }
+  )
+}
+
+const getUsersWithSubscriptions = (subscriptions = [], { loaders }) => {
+  return Promise.map(
+    subscriptions,
+    async (sub) => ({
+      ...await loaders.User.byId.load(sub.userId),
+      __subscription: sub
+    })
+  )
+}
 
 const notifyPublish = async (repoId, context, testUsers) => {
   const {
@@ -26,59 +75,85 @@ const notifyPublish = async (repoId, context, testUsers) => {
   const docRepoId = doc.meta.repoId
 
   const { repoId: formatRepoId } = getRepoId(doc.meta.format)
-  if (!formatRepoId) {
-    return
+  const formatDoc = formatRepoId && await loaders.Document.byRepoId.load(formatRepoId)
+
+  const [formatSubscriptions, authorsSubscriptions] = testUsers ? [] : await Promise.all([
+    getFormatSubscriptions(doc, formatDoc, context),
+    getAuthorSubscriptions(doc, context)
+  ])
+
+  const formatSubscribers = testUsers ||
+    await getUsersWithSubscriptions(formatSubscriptions, context)
+
+  const eventInfo = {
+    objectType: 'Document',
+    objectId: docRepoId
   }
-
-  const subscriptionDoc = await loaders.Document.byRepoId.load(formatRepoId)
-  const subscriptionRepoId = subscriptionDoc.meta.repoId
-
-  const subscriptions = testUsers
-    ? null
-    : await getSubscriptionsForUserAndObject(
-      null,
+  const appContent = {
+    body: doc.meta.shortTitle || [doc.meta.title, doc.meta.description].join(' - '),
+    url: `${FRONTEND_BASE_URL}${doc.meta.path}`,
+    // change when APP allows to open url of other types
+    // https://github.com/orbiting/app/blob/master/src/services/pushNotificationsProvider.ios.js#L59
+    type: 'discussion',
+    tag: docRepoId
+  }
+  let event
+  if (formatSubscribers.length) {
+    event = await sendNotification(
       {
-        type: 'Document',
-        id: subscriptionRepoId
-      },
-      context,
-      {
-        onlyEligibles: true
-      }
-    )
-  const subscribers = testUsers || await Promise.map(
-    subscriptions,
-    async (sub) => ({
-      ...await loaders.User.byId.load(sub.userId),
-      __subscription: sub
-    })
-  )
-
-  if (subscribers.length > 0) {
-    await sendNotification(
-      {
-        subscription: {
-          objectType: 'Document',
-          objectId: subscriptionRepoId
-        },
-        event: {
-          objectType: 'Document',
-          objectId: docRepoId
-        },
-        users: subscribers,
+        event: eventInfo,
+        users: formatSubscribers,
         content: {
           app: {
-            title: t('api/notifications/doc/title', { title: inQuotes(subscriptionDoc.meta.title) }),
-            body: doc.meta.shortTitle || [doc.meta.title, doc.meta.description].join(' - '),
-            url: `${FRONTEND_BASE_URL}${doc.meta.path}`,
-            // change when APP allows to open url of other types
-            // https://github.com/orbiting/app/blob/master/src/services/pushNotificationsProvider.ios.js#L59
-            type: 'discussion',
-            tag: docRepoId
+            ...appContent,
+            title: t('api/notifications/doc/title', { title: inQuotes(formatDoc.meta.title) })
           }
         }
       },
       context
+    )
+  }
+
+  const notifiedUserIds = formatSubscribers.map(user => user.id)
+  const dedupedAuthorsSubscriptions = authorsSubscriptions
+    .filter(sub => !notifiedUserIds.includes(sub.userId))
+
+  if (dedupedAuthorsSubscriptions.length) {
+    const authorsSubscribers =
+      await getUsersWithSubscriptions(dedupedAuthorsSubscriptions, context)
+
+    const authorSubscribersByAuthorIds = authorsSubscribers.reduce(
+      (agg, user) => {
+        const { objectUserId: authorId } = user.__subscription
+        if (agg[authorId]) {
+          agg[authorId].push(user)
+        } else {
+          agg[authorId] = [user]
+        }
+        return agg
+      }, {}
+    )
+
+    await Promise.each(
+      Object.keys(authorSubscribersByAuthorIds),
+      async (authorId) => {
+        const author = await loaders.User.byId.load(authorId)
+        const subscribers = authorSubscribersByAuthorIds[authorId]
+
+        event = await sendNotification(
+          {
+            event: event ? { id: event.id } : eventInfo,
+            users: subscribers,
+            content: {
+              app: {
+                ...appContent,
+                title: t('api/notifications/doc/author/title', { name: author.name })
+              }
+            }
+          },
+          context
+        )
+      }
     )
   }
 }

@@ -1777,6 +1777,10 @@
     {
       "key": "api/notifications/doc/title",
       "value": "{title} jetzt online"
+    },
+    {
+      "key": "api/notifications/doc/author/title",
+      "value": "{name}:"
     }
   ]
 }
