@@ -1,12 +1,13 @@
 const Promise = require('bluebird')
 const crypto = require('crypto')
 
-const { transformUser, AccessToken } = require('@orbiting/backend-modules-auth')
 const { encode } = require('@orbiting/backend-modules-base64u')
 
 const md5 = data => crypto.createHash('md5').update(data).digest('hex')
 
 module.exports = async ({ pgdb }) => {
+  const { transformUser, AccessToken } = require('@orbiting/backend-modules-auth')
+
   const consents = await pgdb.query(`
     SELECT c."userId", c.record
     FROM "consents" c

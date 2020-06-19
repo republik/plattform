@@ -40,18 +40,10 @@ const result = async (question, args, context) => {
   if (!values.length) {
     return null
   }
-
-  return {
-    mean: d3.mean(values),
-    median: d3.median(values),
-    deviation: d3.deviation(values),
-    // for downstream resolvers
-    questionTicks: question.ticks,
-    values
-  }
+  return resultForValues(question, values, context)
 }
 
-const resultHistogram = async (result, { ticks }, context) => {
+const resultHistogram = (result, { ticks }, context) => {
   if (
     !result ||
     !result.questionTicks ||
@@ -60,7 +52,11 @@ const resultHistogram = async (result, { ticks }, context) => {
   ) {
     return []
   }
-  const { questionTicks, values } = result
+  const { questionTicks, values, histogram } = result
+  // cached histogram in result, see resultForValues
+  if (histogram && (histogram.ticks === ticks || !ticks)) {
+    return histogram.bins
+  }
 
   const numTicks = ticks ||
     ((questionTicks.length - 1) * 10)
@@ -73,14 +69,41 @@ const resultHistogram = async (result, { ticks }, context) => {
       d3.ticks(extent[0], extent[1], numTicks).slice(0, -1)
     )(values)
 
-  return bins.map(bin => ({
-    ...bin,
-    count: bin.length
+  return bins.map(({ x0, x1, length }) => ({
+    x0,
+    x1,
+    count: length
   }))
+}
+
+const resultForValues = (question, values, context) => {
+  const intermediateResult = {
+    mean: d3.mean(values),
+    median: d3.median(values),
+    deviation: d3.deviation(values),
+    // for downstream resolvers
+    questionTicks: question.ticks,
+    values
+  }
+
+  // prepare histogram
+  const ticks = question.metadata && question.metadata.histogramTicks
+  if (!ticks) {
+    return intermediateResult
+  }
+
+  return {
+    ...intermediateResult,
+    histogram: {
+      ticks,
+      bins: resultHistogram(intermediateResult, { ticks }, context)
+    }
+  }
 }
 
 module.exports = {
   validate,
   result,
-  resultHistogram
+  resultHistogram,
+  resultForValues
 }

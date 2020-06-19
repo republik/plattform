@@ -101,6 +101,7 @@ const prepareMetaForPublish = async ({
       .then(res => res.buffer())
       .then(res => mp3Duration(res))
       .then(res => res * 1000)
+      .then(Math.round)
       .catch(e => {
         console.error(`Could not download/measure audioSourceMp3 (${audioSourceMp3})`)
         return 0

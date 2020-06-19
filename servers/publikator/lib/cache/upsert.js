@@ -1,6 +1,9 @@
 const debug = require('debug')('publikator:cache:upsert')
 
-const utils = require('@orbiting/backend-modules-search/lib/utils')
+const visit = require('unist-util-visit')
+
+const { getIndexAlias, mdastContentToString } = require('@orbiting/backend-modules-search/lib/utils')
+const { mdastToString } = require('@orbiting/backend-modules-utils')
 
 /**
  * Builds ElasticSearch routing object, to find documents in an {index} of a
@@ -10,19 +13,72 @@ const utils = require('@orbiting/backend-modules-search/lib/utils')
  * @return {Object}    Routing object to pass ElacsticSearch client
  */
 const getPath = (id) => ({
-  index: utils.getIndexAlias('repo', 'write'),
+  index: getIndexAlias('repo', 'write'),
   type: 'Repo',
   id
 })
 
+/**
+ * Get stringified version of mdast object.
+ *
+ * @deprecated Use getContentStrings instead.
+ *
+ * @param {Object} mdast A MDAST object
+ * @return {(Object|null)} Returns { contentString } or null
+ */
 const getContentString = (mdast) => {
-  const contentString = mdast && utils.mdastContentToString(mdast)
+  const contentString = mdast && mdastContentToString(mdast)
 
   if (!contentString) {
     return
   }
 
   return { contentString }
+}
+
+const getContentStrings = (mdast) => {
+  if (!mdast) {
+    return
+  }
+
+  const contentStrings = {}
+
+  const text = mdastContentToString(mdast)
+  if (text) {
+    contentStrings.text = text
+  }
+
+  visit(mdast, 'zone', node => {
+    if (node.identifier === 'TITLE') {
+      const title = mdastToString({
+        children: node.children.filter(n => n.type === 'heading' && n.depth === 1)
+      }).trim()
+
+      const subject = mdastToString({
+        children: node.children.filter(n => n.type === 'heading' && n.depth === 2)
+      }).trim()
+
+      const lead = mdastToString({
+        children: [node.children.filter(n => n.type === 'paragraph')[0]].filter(Boolean)
+      }).trim()
+
+      const credits = mdastToString({
+        children: [node.children.filter(n => n.type === 'paragraph')[1]].filter(Boolean)
+      }).trim()
+
+      Object.assign(
+        contentStrings,
+        {
+          title,
+          subject,
+          lead,
+          credits
+        }
+      )
+    }
+  })
+
+  return { contentStrings }
 }
 
 const getContentMeta = ({ meta = false } = {}) => {
@@ -155,6 +211,7 @@ const upsert = async ({
     updatedAt,
     isArchived,
     ...getContentString(content),
+    ...getContentStrings(content),
     ...getContentMeta(content),
     ...getLatestCommit(commit),
     ...getLatestPublications(publications),

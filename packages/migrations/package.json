@@ -20,12 +20,12 @@
     "db:migrate:create": "script/create.js"
   },
   "devDependencies": {
-    "moment": "^2.24.0",
+    "moment": "^2.26.0",
     "yargs": "^13.2.2"
   },
   "dependencies": {
-    "db-migrate": "^0.11.5",
-    "db-migrate-pg": "^1.0.0",
-    "yargs": "^15.1.0"
+    "db-migrate": "^0.11.11",
+    "db-migrate-pg": "^1.2.2",
+    "yargs": "^15.3.1"
   }
 }

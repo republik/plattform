@@ -48,6 +48,10 @@ type mutations {
 
 
   submitAnswer(answer: AnswerInput!): QuestionInterface!
+  submitAnswerUnattributed(
+    answer: AnswerInput!
+    pseudonym: ID!
+  ): QuestionInterface!
   # delete all my unsubmitted answers
   resetQuestionnaire(id: ID!): Questionnaire!
   submitQuestionnaire(id: ID!): Questionnaire!

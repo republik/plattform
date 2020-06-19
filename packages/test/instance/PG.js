@@ -1,4 +1,5 @@
-const exec = require('util').promisify(require('child_process').exec)
+const util = require('util')
+const exec = util.promisify(require('child_process').exec)
 
 const execAndLog = (command) =>
   exec(command)

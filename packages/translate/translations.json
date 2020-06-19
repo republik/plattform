@@ -1,5 +1,5 @@
 {
-  "updated": "2020-03-23T20:34:06.306Z",
+  "updated": "2020-05-24T13:10:16.770Z",
   "title": "live",
   "data": [
     {
@@ -1131,11 +1131,11 @@
       "value": "Sie benötigen die Rolle «{role}» um den Zugriff zu teilen."
     },
     {
-      "key": "api/access/constraint/recipientBlacklist/error",
+      "key": "api/access/constraint/recipientDenylist/error",
       "value": "Sie können «{email}» keinen Zugriff teilen, da die E-Mail-Adresse auf einer schwarzen Liste aufgeführt ist."
     },
     {
-      "key": "api/access/constraint/granterBlacklist/error",
+      "key": "api/access/constraint/granterDenylist/error",
       "value": "Sie können derzeit keinen Zugriff teilen, da Ihr Konto auf einer schwarzen Liste aufgeführt ist."
     },
     {
@@ -1377,6 +1377,10 @@
     {
       "key": "api/questionnaire/answer/updateResultIncrementally/choiceOnly",
       "value": "Fehler: updateResultIncrementally wird nur von Fragen des Typs 'Choice' unterstützt."
+    },
+    {
+      "key": "api/questionnaire/noUnattributedAnswers",
+      "value": "Dieser Fragebogen unterstützt keine anonymen Eingaben."
     },
     {
       "key": "timeAhead/justNow/other",
@@ -1693,6 +1697,18 @@
     {
       "key": "api/publish/disabled",
       "value": "Artikel können im Moment weder veröffentlicht noch zurückgezogen werden. Bitte versuche es in ein paar Minuten noch einmal, ansonsten kontaktiere bitte die IT."
+    },
+    {
+      "key": "api/publish/error/createCampaign",
+      "value": "Kampagne auf MailChimp konnte nicht angelegt werden."
+    },
+    {
+      "key": "api/publish/error/updateCampaign",
+      "value": "Kampagne auf MailChimp konnte nicht aktualisiert werden."
+    },
+    {
+      "key": "api/publish/error/updateCampaignContent",
+      "value": "Kampagne auf MailChimp konnte nicht aktualisiert werden."
     },
     {
       "key": "api/archive/error/published",

@@ -5,8 +5,8 @@
   "license": "AGPL-3.0",
   "version": "1.0.0",
   "engines": {
-    "node": "13.x",
-    "yarn": "^1.19.0"
+    "node": "14.x",
+    "yarn": "^1.22.4"
   },
   "private": true,
   "main": "index.js",
@@ -34,15 +34,15 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "commitizen": "^4.0.3",
-    "coveralls": "^3.0.9",
-    "cz-conventional-changelog": "^3.1.0",
+    "commitizen": "^4.1.2",
+    "coveralls": "^3.1.0",
+    "cz-conventional-changelog": "^3.2.0",
     "foreman": "^3.0.0",
-    "husky": "^4.2.3",
-    "jest": "^24.3.1",
-    "jest-environment-node": "^24.7.1",
-    "lint-staged": "^10.0.8",
-    "standard": "^14.3.1"
+    "husky": "^4.2.5",
+    "jest": "^26.0.1",
+    "jest-environment-node": "^26.0.1",
+    "lint-staged": "^10.2.9",
+    "standard": "^14.3.4"
   },
   "scripts": {
     "start": "if [ -z \"$SERVER\" ]; then >&2 echo \"Missing ENV var: SERVER. Possible values are: republik, publikator, assets.\" && exit 1; else cd servers/$SERVER && yarn run start; fi",

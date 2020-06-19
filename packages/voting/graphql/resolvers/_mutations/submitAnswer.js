@@ -76,10 +76,15 @@ module.exports = async (_, { answer }, context) => {
       throw new Error(t('api/questionnaire/answer/empty'))
     }
 
+    const submitted = questionnaire.submitAnswersImmediately
+
     if (questionnaire.updateResultIncrementally) {
       await updateResultIncrementally(
         questionnaire.id,
-        answer,
+        {
+          ...answer,
+          submitted
+        },
         transaction,
         context
       )
@@ -108,7 +113,7 @@ module.exports = async (_, { answer }, context) => {
           questionnaireId: questionnaire.id,
           userId: me.id,
           payload,
-          submitted: questionnaire.submitAnswersImmediately
+          submitted
         })
       }
     }

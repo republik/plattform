@@ -1,27 +1,18 @@
 const fetch = require('isomorphic-unfetch')
 
-const {
-  MAILCHIMP_URL,
-  MAILCHIMP_API_KEY,
-  MAILCHIMP_FROM_NAME,
-  MAILCHIMP_REPLY_TO
-} = process.env
+const { MAILCHIMP_URL, MAILCHIMP_API_KEY } = process.env
 
-module.exports = async ({ title, subject }) => {
-  return fetch(`${MAILCHIMP_URL}/campaigns`, {
+module.exports = async () => {
+  return fetch(`${MAILCHIMP_URL}/3.0/campaigns`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Basic ${Buffer.from('anystring:' + MAILCHIMP_API_KEY).toString('base64')}`
+      Authorization: `Basic ${Buffer.from('anystring:' + MAILCHIMP_API_KEY).toString('base64')}`
     },
     body: JSON.stringify({
       type: 'regular',
       settings: {
-        title,
-        subject_line: subject,
-        content_type: 'html',
-        from_name: MAILCHIMP_FROM_NAME,
-        reply_to: MAILCHIMP_REPLY_TO
+        content_type: 'html'
       },
       tracking: {
         opens: false,
@@ -30,6 +21,10 @@ module.exports = async ({ title, subject }) => {
       }
     })
   })
-    .then(response => response.json())
-    .catch(error => console.error('updateMailchimp failed', { error }))
+    .then(response => {
+      if (!response.ok) {
+        throw Error(response.statusText)
+      }
+      return response
+    })
 }

@@ -1,8 +1,8 @@
-# @orbiting/backends [![Build Status](https://travis-ci.org/orbiting/backends.svg?branch=master)](https://travis-ci.org/orbiting/backends) [![Coverage Status](https://coveralls.io/repos/github/orbiting/backends/badge.svg?branch=master)](https://coveralls.io/github/orbiting/backends?branch=master)
+# @orbiting/backends [![Build Status](https://travis-ci.com/orbiting/backends.svg?branch=master)](https://travis-ci.com/orbiting/backends) [![Coverage Status](https://coveralls.io/repos/github/orbiting/backends/badge.svg?branch=master)](https://coveralls.io/github/orbiting/backends?branch=master)
 
 This repo contains all the backend code in use at Republik. For easier development the previously separate repos [republik-backend](https://github.com/orbiting/republik-backend), [publikator-backend](https://github.com/orbiting/publikator-backend), [assets-backend](https://github.com/orbiting/assets-backend) and [backend-modules](https://github.com/orbiting/backend-modules) where merged into this monorepo.
 
-For a guide on how to start the the frontends see: [docs/how-to-run](https://github.com/orbiting/docs/blob/master/guides/how-to-run.md)
+For a guide on how to start the frontends see: [docs/how-to-run](https://github.com/orbiting/docs/blob/master/guides/how-to-run.md)
 
 ## Components
 
@@ -40,7 +40,7 @@ docker-compose up [-d]
 We recommend you install the postgresql client tools on your machine to interact with the database. The tests scripts also depend on the clients being installed.
 ```
 # linux
-sudo apt install postgresql-client-10
+sudo apt install postgresql-client-12
 ```
 
 When postgresql in running in docker client tools like `psql` or `createdb`/`dropdb` don't automatically connect to it. They try to access postgresql via a local socket, when instead you want them to connect via network to localhost. To make your life easier, you can add the following environment variables to `~/.bashrc` / `~/.zshrc` so the client tools connect to localhost per default.
@@ -57,9 +57,9 @@ As an alternative to docker(-compose) you can install the external-services nati
 On macOS with [homebrew](https://brew.sh/):
 ```
 brew install postgresql redis nvm elasticsearch
-nvm install 12
-nvm alias default 12
-npm install -g yarn@1.16
+nvm install 14
+nvm alias default 14
+npm install -g yarn@1.22
 brew services start postgresql
 brew services start redis
 brew services start elasticsearch
@@ -156,7 +156,7 @@ LOCAL_IP=192.168.1.88
 ```
 - in `backends/servers/republik/.env`
 ```
-CORS_WHITELIST_URL=http://republik.test
+CORS_ALLOWLIST_URL=http://republik.test
 COOKIE_DOMAIN=.republik.test
 ```
 - in `republik-frontend/.env`

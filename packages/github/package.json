@@ -20,7 +20,7 @@
     "link": "yarn link"
   },
   "dependencies": {
-    "@octokit/rest": "^17.0.0",
+    "@octokit/rest": "^17.11.0",
     "apollo-fetch": "^0.7.0",
     "await-sleep": "^0.0.1",
     "bottleneck": "^2.15.0",

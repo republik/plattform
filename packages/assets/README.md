@@ -39,7 +39,7 @@ See [servers/assets/.env.example](servers/assets/.env.example) for the required 
 
   fetches resources from a S3 bucket.
 
-  ENVs: `AWS_BUCKET_WHITELIST`: comma separated, format: `bucket:region,bucket:region`
+  ENVs: `AWS_BUCKET_ALLOWLIST`: comma separated, format: `bucket:region,bucket:region`
 
 - `/frontend/:path*(.webp)`
 

@@ -7,7 +7,7 @@ const DEV = process.env.NODE_ENV && process.env.NODE_ENV !== 'production'
 
 const {
   PORT,
-  CORS_WHITELIST_URL
+  CORS_ALLOWLIST_URL
 } = process.env
 
 let additionalMiddlewares = []
@@ -32,9 +32,9 @@ const start = (workerId) => {
     })
   }
 
-  if (CORS_WHITELIST_URL) {
+  if (CORS_ALLOWLIST_URL) {
     const corsOptions = {
-      origin: CORS_WHITELIST_URL.split(','),
+      origin: CORS_ALLOWLIST_URL.split(','),
       credentials: true,
       optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
     }

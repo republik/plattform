@@ -32,18 +32,25 @@ const validateAnswer = async (value, question, context, payload) => {
 }
 
 const turnout = async (question, pgdb) => {
-  const { numSubmitted: getNumSubmittedQuestionnaires } = require('../Questionnaire')
+  const { numSubmitted: getNumQuestionnaireSubmissions } = require('../Questionnaire')
   const { id: questionId, questionnaireId } = question
-  const numSubmittedQuestionnaires =
+
+  const numQuestionnaireSubmissions =
     (question.questionnaire.turnout && question.questionnaire.turnout.submitted) ||
-    await getNumSubmittedQuestionnaires(questionnaireId, pgdb)
-  const numSubmittedAnswers = await pgdb.public.answers.count({
-    submitted: true,
-    questionId
-  })
+    await getNumQuestionnaireSubmissions(questionnaireId, pgdb)
+
+  const [
+    numSubmittedAnswers,
+    numUnattributedAnswers
+  ] = await Promise.all([
+    pgdb.public.answers.count({ submitted: true, questionId }),
+    pgdb.public.answers.count({ submitted: true, unattributed: true, questionId })
+  ])
+
   return {
     submitted: numSubmittedAnswers,
-    skipped: numSubmittedQuestionnaires - numSubmittedAnswers
+    skipped: numQuestionnaireSubmissions - numSubmittedAnswers,
+    unattributed: numUnattributedAnswers
   }
 }
 

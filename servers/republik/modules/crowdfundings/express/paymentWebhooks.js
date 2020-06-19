@@ -115,7 +115,7 @@ module.exports = async (server, pgdb, t, redis) => {
         if (pledge.status !== pledgeStatus) {
           // generate Memberships
           if (pledgeStatus === 'SUCCESSFUL') {
-            await generateMemberships(pledge.id, transaction, t, null, redis)
+            await generateMemberships(pledge.id, transaction, t, redis)
           }
 
           // update pledge status
@@ -196,7 +196,7 @@ module.exports = async (server, pgdb, t, redis) => {
             if (pledge.status !== pledgeStatus) {
               // generate Memberships
               if (pledgeStatus === 'SUCCESSFUL') {
-                await generateMemberships(pledge.id, transaction, t, null, redis)
+                await generateMemberships(pledge.id, transaction, t, redis)
               }
 
               // update pledge status

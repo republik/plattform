@@ -12,7 +12,7 @@ API to puppeteer - chromium.
 see [.env.example]
 
 ```
-now -e URL_WHITELIST=https://republik.ch,https://www.republik.ch,https://republik.love,https://www.republik.love,https://github.com
+now -e URL_ALLOWLIST=https://republik.ch,https://www.republik.ch,https://republik.love,https://www.republik.love,https://github.com
 
 ```
 

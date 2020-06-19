@@ -19,7 +19,7 @@ checkEnv([
 const {
   PORT,
   HOST = '::',
-  CORS_WHITELIST_URL,
+  CORS_ALLOWLIST_URL,
   SESSION_SECRET,
   COOKIE_DOMAIN,
   COOKIE_NAME,
@@ -88,9 +88,9 @@ const start = async (
     )
   }
 
-  if (CORS_WHITELIST_URL) {
+  if (CORS_ALLOWLIST_URL) {
     const corsOptions = {
-      origin: CORS_WHITELIST_URL.split(','),
+      origin: CORS_ALLOWLIST_URL.split(','),
       credentials: true,
       optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
     }

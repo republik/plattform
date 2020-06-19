@@ -13,7 +13,7 @@ module.exports = async (transaction, t, redis) => {
   })
 
   // match and update payments
-  let matchedPaymentIds = []
+  const matchedPaymentIds = []
   const updatedPayments = payments.map(payment => {
     const matchingPayment = unmatchedPayments.find(up => up.mitteilung === payment.hrid)
     if (!matchingPayment) { return null }
@@ -32,9 +32,9 @@ module.exports = async (transaction, t, redis) => {
   if (updatedPayments.length > 0) { // else we are done
     // write updatedPayments and matchedPayments
     await Promise.all(updatedPayments.map(payment => {
-      return transaction.public.payments.update({id: payment.id}, payment)
+      return transaction.public.payments.update({ id: payment.id }, payment)
     }))
-    await transaction.public.postfinancePayments.update({id: matchedPaymentIds}, {matched: true})
+    await transaction.public.postfinancePayments.update({ id: matchedPaymentIds }, { matched: true })
 
     // update pledges
     const pledgePayments = await transaction.public.pledgePayments.find({
@@ -47,7 +47,7 @@ module.exports = async (transaction, t, redis) => {
       id: pledges.map(p => p.userId)
     })
 
-    for (let payment of updatedPayments) {
+    for (const payment of updatedPayments) {
       const pledgePayment = pledgePayments.find(p => p.paymentId === payment.id)
       const pledge = pledges.find(p => p.id === pledgePayment.pledgeId)
       const user = users.find(u => u.id === pledge.userId)
@@ -62,9 +62,9 @@ module.exports = async (transaction, t, redis) => {
 
       if (pledge.status !== newStatus) {
         if (newStatus === 'SUCCESSFUL') {
-          await generateMemberships(pledge.id, transaction, t, null, redis)
+          await generateMemberships(pledge.id, transaction, t, redis)
         }
-        await transaction.public.pledges.update({id: pledge.id}, {
+        await transaction.public.pledges.update({ id: pledge.id }, {
           status: newStatus
         })
         if (newStatus === 'PAID_INVESTIGATE') {
