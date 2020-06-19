@@ -245,4 +245,37 @@ extend type Meta {
   # (!linkedDiscussion || linkedDiscussion.closed)
   ownDiscussion: Discussion
 }
+
+type DiscussionsStats {
+  evolution(
+    "Minimum month (YYYY-MM)"
+    min: YearMonthDate!
+    "Maximum month (YYYY-MM)"
+    max: YearMonthDate!
+  ): DiscussionsStatsEvolution!
+}
+
+type DiscussionsStatsEvolution {
+  buckets: [DiscussionsStatsEvolutionBucket!]
+  updatedAt: DateTime!
+}
+
+type DiscussionsStatsEvolutionBucket {
+  "Bucket key (YYYY-MM)"
+  key: String!
+
+  "Amount of comments"
+  comments: Int!
+
+  "Amount of discussions"
+  discussions: Int!
+
+  "Amount of unqiue users"
+  users: Int!
+  "Amount of unqiue users which posted a comment"
+  usersPosted: Int!
+  "Amount of unqiue users which voted on a comment"
+  usersVoted: Int!
+}
+
 `

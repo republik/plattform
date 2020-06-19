@@ -92,4 +92,37 @@ extend type VimeoEmbed {
 extend type AudioSource {
   userProgress: MediaProgress
 }
+
+type CollectionsStats {
+  evolution(
+    "Collection name"
+    name: String!
+    "Minimum month (YYYY-MM)"
+    min: YearMonthDate!
+    "Maximum month (YYYY-MM)"
+    max: YearMonthDate!
+  ): CollectionsStatsEvolution!
+}
+
+type CollectionsStatsEvolution {
+  buckets: [CollectionsStatsEvolutionBucket!]
+  updatedAt: DateTime!
+}
+
+type CollectionsStatsEvolutionBucket {
+  "Bucket key (YYYY-MM)"
+  key: String!
+
+  "Amount of records"
+  records: Int!
+
+  "Amount of documents"
+  documents: Int!
+
+  "Amount of media"
+  medias: Int!
+
+  "Amount of unqiue users"
+  users: Int!
+}
 `
