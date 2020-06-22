@@ -24,13 +24,24 @@ module.exports = (context) => ({
         return []
       }
 
-      return context.pgdb.public.users.find({ or }).then(users => users.map(transformUser))
+      return context.pgdb.public.users.find({ or })
+        .then(users => users.map(transformUser))
     },
     null,
     (value, rows) => rows.find(row => (
       row._raw.id === value ||
       row._raw.email.toLowerCase() === value.toLowerCase()
     ))
+  ),
+  byUsername: createDataLoader(usernames =>
+    context.pgdb.public.users.find({ username: usernames })
+      .then(users => users
+        .map(u => transformUser(u))
+      ),
+    null,
+    (key, rows) => {
+      return rows.find(row => row.username === key)
+    }
   ),
   credential: createDataLoader(ids =>
     context.pgdb.public.credentials.find({ id: ids })

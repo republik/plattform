@@ -47,6 +47,7 @@ extend type Document {
     after: String
     includeParents: Boolean
     onlyEligibles: Boolean
+    uniqueUsers: Boolean
   ): SubscriptionConnection!
 
   # subject: me
@@ -57,7 +58,6 @@ extend type Document {
     before: String
     after: String
     includeParents: Boolean
-    includeAuthors: Boolean
   ): SubscriptionConnection!
 
   unreadNotifications: NotificationConnection
