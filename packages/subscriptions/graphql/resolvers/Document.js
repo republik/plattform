@@ -176,9 +176,7 @@ module.exports = {
       context
     )
 
-    // TODO SubscriptionConnection instead of Subscription in FE
-    return subscriptions[0]
-    //return paginate(args, subscriptions)
+    return paginate(args, subscriptions)
   },
   async unreadNotifications (doc, args, context) {
     const { user: me } = context
