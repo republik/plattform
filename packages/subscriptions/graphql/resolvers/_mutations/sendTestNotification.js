@@ -38,7 +38,7 @@ module.exports = async (_, args, context) => {
     await notifyPublish(
       repoId,
       context,
-      [me]
+      me
     )
   }
 

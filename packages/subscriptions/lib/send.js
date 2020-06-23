@@ -66,8 +66,8 @@ const send = async (args, context) => {
 
         const notification = await transaction.public.notifications.insertAndGet({
           eventId: event.id,
-          eventObjectType: args.event.objectType,
-          eventObjectId: args.event.objectId,
+          eventObjectType: event.objectType,
+          eventObjectId: event.objectId,
           userId: user.id,
           subscriptionId: subscription && subscription.id,
           channels: getChannelsForUser(
