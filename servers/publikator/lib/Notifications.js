@@ -34,7 +34,7 @@ const groupSubscribersByObjectId = (subscribers, key) => subscribers.reduce(
   }, {}
 )
 
-const notifyPublish = async (repoId, context, testUser) => {
+const notifyPublish = async (repoId, context, testUser, simulateAllPossibleSubscriptions) => {
   const {
     loaders,
     t
@@ -66,16 +66,16 @@ const notifyPublish = async (repoId, context, testUser) => {
     doc,
     testUser?.id, //otherwise null => for all users
     {
-      ...testUser ? {
+      ...(testUser && simulateAllPossibleSubscriptions) ? {
         onlyEligibles: false,
         includeParents: true,
         uniqueUsers: false,
         includeNotActive: true,
         simulate: true
-      } : {
+      } : {
         onlyEligibles: true,
         includeParents: true,
-        uniqueUsers: true
+        uniqueUsers: true
       }
     },
     context

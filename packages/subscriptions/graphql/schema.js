@@ -42,6 +42,7 @@ type mutations {
     commentId: ID
     # repoId of document belonging to a format
     repoId: ID
+    simulateAllPossibleSubscriptions: Boolean
   ): Boolean!
 }
 
