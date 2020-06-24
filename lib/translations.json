@@ -748,11 +748,11 @@
     },
     {
       "key": "account/newsletterSubscriptions/COVID19/label",
-      "value": "Republik – Das tägliche Covid-19-Update"
+      "value": "Covid-19-Updates"
     },
     {
       "key": "account/newsletterSubscriptions/COVID19/frequency",
-      "value": "montags bis freitags um 19 Uhr"
+      "value": "unregelmässig"
     },
     {
       "key": "account/newsletterSubscriptions/ACCOMPLICE/label",
