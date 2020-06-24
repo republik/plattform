@@ -69,7 +69,8 @@ const send = async (args, context) => {
           eventObjectType: event.objectType,
           eventObjectId: event.objectId,
           userId: user.id,
-          subscriptionId: subscription && subscription.id,
+          // simulated for sendTestNotification
+          subscriptionId: (subscription && !subscription.simulated) ? subscription.id : null,
           channels: getChannelsForUser(
             user, subscription
           ),

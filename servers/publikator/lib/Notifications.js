@@ -67,14 +67,15 @@ const notifyPublish = async (repoId, context, testUser) => {
     testUser?.id, //otherwise null => for all users
     {
       ...testUser ? {
-        simulate: true,
         onlyEligibles: false,
+        includeParents: true,
+        uniqueUsers: false,
         includeNotActive: true,
-        uniqueUsers: false
+        simulate: true
       } : {
         onlyEligibles: true,
         includeParents: true,
-        uniqueUsers: true,
+        uniqueUsers: true
       }
     },
     context
@@ -96,9 +97,6 @@ const notifyPublish = async (repoId, context, testUser) => {
     async (docId) => {
       const subscribedDoc = await loaders.Document.byRepoId.load(docId)
       const subscribers = docSubscribersByDocId[docId]
-      console.log({type: 'doc', subscribers,
-        title: t('api/notifications/doc/title', { title: inQuotes(subscribedDoc.meta.title) })
-      })
 
       event = await sendNotification(
         {
@@ -124,9 +122,6 @@ const notifyPublish = async (repoId, context, testUser) => {
     async (authorId) => {
       const author = await loaders.User.byId.load(authorId)
       const subscribers = authorSubscribersByAuthorId[authorId]
-      console.log({type: 'author', subscribers,
-        title: t('api/notifications/doc/author/title', { name: author.name })
-      })
 
       event = await sendNotification(
         {

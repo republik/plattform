@@ -55,6 +55,7 @@ const getSimulatedSubscriptionForUserAndObject = (
   }, t),
   active: false,
   filters: null,
+  simulated: true,
   createdAt: now,
   updatedAt: now
 })
