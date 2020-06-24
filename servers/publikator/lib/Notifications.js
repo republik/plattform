@@ -1,9 +1,9 @@
 const {
   Document: {
     getSubscriptionsForDoc,
-  }
+  },
+  sendNotification
 } = require('@orbiting/backend-modules-subscriptions')
-const { sendNotification } = require('@orbiting/backend-modules-subscriptions')
 const { getRepoId } = require('@orbiting/backend-modules-documents/lib/resolve')
 const { inQuotes } = require('@orbiting/backend-modules-styleguide')
 const Promise = require('bluebird')

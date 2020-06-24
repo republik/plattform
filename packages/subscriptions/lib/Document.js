@@ -18,9 +18,9 @@ const getRepoIdsForDoc = (doc, includeParents) => ([
 const getTemplate = (doc) =>
   doc.meta?.template || doc._meta?.template
 
-const getAuthorUserIds = (doc, { loaders }) =>
+const getAuthorUserIds = (doc, { loaders }, credits) =>
   Promise.map(
-    (doc.meta?.credits || doc._meta?.credits)
+    (doc?.meta?.credits || doc?._meta?.credits || credits)
       .filter(c => c.type === 'link'),
     async ({ url }) => {
       if (url.startsWith('/~')) {
@@ -81,7 +81,8 @@ const getSubscriptionsForDoc = async (
     )
   }
 
-  const authorUserIds = await getAuthorUserIds(doc, context)
+  // from prepareMetaForPublish
+  const authorUserIds = doc.meta?.authorUserIds || await getAuthorUserIds(doc, context)
   if (authorUserIds.length) {
     const authorSubscriptions = await getSubscriptionsForUserAndObjects(
       userId,
@@ -127,5 +128,6 @@ const getSubscriptionsForDoc = async (
 
 module.exports = {
   getRepoIdsForDoc,
+  getAuthorUserIds,
   getSubscriptionsForDoc
 }
