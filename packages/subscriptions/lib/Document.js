@@ -53,7 +53,7 @@ const getSubscriptionsForDoc = async (
 
   const repoIds = getRepoIdsForDoc(doc, includeParents)
 
-  const docSubscription = await getSubscriptionsForUserAndObjects(
+  const docsSubscriptions = await getSubscriptionsForUserAndObjects(
     userId,
     {
       type: 'Document',
@@ -66,25 +66,19 @@ const getSubscriptionsForDoc = async (
       includeNotActive
     }
   )
-    .then(subs => {
-      if (subs.length) {
-        // with includeParents there are going to be multiple subscriptions
-        // as soon as more than just format parents are subscribable
-        return subs[0]
-      }
-      if (simulate && (repoIds.length > 1 || getTemplate(doc) === 'format')) {
-        return getSimulatedSubscriptionForUserAndObject(
-          userId,
-          {
-            type: 'Document',
-            id: repoIds[repoIds.length - 1] // format is always last
-          },
-          context
-        )
-      }
-    })
-  if (docSubscription) {
-    subscriptions.push(docSubscription)
+  if (docsSubscriptions.length) {
+    docsSubscriptions.forEach(s => subscriptions.push(s))
+  } else if (simulate && (repoIds.length > 1 || getTemplate(doc) === 'format')) {
+    subscriptions.push(
+      getSimulatedSubscriptionForUserAndObject(
+        userId,
+        {
+          type: 'Document',
+          id: repoIds[repoIds.length - 1] // format see getRepoIdsForDoc
+        },
+        context
+      )
+    )
   }
 
   const authorUserIds = await getAuthorUserIds(doc, context)
