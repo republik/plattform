@@ -37,9 +37,6 @@ const buildObjectFindProps = ({ id, type }, t) => {
 }
 
 const getUsersWithSubscriptions = (subscriptions = [], { loaders }) => {
-  if (!subscriptions.length) {
-    return subscriptions
-  }
   return Promise.map(
     subscriptions,
     async (sub) => ({
@@ -285,7 +282,7 @@ const getSubscriptionsForUserAndObjects = (
     return []
   }
 
-  if (ids.length === 1) {
+  if (ids.length === 1 && !filter) {
     return getSubscriptionsForUserAndObject(
       userId,
       {
