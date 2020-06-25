@@ -5,6 +5,18 @@ const {
   isUserUnrestricted,
   includesUnrestrictedChildRepoId
 } = require('@orbiting/backend-modules-documents/lib/restrictions')
+const uniq = require('lodash/uniq')
+const { parse, Source } = require('graphql')
+const schemaTypes = require('../graphql/schema-types')
+
+const EventObjectTypes = parse(new Source(schemaTypes))
+  .definitions.find(
+    definition =>
+      definition.kind === 'EnumTypeDefinition' &&
+      definition.name &&
+      definition.name.value === 'EventObjectType'
+  )
+  .values.map(value => value.name.value)
 
 const objectTypes = ({
   User: 'objectUserId',
@@ -62,7 +74,12 @@ const getSimulatedSubscriptionForUserAndObject = (
 
 const upsertSubscription = async (args, context) => {
   const { pgdb, loaders, t } = context
-  const { userId, type, filters } = args
+  const { userId, type, filters: rawFilters } = args
+  const uniqFilters = rawFilters && uniq(rawFilters)
+  // if all EventObjectTypes are set, no filter is set
+  const filters = uniqFilters?.length < EventObjectTypes.length
+    ? uniqFilters
+    : null
 
   if (type === 'User' && userId === args.objectId) {
     throw new Error(t('api/subscriptions/notYourself'))
@@ -87,7 +104,7 @@ const upsertSubscription = async (args, context) => {
   }
   const updateProps = {
     active: true,
-    filters: filters && filters.length ? filters : null
+    filters
   }
 
   const transaction = await pgdb.transactionBegin()
