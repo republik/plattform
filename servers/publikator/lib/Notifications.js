@@ -2,8 +2,12 @@ const {
   Document: {
     getSubscriptionsForDoc,
   },
+  Subscriptions: {
+    getUsersWithSubscriptions
+  },
   sendNotification
 } = require('@orbiting/backend-modules-subscriptions')
+
 const { getRepoId } = require('@orbiting/backend-modules-documents/lib/resolve')
 const { inQuotes } = require('@orbiting/backend-modules-styleguide')
 const Promise = require('bluebird')
@@ -11,16 +15,6 @@ const Promise = require('bluebird')
 const {
   FRONTEND_BASE_URL
 } = process.env
-
-const getUsersWithSubscriptions = (subscriptions = [], { loaders }) => {
-  return Promise.map(
-    subscriptions,
-    async (sub) => ({
-      ...await loaders.User.byId.load(sub.userId),
-      __subscription: sub
-    })
-  )
-}
 
 const groupSubscribersByObjectId = (subscribers, key) => subscribers.reduce(
   (agg, user) => {

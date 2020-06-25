@@ -36,6 +36,19 @@ const buildObjectFindProps = ({ id, type }, t) => {
   }
 }
 
+const getUsersWithSubscriptions = (subscriptions = [], { loaders }) => {
+  if (!subscriptions.length) {
+    return subscriptions
+  }
+  return Promise.map(
+    subscriptions,
+    async (sub) => ({
+      ...await loaders.User.byId.load(sub.userId),
+      __subscription: sub
+    })
+  )
+}
+
 const getIdForSubscription = ({
   userId,
   objectId,
@@ -353,6 +366,8 @@ const getUnreadNotificationsForUserAndObject = (
 }
 
 module.exports = {
+  getUsersWithSubscriptions,
+
   upsertSubscription,
   unsubscribe,
   getObject,
