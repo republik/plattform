@@ -282,7 +282,7 @@ const getSubscriptionsForUserAndObjects = (
     return []
   }
 
-  if (ids.length === 1) {
+  if (ids.length === 1 && !filter) {
     return getSubscriptionsForUserAndObject(
       userId,
       {
