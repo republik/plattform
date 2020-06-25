@@ -5,6 +5,7 @@ const { transformUser } = require('@orbiting/backend-modules-auth')
 const { commentSchema } = require('@orbiting/backend-modules-styleguide')
 const {
   Subscriptions: {
+    getSubscriptionsForUserAndObjects,
     getUsersWithSubscriptions
   },
   sendNotification
@@ -12,7 +13,7 @@ const {
 const Promise = require('bluebird')
 
 const {
-  displayAuthor: getDisplayAuthor,
+  displayAuthor: originalGetDisplayAuthor,
   content: getContent,
   preview: getPreview
 } = require('../graphql/resolvers/Comment')
@@ -36,20 +37,22 @@ const getDiscussionUrl = async (discussion, context) => {
   return `${FRONTEND_BASE_URL}${discussion.path}`
 }
 
-const getCommentInfo = async (comment, discussion, context) => {
+const getDisplayAuthor = (comment, context) => {
+  return originalGetDisplayAuthor(
+    comment,
+    { portrait: { webp: false } },
+    context
+  )
+}
+
+const getCommentInfo = async (comment, displayAuthor, discussion, context) => {
   const { t } = context
 
   const {
-    displayAuthor,
     preview,
     discussionUrl,
     contentMdast
   } = await Promise.props({
-    displayAuthor: getDisplayAuthor(
-      comment,
-      { portrait: { webp: false } },
-      context
-    ),
     preview: getPreview(comment, { length: 128 }, context),
     discussionUrl: getDiscussionUrl(discussion, context),
     contentMdast: getContent(comment, { strip: false }, context)
@@ -61,7 +64,6 @@ const getCommentInfo = async (comment, discussion, context) => {
   const { parentIds } = comment
 
   return {
-    displayAuthor,
     discussionUrl,
     contentHtml,
     contentPlain,
@@ -86,6 +88,8 @@ const submitComment = async (comment, discussion, context, testUsers) => {
   if (testUsers && !Array.isArray(testUsers)) {
     throw new Error(t('api/unexpected'))
   }
+
+  const displayAuthor = await getDisplayAuthor(comment, context)
 
   const subscribers = testUsers || await pgdb.query(`
       -- commenters in discussion
@@ -151,7 +155,7 @@ const submitComment = async (comment, discussion, context, testUsers) => {
       context
     )
 
-  const additionalSubscribers = testUsers ? [] : await getUsersWithSubscriptions(subscriptions)
+  const additionalSubscribers = testUsers ? [] : await getUsersWithSubscriptions(subscriptions, context)
     .then( arr => arr.filter(
       ({ id: id1 }) => subscribers.findIndex( ({ id: id2 }) => id1 === id2) === -1
     ))
@@ -178,7 +182,6 @@ const submitComment = async (comment, discussion, context, testUsers) => {
 
   if (subscribers.length > 0) {
     const {
-      displayAuthor,
       discussionUrl,
       contentHtml,
       contentPlain,
@@ -188,7 +191,7 @@ const submitComment = async (comment, discussion, context, testUsers) => {
       subjectParams,
       isTopLevelComment,
       icon
-    } = await getCommentInfo(comment, discussion, context)
+    } = await getCommentInfo(comment, displayAuthor, discussion, context)
 
     await sendNotification(
       {
