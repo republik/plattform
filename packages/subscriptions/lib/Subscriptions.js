@@ -6,6 +6,7 @@ const {
   includesUnrestrictedChildRepoId
 } = require('@orbiting/backend-modules-documents/lib/restrictions')
 const uniq = require('lodash/uniq')
+const { ascending } = require('d3-array')
 const { parse, Source } = require('graphql')
 const schemaTypes = require('../graphql/schema-types')
 
@@ -78,7 +79,7 @@ const upsertSubscription = async (args, context) => {
   const uniqFilters = rawFilters && uniq(rawFilters)
   // if all EventObjectTypes are set, no filter is set
   const filters = uniqFilters?.length < EventObjectTypes.length
-    ? uniqFilters
+    ? uniqFilters.sort(ascending)
     : null
 
   if (type === 'User' && userId === args.objectId) {
