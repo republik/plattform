@@ -3,7 +3,12 @@ const { renderEmail } = require('mdast-react-render/lib/email')
 
 const { transformUser } = require('@orbiting/backend-modules-auth')
 const { commentSchema } = require('@orbiting/backend-modules-styleguide')
-const { sendNotification } = require('@orbiting/backend-modules-subscriptions')
+const {
+  Subscriptions: {
+    getUsersWithSubscriptions
+  },
+  sendNotification
+} = require('@orbiting/backend-modules-subscriptions')
 const Promise = require('bluebird')
 
 const {
@@ -82,7 +87,7 @@ const submitComment = async (comment, discussion, context, testUsers) => {
     throw new Error(t('api/unexpected'))
   }
 
-  const notifyUsers = testUsers || await pgdb.query(`
+  const subscribers = testUsers || await pgdb.query(`
       -- commenters in discussion
       SELECT
         u.*
@@ -134,7 +139,44 @@ const submitComment = async (comment, discussion, context, testUsers) => {
   })
     .then(users => users.map(transformUser))
 
-  if (notifyUsers.length > 0) {
+  const subscriptions = displayAuthor.anonymity
+    ? []
+    : await getSubscriptionsForUserAndObjects(
+      null,
+      {
+        type: 'User',
+        ids: [comment.userId],
+        filter: 'Comment'
+      },
+      context
+    )
+
+  const additionalSubscribers = testUsers ? [] : await getUsersWithSubscriptions(subscriptions)
+    .then( arr => arr.filter(
+      ({ id: id1 }) => subscribers.findIndex( ({ id: id2 }) => id1 === id2) === -1
+    ))
+
+  if (additionalSubscribers.length) {
+    const discussionPreferences = await pgdb.public.discussionPreferences.find({
+      userId: additionalSubscribers.map(s => s.id),
+      discussionId: comment.discussionId
+    })
+
+    additionalSubscribers
+      .filter(subscriber => {
+        const discussionPreference = discussionPreferences.find(
+          ({ userId }) => userId === subscriber.id
+        )
+
+        return discussionPreference?.notificationOption !== 'NONE' ??
+          subscriber._raw.defaultDiscussionNotificationOption !== 'NONE'
+      })
+      .forEach( subscriber => {
+        subscribers.push(subscriber)
+      })
+  }
+
+  if (subscribers.length > 0) {
     const {
       displayAuthor,
       discussionUrl,
@@ -158,7 +200,7 @@ const submitComment = async (comment, discussion, context, testUsers) => {
           objectType: 'Comment',
           objectId: id
         },
-        users: notifyUsers,
+        users: subscribers,
         content: {
           app: {
             title: isTopLevelComment
