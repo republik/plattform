@@ -95,6 +95,10 @@
       "value": "Monatsabos können nicht verschoben werden."
     },
     {
+      "key": "api/membership/auto_pay_not_mutable",
+      "value": "Das autoPay Feld der Membership mit der ID {id} kann nicht bearbeitet werden."
+    },
+    {
       "key": "api/pledge/alreadyPaid",
       "value": "Sie haben bereits bezahlt. Vielen Dank!"
     },

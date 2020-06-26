@@ -3,7 +3,7 @@ const { autoPayIsMutable: autoPayIsMutableResolver } = require('../Membership')
 const createCache = require('../../../lib/cache')
 
 module.exports = async (_, { id, autoPay }, context) => {
-  const { user: me, t } = context
+  const { user: me, t, req } = context
   Roles.ensureUserHasRole(me, 'supporter')
 
   const transaction = await context.pgdb.transactionBegin()
@@ -21,7 +21,7 @@ module.exports = async (_, { id, autoPay }, context) => {
 
     if (!autoPayIsMutable) {
       throw new Error(
-        `The autoPay field of the membership ${membership.id} is not mutable.`
+        t('api/membership/auto_pay_not_mutable', { id: membership.id })
       )
     }
 
