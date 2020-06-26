@@ -23,7 +23,7 @@ const membershipResolver = {
   async type (membership, args, context) {
     return createMembershipCache(membership, 'type', context)
       .cache(
-        async () => context.loaders.MembershipType.byId.load(membership.membershipTypeId)
+        () => context.loaders.MembershipType.byId.load(membership.membershipTypeId)
       )
   },
 
