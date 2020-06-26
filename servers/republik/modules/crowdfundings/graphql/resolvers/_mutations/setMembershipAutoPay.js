@@ -3,8 +3,8 @@ const { autoPayIsMutable: autoPayIsMutableResolver } = require('../Membership')
 const createCache = require('../../../lib/cache')
 
 module.exports = async (_, { id, autoPay }, context) => {
-  const { pgdb, req } = context
-  Roles.ensureUserHasRole(req.user, 'supporter')
+  const { pgdb, user: me } = context
+  Roles.ensureUserHasRole(me, 'supporter')
 
   const transaction = await pgdb.transactionBegin()
 
