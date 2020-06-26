@@ -29,13 +29,11 @@ module.exports = async (_, { id, autoPay }, context) => {
       return membership
     }
 
-    await transaction.public.memberships.updateOne({
+    const updatedMembership = await transaction.public.memberships.updateAndGetOne({
       id
     }, {
       autoPay
     })
-
-    membership.autoPay = autoPay
 
     await transaction.transactionCommit()
 
@@ -43,7 +41,7 @@ module.exports = async (_, { id, autoPay }, context) => {
       prefix: `User:${membership.userId}`
     }, { redis: context.redis }).invalidate()
 
-    return membership
+    return updatedMembership
   } catch (e) {
     await transaction.transactionRollback()
     console.error('setMembershipAutoPay', e, { req: req._log() })
