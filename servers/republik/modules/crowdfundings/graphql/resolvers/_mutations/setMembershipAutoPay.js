@@ -3,16 +3,15 @@ const { autoPayIsMutable: autoPayIsMutableResolver } = require('../Membership')
 const createCache = require('../../../lib/cache')
 
 module.exports = async (_, { id, autoPay }, context) => {
-  const { pgdb, user: me } = context
-  Roles.ensureUserHasRole(me, 'supporter')
+  Roles.ensureUserHasRole(context.user, 'supporter')
 
-  const transaction = await pgdb.transactionBegin()
+  const transaction = await context.pgdb.transactionBegin()
 
   try {
-    const membership = await pgdb.public.memberships.findOne({
+    const membership = await transaction.public.memberships.findOne({
       id: id
     })
-    const autoPayIsMutable = await autoPayIsMutableResolver(membership, null, context)
+    const autoPayIsMutable = await autoPayIsMutableResolver(membership, null, { ...context, pgdb: transaction })
 
     if (!autoPayIsMutable) {
       throw new Error(
@@ -24,7 +23,7 @@ module.exports = async (_, { id, autoPay }, context) => {
       return membership
     }
 
-    await pgdb.public.memberships.updateOne({
+    await transaction.public.memberships.updateOne({
       id
     }, {
       autoPay
@@ -36,7 +35,7 @@ module.exports = async (_, { id, autoPay }, context) => {
 
     await createCache({
       prefix: `User:${membership.userId}`
-    }, context).invalidate()
+    }, { redis: context.redis }).invalidate()
 
     return membership
   } catch (e) {
