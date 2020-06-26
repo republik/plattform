@@ -1,8 +1,9 @@
 import { Fragment } from 'react'
 import { css } from 'glamor'
-import { Query } from 'react-apollo'
+import { Query, Mutation } from 'react-apollo'
 import gql from 'graphql-tag'
 import { MdChevronLeft as CurrentIcon } from 'react-icons/md'
+import { Dropdown, Spinner, colors } from '@project-r/styleguide'
 
 import { Label, Loader, A, Checkbox } from '@project-r/styleguide'
 
@@ -83,6 +84,7 @@ const GET_MEMBERSHIPS = gql`
         claimerName
         reducedPrice
         autoPay
+        autoPayIsMutable
         createdAt
         active
         renew
@@ -120,7 +122,68 @@ const getState = (membership) => {
   return 'aktiv'
 }
 
+
+const SET_AUTO_PAY = gql`
+  mutation setMembershipAutoPay($id: ID!, $autoPay: Boolean!) {
+    setMembershipAutoPay(id: $id, autoPay: $autoPay) {
+      id
+      autoPay
+    }
+  }
+`
+
+function AutoPayToggle (membership) {
+
+  if (!membership.autoPayIsMutable) return (
+    <React.Fragment>
+      <DT>
+        Automatisch abbuchen
+      </DT>
+      <DD>
+        { membership.autoPay ? 'YES' : 'NO' }
+      </DD>
+    </React.Fragment>
+  )
+
+  return (
+    <Mutation
+      mutation={SET_AUTO_PAY}
+      variables={{ id: membership.id, autoPay: !membership.autoPay }}
+    >
+      {(mutation, {loading, error}) => {
+
+        return (
+          <React.Fragment>
+            <DT>
+              Automatisch abbuchen
+              {error && (
+                <React.Fragment>
+                  <br/>
+                  <span style={{color: colors.error}}>
+                    {error.message}
+                  </span>
+                </React.Fragment>
+              )}
+            </DT>
+            <DD style={{position: 'relative'}}>
+              { loading && (<Spinner/>) }
+              <Dropdown
+                black
+                label=''
+                items={[{value: true, text: 'Yes'}, {value: false, text: 'No'}]}
+                value={membership.autoPay}
+                onChange={mutation}
+              />
+            </DD>
+          </React.Fragment>
+        )
+      }}
+    </Mutation>
+  )
+}
+
 const MembershipCard = ({ membership, ...props }) => {
+
   return (
     <tr {...tableStyles.row} {...props}>
       <td {...tableStyles.paddedCell}>
@@ -147,8 +210,7 @@ const MembershipDetails = ({ userId, membership, ...props }) => {
       <td {...tableStyles.paddedCell} colSpan={2}>
         <div {...displayStyles.hFlexBox}>
           <DL>
-            <DT>Automatisch abbuchen</DT>
-            <DD>{membership.autoPay ? 'YES' : 'NO'}</DD>
+            <AutoPayToggle {... membership}></AutoPayToggle>
             {!!membership.voucherCode && (
               <Fragment>
                 <DT>Voucher Code</DT>
