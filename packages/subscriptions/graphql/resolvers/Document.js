@@ -22,17 +22,38 @@ module.exports = {
   async subscribedBy (doc, args, context) {
     const { user: me } = context
 
+    if (args.onlyMe) {
+      if (!me) {
+        return null
+      }
+
+      return paginate(
+        args,
+        await getSubscriptionsForDoc(
+          doc,
+          me.id,
+          {
+            ...args,
+            includeNotActive: true,
+            simulate: true
+          },
+          context
+        )
+      )
+    }
+
     return createSubscriptionConnection(
       await getSubscriptionsForDoc(
         doc,
         null,
         args,
-        context,
+        context
       ),
       args,
       me
     )
   },
+  // deprecated use subscribedBy with onlyMe
   async subscribedByMe (doc, args, context) {
     const { user: me } = context
 
@@ -51,7 +72,7 @@ module.exports = {
       context
     )
 
-    return paginate(args, subscriptions)
+    return subscriptions && subscriptions[0]
   },
   async unreadNotifications (doc, args, context) {
     const { user: me } = context
