@@ -48,6 +48,7 @@ extend type Document {
     includeParents: Boolean
     onlyEligibles: Boolean
     uniqueUsers: Boolean
+    onlyMe: Boolean
   ): SubscriptionConnection!
 
   # subject: me
@@ -58,7 +59,7 @@ extend type Document {
     before: String
     after: String
     includeParents: Boolean
-  ): SubscriptionConnection!
+  ): Subscription @deprecated(reason: "use \`subscribedBy\` with \`onlyMe: true\` instead")
 
   unreadNotifications: NotificationConnection
 }
