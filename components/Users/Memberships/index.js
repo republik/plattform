@@ -154,10 +154,7 @@ const AutoPayToggle = (membership) => {
   const autoPayAsString = membership.autoPay ? 'true' : 'false';
 
   return (
-    <Mutation
-      mutation={SET_AUTO_PAY}
-      variables={{ id: membership.id, autoPay: !membership.autoPay }}
-    >
+    <Mutation mutation={SET_AUTO_PAY}>
       {(mutation, {loading, error}) => {
 
         return (
@@ -180,7 +177,12 @@ const AutoPayToggle = (membership) => {
                 label=''
                 items={autoPayOptions}
                 value={autoPayAsString}
-                onChange={mutation}
+                onChange={(item) => mutation({
+                  variables: {
+                    id: membership.id,
+                    autoPay: item.value === 'true'
+                  }
+                })}
               />
             </DD>
           </React.Fragment>
