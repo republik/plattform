@@ -137,7 +137,7 @@ const autoPayOptions = [
   {value: 'false', text: 'No'}
 ]
 
-function AutoPayToggle (membership) {
+const AutoPayToggle = (membership) => {
 
   if (!membership.autoPayIsMutable) return (
     <React.Fragment>
