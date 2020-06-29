@@ -219,7 +219,53 @@ const populate = async (context, resultFn) => {
   await createCache(context).set({ result, updatedAt: new Date() })
 }
 
+/**
+ * @typedef {Object} AddSubtractProps
+ * @property {string[]} [add] Props to add to sum
+ * @property {string[]} [subtract] Props to subtract from sum
+ */
+
+/**
+ * Sum bucket properties from cached data
+ *
+ * @param {string} [key] Bucket key e.g. "2020-07"
+ * @param {AddSubtractProps} [props] Add or subtract passed properties
+ *
+ * @returns {(number|null)}
+ */
+const sumBucketProps = async (
+  context,
+  key = moment().format('YYYY-MM'),
+  props
+) => {
+  // Fetch pre-populated data
+  const data = await createCache(context).get()
+
+  // Return null in case pre-populated data is not available
+  if (!data) {
+    return null
+  }
+
+  // Retrieve pre-populated result from data.
+  const { result = [] } = data
+
+  // Find desired bucket
+  const bucket = result.find(bucket => bucket.key === key)
+
+  if (!bucket) {
+    return null
+  }
+
+  const { add = ['active', 'overdue'], subtract = [] } = props
+
+  const sumAdd = add.reduce((prev, curr) => prev + bucket[curr], 0)
+  const sumSubtract = subtract.reduce((prev, curr) => prev + bucket[curr], 0)
+
+  return sumAdd - sumSubtract
+}
+
 module.exports = {
   createCache,
-  populate
+  populate,
+  sumBucketProps
 }

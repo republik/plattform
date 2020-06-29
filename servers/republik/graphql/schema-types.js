@@ -147,7 +147,7 @@ type MutationResult {
 }
 
 type MembershipStats {
-  # number of distinct users with an active memberships
+  # Return sum of active or overdue memberships
   count: Int!
   monthlys: [MonthlyMembershipStat!]!
   periods(
