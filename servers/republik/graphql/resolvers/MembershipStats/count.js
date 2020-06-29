@@ -1,14 +1,18 @@
-const { PARKING_USER_ID } = process.env
+const moment = require('moment')
 
-module.exports = (_, args, { pgdb }) =>
-  pgdb.queryOneField(`
-    SELECT
-      count(DISTINCT m."userId")
-    FROM
-      memberships m
-    WHERE
-      ${PARKING_USER_ID ? 'm."userId" != :excludeUserId AND' : ''}
-      m.active = true
-  `, {
-    excludeUserId: PARKING_USER_ID
-  })
+const { sumBucketProps } = require('../../../lib/MembershipStats/evolution')
+
+module.exports = async (_, args, context) => {
+  try {
+    const sum = await sumBucketProps(
+      context,
+      moment().format('YYYY-MM'),
+      { add: ['active', 'overdue'] }
+    )
+
+    return sum
+  } catch (e) {
+    console.error(e)
+    throw new Error(context.t('api/unexpected'))
+  }
+}
