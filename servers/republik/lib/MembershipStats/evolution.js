@@ -219,6 +219,17 @@ const populate = async (context, resultFn) => {
   await createCache(context).set({ result, updatedAt: new Date() })
 }
 
+/** Reducer, to sum up properties in a bucket */
+const reducerBucketProps = (bucket) => (sum, prop) => {
+  const value = bucket[prop]
+
+  if (!Number.isFinite(value)) {
+    throw new Error(`Missing prop "${prop}" on bucket "${bucket.key}" when summing up props`)
+  }
+
+  return sum + value
+}
+
 /**
  * @typedef {Object} AddSubtractProps
  * @property {string[]} [add] Props to add to sum
@@ -241,9 +252,8 @@ const sumBucketProps = async (
   // Fetch pre-populated data
   const data = await createCache(context).get()
 
-  // Return null in case pre-populated data is not available
   if (!data) {
-    return null
+    throw new Error('Unable to sum bucket: Pre-populated data is not available')
   }
 
   // Retrieve pre-populated result from data.
@@ -253,13 +263,13 @@ const sumBucketProps = async (
   const bucket = result.find(bucket => bucket.key === key)
 
   if (!bucket) {
-    return null
+    throw new Error(`Unable to sum bucket: Bucket "${key}" not in pre-populated data available`)
   }
 
   const { add = ['active', 'overdue'], subtract = [] } = props
 
-  const sumAdd = add.reduce((prev, curr) => prev + bucket[curr], 0)
-  const sumSubtract = subtract.reduce((prev, curr) => prev + bucket[curr], 0)
+  const sumAdd = add.reduce(reducerBucketProps(bucket), 0)
+  const sumSubtract = subtract.reduce(reducerBucketProps(bucket), 0)
 
   return sumAdd - sumSubtract
 }
