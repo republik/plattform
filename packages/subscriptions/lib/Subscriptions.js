@@ -363,6 +363,7 @@ const getUnreadNotificationsForUserAndObject = (
 }
 
 module.exports = {
+  EventObjectTypes,
   getUsersWithSubscriptions,
 
   upsertSubscription,
