@@ -132,6 +132,11 @@ const SET_AUTO_PAY = gql`
   }
 `
 
+const autoPayOptions = [
+  {value: 'true', text: 'Yes'},
+  {value: 'false', text: 'No'}
+]
+
 function AutoPayToggle (membership) {
 
   if (!membership.autoPayIsMutable) return (
@@ -144,6 +149,9 @@ function AutoPayToggle (membership) {
       </DD>
     </React.Fragment>
   )
+
+  // Currently the dropdown component only supports string values
+  const autoPayAsString = membership.autoPay ? 'true' : 'false';
 
   return (
     <Mutation
@@ -170,8 +178,8 @@ function AutoPayToggle (membership) {
               <Dropdown
                 black
                 label=''
-                items={[{value: true, text: 'Yes'}, {value: false, text: 'No'}]}
-                value={membership.autoPay}
+                items={autoPayOptions}
+                value={autoPayAsString}
                 onChange={mutation}
               />
             </DD>
