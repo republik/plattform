@@ -170,7 +170,11 @@ const AutoPayToggle = (membership) => {
                 </React.Fragment>
               )}
             </DT>
-            <DD style={{position: 'relative'}}>
+            <DD style={{
+              position: 'relative',
+              pointerEvents: loading ? 'none' : 'auto'
+            }}
+            >
               { loading && (<Spinner/>) }
               <Dropdown
                 black
