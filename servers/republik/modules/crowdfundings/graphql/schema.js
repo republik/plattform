@@ -141,7 +141,6 @@ type mutations {
   # required role: admin
   deleteUser(userId: ID!, unpublishComments: Boolean): User
 
-  enableMembershipAutoPay(id: ID!): Boolean!
-  disableMembershipAutoPay(id: ID!): Boolean!
+  setMembershipAutoPay(id: ID!, autoPay: Boolean!): Membership!
 }
 `

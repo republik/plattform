@@ -155,6 +155,7 @@ type Membership {
   active: Boolean!
   renew: Boolean!
   autoPay: Boolean!
+  autoPayIsMutable: Boolean!
   accessGranted: Boolean!
   initialInterval: MembershipTypeInterval!
   initialPeriods: Int!

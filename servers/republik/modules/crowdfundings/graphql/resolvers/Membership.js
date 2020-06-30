@@ -19,14 +19,14 @@ const createMembershipCache = (membership, prop, context) =>
     disabled: DISABLE_RESOLVER_USER_CACHE
   }, context)
 
-module.exports = {
+const membershipResolver = {
   async type (membership, args, context) {
-    const { pgdb } = context
     return createMembershipCache(membership, 'type', context)
-      .cache(async () => pgdb.public.membershipTypes.findOne({
-        id: membership.membershipTypeId
-      }))
+      .cache(
+        () => context.loaders.MembershipType.byId.load(membership.membershipTypeId)
+      )
   },
+
   async overdue (membership, args, { pgdb }) {
     if (!membership.active || !membership.latestPaymentFailedAt) {
       return false
@@ -144,6 +144,7 @@ module.exports = {
         )
       )
   },
+
   async giverName (membership, args, context) {
     const { loaders, user: me } = context
     const pledge =
@@ -164,5 +165,20 @@ module.exports = {
     if (me && (membership.userId === me.id || pledge.userId === me.id)) {
       return pledge.messageToClaimers
     }
+  },
+
+  async autoPayIsMutable (membership, args, context) {
+    if (!membership.active) {
+      return false
+    }
+    if (!membership.renew) {
+      return false
+    }
+
+    const type = await membershipResolver.type(membership, null, context)
+
+    return type.interval === 'year'
   }
 }
+
+module.exports = membershipResolver
