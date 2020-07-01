@@ -165,6 +165,7 @@ type Membership {
   graceEndDate: DateTime
   overdue: Boolean!
   cancellations: [Cancellation!]!
+  canManuallyAddPeriod: Boolean!
   createdAt: DateTime!
   updatedAt: DateTime!
 }
