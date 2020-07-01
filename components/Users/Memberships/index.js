@@ -88,6 +88,7 @@ const GET_MEMBERSHIPS = gql`
         createdAt
         active
         renew
+        canManuallyAddPeriod
       }
     }
   }
@@ -218,6 +219,38 @@ const MembershipCard = ({ membership, ...props }) => {
   )
 }
 
+const APPEND_PERIOD_TO_MEMBERSHIP = gql`
+  mutation appendPeriodToMembership($id: ID!, $duration: Int!, $durationUnit: MembershipTypeInterval!) {
+    appendPeriodToMembership(id: $id, duration: $duration, durationUnit: $durationUnit) {
+      id
+      periods {
+        id
+        kind
+        beginDate
+        endDate
+        isCurrent
+        createdAt
+        updatedAt
+      }
+    }
+  }
+`
+
+const AppendPeriod = ({ membership }) => {
+  if (!membership.canManuallyAddPeriod) {
+    return ''
+  }
+
+  return <Mutation
+    mutation={APPEND_PERIOD_TO_MEMBERSHIP}
+    variables={{ id: membership.id, duration: 12, durationUnit: 'week' }}
+  >
+    {(mutation) => {
+      return (<button onClick={mutation}>+</button>)
+    }}
+  </Mutation>
+}
+
 const MembershipDetails = ({ userId, membership, ...props }) => {
   return (
     <tr {...props}>
@@ -268,6 +301,9 @@ const MembershipDetails = ({ userId, membership, ...props }) => {
                     {period.isCurrent && <CurrentIcon size='1.1em' {...styles.icon} />}
                   </DD>
                 ))}
+                <DD>
+                  <AppendPeriod membership={membership}></AppendPeriod>
+                </DD>
               </Fragment>
             )}
           </DL>
