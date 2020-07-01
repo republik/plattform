@@ -234,6 +234,7 @@ input PledgeInput {
   reason: String
   messageToClaimers: String
   accessToken: ID
+  payload: JSON
 }
 
 type PledgeResponse {
