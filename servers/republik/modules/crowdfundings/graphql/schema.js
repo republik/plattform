@@ -141,6 +141,10 @@ type mutations {
   # required role: admin
   deleteUser(userId: ID!, unpublishComments: Boolean): User
 
+  # required role: supporter
   setMembershipAutoPay(id: ID!, autoPay: Boolean!): Membership!
+
+  # required role: supporter
+  appendPeriodToMembership(id: ID!, duration: Int!, durationUnit: MembershipTypeInterval!): Membership!
 }
 `

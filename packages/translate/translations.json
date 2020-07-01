@@ -99,6 +99,10 @@
       "value": "Das autoPay Feld der Membership mit der ID {id} kann nicht bearbeitet werden."
     },
     {
+      "key": "api/appendPeriodToMembership/durationShouldBePositive",
+      "value": "Die durationShouldBePositive Schnittstelle erwartet ein positives `duration` Feld. Es wurde folgender Wert übergeben: {duration}."
+    },
+    {
       "key": "api/pledge/alreadyPaid",
       "value": "Sie haben bereits bezahlt. Vielen Dank!"
     },
