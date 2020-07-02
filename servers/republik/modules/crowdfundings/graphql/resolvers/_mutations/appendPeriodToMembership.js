@@ -1,5 +1,6 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
 const moment = require('moment')
+const membershipResolver = require('../../resolvers/Membership')
 
 module.exports = async (_, { id, duration, durationUnit }, context) => {
   const { user: me, t, req } = context
@@ -11,6 +12,13 @@ module.exports = async (_, { id, duration, durationUnit }, context) => {
     const membership = await transaction.public.memberships.findOne({ id })
     if (!membership) {
       throw new Error(t('api/membership/404'))
+    }
+
+    if (!(await membershipResolver.canManuallyAddPeriod(membership))) {
+      if (!membership.active) {
+        throw new Error(t('api/appendPeriodToMembership/inactive'))
+      }
+      throw new Error(t('api/appendPeriodToMembership/wrongMembershipType'))
     }
 
     if (duration <= 0) {

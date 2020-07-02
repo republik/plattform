@@ -111,6 +111,14 @@
       "value": "Es konnte mit folgenden Werten kein valides Enddatum errechnet werden: duration: {duration}, durationUnit: {durationUnit}"
     },
     {
+      "key": "api/appendPeriodToMembership/inactive",
+      "value": "Eine Periode kann ausschliesslich an eine aktive Periode hinzugefügt werden."
+    },
+    {
+      "key": "api/appendPeriodToMembership/wrongMembershipType",
+      "value": "Diesem Membership-Typ kann keine Periode hinzugefügt werden."
+    },
+    {
       "key": "api/pledge/alreadyPaid",
       "value": "Sie haben bereits bezahlt. Vielen Dank!"
     },
