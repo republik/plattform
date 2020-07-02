@@ -584,7 +584,7 @@ describe('appendPeriodToMembership:', () => {
     )
   })
 
-  test('appends a periods', async () => {
+  test('appends periods', async () => {
     const { pledgeId } = await prepareNewPledge()
     await payPledge({
       pledgeId,
