@@ -180,7 +180,7 @@ const membershipResolver = {
     return type.interval === 'year'
   },
 
-  async canManuallyAddPeriod ({ subscriptionId: stripeSubscriptionId, active }, x, { pgdb }) {
+  async canManuallyAddPeriod ({ subscriptionId: stripeSubscriptionId, active }) {
     if (!active) {
       return false
     }
