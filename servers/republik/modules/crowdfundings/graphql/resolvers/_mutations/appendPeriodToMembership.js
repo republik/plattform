@@ -18,7 +18,7 @@ module.exports = async (_, { id, duration, durationUnit }, context) => {
     }
 
     const beginDate = await getBeginDate(transaction, id)
-    const endDate = getEndDate(beginDate, duration, durationUnit)
+    const endDate = getEndDate(beginDate, duration, durationUnit, t)
 
     await transaction.public.membershipPeriods.insert({
       membershipId: id,
@@ -57,10 +57,17 @@ async function getBeginDate (transaction, id) {
   return lastEndDate
 }
 
-function getEndDate (startDate, duration, durationUnit) {
-  const endDate = moment(startDate).add(duration, durationUnit).toDate()
-  if (endDate.toString() === startDate.toString()) {
-    throw new Error(`${startDate}, ${duration}, ${durationUnit}`)
+function getEndDate (startDate, duration, durationUnit, t) {
+  const startDateMoment = moment(startDate)
+
+  if (!startDateMoment.isValid()) {
+    throw new Error(t('api/appendPeriodToMembership/startDateNotValid'))
   }
-  return endDate
+
+  const endDateMoment = startDateMoment.add(duration, durationUnit)
+
+  if (!endDateMoment.isValid()) {
+    throw new Error(t('api/appendPeriodToMembership/durationOrDurationUnitNotValid', { duration, durationUnit }))
+  }
+  return endDateMoment.toDate()
 }
