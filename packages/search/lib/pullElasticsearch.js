@@ -1,4 +1,4 @@
-const debug = console.log
+let debug = console.log
 
 const Elasticsearch = require('@orbiting/backend-modules-base/lib/Elasticsearch')
 const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
@@ -15,8 +15,13 @@ module.exports = async ({
   indices: indicesFilter = mappings.list.map(({ name }) => name),
   switch: doSwitch = true,
   inserts: doInserts = true,
-  flush: doFlush = false
+  flush: doFlush = false,
+  wait: doWait = true,
+  debug: doDebug
 }) => {
+  if (doDebug !== undefined && !doDebug) {
+    debug = identity => identity
+  }
   const pgdb = await PgDb.connect({ applicationName: 'backends search pullElasticsearch' })
   const elastic = Elasticsearch.connect()
   const redis = Redis.connect()
@@ -99,8 +104,10 @@ module.exports = async ({
       }
     })
 
-    debug('waiting grace period', { writeAlias, index })
-    await timeout(1000 * 5)
+    if (doWait) {
+      debug('waiting grace period', { writeAlias, index })
+      await timeout(1000 * 5)
+    }
 
     if (doInserts && inserts.dict[name].after) {
       debug('after populating index...', { writeAlias, index })
@@ -112,8 +119,10 @@ module.exports = async ({
         redis
       })
 
-      debug('waiting grace period', { writeAlias, index })
-      await timeout(1000 * 5)
+      if (doWait) {
+        debug('waiting grace period', { writeAlias, index })
+        await timeout(1000 * 5)
+      }
     }
 
     if (doSwitch) {
