@@ -488,10 +488,10 @@ describe('cancelPledge', () => {
   })
 })
 
-describe('appendPeriodToMembership:', () => {
+describe('appendPeriod:', () => {
   const APPEND_PERIOD_TO_MEMBERSHIP = `
-    mutation appendPeriodToMembership($id: ID!, $duration: Int!, $durationUnit: MembershipTypeInterval!) {
-      appendPeriodToMembership(id: $id, duration: $duration, durationUnit: $durationUnit) {
+    mutation appendPeriod($id: ID!, $duration: Int!, $durationUnit: MembershipTypeInterval!) {
+      appendPeriod(id: $id, duration: $duration, durationUnit: $durationUnit) {
         id
         periods {
           id
@@ -506,7 +506,7 @@ describe('appendPeriodToMembership:', () => {
     }
   `
 
-  const appendPeriodToMembership = async ({ id, duration, durationUnit }) => {
+  const appendPeriod = async ({ id, duration, durationUnit }) => {
     return global.instance.apolloFetch({
       query: APPEND_PERIOD_TO_MEMBERSHIP,
       variables: {
@@ -525,7 +525,7 @@ describe('appendPeriodToMembership:', () => {
 
     const membership = await pgDatabase().public.memberships.findOne({ pledgeId })
 
-    const result = await appendPeriodToMembership({
+    const result = await appendPeriod({
       id: membership.id,
       duration: 1,
       durationUnit: 'year'
@@ -547,7 +547,7 @@ describe('appendPeriodToMembership:', () => {
     const membership = await pgDatabase().public.memberships.findOne({ pledgeId })
     await signIn({ user: Users.Supporter })
 
-    const result = await appendPeriodToMembership({
+    const result = await appendPeriod({
       id: membership.id,
       duration: 0,
       durationUnit: 'year'
@@ -556,7 +556,7 @@ describe('appendPeriodToMembership:', () => {
     expect(result.errors).toBeTruthy()
     expect(result.errors.length).toEqual(1)
     expect(result.errors[0].message).toEqual(
-      'Die durationShouldBePositive Schnittstelle erwartet ein positives `duration` Feld. Es wurde folgender Wert übergeben: 0.'
+      'Die `durationShouldBePositive` Schnittstelle erwartet ein positives `duration` Feld. Es wurde folgender Wert übergeben: 0.'
     )
   })
 
@@ -571,7 +571,7 @@ describe('appendPeriodToMembership:', () => {
     const membership = await pgDatabase().public.memberships.findOne({ pledgeId })
     await signIn({ user: Users.Supporter })
 
-    const result = await appendPeriodToMembership({
+    const result = await appendPeriod({
       id: membership.id,
       duration: -99,
       durationUnit: 'year'
@@ -580,7 +580,7 @@ describe('appendPeriodToMembership:', () => {
     expect(result.errors).toBeTruthy()
     expect(result.errors.length).toEqual(1)
     expect(result.errors[0].message).toEqual(
-      'Die durationShouldBePositive Schnittstelle erwartet ein positives `duration` Feld. Es wurde folgender Wert übergeben: -99.'
+      'Die `durationShouldBePositive` Schnittstelle erwartet ein positives `duration` Feld. Es wurde folgender Wert übergeben: -99.'
     )
   })
 
@@ -600,28 +600,28 @@ describe('appendPeriodToMembership:', () => {
 
     await signIn({ user: Users.Supporter })
 
-    await appendPeriodToMembership({
+    await appendPeriod({
       id: membership.id,
       duration: 3,
       durationUnit: 'year'
     })
-    await appendPeriodToMembership({
+    await appendPeriod({
       id: membership.id,
       duration: 3,
       durationUnit: 'month'
     })
-    await appendPeriodToMembership({
+    await appendPeriod({
       id: membership.id,
       duration: 3,
       durationUnit: 'week'
     })
-    const result = await appendPeriodToMembership({
+    const result = await appendPeriod({
       id: membership.id,
       duration: 3,
       durationUnit: 'day'
     })
 
-    const newMembership = result.data.appendPeriodToMembership
+    const newMembership = result.data.appendPeriod
 
     const amountOfPeriods = newMembership.periods.length
 

@@ -1,6 +1,6 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
 const moment = require('moment')
-const membershipResolver = require('../../resolvers/Membership')
+const membershipResolver = require('../Membership')
 
 module.exports = async (_, { id, duration, durationUnit }, context) => {
   const { user: me, t, req } = context
@@ -14,15 +14,15 @@ module.exports = async (_, { id, duration, durationUnit }, context) => {
       throw new Error(t('api/membership/404'))
     }
 
-    if (!(await membershipResolver.canManuallyAddPeriod(membership))) {
+    if (!(await membershipResolver.canAppendPeriod(membership))) {
       if (!membership.active) {
-        throw new Error(t('api/appendPeriodToMembership/inactive'))
+        throw new Error(t('api/appendPeriod/inactive'))
       }
-      throw new Error(t('api/appendPeriodToMembership/wrongMembershipType'))
+      throw new Error(t('api/appendPeriod/wrongMembershipType'))
     }
 
     if (duration <= 0) {
-      throw new Error(t('api/appendPeriodToMembership/durationShouldBePositive', { duration }))
+      throw new Error(t('api/appendPeriod/durationShouldBePositive', { duration }))
     }
 
     const beginDate = await getBeginDate(transaction, id)
@@ -40,7 +40,7 @@ module.exports = async (_, { id, duration, durationUnit }, context) => {
     return updatedMembership
   } catch (e) {
     await transaction.transactionRollback()
-    console.error('appendPeriodToMembership', e, { req: req._log() })
+    console.error('appendPeriod', e, { req: req._log() })
     throw e
   }
 }
@@ -69,13 +69,13 @@ function getEndDate (startDate, duration, durationUnit, t) {
   const startDateMoment = moment(startDate)
 
   if (!startDateMoment.isValid()) {
-    throw new Error(t('api/appendPeriodToMembership/startDateNotValid'))
+    throw new Error(t('api/appendPeriod/startDateNotValid'))
   }
 
   const endDateMoment = startDateMoment.add(duration, durationUnit)
 
   if (!endDateMoment.isValid()) {
-    throw new Error(t('api/appendPeriodToMembership/durationOrDurationUnitNotValid', { duration, durationUnit }))
+    throw new Error(t('api/appendPeriod/durationOrDurationUnitNotValid', { duration, durationUnit }))
   }
   return endDateMoment.toDate()
 }

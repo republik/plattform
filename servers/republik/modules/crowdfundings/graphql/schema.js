@@ -145,6 +145,6 @@ type mutations {
   setMembershipAutoPay(id: ID!, autoPay: Boolean!): Membership!
 
   # required role: supporter
-  appendPeriodToMembership(id: ID!, duration: Int!, durationUnit: MembershipTypeInterval!): Membership!
+  appendPeriod(id: ID!, duration: Int!, durationUnit: MembershipTypeInterval!): Membership!
 }
 `
