@@ -71,10 +71,10 @@ const init = async ({ serverName, publicationScheduler, searchNotifyListener = n
   // create ES indices
   const pullElasticsearch = require('@orbiting/backend-modules-search/lib/pullElasticsearch')
   const dropElasticsearch = require('@orbiting/backend-modules-search/lib/dropElasticsearch')
-  await dropElasticsearch(esPrefix, false)
+  await dropElasticsearch(esPrefix, { debug: false })
   await pullElasticsearch({
     inserts: false,
-    wait: false,
+    ensurePropagation: false,
     debug: false
   })
 

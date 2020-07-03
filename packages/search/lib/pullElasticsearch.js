@@ -1,5 +1,3 @@
-let debug = console.log
-
 const Elasticsearch = require('@orbiting/backend-modules-base/lib/Elasticsearch')
 const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
 const Redis = require('@orbiting/backend-modules-base/lib/Redis')
@@ -16,13 +14,16 @@ module.exports = async ({
   switch: doSwitch = true,
   inserts: doInserts = true,
   flush: doFlush = false,
-  wait: doWait = true,
-  debug: doDebug
+  ensurePropagation = true,
+  debug: doDebug = true
 }) => {
-  if (doDebug !== undefined && !doDebug) {
-    debug = identity => identity
-  }
-  const pgdb = await PgDb.connect({ applicationName: 'backends search pullElasticsearch' })
+  const debug = doDebug === false
+    ? ident => ident
+    : console.log
+
+  const pgdb = await PgDb.connect({
+    applicationName: 'backends search pullElasticsearch'
+  })
   const elastic = Elasticsearch.connect()
   const redis = Redis.connect()
 
@@ -104,7 +105,7 @@ module.exports = async ({
       }
     })
 
-    if (doWait) {
+    if (ensurePropagation) {
       debug('waiting grace period', { writeAlias, index })
       await timeout(1000 * 5)
     }
@@ -119,7 +120,7 @@ module.exports = async ({
         redis
       })
 
-      if (doWait) {
+      if (ensurePropagation) {
         debug('waiting grace period', { writeAlias, index })
         await timeout(1000 * 5)
       }
