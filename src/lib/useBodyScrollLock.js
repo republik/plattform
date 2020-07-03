@@ -1,11 +1,16 @@
 import { useEffect, useRef } from 'react'
-import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock'
+import { disableBodyScroll, clearAllBodyScrollLocks } from 'body-scroll-lock'
 
 import warn from './warn'
 
-let numberScrollLocks = 0
+let lockedElements = []
 
-export const isBodyScrollLocked = () => numberScrollLocks > 0
+const options = {
+  allowTouchMove: el =>
+    el.tagName === 'INPUT' && el.type && el.type.toLowerCase() === 'range'
+}
+
+export const isBodyScrollLocked = () => lockedElements.length > 0
 
 export const useBodyScrollLock = (lock = true) => {
   const ref = useRef()
@@ -20,22 +25,23 @@ export const useBodyScrollLock = (lock = true) => {
       return
     }
     const targetElement = ref.current
-    if (!numberScrollLocks) {
-      disableBodyScroll(targetElement, {
-        allowTouchMove: el =>
-          el.tagName === 'INPUT' && el.type && el.type.toLowerCase() === 'range'
-      })
+    const lastLockedElement = lockedElements[lockedElements.length - 1]
+
+    if (lastLockedElement !== targetElement) {
+      clearAllBodyScrollLocks()
+      disableBodyScroll(targetElement, options)
+      lockedElements.push(targetElement)
     }
 
-    numberScrollLocks += 1
-
     return () => {
-      numberScrollLocks -= 1
-      if (numberScrollLocks) {
-        return
+      clearAllBodyScrollLocks()
+      lockedElements = lockedElements.filter(
+        element => element !== targetElement
+      )
+      const prevLockedElement = lockedElements[lockedElements.length - 1]
+      if (prevLockedElement) {
+        disableBodyScroll(prevLockedElement, options)
       }
-
-      enableBodyScroll(targetElement)
     }
   }, [shouldLock])
 

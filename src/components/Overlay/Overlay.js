@@ -75,7 +75,7 @@ const Overlay = props => {
       setSsrMode(false)
     }
   }, [ssrMode])
-  const [innerRef] = useBodyScrollLock()
+  const [innerRef] = useBodyScrollLock(!ssrMode)
 
   const element = (
     <OverlayRenderer
