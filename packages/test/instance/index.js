@@ -88,7 +88,7 @@ const init = async ({ serverName, publicationScheduler, searchNotifyListener = n
     await server.close()
     await db.drop()
     // drop ES indices
-    await dropElasticsearch(esPrefix)
+    await dropElasticsearch(esPrefix, { debug: false })
     global.instance = null
   }
 
