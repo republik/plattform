@@ -39,7 +39,7 @@ const buildObjectFindProps = ({ id, type }, t) => {
 const getUsersWithSubscriptions = (subscriptions = [], { loaders }) => {
   return Promise.map(
     subscriptions,
-    async (sub) => ({
+    async sub => ({
       ...await loaders.User.byId.load(sub.userId),
       __subscription: sub
     })

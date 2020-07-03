@@ -88,7 +88,7 @@ const notifyPublish = async (repoId, context, testUser, simulateAllPossibleSubsc
 
   await Promise.each(
     Object.keys(docSubscribersByDocId),
-    async (docId) => {
+    async docId => {
       const subscribedDoc = await loaders.Document.byRepoId.load(docId)
       const subscribers = docSubscribersByDocId[docId]
 
@@ -113,7 +113,7 @@ const notifyPublish = async (repoId, context, testUser, simulateAllPossibleSubsc
 
   await Promise.each(
     Object.keys(authorSubscribersByAuthorId),
-    async (authorId) => {
+    async authorId => {
       const author = await loaders.User.byId.load(authorId)
       const subscribers = authorSubscribersByAuthorId[authorId]
 
