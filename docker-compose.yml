@@ -20,7 +20,7 @@ services:
         soft: -1
         hard: -1
     volumes:
-      - ./docker-data/elastic:/usr/share/elasticsearch/data
+      - ./docker-data/elastic:/usr/share/elasticsearch/data:delegated
     ports:
       - 9200:9200
 
@@ -37,14 +37,14 @@ services:
     ports:
       - 6379:6379
     volumes:
-      - ./docker-data/redis:/data
+      - ./docker-data/redis:/data:delegated
 
   postgres:
     image: postgres:12
     environment:
       - POSTGRES_HOST_AUTH_METHOD=trust
     volumes:
-      - ./docker-data/postgres:/var/lib/postgresql/data
+      - ./docker-data/postgres:/var/lib/postgresql/data:delegated
     ports:
       - 5432:5432
     command: ["postgres", "-c", "log_statement=all"]
