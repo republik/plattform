@@ -5,7 +5,7 @@ const drop = async (prefix, { debug: doDebug = true } = {}) => {
     throw new Error("can't drop, prefix not specified")
   }
   const debug = doDebug === false
-    ? ident => ident
+    ? () => {}
     : console.log
 
   const elastic = Elasticsearch.connect()
