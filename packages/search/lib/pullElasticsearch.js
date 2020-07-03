@@ -18,7 +18,7 @@ module.exports = async ({
   debug: doDebug = true
 }) => {
   const debug = doDebug === false
-    ? ident => ident
+    ? () => {}
     : console.log
 
   const pgdb = await PgDb.connect({
