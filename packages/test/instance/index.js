@@ -53,6 +53,9 @@ const init = async ({ serverName, publicationScheduler, searchNotifyListener = n
   process.env.REDIS_URL = redisUrl
   process.env.ES_INDEX_PREFIX = esPrefix
   process.env.SEND_MAILS_LOG = false
+  process.env.SEND_MAILS = false
+  process.env.SEND_NOTIFICATIONS = false
+  process.env.SLACK_API_TOKEN = ''
   if (publicationScheduler) {
     process.env.PUBLICATION_SCHEDULER = true
   }
