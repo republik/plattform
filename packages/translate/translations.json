@@ -99,6 +99,26 @@
       "value": "Das autoPay Feld der Membership mit der ID {id} kann nicht bearbeitet werden."
     },
     {
+      "key": "api/appendPeriod/durationShouldBePositive",
+      "value": "Die `durationShouldBePositive` Schnittstelle erwartet ein positives `duration` Feld. Es wurde folgender Wert übergeben: {duration}."
+    },
+    {
+      "key": "api/appendPeriod/startDateNotValid",
+      "value": "Es konnte kein valides Startdatum erarbeitet werden"
+    },
+    {
+      "key": "api/appendPeriod/durationOrDurationUnitNotValid",
+      "value": "Es konnte mit folgenden Werten kein valides Enddatum errechnet werden: duration: {duration}, durationUnit: {durationUnit}"
+    },
+    {
+      "key": "api/appendPeriod/inactive",
+      "value": "Eine Periode kann ausschliesslich an eine aktive Periode hinzugefügt werden."
+    },
+    {
+      "key": "api/appendPeriod/wrongMembershipType",
+      "value": "Diesem Membership-Typ kann keine Periode hinzugefügt werden."
+    },
+    {
       "key": "api/pledge/alreadyPaid",
       "value": "Sie haben bereits bezahlt. Vielen Dank!"
     },
