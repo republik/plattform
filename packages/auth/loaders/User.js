@@ -38,10 +38,8 @@ module.exports = (context) => ({
       .then(users => users
         .map(u => transformUser(u))
       ),
-    null,
-    (key, rows) => {
-      return rows.find(row => row.username === key)
-    }
+  null,
+  (key, rows) => rows.find(row => row.username.toLowerCase() === key.toLowerCase())
   ),
   credential: createDataLoader(ids =>
     context.pgdb.public.credentials.find({ id: ids })
