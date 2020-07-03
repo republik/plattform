@@ -1,13 +1,13 @@
-let debug = console.log
 const Elasticsearch = require('@orbiting/backend-modules-base/lib/Elasticsearch')
 
-const drop = async (prefix, doDebug) => {
+const drop = async (prefix, { debug: doDebug = true } = {}) => {
   if (!prefix) {
     throw new Error("can't drop, prefix not specified")
   }
-  if (doDebug !== undefined && !doDebug) {
-    debug = identity => identity
-  }
+  const debug = doDebug === false
+    ? ident => ident
+    : console.log
+
   const elastic = Elasticsearch.connect()
 
   const indices = await elastic.cat.indices({
