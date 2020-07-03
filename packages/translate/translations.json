@@ -1780,7 +1780,7 @@
     },
     {
       "key": "api/notifications/doc/author/title",
-      "value": "{name}:"
+      "value": "Neuer Beitrag von {name}"
     }
   ]
 }
