@@ -1,11 +1,21 @@
-import { Fragment } from 'react'
+import React, { Fragment } from 'react'
 import { css } from 'glamor'
 import { Query, Mutation } from 'react-apollo'
 import gql from 'graphql-tag'
 import { MdChevronLeft as CurrentIcon } from 'react-icons/md'
-import { Dropdown, Spinner, colors } from '@project-r/styleguide'
 
-import { Label, Loader, A, Checkbox } from '@project-r/styleguide'
+import {
+  A,
+  Button,
+  Checkbox,
+  colors,
+  Dropdown,
+  Field,
+  InlineSpinner,
+  Label,
+  Loader,
+  Spinner,
+} from '@project-r/styleguide'
 
 import {
   displayDate,
@@ -61,6 +71,7 @@ const GET_MEMBERSHIPS = gql`
         initialPeriods
         claimerName
         periods {
+          id
           beginDate
           endDate
           isCurrent
@@ -88,7 +99,7 @@ const GET_MEMBERSHIPS = gql`
         createdAt
         active
         renew
-        canManuallyAddPeriod
+        canAppendPeriod
       }
     }
   }
@@ -219,37 +230,108 @@ const MembershipCard = ({ membership, ...props }) => {
   )
 }
 
-const APPEND_PERIOD_TO_MEMBERSHIP = gql`
-  mutation appendPeriodToMembership($id: ID!, $duration: Int!, $durationUnit: MembershipTypeInterval!) {
-    appendPeriodToMembership(id: $id, duration: $duration, durationUnit: $durationUnit) {
+const APPEND_PERIOD = gql`
+  mutation appendPeriod($id: ID!, $duration: Int!, $durationUnit: MembershipTypeInterval!) {
+    appendPeriod(id: $id, duration: $duration, durationUnit: $durationUnit) {
       id
       periods {
         id
-        kind
         beginDate
         endDate
         isCurrent
-        createdAt
-        updatedAt
       }
     }
   }
 `
 
-const AppendPeriod = ({ membership }) => {
-  if (!membership.canManuallyAddPeriod) {
-    return ''
+class AppendPeriod extends React.Component {
+
+  constructor (props) {
+    super(props)
+    this.membership = props.membership
+    this.state = {
+      duration: 1,
+      durationUnit: 'month',
+      showForm: false
+    }
   }
 
-  return <Mutation
-    mutation={APPEND_PERIOD_TO_MEMBERSHIP}
-    variables={{ id: membership.id, duration: 12, durationUnit: 'week' }}
-  >
-    {(mutation) => {
-      return (<button onClick={mutation}>+</button>)
-    }}
-  </Mutation>
+  render () {
+    if (!this.membership.canAppendPeriod) {
+      return ''
+    }
+
+    const variables = {
+      id: this.membership.id,
+      duration: this.state.duration,
+      durationUnit: this.state.durationUnit
+    }
+
+    return (
+      <Mutation
+        mutation={APPEND_PERIOD}
+        variables={variables}
+      >
+        {(mutation, {loading}) => {
+          if (!this.state.showForm) {
+            return (
+                <Button
+                  primary
+                  onClick={() => { !loading && this.setState({showForm: true}) }}
+                >
+                  {loading ? (<InlineSpinner size={38} />) : 'Neue Laufzeit'}
+                </Button>
+            )
+          }
+
+          const durationUnits = [
+            { value: 'day', text: `Tag${this.state.duration > 1 ? 'e' : ''}` },
+            { value: 'week', text: `Woche${this.state.duration > 1 ? 'n' : ''}` },
+            { value: 'month', text: `Monat${this.state.duration > 1 ? 'e' : ''}` },
+            { value: 'year', text: `Jahr${this.state.duration > 1 ? 'e' : ''}` }
+          ]
+
+          const ondec = this.state.duration > 1 &&
+            (() => this.setState({duration: (this.state.duration - 1 || 0)}))
+
+          return (
+            <DD>
+              <Field
+                label='Betrag'
+                value={this.state.duration}
+                onChange={(_, value) => {
+                  if (value.match(/\D/)) {
+                    return
+                  }
+                  const numberValue = parseInt(value, 10)
+                  this.setState({duration: numberValue})
+                }}
+                onInc={() => this.setState({duration: this.state.duration + 1})}
+
+                onDec={ondec}
+
+              />
+              <Dropdown
+                label='Einheit'
+                items={durationUnits}
+                value={this.state.durationUnit}
+                onChange={(item) => {
+                  this.setState({durationUnit: item.value})
+                }}
+              />
+              <button onClick={() => {
+                mutation()
+                this.setState({showForm: false})
+              }}>Submit</button>
+            </DD>
+          )
+        }}
+      </Mutation>
+    )
+  }
+
 }
+
 
 const MembershipDetails = ({ userId, membership, ...props }) => {
   return (
@@ -295,15 +377,13 @@ const MembershipDetails = ({ userId, membership, ...props }) => {
             {!!membership.periods.length && (
               <Fragment>
                 <DT>Laufzeiten</DT>
-                {membership.periods.map((period, i) => (
-                  <DD key={`period-${i}`}>
+                {membership.periods.map((period) => (
+                  <DD key={`period-${period.id}`}>
                     {displayDate(new Date(period.beginDate))} – {displayDate(new Date(period.endDate))}
                     {period.isCurrent && <CurrentIcon size='1.1em' {...styles.icon} />}
                   </DD>
                 ))}
-                <DD>
-                  <AppendPeriod membership={membership}></AppendPeriod>
-                </DD>
+                <AppendPeriod membership={membership}></AppendPeriod>
               </Fragment>
             )}
           </DL>
