@@ -3,39 +3,13 @@ const {
   getSimulatedSubscriptionForUserAndObject,
 } = require('./Subscriptions')
 const { getRepoId } = require('@orbiting/backend-modules-documents/lib/resolve')
+const {
+  getRepoIdsForDoc,
+  getTemplate,
+  getAuthorUserIds
+} = require('@orbiting/backend-modules-documents/lib/meta')
 const { v4: isUuid } = require('is-uuid')
 const Promise = require('bluebird')
-
-// _meta is present on unpublished docs
-// { repo { publication { commit { document } } } }
-const getRepoIdsForDoc = (doc, includeParents) => ([
-  doc.meta?.repoId || doc._meta?.repoId,
-  includeParents && getRepoId(
-    doc.meta?.format || doc._meta?.format
-  ).repoId
-].filter(Boolean))
-
-const getTemplate = (doc) =>
-  doc.meta?.template || doc._meta?.template
-
-const getAuthorUserIds = (doc, { loaders }, credits) =>
-  Promise.map(
-    (doc?.meta?.credits || doc?._meta?.credits || credits)
-      .filter(c => c.type === 'link'),
-    async ({ url }) => {
-      if (url.startsWith('/~')) {
-        const idOrUsername = url.substring(2)
-        if (isUuid(idOrUsername)) {
-          return idOrUsername
-        } else {
-          return loaders.User.byUsername.load(idOrUsername)
-            .then(u => u?.id)
-        }
-      } else {
-        console.warn(`invalid author link encountered: ${url}`)
-      }
-    }
-  ).then(userIds => userIds.filter(Boolean))
 
 const getSubscriptionsForDoc = async (
   doc,
