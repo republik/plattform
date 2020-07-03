@@ -14,7 +14,7 @@ module.exports = async ({
   switch: doSwitch = true,
   inserts: doInserts = true,
   flush: doFlush = false,
-  wait: doWait = true,
+  ensurePropagation = true,
   debug: doDebug = true
 }) => {
   const debug = doDebug === false
@@ -105,7 +105,7 @@ module.exports = async ({
       }
     })
 
-    if (doWait) {
+    if (ensurePropagation) {
       debug('waiting grace period', { writeAlias, index })
       await timeout(1000 * 5)
     }
@@ -120,7 +120,7 @@ module.exports = async ({
         redis
       })
 
-      if (doWait) {
+      if (ensurePropagation) {
         debug('waiting grace period', { writeAlias, index })
         await timeout(1000 * 5)
       }

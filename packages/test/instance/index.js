@@ -71,7 +71,7 @@ const init = async ({ serverName, publicationScheduler, searchNotifyListener = n
   await dropElasticsearch(esPrefix, { debug: false })
   await pullElasticsearch({
     inserts: false,
-    wait: false,
+    ensurePropagation: false,
     debug: false
   })
 
