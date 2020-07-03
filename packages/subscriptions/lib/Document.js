@@ -90,6 +90,8 @@ const getSubscriptionsForDoc = async (
   }
 
   if (uniqueUsers) {
+    // uniqueify subscriptions in regard to userId
+    // first subscription has precedence (format before author)
     return subscriptions
       .filter( (sub1, index1, arr) => arr
         .findIndex( (sub2, index2) =>
