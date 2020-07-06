@@ -32,6 +32,7 @@ const loaderBuilders = {
   ...require('@orbiting/backend-modules-subscriptions/loaders'),
   ...require('@orbiting/backend-modules-cards/loaders'),
   ...require('@orbiting/backend-modules-embeds/loaders'),
+  ...require('./modules/crowdfundings/loaders'),
   ...require('./loaders')
 }
 
