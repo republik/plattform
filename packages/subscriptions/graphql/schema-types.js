@@ -30,6 +30,7 @@ extend type User {
     last: Int
     before: String
     after: String
+    onlyMe: Boolean
   ): SubscriptionConnection!
 
   # subject: me
