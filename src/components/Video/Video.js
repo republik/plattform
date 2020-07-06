@@ -91,6 +91,7 @@ const Embed = ({ id, platform, aspectRatio, title }) => {
         src={src}
         frameBorder='0'
         title={title}
+        allow='autoplay; fullscreen'
         allowFullScreen
       />
     </div>
