@@ -1,3 +1,5 @@
+const { TREND_INTERVALS } = require('../lib/stats/last')
+
 module.exports = `
 
 type Credential {
@@ -253,6 +255,11 @@ type DiscussionsStats {
     "Maximum month (YYYY-MM)"
     max: YearMonthDate!
   ): DiscussionsStatsEvolution!
+  # Evolution data an interval ago, until now
+  last(
+    "Interval"
+    interval: DiscussionsStatsTrendInterval!
+  ): DiscussionsStatsTrend!
 }
 
 type DiscussionsStatsEvolution {
@@ -276,6 +283,27 @@ type DiscussionsStatsEvolutionBucket {
   usersPosted: Int!
   "Amount of unqiue users which voted on a comment"
   usersVoted: Int!
+}
+
+enum DiscussionsStatsTrendInterval {
+${TREND_INTERVALS.map(i => i.key).join('\n')}
+}
+
+type DiscussionsStatsTrend {
+  "Amount of comments"
+  comments: Int!
+
+  "Amount of discussions"
+  discussions: Int!
+
+  "Amount of unqiue users"
+  users: Int!
+  "Amount of unqiue users which posted a comment"
+  usersPosted: Int!
+  "Amount of unqiue users which voted on a comment"
+  usersVoted: Int!
+
+  updatedAt: DateTime!
 }
 
 `
