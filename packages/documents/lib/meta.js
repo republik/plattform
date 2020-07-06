@@ -1,6 +1,8 @@
 const visit = require('unist-util-visit')
 
-const { metaFieldResolver } = require('./resolve')
+const { metaFieldResolver, getRepoId } = require('./resolve')
+const Promise = require('bluebird')
+const { v4: isUuid } = require('is-uuid')
 
 // mean German, see http://iovs.arvojournals.org/article.aspx?articleid=2166061
 const WORDS_PER_MIN = 180
