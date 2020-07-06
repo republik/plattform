@@ -1,3 +1,5 @@
+const { TREND_INTERVALS } = require('../lib/stats/last')
+
 module.exports = `
 
 interface CollectionItemInterface {
@@ -102,6 +104,13 @@ type CollectionsStats {
     "Maximum month (YYYY-MM)"
     max: YearMonthDate!
   ): CollectionsStatsEvolution!
+  # Evolution data an interval ago up until now
+  last(
+    "Collection name"
+    name: String!
+    "Interval"
+    interval: CollectionsStatsTrendInterval!
+  ): CollectionsStatsTrend!
 }
 
 type CollectionsStatsEvolution {
@@ -124,5 +133,25 @@ type CollectionsStatsEvolutionBucket {
 
   "Amount of unqiue users"
   users: Int!
+}
+
+enum CollectionsStatsTrendInterval {
+${TREND_INTERVALS.map(i => i.key).join('\n')}
+}
+
+type CollectionsStatsTrend {
+  "Amount of records"
+  records: Int!
+
+  "Amount of documents"
+  documents: Int!
+
+  "Amount of media"
+  medias: Int!
+
+  "Amount of unqiue users"
+  users: Int!
+
+  updatedAt: DateTime!
 }
 `
