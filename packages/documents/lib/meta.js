@@ -169,7 +169,7 @@ const getRepoIdsForDoc = (doc, includeParents) => ([
   ).repoId
 ].filter(Boolean))
 
-const getTemplate = (doc) =>
+const getTemplate = doc =>
   doc.meta?.template || doc._meta?.template
 
 const getAuthorUserIds = (doc, { loaders }, credits) =>
