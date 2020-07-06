@@ -1,5 +1,5 @@
 {
-  "updated": "2020-05-10T19:56:53.981Z",
+  "updated": "2020-07-06T15:00:32.573Z",
   "title": "live",
   "data": [
     {
@@ -189,7 +189,7 @@
     },
     {
       "key": "styleguide/video/dnt/note",
-      "value": "Kleine Warnung: Dies ist ein {player}-Video. Wenn Sie das Video abspielen, kann {platform} Sie tracken."
+      "value": "Dies ist ein {player}-Video. Wenn Sie das Video abspielen, kann {platform} Sie tracken."
     },
     {
       "key": "styleguide/video/dnt/player/youtube",
