@@ -11,10 +11,8 @@ const {
   Redirections: { upsert: upsertRedirection }
 } = require('@orbiting/backend-modules-redirections')
 const {
-  Document: {
-    getAuthorUserIds,
-  },
-} = require('@orbiting/backend-modules-subscriptions')
+  getAuthorUserIds
+} = require('@orbiting/backend-modules-documents/lib/meta')
 
 const slugDateFormat = timeFormat('%Y/%m/%d')
 

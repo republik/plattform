@@ -55,10 +55,6 @@ extend type Document {
   # subject: me
   # object: this.document
   subscribedByMe(
-    first: Int
-    last: Int
-    before: String
-    after: String
     includeParents: Boolean
   ): Subscription @deprecated(reason: "use \`subscribedBy\` with \`onlyMe: true\` instead")
 

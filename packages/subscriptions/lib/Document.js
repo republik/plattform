@@ -1,15 +1,12 @@
 const {
   getSubscriptionsForUserAndObjects,
-  getSimulatedSubscriptionForUserAndObject,
+  getSimulatedSubscriptionForUserAndObject
 } = require('./Subscriptions')
-const { getRepoId } = require('@orbiting/backend-modules-documents/lib/resolve')
 const {
   getRepoIdsForDoc,
   getTemplate,
   getAuthorUserIds
 } = require('@orbiting/backend-modules-documents/lib/meta')
-const { v4: isUuid } = require('is-uuid')
-const Promise = require('bluebird')
 
 const getSubscriptionsForDoc = async (
   doc,
@@ -19,7 +16,7 @@ const getSubscriptionsForDoc = async (
     includeParents = false,
     includeNotActive = false,
     uniqueUsers = false,
-    simulate = false,
+    simulate = false
   },
   context
 ) => {
@@ -93,8 +90,8 @@ const getSubscriptionsForDoc = async (
     // uniqueify subscriptions in regard to userId
     // first subscription has precedence (format before author)
     return subscriptions
-      .filter( (sub1, index1, arr) => arr
-        .findIndex( (sub2, index2) =>
+      .filter((sub1, index1, arr) => arr
+        .findIndex((sub2, index2) =>
           sub2.userId === sub1.userId && index2 < index1
         ) === -1
       )
@@ -103,7 +100,5 @@ const getSubscriptionsForDoc = async (
 }
 
 module.exports = {
-  getRepoIdsForDoc,
-  getAuthorUserIds,
   getSubscriptionsForDoc
 }

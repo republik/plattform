@@ -2,9 +2,11 @@ const {
   getUnreadNotificationsForUserAndObject
 } = require('../../lib/Subscriptions')
 const {
-  getSubscriptionsForDoc,
-  getRepoIdsForDoc
+  getSubscriptionsForDoc
 } = require('../../lib/Document')
+const {
+  getRepoIdsForDoc
+} = require('@orbiting/backend-modules-documents/lib/meta')
 const paginateNotifications = require('../../lib/paginateNotificationConnection')
 const { paginate } = require('@orbiting/backend-modules-utils')
 const { Roles } = require('@orbiting/backend-modules-auth')
