@@ -81,7 +81,7 @@ describe('subscriptions', () => {
         objectDiscussionId: null
       })
     ).rejects.toThrow(/duplicate key value/)
-  }),
+  })
 
   test('lib', async () => {
     const {
@@ -134,7 +134,7 @@ describe('subscriptions', () => {
           id: subProps.objectId
         },
         subscriberContext
-      ).then( subs => subs?.pop()?.id )
+      ).then(subs => subs?.pop()?.id)
     ).toBe(subscription.id)
 
     expect(
@@ -145,7 +145,7 @@ describe('subscriptions', () => {
           ids: [subProps.objectId]
         },
         subscriberContext
-      ).then( subs => subs?.pop()?.id )
+      ).then(subs => subs?.pop()?.id)
     ).toBe(subscription.id)
 
     await unsubscribe(subscription.id, context)
@@ -158,88 +158,91 @@ describe('subscriptions', () => {
     expect(await getSubscriptionsForUser(
       subProps.userId,
       subscriberContext
-    ).then( a => a.length)).toBe(0)
+    ).then(a => a.length)).toBe(0)
 
     expect(await getSubscriptionsForUser(
       subProps.userId,
       subscriberContext,
       { includeNotActive: true }
-    ).then( a => a.length)).toBe(1)
-  }),
+    ).then(a => a.length)).toBe(1)
+  })
 
-  test('comments with filters', async () => {
-    const {
-      upsertSubscription,
-      getUnreadNotificationsForUserAndObject
-    } = require('../lib/Subscriptions')
-    const createDiscussion = require('@orbiting/backend-modules-discussions/graphql/resolvers/_mutations/createDiscussion')
-    const submitComment = require('@orbiting/backend-modules-discussions/graphql/resolvers/_mutations/submitComment')
-
-    const { context } = global.instance
-    const { pgdb } = context
-    const [editor] = createUsers(2, ['editor'])
-    const [author, subscriber] = createUsers(2, ['member', 'debater'])
-
+  describe('comments with filters', () => {
     const filters = [null, 'Comment', 'Document']
+    for (const filter of filters) {
+      test(`filter: ${filter}`, async () => {
+        const {
+          upsertSubscription,
+          getUnreadNotificationsForUserAndObject
+        } = require('../lib/Subscriptions')
+        const createDiscussion = require('@orbiting/backend-modules-discussions/graphql/resolvers/_mutations/createDiscussion')
+        const submitComment = require('@orbiting/backend-modules-discussions/graphql/resolvers/_mutations/submitComment')
 
-    const discussionId = await createDiscussion(
-      null,
-      {
-        title: 'test',
-        anonymity: 'ALLOWED'
-      },
-      { ...context, user: editor }
-    )
+        const { context } = global.instance
+        const { pgdb } = context
 
-    for(let filter of filters) {
-      await Promise.all([
-        pgdb.public.subscriptions.truncate({ cascade: true }),
-        pgdb.public.events.truncate({ cascade: true }),
-        pgdb.public.subscriptions.truncate({ cascade: true }),
-        pgdb.public.notifications.truncate({ cascade: true })
-      ])
+        await Promise.all([
+          pgdb.public.subscriptions.truncate({ cascade: true }),
+          pgdb.public.discussions.truncate({ cascade: true }),
+          pgdb.public.events.truncate({ cascade: true }),
+          pgdb.public.subscriptions.truncate({ cascade: true }),
+          pgdb.public.notifications.truncate({ cascade: true })
+        ])
 
-      const subscription = await upsertSubscription(
-        {
+        const [editor] = createUsers(2, ['editor'])
+        const [author, subscriber] = createUsers(2, ['member', 'debater'])
+
+        const discussionId = await createDiscussion(
+          null,
+          {
+            title: 'test',
+            anonymity: 'ALLOWED'
+          },
+          { ...context, user: editor }
+        )
+
+        const subscription = await upsertSubscription(
+          {
+            userId: subscriber.id,
+            objectId: author.id,
+            type: 'User',
+            ...filter ? { filters: [filter] } : {}
+          },
+          { ...context, user: subscriber }
+        )
+        expect(subscription).toBeTruthy()
+
+        const comment = await submitComment(
+          null,
+          {
+            discussionId,
+            content: `test filter:${filter}`
+          },
+          { ...context, user: author }
+        )
+
+        const events = await pgdb.public.events.find({
+          objectType: 'Comment',
+          objectId: comment.id
+        })
+        expect(events.length).toEqual(filter === 'Document' ? 0 : 1)
+
+        const notifications = await pgdb.public.notifications.find({
           userId: subscriber.id,
-          objectId: author.id,
-          type: 'User',
-          ...filter ? { filters: [filter] } : {}
-        },
-        { ...context, user: subscriber }
-      )
-      expect(subscription).toBeTruthy()
+          subscriptionId: subscription.id
+        })
+        expect(notifications.length).toEqual(filter === 'Document' ? 0 : 1)
+        expect(notifications[0]?.readAt).toBeFalsy()
 
-      const comment = await submitComment(
-        null,
-        {
-          discussionId,
-          content: `test filter:${filter}`
-        },
-        { ...context, user: author }
-      )
-
-      const events = await pgdb.public.events.find({
-        objectType: 'Comment',
-        objectId: comment.id
+        expect(await getUnreadNotificationsForUserAndObject(
+          subscriber.id,
+          {
+            type: 'Comment',
+            id: comment.id
+          },
+          context
+        ).then(a => a?.length)).toBe(filter === 'Document' ? 0 : 1)
       })
-      expect(events.length).toEqual(filter === 'Document' ? 0 : 1)
-
-      const notifications = await pgdb.public.notifications.find({
-        userId: subscriber.id,
-        subscriptionId: subscription.id
-      })
-      expect(notifications.length).toEqual(filter === 'Document' ? 0 : 1)
-      expect(notifications[0]?.readAt).toBeFalsy()
-
-      expect(await getUnreadNotificationsForUserAndObject(
-        subscriber.id,
-        {
-          type: 'Comment',
-          id: comment.id
-        },
-        context
-      ).then( a => a?.length)).toBe(filter === 'Document' ? 0 : 1)
     }
   })
 })
