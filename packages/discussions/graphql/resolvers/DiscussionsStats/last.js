@@ -14,8 +14,6 @@ module.exports = async (_, args, context) => {
   // Retrieve pre-populated data.
   const { result = {}, updatedAt = new Date() } = data
 
-  console.log(data)
-
   return {
     ...result,
     updatedAt
