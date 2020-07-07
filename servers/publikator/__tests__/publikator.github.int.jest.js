@@ -443,11 +443,12 @@ describe('publish', () => {
           return
         }
         const diff = moment(variables.scheduledAt).diff(moment())
-        const waitMs = diff + 1000 * 10 // 10s for publicationScheduler
-        console.log('waitMs:', waitMs, waitMs / 1000)
-        if (waitMs > 0) {
-          await sleep(waitMs)
-        }
+        const waitMs = Math.max(
+          diff + 1000 * 10, // 10s for publicationScheduler
+          1000
+        )
+        // console.log('waitMs:', waitMs, waitMs / 1000)
+        await sleep(waitMs)
       }
     }
     return result
