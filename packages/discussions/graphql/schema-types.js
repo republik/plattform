@@ -1,4 +1,4 @@
-const { TREND_INTERVALS } = require('../lib/stats/last')
+const { LAST_INTERVALS } = require('../lib/stats/last')
 
 module.exports = `
 
@@ -258,8 +258,8 @@ type DiscussionsStats {
   # Evolution data an interval ago, until now
   last(
     "Interval"
-    interval: DiscussionsStatsTrendInterval!
-  ): DiscussionsStatsTrend!
+    interval: DiscussionsStatsLastInterval!
+  ): DiscussionsStatsLast!
 }
 
 type DiscussionsStatsEvolution {
@@ -285,11 +285,11 @@ type DiscussionsStatsEvolutionBucket {
   usersVoted: Int!
 }
 
-enum DiscussionsStatsTrendInterval {
-${TREND_INTERVALS.map(i => i.key).join('\n')}
+enum DiscussionsStatsLastInterval {
+${LAST_INTERVALS.map(i => i.key).join('\n')}
 }
 
-type DiscussionsStatsTrend {
+type DiscussionsStatsLast {
   "Amount of comments"
   comments: Int!
 
