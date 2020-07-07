@@ -3,7 +3,7 @@ const Promise = require('bluebird')
 
 const { cache: { create } } = require('@orbiting/backend-modules-utils')
 
-const TREND_INTERVALS = [
+const LAST_INTERVALS = [
   {
     key: 'last30days',
     interval: '30 days'
@@ -71,7 +71,7 @@ const populate = async (context, resultFn) => {
   const { pgdb } = context
 
   const results = await Promise.map(
-    TREND_INTERVALS,
+    LAST_INTERVALS,
     async ({ key, interval }) => ({
       key,
       result: await pgdb.query(query, { interval })
@@ -79,7 +79,8 @@ const populate = async (context, resultFn) => {
   )
 
   if (resultFn) {
-    return resultFn(results)
+    resultFn(results)
+    return
   }
 
   await Promise.each(
@@ -89,7 +90,7 @@ const populate = async (context, resultFn) => {
 }
 
 module.exports = {
-  TREND_INTERVALS,
+  LAST_INTERVALS,
   createCache,
   populate
 }

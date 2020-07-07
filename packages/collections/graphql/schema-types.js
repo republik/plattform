@@ -1,4 +1,4 @@
-const { TREND_INTERVALS } = require('../lib/stats/last')
+const { LAST_INTERVALS } = require('../lib/stats/last')
 
 module.exports = `
 
@@ -109,8 +109,8 @@ type CollectionsStats {
     "Collection name"
     name: String!
     "Interval"
-    interval: CollectionsStatsTrendInterval!
-  ): CollectionsStatsTrend!
+    interval: CollectionsStatsLastInterval!
+  ): CollectionsStatsLast!
 }
 
 type CollectionsStatsEvolution {
@@ -135,11 +135,11 @@ type CollectionsStatsEvolutionBucket {
   users: Int!
 }
 
-enum CollectionsStatsTrendInterval {
-${TREND_INTERVALS.map(i => i.key).join('\n')}
+enum CollectionsStatsLastInterval {
+${LAST_INTERVALS.map(i => i.key).join('\n')}
 }
 
-type CollectionsStatsTrend {
+type CollectionsStatsLast {
   "Amount of records"
   records: Int!
 
