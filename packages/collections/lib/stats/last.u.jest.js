@@ -37,11 +37,7 @@ describe('createCache()', () => {
 
       UUT(null, expectedContext)
 
-      const options = {
-        ...expectedDefaultOptions
-      }
-
-      expect(cache.create).toHaveBeenCalledWith(options, expectedContext)
+      expect(cache.create).toHaveBeenCalledWith(expectedDefaultOptions, expectedContext)
     })
 
     it('calls it with merged options and context arguments', () => {
