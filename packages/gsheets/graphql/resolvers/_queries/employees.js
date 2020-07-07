@@ -12,6 +12,10 @@ module.exports = async (_, args, { pgdb }) => {
     result = result.filter(d => d.greeting)
   }
 
+  if (args.onlyPromotedAuthors) {
+    result = result.filter(d => d.promotedAuthor)
+  }
+
   if (args.shuffle) {
     const shuffledEmployees = shuffle(result)
 

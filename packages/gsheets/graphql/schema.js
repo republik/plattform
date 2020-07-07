@@ -15,6 +15,8 @@ type queries {
     withBoosted: Boolean
     "return employees with an onboarding greeting"
     withGreeting: Boolean
+    "filter for promoted authors"
+    onlyPromotedAuthors: Boolean
   ): [Employee!]!
   mediaResponses: [MediaResponse!]!
 }
