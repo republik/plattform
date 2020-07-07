@@ -148,7 +148,9 @@ describe('subscriptions', () => {
       ).then(subs => subs?.pop()?.id)
     ).toBe(subscription.id)
 
-    await unsubscribe(subscription.id, context)
+    await unsubscribe({
+      id: subscription.id
+    }, context)
     expect(await pgdb.public.subscriptions.count()).toBe(1)
     expect(await pgdb.public.subscriptions.findOne({
       id: subscription.id,
@@ -165,6 +167,87 @@ describe('subscriptions', () => {
       subscriberContext,
       { includeNotActive: true }
     ).then(a => a.length)).toBe(1)
+  })
+
+  test('unsubscribe (with and without filters) and resubscribe', async () => {
+    const {
+      upsertSubscription,
+      unsubscribe
+    } = require('../lib/Subscriptions')
+    const { context } = global.instance
+    const { pgdb } = context
+    const [author, subscriber] = createUsers(2, ['member'])
+    const subscriberContext = { ...context, user: subscriber }
+
+    const preparedUpsertSubscription = () => upsertSubscription(
+      {
+        userId: subscriber.id,
+        objectId: author.id,
+        type: 'User'
+      },
+      subscriberContext
+    )
+
+    let subscription = await preparedUpsertSubscription()
+    expect(subscription).toBeTruthy()
+    expect(subscription.active).toBeTruthy()
+    expect(await pgdb.public.subscriptions.count()).toBe(1)
+
+    // remove Document
+    subscription = await unsubscribe({
+      id: subscription.id,
+      filters: ['Document']
+    }, context)
+    expect(await pgdb.public.subscriptions.count()).toBe(1)
+    expect(subscription.active).toBeTruthy()
+    expect(subscription.filters).toStrictEqual(['Comment'])
+    expect(await pgdb.public.subscriptions.findOne({
+      id: subscription.id,
+      active: true,
+      filters: JSON.stringify(['Comment'])
+    })).toBeTruthy()
+
+    // remove Comment
+    subscription = await unsubscribe({
+      id: subscription.id,
+      filters: ['Comment']
+    }, context)
+    expect(await pgdb.public.subscriptions.count()).toBe(1)
+    expect(subscription.active).toBeFalsy()
+    expect(subscription.filters).toBe(null)
+
+    // resubscribe
+    subscription = await preparedUpsertSubscription()
+    expect(subscription).toBeTruthy()
+    expect(subscription.active).toBeTruthy()
+    expect(await pgdb.public.subscriptions.count()).toBe(1)
+
+    // remove all filters
+    subscription = await unsubscribe({
+      id: subscription.id,
+      filters: ['Document', 'Comment']
+    }, context)
+    expect(await pgdb.public.subscriptions.count()).toBe(1)
+    expect(subscription.active).toBeFalsy()
+    expect(subscription.filters).toBe(null)
+
+    // resubscribe
+    subscription = await preparedUpsertSubscription()
+    expect(subscription).toBeTruthy()
+    expect(subscription.active).toBeTruthy()
+    expect(await pgdb.public.subscriptions.count()).toBe(1)
+
+    // unsubscribe completely
+    subscription = await unsubscribe({
+      id: subscription.id
+    }, context)
+    expect(subscription).toBeTruthy()
+    expect(subscription.active).toBeFalsy()
+    expect(await pgdb.public.subscriptions.count()).toBe(1)
+    expect(await pgdb.public.subscriptions.findOne({
+      id: subscription.id,
+      active: false
+    })).toBeTruthy()
   })
 
   describe('comments with filters', () => {

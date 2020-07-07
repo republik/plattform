@@ -25,6 +25,9 @@ type mutations {
 
   unsubscribe(
     subscriptionId: ID!
+    # EventObjectTypes provided here are removed from existing filters.
+    # If filters is null, the subscription is deactivated completely.
+    filters: [EventObjectType!]
   ): Subscription!
 
   markNotificationAsRead(id: ID!): Notification!

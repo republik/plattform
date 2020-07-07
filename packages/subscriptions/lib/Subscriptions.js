@@ -159,21 +159,33 @@ const upsertSubscription = async (args, context) => {
   return subscription
 }
 
-const unsubscribe = async (id, context) => {
+const unsubscribe = async ({ id, filters }, context) => {
   const { pgdb, loaders, t } = context
 
-  const subscription = await pgdb.public.subscriptions.updateAndGetOne(
-    { id },
-    { active: false }
-  )
+  const subscription = await loaders.Subscription.byId.load(id)
   if (!subscription) {
     throw new Error(t('api/subscriptions/404'))
   }
+
+  let updatedFilters
+  if (filters) {
+    updatedFilters = (subscription.filters || Array.from(EventObjectTypes))
+      .filter(objectType => !filters.includes(objectType))
+  }
+
+  const update = updatedFilters && updatedFilters.length
+    ? { filters: updatedFilters }
+    : { active: false, filters: null }
+
+  const updatedSubscription = await pgdb.public.subscriptions.updateAndGetOne(
+    { id },
+    update
+  )
   await Promise.all([
     loaders.Subscription.byId.clear(subscription.id),
     loaders.Subscription.byUserId.clear(subscription.userId)
   ])
-  return subscription
+  return updatedSubscription
 }
 
 const getObject = async (subscription, context) => {
