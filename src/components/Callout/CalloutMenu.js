@@ -60,6 +60,9 @@ const CalloutMenu = ({ children, icon, align, initiallyOpen, label }) => {
 const styles = {
   label: css({
     ...fontStyles.sansSerifRegular14,
+    display: 'inline-block',
+    verticalAlign: 'middle',
+    margin: '2px 0 0 4px',
     cursor: 'pointer'
   })
 }
