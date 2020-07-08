@@ -8,11 +8,11 @@ module.exports = async (_, args, context) => {
 
   // In case pre-populated data is not available...
   if (!data) {
-    throw new Error('Unable to retrieve pre-populated data for DiscussionsStats.trend')
+    throw new Error('Unable to retrieve pre-populated data for DiscussionsStats.last')
   }
 
   // Retrieve pre-populated data.
-  const { result = {}, updatedAt = new Date() } = data
+  const { updatedAt = new Date(), ...result } = data
 
   return {
     ...result,

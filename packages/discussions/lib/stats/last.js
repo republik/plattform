@@ -88,7 +88,7 @@ const populate = async (context, resultFn) => {
 
   await Promise.each(
     results,
-    ({ key, result }) => createCache({ key }, context).set({ result, updatedAt: new Date() })
+    ({ key, result }) => createCache({ key }, context).set({ ...result, updatedAt: new Date() })
   )
 }
 
