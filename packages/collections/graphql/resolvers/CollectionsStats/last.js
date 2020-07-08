@@ -5,7 +5,7 @@ module.exports = async (_, args, context) => {
 
   const collection = await context.loaders.Collection.byKeyObj.load({ name })
 
-  if (!name) {
+  if (!collection) {
     throw new Error(`Collection "${name}" not found`)
   }
 
