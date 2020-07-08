@@ -7,14 +7,6 @@ const LAST_INTERVALS = [
   {
     key: 'last30days',
     interval: '30 days'
-  },
-  {
-    key: 'last7days',
-    interval: '7 days'
-  },
-  {
-    key: 'last24hours',
-    interval: '24 hours'
   }
 ]
 
