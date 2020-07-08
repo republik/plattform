@@ -62,7 +62,13 @@ describe('populate()', () => {
   const { LAST_INTERVALS, populate: UUT } = require('./last')
 
   const { cache } = require('@orbiting/backend-modules-utils')
-  const context = { pgdb: { query: jest.fn().mockResolvedValue([]) } }
+
+  const expectedResult = [
+    { key: Symbol('collection1') },
+    { key: Symbol('collection2') }
+  ]
+  const queryMock = jest.fn().mockResolvedValue(expectedResult)
+  const context = { pgdb: { query: queryMock } }
 
   beforeEach(() => {
     cache.create.mockImplementation(() => ({ set: jest.fn() }))
@@ -79,7 +85,7 @@ describe('populate()', () => {
     setMock.mock.calls.map(call => {
       const [arg1] = call
 
-      expect(arg1.result).toBeInstanceOf(Array)
+      expect(arg1.result).toEqual(expectedResult)
       expect(arg1.updatedAt).toBeInstanceOf(Date)
     })
   })
