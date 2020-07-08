@@ -25,3 +25,13 @@ A fixed callout animating in from the bottom on mobile and a in place callout on
   </div>
 </div>
 ```
+
+### With Label
+
+```react
+<div style={{ padding: 20 }}>
+  <CalloutMenu icon={<NotificationIcon size={24} />} label='Callout Label'>
+    Hello&nbsp;World
+  </CalloutMenu>
+</div>
+```
