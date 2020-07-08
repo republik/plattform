@@ -1,9 +1,9 @@
-jest.mock('../../../lib/stats/last')
+jest.mock('../../../../lib/stats/last')
 
-const UUT = require('./last')
+const UUT = require('../../../../graphql/resolvers/DiscussionsStats/last')
 
 describe('DiscussionStats.last', () => {
-  const { createCache } = require('../../../lib/stats/last')
+  const { createCache } = require('../../../../lib/stats/last')
 
   const defaultObj = null
   const defaultArgs = { interval: Symbol('interval to propagate') }
