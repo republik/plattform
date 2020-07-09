@@ -1,0 +1,78 @@
+{{#if name}} Hallo {{name}}
+
+{{else}} Sehr geehrte Dame
+Sehr geehrter Herr 
+
+{{/if}} Schön, dass Sie hier sind! Dank Ihnen und über 24’000 weiteren Menschen
+können wir recherchieren, nachfragen, einordnen und aufdecken, ohne von
+Werbeeinnahmen oder Sponsoren abhängig zu sein. Und Ihnen weiterhin Fakten und
+Zusammenhänge als Grundlage für Ihre eigenen Überlegungen und Entscheidungen
+liefern. Wir sind sehr froh und dankbar.
+
+Sind Sie mit uns zufrieden? Gefällt Ihnen, was Sie in der Republik lesen, sehen
+und hören? Im Dialog [{{link_dialog}}] können Sie uns Feedback geben oder
+Vorschläge machen, Kritik loswerden und Fragen stellen. Brauchen Sie technische
+Unterstützung oder funktioniert etwas nicht, wenden Sie sich direkt an 
+kontakt@republik.ch.
+
+{{#unless subscriptions_count}} Möchten Sie mehr lesen, aber Sie wissen nicht,
+was?
+
+Vielleicht gefallen Ihnen als Einstieg unsere regelmässigen Formate: am Montag
+unser Datenbriefing «Auf lange Sicht
+[{{frontend_base_url}}/format/auf-lange-sicht]», mittwochs unsere
+Gerichtskolumne «Am Gericht [{{frontend_base_url}}/format/am-gericht]», am
+Donnerstag das Wichtigste aus dem Bundeshaus im «Briefing aus Bern
+[{{frontend_base_url}}/format/briefing-aus-bern]» und freitags der
+Nachrichtenüberblick «Was diese Woche wichtig war
+[{{frontend_base_url}}/format/was-diese-woche-wichtig-war]». Mit der
+Benachrichtigungs-Funktion können Sie sich Push-Meldungen einrichten, die Sie
+informieren, sobald eine neue Folge erscheint [{{link_account_notifications}}].
+
+{{/unless}} Sind Sie viel unterwegs, oder lesen Sie ungern mit dem Laptop auf
+dem Schoss? Dann installieren Sie die Republik-App für iOS
+[https://apps.apple.com/ch/app/republik/id1392772910] oder Android
+[https://play.google.com/store/apps/details?id=app.republik&hl=de_CH].
+
+{{#unless grants_count}} Oder haben Sie neugierige Freundinnen und Bekannte,
+denen Sie gerne einen Probezugriff auf die Republik ermöglichen würden? Sie
+haben ein Kontingent von fünf 14-Tage-Probeabos, die Sie zu jeder Zeit vergeben
+können [{{link_account_share}}].
+
+{{/unless}} Ausserdem gibt es für jeden Beitrag einige hilfreiche Funktionen,
+die wir Ihnen ans Herz legen wollen:
+
+* Sie können im Beitrag ein Lesezeichen setzen, um ihn später zu lesen.
+  [{{link_bookmarks}}]
+* Sie können Ihre Leseposition pro Beitrag speichern, um später weiterzulesen – 
+  dies müssen Sie zuerst in Ihrem Konto freigeben [{{link_account_progress}}].
+* Und Sie können jeden Beitrag als PDF herunterladen.
+
+Wenn Sie noch mehr über die Republik, die Geschichte und die Leute dahinter
+wissen wollen, finden Sie hier mehr Informationen zu Aufbau und Team
+[{{link_about}}], zu Verlag und Genossenschaft [{{link_publisher}}] und zu
+unseren Zahlen [{{link_cockpit}}].
+
+Wir hoffen, dass wir Ihnen einige hilfreiche Hinweise geben konnten, und würden
+uns sehr freuen, Sie demnächst im Dialog begrüssen zu dürfen. Und da es auch
+möglich ist, dass Sie einfach nur lesen und sonst gar nichts wollen, lassen wir
+Sie nun auch wieder in Ruhe. Schön, dass Sie da sind!
+
+Herzlich
+
+Ihre Crew der Republik
+
+Die Republik ist ein unabhängiges und werbefreies digitales Magazin für Politik,
+Wirtschaft, Gesellschaft und Kultur. Es wird von seinen Leserinnen und Lesern
+finanziert und erscheint von Montag bis Samstag mit täglich ein bis drei neuen
+Beiträgen. In der App, auf der Website und als Newsletter. 
+
+
+Republik AG
+Sihlhallenstrasse 1, CH-8004 Zürich
+www.republik.ch [{{frontend_base_url}}]
+kontakt@republik.ch 
+
+Unser Manifest [{{link_manifest}}]
+Das Impressum [{{link_imprint}}]
+Häufig gestellte Fragen [{{link_faq}}]
