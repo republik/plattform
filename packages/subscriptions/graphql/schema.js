@@ -8,6 +8,7 @@ schema {
 
 type queries {
   notifications(
+    onlyUnread: Boolean
     first: Int
     last: Int
     before: String
