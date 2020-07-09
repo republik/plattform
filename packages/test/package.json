@@ -21,6 +21,6 @@
     "why-is-node-running": "^2.1.2"
   },
   "dependencies": {
-    "graphql": "^14.6.0"
+    "graphql": "^15.3.0"
   }
 }
