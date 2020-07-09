@@ -627,6 +627,10 @@
       "value": "Ihre Mitgliedschaft erneuert sich automatisch"
     },
     {
+      "key": "api/email/membership_owner_feedback/subject",
+      "value": "Sind Sie zufrieden?"
+    },
+    {
       "key": "api/email/membership_deactivated_abo_uncancelled/sequenceNumber/true/subject",
       "value": "Ihre Mitgliedschaft Nr. {sequenceNumber} wurde deaktiviert"
     },
