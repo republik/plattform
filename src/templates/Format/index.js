@@ -71,24 +71,22 @@ const createSchema = ({
     titleBlockRule: titleBlockRule || {
       matchMdast: matchZone('TITLE'),
       component: ({ children, section, ...props }) => (
-        <>
-          <TitleBlock {...props} center margin={titleMargin}>
-            {titleBlockPrepend}
-            {section && section.meta && (
-              <Editorial.Format
-                color={section.meta.color || colors[section.meta.kind]}
-                contentEditable={false}
-              >
-                <Link href={section.meta.path} passHref>
-                  <a {...styles.link} href={section.meta.path}>
-                    {section.meta.title}
-                  </a>
-                </Link>
-              </Editorial.Format>
-            )}
-            {children}
-          </TitleBlock>
-        </>
+        <TitleBlock {...props} center margin={titleMargin}>
+          {titleBlockPrepend}
+          {section && section.meta && (
+            <Editorial.Format
+              color={section.meta.color || colors[section.meta.kind]}
+              contentEditable={false}
+            >
+              <Link href={section.meta.path} passHref>
+                <a {...styles.link} href={section.meta.path}>
+                  {section.meta.title}
+                </a>
+              </Link>
+            </Editorial.Format>
+          )}
+          {children}
+        </TitleBlock>
       ),
       props: (node, index, parent, { ancestors }) => ({
         ...node.data,

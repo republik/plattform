@@ -58,12 +58,10 @@ const createSchema = ({
     titleBlockRule: titleBlockRule || {
       matchMdast: matchZone('TITLE'),
       component: ({ children, ...props }) => (
-        <>
-          <TitleBlock {...props} center margin={titleMargin}>
-            {titleBlockPrepend}
-            {children}
-          </TitleBlock>
-        </>
+        <TitleBlock {...props} center margin={titleMargin}>
+          {titleBlockPrepend}
+          {children}
+        </TitleBlock>
       ),
       editorModule: 'title',
       editorOptions: {

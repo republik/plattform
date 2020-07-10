@@ -229,24 +229,22 @@ const createSchema = ({
           titleBlockRule || {
             matchMdast: matchZone('TITLE'),
             component: ({ children, format, ...props }) => (
-              <>
-                <TitleBlock {...props} format={format} margin={titleMargin}>
-                  {titleBlockPrepend}
-                  {format && format.meta && (
-                    <Editorial.Format
-                      color={format.meta.color || colors[format.meta.kind]}
-                      contentEditable={false}
-                    >
-                      <Link href={format.meta.path} passHref>
-                        <a {...styles.link} href={format.meta.path}>
-                          {format.meta.title}
-                        </a>
-                      </Link>
-                    </Editorial.Format>
-                  )}
-                  {children}
-                </TitleBlock>
-              </>
+              <TitleBlock {...props} format={format} margin={titleMargin}>
+                {titleBlockPrepend}
+                {format && format.meta && (
+                  <Editorial.Format
+                    color={format.meta.color || colors[format.meta.kind]}
+                    contentEditable={false}
+                  >
+                    <Link href={format.meta.path} passHref>
+                      <a {...styles.link} href={format.meta.path}>
+                        {format.meta.title}
+                      </a>
+                    </Link>
+                  </Editorial.Format>
+                )}
+                {children}
+              </TitleBlock>
             ),
             props: (node, index, parent, { ancestors }) => ({
               center: node.data.center,
