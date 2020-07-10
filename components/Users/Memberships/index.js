@@ -36,6 +36,7 @@ import { REPUBLIK_FRONTEND_URL } from '../../../server/constants'
 import MoveMembership from './MoveMembership'
 import CancelMembership from './CancelMembership'
 import ReactivateMembership from './ReactivateMembership'
+import AppendPeriod from './AppendPeriod'
 
 import { intersperse } from '../../../lib/helpers'
 
@@ -230,109 +231,6 @@ const MembershipCard = ({ membership, ...props }) => {
   )
 }
 
-const APPEND_PERIOD = gql`
-  mutation appendPeriod($id: ID!, $duration: Int!, $durationUnit: MembershipTypeInterval!) {
-    appendPeriod(id: $id, duration: $duration, durationUnit: $durationUnit) {
-      id
-      periods {
-        id
-        beginDate
-        endDate
-        isCurrent
-      }
-    }
-  }
-`
-
-class AppendPeriod extends React.Component {
-
-  constructor (props) {
-    super(props)
-    this.membership = props.membership
-    this.state = {
-      duration: 1,
-      durationUnit: 'month',
-      showForm: false
-    }
-  }
-
-  render () {
-    if (!this.membership.canAppendPeriod) {
-      return ''
-    }
-
-    const variables = {
-      id: this.membership.id,
-      duration: this.state.duration,
-      durationUnit: this.state.durationUnit
-    }
-
-    return (
-      <Mutation
-        mutation={APPEND_PERIOD}
-        variables={variables}
-      >
-        {(mutation, {loading}) => {
-          if (!this.state.showForm) {
-            return (
-                <Button
-                  primary
-                  onClick={() => { !loading && this.setState({showForm: true}) }}
-                >
-                  {loading ? (<InlineSpinner size={38} />) : 'Neue Laufzeit'}
-                </Button>
-            )
-          }
-
-          const durationUnits = [
-            { value: 'day', text: `Tag${this.state.duration > 1 ? 'e' : ''}` },
-            { value: 'week', text: `Woche${this.state.duration > 1 ? 'n' : ''}` },
-            { value: 'month', text: `Monat${this.state.duration > 1 ? 'e' : ''}` },
-            { value: 'year', text: `Jahr${this.state.duration > 1 ? 'e' : ''}` }
-          ]
-
-          const ondec = this.state.duration > 1 &&
-            (() => this.setState({duration: (this.state.duration - 1 || 0)}))
-
-          return (
-            <DD>
-              <Field
-                label='Betrag'
-                value={this.state.duration}
-                onChange={(_, value) => {
-                  if (value.match(/\D/)) {
-                    return
-                  }
-                  const numberValue = parseInt(value, 10)
-                  this.setState({duration: numberValue})
-                }}
-                onInc={() => this.setState({duration: this.state.duration + 1})}
-
-                onDec={ondec}
-
-              />
-              <Dropdown
-                label='Einheit'
-                items={durationUnits}
-                value={this.state.durationUnit}
-                onChange={(item) => {
-                  this.setState({durationUnit: item.value})
-                }}
-              />
-              <button onClick={() => {
-                mutation()
-                this.setState({showForm: false})
-              }}>Submit</button>
-            </DD>
-          )
-        }}
-      </Mutation>
-    )
-  }
-
-}
-
-
 const MembershipDetails = ({ userId, membership, ...props }) => {
   return (
     <tr {...props}>
@@ -383,7 +281,6 @@ const MembershipDetails = ({ userId, membership, ...props }) => {
                     {period.isCurrent && <CurrentIcon size='1.1em' {...styles.icon} />}
                   </DD>
                 ))}
-                <AppendPeriod membership={membership}></AppendPeriod>
               </Fragment>
             )}
           </DL>
@@ -479,6 +376,7 @@ const MembershipDetails = ({ userId, membership, ...props }) => {
             <DT>Membership Aktionen</DT>
             <DD>
                 {intersperse([
+                  <AppendPeriod membership={membership}></AppendPeriod>,
                   <MoveMembership
                     membership={membership}
                     refetchQueries={({
