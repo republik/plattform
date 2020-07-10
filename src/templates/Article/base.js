@@ -3,7 +3,7 @@ import scrollIntoView from 'scroll-into-view'
 import globalMediaState, { parseTimeHash } from '../../lib/globalMediaState'
 
 import * as Editorial from '../../components/Typography/Editorial'
-import * as Interaction from '../../components/Typography/Interaction'
+import * as Meta from '../../components/Typography/Meta'
 
 import {
   Figure,
@@ -15,7 +15,10 @@ import {
 
 import { List, ListItem } from '../../components/List'
 
+import { slug } from '../../lib/slug'
+
 import {
+  matchHeading,
   matchType,
   matchZone,
   matchParagraph,
@@ -26,10 +29,12 @@ import {
   matchFigure,
   getDisplayWidth,
   extractImage,
-  globalInlines
+  globalInlines,
+  styles,
+  mdastToString
 } from './utils'
 
-const createBase = () => {
+const createBase = ({ metaBody }) => {
   const link = {
     matchMdast: matchType('link'),
     props: node => ({
@@ -107,14 +112,38 @@ const createBase = () => {
     }
   ]
 
+  const Typography = metaBody ? Meta : Editorial
+
   const paragraph = {
     matchMdast: matchParagraph,
-    component: Editorial.P,
+    component: Typography.P,
     editorModule: 'paragraph',
     editorOptions: {
       formatButtonText: 'Paragraph'
     },
     rules: paragraphRules
+  }
+
+  const subhead = {
+    matchMdast: matchHeading(2),
+    props: node => ({
+      slug: slug(mdastToString(node))
+    }),
+    component: ({ children, slug }) => (
+      <Typography.Subhead>
+        <a {...styles.anchor} id={slug} />
+        {children}
+      </Typography.Subhead>
+    ),
+    editorModule: 'headline',
+    editorOptions: {
+      type: 'H2',
+      depth: 2,
+      formatButtonText: 'Zwischentitel',
+      afterType: 'PARAGRAPH',
+      insertAfterType: 'CENTER'
+    },
+    rules: globalInlines
   }
 
   const list = {
@@ -316,6 +345,7 @@ const createBase = () => {
 
   return {
     link,
+    subhead,
     paragraph,
     paragraphRules,
     list,

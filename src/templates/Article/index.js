@@ -6,7 +6,7 @@ import Button from '../../components/Button'
 import TitleBlock from '../../components/TitleBlock'
 import { HR } from '../../components/Typography'
 import * as Editorial from '../../components/Typography/Editorial'
-import * as Interaction from '../../components/Typography/Interaction'
+import * as Meta from '../../components/Typography/Meta'
 import * as Scribble from '../../components/Typography/Scribble'
 import { TeaserFeed } from '../../components/TeaserFeed'
 import IllustrationHtml from '../../components/IllustrationHtml'
@@ -15,8 +15,6 @@ import { ChartTitle, ChartLead } from '../../components/Chart'
 import ErrorBoundary from '../../components/ErrorBoundary'
 
 import { Figure, CoverTextTitleBlockHeadline } from '../../components/Figure'
-
-import { slug } from '../../lib/slug'
 
 import { Tweet } from '../../components/Social'
 import { Video } from '../../components/Video'
@@ -31,13 +29,7 @@ import {
   matchImage
 } from 'mdast-react-render/lib/utils'
 
-import {
-  matchLast,
-  globalInlines,
-  styles,
-  getDatePath,
-  mdastToString
-} from './utils'
+import { matchLast, globalInlines, styles, getDatePath } from './utils'
 
 import colors from '../../theme/colors'
 import createBase from './base'
@@ -167,9 +159,10 @@ const createSchema = ({
   dynamicComponentRequire,
   previewTeaser,
   getVideoPlayerProps = props => props,
-  onAudioCoverClick
+  onAudioCoverClick,
+  metaBody = false
 } = {}) => {
-  const base = createBase({})
+  const base = createBase({ metaBody })
   const blocks = createBlocks({
     COVER_TYPE,
     base,
@@ -265,7 +258,7 @@ const createSchema = ({
 
                   const Headline =
                     kind === 'meta'
-                      ? Interaction.Headline
+                      ? Meta.Headline
                       : kind === 'scribble'
                       ? Scribble.Headline
                       : Editorial.Headline
@@ -331,7 +324,8 @@ const createSchema = ({
                   ) {
                     return null
                   }
-                  return <Editorial.Lead children={children} {...props} />
+                  const Lead = metaBody ? Meta.Lead : Editorial.Lead
+                  return <Lead children={children} {...props} />
                 },
                 editorModule: 'paragraph',
                 editorOptions: {
@@ -365,27 +359,7 @@ const createSchema = ({
             props: () => ({}),
             editorModule: 'center',
             rules: [
-              {
-                matchMdast: matchHeading(2),
-                props: node => ({
-                  slug: slug(mdastToString(node))
-                }),
-                component: ({ children, slug }) => (
-                  <Editorial.Subhead>
-                    <a {...styles.anchor} id={slug} />
-                    {children}
-                  </Editorial.Subhead>
-                ),
-                editorModule: 'headline',
-                editorOptions: {
-                  type: 'H2',
-                  depth: 2,
-                  formatButtonText: 'Zwischentitel',
-                  afterType: 'PARAGRAPH',
-                  insertAfterType: 'CENTER'
-                },
-                rules: globalInlines
-              },
+              base.subhead,
               base.figureGroup,
               {
                 matchMdast: matchZone('BUTTON'),

@@ -27,6 +27,7 @@ const createSchema = ({
   titleMargin = true,
   titleBlockRule,
   getPath = ({ slug }) => `/format/${(slug || '').split('/').pop()}`,
+  metaBody = true,
   ...args
 } = {}) => {
   return createArticleSchema({
@@ -68,6 +69,7 @@ const createSchema = ({
     series,
     darkMode,
     paynotes,
+    metaBody,
     titleBlockRule: titleBlockRule || {
       matchMdast: matchZone('TITLE'),
       component: ({ children, section, ...props }) => (
