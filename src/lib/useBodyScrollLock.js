@@ -6,8 +6,22 @@ import warn from './warn'
 let lockedElements = []
 
 const options = {
-  allowTouchMove: el =>
-    el.tagName === 'INPUT' && el.type && el.type.toLowerCase() === 'range'
+  allowTouchMove: el => {
+    if (
+      el.tagName === 'INPUT' &&
+      el.type &&
+      el.type.toLowerCase() === 'range'
+    ) {
+      return true
+    }
+    while (el && el !== document.body) {
+      if (el.getAttribute('data-body-scroll-lock-ignore') !== null) {
+        return true
+      }
+
+      el = el.parentNode
+    }
+  }
 }
 
 export const isBodyScrollLocked = () => lockedElements.length > 0
