@@ -109,3 +109,10 @@ const slugDateFormat = timeFormat('%Y/%m/%d')
 
 export const getDatePath = ({ publishDate, slug }) =>
   `/${slugDateFormat(publishDate)}/${(slug || '').split('/').pop()}`
+
+export const mdastToString = node =>
+  node
+    ? node.value ||
+      (node.children && node.children.map(mdastToString).join('')) ||
+      ''
+    : ''

@@ -679,7 +679,7 @@ And `collapsable`.
   "__typename": "TwitterEmbed",
   "userId": "786282996223598592",
   "html": "90 Minuten. Und nur noch 300 Unterstützerinnen und Unterstützer fehlen!",
-  "userProfileImageUrl": "https://pbs.twimg.com/profile_images/851190311267307521/W2kHAHvv_normal.jpg",
+  "userProfileImageUrl": "/static/twitter_icon.jpg",
   "userName": "Republik",
   "id": "869954605337243648",
   "createdAt": "Wed May 31 16:31:55 +0000 2017",
