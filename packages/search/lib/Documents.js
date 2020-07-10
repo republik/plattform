@@ -508,7 +508,7 @@ const resetScheduledAt = async function (
 }
 
 const unpublish = async (elastic, redis, repoId) => {
-  const result = await elastic.deleteByQuery({
+  await elastic.deleteByQuery({
     index: indexRef.index,
     conflicts: 'proceed',
     refresh: true,
@@ -521,7 +521,6 @@ const unpublish = async (elastic, redis, repoId) => {
     }
   })
   await createCache(redis).invalidate()
-  return result
 }
 
 const publish = (elastic, redis, elasticDoc, hasPrepublication) => ({

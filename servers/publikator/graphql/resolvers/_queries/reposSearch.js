@@ -108,7 +108,6 @@ module.exports = async (__, args, context) => {
     template,
     orderBy
   }, context)
-  console.log({body})
 
   const hasNextPage = first > 0 && body.hits.total > from + first
   const hasPreviousPage = from > 0
