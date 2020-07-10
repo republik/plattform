@@ -57,14 +57,12 @@ const styles = {
     padding: '15px 15px 80px',
     animation: `0.3s ${slideUp} 0.2s forwards`,
     textAlign: 'left',
-    boxShadow: 'inset 0px -50px 50px -30px rgba(0, 0, 0, 0.3)',
     [mUp]: {
       bottom: 'auto',
       top: 20,
       left: 'auto',
       padding: 10,
-      animation: 'none',
-      boxShadow: 'none'
+      animation: 'none'
     }
   }),
   right: {
