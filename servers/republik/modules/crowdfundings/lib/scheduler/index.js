@@ -12,6 +12,7 @@ const lockTtlSecs = 60 * 5 // 5 mins
 const { inform: informGivers } = require('./givers')
 const { inform: informWinback } = require('./winbacks')
 const { inform: informFeedback } = require('./feedback')
+const { inform: informUpgrade } = require('./upgrade')
 const { run: membershipsOwnersHandler } = require('./owners')
 const { deactivate } = require('./deactivate')
 const { changeover } = require('./changeover')
@@ -51,6 +52,16 @@ const init = async (context) => {
       name: 'feedback',
       context,
       runFunc: informFeedback,
+      lockTtlSecs,
+      runIntervalSecs: 60 * 10
+    })
+  )
+
+  schedulers.push(
+    intervalScheduler.init({
+      name: 'upgrade',
+      context,
+      runFunc: informUpgrade,
       lockTtlSecs,
       runIntervalSecs: 60 * 10
     })
