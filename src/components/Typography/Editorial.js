@@ -27,9 +27,6 @@ const headline = css({
   margin: '0 0 12px 0',
   [mUp]: {
     ...convertStyleToRem(styles.serifTitle58),
-    '[data-type*="meta"] > &': {
-      ...convertStyleToRem(styles.sansSerifMedium58)
-    },
     margin: '0 0 12px 0'
   },
   ':first-child': {
