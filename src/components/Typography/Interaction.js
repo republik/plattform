@@ -54,14 +54,6 @@ const interactionH3 = css({
   margin: 0
 })
 
-const interactionP = css({
-  ...convertStyleToRem(styles.sansSerifRegular16),
-  [mUp]: {
-    ...convertStyleToRem(styles.sansSerifRegular21)
-  },
-  margin: 0
-})
-
 export const Headline = ({ children, ...props }) => {
   const [
     {
@@ -113,6 +105,14 @@ export const H3 = ({ children, ...props }) => {
     </h3>
   )
 }
+
+const interactionP = css({
+  margin: 0,
+  ...convertStyleToRem(styles.sansSerifRegular17),
+  [mUp]: {
+    ...convertStyleToRem(styles.sansSerifRegular21)
+  }
+})
 
 export const P = ({ children, ...props }) => {
   const [

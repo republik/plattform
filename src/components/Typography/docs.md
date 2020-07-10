@@ -240,7 +240,7 @@ We use `text-decoration-skip: ink` to avoid `g`-conflicts.
   </Editorial.P>
   <Editorial.Subhead>The quick brown fox jumps over the lazy dog</Editorial.Subhead>
   <Editorial.P>
-    The bedding was hardly able to cover it and seemed ready to slide off any moment. His many legs, pitifully thin compared with the size of the rest of him, waved about helplessly as he looked. "What's happened to me?" he thought. It wasn't a dream.
+    The bedding was hardly able to cover it and seemed ready to slide off any moment. His many legs, pitifully thin compared with the size of the rest of him, waved about helplessly as he looked. «What's happened to me?» he thought. It wasn't a dream.
   </Editorial.P>
   <Editorial.P>
      His room, a proper human room although a little too small, lay peacefully between its four familiar walls. One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed into a horrible vermin.
@@ -262,7 +262,7 @@ We use `text-decoration-skip: ink` to avoid `g`-conflicts.
     What happened next?
   </Editorial.Question>
   <Editorial.Answer>
-    The bedding was hardly able to cover it and seemed ready to slide off any moment. His many legs, pitifully thin compared with the size of the rest of him, waved about helplessly as he looked. "What's happened to me?" he thought. It wasn't a dream.
+    The bedding was hardly able to cover it and seemed ready to slide off any moment. His many legs, pitifully thin compared with the size of the rest of him, waved about helplessly as he looked. «What's happened to me?» he thought. It wasn't a dream.
   </Editorial.Answer>
 </article>
 ```
@@ -307,6 +307,43 @@ We use `text-decoration-skip: ink` to avoid `g`-conflicts.
 </Editorial.Note>
 ```
 
+## Meta
+
+Short, meta texts like section and format pages use the sans serif cuts. With font sizes and margins like Editorial.
+
+### Headlines
+
+```react
+<Meta.Headline>The quick brown...</Meta.Headline>
+```
+
+### Lead
+
+```react
+<Meta.Lead>
+  Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.
+  {' '}
+  At vero eos et accusam et justo <em>duo dolores</em>.
+</Meta.Lead>
+```
+
+### Paragraphs and Subheads
+
+```react|responsive
+<article>
+  <Meta.P>
+    One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed into a horrible vermin. He lay on his armour-like back, and if he lifted his head a little he could see his brown belly, slightly domed and divided by arches into stiff sections.
+  </Meta.P>
+  <Meta.Subhead>The quick brown fox jumps over the lazy dog</Meta.Subhead>
+  <Meta.P>
+    The bedding was hardly able to cover it and seemed ready to slide off any moment. His many legs, pitifully thin compared with the size of the rest of him, waved about helplessly as he looked. «What's happened to me?» he thought. It wasn't a dream.
+  </Meta.P>
+  <Meta.P>
+     His room, a proper human room although a little too small, lay peacefully between its four familiar walls. One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed into a horrible vermin.
+  </Meta.P>
+</article>
+```
+
 ## Interaction Text
 
 UI elements and structured information uses the sans serif cuts. Without margins.
@@ -332,11 +369,11 @@ UI elements and structured information uses the sans serif cuts. Without margins
 ### Paragraphs
 
 ```react|responsive
-<div>
-    <Interaction.P>
-      One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed into a horrible vermin. He lay on his armour-like back, and if he lifted his head a little he could see his brown belly, slightly domed and divided by arches into stiff sections. The bedding was hardly able to cover it and seemed ready to slide off any moment. His many legs, pitifully thin compared with the size of the rest of him, waved about helplessly as he looked. "What's happened to me?" he thought. It wasn't a dream. His room, a proper human room although a little too small, lay peacefully between its four familiar walls. A collection of textile samples lay spread out on the table - Samsa was a travelling salesman - and above it there hung a picture that he had recently cut out of an illustrated magazine and housed in a nice, gilded frame. It showed a lady fitted out with a fur hat and fur boa who sat upright, raising a heavy fur muff that covered the whole of her lower arm towards the viewer. Gregor then turned to look out the window at the dull weather.
-    </Interaction.P>
-</div>
+<>
+  <Interaction.P>
+    One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed into a horrible vermin. He lay on his armour-like back, and if he lifted his head a little he could see his brown belly, slightly domed and divided by arches into stiff sections. The bedding was hardly able to cover it and seemed ready to slide off any moment.
+  </Interaction.P>
+</>
 ```
 
 ### Labels
@@ -432,7 +469,7 @@ Long, editorial texts use the serif cuts. With margins, except `:first-child` 0 
 ```react|responsive
 <div>
   <P>
-    One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed into a horrible vermin. He lay on his armour-like back, and if he lifted his head a little he could see his brown belly, slightly domed and divided by arches into stiff sections. The bedding was hardly able to cover it and seemed ready to slide off any moment. His many legs, pitifully thin compared with the size of the rest of him, waved about helplessly as he looked. "What's happened to me?" he thought. It wasn't a dream. His room, a proper human room although a little too small, lay peacefully between its four familiar walls. A collection of textile samples lay spread out on the table - Samsa was a travelling salesman - and above it there hung a picture that he had recently cut out of an illustrated magazine and housed in a nice, gilded frame. It showed a lady fitted out with a fur hat and fur boa who sat upright, raising a heavy fur muff that covered the whole of her lower arm towards the viewer. Gregor then turned to look out the window at the dull weather.
+    One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed into a horrible vermin. He lay on his armour-like back, and if he lifted his head a little he could see his brown belly, slightly domed and divided by arches into stiff sections. The bedding was hardly able to cover it and seemed ready to slide off any moment. His many legs, pitifully thin compared with the size of the rest of him, waved about helplessly as he looked. «What's happened to me?» he thought. It wasn't a dream. His room, a proper human room although a little too small, lay peacefully between its four familiar walls. A collection of textile samples lay spread out on the table - Samsa was a travelling salesman - and above it there hung a picture that he had recently cut out of an illustrated magazine and housed in a nice, gilded frame. It showed a lady fitted out with a fur hat and fur boa who sat upright, raising a heavy fur muff that covered the whole of her lower arm towards the viewer. Gregor then turned to look out the window at the dull weather.
   </P>
 </div>
 ```

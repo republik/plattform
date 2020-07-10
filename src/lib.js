@@ -115,6 +115,7 @@ export {
   Label,
   Quote,
   Interaction,
+  Meta,
   Editorial,
   Sub,
   Sup,
