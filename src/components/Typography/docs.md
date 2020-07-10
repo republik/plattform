@@ -351,10 +351,6 @@ UI elements and structured information uses the sans serif cuts. Without margins
 ### Headlines
 
 ```react
-<Interaction.Headline>The quick brown...</Interaction.Headline>
-```
-
-```react
 <Interaction.H1>The quick brown...</Interaction.H1>
 ```
 
@@ -365,6 +361,8 @@ UI elements and structured information uses the sans serif cuts. Without margins
 ```react
 <Interaction.H3>The quick brown fox jumps over the lazy dog</Interaction.H3>
 ```
+
+`Interaction.Headline` is deprecated. Use `Meta.Headline` instead.
 
 ### Paragraphs
 

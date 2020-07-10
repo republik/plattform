@@ -16,7 +16,7 @@ export const fontRule = css({
   }
 })
 
-const interactionHeadline = css({
+const metaHeadline = css({
   margin: '0 0 12px 0',
   ...convertStyleToRem(styles.sansSerifMedium30),
   [mUp]: {
@@ -37,7 +37,7 @@ export const Headline = ({ children, ...props }) => {
     }
   ] = useColorContext()
   return (
-    <h1 {...props} {...interactionHeadline} {...textColor}>
+    <h1 {...props} {...metaHeadline} {...textColor}>
       {children}
     </h1>
   )
@@ -65,7 +65,7 @@ export const Subhead = ({ children, attributes, ...props }) => {
   )
 }
 
-const interactionP = css({
+const metaP = css({
   margin: '22px 0 22px 0',
   ...convertStyleToRem(styles.sansSerifRegular17),
   [mUp]: {
@@ -90,7 +90,7 @@ export const P = ({ children, ...props }) => {
     }
   ] = useColorContext()
   return (
-    <p {...props} {...interactionP} {...fontRule} {...textColor}>
+    <p {...props} {...metaP} {...fontRule} {...textColor}>
       {children}
     </p>
   )
