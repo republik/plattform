@@ -34,7 +34,7 @@ env:
 before_install:
   - curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version 1.22.4
   - export PATH=$HOME/.yarn/bin:$PATH
-  - curl -O https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-6.3.0.deb && sudo dpkg -i --force-confnew elasticsearch-6.3.0.deb && sudo service elasticsearch restart
+  - curl -O https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-6.8.10.deb && sudo dpkg -i --force-confnew elasticsearch-6.8.10.deb && sudo service elasticsearch restart
 before_script:
   # ElasticSearch takes few seconds to start, to make sure it is available
   # when the build script runs add a small delay to your build script
