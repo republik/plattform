@@ -1,11 +1,21 @@
-import { Fragment } from 'react'
+import React, { Fragment } from 'react'
 import { css } from 'glamor'
 import { Query, Mutation } from 'react-apollo'
 import gql from 'graphql-tag'
 import { MdChevronLeft as CurrentIcon } from 'react-icons/md'
-import { Dropdown, Spinner, colors } from '@project-r/styleguide'
 
-import { Label, Loader, A, Checkbox } from '@project-r/styleguide'
+import {
+  A,
+  Button,
+  Checkbox,
+  colors,
+  Dropdown,
+  Field,
+  InlineSpinner,
+  Label,
+  Loader,
+  Spinner,
+} from '@project-r/styleguide'
 
 import {
   displayDate,
@@ -26,6 +36,7 @@ import { REPUBLIK_FRONTEND_URL } from '../../../server/constants'
 import MoveMembership from './MoveMembership'
 import CancelMembership from './CancelMembership'
 import ReactivateMembership from './ReactivateMembership'
+import AppendPeriod from './AppendPeriod'
 
 import { intersperse } from '../../../lib/helpers'
 
@@ -61,6 +72,7 @@ const GET_MEMBERSHIPS = gql`
         initialPeriods
         claimerName
         periods {
+          id
           beginDate
           endDate
           isCurrent
@@ -88,6 +100,7 @@ const GET_MEMBERSHIPS = gql`
         createdAt
         active
         renew
+        canAppendPeriod
       }
     }
   }
@@ -262,8 +275,8 @@ const MembershipDetails = ({ userId, membership, ...props }) => {
             {!!membership.periods.length && (
               <Fragment>
                 <DT>Laufzeiten</DT>
-                {membership.periods.map((period, i) => (
-                  <DD key={`period-${i}`}>
+                {membership.periods.map((period) => (
+                  <DD key={`period-${period.id}`}>
                     {displayDate(new Date(period.beginDate))} – {displayDate(new Date(period.endDate))}
                     {period.isCurrent && <CurrentIcon size='1.1em' {...styles.icon} />}
                   </DD>
@@ -363,6 +376,7 @@ const MembershipDetails = ({ userId, membership, ...props }) => {
             <DT>Membership Aktionen</DT>
             <DD>
                 {intersperse([
+                  <AppendPeriod membership={membership}></AppendPeriod>,
                   <MoveMembership
                     membership={membership}
                     refetchQueries={({
