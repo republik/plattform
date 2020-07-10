@@ -376,7 +376,7 @@ const MembershipDetails = ({ userId, membership, ...props }) => {
             <DT>Membership Aktionen</DT>
             <DD>
                 {intersperse([
-                  <AppendPeriod key='AppendPeriod' membership={membership}></AppendPeriod>,
+                  membership.canAppendPeriod && <AppendPeriod key='AppendPeriod' membership={membership}></AppendPeriod>,
                   <MoveMembership
                     key='MoveMembership'
                     membership={membership}
