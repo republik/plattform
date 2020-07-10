@@ -376,8 +376,9 @@ const MembershipDetails = ({ userId, membership, ...props }) => {
             <DT>Membership Aktionen</DT>
             <DD>
                 {intersperse([
-                  <AppendPeriod membership={membership}></AppendPeriod>,
+                  <AppendPeriod key='AppendPeriod' membership={membership}></AppendPeriod>,
                   <MoveMembership
+                    key='MoveMembership'
                     membership={membership}
                     refetchQueries={({
                       data: { moveMembership }
@@ -390,6 +391,7 @@ const MembershipDetails = ({ userId, membership, ...props }) => {
                   />,
                   !!membership.renew &&
                     <CancelMembership
+                      key='CancelMembership'
                       membership={membership}
                       refetchQueries={() => [
                         {
@@ -400,6 +402,7 @@ const MembershipDetails = ({ userId, membership, ...props }) => {
                     />,
                   !membership.renew && membership.active &&
                     <ReactivateMembership
+                      key='ReactivateMembership'
                       membership={membership}
                       refetchQueries={({
                         data: { reactivateMembership }
