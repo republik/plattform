@@ -1,10 +1,13 @@
 const { Client } = require('@elastic/elasticsearch')
 
-const connect = () =>
-  new Client({
-    node: process.env.ELASTIC_URL || 'http://elastic:elastic@localhost:9200',
+const connect = () => {
+  const node = process.env.ELASTIC_URL || 'http://elastic:elastic@localhost:9200'
+  console.log({node})
+  return new Client({
+    node,
     apiVersion: '6.8'
   })
+}
 
 const disconnect = client =>
   client.close()
