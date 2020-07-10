@@ -21,7 +21,7 @@ const { notifyPublish } = require('./Notifications')
 const lockTtlSecs = 10 // 10 seconds
 
 const getScheduledDocuments = async (elastic) => {
-  const response = await elastic.search({
+  const { body } = await elastic.search({
     index: getIndexAlias(index.name, 'read'),
     size: lockTtlSecs, // Amount publishing 1 document a second
     body: {
@@ -39,7 +39,7 @@ const getScheduledDocuments = async (elastic) => {
     }
   })
 
-  return response.hits.hits.map(hit => hit._source)
+  return body.hits.hits.map(hit => hit._source)
 }
 
 const init = async (context) => {

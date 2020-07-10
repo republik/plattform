@@ -101,20 +101,21 @@ module.exports = async (__, args, context) => {
     // last - "last" parameter is not implemented in search API
   } = args
 
-  const result = await client.find({
+  const { body } = await client.find({
     first,
     from,
     search,
     template,
     orderBy
   }, context)
+  console.log({body})
 
-  const hasNextPage = first > 0 && result.hits.total > from + first
+  const hasNextPage = first > 0 && body.hits.total > from + first
   const hasPreviousPage = from > 0
 
   const data = {
-    nodes: result.hits.hits.map(mapHit),
-    totalCount: result.hits.total,
+    nodes: body.hits.hits.map(mapHit),
+    totalCount: body.hits.total,
     pageInfo: {
       hasNextPage,
       endCursor: hasNextPage
