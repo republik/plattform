@@ -44,10 +44,16 @@ const styles = {
 }
 
 const SectionTitle = React.forwardRef(
-  ({ children, small, onClick, href }, ref) => {
-    const style = small ? styles.small : styles.container
+  ({ children, small, onClick, href, style }, ref) => {
+    const linkStyle = style || small ? styles.small : styles.container
     return href ? (
-      <a href={href} onClick={onClick} {...style} {...styles.link} ref={ref}>
+      <a
+        href={href}
+        onClick={onClick}
+        {...linkStyle}
+        {...styles.link}
+        ref={ref}
+      >
         {children}
         {<ChevronRight />}
       </a>
