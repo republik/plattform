@@ -274,8 +274,15 @@ const sumBucketProps = async (
   return sumAdd - sumSubtract
 }
 
+const getCount = context => sumBucketProps(
+  context,
+  moment().format('YYYY-MM'),
+  { add: ['active', 'overdue'] }
+)
+
 module.exports = {
   createCache,
   populate,
-  sumBucketProps
+  sumBucketProps,
+  getCount
 }
