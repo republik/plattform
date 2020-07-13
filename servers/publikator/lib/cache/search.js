@@ -120,7 +120,7 @@ const find = async (args, { elastic }) => {
     })
   }
 
-  const docs = elastic.search({
+  return elastic.search({
     index: utils.getIndexAlias('repo', 'read'),
     from: args.from,
     size: args.first,
@@ -130,8 +130,6 @@ const find = async (args, { elastic }) => {
       query
     }
   })
-
-  return docs
 }
 
 module.exports = {
