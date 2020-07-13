@@ -27,13 +27,8 @@ const findRecipients = (context) => {
         u.id "userId",
         m.id "membershipId",
 
-        -- All periods expressed in days
-        EXTRACT(DAYS FROM SUM(mp."endDate" - mp."beginDate")) "days",
-
         -- Days behind (a)
-        EXTRACT(DAYS FROM SUM(LEAST(now(), mp."endDate") - LEAST(now(), mp."beginDate"))) "daysBehind",
-        -- Days ahead (b)
-        EXTRACT(DAYS FROM SUM(GREATEST(now(), mp."endDate") - GREATEST(now(), mp."beginDate"))) "daysAhead"
+        EXTRACT(DAYS FROM SUM(LEAST(now(), mp."endDate") - LEAST(now(), mp."beginDate"))) "daysBehind"
 
       FROM "users" u
       -- users memberships …
@@ -108,7 +103,7 @@ const inform = async function (args, context) {
   await Promise.map(
     recipients,
     sendMail(options, context),
-    { concurrency: 1 }
+    { concurrency: 2 }
   )
 }
 

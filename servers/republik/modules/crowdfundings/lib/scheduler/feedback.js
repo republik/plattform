@@ -31,34 +31,26 @@ const findRecipients = (context) => {
     WITH "eligables" AS (
       SELECT
         u.id "userId",
-      
-        -- All periods expressed in days
-        EXTRACT(DAYS FROM SUM(mp."endDate" - mp."beginDate")) "days",
-      
+
         -- Days behind (a)
-        EXTRACT(DAYS FROM SUM(LEAST(now(), mp."endDate") - LEAST(now(), mp."beginDate"))) "daysBehind",
-        -- Days ahead (b)
-        EXTRACT(DAYS FROM SUM(GREATEST(now(), mp."endDate") - GREATEST(now(), mp."beginDate"))) "daysAhead",
-      
-        -- is overdue?
-        MAX(mp."endDate") < now() "isOverdue"
-      
+        EXTRACT(DAYS FROM SUM(LEAST(now(), mp."endDate") - LEAST(now(), mp."beginDate"))) "daysBehind"
+
       FROM "users" u
       -- users memberships
       JOIN "memberships" m ON m."userId" = u.id
       -- memberships periods
       JOIN "membershipPeriods" mp ON mp."membershipId" = m.id
-      
+
       -- A membership which is …
       JOIN "memberships" ma ON ma."userId" = u.id
         -- … still active
         AND ma.active = TRUE
         -- … not cancelled
         AND ma.renew = TRUE
-      
+
       GROUP BY u.id
     )
-    
+
     SELECT *
     FROM "eligables" e
     JOIN "users" u ON u.id = e."userId"
@@ -124,7 +116,7 @@ const inform = async function (args, context) {
   await Promise.map(
     recipients,
     sendMail(options, context),
-    { concurrency: 1 }
+    { concurrency: 2 }
   )
 }
 
