@@ -72,7 +72,7 @@ const prepareMetaForPublish = async ({
 
   // discussionId is not saved to repoMeta anymore, but repoId to discussion
   // see Meta.ownDiscussion resolver
-  if (['discussion', 'article'].indexOf(docMeta.template) > -1) {
+  if (!scheduledAt) {
     await upsertDiscussion({ ...docMeta, path, repoId }, context, repoMeta.discussionId)
   }
 

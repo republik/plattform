@@ -1,5 +1,6 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
 const moment = require('moment')
+const { publishMonitor } = require('../../../../../lib/slack')
 const membershipResolver = require('../Membership')
 
 module.exports = async (_, { id, duration, durationUnit }, context) => {
@@ -37,6 +38,19 @@ module.exports = async (_, { id, duration, durationUnit }, context) => {
 
     const updatedMembership = await transaction.public.memberships.findOne({ id })
     await transaction.transactionCommit()
+
+    await publishMonitor(
+      req.user,
+      [
+        'appendPeriod:' +
+          `*${moment(beginDate).format('YYYY-MM-DD')} to ` +
+          `${moment(endDate).format('YYYY-MM-DD')}*` +
+          `(${duration} ${durationUnit})`,
+        `membership.id: ${id}`,
+        `{ADMIN_FRONTEND_BASE_URL}/users/${updatedMembership.userId}`
+      ].join('\n')
+    )
+
     return updatedMembership
   } catch (e) {
     await transaction.transactionRollback()
