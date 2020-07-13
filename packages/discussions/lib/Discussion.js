@@ -33,6 +33,7 @@ const upsert = async (id, settings = {}, { pgdb, loaders }, legacyDiscussionId) 
       (settings.maxLength && settings.maxLength !== discussion.maxLength) ||
       (settings.minInterval && settings.minInterval !== discussion.minInterval) ||
       (settings.anonymity && settings.anonymity !== discussion.anonymity) ||
+      (settings.path && settings.path !== discussion.path) ||
       (
         settings.closed !== undefined &&
         settings.closed !== null &&

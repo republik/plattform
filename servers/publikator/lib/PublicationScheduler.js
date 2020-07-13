@@ -17,6 +17,7 @@ const {
 } = require('./github')
 const { upsert: repoCacheUpsert } = require('./cache/upsert')
 const { notifyPublish } = require('./Notifications')
+const { upsert: upsertDiscussion } = require('./Discussion')
 
 const lockTtlSecs = 10 // 10 seconds
 
@@ -114,6 +115,8 @@ const init = async (context) => {
           meta: await getRepoMeta({ id: repoId }),
           publications: await getLatestPublications({ id: repoId })
         }, context)
+
+        await upsertDiscussion(doc.meta, context)
 
         if (notifySubscribers && !prepublication) {
           await notifyPublish(repoId, context)
