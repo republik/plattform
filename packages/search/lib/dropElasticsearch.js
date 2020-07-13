@@ -13,7 +13,7 @@ const drop = async (prefix, { debug: doDebug = true } = {}) => {
   const indices = await elastic.cat.indices({
     h: ['index']
   })
-    .then(stats => stats && stats.split('\n'))
+    .then(({ stats }) => stats && stats.split('\n'))
 
   if (!indices || !indices.length) {
     return

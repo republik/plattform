@@ -440,7 +440,8 @@ const search = async (__, args, context, info) => {
   let result = await cache.get(query)
   const cacheHIT = !!result
   if (!result) {
-    result = await elastic.search(query)
+    const { body } = await elastic.search(query)
+    result = body
     // no reason to await cache priming
     cache.set(query, result, options)
   }
