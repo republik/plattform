@@ -12,6 +12,7 @@ const {
 const {
   getCustomPackages
 } = require('../../lib/User')
+const { suggest: autoPaySuggest } = require('../../lib/AutoPay')
 const createCache = require('../../lib/cache')
 const { getLastEndDate } = require('../../lib/utils')
 const getStripeClients = require('../../lib/payments/stripe/clients')
@@ -113,12 +114,19 @@ module.exports = {
       memberships = await resolveMemberships({ memberships, pgdb })
 
       const activeMembership = memberships.find(m => m.active)
-      if (
-        activeMembership &&
-        activeMembership.membershipType.name === 'ABO_GIVE_MONTHS'
-      ) {
-        debug('active membership type "ABO_GIVE_MONTHS", return prolongBeforeDate: null')
-        return null
+      if (activeMembership) {
+        if (activeMembership.membershipType.name === 'ABO_GIVE_MONTHS') {
+          debug('active membership type "ABO_GIVE_MONTHS", return prolongBeforeDate: null')
+          return null
+        }
+
+        if (!ignoreAutoPayFlag) {
+          const autoPay = await autoPaySuggest(activeMembership.id, pgdb)
+          if (autoPay) {
+            debug('active membership is auto-payable, return prolongBeforeDate: null')
+            return null
+          }
+        }
       }
 
       const eligableMemberships = findEligableMemberships({
@@ -146,16 +154,11 @@ module.exports = {
         .filter(Boolean)
 
       if (allMembershipPeriods.length === 0) {
-        debug('has active but cancelled membership, return prolongBeforeDate: null')
+        debug('found no valid periods to prolong, return prolongBeforeDate: null')
         return null
       }
 
       const lastEndDate = moment(getLastEndDate(allMembershipPeriods))
-
-      if (!ignoreAutoPayFlag && activeMembership.autoPay && lastEndDate > moment().subtract(1, 'day')) {
-        debug('active membership set to auto-pay and not overdue, return prolongBeforeDate: null')
-        return null
-      }
 
       const hasPendingPledges =
         !!activeMembership && await pgdb.public.query(`
