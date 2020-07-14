@@ -31,7 +31,7 @@ const findRecipients = (context) => {
    * Recipients must meet these criteria:
    * - membership active
    * - membership not cancelled
-   * - "days behind" between 21 and 27 days
+   * - "days behind" between 14 and 20 days
    *
    * "days behind" are days a membership was active already. They are
    * calculated for each period and then summed up.
@@ -85,8 +85,8 @@ const findRecipients = (context) => {
     FROM "eligables" e
     JOIN "users" u ON u.id = e."userId"
 
-    -- Scope to days behind a user between 21 and 27 days (3rd week)
-    WHERE e."daysBehind" BETWEEN 21 AND 27
+    -- Scope to days behind a user between 14 and 20 days (3rd week)
+    WHERE e."daysBehind" BETWEEN 14 AND 20
   `)
 }
 

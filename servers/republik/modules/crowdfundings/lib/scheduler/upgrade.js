@@ -26,7 +26,7 @@ const findRecipients = (context) => {
    * - membership of type MONTHLY_ABO
    * - membership active
    * - membership not cancelled
-   * - "days behind" between 42 and 49 days
+   * - "days behind" between 42 and 48 days
    *
    * "days behind" are days a membership was active already. They are
    * calculated for each period and then summed up.
@@ -83,8 +83,8 @@ const findRecipients = (context) => {
     FROM "eligables" e
     JOIN "users" u ON u.id = e."userId"
 
-    -- Scope to days behind in membership between 42 and 49 days (7th week)
-    WHERE e."daysBehind" BETWEEN 42 AND 49
+    -- Scope to days behind in membership between 42 and 48 days (7th week)
+    WHERE e."daysBehind" BETWEEN 42 AND 48
   `)
 }
 
