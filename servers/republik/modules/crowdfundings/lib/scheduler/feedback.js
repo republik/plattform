@@ -141,6 +141,11 @@ const inform = async function (args, context) {
   const recipients = await findRecipients(context)
   debug('recipients', recipients.length)
 
+  if (!recipients.length) {
+    debug('no recipients found')
+    return
+  }
+
   const options = await getOptions(recipients, context)
 
   await Promise.map(
