@@ -27,12 +27,42 @@ const getOptions = async (recipients, context) => {
 }
 
 const findRecipients = (context) => {
+  /**
+   * Recipients must meet these criteria:
+   * - membership active
+   * - membership not cancelled
+   * - "days behind" between 21 and 27 days
+   *
+   * "days behind" are days a membership was active already. They are
+   * calculated for each period and then summed up.
+   *
+   * A period can either
+   *   a) be entirly in past
+   *   b) have begun in past, but did not end yet (current period)
+   *   c) be entirly in future
+   *
+   * And this formula is covering these states:
+   *
+   *   LEAST(now, endDate) - LEAST(now, beginDate)
+   *
+   * It thus calculates days behind:
+   *
+   * a) period in past:
+   *    endDate - beginDate = x days behind
+   *
+   * b) period begun in past:
+   *    now - beginDate = x days behind
+   *
+   * c) period in future:
+   *    now - now = 0 days behind
+   *
+   */
   return context.pgdb.query(`
     WITH "eligables" AS (
       SELECT
         u.id "userId",
 
-        -- Days behind (a)
+        -- Days behind
         EXTRACT(DAYS FROM SUM(LEAST(now(), mp."endDate") - LEAST(now(), mp."beginDate"))) "daysBehind"
 
       FROM "users" u
