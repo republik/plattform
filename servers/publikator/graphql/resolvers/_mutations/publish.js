@@ -121,7 +121,7 @@ module.exports = async (
   if (doc.content.meta.template !== 'front' && !doc.content.meta.slug) {
     throw new Error(t('api/publish/document/slug/404'))
   }
-  const repoMeta = await getRepoMeta({ id: repoId })
+  const repoMeta = await getRepoMeta({ id: repoId }, null, context)
 
   const indexType = 'Document'
 
@@ -414,7 +414,7 @@ module.exports = async (
   await repoCacheUpsert({
     id: repoId,
     meta: repoMeta,
-    publications: await getLatestPublications({ id: repoId })
+    publications: await getLatestPublications({ id: repoId }, null, context)
   }, context)
 
   // release for nice view on github

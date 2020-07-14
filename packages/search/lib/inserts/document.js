@@ -124,13 +124,13 @@ const iterateRepos = async (context, callback) => {
     const allLatestPublications = await Promise.all(
       repos.nodes
         .filter(repo => !repo.isArchived)
-        .map(repo => getLatestPublications(repo))
+        .map(repo => getLatestPublications(repo, null, context))
     )
       .then(arr => arr.filter(arr2 => arr2.length > 0))
 
     for (const publications of allLatestPublications) {
       const repo = repos.nodes.find(r => r.id === publications[0].repo.id)
-      const repoMeta = await getRepoMeta(repo)
+      const repoMeta = await getRepoMeta(repo, null, context)
       await callback(repo, repoMeta, publications)
     }
   } while (pageInfo && pageInfo.hasNextPage)
