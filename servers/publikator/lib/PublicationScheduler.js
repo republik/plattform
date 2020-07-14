@@ -112,8 +112,8 @@ const init = async (context) => {
 
         await repoCacheUpsert({
           id: repoId,
-          meta: await getRepoMeta({ id: repoId }),
-          publications: await getLatestPublications({ id: repoId })
+          meta: await getRepoMeta({ id: repoId }, null, context),
+          publications: await getLatestPublications({ id: repoId }, null, context)
         }, context)
 
         await upsertDiscussion(doc.meta, context)
