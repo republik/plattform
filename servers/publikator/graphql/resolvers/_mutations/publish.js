@@ -286,7 +286,7 @@ module.exports = async (
   }
 
   // calc version number
-  const latestPublicationVersion = await getAnnotatedTags(repoId)
+  const latestPublicationVersion = await getAnnotatedTags(repoId, context)
     .then(tags => tags
       .filter(tag => publicationVersionRegex.test(tag.name))
       .map(tag => parseInt(publicationVersionRegex.exec(tag.name)[1]))

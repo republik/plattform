@@ -8,6 +8,7 @@ const repo = require('./Repo')
 const commit = require('./Commit')
 
 const resolveRepoId = field => async (meta, args, context) => {
+  const { t } = context
   // after publication: return fields resolved by documents/Document.meta
   // on series master documents this is the series info
   if (typeof meta[field] === 'object') {
@@ -20,7 +21,12 @@ const resolveRepoId = field => async (meta, args, context) => {
   }
 
   const latestCommit = await repo.latestCommit({ id: repoId }, null, context)
-  const doc = await commit.document(latestCommit, {}, context)
+    .catch(e => {
+      if (e.message !== t('api/github/unavailable')) {
+        throw e
+      }
+    })
+  const doc = latestCommit && await commit.document(latestCommit, {}, context)
 
   // for series episodes we don't want to return the master
   // document but its meta.series info object

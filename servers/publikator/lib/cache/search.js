@@ -104,6 +104,12 @@ const find = async (args, { elastic }) => {
     }
   }
 
+  if (args.id) {
+    query.bool.must.push(
+      { term: { _id: args.id } }
+    )
+  }
+
   if (args.search) {
     query.bool.must.push({
       simple_query_string: {
@@ -132,6 +138,16 @@ const find = async (args, { elastic }) => {
   })
 }
 
+const mapHit = ({ _source }) => {
+  _source.latestCommit.repo = {
+    id: _source.id
+  }
+
+  return _source
+}
+
+
 module.exports = {
-  find
+  find,
+  mapHit
 }

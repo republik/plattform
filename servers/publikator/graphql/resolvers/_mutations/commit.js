@@ -237,7 +237,7 @@ module.exports = async (_, args, context) => {
   await repoCacheUpsert(cacheUpsert, context)
 
   // load heads
-  const heads = await getHeads(repoId)
+  const heads = await getHeads(repoId, context)
 
   // check if parent is (still) a head
   // pick master for new repos initated by github

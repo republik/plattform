@@ -21,7 +21,7 @@ module.exports = {
     if (repo.latestCommit) {
       return repo.latestCommit
     }
-    return getHeads(repo.id)
+    return getHeads(repo.id, context)
       .then(refs => refs
         .map(ref => ref.target)
         .sort((a, b) => descending(a.author.date, b.author.date))
@@ -58,14 +58,15 @@ module.exports = {
         .then(users => users.map(transformUser))
       : []
   },
-  milestones: (repo) => {
-    if (repo.tags && repo.tags.nodes) { // repos query
+  milestones: (repo, args, context) => {
+    // repo cache only saves node.name (no commit)
+    if (repo?.tags?.nodes[0]?.commit) {
       return repo.tags.nodes
     }
     debug('milestones needs to query getAnnotatedTags repo %O', repo)
-    return getAnnotatedTags(repo.id)
+    return getAnnotatedTags(repo.id, context)
   },
-  latestPublications: async (repo) => {
+  latestPublications: async (repo, args, context) => {
     const { id: repoId } = repo
 
     const publicationMetaDecorator = (publication) => {
@@ -101,7 +102,7 @@ module.exports = {
     let annotatedTags = repo.latestPublications
       ? repo.latestPublications
       : await Promise.all(
-        refs.map(ref => getAnnotatedTag(repoId, ref))
+        refs.map(ref => getAnnotatedTag(repoId, ref, context))
       )
 
     return Promise.all(
@@ -118,7 +119,7 @@ module.exports = {
       )
       .then(tags => uniqBy(tags, 'name').map(publicationMetaDecorator))
   },
-  meta: async (repo) => {
+  meta: async (repo, args, context) => {
     let message
     if (repo.meta) {
       return repo.meta
@@ -130,7 +131,8 @@ module.exports = {
       debug('meta needs to query tag for repo %O', repo)
       const tag = await getAnnotatedTag(
         repo.id,
-        'meta'
+        'meta',
+        context
       )
       message = tag && tag.message
     }

@@ -8,14 +8,6 @@ const { graphql: { resolvers: { queries: { documents: getDocuments } } } } =
 
 const client = require('../../../lib/cache/search')
 
-const mapHit = ({ _source }) => {
-  _source.latestCommit.repo = {
-    id: _source.id
-  }
-
-  return _source
-}
-
 const encodeCursor = (payload) => {
   return Buffer.from(JSON.stringify(payload)).toString('base64')
 }
@@ -113,7 +105,7 @@ module.exports = async (__, args, context) => {
   const hasPreviousPage = from > 0
 
   const data = {
-    nodes: body.hits.hits.map(mapHit),
+    nodes: body.hits.hits.map(client.mapHit),
     totalCount: body.hits.total,
     pageInfo: {
       hasNextPage,
