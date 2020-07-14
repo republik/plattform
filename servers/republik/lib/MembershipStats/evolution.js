@@ -283,6 +283,5 @@ const getCount = context => sumBucketProps(
 module.exports = {
   createCache,
   populate,
-  sumBucketProps,
   getCount
 }
