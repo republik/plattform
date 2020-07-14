@@ -37,7 +37,7 @@ module.exports = async ({
 
     if (doSwitch) {
       debug('remove write alias', { writeAlias, index })
-      const hasWriteAlias = await elastic.indices.existsAlias({
+      const { body: hasWriteAlias } = await elastic.indices.existsAlias({
         name: writeAlias
       })
 
@@ -138,7 +138,7 @@ module.exports = async ({
       })
     }
 
-    const indices = await elastic.indices.getAlias({
+    const { body: indices } = await elastic.indices.getAlias({
       index: getIndexAlias(name, '*')
     })
 

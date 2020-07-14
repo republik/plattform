@@ -151,7 +151,7 @@ const getRepoTags = tags => {
 }
 
 const alterRepoTag = (tag, doc) => {
-  if (!tag || !tag.name || !tag.action || !doc._source) {
+  if (!tag || !tag.name || !tag.action || !doc?._source) {
     return
   }
 
@@ -193,10 +193,11 @@ const upsert = async ({
   // Only check and fetch an existing document if {tag} is required to be
   // altered.
   if (tag) {
-    const hasDoc = await elastic.exists(getPath(id))
+    const { body: hasDoc } = await elastic.exists(getPath(id))
 
     if (hasDoc) {
-      doc = await elastic.get(getPath(id))
+      const result = await elastic.get(getPath(id))
+      doc = result?.body
     }
   }
 
