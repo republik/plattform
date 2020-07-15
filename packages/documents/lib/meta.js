@@ -186,7 +186,8 @@ const getAuthorUserIds = (doc, { loaders }, credits) =>
             .then(u => u?.id)
         }
       } else {
-        console.warn(`invalid author link: ${url} doc: ${(doc.meta || doc._meta)?.repoId}`)
+        const source = doc?.meta?.credits || doc?._meta?.credits || credits
+        console.warn(`invalid author link: ${url} in: ${source}`)
       }
     }
   ).then(userIds => userIds.filter(Boolean))
