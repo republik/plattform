@@ -1,6 +1,7 @@
 const DEV = process.env.NODE_ENV && process.env.NODE_ENV !== 'production'
 
 const debug = require('debug')('crowdfundings:lib:scheduler')
+const Promise = require('bluebird')
 
 const {
   intervalScheduler,
