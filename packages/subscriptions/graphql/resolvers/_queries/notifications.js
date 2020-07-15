@@ -13,7 +13,8 @@ module.exports = async (_, args, context) => {
 
   const nodes = await pgdb.public.notifications.find(
     {
-      userId: me.id
+      userId: me.id,
+      ...args.onlyUnread ? { readAt: null } : {}
     },
     {
       orderBy: { createdAt: 'DESC' },

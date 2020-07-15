@@ -10,6 +10,10 @@ const { mdastToString } = require('@orbiting/backend-modules-utils')
 const {
   Redirections: { upsert: upsertRedirection }
 } = require('@orbiting/backend-modules-redirections')
+const {
+  getAuthorUserIds
+} = require('@orbiting/backend-modules-documents/lib/meta')
+
 const slugDateFormat = timeFormat('%Y/%m/%d')
 
 const getPath = (docMeta) => {
@@ -133,6 +137,8 @@ const prepareMetaForPublish = async ({
     .filter(c => c.type === 'link')
     .map(a => a.children[0].value)
 
+  const authorUserIds = await getAuthorUserIds(null, context, credits)
+
   const isSeriesMaster = typeof docMeta.series === 'object'
   const isSeriesEpisode = typeof docMeta.series === 'string'
   // map series episodes to the key seriesEpisodes to have consistent types
@@ -161,6 +167,7 @@ const prepareMetaForPublish = async ({
     credits,
     audioSource,
     authors,
+    authorUserIds,
     isSeriesMaster,
     isSeriesEpisode,
     seriesEpisodes,

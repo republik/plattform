@@ -6,7 +6,8 @@ module.exports = async (_, args, context) => {
 
   const {
     commentId,
-    repoId
+    repoId,
+    simulateAllPossibleSubscriptions
   } = args
   const {
     user: me,
@@ -38,7 +39,8 @@ module.exports = async (_, args, context) => {
     await notifyPublish(
       repoId,
       context,
-      [me]
+      me,
+      simulateAllPossibleSubscriptions
     )
   }
 

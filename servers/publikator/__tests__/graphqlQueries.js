@@ -294,6 +294,7 @@ const PUBLISH_MUTAION = `
     $prepublication: Boolean!
     $updateMailchimp: Boolean!
     $scheduledAt: DateTime
+    $notifySubscribers: Boolean
   ) {
     publish(
       repoId: $repoId
@@ -301,6 +302,7 @@ const PUBLISH_MUTAION = `
       prepublication: $prepublication
       updateMailchimp: $updateMailchimp
       scheduledAt: $scheduledAt
+      notifySubscribers: $notifySubscribers
     ) {
       unresolvedRepoIds
       publication {

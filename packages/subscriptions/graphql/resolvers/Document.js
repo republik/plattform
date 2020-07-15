@@ -1,13 +1,17 @@
 const {
-  getSubscriptionsForUserAndObjects,
-  getSimulatedSubscriptionForUserAndObject,
   getUnreadNotificationsForUserAndObject
 } = require('../../lib/Subscriptions')
-const paginate = require('../../lib/paginateNotificationConnection')
+const {
+  getSubscriptionsForDoc
+} = require('../../lib/Document')
+const {
+  getRepoIdsForDoc
+} = require('@orbiting/backend-modules-documents/lib/meta')
+const paginateNotifications = require('../../lib/paginateNotificationConnection')
+const { paginate } = require('@orbiting/backend-modules-utils')
 const { Roles } = require('@orbiting/backend-modules-auth')
-const { getRepoId } = require('@orbiting/backend-modules-documents/lib/resolve')
 
-const createSubscriptionConnection = (nodes, args, me) => {
+const createSubscriptionConnection = (nodes, args = {}, me) => {
   const connection = paginate(args, nodes)
   if (!Roles.userIsInRoles(me, ['admin', 'editor'])) {
     connection.pageInfo = null
@@ -16,92 +20,71 @@ const createSubscriptionConnection = (nodes, args, me) => {
   return connection
 }
 
-// _meta is present on unpublished docs
-// { repo { publication { commit { document } } } }
-const getRepoIdsForDoc = (doc, includeParents) => ([
-  (doc.meta && doc.meta.repoId) || (doc._meta && doc._meta.repoId),
-  includeParents && getRepoId(
-    (doc.meta && doc.meta.format) || (doc._meta && doc._meta.format)
-  ).repoId
-].filter(Boolean))
-
-const getTemplate = (doc) =>
-  (doc.meta && doc.meta.template) || (doc._meta && doc._meta.template)
-
 module.exports = {
   async subscribedBy (doc, args, context) {
     const { user: me } = context
-    const {
-      includeParents,
-      onlyEligibles
-    } = args
 
-    const repoIds = getRepoIdsForDoc(doc, includeParents)
+    if (args.onlyMe) {
+      if (!me) {
+        return null
+      }
+
+      return paginate(
+        args,
+        await getSubscriptionsForDoc(
+          doc,
+          me.id,
+          {
+            ...args,
+            includeNotActive: true,
+            simulate: true
+          },
+          context
+        )
+      )
+    }
 
     return createSubscriptionConnection(
-      await getSubscriptionsForUserAndObjects(
+      await getSubscriptionsForDoc(
+        doc,
         null,
-        {
-          type: 'Document',
-          ids: repoIds
-        },
-        context,
-        {
-          onlyEligibles
-        }
+        args,
+        context
       ),
       args,
       me
     )
   },
+  // deprecated use subscribedBy with onlyMe
   async subscribedByMe (doc, args, context) {
     const { user: me } = context
-    const { includeParents } = args
 
     if (!me) {
       return null
     }
 
-    const repoIds = getRepoIdsForDoc(doc, includeParents)
-
-    return getSubscriptionsForUserAndObjects(
+    const subscriptions = await getSubscriptionsForDoc(
+      doc,
       me.id,
       {
-        type: 'Document',
-        ids: repoIds
+        ...args,
+        includeNotActive: true,
+        simulate: true
       },
-      context,
-      {
-        includeNotActive: true
-      }
+      context
     )
-      .then(subs => {
-        if (subs.length) {
-          // with includeParents there are going to be multiple subscriptions
-          // as soon as more than just format parents are subscribeable
-          return subs[0]
-        }
-        if (repoIds.length > 1 || getTemplate(doc) === 'format') {
-          return getSimulatedSubscriptionForUserAndObject(
-            me.id,
-            {
-              type: 'Document',
-              id: repoIds[repoIds.length - 1] // format is always last
-            },
-            context
-          )
-        }
-      })
+
+    return subscriptions && subscriptions[0]
   },
   async unreadNotifications (doc, args, context) {
     const { user: me } = context
 
     const repoIds = getRepoIdsForDoc(doc, false)
     if (!me || !repoIds || !repoIds.length) {
-      return paginate(args, [])
+      return paginateNotifications(args, [])
     }
 
-    return paginate(
+    return paginateNotifications(
       args,
       await getUnreadNotificationsForUserAndObject(
         me.id,

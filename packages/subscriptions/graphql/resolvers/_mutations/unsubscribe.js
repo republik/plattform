@@ -3,7 +3,7 @@ const { unsubscribe } = require('../../../lib/Subscriptions')
 
 module.exports = async (_, args, context) => {
   const { user: me, t, req, loaders: { Subscription } } = context
-  const { subscriptionId } = args
+  const { subscriptionId, filters } = args
   ensureSignedIn(req, t)
 
   const subscription = await Subscription.byId.load(subscriptionId)
@@ -14,5 +14,11 @@ module.exports = async (_, args, context) => {
     throw new Error(t('api/subscriptions/notAllowed'))
   }
 
-  return unsubscribe(subscriptionId, context)
+  return unsubscribe(
+    {
+      id: subscriptionId,
+      filters
+    },
+    context
+  )
 }
