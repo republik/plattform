@@ -1,0 +1,55 @@
+{{#if name}} Hallo {{name}}
+
+{{else}} Sehr geehrte Verlegerin, sehr geehrter Verleger
+
+{{/if}} Schön, dass Sie dabei sind! Dank Ihnen {{#if memberships_count}}und
+{{memberships_count}} weiteren Menschen {{/if}}können wir recherchieren,
+nachfragen, einordnen und aufdecken, ohne von Werbeeinnahmen oder Sponsoren
+abhängig zu sein. Damit ermöglichen Sie uns, in der Schweizer Medienlandschaft
+einen bedeutenden Unterschied zu machen.
+
+Wir hoffen, dass auch Sie zufrieden mit unserer Arbeit sind. Wenn ja, haben wir
+eine Bitte an Sie: Gehen Sie noch einen Schritt weiter und wechseln Sie vom
+Monatsabo zu einer Jahresmitgliedschaft.
+
+Zur Jahresmitgliedschaft wechseln [{{link_account_abos_goto}}] Sie erhöhen
+dadurch unsere Planungssicherheit und sichern die Zukunft der Republik
+langfristig. Ausserdem würden wir uns sehr freuen, Sie auch in einem Jahr noch
+an unserer Seite zu wissen. Zusätzlich profitieren Sie bei einer
+Jahresmitgliedschaft von folgenden Vorteilen:
+
+* Verschiedene Zahlungsmöglichkeiten: Sie können wählen, ob Sie per
+  Kreditkarte, Paypal, Postkarte oder Banküberweisung zahlen möchten.
+* Tiefere Transaktionsgebühren: Sie zahlen rund 24 Franken weniger im Jahr als
+  beim Monatsabo.
+* Stimmrecht in der Project R Genossenschaft: Sie können an Urabstimmungen und
+  Genossenschaftsrats-Wahlen teilnehmen und damit den Weg der Republik
+  mitbestimmen.
+
+Sollten Sie nicht zufrieden sein: Im Dialog [{{link_dialog}}] können Sie uns
+Feedback geben oder Vorschläge machen, Kritik loswerden und Fragen stellen.
+Brauchen Sie technische Unterstützung oder funktioniert etwas nicht, wenden Sie
+sich direkt an kontakt@republik.ch.
+
+Vielen Dank für Ihre Unterstützung!
+
+Bleiben Sie umsichtig, bleiben Sie freundlich, bleiben Sie gesund.
+
+Herzlich
+
+Ihre Crew der Republik
+
+Die Republik ist ein unabhängiges und werbefreies digitales Magazin für Politik,
+Wirtschaft, Gesellschaft und Kultur. Es wird von seinen Leserinnen und Lesern
+finanziert und erscheint von Montag bis Samstag mit täglich ein bis drei neuen
+Beiträgen. In der App, auf der Website und als Newsletter. 
+
+
+Republik AG
+Sihlhallenstrasse 1, CH-8004 Zürich
+www.republik.ch [{{frontend_base_url}}]
+kontakt@republik.ch 
+
+Unser Manifest [{{link_manifest}}]
+Das Impressum [{{link_imprint}}]
+Häufig gestellte Fragen [{{link_faq}}]

@@ -1,16 +1,9 @@
-const moment = require('moment')
-
-const { sumBucketProps } = require('../../../lib/MembershipStats/evolution')
+const { getCount } = require('../../../lib/MembershipStats/evolution')
 
 module.exports = async (_, args, context) => {
   try {
-    const sum = await sumBucketProps(
-      context,
-      moment().format('YYYY-MM'),
-      { add: ['active', 'overdue'] }
-    )
-
-    return sum
+    const count = await getCount(context)
+    return count
   } catch (e) {
     console.error(e)
     throw new Error(context.t('api/unexpected'))
