@@ -26,7 +26,7 @@ module.exports = {
 
     if (args.onlyMe) {
       if (!me) {
-        return null
+        return paginate(args, [])
       }
 
       return paginate(
