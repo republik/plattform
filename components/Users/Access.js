@@ -191,7 +191,7 @@ class Grant extends Component {
       })
 
       return this.props.revokeAccess({
-        id: this.props.grant.id
+        variables: { id: this.props.grant.id }
       })
         .then(this.hasMutated)
         .catch(this.catchMutationError)
