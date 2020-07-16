@@ -423,17 +423,9 @@ module.exports = {
     })
     let ref = result?.data?.repository?.ref
 
-    // github downtime resilience
-    const redisKey = `repos:${repoId}/tags:name=${tagName}`
-    if (ref) {
-      redis.setAsync(redisKey, JSON.stringify(ref))
-    } else {
-      const redisResult = await redis.getAsync(redisKey)
-        .then( r => r && JSON.parse(r) )
-      if (redisResult) {
-        ref = redisResult
-      }
-    }
+    // github downtime resilience:
+    // annotatedTag can not be cached, because they must dissapear when a doc
+    // is unpublished or a scheduled publication is overwritten by a publish.
 
     if (!ref || !ref.target) {
       return null
