@@ -44,7 +44,11 @@ const CalloutMenu = ({ children, icon, align, initiallyOpen, label }) => {
           setMenu(!showMenu)
         }}
       >
-        {label && align === 'right' && <label {...styles.label}>{label}</label>}
+        {label && align === 'right' && (
+          <label {...styles.label} style={{ right: 28 }}>
+            {label}
+          </label>
+        )}
         {icon || <MoreIcon width='calc(1em + 7px)' />}
         {label && align !== 'right' && <label {...styles.label}>{label}</label>}
       </button>
@@ -60,9 +64,11 @@ const CalloutMenu = ({ children, icon, align, initiallyOpen, label }) => {
 const styles = {
   label: css({
     ...fontStyles.sansSerifRegular14,
+    whiteSpace: 'nowrap',
+    position: 'absolute',
     display: 'inline-block',
     verticalAlign: 'middle',
-    margin: '2px 0 0 4px',
+    margin: '4px 0px 0px 4px',
     cursor: 'pointer'
   })
 }

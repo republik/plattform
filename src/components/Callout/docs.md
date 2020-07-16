@@ -30,8 +30,15 @@ A fixed callout animating in from the bottom on mobile and a in place callout on
 
 ```react
 <div style={{ padding: 20 }}>
-  <CalloutMenu icon={<NotificationIcon size={24} />} label='Callout Label'>
-    Hello&nbsp;World
-  </CalloutMenu>
+  <div style={{ float: 'right' }}>
+    <CalloutMenu align='right' icon={<NotificationIcon size={24} />} label='Callout Label'>
+      Hello&nbsp;World
+    </CalloutMenu>
+  </div>
+  <div style={{ float: 'left' }}>
+    <CalloutMenu icon={<NotificationIcon size={24} />} label='Callout Label'>
+      Hello&nbsp;World
+    </CalloutMenu>
+  </div>
 </div>
 ```
