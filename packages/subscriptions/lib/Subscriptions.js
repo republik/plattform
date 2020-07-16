@@ -5,6 +5,19 @@ const {
   isUserUnrestricted,
   includesUnrestrictedChildRepoId
 } = require('@orbiting/backend-modules-documents/lib/restrictions')
+const uniq = require('lodash/uniq')
+const { ascending } = require('d3-array')
+const { parse, Source } = require('graphql')
+const schemaTypes = require('../graphql/schema-types')
+
+const EventObjectTypes = parse(new Source(schemaTypes))
+  .definitions.find(
+    definition =>
+      definition.kind === 'EnumTypeDefinition' &&
+      definition.name &&
+      definition.name.value === 'EventObjectType'
+  )
+  .values.map(value => value.name.value)
 
 const objectTypes = ({
   User: 'objectUserId',
@@ -21,6 +34,16 @@ const buildObjectFindProps = ({ id, type }, t) => {
     objectType: type,
     [objectColumn]: id
   }
+}
+
+const getUsersWithSubscriptions = (subscriptions = [], { loaders }) => {
+  return Promise.map(
+    subscriptions,
+    async sub => ({
+      ...await loaders.User.byId.load(sub.userId),
+      __subscription: sub
+    })
+  )
 }
 
 const getIdForSubscription = ({
@@ -55,13 +78,19 @@ const getSimulatedSubscriptionForUserAndObject = (
   }, t),
   active: false,
   filters: null,
+  simulated: true,
   createdAt: now,
   updatedAt: now
 })
 
 const upsertSubscription = async (args, context) => {
   const { pgdb, loaders, t } = context
-  const { userId, type, filters } = args
+  const { userId, type, filters: rawFilters } = args
+  const uniqFilters = rawFilters && uniq(rawFilters)
+  // if all EventObjectTypes are set, no filter is set
+  const filters = uniqFilters?.length < EventObjectTypes.length
+    ? uniqFilters.sort(ascending)
+    : null
 
   if (type === 'User' && userId === args.objectId) {
     throw new Error(t('api/subscriptions/notYourself'))
@@ -86,7 +115,7 @@ const upsertSubscription = async (args, context) => {
   }
   const updateProps = {
     active: true,
-    filters: filters && filters.length ? filters : null
+    filters
   }
 
   const transaction = await pgdb.transactionBegin()
@@ -130,21 +159,33 @@ const upsertSubscription = async (args, context) => {
   return subscription
 }
 
-const unsubscribe = async (id, context) => {
+const unsubscribe = async ({ id, filters }, context) => {
   const { pgdb, loaders, t } = context
 
-  const subscription = await pgdb.public.subscriptions.updateAndGetOne(
-    { id },
-    { active: false }
-  )
+  const subscription = await loaders.Subscription.byId.load(id)
   if (!subscription) {
     throw new Error(t('api/subscriptions/404'))
   }
+
+  let updatedFilters
+  if (filters) {
+    updatedFilters = (subscription.filters || Array.from(EventObjectTypes))
+      .filter(objectType => !filters.includes(objectType))
+  }
+
+  const update = updatedFilters && updatedFilters.length
+    ? { filters: updatedFilters }
+    : { active: false, filters: null }
+
+  const updatedSubscription = await pgdb.public.subscriptions.updateAndGetOne(
+    { id },
+    update
+  )
   await Promise.all([
     loaders.Subscription.byId.clear(subscription.id),
     loaders.Subscription.byUserId.clear(subscription.userId)
   ])
-  return subscription
+  return updatedSubscription
 }
 
 const getObject = async (subscription, context) => {
@@ -253,7 +294,7 @@ const getSubscriptionsForUserAndObjects = (
     return []
   }
 
-  if (ids.length === 1) {
+  if (ids.length === 1 && !filter) {
     return getSubscriptionsForUserAndObject(
       userId,
       {
@@ -334,6 +375,9 @@ const getUnreadNotificationsForUserAndObject = (
 }
 
 module.exports = {
+  EventObjectTypes,
+  getUsersWithSubscriptions,
+
   upsertSubscription,
   unsubscribe,
   getObject,

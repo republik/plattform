@@ -1,7 +1,8 @@
 const {
   getObject,
   getSubject,
-  subscriptionIsEligibleForNotifications
+  subscriptionIsEligibleForNotifications,
+  EventObjectTypes
 } = require('../../lib/Subscriptions')
 
 module.exports = {
@@ -16,5 +17,8 @@ module.exports = {
       subscription,
       context
     )
+  },
+  filters (subscription, args, context) {
+    return subscription.filters || EventObjectTypes
   }
 }
