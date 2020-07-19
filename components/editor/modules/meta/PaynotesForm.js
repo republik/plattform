@@ -35,13 +35,12 @@ const PAYNOTE_KEY = 'paynotes'
 const TARGETS = ['hasActiveMembership', 'isEligibleForTrial']
 
 const DEFAULT_TARGET = {
-  hasActiveMembership: false,
-  isEligibleForTrial: true
+  hasActiveMembership: false
 }
 
 const DEFAULT_PAYNOTE = {
   content: '',
-  cta: undefined,
+  cta: 'button',
   button: {
     label: '',
     link: ''
