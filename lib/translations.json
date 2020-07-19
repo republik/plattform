@@ -1,5 +1,5 @@
 {
-  "updated": "2020-05-13T10:56:00.234Z",
+  "updated": "2020-07-19T21:56:59.036Z",
   "title": "live",
   "data": [
     {
@@ -629,6 +629,18 @@
     {
       "key": "metaData/paynote/form/target/title",
       "value": "Ziel"
+    },
+    {
+      "key": "metaData/paynote/form/target/value/true",
+      "value": "Ja"
+    },
+    {
+      "key": "metaData/paynote/form/target/value/false",
+      "value": "Nein"
+    },
+    {
+      "key": "metaData/paynote/form/target/value/undefined",
+      "value": "Egal"
     },
     {
       "key": "metaData/paynote/form/target/hasActiveMembership",

@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { A, Checkbox, Label, RawHtml } from '@project-r/styleguide'
+import { A, Radio, Label, RawHtml, Interaction } from '@project-r/styleguide'
 import MdClose from 'react-icons/lib/md/close'
 import MdAdd from 'react-icons/lib/md/add'
 import MdInfoOutline from 'react-icons/lib/md/info-outline'
@@ -8,16 +8,11 @@ import { css } from 'glamor'
 
 import withT from '../../../../lib/withT'
 import PaynoteForm from './PaynoteForm'
-import { DARK_MODE_KEY } from './DarkModeForm'
 
 const styles = {
   title: css({
     display: 'block',
     marginBottom: 5
-  }),
-  subtitle: css({
-    padding: '5px 0',
-    fontWeight: 'bold'
   }),
   container: css({
     backgroundColor: '#fff',
@@ -33,10 +28,6 @@ const styles = {
   }),
   help: css({
     margin: '0 0 10px'
-  }),
-  checkbox: css({
-    display: 'inline-block',
-    marginRight: 10
   })
 }
 
@@ -64,18 +55,24 @@ const DEFAULT_PAYNOTE = {
 
 const TargetForm = withT(({ t, data, onInputChange }) => (
   <div>
-    <Label style={{ display: 'block', paddingBottom: 5 }}>
-      {t('metaData/paynote/form/target/title')}
-    </Label>
+    <Interaction.H3>{t('metaData/paynote/form/target/title')}</Interaction.H3>
     {TARGETS.map((target, i) => {
       return (
-        <div key={i} {...styles.checkbox}>
-          <Checkbox
-            checked={data[target]}
-            onChange={(e, value) => onInputChange({ [target]: value })}
-          >
+        <div key={i} style={{ marginBottom: 10 }}>
+          <Label style={{ display: 'block', marginBottom: 5 }}>
             {t(`metaData/paynote/form/target/${target}`)}
-          </Checkbox>
+          </Label>
+          {[true, false, undefined].map(value => (
+            <Radio
+              key={String(value)}
+              value={String(value)}
+              checked={data[target] === value}
+              onChange={() => onInputChange({ [target]: value })}
+              style={{ marginRight: 20 }}
+            >
+              {t(`metaData/paynote/form/target/value/${value}`)}
+            </Radio>
+          ))}
         </div>
       )
     })}
@@ -145,7 +142,7 @@ export default withT(({ t, editor, node }) => {
                   <MdClose size={20} fill='#000' />
                 </A>
                 <div>
-                  <Label {...styles.subtitle}>
+                  <Label>
                     {t('metaData/paynotes/index', { index: i + 1 })}
                   </Label>
                   <br />
@@ -156,18 +153,14 @@ export default withT(({ t, editor, node }) => {
                   />
                 </div>
                 <br />
-                <Label {...styles.subtitle}>
-                  {t('metaData/paynotes/before')}
-                </Label>
+                <Interaction.H3>{t('metaData/paynotes/before')}</Interaction.H3>
                 <PaynoteForm
                   data={paynote.before}
                   onInputChange={editPaynote(i, paynote, 'before')}
                 />
                 <br />
                 <br />
-                <Label {...styles.subtitle}>
-                  {t('metaData/paynotes/after')}
-                </Label>
+                <Interaction.H3>{t('metaData/paynotes/after')}</Interaction.H3>
                 <PaynoteForm
                   data={paynote.after}
                   onInputChange={editPaynote(i, paynote, 'after')}
