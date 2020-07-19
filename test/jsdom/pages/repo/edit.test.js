@@ -3,7 +3,7 @@ import test from 'tape'
 import setupData from '../../../utils/setupData'
 import { mount } from '../../../utils/enzyme'
 
-import { RouterContext } from 'next/router'
+import { RouterContext } from 'next/dist/next-server/lib/router-context'
 
 import { t } from '../../../../lib/withT'
 import { parse } from '@orbiting/remark-preset'
