@@ -1,6 +1,7 @@
 const DEV = process.env.NODE_ENV && process.env.NODE_ENV !== 'production'
 
 const debug = require('debug')('crowdfundings:lib:scheduler')
+const Promise = require('bluebird')
 
 const {
   intervalScheduler,
@@ -10,7 +11,9 @@ const {
 const lockTtlSecs = 60 * 5 // 5 mins
 
 const { inform: informGivers } = require('./givers')
-const { inform: informCancellers } = require('./winbacks')
+const { inform: informWinback } = require('./winbacks')
+const { inform: informFeedback } = require('./feedback')
+const { inform: informUpgrade } = require('./upgrade')
 const { run: membershipsOwnersHandler } = require('./owners')
 const { deactivate } = require('./deactivate')
 const { changeover } = require('./changeover')
@@ -46,10 +49,30 @@ const init = async (context) => {
   )
 
   schedulers.push(
+    intervalScheduler.init({
+      name: 'feedback',
+      context,
+      runFunc: informFeedback,
+      lockTtlSecs,
+      runIntervalSecs: 60 * 10
+    })
+  )
+
+  schedulers.push(
+    intervalScheduler.init({
+      name: 'upgrade',
+      context,
+      runFunc: informUpgrade,
+      lockTtlSecs,
+      runIntervalSecs: 60 * 10
+    })
+  )
+
+  schedulers.push(
     timeScheduler.init({
       name: 'winback',
       context,
-      runFunc: informCancellers,
+      runFunc: informWinback,
       lockTtlSecs,
       runAtTime: '18:32',
       runAtDaysOfWeek: [1, 2, 3, 4, 5],

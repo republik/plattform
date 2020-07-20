@@ -8,6 +8,7 @@ schema {
 
 type queries {
   notifications(
+    onlyUnread: Boolean
     first: Int
     last: Int
     before: String
@@ -25,6 +26,9 @@ type mutations {
 
   unsubscribe(
     subscriptionId: ID!
+    # EventObjectTypes provided here are removed from existing filters.
+    # If filters is null, the subscription is deactivated completely.
+    filters: [EventObjectType!]
   ): Subscription!
 
   markNotificationAsRead(id: ID!): Notification!
@@ -42,6 +46,7 @@ type mutations {
     commentId: ID
     # repoId of document belonging to a format
     repoId: ID
+    simulateAllPossibleSubscriptions: Boolean
   ): Boolean!
 }
 

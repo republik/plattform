@@ -78,6 +78,10 @@ const envMergeVars = [
     content: `${FRONTEND_BASE_URL}/konto#abos`
   },
   {
+    name: 'link_account_abos_goto',
+    content: `${FRONTEND_BASE_URL}/angebote?goto=account`
+  },
+  {
     name: 'link_account_share',
     content: `${FRONTEND_BASE_URL}/teilen`
   },
@@ -90,8 +94,16 @@ const envMergeVars = [
     content: `${FRONTEND_BASE_URL}/benachrichtigungen/einstellungen`
   },
   {
+    name: 'link_account_progress',
+    content: `${FRONTEND_BASE_URL}/konto#position`
+  },
+  {
     name: 'link_profile',
     content: `${FRONTEND_BASE_URL}/~me`
+  },
+  {
+    name: 'link_bookmarks',
+    content: `${FRONTEND_BASE_URL}/lesezeichen`
   },
   {
     name: 'link_offers_overview',
@@ -144,6 +156,14 @@ const envMergeVars = [
   {
     name: 'link_cockpit',
     content: `${FRONTEND_BASE_URL}/cockpit`
+  },
+  {
+    name: 'link_about',
+    content: `${FRONTEND_BASE_URL}/about`
+  },
+  {
+    name: 'link_publisher',
+    content: `${FRONTEND_BASE_URL}/verlag`
   },
   {
     name: 'link_projectr',

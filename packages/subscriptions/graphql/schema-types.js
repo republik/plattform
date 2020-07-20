@@ -30,6 +30,7 @@ extend type User {
     last: Int
     before: String
     after: String
+    onlyMe: Boolean
   ): SubscriptionConnection!
 
   # subject: me
@@ -47,15 +48,15 @@ extend type Document {
     after: String
     includeParents: Boolean
     onlyEligibles: Boolean
+    uniqueUsers: Boolean
+    onlyMe: Boolean
   ): SubscriptionConnection!
 
   # subject: me
   # object: this.document
-  # this method will return [Subscription] as soon
-  # as more than formats can be subscribed
   subscribedByMe(
     includeParents: Boolean
-  ): Subscription
+  ): Subscription @deprecated(reason: "use \`subscribedBy\` with \`onlyMe: true\` instead")
 
   unreadNotifications: NotificationConnection
 }
