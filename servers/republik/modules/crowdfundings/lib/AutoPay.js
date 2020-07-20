@@ -69,6 +69,10 @@ const suggest = async (membershipId, pgdb) => {
   // Find pledge payments
   const pledgePayments = await pgdb.public.pledgePayments.find({ pledgeId: pledge.id })
 
+  if (!pledgePayments.length) {
+    return false
+  }
+
   // Find latest payment
   const payment = await pgdb.public.payments.findOne(
     { id: pledgePayments.map(p => p.paymentId) },
