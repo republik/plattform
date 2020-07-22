@@ -99,6 +99,22 @@
       "value": "Das autoPay Feld der Membership mit der ID {id} kann nicht bearbeitet werden."
     },
     {
+      "key": "api/membership/canReset/errorInactiveMembership",
+      "value": "Mitgliedschaft kann nicht zurückgesetzt werden, da sie nicht aktiv ist."
+    },
+    {
+      "key": "api/membership/canReset/errorNotRenewable",
+      "value": "Mitgliedschaft kann nicht zurückgesetzt werden, da sie nicht erneuerbar ist."
+    },
+    {
+      "key": "api/membership/canReset/errorContainsSubscriptionId",
+      "value": "Mitgliedschaft kann nicht zurückgesetzt werden, da sie eine \"Subscription ID\" enthält."
+    },
+    {
+      "key": "api/membership/canReset/errorTooFewOrManyPeriods",
+      "value": "Mitgliedschaft kann nicht zurückgesetzt werden, da sie keine oder zuviele Perioden besitzt."
+    },
+    {
       "key": "api/appendPeriod/durationShouldBePositive",
       "value": "Die `durationShouldBePositive` Schnittstelle erwartet ein positives `duration` Feld. Es wurde folgender Wert übergeben: {duration}."
     },
