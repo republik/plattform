@@ -125,8 +125,14 @@ const createLiveTeasers = ({
           },
           {
             key: 'excludeRepoIds',
+            ref: 'repoIds',
+            note: 'Vorherige Artikel werden automatisch ausgeschlossen.'
+          },
+          {
+            key: 'specificRepoIds',
+            ref: 'repoIds',
             note:
-              'Vorherige Artikel werden automatisch ausgeschlossen. Nur im Spezialfall hier Komma-separierte Repo-IDs eintragen.'
+              'Gewinnt gegen alles aber die Dokumente müssen immer noch im Feed sein.'
           }
         ]
       }
