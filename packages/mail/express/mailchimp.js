@@ -96,6 +96,7 @@ const handleUnsubscribe = data => {
     email: data.email,
     action: data.action,
     reason: data.reason,
+    campaign: data['campaign_id'],
     customer: getGroups('Customer', data),
     newsletter: getGroups('Republik NL', data)
   }
