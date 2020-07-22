@@ -24,7 +24,7 @@ module.exports = async (_, args, context) => {
 
     await transaction.public.membershipPeriods.delete({ membershipId })
 
-    const pledge = await transaction.public.pledges.findOn({ id: membership.pledgeId })
+    const pledge = await transaction.public.pledges.findOne({ id: membership.pledgeId })
 
     const voucherCode = await transaction.queryOneField(
       'SELECT make_hrid(\'"memberships"\'::regclass, \'voucherCode\'::text, 6::bigint)'
