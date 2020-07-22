@@ -78,6 +78,7 @@ export default ({ TYPE, newBlock, rule = {}, zone }) => {
                   .remove('priorRepoIds')
               )}
               notes={Map(form.map(field => [field.key, field.note]))}
+              customFields={form}
               onInputChange={onInputChange}
             />
           )

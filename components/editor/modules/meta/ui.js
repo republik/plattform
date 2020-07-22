@@ -166,61 +166,6 @@ const MetaData = ({
           )
         })}
         <br />
-        {(customFieldsByRef['repos'] || []).map(customField => {
-          const label =
-            customField.label ||
-            t(`metaData/field/${customField.key}`, undefined, customField.key)
-          const values = node.data.get(customField.key) || []
-          const onChange = onInputChange(customField.key)
-          const lastValueEmpty = values[values.length - 1] === ''
-          return (
-            <div key={customField.key}>
-              <br />
-              <UIForm getWidth={() => '100%'}>
-                <Label>
-                  {label}
-                  <br />
-                </Label>{' '}
-                {values.map((v, i) => {
-                  return (
-                    <RepoSelect
-                      key={`${customField.key}-${i}`}
-                      value={v}
-                      template={customField.template}
-                      onChange={(_, document) => {
-                        const nextValues = [...values]
-                        nextValues[i] = document
-                        onChange(undefined, nextValues)
-                      }}
-                    />
-                  )
-                })}
-                {lastValueEmpty ? (
-                  <A
-                    href='#cancel'
-                    onClick={e => {
-                      e.preventDefault()
-                      onChange(undefined, values.slice(0, values.length - 1))
-                    }}
-                  >
-                    Abbrechen
-                  </A>
-                ) : (
-                  <A
-                    href='#add'
-                    onClick={e => {
-                      e.preventDefault()
-                      onChange(undefined, [...values, ''])
-                    }}
-                  >
-                    Format hinzufügen
-                  </A>
-                )}
-              </UIForm>
-              <br />
-            </div>
-          )
-        })}
         <UIForm getWidth={() => '50%'}>
           {(customFieldsByRef['repo'] || []).map(customField => {
             const label =

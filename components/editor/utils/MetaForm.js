@@ -2,12 +2,13 @@ import React, { Component } from 'react'
 import { css } from 'glamor'
 import { Map } from 'immutable'
 
-import { Field, Checkbox, Label } from '@project-r/styleguide'
+import { A, Field, Checkbox, Label, Interaction } from '@project-r/styleguide'
 import AutosizeInput from 'react-textarea-autosize'
 import MaskedInput from 'react-maskedinput'
 
 import { timeParse, timeFormat } from 'd3-time-format'
 
+import RepoSelect from '../modules/meta/RepoSelect'
 import withT from '../../../lib/withT'
 
 import ImageInput from './ImageInput'
@@ -82,6 +83,7 @@ class Form extends Component {
       onInputChange,
       data,
       notes = Map(),
+      customFields = [],
       getWidth = defaultGetWidth,
       black
     } = this.props
@@ -95,7 +97,60 @@ class Form extends Component {
             let input
             let formattedValue = value
             let onChange
-            if (key.match(/image|src/i)) {
+            const customField = customFields.find(f => f.key === key) || {}
+
+            if (customField.ref === 'repoIds') {
+              const values =
+                typeof value === 'string' // legacy csv repo ids
+                  ? value.split(',').filter(Boolean)
+                  : value || []
+              const lastValueEmpty =
+                values.length > 0 && !values[values.length - 1]
+
+              input = (
+                <div style={{ marginBottom: 20 }}>
+                  <Interaction.H3>{label}</Interaction.H3>
+                  {values.map((v, i) => {
+                    return (
+                      <RepoSelect
+                        key={`${key}-${i}`}
+                        value={v && `https://github.com/${v}`}
+                        template={customField.template}
+                        onChange={(_, __, item) => {
+                          const nextValues = [...values]
+                          nextValues[i] = item?.value?.id
+                          onInputChange(key)(_, nextValues.filter(Boolean))
+                        }}
+                      />
+                    )
+                  })}
+                  {lastValueEmpty ? (
+                    <A
+                      href='#cancel'
+                      onClick={e => {
+                        e.preventDefault()
+                        onInputChange(key)(
+                          e,
+                          values.slice(0, values.length - 1)
+                        )
+                      }}
+                    >
+                      Abbrechen
+                    </A>
+                  ) : (
+                    <A
+                      href='#add'
+                      onClick={e => {
+                        e.preventDefault()
+                        onInputChange(key)(e, [...values, ''])
+                      }}
+                    >
+                      Dokument hinzufügen
+                    </A>
+                  )}
+                </div>
+              )
+            } else if (key.match(/image|src/i)) {
               input = (
                 <ImageInput
                   maxWidth='100%'
