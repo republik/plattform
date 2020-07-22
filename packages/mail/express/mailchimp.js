@@ -1,16 +1,28 @@
 const bodyParser = require('body-parser')
 const moment = require('moment')
 
+const { MAIL_EXPRESS_MAILCHIMP_SECRET } = process.env
+
 module.exports = async (server, pgdb) => {
   server.get(
-    '/mail/mailchimp/webhook',
-    (req, res) => res.sendStatus(204)
+    '/mail/mailchimp/webhook/:secret',
+    (req, res) => {
+      if (req.params.secret !== MAIL_EXPRESS_MAILCHIMP_SECRET) {
+        return res.sendStatus(403)
+      }
+
+      return res.sendStatus(204)
+    }
   )
 
   server.post(
-    '/mail/mailchimp/webhook',
+    '/mail/mailchimp/webhook/:secret',
     bodyParser.urlencoded({ extended: true }),
     async (req, res) => {
+      if (req.params.secret !== MAIL_EXPRESS_MAILCHIMP_SECRET) {
+        return res.sendStatus(403)
+      }
+
       const { type, fired_at: firedAt, data } = req.body
 
       const record = {
@@ -102,6 +114,7 @@ const handleProfile = data => {
   "data[ip_opt]": "10.20.10.30"
   */
   return {
+    email: data.email,
     customer: getGroups('Customer', data),
     newsletter: getGroups('Republik NL', data)
   }
@@ -129,7 +142,8 @@ const handleCleaned = data => {
   */
   return {
     email: data.email,
-    reason: data.reason
+    reason: data.reason,
+    campaign: data['campaign_id']
   }
 }
 

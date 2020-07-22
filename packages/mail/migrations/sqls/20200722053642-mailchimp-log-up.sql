@@ -3,6 +3,7 @@ CREATE TABLE "mailchimpLog" (
   type text,
   "firedAt" timestamp with time zone DEFAULT now(),
   email citext,
+  campaign text,
   action text,
   reason text,
   customer jsonb,
