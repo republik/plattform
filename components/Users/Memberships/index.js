@@ -412,7 +412,20 @@ const MembershipDetails = ({ userId, membership, ...props }) => {
                           variables: { userId }
                         }
                       ]}
-                    />
+                    />,
+                  (!membership.active || !membership.renew) && membership.type.name === 'MONTHLY_ABO' &&
+                    <ReactivateMembership
+                      key='ReactivateMonthly'
+                      membership={membership}
+                      refetchQueries={({
+                        data: { reactivateMembership }
+                      }) => [
+                        {
+                          query: GET_MEMBERSHIPS,
+                          variables: { userId }
+                        }
+                      ]}
+                    />,
                 ].filter(Boolean), () => ', ')}
             </DD>
           </DL>
