@@ -1,9 +1,5 @@
 import React from 'react'
-import MoreIcon from 'react-icons/lib/md/more-vert'
 import Callout from './index'
-import { plainButtonRule } from '../Button'
-import { css } from 'glamor'
-import { fontStyles } from '../../theme/fonts'
 
 const hasAncestor = (node, predicate) => {
   if (predicate(node)) {
@@ -15,7 +11,7 @@ const hasAncestor = (node, predicate) => {
   return false
 }
 
-const CalloutMenu = ({ children, icon, align, initiallyOpen, label }) => {
+const CalloutMenu = ({ children, Element, align, initiallyOpen }) => {
   const [showMenu, setMenu] = React.useState(initiallyOpen)
   const toggleRef = React.useRef()
 
@@ -34,24 +30,12 @@ const CalloutMenu = ({ children, icon, align, initiallyOpen, label }) => {
   }, [showMenu])
 
   return (
-    <div
-      ref={toggleRef}
-      style={{ display: 'inline-block', position: 'relative' }}
-    >
-      <button
-        {...plainButtonRule}
+    <div ref={toggleRef}>
+      <Element
         onClick={() => {
           setMenu(!showMenu)
         }}
-      >
-        {label && align === 'right' && (
-          <label {...styles.label} style={{ right: 28 }}>
-            {label}
-          </label>
-        )}
-        {icon || <MoreIcon width='calc(1em + 7px)' />}
-        {label && align !== 'right' && <label {...styles.label}>{label}</label>}
-      </button>
+      />
       {showMenu && (
         <Callout onClose={() => setMenu(false)} align={align}>
           {children}
@@ -59,18 +43,6 @@ const CalloutMenu = ({ children, icon, align, initiallyOpen, label }) => {
       )}
     </div>
   )
-}
-
-const styles = {
-  label: css({
-    ...fontStyles.sansSerifRegular14,
-    whiteSpace: 'nowrap',
-    position: 'absolute',
-    display: 'inline-block',
-    verticalAlign: 'middle',
-    margin: '4px 0px 0px 4px',
-    cursor: 'pointer'
-  })
 }
 
 export default CalloutMenu
