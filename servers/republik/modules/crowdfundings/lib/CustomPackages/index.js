@@ -32,11 +32,11 @@ const findEligableMemberships = ({
     // A membership that was not bought by user itself.
     const isClaimedMembership = m.pledge.userId !== m.userId
 
-    // Self-claimed ABO_GIVE
+    // Self-claimed ABO_GIVE, ABO_GIVE_MONTHS
     const isSelfClaimed =
       m.pledge.userId === m.userId &&
       ['ABO_GIVE', 'ABO_GIVE_MONTHS'].includes(m.pledge.package.name) &&
-      m.active
+      !m.voucherCode
 
     debug({
       id: m.id,
