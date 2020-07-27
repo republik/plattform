@@ -52,6 +52,7 @@ const getSourceFilter = () => ({
     excludes: [
       'contentMeta',
       'contentString',
+      'contentStrings',
       'createdAt',
       'name',
       'updatedAt'
@@ -79,13 +80,19 @@ const find = async (args, { elastic }) => {
     'contentMeta.seriesMaster.episodes.label',
     'contentMeta.seriesMaster.episodes.title',
     'contentMeta.seriesMaster.title',
+    'contentMeta.shortTitle',
     'contentMeta.slug',
     'contentMeta.subject',
     'contentMeta.template',
-    'contentMeta.title^2',
+    'contentMeta.title',
     'contentMeta.twitterDescription',
     'contentMeta.twitterTitle',
     'contentString',
+    'contentStrings.credits',
+    'contentStrings.lead',
+    'contentStrings.subject',
+    'contentStrings.text',
+    'contentStrings.title',
     'name'
   ]
 
@@ -113,7 +120,7 @@ const find = async (args, { elastic }) => {
     })
   }
 
-  const docs = elastic.search({
+  return elastic.search({
     index: utils.getIndexAlias('repo', 'read'),
     from: args.from,
     size: args.first,
@@ -123,8 +130,6 @@ const find = async (args, { elastic }) => {
       query
     }
   })
-
-  return docs
 }
 
 module.exports = {

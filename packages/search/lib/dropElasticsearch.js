@@ -1,15 +1,19 @@
 const Elasticsearch = require('@orbiting/backend-modules-base/lib/Elasticsearch')
 
-const drop = async (prefix) => {
+const drop = async (prefix, { debug: doDebug = true } = {}) => {
   if (!prefix) {
     throw new Error("can't drop, prefix not specified")
   }
+  const debug = doDebug === false
+    ? () => {}
+    : console.log
+
   const elastic = Elasticsearch.connect()
 
   const indices = await elastic.cat.indices({
     h: ['index']
   })
-    .then(stats => stats && stats.split('\n'))
+    .then(({ stats }) => stats && stats.split('\n'))
 
   if (!indices || !indices.length) {
     return
@@ -19,7 +23,7 @@ const drop = async (prefix) => {
     indices
       .filter(i => i.indexOf(prefix) === 0)
       .map(index => {
-        console.log(`dropping es index: ${index}`)
+        debug(`dropping es index: ${index}`)
         return elastic.indices.delete({
           index
         })

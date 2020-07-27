@@ -6,6 +6,7 @@ schema {
 
 type queries {
   mediaProgress(mediaId: ID!): MediaProgress
+  collectionsStats: CollectionsStats!
 }
 
 type mutations {

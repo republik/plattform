@@ -41,7 +41,7 @@ const days = argv.end.diff(argv.begin, 'days')
 PgDb.connect().then(async pgdb => {
   const classifiedAuthors = await pgdb.public.gsheets.findOneFieldOnly({ name: 'authors' }, 'data')
 
-  const docs = await elastic.search({
+  const { body } = await elastic.search({
     index: utils.getIndexAlias('document', 'read'),
     _source: [
       'meta.path',
@@ -72,7 +72,7 @@ PgDb.connect().then(async pgdb => {
     }
   })
 
-  const hits = docs.hits.hits
+  const hits = body.hits.hits
 
   hits
     .map(({ _source: { meta } }) => meta)

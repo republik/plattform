@@ -2,12 +2,18 @@ const htmlToText = require('html-to-text')
 const { renderEmail } = require('mdast-react-render/lib/email')
 
 const { transformUser } = require('@orbiting/backend-modules-auth')
-const commentSchema = require('@project-r/styleguide/lib/templates/Comment/email').default()
-const { sendNotification } = require('@orbiting/backend-modules-subscriptions')
+const { commentSchema } = require('@orbiting/backend-modules-styleguide')
+const {
+  Subscriptions: {
+    getSubscriptionsForUserAndObjects,
+    getUsersWithSubscriptions
+  },
+  sendNotification
+} = require('@orbiting/backend-modules-subscriptions')
 const Promise = require('bluebird')
 
 const {
-  displayAuthor: getDisplayAuthor,
+  displayAuthor: originalGetDisplayAuthor,
   content: getContent,
   preview: getPreview
 } = require('../graphql/resolvers/Comment')
@@ -31,20 +37,22 @@ const getDiscussionUrl = async (discussion, context) => {
   return `${FRONTEND_BASE_URL}${discussion.path}`
 }
 
-const getCommentInfo = async (comment, discussion, context) => {
+const getDisplayAuthor = (comment, context) => {
+  return originalGetDisplayAuthor(
+    comment,
+    { portrait: { webp: false } },
+    context
+  )
+}
+
+const getCommentInfo = async (comment, displayAuthor, discussion, context) => {
   const { t } = context
 
   const {
-    displayAuthor,
     preview,
     discussionUrl,
     contentMdast
   } = await Promise.props({
-    displayAuthor: getDisplayAuthor(
-      comment,
-      { portrait: { webp: false } },
-      context
-    ),
     preview: getPreview(comment, { length: 128 }, context),
     discussionUrl: getDiscussionUrl(discussion, context),
     contentMdast: getContent(comment, { strip: false }, context)
@@ -56,7 +64,6 @@ const getCommentInfo = async (comment, discussion, context) => {
   const { parentIds } = comment
 
   return {
-    displayAuthor,
     discussionUrl,
     contentHtml,
     contentPlain,
@@ -82,7 +89,9 @@ const submitComment = async (comment, discussion, context, testUsers) => {
     throw new Error(t('api/unexpected'))
   }
 
-  const notifyUsers = testUsers || await pgdb.query(`
+  const displayAuthor = await getDisplayAuthor(comment, context)
+
+  const subscribers = testUsers || await pgdb.query(`
       -- commenters in discussion
       SELECT
         u.*
@@ -134,9 +143,45 @@ const submitComment = async (comment, discussion, context, testUsers) => {
   })
     .then(users => users.map(transformUser))
 
-  if (notifyUsers.length > 0) {
+  const subscriptions = displayAuthor.anonymity
+    ? []
+    : await getSubscriptionsForUserAndObjects(
+      null,
+      {
+        type: 'User',
+        ids: [comment.userId],
+        filter: 'Comment'
+      },
+      context
+    )
+
+  const additionalSubscribers = testUsers ? [] : await getUsersWithSubscriptions(subscriptions, context)
+    .then( arr => arr.filter(
+      ({ id: id1 }) => subscribers.findIndex( ({ id: id2 }) => id1 === id2) === -1
+    ))
+
+  if (additionalSubscribers.length) {
+    const discussionPreferences = await pgdb.public.discussionPreferences.find({
+      userId: additionalSubscribers.map(s => s.id),
+      discussionId: comment.discussionId
+    })
+
+    additionalSubscribers
+      .filter(subscriber => {
+        const discussionPreference = discussionPreferences.find(
+          ({ userId }) => userId === subscriber.id
+        )
+
+        return discussionPreference?.notificationOption !== 'NONE' ??
+          subscriber._raw.defaultDiscussionNotificationOption !== 'NONE'
+      })
+      .forEach( subscriber => {
+        subscribers.push(subscriber)
+      })
+  }
+
+  if (subscribers.length > 0) {
     const {
-      displayAuthor,
       discussionUrl,
       contentHtml,
       contentPlain,
@@ -146,7 +191,7 @@ const submitComment = async (comment, discussion, context, testUsers) => {
       subjectParams,
       isTopLevelComment,
       icon
-    } = await getCommentInfo(comment, discussion, context)
+    } = await getCommentInfo(comment, displayAuthor, discussion, context)
 
     await sendNotification(
       {
@@ -158,7 +203,7 @@ const submitComment = async (comment, discussion, context, testUsers) => {
           objectType: 'Comment',
           objectId: id
         },
-        users: notifyUsers,
+        users: subscribers,
         content: {
           app: {
             title: isTopLevelComment

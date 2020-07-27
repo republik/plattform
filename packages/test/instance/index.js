@@ -53,6 +53,9 @@ const init = async ({ serverName, publicationScheduler, searchNotifyListener = n
   process.env.REDIS_URL = redisUrl
   process.env.ES_INDEX_PREFIX = esPrefix
   process.env.SEND_MAILS_LOG = false
+  process.env.SEND_MAILS = false
+  process.env.SEND_NOTIFICATIONS = false
+  process.env.SLACK_API_TOKEN = ''
   if (publicationScheduler) {
     process.env.PUBLICATION_SCHEDULER = true
   }
@@ -68,9 +71,11 @@ const init = async ({ serverName, publicationScheduler, searchNotifyListener = n
   // create ES indices
   const pullElasticsearch = require('@orbiting/backend-modules-search/lib/pullElasticsearch')
   const dropElasticsearch = require('@orbiting/backend-modules-search/lib/dropElasticsearch')
-  await dropElasticsearch(esPrefix)
+  await dropElasticsearch(esPrefix, { debug: false })
   await pullElasticsearch({
-    inserts: false
+    inserts: false,
+    ensurePropagation: false,
+    debug: false
   })
 
   // require server's server.js and start
@@ -83,7 +88,7 @@ const init = async ({ serverName, publicationScheduler, searchNotifyListener = n
     await server.close()
     await db.drop()
     // drop ES indices
-    await dropElasticsearch(esPrefix)
+    await dropElasticsearch(esPrefix, { debug: false })
     global.instance = null
   }
 

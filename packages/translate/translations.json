@@ -1,5 +1,5 @@
 {
-  "updated": "2020-03-23T20:34:06.306Z",
+  "updated": "2020-05-24T13:10:16.770Z",
   "title": "live",
   "data": [
     {
@@ -17,6 +17,22 @@
     {
       "key": "api/reclaim/verified",
       "value": "Die von Ihnen eingegebene E-Mail-Adresse ist schon besetzt. Wir können Ihren Kauf daher nicht übertragen. Bitte melden Sie sich bei kontakt@republik.ch. (Pledge E-Mail: {pledgeEmail}, gewünschte E-Mail: {targetEmail})"
+    },
+    {
+      "key": "api/membership/activate/hasPeriods",
+      "value": "Mitgliedschaft enthält bereits Perioden, kann nicht aktiviert werden."
+    },
+    {
+      "key": "api/membership/activate/alreadyActive",
+      "value": "Mitgliedschaft ist bereits aktiv."
+    },
+    {
+      "key": "api/membership/activate/userMissing",
+      "value": "Besitzer der Mitgliedschaft nicht gefunden."
+    },
+    {
+      "key": "api/membership/activate/missingActivatedMembership",
+      "value": "Aktivieren der Mitgliedschaft schlug fehl."
     },
     {
       "key": "api/membership/claim/alreadyHave",
@@ -77,6 +93,30 @@
     {
       "key": "api/membership/move/monthlyDenied",
       "value": "Monatsabos können nicht verschoben werden."
+    },
+    {
+      "key": "api/membership/auto_pay_not_mutable",
+      "value": "Das autoPay Feld der Membership mit der ID {id} kann nicht bearbeitet werden."
+    },
+    {
+      "key": "api/appendPeriod/durationShouldBePositive",
+      "value": "Die `durationShouldBePositive` Schnittstelle erwartet ein positives `duration` Feld. Es wurde folgender Wert übergeben: {duration}."
+    },
+    {
+      "key": "api/appendPeriod/startDateNotValid",
+      "value": "Es konnte kein valides Startdatum erarbeitet werden"
+    },
+    {
+      "key": "api/appendPeriod/durationOrDurationUnitNotValid",
+      "value": "Es konnte mit folgenden Werten kein valides Enddatum errechnet werden: duration: {duration}, durationUnit: {durationUnit}"
+    },
+    {
+      "key": "api/appendPeriod/inactive",
+      "value": "Eine Periode kann ausschliesslich an eine aktive Periode hinzugefügt werden."
+    },
+    {
+      "key": "api/appendPeriod/wrongMembershipType",
+      "value": "Diesem Membership-Typ kann keine Periode hinzugefügt werden."
     },
     {
       "key": "api/pledge/alreadyPaid",
@@ -587,6 +627,14 @@
       "value": "Ihre Mitgliedschaft erneuert sich automatisch"
     },
     {
+      "key": "api/email/membership_owner_feedback/subject",
+      "value": "Sind Sie zufrieden?"
+    },
+    {
+      "key": "api/email/membership_owner_upgrade_monthly/subject",
+      "value": "Wechseln Sie zur Jahresmitgliedschaft!"
+    },
+    {
       "key": "api/email/membership_deactivated_abo_uncancelled/sequenceNumber/true/subject",
       "value": "Ihre Mitgliedschaft Nr. {sequenceNumber} wurde deaktiviert"
     },
@@ -737,6 +785,10 @@
     {
       "key": "api/newsletters/request/COVID19/subject",
       "value": "Bestätigen Sie Ihre Anmeldung zum Covid-19-Uhr-Newsletter."
+    },
+    {
+      "key": "api/newsletters/request/notSupported",
+      "value": "Diese Art der Anmeldung zum gewählten Newsletter wird noch nicht unterstützt."
     },
     {
       "key": "api/statements/maxNodes",
@@ -1111,11 +1163,11 @@
       "value": "Sie benötigen die Rolle «{role}» um den Zugriff zu teilen."
     },
     {
-      "key": "api/access/constraint/recipientBlacklist/error",
+      "key": "api/access/constraint/recipientDenylist/error",
       "value": "Sie können «{email}» keinen Zugriff teilen, da die E-Mail-Adresse auf einer schwarzen Liste aufgeführt ist."
     },
     {
-      "key": "api/access/constraint/granterBlacklist/error",
+      "key": "api/access/constraint/granterDenylist/error",
       "value": "Sie können derzeit keinen Zugriff teilen, da Ihr Konto auf einer schwarzen Liste aufgeführt ist."
     },
     {
@@ -1357,6 +1409,10 @@
     {
       "key": "api/questionnaire/answer/updateResultIncrementally/choiceOnly",
       "value": "Fehler: updateResultIncrementally wird nur von Fragen des Typs 'Choice' unterstützt."
+    },
+    {
+      "key": "api/questionnaire/noUnattributedAnswers",
+      "value": "Dieser Fragebogen unterstützt keine anonymen Eingaben."
     },
     {
       "key": "timeAhead/justNow/other",
@@ -1675,6 +1731,18 @@
       "value": "Artikel können im Moment weder veröffentlicht noch zurückgezogen werden. Bitte versuche es in ein paar Minuten noch einmal, ansonsten kontaktiere bitte die IT."
     },
     {
+      "key": "api/publish/error/createCampaign",
+      "value": "Kampagne auf MailChimp konnte nicht angelegt werden."
+    },
+    {
+      "key": "api/publish/error/updateCampaign",
+      "value": "Kampagne auf MailChimp konnte nicht aktualisiert werden."
+    },
+    {
+      "key": "api/publish/error/updateCampaignContent",
+      "value": "Kampagne auf MailChimp konnte nicht aktualisiert werden."
+    },
+    {
       "key": "api/archive/error/published",
       "value": "«{repoId}» ist veröffentlicht und kann nicht archiviert werden. Heben Sie erst alle Veröffentlichungen auf."
     },
@@ -1739,20 +1807,12 @@
       "value": "Vielen Dank! Wir haben Ihre Zahlung erhalten."
     },
     {
-      "key": "api/email/access_granter_claim_notice/subject",
-      "value": "Die von Ihnen finanzierte Mitgliedschaft wurde soeben eingelöst."
-    },
-    {
-      "key": "api/email/access_recipient_invitation_gifted_membership/subject",
-      "value": "Glückwunsch: eine Jahresmitgliedschaft liegt für Sie bereit."
-    },
-    {
-      "key": "api/email/access_recipient_onboarding_gifted_membership/subject",
-      "value": "Willkommen bei der Republik"
-    },
-    {
       "key": "api/notifications/doc/title",
       "value": "{title} jetzt online"
+    },
+    {
+      "key": "api/notifications/doc/author/title",
+      "value": "Neuer Beitrag von {name}"
     }
   ]
 }

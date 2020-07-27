@@ -10,6 +10,10 @@ const { mdastToString } = require('@orbiting/backend-modules-utils')
 const {
   Redirections: { upsert: upsertRedirection }
 } = require('@orbiting/backend-modules-redirections')
+const {
+  getAuthorUserIds
+} = require('@orbiting/backend-modules-documents/lib/meta')
+
 const slugDateFormat = timeFormat('%Y/%m/%d')
 
 const getPath = (docMeta) => {
@@ -68,7 +72,7 @@ const prepareMetaForPublish = async ({
 
   // discussionId is not saved to repoMeta anymore, but repoId to discussion
   // see Meta.ownDiscussion resolver
-  if (['discussion', 'article'].indexOf(docMeta.template) > -1) {
+  if (!scheduledAt) {
     await upsertDiscussion({ ...docMeta, path, repoId }, context, repoMeta.discussionId)
   }
 
@@ -101,6 +105,7 @@ const prepareMetaForPublish = async ({
       .then(res => res.buffer())
       .then(res => mp3Duration(res))
       .then(res => res * 1000)
+      .then(Math.round)
       .catch(e => {
         console.error(`Could not download/measure audioSourceMp3 (${audioSourceMp3})`)
         return 0
@@ -132,6 +137,8 @@ const prepareMetaForPublish = async ({
     .filter(c => c.type === 'link')
     .map(a => a.children[0].value)
 
+  const authorUserIds = await getAuthorUserIds(null, context, credits)
+
   const isSeriesMaster = typeof docMeta.series === 'object'
   const isSeriesEpisode = typeof docMeta.series === 'string'
   // map series episodes to the key seriesEpisodes to have consistent types
@@ -160,6 +167,7 @@ const prepareMetaForPublish = async ({
     credits,
     audioSource,
     authors,
+    authorUserIds,
     isSeriesMaster,
     isSeriesEpisode,
     seriesEpisodes,

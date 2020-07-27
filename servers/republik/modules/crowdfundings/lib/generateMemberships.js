@@ -2,7 +2,7 @@ const moment = require('moment')
 const { getPledgeOptionsTree } = require('./Pledge')
 const { evaluate, resolvePackages } = require('./CustomPackages')
 const createCache = require('./cache')
-const cancelMembership = require('../graphql/resolvers/_mutations/cancelMembership')
+const cancelMembership = require('./cancelMembership')
 const debug = require('debug')('crowdfundings:memberships')
 const mail = require('./Mail')
 const Promise = require('bluebird')
@@ -10,7 +10,7 @@ const omit = require('lodash/omit')
 
 const MONTHLY_ABO_UPGRADE_PKGS = ['ABO', 'BENEFACTOR']
 
-module.exports = async (pledgeId, pgdb, t, req, redis) => {
+module.exports = async (pledgeId, pgdb, t, redis) => {
   const pledge = await pgdb.public.pledges.findOne({ id: pledgeId })
   const user = await pgdb.public.users.findOne({ id: pledge.userId })
 
@@ -200,25 +200,31 @@ module.exports = async (pledgeId, pgdb, t, req, redis) => {
     await pgdb.public.memberships.insert(memberships)
   }
 
-  if (cancelableMemberships.length > 0 && req) {
+  if (cancelableMemberships.length > 0) {
     debug(
       'cancel memberships, is an upgrade',
       { ids: cancelableMemberships.map(m => m.id) }
     )
 
-    await Promise.map(cancelableMemberships, m => cancelMembership(
-      null,
-      {
-        id: m.id,
-        details: {
-          type: 'SYSTEM',
-          reason: 'Auto Cancellation (generateMemberships)',
-          suppressConfirmation: true,
-          suppressWinback: true
-        }
-      },
-      { req, t, pgdb, redis, mail }
-    ))
+    const details = {
+      type: 'SYSTEM',
+      reason: 'Auto Cancellation (generateMemberships)',
+      suppressConfirmation: true,
+      suppressWinback: true
+    }
+
+    const options = {}
+
+    await Promise.map(
+      cancelableMemberships,
+      cancelableMembership => cancelMembership(
+        cancelableMembership,
+        details,
+        options,
+        t,
+        pgdb
+      )
+    )
   }
 
   if (membershipPeriod) {

@@ -13,7 +13,7 @@ services:
       - PUBLIC_URL=http://localhost:8080
       - FRONTEND_BASE_URL
       - SESSION_SECRET
-      - CORS_WHITELIST_URL
+      - CORS_ALLOWLIST_URL
       - SEND_MAILS
       - MANDRILL_API_KEY
       - DEFAULT_MAIL_FROM_NAME

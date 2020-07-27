@@ -89,7 +89,7 @@ module.exports = async (_, args, { pgdb, req, t, redis, user: me }) => {
       // Only generate memberships (or periods) of pledge has not generated
       // memberships already.
       if (hasPledgeMemberships < 1) {
-        await generateMemberships(pledge.id, transaction, t, req, redis)
+        await generateMemberships(pledge.id, transaction, t, redis)
       }
 
       await sendPaymentSuccessful({ pledgeId: pledge.id, pgdb: transaction, t })

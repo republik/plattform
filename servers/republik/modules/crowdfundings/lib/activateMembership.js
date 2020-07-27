@@ -49,7 +49,7 @@ module.exports = async (membership, user, t, pgdb) => {
 
     const details = {
       type: 'SYSTEM',
-      reason: 'Auto Cancellation (claimMembership)',
+      reason: 'Auto Cancellation (activateMembership)',
       suppressConfirmation: true,
       suppressWinback: true
     }

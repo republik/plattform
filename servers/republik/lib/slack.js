@@ -12,7 +12,10 @@ const {
 exports.publishMonitor = async (_user, message) => {
   const user = transformUser(_user)
   try {
-    const content = `*${user.name}* (${user.email}): ${message}`
+    const content = [
+      `*${user.name}* (${user.email}):`,
+      message.replace(/{ADMIN_FRONTEND_BASE_URL}/g, ADMIN_FRONTEND_BASE_URL)
+    ].join(' ')
     return await publish(SLACK_CHANNEL_IT_MONITOR, content)
   } catch (e) {
     console.warn(e)

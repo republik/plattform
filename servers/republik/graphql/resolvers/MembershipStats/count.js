@@ -1,14 +1,11 @@
-const { PARKING_USER_ID } = process.env
+const { getCount } = require('../../../lib/MembershipStats/evolution')
 
-module.exports = (_, args, { pgdb }) =>
-  pgdb.queryOneField(`
-    SELECT
-      count(DISTINCT m."userId")
-    FROM
-      memberships m
-    WHERE
-      ${PARKING_USER_ID ? 'm."userId" != :excludeUserId AND' : ''}
-      m.active = true
-  `, {
-    excludeUserId: PARKING_USER_ID
-  })
+module.exports = async (_, args, context) => {
+  try {
+    const count = await getCount(context)
+    return count
+  } catch (e) {
+    console.error(e)
+    throw new Error(context.t('api/unexpected'))
+  }
+}

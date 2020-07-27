@@ -147,7 +147,7 @@ type MutationResult {
 }
 
 type MembershipStats {
-  # number of distinct users with an active memberships
+  # Return sum of active or overdue memberships
   count: Int!
   monthlys: [MonthlyMembershipStat!]!
   periods(
@@ -166,6 +166,13 @@ type MembershipStats {
     "Maximum month (YYYY-MM)"
     max: YearMonthDate!
   ): MembershipStatsEvolution!
+
+  lastSeen(
+    "Minimum month (YYYY-MM)"
+    min: YearMonthDate!
+    "Maximum month (YYYY-MM)"
+    max: YearMonthDate!
+  ): MembershipStatsLastSeen!
 
   countRange(
     min: DateTime!
@@ -256,12 +263,24 @@ type MembershipStatsEvolutionBucket {
 
   "Amount of memberships ending during month"
   ending: Int!
-  "Amount of memberships ending during month but still prolongable"
-  prolongable: Int!
-  "Amount of memberships ended during month due to expiration"
+
+  "Amount of memberships which ended as of now"
+  ended: Int!
+  "Amount of memberships which expired as of now"
   expired: Int!
-  "Amount of memberships ended during month due to cancellation"
+  "Amount of memberships which ended and were cancelled as of now"
   cancelled: Int!
+  "Amount of memberships which are active (periods)"
+  active: Int!
+  "Amount of memberships which are overdue"
+  overdue: Int!
+
+  "Amount of memberships ended during month"
+  endedEndOfMonth: Int!
+  "Amount of memberships ended during month due to expiration"
+  expiredEndOfMonth: Int!
+  "Amount of memberships ended during month due to cancellation"
+  cancelledEndOfMonth: Int!
 
   "Amount of active memberships at end of month"
   activeEndOfMonth: Int!
@@ -270,10 +289,23 @@ type MembershipStatsEvolutionBucket {
   "Amount of active memberships at end of month without a donation"
   activeEndOfMonthWithoutDonation: Int!
 
+  "Amount of memberships ending during month but still prolongable"
+  prolongable: Int!
   "Amount of all memberships pending at end of month (ending but still prolongable)"
   pending: Int!
   "Amount of all subscriptions (e.g. MONTHLY_ABO) pending at end of month (ending but still prolongable)"
   pendingSubscriptionsOnly: Int!
+}
+
+type MembershipStatsLastSeen {
+  buckets: [MembershipStatsLastSeenBucket!]
+  updatedAt: DateTime!
+}
+
+type MembershipStatsLastSeenBucket {
+  "Bucket key (YYYY-MM)"
+  key: String!
+  users: Int!
 }
 
 `

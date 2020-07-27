@@ -131,7 +131,7 @@ module.exports = async (_, args, context) => {
     if (pledge.status !== pledgeStatus) {
       // generate Memberships
       if (pledgeStatus === 'SUCCESSFUL') {
-        await generateMemberships(pledge.id, transaction, t, req, redis)
+        await generateMemberships(pledge.id, transaction, t, redis)
       }
 
       // update pledge status

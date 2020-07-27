@@ -23,7 +23,7 @@
     "CLUSTER": {
       "required": true
     },
-    "CORS_WHITELIST_URL": {
+    "CORS_ALLOWLIST_URL": {
       "required": true
     },
     "DEBUG": "*",
@@ -40,7 +40,7 @@
     "DOCUMENTS_RESTRICT_TO_ROLES": {
       "required": true
     },
-    "ENGINE_API_KEY": "",
+    "APOLLO_KEY": "",
     "ERROR_PAGE_URL": {
       "required": true
     },
@@ -70,9 +70,6 @@
     },
     "LOGDNA_KEY": "",
     "MAILCHIMP_API_KEY": "",
-    "MAILCHIMP_FROM_NAME": {
-      "required": true
-    },
     "MAILCHIMP_INTEREST_MEMBER": {
       "required": true
     },
@@ -92,9 +89,6 @@
       "required": true
     },
     "MAILCHIMP_MAIN_LIST_ID": {
-      "required": true
-    },
-    "MAILCHIMP_REPLY_TO": {
       "required": true
     },
     "MAILCHIMP_URL": {

@@ -339,6 +339,7 @@ module.exports = async (_, args, context) => {
       total: pledge.total,
       donation: donation,
       reason: pledge.reason,
+      payload: pledge.payload,
       messageToClaimers: pledge.messageToClaimers,
       status: 'DRAFT'
     }

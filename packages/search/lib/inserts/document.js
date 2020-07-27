@@ -17,6 +17,7 @@ const {
 const { getElasticDoc, createPublish, findTemplates, getResourceUrls } = require('../../lib/Documents')
 
 const loaderBuilders = {
+  ...require('@orbiting/backend-modules-auth/loaders'),
   ...require('@orbiting/backend-modules-discussions/loaders'),
   ...require('@orbiting/backend-modules-documents/loaders')
 }
@@ -81,7 +82,7 @@ const upsertResolvedMeta = (
       }
     })
 
-    if (result.failures.length > 0) {
+    if (result.failures?.length > 0) {
       console.error(entity.repoId, result.failures)
     }
   }))

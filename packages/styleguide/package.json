@@ -1,0 +1,47 @@
+{
+  "name": "@orbiting/backend-modules-styleguide",
+  "version": "0.0.1",
+  "description": "imports @project-r/styleguide and it's peer dependencies",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/orbiting/backends.git"
+  },
+  "author": "Patrick Recher <patrick.recher@republik.ch>",
+  "license": "AGPL-3.0",
+  "publishConfig": {
+    "access": "public"
+  },
+  "bugs": {
+    "url": "https://github.com/orbiting/backends/issues"
+  },
+  "homepage": "https://github.com/orbiting/backends#readme",
+  "scripts": {
+    "link": "yarn link"
+  },
+  "dependencies": {
+    "@project-r/styleguide": "^9.19.3",
+    "@project-r/template-newsletter": "^1.5.0",
+    "d3-array": "1.x",
+    "d3-color": "1.x",
+    "d3-dsv": "1.x",
+    "d3-format": "1.x",
+    "d3-geo": "^1.x",
+    "d3-scale": "2.x",
+    "d3-shape": "1.x",
+    "d3-time": "1.x",
+    "d3-time-format": "2.x",
+    "downshift": "^2.2.2",
+    "glamor": "^2.20.40",
+    "isomorphic-unfetch": "3.x",
+    "lodash": "4.x",
+    "mdast-react-render": ">=1.1",
+    "prop-types": ">=15.5",
+    "react": ">=16.5",
+    "react-dom": ">=16",
+    "react-maskedinput": ">=4.0.1",
+    "react-textarea-autosize": ">=5.1.0",
+    "scroll-into-view": "^1.9.7",
+    "topojson": "3.x"
+  }
+}

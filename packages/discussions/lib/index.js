@@ -6,5 +6,8 @@ module.exports = {
   setDiscussionPreferences: require('./setDiscussionPreferences'),
   slack: require('./slack'),
   sortKey: require('./sortKey'),
-  voteComment: require('./voteComment')
+  voteComment: require('./voteComment'),
+  stats: {
+    evolution: require('./stats/evolution')
+  }
 }

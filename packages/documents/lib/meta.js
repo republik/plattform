@@ -1,6 +1,8 @@
 const visit = require('unist-util-visit')
 
-const { metaFieldResolver } = require('./resolve')
+const { metaFieldResolver, getRepoId } = require('./resolve')
+const Promise = require('bluebird')
+const { v4: isUuid } = require('is-uuid')
 
 // mean German, see http://iovs.arvojournals.org/article.aspx?articleid=2166061
 const WORDS_PER_MIN = 180
@@ -158,6 +160,38 @@ const getEstimatedConsumptionMinutes = (doc, estimatedReadingMinutes) =>
     ? Math.round(doc.meta.audioSource.durationMs / 1000 / 60)
     : estimatedReadingMinutes
 
+// _meta is present on unpublished docs
+// { repo { publication { commit { document } } } }
+const getRepoIdsForDoc = (doc, includeParents) => ([
+  doc.meta?.repoId || doc._meta?.repoId,
+  includeParents && getRepoId(
+    doc.meta?.format || doc._meta?.format
+  ).repoId
+].filter(Boolean))
+
+const getTemplate = doc =>
+  doc.meta?.template || doc._meta?.template
+
+const getAuthorUserIds = (doc, { loaders }, credits) =>
+  Promise.map(
+    (doc?.meta?.credits || doc?._meta?.credits || credits)
+      .filter(c => c.type === 'link'),
+    async ({ url }) => {
+      if (url.startsWith('/~')) {
+        const idOrUsername = url.substring(2)
+        if (isUuid(idOrUsername)) {
+          return idOrUsername
+        } else {
+          return loaders.User.byUsername.load(idOrUsername)
+            .then(u => u?.id)
+        }
+      } else {
+        const source = doc?.meta?.credits || doc?._meta?.credits || credits
+        console.warn(`invalid author link: ${url} in: ${source}`)
+      }
+    }
+  ).then(userIds => userIds.filter(Boolean))
+
 /**
  * Prepares meta information and resolves linked documents in meta which are
  * not available in original {doc.content.meta} fields.
@@ -205,5 +239,8 @@ const getMeta = doc => {
 
 module.exports = {
   getMeta,
-  getWordsPerMinute
+  getWordsPerMinute,
+  getRepoIdsForDoc,
+  getTemplate,
+  getAuthorUserIds
 }

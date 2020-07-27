@@ -1,8 +1,8 @@
 const debug = require('debug')('access:lib:constraints:recipientNotGranter')
 
 /**
- * Constraint checks if recipient's email address is also granter's email
- * address. If true, constraint will fail.
+ * Constraint checks if recipient's email address isn't also granter's email
+ * address. If true, constraint will pass.
  *
  * Story: A granter should not be able to grant access to itself.
  *

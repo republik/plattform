@@ -155,6 +155,7 @@ type Membership {
   active: Boolean!
   renew: Boolean!
   autoPay: Boolean!
+  autoPayIsMutable: Boolean!
   accessGranted: Boolean!
   initialInterval: MembershipTypeInterval!
   initialPeriods: Int!
@@ -164,6 +165,7 @@ type Membership {
   graceEndDate: DateTime
   overdue: Boolean!
   cancellations: [Cancellation!]!
+  canAppendPeriod: Boolean!
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -181,6 +183,7 @@ type MembershipPeriod {
   kind: MembershipPeriodKind!
   beginDate: DateTime!
   endDate: DateTime!
+  isCurrent: Boolean!
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -232,6 +235,7 @@ input PledgeInput {
   reason: String
   messageToClaimers: String
   accessToken: ID
+  payload: JSON
 }
 
 type PledgeResponse {

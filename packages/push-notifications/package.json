@@ -23,7 +23,10 @@
     "dotenv": "^8.2.0"
   },
   "dependencies": {
+    "@firebase/app-types": "0.6.1",
+    "@firebase/auth-interop-types": "0.1.5",
+    "@firebase/util": "0.2.48",
     "apn": "^2.2.0",
-    "firebase-admin": "^8.9.2"
+    "firebase-admin": "^8.12.1"
   }
 }
