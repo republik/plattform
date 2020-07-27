@@ -361,12 +361,10 @@ const MembershipDetails = ({ userId, membership, ...props }) => {
                        <CancelMembership
                          membership={membership}
                          cancellation={cancellation}
-                         refetchQueries={() => [
-                           {
-                             query: GET_MEMBERSHIPS,
-                             variables: { userId }
-                           }
-                         ]}
+                         refetchQueries={() => [{
+                          query: GET_MEMBERSHIPS,
+                          variables: { userId }
+                        }]}
                        />
                      </DD>
                    </DL>
@@ -382,51 +380,37 @@ const MembershipDetails = ({ userId, membership, ...props }) => {
                   <MoveMembership
                     key='MoveMembership'
                     membership={membership}
-                    refetchQueries={({
-                      data: { moveMembership }
-                    }) => [
-                      {
-                        query: GET_MEMBERSHIPS,
-                        variables: { userId }
-                      }
-                    ]}
+                    refetchQueries={() => [{
+                      query: GET_MEMBERSHIPS,
+                      variables: { userId }
+                    }]}
                   />,
                   !!membership.renew &&
                     <CancelMembership
                       key='CancelMembership'
                       membership={membership}
-                      refetchQueries={() => [
-                        {
-                          query: GET_MEMBERSHIPS,
-                          variables: { userId }
-                        }
-                      ]}
+                      refetchQueries={() => [{
+                        query: GET_MEMBERSHIPS,
+                        variables: { userId }
+                      }]}
                     />,
                   !membership.renew && membership.active &&
                     <ReactivateMembership
                       key='ReactivateMembership'
                       membership={membership}
-                      refetchQueries={({
-                        data: { reactivateMembership }
-                      }) => [
-                        {
-                          query: GET_MEMBERSHIPS,
-                          variables: { userId }
-                        }
-                      ]}
+                      refetchQueries={() => [{
+                        query: GET_MEMBERSHIPS,
+                        variables: { userId }
+                      }]}
                     />,
                   (!membership.active || !membership.renew) && membership.type.name === 'MONTHLY_ABO' &&
                     <ReactivateMembership
                       key='ReactivateMonthly'
                       membership={membership}
-                      refetchQueries={({
-                        data: { reactivateMembership }
-                      }) => [
-                        {
-                          query: GET_MEMBERSHIPS,
-                          variables: { userId }
-                        }
-                      ]}
+                      refetchQueries={() => [{
+                        query: GET_MEMBERSHIPS,
+                        variables: { userId }
+                      }]}
                     />,
                   membership.canReset &&
                     <ResetMembership
