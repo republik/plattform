@@ -36,6 +36,7 @@ import { REPUBLIK_FRONTEND_URL } from '../../../server/constants'
 import MoveMembership from './MoveMembership'
 import CancelMembership from './CancelMembership'
 import ReactivateMembership from './ReactivateMembership'
+import ResetMembership from './ResetMembership'
 import AppendPeriod from './AppendPeriod'
 
 import { intersperse } from '../../../lib/helpers'
@@ -101,6 +102,7 @@ const GET_MEMBERSHIPS = gql`
         active
         renew
         canAppendPeriod
+        canReset
       }
     }
   }
@@ -426,6 +428,15 @@ const MembershipDetails = ({ userId, membership, ...props }) => {
                         }
                       ]}
                     />,
+                  membership.canReset &&
+                    <ResetMembership
+                      key='ResetMembership'
+                      membership={membership}
+                      refetchQueries={() => [{
+                        query: GET_MEMBERSHIPS,
+                        variables: { userId }
+                      }]}
+                    />
                 ].filter(Boolean), () => ', ')}
             </DD>
           </DL>
