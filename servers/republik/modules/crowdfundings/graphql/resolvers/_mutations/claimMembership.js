@@ -13,7 +13,7 @@ module.exports = async (_, args, context) => {
 
   try {
     const { voucherCode } = args
-    const membership = await pgdb.public.memberships.findOne({
+    const membership = await transaction.public.memberships.findOne({
       voucherCode,
       voucherable: true,
       active: false
