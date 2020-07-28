@@ -93,6 +93,7 @@ module.exports = async (_, args, context) => {
         total: pledge.total,
         sourceId: pledgePayment.sourceId,
         pspPayload: pledgePayment.pspPayload,
+        makeDefault: pledgePayment.makeDefault,
         userId: user.id,
         pkg,
         transaction,
