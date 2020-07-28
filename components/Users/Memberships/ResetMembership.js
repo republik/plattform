@@ -24,7 +24,7 @@ const RESET_MEMBERSHIP = gql`
   }
 `
 
-export default class ReactivateMembership extends Component {
+export default class ResetMembership extends Component {
   constructor (props) {
     super(props)
     this.state = {
