@@ -43,21 +43,24 @@ module.exports = async (_, args, context) => {
 
     await transaction.transactionCommit()
 
-    const { active, id, sequenceNumber, userId } = updatedMembership
-
     try {
-      if (active) {
-        await enforceSubscriptions({ pgdb, userId })
-      }
+      await enforceSubscriptions({ pgdb, userId: membership.userId })
     } catch (e) {
       // ignore issues with newsletter subscriptions
       console.warn('newsletter subscription changes failed', { req: req._log(), args, error: e })
     }
 
+    const { id, sequenceNumber, userId } = updatedMembership
+
     try {
       await publishMonitor(
         req.user,
-        `resetMembership (id: ${id}) #${sequenceNumber}\n{ADMIN_FRONTEND_BASE_URL}/users/${userId}`
+        [
+          `resetMembership (id: ${id}) #${sequenceNumber}`,
+          `{ADMIN_FRONTEND_BASE_URL}/users/${userId}`,
+          userId !== membership.userId &&
+            `(was claimed by {ADMIN_FRONTEND_BASE_URL}/users/${membership.userId})`
+        ].filter(Boolean).join('\n')
       )
     } catch (e) {
       // swallow slack message
