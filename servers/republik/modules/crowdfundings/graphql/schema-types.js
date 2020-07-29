@@ -166,6 +166,7 @@ type Membership {
   overdue: Boolean!
   cancellations: [Cancellation!]!
   canAppendPeriod: Boolean!
+  canReset: Boolean!
   createdAt: DateTime!
   updatedAt: DateTime!
 }

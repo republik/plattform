@@ -78,6 +78,9 @@ type mutations {
   # YEARLYs are activated and a new membershipPeriod is inserted
   reactivateMembership(id: ID!): Membership!
 
+  # Reset a membership
+  resetMembership(id: ID!): Membership!
+
   # required role: supporter
   updateUser(firstName: String, lastName: String, birthday: Date, phoneNumber: String, address: AddressInput, userId: ID!): User!
 
