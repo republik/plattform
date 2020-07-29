@@ -36,6 +36,7 @@ import { REPUBLIK_FRONTEND_URL } from '../../../server/constants'
 import MoveMembership from './MoveMembership'
 import CancelMembership from './CancelMembership'
 import ReactivateMembership from './ReactivateMembership'
+import ResetMembership from './ResetMembership'
 import AppendPeriod from './AppendPeriod'
 
 import { intersperse } from '../../../lib/helpers'
@@ -101,6 +102,7 @@ const GET_MEMBERSHIPS = gql`
         active
         renew
         canAppendPeriod
+        canReset
       }
     }
   }
@@ -359,12 +361,10 @@ const MembershipDetails = ({ userId, membership, ...props }) => {
                        <CancelMembership
                          membership={membership}
                          cancellation={cancellation}
-                         refetchQueries={() => [
-                           {
-                             query: GET_MEMBERSHIPS,
-                             variables: { userId }
-                           }
-                         ]}
+                         refetchQueries={() => [{
+                          query: GET_MEMBERSHIPS,
+                          variables: { userId }
+                        }]}
                        />
                      </DD>
                    </DL>
@@ -380,38 +380,38 @@ const MembershipDetails = ({ userId, membership, ...props }) => {
                   <MoveMembership
                     key='MoveMembership'
                     membership={membership}
-                    refetchQueries={({
-                      data: { moveMembership }
-                    }) => [
-                      {
-                        query: GET_MEMBERSHIPS,
-                        variables: { userId }
-                      }
-                    ]}
+                    refetchQueries={() => [{
+                      query: GET_MEMBERSHIPS,
+                      variables: { userId }
+                    }]}
                   />,
                   !!membership.renew &&
                     <CancelMembership
                       key='CancelMembership'
                       membership={membership}
-                      refetchQueries={() => [
-                        {
-                          query: GET_MEMBERSHIPS,
-                          variables: { userId }
-                        }
-                      ]}
+                      refetchQueries={() => [{
+                        query: GET_MEMBERSHIPS,
+                        variables: { userId }
+                      }]}
                     />,
-                  !membership.renew && membership.active &&
+                  !membership.renew &&
+                  (membership.active || membership.type.name === 'MONTHLY_ABO') &&
                     <ReactivateMembership
                       key='ReactivateMembership'
                       membership={membership}
-                      refetchQueries={({
-                        data: { reactivateMembership }
-                      }) => [
-                        {
-                          query: GET_MEMBERSHIPS,
-                          variables: { userId }
-                        }
-                      ]}
+                      refetchQueries={() => [{
+                        query: GET_MEMBERSHIPS,
+                        variables: { userId }
+                      }]}
+                    />,
+                  membership.canReset &&
+                    <ResetMembership
+                      key='ResetMembership'
+                      membership={membership}
+                      refetchQueries={() => [{
+                        query: GET_MEMBERSHIPS,
+                        variables: { userId }
+                      }]}
                     />
                 ].filter(Boolean), () => ', ')}
             </DD>
