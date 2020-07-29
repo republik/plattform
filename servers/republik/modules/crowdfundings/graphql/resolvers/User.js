@@ -12,6 +12,7 @@ const {
 const {
   getCustomPackages
 } = require('../../lib/User')
+const { suggest: autoPaySuggest } = require('../../lib/AutoPay')
 const createCache = require('../../lib/cache')
 const { getLastEndDate } = require('../../lib/utils')
 const getStripeClients = require('../../lib/payments/stripe/clients')
@@ -146,15 +147,18 @@ module.exports = {
         .filter(Boolean)
 
       if (allMembershipPeriods.length === 0) {
-        debug('has active but cancelled membership, return prolongBeforeDate: null')
+        debug('found no valid periods to prolong, return prolongBeforeDate: null')
         return null
       }
 
       const lastEndDate = moment(getLastEndDate(allMembershipPeriods))
+      if (!ignoreAutoPayFlag && activeMembership) {
+        const autoPay = await autoPaySuggest(activeMembership.id, pgdb)
 
-      if (!ignoreAutoPayFlag && activeMembership.autoPay && lastEndDate > moment().subtract(1, 'day')) {
-        debug('active membership set to auto-pay and not overdue, return prolongBeforeDate: null')
-        return null
+        if (autoPay && lastEndDate > moment().subtract(1, 'day')) {
+          debug('active membership is auto-payable and not overdue, return prolongBeforeDate: null')
+          return null
+        }
       }
 
       const hasPendingPledges =

@@ -7,6 +7,8 @@ const { getCustomPackages } = require('./User')
 const { getLastEndDate } = require('./utils')
 const createCache = require('./cache')
 
+const PAYMENT_METHODS = ['STRIPE']
+
 const suggest = async (membershipId, pgdb) => {
   // Find membership
   const membership = await pgdb.public.memberships.findOne({ id: membershipId })
@@ -67,11 +69,19 @@ const suggest = async (membershipId, pgdb) => {
   // Find pledge payments
   const pledgePayments = await pgdb.public.pledgePayments.find({ pledgeId: pledge.id })
 
+  if (!pledgePayments.length) {
+    return false
+  }
+
   // Find latest payment
   const payment = await pgdb.public.payments.findOne(
     { id: pledgePayments.map(p => p.paymentId) },
     { orderBy: { createdAt: 'DESC' }, limit: 1 }
   )
+
+  if (!PAYMENT_METHODS.includes(payment.method)) {
+    return false
+  }
 
   // Pick package and options which may be used to submit and autopayment
   const user = await pgdb.public.users.findOne({ id: membership.userId })
