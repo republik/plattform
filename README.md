@@ -6,9 +6,10 @@ For a guide on how to start the frontends see: [docs/how-to-run](https://github.
 
 ## Components
 
-This repo is devided between `servers` and `packages`.
-- **servers:** this directory contains runnable servers
-- **packages:** contains code shared between the servers
+The components in this repo are split into two subfolders:
+
+- [**servers:**](/servers) contains runnable servers
+- [**packages:**](/packages) contains code shared between the servers
 
 
 ## How to run / Development

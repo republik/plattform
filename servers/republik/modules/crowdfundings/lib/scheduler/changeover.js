@@ -140,11 +140,17 @@ const changeover = async (
           throw new Error('Unable to unset membership')
         }
 
+        const membershipCancellations = await transaction.public.membershipCancellations.find({
+          membershipId: sunsetMembership.id,
+          'category !=': 'SYSTEM',
+          revokedAt: null
+        })
+
         const activatedMembership = await transaction.public.memberships.updateAndGetOne(
           { id: electedDormantMembership.id },
           {
             active: true,
-            renew: activeMembership.renew,
+            renew: !membershipCancellations.length,
             voucherCode: null,
             voucherable: false,
             updatedAt: now

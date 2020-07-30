@@ -1,6 +1,7 @@
 const { Roles, transformUser } = require('@orbiting/backend-modules-auth')
 const { autoPayIsMutable: autoPayIsMutableResolver } = require('../Membership')
 const createCache = require('../../../lib/cache')
+const { publishMonitor } = require('../../../../../lib/slack')
 
 module.exports = async (_, { id, autoPay }, context) => {
   const { user: me, t, req } = context
@@ -49,6 +50,16 @@ module.exports = async (_, { id, autoPay }, context) => {
     await createCache({
       prefix: `User:${membership.userId}`
     }, { redis: context.redis }).invalidate()
+
+    try {
+      await publishMonitor(
+        req.user,
+        `setMembershipAutoPay (id: ${id}) #${membership.sequenceNumber} to *${autoPay ? 'TRUE' : 'FALSE'}*\n{ADMIN_FRONTEND_BASE_URL}/users/${membership.userId}`
+      )
+    } catch (e) {
+      // swallow slack message
+      console.warn('publish to slack failed', { req: req._log(), error: e })
+    }
 
     return updatedMembership
   } catch (e) {
