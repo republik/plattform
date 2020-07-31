@@ -2,7 +2,7 @@ A `<ProgressCircle />` represents progress as an arc of a circle. Used in [Comme
 
 Props:
 - `progress`: number; the progress from 0 to 100 (default). Negative values appear counter-clockwise.
-- `radius`: number; the radius of the circle.
+- `size`: number; the desired size of the element (including padding, which is 1/6th to be consistent with material icons).
 - `stroke`: string; the stroke color.
 - `strokeWidth`: number; the stroke width in pixels.
 - `strokePlaceholder`: string; the stroke color of the placeholder.
@@ -29,7 +29,7 @@ Props:
 <ProgressCircle
   progress={66}
   stroke={colors.primary}
-  radius={18}
+  size={36}
   strokeWidth={2}
 />
 ```
@@ -38,7 +38,7 @@ Props:
 <ProgressCircle
   progress={66}
   stroke={colors.primary}
-  radius={18}
+  size={36}
   strokeWidth={4}
 />
 ```
@@ -47,7 +47,7 @@ Props:
 <ProgressCircle
   progress={66}
   stroke={colors.primary}
-  radius={18}
+  size={36}
   strokeWidth={6}
 />
 ```
@@ -55,7 +55,7 @@ Props:
 ```react|span-2
 <ProgressCircle
   progress={-33}
-  radius={18}
+  size={36}
   strokeWidth={4}
 />
 ```
@@ -63,7 +63,7 @@ Props:
 ```react|span-2
 <ProgressCircle
   progress={-66}
-  radius={18}
+  size={36}
   strokeWidth={4}
 />
 ```
@@ -71,7 +71,7 @@ Props:
 ```react|span-2
 <ProgressCircle
   progress={-100}
-  radius={18}
+  size={36}
   strokeWidth={4}
 />
 ```
@@ -79,7 +79,7 @@ Props:
 ```react|span-2
 <ProgressCircle
   progress={33}
-  radius={18}
+  size={36}
   strokeWidth={4}
   strokePlaceholder={colors.divider}
 />
@@ -88,7 +88,7 @@ Props:
 ```react|span-2
 <ProgressCircle
   progress={66}
-  radius={18}
+  size={36}
   strokeWidth={4}
   strokePlaceholder={colors.divider}
 />
@@ -97,7 +97,7 @@ Props:
 ```react|span-2
 <ProgressCircle
   progress={100}
-  radius={18}
+  size={36}
   strokeWidth={4}
   strokePlaceholder={colors.divider}
 />
