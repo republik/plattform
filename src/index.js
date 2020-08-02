@@ -678,6 +678,8 @@ ReactDOM.render(
               path: '/templates/editorialnewsletter',
               title: 'Newsletter',
               imports: {
+                VariableContext: require('./components/VariableComponent')
+                  .VariableContext,
                 webSchema: require('./templates/EditorialNewsletter/web').default(),
                 emailSchema: require('./templates/EditorialNewsletter/email').default(),
                 ...require('./templates/docs'),

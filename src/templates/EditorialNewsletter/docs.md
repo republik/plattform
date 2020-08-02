@@ -11,6 +11,7 @@ The email schema uses table layout in container components.
 ### With cover image
 
 ```react|noSource
+<VariableContext.Provider value={{ firstName: 'Max', lastName: 'Muster '}}>
 <Markdown schema={emailSchema}>{`
 
 <section><h6>FIGURE</h6>
@@ -23,7 +24,21 @@ A caption. _Foto: Laurent Burst_
 
 <section><h6>CENTER</h6>
 
-Ladies and Gentlemen,
+<section><h6>IF</h6>
+
+\`\`\`
+{"present": "lastName"}
+\`\`\`
+
+Guten Tag <span data-variable="firstName"></span> <span data-variable="lastName"></span>
+
+<section><h6>ELSE</h6>
+
+Hallo, guten Tag
+
+<hr /></section>
+
+<hr /></section>
 
 At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est _Lorem ipsum_ dolor sit amet. **Lorem ipsum** dolor _**sit amet**_, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.
 
@@ -80,6 +95,7 @@ Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lo
 <hr /></section>
 
 `}</Markdown>
+</VariableContext.Provider>
 ```
 
 ### Without cover image

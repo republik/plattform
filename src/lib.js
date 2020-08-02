@@ -156,3 +156,5 @@ export { HeaderHeightProvider, useHeaderHeight } from './lib/useHeaderHeight'
 export {
   default as ActiveDebateTeaser
 } from './components/TeaserActiveDebates/DebateTeaser'
+
+export { VariableContext } from './components/VariableComponent'

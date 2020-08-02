@@ -15,6 +15,7 @@ import {
 } from 'mdast-react-render/lib/utils'
 
 import { FigureImage } from '../../components/Figure'
+import { If, Else, Variable } from '../../components/VariableComponent'
 
 import { getDatePath, matchFigure, extractImage } from '../Article/utils'
 
@@ -38,7 +39,13 @@ const createNewsletterSchema = ({
   ListItem,
   ListP
 } = {}) => {
+  const matchSpan = matchType('span')
   const globalInlines = [
+    {
+      matchMdast: node => matchSpan(node) && node.data?.variable,
+      props: node => node.data,
+      component: Variable
+    },
     {
       matchMdast: matchType('break'),
       component: Br,
@@ -250,6 +257,17 @@ const createNewsletterSchema = ({
                   depth: 2,
                   formatButtonText: 'Zwischentitel'
                 }
+              },
+              {
+                matchMdast: matchZone('IF'),
+                component: If,
+                props: node => ({
+                  present: node.data.present
+                })
+              },
+              {
+                matchMdast: matchZone('ELSE'),
+                component: Else
               },
               {
                 matchMdast: matchZone('BUTTON'),
