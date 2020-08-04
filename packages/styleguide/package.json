@@ -20,7 +20,7 @@
     "link": "yarn link"
   },
   "dependencies": {
-    "@project-r/styleguide": "^9.19.3",
+    "@project-r/styleguide": "https://s3.eu-central-1.amazonaws.com/republik-assets-dev/npm/project-r-styleguide-mc-vars-bd05235.tgz",
     "@project-r/template-newsletter": "^1.5.0",
     "d3-array": "1.x",
     "d3-color": "1.x",
