@@ -42,11 +42,6 @@ const createNewsletterSchema = ({
   const matchSpan = matchType('span')
   const globalInlines = [
     {
-      matchMdast: node => matchSpan(node) && node.data?.variable,
-      props: node => node.data,
-      component: Variable
-    },
-    {
       matchMdast: matchType('break'),
       component: Br,
       isVoid: true
@@ -65,6 +60,28 @@ const createNewsletterSchema = ({
       editorModule: 'mark',
       editorOptions: {
         type: 'sup'
+      }
+    },
+    {
+      matchMdast: node => matchSpan(node) && node.data?.variable,
+      props: node => node.data,
+      component: Variable,
+      editorModule: 'variable',
+      editorOptions: {
+        insertVar: true,
+        insertTypes: ['PARAGRAPH'],
+        fields: [
+          {
+            key: 'variable',
+            items: [
+              { value: 'firstName', text: 'Vorname' },
+              { value: 'lastName', text: 'Nachname' }
+            ]
+          },
+          {
+            key: 'fallback'
+          }
+        ]
       }
     }
   ]
@@ -263,11 +280,30 @@ const createNewsletterSchema = ({
                 component: If,
                 props: node => ({
                   present: node.data.present
-                })
+                }),
+                editorModule: 'variableCondition',
+                editorOptions: {
+                  type: 'IF',
+                  insertBlock: 'greeting',
+                  insertTypes: ['PARAGRAPH'],
+                  fields: [
+                    {
+                      key: 'present',
+                      items: [
+                        { value: 'firstName', text: 'Vorname' },
+                        { value: 'lastName', text: 'Nachname' }
+                      ]
+                    }
+                  ]
+                }
               },
               {
                 matchMdast: matchZone('ELSE'),
-                component: Else
+                component: Else,
+                editorModule: 'variableCondition',
+                editorOptions: {
+                  type: 'ELSE'
+                }
               },
               {
                 matchMdast: matchZone('BUTTON'),

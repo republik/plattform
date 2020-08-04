@@ -2,9 +2,9 @@ import React, { useContext, Children } from 'react'
 
 export const VariableContext = React.createContext({})
 
-export const Variable = ({ variable }) => {
+export const Variable = ({ variable, fallback }) => {
   const vars = useContext(VariableContext)
-  return vars[variable]
+  return vars[variable] || fallback || null
 }
 
 export const If = ({ present, children }) => {
