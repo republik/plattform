@@ -1,5 +1,5 @@
 {
-  "updated": "2020-07-22T14:32:09.726Z",
+  "updated": "2020-08-04T09:24:50.126Z",
   "title": "live",
   "data": [
     {
@@ -729,6 +729,30 @@
     {
       "key": "metaData/darkMode",
       "value": "Dark Mode"
+    },
+    {
+      "key": "variable/insert/greeting",
+      "value": "Begrüssung"
+    },
+    {
+      "key": "variable/form/VARIABLE",
+      "value": "Variable"
+    },
+    {
+      "key": "variable/form/IF",
+      "value": "Falls"
+    },
+    {
+      "key": "metaData/field/variable",
+      "value": "Variable"
+    },
+    {
+      "key": "metaData/field/fallback",
+      "value": "Ersatzwert"
+    },
+    {
+      "key": "metaData/field/present",
+      "value": "Vorhanden"
     },
     {
       "key": "uncommittedChanges/unlock/confirm/1",
