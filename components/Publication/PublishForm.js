@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react'
+import React, { Fragment, useState, useMemo } from 'react'
 import { graphql, compose } from 'react-apollo'
 import gql from 'graphql-tag'
 import { css } from 'glamor'
@@ -9,6 +9,7 @@ import IFrame from '../IFrame'
 import { GITHUB_ORG, FRONTEND_BASE_URL } from '../../lib/settings'
 import { intersperse } from '../../lib/utils/helpers'
 import withT from '../../lib/withT'
+import withMe from '../../lib/withMe'
 import { Link, Router } from '../../lib/routes'
 import { swissTime } from '../../lib/utils/format'
 
@@ -23,7 +24,8 @@ import {
   Field,
   Checkbox,
   A,
-  colors
+  colors,
+  VariableContext
 } from '@project-r/styleguide'
 
 import MaskedInput from 'react-maskedinput'
@@ -551,74 +553,85 @@ const Form = ({
   )
 }
 
-const Preview = ({
-  t,
-  commit,
-  commit: {
-    document: { meta }
+const Preview = withMe(
+  ({
+    t,
+    me,
+    commit,
+    commit: {
+      document: { meta }
+    }
+  }) => {
+    const [size, setSize] = useState(PREVIEW_SIZES[0])
+    const variables = useMemo(
+      () => (me ? { firstName: me.firstName, lastName: me.lastName } : {}),
+      [me]
+    )
+
+    const schema = getSchema(meta.template)
+
+    return (
+      <>
+        <Interaction.H2>{t('publish/preview/title')}</Interaction.H2>
+        <Interaction.P>
+          {intersperse(
+            PREVIEW_SIZES.map(previewSize => {
+              const label = t(
+                `publish/preview/${previewSize.label}`,
+                undefined,
+                previewSize.label
+              )
+              if (previewSize === size) {
+                return label
+              }
+              return (
+                <A
+                  key={label}
+                  href='#'
+                  onClick={e => {
+                    e.preventDefault()
+                    setSize(previewSize)
+                  }}
+                >
+                  {label}
+                </A>
+              )
+            }),
+            () => ' '
+          )}
+        </Interaction.P>
+
+        <IFrame
+          size={size}
+          style={{
+            // transition: 'padding 400ms, border-radius 400ms, width 400ms',
+            paddingLeft: PADDING_X,
+            paddingRight: PADDING_X,
+            paddingTop: size.paddingTop,
+            paddingBottom: size.paddingBottom,
+            borderRadius: size.borderRadius,
+            backgroundColor: '#eee',
+            width: size.width + PADDING_X * 2
+          }}
+          dark={
+            commit.document.content && commit.document.content.meta.darkMode
+          }
+        >
+          <VariableContext.Provider value={variables}>
+            {renderMdast(
+              {
+                ...commit.document.content,
+                format: commit.document.meta.format,
+                section: commit.document.meta.section
+              },
+              schema
+            )}
+          </VariableContext.Provider>
+        </IFrame>
+      </>
+    )
   }
-}) => {
-  const [size, setSize] = useState(PREVIEW_SIZES[0])
-
-  const schema = getSchema(meta.template)
-
-  return (
-    <>
-      <Interaction.H2>{t('publish/preview/title')}</Interaction.H2>
-      <Interaction.P>
-        {intersperse(
-          PREVIEW_SIZES.map(previewSize => {
-            const label = t(
-              `publish/preview/${previewSize.label}`,
-              undefined,
-              previewSize.label
-            )
-            if (previewSize === size) {
-              return label
-            }
-            return (
-              <A
-                key={label}
-                href='#'
-                onClick={e => {
-                  e.preventDefault()
-                  setSize(previewSize)
-                }}
-              >
-                {label}
-              </A>
-            )
-          }),
-          () => ' '
-        )}
-      </Interaction.P>
-
-      <IFrame
-        size={size}
-        style={{
-          // transition: 'padding 400ms, border-radius 400ms, width 400ms',
-          paddingLeft: PADDING_X,
-          paddingRight: PADDING_X,
-          paddingTop: size.paddingTop,
-          paddingBottom: size.paddingBottom,
-          borderRadius: size.borderRadius,
-          backgroundColor: '#eee',
-          width: size.width + PADDING_X * 2
-        }}
-        dark={commit.document.content && commit.document.content.meta.darkMode}
-      >
-        {renderMdast(
-          {
-            ...commit.document.content,
-            format: commit.document.meta.format,
-            section: commit.document.meta.section
-          },
-          schema
-        )}
-      </IFrame>
-    </>
-  )
-}
+)
 
 const PublishForm = ({ t, data, publish }) => {
   const { loading, error, repo } = data
