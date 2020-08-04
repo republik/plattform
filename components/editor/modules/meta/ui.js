@@ -109,6 +109,8 @@ const MetaData = ({
     .key(d => (d ? d.ref : 'field'))
     .object(customFields)
 
+  const customFieldsRest = customFields.filter(f => !f.ref)
+
   return (
     <div {...styles.container}>
       <div {...styles.center}>
@@ -220,38 +222,16 @@ const MetaData = ({
               />
             )
           })}
-          {customFields.map(customField => {
-            const label =
-              customField.label ||
-              t(`metaData/field/${customField.key}`, undefined, customField.key)
-            const value = node.data.get(customField.key)
-            const onChange = onInputChange(customField.key)
-            if (customField.items) {
-              return (
-                <Dropdown
-                  key={customField.key}
-                  black
-                  items={customField.items}
-                  label={label}
-                  value={value}
-                  onChange={item => onChange(undefined, item.value)}
-                />
-              )
-            }
-
-            if (!customField.ref) {
-              return (
-                <Field
-                  key={customField.key}
-                  black
-                  label={label}
-                  value={value}
-                  onChange={onChange}
-                />
-              )
-            }
-          })}
         </UIForm>
+        <MetaForm
+          customFields={customFieldsRest}
+          data={Map(
+            customFieldsRest.map(field => [field.key, node.data.get(field.key)])
+          )}
+          onInputChange={onInputChange}
+          black
+          getWidth={() => '50%'}
+        />
         {!!series && <SeriesForm editor={editor} node={node} />}
         {!!Teaser && (
           <div>

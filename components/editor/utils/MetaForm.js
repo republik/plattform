@@ -2,7 +2,14 @@ import React, { Component } from 'react'
 import { css } from 'glamor'
 import { Map } from 'immutable'
 
-import { A, Field, Checkbox, Label, Interaction } from '@project-r/styleguide'
+import {
+  A,
+  Field,
+  Checkbox,
+  Label,
+  Interaction,
+  Dropdown
+} from '@project-r/styleguide'
 import AutosizeInput from 'react-textarea-autosize'
 import MaskedInput from 'react-maskedinput'
 
@@ -92,12 +99,13 @@ class Form extends Component {
       <div {...styles.grid}>
         {data
           .map((value, key) => {
-            const label = t(`metaData/field/${key}`, undefined, key)
-
             let input
             let formattedValue = value
             let onChange
             const customField = customFields.find(f => f.key === key) || {}
+
+            const label =
+              customField.label || t(`metaData/field/${key}`, undefined, key)
 
             if (customField.ref === 'repoIds') {
               const values =
@@ -149,6 +157,17 @@ class Form extends Component {
                     </A>
                   )}
                 </div>
+              )
+            } else if (customField.items) {
+              const defaultOnChange = onInputChange(key)
+              input = (
+                <Dropdown
+                  black={black}
+                  items={customField.items}
+                  label={label}
+                  value={value}
+                  onChange={item => defaultOnChange(undefined, item.value)}
+                />
               )
             } else if (key.match(/image|src/i)) {
               input = (
