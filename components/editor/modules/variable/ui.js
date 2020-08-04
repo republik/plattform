@@ -1,9 +1,10 @@
 import React from 'react'
 import { Map } from 'immutable'
 import { parse } from '@orbiting/remark-preset'
-import { Block } from 'slate'
+import { Block, Inline } from 'slate'
 
 import { Label } from '@project-r/styleguide'
+import InsertVarIcon from 'react-icons/lib/fa/tag'
 
 import MetaForm from '../../utils/MetaForm'
 import withT from '../../../../lib/withT'
@@ -12,6 +13,7 @@ import injectBlock from '../../utils/injectBlock'
 
 import {
   createPropertyForm,
+  createInlineButton,
   buttonStyles,
   matchBlock,
   matchInline
@@ -97,39 +99,79 @@ const createForm = options =>
   })
 
 const createUI = ({ TYPE, editorOptions, context }) => {
-  const { insertBlock } = editorOptions
+  const { insertBlock, insertVar } = editorOptions
 
   const From = editorOptions.fields && createForm({ TYPE, editorOptions })
 
   const newBlock = blockFactories[insertBlock]
   const insertTypes = editorOptions.insertTypes || []
 
-  const InsertButton = withT(({ t, value, onChange }) => {
-    const disabled =
-      value.isBlurred || !value.blocks.every(n => insertTypes.includes(n.type))
+  const InsertButton =
+    newBlock &&
+    withT(({ t, value, onChange }) => {
+      const disabled =
+        value.isBlurred ||
+        !value.blocks.every(n => insertTypes.includes(n.type))
 
-    return (
+      return (
+        <span
+          {...buttonStyles.insert}
+          data-disabled={disabled}
+          data-visible
+          onMouseDown={event => {
+            event.preventDefault()
+            if (!disabled) {
+              const change = value.change()
+              change.call(injectBlock, newBlock({ context }))
+              return onChange(change)
+            }
+          }}
+        >
+          {t(`variable/insert/${insertBlock}`, undefined, insertBlock)}
+        </span>
+      )
+    })
+
+  const textButton =
+    insertVar &&
+    createInlineButton({
+      type: TYPE,
+      parentTypes: insertTypes,
+      isDisabled: ({ value }) => value.isExpanded,
+      reducer: props => event => {
+        event.preventDefault()
+        const { onChange, value } = props
+
+        return onChange(
+          value.change().insertInline(
+            Inline.create({
+              type: TYPE,
+              data: editorOptions.fields?.reduce((data, field) => {
+                if (field.items) {
+                  data[field.key] = field.items[0].value
+                }
+                return data
+              }, {})
+            })
+          )
+        )
+      }
+    })(({ active, disabled, visible, ...props }) => (
       <span
-        {...buttonStyles.insert}
+        {...buttonStyles.mark}
+        {...props}
+        data-active={active}
         data-disabled={disabled}
-        data-visible
-        onMouseDown={event => {
-          event.preventDefault()
-          if (!disabled) {
-            const change = value.change()
-            change.call(injectBlock, newBlock({ context }))
-            return onChange(change)
-          }
-        }}
+        data-visible={visible}
       >
-        {t(`variable/insert/${insertBlock}`, undefined, insertBlock)}
+        <InsertVarIcon />
       </span>
-    )
-  })
+    ))
 
   return {
     forms: [From],
-    insertButtons: [insertBlock && InsertButton]
+    insertButtons: [InsertButton],
+    textFormatButtons: [textButton]
   }
 }
 
