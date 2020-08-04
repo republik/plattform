@@ -678,7 +678,7 @@ ReactDOM.render(
               path: '/templates/editorialnewsletter',
               title: 'Newsletter',
               imports: {
-                VariableContext: require('./components/VariableComponent')
+                VariableContext: require('./components/Variables')
                   .VariableContext,
                 webSchema: require('./templates/EditorialNewsletter/web').default(),
                 emailSchema: require('./templates/EditorialNewsletter/email').default(),

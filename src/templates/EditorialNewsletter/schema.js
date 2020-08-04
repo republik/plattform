@@ -15,7 +15,7 @@ import {
 } from 'mdast-react-render/lib/utils'
 
 import { FigureImage } from '../../components/Figure'
-import { If, Else, Variable } from '../../components/VariableComponent'
+import { If, Else, Variable } from '../../components/Variables'
 
 import { getDatePath, matchFigure, extractImage } from '../Article/utils'
 
