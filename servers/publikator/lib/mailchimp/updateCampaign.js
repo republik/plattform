@@ -29,7 +29,7 @@ module.exports = async ({ campaignId, campaignConfig = {} }) => {
     settings: {
       ...config.subject_line && { subject_line: config.subject_line },
       ...config.title && { title: config.title },
-      ...config.to_name && { to_name: config.to_name },
+      to_name: config.to_name || '*|FNAME|* *|LNAME|*',
       from_name: config.from_name || DEFAULT_MAIL_FROM_NAME,
       reply_to: config.reply_to || DEFAULT_MAIL_FROM_ADDRESS
     }
