@@ -37,7 +37,8 @@ const createNewsletterSchema = ({
   Button,
   List,
   ListItem,
-  ListP
+  ListP,
+  variableContext
 } = {}) => {
   const matchSpan = matchType('span')
   const globalInlines = [
@@ -237,7 +238,8 @@ const createNewsletterSchema = ({
         component: Container,
         editorModule: 'documentPlain',
         props: node => ({
-          meta: node.meta || {}
+          meta: node.meta || {},
+          variableContext
         }),
         rules: [
           {
