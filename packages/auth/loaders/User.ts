@@ -9,7 +9,7 @@ module.exports = (context: any) => {
   const users: PgTable<any> = context.pgdb.public.users;
   const credentials: PgTable<any> = context.pgdb.public.credentials;
   return {
-    byId: createDataLoader((ids: string[]) =>
+    byId: createDataLoader((ids: readonly string[]) =>
       users.find({ id: ids })
         .then(users => users
           .map(u => transformUser(u))
