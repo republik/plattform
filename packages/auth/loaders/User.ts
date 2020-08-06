@@ -1,7 +1,7 @@
 // const { v4: isUuid } = require('is-uuid')
 import {v4 as isUuid} from 'is-uuid'
 
-const createDataLoader = require('@orbiting/backend-modules-dataloader')
+import { default as createDataLoader } from '@orbiting/backend-modules-dataloader'
 import { transformUser } from '@orbiting/backend-modules-auth'
 import {PgTable} from 'pogi';
 
