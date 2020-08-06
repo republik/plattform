@@ -1,6 +1,23 @@
 const { naming } = require('@orbiting/backend-modules-utils')
 
-module.exports = (user, additionalFields = {}) => {
+export interface User {
+  id: string;
+  username: string;
+  firstName: string;
+  lastName: string;
+  name: string;
+  initials: string;
+  hasPublicProfile: boolean;
+  // api read access protected by a resolver functions
+  roles: string[];
+  email: string;
+  // use resolver functions to access _raw
+  // and expose more fields according to custom logic
+  _raw: any;
+  [key: string]: any;
+}
+
+export default (user: any, additionalFields = {}): User | null => {
   if (!user) {
     return null
   }
