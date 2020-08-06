@@ -4,9 +4,9 @@ interface StringObject {
   [key: string]: string;
 }
 
-type KeyType = StringObject | string
+type KeyConstraint = StringObject | string
 
-const getCacheKey = (key: KeyType) => {
+const getCacheKey = (key: KeyConstraint) => {
   if (typeof key === 'string') {
     return key
   }
@@ -30,7 +30,7 @@ interface CreateDataLoaderOptions<Key, LoadedValue> extends DataLoader.Options<K
 }
 
 function defaultFind<Key, LoadedValue>(
-  key: KeyType,
+  key: KeyConstraint,
   rows: AnyObject[],
   { many }: CreateDataLoaderOptions<Key, LoadedValue> = {}
 ) {
@@ -50,7 +50,7 @@ function defaultFind<Key, LoadedValue>(
   }
 }
 
-export default function createDataLoader<Key extends KeyType, LoadedValue>(
+export default function createDataLoader<Key extends KeyConstraint, LoadedValue>(
   loader: (keys: readonly Key[]) => Promise<LoadedValue[]>,
   options?: CreateDataLoaderOptions<Key, LoadedValue>,
   find = defaultFind
