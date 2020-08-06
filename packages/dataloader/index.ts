@@ -25,14 +25,14 @@ interface AnyObject {
   [key: string]: any;
 }
 
-interface CreateDataLoaderOptions<LoadedValue> extends DataLoader.Options<KeyType, LoadedValue, string> {
+interface CreateDataLoaderOptions<Key, LoadedValue> extends DataLoader.Options<Key, LoadedValue, string> {
   many?: boolean;
 }
 
-function defaultFind<LoadedValue>(
+function defaultFind<Key, LoadedValue>(
   key: KeyType,
   rows: AnyObject[],
-  { many }: CreateDataLoaderOptions<LoadedValue> = {}
+  { many }: CreateDataLoaderOptions<Key, LoadedValue> = {}
 ) {
   if (typeof key === 'string') {
     return rows.find(
@@ -50,9 +50,9 @@ function defaultFind<LoadedValue>(
   }
 }
 
-export default function createDataLoader<LoadedValue>(
-  loader: (keys: readonly KeyType[]) => Promise<LoadedValue[]>,
-  options?: CreateDataLoaderOptions<LoadedValue>,
+export default function createDataLoader<Key extends KeyType, LoadedValue>(
+  loader: (keys: readonly Key[]) => Promise<LoadedValue[]>,
+  options?: CreateDataLoaderOptions<Key, LoadedValue>,
   find = defaultFind
 ){
   const { many, ...dlOptions } = options || {}
