@@ -1,6 +1,12 @@
-const DataLoader = require('dataloader')
+import DataLoader from 'dataloader'
 
-const getCacheKey = (key) => {
+interface StringObject {
+  [key: string]: string;
+}
+
+type KeyType = StringObject | string
+
+const getCacheKey = (key: KeyType) => {
   if (typeof key === 'string') {
     return key
   }
@@ -15,7 +21,19 @@ const getCacheKey = (key) => {
   throw new Error('invalid key')
 }
 
-const defaultFind = (key, rows, { many } = {}) => {
+interface AnyObject {
+  [key: string]: any;
+}
+
+interface CreateDataLoaderOptions<LoadedValue> extends DataLoader.Options<KeyType, LoadedValue, string> {
+  many?: boolean;
+}
+
+function defaultFind<LoadedValue>(
+  key: KeyType,
+  rows: AnyObject[],
+  { many }: CreateDataLoaderOptions<LoadedValue> = {}
+) {
   if (typeof key === 'string') {
     return rows.find(
       row => row.id === key
@@ -23,17 +41,20 @@ const defaultFind = (key, rows, { many } = {}) => {
   }
   if (typeof key === 'object') {
     const keyFields = Object.keys(key)
-    const matchRow = row =>
+    const matchRow = (row: any) =>
       keyFields.every(keyField => row[keyField] === key[keyField])
     if (many) {
       return rows.filter(matchRow)
     }
     return rows.find(matchRow)
   }
-  throw new Error('invalid key')
 }
 
-module.exports = (loader, options, find = defaultFind) => {
+export default function createDataLoader<LoadedValue>(
+  loader: (keys: readonly KeyType[]) => Promise<LoadedValue[]>,
+  options?: CreateDataLoaderOptions<LoadedValue>,
+  find = defaultFind
+){
   const { many, ...dlOptions } = options || {}
 
   return new DataLoader(
