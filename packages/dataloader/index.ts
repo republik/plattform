@@ -52,7 +52,7 @@ function defaultFind<Key, LoadedValue>(
 
 export default function createDataLoader<Key extends KeyConstraint, LoadedValue>(
   loader: (keys: readonly Key[]) => Promise<LoadedValue[]>,
-  options?: CreateDataLoaderOptions<Key, LoadedValue>,
+  options?: CreateDataLoaderOptions<Key, LoadedValue> | null,
   find = defaultFind
 ){
   const { many, ...dlOptions } = options || {}
