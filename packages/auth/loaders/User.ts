@@ -16,7 +16,7 @@ module.exports = (context: any) => {
         )
     ),
     byIdOrEmail: createDataLoader(
-      async values => {
+      async (values: readonly string[]) => {
         const ids = values.filter(isUuid)
         const emails = values.filter(v => !ids.includes(v))
 
