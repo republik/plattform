@@ -41,7 +41,7 @@ function defaultFind<Key, LoadedValue>(
   }
   if (typeof key === 'object') {
     const keyFields = Object.keys(key)
-    const matchRow = (row: any) =>
+    const matchRow = (row: AnyObject) =>
       keyFields.every(keyField => row[keyField] === key[keyField])
     if (many) {
       return rows.filter(matchRow)
