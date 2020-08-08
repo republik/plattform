@@ -152,7 +152,7 @@ module.exports = {
       }
 
       const lastEndDate = moment(getLastEndDate(allMembershipPeriods))
-      if (!ignoreAutoPayFlag && activeMembership) {
+      if (!ignoreAutoPayFlag && activeMembership && activeMembership.autoPay) {
         const autoPay = await autoPaySuggest(activeMembership.id, pgdb)
 
         if (autoPay && lastEndDate > moment().subtract(1, 'day')) {
