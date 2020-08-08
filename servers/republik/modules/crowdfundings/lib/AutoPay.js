@@ -67,7 +67,7 @@ const suggest = async (membershipId, pgdb) => {
     : membershipPledgeOptions[0]
 
   if (!membershipPledgeOption) {
-    console.log('failed to find membershipPledgeOption', { membershipId, pledgeId: pledge.id })
+    console.log('failed to find membershipPledgeOption', 'userId', membership.userId, 'membershipId', membershipId, 'pledgeId', pledge.id)
     return false
   }
 
