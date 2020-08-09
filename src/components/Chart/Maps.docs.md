@@ -14,7 +14,7 @@ The Equal Earth projection, by Bojan Šavrič et al., 2018.
       "opacity": 1,
       "colorRange": ["#000"],
       "features": {
-        "url": "https://cdn.repub.ch/s3/republik-assets/assets/geo/world-atlas-110m.json",
+        "url": "/static/geo/world-atlas-110m.json",
         "object": "land"
       }
     }}
@@ -46,7 +46,7 @@ lat,lon,name
       unit: 't CO<sub>2</sub> pro Kopf',
       features: {
         url:
-          'https://cdn.repub.ch/s3/republik-assets/assets/geo/world-atlas-110m.json',
+          '/static/geo/world-atlas-110m.json',
         object: 'land',
       },
     }}
@@ -155,6 +155,232 @@ lat,lon,name
     `.trim()} />
   <Editorial.Note>Geobasis: <Editorial.A href="https://github.com/topojson/world-atlas">World Atlas TopoJSON</Editorial.A></Editorial.Note>
 </div>
+```
+
+### World Wide Country Choropleth
+
+```react
+<div>
+  <CsvChart
+    config={{
+      "type": "GenericMap",
+      "colorLegend": true,
+      "heightRatio": 0.469,
+      "choropleth": true,
+      "thresholds": [
+        30,
+        40,
+        50,
+        60,
+        70,
+        80,
+        90
+      ],
+      "colorRange": [
+        "#800026",
+        "#bd0026",
+        "#e31a1c",
+        "#fc4e2a",
+        "#fd8d3c",
+        "#feb24c",
+        "#fed976",
+        "#ffeda0"
+      ],
+      "features": {
+        "url":
+          "/static/geo/world-atlas-110m-without-antarctic.json",
+        "object": "countries"
+      },
+      "missingDataLegend": "Nicht untersucht",
+      "label": "label",
+      "legendTitle": "Medienfreiheit",
+      "colorLegendPosition": "left",
+      "colorLegendSize": 0.17,
+      "colorLegendMinWidth": 90
+    }}
+    values={`
+feature,value
+004,62.3
+024,66.08
+008,69.75
+784,57.31
+032,71.22
+051,71.4
+036,79.79
+040,84.22
+031,41.52
+108,44.67
+056,87.43
+204,64.89
+854,76.53
+050,50.63
+100,64.94
+070,71.49
+112,50.25
+084,72.5
+068,64.63
+076,65.95
+096,50.35
+064,71.1
+072,76.44
+140,57.13
+124,84.71
+756,89.38
+152,72.69
+156,21.52
+384,71.06
+120,56.72
+180,50.91
+178,63.44
+170,57.34
+188,89.47
+192,36.19
+196,79.55
+203,76.43
+276,87.84
+262,23.27
+208,91.87
+214,72.1
+012,54.48
+218,67.38
+818,43.18
+232,16.5
+724,77.84
+233,87.39
+231,67.18
+246,92.07
+242,72.59
+250,77.08
+266,62.8
+826,77.07
+268,71.41
+288,77.74
+324,65.66
+270,69.38
+624,67.94
+226,43.62
+300,71.2
+320,64.26
+328,73.37
+340,51.8
+191,71.49
+332,69.8
+348,69.16
+360,63.18
+356,54.67
+372,87.4
+364,35.19
+368,44.63
+352,84.88
+376,69.16
+380,76.31
+388,89.49
+400,57.92
+392,71.14
+398,45.89
+404,66.28
+417,69.81
+116,54.54
+410,76.3
+414,65.7
+418,35.72
+422,66.81
+430,67.75
+434,44.23
+144,58.06
+426,69.55
+440,78.81
+442,84.54
+428,81.44
+504,57.12
+498,68.84
+450,72.32
+484,54.55
+807,68.72
+466,65.88
+104,55.23
+499,66.17
+496,70.39
+508,66.21
+478,67.46
+454,70.68
+458,66.88
+516,80.75
+562,71.75
+566,64.37
+558,64.19
+528,90.04
+578,92.16
+524,64.9
+554,89.31
+512,56.58
+586,54.48
+591,70.22
+604,69.06
+608,56.46
+598,76.07
+616,71.35
+408,14.18
+620,88.17
+600,67.03
+634,57.49
+642,74.09
+643,51.08
+646,49.66
+682,37.86
+729,44.67
+686,76.01
+694,69.72
+222,70.3
+706,44.55
+688,68.38
+728,55.51
+740,82.5
+703,77.33
+705,77.36
+752,90.75
+748,54.85
+760,27.43
+148,60.3
+768,70.67
+764,55.06
+762,44.66
+795,14.56
+626,70.1
+780,76.78
+788,70.55
+792,49.98
+158,76.24
+834,59.75
+800,59.05
+804,67.48
+858,84.21
+840,76.15
+860,46.93
+862,54.34
+704,25.29
+887,41.75
+710,77.59
+894,63
+716,59.05
+    `.trim()} />
+  <Editorial.Note>Geobasis: <Editorial.A href="https://github.com/topojson/world-atlas">World Atlas TopoJSON</Editorial.A></Editorial.Note>
+</div>
+```
+
+```
+npm i -g shapefile ndjson-cli d3-geo-projection topojson-simplify topojson-server topojson-client d3-dsv 
+
+shp2json --encoding utf8 -n ~/Desktop/world-map/world-wo-antarctic.shp \
+  | ndjson-map 'i = d.properties.ISO_N3, d.id = i === "-99" ? (d.properties.SOV_A3 === "NOR" ? "578" : d.properties.SOV_A3) : i, d.properties = {name: d.properties.NAME}, d' \
+  > ~/Desktop/world-map/world-wo-antarctic.ndjson
+
+geo2topo -q 1e5 -n countries=<( \
+    ndjson-join 'd.id' <(cat ~/Desktop/world-map/world-wo-antarctic.ndjson) <(csv2json -n public/static/geo/country-names.csv) \
+    | ndjson-map 'd[0].properties.name = d[1].name, d[0]' \
+    | geostitch -n) \
+  | topomerge land=countries \
+  > public/static/geo/world-atlas-110m-without-antarctic.json
 ```
 
 ## ProjectedMap
