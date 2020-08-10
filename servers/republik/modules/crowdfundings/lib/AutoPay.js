@@ -62,9 +62,16 @@ const suggest = async (membershipId, pgdb) => {
 
   const membershipPledgeOptions = pledgeOptions.filter(po => !!po.packageOption)
 
-  const rewardId = membershipPledgeOptions.length > 1
-    ? membershipPledgeOptions.find(po => po.membershipId === membershipId).packageOption.rewardId
-    : membershipPledgeOptions[0].packageOption.rewardId
+  const membershipPledgeOption = membershipPledgeOptions.length > 1
+    ? membershipPledgeOptions.find(po => po.membershipId === membershipId)
+    : membershipPledgeOptions[0]
+
+  if (!membershipPledgeOption) {
+    console.log('failed to find membershipPledgeOption', 'userId', membership.userId, 'membershipId', membershipId, 'pledgeId', pledge.id)
+    return false
+  }
+
+  const rewardId = membershipPledgeOption.packageOption.rewardId
 
   // Find pledge payments
   const pledgePayments = await pgdb.public.pledgePayments.find({ pledgeId: pledge.id })
