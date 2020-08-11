@@ -95,6 +95,10 @@ extend type AudioSource {
   userProgress: MediaProgress
 }
 
+enum CollectionsStatsLastInterval {
+${LAST_INTERVALS.map(i => i.key).join('\n')}
+}
+
 type CollectionsStats {
   evolution(
     "Collection name"
@@ -110,36 +114,18 @@ type CollectionsStats {
     name: String!
     "Interval"
     interval: CollectionsStatsLastInterval!
-  ): CollectionsStatsLast!
+  ): CollectionsStatsBucket!
 }
 
 type CollectionsStatsEvolution {
-  buckets: [CollectionsStatsEvolutionBucket!]
+  buckets: [CollectionsStatsBucket!]
   updatedAt: DateTime!
 }
 
-type CollectionsStatsEvolutionBucket {
+type CollectionsStatsBucket {
   "Bucket key (YYYY-MM)"
   key: String!
 
-  "Amount of records"
-  records: Int!
-
-  "Amount of documents"
-  documents: Int!
-
-  "Amount of media"
-  medias: Int!
-
-  "Amount of unqiue users"
-  users: Int!
-}
-
-enum CollectionsStatsLastInterval {
-${LAST_INTERVALS.map(i => i.key).join('\n')}
-}
-
-type CollectionsStatsLast {
   "Amount of records"
   records: Int!
 

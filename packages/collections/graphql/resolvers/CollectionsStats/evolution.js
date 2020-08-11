@@ -20,7 +20,7 @@ module.exports = async (_, args, context) => {
   }
 
   // Retrieve pre-populated data.
-  const { result = [], updatedAt = new Date() } = data
+  const { result = [], updatedAt } = data
 
   // A list of desired bucket keys to return
   const keys = []
