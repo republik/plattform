@@ -60,7 +60,7 @@
     "populate:collections:last": "packages/collections/script/stats/last.js",
     "populate:discussions:evolution": "packages/discussions/script/stats/evolution/populate.js",
     "populate:discussions:last": "packages/discussions/script/stats/last/populate.js",
-    "populate": "servers/republik/script/MembershipStats/evolution/populate.js; servers/republik/script/MembershipStats/lastSeen/populate.js; packages/collections/script/stats/evolution/populate.js; packages/collections/script/stats/last/populate.js; packages/discussions/script/stats/evolution/populate.js; packages/discussions/script/stats/last/populate.js;",
+    "populate": "servers/republik/script/MembershipStats/evolution/populate.js; servers/republik/script/MembershipStats/lastSeen/populate.js; packages/collections/script/stats/evolution.js; packages/collections/script/stats/last.js; packages/discussions/script/stats/evolution/populate.js; packages/discussions/script/stats/last/populate.js;",
     "db:migrate:create": "packages/migrations/script/create.js",
     "db:migrate:up": "db-migrate up --migrations-dir packages/migrations/migrations",
     "db:migrate:down": "db-migrate down --migrations-dir packages/migrations/migrations --verbose",
