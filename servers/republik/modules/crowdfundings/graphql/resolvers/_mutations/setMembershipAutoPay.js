@@ -1,11 +1,10 @@
-const { Roles } = require('@orbiting/backend-modules-auth')
+const { Roles, transformUser } = require('@orbiting/backend-modules-auth')
 const { autoPayIsMutable: autoPayIsMutableResolver } = require('../Membership')
 const createCache = require('../../../lib/cache')
 const { publishMonitor } = require('../../../../../lib/slack')
 
 module.exports = async (_, { id, autoPay }, context) => {
   const { user: me, t, req } = context
-  Roles.ensureUserHasRole(me, 'supporter')
 
   const transaction = await context.pgdb.transactionBegin()
 
@@ -18,7 +17,17 @@ module.exports = async (_, { id, autoPay }, context) => {
       throw new Error(t('api/membership/404'))
     }
 
-    const autoPayIsMutable = await autoPayIsMutableResolver(membership, null, { ...context, pgdb: transaction })
+    const membershipUser = transformUser(
+      await transaction.public.users.findOne({ id: membership.userId })
+    )
+
+    Roles.ensureUserIsMeOrInRoles(membershipUser, me, ['supporter'])
+
+    const autoPayIsMutable = await autoPayIsMutableResolver(
+      membership,
+      null,
+      { ...context, pgdb: transaction }
+    )
 
     if (!autoPayIsMutable) {
       throw new Error(

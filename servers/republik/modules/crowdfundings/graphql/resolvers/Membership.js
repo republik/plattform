@@ -115,6 +115,8 @@ const membershipResolver = {
   async periods (membership, args, { pgdb }) {
     const periods = await pgdb.public.membershipPeriods.find(
       { membershipId: membership.id },
+      // the frontends rely on endDate DESC
+      // - if you want to change this you'll need to adapt them
       { orderBy: { endDate: 'DESC' } }
     )
 
