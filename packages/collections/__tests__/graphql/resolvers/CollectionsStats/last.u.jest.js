@@ -35,7 +35,7 @@ describe('CollectionsStats.last', () => {
       .toThrowError('Unable to retrieve pre-populated data for Collection.CollectionsStats.last')
   })
 
-  it('throws error if collection name cant be found', async () => {
+  it('throws error if collection name cannot be found', async () => {
     expect.assertions(1)
 
     // Hinder loader to find any data
