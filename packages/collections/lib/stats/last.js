@@ -3,12 +3,7 @@ const Promise = require('bluebird')
 
 const { cache: { create } } = require('@orbiting/backend-modules-utils')
 
-const LAST_INTERVALS = [
-  {
-    key: 'last30days',
-    interval: '30 days'
-  }
-]
+const interval = '30 days'
 
 const QUERY_CACHE_TTL_SECONDS = 60 * 60 * 24 // A day
 
@@ -25,7 +20,7 @@ WITH "documentsMedias" AS (
 
   /* UNION
 
-  SELECT 
+  SELECT
     cmi."collectionId",
     cmi."mediaId" "id",
     cmi."userId",
@@ -46,13 +41,12 @@ FROM "documentsMedias" dm
 GROUP BY 1
 `
 
-const createCache = (options, context) => create(
+const createCache = (context) => create(
   {
     namespace: 'collections',
     prefix: 'stats:last',
     key: 'any',
     ttl: QUERY_CACHE_TTL_SECONDS,
-    ...options
   },
   context
 )
@@ -62,26 +56,16 @@ const populate = async (context, dry) => {
 
   const { pgdb } = context
 
-  const results = await Promise.map(
-    LAST_INTERVALS,
-    async ({ key, interval }) => ({
-      key,
-      result: await pgdb.query(query, { interval })
-    })
-  )
+  const result = await pgdb.query(query, { interval })
 
   if (!dry) {
-    await Promise.each(
-      results,
-      ({ key, result }) => createCache({ key }, context).set({ result, updatedAt: new Date() })
-    )
+    await createCache(context).set({ result, updatedAt: new Date() })
   }
 
-  return results
+  return result
 }
 
 module.exports = {
-  LAST_INTERVALS,
   createCache,
   populate
 }

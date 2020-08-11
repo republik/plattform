@@ -8,7 +8,6 @@ describe('CollectionsStats.last', () => {
   const defaultObj = null
   const defaultArgs = {
     name: Symbol('collection name'),
-    interval: Symbol('interval to propagate')
   }
 
   it('throws error if unable to retreive pre-populated data', async () => {
@@ -86,7 +85,7 @@ describe('CollectionsStats.last', () => {
 
     const result = await UUT(defaultObj, defaultArgs, context)
 
-    expect(createCache).toHaveBeenCalledWith({ key: defaultArgs.interval }, context)
+    expect(createCache).toHaveBeenCalledWith(context)
     expect(getMock).toHaveBeenCalledTimes(1)
     expect(result).toMatchObject(expectedResult)
   })

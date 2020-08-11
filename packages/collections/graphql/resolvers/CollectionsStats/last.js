@@ -1,7 +1,7 @@
 const { createCache } = require('../../../lib/stats/last')
 
 module.exports = async (_, args, context) => {
-  const { name, interval } = args
+  const { name } = args
 
   const collection = await context.loaders.Collection.byKeyObj.load({ name })
 
@@ -10,7 +10,7 @@ module.exports = async (_, args, context) => {
   }
 
   // Fetch pre-populated data
-  const data = await createCache({ key: interval }, context).get()
+  const data = await createCache(context).get()
 
   // In case pre-populated data is not available...
   if (!data) {

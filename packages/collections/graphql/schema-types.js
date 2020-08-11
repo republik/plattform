@@ -95,10 +95,6 @@ extend type AudioSource {
   userProgress: MediaProgress
 }
 
-enum CollectionsStatsLastInterval {
-${LAST_INTERVALS.map(i => i.key).join('\n')}
-}
-
 type CollectionsStats {
   evolution(
     "Collection name"
@@ -108,12 +104,10 @@ type CollectionsStats {
     "Maximum month (YYYY-MM)"
     max: YearMonthDate!
   ): CollectionsStatsEvolution!
-  # Evolution data an interval ago up until now
+  # Evolution data 30 days ago up until now
   last(
     "Collection name"
     name: String!
-    "Interval"
-    interval: CollectionsStatsLastInterval!
   ): CollectionsStatsBucket!
 }
 
