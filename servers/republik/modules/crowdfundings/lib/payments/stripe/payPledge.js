@@ -8,6 +8,7 @@ module.exports = async ({
   total,
   sourceId,
   pspPayload,
+  makeDefault = false,
   userId,
   pkg,
   transaction,
@@ -15,8 +16,7 @@ module.exports = async ({
   t,
   logger = console
 }) => {
-  let isSubscription = pkg.name === 'MONTHLY_ABO'
-
+  const isSubscription = pkg.name === 'MONTHLY_ABO'
   const threeDSecure = pspPayload && pspPayload.type === 'three_d_secure'
   const rememberSourceId = threeDSecure
     ? pspPayload.three_d_secure.card
@@ -44,7 +44,8 @@ module.exports = async ({
         sourceId: rememberSourceId,
         userId,
         pgdb,
-        deduplicate: true
+        deduplicate: true,
+        makeDefault
       })
     }
 

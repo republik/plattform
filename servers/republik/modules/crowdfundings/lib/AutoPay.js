@@ -115,9 +115,6 @@ const suggest = async (membershipId, pgdb) => {
       additionalPeriods: prolongOption.additionalPeriods,
       total: pledgeOptions.length > 1 ? prolongOption.price : pledge.total,
       defaultPrice: prolongOption.price,
-      card: payment.pspPayload &&
-        payment.pspPayload.source &&
-        payment.pspPayload.source.card,
       withDiscount: pledge.donation < 0,
       withDonation: pledge.donation > 0
     }
@@ -133,21 +130,12 @@ const prolong = async (membershipId, pgdb, redis) => {
       throw new Error('suggestion missing')
     }
 
-    if (!suggestion.card) {
-      throw new Error('suggestion is missing prop card')
-    }
-
-    if (!suggestion.card.fingerprint) {
-      throw new Error('suggestion is missing prop card.fingerprint')
-    }
-
     // Create a charge via Stripe
     const charge = await createCharge({
       amount: suggestion.total,
       userId: suggestion.userId,
       companyId: suggestion.companyId,
-      pgdb: transaction,
-      fingerprint: suggestion.card.fingerprint
+      pgdb: transaction
     })
 
     // Insert payment

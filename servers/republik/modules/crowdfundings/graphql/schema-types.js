@@ -253,6 +253,7 @@ input PledgePaymentInput {
   paperInvoice: Boolean
   sourceId: String
   pspPayload: JSON
+  makeDefault: Boolean
   address: AddressInput
 }
 
