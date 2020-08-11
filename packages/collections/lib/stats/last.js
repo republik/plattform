@@ -57,7 +57,7 @@ const createCache = (options, context) => create(
   context
 )
 
-const populate = async (context, resultFn) => {
+const populate = async (context, dry) => {
   debug('populate')
 
   const { pgdb } = context
@@ -70,15 +70,14 @@ const populate = async (context, resultFn) => {
     })
   )
 
-  if (resultFn) {
-    resultFn(results)
-    return
+  if (!dry) {
+    await Promise.each(
+      results,
+      ({ key, result }) => createCache({ key }, context).set({ result, updatedAt: new Date() })
+    )
   }
 
-  await Promise.each(
-    results,
-    ({ key, result }) => createCache({ key }, context).set({ result, updatedAt: new Date() })
-  )
+  return results
 }
 
 module.exports = {

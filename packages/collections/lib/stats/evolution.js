@@ -49,7 +49,7 @@ const createCache = (context) => create(
   context
 )
 
-const populate = async (context, resultFn) => {
+const populate = async (context, dry) => {
   debug('populate')
 
   const { pgdb } = context
@@ -57,12 +57,12 @@ const populate = async (context, resultFn) => {
   // Generate date for range
   const result = await pgdb.query(query)
 
-  if (resultFn) {
-    return resultFn(result)
+  if (!dry) {
+    // Cache said data.
+    await createCache(context).set({ result, updatedAt: new Date() })
   }
 
-  // Cache said data.
-  await createCache(context).set({ result, updatedAt: new Date() })
+  return result
 }
 
 module.exports = {

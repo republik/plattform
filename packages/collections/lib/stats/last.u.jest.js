@@ -90,18 +90,10 @@ describe('populate()', () => {
     })
   })
 
-  it('returns result using callback', async () => {
-    const callbackMock = jest.fn()
+  it('respects dry mode', async () => {
+    const result = await UUT(context, true)
 
-    await UUT(context, callbackMock)
-
-    expect(callbackMock).toHaveBeenCalledTimes(1)
-
-    const [call1] = callbackMock.mock.calls
-    const [arg1] = call1
-
-    expect(arg1).toBeInstanceOf(Array)
-    expect(LAST_INTERVALS).toHaveLength(LAST_INTERVALS.length)
+    expect(result).toBeInstanceOf(Array)
 
     expect(cache.create).not.toHaveBeenCalled()
   })
