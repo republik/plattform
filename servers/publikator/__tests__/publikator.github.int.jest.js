@@ -66,7 +66,7 @@ describe('auth', () => {
     const apolloFetch = global.instance.createApolloFetch()
     global.testUser = {
       email: 'alice.smith@test.project-r.construction',
-      roles: [ ]
+      roles: []
     }
     const result = await apolloFetch({
       query: SIMPLE_REPOS_QUERY
@@ -316,7 +316,7 @@ describe('workflow', () => {
 describe('publish', () => {
   let repoId
   let commits
-  let publishHistory = {}
+  const publishHistory = {}
   let apolloFetch
   const timeout = 1000 * 30
 
@@ -443,11 +443,12 @@ describe('publish', () => {
           return
         }
         const diff = moment(variables.scheduledAt).diff(moment())
-        const waitMs = diff + 1000 * 10 // 10s for publicationScheduler
-        console.log('waitMs:', waitMs, waitMs / 1000)
-        if (waitMs > 0) {
-          await sleep(waitMs)
-        }
+        const waitMs = Math.max(
+          diff + 1000 * 10, // 10s for publicationScheduler
+          1000
+        )
+        // console.log('waitMs:', waitMs, waitMs / 1000)
+        await sleep(waitMs)
       }
     }
     return result
@@ -459,7 +460,7 @@ describe('publish', () => {
       const publications = result.data.repo.latestPublications
       expect(publications.length).toBe(expectations.publications.length)
 
-      for (let expectedPublication of expectations.publications) {
+      for (const expectedPublication of expectations.publications) {
         const { name, live = true } = expectedPublication
         const publication = publications.find(p => p.name === name)
         expect(publication).toBeTruthy()
@@ -512,7 +513,7 @@ describe('publish', () => {
       const refs = await getRefs(repoId)
       expect(refs.length).toBe(Object.keys(expectations.refs).length)
 
-      for (let expectedRefKey of Object.keys(expectations.refs)) {
+      for (const expectedRefKey of Object.keys(expectations.refs)) {
         const expectedRef = expectations.refs[expectedRefKey]
 
         const publish = publishHistory[expectedRef]
@@ -528,7 +529,7 @@ describe('publish', () => {
     if (expectations.redirections) {
       const { pgdb } = global.instance.context
       const redirections = await pgdb.public.redirections.find()
-      for (let expectedRedirection of expectations.redirections) {
+      for (const expectedRedirection of expectations.redirections) {
         const sourcePath = getPathForMeta(publishHistory[expectedRedirection.source].commit.doc.content.meta)
         const targetPath = getPathForMeta(publishHistory[expectedRedirection.target].commit.doc.content.meta)
         const redirection = redirections.find(r => r.source === sourcePath)
@@ -685,8 +686,8 @@ describe('publish', () => {
   }, timeout)
 
   test('check scheduling v4 and v5', async () => {
-    await publishHistory['v4'].waitUntilPublished()
-    await publishHistory['v5'].waitUntilPublished()
+    await publishHistory.v4.waitUntilPublished()
+    await publishHistory.v5.waitUntilPublished()
     await checkState({
       publications: [
         { name: 'v5' }
@@ -779,7 +780,7 @@ describe('publish', () => {
   }, timeout)
 
   test('check scheduling v7 and v8-prepublication', async () => {
-    await publishHistory['v7'].waitUntilPublished()
+    await publishHistory.v7.waitUntilPublished()
     await checkState({
       publications: [
         { name: 'v7' }
@@ -832,10 +833,10 @@ describe('publish', () => {
     })
     expect(result.errors).toBeFalsy()
     expect(result.data).toBeTruthy()
-    await publishHistory['v9'].waitUntilPublished()
+    await publishHistory.v9.waitUntilPublished()
     await sleep(1000 * 15) // wait for ES
     await checkState({
-      publications: [ ],
+      publications: [],
       document: 0,
       refs: { }
     })
@@ -904,7 +905,7 @@ describe('publish', () => {
   }, timeout)
 
   test('check scheduling v11 and v12', async () => {
-    await publishHistory['v11'].waitUntilPublished()
+    await publishHistory.v11.waitUntilPublished()
     await checkState({
       publications: [
         { name: 'v12' }
@@ -921,3 +922,257 @@ describe('publish', () => {
     })
   }, timeout * 2)
 })
+
+// the following tests could be easily exracted into their own file
+// altough, at the time of writing, there was no possibility to ensure
+// that they don't run concurrently with the other tests above.
+// running them concurrently would mess up the state on github.
+describe('document subscriptions and notifications', () => {
+  const user = Users.Editor
+  let repos
+  const originalDoc = docs.postschiff[0]
+  const { authorUserId } = originalDoc
+
+  beforeAll(async () => {
+    const { pgdb } = global.instance.context
+    await pgdb.public.users.insert(Users.Editor)
+    global.testUser = Users.Editor
+
+    repos = {
+      format: {
+        repoId: getRepoId('article-format-test')
+      },
+      child: {
+        repoId: getRepoId('article-child-test')
+      }
+    }
+    for (const step of ['format', 'child']) {
+      const doc = JSON.parse(JSON.stringify(
+        originalDoc.preCommit
+      ))
+      if (step === 'format') {
+        doc.content.meta.slug = 'format'
+      } else {
+        doc.content.meta.format = `https://github.com/${repos.format.repoId}`
+        doc.content.meta.slug = 'child'
+      }
+      repos[step].doc = doc
+    }
+  })
+
+  test('setup: publish format', async () => {
+    const { apolloFetch } = global.instance
+
+    for (const step of ['format', 'child']) {
+      const commitResult = await commit({
+        variables: {
+          parentId: null,
+          message: 'init',
+          repoId: repos[step].repoId,
+          document: repos[step].doc
+        },
+        user
+      })
+      const commitId = commitResult?.data?.commit?.id
+      expect(commitId).toBeTruthy()
+
+      repos[step].commitId = commitId
+    }
+
+    const publishFormatResult = await apolloFetch({
+      query: PUBLISH_MUTAION,
+      variables: {
+        repoId: repos.format.repoId,
+        commitId: repos.format.commitId,
+        updateMailchimp: false,
+        prepublication: false
+      }
+    })
+    expect(publishFormatResult?.data).toBeTruthy()
+  })
+
+  describe('format and author notifications', () => {
+    const { createUsers } = require('@orbiting/backend-modules-test')
+    const [subscriber] = createUsers(1, ['member'])
+
+    const publishFunc = ({ notifySubscribers }) => global.instance.apolloFetch({
+      query: PUBLISH_MUTAION,
+      variables: {
+        repoId: repos.child.repoId,
+        commitId: repos.child.commitId,
+        updateMailchimp: false,
+        prepublication: false,
+        notifySubscribers
+      }
+    })
+
+    let formatSubscription
+    let authorSubscription
+
+    beforeAll(async () => {
+      const { pgdb } = global.instance.context
+      await pgdb.public.users.insert(subscriber)
+      // author
+      await pgdb.public.users.insert({
+        id: authorUserId,
+        firstName: 'Patrick',
+        lastName: 'Author',
+        email: 'patrick.author@test.republik.ch'
+      })
+    })
+
+    test('format', async () => {
+      const { Subscriptions: { upsertSubscription } } =
+        require('@orbiting/backend-modules-subscriptions')
+      const { context } = global.instance
+      const { pgdb } = context
+
+      // subscribe to format
+      formatSubscription = await upsertSubscription(
+        {
+          userId: subscriber.id,
+          objectId: repos.format.repoId,
+          type: 'Document'
+        },
+        { ...context, user: subscriber }
+      )
+      expect(formatSubscription).toBeTruthy()
+      expect(formatSubscription.active).toBeTruthy()
+      expect(await pgdb.public.subscriptions.count()).toBe(1)
+
+      await testNotifications({
+        publishFunc,
+        subscriberId: subscriber.id,
+        subscriptionId: formatSubscription.id,
+        objectType: 'Document',
+        objectId: repos.child.repoId,
+        context
+      })
+    })
+
+    test('format and author', async () => {
+      const { Subscriptions: { upsertSubscription } } =
+        require('@orbiting/backend-modules-subscriptions')
+      const { context } = global.instance
+      const { pgdb } = context
+
+      // subscribe to author
+      authorSubscription = await upsertSubscription(
+        {
+          userId: subscriber.id,
+          objectId: authorUserId,
+          type: 'User'
+        },
+        { ...context, user: subscriber }
+      )
+      expect(authorSubscription).toBeTruthy()
+      expect(authorSubscription.active).toBeTruthy()
+      expect(await pgdb.public.subscriptions.count()).toBe(2)
+
+      // still expecting format notification
+      await testNotifications({
+        publishFunc,
+        subscriberId: subscriber.id,
+        subscriptionId: formatSubscription.id,
+        objectType: 'Document',
+        objectId: repos.child.repoId,
+        context
+      })
+    })
+
+    test('author', async () => {
+      const { context } = global.instance
+      const { pgdb } = context
+
+      await pgdb.public.subscriptions.update(
+        { id: formatSubscription.id },
+        { active: false }
+      )
+
+      // author notification
+      await testNotifications({
+        publishFunc,
+        subscriberId: subscriber.id,
+        // expect notification to come from author subscription
+        subscriptionId: authorSubscription.id,
+        // the event always comes from the doc
+        objectType: 'Document',
+        objectId: repos.child.repoId,
+        context
+      })
+    })
+
+    test('unsubscribe', async () => {
+      const { context } = global.instance
+      const { pgdb } = context
+
+      await pgdb.public.subscriptions.update(
+        { id: authorSubscription.id },
+        { active: false }
+      )
+
+      await testNotifications({
+        publishFunc,
+        subscriberId: subscriber.id,
+        objectType: 'Document',
+        objectId: repos.child.repoId,
+        expectNothing: true,
+        context
+      })
+    })
+  }, 1000 * 60)
+})
+
+const testNotifications = async ({
+  publishFunc,
+  subscriberId,
+  subscriptionId,
+  objectType,
+  objectId,
+  expectNothing = false,
+  context
+}) => {
+  const {
+    Subscriptions: {
+      getUnreadNotificationsForUserAndObject
+    }
+  } = require('@orbiting/backend-modules-subscriptions')
+  const { pgdb } = context
+
+  for (const notifySubscribers of [false, true]) {
+    const expectedLength = notifySubscribers ? (expectNothing ? 0 : 1) : 0
+
+    await Promise.all([
+      pgdb.public.events.truncate({ cascade: true }),
+      pgdb.public.notifications.truncate({ cascade: true })
+    ])
+
+    // publish child
+    expect(
+      await publishFunc({ notifySubscribers }).then(res => res.data)
+    ).toBeTruthy()
+
+    const events = await pgdb.public.events.find({
+      objectType,
+      objectId
+    })
+    expect(events.length).toEqual(expectedLength)
+
+    const notifications = await pgdb.public.notifications.find({
+      userId: subscriberId
+    })
+    expect(notifications.length).toEqual(expectedLength)
+    if (expectedLength) {
+      expect(notifications[0].subscriptionId).toEqual(subscriptionId)
+    }
+
+    expect(await getUnreadNotificationsForUserAndObject(
+      subscriberId,
+      {
+        type: objectType,
+        id: objectId
+      },
+      context
+    ).then(a => a?.length)).toBe(expectedLength)
+  }
+}

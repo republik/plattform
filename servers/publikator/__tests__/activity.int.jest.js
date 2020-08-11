@@ -53,7 +53,7 @@ test('no role uncommittedChanges', async () => {
   const { createSubscriptionClient } = global.instance.clients
   global.testUser = {
     email: 'alice.smith@test.project-r.construction',
-    roles: [ ]
+    roles: []
   }
   await new Promise((resolve) => {
     const client = createSubscriptionClient({

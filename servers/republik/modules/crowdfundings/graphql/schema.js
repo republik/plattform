@@ -78,6 +78,9 @@ type mutations {
   # YEARLYs are activated and a new membershipPeriod is inserted
   reactivateMembership(id: ID!): Membership!
 
+  # Reset a membership
+  resetMembership(id: ID!): Membership!
+
   # required role: supporter
   updateUser(firstName: String, lastName: String, birthday: Date, phoneNumber: String, address: AddressInput, userId: ID!): User!
 
@@ -141,7 +144,10 @@ type mutations {
   # required role: admin
   deleteUser(userId: ID!, unpublishComments: Boolean): User
 
-  enableMembershipAutoPay(id: ID!): Boolean!
-  disableMembershipAutoPay(id: ID!): Boolean!
+  # required role: supporter
+  setMembershipAutoPay(id: ID!, autoPay: Boolean!): Membership!
+
+  # required role: supporter
+  appendPeriod(id: ID!, duration: Int!, durationUnit: MembershipTypeInterval!): Membership!
 }
 `

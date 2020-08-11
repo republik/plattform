@@ -40,7 +40,7 @@
     "DOCUMENTS_RESTRICT_TO_ROLES": {
       "required": true
     },
-    "ENGINE_API_KEY": "",
+    "APOLLO_KEY": "",
     "ERROR_PAGE_URL": {
       "required": true
     },

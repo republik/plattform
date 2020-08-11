@@ -32,6 +32,7 @@ const loaderBuilders = {
   ...require('@orbiting/backend-modules-subscriptions/loaders'),
   ...require('@orbiting/backend-modules-cards/loaders'),
   ...require('@orbiting/backend-modules-embeds/loaders'),
+  ...require('./modules/crowdfundings/loaders'),
   ...require('./loaders')
 }
 
@@ -43,6 +44,7 @@ const mail = require('./modules/crowdfundings/lib/Mail')
 const {
   LOCAL_ASSETS_SERVER,
   MAIL_EXPRESS_RENDER,
+  MAIL_EXPRESS_MAILCHIMP,
   SEARCH_PG_LISTENER,
   NODE_ENV,
   ACCESS_SCHEDULER,
@@ -100,6 +102,10 @@ const run = async (workerId, config) => {
 
   if (MAIL_EXPRESS_RENDER) {
     middlewares.push(require('@orbiting/backend-modules-mail/express/render'))
+  }
+
+  if (MAIL_EXPRESS_MAILCHIMP) {
+    middlewares.push(require('@orbiting/backend-modules-mail/express/mailchimp'))
   }
 
   if (LOCAL_ASSETS_SERVER) {

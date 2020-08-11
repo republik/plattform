@@ -1,5 +1,5 @@
 const { ApolloServer } = require('apollo-server-express')
-const { makeExecutableSchema } = require('apollo-server')
+const { makeExecutableSchema } = require('graphql-tools')
 
 const cookie = require('cookie')
 const cookieParser = require('cookie-parser')

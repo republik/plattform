@@ -63,9 +63,11 @@ const signIn = async ({
     return null
   }
 
-  apolloFetch = apolloFetch || newCookieStore
-    ? global.instance.createApolloFetch()
-    : global.instance.apolloFetch
+  if (!apolloFetch) {
+    apolloFetch = newCookieStore
+      ? global.instance.createApolloFetch()
+      : global.instance.apolloFetch
+  }
 
   try {
     await pgdb.public.users.insert(user)

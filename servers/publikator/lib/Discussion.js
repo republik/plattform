@@ -12,8 +12,13 @@ const upsert = async (docMeta, context, legacyDiscussionId) => {
     collapsable = null,
     board = null,
     tags,
-    tagRequired
+    tagRequired,
+    template
   } = docMeta
+
+  if (['discussion', 'article'].indexOf(template) === -1) {
+    return
+  }
 
   if (!repoId) {
     throw new Error(context.t('api/publish/discussion/repoId/missing'))

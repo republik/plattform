@@ -95,6 +95,46 @@
       "value": "Monatsabos können nicht verschoben werden."
     },
     {
+      "key": "api/membership/auto_pay_not_mutable",
+      "value": "Das autoPay Feld der Membership mit der ID {id} kann nicht bearbeitet werden."
+    },
+    {
+      "key": "api/membership/canReset/errorInactiveMembership",
+      "value": "Mitgliedschaft kann nicht zurückgesetzt werden, da sie nicht aktiv ist."
+    },
+    {
+      "key": "api/membership/canReset/errorNotRenewable",
+      "value": "Mitgliedschaft kann nicht zurückgesetzt werden, da sie nicht erneuerbar ist."
+    },
+    {
+      "key": "api/membership/canReset/errorContainsSubscriptionId",
+      "value": "Mitgliedschaft kann nicht zurückgesetzt werden, da sie eine \"Subscription ID\" enthält."
+    },
+    {
+      "key": "api/membership/canReset/errorTooFewOrManyPeriods",
+      "value": "Mitgliedschaft kann nicht zurückgesetzt werden, da sie keine oder zuviele Perioden besitzt."
+    },
+    {
+      "key": "api/appendPeriod/durationShouldBePositive",
+      "value": "Die `durationShouldBePositive` Schnittstelle erwartet ein positives `duration` Feld. Es wurde folgender Wert übergeben: {duration}."
+    },
+    {
+      "key": "api/appendPeriod/startDateNotValid",
+      "value": "Es konnte kein valides Startdatum erarbeitet werden"
+    },
+    {
+      "key": "api/appendPeriod/durationOrDurationUnitNotValid",
+      "value": "Es konnte mit folgenden Werten kein valides Enddatum errechnet werden: duration: {duration}, durationUnit: {durationUnit}"
+    },
+    {
+      "key": "api/appendPeriod/inactive",
+      "value": "Eine Periode kann ausschliesslich an eine aktive Periode hinzugefügt werden."
+    },
+    {
+      "key": "api/appendPeriod/wrongMembershipType",
+      "value": "Diesem Membership-Typ kann keine Periode hinzugefügt werden."
+    },
+    {
       "key": "api/pledge/alreadyPaid",
       "value": "Sie haben bereits bezahlt. Vielen Dank!"
     },
@@ -601,6 +641,14 @@
     {
       "key": "api/email/membership_owner_autopay_notice/subject",
       "value": "Ihre Mitgliedschaft erneuert sich automatisch"
+    },
+    {
+      "key": "api/email/membership_owner_feedback/subject",
+      "value": "Sind Sie zufrieden?"
+    },
+    {
+      "key": "api/email/membership_owner_upgrade_monthly/subject",
+      "value": "Wechseln Sie zur Jahresmitgliedschaft!"
     },
     {
       "key": "api/email/membership_deactivated_abo_uncancelled/sequenceNumber/true/subject",
@@ -1777,6 +1825,10 @@
     {
       "key": "api/notifications/doc/title",
       "value": "{title} jetzt online"
+    },
+    {
+      "key": "api/notifications/doc/author/title",
+      "value": "Neuer Beitrag von {name}"
     }
   ]
 }

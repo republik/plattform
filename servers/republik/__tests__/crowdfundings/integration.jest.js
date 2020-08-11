@@ -487,3 +487,154 @@ describe('cancelPledge', () => {
     await signOut()
   })
 })
+
+describe('appendPeriod:', () => {
+  const APPEND_PERIOD_TO_MEMBERSHIP = `
+    mutation appendPeriod($id: ID!, $duration: Int!, $durationUnit: MembershipTypeInterval!) {
+      appendPeriod(id: $id, duration: $duration, durationUnit: $durationUnit) {
+        id
+        periods {
+          id
+          kind
+          beginDate
+          endDate
+          isCurrent
+          createdAt
+          updatedAt
+        }
+      }
+    }
+  `
+
+  const appendPeriod = async ({ id, duration, durationUnit }) => {
+    return global.instance.apolloFetch({
+      query: APPEND_PERIOD_TO_MEMBERSHIP,
+      variables: {
+        id, duration, durationUnit
+      }
+    })
+  }
+
+  test('fails without the supporter role', async () => {
+    const { pledgeId } = await prepareNewPledge()
+    await payPledge({
+      pledgeId,
+      method: PAYMENT_METHODS.PAYMENTSLIP,
+      paperInvoice: true
+    })
+
+    const membership = await pgDatabase().public.memberships.findOne({ pledgeId })
+
+    const result = await appendPeriod({
+      id: membership.id,
+      duration: 1,
+      durationUnit: 'year'
+    })
+
+    expect(result.errors).toBeTruthy()
+    expect(result.errors.length).toEqual(1)
+    expect(result.errors[0].message.match(/anmelden/)).toBeTruthy()
+  })
+
+  test('fails with a 0 value duration', async () => {
+    const { pledgeId } = await prepareNewPledge()
+    await payPledge({
+      pledgeId,
+      method: PAYMENT_METHODS.PAYMENTSLIP,
+      paperInvoice: true
+    })
+
+    const membership = await pgDatabase().public.memberships.findOne({ pledgeId })
+    await signIn({ user: Users.Supporter })
+
+    const result = await appendPeriod({
+      id: membership.id,
+      duration: 0,
+      durationUnit: 'year'
+    })
+
+    expect(result.errors).toBeTruthy()
+    expect(result.errors.length).toEqual(1)
+    expect(result.errors[0].message).toEqual(
+      'Die `durationShouldBePositive` Schnittstelle erwartet ein positives `duration` Feld. Es wurde folgender Wert übergeben: 0.'
+    )
+  })
+
+  test('fails with a negative duration', async () => {
+    const { pledgeId } = await prepareNewPledge()
+    await payPledge({
+      pledgeId,
+      method: PAYMENT_METHODS.PAYMENTSLIP,
+      paperInvoice: true
+    })
+
+    const membership = await pgDatabase().public.memberships.findOne({ pledgeId })
+    await signIn({ user: Users.Supporter })
+
+    const result = await appendPeriod({
+      id: membership.id,
+      duration: -99,
+      durationUnit: 'year'
+    })
+
+    expect(result.errors).toBeTruthy()
+    expect(result.errors.length).toEqual(1)
+    expect(result.errors[0].message).toEqual(
+      'Die `durationShouldBePositive` Schnittstelle erwartet ein positives `duration` Feld. Es wurde folgender Wert übergeben: -99.'
+    )
+  })
+
+  test('appends periods', async () => {
+    const { pledgeId } = await prepareNewPledge()
+    await payPledge({
+      pledgeId,
+      method: PAYMENT_METHODS.PAYMENTSLIP,
+      paperInvoice: true
+    })
+
+    const membership = await pgDatabase().public.memberships.findOne({ pledgeId })
+    const period = await pgDatabase().public.membershipPeriods.findOne({
+      membershipId: membership.id
+    })
+    const originalEndDate = period.endDate
+
+    await signIn({ user: Users.Supporter })
+
+    await appendPeriod({
+      id: membership.id,
+      duration: 3,
+      durationUnit: 'year'
+    })
+    await appendPeriod({
+      id: membership.id,
+      duration: 3,
+      durationUnit: 'month'
+    })
+    await appendPeriod({
+      id: membership.id,
+      duration: 3,
+      durationUnit: 'week'
+    })
+    const result = await appendPeriod({
+      id: membership.id,
+      duration: 3,
+      durationUnit: 'day'
+    })
+
+    const newMembership = result.data.appendPeriod
+
+    const amountOfPeriods = newMembership.periods.length
+
+    expect(amountOfPeriods).toEqual(5)
+    const newEndDate = moment(newMembership.periods[0].endDate).toDate()
+
+    const expectedNewEndDate = moment(originalEndDate)
+      .add(3, 'years')
+      .add(3, 'months')
+      .add(3, 'weeks')
+      .add(3, 'days')
+      .toDate()
+
+    expect(newEndDate).toEqual(expectedNewEndDate)
+  })
+})

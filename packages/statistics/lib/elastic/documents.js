@@ -7,7 +7,7 @@ const toPath = url => url.replace('https://www.republik.ch', '')
 const findByPaths = async ({ paths = [], props = ['meta'] }, { elastic }) => {
   debug('findByPaths() %o', { paths })
 
-  const results = await elastic.search({
+  const { body } = await elastic.search({
     index: utils.getIndexAlias('document', 'read'),
     _source: props,
     size: paths.length * 2,
@@ -23,7 +23,7 @@ const findByPaths = async ({ paths = [], props = ['meta'] }, { elastic }) => {
     }
   })
 
-  return results.hits && results.hits.hits && results.hits.hits.map(hit => hit._source)
+  return body?.hits?.hits?.map(hit => hit._source)
 }
 
 module.exports = (_, { elastic }) => ({

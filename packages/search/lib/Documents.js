@@ -508,7 +508,7 @@ const resetScheduledAt = async function (
 }
 
 const unpublish = async (elastic, redis, repoId) => {
-  const result = await elastic.deleteByQuery({
+  await elastic.deleteByQuery({
     index: indexRef.index,
     conflicts: 'proceed',
     refresh: true,
@@ -521,7 +521,6 @@ const unpublish = async (elastic, redis, repoId) => {
     }
   })
   await createCache(redis).invalidate()
-  return result
 }
 
 const publish = (elastic, redis, elasticDoc, hasPrepublication) => ({
@@ -722,7 +721,7 @@ const createPublish = ({
 }
 
 const isPathUsed = async function (elastic, path, repoId) {
-  const response = await elastic.search({
+  const { body } = await elastic.search({
     ...indexRef,
     body: {
       query: {
@@ -739,13 +738,13 @@ const isPathUsed = async function (elastic, path, repoId) {
     }
   })
 
-  debug('findUsedPath', { path, repoId, total: response.hits.total })
+  debug('findUsedPath', { path, repoId, total: body.hits.total })
 
-  return !!response.hits.total
+  return !!body.hits.total
 }
 
 const findPublished = async function (elastic, repoId) {
-  const response = await elastic.search({
+  const { body } = await elastic.search({
     ...indexRef,
     body: {
       query: {
@@ -773,7 +772,7 @@ const findPublished = async function (elastic, repoId) {
     }
   })
 
-  return response.hits.hits.map(hit => hit._source)
+  return body.hits.hits.map(hit => hit._source)
 }
 
 const findTemplates = async function (elastic, template, repoId) {
@@ -781,7 +780,7 @@ const findTemplates = async function (elastic, template, repoId) {
     ? { term: { 'meta.repoId': repoId.split('/').slice(-2).join('/') } }
     : { term: { 'meta.template': template } }
 
-  const response = await elastic.search({
+  const { body } = await elastic.search({
     ...indexRef,
     size: 10000,
     body: {
@@ -805,10 +804,10 @@ const findTemplates = async function (elastic, template, repoId) {
 
   debug(
     'findTemplates',
-    { template, repoId, filter, total: response.hits.total }
+    { template, repoId, filter, total: body.hits.total }
   )
 
-  return response.hits.hits.map(hit => hit._source)
+  return body.hits.hits.map(hit => hit._source)
 }
 
 module.exports = {

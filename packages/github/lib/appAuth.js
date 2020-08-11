@@ -44,30 +44,29 @@ const getInstallationToken = async () => {
   ])
 
   const response = await fetch(
-    `https://api.github.com/installations/${GITHUB_INSTALLATION_ID}/access_tokens`,
+    `https://api.github.com/app/installations/${GITHUB_INSTALLATION_ID}/access_tokens`,
     {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${getAppJWT()}`,
-        'Accept': 'application/vnd.github.machine-man-preview+json'
+        Authorization: `Bearer ${getAppJWT()}`,
+        Accept: 'application/vnd.github.machine-man-preview+json'
       }
     }
   )
     .then(response => response.json())
     .catch(error => {
-      console.error('Error getting installation token:', error)
       return error
     })
 
   if (!response.token) {
+    console.error('Error getting installation token:', response)
     throw new Error('Error getting installation token', response)
   }
 
   const {
-    token,
-    expires_at
+    token
   } = response
-  const expiresAt = new Date(expires_at)
+  const expiresAt = new Date(response.expires_at)
 
   console.log(`new GitHub installation token expires at: ${expiresAt}`)
 

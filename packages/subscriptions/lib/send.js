@@ -1,16 +1,14 @@
 const Promise = require('bluebird')
 const { getSubscriptionsForUserAndObject } = require('./Subscriptions')
-const { sendMailTemplate } = require('@orbiting/backend-modules-mail')
 const pushNotifications = require('@orbiting/backend-modules-push-notifications/lib/app')
 
-const getChannelsForUser = (user, subscriptionInfo, subscription) => {
-  if (subscriptionInfo.objectType === 'Discussion') {
-    return user._raw.discussionNotificationChannels
-  }
+const getChannelsForUser = (user, subscription) => {
   return user._raw.discussionNotificationChannels
 }
 
 const send = async (args, context) => {
+  const { sendMailTemplate } = require('@orbiting/backend-modules-mail')
+
   const {
     users,
     content
@@ -28,19 +26,30 @@ const send = async (args, context) => {
   const now = new Date()
 
   let notifications
+  let event
   const transaction = await pgdb.transactionBegin()
   try {
-    const event = await transaction.public.events.insertAndGet({
-      ...args.event,
-      createdAt: now,
-      updatedAt: now
-    })
+    if (args.event.id) {
+      event = await transaction.public.events.findOne({
+        id: args.event.id
+      })
+      if (!event) {
+        console.error('provided event.id not found')
+        throw new Error(t('api/unexpected'))
+      }
+    } else {
+      event = await transaction.public.events.insertAndGet({
+        ...args.event,
+        createdAt: now,
+        updatedAt: now
+      })
+    }
 
     notifications = await Promise.map(
       users,
       async (user) => {
-        const subscription = user.__subscription ||
-          await getSubscriptionsForUserAndObject(
+        const subscription = user.__subscription || (
+          args.subscription && await getSubscriptionsForUserAndObject(
             user.id,
             {
               type: args.subscription.objectType,
@@ -54,15 +63,17 @@ const send = async (args, context) => {
               }
               return subs
             })
+        )
 
         const notification = await transaction.public.notifications.insertAndGet({
           eventId: event.id,
-          eventObjectType: args.event.objectType,
-          eventObjectId: args.event.objectId,
+          eventObjectType: event.objectType,
+          eventObjectId: event.objectId,
           userId: user.id,
-          subscriptionId: subscription && subscription.id,
+          // simulated for sendTestNotification
+          subscriptionId: (subscription && !subscription.simulated) ? subscription.id : null,
           channels: getChannelsForUser(
-            user, args.subscription, subscription
+            user, subscription
           ),
           content: args.content.app,
           createdAt: now,
@@ -141,6 +152,8 @@ const send = async (args, context) => {
       })
     ))
   ].filter(Boolean))
+
+  return event
 }
 
 module.exports = send

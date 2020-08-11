@@ -24,7 +24,7 @@
   ],
   "lint-staged": {
     "*.js": [
-      "standard --fix"
+      "standard --parser babel-eslint --fix"
     ]
   },
   "config": {
@@ -34,6 +34,7 @@
   },
   "dependencies": {},
   "devDependencies": {
+    "babel-eslint": "^10.1.0",
     "commitizen": "^4.1.2",
     "coveralls": "^3.1.0",
     "cz-conventional-changelog": "^3.2.0",
