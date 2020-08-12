@@ -3,12 +3,7 @@ const Promise = require('bluebird')
 
 const { cache: { create } } = require('@orbiting/backend-modules-utils')
 
-const LAST_INTERVALS = [
-  {
-    key: 'last30days',
-    interval: '30 days'
-  }
-]
+const interval = '30 days'
 
 const QUERY_CACHE_TTL_SECONDS = 60 * 60 * 24 // A day
 
@@ -25,7 +20,7 @@ WITH "commentsVotes" AS (
 
   UNION
 
-  SELECT 
+  SELECT
     c.id "commentId",
     c."discussionId",
     v."userId",
@@ -45,47 +40,35 @@ SELECT
 FROM "commentsVotes" cv
 `
 
-const createCache = (options, context) => create(
+const createCache = (context) => create(
   {
     namespace: 'discussions',
     prefix: 'stats:last',
     key: 'any',
     ttl: QUERY_CACHE_TTL_SECONDS,
-    ...options
   },
   context
 )
 
-const populate = async (context, resultFn) => {
+const populate = async (context, dry) => {
   debug('populate')
 
   const { pgdb } = context
 
-  const results = await Promise.map(
-    LAST_INTERVALS,
-    async ({ key, interval }) => {
-      const rows = await pgdb.query(query, { interval })
+  const result = await pgdb.query(query, { interval })
 
-      return {
-        key,
-        result: rows[0]
-      }
-    }
-  )
-
-  if (resultFn) {
-    resultFn(results)
-    return
+  if (!dry) {
+    await createCache(context).set({
+      result: result[0],
+      updatedAt: new Date(),
+      key: 'discussions:stats:last'
+    })
   }
 
-  await Promise.each(
-    results,
-    ({ key, result }) => createCache({ key }, context).set({ ...result, updatedAt: new Date() })
-  )
+  return result
 }
 
 module.exports = {
-  LAST_INTERVALS,
   createCache,
   populate
 }
