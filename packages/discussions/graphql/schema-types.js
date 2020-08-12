@@ -253,14 +253,16 @@ type DiscussionsStats {
     "Maximum month (YYYY-MM)"
     max: YearMonthDate!
   ): DiscussionsStatsEvolution!
+  # Evolution data 30 days ago, until now
+  last: DiscussionsStatsBucket!
 }
 
 type DiscussionsStatsEvolution {
-  buckets: [DiscussionsStatsEvolutionBucket!]
+  buckets: [DiscussionsStatsBucket!]
   updatedAt: DateTime!
 }
 
-type DiscussionsStatsEvolutionBucket {
+type DiscussionsStatsBucket {
   "Bucket key (YYYY-MM)"
   key: String!
 
@@ -276,6 +278,7 @@ type DiscussionsStatsEvolutionBucket {
   usersPosted: Int!
   "Amount of unqiue users which voted on a comment"
   usersVoted: Int!
-}
 
+  updatedAt: DateTime!
+}
 `

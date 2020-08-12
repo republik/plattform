@@ -102,14 +102,19 @@ type CollectionsStats {
     "Maximum month (YYYY-MM)"
     max: YearMonthDate!
   ): CollectionsStatsEvolution!
+  # Evolution data 30 days ago up until now
+  last(
+    "Collection name"
+    name: String!
+  ): CollectionsStatsBucket!
 }
 
 type CollectionsStatsEvolution {
-  buckets: [CollectionsStatsEvolutionBucket!]
+  buckets: [CollectionsStatsBucket!]
   updatedAt: DateTime!
 }
 
-type CollectionsStatsEvolutionBucket {
+type CollectionsStatsBucket {
   "Bucket key (YYYY-MM)"
   key: String!
 
@@ -124,5 +129,7 @@ type CollectionsStatsEvolutionBucket {
 
   "Amount of unqiue users"
   users: Int!
+
+  updatedAt: DateTime!
 }
 `

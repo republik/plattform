@@ -20,7 +20,7 @@ module.exports = async (_, args, context) => {
   }
 
   // Retrieve pre-populated data.
-  const { result = [], updatedAt = new Date() } = data
+  const { result = [], updatedAt } = data
 
   // A list of desired bucket keys to return
   const keys = []
@@ -35,7 +35,9 @@ module.exports = async (_, args, context) => {
   }
 
   return {
-    buckets: result.filter(({ key }) => keys.includes(key)).filter(({ collectionId }) => collectionId === collection.id),
+    buckets: result
+      .filter(({ key }) => keys.includes(key)).filter(({ collectionId }) => collectionId === collection.id)
+      .map( r => ({ ...r, updatedAt })),
     updatedAt
   }
 }
