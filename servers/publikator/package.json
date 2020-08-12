@@ -27,7 +27,7 @@
     "js-yaml": "^3.14.0",
     "jsonwebtoken": "^8.2.1",
     "leaked-handles": "^5.2.0",
-    "lodash": "^4.17.5",
+    "lodash": "^4.17.19",
     "mdast-util-to-string": "^1.1.0",
     "redis": "^3.0.2",
     "redlock": "^4.1.0",
