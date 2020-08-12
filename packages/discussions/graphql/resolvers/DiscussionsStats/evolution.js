@@ -27,7 +27,9 @@ module.exports = async (_, args, context) => {
   }
 
   return {
-    buckets: result.filter(({ key }) => keys.includes(key)),
+    buckets: result
+      .filter(({ key }) => keys.includes(key))
+      .map( r => ({ ...r, updatedAt })),
     updatedAt
   }
 }
