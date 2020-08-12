@@ -59,7 +59,11 @@ const populate = async (context, dry) => {
   const result = await pgdb.query(query, { interval })
 
   if (!dry) {
-    await createCache(context).set({ result, updatedAt: new Date() })
+    await createCache(context).set({
+      result,
+      updatedAt: new Date(),
+      key: 'collections:stats:last'
+    })
   }
 
   return result

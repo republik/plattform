@@ -18,7 +18,7 @@ module.exports = async (_, args, context) => {
   }
 
   // Retrieve pre-populated data.
-  const { result = [], updatedAt } = data
+  const { result = [], updatedAt, key } = data
 
   const collectionResult = result.find(({ collectionId }) => collectionId === collection.id)
 
@@ -28,6 +28,7 @@ module.exports = async (_, args, context) => {
 
   return {
     ...collectionResult,
-    updatedAt
+    updatedAt,
+    key
   }
 }
