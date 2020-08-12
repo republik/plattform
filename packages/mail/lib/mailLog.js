@@ -1,6 +1,7 @@
 const debug = require('debug')('crowdfundings:lib:mailLog')
+const moment = require('moment')
 
-const wasSent = (onceFor, { pgdb }) => {
+const wasSent = async (onceFor, { pgdb }) => {
   const conditions = Object.keys(onceFor)
     .filter(key => ['type', 'userId', 'keys'].includes(key))
     // if a onceFor value is an array, change the key to `${key} &&`
@@ -23,11 +24,22 @@ const wasSent = (onceFor, { pgdb }) => {
       (agg, cur) => Object.assign(agg, cur),
       {}
     )
-  return pgdb.public.mailLog.count({
+
+  const wasSentSuccessfully = await pgdb.public.mailLog.count({
     ...conditions,
     status: ['SENT', 'SCHEDULED']
   })
     .then(count => count > 0)
+  if (wasSentSuccessfully) {
+    return true
+  }
+
+  return pgdb.public.mailLog.count({
+    ...conditions,
+    status: 'FAILED',
+    'createdAt >': moment().subtract(1, 'day')
+  })
+    .then(count => count >= 5)
 }
 
 const insert = (payload, { pgdb }) =>
