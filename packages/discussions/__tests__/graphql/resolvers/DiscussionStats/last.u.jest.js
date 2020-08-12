@@ -6,7 +6,7 @@ describe('DiscussionStats.last', () => {
   const { createCache } = require('../../../../lib/stats/last')
 
   const defaultObj = null
-  const defaultArgs = { interval: Symbol('interval to propagate') }
+  const defaultArgs = { }
   const defaultContext = Symbol('context')
 
   it('throws error if unable to retreive pre-populated data', async () => {
@@ -22,8 +22,11 @@ describe('DiscussionStats.last', () => {
 
   it('returns pre-populated data', async () => {
     const expectedResult = {
-      foobar: Symbol('foobar'),
-      updatedAt: Symbol('updatedAt')
+      result: {
+        discussions: Symbol('foobar')
+      },
+      updatedAt: Symbol('updatedAt'),
+      key: Symbol('key')
     }
 
     const getMock = jest.fn().mockReturnValue(expectedResult)
@@ -31,8 +34,12 @@ describe('DiscussionStats.last', () => {
 
     const result = await UUT(defaultObj, defaultArgs, defaultContext)
 
-    expect(createCache).toHaveBeenCalledWith({ key: defaultArgs.interval }, defaultContext)
+    expect(createCache).toHaveBeenCalledWith(defaultContext)
     expect(getMock).toHaveBeenCalledTimes(1)
-    expect(result).toMatchObject(expectedResult)
+    expect(result).toMatchObject({
+      updatedAt: expectedResult.updatedAt,
+      key: expectedResult.key,
+      ...expectedResult.result
+    })
   })
 })
