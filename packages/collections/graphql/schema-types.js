@@ -1,5 +1,3 @@
-const { LAST_INTERVALS } = require('../lib/stats/last')
-
 module.exports = `
 
 interface CollectionItemInterface {
