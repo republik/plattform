@@ -13,7 +13,7 @@
     "regiment": "^0.0.5"
   },
   "scripts": {
-    "dev": "NODE_ENV=development nodemon $NODE_DEBUG_OPTION --trace-warnings -w ../../packages -w .env -w package.jsoan -w ../yarn.lock -w server.js -w index.js index.js",
+    "dev": "NODE_ENV=development nodemon $NODE_DEBUG_OPTION --trace-warnings index.js",
     "inspect": "NODE_DEBUG_OPTION=--inspect yarn run dev",
     "start": "node index.js"
   },

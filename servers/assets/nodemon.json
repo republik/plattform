@@ -1,0 +1,4 @@
+{
+  "watch": ["../../packages", "./"],
+  "ext": "js,json,env"
+}

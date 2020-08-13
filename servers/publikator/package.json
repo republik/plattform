@@ -42,9 +42,11 @@
     "yargs": "^15.3.1"
   },
   "scripts": {
-    "dev": "NODE_ENV=development nodemon $NODE_DEBUG_OPTION --trace-warnings -w ../../packages -w graphql -w lib -w express -w .env -w package.json -w ../yarn.lock -w server.js -w index.js index.js",
+    "dev": "NODE_ENV=development nodemon $NODE_DEBUG_OPTION --trace-warnings index.js",
+    "devScheduler": "NODE_ENV=development nodemon $NODE_DEBUG_OPTION --trace-warnings scheduler.js",
     "inspect": "NODE_DEBUG_OPTION=--inspect yarn run dev",
-    "start": "node index.js"
+    "start": "node index.js",
+    "startScheduler": "node scheduler.js"
   },
   "devDependencies": {
     "gsheets": "^2.0.0",

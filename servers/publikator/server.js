@@ -35,9 +35,10 @@ const {
 
 const DEV = NODE_ENV && NODE_ENV !== 'production'
 
+// only used by tests, needs to run server and schedulers
 const start = async () => {
   const server = await run()
-  const _runOnce = await runOnce({ clusterMode: false })
+  const _runOnce = await runOnce()
 
   const close = async () => {
     await server.close()
@@ -127,7 +128,7 @@ const run = async (workerId, config) => {
 }
 
 // in cluster mode, this runs before run otherwise after
-const runOnce = async (...args) => {
+const runOnce = async () => {
   if (cluster.isWorker) {
     throw new Error('runOnce must only be called on cluster.isMaster')
   }

@@ -55,9 +55,10 @@ const {
 
 const DEV = NODE_ENV && NODE_ENV !== 'production'
 
+// only used by tests, needs to run server and schedulers
 const start = async () => {
   const server = await run()
-  const _runOnce = await runOnce({ clusterMode: false })
+  const _runOnce = await runOnce()
 
   const close = async () => {
     await server.close()
@@ -70,7 +71,6 @@ const start = async () => {
   }
 }
 
-// in cluster mode, this runs after runOnce otherwise before
 const run = async (workerId, config) => {
   const localModule = require('./graphql')
   const graphqlSchema = merge(
@@ -172,12 +172,7 @@ const run = async (workerId, config) => {
   }
 }
 
-// in cluster mode, this runs before run otherwise after
-const runOnce = async (...args) => {
-  if (cluster.isWorker) {
-    throw new Error('runOnce must only be called on cluster.isMaster')
-  }
-
+const runOnce = async () => {
   const applicationName = [
     'backends',
     SERVER,
