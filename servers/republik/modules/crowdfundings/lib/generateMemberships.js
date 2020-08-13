@@ -264,9 +264,9 @@ module.exports = async (pledgeId, pgdb, t, redis) => {
 }
 
 async function isMembershipInGracePeriod (membership, pgdb) {
-  const hasActivePeriod = await pgdb.public.membershipPeriods.count({
+  const hasPeriodEndingInTheFuture = await pgdb.public.membershipPeriods.count({
     membershipId: membership.id,
     'endDate >': new Date()
   })
-  return !hasActivePeriod
+  return !hasPeriodEndingInTheFuture
 }
