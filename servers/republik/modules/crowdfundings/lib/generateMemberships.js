@@ -213,17 +213,19 @@ module.exports = async (pledgeId, pgdb, t, redis) => {
       suppressWinback: true
     }
 
-    const options = {}
-
     await Promise.map(
       cancelableMemberships,
-      cancelableMembership => cancelMembership(
-        cancelableMembership,
-        details,
-        options,
-        t,
-        pgdb
-      )
+      async membership => {
+        const immediately = await isMembershipInGracePeriod(membership, pgdb)
+
+        return cancelMembership(
+          membership,
+          details,
+          { immediately },
+          t,
+          pgdb
+        )
+      }
     )
   }
 
@@ -259,4 +261,12 @@ module.exports = async (pledgeId, pgdb, t, redis) => {
 
   const cache = createCache({ prefix: `User:${user.id}` }, { redis })
   cache.invalidate()
+}
+
+async function isMembershipInGracePeriod (membership, pgdb) {
+  const hasActivePeriod = await pgdb.public.membershipPeriods.count({
+    membershipId: membership.id,
+    'endDate >': new Date()
+  })
+  return !hasActivePeriod
 }
