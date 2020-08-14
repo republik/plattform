@@ -4,7 +4,7 @@ Ihre Zahlung ist erfolgreich bei uns eingegangen.
 
 Herzlichen Dank! Lang lebe die Republik!
 
-Hier finden Sie die Details: republik.ch/merci [https://www.republik.ch/merci] 
+Hier finden Sie die Details: https://www.republik.ch/merci 
 
 {{#if VOUCHER_CODES}} Gratulation für Ihre Grossherzigkeit: Sie verschenken die
 Republik. Sie erhalten pro Geschenk-Abonnement einen Sechs-Zeichen-Code. Hier:
@@ -18,12 +18,11 @@ Kuchen oder mit einem Spezialflugzeug an den Himmel geschrieben.
 {{#if NOTEBOOK_OR_TOADBAG}} Wie der Zufall spielt, eignen sich auch das
 Republik-Notizbuch oder die Republik-Tasche perfekt für die Code-Übergabe. Sie
 werden diese per Post zugeschickt bekommen. Stellen Sie dafür bitte sicher, dass
-Sie Ihre Adresse unter republik.ch/merci [https://www.republik.ch/merci] korrekt
-eingetragen haben.
+Sie Ihre Adresse unter https://www.republik.ch/merci korrekt eingetragen haben.
 
 {{/if}} Um das Geschenk einzulösen, muss der neue Besitzer, die neue Besitzerin
-des Codes auf die Seite republik.ch/claim [https://www.republik.ch/claim] gehen.
-Und die sechs Zeichen dort eintippen.
+des Codes auf die Seite https://www.republik.ch/claim gehen. Und die sechs
+Zeichen dort eintippen.
 
 {{/if}} Mit freundlichen Grüssen,
 

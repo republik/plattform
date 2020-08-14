@@ -12,11 +12,11 @@ Wir hoffen, dass auch Sie zufrieden mit unserer Arbeit sind. Wenn ja, haben wir
 eine Bitte an Sie: Gehen Sie noch einen Schritt weiter und wechseln Sie vom
 Monatsabo zu einer Jahresmitgliedschaft.
 
-Zur Jahresmitgliedschaft wechseln [{{link_account_abos_goto}}] Sie erhöhen
-dadurch unsere Planungssicherheit und sichern die Zukunft der Republik
-langfristig. Ausserdem würden wir uns sehr freuen, Sie auch in einem Jahr noch
-an unserer Seite zu wissen. Zusätzlich profitieren Sie bei einer
-Jahresmitgliedschaft von folgenden Vorteilen:
+Zur Jahresmitgliedschaft wechseln {{link_account_abos_goto}} Sie erhöhen dadurch
+unsere Planungssicherheit und sichern die Zukunft der Republik langfristig.
+Ausserdem würden wir uns sehr freuen, Sie auch in einem Jahr noch an unserer
+Seite zu wissen. Zusätzlich profitieren Sie bei einer Jahresmitgliedschaft von
+folgenden Vorteilen:
 
 * Verschiedene Zahlungsmöglichkeiten: Sie können wählen, ob Sie per
   Kreditkarte, Paypal, Postkarte oder Banküberweisung zahlen möchten.
@@ -26,10 +26,10 @@ Jahresmitgliedschaft von folgenden Vorteilen:
   Genossenschaftsrats-Wahlen teilnehmen und damit den Weg der Republik
   mitbestimmen.
 
-Sollten Sie nicht zufrieden sein: Im Dialog [{{link_dialog}}] können Sie uns
+Sollten Sie nicht zufrieden sein: Im Dialog {{link_dialog}} können Sie uns
 Feedback geben oder Vorschläge machen, Kritik loswerden und Fragen stellen.
 Brauchen Sie technische Unterstützung oder funktioniert etwas nicht, wenden Sie
-sich direkt an kontakt@republik.ch.
+sich direkt an kontakt@republik.ch .
 
 Vielen Dank für Ihre Unterstützung!
 
@@ -47,9 +47,9 @@ Beiträgen. In der App, auf der Website und als Newsletter.
 
 Republik AG
 Sihlhallenstrasse 1, CH-8004 Zürich
-www.republik.ch [{{frontend_base_url}}]
+{{frontend_base_url}} 
 kontakt@republik.ch 
 
-Unser Manifest [{{link_manifest}}]
-Das Impressum [{{link_imprint}}]
-Häufig gestellte Fragen [{{link_faq}}]
+Unser Manifest {{link_manifest}} 
+Das Impressum {{link_imprint}} 
+Häufig gestellte Fragen {{link_faq}}

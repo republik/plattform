@@ -1,15 +1,15 @@
 Guten Tag
 
 Geben Sie zur Bestätigung Ihres Logins bitte folgende Ziffern auf der
-Republik-Website ein:
+Republik-Website ein: 
 
-{{code}}
+{{code}} 
 
 Die Bestätigungsziffern sind nur einmal gültig. Sie können die E-Mail
 anschliessend löschen.
 
 Wenn Sie diese E-Mail öfters unaufgefordert erhalten, wenden Sie sich bitte an 
-kontakt@republik.ch.
+kontakt@republik.ch .
 
 Herzlich
 
@@ -23,9 +23,9 @@ Beiträgen. In der App, auf der Website und als Newsletter.
 
 Republik AG
 Sihlhallenstrasse 1, CH-8004 Zürich
-www.republik.ch [{{frontend_base_url}}]
+{{frontend_base_url}} 
 kontakt@republik.ch 
 
-Unser Manifest [{{link_manifest}}]
-Das Impressum [{{link_imprint}}]
-Häufig gestellte Fragen [{{link_faq}}]
+Unser Manifest {{link_manifest}} 
+Das Impressum {{link_imprint}} 
+Häufig gestellte Fragen {{link_faq}}

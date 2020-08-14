@@ -32,7 +32,7 @@ Sihlhallenstrasse 1
 
 {{/if}} Sollte sich Ihre Zahlung mit dieser Zahlungserinnerung kreuzen, erachten
 Sie unsere E-Mail als gegenstandslos. Haben Sie sonst Fragen, melden Sie sich
-jederzeit unter kontakt@republik.ch.
+jederzeit unter kontakt@republik.ch .
 
 Wenn wir Ihre Zahlung in den nächsten 30 Tagen nicht erhalten, gehen wir davon
 aus, dass Sie die Republik nicht mehr lesen möchten, und deaktivieren Ihr Abo
@@ -49,9 +49,9 @@ Beiträgen. In der App, auf der Website und als Newsletter.
 
 Republik AG
 Sihlhallenstrasse 1, CH-8004 Zürich
-www.republik.ch [{{frontend_base_url}}]
+{{frontend_base_url}} 
 kontakt@republik.ch 
 
-Unser Manifest [{{link_manifest}}]
-Das Impressum [{{link_imprint}}]
-Häufig gestellte Fragen [{{link_faq}}]
+Unser Manifest {{link_manifest}} 
+Das Impressum {{link_imprint}} 
+Häufig gestellte Fragen {{link_faq}}

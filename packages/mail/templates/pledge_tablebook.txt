@@ -18,7 +18,7 @@ Bücher liefern wir innerhalb von 7 Werktagen. {{#if waiting_for_payment}}Der
 Versand erfolgt erst nach Zahlungseingang.{{/if}}
 
 Stellen Sie bitte sicher, dass Sie Ihre Adresse unter {{link_account}}
-[{{link_account_account}}] korrekt eingetragen haben.
+{{link_account_account}} korrekt eingetragen haben.
 
 {{#if `payment_method == "PAYMENTSLIP"`}} Sie haben eine Banküberweisung als
 Zahlungsweg gewählt.
@@ -54,9 +54,9 @@ Beiträgen. In der App, auf der Website und als Newsletter.
 
 Republik AG
 Sihlhallenstrasse 1, CH-8004 Zürich
-www.republik.ch [{{frontend_base_url}}]
+{{frontend_base_url}} 
 kontakt@republik.ch 
 
-Unser Manifest [{{link_manifest}}]
-Das Impressum [{{link_imprint}}]
-Häufig gestellte Fragen [{{link_faq}}]
+Unser Manifest {{link_manifest}} 
+Das Impressum {{link_imprint}} 
+Häufig gestellte Fragen {{link_faq}}

@@ -64,7 +64,7 @@ die Beschenkten darüber per E-Mail informiert.
 {{/if}} Bücher und Taschen liefern wir innerhalb von 7 Werktagen. 
 
 Stellen Sie dafür bitte sicher, dass Sie Ihre Adresse unter {{link_account}}
-[{{link_account_account}}] korrekt eingetragen haben.
+{{link_account_account}} korrekt eingetragen haben.
 
 {{/if}} {{/unless}} Herzlich
 
@@ -78,9 +78,9 @@ Beiträgen. In der App, auf der Website und als Newsletter.
 
 Republik AG
 Sihlhallenstrasse 1, CH-8004 Zürich
-www.republik.ch [{{frontend_base_url}}]
+{{frontend_base_url}} 
 kontakt@republik.ch 
 
-Unser Manifest [{{link_manifest}}]
-Das Impressum [{{link_imprint}}]
-Häufig gestellte Fragen [{{link_faq}}]
+Unser Manifest {{link_manifest}} 
+Das Impressum {{link_imprint}} 
+Häufig gestellte Fragen {{link_faq}}

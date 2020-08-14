@@ -2,12 +2,13 @@ Guten Tag
 
 Vielen Dank für Ihr Interesse.
 
-Bestätigen Sie Ihre Newsletter-Anmeldung mit folgendem Link:
+Bestätigen Sie Ihre Newsletter-Anmeldung mit folgendem Link.
 
-Anmeldung bestätigen [{{CONFIRM_LINK}}]
+Anmeldung bestätigen: 
+{{CONFIRM_LINK}} 
 
-Wenn Sie diese E-Mail öfters unaufgefordert erhalten, wenden Sie sich bitte an
-kontakt@republik.ch.
+Wenn Sie diese E-Mail öfters unaufgefordert erhalten, 
+wenden Sie sich bitte an kontakt@republik.ch .
 
 Wir freuen uns, Ihnen jeden Abend Brauchbares zur Pandemie zu liefern.
 
@@ -16,14 +17,14 @@ Ihre Crew der Republik
 Die Republik ist ein unabhängiges und werbefreies digitales Magazin für Politik,
 Wirtschaft, Gesellschaft und Kultur. Es wird von seinen Leserinnen und Lesern
 finanziert und erscheint von Montag bis Samstag mit täglich ein bis drei neuen
-Beiträgen. In der App, auf der Website und als Newsletter.
+Beiträgen. In der App, auf der Website und als Newsletter. 
 
 
 Republik AG
 Sihlhallenstrasse 1, CH-8004 Zürich
-www.republik.ch [{{frontend_base_url}}]
-kontakt@republik.ch
+{{frontend_base_url}} 
+kontakt@republik.ch 
 
-Unser Manifest [{{link_manifest}}]
-Das Impressum [{{link_imprint}}]
-Häufig gestellte Fragen [{{link_faq}}]
+Unser Manifest {{link_manifest}} 
+Das Impressum {{link_imprint}} 
+Häufig gestellte Fragen {{link_faq}}

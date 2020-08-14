@@ -43,7 +43,7 @@ Sihlhallenstrasse 1
 
 {{/if}} Sollte sich Ihre Überweisung mit dieser Zahlungserinnerung kreuzen,
 erachten Sie unsere E-Mail als gegenstandslos. Haben Sie sonst Fragen, melden
-Sie sich jederzeit unter kontakt@republik.ch.
+Sie sich jederzeit unter kontakt@republik.ch .
 
 Herzlich
 Ihre Crew der Republik
@@ -56,9 +56,9 @@ Beiträgen. In der App, auf der Website und als Newsletter.
 
 Republik AG
 Sihlhallenstrasse 1, CH-8004 Zürich
-www.republik.ch [{{frontend_base_url}}]
+{{frontend_base_url}} 
 kontakt@republik.ch 
 
-Unser Manifest [{{link_manifest}}]
-Das Impressum [{{link_imprint}}]
-Häufig gestellte Fragen [{{link_faq}}]
+Unser Manifest {{link_manifest}} 
+Das Impressum {{link_imprint}} 
+Häufig gestellte Fragen {{link_faq}}

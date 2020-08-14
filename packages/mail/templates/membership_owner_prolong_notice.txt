@@ -9,8 +9,8 @@ Ganz gleich, ob Sie uns einmal pro Woche, einmal pro Monat oder einmal pro Jahr
 lesen – mit Ihrem Beitrag stärken Sie kritischen Journalismus, die vierte Gewalt
 und die Demokratie.
 
-Jetzt erneuern [{{prolong_url}}] Als Magazin bieten wir Einordnung und
-Vertiefung anstelle einer Flut von Nachrichten. Wir recherchieren, um Missstände
+Jetzt erneuern {{prolong_url}} Als Magazin bieten wir Einordnung und Vertiefung
+anstelle einer Flut von Nachrichten. Wir recherchieren, um Missstände
 aufzudecken, oft monatelang. Und diskutieren über drängende Fragen der
 Gegenwart.
 
@@ -23,7 +23,7 @@ Magazin über ihre Leserinnen und Leser.
 
 Nun haben Sie die Wahl:
 Sie bleiben an Bord und investieren damit weiter in die Republik und ihre Idee.
-[{{prolong_url}}]
+{{prolong_url}} 
 Sie kündigen Ihre Mitgliedschaft bis zum {{cancel_until_date}}. 
 
 Wie auch immer Sie entscheiden: Wir hoffen, dass wir Sie im vergangenen Jahr
@@ -41,9 +41,9 @@ Beiträgen. In der App, auf der Website und als Newsletter.
 
 Republik AG
 Sihlhallenstrasse 1, CH-8004 Zürich
-www.republik.ch [{{frontend_base_url}}]
+{{frontend_base_url}} 
 kontakt@republik.ch 
 
-Unser Manifest [{{link_manifest}}]
-Das Impressum [{{link_imprint}}]
-Häufig gestellte Fragen [{{link_faq}}]
+Unser Manifest {{link_manifest}} 
+Das Impressum {{link_imprint}} 
+Häufig gestellte Fragen {{link_faq}}
