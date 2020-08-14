@@ -25,7 +25,7 @@ Wie auch immer Sie entscheiden: Wir hoffen, dass wir Sie im vergangenen Jahr
 immer wieder erfolgreich informiert, unterhalten, geärgert und beglückt haben.
 
 Falls Sie Fragen haben, beantworten wir diese sehr gerne unter 
-kontakt@republik.ch.
+kontakt@republik.ch .
 
 Herzlich
 
@@ -39,7 +39,7 @@ Beiträgen. In der App, auf der Website und als Newsletter.
 
 Republik AG
 Sihlhallenstrasse 1, CH-8004 Zürich
-www.republik.ch {{frontend_base_url}} 
+{{frontend_base_url}} 
 kontakt@republik.ch 
 
 Unser Manifest {{link_manifest}} 

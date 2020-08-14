@@ -14,7 +14,7 @@ Sind Sie mit uns zufrieden? Gefällt Ihnen, was Sie in der Republik lesen, sehen
 und hören? Im Dialog {{link_dialog}} können Sie uns Feedback geben oder
 Vorschläge machen, Kritik loswerden und Fragen stellen. Brauchen Sie technische
 Unterstützung oder funktioniert etwas nicht, wenden Sie sich direkt an 
-kontakt@republik.ch.
+kontakt@republik.ch .
 
 {{#unless subscriptions_count}} Möchten Sie mehr lesen, aber Sie wissen nicht,
 was?
@@ -71,7 +71,7 @@ Beiträgen. In der App, auf der Website und als Newsletter.
 
 Republik AG
 Sihlhallenstrasse 1, CH-8004 Zürich
-www.republik.ch {{frontend_base_url}} 
+{{frontend_base_url}} 
 kontakt@republik.ch 
 
 Unser Manifest {{link_manifest}} 

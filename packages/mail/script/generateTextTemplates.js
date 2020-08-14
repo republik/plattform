@@ -36,8 +36,10 @@ const run = async () => {
             format: {
               anchor: (elem, fn, options) => {
                 // based on https://github.com/werk85/node-html-to-text/blob/7894809a57e9066501b954dbd9c16fd34c3bcebf/lib/formatter.js#L148-L176
-                // custom: add extra space after urls
                 // backed in noLinkBrackets: true and hideLinkHrefIfSameAsText: true
+                // custom
+                // - add extra space after urls
+                // - add normalizeUrl for toHideSameLink
                 function getHref () {
                   if (!elem.attribs || !elem.attribs.href) { return undefined }
                   const href = elem.attribs.href.replace(/^mailto:/, '')
@@ -53,12 +55,17 @@ const run = async () => {
                 const storedCharCount = options.lineCharCount
                 const text = getText()
                 const href = getHref()
-                const toHideSameLink = href === text.replace(/\n/g, '')
-                const result = (!href || toHideSameLink)
-                  ? text
-                  : (!text)
-                    ? href
-                    : text + ' ' + href + ' '
+                function normalizeUrl (url = '') {
+                  return url
+                    .replace(/\s+/g, '')
+                    .replace(/^(https?:\/\/)?(www\.)?/, '')
+                    .replace('{{frontend_base_url}}', 'republik.ch')
+                }
+                const toHideSameLink = href && normalizeUrl(href) === normalizeUrl(text)
+
+                const result = toHideSameLink || !text
+                  ? href + ' '
+                  : text + ' ' + href + ' '
 
                 options.lineCharCount = storedCharCount
                 return defaultFormat.text({ data: result, type: 'text' }, options)
@@ -70,7 +77,7 @@ const run = async () => {
       )
     }
   ).then(() => {
-    const custom = 'cf_comment_notification_new.txt signin.txt signin_code.txt'
+    const custom = 'cf_comment_notification_new.txt signin.txt signin_code.txt newsletter_request_COVID19.txt'
       .split(' ')
       .filter(t => !argv.templates || argv.templates.includes(t))
     if (custom.length) {

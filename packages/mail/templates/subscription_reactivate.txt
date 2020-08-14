@@ -10,8 +10,8 @@ erhalten Sie mit dieser E-Mail auch Ihren Status als Verlegerin oder Verleger
 zurück.
 
 Die von Ihnen angegebene Kreditkarte belasten wir monatlich mit CHF 22.–.
-Ihre persönliche Übersicht zu Ihrem Abonnement finden Sie hier: 
-{{link_account}} 
+Ihre persönliche Übersicht zu Ihrem Abonnement finden Sie hier {{link_account}} 
+.
 
 Am gleichen Ort können Sie alle Einstellungen vornehmen (und z. B.
 Kreditkarteninformationen ändern) oder das Abo auch wieder jederzeit kündigen.
@@ -29,7 +29,7 @@ Beiträgen. In der App, auf der Website und als Newsletter.
 
 Republik AG
 Sihlhallenstrasse 1, CH-8004 Zürich
-www.republik.ch {{frontend_base_url}} 
+{{frontend_base_url}} 
 kontakt@republik.ch 
 
 Unser Manifest {{link_manifest}} 

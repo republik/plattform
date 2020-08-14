@@ -1,7 +1,7 @@
 Guten Tag
 
 {{#unless RECIPIENT_HAS_MEMBERSHIPS}} {{#if `RECIPIENT_EMAIL != GRANTER_EMAIL`}} 
-{{GRANTER_NAME}} ({{GRANTER_EMAIL}}) hat die Republik – ein neues, unabhängiges
+{{GRANTER_NAME}} ({{GRANTER_EMAIL}} ) hat die Republik – ein neues, unabhängiges
 und werbefreies digitales Magazin für Politik, Wirtschaft, Gesellschaft und
 Kultur – mit Ihnen geteilt. 
 
@@ -35,11 +35,8 @@ der Macht und Respekt vor dem Menschen.
 Um die Republik näher kennenzulernen, melden Sie sich einfach vor dem
 {{GRANT_BEGIN_BEFORE}} hier an:
 
-Jetzt anmelden
-{{LINK_CLAIM_PREFILLED}}
-
-Falls dieser Button nicht funktioniert:
-Öffnen Sie bitte {{LINK_CLAIM_CONTEXTLESS}} und geben
+Jetzt anmelden {{LINK_CLAIM_PREFILLED}} Falls dieser Button nicht funktioniert:
+Öffnen Sie bitte {{LINK_CLAIM_CONTEXTLESS}} {{LINK_CLAIM_PREFILLED}} , und geben
 Sie dann Ihren Namen, Ihre E-Mail-Adresse und den folgenden Gutscheincode ein: 
 {{GRANT_VOUCHER_CODE}} 
 
@@ -70,7 +67,7 @@ Beiträgen. In der App, auf der Website und als Newsletter.
 
 Republik AG
 Sihlhallenstrasse 1, CH-8004 Zürich
-www.republik.ch {{frontend_base_url}} 
+{{frontend_base_url}} 
 kontakt@republik.ch 
 
 Unser Manifest {{link_manifest}} 
