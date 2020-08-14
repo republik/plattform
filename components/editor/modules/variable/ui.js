@@ -37,7 +37,7 @@ Guten Tag <span data-variable="firstName"></span> <span data-variable="lastName"
 
 <section><h6>ELSE</h6>
 
-Hallo, guten Tag
+Willkommen
 
 <hr /></section>
 
