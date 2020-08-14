@@ -43,7 +43,7 @@ const membershipResolver = {
       return false
     }
 
-    const latestPeriod = periods[periods.length - 1]
+    const latestPeriod = periods[0]
     const isLatestPeriodEnded = new Date(latestPeriod.endDate) < new Date()
     return isLatestPeriodEnded
   },
