@@ -46,6 +46,8 @@ import createChartCanvasModule from './modules/chart/canvas'
 import createDynamicComponentModule from './modules/dynamiccomponent'
 import createLiveTeaserModule from './modules/liveteaser'
 import createButtonModule from './modules/button'
+import createVariableModule from './modules/variable'
+import createVariableConditionModule from './modules/variable/condition'
 
 const moduleCreators = {
   embedVideo: createEmbedVideoModule,
@@ -89,7 +91,9 @@ const moduleCreators = {
   chartCanvas: createChartCanvasModule,
   dynamiccomponent: createDynamicComponentModule,
   liveteaser: createLiveTeaserModule,
-  button: createButtonModule
+  button: createButtonModule,
+  variable: createVariableModule,
+  variableCondition: createVariableConditionModule
 }
 const initModule = (rule, context = {}) => {
   const { editorModule, editorOptions = {} } = rule
@@ -176,12 +180,13 @@ class Editor extends Component {
       throw new Error('missing schema prop')
     }
     const rootRule = schema.rules[0]
-    const rootModule = initModule(rootRule, {
+    const context = {
       mdastSchema: schema,
       meta: props.meta
-    })
+    }
+    const rootModule = initModule(rootRule, context)
 
-    this.serializer = rootModule.helpers.serializer
+    this.serializer = context.rootSerializer = rootModule.helpers.serializer
     this.newDocument = rootModule.helpers.newDocument
 
     const allModules = getAllModules(rootModule)
