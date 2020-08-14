@@ -12,7 +12,12 @@ module.exports = async (membership, details, options, t, pgdb) => {
     immediately = true
   }
 
-  debug('%o', { membership: membership.id, details, options })
+  debug('%o', {
+    membership: membership.id,
+    details,
+    options,
+    immediately
+  })
 
   if (!membership.membershipType) {
     membership.membershipType = await pgdb.public.membershipTypes.findOne({
