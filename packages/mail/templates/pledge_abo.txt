@@ -8,12 +8,12 @@ Beitrag. Da er CHF 1000.– übersteigt, können Ihre Mitgliedschaft und Ihr Zug
 erst nach Zahlungseingang aktiviert werden. Sie erhalten eine Bestätigung, wenn
 die Transaktion erfolgreich bei uns angekommen ist.
 
-{{else}} Sie können ab sofort das Magazin lesen [{{link_signin}}], an sämtlichen Debatten
-teilnehmen [{{link_dialog}}], eine öffentliche Profilseite aufschalten
-[{{link_profile}}] und Beiträge mit Ihren Freunden oder Feinden teilen.
+{{else}} Sie können ab sofort das Magazin lesen {{link_signin}} , an sämtlichen Debatten
+teilnehmen {{link_dialog}} , eine öffentliche Profilseite aufschalten
+{{link_profile}} und Beiträge mit Ihren Freunden oder Feinden teilen.
 
 Falls Sie Fragen zur Inbetriebnahme des Magazins haben:
-Hier finden Sie die Gebrauchsanleitung [{{link_manual}}], die die wichtigsten
+Hier finden Sie die Gebrauchsanleitung {{link_manual}} , die die wichtigsten
 davon klärt.
 
 Wir schicken Ihnen, unserer neusten Verlegerin, unserem neusten Verleger, auch
@@ -62,7 +62,7 @@ mehrere Republik-Objekte gegönnt. {{/if}} Bücher und Taschen liefern wir
 innerhalb von 7 Werktagen. 
 
 Stellen Sie dafür bitte sicher, dass Sie Ihre Adresse unter {{link_account}}
-[{{link_account_account}}] korrekt eingetragen haben.
+{{link_account_account}} korrekt eingetragen haben.
 
 {{/if}} {{/unless}} Vielen Dank!
 Und viel Vergnügen beim Start mit der Republik.
@@ -77,9 +77,9 @@ Beiträgen. In der App, auf der Website und als Newsletter.
 
 Republik AG
 Sihlhallenstrasse 1, CH-8004 Zürich
-www.republik.ch [{{frontend_base_url}}]
+www.republik.ch {{frontend_base_url}} 
 kontakt@republik.ch 
 
-Unser Manifest [{{link_manifest}}]
-Das Impressum [{{link_imprint}}]
-Häufig gestellte Fragen [{{link_faq}}]
+Unser Manifest {{link_manifest}} 
+Das Impressum {{link_imprint}} 
+Häufig gestellte Fragen {{link_faq}}

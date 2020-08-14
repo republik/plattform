@@ -21,7 +21,7 @@ unsere Werbefreiheit, ja unsere Existenz erst möglich. Wir bedanken uns von
 ganzem Herzen und hoffen, dass Sie sich und uns treu bleiben und weiterhin in
 kompromisslosen Journalismus investieren. Sollten Sie es sich anders überlegen,
 können Sie Ihre Mitgliedschaft beziehungsweise die Höhe Ihres Spendenbeitrags
-vor der Abbuchung noch anpassen [{{prolong_url}}].
+vor der Abbuchung noch anpassen {{prolong_url}} .
 
 {{else}} Dieser Beitrag kommt zustande, weil Sie die Republik im letzten Jahr
 grosszügigerweise mit einer Gönner-Mitgliedschaft unterstützt haben. Durch Sie
@@ -29,13 +29,13 @@ ist unsere Unabhängigkeit, unsere Werbefreiheit, ja unsere Existenz erst
 möglich. Wir bedanken uns von ganzem Herzen und hoffen, dass Sie sich und uns
 treu bleiben und weiterhin in kompromisslosen Journalismus investieren. Sollten
 Sie es sich anders überlegen, können Sie Ihre Mitgliedschaft beziehungsweise die
-Höhe Ihres Spendenbeitrags vor der Abbuchung noch anpassen [{{prolong_url}}].
+Höhe Ihres Spendenbeitrags vor der Abbuchung noch anpassen {{prolong_url}} .
 
 {{/if}} {{else}} {{#if autopay_with_discount}} Sie haben im letzten Jahr einen
 reduzierten Beitrag für Ihre Mitgliedschaft bezahlt. Da unsere Unabhängigkeit
 und Werbefreiheit, ja unsere Existenz von der Unterstützung unserer
 Verlegerinnen abhängt, wäre es grandios, wenn Sie Ihre Mitgliedschaft auf den
-regulären Beitrag von {{autopay_default_price}} anpassen [{{prolong_url}}] 
+regulären Beitrag von {{autopay_default_price}} anpassen {{prolong_url}} 
 könnten.
 
 {{elseif autopay_with_donation}} Dieser Beitrag kommt zustande, weil Sie die
@@ -45,21 +45,20 @@ unsere Existenz erst möglich. Wir bedanken uns von ganzem Herzen und hoffen,
 dass Sie sich und uns treu bleiben und weiterhin in kompromisslosen Journalismus
 investieren. Sollten Sie es sich anders überlegen, können Sie Ihre
 Mitgliedschaft beziehungsweise die Höhe Ihres Spendenbeitrags vor der Abbuchung
-noch anpassen [{{prolong_url}}]. 
+noch anpassen {{prolong_url}} . 
 
 {{else}} Sie haben sich im letzten Jahr für eine reguläre Mitgliedschaft
 entschieden. Sollten Sie dieses Mal noch mehr in kompromisslosen, unabhängigen
 und werbefreien Journalismus investieren wollen und können, passen Sie doch 
-Ihren Mitgliedsbeitrag vor der Abbuchung noch an [{{prolong_url}}]. Jede Spende
+Ihren Mitgliedsbeitrag vor der Abbuchung noch an {{prolong_url}} . Jede Spende
 macht einen Unterschied.
 
 {{/if}} {{/if}} Ausserdem können Sie bis zur Abbuchung falls gewünscht eine andere Kreditkarte
-hinterlegen, eine andere Zahlungsart wählen [{{prolong_url}}] oder Ihre
-Mitgliedschaft kündigen [{{cancel_url}}].
+hinterlegen, eine andere Zahlungsart wählen {{prolong_url}} oder Ihre
+Mitgliedschaft kündigen {{cancel_url}} .
 
 Wir melden uns erneut, sobald Ihr Abonnement erfolgreich verlängert wurde. In
-der Zwischenzeit können Sie sich bei Fragen unter kontakt@republik.ch
-[kontakt@republik.ch] melden.
+der Zwischenzeit können Sie sich bei Fragen unter kontakt@republik.ch melden.
 
 Herzlich
 
@@ -73,9 +72,9 @@ Beiträgen. In der App, auf der Website und als Newsletter.
 
 Republik AG
 Sihlhallenstrasse 1, CH-8004 Zürich
-www.republik.ch [{{frontend_base_url}}]
+www.republik.ch {{frontend_base_url}} 
 kontakt@republik.ch 
 
-Unser Manifest [{{link_manifest}}]
-Das Impressum [{{link_imprint}}]
-Häufig gestellte Fragen [{{link_faq}}]
+Unser Manifest {{link_manifest}} 
+Das Impressum {{link_imprint}} 
+Häufig gestellte Fragen {{link_faq}}

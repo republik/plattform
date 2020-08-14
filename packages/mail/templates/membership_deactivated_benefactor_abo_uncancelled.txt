@@ -1,4 +1,4 @@
-Mitgliedschaft jetzt reaktivieren [{{prolong_url}}] 
+Mitgliedschaft jetzt reaktivieren {{prolong_url}} 
 
 --------------------------------------------------------------------------------
 
@@ -15,15 +15,15 @@ wir bis heute auch nicht verzeichnen.
 Deshalb verlieren Ihre Zugangsdaten ab sofort leider ihre Gültigkeit.
 
 Wenn Sie schlicht alle E-Mails übersehen haben – reaktivieren Sie einfach jetzt
-schnell Ihre Mitgliedschaft [{{prolong_url}}]. Das dauert nicht einmal drei
+schnell Ihre Mitgliedschaft {{prolong_url}} . Das dauert nicht einmal drei
 Minuten.
 
 Falls Sie nur einfach nicht mehr Teil der Project R Genossenschaft sein wollen,
 aber gerne weiterhin Zugriff aufs Magazin haben möchten, gibt es die
-Möglichkeit, ein (unbegrenztes) Monatsabo zu kaufen [{{link_offer_monthly_abo}}]
-. Das kostet nur CHF 22.– im Monat, wird Ihrer Kreditkarte belastet und
-verlängert sich auch automatisch – kann dabei aber jederzeit und ohne Frist
-gekündigt werden.
+Möglichkeit, ein (unbegrenztes) Monatsabo zu kaufen {{link_offer_monthly_abo}} .
+Das kostet nur CHF 22.– im Monat, wird Ihrer Kreditkarte belastet und verlängert
+sich auch automatisch – kann dabei aber jederzeit und ohne Frist gekündigt
+werden.
 
 Auch mit diesem Abo erhalten Sie viel Kontext und Vertiefung und stärken den
 kritischen Journalismus, die vierte Gewalt und unser Projekt gegen den Zynismus
@@ -34,8 +34,7 @@ Und wenn Sie einen finanziellen Engpass haben, schreiben Sie uns auf
 kontakt@republik.ch. Wir finden eine Lösung!
 
 Sollte uns hingegen ein Fehler unterlaufen sein, nehmen Sie bitte ebenfalls so
-schnell wie möglich Kontakt mit uns auf: kontakt@republik.ch
-[kontakt@republik.ch].
+schnell wie möglich Kontakt mit uns auf: kontakt@republik.ch.
 
 Herzlich
 
@@ -49,9 +48,9 @@ Beiträgen. In der App, auf der Website und als Newsletter.
 
 Republik AG
 Sihlhallenstrasse 1, CH-8004 Zürich
-www.republik.ch [{{frontend_base_url}}]
+www.republik.ch {{frontend_base_url}} 
 kontakt@republik.ch 
 
-Unser Manifest [{{link_manifest}}]
-Das Impressum [{{link_imprint}}]
-Häufig gestellte Fragen [{{link_faq}}]
+Unser Manifest {{link_manifest}} 
+Das Impressum {{link_imprint}} 
+Häufig gestellte Fragen {{link_faq}}

@@ -3,12 +3,12 @@ Guten Tag
 Haben Sie einen Zugriff auf republik.ch angefordert?
 Dann klicken Sie bitte auf den folgenden Link: 
 
-Zugriff bestätigen [{{LOGIN_LINK}}]
+Zugriff bestätigen: 
+{{LOGIN_LINK}}
 
-Falls Sie diese Zugriffsanfrage nicht ausgelöst haben, können Sie die
-Zugriffsaufforderung ablehnen:
-
-[{{LOGIN_LINK}}&noAutoAuthorize=true]
+Falls Sie diese Zugriffsanfrage nicht ausgelöst haben, 
+können Sie die Zugriffsaufforderung ablehnen: 
+{{LOGIN_LINK}}&noAutoAuthorize=true
 
 Wenn Sie diese E-Mail öfters unaufgefordert erhalten, wenden Sie sich bitte an 
 kontakt@republik.ch.
@@ -25,9 +25,9 @@ Beiträgen. In der App, auf der Website und als Newsletter.
 
 Republik AG
 Sihlhallenstrasse 1, CH-8004 Zürich
-www.republik.ch [{{frontend_base_url}}]
+www.republik.ch {{frontend_base_url}} 
 kontakt@republik.ch 
 
-Unser Manifest [{{link_manifest}}]
-Das Impressum [{{link_imprint}}]
-Häufig gestellte Fragen [{{link_faq}}]
+Unser Manifest {{link_manifest}} 
+Das Impressum {{link_imprint}} 
+Häufig gestellte Fragen {{link_faq}}

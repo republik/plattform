@@ -27,7 +27,7 @@ an:
 
 Klicken Sie hier, um {{#if `gifted_memberships_count == 1`}}die
 Geschenkmitgliedschaft{{elseif `gifted_memberships_count > 1`}}die
-Geschenkmitgliedschaften{{/if}} zu verlängern [{{prolong_url}}].
+Geschenkmitgliedschaften{{/if}} zu verlängern {{prolong_url}} .
 
 Falls Sie innerhalb der nächsten {{inform_claimers_days}} Tage nichts
 unternehmen, erlauben wir uns, {{#if `gifted_memberships_count == 1`}}den oder
@@ -49,9 +49,9 @@ Beiträgen. In der App, auf der Website und als Newsletter.
 
 Republik AG
 Sihlhallenstrasse 1, CH-8004 Zürich
-www.republik.ch [{{frontend_base_url}}]
+www.republik.ch {{frontend_base_url}} 
 kontakt@republik.ch 
 
-Unser Manifest [{{link_manifest}}]
-Das Impressum [{{link_imprint}}]
-Häufig gestellte Fragen [{{link_faq}}]
+Unser Manifest {{link_manifest}} 
+Das Impressum {{link_imprint}} 
+Häufig gestellte Fragen {{link_faq}}

@@ -1,17 +1,16 @@
 Guten Tag
 
-{{#if is_automatic_overdue_cancel}} Leider konnten wir Ihr Republik-Monatsabonnement [{{link_account_abos}}] 
+{{#if is_automatic_overdue_cancel}} Leider konnten wir Ihr Republik-Monatsabonnement {{link_account_abos}} 
 wiederholt nicht von Ihrer Kreditkarte abbuchen und mussten es aus diesem Grund
 deaktivieren.
 
 Wir danken Ihnen herzlich für Ihr bisheriges Interesse und Ihre Unterstützung
 bis hierhin! Und wir würden uns sehr freuen, wenn Sie zu einem späteren
 Zeitpunkt wieder bei uns vorbeischauten. Sie haben jederzeit die Möglichkeit,
-erneut ein Monatsabonnement [{{link_offer_monthly_abo}}] oder eine 
-Jahresmitgliedschaft [{{link_offer_abo}}] abzuschliessen.
+erneut ein Monatsabonnement {{link_offer_monthly_abo}} oder eine 
+Jahresmitgliedschaft {{link_offer_abo}} abzuschliessen.
 
-Falls Sie Fragen haben, helfen wir Ihnen gerne weiter unter kontakt@republik.ch
-[kontakt@republik.ch].
+Falls Sie Fragen haben, helfen wir Ihnen gerne weiter unter kontakt@republik.ch.
 
 {{else}} Heute endete Ihr Republik-Abonnement. Herzlichen Dank für Ihr Interesse und Ihre
 Unterstützung bis hierhin!
@@ -20,7 +19,7 @@ Wir würden uns sehr freuen, wenn Sie zu einem späteren Zeitpunkt wieder bei un
 vorbeischauten.
 
 Sie sind jederzeit willkommen und können Ihr Monatsabo hier ganz einfach wieder
-aktivieren [{{link_account_abos}}].
+aktivieren {{link_account_abos}} .
 
 {{/if}} Herzlich
 
@@ -34,9 +33,9 @@ Beiträgen. In der App, auf der Website und als Newsletter.
 
 Republik AG
 Sihlhallenstrasse 1, CH-8004 Zürich
-www.republik.ch [{{frontend_base_url}}]
+www.republik.ch {{frontend_base_url}} 
 kontakt@republik.ch 
 
-Unser Manifest [{{link_manifest}}]
-Das Impressum [{{link_imprint}}]
-Häufig gestellte Fragen [{{link_faq}}]
+Unser Manifest {{link_manifest}} 
+Das Impressum {{link_imprint}} 
+Häufig gestellte Fragen {{link_faq}}

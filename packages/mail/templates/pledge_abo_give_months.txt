@@ -13,8 +13,7 @@ sofort per Mail, traditionell per Briefpost oder originell als Schrift auf einem
 Kuchen.
 
 Um den Gutscheincode einzulösen, muss der neue Besitzer oder die neue Besitzerin
-nur auf die Seite {{link_claim}} [{{link_claim}}] gehen. Und den Code dort
-eingeben.
+nur auf die Seite {{link_claim}} gehen. Und den Code dort eingeben.
 
 {{#if goodies_count}} {{#if `goodies_count == 1`}} Auch Ihr bestelltes
 Republik-Objekt eignet sich perfekt für die Code-Übergabe. {{elseif
@@ -27,7 +26,7 @@ Werktagen.
 * 
 
 Stellen Sie dafür bitte sicher, dass Sie Ihre Adresse unter {{link_account}}
-[{{link_account_account}}] korrekt eingetragen haben.
+{{link_account_account}} korrekt eingetragen haben.
 
 {{/if}} {{/if}} Informationen zur Zahlung Ihres Geschenkabonnements:
 
@@ -69,9 +68,9 @@ Beiträgen. In der App, auf der Website und als Newsletter.
 
 Republik AG
 Sihlhallenstrasse 1, CH-8004 Zürich
-www.republik.ch [{{frontend_base_url}}]
+www.republik.ch {{frontend_base_url}} 
 kontakt@republik.ch 
 
-Unser Manifest [{{link_manifest}}]
-Das Impressum [{{link_imprint}}]
-Häufig gestellte Fragen [{{link_faq}}]
+Unser Manifest {{link_manifest}} 
+Das Impressum {{link_imprint}} 
+Häufig gestellte Fragen {{link_faq}}

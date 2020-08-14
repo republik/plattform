@@ -6,9 +6,9 @@ weiteres Jahr.
 Wir freuen uns, Sie weiterhin an Bord zu haben, denn die Republik und die Idee
 hinter unserem gemeinsamen Projekt brauchen Sie.
 
-Jetzt erneuern [{{prolong_url}}] Ganz gleich, ob Sie uns einmal pro Woche,
-einmal pro Monat oder einmal pro Jahr lesen – mit Ihrem Beitrag stärken Sie
-kritischen Journalismus, die vierte Gewalt und die Demokratie. 
+Jetzt erneuern {{prolong_url}} Ganz gleich, ob Sie uns einmal pro Woche, einmal
+pro Monat oder einmal pro Jahr lesen – mit Ihrem Beitrag stärken Sie kritischen
+Journalismus, die vierte Gewalt und die Demokratie. 
 
 Wie Sie wissen, finanziert sich die Republik als unabhängiges und werbefreies
 Magazin über ihre Leserinnen und Leser.
@@ -16,9 +16,9 @@ Magazin über ihre Leserinnen und Leser.
 Sie haben die Wahl:
 Sie bleiben an Bord und investieren weiter in die Republik und ihre Idee. 
 Hierfür müssen Sie nur die Rechnung für ein weiteres Jahr Mitgliedschaft
-bezahlen. [{{prolong_url}}] 
+bezahlen. {{prolong_url}} 
 
-Oder: Sie kündigen Ihre Mitgliedschaft [{{cancel_url}}] bis zum
+Oder: Sie kündigen Ihre Mitgliedschaft {{cancel_url}} bis zum
 {{cancel_until_date}}.
 
 Wie auch immer Sie entscheiden: Wir hoffen, dass wir Sie im vergangenen Jahr
@@ -39,9 +39,9 @@ Beiträgen. In der App, auf der Website und als Newsletter.
 
 Republik AG
 Sihlhallenstrasse 1, CH-8004 Zürich
-www.republik.ch [{{frontend_base_url}}]
+www.republik.ch {{frontend_base_url}} 
 kontakt@republik.ch 
 
-Unser Manifest [{{link_manifest}}]
-Das Impressum [{{link_imprint}}]
-Häufig gestellte Fragen [{{link_faq}}]
+Unser Manifest {{link_manifest}} 
+Das Impressum {{link_imprint}} 
+Häufig gestellte Fragen {{link_faq}}

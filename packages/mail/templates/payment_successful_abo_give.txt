@@ -14,7 +14,7 @@ Sie können diesen der beschenkten Person mit einem Mittel Ihrer Wahl
 Schrift auf einem Kuchen.
 
 Um den Geschenkcode einzulösen, muss der neue Besitzer oder die neue Besitzerin
-nur auf die Seite {{link_claim}} [{{link_claim}}] gehen. Und ihn dort eingeben.
+nur auf die Seite {{link_claim}} gehen. Und ihn dort eingeben.
 
 {{/if}} {{#if goodies_count}} {{#if `goodies_count == 1`}} Auch Ihr bestelltes
 Republik-Objekt eignet sich perfekt für die Code-Übergabe. {{elseif
@@ -27,7 +27,7 @@ Werktagen.
 * 
 
 Stellen Sie dafür bitte sicher, dass Sie Ihre Adresse unter {{link_account}}
-[{{link_account_account}}] korrekt eingetragen haben.
+{{link_account_account}} korrekt eingetragen haben.
 
 {{/if}} {{#if `num_access_granted_memberships > 0`}} {{#if
 `num_access_granted_memberships == 1`}} Vielen Dank, dass Sie die Verbreitung
@@ -59,9 +59,9 @@ Beiträgen. In der App, auf der Website und als Newsletter.
 
 Republik AG
 Sihlhallenstrasse 1, CH-8004 Zürich
-www.republik.ch [{{frontend_base_url}}]
+www.republik.ch {{frontend_base_url}} 
 kontakt@republik.ch 
 
-Unser Manifest [{{link_manifest}}]
-Das Impressum [{{link_imprint}}]
-Häufig gestellte Fragen [{{link_faq}}]
+Unser Manifest {{link_manifest}} 
+Das Impressum {{link_imprint}} 
+Häufig gestellte Fragen {{link_faq}}

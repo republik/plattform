@@ -6,17 +6,21 @@
 
 ---
 
-Den Beitrag im Kontext auf republik.ch anzeigen [{{URL}}]. Dort können Sie
-antworten und weiter debattieren.
+Den Beitrag im Kontext auf republik.ch anzeigen: 
+{{URL}} 
 
-Sie erhalten diese E-Mail, weil Sie an der Debatte «{{DISCUSSION_TITLE}}
-[{{DISCUSSION_URL}}]» teilgenommen haben und/oder Benachrichtigungen für diese
+Dort können Sie antworten und weiter debattieren.
+
+
+Sie erhalten diese E-Mail, weil Sie an der Debatte «{{DISCUSSION_TITLE}}» {{DISCUSSION_URL}} teilgenommen haben und/oder Benachrichtigungen für diese
 abonniert haben. 
 
-Hier können Sie die Benachrichtigungen zu dieser Debatte deaktivieren
-[{{DISCUSSION_MUTE_URL}}]. Und falls Sie gar keine Benachrichtigungen per E-Mail
-mehr erhalten möchten, können Sie dies in Ihrem Konto festlegen
-[{{link_account_notifications}}]. 
+Hier können Sie die Benachrichtigungen zu dieser Debatte deaktivieren:
+{{DISCUSSION_MUTE_URL}}
+
+Und falls Sie gar keine Benachrichtigungen per E-Mail
+mehr erhalten möchten, können Sie dies in Ihrem Konto festlegen:
+{{link_account_notifications}}
 
 Die Republik ist ein unabhängiges und werbefreies digitales Magazin für Politik,
 Wirtschaft, Gesellschaft und Kultur. Es wird von seinen Leserinnen und Lesern
@@ -26,9 +30,9 @@ Beiträgen. In der App, auf der Website und als Newsletter.
 
 Republik AG
 Sihlhallenstrasse 1, CH-8004 Zürich
-www.republik.ch [{{frontend_base_url}}]
+www.republik.ch {{frontend_base_url}} 
 kontakt@republik.ch 
 
-Unser Manifest [{{link_manifest}}]
-Das Impressum [{{link_imprint}}]
-Häufig gestellte Fragen [{{link_faq}}]
+Unser Manifest {{link_manifest}} 
+Das Impressum {{link_imprint}} 
+Häufig gestellte Fragen {{link_faq}}

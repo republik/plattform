@@ -13,15 +13,14 @@ der Angst. Und stehen für die Verteidigung der demokratischen Institutionen und
 die Werte der Aufklärung. Und wir können nicht bestehen ohne unsere Leserinnen.
 
 Wir haben deshalb einen Vorschlag für Sie: Die Republik weiterhin lesen können
-[{{prolong_url}}] – und nur den Samstagsnewsletter bestellen? Mit diesem
-erhalten Sie einmal in der Woche die besten Artikel der vergangenen Tage ins
-Postfach.
+{{prolong_url}} – und nur den Samstagsnewsletter bestellen? Mit diesem erhalten
+Sie einmal in der Woche die besten Artikel der vergangenen Tage ins Postfach.
 
 Auch wenn Sie wenig zum Lesen kommen, leisten Sie so einen wichtigen Beitrag zur
 Medienvielfalt der Schweiz.
 
 Oder: Vielleicht wollen oder können Sie die Idee hinter diesem Projekt einfach 
-mit einer Spende unterstützen? [{{link_offer_donate}}]
+mit einer Spende unterstützen? {{link_offer_donate}} 
 
 Wir würden uns sehr freuen, Sie weiter bei uns an Bord zu wissen.
 
@@ -40,9 +39,9 @@ Beiträgen. In der App, auf der Website und als Newsletter.
 
 Republik AG
 Sihlhallenstrasse 1, CH-8004 Zürich
-www.republik.ch [{{frontend_base_url}}]
+www.republik.ch {{frontend_base_url}} 
 kontakt@republik.ch 
 
-Unser Manifest [{{link_manifest}}]
-Das Impressum [{{link_imprint}}]
-Häufig gestellte Fragen [{{link_faq}}]
+Unser Manifest {{link_manifest}} 
+Das Impressum {{link_imprint}} 
+Häufig gestellte Fragen {{link_faq}}

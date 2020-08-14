@@ -19,9 +19,9 @@ mitgegeben:
 {{/if}} Um Ihre Jahresmitgliedschaft in Empfang zu nehmen, melden Sie sich
 einfach vor dem {{GRANT_BEGIN_BEFORE}} hier an:
 
-Jetzt aktivieren [{{LINK_CLAIM_PREFILLED}}] Falls dieser Button nicht
+Jetzt aktivieren {{LINK_CLAIM_PREFILLED}} Falls dieser Button nicht
 funktioniert: Öffnen Sie bitte {{LINK_CLAIM_CONTEXTLESS}}
-[{{LINK_CLAIM_PREFILLED}}], und geben Sie dann Ihren Namen, Ihre E-Mail-Adresse
+{{LINK_CLAIM_PREFILLED}} , und geben Sie dann Ihren Namen, Ihre E-Mail-Adresse
 und den folgenden Gutscheincode ein: {{GRANT_VOUCHER_CODE}} 
 
 Sollten Sie schon in den nächsten Tagen oder Monaten so überzeugt sein, dass Sie
@@ -42,9 +42,9 @@ Beiträgen. In der App, auf der Website und als Newsletter.
 
 Republik AG
 Sihlhallenstrasse 1, CH-8004 Zürich
-www.republik.ch [{{frontend_base_url}}]
+www.republik.ch {{frontend_base_url}} 
 kontakt@republik.ch 
 
-Unser Manifest [{{link_manifest}}]
-Das Impressum [{{link_imprint}}]
-Häufig gestellte Fragen [{{link_faq}}]
+Unser Manifest {{link_manifest}} 
+Das Impressum {{link_imprint}} 
+Häufig gestellte Fragen {{link_faq}}

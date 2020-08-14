@@ -12,7 +12,7 @@ Politik, Wirtschaft, Gesellschaft und Kultur auch unterstützenswert?
 Wie Sie wissen, ist die Republik werbefrei und wird von ihren Leserinnen und
 Lesern finanziert.
 
-Ich bin dabei [{{link_offer_abo}}].
+Ich bin dabei {{link_offer_abo}} .
 
 Wir sind ein Projekt gegen den Zynismus, den Vormarsch der Autoritären und gegen
 die Diktatur der Angst. Wir stehen für die Verteidigung der demokratischen
@@ -32,29 +32,29 @@ besten einfach ein (unbegrenztes) Monatsabo ab.
 
 Die Republik-Abonnemente/-Mitgliedschaften in der Übersicht:
 
-1. Monatsabonnement [{{link_offer_monthly_abo}}] CHF 22.–/Monat Verlängert sich
+1. Monatsabonnement {{link_offer_monthly_abo}} CHF 22.–/Monat Verlängert sich
    automatisch, kann aber jederzeit und ohne Frist gekündigt werden. Mit diesem
    Abo erhalten Sie viel Kontext und Vertiefung – ohne dass Sie Teil unserer
    Genossenschaft werden.
    
    
-2. Jahresmitgliedschaft [{{link_offer_abo}}] CHF 240.–/Jahr Verlängert sich
-   nicht automatisch, wir erinnern Sie aber immer rechtzeitig daran, die
+2. Jahresmitgliedschaft {{link_offer_abo}} CHF 240.–/Jahr Verlängert sich nicht
+   automatisch, wir erinnern Sie aber immer rechtzeitig daran, die
    Mitgliedschaft zu erneuern. Mit dieser Mitgliedschaft erhalten Sie
    unabhängigen und werbefreien Qualitätsjournalismus und sind gleichzeitig
    Teil der Republik-Community und der Project R Genossenschaft.
    
    
-3. Gönnermitgliedschaft [{{link_offer_benefactor}}] ab CHF 1000.–/Jahr 
-   Verlängert sich nicht automatisch, wir erinnern Sie aber rechtzeitig daran,
-   die Gönnerschaft zu erneuern. Mit der Gönnerschaft erhalten Sie Zugang zum
+3. Gönnermitgliedschaft {{link_offer_benefactor}} ab CHF 1000.–/Jahr Verlängert
+   sich nicht automatisch, wir erinnern Sie aber rechtzeitig daran, die
+   Gönnerschaft zu erneuern. Mit der Gönnerschaft erhalten Sie Zugang zum
    vollständigen Republik-Angebot, ein Extra-Dankeschön in Form eines Buches
    und die Sicherheit, etwas sehr Wichtiges zur Erhaltung einer wirklich freien
    Demokratie beigetragen zu haben. Zudem sind Sie Teil der Republik-Community
    und der Project R Genossenschaft.
    
    
-4. Ausbildungsmitgliedschaft [{{link_offer_reduced_ausbildung}}] CHF 140.–/Jahr 
+4. Ausbildungsmitgliedschaft {{link_offer_reduced_ausbildung}} CHF 140.–/Jahr 
    Verlängert sich nicht automatisch, wir erinnern Sie aber rechtzeitig daran,
    die Mitgliedschaft zu erneuern. Mit dieser Mitgliedschaft erhalten alle
    Auszubildenden und Studierenden Zugang zum vollständigen Republik-Angebot
@@ -62,8 +62,8 @@ Die Republik-Abonnemente/-Mitgliedschaften in der Übersicht:
    
    
 
-Haben Sie Fragen oder brauchen Sie Hilfe? Unter kontakt@republik.ch
-[kontakt@republik.ch] helfen wir Ihnen gerne weiter.
+Haben Sie Fragen oder brauchen Sie Hilfe? Unter kontakt@republik.ch helfen wir
+Ihnen gerne weiter.
 
 Herzlich
 Ihre Crew der Republik
@@ -76,9 +76,9 @@ Beiträgen. In der App, auf der Website und als Newsletter.
 
 Republik AG
 Sihlhallenstrasse 1, CH-8004 Zürich
-www.republik.ch [{{frontend_base_url}}]
+www.republik.ch {{frontend_base_url}} 
 kontakt@republik.ch 
 
-Unser Manifest [{{link_manifest}}]
-Das Impressum [{{link_imprint}}]
-Häufig gestellte Fragen [{{link_faq}}]
+Unser Manifest {{link_manifest}} 
+Das Impressum {{link_imprint}} 
+Häufig gestellte Fragen {{link_faq}}
