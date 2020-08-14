@@ -25,6 +25,9 @@ const styles = {
     }
   }),
   preview: css({
+    overflow: 'auto',
+    position: 'relative',
+    zIndex: 0,
     [mediaQueries.mUp]: {
       float: 'left',
       width: previewWidth
