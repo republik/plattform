@@ -8,7 +8,7 @@ module.exports = async (membership, details, options, t, pgdb) => {
   const { reason, type, suppressConfirmation, suppressWinback, cancelledViaSupport } = details
   let { immediately } = options
 
-  if (overdue(membership, null, { pgdb })) {
+  if (immediately || await overdue(membership, null, { pgdb })) {
     immediately = true
   }
 
