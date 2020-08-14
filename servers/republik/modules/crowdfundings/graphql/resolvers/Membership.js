@@ -28,11 +28,11 @@ const membershipResolver = {
       )
   },
 
-  async overdue (membership, args, { pgdb }) {
+  async overdue (membership, args, context) {
     if (!membership.active) return false
 
     const periods = await membershipResolver.periods(
-      membership, null, { pgdb }
+      membership, null, context
     )
     const hasPeriods = !!periods.length
     if (!hasPeriods) {
