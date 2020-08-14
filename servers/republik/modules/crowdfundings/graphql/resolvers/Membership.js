@@ -36,8 +36,10 @@ const membershipResolver = {
     )
     const hasPeriods = !!periods.length
     if (!hasPeriods) {
-      // Sanity check: an active membership should
-      // always have a period.
+      console.trace(
+        // Sanity check: an active membership should always have a period.
+        `[data integrity] active membership without periode: ${membership.id}`
+      )
       return false
     }
 
