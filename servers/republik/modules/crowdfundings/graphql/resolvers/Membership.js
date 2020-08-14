@@ -43,12 +43,9 @@ const membershipResolver = {
       return false
     }
 
-    const hasPeriodEndingInTheFuture = await pgdb.public.membershipPeriods.count({
-      membershipId: membership.id,
-      'endDate >': new Date()
-    })
-
-    return !hasPeriodEndingInTheFuture
+    const latestPeriod = periods[periods.length - 1]
+    const isLatestPeriodEnded = new Date(latestPeriod.endDate) < new Date()
+    return isLatestPeriodEnded
   },
 
   async canProlong (membership, args, context) {
