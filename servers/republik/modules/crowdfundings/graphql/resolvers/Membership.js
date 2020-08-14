@@ -28,20 +28,26 @@ const membershipResolver = {
       )
   },
 
-  async overdue (membership, args, { pgdb }) {
-    if (!membership.active || !membership.latestPaymentFailedAt) {
+  async overdue (membership, args, context) {
+    if (!membership.active) return false
+
+    const periods = await membershipResolver.periods(
+      membership, null, context
+    )
+    const hasPeriods = !!periods.length
+    if (!hasPeriods) {
+      console.trace(
+        // Sanity check: an active membership should always have a period.
+        `[data integrity] active membership without periode: ${membership.id}`
+      )
       return false
     }
 
-    const latest = await pgdb.public.membershipPeriods.findFirst({
-      membershipId: membership.id
-    }, { fields: '"endDate"', orderBy: ['endDate desc'] })
-    return !!(
-      membership.active &&
-      membership.latestPaymentFailedAt &&
-      membership.latestPaymentFailedAt > latest.endDate
-    )
+    const latestPeriod = periods[0]
+    const isLatestPeriodEnded = new Date(latestPeriod.endDate) < new Date()
+    return isLatestPeriodEnded
   },
+
   async canProlong (membership, args, context) {
     const { pgdb } = context
 

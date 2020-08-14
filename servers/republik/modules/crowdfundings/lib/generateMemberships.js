@@ -213,14 +213,12 @@ module.exports = async (pledgeId, pgdb, t, redis) => {
       suppressWinback: true
     }
 
-    const options = {}
-
     await Promise.map(
       cancelableMemberships,
-      cancelableMembership => cancelMembership(
-        cancelableMembership,
+      async membership => cancelMembership(
+        membership,
         details,
-        options,
+        {},
         t,
         pgdb
       )
