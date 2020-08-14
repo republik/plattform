@@ -29,19 +29,26 @@ const membershipResolver = {
   },
 
   async overdue (membership, args, { pgdb }) {
-    if (!membership.active || !membership.latestPaymentFailedAt) {
+    if (!membership.active) return false
+
+    const periods = await membershipResolver.periods(
+      membership, null, { pgdb }
+    )
+    const hasPeriods = !!periods.length
+    if (!hasPeriods) {
+      // Sanity check: an active membership should
+      // always have a period.
       return false
     }
 
-    const latest = await pgdb.public.membershipPeriods.findFirst({
-      membershipId: membership.id
-    }, { fields: '"endDate"', orderBy: ['endDate desc'] })
-    return !!(
-      membership.active &&
-      membership.latestPaymentFailedAt &&
-      membership.latestPaymentFailedAt > latest.endDate
-    )
+    const hasPeriodEndingInTheFuture = await pgdb.public.membershipPeriods.count({
+      membershipId: membership.id,
+      'endDate >': new Date()
+    })
+
+    return !hasPeriodEndingInTheFuture
   },
+
   async canProlong (membership, args, context) {
     const { pgdb } = context
 
