@@ -8,6 +8,7 @@ const {
 const { NotifyListener: SearchNotifyListener } = require('@orbiting/backend-modules-search')
 const { t } = require('@orbiting/backend-modules-translate')
 const SlackGreeter = require('@orbiting/backend-modules-slack/lib/SlackGreeter')
+const { graphql: auth } = require('@orbiting/backend-modules-auth')
 const { graphql: documents } = require('@orbiting/backend-modules-documents')
 const { graphql: redirections } = require('@orbiting/backend-modules-redirections')
 const { graphql: search } = require('@orbiting/backend-modules-search')
@@ -32,14 +33,15 @@ const loaderBuilders = {
   ...require('@orbiting/backend-modules-subscriptions/loaders'),
   ...require('@orbiting/backend-modules-cards/loaders'),
   ...require('@orbiting/backend-modules-embeds/loaders'),
-  ...require('./modules/crowdfundings/loaders'),
-  ...require('./loaders')
+  ...require('@orbiting/backend-modules-republik/modules/crowdfundings/loaders'),
+  ...require('@orbiting/backend-modules-republik/loaders')
 }
 
 const { AccessScheduler, graphql: access } = require('@orbiting/backend-modules-access')
+const PublicationScheduler = require('@orbiting/backend-modules-publikator/lib/PublicationScheduler')
+const MembershipScheduler = require('@orbiting/backend-modules-republik/modules/crowdfundings/lib/scheduler')
 
-const MembershipScheduler = require('./modules/crowdfundings/lib/scheduler')
-const mail = require('./modules/crowdfundings/lib/Mail')
+const mail = require('@orbiting/backend-modules-republik/modules/crowdfundings/lib/Mail')
 
 const {
   LOCAL_ASSETS_SERVER,
@@ -49,7 +51,8 @@ const {
   NODE_ENV,
   ACCESS_SCHEDULER,
   MEMBERSHIP_SCHEDULER,
-  SERVER = 'republik',
+  PUBLICATION_SCHEDULER,
+  SERVER = 'graphql',
   DYNO
 } = process.env
 
@@ -72,10 +75,13 @@ const start = async () => {
 }
 
 const run = async (workerId, config) => {
-  const localModule = require('./graphql')
+  const { graphql: republik } = require('@orbiting/backend-modules-republik')
+  const { graphql: publikator } = require('@orbiting/backend-modules-publikator')
+
   const graphqlSchema = merge(
-    localModule,
+    republik,
     [
+      publikator,
       documents,
       search,
       redirections,
@@ -95,9 +101,10 @@ const run = async (workerId, config) => {
 
   // middlewares
   const middlewares = [
-    require('./modules/crowdfundings/express/paymentWebhooks'),
+    require('@orbiting/backend-modules-republik/modules/crowdfundings/express/paymentWebhooks'),
     require('@orbiting/backend-modules-gsheets/express/gsheets'),
-    require('@orbiting/backend-modules-maillog/express/Mandrill/webhook')
+    require('@orbiting/backend-modules-maillog/express/Mandrill/webhook'),
+    require('@orbiting/backend-modules-publikator/express/uncommittedChanges')
   ]
 
   if (MAIL_EXPRESS_RENDER) {
@@ -213,12 +220,26 @@ const runOnce = async () => {
     membershipScheduler = await MembershipScheduler.init(context)
   }
 
+  let publicationScheduler
+  if (PUBLICATION_SCHEDULER === 'false' || (DEV && PUBLICATION_SCHEDULER !== 'true')) {
+    console.log('PUBLICATION_SCHEDULER prevented scheduler from begin started',
+      { PUBLICATION_SCHEDULER, DEV }
+    )
+  } else {
+    publicationScheduler = await PublicationScheduler.init(context)
+      .catch(error => {
+        console.log(error)
+        throw new Error(error)
+      })
+  }
+
   const close = async () => {
     await Promise.all([
       slackGreeter && slackGreeter.close(),
       searchNotifyListener && searchNotifyListener.close(),
       accessScheduler && accessScheduler.close(),
-      membershipScheduler && membershipScheduler.close()
+      membershipScheduler && membershipScheduler.close(),
+      publicationScheduler && await publicationScheduler.close()
     ].filter(Boolean))
     await ConnectionContext.close(context)
   }

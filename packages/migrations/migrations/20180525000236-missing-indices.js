@@ -1,6 +1,6 @@
 const run = require('../run.js')
 
-const dir = 'servers/republik/migrations/sqls'
+const dir = 'packages/republik/migrations/sqls'
 const file = '20180525000236-missing-indices'
 
 exports.up = (db) =>

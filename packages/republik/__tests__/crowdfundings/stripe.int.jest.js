@@ -1,5 +1,8 @@
 const { Instance } = require('@orbiting/backend-modules-test')
 
+// hardcoded to not accidentally empty prod
+process.env.STRIPE_PLATFORM = 'COMPANY_ONE'
+process.env.STRIPE_CONNECTED_ACCOUNTS = 'COMPANY_TWO'
 Instance.bootstrapEnv()
 
 const moment = require('moment')
@@ -28,6 +31,9 @@ const seedCrowdfundings = require('../../seeds/seedCrowdfundings')
 
 beforeAll(async () => {
   await Instance.init({ serverName: 'republik' })
+console.log({
+  MAILCHIMP_URL: process.env.MAILCHIMP_URL,
+})
   await seedCrowdfundings(global.instance.context.pgdb, true)
   await checkSeed()
 }, 60000)

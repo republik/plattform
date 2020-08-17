@@ -372,8 +372,10 @@ const Editor = {
   email: 'alice.smith@test.project-r.construction',
   roles: [ 'editor' ],
   firstName: 'Alice',
-  lastName: 'Smith'
+  lastName: 'Smith',
+  emailAccessRole: 'PUBLIC'
 }
+Editor._raw = JSON.parse(JSON.stringify(Editor))
 
 const Anonymous = {
   firstName: null,

@@ -4,21 +4,20 @@ const DEV = process.env.NODE_ENV
   ? process.env.NODE_ENV !== 'production'
   : true
 
-const config = (envPath) => {
+const config = (envFile) => {
   if (DEV) {
     const dotenv = require('dotenv')
-    if (envPath) {
-      dotenv.config({ path: envPath })
-    }
-    dotenv.config({ path: process.env.OVERWRITE_ENV })
+
+    // only required by asset server
     dotenv.config()
-    if (envPath) {
-      dotenv.config({ path:
-        path.join(path.dirname(envPath), '../..', path.basename(envPath))
-      })
-    } else {
-      dotenv.config({ path: '../../.env' })
+
+    const projectRootPath = path.join(
+      __dirname, '../..'
+    )
+    if (envFile) {
+      dotenv.config({ path: path.join(projectRootPath, envFile) })
     }
+    dotenv.config({ path: path.join(projectRootPath, '.env') })
   }
 }
 

@@ -1,11 +1,20 @@
 {
-  "name": "publikator-backend",
+  "name": "@orbiting/backend-modules-publikator",
   "version": "0.0.1",
-  "engines": {
-    "node": "14.x"
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/orbiting/backends.git"
   },
-  "private": true,
+  "author": "Patrick Recher <patrick.recher@republik.ch>",
   "license": "AGPL-3.0",
+  "publishConfig": {
+    "access": "public"
+  },
+  "bugs": {
+    "url": "https://github.com/orbiting/backends/issues"
+  },
+  "homepage": "https://github.com/orbiting/backends#readme",
   "dependencies": {
     "@orbiting/graphql-list-fields": "^2.0.2",
     "@orbiting/remark-preset": "^1.2.4",
@@ -40,13 +49,6 @@
     "throng": "^4.0.0",
     "unist-util-visit": "^2.0.2",
     "yargs": "^15.3.1"
-  },
-  "scripts": {
-    "dev": "NODE_ENV=development nodemon $NODE_DEBUG_OPTION --trace-warnings index.js",
-    "devScheduler": "NODE_ENV=development nodemon $NODE_DEBUG_OPTION --trace-warnings scheduler.js",
-    "inspect": "NODE_DEBUG_OPTION=--inspect yarn run dev",
-    "start": "node index.js",
-    "startScheduler": "node scheduler.js"
   },
   "devDependencies": {
     "gsheets": "^2.0.0",

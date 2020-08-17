@@ -68,7 +68,7 @@ brew services start elasticsearch
 </p>
 </details>
 
-#### Docker Kibana accessing an native Elasticsearch
+#### Docker Kibana accessing native Elasticsearch
 
 ```bash
 docker run -p 5601:5601 -e ELASTICSEARCH_HOSTS=http://host.docker.internal:9200 docker.elastic.co/kibana/kibana-oss:6.7.0
@@ -80,11 +80,9 @@ Note:
 
 ### 2. ENVs
 
-Copy the `.env.example` files to `.env` (in root and server/\*/). The default values should be enough to get started.
+Copy the `.env.example` files to `.env` (in root and server/assets/). The default values should be enough to get started.
 ```
 cp .env.example .env
-cp servers/republik/.env.example servers/republik/.env
-cp servers/publikator/.env.example servers/publikator/.env
 cp servers/assets/.env.example servers/assets/.env
 ```
 
@@ -109,25 +107,24 @@ yarn run dev
 ```
 
 This kicks on [foreman](https://github.com/strongloop/node-foreman) which then launches all the servers locally.
-All servers greets you with `Cannot GET /` on the root route. The API servers have a graphical API explorer available at `/graphiql`:
+All servers greets you with `Cannot GET /` on the root route. The API server has a graphical API explorer available at `/graphiql`:
 
-- [Republik API on port 5000](http://localhost:5000/graphiql)
-- [Publikator API on port 5010](http://localhost:5010/graphiql)
+- [Republik & Publikator API on port 5000](http://localhost:5000/graphiql)
 - [Assets server on port 5020](http://localhost:5020/)
 
 ### Next steps
 
 #### more about ENVs
 
-In development environment variables are loaded from `./.env`, `../../.env` (in this order, relative to node's cwd). This is done with the help of [backend-modules-env](packages/env) and enables you to define a `.env` file at the root of this repo for common variables and also store server specific envs at `servers/*/.env`. `./.env` takes precedence over `../../.env` because existing env variables are never overwritten.
+In development environment variables are loaded from `./.env`r.
 No ENV variabeles are loaded from any file in production, you yourself are responsible to set all required ENVs in the production environment.
 
-Checkout [.env.example](.env.example), [servers/republik/.env.example](servers/republik/.env.example), [servers/publikator/.env.example](servers/publikator/.env.example), [servers/assets/.env.example](servers/assets/.env.example) for which ENVs are required and their descriptions. Check the packages' README for further config options.
+Checkout [.env.example](.env.example), [servers/assets/.env.example](servers/assets/.env.example) for which ENVs are required and their descriptions. Check the packages' README for further config options.
 
 
 You will quickly run into errors and limitations if you run with the example envs. You probably want to do the following three rather soon:
 
-1. [Setup GitHub](servers/publikator#github)
+1. [Setup GitHub](packages/publikator#github)
     - `GITHUB_*` in the root `.env`
 2. MailChimp and Mandrill
     - `MAILCHIMP_URL`, `MAILCHIMP_API_KEY`, `MANDRILL_API_KEY` in the root `.env`
@@ -154,9 +151,7 @@ FRONTEND_BASE_URL=http://republik.test
 ASSETS_SERVER_BASE_URL=http://assets.republik.test
 
 LOCAL_IP=192.168.1.88
-```
-- in `backends/servers/republik/.env`
-```
+
 CORS_ALLOWLIST_URL=http://republik.test
 COOKIE_DOMAIN=.republik.test
 ```

@@ -1,13 +1,12 @@
 const _ = require('lodash')
 
-// TODO require from servers is not the idea in packages
-const getRepos = require('../../../../servers/publikator/graphql/resolvers/_queries/repos')
+const getRepos = require('@orbiting/backend-modules-publikator/graphql/resolvers/_queries/repos')
 const {
   latestPublications: getLatestPublications,
   meta: getRepoMeta
-} = require('../../../../servers/publikator/graphql/resolvers/Repo')
-const { document: getDocument } = require('../../../../servers/publikator/graphql/resolvers/Commit')
-const { prepareMetaForPublish } = require('../../../../servers/publikator/lib/Document')
+} = require('@orbiting/backend-modules-publikator/graphql/resolvers/Repo')
+const { document: getDocument } = require('@orbiting/backend-modules-publikator/graphql/resolvers/Commit')
+const { prepareMetaForPublish } = require('@orbiting/backend-modules-publikator/lib/Document')
 const {
   lib: {
     Repo: { uploadImages }

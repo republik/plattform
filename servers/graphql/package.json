@@ -1,5 +1,5 @@
 {
-  "name": "republik-backend",
+  "name": "@orbiting/graphql-server",
   "version": "0.0.1",
   "engines": {
     "node": "14.x"
@@ -35,10 +35,7 @@
     "devScheduler": "NODE_ENV=development nodemon $NODE_DEBUG_OPTION --trace-warnings scheduler.js",
     "inspect": "NODE_DEBUG_OPTION=--inspect yarn run dev",
     "start": "node index.js",
-    "startScheduler": "node scheduler.js",
-    "db:seed:redirections": "cat ../../packages/redirections/seeds/seeds.example.json | node ../../packages/redirections/seeds/seed.js",
-    "db:seed:users": "cat ../../packages/auth/seeds/seeds.example.json | node ../../packages/auth/seeds/seed.js --truncate",
-    "db:seed:crowdfundings": "seeds/script/seed.js"
+    "startScheduler": "node scheduler.js"
   },
   "devDependencies": {
     "apollo-fetch": "^0.7.0",

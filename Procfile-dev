@@ -1,5 +1,2 @@
-republik: cd servers/republik && PORT=5000 yarn run dev
-republik-scheduler: cd servers/republik && PORT=5000 yarn run devScheduler
-publikator: cd servers/publikator && PORT=5010 yarn run dev
-publikator-scheduler: cd servers/publikator && PORT=5010 yarn run devScheduler
+graphql: cd servers/graphql && PORT=5000 yarn run dev
 assets: cd servers/assets && PORT=5020 yarn run dev

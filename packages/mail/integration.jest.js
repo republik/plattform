@@ -1,11 +1,5 @@
 const path = require('path')
-const relativeServerPath = '../../servers/republik/'
-require('@orbiting/backend-modules-env').config(
-  path.join(__dirname, relativeServerPath, '.test.env')
-)
-require('@orbiting/backend-modules-env').config(
-  path.join(__dirname, relativeServerPath, '.env')
-)
+require('@orbiting/backend-modules-env').config()
 
 const cleanup = async () => {
   const mailchimp = MailchimpInterface({ logger: console })

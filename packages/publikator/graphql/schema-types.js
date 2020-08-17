@@ -23,12 +23,12 @@ type Repo {
 
 type RepoConnection {
   nodes: [Repo]
-  pageInfo: PageInfo!
+  pageInfo: PublikatorPageInfo!
   totalCount: Int!
   totalDiskUsage: Int
 }
 
-type PageInfo {
+type PublikatorPageInfo {
   endCursor: String
   hasNextPage: Boolean!
   hasPreviousPage: Boolean!
@@ -113,7 +113,7 @@ type Commit {
 
 type CommitConnection {
   nodes: [Commit!]!
-  pageInfo: PageInfo!
+  pageInfo: PublikatorPageInfo!
   totalCount: Int!
 }
 

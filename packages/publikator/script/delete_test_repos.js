@@ -1,5 +1,5 @@
 process.env.OVERWRITE_ENV = '.test.env'
-require('@orbiting/backend-modules-env').config()
+require('@orbiting/backend-modules-env').config('.test.env')
 
 const {
   createGithubClients
