@@ -27,13 +27,14 @@ const IconButton = React.forwardRef(
     return (
       <Element
         {...styles.button}
+        {...(!noClick && styles.hover)}
+        style={{ cursor: noClick ? 'auto' : 'pointer' }}
         onClick={onClick}
         href={href}
         target={target}
         rel={target === '_blank' ? 'noopener' : ''}
         ref={ref}
         title={title}
-        style={{ cursor: noClick ? 'auto' : 'pointer' }}
       >
         <Icon {...styles.icon} size={ICON_SIZE} fill={fill} />
         {label && (
@@ -78,16 +79,17 @@ const styles = {
     ':only-child': {
       margin: 0
     },
-    '@media(hover)': {
-      '[href]:hover > *': {
-        opacity: 0.6
-      }
-    },
     [mUp]: {
       marginRight: 24
     }
   }),
-  icon: css({}),
+  hover: css({
+    '@media(hover)': {
+      ':hover > *': {
+        opacity: 0.6
+      }
+    }
+  }),
   label: css({
     fontFamily: fontFamilies.sansSerifMedium,
     letterSpacing: 1,
