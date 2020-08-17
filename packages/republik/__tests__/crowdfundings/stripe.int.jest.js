@@ -31,9 +31,6 @@ const seedCrowdfundings = require('../../seeds/seedCrowdfundings')
 
 beforeAll(async () => {
   await Instance.init({ serverName: 'republik' })
-console.log({
-  MAILCHIMP_URL: process.env.MAILCHIMP_URL,
-})
   await seedCrowdfundings(global.instance.context.pgdb, true)
   await checkSeed()
 }, 60000)
