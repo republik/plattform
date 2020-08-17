@@ -1,7 +1,7 @@
 ## Email schema
 
 ```code|lang-jsx
-import schema from '@project-r/styleguide/lib/templates/EditorialNewsletter/email'
+import createEmailSchema from '@project-r/styleguide/lib/templates/EditorialNewsletter/email'
 ```
 
 The email schema uses table layout in container components.
@@ -11,7 +11,7 @@ The email schema uses table layout in container components.
 ### With cover image
 
 ```react|noSource
-<Markdown schema={emailSchema}>{`
+<Markdown schema={createEmailSchema()}>{`
 
 <section><h6>FIGURE</h6>
 
@@ -23,7 +23,7 @@ A caption. _Foto: Laurent Burst_
 
 <section><h6>CENTER</h6>
 
-Ladies and Gentlemen,
+Ladies and Gentlemen and everyone beyond
 
 At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est _Lorem ipsum_ dolor sit amet. **Lorem ipsum** dolor _**sit amet**_, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.
 
@@ -85,11 +85,11 @@ Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lo
 ### Without cover image
 
 ```react|noSource
-<Markdown schema={emailSchema}>{`
+<Markdown schema={createEmailSchema()}>{`
 
 <section><h6>CENTER</h6>
 
-Ladies and Gentlemen,
+Ladies and Gentlemen
 
 At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. **Lorem ipsum** dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua ...
 
@@ -101,7 +101,7 @@ At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergr
 ### With Covid-19 Logo
 
 ```react|noSource
-<Markdown schema={emailSchema}>{`
+<Markdown schema={createEmailSchema()}>{`
 \-\-\-
 format: 'https://github.com/republik/format-covid-19-uhr-newsletter'
 \-\-\-
@@ -123,11 +123,11 @@ Philipp Albrecht, Elia Blülle, Dennis Bühler, Oliver Fuchs und Cinzia Venafro
 `.trim()}</Markdown>
 ```
 
-
 ## Web schema
 
 ```code|lang-jsx
-import schema from '@project-r/styleguide/lib/templates/EditorialNewsletter/web'
+import createWebSchema from '@project-r/styleguide/lib/templates/EditorialNewsletter/web'
+const webSchema = createSchema()
 ```
 
 The web schema reuses most of the email components, but uses web-specific container components without table layout and without header and footer.
@@ -147,7 +147,7 @@ A caption. _Foto: Laurent Burst_
 
 <section><h6>CENTER</h6>
 
-Ladies and Gentlemen,
+Ladies and Gentlemen
 
 At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est _Lorem ipsum_ dolor sit amet. **Lorem ipsum** dolor _**sit amet**_, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.
 
@@ -217,9 +217,97 @@ Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lo
 
 <section><h6>CENTER</h6>
 
-Ladies and Gentlemen,
+Ladies and Gentlemen
 
 At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. **Lorem ipsum** dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua ...
+
+<hr /></section>
+
+`}</Markdown>
+```
+
+## Variables
+
+Custom greetings can be accomplished with variables. Provided via a react context.
+
+```react|noSource
+<VariableContext.Provider value={{ firstName: 'Max', lastName: 'Muster' }}>
+<Markdown schema={webSchema}>{`
+
+<section><h6>CENTER</h6>
+
+<section><h6>IF</h6>
+
+\`\`\`
+{"present": "lastName"}
+\`\`\`
+
+Guten Tag <span data-variable="firstName"></span> <span data-variable="lastName"></span>
+
+<section><h6>ELSE</h6>
+
+Hallo, guten Tag
+
+<hr /></section>
+
+<hr /></section>
+
+<hr /></section>
+
+`}</Markdown>
+</VariableContext.Provider>
+```
+
+The email schema renders them as [Mailchimp merge tags](https://mailchimp.com/en/help/merge-tags/) by default:
+
+```react|noSource
+<Markdown schema={createEmailSchema()}>{`
+
+<section><h6>CENTER</h6>
+
+<section><h6>IF</h6>
+
+\`\`\`
+{"present": "lastName"}
+\`\`\`
+
+Guten Tag <span data-variable="firstName"></span> <span data-variable="lastName"></span>
+
+<section><h6>ELSE</h6>
+
+Hallo, guten Tag
+
+<hr /></section>
+
+<hr /></section>
+
+<hr /></section>
+
+`}</Markdown>
+```
+
+A custom context can be provided through the schema creator, e.g. for rendering a transactional email:
+
+```react|noSource
+<Markdown schema={createEmailSchema({ variableContext: { firstName: 'Max', lastName: 'Muster' } })}>{`
+
+<section><h6>CENTER</h6>
+
+<section><h6>IF</h6>
+
+\`\`\`
+{"present": "lastName"}
+\`\`\`
+
+Guten Tag <span data-variable="firstName"></span> <span data-variable="lastName"></span>
+
+<section><h6>ELSE</h6>
+
+Hallo, guten Tag
+
+<hr /></section>
+
+<hr /></section>
 
 <hr /></section>
 

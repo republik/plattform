@@ -323,6 +323,7 @@ export class GenericMap extends Component {
       description,
       choropleth,
       colorLegendSize,
+      colorLegendPosition,
       missingDataColor,
       opacity
     } = props
@@ -331,6 +332,8 @@ export class GenericMap extends Component {
     const {
       paddingTop,
       paddingLeft,
+      paddingBottom,
+      paddingRight,
       mapSpace,
       mapWidth,
       columnHeight,
@@ -355,10 +358,16 @@ export class GenericMap extends Component {
       mini
     ) {
       legendStyle = {
-        position: 'absolute',
-        top: mini ? 12 : paddingTop,
-        left: paddingLeft + mapSpace * (1 - colorLegendSize),
-        right: 0
+        position: 'absolute'
+      }
+      if (colorLegendPosition === 'left') {
+        legendStyle.bottom = paddingBottom
+        legendStyle.left = paddingLeft
+        legendStyle.right = paddingRight + mapSpace * (1 - colorLegendSize)
+      } else {
+        legendStyle.top = mini ? 12 : paddingTop
+        legendStyle.left = paddingLeft + mapSpace * (1 - colorLegendSize)
+        legendStyle.right = 0
       }
     } else {
       legendStyle = { paddingLeft: paddingLeft }
@@ -554,6 +563,7 @@ export const propTypes = {
   colorLegend: PropTypes.bool.isRequired,
   colorLegendSize: PropTypes.number.isRequired,
   colorLegendMinWidth: PropTypes.number.isRequired,
+  colorLegendPosition: PropTypes.string,
   colorRange: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
   colorRanges: PropTypes.shape({
     sequential3: PropTypes.array.isRequired,
@@ -600,6 +610,7 @@ GenericMap.defaultProps = {
   colorLegend: true,
   colorLegendSize: 0.16,
   colorLegendMinWidth: 80,
+  colorLegendPosition: 'right',
   points: false,
   pointAttributes: [],
   choropleth: false,
@@ -608,7 +619,7 @@ GenericMap.defaultProps = {
   feature: 'feature',
   shape: 'circle',
   sizeRangeMax: 10,
-  getProjection: () => geoEqualEarth(),
+  getProjection: () => geoEqualEarth().rotate([-10, 0]),
   opacity: 0.6
 }
 

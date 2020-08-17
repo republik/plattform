@@ -4,8 +4,9 @@ import { Mso } from 'mdast-react-render/lib/email'
 import Header from './Header'
 import SG from '../../../theme/env'
 import { Editorial } from '../../../components/Typography'
+import { VariableContext } from '../../../components/Variables'
 
-export default ({ children, attributes = {}, meta }) => (
+export default ({ children, attributes = {}, meta, variableContext }) => (
   <html>
     <head>
       <meta charSet='UTF-8' />
@@ -43,8 +44,10 @@ export default ({ children, attributes = {}, meta }) => (
       </Mso>
       <table border='0' cellPadding='0' cellSpacing='0' width='100%'>
         <tbody>
-          <Header meta={meta} />
-          {children}
+          <VariableContext.Provider value={variableContext}>
+            <Header meta={meta} />
+            {children}
+          </VariableContext.Provider>
         </tbody>
       </table>
       <Mso>

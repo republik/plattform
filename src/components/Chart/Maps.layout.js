@@ -276,6 +276,7 @@ export default (props, geoJson) => {
     paddingTop,
     paddingLeft,
     paddingRight,
+    paddingBottom,
     mapSpace,
     mapWidth,
     columnHeight,

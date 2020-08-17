@@ -27,7 +27,12 @@ const createSchema = ({ ...args } = {}) => {
     Button,
     List,
     ListItem,
-    ...args
+    ...args,
+    variableContext: args.variableContext || {
+      firstName: 'FNAME',
+      lastName: 'LNAME',
+      _mergeTags: true
+    }
   })
 }
 

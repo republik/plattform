@@ -157,3 +157,5 @@ export {
   default as ActiveDebateTeaser
 } from './components/TeaserActiveDebates/DebateTeaser'
 export { default as IconButton } from './components/IconButton'
+
+export { VariableContext } from './components/Variables'

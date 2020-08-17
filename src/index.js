@@ -678,8 +678,11 @@ ReactDOM.render(
               path: '/templates/editorialnewsletter',
               title: 'Newsletter',
               imports: {
+                VariableContext: require('./components/Variables')
+                  .VariableContext,
                 webSchema: require('./templates/EditorialNewsletter/web').default(),
-                emailSchema: require('./templates/EditorialNewsletter/email').default(),
+                createEmailSchema: require('./templates/EditorialNewsletter/email')
+                  .default,
                 ...require('./templates/docs'),
                 renderMdast: require('mdast-react-render').renderMdast
               },

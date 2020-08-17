@@ -15,6 +15,7 @@ import {
 } from 'mdast-react-render/lib/utils'
 
 import { FigureImage } from '../../components/Figure'
+import { If, Else, Variable } from '../../components/Variables'
 
 import { getDatePath, matchFigure, extractImage } from '../Article/utils'
 
@@ -36,8 +37,10 @@ const createNewsletterSchema = ({
   Button,
   List,
   ListItem,
-  ListP
+  ListP,
+  variableContext
 } = {}) => {
+  const matchSpan = matchType('span')
   const globalInlines = [
     {
       matchMdast: matchType('break'),
@@ -58,6 +61,28 @@ const createNewsletterSchema = ({
       editorModule: 'mark',
       editorOptions: {
         type: 'sup'
+      }
+    },
+    {
+      matchMdast: node => matchSpan(node) && node.data?.variable,
+      props: node => node.data,
+      component: Variable,
+      editorModule: 'variable',
+      editorOptions: {
+        insertVar: true,
+        insertTypes: ['PARAGRAPH'],
+        fields: [
+          {
+            key: 'variable',
+            items: [
+              { value: 'firstName', text: 'Vorname' },
+              { value: 'lastName', text: 'Nachname' }
+            ]
+          },
+          {
+            key: 'fallback'
+          }
+        ]
       }
     }
   ]
@@ -213,7 +238,8 @@ const createNewsletterSchema = ({
         component: Container,
         editorModule: 'documentPlain',
         props: node => ({
-          meta: node.meta || {}
+          meta: node.meta || {},
+          variableContext
         }),
         rules: [
           {
@@ -249,6 +275,36 @@ const createNewsletterSchema = ({
                   type: 'h2',
                   depth: 2,
                   formatButtonText: 'Zwischentitel'
+                }
+              },
+              {
+                matchMdast: matchZone('IF'),
+                component: If,
+                props: node => ({
+                  present: node.data.present
+                }),
+                editorModule: 'variableCondition',
+                editorOptions: {
+                  type: 'IF',
+                  insertBlock: 'greeting',
+                  insertTypes: ['PARAGRAPH'],
+                  fields: [
+                    {
+                      key: 'present',
+                      items: [
+                        { value: 'firstName', text: 'Vorname' },
+                        { value: 'lastName', text: 'Nachname' }
+                      ]
+                    }
+                  ]
+                }
+              },
+              {
+                matchMdast: matchZone('ELSE'),
+                component: Else,
+                editorModule: 'variableCondition',
+                editorOptions: {
+                  type: 'ELSE'
                 }
               },
               {
