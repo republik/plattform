@@ -155,6 +155,9 @@ ${titleModule ? 'Text' : title}
     changes: {},
     plugins: [
       {
+        onPaste: (event, change, editor) => {
+          console.log('document', 'onPaste', event)
+        },
         renderEditor: ({ children, value }) => (
           <Container meta={value.document.data}>{children}</Container>
         ),
