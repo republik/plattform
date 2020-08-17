@@ -375,7 +375,6 @@ const Editor = {
   lastName: 'Smith',
   emailAccessRole: 'PUBLIC'
 }
-Editor._raw = JSON.parse(JSON.stringify(Editor))
 
 const Anonymous = {
   firstName: null,
