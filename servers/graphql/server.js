@@ -52,7 +52,6 @@ const {
   ACCESS_SCHEDULER,
   MEMBERSHIP_SCHEDULER,
   PUBLICATION_SCHEDULER,
-  SERVER = 'graphql',
   DYNO
 } = process.env
 
@@ -130,7 +129,7 @@ const run = async (workerId, config) => {
 
   const applicationName = [
     'backends',
-    SERVER,
+    'graphql',
     DYNO,
     'worker',
     workerId && `workerId:${workerId}`
