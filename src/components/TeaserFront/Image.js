@@ -17,17 +17,6 @@ const containerStyle = {
   }
 }
 
-const textContainerStyle = {
-  overflow: 'hidden', // Hides unpositioned content on mobile.
-  padding: '15px 15px 40px 15px',
-  [mUp]: {
-    padding: '40px 15% 70px 15%'
-  },
-  [tUp]: {
-    padding: 0
-  }
-}
-
 const styles = {
   container: css({
     ...containerStyle
@@ -41,14 +30,20 @@ const styles = {
     }
   }),
   textContainer: css({
-    ...textContainerStyle
+    overflow: 'hidden', // Hides unpositioned content on mobile.
+    padding: '15px 15px 40px 15px',
+    [mUp]: {
+      padding: '40px 15% 70px 15%'
+    }
   }),
   textContainerFeuilleton: css({
-    ...textContainerStyle,
+    overflow: 'hidden', // Hides unpositioned content on mobile.
     padding: '15px 0 40px 0',
     [mUp]: {
       padding: '40px 0 70px 0'
-    },
+    }
+  }),
+  textContainerOnTop: css({
     [tUp]: {
       padding: 0
     }
@@ -59,6 +54,7 @@ const ImageBlock = ({
   children,
   attributes,
   image,
+  maxWidth,
   byline,
   alt,
   onClick,
@@ -71,6 +67,8 @@ const ImageBlock = ({
   feuilleton
 }) => {
   const background = bgColor || ''
+  const isTextOnTop = textPosition !== 'underneath'
+
   return (
     <div
       {...attributes}
@@ -84,7 +82,9 @@ const ImageBlock = ({
       <div style={{ position: 'relative', fontSize: 0 }}>
         <FigureImage
           aboveTheFold={aboveTheFold}
-          {...FigureImage.utils.getResizedSrcs(image, 1500, false)}
+          {...FigureImage.utils.getResizedSrcs(image, maxWidth || 1500, false)}
+          maxWidth={maxWidth}
+          center={!!maxWidth}
           alt={alt}
         />
         {byline && (
@@ -101,13 +101,16 @@ const ImageBlock = ({
           {...(feuilleton
             ? styles.textContainerFeuilleton
             : styles.textContainer)}
+          {...(isTextOnTop ? styles.textContainerOnTop : undefined)}
         >
           <Text
-            position={textPosition}
+            position={isTextOnTop ? textPosition : undefined}
             color={color}
             collapsedColor={feuilleton && colors.text}
             center={center}
             feuilleton={feuilleton}
+            maxWidth={maxWidth}
+            margin={maxWidth ? '0 auto' : ''}
           >
             {children}
           </Text>

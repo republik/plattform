@@ -200,6 +200,39 @@ A `<TeaserFrontImageHeadline />` should be used. The default font size can be ch
 ```react
 <TeaserFrontImage image='/static/desert.jpg' byline='Foto: Thomas Vuillemin'
   center
+  textPosition='underneath'
+  color='#fff' bgColor='#000'>
+  <Editorial.Format>Neutrum</Editorial.Format>
+  <TeaserFrontImageHeadline.Editorial large>The sand is near</TeaserFrontImageHeadline.Editorial>
+  <TeaserFrontLead>
+    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.
+  </TeaserFrontLead>
+  <TeaserFrontCredit>
+    An article by <TeaserFrontCreditLink href='#' color='#fff'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
+  </TeaserFrontCredit>
+</TeaserFrontImage>
+```
+
+```react
+<TeaserFrontImage image='/static/desert.jpg' byline='Foto: Thomas Vuillemin'
+  center
+  textPosition='underneath'
+  maxWidth={600}
+  color='#fff' bgColor='#000'>
+  <Editorial.Format>Neutrum</Editorial.Format>
+  <TeaserFrontImageHeadline.Editorial large>The sand is near</TeaserFrontImageHeadline.Editorial>
+  <TeaserFrontLead>
+    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.
+  </TeaserFrontLead>
+  <TeaserFrontCredit>
+    An article by <TeaserFrontCreditLink href='#' color='#fff'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
+  </TeaserFrontCredit>
+</TeaserFrontImage>
+```
+
+```react
+<TeaserFrontImage image='/static/desert.jpg' byline='Foto: Thomas Vuillemin'
+  center
   onlyImage
   textPosition='topright' 
   color='#fff' bgColor='#000'>

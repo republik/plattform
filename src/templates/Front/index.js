@@ -235,6 +235,7 @@ const createSchema = ({ Link = DefaultLink, t = () => '', ...rest } = {}) => {
         'titleSize',
         'image',
         'byline',
+        'maxWidth',
         'onlyImage',
         'feuilleton'
       ]

@@ -32,6 +32,9 @@ const styles = {
   }),
   maxWidth: css({
     display: 'block'
+  }),
+  maxWidthCenter: css({
+    margin: '0 auto'
   })
 }
 
@@ -57,7 +60,8 @@ class Image extends Component {
       size: sizeProp,
       aboveTheFold,
       enableGallery = false,
-      gallerySize
+      gallerySize,
+      center
     } = this.props
 
     const onClick = enableGallery
@@ -92,7 +96,11 @@ class Image extends Component {
 
     if (maxWidth) {
       wrappedImage = (
-        <span {...styles.maxWidth} style={{ maxWidth }}>
+        <span
+          {...styles.maxWidth}
+          {...(center ? styles.maxWidthCenter : undefined)}
+          style={{ maxWidth }}
+        >
           {wrappedImage}
         </span>
       )
@@ -124,6 +132,7 @@ Image.propTypes = {
     width: PropTypes.number,
     height: PropTypes.number
   }),
+  center: PropTypes.bool,
   maxWidth: PropTypes.number,
   aboveTheFold: PropTypes.bool,
   enableGallery: PropTypes.bool,
