@@ -176,6 +176,7 @@ const contentUrlResolver = (doc, allDocuments = [], usernames = [], errors, urlP
   const stripDocLinks =
     DOCUMENTS_RESTRICT_TO_ROLES &&
     DOCUMENTS_LINKS_RESTRICTED &&
+    doc?.meta?.path && // not present during publish
     DOCUMENTS_LINKS_RESTRICTED.split(',').includes(doc.meta.path) &&
     user !== undefined &&
     !userIsInRoles(user, DOCUMENTS_RESTRICT_TO_ROLES.split(','))
