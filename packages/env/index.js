@@ -8,9 +8,6 @@ const config = (envFile) => {
   if (DEV) {
     const dotenv = require('dotenv')
 
-    // only required by asset server
-    dotenv.config()
-
     const projectRootPath = path.join(
       __dirname, '../..'
     )
