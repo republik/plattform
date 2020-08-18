@@ -57,7 +57,7 @@ const getArticleMdFromGithub = async (repoId) => {
 
   const [owner, repo] = repoId.split('/')
 
-  return githubRest.repos.getContents({
+  return githubRest.repos.getContent({
     owner,
     repo,
     path: 'article.md'
