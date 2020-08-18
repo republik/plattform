@@ -51,10 +51,11 @@ test('no user uncommittedChanges', async () => {
 
 test('no role uncommittedChanges', async () => {
   const { createSubscriptionClient } = global.instance.clients
-  global.testUser = {
+  const { transformUser } = require('@orbiting/backend-modules-auth')
+  global.testUser = transformUser({
     email: 'alice.smith@test.project-r.construction',
     roles: []
-  }
+  })
   await new Promise((resolve) => {
     const client = createSubscriptionClient({
       connectionCallback: (error) => {
@@ -82,9 +83,10 @@ test('no role uncommittedChanges', async () => {
 test('uncommittedChanges', async () => {
   const { createSubscriptionClient } = global.instance.clients
   const { apolloFetch } = global.instance
+  const { transformUser } = require('@orbiting/backend-modules-auth')
 
   const user = Users.Editor
-  global.testUser = user
+  global.testUser = transformUser(user)
   const repoId = 'fake/fake'
   const action = 'create'
 
