@@ -46,7 +46,7 @@
     "standard": "^14.3.4"
   },
   "scripts": {
-    "start": "if [ -z \"$SERVER\" ]; then >&2 echo \"Missing ENV var: SERVER. Possible values are: graphql, assets.\" && exit 1; else cd servers/$SERVER && yarn run start; fi",
+    "start": "if [ -z \"$SERVER\" ]; then cd servers/graphql; else cd servers/$SERVER; fi && yarn run start",
     "startScheduler": "cd servers/graphql && yarn run startScheduler",
     "dev": "nf --procfile Procfile-dev start",
     "cloc": "find . -name '*.js' -not -path \"*/node_modules*\" -not -path \"./node_modules*\" | xargs wc -l",
