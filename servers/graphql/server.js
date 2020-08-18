@@ -189,11 +189,21 @@ const runOnce = async () => {
     .filter(Boolean)
     .join(' ')
 
-  const context = {
-    ...await ConnectionContext.create(applicationName),
-    t,
-    mail
+  const createGraphQLContext = async () => {
+    const loaders = {}
+    const context = {
+	    ...await ConnectionContext.create(applicationName),
+      t,
+      mail,
+      loaders
+    }
+    Object.keys(loaderBuilders).forEach(key => {
+      loaders[key] = loaderBuilders[key](context)
+    })
+    return context
   }
+
+  const context = await createGraphQLContext()
 
   const slackGreeter = await SlackGreeter.start()
 
