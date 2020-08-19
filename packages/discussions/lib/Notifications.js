@@ -2,7 +2,7 @@ const htmlToText = require('html-to-text')
 const { renderEmail } = require('mdast-react-render/lib/email')
 
 const { transformUser } = require('@orbiting/backend-modules-auth')
-const { commentSchema } = require('@orbiting/backend-modules-styleguide')
+const { commentSchema, inQuotes } = require('@orbiting/backend-modules-styleguide')
 const {
   Subscriptions: {
     getSubscriptionsForUserAndObjects,
@@ -74,7 +74,7 @@ const getCommentInfo = async (comment, displayAuthor, discussion, context) => {
     muteUrl: `${discussionUrl}${discussionUrl.indexOf('?') === -1 ? '?' : '&'}mute=1`,
     subjectParams: {
       authorName: displayAuthor.name,
-      discussionName: discussion.title
+      discussionName: inQuotes(discussion.title)
     },
     isTopLevelComment: !parentIds || parentIds.length === 0,
     icon: displayAuthor.profilePicture || t('api/comment/notification/new/app/icon')
