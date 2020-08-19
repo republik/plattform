@@ -8,8 +8,8 @@
  * For each doc transform returns true, the changes are saved to git and
  * the article get's republished.
  *
- * Usage example:
- * packages/republik/script/removeDialogBoxes.js [-n [num]] [--dry]
+ * Usage:
+ * don't use it directly. See ../removeDialogBoxes for a script using this lib
  * -n:    stop after n fixes
  * --dry: don't commit/publish
  */
@@ -18,7 +18,7 @@ const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
 const Elasticsearch = require('@orbiting/backend-modules-base/lib/Elasticsearch')
 const Redis = require('@orbiting/backend-modules-base/lib/Redis')
 const RedisPubSub = require('@orbiting/backend-modules-base/lib/RedisPubSub')
-const t = require('../../lib/t')
+const { t } = require('@orbiting/backend-modules-translate')
 const Promise = require('bluebird')
 const yargs = require('yargs')
 

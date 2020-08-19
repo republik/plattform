@@ -4,7 +4,7 @@
  * all published articles.
  *
  * Usage:
- * packages/republik/script/addDurations.js [-n [num]] [--dry]
+ * packages/publikator/script/addDurations.js [-n [num]] [--dry]
  * -n:    stop after n fixes
  * --dry: don't commit/publish
  */

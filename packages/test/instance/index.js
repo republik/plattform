@@ -20,7 +20,6 @@ const init = async ({ publicationScheduler, searchNotifyListener = null }) => {
 
   // load env of server
   require('@orbiting/backend-modules-env').config('.test.env')
-  require('@orbiting/backend-modules-env').config('.env')
 
   const instanceId = await getId()
 

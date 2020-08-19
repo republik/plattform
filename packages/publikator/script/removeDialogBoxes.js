@@ -5,7 +5,7 @@
  * from existing published articles.
  *
  * Usage:
- * packages/republik/script/removeDialogBoxes.js [-n [num]] [--dry]
+ * packages/publikator/script/removeDialogBoxes.js [-n [num]] [--dry]
  * -n:    stop after n fixes
  * --dry: don't commit/publish
  */
