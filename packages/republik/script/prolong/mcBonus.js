@@ -5,8 +5,8 @@
  * - the BONUS tag for who is eligable
  *
  *
- * Usage: (run from servers/republik)
- * node script/prolong/mcBonus.js
+ * Usage:
+ * packages/republik/script/prolong/mcBonus.js
  */
 require('@orbiting/backend-modules-env').config()
 const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')

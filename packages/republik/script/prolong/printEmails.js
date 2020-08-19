@@ -5,8 +5,7 @@
  * - uses prolongBeforeDate which respects cancellations, sleeping memberships and pending pledges
  *
  * Usage:
- * cd servers/republik
- * script/prolong/printEmails.js 2019-01-16
+ * /packages/republik/script/prolong/printEmails.js 2019-01-16
  */
 require('@orbiting/backend-modules-env').config()
 const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')

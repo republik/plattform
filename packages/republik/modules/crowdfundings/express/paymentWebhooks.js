@@ -76,7 +76,7 @@ module.exports = async (server, pgdb, t, redis) => {
     // payPledge in case that didn't happen already:
     // in case users close the paypal tab before being redirected back to us,
     // we only get notified about the payment via this webhook.
-    // accepted status see: servers/republik/modules/crowdfundings/lib/payments/postfinance/payPledge.js
+    // accepted status see: packages/republik/modules/crowdfundings/lib/payments/postfinance/payPledge.js
     const status = parseInt(body.STATUS)
     if (status !== 9 && status !== 91) {
       return

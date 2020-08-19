@@ -3,10 +3,10 @@
  * This script adds duration to the embeds and audioSource of
  * all published articles.
  *
- * Usage: (run from servers/publikator)
- * node script/addDurations.js [-n [num]] [--dry]
- * -n: stop after n fixes
- * -- dry: don't commit/publish
+ * Usage:
+ * packages/republik/script/addDurations.js [-n [num]] [--dry]
+ * -n:    stop after n fixes
+ * --dry: don't commit/publish
  */
 
 const transformPublications = require('./lib/transformPublications')

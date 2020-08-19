@@ -8,10 +8,10 @@
  * For each doc transform returns true, the changes are saved to git and
  * the article get's republished.
  *
- * Usage example: (run from servers/publikator)
- * node script/removeDialogBoxes.js [-n [num]] [--dry]
- * -n: stop after n fixes
- * -- dry: don't commit/publish
+ * Usage example:
+ * packages/republik/script/removeDialogBoxes.js [-n [num]] [--dry]
+ * -n:    stop after n fixes
+ * --dry: don't commit/publish
  */
 require('@orbiting/backend-modules-env').config()
 const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')

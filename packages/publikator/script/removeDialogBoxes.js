@@ -4,10 +4,10 @@
  * "Dialog mit der Redaktion" and "Feedback ans Feulleton"
  * from existing published articles.
  *
- * Usage: (run from servers/publikator)
- * node script/removeDialogBoxes.js [-n [num]] [--dry]
- * -n: stop after n fixes
- * -- dry: don't commit/publish
+ * Usage:
+ * packages/republik/script/removeDialogBoxes.js [-n [num]] [--dry]
+ * -n:    stop after n fixes
+ * --dry: don't commit/publish
  */
 
 const transformPublications = require('./lib/transformPublications')

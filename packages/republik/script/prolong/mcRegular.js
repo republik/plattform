@@ -4,8 +4,8 @@
  * - a CP_ATOKEN2 if they need to prolong before 2019-01-16
  *
  *
- * Usage: (run from servers/republik)
- * node script/prolong/mcRegular.js [--dry]
+ * Usage:
+ * packages/republik/script/prolong/mcRegular.js [--dry]
  */
 require('@orbiting/backend-modules-env').config()
 const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')

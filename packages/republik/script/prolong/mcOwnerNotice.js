@@ -4,8 +4,8 @@
  * - if they need to prolong before 2019-01-16
  * - if they to not already have an owner notice key in the maillog
  *
- * Usage: (run from servers/republik)
- * node script/prolong/mcOwnerNotice.js [--dry]
+ * Usage:
+ * packages/republik/script/prolong/mcOwnerNotice.js [--dry]
  */
 require('@orbiting/backend-modules-env').config()
 const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')

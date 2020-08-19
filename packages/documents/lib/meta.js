@@ -58,7 +58,7 @@ const getCredits = doc => {
 
 /**
  * Builds and an audioSource object from {doc.content.meta} for use in meta.
- * Publish uses servers/publikator/lib/Document.prepareMetaForPublish instead
+ * Publish uses packages/publikator/lib/Document.prepareMetaForPublish instead
  *
  * @param  {Object}      doc An MDAST tree
  * @return {Object|null}     e.g. { mp3: true, aac: null, ogg: null }

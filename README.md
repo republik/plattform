@@ -127,8 +127,8 @@ You will quickly run into errors and limitations if you run with the example env
 1. [Setup GitHub](packages/publikator#github)
     - `GITHUB_*` in the root `.env`
 2. MailChimp and Mandrill
-    - `MAILCHIMP_URL`, `MAILCHIMP_API_KEY`, `MANDRILL_API_KEY` in the root `.env`
-    - `MAILCHIMP_*` in `servers/republik/.env` (less important)
+    - `MAILCHIMP_URL`, `MAILCHIMP_API_KEY`, `MANDRILL_API_KEY` in `.env`
+    - `MAILCHIMP_*` in `.env` (less important)
 3. S3 Bucket
     - `AWS_*` in the root `.env`
 

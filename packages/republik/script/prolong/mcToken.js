@@ -3,8 +3,7 @@
  * This script adds a CP_ATOKEN to mailchimp members to all that can prolong
  *
  * Usage:
- * cd servers/republik
- * script/prolong/mcToken.js --dry
+ * packages/republik/script/prolong/mcToken.js --dry
  */
 require('@orbiting/backend-modules-env').config()
 const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
