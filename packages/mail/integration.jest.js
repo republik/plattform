@@ -1,5 +1,5 @@
 const path = require('path')
-require('@orbiting/backend-modules-env').config()
+require('@orbiting/backend-modules-env').config('.test.env')
 
 const cleanup = async () => {
   const mailchimp = MailchimpInterface({ logger: console })

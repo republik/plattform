@@ -80,7 +80,7 @@ Note:
 
 ### 2. ENVs
 
-Copy the `.env.example` files to `.env` (in root and server/assets/). The default values should be enough to get started.
+Copy the `.env.example` files to `.env` (in root and servers/assets/). The default values should be enough to get started.
 ```
 cp .env.example .env
 cp servers/assets/.env.example servers/assets/.env
