@@ -720,11 +720,11 @@
     },
     {
       "key": "api/comment/notification/new/email/subject",
-      "value": "Neuer Beitrag von {authorName} in «{discussionName}»"
+      "value": "Neuer Beitrag von {authorName} in {discussionName}"
     },
     {
       "key": "api/comment/notification/answer/email/subject",
-      "value": "Neue Antwort von {authorName} in «{discussionName}»"
+      "value": "Neue Antwort von {authorName} in {discussionName}"
     },
     {
       "key": "api/comment/notification/new/app/icon",
@@ -732,11 +732,11 @@
     },
     {
       "key": "api/comment/notification/new/app/subject",
-      "value": "Neuer Beitrag in «{discussionName}»"
+      "value": "Neuer Beitrag in {discussionName}"
     },
     {
       "key": "api/comment/notification/answer/app/subject",
-      "value": "Neue Antwort in «{discussionName}»"
+      "value": "Neue Antwort in {discussionName}"
     },
     {
       "key": "api/comment/tagRequired",
