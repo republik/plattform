@@ -192,7 +192,7 @@ const runOnce = async () => {
   const createGraphQLContext = async () => {
     const loaders = {}
     const context = {
-	    ...await ConnectionContext.create(applicationName),
+      ...await ConnectionContext.create(applicationName),
       t,
       mail,
       loaders

@@ -67,4 +67,3 @@ TWITTER_APP_SECRET=[The hash from field "Consumer Secret (API Secret)"]
 
 ## Licensing
 The source code and it's documentation is licensed under [GNU AGPLv3](LICENSE)+.
-
