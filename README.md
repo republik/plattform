@@ -109,7 +109,7 @@ yarn run dev
 This kicks on [foreman](https://github.com/strongloop/node-foreman) which then launches all the servers locally.
 All servers greets you with `Cannot GET /` on the root route. The API server has a graphical API explorer available at `/graphiql`:
 
-- [Republik & Publikator API on port 5000](http://localhost:5000/graphiql)
+- [GraphQL on port 5000](http://localhost:5000/graphiql)
 - [Assets server on port 5020](http://localhost:5020/)
 
 ### Next steps
