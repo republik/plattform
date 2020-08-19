@@ -116,7 +116,7 @@ All servers greets you with `Cannot GET /` on the root route. The API server has
 
 #### more about ENVs
 
-In development environment variables are loaded from `./.env`r.
+In development environment variables are loaded from `./.env`.
 No ENV variabeles are loaded from any file in production, you yourself are responsible to set all required ENVs in the production environment.
 
 Checkout [.env.example](.env.example), [servers/assets/.env.example](servers/assets/.env.example) for which ENVs are required and their descriptions. Check the packages' README for further config options.
