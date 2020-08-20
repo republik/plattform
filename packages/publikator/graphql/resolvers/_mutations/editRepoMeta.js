@@ -29,7 +29,8 @@ module.exports = async (_, args, context) => {
 
   const tag = await getAnnotatedTag(
     repoId,
-    TAG_NAME
+    TAG_NAME,
+    context
   )
 
   const meta = {

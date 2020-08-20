@@ -16,7 +16,7 @@ module.exports = async (
   ensureUserHasRole(user, 'editor')
 
   await Promise.each(repoIds, async repoId => {
-    const publications = await getLatestPublications({ id: repoId })
+    const publications = await getLatestPublications({ id: repoId }, null, context)
 
     if (publications.length > 0) {
       if (!unpublish) {

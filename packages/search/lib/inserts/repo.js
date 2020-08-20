@@ -28,7 +28,7 @@ const iterateRepos = async (context, callback) => {
     for (let repo of repos.nodes) {
       await callback(
         repo,
-        await getLatestPublications(repo)
+        await getLatestPublications(repo, null, context)
       )
     }
   } while (pageInfo && pageInfo.hasNextPage)
