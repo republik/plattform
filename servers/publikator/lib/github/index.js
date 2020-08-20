@@ -90,18 +90,10 @@ module.exports = {
     })
     return repo
   },
-  getHeads: async (repoId) => {
+  getHeads: async (repoId, { t }) => {
     const { githubApolloFetch } = await createGithubClients()
     const [login, repoName] = repoId.split('/')
-    const {
-      data: {
-        repository: {
-          refs: {
-            nodes: heads
-          }
-        }
-      }
-    } = await githubApolloFetch({
+    const result = await githubApolloFetch({
       query: `
         query repository(
           $login: String!,
@@ -134,6 +126,10 @@ module.exports = {
         first: 100
       }
     })
+    const heads = result?.data?.repository?.refs?.nodes
+    if (!heads) {
+      throw new Error(t('api/github/unavailable'))
+    }
     return heads
   },
   getCommit: async (repo, { id: sha }, { redis }) => {
@@ -148,13 +144,7 @@ module.exports = {
 
     const { githubApolloFetch } = await createGithubClients()
     const [login, repoName] = repo.id.split('/')
-    const {
-      data: {
-        repository: {
-          object: rawCommit
-        }
-      }
-    } = await githubApolloFetch({
+    const result = await githubApolloFetch({
       query: `
         query repository(
           $login: String!,
@@ -190,25 +180,18 @@ module.exports = {
         sha
       }
     })
+    const rawCommit = result?.data?.repository?.object
     if (!rawCommit) {
-      return null
+      throw new Error(t('api/github/unavailable'))
     }
     const commit = normalizeGQLCommit(repo, rawCommit)
     await redis.setAsync(redisKey, JSON.stringify(commit), 'EX', redis.__defaultExpireSeconds)
     return commit
   },
-  getCommits: async (repo, { first = 15, after, before }) => {
+  getCommits: async (repo, { first = 15, after, before }, { redis, t }) => {
     const { githubApolloFetch } = await createGithubClients()
     const [login, repoName] = repo.id.split('/')
-    const {
-      data: {
-        repository: {
-          refs: {
-            nodes: heads
-          }
-        }
-      }
-    } = await githubApolloFetch({
+    const result = await githubApolloFetch({
       query: `
         query repository(
           $login: String!,
@@ -269,6 +252,22 @@ module.exports = {
         commitsUntil: after
       }
     })
+
+
+    // github downtime resilience
+    let heads = result?.data?.repository?.refs?.nodes
+    const redisKey = `repos:${repo.id}/heads`
+    if (heads) {
+      redis.setAsync(redisKey, JSON.stringify(heads))
+    } else {
+      const redisHeads = await redis.getAsync(redisKey)
+        .then( r => r && JSON.parse(r) )
+      if (!redisHeads) {
+        throw new Error(t('api/github/unavailable'))
+      }
+      heads = redisHeads
+    }
+
     const hasNextPage = heads.some(({ target }) => target.history.pageInfo.hasNextPage)
     const totalCount = heads.reduce((total, { target }) => total + target.history.totalCount, 0)
 
@@ -296,7 +295,8 @@ module.exports = {
       nodes: commits
     }
   },
-  getAnnotatedTags: async (repoId, first = 100) => {
+  getAnnotatedTags: async (repoId, { redis, t }) => {
+    const first = 100
     const { githubApolloFetch } = await createGithubClients()
     const [login, repoName] = repoId.split('/')
 
@@ -354,10 +354,9 @@ module.exports = {
           }
           return nextNodes
         })
-        .catch(errors => { console.log(errors) })
     }
 
-    return getAll()
+    const result = await getAll()
       .then(tags => tags
         .map(tag => tag.target)
         .filter(tag => Object.keys(tag).length > 0) // only annotated
@@ -366,17 +365,26 @@ module.exports = {
       .then(tags =>
         uniqWith(tags, (a, b) => a.name === b.name)
       )
+      .catch(e => {console.error(e)})
+
+    // github downtime resilience
+    const redisKey = `repos:${repoId}/tags:first=${first}`
+    if (result) {
+      redis.setAsync(redisKey, JSON.stringify(result))
+      return result
+    } else {
+      const redisResult = await redis.getAsync(redisKey)
+        .then( r => r && JSON.parse(r) )
+      if (redisResult) {
+        return redisResult
+      }
+      throw new Error(t('api/github/unavailable'))
+    }
   },
-  getAnnotatedTag: async (repoId, tagName) => {
+  getAnnotatedTag: async (repoId, tagName, { redis, t }) => {
     const { githubApolloFetch } = await createGithubClients()
     const [login, repoName] = repoId.split('/')
-    const {
-      data: {
-        repository: {
-          ref
-        }
-      }
-    } = await githubApolloFetch({
+    const result = await githubApolloFetch({
       query: `
         query repository(
           $login: String!,
@@ -413,6 +421,12 @@ module.exports = {
         ref: `refs/tags/${tagName}`
       }
     })
+    let ref = result?.data?.repository?.ref
+
+    // github downtime resilience:
+    // annotatedTag can not be cached, because they must dissapear when a doc
+    // is unpublished or a scheduled publication is overwritten by a publish.
+
     if (!ref || !ref.target) {
       return null
     }

@@ -1829,6 +1829,10 @@
     {
       "key": "api/notifications/doc/author/title",
       "value": "Neuer Beitrag von {name}"
+    },
+    {
+      "key": "api/github/unavailable",
+      "value": "GitHub scheint zur Zeit nicht verfügbar zu sein. Bitte versuchen Sie es später nochmals."
     }
   ]
 }
