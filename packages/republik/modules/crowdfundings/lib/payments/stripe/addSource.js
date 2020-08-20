@@ -33,7 +33,7 @@ module.exports = async ({
       throw new Error('three_d_secure sources cannot be attached like this!')
     }
 
-    existingSource = stripeCustomer.sources.data.find(s =>
+    existingSource = stripeCustomer.sources?.data.find(s =>
       s.card &&
       s.card.fingerprint === source.card.fingerprint &&
       s.card.exp_month === source.card.exp_month &&
