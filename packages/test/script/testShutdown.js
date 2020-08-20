@@ -1,16 +1,12 @@
+// manual testing if the server performs a clean shutdown
 const log = require('why-is-node-running')
 const path = require('path')
 
-const serverName = 'republik'
-
-const relativeServerPath = `../../../servers/${serverName}/`
-
 // load env of server
-require('@orbiting/backend-modules-env').config(
-  path.join(__dirname, relativeServerPath, '.env')
-)
+require('@orbiting/backend-modules-env').config()
+
 // require server's server.js and start
-const Server = require(`${relativeServerPath}server`)
+const Server = require('../../../servers/graphql/server')
 
 Server.start()
   .then(async (server) => {
