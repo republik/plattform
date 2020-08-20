@@ -1,5 +1,5 @@
 {
-  "name": "assets-backend",
+  "name": "@orbiting/assets-server",
   "version": "0.0.1",
   "engines": {
     "node": "14.x"
