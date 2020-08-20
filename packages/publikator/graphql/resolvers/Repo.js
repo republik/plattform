@@ -18,7 +18,7 @@ const UNCOMMITTED_CHANGES_TTL = 7 * 24 * 60 * 60 * 1000 // 1 week in ms
 module.exports = {
   commits: getCommits,
   latestCommit: async (repo, args, context) => {
-    if (repo.latestCommit) {
+    if (repo.latestCommit?.parentIds) {
       return repo.latestCommit
     }
     return getHeads(repo.id, context)
