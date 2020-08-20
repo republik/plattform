@@ -11,25 +11,15 @@ const { getId } = require('./pool')
 //
 // REDIS_URL: if set is has to be a base url, allowing to append '/db'
 //
-const init = async ({ serverName, publicationScheduler, searchNotifyListener = null }) => {
+const init = async ({ publicationScheduler, searchNotifyListener = null }) => {
   // checks
   if (global.instance) {
     throw new Error('only one instance per process')
   }
   global.instance = 'init'
-  if (!serverName) {
-    throw new Error('serverName missing')
-  }
-
-  const relativeServerPath = `../../../servers/${serverName}/`
 
   // load env of server
-  require('@orbiting/backend-modules-env').config(
-    path.join(__dirname, relativeServerPath, '.test.env')
-  )
-  require('@orbiting/backend-modules-env').config(
-    path.join(__dirname, relativeServerPath, '.env')
-  )
+  require('@orbiting/backend-modules-env').config('.test.env')
 
   const instanceId = await getId()
 
@@ -79,7 +69,7 @@ const init = async ({ serverName, publicationScheduler, searchNotifyListener = n
   })
 
   // require server's server.js and start
-  const Server = require(`${relativeServerPath}server`)
+  const Server = require('@orbiting/graphql-server/server')
   const server = await Server.start()
 
   const closeAndCleanup = async () => {

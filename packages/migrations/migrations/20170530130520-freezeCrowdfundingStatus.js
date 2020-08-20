@@ -1,6 +1,6 @@
 const run = require('../run.js')
 
-const dir = 'servers/republik/migrations/crowdfunding/sqls'
+const dir = 'packages/republik/migrations/crowdfunding/sqls'
 const file = '20170530130520-freezeCrowdfundingStatus'
 
 exports.up = (db) =>

@@ -1,0 +1,48 @@
+{
+  "name": "@orbiting/graphql-server",
+  "version": "0.0.1",
+  "engines": {
+    "node": "14.x"
+  },
+  "private": true,
+  "license": "AGPL-3.0",
+  "dependencies": {
+    "apollo-modules-node": "^0.1.4",
+    "d3-array": "^2.4.0",
+    "d3-dsv": "^1.2.0",
+    "d3-time": "^1.0.8",
+    "debug": "^4.1.1",
+    "emojione_minimal": "^2.1.2",
+    "graphql": "^15.3.0",
+    "graphql-fields": "^2.0.3",
+    "is-uuid": "^1.0.2",
+    "isomorphic-unfetch": "^3.0.0",
+    "lodash": "^4.17.19",
+    "moment": "^2.26.0",
+    "openpgp": "^4.10.4",
+    "remark-breaks": "^1.0.5",
+    "remark-parse": "^8.0.2",
+    "sharp": "^0.25.3",
+    "slugify": "^1.4.0",
+    "stripe": "^8.61.0",
+    "throng": "^4.0.0",
+    "unified": "^9.0.0",
+    "uuid": "^8.1.0",
+    "yargs": "^15.3.1"
+  },
+  "scripts": {
+    "dev": "NODE_ENV=development nodemon $NODE_DEBUG_OPTION --trace-warnings index.js",
+    "devScheduler": "NODE_ENV=development nodemon $NODE_DEBUG_OPTION --trace-warnings scheduler.js",
+    "inspect": "NODE_DEBUG_OPTION=--inspect yarn run dev",
+    "start": "node index.js",
+    "startScheduler": "node scheduler.js"
+  },
+  "devDependencies": {
+    "apollo-fetch": "^0.7.0",
+    "istanbul": "^1.1.0-alpha.1",
+    "nodemon": "^2.0.4",
+    "snoowrap": "^1.21.0",
+    "tap-diff": "^0.1.1",
+    "zero-fill": "^2.2.3"
+  }
+}

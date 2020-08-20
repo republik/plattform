@@ -372,7 +372,8 @@ const Editor = {
   email: 'alice.smith@test.project-r.construction',
   roles: [ 'editor' ],
   firstName: 'Alice',
-  lastName: 'Smith'
+  lastName: 'Smith',
+  emailAccessRole: 'PUBLIC'
 }
 
 const Anonymous = {

@@ -2,7 +2,7 @@ const { ensureUser } = require('@orbiting/backend-modules-auth')
 
 module.exports = async (_, args, context) => {
   const { submitComment } = require('@orbiting/backend-modules-discussions/lib/Notifications')
-  const { notifyPublish } = require('../../../../../servers/publikator/lib/Notifications')
+  const { notifyPublish } = require('@orbiting/backend-modules-publikator/lib/Notifications')
 
   const {
     commentId,

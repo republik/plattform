@@ -1,9 +1,9 @@
 const Redis = require('@orbiting/backend-modules-base/lib/Redis')
-const getRepos = require('../../../../servers/publikator/graphql/resolvers/_queries/repos')
+const getRepos = require('@orbiting/backend-modules-publikator/graphql/resolvers/_queries/repos')
 const {
   latestPublications: getLatestPublications
-} = require('../../../../servers/publikator/graphql/resolvers/Repo')
-const { upsert: repoCacheUpsert } = require('../../../../servers/publikator/lib/cache/upsert')
+} = require('@orbiting/backend-modules-publikator/graphql/resolvers/Repo')
+const { upsert: repoCacheUpsert } = require('@orbiting/backend-modules-publikator/lib/cache/upsert')
 
 const iterateRepos = async (context, callback) => {
   let pageInfo

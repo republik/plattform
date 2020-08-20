@@ -63,9 +63,9 @@ docker-data/
 
 .DS_Store
 
-servers/republik/seeds/seeds.json
-servers/republik/seeds/comments.json
-servers/republik/local/
-servers/publikator/seeds/seeds.json
+packages/republik/seeds/seeds.json
+packages/republik/seeds/comments.json
+packages/republik/local/
+packages/publikator/seeds/seeds.json
 .vim
 local

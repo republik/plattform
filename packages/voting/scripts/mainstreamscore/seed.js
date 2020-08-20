@@ -9,7 +9,7 @@ const submitAnswer = require('@orbiting/backend-modules-voting/graphql/resolvers
 const moment = require('moment')
 const { v4: uuid } = require('uuid')
 const { t } = require('@orbiting/backend-modules-translate')
-const { loaderBuilders } = require('../../../../servers/republik/server')
+const { loaderBuilders } = require('@orbiting/graphql-server/server')
 
 const getRandomUsers = (questionnaireId, limit, pgdb) =>
   pgdb.query(`

@@ -1,4 +1,4 @@
-require('@orbiting/backend-modules-env').config()
+require('@orbiting/backend-modules-env').config('servers/assets/.env')
 const server = require('./server')
 const regiment = require('regiment')
 
