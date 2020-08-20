@@ -365,7 +365,7 @@ module.exports = {
       .then(tags =>
         uniqWith(tags, (a, b) => a.name === b.name)
       )
-      .catch(e => {})
+      .catch(e => {console.error(e)})
 
     // github downtime resilience
     const redisKey = `repos:${repoId}/tags:first=${first}`
