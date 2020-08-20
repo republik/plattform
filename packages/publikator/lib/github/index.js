@@ -186,7 +186,17 @@ module.exports = {
     }
     const commit = normalizeGQLCommit(repo, rawCommit)
     try {
-      await redis.setAsync(redisKey, JSON.stringify(commit), 'EX', redis.__defaultExpireSeconds)
+      await redis.setAsync(
+        redisKey,
+        JSON.stringify({
+          ...commit,
+          repo: { //other keys (e.g. latestCommit) create circular structure
+            id: repo.id
+          }
+        }),
+        'EX',
+        redis.__defaultExpireSeconds
+      )
     } catch(e) {
       console.error(e, { rawCommit, commit })
     }
