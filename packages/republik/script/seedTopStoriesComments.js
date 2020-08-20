@@ -17,7 +17,7 @@ const loaderBuilders = {
 }
 const { v4: uuid } = require('uuid')
 
-const submitComment = require('../../../packages/discussions/graphql/resolvers/_mutations/submitComment')
+const submitComment = require('@orbiting/backend-modules-discussions/graphql/resolvers/_mutations/submitComment')
 
 const comments = [
   {
