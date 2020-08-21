@@ -79,43 +79,52 @@ const ImageBlock = ({
         cursor: onClick ? 'pointer' : 'default'
       }}
     >
-      <div style={{ position: 'relative', fontSize: 0 }}>
-        <FigureImage
-          aboveTheFold={aboveTheFold}
-          {...FigureImage.utils.getResizedSrcs(image, maxWidth || 1500, false)}
-          maxWidth={maxWidth}
-          center={!!maxWidth}
-          alt={alt}
-        />
-        {byline && (
-          <FigureByline
-            position={onlyImage ? 'leftInsideOnlyImage' : 'leftInside'}
-            style={{ color }}
+      <div
+        style={{
+          position: 'relative',
+          maxWidth,
+          margin: maxWidth ? '0 auto' : undefined
+        }}
+      >
+        <div style={{ position: 'relative', fontSize: 0 }}>
+          <FigureImage
+            aboveTheFold={aboveTheFold}
+            {...FigureImage.utils.getResizedSrcs(
+              image,
+              maxWidth || 1500,
+              false
+            )}
+            maxWidth={maxWidth}
+            alt={alt}
+          />
+          {byline && (
+            <FigureByline
+              position={onlyImage ? 'leftInsideOnlyImage' : 'leftInside'}
+              style={{ color }}
+            >
+              {byline}
+            </FigureByline>
+          )}
+        </div>
+        {!onlyImage && (
+          <div
+            {...(feuilleton
+              ? styles.textContainerFeuilleton
+              : styles.textContainer)}
+            {...(isTextOnTop ? styles.textContainerOnTop : undefined)}
           >
-            {byline}
-          </FigureByline>
+            <Text
+              position={isTextOnTop ? textPosition : undefined}
+              color={color}
+              collapsedColor={feuilleton && colors.text}
+              center={center}
+              feuilleton={feuilleton}
+            >
+              {children}
+            </Text>
+          </div>
         )}
       </div>
-      {!onlyImage && (
-        <div
-          {...(feuilleton
-            ? styles.textContainerFeuilleton
-            : styles.textContainer)}
-          {...(isTextOnTop ? styles.textContainerOnTop : undefined)}
-        >
-          <Text
-            position={isTextOnTop ? textPosition : undefined}
-            color={color}
-            collapsedColor={feuilleton && colors.text}
-            center={center}
-            feuilleton={feuilleton}
-            maxWidth={maxWidth}
-            margin={maxWidth ? '0 auto' : ''}
-          >
-            {children}
-          </Text>
-        </div>
-      )}
     </div>
   )
 }
