@@ -139,6 +139,16 @@ ReactDOM.render(
               src: require('./components/Button/docs.md')
             },
             {
+              path: '/components/iconbutton',
+              title: 'IconButton',
+              imports: {
+                css,
+                BookmarkIcon: require('react-icons/lib/md/bookmark'),
+                IconButton: require('./components/IconButton')
+              },
+              src: require('./components/IconButton/docs.md')
+            },
+            {
               path: '/format',
               title: 'FormatTag',
               imports: {
