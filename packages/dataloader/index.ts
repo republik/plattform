@@ -29,10 +29,10 @@ interface CreateDataLoaderOptions<Key, LoadedValue> extends DataLoader.Options<K
   many?: boolean;
 }
 
-function defaultFind<Key, LoadedValue>(
+function defaultFind<LoadedValue extends AnyObject>(
   key: KeyConstraint,
-  rows: AnyObject[],
-  { many }: CreateDataLoaderOptions<Key, LoadedValue> = {}
+  rows: LoadedValue[],
+  { many }: CreateDataLoaderOptions<KeyConstraint, LoadedValue> = {}
 ) {
   if (typeof key === 'string') {
     return rows.find(
@@ -41,7 +41,7 @@ function defaultFind<Key, LoadedValue>(
   }
   if (typeof key === 'object') {
     const keyFields = Object.keys(key)
-    const matchRow = (row: AnyObject) =>
+    const matchRow = (row: LoadedValue) =>
       keyFields.every(keyField => row[keyField] === key[keyField])
     if (many) {
       return rows.filter(matchRow)
@@ -50,10 +50,16 @@ function defaultFind<Key, LoadedValue>(
   }
 }
 
+type FindFunction<LoadedValue> = (
+  key: KeyConstraint,
+  rows: LoadedValue[],
+  options?: {many?: boolean}
+) => LoadedValue | LoadedValue[] | undefined
+
 export default function createDataLoader<Key extends KeyConstraint, LoadedValue>(
   loader: (keys: readonly Key[]) => Promise<LoadedValue[]>,
   options?: CreateDataLoaderOptions<Key, LoadedValue> | null,
-  find = defaultFind
+  find: FindFunction<LoadedValue> = defaultFind
 ){
   const { many, ...dlOptions } = options || {}
 
