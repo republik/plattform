@@ -21,18 +21,19 @@ const getCacheKey = (key: KeyConstraint) => {
   throw new Error('invalid key')
 }
 
-interface AnyObject {
+interface ValueConstraint {
+  id ?: string;
   [key: string]: any;
 }
 
-interface CreateDataLoaderOptions<Key, LoadedValue> extends DataLoader.Options<Key, LoadedValue, string> {
+interface CreateDataLoaderOptions<Key, Value> extends DataLoader.Options<Key, Value, string> {
   many?: boolean;
 }
 
-function defaultFind<LoadedValue extends AnyObject>(
+function defaultFind<Value extends ValueConstraint>(
   key: KeyConstraint,
-  rows: LoadedValue[],
-  { many }: CreateDataLoaderOptions<KeyConstraint, LoadedValue> = {}
+  rows: Value[],
+  { many }: CreateDataLoaderOptions<KeyConstraint, Value> = {}
 ) {
   if (typeof key === 'string') {
     return rows.find(
@@ -41,7 +42,7 @@ function defaultFind<LoadedValue extends AnyObject>(
   }
   if (typeof key === 'object') {
     const keyFields = Object.keys(key)
-    const matchRow = (row: LoadedValue) =>
+    const matchRow = (row: Value) =>
       keyFields.every(keyField => row[keyField] === key[keyField])
     if (many) {
       return rows.filter(matchRow)
@@ -50,16 +51,16 @@ function defaultFind<LoadedValue extends AnyObject>(
   }
 }
 
-type FindFunction<LoadedValue> = (
+type FindFunction<Value> = (
   key: KeyConstraint,
-  rows: LoadedValue[],
+  rows: Value[],
   options?: {many?: boolean}
-) => LoadedValue | LoadedValue[] | undefined
+) => Value | Value[] | undefined
 
-export default function createDataLoader<Key extends KeyConstraint, LoadedValue>(
-  loader: (keys: readonly Key[]) => Promise<LoadedValue[]>,
-  options?: CreateDataLoaderOptions<Key, LoadedValue> | null,
-  find: FindFunction<LoadedValue> = defaultFind
+export default function createDataLoader<Key extends KeyConstraint, Value>(
+  loader: (keys: readonly Key[]) => Promise<Value[]>,
+  options?: CreateDataLoaderOptions<Key, Value> | null,
+  find: FindFunction<Value> = defaultFind
 ){
   const { many, ...dlOptions } = options || {}
 
