@@ -7,11 +7,17 @@ Supported props:
 - `bgColor`: The background color to use in stacked mode.
 - `center`: Whether the text should be center aligned.
 - `onlyImage`: Whether to render only the image (without the text block).
+- `maxWidth`: useful for e.g. gifs that have solid color edges, see example below
 
 A `<TeaserFrontImageHeadline />` should be used. The default font size can be changed with either of these props:d
 - `medium`: Whether the font size shoud be increased to medium.
 - `large`: Whether the font size shoud be increased to large.
 - `small`: Whether the font size should be decreased to small.
+
+
+## `textPosition`
+
+### `topleft` (default)
 
 ```react
 <TeaserFrontImage
@@ -28,18 +34,7 @@ A `<TeaserFrontImageHeadline />` should be used. The default font size can be ch
 </TeaserFrontImage>
 ```
 
-```react
-<TeaserFrontImage
-  image='/static/skilifte-front.svg?size=360x275' color='#fff' bgColor='#000'>
-  <TeaserFrontImageHeadline.Editorial small>The sand is near</TeaserFrontImageHeadline.Editorial>
-  <TeaserFrontLead>
-    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.
-  </TeaserFrontLead>
-  <TeaserFrontCredit>
-    An article by <TeaserFrontCreditLink href='#' color='#fff'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
-  </TeaserFrontCredit>
-</TeaserFrontImage>
-```
+### `topright`
 
 ```react
 <TeaserFrontImage image='/static/desert.jpg' byline='Foto: Thomas Vuillemin'
@@ -56,6 +51,8 @@ A `<TeaserFrontImageHeadline />` should be used. The default font size can be ch
 </TeaserFrontImage>
 ```
 
+### `bottomleft`
+
 ```react
 <TeaserFrontImage image='/static/desert.jpg' byline='Foto: Thomas Vuillemin'
   textPosition='bottomleft'
@@ -71,6 +68,8 @@ A `<TeaserFrontImageHeadline />` should be used. The default font size can be ch
 </TeaserFrontImage>
 ```
 
+### `bottomright`
+
 ```react
 <TeaserFrontImage image='/static/desert.jpg' byline='Foto: Thomas Vuillemin'
   textPosition='bottomright'
@@ -85,6 +84,8 @@ A `<TeaserFrontImageHeadline />` should be used. The default font size can be ch
   </TeaserFrontCredit>
 </TeaserFrontImage>
 ```
+
+### `topright`
 
 ```react
 <TeaserFrontImage image='/static/desert.jpg' byline='Foto: Thomas Vuillemin'
@@ -102,20 +103,7 @@ A `<TeaserFrontImageHeadline />` should be used. The default font size can be ch
 </TeaserFrontImage>
 ```
 
-```react
-<TeaserFrontImage image='/static/desert.jpg' byline='Foto: Thomas Vuillemin'
-  textPosition='topright'
-  color='#fff' bgColor='#000'>
-  <Editorial.Format>Neutrum</Editorial.Format>
-  <TeaserFrontImageHeadline.Interaction small>The sand is near</TeaserFrontImageHeadline.Interaction>
-  <TeaserFrontLead>
-    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.
-  </TeaserFrontLead>
-  <TeaserFrontCredit>
-    An article by <TeaserFrontCreditLink href='#' color='#fff'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
-  </TeaserFrontCredit>
-</TeaserFrontImage>
-```
+### `top`
 
 ```react
 <TeaserFrontImage image='/static/desert.jpg' byline='Foto: Thomas Vuillemin'
@@ -133,6 +121,8 @@ A `<TeaserFrontImageHeadline />` should be used. The default font size can be ch
 </TeaserFrontImage>
 ```
 
+### `middle`
+
 ```react
 <TeaserFrontImage image='/static/desert.jpg' byline='Foto: Thomas Vuillemin'
   center
@@ -148,6 +138,8 @@ A `<TeaserFrontImageHeadline />` should be used. The default font size can be ch
   </TeaserFrontCredit>
 </TeaserFrontImage>
 ```
+
+### `bottom`
 
 ```react
 <TeaserFrontImage image='/static/desert.jpg' byline='Foto: Thomas Vuillemin'
@@ -165,6 +157,30 @@ A `<TeaserFrontImageHeadline />` should be used. The default font size can be ch
 </TeaserFrontImage>
 ```
 
+### `underneath`
+
+Always underneath, even on big screens.
+
+```react
+<TeaserFrontImage image='/static/desert.jpg' byline='Foto: Thomas Vuillemin'
+  center
+  textPosition='underneath'
+  color='#fff' bgColor='#000'>
+  <Editorial.Format>Neutrum</Editorial.Format>
+  <TeaserFrontImageHeadline.Editorial>The sand is near</TeaserFrontImageHeadline.Editorial>
+  <TeaserFrontLead>
+    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.
+  </TeaserFrontLead>
+  <TeaserFrontCredit>
+    An article by <TeaserFrontCreditLink href='#' color='#fff'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
+  </TeaserFrontCredit>
+</TeaserFrontImage>
+```
+
+## `titleSize`
+
+### `medium`
+
 ```react
 <TeaserFrontImage image='/static/desert.jpg' byline='Foto: Thomas Vuillemin'
   center
@@ -181,6 +197,8 @@ A `<TeaserFrontImageHeadline />` should be used. The default font size can be ch
 </TeaserFrontImage>
 ```
 
+### `large`
+
 ```react
 <TeaserFrontImage image='/static/desert.jpg' byline='Foto: Thomas Vuillemin'
   center
@@ -196,6 +214,25 @@ A `<TeaserFrontImageHeadline />` should be used. The default font size can be ch
   </TeaserFrontCredit>
 </TeaserFrontImage>
 ```
+
+### `small`
+
+```react
+<TeaserFrontImage image='/static/desert.jpg' byline='Foto: Thomas Vuillemin'
+  textPosition='bottomright'
+  color='#fff' bgColor='#000'>
+  <Editorial.Format>Neutrum</Editorial.Format>
+  <TeaserFrontImageHeadline.Editorial small>LongWordOverflowingLongWordOverflowing</TeaserFrontImageHeadline.Editorial>
+  <TeaserFrontLead>
+    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.
+  </TeaserFrontLead>
+  <TeaserFrontCredit>
+    An article by <TeaserFrontCreditLink href='#' color='#fff'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
+  </TeaserFrontCredit>
+</TeaserFrontImage>
+```
+
+## `onlyImage`
 
 ```react
 <TeaserFrontImage image='/static/desert.jpg' byline='Foto: Thomas Vuillemin'
@@ -214,22 +251,9 @@ A `<TeaserFrontImageHeadline />` should be used. The default font size can be ch
 </TeaserFrontImage>
 ```
 
-```react
-<TeaserFrontImage image='/static/desert.jpg' byline='Foto: Thomas Vuillemin'
-  textPosition='bottomright'
-  color='#fff' bgColor='#000'>
-  <Editorial.Format>Neutrum</Editorial.Format>
-  <TeaserFrontImageHeadline.Editorial small>LongWordOverflowingLongWordOverflowing</TeaserFrontImageHeadline.Editorial>
-  <TeaserFrontLead>
-    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.
-  </TeaserFrontLead>
-  <TeaserFrontCredit>
-    An article by <TeaserFrontCreditLink href='#' color='#fff'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
-  </TeaserFrontCredit>
-</TeaserFrontImage>
-```
+## `feuilleton`
 
-### `feuilleton`: Horizontal `feuilleton` margins and regular text color in stacked mode
+Horizontal `feuilleton` margins and regular text color in stacked mode.
 
 ```react
 <TeaserFrontImage
@@ -248,3 +272,34 @@ A `<TeaserFrontImageHeadline />` should be used. The default font size can be ch
 ```
 
 Photo by Thomas Vuillemin on [Unsplash](https://unsplash.com/photos/c1_K8Qfd_iQ)
+
+## Animated SVG
+
+```react
+<TeaserFrontImage
+  image='/static/skilifte-front.svg?size=360x275' color='#fff' bgColor='#000'>
+  <TeaserFrontImageHeadline.Editorial small>The sand is near</TeaserFrontImageHeadline.Editorial>
+  <TeaserFrontLead>
+    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.
+  </TeaserFrontLead>
+  <TeaserFrontCredit>
+    An article by <TeaserFrontCreditLink href='#' color='#fff'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
+  </TeaserFrontCredit>
+</TeaserFrontImage>
+```
+
+## `maxWidth`
+
+```react
+<TeaserFrontImage image='/static/im-gespr-3.gif'
+  center
+  textPosition='underneath'
+  maxWidth={600}
+  color='#6EF7E0' bgColor='#000'>
+  <Editorial.Format>Im Gespräch, Folge 3</Editorial.Format>
+  <TeaserFrontCredit>
+    Von Roger de Weck, 07.08.2020
+  </TeaserFrontCredit>
+</TeaserFrontImage>
+```
+
