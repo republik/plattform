@@ -122,7 +122,7 @@ module.exports = {
     : null
   ),
   email: (user, ...rest) => {
-    // special case for pledging: check modules/crowdfundings/graphql/resolvers/Pledge.js
+    // special case for pledging: check packages/republik-crowdfundings/graphql/resolvers/Pledge.js
     if (user._exposeEmail) {
       return user.email
     }

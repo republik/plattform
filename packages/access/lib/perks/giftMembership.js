@@ -4,8 +4,8 @@ const { transformUser } = require('@orbiting/backend-modules-auth')
 const { hasUserActiveMembership } = require('@orbiting/backend-modules-utils')
 
 const memberships = require('../memberships')
-const activateMembership = require('@orbiting/backend-modules-republik/modules/crowdfundings/lib/activateMembership')
-const createCache = require('@orbiting/backend-modules-republik/modules/crowdfundings/lib/cache')
+const activateMembership = require('@orbiting/backend-modules-republik-crowdfundings/lib/activateMembership')
+const createCache = require('@orbiting/backend-modules-republik-crowdfundings/lib/cache')
 
 const give = async (campaign, grant, recipient, settings, t, pgdb, redis, mail) => {
   if (grant.revokedAt) {

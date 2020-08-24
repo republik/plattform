@@ -10,7 +10,7 @@ const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
 const { hasUserActiveMembership } = require('@orbiting/backend-modules-utils')
 // const fs = require('fs')
 const rw = require('rw')
-const { enforceSubscriptions } = require('../modules/crowdfundings/lib/Mail.js')
+const { enforceSubscriptions } = require('@orbiting/backend-modules-republik-crowdfundings/lib/Mail.js')
 const { Roles } = require('@orbiting/backend-modules-auth')
 
 console.log('running fixMemberRole.js...')

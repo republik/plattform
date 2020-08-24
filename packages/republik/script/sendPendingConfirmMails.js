@@ -5,7 +5,7 @@ const debug = require('debug')('republik:script:sendPendingConfirmMails')
 require('@orbiting/backend-modules-env').config()
 const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
 
-const { sendPledgeConfirmations } = require('../modules/crowdfundings/lib/Mail')
+const { sendPledgeConfirmations } = require('@orbiting/backend-modules-republik-crowdfundings/lib/Mail')
 const t = require('../lib/t')
 
 const run = async () => {

@@ -2,7 +2,7 @@ const moment = require('moment')
 const debug = require('debug')('republik:resolvers:RevenueStats:surplus')
 const Promise = require('bluebird')
 
-const createCache = require('../../../modules/crowdfundings/lib/cache')
+const createCache = require('@orbiting/backend-modules-republik-crowdfundings/lib/cache')
 const QUERY_CACHE_TTL_SECONDS = 60 * 5 // 5 min
 
 const query = `

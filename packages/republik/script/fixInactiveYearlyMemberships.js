@@ -8,8 +8,8 @@
  */
 require('@orbiting/backend-modules-env').config()
 const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
-const { enforceSubscriptions } = require('../modules/crowdfundings/lib/Mail')
-const activateYearlyMembership = require('../modules/crowdfundings/lib/activateYearlyMembership')
+const { enforceSubscriptions } = require('@orbiting/backend-modules-republik-crowdfundings/lib/Mail')
+const activateYearlyMembership = require('@orbiting/backend-modules-republik-crowdfundings/lib/activateYearlyMembership')
 
 console.log('running activateMemberships.js...')
 

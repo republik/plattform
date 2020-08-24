@@ -10,7 +10,7 @@ if (!process.env.DEBUG || process.env.DEBUG.indexOf('crowdfundings:pot') === -1)
 const Promise = require('bluebird')
 const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
 
-const { refreshAllPots } = require('../../modules/crowdfundings/lib/membershipPot')
+const { refreshAllPots } = require('@orbiting/backend-modules-republik-crowdfundings/lib/membershipPot')
 
 Promise.props({
   pgdb: PgDb.connect()
