@@ -5,6 +5,7 @@ import { mUp } from '../../theme/mediaQueries'
 import { Format } from './Format'
 import colors from '../../theme/colors'
 import CalloutMenu from '../Callout/CalloutMenu'
+import MoreIcon from 'react-icons/lib/md/more-vert'
 
 const styles = {
   main: css({
@@ -47,7 +48,12 @@ const Teaser = ({
             float: 'right'
           }}
         >
-          <CalloutMenu align='right'>{menu}</CalloutMenu>
+          <CalloutMenu
+            Element={props => <MoreIcon width='calc(1em + 7px)' {...props} />}
+            align='right'
+          >
+            {menu}
+          </CalloutMenu>
         </div>
       )}
       {format && format.meta && (

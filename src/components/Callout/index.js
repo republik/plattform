@@ -25,8 +25,7 @@ const styles = {
     background: 'rgba(0,0,0,0.5)',
     [mUp]: {
       position: 'relative',
-      top: 18,
-      left: 11
+      top: 18
     }
   }),
   arrow: css({
@@ -65,7 +64,7 @@ const styles = {
   right: {
     callout: css({
       [mUp]: {
-        right: -20,
+        right: -9,
         left: 'auto'
       }
     }),
@@ -76,7 +75,7 @@ const styles = {
   left: {
     callout: css({
       [mUp]: {
-        left: -20,
+        left: -9,
         right: 'auto'
       }
     }),

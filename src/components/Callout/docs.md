@@ -8,17 +8,18 @@ A fixed callout animating in from the bottom on mobile and a in place callout on
 
 ```react|responsive
 <div style={{ padding: 20 }}>
-  <CalloutMenu Element={() => <NotificationIcon size={24}/>} initiallyOpen>
+  <CalloutMenu Element={(props) => <NotificationIcon size={24} {...props}/> } initiallyOpen>
     Hello&nbsp;World
   </CalloutMenu>
 </div>
 ```
 
 ### Right Aligned
+
 ```react
 <div style={{ padding: 20 }}>
   <div style={{ float: 'right' }}>
-    <CalloutMenu Element={() => <NotificationIcon size={24}/>} align='right'>
+    <CalloutMenu Element={(props) => <NotificationIcon size={24} {...props}/>} align='right' initiallyOpen>
       Hello&nbsp;World
     </CalloutMenu>
   </div>

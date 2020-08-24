@@ -1,6 +1,7 @@
 import React from 'react'
 import { css } from 'glamor'
 import MdCheck from 'react-icons/lib/md/check'
+import MoreIcon from 'react-icons/lib/md/more-vert'
 import colors from '../../../../theme/colors'
 import {
   sansSerifMedium16,
@@ -268,7 +269,11 @@ export const Header = ({ t, comment, menu, isExpanded, onToggle }) => {
           {isExpanded ? <IcCollapse /> : <IcExpand />}
         </button>
       )}
-      {menu && <CalloutMenu align='right'>{menu}</CalloutMenu>}
+      {menu && (
+        <CalloutMenu Element={props => <MoreIcon {...props} />} align='right'>
+          {menu}
+        </CalloutMenu>
+      )}
     </div>
   )
 }
