@@ -30,14 +30,14 @@ const CalloutMenu = ({ children, Element, align, initiallyOpen }) => {
   }, [showMenu])
 
   return (
-    <div>
+    <>
       {showMenu && (
         <Callout onClose={() => setMenu(false)} align={align}>
           {children}
         </Callout>
       )}
       <Element ref={toggleRef} onClick={() => setMenu(!showMenu)} />
-    </div>
+    </>
   )
 }
 

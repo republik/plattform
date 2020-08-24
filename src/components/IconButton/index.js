@@ -66,7 +66,7 @@ const styles = {
     position: 'relative',
     alignItems: 'center',
     textDecoration: 'none',
-    marginRight: 20,
+    marginRight: 18,
     border: 0,
     padding: 0,
     color: 'inherit',
