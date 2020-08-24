@@ -5,9 +5,13 @@ import { parse } from '@orbiting/remark-preset'
 import { swissTime } from '../../../../lib/utils/format'
 import slugify from '../../../../lib/utils/slug'
 import MarkdownSerializer from 'slate-mdast-serializer'
-import Html from 'slate-html-serializer'
+
+import * as htmlParse from 'rehype-parse'
+import rehype2remark from 'rehype-remark'
+import stringify from 'remark-stringify'
 
 import { getEventTransfer } from 'slate-react'
+import unified from 'unified'
 
 const pubDateFormat = swissTime.format('%d.%m.%Y')
 
@@ -116,75 +120,6 @@ export default ({ rule, subModules, TYPE }) => {
     rules: [documentRule]
   })
 
-  const BLOCK_TAGS = {
-    p: 'PARAGRAPH'
-  }
-
-  const MARK_TAGS = {
-    strong: 'STRONG',
-    em: 'EMPHASIS'
-  }
-
-  const RULES = [
-    {
-      deserialize(el, next) {
-        console.log('deserialise 0', el.tagName, el.childNodes)
-        const block = BLOCK_TAGS[el.tagName.toLowerCase()]
-        if (!block) return
-        return {
-          kind: 'block',
-          type: block,
-          nodes: next(el.childNodes)
-        }
-      }
-    },
-    {
-      deserialize(el, next) {
-        console.log('deserialise 1', el)
-        const mark = MARK_TAGS[el.tagName.toLowerCase()]
-        if (!mark) return
-        return {
-          kind: 'mark',
-          type: mark,
-          nodes: next(el.childNodes)
-        }
-      }
-    },
-    {
-      // Special case for images, to grab their src.
-      deserialize(el, next) {
-        console.log('deserialise 3', el)
-        if (el.tagName.toLowerCase() != 'img') return
-        return {
-          kind: 'block',
-          type: 'image',
-          isVoid: true,
-          nodes: next(el.childNodes),
-          data: {
-            src: el.getAttribute('src')
-          }
-        }
-      }
-    },
-    {
-      // Special case for links, to grab their href.
-      deserialize(el, next) {
-        console.log('deserialise 4', el)
-        if (el.tagName.toLowerCase() != 'a') return
-        return {
-          kind: 'inline',
-          type: 'link',
-          nodes: next(el.childNodes),
-          data: {
-            href: el.getAttribute('href')
-          }
-        }
-      }
-    }
-  ]
-
-  const htmlSerializer = new Html({ rules: RULES })
-
   const newDocument = ({ title, template }, me) =>
     serializer.deserialize(
       parse(`---
@@ -229,10 +164,16 @@ ${titleModule ? 'Text' : title}
       {
         onPaste: (event, change, editor) => {
           const transfer = getEventTransfer(event)
-          console.log(transfer)
-          const test = htmlSerializer.deserialize(transfer.html)
-          console.log(test)
-          // console.log(nodes)
+          const htmlParser = unified()
+            .use(htmlParse, {
+              emitParseErrors: true,
+              duplicateAttribute: false
+            })
+            .use(rehype2remark)
+            .use(stringify)
+          const pastedMd = htmlParser
+            .process(transfer.html)
+            .then(r => console.log(r.contents))
           // change.insertFragment(nodes)
           return true
         },
