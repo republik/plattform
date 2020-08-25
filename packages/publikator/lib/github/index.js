@@ -185,7 +185,21 @@ module.exports = {
       throw new Error(t('api/github/unavailable'))
     }
     const commit = normalizeGQLCommit(repo, rawCommit)
-    await redis.setAsync(redisKey, JSON.stringify(commit), 'EX', redis.__defaultExpireSeconds)
+    try {
+      await redis.setAsync(
+        redisKey,
+        JSON.stringify({
+          ...commit,
+          repo: { //other keys (e.g. latestCommit) create circular structure
+            id: repo.id
+          }
+        }),
+        'EX',
+        redis.__defaultExpireSeconds
+      )
+    } catch(e) {
+      console.error(e, { rawCommit, commit })
+    }
     return commit
   },
   getCommits: async (repo, { first = 15, after, before }, { redis, t }) => {

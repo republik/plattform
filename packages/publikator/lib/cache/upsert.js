@@ -121,7 +121,10 @@ const getLatestCommit = commit => {
       id: commit.id || commit.sha,
       date: commit.date || commit.author.date,
       author: commit.author,
-      message: commit.message
+      message: commit.message,
+      parentIds: commit.parents
+        ? commit.parents.map(parent => parent.sha)
+        : []
     }
   }
 }
