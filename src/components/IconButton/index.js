@@ -72,6 +72,9 @@ const styles = {
     color: 'inherit',
     backgroundColor: 'transparent',
     transition: 'opacity 0.3s',
+    ':focus': {
+      outline: 'none'
+    },
     ':last-child': {
       marginRight: 0
     },
