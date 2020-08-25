@@ -57,7 +57,7 @@ type FindFunction<Key, Value> = (
   options?: {many?: boolean}
 ) => Value | Value[] | undefined
 
-export default function createDataLoader<Key extends KeyConstraint, Value>(
+export = function createDataLoader<Key extends KeyConstraint, Value>(
   loader: (keys: readonly Key[]) => Promise<Value[]>,
   options?: CreateDataLoaderOptions<Key, Value> | null,
   find: FindFunction<Key, Value> = defaultFind
