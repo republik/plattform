@@ -164,17 +164,19 @@ ${titleModule ? 'Text' : title}
       {
         onPaste: (event, change, editor) => {
           const transfer = getEventTransfer(event)
-          const htmlParser = unified()
+          const toMd = unified()
             .use(htmlParse, {
               emitParseErrors: true,
               duplicateAttribute: false
             })
             .use(rehype2remark)
             .use(stringify)
-          const pastedMd = htmlParser
-            .process(transfer.html)
-            .then(r => console.log(r.contents))
-          // change.insertFragment(nodes)
+          const pastedMd = toMd.processSync(transfer.html)
+          const pastedAst = centerModule.helpers.childSerializer.deserialize(
+            parse(pastedMd.contents)
+          )
+          change.insertFragment(pastedAst.document)
+          // test: article, images (credits), title (lead blabla)
           return true
         },
         renderEditor: ({ children, value }) => (
