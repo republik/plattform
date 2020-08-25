@@ -1,4 +1,5 @@
 const { naming } = require('@orbiting/backend-modules-utils')
+import {UserRow} from '../loaders/User'
 
 export interface User {
   id: string;
@@ -13,11 +14,11 @@ export interface User {
   email: string;
   // use resolver functions to access _raw
   // and expose more fields according to custom logic
-  _raw: any;
+  _raw: UserRow;
   [key: string]: any;
 }
 
-export default (user: any, additionalFields = {}): User | null => {
+export default (user: UserRow, additionalFields = {}): User | null => {
   if (!user) {
     return null
   }

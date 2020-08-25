@@ -1,12 +1,23 @@
-// const { v4: isUuid } = require('is-uuid')
 import {v4 as isUuid} from 'is-uuid'
 
 import { default as createDataLoader } from '@orbiting/backend-modules-dataloader'
 import { transformUser } from '@orbiting/backend-modules-auth'
 import {PgTable} from 'pogi';
 
+export interface UserRow {
+  id: string;
+  username: string;
+  firstName: string;
+  lastName: string;
+  name: string;
+  initials: string;
+  hasPublicProfile: boolean;
+  roles: string[];
+  email: string;
+}
+
 module.exports = (context: any) => {
-  const users: PgTable<any> = context.pgdb.public.users;
+  const users: PgTable<UserRow> = context.pgdb.public.users;
   const credentials: PgTable<any> = context.pgdb.public.credentials;
   return {
     byId: createDataLoader((ids: readonly string[]) =>
@@ -33,17 +44,22 @@ module.exports = (context: any) => {
           .then(users => users.map(transformUser))
       },
       null,
-      (value, rows) => rows.find(row => (
-        row._raw.id === value ||
-        row._raw.email.toLowerCase() === value.toLowerCase()
-      ))
+      (key, rows) => rows.find(row => {
+        if (!row) return
+
+        return row._raw.id === key ||
+        row._raw.email.toLowerCase() === key.toLowerCase()
+      })
     ),
     byUsername: createDataLoader(
-      usernames =>
+      (usernames: readonly string[]) =>
         users.find({ username: usernames })
-          .then(users => users.map(transformUser),
+          .then(users => users.map(transformUser)),
       null,
-      (key, rows) => rows.find(row => row.username.toLowerCase() === key.toLowerCase())
+      (key, rows) => rows.find(row => {
+        if (!row) return
+        return row.username.toLowerCase() === key.toLowerCase()
+      })
     ),
     credential: createDataLoader(ids =>
       credentials.find({ id: ids })
