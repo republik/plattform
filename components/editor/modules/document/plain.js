@@ -75,6 +75,12 @@ export default ({ rule, subModules, TYPE }) => {
     return data.equals(newData) ? null : newData
   }
 
+  const hasParent = (type, document, key) => {
+    const parent = document.getParent(key)
+    if (!parent) return
+    return parent.type === type ? true : hasParent(type, document, parent.key)
+  }
+
   const documentRule = {
     match: object => object.kind === 'document',
     matchMdast: rule.matchMdast,
@@ -164,6 +170,8 @@ ${titleModule ? 'Text' : title}
       {
         onPaste: (event, change, editor) => {
           const transfer = getEventTransfer(event)
+          const cursor = editor.value.selection.anchorKey
+          const isCenter = hasParent('CENTER', editor.value.document, cursor)
           const toMd = unified()
             .use(htmlParse, {
               emitParseErrors: true,
@@ -171,12 +179,15 @@ ${titleModule ? 'Text' : title}
             })
             .use(rehype2remark)
             .use(stringify)
-          const pastedMd = toMd.processSync(transfer.html)
+          const pastedMd = toMd.processSync(
+            isCenter ? transfer.html : transfer.text
+          )
           const pastedAst = centerModule.helpers.childSerializer.deserialize(
             parse(pastedMd.contents)
           )
           change.insertFragment(pastedAst.document)
-          // test: article, images (credits), title (lead blabla)
+
+          // test: article OK, images (credits) NOPE, title (lead blabla) OK
           return true
         },
         renderEditor: ({ children, value }) => (
