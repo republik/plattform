@@ -18,16 +18,18 @@ const IconButton = React.forwardRef(
       title,
       fill = colors.text,
       onClick,
-      children
+      children,
+      style
     },
     ref
   ) => {
     const Element = href ? 'a' : 'button'
+    const customStyles = style || null
     return (
       <Element
         {...styles.button}
         {...((onClick || href) && styles.hover)}
-        style={{ cursor: !onClick ? 'auto' : 'pointer' }}
+        style={{ cursor: !onClick ? 'auto' : 'pointer', ...customStyles }}
         onClick={onClick}
         href={href}
         target={target}

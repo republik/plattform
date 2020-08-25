@@ -11,6 +11,7 @@ A clickable component that accepts icons and lables and renders them. If href is
 - `href`: if href is provided, IconButton renders as `<a>`
 - `target`: target for href
 - `children`: renders children after label
+- `style`: allows to overwrite styles on the top component
 
 ```react|responsive
 <div style={{display:'flex'}}>
