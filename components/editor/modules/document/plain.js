@@ -187,7 +187,7 @@ ${titleModule ? 'Text' : title}
           )
           change.insertFragment(pastedAst.document)
 
-          // test: article OK, images (credits) NOPE, title (lead blabla) OK
+          // test: article OK, images (credits) NOPE!!, title (lead blabla) OK
           return true
         },
         renderEditor: ({ children, value }) => (
