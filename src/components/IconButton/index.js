@@ -91,7 +91,6 @@ const styles = {
   }),
   label: css({
     fontFamily: fontFamilies.sansSerifMedium,
-    letterSpacing: 1,
     fontSize: 12,
     marginLeft: 8,
     whiteSpace: 'nowrap'
