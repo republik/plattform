@@ -4,9 +4,6 @@
     "target": "ES2019",
     "module": "commonjs",
     "lib": ["ES2019"],
-    "allowJs": true,
-    "outDir": "./dist",
-    "rootDir": ".",
     "strict": true, /* Enable all strict type-checking options. */
     "noImplicitAny": true, /* Raise error on expressions and declarations with an implied 'any' type. */
     "noUnusedLocals": true, /* Report errors on unused locals. */
@@ -16,10 +13,7 @@
     "esModuleInterop": true, /* Enables emit interoperability between CommonJS and ES Modules via creation of namespace objects for all imports. Implies 'allowSyntheticDefaultImports'. */
     "skipLibCheck": true, /* Skip type checking of declaration files. */
     "forceConsistentCasingInFileNames": true,  /* Disallow inconsistently-cased references to the same file. */
-    "baseUrl": "./dist",                       /* Base directory to resolve non-absolute module names. */
-    "paths": {
-      "@orbiting/backend-modules-*": ["./packages/*"]
-    }
+
 
 
     /* Visit https://aka.ms/tsconfig.json to read more about this file */
