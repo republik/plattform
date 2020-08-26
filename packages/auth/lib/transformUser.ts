@@ -1,7 +1,7 @@
 const { naming } = require('@orbiting/backend-modules-utils')
 import {UserRow} from '../loaders/User'
 
-export interface User {
+interface User {
   id: string;
   username: string;
   firstName: string;
@@ -18,7 +18,7 @@ export interface User {
   [key: string]: any;
 }
 
-export default (user: UserRow, additionalFields = {}): User | null => {
+export = (user: UserRow, additionalFields = {}): User | null => {
   if (!user) {
     return null
   }

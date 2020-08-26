@@ -1,4 +1,4 @@
-import {default as transfromUser} from './transformUser'
+import transfromUser = require('./transformUser')
 
 export default {
   challenges: require('./challenges'),
