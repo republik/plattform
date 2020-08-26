@@ -253,7 +253,9 @@ const sumBucketProps = async (
   const data = await createCache(context).get()
 
   if (!data) {
-    throw new Error('Unable to sum bucket: Pre-populated data is not available')
+    throw new Error(
+      'Unable to sum bucket: Pre-populated data is not available. Did you run `yarn populate`?'
+    )
   }
 
   // Retrieve pre-populated result from data.
