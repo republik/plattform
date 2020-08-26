@@ -170,13 +170,18 @@ ${titleModule ? 'Text' : title}
       {
         onPaste: (event, change, editor) => {
           const transfer = getEventTransfer(event)
+          if (transfer.type !== 'html') return
+
           const cursor = editor.value.selection.anchorKey
-          const isCenter = hasParent('CENTER', editor.value.document, cursor)
           const blockType = editor.value.document.getClosestBlock(cursor).type
-          const isFigure =
-            blockType === 'CAPTION_TEXT' ||
-            blockType === 'CENTERBYLINE' ||
-            blockType === 'BYLINE'
+
+          const isByline =
+            blockType === 'CENTERBYLINE' || blockType === 'BYLINE'
+          if (isByline) return
+
+          const isCenter = hasParent('CENTER', editor.value.document, cursor)
+          const isCaption = blockType === 'CAPTION_TEXT'
+
           const toMd = unified()
             .use(htmlParse, {
               emitParseErrors: true,
@@ -185,17 +190,16 @@ ${titleModule ? 'Text' : title}
             .use(rehype2remark)
             .use(stringify)
           const pastedMd = toMd.processSync(
-            isCenter || isFigure ? transfer.html : transfer.text
+            isCenter || isCaption ? transfer.html : transfer.text
           )
-          const currentSerializer = isFigure
+          const currentSerializer = isCaption
             ? figureModule.helpers.captionSerializer
             : centerModule.helpers.childSerializer
           const pastedAst = currentSerializer.deserialize(
             parse(pastedMd.contents)
           )
-          change.insertFragment(pastedAst.document)
 
-          // test: article OK, caption OK, credits NOPE!!, title (lead blabla) OK
+          change.insertFragment(pastedAst.document)
           return true
         },
         renderEditor: ({ children, value }) => (
