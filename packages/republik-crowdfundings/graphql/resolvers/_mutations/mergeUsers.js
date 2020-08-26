@@ -113,9 +113,6 @@ module.exports = async (_, args, context) => {
     await transaction.public.paymentSources.update(from, to)
     await transaction.public.pledges.update(from, to)
     await transaction.public.memberships.update(from, to)
-    if (!await (transaction.public.ballots.findFirst(to))) {
-      await transaction.public.ballots.update(from, to)
-    }
     await transaction.public.comments.update(from, to)
     await transaction.public.credentials.update(from, to)
     await transaction.public.consents.update(from, to)
@@ -170,7 +167,6 @@ module.exports = async (_, args, context) => {
       })
       await transaction.public.sessions.updateOne({ id: session.id }, { sess })
     }
-    await transaction.public.eventLog.update(from, to)
 
     // remove addresses
     const addressIds = users
@@ -178,6 +174,37 @@ module.exports = async (_, args, context) => {
       .map(u => u.addressId)
     if (addressIds.length) {
       await transaction.public.addresses.deleteOne({ id: addressIds[0] })
+    }
+
+    // try to move other stuff without failing
+    const operations = [
+      () => transaction.public.answers.update(from, to),
+      () => transaction.public.ballots.update(from, to),
+      () => transaction.public.cards.update(from, to),
+      () => transaction.public.collectionDocumentItems.update(from, to),
+      () => transaction.public.collectionMediaItems.update(from, to),
+      () => transaction.public.devices.update(from, to),
+      () => transaction.public.electionBallots.update(from, to),
+      () => transaction.public.electionCandidacies.update(from, to),
+      () => transaction.public.eventLog.update(from, to),
+      () => transaction.public.mailLog.update(from, to),
+      () => transaction.public.notifications.update(from, to),
+      () => transaction.public.previewRequests.update(from, to),
+      () => transaction.public.questionnaireSubmissions.update(from, to),
+      () => transaction.public.accessGrants.update({ granterUserId: from.userId }, { granterUserId: to.userId }),
+      () => transaction.public.accessGrants.update({ recipientUserId: from.userId }, { recipientUserId: to.userId }),
+      () => transaction.public.subscriptions.update({ objectUserId: from.userId }, { objectUserId: to.userId }),
+      () => transaction.public.subscriptions.update(from, to)
+    ]
+    for (const operation of operations) {
+      const savePoint = uuid()
+      await transaction.savePoint(savePoint)
+      try {
+        await operation()
+      } catch(e) {
+        console.log('mergeUsers encountered a problem, continuing', e)
+        await transaction.transactionRollback({ savePoint })
+      }
     }
 
     // remove old user
