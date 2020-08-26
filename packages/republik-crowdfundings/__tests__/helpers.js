@@ -7,12 +7,12 @@ const pgDatabase = () =>
 
 const prepareNewPledge = async ({
   templateId = '00000000-0000-0000-0008-000000000001',
+  apolloFetch = global.instance.createApolloFetch(),
   ...options
 } = {}) => {
   const packageOption = await pgDatabase().public.packageOptions.findOne({
     id: templateId
   })
-  const apolloFetch = global.instance.createApolloFetch()
   const result = await submitPledge({
     total: packageOption.price,
     options: [{

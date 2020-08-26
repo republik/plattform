@@ -57,29 +57,354 @@ const pgDatabase = () =>
 const i18n = (arg) =>
   global.instance.context.t(arg)
 
-describe('addPaymentSource', () => {
-  const ADD_PAYMENT_SOURCE_MUTATION = `
-    mutation addPaymentSource($sourceId: String!, $pspPayload: JSON!) {
-      addPaymentSource(sourceId: $sourceId, pspPayload: $pspPayload) {
-        isDefault
-        status
-        brand
-        expMonth
-        expYear
-      }
+const ADD_PAYMENT_SOURCE_MUTATION = `
+  mutation addPaymentSource($sourceId: String!, $pspPayload: JSON!) {
+    addPaymentSource(sourceId: $sourceId, pspPayload: $pspPayload) {
+      isDefault
+      status
+      brand
+      expMonth
+      expYear
     }
-  `
-
-  const addPaymentSource = ({ sourceId, pspPayload, apolloFetch = global.instance.apolloFetch }) => {
-    return apolloFetch({
-      query: ADD_PAYMENT_SOURCE_MUTATION,
-      variables: {
-        sourceId,
-        pspPayload
-      }
-    })
   }
+`
 
+const addPaymentSource = ({ sourceId, pspPayload, apolloFetch = global.instance.apolloFetch }) => {
+  return apolloFetch({
+    query: ADD_PAYMENT_SOURCE_MUTATION,
+    variables: {
+      sourceId,
+      pspPayload
+    }
+  })
+}
+
+describe('merge customers', () => {
+  const mergeCustomers = require('../lib/payments/stripe/mergeCustomers')
+  const userSource = Users.Member
+  const userTarget = Users.Supporter
+
+  test('source has no stripe customers, nothing changes', async () => {
+    const { pgdb } = global.instance.context
+    const source = await createSource({ card: Cards.Visa })
+
+    const { apolloFetch: apolloFetchSource } = await signIn({ user: userSource, newCookieStore: true })
+    const { apolloFetch: apolloFetchTarget } = await signIn({ user: userTarget, newCookieStore: true })
+
+    const result = await addPaymentSource({
+      sourceId: source.id,
+      pspPayload: '',
+      apolloFetch: apolloFetchTarget
+    })
+
+    expect(
+      await pgdb.public.stripeCustomers.find({ userId: userSource.id })
+        .then(r => r.length)
+    ).toBe(0)
+    expect(
+      await pgdb.public.stripeCustomers.find({ userId: userTarget.id })
+        .then(r => r.length)
+    ).toBe(2)
+
+    await mergeCustomers({
+      targetUserId: userTarget.id,
+      sourceUserId: userSource.id,
+      pgdb
+    })
+
+    expect(
+      await pgdb.public.stripeCustomers.find({ userId: userSource.id })
+        .then(r => r.length)
+    ).toBe(0)
+    expect(
+      await pgdb.public.stripeCustomers.find({ userId: userTarget.id })
+        .then(r => r.length)
+    ).toBe(2)
+
+    await Promise.all([
+      signOut({ apolloFetch: apolloFetchSource }),
+      signOut({ apolloFetch: apolloFetchTarget })
+    ])
+  })
+
+  test('target has no stripe customers, move source to target', async () => {
+    const { pgdb } = global.instance.context
+    const source = await createSource({ card: Cards.Visa })
+
+    const { apolloFetch: apolloFetchSource } = await signIn({ user: userSource, newCookieStore: true })
+    const { apolloFetch: apolloFetchTarget } = await signIn({ user: userTarget, newCookieStore: true })
+
+    const result = await addPaymentSource({
+      sourceId: source.id,
+      pspPayload: '',
+      apolloFetch: apolloFetchSource
+    })
+
+    expect(
+      await pgdb.public.stripeCustomers.find({ userId: userSource.id })
+        .then(r => r.length)
+    ).toBe(2)
+    expect(
+      await pgdb.public.stripeCustomers.find({ userId: userTarget.id })
+        .then(r => r.length)
+    ).toBe(0)
+
+    await mergeCustomers({
+      targetUserId: userTarget.id,
+      sourceUserId: userSource.id,
+      pgdb
+    })
+
+    expect(
+      await pgdb.public.stripeCustomers.find({ userId: userSource.id })
+        .then(r => r.length)
+    ).toBe(0)
+    expect(
+      await pgdb.public.stripeCustomers.find({ userId: userTarget.id })
+        .then(r => r.length)
+    ).toBe(2)
+
+    await Promise.all([
+      signOut({ apolloFetch: apolloFetchSource }),
+      signOut({ apolloFetch: apolloFetchTarget })
+    ])
+  })
+
+  test('stripe customers cannot be merged as both have subscriptions', async () => {
+    const { pgdb } = global.instance.context
+    const sourceSource = await createSource({ card: Cards.Visa })
+    const sourceTarget = await createSource({ card: Cards.Visa })
+
+    const { apolloFetch: apolloFetchSource } = await signIn({ user: userSource, newCookieStore: true })
+    const { apolloFetch: apolloFetchTarget } = await signIn({ user: userTarget, newCookieStore: true })
+
+    // buy monthly subscription source
+    const { pledgeId: pledgeIdSource } = await prepareNewPledge({
+      templateId: '00000000-0000-0000-0008-000000000002',
+      apolloFetch: apolloFetchSource,
+      user: userSource
+    })
+    const resultSource = await payPledge({
+      pledgeId: pledgeIdSource,
+      method: PAYMENT_METHODS.STRIPE,
+      sourceId: sourceSource.id,
+      apolloFetch: apolloFetchSource
+    })
+    expect(resultSource.errors).toBeFalsy()
+
+    // buy monthly subscription target
+    const { pledgeId: pledgeIdTarget } = await prepareNewPledge({
+      templateId: '00000000-0000-0000-0008-000000000002',
+      apolloFetch: apolloFetchTarget,
+      user: userTarget
+    })
+    const resultTarget = await payPledge({
+      pledgeId: pledgeIdTarget,
+      method: PAYMENT_METHODS.STRIPE,
+      sourceId: sourceTarget.id,
+      apolloFetch: apolloFetchTarget
+    })
+    expect(resultTarget.errors).toBeFalsy()
+
+    expect(
+      mergeCustomers({
+        targetUserId: userTarget.id,
+        sourceUserId: userSource.id,
+        pgdb
+      })
+    ).rejects.toThrow(/both have subscriptions/)
+
+    await Promise.all([
+      signOut({ apolloFetch: apolloFetchSource }),
+      signOut({ apolloFetch: apolloFetchTarget })
+    ])
+  })
+
+  test('only source has subscriptions, move to target', async () => {
+    const { pgdb } = global.instance.context
+    const sourceSource = await createSource({ card: Cards.Visa })
+    const sourceTarget = await createSource({ card: Cards.Visa })
+
+    const { apolloFetch: apolloFetchSource } = await signIn({ user: userSource, newCookieStore: true })
+    const { apolloFetch: apolloFetchTarget } = await signIn({ user: userTarget, newCookieStore: true })
+
+    // buy monthly subscription source
+    const { pledgeId: pledgeIdSource } = await prepareNewPledge({
+      templateId: '00000000-0000-0000-0008-000000000002',
+      apolloFetch: apolloFetchSource,
+      user: userSource
+    })
+    const resultSource = await payPledge({
+      pledgeId: pledgeIdSource,
+      method: PAYMENT_METHODS.STRIPE,
+      sourceId: sourceSource.id,
+      apolloFetch: apolloFetchSource
+    })
+    expect(resultSource.errors).toBeFalsy()
+
+    const sourceStripeCustomers = await pgdb.public.stripeCustomers.find({
+      userId: userSource.id
+    })
+    expect(sourceStripeCustomers.length).toBe(2)
+
+    // add source to target
+    const resultTarget = await addPaymentSource({
+      sourceId: sourceTarget.id,
+      pspPayload: '',
+      apolloFetch: apolloFetchTarget
+    })
+    expect(resultTarget.errors).toBeFalsy()
+    expect(
+      await pgdb.public.stripeCustomers.find({ userId: userTarget.id })
+        .then(r => r.length)
+    ).toBe(2)
+
+    await mergeCustomers({
+      targetUserId: userTarget.id,
+      sourceUserId: userSource.id,
+      pgdb
+    })
+
+    expect(
+      await pgdb.public.stripeCustomers.find({ userId: userSource.id })
+        .then(r => r.length)
+    ).toBe(0)
+
+    const targetStripeCustomers = await pgdb.public.stripeCustomers.find({
+      userId: userTarget.id
+    })
+    expect(targetStripeCustomers.length).toBe(2)
+    expect(
+      targetStripeCustomers
+        .filter( cust => sourceStripeCustomers.findIndex(cust2 => cust2.id === cust.id) > -1)
+        .length
+    ).toBe(2)
+
+    await Promise.all([
+      signOut({ apolloFetch: apolloFetchSource }),
+      signOut({ apolloFetch: apolloFetchTarget })
+    ])
+  })
+
+  test('source\'s card expires after target\'s, move source to target', async () => {
+    const { pgdb } = global.instance.context
+    const sourceSource = await createSource({ card: {
+      ...Cards.Visa,
+      exp_month: '12'
+    }})
+    const sourceTarget = await createSource({ card: {
+      ...Cards.Visa,
+      exp_month: '11'
+    }})
+
+    const { apolloFetch: apolloFetchSource } = await signIn({ user: userSource, newCookieStore: true })
+    const { apolloFetch: apolloFetchTarget } = await signIn({ user: userTarget, newCookieStore: true })
+
+    await addPaymentSource({
+      sourceId: sourceSource.id,
+      pspPayload: '',
+      apolloFetch: apolloFetchSource
+    })
+    const sourceStripeCustomers = await pgdb.public.stripeCustomers.find({
+      userId: userSource.id
+    })
+    expect(sourceStripeCustomers.length).toBe(2)
+
+    await addPaymentSource({
+      sourceId: sourceTarget.id,
+      pspPayload: '',
+      apolloFetch: apolloFetchTarget
+    })
+    expect(
+      await pgdb.public.stripeCustomers.find({ userId: userTarget.id })
+        .then(r => r.length)
+    ).toBe(2)
+
+    await mergeCustomers({
+      targetUserId: userTarget.id,
+      sourceUserId: userSource.id,
+      pgdb
+    })
+
+    expect(
+      await pgdb.public.stripeCustomers.find({ userId: userSource.id })
+        .then(r => r.length)
+    ).toBe(0)
+
+    const targetStripeCustomers = await pgdb.public.stripeCustomers.find({
+      userId: userTarget.id
+    })
+    expect(targetStripeCustomers.length).toBe(2)
+    expect(
+      targetStripeCustomers
+        .filter( cust => sourceStripeCustomers.findIndex(cust2 => cust2.id === cust.id) > -1)
+        .length
+    ).toBe(2)
+
+    await Promise.all([
+      signOut({ apolloFetch: apolloFetchSource }),
+      signOut({ apolloFetch: apolloFetchTarget })
+    ])
+  })
+
+  test('source is as good as target, booth keep their customers', async () => {
+    const { pgdb } = global.instance.context
+    const sourceSource = await createSource({ card: Cards.Visa })
+    const sourceTarget = await createSource({ card: Cards.Visa })
+
+    const { apolloFetch: apolloFetchSource } = await signIn({ user: userSource, newCookieStore: true })
+    const { apolloFetch: apolloFetchTarget } = await signIn({ user: userTarget, newCookieStore: true })
+
+    await addPaymentSource({
+      sourceId: sourceSource.id,
+      pspPayload: '',
+      apolloFetch: apolloFetchSource
+    })
+    const sourceStripeCustomers = await pgdb.public.stripeCustomers.find({
+      userId: userSource.id
+    })
+    expect(sourceStripeCustomers.length).toBe(2)
+
+    await addPaymentSource({
+      sourceId: sourceTarget.id,
+      pspPayload: '',
+      apolloFetch: apolloFetchTarget
+    })
+    expect(
+      await pgdb.public.stripeCustomers.find({ userId: userTarget.id })
+        .then(r => r.length)
+    ).toBe(2)
+
+    await mergeCustomers({
+      targetUserId: userTarget.id,
+      sourceUserId: userSource.id,
+      pgdb
+    })
+
+    expect(
+      await pgdb.public.stripeCustomers.find({ userId: userSource.id })
+        .then(r => r.length)
+    ).toBe(2)
+
+    const targetStripeCustomers = await pgdb.public.stripeCustomers.find({
+      userId: userTarget.id
+    })
+    expect(targetStripeCustomers.length).toBe(2)
+    expect(
+      targetStripeCustomers
+        .filter( cust => sourceStripeCustomers.findIndex(cust2 => cust2.id === cust.id) === -1)
+        .length
+    ).toBe(2)
+
+    await Promise.all([
+      signOut({ apolloFetch: apolloFetchSource }),
+      signOut({ apolloFetch: apolloFetchTarget })
+    ])
+  })
+
+})
+
+describe('addPaymentSource', () => {
   test('adding a card as anonymous', async () => {
     await signIn({ user: Users.Anonymous })
     const source = await createSource({ card: Cards.Visa })
