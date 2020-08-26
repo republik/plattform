@@ -13,7 +13,8 @@
       "runtimeArgs": ["run-script", "inspect"],
       "env": {
         "PORT": "5000"
-      }
+      },
+      "preLaunchTask": "watch"
     }
   ]
 }

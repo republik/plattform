@@ -1,0 +1,16 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "watch",
+      "type": "typescript",
+      "isBackground": true,
+      "problemMatcher": "$tsc-watch",
+      "tsconfig": "tsconfig.json",
+      "option": "watch",
+      // "presentation": {
+      //   "reveal": "never",
+      // }
+    },
+  ]
+}
