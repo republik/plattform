@@ -10,6 +10,7 @@ const {
 } = require('@orbiting/backend-modules-redirections')
 const { publishMonitor } = require('@orbiting/backend-modules-republik/lib/slack')
 const { v4: uuid } = require('uuid')
+const mergeCustomers = require('../../../lib/payments/stripe/mergeCustomers')
 
 module.exports = async (_, args, context) => {
   const { pgdb, req, t, mail: { moveNewsletterSubscriptions } } = context
@@ -115,10 +116,18 @@ module.exports = async (_, args, context) => {
     if (!await (transaction.public.ballots.findFirst(to))) {
       await transaction.public.ballots.update(from, to)
     }
-    await transaction.public.stripeCustomers.update(from, to)
     await transaction.public.comments.update(from, to)
     await transaction.public.credentials.update(from, to)
     await transaction.public.consents.update(from, to)
+
+    await mergeCustomers({
+      targetUserId: targetUser.id,
+      sourceUserId: sourceUser.id,
+      pgdb: transaction
+    })
+    await transaction.public.stripeCustomers.delete(
+      { userId: sourceUser.id }
+    )
 
     const sourceDPs = await transaction.public.discussionPreferences.find(from)
     if (sourceDPs.length) {
