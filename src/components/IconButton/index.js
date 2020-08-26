@@ -1,9 +1,9 @@
 import React from 'react'
 import { css } from 'glamor'
 
-import colors from '../../theme/colors'
 import { mUp } from '../../theme/mediaQueries'
 import { fontFamilies } from '../../theme/fonts'
+import { useColorContext } from '../Colors/useColorContext'
 
 const ICON_SIZE = 24
 
@@ -16,7 +16,7 @@ const IconButton = React.forwardRef(
       label,
       labelShort,
       title,
-      fill = colors.text,
+      fill,
       onClick,
       children,
       style
@@ -25,6 +25,8 @@ const IconButton = React.forwardRef(
   ) => {
     const Element = href ? 'a' : 'button'
     const customStyles = style || null
+    const [colorScheme] = useColorContext()
+
     return (
       <Element
         {...styles.button}
@@ -37,12 +39,16 @@ const IconButton = React.forwardRef(
         ref={ref}
         title={title}
       >
-        <Icon {...styles.icon} size={ICON_SIZE} fill={fill} />
+        <Icon
+          {...styles.icon}
+          size={ICON_SIZE}
+          fill={fill || colorScheme.text}
+        />
         {label && (
           <span
             {...styles.label}
             {...styles.long}
-            style={fill && { color: fill }}
+            style={{ color: fill || colorScheme.text }}
           >
             {label}
           </span>
@@ -51,7 +57,7 @@ const IconButton = React.forwardRef(
           <span
             {...styles.label}
             {...styles.short}
-            style={fill && { color: fill }}
+            style={{ color: fill || colorScheme.text }}
           >
             {labelShort}
           </span>
