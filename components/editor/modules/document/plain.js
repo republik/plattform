@@ -6,12 +6,7 @@ import { swissTime } from '../../../../lib/utils/format'
 import slugify from '../../../../lib/utils/slug'
 import MarkdownSerializer from 'slate-mdast-serializer'
 
-import * as htmlParse from 'rehype-parse'
-import rehype2remark from 'rehype-remark'
-import stringify from 'remark-stringify'
-
-import { getEventTransfer } from 'slate-react'
-import unified from 'unified'
+import createPasteHtml from './createPasteHtml'
 
 const pubDateFormat = swissTime.format('%d.%m.%Y')
 
@@ -168,40 +163,7 @@ ${titleModule ? 'Text' : title}
     changes: {},
     plugins: [
       {
-        onPaste: (event, change, editor) => {
-          const transfer = getEventTransfer(event)
-          if (transfer.type !== 'html') return
-
-          const cursor = editor.value.selection.anchorKey
-          const blockType = editor.value.document.getClosestBlock(cursor).type
-
-          const isByline =
-            blockType === 'CENTERBYLINE' || blockType === 'BYLINE'
-          if (isByline) return
-
-          const isCenter = hasParent('CENTER', editor.value.document, cursor)
-          const isCaption = blockType === 'CAPTION_TEXT'
-
-          const toMd = unified()
-            .use(htmlParse, {
-              emitParseErrors: true,
-              duplicateAttribute: false
-            })
-            .use(rehype2remark)
-            .use(stringify)
-          const pastedMd = toMd.processSync(
-            isCenter || isCaption ? transfer.html : transfer.text
-          )
-          const currentSerializer = isCaption
-            ? figureModule.helpers.captionSerializer
-            : centerModule.helpers.childSerializer
-          const pastedAst = currentSerializer.deserialize(
-            parse(pastedMd.contents)
-          )
-
-          change.insertFragment(pastedAst.document)
-          return true
-        },
+        onPaste: createPasteHtml(centerModule, figureModule),
         renderEditor: ({ children, value }) => (
           <Container meta={value.document.data}>{children}</Container>
         ),
