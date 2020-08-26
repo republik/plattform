@@ -43,7 +43,8 @@ const textPositions = [
   { value: 'topleft', text: 'Top Left' },
   { value: 'topright', text: 'Top Right' },
   { value: 'bottomleft', text: 'Bottom Left' },
-  { value: 'bottomright', text: 'Bottom Right' }
+  { value: 'bottomright', text: 'Bottom Right' },
+  { value: 'underneath', text: 'Underneath' }
 ]
 
 const titleSizes = [
@@ -338,6 +339,15 @@ const Form = withT(({ node, onChange, onTypeChange, options, t }) => {
           label='Bildcredit'
           value={node.data.get('byline') || ''}
           onChange={onChange('byline')}
+        />
+      )}
+      {options.includes('maxWidth') && (
+        <Field
+          label='Maximale Breite'
+          value={node.data.get('maxWidth') || ''}
+          onChange={(_, px) => {
+            onChange('maxWidth', null, +px || undefined)
+          }}
         />
       )}
       {options.includes('count') && (
