@@ -2,7 +2,7 @@ import React from 'react'
 import { css } from 'glamor'
 
 import { mUp } from '../../theme/mediaQueries'
-import { fontFamilies } from '../../theme/fonts'
+import { fontStyles } from '../../theme/fonts'
 import { useColorContext } from '../Colors/useColorContext'
 
 const ICON_SIZE = 24
@@ -31,7 +31,10 @@ const IconButton = React.forwardRef(
       <Element
         {...styles.button}
         {...((onClick || href) && styles.hover)}
-        style={{ cursor: href || onClick ? 'pointer' : 'auto', ...customStyles }}
+        style={{
+          cursor: href || onClick ? 'pointer' : 'auto',
+          ...customStyles
+        }}
         onClick={onClick}
         href={href}
         target={target}
@@ -101,7 +104,7 @@ const styles = {
     }
   }),
   label: css({
-    fontFamily: fontFamilies.sansSerifMedium,
+    fontFamily: fontStyles.sansSerifMedium,
     fontSize: 14,
     marginLeft: 8,
     whiteSpace: 'nowrap'
