@@ -31,7 +31,7 @@ const IconButton = React.forwardRef(
       <Element
         {...styles.button}
         {...((onClick || href) && styles.hover)}
-        style={{ cursor: !onClick ? 'auto' : 'pointer', ...customStyles }}
+        style={{ cursor: href || onClick ? 'pointer' : 'auto', ...customStyles }}
         onClick={onClick}
         href={href}
         target={target}
