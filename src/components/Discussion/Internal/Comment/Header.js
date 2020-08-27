@@ -167,6 +167,7 @@ const styles = {
 
 const dateTimeFormat = timeFormat('%d. %B %Y %H:%M')
 const titleDate = string => dateTimeFormat(new Date(string))
+const MoreIconWithProp = props => <MoreIcon {...props} />
 
 export const Header = ({ t, comment, menu, isExpanded, onToggle }) => {
   const { clock, discussion, Link } = React.useContext(DiscussionContext)
@@ -270,7 +271,7 @@ export const Header = ({ t, comment, menu, isExpanded, onToggle }) => {
         </button>
       )}
       {menu && (
-        <CalloutMenu Element={props => <MoreIcon {...props} />} align='right'>
+        <CalloutMenu Element={MoreIconWithProp} align='right'>
           {menu}
         </CalloutMenu>
       )}

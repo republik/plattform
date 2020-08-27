@@ -25,6 +25,10 @@ const styles = {
   })
 }
 
+const MoreIconWithProps = props => (
+  <MoreIcon width='calc(1em + 7px)' {...props} />
+)
+
 const Teaser = ({
   children,
   color,
@@ -48,10 +52,7 @@ const Teaser = ({
             float: 'right'
           }}
         >
-          <CalloutMenu
-            Element={props => <MoreIcon width='calc(1em + 7px)' {...props} />}
-            align='right'
-          >
+          <CalloutMenu Element={MoreIconWithProps} align='right'>
             {menu}
           </CalloutMenu>
         </div>
