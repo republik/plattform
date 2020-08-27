@@ -592,6 +592,20 @@ ReactDOM.render(
               src: require('./components/TeaserActiveDebates/docs.md')
             },
             {
+              path: '/teasermymagazine',
+              title: 'TeaserMyMagazine',
+              imports: {
+                css,
+                ...require('./components/TeaserMyMagazine'),
+                ...require('./components/TeaserMyMagazine/__docs__'),
+                ...require('./components/TeaserFeed'),
+                ...require('./components/Progress'),
+                BookmarkIcon: require('react-icons/lib/md/bookmark'),
+                IconButton: require('./components/IconButton')
+              },
+              src: require('./components/TeaserMyMagazine/docs.md')
+            },
+            {
               path: '/teasercarousel',
               title: 'TeaserCarousel',
               imports: {

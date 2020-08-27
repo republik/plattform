@@ -74,12 +74,12 @@ export const TeaserFeed = ({
     ? formatMeta.color || colors[formatMeta.kind]
     : template === 'format'
     ? metaColor || colors[metaKind]
-    : undefined
+    : metaColor
   const titleColor = metaColor
     ? metaColor
     : template === 'format'
     ? borderColor
-    : undefined
+    : metaColor
 
   return (
     <Container
@@ -105,7 +105,7 @@ export const TeaserFeed = ({
           </Link>
         </Lead>
       )}
-      <Credit>
+      <Credit color={metaColor}>
         {credits && credits.length > 0
           ? renderMdast(credits, creditSchema)
           : !!publishDate && dateFormat(new Date(publishDate))}

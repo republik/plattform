@@ -207,79 +207,62 @@ ActiveDebates.data = {
     }
   },
   query: `
-query getFrontDiscussions($lastDays: Int!, $first: Int!, $featured: Int!) {
-  featured: comments(orderBy: FEATURED_AT, orderDirection: DESC, first: $featured, featured: true) {
-    id
-    nodes {
-      id
-      displayAuthor {
-        id
-        ...AuthorMetaData
-      }
-      featuredText
-      createdAt
-      updatedAt
-      discussion {
-        id
-        ...DiscussionMetaData
-        comments(first: 0) {
-          totalCount
-        }
-      }
-    }
-  }
-  activeDiscussions(lastDays: $lastDays, first: $first) {
-    discussion {
-      id
-      ...DiscussionMetaData
-      comments(first: 3, orderBy: DATE, orderDirection: DESC) {
-        totalCount
-        nodes {
-          id
-          preview(length: 240) {
-            string
-            more
+    query getMyMagazineDocuments {
+      documents: search(
+        filters: [
+            { key: "template", not: true, value: "section" }
+            { key: "template", not: true, value: "format" }
+            { key: "template", not: true, value: "front" }
+          ]
+          filter: { feed: true }
+          sort: { key: publishedAt, direction: DESC }
+          first: 2
+        ) {
+          nodes {
+            entity {
+              ... on Document {
+                meta {
+                  shortTitle
+                  title
+                  credits
+                }
+              }
+            }
           }
-          displayAuthor {
-            id
-            ...AuthorMetaData
-          }
-          createdAt
-          updatedAt
         }
+      me {
+        progressCollection: collection(name: "progress") {
+          items(first: 2) {
+            nodes {
+              document {
+                id
+                meta {
+                  shortTitle
+                  title
+                }
+              }
+            }
+          }
+        }
+        bookmarkCollection: collection(name: "bookmarks") {
+          items(first: 2) {
+            nodes {
+              document {
+                id
+                meta {
+                  shortTitle
+                  title
+                  credits
+                }
+                userProgress {
+                  id
+                  percentage
+                }
+              }
+            }
+          }
+        }  
       }
     }
-  }
-}
-
-fragment AuthorMetaData on DisplayUser {
-  id
-  name
-  slug
-  credential {
-    description
-    verified
-  }
-  profilePicture
-}
-
-fragment DiscussionMetaData on Discussion {
-  id
-  title
-  path
-  closed
-  document {
-    id
-    meta {
-      title
-      path
-      template
-      ownDiscussion {
-        id
-        closed
-      }
-    }
-  }
-}
   `
 }

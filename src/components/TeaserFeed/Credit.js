@@ -12,13 +12,14 @@ const styles = {
     ...convertStyleToRem(sansSerifRegular14),
     [mUp]: {
       ...convertStyleToRem(sansSerifRegular15)
-    },
-    color: colors.text
+    }
   })
 }
 
-const Credit = ({ children }) => {
-  return <p {...styles.main}>{children}</p>
+const Credit = ({ children, color }) => {
+  return (
+    <p {...css(styles.main, { color: color || colors.text })}>{children}</p>
+  )
 }
 
 Credit.propTypes = {
