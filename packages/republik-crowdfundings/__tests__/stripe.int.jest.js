@@ -347,7 +347,7 @@ describe('merge customers', () => {
     ])
   })
 
-  test('source is as good as target, booth keep their customers', async () => {
+  test('source is as good as target, both keep their customers', async () => {
     const { pgdb } = global.instance.context
     const sourceSource = await createSource({ card: Cards.Visa })
     const sourceTarget = await createSource({ card: Cards.Visa })

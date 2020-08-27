@@ -75,8 +75,11 @@ module.exports = async ({
   }
 
   // check sources
-  const getSources = (customers) =>
-    customers.reduce( (acc, cur) => acc.concat(...cur.sources.data), [])
+  const getSources = (customers) => customers.reduce( (acc, cur) => acc.concat(
+    ...cur.default_source
+      ? cur.sources.data.filter(s => s.id === cur.default_source)
+      : cur.sources.data
+  ), [])
   const getMaxSourcesExp = (customers) =>
     getSources(customers).reduce( (acc, cur) => Math.max(parseInt(`${cur.card.exp_year}${cur.card.exp_month}`), acc), 0)
 
