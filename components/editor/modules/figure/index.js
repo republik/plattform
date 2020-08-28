@@ -123,7 +123,8 @@ export default options => {
     helpers: {
       newBlock,
       isEmpty,
-      serializer
+      serializer,
+      captionSerializer: captionModule.helpers.serializer
     },
     changes: {},
     ui: createUi({

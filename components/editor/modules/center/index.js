@@ -44,7 +44,8 @@ export default ({ rule, subModules, TYPE }) => {
   return {
     TYPE,
     helpers: {
-      serializer
+      serializer,
+      childSerializer
     },
     changes: {},
     plugins: [
