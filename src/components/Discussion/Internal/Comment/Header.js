@@ -1,6 +1,7 @@
 import React from 'react'
 import { css } from 'glamor'
 import MdCheck from 'react-icons/lib/md/check'
+import MoreIcon from 'react-icons/lib/md/more-vert'
 import colors from '../../../../theme/colors'
 import {
   sansSerifMedium16,
@@ -166,6 +167,7 @@ const styles = {
 
 const dateTimeFormat = timeFormat('%d. %B %Y %H:%M')
 const titleDate = string => dateTimeFormat(new Date(string))
+const MoreIconWithProps = props => <MoreIcon {...props} />
 
 export const Header = ({ t, comment, menu, isExpanded, onToggle }) => {
   const { clock, discussion, Link } = React.useContext(DiscussionContext)
@@ -268,7 +270,11 @@ export const Header = ({ t, comment, menu, isExpanded, onToggle }) => {
           {isExpanded ? <IcCollapse /> : <IcExpand />}
         </button>
       )}
-      {menu && <CalloutMenu align='right'>{menu}</CalloutMenu>}
+      {menu && (
+        <CalloutMenu Element={MoreIconWithProps} align='right'>
+          {menu}
+        </CalloutMenu>
+      )}
     </div>
   )
 }

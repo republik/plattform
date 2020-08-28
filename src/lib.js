@@ -132,9 +132,15 @@ export {
   CommentComposer,
   CommentComposerPlaceholder
 } from './components/Discussion/Composer'
-export { SecondaryAction as CommentComposerSecondaryAction } from './components/Discussion/Internal/Composer'
-export { renderCommentMdast } from './components/Discussion/Internal/Comment/render'
-export { IconLink as DiscussionIconLink } from './components/Discussion/Internal/Comment/IconLink'
+export {
+  SecondaryAction as CommentComposerSecondaryAction
+} from './components/Discussion/Internal/Composer'
+export {
+  renderCommentMdast
+} from './components/Discussion/Internal/Comment/render'
+export {
+  IconLink as DiscussionIconLink
+} from './components/Discussion/Internal/Comment/IconLink'
 
 export { CommentList } from './components/Discussion/Tree'
 
@@ -147,6 +153,9 @@ export { useDebounce } from './lib/useDebounce'
 export { useBodyScrollLock, isBodyScrollLocked } from './lib/useBodyScrollLock'
 export { HeaderHeightProvider, useHeaderHeight } from './lib/useHeaderHeight'
 
-export { default as ActiveDebateTeaser } from './components/TeaserActiveDebates/DebateTeaser'
+export {
+  default as ActiveDebateTeaser
+} from './components/TeaserActiveDebates/DebateTeaser'
+export { default as IconButton } from './components/IconButton'
 
 export { VariableContext } from './components/Variables'

@@ -1,5 +1,4 @@
-import React, { Component } from 'react'
-import PropTypes from 'prop-types'
+import React from 'react'
 import { css } from 'glamor'
 import colors from '../../theme/colors'
 
@@ -11,68 +10,45 @@ const styles = {
   })
 }
 
-class Circle extends Component {
-  constructor(props) {
-    super(props)
-
-    const { radius, strokeWidth } = this.props
-    this.normalizedRadius = radius - strokeWidth / 2
-    this.circumference = this.normalizedRadius * 2 * Math.PI
-  }
-
-  render() {
-    const {
-      progress,
-      radius,
-      stroke,
-      strokeWidth,
-      strokePlaceholder
-    } = this.props
-    const strokeDashoffset =
-      this.circumference - (progress / 100) * this.circumference
-
-    return (
-      <svg height={radius * 2} width={radius * 2}>
-        {strokePlaceholder && (
-          <circle
-            {...styles.circle}
-            stroke={strokePlaceholder}
-            fill='transparent'
-            strokeWidth={strokeWidth}
-            style={{ strokeDashoffset }}
-            r={this.normalizedRadius}
-            cx={radius}
-            cy={radius}
-          />
-        )}
+const Circle = ({
+  progress = 100,
+  size = 24,
+  stroke = colors.text,
+  strokeWidth = 2,
+  strokePlaceholder
+}) => {
+  const circleSize = (size * 5) / 6
+  const radius = circleSize / 2
+  const normalizedRadius = radius - strokeWidth / 2
+  const circumference = normalizedRadius * 2 * Math.PI
+  const strokeDashoffset = circumference - (progress / 100) * circumference
+  return (
+    <svg height={size} width={size}>
+      {strokePlaceholder && (
         <circle
           {...styles.circle}
-          stroke={stroke}
+          stroke={strokePlaceholder}
           fill='transparent'
           strokeWidth={strokeWidth}
-          strokeDasharray={this.circumference + ' ' + this.circumference}
           style={{ strokeDashoffset }}
-          r={this.normalizedRadius}
-          cx={radius}
-          cy={radius}
+          r={normalizedRadius}
+          cx='50%'
+          cy='50%'
         />
-      </svg>
-    )
-  }
-}
-
-Circle.propTypes = {
-  progress: PropTypes.number,
-  radius: PropTypes.number,
-  stroke: PropTypes.string,
-  strokeWidth: PropTypes.number
-}
-
-Circle.defaultProps = {
-  progress: 100,
-  radius: 9,
-  stroke: colors.text,
-  strokeWidth: 2
+      )}
+      <circle
+        {...styles.circle}
+        stroke={stroke}
+        fill='transparent'
+        strokeWidth={strokeWidth}
+        strokeDasharray={circumference + ' ' + circumference}
+        style={{ strokeDashoffset }}
+        r={normalizedRadius}
+        cx='50%'
+        cy='50%'
+      />
+    </svg>
+  )
 }
 
 export default Circle

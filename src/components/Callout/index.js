@@ -24,12 +24,8 @@ const styles = {
     zIndex: zIndex.callout,
     background: 'rgba(0,0,0,0.5)',
     [mUp]: {
-      position: 'absolute',
-      top: '100%',
-      left: '50%',
-      right: '50%',
-      bottom: 'auto',
-      background: 'none'
+      position: 'relative',
+      top: 18
     }
   }),
   arrow: css({
@@ -68,7 +64,7 @@ const styles = {
   right: {
     callout: css({
       [mUp]: {
-        right: -20,
+        right: -9,
         left: 'auto'
       }
     }),
@@ -79,7 +75,7 @@ const styles = {
   left: {
     callout: css({
       [mUp]: {
-        left: -20,
+        left: -9,
         right: 'auto'
       }
     }),
