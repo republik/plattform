@@ -61,10 +61,22 @@ module.exports = async ({
   const existingDP = await transaction.public.discussionPreferences.findOne(findQuery)
   const user = await transaction.public.users.findOne({ id: userId })
 
+  let anonymousDiff = null
+  if (anonymity) {
+    if (!existingDP || existingDP.anonymousDifferentiator === null) {
+      const lastUsed = await transaction.public.discussionPreferences.findOne({
+        discussionId: discussion.id,
+        'anonymousDifferentiator !=': null
+      }, { orderBy: { anonymousDifferentiator: 'DESC' } })
+      anonymousDiff = lastUsed ? lastUsed.anonymousDifferentiator + 1 : 1
+    }
+  }
+
   const updateQuery = {
     userId,
     discussionId: discussion.id,
     anonymous: anonymity,
+    anonymousDifferentiator: anonymousDiff,
     ...credentialId !== undefined
       ? { credentialId }
       : { },
