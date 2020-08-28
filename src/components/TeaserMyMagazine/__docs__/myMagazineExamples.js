@@ -38,7 +38,7 @@ export const latestSubscribedArticles = [
         'Der verschmähte Kandidat für das SVP-Präsidium bricht sein Schweigen – ein launiges Gespräch über die Lage der SVP. Dazu: Das Wichtigste aus der Schweizer Politik und ein Urteil im Fall «Carlos»',
       title:
         'Alfred Heer bricht sein Schweigen, das Wichtigste der Woche aus der Schweizer Politik und ein Urteil im Fall «Carlos»',
-      path: ''
+      path: '/format/7-uhr-newsletter'
     }
   },
   {
@@ -86,7 +86,8 @@ export const latestSubscribedArticles = [
       shortTitle: 'Emma erlebt ein Comeback, Erika nicht. Warum?',
       title:
         'Warum Grossmamis und Kinder Emma heissen, aber nur Grossmamis Erna',
-      path: ''
+      path:
+        '/2020/08/24/warum-grossmamis-und-kinder-emma-heissen-aber-nur-grossmamis-erna'
     }
   }
 ]

@@ -3,8 +3,11 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { mUp } from '../../theme/mediaQueries'
 import { serifBold17, serifBold19 } from '../Typography/styles'
+import { Interaction } from '../Typography'
 import { TeaserFeed } from '../TeaserFeed'
 import colors from '../../theme/colors'
+import ColorContext from '../Colors/ColorContext'
+import { useColorContext } from '../Colors/useColorContext'
 
 const DefaultLink = ({ children }) => children
 
@@ -14,52 +17,61 @@ const TeaserMyMagazine = ({
   bar,
   Link = DefaultLink
 }) => {
+  const [colorScheme] = useColorContext()
   return (
-    <section {...styles.section}>
-      <div role='group' {...css(styles.row, styles.withHighlight)}>
-        <div {...styles.left}>
-          {latestProgressOrBookmarkedArticles.map(document => {
-            const { path, id } = document
-            const { shortTitle } = document.meta
-            return (
-              <div
-                {...styles.tile}
-                style={{ border: `1px solid ${colors.negative.text}` }}
-                key={id}
-              >
-                <Link href={path} passHref>
-                  <a
-                    {...styles.tileHeadline}
-                    style={{ color: colors.negative.text }}
-                  >
-                    {shortTitle.substring(0, 150).trim()}
-                    {shortTitle.length >= 150 && <>&nbsp;…</>}
-                  </a>
-                </Link>
-                {bar && bar}
-              </div>
-            )
-          })}
+    <div {...css({ backgroundColor: colorScheme.primaryBg })}>
+      <section {...css(styles.section)}>
+        <div role='group' {...css(styles.row, styles.withHighlight)}>
+          <div {...styles.left}>
+            <Interaction.H3>Weiterlesen</Interaction.H3>
+            <br />
+            {latestProgressOrBookmarkedArticles.map(document => {
+              const { path, id } = document
+              const { shortTitle } = document.meta
+
+              return (
+                <div
+                  {...styles.tile}
+                  style={{ border: `1px solid ${colorScheme.text}` }}
+                  key={id}
+                >
+                  <Link href={path} passHref>
+                    <a
+                      {...styles.tileHeadline}
+                      style={{ color: colorScheme.text }}
+                    >
+                      {shortTitle.substring(0, 130).trim()}
+                      {shortTitle.length >= 130 && <>&nbsp;…</>}
+                    </a>
+                  </Link>
+                  {bar && bar}
+                </div>
+              )
+            })}
+          </div>
+          <div {...styles.right}>
+            <Interaction.H3>Neuste abonnierte Beiträge</Interaction.H3>
+            <br />
+            {latestSubscribedArticles.map(document => (
+              <TeaserFeed
+                Link={Link}
+                color={colorScheme.text}
+                format={document.meta.format}
+                path={document.meta.path}
+                title={
+                  document.meta.shortTitle
+                    ? `${document.meta.shortTitle.substring(0, 140).trim()} ${
+                        document.meta.shortTitle.length >= 140 ? '…' : ''
+                      }`
+                    : document.meta.title
+                }
+                credits={document.meta.credits}
+              />
+            ))}
+          </div>
         </div>
-        <div {...styles.right}>
-          {latestSubscribedArticles.map(document => (
-            <TeaserFeed
-              Link={Link}
-              color={colors.negative.text}
-              format={document.meta.format}
-              title={
-                document.meta.shortTitle
-                  ? `${document.meta.shortTitle.substring(0, 150).trim()} ${
-                      document.meta.shortTitle.length >= 150 ? '…' : ''
-                    }`
-                  : document.meta.title
-              }
-              credits={document.meta.credits}
-            />
-          ))}
-        </div>
-      </div>
-    </section>
+      </section>
+    </div>
   )
 }
 
@@ -68,7 +80,6 @@ const styles = {
     margin: '0 auto',
     maxWidth: 1300,
     padding: '40px 15px 10px',
-    backgroundColor: colors.negative.primaryBg,
     [mUp]: {
       padding: '50px 15px 40px'
     }
@@ -90,10 +101,10 @@ const styles = {
     }
   }),
   right: css({
+    display: 'flex',
+    flexDirection: 'column',
     [mUp]: {
       width: '50%',
-      display: 'flex',
-      flexDirection: 'column',
       flexGrow: 1,
       marginLeft: 16
     }
@@ -126,7 +137,13 @@ const styles = {
   })
 }
 
-export default TeaserMyMagazine
+const WrappedTeaserMyMagazine = props => (
+  <ColorContext.Provider value={colors.negative}>
+    <TeaserMyMagazine {...props} />
+  </ColorContext.Provider>
+)
+
+export default WrappedTeaserMyMagazine
 
 TeaserMyMagazine.propTypes = {
   latestSubscribedArticles: PropTypes.array,
@@ -161,64 +178,74 @@ TeaserMyMagazine.data = {
     }
   },
   query: `
-  query getMyMagazineDocuments {
-    documents: search(
-      filters: [
-          { key: "template", not: true, value: "section" }
-          { key: "template", not: true, value: "format" }
-          { key: "template", not: true, value: "front" }
-        ]
-        filter: { feed: true }
-        sort: { key: publishedAt, direction: DESC }
-        first: 2
-      ) {
-        nodes {
-          entity {
-            ... on Document {
-              meta {
-                shortTitle
-                title
-                credits
+    query getMyMagazineDocuments {
+      documents: search(
+        filters: [
+            { key: "template", not: true, value: "section" }
+            { key: "template", not: true, value: "format" }
+            { key: "template", not: true, value: "front" }
+          ]
+          filter: { feed: true }
+          sort: { key: publishedAt, direction: DESC }
+          first: 2
+        ) {
+          nodes {
+            entity {
+              ... on Document {
+                meta {
+                  shortTitle
+                  title
+                  credits
+                  format {
+                    meta {
+                      title
+                      kind
+                      template
+                      path
+                    }
+                  }
+                }
               }
             }
           }
         }
-      }
-    me {
-      progressCollection: collection(name: "progress") {
-        items(first: 2) {
-          nodes {
-            document {
-              id
-              meta {
-                publishDate
-                shortTitle
-                title
-              }
-            }
-          }
-        }
-      }
-      bookmarkCollection: collection(name: "bookmarks") {
-        items(first: 2) {
-          nodes {
-            document {
-              id
-              meta {
-                publishDate
-                shortTitle
-                title
-                credits
-              }
-              userProgress {
+      me {
+        progressCollection: collection(name: "progress") {
+          items(first: 2) {
+            nodes {
+              document {
                 id
-                percentage
+                meta {
+                  publishDate
+                  shortTitle
+                  title
+                  path
+                }
               }
             }
           }
         }
-      }  
-    }
-  }
+        bookmarkCollection: collection(name: "bookmarks") {
+          items(first: 2) {
+            nodes {
+              document {
+                id
+                meta {
+                  publishDate
+                  shortTitle
+                  title
+                  path
+                  credits
+                }
+                userProgress {
+                  id
+                  percentage
+                }
+              }
+            }
+          }
+        }  
+      }
+    }  
   `
 }
