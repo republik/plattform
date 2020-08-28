@@ -1,5 +1,6 @@
 const logger = console
 const { sendPledgeConfirmations } = require('../../../lib/Mail')
+const mergeCustomers = require('../../../lib/payments/stripe/mergeCustomers')
 
 module.exports = async (_, args, {pgdb, req, t, mail: {enforceSubscriptions}}) => {
   // check user
@@ -34,18 +35,25 @@ module.exports = async (_, args, {pgdb, req, t, mail: {enforceSubscriptions}}) =
     }
 
     // transfer belongings to signedin user
-    // TODO: add missing belongings, see mergeUsers
+    // as pledgeUser is new (unverfied) he/she can not have many relations
     const newUser = req.user
+    const to = { userId: newUser.id }
+    const from = { userId: pledgeUser.id }
     const promises = [
-      transaction.public.pledges.updateOne({id: pledge.id}, {userId: newUser.id}),
-      transaction.public.memberships.update({userId: pledgeUser.id}, {userId: newUser.id}),
-      transaction.public.paymentSources.update({userId: pledgeUser.id}, {userId: newUser.id}),
-      transaction.public.consents.update({userId: pledgeUser.id}, {userId: newUser.id}),
+      transaction.public.pledges.updateOne({id: pledge.id}, to),
+      transaction.public.memberships.update(from, to),
+      transaction.public.paymentSources.update(from, to),
+      transaction.public.consents.update(from, to),
       transaction.public.users.updateOne({id: newUser.id}, {
         firstName: newUser.firstName || pledgeUser.firstName,
         lastName: newUser.lastName || pledgeUser.lastName,
         birthday: newUser.birthday || pledgeUser.birthday,
         addressId: newUser.addressId || pledgeUser.addressId
+      }),
+      mergeCustomers({
+        targetUserId: newUser.id,
+        sourceUserId: pledgeUser.id,
+        pgdb: transaction
       })
     ]
     if (pledgeUser.addressId) {

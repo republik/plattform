@@ -96,14 +96,14 @@ module.exports = async ({
           original_source_checksum: originalSourceChecksum
         }
       }, {
-        stripe_account: connectedAccount.accountId
+        stripeAccount: connectedAccount.accountId
       })
 
       await platform.stripe.customers.createSource(connectedCustomer.id, {
         source: connectedSource.id,
         validate: false // workaround suggested by stripe support for 402 invalid_cvc
       }, {
-        stripe_account: connectedAccount.accountId
+        stripeAccount: connectedAccount.accountId
       })
     }
 
@@ -111,7 +111,7 @@ module.exports = async ({
       await platform.stripe.customers.update(connectedCustomer.id, {
         default_source: connectedSource.id
       }, {
-        stripe_account: connectedAccount.accountId
+        stripeAccount: connectedAccount.accountId
       })
     }
   }
