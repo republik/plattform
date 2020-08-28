@@ -20,6 +20,7 @@
     "link": "yarn link"
   },
   "dependencies": {
-    "dataloader": "^2.0.0"
+    "dataloader": "^2.0.0",
+    "graphql-fields": "^2.0.3"
   }
 }

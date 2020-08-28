@@ -1,6 +1,6 @@
 require('@orbiting/backend-modules-env').config()
 const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
-const getClients = require('../modules/crowdfundings/lib/payments/stripe/clients')
+const getClients = require('@orbiting/backend-modules-republik-crowdfundings/lib/payments/stripe/clients')
 const moment = require('moment')
 
 const CHECK_PAYMENTS_BEFORE_DATE = new Date('2018-01-15')

@@ -3,7 +3,7 @@ const uniqBy = require('lodash/uniqBy')
 const { ascending } = require('d3-array')
 const debug = require('debug')('stats:periods')
 
-const createCache = require('../../../modules/crowdfundings/lib/cache')
+const createCache = require('@orbiting/backend-modules-republik-crowdfundings/lib/cache')
 const QUERY_CACHE_TTL_SECONDS = 60 * 5 // 5 min
 
 const { PARKING_USER_ID } = process.env

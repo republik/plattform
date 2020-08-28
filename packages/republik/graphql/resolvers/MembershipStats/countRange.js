@@ -1,6 +1,6 @@
 const moment = require('moment')
 
-const createCache = require('../../../modules/crowdfundings/lib/cache')
+const createCache = require('@orbiting/backend-modules-republik-crowdfundings/lib/cache')
 const QUERY_CACHE_TTL_SECONDS = 60 * 5 // 5 min
 
 const getCount = (min, max, pgdb) => () => pgdb.queryOneField(`

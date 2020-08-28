@@ -33,15 +33,15 @@ const loaderBuilders = {
   ...require('@orbiting/backend-modules-subscriptions/loaders'),
   ...require('@orbiting/backend-modules-cards/loaders'),
   ...require('@orbiting/backend-modules-embeds/loaders'),
-  ...require('@orbiting/backend-modules-republik/modules/crowdfundings/loaders'),
+  ...require('@orbiting/backend-modules-republik-crowdfundings/loaders'),
   ...require('@orbiting/backend-modules-republik/loaders')
 }
 
 const { AccessScheduler, graphql: access } = require('@orbiting/backend-modules-access')
 const PublicationScheduler = require('@orbiting/backend-modules-publikator/lib/PublicationScheduler')
-const MembershipScheduler = require('@orbiting/backend-modules-republik/modules/crowdfundings/lib/scheduler')
+const MembershipScheduler = require('@orbiting/backend-modules-republik-crowdfundings/lib/scheduler')
 
-const mail = require('@orbiting/backend-modules-republik/modules/crowdfundings/lib/Mail')
+const mail = require('@orbiting/backend-modules-republik-crowdfundings/lib/Mail')
 
 const {
   LOCAL_ASSETS_SERVER,
@@ -76,11 +76,13 @@ const start = async () => {
 
 const run = async (workerId, config) => {
   const { graphql: republik } = require('@orbiting/backend-modules-republik')
+  const { graphql: republikCrowdfundings } = require('@orbiting/backend-modules-republik-crowdfundings')
   const { graphql: publikator } = require('@orbiting/backend-modules-publikator')
 
   const graphqlSchema = merge(
     republik,
     [
+      republikCrowdfundings,
       publikator,
       documents,
       search,
@@ -101,7 +103,7 @@ const run = async (workerId, config) => {
 
   // middlewares
   const middlewares = [
-    require('@orbiting/backend-modules-republik/modules/crowdfundings/express/paymentWebhooks'),
+    require('@orbiting/backend-modules-republik-crowdfundings/express/paymentWebhooks'),
     require('@orbiting/backend-modules-gsheets/express/gsheets'),
     require('@orbiting/backend-modules-maillog/express/Mandrill/webhook'),
     require('@orbiting/backend-modules-publikator/express/uncommittedChanges')

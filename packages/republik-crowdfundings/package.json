@@ -1,5 +1,5 @@
 {
-  "name": "@orbiting/backend-modules-republik",
+  "name": "@orbiting/backend-modules-republik-crowdfundings",
   "version": "0.0.1",
   "main": "index.js",
   "repository": {
@@ -17,27 +17,18 @@
   "homepage": "https://github.com/orbiting/backends#readme",
   "scripts": {
     "link": "yarn link",
-    "db:seed:redirections": "cat ../redirections/seeds/seeds.example.json | node ../redirections/seeds/seed.js",
-    "db:seed:users": "cat ../auth/seeds/seeds.example.json | node ../auth/seeds/seed.js --truncate"
+    "db:seed:crowdfundings": "seeds/script/seed.js"
   },
   "dependencies": {
     "apollo-modules-node": "^0.1.4",
     "d3-array": "^2.4.0",
     "d3-dsv": "^1.2.0",
-    "d3-time": "^1.0.8",
     "debug": "^4.1.1",
     "graphql": "^15.3.0",
-    "is-uuid": "^1.0.2",
     "isomorphic-unfetch": "^3.0.0",
     "lodash": "^4.17.19",
     "moment": "^2.26.0",
-    "openpgp": "^4.10.4",
-    "remark-breaks": "^1.0.5",
-    "remark-parse": "^8.0.2",
-    "sharp": "^0.25.3",
-    "slugify": "^1.4.0",
     "stripe": "^8.61.0",
-    "uuid": "^8.1.0",
-    "yargs": "^15.3.1"
+    "uuid": "^8.1.0"
   }
 }

@@ -19,7 +19,7 @@ const { transformUser, AccessToken } = require('@orbiting/backend-modules-auth')
 const {
   isBonusEligable: getIsBonusEligable,
   prolongBeforeDate: getProlongBeforeDate
-} = require('../../modules/crowdfundings/graphql/resolvers/User')
+} = require('@orbiting/backend-modules-republik-crowdfundings/graphql/resolvers/User')
 
 const {
   MAILCHIMP_API_KEY,

@@ -6,8 +6,8 @@
  */
 require('@orbiting/backend-modules-env').config()
 const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
-const createCustomer = require('../../modules/crowdfundings/lib/payments/stripe/createCustomer')
-const addSource = require('../../modules/crowdfundings/lib/payments/stripe/addSource')
+const createCustomer = require('@orbiting/backend-modules-republik-crowdfundings/lib/payments/stripe/createCustomer')
+const addSource = require('@orbiting/backend-modules-republik-crowdfundings/lib/payments/stripe/addSource')
 const removeCustomer = require('./removeStripeCustomer')
 
 const testMode = process.argv[2] === '--test'

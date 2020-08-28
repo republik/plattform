@@ -1,4 +1,4 @@
-const getClients = require('../../modules/crowdfundings/lib/payments/stripe/clients')
+const getClients = require('@orbiting/backend-modules-republik-crowdfundings/lib/payments/stripe/clients')
 
 module.exports = async ({
   userId,
