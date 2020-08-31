@@ -22,7 +22,7 @@ const Page = ({
       <Frame.Header>
         <Frame.Header.Section align='left'>
           <Frame.Nav>
-            <RepoNav route='repo/publish' />
+            <RepoNav route='repo/publish' hide={['raw']} />
           </Frame.Nav>
         </Frame.Header.Section>
         <Frame.Header.Section align='right'>
@@ -37,8 +37,4 @@ const Page = ({
   )
 }
 
-export default compose(
-  withAuthorization(['editor']),
-  withT,
-  withRouter
-)(Page)
+export default compose(withAuthorization(['editor']), withT, withRouter)(Page)

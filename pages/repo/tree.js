@@ -158,7 +158,7 @@ class EditorPage extends Component {
         <Frame.Header>
           <Frame.Header.Section align='left'>
             <Frame.Nav>
-              <RepoNav route='repo/tree' />
+              <RepoNav route='repo/tree' hide={['raw']} />
             </Frame.Nav>
           </Frame.Header.Section>
           <Frame.Header.Section align='right'>
