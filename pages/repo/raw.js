@@ -38,14 +38,12 @@ export default compose(
   const onMdChange = e => {
     const newMd = e.target.value
     setMd(newMd)
-    try {
-      // TODO: adjust remark parser to throw or listen to console warnings
-      // (atm hacked parser source code to throw)
-      const newMdast = parse(newMd)
+    const newMdast = parse(newMd)
+    if (newMdast.meta.errors) {
+      setValidity(false)
+    } else {
       setMdast(newMdast)
       setValidity(true)
-    } catch (error) {
-      setValidity(false)
     }
   }
 
