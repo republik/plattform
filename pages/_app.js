@@ -5,6 +5,9 @@ import { ApolloProvider } from 'react-apollo'
 import withApolloClient from '../lib/apollo/withApolloClient'
 import Track from '../components/Track'
 
+import 'codemirror/lib/codemirror.css'
+import 'codemirror/theme/neo.css'
+
 class WebApp extends App {
   render() {
     const { Component, pageProps, apolloClient, serverContext } = this.props

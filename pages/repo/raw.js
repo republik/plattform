@@ -8,12 +8,17 @@ import withAuthorization from '../../components/Auth/withAuthorization'
 import withMe from '../../lib/withMe'
 import { compose, graphql } from 'react-apollo'
 import { stringify, parse } from '@orbiting/remark-preset'
-import TextareaAutosize from 'react-textarea-autosize'
 import { css } from 'glamor'
 import { A, Button, mediaQueries, colors } from '@project-r/styleguide'
 import { Router } from '../../lib/routes'
 import CircleIcon from 'react-icons/lib/md/lens'
 import gql from 'graphql-tag'
+import { Controlled as CodeMirror } from 'react-codemirror2'
+
+// yeah I know that's ugly
+if (typeof window !== 'undefined') {
+  require('codemirror/mode/markdown/markdown')
+}
 
 const getDocumentContent = gql`
   query getDocumentContent($repoId: ID!, $commitId: ID!) {
@@ -63,18 +68,6 @@ export default compose(
     setMd(editorMd)
   }
 
-  const onMdChange = e => {
-    const newMd = e.target.value
-    setMd(newMd)
-    const newMdast = parse(newMd)
-    if (newMdast.meta.errors) {
-      setValidity(false)
-    } else {
-      setMdast(newMdast)
-      setValidity(true)
-    }
-  }
-
   const goToEditor = () => {
     Router.pushRoute('repo/edit', { repoId, commitId })
   }
@@ -95,6 +88,16 @@ export default compose(
     if (!store) return
     resetMd()
   }, [store])
+
+  useEffect(() => {
+    const newMdast = parse(md)
+    if (newMdast.meta.errors) {
+      setValidity(false)
+    } else {
+      setMdast(newMdast)
+      setValidity(true)
+    }
+  }, [md])
 
   // TODO: import codemirror (mode & css) and insert
   return (
@@ -149,10 +152,18 @@ export default compose(
         </Frame.Header.Section>
       </Frame.Header>
       <Frame.Body raw>
-        <TextareaAutosize
-          style={{ width: 800, padding: 20, margin: 20 }}
+        <CodeMirror
           value={md}
-          onChange={onMdChange}
+          options={{
+            mode: 'markdown',
+            theme: 'neo',
+            lineNumbers: true,
+            lineWrapping: true,
+            smartIndent: false
+          }}
+          onBeforeChange={(editor, data, value) => {
+            setMd(value)
+          }}
         />
       </Frame.Body>
     </Frame>
