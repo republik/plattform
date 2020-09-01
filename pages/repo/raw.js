@@ -14,17 +14,17 @@ import { A, Button, mediaQueries, colors } from '@project-r/styleguide'
 import { Router } from '../../lib/routes'
 import CircleIcon from 'react-icons/lib/md/lens'
 import gql from 'graphql-tag'
-import * as fragments from '../../lib/graphql/fragments'
 
-const getCommitDocumentById = gql`
-  query getCommitDocumentById($repoId: ID!, $commitId: ID!) {
+const getDocumentContent = gql`
+  query getDocumentContent($repoId: ID!, $commitId: ID!) {
     repo(id: $repoId) {
       commit(id: $commitId) {
-        ...CommitWithDocument
+        document {
+          content
+        }
       }
     }
   }
-  ${fragments.CommitWithDocument}
 `
 
 export default compose(
@@ -32,7 +32,7 @@ export default compose(
   withT,
   withAuthorization(['editor']),
   withMe,
-  graphql(getCommitDocumentById, {
+  graphql(getDocumentContent, {
     skip: ({ router }) =>
       router.query.commitId === 'new' || !router.query.commitId,
     options: ({ router }) => ({
@@ -59,7 +59,7 @@ export default compose(
         data.repo.commit &&
         data.repo.commit.document &&
         data.repo.commit.document.content)
-    const editorMd = stringify(editorMdast)
+    const editorMd = editorMdast ? stringify(editorMdast) : ''
     setMd(editorMd)
   }
 
@@ -77,7 +77,6 @@ export default compose(
 
   const goToEditor = () => {
     Router.pushRoute('repo/edit', { repoId, commitId })
-    // FIXME: doesnt work when no editor in local storage (GQL caching issue?)
   }
 
   const onSave = () => {

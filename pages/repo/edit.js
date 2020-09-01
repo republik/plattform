@@ -807,6 +807,7 @@ export default compose(
     skip: ({ router }) =>
       router.query.commitId === 'new' || !router.query.commitId,
     options: ({ router }) => ({
+      fetchPolicy: 'network-only',
       variables: {
         repoId: router.query.repoId,
         commitId: router.query.commitId
