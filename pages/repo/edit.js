@@ -765,9 +765,11 @@ export class EditorPage extends Component {
           >
             {!readOnly && (
               <Sidebar.Tab tabId='edit' label='Editieren'>
-                <Link route='repo/raw' params={{ repoId, commitId }}>
-                  <a {...linkRule}>Raw modus</a>
-                </Link>
+                {!(isNew && !hasUncommittedChanges) && (
+                  <Link route='repo/raw' params={{ repoId, commitId }}>
+                    <a {...linkRule}>Raw modus</a>
+                  </Link>
+                )}
                 <CharCount value={editorState} />
                 {!!this.editor && (
                   <EditorUI

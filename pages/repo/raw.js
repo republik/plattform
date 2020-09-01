@@ -42,7 +42,7 @@ export default compose(
       }
     })
   })
-)(({ router, data: { repo } }) => {
+)(({ router, data }) => {
   const { repoId, commitId } = router.query
   const [store, setStore] = useState(undefined)
   const storeRef = useRef()
@@ -52,14 +52,13 @@ export default compose(
   const [validity, setValidity] = useState(true)
 
   const resetMd = () => {
-    let editorMdast = storeRef.current.get('editorState')
-    if (!editorMdast) {
-      editorMdast =
-        repo &&
-        repo.commit &&
-        repo.commit.document &&
-        repo.commit.document.content
-    }
+    const editorMdast =
+      storeRef.current.get('editorState') ||
+      (data &&
+        data.repo &&
+        data.repo.commit &&
+        data.repo.commit.document &&
+        data.repo.commit.document.content)
     const editorMd = stringify(editorMdast)
     setMd(editorMd)
   }
