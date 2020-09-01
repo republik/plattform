@@ -25,7 +25,7 @@ const menu = [
   }
 ]
 
-const Nav = ({ router, route, isNew, t, hide = [] }) => {
+const Nav = ({ router, route, isNew, t }) => {
   const { repoId } = router.query
 
   const params = {
@@ -40,26 +40,24 @@ const Nav = ({ router, route, isNew, t, hide = [] }) => {
         </title>
       </Head>
       {intersperse(
-        menu
-          .filter(item => hide.indexOf(item.key) === -1)
-          .map(item => {
-            const label = t(`repo/nav/${item.key}`)
-            if (item.route === route) {
-              return <span key={item.route}>{label} </span>
-            }
-            if (isNew && item.key === 'tree') {
-              return (
-                <span key={item.route} {...styles.disabled}>
-                  {label}{' '}
-                </span>
-              )
-            }
+        menu.map(item => {
+          const label = t(`repo/nav/${item.key}`)
+          if (item.route === route) {
+            return <span key={item.route}>{label} </span>
+          }
+          if (isNew && item.key === 'tree') {
             return (
-              <Link key={item.route} route={item.route} params={params}>
-                <a {...linkRule}>{label} </a>
-              </Link>
+              <span key={item.route} {...styles.disabled}>
+                {label}{' '}
+              </span>
             )
-          }),
+          }
+          return (
+            <Link key={item.route} route={item.route} params={params}>
+              <a {...linkRule}>{label} </a>
+            </Link>
+          )
+        }),
         (_, i) => (
           <span key={i}>&nbsp;</span>
         )
