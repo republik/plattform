@@ -16,8 +16,8 @@ import CircleIcon from 'react-icons/lib/md/lens'
 import gql from 'graphql-tag'
 import * as fragments from '../../lib/graphql/fragments'
 
-const getCommitById = gql`
-  query getCommitById($repoId: ID!, $commitId: ID!) {
+const getCommitDocumentById = gql`
+  query getCommitDocumentById($repoId: ID!, $commitId: ID!) {
     repo(id: $repoId) {
       commit(id: $commitId) {
         ...CommitWithDocument
@@ -32,7 +32,7 @@ export default compose(
   withT,
   withAuthorization(['editor']),
   withMe,
-  graphql(getCommitById, {
+  graphql(getCommitDocumentById, {
     skip: ({ router }) =>
       router.query.commitId === 'new' || !router.query.commitId,
     options: ({ router }) => ({
@@ -77,10 +77,13 @@ export default compose(
 
   const goToEditor = () => {
     Router.pushRoute('repo/edit', { repoId, commitId })
+    // FIXME: doesnt work when no editor in local storage (GQL caching issue?)
   }
 
   const onSave = () => {
-    storeRef.current.set('editorState', mdast)
+    if (mdast) {
+      storeRef.current.set('editorState', mdast)
+    }
     goToEditor()
   }
 
