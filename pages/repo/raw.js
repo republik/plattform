@@ -6,20 +6,43 @@ import { withRouter } from 'next/router'
 import withT from '../../lib/withT'
 import withAuthorization from '../../components/Auth/withAuthorization'
 import withMe from '../../lib/withMe'
-import { compose } from 'react-apollo'
+import { compose, graphql } from 'react-apollo'
 import { stringify, parse } from '@orbiting/remark-preset'
 import TextareaAutosize from 'react-textarea-autosize'
 import { css } from 'glamor'
 import { A, Button, mediaQueries, colors } from '@project-r/styleguide'
 import { Router } from '../../lib/routes'
 import CircleIcon from 'react-icons/lib/md/lens'
+import gql from 'graphql-tag'
+import * as fragments from '../../lib/graphql/fragments'
+
+const getCommitById = gql`
+  query getCommitById($repoId: ID!, $commitId: ID!) {
+    repo(id: $repoId) {
+      commit(id: $commitId) {
+        ...CommitWithDocument
+      }
+    }
+  }
+  ${fragments.CommitWithDocument}
+`
 
 export default compose(
   withRouter,
   withT,
   withAuthorization(['editor']),
-  withMe
-)(({ t, router }) => {
+  withMe,
+  graphql(getCommitById, {
+    skip: ({ router }) =>
+      router.query.commitId === 'new' || !router.query.commitId,
+    options: ({ router }) => ({
+      variables: {
+        repoId: router.query.repoId,
+        commitId: router.query.commitId
+      }
+    })
+  })
+)(({ router, data: { repo } }) => {
   const { repoId, commitId } = router.query
   const [store, setStore] = useState(undefined)
   const storeRef = useRef()
@@ -29,8 +52,14 @@ export default compose(
   const [validity, setValidity] = useState(true)
 
   const resetMd = () => {
-    const editorMdast = storeRef.current.get('editorState')
-    // TODO: get state from backend if localstorage is empty
+    let editorMdast = storeRef.current.get('editorState')
+    if (!editorMdast) {
+      editorMdast =
+        repo &&
+        repo.commit &&
+        repo.commit.document &&
+        repo.commit.document.content
+    }
     const editorMd = stringify(editorMdast)
     setMd(editorMd)
   }
