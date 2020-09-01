@@ -9,16 +9,32 @@ import withMe from '../../lib/withMe'
 import { compose, graphql } from 'react-apollo'
 import { stringify, parse } from '@orbiting/remark-preset'
 import { css } from 'glamor'
-import { A, Button, mediaQueries, colors } from '@project-r/styleguide'
+import {
+  A,
+  Button,
+  mediaQueries,
+  colors,
+  fontStyles
+} from '@project-r/styleguide'
 import { Router } from '../../lib/routes'
 import CircleIcon from 'react-icons/lib/md/lens'
 import gql from 'graphql-tag'
 import { Controlled as CodeMirror } from 'react-codemirror2'
 
-// yeah I know that's ugly
-if (typeof window !== 'undefined') {
-  require('codemirror/mode/markdown/markdown')
-}
+const styles = css({
+  background: colors.secondaryBg,
+  padding: 10,
+  '& .CodeMirror': {
+    height: 'auto',
+    width: 800,
+    margin: 'auto',
+    border: `1px solid ${colors.divider}`,
+    ...fontStyles.monospaceRegular
+  },
+  '& pre.CodeMirror-line': {
+    padding: '0 15px'
+  }
+})
 
 const getDocumentContent = gql`
   query getDocumentContent($repoId: ID!, $commitId: ID!) {
@@ -31,6 +47,11 @@ const getDocumentContent = gql`
     }
   }
 `
+
+// yeah I know that's ugly
+if (typeof window !== 'undefined') {
+  require('codemirror/mode/markdown/markdown')
+}
 
 export default compose(
   withRouter,
@@ -152,19 +173,23 @@ export default compose(
         </Frame.Header.Section>
       </Frame.Header>
       <Frame.Body raw>
-        <CodeMirror
-          value={md}
-          options={{
-            mode: 'markdown',
-            theme: 'neo',
-            lineNumbers: true,
-            lineWrapping: true,
-            smartIndent: false
-          }}
-          onBeforeChange={(editor, data, value) => {
-            setMd(value)
-          }}
-        />
+        <div {...styles}>
+          <CodeMirror
+            style={{ height: 'auto' }}
+            value={md}
+            options={{
+              mode: 'markdown',
+              theme: 'xq-light',
+              lineNumbers: true,
+              lineWrapping: true,
+              smartIndent: false,
+              viewportMargin: Infinity
+            }}
+            onBeforeChange={(editor, data, value) => {
+              setMd(value)
+            }}
+          />
+        </div>
       </Frame.Body>
     </Frame>
   )

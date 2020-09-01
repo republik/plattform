@@ -6,7 +6,7 @@ import withApolloClient from '../lib/apollo/withApolloClient'
 import Track from '../components/Track'
 
 import 'codemirror/lib/codemirror.css'
-import 'codemirror/theme/neo.css'
+import 'codemirror/theme/xq-light.css'
 
 class WebApp extends App {
   render() {
