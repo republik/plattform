@@ -20,6 +20,12 @@ import { Router } from '../../lib/routes'
 import CircleIcon from 'react-icons/lib/md/lens'
 import gql from 'graphql-tag'
 import { Controlled as CodeMirror } from 'react-codemirror2'
+import {
+  UncommittedChanges,
+  withUncommitedChanges,
+  withUncommittedChangesMutation
+} from '../../components/VersionControl/UncommittedChanges'
+import BranchingNotice from '../../components/VersionControl/BranchingNotice'
 
 const METADATA_SEPARATOR = '---\n\n'
 
@@ -76,8 +82,16 @@ export default compose(
         commitId: router.query.commitId
       }
     })
-  })
-)(({ router, data }) => {
+  }),
+  withUncommitedChanges({
+    options: ({ router }) => ({
+      variables: {
+        repoId: router.query.repoId
+      }
+    })
+  }),
+  withUncommittedChangesMutation
+)(({ t, router, data, uncommittedChanges, hasUncommitedChanges }) => {
   const { repoId, commitId } = router.query
   const [store, setStore] = useState(undefined)
   const storeRef = useRef()
@@ -116,6 +130,8 @@ export default compose(
   useEffect(() => {
     const storeKey = [repoId, commitId].join('/')
     setStore(initLocalStore(storeKey))
+    hasUncommitedChanges({ repoId, action: 'create' })
+    return () => hasUncommitedChanges({ repoId, action: 'delete' })
   }, [repoId, commitId])
 
   useEffect(() => {
@@ -179,6 +195,12 @@ export default compose(
               style={{ color: validity ? colors.primary : colors.error }}
             />
           </div>
+        </Frame.Header.Section>
+        <Frame.Header.Section align='right'>
+          <BranchingNotice asIcon repoId={repoId} currentCommitId={commitId} />
+        </Frame.Header.Section>
+        <Frame.Header.Section align='right'>
+          <UncommittedChanges uncommittedChanges={uncommittedChanges} t={t} />
         </Frame.Header.Section>
         <Frame.Header.Section align='right'>
           <Frame.Me />

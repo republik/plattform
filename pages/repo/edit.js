@@ -23,7 +23,8 @@ import {
   withUncommitedChanges,
   ActiveInterruptionOverlay,
   warningColor,
-  joinUsers
+  joinUsers,
+  withUncommittedChangesMutation
 } from '../../components/VersionControl/UncommittedChanges'
 import Sidebar from '../../components/Sidebar'
 import Warning from '../../components/Sidebar/Warning'
@@ -68,12 +69,6 @@ const commitMutation = gql`
   }
   ${fragments.CommitWithDocument}
   ${fragments.EditPageRepo}
-`
-
-const uncommittedChangesMutation = gql`
-  mutation uncommittedChanges($repoId: ID!, $action: Action!) {
-    uncommittedChanges(repoId: $repoId, action: $action)
-  }
 `
 
 const getCommitById = gql`
@@ -890,12 +885,5 @@ export default compose(
         })
     })
   }),
-  graphql(uncommittedChangesMutation, {
-    props: ({ mutate }) => ({
-      hasUncommitedChanges: variables =>
-        mutate({
-          variables
-        })
-    })
-  })
+  withUncommittedChangesMutation
 )(EditorPage)
