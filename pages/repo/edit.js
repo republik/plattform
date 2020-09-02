@@ -762,7 +762,7 @@ export class EditorPage extends Component {
               <Sidebar.Tab tabId='edit' label='Editieren'>
                 {!(isNew && !hasUncommittedChanges) && (
                   <Link route='repo/raw' params={{ repoId, commitId }}>
-                    <a {...linkRule}>Raw modus</a>
+                    <a {...linkRule}>{t('pages/raw/title')}</a>
                   </Link>
                 )}
                 <CharCount value={editorState} />

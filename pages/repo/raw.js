@@ -177,7 +177,7 @@ export default compose(
               {...css({ fontSize: 10, [mediaQueries.mUp]: { fontSize: 14 } })}
             >
               <A href='#' onClick={goToEditor}>
-                Zurück
+                {t('pages/raw/cancel')}
               </A>
             </div>
             <Button
@@ -192,7 +192,7 @@ export default compose(
               disabled={!validity}
               onClick={validity && onSave}
             >
-              Speichern
+              {t('pages/raw/save')}
             </Button>
           </div>
         </Frame.Header.Section>

@@ -1,5 +1,5 @@
 {
-  "updated": "2020-08-28T12:45:05.518Z",
+  "updated": "2020-09-02T15:57:01.117Z",
   "title": "live",
   "data": [
     {
@@ -1389,6 +1389,18 @@
     {
       "key": "styleguide/TeaserFeed/InternalOnlyTag",
       "value": "Intern publiziert"
+    },
+    {
+      "key": "pages/raw/save",
+      "value": "Speichern"
+    },
+    {
+      "key": "pages/raw/cancel",
+      "value": "Zurück"
+    },
+    {
+      "key": "pages/raw/title",
+      "value": "Raw Modus"
     }
   ]
 }
