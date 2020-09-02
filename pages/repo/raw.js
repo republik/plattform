@@ -61,7 +61,7 @@ const getDocumentContent = gql`
 
 // yeah I know that's ugly
 if (typeof window !== 'undefined') {
-  require('codemirror/mode/markdown/markdown')
+  require('../../components/editor/utils/codemirror-md')
   // TODO: collapse sections -> doesnt work grrrr!
   require('codemirror/addon/fold/foldcode')
   require('codemirror/addon/fold/foldgutter')
