@@ -38,7 +38,7 @@ const styles = css({
     margin: 'auto',
     border: `1px solid ${colors.divider}`,
     fontFamily: fontFamilies.monospaceRegular,
-    fontSize: 13,
+    fontSize: 14,
     color: colors.text,
     lineHeight: 2
   },
@@ -65,7 +65,7 @@ if (typeof window !== 'undefined') {
   // TODO: collapse sections -> doesnt work grrrr!
   require('codemirror/addon/fold/foldcode')
   require('codemirror/addon/fold/foldgutter')
-  require('codemirror/addon/fold/xml-fold')
+  require('codemirror/addon/fold/xml-fold') // we want to fold the sections
 }
 
 export default compose(
