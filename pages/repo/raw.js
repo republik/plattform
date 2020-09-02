@@ -68,6 +68,13 @@ if (typeof window !== 'undefined') {
   require('codemirror/addon/fold/xml-fold') // we want to fold the sections
 }
 
+const hasOpenSections = md => {
+  if (!md) return
+  return (
+    md.match(/<section>/g).length !== md.match(/<hr \/><\/section>/g).length
+  )
+}
+
 export default compose(
   withRouter,
   withT,
@@ -140,10 +147,10 @@ export default compose(
   }, [store])
 
   useEffect(() => {
-    const newMdast = parse(meta + md)
-    if (newMdast.meta.errors) {
+    if (hasOpenSections(md)) {
       setValidity(false)
     } else {
+      const newMdast = parse(meta + md)
       setMdast(newMdast)
       setValidity(true)
     }
