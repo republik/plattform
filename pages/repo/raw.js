@@ -14,12 +14,14 @@ import {
   Button,
   mediaQueries,
   colors,
-  fontStyles
+  fontFamilies
 } from '@project-r/styleguide'
 import { Router } from '../../lib/routes'
 import CircleIcon from 'react-icons/lib/md/lens'
 import gql from 'graphql-tag'
 import { Controlled as CodeMirror } from 'react-codemirror2'
+
+const METADATA_SEPARATOR = '---\n\n'
 
 const styles = css({
   background: colors.secondaryBg,
@@ -29,7 +31,10 @@ const styles = css({
     width: 800,
     margin: 'auto',
     border: `1px solid ${colors.divider}`,
-    ...fontStyles.monospaceRegular
+    fontFamily: fontFamilies.monospaceRegular,
+    fontSize: 13,
+    color: colors.text,
+    lineHeight: 2
   },
   '& pre.CodeMirror-line': {
     padding: '0 15px'
@@ -73,6 +78,7 @@ export default compose(
   const [store, setStore] = useState(undefined)
   const storeRef = useRef()
   storeRef.current = store
+  const [meta, setMeta] = useState('')
   const [md, setMd] = useState('')
   const [mdast, setMdast] = useState(null)
   const [validity, setValidity] = useState(true)
@@ -85,8 +91,11 @@ export default compose(
         data.repo.commit &&
         data.repo.commit.document &&
         data.repo.commit.document.content)
-    const editorMd = editorMdast ? stringify(editorMdast) : ''
-    setMd(editorMd)
+    if (!editorMdast) return
+    const editorMd = stringify(editorMdast)
+    const splitMd = editorMd.split(METADATA_SEPARATOR)
+    setMeta(splitMd[0] + METADATA_SEPARATOR)
+    setMd(splitMd[1])
   }
 
   const goToEditor = () => {
@@ -111,7 +120,7 @@ export default compose(
   }, [store])
 
   useEffect(() => {
-    const newMdast = parse(md)
+    const newMdast = parse(meta + md)
     if (newMdast.meta.errors) {
       setValidity(false)
     } else {
@@ -120,7 +129,6 @@ export default compose(
     }
   }, [md])
 
-  // TODO: import codemirror (mode & css) and insert
   return (
     <Frame raw>
       <Frame.Header>
