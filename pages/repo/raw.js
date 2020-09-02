@@ -56,6 +56,10 @@ const getDocumentContent = gql`
 // yeah I know that's ugly
 if (typeof window !== 'undefined') {
   require('codemirror/mode/markdown/markdown')
+  // TODO: collapse sections -> doesnt work grrrr!
+  require('codemirror/addon/fold/foldcode')
+  require('codemirror/addon/fold/foldgutter')
+  require('codemirror/addon/fold/xml-fold')
 }
 
 export default compose(
@@ -183,15 +187,15 @@ export default compose(
       <Frame.Body raw>
         <div {...styles}>
           <CodeMirror
-            style={{ height: 'auto' }}
             value={md}
             options={{
               mode: 'markdown',
-              theme: 'xq-light',
+              theme: 'neo',
               lineNumbers: true,
               lineWrapping: true,
               smartIndent: false,
-              viewportMargin: Infinity
+              viewportMargin: Infinity,
+              foldGutter: true
             }}
             onBeforeChange={(editor, data, value) => {
               setMd(value)
