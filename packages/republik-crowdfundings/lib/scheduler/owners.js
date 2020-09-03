@@ -5,8 +5,6 @@ const Promise = require('bluebird')
 const { transformUser } = require('@orbiting/backend-modules-auth')
 const { publishMonitor } = require('@orbiting/backend-modules-republik/lib/slack')
 
-const { getDefaultPaymentSource } = require('../paymentSource')
-
 const {
   prolongBeforeDate: getProlongBeforeDate
 } = require('../../graphql/resolvers/User')
@@ -142,7 +140,7 @@ const createBuckets = (now) => [
     payload: {
       templateName: 'membership_owner_autopay_notice'
     },
-    handler: autoPayMailings
+    handler: mailings
   },
   {
     name: 'membership_owner_autopay',
@@ -240,8 +238,12 @@ const getBuckets = async ({ now }, context) => {
           buckets,
           async bucket => {
             if (prolongBeforeDate.isBetween(bucket.endDate.min, bucket.endDate.max)) {
-              if (!user.autoPay) {
+              if (user.membershipAutoPay && user.autoPay === undefined) {
                 user.autoPay = await autoPaySuggest(user.membershipId, pgdb)
+                if (!user.autoPay) {
+                  user.membershipAutoPay = false
+                  setAutoPayToFalse(user, pgdb)
+                }
               }
 
               if (bucket.predicate(user)) {
@@ -295,33 +297,14 @@ module.exports = {
   run
 }
 
-async function autoPayMailings (user, bucket, context) {
-  const pgdb = context.pgdb
-  const defaultPaymentSource = getDefaultPaymentSource(user, pgdb)
-
-  if (!defaultPaymentSource) {
-    await setAutoPayToFalse(user, pgdb)
-    return
-  }
-
-  user = { ...user, defaultPaymentSource }
-  return mailings(user, bucket, context)
-}
-
 async function setAutoPayToFalse (user, pgdb) {
-  try {
-    await publishMonitor(
-      user,
-      `setAutoPayToFalse: \`autoPay\` was set to \`false\` due to missing default credit card\n{ADMIN_FRONTEND_BASE_URL}/users/${user.id}`
-    )
+  const message = `setAutoPayToFalse: \`autoPay\` was set to \`false\` due to missing default credit card\n{ADMIN_FRONTEND_BASE_URL}/users/${user.id}`
+  console.warn(message)
+  await publishMonitor(user, message)
 
-    await pgdb.public.memberships.update({
-      userId: user.id
-    }, {
-      autoPay: false
-    })
-  } catch (e) {
-    // swallow slack message
-    console.warn(`publish to slack failed - autoPayMailings - user id ${user.id}`)
-  }
+  await pgdb.public.memberships.update({
+    userId: user.id
+  }, {
+    autoPay: false
+  })
 }

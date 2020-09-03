@@ -7,7 +7,7 @@ const { getCustomPackages } = require('./User')
 const { getLastEndDate } = require('./utils')
 const createCache = require('./cache')
 
-const PAYMENT_METHODS = ['STRIPE']
+const { getDefaultPaymentSource } = require('./paymentSource')
 
 const suggest = async (membershipId, pgdb) => {
   // Find membership
@@ -73,22 +73,9 @@ const suggest = async (membershipId, pgdb) => {
 
   const rewardId = membershipPledgeOption.packageOption.rewardId
 
-  // Find pledge payments
-  const pledgePayments = await pgdb.public.pledgePayments.find({ pledgeId: pledge.id })
+  const defaultPaymentSource = getDefaultPaymentSource(membership.userId, pgdb)
 
-  if (!pledgePayments.length) {
-    return false
-  }
-
-  // Find latest payment
-  const payment = await pgdb.public.payments.findOne(
-    { id: pledgePayments.map(p => p.paymentId) },
-    { orderBy: { createdAt: 'DESC' }, limit: 1 }
-  )
-
-  if (!PAYMENT_METHODS.includes(payment.method)) {
-    return false
-  }
+  if (!defaultPaymentSource) return false
 
   // Pick package and options which may be used to submit and autopayment
   const user = await pgdb.public.users.findOne({ id: membership.userId })
@@ -116,7 +103,8 @@ const suggest = async (membershipId, pgdb) => {
       total: pledgeOptions.length > 1 ? prolongOption.price : pledge.total,
       defaultPrice: prolongOption.price,
       withDiscount: pledge.donation < 0,
-      withDonation: pledge.donation > 0
+      withDonation: pledge.donation > 0,
+      card: defaultPaymentSource
     }
   }
 }

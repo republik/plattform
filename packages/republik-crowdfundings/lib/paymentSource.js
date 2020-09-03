@@ -1,14 +1,15 @@
 const getStripeClients = require('./payments/stripe/clients')
 
-const getPaymentSources = async (user, pgdb) => {
+const getPaymentSources = async (userId, pgdb) => {
   const { platform } = await getStripeClients(pgdb)
   if (!platform) {
     return []
   }
   const customer = await pgdb.public.stripeCustomers.findOne({
-    userId: user.id,
+    userId,
     companyId: platform.company.id
   })
+
   if (!customer) {
     return []
   }
@@ -28,9 +29,7 @@ const getPaymentSources = async (user, pgdb) => {
 }
 
 exports.getPaymentSources = getPaymentSources
-exports.getDefaultPaymentSource = (user, pgdb) => getPaymentSources(user, pgdb)
-  .then(
-    paymentSources => paymentSources.find(
-      s => s.isDefault
-    )
-  )
+exports.getDefaultPaymentSource = (userId, pgdb) => getPaymentSources(userId, pgdb)
+  .then(paymentSources => paymentSources.find(
+    s => s.isDefault
+  ))
