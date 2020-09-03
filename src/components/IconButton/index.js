@@ -77,7 +77,7 @@ const styles = {
     position: 'relative',
     alignItems: 'center',
     textDecoration: 'none',
-    marginRight: 18,
+    marginRight: 20,
     border: 0,
     padding: 0,
     color: 'inherit',
