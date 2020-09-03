@@ -1,6 +1,6 @@
 import React from 'react'
 import { css } from 'glamor'
-import TwitterIcon from 'react-icons/lib/fa/twitter'
+import { Twitter } from '../Icons'
 import colors from '../../theme/colors'
 import { mUp } from '../../theme/mediaQueries'
 import { sansSerifMedium16, sansSerifRegular14 } from '../Typography/styles'
@@ -109,7 +109,7 @@ export const Header = ({ url, userProfileImageUrl, name, handle, date }) => {
         <img {...styles.profilePicture} src={userProfileImageUrl} alt='' />
       </UserLink>
       <Link href={url}>
-        <TwitterIcon {...styles.icon} />
+        <Twitter {...styles.icon} />
       </Link>
       <div {...styles.meta}>
         <div {...styles.name}>

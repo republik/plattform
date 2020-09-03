@@ -94,6 +94,15 @@ ReactDOM.render(
               path: '/colors',
               title: 'Colors',
               component: require('./theme/colors.docs.js')
+            },
+            {
+              path: '/icons',
+              title: 'Icons',
+              imports: {
+                ...require('./components/Icons'),
+                ...require('./components/IconButton')
+              },
+              src: require('./components/Icons/docs.md')
             }
           ]
         },
@@ -133,7 +142,7 @@ ReactDOM.render(
                 css,
                 merge,
                 Button: require('./components/Button'),
-                AudioIcon: require('react-icons/lib/md/volume-up'),
+                Icons: require('./components/Icons'),
                 plainButtonRule: require('./components/Button').plainButtonRule
               },
               src: require('./components/Button/docs.md')
@@ -143,7 +152,7 @@ ReactDOM.render(
               title: 'IconButton',
               imports: {
                 css,
-                BookmarkIcon: require('react-icons/lib/md/bookmark'),
+                Icons: require('./components/Icons'),
                 IconButton: require('./components/IconButton')
               },
               src: require('./components/IconButton/docs.md')
@@ -232,7 +241,7 @@ ReactDOM.render(
               title: 'Callout',
               imports: {
                 CalloutMenu: require('./components/Callout/CalloutMenu'),
-                NotificationIcon: require('react-icons/lib/md/notifications')
+                Icons: require('./components/Icons')
               },
               src: require('./components/Callout/docs.md')
             }
@@ -254,7 +263,7 @@ ReactDOM.render(
                 FieldSet: require('./components/Form/FieldSet.js'),
                 MaskedInput: require('react-maskedinput'),
                 AutosizeInput: require('react-textarea-autosize'),
-                SearchIcon: require('react-icons/lib/md/search')
+                Icons: require('./components/Icons')
               },
               src: require('./components/Form/docs.md')
             },
@@ -297,7 +306,7 @@ ReactDOM.render(
                   Inner: require('./components/Form/VirtualDropdown.js').Inner
                 },
                 Autocomplete: require('./components/Form/Autocomplete.js'),
-                SearchIcon: require('react-icons/lib/md/search')
+                Icons: require('./components/Icons')
               },
               src: require('./components/Form/Dropdown.docs.md')
             },
@@ -506,8 +515,7 @@ ReactDOM.render(
                 t,
                 ...require('./components/Typography'),
                 ...require('./components/TeaserFeed'),
-                AudioIcon: require('react-icons/lib/md/volume-up'),
-                BookmarkIcon: require('react-icons/lib/md/bookmark-outline'),
+                Icons: require('./components/Icons'),
                 Center: require('./components/Center')
               },
               src: require('./components/TeaserFeed/docs.md')

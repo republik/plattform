@@ -23,7 +23,7 @@
 ```react|span-3
 <Field
   label='Label'
-  icon={<SearchIcon size={30} />} />
+  icon={<Icons.Search size={30} />} />
 ```
 
 ```react|span-3

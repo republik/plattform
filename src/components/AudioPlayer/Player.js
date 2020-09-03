@@ -1,11 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { css, merge } from 'glamor'
-import Play from 'react-icons/lib/md/play-arrow'
-import Pause from 'react-icons/lib/md/pause'
-import Rewind from 'react-icons/lib/md/skip-previous'
-import Close from 'react-icons/lib/md/close'
-import Download from 'react-icons/lib/md/file-download'
 
 import { ellipsize } from '../../lib/styleMixins'
 import { timeFormat } from '../../lib/timeFormat'
@@ -18,6 +13,7 @@ import { A, linkRule } from '../Typography'
 import { sansSerifRegular12, sansSerifRegular15 } from '../Typography/styles'
 import { mUp } from '../../theme/mediaQueries'
 import colors from '../../theme/colors'
+import Icons from '../Icons'
 
 const ZINDEX_AUDIOPLAYER_ICONS = 6
 const ZINDEX_AUDIOPLAYER_SCRUB = 3
@@ -574,19 +570,19 @@ class AudioPlayer extends Component {
               aria-live='assertive'
             >
               {!playing && (
-                <Play
+                <Icons.Play
                   size={SIZE.play}
                   fill={playEnabled ? '#000' : colors.disabled}
                 />
               )}
-              {playing && <Pause size={SIZE.play} fill='#000' />}
+              {playing && <Icons.Pause size={SIZE.play} fill='#000' />}
             </button>
             <button
               {...styles.button}
               onClick={playEnabled ? () => this.setTime(0) : null}
               title={t('styleguide/AudioPlayer/rewind')}
             >
-              <Rewind
+              <Icons.Rewind
                 size={SIZE.rewind}
                 fill={playEnabled && progress > 0 ? '#000' : colors.disabled}
               />
@@ -600,11 +596,11 @@ class AudioPlayer extends Component {
                   download
                   title={t('styleguide/AudioPlayer/download')}
                 >
-                  <Download size={SIZE.download} fill={'#000'} />
+                  <Icons.Download size={SIZE.download} fill={'#000'} />
                 </a>
               )}
               {!playEnabled && (
-                <Download size={SIZE.download} fill={colors.disabled} />
+                <Icons.Download size={SIZE.download} fill={colors.disabled} />
               )}
             </div>
           )}
@@ -614,7 +610,7 @@ class AudioPlayer extends Component {
               {...styles.close}
               onClick={closeHandler}
             >
-              <Close size={SIZE.close} fill={'#000'} />
+              <Icons.Close size={SIZE.close} fill={'#000'} />
             </button>
           )}
           <div {...styles.uiText} style={uiTextStyle}>

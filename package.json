@@ -126,7 +126,7 @@
   },
   "dependencies": {
     "body-scroll-lock": "3.0.3",
-    "react-icons": "^2.2.7"
+    "react-icons": "^3.10.0"
   },
   "browserslist": [
     ">0.2%",

@@ -3,8 +3,8 @@ import PropTypes from 'prop-types'
 import React, { useRef, useState, useContext, useEffect, useMemo } from 'react'
 import scrollIntoView from 'scroll-into-view'
 
-import ChevronLeft from 'react-icons/lib/md/keyboard-arrow-left'
-import ChevronRight from 'react-icons/lib/md/keyboard-arrow-right'
+import ChevronLeft from 'react-icons/md/keyboard-arrow-left'
+import ChevronRight from 'react-icons/md/keyboard-arrow-right'
 
 import { PADDING, TILE_MARGIN_RIGHT } from './constants'
 import CarouselContext from './Context'

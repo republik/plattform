@@ -1,6 +1,6 @@
 import React from 'react'
-import Fullscreen from 'react-icons/lib/md/fullscreen'
-import FullscreenExit from 'react-icons/lib/md/fullscreen-exit'
+import Fullscreen from 'react-icons/md/fullscreen'
+import FullscreenExit from 'react-icons/md/fullscreen-exit'
 
 const Icon = ({ size, fill, off }) => {
   if (off) {

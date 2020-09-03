@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { css, merge } from 'glamor'
 
-import AudioIcon from 'react-icons/lib/md/volume-up'
+import AudioIcon from 'react-icons/md/volume-up'
 
 import { mUp } from '../../theme/mediaQueries'
 import { breakoutStyles, MAX_WIDTH, PADDING, BREAKOUT_SIZES } from '../Center'

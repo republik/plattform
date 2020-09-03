@@ -4,7 +4,7 @@ import { css } from 'glamor'
 import { imageSizeInfo } from 'mdast-react-render/lib/utils'
 import { getResizedSrcs } from './utils'
 import LazyImage from '../LazyLoad/Image'
-import GalleryIcon from 'react-icons/lib/md/filter'
+import GalleryIcon from 'react-icons/md/filter'
 import { sansSerifRegular12, sansSerifRegular15 } from '../Typography/styles'
 import { mUp } from '../../theme/mediaQueries'
 

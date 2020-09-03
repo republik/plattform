@@ -1,7 +1,7 @@
 import React from 'react'
 import { css } from 'glamor'
-import MdCheck from 'react-icons/lib/md/check'
-import MoreIcon from 'react-icons/lib/md/more-vert'
+import MdCheck from 'react-icons/md/check'
+import MoreIcon from 'react-icons/md/more-vert'
 import colors from '../../../../theme/colors'
 import {
   sansSerifMedium16,

@@ -1,6 +1,6 @@
 import { css } from 'glamor'
 import React from 'react'
-import ChevronRight from 'react-icons/lib/md/keyboard-arrow-right'
+import ChevronRight from 'react-icons/md/keyboard-arrow-right'
 import { mUp } from '../TeaserFront/mediaQueries'
 import {
   sansSerifMedium16,

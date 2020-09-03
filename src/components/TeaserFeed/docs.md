@@ -32,8 +32,8 @@ Only using title is great for compact feeds:
     {type: 'text', value: ', 31.12.2017'},
   ]}
   bar={<span>
-    <BookmarkIcon size={22} style={{ margin: '0 5px 0 -4px'}} />
-    <AudioIcon size={22} />
+    <Icons.Bookmark size={22} style={{ margin: '0 5px 0 -4px'}} />
+    <Icons.Audio size={22} />
   </span>}
 />
 ```
@@ -48,8 +48,8 @@ Only using title is great for compact feeds:
     {type: 'text', value: ', 31.12.2017'},
   ]}
   bar={<span>
-    <BookmarkIcon size={22} style={{ margin: '0 5px 0 -4px'}} />
-    <AudioIcon size={22} />
+    <Icons.Bookmark size={22} style={{ margin: '0 5px 0 -4px'}} />
+    <Icons.Audio size={22} />
   </span>}
 />
 ```

@@ -1,6 +1,6 @@
 import React from 'react'
 import { css } from 'glamor'
-import MdCheck from 'react-icons/lib/md/check'
+import MdCheck from 'react-icons/md/check'
 import colors from '../../../../theme/colors'
 import {
   sansSerifMedium16,
@@ -98,13 +98,8 @@ const styles = {
   })
 }
 
-export const Header = ({
-  t,
-  displayAuthor,
-  onClick
-}) => {
-
-  const { profilePicture, name, credential } = displayAuthor || {}
+export const Header = ({ t, displayAuthor, onClick }) => {
+  const { profilePicture, name, credential } = displayAuthor || {}
 
   return (
     <button {...styles.button} onClick={onClick}>

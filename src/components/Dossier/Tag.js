@@ -2,7 +2,7 @@ import React from 'react'
 import { css } from 'glamor'
 import { mUp } from '../TeaserFront/mediaQueries'
 import { sansSerifMedium14, sansSerifMedium20 } from '../Typography/styles'
-import FolderOpen from 'react-icons/lib/fa/folder-open'
+import { FaFolderOpen } from 'react-icons/fa'
 
 const styles = {
   tag: css({
@@ -22,7 +22,7 @@ const styles = {
 const Tag = ({ children, attributes }) => {
   return (
     <div {...attributes} {...styles.tag}>
-      <FolderOpen {...styles.icon} size={24} />
+      <FaFolderOpen {...styles.icon} size={24} />
       {children}
     </div>
   )

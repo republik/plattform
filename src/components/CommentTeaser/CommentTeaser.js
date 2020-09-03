@@ -2,8 +2,6 @@ import React, { Fragment } from 'react'
 import { css } from 'glamor'
 import get from 'lodash/get'
 
-import NewPage from 'react-icons/lib/md/open-in-new'
-
 import colors from '../../theme/colors'
 import { mUp } from '../../theme/mediaQueries'
 import { ellipsize, underline } from '../../lib/styleMixins'
@@ -18,6 +16,7 @@ import {
   DiscussionContext,
   formatTimeRelative
 } from '../Discussion/DiscussionContext'
+import { NewPage } from '../Icons'
 
 const styles = {
   root: css({

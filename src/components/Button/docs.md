@@ -168,7 +168,7 @@ To fit, e.g. in a header, it's permissible to set an explicit height.
   {...merge(plainButtonRule,
     { backgroundColor: '#000', borderRadius: '50%', width: 50, height: 50 }
   )}>
-  <AudioIcon fill='#fff' />
+  <Icons.Audio fill='#fff' />
 </button>
 ```
 
