@@ -242,7 +242,11 @@ const getBuckets = async ({ now }, context) => {
                 user.autoPay = await autoPaySuggest(user.membershipId, pgdb)
                 if (!user.autoPay) {
                   user.membershipAutoPay = false
-                  setAutoPayToFalse(user, pgdb)
+                  setAutoPayToFalse({
+                    user,
+                    membershipId: user.membershipId,
+                    pgdb
+                  })
                 }
               }
 
@@ -297,13 +301,13 @@ module.exports = {
   run
 }
 
-async function setAutoPayToFalse (user, pgdb) {
-  const message = `setAutoPayToFalse: \`autoPay\` was set to \`false\` due to missing default credit card\n{ADMIN_FRONTEND_BASE_URL}/users/${user.id}`
-  console.warn(message)
+async function setAutoPayToFalse ({ user, membershipId, pgdb }) {
+  const message = `setAutoPayToFalse (membershipId: ${membershipId}) \`autoPay\` was set to \`false\` due to AutoPay.suggest missing data (e.g. no pledge or default credit card)\n{ADMIN_FRONTEND_BASE_URL}/users/${user.id}`
+  console.log(message)
   await publishMonitor(user, message)
 
-  await pgdb.public.memberships.update({
-    userId: user.id
+  await pgdb.public.memberships.updateOne({
+    id: membershipId
   }, {
     autoPay: false
   })
