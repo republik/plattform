@@ -15,7 +15,7 @@ const {
 const { suggest: autoPaySuggest } = require('../../lib/AutoPay')
 const createCache = require('../../lib/cache')
 const { getLastEndDate } = require('../../lib/utils')
-const getStripeClients = require('../../lib/payments/stripe/clients')
+const { getPaymentSources } = require('../../lib/paymentSource')
 
 const { DISABLE_RESOLVER_USER_CACHE } = process.env
 const QUERY_CACHE_TTL_SECONDS = 60 * 60 * 24 // 1 day
@@ -27,33 +27,6 @@ const createMembershipCache = (user, prop, context) =>
     ttl: QUERY_CACHE_TTL_SECONDS,
     disabled: DISABLE_RESOLVER_USER_CACHE
   }, context)
-
-const getPaymentSources = async (user, pgdb) => {
-  const { platform } = await getStripeClients(pgdb)
-  if (!platform) {
-    return []
-  }
-  const customer = await pgdb.public.stripeCustomers.findOne({
-    userId: user.id,
-    companyId: platform.company.id
-  })
-  if (!customer) {
-    return []
-  }
-  const stripeCustomer = await platform.stripe.customers.retrieve(customer.id)
-  if (!stripeCustomer || !stripeCustomer.sources || !stripeCustomer.sources.data) {
-    return []
-  }
-  return stripeCustomer.sources.data.map(source => ({
-    id: source.id,
-    isDefault: source.id === stripeCustomer.default_source,
-    status: source.status.toUpperCase(),
-    brand: source.card.brand,
-    last4: source.card.last4,
-    expMonth: source.card.exp_month,
-    expYear: source.card.exp_year
-  }))
-}
 
 module.exports = {
   async memberships (user, args, { pgdb, user: me }) {
@@ -193,7 +166,7 @@ module.exports = {
       Roles.userIsMeOrInRoles(user, me, ['admin']) ||
       isFieldExposed(user, 'paymentSources')
     ) {
-      return getPaymentSources(user, pgdb)
+      return getPaymentSources(user.id, pgdb)
     }
     return []
   },

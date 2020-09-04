@@ -3,6 +3,7 @@ const moment = require('moment')
 const Promise = require('bluebird')
 
 const { transformUser } = require('@orbiting/backend-modules-auth')
+const { publishMonitor } = require('@orbiting/backend-modules-republik/lib/slack')
 
 const {
   prolongBeforeDate: getProlongBeforeDate
@@ -237,8 +238,16 @@ const getBuckets = async ({ now }, context) => {
           buckets,
           async bucket => {
             if (prolongBeforeDate.isBetween(bucket.endDate.min, bucket.endDate.max)) {
-              if (!user.autoPay) {
+              if (user.membershipAutoPay && user.autoPay === undefined) {
                 user.autoPay = await autoPaySuggest(user.membershipId, pgdb)
+                if (!user.autoPay) {
+                  user.membershipAutoPay = false
+                  setAutoPayToFalse({
+                    user,
+                    membershipId: user.membershipId,
+                    pgdb
+                  })
+                }
               }
 
               if (bucket.predicate(user)) {
@@ -290,4 +299,16 @@ const run = async (args, context) => {
 module.exports = {
   DAYS_BEFORE_END_DATE,
   run
+}
+
+async function setAutoPayToFalse ({ user, membershipId, pgdb }) {
+  const message = `setAutoPayToFalse (membershipId: ${membershipId}) \`autoPay\` was set to \`false\` due to AutoPay.suggest missing data (e.g. no pledge or default credit card)\n{ADMIN_FRONTEND_BASE_URL}/users/${user.id}`
+  console.log(message)
+  await publishMonitor(user, message)
+
+  await pgdb.public.memberships.updateOne({
+    id: membershipId
+  }, {
+    autoPay: false
+  })
 }
