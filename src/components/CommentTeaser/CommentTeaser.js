@@ -16,7 +16,7 @@ import {
   DiscussionContext,
   formatTimeRelative
 } from '../Discussion/DiscussionContext'
-import { NewPage } from '../Icons'
+import { NewPageIcon } from '../Icons'
 
 const styles = {
   root: css({
@@ -201,7 +201,10 @@ export const CommentTeaser = ({
                       {inQuotes(discussion.title)}
                       {newPage && (
                         <span {...styles.icon}>
-                          <NewPage size={ICON_SIZE} fill={colors.disabled} />
+                          <NewPageIcon
+                            size={ICON_SIZE}
+                            fill={colors.disabled}
+                          />
                         </span>
                       )}
                     </a>

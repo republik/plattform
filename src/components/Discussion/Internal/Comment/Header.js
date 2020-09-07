@@ -1,7 +1,6 @@
 import React from 'react'
 import { css } from 'glamor'
-import MdCheck from 'react-icons/md/check'
-import MoreIcon from 'react-icons/md/more-vert'
+import { CheckIcon, MoreIcon } from '../../../Icons'
 import colors from '../../../../theme/colors'
 import {
   sansSerifMedium16,
@@ -236,7 +235,7 @@ export const Header = ({ t, comment, menu, isExpanded, onToggle }) => {
               >
                 {credential.description}
               </div>
-              {credential.verified && <MdCheck {...styles.verifiedCheck} />}
+              {credential.verified && <CheckIcon {...styles.verifiedCheck} />}
             </div>
           )}
           {credential && <div style={{ whiteSpace: 'pre' }}>{' · '}</div>}

@@ -7,7 +7,7 @@ import { default as Button } from '../../Button'
 import { SecondaryAction } from '../Internal/Composer'
 import { CommentComposer } from './CommentComposer'
 import { DiscussionContext } from '../DiscussionContext'
-import { Markdown, Mood } from '../../Icons'
+import { MarkdownIcon, MoodIcon } from '../../Icons'
 
 export { CommentComposerPlaceholder } from './CommentComposerPlaceholder'
 
@@ -69,10 +69,10 @@ export const CommentComposerPlayground = () => {
     composerSecondaryActions: (
       <>
         <SecondaryAction>
-          <Mood height={26} width={26} />
+          <MoodIcon height={26} width={26} />
         </SecondaryAction>
         <SecondaryAction>
-          <Markdown height={26} width={26} />
+          <MarkdownIcon height={26} width={26} />
         </SecondaryAction>
       </>
     )

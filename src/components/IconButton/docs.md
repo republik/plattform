@@ -17,16 +17,16 @@ A clickable component that accepts icons and lables and renders them. If href is
 <div style={{display:'flex'}}>
   <IconButton
     title="Lesezeichen"
-    Icon={Icons.Bookmark}
+    Icon={BookmarkIcon}
     onClick={() => alert("click")}
   />
   <IconButton
-    Icon={Icons.Bookmark}
+    Icon={BookmarkIcon}
     title="Lesezeichen"
     label="Lesezeichen"
   />
     <IconButton
-    Icon={Icons.Bookmark}
+    Icon={BookmarkIcon}
     title="Lesezeichen"
     label="Ihre Lesezeichen"
     labelShort="LZ"

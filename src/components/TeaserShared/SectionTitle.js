@@ -1,6 +1,6 @@
 import { css } from 'glamor'
 import React from 'react'
-import ChevronRight from 'react-icons/md/keyboard-arrow-right'
+import { ChevronRightIcon } from '../Icons'
 import { mUp } from '../TeaserFront/mediaQueries'
 import {
   sansSerifMedium16,
@@ -49,7 +49,7 @@ const SectionTitle = React.forwardRef(
     return href ? (
       <a href={href} onClick={onClick} {...style} {...styles.link} ref={ref}>
         {children}
-        {<ChevronRight />}
+        {<ChevronRightIcon />}
       </a>
     ) : (
       <span onClick={onClick} {...style} ref={ref}>

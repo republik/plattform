@@ -3,8 +3,7 @@ import PropTypes from 'prop-types'
 import React, { useRef, useState, useContext, useEffect, useMemo } from 'react'
 import scrollIntoView from 'scroll-into-view'
 
-import ChevronLeft from 'react-icons/md/keyboard-arrow-left'
-import ChevronRight from 'react-icons/md/keyboard-arrow-right'
+import { ChevronLeftIcon, ChevronRightIcon } from '../Icons'
 
 import { PADDING, TILE_MARGIN_RIGHT } from './constants'
 import CarouselContext from './Context'
@@ -136,7 +135,7 @@ const Row = ({ children }) => {
           })
         }}
       >
-        <ChevronLeft size={50} fill={context.color} />
+        <ChevronLeftIcon size={50} fill={context.color} />
       </button>
       <button
         {...styles.arrow}
@@ -165,7 +164,7 @@ const Row = ({ children }) => {
           })
         }}
       >
-        <ChevronRight size={50} fill={context.color} />
+        <ChevronRightIcon size={50} fill={context.color} />
       </button>
     </div>
   )

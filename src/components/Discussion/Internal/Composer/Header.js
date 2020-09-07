@@ -1,6 +1,6 @@
 import React from 'react'
 import { css } from 'glamor'
-import MdCheck from 'react-icons/md/check'
+import { CheckIcon } from '../../../Icons'
 import colors from '../../../../theme/colors'
 import {
   sansSerifMedium16,
@@ -121,7 +121,7 @@ export const Header = ({ t, displayAuthor, onClick }) => {
                       {credential.description}
                     </div>
                     {credential.verified && (
-                      <MdCheck {...styles.verifiedCheck} />
+                      <CheckIcon {...styles.verifiedCheck} />
                     )}
                   </div>
                 )

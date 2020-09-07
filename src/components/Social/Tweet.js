@@ -7,7 +7,7 @@ import { linkStyle, linkRule } from '../Typography'
 import { sansSerifRegular15, sansSerifRegular18 } from '../Typography/styles'
 import { Figure, FigureImage, FigureCaption } from '../Figure'
 import { Header } from './Header'
-import PlayIcon from 'react-icons/md/play-arrow'
+import { PlayIcon } from '../Icons'
 import { convertStyleToRem } from '../Typography/utils'
 
 const styles = {

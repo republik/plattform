@@ -5,7 +5,7 @@ import { mUp } from '../../theme/mediaQueries'
 import { Format } from './Format'
 import colors from '../../theme/colors'
 import CalloutMenu from '../Callout/CalloutMenu'
-import MoreIcon from 'react-icons/md/more-vert'
+import { MoreIcon } from '../Icons'
 
 const styles = {
   main: css({

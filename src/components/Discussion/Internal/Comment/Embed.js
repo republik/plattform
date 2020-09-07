@@ -10,7 +10,7 @@ import {
 } from '../../../Typography/styles'
 import { mUp } from '../../../../theme/mediaQueries'
 import { linkStyle } from '../../../Typography'
-import { Twitter } from '../../../Icons'
+import { TwitterIcon } from '../../../Icons'
 import { timeFormat } from '../../../../lib/timeFormat'
 
 const styles = {
@@ -158,7 +158,7 @@ export const Embed = ({ comment }) => {
         )}
         {embed.userScreenName && (
           <Interaction.P {...styles.paragraph}>
-            <Twitter size={19} fill={colors.disabled} />{' '}
+            <TwitterIcon size={19} fill={colors.disabled} />{' '}
             {dateFormat(new Date(embed.createdAt))}
           </Interaction.P>
         )}

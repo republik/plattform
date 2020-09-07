@@ -121,7 +121,10 @@ ReactDOM.render(
             {
               path: '/components/container',
               title: 'Container',
-              imports: require('./components/Grid'),
+              imports: {
+                MoreIcon: require('./components/Icons').MoreIcon,
+                ...require('./components/Grid')
+              },
               src: require('./components/Grid/docs.md')
             },
             {
@@ -142,7 +145,7 @@ ReactDOM.render(
                 css,
                 merge,
                 Button: require('./components/Button'),
-                Icons: require('./components/Icons'),
+                ...require('./components/Icons'),
                 plainButtonRule: require('./components/Button').plainButtonRule
               },
               src: require('./components/Button/docs.md')
@@ -152,7 +155,7 @@ ReactDOM.render(
               title: 'IconButton',
               imports: {
                 css,
-                Icons: require('./components/Icons'),
+                ...require('./components/Icons'),
                 IconButton: require('./components/IconButton')
               },
               src: require('./components/IconButton/docs.md')
@@ -241,7 +244,7 @@ ReactDOM.render(
               title: 'Callout',
               imports: {
                 CalloutMenu: require('./components/Callout/CalloutMenu'),
-                Icons: require('./components/Icons')
+                NotificationIcon: require('./components/Icons').NotificationIcon
               },
               src: require('./components/Callout/docs.md')
             }
@@ -263,7 +266,7 @@ ReactDOM.render(
                 FieldSet: require('./components/Form/FieldSet.js'),
                 MaskedInput: require('react-maskedinput'),
                 AutosizeInput: require('react-textarea-autosize'),
-                Icons: require('./components/Icons')
+                ...require('./components/Icons')
               },
               src: require('./components/Form/docs.md')
             },
@@ -306,7 +309,7 @@ ReactDOM.render(
                   Inner: require('./components/Form/VirtualDropdown.js').Inner
                 },
                 Autocomplete: require('./components/Form/Autocomplete.js'),
-                Icons: require('./components/Icons')
+                ...require('./components/Icons')
               },
               src: require('./components/Form/Dropdown.docs.md')
             },
@@ -433,6 +436,7 @@ ReactDOM.render(
               imports: {
                 css,
                 ...require('./components/Typography'),
+                ...require('./components/Icons'),
                 Tweet: require('./components/Social/Tweet'),
                 Center: require('./components/Center')
               },
@@ -456,6 +460,7 @@ ReactDOM.render(
               imports: {
                 css,
                 ...require('./components/Typography'),
+                ...require('./components/Icons'),
                 ...require('./components/Figure'),
                 Center: require('./components/Center'),
                 Fragment
@@ -515,7 +520,7 @@ ReactDOM.render(
                 t,
                 ...require('./components/Typography'),
                 ...require('./components/TeaserFeed'),
-                Icons: require('./components/Icons'),
+                ...require('./components/Icons'),
                 Center: require('./components/Center')
               },
               src: require('./components/TeaserFeed/docs.md')

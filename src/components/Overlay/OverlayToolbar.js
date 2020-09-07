@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { css } from 'glamor'
-import MdClose from 'react-icons/md/close'
+import { CloseIcon } from '../Icons'
 
 import colors from '../../theme/colors'
 import { mUp } from '../../theme/mediaQueries'
@@ -81,7 +81,7 @@ OverlayToolbar.propTypes = {
 
 export const OverlayToolbarClose = ({ onClick }) => (
   <button {...styles.close} onClick={onClick}>
-    <MdClose />
+    <CloseIcon />
   </button>
 )
 OverlayToolbarClose.propTypes = {

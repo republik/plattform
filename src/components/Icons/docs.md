@@ -5,6 +5,6 @@ The default Icon style is Material. For brands we rely on Ionic icons. There are
 
 ```react
 
-<IconButton Icon={Icons.Share} label="Share"/>
+<IconButton Icon={ShareIcon} label="Share"/>
 
 ```
