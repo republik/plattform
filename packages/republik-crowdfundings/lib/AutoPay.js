@@ -73,7 +73,7 @@ const suggest = async (membershipId, pgdb) => {
 
   const rewardId = membershipPledgeOption.packageOption.rewardId
 
-  const defaultPaymentSource = getDefaultPaymentSource(membership.userId, pgdb)
+  const defaultPaymentSource = await getDefaultPaymentSource(membership.userId, pgdb)
 
   if (!defaultPaymentSource) return false
 
