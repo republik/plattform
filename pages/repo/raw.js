@@ -59,8 +59,8 @@ const getDocumentContent = gql`
   }
 `
 
-// yeah I know that's ugly
-if (typeof window !== 'undefined') {
+// CodeMirror can only run in the browser
+if (process.browser) {
   require('../../components/editor/utils/codemirror-md')
   // TODO: collapse sections -> doesnt work grrrr!
   require('codemirror/addon/fold/foldcode')
