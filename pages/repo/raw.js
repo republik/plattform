@@ -18,7 +18,6 @@ import {
 } from '@project-r/styleguide'
 import { Router } from '../../lib/routes'
 import CircleIcon from 'react-icons/lib/md/lens'
-import gql from 'graphql-tag'
 import { Controlled as CodeMirror } from 'react-codemirror2'
 import {
   UncommittedChanges,
@@ -26,6 +25,7 @@ import {
   withUncommittedChangesMutation
 } from '../../components/VersionControl/UncommittedChanges'
 import BranchingNotice from '../../components/VersionControl/BranchingNotice'
+import { getCommitById } from './edit'
 
 const METADATA_SEPARATOR = '---\n\n'
 
@@ -47,32 +47,20 @@ const styles = css({
   }
 })
 
-const getDocumentContent = gql`
-  query getDocumentContent($repoId: ID!, $commitId: ID!) {
-    repo(id: $repoId) {
-      commit(id: $commitId) {
-        document {
-          content
-        }
-      }
-    }
-  }
-`
-
 // CodeMirror can only run in the browser
 if (process.browser) {
   require('../../components/editor/utils/codemirror-md')
-  // TODO: collapse sections -> doesnt work grrrr!
   require('codemirror/addon/fold/foldcode')
   require('codemirror/addon/fold/foldgutter')
-  require('codemirror/addon/fold/xml-fold') // we want to fold the sections
+  require('codemirror/addon/fold/xml-fold')
 }
 
 const hasOpenSections = md => {
   if (!md) return
-  return (
-    md.match(/<section>/g).length !== md.match(/<hr \/><\/section>/g).length
-  )
+  const openTags = md.match(/<section>/g)
+  const closeTags = md.match(/<hr \/><\/section>/g)
+  if (!openTags || !closeTags) return
+  return openTags.length !== closeTags.length
 }
 
 export default compose(
@@ -80,7 +68,7 @@ export default compose(
   withT,
   withAuthorization(['editor']),
   withMe,
-  graphql(getDocumentContent, {
+  graphql(getCommitById, {
     skip: ({ router }) =>
       router.query.commitId === 'new' || !router.query.commitId,
     options: ({ router }) => ({
@@ -101,8 +89,6 @@ export default compose(
 )(({ t, router, data, uncommittedChanges, hasUncommitedChanges }) => {
   const { repoId, commitId } = router.query
   const [store, setStore] = useState(undefined)
-  const storeRef = useRef()
-  storeRef.current = store
   const [meta, setMeta] = useState('')
   const [md, setMd] = useState('')
   const [mdast, setMdast] = useState(null)
@@ -110,7 +96,7 @@ export default compose(
 
   const resetMd = () => {
     const editorMdast =
-      storeRef.current.get('editorState') ||
+      store.get('editorState') ||
       (data &&
         data.repo &&
         data.repo.commit &&
@@ -124,12 +110,16 @@ export default compose(
   }
 
   const goToEditor = () => {
-    Router.pushRoute('repo/edit', { repoId: repoId.split('/'), commitId, ...(commitId === 'new' ? {template: mdast.meta.template} : {}) })
+    Router.pushRoute('repo/edit', {
+      repoId: repoId.split('/'),
+      commitId,
+      ...(commitId === 'new' ? { template: mdast.meta.template } : {})
+    })
   }
 
   const onSave = () => {
     if (mdast) {
-      storeRef.current.set('editorState', mdast)
+      store.set('editorState', mdast)
     }
     goToEditor()
   }
@@ -165,10 +155,16 @@ export default compose(
           </Frame.Nav>
         </Frame.Header.Section>
         <Frame.Header.Section align='right'>
+          <div style={{ padding: '35px 25px' }}>
+            <CircleIcon
+              style={{ color: validity ? colors.containerBg : colors.error }}
+            />
+          </div>
+        </Frame.Header.Section>
+        <Frame.Header.Section align='right'>
           <div
             {...css({
               width: 100,
-              marginRight: 25,
               [mediaQueries.mUp]: { width: 180 }
             })}
           >
@@ -194,13 +190,6 @@ export default compose(
             >
               {t('pages/raw/save')}
             </Button>
-          </div>
-        </Frame.Header.Section>
-        <Frame.Header.Section align='right'>
-          <div style={{ padding: '35px 25px' }}>
-            <CircleIcon
-              style={{ color: validity ? colors.primary : colors.error }}
-            />
           </div>
         </Frame.Header.Section>
         <Frame.Header.Section align='right'>

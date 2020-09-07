@@ -71,7 +71,7 @@ const commitMutation = gql`
   ${fragments.EditPageRepo}
 `
 
-const getCommitById = gql`
+export const getCommitById = gql`
   query getCommitById($repoId: ID!, $commitId: ID!) {
     repo(id: $repoId) {
       ...EditPageRepo
@@ -760,11 +760,12 @@ export class EditorPage extends Component {
           >
             {!readOnly && (
               <Sidebar.Tab tabId='edit' label='Editieren'>
-                {!(isNew && !hasUncommittedChanges) && (
-                  <Link route='repo/raw' params={{ repoId, commitId }}>
-                    <a {...linkRule}>{t('pages/raw/title')}</a>
-                  </Link>
-                )}
+                <Link
+                  route='repo/raw'
+                  params={{ repoId: repoId.split('/'), commitId }}
+                >
+                  <a {...linkRule}>{t('pages/raw/title')}</a>
+                </Link>
                 <CharCount value={editorState} />
                 {!!this.editor && (
                   <EditorUI
