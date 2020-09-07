@@ -1,5 +1,3 @@
-## Icons
-
 - `fill`: fill for icon, default inherit
 - `size`: size, default is "1em"
 
@@ -12,7 +10,7 @@ The default Icon style is Material. For brands we rely on Ionic icons. There are
 <Interaction.H3>Article</Interaction.H3>
 <IconButton Icon={PdfIcon} label="Pdf" />
 <IconButton Icon={ShareIcon} label="Share"/>
-<IconButton Icon={AudioIcon} label="Adio" />
+<IconButton Icon={AudioIcon} label="Audio" />
 <IconButton Icon={BookmarkIcon} label="Bookmark" />
 <IconButton Icon={NotificationIcon} label="Play" />
 <IconButton Icon={GalleryIcon} label="Gallery" />
@@ -52,6 +50,6 @@ The default Icon style is Material. For brands we rely on Ionic icons. There are
 <Interaction.H3>Social Media</Interaction.H3>
 <IconButton Icon={TwitterIcon} label="Twitter" />
 <IconButton Icon={VimeoIcon} label="Vimeo" />
-<IconButton Icon={YoutubeIcon} label="Play" />
+<IconButton Icon={YoutubeIcon} label="Youtube" />
 </div>
 ```
