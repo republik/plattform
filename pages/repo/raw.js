@@ -124,7 +124,7 @@ export default compose(
   }
 
   const goToEditor = () => {
-    Router.pushRoute('repo/edit', { repoId, commitId })
+    Router.pushRoute('repo/edit', { repoId: repoId.split('/'), commitId, ...(commitId === 'new' ? {template: mdast.meta.template} : {}) })
   }
 
   const onSave = () => {
