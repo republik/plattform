@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect } from 'react'
 import Frame from '../../components/Frame'
 import RepoNav from '../../components/Repo/Nav'
 import initLocalStore from '../../lib/utils/localStorage'
@@ -6,7 +6,7 @@ import { withRouter } from 'next/router'
 import withT from '../../lib/withT'
 import withAuthorization from '../../components/Auth/withAuthorization'
 import withMe from '../../lib/withMe'
-import { compose, graphql } from 'react-apollo'
+import { compose } from 'react-apollo'
 import { stringify, parse } from '@orbiting/remark-preset'
 import { css } from 'glamor'
 import {
@@ -25,7 +25,6 @@ import {
   withUncommittedChangesMutation
 } from '../../components/VersionControl/UncommittedChanges'
 import BranchingNotice from '../../components/VersionControl/BranchingNotice'
-import { getCommitById } from './edit'
 
 const METADATA_SEPARATOR = '---\n\n'
 
@@ -68,16 +67,6 @@ export default compose(
   withT,
   withAuthorization(['editor']),
   withMe,
-  graphql(getCommitById, {
-    skip: ({ router }) =>
-      router.query.commitId === 'new' || !router.query.commitId,
-    options: ({ router }) => ({
-      variables: {
-        repoId: router.query.repoId,
-        commitId: router.query.commitId
-      }
-    })
-  }),
   withUncommitedChanges({
     options: ({ router }) => ({
       variables: {
@@ -86,7 +75,7 @@ export default compose(
     })
   }),
   withUncommittedChangesMutation
-)(({ t, router, data, uncommittedChanges, hasUncommitedChanges }) => {
+)(({ t, router, uncommittedChanges }) => {
   const { repoId, commitId } = router.query
   const [store, setStore] = useState(undefined)
   const [meta, setMeta] = useState('')
@@ -95,13 +84,7 @@ export default compose(
   const [validity, setValidity] = useState(true)
 
   const resetMd = () => {
-    const editorMdast =
-      store.get('editorState') ||
-      (data &&
-        data.repo &&
-        data.repo.commit &&
-        data.repo.commit.document &&
-        data.repo.commit.document.content)
+    const editorMdast = store.get('editorState')
     if (!editorMdast) return
     const editorMd = stringify(editorMdast)
     const splitMd = editorMd.split(METADATA_SEPARATOR)
@@ -127,8 +110,6 @@ export default compose(
   useEffect(() => {
     const storeKey = [repoId, commitId].join('/')
     setStore(initLocalStore(storeKey))
-    hasUncommitedChanges({ repoId, action: 'create' })
-    return () => hasUncommitedChanges({ repoId, action: 'delete' })
   }, [repoId, commitId])
 
   useEffect(() => {

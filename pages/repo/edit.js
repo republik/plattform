@@ -42,7 +42,7 @@ import { getSchema } from '../../components/Templates'
 import { API_UNCOMMITTED_CHANGES_URL } from '../../lib/settings'
 import * as fragments from '../../lib/graphql/fragments'
 
-import { ColorContext, colors, linkRule } from '@project-r/styleguide'
+import { ColorContext, colors, linkRule, Button } from '@project-r/styleguide'
 import SettingsIcon from 'react-icons/lib/fa/cogs'
 
 import createDebug from 'debug'
@@ -71,7 +71,7 @@ const commitMutation = gql`
   ${fragments.EditPageRepo}
 `
 
-export const getCommitById = gql`
+const getCommitById = gql`
   query getCommitById($repoId: ID!, $commitId: ID!) {
     repo(id: $repoId) {
       ...EditPageRepo
@@ -125,6 +125,7 @@ export class EditorPage extends Component {
     }
     this.changeHandler = this.changeHandler.bind(this)
     this.commitHandler = this.commitHandler.bind(this)
+    this.goToRaw = this.goToRaw.bind(this)
     this.documentChangeHandler = debounce(
       this.documentChangeHandler.bind(this),
       500
@@ -620,6 +621,18 @@ export class EditorPage extends Component {
       })
   }
 
+  goToRaw() {
+    const {
+      router: {
+        query: { repoId, commitId }
+      }
+    } = this.props
+    const { editorState } = this.state
+    this.beginChanges()
+    this.store.set('editorState', this.editor.serializer.serialize(editorState))
+    Router.pushRoute('repo/raw', { repoId: repoId.split('/'), commitId })
+  }
+
   render() {
     const { router, data = {}, uncommittedChanges, t } = this.props
     const { repoId, commitId } = router.query
@@ -760,12 +773,9 @@ export class EditorPage extends Component {
           >
             {!readOnly && (
               <Sidebar.Tab tabId='edit' label='Editieren'>
-                <Link
-                  route='repo/raw'
-                  params={{ repoId: repoId.split('/'), commitId }}
-                >
-                  <a {...linkRule}>{t('pages/raw/title')}</a>
-                </Link>
+                <Button onClick={this.goToRaw} {...linkRule}>
+                  {t('pages/raw/title')}
+                </Button>
                 <CharCount value={editorState} />
                 {!!this.editor && (
                   <EditorUI
@@ -803,7 +813,6 @@ export default compose(
     skip: ({ router }) =>
       router.query.commitId === 'new' || !router.query.commitId,
     options: ({ router }) => ({
-      fetchPolicy: 'network-only',
       variables: {
         repoId: router.query.repoId,
         commitId: router.query.commitId
