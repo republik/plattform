@@ -422,7 +422,8 @@ export class EditorPage extends Component {
       debug('loadState', 'loadSchema', template)
       this.setState(
         {
-          schema: getSchema(template)
+          schema: getSchema(template),
+          template
         },
         () => {
           this.loadState(this.props)
@@ -627,9 +628,18 @@ export class EditorPage extends Component {
         query: { repoId, commitId }
       }
     } = this.props
-    const { editorState } = this.state
+    const { editorState, template } = this.state
+    const serializedState = this.editor.serializer.serialize(editorState)
+    const stateWithTemplate = {
+      ...serializedState,
+      meta: {
+        ...serializedState.meta,
+        template:
+          (serializedState.meta && serializedState.meta.template) || template
+      }
+    }
     this.beginChanges()
-    this.store.set('editorState', this.editor.serializer.serialize(editorState))
+    this.store.set('editorState', stateWithTemplate)
     Router.pushRoute('repo/raw', { repoId: repoId.split('/'), commitId })
   }
 

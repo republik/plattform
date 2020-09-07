@@ -14,7 +14,8 @@ import {
   Button,
   mediaQueries,
   colors,
-  fontFamilies
+  fontFamilies,
+  Checkbox
 } from '@project-r/styleguide'
 import { Router } from '../../lib/routes'
 import CircleIcon from 'react-icons/lib/md/lens'
@@ -25,8 +26,6 @@ import {
   withUncommittedChangesMutation
 } from '../../components/VersionControl/UncommittedChanges'
 import BranchingNotice from '../../components/VersionControl/BranchingNotice'
-
-const METADATA_SEPARATOR = '---\n\n'
 
 const styles = css({
   background: colors.secondaryBg,
@@ -78,32 +77,29 @@ export default compose(
 )(({ t, router, uncommittedChanges }) => {
   const { repoId, commitId } = router.query
   const [store, setStore] = useState(undefined)
-  const [meta, setMeta] = useState('')
   const [md, setMd] = useState('')
-  const [mdast, setMdast] = useState(null)
+  const [meta, setMeta] = useState(undefined)
+  const [editMeta, setEditMeta] = useState(false)
   const [validity, setValidity] = useState(true)
-
-  const resetMd = () => {
-    const editorMdast = store.get('editorState')
-    if (!editorMdast) return
-    const editorMd = stringify(editorMdast)
-    const splitMd = editorMd.split(METADATA_SEPARATOR)
-    setMeta(splitMd[0] + METADATA_SEPARATOR)
-    setMd(splitMd[1])
-  }
 
   const goToEditor = () => {
     Router.pushRoute('repo/edit', {
       repoId: repoId.split('/'),
       commitId,
-      ...(commitId === 'new' ? { template: mdast.meta.template } : {})
+      ...(commitId === 'new'
+        ? { template: store.get('editorState').meta.template }
+        : {})
     })
   }
 
   const onSave = () => {
-    if (mdast) {
-      store.set('editorState', mdast)
-    }
+    const editedMdast = editMeta
+      ? parse(md)
+      : {
+          ...parse(md),
+          meta
+        }
+    store.set('editorState', editedMdast)
     goToEditor()
   }
 
@@ -114,17 +110,13 @@ export default compose(
 
   useEffect(() => {
     if (!store) return
-    resetMd()
+    setMeta(store.get('editorState').meta)
+    const editorMdast = { ...store.get('editorState'), meta: {} }
+    setMd(stringify(editorMdast))
   }, [store])
 
   useEffect(() => {
-    if (hasOpenSections(md)) {
-      setValidity(false)
-    } else {
-      const newMdast = parse(meta + md)
-      setMdast(newMdast)
-      setValidity(true)
-    }
+    setValidity(!hasOpenSections(md))
   }, [md])
 
   return (
@@ -185,6 +177,12 @@ export default compose(
       </Frame.Header>
       <Frame.Body raw>
         <div {...styles}>
+          <Checkbox
+            checked={editMeta}
+            onChange={() => !editMeta && setEditMeta(true)}
+          >
+            Metadaten editieren
+          </Checkbox>
           <CodeMirror
             value={md}
             options={{
