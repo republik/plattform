@@ -33,7 +33,7 @@ import Loader from '../../components/Loader'
 import CharCount from '../../components/CharCount'
 import withT from '../../lib/withT'
 import withMe from '../../lib/withMe'
-import { Link, Router } from '../../lib/routes'
+import { Router } from '../../lib/routes'
 
 import { errorToString } from '../../lib/utils/errors'
 import initLocalStore from '../../lib/utils/localStorage'
@@ -42,7 +42,7 @@ import { getSchema } from '../../components/Templates'
 import { API_UNCOMMITTED_CHANGES_URL } from '../../lib/settings'
 import * as fragments from '../../lib/graphql/fragments'
 
-import { ColorContext, colors, linkRule, Button } from '@project-r/styleguide'
+import { ColorContext, colors, plainButtonRule } from '@project-r/styleguide'
 import SettingsIcon from 'react-icons/lib/fa/cogs'
 
 import createDebug from 'debug'
@@ -773,9 +773,13 @@ export class EditorPage extends Component {
           >
             {!readOnly && (
               <Sidebar.Tab tabId='edit' label='Editieren'>
-                <Button onClick={this.goToRaw} {...linkRule}>
+                <button
+                  onClick={this.goToRaw}
+                  {...plainButtonRule}
+                  style={{ color: colors.primary }}
+                >
                   {t('pages/raw/title')}
-                </Button>
+                </button>
                 <CharCount value={editorState} />
                 {!!this.editor && (
                   <EditorUI
