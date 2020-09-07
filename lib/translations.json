@@ -1,5 +1,5 @@
 {
-  "updated": "2020-09-02T15:57:01.117Z",
+  "updated": "2020-09-07T08:32:47.385Z",
   "title": "live",
   "data": [
     {
@@ -1392,15 +1392,15 @@
     },
     {
       "key": "pages/raw/save",
-      "value": "Speichern"
+      "value": "Übernehmen"
     },
     {
       "key": "pages/raw/cancel",
-      "value": "Zurück"
+      "value": "Abbrechen"
     },
     {
       "key": "pages/raw/title",
-      "value": "Raw Modus"
+      "value": "Quellcode-Editor"
     }
   ]
 }
