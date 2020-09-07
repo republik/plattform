@@ -29,7 +29,8 @@ const getPaymentSources = async (userId, pgdb) => {
 }
 
 exports.getPaymentSources = getPaymentSources
-exports.getDefaultPaymentSource = (userId, pgdb) => getPaymentSources(userId, pgdb)
-  .then(paymentSources => paymentSources.find(
-    s => s.isDefault
-  ))
+
+exports.getDefaultPaymentSource = async (userId, pgdb) => {
+  const paymentSources = await getPaymentSources(userId, pgdb)
+  return paymentSources.find(s => s.isDefault)
+}
