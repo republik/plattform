@@ -195,7 +195,7 @@ export default compose(
         <div {...styles}>
           <div className='Checkbox' style={{ opacity: editMeta ? 0.5 : 1 }}>
             <Checkbox checked={editMeta} onChange={onEditMeta}>
-              Metadaten editieren
+              {t('pages/raw/metadata')}
             </Checkbox>
           </div>
           <CodeMirror

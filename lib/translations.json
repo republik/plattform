@@ -1,5 +1,5 @@
 {
-  "updated": "2020-09-07T08:32:47.385Z",
+  "updated": "2020-09-07T16:09:34.124Z",
   "title": "live",
   "data": [
     {
@@ -1401,6 +1401,10 @@
     {
       "key": "pages/raw/title",
       "value": "Quellcode-Editor"
+    },
+    {
+      "key": "pages/raw/metadata",
+      "value": "Metadaten bearbeiten"
     }
   ]
 }
