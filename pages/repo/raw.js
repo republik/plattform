@@ -29,7 +29,13 @@ import BranchingNotice from '../../components/VersionControl/BranchingNotice'
 
 const styles = css({
   background: colors.secondaryBg,
+  minHeight: 'calc(100vh - 80px)',
   padding: 10,
+  '& .Checkbox': {
+    position: 'absolute',
+    left: 'calc(50% + 415px)',
+    top: 95
+  },
   '& .CodeMirror': {
     height: 'auto',
     width: 800,
@@ -101,6 +107,16 @@ export default compose(
         }
     store.set('editorState', editedMdast)
     goToEditor()
+  }
+
+  const onEditMeta = () => {
+    if (editMeta) return
+    setEditMeta(true)
+    const contentAndMeta = stringify({
+      ...parse(md),
+      meta
+    })
+    setMd(contentAndMeta)
   }
 
   useEffect(() => {
@@ -177,12 +193,11 @@ export default compose(
       </Frame.Header>
       <Frame.Body raw>
         <div {...styles}>
-          <Checkbox
-            checked={editMeta}
-            onChange={() => !editMeta && setEditMeta(true)}
-          >
-            Metadaten editieren
-          </Checkbox>
+          <div className='Checkbox' style={{ opacity: editMeta ? 0.5 : 1 }}>
+            <Checkbox checked={editMeta} onChange={onEditMeta}>
+              Metadaten editieren
+            </Checkbox>
+          </div>
           <CodeMirror
             value={md}
             options={{
