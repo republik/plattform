@@ -306,9 +306,10 @@ async function setAutoPayToFalse ({ user, membershipId, pgdb }) {
   console.log(message)
   await publishMonitor(user, message)
 
-  await pgdb.public.memberships.updateOne({
-    id: membershipId
-  }, {
-    autoPay: false
-  })
+  // TODO PS: un-comment the folloing code (this is not run, as it is not tested).
+  // await pgdb.public.memberships.updateOne({
+  //   id: membershipId
+  // }, {
+  //   autoPay: false
+  // })
 }
