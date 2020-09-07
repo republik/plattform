@@ -24,7 +24,6 @@ import {
   MdChevronRight,
   MdFullscreen,
   MdFullscreenExit,
-  MdFolderOpen,
   MdNotifications
 } from 'react-icons/md'
 import { IoLogoTwitter, IoLogoYoutube, IoLogoVimeo } from 'react-icons/io'

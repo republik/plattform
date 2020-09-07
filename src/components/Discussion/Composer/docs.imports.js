@@ -69,10 +69,10 @@ export const CommentComposerPlayground = () => {
     composerSecondaryActions: (
       <>
         <SecondaryAction>
-          <MoodIcon height={26} width={26} />
+          <MoodIcon size={26} />
         </SecondaryAction>
         <SecondaryAction>
-          <MarkdownIcon height={26} width={26} />
+          <MarkdownIcon size={26} />
         </SecondaryAction>
       </>
     )
