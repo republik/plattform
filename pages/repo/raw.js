@@ -224,7 +224,11 @@ export default compose(
               lineWrapping: true,
               smartIndent: false,
               viewportMargin: Infinity,
-              foldGutter: true
+              foldGutter: true,
+              gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
+              foldOptions: process.browser && {
+                rangeFinder: require('codemirror').fold.xml
+              }
             }}
             onBeforeChange={(editor, data, value) => {
               setMd(value)
