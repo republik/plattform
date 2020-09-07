@@ -1,11 +1,10 @@
 import React from 'react'
 import colors from '../../../theme/colors'
 
-// Based on MdExitToApp
 const Icon = ({ size = '1em', fill = colors.text, ...props }) => (
   <svg width={size} height={size} viewBox='0 0 24 24' {...props}>
     <path
-      d='M8.41 9.41L7 8L12 3L17 8L15.59 9.41L13 6.83V16.5H11V6.83L8.41 9.41ZM21 20V11H19V20H5V11H3L3 20C3 21.1 3.9 22 5 22H19C19.5304 22 20.0391 21.7893 20.4142 21.4142C20.7893 21.0391 21 20.5304 21 20Z'
+      d='M9,22A1,1 0 0,1 8,21V18H4A2,2 0 0,1 2,16V4C2,2.89 2.9,2 4,2H20A2,2 0 0,1 22,4V16A2,2 0 0,1 20,18H13.9L10.2,21.71C10,21.9 9.75,22 9.5,22V22H9M10,16V19.08L13.08,16H20V4H4V16H10Z'
       fill={fill}
     />
   </svg>
