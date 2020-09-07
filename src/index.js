@@ -99,8 +99,10 @@ ReactDOM.render(
               path: '/icons',
               title: 'Icons',
               imports: {
+                css,
                 ...require('./components/Icons'),
-                ...require('./components/IconButton')
+                ...require('./components/Typography'),
+                IconButton: require('./components/IconButton')
               },
               src: require('./components/Icons/docs.md')
             }

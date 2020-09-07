@@ -28,6 +28,7 @@ import {
   MdNotifications
 } from 'react-icons/md'
 import { IoLogoTwitter, IoLogoYoutube, IoLogoVimeo } from 'react-icons/io'
+import { FaFolderOpen } from 'react-icons/fa'
 import ShareIOS from './CustomIcons/ShareIOS'
 import CustomMarkdownIcon from './CustomIcons/MarkdownIcon'
 
@@ -61,5 +62,5 @@ export const ChevronLeftIcon = MdChevronLeft
 export const ChevronRightIcon = MdChevronRight
 export const FullscreenIcon = MdFullscreen
 export const FullscreenExitIcon = MdFullscreenExit
-export const FolderOpenIcon = MdFolderOpen
+export const FolderOpenIcon = FaFolderOpen
 export const NotificationIcon = MdNotifications

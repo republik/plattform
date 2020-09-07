@@ -15,7 +15,8 @@ const styles = {
     }
   }),
   icon: css({
-    marginRight: '8px'
+    marginRight: '8px',
+    verticalAlign: 'middle'
   })
 }
 
