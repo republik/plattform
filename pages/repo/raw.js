@@ -34,12 +34,12 @@ const styles = css({
   minHeight: 'calc(100vh - 80px)',
   padding: 10,
   '& .Checkbox': {
-    position: 'absolute',
+    position: 'fixed',
     left: 'calc(50% + 415px)',
     top: 95
   },
   '& .Info': {
-    position: 'absolute',
+    position: 'fixed',
     right: 25,
     top: 95
   },

@@ -1,6 +1,6 @@
 # Quellcode-Editor
 
-Das Quellcode-Editor es durch einen Link in der Sidebar von normalen Editor zugänglich: 
+Das Quellcode-Editor ist durch einen Link im Sidebar von normalen Editor zugänglich: 
 > ![](../public/static/docs/templating/quellcode-link.png)
 
 Es gibt 2 wichtige Usecases dafür:
