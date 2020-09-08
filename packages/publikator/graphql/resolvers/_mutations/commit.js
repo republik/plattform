@@ -67,11 +67,11 @@ const extractImage = async (url, images) => {
   return url
 }
 
-const isFromRepo = (url, repoId) =>
+const isFromDifferentRepo = (url, repoId) =>
   url && url.startsWith(`${ASSETS_SERVER_BASE_URL}/github/`) && !url.includes(repoId)
 
 const importFromRepo = async (url, images, repoId) => {
-  if (isFromRepo(url, repoId)) {
+  if (isFromDifferentRepo(url, repoId)) {
     try {
       const blob = await fetch(url).then(result => result.buffer())
       const { image, newUrl } = await generateImageData(blob)
