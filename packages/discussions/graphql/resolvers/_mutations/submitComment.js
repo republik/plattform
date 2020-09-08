@@ -110,14 +110,16 @@ module.exports = async (_, args, context) => {
         userId,
         discussion,
         transaction,
-        t
+        t,
+        loaders
       })
     } else {
       ensureAnonymousDifferentiator({
         transaction,
         userId,
         discussion,
-        t
+        t,
+        loaders
       })
     }
 

@@ -1,7 +1,7 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
 const { setDiscussionPreferences } = require('../../../lib/discussionPreferences')
 
-module.exports = async (_, args, { pgdb, user, t }) => {
+module.exports = async (_, args, { pgdb, user, t, loaders }) => {
   Roles.ensureUserHasRole(user, 'member')
 
   const {
@@ -23,7 +23,8 @@ module.exports = async (_, args, { pgdb, user, t }) => {
       userId: user.id,
       discussion,
       transaction,
-      t
+      t,
+      loaders
     })
 
     await transaction.transactionCommit()

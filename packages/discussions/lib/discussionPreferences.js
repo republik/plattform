@@ -6,7 +6,8 @@ const setDiscussionPreferences = async ({
   userId,
   discussion,
   transaction,
-  t
+  t,
+  loaders
 }) => {
   const {
     credential: credentialDescription
@@ -80,14 +81,21 @@ const setDiscussionPreferences = async ({
   if (existingDP) {
     await transaction.public.discussionPreferences.updateOne(findQuery, updateQuery, options)
   } else {
-    await transaction.public.discussionPreferences.insert(updateQuery, options)
+    await Promise.all([
+      transaction.public.discussionPreferences.insert(updateQuery, options),
+      loaders.Discussion.Commenter.discussionPreferences.clear({
+        userId: userId,
+        discussionId: discussion.id
+      })
+    ])
   }
 
   await ensureAnonymousDifferentiator({
     transaction,
     userId,
     discussion,
-    t
+    t,
+    loaders
   })
 }
 
@@ -95,7 +103,8 @@ const ensureAnonymousDifferentiator = async ({
   transaction,
   userId,
   discussion,
-  t
+  t,
+  loaders
 }) => {
   // const discussionId = discussion.id
   const discussionId = discussion.id
@@ -129,7 +138,8 @@ const ensureAnonymousDifferentiator = async ({
       userId,
       discussion,
       transaction,
-      t
+      t,
+      loaders
     })
 
     return
@@ -143,10 +153,17 @@ const ensureAnonymousDifferentiator = async ({
     discussionId: discussion.id,
     'anonymousDifferentiator !=': null
   }, { orderBy: { anonymousDifferentiator: 'DESC' } })
+  const anonymousDifferentiator = lastUsed ? lastUsed.anonymousDifferentiator + 1 : 1
 
-  transaction.public.discussionPreferences.updateOne(findQuery, {
-    anonymousDifferentiator: lastUsed ? lastUsed.anonymousDifferentiator + 1 : 1
-  })
+  await Promise.all([
+    transaction.public.discussionPreferences.updateOne(findQuery, {
+      anonymousDifferentiator
+    }),
+    loaders.Discussion.Commenter.discussionPreferences.clear({
+      userId: userId,
+      discussionId: discussionId
+    })
+  ])
 }
 
 module.exports = {
