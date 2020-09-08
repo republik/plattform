@@ -15,10 +15,12 @@ import {
   mediaQueries,
   colors,
   fontFamilies,
-  Checkbox
+  Checkbox,
+  linkRule
 } from '@project-r/styleguide'
 import { Router } from '../../lib/routes'
 import CircleIcon from 'react-icons/lib/md/lens'
+import InfoIcon from 'react-icons/lib/md/info-outline'
 import { Controlled as CodeMirror } from 'react-codemirror2'
 import {
   UncommittedChanges,
@@ -34,6 +36,11 @@ const styles = css({
   '& .Checkbox': {
     position: 'absolute',
     left: 'calc(50% + 415px)',
+    top: 95
+  },
+  '& .Info': {
+    position: 'absolute',
+    right: 25,
     top: 95
   },
   '& .CodeMirror': {
@@ -197,6 +204,15 @@ export default compose(
             <Checkbox checked={editMeta} onChange={onEditMeta}>
               {t('pages/raw/metadata')}
             </Checkbox>
+          </div>
+          <div className='Info'>
+            <a
+              href='https://github.com/orbiting/publikator-frontend/blob/raw/docs/raw.md'
+              target='_blank'
+              {...linkRule}
+            >
+              <InfoIcon />
+            </a>
           </div>
           <CodeMirror
             value={md}
