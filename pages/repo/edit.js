@@ -493,7 +493,12 @@ export class EditorPage extends Component {
           localEditorState = Value.fromJSON(localState)
           debug('loadState', 'using local slate document', localEditorState)
         } else {
-          localEditorState = this.editor.serializer.deserialize(localState)
+          localEditorState = this.editor.serializer.deserialize({
+            ...localState,
+            // add format & section to root mdast node
+            format: repo?.commit?.document?.meta?.format,
+            section: repo?.commit?.document?.meta?.section
+          })
           debug('loadState', 'using local mdast document', localEditorState)
         }
       } catch (e) {
