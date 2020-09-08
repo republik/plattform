@@ -38,14 +38,14 @@ const generateImageData = async (blob) => {
   const suffix = meta.format
   const hash = hashObject(blob)
   const path = `images/${hash}.${suffix}`
-  const url = `${path}?size=${meta.width}x${meta.height}`
+  const imageUrl = `${path}?size=${meta.width}x${meta.height}`
   return {
     image: {
       path,
       hash,
       blob
     },
-    url
+    imageUrl
   }
 }
 
@@ -56,9 +56,9 @@ const extractImage = async (url, images) => {
       blob = dataUriToBuffer(url)
     } catch (e) { /* console.log('ignoring image node with url:' + url) */ }
     if (blob) {
-      const { image, url } = await generateImageData(blob)
+      const { image, imageUrl } = await generateImageData(blob)
       images.push(image)
-      return url
+      return imageUrl
     }
   }
   return url
@@ -71,9 +71,9 @@ const importFromRepo = async (url, images, repoId) => {
   if (isFromDifferentRepo(url, repoId)) {
     try {
       const blob = await fetch(url).then(result => result.buffer())
-      const { image, newUrl } = await generateImageData(blob)
+      const { image, imageUrl } = await generateImageData(blob)
       images.push(image)
-      return newUrl
+      return imageUrl
     } catch (e) {
       console.error('failed to transfer image', repoId, url, e)
     }
