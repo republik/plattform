@@ -1,6 +1,6 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
 const { transform } = require('../../../lib/Comment')
-const setDiscussionPreferences = require('../../../lib/setDiscussionPreferences')
+const { setDiscussionPreferences, ensureAnonymousDifferentiator } = require('../../../lib/discussionPreferences')
 const userCanComment = require('../Discussion/userCanComment')
 const userWaitUntil = require('../Discussion/userWaitUntil')
 const { contentLength } = require('../Comment')
@@ -100,6 +100,10 @@ module.exports = async (_, args, context) => {
   let newComment
   const transaction = await pgdb.transactionBegin()
   try {
+    newComment = await transaction.public.comments.insertAndGet(
+      unsavedComment
+    )
+
     if (discussionPreferences) {
       await setDiscussionPreferences({
         discussionPreferences,
@@ -108,11 +112,14 @@ module.exports = async (_, args, context) => {
         transaction,
         t
       })
+    } else {
+      ensureAnonymousDifferentiator({
+        transaction,
+        userId,
+        discussion,
+        t
+      })
     }
-
-    newComment = await transaction.public.comments.insertAndGet(
-      unsavedComment
-    )
 
     await transaction.transactionCommit()
   } catch (e) {

@@ -1,7 +1,7 @@
 const { MAX_CREDENTIAL_LENGTH } = require('./Credential')
 const { ensureStringLength } = require('@orbiting/backend-modules-utils')
 
-module.exports = async ({
+const setDiscussionPreferences = async ({
   discussionPreferences,
   userId,
   discussion,
@@ -61,22 +61,10 @@ module.exports = async ({
   const existingDP = await transaction.public.discussionPreferences.findOne(findQuery)
   const user = await transaction.public.users.findOne({ id: userId })
 
-  let anonymousDiff = null
-  if (anonymity) {
-    if (!existingDP || existingDP.anonymousDifferentiator === null) {
-      const lastUsed = await transaction.public.discussionPreferences.findOne({
-        discussionId: discussion.id,
-        'anonymousDifferentiator !=': null
-      }, { orderBy: { anonymousDifferentiator: 'DESC' } })
-      anonymousDiff = lastUsed ? lastUsed.anonymousDifferentiator + 1 : 1
-    }
-  }
-
   const updateQuery = {
     userId,
     discussionId: discussion.id,
     anonymous: anonymity,
-    anonymousDifferentiator: anonymousDiff,
     ...credentialId !== undefined
       ? { credentialId }
       : { },
@@ -94,4 +82,74 @@ module.exports = async ({
   } else {
     await transaction.public.discussionPreferences.insert(updateQuery, options)
   }
+
+  await ensureAnonymousDifferentiator({
+    transaction,
+    userId,
+    discussion,
+    t
+  })
+}
+
+async function ensureAnonymousDifferentiator ({
+  transaction,
+  userId,
+  discussion,
+  t
+}) {
+  // const discussionId = discussion.id
+  const discussionId = discussion.id
+  const findQuery = {
+    userId, discussionId
+  }
+
+  const preferences = transaction.public.discussionPreferences.findOne(findQuery)
+
+  if (preferences && preferences.anonymousDifferentiator) {
+    return
+  }
+
+  const userHasComments = !!await transaction.public.comments.findOne({
+    userId, discussionId
+  })
+
+  if (!userHasComments) {
+    return
+  }
+
+  if (discussion.anonymity === 'FORBIDDEN') {
+    return
+  }
+
+  if (!preferences && discussion.anonymity === 'ENFORCED') {
+    // setDiscussionPreferences() will set discussionPreferences.annonymous to true
+    // and recursively call ensureAnonymousDifferentiator()
+
+    await setDiscussionPreferences({
+      userId,
+      discussion,
+      transaction,
+      t
+    })
+
+    return
+  }
+
+  if (!preferences || !preferences.anonymous) {
+    return
+  }
+
+  const lastUsed = await transaction.public.discussionPreferences.findOne({
+    discussionId: discussion.id,
+    'anonymousDifferentiator !=': null
+  }, { orderBy: { anonymousDifferentiator: 'DESC' } })
+
+  transaction.public.discussionPreferences.updateOne(findQuery, {
+    anonymousDifferentiator: lastUsed ? lastUsed.anonymousDifferentiator + 1 : 1
+  })
+}
+
+module.exports = {
+  setDiscussionPreferences,
+  ensureAnonymousDifferentiator
 }
