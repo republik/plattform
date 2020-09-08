@@ -78,7 +78,7 @@ const importFromRepo = async (url, images, repoId) => {
       images.push(image)
       return newUrl
     } catch (e) {
-      console.error('failed to transfer image', e)
+      console.error('failed to transfer image', repoId, url, e)
     }
   }
   return url
