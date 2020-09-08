@@ -242,12 +242,13 @@ module.exports = {
     } else { // FORBIDDEN or ALLOWED
       if (commenterPreferences && commenterPreferences.anonymous != null) {
         anonymous = commenterPreferences.anonymous
-        if (anonymous && commenterPreferences.anonymousDifferentiator !== null) {
-          anonymousComment.name += ` ${commenterPreferences.anonymousDifferentiator}`
-        }
       } else {
         anonymous = false
       }
+    }
+
+    if (anonymous && commenterPreferences.anonymousDifferentiator !== null) {
+      anonymousComment.name += ` ${commenterPreferences.anonymousDifferentiator}`
     }
 
     const profilePicture = getPortrait(commenter, (args && args.portrait), context)
