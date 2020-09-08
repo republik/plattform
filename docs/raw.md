@@ -1,8 +1,7 @@
 # Quellcode-Editor
 
-Das Quellcode-Editor es durch einen Link in der Sidebar von normalen Editor zugänglich. 
-
-![](../public/static/docs/quellcode-link.png)
+Das Quellcode-Editor es durch einen Link in der Sidebar von normalen Editor zugänglich: 
+> ![](../public/static/docs/templating/quellcode-link.png)
 
 Es gibt 2 wichtige Usecases dafür:
 
@@ -13,34 +12,49 @@ Es gibt 2 wichtige Usecases dafür:
 
 Bestehende Dokumente kopieren und als Muster für neue Dokumente verwenden, how-to.
 
-1. Im Dokument, was zu kopieren ist, rein, und im Quellcode-Editor.
+- Im Dokument, was zu kopieren ist, rein, und im Quellcode-Editor.
 
-2. Metadaten einblenden:
-![](../public/static/docs/metadaten-checkbox.png)
+- Metadaten einblenden:
+> ![](../public/static/docs/templating/metadaten-checkbox.png)
 
-3. Im Editior rein (einfach drauf clicken), das ganze Inhalt selektieren (ctrl-A/cmd-A funktioniert auch) und kopieren:
-![](../public/static/docs/select-all.png)
+- Im Editior rein (einfach drauf clicken), das ganze Inhalt selektieren (ctrl-A/cmd-A funktioniert auch) und kopieren:
+> ![](../public/static/docs/templating/select-all.png)
 
-4. Neues Dokument erstellen oder im Dokument rein, was die Template verwenden soll.
+- Neues Dokument erstellen oder im Dokument rein, was die Template verwenden soll.
 
-5. Quellcode-Editor aufmachen.
+- Quellcode-Editor aufmachen.
 
-6. Metadaten einblenden.
+- Metadaten einblenden.
 
-7. Existierendes Text selektieren und löschen.
-![](../public/static/docs/empty-editor.png)
+- Existierendes Text selektieren und löschen.
+> ![](../public/static/docs/templating/empty-editor.png)
 
-8. Inhalt von 3. reinpasten.
+- Inhalt von 3. reinpasten.
 
-9. Änderungen übernehmen:
-![](../public/static/docs/save.png)
+- Änderungen übernehmen:
+> ![](../public/static/docs/templating/save.png)
 
-10. Et voila! 
-
-Footnotes:
-
-* Bilder funktionieren zurzeit nicht und sollen manuell im Dokument verlinkt werden
-
+- Et voila!
 
 ## Copy-paste
 
+Komplexe Elemente im selben Dokument verschieben. Hier wollen wir z.B. diese Umfrage im Mitte des Artikel bewegen:
+> ![](../public/static/docs/copypaste/init.png)
+ 
+
+- Im Quellcode-Editor rein.
+
+- Das relevante Teil finden:
+> ![](../public/static/docs/copypaste/find-section.png)
+
+- Das Teil kopieren. Lange `<section>...</section>` können durch das `>` Zeichen auf der  link Seite kompressiert werden:
+> ![](../public/static/docs/copypaste/copy-closed-section.png) 
+
+- Irgendwo anders pasten:
+> ![](../public/static/docs/copypaste/paste-section.png) 
+
+- Änderungen übernehmen:
+> ![](../public/static/docs/copypaste/save.png)
+
+- Et voila!
+> ![](../public/static/docs/copypaste/end-result.png) 
