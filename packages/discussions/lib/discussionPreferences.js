@@ -91,12 +91,12 @@ const setDiscussionPreferences = async ({
   })
 }
 
-async function ensureAnonymousDifferentiator ({
+const ensureAnonymousDifferentiator = async ({
   transaction,
   userId,
   discussion,
   t
-}) {
+}) => {
   // const discussionId = discussion.id
   const discussionId = discussion.id
   const findQuery = {
