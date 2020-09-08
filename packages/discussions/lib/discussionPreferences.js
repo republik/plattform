@@ -103,7 +103,7 @@ const ensureAnonymousDifferentiator = async ({
     userId, discussionId
   }
 
-  const preferences = transaction.public.discussionPreferences.findOne(findQuery)
+  const preferences = await transaction.public.discussionPreferences.findOne(findQuery)
 
   if (preferences && preferences.anonymousDifferentiator) {
     return
