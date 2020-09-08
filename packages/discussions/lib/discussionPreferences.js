@@ -109,7 +109,7 @@ const ensureAnonymousDifferentiator = async ({
     return
   }
 
-  const userHasComments = !!await transaction.public.comments.findOne({
+  const userHasComments = !!await transaction.public.comments.findFirst({
     userId, discussionId
   })
 
