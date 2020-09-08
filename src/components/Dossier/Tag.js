@@ -2,7 +2,7 @@ import React from 'react'
 import { css } from 'glamor'
 import { mUp } from '../TeaserFront/mediaQueries'
 import { sansSerifMedium14, sansSerifMedium20 } from '../Typography/styles'
-import { FolderOpenIcon } from '../Icons'
+import { FolderIcon } from '../Icons'
 
 const styles = {
   tag: css({
@@ -23,7 +23,7 @@ const styles = {
 const Tag = ({ children, attributes }) => {
   return (
     <div {...attributes} {...styles.tag}>
-      <FolderOpenIcon {...styles.icon} size={24} />
+      <FolderIcon {...styles.icon} size={24} />
       {children}
     </div>
   )

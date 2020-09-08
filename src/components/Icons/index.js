@@ -57,7 +57,8 @@ import {
   MdLanguage,
   MdFavorite,
   MdStars,
-  MdTrendingFlat
+  MdTrendingFlat,
+  MdFolder
 } from 'react-icons/md'
 import {
   IoLogoTwitter,
@@ -68,7 +69,6 @@ import {
   IoLogoApple,
   IoLogoFacebook
 } from 'react-icons/io'
-import { FaFolderOpen } from 'react-icons/fa'
 import ShareIOS from './CustomIcons/ShareIOS'
 import CustomMarkdownIcon from './CustomIcons/MarkdownIcon'
 import CustomBackIcon from './CustomIcons/BackIcon'
@@ -113,7 +113,7 @@ export const ChevronLeftIcon = MdChevronLeft
 export const ChevronRightIcon = MdChevronRight
 export const FullscreenIcon = MdFullscreen
 export const FullscreenExitIcon = MdFullscreenExit
-export const FolderOpenIcon = FaFolderOpen
+export const FolderIcon = MdFolder
 export const NotificationIcon = MdNotifications
 export const BackIcon = CustomBackIcon
 export const DiscussionIcon = CustomDiscussionIcon
