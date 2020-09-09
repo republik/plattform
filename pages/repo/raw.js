@@ -34,9 +34,9 @@ const styles = css({
   minHeight: 'calc(100vh - 80px)',
   padding: 10,
   '& .Checkbox': {
-    position: 'fixed',
-    left: 'calc(50% + 415px)',
-    top: 95
+    display: 'bloc',
+    margin: 5,
+    marginLeft: 'calc(50% + 210px)'
   },
   '& .Info': {
     position: 'fixed',
@@ -200,11 +200,6 @@ export default compose(
       </Frame.Header>
       <Frame.Body raw>
         <div {...styles}>
-          <div className='Checkbox' style={{ opacity: editMeta ? 0.5 : 1 }}>
-            <Checkbox checked={editMeta} onChange={onEditMeta}>
-              {t('pages/raw/metadata')}
-            </Checkbox>
-          </div>
           <div className='Info'>
             <a
               href='https://github.com/orbiting/publikator-frontend/blob/raw/docs/raw.md'
@@ -213,6 +208,11 @@ export default compose(
             >
               <InfoIcon />
             </a>
+          </div>
+          <div className='Checkbox' style={{ opacity: editMeta ? 0.5 : 1 }}>
+            <Checkbox checked={editMeta} onChange={onEditMeta}>
+              {t('pages/raw/metadata')}
+            </Checkbox>
           </div>
           <CodeMirror
             value={md}
