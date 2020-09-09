@@ -96,7 +96,8 @@ export default compose(
   const [editMeta, setEditMeta] = useState(false)
   const [validity, setValidity] = useState(true)
 
-  const goToEditor = () => {
+  const goToEditor = e => {
+    if (e) e.preventDefault()
     Router.pushRoute('repo/edit', {
       repoId: repoId.split('/'),
       commitId,
@@ -104,7 +105,8 @@ export default compose(
     })
   }
 
-  const onSave = () => {
+  const onSave = e => {
+    if (e) e.preventDefault()
     const editedMdast = editMeta
       ? parse(md)
       : {
