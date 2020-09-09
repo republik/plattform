@@ -60,6 +60,24 @@ const uncommittedChangesSubscription = gql`
   }
 `
 
+const uncommittedChangesMutation = gql`
+  mutation uncommittedChanges($repoId: ID!, $action: Action!) {
+    uncommittedChanges(repoId: $repoId, action: $action)
+  }
+`
+
+export const withUncommittedChangesMutation = graphql(
+  uncommittedChangesMutation,
+  {
+    props: ({ mutate }) => ({
+      hasUncommitedChanges: variables =>
+        mutate({
+          variables
+        })
+    })
+  }
+)
+
 export const warningColor = '#E9A733'
 
 const styles = {
@@ -344,7 +362,4 @@ export const UncommittedChanges = ({ uncommittedChanges, t }) =>
     </Fragment>
   )
 
-export default compose(
-  withT,
-  withUncommitedChanges()
-)(UncommittedChanges)
+export default compose(withT, withUncommitedChanges())(UncommittedChanges)

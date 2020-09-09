@@ -1,5 +1,5 @@
 {
-  "updated": "2020-08-04T09:24:50.126Z",
+  "updated": "2020-09-09T08:15:48.388Z",
   "title": "live",
   "data": [
     {
@@ -373,6 +373,10 @@
     {
       "key": "repo/nav/edit",
       "value": "Inhalt"
+    },
+    {
+      "key": "repo/nav/raw",
+      "value": "Raw"
     },
     {
       "key": "repo/nav/meta",
@@ -1385,6 +1389,22 @@
     {
       "key": "styleguide/TeaserFeed/InternalOnlyTag",
       "value": "Intern publiziert"
+    },
+    {
+      "key": "pages/raw/save",
+      "value": "Übernehmen"
+    },
+    {
+      "key": "pages/raw/cancel",
+      "value": "Abbrechen"
+    },
+    {
+      "key": "pages/raw/title",
+      "value": "Quellcode bearbeiten"
+    },
+    {
+      "key": "pages/raw/metadata",
+      "value": "Metadaten bearbeiten"
     }
   ]
 }

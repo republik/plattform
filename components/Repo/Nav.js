@@ -66,7 +66,4 @@ const Nav = ({ router, route, isNew, t }) => {
   )
 }
 
-export default compose(
-  withT,
-  withRouter
-)(Nav)
+export default compose(withT, withRouter)(Nav)

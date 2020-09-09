@@ -37,8 +37,4 @@ const Page = ({
   )
 }
 
-export default compose(
-  withAuthorization(['editor']),
-  withT,
-  withRouter
-)(Page)
+export default compose(withAuthorization(['editor']), withT, withRouter)(Page)

@@ -23,7 +23,8 @@ import {
   withUncommitedChanges,
   ActiveInterruptionOverlay,
   warningColor,
-  joinUsers
+  joinUsers,
+  withUncommittedChangesMutation
 } from '../../components/VersionControl/UncommittedChanges'
 import Sidebar from '../../components/Sidebar'
 import Warning from '../../components/Sidebar/Warning'
@@ -41,7 +42,7 @@ import { getSchema } from '../../components/Templates'
 import { API_UNCOMMITTED_CHANGES_URL } from '../../lib/settings'
 import * as fragments from '../../lib/graphql/fragments'
 
-import { ColorContext, colors } from '@project-r/styleguide'
+import { ColorContext, colors, plainButtonRule } from '@project-r/styleguide'
 import SettingsIcon from 'react-icons/lib/fa/cogs'
 
 import createDebug from 'debug'
@@ -68,12 +69,6 @@ const commitMutation = gql`
   }
   ${fragments.CommitWithDocument}
   ${fragments.EditPageRepo}
-`
-
-const uncommittedChangesMutation = gql`
-  mutation uncommittedChanges($repoId: ID!, $action: Action!) {
-    uncommittedChanges(repoId: $repoId, action: $action)
-  }
 `
 
 const getCommitById = gql`
@@ -130,6 +125,7 @@ export class EditorPage extends Component {
     }
     this.changeHandler = this.changeHandler.bind(this)
     this.commitHandler = this.commitHandler.bind(this)
+    this.goToRaw = this.goToRaw.bind(this)
     this.documentChangeHandler = debounce(
       this.documentChangeHandler.bind(this),
       500
@@ -496,7 +492,12 @@ export class EditorPage extends Component {
           localEditorState = Value.fromJSON(localState)
           debug('loadState', 'using local slate document', localEditorState)
         } else {
-          localEditorState = this.editor.serializer.deserialize(localState)
+          localEditorState = this.editor.serializer.deserialize({
+            ...localState,
+            // add format & section to root mdast node
+            format: repo?.commit?.document?.meta?.format,
+            section: repo?.commit?.document?.meta?.section
+          })
           debug('loadState', 'using local mdast document', localEditorState)
         }
       } catch (e) {
@@ -623,6 +624,25 @@ export class EditorPage extends Component {
           )(state)
         }))
       })
+  }
+
+  goToRaw() {
+    const {
+      router: {
+        query: { repoId, commitId }
+      }
+    } = this.props
+    const { editorState } = this.state
+    const serializedState = this.editor.serializer.serialize(editorState)
+    this.beginChanges()
+    this.store.set('editorState', serializedState)
+    Router.pushRoute('repo/raw', {
+      repoId: repoId.split('/'),
+      commitId,
+      ...(commitId === 'new'
+        ? { template: this.props.router.query.template }
+        : {})
+    })
   }
 
   render() {
@@ -765,6 +785,13 @@ export class EditorPage extends Component {
           >
             {!readOnly && (
               <Sidebar.Tab tabId='edit' label='Editieren'>
+                <button
+                  onClick={this.goToRaw}
+                  {...plainButtonRule}
+                  style={{ color: colors.primary }}
+                >
+                  {t('pages/raw/title')}
+                </button>
                 <CharCount value={editorState} />
                 {!!this.editor && (
                   <EditorUI
@@ -884,12 +911,5 @@ export default compose(
         })
     })
   }),
-  graphql(uncommittedChangesMutation, {
-    props: ({ mutate }) => ({
-      hasUncommitedChanges: variables =>
-        mutate({
-          variables
-        })
-    })
-  })
+  withUncommittedChangesMutation
 )(EditorPage)
