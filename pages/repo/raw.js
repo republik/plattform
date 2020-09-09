@@ -206,7 +206,7 @@ export default compose(
         <div {...styles}>
           <div className='Info'>
             <a
-              href='https://github.com/orbiting/publikator-frontend/blob/raw/docs/raw.md'
+              href='https://github.com/orbiting/publikator-frontend/blob/master/docs/raw.md'
               target='_blank'
               {...linkRule}
             >
