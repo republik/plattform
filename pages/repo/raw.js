@@ -112,6 +112,10 @@ export default compose(
           ...parse(md),
           meta
         }
+
+    if (!editedMdast.meta.template) {
+      editedMdast.meta.template = meta.template
+    }
     store.set('editorState', editedMdast)
     goToEditor()
   }
