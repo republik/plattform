@@ -68,8 +68,10 @@ if (process.browser) {
 
 const hasOpenSections = md => {
   if (!md) return
-  const openTags = md.match(/<section>/g)
-  const closeTags = md.match(/<hr \/><\/section>/g)
+  // in synch with our remark-preset
+  // https://github.com/orbiting/mdast/blob/fabbd146dd16f7bdcbf7b699c5bac7161f14d197/packages/remark-preset/src/index.js#L23-L28
+  const openTags = md.match(/<section>\s*<h6>([^<]+)<\/h6>/g)
+  const closeTags = md.match(/<hr\s*\/>\s*<\/section>/g)
   if (!openTags || !closeTags) return
   return openTags.length !== closeTags.length
 }
