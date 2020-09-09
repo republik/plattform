@@ -74,7 +74,7 @@ type Meta {
   estimatedConsumptionMinutes: Int
 
   # template of the article
-  template: String!
+  template: String
 
   indicateChart: Boolean
   indicateGallery: Boolean
