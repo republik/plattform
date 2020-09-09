@@ -1,6 +1,6 @@
 # Quellcode-Editor
 
-Das Quellcode-Editor ist durch einen Link im Sidebar von normalen Editor zugänglich: 
+Der Quellcode-Editor ist über einen Link im Sidebar des normalen Editors zugänglich: 
 > ![](./images/templating/quellcode-link.png)
 
 Es gibt 2 wichtige Usecases dafür:
@@ -10,26 +10,22 @@ Es gibt 2 wichtige Usecases dafür:
 
 ## Templating
 
-Bestehende Dokumente kopieren und als Muster für neue Dokumente verwenden, how-to.
+Bestehende Dokumente kopieren und als Muster für neue Dokumente verwenden:
 
-- Im Dokument, was zu kopieren ist, rein, und im Quellcode-Editor.
-
-- Metadaten einblenden:
+- Das Dokument, welches als Template verwendet werden soll öffnen und im Quellcode-Editor die Metadaten einblenden:
 > ![](./images/templating/metadaten-checkbox.png)
 
-- Im Editior rein (einfach drauf clicken), das ganze Inhalt selektieren (ctrl-A/cmd-A funktioniert auch) und kopieren:
+- Den Editior öffnen (einfach drauf clicken), den ganzen Inhalt auswählen (ctrl-A/cmd-A funktioniert auch) und kopieren (ctrl-C/cmd-C):
 > ![](./images/templating/select-all.png)
 
-- Neues Dokument erstellen oder im Dokument rein, was die Template verwenden soll.
+- Neues Dokument erstellen oder bestehendes Dokument öffnen, welches das Template verwenden soll.
 
-- Quellcode-Editor aufmachen.
+- Quellcode-Editor öffnen und Metadaten einblenden auswählen.
 
-- Metadaten einblenden.
-
-- Existierendes Text selektieren und löschen.
+- Bestehender Text selektieren und löschen.
 > ![](./images/templating/empty-editor.png)
 
-- Inhalt von 3. reinpasten.
+- Kopierter Inhalt reinpasten (ctrl-V/cmd-V).
 
 - Änderungen übernehmen:
 > ![](./images/templating/save.png)
@@ -38,19 +34,18 @@ Bestehende Dokumente kopieren und als Muster für neue Dokumente verwenden, how-
 
 ## Copy-paste
 
-Komplexe Elemente im selben Dokument verschieben. Hier wollen wir z.B. diese Umfrage im Mitte des Artikel bewegen:
+Komplexe Elemente im selben Dokument verschieben. Hier wollen wir z.B. eine Umfrage in die Mitte des Artikel verschieben:
 > ![](./images/copypaste/init.png)
  
+- Den Quellcode-Editor öffnen.
 
-- Im Quellcode-Editor rein.
-
-- Das relevante Teil finden:
+- Den relevanten Code finden (Im Beispiel das `<secion>` Element):
 > ![](./images/copypaste/find-section.png)
 
-- Das Teil kopieren. Lange `<section>...</section>` können durch das `>` Zeichen auf der  link Seite kompressiert werden:
+- Den Code kopieren. Lange Code-Sections `<section>...</section>` können durch das `>` Zeichen auf der linken Seite des Editors kollabiert werden:
 > ![](./images/copypaste/copy-closed-section.png) 
 
-- Irgendwo anders pasten:
+- An der gewünschten Stelle pasten:
 > ![](./images/copypaste/paste-section.png) 
 
 - Änderungen übernehmen:
