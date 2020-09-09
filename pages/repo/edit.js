@@ -645,7 +645,13 @@ export class EditorPage extends Component {
     }
     this.beginChanges()
     this.store.set('editorState', stateWithTemplate)
-    Router.pushRoute('repo/raw', { repoId: repoId.split('/'), commitId })
+    Router.pushRoute('repo/raw', {
+      repoId: repoId.split('/'),
+      commitId,
+      ...(commitId === 'new'
+        ? { template: this.props.router.query.template }
+        : {})
+    })
   }
 
   render() {
