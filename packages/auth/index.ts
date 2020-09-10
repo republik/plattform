@@ -1,7 +1,7 @@
-import {default as lib} from './lib'
+import lib from './lib'
 
 export = {
   ...lib,
   graphql: require('./graphql'),
-  express: require('./express')
+  express: require('./express'),
 }

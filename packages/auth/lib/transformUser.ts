@@ -1,21 +1,21 @@
-const { naming } = require('@orbiting/backend-modules-utils')
-import {UserRow} from '../loaders/User'
+import { UserRow } from '../loaders/User'
+const naming = require('@orbiting/backend-modules-utils/naming')
 
 interface User {
-  id: string;
-  username: string;
-  firstName: string;
-  lastName: string;
-  name: string;
-  initials: string;
-  hasPublicProfile: boolean;
+  id: string
+  username: string
+  firstName: string
+  lastName: string
+  name: string
+  initials: string
+  hasPublicProfile: boolean
   // api read access protected by a resolver functions
-  roles: string[];
-  email: string;
+  roles: string[]
+  email: string
   // use resolver functions to access _raw
   // and expose more fields according to custom logic
-  _raw: UserRow;
-  [key: string]: any;
+  _raw: UserRow
+  [key: string]: any
 }
 
 export = (user: UserRow, additionalFields = {}): User | null => {
@@ -38,6 +38,6 @@ export = (user: UserRow, additionalFields = {}): User | null => {
     // use resolver functions to access _raw
     // and expose more fields according to custom logic
     _raw: user,
-    ...additionalFields
+    ...additionalFields,
   }
 }

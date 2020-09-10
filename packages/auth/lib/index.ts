@@ -1,6 +1,6 @@
 import transfromUser = require('./transformUser')
 
-export default {
+export = {
   challenges: require('./challenges'),
   AccessToken: require('./AccessToken'),
   AuthError: require('./AuthError'),
@@ -15,5 +15,5 @@ export default {
   t: require('./t'),
   transformUser: transfromUser,
   useragent: require('./useragent'),
-  Users: require('./Users')
+  Users: require('./Users'),
 }

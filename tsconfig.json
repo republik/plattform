@@ -1,20 +1,17 @@
 {
   "compilerOptions": {
-
     "target": "ES2019",
     "module": "commonjs",
     "lib": ["ES2019"],
-    "strict": true, /* Enable all strict type-checking options. */
-    "noImplicitAny": true, /* Raise error on expressions and declarations with an implied 'any' type. */
-    "noUnusedLocals": true, /* Report errors on unused locals. */
-    "noUnusedParameters": true, /* Report errors on unused parameters. */
-    "noFallthroughCasesInSwitch": true, /* Report errors for fallthrough cases in switch statement. */
-    "moduleResolution": "node", /* Specify module resolution strategy: 'node' (Node.js) or 'classic' (TypeScript pre-1.6). */
-    "esModuleInterop": true, /* Enables emit interoperability between CommonJS and ES Modules via creation of namespace objects for all imports. Implies 'allowSyntheticDefaultImports'. */
-    "skipLibCheck": true, /* Skip type checking of declaration files. */
-    "forceConsistentCasingInFileNames": true,  /* Disallow inconsistently-cased references to the same file. */
-
-
+    "strict": true /* Enable all strict type-checking options. */,
+    "noImplicitAny": true /* Raise error on expressions and declarations with an implied 'any' type. */,
+    "noUnusedLocals": true /* Report errors on unused locals. */,
+    "noUnusedParameters": true /* Report errors on unused parameters. */,
+    "noFallthroughCasesInSwitch": true /* Report errors for fallthrough cases in switch statement. */,
+    "moduleResolution": "node" /* Specify module resolution strategy: 'node' (Node.js) or 'classic' (TypeScript pre-1.6). */,
+    "esModuleInterop": true /* Enables emit interoperability between CommonJS and ES Modules via creation of namespace objects for all imports. Implies 'allowSyntheticDefaultImports'. */,
+    "skipLibCheck": true /* Skip type checking of declaration files. */,
+    "forceConsistentCasingInFileNames": true /* Disallow inconsistently-cased references to the same file. */
 
     /* Visit https://aka.ms/tsconfig.json to read more about this file */
 
