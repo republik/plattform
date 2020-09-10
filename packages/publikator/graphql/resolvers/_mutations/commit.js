@@ -11,6 +11,7 @@ const superheroes = require('superheroes')
 const sleep = require('await-sleep')
 const sharp = require('sharp')
 const slugify = require('slugify')
+const fetch = require('isomorphic-unfetch')
 const {
   createGithubClients,
   commitNormalizer,
@@ -28,6 +29,26 @@ const {
   }
 } = require('@orbiting/backend-modules-documents')
 
+const {
+  ASSETS_SERVER_BASE_URL
+} = process.env
+
+const generateImageData = async (blob) => {
+  const meta = await sharp(blob).metadata()
+  const suffix = meta.format
+  const hash = hashObject(blob)
+  const path = `images/${hash}.${suffix}`
+  const imageUrl = `${path}?size=${meta.width}x${meta.height}`
+  return {
+    image: {
+      path,
+      hash,
+      blob
+    },
+    imageUrl
+  }
+}
+
 const extractImage = async (url, images) => {
   if (url) {
     let blob
@@ -35,21 +56,26 @@ const extractImage = async (url, images) => {
       blob = dataUriToBuffer(url)
     } catch (e) { /* console.log('ignoring image node with url:' + url) */ }
     if (blob) {
-      const meta = await sharp(blob).metadata()
-      // image/jpeg -> jpeg
-      // image/png -> png
-      // image/svg+xml -> svg
-      const suffix = blob.type.split('/')[1].split('+')[0]
-      const hash = hashObject(blob)
-      const path = `images/${hash}.${suffix}`
-      const url = `${path}?size=${meta.width}x${meta.height}`
-      const image = {
-        path,
-        hash,
-        blob
-      }
+      const { image, imageUrl } = await generateImageData(blob)
       images.push(image)
-      return url
+      return imageUrl
+    }
+  }
+  return url
+}
+
+const isFromDifferentRepo = (url, repoId) =>
+  url && url.startsWith(`${ASSETS_SERVER_BASE_URL}/github/`) && !url.includes(repoId)
+
+const importFromRepo = async (url, images, repoId) => {
+  if (isFromDifferentRepo(url, repoId)) {
+    try {
+      const blob = await fetch(url).then(result => result.buffer())
+      const { image, imageUrl } = await generateImageData(blob)
+      images.push(image)
+      return imageUrl
+    } catch (e) {
+      console.error('failed to transfer image', repoId, url, e)
     }
   }
   return url
@@ -109,6 +135,34 @@ module.exports = async (_, args, context) => {
     )
   }
 
+  // extract repo images
+  const images = []
+  const promises = []
+
+  visit(mdast, 'image', async (node) => {
+    promises.push((async () => {
+      node.url = await importFromRepo(node.url, images, repoId)
+    })())
+  })
+  if (mdast.meta) {
+    promises.push(...Object.keys(mdast.meta).map(async (key) => {
+      if (key.match(/image/i)) {
+        mdast.meta[key] = await importFromRepo(mdast.meta[key], images, repoId)
+      }
+    }))
+
+    const series = mdast.meta.series
+    if (series && Array.isArray(series.episodes)) {
+      series.episodes.forEach(episode => {
+        if (episode.image) {
+          promises.push((async () => {
+            episode.image = await importFromRepo(episode.image, images, repoId)
+          })())
+        }
+      })
+    }
+  }
+
   // reverse asset url prefixing
   // repo images
   processRepoImageUrlsInContent(mdast, unprefixUrl)
@@ -116,9 +170,6 @@ module.exports = async (_, args, context) => {
   // embeds
   processImageUrlsInContent(mdast, unprefixUrl)
 
-  // extract repo images
-  const images = []
-  const promises = []
   visit(mdast, 'image', async (node) => {
     promises.push((async () => {
       node.url = await extractImage(node.url, images)

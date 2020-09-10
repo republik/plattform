@@ -17,9 +17,8 @@
   "homepage": "https://github.com/orbiting/backends#readme",
   "scripts": {
     "link": "yarn link",
-    "db:seed:redirections": "cat ../../packages/redirections/seeds/seeds.example.json | node ../../packages/redirections/seeds/seed.js",
-    "db:seed:users": "cat ../../packages/auth/seeds/seeds.example.json | node ../../packages/auth/seeds/seed.js --truncate",
-    "db:seed:crowdfundings": "seeds/script/seed.js"
+    "db:seed:redirections": "cat ../redirections/seeds/seeds.example.json | node ../redirections/seeds/seed.js",
+    "db:seed:users": "cat ../auth/seeds/seeds.example.json | node ../auth/seeds/seed.js --truncate"
   },
   "dependencies": {
     "apollo-modules-node": "^0.1.4",
@@ -27,9 +26,7 @@
     "d3-dsv": "^1.2.0",
     "d3-time": "^1.0.8",
     "debug": "^4.1.1",
-    "emojione_minimal": "^2.1.2",
     "graphql": "^15.3.0",
-    "graphql-fields": "^2.0.3",
     "is-uuid": "^1.0.2",
     "isomorphic-unfetch": "^3.0.0",
     "lodash": "^4.17.19",
@@ -40,17 +37,7 @@
     "sharp": "^0.25.3",
     "slugify": "^1.4.0",
     "stripe": "^8.61.0",
-    "throng": "^4.0.0",
-    "unified": "^9.0.0",
     "uuid": "^8.1.0",
     "yargs": "^15.3.1"
-  },
-  "devDependencies": {
-    "apollo-fetch": "^0.7.0",
-    "istanbul": "^1.1.0-alpha.1",
-    "nodemon": "^2.0.4",
-    "snoowrap": "^1.21.0",
-    "tap-diff": "^0.1.1",
-    "zero-fill": "^2.2.3"
   }
 }

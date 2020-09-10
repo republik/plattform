@@ -15,7 +15,7 @@ const moment = require('moment')
 const { transformUser, AccessToken } = require('@orbiting/backend-modules-auth')
 const {
   prolongBeforeDate: getProlongBeforeDate
-} = require('../../modules/crowdfundings/graphql/resolvers/User')
+} = require('@orbiting/backend-modules-republik-crowdfundings/graphql/resolvers/User')
 
 const {
   MAILCHIMP_API_KEY,

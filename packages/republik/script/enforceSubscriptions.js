@@ -4,7 +4,7 @@
  * @example ./enforceSubscriptions.js --emails foobar@domain.tld x@y.z
  */
 require('@orbiting/backend-modules-env').config()
-const { enforceSubscriptions } = require('../modules/crowdfundings/lib/Mail')
+const { enforceSubscriptions } = require('@orbiting/backend-modules-republik-crowdfundings/lib/Mail')
 const debug = require('debug')('republik:script:enforceSubscriptions')
 const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
 const Promise = require('bluebird')

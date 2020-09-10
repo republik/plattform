@@ -9,8 +9,8 @@ const moment = require('moment')
 const { transformUser } = require('@orbiting/backend-modules-auth')
 const {
   prolongBeforeDate: getProlongBeforeDate
-} = require('../../modules/crowdfundings/graphql/resolvers/User')
-const createCache = require('../../modules/crowdfundings/lib/cache')
+} = require('@orbiting/backend-modules-republik-crowdfundings/graphql/resolvers/User')
+const createCache = require('@orbiting/backend-modules-republik-crowdfundings/lib/cache')
 
 const {
   PARKING_USER_ID
