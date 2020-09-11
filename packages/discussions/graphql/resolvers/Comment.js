@@ -247,6 +247,10 @@ module.exports = {
       }
     }
 
+    if (anonymous && commenterPreferences.anonymousDifferentiator !== null) {
+      anonymousComment.name += ` ${commenterPreferences.anonymousDifferentiator}`
+    }
+
     const profilePicture = getPortrait(commenter, (args && args.portrait), context)
     const name = getName(commenter, null, context)
     const slug = getSlug(commenter, null, context)
