@@ -118,11 +118,11 @@ const ensureAnonymousDifferentiator = async ({
     return
   }
 
-  const userHasComments = !!await transaction.public.comments.findFirst({
+  const amountOfComments = await transaction.public.comments.count({
     userId, discussionId
   })
 
-  if (!userHasComments) {
+  if (amountOfComments === 0) {
     return
   }
 
