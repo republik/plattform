@@ -78,17 +78,21 @@ const setDiscussionPreferences = async ({
     skipUndefined: true
   }
 
+  let mutation
+
   if (existingDP) {
-    await transaction.public.discussionPreferences.updateOne(findQuery, updateQuery, options)
+    mutation = transaction.public.discussionPreferences.updateOne(findQuery, updateQuery, options)
   } else {
-    await Promise.all([
-      transaction.public.discussionPreferences.insert(updateQuery, options),
-      loaders.Discussion.Commenter.discussionPreferences.clear({
-        userId: userId,
-        discussionId: discussion.id
-      })
-    ])
+    mutation = transaction.public.discussionPreferences.insert(updateQuery, options)
   }
+
+  await Promise.all([
+    mutation,
+    loaders.Discussion.Commenter.discussionPreferences.clear({
+      userId: userId,
+      discussionId: discussion.id
+    })
+  ])
 
   await ensureAnonymousDifferentiator({
     transaction,
