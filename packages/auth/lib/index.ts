@@ -1,4 +1,6 @@
-module.exports = {
+import transfromUser = require('./transformUser')
+
+export = {
   challenges: require('./challenges'),
   AccessToken: require('./AccessToken'),
   AuthError: require('./AuthError'),
@@ -11,7 +13,7 @@ module.exports = {
   Roles: require('./Roles'),
   Sessions: require('./Sessions'),
   t: require('./t'),
-  transformUser: require('./transformUser'),
+  transformUser: transfromUser,
   useragent: require('./useragent'),
-  Users: require('./Users')
+  Users: require('./Users'),
 }

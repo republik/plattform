@@ -69,3 +69,10 @@ packages/republik/local/
 packages/publikator/seeds/seeds.json
 .vim
 local
+
+# files generated from typescript
+packages/auth/index.js
+packages/auth/lib/index.js
+packages/auth/lib/transformUser.js
+packages/auth/loaders/User.js
+packages/dataloader/**/*.js

@@ -23,6 +23,7 @@
     "gsheets": "^2.0.0"
   },
   "dependencies": {
+    "@types/is-uuid": "^1.0.0",
     "apollo-modules-node": "^0.1.4",
     "check-env": "^1.3.0",
     "connect-pg-simple": "^6.1.0",

@@ -23,8 +23,9 @@
     "servers/*"
   ],
   "lint-staged": {
-    "*.js": [
-      "standard --parser babel-eslint --fix"
+    "*.{js,ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
     ]
   },
   "config": {
@@ -34,23 +35,33 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "babel-eslint": "^10.1.0",
+    "@types/is-uuid": "^1.0.0",
+    "@types/node": "^14.0.27",
+    "@typescript-eslint/eslint-plugin": "^4.1.0",
+    "@typescript-eslint/parser": "^4.1.0",
     "commitizen": "^4.1.2",
     "coveralls": "^3.1.0",
     "cz-conventional-changelog": "^3.2.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-config-standard": "^14.1.1",
+    "eslint-plugin-jest": "^24.0.0",
+    "eslint-plugin-prettier": "^3.1.4",
     "foreman": "^3.0.0",
     "husky": "^4.2.5",
     "jest": "^26.0.1",
     "jest-environment-node": "^26.0.1",
     "lint-staged": "^10.2.9",
-    "standard": "^14.3.4"
+    "prettier": "^2.1.1",
+    "standard": "^14.3.4",
+    "typescript": "^4.0.2"
   },
   "scripts": {
     "start": "if [ -z \"$SERVER\" ]; then cd servers/graphql; else cd servers/$SERVER; fi && yarn run start",
     "startScheduler": "cd servers/graphql && yarn run startScheduler",
-    "dev": "nf --procfile Procfile-dev start",
+    "dev": "tsc && nf --procfile Procfile-dev start",
     "cloc": "find . -name '*.js' -not -path \"*/node_modules*\" -not -path \"./node_modules*\" | xargs wc -l",
     "commit": "git-cz",
+    "heroku-postbuild": "yarn run db:migrate:up",
     "roleUser": "node packages/auth/script/roleUser",
     "roleUsers": "node packages/auth/script/roleUsers",
     "translations": "cd packages/translate && yarn translations && cd -",
@@ -73,15 +84,9 @@
     "test:dev": "yarn run test:unit --watch",
     "test:cover": "TZ=Europe/Amsterdam jest --collectCoverage --detectOpenHandles --forceExit",
     "test:reportCover": "cat ./tests/coverage/lcov.info | coveralls",
-    "heroku-postbuild": "yarn run db:migrate:up"
-  },
-  "standard": {
-    "env": [
-      "jest"
-    ],
-    "globals": [
-      "BigInt"
-    ]
+    "tsc": "tsc",
+    "tscWatch": "tsc -w",
+    "postinstall": "tsc"
   },
   "husky": {
     "hooks": {
