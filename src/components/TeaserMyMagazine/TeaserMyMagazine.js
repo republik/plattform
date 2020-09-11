@@ -14,61 +14,88 @@ const DefaultLink = ({ children }) => children
 const TeaserMyMagazine = ({
   latestSubscribedArticles,
   latestProgressOrBookmarkedArticles,
-  bar,
+  ActionBar,
   Link = DefaultLink
 }) => {
   const [colorScheme] = useColorContext()
+
+  if (
+    latestSubscribedArticles.length === 0 &&
+    latestProgressOrBookmarkedArticles.length === 0
+  ) {
+    return null
+  }
+
+  console.log(
+    latestProgressOrBookmarkedArticles,
+    latestProgressOrBookmarkedArticles.length
+  )
+
   return (
     <div {...css({ backgroundColor: colorScheme.primaryBg })}>
       <section {...css(styles.section)}>
         <div role='group' {...css(styles.row, styles.withHighlight)}>
-          <div {...styles.left}>
-            <Interaction.H3>Weiterlesen</Interaction.H3>
-            <br />
-            {latestProgressOrBookmarkedArticles.map(document => {
-              const { path, id } = document
-              const { shortTitle } = document.meta
+          {latestProgressOrBookmarkedArticles.length !== 0 && (
+            <div
+              {...(latestSubscribedArticles.length !== 0
+                ? styles.left
+                : styles.center)}
+            >
+              <Interaction.H3>Weiterlesen</Interaction.H3>
+              <br />
+              {latestProgressOrBookmarkedArticles.map(document => {
+                const { path, id } = document
+                const { shortTitle } = document.meta
 
-              return (
-                <div
-                  {...styles.tile}
-                  style={{ border: `1px solid ${colorScheme.text}` }}
-                  key={id}
-                >
-                  <Link href={path} passHref>
-                    <a
-                      {...styles.tileHeadline}
-                      style={{ color: colorScheme.text }}
-                    >
-                      {shortTitle.substring(0, 130).trim()}
-                      {shortTitle.length >= 130 && <>&nbsp;…</>}
-                    </a>
-                  </Link>
-                  {bar && bar}
-                </div>
-              )
-            })}
-          </div>
-          <div {...styles.right}>
-            <Interaction.H3>Neuste abonnierte Beiträge</Interaction.H3>
-            <br />
-            {latestSubscribedArticles.map(document => (
-              <TeaserFeed
-                Link={Link}
-                color={colorScheme.text}
-                format={document.meta.format}
-                path={document.meta.path}
-                title={
-                  document.meta.shortTitle
-                    ? `${document.meta.shortTitle.substring(0, 140).trim()} ${
-                        document.meta.shortTitle.length >= 140 ? '…' : ''
-                      }`
-                    : document.meta.title
-                }
-                credits={document.meta.credits}
-              />
-            ))}
-          </div>
+                return (
+                  <div
+                    {...styles.tile}
+                    style={{ border: `1px solid ${colorScheme.text}` }}
+                    key={id}
+                  >
+                    <Link href={path} passHref>
+                      <a
+                        {...styles.tileHeadline}
+                        style={{ color: colorScheme.text }}
+                      >
+                        {shortTitle.substring(0, 130).trim()}
+                        {shortTitle.length >= 130 && <>&nbsp;…</>}
+                      </a>
+                    </Link>
+                    {ActionBar && (
+                      <ActionBar mode='bookmark' document={document} />
+                    )}
+                  </div>
+                )
+              })}
+            </div>
+          )}
+          {latestSubscribedArticles.length !== 0 && (
+            <div
+              {...(latestProgressOrBookmarkedArticles.length !== 0
+                ? styles.right
+                : styles.center)}
+            >
+              <Interaction.H3>Neuste abonnierte Beiträge</Interaction.H3>
+              <br />
+              {latestSubscribedArticles.map(document => (
+                <TeaserFeed
+                  Link={Link}
+                  color={colorScheme.text}
+                  format={document.meta.format}
+                  path={document.meta.path}
+                  title={
+                    document.meta.shortTitle
+                      ? `${document.meta.shortTitle.substring(0, 140).trim()} ${
+                          document.meta.shortTitle.length >= 140 ? '…' : ''
+                        }`
+                      : document.meta.title
+                  }
+                  credits={document.meta.credits}
+                />
+              ))}
+            </div>
+          )}
         </div>
       </section>
     </div>
@@ -88,25 +115,30 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     [mUp]: {
-      flexDirection: 'row'
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'flex-start'
     }
   }),
   left: css({
     marginBottom: 32,
     [mUp]: {
-      width: '50%',
       flexGrow: 1,
       marginRight: 16,
       marginBottom: 0
     }
   }),
   right: css({
-    display: 'flex',
-    flexDirection: 'column',
     [mUp]: {
-      width: '50%',
       flexGrow: 1,
       marginLeft: 16
+    }
+  }),
+  center: css({
+    marginBottom: 0,
+    [mUp]: {
+      width: '50%',
+      marginBottom: 0
     }
   }),
   tile: css({
@@ -117,7 +149,10 @@ const styles = {
     alignItems: 'flex-start',
     marginBottom: 16,
     ':last-child': {
-      marginBottom: 0
+      marginBottom: 30,
+      [mUp]: {
+        marginBottom: 40
+      }
     },
     [mUp]: {
       padding: '12px 8px'
@@ -150,7 +185,7 @@ TeaserMyMagazine.propTypes = {
   latestProgressOrBookmarkedArticles: PropTypes.array
 }
 
-TeaserMyMagazine.data = {
+WrappedTeaserMyMagazine.data = {
   config: {
     options: ({ first = 2 }) => ({
       variables: {
@@ -158,94 +193,71 @@ TeaserMyMagazine.data = {
       }
     }),
     props: ({ data }) => {
-      const latestProgressOrBookmarkedArticles = data.me.progressCollection.items.nodes
-        .concat(data.me.bookmarkCollection.items.nodes)
-        .sort((a, b) => {
-          return (
-            new Date(a.document.meta.publishDate) -
-            Date(b.document.meta.publishDate)
-          )
-        })
-        .slice(1)
       return {
         data: {
           loading: data.loading,
           error: data.error,
-          latestSubscribedArticles: data.documents.nodes,
-          latestProgressOrBookmarkedArticles
+          latestSubscribedArticles: data.documents?.nodes.map(i => i.entity),
+          latestProgressOrBookmarkedArticles: data.me?.bookmarkAndProgress.filter(
+            i => i.document
+          )
         }
       }
     }
   },
   query: `
-    query getMyMagazineDocuments {
-      documents: search(
-        filters: [
-            { key: "template", not: true, value: "section" }
-            { key: "template", not: true, value: "format" }
-            { key: "template", not: true, value: "front" }
-          ]
-          filter: { feed: true }
-          sort: { key: publishedAt, direction: DESC }
-          first: 2
-        ) {
-          nodes {
-            entity {
-              ... on Document {
-                meta {
-                  shortTitle
-                  title
-                  credits
-                  format {
-                    meta {
-                      title
-                      kind
-                      template
-                      path
-                    }
+  query getMyMagazineDocuments {
+    documents: search(
+      filters: [
+          { key: "template", not: true, value: "section" }
+          { key: "template", not: true, value: "format" }
+          { key: "template", not: true, value: "front" }
+        ]
+        filter: { feed: true }
+        sort: { key: publishedAt, direction: DESC }
+        first: 2
+      ) {
+        nodes {
+          entity {
+            ... on Document {
+              id
+              meta {
+                shortTitle
+                title
+                credits
+                format {
+                  meta {
+                    title
+                    kind
+                    template
+                    path
                   }
                 }
               }
             }
           }
         }
-      me {
-        progressCollection: collection(name: "progress") {
-          items(first: 2) {
-            nodes {
-              document {
-                id
-                meta {
-                  publishDate
-                  shortTitle
-                  title
-                  path
-                }
-              }
+      }
+    me {
+      bookmarkAndProgress: collectionItems(names: ["progress", "bookmarks"], first: 2) {
+        nodes {
+          document {
+            id
+            meta {
+              publishDate
+              shortTitle
+              title
+              path
+              credits
+            }
+            userProgress {
+              id
+              percentage
             }
           }
         }
-        bookmarkCollection: collection(name: "bookmarks") {
-          items(first: 2) {
-            nodes {
-              document {
-                id
-                meta {
-                  publishDate
-                  shortTitle
-                  title
-                  path
-                  credits
-                }
-                userProgress {
-                  id
-                  percentage
-                }
-              }
-            }
-          }
-        }  
       }
-    }  
+    }
+  }
   `
 }

@@ -8,10 +8,11 @@ import { TeaserFeed } from '../../components/TeaserFeed'
 import { TeaserActiveDebates } from '../../components/TeaserActiveDebates'
 
 import { TeaserSectionTitle } from '../../components/TeaserShared'
+import { TeaserMyMagazine } from '../../components/TeaserMyMagazine'
 
 import Center from '../../components/Center'
 import Loader from '../../components/Loader'
-
+import LazyLoad from '../../components/LazyLoad'
 import { mUp } from '../../theme/mediaQueries'
 
 const styles = {
@@ -34,8 +35,61 @@ const createLiveTeasers = ({
   DiscussionLink = DefaultLink,
   t,
   withFeedData = withData,
-  withDiscussionsData = withData
+  withDiscussionsData = withData,
+  withMyMagazineData = withData,
+  ActionBar
 }) => {
+  const MyMagazineWithData = withMyMagazineData(
+    ({ attributes, data, url, label }) => {
+      return (
+        <Loader
+          error={data.error}
+          loading={data.loading}
+          style={{ minHeight: 600 }}
+          render={() => {
+            return (
+              <TeaserMyMagazine
+                latestSubscribedArticles={data.latestSubscribedArticles}
+                latestProgressOrBookmarkedArticles={
+                  data.latestProgressOrBookmarkedArticles
+                }
+                ActionBar={ActionBar}
+              />
+            )
+          }}
+        />
+      )
+    }
+  )
+
+  const DiscussionWithData = withDiscussionsData(
+    ({ attributes, data, url, label }) => {
+      return (
+        <Loader
+          error={data.error}
+          loading={data.loading}
+          style={{ minHeight: 600 }}
+          render={() => {
+            return (
+              <div {...styles.dialogContainer}>
+                <TeaserActiveDebates
+                  t={t}
+                  CommentLink={CommentLink}
+                  DiscussionLink={DiscussionLink}
+                  discussions={data.discussions}
+                >
+                  <Link href={url} passHref>
+                    <TeaserSectionTitle href={url}>{label}</TeaserSectionTitle>
+                  </Link>
+                </TeaserActiveDebates>
+              </div>
+            )
+          }}
+        />
+      )
+    }
+  )
+
   const extractRepoIds = children => {
     if (!children) {
       return []
@@ -141,33 +195,13 @@ const createLiveTeasers = ({
       matchMdast: node =>
         matchZone('LIVETEASER')(node) && node.data.id === 'dialog',
       props: node => node.data,
-      component: withDiscussionsData(({ attributes, data, url, label }) => {
+      component: props => {
         return (
-          <Loader
-            error={data.error}
-            loading={data.loading}
-            style={{ minHeight: 600 }}
-            render={() => {
-              return (
-                <div {...styles.dialogContainer}>
-                  <TeaserActiveDebates
-                    t={t}
-                    CommentLink={CommentLink}
-                    DiscussionLink={DiscussionLink}
-                    discussions={data.discussions}
-                  >
-                    <Link href={url} passHref>
-                      <TeaserSectionTitle href={url}>
-                        {label}
-                      </TeaserSectionTitle>
-                    </Link>
-                  </TeaserActiveDebates>
-                </div>
-              )
-            }}
-          />
+          <LazyLoad style={{ display: 'block', minHeight: 600 }}>
+            <DiscussionWithData {...props} />
+          </LazyLoad>
         )
-      }),
+      },
       isVoid: true,
       editorModule: 'liveteaser',
       editorOptions: {
@@ -194,6 +228,25 @@ const createLiveTeasers = ({
             note: 'Anzahl Beiträge, 0 für keine, default 1'
           }
         ]
+      }
+    },
+    {
+      matchMdast: node =>
+        matchZone('LIVETEASER')(node) && node.data.id === 'mymagazine',
+      props: node => node.data,
+      component: props => {
+        return (
+          <LazyLoad style={{ display: 'block', minHeight: 600 }}>
+            <MyMagazineWithData {...props} />
+          </LazyLoad>
+        )
+      },
+      isVoid: true,
+      editorModule: 'liveteaser',
+      editorOptions: {
+        type: 'LIVETEASEREND',
+        insertButtonText: 'Meine Republik.',
+        insertId: 'mymagazine'
       }
     },
     {
