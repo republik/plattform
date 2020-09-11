@@ -72,7 +72,8 @@
     "test:integration": "TZ=Europe/Amsterdam jest --verbose --detectOpenHandles --forceExit --testPathPattern \"\\.(int)|(integration)\\.jest\"",
     "test:dev": "yarn run test:unit --watch",
     "test:cover": "TZ=Europe/Amsterdam jest --collectCoverage --detectOpenHandles --forceExit",
-    "test:reportCover": "cat ./tests/coverage/lcov.info | coveralls"
+    "test:reportCover": "cat ./tests/coverage/lcov.info | coveralls",
+    "heroku-postbuild": "yarn run db:migrate:up"
   },
   "standard": {
     "env": [
