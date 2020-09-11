@@ -150,7 +150,7 @@ const ensureAnonymousDifferentiator = async ({
     return
   }
 
-  const lastUsed = await transaction.public.discussionPreferences.findOne({
+  const lastUsed = await transaction.public.discussionPreferences.findFirst({
     discussionId: discussion.id,
     'anonymousDifferentiator !=': null
   }, { orderBy: { anonymousDifferentiator: 'DESC' } })
