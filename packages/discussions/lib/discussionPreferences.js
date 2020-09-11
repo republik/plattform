@@ -1,12 +1,13 @@
 const { MAX_CREDENTIAL_LENGTH } = require('./Credential')
 const { ensureStringLength } = require('@orbiting/backend-modules-utils')
 
-module.exports = async ({
+const setDiscussionPreferences = async ({
   discussionPreferences,
   userId,
   discussion,
   transaction,
-  t
+  t,
+  loaders
 }) => {
   const {
     credential: credentialDescription
@@ -77,9 +78,96 @@ module.exports = async ({
     skipUndefined: true
   }
 
+  let mutation
+
   if (existingDP) {
-    await transaction.public.discussionPreferences.updateOne(findQuery, updateQuery, options)
+    mutation = transaction.public.discussionPreferences.updateOne(findQuery, updateQuery, options)
   } else {
-    await transaction.public.discussionPreferences.insert(updateQuery, options)
+    mutation = transaction.public.discussionPreferences.insert(updateQuery, options)
   }
+
+  await Promise.all([
+    mutation,
+    loaders.Discussion.Commenter.discussionPreferences.clear(findQuery)
+  ])
+
+  await ensureAnonymousDifferentiator({
+    transaction,
+    userId,
+    discussion,
+    t,
+    loaders
+  })
+}
+
+const ensureAnonymousDifferentiator = async ({
+  transaction,
+  userId,
+  discussion,
+  t,
+  loaders
+}) => {
+  // const discussionId = discussion.id
+  const discussionId = discussion.id
+  const findQuery = {
+    userId, discussionId
+  }
+
+  const preferences = await transaction.public.discussionPreferences.findOne(findQuery)
+
+  if (preferences && preferences.anonymousDifferentiator) {
+    return
+  }
+
+  const amountOfComments = await transaction.public.comments.count({
+    userId, discussionId
+  })
+
+  if (amountOfComments === 0) {
+    return
+  }
+
+  if (discussion.anonymity === 'FORBIDDEN') {
+    return
+  }
+
+  if (!preferences && discussion.anonymity === 'ENFORCED') {
+    // setDiscussionPreferences() will set discussionPreferences.annonymous to true
+    // and recursively call ensureAnonymousDifferentiator()
+
+    await setDiscussionPreferences({
+      userId,
+      discussion,
+      transaction,
+      t,
+      loaders
+    })
+
+    return
+  }
+
+  if (!preferences || !preferences.anonymous) {
+    return
+  }
+
+  const lastUsed = await transaction.public.discussionPreferences.findOne({
+    discussionId: discussion.id,
+    'anonymousDifferentiator !=': null
+  }, { orderBy: { anonymousDifferentiator: 'DESC' } })
+  const anonymousDifferentiator = lastUsed ? lastUsed.anonymousDifferentiator + 1 : 1
+
+  await Promise.all([
+    transaction.public.discussionPreferences.updateOne(findQuery, {
+      anonymousDifferentiator
+    }),
+    loaders.Discussion.Commenter.discussionPreferences.clear({
+      userId: userId,
+      discussionId: discussionId
+    })
+  ])
+}
+
+module.exports = {
+  setDiscussionPreferences,
+  ensureAnonymousDifferentiator
 }

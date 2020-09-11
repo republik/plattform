@@ -3,7 +3,7 @@ module.exports = {
   Discussion: require('./Discussion'),
   hotness: require('./hotness'),
   Notifications: require('./Notifications'),
-  setDiscussionPreferences: require('./setDiscussionPreferences'),
+  ...require('./discussionPreferences'),
   slack: require('./slack'),
   sortKey: require('./sortKey'),
   voteComment: require('./voteComment'),
