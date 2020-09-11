@@ -17,12 +17,12 @@ module.exports = {
       ],
       rules: {
         '@typescript-eslint/no-explicit-any': 'off',
-        '@typescript-eslint/no-var-requires': 'off'
-      }
+        '@typescript-eslint/no-var-requires': 'off',
+      },
     },
     {
       files: ['**/*.js'],
-      extends: 'standard',
+      extends: ['standard', 'prettier', 'plugin:prettier/recommended'],
     },
     {
       files: ['**/*.jest.js'],
