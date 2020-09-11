@@ -37,5 +37,6 @@ module.exports = {
       )
       return paginate(args, items)
     }
+    return paginate(args, [])
   }
 }
