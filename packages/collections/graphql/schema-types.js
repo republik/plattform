@@ -48,6 +48,13 @@ extend type Document {
 extend type User {
   collections: [Collection!]!
   collection(name: String!): Collection
+  collectionItems(
+    names: [String!]!
+    first: Int
+    last: Int
+    before: String
+    after: String
+  ): CollectionItemConnection!
 }
 
 type DocumentProgress implements CollectionItemInterface {

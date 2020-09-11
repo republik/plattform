@@ -45,7 +45,7 @@ const byIdForUser = (id, userId, { loaders }) =>
 const findDocumentItems = (args, { pgdb }) =>
   pgdb.public.collectionDocumentItems.find(
     args,
-    { orderBy: ['createdAt desc'] }
+    { orderBy: ['updatedAt desc'] }
   )
     .then(items => items
       .map(spreadItemData)
