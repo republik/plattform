@@ -88,10 +88,7 @@ const setDiscussionPreferences = async ({
 
   await Promise.all([
     mutation,
-    loaders.Discussion.Commenter.discussionPreferences.clear({
-      userId: userId,
-      discussionId: discussion.id
-    })
+    loaders.Discussion.Commenter.discussionPreferences.clear(findQuery)
   ])
 
   await ensureAnonymousDifferentiator({
