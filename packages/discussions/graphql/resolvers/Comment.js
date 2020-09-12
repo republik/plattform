@@ -247,8 +247,8 @@ module.exports = {
       }
     }
 
-    if (anonymous && commenterPreferences.anonymousDifferentiator !== null) {
-      anonymousComment.name += ` ${commenterPreferences.anonymousDifferentiator}`
+    if (anonymous && commenterPreferences && commenterPreferences.anonymousDifferentiator !== null) {
+      anonymousComment.name = `${t('api/comment/anonymous/displayName')} ${commenterPreferences.anonymousDifferentiator}`
     }
 
     const profilePicture = getPortrait(commenter, (args && args.portrait), context)
