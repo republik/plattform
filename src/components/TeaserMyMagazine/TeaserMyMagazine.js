@@ -26,11 +26,6 @@ const TeaserMyMagazine = ({
     return null
   }
 
-  console.log(
-    latestProgressOrBookmarkedArticles,
-    latestProgressOrBookmarkedArticles.length
-  )
-
   return (
     <div {...css({ backgroundColor: colorScheme.primaryBg })}>
       <section {...css(styles.section)}>
