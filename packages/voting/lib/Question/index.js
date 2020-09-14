@@ -1,19 +1,14 @@
-const {
-  validate: validateChoice,
-  result: resultChoice
-} = require('./Choice')
+const { validate: validateChoice, result: resultChoice } = require('./Choice')
 const {
   validate: validateDocument,
-  result: resultDocument
+  result: resultDocument,
 } = require('./Document')
 const {
   validate: validateRange,
   result: resultRange,
-  resultHistogram: resultRangeHistogram
+  resultHistogram: resultRangeHistogram,
 } = require('./Range')
-const {
-  validate: validateText
-} = require('./Text')
+const { validate: validateText } = require('./Text')
 
 const validateAnswer = async (value, question, context, payload) => {
   const { t } = context
@@ -27,30 +22,36 @@ const validateAnswer = async (value, question, context, payload) => {
     case 'Choice':
       return validateChoice(value, question, context)
     default:
-      throw new Error(t('api/questionnaire/question/type/404', { type: question.type }))
+      throw new Error(
+        t('api/questionnaire/question/type/404', { type: question.type }),
+      )
   }
 }
 
 const turnout = async (question, pgdb) => {
-  const { numSubmitted: getNumQuestionnaireSubmissions } = require('../Questionnaire')
+  const {
+    numSubmitted: getNumQuestionnaireSubmissions,
+  } = require('../Questionnaire')
   const { id: questionId, questionnaireId } = question
 
   const numQuestionnaireSubmissions =
-    (question.questionnaire.turnout && question.questionnaire.turnout.submitted) ||
-    await getNumQuestionnaireSubmissions(questionnaireId, pgdb)
+    (question.questionnaire.turnout &&
+      question.questionnaire.turnout.submitted) ||
+    (await getNumQuestionnaireSubmissions(questionnaireId, pgdb))
 
-  const [
-    numSubmittedAnswers,
-    numUnattributedAnswers
-  ] = await Promise.all([
+  const [numSubmittedAnswers, numUnattributedAnswers] = await Promise.all([
     pgdb.public.answers.count({ submitted: true, questionId }),
-    pgdb.public.answers.count({ submitted: true, unattributed: true, questionId })
+    pgdb.public.answers.count({
+      submitted: true,
+      unattributed: true,
+      questionId,
+    }),
   ])
 
   return {
     submitted: numSubmittedAnswers,
     skipped: numQuestionnaireSubmissions - numSubmittedAnswers,
-    unattributed: numUnattributedAnswers
+    unattributed: numUnattributedAnswers,
   }
 }
 
@@ -70,7 +71,7 @@ const resultForArchive = async (question, args, context) => {
   }
   return {
     payload,
-    turnout: await turnout(question, context.pgdb)
+    turnout: await turnout(question, context.pgdb),
   }
 }
 
@@ -85,5 +86,5 @@ module.exports = {
   validateRange,
   resultRange,
   resultRangeHistogram,
-  validateText
+  validateText,
 }

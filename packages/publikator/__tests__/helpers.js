@@ -7,7 +7,7 @@ const deleteRepos = async () => {
   const { GITHUB_LOGIN } = process.env
   if (process.env.GITHUB_LOGIN !== ORG) {
     throw new Error(
-      `deleteRepos: env.GITHUB_LOGIN ('${GITHUB_LOGIN}') doesn't equal hardcoded value: '${ORG}' abort!`
+      `deleteRepos: env.GITHUB_LOGIN ('${GITHUB_LOGIN}') doesn't equal hardcoded value: '${ORG}' abort!`,
     )
   }
 
@@ -22,7 +22,7 @@ const deleteRepos = async () => {
       sort: 'created',
       direction: 'desc',
       per_page: 100,
-      page
+      page,
     })
     page++
 
@@ -30,21 +30,20 @@ const deleteRepos = async () => {
       throw new Error('deleteRepos error getting repos', { response })
     }
 
-    const repoNames = response.data
-      .map(r => r.name)
+    const repoNames = response.data.map((r) => r.name)
 
     hadMore = repoNames.length > 0
     if (hadMore) {
       await Promise.map(
         repoNames,
-        repo => {
+        (repo) => {
           console.log(`deleting: ${repo}...`)
           return githubRest.repos.delete({
             owner: ORG,
-            repo
+            repo,
           })
         },
-        { concurrency: 5 }
+        { concurrency: 5 },
       )
     }
   } while (hadMore)
@@ -57,18 +56,19 @@ const getArticleMdFromGithub = async (repoId) => {
 
   const [owner, repo] = repoId.split('/')
 
-  return githubRest.repos.getContent({
-    owner,
-    repo,
-    path: 'article.md'
-  })
+  return githubRest.repos
+    .getContent({
+      owner,
+      repo,
+      path: 'article.md',
+    })
     .then(({ data: { content, encoding } }) =>
-      Buffer.from(content, encoding).toString('utf-8')
+      Buffer.from(content, encoding).toString('utf-8'),
     )
-    .catch(response => null)
+    .catch((response) => null)
 }
 
 module.exports = {
   deleteRepos,
-  getArticleMdFromGithub
+  getArticleMdFromGithub,
 }

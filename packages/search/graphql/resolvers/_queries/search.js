@@ -1,32 +1,24 @@
 const debug = require('debug')('search:graphql:resolvers:_queries:search')
 const {
-  Roles: {
-    userHasRole
-  }
+  Roles: { userHasRole },
 } = require('@orbiting/backend-modules-auth')
 const {
   isUserUnrestricted,
-  includesUnrestrictedChildRepoId
+  includesUnrestrictedChildRepoId,
 } = require('@orbiting/backend-modules-documents/lib/restrictions')
 const {
   schema: documentSchema,
-  addRelatedDocs
+  addRelatedDocs,
 } = require('../../../lib/Documents')
 const {
   filterReducer,
   getFilterValue,
   getFilterObj,
-  elasticFilterBuilder
+  elasticFilterBuilder,
 } = require('../../../lib/filters')
-const {
-  extractAggs
-} = require('../../../lib/aggregations')
-const {
-  createSort
-} = require('../../../lib/sort')
-const {
-  __resolveType: resolveHitType
-} = require('../SearchEntity')
+const { extractAggs } = require('../../../lib/aggregations')
+const { createSort } = require('../../../lib/sort')
+const { __resolveType: resolveHitType } = require('../SearchEntity')
 const { transformUser } = require('@orbiting/backend-modules-auth')
 
 const _ = require('lodash')
@@ -43,9 +35,7 @@ const getFieldList = require('@orbiting/graphql-list-fields')
 
 const createCache = require('../../../lib/cache')
 
-const {
-  SEARCH_TRACK = false
-} = process.env
+const { SEARCH_TRACK = false } = process.env
 
 const DEV = process.env.NODE_ENV && process.env.NODE_ENV !== 'production'
 
@@ -67,7 +57,7 @@ const getSimpleQueryStringQuery = (searchTerm) => {
   // split search term and stitch together with fuzzy per word
   const fuzzySearchTerm = sanitizedSearchTerm
     .split(/\s/)
-    .map(term => {
+    .map((term) => {
       if (term.length >= FUZZINESS_WORD_LENGTH_THRESHOLD * 2) {
         return `${term}~2`
       } else if (term.length >= FUZZINESS_WORD_LENGTH_THRESHOLD) {
@@ -81,27 +71,32 @@ const getSimpleQueryStringQuery = (searchTerm) => {
   debug('getSimpleQueryStringQuery', {
     searchTerm,
     sanitizedSearchTerm,
-    fuzzySearchTerm
+    fuzzySearchTerm,
   })
 
   return `(${sanitizedSearchTerm}) | ("${sanitizedSearchTerm}") | (${fuzzySearchTerm})`
 }
 
 const createShould = function (
-  searchTerm, searchFilter, indicesList, user, scheduledAt, ignorePrepublished
+  searchTerm,
+  searchFilter,
+  indicesList,
+  user,
+  scheduledAt,
+  ignorePrepublished,
 ) {
   const queries = []
 
   // A query for each ES index
   indicesList.forEach(({ type, index, search }) => {
     let must = {
-      match_all: {}
+      match_all: {},
     }
 
     let fields = Object.keys(search.termFields)
 
     // Append boost if available, annotation "<field name>^<boost>"
-    fields = fields.map(field => {
+    fields = fields.map((field) => {
       const boost = search.termFields[field].boost
       if (boost) {
         return `${field}^${boost}`
@@ -116,24 +111,27 @@ const createShould = function (
           query: getSimpleQueryStringQuery(searchTerm),
           fields,
           default_operator: 'AND',
-          analyzer: 'german'
-        }
+          analyzer: 'german',
+        },
       }
 
       must = [
         query,
-        search.functionScore && { function_score: search.functionScore(query) }
+        search.functionScore && { function_score: search.functionScore(query) },
       ].filter(Boolean)
     }
 
     const rolebasedFilterArgs = Object.assign(
       {},
       { scheduledAt, ignorePrepublished },
-      getFilterObj(searchFilter)
+      getFilterObj(searchFilter),
     )
 
-    const rolebasedFilterDefault =
-      _.get(search, 'rolebasedFilter.default', () => ({}))(rolebasedFilterArgs)
+    const rolebasedFilterDefault = _.get(
+      search,
+      'rolebasedFilter.default',
+      () => ({}),
+    )(rolebasedFilterArgs)
 
     const rolebasedFilter = Object.assign({}, rolebasedFilterDefault)
 
@@ -143,8 +141,8 @@ const createShould = function (
         _.get(
           search,
           'rolebasedFilter.editor',
-          () => rolebasedFilterDefault
-        )(rolebasedFilterArgs)
+          () => rolebasedFilterDefault,
+        )(rolebasedFilterArgs),
       )
     }
 
@@ -153,7 +151,7 @@ const createShould = function (
       search.filter.default(searchFilter),
       createElasticFilter(searchFilter),
       rolebasedFilter,
-      deepMergeArrays
+      deepMergeArrays,
     )
 
     debug('filter', JSON.stringify(filter, null, 2))
@@ -161,8 +159,8 @@ const createShould = function (
     queries.push({
       bool: {
         must,
-        filter
-      }
+        filter,
+      },
     })
   })
 
@@ -176,7 +174,10 @@ const createHighlight = (indicesList) => {
   indicesList.forEach(({ search }) => {
     Object.keys(search.termFields).forEach((field) => {
       if (search.termFields[field].highlight) {
-        fields[field] = { ...search.termFields[field].highlight, order: 'score' }
+        fields[field] = {
+          ...search.termFields[field].highlight,
+          order: 'score',
+        }
       }
     })
   })
@@ -186,39 +187,48 @@ const createHighlight = (indicesList) => {
 
 const defaultExcludes = ['contentString', 'resolved']
 const createQuery = (
-  searchTerm, filter, sort, indicesList, user, scheduledAt, withoutChildren, withoutAggs, ignorePrepublished
+  searchTerm,
+  filter,
+  sort,
+  indicesList,
+  user,
+  scheduledAt,
+  withoutChildren,
+  withoutAggs,
+  ignorePrepublished,
 ) => ({
   query: {
     bool: {
       should: createShould(
-        searchTerm, filter, indicesList, user, scheduledAt, ignorePrepublished
-      )
-    }
+        searchTerm,
+        filter,
+        indicesList,
+        user,
+        scheduledAt,
+        ignorePrepublished,
+      ),
+    },
   },
   sort: createSort(sort),
   highlight: createHighlight(indicesList),
   stored_fields: ['contentString.count'],
-  ...withoutAggs ? {} : { aggs: schemaAggregations },
+  ...(withoutAggs ? {} : { aggs: schemaAggregations }),
   _source: {
     excludes: [
       ...defaultExcludes,
-      ...withoutChildren
-        ? ['content.children']
-        : []
-    ]
-  }
+      ...(withoutChildren ? ['content.children'] : []),
+    ],
+  },
 })
 
 const mapHit = (hit) => {
   const type = resolveHitType(hit._source)
-  const entity = type === 'User'
-    ? transformUser(hit._source)
-    : hit._source
+  const entity = type === 'User' ? transformUser(hit._source) : hit._source
 
   Object.assign(entity, { _storedFields: hit.fields })
 
   const highlights = []
-  Object.keys(hit.highlight || {}).forEach(path => {
+  Object.keys(hit.highlight || {}).forEach((path) => {
     highlights.push({ path, fragments: hit.highlight[path] })
   })
 
@@ -226,55 +236,43 @@ const mapHit = (hit) => {
     entity,
     highlights,
     score: hit._score,
-    type
+    type,
   }
 }
 
 const transformTermsAgg = (key, agg, t) => ({
   key,
-  label: t(
-    `api/search/aggs/${key}`,
-    { key },
-    !DEV ? key : undefined
-  ),
-  buckets: agg.terms.buckets.map(bucket => ({
+  label: t(`api/search/aggs/${key}`, { key }, !DEV ? key : undefined),
+  buckets: agg.terms.buckets.map((bucket) => ({
     label: t(
       `api/search/aggs/${key}/${bucket.key}`,
       { key, value: bucket.key, count: bucket.doc_count },
-      !DEV ? bucket.key : undefined
+      !DEV ? bucket.key : undefined,
     ),
     value: bucket.key,
-    count: bucket.doc_count
-  }))
+    count: bucket.doc_count,
+  })),
 })
 
 const transformCountAgg = (key, agg, t) => ({
   key,
-  label: t(
-    `api/search/aggs/${key}`,
-    { key },
-    !DEV ? key : undefined
-  ),
-  count: agg.count ? agg.count.value : agg.doc_count
+  label: t(`api/search/aggs/${key}`, { key }, !DEV ? key : undefined),
+  count: agg.count ? agg.count.value : agg.doc_count,
 })
 
 const transformRangeAgg = (key, agg, t) => ({
   key,
-  label: t(
-    `api/search/aggs/${key}`,
-    { key },
-    !DEV ? key : undefined
-  ),
+  label: t(`api/search/aggs/${key}`, { key }, !DEV ? key : undefined),
   count: agg.doc_count,
-  buckets: agg.ranges.buckets.map(bucket => ({
+  buckets: agg.ranges.buckets.map((bucket) => ({
     label: t(
       `api/search/aggs/${key}/${bucket.key}`,
       { key, value: bucket.key, count: bucket.doc_count },
-      !DEV ? bucket.key : undefined
+      !DEV ? bucket.key : undefined,
     ),
     value: bucket.key,
-    count: bucket.doc_count
-  }))
+    count: bucket.doc_count,
+  })),
 })
 
 const mapAggregations = (result, t) => {
@@ -282,7 +280,7 @@ const mapAggregations = (result, t) => {
   if (!aggregations) {
     return []
   }
-  return Object.keys(aggregations).map(name => {
+  return Object.keys(aggregations).map((name) => {
     const parts = name.match(/(.*?)\/(.*)/)
     const type = parts[1]
     const key = parts[2]
@@ -309,7 +307,7 @@ const cleanOptions = (options) => ({
   after: undefined,
   before: undefined,
   filter: undefined,
-  trackingId: undefined
+  trackingId: undefined,
 })
 
 const stringifyOptions = (options) =>
@@ -338,7 +336,14 @@ const getFirst = (first, filter, user, recursive, forceUnrestricted) => {
   const format = getFilterValue(filter, 'format')
   const unrestricted = includesUnrestrictedChildRepoId(format)
 
-  if (!isUserUnrestricted(user) && !recursive && !path && !oneRepoId && !unrestricted && !forceUnrestricted) {
+  if (
+    !isUserUnrestricted(user) &&
+    !recursive &&
+    !path &&
+    !oneRepoId &&
+    !unrestricted &&
+    !forceUnrestricted
+  ) {
     return 0
   }
 
@@ -351,9 +356,7 @@ const getFirst = (first, filter, user, recursive, forceUnrestricted) => {
 
 const getIndicesList = (filter) => {
   const limitType = getFilterValue(filter, 'type')
-  const typeFilter = limitType
-    ? ({ type }) => type === limitType
-    : Boolean
+  const typeFilter = limitType ? ({ type }) => type === limitType : Boolean
   const searchableFilter = ({ searchable = true }) => searchable
 
   return indices.list.filter(typeFilter).filter(searchableFilter)
@@ -361,10 +364,10 @@ const getIndicesList = (filter) => {
 
 const hasFieldRequested = (fieldName, GraphQLResolveInfo) => {
   const fields = getFieldList(GraphQLResolveInfo, true)
-  return !!fields.find(field => (
-    field === fieldName ||
-    field.split('.').find(f => f === fieldName)
-  ))
+  return !!fields.find(
+    (field) =>
+      field === fieldName || field.split('.').find((f) => f === fieldName),
+  )
 }
 
 const search = async (__, args, context, info) => {
@@ -381,7 +384,7 @@ const search = async (__, args, context, info) => {
     trackingId = uuid(),
     withoutContent: _withoutContent,
     withoutRelatedDocs = false,
-    withoutAggs = false
+    withoutAggs = false,
   } = args
 
   // detect if Document.content is requested
@@ -389,36 +392,33 @@ const search = async (__, args, context, info) => {
   let withoutChildren = withoutContent
   if (info && _withoutContent === undefined) {
     withoutContent = !hasFieldRequested('content', info)
-    withoutChildren = (
-      withoutContent &&
-      !hasFieldRequested('children', info)
-    )
+    withoutChildren = withoutContent && !hasFieldRequested('children', info)
   }
 
   const options = after
     ? { ...args, ...parseOptions(after) }
     : before
-      ? { ...args, ...parseOptions(before) }
-      : args
+    ? { ...args, ...parseOptions(before) }
+    : args
 
   const {
     search,
-    filter: filterObj = { },
+    filter: filterObj = {},
     filters: filterArray = [],
     sort = {
       key: 'relevance',
-      direction: 'DESC'
+      direction: 'DESC',
     },
     first: _first = 40,
-    from = 0
+    from = 0,
   } = options
 
   debug('options', JSON.stringify(options))
 
-  Object.keys(filterObj).forEach(key => {
+  Object.keys(filterObj).forEach((key) => {
     filterArray.push({
       key,
-      value: filterObj[key]
+      value: filterObj[key],
     })
   })
 
@@ -433,7 +433,17 @@ const search = async (__, args, context, info) => {
     index: indicesList.map(({ name }) => getIndexAlias(name, 'read')),
     from,
     size: first,
-    body: createQuery(search, filter, sort, indicesList, user, scheduledAt, withoutChildren, withoutAggs, ignorePrepublished)
+    body: createQuery(
+      search,
+      filter,
+      sort,
+      indicesList,
+      user,
+      scheduledAt,
+      withoutChildren,
+      withoutAggs,
+      ignorePrepublished,
+    ),
   }
   debug('ES query', JSON.stringify(query))
 
@@ -456,70 +466,79 @@ const search = async (__, args, context, info) => {
     pageInfo: {
       hasNextPage,
       endCursor: hasNextPage
-        ? stringifyOptions(cleanOptions({
-          ...options,
-          filters: filterArray,
-          first,
-          from: from + first
-        }))
+        ? stringifyOptions(
+            cleanOptions({
+              ...options,
+              filters: filterArray,
+              first,
+              from: from + first,
+            }),
+          )
         : null,
       hasPreviousPage,
       startCursor: hasPreviousPage
-        ? stringifyOptions(cleanOptions({
-          ...options,
-          filters: filterArray,
-          first,
-          from: from - first
-        }))
-        : null
+        ? stringifyOptions(
+            cleanOptions({
+              ...options,
+              filters: filterArray,
+              first,
+              from: from - first,
+            }),
+          )
+        : null,
     },
-    trackingId
+    trackingId,
   }
 
-  if (!recursive && !withoutRelatedDocs && (!filter.type || filter.type === 'Document')) {
+  if (
+    !recursive &&
+    !withoutRelatedDocs &&
+    (!filter.type || filter.type === 'Document')
+  ) {
     await addRelatedDocs({
       connection: response,
       context,
-      withoutContent
+      withoutContent,
     })
   }
 
   if (!recursive && SEARCH_TRACK) {
     const took = cacheHIT ? 0 : result.took
     const total = result.hits.total
-    const hits = result.hits.hits
-      .map(hit => _.omit(hit, '_source'))
+    const hits = result.hits.hits.map((hit) => _.omit(hit, '_source'))
     const aggs = result.aggregations
 
     const filters = options.filters
-      ? options.filters.map(filter => {
-        if (typeof filter.value !== 'string') {
-          filter.value = JSON.stringify(filter.value)
-        }
+      ? options.filters.map((filter) => {
+          if (typeof filter.value !== 'string') {
+            filter.value = JSON.stringify(filter.value)
+          }
 
-        return filter
-      })
+          return filter
+        })
       : []
 
     // not await tracking
-    elastic.index({
-      index: getDateIndex('searches'),
-      type: 'Search',
-      body: {
-        date: new Date(),
-        trackingId,
-        roles: user && user.roles,
-        took,
-        cache: cacheHIT,
-        options: Object.assign({}, options, { filters }),
-        query,
-        total,
-        hits,
-        aggs
-      }
-    }).catch(err => {
-      console.error('search, tracking', err)
-    })
+    elastic
+      .index({
+        index: getDateIndex('searches'),
+        type: 'Search',
+        body: {
+          date: new Date(),
+          trackingId,
+          roles: user && user.roles,
+          took,
+          cache: cacheHIT,
+          options: Object.assign({}, options, { filters }),
+          query,
+          total,
+          hits,
+          aggs,
+        },
+      })
+      .catch((err) => {
+        console.error('search, tracking', err)
+      })
   }
 
   return response

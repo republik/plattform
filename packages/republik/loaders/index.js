@@ -1,3 +1,3 @@
 module.exports = {
-  Pledge: require('./Pledge')
+  Pledge: require('./Pledge'),
 }

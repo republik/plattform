@@ -16,52 +16,53 @@ const getEmbed = require('@orbiting/backend-modules-embeds/graphql/resolvers/_qu
 
 const platformToEmbedType = {
   vimeo: 'VimeoEmbed',
-  youtube: 'YoutubeEmbed'
+  youtube: 'YoutubeEmbed',
 }
 
 const transform = async (doc, context, isRawDoc) => {
   const mdast = doc.content
   const promises = []
   visit(mdast, 'zone', (node, i, parent) => {
-    promises.push(new Promise(async (resolve, reject) => {
-      if (node.identifier === 'EMBEDVIDEO') {
-        if (['vimeo', 'youtube'].includes(node.data.platform)) {
-          let newEmbed
-          try {
-            newEmbed = await getEmbed(
-              null,
-              {
-                embedType: platformToEmbedType[node.data.platform],
-                id: node.data.id
-              },
-              context
-            )
-          } catch (e) {
-            console.log('error getEmbed', e, { newEmbed, node })
-          }
-          if (
-            newEmbed &&
-            (
-              (newEmbed.durationMs && !node.data.durationMs) ||
-              (newEmbed.mediaId && !node.data.mediaId)
-            )
-          ) {
-            node.data.durationMs = newEmbed.durationMs
-            node.data.mediaId = newEmbed.mediaId
-            resolve(true)
+    promises.push(
+      new Promise(async (resolve, reject) => {
+        if (node.identifier === 'EMBEDVIDEO') {
+          if (['vimeo', 'youtube'].includes(node.data.platform)) {
+            let newEmbed
+            try {
+              newEmbed = await getEmbed(
+                null,
+                {
+                  embedType: platformToEmbedType[node.data.platform],
+                  id: node.data.id,
+                },
+                context,
+              )
+            } catch (e) {
+              console.log('error getEmbed', e, { newEmbed, node })
+            }
+            if (
+              newEmbed &&
+              ((newEmbed.durationMs && !node.data.durationMs) ||
+                (newEmbed.mediaId && !node.data.mediaId))
+            ) {
+              node.data.durationMs = newEmbed.durationMs
+              node.data.mediaId = newEmbed.mediaId
+              resolve(true)
+            }
           }
         }
-      }
-      resolve(false)
-    }))
+        resolve(false)
+      }),
+    )
   })
   const results = await Promise.all(promises)
   if (
-    results.find(r => !!r) ||
+    results.find((r) => !!r) ||
     // simple republish will augment audioSource with duration
     // if raw then there is no duration (only in published ES doc) but the
     // decision was made in the run with ES doc
-    (isRawDoc || (doc.meta && doc.meta.audioSource && !doc.meta.audioSource.durationMs))
+    isRawDoc ||
+    (doc.meta && doc.meta.audioSource && !doc.meta.audioSource.durationMs)
   ) {
     return 'hinzugefügt: Spieldauer und mediaId für video/audio'
   }
@@ -69,5 +70,5 @@ const transform = async (doc, context, isRawDoc) => {
 }
 
 transformPublications({
-  transform
+  transform,
 })

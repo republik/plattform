@@ -1,3 +1,3 @@
 module.exports = {
-  Embed: require('./Embed')
+  Embed: require('./Embed'),
 }

@@ -27,19 +27,19 @@ module.exports = async (_, { slug }, { pgdb, user: me, t }) => {
       userId: me.id,
       discussionId: election.discussionId,
       content: me._raw.statement,
-      hotness: 0.0
+      hotness: 0.0,
     },
-    { userId: me.id, discussionId: election.discussionId }
+    { userId: me.id, discussionId: election.discussionId },
   )
 
-  const {entity, isNew} = await upsert(
+  const { entity, isNew } = await upsert(
     pgdb.public.electionCandidacies,
     {
       userId: me.id,
       electionId: election.id,
-      commentId: comment.id
+      commentId: comment.id,
     },
-    { userId: me.id, electionId: election.id }
+    { userId: me.id, electionId: election.id },
   )
 
   if (isNew) {
@@ -47,7 +47,7 @@ module.exports = async (_, { slug }, { pgdb, user: me, t }) => {
       user: me,
       election,
       pgdb,
-      t
+      t,
     })
   }
 

@@ -6,7 +6,7 @@ const {
   SLACK_CHANNEL_IT_MONITOR,
   SLACK_CHANNEL_ADMIN,
   SLACK_CHANNEL_FINANCE,
-  ADMIN_FRONTEND_BASE_URL
+  ADMIN_FRONTEND_BASE_URL,
 } = process.env
 
 exports.publishMonitor = async (_user, message) => {
@@ -14,7 +14,7 @@ exports.publishMonitor = async (_user, message) => {
   try {
     const content = [
       `*${user.name}* (${user.email}):`,
-      message.replace(/{ADMIN_FRONTEND_BASE_URL}/g, ADMIN_FRONTEND_BASE_URL)
+      message.replace(/{ADMIN_FRONTEND_BASE_URL}/g, ADMIN_FRONTEND_BASE_URL),
     ].join(' ')
     return await publish(SLACK_CHANNEL_IT_MONITOR, content)
   } catch (e) {
@@ -22,15 +22,22 @@ exports.publishMonitor = async (_user, message) => {
   }
 }
 
-exports.publishMembership = async (_user, membershipTypeName, action, details) => {
+exports.publishMembership = async (
+  _user,
+  membershipTypeName,
+  action,
+  details,
+) => {
   const user = transformUser(_user)
   try {
     let detailsString = ''
     if (details) {
       detailsString = [
         details.category && `Category: ${details.category}`,
-        details.reason
-      ].filter(Boolean).join('\n')
+        details.reason,
+      ]
+        .filter(Boolean)
+        .join('\n')
     }
     const content = `*${user.name}* (${user.email}): ${action} (${membershipTypeName}) ${detailsString}
 ${ADMIN_FRONTEND_BASE_URL}/users/${user.id}

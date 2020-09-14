@@ -1,5 +1,5 @@
 module.exports = {
-  option (voteOptionResult) {
+  option(voteOptionResult) {
     if (voteOptionResult.option) {
       return voteOptionResult.option
     }
@@ -7,8 +7,8 @@ module.exports = {
     if (voteOptionResult.id && voteOptionResult.name) {
       return {
         id: voteOptionResult.id,
-        name: voteOptionResult.name
+        name: voteOptionResult.name,
       }
     }
-  }
+  },
 }

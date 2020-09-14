@@ -4,16 +4,13 @@ const moment = require('moment')
 const { MAIL_EXPRESS_MAILCHIMP_SECRET } = process.env
 
 module.exports = async (server, pgdb) => {
-  server.get(
-    '/mail/mailchimp/webhook/:secret',
-    (req, res) => {
-      if (req.params.secret !== MAIL_EXPRESS_MAILCHIMP_SECRET) {
-        return res.sendStatus(403)
-      }
-
-      return res.sendStatus(204)
+  server.get('/mail/mailchimp/webhook/:secret', (req, res) => {
+    if (req.params.secret !== MAIL_EXPRESS_MAILCHIMP_SECRET) {
+      return res.sendStatus(403)
     }
-  )
+
+    return res.sendStatus(204)
+  })
 
   server.post(
     '/mail/mailchimp/webhook/:secret',
@@ -28,10 +25,10 @@ module.exports = async (server, pgdb) => {
       const record = {
         type,
         firedAt: moment(`${firedAt}+00:00`),
-        createdAt: moment()
+        createdAt: moment(),
       }
 
-      switch(type) {
+      switch (type) {
         case 'subscribe':
           Object.assign(record, handleSubscribe(data))
           break
@@ -52,11 +49,11 @@ module.exports = async (server, pgdb) => {
       await pgdb.public.mailchimpLog.insert(record)
 
       return res.sendStatus(204)
-    }
+    },
   )
 }
 
-const handleSubscribe = data => {
+const handleSubscribe = (data) => {
   /*
   "data[id]": "8a25ff1d98",
   "data[list_id]": "a6b5da1054",
@@ -73,11 +70,11 @@ const handleSubscribe = data => {
   return {
     email: data.email,
     customer: getGroups('Customer', data),
-    newsletter: getGroups('Republik NL', data)
+    newsletter: getGroups('Republik NL', data),
   }
-} 
+}
 
-const handleUnsubscribe = data => {
+const handleUnsubscribe = (data) => {
   /*
   "data[action]": "unsub",
   "data[reason]": "manual",
@@ -98,11 +95,11 @@ const handleUnsubscribe = data => {
     reason: data.reason,
     campaign: data['campaign_id'],
     customer: getGroups('Customer', data),
-    newsletter: getGroups('Republik NL', data)
+    newsletter: getGroups('Republik NL', data),
   }
 }
 
-const handleProfile = data => {
+const handleProfile = (data) => {
   /*
   "data[id]": "8a25ff1d98",
   "data[list_id]": "a6b5da1054",
@@ -117,11 +114,11 @@ const handleProfile = data => {
   return {
     email: data.email,
     customer: getGroups('Customer', data),
-    newsletter: getGroups('Republik NL', data)
+    newsletter: getGroups('Republik NL', data),
   }
 }
 
-const handleUpemail = data => {
+const handleUpemail = (data) => {
   /*
   "data[list_id]": "a6b5da1054",
   "data[new_id]": "51da8c3259",
@@ -130,11 +127,11 @@ const handleUpemail = data => {
   */
   return {
     email: data['new_email'],
-    oldEmail: data['old_email']
+    oldEmail: data['old_email'],
   }
 }
 
-const handleCleaned = data => {
+const handleCleaned = (data) => {
   /*
   "data[list_id]": "a6b5da1054",
   "data[campaign_id]": "4fjk2ma9xd",
@@ -144,14 +141,14 @@ const handleCleaned = data => {
   return {
     email: data.email,
     reason: data.reason,
-    campaign: data['campaign_id']
+    campaign: data['campaign_id'],
   }
 }
 
 /**
  * Finds a grouping by {name} in an array with objects, splits
  * {groups} string and returns an array.
- * 
+ *
  * @example: getGroups(
  *  'Customer', [
  *    {
@@ -175,7 +172,10 @@ const getGroups = (name, data) => {
     return
   }
 
-  const grouping = groupings.find(g => g.name === name)
+  const grouping = groupings.find((g) => g.name === name)
 
-  return grouping.groups.split(',').map(g => g.trim()).filter(Boolean)
+  return grouping.groups
+    .split(',')
+    .map((g) => g.trim())
+    .filter(Boolean)
 }

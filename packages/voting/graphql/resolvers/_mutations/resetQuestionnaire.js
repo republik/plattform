@@ -1,8 +1,5 @@
 const { ensureSignedIn } = require('@orbiting/backend-modules-auth')
-const {
-  findById,
-  ensureReadyToSubmit
-} = require('../../../lib/Questionnaire')
+const { findById, ensureReadyToSubmit } = require('../../../lib/Questionnaire')
 
 module.exports = async (_, { id: questionnaireId }, context) => {
   const { pgdb, user: me, t, req } = context
@@ -14,12 +11,15 @@ module.exports = async (_, { id: questionnaireId }, context) => {
 
     const questionnaire = await findById(questionnaireId, transaction)
 
-    await ensureReadyToSubmit(questionnaire, me.id, now, { ...context, pgdb: transaction })
+    await ensureReadyToSubmit(questionnaire, me.id, now, {
+      ...context,
+      pgdb: transaction,
+    })
 
     await pgdb.public.answers.delete({
       questionnaireId,
       userId: me.id,
-      submitted: false
+      submitted: false,
     })
 
     await transaction.transactionCommit()

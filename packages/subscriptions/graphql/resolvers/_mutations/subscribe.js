@@ -5,8 +5,5 @@ module.exports = (_, args, context) => {
   const { user: me, req } = context
   ensureSignedIn(req)
 
-  return upsertSubscription(
-    { ...args, userId: me.id },
-    context
-  )
+  return upsertSubscription({ ...args, userId: me.id }, context)
 }

@@ -2,17 +2,16 @@ const MailchimpInterface = require('../MailchimpInterface')
 const { SubscriptionHandlerMissingMailError } = require('../errors')
 const logger = console
 
-module.exports = async ({
-  user
-}, NewsletterSubscription) => {
+module.exports = async ({ user }, NewsletterSubscription) => {
   // circumvent circle dependency
-  const { Roles: { userIsInRoles } } = require('@orbiting/backend-modules-auth')
+  const {
+    Roles: { userIsInRoles },
+  } = require('@orbiting/backend-modules-auth')
 
   const { email, roles } = user
   if (!NewsletterSubscription) throw new SubscriptionHandlerMissingMailError()
 
-  const supportedInterestConfigs = NewsletterSubscription
-    .allInterestConfigurations()
+  const supportedInterestConfigs = NewsletterSubscription.allInterestConfigurations()
 
   const mailchimp = MailchimpInterface({ logger })
   const member = await mailchimp.getMember(email)
@@ -23,12 +22,14 @@ module.exports = async ({
     const status = ''
     const subscriptions = supportedInterestConfigs
       .filter(({ visibleToRoles }) => !visibleToRoles || !visibleToRoles.length)
-      .map(({ interestId }) => NewsletterSubscription.buildSubscription(
-        user.id,
-        interestId,
-        false,
-        roles
-      ))
+      .map(({ interestId }) =>
+        NewsletterSubscription.buildSubscription(
+          user.id,
+          interestId,
+          false,
+          roles,
+        ),
+      )
     return { status, subscriptions }
   }
 
@@ -36,16 +37,24 @@ module.exports = async ({
   const subscriptions = []
   supportedInterestConfigs.forEach(({ interestId, visibleToRoles }) => {
     // only return visible interests
-    const subscribed = status === MailchimpInterface.MemberStatus.Subscribed
-      ? !!member.interests[interestId]
-      : false
-    if (subscribed || !visibleToRoles || !visibleToRoles.length || userIsInRoles(user, visibleToRoles)) {
-      subscriptions.push(NewsletterSubscription.buildSubscription(
-        user.id,
-        interestId,
-        subscribed,
-        roles
-      ))
+    const subscribed =
+      status === MailchimpInterface.MemberStatus.Subscribed
+        ? !!member.interests[interestId]
+        : false
+    if (
+      subscribed ||
+      !visibleToRoles ||
+      !visibleToRoles.length ||
+      userIsInRoles(user, visibleToRoles)
+    ) {
+      subscriptions.push(
+        NewsletterSubscription.buildSubscription(
+          user.id,
+          interestId,
+          subscribed,
+          roles,
+        ),
+      )
     }
   })
   return { status, subscriptions }

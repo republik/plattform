@@ -7,7 +7,7 @@ module.exports = async (_, { name }, { user: me, pgdb, req, t }) => {
     userId: me.id,
     consents: [name],
     req,
-    pgdb
+    pgdb,
   })
 
   return me

@@ -4,9 +4,10 @@ const { transformName } = require('../lib/nameClipper')
 
 module.exports = (context) => ({
   clear: async (id) => {
-    const discussion = id && isUUID.v4(id)
-      ? await context.loaders.Discussion.byId.load(id)
-      : await context.loaders.Discussion.byRepoId.load(id)
+    const discussion =
+      id && isUUID.v4(id)
+        ? await context.loaders.Discussion.byId.load(id)
+        : await context.loaders.Discussion.byRepoId.load(id)
     if (discussion) {
       if (discussion.id) {
         context.loaders.Discussion.byId.clear(discussion.id)
@@ -18,32 +19,36 @@ module.exports = (context) => ({
     context.loaders.Discussion.byId.clear(id)
     context.loaders.Discussion.byRepoId.clear(id)
   },
-  byId: createDataLoader(
-    ids => context.pgdb.public.discussions.find({ id: ids })
+  byId: createDataLoader((ids) =>
+    context.pgdb.public.discussions.find({ id: ids }),
   ),
   byRepoId: createDataLoader(
-    repoIds => context.pgdb.public.discussions.find({ repoId: repoIds }),
+    (repoIds) => context.pgdb.public.discussions.find({ repoId: repoIds }),
     null,
-    (key, rows) => rows.find(row => row.repoId === key)
+    (key, rows) => rows.find((row) => row.repoId === key),
   ),
   Commenter: {
-    discussionPreferences: createDataLoader(keyObjs =>
-      context.pgdb.public.discussionPreferences.find({
-        or: keyObjs.map(keyObj => ({
-          and: keyObj
-        }))
-      })
-        .then(dps => dps
-          .map(async (dp) => ({
+    discussionPreferences: createDataLoader((keyObjs) =>
+      context.pgdb.public.discussionPreferences
+        .find({
+          or: keyObjs.map((keyObj) => ({
+            and: keyObj,
+          })),
+        })
+        .then((dps) =>
+          dps.map(async (dp) => ({
             ...dp,
-            credential: dp.credentialId && await context.loaders.User.credential.load(dp.credentialId)
-          }))
-        )
-    )
+            credential:
+              dp.credentialId &&
+              (await context.loaders.User.credential.load(dp.credentialId)),
+          })),
+        ),
+    ),
   },
   byIdCommentsCount: createDataLoader(
-    ids =>
-      context.pgdb.query(`
+    (ids) =>
+      context.pgdb.query(
+        `
         SELECT
           "discussionId",
           COUNT(*) AS count
@@ -53,18 +58,22 @@ module.exports = (context) => ({
           ARRAY["discussionId"] && :ids
         GROUP BY
           "discussionId"
-      `, {
-        ids
-      }),
+      `,
+        {
+          ids,
+        },
+      ),
     null,
     (key, rows) => {
-      const row = rows.find(row => row.discussionId === key)
+      const row = rows.find((row) => row.discussionId === key)
       return (row && row.count) || 0
-    }
+    },
   ),
   byIdCommenterNamesToClip: createDataLoader(
-    ids =>
-      context.pgdb.query(`
+    (ids) =>
+      context.pgdb
+        .query(
+          `
         WITH names AS (
           SELECT
             DISTINCT c."discussionId", u."firstName", u."lastName"
@@ -102,24 +111,27 @@ module.exports = (context) => ({
           names
         GROUP BY
           "discussionId"
-      `, {
-        ids
-      })
-        .then(rows => rows
-          .map(row => ({
+      `,
+          {
+            ids,
+          },
+        )
+        .then((rows) =>
+          rows.map((row) => ({
             ...row,
-            userNames: row.userNames.map(transformName)
-          }))
+            userNames: row.userNames.map(transformName),
+          })),
         ),
     null,
     (key, rows) => {
-      const row = rows.find(row => row.discussionId === key)
+      const row = rows.find((row) => row.discussionId === key)
       return (row && row.userNames) || []
-    }
+    },
   ),
   byIdCommenterIds: createDataLoader(
-    ids =>
-      context.pgdb.query(`
+    (ids) =>
+      context.pgdb.query(
+        `
         WITH user_ids AS (
           SELECT
             DISTINCT c."discussionId", u.id as "userId"
@@ -153,13 +165,15 @@ module.exports = (context) => ({
           user_ids
         GROUP BY
           "discussionId"
-      `, {
-        ids
-      }),
+      `,
+        {
+          ids,
+        },
+      ),
     null,
     (key, rows) => {
-      const row = rows.find(row => row.discussionId === key)
+      const row = rows.find((row) => row.discussionId === key)
       return (row && row.userIds) || []
-    }
-  )
+    },
+  ),
 })

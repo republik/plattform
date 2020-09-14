@@ -1,4 +1,4 @@
 module.exports = {
   Answer: require('./Answer'),
-  QuestionnaireSubmissions: require('./QuestionnaireSubmissions')
+  QuestionnaireSubmissions: require('./QuestionnaireSubmissions'),
 }

@@ -8,7 +8,7 @@ const specs = [
   { n: 7, key: 'timeAhead/days' },
   { n: 365 / 7 / 12, key: 'timeAhead/weeks' },
   { n: 12, key: 'timeAhead/months', fn: 'round' },
-  { n: 10, key: 'timeAhead/years' }
+  { n: 10, key: 'timeAhead/years' },
 ]
 
 // diff is in seconds.
@@ -20,10 +20,7 @@ module.exports = (t, diff) => {
   }
 
   const spec = specs[Math.min(i, specs.length - 1)]
-  return t.pluralize(
-    spec.key,
-    {
-      count: Math[spec.fn || 'floor'](diff)
-    }
-  )
+  return t.pluralize(spec.key, {
+    count: Math[spec.fn || 'floor'](diff),
+  })
 }

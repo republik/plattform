@@ -8,18 +8,19 @@ require('@orbiting/backend-modules-env').config()
 const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
 
 console.log('running deleteLocal.js...')
-PgDb.connect().then(async pgdb => {
-  const dryRun = process.argv[2] === '--dry'
-  if (dryRun) {
-    console.log("dry run: this won't change anything in the DB")
-  }
+PgDb.connect()
+  .then(async (pgdb) => {
+    const dryRun = process.argv[2] === '--dry'
+    if (dryRun) {
+      console.log("dry run: this won't change anything in the DB")
+    }
 
-  const transaction = await pgdb.transactionBegin()
-  try {
-    console.log(`#users: ${await transaction.public.users.count()}`)
+    const transaction = await pgdb.transactionBegin()
+    try {
+      console.log(`#users: ${await transaction.public.users.count()}`)
 
-    // this is only correct as long as PRIVACY is not REVOKEable
-    const deleteUserIds = await transaction.queryOneColumn(`
+      // this is only correct as long as PRIVACY is not REVOKEable
+      const deleteUserIds = await transaction.queryOneColumn(`
       SELECT
         DISTINCT(u.id) AS id
       FROM
@@ -40,54 +41,61 @@ PgDb.connect().then(async pgdb => {
         u.email NOT LIKE '%project-r.construction' AND
         u.email NOT LIKE '%republik.ch'
     `)
-    console.log(`#userIds to delete: ${deleteUserIds.length}`)
+      console.log(`#userIds to delete: ${deleteUserIds.length}`)
 
-    const options = { deleteUserIds }
+      const options = { deleteUserIds }
 
-    // didn't find a way to get the num deleted back with query
-    await transaction.query(`
+      // didn't find a way to get the num deleted back with query
+      await transaction.query(
+        `
       DELETE
         FROM sessions s
       WHERE
         ARRAY[(s.sess #>> '{passport, user}')::uuid] && :deleteUserIds
-    `, options)
-    console.log('deleted sessions')
+    `,
+        options,
+      )
+      console.log('deleted sessions')
 
-    const numDeleteEventLog = await transaction.public.eventLog.delete({
-      userId: deleteUserIds
-    })
-    console.log(`#numDeleteEventLog: ${numDeleteEventLog}`)
+      const numDeleteEventLog = await transaction.public.eventLog.delete({
+        userId: deleteUserIds,
+      })
+      console.log(`#numDeleteEventLog: ${numDeleteEventLog}`)
 
-    const numDeleteCredentials = await transaction.public.credentials.delete({
-      userId: deleteUserIds
-    })
-    console.log(`#numDeleteCredentials: ${numDeleteCredentials}`)
+      const numDeleteCredentials = await transaction.public.credentials.delete({
+        userId: deleteUserIds,
+      })
+      console.log(`#numDeleteCredentials: ${numDeleteCredentials}`)
 
-    const numDeleteUsers = await transaction.public.users.delete({
-      id: deleteUserIds
-    })
-    console.log(`#numDeleteUsers: ${numDeleteUsers}`)
+      const numDeleteUsers = await transaction.public.users.delete({
+        id: deleteUserIds,
+      })
+      console.log(`#numDeleteUsers: ${numDeleteUsers}`)
 
-    console.log(`#users: ${await transaction.public.users.count()}`)
+      console.log(`#users: ${await transaction.public.users.count()}`)
 
-    if (dryRun) {
-      console.log('rolling back transaction (dryMode)...')
+      if (dryRun) {
+        console.log('rolling back transaction (dryMode)...')
+        await transaction.transactionRollback()
+      } else {
+        console.log('commiting transaction...')
+        await transaction.transactionCommit()
+      }
+    } catch (e) {
+      console.log('rolling back transaction...')
+      console.log(e)
       await transaction.transactionRollback()
-    } else {
-      console.log('commiting transaction...')
-      await transaction.transactionCommit()
+      throw e
     }
-  } catch (e) {
-    console.log('rolling back transaction...')
-    console.log(e)
-    await transaction.transactionRollback()
-    throw e
-  }
 
-  console.log(`#users (after transaction): ${await pgdb.public.users.count()}`)
-}).then(() => {
-  process.exit()
-}).catch(e => {
-  console.log(e)
-  process.exit(1)
-})
+    console.log(
+      `#users (after transaction): ${await pgdb.public.users.count()}`,
+    )
+  })
+  .then(() => {
+    process.exit()
+  })
+  .catch((e) => {
+    console.log(e)
+    process.exit(1)
+  })

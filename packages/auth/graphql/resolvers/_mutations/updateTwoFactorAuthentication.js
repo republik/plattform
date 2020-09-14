@@ -4,23 +4,24 @@ const {
   updateUserTwoFactorAuthentication,
   TwoFactorAlreadyEnabledError,
   TwoFactorAlreadyDisabledError,
-  SecondFactorNotReadyError} = require('../../../lib/Users')
+  SecondFactorNotReadyError,
+} = require('../../../lib/Users')
 
-module.exports = async (_, args = { }, { pgdb, user, req, ...rest }) => {
+module.exports = async (_, args = {}, { pgdb, user, req, ...rest }) => {
   ensureSignedIn(req)
 
-  const {
-    enabled,
-    type
-  } = args
+  const { enabled, type } = args
 
-  const enabledSecondFactors = (user._raw.enabledSecondFactors || [])
+  const enabledSecondFactors = user._raw.enabledSecondFactors || []
   const isSecondFactorEnabled = enabledSecondFactors.indexOf(type) !== -1
 
   if (enabled) {
     if (isSecondFactorEnabled) {
       throw new TwoFactorAlreadyEnabledError({ userId: user.id })
-    } else if (type === TokenTypes.TOTP && !user._raw.isTOTPChallengeSecretVerified) {
+    } else if (
+      type === TokenTypes.TOTP &&
+      !user._raw.isTOTPChallengeSecretVerified
+    ) {
       throw new SecondFactorNotReadyError({ userId: user.id, type })
     } else if (type === TokenTypes.SMS && !user._raw.isPhoneNumberVerified) {
       throw new SecondFactorNotReadyError({ userId: user.id, type })
@@ -30,13 +31,15 @@ module.exports = async (_, args = { }, { pgdb, user, req, ...rest }) => {
   }
 
   const updatedEnabledSecondFactors = new Set(enabledSecondFactors)
-  enabled ? updatedEnabledSecondFactors.add(type) : updatedEnabledSecondFactors.delete(type)
+  enabled
+    ? updatedEnabledSecondFactors.add(type)
+    : updatedEnabledSecondFactors.delete(type)
 
   console.log(updatedEnabledSecondFactors)
   const updatedUser = await updateUserTwoFactorAuthentication({
     pgdb,
     userId: user.id,
-    enabledSecondFactors: [...updatedEnabledSecondFactors]
+    enabledSecondFactors: [...updatedEnabledSecondFactors],
   })
   return !!updatedUser
 }

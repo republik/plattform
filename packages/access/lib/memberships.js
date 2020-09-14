@@ -10,10 +10,7 @@ const addMemberRole = async (grant, user, pgdb) => {
 
   const hasMembership = await hasUserActiveMembership(user, pgdb)
 
-  if (
-    !hasMembership &&
-    !Roles.userHasRole(user, 'member')
-  ) {
+  if (!hasMembership && !Roles.userHasRole(user, 'member')) {
     await Roles.addUserToRole(user.id, 'member', pgdb)
     await eventsLib.log(grant, 'role.add', pgdb)
 
@@ -33,8 +30,9 @@ const removeMemberRole = async (grant, user, findFn, pgdb) => {
   const hasMembership = await hasUserActiveMembership(user, pgdb)
 
   const allRecipientGrants = await findFn(user, { pgdb })
-  const allOtherRecipientGrants =
-    allRecipientGrants.filter(otherGrant => otherGrant.id !== grant.id)
+  const allOtherRecipientGrants = allRecipientGrants.filter(
+    (otherGrant) => otherGrant.id !== grant.id,
+  )
 
   if (
     !hasMembership &&
@@ -77,5 +75,5 @@ const findGiftableMemberships = async (pgdb) =>
 module.exports = {
   addMemberRole,
   removeMemberRole,
-  findGiftableMemberships
+  findGiftableMemberships,
 }

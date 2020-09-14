@@ -15,34 +15,31 @@ const cascadeUpdateConfig = {
     {
       table: 'users', // update all users
       via: 'userId', // via credentials.userId
-      where: 'id' // where user.id === <via>
+      where: 'id', // where user.id === <via>
     },
     {
       table: 'comments', // update all comments
       via: 'userId', // via credentials.userId
-      where: 'userId' // where comments.userid === <via>
-    }
+      where: 'userId', // where comments.userid === <via>
+    },
   ],
   discussions: [
     {
       table: 'comments', // update all comments
       via: 'id', // via discussions.id
-      where: 'discussionId' // where comments.discussionId === <via>
-    }
+      where: 'discussionId', // where comments.discussionId === <via>
+    },
   ],
   discussionPreferences: [
     {
       table: 'comments', // update all comments
       via: 'discussionId', // via discussionPreferences.discussionId
-      where: 'discussionId' // where comments.discussionId === <via>
-    }
-  ]
+      where: 'discussionId', // where comments.discussionId === <via>
+    },
+  ],
 }
 
-const updateCascade = async function (
-  { table, rows },
-  { pgdb, elastic }
-) {
+const updateCascade = async function ({ table, rows }, { pgdb, elastic }) {
   if (cascadeUpdateConfig[table]) {
     debug('found cascade configuration')
 
@@ -50,36 +47,35 @@ const updateCascade = async function (
       cascadeUpdateConfig[table].map(async function (config) {
         const sources =
           config.via === 'id'
-            ? rows.map(row => ({ id: row.id }))
-            : await pgdb.public[table].find({ id: rows.map(row => row.id) })
+            ? rows.map((row) => ({ id: row.id }))
+            : await pgdb.public[table].find({ id: rows.map((row) => row.id) })
 
-        const sourceIds = sources.map(source => source[config.via])
+        const sourceIds = sources.map((source) => source[config.via])
 
         if (sourceIds.length < 1) {
           return
         }
 
-        const updateRows = await pgdb.public[config.table]
-          .find(
-            { [config.where]: sourceIds },
-            { fields: ['id'] }
-          )
+        const updateRows = await pgdb.public[config.table].find(
+          { [config.where]: sourceIds },
+          { fields: ['id'] },
+        )
 
         return notificationHandler(
           {
             rows: updateRows,
-            payload: JSON.stringify({ table: config.table })
+            payload: JSON.stringify({ table: config.table }),
           },
-          { pgdb, elastic }
+          { pgdb, elastic },
         )
-      })
+      }),
     )
   }
 }
 
 const notificationHandler = async (
   { rows = false, payload: originalPayload },
-  { pgdb, elastic }
+  { pgdb, elastic },
 ) => {
   const notificationHandleId = ++stats.notifications
 
@@ -87,30 +83,24 @@ const notificationHandler = async (
 
   try {
     const { table } = JSON.parse(originalPayload)
-    debug(
-      'notification received',
-      { table, notificationHandleId }
-    )
+    debug('notification received', { table, notificationHandleId })
 
     if (!rows) {
       rows = await tx.public.notifyTableChangeQueue.query(
         'SELECT * FROM "notifyTableChangeQueue" WHERE "table" = :table LIMIT :limit FOR UPDATE SKIP LOCKED',
-        { table, limit: BULK_SIZE }
+        { table, limit: BULK_SIZE },
       )
     }
 
     if (rows.length === 0) {
-      debug(
-        'queue noop',
-        { table, notificationHandleId }
-      )
+      debug('queue noop', { table, notificationHandleId })
       return tx.transactionCommit()
     }
 
     debug(
       'queue skimmed',
       { table, notificationHandleId },
-      { rows: rows.length }
+      { rows: rows.length },
     )
 
     if (mappings.dict[table]) {
@@ -118,11 +108,11 @@ const notificationHandler = async (
       const { insert } = inserts.dict[name]
 
       const updateIds = rows
-        .filter(row => row.op !== 'DELETE')
-        .map(row => row.id)
+        .filter((row) => row.op !== 'DELETE')
+        .map((row) => row.id)
       const deleteIds = rows
-        .filter(row => row.op === 'DELETE')
-        .map(row => row.id)
+        .filter((row) => row.op === 'DELETE')
+        .map((row) => row.id)
 
       debug(table, { updateIds, deleteIds })
 
@@ -134,16 +124,17 @@ const notificationHandler = async (
         resource: {
           table: tx.public[table],
           where: { id: updateIds.length > 0 ? updateIds : null },
-          delete: deleteIds
-        }
+          delete: deleteIds,
+        },
       })
     }
 
     await updateCascade({ table, rows }, { pgdb, elastic })
 
     // No delete if rows are provided from outside
-    await tx.public.notifyTableChangeQueue
-      .delete({ id: rows.map(row => row.id) })
+    await tx.public.notifyTableChangeQueue.delete({
+      id: rows.map((row) => row.id),
+    })
 
     debug('queue done', { table, notificationHandleId })
 
@@ -178,28 +169,26 @@ const start = async function ({ pgdb, elastic }) {
   const cxt = await pgdb.dedicatedConnectionBegin()
 
   await cxt.connection.query('LISTEN change')
-  await cxt.connection.on(
-    'notification',
-    async input => {
-      if (closing) {
-        return
-      }
-
-      workQueue.push(input)
-
-      if (!runPromise) {
-        runPromise = run(workQueue, { pgdb, elastic })
-          .then(() => { runPromise = null })
-      }
+  await cxt.connection.on('notification', async (input) => {
+    if (closing) {
+      return
     }
-  )
+
+    workQueue.push(input)
+
+    if (!runPromise) {
+      runPromise = run(workQueue, { pgdb, elastic }).then(() => {
+        runPromise = null
+      })
+    }
+  })
 
   debug('listening')
 
   const close = async () => {
     closing = true
     workQueue.length = 0 // empty queue
-    runPromise && await runPromise
+    runPromise && (await runPromise)
 
     await cxt.dedicatedConnectionEnd()
 
@@ -207,10 +196,10 @@ const start = async function ({ pgdb, elastic }) {
   }
 
   return {
-    close
+    close,
   }
 }
 
 module.exports = {
-  start
+  start,
 }

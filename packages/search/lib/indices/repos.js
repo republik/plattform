@@ -7,7 +7,7 @@ module.exports = {
   mapping: {
     [type]: {
       dynamic: true,
-      properties: {}
-    }
-  }
+      properties: {},
+    },
+  },
 }

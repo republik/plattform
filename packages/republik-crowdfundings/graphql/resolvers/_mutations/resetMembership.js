@@ -1,9 +1,17 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
-const { publishMonitor } = require('@orbiting/backend-modules-republik/lib/slack')
+const {
+  publishMonitor,
+} = require('@orbiting/backend-modules-republik/lib/slack')
 const { canReset } = require('../Membership')
 
 module.exports = async (_, args, context) => {
-  const { pgdb, req, t, user: me, mail: { enforceSubscriptions } } = context
+  const {
+    pgdb,
+    req,
+    t,
+    user: me,
+    mail: { enforceSubscriptions },
+  } = context
   Roles.ensureUserHasRole(me, 'supporter')
 
   const { id: membershipId } = args
@@ -19,15 +27,17 @@ module.exports = async (_, args, context) => {
     await canReset(
       membership,
       { throwError: true },
-      { ...context, pgdb: transaction }
+      { ...context, pgdb: transaction },
     )
 
     await transaction.public.membershipPeriods.delete({ membershipId })
 
-    const pledge = await transaction.public.pledges.findOne({ id: membership.pledgeId })
+    const pledge = await transaction.public.pledges.findOne({
+      id: membership.pledgeId,
+    })
 
     const voucherCode = await transaction.queryOneField(
-      'SELECT make_hrid(\'"memberships"\'::regclass, \'voucherCode\'::text, 6::bigint)'
+      "SELECT make_hrid('\"memberships\"'::regclass, 'voucherCode'::text, 6::bigint)",
     )
 
     const updatedMembership = await transaction.public.memberships.updateAndGetOne(
@@ -37,8 +47,8 @@ module.exports = async (_, args, context) => {
         userId: pledge.userId, // return membership to pledger
         voucherCode, // generate new voucher code
         voucherable: true,
-        updatedAt: new Date()
-      }
+        updatedAt: new Date(),
+      },
     )
 
     await transaction.transactionCommit()
@@ -47,7 +57,11 @@ module.exports = async (_, args, context) => {
       await enforceSubscriptions({ pgdb, userId: membership.userId })
     } catch (e) {
       // ignore issues with newsletter subscriptions
-      console.warn('newsletter subscription changes failed', { req: req._log(), args, error: e })
+      console.warn('newsletter subscription changes failed', {
+        req: req._log(),
+        args,
+        error: e,
+      })
     }
 
     const { id, sequenceNumber, userId } = updatedMembership
@@ -59,12 +73,18 @@ module.exports = async (_, args, context) => {
           `resetMembership (id: ${id}) #${sequenceNumber}`,
           `{ADMIN_FRONTEND_BASE_URL}/users/${userId}`,
           userId !== membership.userId &&
-            `(was claimed by {ADMIN_FRONTEND_BASE_URL}/users/${membership.userId})`
-        ].filter(Boolean).join('\n')
+            `(was claimed by {ADMIN_FRONTEND_BASE_URL}/users/${membership.userId})`,
+        ]
+          .filter(Boolean)
+          .join('\n'),
       )
     } catch (e) {
       // swallow slack message
-      console.warn('publish to slack failed', { req: req._log(), args, error: e })
+      console.warn('publish to slack failed', {
+        req: req._log(),
+        args,
+        error: e,
+      })
     }
 
     return updatedMembership

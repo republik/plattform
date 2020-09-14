@@ -30,15 +30,12 @@ const index = async ({ indexName, type, elastic, resource }) => {
   let rows = []
 
   do {
-    rows = await resource.table.find(
-      resource.where || {},
-      {
-        orderBy: { id: 'asc' },
-        limit: resource.bulkSize || BULK_SIZE,
-        offset,
-        skipUndefined: true
-      }
-    )
+    rows = await resource.table.find(resource.where || {}, {
+      orderBy: { id: 'asc' },
+      limit: resource.bulkSize || BULK_SIZE,
+      offset,
+      skipUndefined: true,
+    })
 
     if (resource.transform) {
       rows = rows.map(resource.transform, resource)
@@ -49,7 +46,7 @@ const index = async ({ indexName, type, elastic, resource }) => {
       type,
       elastic,
       upsertDocs: rows,
-      deleteDocs: resource.delete || []
+      deleteDocs: resource.delete || [],
     })
 
     stats[type].added += rows.length
@@ -78,44 +75,44 @@ const bulk = async ({
   type,
   elastic,
   upsertDocs = [],
-  deleteDocs = []
+  deleteDocs = [],
 }) => {
   const payload = {
     body: [
       // <n+0> Destination of document: Index, type and id
       // <n+1> Document source
       // ...
-    ]
+    ],
   }
 
-  upsertDocs.forEach(doc => {
+  upsertDocs.forEach((doc) => {
     // <n+0>
     payload.body.push({
       update: {
         _index: indexName,
         _type: type,
         _id: doc.id,
-        retry_on_conflict: 3
-      }
+        retry_on_conflict: 3,
+      },
     })
     // <n+1>
     payload.body.push({
       doc: {
         ...doc,
-        __type: type
+        __type: type,
       },
-      doc_as_upsert: true
+      doc_as_upsert: true,
     })
   })
 
-  deleteDocs.forEach(id => {
+  deleteDocs.forEach((id) => {
     // <n+0>
     payload.body.push({
       delete: {
         _index: indexName,
         _type: type,
-        _id: id
-      }
+        _id: id,
+      },
     })
   })
 
@@ -131,5 +128,5 @@ const bulk = async ({
 
 module.exports = {
   index,
-  bulk
+  bulk,
 }

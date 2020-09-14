@@ -6,7 +6,7 @@ const {
   MAILCHIMP_API_KEY,
   MAILCHIMP_CAMPAIGN_CONFIGS,
   DEFAULT_MAIL_FROM_NAME,
-  DEFAULT_MAIL_FROM_ADDRESS
+  DEFAULT_MAIL_FROM_ADDRESS,
 } = process.env
 
 const mailchimpCampaignConfigs = MAILCHIMP_CAMPAIGN_CONFIGS
@@ -15,26 +15,28 @@ const mailchimpCampaignConfigs = MAILCHIMP_CAMPAIGN_CONFIGS
 
 module.exports = async ({ campaignId, campaignConfig = {} }) => {
   const config = {
-    ...mailchimpCampaignConfigs.find(c => c.key === campaignConfig.key),
-    ...campaignConfig
+    ...mailchimpCampaignConfigs.find((c) => c.key === campaignConfig.key),
+    ...campaignConfig,
   }
 
   const body = {
     recipients: {
-      ...config.list_id && { list_id: config.list_id },
+      ...(config.list_id && { list_id: config.list_id }),
       segment_opts: {
-        ...config.saved_segment_id && { saved_segment_id: Number(config.saved_segment_id) }
-      }
+        ...(config.saved_segment_id && {
+          saved_segment_id: Number(config.saved_segment_id),
+        }),
+      },
     },
     settings: {
-      ...config.subject_line && { subject_line: config.subject_line },
-      ...config.title && { title: config.title },
-      ...config.to_name && { to_name: config.to_name },
+      ...(config.subject_line && { subject_line: config.subject_line }),
+      ...(config.title && { title: config.title }),
+      ...(config.to_name && { to_name: config.to_name }),
       // ToDo: replace previous line with once we do greetings
       // to_name: config.to_name || '*|FNAME|* *|LNAME|*',
       from_name: config.from_name || DEFAULT_MAIL_FROM_NAME,
-      reply_to: config.reply_to || DEFAULT_MAIL_FROM_ADDRESS
-    }
+      reply_to: config.reply_to || DEFAULT_MAIL_FROM_ADDRESS,
+    },
   }
 
   debug('%o', { campaignId, campaignConfig, config, body })
@@ -43,14 +45,15 @@ module.exports = async ({ campaignId, campaignConfig = {} }) => {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Basic ${Buffer.from('anystring:' + MAILCHIMP_API_KEY).toString('base64')}`
+      Authorization: `Basic ${Buffer.from(
+        'anystring:' + MAILCHIMP_API_KEY,
+      ).toString('base64')}`,
     },
-    body: JSON.stringify(body)
+    body: JSON.stringify(body),
+  }).then((response) => {
+    if (!response.ok) {
+      throw Error(response.statusText)
+    }
+    return response
   })
-    .then(response => {
-      if (!response.ok) {
-        throw Error(response.statusText)
-      }
-      return response
-    })
 }

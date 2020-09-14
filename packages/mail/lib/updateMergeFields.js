@@ -7,8 +7,8 @@ module.exports = async ({ user }) => {
   const body = {
     merge_fields: {
       FNAME: firstName || '',
-      LNAME: lastName || ''
-    }
+      LNAME: lastName || '',
+    },
   }
 
   const mailchimp = MailchimpInterface({ logger })

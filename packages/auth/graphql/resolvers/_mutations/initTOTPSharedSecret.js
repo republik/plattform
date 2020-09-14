@@ -9,7 +9,7 @@ module.exports = async (_, args, { pgdb, user, req, ...rest }) => {
     ...user,
     enabledSecondFactors: user._raw.enabledSecondFactors || [],
     TOTPChallengeSecret: user._raw.TOTPChallengeSecret,
-    isTOTPChallengeSecretVerified: user._raw.isTOTPChallengeSecretVerified
+    isTOTPChallengeSecretVerified: user._raw.isTOTPChallengeSecretVerified,
   }
 
   if (userWith2FA.enabledSecondFactors.indexOf(TokenTypes.TOTP) !== -1) {
@@ -17,7 +17,7 @@ module.exports = async (_, args, { pgdb, user, req, ...rest }) => {
   }
   const secret = await generateSharedSecret(TokenTypes.TOTP, {
     pgdb,
-    user: userWith2FA
+    user: userWith2FA,
   })
   return { secret }
 }

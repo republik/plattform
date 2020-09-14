@@ -1,3 +1,3 @@
 module.exports = {
-  transform: require('./transform')
+  transform: require('./transform'),
 }

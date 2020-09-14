@@ -5,9 +5,7 @@ const { PassThrough } = require('stream')
 const toArray = require('stream-to-array')
 const debug = require('debug')('assets:returnImage')
 
-const {
-  SHARP_NO_CACHE
-} = process.env
+const { SHARP_NO_CACHE } = process.env
 
 if (SHARP_NO_CACHE) {
   console.info('sharp cache disabled! (SHARP_NO_CACHE)')
@@ -24,18 +22,18 @@ const pipeHeaders = [
   'Access-Control-Allow-Methods',
   'Access-Control-Allow-Origin',
   'Link',
-  'Content-Disposition'
+  'Content-Disposition',
 ]
 
 const supportedFormats = ['jpeg', 'png', 'webp']
 
 const toBuffer = async (stream) => {
-  return toArray(stream)
-    .then(parts => {
-      const buffers = parts
-        .map(part => Buffer.isBuffer(part) ? part : Buffer.from(part))
-      return Buffer.concat(buffers)
-    })
+  return toArray(stream).then((parts) => {
+    const buffers = parts.map((part) =>
+      Buffer.isBuffer(part) ? part : Buffer.from(part),
+    )
+    return Buffer.concat(buffers)
+  })
 }
 
 module.exports = async ({
@@ -44,25 +42,21 @@ module.exports = async ({
   headers,
   options = {},
   path,
-  returnResult
+  returnResult,
 }) => {
-  const {
-    resize,
-    bw,
-    webp,
-    format: _format,
-    cacheTags = []
-  } = options
+  const { resize, bw, webp, format: _format, cacheTags = [] } = options
 
   const format =
-    (_format && supportedFormats.indexOf(_format) !== -1)
+    _format && supportedFormats.indexOf(_format) !== -1
       ? _format
-      : webp ? 'webp' : null
+      : webp
+      ? 'webp'
+      : null
 
   let width, height
   if (resize) {
     try {
-      ({ width, height } = getWidthHeight(resize))
+      ;({ width, height } = getWidthHeight(resize))
     } catch (e) {
       res.status(400).end(e.message)
     }
@@ -87,7 +81,10 @@ module.exports = async ({
         stream
           .pipe(fileTypeStream(resolve))
           .pipe(passThrough)
-          .on('finish', reject.bind(null, 'Could not read enough of file to get mimetype'))
+          .on(
+            'finish',
+            reject.bind(null, 'Could not read enough of file to get mimetype'),
+          )
       })
       mime = fileTypeResult && fileTypeResult.mime
     } catch (e2) {
@@ -96,7 +93,11 @@ module.exports = async ({
     const isJPEG = mime === 'image/jpeg'
 
     // svg is not detected by fileTypeStream
-    if ((!mime || mime === 'application/octet-stream') && path && new RegExp(/\.svg(\.webp)?$/).test(path)) {
+    if (
+      (!mime || mime === 'application/octet-stream') &&
+      path &&
+      new RegExp(/\.svg(\.webp)?$/).test(path)
+    ) {
       mime = 'image/svg+xml'
     }
 
@@ -104,25 +105,24 @@ module.exports = async ({
     if (mime && headers && headers.get('Content-Type') === 'text/plain') {
       res.set('Content-Type', mime)
     }
-    res.set('Cache-Tag',
+    res.set(
+      'Cache-Tag',
       cacheTags
         .concat(mime && mime.split('/'))
         .filter(Boolean)
-        .join(' ')
+        .join(' '),
     )
 
     let pipeline
     if (
-      (
-        width || height || bw || format || isJPEG
-      ) && (
-        // only touch images
-        mime && mime.indexOf('image') === 0 &&
-        // don't touch gifs exept format is set and not webp
-        (mime !== 'image/gif' || (format && format !== 'webp')) &&
-        // don't touch xmls exept format is set and not webp
-        (mime !== 'image/svg+xml' || (format && format !== 'webp'))
-      )
+      (width || height || bw || format || isJPEG) &&
+      // only touch images
+      mime &&
+      mime.indexOf('image') === 0 &&
+      // don't touch gifs exept format is set and not webp
+      (mime !== 'image/gif' || (format && format !== 'webp')) &&
+      // don't touch xmls exept format is set and not webp
+      (mime !== 'image/svg+xml' || (format && format !== 'webp'))
     ) {
       pipeline = sharp()
 
@@ -138,12 +138,12 @@ module.exports = async ({
           // avoid interlaced pngs
           // - not supported in pdfkit
           progressive: format === 'jpeg',
-          quality: 80
+          quality: 80,
         })
       } else if (isJPEG) {
         pipeline.jpeg({
           progressive: true,
-          quality: 80
+          quality: 80,
         })
       }
     }
@@ -154,7 +154,8 @@ module.exports = async ({
       headers &&
       headers.get('Content-Length') &&
       !headers.get('Content-Encoding') // gzipped content can't be piped
-    ) { // shortcut
+    ) {
+      // shortcut
       res.set('Content-Length', headers.get('Content-Length'))
       passThrough.pipe(res)
     } else {
@@ -170,7 +171,7 @@ module.exports = async ({
       if (returnResult) {
         return {
           body: result,
-          mime
+          mime,
         }
       }
     }

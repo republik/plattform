@@ -18,8 +18,8 @@ const run = async () => {
     size: 100,
     _source: ['meta', 'content'],
     body: {
-      query: { term: { '__state.published': true } }
-    }
+      query: { term: { '__state.published': true } },
+    },
   }
 
   const faultyLinks = []
@@ -27,14 +27,14 @@ const run = async () => {
   for await (const hit of Elasticsearch.scroll(elastic, params)) {
     const { meta, content } = hit._source
 
-    visit(content, 'zone', node => {
+    visit(content, 'zone', (node) => {
       if (node.identifier === 'TITLE') {
-        const credits = node.children.filter(n => n.type === 'paragraph')[1]
+        const credits = node.children.filter((n) => n.type === 'paragraph')[1]
 
         if (credits && credits.children) {
           credits.children
-            .filter(c => c.type === 'link')
-            .forEach(link => {
+            .filter((c) => c.type === 'link')
+            .forEach((link) => {
               const isTooShort = !link.url || link.url.length < 3
               const handle = link.url.match(/\/~(.+)/)
               const maybeProfile = !!handle
@@ -50,7 +50,7 @@ const run = async () => {
                   publikatorUrl: `https://publikator.republik.ch/repo/${meta.repoId}/tree`,
                   string: mdastToString(link),
                   url: link.url,
-                  error
+                  error,
                 })
               }
             })
@@ -64,4 +64,6 @@ const run = async () => {
   console.log(csvFormat(faultyLinks))
 }
 
-run().catch(e => { throw e })
+run().catch((e) => {
+  throw e
+})

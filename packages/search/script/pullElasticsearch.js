@@ -9,29 +9,29 @@ const argv = yargs
   .option('indices', {
     alias: ['i', 'index'],
     array: true,
-    choices: mappings.list.map(({ name }) => name)
+    choices: mappings.list.map(({ name }) => name),
   })
   .option('switch', {
     alias: 's',
     boolean: true,
-    default: true
+    default: true,
   })
   .option('inserts', {
     boolean: true,
-    default: true
+    default: true,
   })
   .option('flush', {
     boolean: true,
-    default: false
+    default: false,
   })
   .help()
-  .version()
-  .argv
+  .version().argv
 
 pullElasticsearch(argv)
   .then(() => {
     process.exit()
-  }).catch(e => {
+  })
+  .catch((e) => {
     console.log(e)
     process.exit(1)
   })

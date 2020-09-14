@@ -2,62 +2,66 @@ const debug = require('debug')('rediretions:lib:Redirections')
 
 const DEFAULT_ROLES = ['editor', 'admin']
 
-const upsert = async (
-  redirection,
-  { pgdb },
-  now = new Date()
-) => {
+const upsert = async (redirection, { pgdb }, now = new Date()) => {
   if (
-    redirection.source === null || redirection.source === undefined ||
-    redirection.target === null || redirection.target === undefined
+    redirection.source === null ||
+    redirection.source === undefined ||
+    redirection.target === null ||
+    redirection.target === undefined
   ) {
     throw new Error('neither redirection source nor target must be null')
   }
   // in case of A -> B -> A remove A -> B and only keep B -> A
-  await pgdb.public.redirections.update({
-    target: redirection.source,
-    source: redirection.target,
-    deletedAt: null
-  }, {
-    deletedAt: now
-  })
+  await pgdb.public.redirections.update(
+    {
+      target: redirection.source,
+      source: redirection.target,
+      deletedAt: null,
+    },
+    {
+      deletedAt: now,
+    },
+  )
   if (redirection.resource) {
-    await pgdb.public.redirections.update({
-      resource: redirection.resource,
-      deletedAt: null
-    }, {
-      target: redirection.target,
-      status: redirection.status,
-      updatedAt: now
-    })
+    await pgdb.public.redirections.update(
+      {
+        resource: redirection.resource,
+        deletedAt: null,
+      },
+      {
+        target: redirection.target,
+        status: redirection.status,
+        updatedAt: now,
+      },
+    )
   }
   const existingRedir = await pgdb.public.redirections.findOne({
     source: redirection.source,
-    deletedAt: null
+    deletedAt: null,
   })
   if (existingRedir) {
-    return pgdb.public.redirections.update({
-      source: redirection.source
-    }, {
-      ...redirection,
-      updatedAt: now
-    })
+    return pgdb.public.redirections.update(
+      {
+        source: redirection.source,
+      },
+      {
+        ...redirection,
+        updatedAt: now,
+      },
+    )
   } else {
     return pgdb.public.redirections.insert({
       ...redirection,
       updatedAt: now,
-      createdAt: now
+      createdAt: now,
     })
   }
 }
 
 // notResource: get a redirection that does not match resource partial
-const get = async (
-  source,
-  notResource,
-  { pgdb }
-) => {
-  return pgdb.query(`
+const get = async (source, notResource, { pgdb }) => {
+  return pgdb.query(
+    `
     SELECT
       *
     FROM
@@ -66,26 +70,22 @@ const get = async (
       source = :source
       ${notResource ? 'AND NOT (resource @> :notResource)' : ''}
       AND "deletedAt" IS NULL
-  `, {
-    source,
-    ...notResource
-      ? { notResource }
-      : { }
-  })
+  `,
+    {
+      source,
+      ...(notResource ? { notResource } : {}),
+    },
+  )
 }
 
-const deleteBySource = async (
-  source,
-  { pgdb },
-  now = new Date()
-) => {
+const deleteBySource = async (source, { pgdb }, now = new Date()) => {
   return pgdb.public.redirections.updateAndGet(
     {
-      source
+      source,
     },
     {
-      deletedAt: now
-    }
+      deletedAt: now,
+    },
   )
 }
 
@@ -96,7 +96,7 @@ const add = async (args, pgdb) => {
     keepQuery: false,
     resource: null,
     createdAt: now,
-    updatedAt: now
+    updatedAt: now,
   }
   const redirection = { ...defaults, ...args }
   const transaction = await pgdb.transactionBegin()
@@ -104,7 +104,7 @@ const add = async (args, pgdb) => {
   try {
     const exists = !!(await transaction.public.redirections.count({
       source: redirection.source,
-      deletedAt: null
+      deletedAt: null,
     }))
 
     if (exists) {
@@ -115,7 +115,9 @@ const add = async (args, pgdb) => {
     validateTarget(redirection.target)
     validateStatus(redirection.status)
 
-    const result = await transaction.public.redirections.insertAndGet(redirection)
+    const result = await transaction.public.redirections.insertAndGet(
+      redirection,
+    )
 
     await transaction.transactionCommit()
 
@@ -123,7 +125,10 @@ const add = async (args, pgdb) => {
   } catch (e) {
     await transaction.transactionRollback()
 
-    debug('rollback', { source: redirection.source, target: redirection.target })
+    debug('rollback', {
+      source: redirection.source,
+      target: redirection.target,
+    })
 
     throw e
   }
@@ -135,7 +140,7 @@ const update = async (args, pgdb) => {
     status: 302,
     keepQuery: false,
     resource: null,
-    updatedAt: now
+    updatedAt: now,
   }
   const redirection = { ...defaults, ...args }
   const conditions = { id: redirection.id, deletedAt: null }
@@ -154,11 +159,13 @@ const update = async (args, pgdb) => {
       const sibling = !!(await transaction.public.redirections.count({
         source: redirection.source,
         deletedAt: null,
-        'id !=': redirection.id
+        'id !=': redirection.id,
       }))
 
       if (sibling) {
-        throw new Error(`Another Redirection with source "${redirection.source}" exists.`)
+        throw new Error(
+          `Another Redirection with source "${redirection.source}" exists.`,
+        )
       }
     }
 
@@ -170,7 +177,10 @@ const update = async (args, pgdb) => {
       validateStatus(redirection.status)
     }
 
-    const result = await transaction.public.redirections.updateAndGetOne(conditions, redirection)
+    const result = await transaction.public.redirections.updateAndGetOne(
+      conditions,
+      redirection,
+    )
 
     await transaction.transactionCommit()
 
@@ -195,7 +205,10 @@ const deleteById = async ({ id }, pgdb) => {
       throw new Error('Redirection does not exist.')
     }
 
-    const isUpdated = !!(await transaction.public.redirections.update(conditions, { deletedAt: new Date() }))
+    const isUpdated = !!(await transaction.public.redirections.update(
+      conditions,
+      { deletedAt: new Date() },
+    ))
 
     await transaction.transactionCommit()
 
@@ -212,7 +225,7 @@ const deleteById = async ({ id }, pgdb) => {
 const findAll = async (pgdb) =>
   pgdb.public.redirections.find(
     { deletedAt: null },
-    { orderBy: { createdAt: 'desc' } }
+    { orderBy: { createdAt: 'desc' } },
   )
 
 const validateSource = (source) => {
@@ -228,7 +241,11 @@ const validateTarget = (target) => {
   const base = process.env.FRONTEND_BASE_URL || 'http://localhost'
   const targetUrl = new URL(target, base)
 
-  if (![target, encodeURI(target)].includes(targetUrl.toString().replace(base, ''))) {
+  if (
+    ![target, encodeURI(target)].includes(
+      targetUrl.toString().replace(base, ''),
+    )
+  ) {
     throw new Error(`target "${target}" is invalid.`)
   }
 }
@@ -251,5 +268,5 @@ module.exports = {
   validateSource,
   validateTarget,
   validateStatus,
-  DEFAULT_ROLES
+  DEFAULT_ROLES,
 }

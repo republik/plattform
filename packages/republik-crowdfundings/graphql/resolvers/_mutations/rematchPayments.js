@@ -10,7 +10,7 @@ module.exports = async (_, args, { pgdb, req, t, redis }) => {
     const {
       numMatchedPayments,
       numUpdatedPledges,
-      numPaymentsSuccessful
+      numPaymentsSuccessful,
     } = await matchPayments(transaction, t, redis)
 
     await transaction.transactionCommit()
@@ -27,9 +27,8 @@ num payments successfull: ${numPaymentsSuccessful}
     console.info('transaction rollback', { req: req._log(), args, error: e })
     throw e
   } finally {
-    await refreshAllPots({ pgdb })
-      .catch(e => {
-        console.error('error after matchPayments', e)
-      })
+    await refreshAllPots({ pgdb }).catch((e) => {
+      console.error('error after matchPayments', e)
+    })
   }
 }

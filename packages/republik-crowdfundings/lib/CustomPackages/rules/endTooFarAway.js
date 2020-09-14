@@ -1,11 +1,13 @@
-const debug = require('debug')('crowdfundings:lib:CustomPackages:rule:endTooFarAway')
+const debug = require('debug')(
+  'crowdfundings:lib:CustomPackages:rule:endTooFarAway',
+)
 
 const { getLastEndDate } = require('../../utils')
 
 const HORIZON_MONTHS = 4
 
 module.exports = ({ package_, packageOption, membership, payload, now }) => {
-  const activeMembership = package_.user.memberships.find(m => m.active)
+  const activeMembership = package_.user.memberships.find((m) => m.active)
   if (!activeMembership) {
     debug('no active membership. rule does not pass.')
     return false
@@ -19,7 +21,7 @@ module.exports = ({ package_, packageOption, membership, payload, now }) => {
     debug(
       'active membership ends beyond horizon: %s (horizon: %s). rule passes.',
       endDate.toISOString(),
-      horizon.toISOString()
+      horizon.toISOString(),
     )
     return true
   }
@@ -27,7 +29,7 @@ module.exports = ({ package_, packageOption, membership, payload, now }) => {
   debug(
     'active membership ends too soon: %s (horizon: %s). rule does not pass.',
     endDate.toISOString(),
-    horizon.toISOString()
+    horizon.toISOString(),
   )
   return false
 }

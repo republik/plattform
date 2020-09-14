@@ -3,22 +3,20 @@ const { hasUserActiveMembership } = require('@orbiting/backend-modules-utils')
 const { newAuthError } = require('./AuthError')
 const Roles = require('./Roles')
 
-const MissingFieldsError = newAuthError(
-  'missing-fields',
-  'api/fields/missing'
-)
+const MissingFieldsError = newAuthError('missing-fields', 'api/fields/missing')
 
 const getMissingFields = async ({ user, pgdb }) => {
   const missingFields = []
 
   const isMember = !!user && Roles.userHasRole(user, 'member')
-  const hasNames = !!user && (
+  const hasNames =
+    !!user &&
     user.firstName &&
     user.firstName.trim().length > 0 &&
     user.lastName &&
     user.lastName.trim().length > 0
-  )
-  const hasActiveMembership = !!user && (await hasUserActiveMembership(user, pgdb))
+  const hasActiveMembership =
+    !!user && (await hasUserActiveMembership(user, pgdb))
 
   if (user && isMember && hasActiveMembership && !hasNames) {
     missingFields.push('firstName')
@@ -34,21 +32,19 @@ const ensureRequiredFields = async ({ user, email, providedFields, pgdb }) => {
 
   const expectedFields = await getMissingFields({ user, pgdb })
 
-  expectedFields
-    .forEach(expectedField => {
-      if (!providedFields[expectedField]) {
-        missingFields.push(expectedField)
-        return false
-      }
+  expectedFields.forEach((expectedField) => {
+    if (!providedFields[expectedField]) {
+      missingFields.push(expectedField)
+      return false
+    }
 
-      requiredFields[expectedField] = providedFields[expectedField]
-    })
+    requiredFields[expectedField] = providedFields[expectedField]
+  })
 
   if (missingFields.length > 0) {
-    throw new MissingFieldsError(
-      missingFields,
-      { fields: missingFields.join(', ') }
-    )
+    throw new MissingFieldsError(missingFields, {
+      fields: missingFields.join(', '),
+    })
   }
 
   return requiredFields
@@ -56,5 +52,5 @@ const ensureRequiredFields = async ({ user, email, providedFields, pgdb }) => {
 
 module.exports = {
   getMissingFields,
-  ensureRequiredFields
+  ensureRequiredFields,
 }

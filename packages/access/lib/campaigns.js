@@ -7,19 +7,25 @@ const constraints = require('./constraints')
 const findAvailable = async (pgdb) => {
   debug('findAvailable')
   const now = moment()
-  const campaigns = await pgdb.public.accessCampaigns.find({
-    'beginAt <=': now,
-    'endAt >': now
-  }, { orderBy: { beginAt: 'desc' } })
+  const campaigns = await pgdb.public.accessCampaigns.find(
+    {
+      'beginAt <=': now,
+      'endAt >': now,
+    },
+    { orderBy: { beginAt: 'desc' } },
+  )
 
   return campaigns
 }
 
 const findAll = async (pgdb) => {
   debug('findAll')
-  const campaigns = await pgdb.public.accessCampaigns.find({
-    'beginAt <=': moment()
-  }, { orderBy: { beginAt: 'desc' } })
+  const campaigns = await pgdb.public.accessCampaigns.find(
+    {
+      'beginAt <=': moment(),
+    },
+    { orderBy: { beginAt: 'desc' } },
+  )
 
   return campaigns
 }
@@ -27,7 +33,7 @@ const findAll = async (pgdb) => {
 const findByGrant = (grant, pgdb) => {
   debug('findByGrant', { grant: grant.id })
   return pgdb.public.accessCampaigns.findOne({
-    id: grant.accessCampaignId
+    id: grant.accessCampaignId,
   })
 }
 
@@ -36,19 +42,18 @@ const findOne = (id, pgdb) => {
   const now = moment()
   return pgdb.public.accessCampaigns.findOne({
     id,
-    'beginAt <=': now
+    'beginAt <=': now,
   })
 }
 
 const findForGranter = async (granter, { withPast, pgdb }) => {
   debug('findForGranter', { granter: granter.id, withPast })
-  const campaigns =
-    await Promise.map(
-      withPast ? await findAll(pgdb) : await findAvailable(pgdb),
-      getConstraintMeta.bind(null, granter, pgdb)
-    )
-      .then(filterInvisibleCampaigns)
-      .then(mergeConstraintPayloads)
+  const campaigns = await Promise.map(
+    withPast ? await findAll(pgdb) : await findAvailable(pgdb),
+    getConstraintMeta.bind(null, granter, pgdb),
+  )
+    .then(filterInvisibleCampaigns)
+    .then(mergeConstraintPayloads)
 
   return campaigns
 }
@@ -58,7 +63,7 @@ module.exports = {
   findAll,
   findByGrant,
   findOne,
-  findForGranter
+  findForGranter,
 }
 
 /**
@@ -78,7 +83,7 @@ const getConstraintMeta = async (granter, pgdb, campaign) => {
     const settings = constraint[name] // Settings of constraint
     const meta = await constraints[name].getMeta(
       { settings, granter, campaign },
-      { pgdb }
+      { pgdb },
     )
 
     constraintMeta.push(meta)
@@ -87,25 +92,25 @@ const getConstraintMeta = async (granter, pgdb, campaign) => {
   return { ...campaign, constraintMeta }
 }
 
-const filterInvisibleCampaigns = campaigns =>
-  campaigns.filter(campaign => {
-    return campaign.constraintMeta.every(meta => meta.visible !== false)
+const filterInvisibleCampaigns = (campaigns) =>
+  campaigns.filter((campaign) => {
+    return campaign.constraintMeta.every((meta) => meta.visible !== false)
   })
 
-const mergeConstraintPayloads = campaigns =>
-  campaigns.map(campaign => {
+const mergeConstraintPayloads = (campaigns) =>
+  campaigns.map((campaign) => {
     const payload = {
       slots: {
         total: 0,
         used: 0,
-        free: 0
+        free: 0,
       },
       perks: {
-        giftableMemberships: null
-      }
+        giftableMemberships: null,
+      },
     }
 
-    campaign.constraintMeta.forEach(meta => {
+    campaign.constraintMeta.forEach((meta) => {
       Object.assign(payload, meta.payload)
     })
 

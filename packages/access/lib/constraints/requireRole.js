@@ -16,14 +16,11 @@ const isGrantable = async (args, context) => {
 
   const valid = Roles.userIsInRoles(granter, settings.roles)
 
-  debug(
-    'isGrantable',
-    {
-      granter: granter.id,
-      settings,
-      valid
-    }
-  )
+  debug('isGrantable', {
+    granter: granter.id,
+    settings,
+    valid,
+  })
 
   return valid
 }
@@ -34,7 +31,7 @@ const getMeta = async (args, context) => {
   const meta = {
     visible: isGrantableFlag,
     grantable: isGrantableFlag,
-    payload: {}
+    payload: {},
   }
 
   return meta
@@ -42,5 +39,5 @@ const getMeta = async (args, context) => {
 
 module.exports = {
   isGrantable,
-  getMeta
+  getMeta,
 }

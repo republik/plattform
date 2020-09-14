@@ -1,4 +1,6 @@
-const { Discussion: { upsert: upsertDiscussion } } = require('@orbiting/backend-modules-discussions')
+const {
+  Discussion: { upsert: upsertDiscussion },
+} = require('@orbiting/backend-modules-discussions')
 
 const upsert = async (docMeta, context, legacyDiscussionId) => {
   const {
@@ -13,7 +15,7 @@ const upsert = async (docMeta, context, legacyDiscussionId) => {
     board = null,
     tags,
     tagRequired,
-    template
+    template,
   } = docMeta
 
   if (['discussion', 'article'].indexOf(template) === -1) {
@@ -28,31 +30,19 @@ const upsert = async (docMeta, context, legacyDiscussionId) => {
     title,
     path,
     repoId,
-    ...commentsMaxLength
-      ? { maxLength: commentsMaxLength }
-      : { },
-    ...commentsMinInterval
-      ? { minInterval: commentsMinInterval }
-      : { },
-    ...discussionAnonymity
-      ? { anonymity: discussionAnonymity }
-      : { },
-    ...discussionClosed !== null
-      ? { closed: !!discussionClosed }
-      : { },
-    ...collapsable !== null
-      ? { collapsable: !!collapsable }
-      : { },
-    ...board !== null
-      ? { isBoard: !!board }
-      : { },
+    ...(commentsMaxLength ? { maxLength: commentsMaxLength } : {}),
+    ...(commentsMinInterval ? { minInterval: commentsMinInterval } : {}),
+    ...(discussionAnonymity ? { anonymity: discussionAnonymity } : {}),
+    ...(discussionClosed !== null ? { closed: !!discussionClosed } : {}),
+    ...(collapsable !== null ? { collapsable: !!collapsable } : {}),
+    ...(board !== null ? { isBoard: !!board } : {}),
     tags: tags ? tags.trim().split(',') : null,
-    tagRequired: !!tagRequired
+    tagRequired: !!tagRequired,
   }
 
   return upsertDiscussion(repoId, settings, context, legacyDiscussionId)
 }
 
 module.exports = {
-  upsert
+  upsert,
 }

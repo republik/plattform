@@ -22,7 +22,7 @@ exports.configure = ({
   // be reset every time a user visits the site again before it expires.
   maxAge = DEFAULT_MAX_AGE_IN_MS, // 1 year
   // is the server running in development
-  dev = false
+  dev = false,
 } = {}) => {
   if (server === null) {
     throw new Error('server option must be an express server instance')
@@ -40,24 +40,26 @@ exports.configure = ({
   const store = new PgSession({
     tableName: 'sessions',
     pool: pgdb.pool,
-    pruneSessionInterval: 60 * 10 // 10mins
+    pruneSessionInterval: 60 * 10, // 10mins
   })
 
   // Configure sessions
-  server.use(session({
-    secret,
-    store,
-    resave: false,
-    rolling: true,
-    saveUninitialized: false,
-    httpOnly: true,
-    name: cookieName,
-    cookie: {
-      domain,
-      maxAge: maxAge,
-      secure: !dev
-    }
-  }))
+  server.use(
+    session({
+      secret,
+      store,
+      resave: false,
+      rolling: true,
+      saveUninitialized: false,
+      httpOnly: true,
+      name: cookieName,
+      cookie: {
+        domain,
+        maxAge: maxAge,
+        secure: !dev,
+      },
+    }),
+  )
 
   // trust first proxy
   if (!dev) {
@@ -65,15 +67,12 @@ exports.configure = ({
   }
 
   // set user on req
-  server.use( async (req, res, next) => {
-    if (
-      req.session &&
-      req.session.passport &&
-      req.session.passport.user
-    ) {
-      req.user = await pgdb.public.users.findOne({
-        id: req.session.passport.user
-      })
+  server.use(async (req, res, next) => {
+    if (req.session && req.session.passport && req.session.passport.user) {
+      req.user = await pgdb.public.users
+        .findOne({
+          id: req.session.passport.user,
+        })
         .then(transformUser)
     }
 
@@ -91,6 +90,6 @@ exports.configure = ({
   }
 
   return {
-    close
+    close,
   }
 }

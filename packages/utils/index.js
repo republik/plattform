@@ -11,5 +11,5 @@ module.exports = {
   remark: require('./remark'),
   uuidForObject: require('./uuidForObject'),
   cache: require('./cache'),
-  slugify: require('./slugify')
+  slugify: require('./slugify'),
 }

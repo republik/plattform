@@ -16,15 +16,15 @@ const MandrillInterface = require('../MandrillInterface')
 const argv = yargs
   .option('types', {
     type: 'array',
-    default: []
+    default: [],
   })
   .option('limit', {
-    default: 1000
+    default: 1000,
   })
   .option('dry-run', {
-    default: true
+    default: true,
   })
-  .check(argv => {
+  .check((argv) => {
     if (argv.types.length === 0) {
       return 'Check --types. Should contain at least one type.'
     }
@@ -32,10 +32,9 @@ const argv = yargs
     return true
   })
   .help()
-  .version()
-  .argv
+  .version().argv
 
-PgDb.connect().then(async pgdb => {
+PgDb.connect().then(async (pgdb) => {
   if (argv.dryRun) {
     console.warn('In dry-run mode. Use --no-dry-run to send scheduled emails.')
   }
@@ -43,14 +42,14 @@ PgDb.connect().then(async pgdb => {
   const records = await pgdb.public.mailLog.find(
     {
       status: 'SCHEDULED',
-      type: argv.types
+      type: argv.types,
     },
-    { orderBy: { createdAt: 'ASC' }, limit: argv.limit }
+    { orderBy: { createdAt: 'ASC' }, limit: argv.limit },
   )
 
   console.log(`${records.length} record(s) found`)
 
-  await Promise.each(records, async record => {
+  await Promise.each(records, async (record) => {
     const templateName = record.info.template || record.type
 
     if (!templateName || templateName === 'no-template') {
@@ -86,12 +85,12 @@ PgDb.connect().then(async pgdb => {
           return mandrill.send(
             message,
             !message.html ? mail.templateName : false,
-            []
+            [],
           )
         }
 
         return [{ error: 'No mailing interface usable', status: 'error' }]
-      }
+      },
     )
 
     if (argv.dryRun) {
@@ -105,7 +104,7 @@ PgDb.connect().then(async pgdb => {
 
     await pgdb.public.mailLog.updateOne(
       { id: record.id },
-      { result, status, error, updatedAt: new Date() }
+      { result, status, error, updatedAt: new Date() },
     )
   })
 

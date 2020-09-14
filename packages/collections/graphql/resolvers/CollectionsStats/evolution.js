@@ -16,7 +16,9 @@ module.exports = async (_, args, context) => {
 
   // In case pre-populated data is not available...
   if (!data) {
-    throw new Error('Unable to retrieve pre-populated data for Collection.CollectionsStats.evolution')
+    throw new Error(
+      'Unable to retrieve pre-populated data for Collection.CollectionsStats.evolution',
+    )
   }
 
   // Retrieve pre-populated data.
@@ -36,8 +38,9 @@ module.exports = async (_, args, context) => {
 
   return {
     buckets: result
-      .filter(({ key }) => keys.includes(key)).filter(({ collectionId }) => collectionId === collection.id)
-      .map( r => ({ ...r, updatedAt })),
-    updatedAt
+      .filter(({ key }) => keys.includes(key))
+      .filter(({ collectionId }) => collectionId === collection.id)
+      .map((r) => ({ ...r, updatedAt })),
+    updatedAt,
   }
 }

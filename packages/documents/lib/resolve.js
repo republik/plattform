@@ -1,25 +1,23 @@
 const checkEnv = require('check-env')
 const visit = require('unist-util-visit')
-const { Roles: { userIsInRoles } } = require('@orbiting/backend-modules-auth')
+const {
+  Roles: { userIsInRoles },
+} = require('@orbiting/backend-modules-auth')
 
-checkEnv([
-  'FRONTEND_BASE_URL'
-])
+checkEnv(['FRONTEND_BASE_URL'])
 
 const {
   GITHUB_LOGIN,
   GITHUB_ORGS = GITHUB_LOGIN,
   FRONTEND_BASE_URL,
   DOCUMENTS_RESTRICT_TO_ROLES,
-  DOCUMENTS_LINKS_RESTRICTED
+  DOCUMENTS_LINKS_RESTRICTED,
 } = process.env
 
-const PUBLIC_HOSTNAME = (new URL(FRONTEND_BASE_URL)).hostname
+const PUBLIC_HOSTNAME = new URL(FRONTEND_BASE_URL).hostname
 
 const getRepoId = (url, requireQuery) => {
-  checkEnv([
-    'GITHUB_LOGIN'
-  ])
+  checkEnv(['GITHUB_LOGIN'])
 
   if (!url) {
     return {}
@@ -28,7 +26,8 @@ const getRepoId = (url, requireQuery) => {
   const parsedUrl = new URL(String(url), FRONTEND_BASE_URL)
   const { hostname, pathname } = parsedUrl
 
-  if (!pathname) { // empty for mailto
+  if (!pathname) {
+    // empty for mailto
     return { parsedUrl }
   }
 
@@ -56,7 +55,7 @@ const getRepoId = (url, requireQuery) => {
 
 const userPath = /^\/~([^/?#]+)/
 
-const extractUserPath = path => {
+const extractUserPath = (path) => {
   if (!path) {
     return
   }
@@ -65,41 +64,40 @@ const extractUserPath = path => {
   if (id) {
     return {
       id,
-      path
+      path,
     }
   }
 }
 
-const extractUserUrl = url => {
+const extractUserUrl = (url) => {
   if (!url) {
     return
   }
   const urlObject = new URL(String(url), FRONTEND_BASE_URL)
-  if (
-    urlObject.hostname &&
-    urlObject.hostname !== PUBLIC_HOSTNAME
-  ) {
+  if (urlObject.hostname && urlObject.hostname !== PUBLIC_HOSTNAME) {
     // do nothing if url has a hostname and it's not ours
     return
   }
   return extractUserPath(
-    `${urlObject.pathname}${urlObject.search}${urlObject.hash}`
+    `${urlObject.pathname}${urlObject.search}${urlObject.hash}`,
   )
 }
 
-const createUrlReplacer = (allDocuments = [], usernames = [], errors = [], urlPrefix = '', searchString = '') => (url, stripDocLinks) => {
+const createUrlReplacer = (
+  allDocuments = [],
+  usernames = [],
+  errors = [],
+  urlPrefix = '',
+  searchString = '',
+) => (url, stripDocLinks) => {
   const userInfo = extractUserPath(url)
   if (userInfo) {
-    const user = usernames
-      .find(u => u.id === userInfo.id)
+    const user = usernames.find((u) => u.id === userInfo.id)
     if (user) {
       return [
         urlPrefix,
-        userInfo.path.replace(
-          user.id,
-          user.username
-        ),
-        searchString
+        userInfo.path.replace(user.id, user.username),
+        searchString,
       ].join('')
     }
   }
@@ -115,14 +113,13 @@ const createUrlReplacer = (allDocuments = [], usernames = [], errors = [], urlPr
     return ''
   }
 
-  const linkedDoc = allDocuments
-    .find(d => d.meta.repoId === repoId)
+  const linkedDoc = allDocuments.find((d) => d.meta.repoId === repoId)
 
   if (linkedDoc) {
     // Stitch and parse simple URL version including arguments {urlPrefix}, {searchString}
     const resolvedUrl = new URL(
       `${urlPrefix}${linkedDoc.content.meta.path}${searchString}`,
-      FRONTEND_BASE_URL
+      FRONTEND_BASE_URL,
     )
 
     // Replace {parsedUrl.hash} with {resolvedUrl.hash}
@@ -131,7 +128,9 @@ const createUrlReplacer = (allDocuments = [], usernames = [], errors = [], urlPr
     // Merge {parsedUrl.searchParams} into {resolvedUrl.searchParams}
     // parsedUrl overwrites same keys in resolvedUrl.
     // resolvedUrl may contain searchParams from parsed {searchString}.
-    parsedUrl.searchParams.forEach((value, name) => resolvedUrl.searchParams.set(name, value))
+    parsedUrl.searchParams.forEach((value, name) =>
+      resolvedUrl.searchParams.set(name, value),
+    )
 
     // If {urlPrefix} is set, return stringified {resolvedUrl}.
     if (urlPrefix) {
@@ -139,7 +138,9 @@ const createUrlReplacer = (allDocuments = [], usernames = [], errors = [], urlPr
     }
 
     // If {urlPrefix} is not set, replace {FRONTEND_BASE_URL} to return relative URLs.
-    return resolvedUrl.toString().replace(new RegExp(`^${FRONTEND_BASE_URL}`), '')
+    return resolvedUrl
+      .toString()
+      .replace(new RegExp(`^${FRONTEND_BASE_URL}`), '')
   } else {
     errors.push(repoId)
   }
@@ -148,13 +149,12 @@ const createUrlReplacer = (allDocuments = [], usernames = [], errors = [], urlPr
   return ''
 }
 
-const createResolver = (allDocuments, errors = []) => url => {
+const createResolver = (allDocuments, errors = []) => (url) => {
   const { repoId } = getRepoId(url)
   if (!repoId) {
     return null
   }
-  const linkedDoc = allDocuments
-    .find(d => d.meta.repoId === repoId)
+  const linkedDoc = allDocuments.find((d) => d.meta.repoId === repoId)
   if (linkedDoc) {
     return linkedDoc
   } else {
@@ -163,13 +163,21 @@ const createResolver = (allDocuments, errors = []) => url => {
   return null
 }
 
-const contentUrlResolver = (doc, allDocuments = [], usernames = [], errors, urlPrefix, searchString, user) => {
+const contentUrlResolver = (
+  doc,
+  allDocuments = [],
+  usernames = [],
+  errors,
+  urlPrefix,
+  searchString,
+  user,
+) => {
   const urlReplacer = createUrlReplacer(
     allDocuments,
     usernames,
     errors,
     urlPrefix,
-    searchString
+    searchString,
   )
   const docResolver = createResolver(allDocuments, errors)
 
@@ -181,10 +189,10 @@ const contentUrlResolver = (doc, allDocuments = [], usernames = [], errors, urlP
     user !== undefined &&
     !userIsInRoles(user, DOCUMENTS_RESTRICT_TO_ROLES.split(','))
 
-  visit(doc.content, 'link', node => {
+  visit(doc.content, 'link', (node) => {
     node.url = urlReplacer(node.url, stripDocLinks)
   })
-  visit(doc.content, 'zone', node => {
+  visit(doc.content, 'zone', (node) => {
     if (node.data) {
       const linkedDoc = docResolver(node.data.url)
       if (linkedDoc) {
@@ -194,17 +202,19 @@ const contentUrlResolver = (doc, allDocuments = [], usernames = [], errors, urlP
         node.data.urlMeta = {
           repoId: linkedDoc.meta.repoId,
           publishDate: linkedDoc.meta.publishDate,
-          section: linkedDoc.meta.template === 'section'
-            ? linkedDoc.meta.repoId
-            : getRepoId(linkedDoc.meta.section).repoId,
-          format: linkedDoc.meta.template === 'format'
-            ? linkedDoc.meta.repoId
-            : getRepoId(linkedDoc.meta.format).repoId,
-          series: linkedDoc.meta.series ? (
-            typeof linkedDoc.meta.series === 'string'
+          section:
+            linkedDoc.meta.template === 'section'
+              ? linkedDoc.meta.repoId
+              : getRepoId(linkedDoc.meta.section).repoId,
+          format:
+            linkedDoc.meta.template === 'format'
+              ? linkedDoc.meta.repoId
+              : getRepoId(linkedDoc.meta.format).repoId,
+          series: linkedDoc.meta.series
+            ? typeof linkedDoc.meta.series === 'string'
               ? getRepoId(linkedDoc.meta.series).repoId
               : linkedDoc.meta.repoId
-          ) : undefined
+            : undefined,
         }
       }
       node.data.url = urlReplacer(node.data.url, stripDocLinks)
@@ -213,20 +223,28 @@ const contentUrlResolver = (doc, allDocuments = [], usernames = [], errors, urlP
   })
 }
 
-const metaUrlResolver = (meta, allDocuments = [], usernames = [], errors, urlPrefix, searchString) => {
+const metaUrlResolver = (
+  meta,
+  allDocuments = [],
+  usernames = [],
+  errors,
+  urlPrefix,
+  searchString,
+) => {
   const urlReplacer = createUrlReplacer(
     allDocuments,
     usernames,
     errors,
     urlPrefix,
-    searchString
+    searchString,
   )
 
-  meta.credits && meta.credits
-    .filter(c => c.type === 'link')
-    .forEach(c => {
-      c.url = urlReplacer(c.url)
-    })
+  meta.credits &&
+    meta.credits
+      .filter((c) => c.type === 'link')
+      .forEach((c) => {
+        c.url = urlReplacer(c.url)
+      })
 }
 
 const metaFieldResolver = (meta, allDocuments = [], errors) => {
@@ -242,10 +260,10 @@ const metaFieldResolver = (meta, allDocuments = [], errors) => {
   if (series) {
     series = {
       ...series,
-      episodes: (series.episodes || []).map(episode => ({
+      episodes: (series.episodes || []).map((episode) => ({
         ...episode,
-        document: resolver(episode.document)
-      }))
+        document: resolver(episode.document),
+      })),
     }
   }
 
@@ -254,7 +272,7 @@ const metaFieldResolver = (meta, allDocuments = [], errors) => {
     dossier: resolver(meta.dossier),
     format: resolver(meta.format),
     section: resolver(meta.section),
-    discussion: resolver(meta.discussion)
+    discussion: resolver(meta.discussion),
   }
 }
 
@@ -265,5 +283,5 @@ module.exports = {
   extractUserUrl,
   contentUrlResolver,
   metaUrlResolver,
-  metaFieldResolver
+  metaFieldResolver,
 }

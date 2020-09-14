@@ -1,12 +1,15 @@
-const { Roles: { ensureUserIsInRoles } } = require('@orbiting/backend-modules-auth')
+const {
+  Roles: { ensureUserIsInRoles },
+} = require('@orbiting/backend-modules-auth')
 
-module.exports = async (_, args, { pgdb, req, user: me, t, mail: { enforceSubscriptions } }) => {
+module.exports = async (
+  _,
+  args,
+  { pgdb, req, user: me, t, mail: { enforceSubscriptions } },
+) => {
   ensureUserIsInRoles(me, ['supporter'])
 
-  const {
-    pledgeId,
-    userId
-  } = args
+  const { pledgeId, userId } = args
 
   const transaction = await pgdb.transactionBegin()
   const now = new Date()
@@ -30,12 +33,14 @@ module.exports = async (_, args, { pgdb, req, user: me, t, mail: { enforceSubscr
     // only move unclaimed memberships with the pledge
     const membershipsFind = {
       pledgeId: pledge.id,
-      userId: pledge.userId
+      userId: pledge.userId,
     }
-    const memberships = await transaction.public.memberships.find(membershipsFind)
+    const memberships = await transaction.public.memberships.find(
+      membershipsFind,
+    )
     if (memberships.length > 0) {
       const membershipType = await transaction.public.membershipTypes.findOne({
-        id: memberships[0].membershipTypeId
+        id: memberships[0].membershipTypeId,
       })
       if (membershipType.name === 'MONTHLY_ABO') {
         throw new Error(t('api/membership/move/monthlyDenied'))
@@ -43,11 +48,16 @@ module.exports = async (_, args, { pgdb, req, user: me, t, mail: { enforceSubscr
     }
 
     // avoid multiple active memberships for one user
-    const userHasActiveMembership = !!await transaction.public.memberships.findFirst({
-      userId: user.id,
-      active: true
-    })
-    if (userHasActiveMembership && memberships.filter(m => m.active).length > 0) {
+    const userHasActiveMembership = !!(await transaction.public.memberships.findFirst(
+      {
+        userId: user.id,
+        active: true,
+      },
+    ))
+    if (
+      userHasActiveMembership &&
+      memberships.filter((m) => m.active).length > 0
+    ) {
       throw new Error(t('api/membership/move/otherActive'))
     }
 
@@ -56,15 +66,13 @@ module.exports = async (_, args, { pgdb, req, user: me, t, mail: { enforceSubscr
       { id: pledge.id },
       {
         userId: user.id,
-        updatedAt: now
-      }
+        updatedAt: now,
+      },
     )
-    await transaction.public.memberships.update(membershipsFind,
-      {
-        userId: user.id,
-        updatedAt: now
-      }
-    )
+    await transaction.public.memberships.update(membershipsFind, {
+      userId: user.id,
+      updatedAt: now,
+    })
 
     await transaction.transactionCommit()
 
@@ -73,7 +81,11 @@ module.exports = async (_, args, { pgdb, req, user: me, t, mail: { enforceSubscr
       await enforceSubscriptions({ pgdb, userId })
     } catch (e2) {
       // ignore issues with newsletter subscriptions
-      console.error('newsletter subscription changes failed', { req: req._log(), args, error: e2 })
+      console.error('newsletter subscription changes failed', {
+        req: req._log(),
+        args,
+        error: e2,
+      })
     }
 
     return newPledge

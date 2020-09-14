@@ -7,13 +7,11 @@ module.exports = async (_, args, { t, redis, user }) => {
     greeting = JSON.parse(await redis.getAsync('greeting'))
   } catch (e) {}
 
-  if (greeting &&
-    greeting.text &&
-    greeting.text.length > 0) {
+  if (greeting && greeting.text && greeting.text.length > 0) {
     return greeting
   }
 
   return {
-    text: t('api/greeting')
+    text: t('api/greeting'),
   }
 }

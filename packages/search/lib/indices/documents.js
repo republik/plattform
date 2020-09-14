@@ -1,30 +1,33 @@
-const { meta: { getWordsPerMinute } } = require('@orbiting/backend-modules-documents/lib')
+const {
+  meta: { getWordsPerMinute },
+} = require('@orbiting/backend-modules-documents/lib')
 const { MIDDLE_DURATION_MINS } = require('../Documents')
 
 const keywordPartial = {
   fields: {
     keyword: {
       type: 'keyword',
-      ignore_above: 256
-    }
-  }
+      ignore_above: 256,
+    },
+  },
 }
 
 const mdastPartial = {
   properties: {
     type: {
-      type: 'keyword'
+      type: 'keyword',
     },
     value: {
-      type: 'keyword'
+      type: 'keyword',
     },
     url: {
-      type: 'keyword'
+      type: 'keyword',
     },
-    children: { // is actually mdast again
-      type: 'object'
-    }
-  }
+    children: {
+      // is actually mdast again
+      type: 'object',
+    },
+  },
 }
 
 const type = 'Document'
@@ -37,39 +40,39 @@ module.exports = {
       'meta.title': {
         boost: 2,
         highlight: {
-          number_of_fragments: 0
-        }
+          number_of_fragments: 0,
+        },
       },
       'meta.shortTitle': {
         boost: 2,
         highlight: {
-          number_of_fragments: 0
-        }
+          number_of_fragments: 0,
+        },
       },
       'meta.description': {
         boost: 2,
         highlight: {
-          number_of_fragments: 0
-        }
+          number_of_fragments: 0,
+        },
       },
       'meta.creditsString': {
-        boost: 3
+        boost: 3,
       },
       contentString: {
         highlight: {
           boundary_scanner_locale: 'de-CH',
-          fragment_size: 300
-        }
+          fragment_size: 300,
+        },
       },
       'resolved.meta.dossier.meta.title': {
-        boost: 3
+        boost: 3,
       },
       'resolved.meta.format.meta.title': {
-        boost: 3
+        boost: 3,
       },
       'resolved.meta.section.meta.title': {
-        boost: 3
-      }
+        boost: 3,
+      },
     },
     functionScore: (query) => ({
       query,
@@ -77,64 +80,60 @@ module.exports = {
         {
           filter: {
             terms: {
-              'meta.template': ['format', 'section', 'dossier']
-            }
+              'meta.template': ['format', 'section', 'dossier'],
+            },
           },
-          weight: 20
+          weight: 20,
         },
         {
           filter: {
             match: {
-              'meta.isSeriesMaster': true
-            }
+              'meta.isSeriesMaster': true,
+            },
           },
-          weight: 20
+          weight: 20,
         },
         {
           filter: {
             match: {
-              'meta.isSeriesEpisode': true
-            }
+              'meta.isSeriesEpisode': true,
+            },
           },
-          weight: 10
+          weight: 10,
         },
         {
           filter: {
             range: {
               'contentString.count': {
-                gte: getWordsPerMinute() * MIDDLE_DURATION_MINS
-              }
-            }
+                gte: getWordsPerMinute() * MIDDLE_DURATION_MINS,
+              },
+            },
           },
-          weight: 5
+          weight: 5,
         },
         {
           filter: {
             match: {
-              'meta.template': 'editorialNewsletter'
-            }
+              'meta.template': 'editorialNewsletter',
+            },
           },
-          weight: 0.1
-        }
-      ]
+          weight: 0.1,
+        },
+      ],
     }),
     filter: {
       default: () => ({
         bool: {
-          must: [
-            { term: { __type: type } }
-          ]
-        }
-      })
+          must: [{ term: { __type: type } }],
+        },
+      }),
     },
     rolebasedFilter: {
       // Default filter
       default: () => ({
         bool: {
-          must: [
-            { term: { '__state.published': true } }
-          ]
-        }
+          must: [{ term: { '__state.published': true } }],
+        },
       }),
 
       // Adopted filter when role "editor" is present
@@ -144,23 +143,19 @@ module.exports = {
             bool: {
               must: [
                 { term: { '__state.published': true } },
-                { term: { '__state.prepublished': true } }
-              ]
-            }
-          }
+                { term: { '__state.prepublished': true } },
+              ],
+            },
+          },
         ]
 
         if (scheduledAt) {
-          const must = [
-            { term: { 'meta.prepublication': false } }
-          ]
+          const must = [{ term: { 'meta.prepublication': false } }]
           // scheduledAt can be date or a filter object
           // date: filter lower or equal
           // filter: ignore, is added to query in createShould
           if (!scheduledAt.from && !scheduledAt.to) {
-            must.push(
-              { range: { 'meta.scheduledAt': { lte: scheduledAt } } }
-            )
+            must.push({ range: { 'meta.scheduledAt': { lte: scheduledAt } } })
           }
           should.push({ bool: { must } })
         }
@@ -170,77 +165,67 @@ module.exports = {
             bool: {
               must: [
                 { term: { '__state.published': false } },
-                { term: { '__state.prepublished': true } }
-              ]
-            }
+                { term: { '__state.prepublished': true } },
+              ],
+            },
           })
         }
 
         if (id) {
           should.push({
             bool: {
-              must: [
-                { term: { _id: id } }
-              ]
-            }
+              must: [{ term: { _id: id } }],
+            },
           })
         }
 
         if (ids) {
           should.push({
             bool: {
-              must: [
-                { terms: { _id: ids } }
-              ]
-            }
+              must: [{ terms: { _id: ids } }],
+            },
           })
         }
 
         return {
           bool: {
-            must: [
-              { bool: { should } }
-            ]
-          }
+            must: [{ bool: { should } }],
+          },
         }
-      }
-    }
+      },
+    },
   },
   analysis: {
     normalizer: {
       republik_strict: {
         type: 'custom',
-        filter: [
-          'german_normalization',
-          'lowercase',
-          'asciifolding'
-        ]
-      }
-    }
+        filter: ['german_normalization', 'lowercase', 'asciifolding'],
+      },
+    },
   },
   mapping: {
     [type]: {
       dynamic: false,
       properties: {
         __type: {
-          type: 'keyword'
+          type: 'keyword',
         },
         __state: {
           properties: {
             published: {
-              type: 'boolean'
+              type: 'boolean',
             },
             prepublished: {
-              type: 'boolean'
-            }
-          }
+              type: 'boolean',
+            },
+          },
         },
         __sort: {
           properties: {
             date: {
-              type: 'date'
-            }
-          }
+              type: 'date',
+            },
+          },
         },
         resolved: {
           properties: {
@@ -257,23 +242,23 @@ module.exports = {
                             keyword: {
                               type: 'keyword',
                               normalizer: 'republik_strict',
-                              ignore_above: 256
-                            }
-                          }
+                              ignore_above: 256,
+                            },
+                          },
                         },
                         description: {
                           type: 'text',
-                          analyzer: 'german'
+                          analyzer: 'german',
                         },
                         kind: {
-                          type: 'keyword'
+                          type: 'keyword',
                         },
                         template: {
-                          type: 'keyword'
-                        }
-                      }
-                    }
-                  }
+                          type: 'keyword',
+                        },
+                      },
+                    },
+                  },
                 },
                 format: {
                   properties: {
@@ -286,23 +271,23 @@ module.exports = {
                             keyword: {
                               type: 'keyword',
                               normalizer: 'republik_strict',
-                              ignore_above: 256
-                            }
-                          }
+                              ignore_above: 256,
+                            },
+                          },
                         },
                         description: {
                           type: 'text',
-                          analyzer: 'german'
+                          analyzer: 'german',
                         },
                         kind: {
-                          type: 'keyword'
+                          type: 'keyword',
                         },
                         template: {
-                          type: 'keyword'
-                        }
-                      }
-                    }
-                  }
+                          type: 'keyword',
+                        },
+                      },
+                    },
+                  },
                 },
                 dossier: {
                   properties: {
@@ -315,36 +300,36 @@ module.exports = {
                             keyword: {
                               type: 'keyword',
                               normalizer: 'republik_strict',
-                              ignore_above: 256
-                            }
-                          }
+                              ignore_above: 256,
+                            },
+                          },
                         },
                         description: {
                           type: 'text',
-                          analyzer: 'german'
+                          analyzer: 'german',
                         },
                         kind: {
-                          type: 'keyword'
+                          type: 'keyword',
                         },
                         template: {
-                          type: 'keyword'
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
+                          type: 'keyword',
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
         },
         commitId: {
-          type: 'keyword'
+          type: 'keyword',
         },
         versionName: {
-          type: 'keyword'
+          type: 'keyword',
         },
         milestoneCommitId: {
-          type: 'keyword'
+          type: 'keyword',
         },
 
         contentString: {
@@ -355,152 +340,152 @@ module.exports = {
             count: {
               type: 'token_count',
               analyzer: 'standard',
-              store: true
+              store: true,
             },
             keyword: {
               type: 'keyword',
-              ignore_above: 256
-            }
-          }
+              ignore_above: 256,
+            },
+          },
         },
         content: {
           type: 'object',
           dynamic: false,
-          enabled: false
+          enabled: false,
         },
 
         meta: {
           properties: {
             repoId: {
-              type: 'keyword'
+              type: 'keyword',
             },
             title: {
               type: 'text',
-              analyzer: 'german'
+              analyzer: 'german',
             },
             shortTitle: {
               type: 'text',
-              analyzer: 'german'
+              analyzer: 'german',
             },
             description: {
               type: 'text',
-              analyzer: 'german'
+              analyzer: 'german',
             },
             publishDate: {
-              type: 'date'
+              type: 'date',
             },
             lastPublishedAt: {
-              type: 'date'
+              type: 'date',
             },
             scheduledAt: {
-              type: 'date'
+              type: 'date',
             },
             prepublication: {
-              type: 'boolean'
+              type: 'boolean',
             },
             slug: {
               type: 'text',
               ...keywordPartial,
-              analyzer: 'german'
+              analyzer: 'german',
             },
             path: {
               type: 'text',
-              ...keywordPartial
+              ...keywordPartial,
             },
             feed: {
-              type: 'boolean'
+              type: 'boolean',
             },
             creditsString: {
               type: 'text',
-              analyzer: 'german'
+              analyzer: 'german',
             },
             credits: {
-              ...mdastPartial
+              ...mdastPartial,
             },
             authors: {
               type: 'text',
               ...keywordPartial,
-              analyzer: 'german'
+              analyzer: 'german',
             },
             dossier: {
-              type: 'keyword'
+              type: 'keyword',
             },
             format: {
-              type: 'keyword'
+              type: 'keyword',
             },
             section: {
-              type: 'keyword'
+              type: 'keyword',
             },
             kind: {
-              type: 'keyword'
+              type: 'keyword',
             },
             template: {
-              type: 'keyword'
+              type: 'keyword',
             },
             discussionId: {
-              type: 'keyword'
+              type: 'keyword',
             },
             // series <- not indexed, inconsistent types
             isSeriesMaster: {
-              type: 'boolean'
+              type: 'boolean',
             },
             isSeriesEpisode: {
-              type: 'boolean'
+              type: 'boolean',
             },
             seriesEpisodes: {
               properties: {
                 episodes: {
                   properties: {
                     document: {
-                      type: 'keyword'
+                      type: 'keyword',
                     },
                     image: {
-                      type: 'keyword'
+                      type: 'keyword',
                     },
                     label: {
                       type: 'text',
-                      ...keywordPartial
+                      ...keywordPartial,
                     },
                     publishDate: {
-                      type: 'date'
+                      type: 'date',
                     },
                     title: {
                       type: 'text',
-                      ...keywordPartial
-                    }
-                  }
+                      ...keywordPartial,
+                    },
+                  },
                 },
                 title: {
                   type: 'text',
-                  ...keywordPartial
-                }
-              }
+                  ...keywordPartial,
+                },
+              },
             },
             hasAudio: {
-              type: 'boolean'
+              type: 'boolean',
             },
             hasVideo: {
-              type: 'boolean'
+              type: 'boolean',
             },
             audioSource: {
               properties: {
                 mp3: {
-                  type: 'keyword'
+                  type: 'keyword',
                 },
                 aac: {
-                  type: 'keyword'
+                  type: 'keyword',
                 },
                 ogg: {
-                  type: 'keyword'
-                }
-              }
+                  type: 'keyword',
+                },
+              },
             },
             color: {
-              type: 'keyword'
-            }
-          }
-        }
-      }
-    }
-  }
+              type: 'keyword',
+            },
+          },
+        },
+      },
+    },
+  },
 }

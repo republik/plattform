@@ -1,7 +1,9 @@
 const debug = require('debug')('republik:lib:MembershipStats:evolution')
 const moment = require('moment')
 
-const { cache: { create } } = require('@orbiting/backend-modules-utils')
+const {
+  cache: { create },
+} = require('@orbiting/backend-modules-utils')
 
 const QUERY_CACHE_TTL_SECONDS = 60 * 60 * 24 // A day
 
@@ -181,15 +183,16 @@ GROUP BY 1
 ORDER BY 1
 `
 
-const createCache = (context) => create(
-  {
-    namespace: 'republik',
-    prefix: 'MembershipStats:evolution',
-    key: 'any',
-    ttl: QUERY_CACHE_TTL_SECONDS
-  },
-  context
-)
+const createCache = (context) =>
+  create(
+    {
+      namespace: 'republik',
+      prefix: 'MembershipStats:evolution',
+      key: 'any',
+      ttl: QUERY_CACHE_TTL_SECONDS,
+    },
+    context,
+  )
 
 const populate = async (context, resultFn) => {
   debug('populate')
@@ -209,7 +212,11 @@ const populate = async (context, resultFn) => {
   const max = moment(maxEndDate).startOf('month').format('YYYY-MM-DD')
 
   // Generate date for range
-  const result = await pgdb.query(query, { min, max, TZ: process.env.TZ || 'Europe/Zurich' })
+  const result = await pgdb.query(query, {
+    min,
+    max,
+    TZ: process.env.TZ || 'Europe/Zurich',
+  })
 
   if (resultFn) {
     return resultFn(result)
@@ -224,7 +231,9 @@ const reducerBucketProps = (bucket) => (sum, prop) => {
   const value = bucket[prop]
 
   if (!Number.isFinite(value)) {
-    throw new Error(`Missing prop "${prop}" on bucket "${bucket.key}" when summing up props`)
+    throw new Error(
+      `Missing prop "${prop}" on bucket "${bucket.key}" when summing up props`,
+    )
   }
 
   return sum + value
@@ -247,14 +256,14 @@ const reducerBucketProps = (bucket) => (sum, prop) => {
 const sumBucketProps = async (
   context,
   key = moment().format('YYYY-MM'),
-  props
+  props,
 ) => {
   // Fetch pre-populated data
   const data = await createCache(context).get()
 
   if (!data) {
     throw new Error(
-      'Unable to sum bucket: Pre-populated data is not available. Did you run `yarn populate`?'
+      'Unable to sum bucket: Pre-populated data is not available. Did you run `yarn populate`?',
     )
   }
 
@@ -262,10 +271,12 @@ const sumBucketProps = async (
   const { result = [] } = data
 
   // Find desired bucket
-  const bucket = result.find(bucket => bucket.key === key)
+  const bucket = result.find((bucket) => bucket.key === key)
 
   if (!bucket) {
-    throw new Error(`Unable to sum bucket: Bucket "${key}" not in pre-populated data available`)
+    throw new Error(
+      `Unable to sum bucket: Bucket "${key}" not in pre-populated data available`,
+    )
   }
 
   const { add = ['active', 'overdue'], subtract = [] } = props
@@ -276,14 +287,13 @@ const sumBucketProps = async (
   return sumAdd - sumSubtract
 }
 
-const getCount = context => sumBucketProps(
-  context,
-  moment().format('YYYY-MM'),
-  { add: ['active', 'overdue'] }
-)
+const getCount = (context) =>
+  sumBucketProps(context, moment().format('YYYY-MM'), {
+    add: ['active', 'overdue'],
+  })
 
 module.exports = {
   createCache,
   populate,
-  getCount
+  getCount,
 }

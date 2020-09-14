@@ -9,7 +9,7 @@ const appAuth = require('./appAuth')
 const {
   REDIS_URL,
   GITHUB_GRAPHQL_RATELIMIT,
-  GITHUB_LOG_RATELIMIT
+  GITHUB_LOG_RATELIMIT,
 } = process.env
 
 const DEV = process.env.NODE_ENV && process.env.NODE_ENV !== 'production'
@@ -29,10 +29,10 @@ if (GITHUB_GRAPHQL_RATELIMIT) {
 
     datastore: 'redis',
     clientOptions: {
-      url: REDIS_URL
+      url: REDIS_URL,
     },
 
-    timeout: 1000 * 30
+    timeout: 1000 * 30,
   })
 
   limiter.on('err', (err) => {
@@ -45,8 +45,8 @@ if (GITHUB_GRAPHQL_RATELIMIT) {
       local: limiter.counts(),
       all: {
         running: await limiter.running(),
-        done: await limiter.done()
-      }
+        done: await limiter.done(),
+      },
     })
   }
 
@@ -62,16 +62,15 @@ module.exports = async () => {
   }
 
   const githubApolloFetch = createApolloFetch({
-    uri: 'https://api.github.com/graphql'
+    uri: 'https://api.github.com/graphql',
+  }).use(({ options }, next) => {
+    if (!options.headers) {
+      options.headers = {}
+    }
+    options.headers.Authorization = `Bearer ${installationToken.token}`
+    options.headers.Accept = 'application/vnd.github.machine-man-preview+json'
+    next()
   })
-    .use(({ options }, next) => {
-      if (!options.headers) {
-        options.headers = {}
-      }
-      options.headers.Authorization = `Bearer ${installationToken.token}`
-      options.headers.Accept = 'application/vnd.github.machine-man-preview+json'
-      next()
-    })
 
   if (GITHUB_GRAPHQL_RATELIMIT) {
     // Limit requests
@@ -84,25 +83,34 @@ module.exports = async () => {
       const { headers, raw, parsed } = response
 
       if (!parsed || !parsed.data) {
-        console.error('GitHub GraphQL Error: Missing data prop', { raw, parsed })
+        console.error('GitHub GraphQL Error: Missing data prop', {
+          raw,
+          parsed,
+        })
         throw new Error('GitHub GraphQL Error: Missing data prop')
       }
 
       const ratelimit = {
         limit: headers.get('x-ratelimit-limit'),
         remaining: headers.get('x-ratelimit-remaining'),
-        reset: headers.get('x-ratelimit-reset')
+        reset: headers.get('x-ratelimit-reset'),
       }
 
       if (ratelimit.remaining < ratelimit.limit / 10) {
         if (ratelimit.remaining > 0) {
-          console.warn(`Near GitHub GraphQL Rate Limit: ${ratelimit.remaining} request(s) left`)
+          console.warn(
+            `Near GitHub GraphQL Rate Limit: ${ratelimit.remaining} request(s) left`,
+          )
           debug('limits', {
             ...ratelimit,
-            resetDate: new Date(ratelimit.reset * 1000).toString()
+            resetDate: new Date(ratelimit.reset * 1000).toString(),
           })
         } else {
-          console.error(`GitHub GraphQL Error: Rate Limit reached. Reset at ${new Date(ratelimit.reset * 1000).toString()}.`)
+          console.error(
+            `GitHub GraphQL Error: Rate Limit reached. Reset at ${new Date(
+              ratelimit.reset * 1000,
+            ).toString()}.`,
+          )
         }
       }
 
@@ -120,43 +128,49 @@ module.exports = async () => {
 
   const githubRest = new Octokit({
     previews: ['machine-man-preview', 'mercy-preview'],
-    auth: installationToken.token
+    auth: installationToken.token,
   })
 
   if (GITHUB_LOG_RATELIMIT) {
     const now = new Date().getTime()
     if (!nextRateLimitCheck || nextRateLimitCheck <= now) {
       nextRateLimitCheck = now + 15 * 60 * 1000
-      githubRest.rateLimit.get()
-        .then(response => {
-          if (!response.data) {
-            console.error('could not get rateLimit!', response)
-          } else {
-            const { data } = response
-            try { // sanitize dates
-              data.resources.core.resetDate = new Date(data.resources.core.reset * 1000).toString()
-              data.resources.search.resetDate = new Date(data.resources.search.reset * 1000).toString()
-              data.resources.graphql.resetDate = new Date(data.resources.graphql.reset * 1000).toString()
-              data.rate.resetDate = new Date(data.rate.reset * 1000).toString()
-            } catch (e) {}
-            const message = {
-              message: 'GitHub rate limit',
-              level: 'notice',
-              data
-            }
-            if (DEV) {
-              const util = require('util')
-              console.log(util.inspect(message, null, { depth: null }))
-            } else {
-              console.log(JSON.stringify(message))
-            }
+      githubRest.rateLimit.get().then((response) => {
+        if (!response.data) {
+          console.error('could not get rateLimit!', response)
+        } else {
+          const { data } = response
+          try {
+            // sanitize dates
+            data.resources.core.resetDate = new Date(
+              data.resources.core.reset * 1000,
+            ).toString()
+            data.resources.search.resetDate = new Date(
+              data.resources.search.reset * 1000,
+            ).toString()
+            data.resources.graphql.resetDate = new Date(
+              data.resources.graphql.reset * 1000,
+            ).toString()
+            data.rate.resetDate = new Date(data.rate.reset * 1000).toString()
+          } catch (e) {}
+          const message = {
+            message: 'GitHub rate limit',
+            level: 'notice',
+            data,
           }
-        })
+          if (DEV) {
+            const util = require('util')
+            console.log(util.inspect(message, null, { depth: null }))
+          } else {
+            console.log(JSON.stringify(message))
+          }
+        }
+      })
     }
   }
 
   return {
     githubApolloFetch,
-    githubRest
+    githubRest,
   }
 }

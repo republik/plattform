@@ -1,31 +1,24 @@
 const { createGithubClients } = require('../../lib/github')
 const MDAST = require('@orbiting/remark-preset')
 const {
-  lib: {
-    createRepoUrlPrefixer,
-    createUrlPrefixer
-  }
+  lib: { createRepoUrlPrefixer, createUrlPrefixer },
 } = require('@orbiting/backend-modules-assets')
 const {
   lib: {
     process: {
       processRepoImageUrlsInContent,
       processRepoImageUrlsInMeta,
-      processImageUrlsInContent
-    }
-  }
+      processImageUrlsInContent,
+    },
+  },
 } = require('@orbiting/backend-modules-documents')
 const debug = require('debug')('publikator:commit')
 
 module.exports = {
   document: async (
-    {
-      id: commitId,
-      repo: { id: repoId },
-      document: existingDocument
-    },
+    { id: commitId, repo: { id: repoId }, document: existingDocument },
     { publicAssets = false },
-    { user, redis }
+    { user, redis },
   ) => {
     if (existingDocument) {
       return existingDocument
@@ -45,9 +38,7 @@ module.exports = {
       const [login, repoName] = repoId.split('/')
 
       const {
-        data: {
-          repository
-        }
+        data: { repository },
       } = await githubApolloFetch({
         query: `
           query document(
@@ -67,22 +58,22 @@ module.exports = {
         variables: {
           login,
           repoName,
-          blobExpression: `${commitId}:article.md`
-        }
+          blobExpression: `${commitId}:article.md`,
+        },
       })
 
       if (!repository.blob) {
         console.warn(`no document found for ${repoId}`)
         return {
           content: {},
-          meta: {}
+          meta: {},
         }
       }
 
       const blobParams = {
         owner: login,
         repo: repoName,
-        file_sha: repository.blob.oid
+        file_sha: repository.blob.oid,
       }
 
       let blobResult, error
@@ -93,21 +84,30 @@ module.exports = {
         blobResult = null
       }
 
-      if (error || !blobResult || !blobResult.data || !blobResult.data.content) {
-        console.error(
-          'getBlob failed for ',
-          { ...blobParams, commitId, error }
-        )
+      if (
+        error ||
+        !blobResult ||
+        !blobResult.data ||
+        !blobResult.data.content
+      ) {
+        console.error('getBlob failed for ', { ...blobParams, commitId, error })
         throw new Error(`getBlob failed for sha ${repository.blob.oid}`)
       }
 
       try {
-        mdast = MDAST.parse(Buffer.from(blobResult.data.content, 'base64').toString('utf8'))
+        mdast = MDAST.parse(
+          Buffer.from(blobResult.data.content, 'base64').toString('utf8'),
+        )
       } catch (e) {
         console.error(e)
       }
       if (mdast) {
-        await redis.setAsync(redisKey, JSON.stringify(mdast), 'EX', redis.__defaultExpireSeconds)
+        await redis.setAsync(
+          redisKey,
+          JSON.stringify(mdast),
+          'EX',
+          redis.__defaultExpireSeconds,
+        )
       } else {
         mdast = MDAST.parse('Dokument fehlerhaft. Reden Sie mit der IT.')
       }
@@ -115,7 +115,11 @@ module.exports = {
 
     // prefix repo image's urls
     const repoImagePaths = []
-    const prefixRepoUrl = createRepoUrlPrefixer(repoId, publicAssets, repoImagePaths)
+    const prefixRepoUrl = createRepoUrlPrefixer(
+      repoId,
+      publicAssets,
+      repoImagePaths,
+    )
     processRepoImageUrlsInContent(mdast, prefixRepoUrl)
     processRepoImageUrlsInMeta(mdast, prefixRepoUrl)
 
@@ -127,7 +131,7 @@ module.exports = {
       id: Buffer.from(`repo:${repoId}:${commitId}`).toString('base64'),
       repoId,
       content: mdast,
-      repoImagePaths
+      repoImagePaths,
     }
-  }
+  },
 }

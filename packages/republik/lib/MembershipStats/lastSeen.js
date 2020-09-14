@@ -1,6 +1,8 @@
 const debug = require('debug')('republik:lib:MembershipStats:lastSeen')
 
-const { cache: { create } } = require('@orbiting/backend-modules-utils')
+const {
+  cache: { create },
+} = require('@orbiting/backend-modules-utils')
 
 const LAST_SEEN_AGO = '30 days'
 const QUERY_CACHE_TTL_SECONDS = 60 * 60 * 24 // A day
@@ -38,15 +40,16 @@ FROM "sessionsLastSeen"
 WHERE "lastSeenAt" >= now()::timestamp(0) - :ago::interval
 `
 
-const createCache = (context) => create(
-  {
-    namespace: 'republik',
-    prefix: 'MembershipStats:lastSeen',
-    key: 'any',
-    ttl: QUERY_CACHE_TTL_SECONDS
-  },
-  context
-)
+const createCache = (context) =>
+  create(
+    {
+      namespace: 'republik',
+      prefix: 'MembershipStats:lastSeen',
+      key: 'any',
+      ttl: QUERY_CACHE_TTL_SECONDS,
+    },
+    context,
+  )
 
 const populate = async (context, resultFn) => {
   debug('populate')
@@ -67,5 +70,5 @@ const populate = async (context, resultFn) => {
 
 module.exports = {
   createCache,
-  populate
+  populate,
 }

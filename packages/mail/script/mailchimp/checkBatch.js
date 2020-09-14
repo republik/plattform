@@ -13,11 +13,11 @@ const MailchimpInterface = require('../../MailchimpInterface')
 
 const mailchimp = MailchimpInterface({ logger: console })
 
-const argv = yargs
-  .option('id', { required: true })
-  .argv
+const argv = yargs.option('id', { required: true }).argv
 
 mailchimp
   .getBatch(argv.id)
-  .then(r => r.json())
-  .then(r => { console.log('status', r) })
+  .then((r) => r.json())
+  .then((r) => {
+    console.log('status', r)
+  })

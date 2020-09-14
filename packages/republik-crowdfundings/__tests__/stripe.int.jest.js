@@ -9,7 +9,7 @@ const moment = require('moment')
 const {
   signIn,
   signOut,
-  Users
+  Users,
 } = require('@orbiting/backend-modules-auth/__tests__/auth')
 const {
   Cards,
@@ -19,13 +19,13 @@ const {
   chargeSuccess,
   chargeRefund,
   invoicePaymentFail,
-  cancelSubscription
+  cancelSubscription,
 } = require('./stripeHelpers')
 const {
   prepareNewPledge,
   PAYMENT_METHODS,
   payPledge,
-  checkSeed
+  checkSeed,
 } = require('./helpers')
 const seedCrowdfundings = require('../seeds/seedCrowdfundings')
 
@@ -52,10 +52,8 @@ beforeEach(async () => {
 })
 
 // syntax "helpers"
-const pgDatabase = () =>
-  global.instance.context.pgdb
-const i18n = (arg) =>
-  global.instance.context.t(arg)
+const pgDatabase = () => global.instance.context.pgdb
+const i18n = (arg) => global.instance.context.t(arg)
 
 const ADD_PAYMENT_SOURCE_MUTATION = `
   mutation addPaymentSource($sourceId: String!, $pspPayload: JSON!) {
@@ -69,13 +67,17 @@ const ADD_PAYMENT_SOURCE_MUTATION = `
   }
 `
 
-const addPaymentSource = ({ sourceId, pspPayload, apolloFetch = global.instance.apolloFetch }) => {
+const addPaymentSource = ({
+  sourceId,
+  pspPayload,
+  apolloFetch = global.instance.apolloFetch,
+}) => {
   return apolloFetch({
     query: ADD_PAYMENT_SOURCE_MUTATION,
     variables: {
       sourceId,
-      pspPayload
-    }
+      pspPayload,
+    },
   })
 }
 
@@ -88,42 +90,52 @@ describe('merge customers', () => {
     const { pgdb } = global.instance.context
     const source = await createSource({ card: Cards.Visa })
 
-    const { apolloFetch: apolloFetchSource } = await signIn({ user: userSource, newCookieStore: true })
-    const { apolloFetch: apolloFetchTarget } = await signIn({ user: userTarget, newCookieStore: true })
+    const { apolloFetch: apolloFetchSource } = await signIn({
+      user: userSource,
+      newCookieStore: true,
+    })
+    const { apolloFetch: apolloFetchTarget } = await signIn({
+      user: userTarget,
+      newCookieStore: true,
+    })
 
     const result = await addPaymentSource({
       sourceId: source.id,
       pspPayload: '',
-      apolloFetch: apolloFetchTarget
+      apolloFetch: apolloFetchTarget,
     })
 
     expect(
-      await pgdb.public.stripeCustomers.find({ userId: userSource.id })
-        .then(r => r.length)
+      await pgdb.public.stripeCustomers
+        .find({ userId: userSource.id })
+        .then((r) => r.length),
     ).toBe(0)
     expect(
-      await pgdb.public.stripeCustomers.find({ userId: userTarget.id })
-        .then(r => r.length)
+      await pgdb.public.stripeCustomers
+        .find({ userId: userTarget.id })
+        .then((r) => r.length),
     ).toBe(2)
 
     await mergeCustomers({
       targetUserId: userTarget.id,
       sourceUserId: userSource.id,
-      pgdb
+      pgdb,
     })
 
     expect(
-      await pgdb.public.stripeCustomers.find({ userId: userSource.id })
-        .then(r => r.length)
+      await pgdb.public.stripeCustomers
+        .find({ userId: userSource.id })
+        .then((r) => r.length),
     ).toBe(0)
     expect(
-      await pgdb.public.stripeCustomers.find({ userId: userTarget.id })
-        .then(r => r.length)
+      await pgdb.public.stripeCustomers
+        .find({ userId: userTarget.id })
+        .then((r) => r.length),
     ).toBe(2)
 
     await Promise.all([
       signOut({ apolloFetch: apolloFetchSource }),
-      signOut({ apolloFetch: apolloFetchTarget })
+      signOut({ apolloFetch: apolloFetchTarget }),
     ])
   })
 
@@ -131,42 +143,52 @@ describe('merge customers', () => {
     const { pgdb } = global.instance.context
     const source = await createSource({ card: Cards.Visa })
 
-    const { apolloFetch: apolloFetchSource } = await signIn({ user: userSource, newCookieStore: true })
-    const { apolloFetch: apolloFetchTarget } = await signIn({ user: userTarget, newCookieStore: true })
+    const { apolloFetch: apolloFetchSource } = await signIn({
+      user: userSource,
+      newCookieStore: true,
+    })
+    const { apolloFetch: apolloFetchTarget } = await signIn({
+      user: userTarget,
+      newCookieStore: true,
+    })
 
     const result = await addPaymentSource({
       sourceId: source.id,
       pspPayload: '',
-      apolloFetch: apolloFetchSource
+      apolloFetch: apolloFetchSource,
     })
 
     expect(
-      await pgdb.public.stripeCustomers.find({ userId: userSource.id })
-        .then(r => r.length)
+      await pgdb.public.stripeCustomers
+        .find({ userId: userSource.id })
+        .then((r) => r.length),
     ).toBe(2)
     expect(
-      await pgdb.public.stripeCustomers.find({ userId: userTarget.id })
-        .then(r => r.length)
+      await pgdb.public.stripeCustomers
+        .find({ userId: userTarget.id })
+        .then((r) => r.length),
     ).toBe(0)
 
     await mergeCustomers({
       targetUserId: userTarget.id,
       sourceUserId: userSource.id,
-      pgdb
+      pgdb,
     })
 
     expect(
-      await pgdb.public.stripeCustomers.find({ userId: userSource.id })
-        .then(r => r.length)
+      await pgdb.public.stripeCustomers
+        .find({ userId: userSource.id })
+        .then((r) => r.length),
     ).toBe(0)
     expect(
-      await pgdb.public.stripeCustomers.find({ userId: userTarget.id })
-        .then(r => r.length)
+      await pgdb.public.stripeCustomers
+        .find({ userId: userTarget.id })
+        .then((r) => r.length),
     ).toBe(2)
 
     await Promise.all([
       signOut({ apolloFetch: apolloFetchSource }),
-      signOut({ apolloFetch: apolloFetchTarget })
+      signOut({ apolloFetch: apolloFetchTarget }),
     ])
   })
 
@@ -175,20 +197,26 @@ describe('merge customers', () => {
     const sourceSource = await createSource({ card: Cards.Visa })
     const sourceTarget = await createSource({ card: Cards.Visa })
 
-    const { apolloFetch: apolloFetchSource } = await signIn({ user: userSource, newCookieStore: true })
-    const { apolloFetch: apolloFetchTarget } = await signIn({ user: userTarget, newCookieStore: true })
+    const { apolloFetch: apolloFetchSource } = await signIn({
+      user: userSource,
+      newCookieStore: true,
+    })
+    const { apolloFetch: apolloFetchTarget } = await signIn({
+      user: userTarget,
+      newCookieStore: true,
+    })
 
     // buy monthly subscription source
     const { pledgeId: pledgeIdSource } = await prepareNewPledge({
       templateId: '00000000-0000-0000-0008-000000000002',
       apolloFetch: apolloFetchSource,
-      user: userSource
+      user: userSource,
     })
     const resultSource = await payPledge({
       pledgeId: pledgeIdSource,
       method: PAYMENT_METHODS.STRIPE,
       sourceId: sourceSource.id,
-      apolloFetch: apolloFetchSource
+      apolloFetch: apolloFetchSource,
     })
     expect(resultSource.errors).toBeFalsy()
 
@@ -196,13 +224,13 @@ describe('merge customers', () => {
     const { pledgeId: pledgeIdTarget } = await prepareNewPledge({
       templateId: '00000000-0000-0000-0008-000000000002',
       apolloFetch: apolloFetchTarget,
-      user: userTarget
+      user: userTarget,
     })
     const resultTarget = await payPledge({
       pledgeId: pledgeIdTarget,
       method: PAYMENT_METHODS.STRIPE,
       sourceId: sourceTarget.id,
-      apolloFetch: apolloFetchTarget
+      apolloFetch: apolloFetchTarget,
     })
     expect(resultTarget.errors).toBeFalsy()
 
@@ -210,13 +238,13 @@ describe('merge customers', () => {
       mergeCustomers({
         targetUserId: userTarget.id,
         sourceUserId: userSource.id,
-        pgdb
-      })
+        pgdb,
+      }),
     ).rejects.toThrow(/both have subscriptions/)
 
     await Promise.all([
       signOut({ apolloFetch: apolloFetchSource }),
-      signOut({ apolloFetch: apolloFetchTarget })
+      signOut({ apolloFetch: apolloFetchTarget }),
     ])
   })
 
@@ -225,25 +253,31 @@ describe('merge customers', () => {
     const sourceSource = await createSource({ card: Cards.Visa })
     const sourceTarget = await createSource({ card: Cards.Visa })
 
-    const { apolloFetch: apolloFetchSource } = await signIn({ user: userSource, newCookieStore: true })
-    const { apolloFetch: apolloFetchTarget } = await signIn({ user: userTarget, newCookieStore: true })
+    const { apolloFetch: apolloFetchSource } = await signIn({
+      user: userSource,
+      newCookieStore: true,
+    })
+    const { apolloFetch: apolloFetchTarget } = await signIn({
+      user: userTarget,
+      newCookieStore: true,
+    })
 
     // buy monthly subscription source
     const { pledgeId: pledgeIdSource } = await prepareNewPledge({
       templateId: '00000000-0000-0000-0008-000000000002',
       apolloFetch: apolloFetchSource,
-      user: userSource
+      user: userSource,
     })
     const resultSource = await payPledge({
       pledgeId: pledgeIdSource,
       method: PAYMENT_METHODS.STRIPE,
       sourceId: sourceSource.id,
-      apolloFetch: apolloFetchSource
+      apolloFetch: apolloFetchSource,
     })
     expect(resultSource.errors).toBeFalsy()
 
     const sourceStripeCustomers = await pgdb.public.stripeCustomers.find({
-      userId: userSource.id
+      userId: userSource.id,
     })
     expect(sourceStripeCustomers.length).toBe(2)
 
@@ -251,99 +285,115 @@ describe('merge customers', () => {
     const resultTarget = await addPaymentSource({
       sourceId: sourceTarget.id,
       pspPayload: '',
-      apolloFetch: apolloFetchTarget
+      apolloFetch: apolloFetchTarget,
     })
     expect(resultTarget.errors).toBeFalsy()
     expect(
-      await pgdb.public.stripeCustomers.find({ userId: userTarget.id })
-        .then(r => r.length)
+      await pgdb.public.stripeCustomers
+        .find({ userId: userTarget.id })
+        .then((r) => r.length),
     ).toBe(2)
 
     await mergeCustomers({
       targetUserId: userTarget.id,
       sourceUserId: userSource.id,
-      pgdb
+      pgdb,
     })
 
     expect(
-      await pgdb.public.stripeCustomers.find({ userId: userSource.id })
-        .then(r => r.length)
+      await pgdb.public.stripeCustomers
+        .find({ userId: userSource.id })
+        .then((r) => r.length),
     ).toBe(0)
 
     const targetStripeCustomers = await pgdb.public.stripeCustomers.find({
-      userId: userTarget.id
+      userId: userTarget.id,
     })
     expect(targetStripeCustomers.length).toBe(2)
     expect(
-      targetStripeCustomers
-        .filter( cust => sourceStripeCustomers.findIndex(cust2 => cust2.id === cust.id) > -1)
-        .length
+      targetStripeCustomers.filter(
+        (cust) =>
+          sourceStripeCustomers.findIndex((cust2) => cust2.id === cust.id) > -1,
+      ).length,
     ).toBe(2)
 
     await Promise.all([
       signOut({ apolloFetch: apolloFetchSource }),
-      signOut({ apolloFetch: apolloFetchTarget })
+      signOut({ apolloFetch: apolloFetchTarget }),
     ])
   })
 
-  test('source\'s card expires after target\'s, move source to target', async () => {
+  test("source's card expires after target's, move source to target", async () => {
     const { pgdb } = global.instance.context
-    const sourceSource = await createSource({ card: {
-      ...Cards.Visa,
-      exp_month: '12'
-    }})
-    const sourceTarget = await createSource({ card: {
-      ...Cards.Visa,
-      exp_month: '11'
-    }})
+    const sourceSource = await createSource({
+      card: {
+        ...Cards.Visa,
+        exp_month: '12',
+      },
+    })
+    const sourceTarget = await createSource({
+      card: {
+        ...Cards.Visa,
+        exp_month: '11',
+      },
+    })
 
-    const { apolloFetch: apolloFetchSource } = await signIn({ user: userSource, newCookieStore: true })
-    const { apolloFetch: apolloFetchTarget } = await signIn({ user: userTarget, newCookieStore: true })
+    const { apolloFetch: apolloFetchSource } = await signIn({
+      user: userSource,
+      newCookieStore: true,
+    })
+    const { apolloFetch: apolloFetchTarget } = await signIn({
+      user: userTarget,
+      newCookieStore: true,
+    })
 
     await addPaymentSource({
       sourceId: sourceSource.id,
       pspPayload: '',
-      apolloFetch: apolloFetchSource
+      apolloFetch: apolloFetchSource,
     })
     const sourceStripeCustomers = await pgdb.public.stripeCustomers.find({
-      userId: userSource.id
+      userId: userSource.id,
     })
     expect(sourceStripeCustomers.length).toBe(2)
 
     await addPaymentSource({
       sourceId: sourceTarget.id,
       pspPayload: '',
-      apolloFetch: apolloFetchTarget
+      apolloFetch: apolloFetchTarget,
     })
     expect(
-      await pgdb.public.stripeCustomers.find({ userId: userTarget.id })
-        .then(r => r.length)
+      await pgdb.public.stripeCustomers
+        .find({ userId: userTarget.id })
+        .then((r) => r.length),
     ).toBe(2)
 
     await mergeCustomers({
       targetUserId: userTarget.id,
       sourceUserId: userSource.id,
-      pgdb
+      pgdb,
     })
 
     expect(
-      await pgdb.public.stripeCustomers.find({ userId: userSource.id })
-        .then(r => r.length)
+      await pgdb.public.stripeCustomers
+        .find({ userId: userSource.id })
+        .then((r) => r.length),
     ).toBe(0)
 
     const targetStripeCustomers = await pgdb.public.stripeCustomers.find({
-      userId: userTarget.id
+      userId: userTarget.id,
     })
     expect(targetStripeCustomers.length).toBe(2)
     expect(
-      targetStripeCustomers
-        .filter( cust => sourceStripeCustomers.findIndex(cust2 => cust2.id === cust.id) > -1)
-        .length
+      targetStripeCustomers.filter(
+        (cust) =>
+          sourceStripeCustomers.findIndex((cust2) => cust2.id === cust.id) > -1,
+      ).length,
     ).toBe(2)
 
     await Promise.all([
       signOut({ apolloFetch: apolloFetchSource }),
-      signOut({ apolloFetch: apolloFetchTarget })
+      signOut({ apolloFetch: apolloFetchTarget }),
     ])
   })
 
@@ -352,63 +402,75 @@ describe('merge customers', () => {
     const sourceSource = await createSource({ card: Cards.Visa })
     const sourceTarget = await createSource({ card: Cards.Visa })
 
-    const { apolloFetch: apolloFetchSource } = await signIn({ user: userSource, newCookieStore: true })
-    const { apolloFetch: apolloFetchTarget } = await signIn({ user: userTarget, newCookieStore: true })
+    const { apolloFetch: apolloFetchSource } = await signIn({
+      user: userSource,
+      newCookieStore: true,
+    })
+    const { apolloFetch: apolloFetchTarget } = await signIn({
+      user: userTarget,
+      newCookieStore: true,
+    })
 
     await addPaymentSource({
       sourceId: sourceSource.id,
       pspPayload: '',
-      apolloFetch: apolloFetchSource
+      apolloFetch: apolloFetchSource,
     })
     const sourceStripeCustomers = await pgdb.public.stripeCustomers.find({
-      userId: userSource.id
+      userId: userSource.id,
     })
     expect(sourceStripeCustomers.length).toBe(2)
 
     await addPaymentSource({
       sourceId: sourceTarget.id,
       pspPayload: '',
-      apolloFetch: apolloFetchTarget
+      apolloFetch: apolloFetchTarget,
     })
     expect(
-      await pgdb.public.stripeCustomers.find({ userId: userTarget.id })
-        .then(r => r.length)
+      await pgdb.public.stripeCustomers
+        .find({ userId: userTarget.id })
+        .then((r) => r.length),
     ).toBe(2)
 
     await mergeCustomers({
       targetUserId: userTarget.id,
       sourceUserId: userSource.id,
-      pgdb
+      pgdb,
     })
 
     expect(
-      await pgdb.public.stripeCustomers.find({ userId: userSource.id })
-        .then(r => r.length)
+      await pgdb.public.stripeCustomers
+        .find({ userId: userSource.id })
+        .then((r) => r.length),
     ).toBe(2)
 
     const targetStripeCustomers = await pgdb.public.stripeCustomers.find({
-      userId: userTarget.id
+      userId: userTarget.id,
     })
     expect(targetStripeCustomers.length).toBe(2)
     expect(
-      targetStripeCustomers
-        .filter( cust => sourceStripeCustomers.findIndex(cust2 => cust2.id === cust.id) === -1)
-        .length
+      targetStripeCustomers.filter(
+        (cust) =>
+          sourceStripeCustomers.findIndex((cust2) => cust2.id === cust.id) ===
+          -1,
+      ).length,
     ).toBe(2)
 
     await Promise.all([
       signOut({ apolloFetch: apolloFetchSource }),
-      signOut({ apolloFetch: apolloFetchTarget })
+      signOut({ apolloFetch: apolloFetchTarget }),
     ])
   })
-
 })
 
 describe('addPaymentSource', () => {
   test('adding a card as anonymous', async () => {
     await signIn({ user: Users.Anonymous })
     const source = await createSource({ card: Cards.Visa })
-    const result = await addPaymentSource({ sourceId: source.id, pspPayload: '' })
+    const result = await addPaymentSource({
+      sourceId: source.id,
+      pspPayload: '',
+    })
     expect(result.errors[0].message).toBe(i18n('api/signIn'))
     await signOut()
   })
@@ -416,55 +478,79 @@ describe('addPaymentSource', () => {
   test('adding a 3d secure card', async () => {
     const { userId } = await signIn({ user: Users.Member })
     const source = await createSource({ card: Cards.Visa3D, userId })
-    const result = await addPaymentSource({ sourceId: source.id, pspPayload: { type: 'three_d_secure' } })
-    expect(result.errors[0].message).toBe(i18n('api/payment/subscription/threeDsecure/notSupported'))
+    const result = await addPaymentSource({
+      sourceId: source.id,
+      pspPayload: { type: 'three_d_secure' },
+    })
+    expect(result.errors[0].message).toBe(
+      i18n('api/payment/subscription/threeDsecure/notSupported'),
+    )
     await signOut()
   })
 
   test('adding an expired card', async () => {
     const { userId } = await signIn({ user: Users.Member })
     const source = await createSource({ card: Cards.Expired, userId })
-    const result = await addPaymentSource({ sourceId: source.id, pspPayload: {} })
+    const result = await addPaymentSource({
+      sourceId: source.id,
+      pspPayload: {},
+    })
     expect(result.errors[0].message).toBe('Your card has expired.')
     await signOut()
   })
 
   test('adding two cards', async () => {
     const { userId } = await signIn({ user: Users.Member })
-    const untrustedSource = await createSource({ card: Cards.Untrusted, userId })
-    const untrustedResult = await addPaymentSource({ sourceId: untrustedSource.id, pspPayload: {} })
+    const untrustedSource = await createSource({
+      card: Cards.Untrusted,
+      userId,
+    })
+    const untrustedResult = await addPaymentSource({
+      sourceId: untrustedSource.id,
+      pspPayload: {},
+    })
     expect(untrustedResult.errors).toBeFalsy()
     expect(untrustedResult.data).toEqual({
-      addPaymentSource: [{
-        isDefault: true,
-        status: 'CHARGEABLE',
-        brand: 'Visa',
-        expMonth: parseInt(Cards.Untrusted.exp_month, 10),
-        expYear: parseInt(Cards.Untrusted.exp_year, 10)
-      }]
+      addPaymentSource: [
+        {
+          isDefault: true,
+          status: 'CHARGEABLE',
+          brand: 'Visa',
+          expMonth: parseInt(Cards.Untrusted.exp_month, 10),
+          expYear: parseInt(Cards.Untrusted.exp_year, 10),
+        },
+      ],
     })
 
     const visaSource = await createSource({ card: Cards.Visa, userId })
-    const visaResult = await addPaymentSource({ sourceId: visaSource.id, pspPayload: {} })
+    const visaResult = await addPaymentSource({
+      sourceId: visaSource.id,
+      pspPayload: {},
+    })
     expect(visaResult.errors).toBeFalsy()
     expect(visaResult.data.addPaymentSource.length).toBe(2)
     expect(visaResult.data).toEqual({
-      addPaymentSource: [{
-        isDefault: true,
-        status: 'CHARGEABLE',
-        brand: 'Visa',
-        expMonth: parseInt(Cards.Visa.exp_month, 10),
-        expYear: parseInt(Cards.Visa.exp_year, 10)
-      }, {
-        isDefault: false,
-        status: 'CHARGEABLE',
-        brand: 'Visa',
-        expMonth: parseInt(Cards.Untrusted.exp_month, 10),
-        expYear: parseInt(Cards.Untrusted.exp_year, 10)
-      }]
+      addPaymentSource: [
+        {
+          isDefault: true,
+          status: 'CHARGEABLE',
+          brand: 'Visa',
+          expMonth: parseInt(Cards.Visa.exp_month, 10),
+          expYear: parseInt(Cards.Visa.exp_year, 10),
+        },
+        {
+          isDefault: false,
+          status: 'CHARGEABLE',
+          brand: 'Visa',
+          expMonth: parseInt(Cards.Untrusted.exp_month, 10),
+          expYear: parseInt(Cards.Untrusted.exp_year, 10),
+        },
+      ],
     })
 
-    const paymentSources = await pgDatabase().public.paymentSources.find({ userId })
+    const paymentSources = await pgDatabase().public.paymentSources.find({
+      userId,
+    })
     expect(paymentSources.length).toBe(0)
 
     await signOut()
@@ -477,11 +563,15 @@ describe('payPledge', () => {
     const result = await payPledge({
       pledgeId,
       method: PAYMENT_METHODS.PAYMENTSLIP,
-      paperInvoice: true
+      paperInvoice: true,
     })
     expect(result.errors).toBeFalsy()
-    const pledgePayment = await pgDatabase().public.pledgePayments.findOne({ pledgeId })
-    const payment = await pgDatabase().public.payments.findOne({ id: pledgePayment.paymentId })
+    const pledgePayment = await pgDatabase().public.pledgePayments.findOne({
+      pledgeId,
+    })
+    const payment = await pgDatabase().public.payments.findOne({
+      id: pledgePayment.paymentId,
+    })
     expect(payment.status).toBe('WAITING')
   })
 
@@ -506,121 +596,180 @@ describe('payPledge', () => {
     const result = await payPledge({
       pledgeId,
       method: PAYMENT_METHODS.STRIPE,
-      sourceId: source.id
+      sourceId: source.id,
     })
     expect(result.errors).toBeFalsy()
-    const pledgePayment = await pgDatabase().public.pledgePayments.findOne({ pledgeId })
-    const payment = await pgDatabase().public.payments.findOne({ id: pledgePayment.paymentId })
+    const pledgePayment = await pgDatabase().public.pledgePayments.findOne({
+      pledgeId,
+    })
+    const payment = await pgDatabase().public.payments.findOne({
+      id: pledgePayment.paymentId,
+    })
     expect(payment.status).toBe('PAID')
 
-    const membership = await pgDatabase().public.memberships.findOne({ pledgeId })
+    const membership = await pgDatabase().public.memberships.findOne({
+      pledgeId,
+    })
     expect(membership.active).toBe(true)
     expect(membership.voucherable).toBe(false)
 
-    const periods = await pgDatabase().public.membershipPeriods.find({ membershipId: membership.id })
+    const periods = await pgDatabase().public.membershipPeriods.find({
+      membershipId: membership.id,
+    })
     expect(periods.length === 1).toBeTruthy()
-    expect(moment().add('360', 'days').isBefore(moment(periods[0].endDate))).toBeTruthy()
-    expect(moment().add('1', 'year').isAfter(moment(periods[0].endDate))).toBeTruthy()
+    expect(
+      moment().add('360', 'days').isBefore(moment(periods[0].endDate)),
+    ).toBeTruthy()
+    expect(
+      moment().add('1', 'year').isAfter(moment(periods[0].endDate)),
+    ).toBeTruthy()
   })
 
   test('MONTHLY_ABO pledge with STRIPE and then refund', async () => {
-    const { pledgeId } = await prepareNewPledge({ templateId: '00000000-0000-0000-0008-000000000002' })
+    const { pledgeId } = await prepareNewPledge({
+      templateId: '00000000-0000-0000-0008-000000000002',
+    })
     const source = await createSource({ card: Cards.Visa, pledgeId })
     const result = await payPledge({
       pledgeId,
       method: PAYMENT_METHODS.STRIPE,
-      sourceId: source.id
+      sourceId: source.id,
     })
     expect(result.errors).toBeFalsy()
 
-    const pledgePaymentBeforeCharge = await pgDatabase().public.pledgePayments.findOne({ pledgeId })
+    const pledgePaymentBeforeCharge = await pgDatabase().public.pledgePayments.findOne(
+      { pledgeId },
+    )
     expect(pledgePaymentBeforeCharge).toBeFalsy()
 
     // simulate successful payment of the pledge
-    await invoicePaymentSuccess({
+    await invoicePaymentSuccess(
+      {
+        pledgeId,
+        total: 24000,
+        chargeId: 'TEST',
+        start: Math.floor(Date.now() / 1000),
+        end: Math.floor(Date.now() / 1000) + 86400, // 24 hours
+      },
+      pgDatabase(),
+    )
+
+    await chargeSuccess(
+      {
+        chargeId: 'TEST',
+        total: 24000,
+      },
+      pgDatabase(),
+    )
+
+    const pledgePayment = await pgDatabase().public.pledgePayments.findOne({
       pledgeId,
-      total: 24000,
-      chargeId: 'TEST',
-      start: Math.floor(Date.now() / 1000),
-      end: Math.floor(Date.now() / 1000) + 86400 // 24 hours
-    }, pgDatabase())
-
-    await chargeSuccess({
-      chargeId: 'TEST',
-      total: 24000
-    }, pgDatabase())
-
-    const pledgePayment = await pgDatabase().public.pledgePayments.findOne({ pledgeId })
-    const payment = await pgDatabase().public.payments.findOne({ id: pledgePayment.paymentId })
+    })
+    const payment = await pgDatabase().public.payments.findOne({
+      id: pledgePayment.paymentId,
+    })
     expect(payment.status).toBe('PAID')
 
-    const membership = await pgDatabase().public.memberships.findOne({ pledgeId })
+    const membership = await pgDatabase().public.memberships.findOne({
+      pledgeId,
+    })
     expect(membership.active).toBe(true)
     expect(membership.voucherable).toBe(false)
 
-    const periods = await pgDatabase().public.membershipPeriods.find({ membershipId: membership.id })
+    const periods = await pgDatabase().public.membershipPeriods.find({
+      membershipId: membership.id,
+    })
     expect(periods.length === 1).toBeTruthy()
-    expect(moment().add('23', 'hours').isBefore(moment(periods[0].endDate))).toBeTruthy()
-    expect(moment().add('1', 'day').isAfter(moment(periods[0].endDate))).toBeTruthy()
+    expect(
+      moment().add('23', 'hours').isBefore(moment(periods[0].endDate)),
+    ).toBeTruthy()
+    expect(
+      moment().add('1', 'day').isAfter(moment(periods[0].endDate)),
+    ).toBeTruthy()
 
     await chargeRefund({ chargeId: 'TEST' }, pgDatabase())
-    const { status } = await pgDatabase().public.payments.findFirst({ id: payment.id })
+    const { status } = await pgDatabase().public.payments.findFirst({
+      id: payment.id,
+    })
     expect(status).toBe('REFUNDED')
   })
 
   test('Membership that never got charged successfully on MONTHLY_ABO pledge with STRIPE', async () => {
-    const { pledgeId } = await prepareNewPledge({ templateId: '00000000-0000-0000-0008-000000000002' })
+    const { pledgeId } = await prepareNewPledge({
+      templateId: '00000000-0000-0000-0008-000000000002',
+    })
     const source = await createSource({ card: Cards.Untrusted, pledgeId })
     const result = await payPledge({
       pledgeId,
       method: PAYMENT_METHODS.STRIPE,
-      sourceId: source.id
+      sourceId: source.id,
     })
     expect(result.errors).toBeFalsy()
 
     // simulate failed payment of the pledge
-    await invoicePaymentFail({
-      pledgeId
-    }, pgDatabase())
+    await invoicePaymentFail(
+      {
+        pledgeId,
+      },
+      pgDatabase(),
+    )
 
-    const pledgePayment = await pgDatabase().public.pledgePayments.findOne({ pledgeId })
+    const pledgePayment = await pgDatabase().public.pledgePayments.findOne({
+      pledgeId,
+    })
     expect(pledgePayment).toBeFalsy()
 
-    const membership = await pgDatabase().public.memberships.findOne({ pledgeId })
+    const membership = await pgDatabase().public.memberships.findOne({
+      pledgeId,
+    })
     expect(membership.latestPaymentFailedAt).toBeTruthy()
     expect(membership.active).toBe(true)
     expect(membership.voucherable).toBe(false)
 
-    const periods = await pgDatabase().public.membershipPeriods.find({ membershipId: membership.id })
+    const periods = await pgDatabase().public.membershipPeriods.find({
+      membershipId: membership.id,
+    })
     expect(periods.length).toBe(1)
   })
 
   test('Multiple failed payments on MONTHLY_ABO pledge with STRIPE', async () => {
-    const { pledgeId } = await prepareNewPledge({ templateId: '00000000-0000-0000-0008-000000000002' })
+    const { pledgeId } = await prepareNewPledge({
+      templateId: '00000000-0000-0000-0008-000000000002',
+    })
     const source = await createSource({ card: Cards.Visa, pledgeId })
     const result = await payPledge({
       pledgeId,
       method: PAYMENT_METHODS.STRIPE,
-      sourceId: source.id
+      sourceId: source.id,
     })
     expect(result.errors).toBeFalsy()
 
     // simulate successful payment of the pledge
-    await invoicePaymentFail({
-      pledgeId
-    }, pgDatabase())
+    await invoicePaymentFail(
+      {
+        pledgeId,
+      },
+      pgDatabase(),
+    )
 
     // triggered from stripe subscription, this happens after X tries to charge
-    await cancelSubscription({
-      pledgeId,
-      status: 'canceled',
-      atPeriodEnd: false
-    }, pgDatabase())
+    await cancelSubscription(
+      {
+        pledgeId,
+        status: 'canceled',
+        atPeriodEnd: false,
+      },
+      pgDatabase(),
+    )
 
-    const membership = await pgDatabase().public.memberships.findOne({ pledgeId })
+    const membership = await pgDatabase().public.memberships.findOne({
+      pledgeId,
+    })
     expect(membership.active).toBe(false)
 
-    const periods = await pgDatabase().public.membershipPeriods.find({ membershipId: membership.id })
+    const periods = await pgDatabase().public.membershipPeriods.find({
+      membershipId: membership.id,
+    })
     expect(periods.length).toBe(1)
   })
 })

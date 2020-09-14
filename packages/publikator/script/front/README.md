@@ -5,6 +5,7 @@ How to split a front repo into two based on a date. `republik/magazine` is used 
 All commands are relative to where this README is located.
 
 ## Run
+
 0. Archive magazine repo on github (to avoid missing changes).
 
 (Settings -> Danger Zone -> Archive this repository)
@@ -14,7 +15,9 @@ All commands are relative to where this README is located.
 ```
 git clone --mirror git@github.com:republik/magazine.git
 ```
+
 After that your folder should look like this:
+
 ```
 -rw-r--r--  .gitignore
 drwxr-xr-x  magazine
@@ -35,6 +38,7 @@ Or by root children id:
 ```
 
 After that you should get two additional folders, each containing `article.md` and `images/`.
+
 ```
 drwxr-xr-x  magazine-after-2019-01-01
 drwxr-xr-x  magazine-before-2019-01-01
@@ -47,6 +51,7 @@ Open the publikator instance of your choice (eg. `republik-dev`) and create two 
 4. Manually commit and force push
 
 Repeat for both your local folders:
+
 ```
 cd magazine-before-2019-01-01
 git add .

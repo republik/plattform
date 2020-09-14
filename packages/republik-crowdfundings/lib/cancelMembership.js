@@ -5,10 +5,16 @@ const cancelSubscription = require('./payments/stripe/cancelSubscription')
 const { overdue } = require('../graphql/resolvers/Membership')
 
 module.exports = async (membership, details, options, t, pgdb) => {
-  const { reason, type, suppressConfirmation, suppressWinback, cancelledViaSupport } = details
+  const {
+    reason,
+    type,
+    suppressConfirmation,
+    suppressWinback,
+    cancelledViaSupport,
+  } = details
   let { immediately } = options
 
-  if (immediately || await overdue(membership, null, { pgdb })) {
+  if (immediately || (await overdue(membership, null, { pgdb }))) {
     immediately = true
   }
 
@@ -16,28 +22,32 @@ module.exports = async (membership, details, options, t, pgdb) => {
     membership: membership.id,
     details,
     options,
-    immediately
+    immediately,
   })
 
   if (!membership.membershipType) {
     membership.membershipType = await pgdb.public.membershipTypes.findOne({
-      id: membership.membershipTypeId
+      id: membership.membershipTypeId,
     })
   }
 
-  if (membership.membershipType.name === 'MONTHLY_ABO' && !membership.subscriptionId) {
+  if (
+    membership.membershipType.name === 'MONTHLY_ABO' &&
+    !membership.subscriptionId
+  ) {
     throw new Error(t('api/membership/pleaseWait'))
   }
 
-  const updatedMembership = await pgdb.public.memberships.updateAndGetOne({
-    id: membership.id
-  }, {
-    renew: false,
-    active: immediately
-      ? false
-      : membership.active,
-    updatedAt: new Date()
-  })
+  const updatedMembership = await pgdb.public.memberships.updateAndGetOne(
+    {
+      id: membership.id,
+    },
+    {
+      renew: false,
+      active: immediately ? false : membership.active,
+      updatedAt: new Date(),
+    },
+  )
 
   await pgdb.public.membershipCancellations.insert({
     membershipId: updatedMembership.id,
@@ -45,7 +55,7 @@ module.exports = async (membership, details, options, t, pgdb) => {
     category: type,
     suppressConfirmation: !!suppressConfirmation,
     suppressWinback: !!suppressWinback,
-    cancelledViaSupport: !!cancelledViaSupport
+    cancelledViaSupport: !!cancelledViaSupport,
   })
 
   if (updatedMembership.subscriptionId) {
@@ -53,7 +63,7 @@ module.exports = async (membership, details, options, t, pgdb) => {
       id: updatedMembership.subscriptionId,
       companyId: membership.membershipType.companyId,
       immediately,
-      pgdb
+      pgdb,
     })
   }
 

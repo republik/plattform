@@ -1,11 +1,11 @@
 const crypto = require('crypto')
 
-const {
-  NEWSLETTER_HMAC_KEY
-} = process.env
+const { NEWSLETTER_HMAC_KEY } = process.env
 
 if (!NEWSLETTER_HMAC_KEY) {
-  console.warn('missing env NEWSLETTER_HMAC_KEY, the updateNewsletterSubscription mutation will not work with email and mac')
+  console.warn(
+    'missing env NEWSLETTER_HMAC_KEY, the updateNewsletterSubscription mutation will not work with email and mac',
+  )
 }
 
 const authenticate = (email, name, subscribed, t) => {
@@ -20,5 +20,5 @@ const authenticate = (email, name, subscribed, t) => {
 }
 
 module.exports = {
-  authenticate
+  authenticate,
 }

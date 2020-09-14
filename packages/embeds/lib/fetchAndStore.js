@@ -1,5 +1,7 @@
 const moment = require('moment')
-const { createUrlPrefixer } = require('@orbiting/backend-modules-assets/lib/urlPrefixing')
+const {
+  createUrlPrefixer,
+} = require('@orbiting/backend-modules-assets/lib/urlPrefixing')
 const proxyUrl = createUrlPrefixer()
 const Redlock = require('redlock')
 const debug = require('debug')('embeds:lib:fetchAndStore')
@@ -7,17 +9,14 @@ const twitter = require('./twitter')
 const linkPreview = require('./linkPreview')
 const types = {
   TwitterEmbed: {
-    ...twitter
+    ...twitter,
   },
   LinkPreview: {
-    ...linkPreview
-  }
+    ...linkPreview,
+  },
 }
 
-const {
-  REQUEST_TIMEOUT_SECS,
-  MAX_NUM_REQUESTS
-} = linkPreview
+const { REQUEST_TIMEOUT_SECS, MAX_NUM_REQUESTS } = linkPreview
 
 const LOCK_TTL_MS = (MAX_NUM_REQUESTS + 1) * REQUEST_TIMEOUT_SECS * 1000
 const LOCK_RETRY_DELAY_MS = 400
@@ -28,15 +27,12 @@ const NUM_BURST_TRYS = 3
 const REFRESH_EMBEDS_AFTER_SECS = 6 * 60 * 60 // 6h
 
 const redlock = (redis) => {
-  return new Redlock(
-    [redis],
-    {
-      retryCount: LOCK_RETRY_COUNT,
-      retryDelay: LOCK_RETRY_DELAY_MS,
-      retryJitter: LOCK_RETRY_JITTER_MS,
-      driftFactor: 0.01
-    }
-  )
+  return new Redlock([redis], {
+    retryCount: LOCK_RETRY_COUNT,
+    retryDelay: LOCK_RETRY_DELAY_MS,
+    retryJitter: LOCK_RETRY_JITTER_MS,
+    driftFactor: 0.01,
+  })
 }
 
 const fetchContent = async (url, { t }) => {
@@ -45,14 +41,16 @@ const fetchContent = async (url, { t }) => {
     const tweetId = twitter.REGEX.exec(url)[1]
     return {
       type: 'TwitterEmbed',
-      content: await twitter.getTweetById(tweetId, t)
-        .catch(e => { return null })
+      content: await twitter.getTweetById(tweetId, t).catch((e) => {
+        return null
+      }),
     }
   }
   return {
     type: 'LinkPreview',
-    content: await linkPreview.getLinkPreviewByUrl(url)
-      .catch(e => { return null })
+    content: await linkPreview.getLinkPreviewByUrl(url).catch((e) => {
+      return null
+    }),
   }
 }
 
@@ -63,7 +61,7 @@ const proxyContent = (content, type) => {
   }
   return {
     ...content,
-    ...newContent
+    ...newContent,
   }
 }
 
@@ -71,20 +69,17 @@ const mustFetch = (embed, now) => {
   if (!embed) {
     return true
   }
-  const {
-    content,
-    disappeared,
-    updatedAt,
-    nextTryMinDate
-  } = embed
+  const { content, disappeared, updatedAt, nextTryMinDate } = embed
   if (
     (!content || disappeared) &&
     (!nextTryMinDate || moment(nextTryMinDate).isBefore(now))
   ) {
     return true
   }
-  if ( // refresh
-    (content && !disappeared) &&
+  if (
+    // refresh
+    content &&
+    !disappeared &&
     moment(updatedAt).add(REFRESH_EMBEDS_AFTER_SECS, 'seconds').isBefore(now)
   ) {
     return true
@@ -92,15 +87,10 @@ const mustFetch = (embed, now) => {
   return false
 }
 
-const isValid = (embed) =>
-  embed && embed.content && !embed.disappeared
+const isValid = (embed) => embed && embed.content && !embed.disappeared
 
 const fetchEmbed = async ({ url, forceRefetch = false }, context) => {
-  const {
-    pgdb,
-    redis,
-    loaders
-  } = context
+  const { pgdb, redis, loaders } = context
 
   const lockKey = `locks:embeds:fetch:${url.toLowerCase()}`
 
@@ -129,7 +119,7 @@ const fetchEmbed = async ({ url, forceRefetch = false }, context) => {
         updatedAt: now,
         numTries: content ? 0 : 1,
         nextTryMinDate: null,
-        disappeared: false
+        disappeared: false,
       })
       return result
     }
@@ -142,30 +132,33 @@ const fetchEmbed = async ({ url, forceRefetch = false }, context) => {
           type,
           content,
           contentId: content.id,
-          ...existingEmbed.firstContent ? {} : { firstContent: content },
+          ...(existingEmbed.firstContent ? {} : { firstContent: content }),
           updatedAt: now,
           numTries: 0,
           nextTryMinDate: null,
-          disappeared: false
-        }
+          disappeared: false,
+        },
       )
       return result
     }
 
     const numTry = existingEmbed.numTries + 1
-    const tryInSecs = numTry <= NUM_BURST_TRYS
-      ? 0.2
-      : Math.pow(numTry - NUM_BURST_TRYS, 3)
+    const tryInSecs =
+      numTry <= NUM_BURST_TRYS ? 0.2 : Math.pow(numTry - NUM_BURST_TRYS, 3)
     const nextTryMinDate = moment(now).add(tryInSecs, 'second')
     const disappeared = !!existingEmbed.content
-    debug(`updating no success try: ${numTry} next-try: ${tryInSecs}s ${nextTryMinDate.from(now)} disappeared: ${disappeared} (${url})`)
+    debug(
+      `updating no success try: ${numTry} next-try: ${tryInSecs}s ${nextTryMinDate.from(
+        now,
+      )} disappeared: ${disappeared} (${url})`,
+    )
     const result = await pgdb.public.embeds.updateAndGetOne(
       { id: existingEmbed.id },
       {
         numTries: numTry,
         nextTryMinDate,
-        disappeared
-      }
+        disappeared,
+      },
     )
     return result
   } finally {
@@ -183,12 +176,10 @@ const getEmbedByUrl = async (url, context, forceRefetch = false) => {
     ...dbEntry,
     ...proxyContent(dbEntry.content, dbEntry.type),
     id: dbEntry.typeId || dbEntry.id,
-    __typename: dbEntry.type
+    __typename: dbEntry.type,
   })
 
-  const {
-    loaders
-  } = context
+  const { loaders } = context
 
   const embed = await loaders.Embed.byUrl.load(url.toLowerCase())
 
@@ -203,16 +194,14 @@ const getEmbedByUrl = async (url, context, forceRefetch = false) => {
   }
 
   if (doFetch || forceRefetch) {
-    return fetchEmbed({ url, forceRefetch }, context)
-      .then(embed => isValid(embed)
-        ? transformDBEntry(embed)
-        : null
-      )
+    return fetchEmbed({ url, forceRefetch }, context).then((embed) =>
+      isValid(embed) ? transformDBEntry(embed) : null,
+    )
   }
 
   return null
 }
 
 module.exports = {
-  getEmbedByUrl
+  getEmbedByUrl,
 }

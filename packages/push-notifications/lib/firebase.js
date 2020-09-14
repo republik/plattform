@@ -11,36 +11,50 @@ const {
   FIREBASE_PROJECT_ID,
   FIREBASE_CLIENT_EMAIL,
   FIREBASE_PRIVATE_KEY,
-  FIREBASE_DATABASE_URL
+  FIREBASE_DATABASE_URL,
 } = process.env
 
 const DEV = process.env.NODE_ENV && process.env.NODE_ENV !== 'production'
 
 let initialized
-if (!FIREBASE_PROJECT_ID || !FIREBASE_CLIENT_EMAIL || !FIREBASE_PRIVATE_KEY || !FIREBASE_DATABASE_URL) {
-  console.warn('missing env FIREBASE_*, sending push notifications via firebase will not work')
+if (
+  !FIREBASE_PROJECT_ID ||
+  !FIREBASE_CLIENT_EMAIL ||
+  !FIREBASE_PRIVATE_KEY ||
+  !FIREBASE_DATABASE_URL
+) {
+  console.warn(
+    'missing env FIREBASE_*, sending push notifications via firebase will not work',
+  )
 } else {
   // singleton
   firebase.initializeApp({
     credential: firebase.credential.cert({
       projectId: FIREBASE_PROJECT_ID,
       clientEmail: FIREBASE_CLIENT_EMAIL,
-      privateKey: FIREBASE_PRIVATE_KEY
-        .replace(/@/g, '\n')
-        .replace(/\\\s/g, ' ')
+      privateKey: FIREBASE_PRIVATE_KEY.replace(/@/g, '\n').replace(
+        /\\\s/g,
+        ' ',
+      ),
     }),
-    databaseURL: FIREBASE_DATABASE_URL
+    databaseURL: FIREBASE_DATABASE_URL,
   })
   initialized = true
 }
 
 const publish = async (args, pgdb) => {
-  if (SEND_NOTIFICATIONS === 'false' || (DEV && SEND_NOTIFICATIONS !== 'true')) {
-    console.log('\n\nSEND_NOTIFICATIONS prevented notification from being sent\n(SEND_NOTIFICATIONS == false or NODE_ENV != production and SEND_NOTIFICATIONS != true)\n', args)
+  if (
+    SEND_NOTIFICATIONS === 'false' ||
+    (DEV && SEND_NOTIFICATIONS !== 'true')
+  ) {
+    console.log(
+      '\n\nSEND_NOTIFICATIONS prevented notification from being sent\n(SEND_NOTIFICATIONS == false or NODE_ENV != production and SEND_NOTIFICATIONS != true)\n',
+      args,
+    )
     return
   }
   if (!initialized) {
-    throw new Error('mssing env FIREBASE_*, can\'t publish')
+    throw new Error("mssing env FIREBASE_*, can't publish")
   }
 
   const { tokens, title, body, url, icon, type, ttl, priority } = args
@@ -49,28 +63,32 @@ const publish = async (args, pgdb) => {
     const message = {
       notification: {
         title,
-        body
+        body,
       },
       data: {
         url,
         type,
-        ...icon
-          ? { icon }
-          : {}
-      }
+        ...(icon ? { icon } : {}),
+      },
     }
     const options = {
-      ...ttl ? { timeToLive: parseInt(ttl / 1000) } : {},
-      ...priority ? { priority } : {}
+      ...(ttl ? { timeToLive: parseInt(ttl / 1000) } : {}),
+      ...(priority ? { priority } : {}),
     }
-    const result = await firebase.messaging().sendToDevice(
-      tokens,
+    const result = await firebase
+      .messaging()
+      .sendToDevice(tokens, message, options)
+    debug(
+      'Firebase: #recipients %d, message: %O, result: %O',
+      tokens.length,
       message,
-      options
+      result,
     )
-    debug('Firebase: #recipients %d, message: %O, result: %O', tokens.length, message, result)
     const staleTokens = result.results.reduce((acc, cur, idx) => {
-      if (cur.error && cur.error.code === 'messaging/registration-token-not-registered') {
+      if (
+        cur.error &&
+        cur.error.code === 'messaging/registration-token-not-registered'
+      ) {
         acc.push(tokens[idx])
       }
       return acc
@@ -81,7 +99,7 @@ const publish = async (args, pgdb) => {
     }
     return {
       staleTokens,
-      goodTokens: tokens.filter(t => staleTokens.indexOf(t) === -1)
+      goodTokens: tokens.filter((t) => staleTokens.indexOf(t) === -1),
     }
   } else {
     debug('no receipients found for publish: %O', args)
@@ -89,5 +107,5 @@ const publish = async (args, pgdb) => {
 }
 
 module.exports = {
-  publish
+  publish,
 }

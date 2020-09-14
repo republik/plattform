@@ -10,10 +10,12 @@ module.exports = {
   youtube,
   linkPreview,
   ...require('./fetchAndStore'),
-  imageKeys: [...new Set([
-    ...twitter.imageKeys,
-    ...vimeo.imageKeys,
-    ...youtube.imageKeys,
-    ...linkPreview.imageKeys
-  ])]
+  imageKeys: [
+    ...new Set([
+      ...twitter.imageKeys,
+      ...vimeo.imageKeys,
+      ...youtube.imageKeys,
+      ...linkPreview.imageKeys,
+    ]),
+  ],
 }

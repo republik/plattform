@@ -1,9 +1,11 @@
 const _ = require('lodash')
 
-const { AccessToken: { getUserByAccessToken } } = require('@orbiting/backend-modules-auth')
+const {
+  AccessToken: { getUserByAccessToken },
+} = require('@orbiting/backend-modules-auth')
 
 module.exports = {
-  async user (card, { accessToken }, context) {
+  async user(card, { accessToken }, context) {
     const { loaders } = context
     const user = await loaders.User.byId.load(card.userId)
 
@@ -18,11 +20,11 @@ module.exports = {
     return user
   },
 
-  async group (card, args, { loaders }) {
+  async group(card, args, { loaders }) {
     return loaders.CardGroup.byId.load(card.cardGroupId)
   },
 
-  payload (card, args) {
+  payload(card, args) {
     const { paths } = args
     const { meta, ...payload } = card.payload
 
@@ -33,11 +35,11 @@ module.exports = {
     return _.pick(payload, paths.map(_.toPath))
   },
 
-  async statement (card, args, { loaders }) {
+  async statement(card, args, { loaders }) {
     if (!card.commentId) {
       return null
     }
 
     return loaders.Comment.byId.load(card.commentId)
-  }
+  },
 }

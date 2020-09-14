@@ -18,48 +18,46 @@ module.exports = {
   firstName: expose(BASICS_USER_ACCESS_ROLES, 'firstName'),
   lastName: expose(BASICS_USER_ACCESS_ROLES, 'lastName'),
   username: expose(BASICS_USER_ACCESS_ROLES, 'username'),
-  async sessions (user, args, { pgdb, user: me }) {
+  async sessions(user, args, { pgdb, user: me }) {
     if (Roles.userIsMeOrInRoles(user, me, DEFAULT_USER_ACCESS_ROLES)) {
       return findAllUserSessions({ pgdb, userId: user.id })
     }
     return null
   },
-  initials (user) {
+  initials(user) {
     return user.name
       .split(' ')
-      .map(p => p[0])
+      .map((p) => p[0])
       .join('')
   },
-  roles (user, args, { user: me }) {
-    if (
-      Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter'])
-    ) {
+  roles(user, args, { user: me }) {
+    if (Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter'])) {
       return user.roles
     }
     return []
   },
-  createdAt (user, args, { user: me }) {
+  createdAt(user, args, { user: me }) {
     Roles.ensureUserIsMeOrInRoles(user, me, DEFAULT_USER_ACCESS_ROLES)
     return user._raw.createdAt
   },
-  updatedAt (user) {
+  updatedAt(user) {
     return user._raw.updatedAt
   },
-  deletedAt (user, args, { user: me }) {
+  deletedAt(user, args, { user: me }) {
     Roles.ensureUserIsMeOrInRoles(user, me, DEFAULT_USER_ACCESS_ROLES)
     return user._raw.deletedAt
   },
-  enabledSecondFactors (user, args, { user: me }) {
-    if (
-      Roles.userIsMeOrInRoles(user, me, ['supporter'])
-    ) {
+  enabledSecondFactors(user, args, { user: me }) {
+    if (Roles.userIsMeOrInRoles(user, me, ['supporter'])) {
       return user._raw.enabledSecondFactors
     }
     return []
   },
-  async eventLog (user, args, { pgdb, user: me }) {
+  async eventLog(user, args, { pgdb, user: me }) {
     Roles.ensureUserIsMeOrInRoles(user, me, DEFAULT_USER_ACCESS_ROLES)
-    return pgdb.query(`
+    return pgdb
+      .query(
+        `
       SELECT
         e.*,
         to_json(s.*) as "activeSession"
@@ -75,22 +73,24 @@ module.exports = {
         e."oldData" #>> '{sess,passport,user}' = :userId
       ORDER BY
         e."createdAt" DESC
-    `, {
-      email: user.email,
-      userId: user.userId
-    })
-      .then(result => result
-        .map(e => ({
+    `,
+        {
+          email: user.email,
+          userId: user.userId,
+        },
+      )
+      .then((result) =>
+        result.map((e) => ({
           ...e,
-          archivedSession: e.newData || e.oldData
-        }))
+          archivedSession: e.newData || e.oldData,
+        })),
       )
   },
-  async enabledFirstFactors (user, args, { pgdb, user: me }) {
+  async enabledFirstFactors(user, args, { pgdb, user: me }) {
     Roles.ensureUserIsMeOrInRoles(user, me, DEFAULT_USER_ACCESS_ROLES)
     return enabledFirstFactors(user._raw.email, pgdb)
   },
-  preferredFirstFactor (user, args, { user: me }) {
+  preferredFirstFactor(user, args, { user: me }) {
     Roles.ensureUserIsMeOrInRoles(user, me, DEFAULT_USER_ACCESS_ROLES)
     return user._raw.preferredFirstFactor
   },
@@ -98,15 +98,20 @@ module.exports = {
     !!(me && user.id === me.id),
 
   accessToken: (user, { scope }, { user: me }) =>
-    AccessToken.generateForUserByUser(user, scope, me, DEFAULT_USER_ACCESS_ROLES),
+    AccessToken.generateForUserByUser(
+      user,
+      scope,
+      me,
+      DEFAULT_USER_ACCESS_ROLES,
+    ),
 
   hasConsentedTo: (user, { name }, { pgdb, user: me }) => {
     if (Roles.userIsMeOrInRoles(user, me, DEFAULT_USER_ACCESS_ROLES)) {
       return Consents.statusForPolicyForUser({
         userId: user.id,
         policy: name,
-        pgdb
+        pgdb,
       })
     }
-  }
+  },
 }

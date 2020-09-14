@@ -1,4 +1,6 @@
-const { Roles: { ensureUserIsInRoles } } = require('@orbiting/backend-modules-auth')
+const {
+  Roles: { ensureUserIsInRoles },
+} = require('@orbiting/backend-modules-auth')
 const { getEmbedByUrl } = require('../../../lib/fetchAndStore')
 
 module.exports = async (_, { url }, context) => {

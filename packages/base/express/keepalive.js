@@ -3,14 +3,18 @@ const debug = require('debug')('base:keepalive')
 
 const {
   RES_KEEPALIVE_MS = 15 * 1000, // 15s
-  RES_KEEPALIVE_TIMEOUT_MS = 5 * 60 * 1000 // 5min
+  RES_KEEPALIVE_TIMEOUT_MS = 5 * 60 * 1000, // 5min
 } = process.env
 
 if (RES_KEEPALIVE_MS < 2000) {
-  throw new Error(`keepalive: RES_KEEPALIVE_MS (${RES_KEEPALIVE_MS}) too small (min. 2000)`)
+  throw new Error(
+    `keepalive: RES_KEEPALIVE_MS (${RES_KEEPALIVE_MS}) too small (min. 2000)`,
+  )
 }
 if (RES_KEEPALIVE_TIMEOUT_MS < 2 * RES_KEEPALIVE_MS) {
-  throw new Error(`keepalive: RES_KEEPALIVE_TIMEOUT_MS (${RES_KEEPALIVE_TIMEOUT_MS}) too small (min. 2xRES_KEEPALIVE_MS)`)
+  throw new Error(
+    `keepalive: RES_KEEPALIVE_TIMEOUT_MS (${RES_KEEPALIVE_TIMEOUT_MS}) too small (min. 2xRES_KEEPALIVE_MS)`,
+  )
 }
 
 module.exports = (req, res, next) => {
@@ -34,7 +38,8 @@ module.exports = (req, res, next) => {
     setTimeout(() => {
       const now = new Date().getTime()
       if (
-        !isFinished && !isDataSent &&
+        !isFinished &&
+        !isDataSent &&
         now < startTime + RES_KEEPALIVE_TIMEOUT_MS
       ) {
         res.writeProcessing()

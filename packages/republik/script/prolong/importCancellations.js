@@ -9,7 +9,7 @@
 require('@orbiting/backend-modules-env').config()
 const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
 const rw = require('rw')
-const {dsvFormat} = require('d3-dsv')
+const { dsvFormat } = require('d3-dsv')
 const csvParse = dsvFormat(',').parse
 const moment = require('moment')
 const Promise = require('bluebird')
@@ -31,71 +31,73 @@ const getNormalizedCategory = (category) => {
   }
 }
 
-PgDb.connect().then(async pgdb => {
-  const dry = process.argv[2] === '--dry'
-  if (dry) {
-    console.log("dry run: this won't change anything")
-  }
+PgDb.connect()
+  .then(async (pgdb) => {
+    const dry = process.argv[2] === '--dry'
+    if (dry) {
+      console.log("dry run: this won't change anything")
+    }
 
-  const input = rw.readFileSync('/dev/stdin', 'utf8')
-  if (!input || input.length < 4) {
-    throw new Error('You need to provide input on stdin')
-  }
+    const input = rw.readFileSync('/dev/stdin', 'utf8')
+    if (!input || input.length < 4) {
+      throw new Error('You need to provide input on stdin')
+    }
 
-  const stats = {
-    numMemberships: 0
-  }
-  const numCancellationsBefore = await pgdb.public.membershipCancellations.count()
+    const stats = {
+      numMemberships: 0,
+    }
+    const numCancellationsBefore = await pgdb.public.membershipCancellations.count()
 
-  const transaction = await pgdb.transactionBegin()
-  await Promise.map(
-    csvParse(input)
-      .map(row => ({
+    const transaction = await pgdb.transactionBegin()
+    await Promise.map(
+      csvParse(input).map((row) => ({
         ...row,
         date: moment(row.date, 'DD.MM.YYYY'),
-        userId: row.adminUrl.split('users/')[1]
+        userId: row.adminUrl.split('users/')[1],
       })),
-    async ({ userId, date, reason, category }) => {
-      const memberships = await transaction.public.memberships.find({
-        userId,
-        renew: true
-      })
-
-      const normalizedCategory = getNormalizedCategory(category)
-
-      for (let membership of memberships) {
-        await transaction.public.memberships.update(
-          { id: membership.id },
-          { renew: false }
-        )
-        await transaction.public.membershipCancellations.insert({
-          membershipId: membership.id,
-          reason: reason.length ? reason.trim() : null,
-          category: normalizedCategory,
-          suppressConfirmation: true,
-          suppressWinback: true,
-          createdAt: date
+      async ({ userId, date, reason, category }) => {
+        const memberships = await transaction.public.memberships.find({
+          userId,
+          renew: true,
         })
-      }
-      stats.numMemberships += memberships.length
-    },
-    {concurrency: 10}
-  )
 
-  stats.numCancellationsCreated =
-    await transaction.public.membershipCancellations.count() -
-    numCancellationsBefore
+        const normalizedCategory = getNormalizedCategory(category)
 
-  console.log(stats)
+        for (let membership of memberships) {
+          await transaction.public.memberships.update(
+            { id: membership.id },
+            { renew: false },
+          )
+          await transaction.public.membershipCancellations.insert({
+            membershipId: membership.id,
+            reason: reason.length ? reason.trim() : null,
+            category: normalizedCategory,
+            suppressConfirmation: true,
+            suppressWinback: true,
+            createdAt: date,
+          })
+        }
+        stats.numMemberships += memberships.length
+      },
+      { concurrency: 10 },
+    )
 
-  if (dry) {
-    await transaction.transactionRollback()
-  } else {
-    await transaction.transactionCommit()
-  }
-}).then(() => {
-  process.exit()
-}).catch(e => {
-  console.log(e)
-  process.exit(1)
-})
+    stats.numCancellationsCreated =
+      (await transaction.public.membershipCancellations.count()) -
+      numCancellationsBefore
+
+    console.log(stats)
+
+    if (dry) {
+      await transaction.transactionRollback()
+    } else {
+      await transaction.transactionCommit()
+    }
+  })
+  .then(() => {
+    process.exit()
+  })
+  .catch((e) => {
+    console.log(e)
+    process.exit(1)
+  })

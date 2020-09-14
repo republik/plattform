@@ -1,8 +1,5 @@
 const { ensureSignedIn } = require('@orbiting/backend-modules-auth')
-const {
-  findById,
-  ensureReadyToSubmit
-} = require('../../../lib/Questionnaire')
+const { findById, ensureReadyToSubmit } = require('../../../lib/Questionnaire')
 const { v4: uuid } = require('uuid')
 
 module.exports = async (_, { questionnaireId }, context) => {
@@ -14,27 +11,30 @@ module.exports = async (_, { questionnaireId }, context) => {
     const now = new Date()
 
     const questionnaire = await findById(questionnaireId, transaction)
-    await ensureReadyToSubmit(questionnaire, me.id, now, { ...context, pgdb: transaction })
+    await ensureReadyToSubmit(questionnaire, me.id, now, {
+      ...context,
+      pgdb: transaction,
+    })
 
     await transaction.public.questionnaireSubmissions.insert({
       questionnaireId,
-      userId: me.id
+      userId: me.id,
     })
 
     await loaders.QuestionnaireSubmissions.byKeyObj.clear({
       userId: me.id,
-      questionnaireId
+      questionnaireId,
     })
 
     await transaction.public.answers.update(
       {
         userId: me.id,
-        questionnaireId: questionnaire.id
+        questionnaireId: questionnaire.id,
       },
       {
         userId: null,
-        pseudonym: uuid()
-      }
+        pseudonym: uuid(),
+      },
     )
 
     await transaction.transactionCommit()

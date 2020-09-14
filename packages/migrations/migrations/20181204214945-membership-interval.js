@@ -3,8 +3,6 @@ const run = require('../run.js')
 const dir = 'packages/republik/migrations/sqls'
 const file = '20181204214945-membership-interval'
 
-exports.up = (db) =>
-  run(db, dir, `${file}-up.sql`)
+exports.up = (db) => run(db, dir, `${file}-up.sql`)
 
-exports.down = (db) =>
-  run(db, dir, `${file}-down.sql`)
+exports.down = (db) => run(db, dir, `${file}-down.sql`)

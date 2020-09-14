@@ -30,7 +30,7 @@ const isGrantable = async (args, context) => {
   debug({
     granter: granter.id,
     email,
-    usedSlots
+    usedSlots,
   })
 
   return usedSlots.length === 0
@@ -39,10 +39,10 @@ const isGrantable = async (args, context) => {
 const getMeta = () => ({
   visible: true,
   grantable: null, // unkown if it is grantable
-  payload: {}
+  payload: {},
 })
 
 module.exports = {
   isGrantable,
-  getMeta
+  getMeta,
 }

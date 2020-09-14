@@ -26,81 +26,91 @@ const argv = yargs
   .option('type', {
     description: 'type of operations to run',
     required: true,
-    choices: Object.keys(operationsFns)
+    choices: Object.keys(operationsFns),
   })
   .option('interval', {
     description: 'status interval (in seconds)',
-    default: 4
+    default: 4,
   })
   .option('dry-run', {
-    default: true
-  })
-  .argv
+    default: true,
+  }).argv
 
-Promise.props({ pgdb: PgDb.connect() }).then(async connections => {
-  const context = { ...connections }
+Promise.props({ pgdb: PgDb.connect() })
+  .then(async (connections) => {
+    const context = { ...connections }
 
-  const operations = await operationsFns[argv.type](context)
+    const operations = await operationsFns[argv.type](context)
 
-  if (!operations.length) {
-    console.warn(`type of operations "${argv.type}" yielded in no operations`)
-    return connections
-  }
+    if (!operations.length) {
+      console.warn(`type of operations "${argv.type}" yielded in no operations`)
+      return connections
+    }
 
-  console.log({ type: argv.type, operations: operations.length })
+    console.log({ type: argv.type, operations: operations.length })
 
-  if (argv.dryRun) {
-    console.warn('WARNING: In dry-run-mode, not posting operations to MailChimp. Disable with --no-dry-run')
-    return connections
-  }
+    if (argv.dryRun) {
+      console.warn(
+        'WARNING: In dry-run-mode, not posting operations to MailChimp. Disable with --no-dry-run',
+      )
+      return connections
+    }
 
-  await mailchimp
-    .postBatch(operations)
-    .then(r => r.json())
-    .then(async batch => {
-      const { id } = batch
+    await mailchimp
+      .postBatch(operations)
+      .then((r) => r.json())
+      .then(async (batch) => {
+        const { id } = batch
 
-      if (argv.interval) {
-        let isRunning = false
+        if (argv.interval) {
+          let isRunning = false
 
-        do {
+          do {
+            const {
+              status,
+              submitted_at: submittedAt,
+              total_operations: totalOperations,
+              finished_operations: finishedOperations,
+            } = await mailchimp.getBatch(id).then((r) => r.json())
+
+            console.log('status', {
+              batch: id,
+              status,
+              submittedAt,
+              totalOperations,
+              finishedOperations,
+            })
+
+            isRunning = status !== 'finished'
+
+            if (isRunning) {
+              await Promise.delay(1000 * argv.interval)
+            }
+          } while (isRunning)
+        } else {
+          // if (argv.interval) {
           const {
             status,
             submitted_at: submittedAt,
             total_operations: totalOperations,
-            finished_operations: finishedOperations
-          } = await mailchimp.getBatch(id).then(r => r.json())
+          } = batch
 
-          console.log(
-            'status',
-            { batch: id, status, submittedAt, totalOperations, finishedOperations }
-          )
+          console.log('status', {
+            batch: id,
+            status,
+            submittedAt,
+            totalOperations,
+          })
+        }
+      })
 
-          isRunning = status !== 'finished'
-
-          if (isRunning) {
-            await Promise.delay(1000 * argv.interval)
-          }
-        } while (isRunning)
-      } else { // if (argv.interval) {
-        const {
-          status,
-          submitted_at: submittedAt,
-          total_operations: totalOperations
-        } = batch
-
-        console.log(
-          'status',
-          { batch: id, status, submittedAt, totalOperations }
-        )
-      }
-    })
-
-  return connections
-})
-  .then(async connections => {
+    return connections
+  })
+  .then(async (connections) => {
     const { pgdb } = connections
 
     await pgdb.close()
   })
-  .catch(e => { console.error(e) })
+  .catch((e) => {
+    console.error(e)
+  })

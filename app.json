@@ -212,9 +212,7 @@
       "quantity": 1
     }
   },
-  "addons": [
-    "logdna"
-  ],
+  "addons": ["logdna"],
   "buildpacks": [
     {
       "url": "heroku/nodejs"

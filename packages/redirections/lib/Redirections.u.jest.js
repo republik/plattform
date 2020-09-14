@@ -9,7 +9,7 @@ const mockPgdbInstance = ({
   count = jest.fn(),
   insertAndGet = jest.fn(),
   commit = jest.fn(),
-  rollback = jest.fn()
+  rollback = jest.fn(),
 } = {}) => {
   const pgdb = {
     public: {
@@ -18,16 +18,16 @@ const mockPgdbInstance = ({
         update,
         updateAndGetOne,
         count,
-        insertAndGet
-      }
+        insertAndGet,
+      },
     },
     transactionCommit: commit,
-    transactionRollback: rollback
+    transactionRollback: rollback,
   }
 
   return {
     ...pgdb,
-    transactionBegin: () => pgdb
+    transactionBegin: () => pgdb,
   }
 }
 
@@ -35,7 +35,7 @@ describe('add()', () => {
   beforeEach(() => {
     process.env.FRONTEND_BASE_URL = 'http://localhost'
     global.Date = class extends Date {
-      constructor () {
+      constructor() {
         return pinnedDate
       }
     }
@@ -55,11 +55,12 @@ describe('add()', () => {
     const pgdb = mockPgdbInstance({
       insertAndGet: insertMock,
       commit: commitMock,
-      rollback: rollbackMock
+      rollback: rollbackMock,
     })
 
-    await expect(add({ target: '/route/to/predition' }, pgdb))
-      .rejects.toThrow(/source .* invalid/)
+    await expect(add({ target: '/route/to/predition' }, pgdb)).rejects.toThrow(
+      /source .* invalid/,
+    )
 
     expect(insertMock).not.toHaveBeenCalled()
     expect(commitMock).not.toHaveBeenCalled()
@@ -75,11 +76,12 @@ describe('add()', () => {
     const pgdb = mockPgdbInstance({
       insertAndGet: insertMock,
       commit: commitMock,
-      rollback: rollbackMock
+      rollback: rollbackMock,
     })
 
-    await expect(add({ source: '/foobar' }, pgdb))
-      .rejects.toThrow(/target .* invalid/)
+    await expect(add({ source: '/foobar' }, pgdb)).rejects.toThrow(
+      /target .* invalid/,
+    )
 
     expect(insertMock).not.toHaveBeenCalled()
     expect(commitMock).not.toHaveBeenCalled()
@@ -95,11 +97,15 @@ describe('add()', () => {
     const pgdb = mockPgdbInstance({
       insertAndGet: insertMock,
       commit: commitMock,
-      rollback: rollbackMock
+      rollback: rollbackMock,
     })
 
-    await expect(add({ source: '/foobar', target: '/route/to/predition', status: 123 }, pgdb))
-      .rejects.toThrow(/status .* invalid/)
+    await expect(
+      add(
+        { source: '/foobar', target: '/route/to/predition', status: 123 },
+        pgdb,
+      ),
+    ).rejects.toThrow(/status .* invalid/)
 
     expect(insertMock).not.toHaveBeenCalled()
     expect(commitMock).not.toHaveBeenCalled()
@@ -109,8 +115,7 @@ describe('add()', () => {
   test('throw Error if source already exists', async () => {
     const { add } = Redirections
 
-    const countMock = jest.fn()
-      .mockReturnValueOnce(1)
+    const countMock = jest.fn().mockReturnValueOnce(1)
     const insertMock = jest.fn()
     const commitMock = jest.fn()
     const rollbackMock = jest.fn()
@@ -118,14 +123,17 @@ describe('add()', () => {
       count: countMock,
       insertAndGet: insertMock,
       commit: commitMock,
-      rollback: rollbackMock
+      rollback: rollbackMock,
     })
 
-    await expect(add({ source: '/foobar', target: '/route/to/predition' }, pgdb))
-      .rejects.toThrow(/Redirection exists already/)
+    await expect(
+      add({ source: '/foobar', target: '/route/to/predition' }, pgdb),
+    ).rejects.toThrow(/Redirection exists already/)
 
-    expect(countMock)
-      .toHaveBeenCalledWith({ deletedAt: null, source: '/foobar' })
+    expect(countMock).toHaveBeenCalledWith({
+      deletedAt: null,
+      source: '/foobar',
+    })
     expect(insertMock).not.toHaveBeenCalled()
     expect(commitMock).not.toHaveBeenCalled()
     expect(rollbackMock).toHaveBeenCalledTimes(1)
@@ -142,7 +150,7 @@ describe('add()', () => {
       count: countMock,
       insertAndGet: insertMock,
       commit: commitMock,
-      rollback: rollbackMock
+      rollback: rollbackMock,
     })
 
     const expectedDefaultValues = {
@@ -150,20 +158,24 @@ describe('add()', () => {
       keepQuery: false,
       resource: null,
       createdAt: pinnedDate,
-      updatedAt: pinnedDate
+      updatedAt: pinnedDate,
     }
 
     const expectedProps = {
       source: '/foobar',
-      target: '/route/to/predition'
+      target: '/route/to/predition',
     }
 
     await add(expectedProps, pgdb)
 
-    expect(countMock)
-      .toHaveBeenCalledWith({ deletedAt: null, source: '/foobar' })
-    expect(insertMock)
-      .toHaveBeenCalledWith({ ...expectedDefaultValues, ...expectedProps })
+    expect(countMock).toHaveBeenCalledWith({
+      deletedAt: null,
+      source: '/foobar',
+    })
+    expect(insertMock).toHaveBeenCalledWith({
+      ...expectedDefaultValues,
+      ...expectedProps,
+    })
     expect(commitMock).toHaveBeenCalledTimes(1)
     expect(rollbackMock).not.toHaveBeenCalled()
   })
@@ -179,28 +191,32 @@ describe('add()', () => {
       count: countMock,
       insertAndGet: insertMock,
       commit: commitMock,
-      rollback: rollbackMock
+      rollback: rollbackMock,
     })
 
     const expectedDefaultValues = {
       resource: null,
       createdAt: pinnedDate,
-      updatedAt: pinnedDate
+      updatedAt: pinnedDate,
     }
 
     const expectedProps = {
       source: '/foobar',
       target: '/route/to/predition',
       keepQuery: true,
-      status: 301
+      status: 301,
     }
 
     await add(expectedProps, pgdb)
 
-    expect(countMock)
-      .toHaveBeenCalledWith({ deletedAt: null, source: '/foobar' })
-    expect(insertMock)
-      .toHaveBeenCalledWith({ ...expectedDefaultValues, ...expectedProps })
+    expect(countMock).toHaveBeenCalledWith({
+      deletedAt: null,
+      source: '/foobar',
+    })
+    expect(insertMock).toHaveBeenCalledWith({
+      ...expectedDefaultValues,
+      ...expectedProps,
+    })
     expect(commitMock).toHaveBeenCalledTimes(1)
     expect(rollbackMock).not.toHaveBeenCalled()
   })
@@ -216,7 +232,7 @@ describe('add()', () => {
       count: countMock,
       insertAndGet: insertMock,
       commit: commitMock,
-      rollback: rollbackMock
+      rollback: rollbackMock,
     })
 
     const expectedDefaultValues = {
@@ -224,20 +240,24 @@ describe('add()', () => {
       keepQuery: false,
       resource: null,
       createdAt: pinnedDate,
-      updatedAt: pinnedDate
+      updatedAt: pinnedDate,
     }
 
     const expectedProps = {
       source: '/foobar',
-      target: 'https://de.wikipedia.org/wiki/Claus_Kleber'
+      target: 'https://de.wikipedia.org/wiki/Claus_Kleber',
     }
 
     await add(expectedProps, pgdb)
 
-    expect(countMock)
-      .toHaveBeenCalledWith({ deletedAt: null, source: '/foobar' })
-    expect(insertMock)
-      .toHaveBeenCalledWith({ ...expectedDefaultValues, ...expectedProps })
+    expect(countMock).toHaveBeenCalledWith({
+      deletedAt: null,
+      source: '/foobar',
+    })
+    expect(insertMock).toHaveBeenCalledWith({
+      ...expectedDefaultValues,
+      ...expectedProps,
+    })
     expect(commitMock).toHaveBeenCalledTimes(1)
     expect(rollbackMock).not.toHaveBeenCalled()
   })
@@ -247,7 +267,7 @@ describe('update()', () => {
   beforeEach(() => {
     process.env.FRONTEND_BASE_URL = 'http://localhost'
     global.Date = class extends Date {
-      constructor () {
+      constructor() {
         return pinnedDate
       }
     }
@@ -267,10 +287,12 @@ describe('update()', () => {
     const pgdb = mockPgdbInstance({
       updateAndGetOne: updateAndGetOneMock,
       commit: commitMock,
-      rollback: rollbackMock
+      rollback: rollbackMock,
     })
 
-    await expect(update({ id: null }, pgdb)).rejects.toThrow(/Redirection does not exist/)
+    await expect(update({ id: null }, pgdb)).rejects.toThrow(
+      /Redirection does not exist/,
+    )
 
     expect(updateAndGetOneMock).not.toHaveBeenCalled()
     expect(commitMock).not.toHaveBeenCalled()
@@ -280,9 +302,7 @@ describe('update()', () => {
   test('throw Error if source taken already', async () => {
     const { update } = Redirections
 
-    const countMock = jest.fn()
-      .mockReturnValueOnce(1)
-      .mockReturnValueOnce(1)
+    const countMock = jest.fn().mockReturnValueOnce(1).mockReturnValueOnce(1)
     const updateAndGetOneMock = jest.fn()
     const commitMock = jest.fn()
     const rollbackMock = jest.fn()
@@ -290,17 +310,26 @@ describe('update()', () => {
       count: countMock,
       updateAndGetOne: updateAndGetOneMock,
       commit: commitMock,
-      rollback: rollbackMock
+      rollback: rollbackMock,
     })
 
-    await expect(update({ id: '123-123-123', source: '/foobar', target: '/route/to/perdition' }, pgdb))
-      .rejects.toThrow(/Another Redirection with source/)
+    await expect(
+      update(
+        { id: '123-123-123', source: '/foobar', target: '/route/to/perdition' },
+        pgdb,
+      ),
+    ).rejects.toThrow(/Another Redirection with source/)
 
     expect(countMock).toHaveBeenCalledTimes(2)
-    expect(countMock)
-      .toHaveBeenNthCalledWith(1, { deletedAt: null, id: '123-123-123' })
-    expect(countMock)
-      .toHaveBeenNthCalledWith(2, { deletedAt: null, 'id !=': '123-123-123', source: '/foobar' })
+    expect(countMock).toHaveBeenNthCalledWith(1, {
+      deletedAt: null,
+      id: '123-123-123',
+    })
+    expect(countMock).toHaveBeenNthCalledWith(2, {
+      deletedAt: null,
+      'id !=': '123-123-123',
+      source: '/foobar',
+    })
     expect(updateAndGetOneMock).not.toHaveBeenCalled()
     expect(commitMock).not.toHaveBeenCalled()
     expect(rollbackMock).toHaveBeenCalledTimes(1)
@@ -309,9 +338,7 @@ describe('update()', () => {
   test('throw Error if source is not a valid path', async () => {
     const { update } = Redirections
 
-    const countMock = jest.fn()
-      .mockReturnValueOnce(1)
-      .mockReturnValueOnce(1)
+    const countMock = jest.fn().mockReturnValueOnce(1).mockReturnValueOnce(1)
     const updateAndGetOneMock = jest.fn()
     const commitMock = jest.fn()
     const rollbackMock = jest.fn()
@@ -319,15 +346,25 @@ describe('update()', () => {
       count: countMock,
       updateAndGetOne: updateAndGetOneMock,
       commit: commitMock,
-      rollback: rollbackMock
+      rollback: rollbackMock,
     })
 
-    await expect(update({ id: '123-123-123', source: '/foobar?schnarz=bar', target: '/route/to/perdition' }, pgdb))
-      .rejects.toThrow(/source .* invalid/)
+    await expect(
+      update(
+        {
+          id: '123-123-123',
+          source: '/foobar?schnarz=bar',
+          target: '/route/to/perdition',
+        },
+        pgdb,
+      ),
+    ).rejects.toThrow(/source .* invalid/)
 
     expect(countMock).toHaveBeenCalledTimes(1)
-    expect(countMock)
-      .toHaveBeenNthCalledWith(1, { deletedAt: null, id: '123-123-123' })
+    expect(countMock).toHaveBeenNthCalledWith(1, {
+      deletedAt: null,
+      id: '123-123-123',
+    })
     expect(updateAndGetOneMock).not.toHaveBeenCalled()
     expect(commitMock).not.toHaveBeenCalled()
     expect(rollbackMock).toHaveBeenCalledTimes(1)
@@ -336,9 +373,7 @@ describe('update()', () => {
   test('throw Error if target is not a valid URL nor path', async () => {
     const { update } = Redirections
 
-    const countMock = jest.fn()
-      .mockReturnValueOnce(1)
-      .mockReturnValueOnce(0)
+    const countMock = jest.fn().mockReturnValueOnce(1).mockReturnValueOnce(0)
     const updateAndGetOneMock = jest.fn()
     const commitMock = jest.fn()
     const rollbackMock = jest.fn()
@@ -346,15 +381,21 @@ describe('update()', () => {
       count: countMock,
       updateAndGetOne: updateAndGetOneMock,
       commit: commitMock,
-      rollback: rollbackMock
+      rollback: rollbackMock,
     })
 
-    await expect(update({ id: '123-123-123', source: '/foobar', target: 'faulty/target/route' }, pgdb))
-      .rejects.toThrow(/target .* invalid/)
+    await expect(
+      update(
+        { id: '123-123-123', source: '/foobar', target: 'faulty/target/route' },
+        pgdb,
+      ),
+    ).rejects.toThrow(/target .* invalid/)
 
     expect(countMock).toHaveBeenCalledTimes(2)
-    expect(countMock)
-      .toHaveBeenNthCalledWith(1, { deletedAt: null, id: '123-123-123' })
+    expect(countMock).toHaveBeenNthCalledWith(1, {
+      deletedAt: null,
+      id: '123-123-123',
+    })
     expect(updateAndGetOneMock).not.toHaveBeenCalled()
     expect(commitMock).not.toHaveBeenCalled()
     expect(rollbackMock).toHaveBeenCalledTimes(1)
@@ -363,9 +404,7 @@ describe('update()', () => {
   test('w/ new target', async () => {
     const { update } = Redirections
 
-    const countMock = jest.fn()
-      .mockReturnValueOnce(1)
-      .mockReturnValueOnce(0)
+    const countMock = jest.fn().mockReturnValueOnce(1).mockReturnValueOnce(0)
     const updateAndGetOneMock = jest.fn()
     const commitMock = jest.fn()
     const rollbackMock = jest.fn()
@@ -373,7 +412,7 @@ describe('update()', () => {
       count: countMock,
       updateAndGetOne: updateAndGetOneMock,
       commit: commitMock,
-      rollback: rollbackMock
+      rollback: rollbackMock,
     })
 
     const expectedConditions = { deletedAt: null, id: '123-123-123' }
@@ -381,20 +420,17 @@ describe('update()', () => {
       status: 302,
       keepQuery: false,
       resource: null,
-      updatedAt: pinnedDate
+      updatedAt: pinnedDate,
     }
 
     const expectedProps = { id: '123-123-123', target: '/route/to/perdition' }
 
     await update(expectedProps, pgdb)
 
-    expect(updateAndGetOneMock).toHaveBeenCalledWith(
-      expectedConditions,
-      {
-        ...expectedProps,
-        ...expectedDefaultValues
-      }
-    )
+    expect(updateAndGetOneMock).toHaveBeenCalledWith(expectedConditions, {
+      ...expectedProps,
+      ...expectedDefaultValues,
+    })
     expect(commitMock).toHaveBeenCalledTimes(1)
     expect(rollbackMock).not.toHaveBeenCalled()
   })
@@ -402,9 +438,7 @@ describe('update()', () => {
   test('w/ new target, status, keepQuery and resource', async () => {
     const { update } = Redirections
 
-    const countMock = jest.fn()
-      .mockReturnValueOnce(1)
-      .mockReturnValueOnce(0)
+    const countMock = jest.fn().mockReturnValueOnce(1).mockReturnValueOnce(0)
     const updateAndGetOneMock = jest.fn()
     const commitMock = jest.fn()
     const rollbackMock = jest.fn()
@@ -412,7 +446,7 @@ describe('update()', () => {
       count: countMock,
       updateAndGetOne: updateAndGetOneMock,
       commit: commitMock,
-      rollback: rollbackMock
+      rollback: rollbackMock,
     })
 
     const expectedProps = {
@@ -420,7 +454,7 @@ describe('update()', () => {
       target: '/route/to/perdition',
       status: 301,
       keepQuery: true,
-      resource: { foo: 'bar' }
+      resource: { foo: 'bar' },
     }
 
     await update(expectedProps, pgdb)
@@ -429,8 +463,8 @@ describe('update()', () => {
       { deletedAt: null, id: '123-123-123' },
       {
         ...expectedProps,
-        updatedAt: pinnedDate
-      }
+        updatedAt: pinnedDate,
+      },
     )
     expect(commitMock).toHaveBeenCalledTimes(1)
     expect(rollbackMock).not.toHaveBeenCalled()
@@ -440,7 +474,7 @@ describe('update()', () => {
 describe('deleteById()', () => {
   beforeAll(() => {
     global.Date = class extends Date {
-      constructor () {
+      constructor() {
         return pinnedDate
       }
     }
@@ -460,10 +494,12 @@ describe('deleteById()', () => {
     const pgdb = mockPgdbInstance({
       update: updateMock,
       commit: commitMock,
-      rollback: rollbackMock
+      rollback: rollbackMock,
     })
 
-    await expect(deleteById({ id: null }, pgdb)).rejects.toThrow(/Redirection does not exist/)
+    await expect(deleteById({ id: null }, pgdb)).rejects.toThrow(
+      /Redirection does not exist/,
+    )
     expect(updateMock).not.toHaveBeenCalled()
     expect(commitMock).not.toHaveBeenCalled()
     expect(rollbackMock).toHaveBeenCalledTimes(1)
@@ -480,7 +516,7 @@ describe('deleteById()', () => {
       count: countMock,
       update: updateMock,
       commit: commitMock,
-      rollback: rollbackMock
+      rollback: rollbackMock,
     })
 
     const expectedConditions = { deletedAt: null, id: '123-123-123' }
@@ -488,7 +524,9 @@ describe('deleteById()', () => {
     await deleteById({ id: '123-123-123' }, pgdb)
 
     expect(countMock).toHaveBeenCalledWith(expectedConditions)
-    expect(updateMock).toHaveBeenCalledWith(expectedConditions, { deletedAt: pinnedDate })
+    expect(updateMock).toHaveBeenCalledWith(expectedConditions, {
+      deletedAt: pinnedDate,
+    })
     expect(commitMock).toHaveBeenCalledTimes(1)
     expect(rollbackMock).not.toHaveBeenCalled()
   })
@@ -509,7 +547,7 @@ describe('findAll()', () => {
     await findAll(pgdb)
     expect(findMock).toHaveBeenCalledWith(
       { deletedAt: null },
-      { orderBy: { createdAt: 'desc' } }
+      { orderBy: { createdAt: 'desc' } },
     )
   })
 })
@@ -534,15 +572,29 @@ describe('validateSource()', () => {
     expect(() => validateSource('foobar/123')).toThrow(expectedErrorMessagee)
     expect(() => validateSource('+123456789')).toThrow(expectedErrorMessagee)
 
-    expect(() => validateSource('/foobar/123?p=456')).toThrow(expectedErrorMessagee)
-    expect(() => validateSource('/foobar/123?p=456#123')).toThrow(expectedErrorMessagee)
+    expect(() => validateSource('/foobar/123?p=456')).toThrow(
+      expectedErrorMessagee,
+    )
+    expect(() => validateSource('/foobar/123?p=456#123')).toThrow(
+      expectedErrorMessagee,
+    )
 
-    expect(() => validateSource('/foobar/umläute%20and%20spaces')).toThrow(expectedErrorMessagee)
+    expect(() => validateSource('/foobar/umläute%20and%20spaces')).toThrow(
+      expectedErrorMessagee,
+    )
 
-    expect(() => validateSource('https://de.wikipedia.org/')).toThrow(expectedErrorMessagee)
-    expect(() => validateSource('https://de.wikipedia.org/wiki/Claus_Kleber')).toThrow(expectedErrorMessagee)
-    expect(() => validateSource('https://de.wikipedia.org/wiki/Claus_Kleber?foo=bar')).toThrow(expectedErrorMessagee)
-    expect(() => validateSource('https://de.wikipedia.org:8080/wiki/Claus_Kleber')).toThrow(expectedErrorMessagee)
+    expect(() => validateSource('https://de.wikipedia.org/')).toThrow(
+      expectedErrorMessagee,
+    )
+    expect(() =>
+      validateSource('https://de.wikipedia.org/wiki/Claus_Kleber'),
+    ).toThrow(expectedErrorMessagee)
+    expect(() =>
+      validateSource('https://de.wikipedia.org/wiki/Claus_Kleber?foo=bar'),
+    ).toThrow(expectedErrorMessagee)
+    expect(() =>
+      validateSource('https://de.wikipedia.org:8080/wiki/Claus_Kleber'),
+    ).toThrow(expectedErrorMessagee)
   })
 
   test('w/ valid path', () => {
@@ -553,7 +605,9 @@ describe('validateSource()', () => {
 
     expect(validateSource('/foobar/umläute')).toBeUndefined()
     expect(validateSource('/foobar/umläute und spaces')).toBeUndefined()
-    expect(validateSource('/foobar/uml%C3%A4ute%20und%20spaces')).toBeUndefined()
+    expect(
+      validateSource('/foobar/uml%C3%A4ute%20und%20spaces'),
+    ).toBeUndefined()
 
     expect(validateSource('/~someprofile')).toBeUndefined()
     expect(validateSource('/2019/05/31/some-article')).toBeUndefined()
@@ -580,10 +634,18 @@ describe('validateTarget()', () => {
     expect(() => validateTarget('foobar/123')).toThrow(expectedErrorMessagee)
     expect(() => validateTarget('+123456789')).toThrow(expectedErrorMessagee)
 
-    expect(() => validateTarget('https://de.wikipedia.org')).toThrow(expectedErrorMessagee)
-    expect(() => validateTarget('https:/de.wikipedia.org/')).toThrow(expectedErrorMessagee)
-    expect(() => validateTarget('http:de.wikipedia.org/')).toThrow(expectedErrorMessagee)
-    expect(() => validateTarget('http://röpüblique.ch/')).toThrow(expectedErrorMessagee)
+    expect(() => validateTarget('https://de.wikipedia.org')).toThrow(
+      expectedErrorMessagee,
+    )
+    expect(() => validateTarget('https:/de.wikipedia.org/')).toThrow(
+      expectedErrorMessagee,
+    )
+    expect(() => validateTarget('http:de.wikipedia.org/')).toThrow(
+      expectedErrorMessagee,
+    )
+    expect(() => validateTarget('http://röpüblique.ch/')).toThrow(
+      expectedErrorMessagee,
+    )
   })
 
   test('w/ valid URL', () => {
@@ -596,15 +658,23 @@ describe('validateTarget()', () => {
 
     expect(validateTarget('/foobar/umläute')).toBeUndefined()
     expect(validateTarget('/foobar/umläute und spaces')).toBeUndefined()
-    expect(validateTarget('/foobar/uml%C3%A4ute%20und%20spaces')).toBeUndefined()
+    expect(
+      validateTarget('/foobar/uml%C3%A4ute%20und%20spaces'),
+    ).toBeUndefined()
 
     expect(validateTarget('/~someprofile')).toBeUndefined()
     expect(validateTarget('/2019/05/31/some-article')).toBeUndefined()
 
     expect(validateTarget('https://de.wikipedia.org/')).toBeUndefined()
-    expect(validateTarget('https://de.wikipedia.org/wiki/Claus_Kleber')).toBeUndefined()
-    expect(validateTarget('https://de.wikipedia.org/wiki/Claus_Kleber?foo=bar')).toBeUndefined()
-    expect(validateTarget('https://de.wikipedia.org:8080/wiki/Claus_Kleber')).toBeUndefined()
+    expect(
+      validateTarget('https://de.wikipedia.org/wiki/Claus_Kleber'),
+    ).toBeUndefined()
+    expect(
+      validateTarget('https://de.wikipedia.org/wiki/Claus_Kleber?foo=bar'),
+    ).toBeUndefined()
+    expect(
+      validateTarget('https://de.wikipedia.org:8080/wiki/Claus_Kleber'),
+    ).toBeUndefined()
     expect(validateTarget('http://xn--rpblique-n4a5d.ch/')).toBeUndefined()
   })
 })

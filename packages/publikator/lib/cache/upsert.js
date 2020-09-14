@@ -2,7 +2,10 @@ const debug = require('debug')('publikator:cache:upsert')
 
 const visit = require('unist-util-visit')
 
-const { getIndexAlias, mdastContentToString } = require('@orbiting/backend-modules-search/lib/utils')
+const {
+  getIndexAlias,
+  mdastContentToString,
+} = require('@orbiting/backend-modules-search/lib/utils')
 const { mdastToString } = require('@orbiting/backend-modules-utils')
 
 /**
@@ -15,7 +18,7 @@ const { mdastToString } = require('@orbiting/backend-modules-utils')
 const getPath = (id) => ({
   index: getIndexAlias('repo', 'write'),
   type: 'Repo',
-  id
+  id,
 })
 
 /**
@@ -48,33 +51,38 @@ const getContentStrings = (mdast) => {
     contentStrings.text = text
   }
 
-  visit(mdast, 'zone', node => {
+  visit(mdast, 'zone', (node) => {
     if (node.identifier === 'TITLE') {
       const title = mdastToString({
-        children: node.children.filter(n => n.type === 'heading' && n.depth === 1)
+        children: node.children.filter(
+          (n) => n.type === 'heading' && n.depth === 1,
+        ),
       }).trim()
 
       const subject = mdastToString({
-        children: node.children.filter(n => n.type === 'heading' && n.depth === 2)
+        children: node.children.filter(
+          (n) => n.type === 'heading' && n.depth === 2,
+        ),
       }).trim()
 
       const lead = mdastToString({
-        children: [node.children.filter(n => n.type === 'paragraph')[0]].filter(Boolean)
+        children: [
+          node.children.filter((n) => n.type === 'paragraph')[0],
+        ].filter(Boolean),
       }).trim()
 
       const credits = mdastToString({
-        children: [node.children.filter(n => n.type === 'paragraph')[1]].filter(Boolean)
+        children: [
+          node.children.filter((n) => n.type === 'paragraph')[1],
+        ].filter(Boolean),
       }).trim()
 
-      Object.assign(
-        contentStrings,
-        {
-          title,
-          subject,
-          lead,
-          credits
-        }
-      )
+      Object.assign(contentStrings, {
+        title,
+        subject,
+        lead,
+        credits,
+      })
     }
   })
 
@@ -93,14 +101,13 @@ const getContentMeta = ({ meta = false } = {}) => {
 
     if (typeof meta.series === 'object') {
       meta.seriesMaster = meta.series
-      meta.seriesMaster.episodes =
-        meta.seriesMaster.episodes.map(episode => {
-          if (episode.publishDate === '') {
-            delete episode.publishDate
-          }
+      meta.seriesMaster.episodes = meta.seriesMaster.episodes.map((episode) => {
+        if (episode.publishDate === '') {
+          delete episode.publishDate
+        }
 
-          return episode
-        })
+        return episode
+      })
     }
 
     delete meta.series
@@ -111,7 +118,7 @@ const getContentMeta = ({ meta = false } = {}) => {
   return { contentMeta: meta }
 }
 
-const getLatestCommit = commit => {
+const getLatestCommit = (commit) => {
   if (!commit) {
     return
   }
@@ -123,13 +130,13 @@ const getLatestCommit = commit => {
       author: commit.author,
       message: commit.message,
       parentIds: commit.parents
-        ? commit.parents.map(parent => parent.sha)
-        : []
-    }
+        ? commit.parents.map((parent) => parent.sha)
+        : [],
+    },
   }
 }
 
-const getLatestPublications = publications => {
+const getLatestPublications = (publications) => {
   if (!publications) {
     return
   }
@@ -137,7 +144,7 @@ const getLatestPublications = publications => {
   return { latestPublications: publications }
 }
 
-const getRepoMeta = meta => {
+const getRepoMeta = (meta) => {
   if (!meta) {
     return
   }
@@ -145,7 +152,7 @@ const getRepoMeta = meta => {
   return { meta }
 }
 
-const getRepoTags = tags => {
+const getRepoTags = (tags) => {
   if (!tags) {
     return
   }
@@ -160,12 +167,12 @@ const alterRepoTag = (tag, doc) => {
 
   if (!doc._source.tags) {
     doc._source.tags = {
-      nodes: []
+      nodes: [],
     }
   }
 
   // Remove provided tag from nodes
-  const nodes = doc._source.tags.nodes.filter(n => n.name !== tag.name)
+  const nodes = doc._source.tags.nodes.filter((n) => n.name !== tag.name)
 
   // Add tag to nodes again if action is set to be true
   if (tag.action === 'add') {
@@ -175,22 +182,23 @@ const alterRepoTag = (tag, doc) => {
   return { tags: { nodes } }
 }
 
-const upsert = async ({
-  commit,
-  content,
-  createdAt,
-  isArchived,
-  id,
-  meta,
-  name,
-  publications,
-  tag,
-  tags,
-  updatedAt,
-  refresh = true
-}, {
-    elastic
-  }) => {
+const upsert = async (
+  {
+    commit,
+    content,
+    createdAt,
+    isArchived,
+    id,
+    meta,
+    name,
+    publications,
+    tag,
+    tags,
+    updatedAt,
+    refresh = true,
+  },
+  { elastic },
+) => {
   let doc = {}
 
   // Only check and fetch an existing document if {tag} is required to be
@@ -221,7 +229,7 @@ const upsert = async ({
     ...getLatestPublications(publications),
     ...getRepoMeta(meta),
     ...getRepoTags(tags),
-    ...alterRepoTag(tag, doc)
+    ...alterRepoTag(tag, doc),
   }
 
   debug('upsert', id)
@@ -232,11 +240,11 @@ const upsert = async ({
     version: doc._version,
     body: {
       doc_as_upsert: true,
-      doc: partialDoc
-    }
+      doc: partialDoc,
+    },
   })
 }
 
 module.exports = {
-  upsert
+  upsert,
 }

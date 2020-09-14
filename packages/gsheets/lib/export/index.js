@@ -4,7 +4,7 @@ const moment = require('moment')
 const {
   GSHEETS_EXPORT,
   GOOGLE_SERVICE_ACCOUNT_EMAIL,
-  GOOGLE_PRIVATE_KEY
+  GOOGLE_PRIVATE_KEY,
 } = process.env
 
 const mapping = GSHEETS_EXPORT && JSON.parse(GSHEETS_EXPORT)
@@ -33,14 +33,13 @@ module.exports = async (key, pgdb) => {
 
     await doc.useServiceAccountAuth({
       client_email: GOOGLE_SERVICE_ACCOUNT_EMAIL,
-      private_key: GOOGLE_PRIVATE_KEY
-        .replace(/@/g, '\n')
+      private_key: GOOGLE_PRIVATE_KEY.replace(/@/g, '\n'),
     })
 
     const newSheet = await doc.addSheet({
       // colons in spreadsheet titles are not allowed
       title: `${moment().format('DD.MM.YYYY HH_mm_ss')}`,
-      headerValues: Object.keys(rows[0])
+      headerValues: Object.keys(rows[0]),
     })
 
     return newSheet.addRows(rows)

@@ -7,5 +7,5 @@ module.exports = {
   commentSchema,
   newsletterEmailSchema,
   editorialNewsletterSchema,
-  inQuotes
+  inQuotes,
 }

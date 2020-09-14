@@ -1,4 +1,6 @@
-const { Roles: { ensureUserHasRole } } = require('@orbiting/backend-modules-auth')
+const {
+  Roles: { ensureUserHasRole },
+} = require('@orbiting/backend-modules-auth')
 const { filtered } = require('@orbiting/backend-modules-base/lib/RedisPubSub')
 
 module.exports = {
@@ -6,9 +8,7 @@ module.exports = {
     ensureUserHasRole(user, 'editor')
     return filtered(
       pubsub.asyncIterator('repoUpdate'),
-      ({ repoUpdate: { id } }, variables) => (
-        !args.repoId || id === args.repoId
-      )
+      ({ repoUpdate: { id } }, variables) => !args.repoId || id === args.repoId,
     )()
-  }
+  },
 }

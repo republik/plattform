@@ -4,5 +4,5 @@ module.exports = {
   subscribe: (_, args, { user, pubsub }) => {
     Roles.ensureUserHasRole(user, 'member')
     return pubsub.asyncIterator('greeting')
-  }
+  },
 }

@@ -8,31 +8,38 @@ module.exports = async ({
   userId,
   transaction,
   t,
-  logger = console
+  logger = console,
 }) => {
   if (address) {
     // insert address
     const newAddress = await transaction.public.addresses.insertAndGet(address)
-    await transaction.public.users.updateAndGetOne({
-      id: userId
-    }, {
-      addressId: newAddress.id
-    })
+    await transaction.public.users.updateAndGetOne(
+      {
+        id: userId,
+      },
+      {
+        addressId: newAddress.id,
+      },
+    )
   } else {
     const hasAddress = await transaction.public.users.findFirst({
       id: userId,
-      'addressId !=': null
+      'addressId !=': null,
     })
     if (!hasAddress) {
-      logger.error('PAYMENTSLIP payments must include an address', { userId, pledgeId, total, address, paperInvoice })
+      logger.error('PAYMENTSLIP payments must include an address', {
+        userId,
+        pledgeId,
+        total,
+        address,
+        paperInvoice,
+      })
       throw new Error(t('api/unexpected'))
     }
   }
 
   // only count PAYMENTSLIP payments up to CHF 1000.- immediately
-  const pledgeStatus = (total > 100000)
-    ? 'WAITING_FOR_PAYMENT'
-    : 'SUCCESSFUL'
+  const pledgeStatus = total > 100000 ? 'WAITING_FOR_PAYMENT' : 'SUCCESSFUL'
 
   const now = new Date()
   const payment = await transaction.public.payments.insertAndGet({
@@ -41,14 +48,14 @@ module.exports = async ({
     total: total,
     status: 'WAITING',
     paperInvoice,
-    dueDate: new Date(now).setDate(now.getDate() + PAYMENT_DEADLINE_DAYS)
+    dueDate: new Date(now).setDate(now.getDate() + PAYMENT_DEADLINE_DAYS),
   })
 
   // insert pledgePayment
   await transaction.public.pledgePayments.insert({
     pledgeId,
     paymentId: payment.id,
-    paymentType: 'PLEDGE'
+    paymentType: 'PLEDGE',
   })
 
   return pledgeStatus

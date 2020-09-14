@@ -7,6 +7,7 @@ For rendering it calls [lambdas/chromium](lambdas/chromium) via `CHROMIUM_LAMBDA
 Check [assets-backend](https://github.com/orbiting/assets-backend) for a deployable, standalone, express wrapper.
 
 ## ENVs
+
 See [servers/assets/.env.example](servers/assets/.env.example) for the required envs.
 
 ## URLs
@@ -62,6 +63,7 @@ See [servers/assets/.env.example](servers/assets/.env.example) for the required 
 ### Query params
 
 If not specified otherwise all endpoints honour the following query params:
+
 - `resize=:width[x:height]`
   resizes an image to the specified dimensions. center-cropped if dimensions don't match
 

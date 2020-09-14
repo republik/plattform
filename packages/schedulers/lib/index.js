@@ -1,4 +1,4 @@
 module.exports = {
   intervalScheduler: require('./intervalScheduler'),
-  timeScheduler: require('./timeScheduler')
+  timeScheduler: require('./timeScheduler'),
 }

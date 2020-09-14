@@ -11,10 +11,7 @@ const graphiql = require('./express/graphiql')
 
 const DEV = process.env.NODE_ENV && process.env.NODE_ENV !== 'production'
 
-checkEnv([
-  'DATABASE_URL',
-  'SESSION_SECRET'
-])
+checkEnv(['DATABASE_URL', 'SESSION_SECRET'])
 
 const {
   PORT,
@@ -24,11 +21,13 @@ const {
   COOKIE_DOMAIN,
   COOKIE_NAME,
   IGNORE_SSL_HOSTNAME,
-  REQ_TIMEOUT
+  REQ_TIMEOUT,
 } = process.env
 
 // middlewares
-const { express: { auth: Auth } } = require('@orbiting/backend-modules-auth')
+const {
+  express: { auth: Auth },
+} = require('@orbiting/backend-modules-auth')
 const requestLog = require('./express/requestLog')
 
 // init httpServer and express and start listening
@@ -37,24 +36,26 @@ const start = async (
   middlewares,
   t,
   connectionContext,
-  createGraphqlContext = identity => identity,
-  workerId
+  createGraphqlContext = (identity) => identity,
+  workerId,
 ) => {
   const { pgdb, redis } = connectionContext
 
   const server = express()
   const httpServer = createServer(server)
 
-  server.use(helmet({
-    hsts: {
-      maxAge: 60 * 60 * 24 * 365, // 1 year to get preload approval
-      preload: true,
-      includeSubDomains: true
-    },
-    referrerPolicy: {
-      policy: 'no-referrer'
-    }
-  }))
+  server.use(
+    helmet({
+      hsts: {
+        maxAge: 60 * 60 * 24 * 365, // 1 year to get preload approval
+        preload: true,
+        includeSubDomains: true,
+      },
+      referrerPolicy: {
+        policy: 'no-referrer',
+      },
+    }),
+  )
 
   // prod only
   if (!DEV) {
@@ -64,7 +65,10 @@ const start = async (
     server.enable('trust proxy')
     // redirect to https
     server.use((req, res, next) => {
-      if (!req.secure && (!IGNORE_SSL_HOSTNAME || req.hostname !== IGNORE_SSL_HOSTNAME)) {
+      if (
+        !req.secure &&
+        (!IGNORE_SSL_HOSTNAME || req.hostname !== IGNORE_SSL_HOSTNAME)
+      ) {
         res.redirect(`https://${req.hostname}${req.url}`)
       } else {
         next()
@@ -77,22 +81,19 @@ const start = async (
 
   // monitor timeouts
   if (REQ_TIMEOUT) {
-    server.use(
-      timeout(REQ_TIMEOUT, { respond: false }),
-      (req, res, next) => {
-        req.on('timeout', () => {
-          console.log('request timedout:', req._log())
-        })
-        next()
-      }
-    )
+    server.use(timeout(REQ_TIMEOUT, { respond: false }), (req, res, next) => {
+      req.on('timeout', () => {
+        console.log('request timedout:', req._log())
+      })
+      next()
+    })
   }
 
   if (CORS_ALLOWLIST_URL) {
     const corsOptions = {
       origin: CORS_ALLOWLIST_URL.split(','),
       credentials: true,
-      optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+      optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
     }
     server.use('*', cors(corsOptions))
   }
@@ -104,16 +105,10 @@ const start = async (
     domain: COOKIE_DOMAIN || undefined,
     cookieName: COOKIE_NAME,
     dev: DEV,
-    pgdb
+    pgdb,
   })
 
-  graphql(
-    server,
-    httpServer,
-    pgdb,
-    graphqlSchema,
-    createGraphqlContext
-  )
+  graphql(server, httpServer, pgdb, graphqlSchema, createGraphqlContext)
 
   graphiql(server)
 
@@ -136,13 +131,15 @@ const start = async (
 
   const result = {
     close,
-    createGraphqlContext
+    createGraphqlContext,
   }
 
   return new Promise((resolve) => {
     const callback = () => {
       if (workerId) {
-        console.info(`server (${workerId}) is running on http://${HOST}:${PORT}`)
+        console.info(
+          `server (${workerId}) is running on http://${HOST}:${PORT}`,
+        )
       } else {
         console.info(`server is running on http://${HOST}:${PORT}`)
       }
@@ -154,5 +151,5 @@ const start = async (
 }
 
 module.exports = {
-  start
+  start,
 }

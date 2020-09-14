@@ -1,12 +1,7 @@
 const fetch = require('isomorphic-unfetch')
 const querystring = require('querystring')
 
-const {
-  PAYPAL_USER,
-  PAYPAL_PWD,
-  PAYPAL_SIGNATURE,
-  PAYPAL_URL
-} = process.env
+const { PAYPAL_USER, PAYPAL_PWD, PAYPAL_SIGNATURE, PAYPAL_URL } = process.env
 
 module.exports = async ({
   pledgeId,
@@ -14,7 +9,7 @@ module.exports = async ({
   pspPayload,
   transaction,
   t,
-  logger = console
+  logger = console,
 }) => {
   if (!pspPayload || !pspPayload.tx) {
     logger.error('pspPayload(.tx) required', { pledgeId, pspPayload })
@@ -29,12 +24,12 @@ module.exports = async ({
 
   // https://developer.paypal.com/docs/classic/api/merchant/GetTransactionDetails_API_Operation_NVP/
   const transactionDetails = {
-    'METHOD': 'GetTransactionDetails',
-    'TRANSACTIONID': pspPayload.tx,
-    'VERSION': '204.0',
-    'USER': PAYPAL_USER,
-    'PWD': PAYPAL_PWD,
-    'SIGNATURE': PAYPAL_SIGNATURE
+    METHOD: 'GetTransactionDetails',
+    TRANSACTIONID: pspPayload.tx,
+    VERSION: '204.0',
+    USER: PAYPAL_USER,
+    PWD: PAYPAL_PWD,
+    SIGNATURE: PAYPAL_SIGNATURE,
   }
   const form = querystring.stringify(transactionDetails)
   const contentLength = form.length
@@ -42,13 +37,17 @@ module.exports = async ({
     method: 'POST',
     headers: {
       'Content-Length': contentLength,
-      'Content-Type': 'application/x-www-form-urlencoded'
+      'Content-Type': 'application/x-www-form-urlencoded',
     },
-    body: form
+    body: form,
   })
   const response = querystring.parse(await responseRaw.text())
   if (response.PAYMENTSTATUS !== 'Completed') {
-    logger.error('paypal transaction invalid', { pledgeId, pspPayload, response })
+    logger.error('paypal transaction invalid', {
+      pledgeId,
+      pspPayload,
+      response,
+    })
     switch (response.PAYMENTSTATUS) {
       case 'Canceled_Reversal':
       case 'Refunded':
@@ -76,13 +75,17 @@ module.exports = async ({
     total: amount,
     status: 'PAID',
     pspId: pspPayload.tx,
-    pspPayload: response
+    pspPayload: response,
   })
 
   let pledgeStatus = 'SUCCESSFUL'
   // check if amount is correct
   if (amount !== total) {
-    logger.info('payed amount doesnt match with pledge', { pledgeId, pspPayload, payment })
+    logger.info('payed amount doesnt match with pledge', {
+      pledgeId,
+      pspPayload,
+      payment,
+    })
     pledgeStatus = 'PAID_INVESTIGATE'
   }
 
@@ -90,7 +93,7 @@ module.exports = async ({
   await transaction.public.pledgePayments.insert({
     pledgeId,
     paymentId: payment.id,
-    paymentType: 'PLEDGE'
+    paymentType: 'PLEDGE',
   })
 
   return pledgeStatus

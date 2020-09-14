@@ -1,4 +1,6 @@
-const { Roles: { ensureUserHasRole } } = require('@orbiting/backend-modules-auth')
+const {
+  Roles: { ensureUserHasRole },
+} = require('@orbiting/backend-modules-auth')
 const { getTweetById } = require('../../../lib/twitter')
 const { getYoutubeVideoById } = require('../../../lib/youtube')
 const { getVimeoVideoById } = require('../../../lib/vimeo')
@@ -24,8 +26,8 @@ module.exports = async (_, args, { user, t }) => {
 
   const { id, embedType } = args
   return {
-    ...await getEmbedData(args, t),
+    ...(await getEmbedData(args, t)),
     __typename: embedType,
-    mediaId: `${embedType}-${id}`
+    mediaId: `${embedType}-${id}`,
   }
 }

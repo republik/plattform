@@ -3,5 +3,5 @@ const createUsers = require('./createUsers')
 
 module.exports = {
   Instance,
-  createUsers
+  createUsers,
 }

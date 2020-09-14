@@ -1,2 +1,1 @@
-module.exports = async ({ tags }) =>
-  tags || []
+module.exports = async ({ tags }) => tags || []

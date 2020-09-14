@@ -1,14 +1,14 @@
 const {
   hasUserCandidacies,
   hasUserCandidaciesInCandidacyPhase,
-  hasUserCandidaciesInElectionPhase
+  hasUserCandidaciesInElectionPhase,
 } = require('@orbiting/backend-modules-voting/lib/Candidacy')
 const { cards: cardsLib } = require('@orbiting/backend-modules-cards')
 
 exports.isEligible = async (userId, pgdb) => {
   return !!(await pgdb.public.memberships.findFirst({
     userId,
-    active: true
+    active: true,
   }))
 }
 

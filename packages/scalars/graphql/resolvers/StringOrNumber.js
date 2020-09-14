@@ -3,13 +3,13 @@ const { GraphQLScalarType } = require('graphql')
 module.exports = new GraphQLScalarType({
   name: 'StringOrNumber',
   description: 'String or number (input is casted to string)',
-  parseValue (value) {
+  parseValue(value) {
     return String(value)
   },
-  parseLiteral (ast) {
+  parseLiteral(ast) {
     return String(ast.value)
   },
-  serialize (value) {
+  serialize(value) {
     return value
-  }
+  },
 })

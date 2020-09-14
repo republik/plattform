@@ -1,5 +1,5 @@
 module.exports = {
-  __resolveType (obj) {
+  __resolveType(obj) {
     return obj.__typename
-  }
+  },
 }

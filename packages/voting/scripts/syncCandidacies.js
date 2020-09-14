@@ -6,8 +6,11 @@
 require('@orbiting/backend-modules-env').config()
 const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
 
-PgDb.connect().then(async pgdb => {
-  const candidacies = await pgdb.query(`
+PgDb.connect()
+  .then(async (pgdb) => {
+    const candidacies = await pgdb
+      .query(
+        `
     SELECT
       ec.*,
       json_agg(u.*) as user,
@@ -22,21 +25,27 @@ PgDb.connect().then(async pgdb => {
       ON ec."commentId" = c.id
     GROUP BY
       1
-  `).then(cs => cs.map(c => ({ ...c, user: c.user[0], comment: c.comment[0] })))
-  await Promise.all(
-    candidacies.map(c => {
-      if (c.comment && c.user.statement !== c.comment.content) {
-        console.log(`updating ${c.user.firstName} ${c.user.lastName}...`)
-        return pgdb.public.comments.updateOne(
-          { id: c.comment.id },
-          { content: c.user.statement }
-        )
-      }
-    })
-  )
-}).then(() => {
-  process.exit()
-}).catch(e => {
-  console.log(e)
-  process.exit(1)
-})
+  `,
+      )
+      .then((cs) =>
+        cs.map((c) => ({ ...c, user: c.user[0], comment: c.comment[0] })),
+      )
+    await Promise.all(
+      candidacies.map((c) => {
+        if (c.comment && c.user.statement !== c.comment.content) {
+          console.log(`updating ${c.user.firstName} ${c.user.lastName}...`)
+          return pgdb.public.comments.updateOne(
+            { id: c.comment.id },
+            { content: c.user.statement },
+          )
+        }
+      }),
+    )
+  })
+  .then(() => {
+    process.exit()
+  })
+  .catch((e) => {
+    console.log(e)
+    process.exit(1)
+  })

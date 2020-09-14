@@ -1,3 +1,3 @@
 module.exports = {
-  graphql: require('./graphql')
+  graphql: require('./graphql'),
 }

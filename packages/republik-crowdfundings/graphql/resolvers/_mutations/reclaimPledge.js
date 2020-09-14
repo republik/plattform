@@ -2,7 +2,11 @@ const logger = console
 const { sendPledgeConfirmations } = require('../../../lib/Mail')
 const mergeCustomers = require('../../../lib/payments/stripe/mergeCustomers')
 
-module.exports = async (_, args, {pgdb, req, t, mail: {enforceSubscriptions}}) => {
+module.exports = async (
+  _,
+  args,
+  { pgdb, req, t, mail: { enforceSubscriptions } },
+) => {
   // check user
   if (!req.user) {
     logger.error('unauthorized reclaimPledge', { req: req._log(), args })
@@ -13,25 +17,41 @@ module.exports = async (_, args, {pgdb, req, t, mail: {enforceSubscriptions}}) =
   try {
     const { pledgeId } = args
     // check pledgeId
-    const pledge = await transaction.public.pledges.findOne({id: pledgeId})
+    const pledge = await transaction.public.pledges.findOne({ id: pledgeId })
     if (!pledge) {
-      logger.error(`pledge (${pledgeId}) not found`, { req: req._log(), args, pledge })
+      logger.error(`pledge (${pledgeId}) not found`, {
+        req: req._log(),
+        args,
+        pledge,
+      })
       throw new Error(t('api/unexpected'))
     }
 
     // load original user of pledge
-    const pledgeUser = await transaction.public.users.findOne({id: pledge.userId})
+    const pledgeUser = await transaction.public.users.findOne({
+      id: pledge.userId,
+    })
     if (pledgeUser.email === req.user.email) {
-      logger.info('pledge already belongs to the claiming email', { req: req._log(), args, pledgeUser })
+      logger.info('pledge already belongs to the claiming email', {
+        req: req._log(),
+        args,
+        pledgeUser,
+      })
       await transaction.transactionCommit()
       return true
     }
     if (pledgeUser.verified) {
-      logger.error('cannot claim pledges of verified users', { req: req._log(), args, pledge })
-      throw new Error(t('api/reclaim/verified', {
-        pledgeEmail: pledgeUser.email,
-        targetEmail: req.user.email
-      }))
+      logger.error('cannot claim pledges of verified users', {
+        req: req._log(),
+        args,
+        pledge,
+      })
+      throw new Error(
+        t('api/reclaim/verified', {
+          pledgeEmail: pledgeUser.email,
+          targetEmail: req.user.email,
+        }),
+      )
     }
 
     // transfer belongings to signedin user
@@ -40,24 +60,32 @@ module.exports = async (_, args, {pgdb, req, t, mail: {enforceSubscriptions}}) =
     const to = { userId: newUser.id }
     const from = { userId: pledgeUser.id }
     const promises = [
-      transaction.public.pledges.updateOne({id: pledge.id}, to),
+      transaction.public.pledges.updateOne({ id: pledge.id }, to),
       transaction.public.memberships.update(from, to),
       transaction.public.paymentSources.update(from, to),
       transaction.public.consents.update(from, to),
-      transaction.public.users.updateOne({id: newUser.id}, {
-        firstName: newUser.firstName || pledgeUser.firstName,
-        lastName: newUser.lastName || pledgeUser.lastName,
-        birthday: newUser.birthday || pledgeUser.birthday,
-        addressId: newUser.addressId || pledgeUser.addressId
-      }),
+      transaction.public.users.updateOne(
+        { id: newUser.id },
+        {
+          firstName: newUser.firstName || pledgeUser.firstName,
+          lastName: newUser.lastName || pledgeUser.lastName,
+          birthday: newUser.birthday || pledgeUser.birthday,
+          addressId: newUser.addressId || pledgeUser.addressId,
+        },
+      ),
       mergeCustomers({
         targetUserId: newUser.id,
         sourceUserId: pledgeUser.id,
-        pgdb: transaction
-      })
+        pgdb: transaction,
+      }),
     ]
     if (pledgeUser.addressId) {
-      promises.push(transaction.public.users.updateOne({id: pledgeUser.id}, {addressId: null}))
+      promises.push(
+        transaction.public.users.updateOne(
+          { id: pledgeUser.id },
+          { addressId: null },
+        ),
+      )
     }
     await Promise.all(promises)
 
@@ -72,11 +100,15 @@ module.exports = async (_, args, {pgdb, req, t, mail: {enforceSubscriptions}}) =
       await enforceSubscriptions({
         pgdb,
         userId: req.user.id,
-        subscribeToEditorialNewsletters: true
+        subscribeToEditorialNewsletters: true,
       })
     } catch (e) {
       // ignore issues with newsletter subscriptions
-      logger.error('newsletter subscription changes failed', { req: req._log(), args, error: e })
+      logger.error('newsletter subscription changes failed', {
+        req: req._log(),
+        args,
+        error: e,
+      })
     }
 
     return true

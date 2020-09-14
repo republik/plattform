@@ -1,13 +1,11 @@
 const {
-  lib: {
-    resolve
-  }
+  lib: { resolve },
 } = require('@orbiting/backend-modules-documents')
 
 const repo = require('./Repo')
 const commit = require('./Commit')
 
-const resolveRepoId = field => async (meta, args, context) => {
+const resolveRepoId = (field) => async (meta, args, context) => {
   const { t } = context
   // after publication: return fields resolved by documents/Document.meta
   // on series master documents this is the series info
@@ -20,13 +18,14 @@ const resolveRepoId = field => async (meta, args, context) => {
     return null
   }
 
-  const latestCommit = await repo.latestCommit({ id: repoId }, null, context)
-    .catch(e => {
+  const latestCommit = await repo
+    .latestCommit({ id: repoId }, null, context)
+    .catch((e) => {
       if (e.message !== t('api/github/unavailable')) {
         throw e
       }
     })
-  const doc = latestCommit && await commit.document(latestCommit, {}, context)
+  const doc = latestCommit && (await commit.document(latestCommit, {}, context))
 
   // for series episodes we don't want to return the master
   // document but its meta.series info object
@@ -41,5 +40,5 @@ module.exports = {
   format: resolveRepoId('format'),
   section: resolveRepoId('section'),
   dossier: resolveRepoId('dossier'),
-  series: resolveRepoId('series')
+  series: resolveRepoId('series'),
 }

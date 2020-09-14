@@ -1,5 +1,5 @@
 const _ = {
-  get: require('lodash/get')
+  get: require('lodash/get'),
 }
 
 // invoice.payment_succeeded includes:
@@ -12,25 +12,26 @@ module.exports = {
     const invoice = _.get(event, 'data.object')
     const subscription = _.get(event, 'data.object.lines.data[0]')
     if (subscription.type === 'subscription') {
-      const {
-        charge: chargeId,
-        total
-      } = invoice
+      const { charge: chargeId, total } = invoice
       const pledgeId = subscription.metadata.pledgeId
 
       const transaction = await pgdb.transactionBegin()
       try {
         // synchronize with payPledge
-        const pledge = await transaction.query(`
+        const pledge = await transaction
+          .query(
+            `
           SELECT *
           FROM pledges
           WHERE id = :pledgeId
           FOR UPDATE
-        `, {
-          pledgeId
-        })
-          .then(response => response[0])
-          .catch(e => {
+        `,
+            {
+              pledgeId,
+            },
+          )
+          .then((response) => response[0])
+          .catch((e) => {
             console.error(e)
             return null
           })
@@ -44,7 +45,7 @@ module.exports = {
         // save payment deduplicated
         const existingPayment = await transaction.public.payments.findFirst({
           method: 'STRIPE',
-          pspId: chargeId
+          pspId: chargeId,
         })
         if (!existingPayment) {
           const payment = await transaction.public.payments.insertAndGet({
@@ -52,32 +53,36 @@ module.exports = {
             method: 'STRIPE',
             total: total,
             status: 'PAID',
-            pspId: chargeId
+            pspId: chargeId,
           })
 
           await transaction.public.pledgePayments.insert({
             pledgeId,
             paymentId: payment.id,
-            paymentType: 'PLEDGE'
+            paymentType: 'PLEDGE',
           })
         }
 
         // save membershipPeriod
         const memberships = await transaction.public.memberships.find({
-          pledgeId
+          pledgeId,
         })
         const firstNotification = memberships[0].subscriptionId === null
         const beginDate = new Date(subscription.period.start * 1000)
         const endDate = new Date(subscription.period.end * 1000)
         if (firstNotification) {
           // remember subscriptionId
-          await transaction.public.memberships.update({
-            id: memberships.map(m => m.id)
-          }, {
-            subscriptionId: subscription.id
-          })
+          await transaction.public.memberships.update(
+            {
+              id: memberships.map((m) => m.id),
+            },
+            {
+              subscriptionId: subscription.id,
+            },
+          )
           // synchronize beginDate and endDate with stripe
-          await transaction.query(`
+          await transaction.query(
+            `
             UPDATE "membershipPeriods" mp
             SET
               "webhookEventId" = :webhookEventId,
@@ -87,34 +92,43 @@ module.exports = {
             WHERE
               ARRAY[mp."membershipId"] && :membershipIds AND
               mp."webhookEventId" is null
-          `, {
-            webhookEventId: event.id,
-            beginDate,
-            endDate,
-            now: new Date(),
-            membershipIds: memberships.map(m => m.id)
-          })
+          `,
+            {
+              webhookEventId: event.id,
+              beginDate,
+              endDate,
+              now: new Date(),
+              membershipIds: memberships.map((m) => m.id),
+            },
+          )
         } else {
           // check for duplicate event
-          if (!(await transaction.public.membershipPeriods.findFirst({
-            webhookEventId: event.id })
-          )) {
-            // insert membershipPeriods
-            await Promise.all(memberships.map(membership => {
-              return transaction.public.membershipPeriods.insert({
-                membershipId: membership.id,
-                pledgeId: pledge.id,
-                beginDate,
-                endDate,
-                webhookEventId: event.id
-              })
+          if (
+            !(await transaction.public.membershipPeriods.findFirst({
+              webhookEventId: event.id,
             }))
-            await transaction.public.memberships.update({
-              id: memberships.map(m => m.id)
-            }, {
-              active: true,
-              updatedAt: new Date()
-            })
+          ) {
+            // insert membershipPeriods
+            await Promise.all(
+              memberships.map((membership) => {
+                return transaction.public.membershipPeriods.insert({
+                  membershipId: membership.id,
+                  pledgeId: pledge.id,
+                  beginDate,
+                  endDate,
+                  webhookEventId: event.id,
+                })
+              }),
+            )
+            await transaction.public.memberships.update(
+              {
+                id: memberships.map((m) => m.id),
+              },
+              {
+                active: true,
+                updatedAt: new Date(),
+              },
+            )
           }
         }
         await transaction.transactionCommit()
@@ -125,5 +139,5 @@ module.exports = {
         throw e
       }
     }
-  }
+  },
 }

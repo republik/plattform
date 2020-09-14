@@ -1,7 +1,9 @@
 const debug = require('debug')('discussions:lib:stats:last')
 const Promise = require('bluebird')
 
-const { cache: { create } } = require('@orbiting/backend-modules-utils')
+const {
+  cache: { create },
+} = require('@orbiting/backend-modules-utils')
 
 const interval = '30 days'
 
@@ -17,7 +19,9 @@ WITH "commentsVotes" AS (
     'comment' "engagement"
 
   FROM "comments" c
-  WHERE c."userId" IS NOT NULL ${last ? 'AND c."createdAt" >= now() - :interval::interval' : ''}
+  WHERE c."userId" IS NOT NULL ${
+    last ? 'AND c."createdAt" >= now() - :interval::interval' : ''
+  }
 
   UNION
 
@@ -29,7 +33,9 @@ WITH "commentsVotes" AS (
     'vote' "engagement"
 
   FROM "comments" c, jsonb_to_recordset(c.votes) AS v("userId" uuid)
-  WHERE v."userId" IS NOT NULL ${last ? 'AND c."createdAt" >= now() - :interval::interval' : ''}
+  WHERE v."userId" IS NOT NULL ${
+    last ? 'AND c."createdAt" >= now() - :interval::interval' : ''
+  }
 )
 
 SELECT
@@ -45,15 +51,16 @@ FROM "commentsVotes" cv
 ${last ? '' : 'GROUP BY 1'}
 `
 
-const createCache = (context) => create(
-  {
-    namespace: 'discussions',
-    prefix: 'stats:last',
-    key: 'any',
-    ttl: QUERY_CACHE_TTL_SECONDS,
-  },
-  context
-)
+const createCache = (context) =>
+  create(
+    {
+      namespace: 'discussions',
+      prefix: 'stats:last',
+      key: 'any',
+      ttl: QUERY_CACHE_TTL_SECONDS,
+    },
+    context,
+  )
 
 const populate = async (context, dry) => {
   debug('populate')
@@ -66,7 +73,7 @@ const populate = async (context, dry) => {
     await createCache(context).set({
       result: result[0],
       updatedAt: new Date(),
-      key: 'discussions:stats:last'
+      key: 'discussions:stats:last',
     })
   }
 
@@ -76,5 +83,5 @@ const populate = async (context, dry) => {
 module.exports = {
   buildQuery,
   createCache,
-  populate
+  populate,
 }

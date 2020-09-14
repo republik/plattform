@@ -15,26 +15,29 @@ const sendCandidacyConfirmation = async ({ user, election, pgdb, t }) => {
     // either "election_candidacy_confirmation"
     // or "election_candidacy_confirmation_slugsomething"
     ['election_candidacy_confirmation', slug].filter(Boolean).join('_'),
-    { user, t, pgdb }
+    { user, t, pgdb },
   )
 }
 
 module.exports = {
   // Onboarding
-  sendCandidacyConfirmation
+  sendCandidacyConfirmation,
 }
 
 const sendMail = async (to, templateName, { user, t, pgdb }) => {
-  const mail = await sendMailTemplate({
-    to,
-    fromEmail: process.env.DEFAULT_MAIL_FROM_ADDRESS,
-    subject: t(
-      `api/election/email/${templateName}/subject`,
-      getTranslationVars(user)
-    ),
-    templateName,
-    globalMergeVars: getGlobalMergeVars()
-  }, { pgdb })
+  const mail = await sendMailTemplate(
+    {
+      to,
+      fromEmail: process.env.DEFAULT_MAIL_FROM_ADDRESS,
+      subject: t(
+        `api/election/email/${templateName}/subject`,
+        getTranslationVars(user),
+      ),
+      templateName,
+      globalMergeVars: getGlobalMergeVars(),
+    },
+    { pgdb },
+  )
 
   return mail
 }
@@ -43,18 +46,12 @@ const getTranslationVars = (user) => {
   const safeUser = transformUser(user)
 
   return {
-    nameOrEmail: safeUser.name || safeUser.email
+    nameOrEmail: safeUser.name || safeUser.email,
   }
 }
 
-const getGlobalMergeVars = () => ([
-  { name: 'FRONTEND_BASE_URL',
-    content: FRONTEND_BASE_URL
-  },
-  { name: 'LINK_PROJECTR',
-    content: 'https://project-r.construction/'
-  },
-  { name: 'LINK_ETIQUETTE',
-    content: `${FRONTEND_BASE_URL}/etikette`
-  }
-])
+const getGlobalMergeVars = () => [
+  { name: 'FRONTEND_BASE_URL', content: FRONTEND_BASE_URL },
+  { name: 'LINK_PROJECTR', content: 'https://project-r.construction/' },
+  { name: 'LINK_ETIQUETTE', content: `${FRONTEND_BASE_URL}/etikette` },
+]

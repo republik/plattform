@@ -28,22 +28,29 @@ const LOGOUT_USER_MUTATION = `
   }
 `
 
-const authorizeSession = async ({ email, tokens, apolloFetch = global.instance.apolloFetch }) => {
+const authorizeSession = async ({
+  email,
+  tokens,
+  apolloFetch = global.instance.apolloFetch,
+}) => {
   return apolloFetch({
     query: AUTHORIZE_SESSION_MUTATION,
     variables: {
       email,
-      tokens
-    }
+      tokens,
+    },
   })
 }
 
-const preferredFirstFactor = async ({ tokenType, apolloFetch = global.instance.apolloFetch }) => {
+const preferredFirstFactor = async ({
+  tokenType,
+  apolloFetch = global.instance.apolloFetch,
+}) => {
   return apolloFetch({
     query: PREFERED_FIRST_FACTOR_MUTATION,
     variables: {
-      tokenType
-    }
+      tokenType,
+    },
   })
 }
 
@@ -54,7 +61,7 @@ const signIn = async ({
   skipAuthorization = false,
   simulate2FAAuth = false,
   tokenType = null,
-  newCookieStore = false
+  newCookieStore = false,
 }) => {
   const { pgdb } = global.instance.context
 
@@ -82,8 +89,8 @@ const signIn = async ({
     variables: {
       email,
       context,
-      tokenType
-    }
+      tokenType,
+    },
   })
 
   const tokens = await pgdb.public.tokens.find({ email: email }, { limit: 1 })
@@ -92,23 +99,26 @@ const signIn = async ({
 
   if (simulate2FAAuth) {
     const session = await pgdb.public.sessions.findOne({
-      id: sessionId
+      id: sessionId,
     })
-    await pgdb.public.sessions.updateOne({
-      id: sessionId
-    }, {
-      'sess': {
-        ...session.sess,
-        passport: {
-          user: user.id
-        }
-      }
-    })
+    await pgdb.public.sessions.updateOne(
+      {
+        id: sessionId,
+      },
+      {
+        sess: {
+          ...session.sess,
+          passport: {
+            user: user.id,
+          },
+        },
+      },
+    )
   } else if (!skipAuthorization) {
     await authorizeSession({
       email,
       tokens: [{ type: tokenTypeResult, payload }],
-      apolloFetch
+      apolloFetch,
     })
   }
 
@@ -120,11 +130,16 @@ const signIn = async ({
     payload,
     email,
     signInResult,
-    apolloFetch
+    apolloFetch,
   }
 }
 
-const unauthorizedSession = async ({ user, type, payload, apolloFetch = global.instance.apolloFetch }) => {
+const unauthorizedSession = async ({
+  user,
+  type,
+  payload,
+  apolloFetch = global.instance.apolloFetch,
+}) => {
   const result = await apolloFetch({
     query: `
       query unauthorizedSession($email: String!, $type: SignInTokenType!, $payload: String!) {
@@ -142,13 +157,18 @@ const unauthorizedSession = async ({ user, type, payload, apolloFetch = global.i
     variables: {
       email: user.email,
       type,
-      payload
-    }
+      payload,
+    },
   })
   return (result && result.data && result.data.unauthorizedSession) || {}
 }
 
-const denySession = async ({ user, type, payload, apolloFetch = global.instance.apolloFetch }) => {
+const denySession = async ({
+  user,
+  type,
+  payload,
+  apolloFetch = global.instance.apolloFetch,
+}) => {
   const result = await apolloFetch({
     query: `
       mutation denySession($email: String!, $type: SignInTokenType!, $payload: String!) {
@@ -158,13 +178,17 @@ const denySession = async ({ user, type, payload, apolloFetch = global.instance.
     variables: {
       email: user.email,
       type,
-      payload
-    }
+      payload,
+    },
   })
   return result && result.data && result.data.denySession
 }
 
-const updateTwoFactorAuthentication = async ({ enabled, type, apolloFetch = global.instance.apolloFetch }) => {
+const updateTwoFactorAuthentication = async ({
+  enabled,
+  type,
+  apolloFetch = global.instance.apolloFetch,
+}) => {
   const result = await apolloFetch({
     query: `
       mutation updateTwoFactorAuthentication($enabled: Boolean!, $type: SignInTokenType!) {
@@ -173,24 +197,29 @@ const updateTwoFactorAuthentication = async ({ enabled, type, apolloFetch = glob
     `,
     variables: {
       enabled,
-      type
-    }
+      type,
+    },
   })
   return result && result.data && result.data.updateTwoFactorAuthentication
 }
 
-const sendPhoneNumberVerificationCode = async ({ apolloFetch = global.instance.apolloFetch } = {}) => {
+const sendPhoneNumberVerificationCode = async ({
+  apolloFetch = global.instance.apolloFetch,
+} = {}) => {
   const result = await apolloFetch({
     query: `
       mutation sendPhoneNumberVerificationCode {
         sendPhoneNumberVerificationCode
       }
-    `
+    `,
   })
   return result && result.data && result.data.sendPhoneNumberVerificationCode
 }
 
-const verifyPhoneNumber = async ({ verificationCode, apolloFetch = global.instance.apolloFetch }) => {
+const verifyPhoneNumber = async ({
+  verificationCode,
+  apolloFetch = global.instance.apolloFetch,
+}) => {
   const result = await apolloFetch({
     query: `
       mutation verifyPhoneNumber($verificationCode: String!) {
@@ -198,15 +227,15 @@ const verifyPhoneNumber = async ({ verificationCode, apolloFetch = global.instan
       }
     `,
     variables: {
-      verificationCode
-    }
+      verificationCode,
+    },
   })
   return result && result.data && result.data.verifyPhoneNumber
 }
 
 const signOut = async ({ apolloFetch = global.instance.apolloFetch } = {}) => {
   await apolloFetch({
-    query: LOGOUT_USER_MUTATION
+    query: LOGOUT_USER_MUTATION,
   })
   const result = await me({ apolloFetch })
   expect(result).toBeTruthy()
@@ -214,7 +243,9 @@ const signOut = async ({ apolloFetch = global.instance.apolloFetch } = {}) => {
   expect(result.data.me).toBeFalsy()
 }
 
-const initTOTPSharedSecret = async ({ apolloFetch = global.instance.apolloFetch } = {}) => {
+const initTOTPSharedSecret = async ({
+  apolloFetch = global.instance.apolloFetch,
+} = {}) => {
   const result = await apolloFetch({
     query: `
       mutation initTOTPSharedSecret {
@@ -222,12 +253,15 @@ const initTOTPSharedSecret = async ({ apolloFetch = global.instance.apolloFetch 
           secret
         }
       }
-    `
+    `,
   })
   return (result && result.data && result.data.initTOTPSharedSecret) || {}
 }
 
-const validateTOTPSharedSecret = async ({ totp, apolloFetch = global.instance.apolloFetch }) => {
+const validateTOTPSharedSecret = async ({
+  totp,
+  apolloFetch = global.instance.apolloFetch,
+}) => {
   const result = await apolloFetch({
     query: `
       mutation validateTOTPSharedSecret($totp: String!) {
@@ -235,13 +269,16 @@ const validateTOTPSharedSecret = async ({ totp, apolloFetch = global.instance.ap
       }
     `,
     variables: {
-      totp
-    }
+      totp,
+    },
   })
   return result && result.data && result.data.validateTOTPSharedSecret
 }
 
-const updateEmail = async ({ email, apolloFetch = global.instance.apolloFetch }) => {
+const updateEmail = async ({
+  email,
+  apolloFetch = global.instance.apolloFetch,
+}) => {
   const result = await apolloFetch({
     query: `
       mutation updateEmail($email: String!) {
@@ -251,13 +288,17 @@ const updateEmail = async ({ email, apolloFetch = global.instance.apolloFetch })
       }
     `,
     variables: {
-      email
-    }
+      email,
+    },
   })
   return (result && result.data && result.data.updateEmail) || {}
 }
 
-const startChallenge = async ({ sessionId, type, apolloFetch = global.instance.apolloFetch }) => {
+const startChallenge = async ({
+  sessionId,
+  type,
+  apolloFetch = global.instance.apolloFetch,
+}) => {
   const result = await apolloFetch({
     query: `
       mutation startChallenge($sessionId: ID!, $type: SignInTokenType!) {
@@ -266,8 +307,8 @@ const startChallenge = async ({ sessionId, type, apolloFetch = global.instance.a
     `,
     variables: {
       sessionId,
-      type
-    }
+      type,
+    },
   })
   return (result && result.data && result.data.updateEmail) || {}
 }
@@ -288,7 +329,7 @@ const me = async ({ apolloFetch = global.instance.apolloFetch } = {}) => {
           }
         }
       }
-    `
+    `,
   })
 }
 
@@ -304,7 +345,7 @@ const Unverified = {
   TOTPChallengeSecret: null,
   isTOTPChallengeSecretVerified: false,
   enabledSecondFactors: [],
-  verified: false
+  verified: false,
 }
 
 const Member = {
@@ -319,7 +360,7 @@ const Member = {
   TOTPChallengeSecret: null,
   isTOTPChallengeSecretVerified: false,
   enabledSecondFactors: [],
-  verified: true
+  verified: true,
 }
 
 const Supporter = {
@@ -334,7 +375,7 @@ const Supporter = {
   TOTPChallengeSecret: null,
   isTOTPChallengeSecretVerified: false,
   enabledSecondFactors: [],
-  verified: true
+  verified: true,
 }
 
 const Admin = {
@@ -349,7 +390,7 @@ const Admin = {
   TOTPChallengeSecret: null,
   isTOTPChallengeSecretVerified: false,
   enabledSecondFactors: [],
-  verified: true
+  verified: true,
 }
 
 const TwoFactorMember = {
@@ -364,22 +405,22 @@ const TwoFactorMember = {
   TOTPChallengeSecret: 'JVJTCLCFOQTDMZBSHQSHQ3B2MESXOO2WPF2HCYJEJB5TCRRMII7A',
   isTOTPChallengeSecretVerified: true,
   enabledSecondFactors: [],
-  verified: true
+  verified: true,
 }
 
 const Editor = {
   id: 'a0000000-0000-4000-8001-000000000010',
   email: 'alice.smith@test.project-r.construction',
-  roles: [ 'editor' ],
+  roles: ['editor'],
   firstName: 'Alice',
   lastName: 'Smith',
-  emailAccessRole: 'PUBLIC'
+  emailAccessRole: 'PUBLIC',
 }
 
 const Anonymous = {
   firstName: null,
   lastName: null,
-  email: null
+  email: null,
 }
 
 module.exports = {
@@ -404,6 +445,6 @@ module.exports = {
     Member,
     TwoFactorMember,
     Admin,
-    Editor
-  }
+    Editor,
+  },
 }

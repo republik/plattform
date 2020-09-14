@@ -1,3 +1,3 @@
 module.exports = {
-  MembershipType: require('./MembershipType')
+  MembershipType: require('./MembershipType'),
 }

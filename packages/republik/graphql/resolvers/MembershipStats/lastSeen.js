@@ -8,7 +8,9 @@ module.exports = async (_, args, context) => {
 
   // In case pre-populated data is not available...
   if (!data) {
-    throw new Error('Unable to retrieve pre-populated data for MembershipStats.lastSeen')
+    throw new Error(
+      'Unable to retrieve pre-populated data for MembershipStats.lastSeen',
+    )
   }
 
   // Retrieve pre-populated data.
@@ -28,6 +30,6 @@ module.exports = async (_, args, context) => {
 
   return {
     buckets: result.filter(({ key }) => keys.includes(key)),
-    updatedAt
+    updatedAt,
   }
 }

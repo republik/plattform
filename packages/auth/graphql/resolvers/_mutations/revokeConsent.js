@@ -10,9 +10,9 @@ module.exports = async (_, { name }, context) => {
   await Consents.revokeConsent(
     {
       userId: me.id,
-      consent: name
+      consent: name,
     },
-    context
+    context,
   )
 
   return me

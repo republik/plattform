@@ -7,12 +7,11 @@ const status = (userId, { pgdb }) =>
   Consents.lastRecordForPolicyForUser({
     userId,
     policy: POLICY_NAME,
-    pgdb
-  })
-    .then(record => record && record.record === 'GRANT')
+    pgdb,
+  }).then((record) => record && record.record === 'GRANT')
 
 module.exports = {
   COLLECTION_NAME,
   POLICY_NAME,
-  status
+  status,
 }

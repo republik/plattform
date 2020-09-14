@@ -12,5 +12,5 @@ const addSuffix = (url) => {
 }
 
 module.exports = {
-  addSuffix
+  addSuffix,
 }

@@ -18,7 +18,7 @@ const getSort = (args) => {
     CREATED_AT: 'createdAt',
     NAME: 'name.keyword',
     PUSHED_AT: 'latestCommit.date',
-    UPDATED_AT: 'updatedAt'
+    UPDATED_AT: 'updatedAt',
     // 'STARGAZERS' is not implemented. Keeping in sync is hard.
   }
 
@@ -26,17 +26,16 @@ const getSort = (args) => {
 
   if (!field) {
     throw new Error(
-      `Unable to order by "${args.orderBy.field}", probably missing or not implemented.`
+      `Unable to order by "${args.orderBy.field}", probably missing or not implemented.`,
     )
   }
 
   return {
     sort: {
-      [field]:
-        args.orderBy.direction
-          ? args.orderBy.direction.toLowerCase()
-          : 'asc' // Default direction if not available.
-    }
+      [field]: args.orderBy.direction
+        ? args.orderBy.direction.toLowerCase()
+        : 'asc', // Default direction if not available.
+    },
   }
 }
 
@@ -55,9 +54,9 @@ const getSourceFilter = () => ({
       'contentStrings',
       'createdAt',
       'name',
-      'updatedAt'
-    ]
-  }
+      'updatedAt',
+    ],
+  },
 })
 
 /**
@@ -93,21 +92,17 @@ const find = async (args, { elastic }) => {
     'contentStrings.subject',
     'contentStrings.text',
     'contentStrings.title',
-    'name'
+    'name',
   ]
 
   const query = {
     bool: {
-      must: [
-        { term: { isArchived: false } }
-      ]
-    }
+      must: [{ term: { isArchived: false } }],
+    },
   }
 
   if (args.id) {
-    query.bool.must.push(
-      { term: { _id: args.id } }
-    )
+    query.bool.must.push({ term: { _id: args.id } })
   }
 
   if (args.search) {
@@ -115,14 +110,14 @@ const find = async (args, { elastic }) => {
       simple_query_string: {
         query: args.search,
         fields,
-        default_operator: 'AND'
-      }
+        default_operator: 'AND',
+      },
     })
   }
 
   if (args.template) {
     query.bool.must.push({
-      term: { 'contentMeta.template': args.template }
+      term: { 'contentMeta.template': args.template },
     })
   }
 
@@ -133,21 +128,20 @@ const find = async (args, { elastic }) => {
     body: {
       ...getSort(args),
       ...getSourceFilter(),
-      query
-    }
+      query,
+    },
   })
 }
 
 const mapHit = ({ _source }) => {
   _source.latestCommit.repo = {
-    id: _source.id
+    id: _source.id,
   }
 
   return _source
 }
 
-
 module.exports = {
   find,
-  mapHit
+  mapHit,
 }

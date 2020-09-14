@@ -7,11 +7,9 @@ const setDiscussionPreferences = async ({
   discussion,
   transaction,
   t,
-  loaders
+  loaders,
 }) => {
-  const {
-    credential: credentialDescription
-  } = discussionPreferences
+  const { credential: credentialDescription } = discussionPreferences
 
   // default anonymity
   let anonymity
@@ -35,19 +33,19 @@ const setDiscussionPreferences = async ({
       error: t('profile/generic/notInRange', {
         key: t('profile/credential/label'),
         min: 1,
-        max: MAX_CREDENTIAL_LENGTH
-      })
+        max: MAX_CREDENTIAL_LENGTH,
+      }),
     })
     const existingCredential = await transaction.public.credentials.findOne({
       userId,
-      description: credentialDescription
+      description: credentialDescription,
     })
     if (existingCredential) {
       credentialId = existingCredential.id
     } else {
       const newCredential = await transaction.public.credentials.insertAndGet({
         userId,
-        description: credentialDescription
+        description: credentialDescription,
       })
       credentialId = newCredential.id
     }
@@ -57,38 +55,45 @@ const setDiscussionPreferences = async ({
 
   const findQuery = {
     userId,
-    discussionId: discussion.id
+    discussionId: discussion.id,
   }
-  const existingDP = await transaction.public.discussionPreferences.findOne(findQuery)
+  const existingDP = await transaction.public.discussionPreferences.findOne(
+    findQuery,
+  )
   const user = await transaction.public.users.findOne({ id: userId })
 
   const updateQuery = {
     userId,
     discussionId: discussion.id,
     anonymous: anonymity,
-    ...credentialId !== undefined
-      ? { credentialId }
-      : { },
+    ...(credentialId !== undefined ? { credentialId } : {}),
     notificationOption:
       discussionPreferences.notifications ||
       (existingDP && existingDP.notificationOption) ||
-      user.defaultDiscussionNotificationOption
+      user.defaultDiscussionNotificationOption,
   }
   const options = {
-    skipUndefined: true
+    skipUndefined: true,
   }
 
   let mutation
 
   if (existingDP) {
-    mutation = transaction.public.discussionPreferences.updateOne(findQuery, updateQuery, options)
+    mutation = transaction.public.discussionPreferences.updateOne(
+      findQuery,
+      updateQuery,
+      options,
+    )
   } else {
-    mutation = transaction.public.discussionPreferences.insert(updateQuery, options)
+    mutation = transaction.public.discussionPreferences.insert(
+      updateQuery,
+      options,
+    )
   }
 
   await Promise.all([
     mutation,
-    loaders.Discussion.Commenter.discussionPreferences.clear(findQuery)
+    loaders.Discussion.Commenter.discussionPreferences.clear(findQuery),
   ])
 
   await ensureAnonymousDifferentiator({
@@ -96,7 +101,7 @@ const setDiscussionPreferences = async ({
     userId,
     discussion,
     t,
-    loaders
+    loaders,
   })
 }
 
@@ -105,22 +110,26 @@ const ensureAnonymousDifferentiator = async ({
   userId,
   discussion,
   t,
-  loaders
+  loaders,
 }) => {
   // const discussionId = discussion.id
   const discussionId = discussion.id
   const findQuery = {
-    userId, discussionId
+    userId,
+    discussionId,
   }
 
-  const preferences = await transaction.public.discussionPreferences.findOne(findQuery)
+  const preferences = await transaction.public.discussionPreferences.findOne(
+    findQuery,
+  )
 
   if (preferences && preferences.anonymousDifferentiator) {
     return
   }
 
   const amountOfComments = await transaction.public.comments.count({
-    userId, discussionId
+    userId,
+    discussionId,
   })
 
   if (amountOfComments === 0) {
@@ -140,7 +149,7 @@ const ensureAnonymousDifferentiator = async ({
       discussion,
       transaction,
       t,
-      loaders
+      loaders,
     })
 
     return
@@ -150,24 +159,29 @@ const ensureAnonymousDifferentiator = async ({
     return
   }
 
-  const lastUsed = await transaction.public.discussionPreferences.findFirst({
-    discussionId: discussion.id,
-    'anonymousDifferentiator !=': null
-  }, { orderBy: { anonymousDifferentiator: 'DESC' } })
-  const anonymousDifferentiator = lastUsed ? lastUsed.anonymousDifferentiator + 1 : 1
+  const lastUsed = await transaction.public.discussionPreferences.findFirst(
+    {
+      discussionId: discussion.id,
+      'anonymousDifferentiator !=': null,
+    },
+    { orderBy: { anonymousDifferentiator: 'DESC' } },
+  )
+  const anonymousDifferentiator = lastUsed
+    ? lastUsed.anonymousDifferentiator + 1
+    : 1
 
   await Promise.all([
     transaction.public.discussionPreferences.updateOne(findQuery, {
-      anonymousDifferentiator
+      anonymousDifferentiator,
     }),
     loaders.Discussion.Commenter.discussionPreferences.clear({
       userId: userId,
-      discussionId: discussionId
-    })
+      discussionId: discussionId,
+    }),
   ])
 }
 
 module.exports = {
   setDiscussionPreferences,
-  ensureAnonymousDifferentiator
+  ensureAnonymousDifferentiator,
 }

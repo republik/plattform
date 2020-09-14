@@ -7,7 +7,7 @@ module.exports = {
       (update) =>
         update &&
         update.comment &&
-        update.comment.node.discussionId === args.discussionId
+        update.comment.node.discussionId === args.discussionId,
     )()
-  }
+  },
 }

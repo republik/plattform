@@ -23,5 +23,5 @@ module.exports = {
     }
 
     return candidacy.user.address.city
-  }
+  },
 }

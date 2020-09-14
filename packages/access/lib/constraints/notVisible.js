@@ -10,10 +10,10 @@ const isGrantable = () => true
 const getMeta = () => ({
   visible: false,
   grantable: null,
-  payload: {}
+  payload: {},
 })
 
 module.exports = {
   isGrantable,
-  getMeta
+  getMeta,
 }

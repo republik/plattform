@@ -2,15 +2,8 @@ const { Roles } = require('@orbiting/backend-modules-auth')
 const slack = require('../../../lib/slack')
 
 module.exports = async (_, args, context) => {
-  const {
-    id
-  } = args
-  const {
-    pgdb,
-    user: me,
-    t,
-    loaders
-  } = context
+  const { id } = args
+  const { pgdb, user: me, t, loaders } = context
   Roles.ensureUserHasRole(me, 'member')
 
   const comment = await loaders.Comment.byId.load(id)
@@ -19,10 +12,7 @@ module.exports = async (_, args, context) => {
   }
   const discussion = await loaders.Discussion.byId.load(comment.discussionId)
 
-  const {
-    id: commentId,
-    userId: authorId
-  } = comment
+  const { id: commentId, userId: authorId } = comment
 
   if (authorId && authorId === me.id) {
     throw new Error(t('api/comment/report/notYours'))
@@ -31,11 +21,14 @@ module.exports = async (_, args, context) => {
   let newComment
   const transaction = await pgdb.transactionBegin()
   try {
-    const existingComment = await pgdb.queryOne(`
+    const existingComment = await pgdb.queryOne(
+      `
       SELECT c.* FROM comments c WHERE c.id = :commentId FOR UPDATE
-    `, {
-      commentId
-    })
+    `,
+      {
+        commentId,
+      },
+    )
     if (!existingComment) {
       throw new Error(t('api/comment/404'))
     }
@@ -44,11 +37,11 @@ module.exports = async (_, args, context) => {
     if (reports.findIndex(({ userId }) => userId === me.id) < 0) {
       reports.unshift({
         userId: me.id,
-        reportedAt: new Date()
+        reportedAt: new Date(),
       })
       newComment = await pgdb.public.comments.updateAndGetOne(
         { id: commentId },
-        { reports }
+        { reports },
       )
     }
 

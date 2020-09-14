@@ -1,7 +1,9 @@
 const { Roles, transformUser } = require('@orbiting/backend-modules-auth')
 const { autoPayIsMutable: autoPayIsMutableResolver } = require('../Membership')
 const createCache = require('../../../lib/cache')
-const { publishMonitor } = require('@orbiting/backend-modules-republik/lib/slack')
+const {
+  publishMonitor,
+} = require('@orbiting/backend-modules-republik/lib/slack')
 
 module.exports = async (_, { id, autoPay }, context) => {
   const { user: me, t, req } = context
@@ -10,7 +12,7 @@ module.exports = async (_, { id, autoPay }, context) => {
 
   try {
     const membership = await transaction.public.memberships.findOne({
-      id: id
+      id: id,
     })
 
     if (!membership) {
@@ -18,20 +20,19 @@ module.exports = async (_, { id, autoPay }, context) => {
     }
 
     const membershipUser = transformUser(
-      await transaction.public.users.findOne({ id: membership.userId })
+      await transaction.public.users.findOne({ id: membership.userId }),
     )
 
     Roles.ensureUserIsMeOrInRoles(membershipUser, me, ['supporter'])
 
-    const autoPayIsMutable = await autoPayIsMutableResolver(
-      membership,
-      null,
-      { ...context, pgdb: transaction }
-    )
+    const autoPayIsMutable = await autoPayIsMutableResolver(membership, null, {
+      ...context,
+      pgdb: transaction,
+    })
 
     if (!autoPayIsMutable) {
       throw new Error(
-        t('api/membership/auto_pay_not_mutable', { id: membership.id })
+        t('api/membership/auto_pay_not_mutable', { id: membership.id }),
       )
     }
 
@@ -39,22 +40,30 @@ module.exports = async (_, { id, autoPay }, context) => {
       return membership
     }
 
-    const updatedMembership = await transaction.public.memberships.updateAndGetOne({
-      id
-    }, {
-      autoPay
-    })
+    const updatedMembership = await transaction.public.memberships.updateAndGetOne(
+      {
+        id,
+      },
+      {
+        autoPay,
+      },
+    )
 
     await transaction.transactionCommit()
 
-    await createCache({
-      prefix: `User:${membership.userId}`
-    }, { redis: context.redis }).invalidate()
+    await createCache(
+      {
+        prefix: `User:${membership.userId}`,
+      },
+      { redis: context.redis },
+    ).invalidate()
 
     try {
       await publishMonitor(
         req.user,
-        `setMembershipAutoPay (id: ${id}) #${membership.sequenceNumber} to *${autoPay ? 'TRUE' : 'FALSE'}*\n{ADMIN_FRONTEND_BASE_URL}/users/${membership.userId}`
+        `setMembershipAutoPay (id: ${id}) #${membership.sequenceNumber} to *${
+          autoPay ? 'TRUE' : 'FALSE'
+        }*\n{ADMIN_FRONTEND_BASE_URL}/users/${membership.userId}`,
       )
     } catch (e) {
       // swallow slack message

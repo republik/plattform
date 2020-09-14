@@ -1,3 +1,3 @@
 module.exports = {
-	lib: require('./lib')
+  lib: require('./lib'),
 }

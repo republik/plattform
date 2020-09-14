@@ -27,17 +27,15 @@ module.exports = {
   coverageDirectory: 'tests/coverage',
 
   // An array of regexp pattern strings used to skip coverage collection
-  coveragePathIgnorePatterns: [
-    '/node_modules/'
-  ],
+  coveragePathIgnorePatterns: ['/node_modules/'],
 
   // A list of reporter names that Jest uses when writing coverage reports
   coverageReporters: [
     'html',
-    'lcov'
-  //   "json",
-  //   "text",
-  //   "clover"
+    'lcov',
+    //   "json",
+    //   "text",
+    //   "clover"
   ],
 
   // An object that configures minimum threshold enforcement for coverage results
@@ -127,7 +125,7 @@ module.exports = {
 
   // A list of paths to modules that run some code to configure or set up the testing framework before each test
   setupFilesAfterEnv: [
-    '<rootDir>/packages/test/jest/setupTestFrameworkScriptFile.js'
+    '<rootDir>/packages/test/jest/setupTestFrameworkScriptFile.js',
   ],
 
   // A list of paths to snapshot serializer modules Jest should use for snapshot testing
@@ -143,10 +141,7 @@ module.exports = {
   // testLocationInResults: false,
 
   // The glob patterns Jest uses to detect test files
-  testMatch: [
-    '**/__jest__/**/*.[jt]s?(x)',
-    '**/?(*.)+(spec|jest).[tj]s?(x)'
-  ],
+  testMatch: ['**/__jest__/**/*.[jt]s?(x)', '**/?(*.)+(spec|jest).[tj]s?(x)'],
 
   // An array of regexp pattern strings that are matched against all test paths, matched tests are skipped
   // testPathIgnorePatterns: [
@@ -183,7 +178,7 @@ module.exports = {
   // verbose: null,
 
   // An array of regexp patterns that are matched against all source file paths before re-running tests in watch mode
-  watchPathIgnorePatterns: ['<rootDir>/docker-data']
+  watchPathIgnorePatterns: ['<rootDir>/docker-data'],
 
   // Whether to use watchman for file crawling
   // watchman: true,

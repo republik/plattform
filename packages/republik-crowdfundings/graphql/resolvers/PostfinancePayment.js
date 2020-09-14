@@ -1,5 +1,5 @@
 module.exports = {
-  hidden (pfp) {
+  hidden(pfp) {
     return !!pfp.hidden
-  }
+  },
 }

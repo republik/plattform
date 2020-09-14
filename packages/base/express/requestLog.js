@@ -9,10 +9,14 @@ module.exports = server.use(function (req, res, next) {
       method: this.method,
       query: this.query,
       userId: this.user && this.user.id,
-      ip: this.headers['x-forwarded-for'] || this.connection.remoteAddress
+      ip: this.headers['x-forwarded-for'] || this.connection.remoteAddress,
     }
-    if (log.headers.cookie) { log.headers.cookie = 'REMOVED' }
-    if (log.headers.authorization) { log.headers.authorization = 'REMOVED' }
+    if (log.headers.cookie) {
+      log.headers.cookie = 'REMOVED'
+    }
+    if (log.headers.authorization) {
+      log.headers.authorization = 'REMOVED'
+    }
     return log
   }
   next()

@@ -3,10 +3,7 @@ const querystring = require('querystring')
 const crypto = require('crypto')
 const { getS3UrlForGithubPath } = require('./Repo')
 
-const {
-  ASSETS_SERVER_BASE_URL,
-  ASSETS_HMAC_KEY
-} = process.env
+const { ASSETS_SERVER_BASE_URL, ASSETS_HMAC_KEY } = process.env
 
 if (!ASSETS_HMAC_KEY) {
   console.warn('missing env ASSETS_HMAC_KEY, proxying urls will not work')
@@ -14,14 +11,11 @@ if (!ASSETS_HMAC_KEY) {
 
 const originalKey = 'originalURL'
 
-const authenticate = url => {
+const authenticate = (url) => {
   if (!ASSETS_HMAC_KEY) {
     throw new Error('missing ASSETS_HMAC_KEY')
   }
-  return crypto
-    .createHmac('sha256', ASSETS_HMAC_KEY)
-    .update(url)
-    .digest('hex')
+  return crypto.createHmac('sha256', ASSETS_HMAC_KEY).update(url).digest('hex')
 }
 
 module.exports = {
@@ -31,7 +25,7 @@ module.exports = {
     if (!repoId) {
       throw new Error('createRepoUrlPrefixer needs a repoId')
     }
-    return path => {
+    return (path) => {
       if (path && path.indexOf('images/') === 0) {
         let url
         if (_public) {
@@ -39,7 +33,7 @@ module.exports = {
         } else {
           url = new URL(`${ASSETS_SERVER_BASE_URL}/github/${repoId}/${path}`)
           url.hash = querystring.stringify({
-            [originalKey]: path
+            [originalKey]: path,
           })
         }
         originalPaths.push(path)
@@ -49,7 +43,7 @@ module.exports = {
     }
   },
 
-  createUrlPrefixer: _public => url => {
+  createUrlPrefixer: (_public) => (url) => {
     if (url === undefined || url === null) {
       return url
     }
@@ -60,25 +54,30 @@ module.exports = {
     ) {
       return url
     }
-    return `${ASSETS_SERVER_BASE_URL}/proxy?` + querystring.stringify({
-      [originalKey]: url,
-      mac: authenticate(url)
-    })
+    return (
+      `${ASSETS_SERVER_BASE_URL}/proxy?` +
+      querystring.stringify({
+        [originalKey]: url,
+        mac: authenticate(url),
+      })
+    )
   },
 
-  unprefixUrl: _url => {
+  unprefixUrl: (_url) => {
     try {
       const url = new URL(_url)
-      if (url.hash.length > 0) { // repo prefixed
+      if (url.hash.length > 0) {
+        // repo prefixed
         const hash = querystring.parse(url.hash.substring(1))
         const originalUrl = hash[originalKey]
         if (originalUrl) {
           return originalUrl
         }
-      } else if (url.searchParams && url.searchParams.get(originalKey)) { // embed prefixed
+      } else if (url.searchParams && url.searchParams.get(originalKey)) {
+        // embed prefixed
         return url.searchParams.get(originalKey)
       }
-    } catch (e) { }
+    } catch (e) {}
     return _url
-  }
+  },
 }

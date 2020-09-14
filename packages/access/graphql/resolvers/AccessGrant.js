@@ -8,8 +8,7 @@ const PRIVILEDGED_ROLES = ['admin', 'supporter']
 module.exports = {
   campaign: (grant, args, { pgdb }) => campaignsLib.findByGrant(grant, pgdb),
   granter: async (grant, args, { user: me, pgdb }) => {
-    const granter =
-      await pgdb.public.users.findOne({ id: grant.granterUserId })
+    const granter = await pgdb.public.users.findOne({ id: grant.granterUserId })
 
     if (!Roles.userIsMeOrInRoles(granter, me, ['admin', 'supporter'])) {
       return null
@@ -18,19 +17,20 @@ module.exports = {
     return transformUser(granter)
   },
   granterName: async (grant, args, { user: me, t, pgdb }) => {
-    const granter =
-      await pgdb.public.users.findOne({ id: grant.granterUserId })
+    const granter = await pgdb.public.users.findOne({ id: grant.granterUserId })
 
     const safeUser = transformUser(granter)
 
-    return safeUser.name ||
-      t('api/access/resolvers/AccessGrant/tallDarkStranger')
+    return (
+      safeUser.name || t('api/access/resolvers/AccessGrant/tallDarkStranger')
+    )
   },
   recipient: async (grant, args, { user: me, pgdb }) => {
     if (!grant.recipientUserId) return null
 
-    const recipient =
-      await pgdb.public.users.findOne({ id: grant.recipientUserId })
+    const recipient = await pgdb.public.users.findOne({
+      id: grant.recipientUserId,
+    })
 
     if (!Roles.userIsMeOrInRoles(recipient, me, ['admin', 'supporter'])) {
       return null
@@ -40,9 +40,10 @@ module.exports = {
   },
   recipientName: async (grant, args, { user: me, t, loaders }) => {
     const recipient = await loaders.User.byId.load(grant.recipientUserId)
-    
-    return recipient.name ||
-      t('api/access/resolvers/AccessGrant/tallDarkStranger')
+
+    return (
+      recipient.name || t('api/access/resolvers/AccessGrant/tallDarkStranger')
+    )
   },
   status: (grant, args, { user: me, t }) => {
     if (!Roles.userIsInRoles(me, PRIVILEDGED_ROLES)) {
@@ -69,5 +70,5 @@ module.exports = {
     }
 
     return eventsLib.findByGrant(grant, pgdb)
-  }
+  },
 }

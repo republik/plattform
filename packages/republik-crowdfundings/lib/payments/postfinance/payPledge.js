@@ -8,7 +8,7 @@ module.exports = async ({
   userId,
   transaction,
   t,
-  logger = console
+  logger = console,
 }) => {
   if (!pspPayload) {
     logger.error('pspPayload required', { pledgeId, pspPayload })
@@ -22,12 +22,21 @@ module.exports = async ({
   // sort params based on upper case order (urgh!)
   const paramsString = Object.keys(pspPayload)
     .sort((a, b) => ascending(a.toUpperCase(), b.toUpperCase()))
-    .filter(key => pspPayload[key])
-    .map(key => `${key.toUpperCase()}=${pspPayload[key]}${secret}`)
+    .filter((key) => pspPayload[key])
+    .map((key) => `${key.toUpperCase()}=${pspPayload[key]}${secret}`)
     .join('')
-  const shasum = crypto.createHash('sha1').update(paramsString).digest('hex').toUpperCase()
+  const shasum = crypto
+    .createHash('sha1')
+    .update(paramsString)
+    .digest('hex')
+    .toUpperCase()
   if (SHASIGN !== shasum) {
-    logger.error('SHASIGN not correct', { pledgeId, shasum, SHASIGN, pspPayload })
+    logger.error('SHASIGN not correct', {
+      pledgeId,
+      shasum,
+      SHASIGN,
+      pspPayload,
+    })
     throw new Error(t('api/pay/pf/error', { id: pledgeId }))
   }
 
@@ -35,7 +44,13 @@ module.exports = async ({
   // see: packages/republik-crowdfundings/express/paymentWebhooks.js
   const status = parseInt(STATUS)
   if (status !== 9 && status !== 91) {
-    logger.error('STATUS not successfull', { pledgeId, shasum, SHASIGN, status, pspPayload })
+    logger.error('STATUS not successfull', {
+      pledgeId,
+      shasum,
+      SHASIGN,
+      status,
+      pspPayload,
+    })
     throw new Error(t('api/pay/pf/error', { id: pledgeId }))
   }
 
@@ -53,22 +68,24 @@ module.exports = async ({
     total: pspPayload.amount * 100,
     status: 'PAID',
     pspId: PAYID,
-    pspPayload
+    pspPayload,
   })
 
   if (pspPayload.ALIAS) {
-    const paymentSourceExists = !!(await transaction.public.paymentSources.findFirst({
-      userId,
-      pspId: pspPayload.ALIAS,
-      method: 'POSTFINANCECARD'
-    }))
+    const paymentSourceExists = !!(await transaction.public.paymentSources.findFirst(
+      {
+        userId,
+        pspId: pspPayload.ALIAS,
+        method: 'POSTFINANCECARD',
+      },
+    ))
     if (!paymentSourceExists) {
       // save alias to user
       await transaction.public.paymentSources.insert({
         userId,
         method: 'POSTFINANCECARD',
         pspId: pspPayload.ALIAS,
-        pspPayload
+        pspPayload,
       })
     }
   }
@@ -78,7 +95,10 @@ module.exports = async ({
   // check if amount is correct
   // PF amount is suddendly in franken
   if (pspPayload.amount * 100 !== total) {
-    logger.info('payed amount doesnt match with pledge total', { pledgeId, pspPayload })
+    logger.info('payed amount doesnt match with pledge total', {
+      pledgeId,
+      pspPayload,
+    })
     pledgeStatus = 'PAID_INVESTIGATE'
   }
 
@@ -87,7 +107,7 @@ module.exports = async ({
     await transaction.public.paymentSources.insert({
       userId,
       method: 'POSTFINANCECARD',
-      pspId: pspPayload.ALIAS
+      pspId: pspPayload.ALIAS,
     })
   }
 
@@ -95,7 +115,7 @@ module.exports = async ({
   await transaction.public.pledgePayments.insert({
     pledgeId,
     paymentId: payment.id,
-    paymentType: 'PLEDGE'
+    paymentType: 'PLEDGE',
   })
 
   return pledgeStatus

@@ -1,3 +1,3 @@
 module.exports = {
-  sendTextMessage: require('./sendTextMessage')
+  sendTextMessage: require('./sendTextMessage'),
 }

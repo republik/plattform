@@ -1,4 +1,4 @@
 module.exports = {
-	lib: require('./lib'),
-	express: require('./express')
+  lib: require('./lib'),
+  express: require('./express'),
 }

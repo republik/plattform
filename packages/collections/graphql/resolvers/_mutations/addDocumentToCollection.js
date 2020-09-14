@@ -5,7 +5,11 @@ module.exports = async (_, { documentId, collectionName, data }, context) => {
   const { user: me, t, loaders } = context
   Roles.ensureUserHasRole(me, 'member')
 
-  const collection = await Collection.byNameForUser(collectionName, me.id, context)
+  const collection = await Collection.byNameForUser(
+    collectionName,
+    me.id,
+    context,
+  )
   if (!collection) {
     throw new Error(t(`api/collections/collection/404`))
   }
@@ -25,7 +29,7 @@ module.exports = async (_, { documentId, collectionName, data }, context) => {
     collection.id,
     repoId,
     data,
-    context
+    context,
   )
 
   return item

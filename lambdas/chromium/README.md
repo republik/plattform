@@ -6,7 +6,6 @@ API to puppeteer - chromium.
 
 [puppeteer]('https://github.com/GoogleChrome/puppeteer') tries to use locally available chromium (by [chrome-aws-lambda](https://github.com/alixaxel/chrome-aws-lambda)) otherwise tries to fall back to connect to `PUPPETEER_WS_ENDPOINT`
 
-
 ## ENVs
 
 see [.env.example]
@@ -16,8 +15,8 @@ now -e URL_ALLOWLIST=https://republik.ch,https://www.republik.ch,https://republi
 
 ```
 
-
 ## Endpoints
+
 - screenshot.js
   - example query: `/?url=:url[&width=:w][&heigth=:h][&zoomFactor=:sf][&fullPage=:fp][&format=:f][&quality=:q][&cookie=:c][&basicAuthUser=:u][&basicAuthPass=:p]`
   - renders ?url
@@ -37,7 +36,6 @@ now -e URL_ALLOWLIST=https://republik.ch,https://www.republik.ch,https://republi
     - supports `png`, `jpeg`
   - optional &quality
     - only for `jpeg`
-
 
 ## Credits
 

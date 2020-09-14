@@ -1,6 +1,4 @@
-const {
-  sendTextMessage
-} = require('@orbiting/backend-modules-sms')
+const { sendTextMessage } = require('@orbiting/backend-modules-sms')
 const { parse, format } = require('libphonenumber-js')
 const t = require('../t')
 
@@ -8,7 +6,7 @@ const MIN_IN_MS = 1000 * 60
 const TTL = 15 * MIN_IN_MS
 const Type = 'SMS'
 
-function generateSMSTokenCode () {
+function generateSMSTokenCode() {
   // 2’176’782’336 possibilities, assuming 30 ms takes
   // 700 days to bruteforce the code through the API
   let text = ''
@@ -19,7 +17,7 @@ function generateSMSTokenCode () {
   return text
 }
 
-async function getUserPhoneNumber (pgdb, email) {
+async function getUserPhoneNumber(pgdb, email) {
   const user = await pgdb.public.users.findOne({ email })
   try {
     const parsedPhoneNumber = parse(user.phoneNumber || '', 'CH') // it could be any arbitrary string
@@ -36,27 +34,29 @@ module.exports = {
     const phoneNumber = await getUserPhoneNumber(pgdb, user.email)
     await sendTextMessage({
       text: t('api/auth/sms/shared-secret', { sharedSecret }),
-      phoneNumber
+      phoneNumber,
     })
     await pgdb.public.users.updateAndGetOne(
       {
-        id: user.id
-      }, {
+        id: user.id,
+      },
+      {
         isPhoneNumberVerified: false,
-        phoneNumberVerificationCode: sharedSecret
-      }
+        phoneNumberVerificationCode: sharedSecret,
+      },
     )
     return sharedSecret
   },
   validateSharedSecret: async ({ pgdb, user }, { payload }) => {
-    const isMatch = (user.phoneNumberVerificationCode === payload)
+    const isMatch = user.phoneNumberVerificationCode === payload
     if (!isMatch) return false
     await pgdb.public.users.updateAndGetOne(
       {
-        id: user.id
-      }, {
-        isPhoneNumberVerified: true
-      }
+        id: user.id,
+      },
+      {
+        isPhoneNumberVerified: true,
+      },
     )
     return true
   },
@@ -74,16 +74,16 @@ module.exports = {
     const phoneNumber = await getUserPhoneNumber(pgdb, email)
     await sendTextMessage({
       text: t('api/auth/sms/your-code', { code: token.payload }),
-      phoneNumber
+      phoneNumber,
     })
     return true
   },
   validateChallenge: async ({ pgdb, user }, { payload }) => {
     const foundToken = await pgdb.public.tokens.findOne({
       type: Type,
-      payload: payload.toUpperCase()
+      payload: payload.toUpperCase(),
     })
 
     return foundToken && foundToken.id
-  }
+  },
 }

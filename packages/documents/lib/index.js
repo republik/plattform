@@ -3,5 +3,5 @@ module.exports = {
   html: require('./html'),
   meta: require('./meta'),
   process: require('./process'),
-  resolve: require('./resolve')
+  resolve: require('./resolve'),
 }

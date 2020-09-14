@@ -6,19 +6,17 @@ const snappy = require('snappy')
 const {
   SEARCH_CACHE_QUERY = false,
   SEARCH_CACHE_DISABLE = false,
-  SEARCH_CACHE_COMPRESSION = false
-} = process.env
+  SEARCH_CACHE_COMPRESSION = false,
+} = process.env
 
-const keyPrefix = `search:cache:${SEARCH_CACHE_COMPRESSION ? 'compressed:' : 'uncompressed'}`
+const keyPrefix = `search:cache:${
+  SEARCH_CACHE_COMPRESSION ? 'compressed:' : 'uncompressed'
+}`
 
-const getRedisKey = (query) =>
-  `${keyPrefix}${hashQuery(query)}`
+const getRedisKey = (query) => `${keyPrefix}${hashQuery(query)}`
 
 const hashQuery = (query) =>
-  crypto
-    .createHash('sha1')
-    .update(JSON.stringify(query))
-    .digest('hex')
+  crypto.createHash('sha1').update(JSON.stringify(query)).digest('hex')
 
 const createGet = (redis) => async (query) => {
   if (SEARCH_CACHE_DISABLE) {
@@ -27,9 +25,7 @@ const createGet = (redis) => async (query) => {
 
   const redisKey = getRedisKey(query)
   let payload = await redis.getAsync(
-    SEARCH_CACHE_COMPRESSION
-      ? Buffer.from(redisKey)
-      : redisKey
+    SEARCH_CACHE_COMPRESSION ? Buffer.from(redisKey) : redisKey,
   )
 
   debug('search:cache:get')(`${payload ? 'HIT' : 'MISS'} %O`, query)
@@ -40,8 +36,11 @@ const createGet = (redis) => async (query) => {
         payload = snappy.uncompressSync(payload)
       }
       return JSON.parse(payload).data
-    } catch(e) {
-      console.warn('Error while loading from search cache, removing key!', e, { redisKey, query })
+    } catch (e) {
+      console.warn('Error while loading from search cache, removing key!', e, {
+        redisKey,
+        query,
+      })
       await redis.delAsync(redisKey)
     }
   }
@@ -56,7 +55,7 @@ const createSet = (redis) => async (query, data, options = {}) => {
     try {
       payload = JSON.stringify({
         data,
-        ...SEARCH_CACHE_QUERY ? { query } : {}
+        ...(SEARCH_CACHE_QUERY ? { query } : {}),
       })
       if (SEARCH_CACHE_COMPRESSION) {
         payload = snappy.compressSync(payload)
@@ -73,7 +72,7 @@ const createSet = (redis) => async (query, data, options = {}) => {
         // - the data doesn't expire, old is valid, no need for redis to check
         // - we don't need to keep the cache small and want to cache aggressively
         getRedisKey(query),
-        payload
+        payload,
       )
     }
   }
@@ -82,11 +81,12 @@ const createSet = (redis) => async (query, data, options = {}) => {
 
 const createInvalidate = (redis) => async () => {
   debug('search:cache')('INVALIDATE')
-  await redis.scanMap({
-    pattern: `${keyPrefix}*`,
-    mapFn: (key, client) => client.delAsync(key)
-  })
-    .catch(() => {})// fails if no keys are matched
+  await redis
+    .scanMap({
+      pattern: `${keyPrefix}*`,
+      mapFn: (key, client) => client.delAsync(key),
+    })
+    .catch(() => {}) // fails if no keys are matched
 }
 
 const isEligible = (query, options) => {
@@ -103,5 +103,5 @@ const isEligible = (query, options) => {
 module.exports = (redis) => ({
   get: createGet(redis),
   set: createSet(redis),
-  invalidate: createInvalidate(redis)
+  invalidate: createInvalidate(redis),
 })

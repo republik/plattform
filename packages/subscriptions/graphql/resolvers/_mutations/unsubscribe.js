@@ -2,7 +2,12 @@ const { ensureSignedIn } = require('@orbiting/backend-modules-auth')
 const { unsubscribe } = require('../../../lib/Subscriptions')
 
 module.exports = async (_, args, context) => {
-  const { user: me, t, req, loaders: { Subscription } } = context
+  const {
+    user: me,
+    t,
+    req,
+    loaders: { Subscription },
+  } = context
   const { subscriptionId, filters } = args
   ensureSignedIn(req, t)
 
@@ -17,8 +22,8 @@ module.exports = async (_, args, context) => {
   return unsubscribe(
     {
       id: subscriptionId,
-      filters
+      filters,
     },
-    context
+    context,
   )
 }

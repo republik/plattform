@@ -1,3 +1,3 @@
 module.exports = {
-  Redirections: require('./Redirections')
+  Redirections: require('./Redirections'),
 }

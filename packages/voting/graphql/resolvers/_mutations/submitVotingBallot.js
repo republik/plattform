@@ -1,8 +1,5 @@
 const { ensureSignedIn } = require('@orbiting/backend-modules-auth')
-const {
-  findById,
-  ensureReadyToSubmit
-} = require('../../../lib/Voting')
+const { findById, ensureReadyToSubmit } = require('../../../lib/Voting')
 
 module.exports = async (_, { votingId, optionId }, context) => {
   const { pgdb, user: me, t, req } = context
@@ -12,10 +9,15 @@ module.exports = async (_, { votingId, optionId }, context) => {
   try {
     const now = new Date()
     const voting = await findById(votingId, transaction)
-    await ensureReadyToSubmit(voting, me.id, now, { ...context, pgdb: transaction })
+    await ensureReadyToSubmit(voting, me.id, now, {
+      ...context,
+      pgdb: transaction,
+    })
 
     if (optionId) {
-      const votingOption = await transaction.public.votingOptions.findOne({ id: optionId })
+      const votingOption = await transaction.public.votingOptions.findOne({
+        id: optionId,
+      })
       if (!votingOption) {
         throw new Error(t('api/voting/option/404'))
       }
@@ -31,7 +33,7 @@ module.exports = async (_, { votingId, optionId }, context) => {
       votingOptionId: optionId,
       userId: me.id,
       createdAt: now,
-      updatedAt: now
+      updatedAt: now,
     })
 
     await transaction.transactionCommit()

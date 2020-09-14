@@ -16,7 +16,7 @@ module.exports = async (_, { slug }, { pgdb, user: me, t }) => {
 
   await pgdb.public.electionCandidacies.deleteOne({
     userId: me.id,
-    electionId: election.id
+    electionId: election.id,
   })
 
   return election

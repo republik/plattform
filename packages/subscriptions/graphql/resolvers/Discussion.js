@@ -1,11 +1,12 @@
-const {
-  getSubscriptionsForUserAndObjects
-} = require('../../lib/Subscriptions')
+const { getSubscriptionsForUserAndObjects } = require('../../lib/Subscriptions')
 const { paginate } = require('@orbiting/backend-modules-utils')
 
 module.exports = {
-  async userSubscriptionsForCommenters (discussion, args, context) {
-    const { user: me, loaders: { Discussion } } = context
+  async userSubscriptionsForCommenters(discussion, args, context) {
+    const {
+      user: me,
+      loaders: { Discussion },
+    } = context
     if (!me) {
       return paginate(args, [])
     }
@@ -16,11 +17,11 @@ module.exports = {
       {
         type: 'User',
         ids: commenterIds,
-        filter: 'COMMENTS'
+        filter: 'COMMENTS',
       },
-      context
+      context,
     )
 
     return paginate(args, subscriptions)
-  }
+  },
 }

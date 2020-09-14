@@ -1,18 +1,17 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
-const { setDiscussionPreferences } = require('../../../lib/discussionPreferences')
+const {
+  setDiscussionPreferences,
+} = require('../../../lib/discussionPreferences')
 
 module.exports = async (_, args, { pgdb, user, t, loaders }) => {
   Roles.ensureUserHasRole(user, 'member')
 
-  const {
-    id,
-    discussionPreferences
-  } = args
+  const { id, discussionPreferences } = args
 
   const transaction = await pgdb.transactionBegin()
   try {
     const discussion = await transaction.public.discussions.findOne({
-      id
+      id,
     })
     if (!discussion) {
       throw new Error(t('api/discussion/404'))
@@ -24,7 +23,7 @@ module.exports = async (_, args, { pgdb, user, t, loaders }) => {
       discussion,
       transaction,
       t,
-      loaders
+      loaders,
     })
 
     await transaction.transactionCommit()

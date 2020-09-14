@@ -13,7 +13,7 @@ const getId = async () => {
 }
 
 module.exports = {
-  getId
+  getId,
 }
 
 if (process.argv[2] === 'cleanup') {

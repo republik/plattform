@@ -8,7 +8,7 @@ const {
   getCommit,
   getHeads,
   getAnnotatedTags,
-  getAnnotatedTag
+  getAnnotatedTag,
 } = require('../../lib/github')
 const { transformUser } = require('@orbiting/backend-modules-auth')
 const debug = require('debug')('publikator:repo')
@@ -22,24 +22,20 @@ module.exports = {
       return repo.latestCommit
     }
     return getHeads(repo.id, context)
-      .then(refs => refs
-        .map(ref => ref.target)
-        .sort((a, b) => descending(a.author.date, b.author.date))
-        .shift()
+      .then((refs) =>
+        refs
+          .map((ref) => ref.target)
+          .sort((a, b) => descending(a.author.date, b.author.date))
+          .shift(),
       )
-      .then(({ oid: sha }) =>
-        getCommit(repo, { id: sha }, context)
-      )
+      .then(({ oid: sha }) => getCommit(repo, { id: sha }, context))
   },
   commit: getCommit,
-  uncommittedChanges: async (
-    { id: repoId },
-    args,
-    { redis, pgdb }
-  ) => {
+  uncommittedChanges: async ({ id: repoId }, args, { redis, pgdb }) => {
     const minScore = new Date().getTime() - UNCOMMITTED_CHANGES_TTL
-    const result = await redis.zrangeAsync(repoId, 0, -1, 'WITHSCORES')
-      .then(objs => zipArray(objs))
+    const result = await redis
+      .zrangeAsync(repoId, 0, -1, 'WITHSCORES')
+      .then((objs) => zipArray(objs))
     redis.expireAsync(repoId, redis.__defaultExpireSeconds)
     let userIds = []
     let expiredUserIds = []
@@ -50,12 +46,13 @@ module.exports = {
         expiredUserIds.push(r.value)
       }
     }
-    await Promise.all(expiredUserIds.map(expiredKey =>
-      redis.zremAsync(repoId, expiredKey)
-    ))
+    await Promise.all(
+      expiredUserIds.map((expiredKey) => redis.zremAsync(repoId, expiredKey)),
+    )
     return userIds.length
-      ? pgdb.public.users.find({ id: userIds })
-        .then(users => users.map(transformUser))
+      ? pgdb.public.users
+          .find({ id: userIds })
+          .then((users) => users.map(transformUser))
       : []
   },
   milestones: (repo, args, context) => {
@@ -70,28 +67,24 @@ module.exports = {
     const { id: repoId } = repo
 
     const publicationMetaDecorator = (publication) => {
-      const {
-        scheduledAt = undefined,
-        updateMailchimp = false
-      } = yaml.parse(publication.message)
+      const { scheduledAt = undefined, updateMailchimp = false } = yaml.parse(
+        publication.message,
+      )
 
       return {
         ...publication,
         meta: {
           scheduledAt,
-          updateMailchimp
-        }
+          updateMailchimp,
+        },
       }
     }
 
-    const liveRefs = [
-      'publication',
-      'prepublication'
-    ]
+    const liveRefs = ['publication', 'prepublication']
     const refs = [
       ...liveRefs,
       'scheduled-publication',
-      'scheduled-prepublication'
+      'scheduled-prepublication',
     ]
 
     if (!repo.latestPublications) {
@@ -102,38 +95,31 @@ module.exports = {
     let annotatedTags = repo.latestPublications
       ? repo.latestPublications
       : await Promise.all(
-        refs.map(ref => getAnnotatedTag(repoId, ref, context))
-      )
-
-    return Promise.all(
-      annotatedTags
-    )
-      .then(tags => tags
-        .filter(tag => !!tag)
-        .map(tag => ({
-          ...tag,
-          sha: tag.oid,
-          live: liveRefs.indexOf(tag.refName) > -1
-        })
+          refs.map((ref) => getAnnotatedTag(repoId, ref, context)),
         )
+
+    return Promise.all(annotatedTags)
+      .then((tags) =>
+        tags
+          .filter((tag) => !!tag)
+          .map((tag) => ({
+            ...tag,
+            sha: tag.oid,
+            live: liveRefs.indexOf(tag.refName) > -1,
+          })),
       )
-      .then(tags => uniqBy(tags, 'name').map(publicationMetaDecorator))
+      .then((tags) => uniqBy(tags, 'name').map(publicationMetaDecorator))
   },
   meta: async (repo, args, context) => {
     let message
     if (repo.meta) {
       return repo.meta
     } else if (repo.metaTag !== undefined) {
-      message = repo.metaTag && repo.metaTag.target
-        ? repo.metaTag.target.message
-        : ''
+      message =
+        repo.metaTag && repo.metaTag.target ? repo.metaTag.target.message : ''
     } else {
       debug('meta needs to query tag for repo %O', repo)
-      const tag = await getAnnotatedTag(
-        repo.id,
-        'meta',
-        context
-      )
+      const tag = await getAnnotatedTag(repo.id, 'meta', context)
       message = tag && tag.message
     }
     if (!message || message.length === 0) {
@@ -148,5 +134,5 @@ module.exports = {
 
     const { isArchived } = await getRepo(repo.id)
     return isArchived
-  }
+  },
 }

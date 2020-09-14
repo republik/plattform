@@ -10,42 +10,45 @@ const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
 const parse = dsvFormat(';').parse
 
 const districtMap = {
-  'Aargau': 'Aargau',
+  Aargau: 'Aargau',
   'Appenzell Ausserrhoden': 'Appenzell Ausserrhoden',
   'Appenzell Innerrhoden': 'Appenzell Innerrhoden',
   'Basel-Landschaft': 'Basel-Landschaft',
   'Basel-Stadt': 'Basel-Stadt',
   'Bern / Berne': 'Bern',
   'Fribourg / Freiburg': 'Freiburg',
-  'Genève': 'Genf',
-  'Glarus': 'Glarus',
+  Genève: 'Genf',
+  Glarus: 'Glarus',
   'Graubünden / Grigioni / Grischun': 'Graubünden',
-  'Jura': 'Jura',
-  'Luzern': 'Luzern',
-  'Neuchâtel': 'Neuenburg',
-  'Nidwalden': 'Nidwalden',
-  'Obwalden': 'Obwalden',
-  'Schaffhausen': 'Schaffhausen',
-  'Schwyz': 'Schwyz',
-  'Solothurn': 'Solothurn',
+  Jura: 'Jura',
+  Luzern: 'Luzern',
+  Neuchâtel: 'Neuenburg',
+  Nidwalden: 'Nidwalden',
+  Obwalden: 'Obwalden',
+  Schaffhausen: 'Schaffhausen',
+  Schwyz: 'Schwyz',
+  Solothurn: 'Solothurn',
   'St. Gallen': 'St. Gallen',
-  'Thurgau': 'Thurgau',
-  'Ticino': 'Tessin',
-  'Uri': 'Uri',
+  Thurgau: 'Thurgau',
+  Ticino: 'Tessin',
+  Uri: 'Uri',
   'Valais / Wallis': 'Wallis',
-  'Vaud': 'Waadt',
-  'Zug': 'Zug',
-  'Zürich': 'Zürich'
+  Vaud: 'Waadt',
+  Zug: 'Zug',
+  Zürich: 'Zürich',
 }
 
 const normalizeDistrict = (string) => {
   return districtMap[string] || string
 }
 
-PgDb.connect().then(async pgdb => {
+PgDb.connect().then(async (pgdb) => {
   const input = await fs.readFile(
-    path.join(__dirname, '../data/sd-t-17.02-NRW2015-kandidierende-appendix.csv'),
-    'utf-8'
+    path.join(
+      __dirname,
+      '../data/sd-t-17.02-NRW2015-kandidierende-appendix.csv',
+    ),
+    'utf-8',
   )
 
   const data = parse(input)
@@ -83,7 +86,7 @@ PgDb.connect().then(async pgdb => {
   },
   */
 
-  data.forEach(row => {
+  data.forEach((row) => {
     const partyId = Number(row.kandidat_partei_id)
     const district = normalizeDistrict(row.kanton_bezeichnung)
     const listName = row.liste_bezeichnung
@@ -94,9 +97,9 @@ PgDb.connect().then(async pgdb => {
           row.partei_bezeichnung_de,
           row.partei_bezeichnung_fr,
           row.partei_bezeichnung_it,
-          row.partei_bezeichnung_en
+          row.partei_bezeichnung_en,
         ],
-        districts: {}
+        districts: {},
       }
     }
 
@@ -107,11 +110,13 @@ PgDb.connect().then(async pgdb => {
     if (!parties[partyId].districts[district].lists[listName]) {
       parties[partyId].districts[district].lists[listName] = {
         votes: 0,
-        seats: 0
+        seats: 0,
       }
     }
 
-    parties[partyId].districts[district].lists[listName].votes += Number(row.stimmen_kandidat)
+    parties[partyId].districts[district].lists[listName].votes += Number(
+      row.stimmen_kandidat,
+    )
 
     if (row.flag_gewaehlt === '1') {
       parties[partyId].districts[district].lists[listName].seats++

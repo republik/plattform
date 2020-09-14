@@ -4,22 +4,20 @@ const { getConnectionOptions } = require('./Redis')
 
 const connect = () =>
   new RedisPubSub({
-    connection: getConnectionOptions()
+    connection: getConnectionOptions(),
   })
 
-const disconnect = pubsub => {
+const disconnect = (pubsub) => {
   pubsub.getSubscriber().quit()
   return pubsub.getPublisher().quit()
 }
 
 // https://github.com/davidyaha/graphql-redis-subscriptions/issues/67
-const filtered = (asyncIterator, filter) => withFilter(
-  () => asyncIterator,
-  filter
-)
+const filtered = (asyncIterator, filter) =>
+  withFilter(() => asyncIterator, filter)
 
 module.exports = {
   connect,
   disconnect,
-  filtered
+  filtered,
 }

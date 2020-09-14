@@ -2,17 +2,8 @@ const { Roles } = require('@orbiting/backend-modules-auth')
 const slack = require('../../../lib/slack')
 
 module.exports = async (_, args, context) => {
-  const {
-    id,
-    content
-  } = args
-  const {
-    pgdb,
-    user: me,
-    t,
-    loaders,
-    pubsub
-  } = context
+  const { id, content } = args
+  const { pgdb, user: me, t, loaders, pubsub } = context
 
   Roles.ensureUserHasRole(me, 'editor')
 
@@ -26,8 +17,8 @@ module.exports = async (_, args, context) => {
     { id },
     {
       featuredAt: content ? new Date() : null,
-      featuredContent: content || null
-    }
+      featuredContent: content || null,
+    },
   )
 
   await Promise.all([
@@ -35,8 +26,8 @@ module.exports = async (_, args, context) => {
     pubsub.publish('comment', {
       comment: {
         mutation: 'UPDATED',
-        node: newComment
-      }
+        node: newComment,
+      },
     }),
     slack.publishCommentFeatured(
       me,
@@ -44,12 +35,11 @@ module.exports = async (_, args, context) => {
       discussion,
       content,
       !!content,
-      context
-    )
-  ])
-    .catch(e => {
-      console.error(e)
-    })
+      context,
+    ),
+  ]).catch((e) => {
+    console.error(e)
+  })
 
   return newComment
 }

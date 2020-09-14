@@ -9,13 +9,13 @@ module.exports = async (_, { mediaId, secs }, context) => {
   const collection = await Collection.byNameForUser(
     Progress.COLLECTION_NAME,
     me.id,
-    context
+    context,
   )
   if (!collection) {
     throw new Error(t(`api/collections/collection/404`))
   }
 
-  if (!await Progress.status(me.id, context)) {
+  if (!(await Progress.status(me.id, context))) {
     throw new Error(t('api/collections/progress/notEnabled'))
   }
 
@@ -24,7 +24,7 @@ module.exports = async (_, { mediaId, secs }, context) => {
     collection.id,
     mediaId,
     { secs },
-    context
+    context,
   )
 
   return item

@@ -18,38 +18,38 @@ const argv = yargs
   .option('relativeDate', {
     describe: 'ISO 8601 Time Interval e.g. P14D',
     alias: 'r',
-    coerce: input => {
+    coerce: (input) => {
       return moment().subtract(moment.duration(input))
     },
-    conclicts: ['firstDate', 'lastDate']
+    conclicts: ['firstDate', 'lastDate'],
   })
   .option('firstDate', {
     alias: 'f',
     describe: 'e.g. 2019-02-15',
     coerce: moment,
-    implies: 'lastDate'
+    implies: 'lastDate',
   })
   .option('lastDate', {
     alias: 'l',
     describe: 'e.g. 2019-02-18',
     coerce: moment,
-    implies: 'firstDate'
+    implies: 'firstDate',
   })
   .option('idSite', {
     alias: 'i',
-    default: MATOMO_SITE_ID
+    default: MATOMO_SITE_ID,
   })
   .option('segment', {
     alias: 's',
-    default: null
+    default: null,
   })
   .option('rowConcurrency', {
     alias: 'c',
     describe: 'max oncurrent queries to API',
     number: true,
-    default: 2
+    default: 2,
   })
-  .check(argv => {
+  .check((argv) => {
     if (argv.firstDate > argv.lastDate) {
       return `Check --firstDate, --lastDate. Date in --firstDate must be before date in --lastDate.`
     }
@@ -61,46 +61,44 @@ const argv = yargs
     return true
   })
   .help()
-  .version()
-  .argv
+  .version().argv
 
-Promise.all([PgDb.connect(), Elasticsearch.connect()]).spread(async (pgdb, elastic) => {
-  const { idSite, segment } = argv
-  const dates = []
+Promise.all([PgDb.connect(), Elasticsearch.connect()]).spread(
+  async (pgdb, elastic) => {
+    const { idSite, segment } = argv
+    const dates = []
 
-  for (
-    let date = argv.firstDate;
-    date <= argv.lastDate;
-    date = date.clone().add(1, 'day')
-  ) {
-    dates.push(date.format('YYYY-MM-DD'))
-  }
+    for (
+      let date = argv.firstDate;
+      date <= argv.lastDate;
+      date = date.clone().add(1, 'day')
+    ) {
+      dates.push(date.format('YYYY-MM-DD'))
+    }
 
-  if (argv.relativeDate) {
-    dates.push(argv.relativeDate.format('YYYY-MM-DD'))
-  }
+    if (argv.relativeDate) {
+      dates.push(argv.relativeDate.format('YYYY-MM-DD'))
+    }
 
-  debug({ dates: dates.length })
+    debug({ dates: dates.length })
 
-  const matomo = getInstance({
-    endpoint: MATOMO_URL_BASE,
-    tokenAuth: MATOMO_API_TOKEN_AUTH,
-    rowConcurrency: argv.rowConcurrency
-  })
+    const matomo = getInstance({
+      endpoint: MATOMO_URL_BASE,
+      tokenAuth: MATOMO_API_TOKEN_AUTH,
+      rowConcurrency: argv.rowConcurrency,
+    })
 
-  await Promise.each(
-    dates,
-    async (date) => {
+    await Promise.each(dates, async (date) => {
       debug({ idSite, date, segment })
       await collect(
         { idSite, period: 'day', date, segment },
-        { pgdb, matomo, elastic }
+        { pgdb, matomo, elastic },
       )
-    }
-  ).catch(err => {
-    debug('error', err)
-    console.log(err)
-  })
+    }).catch((err) => {
+      debug('error', err)
+      console.log(err)
+    })
 
-  await pgdb.close()
-})
+    await pgdb.close()
+  },
+)

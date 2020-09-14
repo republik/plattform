@@ -10,8 +10,8 @@ const parser = unified()
     position: false,
     commonmark: true,
     gfm: true,
-    footnotes: false
+    footnotes: false,
   })
   .use(remarkBreaks)
 
-module.exports.parse = md => parser.runSync(parser.parse(md))
+module.exports.parse = (md) => parser.runSync(parser.parse(md))

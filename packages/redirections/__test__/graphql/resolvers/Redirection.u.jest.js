@@ -1,11 +1,8 @@
-jest.mock(
-  '@orbiting/backend-modules-auth',
-  () => ({
-    Roles: {
-      userIsInRoles: jest.fn()
-    }
-  })
-)
+jest.mock('@orbiting/backend-modules-auth', () => ({
+  Roles: {
+    userIsInRoles: jest.fn(),
+  },
+}))
 
 const Redirection = require('../../../graphql/resolvers/Redirection')
 const { DEFAULT_ROLES } = require('../../../lib/Redirections')
@@ -19,7 +16,7 @@ describe('target()', () => {
     const redirection = {
       source: '/a',
       target: '/b',
-      __pathUrl: new URL('/a', base)
+      __pathUrl: new URL('/a', base),
     }
 
     expect(target(redirection)).toEqual('/b')
@@ -31,7 +28,7 @@ describe('target()', () => {
     const redirection = {
       source: '/a',
       target: '/b?p=1',
-      __pathUrl: new URL('/a', base)
+      __pathUrl: new URL('/a', base),
     }
 
     expect(target(redirection)).toEqual('/b?p=1')
@@ -45,7 +42,7 @@ describe('target()', () => {
         source: '/a',
         target: '/b?p=1',
         keepQuery: false,
-        __pathUrl: new URL('/a?p=2', base)
+        __pathUrl: new URL('/a?p=2', base),
       }
 
       expect(target(redirection)).toEqual('/b?p=1')
@@ -58,7 +55,7 @@ describe('target()', () => {
         source: '/a',
         target: '/b?p=1',
         keepQuery: false,
-        __pathUrl: new URL('/a?p=2&m=n', base)
+        __pathUrl: new URL('/a?p=2&m=n', base),
       }
 
       expect(target(redirection)).toEqual('/b?p=1')
@@ -73,7 +70,7 @@ describe('target()', () => {
         source: '/a',
         target: '/b?p=1',
         keepQuery: true,
-        __pathUrl: new URL('/a?p=2', base)
+        __pathUrl: new URL('/a?p=2', base),
       }
 
       expect(target(redirection)).toEqual('/b?p=2')
@@ -86,7 +83,7 @@ describe('target()', () => {
         source: '/a',
         target: '/b?p=1',
         keepQuery: true,
-        __pathUrl: new URL('/a?p=2&m=n', base)
+        __pathUrl: new URL('/a?p=2&m=n', base),
       }
 
       expect(target(redirection)).toEqual('/b?p=2&m=n')
@@ -99,7 +96,7 @@ describe('target()', () => {
         source: '/a',
         target: '/b?p=1',
         keepQuery: true,
-        __pathUrl: new URL('/a?p=1&m=n', base)
+        __pathUrl: new URL('/a?p=1&m=n', base),
       }
 
       expect(target(redirection)).toEqual('/b?p=1&m=n')
@@ -112,7 +109,7 @@ describe('target()', () => {
         source: '/a',
         target: '/b?p=1',
         keepQuery: true,
-        __pathUrl: new URL('/a#h1', base)
+        __pathUrl: new URL('/a#h1', base),
       }
 
       expect(target(redirection)).toEqual('/b?p=1')
@@ -139,7 +136,10 @@ describe('resource()', () => {
 
     const result = resource(redirection, null, { user: expectedUser })
 
-    expect(Roles.userIsInRoles).toHaveBeenCalledWith(expectedUser, DEFAULT_ROLES)
+    expect(Roles.userIsInRoles).toHaveBeenCalledWith(
+      expectedUser,
+      DEFAULT_ROLES,
+    )
     expect(result).toEqual(expectedResource)
   })
 
@@ -156,7 +156,10 @@ describe('resource()', () => {
 
     const result = resource(redirection, null, { user: expectedUser })
 
-    expect(Roles.userIsInRoles).toHaveBeenCalledWith(expectedUser, DEFAULT_ROLES)
+    expect(Roles.userIsInRoles).toHaveBeenCalledWith(
+      expectedUser,
+      DEFAULT_ROLES,
+    )
     expect(result).toBeNull()
   })
 })

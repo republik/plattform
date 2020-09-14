@@ -3,11 +3,9 @@ const {
   findById,
   ensureReadyToSubmit,
   transformQuestion,
-  updateResultIncrementally
+  updateResultIncrementally,
 } = require('../../../lib/Questionnaire')
-const {
-  validateAnswer
-} = require('../../../lib/Question')
+const { validateAnswer } = require('../../../lib/Question')
 
 module.exports = async (_, { answer }, context) => {
   const { pgdb, user: me, t, req } = context
@@ -18,13 +16,18 @@ module.exports = async (_, { answer }, context) => {
   const transaction = await pgdb.transactionBegin()
   try {
     const now = new Date()
-    const question = await transaction.public.questions.findOne({ id: questionId })
+    const question = await transaction.public.questions.findOne({
+      id: questionId,
+    })
     if (!question) {
       throw new Error(t('api/questionnaire/question/404'))
     }
 
     const questionnaire = await findById(question.questionnaireId, transaction)
-    await ensureReadyToSubmit(questionnaire, me.id, now, { ...context, pgdb: transaction })
+    await ensureReadyToSubmit(questionnaire, me.id, now, {
+      ...context,
+      pgdb: transaction,
+    })
 
     // check client generated ID
     const existingAnswer = await transaction.public.answers.findOne({ id })
@@ -39,7 +42,7 @@ module.exports = async (_, { answer }, context) => {
     const sameAnswer = await transaction.public.answers.findOne({
       'id !=': id,
       userId: me.id,
-      questionId
+      questionId,
     })
     if (
       (existingAnswer && existingAnswer.submitted) ||
@@ -66,9 +69,9 @@ module.exports = async (_, { answer }, context) => {
         question,
         {
           ...context,
-          pgdb: transaction
+          pgdb: transaction,
         },
-        payload
+        payload,
       )
     }
 
@@ -83,10 +86,10 @@ module.exports = async (_, { answer }, context) => {
         questionnaire.id,
         {
           ...answer,
-          submitted
+          submitted,
         },
         transaction,
-        context
+        context,
       )
     }
 
@@ -98,14 +101,11 @@ module.exports = async (_, { answer }, context) => {
       }
     } else {
       if (existingAnswer) {
-        await transaction.public.answers.updateOne(
-          findQuery,
-          {
-            questionId,
-            payload,
-            updatedAt: now
-          }
-        )
+        await transaction.public.answers.updateOne(findQuery, {
+          questionId,
+          payload,
+          updatedAt: now,
+        })
       } else {
         await transaction.public.answers.insert({
           id,
@@ -113,7 +113,7 @@ module.exports = async (_, { answer }, context) => {
           questionnaireId: questionnaire.id,
           userId: me.id,
           payload,
-          submitted
+          submitted,
         })
       }
     }

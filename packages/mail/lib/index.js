@@ -13,8 +13,8 @@ const handlers = {
   // MailChimp batch operations types
   operations: {
     covidAccessToken: require('./operations/covidAccessTokens'),
-    nameAndEmailBase64u: require('./operations/nameAndEmailBase64u')
-  }
+    nameAndEmailBase64u: require('./operations/nameAndEmailBase64u'),
+  },
 }
 const { withConfiguration } = require('../NewsletterSubscription')
 const errors = require('../errors')
@@ -22,14 +22,19 @@ const errors = require('../errors')
 module.exports = {
   ...handlers,
   createMail: (interestConfiguration) => {
-    if (!interestConfiguration) throw new errors.SubscriptionConfigurationMissingMailError()
-    return Object
-      .keys(handlers)
-      .reduce((result, handlerName) => {
+    if (!interestConfiguration)
+      throw new errors.SubscriptionConfigurationMissingMailError()
+    return Object.keys(handlers).reduce(
+      (result, handlerName) => {
         return {
           ...result,
-          [handlerName]: withConfiguration(interestConfiguration, handlers[handlerName])
+          [handlerName]: withConfiguration(
+            interestConfiguration,
+            handlers[handlerName],
+          ),
         }
-      }, { ...errors })
-  }
+      },
+      { ...errors },
+    )
+  },
 }

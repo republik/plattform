@@ -4,12 +4,12 @@ const Schema = require('../graphql/schema-types')
 // Retrieve supported badges from Badge enum in schema.
 const SUPPORTED_BADGES = parse(new Source(Schema))
   .definitions.find(
-    definition =>
+    (definition) =>
       definition.kind === 'EnumTypeDefinition' &&
       definition.name &&
-      definition.name.value === 'Badge'
+      definition.name.value === 'Badge',
   )
-  .values.map(value => value.name.value)
+  .values.map((value) => value.name.value)
 exports.SUPPORTED_BADGES = SUPPORTED_BADGES
 
 const userHasBadge = (user, badge) => {
@@ -18,7 +18,8 @@ const userHasBadge = (user, badge) => {
 exports.userHasBadge = userHasBadge
 
 const addToUser = async (userId, badge, pgdb) => {
-  await pgdb.query(`
+  await pgdb.query(
+    `
     UPDATE
       users
     SET
@@ -26,26 +27,31 @@ const addToUser = async (userId, badge, pgdb) => {
     WHERE
       id = :userId AND
       (badges IS NULL OR NOT badges @> :badge)
-  `, {
-    badge: JSON.stringify([badge]),
-    userId
-  })
-  return pgdb.public.users.findOne({id: userId})
+  `,
+    {
+      badge: JSON.stringify([badge]),
+      userId,
+    },
+  )
+  return pgdb.public.users.findOne({ id: userId })
 }
 exports.addToUser = addToUser
 
 const removeFromUser = async (userId, badge, pgdb) => {
-  await pgdb.query(`
+  await pgdb.query(
+    `
     UPDATE
       users
     SET
       badges = badges - :badge
     WHERE
       id = :userId
-  `, {
-    badge,
-    userId
-  })
-  return pgdb.public.users.findOne({id: userId})
+  `,
+    {
+      badge,
+      userId,
+    },
+  )
+  return pgdb.public.users.findOne({ id: userId })
 }
 exports.removeFromUser = removeFromUser

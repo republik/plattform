@@ -11,7 +11,7 @@ module.exports = async (_, args, { pgdb, req, user: me }) => {
   const requiredConsents = await missingConsents({
     userId: user && user.id,
     pgdb,
-    consents: session.sess.consents
+    consents: session.sess.consents,
   })
 
   const requiredFields = await getMissingFields({ user, email, pgdb })
@@ -21,6 +21,6 @@ module.exports = async (_, args, { pgdb, req, user: me }) => {
     enabledSecondFactors: (user && user.enabledSecondFactors) || [],
     requiredConsents,
     requiredFields,
-    newUser: !user || !user.verified
+    newUser: !user || !user.verified,
   }
 }

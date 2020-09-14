@@ -1,12 +1,7 @@
 const {
   Roles,
-  Users: {
-    upsertUserAndConsents
-  },
-  Consents: {
-    saveConsents,
-    revokeConsent
-  }
+  Users: { upsertUserAndConsents },
+  Consents: { saveConsents, revokeConsent },
 } = require('@orbiting/backend-modules-auth')
 const { authenticate } = require('../../../lib/Newsletter')
 
@@ -21,22 +16,18 @@ module.exports = async (_, args, context) => {
     email,
     mac,
     consents: _consents = [],
-    ignoreMemberUnsubscribed = false
+    ignoreMemberUnsubscribed = false,
   } = args
 
   // only allow PRIVACY consent via this endpint
-  const consents = _consents
-    .filter(c => c === 'PRIVACY')
+  const consents = _consents.filter((c) => c === 'PRIVACY')
 
   const {
     user: me,
     pgdb,
     req,
     t,
-    mail: {
-      updateNewsletterSubscription,
-      errors
-    }
+    mail: { updateNewsletterSubscription, errors },
   } = context
 
   // if userId is null, the logged in user's subscription is changed
@@ -44,19 +35,17 @@ module.exports = async (_, args, context) => {
   let user
   if (email) {
     if (mac && mac === authenticate(email, name, subscribed, t)) {
-      ({ user } = await upsertUserAndConsents({
+      ;({ user } = await upsertUserAndConsents({
         pgdb,
         email,
         consents,
-        req
+        req,
       }))
     } else {
       throw new Error(t('api/newsletters/update/token/invalid'))
     }
   } else {
-    user = userId
-      ? await pgdb.public.users.findOne({ id: userId })
-      : me
+    user = userId ? await pgdb.public.users.findOne({ id: userId }) : me
 
     if (!user) {
       console.error('user not found', { req: req._log() })
@@ -74,15 +63,15 @@ module.exports = async (_, args, context) => {
       userId: user.id,
       consents: [consentName],
       req,
-      pgdb
+      pgdb,
     })
   } else {
     await revokeConsent(
       {
         userId: user.id,
-        consent: consentName
+        consent: consentName,
       },
-      context
+      context,
     )
   }
 
@@ -92,16 +81,22 @@ module.exports = async (_, args, context) => {
         user,
         name,
         subscribed,
-        ignoreMemberUnsubscribed
+        ignoreMemberUnsubscribed,
       },
-      context
+      context,
     )
   } catch (error) {
     if (error instanceof errors.InterestIdNotFoundMailError) {
-      console.error('interestId not supported in updateNewsletterSubscription', error.meta)
+      console.error(
+        'interestId not supported in updateNewsletterSubscription',
+        error.meta,
+      )
       throw new Error(t('api/newsletters/update/interestIdNotSupported'))
     } else if (error instanceof errors.RolesNotEligibleMailError) {
-      console.error('roles not eligible for interestId in updateNewsletterSubscription', error.meta)
+      console.error(
+        'roles not eligible for interestId in updateNewsletterSubscription',
+        error.meta,
+      )
       throw new Error(t('api/newsletters/update/rolesNotEligible'))
     } else {
       console.error('updateNewsletterSubscription failed', error.meta)

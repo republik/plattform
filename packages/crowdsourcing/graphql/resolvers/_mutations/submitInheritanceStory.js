@@ -2,10 +2,7 @@ const { sendMail } = require('@orbiting/backend-modules-mail') // holt nur was i
 const { ensureStringLength } = require('@orbiting/backend-modules-utils')
 const validator = require('validator')
 
-const {
-  CS_INHERITANCE_TO,
-  CS_INHERITANCE_SUBJECT
-} = process.env
+const { CS_INHERITANCE_TO, CS_INHERITANCE_SUBJECT } = process.env
 
 module.exports = (_, args, context) => {
   const { t } = context
@@ -19,11 +16,13 @@ module.exports = (_, args, context) => {
     value,
     inheritanceBattle,
     heritage,
-    testament
+    testament,
   } = args
 
   if (!CS_INHERITANCE_TO || !CS_INHERITANCE_SUBJECT) {
-    console.error('CS_INHERITANCE_TO or CS_INHERITANCE_SUBJECT undefined, cannot send mail!')
+    console.error(
+      'CS_INHERITANCE_TO or CS_INHERITANCE_SUBJECT undefined, cannot send mail!',
+    )
     throw new Error(t('api/unexpected'))
   }
 
@@ -38,13 +37,25 @@ ${tel ? '\tTel: ' + tel : ''}
 
 ${value ? 'Wert meines Erbteils: ' + value + ' sFr.' : ''}
 
-${inheritanceType ? 'Das habe ich geerbt / werde ich erben: ' + inheritanceType : ''}
+${
+  inheritanceType
+    ? 'Das habe ich geerbt / werde ich erben: ' + inheritanceType
+    : ''
+}
 
 ${inheritanceFrom ? 'Von wem? ' + inheritanceFrom : ''}
 
-${count ? 'Ich teile mein Erbe (voraussichtlich) mit ' + count + ' Personen' : ''}
+${
+  count
+    ? 'Ich teile mein Erbe (voraussichtlich) mit ' + count + ' Personen'
+    : ''
+}
 
-${inheritanceBattle ? 'Es gab einen Erbstreit in meiner Familie: ' + inheritanceBattle : ''}
+${
+  inheritanceBattle
+    ? 'Es gab einen Erbstreit in meiner Familie: ' + inheritanceBattle
+    : ''
+}
 
 ${heritage ? 'Das werde ich mal vererben: ' + heritage : ''}
 
@@ -58,11 +69,11 @@ ${content ? 'Erbgeschichte: ' + content : ''}
     {
       to: CS_INHERITANCE_TO,
       subject: CS_INHERITANCE_SUBJECT,
-      text: emailText
+      text: emailText,
     },
     context,
     {
-      logMessage: false
-    }
+      logMessage: false,
+    },
   )
 }

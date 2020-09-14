@@ -1,22 +1,21 @@
-version: "3.4"
+version: '3.4'
 services:
   traefik:
     image: traefik:v2.1
-    network_mode: "host"
+    network_mode: 'host'
     ports:
-      - "80:80"     # The HTTP port
-      - "8080:8080" # The Web UI
+      - '80:80' # The HTTP port
+      - '8080:8080' # The Web UI
     volumes:
       - ./.docker-config/traefik/traefik.toml:/etc/traefik/traefik.toml
       - ./.docker-config/traefik/traefik-provider.toml:/etc/traefik/traefik-provider.toml
 
   bind:
     image: cytopia/bind
-    network_mode: "host"
+    network_mode: 'host'
     ports:
-      - "53:53/udp"
-      - "53:53/tcp"
+      - '53:53/udp'
+      - '53:53/tcp'
     environment:
-      - "WILDCARD_DNS=republik.test=${LOCAL_IP}"
+      - 'WILDCARD_DNS=republik.test=${LOCAL_IP}'
       - DNS_FORWARDER=1.1.1.1,1.0.0.1
-

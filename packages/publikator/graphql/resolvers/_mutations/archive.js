@@ -1,5 +1,7 @@
 const Promise = require('bluebird')
-const { Roles: { ensureUserHasRole } } = require('@orbiting/backend-modules-auth')
+const {
+  Roles: { ensureUserHasRole },
+} = require('@orbiting/backend-modules-auth')
 
 const { latestPublications: getLatestPublications } = require('../Repo')
 const { archiveRepo } = require('../../../lib/github')
@@ -7,16 +9,16 @@ const { upsert: repoCacheUpsert } = require('../../../lib/cache/upsert')
 
 const unpublishMutation = require('./unpublish')
 
-module.exports = async (
-  _,
-  { repoIds, unpublish = false },
-  context
-) => {
+module.exports = async (_, { repoIds, unpublish = false }, context) => {
   const { user, pubsub, t } = context
   ensureUserHasRole(user, 'editor')
 
-  await Promise.each(repoIds, async repoId => {
-    const publications = await getLatestPublications({ id: repoId }, null, context)
+  await Promise.each(repoIds, async (repoId) => {
+    const publications = await getLatestPublications(
+      { id: repoId },
+      null,
+      context,
+    )
 
     if (publications.length > 0) {
       if (!unpublish) {
@@ -29,24 +31,27 @@ module.exports = async (
 
     await archiveRepo(repoId)
 
-    await repoCacheUpsert({
-      id: repoId,
-      isArchived: true
-    }, context)
+    await repoCacheUpsert(
+      {
+        id: repoId,
+        isArchived: true,
+      },
+      context,
+    )
 
     await pubsub.publish('repoUpdate', {
       repoUpdate: {
-        id: repoId
-      }
+        id: repoId,
+      },
     })
   })
 
   return {
-    nodes: repoIds.map(id => ({ id })),
+    nodes: repoIds.map((id) => ({ id })),
     totalCount: repoIds.length,
     pageInfo: {
       hasNextPage: false,
-      hasPreviousPage: false
-    }
+      hasPreviousPage: false,
+    },
   }
 }

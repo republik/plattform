@@ -1,10 +1,17 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
 const { transformUser } = require('@orbiting/backend-modules-auth')
 
-const { publishMonitor } = require('@orbiting/backend-modules-republik/lib/slack')
+const {
+  publishMonitor,
+} = require('@orbiting/backend-modules-republik/lib/slack')
 const deleteStripeCustomer = require('../../../lib/payments/stripe/deleteCustomer')
 
-const deleteRelatedData = async ({ id: userId }, hasPledges, unpublishComments, pgdb) => {
+const deleteRelatedData = async (
+  { id: userId },
+  hasPledges,
+  unpublishComments,
+  pgdb,
+) => {
   // get all related tables
   // https://stackoverflow.com/questions/5347050/sql-to-list-all-the-tables-that-reference-a-particular-column-in-a-table
   const keepRelations = [
@@ -12,12 +19,14 @@ const deleteRelatedData = async ({ id: userId }, hasPledges, unpublishComments, 
     'electionCandidacies',
     'pledges',
     'stripeCustomers',
-    'comments' // get nullified, see below
+    'comments', // get nullified, see below
   ]
   if (hasPledges) {
     keepRelations.push('memberships')
   }
-  const relations = await pgdb.query(`
+  const relations = await pgdb
+    .query(
+      `
     select
       R.TABLE_SCHEMA as schema,
       R.TABLE_NAME as table,
@@ -33,31 +42,38 @@ const deleteRelatedData = async ({ id: userId }, hasPledges, unpublishComments, 
       and R.CONSTRAINT_NAME = FK.CONSTRAINT_NAME
     where
       U.TABLE_NAME = 'users'
-  `)
-    .then(rels => rels
-      .filter(rel => keepRelations.indexOf(rel.table) === -1)
+  `,
     )
-  relations.unshift({ // needs to be first
+    .then((rels) =>
+      rels.filter((rel) => keepRelations.indexOf(rel.table) === -1),
+    )
+  relations.unshift({
+    // needs to be first
     schema: 'public',
     table: 'discussionPreferences',
-    column: 'userId'
+    column: 'userId',
   })
-  relations.push({ // needs to be last
+  relations.push({
+    // needs to be last
     schema: 'public',
     table: 'eventLog',
-    column: 'userId'
+    column: 'userId',
   })
   return Promise.all([
-    pgdb.query(`
+    pgdb.query(
+      `
       DELETE
         FROM sessions s
       WHERE
         ARRAY[(s.sess #>> '{passport, user}')::uuid] && :userIds
-    `, {
-      userIds: [ userId ]
-    }),
+    `,
+      {
+        userIds: [userId],
+      },
+    ),
     // pull user from comments.votes, leaving upVotes, downVotes untouched
-    pgdb.query(`
+    pgdb.query(
+      `
       UPDATE comments
         SET votes = COALESCE(NULLIF(sub.votes,'[{}]'::jsonb), '[]'::jsonb) -- remove empty objects {}
         FROM (
@@ -74,80 +90,91 @@ const deleteRelatedData = async ({ id: userId }, hasPledges, unpublishComments, 
           GROUP  BY 1
         ) sub
       WHERE comments.id = sub.id
-    `, {
-      userIdPattern: `%${userId}%`,
-      userId
-    }),
+    `,
+      {
+        userIdPattern: `%${userId}%`,
+        userId,
+      },
+    ),
     // nullify comments
     pgdb.public.comments.update(
       { userId },
       {
         userId: null,
-        ...unpublishComments
+        ...(unpublishComments
           ? {
-            published: false,
-            content: null
-          }
-          : {}
-      }
+              published: false,
+              content: null,
+            }
+          : {}),
+      },
     ),
-    ...relations.map(rel =>
+    ...relations.map((rel) =>
       pgdb[rel.schema][rel.table].delete({
-        [rel.column]: userId
-      })
-    )
+        [rel.column]: userId,
+      }),
+    ),
   ])
 }
 
 const getNulledColumnsForUsers = async (pgdb) => {
-  const keepColumns = [ 'firstName', 'lastName', 'addressId', 'createdAt', 'updatedAt', 'deletedAt' ]
-  return pgdb.queryOneColumn(`
+  const keepColumns = [
+    'firstName',
+    'lastName',
+    'addressId',
+    'createdAt',
+    'updatedAt',
+    'deletedAt',
+  ]
+  return pgdb
+    .queryOneColumn(
+      `
     SELECT
       column_name
     FROM information_schema.columns
     WHERE
       table_name = 'users' AND
       is_nullable = 'YES'
-  `)
-    .then(columns => columns
-      .filter(column => keepColumns.indexOf(column) === -1)
-      .reduce(
-        (acc, column) => ({
-          ...acc,
-          [column]: null
-        }),
-        {}
-      )
+  `,
+    )
+    .then((columns) =>
+      columns
+        .filter((column) => keepColumns.indexOf(column) === -1)
+        .reduce(
+          (acc, column) => ({
+            ...acc,
+            [column]: null,
+          }),
+          {},
+        ),
     )
 }
 
 module.exports = async (_, args, context) => {
-  const {
-    userId,
-    unpublishComments = false
-  } = args
+  const { userId, unpublishComments = false } = args
   const {
     pgdb,
     req,
     t,
-    mail: { deleteEmail: deleteFromMailchimp }
+    mail: { deleteEmail: deleteFromMailchimp },
   } = context
   Roles.ensureUserHasRole(req.user, 'admin')
 
   const transaction = await pgdb.transactionBegin()
   try {
     const user = await transaction.public.users.findOne({
-      id: userId
+      id: userId,
     })
     if (!user) {
       throw new Error(t('api/users/404'))
     }
 
     const pledges = await transaction.public.pledges.find({
-      userId
+      userId,
     })
     const hasPledges = pledges.length > 0
-    const memberships = await transaction.query(`
+    const memberships = await transaction.query(
+      `
       SELECT
         m.*,
         json_agg(p.*) as pledges
@@ -158,26 +185,32 @@ module.exports = async (_, args, context) => {
         m."userId" = :userId
       GROUP BY
         m.id
-    `, {
-      userId
-    })
+    `,
+      {
+        userId,
+      },
+    )
     // returning claimed memberships not supported yet
-    const claimedMemberships = memberships.filter(m => !!m.pledges.find(p => p.userId !== userId))
+    const claimedMemberships = memberships.filter(
+      (m) => !!m.pledges.find((p) => p.userId !== userId),
+    )
     if (claimedMemberships.length > 0) {
       throw new Error(t('api/users/delete/claimedMembershipsNotSupported'))
     }
 
     const grants = await transaction.public.accessGrants.find({
-      or: [{granterUserId: userId}, {recipientUserId: userId}]
+      or: [{ granterUserId: userId }, { recipientUserId: userId }],
     })
     const hasGrants = grants.length > 0
 
-    const candidacies = await transaction.public.electionCandidacies.find({ userId })
+    const candidacies = await transaction.public.electionCandidacies.find({
+      userId,
+    })
     const hasCandidacies = candidacies.length > 0
 
     // delete from mailchimp
     const mailchimpResult = await deleteFromMailchimp({
-      email: user.email
+      email: user.email,
     })
     if (!mailchimpResult) {
       console.warn(`deleteUser: could not delete ${user.email} from mailchimp.`)
@@ -192,7 +225,7 @@ module.exports = async (_, args, context) => {
       await deleteStripeCustomer({ userId, pgdb: transaction })
 
       await transaction.public.users.deleteOne({
-        id: userId
+        id: userId,
       })
     } else {
       // null profile where possible
@@ -200,7 +233,7 @@ module.exports = async (_, args, context) => {
       const nulledColumns = await getNulledColumnsForUsers(transaction)
       await transaction.public.users.updateOne(
         {
-          id: userId
+          id: userId,
         },
         {
           email: `${user.id}_deleted@republik.ch`,
@@ -210,8 +243,8 @@ module.exports = async (_, args, context) => {
           isPhoneNumberVerified: false,
           isTOTPChallengeSecretVerified: false,
           deletedAt: new Date(),
-          ...nulledColumns
-        }
+          ...nulledColumns,
+        },
       )
     }
 
@@ -219,15 +252,15 @@ module.exports = async (_, args, context) => {
 
     await publishMonitor(
       req.user,
-      `deleteUser *${user.firstName} ${user.lastName} - ${user.email}*`
+      `deleteUser *${user.firstName} ${user.lastName} - ${user.email}*`,
     )
 
-    return (hasPledges || hasGrants || hasCandidacies)
+    return hasPledges || hasGrants || hasCandidacies
       ? transformUser(
-        await pgdb.public.users.findOne({
-          id: userId
-        })
-      )
+          await pgdb.public.users.findOne({
+            id: userId,
+          }),
+        )
       : null
   } catch (e) {
     await transaction.transactionRollback()

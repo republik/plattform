@@ -15,7 +15,7 @@ const patterns = [
         u.id "userId"
       FROM users u
     `,
-    threshold: 0.3
+    threshold: 0.3,
   },
   {
     name: 'address',
@@ -36,7 +36,7 @@ const patterns = [
         u.id "userId"
       FROM "users" u
       JOIN "addresses" a ON u."addressId" = a.id
-    `
+    `,
   },
   {
     name: 'payment HR-ID',
@@ -48,7 +48,7 @@ const patterns = [
       FROM "payments" pay
       JOIN "pledgePayments" pp ON pay.id = pp."paymentId"
       JOIN "pledges" p ON pp."pledgeId" = p.id
-    `
+    `,
   },
   {
     name: 'membership voucher code',
@@ -59,7 +59,7 @@ const patterns = [
         m."userId"
       FROM "memberships" m
       WHERE m."voucherCode" IS NOT NULL
-    `
+    `,
   },
   {
     name: 'membership sequence number',
@@ -70,7 +70,7 @@ const patterns = [
         m."userId"
       FROM "memberships" m
     `,
-    threshold: 0.2
+    threshold: 0.2,
   },
   {
     name: 'access grant code',
@@ -81,7 +81,7 @@ const patterns = [
         coalesce(ag."recipientUserId", ag."granterUserId") "userId"
       FROM "accessGrants" ag
       WHERE ag."voucherCode" IS NOT NULL
-    `
+    `,
   },
   {
     name: 'user full name',
@@ -93,15 +93,16 @@ const patterns = [
       FROM users u
       WHERE u."firstName" IS NOT NULL
         OR u."lastName" IS NOT NULL
-    `
-  }
+    `,
+  },
 ]
 
 module.exports = async (_, { limit, offset = 0, search }, { pgdb, user }) => {
   Roles.ensureUserHasRole(user, 'supporter')
 
-  const pattern = search && patterns.reduce(
-    (chosen, pattern) => {
+  const pattern =
+    search &&
+    patterns.reduce((chosen, pattern) => {
       // Skip if a pattern matched already
       if (chosen) {
         return chosen
@@ -111,15 +112,19 @@ module.exports = async (_, { limit, offset = 0, search }, { pgdb, user }) => {
       if (match) {
         return {
           ...pattern,
-          match
+          match,
         }
       }
-    },
-    null
-  )
+    }, null)
 
   if (pattern) {
-    const { query, threshold, match: { groups: { word } } } = pattern
+    const {
+      query,
+      threshold,
+      match: {
+        groups: { word },
+      },
+    } = pattern
 
     const users = await pgdb.query(
       `
@@ -141,21 +146,23 @@ module.exports = async (_, { limit, offset = 0, search }, { pgdb, user }) => {
       `,
       {
         word,
-        threshold: threshold || WORD_SIMILARITY_THRESHOLD
-      }
+        threshold: threshold || WORD_SIMILARITY_THRESHOLD,
+      },
     )
 
     return {
       items: users.slice(offset, offset + limit).map(transformUser),
-      count: users.length
+      count: users.length,
     }
   }
 
   return {
-    items: (await pgdb.public.users.find(
-      { deletedAt: null },
-      { orderBy: { createdAt: 'DESC' }, limit, offset })
+    items: (
+      await pgdb.public.users.find(
+        { deletedAt: null },
+        { orderBy: { createdAt: 'DESC' }, limit, offset },
+      )
     ).map(transformUser),
-    count: await pgdb.public.users.count()
+    count: await pgdb.public.users.count(),
   }
 }

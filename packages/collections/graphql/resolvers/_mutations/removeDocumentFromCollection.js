@@ -5,7 +5,11 @@ module.exports = async (_, { documentId, collectionName }, context) => {
   const { user: me, t, req } = context
   ensureSignedIn(req)
 
-  const collection = await Collection.byNameForUser(collectionName, me.id, context)
+  const collection = await Collection.byNameForUser(
+    collectionName,
+    me.id,
+    context,
+  )
   if (!collection) {
     throw new Error(t(`api/collections/collection/404`))
   }
@@ -19,7 +23,7 @@ module.exports = async (_, { documentId, collectionName }, context) => {
     me.id,
     collection.id,
     repoId,
-    context
+    context,
   )
 
   return item

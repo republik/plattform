@@ -3,16 +3,16 @@ module.exports = {
   postschiff: [
     {
       preCommit: require('./postschiff/1/preCommit.doc.mdast.json'),
-      authorUserId: require('./postschiff/1/authorUserId')
+      authorUserId: require('./postschiff/1/authorUserId'),
     },
     {
-      preCommit: require('./postschiff/2/preCommit.doc.mdast.json')
+      preCommit: require('./postschiff/2/preCommit.doc.mdast.json'),
     },
     {
-      preCommit: require('./postschiff/3/preCommit.doc.mdast.json')
+      preCommit: require('./postschiff/3/preCommit.doc.mdast.json'),
     },
     {
-      preCommit: require('./postschiff/4/preCommit.doc.mdast.json')
-    }
-  ]
+      preCommit: require('./postschiff/4/preCommit.doc.mdast.json'),
+    },
+  ],
 }

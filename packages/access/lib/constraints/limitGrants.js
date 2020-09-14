@@ -24,15 +24,12 @@ const isGrantable = async (args, context) => {
 
   const isLimitReached = grants.length >= settings.grants
 
-  debug(
-    'isGrantable',
-    {
-      granter: granter.id,
-      settings,
-      campaign,
-      isLimitReached
-    }
-  )
+  debug('isGrantable', {
+    granter: granter.id,
+    settings,
+    campaign,
+    isLimitReached,
+  })
 
   return !isLimitReached
 }
@@ -40,10 +37,10 @@ const isGrantable = async (args, context) => {
 const getMeta = async (args, context) => ({
   visible: true,
   grantable: await isGrantable(args, context),
-  payload: {}
+  payload: {},
 })
 
 module.exports = {
   isGrantable,
-  getMeta
+  getMeta,
 }

@@ -6,7 +6,7 @@ const SUBSCRIPTION_HANDLER_MISSING_ERROR = 'SUBSCRIPTION_HANDLER_MISSING_ERROR'
 const SEND_ERROR = 'SEND_ERROR'
 
 class MailError extends Error {
-  constructor (type, meta) {
+  constructor(type, meta) {
     const message = `mail error: ${type} ${JSON.stringify(meta)}`
     super(message)
     this.type = type
@@ -15,37 +15,37 @@ class MailError extends Error {
 }
 
 class SubscriptionConfigurationMissingMailError extends MailError {
-  constructor (meta) {
+  constructor(meta) {
     super(SUBSCRIPTION_CONFIG_MISSING_ERROR, meta)
   }
 }
 
 class SubscriptionHandlerMissingMailError extends MailError {
-  constructor (meta) {
+  constructor(meta) {
     super(SUBSCRIPTION_HANDLER_MISSING_ERROR, meta)
   }
 }
 
 class NewsletterMemberMailError extends MailError {
-  constructor (meta) {
+  constructor(meta) {
     super(NEWSLETTER_MEMBER_ERROR, meta)
   }
 }
 
 class InterestIdNotFoundMailError extends MailError {
-  constructor (meta) {
+  constructor(meta) {
     super(INTERESTID_NOT_FOUND_ERROR, meta)
   }
 }
 
 class EmailRequiredMailError extends MailError {
-  constructor (meta) {
+  constructor(meta) {
     super(EMAIL_REQUIRED_ERROR, meta)
   }
 }
 
 class SendMailError extends MailError {
-  constructor (meta) {
+  constructor(meta) {
     super(SEND_ERROR, meta)
   }
 }
@@ -56,5 +56,5 @@ module.exports = {
   EmailRequiredMailError,
   SubscriptionConfigurationMissingMailError,
   SubscriptionHandlerMissingMailError,
-  SendMailError
+  SendMailError,
 }

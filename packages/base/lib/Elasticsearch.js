@@ -3,13 +3,12 @@ const { Client } = require('@elastic/elasticsearch')
 const connect = () =>
   new Client({
     node: process.env.ELASTIC_URL || 'http://elastic:elastic@localhost:9200',
-    apiVersion: '6.8'
+    apiVersion: '6.8',
   })
 
-const disconnect = client =>
-  client.close()
+const disconnect = (client) => client.close()
 
-const scroll = async function * (client, params) {
+const scroll = async function* (client, params) {
   let response = await client.search(params)
 
   while (true) {
@@ -29,7 +28,7 @@ const scroll = async function * (client, params) {
 
     response = await client.scroll({
       scrollId: response.body._scroll_id,
-      scroll: params.scroll
+      scroll: params.scroll,
     })
   }
 }
@@ -37,5 +36,5 @@ const scroll = async function * (client, params) {
 module.exports = {
   connect,
   disconnect,
-  scroll
+  scroll,
 }

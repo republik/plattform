@@ -2,7 +2,7 @@ const { TranslatedError } = require('@orbiting/backend-modules-translate')
 const t = require('./t')
 
 class AuthError extends TranslatedError {
-  constructor (type, meta, replacements) {
+  constructor(type, meta, replacements) {
     const message = `${type} ${JSON.stringify(meta)}`
     super(message, replacements)
     this.name = 'AuthError'
@@ -11,13 +11,13 @@ class AuthError extends TranslatedError {
     this.meta = meta
   }
 
-  static newAuthError (contextCode, i18nKey) {
+  static newAuthError(contextCode, i18nKey) {
     class DynamicAuthError extends AuthError {
-      constructor (meta, replacements) {
+      constructor(meta, replacements) {
         super(contextCode, meta, replacements)
         Error.captureStackTrace(this, this.constructor)
       }
-      translatedMessage (message, replacements) {
+      translatedMessage(message, replacements) {
         return t(i18nKey, replacements, message)
       }
     }

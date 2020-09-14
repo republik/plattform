@@ -9,7 +9,7 @@
 require('@orbiting/backend-modules-env').config()
 const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
 const rw = require('rw')
-const {dsvFormat} = require('d3-dsv')
+const { dsvFormat } = require('d3-dsv')
 const csvParse = dsvFormat(',').parse
 const Promise = require('bluebird')
 
@@ -32,53 +32,60 @@ const getNormalizedCategory = (category) => {
   }
 }
 
-PgDb.connect().then(async pgdb => {
-  const dry = process.argv[2] === '--dry'
-  if (dry) {
-    console.log("dry run: this won't change anything")
-  }
+PgDb.connect()
+  .then(async (pgdb) => {
+    const dry = process.argv[2] === '--dry'
+    if (dry) {
+      console.log("dry run: this won't change anything")
+    }
 
-  const input = rw.readFileSync('/dev/stdin', 'utf8')
-  if (!input || input.length < 4) {
-    throw new Error('You need to provide input on stdin')
-  }
+    const input = rw.readFileSync('/dev/stdin', 'utf8')
+    if (!input || input.length < 4) {
+      throw new Error('You need to provide input on stdin')
+    }
 
-  const stats = {
-    cancellations: 0
-  }
+    const stats = {
+      cancellations: 0,
+    }
 
-  const transaction = await pgdb.transactionBegin()
-  await Promise.map(
-    csvParse(input)
-      .filter(r => !r.done),
-    ({ membershipCancellationId, newCategory, suppressWinback, cancelledViaSupport }) => {
-      stats.cancellations++
+    const transaction = await pgdb.transactionBegin()
+    await Promise.map(
+      csvParse(input).filter((r) => !r.done),
+      ({
+        membershipCancellationId,
+        newCategory,
+        suppressWinback,
+        cancelledViaSupport,
+      }) => {
+        stats.cancellations++
 
-      const normalizedCategory = getNormalizedCategory(newCategory)
+        const normalizedCategory = getNormalizedCategory(newCategory)
 
-      return transaction.public.membershipCancellations.update(
-        { id: membershipCancellationId },
-        {
-          category: normalizedCategory,
-          suppressWinback: suppressWinback === 'TRUE',
-          cancelledViaSupport: !!cancelledViaSupport
-        }
-      )
-    },
-    {concurrency: 10}
-  )
+        return transaction.public.membershipCancellations.update(
+          { id: membershipCancellationId },
+          {
+            category: normalizedCategory,
+            suppressWinback: suppressWinback === 'TRUE',
+            cancelledViaSupport: !!cancelledViaSupport,
+          },
+        )
+      },
+      { concurrency: 10 },
+    )
 
-  console.log(stats)
+    console.log(stats)
 
-  if (dry) {
-    console.log('rollback due to dry')
-    await transaction.transactionRollback()
-  } else {
-    await transaction.transactionCommit()
-  }
-}).then(() => {
-  process.exit()
-}).catch(e => {
-  console.log(e)
-  process.exit(1)
-})
+    if (dry) {
+      console.log('rollback due to dry')
+      await transaction.transactionRollback()
+    } else {
+      await transaction.transactionCommit()
+    }
+  })
+  .then(() => {
+    process.exit()
+  })
+  .catch((e) => {
+    console.log(e)
+    process.exit(1)
+  })

@@ -5,11 +5,11 @@ const termsAggBuilder = (fieldPath) => (key, { filter } = {}) => ({
       terms: {
         terms: {
           field: fieldPath,
-          min_doc_count: 0
-        }
-      }
-    }
-  }
+          min_doc_count: 0,
+        },
+      },
+    },
+  },
 })
 
 const valueCountAggBuilder = (fieldPath) => (key, { filter } = {}) => ({
@@ -18,11 +18,11 @@ const valueCountAggBuilder = (fieldPath) => (key, { filter } = {}) => ({
     aggs: {
       count: {
         value_count: {
-          field: fieldPath
-        }
-      }
-    }
-  }
+          field: fieldPath,
+        },
+      },
+    },
+  },
 })
 
 const trueCountAggBuilder = (fieldPath) => (key, { filter } = {}) => ({
@@ -33,13 +33,13 @@ const trueCountAggBuilder = (fieldPath) => (key, { filter } = {}) => ({
           filter || { match_all: {} },
           {
             term: {
-              [fieldPath]: true
-            }
-          }
-        ]
-      }
-    }
-  }
+              [fieldPath]: true,
+            },
+          },
+        ],
+      },
+    },
+  },
 })
 
 const existsCountAggBuilder = (fieldPath) => (key, { filter } = {}) => ({
@@ -50,13 +50,13 @@ const existsCountAggBuilder = (fieldPath) => (key, { filter } = {}) => ({
           filter || { match_all: {} },
           {
             exists: {
-              field: fieldPath
-            }
-          }
-        ]
-      }
-    }
-  }
+              field: fieldPath,
+            },
+          },
+        ],
+      },
+    },
+  },
 })
 
 const rangeAggBuilder = (fieldPath) => (key, { filter, ranges } = {}) => ({
@@ -66,27 +66,24 @@ const rangeAggBuilder = (fieldPath) => (key, { filter, ranges } = {}) => ({
       ranges: {
         range: {
           field: fieldPath,
-          ranges
-        }
-      }
-    }
-  }
+          ranges,
+        },
+      },
+    },
+  },
 })
 
 const extractAggs = (schema) =>
-  Object.keys(schema).reduce(
-    (aggs, key) => {
-      const schemaEntry = schema[key]
-      if (schemaEntry.agg) {
-        return {
-          ...aggs,
-          ...schemaEntry.agg(key, schemaEntry.options || {})
-        }
+  Object.keys(schema).reduce((aggs, key) => {
+    const schemaEntry = schema[key]
+    if (schemaEntry.agg) {
+      return {
+        ...aggs,
+        ...schemaEntry.agg(key, schemaEntry.options || {}),
       }
-      return aggs
-    },
-    {}
-  )
+    }
+    return aggs
+  }, {})
 
 module.exports = {
   termsAggBuilder,
@@ -94,5 +91,5 @@ module.exports = {
   trueCountAggBuilder,
   existsCountAggBuilder,
   rangeAggBuilder,
-  extractAggs
+  extractAggs,
 }

@@ -1,8 +1,8 @@
-module.exports = ({
+module.exports = {
   pageInfo: {
     hasNextPage: false,
-    hasPreviousPage: false
+    hasPreviousPage: false,
   },
   totalCount: 0,
-  nodes: []
-})
+  nodes: [],
+}

@@ -14,42 +14,46 @@ const argv = yargs
     description: 'CSV file to append token to',
     alias: 'f',
     required: true,
-    coerce: input => path.resolve(input)
+    coerce: (input) => path.resolve(input),
   })
   .option('identifier', {
     description: 'attribute name which points to a user ID',
     alias: 'i',
-    default: 'userId'
+    default: 'userId',
   })
   .option('scope', {
     description: 'Access Token scope',
     alias: 's',
-    default: 'CUSTOM_PLEDGE'
-  })
-  .argv
+    default: 'CUSTOM_PLEDGE',
+  }).argv
 
-PgDb.connect().then(async pgdb => {
+PgDb.connect().then(async (pgdb) => {
   const listRaw = await fs.readFile(argv.file, 'utf-8')
 
   const listArray = csvParse(listRaw)
 
-  const users = await pgdb.public.users.find({ id: listArray.map(row => row[argv.identifier]) })
-    .then(users => users.map(transformUser))
+  const users = await pgdb.public.users
+    .find({ id: listArray.map((row) => row[argv.identifier]) })
+    .then((users) => users.map(transformUser))
 
-  const list = await Promise.map(listArray, async (row, index) => {
-    const user = users.find(user => user.id === row[argv.identifier])
+  const list = await Promise.map(
+    listArray,
+    async (row, index) => {
+      const user = users.find((user) => user.id === row[argv.identifier])
 
-    if (!user) {
-      throw new Error(`User with ID "${row[argv.identifier]}" not found.`)
-    }
+      if (!user) {
+        throw new Error(`User with ID "${row[argv.identifier]}" not found.`)
+      }
 
-    const token = await AccessToken.generateForUser(user, argv.scope)
+      const token = await AccessToken.generateForUser(user, argv.scope)
 
-    return {
-      ...row,
-      CP_ATOKEN: token
-    }
-  }, { concurrency: 1 })
+      return {
+        ...row,
+        CP_ATOKEN: token,
+      }
+    },
+    { concurrency: 1 },
+  )
 
   console.log(csvFormat(list.filter(Boolean)))
 

@@ -1,5 +1,9 @@
 const fetch = require('isomorphic-unfetch')
-const { lib: { appAuth: { getInstallationToken } } } = require('@orbiting/backend-modules-github')
+const {
+  lib: {
+    appAuth: { getInstallationToken },
+  },
+} = require('@orbiting/backend-modules-github')
 const { returnImage } = require('../lib')
 const debug = require('debug')('assets:github')
 
@@ -22,33 +26,28 @@ module.exports = (server) => {
       installationToken = await getInstallationToken()
     }
 
-    const {
-      login,
-      repoName,
-      path
-    } = req.params
+    const { login, repoName, path } = req.params
     debug('getBlob %s/%s/%s', login, repoName, path)
 
     const webp = new RegExp(/\.webp$/).test(path)
 
     // the filename is the blobSha
-    const blobSha = path
-      .split('/')
-      .pop()
-      .split('.')[0]
+    const blobSha = path.split('/').pop().split('.')[0]
 
     let status
-    const result = await fetch(`https://api.github.com/repos/${login}/${repoName}/git/blobs/${blobSha}`, {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${installationToken.token}`,
-        // https://developer.github.com/v3/media/#git-blob-properties
-        'Accept': 'application/vnd.github.v3.raw'
-      }
+    const result = await fetch(
+      `https://api.github.com/repos/${login}/${repoName}/git/blobs/${blobSha}`,
+      {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${installationToken.token}`,
+          // https://developer.github.com/v3/media/#git-blob-properties
+          Accept: 'application/vnd.github.v3.raw',
+        },
+      },
+    ).catch((error) => {
+      status = error.code
     })
-      .catch(error => {
-        status = error.code
-      })
 
     status = status || result.status
     if (status !== 200) {
@@ -56,7 +55,7 @@ module.exports = (server) => {
         console.error('assets:github error:', {
           url: result.url,
           status,
-          statusText: result.statusText
+          statusText: result.statusText,
         })
       }
       res.status(status).end()
@@ -71,8 +70,8 @@ module.exports = (server) => {
       options: {
         ...req.query,
         webp,
-        cacheTags: ['github']
-      }
+        cacheTags: ['github'],
+      },
     })
   })
 }

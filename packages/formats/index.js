@@ -7,10 +7,44 @@ const swissTime = timeFormatLocale({
   date: '%d.%m.%Y',
   time: '%H:%M:%S',
   periods: ['AM', 'PM'],
-  days: ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'],
+  days: [
+    'Sonntag',
+    'Montag',
+    'Dienstag',
+    'Mittwoch',
+    'Donnerstag',
+    'Freitag',
+    'Samstag',
+  ],
   shortDays: ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'],
-  months: ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'],
-  shortMonths: ['Jan', 'Feb', 'Mrz', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez']
+  months: [
+    'Januar',
+    'Februar',
+    'März',
+    'April',
+    'Mai',
+    'Juni',
+    'Juli',
+    'August',
+    'September',
+    'Oktober',
+    'November',
+    'Dezember',
+  ],
+  shortMonths: [
+    'Jan',
+    'Feb',
+    'Mrz',
+    'Apr',
+    'Mai',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Okt',
+    'Nov',
+    'Dez',
+  ],
 })
 
 const timeFormat = swissTime.format
@@ -22,7 +56,7 @@ const swissNumbers = formatLocale({
   decimal: ',',
   thousands: '\u2019',
   grouping: [3],
-  currency: ['CHF\u00a0', '']
+  currency: ['CHF\u00a0', ''],
 })
 
 const chf4Format = swissNumbers.format('$.0f')
@@ -40,7 +74,7 @@ const formatPriceChf = (value) => {
 const count4Format = swissNumbers.format('.0f')
 const count5Format = swissNumbers.format(',.0f')
 
-const countFormat = value => {
+const countFormat = (value) => {
   if (String(Math.round(value)).length > 4) {
     return count5Format(value)
   }
@@ -56,5 +90,5 @@ module.exports = {
   utcTimeParse,
   formatPrice,
   formatPriceChf,
-  countFormat
+  countFormat,
 }

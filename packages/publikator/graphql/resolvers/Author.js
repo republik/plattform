@@ -5,5 +5,5 @@ module.exports = {
     const { email } = author
     const user = await pgdb.public.users.findOne({ email })
     return user && transformUser(user)
-  }
+  },
 }

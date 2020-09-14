@@ -6,8 +6,11 @@ module.exports = async (_, { mediaId }, context) => {
   if (!Roles.userIsInRoles(me, ['member'])) {
     return
   }
-  return Collection.getMediaProgressItem({
-    mediaId,
-    userId: me.id
-  }, context)
+  return Collection.getMediaProgressItem(
+    {
+      mediaId,
+      userId: me.id,
+    },
+    context,
+  )
 }

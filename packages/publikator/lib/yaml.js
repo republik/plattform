@@ -6,9 +6,7 @@ const stringify = (obj, footer, header) => {
   const message =
     (header ? `${header}\n` : '') +
     '---\n' +
-    yaml.safeDump(
-      omitBy(obj, isNil)
-    ) +
+    yaml.safeDump(omitBy(obj, isNil)) +
     '---\n' +
     (footer ? `\n${footer}` : '')
   return message
@@ -19,11 +17,11 @@ const parse = (content) => {
   try {
     const body = content.match(/---\n([\s\S]*?)\n---/)[1] || ''
     parsedMessage = yaml.safeLoad(body)
-  } catch (e) { }
+  } catch (e) {}
   return parsedMessage || {}
 }
 
 module.exports = {
   parse,
-  stringify
+  stringify,
 }

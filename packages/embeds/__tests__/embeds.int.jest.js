@@ -10,7 +10,10 @@ afterAll(async () => {
 
 describe('embeds unauthorized', () => {
   test('fetch youtube data with unathorized user', async () => {
-    const { apolloFetch, context: { t } } = global.instance
+    const {
+      apolloFetch,
+      context: { t },
+    } = global.instance
     const result = await apolloFetch({
       query: `
         {
@@ -22,13 +25,16 @@ describe('embeds unauthorized', () => {
             }
           }
         }
-      `
+      `,
     })
     expect(result.errors[0].message).toBe(t('api/signIn'))
   })
 
   test('fetch vimeo data with unathorized user', async () => {
-    const { apolloFetch, context: { t } } = global.instance
+    const {
+      apolloFetch,
+      context: { t },
+    } = global.instance
     const result = await apolloFetch({
       query: `
         {
@@ -40,13 +46,16 @@ describe('embeds unauthorized', () => {
             }
           }
         }
-      `
+      `,
     })
     expect(result.errors[0].message).toBe(t('api/signIn'))
   })
 
   test('fetch twitter data with unathorized user', async () => {
-    const { apolloFetch, context: { t } } = global.instance
+    const {
+      apolloFetch,
+      context: { t },
+    } = global.instance
     const result = await apolloFetch({
       query: `
         {
@@ -59,13 +68,16 @@ describe('embeds unauthorized', () => {
             }
           }
         }
-      `
+      `,
     })
     expect(result.errors[0].message).toBe(t('api/signIn'))
   })
 
   test('fetch documentcloud data with unathorized user', async () => {
-    const { apolloFetch, context: { t } } = global.instance
+    const {
+      apolloFetch,
+      context: { t },
+    } = global.instance
     const result = await apolloFetch({
       query: `
         {
@@ -79,7 +91,7 @@ describe('embeds unauthorized', () => {
             }
           }
         }
-      `
+      `,
     })
     expect(result.errors[0].message).toBe(t('api/signIn'))
   })
@@ -89,7 +101,7 @@ describe('embeds authorized', () => {
   beforeEach(() => {
     global.testUser = {
       email: 'alice.smith@test.project-r.construction',
-      roles: ['editor']
+      roles: ['editor'],
     }
   })
 
@@ -109,13 +121,13 @@ describe('embeds authorized', () => {
             }
           }
         }
-      `
+      `,
     })
 
     expect(result.data.embed).toEqual({
       __typename: 'YoutubeEmbed',
       id: '2lXD0vv-ds8',
-      userName: 'FlyingLotusVEVO'
+      userName: 'FlyingLotusVEVO',
     })
   }, 30000)
 
@@ -131,10 +143,10 @@ describe('embeds authorized', () => {
             }
           }
         }
-      `
+      `,
     })
     expect(result.errors[0].message).toBe(
-      'Youtube API Error: No video found with ID 2-------ds8.'
+      'Youtube API Error: No video found with ID 2-------ds8.',
     )
   }, 30000)
 
@@ -150,12 +162,12 @@ describe('embeds authorized', () => {
             }
           }
         }
-      `
+      `,
     })
     expect(result.data.embed).toEqual({
       __typename: 'VimeoEmbed',
       id: '229537127',
-      userName: 'FutureDeluxe'
+      userName: 'FutureDeluxe',
     })
   }, 30000)
 
@@ -171,10 +183,10 @@ describe('embeds authorized', () => {
             }
           }
         }
-      `
+      `,
     })
     expect(result.errors[0].message).toBe(
-      "Vimeo API Error: The requested video couldn't be found.."
+      "Vimeo API Error: The requested video couldn't be found..",
     )
   }, 30000)
 
@@ -191,13 +203,14 @@ describe('embeds authorized', () => {
             }
           }
         }
-      `
+      `,
     })
     expect(result.data.embed).toEqual({
       __typename: 'TwitterEmbed',
       id: '931088218279366656',
-      text: 'What’s the manager’s message to the fans ahead of #AFCvTHFC?\n\n“Just to support the team and stand with us for the 90 minutes”\n\n#WeAreTheArsenal🔴 https://pbs.twimg.com/tweet_video_thumb/DOvjvs3WAAAZ3ow.jpg',
-      userName: 'Arsenal'
+      text:
+        'What’s the manager’s message to the fans ahead of #AFCvTHFC?\n\n“Just to support the team and stand with us for the 90 minutes”\n\n#WeAreTheArsenal🔴 https://pbs.twimg.com/tweet_video_thumb/DOvjvs3WAAAZ3ow.jpg',
+      userName: 'Arsenal',
     })
   }, 30000)
 
@@ -214,10 +227,10 @@ describe('embeds authorized', () => {
             }
           }
         }
-      `
+      `,
     })
     expect(result.errors[0].message).toBe(
-      'Twitter API Errors: 144: No status found with that ID.'
+      'Twitter API Errors: 144: No status found with that ID.',
     )
   }, 30000)
 
@@ -235,7 +248,7 @@ describe('embeds authorized', () => {
             }
           }
         }
-      `
+      `,
     })
     expect(result.data.embed.__typename).toBe('DocumentCloudEmbed')
     expect(result.data.embed.id).toBe('325931')

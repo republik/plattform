@@ -1,9 +1,9 @@
 const zeroFill = require('zero-fill')
 
-const buildCreateUser = roles => i => ({
+const buildCreateUser = (roles) => (i) => ({
   id: `a0000000-0000-0000-0000-${zeroFill(12, i)}`,
   email: `test${i}@republik.ch`,
-  roles
+  roles,
 })
 
 module.exports = (count, roles) =>

@@ -1,42 +1,40 @@
 const getFieldNames = require('@orbiting/graphql-list-fields')
 
-const { Roles: { ensureUserHasRole } } =
-  require('@orbiting/backend-modules-auth')
+const {
+  Roles: { ensureUserHasRole },
+} = require('@orbiting/backend-modules-auth')
 
-const { getDocumentId } =
-  require('@orbiting/backend-modules-search/lib/Documents')
+const {
+  getDocumentId,
+} = require('@orbiting/backend-modules-search/lib/Documents')
 
-const { graphql: { resolvers: { queries: { documents: getDocuments } } } } =
-  require('@orbiting/backend-modules-documents')
+const {
+  graphql: {
+    resolvers: {
+      queries: { documents: getDocuments },
+    },
+  },
+} = require('@orbiting/backend-modules-documents')
 
 const { getRepos, tagNormalizer } = require('../../../lib/github')
 
-const {
-  commit: getCommit,
-  meta: getMeta
-} = require('../Repo')
+const { commit: getCommit, meta: getMeta } = require('../Repo')
 const { document: getDocument } = require('../Commit')
 
 const hasFieldRequested = (fieldName, GraphQLResolveInfo) => {
   const fields = getFieldNames(GraphQLResolveInfo)
 
-  return !!fields.find(field => field.indexOf(`.${fieldName}`) > -1)
+  return !!fields.find((field) => field.indexOf(`.${fieldName}`) > -1)
 }
 
-const {
-  GITHUB_LOGIN,
-  REPOS_NAME_FILTER
-} = process.env
+const { GITHUB_LOGIN, REPOS_NAME_FILTER } = process.env
 
 module.exports = async (__, args, context, info) => {
   ensureUserHasRole(context.user, 'editor')
 
-  const {
-    pageInfo,
-    totalCount,
-    totalDiskUsage,
-    repositories
-  } = await getRepos(args)
+  const { pageInfo, totalCount, totalDiskUsage, repositories } = await getRepos(
+    args,
+  )
 
   // List of document IDs, referenced in repo.latestPublications
   const documentIds = []
@@ -44,27 +42,31 @@ module.exports = async (__, args, context, info) => {
   let repos = await Promise.all(
     repositories
       // skip uninitialized repos
-      .filter(repository => repository.defaultBranchRef)
+      .filter((repository) => repository.defaultBranchRef)
       // filter repo names
-      .filter(repository =>
-        !REPOS_NAME_FILTER || !!REPOS_NAME_FILTER.split(',').find(name => repository.name.indexOf(name) > -1)
+      .filter(
+        (repository) =>
+          !REPOS_NAME_FILTER ||
+          !!REPOS_NAME_FILTER.split(',').find(
+            (name) => repository.name.indexOf(name) > -1,
+          ),
       )
       .map(async (repository) => {
         const repo = {
           ...repository,
-          id: `${GITHUB_LOGIN}/${repository.name}`
+          id: `${GITHUB_LOGIN}/${repository.name}`,
         }
 
         const latestCommit = await getCommit(
           repo,
           { id: repo.defaultBranchRef.target.oid },
-          context
+          context,
         )
 
         const document = await getDocument(
           latestCommit,
           { publicAssets: true },
-          context
+          context,
         )
 
         return {
@@ -72,55 +74,61 @@ module.exports = async (__, args, context, info) => {
           meta: await getMeta(repo),
           latestCommit: {
             ...latestCommit,
-            document
+            document,
           },
           latestPublications: [
             { refName: 'publication', ref: repo.publication },
             { refName: 'prepublication', ref: repo.prepublication },
-            { refName: 'scheduled-publication', ref: repo.scheduledPublication },
-            { refName: 'scheduled-prepublication', ref: repo.scheduledPrepublication }
+            {
+              refName: 'scheduled-publication',
+              ref: repo.scheduledPublication,
+            },
+            {
+              refName: 'scheduled-prepublication',
+              ref: repo.scheduledPrepublication,
+            },
           ]
-            .filter(pub => pub.ref && pub.ref.target)
-            .map(pub => tagNormalizer(pub.ref.target, repo.id, pub.refName))
-            .map(pub => {
+            .filter((pub) => pub.ref && pub.ref.target)
+            .map((pub) => tagNormalizer(pub.ref.target, repo.id, pub.refName))
+            .map((pub) => {
               documentIds.push(
                 getDocumentId({
                   repoId: pub.repo.id,
                   commitId: pub.commit.id,
-                  versionName: pub.name
-                })
+                  versionName: pub.name,
+                }),
               )
 
               return pub
-            })
+            }),
         }
-      })
+      }),
   )
 
   if (info && hasFieldRequested('document', info)) {
     // Find all documents reference in latestPublications
-    const publicationDocumentsConnection =
-      await getDocuments(
-        __,
-        { first: documentIds.length, ids: documentIds },
-        context
-      )
+    const publicationDocumentsConnection = await getDocuments(
+      __,
+      { first: documentIds.length, ids: documentIds },
+      context,
+    )
 
     // Add document to each corresponding publication
-    repos = repos.map(repo => ({
+    repos = repos.map((repo) => ({
       ...repo,
-      latestPublications:
-        repo.latestPublications.map(publication => ({
-          ...publication,
-          document:
-            publicationDocumentsConnection.nodes.find(node => {
-              return node.id === getDocumentId({
-                repoId: publication.repo.id,
-                commitId: publication.commit.id,
-                versionName: publication.name
-              })
+      latestPublications: repo.latestPublications.map((publication) => ({
+        ...publication,
+        document: publicationDocumentsConnection.nodes.find((node) => {
+          return (
+            node.id ===
+            getDocumentId({
+              repoId: publication.repo.id,
+              commitId: publication.commit.id,
+              versionName: publication.name,
             })
-        }))
+          )
+        }),
+      })),
     }))
   }
 
@@ -128,6 +136,6 @@ module.exports = async (__, args, context, info) => {
     nodes: repos,
     pageInfo,
     totalCount,
-    totalDiskUsage
+    totalDiskUsage,
   }
 }

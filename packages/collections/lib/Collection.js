@@ -1,69 +1,73 @@
 const {
   COLLECTION_NAME: PROGRESS_COLLECTION_NAME,
-  POLICY_NAME: PROGRESS_POLICY_NAME
+  POLICY_NAME: PROGRESS_POLICY_NAME,
 } = require('./Progress')
 
 const {
-  Consents: { registerRevokeHook }
+  Consents: { registerRevokeHook },
 } = require('@orbiting/backend-modules-auth')
 
-registerRevokeHook(({ userId, consent }, context) =>
-  consent === PROGRESS_POLICY_NAME &&
-    clearItems(userId, PROGRESS_COLLECTION_NAME, context)
+registerRevokeHook(
+  ({ userId, consent }, context) =>
+    consent === PROGRESS_POLICY_NAME &&
+    clearItems(userId, PROGRESS_COLLECTION_NAME, context),
 )
 
 const assignUserId = (collection, userId) =>
-  collection && ({
+  collection && {
     ...collection,
-    userId
-  })
+    userId,
+  }
 
-const spreadItemData = item =>
-  item && ({
+const spreadItemData = (item) =>
+  item && {
     ...item,
-    ...item.data
-  })
+    ...item.data,
+  }
 
 const findForUser = (userId, { pgdb }) =>
-  pgdb.public.collections.find({
-    hidden: false
-  })
-    .then(cs => cs
-      .map(c => assignUserId(c, userId))
-    )
+  pgdb.public.collections
+    .find({
+      hidden: false,
+    })
+    .then((cs) => cs.map((c) => assignUserId(c, userId)))
 
 const byNameForUser = (name, userId, { loaders }) =>
-  loaders.Collection.byKeyObj.load({
-    name
-  })
-    .then(c => assignUserId(c, userId))
+  loaders.Collection.byKeyObj
+    .load({
+      name,
+    })
+    .then((c) => assignUserId(c, userId))
 
 const byIdForUser = (id, userId, { loaders }) =>
-  loaders.Collection.byKeyObj.load({ id })
-    .then(c => assignUserId(c, userId))
+  loaders.Collection.byKeyObj.load({ id }).then((c) => assignUserId(c, userId))
 
 const findDocumentItems = (args, { pgdb }) =>
-  pgdb.public.collectionDocumentItems.find(
-    args,
-    { orderBy: ['updatedAt desc'] }
-  )
-    .then(items => items
-      .map(spreadItemData)
-    )
+  pgdb.public.collectionDocumentItems
+    .find(args, { orderBy: ['updatedAt desc'] })
+    .then((items) => items.map(spreadItemData))
 
-const getItem = async (entityName, { collectionName, ...rest }, { loaders, t }) => {
+const getItem = async (
+  entityName,
+  { collectionName, ...rest },
+  { loaders, t },
+) => {
   if (!loaders[entityName]) {
     console.error(`missing loader ${entityName}`)
     throw new Error(t('api/unexpected'))
   }
   const collection = await loaders.Collection.byKeyObj.load({
-    name: collectionName
+    name: collectionName,
   })
-  return collection && loaders[entityName].byKeyObj.load({
-    ...rest,
-    collectionId: collection.id
-  })
-    .then(spreadItemData)
+  return (
+    collection &&
+    loaders[entityName].byKeyObj
+      .load({
+        ...rest,
+        collectionId: collection.id,
+      })
+      .then(spreadItemData)
+  )
 }
 
 const upsertItem = async (tableName, query, data, { pgdb, t }) => {
@@ -74,13 +78,14 @@ const upsertItem = async (tableName, query, data, { pgdb, t }) => {
 
   const existingItem = await pgdb.public[tableName].findOne(query)
   if (!existingItem) {
-    return pgdb.public[tableName].insertAndGet(
-      {
-        ...query,
-        data
-      },
-      { skipUndefined: true }
-    )
+    return pgdb.public[tableName]
+      .insertAndGet(
+        {
+          ...query,
+          data,
+        },
+        { skipUndefined: true },
+      )
       .then(spreadItemData)
   }
 
@@ -100,46 +105,54 @@ const upsertItem = async (tableName, query, data, { pgdb, t }) => {
     if (existingMax.data[accessor] > newData[accessor]) {
       newData = {
         ...newData,
-        max: existingMax
+        max: existingMax,
       }
     }
   }
 
-  return pgdb.public[tableName].updateAndGetOne(
-    {
-      id: existingItem.id
-    },
-    {
-      ...query,
-      data: newData,
-      updatedAt: new Date()
-    },
-    { skipUndefined: true }
-  )
+  return pgdb.public[tableName]
+    .updateAndGetOne(
+      {
+        id: existingItem.id,
+      },
+      {
+        ...query,
+        data: newData,
+        updatedAt: new Date(),
+      },
+      { skipUndefined: true },
+    )
     .then(spreadItemData)
 }
 
 const getDocumentItem = async (args, context) =>
   getItem('CollectionDocumentItem', args, context)
 
-const upsertDocumentItem = async (userId, collectionId, repoId, data, context) =>
+const upsertDocumentItem = async (
+  userId,
+  collectionId,
+  repoId,
+  data,
+  context,
+) =>
   upsertItem(
     'collectionDocumentItems',
     {
       userId,
       collectionId,
-      repoId
+      repoId,
     },
     data,
-    context
+    context,
   )
 
 const deleteDocumentItem = (userId, collectionId, repoId, { pgdb }) =>
-  pgdb.public.collectionDocumentItems.deleteAndGetOne({
-    userId,
-    collectionId,
-    repoId
-  })
+  pgdb.public.collectionDocumentItems
+    .deleteAndGetOne({
+      userId,
+      collectionId,
+      repoId,
+    })
     .then(spreadItemData)
 
 const getMediaItem = async (args, context) =>
@@ -151,55 +164,60 @@ const upsertMediaItem = async (userId, collectionId, mediaId, data, context) =>
     {
       userId,
       collectionId,
-      mediaId
+      mediaId,
     },
     data,
-    context
+    context,
   )
 
 const deleteMediaItem = (userId, collectionId, mediaId, { pgdb }) =>
-  pgdb.public.collectionMediaItems.deleteAndGetOne({
-    userId,
-    collectionId,
-    mediaId
-  })
+  pgdb.public.collectionMediaItems
+    .deleteAndGetOne({
+      userId,
+      collectionId,
+      mediaId,
+    })
     .then(spreadItemData)
 
 const getDocumentProgressItem = (args, context) =>
   getDocumentItem(
     {
       ...args,
-      collectionName: PROGRESS_COLLECTION_NAME
+      collectionName: PROGRESS_COLLECTION_NAME,
     },
-    context
+    context,
   )
 
 const getMediaProgressItem = (args, context) =>
   getMediaItem(
     {
       ...args,
-      collectionName: PROGRESS_COLLECTION_NAME
+      collectionName: PROGRESS_COLLECTION_NAME,
     },
-    context
+    context,
   )
 
 const clearItems = async (userId, collectionName, { pgdb, loaders }) => {
   const collection = await loaders.Collection.byKeyObj.load({
-    name: collectionName
+    name: collectionName,
   })
-  return collection && Promise.all([
-    pgdb.public.collectionDocumentItems.delete({
-      userId,
-      collectionId: collection.id
-    }),
-    pgdb.public.collectionMediaItems.delete({
-      userId,
-      collectionId: collection.id
-    })
-  ])
+  return (
+    collection &&
+    Promise.all([
+      pgdb.public.collectionDocumentItems.delete({
+        userId,
+        collectionId: collection.id,
+      }),
+      pgdb.public.collectionMediaItems.delete({
+        userId,
+        collectionId: collection.id,
+      }),
+    ])
+  )
 }
 
-const getItemMax = item => spreadItemData(item.data && item.data.max ? item.data.max : item)
+const getItemMax = (item) =>
+  spreadItemData(item.data && item.data.max ? item.data.max : item)
 
 module.exports = {
   findForUser,
@@ -221,5 +239,5 @@ module.exports = {
 
   clearItems,
 
-  getItemMax
+  getItemMax,
 }

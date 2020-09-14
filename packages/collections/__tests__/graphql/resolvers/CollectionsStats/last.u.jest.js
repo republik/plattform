@@ -19,19 +19,19 @@ describe('CollectionsStats.last', () => {
       loaders: {
         Collection: {
           byKeyObj: {
-            load: loadMock
-          }
-        }
-      }
+            load: loadMock,
+          },
+        },
+      },
     }
 
     // Hinder cache util to get any data
     const getMock = jest.fn().mockReturnValue(null)
     createCache.mockImplementation(() => ({ get: getMock }))
 
-    return expect(UUT(defaultObj, defaultArgs, context))
-      .rejects
-      .toThrowError('Unable to retrieve pre-populated data for Collection.CollectionsStats.last')
+    return expect(UUT(defaultObj, defaultArgs, context)).rejects.toThrowError(
+      'Unable to retrieve pre-populated data for Collection.CollectionsStats.last',
+    )
   })
 
   it('throws error if collection name cannot be found', async () => {
@@ -43,41 +43,43 @@ describe('CollectionsStats.last', () => {
       loaders: {
         Collection: {
           byKeyObj: {
-            load: loadMock
-          }
-        }
-      }
+            load: loadMock,
+          },
+        },
+      },
     }
 
-    return expect(UUT(defaultObj, { name: 'foobar' }, context))
-      .rejects
-      .toThrowError('Collection "foobar" not found')
+    return expect(
+      UUT(defaultObj, { name: 'foobar' }, context),
+    ).rejects.toThrowError('Collection "foobar" not found')
   })
 
   it('returns pre-populated data', async () => {
     const expectedCollectionId = Symbol('collection id')
     const expectedResult = {
       collectionId: expectedCollectionId,
-      updatedAt: Symbol('updatedAt')
+      updatedAt: Symbol('updatedAt'),
     }
 
-    const loadMock = jest.fn().mockImplementation(() => ({ id: expectedCollectionId }))
+    const loadMock = jest
+      .fn()
+      .mockImplementation(() => ({ id: expectedCollectionId }))
     const context = {
       loaders: {
         Collection: {
           byKeyObj: {
-            load: loadMock
-          }
-        }
-      }
+            load: loadMock,
+          },
+        },
+      },
     }
 
     const prepopulatedData = {
       result: [
         expectedResult,
-        { collectionId: Symbol('some other collection') }
+        { collectionId: Symbol('some other collection') },
       ],
-      updatedAt: expectedResult.updatedAt
+      updatedAt: expectedResult.updatedAt,
     }
 
     const getMock = jest.fn().mockReturnValue(prepopulatedData)

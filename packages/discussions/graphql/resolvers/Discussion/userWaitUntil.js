@@ -15,7 +15,7 @@ module.exports = async ({ minInterval, id }, _, { pgdb, user }) => {
     return null
   }
   if (BANS.length) {
-    const userBan = BANS.find(ban => ban.userId === user.id)
+    const userBan = BANS.find((ban) => ban.userId === user.id)
     if (userBan) {
       const expire = new Date(userBan.expire)
       if (new Date() < expire) {
@@ -27,18 +27,20 @@ module.exports = async ({ minInterval, id }, _, { pgdb, user }) => {
     return null
   }
   const now = new Date().getTime()
-  const lastCommentByUser = await pgdb.public.comments.findFirst({
-    userId: user.id,
-    discussionId: id,
-    published: true
-  }, {
-    orderBy: ['createdAt desc']
-  })
+  const lastCommentByUser = await pgdb.public.comments.findFirst(
+    {
+      userId: user.id,
+      discussionId: id,
+      published: true,
+    },
+    {
+      orderBy: ['createdAt desc'],
+    },
+  )
   if (!lastCommentByUser) {
     return null
   }
-  const nextPossibleTimestamp = lastCommentByUser.createdAt.getTime() + minInterval
-  return nextPossibleTimestamp > now
-    ? new Date(nextPossibleTimestamp)
-    : null
+  const nextPossibleTimestamp =
+    lastCommentByUser.createdAt.getTime() + minInterval
+  return nextPossibleTimestamp > now ? new Date(nextPossibleTimestamp) : null
 }

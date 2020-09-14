@@ -8,27 +8,29 @@ const argv = yargs
   .option('company', {
     alias: 'c',
     string: true,
-    default: 'PROJECT_R'
+    default: 'PROJECT_R',
   })
   .option('begin', {
     alias: 'b',
     describe: '(day in) first month e.g. 2019-02-01',
     coerce: moment,
-    default: moment().subtract(1, 'month')
+    default: moment().subtract(1, 'month'),
   })
   .option('end', {
     alias: 'e',
     describe: '(day in) last month e.g. 2019-03-01',
     coerce: moment,
-    default: moment().subtract(1, 'month')
+    default: moment().subtract(1, 'month'),
   })
   .help()
-  .version()
-  .argv
+  .version().argv
 
 const METHODS = ['PAYMENTSLIP', 'STRIPE', 'POSTFINANCECARD', 'PAYPAL']
 
-const currency = new Intl.NumberFormat('de-DE', { minimumFractionDigits: 2, useGrouping: false })
+const currency = new Intl.NumberFormat('de-DE', {
+  minimumFractionDigits: 2,
+  useGrouping: false,
+})
 
 const evaluateCompanyMonth = async (company, begin, end, pgdb) => {
   const query = `
@@ -61,8 +63,12 @@ const evaluateCompanyMonth = async (company, begin, end, pgdb) => {
 
     WHERE
       (
-        pay."createdAt" AT TIME ZONE 'Europe/Zurich' BETWEEN '${begin.format('YYYY-MM-DD')}' AND '${end.format('YYYY-MM-DD')}'
-        OR pay."updatedAt" AT TIME ZONE 'Europe/Zurich' BETWEEN '${begin.format('YYYY-MM-DD')}' AND '${end.format('YYYY-MM-DD')}'
+        pay."createdAt" AT TIME ZONE 'Europe/Zurich' BETWEEN '${begin.format(
+          'YYYY-MM-DD',
+        )}' AND '${end.format('YYYY-MM-DD')}'
+        OR pay."updatedAt" AT TIME ZONE 'Europe/Zurich' BETWEEN '${begin.format(
+          'YYYY-MM-DD',
+        )}' AND '${end.format('YYYY-MM-DD')}'
       )
       AND po.amount > 0
 
@@ -78,7 +84,7 @@ const evaluateCompanyMonth = async (company, begin, end, pgdb) => {
 
   const data = {}
 
-  METHODS.forEach(method => {
+  METHODS.forEach((method) => {
     data[method] = {}
     const results = data[method]
 
@@ -91,18 +97,20 @@ const evaluateCompanyMonth = async (company, begin, end, pgdb) => {
        */
 
       const Mitgliedschaften = transactionItems
-        .filter(i => i.createdAt >= begin && i.createdAt < end)
-        .filter(i => i.companyName === company)
-        .filter(i => i.method === method)
-        .filter(i => i.type === 'MembershipType')
+        .filter((i) => i.createdAt >= begin && i.createdAt < end)
+        .filter((i) => i.companyName === company)
+        .filter((i) => i.method === method)
+        .filter((i) => i.type === 'MembershipType')
 
       results.Mitgliedschaften = {
-        Anzahl: Mitgliedschaften
-          .map(m => m.amount * (m.periods || 1))
-          .reduce((p, c) => p + c, 0),
-        Betrag: Mitgliedschaften
-          .map(m => m.amount * (m.periods || 1) * MitgliedschaftBetrag)
-          .reduce((p, c) => p + c, 0) / 100
+        Anzahl: Mitgliedschaften.map((m) => m.amount * (m.periods || 1)).reduce(
+          (p, c) => p + c,
+          0,
+        ),
+        Betrag:
+          Mitgliedschaften.map(
+            (m) => m.amount * (m.periods || 1) * MitgliedschaftBetrag,
+          ).reduce((p, c) => p + c, 0) / 100,
       }
 
       /**
@@ -110,77 +118,92 @@ const evaluateCompanyMonth = async (company, begin, end, pgdb) => {
        */
 
       const StornierteMitgliedschaften = transactionItems
-        .filter(i => i.updatedAt >= begin && i.updatedAt < end)
-        .filter(i => i.companyName === company)
-        .filter(i => i.method === method)
-        .filter(i => i.type === 'MembershipType')
-        .filter(i => ['CANCELLED', 'REFUNDED'].includes(i.status))
+        .filter((i) => i.updatedAt >= begin && i.updatedAt < end)
+        .filter((i) => i.companyName === company)
+        .filter((i) => i.method === method)
+        .filter((i) => i.type === 'MembershipType')
+        .filter((i) => ['CANCELLED', 'REFUNDED'].includes(i.status))
 
       results.StornierteMitgliedschaften = {
-        Anzahl: StornierteMitgliedschaften
-          .map(m => m.amount * (m.periods || 1))
-          .reduce((p, c) => p + c, 0),
-        Betrag: StornierteMitgliedschaften
-          .map(m => m.amount * (m.periods || 1) * MitgliedschaftBetrag)
-          .reduce((p, c) => p - c, 0) / 100
+        Anzahl: StornierteMitgliedschaften.map(
+          (m) => m.amount * (m.periods || 1),
+        ).reduce((p, c) => p + c, 0),
+        Betrag:
+          StornierteMitgliedschaften.map(
+            (m) => m.amount * (m.periods || 1) * MitgliedschaftBetrag,
+          ).reduce((p, c) => p - c, 0) / 100,
       }
 
       /**
        * Reduzierte Mitgliedschaften
        */
 
-      const ReduzierteMitgliedschaften = Mitgliedschaften
-        .filter(m => m.donation < 0)
+      const ReduzierteMitgliedschaften = Mitgliedschaften.filter(
+        (m) => m.donation < 0,
+      )
 
       results.ReduzierteMitgliedschaften = {
-        Betrag: ReduzierteMitgliedschaften
-          .map(m => m.amount * (m.periods || 1) * m.donation)
-          .reduce((p, c) => p + c, 0) / 100
+        Betrag:
+          ReduzierteMitgliedschaften.map(
+            (m) => m.amount * (m.periods || 1) * m.donation,
+          ).reduce((p, c) => p + c, 0) / 100,
       }
 
       /**
        * Stornierte, reduzierte Mitgliedschaften
        */
 
-      const StornierteReduzierteMitgliedschaften = StornierteMitgliedschaften
-        .filter(m => m.donation < 0)
+      const StornierteReduzierteMitgliedschaften = StornierteMitgliedschaften.filter(
+        (m) => m.donation < 0,
+      )
 
       results.StornierteReduzierteMitgliedschaften = {
-        Betrag: StornierteReduzierteMitgliedschaften
-          .map(m => m.amount * (m.periods || 1) * m.donation)
-          .reduce((p, c) => p - c, 0) / 100
+        Betrag:
+          StornierteReduzierteMitgliedschaften.map(
+            (m) => m.amount * (m.periods || 1) * m.donation,
+          ).reduce((p, c) => p - c, 0) / 100,
       }
 
       /**
        * Gönner-Mitgliedschaften
        */
 
-      const GoennerMitgliedschaften = Mitgliedschaften
-        .filter(i => i.packageName === 'BENEFACTOR' || (i.packageName === 'PROLONG' && i.price >= 100000))
+      const GoennerMitgliedschaften = Mitgliedschaften.filter(
+        (i) =>
+          i.packageName === 'BENEFACTOR' ||
+          (i.packageName === 'PROLONG' && i.price >= 100000),
+      )
 
       results.GoennerMitgliedschaften = {
-        Anzahl: GoennerMitgliedschaften
-          .map(m => m.amount * (m.periods || 1))
-          .reduce((p, c) => p + c, 0),
-        Betrag: GoennerMitgliedschaften
-          .map(m => m.amount * (m.periods || 1) * (m.price - MitgliedschaftBetrag))
-          .reduce((p, c) => p + c, 0) / 100
+        Anzahl: GoennerMitgliedschaften.map(
+          (m) => m.amount * (m.periods || 1),
+        ).reduce((p, c) => p + c, 0),
+        Betrag:
+          GoennerMitgliedschaften.map(
+            (m) =>
+              m.amount * (m.periods || 1) * (m.price - MitgliedschaftBetrag),
+          ).reduce((p, c) => p + c, 0) / 100,
       }
 
       /**
        * Stornierte Gönner-Mitgliedschaften
        */
 
-      const StornierteGoennerMitgliedschaften = StornierteMitgliedschaften
-        .filter(i => i.packageName === 'BENEFACTOR' || (i.packageName === 'PROLONG' && i.price >= 100000))
+      const StornierteGoennerMitgliedschaften = StornierteMitgliedschaften.filter(
+        (i) =>
+          i.packageName === 'BENEFACTOR' ||
+          (i.packageName === 'PROLONG' && i.price >= 100000),
+      )
 
       results.StornierteGoennerMitgliedschaften = {
-        Anzahl: StornierteGoennerMitgliedschaften
-          .map(m => m.amount * (m.periods || 1))
-          .reduce((p, c) => p + c, 0),
-        Betrag: StornierteGoennerMitgliedschaften
-          .map(m => m.amount * (m.periods || 1) * (m.price - MitgliedschaftBetrag))
-          .reduce((p, c) => p - c, 0) / 100
+        Anzahl: StornierteGoennerMitgliedschaften.map(
+          (m) => m.amount * (m.periods || 1),
+        ).reduce((p, c) => p + c, 0),
+        Betrag:
+          StornierteGoennerMitgliedschaften.map(
+            (m) =>
+              m.amount * (m.periods || 1) * (m.price - MitgliedschaftBetrag),
+          ).reduce((p, c) => p - c, 0) / 100,
       }
 
       /**
@@ -188,15 +211,21 @@ const evaluateCompanyMonth = async (company, begin, end, pgdb) => {
        */
 
       const Spenden = _.uniqBy(transactionItems, 'id')
-        .filter(i => i.createdAt >= begin && i.createdAt < end)
-        .filter(i => i.companyName === company)
-        .filter(i => i.method === method)
-        .filter(i => i.donation > 0 || ['DONATE', 'DONATE_POT'].includes(i.packageName))
+        .filter((i) => i.createdAt >= begin && i.createdAt < end)
+        .filter((i) => i.companyName === company)
+        .filter((i) => i.method === method)
+        .filter(
+          (i) =>
+            i.donation > 0 || ['DONATE', 'DONATE_POT'].includes(i.packageName),
+        )
 
       results.Spenden = {
-        Betrag: Spenden
-          .map(m => ['DONATE', 'DONATE_POT'].includes(m.packageName) ? m.total : m.donation)
-          .reduce((p, c) => p + c, 0) / 100
+        Betrag:
+          Spenden.map((m) =>
+            ['DONATE', 'DONATE_POT'].includes(m.packageName)
+              ? m.total
+              : m.donation,
+          ).reduce((p, c) => p + c, 0) / 100,
       }
 
       /**
@@ -204,16 +233,22 @@ const evaluateCompanyMonth = async (company, begin, end, pgdb) => {
        */
 
       const StornierteSpenden = _.uniqBy(transactionItems, 'id')
-        .filter(i => i.updatedAt >= begin && i.updatedAt < end)
-        .filter(i => i.companyName === company)
-        .filter(i => i.method === method)
-        .filter(i => i.donation > 0 || ['DONATE', 'DONATE_POT'].includes(i.packageName))
-        .filter(i => ['CANCELLED', 'REFUNDED'].includes(i.status))
+        .filter((i) => i.updatedAt >= begin && i.updatedAt < end)
+        .filter((i) => i.companyName === company)
+        .filter((i) => i.method === method)
+        .filter(
+          (i) =>
+            i.donation > 0 || ['DONATE', 'DONATE_POT'].includes(i.packageName),
+        )
+        .filter((i) => ['CANCELLED', 'REFUNDED'].includes(i.status))
 
       results.StornierteSpenden = {
-        Betrag: StornierteSpenden
-          .map(m => ['DONATE', 'DONATE_POT'].includes(m.packageName) ? m.total : m.donation)
-          .reduce((p, c) => p - c, 0) / 100
+        Betrag:
+          StornierteSpenden.map((m) =>
+            ['DONATE', 'DONATE_POT'].includes(m.packageName)
+              ? m.total
+              : m.donation,
+          ).reduce((p, c) => p - c, 0) / 100,
       }
     } // if (company === 'PROJECT_R')
 
@@ -223,19 +258,22 @@ const evaluateCompanyMonth = async (company, begin, end, pgdb) => {
        */
 
       const Abonnements = transactionItems
-        .filter(i => i.createdAt >= begin && i.createdAt < end)
-        .filter(i => i.companyName === company)
-        .filter(i => i.method === method)
-        .filter(i => i.packageName === 'MONTHLY_ABO')
-        .filter(i => i.type === 'MembershipType')
+        .filter((i) => i.createdAt >= begin && i.createdAt < end)
+        .filter((i) => i.companyName === company)
+        .filter((i) => i.method === method)
+        .filter((i) => i.packageName === 'MONTHLY_ABO')
+        .filter((i) => i.type === 'MembershipType')
 
       results.Abonnements = {
-        Anzahl: Abonnements
-          .map(m => m.amount * (m.periods || 1))
-          .reduce((p, c) => p + c, 0),
-        Betrag: Abonnements
-          .map(m => m.amount * (m.periods || 1) * m.price)
-          .reduce((p, c) => p + c, 0) / 100
+        Anzahl: Abonnements.map((m) => m.amount * (m.periods || 1)).reduce(
+          (p, c) => p + c,
+          0,
+        ),
+        Betrag:
+          Abonnements.map((m) => m.amount * (m.periods || 1) * m.price).reduce(
+            (p, c) => p + c,
+            0,
+          ) / 100,
       }
 
       /**
@@ -243,20 +281,21 @@ const evaluateCompanyMonth = async (company, begin, end, pgdb) => {
        */
 
       const StornierteAbonnements = transactionItems
-        .filter(i => i.updatedAt >= begin && i.updatedAt < end)
-        .filter(i => i.companyName === company)
-        .filter(i => i.method === method)
-        .filter(i => i.packageName === 'MONTHLY_ABO')
-        .filter(i => i.type === 'MembershipType')
-        .filter(i => ['CANCELLED', 'REFUNDED'].includes(i.status))
+        .filter((i) => i.updatedAt >= begin && i.updatedAt < end)
+        .filter((i) => i.companyName === company)
+        .filter((i) => i.method === method)
+        .filter((i) => i.packageName === 'MONTHLY_ABO')
+        .filter((i) => i.type === 'MembershipType')
+        .filter((i) => ['CANCELLED', 'REFUNDED'].includes(i.status))
 
       results.StornierteAbonnements = {
-        Anzahl: StornierteAbonnements
-          .map(m => m.amount * (m.periods || 1))
-          .reduce((p, c) => p + c, 0),
-        Betrag: StornierteAbonnements
-          .map(m => m.amount * (m.periods || 1) * m.price)
-          .reduce((p, c) => p - c, 0) / 100
+        Anzahl: StornierteAbonnements.map(
+          (m) => m.amount * (m.periods || 1),
+        ).reduce((p, c) => p + c, 0),
+        Betrag:
+          StornierteAbonnements.map(
+            (m) => m.amount * (m.periods || 1) * m.price,
+          ).reduce((p, c) => p - c, 0) / 100,
       }
 
       /**
@@ -264,19 +303,20 @@ const evaluateCompanyMonth = async (company, begin, end, pgdb) => {
        */
 
       const Monatsgeschenkabos = transactionItems
-        .filter(i => i.createdAt >= begin && i.createdAt < end)
-        .filter(i => i.companyName === company)
-        .filter(i => i.method === method)
-        .filter(i => i.packageName === 'ABO_GIVE_MONTHS')
-        .filter(i => i.type === 'MembershipType')
+        .filter((i) => i.createdAt >= begin && i.createdAt < end)
+        .filter((i) => i.companyName === company)
+        .filter((i) => i.method === method)
+        .filter((i) => i.packageName === 'ABO_GIVE_MONTHS')
+        .filter((i) => i.type === 'MembershipType')
 
       results.Monatsgeschenkabos = {
-        Anzahl: Monatsgeschenkabos
-          .map(m => m.amount * (m.periods || 1))
-          .reduce((p, c) => p + c, 0),
-        Betrag: Monatsgeschenkabos
-          .map(m => m.amount * (m.periods || 1) * m.price)
-          .reduce((p, c) => p + c, 0) / 100
+        Anzahl: Monatsgeschenkabos.map(
+          (m) => m.amount * (m.periods || 1),
+        ).reduce((p, c) => p + c, 0),
+        Betrag:
+          Monatsgeschenkabos.map(
+            (m) => m.amount * (m.periods || 1) * m.price,
+          ).reduce((p, c) => p + c, 0) / 100,
       }
 
       /**
@@ -284,20 +324,21 @@ const evaluateCompanyMonth = async (company, begin, end, pgdb) => {
        */
 
       const StornierteMonatsgeschenkabos = transactionItems
-        .filter(i => i.updatedAt >= begin && i.updatedAt < end)
-        .filter(i => i.companyName === company)
-        .filter(i => i.method === method)
-        .filter(i => i.packageName === 'ABO_GIVE_MONTHS')
-        .filter(i => i.type === 'MembershipType')
-        .filter(i => ['CANCELLED', 'REFUNDED'].includes(i.status))
+        .filter((i) => i.updatedAt >= begin && i.updatedAt < end)
+        .filter((i) => i.companyName === company)
+        .filter((i) => i.method === method)
+        .filter((i) => i.packageName === 'ABO_GIVE_MONTHS')
+        .filter((i) => i.type === 'MembershipType')
+        .filter((i) => ['CANCELLED', 'REFUNDED'].includes(i.status))
 
       results.StornierteMonatsgeschenkabos = {
-        Anzahl: StornierteMonatsgeschenkabos
-          .map(m => m.amount * (m.periods || 1))
-          .reduce((p, c) => p + c, 0),
-        Betrag: StornierteMonatsgeschenkabos
-          .map(m => m.amount * (m.periods || 1) * m.price)
-          .reduce((p, c) => p - c, 0) / 100
+        Anzahl: StornierteMonatsgeschenkabos.map(
+          (m) => m.amount * (m.periods || 1),
+        ).reduce((p, c) => p + c, 0),
+        Betrag:
+          StornierteMonatsgeschenkabos.map(
+            (m) => m.amount * (m.periods || 1) * m.price,
+          ).reduce((p, c) => p - c, 0) / 100,
       }
     }
 
@@ -306,15 +347,17 @@ const evaluateCompanyMonth = async (company, begin, end, pgdb) => {
      */
 
     const Handelsware = transactionItems
-      .filter(i => i.createdAt >= begin && i.createdAt < end)
-      .filter(i => i.companyName === company)
-      .filter(i => i.method === method)
-      .filter(i => i.type === 'Goodie')
+      .filter((i) => i.createdAt >= begin && i.createdAt < end)
+      .filter((i) => i.companyName === company)
+      .filter((i) => i.method === method)
+      .filter((i) => i.type === 'Goodie')
 
     results.Handelsware = {
-      Betrag: Handelsware
-        .map(m => m.amount * (m.periods || 1) * m.price)
-        .reduce((p, c) => p + c, 0) / 100
+      Betrag:
+        Handelsware.map((m) => m.amount * (m.periods || 1) * m.price).reduce(
+          (p, c) => p + c,
+          0,
+        ) / 100,
     }
 
     /**
@@ -322,39 +365,52 @@ const evaluateCompanyMonth = async (company, begin, end, pgdb) => {
      */
 
     const StornierteHandelsware = transactionItems
-      .filter(i => i.updatedAt >= begin && i.updatedAt < end)
-      .filter(i => i.companyName === company)
-      .filter(i => i.method === method)
-      .filter(i => i.type === 'Goodie')
-      .filter(i => ['CANCELLED', 'REFUNDED'].includes(i.status))
+      .filter((i) => i.updatedAt >= begin && i.updatedAt < end)
+      .filter((i) => i.companyName === company)
+      .filter((i) => i.method === method)
+      .filter((i) => i.type === 'Goodie')
+      .filter((i) => ['CANCELLED', 'REFUNDED'].includes(i.status))
 
     results.StornierteHandelsware = {
-      Betrag: StornierteHandelsware
-        .map(m => m.amount * (m.periods || 1) * m.price)
-        .reduce((p, c) => p - c, 0) / 100
+      Betrag:
+        StornierteHandelsware.map(
+          (m) => m.amount * (m.periods || 1) * m.price,
+        ).reduce((p, c) => p - c, 0) / 100,
     }
   })
 
   // console.log(data)
 
-  Object.keys(data).forEach(method => {
-    Object.keys(data[method]).forEach(aggregation => {
+  Object.keys(data).forEach((method) => {
+    Object.keys(data[method]).forEach((aggregation) => {
       const Anzahl = data[method][aggregation].Anzahl || ''
       const Betrag = currency.format(data[method][aggregation].Betrag || 0)
-      console.log(`${company}\t${begin.format('YYYY-MM')}\t${method}\t${aggregation}\t${Anzahl}\t${Betrag}`)
+      console.log(
+        `${company}\t${begin.format(
+          'YYYY-MM',
+        )}\t${method}\t${aggregation}\t${Anzahl}\t${Betrag}`,
+      )
     })
   })
 }
 
-PgDb.connect().then(async pgdb => {
-  console.log('Entität\tMonat\tZahlungsart\tAggregation\tAnzahl\tBetrag in CHF')
+PgDb.connect()
+  .then(async (pgdb) => {
+    console.log(
+      'Entität\tMonat\tZahlungsart\tAggregation\tAnzahl\tBetrag in CHF',
+    )
 
-  for (const begin = argv.begin.clone().startOf('month'); begin <= argv.end; begin.add(1, 'month')) {
-    const end = begin.clone().add(1, 'month')
-    await evaluateCompanyMonth(argv.company, begin, end, pgdb)
-  }
+    for (
+      const begin = argv.begin.clone().startOf('month');
+      begin <= argv.end;
+      begin.add(1, 'month')
+    ) {
+      const end = begin.clone().add(1, 'month')
+      await evaluateCompanyMonth(argv.company, begin, end, pgdb)
+    }
 
-  await pgdb.close()
-}).catch(e => {
-  console.error(e)
-})
+    await pgdb.close()
+  })
+  .catch((e) => {
+    console.error(e)
+  })

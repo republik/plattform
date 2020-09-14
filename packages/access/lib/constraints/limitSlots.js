@@ -9,10 +9,7 @@ const debug = require('debug')('access:lib:constraints:limitSlots')
  * @example: {"limitSlots": {"slots": 2}}
  */
 
-const getSlots = async (
-  { settings, granter, campaign },
-  { pgdb }
-) => {
+const getSlots = async ({ settings, granter, campaign }, { pgdb }) => {
   const slots = settings.slots
 
   const usedSlots = await pgdb.query(`
@@ -30,7 +27,7 @@ const getSlots = async (
   return {
     total: slots,
     used: usedSlots.length,
-    free: slots - usedSlots.length
+    free: slots - usedSlots.length,
   }
 }
 
@@ -39,15 +36,12 @@ const isGrantable = async (args, context) => {
 
   const slots = await getSlots(args, context)
 
-  debug(
-    'isGrantable',
-    {
-      granter: granter.id,
-      settings,
-      campaign,
-      slots
-    }
-  )
+  debug('isGrantable', {
+    granter: granter.id,
+    settings,
+    campaign,
+    slots,
+  })
 
   return slots.free > 0
 }
@@ -59,12 +53,12 @@ const getMeta = async (args, context) => {
     visible: true,
     grantable: await isGrantable(args, context),
     payload: {
-      slots
-    }
+      slots,
+    },
   }
 }
 
 module.exports = {
   isGrantable,
-  getMeta
+  getMeta,
 }

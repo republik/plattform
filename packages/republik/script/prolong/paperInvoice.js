@@ -8,46 +8,50 @@ const { csvFormat } = require('d3-dsv')
 const moment = require('moment')
 const { transformUser } = require('@orbiting/backend-modules-auth')
 const {
-  prolongBeforeDate: getProlongBeforeDate
+  prolongBeforeDate: getProlongBeforeDate,
 } = require('@orbiting/backend-modules-republik-crowdfundings/graphql/resolvers/User')
 const createCache = require('@orbiting/backend-modules-republik-crowdfundings/lib/cache')
 
-const {
-  PARKING_USER_ID
-} = process.env
+const { PARKING_USER_ID } = process.env
 
 const PROLONG_BEFORE_DATE = moment('2019-01-16')
 
 const me = {
-  roles: ['admin']
+  roles: ['admin'],
 }
 
 const dry = process.argv[2] === '--dry'
 const printIds = process.argv[2] === '--printIds'
-const noBenefactors = process.argv[2] === '--no-benefactors' || process.argv[3] === '--no-benefactors'
+const noBenefactors =
+  process.argv[2] === '--no-benefactors' ||
+  process.argv[3] === '--no-benefactors'
 
-const log = printIds
-  ? () => {}
-  : (...args) => console.log(...args)
+const log = printIds ? () => {} : (...args) => console.log(...args)
 
 log('Start')
 
 const PROLONG_PACKAGE = '6b8897bf-7ab4-433c-92a1-64fafcd54417'
 const PROLONG_PACAKGEOPTION_ABO = {
   id: 'c1cb2b16-8f03-4eec-851c-cea4204d7ff7',
-  price: 24000
+  price: 24000,
 }
 const PROLONG_PACAKGEOPTION_BENEFACTOR = {
   id: '35be2bea-4d3f-44e8-a224-2d17de6d6d51',
-  price: 100000
+  price: 100000,
 }
 
 const dueDate = moment().add(30, 'days')
 
 const createPledgeAndPayments = async ({ transaction, option }, rows) =>
-  Promise.map(rows, async row => {
+  Promise.map(rows, async (row) => {
     if (dry) {
-      return { ...row, pledge: {}, pledgeOption: {}, payment: {}, pledgePayments: {} }
+      return {
+        ...row,
+        pledge: {},
+        pledgeOption: {},
+        payment: {},
+        pledgePayments: {},
+      }
     }
 
     const pledge = await transaction.public.pledges.insertAndGet({
@@ -56,7 +60,7 @@ const createPledgeAndPayments = async ({ transaction, option }, rows) =>
       status: 'WAITING_FOR_PAYMENT',
       total: option.price,
       donation: 0,
-      sendConfirmMail: false
+      sendConfirmMail: false,
     })
 
     const pledgeOption = await transaction.public.pledgeOptions.insertAndGet({
@@ -64,7 +68,7 @@ const createPledgeAndPayments = async ({ transaction, option }, rows) =>
       pledgeId: pledge.id,
       amount: 1,
       price: option.price,
-      membershipId: row.membershipId
+      membershipId: row.membershipId,
     })
 
     const payment = await transaction.public.payments.insertAndGet({
@@ -73,22 +77,25 @@ const createPledgeAndPayments = async ({ transaction, option }, rows) =>
       paperInvoice: true,
       total: option.price,
       status: 'WAITING',
-      dueDate
+      dueDate,
     })
 
     const pledgePayments = transaction.public.pledgePayments.insertAndGet({
       pledgeId: pledge.id,
       paymentId: payment.id,
-      paymentType: 'PLEDGE'
+      paymentType: 'PLEDGE',
     })
 
-    const cache = createCache({ prefix: `User:${row.user.id}` }, { redis: Redis.connect() })
+    const cache = createCache(
+      { prefix: `User:${row.user.id}` },
+      { redis: Redis.connect() },
+    )
     await cache.invalidate()
 
     return { ...row, pledge, pledgeOption, payment, pledgePayments }
   })
 
-const mapToCsv = d => ({
+const mapToCsv = (d) => ({
   id: d.user.id,
   user: d.user.name,
   name: d.address.name,
@@ -100,55 +107,60 @@ const mapToCsv = d => ({
   membershipSequenceNumber: d.membershipSequenceNumber,
   hrid: d.payment.hrid,
   prolongBeforeDate: moment(d.prolongBeforeDate).format('DD.MM.YYYY'),
-  admin: `https://admin.republik.ch/users/${d.user.id}`
+  admin: `https://admin.republik.ch/users/${d.user.id}`,
 })
 
-PgDb.connect().then(async pgdb => {
-  if (dry) {
-    log("dry run: this won't change anything")
-  }
-  if (noBenefactors) {
-    log('no-benefactors: skipping benefactors')
-  }
+PgDb.connect()
+  .then(async (pgdb) => {
+    if (dry) {
+      log("dry run: this won't change anything")
+    }
+    if (noBenefactors) {
+      log('no-benefactors: skipping benefactors')
+    }
 
-  const enrichWithProlongAndAddress = async data => Promise.map(
-    data,
-    async (d) => {
-      const user = transformUser(d)
+    const enrichWithProlongAndAddress = async (data) =>
+      Promise.map(
+        data,
+        async (d) => {
+          const user = transformUser(d)
 
-      const cache = createCache({ prefix: `User:${user.id}` })
-      await cache.invalidate()
+          const cache = createCache({ prefix: `User:${user.id}` })
+          await cache.invalidate()
 
-      const prolongBeforeDate = await getProlongBeforeDate(
-        user, {}, { pgdb, user: me }
-      )
-      if (
-        prolongBeforeDate &&
-        moment(prolongBeforeDate).isBefore(PROLONG_BEFORE_DATE)
-      ) {
-        const address = await pgdb.public.addresses.findOne({
-          id: user._raw.addressId,
-          country: ['Schweiz', 'schweiz', 'Liechtenstein']
-        })
-        if (!address) {
+          const prolongBeforeDate = await getProlongBeforeDate(
+            user,
+            {},
+            { pgdb, user: me },
+          )
+          if (
+            prolongBeforeDate &&
+            moment(prolongBeforeDate).isBefore(PROLONG_BEFORE_DATE)
+          ) {
+            const address = await pgdb.public.addresses.findOne({
+              id: user._raw.addressId,
+              country: ['Schweiz', 'schweiz', 'Liechtenstein'],
+            })
+            if (!address) {
+              return false
+            }
+            return {
+              user,
+              address,
+              prolongBeforeDate,
+              membershipId: d.membershipId,
+              membershipSequenceNumber: d.membershipSequenceNumber,
+            }
+          }
           return false
-        }
-        return {
-          user,
-          address,
-          prolongBeforeDate,
-          membershipId: d.membershipId,
-          membershipSequenceNumber: d.membershipSequenceNumber
-        }
-      }
-      return false
-    },
-    { concurrency: 10 }
-  ).then(all => all.filter(Boolean))
+        },
+        { concurrency: 10 },
+      ).then((all) => all.filter(Boolean))
 
-  const benefactors = noBenefactors
-    ? []
-    : (await pgdb.query(`
+    const benefactors = noBenefactors
+      ? []
+      : await pgdb.query(
+          `
       SELECT
         DISTINCT(u.*),
         m.id "membershipId",
@@ -164,9 +176,13 @@ PgDb.connect().then(async pgdb => {
          u.id != :PARKING_USER_ID
        ORDER BY
          u."lastName"
-    `, { PARKING_USER_ID }))
+    `,
+          { PARKING_USER_ID },
+        )
 
-  const paperPeople = (await pgdb.query(`
+    const paperPeople = (
+      await pgdb.query(
+        `
     SELECT
       DISTINCT(u.*),
       m.id "membershipId",
@@ -183,50 +199,69 @@ PgDb.connect().then(async pgdb => {
        mt.name != 'BENEFACTOR_ABO'
      ORDER BY
        u."lastName"
-  `, { PARKING_USER_ID }))
-    .filter(u => !benefactors.find(b => b.id === u.id))
+  `,
+        { PARKING_USER_ID },
+      )
+    ).filter((u) => !benefactors.find((b) => b.id === u.id))
 
-  log(`investigating ${paperPeople.length} paper people and ${benefactors.length} benefactors`)
+    log(
+      `investigating ${paperPeople.length} paper people and ${benefactors.length} benefactors`,
+    )
 
-  const transaction = await pgdb.transactionBegin()
+    const transaction = await pgdb.transactionBegin()
 
-  const benefactorNeedProlong = await enrichWithProlongAndAddress(benefactors)
-    .then(createPledgeAndPayments.bind(
-      this,
-      { transaction, option: PROLONG_PACAKGEOPTION_BENEFACTOR }
-    ))
-  const paperPeopleNeedProlong = await enrichWithProlongAndAddress(paperPeople)
-    .then(createPledgeAndPayments.bind(
-      this,
-      { transaction, option: PROLONG_PACAKGEOPTION_ABO }
-    ))
+    const benefactorNeedProlong = await enrichWithProlongAndAddress(
+      benefactors,
+    ).then(
+      createPledgeAndPayments.bind(this, {
+        transaction,
+        option: PROLONG_PACAKGEOPTION_BENEFACTOR,
+      }),
+    )
+    const paperPeopleNeedProlong = await enrichWithProlongAndAddress(
+      paperPeople,
+    ).then(
+      createPledgeAndPayments.bind(this, {
+        transaction,
+        option: PROLONG_PACAKGEOPTION_ABO,
+      }),
+    )
 
-  await transaction.transactionCommit()
+    await transaction.transactionCommit()
 
-  log(`need prolong before ${PROLONG_BEFORE_DATE.toISOString()}`)
-  log('benefactors', benefactorNeedProlong.length)
-  log('paper people', paperPeopleNeedProlong.length)
+    log(`need prolong before ${PROLONG_BEFORE_DATE.toISOString()}`)
+    log('benefactors', benefactorNeedProlong.length)
+    log('paper people', paperPeopleNeedProlong.length)
 
-  if (printIds) {
-    console.log([
-      ...benefactorNeedProlong.map(d => d.user.id),
-      ...paperPeopleNeedProlong.map(d => d.user.id)
-    ].join('\n'))
-  } else {
-    log('benefactors')
-    log('---')
-    log(csvFormat(benefactorNeedProlong.filter(d => d.address).map(mapToCsv)))
-    log('---')
-    log('paper people')
-    log('---')
-    log(csvFormat(paperPeopleNeedProlong.filter(d => d.address).map(mapToCsv)))
-    log('---')
-  }
+    if (printIds) {
+      console.log(
+        [
+          ...benefactorNeedProlong.map((d) => d.user.id),
+          ...paperPeopleNeedProlong.map((d) => d.user.id),
+        ].join('\n'),
+      )
+    } else {
+      log('benefactors')
+      log('---')
+      log(
+        csvFormat(benefactorNeedProlong.filter((d) => d.address).map(mapToCsv)),
+      )
+      log('---')
+      log('paper people')
+      log('---')
+      log(
+        csvFormat(
+          paperPeopleNeedProlong.filter((d) => d.address).map(mapToCsv),
+        ),
+      )
+      log('---')
+    }
 
-  await pgdb.close()
+    await pgdb.close()
 
-  log('finished!')
-}).catch(e => {
-  console.log(e)
-  process.exit(1)
-})
+    log('finished!')
+  })
+  .catch((e) => {
+    console.log(e)
+    process.exit(1)
+  })

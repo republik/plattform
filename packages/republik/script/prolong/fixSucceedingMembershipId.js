@@ -6,12 +6,13 @@ const Promise = require('bluebird')
 
 const dry = process.argv[2] === '--dry'
 
-PgDb.connect().then(async pgdb => {
-  if (dry) {
-    console.log("dry run: this won't change anything")
-  }
+PgDb.connect()
+  .then(async (pgdb) => {
+    if (dry) {
+      console.log("dry run: this won't change anything")
+    }
 
-  const fixMemberships = await pgdb.query(`
+    const fixMemberships = await pgdb.query(`
     SELECT
       to_jsonb(m1.*) AS mem1,
       to_jsonb(m2.*) AS mem2,
@@ -37,28 +38,26 @@ PgDb.connect().then(async pgdb => {
         mp2.kind = 'CHANGEOVER'
   `)
 
-  console.log(JSON.stringify(fixMemberships, null, 2))
-  console.log(fixMemberships.length)
+    console.log(JSON.stringify(fixMemberships, null, 2))
+    console.log(fixMemberships.length)
 
-  if (dry) {
-    return
-  }
+    if (dry) {
+      return
+    }
 
-  const transaction = await pgdb.transactionBegin()
+    const transaction = await pgdb.transactionBegin()
 
-  await Promise.each(
-    fixMemberships,
-    ({ mem1, mem2 }) => {
+    await Promise.each(fixMemberships, ({ mem1, mem2 }) => {
       return pgdb.public.memberships.updateOne(
         { id: mem1.id },
-        { succeedingMembershipId: mem2.id }
+        { succeedingMembershipId: mem2.id },
       )
-    }
-  )
-  await transaction.transactionCommit()
+    })
+    await transaction.transactionCommit()
 
-  await pgdb.close()
-}).catch(e => {
-  console.log(e)
-  process.exit(1)
-})
+    await pgdb.close()
+  })
+  .catch((e) => {
+    console.log(e)
+    process.exit(1)
+  })

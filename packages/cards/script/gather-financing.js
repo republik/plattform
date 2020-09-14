@@ -21,33 +21,39 @@ const questions = [
   { id: '2c', column: 'Betrag Social Media' },
   { id: '2d', column: 'Betrag Partei' },
 
-  { id: '3', column: 'Anmerkungen' }
+  { id: '3', column: 'Anmerkungen' },
 ]
 
-PgDb.connect().then(async pgdb => {
+PgDb.connect().then(async (pgdb) => {
   const cards = await pgdb.public.cards.findAll()
   const cardGroups = await pgdb.public.cardGroups.findAll()
-  const users = await pgdb.public.users.find({ id: cards.map(card => card.userId) })
+  const users = await pgdb.public.users.find({
+    id: cards.map((card) => card.userId),
+  })
 
   const rows = []
 
-  cards.forEach(card => {
-    const { payload: {
-      age,
-      meta,
-      financing,
-      nationalCouncil,
-      councilOfStates,
-      lobbywatch,
-      campaignBudgetSmartvote,
-      campaignBudgetCommentSmartvote
-    } } = card
+  cards.forEach((card) => {
+    const {
+      payload: {
+        age,
+        meta,
+        financing,
+        nationalCouncil,
+        councilOfStates,
+        lobbywatch,
+        campaignBudgetSmartvote,
+        campaignBudgetCommentSmartvote,
+      },
+    } = card
     if (!financing || financing === {}) {
       return
     }
 
-    const user = users.find(user => user.id === card.userId)
-    const cardGroup = cardGroups.find(cardGroup => cardGroup.id === card.cardGroupId)
+    const user = users.find((user) => user.id === card.userId)
+    const cardGroup = cardGroups.find(
+      (cardGroup) => cardGroup.id === card.cardGroupId,
+    )
 
     const row = {
       cardId: card.id,
@@ -56,19 +62,23 @@ PgDb.connect().then(async pgdb => {
       cardGroup: cardGroup.name,
       profile: `https://www.republik.ch/~${user.username}`,
       name: [meta.firstName, meta.lastName].join(' '),
-      age
+      age,
     }
 
-    questions.forEach(question => {
-      row[question.column] = (financing[question.id] && financing[question.id].value) || null
+    questions.forEach((question) => {
+      row[question.column] =
+        (financing[question.id] && financing[question.id].value) || null
     })
 
     row['Nationalrat: Kandidatur'] = nationalCouncil.candidacy ? 'Ja' : ''
     row['Nationalrat: Liste'] = nationalCouncil.listName
-    row['Nationalrat: Mandate (ähnliche) Liste 2015'] = nationalCouncil.listMandatesPreviously
+    row['Nationalrat: Mandate (ähnliche) Liste 2015'] =
+      nationalCouncil.listMandatesPreviously
     row['Nationalrat: Listenplatz'] = nationalCouncil.minListPlace
     row['Nationalrat: Anzahl Listenplätze'] = nationalCouncil.listPlaces.length
-    row['Nationalrat: alle Listenplätze'] = nationalCouncil.listPlaces.join(', ')
+    row['Nationalrat: alle Listenplätze'] = nationalCouncil.listPlaces.join(
+      ', ',
+    )
     row['Nationalrat: Rating'] = nationalCouncil.electionPlausibility
     row['Nationalrat: Mitglied'] = nationalCouncil.incumbent ? 'Ja' : ''
 

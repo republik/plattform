@@ -3,19 +3,26 @@ const _ = require('lodash')
 
 const getAggregationKeyValues = (card, key) => {
   switch (key) {
-    case 'party': return [_.get(card, 'payload.party', 'UNKNOWN')]
-    case 'fraction': return [_.get(card, 'payload.fraction', 'UNKNOWN')]
-    case 'election': return [
-      _.get(card, 'payload.nationalCouncil.elected', false) && 'nationalCouncil',
-      _.get(card, 'payload.councilOfStates.elected', false) && 'councilOfStates'
-    ].filter(Boolean)
-    case 'nationalCouncilElection': return [_.get(card, 'payload.nationalCouncil.elected', false)]
-    case 'councilOfStatesElection': return [_.get(card, 'payload.councilOfStates.elected', false)]
+    case 'party':
+      return [_.get(card, 'payload.party', 'UNKNOWN')]
+    case 'fraction':
+      return [_.get(card, 'payload.fraction', 'UNKNOWN')]
+    case 'election':
+      return [
+        _.get(card, 'payload.nationalCouncil.elected', false) &&
+          'nationalCouncil',
+        _.get(card, 'payload.councilOfStates.elected', false) &&
+          'councilOfStates',
+      ].filter(Boolean)
+    case 'nationalCouncilElection':
+      return [_.get(card, 'payload.nationalCouncil.elected', false)]
+    case 'councilOfStatesElection':
+      return [_.get(card, 'payload.councilOfStates.elected', false)]
   }
 }
 
 module.exports = {
-  aggregations (connection, args) {
+  aggregations(connection, args) {
     const { keys } = args
 
     const aggregations = []
@@ -24,25 +31,25 @@ module.exports = {
       return []
     }
 
-    keys.forEach(key => {
+    keys.forEach((key) => {
       const buckets = []
 
-      connection._nodes.forEach(card => {
+      connection._nodes.forEach((card) => {
         const values = getAggregationKeyValues(card, key)
 
-        values.forEach(value => {
+        values.forEach((value) => {
           if (value || value === false) {
-            const index = buckets.findIndex(bucket => bucket.value === value)
+            const index = buckets.findIndex((bucket) => bucket.value === value)
 
             if (index < 0) {
               buckets.push({
                 value,
-                cards: [card]
+                cards: [card],
               })
             } else {
               buckets[index] = {
                 ...buckets[index],
-                cards: buckets[index].cards.concat(card)
+                cards: buckets[index].cards.concat(card),
               }
             }
           }
@@ -51,20 +58,21 @@ module.exports = {
 
       aggregations.push({
         key,
-        buckets:
-          buckets
-            .sort((a, b) => descending(a.cards.length, b.cards.length))
-            .sort((a, b) => descending(
+        buckets: buckets
+          .sort((a, b) => descending(a.cards.length, b.cards.length))
+          .sort((a, b) =>
+            descending(
               a.cards.reduce((a, c) => a + c._mandates, 0),
-              b.cards.reduce((a, c) => a + c._mandates, 0)
-            ))
+              b.cards.reduce((a, c) => a + c._mandates, 0),
+            ),
+          ),
       })
     })
 
     return aggregations
   },
 
-  medians (connection) {
+  medians(connection) {
     return connection._nodes
-  }
+  },
 }

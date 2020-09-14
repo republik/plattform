@@ -7,24 +7,25 @@ module.exports = async () => {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Basic ${Buffer.from('anystring:' + MAILCHIMP_API_KEY).toString('base64')}`
+      Authorization: `Basic ${Buffer.from(
+        'anystring:' + MAILCHIMP_API_KEY,
+      ).toString('base64')}`,
     },
     body: JSON.stringify({
       type: 'regular',
       settings: {
-        content_type: 'html'
+        content_type: 'html',
       },
       tracking: {
         opens: false,
         html_clicks: false,
-        text_clicks: false
-      }
-    })
+        text_clicks: false,
+      },
+    }),
+  }).then((response) => {
+    if (!response.ok) {
+      throw Error(response.statusText)
+    }
+    return response
   })
-    .then(response => {
-      if (!response.ok) {
-        throw Error(response.statusText)
-      }
-      return response
-    })
 }

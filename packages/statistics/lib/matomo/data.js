@@ -33,27 +33,24 @@ const retrieve = async ({ url, date, segment, idSite, period }, { pgdb }) => {
 }
 
 module.exports = ({ props, idSite, period }, { pgdb }) => ({
-  pluck:
-    (rows) => Promise.map(
-      rows,
-      async row => {
-        const pluckedRow = { ...row }
+  pluck: (rows) =>
+    Promise.map(rows, async (row) => {
+      const pluckedRow = { ...row }
 
-        await Promise.each(props, async ({ prop, segment }) => {
-          pluckedRow[prop] = await retrieve(
-            {
-              data: row,
-              url: row.url,
-              date: moment(row.date).format('YYYY-MM-DD'),
-              segment,
-              idSite,
-              period
-            },
-            { pgdb }
-          )
-        })
+      await Promise.each(props, async ({ prop, segment }) => {
+        pluckedRow[prop] = await retrieve(
+          {
+            data: row,
+            url: row.url,
+            date: moment(row.date).format('YYYY-MM-DD'),
+            segment,
+            idSite,
+            period,
+          },
+          { pgdb },
+        )
+      })
 
-        return pluckedRow
-      }
-    )
+      return pluckedRow
+    }),
 })

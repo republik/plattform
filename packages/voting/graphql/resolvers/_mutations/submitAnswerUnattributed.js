@@ -2,11 +2,9 @@ const {
   findById,
   ensureReadyToSubmit,
   transformQuestion,
-  updateResultIncrementally
+  updateResultIncrementally,
 } = require('../../../lib/Questionnaire')
-const {
-  validateAnswer
-} = require('../../../lib/Question')
+const { validateAnswer } = require('../../../lib/Question')
 
 module.exports = async (_, { answer, pseudonym }, context) => {
   const { pgdb, t } = context
@@ -16,13 +14,18 @@ module.exports = async (_, { answer, pseudonym }, context) => {
   const transaction = await pgdb.transactionBegin()
   try {
     const now = new Date()
-    const question = await transaction.public.questions.findOne({ id: questionId })
+    const question = await transaction.public.questions.findOne({
+      id: questionId,
+    })
     if (!question) {
       throw new Error(t('api/questionnaire/question/404'))
     }
 
     const questionnaire = await findById(question.questionnaireId, transaction)
-    await ensureReadyToSubmit(questionnaire, null, now, { ...context, pgdb: transaction })
+    await ensureReadyToSubmit(questionnaire, null, now, {
+      ...context,
+      pgdb: transaction,
+    })
 
     // check client generated ID
     const existingAnswer = await transaction.public.answers.findOne({ id })
@@ -32,7 +35,7 @@ module.exports = async (_, { answer, pseudonym }, context) => {
     const sameQuestionAnswer = await transaction.public.answers.findOne({
       'id !=': id,
       pseudonym,
-      questionId
+      questionId,
     })
     if (sameQuestionAnswer) {
       throw new Error(t('api/questionnaire/answer/immutable'))
@@ -46,9 +49,9 @@ module.exports = async (_, { answer, pseudonym }, context) => {
       question,
       {
         ...context,
-        pgdb: transaction
+        pgdb: transaction,
       },
-      payload
+      payload,
     )
 
     const submitted = true
@@ -60,10 +63,10 @@ module.exports = async (_, { answer, pseudonym }, context) => {
         {
           ...answer,
           submitted,
-          unattributed
+          unattributed,
         },
         transaction,
-        context
+        context,
       )
     }
 
@@ -75,7 +78,7 @@ module.exports = async (_, { answer, pseudonym }, context) => {
       pseudonym,
       unattributed,
       submitted,
-      payload
+      payload,
     })
 
     await transaction.transactionCommit()
