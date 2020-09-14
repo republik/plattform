@@ -419,6 +419,8 @@ type PostfinancePayment {
   hidden: Boolean!
   createdAt: DateTime!
   updatedAt: DateTime!
+  image: String
+  debitorName: String
 }
 
 type PostfinancePayments {

@@ -44,6 +44,8 @@ module.exports = async (
       pfp.mitteilung AS mitteilung,
       pfp.matched AS matched,
       pfp.hidden AS hidden,
+      encode(pfp.image, 'base64') AS image,
+      pfp."debitorName" AS "debitorName",
       pfp."createdAt" AS "createdAt",
       pfp."updatedAt" AS "updatedAt",
       concat_ws(' ',

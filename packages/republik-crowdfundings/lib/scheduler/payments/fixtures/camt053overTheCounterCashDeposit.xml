@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Document xmlns="urn:iso:std:iso:20022:tech:xsd:camt.053.001.04"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:iso:std:iso:20022:tech:xsd:camt.053.001.04 camt.053.001.04.xsd">
+  <BkToCstmrStmt>
+    <Stmt>
+      <Acct>
+        <Id>
+          <IBAN>CH0000000000999999999</IBAN>
+        </Id>
+        <Ownr>
+          <Nm>Project R Genossenschaft Zürich</Nm>
+        </Ownr>
+      </Acct>
+      <Ntry>
+        <Amt Ccy="CHF">240.00</Amt>
+        <CdtDbtInd>CRDT</CdtDbtInd>
+        <BookgDt>
+          <Dt>2020-09-18</Dt>
+        </BookgDt>
+        <ValDt>
+          <Dt>2020-09-18</Dt>
+        </ValDt>
+        <BkTxCd>
+          <Domn>
+            <Cd>PMNT</Cd>
+            <Fmly>
+              <Cd>CNTR</Cd>
+              <SubFmlyCd>CDPT</SubFmlyCd>
+            </Fmly>
+          </Domn>
+        </BkTxCd>
+        <NtryDtls>
+          <Btch>
+            <NbOfTxs>1</NbOfTxs>
+          </Btch>
+          <TxDtls>
+            <Refs>
+              <InstrId>
+                INSTR-ID
+              </InstrId>
+            </Refs>
+            <RltdPties>
+              <Dbtr>
+                <Nm>Pierre Spring</Nm>
+                <PstlAdr>
+                  <StrtNm>Strasse</StrtNm>
+                  <BldgNb>123</BldgNb>
+                  <PstCd>1700</PstCd>
+                  <TwnNm>Fribourg</TwnNm>
+                  <Ctry>CH</Ctry>
+                </PstlAdr>
+              </Dbtr>
+            </RltdPties>
+          </TxDtls>
+        </NtryDtls>
+        <AddtlNtryInf>
+          Hello World
+        </AddtlNtryInf>
+      </Ntry>
+    </Stmt>
+  </BkToCstmrStmt>
+</Document>

@@ -9,6 +9,17 @@ const {
   ADMIN_FRONTEND_BASE_URL,
 } = process.env
 
+exports.publishScheduler = async (message) => {
+  return await publish(SLACK_CHANNEL_IT_MONITOR, message)
+}
+
+exports.publishFinance = async (message) => {
+  return await publish(
+    SLACK_CHANNEL_FINANCE,
+    message.replace(/{ADMIN_FRONTEND_BASE_URL}/g, ADMIN_FRONTEND_BASE_URL),
+  )
+}
+
 exports.publishMonitor = async (_user, message) => {
   const user = transformUser(_user)
   try {

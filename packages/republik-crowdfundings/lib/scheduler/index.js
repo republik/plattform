@@ -17,6 +17,7 @@ const { inform: informUpgrade } = require('./upgrade')
 const { run: membershipsOwnersHandler } = require('./owners')
 const { deactivate } = require('./deactivate')
 const { changeover } = require('./changeover')
+const { importPayments } = require('./importPayments')
 
 const surplus = require('@orbiting/backend-modules-republik/graphql/resolvers/RevenueStats/surplus')
 const {
@@ -28,6 +29,17 @@ const init = async (context) => {
   debug('init')
 
   const schedulers = []
+
+  schedulers.push(
+    timeScheduler.init({
+      name: 'import-payments',
+      context,
+      runFunc: importPayments,
+      lockTtlSecs,
+      runAtTime: '04:00', // Postfinace exports new files at around 1 AM
+      runInitially: DEV,
+    }),
+  )
 
   schedulers.push(
     timeScheduler.init({
