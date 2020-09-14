@@ -34,7 +34,7 @@ const styles = css({
   minHeight: 'calc(100vh - 80px)',
   padding: 10,
   '& .Checkbox': {
-    display: 'bloc',
+    display: 'inline-block',
     margin: 5,
     marginLeft: 'calc(50% + 210px)'
   },
