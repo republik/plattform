@@ -2,13 +2,13 @@ Supported props:
 
 - `latestSubscribedArticles` (array), required:
 - `latestProgressOrBookmarkedArticles` (array), required:
-- `bar` (Component):
+- `ActionBar` (Component):
 
 ```react|responsive
   <TeaserMyMagazine
     latestSubscribedArticles={latestSubscribedArticles}
     latestProgressOrBookmarkedArticles={latestProgressOrBookmarkedArticles}
-    bar={
+    ActionBar={
       <span style={{ display: 'flex', marginTop: 16 }}>
         <IconButton Icon={BookmarkIcon} fill="white"/>
         <IconButton
