@@ -9,9 +9,9 @@ module.exports = async (_, args, context) => {
 
   const nodes = await pgdb.public.notifications.find(
     {
-      userId: me.id,
       ...(args.onlyUnread ? { readAt: null } : {}),
       ...(args.filter ? { eventObjectType: args.filter } : {}),
+      userId: me.id,
     },
     {
       orderBy: { createdAt: 'DESC' },
