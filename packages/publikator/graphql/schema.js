@@ -41,6 +41,7 @@ type mutations {
     parentId: ID
     message: String!
     document: DocumentInput!
+    isTemplate: Boolean
     # files: [FileInput!]!     # FileInput
   ): Commit!
 
