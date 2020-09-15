@@ -28,7 +28,9 @@ module.exports.start = async () => {
   rtm.on('message', async (message) => {
     if (
       message.channel === SLACK_CHANNEL_GREETING &&
-      (!message.subtype || message.subtype === 'message_changed')
+      (!message.subtype ||
+        message.subtype === 'message_changed' ||
+        message.subtype === 'bot_message')
     ) {
       debug('new message from slack: %O', message)
       let text = message.text
