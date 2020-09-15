@@ -37,7 +37,8 @@ const createLiveTeasers = ({
   withFeedData = withData,
   withDiscussionsData = withData,
   withMyMagazineData = withData,
-  ActionBar
+  ActionBar,
+  showMyMagazine = true
 }) => {
   const MyMagazineWithData = withMyMagazineData(
     ({ attributes, data, url, label }) => {
@@ -235,6 +236,9 @@ const createLiveTeasers = ({
         matchZone('LIVETEASER')(node) && node.data.id === 'mymagazine',
       props: node => node.data,
       component: props => {
+        if (!showMyMagazine) {
+          return null
+        }
         return (
           <LazyLoad style={{ display: 'block', minHeight: 600 }}>
             <MyMagazineWithData {...props} />
