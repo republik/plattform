@@ -68,6 +68,7 @@ packages/republik/seeds/comments.json
 packages/republik/local/
 packages/publikator/seeds/seeds.json
 .vim
+.idea
 local
 
 # files generated from typescript
