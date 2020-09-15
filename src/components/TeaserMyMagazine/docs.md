@@ -8,7 +8,7 @@ Supported props:
   <TeaserMyMagazine
     latestSubscribedArticles={latestSubscribedArticles}
     latestProgressOrBookmarkedArticles={latestProgressOrBookmarkedArticles}
-    ActionBar={
+    ActionBar={ () => (
       <span style={{ display: 'flex', marginTop: 16 }}>
         <IconButton Icon={BookmarkIcon} fill="white"/>
         <IconButton
@@ -18,6 +18,7 @@ Supported props:
           fill="white"
         />
       </span>
+      )
     }
   />
 ```

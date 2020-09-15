@@ -3,7 +3,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { mUp } from '../../theme/mediaQueries'
 import { serifBold17, serifBold19 } from '../Typography/styles'
-import { Interaction } from '../Typography'
+import { TeaserSectionTitle } from '../TeaserShared'
 import { TeaserFeed } from '../TeaserFeed'
 import colors from '../../theme/colors'
 import ColorContext from '../Colors/ColorContext'
@@ -15,6 +15,10 @@ const TeaserMyMagazine = ({
   latestSubscribedArticles,
   latestProgressOrBookmarkedArticles,
   ActionBar,
+  bookmarksUrl,
+  bookmarksLabel,
+  notificationsUrl,
+  notificationsLabel,
   Link = DefaultLink
 }) => {
   const [colorScheme] = useColorContext()
@@ -36,7 +40,11 @@ const TeaserMyMagazine = ({
                 ? styles.left
                 : styles.center)}
             >
-              <Interaction.H3>Weiterlesen</Interaction.H3>
+              <Link href={notificationsUrl} passHref>
+                <TeaserSectionTitle small href={notificationsUrl}>
+                  {notificationsLabel}
+                </TeaserSectionTitle>
+              </Link>
               <br />
               {latestProgressOrBookmarkedArticles.map(document => {
                 const { path, id } = document
@@ -71,7 +79,11 @@ const TeaserMyMagazine = ({
                 ? styles.right
                 : styles.center)}
             >
-              <Interaction.H3>Neuste abonnierte Beiträge</Interaction.H3>
+              <Link href={bookmarksUrl} passHref>
+                <TeaserSectionTitle small href={bookmarksUrl}>
+                  {bookmarksLabel}
+                </TeaserSectionTitle>
+              </Link>
               <br />
               {latestSubscribedArticles.map(document => (
                 <TeaserFeed
@@ -201,19 +213,10 @@ WrappedTeaserMyMagazine.data = {
     }
   },
   query: `
-  query getMyMagazineDocuments {
-    documents: search(
-      filters: [
-          { key: "template", not: true, value: "section" }
-          { key: "template", not: true, value: "format" }
-          { key: "template", not: true, value: "front" }
-        ]
-        filter: { feed: true }
-        sort: { key: publishedAt, direction: DESC }
-        first: 2
-      ) {
+    query getMyMagazineDocuments {
+      notifications(first: 2, filter: Document) {
         nodes {
-          entity {
+          object {
             ... on Document {
               id
               meta {
@@ -233,26 +236,26 @@ WrappedTeaserMyMagazine.data = {
           }
         }
       }
-    me {
-      bookmarkAndProgress: collectionItems(names: ["progress", "bookmarks"], first: 2) {
-        nodes {
-          document {
-            id
-            meta {
-              publishDate
-              shortTitle
-              title
-              path
-              credits
-            }
-            userProgress {
+      me {
+        bookmarkAndProgress: collectionItems(names: ["progress", "bookmarks"], first: 2) {
+          nodes {
+            document {
               id
-              percentage
+              meta {
+                publishDate
+                shortTitle
+                title
+                path
+                credits
+              }
+              userProgress {
+                id
+                percentage
+              }
             }
           }
         }
       }
     }
-  }
   `
 }

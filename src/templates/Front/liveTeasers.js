@@ -26,6 +26,8 @@ const styles = {
   })
 }
 
+const LAZYLOADER_HEIGHT = 600
+
 const DefaultLink = ({ children }) => children
 const withData = Component => props => <Component {...props} data={{}} />
 
@@ -46,7 +48,7 @@ const createLiveTeasers = ({
         <Loader
           error={data.error}
           loading={data.loading}
-          style={{ minHeight: 600 }}
+          style={{ minHeight: LAZYLOADER_HEIGHT }}
           render={() => {
             return (
               <TeaserMyMagazine
@@ -69,7 +71,7 @@ const createLiveTeasers = ({
         <Loader
           error={data.error}
           loading={data.loading}
-          style={{ minHeight: 600 }}
+          style={{ minHeight: LAZYLOADER_HEIGHT }}
           render={() => {
             return (
               <div {...styles.dialogContainer}>
@@ -198,7 +200,7 @@ const createLiveTeasers = ({
       props: node => node.data,
       component: props => {
         return (
-          <LazyLoad style={{ display: 'block', minHeight: 600 }}>
+          <LazyLoad style={{ display: 'block', minHeight: LAZYLOADER_HEIGHT }}>
             <DiscussionWithData {...props} />
           </LazyLoad>
         )
@@ -240,7 +242,7 @@ const createLiveTeasers = ({
           return null
         }
         return (
-          <LazyLoad style={{ display: 'block', minHeight: 600 }}>
+          <LazyLoad style={{ display: 'block', minHeight: LAZYLOADER_HEIGHT }}>
             <MyMagazineWithData {...props} />
           </LazyLoad>
         )
