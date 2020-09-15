@@ -9,6 +9,7 @@ schema {
 type queries {
   notifications(
     onlyUnread: Boolean
+    filter: EventObjectType
     first: Int
     last: Int
     before: String

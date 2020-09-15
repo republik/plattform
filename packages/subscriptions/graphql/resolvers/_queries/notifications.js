@@ -11,6 +11,7 @@ module.exports = async (_, args, context) => {
     {
       userId: me.id,
       ...(args.onlyUnread ? { readAt: null } : {}),
+      ...(args.filter ? { eventObjectType: args.filter } : {}),
     },
     {
       orderBy: { createdAt: 'DESC' },
