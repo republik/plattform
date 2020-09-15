@@ -1,3 +1,3 @@
 module.exports = {
-  isEligible: () => true
+  isEligible: () => true,
 }

@@ -8,7 +8,9 @@
  */
 require('@orbiting/backend-modules-env').config()
 const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
-const { enforceSubscriptions } = require('@orbiting/backend-modules-republik-crowdfundings/lib/Mail')
+const {
+  enforceSubscriptions,
+} = require('@orbiting/backend-modules-republik-crowdfundings/lib/Mail')
 const activateYearlyMembership = require('@orbiting/backend-modules-republik-crowdfundings/lib/activateYearlyMembership')
 
 console.log('running activateMemberships.js...')
@@ -16,10 +18,12 @@ console.log('running activateMemberships.js...')
 const dryRun = process.argv[2] !== '--commit'
 
 if (dryRun) {
-  console.log('dry run, no changes will be applied, add --commit to apply changes')
+  console.log(
+    'dry run, no changes will be applied, add --commit to apply changes',
+  )
 }
 
-PgDb.connect().then(async pgdb => {
+PgDb.connect().then(async (pgdb) => {
   const enforceSubscriptionsUserIds = []
   const transaction = await pgdb.transactionBegin()
   try {
@@ -40,13 +44,13 @@ PgDb.connect().then(async pgdb => {
       if (user.email === 'jefferson@project-r.construction') {
         continue
       }
-      if (user.memberships.find(m => m.active)) {
+      if (user.memberships.find((m) => m.active)) {
         continue
       }
       const membership = await activateYearlyMembership(
         user.memberships,
         transaction,
-        dryRun
+        dryRun,
       )
       if (membership) {
         console.log('activating', user.email, membership.sequenceNumber)
@@ -58,14 +62,20 @@ PgDb.connect().then(async pgdb => {
     await transaction.transactionCommit()
 
     try {
-      await Promise.all(enforceSubscriptionsUserIds.map(userId =>
-        enforceSubscriptions({
-          pgdb,
-          userId
-        })
-      ))
+      await Promise.all(
+        enforceSubscriptionsUserIds.map((userId) =>
+          enforceSubscriptions({
+            pgdb,
+            userId,
+          }),
+        ),
+      )
     } catch (e) {
-      console.error('enforceSubscriptions failed', enforceSubscriptionsUserIds, e)
+      console.error(
+        'enforceSubscriptions failed',
+        enforceSubscriptionsUserIds,
+        e,
+      )
     }
   } catch (e) {
     await transaction.transactionRollback()

@@ -14,9 +14,7 @@ const gracefulUpsert = (table, logger) => async (data) => {
 }
 
 const run = async (pgdb, silent = false) => {
-  const logger = silent
-    ? () => {}
-    : console.log
+  const logger = silent ? () => {} : console.log
 
   try {
     await pgdb.public.packageOptions.truncate({ cascade: true })
@@ -33,58 +31,82 @@ const run = async (pgdb, silent = false) => {
 
   logger('> seed companies')
   for (const company of seed.companies) {
-    await gracefulUpsert(pgdb.public.companies, logger)({
+    await gracefulUpsert(
+      pgdb.public.companies,
+      logger,
+    )({
       ...company,
-      createdAt: new Date()
+      createdAt: new Date(),
     })
   }
   logger('> seed crowdfundings')
   for (const crowdfunding of seed.crowdfundings) {
-    await gracefulUpsert(pgdb.public.crowdfundings, logger)({
+    await gracefulUpsert(
+      pgdb.public.crowdfundings,
+      logger,
+    )({
       ...crowdfunding,
-      createdAt: new Date()
+      createdAt: new Date(),
     })
   }
   logger('> seed crowdfundingGoals')
   for (const crowdfundingGoal of seed.crowdfundingGoals) {
-    await gracefulUpsert(pgdb.public.crowdfundingGoals, logger)({
+    await gracefulUpsert(
+      pgdb.public.crowdfundingGoals,
+      logger,
+    )({
       ...crowdfundingGoal,
-      createdAt: new Date()
+      createdAt: new Date(),
     })
   }
   logger('> seed rewards')
   for (const reward of seed.rewards) {
-    await gracefulUpsert(pgdb.public.rewards, logger)({
+    await gracefulUpsert(
+      pgdb.public.rewards,
+      logger,
+    )({
       ...reward,
-      createdAt: new Date()
+      createdAt: new Date(),
     })
   }
   logger('> seed goodies')
   for (const goodie of seed.goodies) {
-    await gracefulUpsert(pgdb.public.goodies, logger)({
+    await gracefulUpsert(
+      pgdb.public.goodies,
+      logger,
+    )({
       ...goodie,
-      createdAt: new Date()
+      createdAt: new Date(),
     })
   }
   logger('> seed membershipTypes')
   for (const membershipType of seed.membershipTypes) {
-    await gracefulUpsert(pgdb.public.membershipTypes, logger)({
+    await gracefulUpsert(
+      pgdb.public.membershipTypes,
+      logger,
+    )({
       ...membershipType,
-      createdAt: new Date()
+      createdAt: new Date(),
     })
   }
   logger('> seed packages')
   for (const _package of seed.packages) {
-    await gracefulUpsert(pgdb.public.packages, logger)({
+    await gracefulUpsert(
+      pgdb.public.packages,
+      logger,
+    )({
       ..._package,
-      createdAt: new Date()
+      createdAt: new Date(),
     })
   }
   logger('> seed packageOptions')
   for (const packageOption of seed.packageOptions) {
-    await gracefulUpsert(pgdb.public.packageOptions, logger)({
+    await gracefulUpsert(
+      pgdb.public.packageOptions,
+      logger,
+    )({
       ...packageOption,
-      createdAt: new Date()
+      createdAt: new Date(),
     })
   }
 }

@@ -6,7 +6,7 @@ module.exports = async (_, { documentId, percentage, nodeId }, context) => {
   const { user: me, t } = context
   Roles.ensureUserHasRole(me, 'member')
 
-  if (!await Progress.status(me.id, context)) {
+  if (!(await Progress.status(me.id, context))) {
     throw new Error(t('api/collections/progress/notEnabled'))
   }
   return addDocumentToCollection(
@@ -16,9 +16,9 @@ module.exports = async (_, { documentId, percentage, nodeId }, context) => {
       collectionName: Progress.COLLECTION_NAME,
       data: {
         percentage,
-        nodeId
-      }
+        nodeId,
+      },
     },
-    context
+    context,
   )
 }

@@ -9,7 +9,8 @@ const debug = require('debug')('crowdfundings:pot')
 const getStats = async (potPledgeOption, txn) => {
   const { price, amount } = potPledgeOption
 
-  const totalDonated = await txn.queryOneField(`
+  const totalDonated = await txn.queryOneField(
+    `
     SELECT
       sum(plo.total)
     FROM
@@ -30,13 +31,14 @@ const getStats = async (potPledgeOption, txn) => {
         pay.status = 'PAID'
     WHERE
       plo."potPledgeOptionId" = :potPledgeOptionId
-  `, {
-    potPledgeOptionId: potPledgeOption.id
-  })
+  `,
+    {
+      potPledgeOptionId: potPledgeOption.id,
+    },
+  )
 
-  const donatedAmountOfMemberships = totalDonated > 0
-    ? Math.floor(totalDonated / price)
-    : 0
+  const donatedAmountOfMemberships =
+    totalDonated > 0 ? Math.floor(totalDonated / price) : 0
 
   const surplusAmountOfDonatedMemberships = donatedAmountOfMemberships - amount
 
@@ -44,7 +46,7 @@ const getStats = async (potPledgeOption, txn) => {
     totalDonated: totalDonated || 0,
     donatedAmountOfMemberships,
     surplusAmountOfDonatedMemberships,
-    generatedAmountOfMemberships: amount
+    generatedAmountOfMemberships: amount,
   }
 }
 
@@ -52,7 +54,8 @@ const refreshPot = async (potPledgeOptionId, pgdb) => {
   debug(`refreshPot potPledgeOptionId:${potPledgeOptionId}`)
   const txn = await pgdb.transactionBegin()
   try {
-    const potPledge = await txn.queryOne(`
+    const potPledge = await txn.queryOne(
+      `
       SELECT
         *
       FROM
@@ -60,11 +63,14 @@ const refreshPot = async (potPledgeOptionId, pgdb) => {
       WHERE
         id = (SELECT "pledgeId" FROM "pledgeOptions" WHERE id = :potPledgeOptionId)
       FOR UPDATE
-    `, {
-      potPledgeOptionId
-    })
+    `,
+      {
+        potPledgeOptionId,
+      },
+    )
 
-    const potPledgeOption = await txn.queryOne(`
+    const potPledgeOption = await txn.queryOne(
+      `
       SELECT
         *
       FROM
@@ -72,14 +78,16 @@ const refreshPot = async (potPledgeOptionId, pgdb) => {
       WHERE
         id = :potPledgeOptionId
       FOR UPDATE
-    `, {
-      potPledgeOptionId
-    })
+    `,
+      {
+        potPledgeOptionId,
+      },
+    )
 
     const {
       totalDonated,
       donatedAmountOfMemberships,
-      surplusAmountOfDonatedMemberships
+      surplusAmountOfDonatedMemberships,
     } = await getStats(potPledgeOption, txn)
 
     const { price, amount } = potPledgeOption
@@ -89,22 +97,21 @@ const refreshPot = async (potPledgeOptionId, pgdb) => {
       amount,
       totalDonated: totalDonated / 100,
       donatedAmountOfMemberships,
-      surplusAmountOfDonatedMemberships
+      surplusAmountOfDonatedMemberships,
     })
 
     if (surplusAmountOfDonatedMemberships > 0) {
       const potPackageOption = await txn.public.packageOptions.findOne({
-        id: potPledgeOption.templateId
+        id: potPledgeOption.templateId,
       })
       const membershipType = await txn.public.membershipTypes.findOne({
-        rewardId: potPackageOption.rewardId
+        rewardId: potPackageOption.rewardId,
       })
 
       const now = new Date()
       debug(`generating ${surplusAmountOfDonatedMemberships} memberships`)
-      await Promise.map(
-        Array(surplusAmountOfDonatedMemberships),
-        () => txn.public.memberships.insert({
+      await Promise.map(Array(surplusAmountOfDonatedMemberships), () =>
+        txn.public.memberships.insert({
           userId: potPledge.userId,
           pledgeId: potPledge.id,
           membershipTypeId: membershipType.id,
@@ -118,8 +125,8 @@ const refreshPot = async (potPledgeOptionId, pgdb) => {
           accessGranted: true,
           createdAt: now,
           updatedAt: now,
-          potPledgeOptionId: potPledgeOption.id
-        })
+          potPledgeOptionId: potPledgeOption.id,
+        }),
       )
 
       const newAmount = amount + surplusAmountOfDonatedMemberships
@@ -128,11 +135,12 @@ const refreshPot = async (potPledgeOptionId, pgdb) => {
         {
           amount: newAmount,
           total: newAmount * price,
-          updatedAt: now
-        }
+          updatedAt: now,
+        },
       )
 
-      await txn.query(`
+      await txn.query(
+        `
         UPDATE
           pledges
         SET
@@ -146,9 +154,11 @@ const refreshPot = async (potPledgeOptionId, pgdb) => {
           )
         WHERE
           id = :potPledgeId
-      `, {
-        potPledgeId: potPledge.id
-      })
+      `,
+        {
+          potPledgeId: potPledge.id,
+        },
+      )
     }
 
     await txn.transactionCommit()
@@ -162,19 +172,16 @@ const refreshPotForPledgeId = async (pledgeId, customContext) => {
   const { pgdb } = customContext
 
   const pledgeOptions = await pgdb.public.pledgeOptions.find({
-    pledgeId
+    pledgeId,
   })
 
   const potPledgeOptionIds = pledgeOptions
-    .map(plo => plo.potPledgeOptionId)
+    .map((plo) => plo.potPledgeOptionId)
     .filter(Boolean)
     .filter((id, index, ids) => ids.lastIndexOf(id) === index) // uniq
 
   if (potPledgeOptionIds.length) {
-    await Promise.each(
-      potPledgeOptionIds,
-      (id) => refreshPot(id, pgdb)
-    )
+    await Promise.each(potPledgeOptionIds, (id) => refreshPot(id, pgdb))
   }
 }
 
@@ -190,10 +197,7 @@ const refreshAllPots = async (customContext) => {
       "potPledgeOptionId" IS NOT NULL
   `)
 
-  await Promise.each(
-    potPledgeOptionIds,
-    (id) => refreshPot(id, pgdb)
-  )
+  await Promise.each(potPledgeOptionIds, (id) => refreshPot(id, pgdb))
 }
 
 const getAllStats = async (context) => {
@@ -215,14 +219,13 @@ const getAllStats = async (context) => {
       )
   `)
 
-  return Promise.map(
-    potPledgeOptions,
-    (potPledgeOption) => getStats(potPledgeOption, pgdb)
+  return Promise.map(potPledgeOptions, (potPledgeOption) =>
+    getStats(potPledgeOption, pgdb),
   )
 }
 
 module.exports = {
   refreshPotForPledgeId,
   refreshAllPots,
-  getAllStats
+  getAllStats,
 }

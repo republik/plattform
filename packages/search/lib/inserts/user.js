@@ -4,17 +4,17 @@ const bulk = require('../../lib/indexPgTable')
 
 const transform = function (row) {
   row.__sort = {
-    date: row.createdAt
+    date: row.createdAt,
   }
 
   row.resolved = {
-    credential: null
+    credential: null,
   }
 
-  const credential = _.find(
-    this.payload.credentials,
-    { userId: row.id, isListed: true }
-  )
+  const credential = _.find(this.payload.credentials, {
+    userId: row.id,
+    isListed: true,
+  })
 
   if (credential && credential.description.length > 0) {
     row.resolved.credential = credential.description.trim()
@@ -32,16 +32,11 @@ const getDefaultResource = async ({ pgdb }) => {
       credentials: await pgdb.public.credentials.find(
         {},
         {
-          fields: [
-            'id',
-            'userId',
-            'description',
-            'isListed'
-          ]
-        }
-      )
+          fields: ['id', 'userId', 'description', 'isListed'],
+        },
+      ),
     },
-    transform
+    transform,
   }
 }
 
@@ -50,10 +45,10 @@ module.exports = {
   insert: async ({ resource, ...rest }) => {
     resource = Object.assign(
       await getDefaultResource({ resource, ...rest }),
-      resource
+      resource,
     )
 
     return bulk.index({ resource, ...rest })
   },
-  after: () => {}
+  after: () => {},
 }

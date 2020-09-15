@@ -6,29 +6,20 @@ const { mdastToString, remark } = require('@orbiting/backend-modules-utils')
 const {
   portrait: getPortrait,
   name: getName,
-  slug: getSlug
+  slug: getSlug,
 } = require('@orbiting/backend-modules-republik/graphql/resolvers/User')
 const { clipNamesInText } = require('../../lib/nameClipper')
 const { stripUrlFromText } = require('../../lib/urlStripper')
 const { getEmbedByUrl } = require('@orbiting/backend-modules-embeds')
 
-const {
-  DISPLAY_AUTHOR_SECRET,
-  ASSETS_SERVER_BASE_URL
-} = process.env
+const { DISPLAY_AUTHOR_SECRET, ASSETS_SERVER_BASE_URL } = process.env
 if (!DISPLAY_AUTHOR_SECRET) {
   throw new Error('missing required DISPLAY_AUTHOR_SECRET')
 }
 
 const embedForComment = async (
-  {
-    embedUrl,
-    discussionId,
-    depth,
-    published,
-    adminUnpublished
-  },
-  context
+  { embedUrl, discussionId, depth, published, adminUnpublished },
+  context,
 ) => {
   if (!embedUrl) {
     return null
@@ -43,22 +34,16 @@ const embedForComment = async (
   return null
 }
 
-const textForComment = async (
-  comment,
-  strip = false,
-  context
-) => {
+const textForComment = async (comment, strip = false, context) => {
   const {
     userId,
     content,
     published,
     adminUnpublished,
     discussionId,
-    embedUrl
+    embedUrl,
   } = comment
-  const {
-    user: me
-  } = context
+  const { user: me } = context
 
   const isPublished = !!(published && !adminUnpublished)
   const isMine = !!(me && userId && userId === me.id)
@@ -68,10 +53,12 @@ const textForComment = async (
 
   let newContent = content
   if (!isMine && !Roles.userIsInRoles(me, ['member'])) {
-    const namesToClip = await context.loaders.Discussion.byIdCommenterNamesToClip.load(discussionId)
+    const namesToClip = await context.loaders.Discussion.byIdCommenterNamesToClip.load(
+      discussionId,
+    )
     newContent = clipNamesInText(namesToClip, content)
   }
-  if (strip && !!await embedForComment(comment, context)) {
+  if (strip && !!(await embedForComment(comment, context))) {
     newContent = stripUrlFromText(embedUrl, content)
   }
   return newContent
@@ -94,9 +81,7 @@ const textForComment = async (
  */
 const mdastToHumanString = (node, length = 500) => {
   let string = ''
-  const parts = mdastToString(node)
-    .split(/\s+/)
-    .filter(Boolean)
+  const parts = mdastToString(node).split(/\s+/).filter(Boolean)
 
   do {
     const part = parts.shift()
@@ -119,14 +104,13 @@ module.exports = {
     published && !adminUnpublished,
 
   adminUnpublished: ({ userId, adminUnpublished }, args, { user }) =>
-    Roles.userIsInRoles(user, ['editor', 'admin']) || (user && userId && userId === user.id)
+    Roles.userIsInRoles(user, ['editor', 'admin']) ||
+    (user && userId && userId === user.id)
       ? adminUnpublished
       : null,
 
   content: async (comment, args, context) => {
-    const strip = args && args.strip !== null
-      ? args.strip
-      : false
+    const strip = args && args.strip !== null ? args.strip : false
     const text = await textForComment(comment, strip, context)
     if (!text) {
       return text
@@ -134,10 +118,14 @@ module.exports = {
     return remark.parse(text)
   },
 
-  text: (comment, args, context) =>
-    textForComment(comment, false, context),
+  text: (comment, args, context) => textForComment(comment, false, context),
 
-  featuredText: ({ published, adminUnpublished, featuredAt, featuredContent }) =>
+  featuredText: ({
+    published,
+    adminUnpublished,
+    featuredAt,
+    featuredContent,
+  }) =>
     published && !adminUnpublished && featuredAt && featuredContent
       ? featuredContent
       : null,
@@ -150,32 +138,26 @@ module.exports = {
     return mdastToHumanString(remark.parse(text), length)
   },
 
-  embed: async (comment, args, context) =>
-    embedForComment(comment, context),
+  embed: async (comment, args, context) => embedForComment(comment, context),
 
   contentLength: ({ content, embedUrl, userId }, args, { user: me }) =>
-    (me && me.id === userId)
+    me && me.id === userId
       ? content.length - (embedUrl ? embedUrl.length : 0)
       : null,
 
-  score: comment =>
-    comment.upVotes - comment.downVotes,
+  score: (comment) => comment.upVotes - comment.downVotes,
 
-  userCanEdit: ({ userId }, args, { user }) =>
-    user && userId === user.id,
+  userCanEdit: ({ userId }, args, { user }) => user && userId === user.id,
 
   userVote: ({ votes }, args, { user }) => {
-    const userVote = user && votes.find(v => v.userId === user.id)
+    const userVote = user && votes.find((v) => v.userId === user.id)
     if (userVote) {
-      return userVote.vote === -1
-        ? 'DOWN'
-        : 'UP'
+      return userVote.vote === -1 ? 'DOWN' : 'UP'
     }
     return null
   },
 
-  parentIds: ({ parentIds }) =>
-    parentIds || [],
+  parentIds: ({ parentIds }) => parentIds || [],
 
   parent: ({ parentIds }, args, { loaders }, info) => {
     if (!parentIds) {
@@ -185,7 +167,7 @@ module.exports = {
     const selections = info.fieldNodes[0].selectionSet.selections
     if (selections.length === 1 && selections[0].name.value === 'id') {
       return {
-        id: parentId
+        id: parentId,
       }
     }
     return loaders.Comment.byId.load(parentId)
@@ -198,15 +180,8 @@ module.exports = {
     return loaders.User.byId.load(comment.userId)
   },
 
-  displayAuthor: async (
-    comment,
-    args,
-    context
-  ) => {
-    const {
-      t,
-      loaders
-    } = context
+  displayAuthor: async (comment, args, context) => {
+    const { t, loaders } = context
 
     const id = crypto
       .createHmac('sha256', DISPLAY_AUTHOR_SECRET)
@@ -218,7 +193,7 @@ module.exports = {
       name: t('api/comment/anonymous/displayName'),
       profilePicture: null,
       anonymity: true,
-      username: null
+      username: null,
     }
 
     if (!comment.userId) {
@@ -230,8 +205,8 @@ module.exports = {
       loaders.User.byId.load(comment.userId),
       loaders.Discussion.Commenter.discussionPreferences.load({
         userId: comment.userId,
-        discussionId: comment.discussionId
-      })
+        discussionId: comment.discussionId,
+      }),
     ])
 
     const credential = commenterPreferences && commenterPreferences.credential
@@ -239,7 +214,8 @@ module.exports = {
     let anonymous
     if (discussion.anonymity === 'ENFORCED') {
       anonymous = true
-    } else { // FORBIDDEN or ALLOWED
+    } else {
+      // FORBIDDEN or ALLOWED
       if (commenterPreferences && commenterPreferences.anonymous != null) {
         anonymous = commenterPreferences.anonymous
       } else {
@@ -247,28 +223,38 @@ module.exports = {
       }
     }
 
-    if (anonymous && commenterPreferences && commenterPreferences.anonymousDifferentiator !== null) {
-      anonymousComment.name = `${t('api/comment/anonymous/displayName')} ${commenterPreferences.anonymousDifferentiator}`
+    if (
+      anonymous &&
+      commenterPreferences &&
+      commenterPreferences.anonymousDifferentiator !== null
+    ) {
+      anonymousComment.name = `${t('api/comment/anonymous/displayName')} ${
+        commenterPreferences.anonymousDifferentiator
+      }`
     }
 
-    const profilePicture = getPortrait(commenter, (args && args.portrait), context)
+    const profilePicture = getPortrait(
+      commenter,
+      args && args.portrait,
+      context,
+    )
     const name = getName(commenter, null, context)
     const slug = getSlug(commenter, null, context)
 
     return anonymous
       ? {
-        ...anonymousComment,
-        credential
-      }
+          ...anonymousComment,
+          credential,
+        }
       : {
-        id,
-        name: name || t('api/noname'),
-        profilePicture: profilePicture,
-        credential,
-        anonymity: false,
-        username: slug,
-        slug
-      }
+          id,
+          name: name || t('api/noname'),
+          profilePicture: profilePicture,
+          credential,
+          anonymity: false,
+          username: slug,
+          slug,
+        }
   },
 
   comments: async (comment, args, { loaders, t }) => {
@@ -277,13 +263,15 @@ module.exports = {
     }
 
     const children = await loaders.Comment.byParentId.load(comment.id)
-    const nodes = children.filter(child => child.parentIds.length === comment.depth + 1)
+    const nodes = children.filter(
+      (child) => child.parentIds.length === comment.depth + 1,
+    )
 
     if (children) {
       return {
         totalCount: children.length,
         directTotalCount: nodes.length,
-        nodes
+        nodes,
       }
     }
 
@@ -291,13 +279,13 @@ module.exports = {
     throw new Error(t('api/unexpected'))
   },
 
-  tags: (comment) =>
-    comment.tags || [],
+  tags: (comment) => comment.tags || [],
 
-  mentioningDocument: async ({
-    mentioningRepoId,
-    mentioningFragmentId: fragmentId
-  }, args, { loaders }) => {
+  mentioningDocument: async (
+    { mentioningRepoId, mentioningFragmentId: fragmentId },
+    args,
+    { loaders },
+  ) => {
     if (!mentioningRepoId) {
       return null
     }
@@ -306,22 +294,25 @@ module.exports = {
       return {
         document: doc,
         fragmentId,
-        iconUrl: `${ASSETS_SERVER_BASE_URL}/s3/republik-assets/assets/top-storys/top-story-badge.png`
+        iconUrl: `${ASSETS_SERVER_BASE_URL}/s3/republik-assets/assets/top-storys/top-story-badge.png`,
       }
     }
   },
 
-  userCanReport: ({ userId }, args, { user: me }) =>
-    !!(me && me.id !== userId),
+  userCanReport: ({ userId }, args, { user: me }) => !!(me && me.id !== userId),
 
   userReportedAt: ({ reports }, args, { user: me }) =>
-    me && reports && reports.reduce(
-      (acc, r) => acc || (r.userId === me.id) ? r.reportedAt : null,
-      null
+    me &&
+    reports &&
+    reports.reduce(
+      (acc, r) => (acc || r.userId === me.id ? r.reportedAt : null),
+      null,
     ),
 
   numReports: ({ reports }, args, { user: me }) =>
     Roles.userIsInRoles(me, ['editor', 'admin'])
-      ? reports ? reports.length : 0
-      : null
+      ? reports
+        ? reports.length
+        : 0
+      : null,
 }

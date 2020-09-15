@@ -1,8 +1,9 @@
 const { transformUser } = require('@orbiting/backend-modules-auth')
 
 module.exports = {
-  async user (payment, args, { pgdb }) {
-    const users = await pgdb.query(`
+  async user(payment, args, { pgdb }) {
+    const users = await pgdb.query(
+      `
       SELECT
         *
       FROM
@@ -24,12 +25,14 @@ module.exports = {
           GROUP BY
             p."userId"
         )
-    `, {
-      paymentId: payment.id
-    })
+    `,
+      {
+        paymentId: payment.id,
+      },
+    )
     if (!users.length) {
       return null
     }
     return transformUser(users[0])
-  }
+  },
 }

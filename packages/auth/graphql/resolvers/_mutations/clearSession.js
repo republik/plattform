@@ -7,10 +7,7 @@ const userAccessRoles = ['admin', 'supporter']
 module.exports = async (_, args, { pgdb, user: me, req }) => {
   ensureSignedIn(req)
 
-  const {
-    userId: foreignUserId,
-    sessionId
-  } = args
+  const { userId: foreignUserId, sessionId } = args
 
   const user = await resolveUser({ userId: foreignUserId || me.id, pgdb })
   const session = pgdb.public.sessions.findOne({ sid: req.sessionID })

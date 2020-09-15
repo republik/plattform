@@ -10,11 +10,12 @@ module.exports = {
     if (!otp.secret) return false
     await pgdb.public.users.updateAndGetOne(
       {
-        id: user.id
-      }, {
+        id: user.id,
+      },
+      {
         TOTPChallengeSecret: otp.secret,
-        isTOTPChallengeSecretVerified: false
-      }
+        isTOTPChallengeSecretVerified: false,
+      },
     )
     return otp.secret
   },
@@ -24,10 +25,11 @@ module.exports = {
     if (otp.totp() !== payload) return false
     await pgdb.public.users.updateAndGetOne(
       {
-        id: user.id
-      }, {
-        isTOTPChallengeSecretVerified: true
-      }
+        id: user.id,
+      },
+      {
+        isTOTPChallengeSecretVerified: true,
+      },
     )
     return true
   },
@@ -44,6 +46,6 @@ module.exports = {
     if (!user.isTOTPChallengeSecretVerified) return false
     const otp = OTP({ secret: user.TOTPChallengeSecret })
     const comparablePayload = await otp.totp()
-    return (comparablePayload === payload)
-  }
+    return comparablePayload === payload
+  },
 }

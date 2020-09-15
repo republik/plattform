@@ -2,15 +2,9 @@ const decode = (input) => Buffer.from(input, 'base64').toString('utf-8')
 const encode = (input) => Buffer.from(input, 'utf-8').toString('base64')
 
 module.exports = (
-  {
-    first,
-    last,
-    after: _after,
-    before: _before,
-    only
-  },
+  { first, last, after: _after, before: _before, only },
   nodes,
-  additionalProps = {}
+  additionalProps = {},
 ) => {
   const after = _after && decode(_after)
   const before = _before && decode(_before)
@@ -20,28 +14,28 @@ module.exports = (
   const lastIndex = Math.max(totalCount - 1, 0)
 
   const beginOffset = after
-    ? nodes.findIndex(n => n.id === after) + 1
+    ? nodes.findIndex((n) => n.id === after) + 1
     : firstIndex
   // slice extracts up to but not including end
   const endOffset = before
-    ? nodes.findIndex(n => n.id === before)
+    ? nodes.findIndex((n) => n.id === before)
     : lastIndex + 1
 
   let nodeSubset = only
-    ? nodes.filter(n => n.id === only)
+    ? nodes.filter((n) => n.id === only)
     : nodes.slice(beginOffset, endOffset)
 
   const isLast = last && !first
-  nodeSubset = isLast
-    ? nodeSubset.slice(-1 * last)
-    : nodeSubset.slice(0, first)
+  nodeSubset = isLast ? nodeSubset.slice(-1 * last) : nodeSubset.slice(0, first)
 
   const startCursor = nodeSubset.length && nodeSubset[0].id
   const endCursor = nodeSubset.length && nodeSubset.slice(-1)[0].id
 
-  const hasPreviousPage = !!startCursor &&
+  const hasPreviousPage =
+    !!startCursor &&
     nodes.some((node, i) => node.id === startCursor && i > firstIndex)
-  const hasNextPage = !!endCursor &&
+  const hasNextPage =
+    !!endCursor &&
     nodes.some((node, i) => node.id === endCursor && i < lastIndex)
 
   return {
@@ -51,17 +45,16 @@ module.exports = (
       hasNextPage,
       endCursor: hasNextPage ? encode(endCursor) : null,
       hasPreviousPage,
-      startCursor: hasPreviousPage ? encode(startCursor) : null
+      startCursor: hasPreviousPage ? encode(startCursor) : null,
     },
-    nodes: nodeSubset
+    nodes: nodeSubset,
   }
 }
 
 const base64toObject = (base64) => {
   try {
     return JSON.parse(Buffer.from(base64, 'base64').toString('utf-8'))
-  } catch (e) {
-  }
+  } catch (e) {}
 
   return {}
 }
@@ -82,40 +75,46 @@ module.exports.paginator = (args, payloadFn, nodesFn) => {
   const firstIndex = 0
   const lastIndex = Math.max(totalCount - 1, 0)
 
-  const beginOffset = after && after.id
-    ? nodes.findIndex(n => n.id === after.id) + 1
-    : firstIndex
+  const beginOffset =
+    after && after.id
+      ? nodes.findIndex((n) => n.id === after.id) + 1
+      : firstIndex
   // slice extracts up to but not including end
-  const endOffset = before && before.id
-    ? nodes.findIndex(n => n.id === before.id)
-    : lastIndex + 1
+  const endOffset =
+    before && before.id
+      ? nodes.findIndex((n) => n.id === before.id)
+      : lastIndex + 1
 
   let nodeSubset = only
-    ? nodes.filter(n => n.id === only)
+    ? nodes.filter((n) => n.id === only)
     : nodes.slice(beginOffset, endOffset)
 
   const isLast = last && !first
-  nodeSubset = isLast
-    ? nodeSubset.slice(-1 * last)
-    : nodeSubset.slice(0, first)
+  nodeSubset = isLast ? nodeSubset.slice(-1 * last) : nodeSubset.slice(0, first)
 
   const startCursor = nodeSubset.length && nodeSubset[0].id
   const endCursor = nodeSubset.length && nodeSubset.slice(-1)[0].id
 
-  const hasPreviousPage = !!startCursor &&
+  const hasPreviousPage =
+    !!startCursor &&
     nodes.some((node, i) => node.id === startCursor && i > firstIndex)
-  const hasNextPage = !!endCursor &&
+  const hasNextPage =
+    !!endCursor &&
     nodes.some((node, i) => node.id === endCursor && i < lastIndex)
 
   return {
     totalCount: nodes.length,
     pageInfo: {
       hasNextPage,
-      endCursor: hasNextPage ? objectToBase64({ id: endCursor, payload }) : null,
+      endCursor: hasNextPage
+        ? objectToBase64({ id: endCursor, payload })
+        : null,
       hasPreviousPage,
-      startCursor: hasPreviousPage ? objectToBase64({ id: startCursor, payload }) : null
+      startCursor: hasPreviousPage
+        ? objectToBase64({ id: startCursor, payload })
+        : null,
     },
     nodes: nodeSubset,
-    _nodes: nodes
+    _nodes: nodes,
   }
 }

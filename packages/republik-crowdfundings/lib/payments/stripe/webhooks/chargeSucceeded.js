@@ -1,6 +1,6 @@
 const debug = require('debug')('crowdfundings:webhooks:stripe')
 const _ = {
-  get: require('lodash/get')
+  get: require('lodash/get'),
 }
 
 // charge.succeeded contains all the charge details
@@ -13,29 +13,39 @@ module.exports = {
     const charge = _.get(event, 'data.object')
     const transaction = await pgdb.transactionBegin()
     try {
-      const existingPayment = await transaction.query(`
+      const existingPayment = await transaction
+        .query(
+          `
         SELECT *
         FROM payments
         WHERE "pspId" = :pspId
         FOR UPDATE
-      `, {
-        pspId: charge.id
-      })
-        .then(response => response[0])
-        .catch(e => {
+      `,
+          {
+            pspId: charge.id,
+          },
+        )
+        .then((response) => response[0])
+        .catch((e) => {
           console.error(e)
           return null
         })
 
       if (existingPayment) {
-        await transaction.public.payments.update({
-          id: existingPayment.id
-        }, {
-          pspPayload: charge,
-          updatedAt: new Date()
-        })
+        await transaction.public.payments.update(
+          {
+            id: existingPayment.id,
+          },
+          {
+            pspPayload: charge,
+            updatedAt: new Date(),
+          },
+        )
       } else {
-        debug('no existing payment found in charge.succeeded. rejecting event %O', event)
+        debug(
+          'no existing payment found in charge.succeeded. rejecting event %O',
+          event,
+        )
         await transaction.transactionRollback()
         return 503
       }
@@ -47,5 +57,5 @@ module.exports = {
       console.error(e)
       throw e
     }
-  }
+  },
 }

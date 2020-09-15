@@ -2,11 +2,11 @@ const { newAuthError } = require('../AuthError')
 
 const AccessTokenMissingError = newAuthError(
   'authorize-token-challenge-access-token-missing',
-  'api/auth/accessToken/accessTokenMissing'
+  'api/auth/accessToken/accessTokenMissing',
 )
 const TokensExceededError = newAuthError(
   'authorize-token-challenge-tokens-exceeded',
-  'api/auth/accessToken/tokensExceeded'
+  'api/auth/accessToken/tokensExceeded',
 )
 
 const MAX_VALID_TOKENS = 1
@@ -24,11 +24,13 @@ module.exports = {
     const existingPayloads = await pgdb.public.tokens.find({
       type: Type,
       email,
-      payload
+      payload,
     })
 
     if (existingPayloads.length >= MAX_VALID_TOKENS) {
-      console.error('Unable to generate a new token: Found too many valid tokens.')
+      console.error(
+        'Unable to generate a new token: Found too many valid tokens.',
+      )
       throw new TokensExceededError({ email, MAX_VALID_TOKENS })
     }
 
@@ -47,9 +49,9 @@ module.exports = {
       email,
       payload,
       sessionId: session.id,
-      'expiresAt >=': new Date()
+      'expiresAt >=': new Date(),
     })
 
     return token && token.id
-  }
+  },
 }

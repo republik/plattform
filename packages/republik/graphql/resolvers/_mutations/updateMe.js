@@ -1,25 +1,24 @@
 const {
-  ensureSignedIn, checkUsername, transformUser, Users
+  ensureSignedIn,
+  checkUsername,
+  transformUser,
+  Users,
 } = require('@orbiting/backend-modules-auth')
-const {
-  getKeyId,
-  containsPrivateKey
-} = require('../../../lib/pgp')
+const { getKeyId, containsPrivateKey } = require('../../../lib/pgp')
 const {
   isEligible,
   isInCandidacy,
   isInCandidacyInCandidacyPhase,
   isInCandidacyInElectionPhase,
-  hasCards
+  hasCards,
 } = require('../../../lib/profile')
 const {
-  Redirections: {
-    upsert: upsertRedirection,
-    delete: deleteRedirection
-  }
+  Redirections: { upsert: upsertRedirection, delete: deleteRedirection },
 } = require('@orbiting/backend-modules-redirections')
 
-const { lib: { Portrait } } = require('@orbiting/backend-modules-assets')
+const {
+  lib: { Portrait },
+} = require('@orbiting/backend-modules-assets')
 const { ensureStringLength } = require('@orbiting/backend-modules-utils')
 
 const MAX_STATEMENT_LENGTH = 140
@@ -41,15 +40,21 @@ const MAX_PHONE_NUMBER_LENGTH = 20 // 20 (15 digits but let's give 5 spaces for 
 const MAX_FIRSTNAME_LENGTH = 32
 const MAX_LASTNAME_LENGTH = 32
 
-const createEnsureStringLengthForProfile = (values, t) => (key, translationKey, max, min = 0) =>
-  ensureStringLength(
-    values[key],
-    {
-      min,
+const createEnsureStringLengthForProfile = (values, t) => (
+  key,
+  translationKey,
+  max,
+  min = 0,
+) =>
+  ensureStringLength(values[key], {
+    min,
+    max,
+    error: t(`profile/generic/${min > 0 ? 'notInRange' : 'tooLong'}`, {
+      key: t(translationKey),
       max,
-      error: t(`profile/generic/${min > 0 ? 'notInRange' : 'tooLong'}`, { key: t(translationKey), max, min })
-    }
-  )
+      min,
+    }),
+  })
 
 module.exports = async (_, args, context) => {
   const { pgdb, req, user: me, t, mail } = context
@@ -62,21 +67,70 @@ module.exports = async (_, args, context) => {
     pgpPublicKey,
     portrait,
     statement,
-    isListed
+    isListed,
   } = args
 
-  const ensureStringLengthForProfile = createEnsureStringLengthForProfile(args, t)
-  ensureStringLengthForProfile('statement', 'profile/statement/label', MAX_STATEMENT_LENGTH)
-  ensureStringLengthForProfile('biography', 'profile/biography/label', MAX_BIOGRAPHY_LENGTH)
-  ensureStringLengthForProfile('pgpPublicKey', 'profile/contact/pgpPublicKey/label', MAX_PUBLIC_KEY_LENGTH)
-  ensureStringLengthForProfile('publicUrl', 'profile/contact/publicUrl/label', MAX_PUBLIC_URL_LENGTH)
-  ensureStringLengthForProfile('twitterHandle', 'profile/contact/twitter/label', MAX_TWITTER_HANDLE_LENGTH)
-  ensureStringLengthForProfile('facebookId', 'profile/contact/facebook/label', MAX_FACEBOOK_ID_LENGTH)
-  ensureStringLengthForProfile('phoneNumberNote', 'profile/contact/phoneNumberNote/label', MAX_PHONE_NUMBER_NOTE_LENGTH)
-  ensureStringLengthForProfile('phoneNumber', 'profile/contact/phoneNumber/label', MAX_PHONE_NUMBER_LENGTH)
-  ensureStringLengthForProfile('firstName', 'pledge/contact/firstName/label', MAX_FIRSTNAME_LENGTH, 1)
-  ensureStringLengthForProfile('lastName', 'pledge/contact/lastName/label', MAX_LASTNAME_LENGTH, 1)
-  ensureStringLengthForProfile('disclosures', 'profile/disclosures/label', MAX_DISCLOSURES_LENGTH)
+  const ensureStringLengthForProfile = createEnsureStringLengthForProfile(
+    args,
+    t,
+  )
+  ensureStringLengthForProfile(
+    'statement',
+    'profile/statement/label',
+    MAX_STATEMENT_LENGTH,
+  )
+  ensureStringLengthForProfile(
+    'biography',
+    'profile/biography/label',
+    MAX_BIOGRAPHY_LENGTH,
+  )
+  ensureStringLengthForProfile(
+    'pgpPublicKey',
+    'profile/contact/pgpPublicKey/label',
+    MAX_PUBLIC_KEY_LENGTH,
+  )
+  ensureStringLengthForProfile(
+    'publicUrl',
+    'profile/contact/publicUrl/label',
+    MAX_PUBLIC_URL_LENGTH,
+  )
+  ensureStringLengthForProfile(
+    'twitterHandle',
+    'profile/contact/twitter/label',
+    MAX_TWITTER_HANDLE_LENGTH,
+  )
+  ensureStringLengthForProfile(
+    'facebookId',
+    'profile/contact/facebook/label',
+    MAX_FACEBOOK_ID_LENGTH,
+  )
+  ensureStringLengthForProfile(
+    'phoneNumberNote',
+    'profile/contact/phoneNumberNote/label',
+    MAX_PHONE_NUMBER_NOTE_LENGTH,
+  )
+  ensureStringLengthForProfile(
+    'phoneNumber',
+    'profile/contact/phoneNumber/label',
+    MAX_PHONE_NUMBER_LENGTH,
+  )
+  ensureStringLengthForProfile(
+    'firstName',
+    'pledge/contact/firstName/label',
+    MAX_FIRSTNAME_LENGTH,
+    1,
+  )
+  ensureStringLengthForProfile(
+    'lastName',
+    'pledge/contact/lastName/label',
+    MAX_LASTNAME_LENGTH,
+    1,
+  )
+  ensureStringLengthForProfile(
+    'disclosures',
+    'profile/disclosures/label',
+    MAX_DISCLOSURES_LENGTH,
+  )
 
   const updateFields = [
     'username',
@@ -95,7 +149,7 @@ module.exports = async (_, args, context) => {
     'biography',
     'isListed',
     'statement',
-    'disclosures'
+    'disclosures',
   ]
 
   if (
@@ -126,7 +180,11 @@ module.exports = async (_, args, context) => {
       }
     }
     if (await isInCandidacyInElectionPhase(me._raw, pgdb)) {
-      if ('hasPublicProfile' in args || 'birthday' in args || 'statement' in args) {
+      if (
+        'hasPublicProfile' in args ||
+        'birthday' in args ||
+        'statement' in args
+      ) {
         throw new Error(t('profile/candidacy/electionPhase'))
       }
     }
@@ -141,21 +199,20 @@ module.exports = async (_, args, context) => {
   if (isListed || (isListed === undefined && me._raw.isListed)) {
     if (
       !(statement && statement.trim()) &&
-      !(statement === undefined && me._raw.statement && me._raw.statement.trim())
+      !(
+        statement === undefined &&
+        me._raw.statement &&
+        me._raw.statement.trim()
+      )
     ) {
       throw new Error(t('profile/statement/needed'))
     }
-    if (
-      !portrait &&
-      !(portrait === undefined && me._raw.portraitUrl)
-    ) {
+    if (!portrait && !(portrait === undefined && me._raw.portraitUrl)) {
       throw new Error(t('profile/portrait/needed'))
     }
   }
 
-  let portraitUrl = portrait === null
-    ? null
-    : undefined
+  let portraitUrl = portrait === null ? null : undefined
 
   if (portrait) {
     portraitUrl = await Portrait.upload(portrait)
@@ -168,7 +225,11 @@ module.exports = async (_, args, context) => {
   if (username !== undefined && username !== null) {
     await checkUsername(username, me, pgdb)
   }
-  if (args.hasPublicProfile && !username && (!me.username || username === null)) {
+  if (
+    args.hasPublicProfile &&
+    !username &&
+    (!me.username || username === null)
+  ) {
     throw new Error(t('api/publicProfile/usernameRequired'))
   }
   if (
@@ -182,7 +243,7 @@ module.exports = async (_, args, context) => {
     if (await containsPrivateKey(pgpPublicKey)) {
       throw new Error(t('api/pgpPublicKey/private'))
     }
-    if (!await getKeyId(pgpPublicKey)) {
+    if (!(await getKeyId(pgpPublicKey))) {
       throw new Error(t('api/pgpPublicKey/invalid'))
     }
   }
@@ -191,7 +252,7 @@ module.exports = async (_, args, context) => {
   const now = new Date()
   try {
     if (
-      updateFields.some(field => args[field] !== undefined) ||
+      updateFields.some((field) => args[field] !== undefined) ||
       portraitUrl !== undefined
     ) {
       await transaction.public.users.updateOne(
@@ -203,24 +264,32 @@ module.exports = async (_, args, context) => {
           },
           {
             portraitUrl,
-            updatedAt: new Date()
-          }
+            updatedAt: new Date(),
+          },
         ),
-        { skipUndefined: true }
+        { skipUndefined: true },
       )
       if (username) {
         // claim other's redirection
-        await deleteRedirection({
-          source: `/~${username}`
-        }, context, now)
+        await deleteRedirection(
+          {
+            source: `/~${username}`,
+          },
+          context,
+          now,
+        )
       }
       if (me.username && username && me.username !== username) {
-        await upsertRedirection({
-          source: `/~${me.username}`,
-          target: `/~${username}`,
-          resource: { user: { id: me.id } },
-          status: 302 // allow reclaiming by somebody else
-        }, context, now)
+        await upsertRedirection(
+          {
+            source: `/~${me.username}`,
+            target: `/~${username}`,
+            resource: { user: { id: me.id } },
+            status: 302, // allow reclaiming by somebody else
+          },
+          context,
+          now,
+        )
       }
     }
 
@@ -231,23 +300,27 @@ module.exports = async (_, args, context) => {
           { id: me._raw.addressId },
           {
             ...address,
-            updatedAt: now
-          }
+            updatedAt: now,
+          },
         )
       } else {
         // user has no address yet
         const userAddress = await transaction.public.addresses.insertAndGet(
-          address
+          address,
         )
         await transaction.public.users.updateOne(
           { id: me.id },
-          { addressId: userAddress.id, updatedAt: now }
+          { addressId: userAddress.id, updatedAt: now },
         )
       }
     }
 
     if (phoneNumber) {
-      await Users.updateUserPhoneNumber({ pgdb: transaction, userId: me.id, phoneNumber })
+      await Users.updateUserPhoneNumber({
+        pgdb: transaction,
+        userId: me.id,
+        phoneNumber,
+      })
     }
 
     await transaction.transactionCommit()

@@ -1,12 +1,15 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
-const {dateRangeFilterWhere,
+const {
+  dateRangeFilterWhere,
   stringArrayFilterWhere,
   booleanFilterWhere,
-  andFilters
+  andFilters,
 } = require('../../../lib/Filters')
 
 const searchWhere = (search, prefix) => {
-  if (!search) { return '' }
+  if (!search) {
+    return ''
+  }
   return `
     ${prefix || ''}
     (hrid ILIKE :search OR
@@ -16,8 +19,16 @@ const searchWhere = (search, prefix) => {
 
 module.exports = async (
   _,
-  { limit, offset, orderBy, search, dateRangeFilter, stringArrayFilter, booleanFilter },
-  { pgdb, user }
+  {
+    limit,
+    offset,
+    orderBy,
+    search,
+    dateRangeFilter,
+    stringArrayFilter,
+    booleanFilter,
+  },
+  { pgdb, user },
 ) => {
   Roles.ensureUserHasRole(user, 'supporter')
 
@@ -28,25 +39,34 @@ module.exports = async (
   const options = {
     limit,
     offset,
-    orderBy: orderByTerm
+    orderBy: orderByTerm,
   }
 
-  const items = !(search || dateRangeFilter || stringArrayFilter || booleanFilter)
+  const items = !(
+    search ||
+    dateRangeFilter ||
+    stringArrayFilter ||
+    booleanFilter
+  )
     ? await pgdb.public.payments.findAll(options)
-    : await pgdb.public.payments.findWhere(`
+    : await pgdb.public.payments.findWhere(
+        `
       ${andFilters([
         searchWhere(search),
         dateRangeFilterWhere(dateRangeFilter),
         stringArrayFilterWhere(stringArrayFilter),
-        booleanFilterWhere(booleanFilter)
+        booleanFilterWhere(booleanFilter),
       ])}
-    `, {
-      search: search ? `${search.trim()}%` : null,
-      fromDate: dateRangeFilter ? dateRangeFilter.from : null,
-      toDate: dateRangeFilter ? dateRangeFilter.to : null,
-      stringArray: stringArrayFilter ? stringArrayFilter.values : null,
-      booleanValue: booleanFilter ? booleanFilter.value : null
-    }, options)
+    `,
+        {
+          search: search ? `${search.trim()}%` : null,
+          fromDate: dateRangeFilter ? dateRangeFilter.from : null,
+          toDate: dateRangeFilter ? dateRangeFilter.to : null,
+          stringArray: stringArrayFilter ? stringArrayFilter.values : null,
+          booleanValue: booleanFilter ? booleanFilter.value : null,
+        },
+        options,
+      )
 
   const count = await pgdb.public.payments.count()
   return { items, count }

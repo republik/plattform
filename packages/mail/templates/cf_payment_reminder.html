@@ -1,16 +1,16 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
   <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="x-ua-compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta charset="UTF-8" />
+    <meta http-equiv="x-ua-compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
     <!--[if gte mso 15]>
-    <xml>
-      <o:officedocumentsettings>
-        <o:allowpng />
-        <o:pixelsperinch>96</o:pixelsperinch>
-      </o:officedocumentsettings>
-    </xml>
+      <xml>
+        <o:officedocumentsettings>
+          <o:allowpng />
+          <o:pixelsperinch>96</o:pixelsperinch>
+        </o:officedocumentsettings>
+      </xml>
     <![endif]-->
     <style type="text/css">
       {{sg_font_faces}}
@@ -25,69 +25,129 @@
       }
     </style>
   </head>
-  <body style="margin: 0; padding: 0; background-color: #fff;">
+  <body style="margin: 0; padding: 0; background-color: #fff">
     <table border="0" cellpadding="0" cellspacing="0" width="100%">
       <tbody>
         <tr>
           <td align="center" valign="top">
-            <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width:640px;color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}">
+            <table
+              align="center"
+              border="0"
+              cellpadding="0"
+              cellspacing="0"
+              width="100%"
+              style="max-width:640px;color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}"
+            >
               <tbody>
                 <tr>
-                  <td style="padding:20px;">
+                  <td style="padding: 20px">
                     <p>Guten Tag</p>
                     <p>Schön, dass Sie die Republik unterstützen.</p>
-                    <p>Mit Ihrer Mitgliedschaft erhalten Sie sechsmal pro Woche ein unabhängiges und werbefreies digitales Magazin für Politik, Wirtschaft, Gesellschaft und Kultur.</p>
-                    <p>Sie fördern aber auch eine wirklich unabhängige vierte Gewalt als zentrale Institution unserer Demokratie.</p>
-                    <p>Denn: Die Republik steht für die Verteidigung der demokratischen Institutionen und die Werte der Aufklärung. Für Treue zu Fakten, für Lösungen von Fall zu Fall, für Offenheit gegenüber Kritik, für Respektlosigkeit gegenüber der Macht und Respekt vor dem Menschen.</p>
-                    <p>Falls sich unsere Buchhaltung nicht irrt, ist allerdings Ihr Mitgliedschafts- oder Unterstützungsbeitrag in der Höhe von CHF {{TOTAL}} noch ausstehend.<br />
-                      Dürfen wir Sie freundlich bitten, den Betrag in den nächsten Tagen zu überweisen?</p>
-                    <p>Bitte geben Sie bei der Zahlung Ihren Namen und den folgenden Code als Zahlungszweck an (so können wir Ihre Zahlung zuordnen): <strong>{{HRID}}</strong></p>
+                    <p>
+                      Mit Ihrer Mitgliedschaft erhalten Sie sechsmal pro Woche
+                      ein unabhängiges und werbefreies digitales Magazin für
+                      Politik, Wirtschaft, Gesellschaft und Kultur.
+                    </p>
+                    <p>
+                      Sie fördern aber auch eine wirklich unabhängige vierte
+                      Gewalt als zentrale Institution unserer Demokratie.
+                    </p>
+                    <p>
+                      Denn: Die Republik steht für die Verteidigung der
+                      demokratischen Institutionen und die Werte der Aufklärung.
+                      Für Treue zu Fakten, für Lösungen von Fall zu Fall, für
+                      Offenheit gegenüber Kritik, für Respektlosigkeit gegenüber
+                      der Macht und Respekt vor dem Menschen.
+                    </p>
+                    <p>
+                      Falls sich unsere Buchhaltung nicht irrt, ist allerdings
+                      Ihr Mitgliedschafts- oder Unterstützungsbeitrag in der
+                      Höhe von CHF {{TOTAL}} noch ausstehend.<br />
+                      Dürfen wir Sie freundlich bitten, den Betrag in den
+                      nächsten Tagen zu überweisen?
+                    </p>
+                    <p>
+                      Bitte geben Sie bei der Zahlung Ihren Namen und den
+                      folgenden Code als Zahlungszweck an (so können wir Ihre
+                      Zahlung zuordnen): <strong>{{HRID}}</strong>
+                    </p>
                     {{#if `COMPANY_NAME == "REPUBLIK"`}}
                     <p>
-                      PC 61-229215-3<br>
-                      IBAN: CH23 0900 0000 6122 9215 3<br>
+                      PC 61-229215-3<br />
+                      IBAN: CH23 0900 0000 6122 9215 3<br />
                       BIC: POFICHBEXXX
                     </p>
                     <p>lautend auf:</p>
                     <p>
-                      Republik AG<br>
-                      Sihlhallenstrasse 1<br>
+                      Republik AG<br />
+                      Sihlhallenstrasse 1<br />
                       8004 Zürich
                     </p>
-                    {{/if}}
-                    {{#if `COMPANY_NAME == "PROJECT_R"`}}
+                    {{/if}} {{#if `COMPANY_NAME == "PROJECT_R"`}}
                     <p>
-                      PC 61-11760-6<br>
-                      IBAN: CH50 0900 0000 6101 1760 6<br>
+                      PC 61-11760-6<br />
+                      IBAN: CH50 0900 0000 6101 1760 6<br />
                       BIC: POFICHBEXXX
                     </p>
                     <p>lautend auf:</p>
                     <p>
-                      Project R Genossenschaft<br>
-                      Sihlhallenstrasse 1<br>
+                      Project R Genossenschaft<br />
+                      Sihlhallenstrasse 1<br />
                       8004 Zürich
                     </p>
                     {{/if}}
-                    <p>Sollte sich Ihre Überweisung mit dieser Zahlungserinnerung kreuzen, erachten Sie unsere E-Mail als gegenstandslos. Haben Sie sonst Fragen, melden Sie sich jederzeit unter <a href="mailto:kontakt@republik.ch">kontakt@republik.ch</a>.</p>
-                    <p>Herzlich<br />
-                    Ihre Crew der Republik</p>
+                    <p>
+                      Sollte sich Ihre Überweisung mit dieser Zahlungserinnerung
+                      kreuzen, erachten Sie unsere E-Mail als gegenstandslos.
+                      Haben Sie sonst Fragen, melden Sie sich jederzeit unter
+                      <a href="mailto:kontakt@republik.ch"
+                        >kontakt@republik.ch</a
+                      >.
+                    </p>
+                    <p>
+                      Herzlich<br />
+                      Ihre Crew der Republik
+                    </p>
                   </td>
                 </tr>
                 <tr>
-                  <td style="padding:20px;">
-                    <p style="font-size:14px;line-height:20px;{{sg_font_style_sans_serif_regular}}">
-                      Die Republik ist ein unabhängiges und werbefreies digitales Magazin für Politik, Wirtschaft, Gesellschaft und Kultur. 
-                      Es wird von seinen Leserinnen und Lesern finanziert und erscheint von Montag bis Samstag mit täglich ein bis drei neuen Beiträgen. In der App, auf der Website und als Newsletter.
+                  <td style="padding: 20px">
+                    <p
+                      style="font-size:14px;line-height:20px;{{sg_font_style_sans_serif_regular}}"
+                    >
+                      Die Republik ist ein unabhängiges und werbefreies
+                      digitales Magazin für Politik, Wirtschaft, Gesellschaft
+                      und Kultur. Es wird von seinen Leserinnen und Lesern
+                      finanziert und erscheint von Montag bis Samstag mit
+                      täglich ein bis drei neuen Beiträgen. In der App, auf der
+                      Website und als Newsletter.
                     </p>
-                    <p style="color:#282828;font-size:14px;line-height:20px;{{sg_font_style_sans_serif_regular}}">
-                      <img height="79" src="{{frontend_base_url}}/static/logo_republik_newsletter.png" style="border:0px;width:180px !important; height:79px !important;margin:0px;" width="180" alt="">
-                      <br>
-                      Republik AG<br>
-                      Sihlhallenstrasse 1, CH-8004 Zürich<br>
-                      <a href="{{frontend_base_url}}">www.republik.ch</a><br>
-                      <a href="mailto:kontakt@republik.ch">kontakt@republik.ch</a>
+                    <p
+                      style="color:#282828;font-size:14px;line-height:20px;{{sg_font_style_sans_serif_regular}}"
+                    >
+                      <img
+                        height="79"
+                        src="{{frontend_base_url}}/static/logo_republik_newsletter.png"
+                        style="
+                          border: 0px;
+                          width: 180px !important;
+                          height: 79px !important;
+                          margin: 0px;
+                        "
+                        width="180"
+                        alt=""
+                      />
+                      <br />
+                      Republik AG<br />
+                      Sihlhallenstrasse 1, CH-8004 Zürich<br />
+                      <a href="{{frontend_base_url}}">www.republik.ch</a><br />
+                      <a href="mailto:kontakt@republik.ch"
+                        >kontakt@republik.ch</a
+                      >
                     </p>
-                    <p style="font-size:14px;line-height:20px;{{sg_font_style_sans_serif_regular}}">
+                    <p
+                      style="font-size:14px;line-height:20px;{{sg_font_style_sans_serif_regular}}"
+                    >
                       <a href="{{link_manifest}}">Unser Manifest</a><br />
                       <a href="{{link_imprint}}">Das Impressum</a><br />
                       <a href="{{link_faq}}">Häufig gestellte Fragen</a>

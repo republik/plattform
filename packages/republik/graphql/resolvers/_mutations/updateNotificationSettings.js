@@ -1,5 +1,6 @@
 const {
-  ensureSignedIn, transformUser
+  ensureSignedIn,
+  transformUser,
 } = require('@orbiting/backend-modules-auth')
 
 module.exports = async (_, args, { pgdb, req, user: me }) => {
@@ -7,20 +8,21 @@ module.exports = async (_, args, { pgdb, req, user: me }) => {
 
   const {
     defaultDiscussionNotificationOption,
-    discussionNotificationChannels
+    discussionNotificationChannels,
   } = args
 
   await pgdb.public.users.updateOne(
     { id: me.id },
     {
       defaultDiscussionNotificationOption,
-      discussionNotificationChannels
+      discussionNotificationChannels,
     },
-    { skipUndefined: true }
+    { skipUndefined: true },
   )
 
-  return pgdb.public.users.findOne({
-    id: me.id
-  })
-    .then(u => transformUser(u))
+  return pgdb.public.users
+    .findOne({
+      id: me.id,
+    })
+    .then((u) => transformUser(u))
 }

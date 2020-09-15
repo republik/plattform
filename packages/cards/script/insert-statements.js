@@ -6,7 +6,7 @@ const Promise = require('bluebird')
 const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
 const { hotness } = require('@orbiting/backend-modules-discussions')
 
-PgDb.connect().then(async pgdb => {
+PgDb.connect().then(async (pgdb) => {
   const cards = await pgdb.public.cards.findAll()
   const groups = await pgdb.public.cardGroups.findAll()
 
@@ -24,41 +24,47 @@ PgDb.connect().then(async pgdb => {
     const transaction = await pgdb.transactionBegin()
 
     try {
-      const { discussionId } = groups.find(group => group.id === card.cardGroupId)
+      const { discussionId } = groups.find(
+        (group) => group.id === card.cardGroupId,
+      )
 
       if (!card.commentId) {
-        console.log(`Handling statement of Card "${name}" (ID: "${identifier}")...`)
+        console.log(
+          `Handling statement of Card "${name}" (ID: "${identifier}")...`,
+        )
 
         const comment = await transaction.public.comments.insertAndGet({
           discussionId,
           userId: card.userId,
           content: statement.trim(),
-          hotness: hotness(0, 0, (new Date().getTime())),
+          hotness: hotness(0, 0, new Date().getTime()),
           createdAt: card.updatedAt,
-          updatedAt: card.updatedAt
+          updatedAt: card.updatedAt,
         })
 
         await transaction.public.cards.updateOne(
           { id: card.id },
-          { commentId: comment.id }
+          { commentId: comment.id },
         )
       }
 
-      const credentials = await transaction.public.credentials.find({ isListed: true })
+      const credentials = await transaction.public.credentials.find({
+        isListed: true,
+      })
 
       const discussionPreference = await transaction.public.discussionPreferences.findOne(
-        { discussionId, userId: card.userId }
+        { discussionId, userId: card.userId },
       )
 
       if (!discussionPreference) {
         await transaction.public.discussionPreferences.insert({
           discussionId,
           userId: card.userId,
-          credentialId: credentials
-            .find(credential => credential.userId === card.userId)
-            .id,
+          credentialId: credentials.find(
+            (credential) => credential.userId === card.userId,
+          ).id,
           notificationOption: 'MY_CHILDREN',
-          anonymous: false
+          anonymous: false,
         })
       }
 

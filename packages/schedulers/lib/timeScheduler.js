@@ -16,10 +16,16 @@ const init = async ({
   runAtTime,
   runAtDaysOfWeek = [1, 2, 3, 4, 5, 6, 7],
   runInitially = false,
-  dryRun = false
+  dryRun = false,
 }) => {
   if (!name || !context || !runFunc || !lockTtlSecs || !runAtTime) {
-    console.error(`missing input, scheduler ${name}`, { name, context, runFunc, lockTtlSecs, runAtTime })
+    console.error(`missing input, scheduler ${name}`, {
+      name,
+      context,
+      runFunc,
+      lockTtlSecs,
+      runAtTime,
+    })
     throw new Error(`missing input, scheduler ${name}`)
   }
   if (runAtDaysOfWeek.length < 1) {
@@ -39,19 +45,19 @@ const init = async ({
   debug('init')
 
   const redlock = () => {
-    return new Redlock(
-      [redis],
-      {
-        driftFactor: 0.01, // time in ms
-        retryCount: LOCK_RETRY_COUNT,
-        retryDelay: LOCK_RETRY_DELAY,
-        retryJitter: LOCK_RETRY_JITTER
-      }
-    )
+    return new Redlock([redis], {
+      driftFactor: 0.01, // time in ms
+      retryCount: LOCK_RETRY_COUNT,
+      retryDelay: LOCK_RETRY_DELAY,
+      retryJitter: LOCK_RETRY_JITTER,
+    })
   }
 
   if (lockTtlSecs * 1000 < MIN_TTL_MS) {
-    throw new Error(`lockTtlSecs must be at least ${Math.ceil(MIN_TTL_MS / 1000)})`, { lockTtlSecs })
+    throw new Error(
+      `lockTtlSecs must be at least ${Math.ceil(MIN_TTL_MS / 1000)})`,
+      { lockTtlSecs },
+    )
   }
 
   let timeout
@@ -61,12 +67,16 @@ const init = async ({
       throw new Error('invalid runAtTime. Format: HH:MM', { runAtTime })
     }
     const now = moment()
-    const nextRunAt = now.clone()
+    const nextRunAt = now
+      .clone()
       .hour(runAtHour)
       .minute(runAtMinute)
       .second(0)
       .millisecond(0)
-    while (now.isAfter(nextRunAt) || !runAtDaysOfWeek.includes(nextRunAt.isoWeekday())) {
+    while (
+      now.isAfter(nextRunAt) ||
+      !runAtDaysOfWeek.includes(nextRunAt.isoWeekday())
+    ) {
       nextRunAt.add(24, 'hours')
     }
     const nextRunInMs = nextRunAt.diff(now) // ms
@@ -83,10 +93,15 @@ const init = async ({
 
       const extendLockInterval = setInterval(
         () =>
-          lock.extend(1000 * lockTtlSecs)
-            .then(() => { debug('extending lock') })
-            .catch(e => { console.warn('extending lock failed', e) }),
-        1000 * lockTtlSecs * 0.9
+          lock
+            .extend(1000 * lockTtlSecs)
+            .then(() => {
+              debug('extending lock')
+            })
+            .catch((e) => {
+              console.warn('extending lock failed', e)
+            }),
+        1000 * lockTtlSecs * 0.9,
       )
 
       debug('run started')
@@ -104,10 +119,15 @@ const init = async ({
 
       // wait until other processes exceeded waiting time
       // then give up lock
-      await Promise.delay(MIN_TTL_MS * 1.5).then(
-        () => lock.unlock()
-          .then(() => { debug('unlocked') })
-          .catch(e => { console.warn('unlocking failed', e) })
+      await Promise.delay(MIN_TTL_MS * 1.5).then(() =>
+        lock
+          .unlock()
+          .then(() => {
+            debug('unlocked')
+          })
+          .catch((e) => {
+            console.warn('unlocking failed', e)
+          }),
       )
 
       debug('run completed')
@@ -129,8 +149,9 @@ const init = async ({
   const close = async () => {
     const lock = await redlock().lock(lockKey, 1000 * lockTtlSecs * 2)
     clearTimeout(timeout)
-    await lock.unlock()
-      .catch((err) => { console.error(err) })
+    await lock.unlock().catch((err) => {
+      console.error(err)
+    })
   }
 
   if (runInitially) {
@@ -142,10 +163,10 @@ const init = async ({
 
   return {
     run,
-    close
+    close,
   }
 }
 
 module.exports = {
-  init
+  init,
 }

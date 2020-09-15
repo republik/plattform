@@ -1,9 +1,11 @@
-const { Roles: { ensureUserHasRole } } = require('@orbiting/backend-modules-auth')
+const {
+  Roles: { ensureUserHasRole },
+} = require('@orbiting/backend-modules-auth')
 const {
   getAnnotatedTag,
   createGithubClients,
   upsertRef,
-  gitAuthor
+  gitAuthor,
 } = require('../../../lib/github')
 const yaml = require('../../../lib/yaml')
 const { upsert: repoCacheUpsert } = require('../../../lib/cache/upsert')
@@ -24,68 +26,61 @@ module.exports = async (_, args, context) => {
     publishDate,
     briefingUrl,
     mailchimpCampaignId,
-    discussionId
+    discussionId,
   } = args
 
-  const tag = await getAnnotatedTag(
-    repoId,
-    TAG_NAME,
-    context
-  )
+  const tag = await getAnnotatedTag(repoId, TAG_NAME, context)
 
   const meta = {
-    ...tag
-      ? yaml.parse(tag.message)
-      : {},
+    ...(tag ? yaml.parse(tag.message) : {}),
     ...(creationDeadline !== undefined && { creationDeadline }),
     ...(productionDeadline !== undefined && { productionDeadline }),
     ...(publishDate !== undefined && { publishDate }),
     ...(briefingUrl !== undefined && { briefingUrl }),
     ...(mailchimpCampaignId !== undefined && { mailchimpCampaignId }),
-    ...(discussionId !== undefined && { discussionId })
+    ...(discussionId !== undefined && { discussionId }),
   }
   const message = yaml.stringify(meta)
 
   const commitId = tag
     ? tag.commit.id
-    : await getLatestCommit({ id: repoId }, null, context)
-      .then(c => c.id)
+    : await getLatestCommit({ id: repoId }, null, context).then((c) => c.id)
 
   const [login, repoName] = repoId.split('/')
-  const newTag = await githubRest.git.createTag({
-    owner: login,
-    repo: repoName,
-    tag: TAG_NAME,
-    message,
-    object: commitId,
-    type: 'commit',
-    tagger: gitAuthor(user)
-  })
-    .then(result => result.data)
-    .catch(e => console.error(e))
+  const newTag = await githubRest.git
+    .createTag({
+      owner: login,
+      repo: repoName,
+      tag: TAG_NAME,
+      message,
+      object: commitId,
+      type: 'commit',
+      tagger: gitAuthor(user),
+    })
+    .then((result) => result.data)
+    .catch((e) => console.error(e))
 
-  await upsertRef(
-    repoId,
-    `tags/${TAG_NAME}`,
-    newTag.sha
+  await upsertRef(repoId, `tags/${TAG_NAME}`, newTag.sha)
+
+  await repoCacheUpsert(
+    {
+      id: repoId,
+      meta,
+    },
+    context,
   )
-
-  await repoCacheUpsert({
-    id: repoId,
-    meta
-  }, context)
 
   // pubsub not available if called by pullRedis
   if (pubsub) {
     await pubsub.publish('repoUpdate', {
       repoUpdate: {
-        id: repoId
-      }
+        id: repoId,
+      },
     })
   }
 
   return {
     id: repoId,
-    meta
+    meta,
   }
 }

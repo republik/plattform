@@ -1,8 +1,6 @@
 const isUUID = require('is-uuid')
 const { ascending } = require('d3-array')
-const {
-  transformUser
-} = require('@orbiting/backend-modules-auth')
+const { transformUser } = require('@orbiting/backend-modules-auth')
 
 const fragmentWithMinMaxDates = `
   WITH "minMaxDates" AS (
@@ -28,14 +26,17 @@ module.exports = async (_, args, { pgdb, t }) => {
 
   let firstId
   if (focus && isUUID.v4(focus)) {
-    firstId = await pgdb.public.users.findOneFieldOnly({
-      testimonialId: focus,
-      isListed: true
-    }, 'id')
+    firstId = await pgdb.public.users.findOneFieldOnly(
+      {
+        testimonialId: focus,
+        isListed: true,
+      },
+      'id',
+    )
   }
 
   const results = async (userRows) => {
-    let ids = userRows.map(user => user.id)
+    let ids = userRows.map((user) => user.id)
     if (firstId) {
       ids = [firstId].concat(ids)
     }
@@ -43,13 +44,14 @@ module.exports = async (_, args, { pgdb, t }) => {
     let startIndex = 0
     let endIndex = ids.length
     if (after) {
-      startIndex = ids.findIndex(id => id === after)
+      startIndex = ids.findIndex((id) => id === after)
     }
     endIndex = startIndex + first
 
     const nodeIds = ids.slice(startIndex, endIndex)
 
-    const users = await pgdb.query(`
+    const users = await pgdb.query(
+      `
       SELECT
         u.*,
         m."sequenceNumber" as "sequenceNumber"
@@ -58,15 +60,16 @@ module.exports = async (_, args, { pgdb, t }) => {
         ON m.id = (SELECT id FROM memberships WHERE "userId" = u.id ORDER BY "sequenceNumber" ASC LIMIT 1)
       WHERE
         ARRAY[u.id] && :ids;
-    `, { ids: nodeIds })
+    `,
+      { ids: nodeIds },
+    )
 
     // obey order!
     // - this ensures firstId comes first
     // - and that the random order isn't overwritten by the db internal order
-    users.sort((a, b) => ascending(
-      nodeIds.indexOf(a.id),
-      nodeIds.indexOf(b.id)
-    ))
+    users.sort((a, b) =>
+      ascending(nodeIds.indexOf(a.id), nodeIds.indexOf(b.id)),
+    )
 
     const endId = nodeIds[nodeIds.length - 1]
     const startId = nodeIds[0]
@@ -78,13 +81,14 @@ module.exports = async (_, args, { pgdb, t }) => {
         endCursor: endId,
         hasNextPage: endIndex < ids.length - 1,
         hasPreviousPage: startIndex > 0,
-        startCursor: startId
-      }
+        startCursor: startId,
+      },
     }
   }
 
   if (search) {
-    const userRows = await pgdb.query(`
+    const userRows = await pgdb.query(
+      `
       ${membershipAfter ? fragmentWithMinMaxDates : ''}
 
       SELECT DISTINCT
@@ -108,11 +112,14 @@ module.exports = async (_, args, { pgdb, t }) => {
           c.description % :search OR
           c.description ILIKE :searchLike
         )
-    `, { search, searchLike: search + '%', seed, membershipAfter })
+    `,
+      { search, searchLike: search + '%', seed, membershipAfter },
+    )
 
     return results(userRows)
   } else {
-    const userRows = await pgdb.query(`
+    const userRows = await pgdb.query(
+      `
       ${membershipAfter ? fragmentWithMinMaxDates : ''}
 
       SELECT id
@@ -136,7 +143,9 @@ module.exports = async (_, args, { pgdb, t }) => {
         OFFSET 1
       ) s
       ORDER BY random()
-    `, { seed, membershipAfter })
+    `,
+      { seed, membershipAfter },
+    )
 
     return results(userRows)
   }

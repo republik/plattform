@@ -1,8 +1,5 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
-const {
-  findBySlug,
-  finalize
-} = require('../../../lib/Questionnaire')
+const { findBySlug, finalize } = require('../../../lib/Questionnaire')
 
 module.exports = async (_, args, context) => {
   const { pgdb, user: me, t } = context
@@ -25,7 +22,7 @@ module.exports = async (_, args, context) => {
 
     const result = await finalize(questionnaire, args, {
       ...context,
-      pgdb: transaction
+      pgdb: transaction,
     })
 
     if (dry) {

@@ -3,14 +3,14 @@ const moment = require('moment')
 
 const wasSent = async (onceFor, { pgdb }) => {
   const conditions = Object.keys(onceFor)
-    .filter(key => ['type', 'userId', 'keys'].includes(key))
+    .filter((key) => ['type', 'userId', 'keys'].includes(key))
     // if a onceFor value is an array, change the key to `${key} &&`
     // to ensure that if a mail was sent for one array member,
     // it doesn't get sent again
     // This is done by the asumption that it's better to send less
     // emails than more.
     // https://pogi.readthedocs.io/en/latest/API/condition/
-    .map(key => {
+    .map((key) => {
       const value = onceFor[key]
       let condition
       if (Array.isArray(value)) {
@@ -20,52 +20,41 @@ const wasSent = async (onceFor, { pgdb }) => {
       }
       return condition
     })
-    .reduce(
-      (agg, cur) => Object.assign(agg, cur),
-      {}
-    )
+    .reduce((agg, cur) => Object.assign(agg, cur), {})
 
-  const wasSentSuccessfully = await pgdb.public.mailLog.count({
-    ...conditions,
-    status: ['SENT', 'SCHEDULED']
-  })
-    .then(count => count > 0)
+  const wasSentSuccessfully = await pgdb.public.mailLog
+    .count({
+      ...conditions,
+      status: ['SENT', 'SCHEDULED'],
+    })
+    .then((count) => count > 0)
   if (wasSentSuccessfully) {
     return true
   }
 
-  return pgdb.public.mailLog.count({
-    ...conditions,
-    status: 'FAILED',
-    'createdAt >': moment().subtract(1, 'day')
-  })
-    .then(count => count >= 5)
+  return pgdb.public.mailLog
+    .count({
+      ...conditions,
+      status: 'FAILED',
+      'createdAt >': moment().subtract(1, 'day'),
+    })
+    .then((count) => count >= 5)
 }
 
 const insert = (payload, { pgdb }) =>
-  pgdb.public.mailLog.insertAndGet(
-    payload,
-    { skipUndefined: true }
-  )
+  pgdb.public.mailLog.insertAndGet(payload, { skipUndefined: true })
 
 const update = (match, payload, { pgdb }) =>
-  pgdb.public.mailLog.update(
-    match,
-    payload,
-    { skipUndefined: true }
-  )
+  pgdb.public.mailLog.update(match, payload, { skipUndefined: true })
 
 const send = async ({
   log,
-  log: {
-    logMessage = true,
-    onceFor = false
-  } = {},
+  log: { logMessage = true, onceFor = false } = {},
   sendFunc,
   message,
   email,
   template,
-  context
+  context,
 }) => {
   if (!sendFunc || !message || !email || !context || !context.pgdb) {
     console.error('missing input', { sendFunc, message, email, context })
@@ -101,9 +90,9 @@ const send = async ({
       keys: (onceFor && onceFor.keys) || undefined,
       status: 'SENDING',
       email,
-      info
+      info,
     },
-    context
+    context,
   )
 
   const { result, status, error } = await sendFunc()
@@ -113,14 +102,14 @@ const send = async ({
     {
       result,
       status,
-      error
+      error,
     },
-    context
+    context,
   )
 
   return { result, status, error, mailLogId: logEntry.id }
 }
 
 module.exports = {
-  send
+  send,
 }

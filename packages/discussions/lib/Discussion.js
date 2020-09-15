@@ -2,7 +2,12 @@ const isUUID = require('is-uuid')
 
 // id can be uuid or repoId
 // on insert, specified id is not honoured
-const upsert = async (id, settings = {}, { pgdb, loaders }, legacyDiscussionId) => {
+const upsert = async (
+  id,
+  settings = {},
+  { pgdb, loaders },
+  legacyDiscussionId,
+) => {
   let discussion
   const idIsUUID = id && isUUID.v4(id)
   if (id) {
@@ -17,10 +22,9 @@ const upsert = async (id, settings = {}, { pgdb, loaders }, legacyDiscussionId) 
   }
 
   if (!discussion) {
-    discussion = await pgdb.public.discussions.insertAndGet(
-      settings,
-      { skipUndefined: true }
-    )
+    discussion = await pgdb.public.discussions.insertAndGet(settings, {
+      skipUndefined: true,
+    })
     if (id) {
       await loaders.Discussion.clear(id)
     }
@@ -31,31 +35,27 @@ const upsert = async (id, settings = {}, { pgdb, loaders }, legacyDiscussionId) 
     if (
       (settings.title && settings.title !== discussion.title) ||
       (settings.maxLength && settings.maxLength !== discussion.maxLength) ||
-      (settings.minInterval && settings.minInterval !== discussion.minInterval) ||
+      (settings.minInterval &&
+        settings.minInterval !== discussion.minInterval) ||
       (settings.anonymity && settings.anonymity !== discussion.anonymity) ||
       (settings.path && settings.path !== discussion.path) ||
-      (
-        settings.closed !== undefined &&
+      (settings.closed !== undefined &&
         settings.closed !== null &&
-        settings.closed !== discussion.closed
-      ) ||
-      (
-        settings.collapsable !== undefined &&
+        settings.closed !== discussion.closed) ||
+      (settings.collapsable !== undefined &&
         settings.collapsable !== null &&
-        settings.collapsable !== discussion.collapsable
-      ) ||
-      (
-        settings.isBoard !== undefined &&
+        settings.collapsable !== discussion.collapsable) ||
+      (settings.isBoard !== undefined &&
         settings.isBoard !== null &&
-        settings.isBoard !== discussion.isBoard
-      ) ||
-      (settings.tagRequired !== undefined && settings.tagRequired !== discussion.tagRequired) ||
+        settings.isBoard !== discussion.isBoard) ||
+      (settings.tagRequired !== undefined &&
+        settings.tagRequired !== discussion.tagRequired) ||
       (settings.tags && settings.tags !== (discussion.tags || []).join(',')) ||
       (!discussion.repoId && id && !idIsUUID && legacyDiscussionId) // to save repoId to existing discussions
     ) {
       discussion = await pgdb.public.discussions.updateAndGetOne(
         { id: discussion.id },
-        settings
+        settings,
       )
       await loaders.Discussion.clear(discussion.id)
     }
@@ -65,5 +65,5 @@ const upsert = async (id, settings = {}, { pgdb, loaders }, legacyDiscussionId) 
 }
 
 module.exports = {
-  upsert
+  upsert,
 }

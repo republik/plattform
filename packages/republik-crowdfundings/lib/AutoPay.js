@@ -1,6 +1,8 @@
 const debug = require('debug')('crowdfundings:lib:AutoPay')
 
-const { applyPgInterval: { add: addInterval } } = require('@orbiting/backend-modules-utils')
+const {
+  applyPgInterval: { add: addInterval },
+} = require('@orbiting/backend-modules-utils')
 
 const createCharge = require('./payments/stripe/createCharge')
 const { getCustomPackages } = require('./User')
@@ -18,17 +20,14 @@ const suggest = async (membershipId, pgdb) => {
   }
 
   // Find current periods
-  const membershipPeriods = await pgdb.public.membershipPeriods.find({ membershipId: membership.id })
+  const membershipPeriods = await pgdb.public.membershipPeriods.find({
+    membershipId: membership.id,
+  })
 
   // Find pledgeOptions
-  const relatedPledgeOptions = await pgdb.public.pledgeOptions.find(
-    {
-      or: [
-        { membershipId },
-        { pledgeId: membership.pledgeId }
-      ]
-    }
-  )
+  const relatedPledgeOptions = await pgdb.public.pledgeOptions.find({
+    or: [{ membershipId }, { pledgeId: membership.pledgeId }],
+  })
 
   if (relatedPledgeOptions.length < 1) {
     return false
@@ -36,8 +35,8 @@ const suggest = async (membershipId, pgdb) => {
 
   // Find latest successful pledge
   const pledge = await pgdb.public.pledges.findOne(
-    { id: relatedPledgeOptions.map(po => po.pledgeId), status: 'SUCCESSFUL' },
-    { orderBy: { createdAt: 'DESC' }, limit: 1 }
+    { id: relatedPledgeOptions.map((po) => po.pledgeId), status: 'SUCCESSFUL' },
+    { orderBy: { createdAt: 'DESC' }, limit: 1 },
   )
 
   if (!pledge) {
@@ -46,45 +45,70 @@ const suggest = async (membershipId, pgdb) => {
 
   // to get membership-related rewardId
   const membershipTypes = await pgdb.public.membershipTypes.findAll()
-  const membershipPackageOptions = await pgdb.public.packageOptions.find(
-    { rewardId: membershipTypes.map(mt => mt.rewardId) }
+  const membershipPackageOptions = await pgdb.public.packageOptions.find({
+    rewardId: membershipTypes.map((mt) => mt.rewardId),
+  })
+
+  const pledgeOptions = (
+    await pgdb.public.pledgeOptions.find({
+      pledgeId: pledge.id,
+      'amount >=': 1,
+    })
+  ).map((pledgeOption) => ({
+    ...pledgeOption,
+    packageOption: membershipPackageOptions.find(
+      (po) => po.id === pledgeOption.templateId,
+    ),
+  }))
+
+  const membershipPledgeOptions = pledgeOptions.filter(
+    (po) => !!po.packageOption,
   )
 
-  const pledgeOptions =
-    (await pgdb.public.pledgeOptions.find({
-      pledgeId: pledge.id,
-      'amount >=': 1
-    }))
-      .map(pledgeOption => ({
-        ...pledgeOption,
-        packageOption: membershipPackageOptions.find(po => po.id === pledgeOption.templateId)
-      }))
-
-  const membershipPledgeOptions = pledgeOptions.filter(po => !!po.packageOption)
-
-  const membershipPledgeOption = membershipPledgeOptions.length > 1
-    ? membershipPledgeOptions.find(po => po.membershipId === membershipId)
-    : membershipPledgeOptions[0]
+  const membershipPledgeOption =
+    membershipPledgeOptions.length > 1
+      ? membershipPledgeOptions.find((po) => po.membershipId === membershipId)
+      : membershipPledgeOptions[0]
 
   if (!membershipPledgeOption) {
-    console.log('failed to find membershipPledgeOption', 'userId', membership.userId, 'membershipId', membershipId, 'pledgeId', pledge.id)
+    console.log(
+      'failed to find membershipPledgeOption',
+      'userId',
+      membership.userId,
+      'membershipId',
+      membershipId,
+      'pledgeId',
+      pledge.id,
+    )
     return false
   }
 
   const rewardId = membershipPledgeOption.packageOption.rewardId
 
-  const defaultPaymentSource = await getDefaultPaymentSource(membership.userId, pgdb)
+  const defaultPaymentSource = await getDefaultPaymentSource(
+    membership.userId,
+    pgdb,
+  )
 
   if (!defaultPaymentSource) return false
 
   // Pick package and options which may be used to submit and autopayment
   const user = await pgdb.public.users.findOne({ id: membership.userId })
-  const prolongPackage = (await getCustomPackages({ user, pgdb })).find(p => p.name === 'PROLONG')
+  const prolongPackage = (await getCustomPackages({ user, pgdb })).find(
+    (p) => p.name === 'PROLONG',
+  )
 
-  const prolongOption = prolongPackage && prolongPackage.options
-    .filter(option => option.membership && option.membership.id === membershipId)
-    .filter(option => option.membershipType && option.membershipType.rewardId === rewardId)
-    .shift()
+  const prolongOption =
+    prolongPackage &&
+    prolongPackage.options
+      .filter(
+        (option) => option.membership && option.membership.id === membershipId,
+      )
+      .filter(
+        (option) =>
+          option.membershipType && option.membershipType.rewardId === rewardId,
+      )
+      .shift()
 
   const endDate = getLastEndDate(membershipPeriods)
 
@@ -94,7 +118,8 @@ const suggest = async (membershipId, pgdb) => {
       pledgeId: pledge.id,
       companyId: prolongPackage.companyId,
       membershipId: membership.id,
-      membershipType: membershipTypes.find(mt => mt.rewardId === rewardId).name,
+      membershipType: membershipTypes.find((mt) => mt.rewardId === rewardId)
+        .name,
       currentPeriods: membershipPeriods,
       endDate,
       graceEndDate: addInterval(endDate, membership.graceInterval),
@@ -104,7 +129,7 @@ const suggest = async (membershipId, pgdb) => {
       defaultPrice: prolongOption.price,
       withDiscount: pledge.donation < 0,
       withDonation: pledge.donation > 0,
-      card: defaultPaymentSource
+      card: defaultPaymentSource,
     }
   }
 }
@@ -123,7 +148,7 @@ const prolong = async (membershipId, pgdb, redis) => {
       amount: suggestion.total,
       userId: suggestion.userId,
       companyId: suggestion.companyId,
-      pgdb: transaction
+      pgdb: transaction,
     })
 
     // Insert payment
@@ -133,28 +158,30 @@ const prolong = async (membershipId, pgdb, redis) => {
       total: charge.amount,
       status: 'PAID',
       pspId: charge.id,
-      pspPayload: charge
+      pspPayload: charge,
     })
 
     // Insert link between payment and pledge
     await transaction.public.pledgePayments.insert({
       pledgeId: suggestion.pledgeId,
       paymentId: payment.id,
-      paymentType: 'PLEDGE'
+      paymentType: 'PLEDGE',
     })
 
     // Insert membership periods
     await transaction.public.membershipPeriods.insert(
-      suggestion.additionalPeriods
-        .map(period => {
-          // Omit period.id, period.createdAt, period.updatedAt
-          const { id, createdAt, updatedAt, ...sanitizedPeriod } = period
-          return { ...sanitizedPeriod, pledgeId: suggestion.pledgeId }
-        })
+      suggestion.additionalPeriods.map((period) => {
+        // Omit period.id, period.createdAt, period.updatedAt
+        const { id, createdAt, updatedAt, ...sanitizedPeriod } = period
+        return { ...sanitizedPeriod, pledgeId: suggestion.pledgeId }
+      }),
     )
 
     // Invalidate User resolver cache
-    const cache = createCache({ prefix: `User:${suggestion.userId}` }, { redis })
+    const cache = createCache(
+      { prefix: `User:${suggestion.userId}` },
+      { redis },
+    )
     cache.invalidate()
 
     // Insert charge attempt
@@ -163,19 +190,16 @@ const prolong = async (membershipId, pgdb, redis) => {
       total: suggestion.total,
       status: 'SUCCESS',
       paymentId: payment.id,
-      createdAt: new Date()
+      createdAt: new Date(),
     })
 
     await transaction.transactionCommit()
 
-    debug(
-      'charge successful: %o',
-      {
-        membershipId: suggestion.membershipId,
-        total: suggestion.total,
-        paymentId: payment.id
-      }
-    )
+    debug('charge successful: %o', {
+      membershipId: suggestion.membershipId,
+      total: suggestion.total,
+      paymentId: payment.id,
+    })
 
     return { suggestion, chargeAttempt }
   } catch (e) {
@@ -187,24 +211,21 @@ const prolong = async (membershipId, pgdb, redis) => {
       stack: e.stack,
       name: e.name,
       message: e.message,
-      raw: e.raw
+      raw: e.raw,
     }
 
-    debug(
-      'charge failed: %o',
-      {
-        membershipId: suggestion.membershipId,
-        total: suggestion.total,
-        error
-      }
-    )
+    debug('charge failed: %o', {
+      membershipId: suggestion.membershipId,
+      total: suggestion.total,
+      error,
+    })
 
     const chargeAttempt = await pgdb.public.chargeAttempts.insertAndGet({
       membershipId: suggestion.membershipId,
       total: suggestion.total,
       status: 'ERROR',
       error,
-      createdAt: new Date()
+      createdAt: new Date(),
     })
 
     return { suggestion, chargeAttempt }
@@ -213,5 +234,5 @@ const prolong = async (membershipId, pgdb, redis) => {
 
 module.exports = {
   suggest,
-  prolong
+  prolong,
 }

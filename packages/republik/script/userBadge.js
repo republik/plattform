@@ -10,7 +10,7 @@ const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
 const Badges = require('../lib/Badges')
 
 PgDb.connect()
-  .then(async pgdb => {
+  .then(async (pgdb) => {
     const badge = process.argv[2]
     const email = process.argv[3]
 
@@ -33,7 +33,7 @@ PgDb.connect()
     } else {
       if (Badges.SUPPORTED_BADGES.indexOf(badge) === -1) {
         throw new Error(
-          `badge ${badge} is not supported, you can only remove it.`
+          `badge ${badge} is not supported, you can only remove it.`,
         )
       }
       newUser = await Badges.addToUser(user.id, badge, pgdb)
@@ -44,7 +44,7 @@ PgDb.connect()
   .then(() => {
     process.exit()
   })
-  .catch(e => {
+  .catch((e) => {
     console.log(e)
     process.exit(1)
   })

@@ -7,7 +7,7 @@ if (!YOUTUBE_APP_KEY) {
   console.warn("missing YOUTUBE_APP_KEY. Youtube Embeds won't work.")
 }
 
-const getYoutubeVideoById = async id => {
+const getYoutubeVideoById = async (id) => {
   if (!YOUTUBE_APP_KEY) {
     throw new Error('missing YOUTUBE_APP_KEY')
   }
@@ -18,11 +18,11 @@ const getYoutubeVideoById = async id => {
   const response = await fetch(
     `https://www.googleapis.com/youtube/v3/videos?id=${id}&key=${YOUTUBE_APP_KEY}&part=snippet,player,contentDetails&maxWidth=1000`,
     {
-      method: 'GET'
-    }
+      method: 'GET',
+    },
   )
-    .then(res => res.json())
-    .catch(error => {
+    .then((res) => res.json())
+    .catch((error) => {
       console.error(`Error getting Youtube video with id ${id}:`, error)
       return error
     })
@@ -35,11 +35,11 @@ const getYoutubeVideoById = async id => {
   const channelResponse = await fetch(
     `https://www.googleapis.com/youtube/v3/channels?id=${channelId}&key=${YOUTUBE_APP_KEY}&part=snippet`,
     {
-      method: 'GET'
-    }
+      method: 'GET',
+    },
   )
-    .then(res => res.json())
-    .catch(error => {
+    .then((res) => res.json())
+    .catch((error) => {
       console.error(`Error getting Youtube channel with id ${id}:`, error)
       return error
     })
@@ -65,8 +65,10 @@ const getYoutubeVideoById = async id => {
 
   // Pick thumbnail with most area
   const bestThumbnailSize = Object.keys(thumbnails).reduce((prev, curr) => {
-    const { width: prevWidth = 0, height: prevHeight = 0 } = thumbnails[prev] || {}
-    const { width: currWidth = 0, height: currHeight = 0 } = thumbnails[curr] || {}
+    const { width: prevWidth = 0, height: prevHeight = 0 } =
+      thumbnails[prev] || {}
+    const { width: currWidth = 0, height: currHeight = 0 } =
+      thumbnails[curr] || {}
 
     if (prevWidth * prevHeight < currWidth * currHeight) {
       return curr
@@ -88,10 +90,11 @@ const getYoutubeVideoById = async id => {
       ? channelResponse.items[0].snippet.thumbnails.default.url
       : '',
     aspectRatio:
-      response.items[0].player.embedWidth / response.items[0].player.embedHeight,
+      response.items[0].player.embedWidth /
+      response.items[0].player.embedHeight,
     durationMs: moment
       .duration(response.items[0].contentDetails.duration)
-      .as('milliseconds')
+      .as('milliseconds'),
   }
 }
 
@@ -99,5 +102,5 @@ module.exports = {
   getYoutubeVideoById,
   // manually keep in sync with backend-modules/packages/documents/lib/process.js
   // until embeds are in their own module
-  imageKeys: ['thumbnail', 'userProfileImageUrl']
+  imageKeys: ['thumbnail', 'userProfileImageUrl'],
 }

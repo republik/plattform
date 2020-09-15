@@ -20,97 +20,89 @@ const sendRecipientInvitation = async (granter, campaign, grant, t, pgdb) => {
 
   const recipient = await pgdb.public.users.findOne({ email: grant.email })
 
-  return sendMail(
-    grant.email,
-    'recipient',
-    'invitation',
-    {
-      granter,
-      recipient,
-      campaign,
-      grant,
-      t,
-      pgdb
-    }
-  )
-}
-
-const sendGranterClaimNotice =
-  async (granter, campaign, recipient, grant, t, pgdb) =>
-    sendMail(
-      granter.email,
-      'granter',
-      'claim_notice',
-      {
-        granter,
-        recipient,
-        campaign,
-        grant,
-        t,
-        pgdb
-      }
-    )
-
-const sendRecipientOnboarding =
-  async (granter, campaign, recipient, grant, t, pgdb) =>
-    sendMail(
-      recipient.email,
-      'recipient',
-      'onboarding',
-      {
-        granter,
-        recipient,
-        campaign,
-        grant,
-        t,
-        pgdb
-      }
-    )
-
-const sendRecipientExpired =
-  async (granter, campaign, recipient, grant, t, pgdb) =>
-    sendMail(
-      recipient.email,
-      'recipient',
-      'expired',
-      {
-        granter,
-        recipient,
-        campaign,
-        grant,
-        t,
-        pgdb
-      }
-    )
-
-const sendRecipientFollowup =
-  async (granter, campaign, recipient, grant, t, pgdb) =>
-    sendMail(
-      recipient.email,
-      'recipient',
-      'followup',
-      {
-        granter,
-        recipient,
-        campaign,
-        grant,
-        t,
-        pgdb
-      }
-    )
-
-const sendMail = async (
-  to,
-  party,
-  template,
-  {
+  return sendMail(grant.email, 'recipient', 'invitation', {
     granter,
     recipient,
     campaign,
     grant,
     t,
-    pgdb
-  }
+    pgdb,
+  })
+}
+
+const sendGranterClaimNotice = async (
+  granter,
+  campaign,
+  recipient,
+  grant,
+  t,
+  pgdb,
+) =>
+  sendMail(granter.email, 'granter', 'claim_notice', {
+    granter,
+    recipient,
+    campaign,
+    grant,
+    t,
+    pgdb,
+  })
+
+const sendRecipientOnboarding = async (
+  granter,
+  campaign,
+  recipient,
+  grant,
+  t,
+  pgdb,
+) =>
+  sendMail(recipient.email, 'recipient', 'onboarding', {
+    granter,
+    recipient,
+    campaign,
+    grant,
+    t,
+    pgdb,
+  })
+
+const sendRecipientExpired = async (
+  granter,
+  campaign,
+  recipient,
+  grant,
+  t,
+  pgdb,
+) =>
+  sendMail(recipient.email, 'recipient', 'expired', {
+    granter,
+    recipient,
+    campaign,
+    grant,
+    t,
+    pgdb,
+  })
+
+const sendRecipientFollowup = async (
+  granter,
+  campaign,
+  recipient,
+  grant,
+  t,
+  pgdb,
+) =>
+  sendMail(recipient.email, 'recipient', 'followup', {
+    granter,
+    recipient,
+    campaign,
+    grant,
+    t,
+    pgdb,
+  })
+
+const sendMail = async (
+  to,
+  party,
+  template,
+  { granter, recipient, campaign, grant, t, pgdb },
 ) => {
   const emailConfig = getConfigEmails(party, template, campaign)
 
@@ -120,23 +112,26 @@ const sendMail = async (
 
   const actualTemplate = (emailConfig && emailConfig.actualTemplate) || template
 
-  const mail = await sendMailTemplate({
-    to,
-    fromEmail: process.env.DEFAULT_MAIL_FROM_ADDRESS,
-    subject: t(
-      `api/access/email/${party}/${actualTemplate}/subject`,
-      getTranslationVars(granter, recipient)
-    ),
-    templateName: `access_${party}_${actualTemplate}`,
-    globalMergeVars: await getGlobalMergeVars(
-      granter,
-      recipient,
-      campaign,
-      grant,
-      t,
-      pgdb
-    )
-  }, { pgdb })
+  const mail = await sendMailTemplate(
+    {
+      to,
+      fromEmail: process.env.DEFAULT_MAIL_FROM_ADDRESS,
+      subject: t(
+        `api/access/email/${party}/${actualTemplate}/subject`,
+        getTranslationVars(granter, recipient),
+      ),
+      templateName: `access_${party}_${actualTemplate}`,
+      globalMergeVars: await getGlobalMergeVars(
+        granter,
+        recipient,
+        campaign,
+        grant,
+        t,
+        pgdb,
+      ),
+    },
+    { pgdb },
+  )
 
   await eventsLib.log(grant, `email.${party}.${actualTemplate}`, pgdb)
 
@@ -144,13 +139,9 @@ const sendMail = async (
 }
 
 const getHumanInterval = (interval, t) =>
-  Object
-    .keys(interval)
-    .map(unit => {
-      return t.pluralize(
-        `api/access/period/${unit}`,
-        { count: interval[unit] }
-      )
+  Object.keys(interval)
+    .map((unit) => {
+      return t.pluralize(`api/access/period/${unit}`, { count: interval[unit] })
     })
     .join(` ${t('api/access/period/join')} `)
     .trim()
@@ -161,17 +152,22 @@ const getTranslationVars = (granter, recipient) => {
 
   return {
     granterName: safeGranter.name || safeGranter.email,
-    recipientName: safeRecipient && (safeRecipient.name || safeRecipient.email)
+    recipientName: safeRecipient && (safeRecipient.name || safeRecipient.email),
   }
 }
 
 const getGlobalMergeVars = async (
-  granter, recipient, campaign, grant, t, pgdb
+  granter,
+  recipient,
+  campaign,
+  grant,
+  t,
+  pgdb,
 ) => {
   const safeGranter = transformUser(granter)
   const safeRecipient = !!recipient && transformUser(recipient)
   const recipientCampaigns =
-    !!recipient && await campaignsLib.findForGranter(recipient, { pgdb })
+    !!recipient && (await campaignsLib.findForGranter(recipient, { pgdb }))
   const recipientHasMemberships =
     !!recipient && (await hasUserActiveMembership(recipient, pgdb))
 
@@ -194,97 +190,98 @@ const getGlobalMergeVars = async (
     // Grant,
     {
       name: 'grant_created',
-      content: dateFormat(grant.createdAt)
+      content: dateFormat(grant.createdAt),
     },
     {
       name: 'grant_begin_before',
-      content: dateFormat(grant.beginBefore)
+      content: dateFormat(grant.beginBefore),
     },
     {
       name: 'grant_begin',
-      content: grant.beginAt && dateFormat(grant.beginAt)
+      content: grant.beginAt && dateFormat(grant.beginAt),
     },
     {
       name: 'grant_end',
-      content: grant.endAt && dateFormat(grant.endAt)
+      content: grant.endAt && dateFormat(grant.endAt),
     },
     {
       name: 'grant_voucher_code',
-      content: grant.voucherCode
+      content: grant.voucherCode,
     },
 
     // Granter
     {
       name: 'granter_name',
-      content: safeGranter.name || t('api/noname')
+      content: safeGranter.name || t('api/noname'),
     },
     {
       name: 'granter_email',
-      content: safeGranter.email
+      content: safeGranter.email,
     },
     {
       name: 'granter_message',
-      content: !!grant.message && escape(grant.message).replace(/\n/g, '<br />')
+      content:
+        !!grant.message && escape(grant.message).replace(/\n/g, '<br />'),
     },
 
     // Recipient
     {
       name: 'recipient_email',
-      content: grant.email || safeRecipient.email
+      content: grant.email || safeRecipient.email,
     },
     {
       name: 'recipient_name',
-      content: safeRecipient.name || t('api/noname')
+      content: safeRecipient.name || t('api/noname'),
     },
     {
       name: 'recipient_has_memberships',
-      content: !!recipient && recipientHasMemberships
+      content: !!recipient && recipientHasMemberships,
     },
     {
       name: 'recipent_has_campaigns',
       content:
-        !!recipient &&
-        !!recipientCampaigns &&
-        recipientCampaigns.length > 0
+        !!recipient && !!recipientCampaigns && recipientCampaigns.length > 0,
     },
 
     // Campaign
     {
       name: 'campaign_title',
-      content: campaign.title
+      content: campaign.title,
     },
     {
       name: 'campaign_begin',
-      content: dateFormat(campaign.beginAt)
+      content: dateFormat(campaign.beginAt),
     },
     {
       name: 'campaign_end',
-      content: dateFormat(campaign.endAt)
+      content: dateFormat(campaign.endAt),
     },
     {
       name: 'campaign_period',
-      content: getHumanInterval(campaign.grantPeriodInterval, t)
+      content: getHumanInterval(campaign.grantPeriodInterval, t),
     },
 
     // Links
     {
       name: 'link_claim',
-      content: `${FRONTEND_BASE_URL}/abholen?context=access`
+      content: `${FRONTEND_BASE_URL}/abholen?context=access`,
     },
     {
       name: 'link_claim_prefilled',
-      content: `${FRONTEND_BASE_URL}/abholen?code=${grant.voucherCode}&email=${email ? base64u.encode(email) : ''}&context=access`
+      content: `${FRONTEND_BASE_URL}/abholen?code=${grant.voucherCode}&email=${
+        email ? base64u.encode(email) : ''
+      }&context=access`,
     },
 
     // Perk "gift membership"
     pledgerName && {
       name: 'pledger_name',
-      content: pledgerName
+      content: pledgerName,
     },
     pledgeMessageToClaimers && {
       name: 'message_to_claimer',
-      content: escape(pledgeMessageToClaimers).replace(/\n/g, '<br />')
-    }
+      content: escape(pledgeMessageToClaimers).replace(/\n/g, '<br />'),
+    },
   ].filter(Boolean)
 }
 
@@ -295,7 +292,9 @@ const getConfigEmails = (party, template, campaign) => {
     return
   }
 
-  return config.emails.find(email => email.party === party && email.template === template)
+  return config.emails.find(
+    (email) => email.party === party && email.template === template,
+  )
 }
 
 module.exports = {
@@ -319,5 +318,5 @@ module.exports = {
   getGlobalMergeVars,
 
   // Returns campaign-level config for party and template
-  getConfigEmails
+  getConfigEmails,
 }

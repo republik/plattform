@@ -6,31 +6,54 @@ const debug = require('debug')('auth:lib:AccessToken')
 
 const { newAuthError } = require('./AuthError')
 const { userIsMeOrInRoles, userIsInRoles } = require('./Roles')
-const MissingScopeError = newAuthError('missing-scope', 'api/auth/accessToken/scope/404')
-const MissingKeyError = newAuthError('missing-key', 'api/auth/accessToken/key/404')
-const MissingPackageGrant = newAuthError('missing-package-grant', 'api/auth/accessToken/pledgePackages/notAllowed')
+const MissingScopeError = newAuthError(
+  'missing-scope',
+  'api/auth/accessToken/scope/404',
+)
+const MissingKeyError = newAuthError(
+  'missing-key',
+  'api/auth/accessToken/key/404',
+)
+const MissingPackageGrant = newAuthError(
+  'missing-package-grant',
+  'api/auth/accessToken/pledgePackages/notAllowed',
+)
 
 const scopeConfigs = {
   CUSTOM_PLEDGE: {
-    exposeFields: ['email', 'firstName', 'lastName', 'hasAddress', 'paymentSources', 'customPackages'],
+    exposeFields: [
+      'email',
+      'firstName',
+      'lastName',
+      'hasAddress',
+      'paymentSources',
+      'customPackages',
+    ],
     pledgePackages: ['PROLONG', 'TABLEBOOK'],
-    ttlDays: 90
+    ttlDays: 90,
   },
   CUSTOM_PLEDGE_EXTENDED: {
-    exposeFields: ['email', 'firstName', 'lastName', 'hasAddress', 'paymentSources', 'customPackages'],
+    exposeFields: [
+      'email',
+      'firstName',
+      'lastName',
+      'hasAddress',
+      'paymentSources',
+      'customPackages',
+    ],
     pledgePackages: ['PROLONG'],
-    ttlDays: 120
+    ttlDays: 120,
   },
   CLAIM_CARD: {
     exposeFields: ['email', 'cards'],
-    ttlDays: 90
+    ttlDays: 90,
   },
   AUTHORIZE_SESSION: {
     requiredRolesToGenerate: ['admin', 'supporter'],
     authorizeSession: true,
     ttlDays: 5,
-    expireAtFormat: 'YYYY-MM-DDTHH:mm:ss.SSSZZ'
-  }
+    expireAtFormat: 'YYYY-MM-DDTHH:mm:ss.SSSZZ',
+  },
 }
 
 const getScopeConfig = (scope) => {
@@ -45,13 +68,11 @@ const getHmac = (payload, key) => {
   if (!key) {
     throw new MissingKeyError()
   }
-  return crypto
-    .createHmac('sha256', key)
-    .update(payload)
-    .digest('hex')
+  return crypto.createHmac('sha256', key).update(payload).digest('hex')
 }
 
-const getPayload = ({ userId, scope, expiresAt }) => `${userId}/${scope}/${expiresAt}`
+const getPayload = ({ userId, scope, expiresAt }) =>
+  `${userId}/${scope}/${expiresAt}`
 
 const generateForUser = (user, scope) => {
   const key = user.accessKey || user._raw.accessKey
@@ -63,7 +84,7 @@ const generateForUser = (user, scope) => {
   const payload = getPayload({
     userId: user.id,
     scope,
-    expiresAt: moment().add(ttlDays, 'days').format(expireAtFormat)
+    expiresAt: moment().add(ttlDays, 'days').format(expireAtFormat),
   })
 
   return base64u.encode(`${payload}/${getHmac(payload, key)}`)
@@ -85,7 +106,10 @@ const generateForUserByUser = (user, scope, me, roles) => {
   // If roles to generate are required and me is not in roles, return null
   const { requiredRolesToGenerate } = getScopeConfig(scope)
   if (requiredRolesToGenerate && !userIsInRoles(me, requiredRolesToGenerate)) {
-    debug('scope requires roles, but me is missing them', { scope, requiredRolesToGenerate })
+    debug('scope requires roles, but me is missing them', {
+      scope,
+      requiredRolesToGenerate,
+    })
     return null
   }
 
@@ -96,7 +120,10 @@ const resolve = async (token, { pgdb }) => {
   const [userId, scope, expiresAt, hmac] = base64u.decode(token).split('/')
   if (userId && scope && expiresAt && hmac) {
     const payload = getPayload({ userId, scope, expiresAt })
-    const key = await pgdb.public.users.findOneFieldOnly({ id: userId }, 'accessKey')
+    const key = await pgdb.public.users.findOneFieldOnly(
+      { id: userId },
+      'accessKey',
+    )
     if (key && getHmac(payload, key) === hmac) {
       const scopeConfig = getScopeConfig(scope)
       return { userId, scope, scopeConfig, expiresAt: moment(expiresAt), hmac }
@@ -121,8 +148,8 @@ const getUserByAccessToken = async (token, context) => {
     return transformUser(
       await pgdb.public.users.findOne({ id: validToken.userId }),
       {
-        _scopeConfig: validToken.scopeConfig
-      }
+        _scopeConfig: validToken.scopeConfig,
+      },
     )
   }
   return null
@@ -136,7 +163,8 @@ const isFieldExposed = (user, field) =>
 
 const ensureCanPledgePackage = (user, packageName) => {
   if (
-    !(user &&
+    !(
+      user &&
       user._scopeConfig &&
       user._scopeConfig.pledgePackages &&
       user._scopeConfig.pledgePackages.includes(packageName)
@@ -147,11 +175,7 @@ const ensureCanPledgePackage = (user, packageName) => {
 }
 
 const hasAuthorizeSession = (user) =>
-  !!(
-    user &&
-    user._scopeConfig &&
-    user._scopeConfig.authorizeSession
-  )
+  !!(user && user._scopeConfig && user._scopeConfig.authorizeSession)
 
 module.exports = {
   generateForUser,
@@ -159,5 +183,5 @@ module.exports = {
   getUserByAccessToken,
   isFieldExposed,
   ensureCanPledgePackage,
-  hasAuthorizeSession
+  hasAuthorizeSession,
 }

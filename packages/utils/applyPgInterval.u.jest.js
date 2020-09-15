@@ -5,10 +5,8 @@ const postgresInterval = require('postgres-interval')
 
 test('timezone is set to Europe/Amsterdam', () => {
   // this test file is written to expect the timezone to be Europe/Amsterdam as the developers machine is configured like that
-  expect(
-    moment('2018-01-01 01:00:00').toISOString()
-  ).toBe(
-    new Date('2018-01-01').toISOString()
+  expect(moment('2018-01-01 01:00:00').toISOString()).toBe(
+    new Date('2018-01-01').toISOString(),
   )
 })
 
@@ -24,13 +22,23 @@ test('applyPgInterval.mutate', async () => {
   expect(b.unix()).toBe(moment('2017-11-16').unix())
 
   expect(() => mutate('2018-01-01')).toThrowError(/mutation missing/)
-  expect(() => mutate('2018-01-01', null, 'foobar')).toThrowError(/not supported/)
+  expect(() => mutate('2018-01-01', null, 'foobar')).toThrowError(
+    /not supported/,
+  )
 
-  expect(() => mutate('2018-01-01', null, 'add')).toThrowError(/interval missing/)
-  expect(() => mutate('2018-01-01', 'not-an-interval', 'add')).toThrowError(/not an object/)
+  expect(() => mutate('2018-01-01', null, 'add')).toThrowError(
+    /interval missing/,
+  )
+  expect(() => mutate('2018-01-01', 'not-an-interval', 'add')).toThrowError(
+    /not an object/,
+  )
   expect(() => mutate('2018-01-01', {}, 'add')).toThrowError(/has no keys/)
-  expect(() => mutate('2018-01-01', { foo: 'bar' }, 'add')).toThrowError(/contains invalid keys/)
-  expect(() => mutate('2018-01-01', { months: 10, foo: 'bar' }, 'add')).toThrowError(/contains invalid keys/)
+  expect(() => mutate('2018-01-01', { foo: 'bar' }, 'add')).toThrowError(
+    /contains invalid keys/,
+  )
+  expect(() =>
+    mutate('2018-01-01', { months: 10, foo: 'bar' }, 'add'),
+  ).toThrowError(/contains invalid keys/)
 })
 
 test('applyPgInterval.add', async () => {
@@ -65,10 +73,16 @@ test('applyPgInterval.add', async () => {
   expect(g.unix()).toBe(moment('2018-02-01 12:30:00').unix())
 
   expect(() => add('2018-01-01')).toThrowError(/interval missing/)
-  expect(() => add('2018-01-01', 'not-an-interval')).toThrowError(/not an object/)
+  expect(() => add('2018-01-01', 'not-an-interval')).toThrowError(
+    /not an object/,
+  )
   expect(() => add('2018-01-01', {})).toThrowError(/has no keys/)
-  expect(() => add('2018-01-01', { foo: 'bar' })).toThrowError(/contains invalid keys/)
-  expect(() => add('2018-01-01', { months: 10, foo: 'bar' })).toThrowError(/contains invalid keys/)
+  expect(() => add('2018-01-01', { foo: 'bar' })).toThrowError(
+    /contains invalid keys/,
+  )
+  expect(() => add('2018-01-01', { months: 10, foo: 'bar' })).toThrowError(
+    /contains invalid keys/,
+  )
 })
 
 test('applyPgInterval.subtract', async () => {
@@ -98,13 +112,23 @@ test('applyPgInterval.subtract', async () => {
   expect(f instanceof moment).toBeTruthy()
   expect(f.unix()).toBe(moment('2017-12-01').unix())
 
-  const g = subtract(moment('2018-01-01'), { months: 1, hours: 12, minutes: 30 })
+  const g = subtract(moment('2018-01-01'), {
+    months: 1,
+    hours: 12,
+    minutes: 30,
+  })
   expect(g instanceof moment).toBeTruthy()
   expect(g.unix()).toBe(moment('2017-11-30 11:30:00').unix())
 
   expect(() => subtract('2018-01-01')).toThrowError(/interval missing/)
-  expect(() => subtract('2018-01-01', 'not-an-interval')).toThrowError(/not an object/)
+  expect(() => subtract('2018-01-01', 'not-an-interval')).toThrowError(
+    /not an object/,
+  )
   expect(() => subtract('2018-01-01', {})).toThrowError(/has no keys/)
-  expect(() => subtract('2018-01-01', { foo: 'bar' })).toThrowError(/contains invalid keys/)
-  expect(() => subtract('2018-01-01', { months: 10, foo: 'bar' })).toThrowError(/contains invalid keys/)
+  expect(() => subtract('2018-01-01', { foo: 'bar' })).toThrowError(
+    /contains invalid keys/,
+  )
+  expect(() => subtract('2018-01-01', { months: 10, foo: 'bar' })).toThrowError(
+    /contains invalid keys/,
+  )
 })

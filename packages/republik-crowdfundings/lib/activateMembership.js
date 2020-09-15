@@ -20,23 +20,22 @@ module.exports = async (membership, user, t, pgdb) => {
       // active.
       active: !hasActiveMembership,
       renew: !hasActiveMembership,
-      updatedAt: now
-    }
+      updatedAt: now,
+    },
   )
 
   if (!hasActiveMembership) {
     // generate interval
     const beginDate = now.clone()
-    const endDate = beginDate.clone().add(
-      membership.initialPeriods,
-      membership.initialInterval
-    )
+    const endDate = beginDate
+      .clone()
+      .add(membership.initialPeriods, membership.initialInterval)
 
     await pgdb.public.membershipPeriods.insert({
       membershipId: membership.id,
       pledgeId: membership.pledgeId,
       beginDate,
-      endDate
+      endDate,
     })
   } else {
     // Cancel active memberships.
@@ -44,27 +43,20 @@ module.exports = async (membership, user, t, pgdb) => {
       'id !=': membership.id,
       userId: user.id,
       active: true,
-      renew: true
+      renew: true,
     })
 
     const details = {
       type: 'SYSTEM',
       reason: 'Auto Cancellation (activateMembership)',
       suppressConfirmation: true,
-      suppressWinback: true
+      suppressWinback: true,
     }
 
     const options = {}
 
-    await Promise.map(
-      activeMemberships,
-      membership => cancelMembership(
-        membership,
-        details,
-        options,
-        t,
-        pgdb
-      )
+    await Promise.map(activeMemberships, (membership) =>
+      cancelMembership(membership, details, options, t, pgdb),
     )
   }
 

@@ -29,7 +29,7 @@ const { document: getRawDoc } = require('../../graphql/resolvers/Commit')
 
 const loaderBuilders = {
   ...require('@orbiting/backend-modules-discussions/loaders'),
-  ...require('@orbiting/backend-modules-documents/loaders')
+  ...require('@orbiting/backend-modules-documents/loaders'),
 }
 
 const getContext = (payload) => {
@@ -40,158 +40,167 @@ const getContext = (payload) => {
     user: {
       name: 'Publikator-bot',
       email: 'ruggedly@project-r.construction',
-      roles: ['editor', 'member']
-    }
+      roles: ['editor', 'member'],
+    },
   }
-  Object.keys(loaderBuilders).forEach(key => {
+  Object.keys(loaderBuilders).forEach((key) => {
     loaders[key] = loaderBuilders[key](context)
   })
   return context
 }
 
-const {
-  GITHUB_LOGIN,
-  FRONTEND_BASE_URL
-} = process.env
+const { GITHUB_LOGIN, FRONTEND_BASE_URL } = process.env
 
-const argv = yargs
-  .usage('Usage: $0 [-n [num]] [--dry]')
-  .help()
-  .version()
-  .argv
+const argv = yargs.usage('Usage: $0 [-n [num]] [--dry]').help().version().argv
 
 const iterateESDocs = async (context, callback) => {
   let pageInfo
 
   do {
-    const docsConnection = await search(null, {
-      first: 100,
-      ...(pageInfo && pageInfo.hasNextPage)
-        ? { after: pageInfo.endCursor }
-        : { },
-      filter: {
-        type: 'Document'
+    const docsConnection = await search(
+      null,
+      {
+        first: 100,
+        ...(pageInfo && pageInfo.hasNextPage
+          ? { after: pageInfo.endCursor }
+          : {}),
+        filter: {
+          type: 'Document',
+        },
+        sort: {
+          key: 'publishedAt',
+          direction: 'DESC',
+        },
+        ignorePrepublished: true,
       },
-      sort: {
-        key: 'publishedAt',
-        direction: 'DESC'
-      },
-      ignorePrepublished: true
-    }, context)
+      context,
+    )
 
     pageInfo = docsConnection.pageInfo
 
     await Promise.each(
       docsConnection.nodes
-        .filter(node => node.type === 'Document')
-        .map(node => node.entity),
-      (entity) =>
-        callback({ doc: entity }), // eslint-disable-line standard/no-callback-literal
-      { concurrency: 1 }
+        .filter((node) => node.type === 'Document')
+        .map((node) => node.entity),
+      (entity) => callback({ doc: entity }), // eslint-disable-line standard/no-callback-literal
+      { concurrency: 1 },
     )
   } while (pageInfo && pageInfo.hasNextPage)
 }
 
 module.exports = ({ transform }) =>
-  PgDb.connect().then(async pgdb => {
-    console.log('running...')
-    const { dry } = argv
-    if (dry) {
-      console.log("dry run: this won't change anything")
-    }
-    const stopAfterNumFixes = argv.n > 0 && argv.n
-    if (stopAfterNumFixes) {
-      console.log(`stop after num fixes: ${stopAfterNumFixes}`)
-    }
-
-    const context = getContext({
-      pgdb,
-      elastic: Elasticsearch.connect(),
-      redis: Redis.connect(),
-      pubsub: RedisPubSub.connect(),
-      t
-    })
-
-    let numFixed = 0
-    let finishNotice = false
-    await iterateESDocs(context, async ({doc}) => {
-      if (stopAfterNumFixes && numFixed >= stopAfterNumFixes) {
-        if (!finishNotice) {
-          console.log(`finish here because stopAfterNumFixes: ${stopAfterNumFixes}`)
-          finishNotice = true
-        }
-        return
+  PgDb.connect()
+    .then(async (pgdb) => {
+      console.log('running...')
+      const { dry } = argv
+      if (dry) {
+        console.log("dry run: this won't change anything")
       }
-      let docTransformed = await transform(doc, context, false)
-      if (docTransformed) {
-        console.log(`\nfixing: ${docTransformed}...`)
-        console.log(`${FRONTEND_BASE_URL}${doc.meta.path}`)
+      const stopAfterNumFixes = argv.n > 0 && argv.n
+      if (stopAfterNumFixes) {
+        console.log(`stop after num fixes: ${stopAfterNumFixes}`)
+      }
 
-        const parsedDocId = Buffer.from(doc.id, 'base64').toString('utf-8')
-        const [
-          repoOrg, // eslint-disable-line no-unused-vars
-          repoName,
-          commitId,
-          versionName
-        ] = parsedDocId.split('/')
+      const context = getContext({
+        pgdb,
+        elastic: Elasticsearch.connect(),
+        redis: Redis.connect(),
+        pubsub: RedisPubSub.connect(),
+        t,
+      })
 
-        // for copied repos
-        const repoId = `${GITHUB_LOGIN}/${repoName}`
-        console.log(`https://github.com/${repoId}`)
-
-        if (versionName.indexOf('prepublication') > -1) {
-          console.log('encountered prepublication: skipping', parsedDocId)
-          return
-        }
-
-        // get commit from github instead of ES and do the work again
-        const rawDoc = await getRawDoc(
-          {
-            id: commitId,
-            repo: { id: repoId }
-          },
-          { publicAssets: false },
-          context
-        )
-
-        docTransformed = await transform(rawDoc, context, true)
-        if (!docTransformed) {
-          console.log('es <> git out of sync!', repoId)
-          return
-        }
-
-        if (dry) {
-          console.log('dry: no commit/publish')
-        } else {
-          console.log('committing...')
-          const newCommit = await commit(null, {
-            repoId,
-            parentId: commitId,
-            message: docTransformed,
-            document: {
-              content: rawDoc.content
-            }
-          }, context)
-
-          console.log('publishing...')
-          const publication = await publish(null, {
-            repoId,
-            commitId: newCommit.id,
-            prepublication: false
-          }, context)
-          if (publication.unresolvedRepoIds.length > 0) {
-            console.log('publication', publication)
+      let numFixed = 0
+      let finishNotice = false
+      await iterateESDocs(context, async ({ doc }) => {
+        if (stopAfterNumFixes && numFixed >= stopAfterNumFixes) {
+          if (!finishNotice) {
+            console.log(
+              `finish here because stopAfterNumFixes: ${stopAfterNumFixes}`,
+            )
+            finishNotice = true
           }
+          return
         }
+        let docTransformed = await transform(doc, context, false)
+        if (docTransformed) {
+          console.log(`\nfixing: ${docTransformed}...`)
+          console.log(`${FRONTEND_BASE_URL}${doc.meta.path}`)
 
-        console.log('done.')
-        numFixed++
-      }
+          const parsedDocId = Buffer.from(doc.id, 'base64').toString('utf-8')
+          const [
+            repoOrg, // eslint-disable-line no-unused-vars
+            repoName,
+            commitId,
+            versionName,
+          ] = parsedDocId.split('/')
+
+          // for copied repos
+          const repoId = `${GITHUB_LOGIN}/${repoName}`
+          console.log(`https://github.com/${repoId}`)
+
+          if (versionName.indexOf('prepublication') > -1) {
+            console.log('encountered prepublication: skipping', parsedDocId)
+            return
+          }
+
+          // get commit from github instead of ES and do the work again
+          const rawDoc = await getRawDoc(
+            {
+              id: commitId,
+              repo: { id: repoId },
+            },
+            { publicAssets: false },
+            context,
+          )
+
+          docTransformed = await transform(rawDoc, context, true)
+          if (!docTransformed) {
+            console.log('es <> git out of sync!', repoId)
+            return
+          }
+
+          if (dry) {
+            console.log('dry: no commit/publish')
+          } else {
+            console.log('committing...')
+            const newCommit = await commit(
+              null,
+              {
+                repoId,
+                parentId: commitId,
+                message: docTransformed,
+                document: {
+                  content: rawDoc.content,
+                },
+              },
+              context,
+            )
+
+            console.log('publishing...')
+            const publication = await publish(
+              null,
+              {
+                repoId,
+                commitId: newCommit.id,
+                prepublication: false,
+              },
+              context,
+            )
+            if (publication.unresolvedRepoIds.length > 0) {
+              console.log('publication', publication)
+            }
+          }
+
+          console.log('done.')
+          numFixed++
+        }
+      })
+      console.log(`fixed ${numFixed} finish!`)
     })
-    console.log(`fixed ${numFixed} finish!`)
-  }).then(() => {
-    process.exit()
-  }).catch(e => {
-    console.log(e)
-    process.exit(1)
-  })
+    .then(() => {
+      process.exit()
+    })
+    .catch((e) => {
+      console.log(e)
+      process.exit(1)
+    })

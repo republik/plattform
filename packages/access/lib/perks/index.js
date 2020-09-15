@@ -1,3 +1,3 @@
 module.exports = {
-  giftMembership: require('./giftMembership')
+  giftMembership: require('./giftMembership'),
 }

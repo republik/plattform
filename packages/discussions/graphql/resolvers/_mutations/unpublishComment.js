@@ -14,27 +14,37 @@ module.exports = async (_, args, context) => {
     if (!comment) {
       throw new Error(t('api/comment/404'))
     }
-    if (!comment.userId || (comment.userId !== user.id && !Roles.userIsInRoles(user, ['editor', 'admin']))) {
+    if (
+      !comment.userId ||
+      (comment.userId !== user.id &&
+        !Roles.userIsInRoles(user, ['editor', 'admin']))
+    ) {
       throw new Error(t('api/comment/notYours'))
     }
 
-    const update = comment.userId === user.id
-      ? { published: false }
-      : { adminUnpublished: true }
+    const update =
+      comment.userId === user.id
+        ? { published: false }
+        : { adminUnpublished: true }
 
-    const updatedComment = await transaction.public.comments.updateAndGetOne({
-      id: comment.id
-    }, update)
+    const updatedComment = await transaction.public.comments.updateAndGetOne(
+      {
+        id: comment.id,
+      },
+      update,
+    )
 
     await transaction.transactionCommit()
 
-    await pubsub.publish('comment', { comment: {
-      mutation: 'UPDATED',
-      node: updatedComment
-    }})
+    await pubsub.publish('comment', {
+      comment: {
+        mutation: 'UPDATED',
+        node: updatedComment,
+      },
+    })
 
     const discussion = await pgdb.public.discussions.findOne({
-      id: comment.discussionId
+      id: comment.discussionId,
     })
 
     await slack.publishCommentUnpublish(
@@ -42,7 +52,7 @@ module.exports = async (_, args, context) => {
       update,
       comment,
       discussion,
-      context
+      context,
     )
 
     return updatedComment

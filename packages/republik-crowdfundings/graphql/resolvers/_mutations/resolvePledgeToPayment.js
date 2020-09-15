@@ -3,11 +3,17 @@ const logger = console
 const { minTotal, regularTotal } = require('../../../lib/Pledge')
 const generateMemberships = require('../../../lib/generateMemberships')
 const { sendPaymentSuccessful } = require('../../../lib/Mail')
-const { publishMonitor } = require('@orbiting/backend-modules-republik/lib/slack')
+const {
+  publishMonitor,
+} = require('@orbiting/backend-modules-republik/lib/slack')
 const { refreshPotForPledgeId } = require('../../../lib/membershipPot')
 const Promise = require('bluebird')
 
-module.exports = async (_, args, { pgdb, req, t, mail: { enforceSubscriptions }, redis }) => {
+module.exports = async (
+  _,
+  args,
+  { pgdb, req, t, mail: { enforceSubscriptions }, redis },
+) => {
   Roles.ensureUserHasRole(req.user, 'supporter')
 
   const { pledgeId, reason } = args
@@ -23,12 +29,16 @@ module.exports = async (_, args, { pgdb, req, t, mail: { enforceSubscriptions },
       throw new Error(t('api/pledge/404'))
     }
     if (pledge.status !== 'PAID_INVESTIGATE') {
-      logger.error('pledge must have status PAID_INVESTIGATE to be eligitable for resolving', { req: req._log(), args, pledge })
+      logger.error(
+        'pledge must have status PAID_INVESTIGATE to be eligitable for resolving',
+        { req: req._log(), args, pledge },
+      )
       throw new Error(t('api/pledge/resolve/status'))
     }
 
     // check for payments
-    const payments = await transaction.query(`
+    const payments = await transaction.query(
+      `
       SELECT
         pay.*
       FROM
@@ -41,37 +51,54 @@ module.exports = async (_, args, { pgdb, req, t, mail: { enforceSubscriptions },
         ON pp."pledgeId" = p.id
       WHERE
         p.id = :pledgeId
-    `, {
-      pledgeId
-    })
+    `,
+      {
+        pledgeId,
+      },
+    )
     if (payments.length > 1) {
-      logger.error('pledge has multiple payments, this is not supported', { req: req._log(), args, payments })
+      logger.error('pledge has multiple payments, this is not supported', {
+        req: req._log(),
+        args,
+        payments,
+      })
       throw new Error(t('api/pledge/resolve/multiplePayments'))
     }
     const payment = payments[0]
     if (payment.status !== 'PAID') {
-      logger.error('pledge payment must be PAID', { req: req._log(), args, payment })
+      logger.error('pledge payment must be PAID', {
+        req: req._log(),
+        args,
+        payment,
+      })
       throw new Error(t('api/pledge/resolve/payment/status'))
     }
     const newTotal = payment.total
 
     // load original of chosen packageOptions
     const pledgeOptions = await transaction.public.pledgeOptions.find({
-      pledgeId
+      pledgeId,
     })
     const pledgeOptionsTemplateIds = pledgeOptions.map((plo) => plo.templateId)
     const packageOptions = await transaction.public.packageOptions.find({
-      id: pledgeOptionsTemplateIds
+      id: pledgeOptionsTemplateIds,
     })
 
     // check total
     const pledgeMinTotal = minTotal(pledgeOptions, packageOptions)
     if (newTotal < pledgeMinTotal) {
-      logger.error(`total (${payment.total}) must be >= (${pledgeMinTotal})`, { req: req._log(), args, payment, pledgeMinTotal })
-      throw new Error(t('api/pledge/resolve/payment/notEnough', {
-        total: newTotal / 100.0,
-        minTotal: pledgeMinTotal / 100.0
-      }))
+      logger.error(`total (${payment.total}) must be >= (${pledgeMinTotal})`, {
+        req: req._log(),
+        args,
+        payment,
+        pledgeMinTotal,
+      })
+      throw new Error(
+        t('api/pledge/resolve/payment/notEnough', {
+          total: newTotal / 100.0,
+          minTotal: pledgeMinTotal / 100.0,
+        }),
+      )
     }
 
     // calculate donation
@@ -79,20 +106,23 @@ module.exports = async (_, args, { pgdb, req, t, mail: { enforceSubscriptions },
     const donation = newTotal - pledgeRegularTotal
 
     const prefixedReason = 'Support: ' + reason
-    updatedPledge = await transaction.public.pledges.updateAndGetOne({
-      id: pledge.id
-    }, {
-      status: 'SUCCESSFUL',
-      total: newTotal,
-      donation,
-      updatedAt: now,
-      reason: pledge.reason
-        ? pledge.reason + '\n' + prefixedReason
-        : prefixedReason
-    })
+    updatedPledge = await transaction.public.pledges.updateAndGetOne(
+      {
+        id: pledge.id,
+      },
+      {
+        status: 'SUCCESSFUL',
+        total: newTotal,
+        donation,
+        updatedAt: now,
+        reason: pledge.reason
+          ? pledge.reason + '\n' + prefixedReason
+          : prefixedReason,
+      },
+    )
 
     const hasPledgeMemberships = await pgdb.public.memberships.count({
-      pledgeId: pledge.id
+      pledgeId: pledge.id,
     })
 
     // Only generate memberships (or periods) of pledge has not generated
@@ -116,12 +146,13 @@ module.exports = async (_, args, { pgdb, req, t, mail: { enforceSubscriptions },
       refreshPotForPledgeId(updatedPledge.id, { pgdb }),
       publishMonitor(
         req.user,
-        `resolvePledgeToPayment pledgeId: ${pledge.id} pledge.total:${pledge.total / 100} newTotal:${updatedPledge.total / 100}`
-      )
-    ])
-      .catch(e => {
-        console.error('error after payPledge', e)
-      })
+        `resolvePledgeToPayment pledgeId: ${pledge.id} pledge.total:${
+          pledge.total / 100
+        } newTotal:${updatedPledge.total / 100}`,
+      ),
+    ]).catch((e) => {
+      console.error('error after payPledge', e)
+    })
   }
 
   return pgdb.public.pledges.findOne({ id: pledgeId })

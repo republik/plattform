@@ -15,7 +15,7 @@ checkEnv([
   'DEFAULT_MAIL_FROM_ADDRESS',
   'DEFAULT_MAIL_FROM_NAME',
   'ASSETS_SERVER_BASE_URL',
-  'FRONTEND_BASE_URL'
+  'FRONTEND_BASE_URL',
 ])
 
 const {
@@ -25,175 +25,190 @@ const {
   FRONTEND_BASE_URL,
   SG_FONT_STYLES,
   SG_FONT_FACES,
-  ASSETS_SERVER_BASE_URL
+  ASSETS_SERVER_BASE_URL,
 } = process.env
 
 const getTemplate = async (filehandler) => {
-  const template = await filehandler.readFile({ encoding: 'utf8' }).catch(() => null)
+  const template = await filehandler
+    .readFile({ encoding: 'utf8' })
+    .catch(() => null)
   await filehandler.close()
   return template
 }
 
 const getTemplates = async (name) =>
   Promise.props({
-    html: fs.open(path.resolve(`${__dirname}/../templates/${name}.html`)).then(getTemplate).catch(() => null),
-    text: fs.open(path.resolve(`${__dirname}/../templates/${name}.txt`)).then(getTemplate).catch(() => null)
+    html: fs
+      .open(path.resolve(`${__dirname}/../templates/${name}.html`))
+      .then(getTemplate)
+      .catch(() => null),
+    text: fs
+      .open(path.resolve(`${__dirname}/../templates/${name}.txt`))
+      .then(getTemplate)
+      .catch(() => null),
   })
 
 const envMergeVars = [
   {
     name: 'frontend_base_url',
-    content: FRONTEND_BASE_URL
+    content: FRONTEND_BASE_URL,
   },
   {
     name: 'link_faq',
-    content: `${FRONTEND_BASE_URL}/faq`
+    content: `${FRONTEND_BASE_URL}/faq`,
   },
   {
     name: 'link_manifest',
-    content: `${FRONTEND_BASE_URL}/manifest`
+    content: `${FRONTEND_BASE_URL}/manifest`,
   },
   {
     name: 'link_imprint',
-    content: `${FRONTEND_BASE_URL}/impressum`
+    content: `${FRONTEND_BASE_URL}/impressum`,
   },
   {
     name: 'assets_server_base_url',
-    content: ASSETS_SERVER_BASE_URL
+    content: ASSETS_SERVER_BASE_URL,
   },
   {
     name: 'link_signin',
-    content: `${FRONTEND_BASE_URL}/anmelden`
+    content: `${FRONTEND_BASE_URL}/anmelden`,
   },
   {
     name: 'link_claim_contextless',
-    content: `${FRONTEND_BASE_URL}/abholen`
+    content: `${FRONTEND_BASE_URL}/abholen`,
   },
   {
     name: 'link_account',
-    content: `${FRONTEND_BASE_URL}/konto`
+    content: `${FRONTEND_BASE_URL}/konto`,
   },
   {
     name: 'link_account_abos',
-    content: `${FRONTEND_BASE_URL}/konto#abos`
+    content: `${FRONTEND_BASE_URL}/konto#abos`,
   },
   {
     name: 'link_account_abos_goto',
-    content: `${FRONTEND_BASE_URL}/angebote?goto=account`
+    content: `${FRONTEND_BASE_URL}/angebote?goto=account`,
   },
   {
     name: 'link_account_share',
-    content: `${FRONTEND_BASE_URL}/teilen`
+    content: `${FRONTEND_BASE_URL}/teilen`,
   },
   {
     name: 'link_account_account',
-    content: `${FRONTEND_BASE_URL}/konto#account`
+    content: `${FRONTEND_BASE_URL}/konto#account`,
   },
   {
     name: 'link_account_notifications',
-    content: `${FRONTEND_BASE_URL}/benachrichtigungen/einstellungen`
+    content: `${FRONTEND_BASE_URL}/benachrichtigungen/einstellungen`,
   },
   {
     name: 'link_account_progress',
-    content: `${FRONTEND_BASE_URL}/konto#position`
+    content: `${FRONTEND_BASE_URL}/konto#position`,
   },
   {
     name: 'link_profile',
-    content: `${FRONTEND_BASE_URL}/~me`
+    content: `${FRONTEND_BASE_URL}/~me`,
   },
   {
     name: 'link_bookmarks',
-    content: `${FRONTEND_BASE_URL}/lesezeichen`
+    content: `${FRONTEND_BASE_URL}/lesezeichen`,
   },
   {
     name: 'link_offers_overview',
-    content: `${FRONTEND_BASE_URL}/angebote`
+    content: `${FRONTEND_BASE_URL}/angebote`,
   },
   {
     name: 'link_offers',
-    content: `${FRONTEND_BASE_URL}/angebote?package=ABO`
+    content: `${FRONTEND_BASE_URL}/angebote?package=ABO`,
   },
   {
     name: 'link_offer_abo',
-    content: `${FRONTEND_BASE_URL}/angebote?package=ABO`
+    content: `${FRONTEND_BASE_URL}/angebote?package=ABO`,
   },
   {
     name: 'link_offer_monthly_abo',
-    content: `${FRONTEND_BASE_URL}/angebote?package=MONTHLY_ABO`
+    content: `${FRONTEND_BASE_URL}/angebote?package=MONTHLY_ABO`,
   },
   {
     name: 'link_offer_benefactor',
-    content: `${FRONTEND_BASE_URL}/angebote?package=BENEFACTOR`
+    content: `${FRONTEND_BASE_URL}/angebote?package=BENEFACTOR`,
   },
   {
     name: 'link_offer_donate',
-    content: `${FRONTEND_BASE_URL}/angebote?package=DONATE`
+    content: `${FRONTEND_BASE_URL}/angebote?package=DONATE`,
   },
   {
     name: 'link_offer_abo_give',
-    content: `${FRONTEND_BASE_URL}/angebote?package=ABO_GIVE`
+    content: `${FRONTEND_BASE_URL}/angebote?package=ABO_GIVE`,
   },
   {
     name: 'link_offer_reduced_ausbildung',
-    content: `${FRONTEND_BASE_URL}/angebote?package=ABO&userPrice=1&price=14000&reason=Ausbildung%3A%20`
+    content: `${FRONTEND_BASE_URL}/angebote?package=ABO&userPrice=1&price=14000&reason=Ausbildung%3A%20`,
   },
   {
     name: 'link_dialog',
-    content: `${FRONTEND_BASE_URL}/dialog`
+    content: `${FRONTEND_BASE_URL}/dialog`,
   },
   {
     name: 'link_app',
-    content: `${FRONTEND_BASE_URL}/app`
+    content: `${FRONTEND_BASE_URL}/app`,
   },
   {
     name: 'link_manual',
-    content: `${FRONTEND_BASE_URL}/anleitung`
+    content: `${FRONTEND_BASE_URL}/anleitung`,
   },
   {
     name: 'link_listen',
-    content: `${FRONTEND_BASE_URL}/vorgelesen`
+    content: `${FRONTEND_BASE_URL}/vorgelesen`,
   },
   {
     name: 'link_cockpit',
-    content: `${FRONTEND_BASE_URL}/cockpit`
+    content: `${FRONTEND_BASE_URL}/cockpit`,
   },
   {
     name: 'link_about',
-    content: `${FRONTEND_BASE_URL}/about`
+    content: `${FRONTEND_BASE_URL}/about`,
   },
   {
     name: 'link_publisher',
-    content: `${FRONTEND_BASE_URL}/verlag`
+    content: `${FRONTEND_BASE_URL}/verlag`,
   },
   {
     name: 'link_projectr',
-    content: 'https://project-r.construction/'
+    content: 'https://project-r.construction/',
   },
   {
     name: 'link_project_r',
-    content: 'https://project-r.construction/news'
-  }
+    content: 'https://project-r.construction/news',
+  },
 ]
 
 if (SG_FONT_FACES) {
   envMergeVars.push({
     name: 'sg_font_faces',
-    content: SG_FONT_FACES
+    content: SG_FONT_FACES,
   })
 }
 
 if (SG_FONT_STYLES) {
   try {
     const styles = JSON.parse(SG_FONT_STYLES)
-    Object.keys(styles).forEach(styleKey => {
+    Object.keys(styles).forEach((styleKey) => {
       const style = styles[styleKey]
       envMergeVars.push({
         // sansSerifRegular -> SANS_SERIF_REGULAR
-        name: `sg_font_style_${styleKey.replace(/[A-Z]/g, char => `_${char}`).toLowerCase()}`,
-        content: Object.keys(style).map(key => {
-          // fontWeight -> font-weight
-          return `${key.replace(/[A-Z]/g, char => `-${char.toLowerCase()}`)}:${style[key]};`
-        }).join('')
+        name: `sg_font_style_${styleKey
+          .replace(/[A-Z]/g, (char) => `_${char}`)
+          .toLowerCase()}`,
+        content: Object.keys(style)
+          .map((key) => {
+            // fontWeight -> font-weight
+            return `${key.replace(
+              /[A-Z]/g,
+              (char) => `-${char.toLowerCase()}`,
+            )}:${style[key]};`
+          })
+          .join(''),
       })
     })
   } catch (e) {
@@ -215,16 +230,14 @@ if (SG_FONT_STYLES) {
 // })
 module.exports = async (mail, context, log) => {
   // sanitize
-  const tags =
-    []
-      .concat(SEND_MAILS_TAGS && SEND_MAILS_TAGS.split(','))
-      .concat(mail.templateName && mail.templateName)
-      .filter(Boolean)
+  const tags = []
+    .concat(SEND_MAILS_TAGS && SEND_MAILS_TAGS.split(','))
+    .concat(mail.templateName && mail.templateName)
+    .filter(Boolean)
 
-  const mergeVars = [
-    ...mail.globalMergeVars || [],
-    ...envMergeVars
-  ].filter(Boolean)
+  const mergeVars = [...(mail.globalMergeVars || []), ...envMergeVars].filter(
+    Boolean,
+  )
 
   const { html, text } = await getTemplates(mail.templateName)
 
@@ -238,7 +251,7 @@ module.exports = async (mail, context, log) => {
     merge_language: mail.mergeLanguage || 'handlebars',
     global_merge_vars: mergeVars,
     auto_text: !text,
-    tags
+    tags,
   }
 
   debug({ ...message, html: !!message.html, text: !!message.text })
@@ -259,12 +272,12 @@ module.exports = async (mail, context, log) => {
         return mandrill.send(
           message,
           !message.html ? mail.templateName : false,
-          []
+          [],
         )
       }
 
       return [{ error: 'No mailing interface usable', status: 'error' }]
-    }
+    },
   )
 
   return send({
@@ -273,7 +286,7 @@ module.exports = async (mail, context, log) => {
     message: { ...message, html: !!message.html, text: !!message.text },
     email: message.to[0].email,
     template: mail.templateName,
-    context
+    context,
   })
 }
 

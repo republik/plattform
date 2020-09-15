@@ -1,29 +1,22 @@
 const { returnImage, s3 } = require('../lib')
-const {
-  AWS_BUCKET_ALLOWLIST
-} = process.env
+const { AWS_BUCKET_ALLOWLIST } = process.env
 
 let buckets = {}
 if (!AWS_BUCKET_ALLOWLIST) {
-  console.warn('missing env AWS_BUCKET_ALLOWLIST, the /:bucket/:path* endpoint will not work')
+  console.warn(
+    'missing env AWS_BUCKET_ALLOWLIST, the /:bucket/:path* endpoint will not work',
+  )
 } else {
-  buckets = AWS_BUCKET_ALLOWLIST
-    .split(',')
-    .reduce(
-      (agg, val) => {
-        const [name, region] = val.split(':')
-        agg[name] = region
-        return agg
-      }, {}
-    )
+  buckets = AWS_BUCKET_ALLOWLIST.split(',').reduce((agg, val) => {
+    const [name, region] = val.split(':')
+    agg[name] = region
+    return agg
+  }, {})
 }
 
 module.exports = (server) => {
   server.get('/s3/:bucket/:path(*)', async (req, res) => {
-    const {
-      bucket,
-      path
-    } = req.params
+    const { bucket, path } = req.params
 
     if (!AWS_BUCKET_ALLOWLIST || !buckets[bucket]) {
       console.warn(`unauthorized s3 url requested: ${bucket}/${path}`)
@@ -31,13 +24,15 @@ module.exports = (server) => {
     }
 
     // eslint-disable-next-line no-unused-vars
-    const [_, sanitizedPath, webp] = new RegExp(/(.*?)(\.webp)?$/, 'g').exec(path)
+    const [_, sanitizedPath, webp] = new RegExp(/(.*?)(\.webp)?$/, 'g').exec(
+      path,
+    )
 
     const region = buckets[bucket]
     const result = await s3.get({
       region,
       bucket,
-      path: sanitizedPath
+      path: sanitizedPath,
     })
     if (!result.ok) {
       const { status, statusText, url } = result
@@ -53,8 +48,8 @@ module.exports = (server) => {
       options: {
         ...req.query,
         webp: !!webp,
-        cacheTags: ['s3']
-      }
+        cacheTags: ['s3'],
+      },
     })
   })
 }

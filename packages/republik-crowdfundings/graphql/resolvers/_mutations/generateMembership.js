@@ -1,9 +1,15 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
 const generateMemberships = require('../../../lib/generateMemberships')
 const payPledgePaymentslip = require('../../../lib/payments/paymentslip/payPledge')
-const { publishMonitor } = require('@orbiting/backend-modules-republik/lib/slack')
+const {
+  publishMonitor,
+} = require('@orbiting/backend-modules-republik/lib/slack')
 
-module.exports = async (_, { userId }, { pgdb, req, t, user: me, mail: { enforceSubscriptions }, redis }) => {
+module.exports = async (
+  _,
+  { userId },
+  { pgdb, req, t, user: me, mail: { enforceSubscriptions }, redis },
+) => {
   Roles.ensureUserHasRole(me, 'supporter')
 
   const transaction = await pgdb.transactionBegin()
@@ -19,11 +25,11 @@ module.exports = async (_, { userId }, { pgdb, req, t, user: me, mail: { enforce
 
     const pkg = await transaction.public.packages.findFirst(
       { name: 'ABO' },
-      { orderBy: { createdAt: 'desc' } }
+      { orderBy: { createdAt: 'desc' } },
     )
 
     const pkgOption = await transaction.public.packageOptions.findOne({
-      packageId: pkg.id
+      packageId: pkg.id,
     })
     const total = pkgOption.price
 
@@ -35,7 +41,7 @@ module.exports = async (_, { userId }, { pgdb, req, t, user: me, mail: { enforce
       donation: 0,
       sendConfirmMail: false,
       createdAt: now,
-      updatedAt: now
+      updatedAt: now,
     })
 
     await transaction.public.pledgeOptions.insert({
@@ -45,7 +51,7 @@ module.exports = async (_, { userId }, { pgdb, req, t, user: me, mail: { enforce
       price: total,
       vat: pkgOption.vat,
       createdAt: now,
-      updatedAt: now
+      updatedAt: now,
     })
 
     await payPledgePaymentslip({
@@ -53,13 +59,13 @@ module.exports = async (_, { userId }, { pgdb, req, t, user: me, mail: { enforce
       total,
       userId,
       transaction,
-      t
+      t,
     })
 
     await generateMemberships(pledge.id, transaction, t, redis)
 
     const newMembership = await transaction.public.memberships.findOne({
-      pledgeId: pledge.id
+      pledgeId: pledge.id,
     })
 
     await transaction.transactionCommit()
@@ -67,12 +73,15 @@ module.exports = async (_, { userId }, { pgdb, req, t, user: me, mail: { enforce
     try {
       await enforceSubscriptions({ pgdb, userId })
     } catch (e2) {
-      console.error('newsletter subscription changes failed', { req: req._log(), error: e2 })
+      console.error('newsletter subscription changes failed', {
+        req: req._log(),
+        error: e2,
+      })
     }
 
     await publishMonitor(
       req.user,
-      `generateMembership for *${user.firstName} ${user.lastName} - ${user.email}* pledgeId: ${pledge.id}`
+      `generateMembership for *${user.firstName} ${user.lastName} - ${user.email}* pledgeId: ${pledge.id}`,
     )
 
     return newMembership

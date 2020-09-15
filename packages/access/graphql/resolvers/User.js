@@ -17,10 +17,7 @@ module.exports = {
       withPast = false
     }
 
-    const grants = await grantsLib.findByRecipient(
-      user,
-      { withPast, pgdb }
-    )
+    const grants = await grantsLib.findByRecipient(user, { withPast, pgdb })
 
     debug('accessGrants', { user: user.id, grants: grants.length })
 
@@ -35,13 +32,13 @@ module.exports = {
       withPast = false
     }
 
-    const campaigns = await campaignsLib.findForGranter(
-      user,
-      { withPast, pgdb }
-    )
+    const campaigns = await campaignsLib.findForGranter(user, {
+      withPast,
+      pgdb,
+    })
 
     debug('accessCampaigns', { user: user.id, campaigns: campaigns.length })
 
-    return campaigns.map(campaign => ({ ...campaign, _user: user }))
-  }
+    return campaigns.map((campaign) => ({ ...campaign, _user: user }))
+  },
 }

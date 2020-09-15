@@ -1,4 +1,6 @@
-const debug = require('debug')('crowdfundings:lib:CustomPackages:rule:earlyUserBonus')
+const debug = require('debug')(
+  'crowdfundings:lib:CustomPackages:rule:earlyUserBonus',
+)
 const moment = require('moment')
 const { v4: uuid } = require('uuid')
 
@@ -11,7 +13,7 @@ module.exports = ({ package_, packageOption, membership, payload, now }) => {
   if (membership.createdAt >= moment(MEMBERSHIP_CREATED_BEFORE)) {
     debug(
       'membership.createdAt not within early adopter range (< %s)',
-      MEMBERSHIP_CREATED_BEFORE
+      MEMBERSHIP_CREATED_BEFORE,
     )
     return true
   }
@@ -24,7 +26,7 @@ module.exports = ({ package_, packageOption, membership, payload, now }) => {
   if (!PACKAGE_ELIGABLE.includes(membership.pledge.package.name)) {
     debug(
       'package "%s" is not eligable for early adopter bonus',
-      membership.pledge.package.name
+      membership.pledge.package.name,
     )
     return true
   }
@@ -32,7 +34,7 @@ module.exports = ({ package_, packageOption, membership, payload, now }) => {
   if (payload.additionalPeriods.length === 0) {
     debug(
       'no additional periods found. rule does not apply.',
-      payload.additionalPeriods.length
+      payload.additionalPeriods.length,
     )
     return true
   }
@@ -40,21 +42,19 @@ module.exports = ({ package_, packageOption, membership, payload, now }) => {
   if (membership.membershipPeriods.length >= 3) {
     debug(
       'too many membership periods found. rule does not apply.',
-      payload.additionalPeriods.length
+      payload.additionalPeriods.length,
     )
     return true
   }
 
-  const { beginDate, endDate } =
-    getPeriodEndingLast(payload.additionalPeriods)
+  const { beginDate, endDate } = getPeriodEndingLast(payload.additionalPeriods)
 
-  const bonus = moment
-    .duration(moment(beginDate).diff(now))
+  const bonus = moment.duration(moment(beginDate).diff(now))
 
   if (bonus.asDays() < 1) {
     debug(
       'bonus not positive (%d). rule does not apply.',
-      Math.floor(bonus.asDays())
+      Math.floor(bonus.asDays()),
     )
     return true
   }
@@ -70,7 +70,7 @@ module.exports = ({ package_, packageOption, membership, payload, now }) => {
     beginDate: endDate,
     endDate: moment(endDate).add(bonus),
     createdAt: now,
-    updatedAt: now
+    updatedAt: now,
   })
 
   return true

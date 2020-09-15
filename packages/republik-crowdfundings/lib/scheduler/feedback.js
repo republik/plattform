@@ -5,7 +5,9 @@ const { transformUser } = require('@orbiting/backend-modules-auth')
 const { sendMailTemplate } = require('@orbiting/backend-modules-mail')
 const { countFormat } = require('@orbiting/backend-modules-formats')
 
-const { getCount: getMembershipStatsCount } = require('@orbiting/backend-modules-republik/lib/MembershipStats/evolution')
+const {
+  getCount: getMembershipStatsCount,
+} = require('@orbiting/backend-modules-republik/lib/MembershipStats/evolution')
 
 const getOptions = async (recipients, context) => {
   const options = {}
@@ -17,10 +19,14 @@ const getOptions = async (recipients, context) => {
     console.warn(e)
   }
 
-  options.subscriptions = await context.pgdb.public.subscriptions.find({ userId: recipients.map(r => r.userId) })
+  options.subscriptions = await context.pgdb.public.subscriptions.find({
+    userId: recipients.map((r) => r.userId),
+  })
   debug('options.subscriptions', options.subscriptions.length)
 
-  options.grants = await context.pgdb.public.accessGrants.find({ granterUserId: recipients.map(r => r.userId) })
+  options.grants = await context.pgdb.public.accessGrants.find({
+    granterUserId: recipients.map((r) => r.userId),
+  })
   debug('options.grants', options.grants.length)
 
   return options
@@ -90,51 +96,51 @@ const findRecipients = (context) => {
   `)
 }
 
-const sendMail = (options, context) => recipient => {
+const sendMail = (options, context) => (recipient) => {
   const { membershipsCount, subscriptions, grants } = options
   const { t } = context
 
-  const recipientSubscriptions = subscriptions.filter(s => s.userId === recipient.userId)
-  const recipientGrants = grants.filter(g => g.granterUserId === recipient.userId)
+  const recipientSubscriptions = subscriptions.filter(
+    (s) => s.userId === recipient.userId,
+  )
+  const recipientGrants = grants.filter(
+    (g) => g.granterUserId === recipient.userId,
+  )
 
   const { name } = transformUser(recipient)
 
   const globalMergeVars = [
     {
       name: 'name',
-      content: name.trim()
+      content: name.trim(),
     },
     membershipsCount && {
       name: 'memberships_count',
-      content: countFormat(membershipsCount)
+      content: countFormat(membershipsCount),
     },
     {
       name: 'subscriptions_count',
-      content: recipientSubscriptions.length
+      content: recipientSubscriptions.length,
     },
     {
       name: 'grants_count',
-      content: recipientGrants.length
-    }
+      content: recipientGrants.length,
+    },
   ]
 
   const templatePayload = {
     to: recipient.email,
     subject: t('api/email/membership_owner_feedback/subject'),
     templateName: 'membership_owner_feedback',
-    globalMergeVars
+    globalMergeVars,
   }
 
-  return sendMailTemplate(
-    templatePayload,
-    context,
-    {
-      onceFor: {
-        type: 'membership_owner_feedback',
-        userId: recipient.userId
-      }
-    }
-  )
+  return sendMailTemplate(templatePayload, context, {
+    onceFor: {
+      type: 'membership_owner_feedback',
+      userId: recipient.userId,
+    },
+  })
 }
 
 const inform = async function (args, context) {
@@ -148,13 +154,9 @@ const inform = async function (args, context) {
 
   const options = await getOptions(recipients, context)
 
-  await Promise.map(
-    recipients,
-    sendMail(options, context),
-    { concurrency: 2 }
-  )
+  await Promise.map(recipients, sendMail(options, context), { concurrency: 2 })
 }
 
 module.exports = {
-  inform
+  inform,
 }

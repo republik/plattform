@@ -1,4 +1,4 @@
 module.exports = {
   ...require('./lib'),
-  graphql: require('./graphql')
+  graphql: require('./graphql'),
 }

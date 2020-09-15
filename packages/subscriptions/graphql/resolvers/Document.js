@@ -1,11 +1,9 @@
 const {
-  getUnreadNotificationsForUserAndObject
+  getUnreadNotificationsForUserAndObject,
 } = require('../../lib/Subscriptions')
+const { getSubscriptionsForDoc } = require('../../lib/Document')
 const {
-  getSubscriptionsForDoc
-} = require('../../lib/Document')
-const {
-  getRepoIdsForDoc
+  getRepoIdsForDoc,
 } = require('@orbiting/backend-modules-documents/lib/meta')
 const paginateNotifications = require('../../lib/paginateNotificationConnection')
 const { paginate } = require('@orbiting/backend-modules-utils')
@@ -21,7 +19,7 @@ const createSubscriptionConnection = (nodes, args = {}, me) => {
 }
 
 module.exports = {
-  async subscribedBy (doc, args, context) {
+  async subscribedBy(doc, args, context) {
     const { user: me } = context
 
     if (args.onlyMe) {
@@ -37,26 +35,21 @@ module.exports = {
           {
             ...args,
             includeNotActive: true,
-            simulate: true
+            simulate: true,
           },
-          context
-        )
+          context,
+        ),
       )
     }
 
     return createSubscriptionConnection(
-      await getSubscriptionsForDoc(
-        doc,
-        null,
-        args,
-        context
-      ),
+      await getSubscriptionsForDoc(doc, null, args, context),
       args,
-      me
+      me,
     )
   },
   // deprecated use subscribedBy with onlyMe
-  async subscribedByMe (doc, args, context) {
+  async subscribedByMe(doc, args, context) {
     const { user: me } = context
 
     if (!me) {
@@ -69,14 +62,14 @@ module.exports = {
       {
         ...args,
         includeNotActive: true,
-        simulate: true
+        simulate: true,
       },
-      context
+      context,
     )
 
     return subscriptions && subscriptions[0]
   },
-  async unreadNotifications (doc, args, context) {
+  async unreadNotifications(doc, args, context) {
     const { user: me } = context
 
     const repoIds = getRepoIdsForDoc(doc, false)
@@ -90,10 +83,10 @@ module.exports = {
         me.id,
         {
           type: 'Document',
-          id: repoIds[0]
+          id: repoIds[0],
         },
-        context
-      )
+        context,
+      ),
     )
-  }
+  },
 }

@@ -15,7 +15,7 @@ module.exports = async (_, { id }, { pgdb, req, user: me, t }) => {
     }
 
     await transaction.public.devices.deleteOne({
-      id
+      id,
     })
 
     await transaction.transactionCommit()

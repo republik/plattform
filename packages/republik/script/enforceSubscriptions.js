@@ -4,7 +4,9 @@
  * @example ./enforceSubscriptions.js --emails foobar@domain.tld x@y.z
  */
 require('@orbiting/backend-modules-env').config()
-const { enforceSubscriptions } = require('@orbiting/backend-modules-republik-crowdfundings/lib/Mail')
+const {
+  enforceSubscriptions,
+} = require('@orbiting/backend-modules-republik-crowdfundings/lib/Mail')
 const debug = require('debug')('republik:script:enforceSubscriptions')
 const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
 const Promise = require('bluebird')
@@ -14,21 +16,20 @@ const argv = yargs
   .option('emails', {
     alias: ['email', 'e'],
     array: true,
-    default: undefined
+    default: undefined,
   })
   .option('ids', {
     alias: ['id'],
     array: true,
-    default: undefined
+    default: undefined,
   })
   .option('dry', {
     alias: 'd',
     boolean: true,
-    default: true
+    default: true,
   })
   .help()
-  .version()
-  .argv
+  .version().argv
 
 const run = async () => {
   const pgdb = await PgDb.connect()
@@ -41,7 +42,7 @@ const run = async () => {
 
   try {
     const query = {
-      or: [{ email: argv.emails }, { id: argv.ids }]
+      or: [{ email: argv.emails }, { id: argv.ids }],
     }
 
     debug('%s', JSON.stringify(query))
@@ -53,9 +54,11 @@ const run = async () => {
     } else {
       await Promise.map(
         users,
-        user => enforceSubscriptions({ pgdb, userId: user.id })
-          .then(() => { stats.users++ }),
-        { concurrency: 10 }
+        (user) =>
+          enforceSubscriptions({ pgdb, userId: user.id }).then(() => {
+            stats.users++
+          }),
+        { concurrency: 10 },
       )
     }
   } catch (e) {

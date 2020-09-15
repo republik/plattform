@@ -13,12 +13,12 @@ module.exports = async (entityName, entity, entityResult, args, pgdb) => {
     updatedAt: now,
     createdAt: entity.result ? entity.result.createdAt : now,
     message,
-    video
+    video,
   }
 
   const updatedEntity = await pgdb.public[entityName].updateAndGetOne(
     { id: entity.id },
-    { result }
+    { result },
   )
   return updatedEntity.result
 }

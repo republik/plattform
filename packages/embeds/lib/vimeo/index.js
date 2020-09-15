@@ -7,7 +7,7 @@ if (!VIMEO_APP_ACCESS_TOKEN) {
   console.warn("missing VIMEO_APP_ACCESS_TOKEN. Vimeo embeds won't work.")
 }
 
-const getVimeoVideoById = async id => {
+const getVimeoVideoById = async (id) => {
   if (!VIMEO_APP_ACCESS_TOKEN) {
     throw new Error('missing VIMEO_APP_ACCESS_TOKEN')
   }
@@ -16,11 +16,11 @@ const getVimeoVideoById = async id => {
     method: 'GET',
     headers: {
       Authorization: `Bearer ${VIMEO_APP_ACCESS_TOKEN}`,
-      'Accept-Encoding': 'gzip'
-    }
+      'Accept-Encoding': 'gzip',
+    },
   })
-    .then(res => res.json())
-    .catch(error => {
+    .then((res) => res.json())
+    .catch((error) => {
       console.error(`Error getting Vimeo video with id ${id}:`, error)
       return error
     })
@@ -33,30 +33,34 @@ const getVimeoVideoById = async id => {
     response.files &&
     response.files.length > 0 &&
     response.files
-      .filter(file => file.type === 'video/mp4')
+      .filter((file) => file.type === 'video/mp4')
       .sort((a, b) => descending(a.width, b.width))[0].link_secure
   const hls =
     response.files &&
     response.files.length > 0 &&
-    response.files.find(file => file.quality === 'hls').link_secure
-  const isLiveOrScheduled = response.duration === 0 &&
+    response.files.find((file) => file.quality === 'hls').link_secure
+  const isLiveOrScheduled =
+    response.duration === 0 &&
     response.embed &&
     response.embed.badges &&
     response.embed.badges.live &&
     !response.embed.badges.live.archived
   const aspectRatio = isLiveOrScheduled
-    // Live videos report an incorrect 4:3 aspect ratio in the API before they're archived.
-    ? 16.0 / 9
+    ? // Live videos report an incorrect 4:3 aspect ratio in the API before they're archived.
+      16.0 / 9
     : response.width / response.height
 
-  const roundAspectRatio = ar => Math.round(ar * 100) / 100
+  const roundAspectRatio = (ar) => Math.round(ar * 100) / 100
   const roundedAspectRatio = roundAspectRatio(aspectRatio)
-  const thumbnail = [].concat(response.pictures.sizes).sort(
-    (a, b) => ascending(
-      Math.abs(roundAspectRatio(a.width / a.height) - roundedAspectRatio),
-      Math.abs(roundAspectRatio(b.width / b.height) - roundedAspectRatio)
-    ) || descending(a.width, b.width)
-  )[0].link
+  const thumbnail = []
+    .concat(response.pictures.sizes)
+    .sort(
+      (a, b) =>
+        ascending(
+          Math.abs(roundAspectRatio(a.width / a.height) - roundedAspectRatio),
+          Math.abs(roundAspectRatio(b.width / b.height) - roundedAspectRatio),
+        ) || descending(a.width, b.width),
+    )[0].link
 
   return {
     platform: 'vimeo',
@@ -68,16 +72,19 @@ const getVimeoVideoById = async id => {
     userUrl: response.user.link,
     userName: response.user.name,
     userScreenName: response.user.name,
-    userProfileImageUrl: response.user.pictures.sizes.find(v => v.width > 75)
+    userProfileImageUrl: response.user.pictures.sizes.find((v) => v.width > 75)
       .link,
     aspectRatio,
-    src: mp4 && !isLiveOrScheduled ? {
-      mp4: mp4,
-      hls: hls,
-      thumbnail: thumbnail
-      // TODO: subtitles
-    } : null,
-    durationMs: response.duration * 1000
+    src:
+      mp4 && !isLiveOrScheduled
+        ? {
+            mp4: mp4,
+            hls: hls,
+            thumbnail: thumbnail,
+            // TODO: subtitles
+          }
+        : null,
+    durationMs: response.duration * 1000,
   }
 }
 
@@ -85,5 +92,5 @@ module.exports = {
   getVimeoVideoById,
   // manually keep in sync with backend-modules/packages/documents/lib/process.js
   // until embeds are in their own module
-  imageKeys: ['thumbnail', 'userProfileImageUrl']
+  imageKeys: ['thumbnail', 'userProfileImageUrl'],
 }

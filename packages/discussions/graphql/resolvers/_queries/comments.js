@@ -2,18 +2,15 @@ const getSortKey = require('../../../lib/sortKey')
 
 const MAX_LIMIT = 100
 module.exports = async (_, args, context, info) => {
-  const {
-    pgdb,
-    t
-  } = context
+  const { pgdb, t } = context
 
   const { after } = args
   const options = after
     ? {
-      ...args,
-      ...JSON.parse(Buffer.from(after, 'base64').toString()),
-      first: args.first
-    }
+        ...args,
+        ...JSON.parse(Buffer.from(after, 'base64').toString()),
+        first: args.first,
+      }
     : args
   const {
     orderBy = 'DATE',
@@ -25,7 +22,7 @@ module.exports = async (_, args, context, info) => {
     toDepth,
     focusId,
     lastId,
-    featured
+    featured,
   } = options
 
   if (limit > MAX_LIMIT) {
@@ -36,13 +33,19 @@ module.exports = async (_, args, context, info) => {
   const filterByDiscussionIds = discussionIds.filter(Boolean).length > 0
 
   const queryWhere = `
-    ${filterByDiscussionIds ? 'ARRAY[c."discussionId"] && :discussionIds AND' : ''}
+    ${
+      filterByDiscussionIds
+        ? 'ARRAY[c."discussionId"] && :discussionIds AND'
+        : ''
+    }
     ${toDepth >= 0 ? 'c."depth" <= :toDepth AND' : ''}
-    ${featured ? 'c."featuredAt" IS NOT NULL AND' : '' }
+    ${featured ? 'c."featuredAt" IS NOT NULL AND' : ''}
     c."published" = true AND
     c."adminUnpublished" = false
   `
-  const queryJoin = filterByDiscussionIds ? '' : `
+  const queryJoin = filterByDiscussionIds
+    ? ''
+    : `
     JOIN
       discussions d ON
         c."discussionId" = d.id AND
@@ -65,7 +68,8 @@ module.exports = async (_, args, context, info) => {
       WHERE
         ${queryWhere}
     `),
-    pgdb.query(`
+    pgdb.query(
+      `
       SELECT
         c.*,
         CASE
@@ -87,22 +91,27 @@ module.exports = async (_, args, context, info) => {
         c."${sortKey}" ${orderDirection === 'DESC' ? 'DESC' : 'ASC'}
       LIMIT :limit
       OFFSET :offset
-    `, {
-      discussionIds,
-      toDepth,
-      focusId: focusId || null,
-      lastId: lastId || null,
-      limit,
-      offset
-    })
+    `,
+      {
+        discussionIds,
+        toDepth,
+        focusId: focusId || null,
+        lastId: lastId || null,
+        limit,
+        offset,
+      },
+    ),
   ])
 
-  const endCursor = (offset + limit) < numComments
-    ? Buffer.from(JSON.stringify({
-      ...options,
-      offset: offset + limit
-    })).toString('base64')
-    : null
+  const endCursor =
+    offset + limit < numComments
+      ? Buffer.from(
+          JSON.stringify({
+            ...options,
+            offset: offset + limit,
+          }),
+        ).toString('base64')
+      : null
 
   return {
     id: `${discussionId || 'comments'}${offset || ''}`,
@@ -110,11 +119,12 @@ module.exports = async (_, args, context, info) => {
     directTotalCount: numComments,
     pageInfo: {
       hasNextPage: !!endCursor,
-      endCursor
+      endCursor,
     },
     nodes: comments,
-    focus: focusId && comments.length && focusId === comments[0].id
-      ? comments[0]
-      : null
+    focus:
+      focusId && comments.length && focusId === comments[0].id
+        ? comments[0]
+        : null,
   }
 }

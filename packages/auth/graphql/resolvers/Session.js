@@ -1,33 +1,33 @@
 const useragent = require('../../lib/useragent')
 
 module.exports = {
-  id (session) {
+  id(session) {
     return session.id
   },
-  ipAddress (session) {
+  ipAddress(session) {
     return session.sess.ip
   },
-  userAgent (session) {
+  userAgent(session) {
     return useragent.detect(session.sess.ua)
   },
-  email (session) {
+  email(session) {
     return session.sess.email
   },
-  country (session) {
+  country(session) {
     const { geo = {} } = session.sess
     return geo.country
   },
-  city (session) {
+  city(session) {
     const { geo = {} } = session.sess
     return geo.city
   },
-  expiresAt (session) {
+  expiresAt(session) {
     return session.expire
   },
-  isCurrent (session, args, { req }) {
+  isCurrent(session, args, { req }) {
     return session.sid === req.sessionID
   },
-  phrase (session) {
+  phrase(session) {
     return session.sess.phrase
-  }
+  },
 }

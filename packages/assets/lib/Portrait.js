@@ -4,13 +4,11 @@ const S3 = require('./s3')
 const querystring = require('querystring')
 const sharp = require('sharp')
 
-checkEnv([
-  'ASSETS_SERVER_BASE_URL'
-])
+checkEnv(['ASSETS_SERVER_BASE_URL'])
 
 const {
   ASSETS_SERVER_BASE_URL,
-  AWS_S3_BUCKET // ./s3 warns if missing
+  AWS_S3_BUCKET, // ./s3 warns if missing
 } = process.env
 
 const PORTRAIT_FOLDER = 'portraits'
@@ -25,7 +23,7 @@ const toJPEG = async (buffer) => {
 
   return {
     meta,
-    data: await image.toBuffer()
+    data: await image.toBuffer(),
   }
 }
 
@@ -34,7 +32,7 @@ const upload = async (portrait, dry = false) => {
     `${PORTRAIT_FOLDER}/`,
     // always a new path—cache buster!
     crypto.createHash('md5').update(portrait).digest('hex'),
-    '.jpeg'
+    '.jpeg',
   ].join('')
 
   const inputBuffer = Buffer.from(portrait, 'base64')
@@ -46,12 +44,12 @@ const upload = async (portrait, dry = false) => {
       stream: data,
       path: portraitPath,
       mimeType: 'image/jpeg',
-      bucket: AWS_S3_BUCKET
+      bucket: AWS_S3_BUCKET,
     })
   }
 
   const query = querystring.stringify({
-    size: `${meta.width}x${meta.height}`
+    size: `${meta.width}x${meta.height}`,
   })
   return `${ASSETS_SERVER_BASE_URL}/s3/${AWS_S3_BUCKET}/${portraitPath}?${query}`
 }
@@ -66,5 +64,5 @@ const del = (portraitUrl) => {
 
 module.exports = {
   upload,
-  del
+  del,
 }

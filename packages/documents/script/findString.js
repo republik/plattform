@@ -10,11 +10,10 @@ const argv = yargs
   .option('string', {
     alias: 's',
     type: 'string',
-    required: true
+    required: true,
   })
   .help()
-  .version()
-  .argv
+  .version().argv
 
 const stringRegEx = new RegExp(argv.string, 'ig')
 
@@ -27,28 +26,29 @@ const run = async () => {
     size: 100,
     _source: ['meta', 'content'],
     body: {
-      query: { term: { '__state.published': true } }
-    }
+      query: { term: { '__state.published': true } },
+    },
   }
 
-  console.log([
-    'URL',
-    'Publikator-URL'
-  ].join('\t'))
+  console.log(['URL', 'Publikator-URL'].join('\t'))
 
   for await (const hit of Elasticsearch.scroll(elastic, params)) {
     const stringified = JSON.stringify(hit._source.content)
     const hasMatch = stringified.match(stringRegEx)
 
     if (hasMatch) {
-      console.log([
-        `https://www.republik.ch${hit._source.meta.path}`,
-        `https://publikator.republik.ch/repo/${hit._source.meta.repoId}/tree`
-      ].join('\t'))
+      console.log(
+        [
+          `https://www.republik.ch${hit._source.meta.path}`,
+          `https://publikator.republik.ch/repo/${hit._source.meta.repoId}/tree`,
+        ].join('\t'),
+      )
     }
   }
 
   await elastic.close()
 }
 
-run().catch(e => { throw e })
+run().catch((e) => {
+  throw e
+})

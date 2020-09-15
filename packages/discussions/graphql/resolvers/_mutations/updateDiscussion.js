@@ -3,15 +3,12 @@ const { Roles } = require('@orbiting/backend-modules-auth')
 module.exports = async (_, args, { pgdb, user, t }) => {
   Roles.ensureUserIsInRoles(user, ['editor', 'admin'])
 
-  const {
-    id,
-    closed
-  } = args
+  const { id, closed } = args
 
   const transaction = await pgdb.transactionBegin()
   try {
     const discussion = await transaction.public.discussions.findOne({
-      id
+      id,
     })
     if (!discussion) {
       throw new Error(t('api/discussion/404'))
@@ -21,7 +18,7 @@ module.exports = async (_, args, { pgdb, user, t }) => {
     if (closed !== undefined) {
       updatedDiscussion = await pgdb.public.discussions.updateAndGetOne(
         { id },
-        { closed }
+        { closed },
       )
     }
 

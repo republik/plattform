@@ -1,17 +1,8 @@
 const { ensureSignedIn } = require('@orbiting/backend-modules-auth')
 
 module.exports = async (_, args, context) => {
-  const {
-    id
-  } = args
-  const {
-    pgdb,
-    user: me,
-    t,
-    pubsub,
-    req,
-    loaders
-  } = context
+  const { id } = args
+  const { pgdb, user: me, t, pubsub, req, loaders } = context
 
   ensureSignedIn(req)
 
@@ -29,12 +20,12 @@ module.exports = async (_, args, context) => {
 
   const updatedNotification = await pgdb.public.notifications.updateAndGetOne(
     { id },
-    { readAt: new Date() }
+    { readAt: new Date() },
   )
   loaders.Notification.byKeyObj().clearAll()
 
   await pubsub.publish('notification', {
-    notification: updatedNotification
+    notification: updatedNotification,
   })
 
   return updatedNotification

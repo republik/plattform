@@ -1,9 +1,7 @@
-const {
-  getCandidaciesResult
-} = require('../../lib/Election')
+const { getCandidaciesResult } = require('../../lib/Election')
 
 module.exports = {
-  async candidacies (result, args, { pgdb, t }) {
+  async candidacies(result, args, { pgdb, t }) {
     if (result.candidacies) {
       return result.candidacies
     }
@@ -11,5 +9,5 @@ module.exports = {
       return getCandidaciesResult(result.entity, args, pgdb, t)
     }
     return null
-  }
+  },
 }

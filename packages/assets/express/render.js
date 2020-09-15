@@ -1,8 +1,4 @@
-const {
-  returnImage,
-  getWidthHeight,
-  s3
-} = require('../lib')
+const { returnImage, getWidthHeight, s3 } = require('../lib')
 const screenshot = require('../lib/screenshot/chromium')
 const debug = require('debug')('assets:render')
 const crypto = require('crypto')
@@ -14,12 +10,10 @@ const cacheS3Path = `render-cache/`
 const getCacheKey = (params) => {
   const paramsString = Object.keys(params)
     .sort(ascending)
-    .map(key => `${key}:${params[key]}`)
+    .map((key) => `${key}:${params[key]}`)
     .join('::')
-  const sha = crypto.createHash('sha256')
-    .update(paramsString)
-    .digest('hex')
-  const s3KeyEncode = string => encodeURIComponent(string).replace(/%/g, 'C')
+  const sha = crypto.createHash('sha256').update(paramsString).digest('hex')
+  const s3KeyEncode = (string) => encodeURIComponent(string).replace(/%/g, 'C')
   const url = (params.url || '').replace('https://', '')
   return `${s3KeyEncode(url).slice(0, 500)}-${sha}`
 }
@@ -30,13 +24,13 @@ module.exports = (server) => {
       viewport,
       width: _width,
       height: _height,
-      permanentCacheKey
+      permanentCacheKey,
     } = req.query
 
     let width, height
     if (viewport) {
       try {
-        ({ width, height } = getWidthHeight(viewport))
+        ;({ width, height } = getWidthHeight(viewport))
       } catch (e) {
         res.status(400).end(e.message)
       }
@@ -48,7 +42,7 @@ module.exports = (server) => {
     const params = {
       ...req.query,
       width,
-      height
+      height,
     }
 
     let cachePath
@@ -57,17 +51,19 @@ module.exports = (server) => {
 
       const cacheResult = await s3.get({
         bucket: AWS_S3_BUCKET,
-        path: cachePath
+        path: cachePath,
       })
 
       if (cacheResult.ok) {
-        ['Content-Type', 'Content-Length'].forEach(key => {
+        ;['Content-Type', 'Content-Length'].forEach((key) => {
           res.set(key, cacheResult.headers.get(key))
         })
-        res.set('Cache-Tag', ['render', 'permanentCache']
-          .concat((res.get('Content-Type') || '').split('/'))
-          .filter(Boolean)
-          .join(' ')
+        res.set(
+          'Cache-Tag',
+          ['render', 'permanentCache']
+            .concat((res.get('Content-Type') || '').split('/'))
+            .filter(Boolean)
+            .join(' '),
         )
         cacheResult.body.pipe(res)
         return
@@ -84,13 +80,12 @@ module.exports = (server) => {
     }
 
     if (error || !result) {
-      console.error(
-        `render failed: ${error && error.message}`,
-        { error, result, params }
-      )
-      return res.status(500).end(
-        (error && error.message) || 'server error'
-      )
+      console.error(`render failed: ${error && error.message}`, {
+        error,
+        result,
+        params,
+      })
+      return res.status(500).end((error && error.message) || 'server error')
     }
 
     const imageResult = await returnImage({
@@ -98,9 +93,9 @@ module.exports = (server) => {
       stream: result,
       options: {
         ...req.query,
-        cacheTags: ['render']
+        cacheTags: ['render'],
       },
-      returnResult: !!cachePath
+      returnResult: !!cachePath,
     })
 
     if (imageResult && cachePath && AWS_S3_BUCKET) {
@@ -108,7 +103,7 @@ module.exports = (server) => {
         stream: imageResult.body,
         mimeType: imageResult.mime,
         path: cachePath,
-        bucket: AWS_S3_BUCKET
+        bucket: AWS_S3_BUCKET,
       })
     }
   })

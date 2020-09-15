@@ -1,14 +1,15 @@
-Publikator
-------------------
+## Publikator
 
 Here you find the code responsible for the CMS tasks.
 
 ## Github
+
 This server acts and authenticates as a [GitHub-App](https://developer.github.com/apps/building-integrations/setting-up-a-new-integration/about-integrations/#github-apps). Despite the claim of GitHub, GitHub-Apps are also compatible to the GraphQL v4 API.
 
 You need to setup a new GitHub-App and install it to at least one organization / account. Follow the steps below or [Read more](https://developer.github.com/apps/building-integrations/setting-up-and-registering-github-apps/).
 
 Setup (for dev environment):
+
 - [Create a GitHub-App](https://developer.github.com/apps/building-integrations/setting-up-and-registering-github-apps/registering-github-apps/).
   - As the "Homepage URL" set `http://localhost:3004`.
   - On the permissions page set "Read & write" for the following sections and leave the rest on "No access".
@@ -66,4 +67,5 @@ TWITTER_APP_SECRET=[The hash from field "Consumer Secret (API Secret)"]
 ```
 
 ## Licensing
+
 The source code and it's documentation is licensed under [GNU AGPLv3](LICENSE)+.

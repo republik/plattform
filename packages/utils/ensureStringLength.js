@@ -3,7 +3,11 @@ const DEFAULT_MIN = 1
 const DEFAULT_MAX = Number.MAX_SAFE_INTEGER
 
 module.exports = (unsafeString, options = {}) => {
-  if (unsafeString === undefined || unsafeString === null || typeof unsafeString !== 'string') {
+  if (
+    unsafeString === undefined ||
+    unsafeString === null ||
+    typeof unsafeString !== 'string'
+  ) {
     // bail if it's not a string or no value at all
     return
   }
@@ -12,7 +16,7 @@ module.exports = (unsafeString, options = {}) => {
   const {
     max = DEFAULT_MAX,
     min = DEFAULT_MIN,
-    error = DEFAULT_ERROR
+    error = DEFAULT_ERROR,
   } = options
 
   const maxInt = parseInt(max, 10)

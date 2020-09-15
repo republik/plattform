@@ -3,10 +3,7 @@ const chromium = require('chrome-aws-lambda')
 const { parse } = require('url')
 const debug = require('debug')('screenshot')
 
-const {
-  URL_ALLOWLIST,
-  PUPPETEER_WS_ENDPOINT
-} = process.env
+const { URL_ALLOWLIST, PUPPETEER_WS_ENDPOINT } = process.env
 
 const DEFAULT_WIDTH = 1200
 const DEFAULT_HEIGHT = 1
@@ -24,7 +21,7 @@ const getBrowser = async () => {
     return puppeteer.launch({
       args: chromium.args,
       executablePath: await chromium.executablePath,
-      headless: chromium.headless
+      headless: chromium.headless,
     })
   } else {
     if (!PUPPETEER_WS_ENDPOINT) {
@@ -33,13 +30,12 @@ const getBrowser = async () => {
     }
     debug(`rendering with chromium @ PUPPETEER_WS_ENDPOINT`)
     return puppeteer.connect({
-      browserWSEndpoint: PUPPETEER_WS_ENDPOINT
+      browserWSEndpoint: PUPPETEER_WS_ENDPOINT,
     })
   }
 }
 
-const getPosInt = (number) =>
-  Math.ceil(Math.abs(number))
+const getPosInt = (number) => Math.ceil(Math.abs(number))
 
 // returns buffer
 module.exports = async (req, res) => {
@@ -54,15 +50,23 @@ module.exports = async (req, res) => {
       quality,
       cookie,
       basicAuthUser,
-      basicAuthPass
-    }
+      basicAuthPass,
+    },
   } = parse(req.url, true)
 
-  const format = (_format && FORMATS.indexOf(_format) !== -1)
-    ? _format
-    : 'png'
+  const format = _format && FORMATS.indexOf(_format) !== -1 ? _format : 'png'
 
-  debug({ url, width, height, zoomFactor, fullPage, format, quality, cookie, basicAuthUser })
+  debug({
+    url,
+    width,
+    height,
+    zoomFactor,
+    fullPage,
+    format,
+    quality,
+    cookie,
+    basicAuthUser,
+  })
 
   if (!url) {
     res.statusCode = 400
@@ -71,7 +75,8 @@ module.exports = async (req, res) => {
 
   const allowed =
     (URL_ALLOWLIST && URL_ALLOWLIST === 'all') ||
-    (allowlistedUrls && !!allowlistedUrls.find(allowUrl => url.indexOf(allowUrl) === 0))
+    (allowlistedUrls &&
+      !!allowlistedUrls.find((allowUrl) => url.indexOf(allowUrl) === 0))
 
   if (!allowed) {
     console.warn('forbidden render url requested: ' + url)
@@ -89,16 +94,14 @@ module.exports = async (req, res) => {
       page.setViewport({
         width: getPosInt(width) || DEFAULT_WIDTH,
         height: getPosInt(height) || DEFAULT_HEIGHT,
-        deviceScaleFactor: Math.abs(zoomFactor) || DEFAULT_SCALE_FACTOR
+        deviceScaleFactor: Math.abs(zoomFactor) || DEFAULT_SCALE_FACTOR,
       }),
-      page.setExtraHTTPHeaders({ 'DNT': '1' })
+      page.setExtraHTTPHeaders({ DNT: '1' }),
     ]
 
     if (cookie) {
       const [name, value] = cookie.split('=')
-      promises.push(
-        page.setCookie({ name, value, url })
-      )
+      promises.push(page.setCookie({ name, value, url }))
     }
 
     await Promise.all(promises)
@@ -106,7 +109,7 @@ module.exports = async (req, res) => {
     if (basicAuthUser) {
       await page.authenticate({
         username: basicAuthUser,
-        password: basicAuthPass
+        password: basicAuthPass,
       })
     }
 
@@ -115,9 +118,7 @@ module.exports = async (req, res) => {
     const screenshot = await page.screenshot({
       fullPage: Boolean(parseInt(fullPage)).valueOf(),
       type: format,
-      ...quality !== undefined
-        ? { quality: getPosInt(quality) }
-        : {}
+      ...(quality !== undefined ? { quality: getPosInt(quality) } : {}),
     })
 
     res.statusCode = 200
@@ -127,7 +128,6 @@ module.exports = async (req, res) => {
     res.statusCode = 500
     res.end(error.message || error)
   } finally {
-    await browser.close()
-      .catch(error => console.warn(error))
+    await browser.close().catch((error) => console.warn(error))
   }
 }

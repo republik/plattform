@@ -6,7 +6,7 @@ describe('DiscussionStats.last', () => {
   const { createCache } = require('../../../../lib/stats/last')
 
   const defaultObj = null
-  const defaultArgs = { }
+  const defaultArgs = {}
   const defaultContext = Symbol('context')
 
   it('throws error if unable to retreive pre-populated data', async () => {
@@ -15,18 +15,20 @@ describe('DiscussionStats.last', () => {
     const getMock = jest.fn().mockReturnValue(null)
     createCache.mockImplementation(() => ({ get: getMock }))
 
-    return expect(UUT(defaultObj, defaultArgs, defaultContext))
-      .rejects
-      .toThrowError('Unable to retrieve pre-populated data for DiscussionsStats.last')
+    return expect(
+      UUT(defaultObj, defaultArgs, defaultContext),
+    ).rejects.toThrowError(
+      'Unable to retrieve pre-populated data for DiscussionsStats.last',
+    )
   })
 
   it('returns pre-populated data', async () => {
     const expectedResult = {
       result: {
-        discussions: Symbol('foobar')
+        discussions: Symbol('foobar'),
       },
       updatedAt: Symbol('updatedAt'),
-      key: Symbol('key')
+      key: Symbol('key'),
     }
 
     const getMock = jest.fn().mockReturnValue(expectedResult)
@@ -39,7 +41,7 @@ describe('DiscussionStats.last', () => {
     expect(result).toMatchObject({
       updatedAt: expectedResult.updatedAt,
       key: expectedResult.key,
-      ...expectedResult.result
+      ...expectedResult.result,
     })
   })
 })

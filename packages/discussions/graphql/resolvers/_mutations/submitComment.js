@@ -1,6 +1,9 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
 const { transform } = require('../../../lib/Comment')
-const { setDiscussionPreferences, ensureAnonymousDifferentiator } = require('../../../lib/discussionPreferences')
+const {
+  setDiscussionPreferences,
+  ensureAnonymousDifferentiator,
+} = require('../../../lib/discussionPreferences')
 const userCanComment = require('../Discussion/userCanComment')
 const userWaitUntil = require('../Discussion/userWaitUntil')
 const { contentLength } = require('../Comment')
@@ -11,13 +14,7 @@ const Promise = require('bluebird')
 const { submitComment: notify } = require('../../../lib/Notifications')
 
 module.exports = async (_, args, context) => {
-  const {
-    pgdb,
-    loaders,
-    user,
-    t,
-    pubsub
-  } = context
+  const { pgdb, loaders, user, t, pubsub } = context
   const userId = user.id
 
   Roles.ensureUserHasRole(user, 'member')
@@ -28,7 +25,7 @@ module.exports = async (_, args, context) => {
     parentId,
     content,
     discussionPreferences,
-    tags
+    tags,
   } = args
 
   if (!content || !content.trim().length) {
@@ -41,7 +38,7 @@ module.exports = async (_, args, context) => {
   }
 
   // check if client-side generated ID already exists
-  if (id && !!await loaders.Comment.byId.load(id)) {
+  if (id && !!(await loaders.Comment.byId.load(id))) {
     throw new Error(t('api/comment/id/duplicate'))
   }
 
@@ -51,15 +48,20 @@ module.exports = async (_, args, context) => {
 
   const [canComment, waitUntil] = await Promise.all([
     userCanComment(discussion, null, context),
-    userWaitUntil(discussion, null, { pgdb, user })
+    userWaitUntil(discussion, null, { pgdb, user }),
   ])
   if (!canComment) {
     throw new Error(t('api/comment/canNotComment'))
   }
   if (waitUntil) {
-    throw new Error(t('api/comment/tooEarly', {
-      timeahead: timeahead(t, (waitUntil.getTime() - new Date().getTime()) / 1000)
-    }))
+    throw new Error(
+      t('api/comment/tooEarly', {
+        timeahead: timeahead(
+          t,
+          (waitUntil.getTime() - new Date().getTime()) / 1000,
+        ),
+      }),
+    )
   }
 
   // check tags
@@ -67,10 +69,13 @@ module.exports = async (_, args, context) => {
     throw new Error(t('api/comment/tagRequired'))
   }
   if (tags && tags.length) {
-    const invalidTags = tags
-      .filter(tc => !discussion.tags.find(td => tc === td))
+    const invalidTags = tags.filter(
+      (tc) => !discussion.tags.find((td) => tc === td),
+    )
     if (invalidTags.length) {
-      throw new Error(t('api/comment/invalidTags', { invalidTags: invalidTags.join(',') }))
+      throw new Error(
+        t('api/comment/invalidTags', { invalidTags: invalidTags.join(',') }),
+      )
     }
   }
 
@@ -83,26 +88,26 @@ module.exports = async (_, args, context) => {
       userId,
       content,
       tags,
-      now: args.now
+      now: args.now,
     },
-    context
+    context,
   )
 
   // ensure comment length is within limit
   if (
     discussion.maxLength &&
     unsavedComment.content.length > discussion.maxLength &&
-    await contentLength(unsavedComment, {}, context) > discussion.maxLength
+    (await contentLength(unsavedComment, {}, context)) > discussion.maxLength
   ) {
-    throw new Error(t('api/comment/tooLong', { maxLength: discussion.maxLength }))
+    throw new Error(
+      t('api/comment/tooLong', { maxLength: discussion.maxLength }),
+    )
   }
 
   let newComment
   const transaction = await pgdb.transactionBegin()
   try {
-    newComment = await transaction.public.comments.insertAndGet(
-      unsavedComment
-    )
+    newComment = await transaction.public.comments.insertAndGet(unsavedComment)
 
     if (discussionPreferences) {
       await setDiscussionPreferences({
@@ -111,7 +116,7 @@ module.exports = async (_, args, context) => {
         discussion,
         transaction,
         t,
-        loaders
+        loaders,
       })
     } else {
       ensureAnonymousDifferentiator({
@@ -119,7 +124,7 @@ module.exports = async (_, args, context) => {
         userId,
         discussion,
         t,
-        loaders
+        loaders,
       })
     }
 
@@ -135,14 +140,13 @@ module.exports = async (_, args, context) => {
       pubsub.publish('comment', {
         comment: {
           mutation: 'CREATED',
-          node: newComment
-        }
+          node: newComment,
+        },
       }),
-      slack.publishComment(newComment, discussion, context)
-    ])
-      .catch(e => {
-        console.error(e)
-      })
+      slack.publishComment(newComment, discussion, context),
+    ]).catch((e) => {
+      console.error(e)
+    })
   }
 
   return newComment

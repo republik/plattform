@@ -1,8 +1,7 @@
-const { Roles: { ensureUserHasRole } } = require('@orbiting/backend-modules-auth')
 const {
-  findBySlug,
-  refreshResult
-} = require('../../../lib/Questionnaire')
+  Roles: { ensureUserHasRole },
+} = require('@orbiting/backend-modules-auth')
+const { findBySlug, refreshResult } = require('../../../lib/Questionnaire')
 
 module.exports = async (_, { slug }, context) => {
   const { pgdb, user: me, t } = context
@@ -19,7 +18,7 @@ module.exports = async (_, { slug }, context) => {
     updatedQuestionnaire = await refreshResult(
       questionnaire.id,
       transaction,
-      context
+      context,
     )
 
     await transaction.transactionCommit()

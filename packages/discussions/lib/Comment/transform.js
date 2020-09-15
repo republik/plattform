@@ -1,5 +1,7 @@
 const hotness = require('../hotness')
-const { getUrls: { getUrlsFromText } } = require('@orbiting/backend-modules-utils')
+const {
+  getUrls: { getUrlsFromText },
+} = require('@orbiting/backend-modules-utils')
 
 const MD_URL_REGEX = /\[.*?\]\((.*?)\)/gm
 
@@ -8,9 +10,7 @@ const getUrls = (content) => {
   const urls = getUrlsFromText(text) || null
   return {
     urls,
-    embedUrl: urls && urls.length
-      ? urls[urls.length - 1]
-      : null
+    embedUrl: urls && urls.length ? urls[urls.length - 1] : null,
   }
 }
 
@@ -24,12 +24,9 @@ const create = async (
     tags,
     published = true,
     adminUnpublished = false,
-    now = new Date()
+    now = new Date(),
   },
-  {
-    loaders,
-    t
-  }
+  { loaders, t },
 ) => {
   let parentIds
   if (parentId) {
@@ -41,35 +38,31 @@ const create = async (
   }
 
   return {
-    ...id ? { id } : { },
+    ...(id ? { id } : {}),
     discussionId,
-    ...parentIds ? { parentIds } : {},
+    ...(parentIds ? { parentIds } : {}),
     depth: (parentIds && parentIds.length) || 0,
     userId,
     content,
     ...getUrls(content),
     hotness: hotness(0, 0, now.getTime()),
-    ...tags ? { tags } : {},
+    ...(tags ? { tags } : {}),
     published,
     adminUnpublished,
     createdAt: now,
-    updatedAt: now
+    updatedAt: now,
   }
 }
 
-const edit = ({
-  content,
-  tags,
-  now = new Date()
-}) => ({
+const edit = ({ content, tags, now = new Date() }) => ({
   content,
   ...getUrls(content),
-  ...tags ? { tags } : {},
+  ...(tags ? { tags } : {}),
   published: true,
-  updatedAt: now
+  updatedAt: now,
 })
 
 module.exports = {
   create,
-  edit
+  edit,
 }

@@ -4,56 +4,86 @@ const { parse, format } = require('libphonenumber-js')
 const isUUID = require('is-uuid')
 const Promise = require('bluebird')
 const debug = require('debug')('auth:lib:Users')
-const { sendMailTemplate, moveNewsletterSubscriptions } = require('@orbiting/backend-modules-mail')
+const {
+  sendMailTemplate,
+  moveNewsletterSubscriptions,
+} = require('@orbiting/backend-modules-mail')
 const t = require('./t')
 const useragent = require('./useragent')
 const AuthError = require('./AuthError')
-const {
-  ensureAllRequiredConsents,
-  saveConsents
-} = require('./Consents')
-const {
-  ensureRequiredFields
-} = require('./Fields')
+const { ensureAllRequiredConsents, saveConsents } = require('./Consents')
+const { ensureRequiredFields } = require('./Fields')
 const { TranslatedError } = require('@orbiting/backend-modules-translate')
 
 const {
   initiateSession,
   sessionByToken,
-  NoSessionError
+  NoSessionError,
 } = require('./Sessions')
 const {
   generateNewToken,
   startChallenge,
   validateChallenge,
-  TokenTypes
+  TokenTypes,
 } = require('./challenges')
 const { getUserByAccessToken, hasAuthorizeSession } = require('./AccessToken')
 
 const { newAuthError } = AuthError
 
 const EmailInvalidError = newAuthError('email-invalid', 'api/email/invalid')
-const EmailAlreadyAssignedError = newAuthError('email-already-assigned', 'api/email/change/exists')
-const TokenTypeNotEnabledError = newAuthError('token-type-not-enabled', 'api/auth/tokenType/notEnabled')
-const AccessTokenInvalidError = newAuthError('access-token-type-invalid', 'api/auth/errorAccessToken')
-const SessionInitializationFailedError = newAuthError('session-initialization-failed', 'api/auth/errorSavingSession')
+const EmailAlreadyAssignedError = newAuthError(
+  'email-already-assigned',
+  'api/email/change/exists',
+)
+const TokenTypeNotEnabledError = newAuthError(
+  'token-type-not-enabled',
+  'api/auth/tokenType/notEnabled',
+)
+const AccessTokenInvalidError = newAuthError(
+  'access-token-type-invalid',
+  'api/auth/errorAccessToken',
+)
+const SessionInitializationFailedError = newAuthError(
+  'session-initialization-failed',
+  'api/auth/errorSavingSession',
+)
 const UserNotFoundError = newAuthError('user-not-found', 'api/users/404')
-const AuthorizationFailedError = newAuthError('authorization-failed', 'api/auth/authorization-failed')
-const TwoFactorAlreadyDisabledError = newAuthError('2fa-already-disabled', 'api/auth/2fa-already-disabled')
-const TwoFactorAlreadyEnabledError = newAuthError('2fa-already-enabled', 'api/auth/2fa-already-enabled')
-const SecondFactorNotReadyError = newAuthError('2f-not-ready', 'api/auth/2f-not-ready')
-const SecondFactorHasToBeDisabledError = newAuthError('second-factor-has-to-be-disabled', 'api/auth/second-factor-has-to-be-disabled')
-const SessionTokenValidationFailed = newAuthError('token-validation-failed', 'api/token/invalid')
-const AuthorizationRateLimitError = newAuthError('authorize-rate-limit-tokens-email', 'api/auth/errorAuthorizationRateLimit')
+const AuthorizationFailedError = newAuthError(
+  'authorization-failed',
+  'api/auth/authorization-failed',
+)
+const TwoFactorAlreadyDisabledError = newAuthError(
+  '2fa-already-disabled',
+  'api/auth/2fa-already-disabled',
+)
+const TwoFactorAlreadyEnabledError = newAuthError(
+  '2fa-already-enabled',
+  'api/auth/2fa-already-enabled',
+)
+const SecondFactorNotReadyError = newAuthError(
+  '2f-not-ready',
+  'api/auth/2f-not-ready',
+)
+const SecondFactorHasToBeDisabledError = newAuthError(
+  'second-factor-has-to-be-disabled',
+  'api/auth/second-factor-has-to-be-disabled',
+)
+const SessionTokenValidationFailed = newAuthError(
+  'token-validation-failed',
+  'api/token/invalid',
+)
+const AuthorizationRateLimitError = newAuthError(
+  'authorize-rate-limit-tokens-email',
+  'api/auth/errorAuthorizationRateLimit',
+)
 
-const {
-  AUTO_LOGIN_REGEX,
-  FRONTEND_BASE_URL
-} = process.env
+const { AUTO_LOGIN_REGEX, FRONTEND_BASE_URL } = process.env
 
 // in order of preference
 const enabledFirstFactors = async (email, pgdb) => {
-  const userWithDevices = await pgdb.query(`
+  const userWithDevices = await pgdb
+    .query(
+      `
     SELECT
       u.*,
       jsonb_agg(d.*) as devices
@@ -66,18 +96,19 @@ const enabledFirstFactors = async (email, pgdb) => {
       u.email = :email
     GROUP BY
       u.id
-  `, {
-    email
-  })
-    .then(result => {
+  `,
+      {
+        email,
+      },
+    )
+    .then((result) => {
       const user = result[0]
       if (!user) {
         return user
       }
       return {
         ...user,
-        devices: user.devices
-          .filter(Boolean)
+        devices: user.devices.filter(Boolean),
       }
     })
 
@@ -89,28 +120,27 @@ const enabledFirstFactors = async (email, pgdb) => {
   }
 
   const { preferredFirstFactor } = userWithDevices || {}
-  return enabledTokenTypes
-    .sort((a, b) => {
-      if (a === b) {
-        return 0
-      }
-      // preferred always wins
-      if (a === preferredFirstFactor) {
-        return -1
-      }
-      if (b === preferredFirstFactor) {
-        return 1
-      }
-      // others are always before EMAIL_TOKEN
-      if (b === EMAIL_TOKEN) {
-        return -1
-      }
-      if (a === EMAIL_TOKEN) {
-        return 1
-      }
-      // undefined order for others
+  return enabledTokenTypes.sort((a, b) => {
+    if (a === b) {
       return 0
-    })
+    }
+    // preferred always wins
+    if (a === preferredFirstFactor) {
+      return -1
+    }
+    if (b === preferredFirstFactor) {
+      return 1
+    }
+    // others are always before EMAIL_TOKEN
+    if (b === EMAIL_TOKEN) {
+      return -1
+    }
+    if (a === EMAIL_TOKEN) {
+      return 1
+    }
+    // undefined order for others
+    return 0
+  })
 }
 
 // not restricted to enabledTokenTypes
@@ -122,38 +152,47 @@ const setPreferredFirstFactor = async (user, tokenType = null, pgdb) => {
   }
   return pgdb.public.users.updateAndGetOne(
     {
-      id: user.id
-    }, {
-      preferredFirstFactor: tokenType
-    }
+      id: user.id,
+    },
+    {
+      preferredFirstFactor: tokenType,
+    },
   )
 }
 
-const signIn = async (_email, context, pgdb, req, consents, _tokenType, accessToken) => {
+const signIn = async (
+  _email,
+  context,
+  pgdb,
+  req,
+  consents,
+  _tokenType,
+  accessToken,
+) => {
   if (req.user) {
     // req is authenticated
     return {
       phrase: '',
       tokenType: 'EMAIL_TOKEN',
       alternativeFirstFactors: [],
-      expiresAt: new Date()
+      expiresAt: new Date(),
     }
   }
 
   if (!validator.isEmail(_email)) {
     debug('invalid email: %O', {
       req: req._log(),
-      _email
+      _email,
     })
     throw new EmailInvalidError({ email: _email })
   }
 
   // find existing email with different cases
   const user = await pgdb.public.users.findOne({
-    email: _email
+    email: _email,
   })
 
-  const { email } = (user || { email: _email })
+  const { email } = user || { email: _email }
   const isApp = useragent.isApp(req.headers['user-agent'])
 
   const { EMAIL_TOKEN, EMAIL_CODE, ACCESS_TOKEN } = TokenTypes
@@ -189,14 +228,18 @@ const signIn = async (_email, context, pgdb, req, consents, _tokenType, accessTo
       const accessTokenUser = await getUserByAccessToken(accessToken, { pgdb })
 
       // Check if scope has authorizeSession prop and requesting user matches accessToken user
-      if (hasAuthorizeSession(accessTokenUser) && user && user.id === accessTokenUser.id) {
+      if (
+        hasAuthorizeSession(accessTokenUser) &&
+        user &&
+        user.id === accessTokenUser.id
+      ) {
         try {
           token = await generateNewToken(ACCESS_TOKEN, {
             pgdb,
             session,
             email,
             accessToken,
-            context
+            context,
           })
           tokenType = ACCESS_TOKEN
         } catch (e) {
@@ -216,7 +259,7 @@ const signIn = async (_email, context, pgdb, req, consents, _tokenType, accessTo
         pgdb,
         session,
         email,
-        context
+        context,
       })
     }
 
@@ -228,7 +271,7 @@ const signIn = async (_email, context, pgdb, req, consents, _tokenType, accessTo
           tokens: [token],
           email,
           req,
-          me: user
+          me: user,
         })
       }, 2000)
     } else {
@@ -239,7 +282,7 @@ const signIn = async (_email, context, pgdb, req, consents, _tokenType, accessTo
         context,
         country,
         phrase,
-        user
+        user,
       })
     }
 
@@ -247,7 +290,9 @@ const signIn = async (_email, context, pgdb, req, consents, _tokenType, accessTo
       tokenType,
       phrase,
       expiresAt: token.expiresAt,
-      alternativeFirstFactors: enabledTokenTypes.filter(tt => tt !== tokenType)
+      alternativeFirstFactors: enabledTokenTypes.filter(
+        (tt) => tt !== tokenType,
+      ),
     }
   } catch (e) {
     console.error(e)
@@ -272,13 +317,22 @@ const shouldAutoLogin = ({ email }) => {
   return false
 }
 
-const unauthorizedSession = async ({ pgdb, token, email: emailFromQuery, me }) => {
+const unauthorizedSession = async ({
+  pgdb,
+  token,
+  email: emailFromQuery,
+  me,
+}) => {
   const user = await pgdb.public.users.findOne({ email: emailFromQuery })
   const session = await sessionByToken({ pgdb, token, email: emailFromQuery })
   if (!session) {
     throw new NoSessionError({ email: emailFromQuery, token })
   }
-  const validatable = await validateChallenge(token.type, { pgdb, user, session, me }, token)
+  const validatable = await validateChallenge(
+    token.type,
+    { pgdb, user, session, me },
+    token,
+  )
   if (!validatable) {
     throw new SessionTokenValidationFailed(token)
   }
@@ -287,39 +341,53 @@ const unauthorizedSession = async ({ pgdb, token, email: emailFromQuery, me }) =
 
 const denySession = async ({ pgdb, token, email: emailFromQuery, me }) => {
   // check if authorized to deny the challenge
-  const session = await unauthorizedSession({ pgdb, token, email: emailFromQuery, me })
+  const session = await unauthorizedSession({
+    pgdb,
+    token,
+    email: emailFromQuery,
+    me,
+  })
 
   const transaction = await pgdb.transactionBegin()
   try {
     // expire session and tokens
-    await transaction.public.sessions.updateOne({
-      id: session.id
-    }, {
-      sess: {
-        ...session.sess,
-        passport: {
-          user: null
+    await transaction.public.sessions.updateOne(
+      {
+        id: session.id,
+      },
+      {
+        sess: {
+          ...session.sess,
+          passport: {
+            user: null,
+          },
+          expire: new Date(),
         },
-        expire: new Date()
-      }
-    })
+      },
+    )
 
     await Promise.all([
       // let all tokens related to this session expire
-      transaction.public.tokens.update({
-        sessionId: session.id
-      }, {
-        updatedAt: new Date(),
-        expiresAt: new Date()
-      }),
+      transaction.public.tokens.update(
+        {
+          sessionId: session.id,
+        },
+        {
+          updatedAt: new Date(),
+          expiresAt: new Date(),
+        },
+      ),
       // mark this token as denied
-      transaction.public.tokens.updateOne({
-        sessionId: session.id,
-        type: token.type,
-        payload: token.payload
-      }, {
-        expireAction: 'deny'
-      })
+      transaction.public.tokens.updateOne(
+        {
+          sessionId: session.id,
+          type: token.type,
+          payload: token.payload,
+        },
+        {
+          expireAction: 'deny',
+        },
+      ),
     ])
 
     await transaction.transactionCommit()
@@ -335,7 +403,8 @@ const auditAuthorizeAttempts = async ({ pgdb, email, maxAttempts = 10 }) => {
   const transaction = await pgdb.transactionBegin()
 
   try {
-    const sessions = await transaction.query(`
+    const sessions = await transaction.query(
+      `
       SELECT
         s.*,
         MAX(t."expiresAt") AS "tokenExpiresAt"
@@ -348,7 +417,9 @@ const auditAuthorizeAttempts = async ({ pgdb, email, maxAttempts = 10 }) => {
         AND t."expiresAt" >= now()
 
       GROUP BY s.sid
-    `, { email })
+    `,
+      { email },
+    )
 
     if (sessions.length === 0) {
       await transaction.transactionCommit()
@@ -356,21 +427,21 @@ const auditAuthorizeAttempts = async ({ pgdb, email, maxAttempts = 10 }) => {
     }
 
     // Find token which expires next over all sessions
-    const nextExpireAt = sessions
-      .reduce((acc, curr) => acc.tokenExpiresAt > curr.tokenExpiresAt ? curr : acc)
-      .tokenExpiresAt
+    const nextExpireAt = sessions.reduce((acc, curr) =>
+      acc.tokenExpiresAt > curr.tokenExpiresAt ? curr : acc,
+    ).tokenExpiresAt
 
     const minsNextExpireAt = Math.ceil((nextExpireAt - new Date()) / 1000 / 60)
 
-    await Promise.map(sessions, async session => {
+    await Promise.map(sessions, async (session) => {
       await transaction.public.sessions.updateOne(
         { id: session.id },
         {
           sess: {
             ...session.sess,
-            authorizeAttempts: ++session.sess.authorizeAttempts || 1
-          }
-        }
+            authorizeAttempts: ++session.sess.authorizeAttempts || 1,
+          },
+        },
       )
 
       if (session.sess.authorizeAttempts > maxAttempts) {
@@ -378,11 +449,11 @@ const auditAuthorizeAttempts = async ({ pgdb, email, maxAttempts = 10 }) => {
           {
             email,
             authorizeAttempts: session.sess.authorizeAttempts,
-            maxAttempts
+            maxAttempts,
           },
           {
-            mins: minsNextExpireAt
-          }
+            mins: minsNextExpireAt,
+          },
         )
       }
     })
@@ -399,24 +470,45 @@ const auditAuthorizeAttempts = async ({ pgdb, email, maxAttempts = 10 }) => {
 
     throw new AuthorizationRateLimitError({
       email,
-      maxAttempts
+      maxAttempts,
     })
   }
 }
 
-const authorizeSession = async ({ pgdb, tokens, email: emailFromQuery, signInHooks = [], consents = [], requiredFields = [], req, me }) => {
+const authorizeSession = async ({
+  pgdb,
+  tokens,
+  email: emailFromQuery,
+  signInHooks = [],
+  consents = [],
+  requiredFields = [],
+  req,
+  me,
+}) => {
   await auditAuthorizeAttempts({ pgdb, email: emailFromQuery })
 
   // validate the challenges
-  const existingUser = await pgdb.public.users.findOne({ email: emailFromQuery })
+  const existingUser = await pgdb.public.users.findOne({
+    email: emailFromQuery,
+  })
   const tokenTypes = []
   let session = null
   for (const token of tokens) {
     if (tokenTypes.indexOf(token.type) !== -1) {
-      console.error('invalid challenge, somebody uses the same type twice trying to circumvent 2fa', tokenTypes.concat([token.type]))
-      throw new SessionTokenValidationFailed({ email: emailFromQuery, ...token })
+      console.error(
+        'invalid challenge, somebody uses the same type twice trying to circumvent 2fa',
+        tokenTypes.concat([token.type]),
+      )
+      throw new SessionTokenValidationFailed({
+        email: emailFromQuery,
+        ...token,
+      })
     }
-    const curSession = await sessionByToken({ pgdb, token, email: emailFromQuery })
+    const curSession = await sessionByToken({
+      pgdb,
+      token,
+      email: emailFromQuery,
+    })
     if (curSession) {
       if (session && session.id !== curSession.id) {
         console.error('multiple different session?!')
@@ -431,17 +523,25 @@ const authorizeSession = async ({ pgdb, tokens, email: emailFromQuery, signInHoo
     const validated = await validateChallenge(
       token.type,
       { pgdb, session, email: emailFromQuery, user: existingUser, req, me },
-      token
+      token,
     )
     if (!validated) {
       console.error('unable to validate token')
-      throw new SessionTokenValidationFailed({ email: emailFromQuery, ...token })
+      throw new SessionTokenValidationFailed({
+        email: emailFromQuery,
+        ...token,
+      })
     }
     tokenTypes.push(token.type)
   }
 
   // security net
-  if (tokenTypes.length < 2 && (existingUser && existingUser.enabledSecondFactors && existingUser.enabledSecondFactors.length > 0)) {
+  if (
+    tokenTypes.length < 2 &&
+    existingUser &&
+    existingUser.enabledSecondFactors &&
+    existingUser.enabledSecondFactors.length > 0
+  ) {
     console.error('two factor is enabled but less than 2 challenges provided')
     throw new SessionTokenValidationFailed({ email: emailFromQuery })
   }
@@ -456,12 +556,12 @@ const authorizeSession = async ({ pgdb, tokens, email: emailFromQuery, signInHoo
   // verify and/or create the user (checks consents)
   let user, isVerificationUpdated
   try {
-    ({ user, isVerificationUpdated } = await upsertUserAndConsents({
+    ;({ user, isVerificationUpdated } = await upsertUserAndConsents({
       pgdb: transaction,
       email: session.sess.email,
       consents,
       requiredFields,
-      req
+      req,
     }))
   } catch (error) {
     await transaction.transactionRollback()
@@ -470,35 +570,44 @@ const authorizeSession = async ({ pgdb, tokens, email: emailFromQuery, signInHoo
 
   try {
     // log in the session and expire tokens
-    await transaction.public.sessions.updateOne({
-      id: session.id
-    }, {
-      sess: {
-        ...session.sess,
-        passport: {
-          user: user.id
-        }
-      }
-    })
+    await transaction.public.sessions.updateOne(
+      {
+        id: session.id,
+      },
+      {
+        sess: {
+          ...session.sess,
+          passport: {
+            user: user.id,
+          },
+        },
+      },
+    )
 
     await Promise.all([
       // let all tokens related to this session expire
-      transaction.public.tokens.update({
-        sessionId: session.id
-      }, {
-        updatedAt: new Date(),
-        expiresAt: new Date()
-      }),
-      // mark used tokens as authorized
-      ...tokens.map(token =>
-        transaction.public.tokens.updateOne({
+      transaction.public.tokens.update(
+        {
           sessionId: session.id,
-          type: token.type,
-          payload: token.payload
-        }, {
-          expireAction: 'authorize'
-        })
-      )
+        },
+        {
+          updatedAt: new Date(),
+          expiresAt: new Date(),
+        },
+      ),
+      // mark used tokens as authorized
+      ...tokens.map((token) =>
+        transaction.public.tokens.updateOne(
+          {
+            sessionId: session.id,
+            type: token.type,
+            payload: token.payload,
+          },
+          {
+            expireAction: 'authorize',
+          },
+        ),
+      ),
     ])
     await transaction.transactionCommit()
   } catch (error) {
@@ -510,25 +619,24 @@ const authorizeSession = async ({ pgdb, tokens, email: emailFromQuery, signInHoo
   // call signIn hooks
   try {
     // token context hooks
-    const tokensUsed =
-      await transaction.public.tokens.find(
-        {
-          payload: tokens.map(token => token.payload),
-          expireAction: 'authorize',
-          'context !=': null
-        },
-        { fields: ['context'] }
-      )
+    const tokensUsed = await transaction.public.tokens.find(
+      {
+        payload: tokens.map((token) => token.payload),
+        expireAction: 'authorize',
+        'context !=': null,
+      },
+      { fields: ['context'] },
+    )
 
     await Promise.all(
-      signInHooks.map(hook =>
+      signInHooks.map((hook) =>
         hook({
           userId: user.id,
           isNew: isVerificationUpdated,
-          contexts: tokensUsed.map(context => context.context),
-          pgdb
-        })
-      )
+          contexts: tokensUsed.map((context) => context.context),
+          pgdb,
+        }),
+      ),
     )
   } catch (e) {
     console.warn('sign in hook failed in authorizeSession', e)
@@ -537,7 +645,13 @@ const authorizeSession = async ({ pgdb, tokens, email: emailFromQuery, signInHoo
   return user
 }
 
-const upsertUserAndConsents = async ({ pgdb, email, consents, requiredFields, req }) => {
+const upsertUserAndConsents = async ({
+  pgdb,
+  email,
+  consents,
+  requiredFields,
+  req,
+}) => {
   const existingUser = await pgdb.public.users.findOne({ email })
   let user = existingUser
 
@@ -545,34 +659,37 @@ const upsertUserAndConsents = async ({ pgdb, email, consents, requiredFields, re
   await ensureAllRequiredConsents({
     pgdb,
     userId: user && user.id,
-    consents
+    consents,
   })
 
   const userFields = await ensureRequiredFields({
     user,
     email,
     providedFields: requiredFields,
-    pgdb
+    pgdb,
   })
 
   const updatedData = {
     ...userFields,
-    ...!user || !user.verified ? { verified: true } : undefined
+    ...(!user || !user.verified ? { verified: true } : undefined),
   }
 
   debug('upsertUserAndConsents', { updatedData })
 
   if (user && Object.keys(updatedData).length > 0) {
     debug('upsertUserAndConsents, updateAndGetOne')
-    user = await pgdb.public.users.updateAndGetOne({ id: user.id }, {
-      ...updatedData,
-      updatedAt: new Date()
-    })
+    user = await pgdb.public.users.updateAndGetOne(
+      { id: user.id },
+      {
+        ...updatedData,
+        updatedAt: new Date(),
+      },
+    )
   } else if (!user) {
     debug('upsertUserAndConsents, insertAndGet')
     user = await pgdb.public.users.insertAndGet({
       ...updatedData,
-      email
+      email,
     })
   }
 
@@ -582,34 +699,37 @@ const upsertUserAndConsents = async ({ pgdb, email, consents, requiredFields, re
       userId: user.id,
       consents,
       req,
-      pgdb
+      pgdb,
     })
   }
 
   return {
     user,
-    isVerificationUpdated: (!existingUser || !existingUser.verified)
+    isVerificationUpdated: !existingUser || !existingUser.verified,
   }
 }
 
 const resolveUser = async ({ slug, pgdb, userId }) => {
   const slugOrId = slug || userId
-  const where = isUUID.v4(slugOrId)
-    ? { id: slugOrId }
-    : { username: slugOrId }
+  const where = isUUID.v4(slugOrId) ? { id: slugOrId } : { username: slugOrId }
 
   return pgdb.public.users.findOne(where)
 }
 
-const updateUserTwoFactorAuthentication = async ({ pgdb, userId: id, enabledSecondFactors }) => {
+const updateUserTwoFactorAuthentication = async ({
+  pgdb,
+  userId: id,
+  enabledSecondFactors,
+}) => {
   const transaction = await pgdb.transactionBegin()
   try {
     const user = await transaction.public.users.updateAndGetOne(
       {
-        id
-      }, {
-        enabledSecondFactors
-      }
+        id,
+      },
+      {
+        enabledSecondFactors,
+      },
     )
     await transaction.transactionCommit()
     return user
@@ -621,7 +741,9 @@ const updateUserTwoFactorAuthentication = async ({ pgdb, userId: id, enabledSeco
 
 const updateUserEmail = async ({ pgdb, user, email }) => {
   if (user.enabledSecondFactors && user.enabledSecondFactors.length > 0) {
-    throw new SecondFactorHasToBeDisabledError({ type: user.enabledSecondFactors[0] })
+    throw new SecondFactorHasToBeDisabledError({
+      type: user.enabledSecondFactors[0],
+    })
   }
   if (!validator.isEmail(email)) {
     throw new EmailInvalidError({ email })
@@ -632,19 +754,19 @@ const updateUserEmail = async ({ pgdb, user, email }) => {
 
   const transaction = await pgdb.transactionBegin()
   try {
-    await transaction.public.sessions.delete(
-      {
-        'sess @>': {
-          passport: { user: user.id }
-        }
-      })
+    await transaction.public.sessions.delete({
+      'sess @>': {
+        passport: { user: user.id },
+      },
+    })
     await transaction.public.users.updateOne(
       {
-        id: user.id
-      }, {
+        id: user.id,
+      },
+      {
         email,
-        verified: false
-      }
+        verified: false,
+      },
     )
     await transaction.transactionCommit()
   } catch (e) {
@@ -652,36 +774,44 @@ const updateUserEmail = async ({ pgdb, user, email }) => {
     throw e
   }
 
-  await sendMailTemplate({
-    to: user.email,
-    fromEmail: process.env.DEFAULT_MAIL_FROM_ADDRESS,
-    subject: t('api/email/change/confirmation/subject'),
-    templateName: 'cf_email_change_old_address',
-    globalMergeVars: [
-      {
-        name: 'EMAIL',
-        content: email
-      }
-    ]
-  }, { pgdb })
+  await sendMailTemplate(
+    {
+      to: user.email,
+      fromEmail: process.env.DEFAULT_MAIL_FROM_ADDRESS,
+      subject: t('api/email/change/confirmation/subject'),
+      templateName: 'cf_email_change_old_address',
+      globalMergeVars: [
+        {
+          name: 'EMAIL',
+          content: email,
+        },
+      ],
+    },
+    { pgdb },
+  )
 
-  await sendMailTemplate({
-    to: email,
-    fromEmail: process.env.DEFAULT_MAIL_FROM_ADDRESS,
-    subject: t('api/email/change/confirmation/subject'),
-    templateName: 'cf_email_change_new_address',
-    globalMergeVars: [
-      {
-        name: 'LOGIN_LINK',
-        content: `${FRONTEND_BASE_URL}/konto?${querystring.stringify({ email })}`
-      }
-    ]
-  }, { pgdb })
+  await sendMailTemplate(
+    {
+      to: email,
+      fromEmail: process.env.DEFAULT_MAIL_FROM_ADDRESS,
+      subject: t('api/email/change/confirmation/subject'),
+      templateName: 'cf_email_change_new_address',
+      globalMergeVars: [
+        {
+          name: 'LOGIN_LINK',
+          content: `${FRONTEND_BASE_URL}/konto?${querystring.stringify({
+            email,
+          })}`,
+        },
+      ],
+    },
+    { pgdb },
+  )
 
   try {
     await moveNewsletterSubscriptions({
       user,
-      newEmail: email
+      newEmail: email,
     })
   } catch (e) {
     console.error(e)
@@ -694,7 +824,10 @@ const updateUserEmail = async ({ pgdb, user, email }) => {
 const updateUserPhoneNumber = async ({ pgdb, userId, phoneNumber }) => {
   const user = await pgdb.public.users.findOne({ id: userId })
 
-  if (user.enabledSecondFactors && user.enabledSecondFactors.indexOf(TokenTypes.SMS) !== -1) {
+  if (
+    user.enabledSecondFactors &&
+    user.enabledSecondFactors.indexOf(TokenTypes.SMS) !== -1
+  ) {
     throw new SecondFactorHasToBeDisabledError({ type: TokenTypes.SMS })
   }
 
@@ -707,11 +840,12 @@ const updateUserPhoneNumber = async ({ pgdb, userId, phoneNumber }) => {
 
   return pgdb.public.users.updateAndGetOne(
     {
-      id: userId
-    }, {
+      id: userId,
+    },
+    {
       phoneNumber, // save un-normalized phone number
-      isPhoneNumberVerified: false
-    }
+      isPhoneNumberVerified: false,
+    },
   )
 }
 
@@ -736,5 +870,5 @@ module.exports = {
   TwoFactorAlreadyDisabledError,
   TwoFactorAlreadyEnabledError,
   SecondFactorNotReadyError,
-  AuthorizationRateLimitError
+  AuthorizationRateLimitError,
 }

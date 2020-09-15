@@ -1,16 +1,16 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
   <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="x-ua-compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta charset="UTF-8" />
+    <meta http-equiv="x-ua-compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
     <!--[if gte mso 15]>
-    <xml>
-      <o:officedocumentsettings>
-        <o:allowpng />
-        <o:pixelsperinch>96</o:pixelsperinch>
-      </o:officedocumentsettings>
-    </xml>
+      <xml>
+        <o:officedocumentsettings>
+          <o:allowpng />
+          <o:pixelsperinch>96</o:pixelsperinch>
+        </o:officedocumentsettings>
+      </xml>
     <![endif]-->
     <style type="text/css">
       {{sg_font_faces}}
@@ -25,73 +25,193 @@
       }
     </style>
   </head>
-  <body style="margin: 0; padding: 0; background-color: #fff;">
+  <body style="margin: 0; padding: 0; background-color: #fff">
     <table border="0" cellpadding="0" cellspacing="0" width="100%">
       <tbody>
         <tr>
           <td align="center" valign="top">
-            <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width:640px;color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}">
+            <table
+              align="center"
+              border="0"
+              cellpadding="0"
+              cellspacing="0"
+              width="100%"
+              style="max-width:640px;color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}"
+            >
               <tbody>
                 <tr>
-                  <td style="padding:20px;">
+                  <td style="padding: 20px">
                     {{#if name}}
-                      <p>Hallo {{name}}</p>
+                    <p>Hallo {{name}}</p>
                     {{else}}
-                      <p>
-                        Sehr geehrte Dame<br />
-                        Sehr geehrter Herr
-                      </p>
+                    <p>
+                      Sehr geehrte Dame<br />
+                      Sehr geehrter Herr
+                    </p>
                     {{/if}}
 
-                    <p>Schön, dass Sie hier sind! Dank Ihnen {{#if memberships_count}}und {{memberships_count}} weiteren Menschen {{/if}}können wir recherchieren, nachfragen, einordnen und aufdecken, ohne von Werbeeinnahmen oder Sponsoren abhängig zu sein. Und Ihnen weiterhin Fakten und Zusammenhänge als Grundlage für Ihre eigenen Überlegungen und Entscheidungen liefern. Wir sind sehr froh und dankbar.</p>
+                    <p>
+                      Schön, dass Sie hier sind! Dank Ihnen {{#if
+                      memberships_count}}und {{memberships_count}} weiteren
+                      Menschen {{/if}}können wir recherchieren, nachfragen,
+                      einordnen und aufdecken, ohne von Werbeeinnahmen oder
+                      Sponsoren abhängig zu sein. Und Ihnen weiterhin Fakten und
+                      Zusammenhänge als Grundlage für Ihre eigenen Überlegungen
+                      und Entscheidungen liefern. Wir sind sehr froh und
+                      dankbar.
+                    </p>
 
-                    <p>Sind Sie mit uns zufrieden? Gefällt Ihnen, was Sie in der Republik lesen, sehen und hören? Im <a href="{{link_dialog}}">Dialog</a> können Sie uns Feedback geben oder Vorschläge machen, Kritik loswerden und Fragen stellen. Brauchen Sie technische Unterstützung oder funktioniert etwas nicht, wenden Sie sich direkt an <a href="mailto:kontakt@republik.ch">kontakt@republik.ch</a>.</p>
+                    <p>
+                      Sind Sie mit uns zufrieden? Gefällt Ihnen, was Sie in der
+                      Republik lesen, sehen und hören? Im
+                      <a href="{{link_dialog}}">Dialog</a> können Sie uns
+                      Feedback geben oder Vorschläge machen, Kritik loswerden
+                      und Fragen stellen. Brauchen Sie technische Unterstützung
+                      oder funktioniert etwas nicht, wenden Sie sich direkt an
+                      <a href="mailto:kontakt@republik.ch"
+                        >kontakt@republik.ch</a
+                      >.
+                    </p>
 
                     {{#unless subscriptions_count}}
-                      <p>Möchten Sie mehr lesen, aber Sie wissen nicht, was?</p>
-                      <p>Vielleicht gefallen Ihnen als Einstieg unsere regelmässigen Formate: am Montag unser Datenbriefing «<a href="{{frontend_base_url}}/format/auf-lange-sicht">Auf lange Sicht</a>», mittwochs unsere Gerichtskolumne «<a href="{{frontend_base_url}}/format/am-gericht">Am Gericht</a>», am Donnerstag das Wichtigste aus dem Bundeshaus im «<a href="{{frontend_base_url}}/format/briefing-aus-bern">Briefing aus Bern</a>» und freitags der Nachrichtenüberblick «<a href="{{frontend_base_url}}/format/was-diese-woche-wichtig-war">Was diese Woche wichtig war</a>». <a href="{{link_account_notifications}}">Mit der Benachrichtigungs-Funktion können Sie sich Push-Meldungen einrichten, die Sie informieren, sobald eine neue Folge erscheint</a>.</p>
+                    <p>Möchten Sie mehr lesen, aber Sie wissen nicht, was?</p>
+                    <p>
+                      Vielleicht gefallen Ihnen als Einstieg unsere
+                      regelmässigen Formate: am Montag unser Datenbriefing «<a
+                        href="{{frontend_base_url}}/format/auf-lange-sicht"
+                        >Auf lange Sicht</a
+                      >», mittwochs unsere Gerichtskolumne «<a
+                        href="{{frontend_base_url}}/format/am-gericht"
+                        >Am Gericht</a
+                      >», am Donnerstag das Wichtigste aus dem Bundeshaus im «<a
+                        href="{{frontend_base_url}}/format/briefing-aus-bern"
+                        >Briefing aus Bern</a
+                      >» und freitags der Nachrichtenüberblick «<a
+                        href="{{frontend_base_url}}/format/was-diese-woche-wichtig-war"
+                        >Was diese Woche wichtig war</a
+                      >».
+                      <a href="{{link_account_notifications}}"
+                        >Mit der Benachrichtigungs-Funktion können Sie sich
+                        Push-Meldungen einrichten, die Sie informieren, sobald
+                        eine neue Folge erscheint</a
+                      >.
+                    </p>
                     {{/unless}}
 
-                    <p>Sind Sie viel unterwegs, oder lesen Sie ungern mit dem Laptop auf dem Schoss? Dann installieren Sie die Republik-App für <a href="https://apps.apple.com/ch/app/republik/id1392772910">iOS</a> oder <a href="https://play.google.com/store/apps/details?id=app.republik&hl=de_CH">Android</a>.</p>
+                    <p>
+                      Sind Sie viel unterwegs, oder lesen Sie ungern mit dem
+                      Laptop auf dem Schoss? Dann installieren Sie die
+                      Republik-App für
+                      <a
+                        href="https://apps.apple.com/ch/app/republik/id1392772910"
+                        >iOS</a
+                      >
+                      oder
+                      <a
+                        href="https://play.google.com/store/apps/details?id=app.republik&hl=de_CH"
+                        >Android</a
+                      >.
+                    </p>
 
                     {{#unless grants_count}}
-                      <p>Oder haben Sie neugierige Freundinnen und Bekannte, denen Sie gerne einen Probezugriff auf die Republik ermöglichen würden? <a href="{{link_account_share}}">Sie haben ein Kontingent von fünf 14-Tage-Probeabos, die Sie zu jeder Zeit vergeben können</a>.</p>
+                    <p>
+                      Oder haben Sie neugierige Freundinnen und Bekannte, denen
+                      Sie gerne einen Probezugriff auf die Republik ermöglichen
+                      würden?
+                      <a href="{{link_account_share}}"
+                        >Sie haben ein Kontingent von fünf 14-Tage-Probeabos,
+                        die Sie zu jeder Zeit vergeben können</a
+                      >.
+                    </p>
                     {{/unless}}
 
-                    <p>Ausserdem gibt es für jeden Beitrag einige hilfreiche Funktionen, die wir Ihnen ans Herz legen wollen:</p>
+                    <p>
+                      Ausserdem gibt es für jeden Beitrag einige hilfreiche
+                      Funktionen, die wir Ihnen ans Herz legen wollen:
+                    </p>
 
                     <ul>
-                      <li><a href="{{link_bookmarks}}">Sie können im Beitrag ein Lesezeichen setzen, um ihn später zu lesen.</a></li>
-                      <li>Sie können Ihre Leseposition pro Beitrag speichern, um später weiterzulesen – <a href="{{link_account_progress}}">dies müssen Sie zuerst in Ihrem Konto freigeben</a>.</li>
-                      <li>Und Sie können jeden Beitrag als PDF herunterladen.</li>
+                      <li>
+                        <a href="{{link_bookmarks}}"
+                          >Sie können im Beitrag ein Lesezeichen setzen, um ihn
+                          später zu lesen.</a
+                        >
+                      </li>
+                      <li>
+                        Sie können Ihre Leseposition pro Beitrag speichern, um
+                        später weiterzulesen –
+                        <a href="{{link_account_progress}}"
+                          >dies müssen Sie zuerst in Ihrem Konto freigeben</a
+                        >.
+                      </li>
+                      <li>
+                        Und Sie können jeden Beitrag als PDF herunterladen.
+                      </li>
                     </ul>
 
-                    <p>Wenn Sie noch mehr über die Republik, die Geschichte und die Leute dahinter wissen wollen, finden Sie hier mehr Informationen zu <a href="{{link_about}}">Aufbau und Team</a>, zu <a href="{{link_publisher}}">Verlag und Genossenschaft</a> und zu unseren <a href="{{link_cockpit}}">Zahlen</a>.</p>
+                    <p>
+                      Wenn Sie noch mehr über die Republik, die Geschichte und
+                      die Leute dahinter wissen wollen, finden Sie hier mehr
+                      Informationen zu
+                      <a href="{{link_about}}">Aufbau und Team</a>, zu
+                      <a href="{{link_publisher}}">Verlag und Genossenschaft</a>
+                      und zu unseren <a href="{{link_cockpit}}">Zahlen</a>.
+                    </p>
 
-                    <p>Wir hoffen, dass wir Ihnen einige hilfreiche Hinweise geben konnten, und würden uns sehr freuen, Sie demnächst im Dialog begrüssen zu dürfen. Und da es auch möglich ist, dass Sie einfach nur lesen und sonst gar nichts wollen, lassen wir Sie nun auch wieder in Ruhe. Schön, dass Sie da sind!</p>
+                    <p>
+                      Wir hoffen, dass wir Ihnen einige hilfreiche Hinweise
+                      geben konnten, und würden uns sehr freuen, Sie demnächst
+                      im Dialog begrüssen zu dürfen. Und da es auch möglich ist,
+                      dass Sie einfach nur lesen und sonst gar nichts wollen,
+                      lassen wir Sie nun auch wieder in Ruhe. Schön, dass Sie da
+                      sind!
+                    </p>
 
                     <p>Herzlich</p>
                     <p>Ihre Crew der Republik</p>
                   </td>
                 </tr>
                 <tr>
-                  <td style="padding:20px;">
-                    <p style="font-size:14px;line-height:20px;{{sg_font_style_sans_serif_regular}}">
-                      Die Republik ist ein unabhängiges und werbefreies digitales Magazin für Politik, Wirtschaft, Gesellschaft und Kultur. 
-                      Es wird von seinen Leserinnen und Lesern finanziert und erscheint von Montag bis Samstag mit täglich ein bis drei neuen Beiträgen. In der App, auf der Website und als Newsletter.
+                  <td style="padding: 20px">
+                    <p
+                      style="font-size:14px;line-height:20px;{{sg_font_style_sans_serif_regular}}"
+                    >
+                      Die Republik ist ein unabhängiges und werbefreies
+                      digitales Magazin für Politik, Wirtschaft, Gesellschaft
+                      und Kultur. Es wird von seinen Leserinnen und Lesern
+                      finanziert und erscheint von Montag bis Samstag mit
+                      täglich ein bis drei neuen Beiträgen. In der App, auf der
+                      Website und als Newsletter.
                     </p>
-                    <p style="color:#282828;font-size:14px;line-height:20px;{{sg_font_style_sans_serif_regular}}">
-                      <img height="79" src="{{frontend_base_url}}/static/logo_republik_newsletter.png" style="border:0px;width:180px !important; height:79px !important;margin:0px;" width="180" alt="">
-                      <br>
-                      Republik AG<br>
-                      Sihlhallenstrasse 1, CH-8004 Zürich<br>
-                      <a href="{{frontend_base_url}}">www.republik.ch</a><br>
-                      <a href="mailto:kontakt@republik.ch">kontakt@republik.ch</a>
+                    <p
+                      style="color:#282828;font-size:14px;line-height:20px;{{sg_font_style_sans_serif_regular}}"
+                    >
+                      <img
+                        height="79"
+                        src="{{frontend_base_url}}/static/logo_republik_newsletter.png"
+                        style="
+                          border: 0px;
+                          width: 180px !important;
+                          height: 79px !important;
+                          margin: 0px;
+                        "
+                        width="180"
+                        alt=""
+                      />
+                      <br />
+                      Republik AG<br />
+                      Sihlhallenstrasse 1, CH-8004 Zürich<br />
+                      <a href="{{frontend_base_url}}">www.republik.ch</a><br />
+                      <a href="mailto:kontakt@republik.ch"
+                        >kontakt@republik.ch</a
+                      >
                     </p>
-                    <p style="font-size:14px;line-height:20px;{{sg_font_style_sans_serif_regular}}">
-                        <a href="{{link_manifest}}">Unser Manifest</a><br />
-                        <a href="{{link_imprint}}">Das Impressum</a><br />
-                        <a href="{{link_faq}}">Häufig gestellte Fragen</a>
+                    <p
+                      style="font-size:14px;line-height:20px;{{sg_font_style_sans_serif_regular}}"
+                    >
+                      <a href="{{link_manifest}}">Unser Manifest</a><br />
+                      <a href="{{link_imprint}}">Das Impressum</a><br />
+                      <a href="{{link_faq}}">Häufig gestellte Fragen</a>
                     </p>
                   </td>
                 </tr>

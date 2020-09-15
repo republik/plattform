@@ -1,4 +1,7 @@
-const { Roles, AccessToken: { isFieldExposed } } = require('@orbiting/backend-modules-auth')
+const {
+  Roles,
+  AccessToken: { isFieldExposed },
+} = require('@orbiting/backend-modules-auth')
 
 const debug = require('debug')('crowdfundings:resolver:User')
 const flattenDeep = require('lodash/flattenDeep')
@@ -7,11 +10,9 @@ const moment = require('moment')
 const {
   findEligableMemberships,
   hasDormantMembership,
-  resolveMemberships
+  resolveMemberships,
 } = require('../../lib/CustomPackages')
-const {
-  getCustomPackages
-} = require('../../lib/User')
+const { getCustomPackages } = require('../../lib/User')
 const { suggest: autoPaySuggest } = require('../../lib/AutoPay')
 const createCache = require('../../lib/cache')
 const { getLastEndDate } = require('../../lib/utils')
@@ -21,45 +22,57 @@ const { DISABLE_RESOLVER_USER_CACHE } = process.env
 const QUERY_CACHE_TTL_SECONDS = 60 * 60 * 24 // 1 day
 
 const createMembershipCache = (user, prop, context) =>
-  createCache({
-    prefix: `User:${user.id}`,
-    key: `${prop}`,
-    ttl: QUERY_CACHE_TTL_SECONDS,
-    disabled: DISABLE_RESOLVER_USER_CACHE
-  }, context)
+  createCache(
+    {
+      prefix: `User:${user.id}`,
+      key: `${prop}`,
+      ttl: QUERY_CACHE_TTL_SECONDS,
+      disabled: DISABLE_RESOLVER_USER_CACHE,
+    },
+    context,
+  )
 
 module.exports = {
-  async memberships (user, args, { pgdb, user: me }) {
-    if (Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter', 'accountant'])) {
-      return pgdb.public.memberships.find({
-        userId: user.id
-      }, {
-        orderBy: {
-          active: 'desc',
-          sequenceNumber: 'asc'
-        }
-      })
+  async memberships(user, args, { pgdb, user: me }) {
+    if (
+      Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter', 'accountant'])
+    ) {
+      return pgdb.public.memberships.find(
+        {
+          userId: user.id,
+        },
+        {
+          orderBy: {
+            active: 'desc',
+            sequenceNumber: 'asc',
+          },
+        },
+      )
     }
     return []
   },
-  async activeMembership (user, args, context) {
+  async activeMembership(user, args, context) {
     const { pgdb, user: me } = context
-    if (Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter', 'accountant'])) {
-      return createMembershipCache(user, 'activeMembership', context)
-        .cache(async () => pgdb.public.memberships.findFirst(
+    if (
+      Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter', 'accountant'])
+    ) {
+      return createMembershipCache(
+        user,
+        'activeMembership',
+        context,
+      ).cache(async () =>
+        pgdb.public.memberships.findFirst(
           { userId: user.id, active: true },
-          { orderBy: { createdAt: 'ASC' } }
-        ))
+          { orderBy: { createdAt: 'ASC' } },
+        ),
+      )
     }
     return null
   },
-  async prolongBeforeDate (
+  async prolongBeforeDate(
     user,
-    {
-      ignoreClaimedMemberships = false,
-      ignoreAutoPayFlag = false
-    },
-    context
+    { ignoreClaimedMemberships = false, ignoreAutoPayFlag = false },
+    context,
   ) {
     const { pgdb, user: me } = context
     debug('prolongBeforeDate')
@@ -69,12 +82,12 @@ module.exports = {
     const cache = createMembershipCache(
       user,
       `prolongBeforeDate-${ignoreClaimedMemberships}-${ignoreAutoPayFlag}`,
-      context
+      context,
     )
 
     return cache.cache(async function () {
       let memberships = await pgdb.public.memberships.find({
-        userId: user.id
+        userId: user.id,
       })
 
       // No memberships, set cache and return 0
@@ -86,19 +99,21 @@ module.exports = {
 
       memberships = await resolveMemberships({ memberships, pgdb })
 
-      const activeMembership = memberships.find(m => m.active)
+      const activeMembership = memberships.find((m) => m.active)
       if (
         activeMembership &&
         activeMembership.membershipType.name === 'ABO_GIVE_MONTHS'
       ) {
-        debug('active membership type "ABO_GIVE_MONTHS", return prolongBeforeDate: null')
+        debug(
+          'active membership type "ABO_GIVE_MONTHS", return prolongBeforeDate: null',
+        )
         return null
       }
 
       const eligableMemberships = findEligableMemberships({
         memberships,
         user,
-        ignoreClaimedMemberships
+        ignoreClaimedMemberships,
       })
 
       if (hasDormantMembership({ user, memberships: eligableMemberships })) {
@@ -112,15 +127,14 @@ module.exports = {
       }
 
       const allMembershipPeriods = eligableMemberships
-        .filter(m => m.active && m.renew)
-        .reduce(
-          (acc, cur) => acc.concat(cur.periods),
-          []
-        )
+        .filter((m) => m.active && m.renew)
+        .reduce((acc, cur) => acc.concat(cur.periods), [])
         .filter(Boolean)
 
       if (allMembershipPeriods.length === 0) {
-        debug('found no valid periods to prolong, return prolongBeforeDate: null')
+        debug(
+          'found no valid periods to prolong, return prolongBeforeDate: null',
+        )
         return null
       }
 
@@ -129,13 +143,17 @@ module.exports = {
         const autoPay = await autoPaySuggest(activeMembership.id, pgdb)
 
         if (autoPay && lastEndDate > moment().subtract(1, 'day')) {
-          debug('active membership is auto-payable and not overdue, return prolongBeforeDate: null')
+          debug(
+            'active membership is auto-payable and not overdue, return prolongBeforeDate: null',
+          )
           return null
         }
       }
 
       const hasPendingPledges =
-        !!activeMembership && await pgdb.public.query(`
+        !!activeMembership &&
+        (await pgdb.public.query(
+          `
           SELECT "pledges".* FROM "pledges"
 
           JOIN "pledgeOptions"
@@ -144,7 +162,9 @@ module.exports = {
 
           WHERE "pledges"."status" = 'WAITING_FOR_PAYMENT'
           ;
-        `, { activeMembershipId: activeMembership.id })
+        `,
+          { activeMembershipId: activeMembership.id },
+        ))
 
       // Check if there are pending pledges, and last end date is not in future.
       if (hasPendingPledges.length > 0 && lastEndDate > moment()) {
@@ -155,13 +175,18 @@ module.exports = {
       return lastEndDate
     })
   },
-  async pledges (user, args, { pgdb, user: me }) {
-    if (Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter', 'accountant'])) {
-      return pgdb.public.pledges.find({ userId: user.id }, { orderBy: ['createdAt desc'] })
+  async pledges(user, args, { pgdb, user: me }) {
+    if (
+      Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter', 'accountant'])
+    ) {
+      return pgdb.public.pledges.find(
+        { userId: user.id },
+        { orderBy: ['createdAt desc'] },
+      )
     }
     return []
   },
-  async paymentSources (user, args, { pgdb, user: me }) {
+  async paymentSources(user, args, { pgdb, user: me }) {
     if (
       Roles.userIsMeOrInRoles(user, me, ['admin']) ||
       isFieldExposed(user, 'paymentSources')
@@ -170,9 +195,10 @@ module.exports = {
     }
     return []
   },
-  async checkMembershipSubscriptions (user, args, { pgdb, user: me }) {
+  async checkMembershipSubscriptions(user, args, { pgdb, user: me }) {
     Roles.ensureUserIsMeOrInRoles(user, me, ['supporter'])
-    const memberships = await pgdb.query(`
+    const memberships = await pgdb.query(
+      `
       SELECT
         m.*,
         to_json(mt.*) as "membershipType"
@@ -190,14 +216,17 @@ module.exports = {
       WHERE
         m."userId" = :userId AND
         pkg.name NOT IN ('ABO_GIVE', 'ABO_GIVE_MONTHS')
-    `, {
-      userId: user.id
-    })
+    `,
+      {
+        userId: user.id,
+      },
+    )
 
-    const monthly = memberships.find(m =>
-      m.membershipType.name === 'MONTHLY_ABO' &&
-      m.active === true &&
-      m.renew === true
+    const monthly = memberships.find(
+      (m) =>
+        m.membershipType.name === 'MONTHLY_ABO' &&
+        m.active === true &&
+        m.renew === true,
     )
 
     if (monthly && memberships.length > 1) {
@@ -205,7 +234,7 @@ module.exports = {
     }
     return false
   },
-  async customPackages (user, args, { pgdb, user: me }) {
+  async customPackages(user, args, { pgdb, user: me }) {
     debug('customPackages')
 
     if (!isFieldExposed(user, 'customPackages')) {
@@ -214,7 +243,7 @@ module.exports = {
 
     return getCustomPackages({ user, pgdb })
   },
-  async isBonusEligable (user, args, context) {
+  async isBonusEligable(user, args, context) {
     const { pgdb, user: me } = context
     debug('isBonusEligable')
 
@@ -223,18 +252,17 @@ module.exports = {
     const cache = createMembershipCache(user, 'isBonusEligable', context)
 
     return cache.cache(async function () {
-      const allPeriods = (await getCustomPackages({ user, pgdb }))
-        .map(
-          package_ => package_.options.map(
-            option => option.additionalPeriods
-          )
-        )
+      const allPeriods = (
+        await getCustomPackages({ user, pgdb })
+      ).map((package_) =>
+        package_.options.map((option) => option.additionalPeriods),
+      )
 
-      return !!flattenDeep(allPeriods).find(period => period.kind === 'BONUS')
+      return !!flattenDeep(allPeriods).find((period) => period.kind === 'BONUS')
     })
   },
-  async adminNotes (user, args, { pgdb, user: me }) {
+  async adminNotes(user, args, { pgdb, user: me }) {
     Roles.ensureUserHasRole(me, 'supporter')
     return user.adminNotes || user._raw.adminNotes
-  }
+  },
 }

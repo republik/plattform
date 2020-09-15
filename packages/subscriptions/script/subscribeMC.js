@@ -16,16 +16,14 @@ const { t } = require('@orbiting/backend-modules-translate')
 
 const loaderBuilders = {
   ...require('@orbiting/backend-modules-documents/loaders'),
-  ...require('@orbiting/backend-modules-subscriptions/loaders')
+  ...require('@orbiting/backend-modules-subscriptions/loaders'),
 }
 
 const {
-  Subscriptions: {
-    upsertSubscription
-  }
+  Subscriptions: { upsertSubscription },
 } = require('@orbiting/backend-modules-subscriptions')
 const {
-  lib: { ConnectionContext }
+  lib: { ConnectionContext },
 } = require('@orbiting/backend-modules-base')
 
 const downloadUrl = process.argv[2]
@@ -33,100 +31,108 @@ if (!downloadUrl) {
   throw new Error('missing url to mailchimp export as first param')
 }
 
-Promise.resolve().then(async () => {
-  const loaders = {}
-  const context = {
-    ...await ConnectionContext.create('script'),
-    loaders,
-    t
-  }
-  Object.keys(loaderBuilders).forEach(key => {
-    loaders[key] = loaderBuilders[key](context)
-  })
+Promise.resolve()
+  .then(async () => {
+    const loaders = {}
+    const context = {
+      ...(await ConnectionContext.create('script')),
+      loaders,
+      t,
+    }
+    Object.keys(loaderBuilders).forEach((key) => {
+      loaders[key] = loaderBuilders[key](context)
+    })
 
-  const { pgdb } = context
+    const { pgdb } = context
 
-  const listRaw = await fetch(downloadUrl)
-    .then(res => res && res.status === 200 && res.text())
+    const listRaw = await fetch(downloadUrl).then(
+      (res) => res && res.status === 200 && res.text(),
+    )
 
-  if (!listRaw || !listRaw.length) {
-    throw new Error('downloaded file invalid!', listRaw)
-  }
+    if (!listRaw || !listRaw.length) {
+      throw new Error('downloaded file invalid!', listRaw)
+    }
 
-  const importedList = csvParse(listRaw)
+    const importedList = csvParse(listRaw)
 
-  const emails = importedList
-    .map(line => ({
+    const emails = importedList.map((line) => ({
       email: line['E-Mail-Adresse'],
       newsletters: {
         daily: line['Republik NL'].indexOf('Täglich') > -1,
         weekly: line['Republik NL'].indexOf('Wochenende') > -1,
-        covid19: line['Republik NL'].indexOf('COVID19') > -1
-      }
+        covid19: line['Republik NL'].indexOf('COVID19') > -1,
+      },
     }))
 
-  const users = await pgdb.public.users.find({
-    'roles ?': 'member',
-    email: emails.map(e => e.email)
-  })
-    .then(us => us.map(u => ({
-      ...emails.find(s => s.email.toLowerCase() === u.email.toLowerCase()),
-      id: u.id,
-      email: u.email
-    })))
+    const users = await pgdb.public.users
+      .find({
+        'roles ?': 'member',
+        email: emails.map((e) => e.email),
+      })
+      .then((us) =>
+        us.map((u) => ({
+          ...emails.find(
+            (s) => s.email.toLowerCase() === u.email.toLowerCase(),
+          ),
+          id: u.id,
+          email: u.email,
+        })),
+      )
 
-  const transaction = await pgdb.transactionBegin()
-  try {
-    await Promise.map(
-      users,
-      (user) =>
+    const transaction = await pgdb.transactionBegin()
+    try {
+      await Promise.map(users, (user) =>
         Promise.all([
-          user.newsletters.daily && upsertSubscription(
-            {
-              userId: user.id,
-              type: 'Document',
-              objectId: 'republik/format-newsletter-um-7'
-              // objectId: 'republik-dev/format-newsletter-um-7'
-            },
-            context
-          ),
-          user.newsletters.weekly && upsertSubscription(
-            {
-              userId: user.id,
-              type: 'Document',
-              objectId: 'republik/format-wochenende-newsletter'
-              // objectId: 'republik-dev/format-wochenende-newsletter'
-            },
-            context
-          ),
-          user.newsletters.covid19 && upsertSubscription(
-            {
-              userId: user.id,
-              type: 'Document',
-              objectId: 'republik/format-covid-19-uhr-newsletter'
-            },
-            context
-          )
-        ])
-    )
+          user.newsletters.daily &&
+            upsertSubscription(
+              {
+                userId: user.id,
+                type: 'Document',
+                objectId: 'republik/format-newsletter-um-7',
+                // objectId: 'republik-dev/format-newsletter-um-7'
+              },
+              context,
+            ),
+          user.newsletters.weekly &&
+            upsertSubscription(
+              {
+                userId: user.id,
+                type: 'Document',
+                objectId: 'republik/format-wochenende-newsletter',
+                // objectId: 'republik-dev/format-wochenende-newsletter'
+              },
+              context,
+            ),
+          user.newsletters.covid19 &&
+            upsertSubscription(
+              {
+                userId: user.id,
+                type: 'Document',
+                objectId: 'republik/format-covid-19-uhr-newsletter',
+              },
+              context,
+            ),
+        ]),
+      )
 
-    await transaction.transactionCommit()
-  } catch (e) {
-    await transaction.transactionRollback()
-    console.error('rollback!', e)
-    throw new Error(t('api/unexpected'))
-  }
+      await transaction.transactionCommit()
+    } catch (e) {
+      await transaction.transactionRollback()
+      console.error('rollback!', e)
+      throw new Error(t('api/unexpected'))
+    }
 
-  console.log({
-    emails: emails.length,
-    users: users.length
+    console.log({
+      emails: emails.length,
+      users: users.length,
+    })
+
+    return context
   })
-
-  return context
-})
   .then(async (context) => {
     await ConnectionContext.close(context)
-  }).catch(e => {
+  })
+  .catch((e) => {
     console.error(e)
     process.exit(1)
   })

@@ -2,7 +2,7 @@ const search = require('@orbiting/backend-modules-search/graphql/resolvers/_quer
 const getFieldList = require('@orbiting/graphql-list-fields')
 
 module.exports = {
-  async document (result, args, context, info) {
+  async document(result, args, context, info) {
     if (result && result.document) {
       return result.document
     }
@@ -16,21 +16,23 @@ module.exports = {
       'meta.section',
       'meta.format',
       'meta.dossier',
-      'meta.discussion'
+      'meta.discussion',
     ]
-    const withoutRelatedDocs = !fields.find(field => (
-      relatedDocsNamespaces
-        .find(namespace => field.startsWith(namespace))
-    ))
-    return search(null, {
-      withoutContent,
-      withoutRelatedDocs,
-      withoutAggs: true,
-      filter: {
-        path: result.path,
-        type: 'Document'
-      }
-    }, context)
-      .then(docCon => docCon.nodes[0] && docCon.nodes[0].entity)
-  }
+    const withoutRelatedDocs = !fields.find((field) =>
+      relatedDocsNamespaces.find((namespace) => field.startsWith(namespace)),
+    )
+    return search(
+      null,
+      {
+        withoutContent,
+        withoutRelatedDocs,
+        withoutAggs: true,
+        filter: {
+          path: result.path,
+          type: 'Document',
+        },
+      },
+      context,
+    ).then((docCon) => docCon.nodes[0] && docCon.nodes[0].entity)
+  },
 }

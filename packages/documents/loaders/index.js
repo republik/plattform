@@ -1,3 +1,3 @@
 module.exports = {
-  Document: require('./Document')
+  Document: require('./Document'),
 }

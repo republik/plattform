@@ -6,7 +6,10 @@ const customerSubscription = require('../lib/payments/stripe/webhooks/customerSu
 
 const t = (text) => text
 
-const invoicePaymentSuccess = async ({ pledgeId, total, chargeId, start, end }, pgdb) => {
+const invoicePaymentSuccess = async (
+  { pledgeId, total, chargeId, start, end },
+  pgdb,
+) => {
   const event = {
     id: `INVOICE_PAYMENT_${pledgeId}`,
     data: {
@@ -18,18 +21,18 @@ const invoicePaymentSuccess = async ({ pledgeId, total, chargeId, start, end }, 
             {
               id: `SUBSCRIPTION_${chargeId}`,
               metadata: {
-                pledgeId
+                pledgeId,
               },
               period: {
                 start,
-                end
+                end,
               },
-              type: 'subscription'
-            }
-          ]
-        }
-      }
-    }
+              type: 'subscription',
+            },
+          ],
+        },
+      },
+    },
   }
   await invoicePaymentSucceeded.handle(event, pgdb, t)
 }
@@ -43,14 +46,14 @@ const invoicePaymentFail = async ({ pledgeId }, pgdb) => {
           data: [
             {
               metadata: {
-                pledgeId
+                pledgeId,
               },
-              type: 'subscription'
-            }
-          ]
-        }
-      }
-    }
+              type: 'subscription',
+            },
+          ],
+        },
+      },
+    },
   }
   await invoicePaymentFailed.handle(event, pgdb, t)
 }
@@ -60,9 +63,9 @@ const chargeSuccess = async ({ total, chargeId }, pgdb) => {
     data: {
       object: {
         id: `CHARGE_${chargeId}`,
-        amount: total
-      }
-    }
+        amount: total,
+      },
+    },
   }
   await chargeSucceeded.handle(event, pgdb, t)
 }
@@ -71,9 +74,9 @@ const chargeRefund = async ({ chargeId }, pgdb) => {
   const event = {
     data: {
       object: {
-        id: `CHARGE_${chargeId}`
-      }
-    }
+        id: `CHARGE_${chargeId}`,
+      },
+    },
   }
   await chargeRefunded.handle(event, pgdb, t)
 }
@@ -86,10 +89,10 @@ const cancelSubscription = async ({ pledgeId, status, atPeriodEnd }, pgdb) => {
         status,
         cancel_at_period_end: atPeriodEnd,
         metadata: {
-          pledgeId
-        }
-      }
-    }
+          pledgeId,
+        },
+      },
+    },
   }
   await customerSubscription.handle(event, pgdb, t)
 }
@@ -108,32 +111,32 @@ const Cards = {
     number: '4000000000003063',
     cvc: '101',
     exp_month: '12',
-    exp_year: '2021'
+    exp_year: '2021',
   },
   Visa: {
     number: '4242424242424242',
     cvc: '102',
     exp_month: '12',
-    exp_year: '2022'
+    exp_year: '2022',
   },
   Expired: {
     number: '4000000000000069',
     cvc: '103',
     exp_month: '12',
-    exp_year: '2023'
+    exp_year: '2023',
   },
   Untrusted: {
     number: '4000000000009235',
     cvc: '104',
     exp_month: '12',
-    exp_year: '2024'
+    exp_year: '2024',
   },
   Disputed: {
     number: '4000000000000259',
     cvc: '105',
     exp_month: '12',
-    exp_year: '2025'
-  }
+    exp_year: '2025',
+  },
 }
 
 const createSource = async ({ total, card, ...metadata }) => {
@@ -144,7 +147,7 @@ const createSource = async ({ total, card, ...metadata }) => {
     amount: total,
     usage: 'reusable',
     card,
-    metadata
+    metadata,
   })
   return source
 }
@@ -158,5 +161,5 @@ module.exports = {
   invoicePaymentFail,
   chargeSuccess,
   chargeRefund,
-  cancelSubscription
+  cancelSubscription,
 }

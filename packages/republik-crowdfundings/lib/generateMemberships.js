@@ -16,7 +16,10 @@ module.exports = async (pledgeId, pgdb, t, redis) => {
 
   // check if pledge really has no memberships yet
   if (await pgdb.public.memberships.count({ pledgeId: pledge.id })) {
-    console.error('tried to generate memberships for a pledge which already has memberships', { pledge })
+    console.error(
+      'tried to generate memberships for a pledge which already has memberships',
+      { pledge },
+    )
     throw new Error(t('api/unexpected'))
   }
 
@@ -26,14 +29,15 @@ module.exports = async (pledgeId, pgdb, t, redis) => {
   let hasRewards = false
   const pledgeOptions = await getPledgeOptionsTree(
     await pgdb.public.pledgeOptions.find({ pledgeId: pledge.id }),
-    pgdb
+    pgdb,
   )
   for (const plo of pledgeOptions) {
     if (plo.packageOption.reward) {
       hasRewards = true
     }
   }
-  if (!hasRewards) { // it's a donation-only pledge
+  if (!hasRewards) {
+    // it's a donation-only pledge
     return
   }
 
@@ -81,47 +85,44 @@ module.exports = async (pledgeId, pgdb, t, redis) => {
       if (plo.membershipId) {
         debug('membershipId "%s"', plo.membershipId)
 
-        const resolvedPackage = (await resolvePackages({
-          packages: [pkg],
-          pledger: user,
-          pgdb
-        })).shift()
+        const resolvedPackage = (
+          await resolvePackages({
+            packages: [pkg],
+            pledger: user,
+            pgdb,
+          })
+        ).shift()
 
-        const membership = resolvedPackage.user.memberships
-          .find(m => m.id === plo.membershipId)
+        const membership = resolvedPackage.user.memberships.find(
+          (m) => m.id === plo.membershipId,
+        )
 
         // Refrain from generate periods if membership already has periods which
         // stem from passed pledge.
-        if (membership.periods.find(p => p.pledgeId === pledge.id)) {
+        if (membership.periods.find((p) => p.pledgeId === pledge.id)) {
           debug('periods already generated', {
             membershipId: membership.id,
-            pledgeId: pledge.id
+            pledgeId: pledge.id,
           })
           return
         }
 
-        const { additionalPeriods } =
-          await evaluate({
-            package_: resolvedPackage,
-            packageOption: { ...plo.packageOption, membershipType },
-            membership,
-            lenient: true
-          })
+        const { additionalPeriods } = await evaluate({
+          package_: resolvedPackage,
+          packageOption: { ...plo.packageOption, membershipType },
+          membership,
+          lenient: true,
+        })
 
         if (!additionalPeriods || additionalPeriods.length === 0) {
-          console.error(
-            'evaluation returned no additional periods',
-            { pledge }
-          )
+          console.error('evaluation returned no additional periods', { pledge })
           throw new Error(t('api/unexpected'))
         }
 
         await pgdb.public.membershipPeriods.insert(
           additionalPeriods
-            .map(period => omit(period, ['id', 'createdAt', 'updatedAt']))
-            .map(period =>
-              Object.assign(period, { pledgeId: plo.pledgeId })
-            )
+            .map((period) => omit(period, ['id', 'createdAt', 'updatedAt']))
+            .map((period) => Object.assign(period, { pledgeId: plo.pledgeId })),
         )
 
         await pgdb.public.memberships.update(
@@ -130,15 +131,19 @@ module.exports = async (pledgeId, pgdb, t, redis) => {
             autoPay: plo.autoPay || membership.autoPay,
             active: true,
             renew: true,
-            updatedAt: now
-          }
+            updatedAt: now,
+          },
         )
 
         debug('additionalPeriods %o', additionalPeriods)
 
         if (membership.userId !== pledge.userId) {
           await mail.sendMembershipProlongConfirmation({
-            pledger: user, membership, additionalPeriods, t, pgdb
+            pledger: user,
+            membership,
+            additionalPeriods,
+            t,
+            pgdb,
           })
         }
       } else {
@@ -156,7 +161,7 @@ module.exports = async (pledgeId, pgdb, t, redis) => {
             initialInterval: membershipType.interval,
             initialPeriods: plo.periods,
             createdAt: now,
-            updatedAt: now
+            updatedAt: now,
           }
 
           if (
@@ -169,19 +174,18 @@ module.exports = async (pledgeId, pgdb, t, redis) => {
             membershipPeriod = {
               pledgeOptionId: plo.id,
               beginDate: now,
-              endDate: now.clone().add(
-                membership.initialPeriods,
-                membership.initialInterval
-              ),
-              membership
+              endDate: now
+                .clone()
+                .add(membership.initialPeriods, membership.initialInterval),
+              membership,
             }
           } else {
             // Cancel active memberships because bought package (option) contains
             // a better abo.
             if (MONTHLY_ABO_UPGRADE_PKGS.includes(pkg.name)) {
-              cancelableMemberships =
-                activeMemberships
-                  .filter(m => (m.name === 'MONTHLY_ABO' && m.renew === true))
+              cancelableMemberships = activeMemberships.filter(
+                (m) => m.name === 'MONTHLY_ABO' && m.renew === true,
+              )
             }
 
             debug({ activeMemberships, cancelableMemberships })
@@ -201,27 +205,19 @@ module.exports = async (pledgeId, pgdb, t, redis) => {
   }
 
   if (cancelableMemberships.length > 0) {
-    debug(
-      'cancel memberships, is an upgrade',
-      { ids: cancelableMemberships.map(m => m.id) }
-    )
+    debug('cancel memberships, is an upgrade', {
+      ids: cancelableMemberships.map((m) => m.id),
+    })
 
     const details = {
       type: 'SYSTEM',
       reason: 'Auto Cancellation (generateMemberships)',
       suppressConfirmation: true,
-      suppressWinback: true
+      suppressWinback: true,
     }
 
-    await Promise.map(
-      cancelableMemberships,
-      async membership => cancelMembership(
-        membership,
-        details,
-        {},
-        t,
-        pgdb
-      )
+    await Promise.map(cancelableMemberships, async (membership) =>
+      cancelMembership(membership, details, {}, t, pgdb),
     )
   }
 
@@ -230,7 +226,7 @@ module.exports = async (pledgeId, pgdb, t, redis) => {
       ...membershipPeriod.membership,
       active: true,
       renew: true,
-      voucherable: false
+      voucherable: false,
     })
     await pgdb.public.membershipPeriods.insert({
       membershipId: membership.id,
@@ -238,7 +234,7 @@ module.exports = async (pledgeId, pgdb, t, redis) => {
       beginDate: membershipPeriod.beginDate,
       endDate: membershipPeriod.endDate,
       createdAt: now,
-      updatedAt: now
+      updatedAt: now,
     })
 
     subscribeToEditorialNewsletters = true
@@ -249,7 +245,7 @@ module.exports = async (pledgeId, pgdb, t, redis) => {
       pgdb,
       userId: user.id,
       isNew: !user.verified,
-      subscribeToEditorialNewsletters
+      subscribeToEditorialNewsletters,
     })
   } catch (e) {
     console.error('enforceSubscriptions failed in generateMemberships', e)

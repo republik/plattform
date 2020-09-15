@@ -3,14 +3,17 @@ const moment = require('moment')
 const Promise = require('bluebird')
 const { sendMailTemplate } = require('@orbiting/backend-modules-mail')
 
-const {
-  PARKING_USER_ID
-} = process.env
+const { PARKING_USER_ID } = process.env
 
 const DAYS_AFTER_CANCELLATION = 3
 const MAX_DAYS_AFTER_CANCELLATION = 30
 
-const CANCELLATION_CATEGORIES = ['NO_TIME', 'TOO_EXPENSIVE', 'NO_MONEY', 'PAPER']
+const CANCELLATION_CATEGORIES = [
+  'NO_TIME',
+  'TOO_EXPENSIVE',
+  'NO_MONEY',
+  'PAPER',
+]
 const MEMBERSHIP_TYPES = ['ABO', 'BENEFACTOR_ABO']
 
 const TYPE = 'membership_winback'
@@ -27,10 +30,7 @@ const getCancelledAtMinMax = (now = moment()) => {
 
 const winbackCanBeSentForCancellationDate = (createdAt) => {
   const { minCancelledAt } = getCancelledAtMinMax()
-  return moment(createdAt)
-    .isAfter(
-      moment(minCancelledAt).add(1, 'days')
-    )
+  return moment(createdAt).isAfter(moment(minCancelledAt).add(1, 'days'))
 }
 
 const getCancellations = async ({ now }, { pgdb }) => {
@@ -38,10 +38,11 @@ const getCancellations = async ({ now }, { pgdb }) => {
 
   debug('get users for: %o', {
     maxCancelledAt: maxCancelledAt.toISOString(),
-    minCancelledAt: minCancelledAt.toISOString()
+    minCancelledAt: minCancelledAt.toISOString(),
   })
 
-  const cancellations = await pgdb.query(`
+  const cancellations = await pgdb.query(
+    `
     SELECT
       u.id AS "userId",
       u.email AS "email",
@@ -63,15 +64,19 @@ const getCancellations = async ({ now }, { pgdb }) => {
       mc."suppressWinback" = false AND
       mc."revokedAt" IS NULL AND
       m."membershipTypeId" IN (
-        SELECT id FROM "membershipTypes" WHERE name = ANY('{${MEMBERSHIP_TYPES.join(',')}}')
+        SELECT id FROM "membershipTypes" WHERE name = ANY('{${MEMBERSHIP_TYPES.join(
+          ',',
+        )}}')
       ) AND
       mc."createdAt" > :minCancelledAt AND
       mc."createdAt" < :maxCancelledAt
-  `, {
-    PARKING_USER_ID,
-    minCancelledAt,
-    maxCancelledAt
-  })
+  `,
+    {
+      PARKING_USER_ID,
+      minCancelledAt,
+      maxCancelledAt,
+    },
+  )
 
   debug('found %d cancellations', cancellations.length)
   return cancellations
@@ -87,36 +92,35 @@ const inform = async (args, context) => {
       membershipId,
       cancellationCategory,
       cancelledAt,
-      cancellationId
+      cancellationId,
     }) => {
-      const templatePayload = await context.mail.prepareMembershipWinback({
-        userId,
-        cancellationCategory,
-        cancelledAt
-      }, context)
-      return sendMailTemplate(
-        templatePayload,
-        context,
+      const templatePayload = await context.mail.prepareMembershipWinback(
         {
-          onceFor: {
-            type: TYPE,
-            userId
-          },
-          info: {
-            // a user is only tried to winback once
-            // thus membershipId not in onceFor
-            membershipId,
-            membershipCancellationId: cancellationId
-          }
-        }
+          userId,
+          cancellationCategory,
+          cancelledAt,
+        },
+        context,
       )
+      return sendMailTemplate(templatePayload, context, {
+        onceFor: {
+          type: TYPE,
+          userId,
+        },
+        info: {
+          // a user is only tried to winback once
+          // thus membershipId not in onceFor
+          membershipId,
+          membershipCancellationId: cancellationId,
+        },
+      })
     },
-    { concurrency: 2 }
+    { concurrency: 2 },
   )
 }
 
 module.exports = {
   TYPE,
   winbackCanBeSentForCancellationDate,
-  inform
+  inform,
 }

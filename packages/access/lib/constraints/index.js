@@ -13,5 +13,5 @@ module.exports = {
   requireExistingGrants: require('./requireExistingGrants'),
   requireGiftableMembership: require('./requireGiftableMembership'),
   requirePackage: require('./requirePackage'),
-  requireRole: require('./requireRole')
+  requireRole: require('./requireRole'),
 }

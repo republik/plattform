@@ -3,12 +3,13 @@ const ensureSignedIn = require('../../../lib/ensureSignedIn')
 const { setPreferredFirstFactor } = require('../../../lib/Users')
 const transformUser = require('../../../lib/transformUser')
 
-const {
-  resolveUser,
-  UserNotFoundError
-} = require('../../../lib/Users')
+const { resolveUser, UserNotFoundError } = require('../../../lib/Users')
 
-module.exports = async (_, { userId: foreignUserId, tokenType }, { pgdb, req, user: me }) => {
+module.exports = async (
+  _,
+  { userId: foreignUserId, tokenType },
+  { pgdb, req, user: me },
+) => {
   ensureSignedIn(req)
 
   const user = await resolveUser({ userId: foreignUserId || me.id, pgdb })
@@ -17,6 +18,5 @@ module.exports = async (_, { userId: foreignUserId, tokenType }, { pgdb, req, us
     throw new UserNotFoundError({ foreignUserId })
   }
 
-  return setPreferredFirstFactor(user, tokenType, pgdb)
-    .then(transformUser)
+  return setPreferredFirstFactor(user, tokenType, pgdb).then(transformUser)
 }

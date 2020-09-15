@@ -1,12 +1,16 @@
 const moment = require('moment')
-const { Roles: { ensureUserIsInRoles } } = require('@orbiting/backend-modules-auth')
+const {
+  Roles: { ensureUserIsInRoles },
+} = require('@orbiting/backend-modules-auth')
 
 module.exports = async (_, args, { pgdb, user: me }) => {
   ensureUserIsInRoles(me, ['editor', 'admin', 'supporter'])
   // this generates a sorted day-series from
   // min(beginDate) to max(beginDate)
   const dayFormat = 'YYYY-MM-DD'
-  const daySeries = await pgdb.query(`
+  const daySeries = await pgdb
+    .query(
+      `
     WITH monthly_periods_boundaries AS (
       SELECT
         min("beginDate") as min,
@@ -30,9 +34,12 @@ module.exports = async (_, args, { pgdb, user: me }) => {
         (SELECT max FROM monthly_periods_boundaries),
         '1 day'::interval
       ) dd;
-  `)
-    .then(result => result.map(r => moment(r.day).format(dayFormat)))
-  const memberships = await pgdb.query(`
+  `,
+    )
+    .then((result) => result.map((r) => moment(r.day).format(dayFormat)))
+  const memberships = await pgdb
+    .query(
+      `
     SELECT
       m.*,
       json_agg(mp.* ORDER BY mp."beginDate") as "periods"
@@ -48,23 +55,24 @@ module.exports = async (_, args, { pgdb, user: me }) => {
       mt.name = 'MONTHLY_ABO'
     GROUP BY
       m.id
-  `)
-    .then(
-      memberships => memberships.map(m => ({
+  `,
+    )
+    .then((memberships) =>
+      memberships.map((m) => ({
         ...m,
-        periods: m.periods.map(mp => ({
+        periods: m.periods.map((mp) => ({
           ...mp,
           beginDate: moment(mp.beginDate).format(dayFormat),
-          endDate: moment(mp.endDate).format(dayFormat)
-        }))
-      }))
+          endDate: moment(mp.endDate).format(dayFormat),
+        })),
+      })),
     )
   const days = {}
   const defaultDay = {
     newCount: 0,
     renewableCount: 0,
     renewedCount: 0,
-    renewedRatio: 0
+    renewedRatio: 0,
   }
   for (let membership of memberships) {
     for (let mpIndex = 0; mpIndex < membership.periods.length; mpIndex++) {
@@ -78,7 +86,10 @@ module.exports = async (_, args, { pgdb, user: me }) => {
       days[mp.endDate].renewableCount += 1
       if (
         mpIndex > 0 &&
-        moment(membership.periods[mpIndex - 1].endDate).isSame(mp.beginDate, 'day')
+        moment(membership.periods[mpIndex - 1].endDate).isSame(
+          mp.beginDate,
+          'day',
+        )
       ) {
         days[mp.beginDate].renewedCount += 1
       } else {
@@ -86,20 +97,21 @@ module.exports = async (_, args, { pgdb, user: me }) => {
       }
     }
   }
-  return daySeries.map(dayDate => {
+  return daySeries.map((dayDate) => {
     const day = days[dayDate]
     if (day) {
       return {
         ...day,
         day: dayDate,
-        renewedRatio: day.renewableCount > 0
-          ? 1 / day.renewableCount * day.renewedCount
-          : 0
+        renewedRatio:
+          day.renewableCount > 0
+            ? (1 / day.renewableCount) * day.renewedCount
+            : 0,
       }
     }
     return {
       ...defaultDay,
-      day: dayDate
+      day: dayDate,
     }
   })
 }

@@ -3,21 +3,35 @@ const cluster = require('cluster')
 
 const {
   server: Server,
-  lib: { ConnectionContext }
+  lib: { ConnectionContext },
 } = require('@orbiting/backend-modules-base')
-const { NotifyListener: SearchNotifyListener } = require('@orbiting/backend-modules-search')
+const {
+  NotifyListener: SearchNotifyListener,
+} = require('@orbiting/backend-modules-search')
 const { t } = require('@orbiting/backend-modules-translate')
 const SlackGreeter = require('@orbiting/backend-modules-slack/lib/SlackGreeter')
 const { graphql: auth } = require('@orbiting/backend-modules-auth')
 const { graphql: documents } = require('@orbiting/backend-modules-documents')
-const { graphql: redirections } = require('@orbiting/backend-modules-redirections')
+const {
+  graphql: redirections,
+} = require('@orbiting/backend-modules-redirections')
 const { graphql: search } = require('@orbiting/backend-modules-search')
-const { graphql: notifications } = require('@orbiting/backend-modules-push-notifications')
+const {
+  graphql: notifications,
+} = require('@orbiting/backend-modules-push-notifications')
 const { graphql: voting } = require('@orbiting/backend-modules-voting')
-const { graphql: discussions } = require('@orbiting/backend-modules-discussions')
-const { graphql: collections } = require('@orbiting/backend-modules-collections')
-const { graphql: crowdsourcing } = require('@orbiting/backend-modules-crowdsourcing')
-const { graphql: subscriptions } = require('@orbiting/backend-modules-subscriptions')
+const {
+  graphql: discussions,
+} = require('@orbiting/backend-modules-discussions')
+const {
+  graphql: collections,
+} = require('@orbiting/backend-modules-collections')
+const {
+  graphql: crowdsourcing,
+} = require('@orbiting/backend-modules-crowdsourcing')
+const {
+  graphql: subscriptions,
+} = require('@orbiting/backend-modules-subscriptions')
 const { graphql: cards } = require('@orbiting/backend-modules-cards')
 const { graphql: maillog } = require('@orbiting/backend-modules-maillog')
 const { graphql: embeds } = require('@orbiting/backend-modules-embeds')
@@ -34,10 +48,13 @@ const loaderBuilders = {
   ...require('@orbiting/backend-modules-cards/loaders'),
   ...require('@orbiting/backend-modules-embeds/loaders'),
   ...require('@orbiting/backend-modules-republik-crowdfundings/loaders'),
-  ...require('@orbiting/backend-modules-republik/loaders')
+  ...require('@orbiting/backend-modules-republik/loaders'),
 }
 
-const { AccessScheduler, graphql: access } = require('@orbiting/backend-modules-access')
+const {
+  AccessScheduler,
+  graphql: access,
+} = require('@orbiting/backend-modules-access')
 const PublicationScheduler = require('@orbiting/backend-modules-publikator/lib/PublicationScheduler')
 const MembershipScheduler = require('@orbiting/backend-modules-republik-crowdfundings/lib/scheduler')
 
@@ -53,7 +70,7 @@ const {
   MEMBERSHIP_SCHEDULER,
   PUBLICATION_SCHEDULER,
   SERVER = 'graphql',
-  DYNO
+  DYNO,
 } = process.env
 
 const DEV = NODE_ENV && NODE_ENV !== 'production'
@@ -70,43 +87,44 @@ const start = async () => {
 
   return {
     ...server,
-    close
+    close,
   }
 }
 
 const run = async (workerId, config) => {
   const { graphql: republik } = require('@orbiting/backend-modules-republik')
-  const { graphql: republikCrowdfundings } = require('@orbiting/backend-modules-republik-crowdfundings')
-  const { graphql: publikator } = require('@orbiting/backend-modules-publikator')
+  const {
+    graphql: republikCrowdfundings,
+  } = require('@orbiting/backend-modules-republik-crowdfundings')
+  const {
+    graphql: publikator,
+  } = require('@orbiting/backend-modules-publikator')
 
-  const graphqlSchema = merge(
-    republik,
-    [
-      republikCrowdfundings,
-      publikator,
-      documents,
-      search,
-      redirections,
-      discussions,
-      notifications,
-      access,
-      voting,
-      collections,
-      crowdsourcing,
-      subscriptions,
-      cards,
-      maillog,
-      embeds,
-      gsheets
-    ]
-  )
+  const graphqlSchema = merge(republik, [
+    republikCrowdfundings,
+    publikator,
+    documents,
+    search,
+    redirections,
+    discussions,
+    notifications,
+    access,
+    voting,
+    collections,
+    crowdsourcing,
+    subscriptions,
+    cards,
+    maillog,
+    embeds,
+    gsheets,
+  ])
 
   // middlewares
   const middlewares = [
     require('@orbiting/backend-modules-republik-crowdfundings/express/paymentWebhooks'),
     require('@orbiting/backend-modules-gsheets/express/gsheets'),
     require('@orbiting/backend-modules-maillog/express/Mandrill/webhook'),
-    require('@orbiting/backend-modules-publikator/express/uncommittedChanges')
+    require('@orbiting/backend-modules-publikator/express/uncommittedChanges'),
   ]
 
   if (MAIL_EXPRESS_RENDER) {
@@ -114,7 +132,9 @@ const run = async (workerId, config) => {
   }
 
   if (MAIL_EXPRESS_MAILCHIMP) {
-    middlewares.push(require('@orbiting/backend-modules-mail/express/mailchimp'))
+    middlewares.push(
+      require('@orbiting/backend-modules-mail/express/mailchimp'),
+    )
   }
 
   if (LOCAL_ASSETS_SERVER) {
@@ -126,8 +146,7 @@ const run = async (workerId, config) => {
 
   // signin hooks
   const signInHooks = [
-    ({ userId, pgdb }) =>
-      mail.sendPledgeConfirmations({ userId, pgdb, t })
+    ({ userId, pgdb }) => mail.sendPledgeConfirmations({ userId, pgdb, t }),
   ]
 
   const applicationName = [
@@ -135,7 +154,7 @@ const run = async (workerId, config) => {
     SERVER,
     DYNO,
     'worker',
-    workerId && `workerId:${workerId}`
+    workerId && `workerId:${workerId}`,
   ]
     .filter(Boolean)
     .join(' ')
@@ -150,9 +169,9 @@ const run = async (workerId, config) => {
       t,
       signInHooks,
       mail,
-      loaders
+      loaders,
     }
-    Object.keys(loaderBuilders).forEach(key => {
+    Object.keys(loaderBuilders).forEach((key) => {
       loaders[key] = loaderBuilders[key](context)
     })
     return context
@@ -165,41 +184,35 @@ const run = async (workerId, config) => {
     connectionContext,
     createGraphQLContext,
     workerId,
-    config
+    config,
   )
 
   const close = () => {
-    return server.close()
-      .then(() => ConnectionContext.close(connectionContext))
+    return server.close().then(() => ConnectionContext.close(connectionContext))
   }
 
   process.once('SIGTERM', close)
 
   return {
     ...server,
-    close
+    close,
   }
 }
 
 const runOnce = async () => {
-  const applicationName = [
-    'backends',
-    SERVER,
-    DYNO,
-    'master'
-  ]
+  const applicationName = ['backends', SERVER, DYNO, 'master']
     .filter(Boolean)
     .join(' ')
 
   const createGraphQLContext = async () => {
     const loaders = {}
     const context = {
-      ...await ConnectionContext.create(applicationName),
+      ...(await ConnectionContext.create(applicationName)),
       t,
       mail,
-      loaders
+      loaders,
     }
-    Object.keys(loaderBuilders).forEach(key => {
+    Object.keys(loaderBuilders).forEach((key) => {
       loaders[key] = loaderBuilders[key](context)
     })
     return context
@@ -216,50 +229,62 @@ const runOnce = async () => {
 
   let accessScheduler
   if (ACCESS_SCHEDULER === 'false' || (DEV && ACCESS_SCHEDULER !== 'true')) {
-    console.log('ACCESS_SCHEDULER prevented scheduler from begin started',
-      { ACCESS_SCHEDULER, DEV }
-    )
+    console.log('ACCESS_SCHEDULER prevented scheduler from begin started', {
+      ACCESS_SCHEDULER,
+      DEV,
+    })
   } else {
     accessScheduler = await AccessScheduler.init(context)
   }
 
   let membershipScheduler
-  if (MEMBERSHIP_SCHEDULER === 'false' || (DEV && MEMBERSHIP_SCHEDULER !== 'true')) {
-    console.log('MEMBERSHIP_SCHEDULER prevented scheduler from begin started',
-      { MEMBERSHIP_SCHEDULER, DEV }
-    )
+  if (
+    MEMBERSHIP_SCHEDULER === 'false' ||
+    (DEV && MEMBERSHIP_SCHEDULER !== 'true')
+  ) {
+    console.log('MEMBERSHIP_SCHEDULER prevented scheduler from begin started', {
+      MEMBERSHIP_SCHEDULER,
+      DEV,
+    })
   } else {
     membershipScheduler = await MembershipScheduler.init(context)
   }
 
   let publicationScheduler
-  if (PUBLICATION_SCHEDULER === 'false' || (DEV && PUBLICATION_SCHEDULER !== 'true')) {
-    console.log('PUBLICATION_SCHEDULER prevented scheduler from begin started',
-      { PUBLICATION_SCHEDULER, DEV }
+  if (
+    PUBLICATION_SCHEDULER === 'false' ||
+    (DEV && PUBLICATION_SCHEDULER !== 'true')
+  ) {
+    console.log(
+      'PUBLICATION_SCHEDULER prevented scheduler from begin started',
+      { PUBLICATION_SCHEDULER, DEV },
     )
   } else {
-    publicationScheduler = await PublicationScheduler.init(context)
-      .catch(error => {
+    publicationScheduler = await PublicationScheduler.init(context).catch(
+      (error) => {
         console.log(error)
         throw new Error(error)
-      })
+      },
+    )
   }
 
   const close = async () => {
-    await Promise.all([
-      slackGreeter && slackGreeter.close(),
-      searchNotifyListener && searchNotifyListener.close(),
-      accessScheduler && accessScheduler.close(),
-      membershipScheduler && membershipScheduler.close(),
-      publicationScheduler && await publicationScheduler.close()
-    ].filter(Boolean))
+    await Promise.all(
+      [
+        slackGreeter && slackGreeter.close(),
+        searchNotifyListener && searchNotifyListener.close(),
+        accessScheduler && accessScheduler.close(),
+        membershipScheduler && membershipScheduler.close(),
+        publicationScheduler && (await publicationScheduler.close()),
+      ].filter(Boolean),
+    )
     await ConnectionContext.close(context)
   }
 
   process.once('SIGTERM', close)
 
   return {
-    close
+    close,
   }
 }
 
@@ -267,5 +292,5 @@ module.exports = {
   start,
   run,
   runOnce,
-  loaderBuilders
+  loaderBuilders,
 }

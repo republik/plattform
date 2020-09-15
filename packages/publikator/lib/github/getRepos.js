@@ -1,8 +1,8 @@
-const { lib: { clients: createGithubClients } } = require('@orbiting/backend-modules-github')
-
 const {
-  GITHUB_LOGIN
-} = process.env
+  lib: { clients: createGithubClients },
+} = require('@orbiting/backend-modules-github')
+
+const { GITHUB_LOGIN } = process.env
 
 const fragments = `
 fragment LatestPublicationProbs on Ref {
@@ -105,7 +105,7 @@ fragment Repo on Repository {
 //   }
 // })
 
-const listQuery = args => ({
+const listQuery = (args) => ({
   query: `
     ${fragments}
     query repositories(
@@ -141,28 +141,30 @@ const listQuery = args => ({
   `,
   variables: {
     ...args,
-    login: GITHUB_LOGIN
-  }
+    login: GITHUB_LOGIN,
+  },
 })
 
-const nameQuery = repoNames => ({
+const nameQuery = (repoNames) => ({
   query: `
     ${fragments}
     query repositories(
       $login: String!
     ) {
       repositoryOwner(login: $login) {
-        ${repoNames.map((repoName, i) => `
+        ${repoNames.map(
+          (repoName, i) => `
           r${i}: repository(name: "${repoName}") {
             ...Repo
           }
-        `)}
+        `,
+        )}
       }
     }
   `,
   variables: {
-    login: GITHUB_LOGIN
-  }
+    login: GITHUB_LOGIN,
+  },
 })
 
 module.exports = {
@@ -180,21 +182,23 @@ module.exports = {
 
       const search = await githubRest.search.code({
         q: `org:${GITHUB_LOGIN} ${args.search}`,
-        per_page: args.first
+        per_page: args.first,
       })
 
       const searchResultRepos = search.data.items
-        .map(item => item.repository)
-        .filter((a, index, all) => index === all.findIndex(b => a.id === b.id))
+        .map((item) => item.repository)
+        .filter(
+          (a, index, all) => index === all.findIndex((b) => a.id === b.id),
+        )
 
       let repositories = []
 
       if (searchResultRepos.length) {
         const {
-          data: {
-            repositoryOwner
-          }
-        } = await githubApolloFetch(nameQuery(searchResultRepos.map(repo => repo.name)))
+          data: { repositoryOwner },
+        } = await githubApolloFetch(
+          nameQuery(searchResultRepos.map((repo) => repo.name)),
+        )
 
         repositories = searchResultRepos.map((_, i) => repositoryOwner[`r${i}`])
       }
@@ -213,10 +217,10 @@ module.exports = {
       return {
         pageInfo: {
           hasPreviousPage: false,
-          hasNextPage: false
+          hasNextPage: false,
         },
         totalCount: repositories.length,
-        repositories
+        repositories,
       }
     }
 
@@ -227,17 +231,17 @@ module.exports = {
             pageInfo,
             totalCount,
             totalDiskUsage,
-            nodes: repositories
-          }
-        }
-      }
+            nodes: repositories,
+          },
+        },
+      },
     } = await githubApolloFetch(listQuery(args))
 
     return {
       pageInfo,
       totalCount,
       totalDiskUsage,
-      repositories
+      repositories,
     }
-  }
+  },
 }

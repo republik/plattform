@@ -23,17 +23,20 @@ const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
 
 const candidacies = JSON.parse(rw.readFileSync('/dev/stdin', 'utf8'))
 
-PgDb.connect().then(async pgdb => {
-  for (let candidate of candidacies) {
-    console.log(`updating ${candidate.user.name}...`)
-    await pgdb.public.electionCandidacies.updateOne(
-      { id: candidate.id },
-      { recommendation: candidate.recommendation }
-    )
-  }
-}).then(() => {
-  process.exit()
-}).catch(e => {
-  console.log(e)
-  process.exit(1)
-})
+PgDb.connect()
+  .then(async (pgdb) => {
+    for (let candidate of candidacies) {
+      console.log(`updating ${candidate.user.name}...`)
+      await pgdb.public.electionCandidacies.updateOne(
+        { id: candidate.id },
+        { recommendation: candidate.recommendation },
+      )
+    }
+  })
+  .then(() => {
+    process.exit()
+  })
+  .catch((e) => {
+    console.log(e)
+    process.exit(1)
+  })

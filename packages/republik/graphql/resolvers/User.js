@@ -1,4 +1,7 @@
-const { Roles, AccessToken: { isFieldExposed } } = require('@orbiting/backend-modules-auth')
+const {
+  Roles,
+  AccessToken: { isFieldExposed },
+} = require('@orbiting/backend-modules-auth')
 const { age } = require('../../lib/age')
 const { getKeyId } = require('../../lib/pgp')
 const querystring = require('querystring')
@@ -6,11 +9,13 @@ const { remark } = require('@orbiting/backend-modules-utils')
 
 const { isEligible } = require('../../lib/profile')
 
-const canAccessBasics = (user, me) => (
-  Roles.userIsMeOrProfileVisible(user, me)
-)
+const canAccessBasics = (user, me) => Roles.userIsMeOrProfileVisible(user, me)
 
-const exposeProfileField = (key, format) => (user, args, { pgdb, user: me }) => {
+const exposeProfileField = (key, format) => (
+  user,
+  args,
+  { pgdb, user: me },
+) => {
   if (canAccessBasics(user, me) || isFieldExposed(user, key)) {
     return format
       ? format(user._raw[key] || user[key], args)
@@ -19,15 +24,19 @@ const exposeProfileField = (key, format) => (user, args, { pgdb, user: me }) => 
   return null
 }
 
-const exposeAccessField = (accessRoleKey, key, format) => (user, args, { pgdb, user: me }) => {
+const exposeAccessField = (accessRoleKey, key, format) => (
+  user,
+  args,
+  { pgdb, user: me },
+) => {
   if (
-    (
-      user._raw[accessRoleKey] === 'PUBLIC' ||
-      Roles.userIsMeOrInRoles(user, me, [
-        user._raw[accessRoleKey].toLowerCase(),
-        'admin', 'supporter'
-      ])
-    ) || isFieldExposed(user, key)
+    user._raw[accessRoleKey] === 'PUBLIC' ||
+    Roles.userIsMeOrInRoles(user, me, [
+      user._raw[accessRoleKey].toLowerCase(),
+      'admin',
+      'supporter',
+    ]) ||
+    isFieldExposed(user, key)
   ) {
     return format
       ? format(user._raw[key] || user[key])
@@ -37,7 +46,7 @@ const exposeAccessField = (accessRoleKey, key, format) => (user, args, { pgdb, u
 }
 
 module.exports = {
-  name (user, args, { user: me }) {
+  name(user, args, { user: me }) {
     if (canAccessBasics(user, me)) {
       return user.name
     }
@@ -48,57 +57,65 @@ module.exports = {
   username: exposeProfileField('username'),
   badges: exposeProfileField('badges'),
   biography: exposeProfileField('biography'),
-  biographyContent: exposeProfileField('biography', (bio) => bio && remark.parse(bio)),
+  biographyContent: exposeProfileField(
+    'biography',
+    (bio) => bio && remark.parse(bio),
+  ),
   facebookId: exposeProfileField('facebookId'),
   twitterHandle: exposeProfileField('twitterHandle'),
   publicUrl: exposeProfileField('publicUrl'),
   disclosures: exposeProfileField('disclosures'),
   statement: exposeProfileField('statement'),
   isListed: (user) => user._raw.isListed,
-  slug (user, args, { user: me }) {
+  slug(user, args, { user: me }) {
     if (canAccessBasics(user, me)) {
       return user._raw.username || user._raw.id
     }
     return null
   },
-  isAdminUnlisted (user, args, { user: me }) {
+  isAdminUnlisted(user, args, { user: me }) {
     if (Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter'])) {
       return user._raw.isAdminUnlisted
     }
     return null
   },
-  isEligibleForProfile (user, args, { user: me, pgdb }) {
+  isEligibleForProfile(user, args, { user: me, pgdb }) {
     if (Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter'])) {
       return isEligible(user.id, pgdb)
     }
     return null
   },
-  async sequenceNumber (user, args, { pgdb, user: me }) {
+  async sequenceNumber(user, args, { pgdb, user: me }) {
     if (canAccessBasics(user, me)) {
       if (user._raw.sequenceNumber) {
         return user._raw.sequenceNumber
       }
-      const firstMembership = await pgdb.public.memberships.findFirst({ userId: user.id }, { orderBy: ['sequenceNumber asc'] })
+      const firstMembership = await pgdb.public.memberships.findFirst(
+        { userId: user.id },
+        { orderBy: ['sequenceNumber asc'] },
+      )
       if (firstMembership) {
         return firstMembership.sequenceNumber
       }
     }
     return null
   },
-  portrait (user, args, { user: me, req, allowAccess = false }) {
+  portrait(user, args, { user: me, req, allowAccess = false }) {
     if (allowAccess || canAccessBasics(user, me)) {
       const { portraitUrl } = user._raw
       if (!portraitUrl) {
         return portraitUrl
       }
-      const bw = args && args.properties && args.properties.bw !== undefined
-        ? args.properties.bw
-        : true // bw is default for portrait images
+      const bw =
+        args && args.properties && args.properties.bw !== undefined
+          ? args.properties.bw
+          : true // bw is default for portrait images
       let resize
       if (args && args.properties) {
         const { width, height } = args.properties
         resize = `${width || ''}x${height || ''}`
-      } else if (args && args.size === 'SHARE') { // PortraitSize is deprecated
+      } else if (args && args.size === 'SHARE') {
+        // PortraitSize is deprecated
         resize = '1000x1000'
       } else {
         resize = '384x384' // default for portraits
@@ -107,19 +124,19 @@ module.exports = {
       const newQuery = querystring.stringify({
         ...querystring.parse(query),
         resize,
-        bw: bw || undefined
+        bw: bw || undefined,
       })
-      const webp = args && args.webp !== undefined
-        ? args.webp
-        : req && req.get('Accept').indexOf('image/webp') > -1
+      const webp =
+        args && args.webp !== undefined
+          ? args.webp
+          : req && req.get('Accept').indexOf('image/webp') > -1
       return `${url}${webp ? '.webp' : ''}?${newQuery}`
     }
     return null
   },
   pgpPublicKey: exposeAccessField('emailAccessRole', 'pgpPublicKey'),
-  pgpPublicKeyId: exposeAccessField('emailAccessRole', 'pgpPublicKey', key => key
-    ? getKeyId(key)
-    : null
+  pgpPublicKeyId: exposeAccessField('emailAccessRole', 'pgpPublicKey', (key) =>
+    key ? getKeyId(key) : null,
   ),
   email: (user, ...rest) => {
     // special case for pledging: check packages/republik-crowdfundings/graphql/resolvers/Pledge.js
@@ -128,58 +145,63 @@ module.exports = {
     }
     return exposeAccessField('emailAccessRole', 'email')(user, ...rest)
   },
-  emailAccessRole (user, args, { user: me }) {
+  emailAccessRole(user, args, { user: me }) {
     if (Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter'])) {
       return user._raw.emailAccessRole
     }
     return null
   },
   phoneNumber: exposeAccessField('phoneNumberAccessRole', 'phoneNumber'),
-  phoneNumberNote: exposeAccessField('phoneNumberAccessRole', 'phoneNumberNote'),
-  phoneNumberAccessRole (user, args, { user: me }) {
+  phoneNumberNote: exposeAccessField(
+    'phoneNumberAccessRole',
+    'phoneNumberNote',
+  ),
+  phoneNumberAccessRole(user, args, { user: me }) {
     if (Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter'])) {
       return user._raw.phoneNumberAccessRole
     }
     return null
   },
-  birthday (user, args, { user: me }) {
+  birthday(user, args, { user: me }) {
     if (Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter'])) {
       return user._raw.birthday
     }
     return null
   },
-  age: exposeAccessField('ageAccessRole', 'birthday', dob => dob
-    ? age(dob)
-    : null
+  age: exposeAccessField('ageAccessRole', 'birthday', (dob) =>
+    dob ? age(dob) : null,
   ),
-  async credentials (user, args, { pgdb, user: me }) {
+  async credentials(user, args, { pgdb, user: me }) {
     const canAccessListed = canAccessBasics(user, me)
-    const canAccessAll = Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter'])
+    const canAccessAll = Roles.userIsMeOrInRoles(user, me, [
+      'admin',
+      'supporter',
+    ])
     if (canAccessListed || canAccessAll) {
       // ToDo: optimize for statements (adds 40ms per 100 records)
       const all = await pgdb.public.credentials.find({
-        userId: user.id
+        userId: user.id,
       })
       if (canAccessAll) {
         return all
       }
-      const allListed = all.filter(c => c.isListed)
+      const allListed = all.filter((c) => c.isListed)
       return allListed
     }
     return []
   },
-  async address (user, args, { pgdb, user: me }) {
+  async address(user, args, { pgdb, user: me }) {
     if (Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter'])) {
       if (!user._raw.addressId) {
         return null
       }
       return pgdb.public.addresses.findOne({
-        id: user._raw.addressId
+        id: user._raw.addressId,
       })
     }
     return null
   },
-  hasAddress (user, args, { user: me }) {
+  hasAddress(user, args, { user: me }) {
     if (
       Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter']) ||
       isFieldExposed(user, 'hasAddress')
@@ -188,7 +210,11 @@ module.exports = {
     }
     return null
   },
-  newsletterSettings (user, args, { user: me, t, mail: { getNewsletterSettings }, ...context }) {
+  newsletterSettings(
+    user,
+    args,
+    { user: me, t, mail: { getNewsletterSettings }, ...context },
+  ) {
     Roles.ensureUserIsMeOrInRoles(user, me, ['admin', 'supporter'])
     try {
       return getNewsletterSettings({ user })
@@ -197,16 +223,16 @@ module.exports = {
       throw new Error(t('api/newsletters/get/failed'))
     }
   },
-  defaultDiscussionNotificationOption (user, args, { user: me }) {
+  defaultDiscussionNotificationOption(user, args, { user: me }) {
     if (Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter'])) {
       return user._raw.defaultDiscussionNotificationOption
     }
     return null
   },
-  discussionNotificationChannels (user, args, { user: me }) {
+  discussionNotificationChannels(user, args, { user: me }) {
     if (Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter'])) {
       return user._raw.discussionNotificationChannels
     }
     return []
-  }
+  },
 }

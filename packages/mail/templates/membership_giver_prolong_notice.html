@@ -1,16 +1,16 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
   <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="x-ua-compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta charset="UTF-8" />
+    <meta http-equiv="x-ua-compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
     <!--[if gte mso 15]>
-    <xml>
-      <o:officedocumentsettings>
-        <o:allowpng />
-        <o:pixelsperinch>96</o:pixelsperinch>
-      </o:officedocumentsettings>
-    </xml>
+      <xml>
+        <o:officedocumentsettings>
+          <o:allowpng />
+          <o:pixelsperinch>96</o:pixelsperinch>
+        </o:officedocumentsettings>
+      </xml>
     <![endif]-->
     <style type="text/css">
       {{sg_font_faces}}
@@ -25,26 +25,54 @@
       }
     </style>
   </head>
-  <body style="margin: 0; padding: 0; background-color: #fff;">
+  <body style="margin: 0; padding: 0; background-color: #fff">
     <table border="0" cellpadding="0" cellspacing="0" width="100%">
       <tbody>
         <tr>
           <td align="center" valign="top">
-            <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width:640px;color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}">
+            <table
+              align="center"
+              border="0"
+              cellpadding="0"
+              cellspacing="0"
+              width="100%"
+              style="max-width:640px;color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}"
+            >
               <tbody>
                 <tr>
-                  <td style="padding:20px;">
+                  <td style="padding: 20px">
                     <p>Guten Tag</p>
-                    <p>Herzlichen Dank für Ihre Grosszügigkeit und Ihr Vertrauen.</p>
-                    <p>Sie haben {{#if `gifted_memberships_count == 1`}}eine Mitgliedschaft{{elseif `gifted_memberships_count > 1`}}mehrere Mitgliedschaften{{/if}} verschenkt.</p>
+                    <p>
+                      Herzlichen Dank für Ihre Grosszügigkeit und Ihr Vertrauen.
+                    </p>
+                    <p>
+                      Sie haben {{#if `gifted_memberships_count == 1`}}eine
+                      Mitgliedschaft{{elseif `gifted_memberships_count >
+                      1`}}mehrere Mitgliedschaften{{/if}} verschenkt.
+                    </p>
                     {{#if `gifted_memberships_count == 1`}}
-                      <p>Diese Mitgliedschaft endet bald.</p>
+                    <p>Diese Mitgliedschaft endet bald.</p>
                     {{elseif `gifted_memberships_count > 1`}}
-                      <p>Diese Mitgliedschaften enden bald.</p>
+                    <p>Diese Mitgliedschaften enden bald.</p>
                     {{/if}}
-                    <p>Schenken Sie noch ein weiteres Jahr unabhängige und werbefreie Einordnung und Vertiefung anstelle einer Flut von Nachrichten?</p>
-                    <p>Jede Mitgliedschaft unterstützt die Republik und die Idee hinter unserem Projekt einer wirklich unabhängigen vierten Gewalt und zentralen demokratischen Institution. Und stärkt unser gemeinsames Projekt gegen den Zynismus, den Vormarsch der Autoritären und gegen die Diktatur der Angst.</p>
-                    <p>Folgende{{#if `gifted_memberships_count == 1`}} Mitgliedschaft steht{{elseif `gifted_memberships_count > 1`}} Mitgliedschaften stehen{{/if}} zur Verlängerung an:</p>
+                    <p>
+                      Schenken Sie noch ein weiteres Jahr unabhängige und
+                      werbefreie Einordnung und Vertiefung anstelle einer Flut
+                      von Nachrichten?
+                    </p>
+                    <p>
+                      Jede Mitgliedschaft unterstützt die Republik und die Idee
+                      hinter unserem Projekt einer wirklich unabhängigen vierten
+                      Gewalt und zentralen demokratischen Institution. Und
+                      stärkt unser gemeinsames Projekt gegen den Zynismus, den
+                      Vormarsch der Autoritären und gegen die Diktatur der
+                      Angst.
+                    </p>
+                    <p>
+                      Folgende{{#if `gifted_memberships_count == 1`}}
+                      Mitgliedschaft steht{{elseif `gifted_memberships_count >
+                      1`}} Mitgliedschaften stehen{{/if}} zur Verlängerung an:
+                    </p>
 
                     <ul>
                       {{#options}}
@@ -52,30 +80,73 @@
                       {{/options}}
                     </ul>
 
-                    <p>Klicken Sie <a href="{{prolong_url}}">hier, um {{#if `gifted_memberships_count == 1`}}die Geschenkmitgliedschaft{{elseif `gifted_memberships_count > 1`}}die Geschenkmitgliedschaften{{/if}} zu verlängern</a>.</p>
-                    <p>Falls Sie innerhalb der nächsten {{inform_claimers_days}} Tage nichts unternehmen, erlauben wir uns, {{#if `gifted_memberships_count == 1`}}den oder die Beschenkte{{elseif `gifted_memberships_count > 1`}}die Beschenkten{{/if}} direkt anzufragen, ob {{#if `gifted_memberships_count == 1`}}sie oder er{{elseif `gifted_memberships_count > 1`}}sie{{/if}} ein weiteres Jahr an Bord sein {{#if `gifted_memberships_count == 1`}}möchte{{elseif `gifted_memberships_count > 1`}}möchten{{/if}}. Dies dann natürlich auf eigene Rechnung.</p>
+                    <p>
+                      Klicken Sie
+                      <a href="{{prolong_url}}"
+                        >hier, um {{#if `gifted_memberships_count == 1`}}die
+                        Geschenkmitgliedschaft{{elseif `gifted_memberships_count
+                        > 1`}}die Geschenkmitgliedschaften{{/if}} zu
+                        verlängern</a
+                      >.
+                    </p>
+                    <p>
+                      Falls Sie innerhalb der nächsten {{inform_claimers_days}}
+                      Tage nichts unternehmen, erlauben wir uns, {{#if
+                      `gifted_memberships_count == 1`}}den oder die
+                      Beschenkte{{elseif `gifted_memberships_count > 1`}}die
+                      Beschenkten{{/if}} direkt anzufragen, ob {{#if
+                      `gifted_memberships_count == 1`}}sie oder er{{elseif
+                      `gifted_memberships_count > 1`}}sie{{/if}} ein weiteres
+                      Jahr an Bord sein {{#if `gifted_memberships_count ==
+                      1`}}möchte{{elseif `gifted_memberships_count >
+                      1`}}möchten{{/if}}. Dies dann natürlich auf eigene
+                      Rechnung.
+                    </p>
                     <p>Vielen Dank für Ihre Unterstützung.</p>
                     <p>Ihre Crew der Republik</p>
                   </td>
                 </tr>
                 <tr>
-                  <td style="padding:20px;">
-                    <p style="font-size:14px;line-height:20px;{{sg_font_style_sans_serif_regular}}">
-                      Die Republik ist ein unabhängiges und werbefreies digitales Magazin für Politik, Wirtschaft, Gesellschaft und Kultur. 
-                      Es wird von seinen Leserinnen und Lesern finanziert und erscheint von Montag bis Samstag mit täglich ein bis drei neuen Beiträgen. In der App, auf der Website und als Newsletter.
+                  <td style="padding: 20px">
+                    <p
+                      style="font-size:14px;line-height:20px;{{sg_font_style_sans_serif_regular}}"
+                    >
+                      Die Republik ist ein unabhängiges und werbefreies
+                      digitales Magazin für Politik, Wirtschaft, Gesellschaft
+                      und Kultur. Es wird von seinen Leserinnen und Lesern
+                      finanziert und erscheint von Montag bis Samstag mit
+                      täglich ein bis drei neuen Beiträgen. In der App, auf der
+                      Website und als Newsletter.
                     </p>
-                    <p style="color:#282828;font-size:14px;line-height:20px;{{sg_font_style_sans_serif_regular}}">
-                      <img height="79" src="{{frontend_base_url}}/static/logo_republik_newsletter.png" style="border:0px;width:180px !important; height:79px !important;margin:0px;" width="180" alt="">
-                      <br>
-                      Republik AG<br>
-                      Sihlhallenstrasse 1, CH-8004 Zürich<br>
-                      <a href="{{frontend_base_url}}">www.republik.ch</a><br>
-                      <a href="mailto:kontakt@republik.ch">kontakt@republik.ch</a>
+                    <p
+                      style="color:#282828;font-size:14px;line-height:20px;{{sg_font_style_sans_serif_regular}}"
+                    >
+                      <img
+                        height="79"
+                        src="{{frontend_base_url}}/static/logo_republik_newsletter.png"
+                        style="
+                          border: 0px;
+                          width: 180px !important;
+                          height: 79px !important;
+                          margin: 0px;
+                        "
+                        width="180"
+                        alt=""
+                      />
+                      <br />
+                      Republik AG<br />
+                      Sihlhallenstrasse 1, CH-8004 Zürich<br />
+                      <a href="{{frontend_base_url}}">www.republik.ch</a><br />
+                      <a href="mailto:kontakt@republik.ch"
+                        >kontakt@republik.ch</a
+                      >
                     </p>
-                    <p style="font-size:14px;line-height:20px;{{sg_font_style_sans_serif_regular}}">
-                        <a href="{{link_manifest}}">Unser Manifest</a><br />
-                        <a href="{{link_imprint}}">Das Impressum</a><br />
-                        <a href="{{link_faq}}">Häufig gestellte Fragen</a>
+                    <p
+                      style="font-size:14px;line-height:20px;{{sg_font_style_sans_serif_regular}}"
+                    >
+                      <a href="{{link_manifest}}">Unser Manifest</a><br />
+                      <a href="{{link_imprint}}">Das Impressum</a><br />
+                      <a href="{{link_faq}}">Häufig gestellte Fragen</a>
                     </p>
                   </td>
                 </tr>

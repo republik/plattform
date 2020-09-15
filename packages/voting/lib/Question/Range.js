@@ -4,15 +4,16 @@ const validate = (value, question, { t }) => {
   if (typeof value !== 'number') {
     throw new Error(t('api/questionnaire/answer/wrongType'))
   }
-  const values = question.typePayload.ticks.map(t => t.value)
+  const values = question.typePayload.ticks.map((t) => t.value)
   if (question.typePayload.kind === 'continous') {
     const min = Math.min(...values)
     const max = Math.max(...values)
     if (value < min || value > max) {
       throw new Error(t('api/questionnaire/answer/outOfRange'))
     }
-  } else { // discrete
-    if (values.find(v => v === value) === undefined) {
+  } else {
+    // discrete
+    if (values.find((v) => v === value) === undefined) {
       throw new Error(t('api/questionnaire/answer/outOfRange'))
     }
   }
@@ -23,7 +24,9 @@ const result = async (question, args, context) => {
   const { pgdb } = context
   // queryOneColumn would be better but explodes
   // if no rows are selected
-  const values = await pgdb.query(`
+  const values = await pgdb
+    .query(
+      `
     SELECT
       payload->'value' as value
     FROM
@@ -33,10 +36,12 @@ const result = async (question, args, context) => {
       "questionId" = :questionId
     ORDER BY
       1 ASC
-  `, {
-    questionId: question.id
-  })
-    .then(rows => rows.map(r => r.value))
+  `,
+      {
+        questionId: question.id,
+      },
+    )
+    .then((rows) => rows.map((r) => r.value))
   if (!values.length) {
     return null
   }
@@ -58,21 +63,17 @@ const resultHistogram = (result, { ticks }, context) => {
     return histogram.bins
   }
 
-  const numTicks = ticks ||
-    ((questionTicks.length - 1) * 10)
-  const extent = d3.extent(
-    questionTicks.map(t => t.value)
-  )
-  const bins = d3.histogram()
+  const numTicks = ticks || (questionTicks.length - 1) * 10
+  const extent = d3.extent(questionTicks.map((t) => t.value))
+  const bins = d3
+    .histogram()
     .domain(extent)
-    .thresholds(
-      d3.ticks(extent[0], extent[1], numTicks).slice(0, -1)
-    )(values)
+    .thresholds(d3.ticks(extent[0], extent[1], numTicks).slice(0, -1))(values)
 
   return bins.map(({ x0, x1, length }) => ({
     x0,
     x1,
-    count: length
+    count: length,
   }))
 }
 
@@ -83,7 +84,7 @@ const resultForValues = (question, values, context) => {
     deviation: d3.deviation(values),
     // for downstream resolvers
     questionTicks: question.ticks,
-    values
+    values,
   }
 
   // prepare histogram
@@ -96,8 +97,8 @@ const resultForValues = (question, values, context) => {
     ...intermediateResult,
     histogram: {
       ticks,
-      bins: resultHistogram(intermediateResult, { ticks }, context)
-    }
+      bins: resultHistogram(intermediateResult, { ticks }, context),
+    },
   }
 }
 
@@ -105,5 +106,5 @@ module.exports = {
   validate,
   result,
   resultHistogram,
-  resultForValues
+  resultForValues,
 }

@@ -14,14 +14,14 @@ const expectedAges = [
   { date: new Date('2000-10-01'), age: 16 },
   { date: new Date('2000-05-02'), age: 16 },
   { date: new Date('2000-05-01'), age: 17 },
-  { date: new Date('2000-04-30'), age: 17 }
+  { date: new Date('2000-04-30'), age: 17 },
 ]
 
 describe('age', () => {
   describe('age()', () => {
     beforeAll(() => {
       global.Date = class extends Date {
-        constructor () {
+        constructor() {
           return pinnedDate
         }
       }

@@ -5,17 +5,21 @@ const Promise = require('bluebird')
 
 const { Roles } = require('@orbiting/backend-modules-auth')
 
-const { evaluatePledge, updateMembershipPeriods } = require('../../../lib/Pledge/cancel')
-const { publishMonitor } = require('@orbiting/backend-modules-republik/lib/slack')
+const {
+  evaluatePledge,
+  updateMembershipPeriods,
+} = require('../../../lib/Pledge/cancel')
+const {
+  publishMonitor,
+} = require('@orbiting/backend-modules-republik/lib/slack')
 const cancelMembership = require('../../../lib/cancelMembership')
 
-const {
-  PARKING_PLEDGE_ID,
-  PARKING_USER_ID
-} = process.env
+const { PARKING_PLEDGE_ID, PARKING_USER_ID } = process.env
 
 if (!PARKING_PLEDGE_ID || !PARKING_USER_ID) {
-  console.warn('missing env PARKING_PLEDGE_ID and/or PARKING_USER_ID, cancelPledge will not work.')
+  console.warn(
+    'missing env PARKING_PLEDGE_ID and/or PARKING_USER_ID, cancelPledge will not work.',
+  )
 }
 
 module.exports = async (_, args, context) => {
@@ -23,10 +27,12 @@ module.exports = async (_, args, context) => {
     pgdb,
     req,
     t,
-    mail: { enforceSubscriptions }
+    mail: { enforceSubscriptions },
   } = context
   if (!PARKING_PLEDGE_ID || !PARKING_USER_ID) {
-    console.error('cancelPledge: missing PARKING_PLEDGE_ID and/or PARKING_USER_ID')
+    console.error(
+      'cancelPledge: missing PARKING_PLEDGE_ID and/or PARKING_USER_ID',
+    )
     throw new Error(t('api/unexpected'))
   }
 
@@ -34,10 +40,10 @@ module.exports = async (_, args, context) => {
   const {
     pledgeId,
     skipEnforceSubscriptions = false,
-    transaction: externalTransaction
+    transaction: externalTransaction,
   } = args
   const now = new Date()
-  const transaction = externalTransaction || await pgdb.transactionBegin()
+  const transaction = externalTransaction || (await pgdb.transactionBegin())
   try {
     const pledge = await transaction.public.pledges.findOne({ id: pledgeId })
     if (!pledge) {
@@ -45,32 +51,40 @@ module.exports = async (_, args, context) => {
       throw new Error(t('api/pledge/404'))
     }
     if (pledge.id === PARKING_PLEDGE_ID || pledge.userId === PARKING_USER_ID) {
-      const message = 'pledge PARKING_PLEDGE_ID by PARKING_USER_ID can not be cancelled'
+      const message =
+        'pledge PARKING_PLEDGE_ID by PARKING_USER_ID can not be cancelled'
       logger.error(message, { req: req._log(), pledge })
       throw new Error(message)
     }
     const pkg = await transaction.public.packages.findOne({
-      id: pledge.packageId
+      id: pledge.packageId,
     })
 
     if (pledge.status === 'DRAFT') {
       await transaction.public.pledges.deleteOne({
-        id: pledgeId
+        id: pledgeId,
       })
     } else {
       // MONTHLY can only be cancelled 14 days max after pledge
       const maxDays = 14
-      if (pkg.name === 'MONTHLY_ABO' && moment().diff(moment(pledge.createdAt), 'days') > maxDays) {
+      if (
+        pkg.name === 'MONTHLY_ABO' &&
+        moment().diff(moment(pledge.createdAt), 'days') > maxDays
+      ) {
         throw new Error(t('api/pledge/cancel/tooLate', { maxDays }))
       }
 
-      await transaction.public.pledges.updateOne({ id: pledgeId }, {
-        status: 'CANCELLED',
-        updatedAt: now
-      })
+      await transaction.public.pledges.updateOne(
+        { id: pledgeId },
+        {
+          status: 'CANCELLED',
+          updatedAt: now,
+        },
+      )
     }
 
-    const payments = await transaction.query(`
+    const payments = await transaction.query(
+      `
       SELECT
         pay.*
       FROM
@@ -83,9 +97,11 @@ module.exports = async (_, args, context) => {
         ON pp."pledgeId" = p.id
       WHERE
         p.id = :pledgeId
-    `, {
-      pledgeId
-    })
+    `,
+      {
+        pledgeId,
+      },
+    )
 
     for (const payment of payments) {
       let newStatus
@@ -100,23 +116,32 @@ module.exports = async (_, args, context) => {
           newStatus = payment.status
       }
       if (newStatus !== payment.status) {
-        await transaction.public.payments.updateOne({
-          id: payment.id
-        }, {
-          status: newStatus,
-          updatedAt: now
-        })
+        await transaction.public.payments.updateOne(
+          {
+            id: payment.id,
+          },
+          {
+            status: newStatus,
+            updatedAt: now,
+          },
+        )
       }
     }
 
     const cancelImmediately = pkg.name === 'MONTHLY_ABO'
 
-    const evaluatePledges = await evaluatePledge({ pledgeId }, { pgdb: transaction, now })
+    const evaluatePledges = await evaluatePledge(
+      { pledgeId },
+      { pgdb: transaction, now },
+    )
 
     await Promise.map(
       evaluatePledges,
       async ({ _raw: { id }, periods: evaluatedPeriods }) => {
-        await updateMembershipPeriods({ evaluatedPeriods }, { pgdb: transaction })
+        await updateMembershipPeriods(
+          { evaluatedPeriods },
+          { pgdb: transaction },
+        )
 
         // Delete membership if there are no periods
         if (evaluatedPeriods.length === 0) {
@@ -124,25 +149,30 @@ module.exports = async (_, args, context) => {
         }
 
         // determine endDate
-        const inPast = !!(await transaction.queryOneField(`
+        const inPast = !!(await transaction.queryOneField(
+          `
           SELECT MAX("endDate") <= :now
           FROM "membershipPeriods"
           WHERE "membershipId" = :membershipId
-        `, { membershipId: id, now }))
+        `,
+          { membershipId: id, now },
+        ))
 
         // Check if memebership should be cancelled when latest end date is now in past
         if (inPast) {
-          const cancelableMembership = await transaction.public.memberships.findOne({ id })
+          const cancelableMembership = await transaction.public.memberships.findOne(
+            { id },
+          )
 
           const details = {
             type: 'SYSTEM',
             reason: 'Auto Cancellation (cancelPledge)',
             suppressConfirmation: true,
-            suppressWinback: true
+            suppressWinback: true,
           }
 
           const options = {
-            immediately: cancelImmediately
+            immediately: cancelImmediately,
           }
 
           await cancelMembership(
@@ -150,10 +180,10 @@ module.exports = async (_, args, context) => {
             details,
             options,
             t,
-            transaction
+            transaction,
           )
         }
-      }
+      },
     )
 
     if (!externalTransaction) {
@@ -166,7 +196,7 @@ module.exports = async (_, args, context) => {
 
     await publishMonitor(
       req.user,
-      `cancelPledge pledgeId: ${pledge.id} pkgName: ${pkg.name}`
+      `cancelPledge pledgeId: ${pledge.id} pkgName: ${pkg.name}`,
     )
   } catch (e) {
     await transaction.transactionRollback()

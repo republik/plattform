@@ -1,3 +1,3 @@
 module.exports = {
-  publish: require('./publish')
+  publish: require('./publish'),
 }

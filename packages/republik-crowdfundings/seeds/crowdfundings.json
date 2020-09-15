@@ -1,13 +1,16 @@
 {
-  "companies": [{
+  "companies": [
+    {
       "id": "c0000000-0000-0000-0001-000000000001",
       "name": "COMPANY_ONE"
-    }, {
+    },
+    {
       "id": "c0000000-0000-0000-0001-000000000002",
       "name": "COMPANY_TWO"
     }
   ],
-  "crowdfundings": [{
+  "crowdfundings": [
+    {
       "id": "f0000000-0000-0000-0002-000000000001",
       "name": "TEST",
       "beginDate": "2017-12-01 22:48:59.971+01",
@@ -15,7 +18,8 @@
       "result": null
     }
   ],
-  "crowdfundingGoals": [{
+  "crowdfundingGoals": [
+    {
       "id": "00000000-0000-0000-0003-000000000001",
       "name": "GOAL_ONE",
       "crowdfundingId": "f0000000-0000-0000-0002-000000000001",
@@ -24,25 +28,30 @@
       "description": "First Goal"
     }
   ],
-  "rewards": [{
+  "rewards": [
+    {
       "id": "00000000-0000-0000-0004-000000000001",
       "type": "Goodie"
-    }, {
+    },
+    {
       "id": "00000000-0000-0000-0004-000000000002",
       "type": "MembershipType"
-    }, {
+    },
+    {
       "id": "00000000-0000-0000-0004-000000000003",
       "type": "MembershipType"
     }
   ],
-  "goodies": [{
+  "goodies": [
+    {
       "id": "00000000-0000-0000-0005-000000000001",
       "rewardId": "00000000-0000-0000-0004-000000000001",
       "rewardType": "Goodie",
       "name": "SWEETS"
     }
   ],
-  "membershipTypes": [{
+  "membershipTypes": [
+    {
       "id": "00000000-0000-0000-0006-000000000001",
       "rewardId": "00000000-0000-0000-0004-000000000002",
       "rewardType": "MembershipType",
@@ -50,7 +59,8 @@
       "name": "ABO",
       "price": 36500,
       "interval": "year"
-    }, {
+    },
+    {
       "id": "00000000-0000-0000-0006-000000000002",
       "rewardId": "00000000-0000-0000-0004-000000000003",
       "rewardType": "MembershipType",
@@ -60,31 +70,36 @@
       "interval": "month"
     }
   ],
-  "packages": [{
+  "packages": [
+    {
       "id": "00000000-0000-0000-0007-000000000001",
       "crowdfundingId": "f0000000-0000-0000-0002-000000000001",
       "companyId": "c0000000-0000-0000-0001-000000000001",
       "name": "ABO",
       "paymentMethods": "{STRIPE,POSTFINANCECARD,PAYPAL,PAYMENTSLIP}"
-    }, {
+    },
+    {
       "id": "00000000-0000-0000-0007-000000000002",
       "crowdfundingId": "f0000000-0000-0000-0002-000000000001",
       "companyId": "c0000000-0000-0000-0001-000000000002",
       "name": "MONTHLY_ABO",
       "paymentMethods": "{STRIPE}"
-    }, {
+    },
+    {
       "id": "00000000-0000-0000-0007-000000000003",
       "crowdfundingId": "f0000000-0000-0000-0002-000000000001",
       "companyId": "c0000000-0000-0000-0001-000000000001",
       "name": "PATRON",
       "paymentMethods": "{STRIPE,POSTFINANCECARD,PAYPAL,PAYMENTSLIP}"
-    }, {
+    },
+    {
       "id": "00000000-0000-0000-0007-000000000004",
       "crowdfundingId": "f0000000-0000-0000-0002-000000000001",
       "companyId": "c0000000-0000-0000-0001-000000000001",
       "name": "DONATION",
       "paymentMethods": "{STRIPE,POSTFINANCECARD,PAYPAL,PAYMENTSLIP}"
-    }, {
+    },
+    {
       "id": "00000000-0000-0000-0007-000000000005",
       "crowdfundingId": "f0000000-0000-0000-0002-000000000001",
       "companyId": "c0000000-0000-0000-0001-000000000001",
@@ -93,7 +108,8 @@
       "isAutoActivateUserMembership": false
     }
   ],
-  "packageOptions": [{
+  "packageOptions": [
+    {
       "id": "00000000-0000-0000-0008-000000000001",
       "packageId": "00000000-0000-0000-0007-000000000001",
       "rewardId": "00000000-0000-0000-0004-000000000002",
@@ -103,7 +119,8 @@
       "price": 24000,
       "userPrice": true,
       "minUserPrice": 1000
-    }, {
+    },
+    {
       "id": "00000000-0000-0000-0008-000000000002",
       "packageId": "00000000-0000-0000-0007-000000000002",
       "rewardId": "00000000-0000-0000-0004-000000000003",
@@ -112,7 +129,8 @@
       "defaultAmount": 1,
       "price": 2000,
       "userPrice": false
-    }, {
+    },
+    {
       "id": "00000000-0000-0000-0008-000000000003",
       "packageId": "00000000-0000-0000-0007-000000000003",
       "rewardId": "00000000-0000-0000-0004-000000000002",
@@ -121,7 +139,8 @@
       "defaultAmount": 1,
       "price": 100000,
       "userPrice": false
-    }, {
+    },
+    {
       "id": "00000000-0000-0000-0008-000000000004",
       "packageId": "00000000-0000-0000-0007-000000000003",
       "rewardId": "00000000-0000-0000-0004-000000000001",
@@ -129,7 +148,8 @@
       "maxAmount": 10,
       "defaultAmount": 5,
       "price": 3000
-    }, {
+    },
+    {
       "id": "00000000-0000-0000-0008-000000000005",
       "packageId": "00000000-0000-0000-0007-000000000004",
       "rewardId": null,
@@ -139,7 +159,8 @@
       "price": 1,
       "userPrice": true,
       "minUserPrice": 1
-    }, {
+    },
+    {
       "id": "00000000-0000-0000-0008-000000000006",
       "packageId": "00000000-0000-0000-0007-000000000005",
       "rewardId": "00000000-0000-0000-0004-000000000002",

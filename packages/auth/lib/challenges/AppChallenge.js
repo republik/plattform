@@ -6,17 +6,18 @@ const { newAuthError } = require('../AuthError')
 const { app } = require('@orbiting/backend-modules-push-notifications/lib')
 const { encode } = require('@orbiting/backend-modules-base64u')
 
-const UserMissingError = newAuthError('app-challenge-user-missing', 'api/users/404')
-const AppTokenRequiresMeError = newAuthError('app-token-requires-me', 'api/signIn/app/requiresMe')
+const UserMissingError = newAuthError(
+  'app-challenge-user-missing',
+  'api/users/404',
+)
+const AppTokenRequiresMeError = newAuthError(
+  'app-token-requires-me',
+  'api/signIn/app/requiresMe',
+)
 
-const {
-  FRONTEND_BASE_URL,
-  DEFAULT_MAIL_FROM_ADDRESS
-} = process.env
+const { FRONTEND_BASE_URL, DEFAULT_MAIL_FROM_ADDRESS } = process.env
 
-const {
-  sendMailTemplate
-} = require('@orbiting/backend-modules-mail')
+const { sendMailTemplate } = require('@orbiting/backend-modules-mail')
 
 const MIN_IN_MS = 1000 * 60
 const TTL = 10 * MIN_IN_MS
@@ -30,7 +31,7 @@ const getNotification = ({ email, token, context }) => {
       type: 'token-authorization',
       email: encode(email),
       token: token.payload,
-      tokenType: Type
+      tokenType: Type,
     })
 
   return {
@@ -40,7 +41,7 @@ const getNotification = ({ email, token, context }) => {
     type: 'authorization',
     ttl: TTL,
     expiresAt: token.expiresAt,
-    priority: 'high'
+    priority: 'high',
   }
 }
 
@@ -60,22 +61,23 @@ module.exports = {
     const hasAppTokens = await pgdb.public.tokens.findFirst({
       email,
       type: Type,
-      'payload !=': token.payload
+      'payload !=': token.payload,
     })
     if (!hasAppTokens) {
-      sendMailTemplate({
-        to: email,
-        fromEmail: DEFAULT_MAIL_FROM_ADDRESS,
-        subject: t('api/signin/mail/appNotice/subject'),
-        templateName: 'signin_app_notice'
-      }, { pgdb })
+      sendMailTemplate(
+        {
+          to: email,
+          fromEmail: DEFAULT_MAIL_FROM_ADDRESS,
+          subject: t('api/signin/mail/appNotice/subject'),
+          templateName: 'signin_app_notice',
+        },
+        { pgdb },
+      )
     }
 
-    return app.publish(
-      [user.id],
-      getNotification({ context, email, token }),
-      { pgdb }
-    )
+    return app.publish([user.id], getNotification({ context, email, token }), {
+      pgdb,
+    })
   },
   validateChallenge: async ({ pgdb, user, me }, { payload }) => {
     // app tokens must only be validated if the request is
@@ -85,9 +87,9 @@ module.exports = {
     }
     const foundToken = await pgdb.public.tokens.findOne({
       type: Type,
-      payload
+      payload,
     })
     return foundToken.id
   },
-  getNotification
+  getNotification,
 }

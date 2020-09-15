@@ -18,8 +18,7 @@ describe('slugify()', () => {
   })
 
   test('"Der Bär ißt Honigblüten" results in "passé"', () => {
-    expect(UUT('Der Bär ißt Honigblüten'))
-      .toEqual('der-baer-isst-honigblueten')
+    expect(UUT('Der Bär ißt Honigblüten')).toEqual('der-baer-isst-honigblueten')
   })
 
   test('trims trailing whitespace', () => {
@@ -30,10 +29,10 @@ describe('slugify()', () => {
   })
 
   test('replaces special characters', () => {
-    expect(UUT('https://foobar.tld/xyz?param=value'))
-      .toEqual('https:foobar.tldxyzparamvalue')
-    expect(UUT('#slug'))
-      .toEqual('slug')
+    expect(UUT('https://foobar.tld/xyz?param=value')).toEqual(
+      'https:foobar.tldxyzparamvalue',
+    )
+    expect(UUT('#slug')).toEqual('slug')
   })
 
   test('empty string returns empty string', () => {

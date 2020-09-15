@@ -1,7 +1,7 @@
 const { turnout } = require('../../lib/Question')
 
 module.exports = {
-  __resolveType (question) {
+  __resolveType(question) {
     return `QuestionType${question.type}`
   },
   userAnswer: (question, args, { req, user: me, pgdb, t, loaders }) => {
@@ -13,7 +13,7 @@ module.exports = {
     }
     return loaders.Answer.byKeyObj.load({
       questionId: question.id,
-      userId: me.id
+      userId: me.id,
     })
   },
   turnout: async (question, args, { pgdb }) => {
@@ -22,5 +22,5 @@ module.exports = {
       return result.turnout
     }
     return turnout(question, pgdb)
-  }
+  },
 }

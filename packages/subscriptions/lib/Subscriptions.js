@@ -3,7 +3,7 @@ const Promise = require('bluebird')
 const { uuidForObject } = require('@orbiting/backend-modules-utils')
 const {
   isUserUnrestricted,
-  includesUnrestrictedChildRepoId
+  includesUnrestrictedChildRepoId,
 } = require('@orbiting/backend-modules-documents/lib/restrictions')
 const uniq = require('lodash/uniq')
 const { ascending } = require('d3-array')
@@ -12,18 +12,18 @@ const schemaTypes = require('../graphql/schema-types')
 
 const EventObjectTypes = parse(new Source(schemaTypes))
   .definitions.find(
-    definition =>
+    (definition) =>
       definition.kind === 'EnumTypeDefinition' &&
       definition.name &&
-      definition.name.value === 'EventObjectType'
+      definition.name.value === 'EventObjectType',
   )
-  .values.map(value => value.name.value)
+  .values.map((value) => value.name.value)
 
-const objectTypes = ({
+const objectTypes = {
   User: 'objectUserId',
   Document: 'objectDocumentId',
-  Discussion: 'objectDiscussionId'
-})
+  Discussion: 'objectDiscussionId',
+}
 
 const buildObjectFindProps = ({ id, type }, t) => {
   const objectColumn = objectTypes[type]
@@ -32,55 +32,48 @@ const buildObjectFindProps = ({ id, type }, t) => {
   }
   return {
     objectType: type,
-    [objectColumn]: id
+    [objectColumn]: id,
   }
 }
 
 const getUsersWithSubscriptions = (subscriptions = [], { loaders }) => {
-  return Promise.map(
-    subscriptions,
-    async sub => ({
-      ...await loaders.User.byId.load(sub.userId),
-      __subscription: sub
-    })
-  )
+  return Promise.map(subscriptions, async (sub) => ({
+    ...(await loaders.User.byId.load(sub.userId)),
+    __subscription: sub,
+  }))
 }
 
-const getIdForSubscription = ({
-  userId,
-  objectId,
-  type
-}) => {
+const getIdForSubscription = ({ userId, objectId, type }) => {
   return uuidForObject({
     userId,
     objectId,
-    type
+    type,
   })
 }
 const getSimulatedSubscriptionForUserAndObject = (
   userId,
-  {
-    type,
-    id
-  },
+  { type, id },
   { t },
-  now = new Date()
+  now = new Date(),
 ) => ({
   id: getIdForSubscription({
     userId,
     objectId: id,
-    type
+    type,
   }),
   userId,
-  ...buildObjectFindProps({
-    id,
-    type
-  }, t),
+  ...buildObjectFindProps(
+    {
+      id,
+      type,
+    },
+    t,
+  ),
   active: false,
   filters: null,
   simulated: true,
   createdAt: now,
-  updatedAt: now
+  updatedAt: now,
 })
 
 const upsertSubscription = async (args, context) => {
@@ -88,9 +81,10 @@ const upsertSubscription = async (args, context) => {
   const { userId, type, filters: rawFilters } = args
   const uniqFilters = rawFilters && uniq(rawFilters)
   // if all EventObjectTypes are set, no filter is set
-  const filters = uniqFilters?.length < EventObjectTypes.length
-    ? uniqFilters.sort(ascending)
-    : null
+  const filters =
+    uniqFilters?.length < EventObjectTypes.length
+      ? uniqFilters.sort(ascending)
+      : null
 
   if (type === 'User' && userId === args.objectId) {
     throw new Error(t('api/subscriptions/notYourself'))
@@ -98,7 +92,7 @@ const upsertSubscription = async (args, context) => {
 
   const object = await getObjectByIdAndType(
     { id: args.objectId, type },
-    context
+    context,
   )
   if (!object) {
     throw new Error(t('api/subscription/object/404', { id: args.objectId }))
@@ -108,39 +102,44 @@ const upsertSubscription = async (args, context) => {
 
   const findProps = {
     userId,
-    ...buildObjectFindProps({
-      id: objectId,
-      type
-    }, t)
+    ...buildObjectFindProps(
+      {
+        id: objectId,
+        type,
+      },
+      t,
+    ),
   }
   const updateProps = {
     active: true,
-    filters
+    filters,
   }
 
   const transaction = await pgdb.transactionBegin()
 
   let subscription
   try {
-    const existingSubscription = await transaction.public.subscriptions.findOne(findProps)
+    const existingSubscription = await transaction.public.subscriptions.findOne(
+      findProps,
+    )
 
     if (existingSubscription) {
       subscription = await transaction.public.subscriptions.updateAndGetOne(
         { id: existingSubscription.id },
         {
           ...updateProps,
-          updatedAt: new Date()
-        }
+          updatedAt: new Date(),
+        },
       )
     } else {
       subscription = await transaction.public.subscriptions.insertAndGet({
         id: getIdForSubscription({
           userId,
           objectId,
-          type
+          type,
         }),
         ...findProps,
-        ...updateProps
+        ...updateProps,
       })
     }
 
@@ -153,7 +152,7 @@ const upsertSubscription = async (args, context) => {
 
   await Promise.all([
     loaders.Subscription.byId.clear(subscription.id),
-    loaders.Subscription.byUserId.clear(subscription.userId)
+    loaders.Subscription.byUserId.clear(subscription.userId),
   ])
 
   return subscription
@@ -169,21 +168,23 @@ const unsubscribe = async ({ id, filters }, context) => {
 
   let updatedFilters
   if (filters) {
-    updatedFilters = (subscription.filters || Array.from(EventObjectTypes))
-      .filter(objectType => !filters.includes(objectType))
+    updatedFilters = (
+      subscription.filters || Array.from(EventObjectTypes)
+    ).filter((objectType) => !filters.includes(objectType))
   }
 
-  const update = updatedFilters && updatedFilters.length
-    ? { filters: updatedFilters }
-    : { active: false, filters: null }
+  const update =
+    updatedFilters && updatedFilters.length
+      ? { filters: updatedFilters }
+      : { active: false, filters: null }
 
   const updatedSubscription = await pgdb.public.subscriptions.updateAndGetOne(
     { id },
-    update
+    update,
   )
   await Promise.all([
     loaders.Subscription.byId.clear(subscription.id),
-    loaders.Subscription.byUserId.clear(subscription.userId)
+    loaders.Subscription.byUserId.clear(subscription.userId),
   ])
   return updatedSubscription
 }
@@ -193,9 +194,9 @@ const getObject = async (subscription, context) => {
   return getObjectByIdAndType(
     {
       id: subscription[objectTypes[type]],
-      type: subscription.objectType
+      type: subscription.objectType,
     },
-    context
+    context,
   )
 }
 
@@ -207,86 +208,69 @@ const getSubject = (subscription, context) => {
 const getSubscriptionsForUser = (
   userId,
   context,
-  {
-    includeNotActive = false,
-    onlyEligibles = false
-  } = {}
+  { includeNotActive = false, onlyEligibles = false } = {},
 ) => {
   const { loaders } = context
 
-  return loaders.Subscription.byUserId.load(userId)
-    .then(
-      subs => includeNotActive
-        ? subs
-        : subs.filter(sub => sub.active)
+  return loaders.Subscription.byUserId
+    .load(userId)
+    .then((subs) =>
+      includeNotActive ? subs : subs.filter((sub) => sub.active),
     )
-    .then(
-      subs => onlyEligibles
-        ? filterEligibleSubscriptions(subs, context)
-        : subs
+    .then((subs) =>
+      onlyEligibles ? filterEligibleSubscriptions(subs, context) : subs,
     )
 }
 
 const getSubscriptionsForUserAndObject = (
   userId,
-  {
-    type,
-    id
-  },
+  { type, id },
   context,
-  {
-    includeNotActive = false,
-    onlyEligibles = false
-  } = {}
+  { includeNotActive = false, onlyEligibles = false } = {},
 ) => {
   const { user: me, pgdb, t } = context
   if (!id) {
     throw new Error(t('api/unexpected'))
   }
   const findProps = {
-    ...includeNotActive ? {} : { active: true },
-    ...buildObjectFindProps({
-      id,
-      type
-    }, t)
+    ...(includeNotActive ? {} : { active: true }),
+    ...buildObjectFindProps(
+      {
+        id,
+        type,
+      },
+      t,
+    ),
   }
   if (userId && userId === me.id) {
-    return getSubscriptionsForUser(userId, context, { includeNotActive, onlyEligibles })
-      .then(subs => subs
-        .filter(sub => Object.keys(findProps).every(
-          key => findProps[key] === sub[key]
-        ))
-      )
+    return getSubscriptionsForUser(userId, context, {
+      includeNotActive,
+      onlyEligibles,
+    }).then((subs) =>
+      subs.filter((sub) =>
+        Object.keys(findProps).every((key) => findProps[key] === sub[key]),
+      ),
+    )
   }
-  return pgdb.public.subscriptions.find({
-    ...userId ? { userId } : {},
-    ...findProps
-  })
-    .then(
-      subs => onlyEligibles
-        ? filterEligibleSubscriptions(subs, context)
-        : subs
+  return pgdb.public.subscriptions
+    .find({
+      ...(userId ? { userId } : {}),
+      ...findProps,
+    })
+    .then((subs) =>
+      onlyEligibles ? filterEligibleSubscriptions(subs, context) : subs,
     )
 }
 
 const getSubscriptionsForUserAndObjects = (
   userId,
-  {
-    type,
-    ids,
-    filter
-  },
+  { type, ids, filter },
   context,
-  {
-    includeNotActive = false,
-    onlyEligibles = false
-  } = {}
+  { includeNotActive = false, onlyEligibles = false } = {},
 ) => {
   const { pgdb, t } = context
   const objectColumn = objectTypes[type]
-  if (
-    !objectColumn
-  ) {
+  if (!objectColumn) {
     throw new Error(t('api/unexpected'))
   }
 
@@ -299,17 +283,19 @@ const getSubscriptionsForUserAndObjects = (
       userId,
       {
         type,
-        id: ids[0]
+        id: ids[0],
       },
       context,
       {
         includeNotActive,
-        onlyEligibles
-      }
+        onlyEligibles,
+      },
     )
   }
 
-  return pgdb.query(`
+  return pgdb
+    .query(
+      `
     SELECT
       s.*
     FROM
@@ -320,26 +306,26 @@ const getSubscriptionsForUserAndObjects = (
       ${filter ? '(s.filters IS NULL OR s.filters ? :filter) AND' : ''}
       ${includeNotActive ? '' : 's."active" = true AND'}
       s."objectType" = :type
-  `, {
-    ...userId ? { userId } : {},
-    type,
-    objectIds: ids,
-    filter
-  })
-    .then(
-      subs => onlyEligibles
-        ? filterEligibleSubscriptions(subs, context)
-        : subs
+  `,
+      {
+        ...(userId ? { userId } : {}),
+        type,
+        objectIds: ids,
+        filter,
+      },
+    )
+    .then((subs) =>
+      onlyEligibles ? filterEligibleSubscriptions(subs, context) : subs,
     )
 }
 
 const subscriptionIsEligibleForNotifications = async (
   subscription,
-  context
+  context,
 ) => {
   const [user, object] = await Promise.all([
     getSubject(subscription, context),
-    getObject(subscription, context)
+    getObject(subscription, context),
   ])
   if (object.__typename === 'Document') {
     return (
@@ -351,26 +337,22 @@ const subscriptionIsEligibleForNotifications = async (
 }
 
 const filterEligibleSubscriptions = (subscriptions, context) => {
-  return Promise.filter(
-    subscriptions,
-    sub => subscriptionIsEligibleForNotifications(sub, context)
+  return Promise.filter(subscriptions, (sub) =>
+    subscriptionIsEligibleForNotifications(sub, context),
   )
 }
 
 const getUnreadNotificationsForUserAndObject = (
   userId,
-  {
-    type,
-    id
-  },
-  { loaders }
+  { type, id },
+  { loaders },
 ) => {
   // the keys provided to load may match multiple notifications
   return loaders.Notification.byKeyObj({ many: true }).load({
     userId,
     eventObjectType: type,
     eventObjectId: id,
-    readAt: null
+    readAt: null,
   })
 }
 
@@ -390,5 +372,5 @@ module.exports = {
   getSubscriptionsForUserAndObjects,
 
   subscriptionIsEligibleForNotifications,
-  getUnreadNotificationsForUserAndObject
+  getUnreadNotificationsForUserAndObject,
 }

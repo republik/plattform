@@ -1,6 +1,6 @@
 language: node_js
 node_js:
-  - "14"
+  - '14'
 cache:
   directories:
     - node_modules
@@ -8,7 +8,7 @@ cache:
 notifications:
   email: false
 addons:
-  postgresql: "9.6"
+  postgresql: '9.6'
 services:
   - elasticsearch
   - postgresql

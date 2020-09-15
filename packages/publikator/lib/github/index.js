@@ -2,8 +2,8 @@ const { descending } = require('d3-array')
 const {
   lib: {
     clients: createGithubClients,
-    utils: { gitAuthor }
-  }
+    utils: { gitAuthor },
+  },
 } = require('@orbiting/backend-modules-github')
 const { getRepos } = require('./getRepos')
 const uniqWith = require('lodash/uniqWith')
@@ -18,39 +18,34 @@ const tagNormalizer = (tag, repoId, refName) => ({
   commit: {
     ...tag.commit,
     repo: {
-      id: repoId
-    }
+      id: repoId,
+    },
   },
   repo: {
-    id: repoId
-  }
+    id: repoId,
+  },
 })
 
 const normalizeRestCommit = ({
   sha,
-  commit: {
-    message,
-    author
-  },
+  commit: { message, author },
   parents,
-  repo
+  repo,
 }) => ({
   id: sha,
-  parentIds: parents
-    ? parents.map(parent => parent.sha)
-    : [],
+  parentIds: parents ? parents.map((parent) => parent.sha) : [],
   message: message,
   author: author,
   date: new Date(author.date),
-  repo
+  repo,
 })
 
 const normalizeGQLCommit = (repo, commit) => ({
   ...commit,
   id: commit.oid,
   date: commit.committedDate,
-  parentIds: commit.parents.nodes.map(v => v.oid),
-  repo
+  parentIds: commit.parents.nodes.map((v) => v.oid),
+  repo,
 })
 
 module.exports = {
@@ -65,9 +60,7 @@ module.exports = {
     const { githubApolloFetch } = await createGithubClients()
     const [login, repoName] = repoId.split('/')
     const {
-      data: {
-        repository: repo
-      }
+      data: { repository: repo },
     } = await githubApolloFetch({
       query: `
         query repository(
@@ -85,8 +78,8 @@ module.exports = {
       `,
       variables: {
         login,
-        repoName
-      }
+        repoName,
+      },
     })
     return repo
   },
@@ -123,8 +116,8 @@ module.exports = {
       variables: {
         login,
         repoName,
-        first: 100
-      }
+        first: 100,
+      },
     })
     const heads = result?.data?.repository?.refs?.nodes
     if (!heads) {
@@ -177,8 +170,8 @@ module.exports = {
       variables: {
         login,
         repoName,
-        sha
-      }
+        sha,
+      },
     })
     const rawCommit = result?.data?.repository?.object
     if (!rawCommit) {
@@ -190,14 +183,15 @@ module.exports = {
         redisKey,
         JSON.stringify({
           ...commit,
-          repo: { //other keys (e.g. latestCommit) create circular structure
-            id: repo.id
-          }
+          repo: {
+            //other keys (e.g. latestCommit) create circular structure
+            id: repo.id,
+          },
         }),
         'EX',
-        redis.__defaultExpireSeconds
+        redis.__defaultExpireSeconds,
       )
-    } catch(e) {
+    } catch (e) {
       console.error(e, { rawCommit, commit })
     }
     return commit
@@ -263,10 +257,9 @@ module.exports = {
         maxRefs: 100,
         maxCommits: first,
         commitsSince: before,
-        commitsUntil: after
-      }
+        commitsUntil: after,
+      },
     })
-
 
     // github downtime resilience
     let heads = result?.data?.repository?.refs?.nodes
@@ -274,28 +267,31 @@ module.exports = {
     if (heads) {
       redis.setAsync(redisKey, JSON.stringify(heads))
     } else {
-      const redisHeads = await redis.getAsync(redisKey)
-        .then( r => r && JSON.parse(r) )
+      const redisHeads = await redis
+        .getAsync(redisKey)
+        .then((r) => r && JSON.parse(r))
       if (!redisHeads) {
         throw new Error(t('api/github/unavailable'))
       }
       heads = redisHeads
     }
 
-    const hasNextPage = heads.some(({ target }) => target.history.pageInfo.hasNextPage)
-    const totalCount = heads.reduce((total, { target }) => total + target.history.totalCount, 0)
+    const hasNextPage = heads.some(
+      ({ target }) => target.history.pageInfo.hasNextPage,
+    )
+    const totalCount = heads.reduce(
+      (total, { target }) => total + target.history.totalCount,
+      0,
+    )
 
     const commits = heads
       .map(({ target }) =>
-        target.history.nodes
-          .map(
-            commit => normalizeGQLCommit(repo, commit)
-          )
+        target.history.nodes.map((commit) => normalizeGQLCommit(repo, commit)),
       )
-      .reduce(
-        (acc, v) => acc.concat(v), []
+      .reduce((acc, v) => acc.concat(v), [])
+      .filter(
+        (v, i, arr) => arr.findIndex((mapObj) => mapObj.id === v.id) === i,
       )
-      .filter((v, i, arr) => arr.findIndex(mapObj => mapObj.id === v.id) === i)
       .sort((a, b) => descending(a.date, b.date))
       .slice(0, first)
 
@@ -303,10 +299,10 @@ module.exports = {
       pageInfo: {
         endCursor: (commits.length && commits.slice(-1)[0].date) || null,
         startCursor: (commits.length && commits[0].date) || null,
-        hasNextPage: hasNextPage || commits.length > first
+        hasNextPage: hasNextPage || commits.length > first,
       },
       totalCount,
-      nodes: commits
+      nodes: commits,
     }
   },
   getAnnotatedTags: async (repoId, { redis, t }) => {
@@ -357,10 +353,10 @@ module.exports = {
           login,
           repoName,
           first,
-          after
-        }
+          after,
+        },
       })
-        .then(response => response.data.repository.refs)
+        .then((response) => response.data.repository.refs)
         .then(({ nodes, pageInfo: { hasNextPage, endCursor } }) => {
           const nextNodes = nodesArray.concat(nodes)
           if (hasNextPage) {
@@ -371,15 +367,16 @@ module.exports = {
     }
 
     const result = await getAll()
-      .then(tags => tags
-        .map(tag => tag.target)
-        .filter(tag => Object.keys(tag).length > 0) // only annotated
-        .map(tag => tagNormalizer(tag, repoId))
+      .then((tags) =>
+        tags
+          .map((tag) => tag.target)
+          .filter((tag) => Object.keys(tag).length > 0) // only annotated
+          .map((tag) => tagNormalizer(tag, repoId)),
       )
-      .then(tags =>
-        uniqWith(tags, (a, b) => a.name === b.name)
-      )
-      .catch(e => {console.error(e)})
+      .then((tags) => uniqWith(tags, (a, b) => a.name === b.name))
+      .catch((e) => {
+        console.error(e)
+      })
 
     // github downtime resilience
     const redisKey = `repos:${repoId}/tags:first=${first}`
@@ -387,8 +384,9 @@ module.exports = {
       redis.setAsync(redisKey, JSON.stringify(result))
       return result
     } else {
-      const redisResult = await redis.getAsync(redisKey)
-        .then( r => r && JSON.parse(r) )
+      const redisResult = await redis
+        .getAsync(redisKey)
+        .then((r) => r && JSON.parse(r))
       if (redisResult) {
         return redisResult
       }
@@ -432,8 +430,8 @@ module.exports = {
       variables: {
         login,
         repoName,
-        ref: `refs/tags/${tagName}`
-      }
+        ref: `refs/tags/${tagName}`,
+      },
     })
     let ref = result?.data?.repository?.ref
 
@@ -450,19 +448,20 @@ module.exports = {
     const [login, repoName] = repoId.split('/')
     const { githubRest } = await createGithubClients()
 
-    return githubRest.git.updateRef({
-      owner: login,
-      repo: repoName,
-      ref,
-      sha
-    })
-      .catch(e => {
+    return githubRest.git
+      .updateRef({
+        owner: login,
+        repo: repoName,
+        ref,
+        sha,
+      })
+      .catch((e) => {
         if (e.message === 'Reference does not exist') {
           return githubRest.git.createRef({
             owner: login,
             repo: repoName,
             ref: `refs/${ref}`,
-            sha
+            sha,
           })
         }
         console.error(e)
@@ -472,12 +471,13 @@ module.exports = {
   deleteRef: async (repoId, ref, silent) => {
     const [login, repoName] = repoId.split('/')
     const { githubRest } = await createGithubClients()
-    return githubRest.git.deleteRef({
-      owner: login,
-      repo: repoName,
-      ref
-    })
-      .catch(errors => {
+    return githubRest.git
+      .deleteRef({
+        owner: login,
+        repo: repoName,
+        ref,
+      })
+      .catch((errors) => {
         if (!silent) {
           console.log(errors)
         }
@@ -490,7 +490,7 @@ module.exports = {
       owner: login,
       repo: repoName,
       name: repoName,
-      archived: true
+      archived: true,
     })
-  }
+  },
 }

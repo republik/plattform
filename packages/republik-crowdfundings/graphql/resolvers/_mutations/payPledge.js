@@ -20,22 +20,33 @@ module.exports = async (_, args, context) => {
   try {
     // load pledge
     // FOR UPDATE to wait on other transactions
-    const pledge = (await transaction.query(`
+    const pledge = (
+      await transaction.query(
+        `
       SELECT *
       FROM pledges
       WHERE id = :pledgeId
       FOR UPDATE
-    `, {
-      pledgeId
-    }))[0]
+    `,
+        {
+          pledgeId,
+        },
+      )
+    )[0]
     if (!pledge) {
-      logger.error(`pledge (${pledgeId}) not found`, { req: req._log(), args, pledge })
+      logger.error(`pledge (${pledgeId}) not found`, {
+        req: req._log(),
+        args,
+        pledge,
+      })
       throw new Error(t('api/unexpected'))
     }
     if (pledge.status === 'SUCCESSFUL') {
       // check if the pledge was paid with the same paypal transaction
       // happens if the webhook is faster than redirect
-      const payment = (await transaction.query(`
+      const payment = (
+        await transaction.query(
+          `
         SELECT
           pay.*
         FROM
@@ -45,19 +56,30 @@ module.exports = async (_, args, context) => {
           ON pp."paymentId" = pay.id
         WHERE
           pp."pledgeId" = :pledgeId
-      `, {
-        pledgeId: pledge.id
-      }))[0]
+      `,
+          {
+            pledgeId: pledge.id,
+          },
+        )
+      )[0]
       const { pspPayload } = pledgePayment
       if (
-        payment && payment.pspPayload && pspPayload &&
-        payment.pspPayload.TRANSACTIONID === pspPayload.tx) {
+        payment &&
+        payment.pspPayload &&
+        pspPayload &&
+        payment.pspPayload.TRANSACTIONID === pspPayload.tx
+      ) {
         await transaction.transactionCommit()
         return {
-          pledgeId: pledge.id
+          pledgeId: pledge.id,
         }
       }
-      logger.error('pledge is already paid', { req: req._log(), args, pledge, pledgePayment })
+      logger.error('pledge is already paid', {
+        req: req._log(),
+        args,
+        pledge,
+        pledgePayment,
+      })
       throw new Error(t('api/pledge/alreadyPaid'))
     }
 
@@ -67,10 +89,15 @@ module.exports = async (_, args, context) => {
     // check if paymentMethod is allowed
     // check by MembershipType would be more precise
     const pkg = await transaction.public.packages.findOne({
-      id: pledge.packageId
+      id: pledge.packageId,
     })
     if (pkg.paymentMethods.indexOf(pledgePayment.method) === -1) {
-      logger.error('payPledge paymentMethod not allowed', { req: req._log(), args, pledge, pledgePayment })
+      logger.error('payPledge paymentMethod not allowed', {
+        req: req._log(),
+        args,
+        pledge,
+        pledgePayment,
+      })
       throw new Error(t('api/pledge/paymentMethod/notAllowed'))
     }
 
@@ -85,7 +112,7 @@ module.exports = async (_, args, context) => {
         userId: user.id,
         transaction,
         t,
-        logger
+        logger,
       })
     } else if (pledgePayment.method === 'STRIPE') {
       pledgeStatus = await payPledgeStripe({
@@ -99,7 +126,7 @@ module.exports = async (_, args, context) => {
         transaction,
         pgdb,
         t,
-        logger
+        logger,
       })
     } else if (pledgePayment.method === 'POSTFINANCECARD') {
       pledgeStatus = await payPledgePostfinance({
@@ -109,7 +136,7 @@ module.exports = async (_, args, context) => {
         userId: user.id,
         transaction,
         t,
-        logger
+        logger,
       })
     } else if (pledgePayment.method === 'PAYPAL') {
       pledgeStatus = await payPledgePaypal({
@@ -118,14 +145,24 @@ module.exports = async (_, args, context) => {
         pspPayload: pledgePayment.pspPayload,
         transaction,
         t,
-        logger
+        logger,
       })
     } else {
-      logger.error('unsupported paymentMethod', { req: req._log(), args, pledge, pledgePayment })
+      logger.error('unsupported paymentMethod', {
+        req: req._log(),
+        args,
+        pledge,
+        pledgePayment,
+      })
       throw new Error(t('api/unexpected'))
     }
     if (!pledgeStatus) {
-      logger.error('pledgeStatus undefined', { req: req._log(), args, pledge, pledgeStatus })
+      logger.error('pledgeStatus undefined', {
+        req: req._log(),
+        args,
+        pledge,
+        pledgeStatus,
+      })
       throw new Error(t('api/unexpected'))
     }
 
@@ -136,12 +173,15 @@ module.exports = async (_, args, context) => {
       }
 
       // update pledge status
-      updatedPledge = await transaction.public.pledges.updateAndGetOne({
-        id: pledge.id
-      }, {
-        status: pledgeStatus,
-        sendConfirmMail: true
-      })
+      updatedPledge = await transaction.public.pledges.updateAndGetOne(
+        {
+          id: pledge.id,
+        },
+        {
+          status: pledgeStatus,
+          sendConfirmMail: true,
+        },
+      )
     }
 
     // commit transaction
@@ -154,26 +194,19 @@ module.exports = async (_, args, context) => {
 
   if (updatedPledge) {
     await Promise.all([
-      user && user.verified && (
-        sendPledgeConfirmations({ userId: user.id, pgdb, t })
-      ),
-      updatedPledge.status === 'SUCCESSFUL' && (
-        refreshPotForPledgeId(pledgeId, context)
-      ),
-      updatedPledge.status === 'PAID_INVESTIGATE' && (
-        slack.publishPledge(
-          user,
-          updatedPledge,
-          'PAID_INVESTIGATE'
-        )
-      )
-    ])
-      .catch(e => {
-        console.error('error after payPledge', e)
-      })
+      user &&
+        user.verified &&
+        sendPledgeConfirmations({ userId: user.id, pgdb, t }),
+      updatedPledge.status === 'SUCCESSFUL' &&
+        refreshPotForPledgeId(pledgeId, context),
+      updatedPledge.status === 'PAID_INVESTIGATE' &&
+        slack.publishPledge(user, updatedPledge, 'PAID_INVESTIGATE'),
+    ]).catch((e) => {
+      console.error('error after payPledge', e)
+    })
   }
 
   return {
-    pledgeId
+    pledgeId,
   }
 }

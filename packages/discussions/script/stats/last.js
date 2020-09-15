@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 require('@orbiting/backend-modules-env').config()
-const { lib: { ConnectionContext } } = require('@orbiting/backend-modules-base')
+const {
+  lib: { ConnectionContext },
+} = require('@orbiting/backend-modules-base')
 
 const { populate } = require('../../lib/stats/last')
 
@@ -8,14 +10,15 @@ const applicationName = 'backends discussions script stats last'
 
 const dry = process.argv[2] === '--dry'
 
-ConnectionContext.create(applicationName).then(async context => {
-  console.log('Begin...')
-  const result = await populate(context, dry)
-  if (dry) {
-    console.log(result)
-  }
-  console.log('Done.')
+ConnectionContext.create(applicationName)
+  .then(async (context) => {
+    console.log('Begin...')
+    const result = await populate(context, dry)
+    if (dry) {
+      console.log(result)
+    }
+    console.log('Done.')
 
-  return context
-})
-  .then(context => ConnectionContext.close(context))
+    return context
+  })
+  .then((context) => ConnectionContext.close(context))

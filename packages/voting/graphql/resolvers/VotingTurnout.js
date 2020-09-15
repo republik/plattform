@@ -1,12 +1,13 @@
 const {
   numEligible,
   numSubmitted,
-  numSubmittedByGroup
+  numSubmittedByGroup,
 } = require('../../lib/Voting')
 
 module.exports = {
-  async eligible (obj, args, { pgdb }) {
-    if (obj.eligible || obj.eligitable) { // typo in old data
+  async eligible(obj, args, { pgdb }) {
+    if (obj.eligible || obj.eligitable) {
+      // typo in old data
       return obj.eligible || obj.eligitable
     } else if (obj.entity) {
       return numEligible(obj.entity, pgdb)
@@ -14,7 +15,7 @@ module.exports = {
       return 0
     }
   },
-  async submitted (obj, args, { pgdb }) {
+  async submitted(obj, args, { pgdb }) {
     if (obj.submitted) {
       return obj.submitted
     } else if (obj.groupSlug) {
@@ -24,5 +25,5 @@ module.exports = {
     } else {
       return 0
     }
-  }
+  },
 }

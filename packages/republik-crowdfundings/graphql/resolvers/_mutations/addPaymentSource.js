@@ -3,7 +3,11 @@ const { paymentSources: getPaymentSources } = require('../User')
 const addSource = require('../../../lib/payments/stripe/addSource')
 const createCustomer = require('../../../lib/payments/stripe/createCustomer')
 
-module.exports = async (_, { sourceId, pspPayload }, { pgdb, req, user: me, t }) => {
+module.exports = async (
+  _,
+  { sourceId, pspPayload },
+  { pgdb, req, user: me, t },
+) => {
   ensureSignedIn(req)
   const userId = me.id
 
@@ -20,7 +24,7 @@ module.exports = async (_, { sourceId, pspPayload }, { pgdb, req, user: me, t })
       await createCustomer({
         sourceId,
         userId,
-        pgdb: transaction
+        pgdb: transaction,
       })
     } else {
       await addSource({
@@ -28,7 +32,7 @@ module.exports = async (_, { sourceId, pspPayload }, { pgdb, req, user: me, t })
         userId,
         pgdb: transaction,
         deduplicate: true,
-        makeDefault: true
+        makeDefault: true,
       })
     }
 

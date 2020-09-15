@@ -1,16 +1,10 @@
 const fetch = require('isomorphic-unfetch')
 const debug = require('debug')('assets:proxy')
-const {
-  authenticate,
-  returnImage
-} = require('../lib')
+const { authenticate, returnImage } = require('../lib')
 
 module.exports = (server) => {
   server.get('/proxy(.:webp)?', async (req, res) => {
-    const {
-      originalURL: url,
-      mac
-    } = req.query
+    const { originalURL: url, mac } = req.query
 
     if (!url) {
       return res.status(404).end()
@@ -23,12 +17,11 @@ module.exports = (server) => {
 
     debug('GET %s', url)
     const result = await fetch(url, {
-      method: 'GET'
+      method: 'GET',
+    }).catch((error) => {
+      console.error('proxy fetch failed', { error })
+      return res.status(404).end()
     })
-      .catch(error => {
-        console.error('proxy fetch failed', { error })
-        return res.status(404).end()
-      })
     if (!result.ok) {
       console.error('proxy fetch failed', result.url, result.status)
       return res.status(result.status).end()
@@ -42,8 +35,8 @@ module.exports = (server) => {
       options: {
         ...req.query,
         webp: !!req.params.webp,
-        cacheTags: ['proxy']
-      }
+        cacheTags: ['proxy'],
+      },
     })
   })
 }

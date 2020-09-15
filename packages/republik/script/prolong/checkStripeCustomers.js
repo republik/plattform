@@ -7,12 +7,10 @@ const CHECK_PAYMENTS_BEFORE_DATE = new Date('2018-01-15')
 const CARDS_VALID_BEFORE_DATE = moment('2019-01-21')
 
 const getList = async (starting_after, account) => {
-  return account.stripe.customers.list(
-    {
-      limit: 100,
-      ...starting_after ? { starting_after } : {}
-    }
-  )
+  return account.stripe.customers.list({
+    limit: 100,
+    ...(starting_after ? { starting_after } : {}),
+  })
 }
 
 const getAllCustomers = async (account) => {
@@ -33,10 +31,12 @@ const getAllCustomers = async (account) => {
   return allCustomers
 }
 
-PgDb.connect().then(async pgdb => {
-  const { accounts } = await getClients(pgdb)
+PgDb.connect()
+  .then(async (pgdb) => {
+    const { accounts } = await getClients(pgdb)
 
-  const userIds = await pgdb.queryOneColumn(`
+    const userIds = await pgdb.queryOneColumn(
+      `
     select
       DISTINCT(p."userId")
     FROM
@@ -49,46 +49,61 @@ PgDb.connect().then(async pgdb => {
       ON pp."pledgeId" = p.id
     where
     pay."createdAt" < :CHECK_PAYMENTS_BEFORE_DATE
-  `, {
-    CHECK_PAYMENTS_BEFORE_DATE
-  })
+  `,
+      {
+        CHECK_PAYMENTS_BEFORE_DATE,
+      },
+    )
 
-  // card backing source on all companies is the same
-  const company = await pgdb.public.companies.findOne({
-    name: 'PROJECT_R'
-  })
-  const account = accounts.find(a => a.company.id === company.id)
+    // card backing source on all companies is the same
+    const company = await pgdb.public.companies.findOne({
+      name: 'PROJECT_R',
+    })
+    const account = accounts.find((a) => a.company.id === company.id)
 
-  const customers = await getAllCustomers(account)
+    const customers = await getAllCustomers(account)
 
-  let numValid = 0
-  let numWithCard = 0
-  let numOfInterest = 0
-  customers.forEach(customer => {
-    if (!customer.metadata || !customer.metadata.userId) {
-      return
-    }
-    const userId = customer.metadata.userId
-    if (!userIds.find(id => id === userId)) {
-      return
-    }
-    numOfInterest++
-    if (!customer.sources || !customer.sources.data[0] || !customer.sources.data[0].card) {
-      return
-    }
-    const card = customer.sources.data[0].card
-    numWithCard++
-    const expires = moment(`${card.exp_year}-${card.exp_month}`, 'YYYY-MM').startOf('month')
-    if (CARDS_VALID_BEFORE_DATE.isBefore(expires)) {
-      numValid++
-    }
+    let numValid = 0
+    let numWithCard = 0
+    let numOfInterest = 0
+    customers.forEach((customer) => {
+      if (!customer.metadata || !customer.metadata.userId) {
+        return
+      }
+      const userId = customer.metadata.userId
+      if (!userIds.find((id) => id === userId)) {
+        return
+      }
+      numOfInterest++
+      if (
+        !customer.sources ||
+        !customer.sources.data[0] ||
+        !customer.sources.data[0].card
+      ) {
+        return
+      }
+      const card = customer.sources.data[0].card
+      numWithCard++
+      const expires = moment(
+        `${card.exp_year}-${card.exp_month}`,
+        'YYYY-MM',
+      ).startOf('month')
+      if (CARDS_VALID_BEFORE_DATE.isBefore(expires)) {
+        numValid++
+      }
+    })
+    const total = customers.length
+    console.log(
+      `numValid: ${numValid} of \nwithCard: ${numWithCard} of \nnumOfInterest: ${numOfInterest} of \ntotal: ${total}.\nturnout: ${
+        (100 / total) * numWithCard
+      }%\ndueDate:${CARDS_VALID_BEFORE_DATE}`,
+    )
+    // console.log(util.inspect(customers, { depth: null }))
   })
-  const total = customers.length
-  console.log(`numValid: ${numValid} of \nwithCard: ${numWithCard} of \nnumOfInterest: ${numOfInterest} of \ntotal: ${total}.\nturnout: ${100 / total * numWithCard}%\ndueDate:${CARDS_VALID_BEFORE_DATE}`)
-  // console.log(util.inspect(customers, { depth: null }))
-}).then(() => {
-  process.exit()
-}).catch(e => {
-  console.log(e)
-  process.exit(1)
-})
+  .then(() => {
+    process.exit()
+  })
+  .catch((e) => {
+    console.log(e)
+    process.exit(1)
+  })

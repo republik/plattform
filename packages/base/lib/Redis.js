@@ -5,37 +5,41 @@ const Promise = require('bluebird')
 Promise.promisifyAll(redis.RedisClient.prototype)
 Promise.promisifyAll(redis.Multi.prototype)
 
-const getConnectionOptions = () => {
-  const {
-    REDIS_URL = 'redis://127.0.0.1:6379'
-  } = process.env
-
+const getConnectionOptions = () => {
+  const { REDIS_URL = 'redis://127.0.0.1:6379' } = process.env
 
   const url = new URL(REDIS_URL)
   const isHerokuRedis = url.hostname.indexOf('amazonaws.com') > -1
 
   const incrementPort = url.password && isHerokuRedis
   if (incrementPort) {
-    console.info("REDIS_URL looks like it's from heroku, automatically incrementing the port by 1")
+    console.info(
+      "REDIS_URL looks like it's from heroku, automatically incrementing the port by 1",
+    )
   }
 
   const connectionOptions = {
     // heroku provides TLS on port + 1
     // https://devcenter.heroku.com/articles/securing-heroku-redis
-    port: incrementPort ? Number(url.port)+1 : Number(url.port),
+    port: incrementPort ? Number(url.port) + 1 : Number(url.port),
     host: url.hostname,
     db: url.path?.split('/')[1] || 0,
-    ...url.password ? {
-      username: url.username,
-      password: url.password,
-      tls: {
-        rejectUnauthorized: false,
-        requestCert: true,
-      },
-    } : {},
-    detect_buffers: true
+    ...(url.password
+      ? {
+          username: url.username,
+          password: url.password,
+          tls: {
+            rejectUnauthorized: false,
+            requestCert: true,
+          },
+        }
+      : {}),
+    detect_buffers: true,
   }
-  debug('redis connectionOptions', connectionOptions, { REDIS_URL, isHerokuRedis })
+  debug('redis connectionOptions', connectionOptions, {
+    REDIS_URL,
+    isHerokuRedis,
+  })
   return connectionOptions
 }
 
@@ -59,9 +63,13 @@ const connect = () => {
 
     do {
       debug('scanMap iteration: %o', { cursor: nextCursor, pattern })
-      const [cursor = '0', keys] = await client.scanAsync([nextCursor, 'MATCH', pattern])
+      const [cursor = '0', keys] = await client.scanAsync([
+        nextCursor,
+        'MATCH',
+        pattern,
+      ])
       nextCursor = cursor
-      await Promise.map(keys, key => mapFn(key, client))
+      await Promise.map(keys, (key) => mapFn(key, client))
     } while (nextCursor !== '0') // nextCursor is "0" if scan is completed.
 
     debug('scanMap reached full iteration')
@@ -71,8 +79,7 @@ const connect = () => {
   return client
 }
 
-const disconnect = client =>
-  client.quit()
+const disconnect = (client) => client.quit()
 
 module.exports = {
   getConnectionOptions,

@@ -1,7 +1,9 @@
 const debug = require('debug')('collections:lib:stats:last')
 const Promise = require('bluebird')
 
-const { cache: { create } } = require('@orbiting/backend-modules-utils')
+const {
+  cache: { create },
+} = require('@orbiting/backend-modules-utils')
 
 const interval = '30 days'
 
@@ -44,15 +46,16 @@ FROM "documentsMedias" dm
 ${last ? 'GROUP BY 1' : 'GROUP BY 1, 2'}
 `
 
-const createCache = (context) => create(
-  {
-    namespace: 'collections',
-    prefix: 'stats:last',
-    key: 'any',
-    ttl: QUERY_CACHE_TTL_SECONDS,
-  },
-  context
-)
+const createCache = (context) =>
+  create(
+    {
+      namespace: 'collections',
+      prefix: 'stats:last',
+      key: 'any',
+      ttl: QUERY_CACHE_TTL_SECONDS,
+    },
+    context,
+  )
 
 const populate = async (context, dry) => {
   debug('populate')
@@ -65,7 +68,7 @@ const populate = async (context, dry) => {
     await createCache(context).set({
       result,
       updatedAt: new Date(),
-      key: 'collections:stats:last'
+      key: 'collections:stats:last',
     })
   }
 
@@ -75,5 +78,5 @@ const populate = async (context, dry) => {
 module.exports = {
   buildQuery,
   createCache,
-  populate
+  populate,
 }

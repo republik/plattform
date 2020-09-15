@@ -1,9 +1,11 @@
 module.exports = {
-  async money ({ money, ignoreFreeze, crowdfunding }, args, { pgdb }) {
+  async money({ money, ignoreFreeze, crowdfunding }, args, { pgdb }) {
     if (money != undefined && !ignoreFreeze) {
       return money
     }
-    return pgdb.public.queryOneField(`
+    return (
+      pgdb.public.queryOneField(
+        `
       SELECT
         SUM(pl.total)
       FROM
@@ -18,15 +20,24 @@ module.exports = {
           cf.id = :crowdfundingId
       WHERE
         pl.status = 'SUCCESSFUL'
-    `, {
-      crowdfundingId: crowdfunding.id
-    }) || 0
+    `,
+        {
+          crowdfundingId: crowdfunding.id,
+        },
+      ) || 0
+    )
   },
-  async memberships ({ memberships, ignoreFreeze, crowdfunding }, args, { pgdb }) {
+  async memberships(
+    { memberships, ignoreFreeze, crowdfunding },
+    args,
+    { pgdb },
+  ) {
     if (memberships != null && !ignoreFreeze) {
       return memberships
     }
-    return pgdb.public.queryOneField(`
+    return (
+      pgdb.public.queryOneField(
+        `
     WITH pledge_ids AS (
       SELECT
         p.id as "pledgeId"
@@ -67,15 +78,20 @@ module.exports = {
               WHERE
                 m."pledgeId" IN (SELECT "pledgeId" FROM pledge_ids)
           ) AS u
-    `, {
-      crowdfundingId: crowdfunding.id
-    }) || 0
+    `,
+        {
+          crowdfundingId: crowdfunding.id,
+        },
+      ) || 0
+    )
   },
-  async people ({ people, ignoreFreeze, crowdfunding }, args, { pgdb }) {
+  async people({ people, ignoreFreeze, crowdfunding }, args, { pgdb }) {
     if (people != null && !ignoreFreeze) {
       return people
     }
-    return pgdb.public.queryOneField(`
+    return (
+      pgdb.public.queryOneField(
+        `
       SELECT
         COUNT(
           DISTINCT(
@@ -96,8 +112,11 @@ module.exports = {
       WHERE
         pl.status = 'SUCCESSFUL' AND
         cf.id = :crowdfundingId
-    `, {
-      crowdfundingId: crowdfunding.id
-    }) || 0
-  }
+    `,
+        {
+          crowdfundingId: crowdfunding.id,
+        },
+      ) || 0
+    )
+  },
 }

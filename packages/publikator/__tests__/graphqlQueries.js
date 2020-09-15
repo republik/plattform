@@ -131,11 +131,11 @@ const COMMIT_MUTATION = `
 const commit = async ({
   apolloFetch = global.instance.createApolloFetch(),
   variables,
-  user
+  user,
 }) => {
   const result = await apolloFetch({
     query: COMMIT_MUTATION,
-    variables
+    variables,
   })
 
   expect(result.errors).toBeFalsy()
@@ -145,7 +145,9 @@ const commit = async ({
   const { commit } = result.data
   expect(commit.id).toBeTruthy()
   expect(commit.repo.id).toBe(variables.repoId)
-  expect(commit.parentIds).toEqual(variables.parentId ? [variables.parentId] : [])
+  expect(commit.parentIds).toEqual(
+    variables.parentId ? [variables.parentId] : [],
+  )
   expect(commit.message).toBe(variables.message)
   expect(commit.date).toBeTruthy()
   expect(commit.author.email).toBe(user.email)
@@ -188,11 +190,11 @@ const PLACE_MILESTONE_MUTATION = `
 const placeMilestone = async ({
   apolloFetch = global.instance.createApolloFetch(),
   variables,
-  user
+  user,
 }) => {
   const result = await apolloFetch({
     query: PLACE_MILESTONE_MUTATION,
-    variables
+    variables,
   })
 
   expect(result.errors).toBeFalsy()
@@ -202,25 +204,14 @@ const placeMilestone = async ({
   checkMilestone({
     milestone: result.data.placeMilestone,
     variables,
-    user
+    user,
   })
 
   return result
 }
 
-const checkMilestone = ({
-  milestone,
-  variables,
-  user
-}) => {
-  const {
-    name,
-    message,
-    commit,
-    date,
-    author,
-    immutable
-  } = milestone
+const checkMilestone = ({ milestone, variables, user }) => {
+  const { name, message, commit, date, author, immutable } = milestone
   expect(name).toBe(variables.name.replace(' ', '-'))
   expect(message).toBe(variables.message)
   expect(commit.id).toBe(variables.commitId)
@@ -377,13 +368,13 @@ const LATEST_PUBLICATIONS_QUERY = `
 
 const getLatestPublications = async ({
   apolloFetch = global.instance.createApolloFetch(),
-  repoId
+  repoId,
 }) => {
   const result = await apolloFetch({
     query: LATEST_PUBLICATIONS_QUERY,
     variables: {
-      repoId
-    }
+      repoId,
+    },
   })
 
   expect(result.errors).toBeFalsy()
@@ -405,14 +396,14 @@ const DOCUMENTS_QUERY = `
 
 const getDocuments = async ({
   apolloFetch = global.instance.createApolloFetch(),
-  user
+  user,
 }) => {
   const testUser = global.testUser
   if (user !== undefined) {
     global.testUser = user
   }
   const result = await apolloFetch({
-    query: DOCUMENTS_QUERY
+    query: DOCUMENTS_QUERY,
   })
   global.testUser = testUser
 
@@ -436,7 +427,7 @@ const DOCUMENT_QUERY = `
 const getDocument = async ({
   apolloFetch = global.instance.createApolloFetch(),
   user,
-  path
+  path,
 }) => {
   const testUser = global.testUser
   if (user !== undefined) {
@@ -445,8 +436,8 @@ const getDocument = async ({
   const result = await apolloFetch({
     query: DOCUMENT_QUERY,
     variables: {
-      path
-    }
+      path,
+    },
   })
   global.testUser = testUser
 
@@ -460,31 +451,26 @@ const getRefs = async (repoId) => {
   const { createGithubClients } = require('../lib/github')
   const { githubRest } = await createGithubClients()
 
-  const liveRefs = [
-    'publication',
-    'prepublication'
-  ]
+  const liveRefs = ['publication', 'prepublication']
   const allRefs = [
     ...liveRefs,
     'scheduled-publication',
-    'scheduled-prepublication'
+    'scheduled-prepublication',
   ]
 
   const [owner, repo] = repoId.split('/')
   return Promise.all([
-    ...allRefs.map(ref =>
-      githubRest.git.getRef({
-        owner,
-        repo,
-        ref: `tags/${ref}`
-      })
-        .then(response => response.data)
-        .catch(e => {})
-    )
-  ])
-    .then(refs => refs
-      .filter(Boolean)
-    )
+    ...allRefs.map((ref) =>
+      githubRest.git
+        .getRef({
+          owner,
+          repo,
+          ref: `tags/${ref}`,
+        })
+        .then((response) => response.data)
+        .catch((e) => {}),
+    ),
+  ]).then((refs) => refs.filter(Boolean))
 }
 
 module.exports = {
@@ -506,5 +492,5 @@ module.exports = {
   getLatestPublications,
   getDocuments,
   getDocument,
-  getRefs
+  getRefs,
 }

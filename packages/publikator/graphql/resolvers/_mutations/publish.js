@@ -1,4 +1,6 @@
-const { Roles: { ensureUserHasRole } } = require('@orbiting/backend-modules-auth')
+const {
+  Roles: { ensureUserHasRole },
+} = require('@orbiting/backend-modules-auth')
 const { descending } = require('d3-array')
 const querystring = require('querystring')
 const sleep = require('await-sleep')
@@ -8,13 +10,13 @@ const {
   publicationVersionRegex,
   getAnnotatedTags,
   upsertRef,
-  deleteRef
+  deleteRef,
 } = require('../../../lib/github')
 const {
   createCampaign,
   updateCampaign,
   updateCampaignContent,
-  getCampaign
+  getCampaign,
 } = require('../../../lib/mailchimp')
 
 const placeMilestone = require('./placeMilestone')
@@ -22,27 +24,25 @@ const { document: getDocument } = require('../Commit')
 const editRepoMeta = require('./editRepoMeta')
 const {
   latestPublications: getLatestPublications,
-  meta: getRepoMeta
+  meta: getRepoMeta,
 } = require('../Repo')
-const { Redirections: { get: getRedirections } } = require('@orbiting/backend-modules-redirections')
+const {
+  Redirections: { get: getRedirections },
+} = require('@orbiting/backend-modules-redirections')
 const {
   prepareMetaForPublish,
-  handleRedirection
+  handleRedirection,
 } = require('../../../lib/Document')
 const {
   lib: {
     html: { get: getHTML },
-    resolve: {
-      contentUrlResolver,
-      metaUrlResolver,
-      metaFieldResolver
-    }
-  }
+    resolve: { contentUrlResolver, metaUrlResolver, metaFieldResolver },
+  },
 } = require('@orbiting/backend-modules-documents')
 const {
   lib: {
-    Repo: { uploadImages }
-  }
+    Repo: { uploadImages },
+  },
 } = require('@orbiting/backend-modules-assets')
 const uniq = require('lodash/uniq')
 const { upsert: repoCacheUpsert } = require('../../../lib/cache/upsert')
@@ -55,7 +55,7 @@ const {
   FRONTEND_BASE_URL,
   PIWIK_URL_BASE,
   PIWIK_SITE_ID,
-  DISABLE_PUBLISH
+  DISABLE_PUBLISH,
 } = process.env
 
 module.exports = async (
@@ -67,9 +67,9 @@ module.exports = async (
     scheduledAt: _scheduledAt,
     updateMailchimp = false,
     notifySubscribers = false,
-    ignoreUnresolvedRepoIds = false
+    ignoreUnresolvedRepoIds = false,
   },
-  context
+  context,
 ) => {
   const { user, t, redis, pubsub, elastic } = context
   ensureUserHasRole(user, 'editor')
@@ -91,10 +91,10 @@ module.exports = async (
         getElasticDoc,
         isPathUsed,
         findTemplates,
-        addRelatedDocs
+        addRelatedDocs,
       },
-      utils: { getIndexAlias }
-    }
+      utils: { getIndexAlias },
+    },
   } = require('@orbiting/backend-modules-search')
 
   // check max scheduledAt
@@ -103,11 +103,14 @@ module.exports = async (
     const maxDate = new Date()
     maxDate.setDate(maxDate.getDate() + 20)
     if (_scheduledAt > maxDate) {
-      throw new Error(t('api/publish/scheduledAt/tooFarInTheFuture', {
-        days: 20
-      }))
+      throw new Error(
+        t('api/publish/scheduledAt/tooFarInTheFuture', {
+          days: 20,
+        }),
+      )
     }
-    if (_scheduledAt > now) { // otherwise it's not scheduled but instant
+    if (_scheduledAt > now) {
+      // otherwise it's not scheduled but instant
       scheduledAt = _scheduledAt
     }
   }
@@ -116,7 +119,7 @@ module.exports = async (
   const doc = await getDocument(
     { id: commitId, repo: { id: repoId } },
     { publicAssets: true },
-    context
+    context,
   )
   if (doc.content.meta.template !== 'front' && !doc.content.meta.slug) {
     throw new Error(t('api/publish/document/slug/404'))
@@ -131,23 +134,26 @@ module.exports = async (
   // for newsletter, preview email: stop publication
   let unresolvedRepoIds = []
 
-  const connection = Object.assign({}, {
-    nodes: [
-      {
-        type: indexType,
-        entity: getElasticDoc({
-          indexType: indexType,
-          doc
-        })
-      }
-    ]
-  })
+  const connection = Object.assign(
+    {},
+    {
+      nodes: [
+        {
+          type: indexType,
+          entity: getElasticDoc({
+            indexType: indexType,
+            doc,
+          }),
+        },
+      ],
+    },
+  )
 
   await addRelatedDocs({
     connection,
     scheduledAt,
     ignorePrepublished: !prepublication,
-    context
+    context,
   })
 
   const { _all, _usernames } = connection.nodes[0].entity
@@ -157,7 +163,7 @@ module.exports = async (
   const utmParams = {
     utm_source: 'newsletter',
     utm_medium: 'email',
-    utm_campaign: repoId
+    utm_campaign: repoId,
   }
 
   const searchString = '?' + querystring.stringify(utmParams)
@@ -168,7 +174,7 @@ module.exports = async (
     _usernames,
     unresolvedRepoIds,
     FRONTEND_BASE_URL,
-    searchString
+    searchString,
   )
 
   metaUrlResolver(
@@ -177,27 +183,21 @@ module.exports = async (
     _usernames,
     unresolvedRepoIds,
     FRONTEND_BASE_URL,
-    searchString
+    searchString,
   )
 
-  metaFieldResolver(
-    resolvedDoc.content.meta,
-    _all,
-    unresolvedRepoIds
-  )
+  metaFieldResolver(resolvedDoc.content.meta, _all, unresolvedRepoIds)
 
   unresolvedRepoIds = uniq(unresolvedRepoIds)
 
   if (
     unresolvedRepoIds.length &&
-    (
-      !ignoreUnresolvedRepoIds ||
+    (!ignoreUnresolvedRepoIds ||
       doc.content.meta.template === 'editorialNewsletter' ||
-      updateMailchimp
-    )
+      updateMailchimp)
   ) {
     return {
-      unresolvedRepoIds
+      unresolvedRepoIds,
     }
   }
 
@@ -210,7 +210,7 @@ module.exports = async (
     notifySubscribers,
     doc,
     now,
-    context
+    context,
   })
 
   // add fields from prepareMetaForPublish to resolvedDoc
@@ -219,7 +219,7 @@ module.exports = async (
     path: doc.content.meta.path,
     publishDate: doc.content.meta.publishDate,
     lastPublishedAt: doc.content.meta.lastPublishedAt,
-    discussionId: doc.content.meta.discussionId
+    discussionId: doc.content.meta.discussionId,
   }
 
   // upload images to S3
@@ -232,13 +232,12 @@ module.exports = async (
   const existingRedirects = await getRedirections(
     newPath,
     { repo: { id: repoId } },
-    context
+    context,
   )
   if (existingRedirects.length) {
-    throw new Error(t(
-      'api/publish/document/slug/redirectsExist',
-      { path: newPath }
-    ))
+    throw new Error(
+      t('api/publish/document/slug/redirectsExist', { path: newPath }),
+    )
   }
 
   if (await isPathUsed(elastic, newPath, repoId)) {
@@ -270,29 +269,39 @@ module.exports = async (
     }
     if (!campaignId) {
       const { id } = await createCampaign()
-        .then(response => response.json())
-        .catch(error => {
+        .then((response) => response.json())
+        .catch((error) => {
           console.error(error)
           throw new Error(t('api/publish/error/createCampaign'))
         })
 
       campaignId = id
-      await redis.setAsync(campaignKey, campaignId, 'EX', redis.__defaultExpireSeconds)
-      await editRepoMeta(null, {
-        repoId,
-        mailchimpCampaignId: campaignId
-      }, context)
+      await redis.setAsync(
+        campaignKey,
+        campaignId,
+        'EX',
+        redis.__defaultExpireSeconds,
+      )
+      await editRepoMeta(
+        null,
+        {
+          repoId,
+          mailchimpCampaignId: campaignId,
+        },
+        context,
+      )
     }
   }
 
   // calc version number
-  const latestPublicationVersion = await getAnnotatedTags(repoId, context)
-    .then(tags => tags
-      .filter(tag => publicationVersionRegex.test(tag.name))
-      .map(tag => parseInt(publicationVersionRegex.exec(tag.name)[1]))
-      .sort((a, b) => descending(a, b))
-      .shift()
-    )
+  const latestPublicationVersion = await getAnnotatedTags(repoId, context).then(
+    (tags) =>
+      tags
+        .filter((tag) => publicationVersionRegex.test(tag.name))
+        .map((tag) => parseInt(publicationVersionRegex.exec(tag.name)[1]))
+        .sort((a, b) => descending(a, b))
+        .shift(),
+  )
   const versionNumber = latestPublicationVersion
     ? latestPublicationVersion + 1
     : 1
@@ -300,13 +309,11 @@ module.exports = async (
     ? `v${versionNumber}-prepublication`
     : `v${versionNumber}`
 
-  const message = yaml.stringify(
-    {
-      scheduledAt,
-      updateMailchimp,
-      notifySubscribers
-    }
-  )
+  const message = yaml.stringify({
+    scheduledAt,
+    updateMailchimp,
+    notifySubscribers,
+  })
 
   const milestone = await placeMilestone(
     null,
@@ -314,44 +321,26 @@ module.exports = async (
       repoId,
       commitId,
       name: versionName,
-      message
+      message,
     },
-    context
+    context,
   )
 
   // move ref
-  let ref = prepublication
-    ? 'prepublication'
-    : 'publication'
+  let ref = prepublication ? 'prepublication' : 'publication'
   if (scheduledAt) {
     ref = `scheduled-${ref}`
   }
-  let gitOps = [
-    upsertRef(
-      repoId,
-      `tags/${ref}`,
-      milestone.sha
-    )
-  ]
+  let gitOps = [upsertRef(repoId, `tags/${ref}`, milestone.sha)]
   if (!scheduledAt) {
     if (ref === 'publication') {
       // prepublication moves along with publication
       gitOps = gitOps.concat(
-        upsertRef(
-          repoId,
-          'tags/prepublication',
-          milestone.sha
-        )
+        upsertRef(repoId, 'tags/prepublication', milestone.sha),
       )
     }
     // overwrite previous scheduling
-    gitOps = gitOps.concat(
-      deleteRef(
-        repoId,
-        `tags/scheduled-${ref}`,
-        true
-      )
-    )
+    gitOps = gitOps.concat(deleteRef(repoId, `tags/scheduled-${ref}`, true))
   }
   await Promise.all(gitOps)
 
@@ -361,7 +350,7 @@ module.exports = async (
     const dossiers = await findTemplates(
       elastic,
       'dossier',
-      doc.content.meta.dossier
+      doc.content.meta.dossier,
     )
 
     if (!resolved.meta) resolved.meta = {}
@@ -372,7 +361,7 @@ module.exports = async (
     const formats = await findTemplates(
       elastic,
       'format',
-      doc.content.meta.format
+      doc.content.meta.format,
     )
 
     if (!resolved.meta) resolved.meta = {}
@@ -383,7 +372,7 @@ module.exports = async (
     const sections = await findTemplates(
       elastic,
       'section',
-      doc.content.meta.section
+      doc.content.meta.section,
     )
 
     if (!resolved.meta) resolved.meta = {}
@@ -398,12 +387,16 @@ module.exports = async (
     commitId,
     versionName,
     milestoneCommitId: milestone.sha,
-    resolved
+    resolved,
   })
 
-  const { insert, after } = createPublish(
-    { prepublication, scheduledAt, elasticDoc, elastic, redis }
-  )
+  const { insert, after } = createPublish({
+    prepublication,
+    scheduledAt,
+    elasticDoc,
+    elastic,
+    redis,
+  })
   await insert()
   await after()
   await sleep(2 * 1000)
@@ -411,31 +404,38 @@ module.exports = async (
   // flush dataloaders
   await context.loaders.Document.byRepoId.clear(repoId)
 
-  await repoCacheUpsert({
-    id: repoId,
-    meta: repoMeta,
-    publications: await getLatestPublications({ id: repoId }, null, context)
-  }, context)
+  await repoCacheUpsert(
+    {
+      id: repoId,
+      meta: repoMeta,
+      publications: await getLatestPublications({ id: repoId }, null, context),
+    },
+    context,
+  )
 
   // release for nice view on github
   // this is optional, the release is not read back again
   const [login, repoName] = repoId.split('/')
-  await githubRest.repos.createRelease({
-    owner: login,
-    repo: repoName,
-    tag_name: milestone.name,
-    name: versionName,
-    draft: false,
-    prerelease: prepublication
-  })
-    .then(response => response.data)
+  await githubRest.repos
+    .createRelease({
+      owner: login,
+      repo: repoName,
+      tag_name: milestone.name,
+      name: versionName,
+      draft: false,
+      prerelease: prepublication,
+    })
+    .then((response) => response.data)
 
   // do the mailchimp update
   if (campaignId) {
     // Update campaign configuration
     const { title, emailSubject, path } = doc.content.meta
     if (!title || !emailSubject) {
-      throw new Error('Mailchimp: missing title or subject', { title, emailSubject })
+      throw new Error('Mailchimp: missing title or subject', {
+        title,
+        emailSubject,
+      })
     }
 
     await updateCampaign({
@@ -447,13 +447,12 @@ module.exports = async (
           resolved.meta.format.meta &&
           resolved.meta.format.meta.repoId,
         subject_line: emailSubject,
-        title
-      }
+        title,
+      },
+    }).catch((error) => {
+      console.error(error)
+      throw new Error(t('api/publish/error/updateCampaign'))
     })
-      .catch(error => {
-        console.error(error)
-        throw new Error(t('api/publish/error/updateCampaign'))
-      })
 
     // Update campaign content (HTML)
     let html = getHTML(resolvedDoc)
@@ -465,25 +464,24 @@ module.exports = async (
         rec: 1,
         bots: 1,
         action_name: `Email: ${emailSubject}`,
-        ...utmParams
+        ...utmParams,
       })}&_id=*|DATE:ymd|**|UNIQID|*`
       html = html.replace(
         '</body>',
-        `<img alt="" src="${openBeacon}" height="1" width="1"></body>`
+        `<img alt="" src="${openBeacon}" height="1" width="1"></body>`,
       )
     }
 
-    await updateCampaignContent({ campaignId, html })
-      .catch(error => {
-        console.error(error)
-        throw new Error(t('api/publish/error/updateCampaignContent'))
-      })
+    await updateCampaignContent({ campaignId, html }).catch((error) => {
+      console.error(error)
+      throw new Error(t('api/publish/error/updateCampaignContent'))
+    })
   }
 
   await pubsub.publish('repoUpdate', {
     repoUpdate: {
-      id: repoId
-    }
+      id: repoId,
+    },
   })
 
   // purge pdfs in CDN
@@ -492,9 +490,9 @@ module.exports = async (
     '?download=1',
     '?images=0',
     '?images=0&download=1',
-    '?download=1&images=0'
+    '?download=1&images=0',
   ]
-  purgeUrls(purgeQueries.map(q => `/pdf${newPath}.pdf${q}`))
+  purgeUrls(purgeQueries.map((q) => `/pdf${newPath}.pdf${q}`))
 
   if (notifySubscribers && !prepublication && !scheduledAt) {
     await notifyPublish(repoId, context)
@@ -507,9 +505,9 @@ module.exports = async (
       live: !scheduledAt,
       meta: {
         scheduledAt,
-        updateMailchimp
+        updateMailchimp,
       },
-      document: doc.content
-    }
+      document: doc.content,
+    },
   }
 }

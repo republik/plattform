@@ -111,30 +111,36 @@ WHERE
 `
 
 const getTotalFn = (min, max, pgdb) => async () => {
-  debug(
-    'query for: %o',
-    { min: min.toISOString(), max: max.toISOString() }
-  )
+  debug('query for: %o', { min: min.toISOString(), max: max.toISOString() })
 
-  const switchDate = await pgdb.public.gsheets.findOneFieldOnly({
-    name: 'RevenueStatsSwitchDate'
-  }, 'data')
-    .then(obj => obj && moment(obj))
+  const switchDate = await pgdb.public.gsheets
+    .findOneFieldOnly(
+      {
+        name: 'RevenueStatsSwitchDate',
+      },
+      'data',
+    )
+    .then((obj) => obj && moment(obj))
 
   const maxSurplus = switchDate || max
 
   const { records, additionals, normalPayments } = await Promise.props({
     records: await pgdb.query(query, {
       min,
-      max: maxSurplus
+      max: maxSurplus,
     }),
-    additionals: await pgdb.public.gsheets.findOneFieldOnly({
-      name: 'revenueStatsSurplusAdditionals'
-    }, 'data'),
-    normalPayments: switchDate && await pgdb.queryOne(normalPaymentsQuery, {
-      min: maxSurplus,
-      max
-    })
+    additionals: await pgdb.public.gsheets.findOneFieldOnly(
+      {
+        name: 'revenueStatsSurplusAdditionals',
+      },
+      'data',
+    ),
+    normalPayments:
+      switchDate &&
+      (await pgdb.queryOne(normalPaymentsQuery, {
+        min: maxSurplus,
+        max,
+      })),
   })
 
   const result = { total: 0, ...records[0] }
@@ -166,11 +172,13 @@ module.exports = async (_, args, context) => {
   const dateFormat = 'YYYY-MM-DD'
   const queryId = `${min.format(dateFormat)}-${max.format(dateFormat)}`
 
-  return createCache({
-    prefix: 'RevenueStats:surplus',
-    key: queryId,
-    ttl: QUERY_CACHE_TTL_SECONDS,
-    forceRecache: args.forceRecache
-  }, context)
-    .cache(getTotalFn(min, max, pgdb))
+  return createCache(
+    {
+      prefix: 'RevenueStats:surplus',
+      key: queryId,
+      ttl: QUERY_CACHE_TTL_SECONDS,
+      forceRecache: args.forceRecache,
+    },
+    context,
+  ).cache(getTotalFn(min, max, pgdb))
 }

@@ -1,16 +1,12 @@
-const path = require('path')
+const path = require('path')
 
-const DEV = process.env.NODE_ENV
-  ? process.env.NODE_ENV !== 'production'
-  : true
+const DEV = process.env.NODE_ENV ? process.env.NODE_ENV !== 'production' : true
 
 const config = (envFile) => {
   if (DEV) {
     const dotenv = require('dotenv')
 
-    const projectRootPath = path.join(
-      __dirname, '../..'
-    )
+    const projectRootPath = path.join(__dirname, '../..')
     if (envFile) {
       dotenv.config({ path: path.join(projectRootPath, envFile) })
     }
@@ -19,5 +15,5 @@ const config = (envFile) => {
 }
 
 module.exports = {
-  config
+  config,
 }

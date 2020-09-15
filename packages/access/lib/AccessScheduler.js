@@ -26,7 +26,10 @@ const init = async ({ pgdb, redis, t, mail }) => {
     debug('run started')
 
     try {
-      const lock = await schedulerLock(redis).lock(LOCK_KEY, 1000 * intervalSecs)
+      const lock = await schedulerLock(redis).lock(
+        LOCK_KEY,
+        1000 * intervalSecs,
+      )
 
       await expireGrants(t, pgdb, mail)
       await followupGrants(t, pgdb, mail)
@@ -56,13 +59,18 @@ const init = async ({ pgdb, redis, t, mail }) => {
   await run()
 
   const close = async () => {
-    const lock = await schedulerLock(redis).lock(LOCK_KEY, 1000 * intervalSecs * 2)
+    const lock = await schedulerLock(redis).lock(
+      LOCK_KEY,
+      1000 * intervalSecs * 2,
+    )
     clearTimeout(timeout)
-    await lock.unlock().catch((err) => { console.error(err) })
+    await lock.unlock().catch((err) => {
+      console.error(err)
+    })
   }
 
   return {
-    close
+    close,
   }
 }
 

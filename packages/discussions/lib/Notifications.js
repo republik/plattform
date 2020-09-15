@@ -2,27 +2,30 @@ const htmlToText = require('html-to-text')
 const { renderEmail } = require('mdast-react-render/lib/email')
 
 const { transformUser } = require('@orbiting/backend-modules-auth')
-const { commentSchema, inQuotes } = require('@orbiting/backend-modules-styleguide')
+const {
+  commentSchema,
+  inQuotes,
+} = require('@orbiting/backend-modules-styleguide')
 const {
   Subscriptions: {
     getSubscriptionsForUserAndObjects,
-    getUsersWithSubscriptions
+    getUsersWithSubscriptions,
   },
-  sendNotification
+  sendNotification,
 } = require('@orbiting/backend-modules-subscriptions')
 const Promise = require('bluebird')
 
 const {
   displayAuthor: originalGetDisplayAuthor,
   content: getContent,
-  preview: getPreview
+  preview: getPreview,
 } = require('../graphql/resolvers/Comment')
 
 const {
   DEFAULT_MAIL_FROM_ADDRESS,
   DEFAULT_MAIL_FROM_NAME,
   FRONTEND_BASE_URL,
-  GENERAL_FEEDBACK_DISCUSSION_ID
+  GENERAL_FEEDBACK_DISCUSSION_ID,
 } = process.env
 
 const getDiscussionUrl = async (discussion, context) => {
@@ -30,7 +33,9 @@ const getDiscussionUrl = async (discussion, context) => {
   if (discussion.id === GENERAL_FEEDBACK_DISCUSSION_ID) {
     return `${communityUrl}&t=general`
   }
-  const document = discussion.repoId && await context.loaders.Document.byRepoId.load(discussion.repoId)
+  const document =
+    discussion.repoId &&
+    (await context.loaders.Document.byRepoId.load(discussion.repoId))
   if (document && document.meta && document.meta.template === 'article') {
     return `${communityUrl}&t=article`
   }
@@ -41,21 +46,17 @@ const getDisplayAuthor = (comment, context) => {
   return originalGetDisplayAuthor(
     comment,
     { portrait: { webp: false } },
-    context
+    context,
   )
 }
 
 const getCommentInfo = async (comment, displayAuthor, discussion, context) => {
   const { t } = context
 
-  const {
-    preview,
-    discussionUrl,
-    contentMdast
-  } = await Promise.props({
+  const { preview, discussionUrl, contentMdast } = await Promise.props({
     preview: getPreview(comment, { length: 128 }, context),
     discussionUrl: getDiscussionUrl(discussion, context),
-    contentMdast: getContent(comment, { strip: false }, context)
+    contentMdast: getContent(comment, { strip: false }, context),
   })
 
   const contentHtml = renderEmail(contentMdast, commentSchema, { doctype: '' })
@@ -67,17 +68,21 @@ const getCommentInfo = async (comment, displayAuthor, discussion, context) => {
     discussionUrl,
     contentHtml,
     contentPlain,
-    shortBody: preview.more
-      ? `${preview.string}...`
-      : preview.string,
-    commentUrl: `${discussionUrl}${discussionUrl.indexOf('?') === -1 ? '?' : '&'}focus=${comment.id}`,
-    muteUrl: `${discussionUrl}${discussionUrl.indexOf('?') === -1 ? '?' : '&'}mute=1`,
+    shortBody: preview.more ? `${preview.string}...` : preview.string,
+    commentUrl: `${discussionUrl}${
+      discussionUrl.indexOf('?') === -1 ? '?' : '&'
+    }focus=${comment.id}`,
+    muteUrl: `${discussionUrl}${
+      discussionUrl.indexOf('?') === -1 ? '?' : '&'
+    }mute=1`,
     subjectParams: {
       authorName: displayAuthor.name,
-      discussionName: inQuotes(discussion.title)
+      discussionName: inQuotes(discussion.title),
     },
     isTopLevelComment: !parentIds || parentIds.length === 0,
-    icon: displayAuthor.profilePicture || t('api/comment/notification/new/app/icon')
+    icon:
+      displayAuthor.profilePicture ||
+      t('api/comment/notification/new/app/icon'),
   }
 }
 
@@ -91,7 +96,11 @@ const submitComment = async (comment, discussion, context, testUsers) => {
 
   const displayAuthor = await getDisplayAuthor(comment, context)
 
-  const subscribers = testUsers || await pgdb.query(`
+  const subscribers =
+    testUsers ||
+    (await pgdb
+      .query(
+        `
       -- commenters in discussion
       SELECT
         u.*
@@ -136,46 +145,54 @@ const submitComment = async (comment, discussion, context, testUsers) => {
       WHERE
         -- exclude commenter
         u.id != :userId
-  `, {
-    discussionId,
-    parentIds,
-    userId
-  })
-    .then(users => users.map(transformUser))
+  `,
+        {
+          discussionId,
+          parentIds,
+          userId,
+        },
+      )
+      .then((users) => users.map(transformUser)))
 
   const subscriptions = displayAuthor.anonymity
     ? []
     : await getSubscriptionsForUserAndObjects(
-      null,
-      {
-        type: 'User',
-        ids: [comment.userId],
-        filter: 'Comment'
-      },
-      context
-    )
+        null,
+        {
+          type: 'User',
+          ids: [comment.userId],
+          filter: 'Comment',
+        },
+        context,
+      )
 
-  const additionalSubscribers = testUsers ? [] : await getUsersWithSubscriptions(subscriptions, context)
-    .then( arr => arr.filter(
-      ({ id: id1 }) => subscribers.findIndex( ({ id: id2 }) => id1 === id2) === -1
-    ))
+  const additionalSubscribers = testUsers
+    ? []
+    : await getUsersWithSubscriptions(subscriptions, context).then((arr) =>
+        arr.filter(
+          ({ id: id1 }) =>
+            subscribers.findIndex(({ id: id2 }) => id1 === id2) === -1,
+        ),
+      )
 
   if (additionalSubscribers.length) {
     const discussionPreferences = await pgdb.public.discussionPreferences.find({
-      userId: additionalSubscribers.map(s => s.id),
-      discussionId: comment.discussionId
+      userId: additionalSubscribers.map((s) => s.id),
+      discussionId: comment.discussionId,
     })
 
     additionalSubscribers
-      .filter(subscriber => {
+      .filter((subscriber) => {
         const discussionPreference = discussionPreferences.find(
-          ({ userId }) => userId === subscriber.id
+          ({ userId }) => userId === subscriber.id,
         )
 
-        return discussionPreference?.notificationOption !== 'NONE' ??
+        return (
+          discussionPreference?.notificationOption !== 'NONE' ??
           subscriber._raw.defaultDiscussionNotificationOption !== 'NONE'
+        )
       })
-      .forEach( subscriber => {
+      .forEach((subscriber) => {
         subscribers.push(subscriber)
       })
   }
@@ -190,18 +207,18 @@ const submitComment = async (comment, discussion, context, testUsers) => {
       muteUrl,
       subjectParams,
       isTopLevelComment,
-      icon
+      icon,
     } = await getCommentInfo(comment, displayAuthor, discussion, context)
 
     await sendNotification(
       {
         subscription: {
           objectType: 'Discussion',
-          objectId: discussion.id
+          objectId: discussion.id,
         },
         event: {
           objectType: 'Comment',
-          objectId: id
+          objectId: id,
         },
         users: subscribers,
         content: {
@@ -213,7 +230,7 @@ const submitComment = async (comment, discussion, context, testUsers) => {
             url: commentUrl,
             icon,
             type: 'discussion',
-            tag: id
+            tag: id,
           },
           mail: (u) => ({
             to: u.email,
@@ -221,63 +238,66 @@ const submitComment = async (comment, discussion, context, testUsers) => {
             fromName: DEFAULT_MAIL_FROM_NAME,
             subject: isTopLevelComment
               ? t('api/comment/notification/new/email/subject', subjectParams)
-              : t('api/comment/notification/answer/email/subject', subjectParams),
+              : t(
+                  'api/comment/notification/answer/email/subject',
+                  subjectParams,
+                ),
             templateName: 'cf_comment_notification_new',
             globalMergeVars: [
               {
                 name: 'NAME',
-                content: u.name
+                content: u.name,
               },
               {
                 name: 'COMMENTER_NAME',
-                content: displayAuthor.name
+                content: displayAuthor.name,
               },
               {
                 name: 'DISCUSSION_TITLE',
-                content: discussion.title
+                content: discussion.title,
               },
               {
                 name: 'DISCUSSION_URL',
-                content: discussionUrl
+                content: discussionUrl,
               },
               {
                 name: 'DISCUSSION_MUTE_URL',
-                content: muteUrl
+                content: muteUrl,
               },
               {
                 name: 'CONTENT_HTML',
-                content: contentHtml
+                content: contentHtml,
               },
               {
                 name: 'CONTENT_PLAIN',
-                content: contentPlain
+                content: contentPlain,
               },
               {
                 name: 'URL',
-                content: commentUrl
+                content: commentUrl,
               },
-              ...displayAuthor.credential
+              ...(displayAuthor.credential
                 ? [
-                  {
-                    name: 'CREDENTIAL_DESCRIPTION',
-                    content: displayAuthor.credential.description
-                  },
-                  {
-                    name: 'CREDENTIAL_VERIFIED',
-                    content: displayAuthor.credential.verified
-                  }
-                ]
-                : []
-            ]
-          })
-        }
+                    {
+                      name: 'CREDENTIAL_DESCRIPTION',
+                      content: displayAuthor.credential.description,
+                    },
+                    {
+                      name: 'CREDENTIAL_VERIFIED',
+                      content: displayAuthor.credential.verified,
+                    },
+                  ]
+                : []),
+            ],
+          }),
+        },
       },
-      context
+      context,
     )
   }
 }
 
 module.exports = {
   submitComment,
-  getDiscussionUrl
+  getDiscussionUrl,
 }

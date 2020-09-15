@@ -14,19 +14,33 @@ module.exports = async (_, args, { pgdb, req, t, mail }) => {
   const transaction = await pgdb.transactionBegin()
   try {
     if (firstName || lastName || birthday || phoneNumber) {
-      await transaction.public.users.update({ id: user.id }, {
-        firstName,
-        lastName,
-        birthday,
-        phoneNumber
-      }, { skipUndefined: true })
+      await transaction.public.users.update(
+        { id: user.id },
+        {
+          firstName,
+          lastName,
+          birthday,
+          phoneNumber,
+        },
+        { skipUndefined: true },
+      )
     }
     if (address) {
-      if (user.addressId) { // update address of user
-        await transaction.public.addresses.update({ id: user.addressId }, address)
-      } else { // user has no address yet
-        const userAddress = await transaction.public.addresses.insertAndGet(address)
-        await transaction.public.users.update({ id: user.id }, { addressId: userAddress.id })
+      if (user.addressId) {
+        // update address of user
+        await transaction.public.addresses.update(
+          { id: user.addressId },
+          address,
+        )
+      } else {
+        // user has no address yet
+        const userAddress = await transaction.public.addresses.insertAndGet(
+          address,
+        )
+        await transaction.public.users.update(
+          { id: user.id },
+          { addressId: userAddress.id },
+        )
       }
     }
     await transaction.transactionCommit()

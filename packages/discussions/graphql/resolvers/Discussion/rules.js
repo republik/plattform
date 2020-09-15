@@ -1,1 +1,1 @@
-module.exports = discussion => discussion
+module.exports = (discussion) => discussion

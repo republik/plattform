@@ -22,9 +22,11 @@ module.exports = async (_, args, { pgdb, req, t, redis, user: me }) => {
     // check if state transform is allowed
     if (status === 'PAID') {
       if (payment.status !== 'WAITING') {
-        logger.error('only payments with status WAITING can be set to PAID',
-          { req: req._log(), args, payment }
-        )
+        logger.error('only payments with status WAITING can be set to PAID', {
+          req: req._log(),
+          args,
+          payment,
+        })
         throw new Error(t('api/unexpected'))
       }
       if (!reason) {
@@ -33,13 +35,18 @@ module.exports = async (_, args, { pgdb, req, t, redis, user: me }) => {
       }
     } else if (status === 'REFUNDED') {
       if (payment.status !== 'WAITING_FOR_REFUND') {
-        logger.error('only payments with status WAITING_FOR_REFUND can be REFUNDED',
-          { req: req._log(), args, payment }
+        logger.error(
+          'only payments with status WAITING_FOR_REFUND can be REFUNDED',
+          { req: req._log(), args, payment },
         )
         throw new Error(t('api/unexpected'))
       }
     } else {
-      logger.error('only change to PAID and REFUNDED supported.', { req: req._log(), args, payment })
+      logger.error('only change to PAID and REFUNDED supported.', {
+        req: req._log(),
+        args,
+        payment,
+      })
       throw new Error(t('api/unexpected'))
     }
 
@@ -47,19 +54,25 @@ module.exports = async (_, args, { pgdb, req, t, redis, user: me }) => {
     if (reason) {
       prefixedReason = 'Support: ' + reason
     }
-    await transaction.public.payments.updateOne({
-      id: payment.id
-    }, {
-      status,
-      pspPayload: prefixedReason,
-      updatedAt: now
-    }, {
-      skipUndefined: true
-    })
+    await transaction.public.payments.updateOne(
+      {
+        id: payment.id,
+      },
+      {
+        status,
+        pspPayload: prefixedReason,
+        updatedAt: now,
+      },
+      {
+        skipUndefined: true,
+      },
+    )
 
     // update pledge status
     if (status === 'PAID') {
-      const pledge = (await transaction.query(`
+      const pledge = (
+        await transaction.query(
+          `
         SELECT
           p.*
         FROM
@@ -69,21 +82,27 @@ module.exports = async (_, args, { pgdb, req, t, redis, user: me }) => {
           ON pp."pledgeId" = p.id
         WHERE
           pp."paymentId" = :paymentId
-      `, {
-        paymentId
-      }))[0]
+      `,
+          {
+            paymentId,
+          },
+        )
+      )[0]
 
       if (pledge.status !== 'SUCCESSFUL') {
-        updatedPledge = await transaction.public.pledges.updateAndGetOne({
-          id: pledge.id
-        }, {
-          status: 'SUCCESSFUL',
-          updatedAt: now
-        })
+        updatedPledge = await transaction.public.pledges.updateAndGetOne(
+          {
+            id: pledge.id,
+          },
+          {
+            status: 'SUCCESSFUL',
+            updatedAt: now,
+          },
+        )
       }
 
       const hasPledgeMemberships = await pgdb.public.memberships.count({
-        pledgeId: pledge.id
+        pledgeId: pledge.id,
       })
 
       // Only generate memberships (or periods) of pledge has not generated
@@ -103,10 +122,9 @@ module.exports = async (_, args, { pgdb, req, t, redis, user: me }) => {
   }
 
   if (updatedPledge) {
-    await refreshPotForPledgeId(updatedPledge.id, { pgdb })
-      .catch(e => {
-        console.error('error after payPledge', e)
-      })
+    await refreshPotForPledgeId(updatedPledge.id, { pgdb }).catch((e) => {
+      console.error('error after payPledge', e)
+    })
   }
 
   return pgdb.public.payments.findOne({ id: paymentId })

@@ -5,5 +5,5 @@ module.exports = {
   proxy: require('./proxy'),
   purge: require('./purge'),
   render: require('./render'),
-  s3: require('./s3')
+  s3: require('./s3'),
 }

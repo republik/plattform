@@ -15,5 +15,5 @@ module.exports = {
       return loaders.Discussion.byRepoId.load(repoId)
     }
     return null
-  }
+  },
 }

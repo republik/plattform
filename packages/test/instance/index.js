@@ -32,7 +32,9 @@ const init = async ({ publicationScheduler, searchNotifyListener = null }) => {
     throw new Error('PG db creating failed')
   }
 
-  const redisUrl = `${process.env.REDIS_URL || 'redis://127.0.0.1:6379'}/${instanceId}`
+  const redisUrl = `${
+    process.env.REDIS_URL || 'redis://127.0.0.1:6379'
+  }/${instanceId}`
 
   const esPrefix = `test${instanceId}`
 
@@ -65,7 +67,7 @@ const init = async ({ publicationScheduler, searchNotifyListener = null }) => {
   await pullElasticsearch({
     inserts: false,
     ensurePropagation: false,
-    debug: false
+    debug: false,
   })
 
   // require server's server.js and start
@@ -88,7 +90,7 @@ const init = async ({ publicationScheduler, searchNotifyListener = null }) => {
     apolloFetch: buildClients(port).createApolloFetch(),
     createApolloFetch: () => buildClients(port).createApolloFetch(),
     clients: buildClients(port),
-    context: server.createGraphqlContext({})
+    context: server.createGraphqlContext({}),
   }
 
   console.log('init completed')
@@ -117,5 +119,5 @@ module.exports = {
       console.error(e)
     }
   },
-  bootstrapEnv
+  bootstrapEnv,
 }

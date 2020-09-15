@@ -9,10 +9,7 @@ const expandUrls = (text, entities) => {
   let newText = `${text}`
   for (const type in entities) {
     for (const e of entities[type]) {
-      newText = newText.replace(
-        e.url,
-        e.media_url_https || e.expanded_url
-      )
+      newText = newText.replace(e.url, e.media_url_https || e.expanded_url)
     }
   }
   return newText
@@ -27,19 +24,19 @@ const getTweetById = async (id, t) => {
     `https://api.twitter.com/1.1/statuses/show.json${format({
       query: {
         id,
-        tweet_mode: 'extended'
-      }
+        tweet_mode: 'extended',
+      },
     })}`,
     {
       method: 'GET',
       headers: {
         Authorization: `Bearer ${bearerToken}`,
-        'Accept-Encoding': 'gzip'
-      }
-    }
+        'Accept-Encoding': 'gzip',
+      },
+    },
   )
-    .then(res => res.json())
-    .catch(error => {
+    .then((res) => res.json())
+    .catch((error) => {
       console.error(`Error getting tweet with id ${id}:`, error)
       return error
     })
@@ -48,8 +45,8 @@ const getTweetById = async (id, t) => {
     throw new Error(
       response.errors.reduce(
         (error, { code, message }) => error.concat(` ${code}: ${message}`),
-        'Twitter API Errors:'
-      )
+        'Twitter API Errors:',
+      ),
     )
   }
 
@@ -71,7 +68,7 @@ const getTweetById = async (id, t) => {
       firstMedium.type === 'photo' &&
       extendedMedia.length > 0 &&
       t.pluralize('api/twitter/morephotos', {
-        count: extendedMedia.length
+        count: extendedMedia.length,
       })) ||
     undefined
 
@@ -79,11 +76,10 @@ const getTweetById = async (id, t) => {
   const text = response.full_text || response.text
   const sanitizedText = expandUrls(text, response.entities)
   const html = sanitizedText
-    ? Autolinker.link(
-      sanitizedText,
-      { mention: 'twitter' }
-    )
-      .replace(/\n/g, '<br/>')
+    ? Autolinker.link(sanitizedText, { mention: 'twitter' }).replace(
+        /\n/g,
+        '<br/>',
+      )
     : null
 
   return {
@@ -98,12 +94,12 @@ const getTweetById = async (id, t) => {
     userProfileImageUrl: response.user.profile_image_url_https,
     image: firstMedium && firstMedium.media_url_https,
     more: more,
-    playable: playable
+    playable: playable,
   }
 }
 
 module.exports = {
   getTweetById,
   imageKeys: ['userProfileImageUrl', 'image'],
-  REGEX: /^https?:\/\/twitter\.com\/(?:#!\/)?\w+\/status(?:es)?\/(\d+)/
+  REGEX: /^https?:\/\/twitter\.com\/(?:#!\/)?\w+\/status(?:es)?\/(\d+)/,
 }

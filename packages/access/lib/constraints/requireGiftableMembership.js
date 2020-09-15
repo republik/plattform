@@ -1,4 +1,6 @@
-const debug = require('debug')('access:lib:constraints:requireGiftableMembership')
+const debug = require('debug')(
+  'access:lib:constraints:requireGiftableMembership',
+)
 
 const memberships = require('../memberships')
 
@@ -28,46 +30,52 @@ const getCounts = async ({ campaign }, { pgdb }) => {
 
   return {
     giftableMemberships: giftableMemberships.length,
-    unclaimedAccessGrants: unclaimedAccessGrants.length
+    unclaimedAccessGrants: unclaimedAccessGrants.length,
   }
 }
 
 const isGrantable = async (args, context) => {
   const { settings, granter, campaign } = args
 
-  const { giftableMemberships, unclaimedAccessGrants } = await getCounts(args, context)
-
-  debug(
-    'isGrantable',
-    {
-      granter: granter.id,
-      settings,
-      campaign,
-      giftableMemberships,
-      unclaimedAccessGrants,
-      isGrantable: giftableMemberships > unclaimedAccessGrants
-    }
+  const { giftableMemberships, unclaimedAccessGrants } = await getCounts(
+    args,
+    context,
   )
+
+  debug('isGrantable', {
+    granter: granter.id,
+    settings,
+    campaign,
+    giftableMemberships,
+    unclaimedAccessGrants,
+    isGrantable: giftableMemberships > unclaimedAccessGrants,
+  })
 
   // Is grantable if there are more memberships to gift than unclaimed access grants.
   return giftableMemberships > unclaimedAccessGrants
 }
 
 const getMeta = async (args, context) => {
-  const { giftableMemberships, unclaimedAccessGrants } = await getCounts(args, context)
+  const { giftableMemberships, unclaimedAccessGrants } = await getCounts(
+    args,
+    context,
+  )
 
   return {
     visible: true,
     grantable: await isGrantable(args, context),
     payload: {
       perks: {
-        giftableMemberships: Math.max(giftableMemberships - unclaimedAccessGrants, 0)
-      }
-    }
+        giftableMemberships: Math.max(
+          giftableMemberships - unclaimedAccessGrants,
+          0,
+        ),
+      },
+    },
   }
 }
 
 module.exports = {
   isGrantable,
-  getMeta
+  getMeta,
 }

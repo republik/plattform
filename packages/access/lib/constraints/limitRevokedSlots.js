@@ -25,15 +25,12 @@ const isGrantable = async (args, context) => {
       AND "accessGrants"."invalidatedAt" IS NULL
   `)
 
-  debug(
-    'isGrantable',
-    {
-      granter: granter.id,
-      settings,
-      campaign,
-      revokedSlots: revokedSlots.length
-    }
-  )
+  debug('isGrantable', {
+    granter: granter.id,
+    settings,
+    campaign,
+    revokedSlots: revokedSlots.length,
+  })
 
   return settings.slots > revokedSlots.length
 }
@@ -41,10 +38,10 @@ const isGrantable = async (args, context) => {
 const getMeta = async (args, context) => ({
   visible: true,
   grantable: await isGrantable(args, context),
-  payload: {}
+  payload: {},
 })
 
 module.exports = {
   isGrantable,
-  getMeta
+  getMeta,
 }

@@ -8,45 +8,37 @@ const { mdastContentToString } = require('../utils')
 const transform = function (row) {
   const user = _.find(this.payload.users, { id: row.userId })
 
-  const discussion = _.find(
-    this.payload.discussions,
-    { id: row.discussionId }
-  )
+  const discussion = _.find(this.payload.discussions, { id: row.discussionId })
   const isAnonymityEnforced = discussion.anonymity === 'ENFORCED'
 
-  const discussionPreferences = _.find(
-    this.payload.discussionPreferences,
-    { userId: row.userId, discussionId: row.discussionId }
-  )
+  const discussionPreferences = _.find(this.payload.discussionPreferences, {
+    userId: row.userId,
+    discussionId: row.discussionId,
+  })
   const isAnonymous = discussionPreferences && discussionPreferences.anonymous
 
   row.resolved = {
     user: null,
     discussion: {
-      hidden: discussion.hidden
-    }
+      hidden: discussion.hidden,
+    },
   }
 
-  if (
-    user &&
-    !isAnonymityEnforced &&
-    !isAnonymous
-  ) {
+  if (user && !isAnonymityEnforced && !isAnonymous) {
     let credential = false
 
     // Find attached credential to discussion
     if (discussionPreferences && discussionPreferences.credentialId) {
-      credential = _.find(
-        this.payload.credentials,
-        { id: discussionPreferences.credentialId }
-      )
+      credential = _.find(this.payload.credentials, {
+        id: discussionPreferences.credentialId,
+      })
     }
 
     if (!credential || credential.length === 0) {
-      credential = _.find(
-        this.payload.credentials,
-        { userId: user.id, isListed: true }
-      )
+      credential = _.find(this.payload.credentials, {
+        userId: user.id,
+        isListed: true,
+      })
     }
 
     row.resolved.user = {
@@ -56,12 +48,12 @@ const transform = function (row) {
       name: `${user.firstName} ${user.lastName}`,
       credential: credential ? credential.description : undefined,
       twitterHandle: user.twitterHandle,
-      username: user.username
+      username: user.username,
     }
   }
 
   row.__sort = {
-    date: row.createdAt
+    date: row.createdAt,
   }
 
   row.contentString = mdastContentToString(remark.parse(row.content))
@@ -82,44 +74,30 @@ const getDefaultResource = async ({ pgdb }) => {
             'lastName',
             'username',
             'twitterHandle',
-            'facebookId'
-          ]
-        }
+            'facebookId',
+          ],
+        },
       ),
       discussions: await pgdb.public.discussions.find(
         {},
         {
-          fields: [
-            'id',
-            'anonymity',
-            'hidden'
-          ]
-        }
+          fields: ['id', 'anonymity', 'hidden'],
+        },
       ),
       discussionPreferences: await pgdb.public.discussionPreferences.find(
         {},
         {
-          fields: [
-            'userId',
-            'discussionId',
-            'anonymous',
-            'credentialId'
-          ]
-        }
+          fields: ['userId', 'discussionId', 'anonymous', 'credentialId'],
+        },
       ),
       credentials: await pgdb.public.credentials.find(
         {},
         {
-          fields: [
-            'id',
-            'userId',
-            'description',
-            'isListed'
-          ]
-        }
-      )
+          fields: ['id', 'userId', 'description', 'isListed'],
+        },
+      ),
     },
-    transform
+    transform,
   }
 }
 
@@ -128,10 +106,10 @@ module.exports = {
   insert: async ({ resource, ...rest }) => {
     resource = Object.assign(
       await getDefaultResource({ resource, ...rest }),
-      resource
+      resource,
     )
 
     return bulk.index({ resource, ...rest })
   },
-  after: () => {}
+  after: () => {},
 }

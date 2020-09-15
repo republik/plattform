@@ -4,16 +4,14 @@ module.exports = async (_, args, context) => {
   const { pgdb, t, user: me } = context
   const {
     id: cancellationId,
-    details: {
-      reason,
-      type,
-      suppressWinback
-    }
+    details: { reason, type, suppressWinback },
   } = args
 
   Roles.ensureUserIsInRoles(me, ['admin', 'supporter'])
 
-  const cancellation = await pgdb.public.membershipCancellations.findOne({ id: cancellationId })
+  const cancellation = await pgdb.public.membershipCancellations.findOne({
+    id: cancellationId,
+  })
   if (!cancellation) {
     throw new Error(t('api/membershipCancellation/404'))
   }
@@ -23,7 +21,7 @@ module.exports = async (_, args, context) => {
     {
       reason,
       category: type,
-      suppressWinback
-    }
+      suppressWinback,
+    },
   )
 }

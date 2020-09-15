@@ -2,19 +2,13 @@ const { ensureSignedIn } = require('@orbiting/backend-modules-auth')
 const Promise = require('bluebird')
 
 module.exports = async (_, args, context) => {
-  const {
-    pgdb,
-    user: me,
-    pubsub,
-    req,
-    loaders
-  } = context
+  const { pgdb, user: me, pubsub, req, loaders } = context
 
   ensureSignedIn(req)
 
   const notifications = await pgdb.public.notifications.find({
     readAt: null,
-    userId: me.id
+    userId: me.id,
   })
 
   if (!notifications.length) {
@@ -22,18 +16,20 @@ module.exports = async (_, args, context) => {
   }
 
   const updatedNotifications = await pgdb.public.notifications.updateAndGet(
-    { id: notifications.map(n => n.id) },
+    { id: notifications.map((n) => n.id) },
     {
-      readAt: new Date()
-    }
+      readAt: new Date(),
+    },
   )
   loaders.Notification.byKeyObj().clearAll()
 
-  await Promise.all(updatedNotifications.map(n =>
-    pubsub.publish('notification', {
-      notification: n
-    })
-  ))
+  await Promise.all(
+    updatedNotifications.map((n) =>
+      pubsub.publish('notification', {
+        notification: n,
+      }),
+    ),
+  )
 
   return updatedNotifications
 }

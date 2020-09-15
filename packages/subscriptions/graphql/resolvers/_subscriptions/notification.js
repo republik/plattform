@@ -6,8 +6,7 @@ module.exports = {
     ensureUser(user)
     return filtered(
       pubsub.asyncIterator('notification'),
-      (update) =>
-        update.notification.userId === user.id
+      (update) => update.notification.userId === user.id,
     )()
-  }
+  },
 }

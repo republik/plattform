@@ -10,16 +10,16 @@ module.exports = async ({ pgdb }) => {
     ORDER BY RANDOM()
   `)
 
-  const operations = await Promise.map(users, user => ({
+  const operations = await Promise.map(users, (user) => ({
     subscriberHash: user.__subscriberHash,
     method: 'PATCH',
     body: {
       merge_fields: {
         FNAME: user.firstName || '',
         LNAME: user.lastName || '',
-        EMAILB64U: encode(user.email)
-      }
-    }
+        EMAILB64U: encode(user.email),
+      },
+    },
   }))
 
   return operations

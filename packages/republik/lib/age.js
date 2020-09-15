@@ -1,6 +1,6 @@
 const { timeYear } = require('d3-time')
 
-exports.age = dateOfBirth => {
+exports.age = (dateOfBirth) => {
   const now = new Date()
   let age = timeYear.count(dateOfBirth, now)
   var months = now.getMonth() - dateOfBirth.getMonth()

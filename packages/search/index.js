@@ -3,6 +3,6 @@ module.exports = {
   NotifyListener: require('./lib/NotifyListener'),
   lib: {
     utils: require('./lib/utils'),
-    Documents: require('./lib/Documents')
-  }
+    Documents: require('./lib/Documents'),
+  },
 }

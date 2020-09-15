@@ -1,3 +1,3 @@
 module.exports = {
-  MAX_CREDENTIAL_LENGTH: 40
+  MAX_CREDENTIAL_LENGTH: 40,
 }

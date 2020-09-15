@@ -27,41 +27,44 @@ if ((!argv.date || !splitDate.isValid()) && !splitId) {
 
 const repoDir = argv.path || path.join(__dirname, 'magazine')
 const getNewRepoDir = (key) =>
-  path.join(__dirname, `magazine-${key}-${splitId || splitDate.format(dateFormatFilesafe)}`)
-
-console.log(`Trying to split front at ${splitId || splitDate.format(dateFormat)}...`)
-
-Promise.resolve().then(async () => {
-  const articleRaw = await fs.readFile(
-    path.join(repoDir, 'article.md')
+  path.join(
+    __dirname,
+    `magazine-${key}-${splitId || splitDate.format(dateFormatFilesafe)}`,
   )
 
-  const mdast = MDAST.parse(articleRaw)
+console.log(
+  `Trying to split front at ${splitId || splitDate.format(dateFormat)}...`,
+)
 
-  const newRootChildren = {
-    before: [],
-    after: []
-  }
+Promise.resolve()
+  .then(async () => {
+    const articleRaw = await fs.readFile(path.join(repoDir, 'article.md'))
 
-  if (splitId) {
-    const splitIndex = mdast.children.findIndex(
-      child => child.data.id === splitId
-    )
-    if (!splitIndex) {
-      throw new Error(`split id ${splitId} not found`)
+    const mdast = MDAST.parse(articleRaw)
+
+    const newRootChildren = {
+      before: [],
+      after: [],
     }
-    newRootChildren.before = mdast.children.slice(0, splitIndex).reverse()
-    newRootChildren.after = mdast.children.slice(splitIndex).reverse()
-  } else {
-    // split nodes into before and after
-    let isAfter = false
-    let firstDateAfter
-    mdast.children
-      .reverse()
-      .forEach(rootChild => {
-        const nodes = rootChild.identifier === 'TEASERGROUP'
-          ? rootChild.children
-          : [rootChild]
+
+    if (splitId) {
+      const splitIndex = mdast.children.findIndex(
+        (child) => child.data.id === splitId,
+      )
+      if (!splitIndex) {
+        throw new Error(`split id ${splitId} not found`)
+      }
+      newRootChildren.before = mdast.children.slice(0, splitIndex).reverse()
+      newRootChildren.after = mdast.children.slice(splitIndex).reverse()
+    } else {
+      // split nodes into before and after
+      let isAfter = false
+      let firstDateAfter
+      mdast.children.reverse().forEach((rootChild) => {
+        const nodes =
+          rootChild.identifier === 'TEASERGROUP'
+            ? rootChild.children
+            : [rootChild]
 
         const nodesString = JSON.stringify(nodes)
         const regexResult = getDateRegex().exec(nodesString)
@@ -69,12 +72,18 @@ Promise.resolve().then(async () => {
 
         const date = dateString && moment(dateString, dateFormat)
         const key = date
-          ? (date.isBefore(splitDate) ? 'before' : 'after')
-          : (isAfter ? 'after' : 'before')
+          ? date.isBefore(splitDate)
+            ? 'before'
+            : 'after'
+          : isAfter
+          ? 'after'
+          : 'before'
 
         if (key === 'before') {
           if (isAfter) {
-            console.warn('child with date before split date encountered after children with date after')
+            console.warn(
+              'child with date before split date encountered after children with date after',
+            )
           }
           newRootChildren.before.push(rootChild)
         } else {
@@ -86,21 +95,20 @@ Promise.resolve().then(async () => {
         }
       })
 
-    console.log(`first date after split: ${firstDateAfter.format(dateFormat)}`)
-  }
+      console.log(
+        `first date after split: ${firstDateAfter.format(dateFormat)}`,
+      )
+    }
 
-  // put content into two folders
-  await Promise.each(
-    ['before', 'after'],
-    async (key) => {
+    // put content into two folders
+    await Promise.each(['before', 'after'], async (key) => {
       const newRepoDir = getNewRepoDir(key)
       await fs.mkdir(newRepoDir, { recursive: true })
       await fs.mkdir(path.join(newRepoDir, 'images'), { recursive: true })
 
       const newMdast = {
         ...mdast,
-        children: newRootChildren[key]
-          .reverse()
+        children: newRootChildren[key].reverse(),
       }
 
       // extract images
@@ -116,38 +124,34 @@ Promise.resolve().then(async () => {
       })
 
       // copy images
-      await Promise.map(
-        imagePaths,
-        (imagePath) =>
-          fs.copyFile(
+      await Promise.map(imagePaths, (imagePath) =>
+        fs
+          .copyFile(
             path.join(repoDir, imagePath),
-            path.join(newRepoDir, imagePath)
+            path.join(newRepoDir, imagePath),
           )
-            .catch(error => {
-              // try with +xml
-              fs.copyFile(
-                path.join(repoDir, `${imagePath}+xml`),
-                path.join(newRepoDir, `${imagePath}+xml`)
-              )
-                .catch(e2 => {
-                  console.error('copying image failed', { error, imagePath })
-                })
+          .catch((error) => {
+            // try with +xml
+            fs.copyFile(
+              path.join(repoDir, `${imagePath}+xml`),
+              path.join(newRepoDir, `${imagePath}+xml`),
+            ).catch((e2) => {
+              console.error('copying image failed', { error, imagePath })
             })
+          }),
       )
 
       // write article.md
       const mdastString = MDAST.stringify(newMdast)
-      await fs.writeFile(
-        path.join(newRepoDir, 'article.md'),
-        mdastString
-      )
-    }
-  )
+      await fs.writeFile(path.join(newRepoDir, 'article.md'), mdastString)
+    })
 
-  console.log(`finished`)
-}).then(() => {
-  process.exit()
-}).catch(e => {
-  console.log(e)
-  process.exit(1)
-})
+    console.log(`finished`)
+  })
+  .then(() => {
+    process.exit()
+  })
+  .catch((e) => {
+    console.log(e)
+    process.exit(1)
+  })

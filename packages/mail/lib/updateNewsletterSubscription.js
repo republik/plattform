@@ -1,16 +1,14 @@
 const MailchimpInterface = require('../MailchimpInterface')
 const {
   InterestIdNotFoundMailError,
-  SubscriptionHandlerMissingMailError
+  SubscriptionHandlerMissingMailError,
 } = require('../errors')
 const logger = console
 
-module.exports = async ({
-  user,
-  name,
-  subscribed,
-  ignoreMemberUnsubscribed = false
-}, NewsletterSubscription) => {
+module.exports = async (
+  { user, name, subscribed, ignoreMemberUnsubscribed = false },
+  NewsletterSubscription,
+) => {
   if (!NewsletterSubscription) throw new SubscriptionHandlerMissingMailError()
 
   const { email } = user
@@ -24,8 +22,8 @@ module.exports = async ({
     email_address: email,
     status_if_new: MailchimpInterface.MemberStatus.Subscribed,
     interests: {
-      [interestId]: !!subscribed
-    }
+      [interestId]: !!subscribed,
+    },
   }
 
   const mailchimp = MailchimpInterface({ logger })
@@ -43,5 +41,9 @@ module.exports = async ({
 
   await mailchimp.updateMember(email, body)
 
-  return NewsletterSubscription.buildSubscription(user.id, interestId, subscribed)
+  return NewsletterSubscription.buildSubscription(
+    user.id,
+    interestId,
+    subscribed,
+  )
 }

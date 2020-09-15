@@ -1,14 +1,23 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
-const {dateRangeFilterWhere,
+const {
+  dateRangeFilterWhere,
   stringArrayFilterWhere,
   booleanFilterWhere,
-  andFilters
+  andFilters,
 } = require('../../../lib/Filters')
 
 module.exports = async (
   _,
-  { limit, offset, orderBy, search, dateRangeFilter, stringArrayFilter, booleanFilter },
-  { pgdb, user }
+  {
+    limit,
+    offset,
+    orderBy,
+    search,
+    dateRangeFilter,
+    stringArrayFilter,
+    booleanFilter,
+  },
+  { pgdb, user },
 ) => {
   Roles.ensureUserHasRole(user, 'supporter')
 
@@ -16,13 +25,14 @@ module.exports = async (
     ? `"${orderBy.field}" ${orderBy.direction}`
     : '"createdAt" ASC'
 
-  const filterActive = (dateRangeFilter || stringArrayFilter || booleanFilter)
+  const filterActive = dateRangeFilter || stringArrayFilter || booleanFilter
   const andFiltersStmt = andFilters([
     dateRangeFilterWhere(dateRangeFilter),
     stringArrayFilterWhere(stringArrayFilter),
-    booleanFilterWhere(booleanFilter)
+    booleanFilterWhere(booleanFilter),
   ])
-  const items = await pgdb.query(`
+  const items = await pgdb.query(
+    `
     SELECT
       pfp.id AS id,
       ba.label AS konto,
@@ -50,15 +60,17 @@ module.exports = async (
       ${search ? 'word_sim' : orderByTerm}
     OFFSET :offset
     LIMIT :limit
-  `, {
-    search: search ? search.trim() : null,
-    fromDate: dateRangeFilter ? dateRangeFilter.from : null,
-    toDate: dateRangeFilter ? dateRangeFilter.to : null,
-    stringArray: stringArrayFilter ? stringArrayFilter.values : null,
-    booleanValue: booleanFilter ? booleanFilter.value : null,
-    limit,
-    offset
-  })
+  `,
+    {
+      search: search ? search.trim() : null,
+      fromDate: dateRangeFilter ? dateRangeFilter.from : null,
+      toDate: dateRangeFilter ? dateRangeFilter.to : null,
+      stringArray: stringArrayFilter ? stringArrayFilter.values : null,
+      booleanValue: booleanFilter ? booleanFilter.value : null,
+      limit,
+      offset,
+    },
+  )
 
   const count = await pgdb.public.postfinancePayments.count()
   return { items, count }

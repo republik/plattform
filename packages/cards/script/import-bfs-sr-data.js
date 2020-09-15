@@ -12,40 +12,39 @@ const argv = yargs
   .option('mapping-url', { alias: 'm', required: true, coerce: url.parse })
   .option('mock', { alias: 't', default: false })
   .option('force', { alias: 'f', default: false })
-  .option('slack-channel', { alias: 'c', default: 'C8NH13Q1W' }) // #comments-dev
-  .argv
+  .option('slack-channel', { alias: 'c', default: 'C8NH13Q1W' }).argv // #comments-dev
 
 const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
 const Redis = require('@orbiting/backend-modules-base/lib/Redis')
 const { publish } = require('@orbiting/backend-modules-slack')
 
 const districtMap = {
-  'Aargau': 'Aargau',
+  Aargau: 'Aargau',
   'Appenzell Ausserrhoden': 'Appenzell Ausserrhoden',
   'Appenzell Innerrhoden': 'Appenzell Innerrhoden',
   'Basel-Landschaft': 'Basel-Landschaft',
   'Basel-Stadt': 'Basel-Stadt',
   'Bern / Berne': 'Bern',
   'Fribourg / Freiburg': 'Freiburg',
-  'Genève': 'Genf',
-  'Glarus': 'Glarus',
+  Genève: 'Genf',
+  Glarus: 'Glarus',
   'Graubünden / Grigioni / Grischun': 'Graubünden',
-  'Jura': 'Jura',
-  'Luzern': 'Luzern',
-  'Neuchâtel': 'Neuenburg',
-  'Nidwalden': 'Nidwalden',
-  'Obwalden': 'Obwalden',
-  'Schaffhausen': 'Schaffhausen',
-  'Schwyz': 'Schwyz',
-  'Solothurn': 'Solothurn',
+  Jura: 'Jura',
+  Luzern: 'Luzern',
+  Neuchâtel: 'Neuenburg',
+  Nidwalden: 'Nidwalden',
+  Obwalden: 'Obwalden',
+  Schaffhausen: 'Schaffhausen',
+  Schwyz: 'Schwyz',
+  Solothurn: 'Solothurn',
   'St. Gallen': 'St. Gallen',
-  'Thurgau': 'Thurgau',
-  'Ticino': 'Tessin',
-  'Uri': 'Uri',
+  Thurgau: 'Thurgau',
+  Ticino: 'Tessin',
+  Uri: 'Uri',
   'Valais / Wallis': 'Wallis',
-  'Vaud': 'Waadt',
-  'Zug': 'Zug',
-  'Zürich': 'Zürich'
+  Vaud: 'Waadt',
+  Zug: 'Zug',
+  Zürich: 'Zürich',
 }
 
 const sanitize = (string) => {
@@ -66,74 +65,85 @@ const sanitize = (string) => {
 
 const maybeTrue = (probability) => Math.random() < probability
 
-Promise.props({ pgdb: PgDb.connect(), redis: Redis.connect() }).then(async (connections) => {
-  const { pgdb, redis } = connections
+Promise.props({ pgdb: PgDb.connect(), redis: Redis.connect() })
+  .then(async (connections) => {
+    const { pgdb, redis } = connections
 
-  if (argv.mock) {
-    console.warn('WARNING: Data mocking enabled, remove --mock flag.')
-  }
+    if (argv.mock) {
+      console.warn('WARNING: Data mocking enabled, remove --mock flag.')
+    }
 
-  const dataRaw = await fetch(argv['data-url'])
-    .then(res => {
+    const dataRaw = await fetch(argv['data-url']).then((res) => {
       if (!res.ok) {
-        throw Error(`Unable to fetch data-url "${url.format(argv['data-url'])}" (HTTP Status Code: ${res.status})`)
+        throw Error(
+          `Unable to fetch data-url "${url.format(
+            argv['data-url'],
+          )}" (HTTP Status Code: ${res.status})`,
+        )
       }
 
       return res.text()
     })
 
-  console.log('Data fetched.')
+    console.log('Data fetched.')
 
-  const { timestamp, kandidierende } = JSON.parse(dataRaw.trim())
+    const { timestamp, kandidierende } = JSON.parse(dataRaw.trim())
 
-  console.log(`Data timestamp: ${timestamp}`)
+    console.log(`Data timestamp: ${timestamp}`)
 
-  const currentHash = crypto.createHash('md5').update(JSON.stringify(kandidierende)).digest('hex')
+    const currentHash = crypto
+      .createHash('md5')
+      .update(JSON.stringify(kandidierende))
+      .digest('hex')
 
-  const redisKey = 'cards:script:import-bfs-sr-data:hash-kandidierende'
-  const previousHash = await redis.getAsync(redisKey)
+    const redisKey = 'cards:script:import-bfs-sr-data:hash-kandidierende'
+    const previousHash = await redis.getAsync(redisKey)
 
-  if (previousHash === currentHash && !argv.mock && !argv.force) {
-    console.log(`Data hash same (${previousHash}), skipping update. Force update with "--force true".`)
-    return connections
-  }
+    if (previousHash === currentHash && !argv.mock && !argv.force) {
+      console.log(
+        `Data hash same (${previousHash}), skipping update. Force update with "--force true".`,
+      )
+      return connections
+    }
 
-  console.log(`Data hash different to before: ${currentHash}. Updating.`)
-  await redis.setAsync(redisKey, currentHash)
+    console.log(`Data hash different to before: ${currentHash}. Updating.`)
+    await redis.setAsync(redisKey, currentHash)
 
-  /**
+    /**
     {
       "bfsHash": "f33b6be8b8bca11bb04c1fa1097b7157",
       "cardId": "243dbc51-014f-4e7b-827d-401781ad7671"
     },
    */
-  const bfsMapping = await fetch(argv['mapping-url'])
-    .then(res => {
+    const bfsMapping = await fetch(argv['mapping-url']).then((res) => {
       if (!res.ok) {
-        throw Error(`Unable to fetch data-url "${url.format(argv['data-url'])}" (HTTP Status Code: ${res.status})`)
+        throw Error(
+          `Unable to fetch data-url "${url.format(
+            argv['data-url'],
+          )}" (HTTP Status Code: ${res.status})`,
+        )
       }
 
       return res.json()
     })
 
-  console.log('Mapping fetched.')
+    console.log('Mapping fetched.')
 
-  const cardGroups = await pgdb.public.cardGroups.findAll()
-  const cards = (await pgdb.public.cards.findAll())
-    .map(r => {
-      r.group = cardGroups.find(cardGroup => cardGroup.id === r.cardGroupId)
+    const cardGroups = await pgdb.public.cardGroups.findAll()
+    const cards = (await pgdb.public.cards.findAll()).map((r) => {
+      r.group = cardGroups.find((cardGroup) => cardGroup.id === r.cardGroupId)
 
       return r
     })
 
-  const stats = { mismatched: 0, tooMany: 0, none: 0 }
-  const mock = { elects: 46, probability: 1 / kandidierende.length * 30 }
+    const stats = { mismatched: 0, tooMany: 0, none: 0 }
+    const mock = { elects: 46, probability: (1 / kandidierende.length) * 30 }
 
-  await Promise.each(
-    kandidierende,
-    async (k, index) => {
-      const bfsHash =
-      crypto.createHash('md5').update(`${k.kanton_nummer}-${k.vorname}-${k.name}`).digest('hex')
+    await Promise.each(kandidierende, async (k, index) => {
+      const bfsHash = crypto
+        .createHash('md5')
+        .update(`${k.kanton_nummer}-${k.vorname}-${k.name}`)
+        .digest('hex')
 
       if (k._matched) {
         throw new Error(`matchend twice, bfsHash "${bfsHash}"`)
@@ -155,13 +165,15 @@ Promise.props({ pgdb: PgDb.connect(), redis: Redis.connect() }).then(async (conn
         }
       */
 
-      const { cardId } = bfsMapping.find(b => b.bfsHash === bfsHash) || {}
-      const mappedCards = cards.filter(c => c.id === cardId)
-      const bfsHashCards = cards.filter(c => c.payload.meta.bfsHash === bfsHash)
+      const { cardId } = bfsMapping.find((b) => b.bfsHash === bfsHash) || {}
+      const mappedCards = cards.filter((c) => c.id === cardId)
+      const bfsHashCards = cards.filter(
+        (c) => c.payload.meta.bfsHash === bfsHash,
+      )
 
       const matchedCards = cards
-        .filter(c => c.group.name === districtMap[k.kanton_bezeichnung])
-        .filter(c => {
+        .filter((c) => c.group.name === districtMap[k.kanton_bezeichnung])
+        .filter((c) => {
           const cFirstName = sanitize(c.payload.meta.firstName)
           const cLastName = sanitize(c.payload.meta.lastName)
 
@@ -187,7 +199,14 @@ Promise.props({ pgdb: PgDb.connect(), redis: Redis.connect() }).then(async (conn
 
         kandidierende[index]._matched = false
 
-        console.log([ k._bfsHash, districtMap[k.kanton_bezeichnung], k.vorname, k.name ].join('\t'))
+        console.log(
+          [
+            k._bfsHash,
+            districtMap[k.kanton_bezeichnung],
+            k.vorname,
+            k.name,
+          ].join('\t'),
+        )
 
         if (matchedCards.length > 1) stats.tooMany++
         if (matchedCards.length === 0) stats.none++
@@ -218,27 +237,27 @@ Promise.props({ pgdb: PgDb.connect(), redis: Redis.connect() }).then(async (conn
           ...payload,
           meta: {
             ...payload.meta,
-            bfsHash
+            bfsHash,
           },
           councilOfStates: {
             ...payload.councilOfStates,
             secondBallotNecessary,
             elected,
-            votes
-          }
+            votes,
+          },
         }
 
-        await pgdb.public.cards.updateOne(
-          { id },
-          { payload: updatedPayload }
-        )
+        await pgdb.public.cards.updateOne({ id }, { payload: updatedPayload })
       }
     })
 
-  console.log('Done.', { stats, matched: kandidierende.filter(k => k._matched).length })
+    console.log('Done.', {
+      stats,
+      matched: kandidierende.filter((k) => k._matched).length,
+    })
 
-  if (argv.slackChannel && !argv.mock) {
-    const dataStats = await pgdb.queryOne(`
+    if (argv.slackChannel && !argv.mock) {
+      const dataStats = await pgdb.queryOne(`
       SELECT
         COUNT(*)
           FILTER (WHERE (payload->'councilOfStates'->>'elected')::bool = TRUE) "countCouncilOfStatesMembers",
@@ -255,35 +274,38 @@ Promise.props({ pgdb: PgDb.connect(), redis: Redis.connect() }).then(async (conn
       ;
     `)
 
-    const content = [
-      `:ballot_box_with_ballot: *Update Ständerat* (Daten vom Bundesamt für Statistik)`,
-      '',
-      `${dataStats.countCouncilOfStatesMembers} gewählte Mitglieder für den Ständerat`,
-      dataStats.listCouncilOfStatesCantons && `Kantone: ${dataStats.listCouncilOfStatesCantons.join(', ')}`
-    ].filter(Boolean).join('\n')
+      const content = [
+        `:ballot_box_with_ballot: *Update Ständerat* (Daten vom Bundesamt für Statistik)`,
+        '',
+        `${dataStats.countCouncilOfStatesMembers} gewählte Mitglieder für den Ständerat`,
+        dataStats.listCouncilOfStatesCantons &&
+          `Kantone: ${dataStats.listCouncilOfStatesCantons.join(', ')}`,
+      ]
+        .filter(Boolean)
+        .join('\n')
 
-    const currentHash = crypto.createHash('md5').update(content).digest('hex')
+      const currentHash = crypto.createHash('md5').update(content).digest('hex')
 
-    const redisKey = 'cards:script:import-bfs-sr-data:hash-slack'
-    const previousHash = await redis.getAsync(redisKey)
+      const redisKey = 'cards:script:import-bfs-sr-data:hash-slack'
+      const previousHash = await redis.getAsync(redisKey)
 
-    if (previousHash !== currentHash) {
-      console.log(`Slack hash different to before: ${currentHash}. Posting.`)
-      await publish(argv.slackChannel, content)
-    } else {
-      console.log(`Slack hash same (${previousHash}), skipping posting.`)
+      if (previousHash !== currentHash) {
+        console.log(`Slack hash different to before: ${currentHash}. Posting.`)
+        await publish(argv.slackChannel, content)
+      } else {
+        console.log(`Slack hash same (${previousHash}), skipping posting.`)
+      }
+
+      await redis.setAsync(redisKey, currentHash)
     }
 
-    await redis.setAsync(redisKey, currentHash)
-  }
-
-  return connections
-})
+    return connections
+  })
   .then(async ({ pgdb, redis }) => {
     await PgDb.disconnect(pgdb)
     await Redis.disconnect(redis)
   })
-  .catch(e => {
+  .catch((e) => {
     console.error(e)
     process.exit(1)
   })

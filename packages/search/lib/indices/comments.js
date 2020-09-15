@@ -9,14 +9,14 @@ module.exports = {
         boost: 0.5,
         highlight: {
           boundary_scanner_locale: 'de-CH',
-          fragment_size: 300
-        }
+          fragment_size: 300,
+        },
       },
       'resolved.user.name': {
         highlight: {
-          number_of_fragments: 0
-        }
-      }
+          number_of_fragments: 0,
+        },
+      },
     },
     filter: {
       default: () => ({
@@ -25,71 +25,71 @@ module.exports = {
             { term: { __type: type } },
             { term: { published: true } },
             { term: { adminUnpublished: false } },
-            { term: { 'resolved.discussion.hidden': false } }
-          ]
-        }
-      })
-    }
+            { term: { 'resolved.discussion.hidden': false } },
+          ],
+        },
+      }),
+    },
   },
   mapping: {
     [type]: {
       dynamic: false,
       properties: {
         __type: {
-          type: 'keyword'
+          type: 'keyword',
         },
         __sort: {
           properties: {
             date: {
-              type: 'date'
-            }
-          }
+              type: 'date',
+            },
+          },
         },
         resolved: {
           properties: {
             user: {
               properties: {
                 facebookId: {
-                  type: 'keyword'
+                  type: 'keyword',
                 },
                 firstName: {
-                  type: 'text'
+                  type: 'text',
                 },
                 lastName: {
-                  type: 'text'
+                  type: 'text',
                 },
                 name: {
-                  type: 'text'
+                  type: 'text',
                 },
                 credential: {
                   type: 'text',
-                  analyzer: 'german'
+                  analyzer: 'german',
                 },
                 twitterHandle: {
-                  type: 'keyword'
+                  type: 'keyword',
                 },
                 username: {
-                  type: 'keyword'
-                }
-              }
+                  type: 'keyword',
+                },
+              },
             },
             discussion: {
               properties: {
                 hidden: {
-                  type: 'boolean'
-                }
-              }
-            }
-          }
+                  type: 'boolean',
+                },
+              },
+            },
+          },
         },
         discussionId: {
-          type: 'keyword'
+          type: 'keyword',
         },
         parentIds: {
-          type: 'keyword'
+          type: 'keyword',
         },
         userId: {
-          type: 'keyword'
+          type: 'keyword',
         },
 
         contentString: {
@@ -100,13 +100,13 @@ module.exports = {
             count: {
               type: 'token_count',
               analyzer: 'standard',
-              store: true
+              store: true,
             },
             keyword: {
               type: 'keyword',
-              ignore_above: 256
-            }
-          }
+              ignore_above: 256,
+            },
+          },
         },
         content: {
           type: 'text',
@@ -114,52 +114,52 @@ module.exports = {
           fields: {
             count: {
               type: 'token_count',
-              analyzer: 'standard'
+              analyzer: 'standard',
             },
             keyword: {
               type: 'keyword',
-              ignore_above: 256
-            }
-          }
+              ignore_above: 256,
+            },
+          },
         },
 
         upVotes: {
-          type: 'integer'
+          type: 'integer',
         },
         downVotes: {
-          type: 'integer'
+          type: 'integer',
         },
 
         votes: {
           properties: {
             vote: {
-              type: 'integer'
+              type: 'integer',
             },
             userid: {
-              type: 'keyword'
-            }
-          }
+              type: 'keyword',
+            },
+          },
         },
         hotness: {
-          type: 'float'
+          type: 'float',
         },
         depth: {
-          type: 'integer'
+          type: 'integer',
         },
 
         published: {
-          type: 'boolean'
+          type: 'boolean',
         },
         adminUnpublished: {
-          type: 'boolean'
+          type: 'boolean',
         },
         createdAt: {
-          type: 'date'
+          type: 'date',
         },
         updatedAt: {
-          type: 'date'
-        }
-      }
-    }
-  }
+          type: 'date',
+        },
+      },
+    },
+  },
 }

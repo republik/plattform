@@ -1,10 +1,7 @@
-const {
-  numEligible,
-  numSubmitted
-} = require('../../lib/Questionnaire')
+const { numEligible, numSubmitted } = require('../../lib/Questionnaire')
 
 module.exports = {
-  async eligible (obj, args, { pgdb }) {
+  async eligible(obj, args, { pgdb }) {
     if (obj.eligible) {
       return obj.eligible
     } else if (obj.entity) {
@@ -13,7 +10,7 @@ module.exports = {
       return 0
     }
   },
-  async submitted (obj, args, { pgdb }) {
+  async submitted(obj, args, { pgdb }) {
     if (obj.submitted) {
       return obj.submitted
     } else if (obj.entity) {
@@ -21,5 +18,5 @@ module.exports = {
     } else {
       return 0
     }
-  }
+  },
 }

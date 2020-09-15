@@ -4,7 +4,9 @@ const { v4: uuid } = require('uuid')
 const Promise = require('bluebird')
 const { ascending, descending } = require('d3-array')
 
-const { applyPgInterval: { add: addInterval } } = require('@orbiting/backend-modules-utils')
+const {
+  applyPgInterval: { add: addInterval },
+} = require('@orbiting/backend-modules-utils')
 
 const { getPeriodEndingLast, getLastEndDate } = require('../utils')
 const rules = require('./rules')
@@ -20,9 +22,9 @@ const OPTIONS_REQUIRE_CLAIMER = ['BENEFACTOR_ABO']
 const findEligableMemberships = ({
   memberships,
   user,
-  ignoreClaimedMemberships = false
+  ignoreClaimedMemberships = false,
 }) =>
-  memberships.filter(m => {
+  memberships.filter((m) => {
     const isCurrentClaimer = m.userId === user.id
 
     const isExtendable =
@@ -47,38 +49,39 @@ const findEligableMemberships = ({
       isCurrentClaimer,
       isExtendable,
       isClaimedMembership,
-      isSelfClaimed
+      isSelfClaimed,
     })
 
-    return isCurrentClaimer &&
+    return (
+      isCurrentClaimer &&
       (isExtendable || isClaimedMembership || isSelfClaimed) &&
       (!ignoreClaimedMemberships || !isClaimedMembership)
+    )
   })
 
 const findDormantMemberships = ({ memberships, user }) =>
-  findEligableMemberships({ memberships, user })
-    .filter(m =>
+  findEligableMemberships({ memberships, user }).filter(
+    (m) =>
       m.userId === user.id &&
       m.active === false &&
-      (m.periods && m.periods.length === 0)
-    )
+      m.periods &&
+      m.periods.length === 0,
+  )
 
 // Checks if user has at least one active and one inactive membership,
 // considering latter as "dormant"
 const hasDormantMembership = ({ user, memberships }) => {
-  const activeMembership = memberships
-    .filter(m =>
-      m.userId === user.id &&
-      m.active === true
-    )
+  const activeMembership = memberships.filter(
+    (m) => m.userId === user.id && m.active === true,
+  )
 
   const dormantMemberships = findDormantMemberships({ memberships, user })
 
-  dormantMemberships.forEach(m => {
+  dormantMemberships.forEach((m) => {
     debug('hasDormantMembership.dormantMemberships.membership', {
       id: m.id,
       membershipType: m.membershipType.name,
-      package: m.pledge.package.name
+      package: m.pledge.package.name,
     })
   })
 
@@ -89,7 +92,7 @@ const evaluate = async ({
   package_,
   packageOption,
   membership,
-  lenient = false
+  lenient = false,
 }) => {
   debug('evaluate')
 
@@ -100,12 +103,14 @@ const evaluate = async ({
 
   const payload = {
     ...packageOption,
-    ...packageOption.reward.type === 'MembershipType' && { id: [packageOption.id, membership.id].join('-') },
+    ...(packageOption.reward.type === 'MembershipType' && {
+      id: [packageOption.id, membership.id].join('-'),
+    }),
     templateId: packageOption.id,
     package: package_,
     membership,
     optionGroup: membership.id,
-    additionalPeriods: []
+    additionalPeriods: [],
   }
 
   if (packageOption.reward.type === 'MembershipType') {
@@ -115,7 +120,7 @@ const evaluate = async ({
     if (
       !membership.active &&
       membership.user.id === package_.user.id &&
-      package_.user.memberships.find(m => m.active)
+      package_.user.memberships.find((m) => m.active)
     ) {
       debug('membership next to an active membership')
       return false
@@ -136,7 +141,7 @@ const evaluate = async ({
     ) {
       debug(
         'only owner can extend membership w/ membershipType "%s"',
-        packageOption.membershipType.name
+        packageOption.membershipType.name,
       )
       return false
     }
@@ -159,7 +164,7 @@ const evaluate = async ({
 
     const lastEndDateWithGracePeriod = addInterval(
       lastEndDate,
-      membership.graceInterval
+      membership.graceInterval,
     )
 
     /**
@@ -183,8 +188,9 @@ const evaluate = async ({
     const beginEnd = {
       beginDate: lastEndDate,
       endDate: moment(lastEndDate).add(
-        packageOptionMembershipType.defaultPeriods, packageOptionMembershipType.interval
-      )
+        packageOptionMembershipType.defaultPeriods,
+        packageOptionMembershipType.interval,
+      ),
     }
 
     payload.additionalPeriods.push({
@@ -193,7 +199,7 @@ const evaluate = async ({
       kind: 'REGULAR',
       createdAt: now,
       updatedAt: now,
-      ...beginEnd
+      ...beginEnd,
     })
 
     // If membership stems from ABO_GIVE_MONTHS package, default ABO option
@@ -216,7 +222,7 @@ const evaluate = async ({
   }
 
   // Apply package rules. Rules may pass or not, and may mutate payload.
-  const passed = await Promise.map(package_.rules, rule => {
+  const passed = await Promise.map(package_.rules, (rule) => {
     if (rules[rule]) {
       return rules[rule]({ package_, packageOption, membership, payload, now })
     }
@@ -226,7 +232,7 @@ const evaluate = async ({
   })
 
   // Check if all rules passed
-  if (passed.length > 0 && passed.some(r => !r)) {
+  if (passed.length > 0 && passed.some((r) => !r)) {
     debug('one or more rules did not pass')
     return false
   }
@@ -235,7 +241,7 @@ const evaluate = async ({
   if (packageOption.reward.type !== 'MembershipType') {
     return {
       ...packageOption,
-      templateId: packageOption.id
+      templateId: packageOption.id,
     }
   }
 
@@ -250,10 +256,12 @@ const getCustomOptions = async (package_) => {
 
   const options = []
 
-  const hasMembershipTypePackageOptions = !!packageOptions.filter(option => option.reward.type === 'MembershipType').length
+  const hasMembershipTypePackageOptions = !!packageOptions.filter(
+    (option) => option.reward.type === 'MembershipType',
+  ).length
 
-  await Promise.map(package_.user.memberships, membership => {
-    return Promise.map(packageOptions, async packageOption => {
+  await Promise.map(package_.user.memberships, (membership) => {
+    return Promise.map(packageOptions, async (packageOption) => {
       const { user } = package_
       if (
         hasMembershipTypePackageOptions &&
@@ -261,18 +269,25 @@ const getCustomOptions = async (package_) => {
         membership.userId === user.id &&
         hasDormantMembership({
           user,
-          memberships: user.memberships
+          memberships: user.memberships,
         })
       ) {
         debug('user has one or more dormant memberships')
         return false
       }
 
-      const evaluatedOption = await evaluate({ package_, packageOption, membership })
+      const evaluatedOption = await evaluate({
+        package_,
+        packageOption,
+        membership,
+      })
 
       // Add option if there it is not in options already, determine
       // by option.id.
-      if (evaluatedOption && !options.find(option => option.id === evaluatedOption.id)) {
+      if (
+        evaluatedOption &&
+        !options.find((option) => option.id === evaluatedOption.id)
+      ) {
         options.push(evaluatedOption)
       }
     })
@@ -280,34 +295,44 @@ const getCustomOptions = async (package_) => {
 
   if (
     hasMembershipTypePackageOptions &&
-    !options.filter(Boolean).find(option => option.reward.type === 'MembershipType')
+    !options
+      .filter(Boolean)
+      .find((option) => option.reward.type === 'MembershipType')
   ) {
     return []
   }
 
-  return options
-    .filter(Boolean)
-    // Sort by price
-    .sort((a, b) => descending(a.price, b.price))
-    // Sort by defaultAmount
-    .sort((a, b) => descending(a.defaultAmount, b.defaultAmount))
-    // Sort by sequenceNumber in an ascending manner
-    .sort((a, b) => ascending(
-      a.membership && a.membership.sequenceNumber,
-      b.membership && b.membership.sequenceNumber
-    ))
-    // Sort by membership "endDate", ascending
-    .sort((a, b) => ascending(
-      a.membership && getLastEndDate(a.membership.membershipPeriods),
-      b.membership && getLastEndDate(b.membership.membershipPeriods)
-    ))
-    // Sort by userID, own ones up top.
-    .sort((a, b) => descending(
-      a.membership && a.membership.userId === package_.user.id,
-      b.membership && b.membership.userId === package_.user.id
-    ))
-    // Sort by sortOrder at lat
-    .sort((a, b) => ascending(a.order, b.order))
+  return (
+    options
+      .filter(Boolean)
+      // Sort by price
+      .sort((a, b) => descending(a.price, b.price))
+      // Sort by defaultAmount
+      .sort((a, b) => descending(a.defaultAmount, b.defaultAmount))
+      // Sort by sequenceNumber in an ascending manner
+      .sort((a, b) =>
+        ascending(
+          a.membership && a.membership.sequenceNumber,
+          b.membership && b.membership.sequenceNumber,
+        ),
+      )
+      // Sort by membership "endDate", ascending
+      .sort((a, b) =>
+        ascending(
+          a.membership && getLastEndDate(a.membership.membershipPeriods),
+          b.membership && getLastEndDate(b.membership.membershipPeriods),
+        ),
+      )
+      // Sort by userID, own ones up top.
+      .sort((a, b) =>
+        descending(
+          a.membership && a.membership.userId === package_.user.id,
+          b.membership && b.membership.userId === package_.user.id,
+        ),
+      )
+      // Sort by sortOrder at lat
+      .sort((a, b) => ascending(a.order, b.order))
+  )
 }
 
 /*
@@ -330,7 +355,12 @@ const getCustomOptions = async (package_) => {
     }
   }
 */
-const resolvePackages = async ({ packages, pledger = {}, strict = false, pgdb }) => {
+const resolvePackages = async ({
+  packages,
+  pledger = {},
+  strict = false,
+  pgdb,
+}) => {
   debug('resolvePackages', { packages: packages.length, strict })
 
   if (packages.length === 0) {
@@ -342,103 +372,105 @@ const resolvePackages = async ({ packages, pledger = {}, strict = false, pgdb })
     debug('empty pledger object or missing pledger.id')
   }
 
-  const pledges =
-    pledger.id
-      ? await pgdb.public.pledges.find({
+  const pledges = pledger.id
+    ? await pgdb.public.pledges.find({
         userId: pledger.id,
-        status: 'SUCCESSFUL'
+        status: 'SUCCESSFUL',
       })
-      : []
+    : []
 
-  let memberships =
-    pledger.id
-      ? await pgdb.public.memberships.find({
+  let memberships = pledger.id
+    ? await pgdb.public.memberships.find({
         or: [
           { userId: pledger.id },
-          pledges.length > 0 && { pledgeId: pledges.map(pledge => pledge.id) }
-        ].filter(Boolean)
+          pledges.length > 0 && {
+            pledgeId: pledges.map((pledge) => pledge.id),
+          },
+        ].filter(Boolean),
       })
-      : []
+    : []
 
   memberships = await resolveMemberships({ memberships, pgdb })
 
   const users =
     memberships.length > 0
       ? await pgdb.public.users.find({
-        id: memberships.map(membership => membership.userId)
-      })
+          id: memberships.map((membership) => membership.userId),
+        })
       : []
 
   const membershipPeriods =
     memberships.length > 0
       ? await pgdb.public.membershipPeriods.find({
-        membershipId: memberships.map(membership => membership.id)
-      })
+          membershipId: memberships.map((membership) => membership.id),
+        })
       : []
 
   memberships.forEach((membership, index, memberships) => {
-    const user = users.find(user => user.id === membership.userId)
+    const user = users.find((user) => user.id === membership.userId)
     memberships[index].user = user
-    memberships[index].claimerName =
-      [user.firstName, user.lastName].filter(Boolean).join(' ').trim()
+    memberships[index].claimerName = [user.firstName, user.lastName]
+      .filter(Boolean)
+      .join(' ')
+      .trim()
 
-    memberships[index].membershipPeriods =
-      membershipPeriods.filter(
-        membershipPeriod => membershipPeriod.membershipId === membership.id
-      )
+    memberships[index].membershipPeriods = membershipPeriods.filter(
+      (membershipPeriod) => membershipPeriod.membershipId === membership.id,
+    )
   })
 
   Object.assign(pledger, { memberships })
 
   const now = moment()
 
-  const allPackageOptions =
-    await pgdb.public.packageOptions.find({
-      packageId: packages.map(package_ => package_.id),
-      and: [
-        { or: [{ 'disabledAt >': now }, { disabledAt: null }] },
-        strict && { or: [{ 'hiddenAt >': now }, { hiddenAt: null }] }
-      ].filter(Boolean)
-    })
+  const allPackageOptions = await pgdb.public.packageOptions.find({
+    packageId: packages.map((package_) => package_.id),
+    and: [
+      { or: [{ 'disabledAt >': now }, { disabledAt: null }] },
+      strict && { or: [{ 'hiddenAt >': now }, { hiddenAt: null }] },
+    ].filter(Boolean),
+  })
 
   const allRewards =
     allPackageOptions.length > 0
       ? await pgdb.public.rewards.find({
-        id: allPackageOptions.map(option => option.rewardId)
-      })
+          id: allPackageOptions.map((option) => option.rewardId),
+        })
       : []
 
   const allGoodies =
     allRewards.length > 0
       ? await pgdb.public.goodies.find({
-        rewardId: allRewards.map(reward => reward.id)
-      })
+          rewardId: allRewards.map((reward) => reward.id),
+        })
       : []
 
   const allMembershipTypes =
     allRewards.length > 0
       ? await pgdb.public.membershipTypes.find({
-        rewardId: allRewards.map(reward => reward.id)
-      })
+          rewardId: allRewards.map((reward) => reward.id),
+        })
       : []
 
   allRewards.forEach((reward, index, allRewards) => {
-    const goodie = allGoodies
-      .find(g => g.rewardId === reward.id)
-    const membershipType = allMembershipTypes
-      .find(m => m.rewardId === reward.id)
+    const goodie = allGoodies.find((g) => g.rewardId === reward.id)
+    const membershipType = allMembershipTypes.find(
+      (m) => m.rewardId === reward.id,
+    )
 
     allRewards[index] = Object.assign({}, reward, membershipType, goodie)
   })
 
-  const resolvedPackages = await Promise.map(packages, async package_ => {
+  const resolvedPackages = await Promise.map(packages, async (package_) => {
     const packageOptions = allPackageOptions
-      .filter(packageOption => packageOption.packageId === package_.id)
-      .map(packageOption => {
-        const reward = allRewards
-          .find(reward => packageOption.rewardId === reward.rewardId)
+      .filter((packageOption) => packageOption.packageId === package_.id)
+      .map((packageOption) => {
+        const reward = allRewards.find(
+          (reward) => packageOption.rewardId === reward.rewardId,
+        )
         const membershipType = allMembershipTypes.find(
-          membershipType => packageOption.rewardId === membershipType.rewardId
+          (membershipType) =>
+            packageOption.rewardId === membershipType.rewardId,
         )
 
         return { ...packageOption, reward, membershipType }
@@ -458,49 +490,48 @@ const resolveMemberships = async ({ memberships, pgdb }) => {
   const membershipTypes =
     memberships.length > 0
       ? await pgdb.public.membershipTypes.find({
-        id: memberships.map(membership => membership.membershipTypeId)
-      })
+          id: memberships.map((membership) => membership.membershipTypeId),
+        })
       : []
 
   const membershipPledges =
     memberships.length > 0
       ? await pgdb.public.pledges.find({
-        id: memberships.map(membership => membership.pledgeId)
-      })
+          id: memberships.map((membership) => membership.pledgeId),
+        })
       : []
 
   const membershipPledgePackages =
     membershipPledges.length > 0
       ? await pgdb.public.packages.find({
-        id: membershipPledges.map(pledge => pledge.packageId)
-      })
+          id: membershipPledges.map((pledge) => pledge.packageId),
+        })
       : []
 
   const membershipPeriods =
     memberships.length > 0
       ? await pgdb.public.membershipPeriods.find({
-        membershipId: memberships.map(membership => membership.id)
-      })
+          membershipId: memberships.map((membership) => membership.id),
+        })
       : []
 
   membershipPledges.forEach((pledge, index, pledges) => {
-    pledges[index].package = membershipPledgePackages.find(package_ => package_.id === pledge.packageId)
+    pledges[index].package = membershipPledgePackages.find(
+      (package_) => package_.id === pledge.packageId,
+    )
   })
 
   memberships.forEach((membership, index, memberships) => {
-    memberships[index].membershipType =
-      membershipTypes.find(
-        membershipType => membershipType.id === membership.membershipTypeId
-      )
-    memberships[index].pledge =
-      membershipPledges.find(
-        membershipPledge => membershipPledge.id === membership.pledgeId
-      )
+    memberships[index].membershipType = membershipTypes.find(
+      (membershipType) => membershipType.id === membership.membershipTypeId,
+    )
+    memberships[index].pledge = membershipPledges.find(
+      (membershipPledge) => membershipPledge.id === membership.pledgeId,
+    )
 
-    memberships[index].periods =
-      membershipPeriods.filter(
-        period => period.membershipId === membership.id
-      )
+    memberships[index].periods = membershipPeriods.filter(
+      (period) => period.membershipId === membership.id,
+    )
   })
 
   return memberships
@@ -513,5 +544,5 @@ module.exports = {
   evaluate,
   resolvePackages,
   resolveMemberships,
-  getCustomOptions
+  getCustomOptions,
 }

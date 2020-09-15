@@ -14,7 +14,7 @@ module.exports = async ({
   transaction,
   pgdb,
   t,
-  logger = console
+  logger = console,
 }) => {
   const isSubscription = pkg.name === 'MONTHLY_ABO'
   const threeDSecure = pspPayload && pspPayload.type === 'three_d_secure'
@@ -37,15 +37,16 @@ module.exports = async ({
       await createCustomer({
         sourceId: rememberSourceId,
         userId,
-        pgdb
+        pgdb,
       })
-    } else { // stripe customer exists
+    } else {
+      // stripe customer exists
       deduplicatedSourceId = await addSource({
         sourceId: rememberSourceId,
         userId,
         pgdb,
         deduplicate: true,
-        makeDefault
+        makeDefault,
       })
     }
 
@@ -55,20 +56,18 @@ module.exports = async ({
         userId,
         companyId: pkg.companyId,
         metadata: {
-          pledgeId
+          pledgeId,
         },
-        pgdb: transaction
+        pgdb: transaction,
       })
     } else {
       charge = await createCharge({
         amount: total,
         userId,
         companyId: pkg.companyId,
-        sourceId: threeDSecure
-          ? sourceId
-          : deduplicatedSourceId || sourceId,
+        sourceId: threeDSecure ? sourceId : deduplicatedSourceId || sourceId,
         threeDSecure,
-        pgdb: transaction
+        pgdb: transaction,
       })
     }
   } catch (e) {
@@ -97,14 +96,14 @@ module.exports = async ({
       total: charge.amount,
       status: 'PAID',
       pspId: charge.id,
-      pspPayload: charge
+      pspPayload: charge,
     })
 
     // insert pledgePayment
     await transaction.public.pledgePayments.insert({
       pledgeId,
       paymentId: payment.id,
-      paymentType: 'PLEDGE'
+      paymentType: 'PLEDGE',
     })
   }
 

@@ -1,8 +1,6 @@
 const fetch = require('isomorphic-unfetch')
 const { returnImage } = require('../lib')
-const {
-  PDF_BASE_URL
-} = process.env
+const { PDF_BASE_URL } = process.env
 
 if (!PDF_BASE_URL) {
   console.warn('missing env PDF_BASE_URL, the /pdf endpoint will not work')
@@ -19,12 +17,11 @@ module.exports = (server) => {
     const path = req.originalUrl.replace(/^\/pdf/, '')
 
     const result = await fetch(`${PDF_BASE_URL}${path}`, {
-      method: 'GET'
+      method: 'GET',
+    }).catch((error) => {
+      console.error('pdf fetch failed', { error })
+      return res.status(404).end()
     })
-      .catch(error => {
-        console.error('pdf fetch failed', { error })
-        return res.status(404).end()
-      })
     if (!result.ok) {
       console.error('pdf fetch failed', result.url, result.status)
       return res.status(result.status).end()
@@ -37,8 +34,8 @@ module.exports = (server) => {
       path,
       options: {
         ...req.query,
-        cacheTags: ['pdf-proxy']
-      }
+        cacheTags: ['pdf-proxy'],
+      },
     })
   })
 }

@@ -6,7 +6,9 @@ module.exports = async (_, args, context) => {
 
   // In case pre-populated data is not available...
   if (!data) {
-    throw new Error('Unable to retrieve pre-populated data for DiscussionsStats.last')
+    throw new Error(
+      'Unable to retrieve pre-populated data for DiscussionsStats.last',
+    )
   }
 
   // Retrieve pre-populated data.
@@ -15,6 +17,6 @@ module.exports = async (_, args, context) => {
   return {
     ...result,
     updatedAt,
-    key
+    key,
   }
 }

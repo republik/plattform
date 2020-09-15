@@ -8,6 +8,6 @@ module.exports = {
   sortKey: require('./sortKey'),
   voteComment: require('./voteComment'),
   stats: {
-    evolution: require('./stats/evolution')
-  }
+    evolution: require('./stats/evolution'),
+  },
 }

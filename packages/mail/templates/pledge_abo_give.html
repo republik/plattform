@@ -1,16 +1,16 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
   <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="x-ua-compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta charset="UTF-8" />
+    <meta http-equiv="x-ua-compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
     <!--[if gte mso 15]>
-    <xml>
-      <o:officedocumentsettings>
-        <o:allowpng />
-        <o:pixelsperinch>96</o:pixelsperinch>
-      </o:officedocumentsettings>
-    </xml>
+      <xml>
+        <o:officedocumentsettings>
+          <o:allowpng />
+          <o:pixelsperinch>96</o:pixelsperinch>
+        </o:officedocumentsettings>
+      </xml>
     <![endif]-->
     <style type="text/css">
       {{sg_font_faces}}
@@ -25,114 +25,196 @@
       }
     </style>
   </head>
-  <body style="margin: 0; padding: 0; background-color: #fff;">
+  <body style="margin: 0; padding: 0; background-color: #fff">
     <table border="0" cellpadding="0" cellspacing="0" width="100%">
       <tbody>
         <tr>
           <td align="center" valign="top">
-            <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width:640px;color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}">
+            <table
+              align="center"
+              border="0"
+              cellpadding="0"
+              cellspacing="0"
+              width="100%"
+              style="max-width:640px;color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}"
+            >
               <tbody>
                 <tr>
-                  <td style="padding:20px;">
+                  <td style="padding: 20px">
                     <p>Guten Tag</p>
                     {{#if waiting_for_payment}}
-                      <p>Vielen Dank, dass Sie die Verbreitung der Republik mit einer Geschenk-Mitgliedschaft unterstützen!</p>
-                    {{/if}}
+                    <p>
+                      Vielen Dank, dass Sie die Verbreitung der Republik mit
+                      einer Geschenk-Mitgliedschaft unterstützen!
+                    </p>
+                    {{/if}} {{#if voucher_codes}} {{#unless
+                    waiting_for_payment}}
+                    <p>
+                      Vielen Dank, dass Sie die Verbreitung der Republik mit
+                      einer Geschenk-Mitgliedschaft unterstützen!
+                    </p>
+                    {{/unless}}
 
-                    {{#if voucher_codes}}
-                      {{#unless waiting_for_payment}}
-                        <p>Vielen Dank, dass Sie die Verbreitung der Republik mit einer Geschenk-Mitgliedschaft unterstützen!</p>
-                      {{/unless}}
+                    <p>
+                      Für jede Geschenk-Mitgliedschaft erhalten Sie nachfolgend
+                      einen Gutscheincode.
+                    </p>
+                    <p><strong>{{voucher_codes}}</strong></p>
+                    <p>
+                      Sie können diesen der Person Ihrer Wahl mit einem Mittel
+                      Ihrer Wahl überreichen: sofort per Mail, traditionell per
+                      Briefpost oder originell als Schrift auf einem Kuchen.
+                    </p>
+                    <p>
+                      Um den Gutscheincode einzulösen, muss der neue Besitzer
+                      oder die neue Besitzerin nur auf die Seite
+                      <a href="{{link_claim}}">{{link_claim}}</a> gehen. Und den
+                      Code dort eingeben.
+                    </p>
 
-                      <p>Für jede Geschenk-Mitgliedschaft erhalten Sie nachfolgend einen Gutscheincode.</p>
-                      <p><strong>{{voucher_codes}}</strong></p>
-                      <p>Sie können diesen der Person Ihrer Wahl mit einem Mittel Ihrer Wahl überreichen: sofort per Mail, traditionell per Briefpost oder originell als Schrift auf einem Kuchen.</p>
-                      <p>Um den Gutscheincode einzulösen, muss der neue Besitzer oder die neue Besitzerin nur auf die Seite <a href="{{link_claim}}">{{link_claim}}</a> gehen. Und den Code dort eingeben.</p>
+                    {{#if goodies_count}}
+                    <p>
+                      {{#if `goodies_count == 1`}} Auch Ihr bestelltes
+                      Republik-Objekt eignet sich perfekt für die Code-Übergabe.
+                      {{elseif `goodies_count > 1`}} Auch Ihre bestellten
+                      Republik-Objekte eignen sich perfekt für die
+                      Code-Übergabe. {{/if}} Bücher und Taschen liefern wir
+                      innerhalb von 7 Werktagen.
+                    </p>
 
-                      {{#if goodies_count}}
-                        <p>
-                          {{#if `goodies_count == 1`}}
-                            Auch Ihr bestelltes Republik-Objekt eignet sich perfekt für die Code-Übergabe.
-                          {{elseif `goodies_count > 1`}}
-                            Auch Ihre bestellten Republik-Objekte eignen sich perfekt für die Code-Übergabe.
-                          {{/if}}
-
-                          Bücher und Taschen liefern wir innerhalb von 7 Werktagen.
-                        </p>
-
-                        <ul>
-                          {{#options}}
-                            {{#if `this.otype == "Goodie"`}}
-                              <li>{{this.oamount}} {{this.olabel}}</li>
-                            {{/if}}
-                          {{/options}}
-                        </ul>
-                        <p>Stellen Sie dafür bitte sicher, dass Sie Ihre Adresse unter <a href="{{link_account_account}}">{{link_account}}</a> korrekt eingetragen haben.</p>
-                      {{/if}}
-                    {{/if}}
-
-                    {{#if `num_access_granted_memberships > 0`}}
-                      {{#if `num_access_granted_memberships == 1`}}
-                        <p><strong>Vielen Dank, dass Sie die Verbreitung der Republik {{#if voucher_codes}}zusätzlich {{/if}}mit einer Wachstums-Mitgliedschaft unterstützen!</strong></p>
-                        <p>Wir werden nun, zusammen mit unseren Komplizen, eine passende Empfängerin für Ihr Geschenk suchen und Sie informieren, sobald die Mitgliedschaft eingelöst wird.</p>
-                      {{/if}}
-                      {{#if `num_access_granted_memberships > 1`}}
-                        <p><strong>Vielen Dank, dass Sie die Verbreitung der Republik {{#if voucher_codes}}zusätzlich {{/if}}mit gleich mehreren Wachstums-Mitgliedschaften unterstützen!</strong></p>
-                        <p>Wir werden nun, zusammen mit unseren Komplizen, passende Empfängerinnen für Ihr Geschenk suchen und Sie informieren, wann immer eine Mitgliedschaft eingelöst wird.</p>
-                      {{/if}}
-                    {{/if}}
+                    <ul>
+                      {{#options}} {{#if `this.otype == "Goodie"`}}
+                      <li>{{this.oamount}} {{this.olabel}}</li>
+                      {{/if}} {{/options}}
+                    </ul>
+                    <p>
+                      Stellen Sie dafür bitte sicher, dass Sie Ihre Adresse
+                      unter
+                      <a href="{{link_account_account}}">{{link_account}}</a>
+                      korrekt eingetragen haben.
+                    </p>
+                    {{/if}} {{/if}} {{#if `num_access_granted_memberships > 0`}}
+                    {{#if `num_access_granted_memberships == 1`}}
+                    <p>
+                      <strong
+                        >Vielen Dank, dass Sie die Verbreitung der Republik
+                        {{#if voucher_codes}}zusätzlich {{/if}}mit einer
+                        Wachstums-Mitgliedschaft unterstützen!</strong
+                      >
+                    </p>
+                    <p>
+                      Wir werden nun, zusammen mit unseren Komplizen, eine
+                      passende Empfängerin für Ihr Geschenk suchen und Sie
+                      informieren, sobald die Mitgliedschaft eingelöst wird.
+                    </p>
+                    {{/if}} {{#if `num_access_granted_memberships > 1`}}
+                    <p>
+                      <strong
+                        >Vielen Dank, dass Sie die Verbreitung der Republik
+                        {{#if voucher_codes}}zusätzlich {{/if}}mit gleich
+                        mehreren Wachstums-Mitgliedschaften
+                        unterstützen!</strong
+                      >
+                    </p>
+                    <p>
+                      Wir werden nun, zusammen mit unseren Komplizen, passende
+                      Empfängerinnen für Ihr Geschenk suchen und Sie
+                      informieren, wann immer eine Mitgliedschaft eingelöst
+                      wird.
+                    </p>
+                    {{/if}} {{/if}}
 
                     <p><strong>Informationen zur Zahlung:</strong></p>
 
                     {{#if `payment_method != "PAYMENTSLIP"`}}
-                      <p>Ihre Zahlung ist erfolgreich bei uns eingegangen, herzlichen Dank!</p>
+                    <p>
+                      Ihre Zahlung ist erfolgreich bei uns eingegangen,
+                      herzlichen Dank!
+                    </p>
+                    {{/if}} {{#if `payment_method == "PAYMENTSLIP"`}}
+                    <p>
+                      Sie haben eine Banküberweisung als Zahlungsweg gewählt.
+                    </p>
+                    <p>
+                      Bitte überweisen Sie {{total_formatted}} bis spätestens
+                      {{due_date}} an:
+                    </p>
+                    <p>
+                      PC 61-11760-6<br />
+                      IBAN: CH50 0900 0000 6101 1760 6<br />
+                      BIC: POFICHBEXXX
+                    </p>
+                    <p>lautend auf:</p>
+                    <p>
+                      Project R Genossenschaft<br />
+                      Sihlhallenstrasse 1<br />
+                      8004 Zürich
+                    </p>
+                    <p>
+                      <strong
+                        >Bitte vergessen Sie nicht, {{HRID}} in das Feld
+                        «Betreff» des Einzahlungsscheins zu schreiben, sonst
+                        funktioniert die Zuordnung nicht. Danke!</strong
+                      >
+                    </p>
+                    {{/if}} {{#if waiting_for_payment}}<br />
+                    <p>
+                      <strong
+                        >Da der Gesamtbetrag Ihrer Bestellung die magische
+                        Grenze von CHF 1000.– übersteigt, erhalten Sie die
+                        Gutscheincodes erst nach Zahlungseingang.</strong
+                      >
+                    </p>
                     {{/if}}
 
-                    {{#if `payment_method == "PAYMENTSLIP"`}}
-                      <p>Sie haben eine Banküberweisung als Zahlungsweg gewählt.</p>
-                      <p>Bitte überweisen Sie {{total_formatted}} bis spätestens {{due_date}} an:</p>
-                      <p>PC 61-11760-6<br>
-                        IBAN: CH50 0900 0000 6101 1760 6<br>
-                        BIC: POFICHBEXXX
-                      </p>
-                      <p>
-                        lautend auf:
-                      </p>
-                      <p>
-                        Project R Genossenschaft<br>
-                        Sihlhallenstrasse 1<br>
-                        8004 Zürich
-                      </p>
-                      <p><strong>Bitte vergessen Sie nicht, {{HRID}} in das Feld «Betreff» des Einzahlungsscheins zu schreiben, sonst funktioniert die Zuordnung nicht. Danke!</strong></p>
-                    {{/if}}
-
-                    {{#if waiting_for_payment}}<br>
-                      <p><strong>Da der Gesamtbetrag Ihrer Bestellung die magische Grenze von CHF 1000.– übersteigt, erhalten Sie die Gutscheincodes erst nach Zahlungseingang.</strong></p>
-                    {{/if}}
-
-                    <p>Vielen Dank!
-                    {{#if voucher_codes}}
-                      <br />Und viel Freude beim Verschenken der Republik.
-                    {{/if}}
+                    <p>
+                      Vielen Dank! {{#if voucher_codes}} <br />Und viel Freude
+                      beim Verschenken der Republik. {{/if}}
                     </p>
                     <p>Ihre Crew der Republik</p>
                   </td>
                 </tr>
                 <tr>
-                  <td style="padding:20px;">
-                    <p style="font-size:14px;line-height:20px;{{sg_font_style_sans_serif_regular}}">Die Republik ist ein unabhängiges und werbefreies digitales Magazin für Politik, Wirtschaft, Gesellschaft und Kultur. Es wird von seinen Leserinnen und Lesern finanziert und erscheint von Montag bis Samstag mit täglich ein bis drei neuen Beiträgen. In der App, auf der Website und als Newsletter.</p>
-                    <p style="color:#282828;font-size:14px;line-height:20px;{{sg_font_style_sans_serif_regular}}">
-                      <img height="79" src="{{frontend_base_url}}/static/logo_republik_newsletter.png" style="border:0px;width:180px !important; height:79px !important;margin:0px;" width="180" alt="">
-                      <br>
-                      Republik AG<br>
-                      Sihlhallenstrasse 1, CH-8004 Zürich<br>
-                      <a href="{{frontend_base_url}}">www.republik.ch</a><br>
-                      <a href="mailto:kontakt@republik.ch">kontakt@republik.ch</a>
+                  <td style="padding: 20px">
+                    <p
+                      style="font-size:14px;line-height:20px;{{sg_font_style_sans_serif_regular}}"
+                    >
+                      Die Republik ist ein unabhängiges und werbefreies
+                      digitales Magazin für Politik, Wirtschaft, Gesellschaft
+                      und Kultur. Es wird von seinen Leserinnen und Lesern
+                      finanziert und erscheint von Montag bis Samstag mit
+                      täglich ein bis drei neuen Beiträgen. In der App, auf der
+                      Website und als Newsletter.
                     </p>
-                    <p style="font-size:14px;line-height:20px;{{sg_font_style_sans_serif_regular}}">
-                        <a href="{{link_manifest}}">Unser Manifest</a><br />
-                        <a href="{{link_imprint}}">Das Impressum</a><br />
-                        <a href="{{link_faq}}">Häufig gestellte Fragen</a>
+                    <p
+                      style="color:#282828;font-size:14px;line-height:20px;{{sg_font_style_sans_serif_regular}}"
+                    >
+                      <img
+                        height="79"
+                        src="{{frontend_base_url}}/static/logo_republik_newsletter.png"
+                        style="
+                          border: 0px;
+                          width: 180px !important;
+                          height: 79px !important;
+                          margin: 0px;
+                        "
+                        width="180"
+                        alt=""
+                      />
+                      <br />
+                      Republik AG<br />
+                      Sihlhallenstrasse 1, CH-8004 Zürich<br />
+                      <a href="{{frontend_base_url}}">www.republik.ch</a><br />
+                      <a href="mailto:kontakt@republik.ch"
+                        >kontakt@republik.ch</a
+                      >
+                    </p>
+                    <p
+                      style="font-size:14px;line-height:20px;{{sg_font_style_sans_serif_regular}}"
+                    >
+                      <a href="{{link_manifest}}">Unser Manifest</a><br />
+                      <a href="{{link_imprint}}">Das Impressum</a><br />
+                      <a href="{{link_faq}}">Häufig gestellte Fragen</a>
                     </p>
                   </td>
                 </tr>

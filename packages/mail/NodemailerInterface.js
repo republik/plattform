@@ -4,7 +4,7 @@ const { SendMailError } = require('./errors')
 
 const {
   SEND_MAILS_NODEMAILER_CONNECTION_URL,
-  SEND_MAILS_NODEMAILER_TEMPLATE_REGEX
+  SEND_MAILS_NODEMAILER_TEMPLATE_REGEX,
 } = process.env
 
 const transporter =
@@ -16,25 +16,24 @@ const compile = (template, variables = []) => {
     return undefined
   }
 
-  return variables.reduce(
-    (string, mergeVar) => {
-      const { name, content } = mergeVar
-      return string.replace(new RegExp(`{?{{ ?${name} ?}}}?`, 'ig'), content)
-    },
-    template
-  )
+  return variables.reduce((string, mergeVar) => {
+    const { name, content } = mergeVar
+    return string.replace(new RegExp(`{?{{ ?${name} ?}}}?`, 'ig'), content)
+  }, template)
 }
 
 module.exports = () => {
   return {
-    isUsable (mail) {
+    isUsable(mail) {
       return !!(
         transporter &&
         SEND_MAILS_NODEMAILER_TEMPLATE_REGEX &&
-        new RegExp(SEND_MAILS_NODEMAILER_TEMPLATE_REGEX, 'ig').test(mail.templateName)
+        new RegExp(SEND_MAILS_NODEMAILER_TEMPLATE_REGEX, 'ig').test(
+          mail.templateName,
+        )
       )
     },
-    async send (message) {
+    async send(message) {
       const result = await new Promise(function (resolve, reject) {
         transporter.sendMail(
           {
@@ -42,7 +41,7 @@ module.exports = () => {
             to: message.to.map(({ email }) => email).join(', '),
             subject: message.subject,
             text: compile(message.text, message.global_merge_vars),
-            html: compile(message.html, message.global_merge_vars)
+            html: compile(message.html, message.global_merge_vars),
           },
           (error, info) => {
             if (error) {
@@ -50,11 +49,11 @@ module.exports = () => {
             } else {
               resolve({ ...info, status: 'sent' })
             }
-          }
+          },
         )
       })
 
       return [result]
-    }
+    },
   }
 }

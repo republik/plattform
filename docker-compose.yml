@@ -1,4 +1,4 @@
-version: "3.4"
+version: '3.4'
 services:
   elastic:
     # in order to get elastic to work, see https://www.elastic.co/guide/en/elasticsearch/reference/current/docker.html#docker-cli-run-prod-mode
@@ -6,14 +6,14 @@ services:
     container_name: elasticsearch
     environment:
       - cluster.routing.allocation.disk.threshold_enabled=false
-      - "ES_JAVA_OPTS=-Xms1024m -Xmx1024m"
+      - 'ES_JAVA_OPTS=-Xms1024m -Xmx1024m'
       - xpack.graph.enabled=false
       - xpack.ml.enabled=false
       - xpack.monitoring.enabled=false
       - xpack.security.enabled=false
       - xpack.watcher.enabled=false
       - ELASTIC_PASSWORD=elastic
-      - "discovery.type=single-node"
+      - 'discovery.type=single-node'
       - TAKE_FILE_OWNERSHIP=true
     ulimits:
       memlock:
@@ -47,4 +47,4 @@ services:
       - ./docker-data/postgres:/var/lib/postgresql/data:delegated
     ports:
       - 5432:5432
-    command: ["postgres", "-c", "log_statement=all"]
+    command: ['postgres', '-c', 'log_statement=all']

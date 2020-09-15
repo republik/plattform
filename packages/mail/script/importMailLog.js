@@ -28,59 +28,61 @@ const argv = yargs
   .options('type', { required: true })
   .options('keys', { coerce: JSON.parse })
   .options('now', { coerce: moment, default: new Date() })
-  .options('dry-run', { default: true })
-  .argv
+  .options('dry-run', { default: true }).argv
 
-PgDb.connect().then(async pgdb => {
-  const { type, keys, now, dryRun } = argv
-  console.log('running importMailLog.js...', { dryRun })
+PgDb.connect()
+  .then(async (pgdb) => {
+    const { type, keys, now, dryRun } = argv
+    console.log('running importMailLog.js...', { dryRun })
 
-  console.log('reading stdin')
-  const input = rw.readFileSync('/dev/stdin', 'utf8')
+    console.log('reading stdin')
+    const input = rw.readFileSync('/dev/stdin', 'utf8')
 
-  if (!input || !input.length) {
-    throw new Error('You need to provide input on stdin')
-  }
+    if (!input || !input.length) {
+      throw new Error('You need to provide input on stdin')
+    }
 
-  const records = uniq(input.split('\n').filter(Boolean))
-  console.log('starting', { type, keys, dryRun, now })
+    const records = uniq(input.split('\n').filter(Boolean))
+    console.log('starting', { type, keys, dryRun, now })
 
-  const ids = records.filter(line => isUUID.v4(line))
-  const emails = records.filter(line => !isUUID.v4(line))
-  console.log(`${ids.length} ids, ${emails.length} emails`)
+    const ids = records.filter((line) => isUUID.v4(line))
+    const emails = records.filter((line) => !isUUID.v4(line))
+    console.log(`${ids.length} ids, ${emails.length} emails`)
 
-  const users = [
-    ...ids.length ? await pgdb.public.users.find({ id: ids }) : [],
-    ...emails.length ? await pgdb.public.users.find({ email: emails }) : []
-  ]
-  console.log(`found ${users.length} users`)
+    const users = [
+      ...(ids.length ? await pgdb.public.users.find({ id: ids }) : []),
+      ...(emails.length ? await pgdb.public.users.find({ email: emails }) : []),
+    ]
+    console.log(`found ${users.length} users`)
 
-  if (dryRun) {
-    console.log('dryRun: skipping insert')
-  } else {
-    // too many rows to insert in one swoosh, thus one by one
-    const rows = await Promise.map(
-      users,
-      ({ id: userId, email }) =>
-        pgdb.public.mailLog.insert({
-          type,
-          userId,
-          email,
-          keys,
-          status: 'SENT',
-          result: { status: 'imported' },
-          createdAt: now,
-          updatedAt: now
-        }),
-      { concurrency: 20 }
-    )
-    console.log(`inserted ${rows.length} rows!`)
-  }
+    if (dryRun) {
+      console.log('dryRun: skipping insert')
+    } else {
+      // too many rows to insert in one swoosh, thus one by one
+      const rows = await Promise.map(
+        users,
+        ({ id: userId, email }) =>
+          pgdb.public.mailLog.insert({
+            type,
+            userId,
+            email,
+            keys,
+            status: 'SENT',
+            result: { status: 'imported' },
+            createdAt: now,
+            updatedAt: now,
+          }),
+        { concurrency: 20 },
+      )
+      console.log(`inserted ${rows.length} rows!`)
+    }
 
-  console.log('finished!')
-}).then(() => {
-  process.exit()
-}).catch(e => {
-  console.log(e)
-  process.exit(1)
-})
+    console.log('finished!')
+  })
+  .then(() => {
+    process.exit()
+  })
+  .catch((e) => {
+    console.log(e)
+    process.exit(1)
+  })

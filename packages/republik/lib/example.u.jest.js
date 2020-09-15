@@ -2,7 +2,7 @@
  * Check if age.jest.js global.Date has any influence.
  */
 
-test.skip('Date ok?', done => {
+test.skip('Date ok?', (done) => {
   console.log('a', new Date())
 
   setTimeout(() => {

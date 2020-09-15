@@ -9,5 +9,5 @@ const validate = (value, question, { t }) => {
 }
 
 module.exports = {
-  validate
+  validate,
 }

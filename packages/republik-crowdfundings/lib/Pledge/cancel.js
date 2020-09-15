@@ -7,7 +7,9 @@ const evaluatePledge = async function ({ pledgeId }, { pgdb, now = moment() }) {
   // a) membership.pledgeId
   // b) membershipPeriod.membershipId, linked on membershipPeriod.pledgeId
   const pledgePeriods = await pgdb.public.membershipPeriods.find({ pledgeId })
-  const periodMembershipIds = [...new Set(pledgePeriods.map(p => p.membershipId).filter(Boolean))]
+  const periodMembershipIds = [
+    ...new Set(pledgePeriods.map((p) => p.membershipId).filter(Boolean)),
+  ]
 
   const query = { or: [{ pledgeId }] }
   if (periodMembershipIds.length > 0) {
@@ -18,13 +20,16 @@ const evaluatePledge = async function ({ pledgeId }, { pgdb, now = moment() }) {
 
   // Process each membership and its periods.
   return Promise.map(pledgeMemberships, async function (membership) {
-    const periods = await pgdb.public.membershipPeriods.find(
-      { membershipId: membership.id }
-    )
+    const periods = await pgdb.public.membershipPeriods.find({
+      membershipId: membership.id,
+    })
 
     return {
       _raw: membership,
-      periods: await evaluatePeriods({ pledgeId, membership, periods }, { now })
+      periods: await evaluatePeriods(
+        { pledgeId, membership, periods },
+        { now },
+      ),
     }
   })
 }
@@ -44,7 +49,10 @@ const evaluatePledge = async function ({ pledgeId }, { pgdb, now = moment() }) {
  * - isObsolete indicates if period is or was not used.
  * - updateAttributes contains fields required to be updated in database.
  */
-const evaluatePeriods = ({ pledgeId, membership, periods }, { now = moment() } = {}) => {
+const evaluatePeriods = (
+  { pledgeId, membership, periods },
+  { now = moment() } = {},
+) => {
   if (!pledgeId) {
     throw new Error('pledgeId is missing')
   }
@@ -61,9 +69,9 @@ const evaluatePeriods = ({ pledgeId, membership, periods }, { now = moment() } =
   let glueEndDate = false
 
   return periods
-    .filter(period => period.membershipId === membership.id)
+    .filter((period) => period.membershipId === membership.id)
     .sort((a, b) => ascending(a.beginDate, b.beginDate))
-    .map(period => {
+    .map((period) => {
       // Is period caused by pledge
       const isCausedByPledge =
         (membership.pledgeId === pledgeId && !period.pledgeId) || // Initial period
@@ -81,7 +89,7 @@ const evaluatePeriods = ({ pledgeId, membership, periods }, { now = moment() } =
           // "Update aka shorten period"
           // Period began. Shorten it.
           updateAttributes = {
-            endDate: now
+            endDate: now,
           }
 
           glueEndDate = now
@@ -89,13 +97,15 @@ const evaluatePeriods = ({ pledgeId, membership, periods }, { now = moment() } =
       } else if (glueEndDate) {
         // "Glue period"
         // Subsequent period, not caused by pledge. Has to be glued to previous endDate.
-        const interval = moment.duration(moment(period.endDate).diff(moment(period.beginDate)))
+        const interval = moment.duration(
+          moment(period.endDate).diff(moment(period.beginDate)),
+        )
         const endDate = moment(glueEndDate).add(interval)
 
         // Set beginDate to previous end date ("glueEndDate"), and add interval to endDate.
         updateAttributes = {
           beginDate: glueEndDate,
-          endDate
+          endDate,
         }
 
         glueEndDate = endDate
@@ -107,12 +117,15 @@ const evaluatePeriods = ({ pledgeId, membership, periods }, { now = moment() } =
         _raw: period,
         isCausedByPledge,
         isObsolete,
-        updateAttributes
+        updateAttributes,
       }
     })
 }
 
-const updateMembershipPeriods = async function ({ evaluatedPeriods }, { pgdb }) {
+const updateMembershipPeriods = async function (
+  { evaluatedPeriods },
+  { pgdb },
+) {
   const now = moment()
 
   /**
@@ -129,16 +142,16 @@ const updateMembershipPeriods = async function ({ evaluatedPeriods }, { pgdb }) 
       if (updateAttributes) {
         return pgdb.public.membershipPeriods.update(
           { id: period.id },
-          { ...updateAttributes, updatedAt: now }
+          { ...updateAttributes, updatedAt: now },
         )
       }
     },
-    { concurrency: 10 }
+    { concurrency: 10 },
   )
 }
 
 module.exports = {
   evaluatePledge,
   evaluatePeriods,
-  updateMembershipPeriods
+  updateMembershipPeriods,
 }

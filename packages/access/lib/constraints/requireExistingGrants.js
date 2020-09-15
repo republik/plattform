@@ -30,22 +30,19 @@ const getMeta = async (args, context) => {
   const meta = {
     visible: hasGrants.length > 0,
     grantable: null,
-    payload: {}
+    payload: {},
   }
 
-  debug(
-    'getMeta',
-    {
-      granter: granter.id,
-      campaign,
-      meta
-    }
-  )
+  debug('getMeta', {
+    granter: granter.id,
+    campaign,
+    meta,
+  })
 
   return meta
 }
 
 module.exports = {
   isGrantable: () => true,
-  getMeta
+  getMeta,
 }

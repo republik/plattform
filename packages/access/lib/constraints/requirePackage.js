@@ -12,7 +12,7 @@ const debug = require('debug')('access:lib:constraints:requirePackage')
  */
 
 const hasValidMembership = async ({ granter, settings }, { pgdb }) => {
-  const packages = settings.packages.map(pkg => `'${pkg}'`).join(', ')
+  const packages = settings.packages.map((pkg) => `'${pkg}'`).join(', ')
 
   const activeMemberships = await pgdb.query(`
     SELECT memberships.id, packages.name
@@ -43,14 +43,11 @@ const isGrantable = async (args, context) => {
 
   const isGrantable = await hasValidMembership({ granter, settings }, { pgdb })
 
-  debug(
-    'isGrantable',
-    {
-      granter: granter.id,
-      settings,
-      isGrantable
-    }
-  )
+  debug('isGrantable', {
+    granter: granter.id,
+    settings,
+    isGrantable,
+  })
 
   return isGrantable
 }
@@ -61,7 +58,7 @@ const getMeta = async (args, context) => {
   const meta = {
     visible: isGrantableFlag,
     grantable: isGrantableFlag,
-    payload: {}
+    payload: {},
   }
 
   return meta
@@ -69,5 +66,5 @@ const getMeta = async (args, context) => {
 
 module.exports = {
   isGrantable,
-  getMeta
+  getMeta,
 }

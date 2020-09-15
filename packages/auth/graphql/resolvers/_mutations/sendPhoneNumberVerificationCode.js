@@ -9,7 +9,7 @@ module.exports = async (_, args, { pgdb, user, req, ...rest }) => {
     ...user,
     enabledSecondFactors: user._raw.enabledSecondFactors || [],
     isPhoneNumberVerified: user._raw.isPhoneNumberVerified,
-    phoneNumberVerificationCode: user._raw.phoneNumberVerificationCode
+    phoneNumberVerificationCode: user._raw.phoneNumberVerificationCode,
   }
 
   if (userWith2FA.enabledSecondFactors.indexOf(TokenTypes.SMS) !== -1) {
@@ -17,7 +17,7 @@ module.exports = async (_, args, { pgdb, user, req, ...rest }) => {
   }
   const secret = await generateSharedSecret(TokenTypes.SMS, {
     pgdb,
-    user: userWith2FA
+    user: userWith2FA,
   })
   return !!secret
 }

@@ -10,5 +10,5 @@ module.exports = {
       .update('\0')
       .update(blob)
       .digest('hex')
-  }
+  },
 }

@@ -1,6 +1,8 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
 const moment = require('moment')
-const { publishMonitor } = require('@orbiting/backend-modules-republik/lib/slack')
+const {
+  publishMonitor,
+} = require('@orbiting/backend-modules-republik/lib/slack')
 const membershipResolver = require('../Membership')
 
 module.exports = async (_, { id, duration, durationUnit }, context) => {
@@ -23,7 +25,9 @@ module.exports = async (_, { id, duration, durationUnit }, context) => {
     }
 
     if (duration <= 0) {
-      throw new Error(t('api/appendPeriod/durationShouldBePositive', { duration }))
+      throw new Error(
+        t('api/appendPeriod/durationShouldBePositive', { duration }),
+      )
     }
 
     const beginDate = await getBeginDate(transaction, id)
@@ -33,10 +37,12 @@ module.exports = async (_, { id, duration, durationUnit }, context) => {
       membershipId: id,
       beginDate,
       endDate,
-      kind: 'ADMIN'
+      kind: 'ADMIN',
     })
 
-    const updatedMembership = await transaction.public.memberships.findOne({ id })
+    const updatedMembership = await transaction.public.memberships.findOne({
+      id,
+    })
     await transaction.transactionCommit()
 
     await publishMonitor(
@@ -47,8 +53,8 @@ module.exports = async (_, { id, duration, durationUnit }, context) => {
           `${moment(endDate).format('YYYY-MM-DD')}*` +
           `(${duration} ${durationUnit})`,
         `membership.id: ${id}`,
-        `{ADMIN_FRONTEND_BASE_URL}/users/${updatedMembership.userId}`
-      ].join('\n')
+        `{ADMIN_FRONTEND_BASE_URL}/users/${updatedMembership.userId}`,
+      ].join('\n'),
     )
 
     return updatedMembership
@@ -59,10 +65,13 @@ module.exports = async (_, { id, duration, durationUnit }, context) => {
   }
 }
 
-async function getBeginDate (transaction, id) {
-  const result = await transaction.public.membershipPeriods.findFirst({
-    membershipId: id
-  }, { fields: '"endDate"', orderBy: ['endDate desc'] })
+async function getBeginDate(transaction, id) {
+  const result = await transaction.public.membershipPeriods.findFirst(
+    {
+      membershipId: id,
+    },
+    { fields: '"endDate"', orderBy: ['endDate desc'] },
+  )
 
   const now = new Date()
 
@@ -79,7 +88,7 @@ async function getBeginDate (transaction, id) {
   return lastEndDate
 }
 
-function getEndDate (startDate, duration, durationUnit, t) {
+function getEndDate(startDate, duration, durationUnit, t) {
   const startDateMoment = moment(startDate)
 
   if (!startDateMoment.isValid()) {
@@ -89,7 +98,12 @@ function getEndDate (startDate, duration, durationUnit, t) {
   const endDateMoment = startDateMoment.add(duration, durationUnit)
 
   if (!endDateMoment.isValid()) {
-    throw new Error(t('api/appendPeriod/durationOrDurationUnitNotValid', { duration, durationUnit }))
+    throw new Error(
+      t('api/appendPeriod/durationOrDurationUnitNotValid', {
+        duration,
+        durationUnit,
+      }),
+    )
   }
   return endDateMoment.toDate()
 }

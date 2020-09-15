@@ -14,14 +14,11 @@ const isGrantable = async (args, context) => {
 
   const valid = !settings.emails.includes(email.trim().toLowerCase())
 
-  debug(
-    'isGrantable',
-    {
-      email,
-      settings,
-      valid
-    }
-  )
+  debug('isGrantable', {
+    email,
+    settings,
+    valid,
+  })
 
   return valid
 }
@@ -29,10 +26,10 @@ const isGrantable = async (args, context) => {
 const getMeta = async (args, context) => ({
   visible: true,
   grantable: null,
-  payload: {}
+  payload: {},
 })
 
 module.exports = {
   isGrantable,
-  getMeta
+  getMeta,
 }

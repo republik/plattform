@@ -9,26 +9,24 @@ const connect = ({ applicationName = 'backends' } = {}) => {
   return PgDb.connect({
     application_name: applicationName,
     connectionString: DATABASE_URL,
-    max: DATABASE_MAX_CONNECTIONS
-  })
-    .then(async (pgdb) => {
-      // custom date parser
-      // parse db dates as 12:00 Zulu
-      // this applies to dates only (not datetime)
-      const dateParser = val => {
-        const date = parser(val + ' 12 Z')
-        return date
-      }
-      await pgdb.setTypeParser('date', dateParser)
+    max: DATABASE_MAX_CONNECTIONS,
+  }).then(async (pgdb) => {
+    // custom date parser
+    // parse db dates as 12:00 Zulu
+    // this applies to dates only (not datetime)
+    const dateParser = (val) => {
+      const date = parser(val + ' 12 Z')
+      return date
+    }
+    await pgdb.setTypeParser('date', dateParser)
 
-      return pgdb
-    })
+    return pgdb
+  })
 }
 
-const disconnect = pgdb =>
-  pgdb.close()
+const disconnect = (pgdb) => pgdb.close()
 
 module.exports = {
   connect,
-  disconnect
+  disconnect,
 }

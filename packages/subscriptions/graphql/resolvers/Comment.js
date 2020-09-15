@@ -1,10 +1,10 @@
 const {
-  getUnreadNotificationsForUserAndObject
+  getUnreadNotificationsForUserAndObject,
 } = require('../../lib/Subscriptions')
 const paginate = require('../../lib/paginateNotificationConnection')
 
 module.exports = {
-  async unreadNotifications (comment, args, context) {
+  async unreadNotifications(comment, args, context) {
     const { user: me } = context
 
     if (!me) {
@@ -17,10 +17,10 @@ module.exports = {
         me.id,
         {
           type: 'Comment',
-          id: comment.id
+          id: comment.id,
         },
-        context
-      )
+        context,
+      ),
     )
-  }
+  },
 }

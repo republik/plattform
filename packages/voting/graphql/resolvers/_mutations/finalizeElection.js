@@ -1,8 +1,5 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
-const {
-  findBySlug,
-  finalize
-} = require('../../../lib/Election')
+const { findBySlug, finalize } = require('../../../lib/Election')
 
 module.exports = async (_, args, { pgdb, user: me, t }) => {
   Roles.ensureUserHasRole(me, 'admin')

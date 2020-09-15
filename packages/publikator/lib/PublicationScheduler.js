@@ -1,20 +1,15 @@
 const debug = require('debug')('publikator:lib:scheduler')
 const Promise = require('bluebird')
-const {
-  intervalScheduler
-} = require('@orbiting/backend-modules-schedulers')
+const { intervalScheduler } = require('@orbiting/backend-modules-schedulers')
 const indices = require('@orbiting/backend-modules-search/lib/indices')
 const index = indices.dict.documents
 const { getIndexAlias } = require('@orbiting/backend-modules-search/lib/utils')
 const { handleRedirection } = require('./Document')
 const {
   latestPublications: getLatestPublications,
-  meta: getRepoMeta
+  meta: getRepoMeta,
 } = require('../graphql/resolvers/Repo')
-const {
-  upsertRef,
-  deleteRef
-} = require('./github')
+const { upsertRef, deleteRef } = require('./github')
 const { upsert: repoCacheUpsert } = require('./cache/upsert')
 const { notifyPublish } = require('./Notifications')
 const { upsert: upsertDiscussion } = require('./Discussion')
@@ -33,14 +28,14 @@ const getScheduledDocuments = async (elastic) => {
             { term: { __type: 'Document' } },
             { range: { 'meta.scheduledAt': { lte: new Date() } } },
             { term: { '__state.published': false } },
-            { term: { '__state.prepublished': false } }
-          ]
-        }
-      }
-    }
+            { term: { '__state.prepublished': false } },
+          ],
+        },
+      },
+    },
   })
 
-  return body.hits.hits.map(hit => hit._source)
+  return body.hits.hits.map((hit) => hit._source)
 }
 
 const init = async (context) => {
@@ -58,28 +53,33 @@ const init = async (context) => {
         debug('scheduled documents found', docs.length)
       }
 
-      await Promise.each(docs, async doc => {
+      await Promise.each(docs, async (doc) => {
         // repos:republik/article-briefing-aus-bern-14/scheduled-publication
         const repoId = doc.meta.repoId
         const prepublication = doc.meta.prepublication
         const scheduledAt = doc.meta.scheduledAt
         const notifySubscribers = doc.meta.notifySubscribers
 
-        const ref = `scheduled-${prepublication ? 'prepublication' : 'publication'}`
+        const ref = `scheduled-${
+          prepublication ? 'prepublication' : 'publication'
+        }`
         console.log(`scheduler: publishing ${repoId}`)
 
         const newRef = ref.replace('scheduled-', '')
         const newRefs = [newRef]
 
-        const { lib: { Documents: { createPublish } } } =
-          require('@orbiting/backend-modules-search')
+        const {
+          lib: {
+            Documents: { createPublish },
+          },
+        } = require('@orbiting/backend-modules-search')
 
         const publish = createPublish({
           prepublication,
           scheduledAt,
           elasticDoc: doc,
           elastic,
-          redis
+          redis,
         })
 
         if (newRef === 'publication') {
@@ -89,54 +89,49 @@ const init = async (context) => {
 
         await Promise.all([
           publish.afterScheduled(),
-          ...newRefs.map(_ref =>
-            upsertRef(
-              repoId,
-              `tags/${_ref}`,
-              doc.milestoneCommitId
-            )
+          ...newRefs.map((_ref) =>
+            upsertRef(repoId, `tags/${_ref}`, doc.milestoneCommitId),
           ),
-          deleteRef(
-            repoId,
-            `tags/${ref}`,
-            true
-          )
-        ])
-          .catch(e => {
-            console.error('Error: one or more promises failed:')
-            console.error(e)
-          })
+          deleteRef(repoId, `tags/${ref}`, true),
+        ]).catch((e) => {
+          console.error('Error: one or more promises failed:')
+          console.error(e)
+        })
 
         // flush dataloaders
         await context.loaders.Document.byRepoId.clear(repoId)
 
-        await repoCacheUpsert({
-          id: repoId,
-          meta: await getRepoMeta({ id: repoId }, null, context),
-          publications: await getLatestPublications({ id: repoId }, null, context)
-        }, context)
+        await repoCacheUpsert(
+          {
+            id: repoId,
+            meta: await getRepoMeta({ id: repoId }, null, context),
+            publications: await getLatestPublications(
+              { id: repoId },
+              null,
+              context,
+            ),
+          },
+          context,
+        )
 
         await upsertDiscussion(doc.meta, context)
 
         if (notifySubscribers && !prepublication) {
-          await notifyPublish(repoId, context)
-            .catch(e => {
-              console.error('error in notifyPublish', e)
-            })
+          await notifyPublish(repoId, context).catch((e) => {
+            console.error('error in notifyPublish', e)
+          })
         }
 
-        debug(
-          'published', {
-            repoId: doc.meta.repoId,
-            versionName: doc.versionName,
-            scheduledAt: doc.meta.scheduledAt,
-            refs: newRefs
-          }
-        )
+        debug('published', {
+          repoId: doc.meta.repoId,
+          versionName: doc.versionName,
+          scheduledAt: doc.meta.scheduledAt,
+          refs: newRefs,
+        })
       })
     },
     lockTtlSecs,
-    runIntervalSecs: lockTtlSecs
+    runIntervalSecs: lockTtlSecs,
   })
 
   const close = async () => {
@@ -144,10 +139,10 @@ const init = async (context) => {
   }
 
   return {
-    close
+    close,
   }
 }
 
 module.exports = {
-  init
+  init,
 }

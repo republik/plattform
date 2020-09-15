@@ -5,10 +5,7 @@ const t = require('../t')
 const { sendMailTemplate } = require('@orbiting/backend-modules-mail')
 const { encode } = require('@orbiting/backend-modules-base64u')
 
-const {
-  FRONTEND_BASE_URL,
-  DEFAULT_MAIL_FROM_ADDRESS
-} = process.env
+const { FRONTEND_BASE_URL, DEFAULT_MAIL_FROM_ADDRESS } = process.env
 
 const MIN_IN_MS = 1000 * 60
 const HOUR_IN_MS = MIN_IN_MS * 60
@@ -23,9 +20,7 @@ module.exports = {
     return { payload, expiresAt }
   },
   startChallenge: async ({ email, context, token, country, phrase, pgdb }) => {
-    const geoString = (country === 'Schweiz')
-      ? 'der Schweiz'
-      : country
+    const geoString = country === 'Schweiz' ? 'der Schweiz' : country
 
     const verificationUrl =
       `${FRONTEND_BASE_URL}/mitteilung?` +
@@ -34,35 +29,38 @@ module.exports = {
         type: 'token-authorization',
         email: encode(email),
         token: token.payload,
-        tokenType: Type
+        tokenType: Type,
       })
 
-    return sendMailTemplate({
-      to: email,
-      fromEmail: DEFAULT_MAIL_FROM_ADDRESS,
-      subject: t('api/signin/mail/subject', { phrase }),
-      templateName: 'signin',
-      globalMergeVars: [
-        {
-          name: 'LOCATION',
-          content: geoString
-        },
-        {
-          name: 'SECRET_WORDS',
-          content: phrase
-        },
-        {
-          name: 'LOGIN_LINK',
-          content: verificationUrl
-        }
-      ]
-    }, { pgdb })
+    return sendMailTemplate(
+      {
+        to: email,
+        fromEmail: DEFAULT_MAIL_FROM_ADDRESS,
+        subject: t('api/signin/mail/subject', { phrase }),
+        templateName: 'signin',
+        globalMergeVars: [
+          {
+            name: 'LOCATION',
+            content: geoString,
+          },
+          {
+            name: 'SECRET_WORDS',
+            content: phrase,
+          },
+          {
+            name: 'LOGIN_LINK',
+            content: verificationUrl,
+          },
+        ],
+      },
+      { pgdb },
+    )
   },
   validateChallenge: async ({ pgdb, user }, { payload }) => {
     const foundToken = await pgdb.public.tokens.findOne({
       type: Type,
-      payload
+      payload,
     })
     return foundToken.id
-  }
+  },
 }

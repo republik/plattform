@@ -7,5 +7,5 @@ module.exports = {
   mail: require('./mail'),
   queries: require('./queries'),
   Questionnaire: require('./Questionnaire'),
-  Voting: require('./Voting')
+  Voting: require('./Voting'),
 }

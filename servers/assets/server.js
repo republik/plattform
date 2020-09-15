@@ -5,10 +5,7 @@ const basicAuthMiddleware = require('@orbiting/backend-modules-auth/express/basi
 
 const DEV = process.env.NODE_ENV && process.env.NODE_ENV !== 'production'
 
-const {
-  PORT,
-  CORS_ALLOWLIST_URL
-} = process.env
+const { PORT, CORS_ALLOWLIST_URL } = process.env
 
 let additionalMiddlewares = []
 let httpServer
@@ -36,7 +33,7 @@ const start = (workerId) => {
     const corsOptions = {
       origin: CORS_ALLOWLIST_URL.split(','),
       credentials: true,
-      optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+      optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
     }
     server.use('*', cors(corsOptions))
   }
@@ -55,7 +52,9 @@ const start = (workerId) => {
 
   const callback = () => {
     if (workerId) {
-      console.info(`server (${workerId}) is running on http://localhost:${PORT}`)
+      console.info(
+        `server (${workerId}) is running on http://localhost:${PORT}`,
+      )
     } else {
       console.info(`server is running on http://localhost:${PORT}`)
     }
@@ -72,7 +71,7 @@ const close = () => {
 module.exports = {
   start,
   close,
-  addMiddleware
+  addMiddleware,
 }
 
 process.on('SIGTERM', () => {

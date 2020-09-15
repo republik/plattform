@@ -3,7 +3,7 @@ const path = require('path')
 const _ = {
   pickBy: require('lodash.pickby'),
   merge: require('lodash.merge'),
-  clone: require('lodash.clone')
+  clone: require('lodash.clone'),
 }
 const { parse, print, Source } = require('graphql')
 
@@ -12,30 +12,37 @@ const isDirectory = (...paths) => {
 }
 
 const requireDirectory = (root, except, flatify, ignoreDirectories) => {
-  return fs.existsSync(root) && fs.readdirSync(root)
-    .filter(file =>
-      !(file.indexOf('.') === 0) && // exclude hidden
-      (!except || except.indexOf(file) === -1)
-    )
-    .map(file => {
-      if (isDirectory(root, file)) {
-        if (!ignoreDirectories) {
-          if (flatify) {
-            return { ...requireDirectory(path.join(root, file), [], flatify, true) }
-          } else {
-            return { [file]: requireDirectory(path.join(root, file)) }
+  return (
+    fs.existsSync(root) &&
+    fs
+      .readdirSync(root)
+      .filter(
+        (file) =>
+          !(file.indexOf('.') === 0) && // exclude hidden
+          (!except || except.indexOf(file) === -1),
+      )
+      .map((file) => {
+        if (isDirectory(root, file)) {
+          if (!ignoreDirectories) {
+            if (flatify) {
+              return {
+                ...requireDirectory(path.join(root, file), [], flatify, true),
+              }
+            } else {
+              return { [file]: requireDirectory(path.join(root, file)) }
+            }
           }
+        } else {
+          return { [file.split('.')[0]]: require(path.join(root, file)) }
         }
-      } else {
-        return { [file.split('.')[0]]: require(path.join(root, file)) }
-      }
-    })
-    .reduce((result, file) => {
-      return {
-        ...file,
-        ...result
-      }
-    }, {})
+      })
+      .reduce((result, file) => {
+        return {
+          ...file,
+          ...result,
+        }
+      }, {})
+  )
 }
 
 // loads a module from a directory
@@ -44,33 +51,56 @@ const loadModule = (root) => {
   let schemaTypes
   try {
     schemaTypes = [require(path.join(root, 'schema-types'))]
-  } catch { }
-  const typeResolvers = requireDirectory(path.join(root, 'resolvers/'), ['_queries', '_mutations', '_subscriptions'])
+  } catch {}
+  const typeResolvers = requireDirectory(path.join(root, 'resolvers/'), [
+    '_queries',
+    '_mutations',
+    '_subscriptions',
+  ])
   return {
     schema,
     schemaTypes,
-    typeDefs: [...schema, ...schemaTypes || []],
+    typeDefs: [...schema, ...(schemaTypes || [])],
     typeResolvers,
-    resolvers: _.pickBy({
-      queries: requireDirectory(path.join(root, 'resolvers/', '_queries/'), [], true),
-      mutations: requireDirectory(path.join(root, 'resolvers/', '_mutations/'), [], true),
-      subscriptions: requireDirectory(path.join(root, 'resolvers/', '_subscriptions/'), [], true),
-      ...typeResolvers
-    }, Boolean)
+    resolvers: _.pickBy(
+      {
+        queries: requireDirectory(
+          path.join(root, 'resolvers/', '_queries/'),
+          [],
+          true,
+        ),
+        mutations: requireDirectory(
+          path.join(root, 'resolvers/', '_mutations/'),
+          [],
+          true,
+        ),
+        subscriptions: requireDirectory(
+          path.join(root, 'resolvers/', '_subscriptions/'),
+          [],
+          true,
+        ),
+        ...typeResolvers,
+      },
+      Boolean,
+    ),
   }
 }
 
 // returns a new instance of master including the types of donor
 const _addTypes = (master, donor) => {
   if (Object.keys(donor).length === 0) {
-    console.error('cycle detected! Cyclic dependencies can not be resolved by this lib.')
+    console.error(
+      'cycle detected! Cyclic dependencies can not be resolved by this lib.',
+    )
     return master
   }
 
   // deduplicate scalar types
   let masterScalarTypeDefs = []
-  const parsedMasterSchemaTypes = parse(new Source(master.schemaTypes.join('\n')))
-  parsedMasterSchemaTypes.definitions.forEach(def => {
+  const parsedMasterSchemaTypes = parse(
+    new Source(master.schemaTypes.join('\n')),
+  )
+  parsedMasterSchemaTypes.definitions.forEach((def) => {
     if (def.kind === 'ScalarTypeDefinition') {
       masterScalarTypeDefs.push(def.name.value)
     }
@@ -78,13 +108,16 @@ const _addTypes = (master, donor) => {
 
   let mergedSchemaTypes = [...master.schemaTypes]
   if (donor.schemaTypes) {
-    const parsedDonorSchemaTypes = parse(new Source(donor.schemaTypes.join('\n')))
+    const parsedDonorSchemaTypes = parse(
+      new Source(donor.schemaTypes.join('\n')),
+    )
 
     const deduplicatedDonorSchemaTypes = print({
       ...parsedDonorSchemaTypes,
       definitions: parsedDonorSchemaTypes.definitions.filter(
-        def => !def.name || masterScalarTypeDefs.indexOf(def.name.value) === -1
-      )
+        (def) =>
+          !def.name || masterScalarTypeDefs.indexOf(def.name.value) === -1,
+      ),
     })
     mergedSchemaTypes.push(deduplicatedDonorSchemaTypes)
   }
@@ -93,7 +126,7 @@ const _addTypes = (master, donor) => {
     ...master,
     schemaTypes: mergedSchemaTypes,
     typeDefs: [...master.schema, ...mergedSchemaTypes],
-    resolvers: _.merge(_.clone(donor.typeResolvers), master.resolvers)
+    resolvers: _.merge(_.clone(donor.typeResolvers), master.resolvers),
   }
 }
 
@@ -103,24 +136,26 @@ const _mergeSchema = (module1, module2) => {
   const mergedSchema = {
     kind: 'Document',
     definitions: [
-      ...parsedModule1Schema.definitions.filter(def => def.kind === 'SchemaDefinition'),
+      ...parsedModule1Schema.definitions.filter(
+        (def) => def.kind === 'SchemaDefinition',
+      ),
       ...parsedModule1Schema.definitions
-        .filter(def => def.kind === 'ObjectTypeDefinition')
-        .map(def => {
-          const objectTypeDefsModule2 = parsedModule2Schema.definitions
-            .find(def2 =>
+        .filter((def) => def.kind === 'ObjectTypeDefinition')
+        .map((def) => {
+          const objectTypeDefsModule2 = parsedModule2Schema.definitions.find(
+            (def2) =>
               def2.kind === 'ObjectTypeDefinition' &&
-              def2.name.value === def.name.value
-            )
+              def2.name.value === def.name.value,
+          )
           return {
             ...def,
             fields: [
               ...def.fields,
-              ...objectTypeDefsModule2 ? objectTypeDefsModule2.fields : []
-            ]
+              ...(objectTypeDefsModule2 ? objectTypeDefsModule2.fields : []),
+            ],
           }
-        })
-    ]
+        }),
+    ],
   }
 
   return print(mergedSchema)
@@ -137,10 +172,16 @@ const _merge = (module1, module2) => {
     resolvers: {
       ...newModule.resolvers,
       queries: _.merge(module2.resolvers.queries, module1.resolvers.queries),
-      mutations: _.merge(module2.resolvers.mutations, module1.resolvers.mutations),
-      subscriptions: _.merge(module2.resolvers.subscriptions, module1.resolvers.subscriptions)
+      mutations: _.merge(
+        module2.resolvers.mutations,
+        module1.resolvers.mutations,
+      ),
+      subscriptions: _.merge(
+        module2.resolvers.subscriptions,
+        module1.resolvers.subscriptions,
+      ),
     },
-    inheritResolversFromInterfaces: true
+    inheritResolversFromInterfaces: true,
   }
 }
 
@@ -163,5 +204,5 @@ const merge = (module1, modules) => {
 module.exports = {
   loadModule,
   addTypes,
-  merge
+  merge,
 }

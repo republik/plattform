@@ -1,3 +1,3 @@
 module.exports = {
-  MailLog: require('./MailLog')
+  MailLog: require('./MailLog'),
 }

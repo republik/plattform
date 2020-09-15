@@ -1,7 +1,7 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
 const logger = console
 
-module.exports = async (_, args, {pgdb, req, t}) => {
+module.exports = async (_, args, { pgdb, req, t }) => {
   Roles.ensureUserHasRole(req.user, 'supporter')
 
   const { id } = args
@@ -9,22 +9,28 @@ module.exports = async (_, args, {pgdb, req, t}) => {
   const transaction = await pgdb.transactionBegin()
 
   try {
-    const pfp = await transaction.public.postfinancePayments.findOne({id})
+    const pfp = await transaction.public.postfinancePayments.findOne({ id })
     if (!pfp) {
       logger.error('postfinancePayment not found', { req: req._log(), args })
       throw new Error(t('api/payment/404'))
     }
     if (pfp.matched) {
-      logger.error('can not hide matched postfinancePayments', { req: req._log(), args })
+      logger.error('can not hide matched postfinancePayments', {
+        req: req._log(),
+        args,
+      })
       throw new Error(t('api/postfinancePayment/hide/matched'))
     }
 
-    await transaction.public.postfinancePayments.updateOne({
-      id
-    }, {
-      hidden: true,
-      updatedAt: now
-    })
+    await transaction.public.postfinancePayments.updateOne(
+      {
+        id,
+      },
+      {
+        hidden: true,
+        updatedAt: now,
+      },
+    )
 
     await transaction.transactionCommit()
   } catch (e) {
@@ -33,5 +39,5 @@ module.exports = async (_, args, {pgdb, req, t}) => {
     throw e
   }
 
-  return pgdb.public.postfinancePayments.findOne({id})
+  return pgdb.public.postfinancePayments.findOne({ id })
 }

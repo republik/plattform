@@ -6,11 +6,7 @@ const Promise = require('bluebird')
 
 module.exports = async (_, args, context) => {
   const { pgdb, user, t, pubsub, loaders } = context
-  const {
-    id,
-    content,
-    tags
-  } = args
+  const { id, content, tags } = args
 
   Roles.ensureUserHasRole(user, 'member')
 
@@ -42,21 +38,23 @@ module.exports = async (_, args, context) => {
     const unsavedComment = transform.edit({
       content,
       tags,
-      now: args.now
+      now: args.now,
     })
 
     // ensure comment length is within limit
     if (
       discussion.maxLength &&
       unsavedComment.content.length > discussion.maxLength &&
-      await contentLength(unsavedComment, {}, context) > discussion.maxLength
+      (await contentLength(unsavedComment, {}, context)) > discussion.maxLength
     ) {
-      throw new Error(t('api/comment/tooLong', { maxLength: discussion.maxLength }))
+      throw new Error(
+        t('api/comment/tooLong', { maxLength: discussion.maxLength }),
+      )
     }
 
     newComment = await transaction.public.comments.updateAndGetOne(
       { id: comment.id },
-      unsavedComment
+      unsavedComment,
     )
 
     await transaction.transactionCommit()
@@ -71,14 +69,13 @@ module.exports = async (_, args, context) => {
       pubsub.publish('comment', {
         comment: {
           mutation: 'UPDATED',
-          node: newComment
-        }
+          node: newComment,
+        },
       }),
-      slack.publishCommentUpdate(newComment, comment, discussion, context)
-    ])
-      .catch(e => {
-        console.error(e)
-      })
+      slack.publishCommentUpdate(newComment, comment, discussion, context),
+    ]).catch((e) => {
+      console.error(e)
+    })
   }
 
   return newComment

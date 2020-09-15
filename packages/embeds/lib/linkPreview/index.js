@@ -1,29 +1,25 @@
 const cheerio = require('cheerio')
 const { fetchWithTimeout } = require('@orbiting/backend-modules-utils')
 
-const {
-  LINK_PREVIEW_USER_AGENT
-} = process.env
+const { LINK_PREVIEW_USER_AGENT } = process.env
 
 const REQUEST_TIMEOUT_SECS = 10
 const MAX_NUM_REQUESTS = 3
 
-const fetch = (url, method = 'GET') => fetchWithTimeout(
-  url,
-  {
+const fetch = (url, method = 'GET') =>
+  fetchWithTimeout(url, {
     method,
     headers: {
-      'User-Agent': LINK_PREVIEW_USER_AGENT
+      'User-Agent': LINK_PREVIEW_USER_AGENT,
     },
-    timeoutSecs: REQUEST_TIMEOUT_SECS
-  }
-)
+    timeoutSecs: REQUEST_TIMEOUT_SECS,
+  })
 
 const parseMetaAndLink = (html, baseUrl) => {
   const $ = cheerio.load(html)
   const meta = $('meta')
   const obj = {}
-  Object.keys(meta).forEach(key => {
+  Object.keys(meta).forEach((key) => {
     const { attribs } = meta[key] || {}
     if (attribs !== undefined) {
       if (attribs.property && attribs.content) {
@@ -38,13 +34,9 @@ const parseMetaAndLink = (html, baseUrl) => {
   // add biggest icon and favicon to obj
   const link = $('link')
   let minSize = Number.MAX_SAFE_INTEGER
-  Object.keys(link).forEach(key => {
+  Object.keys(link).forEach((key) => {
     const { attribs } = meta[key] || {}
-    if (
-      attribs !== undefined &&
-      attribs.rel &&
-      attribs.href
-    ) {
+    if (attribs !== undefined && attribs.rel && attribs.href) {
       const { rel, href, sizes } = attribs
       if (rel.indexOf('icon') > -1 && sizes) {
         const size = parseInt(sizes.split('x')[0])
@@ -69,15 +61,17 @@ const parseMetaAndLink = (html, baseUrl) => {
 const getSiteImage = async (url, baseUrl) => {
   // try well-known favicon
   const faviconUrl = `${baseUrl}/favicon.ico`
-  const faviconExists = await fetch(faviconUrl, 'HEAD')
-    .then(res => res && res.status === 200)
+  const faviconExists = await fetch(faviconUrl, 'HEAD').then(
+    (res) => res && res.status === 200,
+  )
   if (faviconExists) {
     return faviconUrl
   }
 
   // try meta data of origin
-  const response = await fetch(baseUrl)
-    .then(res => res && res.status === 200 && res.text())
+  const response = await fetch(baseUrl).then(
+    (res) => res && res.status === 200 && res.text(),
+  )
 
   if (!response) {
     return
@@ -87,8 +81,9 @@ const getSiteImage = async (url, baseUrl) => {
 }
 
 const getLinkPreviewByUrl = async (url) => {
-  const response = await fetch(url)
-    .then(res => res && res.status === 200 && res.text())
+  const response = await fetch(url).then(
+    (res) => res && res.status === 200 && res.text(),
+  )
 
   if (!response) {
     return
@@ -103,9 +98,7 @@ const getLinkPreviewByUrl = async (url) => {
 
   const ogImage = obj['og:image']
   const siteImage =
-    obj['shortcut icon'] ||
-    obj.iconSmall ||
-    await getSiteImage(url, baseUrl)
+    obj['shortcut icon'] || obj.iconSmall || (await getSiteImage(url, baseUrl))
 
   return {
     title: obj['og:title'],
@@ -113,7 +106,7 @@ const getLinkPreviewByUrl = async (url) => {
     imageUrl: ogImage && new URL(ogImage, baseUrl).toString(),
     imageAlt: obj['og:image:alt'],
     siteName: obj['og:site_name'] || hostname,
-    siteImageUrl: siteImage && new URL(siteImage, baseUrl).toString()
+    siteImageUrl: siteImage && new URL(siteImage, baseUrl).toString(),
   }
 }
 
@@ -121,5 +114,5 @@ module.exports = {
   getLinkPreviewByUrl,
   imageKeys: ['siteImageUrl', 'imageUrl'],
   REQUEST_TIMEOUT_SECS,
-  MAX_NUM_REQUESTS
+  MAX_NUM_REQUESTS,
 }

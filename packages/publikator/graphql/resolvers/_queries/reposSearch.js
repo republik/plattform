@@ -1,10 +1,17 @@
 const debug = require('debug')('publikator:resolver:query:search')
-const { Roles: { ensureUserHasRole } } =
-  require('@orbiting/backend-modules-auth')
-const { getDocumentId } =
-  require('@orbiting/backend-modules-search/lib/Documents')
-const { graphql: { resolvers: { queries: { documents: getDocuments } } } } =
-  require('@orbiting/backend-modules-documents')
+const {
+  Roles: { ensureUserHasRole },
+} = require('@orbiting/backend-modules-auth')
+const {
+  getDocumentId,
+} = require('@orbiting/backend-modules-search/lib/Documents')
+const {
+  graphql: {
+    resolvers: {
+      queries: { documents: getDocuments },
+    },
+  },
+} = require('@orbiting/backend-modules-documents')
 
 const client = require('../../../lib/cache/search')
 
@@ -26,17 +33,15 @@ const decodeCursor = (cursor) => {
 const getPublicationDocumentIds = (repos) => {
   const ids = []
 
-  repos.forEach(repo => {
+  repos.forEach((repo) => {
     if (repo.latestPublications) {
-      repo.latestPublications.forEach(publication => {
+      repo.latestPublications.forEach((publication) => {
         ids.push(
-          getDocumentId(
-            {
-              repoId: publication.repo.id,
-              commitId: publication.commit.id,
-              versionName: publication.name
-            }
-          )
+          getDocumentId({
+            repoId: publication.repo.id,
+            commitId: publication.commit.id,
+            versionName: publication.name,
+          }),
         )
       })
     }
@@ -46,18 +51,15 @@ const getPublicationDocumentIds = (repos) => {
 }
 
 const mapDocuments = (documents, publication) =>
-  Object.assign(
-    publication,
-    {
-      document: documents.nodes.find(findDocumentId.bind(this, publication))
-    }
-  )
+  Object.assign(publication, {
+    document: documents.nodes.find(findDocumentId.bind(this, publication)),
+  })
 
 const findDocumentId = (publication, document) => {
   const documentId = getDocumentId({
     repoId: publication.repo.id,
     commitId: publication.commit.id,
-    versionName: publication.name
+    versionName: publication.name,
   })
 
   return document.id === documentId
@@ -74,13 +76,13 @@ module.exports = async (__, args, context) => {
 
   // This overwrites parameters passed via "before" cursor
   const before = args.before ? decodeCursor(args.before) : {}
-  Object.keys(before).forEach(key => {
+  Object.keys(before).forEach((key) => {
     args[key] = before[key]
   })
 
   // This overwrites parameters passed via "after" cursor
   const after = args.after ? decodeCursor(args.after) : {}
-  Object.keys(after).forEach(key => {
+  Object.keys(after).forEach((key) => {
     args[key] = after[key]
   })
 
@@ -89,17 +91,20 @@ module.exports = async (__, args, context) => {
     from = 0,
     search,
     template,
-    orderBy
+    orderBy,
     // last - "last" parameter is not implemented in search API
   } = args
 
-  const { body } = await client.find({
-    first,
-    from,
-    search,
-    template,
-    orderBy
-  }, context)
+  const { body } = await client.find(
+    {
+      first,
+      from,
+      search,
+      template,
+      orderBy,
+    },
+    context,
+  )
 
   const hasNextPage = first > 0 && body.hits.total > from + first
   const hasPreviousPage = from > 0
@@ -111,24 +116,24 @@ module.exports = async (__, args, context) => {
       hasNextPage,
       endCursor: hasNextPage
         ? encodeCursor({
-          first,
-          from: from + first,
-          search,
-          template,
-          orderBy
-        })
+            first,
+            from: from + first,
+            search,
+            template,
+            orderBy,
+          })
         : null,
       hasPreviousPage,
       startCursor: hasPreviousPage
         ? encodeCursor({
-          first,
-          from: from - first,
-          search,
-          template,
-          orderBy
-        })
-        : null
-    }
+            first,
+            from: from - first,
+            search,
+            template,
+            orderBy,
+          })
+        : null,
+    },
   }
 
   // The following secion will find all retrieved document IDs in publications,
@@ -143,17 +148,20 @@ module.exports = async (__, args, context) => {
   const documents = await getDocuments(
     null,
     { first: documentIds.length, ids: documentIds },
-    context
+    context,
   )
 
   // Append documents to publications
-  data.nodes = data.nodes.map(repo => {
+  data.nodes = data.nodes.map((repo) => {
     if (repo.latestPublications) {
-      repo.latestPublications =
-        repo.latestPublications.map(mapDocuments.bind(this, documents))
+      repo.latestPublications = repo.latestPublications.map(
+        mapDocuments.bind(this, documents),
+      )
     }
     if (repo.latestCommit) {
-      repo.latestCommit.document = documents.nodes.find(d => d.commitId === repo.latestCommit.id)
+      repo.latestCommit.document = documents.nodes.find(
+        (d) => d.commitId === repo.latestCommit.id,
+      )
     }
 
     return repo

@@ -11,19 +11,18 @@ const argv = yargs
   .option('path', {
     alias: 'p',
     type: 'string',
-    required: true
+    required: true,
   })
   .option('identifier', {
     alias: 'i',
-    type: 'string'
+    type: 'string',
   })
   .option('data-id', {
     alias: 'd',
-    type: 'string'
+    type: 'string',
   })
   .help()
-  .version()
-  .argv
+  .version().argv
 
 const elastic = Elasticsearch.connect()
 
@@ -34,12 +33,12 @@ const run = async () => {
     size: 10,
     _source: ['meta', 'content'],
     body: {
-      query: { term: { 'meta.path.keyword': argv.path } }
-    }
+      query: { term: { 'meta.path.keyword': argv.path } },
+    },
   }
 
   for await (const hit of Elasticsearch.scroll(elastic, params)) {
-    visit(hit._source.content, 'zone', node => {
+    visit(hit._source.content, 'zone', (node) => {
       if (
         (!argv.identifier || node.identifier === argv.identifier) &&
         (!argv.dataId || (node.data && node.data.id === argv.dataId))
@@ -52,4 +51,6 @@ const run = async () => {
   await elastic.close()
 }
 
-run().catch(e => { throw e })
+run().catch((e) => {
+  throw e
+})

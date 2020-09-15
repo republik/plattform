@@ -1,5 +1,5 @@
 module.exports = {
-  label ({ name, label }) {
+  label({ name, label }) {
     return label || name
-  }
+  },
 }

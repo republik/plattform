@@ -11,6 +11,6 @@ module.exports = async (_, args, { req }) => {
     userAgent: useragent.detect(ua),
     isApp: useragent.isApp(ua),
     country,
-    city
+    city,
   }
 }

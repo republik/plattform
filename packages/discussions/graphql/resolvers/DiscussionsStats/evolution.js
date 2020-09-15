@@ -8,7 +8,9 @@ module.exports = async (_, args, context) => {
 
   // In case pre-populated data is not available...
   if (!data) {
-    throw new Error('Unable to retrieve pre-populated data for DiscussionsStats.evolution')
+    throw new Error(
+      'Unable to retrieve pre-populated data for DiscussionsStats.evolution',
+    )
   }
 
   // Retrieve pre-populated data.
@@ -29,7 +31,7 @@ module.exports = async (_, args, context) => {
   return {
     buckets: result
       .filter(({ key }) => keys.includes(key))
-      .map( r => ({ ...r, updatedAt })),
-    updatedAt
+      .map((r) => ({ ...r, updatedAt })),
+    updatedAt,
   }
 }

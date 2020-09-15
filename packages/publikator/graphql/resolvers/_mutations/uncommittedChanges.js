@@ -1,10 +1,8 @@
-const { Roles: { ensureUserHasRole } } = require('@orbiting/backend-modules-auth')
+const {
+  Roles: { ensureUserHasRole },
+} = require('@orbiting/backend-modules-auth')
 
-module.exports = async (
-  _,
-  { repoId, action },
-  { user, redis, pubsub }
-) => {
+module.exports = async (_, { repoId, action }, { user, redis, pubsub }) => {
   ensureUserHasRole(user, 'editor')
 
   const now = new Date().getTime()
@@ -17,16 +15,13 @@ module.exports = async (
   }
   if (result) {
     redis.expireAsync(repoId, redis.__defaultExpireSeconds)
-    await pubsub.publish(
-      'uncommittedChanges',
-      {
-        uncommittedChanges: {
-          repoId,
-          user,
-          action
-        }
-      }
-    )
+    await pubsub.publish('uncommittedChanges', {
+      uncommittedChanges: {
+        repoId,
+        user,
+        action,
+      },
+    })
   }
   return result
 }

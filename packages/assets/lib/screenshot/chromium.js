@@ -4,11 +4,13 @@ const {
   CHROMIUM_LAMBDA_URL,
   RENDER_COOKIE,
   BASIC_AUTH_USER,
-  BASIC_AUTH_PASS
+  BASIC_AUTH_PASS,
 } = process.env
 
 if (!CHROMIUM_LAMBDA_URL) {
-  console.warn('missing CHROMIUM_LAMBDA_URL, the /render endpoint will not work')
+  console.warn(
+    'missing CHROMIUM_LAMBDA_URL, the /render endpoint will not work',
+  )
 }
 
 const render = (params) => {
@@ -26,8 +28,7 @@ const render = (params) => {
     url.searchParams.set('basicAuthUser', BASIC_AUTH_USER)
     url.searchParams.set('basicAuthPass', BASIC_AUTH_PASS)
   }
-  return fetch(url.toString())
-    .then(result => result.body)
+  return fetch(url.toString()).then((result) => result.body)
 }
 
 module.exports = render

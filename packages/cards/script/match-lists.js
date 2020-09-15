@@ -5,32 +5,32 @@ require('@orbiting/backend-modules-env').config()
 const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
 
 const districtMap = {
-  'Aargau': 'Aargau',
+  Aargau: 'Aargau',
   'Appenzell Ausserrhoden': 'Appenzell Ausserrhoden',
   'Appenzell Innerrhoden': 'Appenzell Innerrhoden',
   'Basel-Landschaft': 'Basel-Landschaft',
   'Basel-Stadt': 'Basel-Stadt',
   'Bern / Berne': 'Bern',
   'Fribourg / Freiburg': 'Freiburg',
-  'Genève': 'Genf',
-  'Glarus': 'Glarus',
+  Genève: 'Genf',
+  Glarus: 'Glarus',
   'Graubünden / Grigioni / Grischun': 'Graubünden',
-  'Jura': 'Jura',
-  'Luzern': 'Luzern',
-  'Neuchâtel': 'Neuenburg',
-  'Nidwalden': 'Nidwalden',
-  'Obwalden': 'Obwalden',
-  'Schaffhausen': 'Schaffhausen',
-  'Schwyz': 'Schwyz',
-  'Solothurn': 'Solothurn',
+  Jura: 'Jura',
+  Luzern: 'Luzern',
+  Neuchâtel: 'Neuenburg',
+  Nidwalden: 'Nidwalden',
+  Obwalden: 'Obwalden',
+  Schaffhausen: 'Schaffhausen',
+  Schwyz: 'Schwyz',
+  Solothurn: 'Solothurn',
   'St. Gallen': 'St. Gallen',
-  'Thurgau': 'Thurgau',
-  'Ticino': 'Tessin',
-  'Uri': 'Uri',
+  Thurgau: 'Thurgau',
+  Ticino: 'Tessin',
+  Uri: 'Uri',
   'Valais / Wallis': 'Wallis',
-  'Vaud': 'Waadt',
-  'Zug': 'Zug',
-  'Zürich': 'Zürich'
+  Vaud: 'Waadt',
+  Zug: 'Zug',
+  Zürich: 'Zürich',
 }
 
 const enrichTokens = [
@@ -52,7 +52,7 @@ const enrichTokens = [
 
   // Andere
   { token: 'Wirtschaft', concat: ['Gewerbe'] },
-  { token: 'Gewerbe', concat: ['Wirtschaft'] }
+  { token: 'Gewerbe', concat: ['Wirtschaft'] },
 ]
 
 const normalizeDistrict = (string) => {
@@ -60,32 +60,32 @@ const normalizeDistrict = (string) => {
 }
 
 const toTokens = (string) => {
-  const tokens = Array.from(new Set(
-    string
-      .toLowerCase()
-      .replace(/[.-]/g, ' ')
-      .replace(/[^a-z ]/g, '')
-      .split(' ')
-      .filter(c => c.length >= 2)
-      .filter(Boolean)
-  ))
-
-  enrichTokens.forEach(({ token, concat }) => {
-    const normalizedToken =
-      token
+  const tokens = Array.from(
+    new Set(
+      string
         .toLowerCase()
         .replace(/[.-]/g, ' ')
         .replace(/[^a-z ]/g, '')
+        .split(' ')
+        .filter((c) => c.length >= 2)
+        .filter(Boolean),
+    ),
+  )
+
+  enrichTokens.forEach(({ token, concat }) => {
+    const normalizedToken = token
+      .toLowerCase()
+      .replace(/[.-]/g, ' ')
+      .replace(/[^a-z ]/g, '')
 
     if (tokens.includes(normalizedToken)) {
       tokens.concat(
-        concat.map(
-          token =>
-            token
-              .toLowerCase()
-              .replace(/[.-]/g, ' ')
-              .replace(/[^a-z ]/g, '')
-        )
+        concat.map((token) =>
+          token
+            .toLowerCase()
+            .replace(/[.-]/g, ' ')
+            .replace(/[^a-z ]/g, ''),
+        ),
       )
     }
   })
@@ -107,10 +107,10 @@ const getCurrentLists = async (pgdb) => {
     ;
   `)
 
-  return lists.map(list => ({
+  return lists.map((list) => ({
     ...list,
     __normalizedDistrict: normalizeDistrict(list.district),
-    __tokens: toTokens(`${list.listName}`)
+    __tokens: toTokens(`${list.listName}`),
   }))
 }
 
@@ -155,15 +155,15 @@ const getCurrentLists = async (pgdb) => {
 
 const parties = require('../data/2015-parties-distrricts-lists-seats.json')
 
-const partiesArray = Object.keys(parties).map(i => {
+const partiesArray = Object.keys(parties).map((i) => {
   return {
-    ...parties[i]
+    ...parties[i],
   }
 })
 
 const unknownPartyLists = []
 
-PgDb.connect().then(async pgdb => {
+PgDb.connect().then(async (pgdb) => {
   const currentLists = await getCurrentLists(pgdb)
   // const previousLists = getPreviousLists()
 
@@ -173,12 +173,16 @@ PgDb.connect().then(async pgdb => {
       return currentList.district === 'Basel-Landschaft' &&
       currentList.listName === 'Evangelische Volkspartei - Zukunft'
     }) */
-    .map(currentList => {
-      const party = partiesArray.find(({ labels }) => labels.includes(currentList.party))
+    .map((currentList) => {
+      const party = partiesArray.find(({ labels }) =>
+        labels.includes(currentList.party),
+      )
       if (!party) {
         unknownPartyLists.push(currentList)
 
-        console.log(`${currentList.district}\t${currentList.party}\t${currentList.listName}`)
+        console.log(
+          `${currentList.district}\t${currentList.party}\t${currentList.listName}`,
+        )
         return
         // console.warn(`List «${currentList.listName}» unbeknownst to party affilliations`)
         // return
@@ -188,50 +192,64 @@ PgDb.connect().then(async pgdb => {
       if (!district) {
         // console.warn(`Party «${currentList.party}» had no list in «${currentList.district}» previously`)
         // return
-        console.log(`${currentList.district}\t${currentList.party}\t${currentList.listName}`)
+        console.log(
+          `${currentList.district}\t${currentList.party}\t${currentList.listName}`,
+        )
         return
       }
 
       const lists = district.lists
       const matchedLists = []
 
-      Object
-        .keys(lists)
-        .forEach(name => {
-          const tokens = toTokens(name)
+      Object.keys(lists).forEach((name) => {
+        const tokens = toTokens(name)
 
-          const maxMatches = Math.max(tokens.length, currentList.__tokens.length)
-          let matches = 0
+        const maxMatches = Math.max(tokens.length, currentList.__tokens.length)
+        let matches = 0
 
-          tokens.forEach(token => {
-            const hasTokenFound = currentList.__tokens.includes(token)
-            matches += hasTokenFound ? 1 : 0
-          })
-
-          const score = Number(Number(1 / maxMatches * matches).toPrecision(2))
-
-          if (score > 0) {
-            matchedLists.push({
-              listName: name,
-              ...lists[name],
-              score
-            })
-          }
+        tokens.forEach((token) => {
+          const hasTokenFound = currentList.__tokens.includes(token)
+          matches += hasTokenFound ? 1 : 0
         })
 
+        const score = Number(Number((1 / maxMatches) * matches).toPrecision(2))
+
+        if (score > 0) {
+          matchedLists.push({
+            listName: name,
+            ...lists[name],
+            score,
+          })
+        }
+      })
+
       if (matchedLists.length === 0) {
-        console.log(`${currentList.district}\t${currentList.party}\t${currentList.listName}`)
+        console.log(
+          `${currentList.district}\t${currentList.party}\t${currentList.listName}`,
+        )
         return
       }
 
-      const fullMatchedList = matchedLists.find(l => l.score === 1)
+      const fullMatchedList = matchedLists.find((l) => l.score === 1)
       if (fullMatchedList) {
-        console.log(`${currentList.district}\t${currentList.party}\t${currentList.listName}\t${fullMatchedList.listName}\t${fullMatchedList.votes}\t${fullMatchedList.seats}\t${String(fullMatchedList.score).replace('.', ',')}`)
+        console.log(
+          `${currentList.district}\t${currentList.party}\t${
+            currentList.listName
+          }\t${fullMatchedList.listName}\t${fullMatchedList.votes}\t${
+            fullMatchedList.seats
+          }\t${String(fullMatchedList.score).replace('.', ',')}`,
+        )
         return
       }
 
-      matchedLists.forEach(matchedList => {
-        console.log(`${currentList.district}\t${currentList.party}\t${currentList.listName}\t${matchedList.listName}\t${matchedList.votes}\t${matchedList.seats}\t${String(matchedList.score).replace('.', ',')}`)
+      matchedLists.forEach((matchedList) => {
+        console.log(
+          `${currentList.district}\t${currentList.party}\t${
+            currentList.listName
+          }\t${matchedList.listName}\t${matchedList.votes}\t${
+            matchedList.seats
+          }\t${String(matchedList.score).replace('.', ',')}`,
+        )
       })
     })
 

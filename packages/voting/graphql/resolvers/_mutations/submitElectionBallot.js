@@ -2,7 +2,7 @@ const { ensureSignedIn } = require('@orbiting/backend-modules-auth')
 const {
   findById,
   getCandidacies,
-  ensureReadyToSubmit
+  ensureReadyToSubmit,
 } = require('../../../lib/Election')
 
 module.exports = async (_, { electionId, candidacyIds }, context) => {
@@ -13,13 +13,16 @@ module.exports = async (_, { electionId, candidacyIds }, context) => {
   try {
     const now = new Date()
     const election = await findById(electionId, pgdb)
-    await ensureReadyToSubmit(election, me.id, now, { ...context, pgdb: transaction })
+    await ensureReadyToSubmit(election, me.id, now, {
+      ...context,
+      pgdb: transaction,
+    })
 
     // check legitimacy of candidacyIds
     if (candidacyIds.length > 0) {
       const candidacies = await getCandidacies(election, transaction)
       for (let candidacyId of candidacyIds) {
-        if (!candidacies.find(c => c.id === candidacyId)) {
+        if (!candidacies.find((c) => c.id === candidacyId)) {
           throw new Error(t('api/election/candidacy/404'))
         }
       }
@@ -32,20 +35,20 @@ module.exports = async (_, { electionId, candidacyIds }, context) => {
       }
       paddedCandidacyIds = Array.from(
         { length: election.numSeats },
-        (v, i) => candidacyIds[i] || null
+        (v, i) => candidacyIds[i] || null,
       )
     }
 
     await Promise.all(
-      paddedCandidacyIds.map(candidacyId =>
+      paddedCandidacyIds.map((candidacyId) =>
         transaction.public.electionBallots.insert({
           electionId: election.id,
           candidacyId,
           userId: me.id,
           createdAt: now,
-          updatedAt: now
-        })
-      )
+          updatedAt: now,
+        }),
+      ),
     )
 
     await transaction.transactionCommit()

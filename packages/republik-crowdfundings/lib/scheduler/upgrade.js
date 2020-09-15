@@ -5,9 +5,11 @@ const { transformUser } = require('@orbiting/backend-modules-auth')
 const { sendMailTemplate } = require('@orbiting/backend-modules-mail')
 const { countFormat } = require('@orbiting/backend-modules-formats')
 
-const { getCount: getMembershipStatsCount } = require('@orbiting/backend-modules-republik/lib/MembershipStats/evolution')
+const {
+  getCount: getMembershipStatsCount,
+} = require('@orbiting/backend-modules-republik/lib/MembershipStats/evolution')
 
-const getOptions = async context => {
+const getOptions = async (context) => {
   const options = {}
 
   try {
@@ -88,7 +90,7 @@ const findRecipients = (context) => {
   `)
 }
 
-const sendMail = (options, context) => recipient => {
+const sendMail = (options, context) => (recipient) => {
   const { membershipsCount } = options
   const { t } = context
 
@@ -97,32 +99,28 @@ const sendMail = (options, context) => recipient => {
   const globalMergeVars = [
     {
       name: 'name',
-      content: name.trim()
+      content: name.trim(),
     },
     membershipsCount && {
       name: 'memberships_count',
-      content: countFormat(membershipsCount)
-    }
+      content: countFormat(membershipsCount),
+    },
   ]
 
   const templatePayload = {
     to: recipient.email,
     subject: t('api/email/membership_owner_upgrade_monthly/subject'),
     templateName: 'membership_owner_upgrade_monthly',
-    globalMergeVars
+    globalMergeVars,
   }
 
-  return sendMailTemplate(
-    templatePayload,
-    context,
-    {
-      onceFor: {
-        type: 'membership_owner_upgrade_monthly',
-        userId: recipient.userId,
-        keys: [`membershipId:${recipient.membershipId}`]
-      }
-    }
-  )
+  return sendMailTemplate(templatePayload, context, {
+    onceFor: {
+      type: 'membership_owner_upgrade_monthly',
+      userId: recipient.userId,
+      keys: [`membershipId:${recipient.membershipId}`],
+    },
+  })
 }
 
 const inform = async function (args, context) {
@@ -136,13 +134,9 @@ const inform = async function (args, context) {
 
   const options = await getOptions(context)
 
-  await Promise.map(
-    recipients,
-    sendMail(options, context),
-    { concurrency: 2 }
-  )
+  await Promise.map(recipients, sendMail(options, context), { concurrency: 2 })
 }
 
 module.exports = {
-  inform
+  inform,
 }

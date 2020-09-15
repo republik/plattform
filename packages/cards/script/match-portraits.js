@@ -12,9 +12,8 @@ const argv = yargs
   .option('path', {
     alias: 'p',
     required: true,
-    coerce: input => path.resolve('./', input)
-  })
-  .argv
+    coerce: (input) => path.resolve('./', input),
+  }).argv
 
 const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
 
@@ -55,15 +54,16 @@ const partyMap = {
 
   Lega: 'Lega',
   Parteilos: 'Parteilos',
-  PdA: 'PdA'
+  PdA: 'PdA',
 }
 
-const parties = Object.keys(partyMap).map(k => k.toLowerCase())
+const parties = Object.keys(partyMap).map((k) => k.toLowerCase())
 
 const replaceStrings = [
   // LOREM IPSUM to Lorem Ipsum
-  { search: new RegExp('[A-ZÄÖÜ]{2,}', 'g'),
-    replace: (match) => match.substr(0, 1) + match.substr(1).toLowerCase()
+  {
+    search: new RegExp('[A-ZÄÖÜ]{2,}', 'g'),
+    replace: (match) => match.substr(0, 1) + match.substr(1).toLowerCase(),
   },
 
   // Names
@@ -83,7 +83,7 @@ const replaceStrings = [
   { search: new RegExp('Ann[^e]'), replace: 'Anne' },
   { search: new RegExp('Rony', 'i'), replace: 'Rosy' },
   { search: new RegExp('Nathalie'), replace: 'Natalie' },
-  { search: new RegExp('Z\'graggen', 'i'), replace: 'Zgraggen' },
+  { search: new RegExp("Z'graggen", 'i'), replace: 'Zgraggen' },
   { search: new RegExp('Béa'), replace: 'Beatrice' },
   { search: new RegExp('Gian-Reto'), replace: 'Gianreto' },
   { search: new RegExp('Ursind', 'i'), replace: 'Ursin' },
@@ -106,7 +106,13 @@ const replaceStrings = [
 
   // Regular naming
   { search: new RegExp('(png|jpeg|jpg|rgb)', 'i'), replace: '' },
-  { search: new RegExp('(_grune|_qur|_PK-Plakat|_Jpg_klein|_Alternative_hoch|_Alternative|Luzern-Land|JungCspo|_farbig|_wall_2000px|_color_DSC|Spinternational|Spinternation|Psinternational|Psinternation|Liste|Hochformat|Gruene|hochformat|offiziell|LowRes|_rgb_a|Foto_)', 'g'), replace: '' }
+  {
+    search: new RegExp(
+      '(_grune|_qur|_PK-Plakat|_Jpg_klein|_Alternative_hoch|_Alternative|Luzern-Land|JungCspo|_farbig|_wall_2000px|_color_DSC|Spinternational|Spinternation|Psinternational|Psinternation|Liste|Hochformat|Gruene|hochformat|offiziell|LowRes|_rgb_a|Foto_)',
+      'g',
+    ),
+    replace: '',
+  },
 ]
 
 const toTokens = (string) => {
@@ -119,99 +125,115 @@ const toTokens = (string) => {
     .replace(/[^a-zA-Z]/g, ' ')
     .toLowerCase()
     .split(/[\s_-]/)
-    .filter(a => a.length > 2)
-    .filter(a => !parties.includes(a))
+    .filter((a) => a.length > 2)
+    .filter((a) => !parties.includes(a))
     .filter(Boolean)
     .sort()
 }
 
-PgDb.connect().then(async pgdb => {
-  console.log('Loading file list...')
-  const files = await recursive(argv.path, ['.*'])
+PgDb.connect()
+  .then(async (pgdb) => {
+    console.log('Loading file list...')
+    const files = await recursive(argv.path, ['.*'])
 
-  console.log('Tokenizing file names')
-  const images = files
-    .filter(file => !file.match(/(\.pdf$|Icon\r$|\/triage\/|\/archive\/)/g))
-    .map(file => {
-      const basename = path.basename(file, '.jpg')
-      const party = file.match(/parties\/(.+?)\//, '$1')[1]
-      const tokens = toTokens(basename)
+    console.log('Tokenizing file names')
+    const images = files
+      .filter((file) => !file.match(/(\.pdf$|Icon\r$|\/triage\/|\/archive\/)/g))
+      .map((file) => {
+        const basename = path.basename(file, '.jpg')
+        const party = file.match(/parties\/(.+?)\//, '$1')[1]
+        const tokens = toTokens(basename)
 
-      return {
-        file,
-        basename,
-        party,
-        tokens
-      }
-    })
+        return {
+          file,
+          basename,
+          party,
+          tokens,
+        }
+      })
 
-  const hasCache = !!(await pgdb.public.gsheets.count({ name: 'cards/tokenizedCards' }))
-  if (!hasCache) {
-    await pgdb.public.gsheets.insert({
+    const hasCache = !!(await pgdb.public.gsheets.count({
       name: 'cards/tokenizedCards',
-      data: []
-    })
-  }
-
-  const records = await pgdb.public.cards.findAll()
-  let cards = []
-
-  if (argv['cache']) {
-    console.log('Loading tokenized cards from cache...')
-    cards = await pgdb.public.gsheets.findOneFieldOnly(
-      { name: 'cards/tokenizedCards' },
-      'data'
-    )
-
-    if (cards.length < 1) {
-      throw new Error('No cached data available. Run script with --no-cache option.')
+    }))
+    if (!hasCache) {
+      await pgdb.public.gsheets.insert({
+        name: 'cards/tokenizedCards',
+        data: [],
+      })
     }
-  } else {
-    console.log('Tokenizing cards...')
-    cards = await Promise.map(records, async (record, index) => {
+
+    const records = await pgdb.public.cards.findAll()
+    let cards = []
+
+    if (argv['cache']) {
+      console.log('Loading tokenized cards from cache...')
+      cards = await pgdb.public.gsheets.findOneFieldOnly(
+        { name: 'cards/tokenizedCards' },
+        'data',
+      )
+
+      if (cards.length < 1) {
+        throw new Error(
+          'No cached data available. Run script with --no-cache option.',
+        )
+      }
+    } else {
+      console.log('Tokenizing cards...')
+      cards = await Promise.map(
+        records,
+        async (record, index) => {
+          if (index % 100 === 1) {
+            console.log(`  ${index + 1}`)
+          }
+
+          // const user = users.find(({ id }) => id === record.userId)
+          const user = await pgdb.public.users.findOne({ id: record.userId })
+
+          const name = [
+            record.payload.meta.firstName,
+            record.payload.meta.lastName,
+          ].join(' ')
+          const tokens = toTokens(name)
+
+          return {
+            id: record.id,
+            identifier: record.payload.meta.userId,
+            party: record.payload.party,
+            userId: user.id,
+            name,
+            tokens,
+          }
+        },
+        { concurrency: 5 },
+      )
+
+      await pgdb.public.gsheets.updateOne(
+        { name: 'cards/tokenizedCards' },
+        { data: cards, updatedAt: new Date() },
+      )
+    }
+
+    console.log('Evaluating matching score...')
+    const evaluatedImages = images.map((image, index, images) => {
       if (index % 100 === 1) {
         console.log(`  ${index + 1}`)
       }
 
-      // const user = users.find(({ id }) => id === record.userId)
-      const user = await pgdb.public.users.findOne({ id: record.userId })
+      const { tokens: imageTokens } = image
 
-      const name = [record.payload.meta.firstName, record.payload.meta.lastName].join(' ')
-      const tokens = toTokens(name)
-
-      return {
-        id: record.id,
-        identifier: record.payload.meta.userId,
-        party: record.payload.party,
-        userId: user.id,
-        name,
-        tokens
-      }
-    }, { concurrency: 5 })
-
-    await pgdb.public.gsheets.updateOne(
-      { name: 'cards/tokenizedCards' },
-      { data: cards, updatedAt: new Date() }
-    )
-  }
-
-  console.log('Evaluating matching score...')
-  const evaluatedImages = images.map((image, index, images) => {
-    if (index % 100 === 1) {
-      console.log(`  ${index + 1}`)
-    }
-
-    const { tokens: imageTokens } = image
-
-    const eligibleCards =
-      cards
-        .filter(card => partyMap[card.party] && partyMap[card.party].includes(image.party))
-        .map(card => {
+      const eligibleCards = cards
+        .filter(
+          (card) =>
+            partyMap[card.party] && partyMap[card.party].includes(image.party),
+        )
+        .map((card) => {
           const maxMatches = Math.max(card.tokens.length, image.tokens.length)
           let matches = 0
 
-          card.tokens.forEach(cardToken => {
-            const imageToken = imageTokens.find(imageToken => imageToken === cardToken)
+          card.tokens.forEach((cardToken) => {
+            const imageToken = imageTokens.find(
+              (imageToken) => imageToken === cardToken,
+            )
             matches += imageToken ? 1 : 0
           })
 
@@ -219,76 +241,101 @@ PgDb.connect().then(async pgdb => {
           if (matches < 2 && maxMatches <= 2) {
             return {
               ...card,
-              score: 0
+              score: 0,
             }
           }
 
           return {
             ...card,
-            score: Number(Number(1 / maxMatches * matches).toPrecision(2))
+            score: Number(Number((1 / maxMatches) * matches).toPrecision(2)),
           }
         })
-        .filter(card => card.score > 0)
+        .filter((card) => card.score > 0)
 
-    const highestCardScore = Math.max.apply(Math, eligibleCards.map(o => o.score))
-    const electedCards = eligibleCards.filter(card => card.score === highestCardScore)
+      const highestCardScore = Math.max.apply(
+        Math,
+        eligibleCards.map((o) => o.score),
+      )
+      const electedCards = eligibleCards.filter(
+        (card) => card.score === highestCardScore,
+      )
 
-    if (electedCards.length > 1) {
-      // console.log(image, electedCards)
-      return { image, card: false, cards: electedCards, error: 'too many machting cards' }
-    } else if (electedCards.length < 1) {
-      // console.log(image, electedCards)
-      return { image, card: false, cards: electedCards, error: 'no matching cards' }
-    }
-
-    const electedCard = electedCards[0]
-    if (electedCard.score < 0.5) {
-      return { image, card: false, cards: electedCards, error: 'matching score low' }
-    }
-
-    return { image, card: electedCard, cards: electedCards, error: false }
-  })
-
-  /* errornous */
-  evaluatedImages
-    .filter(evaluatedImage => evaluatedImage.error)
-    .forEach(evaluatedImage => {
-      if (evaluatedImage.cards.length > 0) {
-        return evaluatedImage.cards.forEach(card => console.log([
-          evaluatedImage.image.basename,
-          evaluatedImage.image.tokens.join(' '),
-          card.name,
-          card.identifier,
-          card.score,
-          card.tokens.join(' '),
-          evaluatedImage.error
-        ].join('\t')))
+      if (electedCards.length > 1) {
+        // console.log(image, electedCards)
+        return {
+          image,
+          card: false,
+          cards: electedCards,
+          error: 'too many machting cards',
+        }
+      } else if (electedCards.length < 1) {
+        // console.log(image, electedCards)
+        return {
+          image,
+          card: false,
+          cards: electedCards,
+          error: 'no matching cards',
+        }
       }
 
-      return console.log([
-        evaluatedImage.image.basename,
-        evaluatedImage.image.party,
+      const electedCard = electedCards[0]
+      if (electedCard.score < 0.5) {
+        return {
+          image,
+          card: false,
+          cards: electedCards,
+          error: 'matching score low',
+        }
+      }
 
-        evaluatedImage.image.tokens.join(' '),
-        '',
-        '',
-        0,
-        '',
-        evaluatedImage.error
-      ].join('\t'))
+      return { image, card: electedCard, cards: electedCards, error: false }
     })
 
-  console.log('Report', {
-    evaluatedImages: evaluatedImages.length,
-    errornous: evaluatedImages.filter(e => e.error).length
-  })
+    /* errornous */
+    evaluatedImages
+      .filter((evaluatedImage) => evaluatedImage.error)
+      .forEach((evaluatedImage) => {
+        if (evaluatedImage.cards.length > 0) {
+          return evaluatedImage.cards.forEach((card) =>
+            console.log(
+              [
+                evaluatedImage.image.basename,
+                evaluatedImage.image.tokens.join(' '),
+                card.name,
+                card.identifier,
+                card.score,
+                card.tokens.join(' '),
+                evaluatedImage.error,
+              ].join('\t'),
+            ),
+          )
+        }
 
-  console.log('Checking for triage folder...')
+        return console.log(
+          [
+            evaluatedImage.image.basename,
+            evaluatedImage.image.party,
 
-  const triagePath = path.join(argv.path, '/triage')
+            evaluatedImage.image.tokens.join(' '),
+            '',
+            '',
+            0,
+            '',
+            evaluatedImage.error,
+          ].join('\t'),
+        )
+      })
 
-  await fs.access(triagePath)
-    .catch(e => {
+    console.log('Report', {
+      evaluatedImages: evaluatedImages.length,
+      errornous: evaluatedImages.filter((e) => e.error).length,
+    })
+
+    console.log('Checking for triage folder...')
+
+    const triagePath = path.join(argv.path, '/triage')
+
+    await fs.access(triagePath).catch((e) => {
       if (e.code === 'ENOENT') {
         console.log('Creating triage folder...')
         return fs.mkdir(triagePath)
@@ -297,32 +344,42 @@ PgDb.connect().then(async pgdb => {
       throw e
     })
 
-  await Promise.map(
-    evaluatedImages.filter(evaluatedImage => !evaluatedImage.error),
-    async ({ image, card }, index) => {
-      if (index % 100 === 1) {
-        console.log(`  ${index + 1}`)
-      }
+    await Promise.map(
+      evaluatedImages.filter((evaluatedImage) => !evaluatedImage.error),
+      async ({ image, card }, index) => {
+        if (index % 100 === 1) {
+          console.log(`  ${index + 1}`)
+        }
 
-      const extname = path.extname(image.file)
-      const dest = path.join(triagePath, `/${card.identifier}${extname.toLowerCase()}`)
+        const extname = path.extname(image.file)
+        const dest = path.join(
+          triagePath,
+          `/${card.identifier}${extname.toLowerCase()}`,
+        )
 
-      const srcSize = await fs.stat(image.file).then(stat => stat.size).catch(() => 0)
-      const destSize = await fs.stat(dest).then(stat => stat.size).catch(() => 0)
+        const srcSize = await fs
+          .stat(image.file)
+          .then((stat) => stat.size)
+          .catch(() => 0)
+        const destSize = await fs
+          .stat(dest)
+          .then((stat) => stat.size)
+          .catch(() => 0)
 
-      if (srcSize !== destSize) {
-        return fs.copyFile(image.file, dest)
-      }
+        if (srcSize !== destSize) {
+          return fs.copyFile(image.file, dest)
+        }
 
-      return null
-    },
-    { concurrency: 10 }
-  )
+        return null
+      },
+      { concurrency: 10 },
+    )
 
-  console.log('Done.')
+    console.log('Done.')
 
-  await pgdb.close()
-}).catch(console.error)
+    await pgdb.close()
+  })
+  .catch(console.error)
 
 // 318719.png
 // 318716.png

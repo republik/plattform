@@ -9,7 +9,7 @@ module.exports = async (_, { mediaId }, context) => {
   const collection = await Collection.byNameForUser(
     Progress.COLLECTION_NAME,
     me.id,
-    context
+    context,
   )
   if (!collection) {
     throw new Error(t(`api/collections/collection/404`))
@@ -19,7 +19,7 @@ module.exports = async (_, { mediaId }, context) => {
     me.id,
     collection.id,
     mediaId,
-    context
+    context,
   )
 
   return item

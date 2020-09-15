@@ -8,8 +8,7 @@ module.exports = {
     ensureUser(user)
     return filtered(
       pubsub.asyncIterator('webNotification'),
-      (update) =>
-        update.userIds.indexOf(user.id) > -1
+      (update) => update.userIds.indexOf(user.id) > -1,
     )()
-  }
+  },
 }

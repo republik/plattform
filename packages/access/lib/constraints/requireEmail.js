@@ -14,14 +14,11 @@ const isGrantable = async (args) => {
 
   const isValid = !!email && !!validator.isEmail(email)
 
-  debug(
-    'isGrantable',
-    {
-      granter: granter.id,
-      email,
-      isValid
-    }
-  )
+  debug('isGrantable', {
+    granter: granter.id,
+    email,
+    isValid,
+  })
 
   return isValid
 }
@@ -29,10 +26,10 @@ const isGrantable = async (args) => {
 const getMeta = async () => ({
   visible: true,
   grantable: null,
-  payload: {}
+  payload: {},
 })
 
 module.exports = {
   isGrantable,
-  getMeta
+  getMeta,
 }

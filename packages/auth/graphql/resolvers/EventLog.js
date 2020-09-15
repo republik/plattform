@@ -1,6 +1,5 @@
-
 module.exports = {
-  type (eventLog, args) {
+  type(eventLog, args) {
     if (
       eventLog.action === 'INSERT' &&
       eventLog.oldData === null &&
@@ -42,11 +41,9 @@ module.exports = {
         return 'DENY_SESSION'
       }
     }
-    if (
-      eventLog.action === 'DELETE'
-    ) {
+    if (eventLog.action === 'DELETE') {
       return 'SIGNOUT_TIMEOUT'
     }
     return 'UNKNOWN'
-  }
+  },
 }

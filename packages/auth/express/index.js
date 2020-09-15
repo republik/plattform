@@ -1,4 +1,4 @@
 module.exports = {
   auth: require('./auth'),
-  basicAuth: require('./basicAuth')
+  basicAuth: require('./basicAuth'),
 }

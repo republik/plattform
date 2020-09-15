@@ -8,75 +8,75 @@ module.exports = {
       name: {
         boost: 2,
         highlight: {
-          number_of_fragments: 0
-        }
+          number_of_fragments: 0,
+        },
       },
       username: {
         highlight: {
-          number_of_fragments: 0
-        }
+          number_of_fragments: 0,
+        },
       },
       biography: {
         highlight: {
           boundary_scanner_locale: 'de-CH',
-          fragment_size: 300
-        }
+          fragment_size: 300,
+        },
       },
       statement: {
         highlight: {
           boundary_scanner_locale: 'de-CH',
-          fragment_size: 300
-        }
+          fragment_size: 300,
+        },
       },
       'resolved.credential': {
         highlight: {
-          number_of_fragments: 0
-        }
-      }
+          number_of_fragments: 0,
+        },
+      },
     },
     filter: {
       default: () => ({
         bool: {
           must: [
             { term: { __type: type } },
-            { term: { hasPublicProfile: true } }
-          ]
-        }
-      })
-    }
+            { term: { hasPublicProfile: true } },
+          ],
+        },
+      }),
+    },
   },
   mapping: {
     [type]: {
       dynamic: false,
       properties: {
         __type: {
-          type: 'keyword'
+          type: 'keyword',
         },
         __sort: {
           properties: {
             date: {
-              type: 'date'
-            }
-          }
+              type: 'date',
+            },
+          },
         },
         resolved: {
           properties: {
             credential: {
               type: 'text',
-              analyzer: 'german'
-            }
-          }
+              analyzer: 'german',
+            },
+          },
         },
 
         addressId: {
-          type: 'keyword'
+          type: 'keyword',
         },
         adminNotes: {
           type: 'text',
-          analyzer: 'german'
+          analyzer: 'german',
         },
         ageAccessRole: {
-          type: 'keyword'
+          type: 'keyword',
         },
         biography: {
           type: 'text',
@@ -84,94 +84,94 @@ module.exports = {
           fields: {
             keyword: {
               type: 'keyword',
-              ignore_above: 256
-            }
-          }
+              ignore_above: 256,
+            },
+          },
         },
         birthday: {
-          type: 'date'
+          type: 'date',
         },
         createdAt: {
-          type: 'date'
+          type: 'date',
         },
         defaultDiscussionNotificationOption: {
-          type: 'keyword'
+          type: 'keyword',
         },
         discussionNotificationChannels: {
-          type: 'keyword'
+          type: 'keyword',
         },
         email: {
-          type: 'keyword'
+          type: 'keyword',
         },
         emailAccessRole: {
-          type: 'keyword'
+          type: 'keyword',
         },
         facebookId: {
-          type: 'keyword'
+          type: 'keyword',
         },
         firstName: {
-          type: 'text'
+          type: 'text',
         },
         hasPublicProfile: {
-          type: 'boolean'
+          type: 'boolean',
         },
         id: {
-          type: 'keyword'
+          type: 'keyword',
         },
         isAdminUnlisted: {
-          type: 'boolean'
+          type: 'boolean',
         },
         isListed: {
-          type: 'boolean'
+          type: 'boolean',
         },
         lastName: {
-          type: 'text'
+          type: 'text',
         },
         name: {
-          type: 'text'
+          type: 'text',
         },
         pgpPublicKey: {
-          type: 'text'
+          type: 'text',
         },
         phoneNumber: {
-          type: 'keyword'
+          type: 'keyword',
         },
         phoneNumberAccessRole: {
-          type: 'keyword'
+          type: 'keyword',
         },
         phoneNumberNote: {
           type: 'text',
-          analyzer: 'german'
+          analyzer: 'german',
         },
         portraitUrl: {
-          type: 'keyword'
+          type: 'keyword',
         },
         publicUrl: {
-          type: 'keyword'
+          type: 'keyword',
         },
         roles: {
-          type: 'keyword'
+          type: 'keyword',
         },
         statement: {
           type: 'text',
-          analyzer: 'german'
+          analyzer: 'german',
         },
         testimonialId: {
-          type: 'keyword'
+          type: 'keyword',
         },
         twitterHandle: {
-          type: 'keyword'
+          type: 'keyword',
         },
         updatedAt: {
-          type: 'date'
+          type: 'date',
         },
         username: {
-          type: 'text'
+          type: 'text',
         },
         verified: {
-          type: 'boolean'
-        }
-      }
-    }
-  }
+          type: 'boolean',
+        },
+      },
+    },
+  },
 }

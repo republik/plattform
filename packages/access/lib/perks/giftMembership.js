@@ -7,7 +7,16 @@ const memberships = require('../memberships')
 const activateMembership = require('@orbiting/backend-modules-republik-crowdfundings/lib/activateMembership')
 const createCache = require('@orbiting/backend-modules-republik-crowdfundings/lib/cache')
 
-const give = async (campaign, grant, recipient, settings, t, pgdb, redis, mail) => {
+const give = async (
+  campaign,
+  grant,
+  recipient,
+  settings,
+  t,
+  pgdb,
+  redis,
+  mail,
+) => {
   if (grant.revokedAt) {
     throw new Error(t('api/access/perk/giftMembership/grantRevoked/error'))
   }
@@ -19,39 +28,50 @@ const give = async (campaign, grant, recipient, settings, t, pgdb, redis, mail) 
   const hasActiveMembership = await hasUserActiveMembership(recipient, pgdb)
 
   if (hasActiveMembership) {
-    throw new Error(t('api/access/perk/giftMembership/hasActiveMembership/error'))
+    throw new Error(
+      t('api/access/perk/giftMembership/hasActiveMembership/error'),
+    )
   }
 
   const giftableMemberships = await memberships.findGiftableMemberships(pgdb)
 
   if (giftableMemberships.length === 0) {
-    throw new Error(t('api/access/perk/giftMembership/noGiftableMemberships/error'))
+    throw new Error(
+      t('api/access/perk/giftMembership/noGiftableMemberships/error'),
+    )
   }
 
   const electedMembership = giftableMemberships.shift()
 
-  const membership = await activateMembership(electedMembership, recipient, t, pgdb)
+  const membership = await activateMembership(
+    electedMembership,
+    recipient,
+    t,
+    pgdb,
+  )
 
   createCache({ prefix: `User:${recipient.id}` }, { redis }).invalidate()
 
   debug('give', {
     electedMembership: membership.id,
     pledger: electedMembership.pledgeUserId,
-    recipient: recipient.id
+    recipient: recipient.id,
   })
 
   // @TODO: Render anon if pledger is from pod-thingy.
-  const pledger = await pgdb.public.users.findOne({ id: electedMembership.pledgeUserId }).then(transformUser)
+  const pledger = await pgdb.public.users
+    .findOne({ id: electedMembership.pledgeUserId })
+    .then(transformUser)
 
   await mail.sendMembershipClaimNotice({ membership }, { pgdb, t })
 
   return {
     ...electedMembership,
     ...membership,
-    pledger
+    pledger,
   }
 }
 
 module.exports = {
-  give
+  give,
 }

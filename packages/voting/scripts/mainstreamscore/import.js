@@ -11,23 +11,22 @@ const moment = require('moment')
 
 const SPREADSHEET_ID = '1kmUhQ2Tihg0V1bBxKgYbhAgArSQqQk8q1Ee-tEMUu2A'
 
-PgDb.connect().then(async pgdb => {
-  const spreadsheet = await gsheets.getSpreadsheet(SPREADSHEET_ID)
+PgDb.connect()
+  .then(async (pgdb) => {
+    const spreadsheet = await gsheets.getSpreadsheet(SPREADSHEET_ID)
 
-  const worksheetTitle = process.argv[2]
+    const worksheetTitle = process.argv[2]
 
-  const selectedWorksheets = worksheetTitle
-    ? spreadsheet.worksheets.filter(s => s.title === worksheetTitle)
-    : spreadsheet.worksheets
+    const selectedWorksheets = worksheetTitle
+      ? spreadsheet.worksheets.filter((s) => s.title === worksheetTitle)
+      : spreadsheet.worksheets
 
-  if (!selectedWorksheets.length) {
-    console.error(`Error: worksheet with title: ${worksheetTitle} not found!`)
-    return
-  }
+    if (!selectedWorksheets.length) {
+      console.error(`Error: worksheet with title: ${worksheetTitle} not found!`)
+      return
+    }
 
-  await Promise.each(
-    selectedWorksheets,
-    async ({ id: worksheetId }) => {
+    await Promise.each(selectedWorksheets, async ({ id: worksheetId }) => {
       const sheet = await gsheets.getWorksheetById(SPREADSHEET_ID, worksheetId)
 
       const slug = `mss-${sheet.title}`
@@ -45,12 +44,12 @@ PgDb.connect().then(async pgdb => {
           liveResult: true,
           submitAnswersImmediately: true,
           updateResultIncrementally: true,
-          noEmptyAnswers: true
+          noEmptyAnswers: true,
         })
 
         let counter = 0
         await pgdb.public.questions.insert(
-          sheet.data.map(d => {
+          sheet.data.map((d) => {
             const type = d.Type ? d.Type : 'Choice'
 
             let typePayload
@@ -59,16 +58,16 @@ PgDb.connect().then(async pgdb => {
                 cardinality: 1,
                 options: [
                   { label: 'Ja', value: 'true' },
-                  { label: 'Nein', value: 'false' }
-                ]
+                  { label: 'Nein', value: 'false' },
+                ],
               }
             } else if (type === 'Range') {
               typePayload = {
                 kind: 'continous',
                 ticks: [
-                  {"label": "unnötig", "value": 0},
-                  {"label": "zwingend", "value": 1}
-                ]
+                  { label: 'unnötig', value: 0 },
+                  { label: 'zwingend', value: 1 },
+                ],
               }
             } else {
               throw new Error(`unknown type ${type}`)
@@ -78,22 +77,25 @@ PgDb.connect().then(async pgdb => {
               questionnaireId: questionnaire.id,
               order: counter++,
               text: d.Frage,
-              ...d.Gruppe ? { metadata: { group: d.Gruppe } } : {},
-              ...d.histogramTicks ? { metadata: { histogramTicks: d.histogramTicks } } : {},
+              ...(d.Gruppe ? { metadata: { group: d.Gruppe } } : {}),
+              ...(d.histogramTicks
+                ? { metadata: { histogramTicks: d.histogramTicks } }
+                : {}),
               type,
-              typePayload
+              typePayload,
             }
-          })
+          }),
         )
 
         console.log(`imported ${slug} with ${counter} questions`)
       }
-    }
-  )
-  console.log('finished')
-}).then(() => {
-  process.exit()
-}).catch(e => {
-  console.log(e)
-  process.exit(1)
-})
+    })
+    console.log('finished')
+  })
+  .then(() => {
+    process.exit()
+  })
+  .catch((e) => {
+    console.log(e)
+    process.exit(1)
+  })

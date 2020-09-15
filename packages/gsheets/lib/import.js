@@ -8,8 +8,8 @@ const dateTimeParse = timeParse('%x %H:%M')
 const { GSHEETS_IMPORT } = process.env
 const mapping = GSHEETS_IMPORT && JSON.parse(GSHEETS_IMPORT)
 
-const normalize = data =>
-  data.map(d => {
+const normalize = (data) =>
+  data.map((d) => {
     return Object.assign({}, d, {
       published: d.hasOwnProperty('published') ? !!d.published : undefined,
       date: d.hasOwnProperty('date') ? dateParse(d.date) : undefined,
@@ -19,7 +19,7 @@ const normalize = data =>
       publishedDateTime: d.hasOwnProperty('publishedDateTime')
         ? dateTimeParse(d.publishedDateTime)
         : undefined,
-      slug: d.hasOwnProperty('slug') ? slugify(d.slug) : undefined
+      slug: d.hasOwnProperty('slug') ? slugify(d.slug) : undefined,
     })
   })
 
@@ -43,7 +43,7 @@ module.exports = async (key, pgdb) => {
   } catch (e) {
     console.error('gsheets: could not get sheet', {
       e,
-      key
+      key,
     })
     throw new Error('could not get sheet')
   }
@@ -56,15 +56,15 @@ module.exports = async (key, pgdb) => {
           { name },
           {
             data,
-            updatedAt: new Date()
-          }
+            updatedAt: new Date(),
+          },
         )
       } else {
         await pgdb.public.gsheets.insert({
           name,
           data,
           createdAt: new Date(),
-          updatedAt: new Date()
+          updatedAt: new Date(),
         })
       }
     } catch (e) {

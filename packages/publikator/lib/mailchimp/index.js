@@ -7,5 +7,5 @@ module.exports = {
   createCampaign,
   updateCampaign,
   updateCampaignContent,
-  getCampaign
+  getCampaign,
 }

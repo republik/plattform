@@ -7,15 +7,12 @@ const NodemailerInterface = require('../NodemailerInterface')
 const MandrillInterface = require('../MandrillInterface')
 const { send } = require('./mailLog')
 
-checkEnv([
-  'DEFAULT_MAIL_FROM_ADDRESS',
-  'DEFAULT_MAIL_FROM_NAME'
-])
+checkEnv(['DEFAULT_MAIL_FROM_ADDRESS', 'DEFAULT_MAIL_FROM_NAME'])
 
 const {
   DEFAULT_MAIL_FROM_ADDRESS,
   DEFAULT_MAIL_FROM_NAME,
-  SEND_MAILS_TAGS
+  SEND_MAILS_TAGS,
 } = process.env
 
 // usage
@@ -28,9 +25,9 @@ const {
 // })
 module.exports = async (mail, context, log) => {
   // sanitize
-  const tags = [].concat(
-    SEND_MAILS_TAGS && SEND_MAILS_TAGS.split(',')
-  ).filter(Boolean)
+  const tags = []
+    .concat(SEND_MAILS_TAGS && SEND_MAILS_TAGS.split(','))
+    .filter(Boolean)
 
   mail.to = [{ email: mail.to }]
   mail.from_email = mail.fromEmail || DEFAULT_MAIL_FROM_ADDRESS
@@ -58,7 +55,7 @@ module.exports = async (mail, context, log) => {
       }
 
       return [{ error: 'No mailing interface usable', status: 'error' }]
-    }
+    },
   )
 
   return send({
@@ -66,6 +63,6 @@ module.exports = async (mail, context, log) => {
     sendFunc,
     message: mail,
     email: mail.to[0].email,
-    context
+    context,
   })
 }

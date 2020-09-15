@@ -1,13 +1,10 @@
-const {
-  Instance,
-  createUsers
-} = require('@orbiting/backend-modules-test')
+const { Instance, createUsers } = require('@orbiting/backend-modules-test')
 
 describe('subscriptions', () => {
   beforeAll(async () => {
     await Instance.init({
       serverName: 'republik',
-      searchNotifyListener: false
+      searchNotifyListener: false,
     })
   }, 60000)
 
@@ -22,7 +19,7 @@ describe('subscriptions', () => {
       pgdb.public.users.truncate({ cascade: true }),
       pgdb.public.events.truncate({ cascade: true }),
       pgdb.public.subscriptions.truncate({ cascade: true }),
-      pgdb.public.notifications.truncate({ cascade: true })
+      pgdb.public.notifications.truncate({ cascade: true }),
     ])
     const users = createUsers(10, ['member'])
     await pgdb.public.users.insert(users)
@@ -37,7 +34,9 @@ describe('subscriptions', () => {
   test('DB schema', async () => {
     const { pgdb } = global.instance.context
     const [user0, user1] = createUsers(2, ['member'])
-    const discussion = await pgdb.public.discussions.insertAndGet({ title: 'test' })
+    const discussion = await pgdb.public.discussions.insertAndGet({
+      title: 'test',
+    })
 
     await expect(
       pgdb.public.subscriptions.insert({
@@ -45,8 +44,8 @@ describe('subscriptions', () => {
         objectType: 'User',
         objectUserId: null,
         objectDocumentId: user1.id,
-        objectDiscussionId: null
-      })
+        objectDiscussionId: null,
+      }),
     ).rejects.toThrow(/wrong object arguments/)
 
     await expect(
@@ -55,8 +54,8 @@ describe('subscriptions', () => {
         objectType: 'User',
         objectUserId: null,
         objectDocumentId: null,
-        objectDiscussionId: discussion.id
-      })
+        objectDiscussionId: discussion.id,
+      }),
     ).rejects.toThrow(/wrong object arguments/)
 
     await expect(
@@ -65,11 +64,11 @@ describe('subscriptions', () => {
         objectType: 'User',
         objectUserId: user1.id,
         objectDocumentId: null,
-        objectDiscussionId: null
-      })
+        objectDiscussionId: null,
+      }),
     ).toMatchObject({
       userId: user0.id,
-      objectType: 'User'
+      objectType: 'User',
     })
 
     await expect(
@@ -78,8 +77,8 @@ describe('subscriptions', () => {
         objectType: 'User',
         objectUserId: user1.id,
         objectDocumentId: null,
-        objectDiscussionId: null
-      })
+        objectDiscussionId: null,
+      }),
     ).rejects.toThrow(/duplicate key value/)
   })
 
@@ -90,7 +89,7 @@ describe('subscriptions', () => {
       getSubscriptionsForUserAndObject,
       getSubscriptionsForUserAndObjects,
       upsertSubscription,
-      unsubscribe
+      unsubscribe,
     } = require('../lib/Subscriptions')
     const { context } = global.instance
     const { pgdb } = context
@@ -100,20 +99,17 @@ describe('subscriptions', () => {
     const subProps = {
       userId: subscriber.id,
       objectId: author.id,
-      type: 'User'
+      type: 'User',
     }
     const simulatedSubscription = getSimulatedSubscriptionForUserAndObject(
       subProps.userId,
       {
         type: subProps.type,
-        id: subProps.objectId
+        id: subProps.objectId,
       },
-      subscriberContext
+      subscriberContext,
     )
-    const subscription = await upsertSubscription(
-      subProps,
-      subscriberContext
-    )
+    const subscription = await upsertSubscription(subProps, subscriberContext)
     expect(subscription).toBeTruthy()
     expect(subscription.active).toBeTruthy()
     expect(subscription.id).toBe(simulatedSubscription.id)
@@ -121,7 +117,7 @@ describe('subscriptions', () => {
 
     const userSubscriptions = await getSubscriptionsForUser(
       subProps.userId,
-      subscriberContext
+      subscriberContext,
     )
     expect(userSubscriptions.length).toBe(1)
     expect(userSubscriptions[0].id).toBe(subscription.id)
@@ -131,10 +127,10 @@ describe('subscriptions', () => {
         subProps.userId,
         {
           type: subProps.type,
-          id: subProps.objectId
+          id: subProps.objectId,
         },
-        subscriberContext
-      ).then(subs => subs?.pop()?.id)
+        subscriberContext,
+      ).then((subs) => subs?.pop()?.id),
     ).toBe(subscription.id)
 
     expect(
@@ -142,51 +138,55 @@ describe('subscriptions', () => {
         subProps.userId,
         {
           type: subProps.type,
-          ids: [subProps.objectId]
+          ids: [subProps.objectId],
         },
-        subscriberContext
-      ).then(subs => subs?.pop()?.id)
+        subscriberContext,
+      ).then((subs) => subs?.pop()?.id),
     ).toBe(subscription.id)
 
-    await unsubscribe({
-      id: subscription.id
-    }, context)
+    await unsubscribe(
+      {
+        id: subscription.id,
+      },
+      context,
+    )
     expect(await pgdb.public.subscriptions.count()).toBe(1)
-    expect(await pgdb.public.subscriptions.findOne({
-      id: subscription.id,
-      active: false
-    })).toBeTruthy()
+    expect(
+      await pgdb.public.subscriptions.findOne({
+        id: subscription.id,
+        active: false,
+      }),
+    ).toBeTruthy()
 
-    expect(await getSubscriptionsForUser(
-      subProps.userId,
-      subscriberContext
-    ).then(a => a.length)).toBe(0)
+    expect(
+      await getSubscriptionsForUser(subProps.userId, subscriberContext).then(
+        (a) => a.length,
+      ),
+    ).toBe(0)
 
-    expect(await getSubscriptionsForUser(
-      subProps.userId,
-      subscriberContext,
-      { includeNotActive: true }
-    ).then(a => a.length)).toBe(1)
+    expect(
+      await getSubscriptionsForUser(subProps.userId, subscriberContext, {
+        includeNotActive: true,
+      }).then((a) => a.length),
+    ).toBe(1)
   })
 
   test('unsubscribe (with and without filters) and resubscribe', async () => {
-    const {
-      upsertSubscription,
-      unsubscribe
-    } = require('../lib/Subscriptions')
+    const { upsertSubscription, unsubscribe } = require('../lib/Subscriptions')
     const { context } = global.instance
     const { pgdb } = context
     const [author, subscriber] = createUsers(2, ['member'])
     const subscriberContext = { ...context, user: subscriber }
 
-    const preparedUpsertSubscription = () => upsertSubscription(
-      {
-        userId: subscriber.id,
-        objectId: author.id,
-        type: 'User'
-      },
-      subscriberContext
-    )
+    const preparedUpsertSubscription = () =>
+      upsertSubscription(
+        {
+          userId: subscriber.id,
+          objectId: author.id,
+          type: 'User',
+        },
+        subscriberContext,
+      )
 
     let subscription = await preparedUpsertSubscription()
     expect(subscription).toBeTruthy()
@@ -194,24 +194,32 @@ describe('subscriptions', () => {
     expect(await pgdb.public.subscriptions.count()).toBe(1)
 
     // remove Document
-    subscription = await unsubscribe({
-      id: subscription.id,
-      filters: ['Document']
-    }, context)
+    subscription = await unsubscribe(
+      {
+        id: subscription.id,
+        filters: ['Document'],
+      },
+      context,
+    )
     expect(await pgdb.public.subscriptions.count()).toBe(1)
     expect(subscription.active).toBeTruthy()
     expect(subscription.filters).toStrictEqual(['Comment'])
-    expect(await pgdb.public.subscriptions.findOne({
-      id: subscription.id,
-      active: true,
-      filters: JSON.stringify(['Comment'])
-    })).toBeTruthy()
+    expect(
+      await pgdb.public.subscriptions.findOne({
+        id: subscription.id,
+        active: true,
+        filters: JSON.stringify(['Comment']),
+      }),
+    ).toBeTruthy()
 
     // remove Comment
-    subscription = await unsubscribe({
-      id: subscription.id,
-      filters: ['Comment']
-    }, context)
+    subscription = await unsubscribe(
+      {
+        id: subscription.id,
+        filters: ['Comment'],
+      },
+      context,
+    )
     expect(await pgdb.public.subscriptions.count()).toBe(1)
     expect(subscription.active).toBeFalsy()
     expect(subscription.filters).toBe(null)
@@ -223,10 +231,13 @@ describe('subscriptions', () => {
     expect(await pgdb.public.subscriptions.count()).toBe(1)
 
     // remove all filters
-    subscription = await unsubscribe({
-      id: subscription.id,
-      filters: ['Document', 'Comment']
-    }, context)
+    subscription = await unsubscribe(
+      {
+        id: subscription.id,
+        filters: ['Document', 'Comment'],
+      },
+      context,
+    )
     expect(await pgdb.public.subscriptions.count()).toBe(1)
     expect(subscription.active).toBeFalsy()
     expect(subscription.filters).toBe(null)
@@ -238,16 +249,21 @@ describe('subscriptions', () => {
     expect(await pgdb.public.subscriptions.count()).toBe(1)
 
     // unsubscribe completely
-    subscription = await unsubscribe({
-      id: subscription.id
-    }, context)
+    subscription = await unsubscribe(
+      {
+        id: subscription.id,
+      },
+      context,
+    )
     expect(subscription).toBeTruthy()
     expect(subscription.active).toBeFalsy()
     expect(await pgdb.public.subscriptions.count()).toBe(1)
-    expect(await pgdb.public.subscriptions.findOne({
-      id: subscription.id,
-      active: false
-    })).toBeTruthy()
+    expect(
+      await pgdb.public.subscriptions.findOne({
+        id: subscription.id,
+        active: false,
+      }),
+    ).toBeTruthy()
   })
 
   describe('comments with filters', () => {
@@ -256,7 +272,7 @@ describe('subscriptions', () => {
       test(`filter: ${filter}`, async () => {
         const {
           upsertSubscription,
-          getUnreadNotificationsForUserAndObject
+          getUnreadNotificationsForUserAndObject,
         } = require('../lib/Subscriptions')
         const createDiscussion = require('@orbiting/backend-modules-discussions/graphql/resolvers/_mutations/createDiscussion')
         const submitComment = require('@orbiting/backend-modules-discussions/graphql/resolvers/_mutations/submitComment')
@@ -269,7 +285,7 @@ describe('subscriptions', () => {
           pgdb.public.discussions.truncate({ cascade: true }),
           pgdb.public.events.truncate({ cascade: true }),
           pgdb.public.subscriptions.truncate({ cascade: true }),
-          pgdb.public.notifications.truncate({ cascade: true })
+          pgdb.public.notifications.truncate({ cascade: true }),
         ])
 
         const [editor] = createUsers(2, ['editor'])
@@ -279,9 +295,9 @@ describe('subscriptions', () => {
           null,
           {
             title: 'test',
-            anonymity: 'ALLOWED'
+            anonymity: 'ALLOWED',
           },
-          { ...context, user: editor }
+          { ...context, user: editor },
         )
 
         const subscription = await upsertSubscription(
@@ -289,9 +305,9 @@ describe('subscriptions', () => {
             userId: subscriber.id,
             objectId: author.id,
             type: 'User',
-            ...filter ? { filters: [filter] } : {}
+            ...(filter ? { filters: [filter] } : {}),
           },
-          { ...context, user: subscriber }
+          { ...context, user: subscriber },
         )
         expect(subscription).toBeTruthy()
 
@@ -299,32 +315,34 @@ describe('subscriptions', () => {
           null,
           {
             discussionId,
-            content: `test filter:${filter}`
+            content: `test filter:${filter}`,
           },
-          { ...context, user: author }
+          { ...context, user: author },
         )
 
         const events = await pgdb.public.events.find({
           objectType: 'Comment',
-          objectId: comment.id
+          objectId: comment.id,
         })
         expect(events.length).toEqual(filter === 'Document' ? 0 : 1)
 
         const notifications = await pgdb.public.notifications.find({
           userId: subscriber.id,
-          subscriptionId: subscription.id
+          subscriptionId: subscription.id,
         })
         expect(notifications.length).toEqual(filter === 'Document' ? 0 : 1)
         expect(notifications[0]?.readAt).toBeFalsy()
 
-        expect(await getUnreadNotificationsForUserAndObject(
-          subscriber.id,
-          {
-            type: 'Comment',
-            id: comment.id
-          },
-          context
-        ).then(a => a?.length)).toBe(filter === 'Document' ? 0 : 1)
+        expect(
+          await getUnreadNotificationsForUserAndObject(
+            subscriber.id,
+            {
+              type: 'Comment',
+              id: comment.id,
+            },
+            context,
+          ).then((a) => a?.length),
+        ).toBe(filter === 'Document' ? 0 : 1)
       })
     }
   })

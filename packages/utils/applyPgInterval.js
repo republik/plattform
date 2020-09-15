@@ -20,7 +20,7 @@ const ALLOWED_INTERVAL_KEYS = [
   'hours',
   'minutes',
   'seconds',
-  'milliseconds'
+  'milliseconds',
 ]
 
 const mutate = (date, interval, mutation) => {
@@ -46,7 +46,10 @@ const mutate = (date, interval, mutation) => {
     throw new Error('interval object has no keys')
   }
 
-  if (keys.filter(key => ALLOWED_INTERVAL_KEYS.includes(key)).length !== keys.length) {
+  if (
+    keys.filter((key) => ALLOWED_INTERVAL_KEYS.includes(key)).length !==
+    keys.length
+  ) {
     throw new Error('interval object contains invalid keys')
   }
 
@@ -55,7 +58,7 @@ const mutate = (date, interval, mutation) => {
   // '30 days 12 hours'::interval in Postgres database is retrieved as
   // PostgresInterval object { days: 30, hours: 12 } in here. Iterating through
   // each object key and mutating count (add, subtract).
-  Object.keys(interval).forEach(key => {
+  Object.keys(interval).forEach((key) => {
     // e.g. moment.add(<count>, <unit>)
     mutatedDate[mutation](interval[key], key)
   })
@@ -66,5 +69,5 @@ const mutate = (date, interval, mutation) => {
 module.exports = {
   mutate,
   add: (date, interval) => mutate(date, interval, 'add'),
-  subtract: (date, interval) => mutate(date, interval, 'subtract')
+  subtract: (date, interval) => mutate(date, interval, 'subtract'),
 }

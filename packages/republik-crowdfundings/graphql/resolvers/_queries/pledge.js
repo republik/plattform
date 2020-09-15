@@ -1,7 +1,7 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
 
 module.exports = async (_, { id }, { pgdb, user: me }) => {
-  const pledge = await pgdb.public.pledges.findOne({id: id})
+  const pledge = await pgdb.public.pledges.findOne({ id: id })
 
   if (pledge.status === 'DRAFT') {
     return pledge

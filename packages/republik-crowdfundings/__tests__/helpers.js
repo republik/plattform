@@ -1,9 +1,6 @@
-const {
-  Users
-} = require('@orbiting/backend-modules-auth/__tests__/auth')
+const { Users } = require('@orbiting/backend-modules-auth/__tests__/auth')
 
-const pgDatabase = () =>
-  global.instance.context.pgdb
+const pgDatabase = () => global.instance.context.pgdb
 
 const prepareNewPledge = async ({
   templateId = '00000000-0000-0000-0008-000000000001',
@@ -11,23 +8,25 @@ const prepareNewPledge = async ({
   ...options
 } = {}) => {
   const packageOption = await pgDatabase().public.packageOptions.findOne({
-    id: templateId
+    id: templateId,
   })
   const result = await submitPledge({
     total: packageOption.price,
-    options: [{
-      amount: 1,
-      price: packageOption.price,
-      templateId
-    }],
+    options: [
+      {
+        amount: 1,
+        price: packageOption.price,
+        templateId,
+      },
+    ],
     ...options,
-    apolloFetch
+    apolloFetch,
   })
   expect(result).toBeTruthy()
   return {
     pledgeId: result.data.submitPledge.pledgeId,
     userId: result.data.submitPledge.userId,
-    apolloFetch
+    apolloFetch,
   }
 }
 
@@ -43,8 +42,13 @@ const SUBMIT_PLEDGE_MUTATION = `
   }
 `
 
-const submitPledge = ({ user: userObject, apolloFetch = global.instance.apolloFetch, ...variables }) => {
-  const { email, firstName, lastName, birthday, phoneNumber } = (userObject || Users.Unverified)
+const submitPledge = ({
+  user: userObject,
+  apolloFetch = global.instance.apolloFetch,
+  ...variables
+}) => {
+  const { email, firstName, lastName, birthday, phoneNumber } =
+    userObject || Users.Unverified
   return apolloFetch({
     query: SUBMIT_PLEDGE_MUTATION,
     variables: {
@@ -53,10 +57,10 @@ const submitPledge = ({ user: userObject, apolloFetch = global.instance.apolloFe
         firstName,
         lastName,
         birthday,
-        phoneNumber
+        phoneNumber,
       },
-      ...variables
-    }
+      ...variables,
+    },
   })
 }
 
@@ -64,7 +68,7 @@ const PAYMENT_METHODS = {
   STRIPE: 'STRIPE',
   POSTFINANCECARD: 'POSTFINANCECARD',
   PAYPAL: 'PAYPAL',
-  PAYMENTSLIP: 'PAYMENTSLIP'
+  PAYMENTSLIP: 'PAYMENTSLIP',
 }
 
 const PAY_PLEDGE_ADDRESS = {
@@ -73,7 +77,7 @@ const PAY_PLEDGE_ADDRESS = {
   line2: '',
   postalCode: '8000',
   city: 'zurich',
-  country: 'CH'
+  country: 'CH',
 }
 
 const PAY_PLEDGE_MUTATION = `
@@ -86,14 +90,18 @@ const PAY_PLEDGE_MUTATION = `
   }
 `
 
-const payPledge = ({ method, apolloFetch = global.instance.apolloFetch, ...variables }) => {
+const payPledge = ({
+  method,
+  apolloFetch = global.instance.apolloFetch,
+  ...variables
+}) => {
   return apolloFetch({
     query: PAY_PLEDGE_MUTATION,
     variables: {
       address: PAY_PLEDGE_ADDRESS,
       method: PAYMENT_METHODS[method],
-      ...variables
-    }
+      ...variables,
+    },
   })
 }
 
@@ -103,7 +111,7 @@ const prepareParkingUserAndPledge = async () => {
       id: process.env.PARKING_USER_ID,
       email: 'parking@test.project-r.construction',
       firstName: 'parking',
-      lastName: 'parker'
+      lastName: 'parker',
     })
   } catch (e) {
     console.log(e)
@@ -114,7 +122,7 @@ const prepareParkingUserAndPledge = async () => {
       userId: process.env.PARKING_USER_ID,
       packageId: '00000000-0000-0000-0007-000000000001',
       total: 0,
-      donation: 0
+      donation: 0,
     })
   } catch (e) {
     console.log(e)
@@ -136,13 +144,16 @@ const CANCEL_PLEDGE_MUTATION = `
   }
 `
 
-const cancelPledge = async ({ pledgeId, apolloFetch = global.instance.apolloFetch }) => {
+const cancelPledge = async ({
+  pledgeId,
+  apolloFetch = global.instance.apolloFetch,
+}) => {
   await prepareParkingUserAndPledge()
   return apolloFetch({
     query: CANCEL_PLEDGE_MUTATION,
     variables: {
-      pledgeId
-    }
+      pledgeId,
+    },
   })
 }
 
@@ -178,114 +189,114 @@ const checkSeed = async () => {
           }
         }
       }
-    `
+    `,
   })
   expect(result.data).toEqual({
-    'crowdfunding': {
-      'id': 'f0000000-0000-0000-0002-000000000001',
-      'name': 'TEST',
-      'packages': [
+    crowdfunding: {
+      id: 'f0000000-0000-0000-0002-000000000001',
+      name: 'TEST',
+      packages: [
         {
-          'id': '00000000-0000-0000-0007-000000000001',
-          'name': 'ABO',
-          'options': [
+          id: '00000000-0000-0000-0007-000000000001',
+          name: 'ABO',
+          options: [
             {
-              'id': '00000000-0000-0000-0008-000000000001',
-              'price': 24000,
-              'userPrice': true,
-              'minAmount': 1,
-              'maxAmount': 1,
-              'defaultAmount': 1,
-              'reward': {
-                'id': '00000000-0000-0000-0006-000000000001',
-                'name': 'ABO'
-              }
-            }
-          ]
+              id: '00000000-0000-0000-0008-000000000001',
+              price: 24000,
+              userPrice: true,
+              minAmount: 1,
+              maxAmount: 1,
+              defaultAmount: 1,
+              reward: {
+                id: '00000000-0000-0000-0006-000000000001',
+                name: 'ABO',
+              },
+            },
+          ],
         },
         {
-          'id': '00000000-0000-0000-0007-000000000002',
-          'name': 'MONTHLY_ABO',
-          'options': [
+          id: '00000000-0000-0000-0007-000000000002',
+          name: 'MONTHLY_ABO',
+          options: [
             {
-              'id': '00000000-0000-0000-0008-000000000002',
-              'price': 2000,
-              'userPrice': false,
-              'minAmount': 1,
-              'maxAmount': 1,
-              'defaultAmount': 1,
-              'reward': {
-                'id': '00000000-0000-0000-0006-000000000002',
-                'name': 'MONTHLY_ABO'
-              }
-            }
-          ]
+              id: '00000000-0000-0000-0008-000000000002',
+              price: 2000,
+              userPrice: false,
+              minAmount: 1,
+              maxAmount: 1,
+              defaultAmount: 1,
+              reward: {
+                id: '00000000-0000-0000-0006-000000000002',
+                name: 'MONTHLY_ABO',
+              },
+            },
+          ],
         },
         {
-          'id': '00000000-0000-0000-0007-000000000003',
-          'name': 'PATRON',
-          'options': [
+          id: '00000000-0000-0000-0007-000000000003',
+          name: 'PATRON',
+          options: [
             {
-              'id': '00000000-0000-0000-0008-000000000003',
-              'price': 100000,
-              'userPrice': false,
-              'minAmount': 1,
-              'maxAmount': 1,
-              'defaultAmount': 1,
-              'reward': {
-                'id': '00000000-0000-0000-0006-000000000001',
-                'name': 'ABO'
-              }
+              id: '00000000-0000-0000-0008-000000000003',
+              price: 100000,
+              userPrice: false,
+              minAmount: 1,
+              maxAmount: 1,
+              defaultAmount: 1,
+              reward: {
+                id: '00000000-0000-0000-0006-000000000001',
+                name: 'ABO',
+              },
             },
             {
-              'id': '00000000-0000-0000-0008-000000000004',
-              'price': 3000,
-              'userPrice': false,
-              'minAmount': 2,
-              'maxAmount': 10,
-              'defaultAmount': 5,
-              'reward': {
-                'id': '00000000-0000-0000-0005-000000000001',
-                'name': 'SWEETS'
-              }
-            }
-          ]
+              id: '00000000-0000-0000-0008-000000000004',
+              price: 3000,
+              userPrice: false,
+              minAmount: 2,
+              maxAmount: 10,
+              defaultAmount: 5,
+              reward: {
+                id: '00000000-0000-0000-0005-000000000001',
+                name: 'SWEETS',
+              },
+            },
+          ],
         },
         {
-          'id': '00000000-0000-0000-0007-000000000004',
-          'name': 'DONATION',
-          'options': [
+          id: '00000000-0000-0000-0007-000000000004',
+          name: 'DONATION',
+          options: [
             {
-              'id': '00000000-0000-0000-0008-000000000005',
-              'price': 1,
-              'userPrice': true,
-              'minAmount': 1,
-              'maxAmount': 1,
-              'defaultAmount': 1,
-              'reward': null
-            }
-          ]
+              id: '00000000-0000-0000-0008-000000000005',
+              price: 1,
+              userPrice: true,
+              minAmount: 1,
+              maxAmount: 1,
+              defaultAmount: 1,
+              reward: null,
+            },
+          ],
         },
         {
-          'id': '00000000-0000-0000-0007-000000000005',
-          'name': 'PRESENT',
-          'options': [
+          id: '00000000-0000-0000-0007-000000000005',
+          name: 'PRESENT',
+          options: [
             {
-              'id': '00000000-0000-0000-0008-000000000006',
-              'price': 24000,
-              'userPrice': false,
-              'minAmount': 1,
-              'maxAmount': 1,
-              'defaultAmount': 1,
-              'reward': {
-                'id': '00000000-0000-0000-0006-000000000001',
-                'name': 'ABO'
-              }
-            }
-          ]
-        }
-      ]
-    }
+              id: '00000000-0000-0000-0008-000000000006',
+              price: 24000,
+              userPrice: false,
+              minAmount: 1,
+              maxAmount: 1,
+              defaultAmount: 1,
+              reward: {
+                id: '00000000-0000-0000-0006-000000000001',
+                name: 'ABO',
+              },
+            },
+          ],
+        },
+      ],
+    },
   })
 }
 
@@ -295,5 +306,5 @@ module.exports = {
   PAYMENT_METHODS,
   payPledge,
   cancelPledge,
-  checkSeed
+  checkSeed,
 }

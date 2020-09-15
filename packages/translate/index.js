@@ -1,4 +1,4 @@
 module.exports = {
   TranslatedError: require('./TranslatedError'),
-  t: require('./t')
+  t: require('./t'),
 }

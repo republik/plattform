@@ -6,13 +6,13 @@
 require('@orbiting/backend-modules-env').config()
 const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
 
-const {
-  PARKING_USER_ID
-} = process.env
+const { PARKING_USER_ID } = process.env
 
 console.log('running reconstructConsents.js...')
-PgDb.connect().then(async pgdb => {
-  await pgdb.query(`
+PgDb.connect()
+  .then(async (pgdb) => {
+    await pgdb.query(
+      `
 WITH mts_projectr AS (
   SELECT
     id
@@ -87,12 +87,16 @@ WITH mts_projectr AS (
     "numMembershipsProjectR" > 0
 )
 SELECT 'DONE'
-  `, {
-    excludeUserId: PARKING_USER_ID
+  `,
+      {
+        excludeUserId: PARKING_USER_ID,
+      },
+    )
   })
-}).then(() => {
-  process.exit()
-}).catch(e => {
-  console.log(e)
-  process.exit(1)
-})
+  .then(() => {
+    process.exit()
+  })
+  .catch((e) => {
+    console.log(e)
+    process.exit(1)
+  })

@@ -1,15 +1,21 @@
 const ensureSignedIn = require('../../../lib/ensureSignedIn')
-const { Type, getNotification } = require('../../../lib/challenges/AppChallenge')
+const {
+  Type,
+  getNotification,
+} = require('../../../lib/challenges/AppChallenge')
 
 module.exports = async (_, args, { pgdb, user: me, req }) => {
   ensureSignedIn(req)
 
-  const token = await pgdb.public.tokens.findFirst({
-    email: me.email,
-    type: Type,
-    'expiresAt >= ': new Date()
-  }, {
-    orderBy: ['createdAt desc']}
+  const token = await pgdb.public.tokens.findFirst(
+    {
+      email: me.email,
+      type: Type,
+      'expiresAt >= ': new Date(),
+    },
+    {
+      orderBy: ['createdAt desc'],
+    },
   )
 
   if (!token) {
@@ -18,11 +24,11 @@ module.exports = async (_, args, { pgdb, user: me, req }) => {
 
   const notification = getNotification({
     email: me.email,
-    token
+    token,
   })
 
   return {
     ...notification,
-    verificationUrl: notification.url
+    verificationUrl: notification.url,
   }
 }

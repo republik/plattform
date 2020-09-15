@@ -14,21 +14,27 @@ module.exports = async (_, args, context) => {
 
   // In case pre-populated data is not available...
   if (!data) {
-    throw new Error('Unable to retrieve pre-populated data for Collection.CollectionsStats.last')
+    throw new Error(
+      'Unable to retrieve pre-populated data for Collection.CollectionsStats.last',
+    )
   }
 
   // Retrieve pre-populated data.
   const { result = [], updatedAt, key } = data
 
-  const collectionResult = result.find(({ collectionId }) => collectionId === collection.id)
+  const collectionResult = result.find(
+    ({ collectionId }) => collectionId === collection.id,
+  )
 
   if (!collectionResult) {
-    throw new Error('Unable to retrieve collection in pre-populated data for Collection.CollectionsStats.last')
+    throw new Error(
+      'Unable to retrieve collection in pre-populated data for Collection.CollectionsStats.last',
+    )
   }
 
   return {
     ...collectionResult,
     updatedAt,
-    key
+    key,
   }
 }

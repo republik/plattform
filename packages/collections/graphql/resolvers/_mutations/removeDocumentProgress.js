@@ -6,7 +6,7 @@ module.exports = async (_, { documentId }, context) =>
     null,
     {
       documentId,
-      collectionName: Progress.COLLECTION_NAME
+      collectionName: Progress.COLLECTION_NAME,
     },
-    context
+    context,
   )

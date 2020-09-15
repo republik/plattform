@@ -5,5 +5,9 @@ module.exports = async (discussion, _, context) => {
   if (!user) {
     return null
   }
-  return getDisplayAuthor({ userId: user.id, discussionId: discussion.id }, null, context)
+  return getDisplayAuthor(
+    { userId: user.id, discussionId: discussion.id },
+    null,
+    context,
+  )
 }

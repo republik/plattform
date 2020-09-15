@@ -1,30 +1,26 @@
 const visit = require('unist-util-visit')
 const {
-  Roles: {
-    userIsInRoles
-  }
+  Roles: { userIsInRoles },
 } = require('@orbiting/backend-modules-auth')
 
-const {
-  DOCUMENTS_RESTRICT_TO_ROLES
-} = process.env
+const { DOCUMENTS_RESTRICT_TO_ROLES } = process.env
 
 const processRepoImageUrlsInContent = (mdast, fn) => {
-  visit(mdast, 'image', node => {
+  visit(mdast, 'image', (node) => {
     node.url = fn(node.url)
   })
 }
 
 const processRepoImageUrlsInMeta = (mdast, fn) => {
   if (mdast.meta) {
-    Object.keys(mdast.meta).forEach(key => {
+    Object.keys(mdast.meta).forEach((key) => {
       if (key.match(/image/i)) {
         mdast.meta[key] = fn(mdast.meta[key])
       }
     })
     const series = mdast.meta.series
     if (series && Array.isArray(series.episodes)) {
-      series.episodes.forEach(episode => {
+      series.episodes.forEach((episode) => {
         if (episode.image) {
           episode.image = fn(episode.image)
         }
@@ -33,10 +29,12 @@ const processRepoImageUrlsInMeta = (mdast, fn) => {
   }
 }
 
-const { imageKeys: embedImageKeys } = require('@orbiting/backend-modules-embeds')
+const {
+  imageKeys: embedImageKeys,
+} = require('@orbiting/backend-modules-embeds')
 
 const processImageUrlsInContent = (mdast, fn) => {
-  visit(mdast, 'zone', node => {
+  visit(mdast, 'zone', (node) => {
     if (node.data && node.identifier.indexOf('EMBED') > -1) {
       for (const key of embedImageKeys) {
         if (node.data[key]) {
@@ -55,7 +53,7 @@ const processImageUrlsInContent = (mdast, fn) => {
 }
 
 const processEmbedsInContent = (mdast, fn) => {
-  visit(mdast, 'zone', node => {
+  visit(mdast, 'zone', (node) => {
     if (node.data && node.identifier.indexOf('EMBED') > -1) {
       const result = fn(node.data)
       if (result !== undefined) {
@@ -69,7 +67,7 @@ const processMembersOnlyZonesInContent = (mdast, user) => {
   if (!DOCUMENTS_RESTRICT_TO_ROLES) {
     return
   }
-  visit(mdast, 'zone', node => {
+  visit(mdast, 'zone', (node) => {
     if (node.data && node.data.membersOnly) {
       const roles = DOCUMENTS_RESTRICT_TO_ROLES.split(',')
 
@@ -85,5 +83,5 @@ module.exports = {
   processRepoImageUrlsInContent,
   processRepoImageUrlsInMeta,
   processImageUrlsInContent,
-  processEmbedsInContent
+  processEmbedsInContent,
 }

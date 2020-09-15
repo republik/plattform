@@ -2,7 +2,7 @@ const dict = {
   comment: require('./comment'),
   document: require('./document'),
   repo: require('./repo'),
-  user: require('./user')
+  user: require('./user'),
 }
 
 const list = []
@@ -13,5 +13,5 @@ for (let key in dict) {
 
 module.exports = {
   dict,
-  list
+  list,
 }

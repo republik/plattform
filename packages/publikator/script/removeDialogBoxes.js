@@ -19,25 +19,24 @@ const removeDialogBox = ({ content: mdast }) => {
     let title
     if (
       node.identifier === 'INFOBOX' &&
-      node.children.find(child =>
-        child.type === 'heading' &&
-        child.children.find(child2 =>
-          (
-            child2.value === 'Dialog mit der Redaktion' ||
-            child2.value === 'Feedback ans Feuilleton'
-          ) && (title = child2.value)
-        )
+      node.children.find(
+        (child) =>
+          child.type === 'heading' &&
+          child.children.find(
+            (child2) =>
+              (child2.value === 'Dialog mit der Redaktion' ||
+                child2.value === 'Feedback ans Feuilleton') &&
+              (title = child2.value),
+          ),
       )
     ) {
       parent.children.splice(i, 1)
       removedTitle = title
     }
   })
-  return removedTitle
-    ? `entfernt: ${removedTitle}`
-    : null
+  return removedTitle ? `entfernt: ${removedTitle}` : null
 }
 
 transformPublications({
-  transform: removeDialogBox
+  transform: removeDialogBox,
 })

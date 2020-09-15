@@ -14,15 +14,26 @@ const init = async ({
   lockTtlSecs,
   runIntervalSecs,
   runInitially = true,
-  dryRun = false
+  dryRun = false,
 }) => {
   if (!name || !context || !runFunc || !lockTtlSecs || !runIntervalSecs) {
-    console.error(`missing input, scheduler ${name}`, { name, context, runFunc, lockTtlSecs, runIntervalSecs })
+    console.error(`missing input, scheduler ${name}`, {
+      name,
+      context,
+      runFunc,
+      lockTtlSecs,
+      runIntervalSecs,
+    })
     throw new Error(`missing input, scheduler ${name}`)
   }
   if (runIntervalSecs < lockTtlSecs) {
-    console.error('lockTtlSecs bigger than runIntervalSecs', { runIntervalSecs, lockTtlSecs })
-    throw new Error(`lockTtlSecs bigger than runIntervalSecs, scheduler ${name}`)
+    console.error('lockTtlSecs bigger than runIntervalSecs', {
+      runIntervalSecs,
+      lockTtlSecs,
+    })
+    throw new Error(
+      `lockTtlSecs bigger than runIntervalSecs, scheduler ${name}`,
+    )
   }
   if (dryRun) {
     console.warn(`WARNING: dryRun flag enabled, scheduler "${name}"`)
@@ -47,19 +58,19 @@ const init = async ({
   }
 
   const redlock = () => {
-    return new Redlock(
-      [redis],
-      {
-        driftFactor: 0.01, // time in ms
-        retryCount: LOCK_RETRY_COUNT,
-        retryDelay: LOCK_RETRY_DELAY,
-        retryJitter: LOCK_RETRY_JITTER
-      }
-    )
+    return new Redlock([redis], {
+      driftFactor: 0.01, // time in ms
+      retryCount: LOCK_RETRY_COUNT,
+      retryDelay: LOCK_RETRY_DELAY,
+      retryJitter: LOCK_RETRY_JITTER,
+    })
   }
 
   if (lockTtlSecs * 1000 < MIN_TTL_MS) {
-    throw new Error(`lockTtlSecs must be at least ${Math.ceil(MIN_TTL_MS / 1000)})`, { lockTtlSecs })
+    throw new Error(
+      `lockTtlSecs must be at least ${Math.ceil(MIN_TTL_MS / 1000)})`,
+      { lockTtlSecs },
+    )
   }
 
   const run = async () => {
@@ -69,10 +80,15 @@ const init = async ({
 
       const extendLockInterval = setInterval(
         () =>
-          lock.extend(1000 * lockTtlSecs)
-            .then(() => { debug('extending lock') })
-            .catch(e => { console.warn('extending lock failed', e) }),
-        1000 * lockTtlSecs * 0.9
+          lock
+            .extend(1000 * lockTtlSecs)
+            .then(() => {
+              debug('extending lock')
+            })
+            .catch((e) => {
+              console.warn('extending lock failed', e)
+            }),
+        1000 * lockTtlSecs * 0.9,
       )
 
       debug('run started')
@@ -89,11 +105,17 @@ const init = async ({
 
       // wait until other processes exceeded waiting time
       // then give up lock
-      const blockLockMs = BigInt(TTL_EXP_MS) * BigInt(1000) - process.hrtime.bigint() - beginTime
-      await Promise.delay(blockLockMs > 0 ? blockLockMs : 0).then(
-        () => lock.unlock()
-          .then(() => { debug('unlocked') })
-          .catch(e => { console.warn('unlocking failed', e) })
+      const blockLockMs =
+        BigInt(TTL_EXP_MS) * BigInt(1000) - process.hrtime.bigint() - beginTime
+      await Promise.delay(blockLockMs > 0 ? blockLockMs : 0).then(() =>
+        lock
+          .unlock()
+          .then(() => {
+            debug('unlocked')
+          })
+          .catch((e) => {
+            console.warn('unlocking failed', e)
+          }),
       )
 
       debug('run completed')
@@ -115,8 +137,9 @@ const init = async ({
   const close = async () => {
     const lock = await redlock().lock(lockKey, 1000 * lockTtlSecs * 2)
     clearTimeout(timeout)
-    await lock.unlock()
-      .catch((err) => { console.error(err) })
+    await lock.unlock().catch((err) => {
+      console.error(err)
+    })
   }
 
   if (runInitially) {
@@ -128,10 +151,10 @@ const init = async ({
 
   return {
     run,
-    close
+    close,
   }
 }
 
 module.exports = {
-  init
+  init,
 }

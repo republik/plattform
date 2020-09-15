@@ -14,17 +14,17 @@ const ensureUserHasRole = (user, role) => {
   }
   if (!userHasRole(user, role)) {
     console.info('unauthorized', { stack: new Error().stack })
-    throw new Error(t.pluralize('api/unauthorized', {
-      count: 1,
-      role: `«${role}»`
-    }))
+    throw new Error(
+      t.pluralize('api/unauthorized', {
+        count: 1,
+        role: `«${role}»`,
+      }),
+    )
   }
 }
 
 const userIsInRoles = (user, roles = []) => {
-  const matches = roles.filter(role =>
-    userHasRole(user, role)
-  )
+  const matches = roles.filter((role) => userHasRole(user, role))
   return matches.length > 0
 }
 
@@ -35,17 +35,18 @@ const ensureUserIsInRoles = (user, roles) => {
   }
   if (!userIsInRoles(user, roles)) {
     console.info('unauthorized', { stack: new Error().stack })
-    throw new Error(t.pluralize('api/unauthorized', {
-      count: roles.length,
-      role: roles
-        .map(role => `«${role}»`)
-        .join(', ')
-    }))
+    throw new Error(
+      t.pluralize('api/unauthorized', {
+        count: roles.length,
+        role: roles.map((role) => `«${role}»`).join(', '),
+      }),
+    )
   }
 }
 
 const addUserToRole = async (userId, role, pgdb) => {
-  await pgdb.query(`
+  await pgdb.query(
+    `
     UPDATE
       users
     SET
@@ -53,62 +54,55 @@ const addUserToRole = async (userId, role, pgdb) => {
     WHERE
       id = :userId AND
       (roles IS NULL OR NOT roles @> :role)
-  `, {
-    role: JSON.stringify([role]),
-    userId
-  })
+  `,
+    {
+      role: JSON.stringify([role]),
+      userId,
+    },
+  )
   return pgdb.public.users.findOne({ id: userId })
 }
 
 const removeUserFromRole = async (userId, role, pgdb) => {
-  await pgdb.query(`
+  await pgdb.query(
+    `
     UPDATE
       users
     SET
       roles = roles - :role
     WHERE
       id = :userId
-  `, {
-    role,
-    userId
-  })
+  `,
+    {
+      role,
+      userId,
+    },
+  )
   return pgdb.public.users.findOne({ id: userId })
 }
 
-const userIsMe = (user, me) => (
-  me && me.id === user.id
-)
+const userIsMe = (user, me) => me && me.id === user.id
 
-const userIsMeOrInRoles = (user, me, roles) => (
-  userIsMe(user, me) ||
-  userIsInRoles(me, roles)
-)
+const userIsMeOrInRoles = (user, me, roles) =>
+  userIsMe(user, me) || userIsInRoles(me, roles)
 
-const ensureUserIsMeOrInRoles = (user, me, roles) => (
-  userIsMe(user, me) ||
-  ensureUserIsInRoles(me, roles)
-)
+const ensureUserIsMeOrInRoles = (user, me, roles) =>
+  userIsMe(user, me) || ensureUserIsInRoles(me, roles)
 
-const userIsMeOrProfileVisible = (user, me) => (
-  user && (
-    user.hasPublicProfile || (user._raw && user._raw.hasPublicProfile) ||
-    userIsMeOrInRoles(user, me, ['member', 'admin', 'supporter'])
-  )
-)
+const userIsMeOrProfileVisible = (user, me) =>
+  user &&
+  (user.hasPublicProfile ||
+    (user._raw && user._raw.hasPublicProfile) ||
+    userIsMeOrInRoles(user, me, ['member', 'admin', 'supporter']))
 
-const {
-  SELF_CLAIMABLE_ROLES
-} = process.env
+const { SELF_CLAIMABLE_ROLES } = process.env
 
-const isRoleClaimableByMe = (role, me) => (
+const isRoleClaimableByMe = (role, me) =>
   me &&
   role &&
   SELF_CLAIMABLE_ROLES &&
   SELF_CLAIMABLE_ROLES.length &&
-  SELF_CLAIMABLE_ROLES
-    .split(',')
-    .some(r => r === role)
-)
+  SELF_CLAIMABLE_ROLES.split(',').some((r) => r === role)
 
 module.exports = {
   roles,
@@ -123,5 +117,5 @@ module.exports = {
   ensureUserIsInRoles,
   addUserToRole,
   removeUserFromRole,
-  isRoleClaimableByMe
+  isRoleClaimableByMe,
 }

@@ -5,13 +5,12 @@ const RedisPubSub = require('@orbiting/backend-modules-base/lib/RedisPubSub')
 
 const { RTMClient } = require('@slack/rtm-api')
 
-const {
-  SLACK_API_TOKEN,
-  SLACK_CHANNEL_GREETING
-} = process.env
+const { SLACK_API_TOKEN, SLACK_CHANNEL_GREETING } = process.env
 
 if (!SLACK_API_TOKEN) {
-  console.warn('Listening to messages from slack disabled: missing SLACK_API_TOKEN')
+  console.warn(
+    'Listening to messages from slack disabled: missing SLACK_API_TOKEN',
+  )
 }
 
 // attention, once you call start, there is no way to properly stop
@@ -27,7 +26,10 @@ module.exports.start = async () => {
   const rtm = new RTMClient(SLACK_API_TOKEN)
 
   rtm.on('message', async (message) => {
-    if (message.channel === SLACK_CHANNEL_GREETING && (!message.subtype || message.subtype === 'message_changed')) {
+    if (
+      message.channel === SLACK_CHANNEL_GREETING &&
+      (!message.subtype || message.subtype === 'message_changed')
+    ) {
       debug('new message from slack: %O', message)
       let text = message.text
       if (!text && message.message) {
@@ -38,35 +40,31 @@ module.exports.start = async () => {
       }
 
       const greeting = {
-        text: emojione.shortnameToUnicode(text)
+        text: emojione.shortnameToUnicode(text),
       }
 
       // dedub to avoid unneccessary websocket pushes
       let existingGreeting
       try {
         existingGreeting = JSON.parse(
-          redis && await redis.getAsync('greeting')
+          redis && (await redis.getAsync('greeting')),
         )
       } catch (e) {}
       if (
         !existingGreeting ||
         (existingGreeting &&
           (!existingGreeting.text ||
-          !existingGreeting.text.length ||
-          existingGreeting.text !== greeting.text)
-        )
+            !existingGreeting.text.length ||
+            existingGreeting.text !== greeting.text))
       ) {
-        redis && await redis.setAsync('greeting', JSON.stringify(greeting))
-        pubsub && await pubsub.publish('greeting', { greeting })
+        redis && (await redis.setAsync('greeting', JSON.stringify(greeting)))
+        pubsub && (await pubsub.publish('greeting', { greeting }))
       }
     }
   })
 
   rtm.on('authenticated', (payload) => {
-    const {
-      self,
-      team
-    } = payload
+    const { self, team } = payload
     debug(`logged in as ${self.name} of team ${team.name}`)
   })
 
@@ -74,10 +72,12 @@ module.exports.start = async () => {
     rtm.on('hello', resolve)
     rtm.on('unable_to_rtm_start', reject)
     rtm.start()
+  }).catch((e) => {
+    console.error(
+      'slackGreeter: error connecting to slack RTM. Listing to messages disabled!',
+      e,
+    )
   })
-    .catch((e) => {
-      console.error('slackGreeter: error connecting to slack RTM. Listing to messages disabled!', e)
-    })
 
   debug(`RTM connected`)
 
@@ -85,14 +85,14 @@ module.exports.start = async () => {
     // sadly rtm.close is not exposed, no way to porperly exit slack
     const _redis = redis
     redis = null
-    _redis && await Redis.disconnect(_redis)
+    _redis && (await Redis.disconnect(_redis))
 
     const _pubsub = pubsub
     pubsub = null
-    _pubsub && await RedisPubSub.disconnect(_pubsub)
+    _pubsub && (await RedisPubSub.disconnect(_pubsub))
   }
 
   return {
-    close
+    close,
   }
 }

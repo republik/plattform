@@ -18,7 +18,7 @@ const isGrantable = async (args, context) => {
   debug({
     granter: granter.id,
     email,
-    isNotEqual
+    isNotEqual,
   })
 
   return isNotEqual
@@ -27,10 +27,10 @@ const isGrantable = async (args, context) => {
 const getMeta = () => ({
   visible: true,
   grantable: null, // unkown if it is grantable
-  payload: {}
+  payload: {},
 })
 
 module.exports = {
   isGrantable,
-  getMeta
+  getMeta,
 }
