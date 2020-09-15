@@ -7,6 +7,7 @@ import {
   sansSerifMedium22,
   sansSerifRegular30
 } from '../Typography/styles'
+import { useColorContext } from '../Colors/useColorContext'
 
 const styles = {
   container: css({
@@ -45,14 +46,24 @@ const styles = {
 
 const SectionTitle = React.forwardRef(
   ({ children, small, onClick, href }, ref) => {
+    const [colorScheme] = useColorContext()
     const style = small ? styles.small : styles.container
     return href ? (
-      <a href={href} onClick={onClick} {...style} {...styles.link} ref={ref}>
+      <a
+        href={href}
+        onClick={onClick}
+        {...css(style, styles.link, { color: colorScheme.text })}
+        ref={ref}
+      >
         {children}
         {<ChevronRight />}
       </a>
     ) : (
-      <span onClick={onClick} {...style} ref={ref}>
+      <span
+        onClick={onClick}
+        {...css(style, { color: colorScheme.text })}
+        ref={ref}
+      >
         {children}
       </span>
     )

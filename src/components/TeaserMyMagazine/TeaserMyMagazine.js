@@ -16,7 +16,7 @@ const TeaserMyMagazine = ({
   latestProgressOrBookmarkedArticles,
   ActionBar,
   bookmarksUrl,
-  bookmarksLabel,
+  bookmarkLabel,
   notificationsUrl,
   notificationsLabel,
   Link = DefaultLink
@@ -40,12 +40,13 @@ const TeaserMyMagazine = ({
                 ? styles.left
                 : styles.center)}
             >
-              <Link href={notificationsUrl} passHref>
-                <TeaserSectionTitle small href={notificationsUrl}>
-                  {notificationsLabel}
-                </TeaserSectionTitle>
-              </Link>
-              <br />
+              <div {...styles.sectionTitle}>
+                <Link href={notificationsUrl} passHref>
+                  <TeaserSectionTitle small href={notificationsUrl}>
+                    {notificationsLabel}
+                  </TeaserSectionTitle>
+                </Link>
+              </div>
               {latestProgressOrBookmarkedArticles.map(document => {
                 const { path, id } = document
                 const { shortTitle } = document.meta
@@ -79,12 +80,13 @@ const TeaserMyMagazine = ({
                 ? styles.right
                 : styles.center)}
             >
-              <Link href={bookmarksUrl} passHref>
-                <TeaserSectionTitle small href={bookmarksUrl}>
-                  {bookmarksLabel}
-                </TeaserSectionTitle>
-              </Link>
-              <br />
+              <div {...styles.sectionTitle}>
+                <Link href={bookmarksUrl} passHref>
+                  <TeaserSectionTitle small href={bookmarksUrl}>
+                    {bookmarkLabel}
+                  </TeaserSectionTitle>
+                </Link>
+              </div>
               {latestSubscribedArticles.map(document => (
                 <TeaserFeed
                   Link={Link}
@@ -116,6 +118,12 @@ const styles = {
     padding: '40px 15px 10px',
     [mUp]: {
       padding: '50px 15px 40px'
+    }
+  }),
+  sectionTitle: css({
+    marginBottom: 24,
+    [mUp]: {
+      marginBottom: 36
     }
   }),
   row: css({

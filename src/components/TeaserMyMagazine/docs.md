@@ -8,6 +8,10 @@ Supported props:
   <TeaserMyMagazine
     latestSubscribedArticles={latestSubscribedArticles}
     latestProgressOrBookmarkedArticles={latestProgressOrBookmarkedArticles}
+    bookmarksUrl="/lesezeichen"
+    notificationsUrl="/benachrichtigungen"
+    bookmarkLabel="Weiterlesen"
+    notificationsLabel="Neuste abonnierte Beiträge"
     ActionBar={ () => (
       <span style={{ display: 'flex', marginTop: 16 }}>
         <IconButton Icon={BookmarkIcon} fill="white"/>
