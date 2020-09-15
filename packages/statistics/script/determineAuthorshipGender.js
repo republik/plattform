@@ -105,6 +105,7 @@ PgDb.connect()
           .replace(/Letzte Aktualisierung.*/, '')
           .replace(/(Die|die|der) Republik-Jury/, 'Republik-Jury')
           .replace('Ihrem Expeditionsteam', 'Expeditionsteam')
+          .replace('(Bildschirmfotos und Video)', '')
           .replace(
             /(Eine? )?(Kommentar|Porträt|Essay|Interview|Einordnung|Gastbeitrag|Preisrede|Aufgezeichnet|Analyse|Bilder|Kolumne|Recherche|Nachruf|Reportage) von /,
             '',
