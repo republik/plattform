@@ -130,6 +130,7 @@ module.exports = async (_, args, context) => {
     Object.assign(cacheUpsert, {
       createdAt: repo.data.created_at,
       isArchived: false,
+      isTemplate,
       meta: {},
       name: repoName,
       publications: [],

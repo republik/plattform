@@ -8,6 +8,7 @@ const {
 const { getRepos } = require('./getRepos')
 const uniqWith = require('lodash/uniqWith')
 const debug = require('debug')('publikator:github')
+const { t } = require('@orbiting/backend-modules-translate')
 
 const publicationVersionRegex = /^v(\d+)(-prepublication)?.*/
 
@@ -73,6 +74,7 @@ module.exports = {
           ) {
             name
             isArchived
+            isTemplate
           }
         }
       `,
@@ -184,7 +186,7 @@ module.exports = {
         JSON.stringify({
           ...commit,
           repo: {
-            //other keys (e.g. latestCommit) create circular structure
+            // other keys (e.g. latestCommit) create circular structure
             id: repo.id,
           },
         }),
@@ -433,7 +435,7 @@ module.exports = {
         ref: `refs/tags/${tagName}`,
       },
     })
-    let ref = result?.data?.repository?.ref
+    const ref = result?.data?.repository?.ref
 
     // github downtime resilience:
     // annotatedTag can not be cached, because they must dissapear when a doc

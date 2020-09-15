@@ -31,7 +31,7 @@ const iterateRepos = async (context, callback) => {
 
     pageInfo = repos.pageInfo
 
-    for (let repo of repos.nodes) {
+    for (const repo of repos.nodes) {
       await callback(repo, await getLatestPublications(repo, null, context))
     }
   } while (pageInfo && pageInfo.hasNextPage)
@@ -65,6 +65,7 @@ module.exports = {
           content: repo.latestCommit.document.content,
           createdAt: repo.createdAt,
           isArchived: repo.isArchived,
+          isTemplate: repo.isTemplate,
           id: repo.id,
           meta: repo.meta,
           name: repo.id.split('/')[1],
