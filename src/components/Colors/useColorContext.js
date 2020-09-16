@@ -14,7 +14,9 @@ export const useColorContext = () => {
     // precomputed css rules which are often used
     const colorRules = {
       textColor: css({
-        color: colorScheme.text
+        color: colorScheme.rawColors
+          ? [colorScheme.rawColors.text, colorScheme.text]
+          : colorScheme.text
       })
     }
     return [
