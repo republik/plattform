@@ -30,6 +30,7 @@ type queries {
     search: String
     template: String
     orderBy: RepoOrderBy
+    isTemplate: Boolean
   ): RepoConnection!
 }
 
