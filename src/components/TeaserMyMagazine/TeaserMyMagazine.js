@@ -232,6 +232,7 @@ WrappedTeaserMyMagazine.data = {
                 title
                 credits
                 format {
+                  id
                   meta {
                     title
                     kind
