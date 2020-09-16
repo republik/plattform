@@ -87,4 +87,26 @@ const colors = {
   ...getJson('COLORS')
 }
 
+export const mainColorKeys = [
+  'primary',
+  'primaryBg',
+  'containerBg',
+  'secondary',
+  'secondaryBg',
+  'disabled',
+  'text',
+  'lightText',
+  'fill',
+  'lightFill',
+  'error',
+  'divider'
+]
+
+// ensure that negative has all main keys
+mainColorKeys.forEach(key => {
+  if (!colors.negative[key]) {
+    colors.negative[key] = colors[key]
+  }
+})
+
 export default colors

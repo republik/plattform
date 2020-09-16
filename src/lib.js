@@ -38,7 +38,11 @@ export { default as LazyLoad } from './components/LazyLoad'
 export { default as LazyImage } from './components/LazyLoad/Image'
 export { Collapsable } from './components/Collapsable'
 export { default as CalloutMenu } from './components/Callout/CalloutMenu'
-export { default as ColorContext } from './components/Colors/ColorContext'
+export {
+  default as ColorContext,
+  ColorContextProvider,
+  generateCSSColorDefinitions
+} from './components/Colors/ColorContext'
 export { useColorContext } from './components/Colors/useColorContext'
 export {
   InfoBox,

@@ -923,6 +923,11 @@ ReactDOM.render(
                 ...require('./lib/useHeaderHeight'),
                 css
               }
+            },
+            {
+              path: '/dev/colors',
+              title: 'ColorContext',
+              src: require('./components/Colors/docs.md')
             }
           ]
         }

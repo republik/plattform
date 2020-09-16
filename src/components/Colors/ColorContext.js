@@ -1,42 +1,50 @@
-import React from 'react'
-import colors from '../../theme/colors'
+import React, { useEffect, useState } from 'react'
+import colors, { mainColorKeys } from '../../theme/colors'
 
 const defaultColors = colors
 const ColorContext = React.createContext(defaultColors)
 
-export const GlobalColorContextProvider = ({ forcedValue, children }) => {
-  return (
-    <ColorContext.Provider value={forcedValue}>
-      {children}
-    </ColorContext.Provider>
-  )
+export const generateCSSColorDefinitions = colors => {
+  return mainColorKeys.map(key => `--color-${key}: ${colors[key]};`).join(' ')
+}
 
-  const colors = {
-    primary: '#00508C',
-    primaryBg: '#BFE1FF',
-    containerBg: '#FFF',
-    secondary: '#00335A',
-    secondaryBg: '#D8EEFF',
-    disabled: '#B8BDC1',
-    text: '#191919',
-    lightText: '#979797'
-  }
-  const varColors = {
-    primary: 'var(--color-primary)',
-    text: 'var(--color-text)',
-    rawColor: colors
-  }
-  css.global(':root', {
-    '--color-primary': colors.primary,
-    '--color-text': colors.text,
-    '@media (prefers-color-scheme: dark)': {
-      '--color-primary': colors.negative.primary,
-      '--color-text': colors.negative.text
+// ensure only main colors are available via context
+const reduceMainColors = (mapper = key => key) =>
+  mainColorKeys.reduce((c, key) => {
+    c[key] = mapper(key)
+    return c
+  }, {})
+
+export const ColorContextProvider = ({ value: forcedValue, children }) => {
+  // we initially assume browser support it
+  // - e.g. during server side rendering
+  const [CSSSupport, setCSSSupport] = useState(true)
+  useEffect(() => {
+    let support
+    try {
+      support =
+        window.CSS &&
+        window.CSS.supports &&
+        window.CSS.supports('color', 'var(--primary)')
+    } catch (e) {}
+    if (!support) {
+      // but if can't confirm the support in the browser we turn it off
+      setCSSSupport(false)
     }
-  })
+  }, [])
+
+  let colorValue
+  if (forcedValue) {
+    colorValue = reduceMainColors(key => forcedValue[key])
+  } else if (CSSSupport) {
+    colorValue = reduceMainColors(key => `var(--color-${key})`)
+    colorValue.rawColors = colors
+  } else {
+    colorValue = reduceMainColors(key => colors[key])
+  }
 
   return (
-    <ColorContext.Provider value={varColors}>{children}</ColorContext.Provider>
+    <ColorContext.Provider value={colorValue}>{children}</ColorContext.Provider>
   )
 }
 
