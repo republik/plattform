@@ -212,8 +212,10 @@ WrappedTeaserMyMagazine.data = {
         data: {
           loading: data.loading,
           error: data.error,
-          latestSubscribedArticles: data.documents?.nodes.map(i => i.entity),
-          latestProgressOrBookmarkedArticles: data.me?.bookmarkAndProgress.filter(
+          latestSubscribedArticles: data.notifications?.nodes.map(
+            i => i.entity
+          ),
+          latestProgressOrBookmarkedArticles: data.me?.bookmarkAndProgress.nodes.filter(
             i => i.document
           )
         }
