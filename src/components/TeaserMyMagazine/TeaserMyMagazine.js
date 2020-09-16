@@ -62,10 +62,11 @@ const TeaserMyMagazine = ({
                         {...styles.tileHeadline}
                         style={{ color: colorScheme.text }}
                       >
-                        {shortTitle && shortTitle.substring(0, 130).trim()}
-                        {shortTitle && shortTitle.length >= 130 && <>&nbsp;…</>}
-                        {!shortTitle && title.substring(0, 130).trim()}
-                        {!shortTitle && title.length >= 130 && <>&nbsp;…</>}
+                        {shortTitle && shortTitle !== null
+                          ? `${shortTitle.substring(0, 130).trim()}
+                            ${shortTitle.length >= 130 && <>&nbsp;…</>}`
+                          : `${title.substring(0, 130).trim()}
+                              ${title.length >= 130 && <>&nbsp;…</>}`}
                       </a>
                     </Link>
                     {ActionBar && (
