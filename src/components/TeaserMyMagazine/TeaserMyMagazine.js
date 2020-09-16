@@ -48,8 +48,8 @@ const TeaserMyMagazine = ({
                 </Link>
               </div>
               {latestProgressOrBookmarkedArticles.map(document => {
-                const { path, id } = document
-                const { shortTitle } = document.meta
+                const { id } = document
+                const { shortTitle, path } = document.meta
 
                 return (
                   <div
@@ -62,8 +62,10 @@ const TeaserMyMagazine = ({
                         {...styles.tileHeadline}
                         style={{ color: colorScheme.text }}
                       >
-                        {shortTitle.substring(0, 130).trim()}
-                        {shortTitle.length >= 130 && <>&nbsp;…</>}
+                        {shortTitle && shortTitle.substring(0, 130).trim()}
+                        {shortTitle && shortTitle.length >= 130 && <>&nbsp;…</>}
+                        {!shortTitle && title.substring(0, 130).trim()}
+                        {!shortTitle && title.length >= 130 && <>&nbsp;…</>}
                       </a>
                     </Link>
                     {ActionBar && (
@@ -212,9 +214,9 @@ WrappedTeaserMyMagazine.data = {
         data: {
           loading: data.loading,
           error: data.error,
-          latestSubscribedArticles: data.notifications?.nodes.map(
-            i => i.entity
-          ),
+          latestSubscribedArticles: data.notifications?.nodes
+            .filter(i => i.document)
+            .map(i => i.entity),
           latestProgressOrBookmarkedArticles: data.me?.bookmarkAndProgress.nodes.filter(
             i => i.document
           )
