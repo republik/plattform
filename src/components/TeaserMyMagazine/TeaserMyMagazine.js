@@ -22,7 +22,7 @@ const TeaserMyMagazine = ({
   Link = DefaultLink
 }) => {
   const [colorScheme] = useColorContext()
-
+  console.log(latestSubscribedArticles, latestProgressOrBookmarkedArticles)
   if (
     latestSubscribedArticles.length === 0 &&
     latestProgressOrBookmarkedArticles.length === 0
@@ -34,7 +34,8 @@ const TeaserMyMagazine = ({
     <div {...css({ backgroundColor: colorScheme.primaryBg })}>
       <section {...css(styles.section)}>
         <div role='group' {...css(styles.row, styles.withHighlight)}>
-          {latestProgressOrBookmarkedArticles.length !== 0 && (
+          {latestProgressOrBookmarkedArticles &&
+          latestProgressOrBookmarkedArticles.length !== 0 ? (
             <div
               {...(latestSubscribedArticles.length !== 0
                 ? styles.left
@@ -49,7 +50,7 @@ const TeaserMyMagazine = ({
               </div>
               {latestProgressOrBookmarkedArticles.map(document => {
                 const { id } = document
-                const { shortTitle, path } = document.meta
+                const { path } = document.meta
 
                 return (
                   <div
@@ -76,8 +77,8 @@ const TeaserMyMagazine = ({
                 )
               })}
             </div>
-          )}
-          {latestSubscribedArticles.length !== 0 && (
+          ) : null}
+          {latestSubscribedArticles && latestSubscribedArticles.length !== 0 ? (
             <div
               {...(latestProgressOrBookmarkedArticles.length !== 0
                 ? styles.right
@@ -107,7 +108,7 @@ const TeaserMyMagazine = ({
                 />
               ))}
             </div>
-          )}
+          ) : null}
         </div>
       </section>
     </div>
@@ -216,11 +217,11 @@ WrappedTeaserMyMagazine.data = {
           loading: data.loading,
           error: data.error,
           latestSubscribedArticles: data.notifications?.nodes
-            .filter(i => i.document)
-            .map(i => i.entity),
-          latestProgressOrBookmarkedArticles: data.me?.bookmarkAndProgress.nodes.filter(
-            i => i.document
-          )
+            .map(i => i.object)
+            .filter(Boolean),
+          latestProgressOrBookmarkedArticles: data.me?.bookmarkAndProgress.nodes
+            .map(i => i.document)
+            .filter(Boolean)
         }
       }
     }
@@ -236,6 +237,7 @@ WrappedTeaserMyMagazine.data = {
                 shortTitle
                 title
                 credits
+                path
                 format {
                   id
                   meta {
