@@ -18,7 +18,11 @@ const styles = {
 
 const Credit = ({ children }) => {
   const [colorScheme] = useColorContext()
-  return <p {...css(styles.main, { color: colorScheme.text })}>{children}</p>
+  return (
+    <p {...styles.main} {...colorScheme.rules.textColor}>
+      {children}
+    </p>
+  )
 }
 
 Credit.propTypes = {
