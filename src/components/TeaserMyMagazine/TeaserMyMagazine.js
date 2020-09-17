@@ -152,14 +152,14 @@ const styles = {
   left: css({
     marginBottom: 32,
     [mUp]: {
-      flexGrow: 1,
+      flex: 1,
       marginRight: 16,
       marginBottom: 0
     }
   }),
   right: css({
     [mUp]: {
-      flexGrow: 1,
+      flex: 1,
       marginLeft: 16
     }
   }),
