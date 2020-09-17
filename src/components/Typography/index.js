@@ -26,9 +26,6 @@ export const fontStyles = {
 export const linkStyle = {
   textDecoration: 'none',
   color: colors.primary,
-  ':visited': {
-    color: colors.primary
-  },
   '@media (hover)': {
     ':hover': {
       color: colors.secondary

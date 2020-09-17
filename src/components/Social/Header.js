@@ -78,9 +78,6 @@ const styles = {
   link: css({
     textDecoration: 'none',
     color: colors.text,
-    ':visited': {
-      color: colors.text
-    },
     '@media (hover)': {
       ':hover': {
         color: colors.lightText
