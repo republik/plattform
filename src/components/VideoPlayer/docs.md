@@ -10,8 +10,9 @@ Props:
 - `showPlay`: Whether to show the play button, defaults to `true`
 - `autoPlay`: Boolean, mapped to the video tag
 - `loop`: Boolean, mapped to the video tag
+- `hideTime`: Boolean, hides time and rewind button
 - `forceMuted`: Boolean, mutes the player and hides the mute interfaces.
-- `cinemagraph`: Boolean, whether the video is a cinemagraph. Forces `loop`, `muted`, `autoPlay` and `playsInline`.
+- `cinemagraph`: Boolean, whether the video is a cinemagraph. Forces `loop`, `muted`, `hideTime`, `autoPlay` and `playsInline`.
 - `attributes`: Object, arbitrary attributes mapped to the video tag like playsinline, specific ones win
 
 Context:

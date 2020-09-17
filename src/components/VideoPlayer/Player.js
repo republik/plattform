@@ -473,6 +473,7 @@ class VideoPlayer extends Component {
       autoPlay,
       loop,
       cinemagraph,
+      hideTime,
       attributes = {}
     } = this.props
     const {
@@ -547,21 +548,23 @@ class VideoPlayer extends Component {
           >
             <Play />
           </div>
-          <div {...styles.iconsLeft}>
-            <div
-              onClick={e => {
-                e.stopPropagation()
-                enableRewind && this.setTime(0)
-              }}
-            >
-              <Rewind disabled={!enableRewind} />
+          {!hideTime && !cinemagraph && (
+            <div {...styles.iconsLeft}>
+              <div
+                onClick={e => {
+                  e.stopPropagation()
+                  enableRewind && this.setTime(0)
+                }}
+              >
+                <Rewind disabled={!enableRewind} />
+              </div>
+              <div {...styles.time}>
+                {`${getFormattedTime(this.getCurrentTime())} / ${
+                  this.video ? getFormattedTime(this.video.duration) : '–:––'
+                }`}
+              </div>
             </div>
-            <div {...styles.time}>
-              {`${getFormattedTime(this.getCurrentTime())} / ${
-                this.video ? getFormattedTime(this.video.duration) : '–:––'
-              }`}
-            </div>
-          </div>
+          )}
           <div {...styles.iconsRight}>
             {loading && <InlineSpinner size={25} />}{' '}
             {!!src.subtitles && (
@@ -651,6 +654,7 @@ CrossOrigin subtitles do not work in older browsers.'`
   // ignores global muted state and sets muted
   forceMuted: PropTypes.bool,
   cinemagraph: PropTypes.bool,
+  hideTime: PropTypes.bool,
   // arbitrary attributes like playsinline, specific ones win
   attributes: PropTypes.object,
   // mandate full window instead of fullscreen API
