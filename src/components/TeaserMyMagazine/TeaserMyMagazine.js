@@ -50,7 +50,7 @@ const TeaserMyMagazine = ({
               </div>
               {latestProgressOrBookmarkedArticles.map(document => {
                 const { id } = document
-                const { path } = document.meta
+                const { path, shortTitle, title } = document.meta
 
                 return (
                   <div
@@ -65,14 +65,14 @@ const TeaserMyMagazine = ({
                       >
                         {shortTitle && shortTitle !== null
                           ? `${shortTitle.substring(0, 130).trim()}
-                            ${shortTitle.length >= 130 && <>&nbsp;…</>}`
+                            ${shortTitle.length >= 130 ? <>&nbsp;…</> : ''}`
                           : `${title.substring(0, 130).trim()}
-                              ${title.length >= 130 && <>&nbsp;…</>}`}
+                              ${title.length >= 130 ? <>&nbsp;…</> : ''}`}
                       </a>
                     </Link>
-                    {ActionBar && (
+                    {ActionBar ? (
                       <ActionBar mode='bookmark' document={document} />
-                    )}
+                    ) : null}
                   </div>
                 )
               })}
@@ -91,22 +91,32 @@ const TeaserMyMagazine = ({
                   </TeaserSectionTitle>
                 </Link>
               </div>
-              {latestSubscribedArticles.map(document => (
-                <TeaserFeed
-                  Link={Link}
-                  color={colorScheme.text}
-                  format={document.meta.format}
-                  path={document.meta.path}
-                  title={
-                    document.meta.shortTitle
-                      ? `${document.meta.shortTitle.substring(0, 140).trim()} ${
-                          document.meta.shortTitle.length >= 140 ? '…' : ''
-                        }`
-                      : document.meta.title
-                  }
-                  credits={document.meta.credits}
-                />
-              ))}
+              {latestSubscribedArticles.map(document => {
+                const {
+                  format,
+                  path,
+                  shortTitle,
+                  title,
+                  credits
+                } = document.meta
+
+                return (
+                  <TeaserFeed
+                    Link={Link}
+                    color={colorScheme.text}
+                    format={format}
+                    path={path}
+                    title={
+                      shortTitle
+                        ? `${shortTitle.substring(0, 140).trim()} ${
+                            shortTitle.length >= 140 ? '…' : ''
+                          }`
+                        : title
+                    }
+                    credits={credits}
+                  />
+                )
+              })}
             </div>
           ) : null}
         </div>
