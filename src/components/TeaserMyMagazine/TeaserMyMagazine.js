@@ -71,7 +71,9 @@ const TeaserMyMagazine = ({
                       </a>
                     </Link>
                     {ActionBar ? (
-                      <ActionBar mode='bookmark' document={document} />
+                      <div style={{ marginTop: 10 }}>
+                        <ActionBar mode='bookmark' document={document} />
+                      </div>
                     ) : null}
                   </div>
                 )
@@ -274,10 +276,23 @@ WrappedTeaserMyMagazine.data = {
                 title
                 path
                 credits
+                estimatedConsumptionMinutes
+                estimatedReadingMinutes
               }
               userProgress {
                 id
                 percentage
+                nodeId
+                updatedAt
+                max {
+                  id
+                  percentage
+                  updatedAt
+                }
+              }
+              userBookmark: userCollectionItem(collectionName: "bookmarks") {
+                id
+                createdAt
               }
             }
           }
