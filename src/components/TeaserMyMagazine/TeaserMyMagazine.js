@@ -41,9 +41,9 @@ const TeaserMyMagazine = ({
                 : styles.center)}
             >
               <div {...styles.sectionTitle}>
-                <Link href={notificationsUrl} passHref>
-                  <TeaserSectionTitle small href={notificationsUrl}>
-                    {notificationsLabel}
+                <Link href={bookmarksUrl} passHref>
+                  <TeaserSectionTitle small href={bookmarksUrl}>
+                    {bookmarkLabel}
                   </TeaserSectionTitle>
                 </Link>
               </div>
@@ -86,9 +86,9 @@ const TeaserMyMagazine = ({
                 : styles.center)}
             >
               <div {...styles.sectionTitle}>
-                <Link href={bookmarksUrl} passHref>
-                  <TeaserSectionTitle small href={bookmarksUrl}>
-                    {bookmarkLabel}
+                <Link href={notificationsUrl} passHref>
+                  <TeaserSectionTitle small href={notificationsUrl}>
+                    {notificationsLabel}
                   </TeaserSectionTitle>
                 </Link>
               </div>
