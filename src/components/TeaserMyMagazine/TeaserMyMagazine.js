@@ -22,7 +22,7 @@ const TeaserMyMagazine = ({
   Link = DefaultLink
 }) => {
   const [colorScheme] = useColorContext()
-  console.log(latestSubscribedArticles, latestProgressOrBookmarkedArticles)
+
   if (
     latestSubscribedArticles.length === 0 &&
     latestProgressOrBookmarkedArticles.length === 0

@@ -43,7 +43,13 @@ const createLiveTeasers = ({
   showMyMagazine = true
 }) => {
   const MyMagazineWithData = withMyMagazineData(
-    ({ attributes, data, url, label }) => {
+    ({
+      data,
+      bookmarksUrl,
+      bookmarkLabel,
+      notificationsUrl,
+      notificationsLabel
+    }) => {
       return (
         <Loader
           error={data.error}
@@ -56,6 +62,11 @@ const createLiveTeasers = ({
                 latestProgressOrBookmarkedArticles={
                   data.latestProgressOrBookmarkedArticles
                 }
+                bookmarkLabel={bookmarkLabel}
+                bookmarksUrl={bookmarksUrl}
+                notificationsLabel={notificationsLabel}
+                notificationsUrl={notificationsUrl}
+                Link={Link}
                 ActionBar={ActionBar}
               />
             )
