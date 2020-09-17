@@ -24,8 +24,8 @@ const TeaserMyMagazine = ({
   const [colorScheme] = useColorContext()
 
   if (
-    latestSubscribedArticles.length === 0 &&
-    latestProgressOrBookmarkedArticles.length === 0
+    !latestSubscribedArticles?.length &&
+    !latestProgressOrBookmarkedArticles?.length
   ) {
     return null
   }
@@ -34,10 +34,9 @@ const TeaserMyMagazine = ({
     <div {...css({ backgroundColor: colorScheme.primaryBg })}>
       <section {...css(styles.section)}>
         <div role='group' {...css(styles.row, styles.withHighlight)}>
-          {latestProgressOrBookmarkedArticles &&
-          latestProgressOrBookmarkedArticles.length !== 0 ? (
+          {latestProgressOrBookmarkedArticles?.length ? (
             <div
-              {...(latestSubscribedArticles.length !== 0
+              {...(latestSubscribedArticles?.length
                 ? styles.left
                 : styles.center)}
             >
@@ -80,9 +79,9 @@ const TeaserMyMagazine = ({
               })}
             </div>
           ) : null}
-          {latestSubscribedArticles && latestSubscribedArticles.length !== 0 ? (
+          {latestSubscribedArticles?.length ? (
             <div
-              {...(latestProgressOrBookmarkedArticles.length !== 0
+              {...(latestProgressOrBookmarkedArticles?.length
                 ? styles.right
                 : styles.center)}
             >
