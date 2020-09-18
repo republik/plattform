@@ -220,7 +220,8 @@ WrappedTeaserMyMagazine.data = {
     options: ({ first = 2 }) => ({
       variables: {
         first: +first
-      }
+      },
+      ssr: false
     }),
     props: ({ data }) => {
       return {
