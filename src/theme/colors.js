@@ -141,7 +141,9 @@ export const variableColorKeys = [
   'overlayInverted',
   'divider',
   'text',
-  'textSoft'
+  'textSoft',
+  'textInverted',
+  'textInvertedSoft'
 ]
 
 //add all deprecated colors, but only if they don't exist in new colors (no overwrites)
