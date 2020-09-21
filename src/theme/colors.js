@@ -144,7 +144,7 @@ export const variableColorKeys = [
   'textSoft'
 ]
 
-//add all deprecated colors if they don't exist anymore
+//add all deprecated colors, but only if they don't exist in new colors (no overwrites)
 Object.keys(colorsDeprecated).forEach(key => {
   if (!colors[key]) {
     colors[key] = colorsDeprecated[key]
