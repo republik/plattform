@@ -20,7 +20,7 @@ import { getJson } from './env'
  discrete = d3.schemeCategory10
  */
 
-const colors = {
+const colorsDeprecated = {
   primary: '#00508C',
   primaryBg: '#BFE1FF',
   containerBg: '#FFF',
@@ -87,26 +87,70 @@ const colors = {
   ...getJson('COLORS')
 }
 
-export const mainColorKeys = [
-  'primary',
-  'primaryBg',
-  'containerBg',
-  'secondary',
-  'secondaryBg',
-  'disabled',
+const colors = {
+  default: '#ffffff',
+  overlay: '#ffffff',
+  hover: '#f6f8f7',
+  alert: '#ebf6e5',
+  defaultInverted: '#111111',
+  overlayInverted: '#191919',
+  divider: '#dadddc',
+  text: '#282828',
+  textSoft: '#979797',
+  textInverted: '#f0f0f0',
+  textInvertedSoft: '#828282',
+  static: {
+    primary: '#3cad00',
+    primaryDark: '#009400',
+    secondary: '#4b6359',
+    error: '#9f2500',
+    textBright: '#f0f0f0',
+    textBrightSoft: '#828282',
+    textDark: '#282828',
+    textDarkSoft: '#979797'
+  },
+  accentColors: {
+    accent1: '#07809a',
+    accent2: '#3CAD00',
+    accent3: '#D0913C',
+    accent4: '#d44438',
+    accent5: '#000000',
+    accent6: '#000000'
+  },
+  dark: {
+    default: '#111111',
+    overlay: '#191919',
+    hover: '#292929',
+    alert: '#1A2F0E',
+    defaultInverted: '#FFFFFF',
+    overlayInverted: '#FFFFFF',
+    divider: '#4C4D4C',
+    text: '#f0f0f0',
+    textSoft: '#828282',
+    textInverted: '#282828',
+    textInvertedSoft: '#979797'
+  }
+}
+
+export const variableColorKeys = [
+  'default',
+  'overlay',
+  'hover',
+  'alert',
+  'defaultInverted',
+  'overlayInverted',
+  'divider',
   'text',
-  'lightText',
-  'fill',
-  'lightFill',
-  'error',
-  'divider'
+  'textSoft'
 ]
 
-// ensure that negative has all main keys
-mainColorKeys.forEach(key => {
-  if (!colors.negative[key]) {
-    colors.negative[key] = colors[key]
+//add all deprecated colors if they don't exist anymore
+Object.keys(colorsDeprecated).forEach(key => {
+  if (!colors[key]) {
+    colors[key] = colorsDeprecated[key]
   }
 })
+
+console.log(colors)
 
 export default colors

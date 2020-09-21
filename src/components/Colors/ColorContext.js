@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from 'react'
-import colors, { mainColorKeys } from '../../theme/colors'
+import colors, { variableColorKeys } from '../../theme/colors'
 
 const defaultColors = colors
 const ColorContext = React.createContext(defaultColors)
 
 export const generateCSSColorDefinitions = colors => {
-  return mainColorKeys.map(key => `--color-${key}: ${colors[key]};`).join(' ')
+  return variableColorKeys
+    .map(key => `--color-${key}: ${colors[key]};`)
+    .join(' ')
 }
 
 // ensure only main colors are available via context
 const reduceMainColors = (mapper = key => key) =>
-  mainColorKeys.reduce((c, key) => {
+  variableColorKeys.reduce((c, key) => {
     c[key] = mapper(key)
     return c
   }, {})
