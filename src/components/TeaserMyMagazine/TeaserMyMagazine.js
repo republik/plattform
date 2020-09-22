@@ -266,7 +266,7 @@ WrappedTeaserMyMagazine.data = {
       }
       me {
         id
-        bookmarkAndProgress: collectionItems(names: ["progress", "bookmarks"], first: 2) {
+        bookmarkAndProgress: collectionItems(names: ["progress", "bookmarks"], first: 2, progress: UNFINISHED) {
           nodes {
             document {
               id
