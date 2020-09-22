@@ -13,22 +13,6 @@ const canAccess = (user, context) => {
   )
 }
 
-const progressFinishedThreshold = 0.85
-const progressConditions = {
-  FINISHED: {
-    or: [
-      { "data->>'percentage' >=": progressFinishedThreshold },
-      { "data->>'percentage'": null },
-    ],
-  },
-  UNFINISHED: {
-    or: [
-      { "data->>'percentage' <=": progressFinishedThreshold },
-      { "data->>'percentage'": null },
-    ],
-  },
-}
-
 module.exports = {
   collections(user, args, context) {
     if (canAccess(user, context)) {
@@ -48,11 +32,12 @@ module.exports = {
           Collection.byNameForUser(name, user.id, context),
         ),
       )
+
       const items = await Collection.findDocumentItems(
         {
           collectionId: collections.map((collection) => collection.id),
           userId: user.id,
-          ...progressConditions[args.progress],
+          ...Collection.getProgressConditions(args.progress),
         },
         context,
       )

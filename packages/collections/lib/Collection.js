@@ -1,3 +1,4 @@
+const moment = require('moment')
 const {
   COLLECTION_NAME: PROGRESS_COLLECTION_NAME,
   POLICY_NAME: PROGRESS_POLICY_NAME,
@@ -219,7 +220,37 @@ const clearItems = async (userId, collectionName, { pgdb, loaders }) => {
 const getItemMax = (item) =>
   spreadItemData(item.data && item.data.max ? item.data.max : item)
 
+const PROGRESS_FINISHED_THRESHOLD = 0.75
+const getProgressConditions = (progressState) => {
+  if (!progressState) {
+    return
+  }
+  const aWeekAgo = moment().subtract(7, 'days')
+  const conditions = {
+    FINISHED: {
+      or: [
+        {
+          "data->>'percentage' >=": PROGRESS_FINISHED_THRESHOLD,
+          'updatedAt <=': aWeekAgo,
+        },
+        { "data->>'percentage'": 1 },
+        { "data->>'percentage'": null },
+      ],
+    },
+    UNFINISHED: {
+      or: [
+        { "data->>'percentage' <=": PROGRESS_FINISHED_THRESHOLD },
+        { "data->>'percentage' <": 1, 'updatedAt >': aWeekAgo },
+        { "data->>'percentage'": null },
+      ],
+    },
+  }
+  return conditions[progressState]
+}
+
 module.exports = {
+  getProgressConditions,
+
   findForUser,
   byNameForUser,
   byIdForUser,
