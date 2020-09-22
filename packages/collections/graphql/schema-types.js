@@ -45,11 +45,17 @@ extend type Document {
   userProgress: DocumentProgress
 }
 
+enum ProgressState {
+  FINISHED
+  UNFINISHED
+}
+
 extend type User {
   collections: [Collection!]!
   collection(name: String!): Collection
   collectionItems(
     names: [String!]!
+    progressState: ProgressState
     first: Int
     last: Int
     before: String
