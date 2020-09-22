@@ -55,7 +55,7 @@ extend type User {
   collection(name: String!): Collection
   collectionItems(
     names: [String!]!
-    progressState: ProgressState
+    progress: ProgressState
     first: Int
     last: Int
     before: String

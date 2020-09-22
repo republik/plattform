@@ -52,7 +52,7 @@ module.exports = {
         {
           collectionId: collections.map((collection) => collection.id),
           userId: user.id,
-          ...progressConditions[args.progressState],
+          ...progressConditions[args.progress],
         },
         context,
       )
