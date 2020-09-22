@@ -291,6 +291,7 @@ const loadLinkedMetaData = async ({
     : await context.pgdb.public.users.find(
         {
           id: userIds,
+          hasPublicProfile: true,
           'username !=': null,
         },
         {
