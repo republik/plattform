@@ -50,6 +50,7 @@ class Image extends Component {
   render() {
     const {
       src,
+      srcNeg,
       srcSet,
       alt,
       attributes = {},
@@ -73,19 +74,34 @@ class Image extends Component {
         visible={aboveTheFold}
         aspectRatio={aspectRatio}
         src={src}
+        srcNeg={srcNeg}
         srcSet={srcSet}
         alt={alt}
         onClick={onClick}
       />
     ) : (
-      <img
-        {...attributes}
-        {...styles.image}
-        src={src}
-        srcSet={srcSet}
-        alt={alt}
-        onClick={onClick}
-      />
+      <>
+        <img
+          {...attributes}
+          {...styles.image}
+          src={src}
+          srcSet={srcSet}
+          alt={alt}
+          onClick={onClick}
+          className={srcNeg && 'img-standard'}
+        />
+        {srcNeg && (
+          <img
+            {...attributes}
+            {...styles.image}
+            src={srcNeg}
+            srcSet={srcSet}
+            alt={alt}
+            onClick={onClick}
+            className='img-negative'
+          />
+        )}
+      </>
     )
 
     let wrappedImage = image
@@ -118,6 +134,7 @@ class Image extends Component {
 
 Image.propTypes = {
   src: PropTypes.string.isRequired,
+  srcNeg: PropTypes.string,
   srcSet: PropTypes.string,
   alt: PropTypes.string,
   size: PropTypes.shape({
