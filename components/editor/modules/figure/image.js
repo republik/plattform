@@ -1,6 +1,6 @@
 import React from 'react'
 import { css } from 'glamor'
-import { colors, matchImagesParagraph } from '@project-r/styleguide'
+import { colors } from '@project-r/styleguide'
 
 import { matchBlock } from '../../utils'
 import { gray2x1 } from '../../utils/placeholder'
@@ -81,6 +81,7 @@ export default ({ rule, subModules, TYPE }) => {
             <span {...styles.border} {...attributes} data-active={active}>
               <Image
                 src={node.data.get('src') || gray2x1}
+                srcNeg={node.data.get('srcNeg') || gray2x1}
                 alt={node.data.get('alt')}
               />
             </span>
