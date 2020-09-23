@@ -83,10 +83,6 @@ export default ({ rule, subModules, TYPE }) => {
                 src={node.data.get('src') || gray2x1}
                 alt={node.data.get('alt')}
               />
-              <Image
-                src={node.data.get('srcNeg') || gray2x1}
-                alt={node.data.get('alt')}
-              />
             </span>
           )
         },
