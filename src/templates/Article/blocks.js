@@ -19,8 +19,7 @@ import {
   matchType,
   matchZone,
   matchHeading,
-  matchParagraph,
-  matchImageParagraph
+  matchParagraph
 } from 'mdast-react-render/lib/utils'
 
 import {
@@ -40,7 +39,9 @@ import {
   extractImage,
   globalInlines,
   styles,
-  mdastToString
+  mdastToString,
+  matchImagesParagraph,
+  extractImages
 } from './utils'
 
 import { slug } from '../../lib/slug'
@@ -325,10 +326,10 @@ const createBlocks = ({ base, COVER_TYPE, t, onAudioCoverClick }) => {
     },
     rules: [
       {
-        matchMdast: matchImageParagraph,
+        matchMdast: matchImagesParagraph,
         component: FigureImage,
         props: (node, index, parent, { ancestors }) => {
-          const src = extractImage(node)
+          const { src, srcNeg } = extractImages(node)
           const displayWidth = FIGURE_SIZES[parent.data.size] || 1500
           const setMaxWidth = parent.data.size !== undefined
 
@@ -340,6 +341,7 @@ const createBlocks = ({ base, COVER_TYPE, t, onAudioCoverClick }) => {
 
           return {
             ...FigureImage.utils.getResizedSrcs(src, displayWidth, setMaxWidth),
+            srcNeg,
             enableGallery,
             aboveTheFold: true,
             alt: node.children[0].alt

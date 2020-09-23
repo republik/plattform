@@ -8,6 +8,8 @@ import { mUp } from '../../theme/mediaQueries'
 import {
   matchType,
   matchZone,
+  matchImage,
+  matchParagraph,
   matchImageParagraph
 } from 'mdast-react-render/lib/utils'
 
@@ -28,8 +30,25 @@ export const matchTeaser = matchZone('TEASER')
 export const matchTeaserGroup = matchZone('TEASERGROUP')
 export const matchTeaserType = teaserType => node =>
   matchTeaser(node) && node.data.teaserType === teaserType
+
+export const matchImagesParagraph = node =>
+  matchImageParagraph(node) ||
+  (matchParagraph(node) &&
+    node.children.length === 3 &&
+    matchImage(node.children[0]) &&
+    matchImage(node.children[2]))
+
 export const extractImage = node =>
   matchImageParagraph(node) ? node.children[0].url : undefined
+
+export const extractImages = node => {
+  if (!matchImagesParagraph(node)) return undefined
+  const urls = node.children.filter(matchImage).map(child => child.url)
+  return {
+    src: urls[0],
+    srcNeg: urls.length === 2 ? urls[1] : null
+  }
+}
 
 export const getDisplayWidth = ancestors => {
   const infobox = ancestors.find(matchInfoBox)
@@ -84,7 +103,7 @@ export const globalInlines = [
 ]
 
 export const skipMdastImage = {
-  matchMdast: matchImageParagraph,
+  matchMdast: matchImagesParagraph,
   component: () => null,
   isVoid: true
 }
