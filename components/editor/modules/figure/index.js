@@ -65,13 +65,21 @@ export default options => {
           excludeFromGallery: node.data.excludeFromGallery === true
         },
         nodes: [
-          imageSerializer.fromMdast(image, 0, node, rest),
+          imageSerializer.fromMdast(imageParagraph, 0, node, rest),
           captionSerializer.fromMdast(caption, 1, node, rest)
         ]
       }
     },
     toMdast: (object, index, parent, rest) => {
       const image = findOrCreate(
+        object.nodes,
+        {
+          kind: 'block',
+          type: FIGURE_IMAGE
+        },
+        { isVoid: true, data: {} }
+      )
+      const imageNeg = findOrCreate(
         object.nodes,
         {
           kind: 'block',

@@ -1,6 +1,6 @@
 import React from 'react'
 import { css } from 'glamor'
-import { colors } from '@project-r/styleguide'
+import { colors, matchImagesParagraph } from '@project-r/styleguide'
 
 import { matchBlock } from '../../utils'
 import { gray2x1 } from '../../utils/placeholder'
@@ -24,24 +24,38 @@ export default ({ rule, subModules, TYPE }) => {
 
   const figureImage = {
     match: matchBlock(TYPE),
-    matchMdast: node => node.type === 'image',
+    matchMdast: rule.matchMdast,
     fromMdast: node => {
+      const imageNodes = node.children.filter(child => child.type === 'image')
       return {
         kind: 'block',
         type: TYPE,
         data: {
-          alt: node.alt,
-          src: node.url
+          alt: imageNodes[0].alt,
+          src: imageNodes[0].url,
+          srcNeg: imageNodes.length === 2 ? imageNodes[1].url : null
         },
         isVoid: true,
         nodes: []
       }
     },
-    toMdast: object => ({
-      type: 'image',
-      alt: object.data.alt,
-      url: object.data.src
-    })
+    toMdast: object => {
+      const mainImage = {
+        type: 'image',
+        alt: object.data.alt,
+        url: object.data.src
+      }
+      return {
+        type: 'paragraph',
+        children: object.data.srcNeg
+          ? [
+              mainImage,
+              { type: 'text', value: ' ' },
+              { type: 'image', alt: object.data.alt, url: object.data.srcNeg }
+            ]
+          : [mainImage]
+      }
+    }
   }
 
   const serializer = new MarkdownSerializer({
@@ -67,6 +81,10 @@ export default ({ rule, subModules, TYPE }) => {
             <span {...styles.border} {...attributes} data-active={active}>
               <Image
                 src={node.data.get('src') || gray2x1}
+                alt={node.data.get('alt')}
+              />
+              <Image
+                src={node.data.get('srcNeg') || gray2x1}
                 alt={node.data.get('alt')}
               />
             </span>

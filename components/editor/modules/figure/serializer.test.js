@@ -11,6 +11,10 @@ const TYPE = 'FIGURE'
 const imageModule = createImageModule({
   TYPE: 'FIGURE_IMAGE',
   rule: {
+    matchMdast: node =>
+      node.type === 'paragraph' &&
+      node.children.length === 3 &&
+      node.children[0].type === 'image',
     editorOptions: {
       depth: 1
     }
@@ -57,7 +61,7 @@ test('figure serialization', assert => {
 }
 \`\`\`
 
-![Alt](example.com/img.jpg)
+![Alt](example.com/img.jpg) ![Alt](example.com/img-neg.jpg)
 
 Caption_Byline_
 
@@ -71,6 +75,7 @@ Caption_Byline_
   assert.equal(image.type, 'FIGURE_IMAGE')
 
   assert.equal(image.getIn(['data', 'src']), 'example.com/img.jpg')
+  assert.equal(image.getIn(['data', 'srcNeg']), 'example.com/img-neg.jpg')
   assert.equal(image.getIn(['data', 'alt']), 'Alt')
 
   const caption = node.nodes.get(1)

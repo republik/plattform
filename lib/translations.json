@@ -1,5 +1,5 @@
 {
-  "updated": "2020-09-09T08:15:48.388Z",
+  "updated": "2020-09-23T12:46:22.351Z",
   "title": "live",
   "data": [
     {
@@ -123,6 +123,10 @@
       "value": "Neuer Artikel"
     },
     {
+      "key": "repo/add/template/title",
+      "value": "Neues Template"
+    },
+    {
       "key": "repo/add/titleField/label",
       "value": "Titel"
     },
@@ -235,6 +239,14 @@
       "value": "Keine Resultate"
     },
     {
+      "key": "repo/table/nav/articles",
+      "value": "Artikel"
+    },
+    {
+      "key": "repo/table/nav/templates",
+      "value": "Templates"
+    },
+    {
       "key": "repo/table/pageInfo/loadMore",
       "value": "mehr laden"
     },
@@ -279,12 +291,24 @@
       "value": "Artikel tatsächlich archivieren?"
     },
     {
+      "key": "repo/archive/template/confirm",
+      "value": "Template tatsächlich archivieren?"
+    },
+    {
       "key": "repo/archive/button",
       "value": "Artikel archivieren"
     },
     {
+      "key": "repo/archive/template/button",
+      "value": "Template archivieren"
+    },
+    {
       "key": "repo/archived/notice",
       "value": "Artikel wurde archiviert und kann nicht bearbeitet oder veröffentlicht werden."
+    },
+    {
+      "key": "repo/archived/template/notice",
+      "value": "Template wurde archiviert und kann nicht bearbeitet oder verwendet werden."
     },
     {
       "key": "baseCommit/title",
@@ -403,6 +427,10 @@
       "value": "Titel"
     },
     {
+      "key": "metaData/field/auto",
+      "value": "Mit Titel syncen"
+    },
+    {
       "key": "metaData/field/shortTitle",
       "value": "Kurztitel"
     },
@@ -441,6 +469,10 @@
     {
       "key": "metaData/field/src",
       "value": "Bild"
+    },
+    {
+      "key": "metaData/field/srcNeg",
+      "value": "Dark Mode (optional)"
     },
     {
       "key": "metaData/field/alt",
@@ -845,6 +877,10 @@
     {
       "key": "commit/status/new/short",
       "value": "Neues Dokument erstellen"
+    },
+    {
+      "key": "commit/status/new/template",
+      "value": "Neues Template erstellen"
     },
     {
       "key": "commit/status/committed",
