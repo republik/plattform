@@ -1,3 +1,4 @@
+const moment = require('moment')
 const {
   COLLECTION_NAME: PROGRESS_COLLECTION_NAME,
   POLICY_NAME: PROGRESS_POLICY_NAME,
@@ -46,6 +47,53 @@ const findDocumentItems = (args, { pgdb }) =>
   pgdb.public.collectionDocumentItems
     .find(args, { orderBy: ['updatedAt desc'] })
     .then((items) => items.map(spreadItemData))
+
+const findDocumentItemsByCollectionNames = (
+  { names, progress, userId, lastDays },
+  context,
+) => {
+  const { pgdb } = context
+
+  return pgdb.query(
+    `
+    SELECT
+      document_item.*
+    FROM "collectionDocumentItems" document_item
+    JOIN collections c ON c.id = document_item."collectionId"
+    ${
+      progress
+        ? `
+    LEFT JOIN "collectionDocumentItems" progress_item ON
+      progress_item."repoId" = document_item."repoId" AND
+      progress_item."userId" = document_item."userId" AND
+      progress_item."collectionId" = (SELECT id FROM collections WHERE name = :progressCollectionName)
+    `
+        : ''
+    }
+    WHERE
+      document_item."userId" = :userId
+      AND c.name = ANY(:names)
+      ${lastDays ? `AND document_item."updatedAt" >= :afterDate` : ''}
+      ${
+        progress === 'FINISHED'
+          ? `AND (progress_item.data->>'percentage')::numeric >= 1`
+          : ''
+      }
+      ${
+        progress === 'UNFINISHED'
+          ? `AND (progress_item.data->>'percentage' IS NULL OR (progress_item.data->>'percentage')::numeric < 1)`
+          : ''
+      }
+    ORDER BY document_item."updatedAt" DESC
+  `,
+    {
+      afterDate: moment().subtract(lastDays, 'days'),
+      userId: userId,
+      progressCollectionName: PROGRESS_COLLECTION_NAME,
+      names,
+    },
+  )
+}
 
 const getItem = async (
   entityName,
@@ -225,6 +273,7 @@ module.exports = {
   byIdForUser,
 
   findDocumentItems,
+  findDocumentItemsByCollectionNames,
 
   getDocumentItem,
   upsertDocumentItem,

@@ -28,14 +28,20 @@ module.exports.start = async () => {
   rtm.on('message', async (message) => {
     if (
       message.channel === SLACK_CHANNEL_GREETING &&
+      // ignore thread messages
+      !message.thread_ts &&
       (!message.subtype ||
         message.subtype === 'message_changed' ||
         message.subtype === 'bot_message')
     ) {
-      debug('new message from slack: %O', message)
+      debug('new greeting message from slack: %O', message)
       let text = message.text
       if (!text && message.message) {
         text = message.message.text
+      }
+      // support bot messages with text as attachment
+      if (!text && message.attachments?.length) {
+        text = message.attachments[0].fallback
       }
       if (!text) {
         return

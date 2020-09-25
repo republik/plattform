@@ -27,18 +27,19 @@ module.exports = {
   },
   async collectionItems(user, args, context) {
     if (canAccess(user, context)) {
-      const collections = await Promise.all(
-        args.names.map((name) =>
-          Collection.byNameForUser(name, user.id, context),
-        ),
-      )
-      const items = await Collection.findDocumentItems(
+      let items = await Collection.findDocumentItemsByCollectionNames(
         {
-          collectionId: collections.map((collection) => collection.id),
+          ...args,
           userId: user.id,
         },
         context,
       )
+      if (args.uniqueDocuments) {
+        items = items.filter(
+          (a, index, all) =>
+            index === all.findIndex((b) => b.repoId === a.repoId),
+        )
+      }
       return paginate(args, items)
     }
     return paginate(args, [])
