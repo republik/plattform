@@ -27,17 +27,10 @@ module.exports = {
   },
   async collectionItems(user, args, context) {
     if (canAccess(user, context)) {
-      const collections = await Promise.all(
-        args.names.map((name) =>
-          Collection.byNameForUser(name, user.id, context),
-        ),
-      )
-
-      const items = await Collection.findDocumentItems(
+      const items = await Collection.findDocumentItemsByCollectionNames(
         {
-          collectionId: collections.map((collection) => collection.id),
+          ...args,
           userId: user.id,
-          ...Collection.getProgressConditions(args.progress),
         },
         context,
       )

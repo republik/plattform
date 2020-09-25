@@ -56,6 +56,7 @@ extend type User {
   collectionItems(
     names: [String!]!
     progress: ProgressState
+    lastDays: Int
     first: Int
     last: Int
     before: String
