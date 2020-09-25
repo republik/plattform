@@ -8,7 +8,6 @@ const {
 const { getRepos } = require('./getRepos')
 const uniqWith = require('lodash/uniqWith')
 const debug = require('debug')('publikator:github')
-const { t } = require('@orbiting/backend-modules-translate')
 
 const publicationVersionRegex = /^v(\d+)(-prepublication)?.*/
 
@@ -127,7 +126,7 @@ module.exports = {
     }
     return heads
   },
-  getCommit: async (repo, { id: sha }, { redis }) => {
+  getCommit: async (repo, { id: sha }, { redis, t }) => {
     const redisKey = `repos:${repo.id}/commits/${sha}`
     const redisCommit = await redis.getAsync(redisKey)
     redis.expireAsync(redisKey, redis.__defaultExpireSeconds)
