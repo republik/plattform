@@ -59,6 +59,11 @@ const Autocomplete = ({
                           openMenu(...args)
                         }
                       },
+                      onClick: (...args) => {
+                        if (items.length > 1) {
+                          openMenu(...args)
+                        }
+                      },
                       autoComplete,
                       placeholder: selectedItem
                         ? itemToString(selectedItem)
