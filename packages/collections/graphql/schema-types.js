@@ -57,6 +57,7 @@ extend type User {
     names: [String!]!
     progress: ProgressState
     lastDays: Int
+    uniqueDocuments: Boolean
     first: Int
     last: Int
     before: String

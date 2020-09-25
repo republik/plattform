@@ -27,13 +27,19 @@ module.exports = {
   },
   async collectionItems(user, args, context) {
     if (canAccess(user, context)) {
-      const items = await Collection.findDocumentItemsByCollectionNames(
+      let items = await Collection.findDocumentItemsByCollectionNames(
         {
           ...args,
           userId: user.id,
         },
         context,
       )
+      if (args.uniqueDocuments) {
+        items = items.filter(
+          (a, index, all) =>
+            index === all.findIndex((b) => b.repoId === a.repoId),
+        )
+      }
       return paginate(args, items)
     }
     return paginate(args, [])
