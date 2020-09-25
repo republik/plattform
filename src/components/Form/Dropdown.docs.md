@@ -69,12 +69,18 @@ The virtual dropdown element uses negative margin left/right. This is needed so 
 <div>
   <Field label='Label' />
   <Dropdown.Virtual
-    label='Bezeichnung'
+    label='Label'
     items={dropdownItems}
   />
   <Dropdown.Native
-    label='Bezeichnung'
+    label='Label'
     items={dropdownItems}
+  />
+  <Field label='Label' value={dropdownItems[0].text} />
+  <Dropdown.Virtual
+    label='Label'
+    items={dropdownItems}
+    value={dropdownItems[0].value}
   />
 </div>
 ```
@@ -240,23 +246,23 @@ state: {
 }
 ---
 <Autocomplete
-    label='Monat'
-    value={state.value}
-    filter={state.filter}
-    items={
-      state.items.filter(
-        ({text}) =>
-          !state.filter || text.toLowerCase().includes(state.filter.toLowerCase())
-      )
+  label='Monat'
+  value={state.value}
+  filter={state.filter}
+  items={
+    state.items.filter(
+      ({text}) =>
+        !state.filter || text.toLowerCase().includes(state.filter.toLowerCase())
+    )
+  }
+  onChange={
+    value => {
+      setState({...state, value})
     }
-    onChange={
-      value => {
-        setState({...state, value})
-      }
-    }
-    onFilterChange={
-      filter => setState({...state, filter})
-    }
+  }
+  onFilterChange={
+    filter => setState({...state, filter})
+  }
 />
 ```
 
@@ -281,31 +287,31 @@ state: {
 }
 ---
 <Autocomplete
-    label='Monat'
-    value={state.value}
-    filter={state.filter}
-    items={
-      state.items.filter(
-        ({text}) =>
-          !state.filter || text.toLowerCase().includes(state.filter.toLowerCase())
-      )
+  label='Monat'
+  value={state.value}
+  filter={state.filter}
+  items={
+    state.items.filter(
+      ({text}) =>
+        !state.filter || text.toLowerCase().includes(state.filter.toLowerCase())
+    )
+  }
+  onChange={
+    value => {
+      setState({...state, value})
     }
-    onChange={
-      value => {
-        setState({...state, value})
-      }
-    }
-    onFilterChange={
-      filter => setState({...state, filter})
-    }
-    icon={
-      <SearchIcon
-        size={30}
-        onClick={() => {
-          console.log('search')
-        }}
-      />
-    }
-    autoComplete='on'
+  }
+  onFilterChange={
+    filter => setState({...state, filter})
+  }
+  icon={
+    <SearchIcon
+      size={30}
+      onClick={() => {
+        console.log('search')
+      }}
+    />
+  }
+  autoComplete='on'
 />
 ```

@@ -2,10 +2,11 @@ import React from 'react'
 import { css, merge } from 'glamor'
 
 import colors from '../../theme/colors'
-import { sansSerifRegular21 } from '../Typography/styles'
+import { sansSerifRegular22 } from '../Typography/styles'
 import { convertStyleToRem, pxToRem } from '../Typography/utils'
 
 const borderWidth = 1
+const yPadding = 9 // (40 - 22) / 2
 export const labelHeight = 20 // The height of the area at the top for the label.
 export const fieldHeight = 40
 
@@ -17,10 +18,11 @@ const styles = {
     display: 'block'
   }),
   labelText: css({
-    ...convertStyleToRem(sansSerifRegular21),
+    ...convertStyleToRem(sansSerifRegular22),
+    lineHeight: pxToRem(20),
     color: colors.disabled,
     position: 'absolute',
-    top: pxToRem(labelHeight),
+    top: pxToRem(labelHeight + yPadding),
     transition: 'top 200ms, font-size 200ms'
   }),
   labelTextTop: css({
@@ -36,8 +38,8 @@ const styles = {
   }),
   field: css({
     display: 'block',
-    padding: '6px 0',
-    ...convertStyleToRem(sansSerifRegular21),
+    padding: '7px 0 5px',
+    ...convertStyleToRem(sansSerifRegular22),
     lineHeight: pxToRem(27),
     minHeight: pxToRem(fieldHeight),
     color: colors.text,
