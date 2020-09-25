@@ -37,7 +37,8 @@ const Autocomplete = ({
         getLabelProps,
         selectedItem,
         highlightedIndex,
-        isOpen
+        isOpen,
+        openMenu
       }) => {
         return (
           <div {...styles.root}>
@@ -50,6 +51,14 @@ const Autocomplete = ({
                   <input
                     {...getInputProps({
                       ...fieldProps,
+                      onFocus: (...args) => {
+                        if (fieldProps.onFocus) {
+                          fieldProps.onFocus(...args)
+                        }
+                        if (items.length > 1) {
+                          openMenu(...args)
+                        }
+                      },
                       autoComplete,
                       placeholder: selectedItem
                         ? itemToString(selectedItem)
