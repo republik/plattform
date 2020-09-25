@@ -295,11 +295,20 @@ ReactDOM.render(
                   ItemsContainer: require('./components/Form/VirtualDropdown.js')
                     .ItemsContainer,
                   Inner: require('./components/Form/VirtualDropdown.js').Inner
-                },
+                }
+              },
+              src: require('./components/Form/Dropdown.docs.md')
+            },
+            {
+              path: '/forms/autocomplete',
+              title: 'Autocomplete',
+              imports: {
+                css,
+                ...require('./components/Typography'),
                 Autocomplete: require('./components/Form/Autocomplete.js'),
                 SearchIcon: require('react-icons/lib/md/search')
               },
-              src: require('./components/Form/Dropdown.docs.md')
+              src: require('./components/Form/Autocomplete.docs.md')
             },
             {
               path: '/forms/slider',
