@@ -46,7 +46,7 @@ const WarningButton = ({ repoId }) => (
   </Link>
 )
 
-export default ({ asIcon, repoId, currentCommitId }) => (
+const BranchingNotice = ({ asIcon, repoId, currentCommitId }) => (
   <Subscription subscription={repoSubscription} variables={{ repoId }}>
     {({ data = {}, loading = true }) => {
       const lastestCommit = data.repoUpdate && data.repoUpdate.commits.nodes[0]
@@ -67,3 +67,5 @@ export default ({ asIcon, repoId, currentCommitId }) => (
     }}
   </Subscription>
 )
+
+export default BranchingNotice

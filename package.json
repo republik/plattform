@@ -67,7 +67,7 @@
   },
   "dependencies": {
     "@orbiting/remark-preset": "^1.2.4",
-    "@project-r/styleguide": "^9.27.0",
+    "@project-r/styleguide": "^9.30.0",
     "@project-r/template-newsletter": "^1.5.0",
     "apollo-cache-inmemory": "^1.6.6",
     "apollo-client": "^2.6.10",
@@ -101,7 +101,7 @@
     "js-yaml": "^3.14.0",
     "lodash.debounce": "^4.0.8",
     "mdast-react-render": "^1.2.0",
-    "next": "^9.4.4",
+    "next": "^9.5.3",
     "next-routes": "^1.4.2",
     "prop-types": "^15.6.2",
     "ramda": "^0.25.0",
