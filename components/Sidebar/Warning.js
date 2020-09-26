@@ -12,6 +12,8 @@ const styles = {
   })
 }
 
-export default ({ message }) => {
+const Warning = ({ message }) => {
   return <div {...styles.warning}>{message}</div>
 }
+
+export default Warning
