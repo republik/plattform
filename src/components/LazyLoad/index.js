@@ -67,18 +67,20 @@ class LazyLoad extends Component {
     instances.rm(this)
   }
   render() {
-    const { children, attributes, style } = this.props
+    const { children, attributes, style, type: Element, noscript } = this.props
     const visible = this.props.visible || this.state.visible
     return (
-      <span ref={this.setRef} {...attributes} style={style}>
-        {visible ? children : <noscript>{children}</noscript>}
-      </span>
+      <Element ref={this.setRef} {...attributes} style={style}>
+        {visible ? children : noscript ? <noscript>{children}</noscript> : null}
+      </Element>
     )
   }
 }
 
 LazyLoad.defaultProps = {
-  offset: 0.5
+  offset: 0.5,
+  type: 'span',
+  noscript: true
 }
 
 export default LazyLoad
