@@ -192,6 +192,11 @@ const styles = {
   })
 }
 
+TeaserMyMagazine.propTypes = {
+  latestSubscribedArticles: PropTypes.array,
+  latestProgressOrBookmarkedArticles: PropTypes.array
+}
+
 const WrappedTeaserMyMagazine = props => (
   <ColorContext.Provider value={colors.negative}>
     <TeaserMyMagazine {...props} />
@@ -199,11 +204,6 @@ const WrappedTeaserMyMagazine = props => (
 )
 
 export default WrappedTeaserMyMagazine
-
-TeaserMyMagazine.propTypes = {
-  latestSubscribedArticles: PropTypes.array,
-  latestProgressOrBookmarkedArticles: PropTypes.array
-}
 
 WrappedTeaserMyMagazine.data = {
   config: {
