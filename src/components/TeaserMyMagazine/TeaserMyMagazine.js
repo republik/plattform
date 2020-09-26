@@ -11,6 +11,12 @@ import { useColorContext } from '../Colors/useColorContext'
 
 const DefaultLink = ({ children }) => children
 
+const NBSP = '\u00a0'
+const limitedTitle = (title, limit = 130) =>
+  `${title.substring(0, limit).trim()}${
+    title.length >= limit ? `${NBSP}…` : ''
+  }`
+
 const TeaserMyMagazine = ({
   latestSubscribedArticles,
   latestProgressOrBookmarkedArticles,
@@ -47,9 +53,9 @@ const TeaserMyMagazine = ({
                   </TeaserSectionTitle>
                 </Link>
               </div>
-              {latestProgressOrBookmarkedArticles.map(document => {
-                const { id } = document
-                const { path, shortTitle, title } = document.meta
+              {latestProgressOrBookmarkedArticles.map(doc => {
+                const { id } = doc
+                const { path, shortTitle, title } = doc.meta
 
                 return (
                   <div
@@ -62,16 +68,12 @@ const TeaserMyMagazine = ({
                         {...styles.tileHeadline}
                         style={{ color: colorScheme.text }}
                       >
-                        {shortTitle && shortTitle !== null
-                          ? `${shortTitle.substring(0, 130).trim()}
-                            ${shortTitle.length >= 130 ? <>&nbsp;…</> : ''}`
-                          : `${title.substring(0, 130).trim()}
-                              ${title.length >= 130 ? <>&nbsp;…</> : ''}`}
+                        {limitedTitle(shortTitle || title, 130)}
                       </a>
                     </Link>
                     {ActionBar ? (
                       <div style={{ marginTop: 10 }}>
-                        <ActionBar mode='bookmark' document={document} />
+                        <ActionBar mode='bookmark' document={doc} />
                       </div>
                     ) : null}
                   </div>
@@ -92,14 +94,8 @@ const TeaserMyMagazine = ({
                   </TeaserSectionTitle>
                 </Link>
               </div>
-              {latestSubscribedArticles.map(document => {
-                const {
-                  format,
-                  path,
-                  shortTitle,
-                  title,
-                  credits
-                } = document.meta
+              {latestSubscribedArticles.map(doc => {
+                const { format, path, shortTitle, title, credits } = doc.meta
 
                 return (
                   <TeaserFeed
@@ -107,13 +103,7 @@ const TeaserMyMagazine = ({
                     color={colorScheme.text}
                     format={format}
                     path={path}
-                    title={
-                      shortTitle
-                        ? `${shortTitle.substring(0, 140).trim()} ${
-                            shortTitle.length >= 140 ? '…' : ''
-                          }`
-                        : title
-                    }
+                    title={limitedTitle(shortTitle || title, 140)}
                     credits={credits}
                   />
                 )
@@ -242,6 +232,7 @@ WrappedTeaserMyMagazine.data = {
     query getMyMagazineDocuments {
       notifications(first: 2, filter: Document) {
         nodes {
+          id
           object {
             ... on Document {
               id
@@ -266,8 +257,9 @@ WrappedTeaserMyMagazine.data = {
       }
       me {
         id
-        bookmarkAndProgress: collectionItems(names: ["progress", "bookmarks"], first: 2, progress: UNFINISHED) {
+        bookmarkAndProgress: collectionItems(names: ["progress", "bookmarks"], first: 2, progress: UNFINISHED, uniqueDocuments: true, lastDays: 30) {
           nodes {
+            id
             document {
               id
               meta {

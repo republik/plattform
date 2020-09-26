@@ -26,7 +26,7 @@ const styles = {
   })
 }
 
-const LAZYLOADER_HEIGHT = 600
+const LAZYLOADER_HEIGHT = 300
 
 const DefaultLink = ({ children }) => children
 const withData = Component => props => <Component {...props} data={{}} />
@@ -211,7 +211,11 @@ const createLiveTeasers = ({
       props: node => node.data,
       component: props => {
         return (
-          <LazyLoad style={{ display: 'block', minHeight: LAZYLOADER_HEIGHT }}>
+          <LazyLoad
+            type='div'
+            noscript={false}
+            style={{ minHeight: LAZYLOADER_HEIGHT }}
+          >
             <DiscussionWithData {...props} />
           </LazyLoad>
         )
@@ -253,7 +257,11 @@ const createLiveTeasers = ({
           return null
         }
         return (
-          <LazyLoad style={{ display: 'block', minHeight: LAZYLOADER_HEIGHT }}>
+          <LazyLoad
+            type='div'
+            noscript={false}
+            style={{ minHeight: LAZYLOADER_HEIGHT }}
+          >
             <MyMagazineWithData {...props} />
           </LazyLoad>
         )
@@ -261,7 +269,7 @@ const createLiveTeasers = ({
       isVoid: true,
       editorModule: 'liveteaser',
       editorOptions: {
-        type: 'LIVETEASEREND',
+        type: 'LIVETEASERMYMAGAZINE',
         insertButtonText: 'Meine Republik.',
         insertId: 'mymagazine'
       }
