@@ -30,6 +30,7 @@ fragment Repo on Repository {
   createdAt
   updatedAt
   isArchived
+  isTemplate
   defaultBranchRef {
     target {
       ... on Commit {

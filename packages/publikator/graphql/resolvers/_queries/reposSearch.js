@@ -92,6 +92,7 @@ module.exports = async (__, args, context) => {
     search,
     template,
     orderBy,
+    isTemplate,
     // last - "last" parameter is not implemented in search API
   } = args
 
@@ -102,6 +103,7 @@ module.exports = async (__, args, context) => {
       search,
       template,
       orderBy,
+      isTemplate,
     },
     context,
   )

@@ -30,6 +30,7 @@ type queries {
     search: String
     template: String
     orderBy: RepoOrderBy
+    isTemplate: Boolean
   ): RepoConnection!
 }
 
@@ -41,6 +42,7 @@ type mutations {
     parentId: ID
     message: String!
     document: DocumentInput!
+    isTemplate: Boolean
     # files: [FileInput!]!     # FileInput
   ): Commit!
 

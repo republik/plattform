@@ -73,6 +73,7 @@ module.exports = {
           ) {
             name
             isArchived
+            isTemplate
           }
         }
       `,
@@ -125,7 +126,7 @@ module.exports = {
     }
     return heads
   },
-  getCommit: async (repo, { id: sha }, { redis }) => {
+  getCommit: async (repo, { id: sha }, { redis, t }) => {
     const redisKey = `repos:${repo.id}/commits/${sha}`
     const redisCommit = await redis.getAsync(redisKey)
     redis.expireAsync(redisKey, redis.__defaultExpireSeconds)
@@ -184,7 +185,7 @@ module.exports = {
         JSON.stringify({
           ...commit,
           repo: {
-            //other keys (e.g. latestCommit) create circular structure
+            // other keys (e.g. latestCommit) create circular structure
             id: repo.id,
           },
         }),
@@ -433,7 +434,7 @@ module.exports = {
         ref: `refs/tags/${tagName}`,
       },
     })
-    let ref = result?.data?.repository?.ref
+    const ref = result?.data?.repository?.ref
 
     // github downtime resilience:
     // annotatedTag can not be cached, because they must dissapear when a doc

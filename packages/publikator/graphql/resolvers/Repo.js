@@ -37,9 +37,9 @@ module.exports = {
       .zrangeAsync(repoId, 0, -1, 'WITHSCORES')
       .then((objs) => zipArray(objs))
     redis.expireAsync(repoId, redis.__defaultExpireSeconds)
-    let userIds = []
-    let expiredUserIds = []
-    for (let r of result) {
+    const userIds = []
+    const expiredUserIds = []
+    for (const r of result) {
       if (r.score > minScore) {
         userIds.push(r.value)
       } else {
@@ -92,7 +92,7 @@ module.exports = {
     }
 
     // repos query gets the refs for us
-    let annotatedTags = repo.latestPublications
+    const annotatedTags = repo.latestPublications
       ? repo.latestPublications
       : await Promise.all(
           refs.map((ref) => getAnnotatedTag(repoId, ref, context)),
@@ -134,5 +134,13 @@ module.exports = {
 
     const { isArchived } = await getRepo(repo.id)
     return isArchived
+  },
+  isTemplate: async (repo, args, context) => {
+    if (repo.isTemplate !== undefined) {
+      return repo.isTemplate
+    }
+
+    const { isTemplate } = await getRepo(repo.id)
+    return isTemplate
   },
 }

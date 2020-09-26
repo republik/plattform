@@ -19,6 +19,7 @@ type Repo {
   meta: RepoMeta!
 
   isArchived: Boolean!
+  isTemplate: Boolean!
 }
 
 type RepoConnection {

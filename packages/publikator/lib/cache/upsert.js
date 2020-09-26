@@ -118,20 +118,23 @@ const getContentMeta = ({ meta = false } = {}) => {
   return { contentMeta: meta }
 }
 
+const mapParents = (commit) => {
+  if (!commit.parents) return []
+  if (commit.parents.nodes) return commit.parents.nodes.map((node) => node.oid)
+  return commit.parents.map((parent) => parent.sha)
+}
+
 const getLatestCommit = (commit) => {
   if (!commit) {
     return
   }
-
   return {
     latestCommit: {
       id: commit.id || commit.sha,
       date: commit.date || commit.author.date,
       author: commit.author,
       message: commit.message,
-      parentIds: commit.parents
-        ? commit.parents.map((parent) => parent.sha)
-        : [],
+      parentIds: mapParents(commit),
     },
   }
 }
@@ -188,6 +191,7 @@ const upsert = async (
     content,
     createdAt,
     isArchived,
+    isTemplate,
     id,
     meta,
     name,
@@ -222,6 +226,7 @@ const upsert = async (
     createdAt,
     updatedAt,
     isArchived,
+    isTemplate,
     ...getContentString(content),
     ...getContentStrings(content),
     ...getContentMeta(content),

@@ -127,7 +127,7 @@ module.exports = async () => {
   })
 
   const githubRest = new Octokit({
-    previews: ['machine-man-preview', 'mercy-preview'],
+    previews: ['machine-man-preview', 'mercy-preview', 'baptiste-preview'],
     auth: installationToken.token,
   })
 

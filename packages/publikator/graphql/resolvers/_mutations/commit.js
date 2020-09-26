@@ -97,6 +97,7 @@ module.exports = async (_, args, context) => {
     parentId,
     message,
     document: { content: mdast },
+    isTemplate,
   } = args
 
   debug({ repoId, message })
@@ -123,11 +124,13 @@ module.exports = async (_, args, context) => {
       name: repoName,
       private: true,
       auto_init: true,
+      is_template: isTemplate,
     })
 
     Object.assign(cacheUpsert, {
       createdAt: repo.data.created_at,
       isArchived: false,
+      isTemplate,
       meta: {},
       name: repoName,
       publications: [],

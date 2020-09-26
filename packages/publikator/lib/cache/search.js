@@ -68,6 +68,7 @@ const getSourceFilter = () => ({
  */
 const find = async (args, { elastic }) => {
   debug('args: %o', args)
+  const { isTemplate } = args
 
   const fields = [
     'contentMeta.description',
@@ -98,7 +99,14 @@ const find = async (args, { elastic }) => {
   const query = {
     bool: {
       must: [{ term: { isArchived: false } }],
+      must_not: [],
     },
+  }
+
+  if (isTemplate) {
+    query.bool.must.push({ term: { isTemplate: true } })
+  } else if (isTemplate === false) {
+    query.bool.must_not.push({ term: { isTemplate: true } })
   }
 
   if (args.id) {
