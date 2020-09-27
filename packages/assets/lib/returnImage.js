@@ -101,8 +101,14 @@ module.exports = async ({
       mime = 'image/svg+xml'
     }
 
-    // requests to github always return Content-Type: text/plain, let's fix that
-    if (mime && headers && headers.get('Content-Type') === 'text/plain') {
+    // fix content type if necessary
+    // - e.g. requests to github always return Content-Type: text/plain
+    // - s3 svg need to be rewritten from application/octet-stream to image/svg+xml
+    if (
+      mime &&
+      (mime !== 'application/octet-stream' ||
+        headers?.get('Content-Type')?.startsWith('text/plain'))
+    ) {
       res.set('Content-Type', mime)
     }
     res.set(
