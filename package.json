@@ -65,7 +65,7 @@
     "dev": "tsc && nf --procfile Procfile-dev start",
     "cloc": "find . -name '*.js' -not -path \"*/node_modules*\" -not -path \"./node_modules*\" | xargs wc -l",
     "commit": "git-cz",
-    "heroku-postbuild": "yarn run db:migrate:up",
+    "heroku-postbuild": "if [ -z \"$SERVER\" ]; then yarn run db:migrate:up; fi",
     "roleUser": "node packages/auth/script/roleUser",
     "roleUsers": "node packages/auth/script/roleUsers",
     "translations": "cd packages/translate && yarn translations && cd -",
