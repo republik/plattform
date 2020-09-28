@@ -32,26 +32,36 @@ const createCommentSchema = ({
     return href
   }
 
-  const screenHref = href => {
+  const screenHref = (href = '') => {
     if (href.match(/^(https?:|\/|#)/)) {
       return {
         safe: href
       }
     }
     return {
-      unknown: href
+      unknown: href.replace(/^mailto:/, '')
     }
   }
 
-  const SafeA = ({ children, text, href, ...props }) => {
+  const SafeA = ({ children, href, ...props }) => {
     const screenedHref = screenHref(href)
+    const childText = children?.length === 1 && children[0]
     const ellipsizedHref =
-      children && children[0] === href && ellipsizeHref(screenedHref.safe)
+      childText === href && ellipsizeHref(screenedHref.safe)
+    if (screenedHref.safe) {
+      return (
+        <Link {...props} href={screenedHref.safe}>
+          {ellipsizedHref || children}
+        </Link>
+      )
+    }
     return (
-      <Link {...props} href={screenedHref.safe}>
-        {text || ellipsizedHref || children}
-        {screenedHref.unknown && ` [${screenedHref.unknown}]`}
-      </Link>
+      <>
+        {ellipsizedHref || children}
+        {screenedHref.unknown &&
+          screenedHref.unknown !== childText &&
+          ` [${screenedHref.unknown}]`}
+      </>
     )
   }
 
