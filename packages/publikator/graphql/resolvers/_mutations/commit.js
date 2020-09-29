@@ -112,11 +112,11 @@ module.exports = async (_, args, context) => {
   let repo = await getRepo(repoId).catch((response) => null)
 
   if (isTemplate && !mdast.meta.title) {
-    throw new Error('Title required for templates')
+    throw new Error(t('api/commit/templateTitle/required'))
   }
 
   if (isTemplate && !mdast.meta.slug) {
-    throw new Error('Repo-slug required for templates')
+    throw new Error(t('api/commit/templateSlug/required'))
   }
 
   if (repo) {
