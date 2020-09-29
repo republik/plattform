@@ -7,6 +7,7 @@ import slugify from '../../../../lib/utils/slug'
 import MarkdownSerializer from 'slate-mdast-serializer'
 
 import createPasteHtml from './createPasteHtml'
+import { safeDump } from 'js-yaml'
 
 const pubDateFormat = swissTime.format('%d.%m.%Y')
 
@@ -50,6 +51,8 @@ export default ({ rule, subModules, TYPE }) => {
       documentNode.nodes.find(
         n => n.type === titleModule.TYPE && n.kind === 'block'
       )
+    const fallbackTitle = data.get('title')
+
     if (title) {
       const headline = title.nodes.first()
       const headlineText = headline ? headline.text : ''
@@ -61,6 +64,12 @@ export default ({ rule, subModules, TYPE }) => {
         .set('subject', subject ? subject.text : '')
         .set('description', lead ? lead.text : '')
         .set('slug', slugify(headlineText))
+    } else if (fallbackTitle) {
+      if (data.get('template') === 'editorialNewsletter') {
+        newData = newData
+          .set('emailSubject', fallbackTitle)
+          .set('slug', slugify(fallbackTitle))
+      }
     }
 
     if (data.get('template') === 'discussion') {
@@ -121,10 +130,10 @@ export default ({ rule, subModules, TYPE }) => {
     rules: [documentRule]
   })
 
-  const newDocument = ({ title, template }, me) =>
+  const newDocument = ({ title = '', schema = '' }, me) =>
     serializer.deserialize(
       parse(`---
-template: ${template}
+${safeDump({ template: schema, title, auto: true })}
 ---
 ${
   titleModule

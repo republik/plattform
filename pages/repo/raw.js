@@ -89,7 +89,7 @@ export default compose(
   }),
   withUncommittedChangesMutation
 )(({ t, router, uncommittedChanges }) => {
-  const { repoId, commitId, template } = router.query
+  const { repoId, commitId, schema, template } = router.query
   const [store, setStore] = useState(undefined)
   const [md, setMd] = useState('')
   const [meta, setMeta] = useState(undefined)
@@ -101,7 +101,7 @@ export default compose(
     Router.pushRoute('repo/edit', {
       repoId: repoId.split('/'),
       commitId,
-      ...(commitId === 'new' ? { template } : {})
+      ...(commitId === 'new' ? { schema: schema || template } : {})
     })
   }
 

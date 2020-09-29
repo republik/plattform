@@ -32,6 +32,7 @@ export const getRepoHistory = gql`
     repo(id: $repoId) {
       id
       isArchived
+      isTemplate
       commits(first: $first, after: $after) {
         pageInfo {
           hasNextPage
@@ -55,6 +56,7 @@ const treeRepoSubscription = gql`
     repoUpdate(repoId: $repoId) {
       id
       isArchived
+      isTemplate
       commits(first: 1) {
         nodes {
           ...SimpleCommit
@@ -179,17 +181,18 @@ class EditorPage extends Component {
             render={() => (
               <Fragment>
                 {repo.isArchived ? (
-                  <RepoArchivedBanner />
+                  <RepoArchivedBanner isTemplate={repo.isTemplate} />
                 ) : (
                   <NarrowContainer {...styles.publishContainer}>
                     <CurrentPublications repoId={repoId} />
-                    <RepoArchive repoId={repoId} />
+                    <RepoArchive repoId={repoId} isTemplate={repo.isTemplate} />
                   </NarrowContainer>
                 )}
                 <Tree
                   commits={commits}
                   localStorageCommitIds={localStorageCommitIds}
                   milestones={repo.milestones}
+                  isTemplate={repo.isTemplate}
                   repoId={repoId}
                 />
                 {/* Load more commits */

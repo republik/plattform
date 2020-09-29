@@ -17,11 +17,11 @@ const styles = {
   })
 }
 
-const RepoArchivedBanner = ({ t }) => {
+const RepoArchivedBanner = ({ t, isTemplate }) => {
   return (
     <div {...styles.container}>
       <Interaction.H3 {...styles.notice}>
-        {t('repo/archived/notice')}
+        {t(`repo/archived${isTemplate ? '/template/' : '/'}notice`)}
       </Interaction.H3>
     </div>
   )

@@ -99,12 +99,12 @@ export default ({ rule, subModules, TYPE }) => {
     rules: [documentRule]
   })
 
-  const newDocument = ({ title, template }) =>
+  const newDocument = ({ title, schema }) =>
     serializer.deserialize(
       parse(
         `
 ---
-template: ${template}
+template: ${schema}
 ---
 
 <section><h6>TEASER</h6>

@@ -1,5 +1,5 @@
 {
-  "updated": "2020-09-09T08:15:48.388Z",
+  "updated": "2020-09-29T12:29:20.256Z",
   "title": "live",
   "data": [
     {
@@ -120,7 +120,11 @@
     },
     {
       "key": "repo/add/title",
-      "value": "Neuer Artikel"
+      "value": "Neues Dokument"
+    },
+    {
+      "key": "repo/add/template/title",
+      "value": "Neues Template"
     },
     {
       "key": "repo/add/titleField/label",
@@ -235,16 +239,24 @@
       "value": "Keine Resultate"
     },
     {
+      "key": "repo/table/nav/documents",
+      "value": "Dokumente"
+    },
+    {
+      "key": "repo/table/nav/templates",
+      "value": "Templates"
+    },
+    {
       "key": "repo/table/pageInfo/loadMore",
       "value": "mehr laden"
     },
     {
       "key": "repo/table/pageInfo/total",
-      "value": "Total {count} Artikel"
+      "value": "Total {count}"
     },
     {
       "key": "repo/table/pageInfo/loadedTotal",
-      "value": "die zuletzt bearbeiteten {loaded} von etwa {total} Artikel"
+      "value": "die zuletzt bearbeiteten {loaded} von etwa {total}"
     },
     {
       "key": "repo/table/col/title",
@@ -276,15 +288,27 @@
     },
     {
       "key": "repo/archive/confirm",
-      "value": "Artikel tatsächlich archivieren?"
+      "value": "Dokument tatsächlich archivieren?"
+    },
+    {
+      "key": "repo/archive/template/confirm",
+      "value": "Template tatsächlich archivieren?"
     },
     {
       "key": "repo/archive/button",
-      "value": "Artikel archivieren"
+      "value": "Dokument archivieren"
+    },
+    {
+      "key": "repo/archive/template/button",
+      "value": "Template archivieren"
     },
     {
       "key": "repo/archived/notice",
-      "value": "Artikel wurde archiviert und kann nicht bearbeitet oder veröffentlicht werden."
+      "value": "Dokument wurde archiviert und kann nicht bearbeitet oder veröffentlicht werden."
+    },
+    {
+      "key": "repo/archived/template/notice",
+      "value": "Template wurde archiviert und kann nicht bearbeitet oder verwendet werden."
     },
     {
       "key": "baseCommit/title",
@@ -403,6 +427,10 @@
       "value": "Titel"
     },
     {
+      "key": "metaData/field/auto",
+      "value": "Automatisch vom Titelblock ableiten (Titel, Deskription & Slug)"
+    },
+    {
       "key": "metaData/field/shortTitle",
       "value": "Kurztitel"
     },
@@ -431,6 +459,14 @@
       "value": "Web-Slug"
     },
     {
+      "key": "metaData/field/repoSlug",
+      "value": "Repo-Slug"
+    },
+    {
+      "key": "metaData/field/repoSlug/error/tooLong",
+      "value": "Repo-Slug zu lange (max. 30 Chars)"
+    },
+    {
       "key": "metaData/field/slug/note",
       "value": "Ergibt folgende URL: {base}{path}"
     },
@@ -441,6 +477,10 @@
     {
       "key": "metaData/field/src",
       "value": "Bild"
+    },
+    {
+      "key": "metaData/field/srcNeg",
+      "value": "Dark Mode (optional)"
     },
     {
       "key": "metaData/field/alt",
@@ -847,6 +887,10 @@
       "value": "Neues Dokument erstellen"
     },
     {
+      "key": "commit/status/new/template",
+      "value": "Neues Template erstellen"
+    },
+    {
       "key": "commit/status/committed",
       "value": "Keine Änderungen"
     },
@@ -1076,7 +1120,7 @@
     },
     {
       "key": "link/repo/search",
-      "value": "Artikel suchen"
+      "value": "Dokument suchen"
     },
     {
       "key": "styleguide/video/dnt/note",
@@ -1120,11 +1164,11 @@
     },
     {
       "key": "api/publish/disabled",
-      "value": "Artikel können derzeit nicht veröffentlicht werden."
+      "value": "Dokumente können derzeit nicht veröffentlicht werden."
     },
     {
       "key": "api/unpublish/disabled",
-      "value": "Artikel können derzeit nicht zurückgezogen werden."
+      "value": "Dokumente können derzeit nicht zurückgezogen werden."
     },
     {
       "key": "styleguide/Collapsable/expand",

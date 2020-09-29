@@ -29,6 +29,7 @@ import { renderMdast } from 'mdast-react-render'
 import EditMetaDate from './EditMetaDate'
 import { phases } from './workflow'
 import RepoAdd from './Add'
+import { withRouter } from 'next/router'
 
 export const editRepoMeta = gql`
   mutation editRepoMeta($repoId: ID!, $publishDate: DateTime) {
@@ -42,12 +43,18 @@ export const editRepoMeta = gql`
 `
 
 export const filterAndOrderRepos = gql`
-  query repoListSearch($after: String, $search: String, $orderBy: RepoOrderBy) {
+  query repoListSearch(
+    $after: String
+    $search: String
+    $orderBy: RepoOrderBy
+    $isTemplate: Boolean
+  ) {
     repos: reposSearch(
       first: 50
       after: $after
       search: $search
       orderBy: $orderBy
+      isTemplate: $isTemplate
     ) {
       totalCount
       pageInfo {
@@ -225,6 +232,16 @@ class RepoList extends Component {
     }
   }
 
+  UNSAFE_componentWillReceiveProps(nextProps) {
+    if (
+      nextProps.router.query.templates !== this.props.router.query.templates
+    ) {
+      this.setState({
+        search: undefined
+      })
+    }
+  }
+
   render() {
     const {
       t,
@@ -233,8 +250,11 @@ class RepoList extends Component {
       orderDirection,
       phase: filterPhase,
       editRepoMeta,
-      fetchMore
+      fetchMore,
+      router: { query }
     } = this.props
+
+    const { templates } = query
 
     const { search } = this.state
 
@@ -271,7 +291,10 @@ class RepoList extends Component {
 
       this.setState(
         { search: value },
-        this.debouncedRouting.bind(this, getParams({ q: value }))
+        this.debouncedRouting.bind(this, {
+          templates,
+          ...getParams({ q: value })
+        })
       )
     }
 
@@ -289,7 +312,7 @@ class RepoList extends Component {
 
     return (
       <div {...styles.container}>
-        <RepoAdd />
+        <RepoAdd isTemplate={templates} />
 
         <Field
           label={t('repo/search/field/label')}
@@ -365,6 +388,7 @@ class RepoList extends Component {
                 </ThOrder>
               ))}
               <Th style={{ width: '10%' }}>{t('repo/table/col/phase')}</Th>
+
               <Th style={{ width: 70 }} />
             </Tr>
           </thead>
@@ -542,15 +566,17 @@ class RepoList extends Component {
 
 const RepoListWithQuery = compose(
   withT,
+  withRouter,
   graphql(filterAndOrderRepos, {
-    options: ({ search }) => ({
+    options: ({ search, router }) => ({
       fetchPolicy: 'cache-and-network',
       ssr: false,
       notifyOnNetworkStatusChange: true,
       variables: {
         search:
           search && search.length >= SEARCH_MIN_LENGTH ? search : undefined,
-        orderBy: { field: 'PUSHED_AT', direction: 'DESC' }
+        orderBy: { field: 'PUSHED_AT', direction: 'DESC' },
+        isTemplate: !!router.query.templates
       }
     }),
     props: ({ data, ownProps }) => ({

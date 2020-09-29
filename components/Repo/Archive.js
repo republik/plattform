@@ -18,7 +18,7 @@ export const ARCHIVE_REPO = gql`
   }
 `
 
-const RepoArchive = ({ repoId, t }) => {
+const RepoArchive = ({ repoId, isTemplate, t }) => {
   return (
     <Mutation mutation={ARCHIVE_REPO} variables={{ repoId }}>
       {archiveRepo => (
@@ -26,7 +26,13 @@ const RepoArchive = ({ repoId, t }) => {
           href='#'
           onClick={e => {
             e.preventDefault()
-            if (window.confirm(t('repo/archive/confirm', { repoId }))) {
+            if (
+              window.confirm(
+                t(`repo/archive${isTemplate ? '/template/' : '/'}confirm`, {
+                  repoId
+                })
+              )
+            ) {
               archiveRepo()
                 .then(() => {
                   Router.pushRoute('index')
@@ -37,14 +43,11 @@ const RepoArchive = ({ repoId, t }) => {
             }
           }}
         >
-          {t('repo/archive/button')}
+          {t(`repo/archive${isTemplate ? '/template/' : '/'}button`)}
         </A>
       )}
     </Mutation>
   )
 }
 
-export default compose(
-  withT,
-  withRouter
-)(RepoArchive)
+export default compose(withT, withRouter)(RepoArchive)
