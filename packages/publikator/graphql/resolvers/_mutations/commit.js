@@ -111,6 +111,14 @@ module.exports = async (_, args, context) => {
   // get / create repo
   let repo = await getRepo(repoId).catch((response) => null)
 
+  if (isTemplate && !mdast.meta.title) {
+    throw new Error(t('api/commit/templateTitle/required'))
+  }
+
+  if (isTemplate && !mdast.meta.slug) {
+    throw new Error(t('api/commit/templateSlug/required'))
+  }
+
   if (repo) {
     if (!parentId) {
       throw new Error(t('api/commit/parentId/required', { repoId }))
@@ -119,6 +127,7 @@ module.exports = async (_, args, context) => {
     if (parentId) {
       throw new Error(t('api/commit/parentId/notAllowed', { repoId }))
     }
+
     repo = await githubRest.repos.createInOrg({
       org: login,
       name: repoName,

@@ -1,5 +1,5 @@
 {
-  "updated": "2020-05-24T13:10:16.770Z",
+  "updated": "2020-09-29T12:38:33.641Z",
   "title": "live",
   "data": [
     {
@@ -300,7 +300,7 @@
     },
     {
       "key": "api/payment/subscription/threeDsecure/notSupported",
-      "value": "Es tut uns leid, aus technischen Gründen können wir zurzeit kein Monats-Abonnement auf eine Kreditkarte buchen, die 3D secure voraussetzt. Sie können es entweder mit einer anderen Karte versuchen und/oder uns kontaktieren unter: kontakt@republik.ch. "
+      "value": "Es tut uns leid, aus technischen Gründen können wir zurzeit kein Abonnement auf eine Kreditkarte buchen, die 3D Secure voraussetzt. Sie können es entweder mit einer anderen Karte versuchen oder uns kontaktieren unter: kontakt@republik.ch. "
     },
     {
       "key": "api/email/change/exists",
@@ -1701,6 +1701,14 @@
     {
       "key": "api/auth/accessToken/tokensExceeded",
       "value": "Anzahl der gleichzeitig gültigen Tokens überschritten"
+    },
+    {
+      "key": "api/commit/templateTitle/required",
+      "value": "Title required for templates"
+    },
+    {
+      "key": "api/commit/templateSlug/required",
+      "value": "Repo-slug required for templates"
     },
     {
       "key": "api/commit/parentId/required",
