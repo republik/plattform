@@ -112,7 +112,7 @@ const InfoBox = ({
   figureSize,
   figureFloat,
   collapsable,
-  collapsableEditorPreview
+  editorPreview
 }) => {
   let styles = {}
   const float = figureFloat || size === 'float'
@@ -139,7 +139,7 @@ const InfoBox = ({
     <Collapsable
       t={t}
       height={{ mobile: 121, desktop: 151 }}
-      editorPreview={collapsableEditorPreview}
+      editorPreview={editorPreview}
     >
       {children}
     </Collapsable>
