@@ -720,6 +720,16 @@ ReactDOM.render(
                 renderMdast: require('mdast-react-render').renderMdast
               },
               src: require('./templates/EditorialNewsletter/docs.md')
+            },
+            {
+              path: '/templates/static-page',
+              title: 'Static Page',
+              imports: {
+                schema: require('./templates/StaticPage').default(),
+                ...require('./templates/docs'),
+                renderMdast: require('mdast-react-render').renderMdast
+              },
+              src: require('./templates/StaticPage/docs.md')
             }
           ]
         },
