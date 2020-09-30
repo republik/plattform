@@ -31,6 +31,8 @@ export default ({
     attributes={{ ...styles.container, ...attributes }}
     offset={offset}
     visible={visible}
+    consistentPlaceholder
+    type='span'
     style={{
       // We always subtract 1px to prevent against rounding issues that can lead
       // to the background color shining through at the bottom of the image.

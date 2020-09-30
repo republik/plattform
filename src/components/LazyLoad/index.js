@@ -67,11 +67,24 @@ class LazyLoad extends Component {
     instances.rm(this)
   }
   render() {
-    const { children, attributes, style, type: Element, noscript } = this.props
+    const {
+      children,
+      attributes,
+      style,
+      type: Element,
+      consistentPlaceholder
+    } = this.props
     const visible = this.props.visible || this.state.visible
+    if (visible && !consistentPlaceholder) {
+      return <>{children}</>
+    }
     return (
       <Element ref={this.setRef} {...attributes} style={style}>
-        {visible ? children : noscript ? <noscript>{children}</noscript> : null}
+        {visible ? (
+          children
+        ) : consistentPlaceholder ? (
+          <noscript>{children}</noscript>
+        ) : null}
       </Element>
     )
   }
@@ -79,8 +92,8 @@ class LazyLoad extends Component {
 
 LazyLoad.defaultProps = {
   offset: 0.5,
-  type: 'span',
-  noscript: true
+  type: 'div',
+  consistentPlaceholder: false
 }
 
 export default LazyLoad

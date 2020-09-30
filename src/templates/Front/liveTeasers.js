@@ -232,11 +232,7 @@ const createLiveTeasers = ({
       props: node => node.data,
       component: props => {
         return (
-          <LazyLoad
-            type='div'
-            noscript={false}
-            style={{ minHeight: LAZYLOADER_DIALOG_HEIGHT }}
-          >
+          <LazyLoad style={{ minHeight: LAZYLOADER_DIALOG_HEIGHT }}>
             <DiscussionWithData {...props} />
           </LazyLoad>
         )
@@ -279,8 +275,6 @@ const createLiveTeasers = ({
         }
         return (
           <LazyLoad
-            type='div'
-            noscript={false}
             style={{
               minHeight: LAZYLOADER_MYMAGAZINE_HEIGHT,
               backgroundColor: colors.negative.primaryBg
