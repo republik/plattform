@@ -117,6 +117,8 @@ const Tile = ({
         >
           <LazyLoad
             visible={aboveTheFold}
+            consistentPlaceholder
+            type='span'
             style={{ position: 'relative', fontSize: 0 }}
           >
             <img
