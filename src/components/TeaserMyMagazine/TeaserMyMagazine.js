@@ -38,7 +38,13 @@ const TeaserMyMagazine = ({
   }
 
   return (
-    <div {...css({ backgroundColor: colorScheme.primaryBg })}>
+    <div
+      style={{
+        backgroundColor: colorScheme.primaryBg,
+        // for color inherit below, e.g. TeaserSectionTitle
+        color: colorScheme.text
+      }}
+    >
       <section {...css(styles.section)}>
         <div role='group' {...css(styles.row, styles.withHighlight)}>
           {latestProgressOrBookmarkedArticles?.length ? (

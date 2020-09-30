@@ -49,6 +49,7 @@ export const Carousel = ({
         {...styles.carousel}
         style={{
           backgroundColor: bgColor,
+          // for color inherit below, e.g. TeaserSectionTitle
           color: color ? color : 'inherit',
           margin: article ? '20px 0' : undefined
         }}
