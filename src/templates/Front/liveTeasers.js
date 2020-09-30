@@ -14,6 +14,7 @@ import Center from '../../components/Center'
 import Loader from '../../components/Loader'
 import LazyLoad from '../../components/LazyLoad'
 import { mUp } from '../../theme/mediaQueries'
+import colors from '../../theme/colors'
 
 const styles = {
   feedContainer: css({
@@ -31,6 +32,23 @@ const LAZYLOADER_MYMAGAZINE_HEIGHT = 210
 
 const DefaultLink = ({ children }) => children
 const withData = Component => props => <Component {...props} data={{}} />
+const Placeholder = ({ attributes, children, minHeight }) => (
+  <div
+    attributes={attributes}
+    style={{
+      padding: '20px 0',
+      backgroundColor: '#111',
+      color: '#f0f0f0',
+      textAlign: 'center',
+      minHeight,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center'
+    }}
+  >
+    {children}
+  </div>
+)
 
 const createLiveTeasers = ({
   Link = DefaultLink,
@@ -49,7 +67,8 @@ const createLiveTeasers = ({
       bookmarksUrl,
       bookmarkLabel,
       notificationsUrl,
-      notificationsLabel
+      notificationsLabel,
+      placeholder
     }) => {
       return (
         <Loader
@@ -59,6 +78,7 @@ const createLiveTeasers = ({
           render={() => {
             return (
               <TeaserMyMagazine
+                placeholder={placeholder}
                 latestSubscribedArticles={data.latestSubscribedArticles}
                 latestProgressOrBookmarkedArticles={
                   data.latestProgressOrBookmarkedArticles
@@ -261,9 +281,21 @@ const createLiveTeasers = ({
           <LazyLoad
             type='div'
             noscript={false}
-            style={{ minHeight: LAZYLOADER_MYMAGAZINE_HEIGHT }}
+            style={{
+              minHeight: LAZYLOADER_MYMAGAZINE_HEIGHT,
+              backgroundColor: colors.negative.primaryBg
+            }}
           >
-            <MyMagazineWithData {...props} />
+            <MyMagazineWithData
+              placeholder={
+                props.editorPreview && (
+                  <Placeholder minHeight={LAZYLOADER_MYMAGAZINE_HEIGHT}>
+                    Meine Republik
+                  </Placeholder>
+                )
+              }
+              {...props}
+            />
           </LazyLoad>
         )
       },
@@ -271,7 +303,7 @@ const createLiveTeasers = ({
       editorModule: 'liveteaser',
       editorOptions: {
         type: 'LIVETEASERMYMAGAZINE',
-        insertButtonText: 'Meine Republik.',
+        insertButtonText: 'Meine Republik',
         insertId: 'mymagazine'
       }
     },
@@ -280,19 +312,7 @@ const createLiveTeasers = ({
         matchZone('LIVETEASER')(node) && node.data.id === 'end',
       props: node => node.data,
       component: ({ attributes, data, url, label }) => {
-        return (
-          <div
-            attributes={attributes}
-            style={{
-              padding: '20px 0',
-              backgroundColor: '#111',
-              color: '#f0f0f0',
-              textAlign: 'center'
-            }}
-          >
-            The End
-          </div>
-        )
+        return <Placeholder attributes={attributes}>The End</Placeholder>
       },
       isVoid: true,
       editorModule: 'liveteaser',

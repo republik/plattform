@@ -25,7 +25,8 @@ const TeaserMyMagazine = ({
   bookmarkLabel,
   notificationsUrl,
   notificationsLabel,
-  Link = DefaultLink
+  Link = DefaultLink,
+  placeholder = null
 }) => {
   const [colorScheme] = useColorContext()
 
@@ -33,7 +34,7 @@ const TeaserMyMagazine = ({
     !latestSubscribedArticles?.length &&
     !latestProgressOrBookmarkedArticles?.length
   ) {
-    return null
+    return placeholder
   }
 
   return (
