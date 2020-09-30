@@ -34,7 +34,8 @@ const UserItem = ({ user }) => (
         backgroundImage: user.portrait ? `url(${user.portrait})` : undefined,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
-        marginRight: 10
+        marginRight: 10,
+        flexShrink: 0
       }}
     />
     <div>
