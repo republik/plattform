@@ -33,76 +33,9 @@ Jemand musste Josef K. verleumdet haben, denn ohne dass er etwas Böses getan h�
 
 Und es war ihnen wie eine Bestätigung ihrer neuen Träume und guten Absichten, als am Ziele ihrer Fahrt die Tochter als erste sich erhob und ihren jungen Körper dehnte. «Es ist ein eigentümlicher Apparat», sagte der Offizier zu dem Forschungsreisenden und überblickte mit einem gewissermaßen bewundernden Blick den ihm doch wohlbekannten Apparat. «Es ist ein eigentümlicher Apparat», sagte der Offizier zu dem Forschungsreisenden und überblickte mit einem gewissermaßen bewundernden Blick den ihm doch wohlbekannten Apparat.
 
-<section><h6>ARTICLECOLLECTION</h6>
+## Wie ein Hund!
 
-## Diese Artikel sind im Dossier enthalten:
-
-<section><h6>TEASERGROUP</h6>
-
-<section><h6>TEASER</h6>
-
-\`\`\`
-{
-  "kind": "editorial",
-  "teaserType": "articleTile",
-  "url": "https://www.republik.ch/updates/portraets"
-}
-\`\`\`
-
-![](https://assets.republik.ch/images/pierre_rom.jpeg?size=853x853)
-
-###### Echte Republikaner
-
-# Pierre
-
-#### Republik-Verleger, 93 Jahre
-
-Foto: [Laurent Burst](/~349ef65b-119a-4d3e-9176-26517855d342 "Laurent Burst")
-
-<hr /></section>
-
-<section><h6>TEASER</h6>
-
-\`\`\`
-{
-  "kind": "interaction",
-  "teaserType": "articleTile",
-  "url": "https://www.republik.ch/updates/portraets"
-}
-\`\`\`
-
-###### Aus der Redaktion
-
-# Unsere aktuellen Recherchen zum Thema Gregor Samsa
-
-
-<hr /></section>
-
-<section><h6>TEASER</h6>
-
-\`\`\`
-{
-  "kind": "editorial",
-  "teaserType": "articleTile",
-  "url": "https://www.republik.ch/updates/portraets"
-}
-\`\`\`
-
-![](https://assets.republik.ch/images/mavie.jpeg?size=848x848)
-
-###### Echte Republikaner
-
-# Mavie
-
-#### Republik-Verlegerin, 8 Monate
-
-Foto: [Laurent Burst](/~349ef65b-119a-4d3e-9176-26517855d342 "Laurent Burst")
-
-<hr /></section>
-
-<hr /></section>
-
-<hr /></section>
+«Es ist ein eigentümlicher Apparat», sagte der Offizier zu dem Forschungsreisenden und überblickte mit einem gewissermaßen bewundernden Blick den ihm doch wohlbekannten Apparat.
 
 <hr /></section>
 
