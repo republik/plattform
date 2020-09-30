@@ -4,7 +4,7 @@ import Container from './Container'
 import Center from '../../components/Center'
 import Button from '../../components/Button'
 import TitleBlock from '../../components/TitleBlock'
-import { HR } from '../../components/Typography'
+import { HR, Interaction } from '../../components/Typography'
 import * as Editorial from '../../components/Typography/Editorial'
 import * as Meta from '../../components/Typography/Meta'
 import * as Scribble from '../../components/Typography/Scribble'
@@ -160,7 +160,8 @@ const createSchema = ({
   previewTeaser,
   getVideoPlayerProps = props => props,
   onAudioCoverClick,
-  metaBody = false
+  metaBody = false,
+  useInteractionsTypo = false
 } = {}) => {
   const base = createBase({ metaBody })
   const blocks = createBlocks({
@@ -256,12 +257,13 @@ const createSchema = ({
                     (format && format.meta && format.meta.kind) ||
                     (meta && meta.kind)
 
-                  const Headline =
-                    kind === 'meta'
-                      ? Meta.Headline
-                      : kind === 'scribble'
-                      ? Scribble.Headline
-                      : Editorial.Headline
+                  const Headline = useInteractionsTypo
+                    ? Interaction.Headline
+                    : kind === 'meta'
+                    ? Meta.Headline
+                    : kind === 'scribble'
+                    ? Scribble.Headline
+                    : Editorial.Headline
 
                   const element = (
                     <Headline attributes={attributes}>{children}</Headline>
