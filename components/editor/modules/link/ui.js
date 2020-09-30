@@ -19,6 +19,7 @@ const getUsers = gql`
       lastName
       email
       id
+      portrait
     }
   }
 `
