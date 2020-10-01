@@ -86,7 +86,7 @@ PgDb.connect()
           .replace(/(Von|By|Mit) /, '')
           .replace(/(,|:)? ?\d{1,2}.\d{2}.\d{4}/g, '')
           .replace(
-            / ?\((Text|Moderation|Text und Bilder|Bilder, Audio, Video|Bild und Audio|Photo and Audio)\)/,
+            / ?\((Text|Moderation|Text und (Bilder|Audio)|Bilder, Audio, Video|Bild und Audio|Photo and Audio)\)/,
             '',
           )
           .replace('(«New York Times Magazine», Text)', '')
