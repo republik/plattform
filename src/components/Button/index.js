@@ -1,13 +1,16 @@
 import React from 'react'
 import { css, merge, simulate } from 'glamor'
 import colors from '../../theme/colors'
-import { fontFamilies } from '../../theme/fonts'
+import { fontStyles } from '../../theme/fonts'
 import { pxToRem } from '../Typography/utils'
 import { lab } from 'd3-color'
 
 const primaryColor = lab(colors.primary)
 
 export const plainButtonRule = css({
+  fontFamily: 'inherit',
+  fontWeight: 'inherit',
+  fontStyle: 'inherit',
   border: 'none',
   background: 'transparent',
   cursor: 'pointer',
@@ -26,7 +29,7 @@ const buttonStyle = css(plainButtonRule, {
   height: pxToRem(60),
   boxSizing: 'border-box',
   backgroundColor: '#fff',
-  fontFamily: fontFamilies.sansSerifRegular,
+  ...fontStyles.sansSerifRegular,
   border: `1px solid ${colors.secondary}`,
   borderRadius: 0,
   color: colors.secondary,
