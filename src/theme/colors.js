@@ -88,34 +88,23 @@ const colorsDeprecated = {
 }
 
 const colors = {
-  default: '#ffffff',
-  overlay: '#ffffff',
-  hover: '#f6f8f7',
-  alert: '#ebf6e5',
-  defaultInverted: '#111111',
-  overlayInverted: '#191919',
-  divider: '#dadddc',
-  text: '#282828',
-  textSoft: '#979797',
-  textInverted: '#f0f0f0',
-  textInvertedSoft: '#828282',
-  static: {
-    primary: '#3cad00',
-    primaryDark: '#009400',
-    secondary: '#4b6359',
-    error: '#9f2500',
-    textBright: '#f0f0f0',
-    textBrightSoft: '#828282',
-    textDark: '#282828',
-    textDarkSoft: '#979797'
-  },
-  accentColors: {
-    accent1: '#07809a',
-    accent2: '#3CAD00',
-    accent3: '#D0913C',
-    accent4: '#d44438',
-    accent5: '#000000',
-    accent6: '#000000'
+  bright: {
+    default: '#ffffff',
+    overlay: '#ffffff',
+    hover: '#f6f8f7',
+    alert: '#ebf6e5',
+    defaultInverted: '#111111',
+    overlayInverted: '#191919',
+    divider: '#dadddc',
+    text: '#282828',
+    textInverted: '#f0f0f0',
+    textSoft: '#979797',
+    textSoftInverted: '#828282',
+    accentColor1: '#07809a',
+    accentColor2: '#3CAD00',
+    accentColor3: '#D0913C',
+    accentColor4: '#d44438',
+    accentColor5: '#000000'
   },
   dark: {
     default: '#111111',
@@ -126,25 +115,31 @@ const colors = {
     overlayInverted: '#FFFFFF',
     divider: '#4C4D4C',
     text: '#f0f0f0',
-    textSoft: '#828282',
     textInverted: '#282828',
-    textInvertedSoft: '#979797'
+    textSoft: '#828282',
+    textSorftInverted: '#979797',
+    accentColor1: '#07809a',
+    accentColor2: '#3CAD00',
+    accentColor3: '#D0913C',
+    accentColor4: '#d44438',
+    accentColor5: '#ffffff'
+  },
+  static: {
+    primary: '#3cad00',
+    primaryDark: '#009400',
+    secondary: '#4b6359',
+    error: '#9f2500',
+    textBright: '#f0f0f0',
+    textBrightSoft: '#828282',
+    textDark: '#282828',
+    textDarkSoft: '#979797'
   }
 }
 
-export const variableColorKeys = [
-  'default',
-  'overlay',
-  'hover',
-  'alert',
-  'defaultInverted',
-  'overlayInverted',
-  'divider',
-  'text',
-  'textSoft',
-  'textInverted',
-  'textInvertedSoft'
-]
+// variables are the
+export const variableColorKeys = () => {
+  colors
+}
 
 //add all deprecated colors, but only if they don't exist in new colors (no overwrites)
 Object.keys(colorsDeprecated).forEach(key => {
