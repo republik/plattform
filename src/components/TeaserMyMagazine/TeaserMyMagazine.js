@@ -247,14 +247,18 @@ WrappedTeaserMyMagazine.data = {
                 shortTitle
                 title
                 credits
+                prepublication
                 path
+                kind
+                template
+                color
                 format {
                   id
                   meta {
-                    title
-                    kind
-                    template
                     path
+                    title
+                    color
+                    kind
                   }
                 }
               }

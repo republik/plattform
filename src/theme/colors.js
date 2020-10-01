@@ -80,7 +80,8 @@ const colors = {
     disabled: '#242424',
     formatColorMap: {
       '#000': '#fff',
-      '#000000': '#fff'
+      '#000000': '#fff',
+      '#282828': '#fff'
     }
   },
   ...getJson('COLORS')
