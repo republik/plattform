@@ -72,12 +72,12 @@ export const TeaserFeed = ({
       ? Headlines.Scribble
       : Headlines.Editorial
   const borderColor = formatMeta.title
-    ? formatMeta.color || colors[formatMeta.kind]
+    ? colorScheme.formatColorMapper(formatMeta.color || colors[formatMeta.kind])
     : template === 'format'
-    ? metaColor || colors[metaKind]
+    ? colorScheme.formatColorMapper(metaColor || colors[metaKind])
     : colorScheme.text
   const titleColor = metaColor
-    ? metaColor
+    ? colorScheme.formatColorMapper(metaColor)
     : template === 'format'
     ? borderColor
     : colorScheme.text

@@ -10,6 +10,7 @@ export const useColorContext = () => {
       ...colors,
       ...colorContext
     }
+    const { formatColorMap = {} } = colorScheme
     // precomputed css rules which are often used
     const colorRules = {
       textColor: css({
@@ -19,7 +20,13 @@ export const useColorContext = () => {
     return [
       {
         ...colorScheme,
-        rules: colorRules
+        rules: colorRules,
+        formatColorMapper: color => {
+          if (formatColorMap[color]) {
+            return formatColorMap[color]
+          }
+          return color
+        }
       }
     ]
   }, [colorContext])
