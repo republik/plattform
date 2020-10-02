@@ -335,7 +335,7 @@ module.exports = async (_, args, context) => {
   // pick master for new repos initated by github
   const headParent = parentId
     ? heads.find((ref) => ref.target.oid === parentId)
-    : { name: 'master' }
+    : { name: 'main' }
 
   let branch
   if (headParent) {
