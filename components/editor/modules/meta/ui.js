@@ -94,7 +94,7 @@ const MetaData = ({
   )
 
   const onInputChange = key => (_, inputValue) => {
-    const newData = node.data.remove('auto')
+    const newData = key !== 'auto' ? node.data.remove('auto') : node.data
     editor.change(change => {
       change.setNodeByKey(node.key, {
         data:
