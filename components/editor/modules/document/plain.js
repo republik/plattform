@@ -42,9 +42,13 @@ export default ({ rule, subModules, TYPE }) => {
     }
 
     let newData = data
-      .set('auto', true)
-      .set('feed', !rule.editorOptions?.excludeFromFeed)
-      .set('gallery', true)
+
+    if (!data || !data.delete('template').size) {
+      newData = newData
+        .set('auto', true)
+        .set('feed', !rule.editorOptions?.excludeFromFeed)
+        .set('gallery', true)
+    }
 
     const title =
       titleModule &&
