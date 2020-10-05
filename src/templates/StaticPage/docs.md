@@ -6,12 +6,13 @@ import createStaticPageSchema from '@project-r/styleguide/lib/templates/StaticPa
 const schema = createStaticPageSchema()
 ```
 
-`createStaticPageSchema` take an optional options object with following keys:
+`createStaticPageSchema` is configured with the following `documentEditorOptions`:
 
-- TBD
+- `skipCredits`: true
+- `excludeFromFeed`: true
 
 Defaults:
-- `repoPrefix`, `page-`
+- `repoPrefix`, `static-`
 - `getPath`, `/:slug`
 - `series`, false
 - `darkMode`, false
