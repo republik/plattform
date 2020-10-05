@@ -163,7 +163,7 @@ const createSchema = ({
   metaBody = false,
   useInteractionsTypo = false
 } = {}) => {
-  const base = createBase({ metaBody })
+  const base = createBase({ metaBody, useInteractionsTypo })
   const blocks = createBlocks({
     COVER_TYPE,
     base,

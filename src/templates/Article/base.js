@@ -4,6 +4,7 @@ import globalMediaState, { parseTimeHash } from '../../lib/globalMediaState'
 
 import * as Editorial from '../../components/Typography/Editorial'
 import * as Meta from '../../components/Typography/Meta'
+import { Interaction } from '../../components/Typography'
 
 import {
   Figure,
@@ -34,7 +35,7 @@ import {
   mdastToString
 } from './utils'
 
-const createBase = ({ metaBody }) => {
+const createBase = ({ metaBody, useInteractionsTypo }) => {
   const link = {
     matchMdast: matchType('link'),
     props: node => ({
@@ -129,12 +130,17 @@ const createBase = ({ metaBody }) => {
     props: node => ({
       slug: slug(mdastToString(node))
     }),
-    component: ({ children, slug }) => (
-      <Typography.Subhead>
-        <a {...styles.anchor} id={slug} />
-        {children}
-      </Typography.Subhead>
-    ),
+    component: ({ children, slug }) => {
+      const Subhead = useInteractionsTypo
+        ? Interaction.Subhead
+        : Typography.Subhead
+      return (
+        <Subhead>
+          <a {...styles.anchor} id={slug} />
+          {children}
+        </Subhead>
+      )
+    },
     editorModule: 'headline',
     editorOptions: {
       type: 'H2',
