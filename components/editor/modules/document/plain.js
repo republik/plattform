@@ -143,11 +143,17 @@ ${
 # ${title}
 
 Lead
-
+${
+  rule.editorOptions.skipCredits
+    ? ''
+    : `
+    
 Von ${me ? `[${me.name}](/~${me.id})` : '[Autor](<>)'}, ${pubDateFormat(
         new Date()
       )}
 
+`
+}
 <hr/></section>
 
 `
