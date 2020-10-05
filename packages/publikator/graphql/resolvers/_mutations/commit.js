@@ -233,7 +233,7 @@ module.exports = async (_, args, context) => {
   // markdown -> blob
   // try this until success
   // CreateBlob sometimes fails even with "Initial commit" present
-  // on master. Issue under investigation with github.
+  // on main. Issue under investigation with github.
   let markdownBlob
   let success = false
   let count = 20
@@ -332,7 +332,7 @@ module.exports = async (_, args, context) => {
   const heads = await getHeads(repoId, context)
 
   // check if parent is (still) a head
-  // pick master for new repos initated by github
+  // pick main for new repos initated by github
   const headParent = parentId
     ? heads.find((ref) => ref.target.oid === parentId)
     : { name: 'main' }
