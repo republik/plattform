@@ -6,7 +6,8 @@ export const latestProgressOrBookmarkedArticles = [
       title:
         'Die Pandemie profitiert, Hongkong zensiert das Internet, die Arktis brennt – und Trump schummelt',
       path:
-        '/2020/07/10/die-pandemie-profitiert-hongkong-zensiert-das-internet-die-arktis-brennt-und-trump-schummelt'
+        '/2020/07/10/die-pandemie-profitiert-hongkong-zensiert-das-internet-die-arktis-brennt-und-trump-schummelt',
+      format: {}
     }
   },
   {
@@ -15,7 +16,14 @@ export const latestProgressOrBookmarkedArticles = [
         '«Rassismus-Welle in den USA? Der Rassismus war nie weg»: Zum Start der neuen Podcast-Reihe von Roger de Weck analysiert Republik-Autor Daniel Binswanger die Polarisierung in den uneinigen Staaten von Amerika',
       title:
         '«Wir reden immer von einer Rassismus-Welle unter Trump. Tatsächlich war der Rassismus nie weg»',
-      path: '/2020/07/10/im-gespraech-roger-de-weck-daniel-binswanger'
+      path: '/2020/07/10/im-gespraech-roger-de-weck-daniel-binswanger',
+      format: {
+        id: 'id',
+        meta: {
+          title: 'Format',
+          color: '#d44438'
+        }
+      }
     }
   }
 ]

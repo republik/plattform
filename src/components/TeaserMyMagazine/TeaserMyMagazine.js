@@ -2,7 +2,7 @@ import { css } from 'glamor'
 import React from 'react'
 import PropTypes from 'prop-types'
 import { mUp } from '../../theme/mediaQueries'
-import { serifBold17, serifBold19 } from '../Typography/styles'
+import { serifTitle20, serifTitle22 } from '../Typography/styles'
 import { TeaserSectionTitle } from '../TeaserShared'
 import { TeaserFeed } from '../TeaserFeed'
 import colors from '../../theme/colors'
@@ -62,8 +62,9 @@ const TeaserMyMagazine = ({
               </div>
               {latestProgressOrBookmarkedArticles.map(doc => {
                 const { id } = doc
-                const { path, shortTitle, title } = doc.meta
-
+                const { path, title } = doc.meta
+                const formatTitle = doc.meta.format?.meta?.title
+                const formatColor = doc.meta.format?.meta?.color
                 return (
                   <div
                     {...styles.tile}
@@ -75,7 +76,16 @@ const TeaserMyMagazine = ({
                         {...styles.tileHeadline}
                         style={{ color: colorScheme.text }}
                       >
-                        {limitedTitle(shortTitle || title, 130)}
+                        {formatTitle ? (
+                          <span>
+                            <span style={{ color: formatColor }}>
+                              {`${formatTitle}: `}
+                            </span>
+                            {limitedTitle(title, 90)}
+                          </span>
+                        ) : (
+                          limitedTitle(title, 100)
+                        )}
                       </a>
                     </Link>
                     {ActionBar ? (
@@ -190,11 +200,9 @@ const styles = {
     cursor: 'pointer',
     wordWrap: 'break-word',
     width: '100%',
-    ...serifBold17,
-    lineHeight: '18px',
+    ...serifTitle20,
     [mUp]: {
-      ...serifBold19,
-      lineHeight: '21px'
+      ...serifTitle22
     }
   })
 }
@@ -281,6 +289,12 @@ WrappedTeaserMyMagazine.data = {
                 credits
                 estimatedConsumptionMinutes
                 estimatedReadingMinutes
+                format {
+                  id
+                  meta {
+                    title
+                  }
+                }
               }
               userProgress {
                 id
