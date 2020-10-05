@@ -64,7 +64,6 @@ const TeaserMyMagazine = ({
                 const { id } = doc
                 const { path, title } = doc.meta
                 const formatTitle = doc.meta.format?.meta?.title
-                const formatColor = doc.meta.format?.meta?.color
                 return (
                   <div
                     {...styles.tile}
@@ -76,16 +75,9 @@ const TeaserMyMagazine = ({
                         {...styles.tileHeadline}
                         style={{ color: colorScheme.text }}
                       >
-                        {formatTitle ? (
-                          <span>
-                            <span style={{ color: formatColor }}>
-                              {`${formatTitle}: `}
-                            </span>
-                            {limitedTitle(title, 90)}
-                          </span>
-                        ) : (
-                          limitedTitle(title, 100)
-                        )}
+                        {formatTitle
+                          ? `${formatTitle}: ${limitedTitle(title, 90)}`
+                          : limitedTitle(title, 100)}
                       </a>
                     </Link>
                     {ActionBar ? (
