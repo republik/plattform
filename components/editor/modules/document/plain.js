@@ -43,7 +43,7 @@ export default ({ rule, subModules, TYPE }) => {
 
     let newData = data
       .set('auto', true)
-      .set('feed', true)
+      .set('feed', !rule.editorOptions?.excludeFromFeed)
       .set('gallery', true)
 
     const title =
