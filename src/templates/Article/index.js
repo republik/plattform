@@ -97,7 +97,7 @@ const mdastPlaceholder = '\u2063'
 const DefaultLink = ({ children }) => children
 
 const createSchema = ({
-  documentEditorOptions = {},
+  documentEditorOptions = { skipCredits: false },
   customMetaFields = [
     {
       label: 'Bildergalerie aktiv',
@@ -338,7 +338,7 @@ const createSchema = ({
                 },
                 rules: [...globalInlines, base.link]
               },
-              {
+              !documentEditorOptions.skipCredits && {
                 matchMdast: matchParagraph,
                 component: Editorial.Credit,
                 editorModule: 'paragraph',
@@ -351,7 +351,7 @@ const createSchema = ({
                 },
                 rules: [...globalInlines, base.link]
               }
-            ]
+            ].filter(Boolean)
           },
           {
             matchMdast: matchZone('CENTER'),

@@ -7,6 +7,7 @@ import createArticleSchema from '../Article'
 const DefaultLink = ({ children }) => children
 
 const createSchema = ({
+  documentEditorOptions,
   customMetaFields = [],
   series = false,
   darkMode,
@@ -18,7 +19,8 @@ const createSchema = ({
   ...args
 } = {}) => {
   return createArticleSchema({
-    repoPrefix: 'dossier-',
+    documentEditorOptions: { skipCredits: true },
+    repoPrefix: 'static-',
     getPath,
     customMetaFields: [
       {
