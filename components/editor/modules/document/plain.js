@@ -144,7 +144,7 @@ ${
 
 Lead
 ${
-  rule.editorOptions.skipCredits
+  rule.editorOptions?.skipCredits
     ? ''
     : `
     

@@ -30,7 +30,6 @@ const schemas = {
   editorialNewsletter: editorialNewsletterSchema(),
   neutrum: neutrumSchema,
   article: createArticleSchema({ t, dynamicComponentRequire }),
-  staticPage: createStaticSchema({ t, dynamicComponentRequire }),
   front: createFrontSchema({
     Link: NoOpLink,
     CommentLink: NoOpLink,
@@ -41,7 +40,8 @@ const schemas = {
   format: createFormatSchema({ t, dynamicComponentRequire }),
   section: createSectionSchema({ t, dynamicComponentRequire }),
   discussion: createDiscussionSchema({ t, dynamicComponentRequire }),
-  dossier: createDossierSchema({ t, dynamicComponentRequire })
+  dossier: createDossierSchema({ t, dynamicComponentRequire }),
+  staticPage: createStaticSchema({ t, dynamicComponentRequire })
 }
 
 export const getSchema = template => {

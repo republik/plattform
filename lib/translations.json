@@ -1,5 +1,5 @@
 {
-  "updated": "2020-09-29T12:29:20.256Z",
+  "updated": "2020-10-05T12:49:22.021Z",
   "title": "live",
   "data": [
     {
@@ -181,6 +181,10 @@
     {
       "key": "repo/add/template/dossier",
       "value": "Dossier"
+    },
+    {
+      "key": "repo/add/template/staticPage",
+      "value": "Webpage"
     },
     {
       "key": "repo/phase/draft",
