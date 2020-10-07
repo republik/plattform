@@ -80,7 +80,7 @@ module.exports = {
         {
           filter: {
             terms: {
-              'meta.template': ['format', 'section', 'dossier'],
+              'meta.template': ['format', 'section', 'dossier', 'page'],
             },
           },
           weight: 20,
