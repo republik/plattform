@@ -11,6 +11,7 @@ export const plainButtonRule = css({
   fontFamily: 'inherit',
   fontWeight: 'inherit',
   fontStyle: 'inherit',
+  color: 'inherit',
   border: 'none',
   background: 'transparent',
   cursor: 'pointer',

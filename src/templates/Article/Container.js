@@ -6,7 +6,7 @@ const ArticleContainer = ({ children }) => {
   return (
     <div
       style={{
-        backgroundColor: colorScheme.containerBg
+        backgroundColor: colorScheme.default
       }}
     >
       {children}
