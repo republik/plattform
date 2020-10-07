@@ -144,6 +144,16 @@ ${
     ? `
 <section><h6>${titleModule.TYPE}</h6>
 
+${
+  rule.editorOptions?.titleCenter
+    ? `\`\`\`
+{
+  "center": true
+}
+\`\`\``
+    : ''
+}
+
 # ${title}
 
 Lead
