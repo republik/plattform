@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import PropTypes from 'prop-types'
 import colors, { variableColorKeys } from '../../theme/colors'
 
@@ -25,7 +25,7 @@ export const ColorContextProvider = ({
 }) => {
   // we initially assume browser support it
   // - e.g. during server side rendering
-  const [CSSSupport, setCSSSupport] = useState(true)
+  const [CSSVarSupport, setCSSVarSupport] = useState(true)
   useEffect(() => {
     let support
     try {
@@ -36,22 +36,24 @@ export const ColorContextProvider = ({
     } catch (e) {}
     if (!support) {
       // but if can't confirm the support in the browser we turn it off
-      setCSSSupport(false)
+      setCSSVarSupport(false)
     }
   }, [])
 
-  let colorValue
-  if (colorSchemeKey === 'auto') {
-    colorValue = CSSSupport
-      ? reduceMainColors(key => `var(--color-${key})`)
-      : colors.bright
-    colorValue.cssColors = reduceMainColors(key => [
-      colors.bright[key],
-      `var(--color-${key})`
-    ])
-  } else {
-    colorValue = colors[colorSchemeKey]
-  }
+  const colorValue = useMemo(() => {
+    if (colorSchemeKey === 'auto') {
+      return {
+        ...(CSSVarSupport
+          ? reduceMainColors(key => `var(--color-${key})`)
+          : colors.bright),
+        cssColors: reduceMainColors(key => [
+          colors.bright[key],
+          `var(--color-${key})`
+        ])
+      }
+    }
+    return colors[colorSchemeKey]
+  }, [colorSchemeKey, CSSVarSupport])
 
   return (
     <ColorContext.Provider value={colorValue}>
