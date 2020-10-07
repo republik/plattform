@@ -10,6 +10,7 @@ const schema = createPageSchema()
 
 - `skipCredits`: true
 - `excludeFromFeed`: true
+- `titleCenter`: true (initial default - can always be changed)
 
 And offers the following custom meta configuration options:
 - `disableActionBar`: default false

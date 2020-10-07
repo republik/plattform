@@ -19,7 +19,11 @@ const createSchema = ({
   ...args
 } = {}) => {
   return createArticleSchema({
-    documentEditorOptions: { skipCredits: true, excludeFromFeed: true },
+    documentEditorOptions: {
+      skipCredits: true,
+      excludeFromFeed: true,
+      titleCenter: true
+    },
     repoPrefix: 'page-',
     getPath,
     customMetaFields: [
