@@ -28,6 +28,11 @@ const createSchema = ({
         key: 'discussion',
         ref: 'repo'
       },
+      {
+        label: 'Action Bar ausblenden',
+        key: 'disableActionBar',
+        ref: 'bool'
+      },
       ...customMetaFields
     ],
     series,

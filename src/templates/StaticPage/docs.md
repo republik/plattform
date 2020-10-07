@@ -11,6 +11,10 @@ const schema = createStaticPageSchema()
 - `skipCredits`: true
 - `excludeFromFeed`: true
 
+And offers the following custom meta configuration options:
+- `disableActionBar`: default false
+- `discussion`: (optional) discussion repo (if set, will show up in action bar) 
+
 Defaults:
 - `repoPrefix`, `static-`
 - `getPath`, `/:slug`
