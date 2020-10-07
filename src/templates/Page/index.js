@@ -20,7 +20,7 @@ const createSchema = ({
 } = {}) => {
   return createArticleSchema({
     documentEditorOptions: { skipCredits: true, excludeFromFeed: true },
-    repoPrefix: 'static-',
+    repoPrefix: 'page-',
     getPath,
     customMetaFields: [
       {
