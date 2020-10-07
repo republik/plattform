@@ -94,9 +94,15 @@ export const H2 = ({ children, ...props }) => {
 }
 
 const subhead = css({
-  margin: '40px 0 8px 0',
+  margin: '8px 0 8px 0',
+  'p + &': {
+    marginTop: 40
+  },
   [mUp]: {
-    margin: '80px 0 12px 0'
+    margin: '12px 0 12px 0',
+    'p + &': {
+      marginTop: 80
+    }
   }
 })
 
