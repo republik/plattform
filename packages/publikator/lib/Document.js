@@ -28,7 +28,9 @@ const getPath = (docMeta) => {
 
   switch (template) {
     case 'front':
-    case 'section' || 'page':
+    case 'section':
+      return `/${cleanedSlug || ''}`
+    case 'page':
       return `/${cleanedSlug || ''}`
     case 'dossier':
       return `/dossier/${cleanedSlug}`
