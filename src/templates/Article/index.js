@@ -4,7 +4,7 @@ import Container from './Container'
 import Center from '../../components/Center'
 import Button from '../../components/Button'
 import TitleBlock from '../../components/TitleBlock'
-import { HR, Interaction } from '../../components/Typography'
+import { HR } from '../../components/Typography'
 import * as Editorial from '../../components/Typography/Editorial'
 import * as Meta from '../../components/Typography/Meta'
 import * as Scribble from '../../components/Typography/Scribble'
@@ -257,13 +257,12 @@ const createSchema = ({
                     (format && format.meta && format.meta.kind) ||
                     (meta && meta.kind)
 
-                  const Headline = useInteractionsTypo
-                    ? Interaction.Headline
-                    : kind === 'meta'
-                    ? Meta.Headline
-                    : kind === 'scribble'
-                    ? Scribble.Headline
-                    : Editorial.Headline
+                  const Headline =
+                    useInteractionsTypo || kind === 'meta'
+                      ? Meta.Headline
+                      : kind === 'scribble'
+                      ? Scribble.Headline
+                      : Editorial.Headline
 
                   const element = (
                     <Headline attributes={attributes}>{children}</Headline>

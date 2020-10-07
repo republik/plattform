@@ -93,27 +93,6 @@ export const H2 = ({ children, ...props }) => {
   )
 }
 
-const subhead = css({
-  margin: '8px 0 8px 0',
-  'p + &': {
-    marginTop: 40
-  },
-  [mUp]: {
-    margin: '12px 0 12px 0',
-    'p + &': {
-      marginTop: 80
-    }
-  }
-})
-
-export const Subhead = ({ children, ...props }) => {
-  return (
-    <div {...subhead}>
-      <H2 {...props}>{children}</H2>
-    </div>
-  )
-}
-
 export const H3 = ({ children, ...props }) => {
   const [
     {

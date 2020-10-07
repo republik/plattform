@@ -4,7 +4,6 @@ import globalMediaState, { parseTimeHash } from '../../lib/globalMediaState'
 
 import * as Editorial from '../../components/Typography/Editorial'
 import * as Meta from '../../components/Typography/Meta'
-import { Interaction } from '../../components/Typography'
 
 import {
   Figure,
@@ -131,9 +130,7 @@ const createBase = ({ metaBody, useInteractionsTypo }) => {
       slug: slug(mdastToString(node))
     }),
     component: ({ children, slug }) => {
-      const Subhead = useInteractionsTypo
-        ? Interaction.Subhead
-        : Typography.Subhead
+      const Subhead = useInteractionsTypo ? Meta.Subhead : Typography.Subhead
       return (
         <Subhead>
           <a {...styles.anchor} id={slug} />
