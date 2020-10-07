@@ -725,11 +725,11 @@ ReactDOM.render(
               path: '/templates/static-page',
               title: 'Static Page',
               imports: {
-                schema: require('./templates/StaticPage').default(),
+                schema: require('./templates/Page').default(),
                 ...require('./templates/docs'),
                 renderMdast: require('mdast-react-render').renderMdast
               },
-              src: require('./templates/StaticPage/docs.md')
+              src: require('./templates/Page/docs.md')
             }
           ]
         },

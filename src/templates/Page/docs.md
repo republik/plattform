@@ -1,12 +1,12 @@
-A preconfigured article template for static pages.
+A preconfigured article template for pages.
 
 ```code|lang-jsx
-import createStaticPageSchema from '@project-r/styleguide/lib/templates/StaticPage'
+import createPageSchema from '@project-r/styleguide/lib/templates/Page'
 
-const schema = createStaticPageSchema()
+const schema = createPageSchema()
 ```
 
-`createStaticPageSchema` is configured with the following `documentEditorOptions`:
+`createPageSchema` is configured with the following `documentEditorOptions`:
 
 - `skipCredits`: true
 - `excludeFromFeed`: true
