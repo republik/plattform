@@ -1,4 +1,4 @@
-A preconfigured article template for pages.
+A preconfigured article template using interaction typography to create pages.
 
 ```code|lang-jsx
 import createPageSchema from '@project-r/styleguide/lib/templates/Page'

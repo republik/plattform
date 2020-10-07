@@ -722,8 +722,8 @@ ReactDOM.render(
               src: require('./templates/EditorialNewsletter/docs.md')
             },
             {
-              path: '/templates/static-page',
-              title: 'Static Page',
+              path: '/templates/page',
+              title: 'Page',
               imports: {
                 schema: require('./templates/Page').default(),
                 ...require('./templates/docs'),
