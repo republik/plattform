@@ -13,7 +13,8 @@ import {
   Autocomplete,
   mediaQueries,
   colors,
-  Loader
+  Loader,
+  linkRule
 } from '@project-r/styleguide'
 
 import { GITHUB_ORG, TEMPLATES, REPO_PREFIX } from '../../lib/settings'
@@ -21,6 +22,7 @@ import gql from 'graphql-tag'
 import { compose, graphql } from 'react-apollo'
 import { withRouter } from 'next/router'
 import SearchIcon from 'react-icons/lib/md/search'
+import InfoIcon from 'react-icons/lib/md/info-outline'
 
 const getTemplateRepos = gql`
   query templateListSearch {
@@ -80,6 +82,16 @@ const styles = {
     [mediaQueries.mUp]: {
       width: '38%',
       minWidth: 160
+    }
+  }),
+  infoLink: css({
+    display: 'inline-block',
+    verticalAlign: 'middle',
+    height: 25,
+    marginLeft: 5,
+    [mediaQueries.mUp]: {
+      height: 28,
+      marginLeft: 7
     }
   })
 }
@@ -247,9 +259,19 @@ class RepoAdd extends Component {
 
     return (
       <div {...styles.new}>
-        <Interaction.H2>
+        <Interaction.H2 style={{ display: 'inline-block' }}>
           {t(`repo/add${isTemplate ? '/template/' : '/'}title`)}
         </Interaction.H2>
+        {isTemplate && (
+          <a
+            {...styles.infoLink}
+            href='https://github.com/orbiting/publikator-frontend/blob/template-fixes/docs/templates.md'
+            target='_blank'
+            {...linkRule}
+          >
+            <InfoIcon />
+          </a>
+        )}
         <form
           {...styles.form}
           onSubmit={e => this.onSubmit(e)}
