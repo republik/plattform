@@ -161,9 +161,9 @@ const createSchema = ({
   getVideoPlayerProps = props => props,
   onAudioCoverClick,
   metaBody = false,
-  useInteractionsTypo = false
+  metaHeadlines = false
 } = {}) => {
-  const base = createBase({ metaBody, useInteractionsTypo })
+  const base = createBase({ metaBody, metaHeadlines })
   const blocks = createBlocks({
     COVER_TYPE,
     base,
@@ -258,7 +258,7 @@ const createSchema = ({
                     (meta && meta.kind)
 
                   const Headline =
-                    useInteractionsTypo || kind === 'meta'
+                    metaHeadlines || kind === 'meta'
                       ? Meta.Headline
                       : kind === 'scribble'
                       ? Scribble.Headline

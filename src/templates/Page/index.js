@@ -15,7 +15,7 @@ const createSchema = ({
   Link = DefaultLink,
   titleBlockPrepend = null,
   getPath = ({ slug }) => `/${(slug || '').split('/').pop()}`,
-  useInteractionsTypo = true,
+  metaHeadlines = true,
   ...args
 } = {}) => {
   return createArticleSchema({
@@ -43,7 +43,7 @@ const createSchema = ({
     darkMode,
     paynotes,
     Link,
-    useInteractionsTypo,
+    metaHeadlines,
     ...args
   })
 }

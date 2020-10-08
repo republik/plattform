@@ -34,7 +34,7 @@ import {
   mdastToString
 } from './utils'
 
-const createBase = ({ metaBody, useInteractionsTypo }) => {
+const createBase = ({ metaBody, metaHeadlines }) => {
   const link = {
     matchMdast: matchType('link'),
     props: node => ({
@@ -130,7 +130,7 @@ const createBase = ({ metaBody, useInteractionsTypo }) => {
       slug: slug(mdastToString(node))
     }),
     component: ({ children, slug }) => {
-      const Subhead = useInteractionsTypo ? Meta.Subhead : Typography.Subhead
+      const Subhead = metaHeadlines ? Meta.Subhead : Typography.Subhead
       return (
         <Subhead>
           <a {...styles.anchor} id={slug} />

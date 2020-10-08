@@ -17,7 +17,7 @@ And offers the following custom meta configuration options:
 - `discussion`: (optional) discussion repo (if set, will show up in action bar) 
 
 Defaults:
-- `repoPrefix`, `static-`
+- `repoPrefix`, `page-`
 - `getPath`, `/:slug`
 - `series`, false
 - `darkMode`, false
