@@ -152,13 +152,12 @@ export default compose(
       <Frame.Header>
         <Frame.Header.Section align='left'>
           <Frame.Nav>
-            <RepoNav route='repo/edit' />
+            <RepoNav
+              route='repo/edit'
+              prefix={isTemplate ? 'template' : 'document'}
+            />
           </Frame.Nav>
         </Frame.Header.Section>
-        <Frame.Header.Tagline
-          align='left'
-          title={t(`repo/nav/${isTemplate ? 'template' : 'document'}`)}
-        />
         <Frame.Header.Section align='right'>
           <div style={{ padding: '35px 25px' }}>
             <CircleIcon

@@ -161,15 +161,12 @@ class EditorPage extends Component {
         <Frame.Header>
           <Frame.Header.Section align='left'>
             <Frame.Nav>
-              <RepoNav route='repo/tree' />
+              <RepoNav
+                route='repo/tree'
+                prefix={repo?.isTemplate ? 'template' : 'document'}
+              />
             </Frame.Nav>
           </Frame.Header.Section>
-          {!!repo && (
-            <Frame.Header.Tagline
-              align='left'
-              title={t(`repo/nav/${repo.isTemplate ? 'template' : 'document'}`)}
-            />
-          )}
           <Frame.Header.Section align='right'>
             {!!repo && (
               <div style={{ marginRight: 10 }}>

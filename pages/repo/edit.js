@@ -705,7 +705,8 @@ export class EditorPage extends Component {
     const {
       router: {
         query: { repoId, commitId }
-      }
+      },
+      data
     } = this.props
     const { editorState } = this.state
     const serializedState = this.editor.serializer.serialize(editorState)
@@ -714,12 +715,14 @@ export class EditorPage extends Component {
     Router.pushRoute('repo/raw', {
       repoId: repoId.split('/'),
       commitId,
+      isTemplate:
+        this.props.router.query.isTemplate || data?.repo?.isTemplate
+          ? true
+          : null,
       ...(commitId === 'new'
         ? {
             schema:
-              this.props.router.query.schema ||
-              this.props.router.query.template,
-            isTemplate: this.props.router.query.isTemplate
+              this.props.router.query.schema || this.props.router.query.template
           }
         : {})
     })
@@ -782,15 +785,13 @@ export class EditorPage extends Component {
         >
           <Frame.Header.Section align='left'>
             <Frame.Nav>
-              <RepoNav route='repo/edit' isNew={isNew} />
+              <RepoNav
+                route='repo/edit'
+                isNew={isNew}
+                prefix={isTemplate ? 'template' : 'document'}
+              />
             </Frame.Nav>
           </Frame.Header.Section>
-          {!showLoading && (
-            <Frame.Header.Tagline
-              align='left'
-              title={t(`repo/nav/${isTemplate ? 'template' : 'document'}`)}
-            />
-          )}
           <Frame.Header.Section align='right'>
             <div
               style={{
