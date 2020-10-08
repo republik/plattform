@@ -74,7 +74,11 @@ export default ({ rule, subModules, TYPE }) => {
               {isSelected && (
                 <TeaserInlineUI node={node} editor={editor} removable={false} />
               )}
-              <Preview attributes={attributes} {...node.data.toJS()} />
+              <Preview
+                editorPreview
+                attributes={attributes}
+                {...node.data.toJS()}
+              />
             </>
           )
         },
