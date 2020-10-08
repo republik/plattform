@@ -21,6 +21,7 @@ import layout, {
   VALUE_FONT,
   Y_CONNECTOR,
   Y_CONNECTOR_PADDING,
+  Y_LABEL_HEIGHT,
   AXIS_BOTTOM_HEIGHT,
   yScales
 } from './Lines.layout'
@@ -105,25 +106,9 @@ const styles = {
 }
 
 const X_TICK_HEIGHT = 4
-const Y_LABEL_HEIGHT = 12
 const Y_GROUP_MARGIN = 20
 
 const last = (array, index) => array.length - 1 === index
-
-const calculateLabelY = (linesWithLayout, propery) => {
-  let lastY = -Infinity
-  sortBy(
-    linesWithLayout.filter(line => line[`${propery}Value`]),
-    line => line[`${propery}Y`]
-  ).forEach(line => {
-    let labelY = line[`${propery}Y`]
-    let nextY = lastY + Y_LABEL_HEIGHT
-    if (nextY > labelY) {
-      labelY = nextY
-    }
-    line[`${propery}LabelY`] = lastY = labelY
-  })
-}
 
 const LineGroup = props => {
   const {
@@ -141,6 +126,8 @@ const LineGroup = props => {
     width,
     yCut,
     yCutHeight,
+    yConnectorSize,
+    yNeedsConnectors,
     yAnnotations,
     xAnnotations,
     band,
@@ -165,14 +152,9 @@ const LineGroup = props => {
       startX: x(xAccessor(line.start)),
       // we always render at end label outside of the chart area
       // even if the line ends in the middle of the graph
-      endX: width,
-      startY: y(line.start.value),
-      endY: y(line.end.value)
+      endX: width
     }
   })
-
-  calculateLabelY(linesWithLayout, 'start')
-  calculateLabelY(linesWithLayout, 'end')
 
   return (
     <g>
@@ -239,20 +221,20 @@ const LineGroup = props => {
         ) => {
           return (
             <g key={`line${endLabel}${i}`}>
-              {startValue && startValue !== endValue && (
+              {startValue && (
                 <g>
-                  <line
-                    x1={startX - Y_CONNECTOR_PADDING}
-                    x2={startX - Y_CONNECTOR - Y_CONNECTOR_PADDING}
-                    y1={startLabelY}
-                    y2={startLabelY}
-                    stroke={lineColor}
-                    strokeWidth={3}
-                  />
+                  {yNeedsConnectors && (
+                    <circle
+                      cx={startX - Y_CONNECTOR_PADDING - Y_CONNECTOR / 2}
+                      cy={startLabelY + 0.5}
+                      r={Y_CONNECTOR / 2}
+                      fill={lineColor}
+                    />
+                  )}
                   <text
                     {...styles.value}
                     dy='0.3em'
-                    x={startX - Y_CONNECTOR - Y_CONNECTOR_PADDING * 2}
+                    x={startX - yConnectorSize}
                     y={startLabelY}
                     textAnchor='end'
                   >
@@ -270,23 +252,19 @@ const LineGroup = props => {
                 strokeDasharray={stroked ? '6 2' : 'none'}
                 d={pathGenerator(line)}
               />
-              {endValue && (
+              {(endValue || endLabel) && (
                 <g>
-                  {!mini && (
-                    <line
-                      x1={endX + Y_CONNECTOR_PADDING}
-                      x2={endX + Y_CONNECTOR + Y_CONNECTOR_PADDING}
-                      y1={endLabelY}
-                      y2={endLabelY}
-                      stroke={lineColor}
-                      strokeWidth={3}
+                  {!mini && yNeedsConnectors && (
+                    <circle
+                      cx={endX + Y_CONNECTOR_PADDING + Y_CONNECTOR / 2}
+                      cy={endLabelY + 0.5}
+                      r={Y_CONNECTOR / 2}
+                      fill={lineColor}
                     />
                   )}
                   <text
                     dy={endDy}
-                    x={
-                      mini ? endX : endX + Y_CONNECTOR + Y_CONNECTOR_PADDING * 2
-                    }
+                    x={mini ? endX : endX + yConnectorSize}
                     y={mini ? endLabelY - Y_LABEL_HEIGHT : endLabelY}
                     fill={colors.text}
                     textAnchor={mini ? 'end' : 'start'}
@@ -455,6 +433,8 @@ const LineChart = props => {
     yAxis,
     yCut,
     yCutHeight,
+    yConnectorSize,
+    yNeedsConnectors,
     yAnnotations,
     xAnnotations,
     colorLegend,
@@ -597,6 +577,8 @@ const LineChart = props => {
                 band={band}
                 yCut={yCut}
                 yCutHeight={yCutHeight}
+                yConnectorSize={yConnectorSize}
+                yNeedsConnectors={yNeedsConnectors}
                 yAnnotations={yAnnotations}
                 xAnnotations={xAnnotations}
                 endDy={endDy}
@@ -705,6 +687,7 @@ Line.defaultProps = {
   zero: true,
   unit: '',
   startValue: false,
+  endValue: true,
   endLabel: true,
   endDy: '0.3em',
   minInnerWidth: 110,
@@ -725,6 +708,7 @@ Slope.defaultProps = {
   zero: true,
   unit: '',
   startValue: true,
+  endValue: true,
   endLabel: false,
   endDy: '0.3em',
   minInnerWidth: 90,

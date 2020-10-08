@@ -484,6 +484,8 @@ date,value
 
 Use a `band` column base name with `_lower` and `_upper` data to display bands, e.g. confidence intervals, around your lines.
 
+Also note: When values are too close for clear differentiation a color circle is shown before the end value and label.
+
 ```react
 <div>
   <ChartTitle>Entwicklung der Arbeitszufriedenheit nach Einkommensgruppen</ChartTitle>
@@ -581,6 +583,8 @@ Gesamt,2014,7.13645,7.11445,7.15846
 
 Use a `"xScale": "ordinal"` to display values not representable as JavaScript dates, e.g. going back 500’000 years. Use `"xSort": "none"` if the data is already sorted.
 
+End values can be disabled with `"endValue": false`. Should only be done when the value is truely irrelevant.
+
 ```react
 <div>
   <ChartTitle>Sonneneinstrahlung</ChartTitle>
@@ -593,7 +597,8 @@ Use a `"xScale": "ordinal"` to display values not representable as JavaScript da
       "xScale": "ordinal",
       "xSort": "none",
       "xTicks": ["-500k", "-250k", "0"],
-      "color": "label"
+      "color": "label",
+      "endValue": false
     }}
     values={`
 year,value
