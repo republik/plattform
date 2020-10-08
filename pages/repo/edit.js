@@ -782,6 +782,12 @@ export class EditorPage extends Component {
               <RepoNav route='repo/edit' isNew={isNew} />
             </Frame.Nav>
           </Frame.Header.Section>
+          {!showLoading && (
+            <Frame.Header.Tagline
+              align='left'
+              title={t(`repo/nav/${isTemplate ? 'template' : 'document'}`)}
+            />
+          )}
           <Frame.Header.Section align='right'>
             <div
               style={{

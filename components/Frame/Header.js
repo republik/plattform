@@ -1,7 +1,7 @@
 import React from 'react'
 import { css } from 'glamor'
 
-import { colors } from '@project-r/styleguide'
+import { colors, Interaction, mediaQueries } from '@project-r/styleguide'
 
 import LoadingBar from './LoadingBar'
 import { HEADER_HEIGHT, ZINDEX_HEADER } from './constants'
@@ -30,11 +30,30 @@ const styles = {
   }),
   right: css({
     float: 'right'
+  }),
+  tagline: css({
+    paddingTop: 18,
+    paddingLeft: 4,
+    [mediaQueries.mUp]: {
+      paddingTop: 20,
+      paddingLeft: 10
+    }
+  }),
+  taglineP: css({
+    color: colors.lightText
   })
 }
 
 export const Section = ({ align, children }) => (
   <div {...styles[align || 'left']}>{children}</div>
+)
+
+export const Tagline = ({ align, title }) => (
+  <Section align={align}>
+    <div {...styles.tagline}>
+      <Interaction.P {...styles.taglineP}>{title}</Interaction.P>
+    </div>
+  </Section>
 )
 
 export const Header = ({ children, barStyle }) => (
@@ -47,5 +66,6 @@ export const Header = ({ children, barStyle }) => (
 )
 
 Header.Section = Section
+Header.Tagline = Tagline
 
 export default Header

@@ -1,5 +1,5 @@
 {
-  "updated": "2020-10-07T13:54:57.465Z",
+  "updated": "2020-10-08T14:23:17.779Z",
   "title": "live",
   "data": [
     {
@@ -419,8 +419,12 @@
       "value": "Publizierung"
     },
     {
-      "key": "metaData/title",
-      "value": "Metadaten"
+      "key": "repo/nav/template",
+      "value": "Template"
+    },
+    {
+      "key": "repo/nav/document",
+      "value": "Dokument"
     },
     {
       "key": "metaData/preview",

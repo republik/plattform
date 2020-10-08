@@ -25,6 +25,7 @@ const Page = ({
             <RepoNav route='repo/publish' />
           </Frame.Nav>
         </Frame.Header.Section>
+        <Frame.Header.Tagline align='left' title={t('repo/nav/document')} />
         <Frame.Header.Section align='right'>
           <Frame.Me />
         </Frame.Header.Section>
