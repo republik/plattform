@@ -485,12 +485,14 @@ export class EditorPage extends Component {
     if (isNew) {
       if (templateRepo) {
         const commit = templateRepo.latestCommit
-        const json = {
-          ...commit.document.content,
-          // add format & section to root mdast node
-          format: commit.document.meta.format,
-          section: commit.document.meta.section
-        }
+        const json = JSON.parse(
+          JSON.stringify({
+            ...commit.document.content,
+            // add format & section to root mdast node
+            format: commit.document.meta.format,
+            section: commit.document.meta.section
+          })
+        )
 
         const titleLeaf = findTitleLeaf(json)
         if (titleLeaf) {
@@ -501,6 +503,7 @@ export class EditorPage extends Component {
         json.meta.templateRepoId = router.query.templateRepoId
 
         committedEditorState = this.editor.serializer.deserialize(json)
+
         debug('loadState', 'new document from template', committedEditorState)
       } else {
         committedEditorState = this.editor.newDocument(
