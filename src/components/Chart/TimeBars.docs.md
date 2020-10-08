@@ -229,7 +229,6 @@ By default a four digit year column is expected. Use `x`, `timeParse` and `timeF
   <CsvChart
     config={{
       "type": "TimeBar",
-      "color": "bilanzposition",
       "numberFormat": ".3s",
       "unit": "",
       "x": "date",

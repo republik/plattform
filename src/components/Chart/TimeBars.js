@@ -97,7 +97,6 @@ const TimeBarChart = props => {
     values,
     width,
     mini,
-    children,
     tLabel,
     description,
     yAnnotations,
@@ -150,7 +149,13 @@ const TimeBarChart = props => {
     .domain(
       props.domain
         ? props.domain
-        : [Math.min(0, min(bars, d => d.down)), max(bars, d => d.up)]
+        : [
+            Math.min(
+              0,
+              min(bars, d => d.down)
+            ),
+            max(bars, d => d.up)
+          ]
     )
     .range([innerHeight, 0])
 
@@ -286,8 +291,19 @@ const TimeBarChart = props => {
 
   const xFormat = timeFormat(props.timeFormat || props.timeParse)
 
+  const colorLegendValues = []
+    .concat(
+      props.colorLegend &&
+        (props.colorLegendValues || colorValues).map(colorValue => ({
+          color: color(colorValue),
+          label: tLabel(colorValue)
+        }))
+    )
+    .filter(Boolean)
+
   return (
-    <div>
+    <>
+      <ColorLegend inline values={colorLegendValues} />
       <svg width={width} height={innerHeight + paddingTop + AXIS_BOTTOM_HEIGHT}>
         <desc>{description}</desc>
         <g transform={`translate(0,${paddingTop})`}>
@@ -479,29 +495,11 @@ const TimeBarChart = props => {
           })}
         </g>
       </svg>
-      <div>
-        {!mini && (
-          <ColorLegend
-            inline
-            values={[]
-              .concat(
-                props.colorLegend &&
-                  (props.colorLegendValues || colorValues).map(colorValue => ({
-                    color: color(colorValue),
-                    label: tLabel(colorValue)
-                  }))
-              )
-              .filter(Boolean)}
-          />
-        )}
-        {children}
-      </div>
-    </div>
+    </>
   )
 }
 
 export const propTypes = {
-  children: PropTypes.node,
   values: PropTypes.array.isRequired,
   padding: PropTypes.number.isRequired,
   width: PropTypes.number.isRequired,

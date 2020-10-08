@@ -317,7 +317,6 @@ export class GenericMap extends Component {
     const { props, state } = this
     const {
       width,
-      children,
       mini,
       tLabel,
       description,
@@ -379,6 +378,21 @@ export class GenericMap extends Component {
 
     return (
       <div style={{ position: 'relative' }}>
+        <div style={legendStyle}>
+          {!!props.geotiffLegendTitle && (
+            <ColorLegend
+              title={tLabel(props.geotiffLegendTitle)}
+              values={props.geotiffLegend}
+            />
+          )}
+          {!!props.colorLegend && (
+            <ColorLegend
+              title={tLabel(props.legendTitle)}
+              shape={props.shape}
+              values={colorLegendValues}
+            />
+          )}
+        </div>
         <svg width={width} height={columnHeight * rows}>
           <desc>{description}</desc>
           {groupedData.map(({ values: groupData, key: title }) => {
@@ -502,24 +516,6 @@ export class GenericMap extends Component {
             <Loader loading={loading} error={error} />
           </div>
         )}
-        <div>
-          <div style={legendStyle}>
-            {!!props.geotiffLegendTitle && (
-              <ColorLegend
-                title={tLabel(props.geotiffLegendTitle)}
-                values={props.geotiffLegend}
-              />
-            )}
-            {!!props.colorLegend && (
-              <ColorLegend
-                title={tLabel(props.legendTitle)}
-                shape={props.shape}
-                values={colorLegendValues}
-              />
-            )}
-          </div>
-          {children}
-        </div>
         {hasTooltips && this.renderTooltips()}
         {this.renderPointTooltip()}
       </div>
@@ -537,7 +533,6 @@ const featuresShape = PropTypes.shape({
 })
 
 export const propTypes = {
-  children: PropTypes.node,
   values: PropTypes.array.isRequired,
   width: PropTypes.number.isRequired,
   // full width map, dynamic height

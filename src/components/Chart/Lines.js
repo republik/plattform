@@ -444,7 +444,7 @@ LineGroup.propTypes = {
 }
 
 const LineChart = props => {
-  const { width, mini, children, description, band, bandLegend, endDy } = props
+  const { width, mini, description, band, bandLegend, endDy } = props
 
   const {
     data,
@@ -550,8 +550,27 @@ const LineChart = props => {
       })
     )
 
+  const visibleColorLegendValues = []
+    .concat(props.colorLegend !== false && colorLegend && colorLegendValues)
+    .concat(
+      !mini &&
+        band &&
+        bandLegend && {
+          label: (
+            <span {...styles.bandLegend}>
+              <span {...styles.bandBar} />
+              {` ${bandLegend}`}
+            </span>
+          )
+        }
+    )
+    .filter(Boolean)
+
   return (
-    <div>
+    <>
+      <div style={{ paddingLeft, paddingRight }}>
+        <ColorLegend inline values={visibleColorLegendValues} />
+      </div>
       <svg
         width={width}
         height={rows * columnHeight + (rows - 1) * Y_GROUP_MARGIN}
@@ -588,37 +607,11 @@ const LineChart = props => {
           )
         })}
       </svg>
-      <div>
-        <div style={{ paddingLeft, paddingRight }}>
-          <ColorLegend
-            inline
-            values={[]
-              .concat(
-                props.colorLegend !== false && colorLegend && colorLegendValues
-              )
-              .concat(
-                !mini &&
-                  band &&
-                  bandLegend && {
-                    label: (
-                      <span {...styles.bandLegend}>
-                        <span {...styles.bandBar} />
-                        {` ${bandLegend}`}
-                      </span>
-                    )
-                  }
-              )
-              .filter(Boolean)}
-          />
-        </div>
-        {children}
-      </div>
-    </div>
+    </>
   )
 }
 
 export const propTypes = {
-  children: PropTypes.node,
   values: PropTypes.array.isRequired,
   width: PropTypes.number.isRequired,
   mini: PropTypes.bool,

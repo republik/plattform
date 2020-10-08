@@ -480,7 +480,7 @@ npx -p topojson toposimplify -p 1 < nuts-topo.json > nuts2013-20m-l2-custom-gdp.
 ```react
 <div>
   <ChartTitle>Zentraleuropäischer Wohlstandsgürtel</ChartTitle>
-  <ChartLead>2016 BIP pro Kopf nach Regionen</ChartLead>
+  <ChartLead>2016 nach Regionen</ChartLead>
   <CsvChart
     config={{
       "type": "ProjectedMap",

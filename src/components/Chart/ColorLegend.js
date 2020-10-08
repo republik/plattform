@@ -10,7 +10,6 @@ const styles = {
     marginBottom: 10
   }),
   inlineContainer: css({
-    marginBottom: 0,
     lineHeight: '12px'
   }),
   title: css({

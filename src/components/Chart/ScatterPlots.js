@@ -205,7 +205,6 @@ class ScatterPlot extends Component {
     const {
       width,
       description,
-      children,
       values,
       tLabel,
       inlineLabelPosition,
@@ -350,8 +349,19 @@ class ScatterPlot extends Component {
 
     const yLinesPaddingLeft = paddingLeft < 2 ? paddingLeft : 0
 
+    const colorLegendValues = []
+      .concat(
+        props.colorLegend &&
+          (props.colorLegendValues || colorValues).map(colorValue => ({
+            color: color(colorValue),
+            label: colorValue
+          }))
+      )
+      .filter(Boolean)
+
     return (
       <div style={{ position: 'relative' }}>
+        <ColorLegend inline values={colorLegendValues} />
         <svg width={width} height={height} ref={this.setContainerRef}>
           <desc>{description}</desc>
           {this.symbols.map((symbol, i) => (
@@ -523,26 +533,12 @@ class ScatterPlot extends Component {
           xFormat: xAxis.format,
           yFormat: yAxis.format
         })}
-        <ColorLegend
-          inline
-          values={[]
-            .concat(
-              props.colorLegend &&
-                (props.colorLegendValues || colorValues).map(colorValue => ({
-                  color: color(colorValue),
-                  label: colorValue
-                }))
-            )
-            .filter(Boolean)}
-        />
-        {children}
       </div>
     )
   }
 }
 
 export const propTypes = {
-  children: PropTypes.node,
   values: PropTypes.array.isRequired,
   width: PropTypes.number.isRequired,
   height: PropTypes.number,

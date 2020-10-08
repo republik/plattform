@@ -254,7 +254,8 @@ export const propTypes = {
   values: PropTypes.arrayOf(
     PropTypes.shape({
       label: PropTypes.string.isRequired,
-      value: PropTypes.number.isRequired
+      value: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+        .isRequired
     })
   ).isRequired
 }

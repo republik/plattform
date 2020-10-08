@@ -6053,7 +6053,7 @@ Also if you have multiple charts after each other with varying end labels you ca
         "2020-03-26"
       ],
       "endLabelWidth": 160,
-      "paddingTop": 10,
+      "paddingTop": 8,
       "xAnnotations": [
         {
           "x1": "2020-03-16",

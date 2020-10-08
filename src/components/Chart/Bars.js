@@ -30,9 +30,7 @@ import { getColorMapper } from './colorMaps'
 const COLUMN_PADDING = 20
 const COLUMN_TITLE_HEIGHT = 30
 const BAR_LABEL_HEIGHT = 15
-const AXIS_BOTTOM_HEIGHT = 20
-const AXIS_BOTTOM_PADDING = 8
-const X_TICK_TEXT_MARGIN = 0
+const AXIS_HEIGHT = 20
 const LOLLIPOP_PADDING = 7 // half of max pop height
 
 const BAR_STYLES = {
@@ -144,7 +142,6 @@ const BarChart = props => {
     values,
     width,
     mini,
-    children,
     tLabel,
     description,
     band,
@@ -355,7 +352,7 @@ const BarChart = props => {
 
       yPos +=
         height +
-        (hasXTicks ? AXIS_BOTTOM_HEIGHT : 0) +
+        (hasXTicks ? AXIS_HEIGHT : 0) +
         (isLollipop ? LOLLIPOP_PADDING : 0)
     }
   )
@@ -386,15 +383,17 @@ const BarChart = props => {
 
   return (
     <>
+      <ColorLegend inline values={colorLegendValues} />
       <svg width={width} height={yPos}>
         <desc>{description}</desc>
         {groupedData.map(group => {
           return (
             <g
               key={`group${group.title || 1}`}
-              transform={`translate(${group.x},${group.y})`}
+              transform={`translate(${group.x},${group.y +
+                (hasXTicks ? AXIS_HEIGHT : 0)})`}
             >
-              <text dy='1.5em' {...styles.groupTitle}>
+              <text dy='1.5em' y={-AXIS_HEIGHT} {...styles.groupTitle}>
                 {group.title}
               </text>
               {group.bars.map(bar => {
@@ -556,8 +555,9 @@ const BarChart = props => {
               })}
               {hasXTicks && (
                 <g
-                  transform={`translate(0,${group.groupHeight +
-                    AXIS_BOTTOM_PADDING})`}
+                  transform={`translate(0,${
+                    group.title ? COLUMN_TITLE_HEIGHT : 0
+                  })`}
                 >
                   {xTicks.map((tick, i) => {
                     let textAnchor = 'middle'
@@ -576,27 +576,16 @@ const BarChart = props => {
                       >
                         <line
                           {...styles.axisXLine}
-                          y1={
-                            -AXIS_BOTTOM_PADDING -
-                            group.groupHeight +
-                            group.firstBarY -
-                            (isLollipop ? LOLLIPOP_PADDING : 0)
-                          }
-                          y2={
-                            -AXIS_BOTTOM_PADDING +
-                            (isLollipop ? LOLLIPOP_PADDING : 0)
-                          }
+                          y1={0}
+                          y2={group.groupHeight}
                           style={{
                             stroke: highlightTick ? baseLineColor : undefined
                           }}
                         />
                         <text
                           {...styles.axisLabel}
-                          y={
-                            X_TICK_TEXT_MARGIN +
-                            (isLollipop ? LOLLIPOP_PADDING : 0)
-                          }
-                          dy='0.6em'
+                          y={0}
+                          dy='-0.5em'
                           textAnchor={textAnchor}
                           style={{
                             fill: highlightTick ? colors.text : undefined
@@ -613,18 +602,11 @@ const BarChart = props => {
           )
         })}
       </svg>
-      <div
-        style={{ marginTop: !hasXTicks && colorLegendValues.length ? 3 : 0 }}
-      >
-        <ColorLegend inline values={colorLegendValues} />
-        {children}
-      </div>
     </>
   )
 }
 
 export const propTypes = {
-  children: PropTypes.node,
   values: PropTypes.array.isRequired,
   width: PropTypes.number.isRequired,
   mini: PropTypes.bool,
