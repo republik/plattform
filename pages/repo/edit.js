@@ -714,7 +714,9 @@ export class EditorPage extends Component {
       ...(commitId === 'new'
         ? {
             schema:
-              this.props.router.query.schema || this.props.router.query.template
+              this.props.router.query.schema ||
+              this.props.router.query.template,
+            isTemplate: this.props.router.query.isTemplate
           }
         : {})
     })

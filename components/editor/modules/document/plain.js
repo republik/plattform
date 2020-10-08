@@ -42,9 +42,13 @@ export default ({ rule, subModules, TYPE }) => {
     }
 
     let newData = data
-      .set('auto', true)
-      .set('feed', true)
-      .set('gallery', true)
+
+    if (!data || !data.delete('template').size) {
+      newData = newData
+        .set('auto', true)
+        .set('feed', !rule.editorOptions?.excludeFromFeed)
+        .set('gallery', true)
+    }
 
     const title =
       titleModule &&
@@ -140,14 +144,30 @@ ${
     ? `
 <section><h6>${titleModule.TYPE}</h6>
 
+${
+  rule.editorOptions?.titleCenter
+    ? `\`\`\`
+{
+  "center": true
+}
+\`\`\``
+    : ''
+}
+
 # ${title}
 
 Lead
-
+${
+  rule.editorOptions?.skipCredits
+    ? ''
+    : `
+    
 Von ${me ? `[${me.name}](/~${me.id})` : '[Autor](<>)'}, ${pubDateFormat(
         new Date()
       )}
 
+`
+}
 <hr/></section>
 
 `

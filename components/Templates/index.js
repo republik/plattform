@@ -4,6 +4,7 @@ import editorialNewsletterSchema from '@project-r/styleguide/lib/templates/Edito
 import neutrumSchema from './Neutrum'
 
 import createArticleSchema from '@project-r/styleguide/lib/templates/Article'
+import createPageSchema from '@project-r/styleguide/lib/templates/Page'
 import createFrontSchema from '@project-r/styleguide/lib/templates/Front'
 import createFormatSchema from '@project-r/styleguide/lib/templates/Format'
 import createSectionSchema from '@project-r/styleguide/lib/templates/Section'
@@ -39,7 +40,8 @@ const schemas = {
   format: createFormatSchema({ t, dynamicComponentRequire }),
   section: createSectionSchema({ t, dynamicComponentRequire }),
   discussion: createDiscussionSchema({ t, dynamicComponentRequire }),
-  dossier: createDossierSchema({ t, dynamicComponentRequire })
+  dossier: createDossierSchema({ t, dynamicComponentRequire }),
+  page: createPageSchema({ t, dynamicComponentRequire })
 }
 
 export const getSchema = template => {

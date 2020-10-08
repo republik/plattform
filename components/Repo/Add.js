@@ -123,6 +123,7 @@ const TemplatePicker = compose(
       .filter(
         ({ text }) =>
           !templateFilter ||
+          !text ||
           text.toLowerCase().includes(templateFilter.toLowerCase())
       )
   }, [data, templateFilter, schemaOptions])
