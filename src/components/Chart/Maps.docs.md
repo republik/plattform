@@ -26,7 +26,7 @@ lat,lon,name
 39.933333,116.383333,"Peking"
 49.28098,-123.12244,"Vancouver"
 `.trim()} />
-  <Editorial.Note>Geobasis: <Editorial.A href="https://github.com/topojson/world-atlas">World Atlas TopoJSON</Editorial.A></Editorial.Note>
+  <ChartLegend>Geobasis: <Editorial.A href="https://github.com/topojson/world-atlas">World Atlas TopoJSON</Editorial.A></ChartLegend>
 </div>
 ```
 
@@ -153,7 +153,7 @@ lat,lon,name
       113.4872,22.92145,"Guangzhou",6.1392,"China"
       126.9629,37.48175,"Seoul",12.989,"South Korea"
     `.trim()} />
-  <Editorial.Note>Geobasis: <Editorial.A href="https://github.com/topojson/world-atlas">World Atlas TopoJSON</Editorial.A></Editorial.Note>
+  <ChartLegend>Geobasis: <Editorial.A href="https://github.com/topojson/world-atlas">World Atlas TopoJSON</Editorial.A></ChartLegend>
 </div>
 ```
 
@@ -364,7 +364,7 @@ feature,value
 894,63
 716,59.05
     `.trim()} />
-  <Editorial.Note>Geobasis: <Editorial.A href="https://github.com/topojson/world-atlas">World Atlas TopoJSON</Editorial.A></Editorial.Note>
+  <ChartLegend>Geobasis: <Editorial.A href="https://github.com/topojson/world-atlas">World Atlas TopoJSON</Editorial.A></ChartLegend>
 </div>
 ```
 
@@ -439,7 +439,7 @@ npx -p topojson geo2topo -q 1e5 nuts=nuts-projected-clean.json cb=nuts-compositi
       }
     }}
     values={''} />
-  <Editorial.Note>Geobasis: <Editorial.A href="https://ec.europa.eu/eurostat/web/gisco/geodata/reference-data/administrative-units-statistical-units/nuts">NUTS 2016 20M L2</Editorial.A></Editorial.Note>
+  <ChartLegend>Geobasis: <Editorial.A href="https://ec.europa.eu/eurostat/web/gisco/geodata/reference-data/administrative-units-statistical-units/nuts">NUTS 2016 20M L2</Editorial.A></ChartLegend>
 </div>
 ```
 
@@ -513,7 +513,7 @@ npx -p topojson toposimplify -p 1 < nuts-topo.json > nuts2013-20m-l2-custom-gdp.
       }
     }}
     values={data.nuts13mCHdGDP} />
-  <Editorial.Note>Quelle: Eurostat. Das BIP pro Kopf ist nach Kaufkraft bereinigt. Geobasis: <Editorial.A href="https://ec.europa.eu/eurostat/web/gisco/geodata/reference-data/administrative-units-statistical-units/nuts">NUTS 2013 20M L2</Editorial.A>, ohne entlegene Gebiete, fusionierte Schweiz</Editorial.Note>
+  <ChartLegend>Quelle: Eurostat. Das BIP pro Kopf ist nach Kaufkraft bereinigt. Geobasis: <Editorial.A href="https://ec.europa.eu/eurostat/web/gisco/geodata/reference-data/administrative-units-statistical-units/nuts">NUTS 2013 20M L2</Editorial.A>, ohne entlegene Gebiete, fusionierte Schweiz</ChartLegend>
 </div>
 ```
 
@@ -606,7 +606,7 @@ MK,Nord Mazedonien,
 RO,Rumänien,
 RS,Serbien,
     `.trim()} />
-  <Editorial.Note>Geobasis: <Editorial.A href="https://ec.europa.eu/eurostat/web/gisco/geodata/reference-data/administrative-units-statistical-units/countries">Eurostat Countries 2016 20M</Editorial.A></Editorial.Note>
+  <ChartLegend>Geobasis: <Editorial.A href="https://ec.europa.eu/eurostat/web/gisco/geodata/reference-data/administrative-units-statistical-units/countries">Eurostat Countries 2016 20M</Editorial.A></ChartLegend>
 </div>
 ```
 
@@ -747,7 +747,7 @@ NE,0.309
 GE,0.322
 JU,0.257
     `.trim()} />
-  <Editorial.Note>Quelle: <Editorial.A href="https://www.bk.admin.ch/ch/d/pore/va/20140518/can584.html">Bundeskanzlei</Editorial.A></Editorial.Note>
+  <ChartLegend>Quelle: <Editorial.A href="https://www.bk.admin.ch/ch/d/pore/va/20140518/can584.html">Bundeskanzlei</Editorial.A></ChartLegend>
 </div>
 ```
 
@@ -799,7 +799,7 @@ NE,0.309
 GE,0.322
 JU,0.257
     `.trim()} />
-  <Editorial.Note>Quelle: <Editorial.A href="https://www.bk.admin.ch/ch/d/pore/va/20140518/can584.html">Bundeskanzlei</Editorial.A></Editorial.Note>
+  <ChartLegend>Quelle: <Editorial.A href="https://www.bk.admin.ch/ch/d/pore/va/20140518/can584.html">Bundeskanzlei</Editorial.A></ChartLegend>
 </div>
 ```
 
@@ -823,6 +823,6 @@ JU,0.257
       }
     }}
     values={data.mun} />
-  <Editorial.Note>Quelle: <Editorial.A href="https://www.haupt.ch/Verlag/Buecher/Natur/Umwelt-Oekologie/Zersiedelung-messen-und-begrenzen.html">Fachbuch «Zersiedelung messen und begrenzen»</Editorial.A>, <Editorial.A href="https://www.bfs.admin.ch/bfs/de/home/dienstleistungen/geostat/geodaten-bundesstatistik/administrative-grenzen/generalisierte-gemeindegrenzen.html">BFS</Editorial.A></Editorial.Note>
+  <ChartLegend>Quelle: <Editorial.A href="https://www.haupt.ch/Verlag/Buecher/Natur/Umwelt-Oekologie/Zersiedelung-messen-und-begrenzen.html">Fachbuch «Zersiedelung messen und begrenzen»</Editorial.A>, <Editorial.A href="https://www.bfs.admin.ch/bfs/de/home/dienstleistungen/geostat/geodaten-bundesstatistik/administrative-grenzen/generalisierte-gemeindegrenzen.html">BFS</Editorial.A></ChartLegend>
 </div>
 ```

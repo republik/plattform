@@ -11,7 +11,7 @@ import * as Scribble from '../../components/Typography/Scribble'
 import { TeaserFeed } from '../../components/TeaserFeed'
 import IllustrationHtml from '../../components/IllustrationHtml'
 import CsvChart from '../../components/Chart/Csv'
-import { ChartTitle, ChartLead } from '../../components/Chart'
+import { ChartTitle, ChartLead, ChartLegend } from '../../components/Chart'
 import ErrorBoundary from '../../components/ErrorBoundary'
 
 import { Figure, CoverTextTitleBlockHeadline } from '../../components/Figure'
@@ -570,10 +570,8 @@ const createSchema = ({
                   {
                     matchMdast: (node, index, parent) =>
                       matchParagraph(node) && matchLast(node, index, parent),
-                    component: Editorial.Note,
-                    props: () => ({
-                      style: { marginTop: 10 }
-                    }),
+                    component: ChartLegend,
+                    props: () => ({}),
                     editorModule: 'paragraph',
                     editorOptions: {
                       type: 'CHARTNOTE',

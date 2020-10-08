@@ -24,7 +24,7 @@ Altersgruppen,55-64 Jahre,2014,0.132,0.112,0.151
 Altersgruppen,65-74 Jahre,2014,0.141,0.110,0.171
 Altersgruppen,über 74 Jahre,2014,0.133,0.120,0.146
     `.trim()} />
-  <Editorial.Note>Quelle: Berechnungen des DIW Berlin, SOEPv32.1.</Editorial.Note>
+  <ChartLegend>Quelle: Berechnungen des DIW Berlin, SOEPv32.1.</ChartLegend>
 </div>
 ```
 

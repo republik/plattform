@@ -20,6 +20,7 @@ import {
   sansSerifRegular19
 } from '../Typography/styles'
 import { fontRule } from '../Typography/Interaction'
+import { Note } from '../Typography/Editorial'
 import { convertStyleToRem, pxToRem } from '../Typography/utils'
 
 export const ReactCharts = {
@@ -91,6 +92,10 @@ export const ChartLead = ({ children, ...props }) => (
   <p {...props} {...styles.p} {...fontRule}>
     {children}
   </p>
+)
+
+export const ChartLegend = ({ children, ...props }) => (
+  <Note style={{ marginTop: 15 }}>{children}</Note>
 )
 
 class Chart extends Component {

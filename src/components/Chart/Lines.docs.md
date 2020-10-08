@@ -91,7 +91,7 @@ year,gender,at_age,value
 2014,Total,0,80.92
 2015,Total,0,80.57
     `.trim()} />
-  <Editorial.Note>Quelle: <Editorial.A href='http://www.humanmortality.de/'>Human Mortality Database</Editorial.A>. University of California, Berkeley (USA) und Max-Planck-Institut </Editorial.Note>
+  <ChartLegend>Quelle: <Editorial.A href='http://www.humanmortality.de/'>Human Mortality Database</Editorial.A>. University of California, Berkeley (USA) und Max-Planck-Institut </ChartLegend>
 </div>
 ```
 
@@ -476,7 +476,7 @@ date,value
 2018-02-23,10162.116666666667
 2018-02-24,9697.956
     `.trim()} />
-  <Editorial.Note>Quelle: blockchain.info</Editorial.Note>
+  <ChartLegend>Quelle: blockchain.info</ChartLegend>
 </div>
 ```
 
@@ -570,10 +570,10 @@ Gesamt,2012,7.00601,6.94204,7.06998
 Gesamt,2013,7.05254,7.00163,7.10346
 Gesamt,2014,7.13645,7.11445,7.15846
     `.trim()} />
-  <Editorial.Note>
+  <ChartLegend>
     Quelle: Berechnungen des DIW Berlin, SOEPv32.1.<br />
     Die Arbeitszufriedenheit wird auf einer Skala von 0 (sehr unzufrieden) bis 10 (sehr zufrieden) gemessen.
-  </Editorial.Note>
+  </ChartLegend>
 </div>
 ```
 
@@ -5715,9 +5715,9 @@ inc,group,category,value
 1000000,neu ,Mittelstandsinitiative,0.117
     `.trim()}
   />
-  <Editorial.Note>
+  <ChartLegend>
     Steuerbelastung für Allein­stehende bei der einfachen Staats­steuer inklusive Kirchen­steuer. Lesebeispiel: Bei einem steuer­baren Einkommen von 200’000 Franken beträgt der Steuer­tarif 8,9 Prozent. Quelle: <Editorial.A href="https://wahlen-abstimmungen.zh.ch/internet/justiz_inneres/wahlen-abstimmungen/de/service/shared/aktuelle-abstimmung/2-aktuelle-abstimmung-kantonal/_jcr_content/contentPar/downloadlist/downloaditems/2205_1544179949713.spooler.download.1576484211868.pdf/Abstimmungszeitung_9_Februar_2020.pdf">Kanton Zürich</Editorial.A>
-  </Editorial.Note>
+  </ChartLegend>
 </div>
 ```
 
@@ -5997,9 +5997,9 @@ year,category,value
 2018,Konsumentenpeise,730.1
     `.trim()}
     />
-  <Editorial.Note>
+  <ChartLegend>
     Quelle: BFS
-  </Editorial.Note>
+  </ChartLegend>
 </div>
 ```
 
@@ -6110,8 +6110,8 @@ bereits Infizierte,2020-03-15,12726,12726,12726
 bereits Infizierte,2020-03-16,13801,13801,13801
     `.trim()}
     />
-  <Editorial.Note>
+  <ChartLegend>
     Quelle: BAG Situationsberichtes als XLS bis zum 26. März (aufsummiert, Stand 29. March 08:00)
-  </Editorial.Note>
+  </ChartLegend>
 </div>
 ```

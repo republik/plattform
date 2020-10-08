@@ -209,13 +209,11 @@ Stickstofftrifluorid,2014,20278.8000
 Stickstofftrifluorid,2015,11885.2000
 Stickstofftrifluorid,2016,12000.0000
     `.trim()} />
-  <Editorial.Note style={{marginTop: 10, marginBottom: 0}}>
-    *ohne Kohlendioxid aus Landnutzung, Landnutzungsänderungen und Forstwirtschaft. Daten für 2016 sind vorläufig.
-  </Editorial.Note>
-  <Editorial.Note style={{marginTop: 10}}>
+  <ChartLegend>
+    *ohne Kohlendioxid aus Landnutzung, Landnutzungsänderungen und Forstwirtschaft. Daten für 2016 sind vorläufig.<br />
     Quelle: Umweltbundesamt, Nationale Treibhausgas-Inventare 1990 bis 2015 (Stand 02/2017) und Schätzung für 2016 (Stand 03/2017).
     <br /><Editorial.A href='https://creativecommons.org/licenses/by-nc-nd/4.0/deed.de'>CC BY-NC-ND 4.0 Bundesregierung</Editorial.A>
-  </Editorial.Note>
+  </ChartLegend>
 </div>
 ```
 
@@ -454,9 +452,9 @@ date,bilanzposition,value
 2018-01,Devisenanlagen,790125000000
 2018-02,Devisenanlagen,759715000000
     `.trim()} />
-  <Editorial.Note style={{marginTop: 10}}>
+  <ChartLegend>
     Quelle: SNB
-  </Editorial.Note>
+  </ChartLegend>
 </div>
 ```
 
@@ -510,9 +508,9 @@ year,value,type
 2015,2337300888.72,Überschuss
 2016,751559663.61,Überschuss
     `.trim()} />
-  <Editorial.Note style={{marginTop: 10}}>
+  <ChartLegend>
     Quelle: <Editorial.A href='https://www.efv.admin.ch/efv/de/home/finanzberichterstattung/bundeshaushalt_ueb/stat_kennz_bundeshh.html'>Eidgenössische Finanzverwaltung</Editorial.A>
-  </Editorial.Note>
+  </ChartLegend>
 
 </div>
 ```
@@ -745,8 +743,8 @@ year,value,color
 2019,0.023,positiv
 2020,-0.056,negativ
     `.trim()} />
-  <Editorial.Note style={{marginTop: 10}}>
+  <ChartLegend>
     Quellen: <Editorial.A href='https://apps.bea.gov/iTable/iTable.cfm?reqid=19&step=2#reqid=19&step=2&isuri=1&1921=survey'>Bureau of Economic Analysis (BEA)</Editorial.A>, <Editorial.A href='https://www.cbo.gov/publication/56335'>CBO</Editorial.A>
-  </Editorial.Note>
+  </ChartLegend>
 </div>
 ```

@@ -218,9 +218,9 @@ Yemen,3770,0.865,Asia
 Zambia,3630,0.288,Africa
 Zimbabwe,1910,0.78,Africa
       `.trim()} />
-  <Editorial.Note style={{marginTop: 10}}>
+  <ChartLegend>
     Quelle: <Editorial.A href='https://gapm.io/dgdppc'>Gapminder</Editorial.A> basierend auf World Bank, A. Maddison, M. Lindgren, IMF & mehr (Einkommen) und <Editorial.A href='http://cdiac.ess-dive.lbl.gov/trends/emis/meth_reg.html'>CDIAC</Editorial.A> (CO<Sub>2</Sub>)
-  </Editorial.Note>
+  </ChartLegend>
 </div>
 ```
 
@@ -299,9 +299,9 @@ year,label,detail,family,position,lrgen,vote_abs,inline_pos,inline,inline_countr
 2017,Bürgerlich–Demokratische Partei,"Schweiz
 0,10 Mio. Stimmen im 2015",konservativ,3.625,6.25,103476,bottom,,
       `.trim()} />
-  <Editorial.Note style={{marginTop: 10}}>
+  <ChartLegend>
     Quelle: <Editorial.A href='https://www.chesdata.eu/our-surveys/'>Chapel Hill Expert Survey 2017 und 2014</Editorial.A>, <Editorial.A href='http://www.parlgov.org/'>ParlGov database</Editorial.A>
-  </Editorial.Note>
+  </ChartLegend>
 </div>
 ```
 

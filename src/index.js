@@ -748,6 +748,7 @@ ReactDOM.render(
                 ...require('./components/Typography'),
                 ChartTitle: require('./components/Chart').ChartTitle,
                 ChartLead: require('./components/Chart').ChartLead,
+                ChartLegend: require('./components/Chart').ChartLegend,
                 CsvChart: require('./components/Chart/Csv'),
                 t
               },
@@ -760,6 +761,7 @@ ReactDOM.render(
                 ...require('./components/Typography'),
                 ChartTitle: require('./components/Chart').ChartTitle,
                 ChartLead: require('./components/Chart').ChartLead,
+                ChartLegend: require('./components/Chart').ChartLegend,
                 CsvChart: require('./components/Chart/Csv'),
                 t
               },
@@ -772,6 +774,7 @@ ReactDOM.render(
                 ...require('./components/Typography'),
                 ChartTitle: require('./components/Chart').ChartTitle,
                 ChartLead: require('./components/Chart').ChartLead,
+                ChartLegend: require('./components/Chart').ChartLegend,
                 CsvChart: require('./components/Chart/Csv'),
                 t
               },
@@ -784,6 +787,7 @@ ReactDOM.render(
                 ...require('./components/Typography'),
                 ChartTitle: require('./components/Chart').ChartTitle,
                 ChartLead: require('./components/Chart').ChartLead,
+                ChartLegend: require('./components/Chart').ChartLegend,
                 CsvChart: require('./components/Chart/Csv'),
                 t
               },
@@ -796,6 +800,7 @@ ReactDOM.render(
                 ...require('./components/Typography'),
                 ChartTitle: require('./components/Chart').ChartTitle,
                 ChartLead: require('./components/Chart').ChartLead,
+                ChartLegend: require('./components/Chart').ChartLegend,
                 CsvChart: require('./components/Chart/Csv'),
                 t
               },
@@ -808,6 +813,7 @@ ReactDOM.render(
                 ...require('./components/Typography'),
                 ChartTitle: require('./components/Chart').ChartTitle,
                 ChartLead: require('./components/Chart').ChartLead,
+                ChartLegend: require('./components/Chart').ChartLegend,
                 CsvChart: require('./components/Chart/Csv'),
                 t
               },
@@ -821,6 +827,7 @@ ReactDOM.render(
                 data: { ...require('./components/Chart/Maps.docs.data') },
                 ChartTitle: require('./components/Chart').ChartTitle,
                 ChartLead: require('./components/Chart').ChartLead,
+                ChartLegend: require('./components/Chart').ChartLegend,
                 CsvChart: require('./components/Chart/Csv'),
                 t
               },
@@ -833,6 +840,7 @@ ReactDOM.render(
                 ...require('./components/Typography'),
                 ChartTitle: require('./components/Chart').ChartTitle,
                 ChartLead: require('./components/Chart').ChartLead,
+                ChartLegend: require('./components/Chart').ChartLegend,
                 CsvChart: require('./components/Chart/Csv'),
                 t
               },

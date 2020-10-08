@@ -1,1 +1,6 @@
-export { default as Chart, ChartTitle, ChartLead } from './components/Chart'
+export {
+  default as Chart,
+  ChartTitle,
+  ChartLead,
+  ChartLegend
+} from './components/Chart'
