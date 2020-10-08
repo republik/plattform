@@ -1,7 +1,3 @@
-import React from 'react'
-
-import { DossierTag } from '../../components/Dossier'
-
 import createArticleSchema from '../Article'
 
 const DefaultLink = ({ children }) => children
