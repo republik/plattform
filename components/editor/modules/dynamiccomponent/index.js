@@ -12,7 +12,7 @@ import { SG_DYNAMIC_COMPONENT_BASE_URLS } from '../../../../lib/settings'
 
 import dynamicComponentRequire from './require'
 
-export default ({ rule, subModules, TYPE }) => {
+const DynamicComponent = ({ rule, subModules, TYPE }) => {
   const { identifier = 'DYNAMIC_COMPONENT' } = rule.editorOptions || {}
 
   const mdastRule = {
@@ -114,3 +114,4 @@ export default ({ rule, subModules, TYPE }) => {
     ]
   }
 }
+export default DynamicComponent

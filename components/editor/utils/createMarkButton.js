@@ -53,8 +53,9 @@ const defaultOptions = markType => ({
   reducer: reducer(markType)
 })
 
-export default ({ type, ...options }) => Component =>
+const createMarkButton = ({ type, ...options }) => Component =>
   createFormatButton({
     ...defaultOptions(type),
     ...options
   })(Component)
+export default createMarkButton

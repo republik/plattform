@@ -184,7 +184,7 @@ class Form extends Component {
   }
 }
 
-export default props => {
+const EditOverlay = props => {
   const onChange = data => {
     props.editor.change(change => {
       change.setNodeByKey(props.node.key, {
@@ -206,3 +206,4 @@ export default props => {
     </OverlayFormManager>
   )
 }
+export default EditOverlay

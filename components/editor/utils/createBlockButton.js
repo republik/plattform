@@ -22,8 +22,9 @@ const defaultOptions = (blockType, parentTypes) => ({
   reducer: reducer(blockType)
 })
 
-export default options => Component =>
+const createBlockButton = options => Component =>
   createFormatButton({
     ...defaultOptions(options.type, options.parentTypes),
     ...options
   })(Component)
+export default createBlockButton

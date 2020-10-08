@@ -15,7 +15,7 @@ const defaultProps = {
   onChange: () => true
 }
 
-export default ({
+const createFormatButton = ({
   isDisabled = () => false,
   isActive = () => false,
   isVisible = () => true,
@@ -55,3 +55,4 @@ export default ({
 
   return FormatButton
 }
+export default createFormatButton

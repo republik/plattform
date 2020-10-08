@@ -1,4 +1,4 @@
-export default (change, block) => {
+const injectBlock = (change, block) => {
   const {
     value: { startBlock, endBlock }
   } = change
@@ -12,3 +12,4 @@ export default (change, block) => {
   }
   return change.insertBlock(block)
 }
+export default injectBlock
