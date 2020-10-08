@@ -113,12 +113,17 @@ const TemplatePicker = compose(
   const templateOptions = useMemo(() => {
     return schemaOptions
       .concat(
-        (data?.reposSearch?.nodes || []).map(repo => ({
-          value: repo.latestCommit.document.meta.template,
-          text: repo.latestCommit.document.meta.title,
-          repoId: repo.id,
-          slug: repo.latestCommit.document.meta.slug
-        }))
+        (data?.reposSearch?.nodes || [])
+          .map(repo => ({
+            value: repo.latestCommit.document.meta.template,
+            text: repo.latestCommit.document.meta.title,
+            repoId: repo.id,
+            slug: repo.latestCommit.document.meta.slug
+          }))
+          .sort(
+            (repo1, repo2) =>
+              repo1.text?.toLowerCase() > repo2.text?.toLowerCase()
+          )
       )
       .filter(
         ({ text }) =>
