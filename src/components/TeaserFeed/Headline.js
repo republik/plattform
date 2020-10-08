@@ -1,6 +1,5 @@
 import React from 'react'
 import { css } from 'glamor'
-import colors from '../../theme/colors'
 import { mUp } from '../../theme/mediaQueries'
 import {
   serifTitle20,
@@ -14,7 +13,6 @@ import { convertStyleToRem, pxToRem } from '../Typography/utils'
 
 const styles = {
   base: css({
-    color: colors.text,
     margin: 0,
     marginBottom: 6,
     [mUp]: {

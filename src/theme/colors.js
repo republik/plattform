@@ -89,6 +89,7 @@ const colorsDeprecated = {
 
 const colors = {
   bright: {
+    logo: '#000000',
     default: '#FFFFFF',
     overlay: '#FFFFFF',
     hover: '#F6F8F7',
@@ -108,6 +109,7 @@ const colors = {
     accentColorAudio: '#000000'
   },
   dark: {
+    logo: '#FFFFFF',
     default: '#1F1F1F',
     overlay: '#232323',
     hover: '#2F2F2F',

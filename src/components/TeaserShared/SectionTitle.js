@@ -7,7 +7,6 @@ import {
   sansSerifMedium22,
   sansSerifRegular30
 } from '../Typography/styles'
-import { useColorContext } from '../Colors/useColorContext'
 
 const styles = {
   container: css({

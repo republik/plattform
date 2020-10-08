@@ -1,6 +1,7 @@
 import React from 'react'
 import { css } from 'glamor'
 import SG from '../../theme/env'
+import { useColorContext } from '../Colors/useColorContext'
 
 const VIEWBOX = SG.LOGO_VIEWBOX || '0 0 4 1.5'
 const GRADIENT = SG.LOGO_GRADIENT
@@ -27,12 +28,21 @@ const styles = {
   })
 }
 
-const LogoSvg = ({ width, height, fill, ...props }) => (
-  <svg {...props} width={width} height={height} viewBox={VIEWBOX}>
-    {GRADIENT && <defs dangerouslySetInnerHTML={{ __html: GRADIENT }} />}
-    <path fill={GRADIENT ? 'url(#logo-gradient)' : fill} d={PATH} />
-  </svg>
-)
+const LogoSvg = ({ width, height, fill, ...props }) => {
+  const [colorScheme] = useColorContext()
+  return (
+    <svg
+      {...colorScheme.rules.logoFill}
+      {...props}
+      width={width}
+      height={height}
+      viewBox={VIEWBOX}
+    >
+      {GRADIENT && <defs dangerouslySetInnerHTML={{ __html: GRADIENT }} />}
+      <path fill={GRADIENT ? 'url(#logo-gradient)' : fill} d={PATH} />
+    </svg>
+  )
+}
 
 const Logo = props => {
   let width
@@ -54,9 +64,6 @@ const Logo = props => {
   return <LogoSvg width={width} height={height} fill={props.fill} />
 }
 
-Logo.defaultProps = {
-  fill: '#000'
-}
 Logo.ratio = ratio
 
 export default Logo
