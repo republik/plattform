@@ -4,6 +4,7 @@ import slugify from '../../lib/utils/slug'
 import schemas from '../Templates'
 import { css } from 'glamor'
 import withT from '../../lib/withT'
+import { ascending } from 'd3-array'
 
 import {
   Interaction,
@@ -26,7 +27,7 @@ import InfoIcon from 'react-icons/lib/md/info-outline'
 
 const getTemplateRepos = gql`
   query templateListSearch {
-    reposSearch(isTemplate: true) {
+    reposSearch(isTemplate: true, first: 200) {
       totalCount
       nodes {
         id
@@ -86,13 +87,9 @@ const styles = {
   }),
   infoLink: css({
     display: 'inline-block',
-    verticalAlign: 'middle',
-    height: 25,
-    marginLeft: 5,
-    [mediaQueries.mUp]: {
-      height: 28,
-      marginLeft: 7
-    }
+    verticalAlign: 'top',
+    marginLeft: '0.6em',
+    fontSize: '0.6em'
   })
 }
 
@@ -132,9 +129,8 @@ const TemplatePicker = compose(
             repoId: repo.id,
             slug: repo.latestCommit.document.meta.slug
           }))
-          .sort(
-            (repo1, repo2) =>
-              repo1.text?.toLowerCase() > repo2.text?.toLowerCase()
+          .sort((repo1, repo2) =>
+            ascending(repo1.text?.toLowerCase(), repo2.text?.toLowerCase())
           )
       )
       .filter(
@@ -259,19 +255,19 @@ class RepoAdd extends Component {
 
     return (
       <div {...styles.new}>
-        <Interaction.H2 style={{ display: 'inline-block' }}>
+        <Interaction.H2>
           {t(`repo/add${isTemplate ? '/template/' : '/'}title`)}
+          {isTemplate && (
+            <a
+              {...styles.infoLink}
+              href='https://github.com/orbiting/publikator-frontend/blob/template-fixes/docs/templates.md'
+              target='_blank'
+              {...linkRule}
+            >
+              <InfoIcon />
+            </a>
+          )}
         </Interaction.H2>
-        {isTemplate && (
-          <a
-            {...styles.infoLink}
-            href='https://github.com/orbiting/publikator-frontend/blob/template-fixes/docs/templates.md'
-            target='_blank'
-            {...linkRule}
-          >
-            <InfoIcon />
-          </a>
-        )}
         <form
           {...styles.form}
           onSubmit={e => this.onSubmit(e)}

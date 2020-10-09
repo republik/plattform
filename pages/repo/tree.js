@@ -158,7 +158,7 @@ class EditorPage extends Component {
       .map(key => key.split('/').pop())
     return (
       <Frame>
-        <Frame.Header>
+        <Frame.Header isTemplate={repo?.isTemplate}>
           <Frame.Header.Section align='left'>
             <Frame.Nav>
               <RepoNav

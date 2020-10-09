@@ -149,7 +149,7 @@ export default compose(
 
   return (
     <Frame raw>
-      <Frame.Header>
+      <Frame.Header isTemplate={isTemplate}>
         <Frame.Header.Section align='left'>
           <Frame.Nav>
             <RepoNav

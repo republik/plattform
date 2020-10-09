@@ -37,9 +37,15 @@ export const Section = ({ align, children }) => (
   <div {...styles[align || 'left']}>{children}</div>
 )
 
-export const Header = ({ children, barStyle }) => (
+export const Header = ({ children, barStyle, isTemplate }) => (
   <div {...styles.header}>
-    <div {...styles.bar} style={barStyle}>
+    <div
+      {...styles.bar}
+      style={{
+        backgroundColor: isTemplate ? colors.secondaryBg : undefined,
+        ...barStyle
+      }}
+    >
       {children}
     </div>
     <LoadingBar />

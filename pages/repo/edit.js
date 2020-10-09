@@ -777,10 +777,9 @@ export class EditorPage extends Component {
     return (
       <Frame raw>
         <Frame.Header
+          isTemplate={isTemplate}
           barStyle={{
-            borderBottom: isTemplate
-              ? `3px solid ${colors.divider}`
-              : activeUsers.length
+            borderBottom: activeUsers.length
               ? `3px solid ${readOnly ? colors.error : warningColor}`
               : undefined
           }}
