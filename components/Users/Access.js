@@ -456,7 +456,7 @@ const Access = withT(({ grants, campaigns, revokeAccess, t }) => {
   )
 })
 
-export default ({ userId }) => {
+const AccessComponent = ({ userId }) => {
   return (
     <Query query={GET_ACCESS_GRANTS} variables={{id: userId}}>{({loading, error, data}) => {
       return (
@@ -474,4 +474,6 @@ export default ({ userId }) => {
       )
     }}</Query>
   )
-}
+};
+
+export default AccessComponent;

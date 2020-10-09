@@ -7,7 +7,7 @@ import {
   Footer
 } from '../components/Layout'
 
-export default () => {
+const Layout = () => {
   return (
     <App>
       <Body>
@@ -19,4 +19,6 @@ export default () => {
       </Body>
     </App>
   )
-}
+};
+
+export default Layout;

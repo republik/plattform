@@ -6,7 +6,7 @@ import { Link } from '../../../server/routes'
 import { displayDate } from '../../Display/utils'
 import { tableStyles as styles } from '../../Tables/utils'
 
-export default ({ items,...props }) => {
+const Table = ({ items,...props }) => {
   return (
     <table {...props} {...styles.table}>
       <colgroup>
@@ -54,4 +54,6 @@ export default ({ items,...props }) => {
       </tbody>
     </table>
   )
-}
+};
+
+export default Table;

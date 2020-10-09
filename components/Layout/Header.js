@@ -65,7 +65,7 @@ const navLinkStyles = {
   cursor: 'pointer'
 }
 
-export default ({ ...props }) => {
+const HeaderComponent = ({ ...props }) => {
   const searchParams = props.search ? { search: props.search } : {}
   return (
     <Header {...props}>
@@ -124,4 +124,6 @@ export default ({ ...props }) => {
       </HeaderSection>
     </Header>
   )
-}
+};
+
+export default HeaderComponent;

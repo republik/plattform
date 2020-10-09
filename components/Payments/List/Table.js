@@ -37,7 +37,7 @@ const getDueDate = (
   return displayDate(dueDate)
 }
 
-export default ({ items, sort, onSort, ...props }) => {
+const Table = ({ items, sort, onSort, ...props }) => {
   const sortHandler = createSortHandler(sort || {}, onSort)
   const indicator = createSortIndicator(sort || {})
   return (
@@ -128,4 +128,6 @@ export default ({ items, sort, onSort, ...props }) => {
       </tbody>
     </table>
   )
-}
+};
+
+export default Table;

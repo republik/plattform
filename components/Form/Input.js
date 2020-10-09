@@ -34,31 +34,33 @@ const styles = {
   })
 }
 
-export default ({
-  value,
-  type,
-  name,
-  onChange,
-  label,
-  checked,
-  ...props
-}) => (
-  <div
-    {...props}
-    className={
-      type === 'checkbox'
-        ? `${styles.container.checkbox}`
-        : ''
-    }
-  >
-    <Label>{label}</Label>
-    <input
-      name={name}
-      className={`${styles.input}`}
-      type={type}
-      value={value}
-      onChange={onChange}
-      checked={checked}
-    />
-  </div>
-)
+const Input = (
+  {
+    value,
+    type,
+    name,
+    onChange,
+    label,
+    checked,
+    ...props
+  }
+) => <div
+  {...props}
+  className={
+    type === 'checkbox'
+      ? `${styles.container.checkbox}`
+      : ''
+  }
+>
+  <Label>{label}</Label>
+  <input
+    name={name}
+    className={`${styles.input}`}
+    type={type}
+    value={value}
+    onChange={onChange}
+    checked={checked}
+  />
+</div>;
+
+export default Input;

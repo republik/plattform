@@ -11,15 +11,17 @@ import {
   createSortIndicator
 } from '../../Tables/utils'
 
-export default ({
-  items,
-  sort,
-  onSort,
-  onMessage,
-  onMatch,
-  onHide,
-  ...props
-}) => {
+const Table = (
+  {
+    items,
+    sort,
+    onSort,
+    onMessage,
+    onMatch,
+    onHide,
+    ...props
+  }
+) => {
   const sortHandler = createSortHandler(sort || {}, onSort)
   const indicator = createSortIndicator(sort || {})
   return (
@@ -144,4 +146,6 @@ export default ({
       </tbody>
     </table>
   )
-}
+};
+
+export default Table;

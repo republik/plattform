@@ -8,13 +8,13 @@ import {
 
 const { P } = Interaction
 
-export default ({ error }) => (
-  <P
-    style={{
-      color: colors.error,
-      margin: '20px 0'
-    }}
-  >
-    {errorToString(error)}
-  </P>
-)
+const ErrorMessage = ({ error }) => <P
+  style={{
+    color: colors.error,
+    margin: '20px 0'
+  }}
+>
+  {errorToString(error)}
+</P>;
+
+export default ErrorMessage;

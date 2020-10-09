@@ -126,14 +126,14 @@ class UpdateRole extends Component {
                 </span>
               </p>
             </form>
-          )
+          );
         }}
       </Mutation>
-    )
+    );
   }
 }
 
-export default ({ userId }) => {
+const Roles = ({ userId }) => {
   return (
     <Query query={GET_ROLES} variables={{ id: userId }}>
       {({ loading, error, data }) => {
@@ -166,4 +166,6 @@ export default ({ userId }) => {
       }}
     </Query>
   )
-}
+};
+
+export default Roles;

@@ -112,7 +112,7 @@ const Subnav = ({ userId, section }) => (
   </div>
 )
 
-export default ({ userId, section }) => {
+const ProfileHeader = ({ userId, section }) => {
   return (
     <Query query={GET_PROFILE} variables={{ id: userId }}>
       {({ loading, error, data }) => {
@@ -181,4 +181,6 @@ export default ({ userId, section }) => {
       }}
     </Query>
   )
-}
+};
+
+export default ProfileHeader;

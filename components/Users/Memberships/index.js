@@ -421,7 +421,7 @@ const MembershipDetails = ({ userId, membership, ...props }) => {
   )
 }
 
-export default ({ userId }) => {
+const Index = ({ userId }) => {
   return (
     <Query
       query={GET_MEMBERSHIPS}
@@ -481,4 +481,6 @@ export default ({ userId }) => {
       }}
     </Query>
   )
-}
+};
+
+export default Index;

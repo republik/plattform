@@ -38,7 +38,7 @@ const EventLogTable = ({ entries, ...props }) => (
   </table>
 )
 
-export default ({ userId }) => {
+const LatestActivity = ({ userId }) => {
   return (
     <Query query={GET_EVENT_LOG} ssr={false} variables={{ id: userId }}>
       {({ loading, error, data }) => {
@@ -69,4 +69,6 @@ export default ({ userId }) => {
       }}
     </Query>
   )
-}
+};
+
+export default LatestActivity;
