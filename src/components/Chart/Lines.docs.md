@@ -583,7 +583,7 @@ Gesamt,2014,7.13645,7.11445,7.15846
 
 Use a `"xScale": "ordinal"` to display values not representable as JavaScript dates, e.g. going back 500’000 years. Use `"xSort": "none"` if the data is already sorted.
 
-End values can be disabled with `"endValue": false`. Should only be done when the value is truely irrelevant.
+End values can be disabled with `"endValue": false`. Should only be done when the value is truly irrelevant.
 
 ```react
 <div>

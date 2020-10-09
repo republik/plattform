@@ -122,26 +122,25 @@ const Hemicycle = props => {
           })`}
         >
           <g transform={`translate(${w >> 1},${hemicycleOffset})`}>
-            {primaryAngles.map(d => {
+            {primaryAngles.map((d, i) => {
               const datum = primaryVals.find(g => g.label === d[2])
               const fill = color(datum[colorProp])
               return (
-                <>
-                  <path
-                    fill={fill}
-                    d={arc({
-                      outerRadius: outerRadiusPrimary,
-                      innerRadius: innerRadiusPrimary,
-                      startAngle: d[0],
-                      endAngle: d[1] + 0.001
-                    })}
-                  />
-                </>
+                <path
+                  key={`primaryPath${i}`}
+                  fill={fill}
+                  d={arc({
+                    outerRadius: outerRadiusPrimary,
+                    innerRadius: innerRadiusPrimary,
+                    startAngle: d[0],
+                    endAngle: d[1] + 0.001
+                  })}
+                />
               )
             })}
             {primaryAngles
               .filter((d, i) => primaryVals[i].value >= inlineLabelThreshold)
-              .map(d => {
+              .map((d, i) => {
                 const isMajorParty = Math.abs(d[1] - d[0]) > MAX_ARC / 10
                 const datum = primaryVals.find(g => g.label === d[2])
                 const fill = color(datum[colorProp])
@@ -164,7 +163,7 @@ const Hemicycle = props => {
                     : 'start'
 
                 return (
-                  <g transform={`translate(${x},${y})`}>
+                  <g key={`primaryText${i}`} transform={`translate(${x},${y})`}>
                     <text
                       {...styles.label}
                       x={0}
@@ -188,21 +187,20 @@ const Hemicycle = props => {
                   </g>
                 )
               })}
-            {secondaryAngles.map(d => {
+            {secondaryAngles.map((d, i) => {
               const datum = secondaryVals.find(g => g.label === d[2])
               const fill = color(datum[colorProp])
               return (
-                <>
-                  <path
-                    fill={fill}
-                    d={arc({
-                      outerRadius: outerRadiusSecondary,
-                      innerRadius: innerRadiusSecondary,
-                      startAngle: d[0],
-                      endAngle: d[1] + 0.001
-                    })}
-                  />
-                </>
+                <path
+                  key={`secondaryPath${i}`}
+                  fill={fill}
+                  d={arc({
+                    outerRadius: outerRadiusSecondary,
+                    innerRadius: innerRadiusSecondary,
+                    startAngle: d[0],
+                    endAngle: d[1] + 0.001
+                  })}
+                />
               )
             })}
           </g>
