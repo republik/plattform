@@ -12,38 +12,38 @@ export const useColorContext = () => {
     }
     const { formatColorMap = {} } = colorScheme
     // precomputed css rules which are often used
-    const colorRules = {
-      textColor: css({
-        color: colorScheme.cssColors?.text || colorScheme.text
-      }),
-      textBorderColor: css({
-        borderColor: colorScheme.cssColors?.text || colorScheme.text
-      }),
-      textFill: css({
-        fill: colorScheme.cssColors?.text || colorScheme.text
-      }),
-      logoFill: css({
-        fill: colorScheme.cssColors?.logo || colorScheme.logo
-      }),
-      lightTextColor: css({
-        color: colorScheme.cssColors?.lightText || colorScheme.lightText
-      }),
-      defaultBackgroundColor: css({
-        backgroundColor: colorScheme.cssColors?.default || colorScheme.default
-      }),
-      hoverBackgroundColor: css({
-        backgroundColor: colorScheme.cssColors?.hover || colorScheme.hover
-      }),
-      dividerColor: css({
-        color: colorScheme.cssColors?.divider || colorScheme.divider
-      }),
-      dividerBorderColor: css({
-        borderColor: colorScheme.cssColors?.divider || colorScheme.divider
-      }),
-      dividerBackgroundColor: css({
-        backgroundColor: colorScheme.cssColors?.divider || colorScheme.divider
+
+    const createColorRule = (attr, color) => {
+      return css({
+        [attr]: colorScheme.cssColors?.[color] || colorScheme[color]
       })
     }
+
+    const colorRules = {
+      text: {
+        color: createColorRule('color', 'text'),
+        borderColor: createColorRule('borderColor', 'text'),
+        fill: createColorRule('fill', 'text')
+      },
+      textSoft: {
+        color: createColorRule('color', 'textSoft')
+      },
+      default: {
+        backgroundColor: createColorRule('color', 'textSoft')
+      },
+      hover: {
+        backgroundColor: createColorRule('backgroundColor', 'hover')
+      },
+      divider: {
+        color: createColorRule('color', 'divider'),
+        borderColor: createColorRule('borderColor', 'divider'),
+        fill: createColorRule('fill', 'divider')
+      },
+      logo: {
+        fill: createColorRule('fill', 'logo')
+      }
+    }
+
     return [
       {
         ...colorScheme,

@@ -32,7 +32,7 @@ const LogoSvg = ({ width, height, fill, ...props }) => {
   const [colorScheme] = useColorContext()
   return (
     <svg
-      {...colorScheme.rules.logoFill}
+      {...colorScheme.rules.logo.fill}
       {...props}
       width={width}
       height={height}
