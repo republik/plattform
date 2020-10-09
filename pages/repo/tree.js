@@ -25,6 +25,7 @@ import * as fragments from '../../lib/graphql/fragments'
 
 import CurrentPublications from '../../components/Publication/Current'
 import UncommittedChanges from '../../components/VersionControl/UncommittedChanges'
+import withT from '../../lib/withT'
 
 export const COMMIT_LIMIT = 40
 export const getRepoHistory = gql`
@@ -148,7 +149,7 @@ class EditorPage extends Component {
   }
 
   render() {
-    const { router, commits, hasMore, fetchMore } = this.props
+    const { router, commits, hasMore, fetchMore, t } = this.props
     const { loading, error, repo } = this.props.data
     const { repoId } = router.query
 
@@ -157,10 +158,13 @@ class EditorPage extends Component {
       .map(key => key.split('/').pop())
     return (
       <Frame>
-        <Frame.Header>
+        <Frame.Header isTemplate={repo?.isTemplate}>
           <Frame.Header.Section align='left'>
             <Frame.Nav>
-              <RepoNav route='repo/tree' />
+              <RepoNav
+                route='repo/tree'
+                prefix={repo?.isTemplate ? 'template' : 'document'}
+              />
             </Frame.Nav>
           </Frame.Header.Section>
           <Frame.Header.Section align='right'>
@@ -217,6 +221,7 @@ class EditorPage extends Component {
 
 export default compose(
   withRouter,
+  withT,
   withAuthorization(['editor']),
   graphql(getRepoHistory, {
     options: ({ router }) => {

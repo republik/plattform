@@ -149,10 +149,13 @@ export default compose(
 
   return (
     <Frame raw>
-      <Frame.Header>
+      <Frame.Header isTemplate={isTemplate}>
         <Frame.Header.Section align='left'>
           <Frame.Nav>
-            <RepoNav route='repo/edit' />
+            <RepoNav
+              route='repo/edit'
+              prefix={isTemplate ? 'template' : 'document'}
+            />
           </Frame.Nav>
         </Frame.Header.Section>
         <Frame.Header.Section align='right'>

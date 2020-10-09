@@ -485,12 +485,14 @@ export class EditorPage extends Component {
     if (isNew) {
       if (templateRepo) {
         const commit = templateRepo.latestCommit
-        const json = {
-          ...commit.document.content,
-          // add format & section to root mdast node
-          format: commit.document.meta.format,
-          section: commit.document.meta.section
-        }
+        const json = JSON.parse(
+          JSON.stringify({
+            ...commit.document.content,
+            // add format & section to root mdast node
+            format: commit.document.meta.format,
+            section: commit.document.meta.section
+          })
+        )
 
         const titleLeaf = findTitleLeaf(json)
         if (titleLeaf) {
@@ -501,6 +503,7 @@ export class EditorPage extends Component {
         json.meta.templateRepoId = router.query.templateRepoId
 
         committedEditorState = this.editor.serializer.deserialize(json)
+
         debug('loadState', 'new document from template', committedEditorState)
       } else {
         committedEditorState = this.editor.newDocument(
@@ -702,7 +705,8 @@ export class EditorPage extends Component {
     const {
       router: {
         query: { repoId, commitId }
-      }
+      },
+      data
     } = this.props
     const { editorState } = this.state
     const serializedState = this.editor.serializer.serialize(editorState)
@@ -711,12 +715,14 @@ export class EditorPage extends Component {
     Router.pushRoute('repo/raw', {
       repoId: repoId.split('/'),
       commitId,
+      isTemplate:
+        this.props.router.query.isTemplate || data?.repo?.isTemplate
+          ? true
+          : null,
       ...(commitId === 'new'
         ? {
             schema:
-              this.props.router.query.schema ||
-              this.props.router.query.template,
-            isTemplate: this.props.router.query.isTemplate
+              this.props.router.query.schema || this.props.router.query.template
           }
         : {})
     })
@@ -771,6 +777,7 @@ export class EditorPage extends Component {
     return (
       <Frame raw>
         <Frame.Header
+          isTemplate={isTemplate}
           barStyle={{
             borderBottom: activeUsers.length
               ? `3px solid ${readOnly ? colors.error : warningColor}`
@@ -779,7 +786,11 @@ export class EditorPage extends Component {
         >
           <Frame.Header.Section align='left'>
             <Frame.Nav>
-              <RepoNav route='repo/edit' isNew={isNew} />
+              <RepoNav
+                route='repo/edit'
+                isNew={isNew}
+                prefix={isTemplate ? 'template' : 'document'}
+              />
             </Frame.Nav>
           </Frame.Header.Section>
           <Frame.Header.Section align='right'>

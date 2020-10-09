@@ -22,7 +22,7 @@ const Page = ({
       <Frame.Header>
         <Frame.Header.Section align='left'>
           <Frame.Nav>
-            <RepoNav route='repo/publish' />
+            <RepoNav route='repo/publish' prefix='document' />
           </Frame.Nav>
         </Frame.Header.Section>
         <Frame.Header.Section align='right'>

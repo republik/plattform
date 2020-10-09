@@ -4,6 +4,7 @@ import slugify from '../../lib/utils/slug'
 import schemas from '../Templates'
 import { css } from 'glamor'
 import withT from '../../lib/withT'
+import { ascending } from 'd3-array'
 
 import {
   Interaction,
@@ -13,7 +14,8 @@ import {
   Autocomplete,
   mediaQueries,
   colors,
-  Loader
+  Loader,
+  linkRule
 } from '@project-r/styleguide'
 
 import { GITHUB_ORG, TEMPLATES, REPO_PREFIX } from '../../lib/settings'
@@ -21,10 +23,11 @@ import gql from 'graphql-tag'
 import { compose, graphql } from 'react-apollo'
 import { withRouter } from 'next/router'
 import SearchIcon from 'react-icons/lib/md/search'
+import InfoIcon from 'react-icons/lib/md/info-outline'
 
 const getTemplateRepos = gql`
   query templateListSearch {
-    reposSearch(isTemplate: true) {
+    reposSearch(isTemplate: true, first: 200) {
       totalCount
       nodes {
         id
@@ -81,6 +84,12 @@ const styles = {
       width: '38%',
       minWidth: 160
     }
+  }),
+  infoLink: css({
+    display: 'inline-block',
+    verticalAlign: 'top',
+    marginLeft: '0.6em',
+    fontSize: '0.6em'
   })
 }
 
@@ -113,12 +122,16 @@ const TemplatePicker = compose(
   const templateOptions = useMemo(() => {
     return schemaOptions
       .concat(
-        (data?.reposSearch?.nodes || []).map(repo => ({
-          value: repo.latestCommit.document.meta.template,
-          text: repo.latestCommit.document.meta.title,
-          repoId: repo.id,
-          slug: repo.latestCommit.document.meta.slug
-        }))
+        (data?.reposSearch?.nodes || [])
+          .map(repo => ({
+            value: repo.latestCommit.document.meta.template,
+            text: repo.latestCommit.document.meta.title,
+            repoId: repo.id,
+            slug: repo.latestCommit.document.meta.slug
+          }))
+          .sort((repo1, repo2) =>
+            ascending(repo1.text?.toLowerCase(), repo2.text?.toLowerCase())
+          )
       )
       .filter(
         ({ text }) =>
@@ -244,6 +257,16 @@ class RepoAdd extends Component {
       <div {...styles.new}>
         <Interaction.H2>
           {t(`repo/add${isTemplate ? '/template/' : '/'}title`)}
+          {isTemplate && (
+            <a
+              {...styles.infoLink}
+              href='https://github.com/orbiting/publikator-frontend/blob/template-fixes/docs/templates.md'
+              target='_blank'
+              {...linkRule}
+            >
+              <InfoIcon />
+            </a>
+          )}
         </Interaction.H2>
         <form
           {...styles.form}

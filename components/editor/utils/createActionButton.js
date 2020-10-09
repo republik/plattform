@@ -13,7 +13,7 @@ const defaultProps = {
   onChange: () => true
 }
 
-export default ({
+const createActionButton = ({
   isDisabled = () => false,
   isVisible = () => true,
   reducer
@@ -46,3 +46,4 @@ export default ({
 
   return ActionButton
 }
+export default createActionButton

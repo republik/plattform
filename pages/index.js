@@ -49,7 +49,7 @@ const Index = ({ router: { query } }) => {
     .filter(Boolean)
   return (
     <Frame>
-      <Frame.Header>
+      <Frame.Header isTemplate={!!query.templates}>
         <Frame.Header.Section align='left'>
           <Frame.Nav>
             <IndexNav />
