@@ -29,7 +29,8 @@ export const useColorContext = () => {
         color: createColorRule('color', 'textSoft')
       },
       default: {
-        backgroundColor: createColorRule('color', 'textSoft')
+        backgroundColor: createColorRule('backgroundColor', 'default'),
+        borderColor: createColorRule('borderColor', 'default')
       },
       hover: {
         backgroundColor: createColorRule('backgroundColor', 'hover')
@@ -37,7 +38,8 @@ export const useColorContext = () => {
       divider: {
         color: createColorRule('color', 'divider'),
         borderColor: createColorRule('borderColor', 'divider'),
-        fill: createColorRule('fill', 'divider')
+        fill: createColorRule('fill', 'divider'),
+        backgroundColor: createColorRule('backgroundColor', 'divider')
       },
       logo: {
         fill: createColorRule('fill', 'logo')
