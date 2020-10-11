@@ -393,7 +393,11 @@ const BarChart = props => {
               transform={`translate(${group.x},${group.y +
                 (hasXTicks ? AXIS_HEIGHT : 0)})`}
             >
-              <text dy='1.5em' y={-AXIS_HEIGHT} {...styles.groupTitle}>
+              <text
+                dy='1.5em'
+                y={hasXTicks ? -AXIS_HEIGHT : 0}
+                {...styles.groupTitle}
+              >
                 {group.title}
               </text>
               {group.bars.map(bar => {
