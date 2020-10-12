@@ -30,7 +30,8 @@ const styles = {
     )} ${pxToRem(-profilePictureBorderSize)} ${pxToRem(
       -profilePictureBorderSize
     )}`,
-    border: `${pxToRem(profilePictureBorderSize)} solid`
+    borderWidth: `${pxToRem(profilePictureBorderSize)}`,
+    borderStyle: 'solid'
   }),
   meta: css({
     alignSelf: 'stretch',
