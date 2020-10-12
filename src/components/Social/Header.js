@@ -1,12 +1,12 @@
 import React from 'react'
 import { css } from 'glamor'
 import TwitterIcon from 'react-icons/lib/fa/twitter'
-import colors from '../../theme/colors'
 import { mUp } from '../../theme/mediaQueries'
 import { sansSerifMedium16, sansSerifRegular14 } from '../Typography/styles'
 import { ellipsize } from '../../lib/styleMixins'
 import { timeFormat } from '../../lib/timeFormat'
 import { convertStyleToRem, pxToRem } from '../Typography/utils'
+import { useColorContext } from '../Colors/useColorContext'
 
 export const profilePictureSize = 40
 export const profilePictureMargin = 10
@@ -30,7 +30,7 @@ const styles = {
     )} ${pxToRem(-profilePictureBorderSize)} ${pxToRem(
       -profilePictureBorderSize
     )}`,
-    border: `${pxToRem(profilePictureBorderSize)} solid white`
+    border: `${pxToRem(profilePictureBorderSize)} solid`
   }),
   meta: css({
     alignSelf: 'stretch',
@@ -42,7 +42,7 @@ const styles = {
   name: css({
     ...convertStyleToRem(sansSerifMedium16),
     lineHeight: pxToRem('20px'),
-    color: colors.text,
+    color: 'inherit',
     display: 'flex',
     alignItems: 'center',
     paddingRight: '15px'
@@ -53,7 +53,6 @@ const styles = {
   subline: css({
     ...convertStyleToRem(sansSerifRegular14),
     lineHeight: pxToRem('20px'),
-    color: colors.text,
     display: 'flex',
     alignItems: 'center'
   }),
@@ -62,7 +61,6 @@ const styles = {
     overflow: 'hidden'
   }),
   icon: css({
-    color: '#CDCDCD',
     position: 'absolute',
     right: 0,
     top: '2px',
@@ -77,10 +75,10 @@ const styles = {
   }),
   link: css({
     textDecoration: 'none',
-    color: colors.text,
+    color: 'inherit',
     '@media (hover)': {
       ':hover': {
-        color: colors.lightText
+        opacity: 0.8
       }
     }
   })
@@ -100,13 +98,19 @@ const UserLink = ({ handle, children }) => (
 
 export const Header = ({ url, userProfileImageUrl, name, handle, date }) => {
   const cleanHandle = handle && handle.replace('@', '')
+  const [colorScheme] = useColorContext()
   return (
-    <div {...styles.root}>
+    <div {...styles.root} {...colorScheme.rules.text.color}>
       <UserLink handle={cleanHandle}>
-        <img {...styles.profilePicture} src={userProfileImageUrl} alt='' />
+        <img
+          {...styles.profilePicture}
+          {...colorScheme.rules.default.borderColor}
+          src={userProfileImageUrl}
+          alt=''
+        />
       </UserLink>
       <Link href={url}>
-        <TwitterIcon {...styles.icon} />
+        <TwitterIcon {...styles.icon} {...colorScheme.rules.divider.color} />
       </Link>
       <div {...styles.meta}>
         <div {...styles.name}>

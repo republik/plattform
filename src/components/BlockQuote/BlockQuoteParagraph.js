@@ -6,10 +6,10 @@ import { mUp } from '../../theme/mediaQueries'
 import { fontRule } from '../Typography/Interaction'
 import { sansSerifRegular15, sansSerifRegular18 } from '../Typography/styles'
 import { convertStyleToRem } from '../Typography/utils'
+import { useColorContext } from '../Colors/useColorContext'
 
 const styles = {
   quote: css({
-    backgroundColor: '#f7f7f7',
     margin: 0,
     padding: '0 15px 12px 15px',
     fontSize: '15px',
@@ -28,8 +28,14 @@ const styles = {
 }
 
 const BlockQuoteParagraph = ({ children, attributes }) => {
+  const [colorScheme] = useColorContext()
   return (
-    <p {...attributes} {...styles.quote} {...fontRule}>
+    <p
+      {...attributes}
+      {...styles.quote}
+      {...colorScheme.rules.hover.backgroundColor}
+      {...fontRule}
+    >
       {children}
     </p>
   )
