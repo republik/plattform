@@ -27,7 +27,6 @@ const styles = {
     position: 'relative',
     zIndex: 1, // to establish a stacking context
     height: '100vh',
-    boxShadow: '0 0 6px rgba(0,0,0,.2)',
     overflowY: 'auto',
     WebkitOverflowScrolling: 'touch',
     [mUp]: {
@@ -122,6 +121,7 @@ export const OverlayRenderer = ({
       <div
         {...merge(styles.inner, mUpStyle && { [mUp]: mUpStyle })}
         {...colorScheme.rules.overlay.backgroundColor}
+        {...colorScheme.rules.overlay.boxShadow}
         {...colorScheme.rules.text.color}
         ref={innerRef}
       >

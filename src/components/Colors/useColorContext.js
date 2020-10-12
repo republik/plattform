@@ -33,7 +33,8 @@ export const useColorContext = () => {
         borderColor: createColorRule('borderColor', 'default')
       },
       overlay: {
-        backgroundColor: createColorRule('backgroundColor', 'overlay')
+        backgroundColor: createColorRule('backgroundColor', 'overlay'),
+        boxShadow: createColorRule('boxShadow', 'overlayShadow')
       },
       hover: {
         backgroundColor: createColorRule('backgroundColor', 'hover')

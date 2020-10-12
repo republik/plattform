@@ -41,6 +41,7 @@ const colorsDeprecated = {
   scribble: '#ef4533',
   neutral: '#bbb',
   highlight: '#FFFFCC',
+  overlayShadow: '0 0 15px rgba(0,0,0,0.1)',
   sequential: [
     'rgb(8, 48, 107)',
     'rgb(8, 61, 126)',
@@ -78,6 +79,7 @@ const colorsDeprecated = {
     lightFill: '#555',
     error: 'rgb(239,69,51)',
     disabled: '#242424',
+    overlayShadow: '0 0 15px rgba(0,0,0,0.5)',
     formatColorMap: {
       '#000': '#fff',
       '#000000': '#fff',
@@ -106,7 +108,8 @@ const colors = {
     accentColorOppinion: '#D0913C',
     accentColorFormats: '#d44438',
     accentColorMeta: '#000000',
-    accentColorAudio: '#000000'
+    accentColorAudio: '#000000',
+    overlayShadow: '0 0 15px rgba(0,0,0,0.1)'
   },
   dark: {
     logo: '#FFFFFF',
@@ -126,7 +129,8 @@ const colors = {
     accentColorOppinion: '#D0913C',
     accentColorFormats: '#d44438',
     accentColorMeta: '#FFFFFF',
-    accentColorAudio: '#FFFFFF'
+    accentColorAudio: '#FFFFFF',
+    overlayShadow: '0 0 15px rgba(0,0,0,0.5)'
   },
   static: {
     primary: '#00AA00',
