@@ -4,8 +4,7 @@ import PropTypes from 'prop-types'
 import { css, merge } from 'glamor'
 import zIndex from '../../theme/zIndex'
 import { mUp } from '../../theme/mediaQueries'
-import colors from '../../theme/colors'
-import ColorContext from '../Colors/ColorContext'
+import { useColorContext } from '../Colors/useColorContext'
 
 import { useBodyScrollLock } from '../../lib/useBodyScrollLock'
 
@@ -27,12 +26,10 @@ const styles = {
   inner: css({
     position: 'relative',
     zIndex: 1, // to establish a stacking context
-    background: 'white',
     height: '100vh',
     boxShadow: '0 0 6px rgba(0,0,0,.2)',
     overflowY: 'auto',
     WebkitOverflowScrolling: 'touch',
-    color: colors.text,
     [mUp]: {
       maxWidth: '600px',
       minHeight: '60vh',
@@ -76,7 +73,6 @@ const Overlay = props => {
     }
   }, [ssrMode])
   const [innerRef] = useBodyScrollLock(!ssrMode)
-
   const element = (
     <OverlayRenderer
       {...props}
@@ -114,6 +110,7 @@ export const OverlayRenderer = ({
       onClose()
     }
   }
+  const [colorScheme] = useColorContext()
 
   return (
     <div
@@ -122,14 +119,14 @@ export const OverlayRenderer = ({
       style={{ opacity: isVisible ? 1 : 0 }}
       onClick={close}
     >
-      <ColorContext.Provider value={colors}>
-        <div
-          {...merge(styles.inner, mUpStyle && { [mUp]: mUpStyle })}
-          ref={innerRef}
-        >
-          {children}
-        </div>
-      </ColorContext.Provider>
+      <div
+        {...merge(styles.inner, mUpStyle && { [mUp]: mUpStyle })}
+        {...colorScheme.rules.overlay.backgroundColor}
+        {...colorScheme.rules.text.color}
+        ref={innerRef}
+      >
+        {children}
+      </div>
     </div>
   )
 }

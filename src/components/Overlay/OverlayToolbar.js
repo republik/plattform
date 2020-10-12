@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { css } from 'glamor'
 import MdClose from 'react-icons/lib/md/close'
 
-import colors from '../../theme/colors'
+import { useColorContext } from '../Colors/useColorContext'
 import { mUp } from '../../theme/mediaQueries'
 import { sansSerifRegular16 } from '../Typography/styles'
 
@@ -13,9 +13,7 @@ const styles = {
   root: css({
     display: 'flex',
     height: `${height}px`,
-    background: 'white',
-    borderBottom: `1px solid ${colors.divider}`,
-
+    borderBottom: `1px solid`,
     position: 'fixed',
     top: '0',
     left: '0',
@@ -62,7 +60,6 @@ const styles = {
     background: 'transparent',
 
     ...sansSerifRegular16,
-    color: colors.primary,
     margin: '0 0 0 auto',
     padding: '0 12px',
 
@@ -72,27 +69,46 @@ const styles = {
   })
 }
 
-export const OverlayToolbar = ({ children }) => (
-  <div {...styles.root}>{children}</div>
-)
+export const OverlayToolbar = ({ children }) => {
+  const [colorScheme] = useColorContext()
+  return (
+    <div
+      {...styles.root}
+      {...colorScheme.rules.divider.borderColor}
+      {...colorScheme.rules.overlay.backgroundColor}
+    >
+      {children}
+    </div>
+  )
+}
 OverlayToolbar.propTypes = {
   children: PropTypes.node.isRequired
 }
 
-export const OverlayToolbarClose = ({ onClick }) => (
-  <button {...styles.close} onClick={onClick}>
-    <MdClose />
-  </button>
-)
+export const OverlayToolbarClose = ({ onClick }) => {
+  const [colorScheme] = useColorContext()
+  return (
+    <button {...styles.close} onClick={onClick}>
+      <MdClose {...colorScheme.rules.text.fill} />
+    </button>
+  )
+}
 OverlayToolbarClose.propTypes = {
   onClick: PropTypes.func.isRequired
 }
 
-export const OverlayToolbarConfirm = ({ label, onClick }) => (
-  <button {...styles.confirm} onClick={onClick}>
-    {label}
-  </button>
-)
+export const OverlayToolbarConfirm = ({ label, onClick }) => {
+  const [colorScheme] = useColorContext()
+  return (
+    <button
+      {...styles.confirm}
+      {...css({ color: colorScheme.static.primary })}
+      onClick={onClick}
+    >
+      {label}
+    </button>
+  )
+}
 OverlayToolbarConfirm.propTypes = {
   label: PropTypes.node.isRequired,
   onClick: PropTypes.func.isRequired
