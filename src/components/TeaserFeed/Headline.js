@@ -10,6 +10,7 @@ import {
   cursiveTitle22
 } from '../Typography/styles'
 import { convertStyleToRem, pxToRem } from '../Typography/utils'
+import { useColorContext } from '../Colors/useColorContext'
 
 const styles = {
   base: css({
@@ -40,20 +41,41 @@ const styles = {
   })
 }
 
-export const Editorial = ({ children, style }) => (
-  <h1 {...styles.base} {...styles.editorial} style={style}>
-    {children}
-  </h1>
-)
+export const Editorial = ({ children, cssColor }) => {
+  const [colorScheme] = useColorContext()
+  return (
+    <h1
+      {...styles.base}
+      {...styles.editorial}
+      {...colorScheme.getColorRule('color', cssColor)}
+    >
+      {children}
+    </h1>
+  )
+}
 
-export const Interaction = ({ children, style }) => (
-  <h1 {...styles.base} {...styles.interaction} style={style}>
-    {children}
-  </h1>
-)
+export const Interaction = ({ children, cssColor }) => {
+  const [colorScheme] = useColorContext()
+  return (
+    <h1
+      {...styles.base}
+      {...styles.interaction}
+      {...colorScheme.getColorRule('color', cssColor)}
+    >
+      {children}
+    </h1>
+  )
+}
 
-export const Scribble = ({ children, style }) => (
-  <h1 {...styles.base} {...styles.scribble} style={style}>
-    {children}
-  </h1>
-)
+export const Scribble = ({ children, cssColor }) => {
+  const [colorScheme] = useColorContext()
+  return (
+    <h1
+      {...styles.base}
+      {...styles.scribble}
+      {...colorScheme.getColorRule('color', cssColor)}
+    >
+      {children}
+    </h1>
+  )
+}

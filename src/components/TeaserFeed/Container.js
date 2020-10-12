@@ -3,13 +3,14 @@ import PropTypes from 'prop-types'
 import { css } from 'glamor'
 import { mUp } from '../../theme/mediaQueries'
 import { Format } from './Format'
-import colors from '../../theme/colors'
 import CalloutMenu from '../Callout/CalloutMenu'
 import MoreIcon from 'react-icons/lib/md/more-vert'
+import { useColorContext } from '../Colors/useColorContext'
 
 const styles = {
   main: css({
-    borderTop: `1px solid ${colors.text}`,
+    borderTopWidth: 1,
+    borderTopStyle: 'solid',
     paddingTop: 8,
     paddingBottom: 30,
     position: 'relative',
@@ -31,20 +32,20 @@ const MoreIconWithProps = props => (
 
 const Teaser = ({
   children,
-  color,
+  cssColor,
   format,
   interaction,
   Link,
   highlighted,
   menu
 }) => {
+  const [colorScheme] = useColorContext()
+
   return (
     <div
       {...styles.main}
-      style={{
-        borderColor: color,
-        backgroundColor: highlighted ? colors.primaryBg : undefined
-      }}
+      {...colorScheme.getColorRule('borderColor', cssColor)}
+      {...(highlighted && colorScheme.getColorRule('backgroundColor', 'alert'))}
     >
       {menu && (
         <div
@@ -58,7 +59,7 @@ const Teaser = ({
         </div>
       )}
       {format && format.meta && (
-        <Format color={color}>
+        <Format colorRule={colorScheme.getColorRule('color', cssColor)}>
           <Link href={format.meta.path} passHref>
             <a {...styles.link} href={format.meta.path}>
               {format.meta.title}

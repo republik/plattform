@@ -2,6 +2,7 @@ import { useContext, useMemo } from 'react'
 import { css } from 'glamor'
 import ColorContext from './ColorContext'
 import colors from '../../theme/colors'
+import memoize from 'lodash/memoize'
 
 export const useColorContext = () => {
   const colorContext = useContext(ColorContext)
@@ -11,14 +12,34 @@ export const useColorContext = () => {
       ...colorContext
     }
     const { formatColorMap = {} } = colorScheme
-    // precomputed css rules which are often used
 
-    const createColorRule = (attr, color) => {
-      return css({
-        [attr]: colorScheme.cssColors?.[color] || colorScheme[color]
-      })
+    const getCSSColor = color =>
+      colorScheme.cssColors?.[color] || colorScheme[color] || color
+
+    const createColorRule = (attr, color, pseudo) => {
+      const cssColor = getCSSColor(color)
+      return css(
+        pseudo
+          ? pseudo === ':hover'
+            ? {
+                '@media (hover)': {
+                  ':hover': {
+                    [attr]: cssColor
+                  }
+                }
+              }
+            : {
+                [pseudo]: {
+                  [attr]: cssColor
+                }
+              }
+          : {
+              [attr]: cssColor
+            }
+      )
     }
 
+    // precomputed css rules which are often used
     const colorRules = {
       text: {
         color: createColorRule('color', 'text'),
@@ -54,9 +75,11 @@ export const useColorContext = () => {
       {
         ...colorScheme,
         rules: colorRules,
-        formatColorMapper: color => {
+        getColorRule: memoize(createColorRule, (...args) => args.join('.')),
+        getCSSColor,
+        getFormatCSSColor: color => {
           if (formatColorMap[color]) {
-            return formatColorMap[color]
+            return getCSSColor(formatColorMap[color])
           }
           return color
         }

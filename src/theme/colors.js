@@ -79,12 +79,7 @@ const colorsDeprecated = {
     lightFill: '#555',
     error: 'rgb(239,69,51)',
     disabled: '#242424',
-    overlayShadow: '0 0 15px rgba(0,0,0,0.5)',
-    formatColorMap: {
-      '#000': '#fff',
-      '#000000': '#fff',
-      '#282828': '#fff'
-    }
+    overlayShadow: '0 0 15px rgba(0,0,0,0.5)'
   },
   ...getJson('COLORS')
 }
@@ -131,6 +126,11 @@ const colors = {
     accentColorMeta: '#FFFFFF',
     accentColorAudio: '#FFFFFF',
     overlayShadow: '0 0 15px rgba(0,0,0,0.5)'
+  },
+  formatColorMap: {
+    '#000': 'accentColorMeta',
+    '#000000': 'accentColorMeta',
+    '#282828': 'accentColorMeta'
   },
   static: {
     primary: '#00AA00',

@@ -72,12 +72,12 @@ export const TeaserFeed = ({
       ? Headlines.Scribble
       : Headlines.Editorial
   const borderColor = formatMeta.title
-    ? colorScheme.formatColorMapper(formatMeta.color || colors[formatMeta.kind])
+    ? colorScheme.getFormatCSSColor(formatMeta.color || colors[formatMeta.kind])
     : template === 'format'
-    ? colorScheme.formatColorMapper(metaColor || colors[metaKind])
+    ? colorScheme.getFormatCSSColor(metaColor || colors[metaKind])
     : colorScheme.text
   const titleColor = metaColor
-    ? colorScheme.formatColorMapper(metaColor)
+    ? colorScheme.getFormatCSSColor(metaColor)
     : template === 'format'
     ? borderColor
     : colorScheme.text
@@ -86,11 +86,11 @@ export const TeaserFeed = ({
     <Container
       highlighted={highlighted}
       format={format}
-      color={borderColor}
+      cssColor={borderColor}
       Link={Link}
       menu={menu}
     >
-      <Headline style={{ color: titleColor }}>
+      <Headline cssColor={titleColor}>
         <Link href={path} passHref>
           <a {...styles.link} href={path}>
             {title}

@@ -4,6 +4,7 @@ import { sansSerifMedium14, sansSerifMedium16 } from '../Typography/styles'
 import { css } from 'glamor'
 import { mUp } from '../../theme/mediaQueries'
 import { convertStyleToRem } from '../Typography/utils'
+import { useColorContext } from '../Colors/useColorContext'
 
 const styles = {
   main: css({
@@ -16,9 +17,11 @@ const styles = {
   })
 }
 
-export const Format = ({ children, color }) => {
+export const Format = ({ children, cssColor }) => {
+  const [colorScheme] = useColorContext()
+
   return (
-    <p {...styles.main} style={{ color }}>
+    <p {...styles.main} {...colorScheme.getColorRule('color', cssColor)}>
       {children}
     </p>
   )
@@ -26,7 +29,10 @@ export const Format = ({ children, color }) => {
 
 Format.propTypes = {
   children: PropTypes.node.isRequired,
-  color: PropTypes.string
+  cssColor: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.arrayOf(PropTypes.string)
+  ])
 }
 
 export default Format
