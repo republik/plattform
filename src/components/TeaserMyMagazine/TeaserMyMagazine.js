@@ -2,12 +2,18 @@ import { css } from 'glamor'
 import React from 'react'
 import PropTypes from 'prop-types'
 import { mUp } from '../../theme/mediaQueries'
-import { serifTitle20, serifTitle22 } from '../Typography/styles'
+import {
+  serifTitle20,
+  serifTitle22,
+  sansSerifMedium14,
+  sansSerifMedium16
+} from '../Typography/styles'
 import { TeaserSectionTitle } from '../TeaserShared'
 import { TeaserFeed } from '../TeaserFeed'
 import colors from '../../theme/colors'
 import ColorContext from '../Colors/ColorContext'
 import { useColorContext } from '../Colors/useColorContext'
+import { convertStyleToRem } from '../Typography/utils'
 
 const DefaultLink = ({ children }) => children
 
@@ -61,10 +67,24 @@ const TeaserMyMagazine = ({
               </div>
               {latestProgressOrBookmarkedArticles.map(doc => {
                 const { id } = doc
-                const { path, title } = doc.meta
-                const formatTitle = doc.meta.format?.meta?.title
-                const formatPath = doc.meta.format?.meta?.path
-                const formatColor = doc.meta.format?.meta?.color
+                const {
+                  path,
+                  title,
+                  template,
+                  kind: metaKind,
+                  color: metaColor
+                } = doc.meta
+                const formatMeta = doc.meta.format?.meta
+                const formatTitle = formatMeta?.title
+                const formatPath = formatMeta?.path
+
+                const formatColor = formatMeta?.title
+                  ? colorScheme.formatColorMapper(
+                      formatMeta.color || colors[formatMeta.kind]
+                    )
+                  : template === 'format'
+                  ? colorScheme.formatColorMapper(metaColor || colors[metaKind])
+                  : colorScheme.text
 
                 return (
                   <div
@@ -72,11 +92,12 @@ const TeaserMyMagazine = ({
                     style={{ border: `1px solid ${colorScheme.text}` }}
                     key={id}
                   >
-                    {formatTitle ? (
+                    {formatMeta ? (
                       <Link href={formatPath} passHref>
                         <a
+                          {...styles.formatAnchor}
                           href={formatPath}
-                          style={{ color: formatColor, marginBottom: 4 }}
+                          style={{ color: formatColor }}
                         >
                           {formatTitle}
                         </a>
@@ -216,6 +237,15 @@ const styles = {
     [mUp]: {
       ...serifTitle22
     }
+  }),
+  formatAnchor: css({
+    color: 'inherit',
+    textDecoration: 'none',
+    marginBottom: 4,
+    ...convertStyleToRem(sansSerifMedium14),
+    [mUp]: {
+      ...convertStyleToRem(sansSerifMedium16)
+    }
   })
 }
 
@@ -298,6 +328,9 @@ WrappedTeaserMyMagazine.data = {
                 publishDate
                 title
                 path
+                template
+                kind
+                color
                 credits
                 estimatedConsumptionMinutes
                 estimatedReadingMinutes
