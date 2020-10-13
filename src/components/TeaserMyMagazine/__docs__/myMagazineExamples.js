@@ -21,7 +21,8 @@ export const latestProgressOrBookmarkedArticles = [
         id: 'id',
         meta: {
           title: 'Format',
-          color: '#d44438'
+          color: '#d44438',
+          path: '/path-to-format'
         }
       }
     }

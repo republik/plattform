@@ -40,7 +40,6 @@ const TeaserMyMagazine = ({
   return (
     <div
       style={{
-        backgroundColor: colorScheme.primaryBg,
         // for color inherit below, e.g. TeaserSectionTitle
         color: colorScheme.text
       }}
@@ -64,20 +63,29 @@ const TeaserMyMagazine = ({
                 const { id } = doc
                 const { path, title } = doc.meta
                 const formatTitle = doc.meta.format?.meta?.title
+                const formatPath = doc.meta.format?.meta?.path
+                const formatColor = doc.meta.format?.meta?.color
+
                 return (
                   <div
                     {...styles.tile}
                     style={{ border: `1px solid ${colorScheme.text}` }}
                     key={id}
                   >
+                    {formatTitle ? (
+                      <Link href={formatPath} passHref>
+                        <a style={{ color: formatColor, marginBottom: 4 }}>
+                          {formatTitle}
+                        </a>
+                      </Link>
+                    ) : null}
+
                     <Link href={path} passHref>
                       <a
                         {...styles.tileHeadline}
                         style={{ color: colorScheme.text }}
                       >
-                        {formatTitle
-                          ? `${formatTitle}: ${limitedTitle(title, 90)}`
-                          : limitedTitle(title, 100)}
+                        {limitedTitle(title, 100)}
                       </a>
                     </Link>
                     {ActionBar ? (
@@ -104,7 +112,14 @@ const TeaserMyMagazine = ({
                 </Link>
               </div>
               {latestSubscribedArticles.map(doc => {
-                const { format, path, shortTitle, title, credits } = doc.meta
+                const {
+                  format,
+                  path,
+                  title,
+                  credits,
+                  publishDate,
+                  emailSubject
+                } = doc.meta
 
                 return (
                   <TeaserFeed
@@ -112,8 +127,9 @@ const TeaserMyMagazine = ({
                     color={colorScheme.text}
                     format={format}
                     path={path}
-                    title={limitedTitle(shortTitle || title, 140)}
+                    title={limitedTitle(emailSubject || title, 140)}
                     credits={credits}
+                    publishDate={publishDate}
                   />
                 )
               })}
@@ -205,7 +221,7 @@ TeaserMyMagazine.propTypes = {
 }
 
 const WrappedTeaserMyMagazine = props => (
-  <ColorContext.Provider value={colors.negative}>
+  <ColorContext.Provider value={colors}>
     <TeaserMyMagazine {...props} />
   </ColorContext.Provider>
 )
