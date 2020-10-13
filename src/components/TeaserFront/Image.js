@@ -145,7 +145,8 @@ ImageBlock.propTypes = {
     'bottomright',
     'top',
     'middle',
-    'bottom'
+    'bottom',
+    'underneath'
   ]),
   onlyImage: PropTypes.bool,
   feuilleton: PropTypes.bool
