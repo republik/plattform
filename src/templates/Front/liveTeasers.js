@@ -14,7 +14,6 @@ import Center from '../../components/Center'
 import Loader from '../../components/Loader'
 import LazyLoad from '../../components/LazyLoad'
 import { mUp } from '../../theme/mediaQueries'
-import colors from '../../theme/colors'
 
 const styles = {
   feedContainer: css({
@@ -276,8 +275,7 @@ const createLiveTeasers = ({
         return (
           <LazyLoad
             style={{
-              minHeight: LAZYLOADER_MYMAGAZINE_HEIGHT,
-              backgroundColor: colors.negative.primaryBg
+              minHeight: LAZYLOADER_MYMAGAZINE_HEIGHT
             }}
           >
             <MyMagazineWithData

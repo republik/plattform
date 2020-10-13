@@ -11,7 +11,6 @@ import {
 import { TeaserSectionTitle } from '../TeaserShared'
 import { TeaserFeed } from '../TeaserFeed'
 import colors from '../../theme/colors'
-import ColorContext from '../Colors/ColorContext'
 import { useColorContext } from '../Colors/useColorContext'
 import { convertStyleToRem } from '../Typography/utils'
 
@@ -142,14 +141,15 @@ const TeaserMyMagazine = ({
                   title,
                   credits,
                   publishDate,
-                  emailSubject
+                  emailSubject,
+                  color
                 } = doc.meta
 
                 return (
                   <TeaserFeed
                     key={doc.id}
                     Link={Link}
-                    color={colorScheme.text}
+                    color={color}
                     format={format}
                     path={path}
                     title={limitedTitle(emailSubject || title, 140)}
@@ -254,11 +254,7 @@ TeaserMyMagazine.propTypes = {
   latestProgressOrBookmarkedArticles: PropTypes.array
 }
 
-const WrappedTeaserMyMagazine = props => (
-  <ColorContext.Provider value={colors}>
-    <TeaserMyMagazine {...props} />
-  </ColorContext.Provider>
-)
+const WrappedTeaserMyMagazine = props => <TeaserMyMagazine {...props} />
 
 export default WrappedTeaserMyMagazine
 

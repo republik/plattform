@@ -192,9 +192,7 @@ const createSchema = ({
       {
         matchMdast: matchType('root'),
         component: Container,
-        props: node => ({
-          meta: node.meta
-        }),
+        props: node => ({}),
         editorModule: 'documentPlain',
         editorOptions: documentEditorOptions,
         rules: [
