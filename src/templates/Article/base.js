@@ -180,7 +180,8 @@ const createBase = ({ metaBody, metaHeadlines }) => {
       const src = extractImage(node)
       const displayWidth = getDisplayWidth(ancestors)
       const enableGallery =
-        meta.gallery && (parent.data ? !parent.data.excludeFromGallery : true)
+        meta.gallery !== false &&
+        (parent.data ? !parent.data.excludeFromGallery : true)
 
       const group = ancestors.find(matchZone('FIGUREGROUP'))
 

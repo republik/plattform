@@ -335,7 +335,7 @@ const createBlocks = ({ base, COVER_TYPE, t, onAudioCoverClick }) => {
           const rootNode = ancestors[ancestors.length - 1]
           const meta = rootNode ? rootNode.meta : {}
           const enableGallery =
-            meta.gallery &&
+            meta.gallery !== false &&
             (parent.data ? !parent.data.excludeFromGallery : true)
 
           return {
