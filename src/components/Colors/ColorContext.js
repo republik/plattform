@@ -10,24 +10,27 @@ const createScheme = specificColors => {
     ...specificColors
   }
 
-  const getCSSColor = colorScheme.cssColors
-    ? color => colorScheme.cssColors?.[color] || colorScheme[color] || color
+  const accessCSSColor = colorScheme.cssColors
+    ? color => colorScheme.cssColors[color] || colorScheme[color] || color
     : color => colorScheme[color] || color
-  const getFormatCSSColor = colorScheme.formatColorMap
-    ? color => getCSSColor(colorScheme.formatColorMap[color] || color)
-    : getCSSColor
 
-  const createColorRule = (attr, color, pseudo) => {
+  const { mappings = {} } = colorScheme
+
+  const getCSSColor = (color, mappingName) => {
+    const mapping = mappings[mappingName] || {}
+    return accessCSSColor(mapping[color] || color)
+  }
+
+  const createColorRule = (attr, color, mappingName) => {
     return css({
-      [attr]: getCSSColor(color)
+      [attr]: getCSSColor(color, mappingName)
     })
   }
 
   return {
     ...colorScheme,
     set: memoize(createColorRule, (...args) => args.join('.')),
-    getCSSColor,
-    getFormatCSSColor
+    getCSSColor
   }
 }
 

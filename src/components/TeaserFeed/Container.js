@@ -59,7 +59,7 @@ const Teaser = ({
         </div>
       )}
       {format && format.meta && (
-        <Format colorRule={colorScheme.set('color', cssColor)}>
+        <Format cssColor={cssColor}>
           <Link href={format.meta.path} passHref>
             <a {...styles.link} href={format.meta.path}>
               {format.meta.title}

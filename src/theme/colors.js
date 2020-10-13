@@ -127,10 +127,12 @@ const colors = {
     accentColorAudio: '#FFFFFF',
     overlayShadow: '0 0 15px rgba(0,0,0,0.5)'
   },
-  formatColorMap: {
-    '#000': 'accentColorMeta',
-    '#000000': 'accentColorMeta',
-    '#282828': 'accentColorMeta'
+  mappings: {
+    format: {
+      '#000': 'accentColorMeta',
+      '#000000': 'accentColorMeta',
+      '#282828': 'accentColorMeta'
+    }
   },
   static: {
     primary: '#00AA00',
