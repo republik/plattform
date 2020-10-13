@@ -85,7 +85,7 @@ const colorsDeprecated = {
 }
 
 const colors = {
-  bright: {
+  light: {
     logo: '#000000',
     default: '#FFFFFF',
     overlay: '#FFFFFF',
@@ -145,8 +145,8 @@ const colors = {
 }
 
 // identify all variable color keys
-export const variableColorKeys = Object.keys(colors.bright).filter(
-  color => colors.bright[color] !== colors.dark[color]
+export const variableColorKeys = Object.keys(colors.light).filter(
+  color => colors.light[color] !== colors.dark[color]
 )
 
 //add all deprecated colors, but only if they don't exist in new colors (no overwrites)

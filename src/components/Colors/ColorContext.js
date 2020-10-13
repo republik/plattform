@@ -34,7 +34,7 @@ const createScheme = specificColors => {
   }
 }
 
-const ColorContext = React.createContext(createScheme(colors.bright))
+const ColorContext = React.createContext(createScheme(colors.light))
 
 const generateCSSColorDefinitions = colors => {
   return variableColorKeys
@@ -76,9 +76,9 @@ export const ColorContextProvider = ({
       return createScheme({
         ...(CSSVarSupport
           ? reduceMainColors(key => `var(--color-${key})`)
-          : colors.bright),
+          : colors.light),
         cssColors: reduceMainColors(key => [
-          colors.bright[key],
+          colors.light[key],
           `var(--color-${key})`
         ])
       })
@@ -95,9 +95,9 @@ export const ColorContextProvider = ({
             __html:
               colorSchemeKey === 'auto'
                 ? [
-                    // default bright
-                    `html, body { background-color: ${colors.bright.default}; color: ${colors.bright.text}; }`,
-                    `:root { ${generateCSSColorDefinitions(colors.bright)} }`,
+                    // default light
+                    `html, body { background-color: ${colors.light.default}; color: ${colors.light.text}; }`,
+                    `:root { ${generateCSSColorDefinitions(colors.light)} }`,
                     // dark via user preference
                     `html[data-user-color-scheme="dark"], html[data-user-color-scheme="dark"] body { background-color: ${colors.dark.default}; color: ${colors.dark.text}; }`,
                     `:root[data-user-color-scheme="dark"] { ${generateCSSColorDefinitions(
@@ -109,10 +109,10 @@ export const ColorContextProvider = ({
                       // auto dark via media query
                       `html, body { background-color: ${colors.dark.default}; color: ${colors.dark.text}; }`,
                       `:root { ${generateCSSColorDefinitions(colors.dark)} }`,
-                      // bright via user preference when os is dark
-                      `html[data-user-color-scheme="bright"], html[data-user-color-scheme="bright"] body { background-color: ${colors.bright.default}; color: ${colors.bright.text}; }`,
-                      `:root[data-user-color-scheme="bright"] { ${generateCSSColorDefinitions(
-                        colors.bright
+                      // light via user preference when os is dark
+                      `html[data-user-color-scheme="light"], html[data-user-color-scheme="light"] body { background-color: ${colors.light.default}; color: ${colors.light.text}; }`,
+                      `:root[data-user-color-scheme="light"] { ${generateCSSColorDefinitions(
+                        colors.light
                       )} }`
                     ].join('\n'),
                     `}`
@@ -127,7 +127,7 @@ export const ColorContextProvider = ({
 }
 
 ColorContextProvider.propTypes = {
-  colorSchemeKey: PropTypes.oneOf(['bright', 'dark', 'auto']).isRequired
+  colorSchemeKey: PropTypes.oneOf(['light', 'dark', 'auto']).isRequired
 }
 
 export default ColorContext
