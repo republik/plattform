@@ -74,7 +74,10 @@ const TeaserMyMagazine = ({
                   >
                     {formatTitle ? (
                       <Link href={formatPath} passHref>
-                        <a style={{ color: formatColor, marginBottom: 4 }}>
+                        <a
+                          href={formatPath}
+                          style={{ color: formatColor, marginBottom: 4 }}
+                        >
                           {formatTitle}
                         </a>
                       </Link>
@@ -123,6 +126,7 @@ const TeaserMyMagazine = ({
 
                 return (
                   <TeaserFeed
+                    key={doc.id}
                     Link={Link}
                     color={colorScheme.text}
                     format={format}
@@ -253,21 +257,22 @@ WrappedTeaserMyMagazine.data = {
   },
   query: `
     query getMyMagazineDocuments {
-      notifications(first: 2, filter: Document) {
+      notifications(first: 2, filter: Document, lastDays: 30) {
         nodes {
           id
           object {
             ... on Document {
               id
               meta {
-                shortTitle
                 title
+                emailSubject
                 credits
                 prepublication
                 path
                 kind
                 template
                 color
+                publishDate
                 format {
                   id
                   meta {
@@ -291,7 +296,6 @@ WrappedTeaserMyMagazine.data = {
               id
               meta {
                 publishDate
-                shortTitle
                 title
                 path
                 credits
@@ -300,7 +304,10 @@ WrappedTeaserMyMagazine.data = {
                 format {
                   id
                   meta {
+                    path
                     title
+                    color
+                    kind
                   }
                 }
               }
