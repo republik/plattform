@@ -7,6 +7,7 @@ module.exports = async ({
   pledgeId,
   total,
   sourceId,
+  paymentMethodId,
   pspPayload,
   makeDefault = false,
   userId,
@@ -30,12 +31,18 @@ module.exports = async ({
   try {
     let deduplicatedSourceId
     if (!(await pgdb.public.stripeCustomers.findFirst({ userId }))) {
-      if (!rememberSourceId) {
-        logger.error('missing sourceId', { userId, pledgeId, sourceId })
+      if (!rememberSourceId && !paymentMethodId) {
+        logger.error('missing sourceId or paymentMethodId', {
+          userId,
+          pledgeId,
+          sourceId,
+          paymentMethodId,
+        })
         throw new Error(t('api/unexpected'))
       }
       await createCustomer({
         sourceId: rememberSourceId,
+        paymentMethodId,
         userId,
         pgdb,
       })
@@ -43,11 +50,17 @@ module.exports = async ({
       // stripe customer exists
       deduplicatedSourceId = await addSource({
         sourceId: rememberSourceId,
+        paymentMethodId,
         userId,
         pgdb,
         deduplicate: true,
         makeDefault,
       })
+    }
+
+    // paymentIntent payments are setteled via webhook
+    if (paymentMethodId) {
+      return 'WAITING_FOR_PAYMENT'
     }
 
     if (isSubscription) {

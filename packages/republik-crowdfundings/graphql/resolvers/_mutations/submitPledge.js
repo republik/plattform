@@ -16,6 +16,7 @@ const {
   AccessToken: { getUserByAccessToken, ensureCanPledgePackage },
 } = require('@orbiting/backend-modules-auth')
 const { hasUserActiveMembership } = require('@orbiting/backend-modules-utils')
+const getClients = require('@orbiting/backend-modules-republik-crowdfundings/lib/payments/stripe/clients')
 
 module.exports = async (_, args, context) => {
   const { pgdb, req, t } = context
@@ -438,11 +439,23 @@ module.exports = async (_, args, context) => {
       userId: user.id,
     })
 
+    let stripeClientSecret
+    if (!args.method || args.method === 'STRIPE') {
+      const { platform } = await getClients(pgdb)
+      const paymentIntent = await platform.stripe.paymentIntents.create({
+        setup_future_usage: 'off_session',
+        amount: newPledge.total,
+        currency: 'chf',
+      })
+      stripeClientSecret = paymentIntent.client_secret
+    }
+
     return {
       pledgeId: newPledge.id,
       userId: user.id,
       pfSHA,
       pfAliasId,
+      stripeClientSecret,
     }
   } catch (e) {
     await transaction.transactionRollback()

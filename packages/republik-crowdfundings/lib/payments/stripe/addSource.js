@@ -1,8 +1,10 @@
 const getClients = require('./clients')
 const crypto = require('crypto')
+const addPaymentMethod = require('./addPaymentMethod')
 
 module.exports = async ({
   sourceId,
+  paymentMethodId,
   userId,
   pgdb,
   clients, // optional
@@ -10,6 +12,23 @@ module.exports = async ({
   makeDefault = false,
   t,
 }) => {
+  if (sourceId && paymentMethodId) {
+    console.error(
+      'addSource must only be called with either sourceId or paymentMethodId',
+    )
+    throw new Error(t('api/unexpected'))
+  }
+  if (paymentMethodId) {
+    return addPaymentMethod({
+      paymentMethodId,
+      userId,
+      pgdb,
+      clients,
+      makeDefault,
+      t,
+    })
+  }
+
   const { platform, connectedAccounts } = clients || (await getClients(pgdb))
 
   const customer = await pgdb.public.stripeCustomers.findOne({
@@ -55,7 +74,7 @@ module.exports = async ({
     })
   }
 
-  for (let connectedAccount of connectedAccounts) {
+  for (const connectedAccount of connectedAccounts) {
     const connectedCustomer = await pgdb.public.stripeCustomers.findOne({
       userId,
       companyId: connectedAccount.company.id,

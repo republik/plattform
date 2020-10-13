@@ -237,6 +237,7 @@ input PledgeInput {
   messageToClaimers: String
   accessToken: ID
   payload: JSON
+  method: PaymentMethod
 }
 
 type PledgeResponse {
@@ -245,6 +246,7 @@ type PledgeResponse {
   emailVerify: Boolean
   pfAliasId: String
   pfSHA: String
+  stripeClientSecret: String
 }
 
 input PledgePaymentInput {
@@ -252,6 +254,7 @@ input PledgePaymentInput {
   method: PaymentMethod!
   paperInvoice: Boolean
   sourceId: String
+  paymentMethodId: String
   pspPayload: JSON
   makeDefault: Boolean
   address: AddressInput
