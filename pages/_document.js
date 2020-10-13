@@ -1,5 +1,5 @@
 import React from 'react'
-import Document, { Head, Main, NextScript } from 'next/document'
+import Document, { Html, Head, Main, NextScript } from 'next/document'
 import { renderStatic } from 'glamor/server'
 import { fontFaces } from '@project-r/styleguide'
 
@@ -27,7 +27,7 @@ export default class MyDocument extends Document {
     } = this.props
     const piwik = !!PIWIK_URL_BASE && !!PIWIK_SITE_ID
     return (
-      <html>
+      <Html>
         <Head>
           <meta httpEquiv='X-UA-Compatible' content='IE=edge' />
           <style
@@ -70,7 +70,7 @@ export default class MyDocument extends Document {
             </noscript>
           )}
         </body>
-      </html>
+      </Html>
     )
   }
 }
