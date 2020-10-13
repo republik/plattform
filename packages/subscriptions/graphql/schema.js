@@ -14,6 +14,7 @@ type queries {
     last: Int
     before: String
     after: String
+    lastDays: Int
   ): NotificationConnection
 }
 
