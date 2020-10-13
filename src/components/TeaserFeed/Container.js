@@ -44,8 +44,8 @@ const Teaser = ({
   return (
     <div
       {...styles.main}
-      {...colorScheme.getColorRule('borderColor', cssColor)}
-      {...(highlighted && colorScheme.getColorRule('backgroundColor', 'alert'))}
+      {...colorScheme.set('borderColor', cssColor)}
+      {...(highlighted && colorScheme.set('backgroundColor', 'alert'))}
     >
       {menu && (
         <div
@@ -59,7 +59,7 @@ const Teaser = ({
         </div>
       )}
       {format && format.meta && (
-        <Format colorRule={colorScheme.getColorRule('color', cssColor)}>
+        <Format colorRule={colorScheme.set('color', cssColor)}>
           <Link href={format.meta.path} passHref>
             <a {...styles.link} href={format.meta.path}>
               {format.meta.title}

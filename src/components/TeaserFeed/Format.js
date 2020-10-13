@@ -21,7 +21,7 @@ export const Format = ({ children, cssColor }) => {
   const [colorScheme] = useColorContext()
 
   return (
-    <p {...styles.main} {...colorScheme.getColorRule('color', cssColor)}>
+    <p {...styles.main} {...colorScheme.set('color', cssColor)}>
       {children}
     </p>
   )

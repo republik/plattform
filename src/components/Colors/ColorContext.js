@@ -1,9 +1,37 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import PropTypes from 'prop-types'
+import { css } from 'glamor'
 import colors, { variableColorKeys } from '../../theme/colors'
+import memoize from 'lodash/memoize'
 
-const defaultColors = colors
-const ColorContext = React.createContext(defaultColors)
+const createScheme = specificColors => {
+  const colorScheme = {
+    ...colors,
+    ...specificColors
+  }
+
+  const getCSSColor = colorScheme.cssColors
+    ? color => colorScheme.cssColors?.[color] || colorScheme[color] || color
+    : color => colorScheme[color] || color
+  const getFormatCSSColor = colorScheme.formatColorMap
+    ? color => getCSSColor(colorScheme.formatColorMap[color] || color)
+    : getCSSColor
+
+  const createColorRule = (attr, color, pseudo) => {
+    return css({
+      [attr]: getCSSColor(color)
+    })
+  }
+
+  return {
+    ...colorScheme,
+    set: memoize(createColorRule, (...args) => args.join('.')),
+    getCSSColor,
+    getFormatCSSColor
+  }
+}
+
+const ColorContext = React.createContext(createScheme(colors.bright))
 
 const generateCSSColorDefinitions = colors => {
   return variableColorKeys
@@ -42,7 +70,7 @@ export const ColorContextProvider = ({
 
   const colorValue = useMemo(() => {
     if (colorSchemeKey === 'auto') {
-      return {
+      return createScheme({
         ...(CSSVarSupport
           ? reduceMainColors(key => `var(--color-${key})`)
           : colors.bright),
@@ -50,9 +78,9 @@ export const ColorContextProvider = ({
           colors.bright[key],
           `var(--color-${key})`
         ])
-      }
+      })
     }
-    return colors[colorSchemeKey]
+    return createScheme(colors[colorSchemeKey])
   }, [colorSchemeKey, CSSVarSupport])
 
   return (

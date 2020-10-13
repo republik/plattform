@@ -47,7 +47,7 @@ export const Editorial = ({ children, cssColor }) => {
     <h1
       {...styles.base}
       {...styles.editorial}
-      {...colorScheme.getColorRule('color', cssColor)}
+      {...colorScheme.set('color', cssColor)}
     >
       {children}
     </h1>
@@ -60,7 +60,7 @@ export const Interaction = ({ children, cssColor }) => {
     <h1
       {...styles.base}
       {...styles.interaction}
-      {...colorScheme.getColorRule('color', cssColor)}
+      {...colorScheme.set('color', cssColor)}
     >
       {children}
     </h1>
@@ -73,7 +73,7 @@ export const Scribble = ({ children, cssColor }) => {
     <h1
       {...styles.base}
       {...styles.scribble}
-      {...colorScheme.getColorRule('color', cssColor)}
+      {...colorScheme.set('color', cssColor)}
     >
       {children}
     </h1>

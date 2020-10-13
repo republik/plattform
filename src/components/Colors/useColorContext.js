@@ -1,88 +1,46 @@
 import { useContext, useMemo } from 'react'
-import { css } from 'glamor'
 import ColorContext from './ColorContext'
-import colors from '../../theme/colors'
-import memoize from 'lodash/memoize'
 
 export const useColorContext = () => {
   const colorContext = useContext(ColorContext)
   return useMemo(() => {
-    const colorScheme = {
-      ...colors,
-      ...colorContext
-    }
-    const { formatColorMap = {} } = colorScheme
-
-    const getCSSColor = color =>
-      colorScheme.cssColors?.[color] || colorScheme[color] || color
-
-    const createColorRule = (attr, color, pseudo) => {
-      const cssColor = getCSSColor(color)
-      return css(
-        pseudo
-          ? pseudo === ':hover'
-            ? {
-                '@media (hover)': {
-                  ':hover': {
-                    [attr]: cssColor
-                  }
-                }
-              }
-            : {
-                [pseudo]: {
-                  [attr]: cssColor
-                }
-              }
-          : {
-              [attr]: cssColor
-            }
-      )
-    }
-
     // precomputed css rules which are often used
     const colorRules = {
       text: {
-        color: createColorRule('color', 'text'),
-        borderColor: createColorRule('borderColor', 'text'),
-        fill: createColorRule('fill', 'text')
+        color: colorContext.set('color', 'text'),
+        borderColor: colorContext.set('borderColor', 'text'),
+        fill: colorContext.set('fill', 'text')
       },
       textSoft: {
-        color: createColorRule('color', 'textSoft')
+        color: colorContext.set('color', 'textSoft')
       },
       default: {
-        backgroundColor: createColorRule('backgroundColor', 'default'),
-        borderColor: createColorRule('borderColor', 'default')
+        backgroundColor: colorContext.set('backgroundColor', 'default'),
+        borderColor: colorContext.set('borderColor', 'default')
       },
       overlay: {
-        backgroundColor: createColorRule('backgroundColor', 'overlay'),
-        boxShadow: createColorRule('boxShadow', 'overlayShadow')
+        backgroundColor: colorContext.set('backgroundColor', 'overlay'),
+        boxShadow: colorContext.set('boxShadow', 'overlayShadow')
       },
       hover: {
-        backgroundColor: createColorRule('backgroundColor', 'hover')
+        backgroundColor: colorContext.set('backgroundColor', 'hover')
       },
       divider: {
-        color: createColorRule('color', 'divider'),
-        borderColor: createColorRule('borderColor', 'divider'),
-        fill: createColorRule('fill', 'divider'),
-        backgroundColor: createColorRule('backgroundColor', 'divider')
+        color: colorContext.set('color', 'divider'),
+        borderColor: colorContext.set('borderColor', 'divider'),
+        fill: colorContext.set('fill', 'divider'),
+        backgroundColor: colorContext.set('backgroundColor', 'divider')
       },
       logo: {
-        fill: createColorRule('fill', 'logo')
+        fill: colorContext.set('fill', 'logo')
       }
     }
 
     return [
       {
-        ...colorScheme,
+        ...colorContext,
         rules: colorRules,
-        getColorRule: memoize(createColorRule, (...args) => args.join('.')),
-        getCSSColor,
-        getFormatCSSColor: color => {
-          if (formatColorMap[color]) {
-            return getCSSColor(formatColorMap[color])
-          }
-          return color
-        }
+        getColorRule: colorContext.set
       }
     ]
   }, [colorContext])
