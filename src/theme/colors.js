@@ -133,7 +133,7 @@ const colors = {
     accentColorFormats: '#d44438',
     accentColorMeta: '#FFFFFF',
     accentColorAudio: '#FFFFFF',
-    overlayShadow: '0 0 15px rgba(0,0,0,0.5)',
+    overlayShadow: '0 0 15px rgba(0,0,0,0.3)',
     fadeOutGradientDefault:
       'linear-gradient(0deg, rgba(31,31,31,1) 0%, rgba(31,31,31,0) 100%)',
     fadeOutGradientOverlay:
