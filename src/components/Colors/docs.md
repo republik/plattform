@@ -14,7 +14,7 @@ Add a root color context provider, e.g. in your frame component:
 </ColorContextProvider>
 ```
 
-`auto` respects OS preference via media query `@media (prefers-color-scheme: dark)` and user preferences via a html data attribute `html[data-user-color-scheme="dark"]`.
+`auto` respects OS preference via media query `@media (prefers-color-scheme: dark)` and user preferences via a html data attribute `html[data-user-color-scheme="dark"]`. The `root` provider renders a style tag with CSS variable definitions and global CSS rules for `html` and `body`—setting `backgroundColor` and `color`.
 
 Force dark mode:
 
@@ -40,13 +40,17 @@ You may also only force a section within your React tree by using nested `ColorC
 ## Using the Context
 
 ```
-colorScheme.set(attr, color, [mappingName])
-colorScheme.getCSSColor(color, [mappingName])
+colorScheme.set(attr, color, [mappingName]): rule
+colorScheme.getCSSColor(color, [mappingName]): string[]|string
 ```
 
 - `attr`: string, the css attribute, e.g. `'backgroundColor'`, `'color'` or `'borderColor'`
 - `color`: string, the variable name, e.g. `'default'` or `'text'`, for convenience you may also pass literal values (`'#000'`) and css color arrays (`['#000', 'var(--color-text)']`)
 - `mappingName`: string, optional, use a predefined map to transform `color` to a variable or different literal value, e.g. `'format'`
+
+`colorScheme.set` returns a glamor rule (like glamors `css`) which should be spread onto a React element.
+
+`colorScheme.getCSSColor` returns CSS values (array of string or just a string) which should be used as a CSS attribute value within a CSS rule.
 
 ### `colorScheme.set`
 
