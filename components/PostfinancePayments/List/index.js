@@ -167,6 +167,8 @@ const postfinancePaymentsQuery = gql`
         konto
         mitteilung
         matched
+        image
+        debitorName
         createdAt
         updatedAt
       }

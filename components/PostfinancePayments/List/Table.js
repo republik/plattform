@@ -1,11 +1,11 @@
-import React from 'react'
+import React, { useState } from 'react'
+import { css } from 'glamor'
 import { Label } from '@project-r/styleguide'
 import MessageForm from './MessageForm'
 import { chfFormat } from '../../../lib/utils/formats'
 import { displayDate } from '../../Display/utils'
 
 import {
-
   tableStyles as styles,
   createSortHandler,
   createSortIndicator
@@ -102,7 +102,12 @@ const Table = (
               <td>{postfinancePayment.buchungsdatum}</td>
               <td>{postfinancePayment.valuta}</td>
               <td>{postfinancePayment.konto}</td>
-              <td>{postfinancePayment.avisierungstext}</td>
+              <td>
+                {postfinancePayment.avisierungstext}
+                {postfinancePayment.image ? (
+                  <Einzahlungsschein {...postfinancePayment}></Einzahlungsschein>
+                ) : ''}
+              </td>
               <td>{chfFormat(
                 postfinancePayment.gutschrift /
                   100
@@ -147,5 +152,31 @@ const Table = (
     </table>
   )
 };
+
+function Einzahlungsschein ({image}) {
+  const [isSmall, setIsSmall] = useState(true)
+  const size = isSmall ? 1 : 8
+  const imgStyles = css({
+    height: '2em',
+    display: 'block',
+    border: '1px solid black',
+    borderColor: isSmall ? 'black' : 'transparent',
+    transform: `scale(${size}, ${size})`
+  })
+  const linkStyle = css({
+    display: 'block',
+  })
+  const onClick = (e) => {
+    e.preventDefault()
+    setIsSmall(!isSmall)
+  }
+  return (
+    <a href="#" {...{onClick}}
+      {...linkStyle}
+    >
+      <img src={'data:image/png;base64, ' + image} {...imgStyles}></img>
+    </a>
+  )
+}
 
 export default Table;
