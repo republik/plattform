@@ -17,6 +17,11 @@ const {
 } = require('@orbiting/backend-modules-auth')
 const { hasUserActiveMembership } = require('@orbiting/backend-modules-utils')
 const getClients = require('@orbiting/backend-modules-republik-crowdfundings/lib/payments/stripe/clients')
+const addPaymentMethod = require('../../../lib/payments/stripe/addPaymentMethod')
+const {
+  getPaymentMethods,
+} = require('../../../lib/payments/stripe/paymentMethod')
+const createCustomer = require('../../../lib/payments/stripe/createCustomer')
 
 module.exports = async (_, args, context) => {
   const { pgdb, req, t } = context
@@ -439,13 +444,71 @@ module.exports = async (_, args, context) => {
       userId: user.id,
     })
 
+    // create stripe PaymentIntent
     let stripeClientSecret
-    if (!args.method || args.method === 'STRIPE') {
-      const { platform } = await getClients(pgdb)
-      const paymentIntent = await platform.stripe.paymentIntents.create({
+    if (pledge.method === 'STRIPE') {
+      const { companyId } = pkg
+
+      const { stripePlatformPaymentMethodId } = pledge
+      if (!stripePlatformPaymentMethodId) {
+        console.error('missing stripePlatformPaymentMethodId')
+        throw new Error(t('api/unexpected'))
+      }
+
+      // save paymentMethodId (to platform and connectedAccounts)
+      if (!(await pgdb.public.stripeCustomers.findFirst({ userId: user.id }))) {
+        await createCustomer({
+          paymentMethodId: stripePlatformPaymentMethodId,
+          userId: user.id,
+          pgdb,
+        })
+      } else {
+        await addPaymentMethod({
+          paymentMethodId: stripePlatformPaymentMethodId,
+          userId: user.id,
+          pgdb,
+        })
+      }
+
+      // load all paymentMethods and select the one for companyId
+      let paymentMethodId
+      const paymentMethods = await getPaymentMethods(user.id, pgdb)
+      const platformPaymentMethod = paymentMethods.find(
+        (pm) => pm.id === stripePlatformPaymentMethodId,
+      )
+      if (platformPaymentMethod.companyId === companyId) {
+        paymentMethodId = platformPaymentMethod.id
+      } else {
+        paymentMethodId = platformPaymentMethod.connectedPaymentMethods.find(
+          (cpm) => cpm.companyId === companyId,
+        ).id
+      }
+      console.log({
+        stripePlatformPaymentMethodId,
+        paymentMethodId,
+      })
+      if (!paymentMethodId) {
+        console.error('missing paymentMethodId')
+        throw new Error(t('api/unexpected'))
+      }
+
+      // customer needs to be attached to PaymentIntent
+      // otherwise she can't use her saved paymentMethods
+      const customer = await pgdb.public.stripeCustomers.findOne({
+        userId: user.id,
+        companyId,
+      })
+
+      // the paymentIntent needs to be created on the account of the company
+      const { accounts } = await getClients(pgdb)
+      const stripeClient = accounts.find((a) => a.company.id === companyId)
+
+      const paymentIntent = await stripeClient.stripe.paymentIntents.create({
         setup_future_usage: 'off_session',
         amount: newPledge.total,
         currency: 'chf',
+        customer: customer.id,
+        payment_method: paymentMethodId,
       })
       stripeClientSecret = paymentIntent.client_secret
     }

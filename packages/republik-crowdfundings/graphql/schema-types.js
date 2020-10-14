@@ -239,6 +239,8 @@ input PledgeInput {
   accessToken: ID
   payload: JSON
   method: PaymentMethod
+  # mandatory to pay with PaymentIntent
+  stripePlatformPaymentMethodId: ID
 }
 
 type PledgeResponse {
@@ -316,9 +318,11 @@ type PaymentSource {
   isExpired: Boolean!
 }
 type StripePaymentMethod {
-  id: String!
+  id: ID!
   isDefault: Boolean!
   card: StripeCard
+  companyId: ID!
+  connectedPaymentMethods: [StripeConnectedPaymentMethod!]!
 }
 type StripeCard {
   brand: String!
@@ -327,6 +331,10 @@ type StripeCard {
   expYear: Int!
   # is card expired now
   isExpired: Boolean!
+}
+type StripeConnectedPaymentMethod {
+  id: ID!
+  companyId: ID!
 }
 
 enum CancellationCategoryType {

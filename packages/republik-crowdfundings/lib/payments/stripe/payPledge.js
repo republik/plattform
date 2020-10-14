@@ -46,11 +46,10 @@ module.exports = async ({
         userId,
         pgdb,
       })
-    } else {
+    } else if (sourceId) {
       // stripe customer exists
       deduplicatedSourceId = await addSource({
         sourceId: rememberSourceId,
-        paymentMethodId,
         userId,
         pgdb,
         deduplicate: true,

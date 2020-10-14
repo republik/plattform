@@ -1,7 +1,8 @@
 const getClients = require('./clients')
 
-// deduplication (like in addSource) is not possible. The paymentMethod mus
-// be attached otherwise there is no customer <> payment connection
+// Deduplication based on the card (like in addSource) is not possible here.
+// The paymentMethod must be attached otherwise there is no customer <> payment
+// connection. Adding the the same paymentMethodId twice is deduplicated though.
 module.exports = async ({
   paymentMethodId,
   userId,
@@ -44,24 +45,56 @@ module.exports = async ({
         `could not find stripeCustomer for userId: ${userId} companyId: ${connectedAccount.company.id}`,
       )
     }
-
-    const connectedPaymentMethod = await platform.stripe.paymentMethods.create(
+    const connectedPaymentMethods = await platform.stripe.paymentMethods.list(
       {
-        customer: customer.id,
-        payment_method: paymentMethodId,
+        customer: connectedCustomer.id,
+        type: 'card',
       },
       {
         stripeAccount: connectedAccount.accountId,
       },
     )
-
-    await platform.stripe.paymentMethods.attach(
-      connectedPaymentMethod.id,
-      { customer: connectedCustomer.id },
-      {
-        stripeAccount: connectedAccount.accountId,
+    const existingConnectedPaymentMethod = connectedPaymentMethods?.data.find(
+      (cpm) => {
+        const { original_payment_method_id } = cpm.metadata
+        if (original_payment_method_id === paymentMethodId) {
+          return cpm
+        }
       },
     )
+
+    let connectedPaymentMethod = existingConnectedPaymentMethod
+    if (!existingConnectedPaymentMethod) {
+      connectedPaymentMethod = await platform.stripe.paymentMethods.create(
+        {
+          customer: customer.id,
+          payment_method: paymentMethodId,
+        },
+        {
+          stripeAccount: connectedAccount.accountId,
+        },
+      )
+
+      await platform.stripe.paymentMethods.attach(
+        connectedPaymentMethod.id,
+        { customer: connectedCustomer.id },
+        {
+          stripeAccount: connectedAccount.accountId,
+        },
+      )
+
+      await platform.stripe.paymentMethods.update(
+        connectedPaymentMethod.id,
+        {
+          metadata: {
+            original_payment_method_id: paymentMethodId,
+          },
+        },
+        {
+          stripeAccount: connectedAccount.accountId,
+        },
+      )
+    }
 
     if (makeDefault) {
       await platform.stripe.customers.update(
