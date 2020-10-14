@@ -1,14 +1,13 @@
-import React from 'react'
+import React, { useEffect, useState, useMemo } from 'react'
 import PropTypes from 'prop-types'
 import { css, merge } from 'glamor'
 
 import { sansSerifRegular14 } from '../Typography/styles'
-
-import colors from '../../theme/colors'
 import { mUp } from '../../theme/mediaQueries'
 import { useMediaQuery } from '../../lib/useMediaQuery'
 import { useBoundingClientRect } from '../../lib/useBoundingClientRect'
 import { convertStyleToRem, pxToRem } from '../Typography/utils'
+import { useColorContext } from '../Colors/useColorContext'
 
 const COLLAPSED_HEIGHT = {
   mobile: 180,
@@ -38,59 +37,15 @@ const collapsedEditorPreviewStyle = (mobile, desktop) =>
       left: 0,
       bottom: 0,
       right: 0,
-      backgroundColor: colors.secondaryBg,
-      borderTop: `1px solid ${colors.primary}`,
-      borderBottom: `1px solid ${colors.primary}`,
+      borderWidth: '1px 0px 1px 0px',
+      borderBottomStyle: 'solid',
+      borderTopStyle: 'solid',
       top: mobile,
       [mUp]: {
         top: desktop
       }
     }
   })
-
-const styles = {
-  body: css({
-    position: 'relative'
-  }),
-  buttonContainer: css({
-    position: 'relative',
-    '&::before': {
-      position: 'absolute',
-      display: 'block',
-      content: '""',
-      left: 0,
-      right: 0,
-      top: -60,
-      height: 60,
-      background:
-        'linear-gradient(0deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%)'
-    }
-  }),
-  buttonContainerDivider: css({
-    borderTop: `1px solid ${colors.divider}`,
-    '&::before': {
-      top: -61
-    }
-  }),
-  button: css({
-    ...convertStyleToRem(sansSerifRegular14),
-    outline: 'none',
-    WebkitAppearance: 'none',
-    background: 'transparent',
-    border: 'none',
-    padding: '0',
-    display: 'block',
-    cursor: 'pointer',
-    color: colors.primary,
-    height: pxToRem('32px'),
-    lineHeight: pxToRem('32px'),
-    '@media (hover)': {
-      ':hover': {
-        color: colors.secondary
-      }
-    }
-  })
-}
 
 const Collapsable = ({
   t,
@@ -112,15 +67,13 @@ const Collapsable = ({
    *   - 'preview': The body is collapsed.
    */
 
-  const [bodyVisibility, setBodyVisibility] = React.useState(initialVisibility)
+  const [bodyVisibility, setBodyVisibility] = useState(initialVisibility)
   const [bodyRef, bodySize] = useBoundingClientRect([children])
+  const [colorScheme] = useColorContext()
   const isDesktop = useMediaQuery(mUp)
   const { desktop, mobile } = height
-  React.useEffect(() => {
-    /*
-     * Collapse the body (switch to 'preview' visibility) when allowed and the size
-     * exceeds the threshold.
-     */
+  useEffect(() => {
+    /* Collapse the body (switch to 'preview' visibility) when allowed and the size exceeds the threshold. */
     if (bodyVisibility === 'auto' && bodySize.height !== undefined) {
       const maxBodyHeight = isDesktop ? desktop : mobile
       if (bodySize.height > maxBodyHeight + threshold) {
@@ -138,8 +91,45 @@ const Collapsable = ({
     [setBodyVisibility]
   )
 
+  const buttonContainerBefore = useMemo(
+    () =>
+      css({
+        '&::before': {
+          background: colorScheme.getCSSColor('fadeOutGradientOverlay')
+        }
+      }),
+    [colorScheme]
+  )
+
+  const buttonRules = useMemo(
+    () =>
+      css({
+        color: colorScheme.getCSSColor('primary'),
+        '@media (hover)': {
+          ':hover': {
+            color: colorScheme.getCSSColor('textSoft')
+          }
+        }
+      }),
+    [colorScheme]
+  )
+
+  const collapsedEditorPreviewRule = useMemo(() =>
+    css({
+      '&:before': {
+        backgroundColor: colorScheme.getCSSColor('hover'),
+        borderColor: colorScheme.getCSSColor('primary')
+      }
+    })
+  )
+
   return (
-    <div {...(editorPreview && collapsedEditorPreviewStyle(mobile, desktop))}>
+    <div
+      {...merge(
+        editorPreview && collapsedEditorPreviewStyle(mobile, desktop),
+        editorPreview && collapsedEditorPreviewRule
+      )}
+    >
       <div
         ref={bodyRef}
         {...styles.body}
@@ -155,12 +145,15 @@ const Collapsable = ({
         <div
           {...merge(
             collapsed ? styles.buttonContainer : {},
-            !alwaysCollapsed && styles.buttonContainerDivider
+            collapsed ? buttonContainerBefore : {},
+            !alwaysCollapsed && styles.buttonContainerDivider,
+            !alwaysCollapsed && colorScheme.set('borderColor', 'divider')
           )}
         >
           {!alwaysCollapsed && (
             <button
               {...styles.button}
+              {...buttonRules}
               onClick={onToggleCollapsed}
               title={collapseLabel}
             >
@@ -171,6 +164,43 @@ const Collapsable = ({
       )}
     </div>
   )
+}
+
+const styles = {
+  body: css({
+    position: 'relative'
+  }),
+  buttonContainer: css({
+    position: 'relative',
+    '&::before': {
+      position: 'absolute',
+      display: 'block',
+      content: '""',
+      left: 0,
+      right: 0,
+      top: -60,
+      height: 60
+    }
+  }),
+  buttonContainerDivider: css({
+    borderTopWidth: 1,
+    borderTopStyle: 'solid',
+    '&::before': {
+      top: -61
+    }
+  }),
+  button: css({
+    ...convertStyleToRem(sansSerifRegular14),
+    outline: 'none',
+    WebkitAppearance: 'none',
+    background: 'transparent',
+    border: 'none',
+    padding: '0',
+    display: 'block',
+    cursor: 'pointer',
+    height: pxToRem('32px'),
+    lineHeight: pxToRem('32px')
+  })
 }
 
 Collapsable.propTypes = {
