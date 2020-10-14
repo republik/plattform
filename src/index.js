@@ -927,7 +927,15 @@ ReactDOM.render(
             {
               path: '/dev/colors',
               title: 'ColorContext',
-              src: require('./components/Colors/docs.md')
+              src: require('./components/Colors/docs.md'),
+              imports: {
+                Container: require('./templates/Article/Container').default,
+                ...require('./components/Typography'),
+                ColorContextProvider: require('./components/Colors/ColorContext')
+                  .ColorContextProvider,
+                ...require('./components/Colors/useColorContext'),
+                css
+              }
             }
           ]
         }
