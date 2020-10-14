@@ -15,6 +15,7 @@ import { v4 as uuid } from 'uuid'
 import matchPayments, { MatchPaymentReport } from '../payments/matchPayments'
 import { SftpFile } from './payments/sftp'
 import { syncPaymentFiles } from './payments/syncPaymentFiles'
+import { getAmountOfUnmatchedPayments } from '../payments/helpers'
 
 const {
   publishScheduler,
@@ -57,7 +58,9 @@ const createPaymentImporter = (context: Context) => async (
 ): Promise<Report> => {
   const insertPaymentReport = await insertNewPayments(transaction)
   const matchingReport = await tryMatchingPayments(transaction, context)
-  const unmatchedPaymentsAmount = await getUnmatchedPaymentsAmount(transaction)
+  const unmatchedPaymentsAmount = await getAmountOfUnmatchedPayments(
+    transaction,
+  )
 
   return {
     ...insertPaymentReport,
@@ -141,12 +144,6 @@ async function notifyAccountants({
   )
 
   await publishFinance(report.join('\n'))
-}
-
-async function getUnmatchedPaymentsAmount(pgdb: PgDb) {
-  return (await pgdb.queryOneField(
-    'select count(*) from "postfinancePayments" where matched = false and hidden is not true;',
-  )) as number
 }
 
 async function sendReminders() {
