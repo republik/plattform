@@ -80,3 +80,4 @@ packages/dataloader/**/*.js
 packages/republik-crowdfundings/lib/scheduler/importPayments.js
 packages/republik-crowdfundings/lib/scheduler/payments/*.js
 packages/republik-crowdfundings/lib/payments/helpers.js
+packages/republik-crowdfundings/lib/payments/sendPaymentReminders.js
