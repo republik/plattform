@@ -16,7 +16,8 @@ const { getCustomPackages } = require('../../lib/User')
 const { suggest: autoPaySuggest } = require('../../lib/AutoPay')
 const createCache = require('../../lib/cache')
 const { getLastEndDate } = require('../../lib/utils')
-const { getPaymentSources } = require('../../lib/paymentSource')
+const { getPaymentSources } = require('../../lib/payments/stripe/paymentSource')
+const { getPaymentMethods } = require('../../lib/payments/stripe/paymentMethod')
 
 const { DISABLE_RESOLVER_USER_CACHE } = process.env
 const QUERY_CACHE_TTL_SECONDS = 60 * 60 * 24 // 1 day
@@ -192,6 +193,15 @@ module.exports = {
       isFieldExposed(user, 'paymentSources')
     ) {
       return getPaymentSources(user.id, pgdb)
+    }
+    return []
+  },
+  async stripePaymentMethods(user, args, { pgdb, user: me }) {
+    if (
+      Roles.userIsMeOrInRoles(user, me, ['admin']) ||
+      isFieldExposed(user, 'paymentMethods')
+    ) {
+      return getPaymentMethods(user.id, pgdb)
     }
     return []
   },

@@ -9,7 +9,7 @@ const { getCustomPackages } = require('./User')
 const { getLastEndDate } = require('./utils')
 const createCache = require('./cache')
 
-const { getDefaultPaymentSource } = require('./paymentSource')
+const { getDefaultPaymentSource } = require('./payments/stripe/paymentSource')
 
 const suggest = async (membershipId, pgdb) => {
   // Find membership

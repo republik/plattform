@@ -1,4 +1,4 @@
-const getStripeClients = require('./payments/stripe/clients')
+const getStripeClients = require('./clients')
 
 const getPaymentSources = async (userId, pgdb) => {
   const { platform } = await getStripeClients(pgdb)

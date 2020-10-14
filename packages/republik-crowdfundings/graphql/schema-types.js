@@ -9,6 +9,7 @@ extend type User {
   activeMembership: Membership
 
   paymentSources: [PaymentSource!]!
+  stripePaymentMethods: [StripePaymentMethod!]!
 
   # Custom-tailored packages available for User
   customPackages(crowdfundingName: String): [Package!]
@@ -312,6 +313,19 @@ type PaymentSource {
   expMonth: Int!
   expYear: Int!
   # is source expired now
+  isExpired: Boolean!
+}
+type StripePaymentMethod {
+  id: String!
+  isDefault: Boolean!
+  card: StripeCard
+}
+type StripeCard {
+  brand: String!
+  last4: String!
+  expMonth: Int!
+  expYear: Int!
+  # is card expired now
   isExpired: Boolean!
 }
 
