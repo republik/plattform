@@ -33,6 +33,11 @@ export const useColorContext = () => {
       },
       logo: {
         fill: colorContext.set('fill', 'logo')
+      },
+      disabled: {
+        color: colorContext.set('color', 'disabled'),
+        borderColor: colorContext.set('borderColor', 'disabled'),
+        fill: colorContext.set('fill', 'disabled')
       }
     }
 
