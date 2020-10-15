@@ -98,12 +98,28 @@ const cancelSubscription = async ({ pledgeId, status, atPeriodEnd }, pgdb) => {
 }
 
 const resetCustomers = async (pgdb) => {
-  const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY_COMPANY_ONE)
-  const customers = await stripe.customers.list({ limit: 100 })
-  pgdb.public.stripeCustomers.truncate({ cascade: true })
-  for (const customer of customers.data) {
-    await stripe.customers.del(customer.id)
-  }
+  const Promise = require('bluebird')
+  const {
+    STRIPE_SECRET_KEY_COMPANY_ONE,
+    STRIPE_SECRET_KEY_COMPANY_TWO,
+  } = process.env
+
+  await pgdb.public.stripeCustomers.truncate({ cascade: true })
+
+  await Promise.map(
+    [STRIPE_SECRET_KEY_COMPANY_ONE, STRIPE_SECRET_KEY_COMPANY_TWO],
+    async (key) => {
+      const stripe = require('stripe')(key)
+      const customers = await stripe.customers.list({ limit: 100 })
+
+      await Promise.map(
+        customers.data,
+        (customer) => stripe.customers.del(customer.id),
+        { concurrency: 10 },
+      )
+      console.log(`done deleting ${customers.data.length} stripe customers`)
+    },
+  )
 }
 
 const Cards = {
