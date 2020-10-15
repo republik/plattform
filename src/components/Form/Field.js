@@ -1,152 +1,96 @@
-import React, { Component } from 'react'
+import React, { useState, useRef, useEffect, useMemo } from 'react'
 import PropTypes from 'prop-types'
 import { css, merge, simulate } from 'glamor'
 import colors from '../../theme/colors'
 import { fontFamilies } from '../../theme/fonts'
 import { mUp } from '../../theme/mediaQueries'
+import { useColorContext } from '../Colors/useColorContext'
+import {
+  X_PADDING,
+  Y_PADDING,
+  BORDER_WIDTH,
+  LINE_HEIGHT,
+  FIELD_HEIGHT
+} from './constants'
 
-const xPadding = 0
-const yPadding = 9 // (40 - 22) / 2
-const borderWidth = 1
-const lineHeight = 20
-export const fieldHeight = 40
-
-const fieldStyle = css({
-  width: '100%',
-  appearance: 'none',
-  outline: 'none',
-  verticalAlign: 'bottom',
-  // yPadding can interfere with font
-  padding: `0 ${xPadding}px`,
-  textDecoration: 'none',
-  height: fieldHeight,
-  fontFamily: fontFamilies.sansSerifRegular,
-  fontSize: 22,
-  boxSizing: 'border-box',
-  backgroundColor: 'white',
-  border: 'none',
-  borderBottom: `solid ${colors.disabled} ${borderWidth}px`,
-  borderRadius: 0,
-  color: colors.text,
-  ':disabled': {
-    color: colors.disabled
-  },
-  ':focus': {
-    borderColor: colors.primary
-  }
-})
-const fieldErrorStyle = css({
-  borderColor: colors.error,
-  ':focus': {
-    borderColor: colors.error
-  }
-})
-const noBrowserIconStyle = css({
-  '::-ms-clear': {
-    display: 'none'
-  },
-  '::-webkit-inner-spin-button': {
-    appearance: 'none'
-  },
-  '::-webkit-outer-spin-button': {
-    appearance: 'none'
-  }
-})
-const fieldIconStyle = css({
-  paddingRight: fieldHeight
-})
-
-const containerStyle = css({
-  width: '100%',
-  paddingTop: lineHeight,
-  position: 'relative',
-  display: 'inline-block',
-  fontFamily: fontFamilies.sansSerifRegular,
-  fontSize: 22,
-  lineHeight: `${lineHeight}px`,
-  marginBottom: 15,
-  cursor: 'text'
-})
-const labelTextStyle = css({
-  position: 'absolute',
-  left: xPadding,
-  top: lineHeight + yPadding,
-  color: colors.disabled,
-  transition: 'top 200ms, font-size 200ms'
-})
-const labelTextTopStyle = css({
-  top: 3,
-  fontSize: 12,
-  lineHeight: '13px',
-  [mUp]: {
-    top: 5,
-    fontSize: 14,
-    lineHeight: '15px'
-  }
-})
-const labelTextFocusedStyle = css({
-  color: colors.primary
-})
-const labelTextErrorStyle = css({
-  color: colors.error
-})
-const whiteStyle = css({
-  backgroundColor: 'transparent',
-  color: '#fff',
-  borderColor: '#fff',
-  ':focus': {
-    borderColor: '#fff'
-  },
-  ':disabled': {
-    color: 'rgba(255,255,255,0.8)'
-  }
-})
-const fieldErrorWhiteStyle = css({
-  borderColor: colors.negative.error,
-  ':focus': {
-    borderColor: colors.negative.error
-  }
-})
-const labelTextErrorWhiteStyle = css({
-  color: colors.negative.error
-})
-const blackStyle = css({
-  backgroundColor: 'transparent',
-  color: '#000',
-  borderColor: '#000',
-  ':focus': {
-    borderColor: '#000'
-  },
-  ':disabled': {
-    color: 'rgba(0,0,0,0.8)'
-  }
-})
-const arrowUpStyle = css({
-  position: 'absolute',
-  right: 0,
-  top: lineHeight + 3,
-  cursor: 'pointer'
-})
-const arrowDownStyle = css({
-  position: 'absolute',
-  right: 0,
-  top: lineHeight + fieldHeight / 2 - 3,
-  cursor: 'pointer'
-})
-const iconWrapperStyle = css({
-  position: 'absolute',
-  right: 3,
-  top: lineHeight + 5
-})
-const iconWrapperStyleWhite = css({
-  color: '#ffffff'
-})
+const styles = {
+  container: css({
+    width: '100%',
+    paddingTop: LINE_HEIGHT,
+    position: 'relative',
+    display: 'inline-block',
+    fontFamily: fontFamilies.sansSerifRegular,
+    fontSize: 22,
+    lineHeight: `${LINE_HEIGHT}px`,
+    marginBottom: 15,
+    cursor: 'text'
+  }),
+  field: css({
+    width: '100%',
+    appearance: 'none',
+    outline: 'none',
+    verticalAlign: 'bottom',
+    padding: `0 ${X_PADDING}px`,
+    textDecoration: 'none',
+    height: FIELD_HEIGHT,
+    fontFamily: fontFamilies.sansSerifRegular,
+    fontSize: 22,
+    boxSizing: 'border-box',
+    border: 'none',
+    borderBottomWidth: BORDER_WIDTH,
+    borderBottomStyle: 'solid',
+    borderRadius: 0,
+    backgroundColor: 'transparent'
+  }),
+  labelText: css({
+    position: 'absolute',
+    left: X_PADDING,
+    top: LINE_HEIGHT + Y_PADDING,
+    color: colors.disabled,
+    transition: 'top 200ms, font-size 200ms'
+  }),
+  labelTextFocused: css({
+    top: 3,
+    fontSize: 12,
+    lineHeight: '13px',
+    [mUp]: {
+      top: 5,
+      fontSize: 14,
+      lineHeight: '15px'
+    }
+  }),
+  iconWrapper: css({
+    position: 'absolute',
+    right: 3,
+    top: LINE_HEIGHT + 5
+  }),
+  arrow: css({
+    position: 'absolute',
+    right: 0,
+    cursor: 'pointer'
+  }),
+  noBrowserIcon: css({
+    '::-ms-clear': {
+      display: 'none'
+    },
+    '::-webkit-inner-spin-button': {
+      appearance: 'none'
+    },
+    '::-webkit-outer-spin-button': {
+      appearance: 'none'
+    }
+  }),
+  fieldIcon: css({
+    paddingRight: FIELD_HEIGHT
+  })
+}
 
 const ArrowUp = ({ size, fill, ...props }) => (
   <svg
     {...props}
     fill={fill}
-    {...arrowUpStyle}
+    {...styles.arrow}
+    style={{ top: LINE_HEIGHT + 3 }}
     width={size}
     height={size}
     viewBox='0 0 24 24'
@@ -159,7 +103,8 @@ const ArrowDown = ({ size, fill, ...props }) => (
   <svg
     {...props}
     fill={fill}
-    {...arrowDownStyle}
+    {...styles.arrow}
+    style={{ top: LINE_HEIGHT + FIELD_HEIGHT / 2 - 3 }}
     width={size}
     height={size}
     viewBox='0 0 24 24'
@@ -169,158 +114,145 @@ const ArrowDown = ({ size, fill, ...props }) => (
   </svg>
 )
 
-class Field extends Component {
-  constructor(props, context) {
-    super(props, context)
-    this.state = {
-      isFocused: false,
-      isValidating: false,
-      isDirty: false,
-      value: ''
-    }
-    this.inputRef = ref => (this.input = ref)
-  }
-  render() {
-    const {
-      onChange,
-      name,
-      autoComplete,
-      type,
-      simulate: sim,
-      label,
-      error,
-      renderInput,
-      onInc,
-      onDec,
-      icon,
-      disabled
-    } = this.props
+const Field = ({
+  onChange,
+  name,
+  autoComplete,
+  type,
+  simulate: sim,
+  label,
+  error,
+  renderInput,
+  onInc,
+  onDec,
+  icon,
+  disabled,
+  value
+}) => {
+  const [isFocused, setIsFocused] = useState(false)
+  const [isValidating, setIsValidating] = useState(false)
+  const [isDirty, setIsDirty] = useState(false)
+  const [localStateValue, setLocalStateValue] = useState('')
+  const inputRef = useRef()
+  const [colorScheme] = useColorContext()
 
-    let simulationClassName
-    let { isFocused } = this.state
+  useEffect(() => {
     if (sim) {
-      isFocused = sim.indexOf('focus') !== -1
-      simulationClassName = simulate(sim).toString()
+      setIsFocused(sim.indexOf('focus') !== -1)
     }
+  }, [sim])
+  const simulationClassName = useMemo(() => simulate(sim).toString(), [sim])
+  const fieldValue = value !== undefined ? value : localStateValue
+  const hasIncrease = !!onInc
+  const hasDecrease = !!onDec
+  const hasValue =
+    fieldValue !== undefined &&
+    fieldValue !== null &&
+    String(fieldValue).length !== 0
+  const browserIconStyle =
+    hasIncrease || icon ? styles.noBrowserIcon : undefined
+  const iconStyle = icon ? styles.fieldIcon : undefined
 
-    const { isValidating, isDirty } = this.state
-
-    const value =
-      this.props.value !== undefined ? this.props.value : this.state.value
-
-    let colorStyle
-    if (this.props.black) {
-      colorStyle = blackStyle
-    }
-    if (this.props.white) {
-      colorStyle = whiteStyle
-    }
-
-    const hasIncrease = !!onInc
-    const hasDecrease = !!onDec
-    const hasError = !!error
-    const valueIsPresent =
-      value !== undefined && value !== null && String(value).length !== 0
-    const labelStyle =
-      isFocused || valueIsPresent || hasError
-        ? merge(
-            labelTextStyle,
-            labelTextTopStyle,
-            isFocused && labelTextFocusedStyle,
-            colorStyle,
-            hasError && labelTextErrorStyle,
-            hasError && this.props.white && labelTextErrorWhiteStyle
-          )
-        : merge(labelTextStyle, colorStyle)
-    const browserIconStyle =
-      hasIncrease || icon ? noBrowserIconStyle : undefined
-    const iconStyle = icon ? fieldIconStyle : undefined
-    const fStyle = hasError
-      ? merge(
-          fieldStyle,
-          colorStyle,
-          fieldErrorStyle,
-          this.props.white && fieldErrorWhiteStyle,
-          browserIconStyle,
-          iconStyle
+  const styleRules = useMemo(() => {
+    return {
+      labelText: css({
+        color: colorScheme.getCSSColor(
+          error ? 'error' : isFocused ? 'primary' : 'softText'
         )
-      : merge(fieldStyle, browserIconStyle, colorStyle, iconStyle)
+      }),
+      field: css({
+        borderColor: colorScheme.getCSSColor(
+          error ? 'error' : isFocused ? 'primary' : 'divider'
+        ),
+        color: colorScheme.getCSSColor(
+          error ? 'error' : disabled ? 'disabled' : 'text'
+        )
+      }),
+      other: css({})
+    }
+  }, [isFocused, error, disabled, icon])
 
-    return (
-      <label {...containerStyle}>
-        {renderInput({
-          disabled,
-          name,
-          autoComplete,
-          type,
-          ref: this.inputRef,
-          onChange: event => {
-            let v = event.target.value
-            if (onChange) {
-              onChange(event, v, isValidating)
-              this.setState(() => ({ isDirty: true }))
-            } else {
-              this.setState(() => ({ isDirty: true, value: v }))
+  const fStyle = merge(
+    styles.field,
+    styleRules.field,
+    browserIconStyle,
+    iconStyle
+  )
+
+  return (
+    <label {...styles.container}>
+      {renderInput({
+        disabled,
+        name,
+        autoComplete,
+        type,
+        ref: inputRef,
+        onChange: event => {
+          let v = event.target.value
+          if (onChange) {
+            onChange(event, v, isValidating)
+            setIsDirty(true)
+          } else {
+            setIsDirty(true)
+            setLocalStateValue(v)
+          }
+        },
+        value,
+        onFocus: () => setIsFocused(true),
+        onBlur: event => {
+          const v = event.target.value
+          if (!isValidating && onChange && isDirty) {
+            onChange(event, v, true)
+          }
+          setIsFocused(true)
+          setIsValidating(isDirty)
+        },
+        className: [fStyle.toString(), simulationClassName]
+          .filter(Boolean)
+          .join(' ')
+      })}
+      <span
+        {...styles.labelText}
+        {...((isFocused || hasValue || error) && styles.labelTextFocused)}
+        {...styleRules.labelText}
+      >
+        {error || label}
+      </span>
+      {!disabled && hasDecrease && (
+        <ArrowDown
+          {...(isFocused
+            ? colorScheme.set('fill', 'primary')
+            : colorScheme.set('fill', 'disabled'))}
+          size={FIELD_HEIGHT / 2}
+          onClick={e => {
+            e.preventDefault()
+            e.stopPropagation()
+            onDec()
+            if (inputRef.current) {
+              inputRef.current.focus()
             }
-          },
-          value,
-          onFocus: () => this.setState(() => ({ isFocused: true })),
-          onBlur: event => {
-            const v = event.target.value
-            if (!isValidating && onChange && isDirty) {
-              onChange(event, v, true)
+          }}
+        />
+      )}
+      {!disabled && hasIncrease && (
+        <ArrowUp
+          {...(isFocused
+            ? colorScheme.set('fill', 'primary')
+            : colorScheme.set('fill', 'disabled'))}
+          size={FIELD_HEIGHT / 2}
+          onClick={e => {
+            e.preventDefault()
+            e.stopPropagation()
+            onInc()
+            if (inputRef.current) {
+              inputRef.current.focus()
             }
-            this.setState(state => ({
-              isFocused: false,
-              isValidating: state.isDirty
-            }))
-          },
-          className: [fStyle.toString(), simulationClassName]
-            .filter(Boolean)
-            .join(' ')
-        })}
-        <span {...labelStyle}>{error || label}</span>
-        {!disabled && hasDecrease && (
-          <ArrowDown
-            fill={isFocused ? colors.primary : colors.disabled}
-            size={fieldHeight / 2}
-            onClick={e => {
-              e.preventDefault()
-              e.stopPropagation()
-              onDec()
-              if (this.input) {
-                this.input.focus()
-              }
-            }}
-          />
-        )}
-        {!disabled && hasIncrease && (
-          <ArrowUp
-            fill={isFocused ? colors.primary : colors.disabled}
-            size={fieldHeight / 2}
-            onClick={e => {
-              e.preventDefault()
-              e.stopPropagation()
-              onInc()
-              if (this.input) {
-                this.input.focus()
-              }
-            }}
-          />
-        )}
-        {icon && (
-          <span
-            {...merge(
-              iconWrapperStyle,
-              this.props.white && iconWrapperStyleWhite
-            )}
-          >
-            {icon}
-          </span>
-        )}
-      </label>
-    )
-  }
+          }}
+        />
+      )}
+      {icon && <span {...styles.iconWrapper}>{icon}</span>}
+    </label>
+  )
 }
 
 Field.propTypes = {

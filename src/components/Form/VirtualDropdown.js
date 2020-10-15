@@ -5,12 +5,13 @@ import Downshift from 'downshift'
 import zIndex from '../../theme/zIndex'
 import colors from '../../theme/colors'
 import { sansSerifRegular21 } from '../Typography/styles'
-import { labelHeight, fieldHeight, Label, LButton } from './Label'
+import { Label, LButton } from './Label'
+import { LABEL_HEIGHT, FIELD_HEIGHT } from './constants'
 
 export const styles = {
   root: css({
     position: 'relative',
-    minHeight: labelHeight + fieldHeight,
+    minHeight: LABEL_HEIGHT + FIELD_HEIGHT,
     marginBottom: 12
   }),
   inner: css({

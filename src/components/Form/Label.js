@@ -4,16 +4,17 @@ import { css, merge } from 'glamor'
 import colors from '../../theme/colors'
 import { sansSerifRegular22 } from '../Typography/styles'
 import { convertStyleToRem, pxToRem } from '../Typography/utils'
-
-const borderWidth = 1
-const yPadding = 9 // (40 - 22) / 2
-export const labelHeight = 20 // The height of the area at the top for the label.
-export const fieldHeight = 40
+import {
+  Y_PADDING,
+  BORDER_WIDTH,
+  LABEL_HEIGHT,
+  FIELD_HEIGHT
+} from './constants'
 
 const styles = {
   label: css({
     width: '100%',
-    paddingTop: pxToRem(labelHeight),
+    paddingTop: pxToRem(LABEL_HEIGHT),
     position: 'relative',
     display: 'block'
   }),
@@ -22,7 +23,7 @@ const styles = {
     lineHeight: pxToRem(20),
     color: colors.disabled,
     position: 'absolute',
-    top: pxToRem(labelHeight + yPadding),
+    top: pxToRem(LABEL_HEIGHT + Y_PADDING),
     transition: 'top 200ms, font-size 200ms'
   }),
   labelTextTop: css({
@@ -41,7 +42,7 @@ const styles = {
     padding: '7px 0 5px',
     ...convertStyleToRem(sansSerifRegular22),
     lineHeight: pxToRem(27),
-    minHeight: pxToRem(fieldHeight),
+    minHeight: pxToRem(FIELD_HEIGHT),
     color: colors.text,
     width: '100%',
     appearance: 'none',
@@ -51,14 +52,14 @@ const styles = {
     border: 'none',
     textAlign: 'left',
     cursor: 'pointer',
-    borderBottom: `solid ${colors.disabled} ${borderWidth}px`,
+    borderBottom: `solid ${colors.disabled} ${BORDER_WIDTH}px`,
     ':focus': {
       borderColor: colors.primary
     }
   }),
   select: css({
     position: 'absolute',
-    top: pxToRem(labelHeight),
+    top: pxToRem(LABEL_HEIGHT),
     left: 0,
     right: 0,
     bottom: 0,
