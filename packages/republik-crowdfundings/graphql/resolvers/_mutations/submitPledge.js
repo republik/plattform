@@ -509,6 +509,9 @@ module.exports = async (_, args, context) => {
         currency: 'chf',
         customer: customer.id,
         payment_method: paymentMethodId,
+        metadata: {
+          pledgeId: newPledge.id,
+        },
       })
       stripeClientSecret = paymentIntent.client_secret
     }
