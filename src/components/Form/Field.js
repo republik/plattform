@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react'
 import PropTypes from 'prop-types'
 import { css, merge, simulate } from 'glamor'
-import colors from '../../theme/colors'
 import { fontFamilies } from '../../theme/fonts'
 import { mUp } from '../../theme/mediaQueries'
 import { useColorContext } from '../Colors/useColorContext'
@@ -46,7 +45,6 @@ const styles = {
     position: 'absolute',
     left: X_PADDING,
     top: LINE_HEIGHT + Y_PADDING,
-    color: colors.disabled,
     transition: 'top 200ms, font-size 200ms'
   }),
   labelTextFocused: css({
@@ -167,8 +165,7 @@ const Field = ({
         color: colorScheme.getCSSColor(
           error ? 'error' : disabled ? 'disabled' : 'text'
         )
-      }),
-      other: css({})
+      })
     }
   }, [isFocused, error, disabled, icon])
 
