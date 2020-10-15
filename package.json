@@ -58,7 +58,7 @@
     "d3-time-format": "^2.2.3",
     "dotenv": "^8.2.0",
     "downshift": "^2.2.2",
-    "eslint": "^7.11.0",
+    "eslint": "^6.6.0",
     "eslint-config-prettier": "^6.12.0",
     "eslint-plugin-prettier": "^3.1.4",
     "eslint-plugin-react": "^7.21.4",
