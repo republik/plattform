@@ -1,8 +1,8 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { css, merge } from 'glamor'
-import colors from '../../theme/colors'
 import { fontStyles } from '../../theme/fonts'
 import { Label } from '../Typography'
+import { useColorContext } from '../Colors/useColorContext'
 
 const thumbSize = 24
 const trackHeight = 4
@@ -12,13 +12,11 @@ const thumbStyle = {
   borderRadius: '50%',
   width: thumbSize,
   height: thumbSize,
-  background: colors.primary,
   cursor: 'pointer',
   outline: 'none'
 }
 
 const trackStyle = {
-  background: colors.divider,
   height: trackHeight
 }
 
@@ -27,7 +25,6 @@ const styles = {
     minHeight: thumbSize,
     display: 'inline-block',
     ...fontStyles.sansSerifRegular14,
-    color: colors.secondary,
     paddingTop: 0
   }),
   slider: css({
@@ -82,41 +79,80 @@ const styles = {
       ...trackStyle
     }
   }),
-  sliderInactive: css({
-    '::-webkit-slider-thumb': {
-      background: colors.disabled
-    },
-    '::-moz-range-thumb': {
-      background: colors.disabled
-    },
-    '::-ms-thumb': {
-      background: colors.disabled
-    }
-  }),
   fullWidth: css({
     width: '100%'
   })
 }
 
-const Slider = ({ label, fullWidth, inactive, onChange, ...props }) => (
-  <label {...merge(styles.label, fullWidth ? styles.fullWidth : null)}>
-    {label && (
-      <>
-        <Label>{label}</Label>
-        <br />
-      </>
-    )}
-    <input
-      {...merge(
-        styles.slider,
-        inactive && styles.sliderInactive,
-        fullWidth && styles.fullWidth
+const Slider = ({ label, fullWidth, inactive, onChange, ...props }) => {
+  const [colorScheme] = useColorContext()
+  const sliderStyleRules = useMemo(() => {
+    return {
+      sliderInactive: css({
+        '::-webkit-slider-thumb': {
+          background: colorScheme.getCSSColor('disabled')
+        },
+        '::-moz-range-thumb': {
+          background: colorScheme.getCSSColor('disabled')
+        },
+        '::-ms-thumb': {
+          background: colorScheme.getCSSColor('disabled')
+        }
+      }),
+      slider: css({
+        // thumb
+        '::-webkit-slider-thumb': {
+          background: colorScheme.getCSSColor('primary')
+        },
+        '::-moz-focus-outer': {
+          border: 0
+        },
+        '::-moz-range-thumb': {
+          background: colorScheme.getCSSColor('primary')
+        },
+        '::-ms-thumb': {
+          background: colorScheme.getCSSColor('primary')
+        },
+        // track
+        '::-webkit-slider-runnable-track': {
+          background: colorScheme.getCSSColor('divider')
+        },
+        '::-moz-range-track': {
+          background: colorScheme.getCSSColor('divider')
+        },
+        '::-ms-fill-lower': {
+          background: colorScheme.getCSSColor('divider')
+        },
+        '::-ms-fill-upper': {
+          background: colorScheme.getCSSColor('divider')
+        }
+      })
+    }
+  }, [])
+  return (
+    <label
+      {...merge(styles.label, fullWidth ? styles.fullWidth : null)}
+      {...colorScheme.set('color', 'textSoft')}
+    >
+      {label && (
+        <>
+          <Label>{label}</Label>
+          <br />
+        </>
       )}
-      type='range'
-      {...props}
-      onChange={e => onChange(e, +e.target.value)}
-    />
-  </label>
-)
+      <input
+        {...merge(
+          styles.slider,
+          sliderStyleRules.slider,
+          inactive && sliderStyleRules.sliderInactive,
+          fullWidth && styles.fullWidth
+        )}
+        type='range'
+        {...props}
+        onChange={e => onChange(e, +e.target.value)}
+      />
+    </label>
+  )
+}
 
 export default Slider
