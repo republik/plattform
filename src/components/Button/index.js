@@ -1,11 +1,8 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { css, merge, simulate } from 'glamor'
-import colors from '../../theme/colors'
 import { fontStyles } from '../../theme/fonts'
 import { pxToRem } from '../Typography/utils'
-import { lab } from 'd3-color'
-
-const primaryColor = lab(colors.primary)
+import { useColorContext } from '../Colors/useColorContext'
 
 export const plainButtonRule = css({
   fontFamily: 'inherit',
@@ -20,127 +17,39 @@ export const plainButtonRule = css({
   padding: 0
 })
 
-const buttonStyle = css(plainButtonRule, {
-  verticalAlign: 'bottom',
-  padding: '10px 20px 10px 20px',
-  minWidth: 160,
-  textAlign: 'center',
-  textDecoration: 'none',
-  fontSize: pxToRem(22),
-  height: pxToRem(60),
-  boxSizing: 'border-box',
-  backgroundColor: '#fff',
-  ...fontStyles.sansSerifRegular,
-  border: `1px solid ${colors.secondary}`,
-  borderRadius: 0,
-  color: colors.secondary,
-  '@media (hover)': {
-    ':hover': {
-      backgroundColor: colors.primary,
-      borderColor: colors.primary,
-      color: '#fff'
-    }
-  },
-  ':active': {
-    backgroundColor: colors.secondary,
-    borderColor: colors.secondary,
-    color: '#fff'
-  },
-  ':disabled, [disabled]': {
-    backgroundColor: '#fff',
-    color: colors.disabled,
-    borderColor: colors.disabled,
-    cursor: 'default',
-    '@media (hover)': {
-      ':hover': {
-        backgroundColor: '#fff',
-        color: colors.disabled,
-        borderColor: colors.disabled
-      }
-    }
-  }
-})
-const linkStyle = css({
-  display: 'inline-block',
-  verticalAlign: 'middle',
-  lineHeight: 1.5,
-  height: 'inherit',
-  minHeight: pxToRem(60)
-})
-const primaryStyle = css({
-  backgroundColor: colors.primary,
-  borderColor: colors.primary,
-  color: '#fff',
-  '@media (hover)': {
-    ':hover': {
-      backgroundColor: primaryColor.darker(0.7),
-      borderColor: primaryColor.darker(0.7)
-    }
-  },
-  ':active': {
-    backgroundColor: '#000',
-    borderColor: '#000',
-    color: '#fff'
-  }
-})
-const dimmedStyle = css({
-  backgroundColor: '#fff',
-  color: colors.disabled,
-  borderColor: colors.disabled
-})
-const blackStyle = css({
-  backgroundColor: 'transparent',
-  borderColor: '#000',
-  color: '#000',
-  '@media (hover)': {
-    ':hover': {
-      backgroundColor: '#000',
-      borderColor: '#000',
-      color: '#fff'
-    }
-  },
-  ':active': {
-    backgroundColor: '#000',
-    borderColor: '#000',
-    color: '#fff'
-  }
-})
-const whiteStyle = css({
-  backgroundColor: 'transparent',
-  borderColor: '#fff',
-  color: '#fff',
-  '@media (hover)': {
-    ':hover': {
-      backgroundColor: '#fff',
-      borderColor: '#fff',
-      color: '#000'
-    }
-  },
-  ':active': {
-    backgroundColor: '#fff',
-    borderColor: '#fff',
-    color: '#000'
-  }
-})
-const blockStyle = css({
-  display: 'block',
-  width: '100%'
-})
-const bigStyle = css({
-  fontSize: pxToRem(22),
-  height: pxToRem(80),
-  padding: '10px 30px 10px 30px'
-})
-
-const marginBottomStyle = css({
-  marginBottom: '10px'
-})
-
-const marginLeftStyle = css({
-  '& + a, & + button': {
-    marginLeft: '10px'
-  }
-})
+const styles = {
+  default: css(plainButtonRule, {
+    verticalAlign: 'bottom',
+    padding: '10px 20px 10px 20px',
+    minWidth: 160,
+    textAlign: 'center',
+    textDecoration: 'none',
+    fontSize: pxToRem(22),
+    height: pxToRem(60),
+    boxSizing: 'border-box',
+    backgroundColor: 'transparent',
+    ...fontStyles.sansSerifRegular,
+    borderWidth: 1,
+    borderStyle: 'solid',
+    borderRadius: 0
+  }),
+  link: css({
+    display: 'inline-block',
+    verticalAlign: 'middle',
+    lineHeight: 1.5,
+    height: 'inherit',
+    minHeight: pxToRem(60)
+  }),
+  block: css({
+    display: 'block',
+    width: '100%'
+  }),
+  big: css({
+    fontSize: pxToRem(22),
+    height: pxToRem(80),
+    padding: '10px 30px 10px 30px'
+  })
+}
 
 const Button = React.forwardRef(
   (
@@ -149,10 +58,6 @@ const Button = React.forwardRef(
       type,
       children,
       primary,
-      dimmed,
-      black,
-      white,
-      spacedOut,
       big,
       block,
       style,
@@ -161,22 +66,68 @@ const Button = React.forwardRef(
       title,
       target,
       simulate: sim,
-      attributes
+      attributes,
+      bw
     },
     ref
   ) => {
+    const [colorScheme] = useColorContext()
+    const buttonStyleRules = useMemo(
+      () =>
+        css({
+          backgroundColor: colorScheme.getCSSColor(
+            primary ? 'primary' : 'transparent'
+          ),
+          borderColor: colorScheme.getCSSColor(primary ? 'primary' : 'text'),
+          color: colorScheme.getCSSColor(primary ? '#FFF' : 'text'),
+          '@media (hover)': {
+            ':hover': {
+              backgroundColor: colorScheme.getCSSColor(
+                bw ? 'defaultInverted' : primary ? 'default' : 'primary'
+              ),
+              borderColor: colorScheme.getCSSColor(
+                bw ? 'defaultInverted' : primary ? 'primary' : 'primary'
+              ),
+              color: colorScheme.getCSSColor(
+                bw ? 'textInverted' : primary ? 'primary' : '#FFF'
+              )
+            }
+          },
+          ':active': {
+            backgroundColor: colorScheme.getCSSColor(
+              bw ? 'defaultInverted' : primary ? 'default' : 'primary'
+            ),
+            borderColor: colorScheme.getCSSColor(
+              bw ? 'defaultInverted' : primary ? 'primary' : 'primary'
+            ),
+            color: colorScheme.getCSSColor(
+              bw ? 'textInverted' : primary ? 'primary' : '#FFF'
+            )
+          },
+          ':disabled, [disabled]': {
+            backgroundColor: 'transparent',
+            cursor: 'default',
+            color: colorScheme.getCSSColor('disabled'),
+            borderColor: colorScheme.getCSSColor('disabled'),
+            '@media (hover)': {
+              ':hover': {
+                backgroundColor: 'transparent',
+                color: colorScheme.getCSSColor('disabled'),
+                borderColor: colorScheme.getCSSColor('disabled')
+              }
+            }
+          }
+        }),
+
+      [primary, bw]
+    )
     const simulations = sim ? simulate(sim) : {}
-    const styles = merge(
-      buttonStyle,
-      href && linkStyle,
-      primary && primaryStyle,
-      dimmed && dimmedStyle,
-      black && blackStyle,
-      white && whiteStyle,
-      block && blockStyle,
-      big && bigStyle,
-      spacedOut && marginBottomStyle,
-      spacedOut && !block && marginLeftStyle
+    const buttonStyles = merge(
+      styles.default,
+      buttonStyleRules,
+      href && styles.link,
+      block && styles.block,
+      big && styles.big
     )
 
     const Element = href ? 'a' : 'button'
@@ -191,7 +142,7 @@ const Button = React.forwardRef(
         disabled={disabled}
         target={target}
         {...attributes}
-        {...styles}
+        {...buttonStyles}
         {...simulations}
         ref={ref}
       >

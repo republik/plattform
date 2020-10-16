@@ -78,15 +78,6 @@
 </Button>
 ```
 
-##  Dimmed
-
-Just like the secondary button, except that the default state looks dimmed liked the disabled state.
-
-```react|span-3
-<Button dimmed>
-  Mitmachen
-</Button>
-```
 
 ## Big
 
@@ -129,26 +120,14 @@ To fit, e.g. in a header, it's permissible to set an explicit height.
 ## Black and White
 
 ```react|span-3
-<Button black>
-  Schwarz
+<Button bw>
+  Black & White
 </Button>
 ```
 
 ```react|span-3
-<Button black simulate='hover'>
-  Schwarz
-</Button>
-```
-
-```react|span-3,dark
-<Button white>
-  Weiss
-</Button>
-```
-
-```react|span-3,dark
-<Button white simulate='hover'>
-  Weiss
+<Button bw simulate='hover'>
+  Black & White
 </Button>
 ```
 
