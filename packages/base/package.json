@@ -36,7 +36,7 @@
     "d3-time-format": "^2.2.3",
     "express": "^4.16.3",
     "graphql": "^15.3.0",
-    "graphql-redis-subscriptions": "^2.2.1",
+    "graphql-redis-subscriptions": "2.2.1",
     "graphql-subscriptions": "^1.0.0",
     "graphql-tools": "^6.0.12",
     "helmet": "^3.22.0",

@@ -5990,14 +5990,14 @@ graphql-fields@^2.0.3:
   resolved "https://registry.yarnpkg.com/graphql-fields/-/graphql-fields-2.0.3.tgz#5e68dff7afbb202be4f4f40623e983b22c96ab8f"
   integrity sha512-x3VE5lUcR4XCOxPIqaO4CE+bTK8u6gVouOdpQX9+EKHr+scqtK5Pp/l8nIGqIpN1TUlkKE6jDCCycm/WtLRAwA==
 
-graphql-redis-subscriptions@^2.2.1:
-  version "2.3.1"
-  resolved "https://registry.yarnpkg.com/graphql-redis-subscriptions/-/graphql-redis-subscriptions-2.3.1.tgz#53d67d157f9c8c48ef0c5c1902f42fe2d0b93e27"
-  integrity sha512-ztS3ZXBSoPJ8Q0/o7PG2iLO6QWq2tlJrukiBJCjgMccRv1I3lt3HmLjiH2CbDjPhpoINttZNoytQbxE0OE/UpA==
+graphql-redis-subscriptions@2.2.1:
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/graphql-redis-subscriptions/-/graphql-redis-subscriptions-2.2.1.tgz#377be5670ff344aa78cf147a9852e686a65e4b21"
+  integrity sha512-Rk0hapKUZuZpJIv3rG5rmd1SX3f+9k1k5AXoh8bxbM3Vkdzh28WM7kvJOqq1pJuO3gQ4OAoqzciNT0MMHRylXQ==
   dependencies:
     iterall "^1.3.0"
   optionalDependencies:
-    ioredis "^4.17.3"
+    ioredis "^4.6.3"
 
 graphql-subscriptions@^1.0.0:
   version "1.1.0"
@@ -6598,7 +6598,7 @@ invariant@^2.2.2:
   dependencies:
     loose-envify "^1.0.0"
 
-ioredis@^4.17.3:
+ioredis@^4.6.3:
   version "4.17.3"
   resolved "https://registry.yarnpkg.com/ioredis/-/ioredis-4.17.3.tgz#9938c60e4ca685f75326337177bdc2e73ae9c9dc"
   integrity sha512-iRvq4BOYzNFkDnSyhx7cmJNOi1x/HWYe+A4VXHBu4qpwJaGT1Mp+D2bVGJntH9K/Z/GeOM/Nprb8gB3bmitz1Q==
