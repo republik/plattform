@@ -1,6 +1,6 @@
 import React from 'react'
 import { css } from 'glamor'
-import colors from '../../theme/colors'
+import { useColorContext } from '../Colors/useColorContext'
 
 const styles = {
   circle: css({
@@ -13,7 +13,7 @@ const styles = {
 const Circle = ({
   progress = 100,
   size = 24,
-  stroke = colors.text,
+  stroke,
   strokeWidth = 2,
   strokePlaceholder
 }) => {
@@ -22,12 +22,13 @@ const Circle = ({
   const normalizedRadius = radius - strokeWidth / 2
   const circumference = normalizedRadius * 2 * Math.PI
   const strokeDashoffset = circumference - (progress / 100) * circumference
+  const [colorScheme] = useColorContext()
   return (
     <svg height={size} width={size}>
       {strokePlaceholder && (
         <circle
           {...styles.circle}
-          stroke={strokePlaceholder}
+          {...colorScheme.set('stroke', 'divider')}
           fill='transparent'
           strokeWidth={strokeWidth}
           style={{ strokeDashoffset }}
@@ -38,7 +39,7 @@ const Circle = ({
       )}
       <circle
         {...styles.circle}
-        stroke={stroke}
+        {...(stroke ? { stroke: stroke } : colorScheme.set('stroke', 'text'))}
         fill='transparent'
         strokeWidth={strokeWidth}
         strokeDasharray={circumference + ' ' + circumference}
