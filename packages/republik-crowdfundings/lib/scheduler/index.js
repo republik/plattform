@@ -36,7 +36,7 @@ const init = async (context) => {
       context,
       runFunc: importPayments,
       lockTtlSecs,
-      runAtTime: '04:00', // Postfinace exports new files at around 1 AM
+      runAtTime: '13:30', // Postfinace exports new files at around 1 AM
       runInitially: DEV,
     }),
   )
