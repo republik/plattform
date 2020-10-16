@@ -1,12 +1,12 @@
-import React, { PureComponent } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { css, merge } from 'glamor'
 import Downshift from 'downshift'
 
 import zIndex from '../../theme/zIndex'
-import colors from '../../theme/colors'
 import { sansSerifRegular21 } from '../Typography/styles'
-import { Label, LButton } from './Label'
+import { Label } from './Label'
 import { LABEL_HEIGHT, FIELD_HEIGHT } from './constants'
+import { useColorContext } from '../Colors/useColorContext'
 
 export const styles = {
   root: css({
@@ -21,44 +21,32 @@ export const styles = {
     right: 0,
     margin: '0 -12px',
     padding: '0 12px',
-    background: 'transparent',
     transition: 'box-shadow .12s, background .12s'
   }),
   innerFocus: css({
-    zIndex: zIndex.dropdown,
-    background: 'white',
-    boxShadow: '0 2px 8px rgba(0,0,0,.2)'
+    zIndex: zIndex.dropdown
   }),
   items: css({
     overflow: 'hidden',
     margin: '0 -12px',
     transition: 'opacity .2s, height .12s'
   }),
-
   item: css({
     ...sansSerifRegular21,
     lineHeight: '27px',
-    color: colors.text,
     padding: '17px 12px',
     cursor: 'pointer',
     transition: 'background .12s'
   }),
-  selectedItem: css({
-    color: colors.primary
-  }),
-  highlightedItem: css({
-    background: colors.secondaryBg
-  }),
-
   itemSeparator: css({
     margin: '-1px 12px 0',
-    borderTop: `1px solid ${colors.divider}`,
+    borderTopWidth: 1,
+    borderTopStyle: 'solid',
     transition: 'border-color .12s'
   }),
   hiddenItemSeparator: css({
     borderColor: 'transparent'
   }),
-
   arrowDown: css({
     position: 'absolute',
     right: 0,
@@ -69,148 +57,108 @@ export const styles = {
 
 export const itemToString = item => (item ? item.text : null)
 
-export class VirtualDropdown extends PureComponent {
-  constructor(props) {
-    super(props)
-
-    this.state = {
-      focus: false
-    }
-
-    this.onFocus = () => {
-      this.setState({ focus: true })
-    }
-    this.onBlur = () => {
-      this.setState({ focus: false })
-    }
-  }
-
-  render() {
-    const { label, items, onChange, white, black, value } = this.props
-    const { focus } = this.state
-    const selectedItem = items.find(item => item.value === value)
-
-    return (
-      <Downshift
-        onChange={onChange}
-        itemToString={itemToString}
-        selectedItem={selectedItem}
-      >
-        {renderDropdown({
-          label,
-          items,
-          focus,
-          white,
-          black,
-          onFocus: this.onFocus,
-          onBlur: this.onBlur
-        })}
-      </Downshift>
-    )
-  }
+export const VirtualDropdown = ({ label, items, onChange, value }) => {
+  const [focus, setFocus] = useState(false)
+  const [colorScheme] = useColorContext()
+  const selectedItem = items.find(item => item.value === value)
+  return (
+    <Downshift
+      onChange={onChange}
+      itemToString={itemToString}
+      selectedItem={selectedItem}
+    >
+      {({
+        getToggleButtonProps,
+        getItemProps,
+        isOpen,
+        inputValue,
+        selectedItem,
+        highlightedIndex
+      }) => (
+        <div {...styles.root}>
+          {/* ensure the height for selected multiline values (<Inner> is absolute) */}
+          {!!selectedItem && (
+            <Label
+              Element='button'
+              field={true}
+              style={{ visibility: 'hidden' }}
+            >
+              {selectedItem.element || selectedItem.text}
+            </Label>
+          )}
+          <Inner isOpen={isOpen}>
+            <Label
+              top={!!selectedItem || focus}
+              focus={isOpen || focus}
+              text={label}
+            >
+              <Label
+                Element='button'
+                field={true}
+                {...getToggleButtonProps()}
+                onFocus={() => setFocus(true)}
+                onBlur={() => setFocus(false)}
+              >
+                {selectedItem ? selectedItem.element || selectedItem.text : ''}
+              </Label>
+              <ArrowDown
+                {...(isOpen || focus
+                  ? colorScheme.set('fill', 'primary')
+                  : colorScheme.set('fill', 'disabled'))}
+                size={30}
+              />
+            </Label>
+            <ItemsContainer isOpen={isOpen}>
+              <Items
+                items={items}
+                selectedItem={selectedItem}
+                highlightedIndex={highlightedIndex}
+                getItemProps={getItemProps}
+              />
+            </ItemsContainer>
+          </Inner>
+        </div>
+      )}
+    </Downshift>
+  )
 }
 
 export default VirtualDropdown
 
-const renderDropdown = ({
-  label,
-  focus,
-  white,
-  black,
-  items,
-  onFocus,
-  onBlur
-}) => ({
-  getToggleButtonProps,
-  getItemProps,
-  isOpen,
-  inputValue,
-  selectedItem,
-  highlightedIndex
-}) => (
-  <div {...styles.root}>
-    {/* ensure the height for selected multiline values (<Inner> is absolute) */}
-    {!!selectedItem && (
-      <LButton style={{ visibility: 'hidden' }}>
-        {selectedItem.element || selectedItem.text}
-      </LButton>
-    )}
-    <Inner isOpen={isOpen}>
-      <Label
-        top={!!selectedItem || focus}
-        focus={isOpen || focus}
-        text={label}
-        white={white && !isOpen}
-        black={black || (white && isOpen)}
-      >
-        <LButton
-          {...getToggleButtonProps()}
-          onFocus={onFocus}
-          onBlur={onBlur}
-          white={white && !isOpen}
-          black={black || (white && isOpen)}
-        >
-          {selectedItem ? selectedItem.element || selectedItem.text : ''}
-        </LButton>
-        <ArrowDown
-          fill={
-            (black && '#000') ||
-            (white && (isOpen ? '#000' : '#fff')) ||
-            (isOpen || focus ? colors.primary : colors.disabled)
-          }
-          size={30}
-        />
-      </Label>
-      <ItemsContainer isOpen={isOpen}>
-        <Items
-          items={items}
-          selectedItem={selectedItem}
-          highlightedIndex={highlightedIndex}
-          getItemProps={getItemProps}
-        />
-      </ItemsContainer>
-    </Inner>
-  </div>
-)
-
-export const Inner = ({ isOpen, children }) => (
-  <div {...merge(styles.inner, isOpen && styles.innerFocus)}>{children}</div>
-)
+export const Inner = ({ isOpen, children }) => {
+  const [colorScheme] = useColorContext()
+  return (
+    <div
+      {...merge(styles.inner, isOpen && styles.innerFocus)}
+      {...(isOpen && colorScheme.set('backgroundColor', 'overlay'))}
+      {...(isOpen && colorScheme.set('boxShadow', 'overlayShadow'))}
+    >
+      {children}
+    </div>
+  )
+}
 
 // This (stateful) component wraps a list of items and adds a fade in/out animation.
-export class ItemsContainer extends PureComponent {
-  constructor(props) {
-    super(props)
-    this.state = { height: 0, opacity: 0 }
-    this.refFn = ref => {
-      this.ref = ref
+export const ItemsContainer = ({ isOpen, children }) => {
+  const [height, setHeight] = useState(0)
+  const [opacity, setOpacity] = useState(0)
+  const refFn = useRef()
+  const [colorScheme] = useColorContext()
+
+  useEffect(() => {
+    if (refFn.current) {
+      const { height } = refFn.current.getBoundingClientRect()
+      setHeight(height)
+      setOpacity(1)
     }
-  }
+  }, [refFn])
 
-  updateHeight() {
-    if (this.ref) {
-      const { height } = this.ref.getBoundingClientRect()
-      this.setState({ height, opacity: 1 })
-    }
-  }
-
-  componentDidUpdate() {
-    this.updateHeight()
-  }
-
-  componentDidMount() {
-    this.updateHeight()
-  }
-
-  render() {
-    const style = this.props.isOpen ? this.state : { height: 0, opacity: 0 }
-
-    return (
-      <div {...styles.items} style={style}>
-        <div ref={this.refFn}>{this.props.children}</div>
-      </div>
-    )
-  }
+  const style = isOpen ? { height, opacity } : { height: 0, opacity: 0 }
+  return (
+    <div {...styles.items} {...colorScheme.set('color', 'text')} style={style}>
+      <div ref={refFn}>{children}</div>
+    </div>
+  )
 }
 
 const isSameItem = (itemA, itemB) =>
@@ -250,23 +198,30 @@ export const Items = ({
     ]
   })
 
-const Item = ({ selected, highlighted, ...props }) => (
-  <div
-    {...merge(
-      styles.item,
-      selected && styles.selectedItem,
-      highlighted && styles.highlightedItem
-    )}
-    {...props}
-    onMouseDown={e => {
-      e.preventDefault()
-    }}
-  />
-)
+const Item = ({ selected, highlighted, ...props }) => {
+  const [colorScheme] = useColorContext()
+  return (
+    <div
+      {...styles.item}
+      {...(selected && colorScheme.set('color', 'primary'))}
+      {...(highlighted && colorScheme.set('backgroundColor', 'hover'))}
+      {...props}
+      onMouseDown={e => {
+        e.preventDefault()
+      }}
+    />
+  )
+}
 
-const ItemSeparator = ({ hidden }) => (
-  <div {...merge(styles.itemSeparator, hidden && styles.hiddenItemSeparator)} />
-)
+const ItemSeparator = ({ hidden }) => {
+  const [colorScheme] = useColorContext()
+  return (
+    <div
+      {...merge(styles.itemSeparator, hidden && styles.hiddenItemSeparator)}
+      {...(!hidden && colorScheme.set('borderColor', 'divider'))}
+    />
+  )
+}
 
 const ArrowDown = ({ size, fill, ...props }) => (
   <svg

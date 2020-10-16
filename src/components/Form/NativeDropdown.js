@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react'
-import { Label, LSelect, LSpan } from './Label'
+import { Label } from './Label'
 
 export class NativeDropdown extends PureComponent {
   constructor(props) {
@@ -31,10 +31,12 @@ export class NativeDropdown extends PureComponent {
         black={black}
       >
         {/* ensure the height for selected multiline values (<Inner> is absolute) */}
-        <LSpan>
+        <Label Element='span' field={true}>
           {selectedItem ? selectedItem.element || selectedItem.text : ''}
-        </LSpan>
-        <LSelect
+        </Label>
+        <Label
+          Element='select'
+          field={true}
           value={value}
           onChange={
             onChange &&
@@ -50,7 +52,7 @@ export class NativeDropdown extends PureComponent {
               {item.text}
             </option>
           ))}
-        </LSelect>
+        </Label>
       </Label>
     )
   }

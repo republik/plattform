@@ -1,7 +1,6 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { css, merge } from 'glamor'
 
-import colors from '../../theme/colors'
 import { sansSerifRegular22 } from '../Typography/styles'
 import { convertStyleToRem, pxToRem } from '../Typography/utils'
 import {
@@ -10,8 +9,26 @@ import {
   LABEL_HEIGHT,
   FIELD_HEIGHT
 } from './constants'
+import { useColorContext } from '../Colors/useColorContext'
 
 const styles = {
+  field: css({
+    display: 'block',
+    padding: '7px 0 5px',
+    ...convertStyleToRem(sansSerifRegular22),
+    lineHeight: pxToRem(27),
+    minHeight: pxToRem(FIELD_HEIGHT),
+    width: '100%',
+    appearance: 'none',
+    outline: 'none',
+    borderRadius: 0,
+    backgroundColor: 'transparent',
+    border: 'none',
+    textAlign: 'left',
+    cursor: 'pointer',
+    borderBottomWidth: BORDER_WIDTH,
+    borderBottomStyle: 'solid'
+  }),
   label: css({
     width: '100%',
     paddingTop: pxToRem(LABEL_HEIGHT),
@@ -21,7 +38,6 @@ const styles = {
   labelText: css({
     ...convertStyleToRem(sansSerifRegular22),
     lineHeight: pxToRem(20),
-    color: colors.disabled,
     position: 'absolute',
     top: pxToRem(LABEL_HEIGHT + Y_PADDING),
     transition: 'top 200ms, font-size 200ms'
@@ -31,136 +47,99 @@ const styles = {
     fontSize: pxToRem(14),
     lineHeight: pxToRem(15)
   }),
-  labelTextFocused: css({
-    color: colors.primary
-  }),
-  labelTextError: css({
-    color: colors.error
-  }),
-  field: css({
-    display: 'block',
-    padding: '7px 0 5px',
-    ...convertStyleToRem(sansSerifRegular22),
-    lineHeight: pxToRem(27),
-    minHeight: pxToRem(FIELD_HEIGHT),
-    color: colors.text,
-    width: '100%',
-    appearance: 'none',
-    outline: 'none',
-    borderRadius: 0,
-    backgroundColor: '#fff',
-    border: 'none',
-    textAlign: 'left',
-    cursor: 'pointer',
-    borderBottom: `solid ${colors.disabled} ${BORDER_WIDTH}px`,
-    ':focus': {
-      borderColor: colors.primary
-    }
-  }),
   select: css({
     position: 'absolute',
     top: pxToRem(LABEL_HEIGHT),
     left: 0,
     right: 0,
     bottom: 0,
-    opacity: 0,
-    ':focus + svg': {
-      fill: colors.primary
-    }
+    opacity: 0
   }),
   selectArrow: css({
     position: 'absolute',
     right: 0,
     top: pxToRem(28),
-    pointerEvents: 'none',
-    fill: colors.disabled
-  }),
-  selectArrowBlack: css({
-    fill: '#000'
-  }),
-  selectArrowWhite: css({
-    fill: '#fff'
-  }),
-
-  white: css({
-    backgroundColor: 'transparent',
-    color: '#fff',
-    borderColor: '#fff',
-    ':focus': {
-      borderColor: '#fff'
-    }
-  }),
-  black: css({
-    backgroundColor: 'transparent',
-    color: '#000',
-    borderColor: '#000',
-    ':focus': {
-      borderColor: '#000'
-    }
+    pointerEvents: 'none'
   })
 }
 
-export const Label = ({ top, focus, error, text, black, white, children }) => {
-  const labelTextStyle = merge(
-    styles.labelText,
-    top && styles.labelTextTop,
-    focus && styles.labelTextFocused,
-    error && styles.labelTextError,
-    white && styles.white,
-    black && styles.black
-  )
+export const Label = ({
+  top,
+  focus,
+  error,
+  text,
+  children,
+  Element = 'span',
+  field,
+  ...props
+}) => {
+  const [colorScheme] = useColorContext()
+  const labelTextStyle = merge(styles.labelText, top && styles.labelTextTop)
+  const isSelect = Element === 'select'
+  const styleRules = useMemo(() => {
+    return {
+      field: css({
+        borderColor: colorScheme.getCSSColor('disabled'),
+        ':focus': {
+          borderColor: colorScheme.getCSSColor('primary')
+        }
+      }),
+      select: css({
+        ':focus + svg': {
+          fill: colorScheme.getCSSColor('primary')
+        }
+      })
+    }
+  }, [])
+
+  if (field) {
+    return (
+      <>
+        <Element
+          {...props}
+          {...merge(
+            styles.field,
+            styleRules.field,
+            isSelect && styles.select,
+            isSelect && styleRules.select
+          )}
+          {...(error
+            ? colorScheme.set('color', 'error')
+            : focus
+            ? colorScheme.set('color', 'primary')
+            : colorScheme.set('color', 'text'))}
+        >
+          {children}
+        </Element>
+        {Element === 'select' ? (
+          <svg
+            key='arrow'
+            {...styles.selectArrow}
+            {...colorScheme.set('fill', 'text')}
+            width={30}
+            height={30}
+            viewBox='0 0 24 24'
+          >
+            <path d='M7.41 7.84L12 12.42l4.59-4.58L18 9.25l-6 6-6-6z' />
+          </svg>
+        ) : null}
+      </>
+    )
+  }
 
   return (
     <label {...styles.label}>
-      <span {...labelTextStyle}>{text}</span>
+      <span
+        {...merge(labelTextStyle, isSelect && styleRules.select)}
+        {...(error
+          ? colorScheme.set('color', 'error')
+          : focus
+          ? colorScheme.set('color', 'primary')
+          : colorScheme.set('color', 'text'))}
+      >
+        {text}
+      </span>
       {children}
     </label>
   )
 }
-
-export const LSpan = ({ black, white, ...props }) => (
-  <span
-    {...merge(styles.field, black && styles.black, white && styles.white)}
-    {...props}
-  />
-)
-
-export const LButton = ({ black, white, ...props }) => (
-  <button
-    {...merge(styles.field, black && styles.black, white && styles.white)}
-    {...props}
-  />
-)
-
-export const LInput = ({ black, white, ...props }) => (
-  <input
-    {...merge(styles.field, black && styles.black, white && styles.white)}
-    {...props}
-  />
-)
-
-export const LSelect = ({ black, white, ...props }) => [
-  <select
-    key='select'
-    {...merge(
-      styles.field,
-      styles.select,
-      black && styles.black,
-      white && styles.white
-    )}
-    {...props}
-  />,
-  <svg
-    key='arrow'
-    {...merge(
-      styles.selectArrow,
-      black && styles.selectArrowBlack,
-      white && styles.selectArrowWhite
-    )}
-    width={30}
-    height={30}
-    viewBox='0 0 24 24'
-  >
-    <path d='M7.41 7.84L12 12.42l4.59-4.58L18 9.25l-6 6-6-6z' />
-  </svg>
-]
