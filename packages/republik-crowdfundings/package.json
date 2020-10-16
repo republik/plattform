@@ -21,11 +21,11 @@
     "dev:postfinance:import": "concurrently 'tsc -w' 'sleep 3 && echo \"Starting import payments runner.\" && sleep 2 && NODE_ENV=development nodemon lib/scheduler/importPaymentsRunner.js'"
   },
   "dependencies": {
-    "@types/lodash": "^4.14.161",
     "apollo-modules-node": "^0.1.4",
     "d3-array": "^2.4.0",
     "d3-dsv": "^1.2.0",
     "debug": "^4.1.1",
+    "fast-xml-parser": "^3.17.4",
     "graphql": "^15.3.0",
     "isomorphic-unfetch": "^3.0.0",
     "lodash": "^4.17.19",
@@ -39,10 +39,12 @@
     "uuid": "^8.3.1"
   },
   "devDependencies": {
+    "@types/lodash": "^4.14.162",
     "@types/sharp": "^0.25.1",
     "@types/ssh2-sftp-client": "^5.3.0",
     "@types/stream-to-array": "^2.3.0",
     "@types/tar": "^4.0.3",
-    "@types/uuid": "^8.3.0"
+    "@types/uuid": "^8.3.0",
+    "simplytyped": "^3.3.0"
   }
 }

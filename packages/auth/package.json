@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/orbiting/backends#readme",
   "devDependencies": {
+    "@types/uuid": "^8.3.0",
     "gsheets": "^2.0.0"
   },
   "dependencies": {
