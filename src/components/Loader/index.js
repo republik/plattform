@@ -1,8 +1,8 @@
-import React, { Component } from 'react'
+import React, { useState, useEffect } from 'react'
 import { css } from 'glamor'
-import colors from '../../theme/colors'
 import { Interaction } from '../Typography'
 import Spinner from '../Spinner'
+import { useColorContext } from '../Colors/useColorContext'
 
 const { P } = Interaction
 
@@ -22,65 +22,54 @@ const styles = {
   })
 }
 
-const ErrorMessage = ({ error }) => (
-  <P style={{ color: colors.error }}>
-    {error.graphQLErrors && error.graphQLErrors.length
-      ? error.graphQLErrors.map(e => e.message).join(', ')
-      : error.toString()}
-  </P>
-)
-
 const Spacer = ({ style, children }) => (
   <div {...styles.spacer} style={style}>
     {children}
   </div>
 )
 
-class Loader extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      visible: false
-    }
-  }
-  componentDidMount() {
-    this.timeout = setTimeout(
-      () => this.setState({ visible: true }),
-      this.props.delay
+const Loader = ({
+  style,
+  message,
+  loading,
+  error,
+  render,
+  delay,
+  ErrorContainer
+}) => {
+  const [visible, setVisible] = useState(false)
+  const [colorScheme] = useColorContext()
+
+  useEffect(() => {
+    const timer = setTimeout(() => setVisible(true), delay)
+    return () => clearTimeout(timer)
+  }, [])
+
+  if (loading && !visible) {
+    return <Spacer style={style} />
+  } else if (loading) {
+    return (
+      <Spacer style={style}>
+        <Spinner />
+        {!!message && (
+          <P {...styles.message} {...colorScheme.set('color', 'text')}>
+            {message}
+          </P>
+        )}
+      </Spacer>
+    )
+  } else if (error) {
+    return (
+      <ErrorContainer>
+        <P {...colorScheme.set('color', 'error')}>
+          {error.graphQLErrors && error.graphQLErrors.length
+            ? error.graphQLErrors.map(e => e.message).join(', ')
+            : error.toString()}
+        </P>
+      </ErrorContainer>
     )
   }
-  componentWillUnmount() {
-    clearTimeout(this.timeout)
-  }
-  render() {
-    const { visible } = this.state
-    const {
-      style,
-      message,
-      loading,
-      error,
-      render,
-      ErrorContainer
-    } = this.props
-
-    if (loading && !visible) {
-      return <Spacer style={style} />
-    } else if (loading) {
-      return (
-        <Spacer style={style}>
-          <Spinner />
-          {!!message && <P {...styles.message}>{message}</P>}
-        </Spacer>
-      )
-    } else if (error) {
-      return (
-        <ErrorContainer>
-          <ErrorMessage error={error} />
-        </ErrorContainer>
-      )
-    }
-    return render()
-  }
+  return render()
 }
 
 Loader.defaultProps = {
