@@ -1,7 +1,7 @@
 import React from 'react'
 import { css } from 'glamor'
-import colors from '../../theme/colors'
 import { fontFamilies } from '../../theme/fonts'
+import { useColorContext } from '../Colors/useColorContext'
 
 const styles = {
   label: css({
@@ -23,32 +23,33 @@ const styles = {
   })
 }
 
-const Radio = ({ checked, disabled }) => (
-  <svg width='24' height='24' viewBox='0 0 24 24'>
-    <circle fill='#fff' stroke='#fff' strokeWidth='6' cx='12' cy='12' r='9' />
-    {checked && (
+const Radio = ({ checked, disabled }) => {
+  const [colorScheme] = useColorContext()
+  return (
+    <svg width='24' height='24' viewBox='0 0 24 24'>
+      <circle fill='none' cx='12' cy='12' r='9' />
+      {checked && (
+        <circle
+          {...(disabled
+            ? colorScheme.set('fill', 'disabled')
+            : colorScheme.set('fill', 'primary'))}
+          cx='12'
+          cy='12'
+          r='6'
+        />
+      )}
       <circle
-        fill={disabled ? colors.disabled : colors.primary}
+        fill='none'
+        {...(disabled
+          ? colorScheme.set('stroke', 'divider')
+          : colorScheme.set('stroke', 'primary'))}
         cx='12'
         cy='12'
-        r='6'
+        r='11.5'
       />
-    )}
-    <circle
-      fill='none'
-      stroke={
-        checked && !disabled
-          ? colors.primary
-          : disabled
-          ? colors.divider
-          : colors.secondary
-      }
-      cx='12'
-      cy='12'
-      r='11.5'
-    />
-  </svg>
-)
+    </svg>
+  )
+}
 
 export default ({
   children,
@@ -58,24 +59,30 @@ export default ({
   checked,
   disabled,
   onChange
-}) => (
-  <label
-    {...styles.label}
-    style={{ color: disabled ? colors.disabled : colors.text, ...style }}
-  >
-    <span {...styles.box}>
-      <Radio checked={checked} disabled={disabled} />
-    </span>
-    <input
-      {...styles.input}
-      name={name}
-      type='radio'
-      value={value}
-      checked={checked}
-      disabled={disabled}
-      onChange={onChange}
-    />
-    {children}
-    <span {...styles.clear} />
-  </label>
-)
+}) => {
+  const [colorScheme] = useColorContext()
+  return (
+    <label
+      {...styles.label}
+      {...(disabled
+        ? colorScheme.set('color', 'disabled')
+        : colorScheme.set('color', 'text'))}
+      style={{ ...style }}
+    >
+      <span {...styles.box}>
+        <Radio checked={checked} disabled={disabled} />
+      </span>
+      <input
+        {...styles.input}
+        name={name}
+        type='radio'
+        value={value}
+        checked={checked}
+        disabled={disabled}
+        onChange={onChange}
+      />
+      {children}
+      <span {...styles.clear} />
+    </label>
+  )
+}
