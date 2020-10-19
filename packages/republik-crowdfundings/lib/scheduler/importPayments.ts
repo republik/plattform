@@ -9,15 +9,12 @@ import {
   IbanCreditor,
   PaymentEntry,
 } from './payments/parseCamt053'
-import {
-  listSftpFiles,
-  loadSftpFiles,
-  getConnectedSftpClient,
-  SftpFile,
-} from './payments/sftp'
+
 import { Nominal } from 'simplytyped'
 import { v4 as uuid } from 'uuid'
 import matchPayments, { MatchPaymentReport } from '../payments/matchPayments'
+import { SftpFile } from './payments/sftp'
+import { syncPaymentFiles } from './payments/syncPaymentFiles'
 
 const {
   publishScheduler,
@@ -37,32 +34,45 @@ export async function importPayments(
   _args: undefined,
   context: Context,
 ): Promise<void> {
-  const transaction = await context.pgdb.transactionBegin()
-  let insertPaymentReport, unmatchedPaymentsAmount, matchingReport
-
   try {
-    await getAndInsertPostfinanceImports(transaction)
-    insertPaymentReport = await insertNewPayments(transaction)
-    matchingReport = await tryMatchingPayments(transaction, context)
-    await transaction.transactionCommit()
-    unmatchedPaymentsAmount = await getUnmatchedPaymentsAmount(context.pgdb)
+    await withTransaction(syncPaymentFiles, context.pgdb)
+    await withTransaction(_importPayments(context), context.pgdb)
+    await sendReminders()
   } catch (e) {
-    transaction.transactionRollback()
-    informFailed(
+    await informFailed(
       `importPayments(): postfinance sync failed with the following error: ${
         e.message || e
       } ${e.stack || ''}`,
     )
     return
   }
+}
+
+const _importPayments = (context: Context) => async (transaction: PgDb) => {
+  const insertPaymentReport = await insertNewPayments(transaction)
+  const matchingReport = await tryMatchingPayments(transaction, context)
+  const unmatchedPaymentsAmount = await getUnmatchedPaymentsAmount(transaction)
 
   await notifyAccountants({
     ...insertPaymentReport,
     unmatchedPaymentsAmount,
     matchingReport,
   })
+}
 
-  sendReminders()
+async function withTransaction<T>(
+  fn: (pgdb: PgDb) => Promise<T>,
+  pgdb: PgDb,
+): Promise<T> {
+  const transaction = await pgdb.transactionBegin()
+  try {
+    const result = await fn(transaction)
+    await transaction.transactionCommit()
+    return result
+  } catch (e) {
+    await transaction.transactionRollback()
+    throw e
+  }
 }
 
 interface Report {
@@ -201,38 +211,15 @@ async function extractTarFiles(possiblyTarFiles: PostfinanceImportsRecord[]) {
   return (await Promise.all(postfinanceImportPromises)).flat()
 }
 
-function informFailed(message: string) {
+async function informFailed(message: string) {
   console.log(message)
-  publishScheduler(message)
+  await publishScheduler(message)
 }
 
 interface PostfinanceImportsRecord {
   fileName: string
   buffer: Buffer
   isImported?: boolean
-}
-
-async function filterPreviouslyLoadedFiles({
-  fileNames,
-  transaction,
-}: {
-  fileNames: string[]
-  transaction: PgDb
-}) {
-  if (fileNames.length === 0) {
-    return []
-  }
-
-  const records = await postfinanceImportsTable(transaction).find({
-    fileName: fileNames,
-  })
-
-  const set = new Set(fileNames)
-  records.forEach((record) => {
-    set.delete(record.fileName)
-  })
-
-  return Array.from(set)
 }
 
 function postfinanceImportsTable(transaction: PgDb) {
@@ -278,26 +265,6 @@ const insertPayments = async ({
   })
 
   return (await Promise.all(insertPromises)).reduce((a, b) => a + b)
-}
-
-interface SftpConnectionOptions {
-  host: string
-  port: number
-  username: string
-  privateKey: string
-}
-
-const { PF_SFTP_CONNECTIONS } = process.env
-let serverConnections: SftpConnectionOptions[] = []
-if (PF_SFTP_CONNECTIONS) {
-  try {
-    serverConnections = JSON.parse(PF_SFTP_CONNECTIONS)
-  } catch (e) {
-    console.warn(
-      'invalid PF_SFTP_CONNECTIONS env, no payments will be imported',
-      PF_SFTP_CONNECTIONS,
-    )
-  }
 }
 
 interface PostfinancePaymentRecord {
@@ -467,40 +434,6 @@ function getImageFiles(files: SftpFile[]) {
         png: buffer,
       }
     })
-}
-
-async function getNewFilesFromAllServers(transaction: PgDb) {
-  const serverFiles = await Promise.all(
-    serverConnections.map(getNewFilesFromServer(transaction)),
-  )
-  return serverFiles.flat()
-}
-
-function getNewFilesFromServer(transaction: PgDb) {
-  return async function (connectionOptions: SftpConnectionOptions) {
-    const sftpClient = await getConnectedSftpClient(connectionOptions)
-
-    try {
-      const fileNamesOnServer = await listSftpFiles(sftpClient)
-
-      const fileNamesToLoad = await filterPreviouslyLoadedFiles({
-        transaction,
-        fileNames: fileNamesOnServer,
-      })
-
-      return await loadSftpFiles({
-        fileNames: fileNamesToLoad,
-        client: sftpClient,
-      })
-    } finally {
-      sftpClient.end()
-    }
-  }
-}
-
-async function getAndInsertPostfinanceImports(transaction: PgDb) {
-  const files = await getNewFilesFromAllServers(transaction)
-  await postfinanceImportsTable(transaction).insert(files)
 }
 
 async function getPostfinanceImports(transaction: PgDb) {
