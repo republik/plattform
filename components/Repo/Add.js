@@ -260,7 +260,7 @@ class RepoAdd extends Component {
           {isTemplate && (
             <a
               {...styles.infoLink}
-              href='https://github.com/orbiting/publikator-frontend/blob/template-fixes/docs/templates.md'
+              href='https://github.com/orbiting/publikator-frontend/blob/master/docs/templates.md'
               target='_blank'
               {...linkRule}
             >
