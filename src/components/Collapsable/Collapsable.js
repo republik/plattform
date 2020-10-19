@@ -55,7 +55,8 @@ const Collapsable = ({
   initialVisibility,
   style,
   alwaysCollapsed,
-  editorPreview
+  editorPreview,
+  isOnOverlay
 }) => {
   /**
    * Measuring the body size (height), so we can determine whether to collapse
@@ -95,10 +96,12 @@ const Collapsable = ({
     () =>
       css({
         '&::before': {
-          background: colorScheme.getCSSColor('fadeOutGradientOverlay')
+          background: colorScheme.getCSSColor(
+            isOnOverlay ? 'fadeOutGradientOverlay' : 'fadeOutGradientDefault'
+          )
         }
       }),
-    [colorScheme]
+    [colorScheme, isOnOverlay]
   )
 
   const buttonRules = useMemo(
