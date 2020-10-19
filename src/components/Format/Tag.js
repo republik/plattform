@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import { css } from 'glamor'
 
@@ -9,6 +9,7 @@ import {
   sansSerifMedium20
 } from '../Typography/styles'
 import { mUp } from '../../theme/mediaQueries'
+import { useColorContext } from '../Colors/useColorContext'
 
 const styles = {
   container: css({
@@ -23,7 +24,6 @@ const styles = {
   }),
   count: css({
     ...sansSerifMedium14,
-    color: '#b4b4b4',
     marginLeft: 5,
     [mUp]: {
       ...sansSerifMedium16
@@ -31,16 +31,18 @@ const styles = {
   })
 }
 
-class FormatTag extends Component {
-  render() {
-    const { label, count, color } = this.props
-    return (
-      <div {...styles.container} style={{ color }}>
-        {label}
-        {count !== undefined && <span {...styles.count}>{count}</span>}
-      </div>
-    )
-  }
+const FormatTag = ({ label, count, color }) => {
+  const [colorScheme] = useColorContext()
+  return (
+    <div {...styles.container} {...colorScheme.set('color', color, 'format')}>
+      {label}
+      {count !== undefined && (
+        <span {...styles.count} {...colorScheme.set('color', 'textSoft')}>
+          {count}
+        </span>
+      )}
+    </div>
+  )
 }
 
 FormatTag.propTypes = {
