@@ -36,7 +36,10 @@ export async function importPayments(
 ): Promise<void> {
   try {
     await withTransaction(syncPaymentFiles, context.pgdb)
-    const report = await withTransaction(_importPayments(context), context.pgdb)
+    const report = await withTransaction(
+      createPaymentImporter(context),
+      context.pgdb,
+    )
     await notifyAccountants(report)
     await sendReminders()
   } catch (e) {
@@ -49,7 +52,7 @@ export async function importPayments(
   }
 }
 
-const _importPayments = (context: Context) => async (
+const createPaymentImporter = (context: Context) => async (
   transaction: PgDb,
 ): Promise<Report> => {
   const insertPaymentReport = await insertNewPayments(transaction)
