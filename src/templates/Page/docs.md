@@ -9,7 +9,6 @@ const schema = createPageSchema()
 `createPageSchema` is configured with the following `documentEditorOptions`:
 
 - `skipCredits`: true
-- `excludeFromFeed`: true
 - `titleCenter`: true (initial default - can always be changed)
 
 And offers the following custom meta configuration options:

@@ -17,7 +17,6 @@ const createSchema = ({
   return createArticleSchema({
     documentEditorOptions: {
       skipCredits: true,
-      excludeFromFeed: true,
       titleCenter: true
     },
     repoPrefix: 'page-',
