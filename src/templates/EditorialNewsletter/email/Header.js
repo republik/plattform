@@ -21,13 +21,13 @@ export default ({ meta }) => {
           >
             <img
               height='79'
-              width={isCovid19 ? 217 : 178}
+              width={isCovid19 ? 226 : 178}
               src={`https://www.republik.ch/static/logo_republik_newsletter${
-                isCovid19 ? '_covid19' : ''
+                isCovid19 ? '_covid19_wave2' : ''
               }.png`}
               style={{
                 border: 0,
-                width: `${isCovid19 ? 217 : 178}px !important`,
+                width: `${isCovid19 ? 226 : 178}px !important`,
                 height: '79px !important',
                 margin: 0,
                 maxWidth: '100% !important'
