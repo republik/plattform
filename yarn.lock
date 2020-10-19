@@ -1669,10 +1669,10 @@
     stringify-entities "^1.3.1"
     unified "^6.1.5"
 
-"@project-r/styleguide@^9.24.0":
-  version "9.24.0"
-  resolved "https://registry.yarnpkg.com/@project-r/styleguide/-/styleguide-9.24.0.tgz#8079e673e83cb0cd343b60eabb1354d12d9c9ea1"
-  integrity sha512-WHJp04IpPrbp/+xlQ17V+pWVwf1P0OPZnnbD0b55EiH13EGvp5s8zd1NYaZet/XCpzPE8zw0C6gJbAsPTQMBdg==
+"@project-r/styleguide@^9.35.0":
+  version "9.35.0"
+  resolved "https://registry.yarnpkg.com/@project-r/styleguide/-/styleguide-9.35.0.tgz#097e5ca8ef53e85d7241cb9d811df98c13750e38"
+  integrity sha512-q4g7xyEGClT+koabIRz4ct5yH6Js/5nZhw3MlJa+lFm6jupjxja+UWlrxizMmdYjatAWtR59AxObn4pDe3+i8Q==
   dependencies:
     body-scroll-lock "3.0.3"
     react-icons "^2.2.7"
