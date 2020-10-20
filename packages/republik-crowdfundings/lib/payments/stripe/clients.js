@@ -50,7 +50,7 @@ module.exports = async (pgdb) => {
     const company = companies.find((c) => c.name === accountName)
     return {
       name: accountName,
-      stripe: require('stripe')(key),
+      stripe: require('stripe')(key, { apiVersion: '2020-08-27' }),
       accountId,
       endpointSecret,
       company,

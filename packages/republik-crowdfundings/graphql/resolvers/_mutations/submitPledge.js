@@ -444,10 +444,11 @@ module.exports = async (_, args, context) => {
       userId: user.id,
     })
 
-    // create stripe PaymentIntent
+    // create stripe PaymentIntent or PaymentMethod
     let stripeClientSecret
     if (pledge.method === 'STRIPE') {
       const { companyId } = pkg
+      const isSubscription = pkg.name === 'MONTHLY_ABO'
 
       const { stripePlatformPaymentMethodId } = pledge
       if (!stripePlatformPaymentMethodId) {
@@ -483,10 +484,6 @@ module.exports = async (_, args, context) => {
           (cpm) => cpm.companyId === companyId,
         ).id
       }
-      console.log({
-        stripePlatformPaymentMethodId,
-        paymentMethodId,
-      })
       if (!paymentMethodId) {
         console.error('missing paymentMethodId')
         throw new Error(t('api/unexpected'))
@@ -499,21 +496,23 @@ module.exports = async (_, args, context) => {
         companyId,
       })
 
-      // the paymentIntent needs to be created on the account of the company
-      const { accounts } = await getClients(pgdb)
-      const stripeClient = accounts.find((a) => a.company.id === companyId)
+      if (!isSubscription) {
+        // the paymentIntent needs to be created on the account of the company
+        const { accounts } = await getClients(pgdb)
+        const stripe = accounts.find((a) => a.company.id === companyId).stripe
 
-      const paymentIntent = await stripeClient.stripe.paymentIntents.create({
-        setup_future_usage: 'off_session',
-        amount: newPledge.total,
-        currency: 'chf',
-        customer: customer.id,
-        payment_method: paymentMethodId,
-        metadata: {
-          pledgeId: newPledge.id,
-        },
-      })
-      stripeClientSecret = paymentIntent.client_secret
+        const paymentIntent = await stripe.paymentIntents.create({
+          setup_future_usage: 'off_session',
+          amount: newPledge.total,
+          currency: 'chf',
+          customer: customer.id,
+          payment_method: paymentMethodId,
+          metadata: {
+            pledgeId: newPledge.id,
+          },
+        })
+        stripeClientSecret = paymentIntent.client_secret
+      }
     }
 
     return {

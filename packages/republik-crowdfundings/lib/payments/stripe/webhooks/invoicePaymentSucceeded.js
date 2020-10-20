@@ -37,7 +37,9 @@ module.exports = {
           })
 
         if (!pledge) {
-          console.warn(`received webhook for unknown pledgeId ${pledgeId}`)
+          console.warn(
+            `invoicePaymentSucceeded received webhook for unknown pledgeId ${pledgeId}`,
+          )
           await transaction.transactionRollback()
           return 500
         }

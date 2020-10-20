@@ -18,51 +18,55 @@ module.exports = async ({
   logger = console,
 }) => {
   const isSubscription = pkg.name === 'MONTHLY_ABO'
+
+  // old charge threeDSecure
   const threeDSecure = pspPayload && pspPayload.type === 'three_d_secure'
   const rememberSourceId = threeDSecure
     ? pspPayload.three_d_secure.card
     : sourceId
-
   if (isSubscription && threeDSecure) {
     throw new Error(t('api/payment/subscription/threeDsecure/notSupported'))
+  }
+
+  // paymentIntent payments are setteled via webhook
+  if (paymentMethodId && !isSubscription) {
+    console.log('paymentMethodId && !isSubscription -> SUCCESSFUL')
+    return 'SUCCESSFUL'
   }
 
   let charge
   try {
     let deduplicatedSourceId
-    if (!(await pgdb.public.stripeCustomers.findFirst({ userId }))) {
-      if (!rememberSourceId && !paymentMethodId) {
-        logger.error('missing sourceId or paymentMethodId', {
+    // paymentMethod is saved to customer in submitPledge
+    if (!paymentMethodId) {
+      if (!(await pgdb.public.stripeCustomers.findFirst({ userId }))) {
+        if (!rememberSourceId) {
+          logger.error('missing sourceId or paymentMethodId', {
+            userId,
+            pledgeId,
+            sourceId,
+          })
+          throw new Error(t('api/unexpected'))
+        }
+        await createCustomer({
+          sourceId: rememberSourceId,
           userId,
-          pledgeId,
-          sourceId,
-          paymentMethodId,
+          pgdb,
         })
-        throw new Error(t('api/unexpected'))
+      } else {
+        // stripe customer exists
+        deduplicatedSourceId = await addSource({
+          sourceId: rememberSourceId,
+          userId,
+          pgdb,
+          deduplicate: true,
+          makeDefault,
+        })
       }
-      await createCustomer({
-        sourceId: rememberSourceId,
-        paymentMethodId,
-        userId,
-        pgdb,
-      })
-    } else if (sourceId) {
-      // stripe customer exists
-      deduplicatedSourceId = await addSource({
-        sourceId: rememberSourceId,
-        userId,
-        pgdb,
-        deduplicate: true,
-        makeDefault,
-      })
-    }
-
-    // paymentIntent payments are setteled via webhook
-    if (paymentMethodId) {
-      return 'WAITING_FOR_PAYMENT'
     }
 
     if (isSubscription) {
+      console.log('createSubscription...')
       await createSubscription({
         plan: pkg.name,
         userId,
@@ -70,6 +74,7 @@ module.exports = async ({
         metadata: {
           pledgeId,
         },
+        ...(paymentMethodId ? { default_payment_method: paymentMethodId } : {}),
         pgdb: transaction,
       })
     } else {
@@ -100,7 +105,7 @@ module.exports = async ({
 
   // for subscriptions the payment doesn't exist yet
   // and is saved by the webhookHandler
-  if (!isSubscription) {
+  if (!isSubscription && !paymentMethodId) {
     // save payment
     const payment = await transaction.public.payments.insertAndGet({
       type: 'PLEDGE',
