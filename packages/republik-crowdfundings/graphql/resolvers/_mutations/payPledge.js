@@ -1,21 +1,18 @@
 const logger = console
-const { sendPledgeConfirmations } = require('../../../lib/Mail')
-const generateMemberships = require('../../../lib/generateMemberships')
-const { refreshPotForPledgeId } = require('../../../lib/membershipPot')
 const payPledgePaymentslip = require('../../../lib/payments/paymentslip/payPledge')
 const payPledgePaypal = require('../../../lib/payments/paypal/payPledge')
 const payPledgePostfinance = require('../../../lib/payments/postfinance/payPledge')
 const payPledgeStripe = require('../../../lib/payments/stripe/payPledge')
-const slack = require('@orbiting/backend-modules-republik/lib/slack')
-const Promise = require('bluebird')
+const { changeStatus, afterChange } = require('../../../lib/payments/Pledge')
 
 module.exports = async (_, args, context) => {
-  const { pgdb, req, t, redis } = context
+  const { pgdb, req, t } = context
   const { pledgePayment } = args
   const { pledgeId } = pledgePayment
 
   let user
   let updatedPledge
+  let pledgeResponse
   const transaction = await pgdb.transactionBegin()
   try {
     // load pledge
@@ -115,11 +112,12 @@ module.exports = async (_, args, context) => {
         logger,
       })
     } else if (pledgePayment.method === 'STRIPE') {
-      pledgeStatus = await payPledgeStripe({
+      pledgeResponse = await payPledgeStripe({
         pledgeId: pledge.id,
         total: pledge.total,
         sourceId: pledgePayment.sourceId,
-        paymentMethodId: pledgePayment.paymentMethodId,
+        stripePlatformPaymentMethodId:
+          pledgePayment.stripePlatformPaymentMethodId,
         pspPayload: pledgePayment.pspPayload,
         makeDefault: pledgePayment.makeDefault,
         userId: user.id,
@@ -157,6 +155,11 @@ module.exports = async (_, args, context) => {
       })
       throw new Error(t('api/unexpected'))
     }
+
+    if (pledgeResponse) {
+      pledgeStatus = pledgeResponse.status
+    }
+
     if (!pledgeStatus) {
       logger.error('pledgeStatus undefined', {
         req: req._log(),
@@ -168,20 +171,13 @@ module.exports = async (_, args, context) => {
     }
 
     if (pledge.status !== pledgeStatus) {
-      // generate Memberships
-      if (pledgeStatus === 'SUCCESSFUL') {
-        await generateMemberships(pledge.id, transaction, t, redis)
-      }
-
-      // update pledge status
-      updatedPledge = await transaction.public.pledges.updateAndGetOne(
+      updatedPledge = await changeStatus(
         {
-          id: pledge.id,
+          pledge,
+          newStatus: pledgeStatus,
+          transaction,
         },
-        {
-          status: pledgeStatus,
-          sendConfirmMail: true,
-        },
+        context,
       )
     }
 
@@ -194,20 +190,17 @@ module.exports = async (_, args, context) => {
   }
 
   if (updatedPledge) {
-    await Promise.all([
-      user &&
-        user.verified &&
-        sendPledgeConfirmations({ userId: user.id, pgdb, t }),
-      updatedPledge.status === 'SUCCESSFUL' &&
-        refreshPotForPledgeId(pledgeId, context),
-      updatedPledge.status === 'PAID_INVESTIGATE' &&
-        slack.publishPledge(user, updatedPledge, 'PAID_INVESTIGATE'),
-    ]).catch((e) => {
-      console.error('error after payPledge', e)
-    })
+    await afterChange(
+      {
+        user,
+        pledge: updatedPledge,
+      },
+      context,
+    )
   }
 
   return {
     pledgeId,
+    ...pledgeResponse,
   }
 }

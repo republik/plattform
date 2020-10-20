@@ -2,12 +2,23 @@ const createCustomer = require('./createCustomer')
 const createCharge = require('./createCharge')
 const createSubscription = require('./createSubscription')
 const addSource = require('./addSource')
+const addPaymentMethod = require('./addPaymentMethod')
+const { getPaymentMethods } = require('./paymentMethod')
+const getClients = require('./clients')
 
-module.exports = async ({
+module.exports = (args) => {
+  const { sourceId } = args
+  if (sourceId) {
+    return payWithSource(args)
+  } else {
+    return payWithPaymentMethod(args)
+  }
+}
+
+const payWithSource = async ({
   pledgeId,
   total,
   sourceId,
-  paymentMethodId,
   pspPayload,
   makeDefault = false,
   userId,
@@ -15,7 +26,6 @@ module.exports = async ({
   transaction,
   pgdb,
   t,
-  logger = console,
 }) => {
   const isSubscription = pkg.name === 'MONTHLY_ABO'
 
@@ -28,45 +38,35 @@ module.exports = async ({
     throw new Error(t('api/payment/subscription/threeDsecure/notSupported'))
   }
 
-  // paymentIntent payments are setteled via webhook
-  if (paymentMethodId && !isSubscription) {
-    console.log('paymentMethodId && !isSubscription -> SUCCESSFUL')
-    return 'SUCCESSFUL'
-  }
-
   let charge
   try {
     let deduplicatedSourceId
-    // paymentMethod is saved to customer in submitPledge
-    if (!paymentMethodId) {
-      if (!(await pgdb.public.stripeCustomers.findFirst({ userId }))) {
-        if (!rememberSourceId) {
-          logger.error('missing sourceId or paymentMethodId', {
-            userId,
-            pledgeId,
-            sourceId,
-          })
-          throw new Error(t('api/unexpected'))
-        }
-        await createCustomer({
-          sourceId: rememberSourceId,
+    if (!(await pgdb.public.stripeCustomers.findFirst({ userId }))) {
+      if (!rememberSourceId) {
+        console.error('missing sourceId', {
           userId,
-          pgdb,
+          pledgeId,
+          sourceId,
         })
-      } else {
-        // stripe customer exists
-        deduplicatedSourceId = await addSource({
-          sourceId: rememberSourceId,
-          userId,
-          pgdb,
-          deduplicate: true,
-          makeDefault,
-        })
+        throw new Error(t('api/unexpected'))
       }
+      await createCustomer({
+        sourceId: rememberSourceId,
+        userId,
+        pgdb,
+      })
+    } else {
+      // stripe customer exists
+      deduplicatedSourceId = await addSource({
+        sourceId: rememberSourceId,
+        userId,
+        pgdb,
+        deduplicate: true,
+        makeDefault,
+      })
     }
 
     if (isSubscription) {
-      console.log('createSubscription...')
       await createSubscription({
         plan: pkg.name,
         userId,
@@ -74,7 +74,6 @@ module.exports = async ({
         metadata: {
           pledgeId,
         },
-        ...(paymentMethodId ? { default_payment_method: paymentMethodId } : {}),
         pgdb: transaction,
       })
     } else {
@@ -88,24 +87,24 @@ module.exports = async ({
       })
     }
   } catch (e) {
-    logger.info('stripe charge failed', { pledgeId, e })
+    console.info('stripe charge failed', { pledgeId, e })
     if (e.type === 'StripeCardError') {
       const translatedError = t('api/pay/stripe/' + e.code)
       if (translatedError) {
         throw new Error(translatedError)
       } else {
-        logger.warn('translation not found for stripe error', { pledgeId, e })
+        console.warn('translation not found for stripe error', { pledgeId, e })
         throw new Error(e.message)
       }
     } else {
-      logger.error('unknown error on stripe charge', { pledgeId, e })
+      console.error('unknown error on stripe charge', { pledgeId, e })
       throw new Error(t('api/unexpected'))
     }
   }
 
   // for subscriptions the payment doesn't exist yet
   // and is saved by the webhookHandler
-  if (!isSubscription && !paymentMethodId) {
+  if (!isSubscription) {
     // save payment
     const payment = await transaction.public.payments.insertAndGet({
       type: 'PLEDGE',
@@ -124,5 +123,105 @@ module.exports = async ({
     })
   }
 
-  return 'SUCCESSFUL'
+  return {
+    status: 'SUCCESSFUL',
+  }
+}
+
+const payWithPaymentMethod = async ({
+  pledgeId,
+  total,
+  stripePlatformPaymentMethodId,
+  pspPayload,
+  makeDefault = false,
+  userId,
+  pkg,
+  transaction,
+  pgdb,
+  t,
+}) => {
+  const { companyId } = pkg
+  const isSubscription = pkg.name === 'MONTHLY_ABO'
+
+  if (!stripePlatformPaymentMethodId) {
+    console.error('missing stripePlatformPaymentMethodId')
+    throw new Error(t('api/unexpected'))
+  }
+
+  // save paymentMethodId (to platform and connectedAccounts)
+  if (!(await pgdb.public.stripeCustomers.findFirst({ userId: userId }))) {
+    await createCustomer({
+      paymentMethodId: stripePlatformPaymentMethodId,
+      userId: userId,
+      pgdb,
+    })
+  } else {
+    await addPaymentMethod({
+      paymentMethodId: stripePlatformPaymentMethodId,
+      userId: userId,
+      pgdb,
+    })
+  }
+
+  // load all paymentMethods and select the one for companyId
+  let paymentMethodId
+  const paymentMethods = await getPaymentMethods(userId, pgdb)
+  const platformPaymentMethod = paymentMethods.find(
+    (pm) => pm.id === stripePlatformPaymentMethodId,
+  )
+  if (platformPaymentMethod.companyId === companyId) {
+    paymentMethodId = platformPaymentMethod.id
+  } else {
+    paymentMethodId = platformPaymentMethod.connectedPaymentMethods.find(
+      (cpm) => cpm.companyId === companyId,
+    ).id
+  }
+  if (!paymentMethodId) {
+    console.error('missing paymentMethodId')
+    throw new Error(t('api/unexpected'))
+  }
+
+  // customer needs to be attached to PaymentIntent
+  // otherwise she can't use her saved paymentMethods
+  const customer = await pgdb.public.stripeCustomers.findOne({
+    userId,
+    companyId,
+  })
+
+  let stripeClientSecret
+  if (!isSubscription) {
+    // the paymentIntent needs to be created on the account of the company
+    const { accounts } = await getClients(pgdb)
+    const stripe = accounts.find((a) => a.company.id === companyId).stripe
+
+    const paymentIntent = await stripe.paymentIntents.create({
+      setup_future_usage: 'off_session',
+      amount: total,
+      currency: 'chf',
+      customer: customer.id,
+      payment_method: paymentMethodId,
+      metadata: {
+        pledgeId: pledgeId,
+      },
+    })
+    stripeClientSecret = paymentIntent.client_secret
+  } else {
+    await createSubscription({
+      plan: pkg.name,
+      userId,
+      companyId: pkg.companyId,
+      metadata: {
+        pledgeId: pledgeId,
+      },
+      // ...paymentMethodId ? { default_payment_method: paymentMethodId } : {},
+      pgdb: transaction,
+    })
+    // wait for paymentIntent webhook
+    // wait for it to succeed or return client secret for confirmation
+  }
+
+  return {
+    status: 'DRAFT',
+    stripeClientSecret,
+  }
 }

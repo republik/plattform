@@ -1,7 +1,11 @@
 const _ = {
   get: require('lodash/get'),
 }
+const { savePaymentDedup } = require('../../Pledge')
 
+// used by stripe subscriptions (source or paymentMethod)
+// not used by stripe paymentIntent
+//
 // invoice.payment_succeeded includes:
 // pledgeId, charge total and charge id
 // but not the charge details, charge may not
@@ -44,26 +48,12 @@ module.exports = {
           return 500
         }
 
-        // save payment deduplicated
-        const existingPayment = await transaction.public.payments.findFirst({
-          method: 'STRIPE',
-          pspId: chargeId,
+        await savePaymentDedup({
+          pledgeId,
+          chargeId,
+          total,
+          transaction,
         })
-        if (!existingPayment) {
-          const payment = await transaction.public.payments.insertAndGet({
-            type: 'PLEDGE',
-            method: 'STRIPE',
-            total: total,
-            status: 'PAID',
-            pspId: chargeId,
-          })
-
-          await transaction.public.pledgePayments.insert({
-            pledgeId,
-            paymentId: payment.id,
-            paymentType: 'PLEDGE',
-          })
-        }
 
         // save membershipPeriod
         const memberships = await transaction.public.memberships.find({

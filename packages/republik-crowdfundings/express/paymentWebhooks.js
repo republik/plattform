@@ -12,8 +12,13 @@ const getWebhookHandler = require('../lib/payments/stripe/webhookHandler')
 
 const { STRIPE_TEST_MODE } = process.env
 
-module.exports = async (server, pgdb, t, redis) => {
-  const handleWebhook = await getWebhookHandler({ pgdb, t })
+module.exports = async (server, pgdb, t, redis, connectionContext) => {
+  const handleWebhook = await getWebhookHandler({
+    pgdb,
+    t,
+    redis,
+    connectionContext,
+  })
 
   const handleStripeWebhook = async (req, res, connected) => {
     const body = JSON.parse(req.body.toString('utf8'))

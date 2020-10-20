@@ -2,7 +2,7 @@ const debug = require('debug')('crowdfundings:webhooks:stripe')
 const getStripeClients = require('./clients')
 const handlers = require('./webhooks/index')
 
-module.exports = async ({ pgdb, t }) => {
+module.exports = async ({ pgdb, t, redis, connectionContext }) => {
   const { platform, connectedAccounts } = await getStripeClients(pgdb)
 
   const typesOfInterest = handlers.reduce(
@@ -33,7 +33,16 @@ module.exports = async ({ pgdb, t }) => {
       const { handle } = handlers.find((handler) =>
         handler.eventTypes.includes(event.type),
       )
-      const result = await handle(event, pgdb, t)
+      const result = await handle(
+        event,
+        pgdb,
+        t,
+        redis,
+        connectionContext,
+      ).catch((e) => {
+        console.error(e)
+        throw e
+      })
       if (result) {
         return result
       }

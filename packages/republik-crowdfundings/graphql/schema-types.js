@@ -239,8 +239,6 @@ input PledgeInput {
   accessToken: ID
   payload: JSON
   method: PaymentMethod
-  # mandatory to pay with PaymentIntent
-  stripePlatformPaymentMethodId: ID
 }
 
 type PledgeResponse {
@@ -257,7 +255,8 @@ input PledgePaymentInput {
   method: PaymentMethod!
   paperInvoice: Boolean
   sourceId: String
-  paymentMethodId: String
+  # mandatory to pay with PaymentIntent
+  stripePlatformPaymentMethodId: ID
   pspPayload: JSON
   makeDefault: Boolean
   address: AddressInput
