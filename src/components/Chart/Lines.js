@@ -6,6 +6,7 @@ import { range, min, max } from 'd3-array'
 import { scaleOrdinal, scalePoint, scaleTime, scaleLinear } from 'd3-scale'
 import { line as lineShape, area as areaShape } from 'd3-shape'
 import { timeYear } from 'd3-time'
+import { useColorContext } from '../Colors/useColorContext'
 
 import {
   sansSerifRegular12,
@@ -13,7 +14,6 @@ import {
   sansSerifMedium14,
   sansSerifMedium22
 } from '../Typography/styles'
-import colors from '../../theme/colors'
 import { timeFormat } from '../../lib/timeFormat'
 
 import layout, {
@@ -34,19 +34,16 @@ import {
   runSort,
   sortPropType,
   sortBy,
-  baseLineColor,
   getFormat
 } from './utils'
 import ColorLegend from './ColorLegend'
 
 const styles = {
   columnTitle: css({
-    ...sansSerifMedium14,
-    fill: colors.text
+    ...sansSerifMedium14
   }),
   axisLabel: css({
-    ...sansSerifRegular12,
-    fill: colors.text
+    ...sansSerifRegular12
   }),
   axisYLine: css({
     stroke: transparentAxisStroke,
@@ -54,16 +51,13 @@ const styles = {
     shapeRendering: 'crispEdges'
   }),
   axisXLine: css({
-    stroke: baseLineColor,
     strokeWidth: '1px',
     shapeRendering: 'crispEdges'
   }),
   annotationCircle: css({
-    stroke: colors.text,
     fill: circleFill
   }),
   annotationLine: css({
-    stroke: colors.text,
     strokeWidth: '1px',
     fillRule: 'evenodd',
     strokeLinecap: 'round',
@@ -71,27 +65,22 @@ const styles = {
     strokeLinejoin: 'round'
   }),
   annotationText: css({
-    fill: colors.text,
     ...sansSerifRegular12
   }),
   annotationValue: css({
-    fill: colors.text,
     ...sansSerifMedium12
   }),
   value: css({
-    ...VALUE_FONT,
-    fill: colors.text
+    ...VALUE_FONT
   }),
   valueMini: css({
     ...sansSerifMedium22
   }),
   label: css({
-    ...LABEL_FONT,
-    fill: colors.text
+    ...LABEL_FONT
   }),
   bandLegend: css({
     ...sansSerifRegular12,
-    color: colors.text,
     whiteSpace: 'nowrap'
   }),
   bandBar: css({
@@ -99,9 +88,10 @@ const styles = {
     width: 24,
     height: 11,
     marginBottom: -1,
-    backgroundColor: colors.text,
-    borderTop: `4px solid ${colors.divider}`,
-    borderBottom: `4px solid ${colors.divider}`
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
+    borderTopStyle: 'solid',
+    borderBottomStyle: 'solid'
   })
 }
 
@@ -133,6 +123,7 @@ const LineGroup = props => {
     band,
     endDy
   } = props
+  const [colorScheme] = useColorContext()
 
   const [height] = y.range()
   const xAxisY = height + (yCut ? yCutHeight : 0)
@@ -158,11 +149,20 @@ const LineGroup = props => {
 
   return (
     <g>
-      <text dy='1.7em' {...styles.columnTitle}>
+      <text
+        dy='1.7em'
+        {...styles.columnTitle}
+        {...colorScheme.set('fill', 'text')}
+      >
         {subsup.svg(title)}
       </text>
       {!!yCut && (
-        <text y={height + yCutHeight / 2} dy='0.3em' {...styles.axisLabel}>
+        <text
+          y={height + yCutHeight / 2}
+          dy='0.3em'
+          {...styles.axisLabel}
+          {...colorScheme.set('fill', 'text')}
+        >
           {yCut}
         </text>
       )}
@@ -176,9 +176,14 @@ const LineGroup = props => {
         }
         return (
           <g key={`x${tick}`} transform={`translate(${x(tick)},${xAxisY})`}>
-            <line {...styles.axisXLine} y2={X_TICK_HEIGHT} />
+            <line
+              {...styles.axisXLine}
+              {...colorScheme.set('stroke', 'text')}
+              y2={X_TICK_HEIGHT}
+            />
             <text
               {...styles.axisLabel}
+              {...colorScheme.set('fill', 'text')}
               y={X_TICK_HEIGHT + 5}
               dy='0.6em'
               textAnchor={textAnchor}
@@ -194,6 +199,7 @@ const LineGroup = props => {
           y={height + AXIS_BOTTOM_HEIGHT + X_TICK_HEIGHT * 2}
           textAnchor='end'
           {...styles.axisLabel}
+          {...colorScheme.set('fill', 'text')}
         >
           {xUnit}
         </text>
@@ -233,6 +239,7 @@ const LineGroup = props => {
                   )}
                   <text
                     {...styles.value}
+                    {...colorScheme.set('fill', 'text')}
                     dy='0.3em'
                     x={startX - yConnectorSize}
                     y={startLabelY}
@@ -266,14 +273,19 @@ const LineGroup = props => {
                     dy={endDy}
                     x={mini ? endX : endX + yConnectorSize}
                     y={mini ? endLabelY - Y_LABEL_HEIGHT : endLabelY}
-                    fill={colors.text}
+                    {...colorScheme.set('fill', 'text')}
                     textAnchor={mini ? 'end' : 'start'}
                   >
                     <tspan {...styles[mini ? 'valueMini' : 'value']}>
                       {endValue}
                     </tspan>
                     {endLabel && (
-                      <tspan {...styles.label}>{subsup.svg(endLabel)}</tspan>
+                      <tspan
+                        {...styles.label}
+                        {...colorScheme.set('fill', 'text')}
+                      >
+                        {subsup.svg(endLabel)}
+                      </tspan>
                     )}
                   </text>
                 </g>
@@ -287,11 +299,16 @@ const LineGroup = props => {
           <line
             {...styles.axisYLine}
             x2={width}
+            {...colorScheme.set('stroke', 'divider')}
             style={{
-              stroke: tick === 0 ? baseLineColor : undefined
+              opacity: tick === 0 ? 0.8 : 0.17
             }}
           />
-          <text {...styles.axisLabel} dy='-3px'>
+          <text
+            {...styles.axisLabel}
+            {...colorScheme.set('fill', 'text')}
+            dy='-3px'
+          >
             {yAxisFormat(tick, last(yTicks, i))}
           </text>
         </g>
@@ -301,17 +318,24 @@ const LineGroup = props => {
           key={`annotation-${i}`}
           transform={`translate(0,${y(annotation.value)})`}
         >
-          <line x1={0} x2={width} {...styles.annotationLine} />
+          <line
+            x1={0}
+            x2={width}
+            {...styles.annotationLine}
+            {...colorScheme.set('stroke', 'text')}
+          />
           <circle
             r='3.5'
             cx={annotation.x ? x(annotation.x) : 4}
             {...styles.annotationCircle}
+            {...colorScheme.set('stroke', 'text')}
           />
           <text
             x={width}
             textAnchor='end'
             dy={annotation.dy || '-0.4em'}
             {...styles.annotationText}
+            {...colorScheme.set('fill', 'text')}
           >
             {annotation.label} {annotation.formattedValue} {annotation.unit}
           </text>
@@ -351,14 +375,34 @@ const LineGroup = props => {
             key={`x-annotation-${i}`}
             transform={`translate(0,${y(annotation.value)})`}
           >
-            {range && <line x1={x1} x2={x2} {...styles.annotationLine} />}
-            <circle r='3.5' cx={x1} {...styles.annotationCircle} />
-            {range && <circle r='3.5' cx={x2} {...styles.annotationCircle} />}
+            {range && (
+              <line
+                x1={x1}
+                x2={x2}
+                {...styles.annotationLine}
+                {...colorScheme.set('stroke', 'text')}
+              />
+            )}
+            <circle
+              r='3.5'
+              cx={x1}
+              {...styles.annotationCircle}
+              {...colorScheme.set('stroke', 'text')}
+            />
+            {range && (
+              <circle
+                r='3.5'
+                cx={x2}
+                {...styles.annotationCircle}
+                {...colorScheme.set('stroke', 'text')}
+              />
+            )}
             <text
               x={tx}
               textAnchor={textAnchor}
               dy={isBottom ? '2.7em' : '-1.8em'}
               {...styles.annotationText}
+              {...colorScheme.set('fill', 'text')}
             >
               {annotation.label}
             </text>
@@ -367,6 +411,7 @@ const LineGroup = props => {
               textAnchor={textAnchor}
               dy={isBottom ? '1.4em' : '-0.5em'}
               {...styles.annotationValue}
+              {...colorScheme.set('fill', 'text')}
             >
               {annotation.valuePrefix}
               {annotation.formattedValue} {annotation.unit}
@@ -536,12 +581,23 @@ const LineChart = props => {
       !mini &&
         band &&
         bandLegend && {
-          label: (
-            <span {...styles.bandLegend}>
-              <span {...styles.bandBar} />
-              {` ${bandLegend}`}
-            </span>
-          )
+          Label: () => {
+            const [colorScheme] = useColorContext()
+            return (
+              <span
+                {...styles.bandLegend}
+                {...colorScheme.set('color', 'text')}
+              >
+                <span
+                  {...styles.bandBar}
+                  {...colorScheme.set('backgroundColor', 'text')}
+                  {...colorScheme.set('borderTopColor', 'divider')}
+                  {...colorScheme.set('borderBottomColor', 'divider')}
+                />
+                {` ${bandLegend}`}
+              </span>
+            )
+          }
         }
     )
     .filter(Boolean)

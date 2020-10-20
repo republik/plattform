@@ -1,9 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { css, merge } from 'glamor'
-
+import { useColorContext } from '../Colors/useColorContext'
 import { sansSerifRegular12, sansSerifMedium12 } from '../Typography/styles'
-import colors from '../../theme/colors'
 
 const styles = {
   container: css({
@@ -13,12 +12,10 @@ const styles = {
     lineHeight: '12px'
   }),
   title: css({
-    ...sansSerifMedium12,
-    color: colors.text
+    ...sansSerifMedium12
   }),
   label: css({
     ...sansSerifRegular12,
-    color: colors.text,
     fontFeatureSettings: '"tnum" 1, "kern" 1'
   }),
   labelWithColor: css({
@@ -42,7 +39,8 @@ const styles = {
 }
 
 const ColorLegend = ({ title, shape, values, maxWidth, inline }) => {
-  if (!values.length && !title) {
+  const [colorScheme] = useColorContext()
+  if (!values?.length && !title) {
     return null
   }
   return (
@@ -50,8 +48,13 @@ const ColorLegend = ({ title, shape, values, maxWidth, inline }) => {
       {...merge(styles.container, inline && styles.inlineContainer)}
       style={{ maxWidth }}
     >
-      {!!title && <div {...styles.title}>{title}</div>}
+      {!!title && (
+        <div {...styles.title} {...colorScheme.set('color', 'text')}>
+          {title}
+        </div>
+      )}
       {values.map((value, i) => {
+        let TextComponent = value.Label
         let text = value.label
 
         return (
@@ -62,6 +65,7 @@ const ColorLegend = ({ title, shape, values, maxWidth, inline }) => {
               inline && styles.inlineLabel,
               !!value.color && styles.labelWithColor
             )}
+            {...colorScheme.set('color', 'text')}
           >
             {!!value.color && (
               <div
@@ -72,7 +76,7 @@ const ColorLegend = ({ title, shape, values, maxWidth, inline }) => {
                 style={{ backgroundColor: value.color }}
               />
             )}
-            {text}{' '}
+            {TextComponent || text}
           </div>
         )
       })}

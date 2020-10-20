@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import React, { Fragment, useMemo } from 'react'
 import PropTypes from 'prop-types'
 import { css } from 'glamor'
 
@@ -7,20 +7,18 @@ import { max, min } from 'd3-array'
 
 import { sansSerifRegular12, sansSerifMedium14 } from '../Typography/styles'
 import { fontFamilies } from '../../theme/fonts'
-import colors from '../../theme/colors'
 import { underline } from '../../lib/styleMixins'
+import { useColorContext } from '../Colors/useColorContext'
 
 import {
   calculateAxis,
   groupBy,
   runSort,
   sortPropType,
-  transparentAxisStroke,
   circleFill,
   deduplicate,
   unsafeDatumFn,
   subsup,
-  baseLineColor,
   getTextColor
 } from './utils'
 import ColorLegend from './ColorLegend'
@@ -97,31 +95,22 @@ const last = (array, index) => array.length - 1 === index
 
 const styles = {
   groupTitle: css({
-    ...sansSerifMedium14,
-    fill: colors.text
+    ...sansSerifMedium14
   }),
   barLabel: css({
-    ...sansSerifRegular12,
-    fill: colors.text
+    ...sansSerifRegular12
   }),
   barLabelLink: css({
-    ...underline,
-    '@media (hover)': {
-      ':hover': {
-        fill: colors.lightText
-      }
-    }
+    ...underline
   }),
   inlineLabel: css({
     fontFamily: fontFamilies.sansSerifRegular,
     fontWeight: 'normal'
   }),
   axisLabel: css({
-    ...sansSerifRegular12,
-    fill: colors.lightText
+    ...sansSerifRegular12
   }),
   axisXLine: css({
-    stroke: transparentAxisStroke,
     strokeWidth: '1px',
     shapeRendering: 'crispEdges'
   }),
@@ -132,7 +121,6 @@ const styles = {
     display: 'inline-block',
     width: 24,
     height: 8,
-    backgroundColor: colors.divider,
     borderRadius: '4px'
   })
 }
@@ -154,7 +142,7 @@ const BarChart = props => {
     inlineLabelPosition,
     link
   } = props
-
+  const [colorScheme] = useColorContext()
   const possibleColumns = Math.floor(
     width / (props.minInnerWidth + COLUMN_PADDING)
   )
@@ -373,13 +361,28 @@ const BarChart = props => {
         bandLegend && {
           label: (
             <span {...styles.bandLegend}>
-              <span {...styles.bandBar} />
+              <span
+                {...styles.bandBar}
+                {...colorScheme.set('backgroundColor', 'divider')}
+              />
               {` ${bandLegend}`}
             </span>
           )
         }
     )
     .filter(Boolean)
+
+  const barLabelLinkHoverRule = useMemo(
+    () =>
+      css({
+        '@media (hover)': {
+          ':hover': {
+            fill: colorScheme.getCSSColor('textSoft')
+          }
+        }
+      }),
+    [colorScheme]
+  )
 
   return (
     <>
@@ -397,6 +400,7 @@ const BarChart = props => {
                 dy='1.5em'
                 y={hasXTicks ? -AXIS_HEIGHT : 0}
                 {...styles.groupTitle}
+                {...colorScheme.set('fill', 'text')}
               >
                 {group.title}
               </text>
@@ -405,7 +409,8 @@ const BarChart = props => {
                 let barLabel = (
                   <text
                     {...styles.barLabel}
-                    {...(href && styles.barLabelLink)}
+                    {...colorScheme.set('fill', 'text')}
+                    {...(href && barLabelLinkHoverRule)}
                     y={bar.labelY}
                     dy='0.9em'
                     x={x(0) + (highlightZero ? (bar.max <= 0 ? -2 : 2) : 0)}
@@ -415,8 +420,6 @@ const BarChart = props => {
                   </text>
                 )
                 if (href) {
-                  // disable a11y rule because it does not understand that this a tag is an svg tag
-                  // eslint-disable-next-line jsx-a11y/anchor-is-valid
                   barLabel = <a xlinkHref={href}>{barLabel}</a>
                 }
                 return (
@@ -427,9 +430,7 @@ const BarChart = props => {
                       const valueTextStartAnchor =
                         (segment.value >= 0 && isLast) ||
                         (segment.value < 0 && i !== 0)
-                      const inlineFill = getTextColor(segment.color)
                       const isLastSegment = isLast && i !== 0
-
                       const inlinePos =
                         segment.datum[inlineLabelPosition] ||
                         (segment.value >= 0
@@ -449,6 +450,7 @@ const BarChart = props => {
                         iTextAnchor = 'start'
                         iXOffset = 5
                       }
+                      const segmentTextColor = getTextColor(segment.color)
 
                       return (
                         <g key={`seg${i}`} transform={`translate(0,${bar.y})`}>
@@ -466,7 +468,7 @@ const BarChart = props => {
                                 y={bar.style.inlineTop}
                                 dy='1em'
                                 fontSize={bar.style.fontSize}
-                                fill={inlineFill}
+                                {...colorScheme.set('fill', segmentTextColor)}
                                 textAnchor={iTextAnchor}
                               >
                                 {subsup.svg(
@@ -486,7 +488,7 @@ const BarChart = props => {
                                   }
                                   dy='1em'
                                   fontSize={bar.style.secondaryFontSize}
-                                  fill={inlineFill}
+                                  {...colorScheme.set('fill', segmentTextColor)}
                                   textAnchor={iTextAnchor}
                                 >
                                   {subsup.svg(
@@ -531,6 +533,7 @@ const BarChart = props => {
                           {showBarValues && (
                             <text
                               {...styles.barLabel}
+                              {...colorScheme.set('fill', 'text')}
                               x={
                                 valueTextStartAnchor
                                   ? segment.x +
@@ -580,20 +583,21 @@ const BarChart = props => {
                       >
                         <line
                           {...styles.axisXLine}
+                          {...colorScheme.set('stroke', 'text')}
+                          style={{
+                            opacity: highlightTick ? 1 : 0.17
+                          }}
                           y1={0}
                           y2={group.groupHeight}
-                          style={{
-                            stroke: highlightTick ? baseLineColor : undefined
-                          }}
                         />
                         <text
                           {...styles.axisLabel}
+                          {...(highlightTick
+                            ? colorScheme.set('fill', 'text')
+                            : colorScheme.set('fill', 'textSoft'))}
                           y={0}
                           dy='-0.5em'
                           textAnchor={textAnchor}
-                          style={{
-                            fill: highlightTick ? colors.text : undefined
-                          }}
                         >
                           {xAxis.axisFormat(tick, isLast)}
                         </text>

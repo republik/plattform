@@ -22,6 +22,7 @@ import {
 import { fontRule } from '../Typography/Interaction'
 import { Note } from '../Typography/Editorial'
 import { convertStyleToRem, pxToRem } from '../Typography/utils'
+import { useColorContext } from '../Colors/useColorContext'
 
 export const ReactCharts = {
   Bar,
@@ -64,7 +65,6 @@ const styles = {
     [mUp]: {
       ...convertStyleToRem(sansSerifMedium22)
     },
-    color: colors.text,
     margin: 0,
     marginBottom: 15,
     '& + p': {
@@ -72,7 +72,6 @@ const styles = {
     }
   }),
   p: css({
-    color: colors.text,
     ...convertStyleToRem(sansSerifRegular16),
     [mUp]: {
       ...convertStyleToRem(sansSerifRegular19)
@@ -82,21 +81,37 @@ const styles = {
   })
 }
 
-export const ChartTitle = ({ children, ...props }) => (
-  <h3 {...props} {...styles.h}>
-    {children}
-  </h3>
-)
+export const ChartTitle = ({ children, ...props }) => {
+  const [colorScheme] = useColorContext()
+  return (
+    <h3 {...props} {...styles.h} {...colorScheme.set('color', 'text')}>
+      {children}
+    </h3>
+  )
+}
 
-export const ChartLead = ({ children, ...props }) => (
-  <p {...props} {...styles.p} {...fontRule}>
-    {children}
-  </p>
-)
+export const ChartLead = ({ children, ...props }) => {
+  const [colorScheme] = useColorContext()
+  return (
+    <p
+      {...props}
+      {...styles.p}
+      {...colorScheme.set('color', 'text')}
+      {...fontRule}
+    >
+      {children}
+    </p>
+  )
+}
 
-export const ChartLegend = ({ children, ...props }) => (
-  <Note style={{ marginTop: 15 }}>{children}</Note>
-)
+export const ChartLegend = ({ children, ...props }) => {
+  const [colorScheme] = useColorContext()
+  return (
+    <Note {...colorScheme.set('color', 'textSoft')} style={{ marginTop: 15 }}>
+      {children}
+    </Note>
+  )
+}
 
 class Chart extends Component {
   constructor(props) {

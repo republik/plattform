@@ -6,15 +6,12 @@ import React, { Fragment } from 'react'
 import { css } from 'glamor'
 import PropTypes from 'prop-types'
 
-import colors from '../../theme/colors'
 import { Interaction } from '../Typography'
 import { sansSerifRegular14 } from '../Typography/styles'
+import { useColorContext } from '../Colors/useColorContext'
 
 const boxStyle = css({
   position: 'absolute',
-  backgroundColor: '#fff',
-  color: colors.text,
-  boxShadow: '0 2px 8px rgba(0,0,0,.2)',
   ...sansSerifRegular14,
   lineHeight: '1.1em',
   padding: '12px 16px',
@@ -73,10 +70,10 @@ const notchPosition = {
 const labeledValueStyle = css({
   fontSize: 14,
   lineHeight: '20px',
-  borderBottom: `1px solid ${colors.divider}`,
+  borderBottomWidth: 1,
+  borderBottomStyle: 'solid',
   paddingBottom: 10,
   marginBottom: 5,
-  color: '#000',
   ':last-child': {
     borderBottom: 'none',
     paddingBottom: 5,
@@ -85,11 +82,17 @@ const labeledValueStyle = css({
 })
 
 export const ContextBoxValue = ({ label, children }) => {
+  const [colorScheme] = useColorContext()
   if (!children) {
     return null
   }
   return (
-    <div {...labeledValueStyle} {...Interaction.fontRule}>
+    <div
+      {...labeledValueStyle}
+      {...Interaction.fontRule}
+      {...colorScheme.set('color', 'text')}
+      {...colorScheme.set('borderColor', 'divider')}
+    >
       {!!label && (
         <Fragment>
           <strong>{label}</strong>
@@ -120,16 +123,25 @@ const ContextBox = ({
   } else if (x < maxWidth / 2) {
     xOrientation = 'left'
   }
+  const [colorScheme] = useColorContext()
 
   return (
     <div
       {...boxStyle}
+      {...colorScheme.set('color', 'text')}
+      {...colorScheme.set('backgroundColor', 'overlay')}
       className={boxPosition[yOrientation][xOrientation]}
-      style={{ left: x, top: y, maxWidth }}
+      style={{
+        left: x,
+        top: y,
+        maxWidth,
+        boxShadow: colorScheme.getCSSColor('overlayShadow')
+      }}
     >
       <div>{children}</div>
       <div
         {...notchStyle}
+        {...colorScheme.set('borderTopColor', 'overlay')}
         className={notchPosition[yOrientation][xOrientation]}
       />
     </div>
