@@ -243,6 +243,7 @@ module.exports = async (_, args, context) => {
       await transaction.savePoint(savePoint)
       try {
         await operation()
+        await transaction.savePointRelease(savePoint)
       } catch (e) {
         console.log('mergeUsers encountered a problem, continuing', e)
         await transaction.transactionRollback({ savePoint })
