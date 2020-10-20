@@ -78,12 +78,18 @@ const TeaserMyMagazine = ({
                 const formatPath = formatMeta?.path
 
                 const formatColor = formatMeta?.title
-                  ? colorScheme.formatColorMapper(
-                      formatMeta.color || colors[formatMeta.kind]
+                  ? colorScheme.set(
+                      'color',
+                      formatMeta.color || colors[formatMeta.kind],
+                      'format'
                     )
                   : template === 'format'
-                  ? colorScheme.formatColorMapper(metaColor || colors[metaKind])
-                  : colorScheme.text
+                  ? colorScheme.set(
+                      'color',
+                      metaColor || colors[metaKind],
+                      'format'
+                    )
+                  : colorScheme.set('color', 'text')
 
                 return (
                   <div
@@ -96,7 +102,7 @@ const TeaserMyMagazine = ({
                         <a
                           {...styles.formatAnchor}
                           href={formatPath}
-                          style={{ color: formatColor }}
+                          {...formatColor}
                         >
                           {formatTitle}
                         </a>
