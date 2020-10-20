@@ -84,14 +84,12 @@ const Tile = ({
   singleColumn
 }) => {
   const [colorScheme] = useColorContext()
-  const background = bgColor || colorScheme.containerBg
-  const textColor = color || colorScheme.text
   const justifyContent =
     align === 'top' ? 'flex-start' : align === 'bottom' ? 'flex-end' : ''
   const imageProps =
     image && FigureImage.utils.getResizedSrcs(image, IMAGE_SIZE.large, false)
   let containerStyle = {
-    background,
+    backgroundColor: bgColor,
     cursor: onClick ? 'pointer' : 'default',
     justifyContent
   }
@@ -104,6 +102,7 @@ const Tile = ({
     <div
       {...attributes}
       onClick={onClick}
+      {...colorScheme.set('backgroundColor', 'default')}
       style={containerStyle}
       // The styles of the container are defined
       // on the parent component <TileRow />
@@ -128,10 +127,7 @@ const Tile = ({
               {...(onlyImage ? styles.onlyImage : styles.image)}
             />
             {byline && (
-              <FigureByline
-                position='rightCompact'
-                style={{ color: textColor }}
-              >
+              <FigureByline position='rightCompact' style={{ color }}>
                 {byline}
               </FigureByline>
             )}
@@ -141,7 +137,7 @@ const Tile = ({
       {!onlyImage && (
         <div {...(singleColumn ? {} : styles.textContainer)}>
           <Text
-            color={textColor}
+            color={color}
             maxWidth={singleColumn ? undefined : '600px'}
             margin={'0 auto'}
           >

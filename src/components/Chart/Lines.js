@@ -254,7 +254,7 @@ const LineGroup = props => {
               )}
               <path
                 fill='none'
-                stroke={lineColor}
+                {...colorScheme.set('stroke', lineColor, 'charts')}
                 strokeWidth={highlighted ? 6 : 3}
                 strokeDasharray={stroked ? '6 2' : 'none'}
                 d={pathGenerator(line)}

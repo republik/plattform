@@ -197,6 +197,9 @@ const createTeasers = ({ t, Link, plattformUnauthorizedZoneText }) => {
           singleColumn={singleColumn}
           attributes={attributes}
           {...props}
+          // darkmode support in article "read more" teaser
+          color={undefined}
+          bgColor={undefined}
         >
           {children}
         </TeaserFrontTile>

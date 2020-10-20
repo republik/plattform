@@ -1,8 +1,8 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import PropTypes from 'prop-types'
 import { css } from 'glamor'
 import { mUp, tUp } from './mediaQueries'
-import colors from '../../theme/colors'
+import { useColorContext } from '../Colors/useColorContext'
 
 const TEXT_PADDING = 50
 
@@ -105,6 +105,7 @@ const Text = ({
   margin,
   feuilleton
 }) => {
+  const [colorScheme] = useColorContext()
   const textAlignStyle =
     feuilleton && !center
       ? styles.centerMobileOnly
@@ -114,23 +115,29 @@ const Text = ({
   const rootStyles = position ? styles.rootPosition : {}
   const middleStyles = position === 'middle' ? styles.rootMiddle : {}
 
-  const colorStyle =
-    collapsedColor &&
-    css({
-      color: collapsedColor,
-      [tUp]: {
-        color
-      }
-    })
+  const colorRule = useMemo(
+    () =>
+      collapsedColor
+        ? css({
+            color: collapsedColor,
+            [tUp]: {
+              color: color || colorScheme.getCSSColor('text')
+            }
+          })
+        : css({
+            color: color || colorScheme.getCSSColor('text')
+          }),
+    [colorScheme, collapsedColor, color]
+  )
 
   return (
     <div {...rootStyles} {...middleStyles}>
       <div
         {...attributes}
-        {...colorStyle}
+        {...colorRule}
         {...textAlignStyle}
         {...css(styles.positioned, position ? styles[position] : {})}
-        style={{ color: !collapsedColor ? color : undefined, maxWidth, margin }}
+        style={{ maxWidth, margin }}
       >
         {children}
       </div>
@@ -159,7 +166,6 @@ Text.propTypes = {
 }
 
 Text.defaultProps = {
-  color: colors.text,
   maxWidth: '',
   margin: ''
 }

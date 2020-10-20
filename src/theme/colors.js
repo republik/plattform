@@ -144,6 +144,10 @@ const colors = {
       '#000': 'accentColorMeta',
       '#000000': 'accentColorMeta',
       '#282828': 'accentColorMeta'
+    },
+    charts: {
+      '#000': 'accentColorMeta',
+      '#000000': 'accentColorMeta'
     }
   },
   static: {
