@@ -1,0 +1,25 @@
+{
+  "name": "@orbiting/backend-modules-types",
+  "version": "0.0.1",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/orbiting/backends.git"
+  },
+  "author": "Pierre Spring <pierre.spring@republik.ch>",
+  "license": "AGPL-3.0",
+  "publishConfig": {
+    "access": "public"
+  },
+  "bugs": {
+    "url": "https://github.com/orbiting/backends/issues"
+  },
+  "homepage": "https://github.com/orbiting/backends#readme",
+  "scripts": {
+    "link": "yarn link"
+  },
+  "dependencies": {
+  },
+  "devDependencies": {
+  }
+}

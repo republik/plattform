@@ -15,21 +15,14 @@ import { v4 as uuid } from 'uuid'
 import matchPayments, { MatchPaymentReport } from '../payments/matchPayments'
 import { SftpFile } from './payments/sftp'
 import { syncPaymentFiles } from './payments/syncPaymentFiles'
-import { getAmountOfUnmatchedPayments } from '../payments/helpers'
+import { getAmountOfUnmatchedPayments } from '../payments/paymentslip/helpers'
+import { sendPaymentReminders } from '../payments/paymentslip/sendPaymentReminders'
+import { Context } from '@orbiting/backend-modules-types'
 
-const {
+import {
   publishScheduler,
   publishFinance,
-}: {
-  publishScheduler: (message: string) => Promise<void>
-  publishFinance: (message: string) => Promise<void>
-} = require('@orbiting/backend-modules-republik/lib/slack')
-
-interface Context {
-  pgdb: PgDb
-  redis: any
-  t: any
-}
+} from '@orbiting/backend-modules-republik/lib/slack'
 
 export async function importPayments(
   _args: undefined,
@@ -42,7 +35,7 @@ export async function importPayments(
       context.pgdb,
     )
     await notifyAccountants(report)
-    await sendReminders()
+    await withTransaction(createReminderMailer(context), context.pgdb)
   } catch (e) {
     await informFailed(
       `importPayments(): postfinance sync failed with the following error: ${
@@ -53,9 +46,17 @@ export async function importPayments(
   }
 }
 
+const createReminderMailer = (context: Context) => async (
+  transaction: PgDb,
+): Promise<void> => {
+  context = { ...context, pgdb: transaction }
+  await sendPaymentReminders(context)
+}
+
 const createPaymentImporter = (context: Context) => async (
   transaction: PgDb,
 ): Promise<Report> => {
+  context = { ...context, pgdb: transaction }
   const insertPaymentReport = await insertNewPayments(transaction)
   const matchingReport = await tryMatchingPayments(transaction, context)
   const unmatchedPaymentsAmount = await getAmountOfUnmatchedPayments(
@@ -144,10 +145,6 @@ async function notifyAccountants({
   )
 
   await publishFinance(report.join('\n'))
-}
-
-async function sendReminders() {
-  console.log('TODO send reminders')
 }
 
 async function tryMatchingPayments(
