@@ -28,13 +28,6 @@ interface OutstandingPayment {
 export async function sendPaymentReminders(context: Context): Promise<void> {
   const { pgdb } = context
 
-  if (!pgdb.isTransactionActive()) {
-    // @thomas
-    throw new Error(
-      'sendPaymentReminders() expects a transaction on the context.',
-    )
-  }
-
   if (await hasUnmatchedPayments(pgdb)) {
     return
   }
@@ -135,13 +128,12 @@ async function sendReminders({
 }: sendRemindersParameters) {
   const latePayments = outstandingPayments.filter(filter)
   for (const payment of latePayments) {
-    // @thomas: savePoint as sendmail actually sends the mail?
-    await updatePayment({ payment, pgdb: context.pgdb })
     await send({
       payment,
       context,
       isLast,
     })
+    await updatePayment({ payment, pgdb: context.pgdb })
   }
   return latePayments.length
 }
