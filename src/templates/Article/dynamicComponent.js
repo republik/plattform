@@ -5,6 +5,7 @@ import ErrorBoundary from '../../components/ErrorBoundary'
 import { Figure } from '../../components/Figure'
 
 import { matchZone } from 'mdast-react-render/lib/utils'
+import DynamicPlaceholder from '../../components/DynamicComponent/DynamicPlaceholder'
 
 const createDynamicComponent = ({
   t,
@@ -45,7 +46,12 @@ const createDynamicComponent = ({
       props: node.data.props,
       loader: node.data.loader,
       require: dynamicComponentRequire,
-      identifiers: dynamicComponentIdentifiers
+      identifiers:
+        dynamicComponentIdentifiers || node.data.identifier
+          ? {
+              [node.data.identifier]: DynamicPlaceholder(node.data.identifier)
+            }
+          : {}
     }
   },
   editorModule: 'dynamiccomponent',

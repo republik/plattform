@@ -54,7 +54,6 @@ class DynamicComponent extends Component {
   render() {
     const { LoadedComponent } = this.state
     const IdentifierComponent = this.props.identifiers[this.props.identifier]
-    console.log(this.props)
     const error =
       this.state.error ||
       (!this.props.src &&
