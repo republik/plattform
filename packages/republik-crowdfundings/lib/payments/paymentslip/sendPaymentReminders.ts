@@ -7,10 +7,11 @@ import { Context } from '@orbiting/backend-modules-types'
 import { publishFinance } from '@orbiting/backend-modules-republik/lib/slack'
 
 const { sendMailTemplate } = require('@orbiting/backend-modules-mail')
+const { PAYMENT_DEADLINE_DAYS } = require('./helpers')
 
-const daysTillFirstReminder = 30
-const daysTillSecondReminder = 60
-const daysTillCancelPledge = 75
+const daysTillFirstReminder = PAYMENT_DEADLINE_DAYS + 3
+const daysTillSecondReminder = daysTillFirstReminder + 30
+const daysTillCancelPledge = daysTillSecondReminder + 15
 const daysToConsider = daysTillCancelPledge + 30
 
 interface OutstandingPayment {

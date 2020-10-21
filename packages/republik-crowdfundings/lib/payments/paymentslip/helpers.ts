@@ -1,5 +1,5 @@
 import { PgDb } from 'pogi'
-
+export const PAYMENT_DEADLINE_DAYS = 30
 export async function getAmountOfUnmatchedPayments(
   pgdb: PgDb,
 ): Promise<number> {
