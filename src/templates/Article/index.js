@@ -157,6 +157,7 @@ const createSchema = ({
   t = () => '',
   plattformUnauthorizedZoneText,
   dynamicComponentRequire,
+  dynamicComponentIdentifiers,
   previewTeaser,
   getVideoPlayerProps = props => props,
   onAudioCoverClick,
@@ -179,6 +180,7 @@ const createSchema = ({
   const dynamicComponent = createDynamicComponent({
     t,
     dynamicComponentRequire,
+    dynamicComponentIdentifiers,
     insertButtonText: 'Dynamic Component',
     type: DYNAMICCOMPONENT_TYPE
   })

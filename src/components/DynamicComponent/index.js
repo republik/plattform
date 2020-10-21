@@ -36,31 +36,39 @@ class DynamicComponent extends Component {
     this.state = {}
   }
   componentDidMount() {
-    this.props
-      .require(this.props.src)
-      .then(module => {
-        this.setState({
-          LoadedComponent: module.hasOwnProperty('default')
-            ? module['default']
-            : module
+    if (this.props.src) {
+      this.props
+        .require(this.props.src)
+        .then(module => {
+          this.setState({
+            LoadedComponent: module.hasOwnProperty('default')
+              ? module['default']
+              : module
+          })
         })
-      })
-      .catch(error => {
-        this.setState({ error })
-      })
+        .catch(error => {
+          this.setState({ error })
+        })
+    }
   }
   render() {
     const { LoadedComponent } = this.state
-
+    const IdentifierComponent = this.props.identifiers[this.props.identifier]
+    console.log(this.props)
     const error =
-      this.state.error || (!this.props.src && new Error('Missing src'))
+      this.state.error ||
+      (!this.props.src &&
+        !IdentifierComponent &&
+        new Error('Missing src or identifier'))
     if (error) {
       throw error
     }
 
-    if (LoadedComponent) {
+    const DisplayComponent = LoadedComponent || IdentifierComponent
+
+    if (DisplayComponent) {
       return (
-        <LoadedComponent require={this.props.require} {...this.props.props} />
+        <DisplayComponent require={this.props.require} {...this.props.props} />
       )
     }
 
@@ -79,15 +87,18 @@ class DynamicComponent extends Component {
 }
 
 DynamicComponent.propTypes = {
-  src: PropTypes.string.isRequired,
+  src: PropTypes.string,
+  identifier: PropTypes.string,
   html: PropTypes.string,
   props: PropTypes.object,
   loaderProps: PropTypes.object,
-  require: PropTypes.func.isRequired
+  require: PropTypes.func.isRequired,
+  identifiers: PropTypes.object.isRequired
 }
 
 DynamicComponent.defaultProps = {
-  require: createRequire()
+  require: createRequire(),
+  identifiers: {}
 }
 
 export default DynamicComponent

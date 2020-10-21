@@ -9,6 +9,7 @@ import { matchZone } from 'mdast-react-render/lib/utils'
 const createDynamicComponent = ({
   t,
   dynamicComponentRequire,
+  dynamicComponentIdentifiers,
   insertButtonText,
   type
 }) => ({
@@ -39,10 +40,12 @@ const createDynamicComponent = ({
       raw: node.data.raw,
       size: node.data.size,
       src: node.data.src,
+      identifier: node.data.identifier,
       html: html && html.value,
       props: node.data.props,
       loader: node.data.loader,
-      require: dynamicComponentRequire
+      require: dynamicComponentRequire,
+      identifiers: dynamicComponentIdentifiers
     }
   },
   editorModule: 'dynamiccomponent',
