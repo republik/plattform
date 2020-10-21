@@ -35,7 +35,7 @@ export async function importPayments(
       context.pgdb,
     )
     await notifyAccountants(report)
-    await withTransaction(createReminderMailer(context), context.pgdb)
+    await sendPaymentReminders(context)
   } catch (e) {
     await informFailed(
       `importPayments(): postfinance sync failed with the following error: ${
@@ -44,13 +44,6 @@ export async function importPayments(
     )
     return
   }
-}
-
-const createReminderMailer = (context: Context) => async (
-  transaction: PgDb,
-): Promise<void> => {
-  context = { ...context, pgdb: transaction }
-  await sendPaymentReminders(context)
 }
 
 const createPaymentImporter = (context: Context) => async (
