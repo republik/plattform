@@ -43,13 +43,6 @@ export default ({ rule, subModules, TYPE }) => {
 
     let newData = data
 
-    if (!data || !data.delete('template').size) {
-      newData = newData
-        .set('auto', true)
-        .set('feed', !rule.editorOptions?.excludeFromFeed)
-        .set('gallery', true)
-    }
-
     const title =
       titleModule &&
       documentNode.nodes.find(
@@ -137,7 +130,7 @@ export default ({ rule, subModules, TYPE }) => {
   const newDocument = ({ title = '', schema = '' }, me) =>
     serializer.deserialize(
       parse(`---
-${safeDump({ template: schema, title, auto: true })}
+${safeDump({ template: schema, title, auto: true, feed: true, gallery: true })}
 ---
 ${
   titleModule

@@ -498,6 +498,7 @@ export class EditorPage extends Component {
         if (titleLeaf) {
           titleLeaf.value = router.query.title
         }
+        json.meta.title = router.query.title
 
         json.meta.auto = true
         json.meta.templateRepoId = router.query.templateRepoId
