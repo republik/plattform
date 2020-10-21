@@ -1,7 +1,6 @@
 import PropTypes from 'prop-types'
 import React from 'react'
 import { css } from 'glamor'
-
 import { max, min, ascending } from 'd3-array'
 import { scaleLinear, scaleBand } from 'd3-scale'
 import * as d3Intervals from 'd3-time'
@@ -10,26 +9,18 @@ import {
   sansSerifMedium12 as VALUE_FONT,
   sansSerifRegular12 as LABEL_FONT
 } from '../Typography/styles'
-
-import colors from '../../theme/colors'
 import { timeFormat, timeParse } from '../../lib/timeFormat'
-
 import { createTextGauger } from '../../lib/textGauger'
-
 import {
   calculateAxis,
   groupBy,
   deduplicate,
-  transparentAxisStroke,
-  circleFill,
   unsafeDatumFn,
-  last,
-  baseLineColor
+  last
 } from './utils'
-
 import { getColorMapper } from './colorMaps'
-
 import ColorLegend from './ColorLegend'
+import { useColorContext } from '../Colors/useColorContext'
 
 const intervals = Object.keys(d3Intervals)
   .filter(key => key.match(/^time/) && key !== 'timeInterval')
@@ -52,25 +43,17 @@ const labelGauger = createTextGauger(LABEL_FONT, {
 
 const styles = {
   axisLabel: css({
-    ...LABEL_FONT,
-    fill: colors.text
+    ...LABEL_FONT
   }),
   axisYLine: css({
-    stroke: transparentAxisStroke,
     strokeWidth: '1px',
     shapeRendering: 'crispEdges'
   }),
   axisXLine: css({
-    stroke: baseLineColor,
     strokeWidth: '1px',
     shapeRendering: 'crispEdges'
   }),
-  annotationCircle: css({
-    stroke: colors.text,
-    fill: circleFill
-  }),
   annotationLine: css({
-    stroke: colors.text,
     strokeWidth: '1px',
     fillRule: 'evenodd',
     strokeLinecap: 'round',
@@ -78,16 +61,13 @@ const styles = {
     strokeLinejoin: 'round'
   }),
   annotationLineValue: css({
-    stroke: colors.text,
     strokeWidth: '1px',
     shapeRendering: 'crispEdges'
   }),
   annotationValue: css({
-    fill: colors.text,
     ...VALUE_FONT
   }),
   annotationText: css({
-    fill: colors.text,
     ...LABEL_FONT
   })
 }
@@ -104,7 +84,7 @@ const TimeBarChart = props => {
   } = props
 
   const paddingTop = 24
-
+  const [colorScheme] = useColorContext()
   let data = values
   if (props.filter) {
     const filter = unsafeDatumFn(props.filter)
@@ -317,7 +297,7 @@ const TimeBarChart = props => {
                 width={barWidth}
                 height={y(0) - y(annotation.value)}
                 shapeRendering='crispEdges'
-                fill={colors.divider}
+                {...colorScheme.set('fill', 'divider')}
               />
             ))}
           {bars.map(bar => {
@@ -344,10 +324,10 @@ const TimeBarChart = props => {
                   x1={line.x1}
                   x2={line.x2}
                   {...styles.axisXLine}
+                  {...(baseTick !== 0
+                    ? colorScheme.set('stroke', 'text')
+                    : colorScheme.set('stroke', 'divider'))}
                   strokeDasharray={line.gap ? '2 2' : 'none'}
-                  style={{
-                    stroke: baseTick !== 0 ? colors.divider : undefined
-                  }}
                 />
               )
             })}
@@ -358,9 +338,14 @@ const TimeBarChart = props => {
                   transform={`translate(${x(tick) +
                     Math.round(barWidth / 2)},0)`}
                 >
-                  <line {...styles.axisXLine} y2={X_TICK_HEIGHT} />
+                  <line
+                    {...styles.axisXLine}
+                    {...colorScheme.set('stroke', 'text')}
+                    y2={X_TICK_HEIGHT}
+                  />
                   <text
                     {...styles.axisLabel}
+                    {...colorScheme.set('fill', 'text')}
                     y={X_TICK_HEIGHT + 5}
                     dy='0.6em'
                     textAnchor='middle'
@@ -376,13 +361,18 @@ const TimeBarChart = props => {
               {tick !== baseTick && (
                 <line
                   {...styles.axisYLine}
+                  {...colorScheme.set('stroke', 'text')}
                   style={{
-                    stroke: tick === 0 ? baseLineColor : undefined
+                    opacity: tick === 0 ? 0.8 : 0.17
                   }}
                   x2={width}
                 />
               )}
-              <text {...styles.axisLabel} dy='-3px'>
+              <text
+                {...styles.axisLabel}
+                {...colorScheme.set('fill', 'text')}
+                dy='-3px'
+              >
                 {yAxis.axisFormat(tick, last(yTicks, i))}
               </text>
             </g>
@@ -392,17 +382,24 @@ const TimeBarChart = props => {
               key={`y-annotation-${i}`}
               transform={`translate(0,${y(annotation.value)})`}
             >
-              <line x1={0} x2={width} {...styles.annotationLine} />
+              <line
+                x1={0}
+                x2={width}
+                {...styles.annotationLine}
+                {...colorScheme.set('stroke', 'text')}
+              />
               <circle
                 r='3.5'
                 cx={annotation.x ? x(xNormalizer(annotation.x)) : 4}
-                {...styles.annotationCircle}
+                {...colorScheme.set('stroke', 'text')}
+                {...colorScheme.set('fill', 'textInverted')}
               />
               <text
                 x={width}
                 textAnchor='end'
                 dy={annotation.dy || '-0.4em'}
                 {...styles.annotationText}
+                {...colorScheme.set('fill', 'text')}
               >
                 {tLabel(annotation.label)} {yAxis.format(annotation.value)}{' '}
                 {tLabel(annotation.unit)}
@@ -469,16 +466,28 @@ const TimeBarChart = props => {
                   {...(range
                     ? styles.annotationLine
                     : styles.annotationLineValue)}
+                  {...colorScheme.set('stroke', 'text')}
                 />
-                <circle r='3.5' cx={x1} {...styles.annotationCircle} />
+                <circle
+                  r='3.5'
+                  cx={x1}
+                  {...colorScheme.set('stroke', 'text')}
+                  {...colorScheme.set('fill', 'textInverted')}
+                />
                 {range && (
-                  <circle r='3.5' cx={x2} {...styles.annotationCircle} />
+                  <circle
+                    r='3.5'
+                    cx={x2}
+                    {...colorScheme.set('stroke', 'text')}
+                    {...colorScheme.set('fill', 'textInverted')}
+                  />
                 )}
                 <text
                   x={tx}
                   textAnchor={textAnchor}
                   dy={isBottom ? '2.7em' : '-1.8em'}
                   {...styles.annotationText}
+                  {...colorScheme.set('fill', 'text')}
                 >
                   {labelText}
                 </text>
@@ -487,6 +496,7 @@ const TimeBarChart = props => {
                   textAnchor={textAnchor}
                   dy={isBottom ? '1.4em' : '-0.5em'}
                   {...styles.annotationValue}
+                  {...colorScheme.set('fill', 'text')}
                 >
                   {valueText}
                 </text>
