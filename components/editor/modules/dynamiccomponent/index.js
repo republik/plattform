@@ -92,6 +92,16 @@ const DynamicComponent = ({ rule, subModules, TYPE }) => {
               showException
               key={JSON.stringify(data)}
               require={dynamicComponentRequire}
+              identifiers={{
+                [data.identifier]: ({ text }) => {
+                  // ToDo: better placeholder and without text prop
+                  return (
+                    <div>
+                      {data.identifier} Hello World {text}
+                    </div>
+                  )
+                }
+              }}
               {...data}
             />
           )
