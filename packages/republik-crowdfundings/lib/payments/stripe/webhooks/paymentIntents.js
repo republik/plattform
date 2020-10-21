@@ -7,12 +7,14 @@ const {
 
 module.exports = {
   eventTypes: [
+    /*
     'payment_intent.amount_capturable_updated',
     'payment_intent.canceled',
     'payment_intent.created',
     'payment_intent.payment_failed',
     'payment_intent.processing',
     'payment_intent.requires_action',
+    */
     'payment_intent.succeeded',
   ],
   handle: async (event, _pgdb, t, _redis, connectionContext) => {
@@ -22,88 +24,66 @@ module.exports = {
     }
     const { pgdb } = context
 
-    const eventType = event?.type
-    const pledgeId = event?.data?.object?.metadata?.pledgeId
-
+    const pledgeId = event.data?.object?.metadata?.pledgeId
     if (!pledgeId) {
-      console.warn('received PaymentIntent webhook without pledgeId')
+      // This event only has metadata set if the paymentIntent originates
+      // from stripe/payPledge paymentIntents.create.
+      // If the paymentIntent was created indirectly e.g. via createSubscription
+      // the metadata is not set.
+      // In here we are only interested in non subscription PaymentIntents
+      // so let's ignore the others
+
       return 503
     }
 
-    /*
-    const getClients = require('../clients')
-    const accountId = event?.account
-    const paymentIntentId = event?.data?.object?.id
-    const paymentIntent = event?.data?.object
-    const { accounts } = await getClients(pgdb)
-    const stripe = accounts
-      .find((a) => a.accountId === accountId)
-      .stripe
+    const charge = event?.data?.object?.charges?.data[0]
+    if (!charge) {
+      console.warn(`${event.type} without charge`)
+      return 503
+    }
 
-    const paymentIntent = await stripe.paymentIntents.retrieve(
-      paymentIntentId
-    )
-    console.log({ event, accountId, paymentIntentId, pledgeId, paymentIntent })
-    */
+    let updatedPledge
+    const result = await forUpdate({
+      pledgeId,
+      pgdb,
+      fn: async ({ pledge, transaction }) => {
+        if (!pledge) {
+          console.warn(`${event.type} pledge not found for id: ${pledgeId}`)
+          return 503
+        }
 
-    if (eventType === 'payment_intent.succeeded') {
-      console.log('payment_intent.succeeded gogogogo!')
+        await savePaymentDedup({
+          pledgeId: pledge.id,
+          chargeId: charge.id,
+          total: charge.amount,
+          transaction,
+        })
 
-      const charge = event?.data?.object?.charges?.data[0]
-      if (!charge) {
-        console.warn('received PaymentIntent webhook without charge')
-        return 503
-      }
-
-      let updatedPledge
-      await forUpdate({
-        pledgeId,
-        pgdb,
-        fn: async ({ pledge, transaction }) => {
-          if (!pledge) {
-            console.error('payment_intent.succeed pledge not found.')
-            return
-          }
-
-          await savePaymentDedup(
+        const newStatus = 'SUCCESSFUL'
+        if (pledge.status !== newStatus) {
+          updatedPledge = await changeStatus(
             {
-              pledgeId: pledge.id,
-              chargeId: charge.id,
-              total: charge.amount,
+              pledge,
+              newStatus,
               transaction,
             },
             context,
           )
+        }
 
-          const newStatus = 'SUCCESSFUL'
-          if (pledge.status !== newStatus) {
-            updatedPledge = await changeStatus(
-              {
-                pledge,
-                newStatus,
-                transaction,
-              },
-              context,
-            )
-          }
+        return 200
+      },
+    })
+
+    if (updatedPledge) {
+      await afterChange(
+        {
+          pledge: updatedPledge,
         },
-      })
-
-      if (updatedPledge) {
-        const user = await pgdb.public.users.findOne({
-          id: updatedPledge.userId,
-        })
-
-        await afterChange(
-          {
-            user,
-            pledge: updatedPledge,
-          },
-          context,
-        )
-      }
+        context,
+      )
     }
 
-    return 200
+    return result
   },
 }

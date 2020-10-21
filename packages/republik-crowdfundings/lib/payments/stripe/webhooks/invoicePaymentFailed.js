@@ -4,7 +4,10 @@ const _ = {
   get: require('lodash/get'),
 }
 
-// stripe tried to charge the card but this failed
+// stripe tried to charge the card but failed
+//
+// also fired after createSubscription with a CC that requires authentication
+// no action taken because !memberships.length and !next_payment_attempt
 module.exports = {
   eventTypes: ['invoice.payment_failed'],
   handle: async (event, pgdb, t) => {

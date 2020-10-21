@@ -192,7 +192,6 @@ module.exports = async (_, args, context) => {
   if (updatedPledge) {
     await afterChange(
       {
-        user,
         pledge: updatedPledge,
       },
       context,

@@ -175,13 +175,19 @@ mail.sendMembershipProlongConfirmation = async ({
 }
 
 mail.sendPledgeConfirmations = async ({ userId, pgdb, t }) => {
-  const user = await pgdb.public.users.findOne({ id: userId })
+  const user = await pgdb.public.users.findOne({
+    id: userId,
+    verified: true,
+  })
+  if (!user) {
+    return
+  }
+
   const pledges = await pgdb.public.pledges.find({
     userId: user.id,
     'status !=': 'CANCELLED',
     sendConfirmMail: true,
   })
-
   if (!pledges.length) {
     return
   }

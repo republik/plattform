@@ -5,6 +5,8 @@ const addSource = require('./addSource')
 const addPaymentMethod = require('./addPaymentMethod')
 const { getPaymentMethods } = require('./paymentMethod')
 const getClients = require('./clients')
+const sleep = require('await-sleep')
+const Redis = require('@orbiting/backend-modules-base/lib/Redis')
 
 module.exports = (args) => {
   const { sourceId } = args
@@ -206,6 +208,18 @@ const payWithPaymentMethod = async ({
     })
     stripeClientSecret = paymentIntent.client_secret
   } else {
+    // subscribe to get clientSecret from invoicePaymentActionRequired webhook
+    let noAuthRequired
+    const subscriber = Redis.connect()
+    subscriber.on('message', (channel, message) => {
+      if (message === 'no-auth-required') {
+        noAuthRequired = true
+      } else {
+        stripeClientSecret = message
+      }
+    })
+    subscriber.subscribe(`pledge:${pledgeId}:clientSecret`)
+
     await createSubscription({
       plan: pkg.name,
       userId,
@@ -216,8 +230,21 @@ const payWithPaymentMethod = async ({
       // ...paymentMethodId ? { default_payment_method: paymentMethodId } : {},
       pgdb: transaction,
     })
-    // wait for paymentIntent webhook
-    // wait for it to succeed or return client secret for confirmation
+
+    // wait 15s max
+    const maxMs = new Date().getTime() + 15 * 1000
+    await (async () => {
+      while (
+        !noAuthRequired && // eslint-disable-line no-unmodified-loop-condition
+        !stripeClientSecret && // eslint-disable-line no-unmodified-loop-condition
+        new Date().getTime() < maxMs
+      ) {
+        await sleep(500)
+      }
+    })()
+
+    subscriber.unsubscribe()
+    Redis.disconnect(subscriber)
   }
 
   return {

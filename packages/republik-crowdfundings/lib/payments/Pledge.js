@@ -21,20 +21,20 @@ const forUpdate = async ({ pledgeId, fn, pgdb }) => {
       .then((response) => response[0])
       .catch((e) => {
         console.error(e)
-        return null
-      })
-
-    await fn({
-      pledge,
-      transaction,
-    })
-      .then(async () => {
-        await transaction.transactionCommit()
-      })
-      .catch((e) => {
-        console.error(e)
         throw e
       })
+
+    const result = await fn({
+      pledge,
+      transaction,
+    }).catch((e) => {
+      console.error(e)
+      throw e
+    })
+
+    await transaction.transactionCommit()
+
+    return result
   } catch (e) {
     await transaction.transactionRollback()
     console.info('transaction rollback', { error: e })
@@ -43,8 +43,6 @@ const forUpdate = async ({ pledgeId, fn, pgdb }) => {
 }
 
 const changeStatus = async ({ pledge, newStatus, transaction }, context) => {
-  console.log('changeStatus')
-
   const { redis, t } = context
   const pgdb = transaction || context.pgdb
 
@@ -63,13 +61,16 @@ const changeStatus = async ({ pledge, newStatus, transaction }, context) => {
   )
 }
 
-const afterChange = async ({ user, pledge }, context) => {
-  console.log('afterChange', { user, pledge })
-
+const afterChange = async ({ pledge }, context) => {
   const { pgdb, t } = context
 
+  let user
+  if (pledge.status === 'PAID_INVESTIGATE') {
+    user = await pgdb.public.users.findOne({ id: pledge.userId })
+  }
+
   return Promise.all([
-    user?.verified && sendPledgeConfirmations({ userId: user.id, pgdb, t }),
+    sendPledgeConfirmations({ userId: pledge.userId, pgdb, t }),
     pledge.status === 'SUCCESSFUL' && refreshPotForPledgeId(pledge.id, context),
     pledge.status === 'PAID_INVESTIGATE' &&
       slack.publishPledge(user, pledge, 'PAID_INVESTIGATE'),
