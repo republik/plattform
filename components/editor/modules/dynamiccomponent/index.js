@@ -11,6 +11,7 @@ import EditOverlay from './EditOverlay'
 import { SG_DYNAMIC_COMPONENT_BASE_URLS } from '../../../../lib/settings'
 
 import dynamicComponentRequire from './require'
+import DynamicPlaceholder from './DynamicPlaceholder'
 
 const DynamicComponent = ({ rule, subModules, TYPE }) => {
   const { identifier = 'DYNAMIC_COMPONENT' } = rule.editorOptions || {}
@@ -92,16 +93,11 @@ const DynamicComponent = ({ rule, subModules, TYPE }) => {
               showException
               key={JSON.stringify(data)}
               require={dynamicComponentRequire}
-              identifiers={{
-                [data.identifier]: ({ text }) => {
-                  // ToDo: better placeholder and without text prop
-                  return (
-                    <div>
-                      {data.identifier} Hello World {text}
-                    </div>
-                  )
+              identifiers={
+                data.identifier && {
+                  [data.identifier]: DynamicPlaceholder(data.identifier)
                 }
-              }}
+              }
               {...data}
             />
           )
