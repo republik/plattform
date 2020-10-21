@@ -31,10 +31,10 @@ interface OutstandingPayment {
 export async function sendPaymentReminders(
   context: Context,
   { dryRun = DRY_RUN } = {},
-): Promise<void> {
+): Promise<string> {
   const { pgdb } = context
   if (await hasUnmatchedPayments(pgdb)) {
-    return
+    return 'Could not send payment reminders, there are still umatched payments.'
   }
 
   const outstandingPayments = await getOutstandingPayments(pgdb)
@@ -49,6 +49,28 @@ export async function sendPaymentReminders(
     getMessageForAccountsToCancel(outstandingPayments),
   ])
 
+  const message = generateReport({
+    dryRun,
+    firstRemindersSent,
+    secondRemindersSent,
+    cancelMessages,
+  })
+
+  await publishFinance(message)
+  return message
+}
+
+function generateReport({
+  dryRun,
+  firstRemindersSent,
+  secondRemindersSent,
+  cancelMessages,
+}: {
+  dryRun: boolean
+  firstRemindersSent: number
+  secondRemindersSent: number
+  cancelMessages: string[]
+}) {
   let messageLines = [
     ...(dryRun ? ['⚠️ DRY RUN, REMINDERS ARE NOT SENT ⚠️'] : []),
     '💌 Reminders Sent',
@@ -66,7 +88,8 @@ export async function sendPaymentReminders(
     ]
   }
 
-  await publishFinance(messageLines.join('\n'))
+  const message = messageLines.join('\n')
+  return message
 }
 
 function getMessageForAccountsToCancel(
