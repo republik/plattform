@@ -147,7 +147,8 @@ const colors = {
     },
     charts: {
       '#000': 'accentColorMeta',
-      '#000000': 'accentColorMeta'
+      '#000000': 'accentColorMeta',
+      '#111111': 'accentColorMeta'
     }
   },
   static: {

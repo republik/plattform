@@ -454,7 +454,11 @@ const BarChart = props => {
                         <g key={`seg${i}`} transform={`translate(0,${bar.y})`}>
                           <rect
                             x={segment.x}
-                            fill={segment.color}
+                            {...colorScheme.set(
+                              'fill',
+                              segment.color,
+                              'charts'
+                            )}
                             width={segment.width}
                             height={bar.height}
                           />
@@ -512,8 +516,12 @@ const BarChart = props => {
                                 x(+segment.datum[`${band}_upper`]) -
                                 x(+segment.datum[`${band}_lower`])
                               }
+                              {...colorScheme.set(
+                                'stroke',
+                                segment.color,
+                                'charts'
+                              )}
                               height={bar.style.popHeight}
-                              fill={segment.color}
                               fillOpacity='0.3'
                             />
                           )}
@@ -530,7 +538,11 @@ const BarChart = props => {
                                 ) / 2
                               }
                               {...colorScheme.set('fill', 'textInverted')}
-                              stroke={segment.color}
+                              {...colorScheme.set(
+                                'stroke',
+                                segment.color,
+                                'charts'
+                              )}
                               strokeWidth={bar.style.stroke}
                             />
                           )}
