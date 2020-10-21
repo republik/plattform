@@ -15,7 +15,6 @@ import {
   groupBy,
   runSort,
   sortPropType,
-  circleFill,
   deduplicate,
   unsafeDatumFn,
   subsup,
@@ -450,7 +449,6 @@ const BarChart = props => {
                         iTextAnchor = 'start'
                         iXOffset = 5
                       }
-                      const segmentTextColor = getTextColor(segment.color)
 
                       return (
                         <g key={`seg${i}`} transform={`translate(0,${bar.y})`}>
@@ -468,7 +466,10 @@ const BarChart = props => {
                                 y={bar.style.inlineTop}
                                 dy='1em'
                                 fontSize={bar.style.fontSize}
-                                {...colorScheme.set('fill', segmentTextColor)}
+                                {...colorScheme.set(
+                                  'fill',
+                                  getTextColor(segment.color)
+                                )}
                                 textAnchor={iTextAnchor}
                               >
                                 {subsup.svg(
@@ -488,7 +489,10 @@ const BarChart = props => {
                                   }
                                   dy='1em'
                                   fontSize={bar.style.secondaryFontSize}
-                                  {...colorScheme.set('fill', segmentTextColor)}
+                                  {...colorScheme.set(
+                                    'fill',
+                                    getTextColor(segment.color)
+                                  )}
                                   textAnchor={iTextAnchor}
                                 >
                                   {subsup.svg(
@@ -525,7 +529,7 @@ const BarChart = props => {
                                   bar.style.popHeight - bar.style.stroke / 2
                                 ) / 2
                               }
-                              fill={circleFill}
+                              {...colorScheme.set('fill', 'textInverted')}
                               stroke={segment.color}
                               strokeWidth={bar.style.stroke}
                             />

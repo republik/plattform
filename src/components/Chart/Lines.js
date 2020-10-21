@@ -1,7 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { css } from 'glamor'
-
 import { range, min, max } from 'd3-array'
 import { scaleOrdinal, scalePoint, scaleTime, scaleLinear } from 'd3-scale'
 import { line as lineShape, area as areaShape } from 'd3-shape'
@@ -28,8 +27,6 @@ import layout, {
 
 import {
   subsup,
-  transparentAxisStroke,
-  circleFill,
   deduplicate,
   runSort,
   sortPropType,
@@ -46,16 +43,12 @@ const styles = {
     ...sansSerifRegular12
   }),
   axisYLine: css({
-    stroke: transparentAxisStroke,
     strokeWidth: '1px',
     shapeRendering: 'crispEdges'
   }),
   axisXLine: css({
     strokeWidth: '1px',
     shapeRendering: 'crispEdges'
-  }),
-  annotationCircle: css({
-    fill: circleFill
   }),
   annotationLine: css({
     strokeWidth: '1px',
@@ -299,7 +292,7 @@ const LineGroup = props => {
           <line
             {...styles.axisYLine}
             x2={width}
-            {...colorScheme.set('stroke', 'divider')}
+            {...colorScheme.set('stroke', 'text')}
             style={{
               opacity: tick === 0 ? 0.8 : 0.17
             }}
@@ -329,6 +322,7 @@ const LineGroup = props => {
             cx={annotation.x ? x(annotation.x) : 4}
             {...styles.annotationCircle}
             {...colorScheme.set('stroke', 'text')}
+            {...colorScheme.set('fill', 'textInverted')}
           />
           <text
             x={width}
