@@ -11,7 +11,7 @@ import EditOverlay from './EditOverlay'
 import { SG_DYNAMIC_COMPONENT_BASE_URLS } from '../../../../lib/settings'
 
 import dynamicComponentRequire from './require'
-import DynamicPlaceholder from './DynamicPlaceholder'
+import { DynamicPlaceholder } from '@project-r/styleguide'
 
 const DynamicComponent = ({ rule, subModules, TYPE }) => {
   const { identifier = 'DYNAMIC_COMPONENT' } = rule.editorOptions || {}
