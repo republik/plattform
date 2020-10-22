@@ -18,6 +18,9 @@ const { run: membershipsOwnersHandler } = require('./owners')
 const { deactivate } = require('./deactivate')
 const { changeover } = require('./changeover')
 const { importPayments } = require('./importPayments')
+const {
+  sendPaymentReminders,
+} = require('../../lib/payments/paymentslip/sendPaymentReminders')
 
 const surplus = require('@orbiting/backend-modules-republik/graphql/resolvers/RevenueStats/surplus')
 const {
@@ -37,7 +40,16 @@ const init = async (context) => {
       runFunc: importPayments,
       lockTtlSecs,
       runAtTime: '04:00', // Postfinace exports new files at around 1 AM
-      runInitially: DEV,
+    }),
+  )
+
+  schedulers.push(
+    timeScheduler.init({
+      name: 'import-payments',
+      context,
+      runFunc: (_args, context) => sendPaymentReminders(context),
+      lockTtlSecs,
+      runAtTime: '12:00',
     }),
   )
 

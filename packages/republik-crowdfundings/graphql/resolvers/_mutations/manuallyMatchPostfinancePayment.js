@@ -1,7 +1,4 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
-const {
-  sendPaymentReminders,
-} = require('../../../lib/payments/paymentslip/sendPaymentReminders')
 const logger = console
 
 module.exports = async (_, args, context) => {
@@ -78,6 +75,5 @@ module.exports = async (_, args, context) => {
     throw e
   }
 
-  sendPaymentReminders(context)
   return pgdb.public.postfinancePayments.findOne({ id })
 }
