@@ -8,7 +8,8 @@ const {
 const DEV = process.env.NODE_ENV ? process.env.NODE_ENV !== 'production' : true
 
 // used by stripe subscriptions (source or paymentMethod)
-// not used by stripe paymentIntent
+// paymentIntent for one time payments don't create an invoice
+// so this is only used for subscriptions
 //
 // invoice.payment_succeeded includes:
 // pledgeId, charge total and charge id

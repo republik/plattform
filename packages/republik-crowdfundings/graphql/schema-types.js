@@ -238,7 +238,6 @@ input PledgeInput {
   messageToClaimers: String
   accessToken: ID
   payload: JSON
-  method: PaymentMethod
 }
 
 type PledgeResponse {
@@ -247,6 +246,7 @@ type PledgeResponse {
   emailVerify: Boolean
   pfAliasId: String
   pfSHA: String
+  # returned by payPledge if confirmCard is expected
   stripeClientSecret: String
 }
 
