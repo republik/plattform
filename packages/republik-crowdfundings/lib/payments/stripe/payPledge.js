@@ -150,6 +150,8 @@ const payWithPaymentMethod = async ({
     throw new Error(t('api/unexpected'))
   }
 
+  const clients = await getClients(pgdb)
+
   let customer = await pgdb.public.stripeCustomers.findOne({
     userId,
     companyId,
@@ -161,18 +163,24 @@ const payWithPaymentMethod = async ({
       paymentMethodId: stripePlatformPaymentMethodId,
       userId: userId,
       pgdb,
+      clients,
     })
   } else {
     await addPaymentMethod({
       paymentMethodId: stripePlatformPaymentMethodId,
       userId: userId,
       pgdb,
+      clients,
     })
   }
 
   // load all paymentMethods and select the one for companyId
   let paymentMethodId
-  const paymentMethods = await getPaymentMethods(userId, pgdb)
+  const paymentMethods = await getPaymentMethods({
+    userId,
+    pgdb,
+    clients,
+  })
   const platformPaymentMethod = paymentMethods.find(
     (pm) => pm.id === stripePlatformPaymentMethodId,
   )
@@ -191,7 +199,7 @@ const payWithPaymentMethod = async ({
   let stripeClientSecret
   if (!isSubscription) {
     // the paymentIntent needs to be created on the account of the company
-    const { accounts } = await getClients(pgdb)
+    const { accounts } = clients
     const stripe = accounts.find((a) => a.company.id === companyId).stripe
 
     // customer needs to be attached to PaymentIntent
@@ -229,6 +237,7 @@ const payWithPaymentMethod = async ({
       },
       // ...paymentMethodId ? { default_payment_method: paymentMethodId } : {},
       pgdb: transaction,
+      clients,
     })
 
     // wait 15s max

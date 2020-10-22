@@ -1,7 +1,14 @@
 const getClients = require('./clients')
 
-module.exports = async ({ plan, userId, companyId, metadata, pgdb }) => {
-  const { accounts } = await getClients(pgdb)
+module.exports = async ({
+  plan,
+  userId,
+  companyId,
+  metadata,
+  pgdb,
+  clients, // optional
+}) => {
+  const { accounts } = clients || (await getClients(pgdb))
 
   const account = accounts.find((a) => a.company.id === companyId)
   if (!account) {

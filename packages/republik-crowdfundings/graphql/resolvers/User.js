@@ -201,7 +201,10 @@ module.exports = {
       Roles.userIsMeOrInRoles(user, me, ['admin']) ||
       isFieldExposed(user, 'paymentMethods')
     ) {
-      return getPaymentMethods(user.id, pgdb)
+      return getPaymentMethods({
+        userId: user.id,
+        pgdb,
+      })
     }
     return []
   },

@@ -1,8 +1,13 @@
 const getStripeClients = require('./clients')
 const Promise = require('bluebird')
 
-const getPaymentMethods = async (userId, pgdb) => {
-  const { platform, connectedAccounts } = await getStripeClients(pgdb)
+const getPaymentMethods = async ({
+  userId,
+  pgdb,
+  clients, // optional
+}) => {
+  const { platform, connectedAccounts } =
+    clients || (await getStripeClients(pgdb))
   if (!platform) {
     return []
   }
@@ -89,7 +94,11 @@ const getPaymentMethods = async (userId, pgdb) => {
 
 exports.getPaymentMethods = getPaymentMethods
 
-exports.getDefaultPaymentMethod = async (userId, pgdb) => {
-  const paymentMethods = await getPaymentMethods(userId, pgdb)
+exports.getDefaultPaymentMethod = async ({
+  userId,
+  pgdb,
+  clients, // optional
+}) => {
+  const paymentMethods = await getPaymentMethods({ userId, pgdb, clients })
   return paymentMethods.find((pm) => pm.isDefault)
 }
