@@ -18,7 +18,8 @@ The Postfinance import goes through the follwoing steps:
 
 9. Write payment entries to the follwing db table: `postfinancePayments`.
 10. Run the payment matcher.
-11. Send notifications.
+11. Send notifications to accountant.
+12. If all payments could be matched, send payment reminders.
 
 ## Config
 
@@ -26,6 +27,12 @@ As you can see in the `.env.example` file, the Sftp servers are configured as fo
 
 ```
 PF_SFTP_CONNECTIONS=[{ host: 'one.com', port: 2222, username: 'accountant', privateKey: '-----BEGIN OPENSSH PRIVATE KEY-----\n...\n\n-----END OPENSSH PRIVATE KEY-----\n'},{ host: 'two.com', port: 2222, username: 'accountant', privateKey: '-----BEGIN OPENSSH PRIVATE KEY-----\n...\n\n-----END OPENSSH PRIVATE KEY-----\n'}]
+```
+
+Dry run sending payment reminders by setting the following `.env`:
+
+```
+DRY_RUN_SEND_PAYMENT_REMINDERS=true
 ```
 
 ## Development
