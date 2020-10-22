@@ -7,19 +7,45 @@ const getPaymentMethods = async (userId, pgdb) => {
     return []
   }
 
-  const customer = await pgdb.public.stripeCustomers.findOne({
+  const customers = await pgdb.public.stripeCustomers.find({
     userId,
-    companyId: platform.company.id,
   })
+  const customer = customers.find((c) => c.companyId === platform.company.id)
   if (!customer) {
     return []
   }
+  if (customers.length !== connectedAccounts.length + 1) {
+    throw new Error(`missing stripeCustomer for userId: ${userId}`)
+  }
 
-  const [stripeCustomer, paymentMethods] = await Promise.all([
+  const [
+    stripeCustomer,
+    paymentMethods,
+    connectedAccountsPaymentMethods,
+  ] = await Promise.all([
     platform.stripe.customers.retrieve(customer.id),
     platform.stripe.paymentMethods.list({
       customer: customer.id,
       type: 'card',
+    }),
+    Promise.map(connectedAccounts, async (connectedAccount) => {
+      const connectedCustomer = customers.find(
+        (c) => c.companyId === connectedAccount.company.id,
+      )
+      const cpms = await platform.stripe.paymentMethods.list(
+        {
+          customer: connectedCustomer.id,
+          type: 'card',
+        },
+        {
+          stripeAccount: connectedAccount.accountId,
+        },
+      )
+      return {
+        companyId: connectedAccount.company.id,
+        accountId: connectedAccount.accountId,
+        paymentMethods: cpms.data,
+      }
     }),
   ])
   if (!stripeCustomer || !paymentMethods) {
@@ -27,26 +53,9 @@ const getPaymentMethods = async (userId, pgdb) => {
   }
 
   // add connected paymentMethods to paymentMethods.connectedPaymentMethods
-  for (const connectedAccount of connectedAccounts) {
-    const connectedCustomer = await pgdb.public.stripeCustomers.findOne({
-      userId,
-      companyId: connectedAccount.company.id,
-    })
-    if (!connectedCustomer) {
-      throw new Error(
-        `could not find stripeCustomer for userId: ${userId} companyId: ${connectedAccount.company.id}`,
-      )
-    }
-    const connectedPaymentMethods = await platform.stripe.paymentMethods.list(
-      {
-        customer: connectedCustomer.id,
-        type: 'card',
-      },
-      {
-        stripeAccount: connectedAccount.accountId,
-      },
-    )
-    for (const cpm of connectedPaymentMethods?.data) {
+  for (const ca of connectedAccountsPaymentMethods) {
+    const { companyId } = ca
+    for (const cpm of ca.paymentMethods) {
       const { original_payment_method_id } = cpm.metadata
       if (original_payment_method_id) {
         const pm = paymentMethods.data.find(
@@ -57,7 +66,7 @@ const getPaymentMethods = async (userId, pgdb) => {
         }
         pm.connectedPaymentMethods.push({
           id: cpm.id,
-          companyId: connectedAccount.company.id,
+          companyId,
         })
       }
     }
