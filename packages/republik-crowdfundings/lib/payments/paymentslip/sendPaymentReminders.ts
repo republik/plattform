@@ -143,8 +143,17 @@ function sendSecondReminder(
 ) {
   const filterDate = daysAgo(SECOND_REMINDER_DEADLINE_DAYS)
 
+  const daysBetweenReminders =
+    SECOND_REMINDER_DEADLINE_DAYS - FIRST_REMINDER_DEADLINE_DAYS
+
   const filter = ({ createdAt, remindersSentAt }: OutstandingPayment) => {
     if (remindersSentAt?.length !== 1) {
+      return false
+    }
+
+    const daysSinceFirstReminder = moment().diff(remindersSentAt[0], 'days')
+
+    if (daysSinceFirstReminder < daysBetweenReminders) {
       return false
     }
 
