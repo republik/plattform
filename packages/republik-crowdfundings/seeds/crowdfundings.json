@@ -106,6 +106,15 @@
       "name": "PRESENT",
       "paymentMethods": "{STRIPE,POSTFINANCECARD,PAYPAL,PAYMENTSLIP}",
       "isAutoActivateUserMembership": false
+    },
+    {
+      "id": "00000000-0000-0000-0007-000000000010",
+      "crowdfundingId": "f0000000-0000-0000-0002-000000000001",
+      "companyId": "c0000000-0000-0000-0001-000000000001",
+      "name": "PROLONG",
+      "paymentMethods": "{STRIPE,POSTFINANCECARD,PAYPAL,PAYMENTSLIP}",
+      "isAutoActivateUserMembership": false,
+      "custom": true
     }
   ],
   "packageOptions": [
@@ -168,6 +177,36 @@
       "maxAmount": 1,
       "defaultAmount": 1,
       "price": 24000,
+      "userPrice": false
+    },
+    {
+      "id": "00000000-0000-0000-0008-000000000010",
+      "packageId": "00000000-0000-0000-0007-000000000010",
+      "rewardId": "00000000-0000-0000-0004-000000000002",
+      "minAmount": 0,
+      "maxAmount": 1,
+      "defaultAmount": 0,
+      "price": 24000,
+      "userPrice": true
+    },
+    {
+      "id": "00000000-0000-0000-0008-000000000011",
+      "packageId": "00000000-0000-0000-0007-000000000010",
+      "rewardId": "00000000-0000-0000-0004-000000000002",
+      "minAmount": 0,
+      "maxAmount": 1,
+      "defaultAmount": 0,
+      "price": 100000,
+      "userPrice": false
+    },
+    {
+      "id": "00000000-0000-0000-0008-000000000012",
+      "packageId": "00000000-0000-0000-0007-000000000010",
+      "rewardId": "00000000-0000-0000-0004-000000000001",
+      "minAmount": 0,
+      "maxAmount": 10,
+      "defaultAmount": 0,
+      "price": 3000,
       "userPrice": false
     }
   ]
