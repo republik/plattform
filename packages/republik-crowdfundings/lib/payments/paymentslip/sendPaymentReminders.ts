@@ -9,6 +9,10 @@ import { publishFinance } from '@orbiting/backend-modules-republik/lib/slack'
 const { sendMailTemplate } = require('@orbiting/backend-modules-mail')
 const { PAYMENT_DEADLINE_DAYS } = require('./helpers')
 
+if (typeof PAYMENT_DEADLINE_DAYS !== 'number') {
+  throw new Error('PAYMENT_DEADLINE_DAYS should be a number.')
+}
+
 const DRY_RUN = process.env.DRY_RUN_SEND_PAYMENT_REMINDERS === 'true'
 
 const FIRST_REMINDER_DEADLINE_DAYS = PAYMENT_DEADLINE_DAYS + 3 // 3 days to consider weekends

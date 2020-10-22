@@ -18,7 +18,7 @@ const PROLONG_BEFORE_DATE = moment('2019-01-16')
 
 const {
   PAYMENT_DEADLINE_DAYS,
-} = require('@orbiting/backend-modules-republik-crowdfundings/lib/payments/paymentslip/helpers')
+} = require('@orbiting/backend-modules-republik-crowdfundings')
 
 const me = {
   roles: ['admin'],
