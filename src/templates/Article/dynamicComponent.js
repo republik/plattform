@@ -15,7 +15,6 @@ const createDynamicComponent = ({
 }) => ({
   matchMdast: matchZone('DYNAMIC_COMPONENT'),
   component: ({ showException, raw = false, size, attributes, ...props }) => {
-    console.log('dc factory', dynamicComponentIdentifiers)
     const content = (
       <ErrorBoundary
         showException={showException}
