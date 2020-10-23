@@ -254,7 +254,7 @@ async function send({
     {
       to: payment.email,
       fromEmail: process.env.DEFAULT_MAIL_FROM_ADDRESS,
-      subject: emailSubject, // todo: move strings to `t`
+      subject: emailSubject,
       templateName: isLast ? 'cf_payment_reminder_last' : 'cf_payment_reminder',
       globalMergeVars: [
         { name: 'TOTAL', content: formatPrice(payment.total) },
