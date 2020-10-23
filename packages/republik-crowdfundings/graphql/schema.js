@@ -113,7 +113,7 @@ type mutations {
   rematchPayments: String!
 
   # required role: supporter
-  sendPaymentReminders(paymentIds: [ID!]!, emailSubject: String, isLast: Boolean): Int!
+  sendPaymentReminders(dryRun: Boolean!): String!
 
   # required role: supporter
   hidePostfinancePayment(id: ID!): PostfinancePayment!

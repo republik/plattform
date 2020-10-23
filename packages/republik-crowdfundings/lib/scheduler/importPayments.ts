@@ -15,20 +15,14 @@ import { v4 as uuid } from 'uuid'
 import matchPayments, { MatchPaymentReport } from '../payments/matchPayments'
 import { SftpFile } from './payments/sftp'
 import { syncPaymentFiles } from './payments/syncPaymentFiles'
+import { getAmountOfUnmatchedPayments } from '../payments/paymentslip/helpers'
+import { sendPaymentReminders } from '../payments/paymentslip/sendPaymentReminders'
+import { Context } from '@orbiting/backend-modules-types'
 
-const {
+import {
   publishScheduler,
   publishFinance,
-}: {
-  publishScheduler: (message: string) => Promise<void>
-  publishFinance: (message: string) => Promise<void>
-} = require('@orbiting/backend-modules-republik/lib/slack')
-
-interface Context {
-  pgdb: PgDb
-  redis: any
-  t: any
-}
+} from '@orbiting/backend-modules-republik/lib/slack'
 
 export async function importPayments(
   _args: undefined,
@@ -41,7 +35,7 @@ export async function importPayments(
       context.pgdb,
     )
     await notifyAccountants(report)
-    await sendReminders()
+    await sendPaymentReminders(context)
   } catch (e) {
     await informFailed(
       `importPayments(): postfinance sync failed with the following error: ${
@@ -55,9 +49,12 @@ export async function importPayments(
 const createPaymentImporter = (context: Context) => async (
   transaction: PgDb,
 ): Promise<Report> => {
+  context = { ...context, pgdb: transaction }
   const insertPaymentReport = await insertNewPayments(transaction)
   const matchingReport = await tryMatchingPayments(transaction, context)
-  const unmatchedPaymentsAmount = await getUnmatchedPaymentsAmount(transaction)
+  const unmatchedPaymentsAmount = await getAmountOfUnmatchedPayments(
+    transaction,
+  )
 
   return {
     ...insertPaymentReport,
@@ -141,16 +138,6 @@ async function notifyAccountants({
   )
 
   await publishFinance(report.join('\n'))
-}
-
-async function getUnmatchedPaymentsAmount(pgdb: PgDb) {
-  return (await pgdb.queryOneField(
-    'select count(*) from "postfinancePayments" where matched = false and hidden is not true;',
-  )) as number
-}
-
-async function sendReminders() {
-  console.log('TODO send reminders')
 }
 
 async function tryMatchingPayments(

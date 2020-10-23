@@ -1,5 +1,5 @@
 {
-  "updated": "2020-09-29T12:38:33.641Z",
+  "updated": "2020-10-23T08:52:18.814Z",
   "title": "live",
   "data": [
     {
@@ -1841,6 +1841,46 @@
     {
       "key": "api/github/unavailable",
       "value": "GitHub scheint zur Zeit nicht verfügbar zu sein. Bitte versuchen Sie es später nochmals."
+    },
+    {
+      "key": "api/email/payment/reminder/default/subject",
+      "value": "Zahlungserinnerung Republik"
+    },
+    {
+      "key": "api/email/payment/reminder/ABO/subject",
+      "value": "Zahlungserinnerung Republik-Mitgliedschaft"
+    },
+    {
+      "key": "api/email/payment/reminder/PROLONG/subject",
+      "value": "Zahlungserinnerung Republik-Mitgliedschaft"
+    },
+    {
+      "key": "api/email/payment/reminder/DONATE/subject",
+      "value": "Zahlungserinnerung Republik-Spende"
+    },
+    {
+      "key": "api/email/payment/reminder/BENEFACTOR/subject",
+      "value": "Zahlungserinnerung Republik-Mitgliedschaft"
+    },
+    {
+      "key": "api/email/payment/reminder/last/default/subject",
+      "value": "LETZTE MAHNUNG Republik"
+    },
+    {
+      "key": "api/email/payment/reminder/last/ABO/subject",
+      "value": "LETZTE MAHNUNG Republik-Mitgliedschaft"
+    },
+    {
+      "key": "api/email/payment/reminder/last/PROLONG/subject",
+      "value": "LETZTE MAHNUNG Republik-Mitgliedschaft"
+    },
+    {
+      "key": "api/email/payment/reminder/last/DONATE/subject",
+      "value": "LETZTE MAHNUNG Republik-Spende"
+    },
+    {
+      "key": "api/email/payment/reminder/last/BENEFACTOR/subject",
+      "value": "LETZTE MAHNUNG Republik-Mitgliedschaft"
     }
   ]
 }

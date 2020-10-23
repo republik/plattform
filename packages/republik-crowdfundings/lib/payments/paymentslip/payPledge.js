@@ -1,4 +1,4 @@
-const PAYMENT_DEADLINE_DAYS = 30
+const { PAYMENT_DEADLINE_DAYS } = require('./helpers')
 
 module.exports = async ({
   pledgeId,

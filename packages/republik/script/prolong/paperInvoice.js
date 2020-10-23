@@ -16,6 +16,10 @@ const { PARKING_USER_ID } = process.env
 
 const PROLONG_BEFORE_DATE = moment('2019-01-16')
 
+const {
+  PAYMENT_DEADLINE_DAYS,
+} = require('@orbiting/backend-modules-republik-crowdfundings')
+
 const me = {
   roles: ['admin'],
 }
@@ -40,7 +44,7 @@ const PROLONG_PACAKGEOPTION_BENEFACTOR = {
   price: 100000,
 }
 
-const dueDate = moment().add(30, 'days')
+const dueDate = moment().add(PAYMENT_DEADLINE_DAYS, 'days')
 
 const createPledgeAndPayments = async ({ transaction, option }, rows) =>
   Promise.map(rows, async (row) => {
