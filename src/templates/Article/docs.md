@@ -19,6 +19,7 @@ const schema = createArticleSchema({
 - `getPath`, the function to transform meta data to a path, default `/YYYY/MM/DD/:slug`
 - `t`, optional translation function, used for e.g. DNT notes
 - `dynamicComponentRequire`, optional custom require function for dynamic components
+- `dynamicComponentIdentifiers`, optional custom mapping between string identifiers and frontend components
 - `Link`, a Next.js like `<Link />` component
   This will be wrapped around links. You should attach an `onClick` handler within, if you wish to do client side routing and or prefetching. The component recieves following props:
   - `href` String, target url or path
