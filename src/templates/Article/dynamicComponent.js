@@ -15,6 +15,7 @@ const createDynamicComponent = ({
 }) => ({
   matchMdast: matchZone('DYNAMIC_COMPONENT'),
   component: ({ showException, raw = false, size, attributes, ...props }) => {
+    console.log('dc factory', dynamicComponentIdentifiers)
     const content = (
       <ErrorBoundary
         showException={showException}
@@ -46,11 +47,11 @@ const createDynamicComponent = ({
       loader: node.data.loader,
       require: dynamicComponentRequire,
       identifiers:
-        dynamicComponentIdentifiers || node.data.identifier
-          ? {
-              [node.data.identifier]: () => null
-            }
-          : {}
+        dynamicComponentIdentifiers ||
+        (node.data.identifier && {
+          [node.data.identifier]: () => null
+        }) ||
+        {}
     }
   },
   editorModule: 'dynamiccomponent',
