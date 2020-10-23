@@ -30,6 +30,7 @@ interface OutstandingPayment {
   total: number
   email: Nominal<string, 'userEmail'>
   companyName: string
+  packageName: string
 }
 
 export async function sendPaymentReminders(
@@ -242,9 +243,12 @@ async function send({
   isLast,
   context,
 }: SendParameters): Promise<void> {
-  const emailSubject = isLast
-    ? 'LETZTE MAHNUNG Republik-Abonnement/Mitgliedschaft/Spende'
-    : 'Zahlungserinnerung Republik-Abonnement/Mitgliedschaft/Spende'
+  const emailSubject = context.t.first([
+    `api/email/payment/reminder${isLast ? '/last' : ''}/${
+      payment.packageName
+    }/subject`,
+    `api/email/payment/reminder${isLast ? '/last' : ''}/default/subject`,
+  ])
 
   await sendMailTemplate(
     {
@@ -284,7 +288,8 @@ SELECT
   pledges.id AS "pledgeId",
   users.email,
   users.id AS "userId",
-  companies.name AS "companyName"
+  companies.name AS "companyName",
+  packages.name as "packageName"
 
 FROM payments
 
