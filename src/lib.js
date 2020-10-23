@@ -151,5 +151,3 @@ export { default as ActiveDebateTeaser } from './components/TeaserActiveDebates/
 export { default as IconButton } from './components/IconButton'
 
 export { VariableContext } from './components/Variables'
-
-export { default as DynamicPlaceholder } from './components/DynamicComponent/DynamicPlaceholder'
