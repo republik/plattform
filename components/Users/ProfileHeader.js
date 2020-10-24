@@ -8,6 +8,7 @@ import {
   Interaction,
   A
 } from '@project-r/styleguide'
+import Head from 'next/head'
 
 import routes from '../../server/routes'
 import { REPUBLIK_FRONTEND_URL } from '../../server/constants'
@@ -153,6 +154,9 @@ const ProfileHeader = ({ userId, section }) => {
                 .slice(1)
               return (
                 <Section {...styles.header}>
+                  <Head>
+                    <title>{section !== 'index' ? `${section}: ` : ''}{name ? `${name} (${user.email.split('@')[1]})`  : user.email} – Admin</title>
+                  </Head>
                   <div style={{clear: 'both', margin: '0 2px'}}>
                     {user.portrait && (
                       <img
