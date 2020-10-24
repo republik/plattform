@@ -29,7 +29,7 @@ const Table = (
       <colgroup>
         <col style={{ width: '120px' }} />
         <col style={{ width: '100px' }} />
-        <col style={{ width: '100px' }} />
+        <col style={{ width: '180px' }} />
         <col style={{ width: '40%' }} />
         <col style={{ width: '100px' }} />
         <col style={{ width: '100px' }} />
@@ -41,9 +41,9 @@ const Table = (
           <th
             {...styles.interactive}
             {...styles.left}
-            onClick={sortHandler('buchungsdatum')}
+            onClick={sortHandler('createdAt')}
           >
-            <Label>Buchungsdatum {indicator('buchungsdatum')}</Label>
+            <Label>Erstellt{indicator('createdAt')}</Label>
           </th>
           <th
             {...styles.interactive}
@@ -88,9 +88,9 @@ const Table = (
           <th
             {...styles.interactive}
             {...styles.left}
-            onClick={sortHandler('createdAt')}
+            onClick={sortHandler('buchungsdatum')}
           >
-            <Label>Erstellt{indicator('createdAt')}</Label>
+            <Label>Buchungsdatum {indicator('buchungsdatum')}</Label>
           </th>
           <th />
         </tr>
@@ -99,7 +99,7 @@ const Table = (
         {items.filter(v => v.hidden !== true).map(
           (postfinancePayment, index) => (
             <tr key={`postfinancePayment-${index}`} {...styles.row}>
-              <td>{postfinancePayment.buchungsdatum}</td>
+              <td>{displayDate(postfinancePayment.createdAt)}</td>
               <td>{postfinancePayment.valuta}</td>
               <td>{postfinancePayment.konto}</td>
               <td>
@@ -124,7 +124,7 @@ const Table = (
                   : postfinancePayment.mitteilung
               }</td>
               <td>{postfinancePayment.matched ? 'Yes' : 'No'}</td>
-              <td>{displayDate(postfinancePayment.createdAt)}</td>
+              <td>{postfinancePayment.buchungsdatum}</td>
               <td>{!postfinancePayment.matched && (
                 <span>
                   <a

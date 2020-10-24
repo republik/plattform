@@ -18,7 +18,7 @@ const getDueDate = (
   dueDate
 ) => {
   if (!dueDate) {
-    return '-'
+    return ''
   } else if (
     new Date(dueDate) < new Date() &&
     status !== 'PAID'
@@ -26,8 +26,7 @@ const getDueDate = (
     return (
       <span
         style={{
-          color: colors.error,
-          fontWeight: 'bold'
+          color: colors.error
         }}
       >
         {displayDate(dueDate)}
@@ -43,22 +42,36 @@ const Table = ({ items, sort, onSort, ...props }) => {
   return (
     <table {...props} {...styles.table}>
       <colgroup>
-        <col style={{ width: '100px' }} />
-        <col />
-        <col />
-        <col style={{ width: '150px' }} />
+        <col style={{ width: '120px' }} />
         <col style={{ width: '100px' }} />
         <col style={{ width: '180px' }} />
-        <col style={{ maxWidth: '100px' }} />
+        <col style={{ width: '15%' }} />
+        <col style={{ width: '25%' }} />
+        <col style={{ width: '100px' }} />
+        <col style={{ width: '100px' }} />
       </colgroup>
       <thead>
         <tr {...styles.headRow}>
           <th
             {...styles.interactive}
             {...styles.left}
-            onClick={sortHandler('hrid')}
+            onClick={sortHandler('createdAt')}
           >
-            <Label>HR-Nummer {indicator('hrid')}</Label>
+            <Label>Erstellt{indicator('createdAt')}</Label>
+          </th>
+          <th
+            {...styles.interactive}
+            {...styles.left}
+            onClick={sortHandler('dueDate')}
+          >
+            <Label>Fälligkeit{indicator('dueDate')}</Label>
+          </th>
+          <th
+            {...styles.interactive}
+            {...styles.left}
+            onClick={sortHandler('method')}
+          >
+            <Label>Zahlungsart{indicator('method')}</Label>
           </th>
           <th
             {...styles.left}
@@ -80,30 +93,16 @@ const Table = ({ items, sort, onSort, ...props }) => {
           <th
             {...styles.interactive}
             {...styles.left}
+            onClick={sortHandler('hrid')}
+          >
+            <Label>HR-Nummer {indicator('hrid')}</Label>
+          </th>
+          <th
+            {...styles.interactive}
+            {...styles.left}
             onClick={sortHandler('status')}
           >
             <Label>Status{indicator('status')}</Label>
-          </th>
-          <th
-            {...styles.interactive}
-            {...styles.left}
-            onClick={sortHandler('dueDate')}
-          >
-            <Label>Fälligkeit{indicator('dueDate')}</Label>
-          </th>
-          <th
-            {...styles.interactive}
-            {...styles.left}
-            onClick={sortHandler('method')}
-          >
-            <Label>Zahlungsart{indicator('method')}</Label>
-          </th>
-          <th
-            {...styles.interactive}
-            {...styles.left}
-            onClick={sortHandler('createdAt')}
-          >
-            <Label>Erstellt{indicator('createdAt')}</Label>
           </th>
         </tr>
       </thead>
@@ -112,7 +111,11 @@ const Table = ({ items, sort, onSort, ...props }) => {
           const { user, user: { address } } = payment
           return (
             <tr key={`payment-${index}`} {...styles.row}>
-              <td>{payment.hrid}</td>
+              <td>{displayDate(payment.createdAt)}</td>
+              <td>{
+                getDueDate(payment.status, payment.dueDate)
+              }</td>
+              <td>{payment.method}</td>
               <td>
                 <Link
                   route='user'
@@ -127,12 +130,8 @@ const Table = ({ items, sort, onSort, ...props }) => {
                 {address && [address.line1, address.line2, [address.postalCode, address.city].join(' ')].filter(Boolean).join(', ')}
               </td>
               <td>{chfFormat(payment.total / 100)}</td>
+              <td>{payment.hrid}</td>
               <td>{payment.status}</td>
-              <td>{
-                getDueDate(payment.status, payment.dueDate)
-              }</td>
-              <td>{payment.method}</td>
-              <td>{displayDate(payment.createdAt)}</td>
             </tr>
           )
         })}
