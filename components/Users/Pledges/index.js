@@ -25,7 +25,6 @@ import MovePledge from './MovePledge'
 import ResolvePledgeToPayment from './ResolvePledgeToPayment'
 import CancelPledge from './CancelPledge'
 import UpdatePayment from './UpdatePayment'
-import SendPaymentReminder from './SendPaymentReminder'
 const { Link } = routes
 
 
@@ -248,18 +247,6 @@ const PledgeDetails = ({ userId, pledge, ...props }) => {
                         }
                       ]}
                     />
-                   {payment.status === 'WAITING' &&
-                    <SendPaymentReminder
-                      key={`send-reminder-${payment.id}`}
-                      payment={payment}
-                      refetchQueries={() => [
-                        {
-                          query: GET_PLEDGES,
-                          variables: { userId }
-                        }
-                      ]}
-                    />
-                    }
                   </DD>
                 </DL>}
               </Fragment>
