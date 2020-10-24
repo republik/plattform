@@ -48,6 +48,9 @@ const Payments = props => {
           'dateRange',
           DateRange.serialize
         )}
+        onStringArray={change => {
+          changeHandler('stringArray')(change && StringArray.serialize(change))
+        }}
       />
       <Loader
         error={data.error}
@@ -104,6 +107,14 @@ const paymentsQuery = gql`
           name
           firstName
           lastName
+          address {
+            name
+            line1
+            line2
+            postalCode
+            city
+            country
+          }
         }
         createdAt
         updatedAt

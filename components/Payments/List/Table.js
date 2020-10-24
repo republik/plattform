@@ -63,7 +63,12 @@ const Table = ({ items, sort, onSort, ...props }) => {
           <th
             {...styles.left}
           >
-            <Label>Bezahlt von</Label>
+            <Label>Name</Label>
+          </th>
+          <th
+            {...styles.left}
+          >
+            <Label>Adresse</Label>
           </th>
           <th
             {...styles.interactive}
@@ -103,28 +108,34 @@ const Table = ({ items, sort, onSort, ...props }) => {
         </tr>
       </thead>
       <tbody>
-        {items.map((payment, index) => (
-          <tr key={`payment-${index}`} {...styles.row}>
-            <td>{payment.hrid}</td>
-            <td>
-              <Link
-                route='user'
-                params={{ userId: payment.user.id }}
-              >
-                <a {...styles.link}>
-                  {payment.user.name || (`${payment.user.firstName} ${payment.user.lastName}`)}
-                </a>
-              </Link>
-            </td>
-            <td>{chfFormat(payment.total / 100)}</td>
-            <td>{payment.status}</td>
-            <td>{
-              getDueDate(payment.status, payment.dueDate)
-            }</td>
-            <td>{payment.method}</td>
-            <td>{displayDate(payment.createdAt)}</td>
-          </tr>
-        ))}
+        {items.map((payment, index) => {
+          const { user, user: { address } } = payment
+          return (
+            <tr key={`payment-${index}`} {...styles.row}>
+              <td>{payment.hrid}</td>
+              <td>
+                <Link
+                  route='user'
+                  params={{ userId: user.id }}
+                >
+                  <a {...styles.link}>
+                    {user.name || (`${user.firstName} ${user.lastName}`)}
+                  </a>
+                </Link>
+              </td>
+              <td>
+                {address && [address.line1, address.line2, [address.postalCode, address.city].join(' ')].filter(Boolean).join(', ')}
+              </td>
+              <td>{chfFormat(payment.total / 100)}</td>
+              <td>{payment.status}</td>
+              <td>{
+                getDueDate(payment.status, payment.dueDate)
+              }</td>
+              <td>{payment.method}</td>
+              <td>{displayDate(payment.createdAt)}</td>
+            </tr>
+          )
+        })}
       </tbody>
     </table>
   )
