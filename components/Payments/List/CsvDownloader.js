@@ -99,6 +99,7 @@ class CSVDownloader extends Component {
                 </option>
               ))}
             </select>
+            {' '}
             <button
               style={{ cursor: 'pointer' }}
               className={`${link}`}

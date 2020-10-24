@@ -72,7 +72,7 @@ const Page = withT(({ params, onChange }) => {
           loading={loading}
           error={error}
           render={() =>
-            <Section>
+            <>
               <SectionTitle>
                 E-Mails {hasError && '(problematische Zustellungen)'}
               </SectionTitle>
@@ -83,7 +83,7 @@ const Page = withT(({ params, onChange }) => {
               {data.mailLog.pageInfo.endCursor && (
                 <A href='#' onClick={fetchMoreNodes}>mehr</A>
               )}
-            </Section>
+            </>
           }
         />
       )

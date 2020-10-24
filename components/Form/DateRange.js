@@ -2,9 +2,6 @@ import React, { Component } from 'react'
 import Input from './Input'
 import moment from 'moment'
 
-const standardDate = (rawDate) =>
-  moment(rawDate).format('YYYY-MM-DD')
-
 const localDate = (rawDate) =>
   moment(rawDate).format('YYYY-MM-DD')
 
@@ -28,8 +25,8 @@ const getInitialState = ({ dateRange, ...props }) =>
         enabled: false,
         dateRange: {
           field: props.fields[0],
-          from: standardDate('2017-04-20'),
-          to: standardDate({})
+          from: moment().subtract(90, 'days').format('YYYY-MM-DD'),
+          to: localDate()
         }
       }
 
@@ -113,36 +110,35 @@ export class Form extends Component {
         <Input
           type="checkbox"
           checked={enabled}
-          label="Filter"
+          label="Datumsfilter"
           onChange={this.enabledChangeHandler}
         />
-        {fields.length > 1 ? (
-          <select
-            value={field}
-            disabled={!enabled}
-            onChange={this.fieldChangeHandler}
-          >
-            {fields.map(fieldName => (
-              <option key={fieldName} value={fieldName}>
-                {fieldName}
-              </option>
-            ))}
-          </select>
-        ) : null}
-        <Input
-          label="From"
-          type="date"
-          disabled={!enabled}
-          onChange={this.dateChangeHandler('from')}
-          value={from}
-        />
-        <Input
-          label="Until"
-          type="date"
-          disabled={!enabled}
-          onChange={this.dateChangeHandler('to')}
-          value={to}
-        />
+        {enabled && <>
+          {fields.length > 1 ? (
+            <select
+              value={field}
+              onChange={this.fieldChangeHandler}
+            >
+              {fields.map(fieldName => (
+                <option key={fieldName} value={fieldName}>
+                  {fieldName}
+                </option>
+              ))}
+            </select>
+          ) : null}
+          <Input
+            label="From"
+            type="date"
+            onChange={this.dateChangeHandler('from')}
+            value={from}
+          />
+          <Input
+            label="Until"
+            type="date"
+            onChange={this.dateChangeHandler('to')}
+            value={to}
+          />
+        </>}
       </div>
     )
   }

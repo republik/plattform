@@ -16,9 +16,8 @@ export const serialize = ({ field, values }) =>
 
 const getInitialState = ({ stringArray, ...props }) =>
   stringArray
-    ? { stringArray, enabled: true }
+    ? { stringArray }
     : {
-        enabled: false,
         stringArray: {
           field: props.fields[0][0],
           values: []
@@ -40,18 +39,6 @@ export class Form extends Component {
           values: [],
           field
         }
-      }),
-      this.emitChange
-    )
-  }
-
-  enabledChangeHandler = event => {
-    const enabled = event.target.checked
-
-    this.setState(
-      () => ({
-        ...this.state,
-        enabled
       }),
       this.emitChange
     )
@@ -80,11 +67,10 @@ export class Form extends Component {
   emitChange = () => {
     if (this.props.onChange) {
       const {
-        enabled,
         stringArray: { field, values }
       } = this.state
       this.props.onChange(
-        enabled && values.length > 0
+        values.length > 0
           ? {
               field,
               values
@@ -101,7 +87,6 @@ export class Form extends Component {
   render() {
     const { fields } = this.props
     const {
-      enabled,
       stringArray: { field, values }
     } = this.state
     const selectedField = fields.find(
@@ -110,16 +95,9 @@ export class Form extends Component {
 
     return (
       <div>
-        <Input
-          type="checkbox"
-          checked={enabled}
-          label="Filter"
-          onChange={this.enabledChangeHandler}
-        />
         {fields.length > 1 ? (
           <select
             value={field}
-            disabled={!enabled}
             onChange={this.fieldChangeHandler}
           >
             {fields.map(fieldTuple => (

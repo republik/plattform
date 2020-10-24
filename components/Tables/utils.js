@@ -115,7 +115,10 @@ export const createSortIndicator = sort => fieldName => {
 
 export const deserializeOrderBy = str => {
   if (!str) {
-    return
+    return {
+      field: 'createdAt',
+      direction: 'DESC'
+    }
   }
   const [field, direction] = str.split('-')
   return {

@@ -62,6 +62,7 @@ export default withDebouncedSearch(({
     </div>
     <div style={formSectionStyles}>
       <UploadForm onUpload={onUpload} />
+      <br />
       <button onClick={onRematch}>
         Rematch payments
       </button>
