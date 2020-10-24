@@ -1,5 +1,6 @@
 import React from 'react'
 import Document, {
+  Html,
   Head,
   Main,
   NextScript
@@ -29,7 +30,7 @@ export default class MyDocument extends Document {
   render() {
     const { css } = this.props
     return (
-      <html>
+      <Html>
         <Head>
           <meta
             httpEquiv="X-UA-Compatible"
@@ -56,7 +57,7 @@ export default class MyDocument extends Document {
           <Main />
           <NextScript />
         </body>
-      </html>
+      </Html>
     )
   }
 }
