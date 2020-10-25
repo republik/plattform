@@ -48,54 +48,53 @@ const ScatterPlot = ({
   values,
   width,
   height,
-  heightRatio = 1,
-  x = 'value',
+  heightRatio,
+  x,
   xUnit,
   xNice,
   xTicks,
   xLines,
-  xScale = 'linear',
+  xScale,
   xNumberFormat,
-  xShowValue = true,
-  y = 'value',
+  xShowValue,
+  y,
   yUnit,
   yNice,
   yTicks,
   yLines,
-  yScale = 'linear',
+  yScale,
   yNumberFormat,
-  yShowValue = true,
-  numberFormat = 's',
-  opacity = 1,
+  yShowValue,
+  numberFormat,
+  opacity,
   color,
-  colorLegend = true,
+  colorLegend,
   colorLegendValues,
   colorRange,
   colorRanges,
   colorMap,
   colorSort,
-  size = 'size',
+  size,
   sizeRange,
-  sizeRangeMax = 4,
+  sizeRangeMax,
   sizeUnit,
   sizeNumberFormat,
-  sizeShowValue = false,
-  label = label,
+  sizeShowValue,
+  label,
   inlineLabel,
   inlineLabelPosition,
   inlineSecondaryLabel,
   detail,
   tLabel,
   description,
-  paddingTop = 15,
-  paddingRight = 1,
-  paddingBottom = 50,
-  paddingLeft = 30
+  paddingTop,
+  paddingRight,
+  paddingBottom,
+  paddingLeft
 }) => {
   const [hover, setHover] = useState([])
-  const [hoverTouch, setHoverTouch] = useState([])
-  const [left, setLeft] = useState('')
-  const [top, setTop] = useState('')
+  const [hoverTouch, setHoverTouch] = useState()
+
   const containerRef = useRef()
   const hoverRectRef = useRef()
   const [colorScheme] = useColorContext()
@@ -191,7 +190,7 @@ const ScatterPlot = ({
   const colorAccessor = d => d.datum[color]
   const colorValues = []
     .concat(data.map(colorAccessor))
-    .concat(plotColorLegendValues)
+    .concat(colorLegendValues)
     .filter(deduplicate)
     .filter(Boolean)
   runSort(colorSort, colorValues)
@@ -208,7 +207,7 @@ const ScatterPlot = ({
 
   const yLinesPaddingLeft = paddingLeft < 2 ? paddingLeft : 0
 
-  const plotColorLegendValues = []
+  const displayedColorLegendValues = []
     .concat(
       colorLegend &&
         (colorLegendValues || colorValues).map(colorValue => ({
@@ -237,21 +236,12 @@ const ScatterPlot = ({
     }
   })
 
-  const measure = () => {
-    const {
-      left: containerLeft,
-      top: containerTop
-    } = containerRef.current.getBoundingClientRect()
-    if (containerLeft !== left || containerTop !== top) {
-      setTop(containerTop)
-      setLeft(containerLeft)
-    }
-  }
-
-  const focus = event => {
-    if (top === undefined || left === undefined || !symbols) {
+  const focusRef = useRef()
+  const focus = (focusRef.current = event => {
+    if (!symbols) {
       return
     }
+    const { left, top } = containerRef.current.getBoundingClientRect()
     let hoverTouchItem = false
     let currentEvent = event
     if (currentEvent.changedTouches) {
@@ -286,29 +276,30 @@ const ScatterPlot = ({
     hoverItems = hoverItems.map(({ symbol }) => symbol)
     setHover(hoverItems)
     setHoverTouch(hoverTouchItem)
-  }
-
+  })
   const blur = () => {
     setHover([])
   }
 
   useEffect(() => {
-    window.addEventListener('resize', measure)
-    hoverRectRef.current.addEventListener('touchstart', focus, {
+    const focusCallback = event => focusRef.current(event)
+    const blurCallback = () => {
+      setHover([])
+    }
+    const rect = hoverRectRef.current
+    rect.addEventListener('touchstart', focusCallback, {
       passive: false
     })
-    hoverRectRef.current.addEventListener('touchmove', focus)
-    hoverRectRef.current.addEventListener('touchend', blur)
-    measure()
+    rect.addEventListener('touchmove', focusCallback)
+    rect.addEventListener('touchend', blurCallback)
     return () => {
-      window.removeEventListener('resize', measure())
-      hoverRectRef.current.removeEventListener('touchstart', focus, {
+      rect.removeEventListener('touchstart', focusCallback, {
         passive: false
       })
-      hoverRectRef.current.removeEventListener('touchmove', focus)
-      hoverRectRef.current.removeEventListener('touchend', blur)
+      rect.removeEventListener('touchmove', focusCallback)
+      rect.removeEventListener('touchend', blurCallback)
     }
-  }, [measure, focus, blur])
+  }, [])
 
   const renderHover = ({ width, height, xFormat, yFormat }) => {
     if (!hover.length) {
@@ -371,136 +362,97 @@ const ScatterPlot = ({
   }
 
   return (
-    <div style={{ position: 'relative' }}>
-      <ColorLegend inline values={colorLegendValues} />
-      <svg width={width} height={plotHeight} ref={containerRef}>
-        <desc>{description}</desc>
-        {symbols.map((symbol, i) => (
-          <circle
-            key={symbol.key}
-            style={{ opacity }}
-            fill={colorMapper(colorAccessor(symbol.value))}
-            cx={symbol.cx}
-            cy={symbol.cy}
-            r={symbol.r}
-          />
-        ))}
-        {(inlineLabel || inlineSecondaryLabel) &&
-          symbols
-            .filter(
-              ({ value: { datum } }) =>
-                datum[inlineLabel] || datum[inlineSecondaryLabel]
-            )
-            .map((symbol, i) => {
-              const { datum } = symbol.value
-              const primary = datum[inlineLabel]
-              const secondary = datum[inlineSecondaryLabel]
-              const pos = datum[inlineLabelPosition] || 'center'
-              let textAnchor = 'middle'
-              let yOffset = 0
-              let xOffset = 0
-              if (pos === 'left') {
-                textAnchor = 'end'
-                xOffset = -(symbol.r + 5)
-              }
-              if (pos === 'right') {
-                textAnchor = 'start'
-                xOffset = symbol.r + 5
-              }
-              if (pos === 'top' || pos === 'bottom') {
-                yOffset = symbol.r + 5 + (primary && secondary ? 15 : 7)
-                if (pos === 'top') {
-                  yOffset = -yOffset
-                }
-              }
-
-              return (
-                <g
-                  key={`inlineLabel${symbol.key}`}
-                  textAnchor={textAnchor}
-                  transform={`translate(${symbol.cx + xOffset},${symbol.cy +
-                    yOffset})`}
-                >
-                  {primary && (
-                    <text
-                      {...styles.inlineLabel}
-                      {...colorScheme.set('fill', 'text')}
-                      dy={secondary ? '-0.3em' : '0.4em'}
-                    >
-                      {subsup.svg(primary)}
-                    </text>
-                  )}
-                  {secondary && (
-                    <text
-                      {...styles.inlineSecondaryLabel}
-                      {...colorScheme.set('fill', 'text')}
-                      dy={primary ? '0.9em' : '0.4em'}
-                    >
-                      {subsup.svg(secondary)}
-                    </text>
-                  )}
-                </g>
-              )
-            })}
-        {hover.map((symbol, i) => (
-          <circle
-            key={`hover${symbol.key}`}
-            fill='none'
-            {...colorScheme.set('stroke', 'text')}
-            cx={symbol.cx}
-            cy={symbol.cy}
-            r={symbol.r}
-          />
-        ))}
-        {plotYLines.map(({ tick, label, base }, i) => (
-          <g
-            key={tick}
-            transform={`translate(${yLinesPaddingLeft},${plotY(tick)})`}
-          >
-            <line
-              {...styles.axisLine}
-              {...colorScheme.set('stroke', 'text')}
-              x2={width - paddingRight - yLinesPaddingLeft}
-              style={{
-                opacity: base || (base === undefined && tick === 0) ? 0.8 : 0.17
-              }}
+    <>
+      <ColorLegend inline values={displayedColorLegendValues} />
+      <div style={{ position: 'relative' }} ref={containerRef}>
+        <svg width={width} height={plotHeight}>
+          <desc>{description}</desc>
+          {symbols.map((symbol, i) => (
+            <circle
+              key={symbol.key}
+              style={{ opacity }}
+              fill={colorMapper(colorAccessor(symbol.value))}
+              cx={symbol.cx}
+              cy={symbol.cy}
+              r={symbol.r}
             />
-            <text
-              {...styles.axisLabel}
-              {...colorScheme.set('fill', 'text')}
-              dy='-3px'
-            >
-              {subsup.svg(label || yAxis.axisFormat(tick, last(plotYLines, i)))}
-            </text>
-          </g>
-        ))}
-        {plotXLines.map(({ tick, label, textAnchor, base }, i) => {
-          if (!textAnchor) {
-            textAnchor = 'middle'
-            if (last(plotXLines, i)) {
-              textAnchor = 'end'
-            }
-            if (i === 0 && paddingLeft < 20) {
-              textAnchor = 'start'
-            }
-          }
-          return (
+          ))}
+          {(inlineLabel || inlineSecondaryLabel) &&
+            symbols
+              .filter(
+                ({ value: { datum } }) =>
+                  datum[inlineLabel] || datum[inlineSecondaryLabel]
+              )
+              .map((symbol, i) => {
+                const { datum } = symbol.value
+                const primary = datum[inlineLabel]
+                const secondary = datum[inlineSecondaryLabel]
+                const pos = datum[inlineLabelPosition] || 'center'
+                let textAnchor = 'middle'
+                let yOffset = 0
+                let xOffset = 0
+                if (pos === 'left') {
+                  textAnchor = 'end'
+                  xOffset = -(symbol.r + 5)
+                }
+                if (pos === 'right') {
+                  textAnchor = 'start'
+                  xOffset = symbol.r + 5
+                }
+                if (pos === 'top' || pos === 'bottom') {
+                  yOffset = symbol.r + 5 + (primary && secondary ? 15 : 7)
+                  if (pos === 'top') {
+                    yOffset = -yOffset
+                  }
+                }
+
+                return (
+                  <g
+                    key={`inlineLabel${symbol.key}`}
+                    textAnchor={textAnchor}
+                    transform={`translate(${symbol.cx + xOffset},${symbol.cy +
+                      yOffset})`}
+                  >
+                    {primary && (
+                      <text
+                        {...styles.inlineLabel}
+                        {...colorScheme.set('fill', 'text')}
+                        dy={secondary ? '-0.3em' : '0.4em'}
+                      >
+                        {subsup.svg(primary)}
+                      </text>
+                    )}
+                    {secondary && (
+                      <text
+                        {...styles.inlineSecondaryLabel}
+                        {...colorScheme.set('fill', 'text')}
+                        dy={primary ? '0.9em' : '0.4em'}
+                      >
+                        {subsup.svg(secondary)}
+                      </text>
+                    )}
+                  </g>
+                )
+              })}
+          {hover.map((symbol, i) => (
+            <circle
+              key={`hover${symbol.key}`}
+              fill='none'
+              {...colorScheme.set('stroke', 'text')}
+              cx={symbol.cx}
+              cy={symbol.cy}
+              r={symbol.r}
+            />
+          ))}
+          {plotYLines.map(({ tick, label, base }, i) => (
             <g
-              key={`x${tick}`}
-              transform={`translate(${plotX(tick)},${paddingTop +
-                innerHeight +
-                X_TICK_HEIGHT})`}
+              key={tick}
+              transform={`translate(${yLinesPaddingLeft},${plotY(tick)})`}
             >
               <line
                 {...styles.axisLine}
                 {...colorScheme.set('stroke', 'text')}
-                y2={
-                  -(
-                    (maxYLine
-                      ? plotY(plotY.domain()[0]) - plotY(maxYLine.tick)
-                      : innerHeight) + X_TICK_HEIGHT
-                  )
-                }
+                x2={width - paddingRight - yLinesPaddingLeft}
                 style={{
                   opacity:
                     base || (base === undefined && tick === 0) ? 0.8 : 0.17
@@ -509,49 +461,93 @@ const ScatterPlot = ({
               <text
                 {...styles.axisLabel}
                 {...colorScheme.set('fill', 'text')}
-                y={5}
-                dy='0.6em'
-                textAnchor={textAnchor}
+                dy='-3px'
               >
                 {subsup.svg(
-                  label || xAxis.axisFormat(tick, last(plotXLines, i))
+                  label || yAxis.axisFormat(tick, last(plotYLines, i))
                 )}
               </text>
             </g>
-          )
+          ))}
+          {plotXLines.map(({ tick, label, textAnchor, base }, i) => {
+            if (!textAnchor) {
+              textAnchor = 'middle'
+              if (last(plotXLines, i)) {
+                textAnchor = 'end'
+              }
+              if (i === 0 && paddingLeft < 20) {
+                textAnchor = 'start'
+              }
+            }
+            return (
+              <g
+                key={`x${tick}`}
+                transform={`translate(${plotX(tick)},${paddingTop +
+                  innerHeight +
+                  X_TICK_HEIGHT})`}
+              >
+                <line
+                  {...styles.axisLine}
+                  {...colorScheme.set('stroke', 'text')}
+                  y2={
+                    -(
+                      (maxYLine
+                        ? plotY(plotY.domain()[0]) - plotY(maxYLine.tick)
+                        : innerHeight) + X_TICK_HEIGHT
+                    )
+                  }
+                  style={{
+                    opacity:
+                      base || (base === undefined && tick === 0) ? 0.8 : 0.17
+                  }}
+                />
+                <text
+                  {...styles.axisLabel}
+                  {...colorScheme.set('fill', 'text')}
+                  y={5}
+                  dy='0.6em'
+                  textAnchor={textAnchor}
+                >
+                  {subsup.svg(
+                    label || xAxis.axisFormat(tick, last(plotXLines, i))
+                  )}
+                </text>
+              </g>
+            )
+          })}
+          <text
+            x={paddingLeft + innerWidth}
+            y={paddingTop + innerHeight + 28 + X_TICK_HEIGHT}
+            textAnchor='end'
+            {...styles.axisLabel}
+            {...colorScheme.set('fill', 'text')}
+          >
+            {xUnit}
+          </text>
+          <rect
+            fill='transparent'
+            width={width}
+            height={plotHeight}
+            onMouseEnter={e => focus(e)}
+            onMouseMove={e => focus(e)}
+            onMouseLeave={e => blur(e)}
+            ref={
+              /* touch events are added via ref for { passive: false } on touchstart
+               * react does not support setting passive, which defaults to true in newer browsers
+               * https://github.com/facebook/react/issues/6436
+               */
+              hoverRectRef
+            }
+          />
+        </svg>
+        {renderHover({
+          width,
+          height: plotHeight,
+          xFormat: xAxis.format,
+          yFormat: yAxis.format
         })}
-        <text
-          x={paddingLeft + innerWidth}
-          y={paddingTop + innerHeight + 28 + X_TICK_HEIGHT}
-          textAnchor='end'
-          {...styles.axisLabel}
-          {...colorScheme.set('fill', 'text')}
-        >
-          {xUnit}
-        </text>
-        <rect
-          fill='transparent'
-          width={width}
-          height={plotHeight}
-          onMouseEnter={e => focus(e)}
-          onMouseMove={e => focus(e)}
-          onMouseLeave={e => blur(e)}
-          ref={
-            /* touch events are added via ref for { passive: false } on touchstart
-             * react does not support setting passive, which defaults to true in newer browsers
-             * https://github.com/facebook/react/issues/6436
-             */
-            hoverRectRef
-          }
-        />
-      </svg>
-      {renderHover({
-        width,
-        height: plotHeight,
-        xFormat: xAxis.format,
-        yFormat: yAxis.format
-      })}
-    </div>
+      </div>
+    </>
   )
 }
 
