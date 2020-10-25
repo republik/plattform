@@ -63,7 +63,7 @@ const Tweet = ({
     <div
       {...attributes}
       {...styles.container}
-      {...colorScheme.rules.text.borderColor}
+      {...colorScheme.set('borderColor', 'text')}
     >
       <Header
         url={url}
@@ -74,7 +74,7 @@ const Tweet = ({
       />
       <p
         {...styles.text}
-        {...colorScheme.rules.text.color}
+        {...colorScheme.set('color', 'text')}
         dangerouslySetInnerHTML={{ __html: html }}
       />
       {image && (

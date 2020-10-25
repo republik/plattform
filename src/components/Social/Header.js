@@ -101,17 +101,20 @@ export const Header = ({ url, userProfileImageUrl, name, handle, date }) => {
   const cleanHandle = handle && handle.replace('@', '')
   const [colorScheme] = useColorContext()
   return (
-    <div {...styles.root} {...colorScheme.rules.text.color}>
+    <div {...styles.root} {...colorScheme.set('color', 'text')}>
       <UserLink handle={cleanHandle}>
         <img
           {...styles.profilePicture}
-          {...colorScheme.rules.default.borderColor}
+          {...colorScheme.set('borderColor', 'default')}
           src={userProfileImageUrl}
           alt=''
         />
       </UserLink>
       <Link href={url}>
-        <TwitterIcon {...styles.icon} {...colorScheme.rules.divider.color} />
+        <TwitterIcon
+          {...styles.icon}
+          {...colorScheme.set('color', 'divider')}
+        />
       </Link>
       <div {...styles.meta}>
         <div {...styles.name}>

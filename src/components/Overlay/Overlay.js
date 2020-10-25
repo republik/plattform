@@ -120,9 +120,9 @@ export const OverlayRenderer = ({
     >
       <div
         {...merge(styles.inner, mUpStyle && { [mUp]: mUpStyle })}
-        {...colorScheme.rules.overlay.backgroundColor}
-        {...colorScheme.rules.overlay.boxShadow}
-        {...colorScheme.rules.text.color}
+        {...colorScheme.set('backgroundColor', 'overlay')}
+        {...colorScheme.set('boxShadow', 'overlay')}
+        {...colorScheme.set('color', 'text')}
         ref={innerRef}
       >
         {children}

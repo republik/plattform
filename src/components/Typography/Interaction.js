@@ -55,52 +55,40 @@ const interactionH3 = css({
 })
 
 export const Headline = ({ children, ...props }) => {
-  const [
-    {
-      rules: { textColor }
-    }
-  ] = useColorContext()
+  const [colorScheme] = useColorContext()
   return (
-    <h1 {...props} {...interactionHeadline} {...textColor}>
+    <h1
+      {...props}
+      {...interactionHeadline}
+      {...colorScheme.set('color', 'text')}
+    >
       {children}
     </h1>
   )
 }
 
 export const H1 = ({ children, ...props }) => {
-  const [
-    {
-      rules: { textColor }
-    }
-  ] = useColorContext()
+  const [colorScheme] = useColorContext()
   return (
-    <h1 {...props} {...interactionH1} {...textColor}>
+    <h1 {...props} {...interactionH1} {...colorScheme.set('color', 'text')}>
       {children}
     </h1>
   )
 }
 
 export const H2 = ({ children, ...props }) => {
-  const [
-    {
-      rules: { textColor }
-    }
-  ] = useColorContext()
+  const [colorScheme] = useColorContext()
   return (
-    <h2 {...props} {...interactionH2} {...textColor}>
+    <h2 {...props} {...interactionH2} {...colorScheme.set('color', 'text')}>
       {children}
     </h2>
   )
 }
 
 export const H3 = ({ children, ...props }) => {
-  const [
-    {
-      rules: { textColor }
-    }
-  ] = useColorContext()
+  const [colorScheme] = useColorContext()
   return (
-    <h3 {...props} {...interactionH3} {...textColor}>
+    <h3 {...props} {...interactionH3} {...colorScheme.set('color', 'text')}>
       {children}
     </h3>
   )
@@ -115,13 +103,14 @@ const interactionP = css({
 })
 
 export const P = ({ children, ...props }) => {
-  const [
-    {
-      rules: { textColor }
-    }
-  ] = useColorContext()
+  const [colorScheme] = useColorContext()
   return (
-    <p {...props} {...interactionP} {...fontRule} {...textColor}>
+    <p
+      {...props}
+      {...interactionP}
+      {...fontRule}
+      {...colorScheme.set('color', 'text')}
+    >
       {children}
     </p>
   )

@@ -74,8 +74,8 @@ export const OverlayToolbar = ({ children }) => {
   return (
     <div
       {...styles.root}
-      {...colorScheme.rules.divider.borderColor}
-      {...colorScheme.rules.overlay.backgroundColor}
+      {...colorScheme.set('borderColor', 'divider')}
+      {...colorScheme.set('backgroundColor', 'overlay')}
     >
       {children}
     </div>
@@ -89,7 +89,7 @@ export const OverlayToolbarClose = ({ onClick }) => {
   const [colorScheme] = useColorContext()
   return (
     <button {...styles.close} onClick={onClick}>
-      <MdClose {...colorScheme.rules.text.fill} />
+      <MdClose {...colorScheme.set('fill', 'text')} />
     </button>
   )
 }

@@ -19,7 +19,7 @@ const styles = {
 const Credit = ({ children }) => {
   const [colorScheme] = useColorContext()
   return (
-    <p {...styles.main} {...colorScheme.rules.text.color}>
+    <p {...styles.main} {...colorScheme.set('color', 'text')}>
       {children}
     </p>
   )
