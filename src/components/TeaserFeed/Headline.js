@@ -41,39 +41,39 @@ const styles = {
   })
 }
 
-export const Editorial = ({ children, cssColor }) => {
+export const Editorial = ({ children, formatColor }) => {
   const [colorScheme] = useColorContext()
   return (
     <h1
       {...styles.base}
       {...styles.editorial}
-      {...colorScheme.set('color', cssColor)}
+      {...colorScheme.set('color', formatColor || 'text', 'format')}
     >
       {children}
     </h1>
   )
 }
 
-export const Interaction = ({ children, cssColor }) => {
+export const Interaction = ({ children, formatColor }) => {
   const [colorScheme] = useColorContext()
   return (
     <h1
       {...styles.base}
       {...styles.interaction}
-      {...colorScheme.set('color', cssColor)}
+      {...colorScheme.set('color', formatColor || 'text', 'format')}
     >
       {children}
     </h1>
   )
 }
 
-export const Scribble = ({ children, cssColor }) => {
+export const Scribble = ({ children, formatColor }) => {
   const [colorScheme] = useColorContext()
   return (
     <h1
       {...styles.base}
       {...styles.scribble}
-      {...colorScheme.set('color', cssColor)}
+      {...colorScheme.set('color', formatColor || 'text', 'format')}
     >
       {children}
     </h1>

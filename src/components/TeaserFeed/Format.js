@@ -17,11 +17,14 @@ const styles = {
   })
 }
 
-export const Format = ({ children, cssColor }) => {
+export const Format = ({ children, color }) => {
   const [colorScheme] = useColorContext()
 
   return (
-    <p {...styles.main} {...colorScheme.set('color', cssColor)}>
+    <p
+      {...styles.main}
+      {...colorScheme.set('color', color || 'text', 'format')}
+    >
       {children}
     </p>
   )

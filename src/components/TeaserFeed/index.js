@@ -9,7 +9,6 @@ import colors from '../../theme/colors'
 import { renderMdast } from 'mdast-react-render'
 import { timeFormat } from '../../lib/timeFormat'
 import { Editorial } from '../Typography'
-import { useColorContext } from '../Colors/useColorContext'
 import { matchType } from 'mdast-react-render/lib/utils'
 import Highlight from './Highlight'
 
@@ -63,7 +62,6 @@ export const TeaserFeed = ({
   menu,
   highlighted
 }) => {
-  const [colorScheme] = useColorContext()
   const formatMeta = (format && format.meta) || {}
   const Headline =
     formatMeta.kind === 'meta' || metaKind === 'meta' || template === 'format'
@@ -72,28 +70,25 @@ export const TeaserFeed = ({
       ? Headlines.Scribble
       : Headlines.Editorial
   const borderColor = formatMeta.title
-    ? colorScheme.getCSSColor(
-        formatMeta.color || colors[formatMeta.kind],
-        'format'
-      )
+    ? formatMeta.color || colors[formatMeta.kind]
     : template === 'format'
-    ? colorScheme.getCSSColor(metaColor || colors[metaKind], 'format')
-    : colorScheme.text
+    ? metaColor || colors[metaKind]
+    : undefined
   const titleColor = metaColor
-    ? colorScheme.getCSSColor(metaColor, 'format')
+    ? metaColor
     : template === 'format'
     ? borderColor
-    : colorScheme.text
+    : undefined
 
   return (
     <Container
       highlighted={highlighted}
       format={format}
-      cssColor={borderColor}
+      formatColor={borderColor}
       Link={Link}
       menu={menu}
     >
-      <Headline cssColor={titleColor}>
+      <Headline formatColor={titleColor}>
         <Link href={path} passHref>
           <a {...styles.link} href={path}>
             {title}

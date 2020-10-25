@@ -32,7 +32,7 @@ const MoreIconWithProps = props => (
 
 const Teaser = ({
   children,
-  cssColor,
+  formatColor,
   format,
   interaction,
   Link,
@@ -44,7 +44,7 @@ const Teaser = ({
   return (
     <div
       {...styles.main}
-      {...colorScheme.set('borderColor', cssColor)}
+      {...colorScheme.set('borderColor', formatColor || 'text', 'format')}
       {...(highlighted && colorScheme.set('backgroundColor', 'alert'))}
     >
       {menu && (
@@ -59,7 +59,7 @@ const Teaser = ({
         </div>
       )}
       {format && format.meta && (
-        <Format cssColor={cssColor}>
+        <Format color={formatColor}>
           <Link href={format.meta.path} passHref>
             <a {...styles.link} href={format.meta.path}>
               {format.meta.title}
