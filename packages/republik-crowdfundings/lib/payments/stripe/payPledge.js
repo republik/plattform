@@ -5,6 +5,7 @@ const addSource = require('./addSource')
 const addPaymentMethod = require('./addPaymentMethod')
 const { getPaymentMethods } = require('./paymentMethod')
 const getClients = require('./clients')
+const createPaymentIntent = require('./createPaymentIntent')
 const sleep = require('await-sleep')
 const Redis = require('@orbiting/backend-modules-base/lib/Redis')
 
@@ -13,7 +14,25 @@ module.exports = (args) => {
   if (sourceId) {
     return payWithSource(args)
   } else {
-    return payWithPaymentMethod(args)
+    return payWithPaymentMethod(args).catch((e) => {
+      throwStripeError(e, { ...args, kind: 'paymentIntent' })
+    })
+  }
+}
+
+const throwStripeError = (e, { pledgeId, t, kind }) => {
+  console.info(`stripe ${kind} failed`, { pledgeId, e })
+  if (e.type === 'StripeCardError') {
+    const translatedError = t('api/pay/stripe/' + e.code)
+    if (translatedError) {
+      throw new Error(translatedError)
+    } else {
+      console.warn('translation not found for stripe error', { pledgeId, e })
+      throw new Error(e.message)
+    }
+  } else {
+    console.error('unknown error on stripe charge', { pledgeId, e })
+    throw new Error(t('api/unexpected'))
   }
 }
 
@@ -89,19 +108,7 @@ const payWithSource = async ({
       })
     }
   } catch (e) {
-    console.info('stripe charge failed', { pledgeId, e })
-    if (e.type === 'StripeCardError') {
-      const translatedError = t('api/pay/stripe/' + e.code)
-      if (translatedError) {
-        throw new Error(translatedError)
-      } else {
-        console.warn('translation not found for stripe error', { pledgeId, e })
-        throw new Error(e.message)
-      }
-    } else {
-      console.error('unknown error on stripe charge', { pledgeId, e })
-      throw new Error(t('api/unexpected'))
-    }
+    throwStripeError(e, { pledgeId, t, kind: 'charge' })
   }
 
   // for subscriptions the payment doesn't exist yet
@@ -152,14 +159,14 @@ const payWithPaymentMethod = async ({
 
   const clients = await getClients(pgdb)
 
-  let customer = await pgdb.public.stripeCustomers.findOne({
-    userId,
-    companyId,
-  })
-
   // save paymentMethodId (to platform and connectedAccounts)
-  if (!customer) {
-    customer = await createCustomer({
+  if (
+    !(await pgdb.public.stripeCustomers.findOne({
+      userId,
+      companyId,
+    }))
+  ) {
+    await createCustomer({
       paymentMethodId: stripePlatformPaymentMethodId,
       userId: userId,
       pgdb,
@@ -198,21 +205,14 @@ const payWithPaymentMethod = async ({
 
   let stripeClientSecret
   if (!isSubscription) {
-    // the paymentIntent needs to be created on the account of the company
-    const { accounts } = clients
-    const stripe = accounts.find((a) => a.company.id === companyId).stripe
-
-    // customer needs to be attached to PaymentIntent
-    // otherwise she can't use her saved paymentMethods
-    const paymentIntent = await stripe.paymentIntents.create({
-      setup_future_usage: 'off_session',
-      amount: total,
-      currency: 'chf',
-      customer: customer.id,
-      payment_method: paymentMethodId,
-      metadata: {
-        pledgeId: pledgeId,
-      },
+    const paymentIntent = await createPaymentIntent({
+      userId,
+      companyId,
+      paymentMethodId,
+      total,
+      pledgeId,
+      pgdb,
+      clients,
     })
     stripeClientSecret = paymentIntent.client_secret
   } else {
