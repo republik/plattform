@@ -13,6 +13,23 @@ const { getDefaultPaymentSource } = require('./payments/stripe/paymentSource')
 
 const { getDefaultPaymentMethod } = require('./payments/stripe/paymentMethod')
 const createPaymentIntent = require('./payments/stripe/createPaymentIntent')
+const cancelPaymentIntent = require('./payments/stripe/cancelPaymentIntent')
+
+class RequiresActionError extends Error {
+  constructor(params) {
+    super(params)
+
+    // Maintains proper stack trace for where our error was thrown (only available on V8)
+    if (Error.captureStackTrace) {
+      Error.captureStackTrace(this, RequiresActionError)
+    }
+
+    // see lib/scheduler/owners/charging
+    this.name = 'RequiresActionError'
+    // see sendMembershipOwnerAutoPay
+    this.raw = 'card_error'
+  }
+}
 
 const suggest = async (membershipId, pgdb) => {
   // Find membership
@@ -144,6 +161,8 @@ const suggest = async (membershipId, pgdb) => {
       withDonation: pledge.donation > 0,
       defaultPaymentSource,
       defaultPaymentMethod,
+      // used in email templates
+      card: defaultPaymentMethod?.card || defaultPaymentSource,
     }
   }
 }
@@ -176,14 +195,34 @@ const prolong = async (membershipId, pgdb, redis) => {
         paymentMethodId: defaultPaymentMethod.id,
         total: total,
         pledgeId: pledgeId,
+        metadata: {
+          AutoPay: true,
+        },
         pgdb,
         confirm: true,
       })
 
       if (paymentIntent.status !== 'succeeded') {
-        throw new Error(
-          `AutoPay: paymentIntent did not succeed immediately. status: ${paymentIntent.status}`,
-        )
+        if (
+          ['requires_action', 'requires_confirmation'].includes(
+            paymentIntent.status,
+          )
+        ) {
+          await cancelPaymentIntent({
+            paymentIntentId: paymentIntent.id,
+            companyId,
+            pgdb,
+          }).catch((e) => {
+            console.error('Could not cancel paymentIntent', e)
+          })
+          throw new RequiresActionError(
+            'PaymentIntent requires user action. Aborting AutoPay.',
+          )
+        } else {
+          throw new Error(
+            `AutoPay: paymentIntent did not succeed immediately. status: ${paymentIntent.status}`,
+          )
+        }
       }
 
       charge = paymentIntent.charges.data[0]

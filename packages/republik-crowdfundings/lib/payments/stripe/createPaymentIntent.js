@@ -7,6 +7,7 @@ module.exports = async ({
   paymentMethodId,
   total,
   pledgeId,
+  metadata = {},
   confirm = false,
   pgdb,
   clients, // optional
@@ -37,6 +38,7 @@ module.exports = async ({
     payment_method: paymentMethodId,
     metadata: {
       pledgeId,
+      ...metadata,
     },
     confirm,
     setup_future_usage: 'off_session',

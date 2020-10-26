@@ -41,9 +41,14 @@ module.exports = async (user, bucket, context) => {
     return
   }
 
-  // Back off if last attempt was too recent
+  // Back off if last attempt failed due to PaymentIntent.requires_action or was too recent
   const mostRecentAttempt = previousAttempts[0]
   if (mostRecentAttempt) {
+    if (mostRecentAttempt.error.name === 'RequiresActionError') {
+      debug('backing off, most recent attempt failed with requires_action')
+      return
+    }
+
     const waitUntil = moment(mostRecentAttempt.createdAt).add(
       backOffMinutes,
       'minutes',
@@ -83,6 +88,7 @@ module.exports = async (user, bucket, context) => {
       chargeAttemptStatus: chargeAttempt.status,
       chargeAttemptError: chargeAttempt.error,
       attemptNumber: previousAttempts.length + 1,
+      requiresAction: chargeAttempt.error?.name === 'RequiresActionError',
       isLastAttempt: previousAttempts.length + 1 === attempts.length,
       isNextAttemptLast,
       nextAttemptDate:
