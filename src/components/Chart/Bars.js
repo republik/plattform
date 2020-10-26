@@ -419,6 +419,8 @@ const BarChart = props => {
                   </text>
                 )
                 if (href) {
+                  // disable a11y rule because it does not understand that this a tag is an svg tag
+                  // eslint-disable-next-line jsx-a11y/anchor-is-valid
                   barLabel = <a xlinkHref={href}>{barLabel}</a>
                 }
                 return (

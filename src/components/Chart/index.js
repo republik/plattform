@@ -107,7 +107,7 @@ export const ChartLead = ({ children, ...props }) => {
 export const ChartLegend = ({ children, ...props }) => {
   const [colorScheme] = useColorContext()
   return (
-    <Note {...colorScheme.set('color', 'textSoft')} style={{ marginTop: 15 }}>
+    <Note {...colorScheme.set('color', 'text')} style={{ marginTop: 15 }}>
       {children}
     </Note>
   )

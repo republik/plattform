@@ -756,7 +756,6 @@ AudioPlayer.contextTypes = {
 
 const AudioPlayerWithColorContext = ({ ...props }) => {
   const [colorScheme] = useColorContext()
-  //useMemo => zusätzliches Prop
   return <AudioPlayer {...props} colorScheme={colorScheme} />
 }
 

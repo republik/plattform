@@ -107,7 +107,7 @@ export const Label = ({
             ? colorScheme.set('color', 'error')
             : focus
             ? colorScheme.set('color', 'primary')
-            : colorScheme.set('color', 'text'))}
+            : colorScheme.set('color', 'disabled'))}
         >
           {children}
         </Element>
@@ -135,7 +135,7 @@ export const Label = ({
           ? colorScheme.set('color', 'error')
           : focus
           ? colorScheme.set('color', 'primary')
-          : colorScheme.set('color', 'text'))}
+          : colorScheme.set('color', 'disabled'))}
       >
         {text}
       </span>

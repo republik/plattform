@@ -66,8 +66,7 @@ const Button = React.forwardRef(
       title,
       target,
       simulate: sim,
-      attributes,
-      bw
+      attributes
     },
     ref
   ) => {
@@ -83,26 +82,22 @@ const Button = React.forwardRef(
           '@media (hover)': {
             ':hover': {
               backgroundColor: colorScheme.getCSSColor(
-                bw ? 'defaultInverted' : primary ? 'default' : 'primary'
+                primary ? 'default' : 'primary'
               ),
               borderColor: colorScheme.getCSSColor(
-                bw ? 'defaultInverted' : primary ? 'primary' : 'primary'
+                primary ? 'primary' : 'primary'
               ),
-              color: colorScheme.getCSSColor(
-                bw ? 'textInverted' : primary ? 'primary' : '#FFF'
-              )
+              color: colorScheme.getCSSColor(primary ? 'primary' : '#FFF')
             }
           },
           ':active': {
             backgroundColor: colorScheme.getCSSColor(
-              bw ? 'defaultInverted' : primary ? 'default' : 'primary'
+              primary ? 'default' : 'primary'
             ),
             borderColor: colorScheme.getCSSColor(
-              bw ? 'defaultInverted' : primary ? 'primary' : 'primary'
+              primary ? 'primary' : 'primary'
             ),
-            color: colorScheme.getCSSColor(
-              bw ? 'textInverted' : primary ? 'primary' : '#FFF'
-            )
+            color: colorScheme.getCSSColor(primary ? 'primary' : '#FFF')
           },
           ':disabled, [disabled]': {
             backgroundColor: 'transparent',
@@ -119,7 +114,7 @@ const Button = React.forwardRef(
           }
         }),
 
-      [colorScheme, primary, bw]
+      [colorScheme, primary]
     )
     const simulations = sim ? simulate(sim) : {}
     const buttonStyles = merge(

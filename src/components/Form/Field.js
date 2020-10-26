@@ -155,7 +155,7 @@ const Field = ({
     return {
       labelText: css({
         color: colorScheme.getCSSColor(
-          error ? 'error' : isFocused ? 'primary' : 'softText'
+          error ? 'error' : isFocused ? 'primary' : 'disabled'
         )
       }),
       field: css({
@@ -167,7 +167,7 @@ const Field = ({
         )
       })
     }
-  }, [colorScheme, isFocused, error, disabled, icon])
+  }, [colorScheme, isFocused, error, disabled])
 
   const fStyle = merge(
     styles.field,
@@ -201,7 +201,7 @@ const Field = ({
           if (!isValidating && onChange && isDirty) {
             onChange(event, v, true)
           }
-          setIsFocused(true)
+          setIsFocused(false)
           setIsValidating(isDirty)
         },
         className: [fStyle.toString(), simulationClassName]

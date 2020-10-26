@@ -483,6 +483,8 @@ const LineChart = props => {
     columnHeight
   } = layout(props)
 
+  const [colorScheme] = useColorContext()
+
   const possibleColumns = Math.floor(
     width / (props.minInnerWidth + paddingLeft + paddingRight)
   )
@@ -575,23 +577,17 @@ const LineChart = props => {
       !mini &&
         band &&
         bandLegend && {
-          Label: () => {
-            const [colorScheme] = useColorContext()
-            return (
+          label: (
+            <span {...styles.bandLegend} {...colorScheme.set('color', 'text')}>
               <span
-                {...styles.bandLegend}
-                {...colorScheme.set('color', 'text')}
-              >
-                <span
-                  {...styles.bandBar}
-                  {...colorScheme.set('backgroundColor', 'text')}
-                  {...colorScheme.set('borderTopColor', 'divider')}
-                  {...colorScheme.set('borderBottomColor', 'divider')}
-                />
-                {` ${bandLegend}`}
-              </span>
-            )
-          }
+                {...styles.bandBar}
+                {...colorScheme.set('backgroundColor', 'text')}
+                {...colorScheme.set('borderTopColor', 'divider')}
+                {...colorScheme.set('borderBottomColor', 'divider')}
+              />
+              {` ${bandLegend}`}
+            </span>
+          )
         }
     )
     .filter(Boolean)

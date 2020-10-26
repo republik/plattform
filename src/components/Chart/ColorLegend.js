@@ -54,7 +54,6 @@ const ColorLegend = ({ title, shape, values, maxWidth, inline }) => {
         </div>
       )}
       {values.map((value, i) => {
-        let TextComponent = value.Label
         let text = value.label
 
         return (
@@ -76,7 +75,7 @@ const ColorLegend = ({ title, shape, values, maxWidth, inline }) => {
                 style={{ backgroundColor: value.color }}
               />
             )}
-            {TextComponent || text}
+            {text}
           </div>
         )
       })}
