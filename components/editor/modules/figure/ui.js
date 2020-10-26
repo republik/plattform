@@ -83,7 +83,7 @@ function createUI({
                   <MetaForm
                     data={Map({
                       src: '',
-                      srcNeg: '',
+                      srcDark: '',
                       alt: ''
                     }).merge(imageBlock.data)}
                     onInputChange={onInputChange(imageBlock)}

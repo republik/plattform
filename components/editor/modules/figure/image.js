@@ -33,7 +33,7 @@ export default ({ rule, subModules, TYPE }) => {
         data: {
           alt: imageNodes[0].alt,
           src: imageNodes[0].url,
-          srcNeg: imageNodes.length === 2 ? imageNodes[1].url : null
+          srcDark: imageNodes.length === 2 ? imageNodes[1].url : null
         },
         isVoid: true,
         nodes: []
@@ -47,11 +47,11 @@ export default ({ rule, subModules, TYPE }) => {
       }
       return {
         type: 'paragraph',
-        children: object.data.srcNeg
+        children: object.data.srcDark
           ? [
               mainImage,
               { type: 'text', value: ' ' },
-              { type: 'image', alt: object.data.alt, url: object.data.srcNeg }
+              { type: 'image', alt: object.data.alt, url: object.data.srcDark }
             ]
           : [mainImage]
       }
@@ -81,7 +81,7 @@ export default ({ rule, subModules, TYPE }) => {
             <span {...styles.border} {...attributes} data-active={active}>
               <Image
                 src={node.data.get('src') || gray2x1}
-                srcNeg={node.data.get('srcNeg')}
+                srcNeg={node.data.get('srcDark')}
                 alt={node.data.get('alt')}
               />
             </span>
