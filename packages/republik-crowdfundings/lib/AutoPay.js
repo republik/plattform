@@ -11,6 +11,9 @@ const createCache = require('./cache')
 
 const { getDefaultPaymentSource } = require('./payments/stripe/paymentSource')
 
+const { getDefaultPaymentMethod } = require('./payments/stripe/paymentMethod')
+const createPaymentIntent = require('./payments/stripe/createPaymentIntent')
+
 const suggest = async (membershipId, pgdb) => {
   // Find membership
   const membership = await pgdb.public.memberships.findOne({ id: membershipId })
@@ -85,12 +88,22 @@ const suggest = async (membershipId, pgdb) => {
 
   const rewardId = membershipPledgeOption.packageOption.rewardId
 
-  const defaultPaymentSource = await getDefaultPaymentSource(
-    membership.userId,
+  const defaultPaymentMethod = await getDefaultPaymentMethod({
+    userId: membership.userId,
     pgdb,
-  )
+  })
 
-  if (!defaultPaymentSource) return false
+  let defaultPaymentSource
+  if (!defaultPaymentMethod) {
+    defaultPaymentSource = await getDefaultPaymentSource(
+      membership.userId,
+      pgdb,
+    )
+  }
+
+  if (!defaultPaymentMethod && !defaultPaymentSource) {
+    return false
+  }
 
   // Pick package and options which may be used to submit and autopayment
   const user = await pgdb.public.users.findOne({ id: membership.userId })
@@ -129,27 +142,60 @@ const suggest = async (membershipId, pgdb) => {
       defaultPrice: prolongOption.price,
       withDiscount: pledge.donation < 0,
       withDonation: pledge.donation > 0,
-      card: defaultPaymentSource,
+      defaultPaymentSource,
+      defaultPaymentMethod,
     }
   }
 }
 
 const prolong = async (membershipId, pgdb, redis) => {
-  const transaction = await pgdb.transactionBegin()
   const suggestion = await suggest(membershipId, pgdb)
 
+  if (!suggestion) {
+    return
+  }
+
+  const transaction = await pgdb.transactionBegin()
   try {
     if (!suggestion) {
       throw new Error('suggestion missing')
     }
 
-    // Create a charge via Stripe
-    const charge = await createCharge({
-      amount: suggestion.total,
-      userId: suggestion.userId,
-      companyId: suggestion.companyId,
-      pgdb: transaction,
-    })
+    let charge
+    if (suggestion.defaultPaymentMethod) {
+      const {
+        userId,
+        companyId,
+        defaultPaymentMethod,
+        total,
+        pledgeId,
+      } = suggestion
+      const paymentIntent = await createPaymentIntent({
+        userId,
+        companyId,
+        paymentMethodId: defaultPaymentMethod.id,
+        total: total,
+        pledgeId: pledgeId,
+        pgdb,
+        confirm: true,
+      })
+
+      if (paymentIntent.status !== 'succeeded') {
+        throw new Error(
+          `AutoPay: paymentIntent did not succeed immediately. status: ${paymentIntent.status}`,
+        )
+      }
+
+      charge = paymentIntent.charges.data[0]
+    } else {
+      // Create a charge via Stripe
+      charge = await createCharge({
+        amount: suggestion.total,
+        userId: suggestion.userId,
+        companyId: suggestion.companyId,
+        pgdb: transaction,
+      })
+    }
 
     // Insert payment
     const payment = await transaction.public.payments.insertAndGet({
@@ -214,7 +260,7 @@ const prolong = async (membershipId, pgdb, redis) => {
       raw: e.raw,
     }
 
-    debug('charge failed: %o', {
+    debug('charge/paymentIntent failed: %o', {
       membershipId: suggestion.membershipId,
       total: suggestion.total,
       error,
