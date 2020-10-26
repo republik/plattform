@@ -11,7 +11,7 @@ import EditOverlay from './EditOverlay'
 import { SG_DYNAMIC_COMPONENT_BASE_URLS } from '../../../../lib/settings'
 
 import dynamicComponentRequire from './require'
-import Placeholder from './Placeholder'
+import dynamicComponentIdentifiers from './identifiers'
 
 const DynamicComponent = ({ rule, subModules, TYPE }) => {
   const { identifier = 'DYNAMIC_COMPONENT' } = rule.editorOptions || {}
@@ -93,11 +93,7 @@ const DynamicComponent = ({ rule, subModules, TYPE }) => {
               showException
               key={JSON.stringify(data)}
               require={dynamicComponentRequire}
-              identifiers={
-                data.identifier && {
-                  [data.identifier]: Placeholder(data.identifier)
-                }
-              }
+              identifiers={dynamicComponentIdentifiers}
               {...data}
             />
           )
