@@ -14,6 +14,7 @@ import createDossierSchema from '@project-r/styleguide/lib/templates/Dossier'
 import { t } from '../../lib/withT'
 
 import dynamicComponentRequire from '../editor/modules/dynamiccomponent/require'
+import dynamicComponentIdentifiers from '../editor/modules/dynamiccomponent/identifiers'
 import * as withFrontData from './withFrontData'
 
 const NoOpLink = ({ children }) =>
@@ -29,7 +30,11 @@ const schemas = {
   newsletter: newsletterSchema,
   editorialNewsletter: editorialNewsletterSchema(),
   neutrum: neutrumSchema,
-  article: createArticleSchema({ t, dynamicComponentRequire }),
+  article: createArticleSchema({
+    t,
+    dynamicComponentRequire,
+    dynamicComponentIdentifiers
+  }),
   front: createFrontSchema({
     Link: NoOpLink,
     CommentLink: NoOpLink,
@@ -37,11 +42,31 @@ const schemas = {
     t,
     ...withFrontData
   }),
-  format: createFormatSchema({ t, dynamicComponentRequire }),
-  section: createSectionSchema({ t, dynamicComponentRequire }),
-  discussion: createDiscussionSchema({ t, dynamicComponentRequire }),
-  dossier: createDossierSchema({ t, dynamicComponentRequire }),
-  page: createPageSchema({ t, dynamicComponentRequire })
+  format: createFormatSchema({
+    t,
+    dynamicComponentRequire,
+    dynamicComponentIdentifiers
+  }),
+  section: createSectionSchema({
+    t,
+    dynamicComponentRequire,
+    dynamicComponentIdentifiers
+  }),
+  discussion: createDiscussionSchema({
+    t,
+    dynamicComponentRequire,
+    dynamicComponentIdentifiers
+  }),
+  dossier: createDossierSchema({
+    t,
+    dynamicComponentRequire,
+    dynamicComponentIdentifiers
+  }),
+  page: createPageSchema({
+    t,
+    dynamicComponentRequire,
+    dynamicComponentIdentifiers
+  })
 }
 
 export const getSchema = template => {
