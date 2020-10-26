@@ -32,10 +32,7 @@ export const Format = ({ children, color }) => {
 
 Format.propTypes = {
   children: PropTypes.node.isRequired,
-  cssColor: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.arrayOf(PropTypes.string)
-  ])
+  color: PropTypes.string
 }
 
 export default Format
