@@ -45,12 +45,7 @@ const createDynamicComponent = ({
       props: node.data.props,
       loader: node.data.loader,
       require: dynamicComponentRequire,
-      identifiers:
-        dynamicComponentIdentifiers ||
-        (node.data.identifier && {
-          [node.data.identifier]: () => null
-        }) ||
-        {}
+      identifiers: dynamicComponentIdentifiers || {}
     }
   },
   editorModule: 'dynamiccomponent',
