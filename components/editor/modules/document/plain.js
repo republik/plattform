@@ -187,7 +187,7 @@ ${titleModule ? 'Text' : title}
       {
         onPaste: createPasteHtml(centerModule, figureModule),
         renderEditor: ({ children, value }) => (
-          <Container meta={value.document.data}>{children}</Container>
+          <Container>{children}</Container>
         ),
         validateNode: node => {
           if (node.kind !== 'document') return
