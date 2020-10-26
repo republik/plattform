@@ -67,7 +67,7 @@ class DynamicComponent extends Component {
 
     if (DisplayComponent) {
       return (
-        <DisplayComponent require={this.props.require} {...this.props.props} />
+        <DisplayComponent require={this.props.require} identifier={this.props.identifier} {...this.props.props} />
       )
     }
 
