@@ -633,7 +633,11 @@ class AudioPlayer extends Component {
             {!loading && title && fixed && (
               <div {...styles.time}>
                 <Link href={sourcePath} passHref>
-                  <a {...colorScheme.set('color', 'text')} href={sourcePath}>
+                  <a
+                    {...colorScheme.set('color', 'text')}
+                    style={{ textDecoration: 'none' }}
+                    href={sourcePath}
+                  >
                     {title}
                   </a>
                 </Link>
