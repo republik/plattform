@@ -183,12 +183,12 @@ const createNewsletterSchema = ({
         matchMdast: matchImagesParagraph,
         component: Image,
         props: (node, index, parent) => {
-          const { src, srcNeg } = extractImages(node)
+          const { src, srcDark } = extractImages(node)
           const displayWidth = 600
 
           return {
             ...FigureImage.utils.getResizedSrcs(src, displayWidth),
-            srcNeg,
+            srcDark,
             alt: node.children[0].alt
           }
         },
@@ -215,13 +215,13 @@ const createNewsletterSchema = ({
         matchMdast: matchImagesParagraph,
         component: CoverImage,
         props: (node, index, parent) => {
-          const { src, srcNeg } = extractImages(node)
+          const { src, srcDark } = extractImages(node)
           const displayWidth = 1280
           const setMaxWidth = parent.data.size !== undefined
 
           return {
             ...FigureImage.utils.getResizedSrcs(src, displayWidth, setMaxWidth),
-            srcNeg,
+            srcDark,
             alt: node.children[0].alt
           }
         },

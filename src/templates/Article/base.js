@@ -178,7 +178,7 @@ const createBase = ({ metaBody, metaHeadlines }) => {
       const rootNode = ancestors[ancestors.length - 1]
       const meta = rootNode ? rootNode.meta : {}
 
-      const { src, srcNeg } = extractImages(node)
+      const { src, srcDark } = extractImages(node)
       const displayWidth = getDisplayWidth(ancestors)
       const enableGallery =
         meta.gallery !== false &&
@@ -207,7 +207,7 @@ const createBase = ({ metaBody, metaHeadlines }) => {
 
       return {
         ...FigureImage.utils.getResizedSrcs(src, displayWidth),
-        srcNeg,
+        srcDark,
         alt: node.children[0].alt,
         enableGallery,
         gallerySize,

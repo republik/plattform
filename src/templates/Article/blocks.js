@@ -329,7 +329,7 @@ const createBlocks = ({ base, COVER_TYPE, t, onAudioCoverClick }) => {
         matchMdast: matchImagesParagraph,
         component: FigureImage,
         props: (node, index, parent, { ancestors }) => {
-          const { src, srcNeg } = extractImages(node)
+          const { src, srcDark } = extractImages(node)
           const displayWidth = FIGURE_SIZES[parent.data.size] || 1500
           const setMaxWidth = parent.data.size !== undefined
 
@@ -341,7 +341,7 @@ const createBlocks = ({ base, COVER_TYPE, t, onAudioCoverClick }) => {
 
           return {
             ...FigureImage.utils.getResizedSrcs(src, displayWidth, setMaxWidth),
-            srcNeg,
+            srcDark,
             enableGallery,
             aboveTheFold: true,
             alt: node.children[0].alt

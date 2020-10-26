@@ -50,7 +50,7 @@ class Image extends Component {
   render() {
     const {
       src,
-      srcNeg,
+      srcDark,
       srcSet,
       alt,
       attributes = {},
@@ -74,7 +74,7 @@ class Image extends Component {
         visible={aboveTheFold}
         aspectRatio={aspectRatio}
         src={src}
-        srcNeg={srcNeg}
+        srcDark={srcDark}
         srcSet={srcSet}
         alt={alt}
         onClick={onClick}
@@ -88,17 +88,17 @@ class Image extends Component {
           srcSet={srcSet}
           alt={alt}
           onClick={onClick}
-          className={srcNeg && 'img-standard'}
+          className={srcDark && 'img-standard'}
         />
-        {srcNeg && (
+        {srcDark && (
           <img
             {...attributes}
             {...styles.image}
-            src={srcNeg}
+            src={srcDark}
             srcSet={srcSet}
             alt={alt}
             onClick={onClick}
-            className='img-negative'
+            className='img-dark'
           />
         )}
       </>
@@ -134,7 +134,7 @@ class Image extends Component {
 
 Image.propTypes = {
   src: PropTypes.string.isRequired,
-  srcNeg: PropTypes.string,
+  srcDark: PropTypes.string,
   srcSet: PropTypes.string,
   alt: PropTypes.string,
   size: PropTypes.shape({

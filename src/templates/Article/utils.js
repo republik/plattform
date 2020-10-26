@@ -46,7 +46,7 @@ export const extractImages = node => {
   const urls = node.children.filter(matchImage).map(child => child.url)
   return {
     src: urls[0],
-    srcNeg: urls.length === 2 ? urls[1] : null
+    srcDark: urls.length === 2 ? urls[1] : null
   }
 }
 
