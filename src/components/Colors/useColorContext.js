@@ -1,4 +1,4 @@
-import { useContext, useMemo } from 'react'
+import { useContext } from 'react'
 import ColorContext from './ColorContext'
 
 export const useColorContext = () => {

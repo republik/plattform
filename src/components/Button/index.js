@@ -119,7 +119,7 @@ const Button = React.forwardRef(
           }
         }),
 
-      [primary, bw]
+      [colorScheme, primary, bw]
     )
     const simulations = sim ? simulate(sim) : {}
     const buttonStyles = merge(

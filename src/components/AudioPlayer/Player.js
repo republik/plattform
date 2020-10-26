@@ -1,4 +1,4 @@
-import React, { Component, useMemo } from 'react'
+import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { css, merge } from 'glamor'
 import Play from 'react-icons/lib/md/play-arrow'

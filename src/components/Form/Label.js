@@ -90,7 +90,7 @@ export const Label = ({
         }
       })
     }
-  }, [])
+  }, [colorScheme])
 
   if (field) {
     return (

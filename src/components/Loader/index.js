@@ -43,7 +43,7 @@ const Loader = ({
   useEffect(() => {
     const timer = setTimeout(() => setVisible(true), delay)
     return () => clearTimeout(timer)
-  }, [])
+  }, [delay])
 
   if (loading && !visible) {
     return <Spacer style={style} />

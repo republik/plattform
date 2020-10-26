@@ -128,7 +128,7 @@ const Slider = ({ label, fullWidth, inactive, onChange, ...props }) => {
         }
       })
     }
-  }, [])
+  }, [colorScheme])
   return (
     <label
       {...merge(styles.label, fullWidth ? styles.fullWidth : null)}

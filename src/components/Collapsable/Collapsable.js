@@ -117,13 +117,15 @@ const Collapsable = ({
     [colorScheme]
   )
 
-  const collapsedEditorPreviewRule = useMemo(() =>
-    css({
-      '&:before': {
-        backgroundColor: colorScheme.getCSSColor('hover'),
-        borderColor: colorScheme.getCSSColor('primary')
-      }
-    })
+  const collapsedEditorPreviewRule = useMemo(
+    () =>
+      css({
+        '&:before': {
+          backgroundColor: colorScheme.getCSSColor('hover'),
+          borderColor: colorScheme.getCSSColor('primary')
+        }
+      }),
+    [colorScheme]
   )
 
   return (

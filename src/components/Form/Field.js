@@ -167,7 +167,7 @@ const Field = ({
         )
       })
     }
-  }, [isFocused, error, disabled, icon])
+  }, [colorScheme, isFocused, error, disabled, icon])
 
   const fStyle = merge(
     styles.field,
