@@ -74,6 +74,7 @@ export const ColorContextProvider = ({
   const colorValue = useMemo(() => {
     if (colorSchemeKey === 'auto') {
       return createScheme({
+        isSupported: CSSVarSupport,
         ...(CSSVarSupport
           ? reduceMainColors(key => `var(--color-${key})`)
           : colors.light),
