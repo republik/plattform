@@ -10,13 +10,11 @@ const styles = {
   })
 }
 
-const Placeholder = identifier => () => {
-  return (
-    <div {...styles.box}>
-      <small>Dynamic Component</small>
-      <br />
-      <Interaction.P style={{ marginBottom: 0 }}>{identifier}</Interaction.P>
-    </div>
-  )
-}
+const Placeholder = ({ identifier }) => (
+  <div {...styles.box}>
+    <small>Dynamic Component</small>
+    <br />
+    <Interaction.P style={{ marginBottom: 0 }}>{identifier}</Interaction.P>
+  </div>
+)
 export default Placeholder
