@@ -75,7 +75,7 @@ const ColorLegend = ({ title, shape, values, maxWidth, inline }) => {
                 style={{ backgroundColor: value.color }}
               />
             )}
-            {text}
+            {text}{' '}
           </div>
         )
       })}

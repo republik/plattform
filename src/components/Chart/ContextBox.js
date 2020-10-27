@@ -39,7 +39,7 @@ const notchStyle = css({
   height: 0,
   borderStyle: 'solid',
   borderWidth: '8px 7.5px 0 7.5px',
-  borderColor: `#fff transparent transparent transparent`
+  borderColor: 'transparent'
 })
 
 const notchPosition = {
@@ -130,12 +130,12 @@ const ContextBox = ({
       {...boxStyle}
       {...colorScheme.set('color', 'text')}
       {...colorScheme.set('backgroundColor', 'overlay')}
+      {...colorScheme.set('boxShadow', 'overlayShadow')}
       className={boxPosition[yOrientation][xOrientation]}
       style={{
         left: x,
         top: y,
-        maxWidth,
-        boxShadow: colorScheme.getCSSColor('overlayShadow')
+        maxWidth
       }}
     >
       <div>{children}</div>

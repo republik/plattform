@@ -107,7 +107,7 @@ export const Label = ({
             ? colorScheme.set('color', 'error')
             : focus
             ? colorScheme.set('color', 'primary')
-            : colorScheme.set('color', 'disabled'))}
+            : colorScheme.set('color', 'text'))}
         >
           {children}
         </Element>

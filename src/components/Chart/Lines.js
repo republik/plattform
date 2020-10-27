@@ -381,6 +381,7 @@ const LineGroup = props => {
               r='3.5'
               cx={x1}
               {...styles.annotationCircle}
+              {...colorScheme.set('fill', 'textInverted')}
               {...colorScheme.set('stroke', 'text')}
             />
             {range && (
