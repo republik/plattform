@@ -12,10 +12,10 @@ module.exports = async ({
   pgdb,
   clients, // optional
 }) => {
-  const { accounts } = clients || (await getStripeClients(pgdb))
+  const { accountForCompanyId } = clients || (await getStripeClients(pgdb))
 
   // the paymentIntent needs to be created on the account of the company
-  const { stripe } = accounts.find((a) => a.company.id === companyId)
+  const { stripe } = accountForCompanyId(companyId)
   if (!stripe) {
     throw new Error(`could not find account for companyId: ${companyId}`)
   }

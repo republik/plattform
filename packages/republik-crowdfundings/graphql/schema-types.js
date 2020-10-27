@@ -246,7 +246,7 @@ type PledgeResponse {
   emailVerify: Boolean
   pfAliasId: String
   pfSHA: String
-  # returned by payPledge if confirmCard is expected
+  # returned by payPledge if confirmCardPayment is expected
   stripeClientSecret: String
 }
 
@@ -260,6 +260,11 @@ input PledgePaymentInput {
   pspPayload: JSON
   makeDefault: Boolean
   address: AddressInput
+}
+
+type AddPaymentMethodResponse {
+  # returned confirmCardSetup is expected
+  stripeClientSecret: String
 }
 
 enum PaymentMethod {

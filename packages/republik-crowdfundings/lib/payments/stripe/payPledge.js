@@ -3,7 +3,7 @@ const createCharge = require('./createCharge')
 const createSubscription = require('./createSubscription')
 const addSource = require('./addSource')
 const addPaymentMethod = require('./addPaymentMethod')
-const { getPaymentMethods } = require('./paymentMethod')
+const getPaymentMethodForCompany = require('./getPaymentMethodForCompany')
 const getClients = require('./clients')
 const createPaymentIntent = require('./createPaymentIntent')
 const sleep = require('await-sleep')
@@ -137,6 +137,7 @@ const payWithSource = async ({
   }
 }
 
+// TODO check the usage of transaction / pgdb
 const payWithPaymentMethod = async ({
   pledgeId,
   total,
@@ -150,6 +151,7 @@ const payWithPaymentMethod = async ({
   t,
 }) => {
   const { companyId } = pkg
+
   const isSubscription = pkg.name === 'MONTHLY_ABO'
 
   if (!stripePlatformPaymentMethodId) {
@@ -161,47 +163,34 @@ const payWithPaymentMethod = async ({
 
   // save paymentMethodId (to platform and connectedAccounts)
   if (
-    !(await pgdb.public.stripeCustomers.findOne({
+    !(await pgdb.public.stripeCustomers.findFirst({
       userId,
-      companyId,
     }))
   ) {
     await createCustomer({
       paymentMethodId: stripePlatformPaymentMethodId,
-      userId: userId,
+      userId,
       pgdb,
       clients,
     })
   } else {
     await addPaymentMethod({
       paymentMethodId: stripePlatformPaymentMethodId,
-      userId: userId,
+      userId,
       pgdb,
       clients,
     })
   }
 
-  // load all paymentMethods and select the one for companyId
-  let paymentMethodId
-  const paymentMethods = await getPaymentMethods({
+  // TODO move to createPaymentIntent?
+  const paymentMethodId = await getPaymentMethodForCompany({
     userId,
+    companyId,
+    platformPaymentMethodId: stripePlatformPaymentMethodId,
     pgdb,
     clients,
-  })
-  const platformPaymentMethod = paymentMethods.find(
-    (pm) => pm.id === stripePlatformPaymentMethodId,
-  )
-  if (platformPaymentMethod.companyId === companyId) {
-    paymentMethodId = platformPaymentMethod.id
-  } else {
-    paymentMethodId = platformPaymentMethod.connectedPaymentMethods.find(
-      (cpm) => cpm.companyId === companyId,
-    ).id
-  }
-  if (!paymentMethodId) {
-    console.error('missing paymentMethodId')
-    throw new Error(t('api/unexpected'))
-  }
+    t,
+  }).then((pm) => pm.id)
 
   let stripeClientSecret
   if (!isSubscription) {

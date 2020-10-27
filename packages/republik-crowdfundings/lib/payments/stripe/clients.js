@@ -61,5 +61,7 @@ module.exports = async (pgdb) => {
     platform: accounts.find((a) => a.name === STRIPE_PLATFORM),
     connectedAccounts: accounts.filter((a) => a.name !== STRIPE_PLATFORM),
     accounts,
+    accountForCompanyId: (companyId) =>
+      accounts.find((a) => a.company.id === companyId),
   }
 }
