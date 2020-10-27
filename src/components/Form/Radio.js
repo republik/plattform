@@ -27,7 +27,6 @@ const Radio = ({ checked, disabled }) => {
   const [colorScheme] = useColorContext()
   return (
     <svg width='24' height='24' viewBox='0 0 24 24'>
-      <circle fill='none' cx='12' cy='12' r='9' />
       {checked && (
         <circle
           {...(disabled
