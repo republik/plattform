@@ -519,7 +519,7 @@ const BarChart = props => {
                                 x(+segment.datum[`${band}_lower`])
                               }
                               {...colorScheme.set(
-                                'stroke',
+                                'fill',
                                 segment.color,
                                 'charts'
                               )}
