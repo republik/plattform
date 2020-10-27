@@ -42,7 +42,7 @@ const Radio = ({ checked, disabled }) => {
         fill='none'
         {...(disabled
           ? colorScheme.set('stroke', 'divider')
-          : colorScheme.set('stroke', 'primary'))}
+          : colorScheme.set('stroke', checked ? 'primary' : 'text'))}
         cx='12'
         cy='12'
         r='11.5'
