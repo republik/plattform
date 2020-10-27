@@ -5,11 +5,11 @@ import {
   serifRegular17,
   serifRegular19
 } from '../Typography/styles'
-import colors from '../../theme/colors'
 import { css, merge } from 'glamor'
 import { mUp } from '../../theme/mediaQueries'
 import { convertStyleToRem, pxToRem } from '../Typography/utils'
 import { fontRule } from '../Typography/Editorial'
+import { useColorContext } from '../Colors/useColorContext'
 
 const WIDTH = 22
 const MARGIN = 8
@@ -32,7 +32,6 @@ const styles = {
     }
   }),
   li: css({
-    color: colors.text,
     paddingLeft: `${WIDTH}px`,
     position: 'relative',
     ...convertStyleToRem(serifRegular17),
@@ -110,11 +109,20 @@ OrderedList.defaultProps = {
   start: 1
 }
 
-export const ListItem = ({ children, attributes = {}, style = {} }) => (
-  <li {...styles.li} {...fontRule} {...attributes} style={style}>
-    {children}
-  </li>
-)
+export const ListItem = ({ children, attributes = {}, style = {} }) => {
+  const [colorScheme] = useColorContext()
+  return (
+    <li
+      {...styles.li}
+      {...colorScheme.set('color', 'text')}
+      {...fontRule}
+      {...attributes}
+      style={style}
+    >
+      {children}
+    </li>
+  )
+}
 
 ListItem.propTypes = {
   children: PropTypes.node.isRequired,

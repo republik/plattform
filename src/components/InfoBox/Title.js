@@ -10,6 +10,8 @@ import { useColorContext } from '../Colors/useColorContext'
 const styles = {
   text: css({
     margin: '0 0 8px 0',
+    borderTopWidth: 1,
+    borderTopStyle: 'solid',
     ...convertStyleToRem(sansSerifMedium16),
     [mUp]: {
       ...convertStyleToRem(sansSerifMedium19),
@@ -20,12 +22,14 @@ const styles = {
 
 export const Title = ({ children, attributes }) => {
   const [colorScheme] = useColorContext()
-  const colors = css({
-    color: colorScheme.text,
-    borderTop: `1px solid ${colorScheme.text}`
-  })
   return (
-    <p {...attributes} {...textAttributes} {...styles.text} {...colors}>
+    <p
+      {...attributes}
+      {...textAttributes}
+      {...styles.text}
+      {...colorScheme.set('color', 'text')}
+      {...colorScheme.set('borderColor', 'text')}
+    >
       {children}
     </p>
   )

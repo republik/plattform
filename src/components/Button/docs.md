@@ -117,20 +117,6 @@ To fit, e.g. in a header, it's permissible to set an explicit height.
 </Button>
 ```
 
-## Black and White
-
-```react|span-3
-<Button bw>
-  Black & White
-</Button>
-```
-
-```react|span-3
-<Button bw simulate='hover'>
-  Black & White
-</Button>
-```
-
 ## Plain Button
 
 ```react|span-3

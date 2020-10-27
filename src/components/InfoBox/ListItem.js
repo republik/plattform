@@ -1,17 +1,16 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { sansSerifRegular15, sansSerifRegular18 } from '../Typography/styles'
-import colors from '../../theme/colors'
 import { css } from 'glamor'
 import { mUp } from '../../theme/mediaQueries'
 import { textAttributes } from './InfoBox'
 import { convertStyleToRem } from '../Typography/utils'
+import { useColorContext } from '../Colors/useColorContext'
 
 const WIDTH = 22
 
 const styles = {
   li: css({
-    color: colors.text,
     paddingLeft: `${WIDTH}px`,
     position: 'relative',
     ...convertStyleToRem(sansSerifRegular15),
@@ -24,11 +23,20 @@ const styles = {
   })
 }
 
-const ListItem = ({ children, attributes = {}, style = {} }) => (
-  <li {...styles.li} {...attributes} {...textAttributes} style={style}>
-    {children}
-  </li>
-)
+const ListItem = ({ children, attributes = {}, style = {} }) => {
+  const [colorScheme] = useColorContext()
+  return (
+    <li
+      {...styles.li}
+      {...colorScheme.set('color', 'text')}
+      {...attributes}
+      {...textAttributes}
+      style={style}
+    >
+      {children}
+    </li>
+  )
+}
 
 ListItem.propTypes = {
   children: PropTypes.node.isRequired,

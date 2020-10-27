@@ -2,10 +2,10 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { sansSerifMedium15, sansSerifMedium18 } from '../Typography/styles'
 import { css } from 'glamor'
-import colors from '../../theme/colors'
 import { mUp } from '../../theme/mediaQueries'
 import { textAttributes } from './InfoBox'
 import { convertStyleToRem } from '../Typography/utils'
+import { useColorContext } from '../Colors/useColorContext'
 
 const styles = {
   text: css({
@@ -14,14 +14,19 @@ const styles = {
     [mUp]: {
       ...convertStyleToRem(sansSerifMedium18),
       marginBottom: '-14px'
-    },
-    color: colors.text
+    }
   })
 }
 
 export const Subhead = ({ children, attributes }) => {
+  const [colorScheme] = useColorContext()
   return (
-    <p {...attributes} {...textAttributes} {...styles.text}>
+    <p
+      {...attributes}
+      {...colorScheme.set('color', 'text')}
+      {...textAttributes}
+      {...styles.text}
+    >
       {children}
     </p>
   )

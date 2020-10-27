@@ -23,16 +23,13 @@ const styles = {
 
 export const Text = ({ children, attributes }) => {
   const [colorScheme] = useColorContext()
-  const colors = css({
-    color: colorScheme.text
-  })
   return (
     <p
       {...attributes}
       {...textAttributes}
       {...styles.text}
-      {...colors}
       {...fontRule}
+      {...colorScheme.set('color', 'text')}
     >
       {children}
     </p>
