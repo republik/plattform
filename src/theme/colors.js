@@ -41,7 +41,6 @@ const colorsDeprecated = {
   scribble: '#ef4533',
   neutral: '#bbb',
   highlight: '#FFFFCC',
-  overlayShadow: '0 0 15px rgba(0,0,0,0.1)',
   sequential: [
     'rgb(8, 48, 107)',
     'rgb(8, 61, 126)',
@@ -78,8 +77,7 @@ const colorsDeprecated = {
     fill: '#FFF',
     lightFill: '#555',
     error: 'rgb(239,69,51)',
-    disabled: '#242424',
-    overlayShadow: '0 0 15px rgba(0,0,0,0.5)'
+    disabled: '#242424'
   },
   ...getJson('COLORS')
 }
