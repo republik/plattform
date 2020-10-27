@@ -14,8 +14,10 @@ const styles = {
   container: css({
     display: 'block',
     textDecoration: 'none',
-    borderBottom: `1px solid`,
-    borderTop: `1px solid`,
+    borderBottomWidth: 1,
+    borderBottomStyle: 'solid',
+    borderTopWidth: 1,
+    borderTopStyle: 'solid',
     margin: '36px auto',
     paddingTop: '10px',
     position: 'relative',
