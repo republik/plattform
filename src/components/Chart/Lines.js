@@ -81,8 +81,8 @@ const styles = {
     width: 24,
     height: 11,
     marginBottom: -1,
-    borderTopWidth: 1,
-    borderBottomWidth: 1,
+    borderTopWidth: 4,
+    borderBottomWidth: 4,
     borderTopStyle: 'solid',
     borderBottomStyle: 'solid'
   })
