@@ -127,18 +127,17 @@ const Field = ({
   disabled,
   value
 }) => {
-  const [isFocused, setIsFocused] = useState(false)
+  let [isFocused, setIsFocused] = useState(false)
   const [isValidating, setIsValidating] = useState(false)
   const [isDirty, setIsDirty] = useState(false)
   const [localStateValue, setLocalStateValue] = useState('')
   const inputRef = useRef()
   const [colorScheme] = useColorContext()
 
-  useEffect(() => {
-    if (sim) {
-      setIsFocused(sim.indexOf('focus') !== -1)
-    }
-  }, [sim])
+  if (sim && sim.indexOf('focus') !== -1) {
+    isFocused = true
+  }
+
   const simulationClassName = sim && simulate(sim).toString()
   const fieldValue = value !== undefined ? value : localStateValue
   const hasIncrease = !!onInc
