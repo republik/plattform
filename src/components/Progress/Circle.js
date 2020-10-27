@@ -13,7 +13,7 @@ const styles = {
 const Circle = ({
   progress = 100,
   size = 24,
-  strokeColor,
+  strokeColorName,
   strokeWidth = 2,
   strokePlaceholder
 }) => {
@@ -39,7 +39,7 @@ const Circle = ({
       )}
       <circle
         {...styles.circle}
-        {...colorScheme.set('stroke', strokeColor || 'text')}
+        {...colorScheme.set('stroke', strokeColorName || 'text')}
         fill='transparent'
         strokeWidth={strokeWidth}
         strokeDasharray={circumference + ' ' + circumference}
