@@ -13,13 +13,13 @@ const styles = {
   root: css({
     display: 'flex',
     height: `${height}px`,
-    borderBottom: `1px solid`,
+    borderBottomWidth: 1,
+    borderBottomStyle: 'solid',
     position: 'fixed',
     top: '0',
     left: '0',
     right: '0',
     zIndex: 100,
-
     [mUp]: {
       position: 'absolute'
     }
@@ -37,13 +37,11 @@ const styles = {
     outline: 'none',
     padding: '0',
     background: 'transparent',
-
     // For some reason 'justify-content' doesn't work in iOS, so
     // use auto margin to center the icon inside the button.
     '& > svg': {
       margin: '0 auto'
     },
-
     [mUp]: {
       width: '48px',
       flexBasis: '48px'
@@ -58,11 +56,9 @@ const styles = {
     border: 'none',
     outline: 'none',
     background: 'transparent',
-
     ...sansSerifRegular16,
     margin: '0 0 0 auto',
     padding: '0 12px',
-
     [mUp]: {
       padding: '0 20px'
     }
@@ -102,7 +98,7 @@ export const OverlayToolbarConfirm = ({ label, onClick }) => {
   return (
     <button
       {...styles.confirm}
-      {...css({ color: colorScheme.static.primary })}
+      {...colorScheme.set('color', 'primary')}
       onClick={onClick}
     >
       {label}

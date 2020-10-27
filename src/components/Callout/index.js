@@ -49,7 +49,6 @@ const styles = {
     animation: `0.3s ${slideUp} 0.2s forwards`,
     textAlign: 'left',
     [mUp]: {
-      borderWidth: 0,
       bottom: 'auto',
       top: 20,
       left: 'auto',

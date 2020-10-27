@@ -150,14 +150,6 @@ const colors = {
       '#000000': 'accentColorMeta',
       '#111111': 'accentColorMeta'
     }
-  },
-  static: {
-    primary: '#00AA00',
-    error: '#9f2500',
-    textBright: '#F0F0F0',
-    textBrightSoft: '#828282',
-    textDark: '#282828',
-    textDarkSoft: '#979797'
   }
 }
 

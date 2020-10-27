@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { css } from 'glamor'
 import TwitterIcon from 'react-icons/lib/fa/twitter'
 import { mUp } from '../../theme/mediaQueries'
@@ -76,22 +76,31 @@ const styles = {
   }),
   link: css({
     textDecoration: 'none',
-    color: 'inherit',
-    '@media (hover)': {
-      ':hover': {
-        opacity: 0.8
-      }
-    }
+    color: 'inherit'
   })
 }
 
 const dateFormat = timeFormat('%d. %B %Y')
 
-const Link = ({ href, children }) => (
-  <a href={href} {...styles.link}>
-    {children}
-  </a>
-)
+const Link = ({ href, children }) => {
+  const [colorScheme] = useColorContext()
+  const hoverRule = useMemo(
+    () =>
+      css({
+        '@media (hover)': {
+          ':hover': {
+            color: colorScheme.getCSSColor('textSoft')
+          }
+        }
+      }),
+    [colorScheme]
+  )
+  return (
+    <a href={href} {...styles.link} {...hoverRule}>
+      {children}
+    </a>
+  )
+}
 
 const UserLink = ({ handle, children }) => (
   <Link href={`https://twitter.com/${handle}`}>{children}</Link>
