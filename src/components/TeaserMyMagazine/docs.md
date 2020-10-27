@@ -10,7 +10,8 @@ Supported props:
     latestProgressOrBookmarkedArticles={latestProgressOrBookmarkedArticles}
     bookmarksUrl="/lesezeichen"
     notificationsUrl="/benachrichtigungen"
-    bookmarkLabel="Weiterlesen"
+    bookmarksLabel="Alle Beiträge zum Weiterlesen"
+    title="Meine Republik"
     notificationsLabel="Neuste abonnierte Beiträge"
     ActionBar={ () => (
       <span style={{ display: 'flex' }}>

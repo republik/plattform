@@ -28,7 +28,8 @@ const TeaserMyMagazine = ({
   latestProgressOrBookmarkedArticles,
   ActionBar,
   bookmarksUrl,
-  bookmarkLabel,
+  title,
+  bookmarksLabel,
   notificationsUrl,
   notificationsLabel,
   Link = DefaultLink,
@@ -51,7 +52,7 @@ const TeaserMyMagazine = ({
       }}
     >
       <section {...css(styles.section)}>
-        <TeaserSectionTitle>Meine Republik</TeaserSectionTitle>
+        <TeaserSectionTitle>{title}</TeaserSectionTitle>
         <div role='group' {...css(styles.row, styles.withHighlight)}>
           {latestProgressOrBookmarkedArticles?.length ? (
             <div
@@ -131,7 +132,7 @@ const TeaserMyMagazine = ({
               })}
               <Link href={bookmarksUrl} passHref>
                 <TeaserSectionTitle small href={bookmarksUrl}>
-                  {'Alle Beiträge zum Weiterlesen'}
+                  {bookmarksLabel}
                 </TeaserSectionTitle>
               </Link>
             </div>
