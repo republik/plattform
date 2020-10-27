@@ -139,7 +139,7 @@ const Field = ({
       setIsFocused(sim.indexOf('focus') !== -1)
     }
   }, [sim])
-  const simulationClassName = useMemo(() => simulate(sim).toString(), [sim])
+  const simulationClassName = sim && simulate(sim).toString()
   const fieldValue = value !== undefined ? value : localStateValue
   const hasIncrease = !!onInc
   const hasDecrease = !!onDec
