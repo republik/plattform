@@ -115,7 +115,7 @@ export const Label = ({
           <svg
             key='arrow'
             {...styles.selectArrow}
-            {...colorScheme.set('fill', 'text')}
+            {...colorScheme.set('fill', 'disabled')}
             width={30}
             height={30}
             viewBox='0 0 24 24'
