@@ -82,6 +82,11 @@ const colorsDeprecated = {
   ...getJson('COLORS')
 }
 
+// ToDos
+// - mv getJson('COLORS') to a var
+// - deep merge into light and dark
+// - create open source color scheme, mv brand values to env via internal handbook
+
 const colors = {
   light: {
     logo: '#000000',
