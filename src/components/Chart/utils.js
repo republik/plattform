@@ -3,7 +3,6 @@ import { ascending, descending, max as d3Max } from 'd3-array'
 import { rgb } from 'd3-color'
 import React, { createElement, Fragment } from 'react'
 import PropTypes from 'prop-types'
-import colors from '../../theme/colors'
 
 export const groupBy = (array, key) => {
   const keys = []
@@ -260,7 +259,6 @@ subsup.svg = subSupSplitter((tag, key, text) => {
 
 export const transparentAxisStroke = 'rgba(0,0,0,0.17)'
 export const circleFill = '#fff'
-export const baseLineColor = colors.text
 
 export const deduplicate = (d, i, all) => all.indexOf(d) === i
 

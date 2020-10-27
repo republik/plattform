@@ -5,7 +5,7 @@ Props:
 - `size`: number; the desired size of the element (including padding, which is 1/6th to be consistent with material icons).
 - `stroke`: string; the stroke color.
 - `strokeWidth`: number; the stroke width in pixels.
-- `strokePlaceholder`: string; the stroke color of the placeholder.
+- `strokePlaceholder`: boolean; adds palceholder stroke
 
 ```react|span-2
 <ProgressCircle
@@ -28,7 +28,7 @@ Props:
 ```react|span-2
 <ProgressCircle
   progress={66}
-  stroke={colors.primary}
+  strokeColor="primary"
   size={36}
   strokeWidth={2}
 />
@@ -37,7 +37,7 @@ Props:
 ```react|span-2
 <ProgressCircle
   progress={66}
-  stroke={colors.primary}
+  strokeColor="primary"
   size={36}
   strokeWidth={4}
 />
@@ -46,7 +46,7 @@ Props:
 ```react|span-2
 <ProgressCircle
   progress={66}
-  stroke={colors.primary}
+  strokeColor="primary"
   size={36}
   strokeWidth={6}
 />
@@ -81,7 +81,7 @@ Props:
   progress={33}
   size={36}
   strokeWidth={4}
-  strokePlaceholder={colors.divider}
+  strokePlaceholder
 />
 ```
 
@@ -90,7 +90,7 @@ Props:
   progress={66}
   size={36}
   strokeWidth={4}
-  strokePlaceholder={colors.divider}
+  strokePlaceholder
 />
 ```
 
@@ -99,6 +99,6 @@ Props:
   progress={100}
   size={36}
   strokeWidth={4}
-  strokePlaceholder={colors.divider}
+  strokePlaceholder
 />
 ```
