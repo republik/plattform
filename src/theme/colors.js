@@ -24,6 +24,7 @@ const colorsDeprecated = {
   primary: '#00508C',
   primaryBg: '#BFE1FF',
   containerBg: '#FFF',
+  secondary: '#00335A',
   secondaryBg: '#D8EEFF',
   disabled: '#B8BDC1',
   text: '#191919',
@@ -78,8 +79,7 @@ const colorsDeprecated = {
     error: 'rgb(239,69,51)',
     disabled: '#242424'
   },
-  ...getJson('COLORS'),
-  secondary: '#009200'
+  ...getJson('COLORS')
 }
 
 // ToDos
