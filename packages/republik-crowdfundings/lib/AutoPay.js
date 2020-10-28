@@ -167,7 +167,7 @@ const suggest = async (membershipId, pgdb) => {
   }
 }
 
-const prolong = async (membershipId, pgdb, redis) => {
+const prolong = async (membershipId, pgdb, redis, t) => {
   const suggestion = await suggest(membershipId, pgdb)
 
   if (!suggestion) {
@@ -192,7 +192,7 @@ const prolong = async (membershipId, pgdb, redis) => {
       const paymentIntent = await createPaymentIntent({
         userId,
         companyId,
-        paymentMethodId: defaultPaymentMethod.id,
+        platformPaymentMethodId: defaultPaymentMethod.id,
         total: total,
         pledgeId: pledgeId,
         metadata: {
@@ -200,6 +200,7 @@ const prolong = async (membershipId, pgdb, redis) => {
         },
         pgdb,
         confirm: true,
+        t,
       })
 
       if (paymentIntent.status !== 'succeeded') {

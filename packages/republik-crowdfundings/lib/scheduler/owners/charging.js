@@ -81,6 +81,7 @@ module.exports = async (user, bucket, context) => {
       membershipId,
       pgdb,
       redis,
+      t,
     )
 
     const isNextAttemptLast = previousAttempts.length + 2 === attempts.length

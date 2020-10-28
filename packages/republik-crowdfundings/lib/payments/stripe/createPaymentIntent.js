@@ -1,18 +1,29 @@
 const getStripeClients = require('./clients')
+const getPaymentMethodForCompany = require('./getPaymentMethodForCompany')
 
 // paymentMethod(Id) is expected to be in company(Id)
 module.exports = async ({
   userId,
   companyId,
-  paymentMethodId,
+  platformPaymentMethodId,
   total,
   pledgeId,
   metadata = {},
   confirm = false,
   pgdb,
   clients, // optional
+  t,
 }) => {
   const { accountForCompanyId } = clients || (await getStripeClients(pgdb))
+
+  const paymentMethodId = await getPaymentMethodForCompany({
+    userId,
+    companyId,
+    platformPaymentMethodId,
+    pgdb,
+    clients,
+    t,
+  }).then((pm) => pm.id)
 
   // the paymentIntent needs to be created on the account of the company
   const { stripe } = accountForCompanyId(companyId)

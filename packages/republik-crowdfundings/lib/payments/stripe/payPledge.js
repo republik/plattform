@@ -3,7 +3,6 @@ const createCharge = require('./createCharge')
 const createSubscription = require('./createSubscription')
 const addSource = require('./addSource')
 const addPaymentMethod = require('./addPaymentMethod')
-const getPaymentMethodForCompany = require('./getPaymentMethodForCompany')
 const getClients = require('./clients')
 const createPaymentIntent = require('./createPaymentIntent')
 const sleep = require('await-sleep')
@@ -182,26 +181,17 @@ const payWithPaymentMethod = async ({
     })
   }
 
-  // TODO move to createPaymentIntent?
-  const paymentMethodId = await getPaymentMethodForCompany({
-    userId,
-    companyId,
-    platformPaymentMethodId: stripePlatformPaymentMethodId,
-    pgdb,
-    clients,
-    t,
-  }).then((pm) => pm.id)
-
   let stripeClientSecret
   if (!isSubscription) {
     const paymentIntent = await createPaymentIntent({
       userId,
       companyId,
-      paymentMethodId,
+      platformPaymentMethodId: stripePlatformPaymentMethodId,
       total,
       pledgeId,
       pgdb,
       clients,
+      t,
     })
     stripeClientSecret = paymentIntent.client_secret
   } else {
@@ -224,7 +214,6 @@ const payWithPaymentMethod = async ({
       metadata: {
         pledgeId: pledgeId,
       },
-      // ...paymentMethodId ? { default_payment_method: paymentMethodId } : {},
       pgdb: transaction,
       clients,
     })
