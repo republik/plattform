@@ -44,8 +44,10 @@ module.exports = async (user, bucket, context) => {
   // Back off if last attempt failed due to PaymentIntent.requires_action or was too recent
   const mostRecentAttempt = previousAttempts[0]
   if (mostRecentAttempt) {
-    if (mostRecentAttempt.error.name === 'RequiresActionError') {
-      debug('backing off, most recent attempt failed with requires_action')
+    if (mostRecentAttempt.error.raw.code === 'authentication_required') {
+      debug(
+        'backing off, most recent attempt failed with authentication_required',
+      )
       return
     }
 
@@ -89,7 +91,8 @@ module.exports = async (user, bucket, context) => {
       chargeAttemptStatus: chargeAttempt.status,
       chargeAttemptError: chargeAttempt.error,
       attemptNumber: previousAttempts.length + 1,
-      requiresAction: chargeAttempt.error?.name === 'RequiresActionError',
+      authenticationRequired:
+        chargeAttempt.error?.raw?.code === 'authentication_required',
       isLastAttempt: previousAttempts.length + 1 === attempts.length,
       isNextAttemptLast,
       nextAttemptDate:

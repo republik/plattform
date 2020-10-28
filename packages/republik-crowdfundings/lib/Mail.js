@@ -596,8 +596,8 @@ mail.sendMembershipOwnerAutoPay = async ({ autoPay, payload, pgdb, t }) => {
           content: payload.attemptNumber,
         },
         {
-          name: 'requires_action',
-          content: payload.requires_action,
+          name: 'authentication_required',
+          content: payload.authenticationRequired,
         },
         {
           name: 'attempt_is_last',

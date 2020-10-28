@@ -193,7 +193,9 @@ const payWithPaymentMethod = async ({
       clients,
       t,
     })
-    stripeClientSecret = paymentIntent.client_secret
+    if (paymentIntent.status !== 'succeeded') {
+      stripeClientSecret = paymentIntent.client_secret
+    }
   } else {
     // subscribe to get clientSecret from invoicePaymentActionRequired webhook
     let noAuthRequired

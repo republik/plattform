@@ -35,7 +35,7 @@ den Jahresbeitrag von {{autopay_total}} von Ihrer hinterlegten
 {{autopay_card_brand}}-Kreditkarte mit den Endziffern {{autopay_card_last4}}
 nicht abbuchen. 
 
-{{#if requires_action}} Dies weil Ihre Kreditkarte verlangt, dass Buchungen von
+{{#if authentication_required}} Dies weil Ihre Kreditkarte verlangt, dass Buchungen von
 Ihnen online bestätigt werden. Wir bitten Sie daher Ihre Mitgliedschaft hier
 manuell zu erneuern {{prolong_url}} . 
 

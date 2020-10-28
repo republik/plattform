@@ -9,7 +9,8 @@ module.exports = async ({
   total,
   pledgeId,
   metadata = {},
-  confirm = false,
+  confirm = true,
+  offSession = false,
   pgdb,
   clients, // optional
   t,
@@ -45,6 +46,7 @@ module.exports = async ({
   // otherwise she can't use her saved paymentMethods
   return stripe.paymentIntents.create({
     amount: total,
+    currency: 'chf',
     customer: customer.id,
     payment_method: paymentMethodId,
     metadata: {
@@ -52,7 +54,7 @@ module.exports = async ({
       ...metadata,
     },
     confirm,
-    setup_future_usage: 'off_session',
-    currency: 'chf',
+    off_session: offSession,
+    ...(offSession ? {} : { setup_future_usage: 'off_session' }),
   })
 }
