@@ -2,13 +2,12 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { serifBold24, serifBold28, serifBold42 } from '../Typography/styles'
 import { css } from 'glamor'
-import colors from '../../theme/colors'
 import { mUp } from '../../theme/mediaQueries'
 import { convertStyleToRem } from '../Typography/utils'
+import { useColorContext } from '../Colors/useColorContext'
 
 const baseStyle = {
-  ...convertStyleToRem(serifBold24),
-  color: colors.text
+  ...convertStyleToRem(serifBold24)
 }
 
 const styles = {
@@ -27,8 +26,13 @@ const styles = {
 }
 
 export const Text = ({ children, attributes, size }) => {
+  const [colorScheme] = useColorContext()
   return (
-    <div {...attributes} {...styles[size]}>
+    <div
+      {...attributes}
+      {...colorScheme.set('color', 'text')}
+      {...styles[size]}
+    >
       {children}
     </div>
   )
