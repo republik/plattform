@@ -82,22 +82,22 @@ const Button = React.forwardRef(
           '@media (hover)': {
             ':hover': {
               backgroundColor: colorScheme.getCSSColor(
-                primary ? 'default' : 'primary'
+                primary ? 'primaryHover' : 'primary'
               ),
               borderColor: colorScheme.getCSSColor(
-                primary ? 'primary' : 'primary'
+                primary ? 'primaryHover' : 'primary'
               ),
-              color: colorScheme.getCSSColor(primary ? 'primary' : '#FFF')
+              color: colorScheme.getCSSColor('#FFF')
             }
           },
           ':active': {
             backgroundColor: colorScheme.getCSSColor(
-              primary ? 'default' : 'primary'
+              primary ? 'primaryHover' : 'primary'
             ),
             borderColor: colorScheme.getCSSColor(
-              primary ? 'primary' : 'primary'
+              primary ? 'primaryHover' : 'primary'
             ),
-            color: colorScheme.getCSSColor(primary ? 'primary' : '#FFF')
+            color: colorScheme.getCSSColor('#FFF')
           },
           ':disabled, [disabled]': {
             backgroundColor: 'transparent',
