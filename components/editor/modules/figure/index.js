@@ -8,6 +8,14 @@ import { createRemoveEmptyKeyHandler } from '../../utils/keyHandlers'
 
 import MarkdownSerializer from 'slate-mdast-serializer'
 
+const findP = (node, hasImage) =>
+  node.children.find(
+    child =>
+      child.children &&
+      !!child.children.find(grandchild => grandchild.type === 'image') ===
+        hasImage
+  )
+
 export default options => {
   const { rule, subModules, TYPE } = options
   // Define submodule and serializers
@@ -39,13 +47,12 @@ export default options => {
         []
       )
       const image = findOrCreate(deepNodes, { type: 'image' })
-      const imageParagraph = node.children.find(
-        n => n.children && n.children.indexOf(image) !== -1
-      )
+      const imageParagraph = findP(node, true) || {
+        type: 'paragraph',
+        children: [image]
+      }
 
-      const caption = node.children.find(
-        child => child.type === 'paragraph' && child !== imageParagraph
-      ) || {
+      const caption = findP(node, false) || {
         type: 'paragraph',
         children: [
           { type: 'text', value: '' },
@@ -72,14 +79,6 @@ export default options => {
     },
     toMdast: (object, index, parent, rest) => {
       const image = findOrCreate(
-        object.nodes,
-        {
-          kind: 'block',
-          type: FIGURE_IMAGE
-        },
-        { isVoid: true, data: {} }
-      )
-      const imageNeg = findOrCreate(
         object.nodes,
         {
           kind: 'block',
