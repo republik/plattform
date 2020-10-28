@@ -61,7 +61,7 @@ test('figure serialization', assert => {
 }
 \`\`\`
 
-![Alt](example.com/img.jpg) ![Alt](example.com/img-neg.jpg)
+![Alt](example.com/img.jpg) ![Alt](example.com/img-dark.jpg)
 
 Caption_Byline_
 
@@ -75,7 +75,7 @@ Caption_Byline_
   assert.equal(image.type, 'FIGURE_IMAGE')
 
   assert.equal(image.getIn(['data', 'src']), 'example.com/img.jpg')
-  assert.equal(image.getIn(['data', 'srcNeg']), 'example.com/img-neg.jpg')
+  assert.equal(image.getIn(['data', 'srcDark']), 'example.com/img-dark.jpg')
   assert.equal(image.getIn(['data', 'alt']), 'Alt')
 
   const caption = node.nodes.get(1)

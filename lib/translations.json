@@ -1,5 +1,5 @@
 {
-  "updated": "2020-09-23T12:46:22.351Z",
+  "updated": "2020-10-26T14:38:44.635Z",
   "title": "live",
   "data": [
     {
@@ -471,7 +471,7 @@
       "value": "Bild"
     },
     {
-      "key": "metaData/field/srcNeg",
+      "key": "metaData/field/srcDark",
       "value": "Dark Mode (optional)"
     },
     {
