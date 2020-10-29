@@ -1,7 +1,7 @@
 import createNewsletterSchema from '../schema'
 
 import { H2 } from './Headlines'
-import Paragraph from './Paragraph'
+import Paragraph, { Link } from './Paragraph'
 import Container from './Container'
 import Cover, { CoverImage } from './Cover'
 import Center from './Center'
@@ -27,6 +27,7 @@ const createSchema = ({ ...args } = {}) => {
     Button,
     List,
     ListItem,
+    Link,
     ...args,
     variableContext: args.variableContext || {
       firstName: 'FNAME',

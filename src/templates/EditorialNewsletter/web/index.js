@@ -13,7 +13,7 @@ import {
   FigureByline
 } from '../../../components/Figure'
 import { Sub, Sup } from '../../../components/Typography'
-import { P, Subhead } from '../../../components/Typography/Editorial'
+import { P, Subhead, A } from '../../../components/Typography/Editorial'
 import { List, ListItem } from '../../../components/List'
 
 const createSchema = ({ ...args } = {}) => {
@@ -34,6 +34,7 @@ const createSchema = ({ ...args } = {}) => {
     List,
     ListItem,
     ListP,
+    Link: A,
     ...args
   })
 }
