@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import * as styles from './styles'
 import { css } from 'glamor'
 import { mUp } from '../../theme/mediaQueries'
@@ -265,16 +265,26 @@ export const link = css({
 })
 export const A = React.forwardRef(({ children, attributes, ...props }, ref) => {
   const [colorScheme] = useColorContext()
-  const colors = css({
-    color: colorScheme.text,
-    '@media (hover)': {
-      ':hover': {
-        color: colorScheme.lightText
-      }
-    }
-  })
+  const AHoverRule = useMemo(
+    () =>
+      css({
+        '@media (hover)': {
+          ':hover': {
+            color: colorScheme.getCSSColor('textSoft')
+          }
+        }
+      }),
+    [colorScheme]
+  )
   return (
-    <a {...attributes} {...props} {...link} {...colors} ref={ref}>
+    <a
+      {...colorScheme.set('color', 'text')}
+      {...attributes}
+      {...props}
+      {...link}
+      {...AHoverRule}
+      ref={ref}
+    >
       {children}
     </a>
   )
