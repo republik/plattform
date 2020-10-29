@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import colors from '../../theme/colors'
 import { mUp } from '../../theme/mediaQueries'
 import { fontStyles as _fontStyles } from '../../theme/fonts'
@@ -10,6 +10,7 @@ import * as _Scribble from './Scribble'
 import { css } from 'glamor'
 import { convertStyleToRem } from './utils'
 import { underline } from '../../lib/styleMixins'
+import { useColorContext } from '../Colors/useColorContext'
 
 // Namespaced exports.
 export const Editorial = { ..._Editorial }
@@ -140,11 +141,27 @@ const styles = {
   })
 }
 
-export const A = React.forwardRef(({ children, ...props }, ref) => (
-  <a {...props} {...linkRule} ref={ref}>
-    {children}
-  </a>
-))
+export const A = React.forwardRef(({ children, ...props }, ref) => {
+  const [colorScheme] = useColorContext()
+  const linkStyleRule = useMemo(
+    () =>
+      css({
+        textDecoration: 'none',
+        color: colorScheme.getCSSColor('primary'),
+        '@media (hover)': {
+          ':hover': {
+            color: colorScheme.getCSSColor('primary')
+          }
+        }
+      }),
+    [colorScheme]
+  )
+  return (
+    <a {...props} {...linkStyleRule} ref={ref}>
+      {children}
+    </a>
+  )
+})
 
 export const H1 = ({ children, ...props }) => (
   <h1 {...props} {...styles.h1}>

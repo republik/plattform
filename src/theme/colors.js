@@ -24,7 +24,6 @@ const colorsDeprecated = {
   primary: '#00508C',
   primaryBg: '#BFE1FF',
   containerBg: '#FFF',
-  secondary: '#00335A',
   secondaryBg: '#D8EEFF',
   disabled: '#B8BDC1',
   text: '#191919',
@@ -79,7 +78,8 @@ const colorsDeprecated = {
     error: 'rgb(239,69,51)',
     disabled: '#242424'
   },
-  ...getJson('COLORS')
+  ...getJson('COLORS'),
+  secondary: '#006300'
 }
 
 // ToDos
@@ -99,7 +99,7 @@ const colors = {
     divider: '#DADDDC',
     dividerInverted: '#4C4D4C',
     primary: '#00AA00',
-    primaryHover: '#009200',
+    primaryHover: '#008800',
     text: '#282828',
     textInverted: '#F0F0F0',
     textSoft: '#7D7D7D',
@@ -130,7 +130,7 @@ const colors = {
     divider: '#4C4D4C',
     dividerInverted: '#DADDDC',
     primary: '#00AA00',
-    primaryHover: '#009200',
+    primaryHover: '#008800',
     text: '#F0F0F0',
     textInverted: '#282828',
     textSoft: '#A9A9A9',
