@@ -1,6 +1,5 @@
 import React from 'react'
 import { css } from 'glamor'
-import colors from '../../../../theme/colors'
 import { ellipsize } from '../../../../lib/styleMixins'
 import { mUp } from '../../../../theme/mediaQueries'
 import {
@@ -9,6 +8,7 @@ import {
   sansSerifRegular14
 } from '../../../Typography/styles'
 import { convertStyleToRem } from '../../../Typography/utils'
+import { useColorContext } from '../../../Colors/useColorContext'
 
 const styles = {
   root: css({
@@ -25,7 +25,6 @@ const styles = {
   title: css({
     ...ellipsize,
     ...convertStyleToRem(sansSerifMedium14),
-    color: colors.text,
     [mUp]: {
       ...convertStyleToRem(sansSerifMedium16),
       lineHeight: '20px'
@@ -33,16 +32,24 @@ const styles = {
   }),
   description: css({
     ...ellipsize,
-    ...convertStyleToRem(sansSerifRegular14),
-    color: colors.text
+    ...convertStyleToRem(sansSerifRegular14)
   })
 }
 
-export const Context = ({ title, description }) => (
-  <div {...styles.root}>
-    <div {...styles.meta}>
-      <div {...styles.title}>{title}</div>
-      {description && <div {...styles.description}>{description}</div>}
+export const Context = ({ title, description }) => {
+  const [colorScheme] = useColorContext()
+  return (
+    <div {...styles.root}>
+      <div {...styles.meta}>
+        <div {...styles.title} {...colorScheme.set('color', 'text')}>
+          {title}
+        </div>
+        {description && (
+          <div {...styles.description} {...colorScheme.set('color', 'text')}>
+            {description}
+          </div>
+        )}
+      </div>
     </div>
-  </div>
-)
+  )
+}

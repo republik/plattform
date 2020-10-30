@@ -1,13 +1,13 @@
 import React from 'react'
 import { css } from 'glamor'
 import MdCheck from 'react-icons/lib/md/check'
-import colors from '../../../../theme/colors'
 import {
   sansSerifMedium16,
   sansSerifRegular14
 } from '../../../Typography/styles'
 import { ellipsize } from '../../../../lib/styleMixins'
 import { convertStyleToRem, pxToRem } from '../../../Typography/utils'
+import { useColorContext } from '../../../Colors/useColorContext'
 
 const buttonStyle = {
   background: 'none',
@@ -46,7 +46,6 @@ const styles = {
   name: css({
     ...convertStyleToRem(sansSerifMedium16),
     lineHeight: pxToRem('20px'),
-    color: colors.text,
     minWidth: 0,
     flexGrow: 0,
     flexShrink: 1,
@@ -55,7 +54,6 @@ const styles = {
   meta: css({
     ...convertStyleToRem(sansSerifRegular14),
     lineHeight: pxToRem('20px'),
-    color: colors.lightText,
     display: 'flex',
     alignItems: 'center'
   }),
@@ -66,17 +64,10 @@ const styles = {
     flexShrink: 1,
     minWidth: 0
   }),
-  credentialVerified: css({
-    color: colors.text
-  }),
-  credentialMissing: css({
-    color: colors.primary
-  }),
   descriptionText: css({
     ...ellipsize
   }),
   verifiedCheck: css({
-    color: colors.primary,
     flexShrink: 0,
     display: 'inline-block',
     marginLeft: 4,
@@ -85,7 +76,6 @@ const styles = {
   action: css({
     ...buttonStyle,
     ...convertStyleToRem(sansSerifRegular14),
-    color: colors.primary,
     flexShrink: 0,
     height: pxToRem('40px'),
     marginLeft: 12,
@@ -98,14 +88,9 @@ const styles = {
   })
 }
 
-export const Header = ({
-  t,
-  displayAuthor,
-  onClick
-}) => {
-
-  const { profilePicture, name, credential } = displayAuthor || {}
-
+export const Header = ({ t, displayAuthor, onClick }) => {
+  const { profilePicture, name, credential } = displayAuthor || {}
+  const [colorScheme] = useColorContext()
   return (
     <button {...styles.button} onClick={onClick}>
       <div {...styles.root}>
@@ -113,26 +98,35 @@ export const Header = ({
           <img {...styles.profilePicture} src={profilePicture} alt='' />
         )}
         <div {...styles.center}>
-          <div {...styles.name}>{name}</div>
-          <div {...styles.meta}>
+          <div {...styles.name} {...colorScheme.set('color', 'text')}>
+            {name}
+          </div>
+          <div {...styles.meta} {...colorScheme.set('color', 'textSoft')}>
             {(() => {
               if (credential) {
                 return (
                   <div
                     {...styles.credential}
-                    {...(credential.verified ? styles.credentialVerified : {})}
+                    {...(credential.verified &&
+                      colorScheme.set('color', 'text'))}
                   >
                     <div {...styles.descriptionText}>
                       {credential.description}
                     </div>
                     {credential.verified && (
-                      <MdCheck {...styles.verifiedCheck} />
+                      <MdCheck
+                        {...styles.verifiedCheck}
+                        {...colorScheme.set('color', 'primary')}
+                      />
                     )}
                   </div>
                 )
               } else {
                 return (
-                  <div {...styles.credential} {...styles.credentialMissing}>
+                  <div
+                    {...styles.credential}
+                    {...colorScheme.set('color', 'primary')}
+                  >
                     {t('styleguide/comment/header/credentialMissing')}
                   </div>
                 )
@@ -140,7 +134,7 @@ export const Header = ({
             })()}
           </div>
         </div>
-        <div {...styles.action}>
+        <div {...styles.action} {...colorScheme.set('color', 'primary')}>
           <EditIcon />
         </div>
       </div>

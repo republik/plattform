@@ -1,7 +1,6 @@
 import React from 'react'
 import * as Interaction from '../../../../components/Typography/Interaction'
 import { css } from 'glamor'
-import colors from '../../../../theme/colors'
 import {
   sansSerifRegular13,
   sansSerifRegular15,
@@ -11,7 +10,7 @@ import {
 import { mUp } from '../../../../theme/mediaQueries'
 import { linkStyle } from '../../../Typography'
 import TwitterIcon from 'react-icons/lib/fa/twitter'
-
+import { useColorContext } from '../../../Colors/useColorContext'
 import { timeFormat } from '../../../../lib/timeFormat'
 
 const styles = {
@@ -24,7 +23,8 @@ const styles = {
     bottom: 0
   }),
   container: css({
-    border: `1px solid ${colors.divider}`,
+    borderWidth: 1,
+    borderStyle: 'solid',
     position: 'relative',
     marginTop: 15,
     [mUp]: {
@@ -33,7 +33,8 @@ const styles = {
   }),
   imageContainer: css({}),
   image: css({
-    borderBottom: `1px solid ${colors.divider}`,
+    borderBottomWidth: 1,
+    borderBottomStyle: 'solid',
     width: '100%'
   }),
   text: css({
@@ -95,10 +96,9 @@ const normalizeEmbed = embed => ({
 })
 
 export const Embed = ({ comment }) => {
+  const [colorScheme] = useColorContext()
   if (!comment || !comment.embed) return null
-
   const { mentioningDocument, embed } = comment
-
   const {
     url,
     title,
@@ -111,11 +111,16 @@ export const Embed = ({ comment }) => {
   } = normalizeEmbed(embed)
 
   return (
-    <div {...styles.container}>
+    <div {...styles.container} {...colorScheme.set('borderColor', 'divider')}>
       <a href={url} {...styles.link}></a>
       <div {...styles.imageContainer}>
         {imageUrl && (
-          <img src={imageUrl} alt={imageAlt || title} {...styles.image} />
+          <img
+            src={imageUrl}
+            alt={imageAlt || title}
+            {...styles.image}
+            {...colorScheme.set('borderColor', 'divider')}
+          />
         )}
         {mentioningDocument && (
           <div {...styles.topStory}>
@@ -159,7 +164,7 @@ export const Embed = ({ comment }) => {
         )}
         {embed.userScreenName && (
           <Interaction.P {...styles.paragraph}>
-            <TwitterIcon size={19} fill={colors.disabled} />{' '}
+            <TwitterIcon size={19} {...colorScheme.set('fill', 'disabled')} />{' '}
             {dateFormat(new Date(embed.createdAt))}
           </Interaction.P>
         )}

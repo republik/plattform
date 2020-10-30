@@ -1,18 +1,18 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { css, merge } from 'glamor'
 import scrollIntoView from 'scroll-into-view'
 
-import colors from '../../../theme/colors'
 import { DiscussionContext } from '../DiscussionContext'
 import { CommentComposer } from '../Composer/CommentComposer'
 import { LoadMore } from './LoadMore'
 import * as Comment from '../Internal/Comment'
 import * as config from '../config'
 import { mUp } from '../../../theme/mediaQueries'
+import { useColorContext } from '../../Colors/useColorContext'
 
 const buttonStyle = {
   display: 'block',
-  background: 'none',
+  background: 'transparent',
   border: 'none',
   cursor: 'pointer',
   outline: 'none',
@@ -22,8 +22,7 @@ const buttonStyle = {
 const styles = {
   highlightContainer: css({
     padding: '7px 7px 0 7px',
-    margin: '0 -7px 12px -7px',
-    background: colors.primaryBg
+    margin: '0 -7px 12px -7px'
   }),
   boardColumn: css({
     [mUp]: {
@@ -65,11 +64,10 @@ const styles = {
     }),
   root: ({ isExpanded, nestLimitExceeded, depth, board }) =>
     css({
+      background: 'transparent',
       position: 'relative',
       margin: `10px 0 ${(isExpanded ? 24 : 16) + (depth === 0 ? 20 : 0)}px`,
       paddingLeft: nestLimitExceeded || depth < 1 ? 0 : config.indentSizeS,
-      background: 'white',
-
       [mUp]: {
         paddingLeft: nestLimitExceeded || depth < 1 ? 0 : config.indentSizeM,
         ...(board
@@ -97,7 +95,6 @@ const styles = {
         left: -((config.indentSizeM - config.verticalLineWidth) / 2),
         width: config.indentSizeM
       },
-
       '::before': {
         display: 'block',
         content: '""',
@@ -106,15 +103,8 @@ const styles = {
         bottom: 0,
         left: (config.indentSizeS - config.verticalLineWidth) / 2,
         width: config.verticalLineWidth,
-        background: colors.divider,
-
         [mUp]: {
           left: (config.indentSizeM - config.verticalLineWidth) / 2
-        }
-      },
-      '@media (hover)': {
-        ':hover::before': {
-          background: colors.primary
         }
       },
       ...(drawLineEnd
@@ -128,15 +118,8 @@ const styles = {
               bottom: -2 - config.verticalLineWidth / 2,
               borderRadius: '100%',
               left: (config.indentSizeS - config.verticalLineWidth) / 2 - 2,
-              background: colors.divider,
-
               [mUp]: {
                 left: (config.indentSizeM - config.verticalLineWidth) / 2 - 2
-              }
-            },
-            '@media (hover)': {
-              ':hover::after': {
-                background: colors.primary
               }
             }
           }
@@ -213,8 +196,8 @@ const CommentNode = ({
   const depth = parentIds.length
   const nestLimitExceeded = depth > config.nestLimit
   const isRoot = depth === 0
-
   const root = React.useRef()
+  const [colorScheme] = useColorContext()
 
   /*
    * The local state that the CommentNode component manages.
@@ -302,12 +285,36 @@ const CommentNode = ({
   const rootStyle = styles.root({ isExpanded, nestLimitExceeded, depth, board })
   const verticalToggleStyle =
     !isRoot && styles.verticalToggle({ isExpanded, depth, drawLineEnd, isLast })
+  const verticalToggleStyleRules = useMemo(
+    () =>
+      css({
+        '::before': colorScheme.getCSSColor('divider'),
+        '@media (hover)': {
+          ':hover::before': {
+            background: colorScheme.getCSSColor('primary')
+          },
+          ':hover::after': {
+            background: drawLineEnd
+              ? colorScheme.getCSSColor('primary')
+              : 'none'
+          }
+        },
+        '::after': {
+          background: drawLineEnd ? colorScheme.getCSSColor('divider') : 'none'
+        }
+      }),
+    [colorScheme]
+  )
 
   if (isExpanded) {
     return (
       <div ref={root} data-comment-id={id} {...rootStyle}>
         {!nestLimitExceeded && !board && verticalToggleStyle && (
-          <button {...verticalToggleStyle} onClick={toggleReplies} />
+          <button
+            {...verticalToggleStyle}
+            {...verticalToggleStyleRules}
+            onClick={toggleReplies}
+          />
         )}
         <div
           {...merge(
@@ -315,6 +322,9 @@ const CommentNode = ({
             board ? styles.boardColumn : null,
             isRoot && rootCommentOverlay ? styles.modalRoot : null
           )}
+          {...(mode === 'view' &&
+            isHighlighted &&
+            colorScheme.set('backgroundColor', 'alert'))}
         >
           {{
             view: () => (

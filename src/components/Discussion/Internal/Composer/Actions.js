@@ -1,11 +1,11 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import PropTypes from 'prop-types'
 import { css } from 'glamor'
-import colors from '../../../../theme/colors'
 import { sansSerifMedium14 } from '../../../Typography/styles'
 import { DiscussionContext } from '../../DiscussionContext'
 import { mUp } from '../../../../theme/mediaQueries'
 import { convertStyleToRem, pxToRem } from '../../../Typography/utils'
+import { useColorContext } from '../../../Colors/useColorContext'
 
 const actionButtonStyle = {
   ...convertStyleToRem(sansSerifMedium14),
@@ -32,26 +32,13 @@ const styles = {
     display: 'flex'
   }),
   closeButton: css({
-    ...actionButtonStyle,
-    color: colors.lightText,
-    '@media (hover)': {
-      ':hover': {
-        color: colors.text
-      }
-    }
+    ...actionButtonStyle
   }),
   submitButton: css({
     ...actionButtonStyle,
-    color: colors.primary,
     marginLeft: '16px',
     '[disabled]': {
-      color: colors.disabled,
       cursor: 'inherit'
-    },
-    '@media (hover)': {
-      ':not([disabled]):hover': {
-        color: colors.secondary
-      }
     }
   }),
   secondaryActions: css({
@@ -62,15 +49,9 @@ const styles = {
   }),
   secondaryAction: css({
     ...actionButtonStyle,
-    color: colors.lightText,
     margin: '0 4px',
     [mUp]: {
       margin: '0 8px'
-    },
-    '@media (hover)': {
-      ':hover': {
-        color: colors.text
-      }
     }
   })
 }
@@ -82,20 +63,58 @@ export const Actions = ({
   onSubmit,
   onSubmitLabel
 }) => {
+  const [colorScheme] = useColorContext()
   const { composerSecondaryActions } = React.useContext(DiscussionContext)
-
+  const styleRules = useMemo(() => {
+    return {
+      secondaryAction: css({
+        color: colorScheme.getCSSColor('textSoft'),
+        '@media (hover)': {
+          ':hover': {
+            color: colorScheme.getCSSColor('text')
+          }
+        }
+      }),
+      closeButton: css({
+        color: colorScheme.getCSSColor('textSoft'),
+        '@media (hover)': {
+          ':hover': {
+            color: colorScheme.getCSSColor('text')
+          }
+        }
+      }),
+      submitButton: css({
+        color: colorScheme.getCSSColor('primary'),
+        '[disabled]': {
+          color: colorScheme.getCSSColor('disabled')
+        },
+        '@media (hover)': {
+          ':not([disabled]):hover': {
+            color: colorScheme.getCSSColor('primaryHover')
+          }
+        }
+      })
+    }
+  }, [colorScheme])
   return (
     <div {...styles.root}>
       {composerSecondaryActions && (
-        <div {...styles.secondaryActions}>{composerSecondaryActions}</div>
+        <div {...styles.secondaryActions} {...styleRules.secondaryAction}>
+          {composerSecondaryActions}
+        </div>
       )}
 
       <div {...styles.mainActions}>
-        <button {...styles.closeButton} onClick={onClose}>
+        <button
+          {...styles.closeButton}
+          {...styleRules.closeButton}
+          onClick={onClose}
+        >
           {onCloseLabel || t('styleguide/CommentComposer/cancel')}
         </button>
         <button
           {...styles.submitButton}
+          {...styleRules.submitButton}
           onClick={onSubmit}
           disabled={!onSubmit}
         >

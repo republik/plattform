@@ -1,8 +1,7 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { css } from 'glamor'
 import MdCheck from 'react-icons/lib/md/check'
 import MoreIcon from 'react-icons/lib/md/more-vert'
-import colors from '../../../../theme/colors'
 import {
   sansSerifMedium16,
   sansSerifRegular14
@@ -16,6 +15,7 @@ import { DiscussionContext, formatTimeRelative } from '../../DiscussionContext'
 import * as config from '../../config'
 import { convertStyleToRem, pxToRem } from '../../../Typography/utils'
 import CalloutMenu from '../../../Callout/CalloutMenu'
+import { useColorContext } from '../../../Colors/useColorContext'
 
 export const profilePictureSize = 40
 export const profilePictureMargin = 10
@@ -38,15 +38,9 @@ export const headerActionStyle = ({ isExpanded }) =>
   css({
     ...buttonStyle,
     ...convertStyleToRem(sansSerifRegular14),
-    color: isExpanded ? colors.divider : colors.lightText,
     flexShrink: 0,
     height: pxToRem('40px'),
     cursor: 'pointer',
-    '@media (hover)': {
-      ':hover': {
-        color: colors.text
-      }
-    },
     '& svg': {
       display: 'inline-block',
       margin: '10px',
@@ -56,11 +50,10 @@ export const headerActionStyle = ({ isExpanded }) =>
   })
 
 const styles = {
-  root: ({ isExpanded }) =>
-    css({
-      display: 'flex',
-      alignItems: 'flex-start'
-    }),
+  root: css({
+    display: 'flex',
+    alignItems: 'flex-start'
+  }),
   profilePicture: css({
     display: 'block',
     width: pxToRem(40),
@@ -76,7 +69,8 @@ const styles = {
   indentIndicator: css({
     width: pxToRem(4 + config.verticalLineWidth),
     height: pxToRem(40),
-    borderLeft: `${pxToRem(config.verticalLineWidth)} solid ${colors.divider}`
+    borderLeftWidth: pxToRem(config.verticalLineWidth),
+    borderLeftStyle: 'solid'
   }),
   center: css({
     alignSelf: 'stretch',
@@ -89,7 +83,6 @@ const styles = {
   name: css({
     ...convertStyleToRem(sansSerifMedium16),
     lineHeight: pxToRem(20),
-    color: colors.text,
     minWidth: 0,
     flexGrow: 0,
     flexShrink: 1,
@@ -110,7 +103,6 @@ const styles = {
   meta: css({
     ...convertStyleToRem(sansSerifRegular14),
     lineHeight: pxToRem(20),
-    color: colors.lightText,
     display: 'flex',
     alignItems: 'center'
   }),
@@ -121,14 +113,10 @@ const styles = {
     flexShrink: 1,
     minWidth: 0
   }),
-  credentialVerified: css({
-    color: colors.text
-  }),
   descriptionText: css({
     ...ellipsize
   }),
   verifiedCheck: css({
-    color: colors.primary,
     flexShrink: 0,
     display: 'inline-block',
     marginLeft: pxToRem(4),
@@ -148,7 +136,6 @@ const styles = {
     }
   }),
   timeago: css({
-    color: colors.lightText,
     flexShrink: 0,
     flexGrow: 0,
     whiteSpace: 'pre'
@@ -171,7 +158,7 @@ const MoreIconWithProps = props => <MoreIcon {...props} />
 
 export const Header = ({ t, comment, menu, isExpanded, onToggle }) => {
   const { clock, discussion, Link } = React.useContext(DiscussionContext)
-
+  const [colorScheme] = useColorContext()
   const {
     displayAuthor,
     updatedAt,
@@ -183,8 +170,20 @@ export const Header = ({ t, comment, menu, isExpanded, onToggle }) => {
 
   const isUpdated = updatedAt && updatedAt !== createdAt
 
+  const headerActionStyleHover = useMemo(
+    () =>
+      css({
+        '@media (hover)': {
+          ':hover': {
+            color: colorScheme.getCSSColor('text')
+          }
+        }
+      }),
+    [colorScheme]
+  )
+
   return (
-    <div {...styles.root({ isExpanded })}>
+    <div {...styles.root}>
       {(() => {
         const n = parentIds.length - config.nestLimit
         if (n < 0) {
@@ -204,7 +203,11 @@ export const Header = ({ t, comment, menu, isExpanded, onToggle }) => {
           return (
             <div {...styles.indentIndicators}>
               {Array.from({ length: n }).map((_, i) => (
-                <div key={i} {...styles.indentIndicator} />
+                <div
+                  key={i}
+                  {...styles.indentIndicator}
+                  {...colorScheme.set('borderColor', 'divider')}
+                />
               ))}
             </div>
           )
@@ -212,9 +215,11 @@ export const Header = ({ t, comment, menu, isExpanded, onToggle }) => {
       })()}
       <div {...styles.center}>
         <Link displayAuthor={displayAuthor} passHref>
-          <a {...styles.name}>{name}</a>
+          <a {...styles.name} {...colorScheme.set('color', 'text')}>
+            {name}
+          </a>
         </Link>
-        <div {...styles.meta}>
+        <div {...styles.meta} {...colorScheme.set('color', 'textSoft')}>
           {credential && (
             <div
               {...styles.credential}
@@ -230,17 +235,27 @@ export const Header = ({ t, comment, menu, isExpanded, onToggle }) => {
             >
               <div
                 {...styles.descriptionText}
-                style={{
-                  color: credential.verified ? colors.text : colors.lightText
-                }}
+                {...colorScheme.set(
+                  'color',
+                  credential.verified ? 'text' : 'textSoft'
+                )}
               >
                 {credential.description}
               </div>
-              {credential.verified && <MdCheck {...styles.verifiedCheck} />}
+              {credential.verified && (
+                <MdCheck
+                  {...styles.verifiedCheck}
+                  {...colorScheme.set('color', 'primary')}
+                />
+              )}
             </div>
           )}
           {credential && <div style={{ whiteSpace: 'pre' }}>{' · '}</div>}
-          <div {...styles.timeago} title={titleDate(createdAt)}>
+          <div
+            {...styles.timeago}
+            {...colorScheme.set('color', 'textSoft')}
+            title={titleDate(createdAt)}
+          >
             <Link discussion={discussion} comment={comment} passHref>
               <a {...styles.linkUnderline} suppressHydrationWarning>
                 {formatTimeRelative(new Date(createdAt), {
@@ -251,7 +266,11 @@ export const Header = ({ t, comment, menu, isExpanded, onToggle }) => {
             </Link>
           </div>
           {isUpdated && (
-            <div {...styles.timeago} title={titleDate(updatedAt)}>
+            <div
+              {...styles.timeago}
+              {...colorScheme.set('color', 'textSoft')}
+              title={titleDate(updatedAt)}
+            >
               {' · '}
               {t('styleguide/comment/header/updated')}
             </div>
@@ -259,7 +278,12 @@ export const Header = ({ t, comment, menu, isExpanded, onToggle }) => {
         </div>
       </div>
       {onToggle && (
-        <button {...headerActionStyle({ isExpanded })} onClick={onToggle}>
+        <button
+          {...headerActionStyle({ isExpanded })}
+          {...headerActionStyleHover}
+          {...colorScheme.set('color', isExpanded ? 'divider' : 'textSoft')}
+          onClick={onToggle}
+        >
           {!isExpanded && comments && comments.totalCount > 0 && (
             <div {...styles.expandCount}>
               {t.pluralize('styleguide/comment/header/expandCount', {

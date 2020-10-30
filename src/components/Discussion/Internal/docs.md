@@ -135,10 +135,10 @@ As far as I can see in the code, the **Context** is only used to display the com
 
 ```react|noSource,span-2
 <>
-  <div style={{ marginBottom: 20, background: 'white' }}>
+  <div style={{ marginBottom: 20 }}>
     <Comment.Context {...commentContext} />
   </div>
-  <div style={{ marginBottom: 20, background: 'white' }}>
+  <div style={{ marginBottom: 20 }}>
     <Comment.Context title='Wunsch' />
   </div>
 </>

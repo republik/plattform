@@ -1,7 +1,7 @@
 import React from 'react'
 import { css } from 'glamor'
 import { sansSerifMedium16 } from '../../../Typography/styles'
-import colors from '../../../../theme/colors'
+import { useColorContext } from '../../../Colors/useColorContext'
 
 const styles = {
   text: css({
@@ -9,7 +9,6 @@ const styles = {
     textOverflow: 'ellipsis',
     overflow: 'hidden',
     verticalAlign: 'middle',
-    color: colors.primary,
     marginTop: -1,
     paddingLeft: 4,
     ...sansSerifMedium16
@@ -39,14 +38,18 @@ export default ({ count, small }) => {
   const size = small ? 18 : 24
   const fontSize = small ? '14px' : undefined
   const lineHeight = small ? '17px' : undefined
-
+  const [colorScheme] = useColorContext()
   return (
     <>
       <span {...styles.icon}>
-        <Icon size={size} fill={colors.primary} />
+        <Icon size={size} {...colorScheme.set('fill', 'primary')} />
       </span>
       {count > 0 && (
-        <span {...styles.text} style={{ fontSize, lineHeight }}>
+        <span
+          {...styles.text}
+          {...colorScheme.set('color', 'primary')}
+          style={{ fontSize, lineHeight }}
+        >
           {count}
         </span>
       )}
