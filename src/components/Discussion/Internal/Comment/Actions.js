@@ -187,7 +187,7 @@ export const Actions = ({
           onClick={onEdit}
           title={t('styleguide/CommentActions/edit')}
         >
-          <EditIcon />
+          <EditIcon {...colorScheme.set('fill', 'text')} />
         </IconButton>
       )}
       {onUnpublish && (
@@ -196,7 +196,7 @@ export const Actions = ({
           onClick={onUnpublish}
           title={t('styleguide/CommentActions/unpublish')}
         >
-          <UnpublishIcon />
+          <UnpublishIcon {...colorScheme.set('fill', 'text')} />
         </IconButton>
       )}
       <IconButton
@@ -204,7 +204,7 @@ export const Actions = ({
         onClick={onShare}
         title={t('styleguide/CommentActions/share')}
       >
-        <ShareIcon />
+        <ShareIcon {...colorScheme.set('fill', 'text')} />
       </IconButton>
       {userCanReport && onReport && (
         <IconButton
@@ -243,7 +243,10 @@ export const Actions = ({
             }
           >
             <FeaturedIcon
-              {...(featuredText && colorScheme.set('fill', 'primary'))}
+              {...colorScheme.set(
+                'fill',
+                featuredText ? 'primary' : 'disabled'
+              )}
             />
           </IconButton>
         )}
@@ -253,7 +256,7 @@ export const Actions = ({
             onClick={onUpvote}
             title={t('styleguide/CommentActions/upvote')}
           >
-            <MdKeyboardArrowUp />
+            <MdKeyboardArrowUp {...colorScheme.set('fill', 'text')} />
           </IconButton>
           <span
             title={t.pluralize('styleguide/CommentActions/upvote/count', {
@@ -279,7 +282,7 @@ export const Actions = ({
             onClick={onDownvote}
             title={t('styleguide/CommentActions/downvote')}
           >
-            <MdKeyboardArrowDown />
+            <MdKeyboardArrowDown {...colorScheme.set('fill', 'text')} />
           </IconButton>
         </div>
       </div>

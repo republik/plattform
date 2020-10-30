@@ -1,10 +1,8 @@
-import React, { Fragment } from 'react'
+import React, { Fragment, useMemo } from 'react'
 import { css } from 'glamor'
 import get from 'lodash/get'
 
 import NewPage from 'react-icons/lib/md/open-in-new'
-
-import colors from '../../theme/colors'
 import { mUp } from '../../theme/mediaQueries'
 import { ellipsize, underline } from '../../lib/styleMixins'
 import { inQuotes } from '../../lib/inQuotes'
@@ -14,6 +12,7 @@ import { serifRegular14, sansSerifRegular14 } from '../Typography/styles'
 import { CommentBodyParagraph } from '../CommentBody/web'
 import { Context, Header } from '../Discussion/Internal/Comment'
 import RawHtml from '../RawHtml/'
+import { useColorContext } from '../Colors/useColorContext'
 import {
   DiscussionContext,
   formatTimeRelative
@@ -21,7 +20,8 @@ import {
 
 const styles = {
   root: css({
-    borderTop: `1px solid ${colors.text}`,
+    borderTopWidth: 1,
+    borderTopStyle: 'solid',
     margin: 0,
     paddingTop: 10,
     paddingBottom: 40
@@ -32,17 +32,12 @@ const styles = {
   body: css({
     ...serifRegular14,
     wordWrap: 'break-word',
-    color: colors.text,
     margin: '10px 0'
   }),
   link: css({
     color: 'inherit',
     textDecoration: 'none',
-    cursor: 'pointer',
-    '& em': {
-      background: colors.primaryBg,
-      fontStyle: 'normal'
-    }
+    cursor: 'pointer'
   }),
   linkUnderline: css({
     color: 'inherit',
@@ -60,7 +55,6 @@ const styles = {
   }),
   discussionReference: css({
     ...ellipsize,
-    color: colors.lightText,
     position: 'relative'
   }),
   icon: css({
@@ -69,7 +63,6 @@ const styles = {
     marginTop: '-2px'
   }),
   timeago: css({
-    color: colors.lightText,
     flexShrink: 0,
     paddingLeft: 10
   })
@@ -99,7 +92,7 @@ export const CommentTeaser = ({
     createdAt
   } = comment
   const isDesktop = useMediaQuery(mUp)
-
+  const [colorScheme] = useColorContext()
   const highlight = get(highlights, '[0].fragments[0]', '').trim()
 
   const endsWithPunctuation =
@@ -127,12 +120,23 @@ export const CommentTeaser = ({
     Link
   }
 
+  const linkEMRule = useMemo(
+    () =>
+      css({
+        '& em': {
+          background: colorScheme.getCSSColor('hover'),
+          fontStyle: 'normal'
+        }
+      }),
+    [colorScheme]
+  )
   return (
     <DiscussionContext.Provider value={discussionContextValue}>
       <div
         id={id}
         {...styles.root}
-        style={{ backgroundColor: highlighted ? colors.primaryBg : undefined }}
+        {...colorScheme.set('borderColor', 'text')}
+        {...(highlighted && colorScheme.set('backgroundColor', 'hover'))}
       >
         {displayAuthor && (
           <div {...styles.header}>
@@ -147,18 +151,21 @@ export const CommentTeaser = ({
           <Context
             title={
               <Link comment={comment} discussion={discussion} passHref>
-                <a {...styles.link}>{tag}</a>
+                <a {...styles.link} {...linkEMRule}>
+                  {tag}
+                </a>
               </Link>
             }
           />
         )}
         <div
           {...styles.body}
+          {...colorScheme.set('color', 'text')}
           style={{ marginTop: displayAuthor || tag ? undefined : 0 }}
         >
           <CommentBodyParagraph>
             <Link comment={comment} discussion={discussion} passHref>
-              <a {...styles.link}>
+              <a {...styles.link} {...linkEMRule}>
                 {!!preview && !highlight && (
                   <Fragment>
                     {preview.string}
@@ -182,6 +189,7 @@ export const CommentTeaser = ({
         <div {...styles.footer}>
           <div
             {...styles.discussionReference}
+            {...colorScheme.set('color', 'textSoft')}
             style={{
               paddingRight: newPage ? `${ICON_SIZE + 5}px` : undefined
             }}
@@ -202,7 +210,10 @@ export const CommentTeaser = ({
                       {inQuotes(discussion.title)}
                       {newPage && (
                         <span {...styles.icon}>
-                          <NewPage size={ICON_SIZE} fill={colors.disabled} />
+                          <NewPage
+                            size={ICON_SIZE}
+                            fill={colorScheme.getCSSColor('disabled')}
+                          />
                         </span>
                       )}
                     </a>
@@ -212,7 +223,7 @@ export const CommentTeaser = ({
             )}
           </div>
           {!displayAuthor && (
-            <div {...styles.timeago}>
+            <div {...styles.timeago} {...colorScheme.set('color', 'textSoft')}>
               <Link comment={comment} discussion={discussion} passHref>
                 <a {...styles.linkUnderline} suppressHydrationWarning>
                   {formatTimeRelative(new Date(createdAt), {

@@ -2,7 +2,6 @@ import React from 'react'
 import { css } from 'glamor'
 import { sansSerifMedium16 } from '../../../Typography/styles'
 import { useColorContext } from '../../../Colors/useColorContext'
-
 const styles = {
   text: css({
     display: 'inline-block',

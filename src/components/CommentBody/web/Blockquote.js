@@ -1,14 +1,15 @@
 import React from 'react'
 import { css } from 'glamor'
 
-import colors from '../../../theme/colors'
+import { useColorContext } from '../../Colors/useColorContext'
 import { mUp } from '../../../theme/mediaQueries'
 import { serifRegular14, serifRegular16 } from '../../Typography/styles'
 import { convertStyleToRem } from '../../Typography/utils'
 
 const styles = {
   blockquote: css({
-    backgroundColor: '#f7f7f7',
+    borderLeftWidth: 2,
+    borderLeftStyle: 'solid',
     margin: '20px auto',
     padding: '15px',
     [mUp]: {
@@ -35,13 +36,17 @@ export const BlockQuoteParagraph = ({ children }) => (
   <p {...styles.paragraph}>{children}</p>
 )
 
-export const BlockQuoteNested = ({ children }) => (
-  <div
-    {...styles.blockquote}
-    style={{ borderLeft: `2px solid ${colors.divider}` }}
-  >
-    {children}
-  </div>
-)
+export const BlockQuoteNested = ({ children }) => {
+  const [colorScheme] = useColorContext()
+  return (
+    <div
+      {...styles.blockquote}
+      {...colorScheme.set('backgroundColor', 'hover')}
+      {...colorScheme.set('borderColor', 'divider')}
+    >
+      {children}
+    </div>
+  )
+}
 
 export default ({ children }) => <div {...styles.blockquote}>{children}</div>

@@ -2,14 +2,13 @@ import React from 'react'
 import { css } from 'glamor'
 
 import { mUp } from '../../../theme/mediaQueries'
-
+import { useColorContext } from '../../Colors/useColorContext'
 const styles = {
   pre: css({
     margin: '20px auto',
     whiteSpace: 'pre-wrap'
   }),
   code: css({
-    backgroundColor: '#f7f7f7',
     display: 'block',
     fontSize: '90%',
     margin: 0,
@@ -26,8 +25,12 @@ const styles = {
   })
 }
 
-export default ({ children }) => (
-  <pre {...styles.pre}>
-    <code {...styles.code}>{children}</code>
-  </pre>
-)
+export default ({ children }) => {
+  const [colorScheme] = useColorContext()(
+    <pre {...styles.pre}>
+      <code {...styles.code} {...colorScheme.set('backgroundColor', 'hover')}>
+        {children}
+      </code>
+    </pre>
+  )
+}
