@@ -295,6 +295,24 @@ const checkSeed = async () => {
             },
           ],
         },
+        {
+          id: '00000000-0000-0000-0007-000000000020',
+          name: 'ABO_COMPANY_TWO',
+          options: [
+            {
+              id: '00000000-0000-0000-0008-000000000020',
+              price: 12000,
+              userPrice: false,
+              minAmount: 1,
+              maxAmount: 1,
+              defaultAmount: 1,
+              reward: {
+                id: '00000000-0000-0000-0006-000000000020',
+                name: 'ABO'
+              }
+            }
+          ]
+        },
       ],
     },
   })
