@@ -8,7 +8,7 @@ const t = (text) => text
 
 const invoicePaymentSuccess = async (
   { pledgeId, total, chargeId, start, end },
-  pgdb,
+  pgdb, context
 ) => {
   const event = {
     id: `INVOICE_PAYMENT_${pledgeId}`,
@@ -34,7 +34,7 @@ const invoicePaymentSuccess = async (
       },
     },
   }
-  await invoicePaymentSucceeded.handle(event, pgdb, t)
+  await invoicePaymentSucceeded.handle(event, pgdb, t, context.redis, context)
 }
 
 const invoicePaymentFail = async ({ pledgeId }, pgdb) => {

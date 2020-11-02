@@ -652,6 +652,7 @@ describe('payPledge', () => {
         end: Math.floor(Date.now() / 1000) + 86400, // 24 hours
       },
       pgDatabase(),
+      global.instance.context
     )
 
     await chargeSuccess(
