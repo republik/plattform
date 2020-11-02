@@ -46,7 +46,9 @@ module.exports = async ({
       const account = accounts.find(
         (a) => a.company.id === stripeCustomer.companyId,
       )
-      return account.stripe.customers.retrieve(stripeCustomer.id)
+      return account.stripe.customers.retrieve(stripeCustomer.id, {
+        expand: ['subscriptions', 'sources'],
+      })
     })
 
   const [targetCustomers, sourceCustomers] = await Promise.all([

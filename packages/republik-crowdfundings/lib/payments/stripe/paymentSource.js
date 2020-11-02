@@ -13,7 +13,9 @@ const getPaymentSources = async (userId, pgdb) => {
   if (!customer) {
     return []
   }
-  const stripeCustomer = await platform.stripe.customers.retrieve(customer.id)
+  const stripeCustomer = await platform.stripe.customers.retrieve(customer.id, {
+    expand: ['sources'],
+  })
   if (
     !stripeCustomer ||
     !stripeCustomer.sources ||
