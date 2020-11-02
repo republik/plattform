@@ -116,28 +116,6 @@ export const P = ({ children, ...props }) => {
   )
 }
 
-export const A = React.forwardRef(({ children, attributes, ...props }, ref) => {
-  const [colorScheme] = useColorContext()
-  const AColorRule = useMemo(
-    () =>
-      css({
-        textDecoration: 'none',
-        color: colorScheme.getCSSColor('primary'),
-        '@media (hover)': {
-          ':hover': {
-            color: colorScheme.getCSSColor('primaryHover')
-          }
-        }
-      }),
-    [colorScheme]
-  )
-  return (
-    <a {...AColorRule} {...attributes} {...props} ref={ref}>
-      {children}
-    </a>
-  )
-})
-
 const emphasis = css(fontStyles.sansSerifMedium)
 export const Emphasis = ({ children, attributes, ...props }) => (
   <strong {...props} {...attributes} {...emphasis}>
