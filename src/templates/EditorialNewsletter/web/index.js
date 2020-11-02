@@ -34,7 +34,7 @@ const createSchema = ({ ...args } = {}) => {
     List,
     ListItem,
     ListP,
-    Link: A,
+    A,
     ...args
   })
 }

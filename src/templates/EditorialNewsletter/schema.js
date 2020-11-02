@@ -39,7 +39,7 @@ const createNewsletterSchema = ({
   ListItem,
   ListP,
   variableContext,
-  Link
+  A
 } = {}) => {
   const matchSpan = matchType('span')
   const globalInlines = [
@@ -90,7 +90,7 @@ const createNewsletterSchema = ({
 
   const link = {
     matchMdast: matchType('link'),
-    component: Link,
+    component: A,
     props: node => ({
       title: node.title,
       href: node.url

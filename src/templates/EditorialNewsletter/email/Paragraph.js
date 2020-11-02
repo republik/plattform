@@ -16,7 +16,7 @@ export const linkStyle = {
 }
 
 export const Br = () => <br />
-export const Link = ({ children, href, title }) => (
+export const A = ({ children, href, title }) => (
   <a href={href} title={title} style={linkStyle}>
     {children}
   </a>
