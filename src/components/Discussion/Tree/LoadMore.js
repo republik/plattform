@@ -41,9 +41,7 @@ const styles = {
 
 export const LoadMore = React.memo(({ t, count, onClick }) => {
   const previousCount = usePrevious(count)
-  if (count === 0) {
-    return null
-  } else {
+  if (count > 0) {
     return (
       <LoadMore1
         t={t}
@@ -53,6 +51,7 @@ export const LoadMore = React.memo(({ t, count, onClick }) => {
       />
     )
   }
+  return null
 })
 
 LoadMore.propTypes = {
