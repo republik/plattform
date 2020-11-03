@@ -3,12 +3,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { mUp } from '../../theme/mediaQueries'
 import * as Headlines from '../TeaserFeed/Headline'
-import {
-  serifTitle20,
-  serifTitle22,
-  sansSerifMedium14,
-  sansSerifMedium16
-} from '../Typography/styles'
+import { sansSerifMedium14, sansSerifMedium16 } from '../Typography/styles'
 import { TeaserSectionTitle } from '../TeaserShared'
 import { TeaserFeed } from '../TeaserFeed'
 import colors from '../../theme/colors'
@@ -52,7 +47,6 @@ const TeaserMyMagazine = ({
       }}
     >
       <section {...css(styles.section)}>
-        <TeaserSectionTitle>{title}</TeaserSectionTitle>
         <div role='group' {...css(styles.row, styles.withHighlight)}>
           {latestProgressOrBookmarkedArticles?.length ? (
             <div
@@ -60,6 +54,11 @@ const TeaserMyMagazine = ({
                 ? styles.left
                 : styles.center)}
             >
+              <Link href={bookmarksUrl} passHref>
+                <TeaserSectionTitle href={bookmarksUrl}>
+                  {bookmarksLabel}
+                </TeaserSectionTitle>
+              </Link>
               {latestProgressOrBookmarkedArticles.map(doc => {
                 const { id } = doc
                 const {
@@ -130,11 +129,6 @@ const TeaserMyMagazine = ({
                   </div>
                 )
               })}
-              <Link href={bookmarksUrl} passHref>
-                <TeaserSectionTitle small href={bookmarksUrl}>
-                  {bookmarksLabel}
-                </TeaserSectionTitle>
-              </Link>
             </div>
           ) : null}
           {latestSubscribedArticles?.length ? (
@@ -143,6 +137,11 @@ const TeaserMyMagazine = ({
                 ? styles.right
                 : styles.center)}
             >
+              <Link href={notificationsUrl} passHref>
+                <TeaserSectionTitle href={notificationsUrl}>
+                  {notificationsLabel}
+                </TeaserSectionTitle>
+              </Link>
               {latestSubscribedArticles.map(doc => {
                 const {
                   format,
@@ -167,11 +166,6 @@ const TeaserMyMagazine = ({
                   />
                 )
               })}
-              <Link href={notificationsUrl} passHref>
-                <TeaserSectionTitle small href={notificationsUrl}>
-                  {notificationsLabel}
-                </TeaserSectionTitle>
-              </Link>
             </div>
           ) : null}
         </div>
