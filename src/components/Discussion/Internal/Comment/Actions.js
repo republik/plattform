@@ -245,7 +245,7 @@ export const Actions = ({
             <FeaturedIcon
               {...colorScheme.set(
                 'fill',
-                featuredText ? 'primary' : 'disabled'
+                featuredText ? 'primary' : 'text'
               )}
             />
           </IconButton>
