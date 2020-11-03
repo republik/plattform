@@ -156,7 +156,6 @@ export const Actions = ({
     <div {...styles.root} {...colorScheme.set('color', 'text')}>
       {onExpand && (
         <IconButton
-          type='left'
           onClick={onExpand}
           title={t('styleguide/CommentActions/expand')}
         >
@@ -168,7 +167,6 @@ export const Actions = ({
       )}
       {onReply && !!displayAuthor && (
         <IconButton
-          type='left'
           disabled={!!replyBlockedMessage}
           onClick={onReply}
           title={replyBlockedMessage || t('styleguide/CommentActions/answer')}
@@ -183,7 +181,6 @@ export const Actions = ({
       )}
       {userCanEdit && onEdit && (
         <IconButton
-          type='left'
           onClick={onEdit}
           title={t('styleguide/CommentActions/edit')}
         >
@@ -192,7 +189,6 @@ export const Actions = ({
       )}
       {onUnpublish && (
         <IconButton
-          type='left'
           onClick={onUnpublish}
           title={t('styleguide/CommentActions/unpublish')}
         >
@@ -200,7 +196,6 @@ export const Actions = ({
         </IconButton>
       )}
       <IconButton
-        type='left'
         onClick={onShare}
         title={t('styleguide/CommentActions/share')}
       >
@@ -208,7 +203,6 @@ export const Actions = ({
       </IconButton>
       {userCanReport && onReport && (
         <IconButton
-          type='left'
           disabled={userReportedAt}
           onClick={handleReport}
           title={t('styleguide/CommentActions/report')}
@@ -243,20 +237,18 @@ export const Actions = ({
             }
           >
             <FeaturedIcon
-              {...colorScheme.set(
-                'fill',
-                featuredText ? 'primary' : 'text'
-              )}
+              {...colorScheme.set('fill', featuredText ? 'primary' : 'text')}
             />
           </IconButton>
         )}
         <div {...styles.vote}>
           <IconButton
-            type={userVote === 'UP' ? 'selectedVote' : 'vote'}
+            selected={userVote === 'UP'}
+            vote={true}
             onClick={onUpvote}
             title={t('styleguide/CommentActions/upvote')}
           >
-            <MdKeyboardArrowUp {...colorScheme.set('fill', 'text')} />
+            <MdKeyboardArrowUp />
           </IconButton>
           <span
             title={t.pluralize('styleguide/CommentActions/upvote/count', {
@@ -278,11 +270,12 @@ export const Actions = ({
             {downVotes}
           </span>
           <IconButton
-            type={userVote === 'DOWN' ? 'selectedVote' : 'vote'}
+            selected={userVote === 'DOWN'}
+            vote={true}
             onClick={onDownvote}
             title={t('styleguide/CommentActions/downvote')}
           >
-            <MdKeyboardArrowDown {...colorScheme.set('fill', 'text')} />
+            <MdKeyboardArrowDown />
           </IconButton>
         </div>
       </div>
@@ -290,22 +283,25 @@ export const Actions = ({
   )
 }
 
-const IconButton = ({ type, onClick, title, children }) => {
+const IconButton = ({ vote, selected, onClick, title, children }) => {
   const [colorScheme] = useColorContext()
-  const iconButtonStyleRules = useMemo(() => {
-    return {
-      iconButton: css({
-        color: colorScheme.getCSSColor('text'),
+  const iconButtonStyleRules = useMemo(
+    () =>
+      css({
+        color: colorScheme.getCSSColor(selected ? 'primary' : 'text'),
         '&[disabled]': {
           cursor: 'inherit',
           color: colorScheme.getCSSColor('disabled')
         }
-      })
-    }
-  }, [colorScheme])
+      }),
+    [colorScheme, selected]
+  )
   return (
     <button
-      {...merge(styles.iconButton, styles[`${type}Button`])}
+      {...merge(
+        styles.iconButton,
+        vote ? styles.voteButton : styles.leftButton
+      )}
       {...iconButtonStyleRules}
       title={title}
       disabled={!onClick}
