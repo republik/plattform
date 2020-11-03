@@ -32,7 +32,8 @@ const styles = {
     [mUp]: {
       ...convertStyleToRem(sansSerifRegular18)
     },
-    '& a': linkStyle
+    wordWrap: 'break-word',
+    '& a': { linkStyle }
   }),
   mediaContainer: css({
     display: 'inline-block',
