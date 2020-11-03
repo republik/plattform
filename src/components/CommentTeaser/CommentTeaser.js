@@ -6,8 +6,8 @@ import { mUp } from '../../theme/mediaQueries'
 import { ellipsize, underline } from '../../lib/styleMixins'
 import { inQuotes } from '../../lib/inQuotes'
 import { useMediaQuery } from '../../lib/useMediaQuery'
-import { linkRule } from '../Typography/'
 import { serifRegular14, sansSerifRegular14 } from '../Typography/styles'
+import { A } from '../Typography/'
 import { CommentBodyParagraph } from '../CommentBody/web'
 import { Context, Header } from '../Discussion/Internal/Comment'
 import RawHtml from '../RawHtml/'
@@ -201,7 +201,7 @@ export const CommentTeaser = ({
                     discussion={discussion}
                     passHref
                   >
-                    <a {...linkRule}>{inQuotes(discussion.title)}</a>
+                    <A>{inQuotes(discussion.title)}</A>
                   </Link>
                 )
               }
