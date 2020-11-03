@@ -150,7 +150,7 @@ export const A = React.forwardRef(({ children, ...props }, ref) => {
         color: colorScheme.getCSSColor('primary'),
         '@media (hover)': {
           ':hover': {
-            color: colorScheme.getCSSColor('primary')
+            color: colorScheme.getCSSColor('primaryHover')
           }
         }
       }),
