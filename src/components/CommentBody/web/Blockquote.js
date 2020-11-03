@@ -49,4 +49,14 @@ export const BlockQuoteNested = ({ children }) => {
   )
 }
 
-export default ({ children }) => <div {...styles.blockquote}>{children}</div>
+export default ({ children }) => {
+  const [colorScheme] = useColorContext()
+  return (
+    <div
+      {...styles.blockquote}
+      {...colorScheme.set('backgroundColor', 'hover')}
+    >
+      {children}
+    </div>
+  )
+}
