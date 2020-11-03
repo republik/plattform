@@ -288,7 +288,7 @@ const CommentNode = ({
   const verticalToggleStyleRules = useMemo(
     () =>
       css({
-        '::before': colorScheme.getCSSColor('divider'),
+        '::before': { background: colorScheme.getCSSColor('divider') },
         '@media (hover)': {
           ':hover::before': {
             background: colorScheme.getCSSColor('primary')

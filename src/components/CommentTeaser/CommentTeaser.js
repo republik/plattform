@@ -2,7 +2,6 @@ import React, { Fragment, useMemo } from 'react'
 import { css } from 'glamor'
 import get from 'lodash/get'
 
-import NewPage from 'react-icons/lib/md/open-in-new'
 import { mUp } from '../../theme/mediaQueries'
 import { ellipsize, underline } from '../../lib/styleMixins'
 import { inQuotes } from '../../lib/inQuotes'
@@ -76,7 +75,6 @@ export const CommentTeaser = ({
   t,
   Link = DefaultLink,
   onClick,
-  newPage,
   highlighted,
   menu,
   ...comment
@@ -120,11 +118,11 @@ export const CommentTeaser = ({
     Link
   }
 
-  const linkEMRule = useMemo(
+  const highlightEMRule = useMemo(
     () =>
       css({
         '& em': {
-          background: colorScheme.getCSSColor('hover'),
+          background: colorScheme.getCSSColor('alert'),
           fontStyle: 'normal'
         }
       }),
@@ -151,7 +149,7 @@ export const CommentTeaser = ({
           <Context
             title={
               <Link comment={comment} discussion={discussion} passHref>
-                <a {...styles.link} {...linkEMRule}>
+                <a {...styles.link} {...highlightEMRule}>
                   {tag}
                 </a>
               </Link>
@@ -165,7 +163,7 @@ export const CommentTeaser = ({
         >
           <CommentBodyParagraph>
             <Link comment={comment} discussion={discussion} passHref>
-              <a {...styles.link} {...linkEMRule}>
+              <a {...styles.link} {...highlightEMRule}>
                 {!!preview && !highlight && (
                   <Fragment>
                     {preview.string}
@@ -190,9 +188,6 @@ export const CommentTeaser = ({
           <div
             {...styles.discussionReference}
             {...colorScheme.set('color', 'textSoft')}
-            style={{
-              paddingRight: newPage ? `${ICON_SIZE + 5}px` : undefined
-            }}
           >
             {t.elements(
               `styleguide/CommentTeaser/${
@@ -206,17 +201,7 @@ export const CommentTeaser = ({
                     discussion={discussion}
                     passHref
                   >
-                    <a {...linkRule}>
-                      {inQuotes(discussion.title)}
-                      {newPage && (
-                        <span {...styles.icon}>
-                          <NewPage
-                            size={ICON_SIZE}
-                            fill={colorScheme.getCSSColor('disabled')}
-                          />
-                        </span>
-                      )}
-                    </a>
+                    <a {...linkRule}>{inQuotes(discussion.title)}</a>
                   </Link>
                 )
               }

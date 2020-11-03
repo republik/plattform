@@ -10,7 +10,6 @@ Props:
 - `parentIds`: The comment's array of parent ids. Used to determine whether it's a comment or a reply.
 - `createdAt`: The comment's creation timestamp.
 - `timeago`: A function that renders a human-readable version of `createdAt`.
-- `newPage`: Whether to display a "new page" icon.
 - `highlighted`: Adds a background to the teaser
 - `menu`: Adds a more icon to the right and a callout menu
 - `Link`: A Next.js like `<Link />` component, receiving these props:
@@ -46,7 +45,6 @@ Props:
   discussion={{
     title: "Der Crowdfunding-Code"
   }}
-  newPage={true}
   t={t}
 />
 ```
@@ -85,7 +83,6 @@ Props:
   discussion={{
     title: "Der Crowdfunding"
   }}
-  newPage={true}
   t={t}
 />
 ```
