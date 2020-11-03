@@ -265,7 +265,7 @@ export const link = css({
 })
 export const A = React.forwardRef(({ children, attributes, ...props }, ref) => {
   const [colorScheme] = useColorContext()
-  const AHoverRule = useMemo(
+  const hoverRule = useMemo(
     () =>
       css({
         '@media (hover)': {
@@ -282,7 +282,7 @@ export const A = React.forwardRef(({ children, attributes, ...props }, ref) => {
       {...attributes}
       {...props}
       {...link}
-      {...AHoverRule}
+      {...hoverRule}
       ref={ref}
     >
       {children}

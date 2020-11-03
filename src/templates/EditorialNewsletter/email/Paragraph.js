@@ -1,16 +1,17 @@
 import React from 'react'
 import { fontFamilies } from '../../../theme/fonts'
 import { Editorial } from '../../../components/Typography'
+import colors from '../../../theme/colors'
 
 export const paragraphStyle = {
-  color: 'inherit',
+  color: colors.text,
   fontSize: '19px',
   lineHeight: '158%',
   fontFamily: fontFamilies.serifRegular
 }
 
 export const linkStyle = {
-  color: 'inherit',
+  color: colors.text,
   textDecoration: 'underline',
   textDecorationSkip: 'ink'
 }
