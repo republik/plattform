@@ -93,7 +93,7 @@ const colors = {
     default: '#FFFFFF',
     overlay: '#FFFFFF',
     hover: '#F6F8F7',
-    alert: '#DBF4DB',
+    alert: '#E4F5E2',
     defaultInverted: '#111111',
     overlayInverted: '#191919',
     divider: '#DADDDC',
