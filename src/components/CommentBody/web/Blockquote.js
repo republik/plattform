@@ -8,13 +8,15 @@ import { convertStyleToRem } from '../../Typography/utils'
 
 const styles = {
   blockquote: css({
-    borderLeftWidth: 2,
-    borderLeftStyle: 'solid',
     margin: '20px auto',
     padding: '15px',
     [mUp]: {
       padding: '25px'
     }
+  }),
+  nestedBlockQuote: css({
+    borderLeftWidth: 2,
+    borderLeftStyle: 'solid'
   }),
   paragraph: css({
     margin: '6px 0',
@@ -41,6 +43,7 @@ export const BlockQuoteNested = ({ children }) => {
   return (
     <div
       {...styles.blockquote}
+      {...styles.nestedBlockQuote}
       {...colorScheme.set('backgroundColor', 'hover')}
       {...colorScheme.set('borderColor', 'divider')}
     >
