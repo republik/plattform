@@ -6,7 +6,7 @@ import { FigureByline, FigureImage } from '../Figure'
 import { mUp } from '../TeaserFront/mediaQueries'
 import Text from '../TeaserFront/Text'
 import { serifRegular16, serifRegular18 } from '../Typography/styles'
-
+import { useColorContext } from '../Colors/useColorContext'
 import CarouselContext from './Context'
 
 import {
@@ -112,21 +112,22 @@ const Tile = ({
   aboveTheFold,
   byline,
   children,
-  ...rest
+  bgColor: tileBgColor,
+  color: tileColor,
+  outline: tileOutlineColor,
+  bigger: biggerOverride
 }) => {
   const context = React.useContext(CarouselContext)
-
-  const color = rest.color || context.color
-  const bgColor = rest.bgColor || context.bgColor
-  const outline = rest.outline || context.outline
-  const bigger = rest.bigger || context.bigger
+  const [colorScheme] = useColorContext()
+  const bigger = biggerOverride || context.bigger
 
   const tileStyle = merge(
     styles.tile,
     {
-      border: outline ? `1px solid ${outline}` : 'none',
-      color,
-      backgroundColor: bgColor,
+      borderWidth: tileOutlineColor && 1,
+      borderStyle: tileOutlineColor && 'solid',
+      backgroundColor: tileBgColor,
+      color: tileColor,
       cursor: onClick ? 'pointer' : 'default',
       padding: bigger ? '0 0 20px 0' : '30px 15px',
       alignItems: bigger ? 'flex-start' : 'center'
@@ -155,7 +156,14 @@ const Tile = ({
       : false
 
   return (
-    <div {...tileStyle} onClick={onClick} className='tile'>
+    <div
+      {...tileStyle}
+      {...(tileOutlineColor && colorScheme.set('borderColor', 'divider'))}
+      {...(!tileBgColor && colorScheme.set('backgroundColor', 'default'))}
+      {...(!tileColor && colorScheme.set('color', 'text'))}
+      onClick={onClick}
+      className='tile'
+    >
       <div {...containerStyle}>
         {/* Image */}
         {imageProps && !isPortrait && (
@@ -168,7 +176,7 @@ const Tile = ({
             {byline && (
               <FigureByline
                 position={bigger ? 'belowRight' : 'rightCompact'}
-                style={{ color }}
+                style={{ color: tileColor }}
               >
                 {byline}
               </FigureByline>
@@ -187,7 +195,7 @@ const Tile = ({
               {byline && (
                 <FigureByline
                   position={bigger ? 'aboveRight' : 'rightCompact'}
-                  style={{ color }}
+                  style={{ color: tileColor }}
                 >
                   {byline}
                 </FigureByline>
@@ -197,13 +205,13 @@ const Tile = ({
         )}
         {/* Body */}
         <div>
-          <Text color={color} margin={'0 auto'}>
+          <Text color={tileColor} margin={'0 auto'}>
             {children}
             {!!count && (
               <TeaserCarouselArticleCount
                 count={count}
-                bgColor={color}
-                color={bgColor}
+                bgColor={tileColor}
+                color={tileBgColor}
               />
             )}
           </Text>

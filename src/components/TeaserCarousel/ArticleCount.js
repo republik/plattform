@@ -2,6 +2,7 @@ import { css } from 'glamor'
 import React from 'react'
 import { sansSerifMedium16 } from '../Typography/styles'
 import PropTypes from 'prop-types'
+import { useColorContext } from '../Colors/useColorContext'
 
 const ICON_SIZE = 29
 
@@ -48,12 +49,22 @@ const styles = {
   })
 }
 
-const ArticleCount = ({ count, bgColor, color }) => {
-  let countStyles = css(styles.count, { color })
+const ArticleCount = ({ count, bgColor: iconColor, color: textColor }) => {
+  let countStyles = css(styles.count, { color: textColor && textColor })
+  const [colorScheme] = useColorContext()
   return (
     <div {...styles.container}>
-      <Icon size={ICON_SIZE} fill={bgColor} />
-      <span {...countStyles}>{count}</span>
+      <Icon
+        size={ICON_SIZE}
+        fill={iconColor && iconColor}
+        {...(!iconColor && colorScheme.set('fill', 'text'))}
+      />
+      <span
+        {...countStyles}
+        {...(!textColor && colorScheme.set('color', 'textInverted'))}
+      >
+        {count}
+      </span>
     </div>
   )
 }
@@ -64,9 +75,4 @@ ArticleCount.propTypes = {
   bgColor: PropTypes.string,
   color: PropTypes.string,
   count: PropTypes.number
-}
-
-ArticleCount.defaultProps = {
-  bgColor: '#000',
-  color: '#fff'
 }
