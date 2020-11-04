@@ -140,6 +140,7 @@ const InfoBox = ({
       t={t}
       height={{ mobile: 121, desktop: 151 }}
       editorPreview={editorPreview}
+      scrollTop={true}
     >
       {children}
     </Collapsable>

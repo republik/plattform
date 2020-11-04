@@ -1,9 +1,10 @@
-import React, { useEffect, useState, useMemo } from 'react'
+import React, { useEffect, useState, useMemo, useRef } from 'react'
 import PropTypes from 'prop-types'
 import { css, merge } from 'glamor'
 
 import { sansSerifRegular14 } from '../Typography/styles'
 import { mUp } from '../../theme/mediaQueries'
+import scrollIntoView from 'scroll-into-view'
 import { useMediaQuery } from '../../lib/useMediaQuery'
 import { useBoundingClientRect } from '../../lib/useBoundingClientRect'
 import { convertStyleToRem, pxToRem } from '../Typography/utils'
@@ -56,7 +57,8 @@ const Collapsable = ({
   style,
   alwaysCollapsed,
   editorPreview,
-  isOnOverlay
+  isOnOverlay,
+  scrollTop
 }) => {
   /**
    * Measuring the body size (height), so we can determine whether to collapse
@@ -72,6 +74,7 @@ const Collapsable = ({
   const [bodyRef, bodySize] = useBoundingClientRect([children])
   const [colorScheme] = useColorContext()
   const isDesktop = useMediaQuery(mUp)
+  const root = useRef()
   const { desktop, mobile } = height
   useEffect(() => {
     /* Collapse the body (switch to 'preview' visibility) when allowed and the size exceeds the threshold. */
@@ -128,12 +131,19 @@ const Collapsable = ({
     [colorScheme]
   )
 
+  useEffect(() => {
+    bodyVisibility === 'preview' &&
+      scrollTop &&
+      scrollIntoView(root.current, { time: 0, align: { top: 0 } })
+  }, [bodyVisibility])
+
   return (
     <div
       {...merge(
         editorPreview && collapsedEditorPreviewStyle(mobile, desktop),
         editorPreview && collapsedEditorPreviewRule
       )}
+      ref={root}
     >
       <div
         ref={bodyRef}
@@ -219,14 +229,16 @@ Collapsable.propTypes = {
   threshold: PropTypes.number,
   style: PropTypes.object,
   editorPreview: PropTypes.bool,
-  alwaysCollapsed: PropTypes.bool
+  alwaysCollapsed: PropTypes.bool,
+  scrollTop: PropTypes.bool
 }
 
 Collapsable.defaultProps = {
   height: COLLAPSED_HEIGHT,
   initialVisibility: 'auto',
   threshold: 50,
-  alwaysCollapsed: false
+  alwaysCollapsed: false,
+  scrollTop: false
 }
 
 export default Collapsable
