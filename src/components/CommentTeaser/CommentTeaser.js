@@ -67,8 +67,6 @@ const styles = {
   })
 }
 
-const ICON_SIZE = 18
-
 const DefaultLink = ({ children }) => children
 
 export const CommentTeaser = ({

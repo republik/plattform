@@ -303,7 +303,7 @@ const CommentNode = ({
           background: drawLineEnd ? colorScheme.getCSSColor('divider') : 'none'
         }
       }),
-    [colorScheme]
+    [colorScheme, drawLineEnd]
   )
 
   if (isExpanded) {

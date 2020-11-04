@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React from 'react'
 import * as styles from './styles'
 import { css } from 'glamor'
 import colors from '../../theme/colors'
