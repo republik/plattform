@@ -308,7 +308,7 @@ const IcExpand = () => (
     <rect
       stroke='currentColor'
       strokeWidth='2'
-      fill='white'
+      fill='transparent'
       x='1'
       y='1'
       width='18'
@@ -324,7 +324,7 @@ const IcCollapse = () => (
     <rect
       stroke='currentColor'
       strokeWidth='2'
-      fill='white'
+      fill='transparent'
       x='1'
       y='1'
       width='18'
