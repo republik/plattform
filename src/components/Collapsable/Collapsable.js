@@ -57,8 +57,7 @@ const Collapsable = ({
   style,
   alwaysCollapsed,
   editorPreview,
-  isOnOverlay,
-  scrollTop
+  isOnOverlay
 }) => {
   /**
    * Measuring the body size (height), so we can determine whether to collapse
@@ -74,7 +73,6 @@ const Collapsable = ({
   const [bodyRef, bodySize] = useBoundingClientRect([children])
   const [colorScheme] = useColorContext()
   const isDesktop = useMediaQuery(mUp)
-  const root = useRef()
   const { desktop, mobile } = height
   useEffect(() => {
     /* Collapse the body (switch to 'preview' visibility) when allowed and the size exceeds the threshold. */
@@ -90,8 +88,19 @@ const Collapsable = ({
     bodyVisibility === 'auto' ? undefined : bodyVisibility === 'preview'
   const collapseLabel =
     t && t(`styleguide/Collapsable/${collapsed ? 'expand' : 'collapse'}`)
+
+  const root = useRef()
   const onToggleCollapsed = React.useCallback(
-    () => setBodyVisibility(v => (v === 'preview' ? 'full' : 'preview')),
+    () =>
+      setBodyVisibility(v => {
+        if (v === 'full') {
+          if (root.current.getBoundingClientRect().top < 0) {
+            scrollIntoView(root.current, { time: 0, align: { top: 0 } })
+          }
+          return 'preview'
+        }
+        return 'full'
+      }),
     [setBodyVisibility]
   )
 
@@ -130,12 +139,6 @@ const Collapsable = ({
       }),
     [colorScheme]
   )
-
-  useEffect(() => {
-    bodyVisibility === 'preview' &&
-      scrollTop &&
-      scrollIntoView(root.current, { time: 0, align: { top: 0 } })
-  }, [bodyVisibility])
 
   return (
     <div
@@ -229,16 +232,14 @@ Collapsable.propTypes = {
   threshold: PropTypes.number,
   style: PropTypes.object,
   editorPreview: PropTypes.bool,
-  alwaysCollapsed: PropTypes.bool,
-  scrollTop: PropTypes.bool
+  alwaysCollapsed: PropTypes.bool
 }
 
 Collapsable.defaultProps = {
   height: COLLAPSED_HEIGHT,
   initialVisibility: 'auto',
   threshold: 50,
-  alwaysCollapsed: false,
-  scrollTop: false
+  alwaysCollapsed: false
 }
 
 export default Collapsable
