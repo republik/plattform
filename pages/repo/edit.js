@@ -42,7 +42,11 @@ import { getSchema } from '../../components/Templates'
 import { API_UNCOMMITTED_CHANGES_URL } from '../../lib/settings'
 import * as fragments from '../../lib/graphql/fragments'
 
-import { ColorContext, colors, plainButtonRule } from '@project-r/styleguide'
+import {
+  ColorContextProvider,
+  colors,
+  plainButtonRule
+} from '@project-r/styleguide'
 import SettingsIcon from 'react-icons/lib/fa/cogs'
 
 import createDebug from 'debug'
@@ -862,7 +866,7 @@ export class EditorPage extends Component {
                     }
                   />
                 )}
-                <ColorContext.Provider value={dark && colors.negative}>
+                <ColorContextProvider colorSchemeKey={dark ? 'dark' : 'light'}>
                   <Editor
                     ref={this.editorRef}
                     schema={schema}
@@ -873,7 +877,7 @@ export class EditorPage extends Component {
                     onDocumentChange={this.documentChangeHandler}
                     readOnly={readOnly}
                   />
-                </ColorContext.Provider>
+                </ColorContextProvider>
               </div>
             )}
           />
