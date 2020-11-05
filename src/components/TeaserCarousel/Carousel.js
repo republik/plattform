@@ -18,7 +18,7 @@ export const Carousel = ({
   children,
   tileCount: tileCountFromProps,
   article,
-  outline: outlineOverride,
+  outline,
   bgColor: bgColorOverride,
   color: colorOverride,
   grid
@@ -34,17 +34,16 @@ export const Carousel = ({
     : TILE_MAX_WIDTH
   const [colorScheme] = useColorContext()
 
-  const outline = outlineOverride
   const bgColor = bgColorOverride || colorScheme.getCSSColor('default')
   const color = colorOverride || colorScheme.getCSSColor('text')
 
   return (
     <CarouselContext.Provider
       value={{
+        bigger,
+        outline,
         bgColor,
         color,
-        outline,
-        bigger,
         tileCount,
         tileMaxWidth,
         grid
@@ -76,6 +75,9 @@ export const Carousel = ({
 export default React.memo(Carousel)
 
 Carousel.propTypes = {
+  bgColor: PropTypes.string,
+  color: PropTypes.string,
+  outline: PropTypes.string,
   bigger: PropTypes.bool,
   children: PropTypes.node
 }

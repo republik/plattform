@@ -1,14 +1,14 @@
 import { css } from 'glamor'
 import PropTypes from 'prop-types'
-import React, { useRef, useState, useEffect, useMemo, useContext } from 'react'
+import React, { useRef, useState, useContext, useEffect, useMemo } from 'react'
 import scrollIntoView from 'scroll-into-view'
-import { color } from 'd3-color'
 import ChevronLeft from 'react-icons/lib/md/keyboard-arrow-left'
 import ChevronRight from 'react-icons/lib/md/keyboard-arrow-right'
 import { PADDING, TILE_MARGIN_RIGHT } from './constants'
-import { useColorContext } from '../Colors/useColorContext'
-import { plainButtonRule } from '../Button'
 import CarouselContext from './Context'
+import { color } from 'd3-color'
+import { plainButtonRule } from '../Button'
+import { useColorContext } from '../Colors/useColorContext'
 
 const styles = {
   container: css({
@@ -62,10 +62,10 @@ const styles = {
 }
 
 const Row = ({ children }) => {
+  const context = useContext(CarouselContext)
   const overflow = useRef()
   const [{ left, right }, setArrows] = useState({ left: false, right: false })
   const [colorScheme] = useColorContext()
-  const context = useContext(CarouselContext)
   const lightBg = useMemo(() => {
     const bg = color(context.bgColor)
     bg.opacity = 0.7

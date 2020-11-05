@@ -6,8 +6,8 @@ import { FigureByline, FigureImage } from '../Figure'
 import { mUp } from '../TeaserFront/mediaQueries'
 import Text from '../TeaserFront/Text'
 import { serifRegular16, serifRegular18 } from '../Typography/styles'
-import { useColorContext } from '../Colors/useColorContext'
 import CarouselContext from './Context'
+import { useColorContext } from '../Colors/useColorContext'
 
 import {
   PADDING,
