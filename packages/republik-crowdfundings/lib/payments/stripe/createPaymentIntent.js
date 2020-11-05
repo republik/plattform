@@ -1,5 +1,5 @@
 const getStripeClients = require('./clients')
-const getPaymentMethodForCompany = require('./getPaymentMethodForCompany')
+const { getPaymentMethodForCompany } = require('./paymentMethod')
 
 // paymentMethod(Id) is expected to be in company(Id)
 module.exports = async ({

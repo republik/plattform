@@ -2,7 +2,9 @@ const { ensureSignedIn } = require('@orbiting/backend-modules-auth')
 const getClients = require('../../../lib/payments/stripe/clients')
 const createCustomer = require('../../../lib/payments/stripe/createCustomer')
 const addPaymentMethod = require('../../../lib/payments/stripe/addPaymentMethod')
-const getPaymentMethodForCompany = require('../../../lib/payments/stripe/getPaymentMethodForCompany')
+const {
+  getPaymentMethodForCompany,
+} = require('../../../lib/payments/stripe/paymentMethod')
 
 module.exports = async (
   _,
