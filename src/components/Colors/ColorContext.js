@@ -75,9 +75,10 @@ export const ColorContextProvider = ({
     if (colorSchemeKey === 'auto') {
       return createScheme({
         isSupported: CSSVarSupport,
+        ...colors.light,
         ...(CSSVarSupport
           ? reduceMainColors(key => `var(--color-${key})`)
-          : colors.light),
+          : {}),
         cssColors: reduceMainColors(key => [
           colors.light[key],
           `var(--color-${key})`
