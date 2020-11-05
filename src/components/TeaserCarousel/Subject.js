@@ -1,12 +1,11 @@
 import { css } from 'glamor'
 import PropTypes from 'prop-types'
 import React from 'react'
-import colors from '../../theme/colors'
 import { mUp } from '../TeaserFront/mediaQueries'
 import { sansSerifRegular16, sansSerifRegular18 } from '../Typography/styles'
+import { useColorContext } from '../Colors/useColorContext'
 
 const styles = css({
-  color: colors.lightText,
   ...sansSerifRegular16,
   lineHeight: '22px',
 
@@ -17,12 +16,17 @@ const styles = css({
 })
 
 const Subject = ({ children }) => {
+  const [colorScheme] = useColorContext()
   const customStyles = css(styles, {
     '&::after': {
-      content: !!children.length ? ' ' : undefined
+      content: children.length ? ' ' : undefined
     }
   })
-  return <span {...customStyles}>{children}</span>
+  return (
+    <span {...customStyles} {...colorScheme.set('color', 'textSoft')}>
+      {children}
+    </span>
+  )
 }
 
 export default Subject

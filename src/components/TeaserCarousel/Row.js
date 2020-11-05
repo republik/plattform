@@ -1,15 +1,14 @@
 import { css } from 'glamor'
 import PropTypes from 'prop-types'
-import React, { useRef, useState, useEffect, useMemo } from 'react'
+import React, { useRef, useState, useEffect, useMemo, useContext } from 'react'
 import scrollIntoView from 'scroll-into-view'
-
+import { color } from 'd3-color'
 import ChevronLeft from 'react-icons/lib/md/keyboard-arrow-left'
 import ChevronRight from 'react-icons/lib/md/keyboard-arrow-right'
-
 import { PADDING, TILE_MARGIN_RIGHT } from './constants'
 import { useColorContext } from '../Colors/useColorContext'
-
 import { plainButtonRule } from '../Button'
+import CarouselContext from './Context'
 
 const styles = {
   container: css({
@@ -66,6 +65,12 @@ const Row = ({ children }) => {
   const overflow = useRef()
   const [{ left, right }, setArrows] = useState({ left: false, right: false })
   const [colorScheme] = useColorContext()
+  const context = useContext(CarouselContext)
+  const lightBg = useMemo(() => {
+    const bg = color(context.bgColor)
+    bg.opacity = 0.7
+    return bg.toString()
+  }, [context.bgColor])
 
   useEffect(() => {
     const scroller = overflow.current
@@ -112,7 +117,7 @@ const Row = ({ children }) => {
       <button
         {...styles.arrow}
         {...(left && styles.arrowHoverable)}
-        {...colorScheme.set('backgroundColor', 'default')}
+        style={{ left: 0, backgroundColor: lightBg }}
         onClick={() => {
           const scroller = overflow.current
           const clientWidth = scroller.clientWidth
@@ -135,7 +140,7 @@ const Row = ({ children }) => {
       <button
         {...styles.arrow}
         {...(right && styles.arrowHoverable)}
-        {...colorScheme.set('backgroundColor', 'default')}
+        style={{ right: 0, backgroundColor: lightBg }}
         onClick={() => {
           const scroller = overflow.current
           const clientWidth = scroller.clientWidth

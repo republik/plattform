@@ -1,9 +1,9 @@
 A `<TeaserCarousel />` is a row of tiles through which the user can scroll horizontally.
 
 Supported props:
-- `color` (string): The text color (default: `#fff`).
-- `bgColor` (string): The background color (default: `#000`).
-- `outline` (string): The default outline color for cards.
+- `bgColor` (string): Sets the carousel background color, (default: colorsScheme('default').
+- `color` (string): Sets the text color (default: colorScheme('text'). Overrides Tile text color if it isn't set on Tiles.
+- `outline` (string): Sets a default outline color. Overrides Tile text color if it isn't set on Tiles.
 - `bigger` (bool): use bigger style for cards
 - `article` (bool): margin and smaller max width for tiles (optimised to align with article column)
 
