@@ -32,8 +32,7 @@ module.exports = {
   },
   roles(user, args, { user: me }) {
     if (Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter'])) {
-      const roles = user.roles ?? []
-      return roles.filter((role) => Roles.exposableRoles.includes(role))
+      return user.roles.filter((role) => Roles.exposableRoles.includes(role))
     }
     return []
   },
