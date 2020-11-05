@@ -10,10 +10,13 @@ const Redis = require('@orbiting/backend-modules-base/lib/Redis')
 
 module.exports = (args) => {
   const { sourceId } = args
-  if (sourceId) {
+  if (sourceId.startsWith('src_')) {
     return payWithSource(args)
   } else {
-    return payWithPaymentMethod(args).catch((e) => {
+    return payWithPaymentMethod({
+      ...args,
+      stripePlatformPaymentMethodId: args.sourceId,
+    }).catch((e) => {
       throwStripeError(e, { ...args, kind: 'paymentIntent' })
     })
   }

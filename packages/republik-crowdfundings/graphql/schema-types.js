@@ -8,8 +8,9 @@ extend type User {
   memberships: [Membership!]!
   activeMembership: Membership
 
-  paymentSources: [PaymentSource!]!
-  stripePaymentMethods: [StripePaymentMethod!]!
+  # stripe Sources and PaymentMethods
+  paymentSources: [PaymentSource!]! @deprecated(reason: "use \`defaultPaymentSource\` instead")
+  defaultPaymentSource: PaymentSource
 
   # Custom-tailored packages available for User
   customPackages(crowdfundingName: String): [Package!]
@@ -254,9 +255,8 @@ input PledgePaymentInput {
   pledgeId: ID!
   method: PaymentMethod!
   paperInvoice: Boolean
+  # can be a stripe Source id or a stripe PaymentMethod id (both must have been created on the platform's account)
   sourceId: String
-  # mandatory to pay with PaymentIntent
-  stripePlatformPaymentMethodId: ID
   pspPayload: JSON
   makeDefault: Boolean
   address: AddressInput
@@ -310,35 +310,21 @@ enum PaymentSourceStatus {
   FAILED
   PENDING
 }
+# can be stripe source or paymentMethod
+# id starts with:
+# src_: Source
+# pm_: PaymentMethod
 type PaymentSource {
   id: String!
   isDefault: Boolean!
+  # is always CHARGEABLE for PaymentSources
   status: PaymentSourceStatus!
-  brand: String!
-  last4: String!
-  expMonth: Int!
-  expYear: Int!
-  # is source expired now
-  isExpired: Boolean!
-}
-type StripePaymentMethod {
-  id: ID!
-  isDefault: Boolean!
-  card: StripeCard
-  companyId: ID!
-  connectedPaymentMethods: [StripeConnectedPaymentMethod!]!
-}
-type StripeCard {
   brand: String!
   last4: String!
   expMonth: Int!
   expYear: Int!
   # is card expired now
   isExpired: Boolean!
-}
-type StripeConnectedPaymentMethod {
-  id: ID!
-  companyId: ID!
 }
 
 enum CancellationCategoryType {

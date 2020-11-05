@@ -81,6 +81,8 @@ const getPaymentMethods = async ({
     id: pm.id,
     isDefault:
       pm.id === stripeCustomer.invoice_settings?.default_payment_method,
+    // in contrast to sources, status is not available from stripe
+    status: 'CHARGEABLE',
     card: {
       brand: pm.card.brand,
       last4: pm.card.last4,

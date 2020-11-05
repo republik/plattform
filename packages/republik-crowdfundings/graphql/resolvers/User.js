@@ -16,8 +16,12 @@ const { getCustomPackages } = require('../../lib/User')
 const { suggest: autoPaySuggest } = require('../../lib/AutoPay')
 const createCache = require('../../lib/cache')
 const { getLastEndDate } = require('../../lib/utils')
-const { getPaymentSources } = require('../../lib/payments/stripe/paymentSource')
-const { getPaymentMethods } = require('../../lib/payments/stripe/paymentMethod')
+const {
+  getDefaultPaymentSource,
+} = require('../../lib/payments/stripe/paymentSource')
+const {
+  getDefaultPaymentMethod,
+} = require('../../lib/payments/stripe/paymentMethod')
 
 const { DISABLE_RESOLVER_USER_CACHE } = process.env
 const QUERY_CACHE_TTL_SECONDS = 60 * 60 * 24 // 1 day
@@ -32,6 +36,37 @@ const createMembershipCache = (user, prop, context) =>
     },
     context,
   )
+
+const defaultPaymentSource = async (user, args, { pgdb }) => {
+  const getIsExpired = ({ expYear, expMonth }) => {
+    if (!expYear || !expMonth) {
+      return true
+    }
+    return moment(`${expYear}-${expMonth}`, 'YYYY-MM')
+      .endOf('month')
+      .isBefore(moment())
+  }
+
+  let source = await getDefaultPaymentMethod({
+    userId: user.id,
+    pgdb,
+  }).then((s) => ({
+    ...s,
+    ...s.card,
+    isExpired: getIsExpired(s.card),
+  }))
+  if (source && !source.isExpired) {
+    return source
+  }
+
+  source = await getDefaultPaymentSource(user.id, pgdb).then((s) => ({
+    ...s,
+    isExpired: getIsExpired(s),
+  }))
+  if (source && !source.isExpired) {
+    return source
+  }
+}
 
 module.exports = {
   async memberships(user, args, { pgdb, user: me }) {
@@ -187,26 +222,24 @@ module.exports = {
     }
     return []
   },
-  async paymentSources(user, args, { pgdb, user: me }) {
+  async paymentSources(user, args, context) {
+    const { user: me } = context
     if (
       Roles.userIsMeOrInRoles(user, me, ['admin']) ||
       isFieldExposed(user, 'paymentSources')
     ) {
-      return getPaymentSources(user.id, pgdb)
+      return [await defaultPaymentSource(user, args, context)]
     }
     return []
   },
-  async stripePaymentMethods(user, args, { pgdb, user: me }) {
+  async defaultPaymentSource(user, args, context) {
+    const { user: me } = context
     if (
       Roles.userIsMeOrInRoles(user, me, ['admin']) ||
-      isFieldExposed(user, 'paymentMethods')
+      isFieldExposed(user, 'paymentSources')
     ) {
-      return getPaymentMethods({
-        userId: user.id,
-        pgdb,
-      })
+      return defaultPaymentSource(user, args, context)
     }
-    return []
   },
   async checkMembershipSubscriptions(user, args, { pgdb, user: me }) {
     Roles.ensureUserIsMeOrInRoles(user, me, ['supporter'])

@@ -116,8 +116,6 @@ module.exports = async (_, args, context) => {
         pledgeId: pledge.id,
         total: pledge.total,
         sourceId: pledgePayment.sourceId,
-        stripePlatformPaymentMethodId:
-          pledgePayment.stripePlatformPaymentMethodId,
         pspPayload: pledgePayment.pspPayload,
         makeDefault: pledgePayment.makeDefault,
         userId: user.id,
