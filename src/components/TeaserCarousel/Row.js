@@ -6,7 +6,6 @@ import ChevronLeft from 'react-icons/lib/md/keyboard-arrow-left'
 import ChevronRight from 'react-icons/lib/md/keyboard-arrow-right'
 import { PADDING, TILE_MARGIN_RIGHT } from './constants'
 import CarouselContext from './Context'
-import { color } from 'd3-color'
 import { plainButtonRule } from '../Button'
 import { useColorContext } from '../Colors/useColorContext'
 
@@ -55,7 +54,7 @@ const styles = {
     '@media (hover)': {
       '[role=group]:hover > &': {
         pointerEvents: 'auto',
-        opacity: 1
+        opacity: 0.7
       }
     }
   })
@@ -66,11 +65,9 @@ const Row = ({ children }) => {
   const overflow = useRef()
   const [{ left, right }, setArrows] = useState({ left: false, right: false })
   const [colorScheme] = useColorContext()
-  const lightBg = useMemo(() => {
-    const bg = color(context.bgColor)
-    bg.opacity = 0.7
-    return bg.toString()
-  }, [context.bgColor])
+
+  // const bgColor = bgColorOverride || colorScheme.getCSSColor('default')
+  // const color = colorOverride || colorScheme.getCSSColor('text')
 
   useEffect(() => {
     const scroller = overflow.current
@@ -117,7 +114,8 @@ const Row = ({ children }) => {
       <button
         {...styles.arrow}
         {...(left && styles.arrowHoverable)}
-        style={{ left: 0, backgroundColor: lightBg }}
+        style={{ left: 0 }}
+        {...colorScheme.set('backgroundColor', context.bgColor || 'default')}
         onClick={() => {
           const scroller = overflow.current
           const clientWidth = scroller.clientWidth
@@ -135,12 +133,17 @@ const Row = ({ children }) => {
           })
         }}
       >
-        <ChevronLeft size={50} {...colorScheme.set('fill', 'text')} />
+        <ChevronLeft
+          size={50}
+          {...colorScheme.set('fill', context.color || 'text')}
+        />
       </button>
+
       <button
         {...styles.arrow}
         {...(right && styles.arrowHoverable)}
-        style={{ right: 0, backgroundColor: lightBg }}
+        style={{ right: 0 }}
+        {...colorScheme.set('backgroundColor', context.bgColor || 'default')}
         onClick={() => {
           const scroller = overflow.current
           const clientWidth = scroller.clientWidth
@@ -164,7 +167,10 @@ const Row = ({ children }) => {
           })
         }}
       >
-        <ChevronRight size={50} {...colorScheme.set('fill', 'text')} />
+        <ChevronRight
+          size={50}
+          {...colorScheme.set('fill', context.color || 'text')}
+        />
       </button>
     </div>
   )

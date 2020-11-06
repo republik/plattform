@@ -4,7 +4,6 @@ import React from 'react'
 
 import CarouselContext from './Context'
 import { PADDING, TILE_MAX_WIDTH } from './constants'
-import { useColorContext } from '../Colors/useColorContext'
 import { MAX_WIDTH } from '../Center'
 
 const styles = {
@@ -19,9 +18,10 @@ export const Carousel = ({
   tileCount: tileCountFromProps,
   article,
   outline,
-  bgColor: bgColorOverride,
-  color: colorOverride,
-  grid
+  bgColor,
+  color,
+  grid,
+  defaultOutline
 }) => {
   const row = children && children[1]
   const tileCount =
@@ -32,10 +32,6 @@ export const Carousel = ({
     : article
     ? MAX_WIDTH / 2 // optimised to align with article column
     : TILE_MAX_WIDTH
-  const [colorScheme] = useColorContext()
-
-  const bgColor = bgColorOverride || colorScheme.getCSSColor('default')
-  const color = colorOverride || colorScheme.getCSSColor('text')
 
   return (
     <CarouselContext.Provider
@@ -46,7 +42,8 @@ export const Carousel = ({
         color,
         tileCount,
         tileMaxWidth,
-        grid
+        grid,
+        defaultOutline
       }}
     >
       <section

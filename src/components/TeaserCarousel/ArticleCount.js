@@ -51,18 +51,17 @@ const styles = {
 }
 
 const ArticleCount = ({ count, bgColor: iconColor, color: textColor }) => {
-  let countStyles = css(styles.count, { color: textColor && textColor })
   const [colorScheme] = useColorContext()
   return (
     <div {...styles.container}>
       <Icon
         size={ICON_SIZE}
         fill={iconColor && iconColor}
-        {...(!iconColor && colorScheme.set('fill', 'text'))}
+        {...colorScheme.set('fill', iconColor || 'text')}
       />
       <span
-        {...countStyles}
-        {...(!textColor && colorScheme.set('color', 'textInverted'))}
+        {...styles.count}
+        {...colorScheme.set('color', textColor || 'textInverted')}
       >
         {count}
       </span>
