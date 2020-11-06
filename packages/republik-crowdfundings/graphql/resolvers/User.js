@@ -50,19 +50,25 @@ const defaultPaymentSource = async (user, args, { pgdb }) => {
   let source = await getDefaultPaymentMethod({
     userId: user.id,
     pgdb,
-  }).then((s) => ({
-    ...s,
-    ...s.card,
-    isExpired: getIsExpired(s.card),
-  }))
+  }).then(
+    (s) =>
+      s && {
+        ...s,
+        ...s.card,
+        isExpired: getIsExpired(s.card),
+      },
+  )
   if (source && !source.isExpired) {
     return source
   }
 
-  source = await getDefaultPaymentSource(user.id, pgdb).then((s) => ({
-    ...s,
-    isExpired: getIsExpired(s),
-  }))
+  source = await getDefaultPaymentSource(user.id, pgdb).then(
+    (s) =>
+      s && {
+        ...s,
+        isExpired: getIsExpired(s),
+      },
+  )
   if (source && !source.isExpired) {
     return source
   }
@@ -228,7 +234,7 @@ module.exports = {
       Roles.userIsMeOrInRoles(user, me, ['admin']) ||
       isFieldExposed(user, 'paymentSources')
     ) {
-      return [await defaultPaymentSource(user, args, context)]
+      return [await defaultPaymentSource(user, args, context)].filter(Boolean)
     }
     return []
   },
