@@ -56,9 +56,11 @@ type mutations {
   claimMembership(voucherCode: String!): Boolean!
   # adds a new paymentSource and makes it the default
   addPaymentSource(sourceId: String!, pspPayload: JSON!): [PaymentSource!]!
-  # adds a new paymentSource and makes it the default
+  # Adds a new paymentSource without making it the default.
+  # Call setDefaultPaymentMethod after a successful confirmCardSetup.
   # SetupIntent is created on the specified company
   addPaymentMethod(stripePlatformPaymentMethodId: ID!, companyId: ID!): AddPaymentMethodResponse!
+  setDefaultPaymentMethod(stripePlatformPaymentMethodId: ID!): [PaymentSource!]!
 
   # Activate an existing membership.
   # required role: supporter

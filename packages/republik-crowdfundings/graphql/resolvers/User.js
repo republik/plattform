@@ -23,6 +23,8 @@ const {
   getDefaultPaymentMethod,
 } = require('../../lib/payments/stripe/paymentMethod')
 
+const normalizePaymentSource = require('../../lib/payments/stripe/normalizePaymentSource')
+
 const { DISABLE_RESOLVER_USER_CACHE } = process.env
 const QUERY_CACHE_TTL_SECONDS = 60 * 60 * 24 // 1 day
 
@@ -38,36 +40,16 @@ const createMembershipCache = (user, prop, context) =>
   )
 
 const defaultPaymentSource = async (user, args, { pgdb }) => {
-  const getIsExpired = ({ expYear, expMonth }) => {
-    if (!expYear || !expMonth) {
-      return true
-    }
-    return moment(`${expYear}-${expMonth}`, 'YYYY-MM')
-      .endOf('month')
-      .isBefore(moment())
-  }
-
   let source = await getDefaultPaymentMethod({
     userId: user.id,
     pgdb,
-  }).then(
-    (s) =>
-      s && {
-        ...s,
-        ...s.card,
-        isExpired: getIsExpired(s.card),
-      },
-  )
+  }).then(normalizePaymentSource)
   if (source && !source.isExpired) {
     return source
   }
 
   source = await getDefaultPaymentSource(user.id, pgdb).then(
-    (s) =>
-      s && {
-        ...s,
-        isExpired: getIsExpired(s),
-      },
+    normalizePaymentSource,
   )
   if (source && !source.isExpired) {
     return source

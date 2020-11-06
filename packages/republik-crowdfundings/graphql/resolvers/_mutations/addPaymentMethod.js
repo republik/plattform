@@ -34,7 +34,9 @@ module.exports = async (
       userId,
       pgdb,
       clients,
-      makeDefault: true,
+      // done by client after confirmCardSetup with setDefaultPaymentMethod
+      makeDefault: false,
+      t,
     })
   }
 

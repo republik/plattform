@@ -363,6 +363,10 @@
       "value": "Ermässigung"
     },
     {
+      "key": "api/payment/paymentMethod/404",
+      "value": "Die PaymentMethod konnte nicht gefunden werden."
+    },
+    {
       "key": "api/email/membership_prolong_notice/subject",
       "value": "Ihr Republik-Abo wurde verlängert"
     },
