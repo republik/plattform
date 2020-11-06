@@ -105,6 +105,12 @@ const suggest = async (membershipId, pgdb) => {
     return false
   }
 
+  // paymentMethod takes precedence over source
+  // func prolong below expects this order
+  // sourceId is used by scheduler/owners/charging to determine
+  // if the source changed between suggests
+  const sourceId = defaultPaymentMethod?.id || defaultPaymentSource?.id
+
   // Pick package and options which may be used to submit and autopayment
   const user = await pgdb.public.users.findOne({ id: membership.userId })
   const prolongPackage = (await getCustomPackages({ user, pgdb })).find(
@@ -144,6 +150,7 @@ const suggest = async (membershipId, pgdb) => {
       withDonation: pledge.donation > 0,
       defaultPaymentSource,
       defaultPaymentMethod,
+      sourceId,
       // used in email templates
       card: defaultPaymentMethod?.card || defaultPaymentSource,
     }
@@ -164,6 +171,8 @@ const prolong = async (membershipId, pgdb, redis, t) => {
     }
 
     let charge
+    // paymentMethod takes precedence over source
+    // func suggest above expects this order
     if (suggestion.defaultPaymentMethod) {
       const {
         userId,
@@ -244,6 +253,7 @@ const prolong = async (membershipId, pgdb, redis, t) => {
       status: 'SUCCESS',
       paymentId: payment.id,
       createdAt: new Date(),
+      sourceId: suggestion.sourceId,
     })
 
     await transaction.transactionCommit()
@@ -279,6 +289,7 @@ const prolong = async (membershipId, pgdb, redis, t) => {
       status: 'ERROR',
       error,
       createdAt: new Date(),
+      sourceId: suggestion.sourceId,
     })
 
     return { suggestion, chargeAttempt }

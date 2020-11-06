@@ -41,12 +41,16 @@ module.exports = async (user, bucket, context) => {
     return
   }
 
-  // Back off if last attempt failed due to PaymentIntent.requires_action or was too recent
+  // Back off if last attempt failed due to PaymentIntent.authentication_required and the same paymentMethod would be used this time or was too recent
   const mostRecentAttempt = previousAttempts[0]
   if (mostRecentAttempt) {
-    if (mostRecentAttempt.error.raw.code === 'authentication_required') {
+    if (
+      mostRecentAttempt.error?.raw?.code === 'authentication_required' &&
+      (!mostRecentAttempt.sourceId ||
+        mostRecentAttempt.sourceId === user.user.autoPay.sourceId)
+    ) {
       debug(
-        'backing off, most recent attempt failed with authentication_required',
+        'backing off, most recent attempt failed with authentication_required and no new payment source',
       )
       return
     }
