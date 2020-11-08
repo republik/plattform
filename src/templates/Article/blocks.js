@@ -36,7 +36,6 @@ import {
   matchInfoBox,
   matchQuote,
   matchFigure,
-  extractImage,
   globalInlines,
   styles,
   mdastToString,

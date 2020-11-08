@@ -27,7 +27,6 @@ import {
 import {
   matchFigure,
   getDisplayWidth,
-  extractImage,
   globalInlines,
   styles,
   mdastToString,
