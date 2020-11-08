@@ -18,7 +18,7 @@ const styles = {
 
 export default ({
   src,
-  srcDark,
+  dark,
   srcSet,
   sizes,
   alt,
@@ -51,12 +51,12 @@ export default ({
       alt={alt}
       {...styles.img}
       onClick={onClick}
-      className={srcDark && 'img-standard'}
+      className={dark && 'img-standard'}
     />
-    {srcDark && (
+    {dark && (
       <img
-        src={srcDark}
-        srcSet={srcSet}
+        src={dark.src}
+        srcSet={dark.srcSet}
         sizes={sizes}
         alt={alt}
         {...styles.img}

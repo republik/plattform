@@ -188,7 +188,9 @@ const createNewsletterSchema = ({
 
           return {
             ...FigureImage.utils.getResizedSrcs(src, displayWidth),
-            srcDark,
+            dark:
+              srcDark &&
+              FigureImage.utils.getResizedSrcs(srcDark, displayWidth),
             alt: node.children[0].alt
           }
         },
@@ -221,7 +223,9 @@ const createNewsletterSchema = ({
 
           return {
             ...FigureImage.utils.getResizedSrcs(src, displayWidth, setMaxWidth),
-            srcDark,
+            dark:
+              srcDark &&
+              FigureImage.utils.getResizedSrcs(srcDark, displayWidth),
             alt: node.children[0].alt
           }
         },

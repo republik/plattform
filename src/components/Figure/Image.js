@@ -50,7 +50,7 @@ class Image extends Component {
   render() {
     const {
       src,
-      srcDark,
+      dark,
       srcSet,
       alt,
       attributes = {},
@@ -63,7 +63,7 @@ class Image extends Component {
 
     const onClick = enableGallery
       ? () => this.context.toggleGallery && this.context.toggleGallery(src)
-      : () => {}
+      : undefined
 
     const size = sizeProp || (sizeProp === undefined && imageSizeInfo(src))
     const aspectRatio = size ? size.width / size.height : undefined
@@ -74,7 +74,7 @@ class Image extends Component {
         visible={aboveTheFold}
         aspectRatio={aspectRatio}
         src={src}
-        srcDark={srcDark}
+        dark={dark}
         srcSet={srcSet}
         alt={alt}
         onClick={onClick}
@@ -88,14 +88,14 @@ class Image extends Component {
           srcSet={srcSet}
           alt={alt}
           onClick={onClick}
-          className={srcDark && 'img-standard'}
+          className={dark && 'img-standard'}
         />
-        {srcDark && (
+        {dark && (
           <img
             {...attributes}
             {...styles.image}
-            src={srcDark}
-            srcSet={srcSet}
+            src={dark.src}
+            srcSet={dark.srcSet}
             alt={alt}
             onClick={onClick}
             className='img-dark'
@@ -134,7 +134,10 @@ class Image extends Component {
 
 Image.propTypes = {
   src: PropTypes.string.isRequired,
-  srcDark: PropTypes.string,
+  dark: PropTypes.shape({
+    src: PropTypes.string.isRequired,
+    srcSet: PropTypes.string
+  }),
   srcSet: PropTypes.string,
   alt: PropTypes.string,
   size: PropTypes.shape({
