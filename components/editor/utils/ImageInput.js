@@ -65,13 +65,15 @@ const ImageInput = ({ onChange, t, src, label, maxWidth = 200 }) => (
   <div style={{ position: 'relative' }}>
     <label>
       <Label {...styles.label}>{label}</Label>
-      <MdClose
-        {...styles.close}
-        onClick={e => {
-          e.preventDefault()
-          onChange(e, undefined)
-        }}
-      />
+      {src && (
+        <MdClose
+          {...styles.close}
+          onClick={e => {
+            e.preventDefault()
+            onChange(e, undefined)
+          }}
+        />
+      )}
       <img
         src={src || '/static/placeholder.png'}
         style={{
