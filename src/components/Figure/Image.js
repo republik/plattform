@@ -66,7 +66,10 @@ const Image = (props, context) => {
       : undefined
 
   const size = sizeProp || (sizeProp === undefined && imageSizeInfo(src))
-  const aspectRatio = size ? size.width / size.height : undefined
+  let aspectRatio = size ? size.width / size.height : undefined
+  if (dark?.size) {
+    aspectRatio = Math.min(aspectRatio, dark.size.width / dark.size.height)
+  }
 
   const image = isFinite(aspectRatio) ? (
     <LazyImage
