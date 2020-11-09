@@ -30,7 +30,7 @@ Properties
 </Center>
 ```
 
-#### `<FigureImage />`
+### `<FigureImage />`
 
 The `<FigureImage>` component scales the image to 100% of the available space.
 
@@ -38,6 +38,7 @@ Properties
 
 - `src` string, the image url, mandatory
 - `srcSet` string, alt src, e.g. retina
+- `dark` object, `src` and `srcSet` of a image for dark mode
 - `alt` string, the alternative text
 - `maxWidth` number, e.g. the src width you don't want to exceed
 - `size` object, pre-calculated `width` and `height`
@@ -101,6 +102,53 @@ You can directly pass the result as props to `FigureImage`:
     1500
   ), null, 2)}
 </pre>
+```
+
+#### Dark Mode
+
+```react|span-2
+<ColorContextProvider
+  colorSchemeKey='light'>
+  <FigureImage
+    {...FigureImage.utils.getResizedSrcs(
+      '/static/dada.jpg?size=512x687',
+      1500
+    )}
+    dark={FigureImage.utils.getResizedSrcs(
+      '/static/dada_dark.png?size=512x687',
+      1500
+    )} />
+</ColorContextProvider>
+```
+
+```react|span-2
+<ColorContextProvider
+  colorSchemeKey='dark'>
+  <FigureImage
+    {...FigureImage.utils.getResizedSrcs(
+      '/static/dada.jpg?size=512x687',
+      1500
+    )}
+    dark={FigureImage.utils.getResizedSrcs(
+      '/static/dada_dark.png?size=512x687',
+      1500
+    )} />
+</ColorContextProvider>
+```
+
+```react|span-2
+<ColorContextProvider
+  colorSchemeKey='auto'>
+  <FigureImage
+    {...FigureImage.utils.getResizedSrcs(
+      '/static/dada.jpg?size=512x687',
+      1500
+    )}
+    dark={FigureImage.utils.getResizedSrcs(
+      '/static/dada_dark.png?size=512x687',
+      1500
+    )} />
+</ColorContextProvider>
 ```
 
 ### `<FigureGroup />`

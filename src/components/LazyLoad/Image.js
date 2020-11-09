@@ -3,6 +3,8 @@ import { css } from 'glamor'
 
 import LazyLoad from './'
 
+import SwitchImage from '../Figure/SwitchImage'
+
 const styles = {
   container: css({
     display: 'block',
@@ -10,7 +12,6 @@ const styles = {
     backgroundColor: 'rgba(0,0,0,0.1)'
   }),
   img: css({
-    display: 'block',
     position: 'absolute',
     width: '100%'
   })
@@ -44,25 +45,14 @@ export default ({
           : undefined
     }}
   >
-    <img
+    <SwitchImage
       src={src}
       srcSet={srcSet}
+      dark={dark}
       sizes={sizes}
       alt={alt}
       {...styles.img}
       onClick={onClick}
-      className={dark && 'img-standard'}
     />
-    {dark && (
-      <img
-        src={dark.src}
-        srcSet={dark.srcSet}
-        sizes={sizes}
-        alt={alt}
-        {...styles.img}
-        onClick={onClick}
-        className='img-dark'
-      />
-    )}
   </LazyLoad>
 )

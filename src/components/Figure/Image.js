@@ -7,10 +7,10 @@ import LazyImage from '../LazyLoad/Image'
 import GalleryIcon from 'react-icons/lib/md/filter'
 import { sansSerifRegular12, sansSerifRegular15 } from '../Typography/styles'
 import { mUp } from '../../theme/mediaQueries'
+import SwitchImage from './SwitchImage'
 
 const styles = {
   image: css({
-    display: 'block',
     width: '100%'
   }),
   imageContainer: css({
@@ -80,28 +80,15 @@ const Image = (props, context) => {
       onClick={onClick}
     />
   ) : (
-    <>
-      <img
-        {...attributes}
-        {...styles.image}
-        src={src}
-        srcSet={srcSet}
-        alt={alt}
-        onClick={onClick}
-        className={dark && 'img-standard'}
-      />
-      {dark && (
-        <img
-          {...attributes}
-          {...styles.image}
-          src={dark.src}
-          srcSet={dark.srcSet}
-          alt={alt}
-          onClick={onClick}
-          className='img-dark'
-        />
-      )}
-    </>
+    <SwitchImage
+      {...attributes}
+      {...styles.image}
+      src={src}
+      srcSet={srcSet}
+      dark={dark}
+      alt={alt}
+      onClick={onClick}
+    />
   )
 
   let wrappedImage = image

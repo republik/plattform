@@ -115,7 +115,9 @@ const colors = {
     fadeOutGradientDefault:
       'linear-gradient(0deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%)',
     fadeOutGradientOverlay:
-      'linear-gradient(0deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%)'
+      'linear-gradient(0deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%)',
+    displayLight: 'block',
+    displayDark: 'none'
   },
   dark: {
     logo: '#FFFFFF',
@@ -144,7 +146,9 @@ const colors = {
     fadeOutGradientDefault:
       'linear-gradient(0deg, rgba(31,31,31,1) 0%, rgba(31,31,31,0) 100%)',
     fadeOutGradientOverlay:
-      'linear-gradient(0deg, rgba(35,35,35,1) 0%, rgba(35,35,35,0) 100%)'
+      'linear-gradient(0deg, rgba(35,35,35,1) 0%, rgba(35,35,35,0) 100%)',
+    displayLight: 'none',
+    displayDark: 'block'
   },
   mappings: {
     format: {
