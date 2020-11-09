@@ -1,5 +1,5 @@
 {
-  "updated": "2020-10-26T14:38:44.635Z",
+  "updated": "2020-11-09T13:43:21.049Z",
   "title": "live",
   "data": [
     {
@@ -121,10 +121,6 @@
     {
       "key": "repo/add/title",
       "value": "Neues Dokument"
-    },
-    {
-      "key": "repo/add/template/title",
-      "value": "Neues Template"
     },
     {
       "key": "repo/add/template/title",
@@ -303,10 +299,6 @@
       "value": "Template tatsächlich archivieren?"
     },
     {
-      "key": "repo/archive/template/confirm",
-      "value": "Template tatsächlich archivieren?"
-    },
-    {
       "key": "repo/archive/button",
       "value": "Dokument archivieren"
     },
@@ -315,16 +307,8 @@
       "value": "Template archivieren"
     },
     {
-      "key": "repo/archive/template/button",
-      "value": "Template archivieren"
-    },
-    {
       "key": "repo/archived/notice",
       "value": "Dokument wurde archiviert und kann nicht bearbeitet oder veröffentlicht werden."
-    },
-    {
-      "key": "repo/archived/template/notice",
-      "value": "Template wurde archiviert und kann nicht bearbeitet oder verwendet werden."
     },
     {
       "key": "repo/archived/template/notice",
@@ -516,7 +500,11 @@
     },
     {
       "key": "metaData/field/srcDark",
-      "value": "Dark Mode (optional)"
+      "value": "Nachtmodus (optional)"
+    },
+    {
+      "key": "metaData/field/srcDark/note",
+      "value": "Das Bildseitenverhältnis für den Nachtmodus muss identisch sein."
     },
     {
       "key": "metaData/field/alt",
