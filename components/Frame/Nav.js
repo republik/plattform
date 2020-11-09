@@ -1,9 +1,15 @@
 import React from 'react'
 import { compose } from 'react-apollo'
 import Router, { withRouter } from 'next/router'
-import { BrandMark, Interaction, mediaQueries } from '@project-r/styleguide'
+import {
+  BrandMark,
+  colors,
+  Interaction,
+  mediaQueries
+} from '@project-r/styleguide'
 import { css } from 'glamor'
 import withT from '../../lib/withT'
+import Frame from './index'
 
 const styles = {
   nav: css({
@@ -80,7 +86,4 @@ export const Nav = ({ t, router, children }) => {
   )
 }
 
-export default compose(
-  withT,
-  withRouter
-)(Nav)
+export default compose(withT, withRouter)(Nav)

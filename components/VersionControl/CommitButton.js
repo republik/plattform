@@ -6,6 +6,7 @@ import { Button, A, colors, mediaQueries } from '@project-r/styleguide'
 const Text = ({
   t,
   isNew,
+  isTemplate,
   readOnly,
   hasUncommittedChanges,
   didUnlock,
@@ -13,6 +14,9 @@ const Text = ({
   onLock
 }) => {
   if (isNew) {
+    if (isTemplate) {
+      return t('commit/status/new/template')
+    }
     return t('commit/status/new/short')
   }
   if (hasUncommittedChanges) {

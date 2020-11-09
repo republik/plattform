@@ -42,11 +42,16 @@ import { getSchema } from '../../components/Templates'
 import { API_UNCOMMITTED_CHANGES_URL } from '../../lib/settings'
 import * as fragments from '../../lib/graphql/fragments'
 
-import { ColorContext, colors, plainButtonRule } from '@project-r/styleguide'
+import {
+  ColorContextProvider,
+  colors,
+  plainButtonRule
+} from '@project-r/styleguide'
 import SettingsIcon from 'react-icons/lib/fa/cogs'
 
 import createDebug from 'debug'
 import { DARK_MODE_KEY } from '../../components/editor/modules/meta/DarkModeForm'
+import { findTitleLeaf } from '../../lib/utils/helpers'
 
 const commitMutation = gql`
   mutation commit(
@@ -54,12 +59,14 @@ const commitMutation = gql`
     $parentId: ID
     $message: String!
     $document: DocumentInput!
+    $isTemplate: Boolean
   ) {
     commit(
       repoId: $repoId
       parentId: $parentId
       message: $message
       document: $document
+      isTemplate: $isTemplate
     ) {
       ...CommitWithDocument
       repo {
@@ -94,6 +101,18 @@ const getLatestCommit = gql`
     }
   }
   ${fragments.SimpleCommit}
+`
+
+const getTemplateById = gql`
+  query getLatestCommit($repoId: ID!) {
+    templateRepo: repo(id: $repoId) {
+      id
+      latestCommit {
+        ...CommitWithDocument
+      }
+    }
+  }
+  ${fragments.CommitWithDocument}
 `
 
 const debug = createDebug('publikator:pages:edit')
@@ -298,13 +317,19 @@ export class EditorPage extends Component {
   UNSAFE_componentWillReceiveProps(nextProps) {
     const emptyRepo = {}
     const { repo = emptyRepo, loading } = this.props.data || {}
+    const { repo: templateRepo = emptyRepo, loading: templateLoading } =
+      this.props.templateData || {}
     const { repo: nextRepo = emptyRepo, loading: nextLoading } =
       nextProps.data || {}
+    const { repo: nextTemplateRepo = emptyRepo, loading: nextTemplateLoading } =
+      nextProps.templateData || {}
 
     const shouldLoad =
       repo !== nextRepo ||
       repo.commit !== nextRepo.commit ||
-      loading !== nextLoading
+      loading !== nextLoading ||
+      templateRepo !== nextTemplateRepo ||
+      templateLoading !== nextTemplateLoading
     debug('componentWillReceiveProps', 'shouldLoad', shouldLoad)
     if (shouldLoad) {
       this.loadState(nextProps)
@@ -387,7 +412,16 @@ export class EditorPage extends Component {
   }
 
   loadState(props) {
-    const { t, data: { loading, error, repo } = {}, router } = props
+    const {
+      t,
+      data: { loading, error, repo } = {},
+      templateData: {
+        loading: templateLoading,
+        error: templateError,
+        templateRepo
+      } = {},
+      router
+    } = props
 
     if (!process.browser && !TEST) {
       // running without local storage doesn't make sense
@@ -402,8 +436,19 @@ export class EditorPage extends Component {
       debug('loadState', 'isLoading', loading, 'hasError', error)
       return
     }
+    if (templateLoading || templateError) {
+      debug(
+        'loadTemplateState',
+        'isLoading',
+        templateLoading,
+        'hasError',
+        templateError
+      )
+      return
+    }
     const repoId = router.query.repoId
     const commitId = router.query.commitId
+
     if (!commitId && repo && repo.latestCommit) {
       debug('loadState', 'redirect', repo.latestCommit)
       Router.replaceRoute('repo/edit', {
@@ -415,14 +460,18 @@ export class EditorPage extends Component {
 
     const { schema } = this.state
     if (!schema) {
-      const commit = repo && repo.commit
+      const commit =
+        (repo && repo.commit) || (templateRepo && templateRepo.latestCommit)
 
-      const template =
-        (commit && commit.document.meta.template) || router.query.template
-      debug('loadState', 'loadSchema', template)
+      const schema =
+        (commit && commit.document.meta.template) ||
+        router.query.schema ||
+        router.query.template
+
+      debug('loadState', 'loadSchema', schema)
       this.setState(
         {
-          schema: getSchema(template)
+          schema: getSchema(schema)
         },
         () => {
           this.loadState(this.props)
@@ -438,11 +487,36 @@ export class EditorPage extends Component {
     const isNew = commitId === 'new'
     let committedEditorState
     if (isNew) {
-      committedEditorState = this.editor.newDocument(
-        router.query,
-        this.props.me
-      )
-      debug('loadState', 'new document', committedEditorState)
+      if (templateRepo) {
+        const commit = templateRepo.latestCommit
+        const json = JSON.parse(
+          JSON.stringify({
+            ...commit.document.content,
+            // add format & section to root mdast node
+            format: commit.document.meta.format,
+            section: commit.document.meta.section
+          })
+        )
+
+        const titleLeaf = findTitleLeaf(json)
+        if (titleLeaf) {
+          titleLeaf.value = router.query.title
+        }
+        json.meta.title = router.query.title
+
+        json.meta.auto = true
+        json.meta.templateRepoId = router.query.templateRepoId
+
+        committedEditorState = this.editor.serializer.deserialize(json)
+
+        debug('loadState', 'new document from template', committedEditorState)
+      } else {
+        committedEditorState = this.editor.newDocument(
+          router.query,
+          this.props.me
+        )
+        debug('loadState', 'new document', committedEditorState)
+      }
     } else {
       const commit = repo.commit
       if (!commit) {
@@ -578,9 +652,10 @@ export class EditorPage extends Component {
   commitHandler() {
     const {
       router: {
-        query: { repoId, commitId }
+        query: { repoId, commitId, isTemplate }
       },
       commitMutation,
+      data,
       t
     } = this.props
     const { editorState } = this.state
@@ -593,9 +668,12 @@ export class EditorPage extends Component {
       committing: true
     })
 
+    const isNew = commitId === 'new'
+
     commitMutation({
       repoId,
-      parentId: commitId === 'new' ? null : commitId,
+      parentId: isNew ? null : commitId,
+      isTemplate: isNew ? isTemplate === 'true' : data?.repo?.isTemplate,
       message: message,
       document: {
         content: this.editor.serializer.serialize(editorState)
@@ -610,7 +688,9 @@ export class EditorPage extends Component {
         })
         Router.replaceRoute('repo/edit', {
           repoId: repoId.split('/'),
-          commitId: data.commit.id
+          commitId: data.commit.id,
+          isTemplate: null,
+          templateRepoId: null
         })
       })
       .catch(e => {
@@ -630,7 +710,8 @@ export class EditorPage extends Component {
     const {
       router: {
         query: { repoId, commitId }
-      }
+      },
+      data
     } = this.props
     const { editorState } = this.state
     const serializedState = this.editor.serializer.serialize(editorState)
@@ -639,16 +720,30 @@ export class EditorPage extends Component {
     Router.pushRoute('repo/raw', {
       repoId: repoId.split('/'),
       commitId,
+      isTemplate:
+        this.props.router.query.isTemplate || data?.repo?.isTemplate
+          ? true
+          : null,
       ...(commitId === 'new'
-        ? { template: this.props.router.query.template }
+        ? {
+            schema:
+              this.props.router.query.schema || this.props.router.query.template
+          }
         : {})
     })
   }
 
   render() {
-    const { router, data = {}, uncommittedChanges, t } = this.props
+    const {
+      router,
+      data = {},
+      templateData = {},
+      uncommittedChanges,
+      t
+    } = this.props
     const { repoId, commitId } = router.query
     const { loading, repo } = data
+    const { loading: templateLoading, error: templateError } = templateData
     const {
       schema,
       editorState,
@@ -662,9 +757,11 @@ export class EditorPage extends Component {
       didUnlock
     } = this.state
 
+    const isTemplate = repo ? repo.isTemplate : router.query.isTemplate
     const isNew = commitId === 'new'
-    const error = data.error || this.state.error
-    const showLoading = committing || loading || (!schema && !error)
+    const error = data.error || templateError || this.state.error
+    const showLoading =
+      committing || loading || templateLoading || (!schema && !error)
     const dark = editorState && editorState.document.data.get(DARK_MODE_KEY)
 
     const sidebarPrependChildren = [
@@ -685,6 +782,7 @@ export class EditorPage extends Component {
     return (
       <Frame raw>
         <Frame.Header
+          isTemplate={isTemplate}
           barStyle={{
             borderBottom: activeUsers.length
               ? `3px solid ${readOnly ? colors.error : warningColor}`
@@ -693,7 +791,11 @@ export class EditorPage extends Component {
         >
           <Frame.Header.Section align='left'>
             <Frame.Nav>
-              <RepoNav route='repo/edit' isNew={isNew} />
+              <RepoNav
+                route='repo/edit'
+                isNew={isNew}
+                prefix={isTemplate ? 'template' : 'document'}
+              />
             </Frame.Nav>
           </Frame.Header.Section>
           <Frame.Header.Section align='right'>
@@ -714,6 +816,7 @@ export class EditorPage extends Component {
           <Frame.Header.Section align='right'>
             <CommitButton
               isNew={isNew}
+              isTemplate={isTemplate}
               readOnly={!showLoading && readOnly}
               didUnlock={didUnlock}
               hasUncommittedChanges={!showLoading && hasUncommittedChanges}
@@ -763,17 +866,18 @@ export class EditorPage extends Component {
                     }
                   />
                 )}
-                <ColorContext.Provider value={dark && colors.negative}>
+                <ColorContextProvider colorSchemeKey={dark ? 'dark' : 'light'}>
                   <Editor
                     ref={this.editorRef}
                     schema={schema}
+                    isTemplate={isTemplate}
                     meta={repo ? repo.meta : {}}
                     value={editorState}
                     onChange={this.changeHandler}
                     onDocumentChange={this.documentChangeHandler}
                     readOnly={readOnly}
                   />
-                </ColorContext.Provider>
+                </ColorContextProvider>
               </div>
             )}
           />
@@ -860,6 +964,15 @@ export default compose(
         data
       }
     }
+  }),
+  graphql(getTemplateById, {
+    name: 'templateData',
+    skip: ({ router }) => !router.query.templateRepoId,
+    options: ({ router }) => ({
+      variables: {
+        repoId: router.query.templateRepoId
+      }
+    })
   }),
   withUncommitedChanges({
     options: ({ router }) => ({

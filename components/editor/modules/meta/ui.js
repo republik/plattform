@@ -51,6 +51,7 @@ const MetaData = ({
   editor,
   mdastSchema,
   contextMeta,
+  isTemplate,
   series,
   darkMode,
   paynotes,
@@ -93,7 +94,7 @@ const MetaData = ({
   )
 
   const onInputChange = key => (_, inputValue) => {
-    const newData = node.data.remove('auto')
+    const newData = key !== 'auto' ? node.data.remove('auto') : node.data
     editor.change(change => {
       change.setNodeByKey(node.key, {
         data:
@@ -115,14 +116,28 @@ const MetaData = ({
     <div {...styles.container}>
       <div {...styles.center}>
         <Interaction.H2>{t('metaData/title')}</Interaction.H2>
+        <div style={{ marginTop: 6 }}>
+          <Checkbox
+            checked={node.data.get('auto')}
+            onChange={onInputChange('auto')}
+            black
+          >
+            {t('metaData/field/auto')}
+          </Checkbox>
+        </div>
         <br />
         <SlugField
           black
-          label={t(`metaData/field/slug`, undefined, 'slug')}
+          label={t(
+            `metaData/field/${isTemplate ? 'repoSlug' : 'slug'}`,
+            undefined,
+            'slug'
+          )}
           value={node.data.get('slug')}
           onChange={onInputChange('slug')}
+          isTemplate={isTemplate}
         />
-        {mdastSchema && mdastSchema.getPath && (
+        {!isTemplate && mdastSchema && mdastSchema.getPath && (
           <Label>
             {t('metaData/field/slug/note', {
               base: FRONTEND_BASE_URL

@@ -19,7 +19,7 @@ const styles = {
   })
 }
 
-export default authorizedRoles => Component =>
+const withAuthorization = authorizedRoles => Component =>
   withT(
     withMe(props => {
       const { me, t } = props
@@ -50,3 +50,5 @@ export default authorizedRoles => Component =>
       )
     })
   )
+
+export default withAuthorization

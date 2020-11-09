@@ -21,6 +21,7 @@ export default ({ rule, TYPE, context = {} }) => {
                 {...options}
                 mdastSchema={context.mdastSchema}
                 contextMeta={context.meta}
+                isTemplate={context.isTemplate}
               />
             </div>
           )

@@ -33,8 +33,9 @@ const defaultOptions = (inlineType, parentTypes) => ({
   reducer: reducer(inlineType)
 })
 
-export default options => Component =>
+const InlineButton = options => Component =>
   createFormatButton({
     ...defaultOptions(options.type, options.parentTypes),
     ...options
   })(Component)
+export default InlineButton

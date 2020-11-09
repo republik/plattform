@@ -6,7 +6,7 @@ const propTypes = {
   onChange: PropTypes.func
 }
 
-export default ({ isDisabled }) => Component => {
+const createPropertyForm = ({ isDisabled }) => Component => {
   const PropertyForm = props => (
     <Component disabled={isDisabled(props)} {...props} />
   )
@@ -15,3 +15,4 @@ export default ({ isDisabled }) => Component => {
 
   return PropertyForm
 }
+export default createPropertyForm

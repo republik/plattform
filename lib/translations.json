@@ -120,7 +120,11 @@
     },
     {
       "key": "repo/add/title",
-      "value": "Neuer Artikel"
+      "value": "Neues Dokument"
+    },
+    {
+      "key": "repo/add/template/title",
+      "value": "Neues Template"
     },
     {
       "key": "repo/add/template/title",
@@ -183,6 +187,10 @@
       "value": "Dossier"
     },
     {
+      "key": "repo/add/template/page",
+      "value": "Seite"
+    },
+    {
       "key": "repo/phase/draft",
       "value": "Entwurf"
     },
@@ -239,8 +247,8 @@
       "value": "Keine Resultate"
     },
     {
-      "key": "repo/table/nav/articles",
-      "value": "Artikel"
+      "key": "repo/table/nav/documents",
+      "value": "Dokumente"
     },
     {
       "key": "repo/table/nav/templates",
@@ -252,11 +260,11 @@
     },
     {
       "key": "repo/table/pageInfo/total",
-      "value": "Total {count} Artikel"
+      "value": "Total {count}"
     },
     {
       "key": "repo/table/pageInfo/loadedTotal",
-      "value": "die zuletzt bearbeiteten {loaded} von etwa {total} Artikel"
+      "value": "die zuletzt bearbeiteten {loaded} von etwa {total}"
     },
     {
       "key": "repo/table/col/title",
@@ -288,7 +296,11 @@
     },
     {
       "key": "repo/archive/confirm",
-      "value": "Artikel tatsächlich archivieren?"
+      "value": "Dokument tatsächlich archivieren?"
+    },
+    {
+      "key": "repo/archive/template/confirm",
+      "value": "Template tatsächlich archivieren?"
     },
     {
       "key": "repo/archive/template/confirm",
@@ -296,7 +308,11 @@
     },
     {
       "key": "repo/archive/button",
-      "value": "Artikel archivieren"
+      "value": "Dokument archivieren"
+    },
+    {
+      "key": "repo/archive/template/button",
+      "value": "Template archivieren"
     },
     {
       "key": "repo/archive/template/button",
@@ -304,7 +320,11 @@
     },
     {
       "key": "repo/archived/notice",
-      "value": "Artikel wurde archiviert und kann nicht bearbeitet oder veröffentlicht werden."
+      "value": "Dokument wurde archiviert und kann nicht bearbeitet oder veröffentlicht werden."
+    },
+    {
+      "key": "repo/archived/template/notice",
+      "value": "Template wurde archiviert und kann nicht bearbeitet oder verwendet werden."
     },
     {
       "key": "repo/archived/template/notice",
@@ -415,6 +435,22 @@
       "value": "Publizierung"
     },
     {
+      "key": "repo/nav/template/edit",
+      "value": "Template"
+    },
+    {
+      "key": "repo/nav/document/edit",
+      "value": "Dokument"
+    },
+    {
+      "key": "repo/nav/template/tree",
+      "value": "Versionen"
+    },
+    {
+      "key": "repo/nav/document/tree",
+      "value": "Versionen"
+    },
+    {
       "key": "metaData/title",
       "value": "Metadaten"
     },
@@ -428,7 +464,7 @@
     },
     {
       "key": "metaData/field/auto",
-      "value": "Mit Titel syncen"
+      "value": "Automatisch vom Titelblock ableiten (Titel, Deskription & Slug)"
     },
     {
       "key": "metaData/field/shortTitle",
@@ -457,6 +493,14 @@
     {
       "key": "metaData/field/slug",
       "value": "Web-Slug"
+    },
+    {
+      "key": "metaData/field/repoSlug",
+      "value": "Repo-Slug"
+    },
+    {
+      "key": "metaData/field/repoSlug/error/tooLong",
+      "value": "Repo-Slug zu lange (max. 30 Chars)"
     },
     {
       "key": "metaData/field/slug/note",
@@ -1112,7 +1156,7 @@
     },
     {
       "key": "link/repo/search",
-      "value": "Artikel suchen"
+      "value": "Dokument suchen"
     },
     {
       "key": "styleguide/video/dnt/note",
@@ -1156,11 +1200,11 @@
     },
     {
       "key": "api/publish/disabled",
-      "value": "Artikel können derzeit nicht veröffentlicht werden."
+      "value": "Dokumente können derzeit nicht veröffentlicht werden."
     },
     {
       "key": "api/unpublish/disabled",
-      "value": "Artikel können derzeit nicht zurückgezogen werden."
+      "value": "Dokumente können derzeit nicht zurückgezogen werden."
     },
     {
       "key": "styleguide/Collapsable/expand",

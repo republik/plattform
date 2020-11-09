@@ -25,6 +25,7 @@ import * as fragments from '../../lib/graphql/fragments'
 
 import CurrentPublications from '../../components/Publication/Current'
 import UncommittedChanges from '../../components/VersionControl/UncommittedChanges'
+import withT from '../../lib/withT'
 
 export const COMMIT_LIMIT = 40
 export const getRepoHistory = gql`
@@ -32,6 +33,7 @@ export const getRepoHistory = gql`
     repo(id: $repoId) {
       id
       isArchived
+      isTemplate
       commits(first: $first, after: $after) {
         pageInfo {
           hasNextPage
@@ -55,6 +57,7 @@ const treeRepoSubscription = gql`
     repoUpdate(repoId: $repoId) {
       id
       isArchived
+      isTemplate
       commits(first: 1) {
         nodes {
           ...SimpleCommit
@@ -146,7 +149,7 @@ class EditorPage extends Component {
   }
 
   render() {
-    const { router, commits, hasMore, fetchMore } = this.props
+    const { router, commits, hasMore, fetchMore, t } = this.props
     const { loading, error, repo } = this.props.data
     const { repoId } = router.query
 
@@ -155,10 +158,13 @@ class EditorPage extends Component {
       .map(key => key.split('/').pop())
     return (
       <Frame>
-        <Frame.Header>
+        <Frame.Header isTemplate={repo?.isTemplate}>
           <Frame.Header.Section align='left'>
             <Frame.Nav>
-              <RepoNav route='repo/tree' />
+              <RepoNav
+                route='repo/tree'
+                prefix={repo?.isTemplate ? 'template' : 'document'}
+              />
             </Frame.Nav>
           </Frame.Header.Section>
           <Frame.Header.Section align='right'>
@@ -179,17 +185,18 @@ class EditorPage extends Component {
             render={() => (
               <Fragment>
                 {repo.isArchived ? (
-                  <RepoArchivedBanner />
+                  <RepoArchivedBanner isTemplate={repo.isTemplate} />
                 ) : (
                   <NarrowContainer {...styles.publishContainer}>
                     <CurrentPublications repoId={repoId} />
-                    <RepoArchive repoId={repoId} />
+                    <RepoArchive repoId={repoId} isTemplate={repo.isTemplate} />
                   </NarrowContainer>
                 )}
                 <Tree
                   commits={commits}
                   localStorageCommitIds={localStorageCommitIds}
                   milestones={repo.milestones}
+                  isTemplate={repo.isTemplate}
                   repoId={repoId}
                 />
                 {/* Load more commits */
@@ -214,6 +221,7 @@ class EditorPage extends Component {
 
 export default compose(
   withRouter,
+  withT,
   withAuthorization(['editor']),
   graphql(getRepoHistory, {
     options: ({ router }) => {

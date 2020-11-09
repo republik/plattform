@@ -1,7 +1,12 @@
 import { Text } from 'slate'
 import React, { Component } from 'react'
 import { graphql } from 'react-apollo'
-import { Label, Field, Autocomplete } from '@project-r/styleguide'
+import {
+  Label,
+  Field,
+  Autocomplete,
+  InlineSpinner
+} from '@project-r/styleguide'
 import LinkIcon from 'react-icons/lib/fa/chain'
 import UIForm from '../../UIForm'
 import createOnFieldChange from '../../utils/createOnFieldChange'
@@ -9,6 +14,7 @@ import RepoSearch from '../../utils/RepoSearch'
 import { AutoSlugLinkInfo } from '../../utils/github'
 import withT from '../../../../lib/withT'
 import gql from 'graphql-tag'
+import debounce from 'lodash.debounce'
 
 import { createInlineButton, matchInline, buttonStyles } from '../../utils'
 
@@ -19,20 +25,66 @@ const getUsers = gql`
       lastName
       email
       id
+      portrait
     }
   }
 `
 
+const UserItem = ({ user }) => (
+  <div style={{ display: 'flex', alignItems: 'center' }}>
+    <div
+      style={{
+        width: 54,
+        height: 54,
+        backgroundColor: '#E2E8E6',
+        backgroundImage: user.portrait ? `url(${user.portrait})` : undefined,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        marginRight: 10,
+        flexShrink: 0
+      }}
+    />
+    <div>
+      {user.lastName && (
+        <span>
+          {user.firstName} {user.lastName}
+          <br />
+        </span>
+      )}
+      <small>{user.email}</small>
+    </div>
+  </div>
+)
+
 const ConnectedAutoComplete = graphql(getUsers, {
   skip: props => !props.filter,
-  options: ({ filter }) => ({ variables: { search: filter } }),
-  props: ({ data: { users = [] } }) => ({
-    items: users.slice(0, 5).map(v => ({
-      value: v,
-      text: v.email
-    }))
+  options: ({ search }) => ({ variables: { search } }),
+  props: ({ data }) => ({
+    data: data,
+    items:
+      data.loading ||
+      data.users.slice(0, 5).map(user => ({
+        value: user,
+        element: <UserItem user={user} />
+      }))
   })
-})(Autocomplete)
+})(props => (
+  <span style={{ position: 'relative', display: 'block' }}>
+    <Autocomplete key='autocomplete' {...props} />
+    {props.data?.loading && (
+      <span
+        style={{
+          position: 'absolute',
+          top: '21px',
+          right: '0px',
+          zIndex: 500
+        }}
+      >
+        <InlineSpinner size={35} />
+      </span>
+    )}
+  </span>
+))
 
 const SearchUserForm = withT(
   class extends Component {
@@ -41,17 +93,32 @@ const SearchUserForm = withT(
       this.state = {
         items: [],
         filter: '',
+        search: '',
         value: null
       }
       this.filterChangeHandler = this.filterChangeHandler.bind(this)
       this.changeHandler = this.changeHandler.bind(this)
+      this.setSearchValue = debounce(this.setSearchValue.bind(this), 500)
+    }
+
+    componentWillUnmount() {
+      this.setSearchValue.cancel()
+    }
+
+    setSearchValue() {
+      this.setState({
+        search: this.state.filter
+      })
     }
 
     filterChangeHandler(value) {
-      this.setState(state => ({
-        ...this.state,
-        filter: value
-      }))
+      this.setState(
+        state => ({
+          ...this.state,
+          filter: value
+        }),
+        this.setSearchValue
+      )
     }
 
     changeHandler(value) {
@@ -65,7 +132,7 @@ const SearchUserForm = withT(
     }
 
     render() {
-      const { filter, value } = this.state
+      const { filter, value, search } = this.state
       return (
         <ConnectedAutoComplete
           label={this.props.t(
@@ -76,6 +143,7 @@ const SearchUserForm = withT(
           filter={filter}
           value={value}
           items={[]}
+          search={search}
           onChange={this.changeHandler}
           onFilterChange={this.filterChangeHandler}
         />

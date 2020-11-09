@@ -3,7 +3,7 @@ import React from 'react'
 import { buttonStyles } from '../../utils'
 import injectBlock from '../../utils/injectBlock'
 
-export default ({ TYPE, newItem, editorOptions }) => {
+const UI = ({ TYPE, newItem, editorOptions }) => {
   const { insertButtonText, insertTypes = [] } = editorOptions || {}
 
   const buttonClickHandler = (disabled, value, onChange) => event => {
@@ -33,3 +33,4 @@ export default ({ TYPE, newItem, editorOptions }) => {
     insertButtons: [insertButtonText && Button]
   }
 }
+export default UI

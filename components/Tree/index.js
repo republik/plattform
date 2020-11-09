@@ -229,7 +229,7 @@ class Tree extends Component {
   }
 
   render() {
-    const { repoId, t, localStorageCommitIds = [] } = this.props
+    const { repoId, isTemplate, t, localStorageCommitIds = [] } = this.props
     const { width, height, slotWidth, commits, links, numSlots } = this.state
 
     const paddingLeft = slotWidth ? numSlots * slotWidth + NODE_SIZE : 0
@@ -347,19 +347,21 @@ class Tree extends Component {
                           {milestone.author.name}
                         </span>
                       ))}
-                      <Interaction.P>
-                        <Label>
-                          <Link
-                            route='repo/publish'
-                            params={{
-                              repoId: repoId.split('/'),
-                              commitId: commit.id
-                            }}
-                          >
-                            <a {...styles.link}>{t('tree/commit/publish')}</a>
-                          </Link>
-                        </Label>
-                      </Interaction.P>
+                      {!isTemplate && (
+                        <Interaction.P>
+                          <Label>
+                            <Link
+                              route='repo/publish'
+                              params={{
+                                repoId: repoId.split('/'),
+                                commitId: commit.id
+                              }}
+                            >
+                              <a {...styles.link}>{t('tree/commit/publish')}</a>
+                            </Link>
+                          </Label>
+                        </Interaction.P>
+                      )}
                     </div>
                     <div style={{ marginRight: 10 }}>
                       <Interaction.P>

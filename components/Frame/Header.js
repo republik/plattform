@@ -1,7 +1,7 @@
 import React from 'react'
 import { css } from 'glamor'
 
-import { colors } from '@project-r/styleguide'
+import { colors, Interaction, mediaQueries } from '@project-r/styleguide'
 
 import LoadingBar from './LoadingBar'
 import { HEADER_HEIGHT, ZINDEX_HEADER } from './constants'
@@ -37,9 +37,15 @@ export const Section = ({ align, children }) => (
   <div {...styles[align || 'left']}>{children}</div>
 )
 
-export const Header = ({ children, barStyle }) => (
+export const Header = ({ children, barStyle, isTemplate }) => (
   <div {...styles.header}>
-    <div {...styles.bar} style={barStyle}>
+    <div
+      {...styles.bar}
+      style={{
+        backgroundColor: isTemplate ? colors.secondaryBg : undefined,
+        ...barStyle
+      }}
+    >
       {children}
     </div>
     <LoadingBar />

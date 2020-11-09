@@ -94,7 +94,7 @@ export default ({ rule, subModules, TYPE }) => {
           return (
             <Container
               {...node.data.toJS()}
-              collapsableEditorPreview
+              editorPreview
               figureSize={
                 hasFigure ? node.data.get('figureSize', 'S') : undefined
               }
@@ -122,10 +122,15 @@ export default ({ rule, subModules, TYPE }) => {
           if (
             !block.text &&
             !isBackspace &&
-            !// let list module handle it
-            (
-              listModule &&
-              value.document.getClosest(block.key, matchBlock(listModule.TYPE))
+            !(
+              // let list module handle it
+              (
+                listModule &&
+                value.document.getClosest(
+                  block.key,
+                  matchBlock(listModule.TYPE)
+                )
+              )
             )
           ) {
             event.preventDefault()

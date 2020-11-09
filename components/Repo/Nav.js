@@ -25,7 +25,7 @@ const menu = [
   }
 ]
 
-const Nav = ({ router, route, isNew, t }) => {
+const Nav = ({ router, route, isNew, prefix, t }) => {
   const { repoId } = router.query
 
   const params = {
@@ -41,7 +41,7 @@ const Nav = ({ router, route, isNew, t }) => {
       </Head>
       {intersperse(
         menu.map(item => {
-          const label = t(`repo/nav/${item.key}`)
+          const label = t(`repo/nav/${prefix}/${item.key}`)
           if (item.route === route) {
             return <span key={item.route}>{label} </span>
           }

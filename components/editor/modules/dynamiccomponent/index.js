@@ -11,8 +11,9 @@ import EditOverlay from './EditOverlay'
 import { SG_DYNAMIC_COMPONENT_BASE_URLS } from '../../../../lib/settings'
 
 import dynamicComponentRequire from './require'
+import dynamicComponentIdentifiers from './identifiers'
 
-export default ({ rule, subModules, TYPE }) => {
+const DynamicComponent = ({ rule, subModules, TYPE }) => {
   const { identifier = 'DYNAMIC_COMPONENT' } = rule.editorOptions || {}
 
   const mdastRule = {
@@ -92,6 +93,7 @@ export default ({ rule, subModules, TYPE }) => {
               showException
               key={JSON.stringify(data)}
               require={dynamicComponentRequire}
+              identifiers={dynamicComponentIdentifiers}
               {...data}
             />
           )
@@ -114,3 +116,4 @@ export default ({ rule, subModules, TYPE }) => {
     ]
   }
 }
+export default DynamicComponent

@@ -3,7 +3,7 @@ import { styleSheet } from 'glamor'
 import Frame from 'react-frame-component'
 import PropTypes from 'prop-types'
 import createDebug from 'debug'
-import { ColorContext, colors } from '@project-r/styleguide'
+import { ColorContextProvider, colors } from '@project-r/styleguide'
 
 const debug = createDebug('publikator:iframe')
 
@@ -69,9 +69,9 @@ class IFrame extends Component {
               height: size.height
             }}
           >
-            <ColorContext.Provider value={dark && colors.negative}>
+            <ColorContextProvider colorSchemeKey={dark ? 'dark' : 'light'}>
               {children}
-            </ColorContext.Provider>
+            </ColorContextProvider>
           </Frame>
         </div>
       </div>
