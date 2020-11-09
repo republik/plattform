@@ -2,6 +2,7 @@ import React from 'react'
 import { css } from 'glamor'
 import { Label } from '@project-r/styleguide'
 import withT from '../../../lib/withT'
+import MdClose from 'react-icons/lib/md/close'
 
 const styles = {
   label: css({
@@ -10,6 +11,13 @@ const styles = {
   }),
   input: css({
     display: 'none'
+  }),
+  close: css({
+    position: 'absolute',
+    background: 'rgba(255, 255, 255, 0.5)',
+    right: 2,
+    marginTop: 2,
+    cursor: 'pointer'
   })
 }
 
@@ -54,23 +62,32 @@ const readImage = (onChange, t) => e => {
 }
 
 const ImageInput = ({ onChange, t, src, label, maxWidth = 200 }) => (
-  <label>
-    <Label {...styles.label}>{label}</Label>
-    <img
-      src={src || '/static/placeholder.png'}
-      style={{
-        maxWidth,
-        width: src ? undefined : '100%'
-      }}
-      alt=''
-    />
-    <input
-      type='file'
-      accept='image/jpeg,image/png,image/gif,image/svg+xml'
-      {...styles.input}
-      onChange={readImage(onChange, t)}
-    />
-  </label>
+  <div style={{ position: 'relative' }}>
+    <label>
+      <Label {...styles.label}>{label}</Label>
+      <MdClose
+        {...styles.close}
+        onClick={e => {
+          e.preventDefault()
+          onChange(e, undefined)
+        }}
+      />
+      <img
+        src={src || '/static/placeholder.png'}
+        style={{
+          maxWidth,
+          width: src ? undefined : '100%'
+        }}
+        alt=''
+      />
+      <input
+        type='file'
+        accept='image/jpeg,image/png,image/gif,image/svg+xml'
+        {...styles.input}
+        onChange={readImage(onChange, t)}
+      />
+    </label>
+  </div>
 )
 
 export default withT(ImageInput)
