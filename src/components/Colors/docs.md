@@ -130,3 +130,24 @@ Use `borderTopWidth` and `borderTopStyle` instead:
 </div>
 ```
 
+#### Avoid Custom Elements
+
+```code|lang-js
+<Interaction.P {...colorScheme.set('color', 'error')}>
+  May or may not be red.
+</Interaction.P>
+```
+
+Even when a component forwards props to it's nativ element it might already have a different color rule which most likely has the same specificity.
+
+Instead use a native `span` to set your color:
+
+```code|lang-js
+<Interaction.P>
+  <span {...colorScheme.set('color', 'error')}>
+    Will always be red.
+  </span>
+</Interaction.P>
+```
+
+Notable exceptions: setting fill on icons. We'll ensure that our icon components always support setting a `fill` via `colorScheme.set` from the outside.
