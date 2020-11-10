@@ -138,7 +138,7 @@ Use `borderTopWidth` and `borderTopStyle` instead:
 </Interaction.P>
 ```
 
-Even when a component forwards props to it's nativ element it might already have a different color rule which most likely has the same specificity.
+Even when a component forwards props to its nativ element it might already have a different color rule which most likely has the same specificity.
 
 Instead use a native `span` to set your color:
 
