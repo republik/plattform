@@ -218,6 +218,11 @@ module.exports = async (_, args, context) => {
       () => transaction.public.electionCandidacies.update(from, to),
       () => transaction.public.eventLog.update(from, to),
       () => transaction.public.mailLog.update(from, to),
+      () =>
+        transaction.public.mailLog.update(
+          { userId: null, email: sourceUser.email },
+          to
+        ),
       () => transaction.public.notifications.update(from, to),
       () => transaction.public.previewRequests.update(from, to),
       () => transaction.public.questionnaireSubmissions.update(from, to),
