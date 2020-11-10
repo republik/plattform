@@ -101,6 +101,9 @@ type PackageOption {
   additionalPeriods: [MembershipPeriod!]
 
   accessGranted: Boolean
+
+  # If true, option reward is delivered
+  postalDelivery: Boolean!
 }
 
 input PackageOptionInput {
