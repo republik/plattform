@@ -357,6 +357,7 @@ const Form = withT(({ node, onChange, onTypeChange, options, t }) => {
             label={t('metaData/field/srcDark')}
             src={node.data.get('imageDark')}
             onChange={onChange('imageDark')}
+            dark
           />
           <Label>{t('metaData/field/srcDark/note')}</Label>
         </>

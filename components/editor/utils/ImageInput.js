@@ -61,7 +61,7 @@ const readImage = (onChange, t) => e => {
   reader.readAsDataURL(file)
 }
 
-const ImageInput = ({ onChange, t, src, label, maxWidth = 200 }) => (
+const ImageInput = ({ onChange, t, src, dark, label, maxWidth = 200 }) => (
   <div style={{ position: 'relative' }}>
     <label>
       <Label {...styles.label}>{label}</Label>
@@ -78,7 +78,8 @@ const ImageInput = ({ onChange, t, src, label, maxWidth = 200 }) => (
         src={src || '/static/placeholder.png'}
         style={{
           maxWidth,
-          width: src ? undefined : '100%'
+          width: src ? undefined : '100%',
+          backgroundColor: dark ? '#1F1F1F' : '#fff'
         }}
         alt=''
       />

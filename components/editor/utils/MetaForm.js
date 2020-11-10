@@ -176,6 +176,7 @@ class Form extends Component {
                   label={label}
                   src={value}
                   onChange={onInputChange(key)}
+                  dark={!!key.match(/dark/i)}
                 />
               )
             } else if (typeof value === 'boolean') {
