@@ -224,7 +224,9 @@ module.exports = async (_, args, context) => {
           to
         ),
       () => transaction.public.notifications.update(from, to),
-      () => transaction.public.previewRequests.update(from, to),
+      () =>
+        transaction.public.previewRequests &&
+        transaction.public.previewRequests.update(from, to),
       () => transaction.public.questionnaireSubmissions.update(from, to),
       () =>
         transaction.public.accessGrants.update(
