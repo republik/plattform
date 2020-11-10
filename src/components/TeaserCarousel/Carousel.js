@@ -2,9 +2,10 @@ import { css } from 'glamor'
 import PropTypes from 'prop-types'
 import React from 'react'
 
-import CarouselContext from './Context'
+import CarouselContext, { defaultValue } from './Context'
 import { PADDING, TILE_MAX_WIDTH } from './constants'
 import { MAX_WIDTH } from '../Center'
+import { useColorContext } from '../Colors/useColorContext'
 
 const styles = {
   carousel: css({
@@ -20,9 +21,9 @@ export const Carousel = ({
   outline,
   bgColor,
   color,
-  grid,
-  defaultOutline
+  grid
 }) => {
+  const [colorScheme] = useColorContext()
   const row = children && children[1]
   const tileCount =
     tileCountFromProps ||
@@ -42,12 +43,13 @@ export const Carousel = ({
         color,
         tileCount,
         tileMaxWidth,
-        grid,
-        defaultOutline
+        grid
       }}
     >
       <section
         {...styles.carousel}
+        {...colorScheme.set('backgroundColor', bgColor)}
+        {...colorScheme.set('color', color || 'inherit')}
         style={{
           margin: article ? '20px 0' : undefined
         }}
@@ -74,7 +76,9 @@ export default React.memo(Carousel)
 Carousel.propTypes = {
   bgColor: PropTypes.string,
   color: PropTypes.string,
-  outline: PropTypes.string,
+  outline: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   bigger: PropTypes.bool,
   children: PropTypes.node
 }
+
+Carousel.defaultProps = defaultValue

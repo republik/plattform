@@ -614,6 +614,7 @@ ReactDOM.render(
                 path: '/teasercarousel',
                 title: 'TeaserCarousel',
                 imports: {
+                  ColorContextProvider,
                   css,
                   t,
                   ...require('./components/TeaserCarousel'),

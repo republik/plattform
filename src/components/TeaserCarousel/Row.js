@@ -79,9 +79,6 @@ const Row = ({ children }) => {
   const [{ left, right }, setArrows] = useState({ left: false, right: false })
   const [colorScheme] = useColorContext()
 
-  // const bgColor = bgColorOverride || colorScheme.getCSSColor('default')
-  // const color = colorOverride || colorScheme.getCSSColor('text')
-
   useEffect(() => {
     const scroller = overflow.current
     const measure = () => {
@@ -147,12 +144,12 @@ const Row = ({ children }) => {
       >
         <span
           {...styles.arrowBg}
-          {...colorScheme.set('backgroundColor', context.bgColor || 'default')}
+          {...colorScheme.set('backgroundColor', context.bgColor)}
         />
         <ChevronLeft
           size={50}
           {...styles.arrowIcon}
-          {...colorScheme.set('fill', context.color || 'text')}
+          {...colorScheme.set('fill', context.color)}
         />
       </button>
 
@@ -185,12 +182,12 @@ const Row = ({ children }) => {
       >
         <span
           {...styles.arrowBg}
-          {...colorScheme.set('backgroundColor', context.bgColor || 'default')}
+          {...colorScheme.set('backgroundColor', context.bgColor)}
         />
         <ChevronRight
           size={50}
           {...styles.arrowIcon}
-          {...colorScheme.set('fill', context.color || 'text')}
+          {...colorScheme.set('fill', context.color)}
         />
       </button>
     </div>

@@ -596,7 +596,7 @@ const createSchema = ({ Link = DefaultLink, t = () => '', ...rest } = {}) => {
       formTitle: 'Carousel',
       formOptions: ['noAdapt', 'color', 'bgColor', 'outline', 'bigger'],
       defaultValues: {
-        outline: '#D7D7D7'
+        outline: true
       }
     },
     rules: [

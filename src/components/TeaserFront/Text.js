@@ -121,11 +121,11 @@ const Text = ({
         ? css({
             color: collapsedColor,
             [tUp]: {
-              color: color || colorScheme.getCSSColor('text')
+              color: colorScheme.getCSSColor(color || 'text')
             }
           })
         : css({
-            color: color || colorScheme.getCSSColor('text')
+            color: colorScheme.getCSSColor(color || 'text')
           }),
     [colorScheme, collapsedColor, color]
   )

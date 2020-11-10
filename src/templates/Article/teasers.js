@@ -486,7 +486,7 @@ const createTeasers = ({ t, Link, plattformUnauthorizedZoneText }) => {
       formTitle: 'Carousel',
       formOptions: ['noAdapt', 'color', 'bgColor', 'outline', 'bigger', 'grid'],
       defaultValues: {
-        outline: '#D7D7D7'
+        outline: true
       }
     },
     rules: [
