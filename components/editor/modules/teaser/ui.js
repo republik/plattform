@@ -310,13 +310,30 @@ const Form = withT(({ node, onChange, onTypeChange, options, t }) => {
         />
       )}
       {options.includes('outline') && (
-        <ColorPicker
-          label='Umrisslinienfarbe'
-          value={node.data.get('outline')}
-          onChange={color => {
-            onChange('outline', null, color)
-          }}
-        />
+        <>
+          <Checkbox
+            checked={node.data.get('outline') ? true : false}
+            onChange={onChange('outline')}
+          >
+            Mit Umrisslinie
+          </Checkbox>
+          {node.data.get('outline') && (
+            <>
+              <br style={{ clear: 'left' }} />
+              <ColorPicker
+                label='Umrisslinienfarbe'
+                value={
+                  node.data.get('outline') === true
+                    ? undefined
+                    : node.data.get('outline')
+                }
+                onChange={color => {
+                  onChange('outline', null, color || true)
+                }}
+              />
+            </>
+          )}
+        </>
       )}
       {options.includes('formatColor') && (
         <ColorPicker
