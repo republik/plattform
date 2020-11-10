@@ -180,10 +180,7 @@ const Tile = ({
               alt={alt}
             />
             {byline && (
-              <FigureByline
-                position={bigger ? 'belowRight' : 'rightCompact'}
-                {...colorScheme.set('color', color)}
-              >
+              <FigureByline position={bigger ? 'belowRight' : 'rightCompact'}>
                 {byline}
               </FigureByline>
             )}
@@ -200,10 +197,7 @@ const Tile = ({
                 alt={alt}
               />
               {byline && (
-                <FigureByline
-                  position={bigger ? 'aboveRight' : 'rightCompact'}
-                  {...colorScheme.set('color', color)}
-                >
+                <FigureByline position={bigger ? 'aboveRight' : 'rightCompact'}>
                   {byline}
                 </FigureByline>
               )}
