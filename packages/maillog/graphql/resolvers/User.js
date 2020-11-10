@@ -10,7 +10,10 @@ module.exports = {
 
     const records = await pgdb.public.mailLog.find(
       {
-        or: [{ userId: user.id }, { email: user.email }],
+        or: [
+          { userId: user.id },
+          { userId: null, email: user.email }
+        ],
       },
       { orderBy: { createdAt: 'DESC' } },
     )
