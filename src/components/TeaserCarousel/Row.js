@@ -50,11 +50,24 @@ const styles = {
       transition: 'opacity 200ms'
     }
   }),
+  arrowBg: css({
+    display: 'block',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    opacity: 0.7
+  }),
+  arrowIcon: css({
+    // ontop of arrowBg
+    position: 'relative'
+  }),
   arrowHoverable: css({
     '@media (hover)': {
       '[role=group]:hover > &': {
         pointerEvents: 'auto',
-        opacity: 0.7
+        opacity: 1
       }
     }
   })
@@ -115,7 +128,6 @@ const Row = ({ children }) => {
         {...styles.arrow}
         {...(left && styles.arrowHoverable)}
         style={{ left: 0 }}
-        {...colorScheme.set('backgroundColor', context.bgColor || 'default')}
         onClick={() => {
           const scroller = overflow.current
           const clientWidth = scroller.clientWidth
@@ -133,8 +145,13 @@ const Row = ({ children }) => {
           })
         }}
       >
+        <span
+          {...styles.arrowBg}
+          {...colorScheme.set('backgroundColor', context.bgColor || 'default')}
+        />
         <ChevronLeft
           size={50}
+          {...styles.arrowIcon}
           {...colorScheme.set('fill', context.color || 'text')}
         />
       </button>
@@ -143,7 +160,6 @@ const Row = ({ children }) => {
         {...styles.arrow}
         {...(right && styles.arrowHoverable)}
         style={{ right: 0 }}
-        {...colorScheme.set('backgroundColor', context.bgColor || 'default')}
         onClick={() => {
           const scroller = overflow.current
           const clientWidth = scroller.clientWidth
@@ -167,8 +183,13 @@ const Row = ({ children }) => {
           })
         }}
       >
+        <span
+          {...styles.arrowBg}
+          {...colorScheme.set('backgroundColor', context.bgColor || 'default')}
+        />
         <ChevronRight
           size={50}
+          {...styles.arrowIcon}
           {...colorScheme.set('fill', context.color || 'text')}
         />
       </button>
