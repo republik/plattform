@@ -41,12 +41,12 @@ export const matchImagesParagraph = node =>
 export const extractImage = node =>
   matchImageParagraph(node) ? node.children[0].url : undefined
 
-export const extractImages = node => {
+export const extractImages = (node, prop = 'src') => {
   if (!matchImagesParagraph(node)) return undefined
   const urls = node.children.filter(matchImage).map(child => child.url)
   return {
-    src: urls[0],
-    srcDark: urls.length === 2 ? urls[1] : null
+    [prop]: urls[0],
+    [`${prop}Dark`]: urls.length === 2 ? urls[1] : null
   }
 }
 

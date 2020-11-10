@@ -44,6 +44,7 @@ import {
   matchTeaserType,
   skipMdastImage,
   extractImage,
+  extractImages,
   globalInlines,
   styles
 } from '../Article/utils'
@@ -516,7 +517,7 @@ const createSchema = ({ Link = DefaultLink, t = () => '', ...rest } = {}) => {
       )
     },
     props: node => ({
-      image: extractImage(node.children[0]),
+      ...extractImages(node.children[0], 'image'),
       ...node.data
     }),
     editorModule: 'teaser',
@@ -527,6 +528,7 @@ const createSchema = ({ Link = DefaultLink, t = () => '', ...rest } = {}) => {
       formOptions: [
         'formatUrl',
         'image',
+        'imageDark',
         'byline',
         'kind',
         'showImage',

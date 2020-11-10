@@ -103,7 +103,7 @@ The media queries are defined in [`FrontTile`](/teaserfronttile).
 <TeaserCarousel outline>
  <TeaserSectionTitle>Kolumnen</TeaserSectionTitle>
   <TeaserCarouselTileContainer>
-    <TeaserCarouselTile image='/static/carousel/binswanger.png?size=2480x2521' onClick={() => console.log("click on first tile")}>
+    <TeaserCarouselTile image='/static/carousel/binswanger.png?size=2480x2521' imageDark='/static/carousel/binswanger_dark.png?size=2480x2521' onClick={() => console.log("click on first tile")}>
       <TeaserCarouselFormat color='#00B4FF'>
         Binswanger
       </TeaserCarouselFormat>
@@ -145,7 +145,7 @@ The default colors automatically adjust to the color context.
   <TeaserCarousel outline>
    <TeaserSectionTitle>Kolumnen</TeaserSectionTitle>
     <TeaserCarouselTileContainer>
-      <TeaserCarouselTile image='/static/carousel/binswanger.png?size=2480x2521' onClick={() => console.log("click on first tile")}>
+      <TeaserCarouselTile image='/static/carousel/binswanger.png?size=2480x2521' imageDark='/static/carousel/binswanger_dark.png?size=2480x2521' onClick={() => console.log("click on first tile")}>
         <TeaserCarouselFormat color='#00B4FF'>
           Binswanger
         </TeaserCarouselFormat>
@@ -154,26 +154,6 @@ The default colors automatically adjust to the color context.
         </TeaserCarouselHeadline.Editorial>
         <Editorial.Credit>
           Von <Editorial.A href='#'>Daniel Binswanger</Editorial.A >, 05.07.2019
-        </Editorial.Credit>
-      </TeaserCarouselTile>
-
-      <TeaserCarouselTile image='/static/carousel/berg.png?size=2480x2963'>
-        <TeaserCarouselFormat color="#00B4FF">Sybille Berg</TeaserCarouselFormat>
-        <TeaserCarouselHeadline.Editorial>
-          «Was führt Männer oft zu fast albern anmutender Selbstüber-schätzung?»
-        </TeaserCarouselHeadline.Editorial>
-        <Editorial.Credit>
-          Von <Editorial.A href='#'>Sybille Berg</Editorial.A >, 05.07.2019
-        </Editorial.Credit>
-      </TeaserCarouselTile>
-
-      <TeaserCarouselTile image='/static/carousel/niggli.png?size=2422x2480'>
-        <TeaserCarouselFormat color="#00B4FF">Niggli</TeaserCarouselFormat>
-        <TeaserCarouselHeadline.Editorial>
-          Sir Kim Darroch, Ritter der ungeschminkten Wahrheit
-        </TeaserCarouselHeadline.Editorial>
-        <Editorial.Credit>
-          Von <Editorial.A href='#'>Marcel Alexander Niggli</Editorial.A >, 05.07.2019
         </Editorial.Credit>
       </TeaserCarouselTile>
     </TeaserCarouselTileContainer>
@@ -186,7 +166,7 @@ The default colors automatically adjust to the color context.
   <TeaserCarousel outline>
    <TeaserSectionTitle>Kolumnen</TeaserSectionTitle>
     <TeaserCarouselTileContainer>
-      <TeaserCarouselTile image='/static/carousel/binswanger.png?size=2480x2521' onClick={() => console.log("click on first tile")}>
+      <TeaserCarouselTile image='/static/carousel/binswanger.png?size=2480x2521' imageDark='/static/carousel/binswanger_dark.png?size=2480x2521' onClick={() => console.log("click on first tile")}>
         <TeaserCarouselFormat color='#00B4FF'>
           Binswanger
         </TeaserCarouselFormat>
@@ -195,26 +175,6 @@ The default colors automatically adjust to the color context.
         </TeaserCarouselHeadline.Editorial>
         <Editorial.Credit>
           Von <Editorial.A href='#'>Daniel Binswanger</Editorial.A >, 05.07.2019
-        </Editorial.Credit>
-      </TeaserCarouselTile>
-
-      <TeaserCarouselTile image='/static/carousel/berg.png?size=2480x2963'>
-        <TeaserCarouselFormat color="#00B4FF">Sybille Berg</TeaserCarouselFormat>
-        <TeaserCarouselHeadline.Editorial>
-          «Was führt Männer oft zu fast albern anmutender Selbstüber-schätzung?»
-        </TeaserCarouselHeadline.Editorial>
-        <Editorial.Credit>
-          Von <Editorial.A href='#'>Sybille Berg</Editorial.A >, 05.07.2019
-        </Editorial.Credit>
-      </TeaserCarouselTile>
-
-      <TeaserCarouselTile image='/static/carousel/niggli.png?size=2422x2480'>
-        <TeaserCarouselFormat color="#00B4FF">Niggli</TeaserCarouselFormat>
-        <TeaserCarouselHeadline.Editorial>
-          Sir Kim Darroch, Ritter der ungeschminkten Wahrheit
-        </TeaserCarouselHeadline.Editorial>
-        <Editorial.Credit>
-          Von <Editorial.A href='#'>Marcel Alexander Niggli</Editorial.A >, 05.07.2019
         </Editorial.Credit>
       </TeaserCarouselTile>
     </TeaserCarouselTileContainer>
@@ -317,7 +277,7 @@ Supported props:
 ```
 ```react|span-2
 <TeaserCarouselTile
-  image='/static/carousel/binswanger.png?size=2480x2521'
+  image='/static/carousel/binswanger.png?size=2480x2521' imageDark='/static/carousel/binswanger_dark.png?size=2480x2521'
   outline
   onClick={() => console.log("click on tile")}
 >

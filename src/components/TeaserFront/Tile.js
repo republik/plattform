@@ -7,6 +7,7 @@ import LazyLoad from '../LazyLoad'
 import { mUp } from './mediaQueries'
 import Text from './Text'
 import { useColorContext } from '../Colors/useColorContext'
+import SwitchImage from '../Figure/SwitchImage'
 
 const IMAGE_SIZE = {
   small: 220,
@@ -73,6 +74,7 @@ const Tile = ({
   children,
   attributes,
   image,
+  imageDark,
   byline,
   alt,
   onClick,
@@ -88,6 +90,9 @@ const Tile = ({
     align === 'top' ? 'flex-start' : align === 'bottom' ? 'flex-end' : ''
   const imageProps =
     image && FigureImage.utils.getResizedSrcs(image, IMAGE_SIZE.large, false)
+  const imageDarkProps =
+    imageDark &&
+    FigureImage.utils.getResizedSrcs(imageDark, IMAGE_SIZE.large, false)
   let containerStyle = {
     backgroundColor: bgColor,
     cursor: onClick ? 'pointer' : 'default',
@@ -118,11 +123,16 @@ const Tile = ({
             visible={aboveTheFold}
             consistentPlaceholder
             type='span'
-            style={{ position: 'relative', fontSize: 0 }}
+            style={{
+              position: 'relative',
+              fontSize: 0,
+              display: 'inline-block'
+            }}
           >
-            <img
+            <SwitchImage
               src={imageProps.src}
               srcSet={imageProps.srcSet}
+              dark={imageDarkProps}
               alt={alt}
               {...(onlyImage ? styles.onlyImage : styles.image)}
             />

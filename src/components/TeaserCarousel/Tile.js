@@ -8,6 +8,7 @@ import Text from '../TeaserFront/Text'
 import { serifRegular16, serifRegular18 } from '../Typography/styles'
 import CarouselContext from './Context'
 import { useColorContext } from '../Colors/useColorContext'
+import SwitchImage from '../Figure/SwitchImage'
 
 import {
   PADDING,
@@ -91,13 +92,11 @@ const styles = {
     margin: '0 auto'
   }),
   image: css({
-    display: 'block',
     height: '100%',
     maxWidth: '100%',
     maxHeight: IMAGE_SIZE.maxHeight
   }),
   imageBigger: css({
-    display: 'block',
     margin: '0 auto',
     maxWidth: '100%',
     objectFit: 'contain'
@@ -107,6 +106,7 @@ const styles = {
 const Tile = ({
   count,
   image,
+  imageDark,
   alt,
   onClick,
   aboveTheFold,
@@ -144,6 +144,8 @@ const Tile = ({
   })
 
   const imageProps = image && FigureImage.utils.getResizedSrcs(image, 450, true)
+  const imageDarkProps =
+    imageDark && FigureImage.utils.getResizedSrcs(imageDark, 450, true)
   const imageContainerStyles = bigger
     ? styles.imageContainerBigger
     : styles.imageContainer
@@ -174,6 +176,7 @@ const Tile = ({
             <FigureImage
               aboveTheFold={aboveTheFold}
               {...imageProps}
+              dark={imageDarkProps}
               alt={alt}
             />
             {byline && (
@@ -189,10 +192,11 @@ const Tile = ({
         {imageProps && isPortrait && (
           <div {...imageContainerStyles}>
             <div {...styles.imageWrapper}>
-              <img
+              <SwitchImage
                 {...imageStyles}
                 src={imageProps.src}
                 srcSet={imageProps.srcSet}
+                dark={imageDarkProps}
                 alt={alt}
               />
               {byline && (
