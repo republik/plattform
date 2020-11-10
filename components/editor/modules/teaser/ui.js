@@ -334,6 +334,16 @@ const Form = withT(({ node, onChange, onTypeChange, options, t }) => {
           onChange={onChange('image')}
         />
       )}
+      {options.includes('imageDark') && node.data.get('image') && (
+        <>
+          <ImageInput
+            label={t('metaData/field/srcDark')}
+            src={node.data.get('imageDark')}
+            onChange={onChange('imageDark')}
+          />
+          <Label>{t('metaData/field/srcDark/note')}</Label>
+        </>
+      )}
       {options.includes('byline') && (
         <Field
           label='Bildcredit'
