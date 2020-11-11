@@ -159,15 +159,6 @@ const run = async () => {
         ,
       { encoding: 'utf8', flag: 'w' },
     )
-  }).then(() => {
-    const custom = 'cf_comment_notification_new.txt signin.txt signin_code.txt newsletter_request_COVID19.txt'
-      .split(' ')
-      .filter((t) => !argv.templates || argv.templates.includes(t))
-    if (custom.length) {
-      console.log(
-        'Make sure to restore plain text customizations: ' + custom.join(', '),
-      )
-    }
   })
 }
 
