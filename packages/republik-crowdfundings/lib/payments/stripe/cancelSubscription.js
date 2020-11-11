@@ -8,9 +8,11 @@ module.exports = async ({ id, companyId, immediately = false, pgdb }) => {
     throw new Error(`could not find account for companyId: ${companyId}`)
   }
 
-  // TODO update to new stripe api version
-  // https://stripe.com/docs/api/subscriptions/cancel
-  return account.stripe.subscriptions.del(id, {
-    at_period_end: !immediately,
-  })
+  if (immediately) {
+    return account.stripe.subscriptions.del(id)
+  } else {
+    return account.stripe.subscriptions.update(id, {
+      cancel_at_period_end: true,
+    })
+  }
 }
