@@ -81,7 +81,10 @@ export default ({ rule, subModules, TYPE }) => {
             <span {...styles.border} {...attributes} data-active={active}>
               <Image
                 src={node.data.get('src') || gray2x1}
-                dark={node.data.get('srcDark')}
+                dark={{
+                  src:
+                    node.data.get('srcDark') || node.data.get('src') || gray2x1
+                }}
                 alt={node.data.get('alt')}
               />
             </span>
