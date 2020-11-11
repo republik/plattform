@@ -1,5 +1,5 @@
 {
-  "updated": "2020-11-09T13:43:21.049Z",
+  "updated": "2020-11-11T13:49:37.534Z",
   "title": "live",
   "data": [
     {
@@ -796,7 +796,7 @@
     },
     {
       "key": "metaData/darkMode",
-      "value": "Dark Mode"
+      "value": "Dunkles Farbschema forcieren"
     },
     {
       "key": "variable/insert/greeting",

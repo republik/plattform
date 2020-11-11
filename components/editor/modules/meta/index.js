@@ -15,9 +15,8 @@ export default ({ rule, TYPE, context = {} }) => {
         renderEditor({ value, children }, editor) {
           return (
             <div>
+              {children}
               <ColorContextProvider colorSchemeKey='light'>
-                {children}
-                {children}
                 <MetaData
                   value={value}
                   editor={editor}
