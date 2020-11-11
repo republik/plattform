@@ -22,8 +22,11 @@ module.exports = {
 
       // send clientSecret to stripe/payPledge
       await redis.publish(
-        `pledge:${pledgeId}:clientSecret`,
-        paymentIntent.client_secret,
+        `pledge:${pledgeId}:paymentIntent`,
+        JSON.stringify({
+          id: paymentIntent.id,
+          clientSecret: paymentIntent.client_secret,
+        }),
       )
     }
   },

@@ -1,13 +1,9 @@
-const {
-  forUpdate,
-  changeStatus,
-  afterChange,
-  savePaymentDedup,
-} = require('../../Pledge')
+const { makePledgeSuccessfulWithCharge } = require('../../Pledge')
 
 module.exports = {
   eventTypes: [
     /*
+    TODO: cleanup
     'payment_intent.amount_capturable_updated',
     'payment_intent.canceled',
     'payment_intent.created',
@@ -22,7 +18,6 @@ module.exports = {
       ...connectionContext,
       t,
     }
-    const { pgdb } = context
 
     const pledgeId = event.data?.object?.metadata?.pledgeId
     if (!pledgeId) {
@@ -42,48 +37,19 @@ module.exports = {
       return 503
     }
 
-    let updatedPledge
-    const result = await forUpdate({
-      pledgeId,
-      pgdb,
-      fn: async ({ pledge, transaction }) => {
-        if (!pledge) {
-          console.warn(`${event.type} pledge not found for id: ${pledgeId}`)
-          return 503
-        }
-
-        await savePaymentDedup({
-          pledgeId: pledge.id,
-          chargeId: charge.id,
-          total: charge.amount,
-          transaction,
-        })
-
-        const newStatus = 'SUCCESSFUL'
-        if (pledge.status !== newStatus) {
-          updatedPledge = await changeStatus(
-            {
-              pledge,
-              newStatus,
-              transaction,
-            },
-            context,
-          )
-        }
-
-        return 200
+    const { pledge } = await makePledgeSuccessfulWithCharge(
+      {
+        pledgeId,
+        charge,
       },
-    })
+      context,
+    )
 
-    if (updatedPledge) {
-      await afterChange(
-        {
-          pledge: updatedPledge,
-        },
-        context,
-      )
+    if (!pledge) {
+      console.warn(`${event.type} pledge not found for id: ${pledgeId}`)
+      return 503
     }
 
-    return result
+    return 200
   },
 }

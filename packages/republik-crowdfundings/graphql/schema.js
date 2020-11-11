@@ -62,6 +62,9 @@ type mutations {
   addPaymentMethod(stripePlatformPaymentMethodId: ID!, companyId: ID!): AddPaymentMethodResponse!
   setDefaultPaymentMethod(stripePlatformPaymentMethodId: ID!): [PaymentSource!]!
 
+  # sync the status of a paymentIntent
+  syncPaymentIntent(stripePaymentIntentId: ID!, companyId: ID!): SyncPledgeResponse!
+
   # Activate an existing membership.
   # required role: supporter
   activateMembership(id: ID!): Membership!

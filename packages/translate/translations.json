@@ -367,6 +367,10 @@
       "value": "Die PaymentMethod konnte nicht gefunden werden."
     },
     {
+      "key": "api/payment/paymentIntent/404",
+      "value": "Der PaymentIntent konnte nicht gefunden werden."
+    },
+    {
       "key": "api/email/membership_prolong_notice/subject",
       "value": "Ihr Republik-Abo wurde verlängert"
     },

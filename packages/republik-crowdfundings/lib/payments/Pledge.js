@@ -82,6 +82,7 @@ const afterChange = async ({ pledge }, context) => {
 const savePaymentDedup = async ({
   pledgeId,
   chargeId,
+  charge, // optional
   total,
   transaction,
   method = 'STRIPE',
@@ -103,6 +104,7 @@ const savePaymentDedup = async ({
     total,
     status,
     pspId: chargeId,
+    ...(charge ? { pspPayload: charge } : {}),
   })
 
   await transaction.public.pledgePayments.insert({
@@ -114,9 +116,64 @@ const savePaymentDedup = async ({
   return payment
 }
 
+// This method is only suitable for !subscription pledges as it only calls
+// generateMemberships (via changeStatus) and doesn't generate periods.
+// See invoicePaymentSucceeded for how subscriptions are handled.
+const makePledgeSuccessfulWithCharge = async (
+  { pledgeId, charge },
+  context,
+) => {
+  const { pgdb } = context
+
+  const { pledge, updatedPledge } = await forUpdate({
+    pledgeId,
+    pgdb,
+    fn: async ({ pledge, transaction }) => {
+      if (!pledge) {
+        return { pledge }
+      }
+
+      await savePaymentDedup({
+        pledgeId: pledge.id,
+        chargeId: charge.id,
+        charge,
+        total: charge.amount,
+        transaction,
+      })
+
+      const newStatus = 'SUCCESSFUL'
+      let updatedPledge
+      if (pledge.status !== newStatus) {
+        updatedPledge = await changeStatus(
+          {
+            pledge,
+            newStatus,
+            transaction,
+          },
+          context,
+        )
+      }
+
+      return { pledge, updatedPledge }
+    },
+  })
+
+  if (updatedPledge) {
+    await afterChange(
+      {
+        pledge: updatedPledge,
+      },
+      context,
+    )
+  }
+
+  return { pledge, updatedPledge }
+}
+
 module.exports = {
   forUpdate,
   changeStatus,
   afterChange,
   savePaymentDedup,
+  makePledgeSuccessfulWithCharge,
 }

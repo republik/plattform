@@ -25,6 +25,7 @@ module.exports = {
 
     const invoice = event.data?.object
     const subscription = event.data?.object?.lines?.data[0]
+    const paymentIntentId = event.data?.object?.payment_intent
 
     if (subscription.type === 'subscription') {
       const { charge: chargeId, total } = invoice
@@ -32,7 +33,13 @@ module.exports = {
 
       // stripe/payPledge might be waiting for clientSecret
       // publish that no auth is required
-      await redis.publish(`pledge:${pledgeId}:clientSecret`, 'no-auth-required')
+      await redis.publish(
+        `pledge:${pledgeId}:paymentIntent`,
+        JSON.stringify({
+          id: paymentIntentId,
+          clientSecret: 'no-auth-required',
+        }),
+      )
 
       let updatedPledge
       const result = await forUpdate({

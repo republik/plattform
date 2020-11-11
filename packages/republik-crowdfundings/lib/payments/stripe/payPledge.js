@@ -185,6 +185,7 @@ const payWithPaymentMethod = async ({
   }
 
   let stripeClientSecret
+  let stripePaymentIntentId
   if (!isSubscription) {
     const paymentIntent = await createPaymentIntent({
       userId,
@@ -196,21 +197,25 @@ const payWithPaymentMethod = async ({
       clients,
       t,
     })
+    stripePaymentIntentId = paymentIntent.id
     if (paymentIntent.status !== 'succeeded') {
       stripeClientSecret = paymentIntent.client_secret
     }
   } else {
-    // subscribe to get clientSecret from invoicePaymentActionRequired webhook
+    // subscribe to get clientSecret from webhooks:
+    // invoicePaymentActionRequired or invoicePaymentSucceeded
     let noAuthRequired
     const subscriber = Redis.connect()
-    subscriber.on('message', (channel, message) => {
-      if (message === 'no-auth-required') {
+    subscriber.on('message', (channel, rawMessage) => {
+      const { id, clientSecret } = JSON.parse(rawMessage)
+      stripePaymentIntentId = id
+      if (clientSecret === 'no-auth-required') {
         noAuthRequired = true
       } else {
-        stripeClientSecret = message
+        stripeClientSecret = clientSecret
       }
     })
-    subscriber.subscribe(`pledge:${pledgeId}:clientSecret`)
+    subscriber.subscribe(`pledge:${pledgeId}:paymentIntent`)
 
     await createSubscription({
       plan: pkg.name,
@@ -242,5 +247,7 @@ const payWithPaymentMethod = async ({
   return {
     status: 'DRAFT',
     stripeClientSecret,
+    stripePaymentIntentId,
+    companyId: pkg.companyId,
   }
 }

@@ -249,6 +249,16 @@ type PledgeResponse {
   pfSHA: String
   # returned by payPledge if confirmCardPayment is expected
   stripeClientSecret: String
+  # returned by payPledge if PaymentIntent is used
+  # can be used by client to call the syncPaymentIntent migration
+  stripePaymentIntentId: ID
+  # returned by payPledge if PaymentIntent is used
+  companyId: ID
+}
+
+type SyncPledgeResponse {
+  pledgeStatus: PledgeStatus!
+  updatedPledge: Boolean!
 }
 
 input PledgePaymentInput {
