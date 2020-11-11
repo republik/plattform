@@ -2,7 +2,7 @@ Guten Tag
 
 Sie haben sich entschieden, Ihre Mitgliedschaft zu künden.
 Schade, sind Sie nicht mehr Teil der Republik und der Idee hinter unserem
-gemeinsamen Projekt! 
+gemeinsamen Projekt!
 
 Bei Ihrer Kündigung haben Sie angegeben, dass Sie keine Zeit für die Lektüre
 haben.
@@ -19,8 +19,8 @@ Sie einmal in der Woche die besten Artikel der vergangenen Tage ins Postfach.
 Auch wenn Sie wenig zum Lesen kommen, leisten Sie so einen wichtigen Beitrag zur
 Medienvielfalt der Schweiz.
 
-Oder: Vielleicht wollen oder können Sie die Idee hinter diesem Projekt einfach 
-mit einer Spende unterstützen? {{link_offer_donate}} 
+Oder: Vielleicht wollen oder können Sie die Idee hinter diesem Projekt einfach
+mit einer Spende unterstützen? {{link_offer_donate}}
 
 Wir würden uns sehr freuen, Sie weiter bei uns an Bord zu wissen.
 
@@ -34,14 +34,14 @@ Ihre Crew der Republik
 Die Republik ist ein unabhängiges und werbefreies digitales Magazin für Politik,
 Wirtschaft, Gesellschaft und Kultur. Es wird von seinen Leserinnen und Lesern
 finanziert und erscheint von Montag bis Samstag mit täglich ein bis drei neuen
-Beiträgen. In der App, auf der Website und als Newsletter. 
+Beiträgen. In der App, auf der Website und als Newsletter.
 
 
 Republik AG
 Sihlhallenstrasse 1, CH-8004 Zürich
-{{frontend_base_url}} 
-kontakt@republik.ch 
+{{frontend_base_url}}
+kontakt@republik.ch
 
-Unser Manifest {{link_manifest}} 
-Das Impressum {{link_imprint}} 
+Unser Manifest {{link_manifest}}
+Das Impressum {{link_imprint}}
 Häufig gestellte Fragen {{link_faq}}

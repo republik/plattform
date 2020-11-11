@@ -3,7 +3,9 @@ Guten Tag
 Ihre Zahlung ist erfolgreich bei uns eingegangen.
 Herzlichen Dank!
 
-{{#if `total > 1000`}} Sie können ab sofort das Magazin lesen {{link_signin}} , an sämtlichen Debatten
+{{#if `total > 1000`}}
+
+Sie können ab sofort das Magazin lesen {{link_signin}} , an sämtlichen Debatten
 teilnehmen {{link_dialog}} , eine öffentliche Profilseite aufschalten
 {{link_profile}} und Beiträge mit Ihren Freunden oder Feinden teilen.
 
@@ -16,51 +18,59 @@ regelmässig Neuigkeiten aus Redaktion und Verlag: zu Vorhaben, Hintergründen,
 Entscheidungen und Fehlern. Sie können Kritik üben und Vorschläge machen. Und
 sich mit Ihren Kolleginnen und Kollegen in der Verlagsetage austauschen.
 
-{{/if}} Um uns für Ihre besonders grosse Unterstützung ein kleines bisschen zu
+{{/if}}
+
+Um uns für Ihre besonders grosse Unterstützung ein kleines bisschen zu
 revanchieren, schicken wir Ihnen postwendend das Gönnerpaket mit Manifest, dem
 exklusiven Republik-Anstecker in Gold sowie einer signierten Ausgabe von
 Constantin Seibts Buch «Deadline – Wie man besser schreibt
 https://keinundaber.ch/de/literary-work/deadline/ » zu.
 
-Stellen Sie dafür bitte sicher, dass Sie Ihre Adresse unter {{link_account}}
+Stellen Sie dafür bitte sicher, dass Sie Ihre Adresse unter
 {{link_account_account}} korrekt eingetragen haben.
 
-{{#if goodies_count}} {{#if `goodies_count == 1`}} Sie haben sich zu Ihrer
-Gönner-Mitgliedschaft noch ein Republik-Objekt gegönnt. {{elseif `goodies_count
-> 1`}} Sie haben sich zu Ihrer Gönner-Mitgliedschaft noch mehrere
-Republik-Objekte gegönnt. {{/if}} Bücher und Taschen liefern wir innerhalb von 7
-Werktagen. 
+{{#if goodies_count}}
 
-* 
-* {{this.oamount}} {{this.olabel}}
-* 
+{{#if `goodies_count == 1`}} Sie haben sich zu Ihrer Gönner-Mitgliedschaft noch
+ein Republik-Objekt gegönnt. {{elseif `goodies_count > 1`}} Sie haben sich zu
+Ihrer Gönner-Mitgliedschaft noch mehrere Republik-Objekte gegönnt. {{/if}}
+Bücher und Taschen liefern wir innerhalb von 7 Werktagen.
 
-Stellen Sie dafür bitte sicher, dass Sie Ihre Adresse unter {{link_account}}
+   {{#options}} {{#if `this.otype == "Goodie"`}}
+ * {{this.oamount}} {{this.olabel}}
+   {{/if}} {{/options}}
+
+Stellen Sie dafür bitte sicher, dass Sie Ihre Adresse unter
 {{link_account_account}} korrekt eingetragen haben.
 
-{{/if}} {{#if `total > 1000`}} Vielen Dank!
+{{/if}} {{#if `total > 1000`}}
+
+Vielen Dank!
 Und viel Vergnügen beim Start mit der Republik.
 
-{{/if}} {{#if `total < 1000`}} Falls Sie Fragen zur Inbetriebnahme des Magazins
-haben:
+{{/if}} {{#if `total < 1000`}}
+
+Falls Sie Fragen zur Inbetriebnahme des Magazins haben:
 Hier finden Sie die Gebrauchsanleitung {{link_manual}} , die die wichtigsten
 davon klärt.
 
 Wir wünschen weiterhin viel Vergnügen mit der Republik.
 
-{{/if}} Ihre Crew der Republik
+{{/if}}
+
+Ihre Crew der Republik
 
 Die Republik ist ein unabhängiges und werbefreies digitales Magazin für Politik,
 Wirtschaft, Gesellschaft und Kultur. Es wird von seinen Leserinnen und Lesern
 finanziert und erscheint von Montag bis Samstag mit täglich ein bis drei neuen
-Beiträgen. In der App, auf der Website und als Newsletter. 
+Beiträgen. In der App, auf der Website und als Newsletter.
 
 
 Republik AG
 Sihlhallenstrasse 1, CH-8004 Zürich
-{{frontend_base_url}} 
-kontakt@republik.ch 
+{{frontend_base_url}}
+kontakt@republik.ch
 
-Unser Manifest {{link_manifest}} 
-Das Impressum {{link_imprint}} 
+Unser Manifest {{link_manifest}}
+Das Impressum {{link_imprint}}
 Häufig gestellte Fragen {{link_faq}}

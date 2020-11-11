@@ -2,7 +2,7 @@ Guten Tag
 
 Sie haben sich entschieden, Ihre Mitgliedschaft zu künden.
 Schade, sind Sie nicht mehr Teil der Republik und der Idee hinter unserem
-gemeinsamen Projekt! 
+gemeinsamen Projekt!
 
 Bei Ihrer Kündigung haben Sie angegeben, dass Sie lieber auf Papier lesen
 beziehungsweise nicht gerne am Bildschirm.
@@ -28,14 +28,14 @@ Ihre Crew der Republik
 Die Republik ist ein unabhängiges und werbefreies digitales Magazin für Politik,
 Wirtschaft, Gesellschaft und Kultur. Es wird von seinen Leserinnen und Lesern
 finanziert und erscheint von Montag bis Samstag mit täglich ein bis drei neuen
-Beiträgen. In der App, auf der Website und als Newsletter. 
+Beiträgen. In der App, auf der Website und als Newsletter.
 
 
 Republik AG
 Sihlhallenstrasse 1, CH-8004 Zürich
-{{frontend_base_url}} 
-kontakt@republik.ch 
+{{frontend_base_url}}
+kontakt@republik.ch
 
-Unser Manifest {{link_manifest}} 
-Das Impressum {{link_imprint}} 
+Unser Manifest {{link_manifest}}
+Das Impressum {{link_imprint}}
 Häufig gestellte Fragen {{link_faq}}
