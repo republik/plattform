@@ -222,14 +222,14 @@ const payWithPaymentMethod = async ({
       userId,
       companyId: pkg.companyId,
       metadata: {
-        pledgeId: pledgeId,
+        pledgeId,
       },
       pgdb: transaction,
       clients,
     })
 
-    // wait 15s max
-    const maxMs = new Date().getTime() + 15 * 1000
+    // wait 25s max
+    const maxMs = new Date().getTime() + 25 * 1000
     await (async () => {
       while (
         !noAuthRequired && // eslint-disable-line no-unmodified-loop-condition
@@ -239,6 +239,14 @@ const payWithPaymentMethod = async ({
         await sleep(500)
       }
     })()
+
+    // we didn't receive a webhook (or redis publish) in time
+    if (!stripePaymentIntentId) {
+      console.error(
+        `payPledge didn't receive the paymentIntent in time for pledgeId: ${pledgeId}`,
+      )
+      throw new Error(t('api/unexpected'))
+    }
 
     subscriber.unsubscribe()
     Redis.disconnect(subscriber)
