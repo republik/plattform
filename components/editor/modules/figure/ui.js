@@ -84,9 +84,20 @@ function createUI({
                     data={Map({
                       src: '',
                       alt: ''
-                    }).merge(imageBlock.data)}
+                    }).merge(imageBlock.data.remove('srcDark'))}
                     onInputChange={onInputChange(imageBlock)}
                   />
+                  {imageBlock.data.get('src') && (
+                    <>
+                      <MetaForm
+                        data={Map({
+                          srcDark: imageBlock.data.get('srcDark') || ''
+                        })}
+                        onInputChange={onInputChange(imageBlock)}
+                      />
+                      <Label>{t('metaData/field/srcDark/note')}</Label>
+                    </>
+                  )}
                   {captionRight && (
                     <MetaForm
                       data={Map({

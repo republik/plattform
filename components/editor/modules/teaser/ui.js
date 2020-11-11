@@ -310,13 +310,30 @@ const Form = withT(({ node, onChange, onTypeChange, options, t }) => {
         />
       )}
       {options.includes('outline') && (
-        <ColorPicker
-          label='Umrisslinienfarbe'
-          value={node.data.get('outline')}
-          onChange={color => {
-            onChange('outline', null, color)
-          }}
-        />
+        <>
+          <Checkbox
+            checked={node.data.get('outline') ? true : false}
+            onChange={onChange('outline')}
+          >
+            Mit Umrisslinie
+          </Checkbox>
+          {node.data.get('outline') && (
+            <>
+              <br style={{ clear: 'left' }} />
+              <ColorPicker
+                label='Umrisslinienfarbe'
+                value={
+                  node.data.get('outline') === true
+                    ? undefined
+                    : node.data.get('outline')
+                }
+                onChange={color => {
+                  onChange('outline', null, color || true)
+                }}
+              />
+            </>
+          )}
+        </>
       )}
       {options.includes('formatColor') && (
         <ColorPicker
@@ -333,6 +350,17 @@ const Form = withT(({ node, onChange, onTypeChange, options, t }) => {
           src={node.data.get('image')}
           onChange={onChange('image')}
         />
+      )}
+      {options.includes('imageDark') && node.data.get('image') && (
+        <>
+          <ImageInput
+            label={t('metaData/field/srcDark')}
+            src={node.data.get('imageDark')}
+            onChange={onChange('imageDark')}
+            dark
+          />
+          <Label>{t('metaData/field/srcDark/note')}</Label>
+        </>
       )}
       {options.includes('byline') && (
         <Field

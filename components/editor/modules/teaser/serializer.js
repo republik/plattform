@@ -1,6 +1,9 @@
 import MarkdownSerializer from 'slate-mdast-serializer'
 import { matchBlock } from '../../utils'
-import { matchImageParagraph } from 'mdast-react-render/lib/utils'
+import {
+  extractImages,
+  matchImagesParagraph
+} from '@project-r/styleguide/lib/templates/Article/utils'
 
 import { getData } from './'
 
@@ -68,7 +71,7 @@ const fromMdast = ({ TYPE, subModules, rule }) => (
   parent,
   rest
 ) => {
-  const imageParagraph = node.children.find(matchImageParagraph)
+  const imageParagraph = node.children.find(matchImagesParagraph)
 
   // Remove module key from data
   const { module, ...data } = getData({
@@ -76,7 +79,9 @@ const fromMdast = ({ TYPE, subModules, rule }) => (
     ...node.data
   })
   if (imageParagraph) {
-    data.image = imageParagraph.children[0].url
+    const imgs = extractImages(imageParagraph)
+    data.image = imgs.src
+    data.imageDark = imgs.srcDark
   }
 
   const childSerializer = new MarkdownSerializer({
@@ -147,7 +152,7 @@ const toMdast = ({ TYPE, subModules }) => (
     rules: getRules(subModules)
   })
 
-  const { image, module, ...data } = node.data
+  const { image, imageDark, module, ...data } = node.data
   const imageNode = image && {
     type: 'paragraph',
     children: [
@@ -155,7 +160,14 @@ const toMdast = ({ TYPE, subModules }) => (
         type: 'image',
         url: image
       }
-    ]
+    ].concat(
+      imageDark
+        ? [
+            { type: 'text', value: ' ' },
+            { type: 'image', url: imageDark }
+          ]
+        : []
+    )
   }
   return {
     type: 'zone',

@@ -24,24 +24,38 @@ export default ({ rule, subModules, TYPE }) => {
 
   const figureImage = {
     match: matchBlock(TYPE),
-    matchMdast: node => node.type === 'image',
+    matchMdast: rule.matchMdast,
     fromMdast: node => {
+      const imageNodes = node.children.filter(child => child.type === 'image')
       return {
         kind: 'block',
         type: TYPE,
         data: {
-          alt: node.alt,
-          src: node.url
+          alt: imageNodes[0].alt,
+          src: imageNodes[0].url,
+          srcDark: imageNodes.length === 2 ? imageNodes[1].url : null
         },
         isVoid: true,
         nodes: []
       }
     },
-    toMdast: object => ({
-      type: 'image',
-      alt: object.data.alt,
-      url: object.data.src
-    })
+    toMdast: object => {
+      const mainImage = {
+        type: 'image',
+        alt: object.data.alt,
+        url: object.data.src
+      }
+      return {
+        type: 'paragraph',
+        children: object.data.srcDark
+          ? [
+              mainImage,
+              { type: 'text', value: ' ' },
+              { type: 'image', alt: object.data.alt, url: object.data.srcDark }
+            ]
+          : [mainImage]
+      }
+    }
   }
 
   const serializer = new MarkdownSerializer({
@@ -67,6 +81,7 @@ export default ({ rule, subModules, TYPE }) => {
             <span {...styles.border} {...attributes} data-active={active}>
               <Image
                 src={node.data.get('src') || gray2x1}
+                srcDark={node.data.get('srcDark')}
                 alt={node.data.get('alt')}
               />
             </span>

@@ -1,5 +1,5 @@
 {
-  "updated": "2020-10-08T15:26:04.801Z",
+  "updated": "2020-11-09T13:43:21.049Z",
   "title": "live",
   "data": [
     {
@@ -499,8 +499,12 @@
       "value": "Bild"
     },
     {
-      "key": "metaData/field/srcNeg",
-      "value": "Dark Mode (optional)"
+      "key": "metaData/field/srcDark",
+      "value": "Nachtmodus (optional)"
+    },
+    {
+      "key": "metaData/field/srcDark/note",
+      "value": "Das Bildseitenverhältnis für den Nachtmodus muss identisch sein."
     },
     {
       "key": "metaData/field/alt",
