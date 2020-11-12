@@ -132,8 +132,7 @@ const styles = {
     marginBottom: 30
   }),
   label: css({
-    ...convertStyleToRem(fontStyles.sansSerifRegular14),
-    color: colors.secondary
+    ...convertStyleToRem(fontStyles.sansSerifRegular14)
   }),
   quote: css({
     ...fontStyles.sansSerifRegular21,
@@ -187,11 +186,14 @@ export const P = ({ children, ...props }) => (
   </p>
 )
 
-export const Label = ({ children, ...props }) => (
-  <span {...props} {...styles.label}>
-    {children}
-  </span>
-)
+export const Label = ({ children, ...props }) => {
+  const [colorScheme] = useColorContext()
+  return (
+    <span {...props} {...styles.label} {...colorScheme.set('color', 'text')}>
+      {children}
+    </span>
+  )
+}
 
 const subSupStyles = {
   base: css({
