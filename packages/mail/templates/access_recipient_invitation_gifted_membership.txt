@@ -12,17 +12,22 @@ Wachstum beiträgt.
 Sie wurden von {{GRANTER_NAME}} ausgewählt und erhalten damit eine
 Jahresmitgliedschaft, im Wert von 240 Franken, geschenkt!
 
-{{#if GRANTER_MESSAGE}} {{GRANTER_NAME}} hat uns eine Nachricht für Sie
-mitgegeben:
+{{#if GRANTER_MESSAGE}}
+
+{{GRANTER_NAME}} hat uns eine Nachricht für Sie mitgegeben:
 
 > {{{GRANTER_MESSAGE}}}
-{{/if}} Um Ihre Jahresmitgliedschaft in Empfang zu nehmen, melden Sie sich
-einfach vor dem {{GRANT_BEGIN_BEFORE}} hier an:
 
-Jetzt aktivieren {{LINK_CLAIM_PREFILLED}} Falls dieser Button nicht
-funktioniert: Öffnen Sie bitte {{LINK_CLAIM_CONTEXTLESS}}
+{{/if}}
+
+Um Ihre Jahresmitgliedschaft in Empfang zu nehmen, melden Sie sich einfach vor
+dem {{GRANT_BEGIN_BEFORE}} hier an:
+
+Jetzt aktivieren {{LINK_CLAIM_PREFILLED}}
+
+Falls dieser Button nicht funktioniert: Öffnen Sie bitte
 {{LINK_CLAIM_PREFILLED}} , und geben Sie dann Ihren Namen, Ihre E-Mail-Adresse
-und den folgenden Gutscheincode ein: {{GRANT_VOUCHER_CODE}} 
+und den folgenden Gutscheincode ein: {{GRANT_VOUCHER_CODE}}
 
 Sollten Sie schon in den nächsten Tagen oder Monaten so überzeugt sein, dass Sie
 der Republik-Community etwas zurückgeben wollen: Sie können jederzeit eine
@@ -42,9 +47,9 @@ Beiträgen. In der App, auf der Website und als Newsletter.
 
 Republik AG
 Sihlhallenstrasse 1, CH-8004 Zürich
-{{frontend_base_url}} 
-kontakt@republik.ch 
+{{frontend_base_url}}
+kontakt@republik.ch
 
-Unser Manifest {{link_manifest}} 
-Das Impressum {{link_imprint}} 
+Unser Manifest {{link_manifest}}
+Das Impressum {{link_imprint}}
 Häufig gestellte Fragen {{link_faq}}
