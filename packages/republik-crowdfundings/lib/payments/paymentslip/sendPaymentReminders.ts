@@ -1,7 +1,7 @@
 import moment from 'moment'
 import { PgDb } from 'pogi'
 import { Nominal } from 'simplytyped'
-import { getAmountOfUnmatchedPayments } from './helpers'
+import { getAmountOfUnmatchedPayments, getLatestImportSecondsAgo } from './helpers'
 import { formatPrice } from '@orbiting/backend-modules-formats'
 import { Context } from '@orbiting/backend-modules-types'
 import { publishFinance } from '@orbiting/backend-modules-republik/lib/slack'
@@ -18,6 +18,7 @@ const DRY_RUN = process.env.DRY_RUN_SEND_PAYMENT_REMINDERS === 'true'
 const FIRST_REMINDER_DEADLINE_DAYS = PAYMENT_DEADLINE_DAYS + 3 // 3 days to consider weekends
 const SECOND_REMINDER_DEADLINE_DAYS = FIRST_REMINDER_DEADLINE_DAYS + 30
 const DAYS_TO_CONSIDER = SECOND_REMINDER_DEADLINE_DAYS + 30
+const MAX_SECONDS_RECENT_IMPORT = 60 * 60 * 12 // 12 hours
 
 interface OutstandingPayment {
   paymentId: Nominal<string, 'paymentId'>
@@ -39,6 +40,10 @@ export async function sendPaymentReminders(
   const { pgdb } = context
   if (await hasUnmatchedPayments(pgdb)) {
     return 'Could not send payment reminders, there are still umatched payments.'
+  }
+
+  if (await hasNoRecentImport(pgdb)) {
+    return 'Could not send payment reminders, there is not recent import.'
   }
 
   const outstandingPayments = await getOutstandingPayments(pgdb)
@@ -249,6 +254,11 @@ async function getOutstandingPayments(
 
 async function hasUnmatchedPayments(pgdb: PgDb) {
   return !!(await getAmountOfUnmatchedPayments(pgdb))
+}
+
+async function hasNoRecentImport(pgdb: PgDb) {
+  const secondsAgo = await getLatestImportSecondsAgo(pgdb)
+  return secondsAgo > MAX_SECONDS_RECENT_IMPORT
 }
 
 const outstandingPaymentsQuery = `
