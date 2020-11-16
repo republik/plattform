@@ -17,8 +17,7 @@ const DRY_RUN = process.env.DRY_RUN_SEND_PAYMENT_REMINDERS === 'true'
 
 const FIRST_REMINDER_DEADLINE_DAYS = PAYMENT_DEADLINE_DAYS + 3 // 3 days to consider weekends
 const SECOND_REMINDER_DEADLINE_DAYS = FIRST_REMINDER_DEADLINE_DAYS + 30
-const CANCEL_PLEDGE_DEADLINE_DAYS = SECOND_REMINDER_DEADLINE_DAYS + 15
-const DAYS_TO_CONSIDER = CANCEL_PLEDGE_DEADLINE_DAYS + 30
+const DAYS_TO_CONSIDER = SECOND_REMINDER_DEADLINE_DAYS + 30
 
 interface OutstandingPayment {
   paymentId: Nominal<string, 'paymentId'>
@@ -46,19 +45,16 @@ export async function sendPaymentReminders(
 
   const [
     firstRemindersSent,
-    secondRemindersSent,
-    cancelMessages,
+    secondRemindersSent
   ] = await Promise.all([
     sendFirstReminder(outstandingPayments, context, dryRun),
-    sendSecondReminder(outstandingPayments, context, dryRun),
-    getMessageForAccountsToCancel(outstandingPayments),
+    sendSecondReminder(outstandingPayments, context, dryRun)
   ])
 
   const message = generateReport({
     dryRun,
     firstRemindersSent,
-    secondRemindersSent,
-    cancelMessages,
+    secondRemindersSent
   })
 
   await publishFinance(message)
@@ -68,42 +64,19 @@ export async function sendPaymentReminders(
 function generateReport({
   dryRun,
   firstRemindersSent,
-  secondRemindersSent,
-  cancelMessages,
+  secondRemindersSent
 }: {
   dryRun: boolean
   firstRemindersSent: number
   secondRemindersSent: number
-  cancelMessages: string[]
 }) {
-  let messageLines = [
+  return [
     ...(dryRun ? ['⚠️ DRY RUN, REMINDERS ARE NOT SENT ⚠️'] : []),
     '💌 Reminders Sent',
     '',
     `First reminders sent: ${firstRemindersSent}`,
     `SecondRemindersSent: ${secondRemindersSent}`,
-  ]
-
-  if (cancelMessages.length) {
-    messageLines = [
-      ...messageLines,
-      '',
-      '🚨 Action Required - Cancel Pledges 🚨',
-      ...cancelMessages,
-    ]
-  }
-
-  const message = messageLines.join('\n')
-  return message
-}
-
-function getMessageForAccountsToCancel(
-  outstandingPayments: OutstandingPayment[],
-) {
-  const filterDate = daysAgo(CANCEL_PLEDGE_DEADLINE_DAYS)
-  return outstandingPayments
-    .filter(({ createdAt }) => createdAt < filterDate)
-    .map(paymentToMessage)
+  ].join('\n')
 }
 
 function paymentToMessage({ userId, pledgeId }: OutstandingPayment) {
