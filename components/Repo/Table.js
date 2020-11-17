@@ -46,6 +46,7 @@ export const filterAndOrderRepos = gql`
   query repoListSearch(
     $after: String
     $search: String
+    $phases: [RepoPhase!]
     $orderBy: RepoOrderBy
     $isTemplate: Boolean
   ) {
@@ -53,6 +54,7 @@ export const filterAndOrderRepos = gql`
       first: 50
       after: $after
       search: $search
+      phases: $phases
       orderBy: $orderBy
       isTemplate: $isTemplate
     ) {
@@ -120,6 +122,7 @@ export const filterAndOrderRepos = gql`
             }
           }
         }
+        currentPhase
       }
     }
   }
@@ -163,28 +166,6 @@ const styles = {
   })
 }
 
-const phaseForRepo = repo => {
-  const phasesReached = phases.filter(phase => {
-    if (phase.milestones) {
-      return phase.milestones.every(name =>
-        repo.milestones.find(milestone => milestone.name === name)
-      )
-    }
-    if (phase.published) {
-      if (phase.scheduled) {
-        return repo.latestPublications.find(
-          p => p.scheduledAt && !p.live && !p.prepublication
-        )
-      }
-      if (phase.live) {
-        return repo.latestPublications.find(p => p.live && !p.prepublication)
-      }
-    }
-  })
-
-  return phasesReached[phasesReached.length - 1]
-}
-
 const orderFields = [
   {
     field: 'pushed',
@@ -198,18 +179,22 @@ const orderFields = [
   }
 ]
 
-const Phase = ({ phase, onClick, disabled, t }) => (
-  <span
-    {...styles.phase}
-    style={{
-      backgroundColor: disabled ? 'gray' : phase.color,
-      cursor: onClick ? 'pointer' : 'default'
-    }}
-    onClick={onClick}
-  >
-    {t(`repo/phase/${phase.key}`, undefined, phase.key)}
-  </span>
-)
+const Phase = ({ phase, onClick, disabled, t }) => {
+  const { color } = phases.find(p => p.key === phase)
+
+  return (
+    <span
+      {...styles.phase}
+      style={{
+        backgroundColor: disabled ? 'gray' : color,
+        cursor: onClick ? 'pointer' : 'default'
+      }}
+      onClick={onClick}
+    >
+      {t(`repo/phase/${phase}`, undefined, phase)}
+    </span>
+  )
+}
 
 const SEARCH_MIN_LENGTH = 3
 
@@ -338,7 +323,7 @@ class RepoList extends Component {
               >
                 <Phase
                   t={t}
-                  phase={phase}
+                  phase={phase.key}
                   disabled={activeFilterPhase && !active}
                 />
               </Link>
@@ -413,18 +398,11 @@ class RepoList extends Component {
             ) : (
               data.repos &&
               data.repos.nodes
-                .map(repo => ({
-                  phase: phaseForRepo(repo),
-                  repo
-                }))
-                .filter(
-                  ({ phase }) =>
-                    !activeFilterPhase || activeFilterPhase.key === phase.key
-                )
+                .map(repo => ({ repo }))
                 .sort((a, b) =>
                   orderCompare(orderAccessor(a.repo), orderAccessor(b.repo))
                 )
-                .map(({ repo, phase }) => {
+                .map(({ repo }) => {
                   const {
                     id,
                     meta: { publishDate },
@@ -433,7 +411,8 @@ class RepoList extends Component {
                       author: { name: authorName },
                       message,
                       document: { meta }
-                    }
+                    },
+                    currentPhase
                   } = repo
 
                   const label =
@@ -502,7 +481,7 @@ class RepoList extends Component {
                         />
                       </TdNum>
                       <Td>
-                        <Phase t={t} phase={phase} />
+                        <Phase t={t} phase={currentPhase} />
                       </Td>
                       <Td style={{ textAlign: 'right' }}>
                         {repo.latestPublications
@@ -576,7 +555,8 @@ const RepoListWithQuery = compose(
         search:
           search && search.length >= SEARCH_MIN_LENGTH ? search : undefined,
         orderBy: { field: 'PUSHED_AT', direction: 'DESC' },
-        isTemplate: !!router.query.templates
+        isTemplate: !!router.query.templates,
+        ...(router.query?.phase && { phases: [router.query.phase] })
       }
     }),
     props: ({ data, ownProps }) => ({
