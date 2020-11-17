@@ -7,6 +7,7 @@ const {
   mdastContentToString,
 } = require('@orbiting/backend-modules-search/lib/utils')
 const { mdastToString } = require('@orbiting/backend-modules-utils')
+const { getCurrentPhase } = require('../phases')
 
 /**
  * Builds ElasticSearch routing object, to find documents in an {index} of a
@@ -185,6 +186,19 @@ const alterRepoTag = (tag, doc) => {
   return { tags: { nodes } }
 }
 
+const applyCurrentPhase = (partialDoc, doc) => {
+  const repo = {
+    ...doc._source,
+    ...partialDoc.latestPublications && { latestPublications: partialDoc.latestPublications },
+    ...partialDoc.tags && { tags: partialDoc.tags }
+  }
+
+  return {
+    ...partialDoc,
+    currentPhase: getCurrentPhase(repo)?.key
+  }
+}
+
 const upsert = async (
   {
     commit,
@@ -207,7 +221,7 @@ const upsert = async (
 
   // Only check and fetch an existing document if {tag} is required to be
   // altered.
-  if (tag) {
+  if (publications || tag) {
     const { body: hasDoc } = await elastic.exists(getPath(id))
 
     if (hasDoc) {
@@ -220,7 +234,7 @@ const upsert = async (
     updatedAt = new Date()
   }
 
-  const partialDoc = {
+  let partialDoc = {
     id,
     name,
     createdAt,
@@ -236,6 +250,8 @@ const upsert = async (
     ...getRepoTags(tags),
     ...alterRepoTag(tag, doc),
   }
+
+  partialDoc = applyCurrentPhase(partialDoc, doc)
 
   debug('upsert', id)
 

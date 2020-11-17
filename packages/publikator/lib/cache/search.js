@@ -129,6 +129,10 @@ const find = async (args, { elastic }) => {
     })
   }
 
+  if (args.phases?.length) {
+    query.bool.must.push({ terms: { 'currentPhase.keyword': args.phases } })
+  }
+
   return elastic.search({
     index: utils.getIndexAlias('repo', 'read'),
     from: args.from,

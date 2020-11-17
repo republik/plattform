@@ -1,3 +1,5 @@
+const { getPhases } = require('../lib/phases')
+
 module.exports = `
 scalar DateTime
 scalar JSON
@@ -17,6 +19,7 @@ type Repo {
   unpublished: Boolean!
 
   meta: RepoMeta!
+  currentPhase: RepoPhase!
 
   isArchived: Boolean!
   isTemplate: Boolean!
@@ -46,6 +49,10 @@ type RepoMeta {
 input RepoOrderBy {
   field: RepoOrderField!
   direction: OrderDirection!
+}
+
+enum RepoPhase {
+${getPhases().map(p => p.key).join('\n')}
 }
 
 enum RepoOrderField {
