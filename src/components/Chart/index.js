@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types'
-import React, { Component } from 'react'
+import React, { useState, useEffect, useRef, useMemo } from 'react'
 import { css } from 'glamor'
 
 import { measure } from './utils'
@@ -56,8 +56,6 @@ const createRanges = ({
   }
 }
 
-const colorRanges = createRanges(colors)
-
 const styles = {
   h: css({
     ...convertStyleToRem(sansSerifMedium19),
@@ -113,45 +111,54 @@ export const ChartLegend = ({ children, ...props }) => {
   )
 }
 
-class Chart extends Component {
-  constructor(props) {
-    super(props)
+const Chart = props => {
+  const [colorScheme] = useColorContext()
+  const [stateWidth, setWidth] = useState(290)
 
-    this.state = {
-      width: 290
+  const { width: fixedWidth, config, tLabel } = props
+
+  const width = fixedWidth || stateWidth
+  const ReactChart = ReactCharts[config.type]
+
+  const colorRanges = useMemo(() => createRanges(colorScheme), [colorScheme])
+
+  const ref = useRef()
+  useEffect(() => {
+    if (fixedWidth) {
+      return
     }
-    this.measure = measure((ref, { width }) => {
-      if (width !== this.state.width) {
-        this.setState({ width })
+    const measure = () => {
+      if (ref.current) {
+        const { width, height } = ref.current.getBoundingClientRect()
+        setWidth(width)
       }
-    })
-  }
-  render() {
-    const { width: fixedWidth, config, tLabel } = this.props
+    }
+    window.addEventListener('resize', measure)
+    measure()
+    return () => {
+      window.removeEventListener('resize', measure)
+    }
+  }, [fixedWidth])
 
-    const width = fixedWidth || this.state.width
-    const ReactChart = ReactCharts[config.type]
-
-    return (
-      <div
-        ref={fixedWidth ? undefined : this.measure}
-        style={{
-          maxWidth: config.maxWidth
-        }}
-      >
-        {!!width && (
-          <ReactChart
-            {...config}
-            tLabel={tLabel}
-            colorRanges={colorRanges}
-            width={width}
-            values={this.props.values}
-            description={config.description}
-          />
-        )}
-      </div>
-    )
-  }
+  return (
+    <div
+      ref={fixedWidth ? undefined : ref}
+      style={{
+        maxWidth: config.maxWidth
+      }}
+    >
+      {!!width && (
+        <ReactChart
+          {...config}
+          tLabel={tLabel}
+          colorRanges={colorRanges}
+          width={width}
+          values={props.values}
+          description={config.description}
+        />
+      )}
+    </div>
+  )
 }
 
 Chart.propTypes = {

@@ -29,6 +29,25 @@ const createScheme = specificColors => {
 
   return {
     ...colorScheme,
+    sequential: [
+      'sequential100',
+      'sequential95',
+      'sequential90',
+      'sequential85',
+      'sequential80',
+      'sequential75',
+      'sequential70',
+      'sequential65',
+      'sequential60',
+      'sequential55',
+      'sequential50'
+    ].map(key => colorScheme[key]),
+    sequential3: ['sequential100', 'sequential80', 'sequential60'].map(
+      key => colorScheme[key]
+    ),
+    opposite3: ['opposite100', 'opposite80', 'opposite60'].map(
+      key => colorScheme[key]
+    ),
     set: memoize(createColorRule, (...args) => args.join('.')),
     getCSSColor
   }

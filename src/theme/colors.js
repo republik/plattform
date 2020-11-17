@@ -20,6 +20,19 @@ import { getJson } from './env'
  discrete = d3.schemeCategory10
  */
 
+const discrete = [
+  '#1f77b4',
+  '#ff7f0e',
+  '#2ca02c',
+  '#d62728',
+  '#9467bd',
+  '#8c564b',
+  '#e377c2',
+  '#7f7f7f',
+  '#bcbd22',
+  '#17becf'
+]
+
 const colorsDeprecated = {
   primary: '#00508C',
   primaryBg: '#BFE1FF',
@@ -56,18 +69,7 @@ const colorsDeprecated = {
   ],
   sequential3: ['rgb(8,48,107)', 'rgb(24,100,170)', 'rgb(75,151,201)'],
   opposite3: ['rgb(103,0,13)', 'rgb(187,21,26)', 'rgb(239,69,51)'],
-  discrete: [
-    '#1f77b4',
-    '#ff7f0e',
-    '#2ca02c',
-    '#d62728',
-    '#9467bd',
-    '#8c564b',
-    '#e377c2',
-    '#7f7f7f',
-    '#bcbd22',
-    '#17becf'
-  ],
+  discrete,
   negative: {
     containerBg: '#111',
     primaryBg: '#191919',
@@ -117,7 +119,23 @@ const colors = {
     fadeOutGradientOverlay:
       'linear-gradient(0deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%)',
     displayLight: 'block',
-    displayDark: 'none'
+    displayDark: 'none',
+    sequential100: 'rgb(8, 48, 107)',
+    sequential95: 'rgb(8, 61, 126)',
+    sequential90: 'rgb(10, 74, 144)',
+    sequential85: 'rgb(15, 87, 159)',
+    sequential80: 'rgb(24, 100, 170)',
+    sequential75: 'rgb(34, 113, 180)',
+    sequential70: 'rgb(47, 126, 188)',
+    sequential65: 'rgb(60, 139, 195)',
+    sequential60: 'rgb(75, 151, 201)',
+    sequential55: 'rgb(91, 163, 207)',
+    sequential50: 'rgb(109, 174, 213)',
+    opposite100: 'rgb(103,0,13)',
+    opposite80: 'rgb(187,21,26)',
+    opposite60: 'rgb(239,69,51)',
+    neutral: '#bbb',
+    discrete
   },
   dark: {
     logo: '#FFFFFF',
@@ -148,7 +166,23 @@ const colors = {
     fadeOutGradientOverlay:
       'linear-gradient(0deg, rgba(35,35,35,1) 0%, rgba(35,35,35,0) 100%)',
     displayLight: 'none',
-    displayDark: 'block'
+    displayDark: 'block',
+    sequential100: 'rgb(8, 48, 107)',
+    sequential95: 'rgb(8, 61, 126)',
+    sequential90: 'rgb(10, 74, 144)',
+    sequential85: 'rgb(15, 87, 159)',
+    sequential80: 'rgb(24, 100, 170)',
+    sequential75: 'rgb(34, 113, 180)',
+    sequential70: 'rgb(47, 126, 188)',
+    sequential65: 'rgb(60, 139, 195)',
+    sequential60: 'rgb(75, 151, 201)',
+    sequential55: 'rgb(91, 163, 207)',
+    sequential50: 'rgb(109, 174, 213)',
+    opposite100: 'rgb(103,0,13)',
+    opposite80: 'rgb(187,21,26)',
+    opposite60: 'rgb(239,69,51)',
+    neutral: '#bbb',
+    discrete
   },
   mappings: {
     format: {
