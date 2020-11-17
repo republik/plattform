@@ -1,71 +1,127 @@
 import React, { Fragment } from 'react'
 import { markdown, ColorSpecimen, CodeSpecimen } from '@catalog/core'
-import colors from './colors'
+import colorDefinitions from './colors'
+import { css } from 'glamor'
 
-export default () => markdown`
+export default () => (
+  <>
+    {markdown`
+
+We have two color scheme, \`light\` and \`dark\`.
+
+Simple usage example of the color context:
+
+    ${(
+      <CodeSpecimen lang='js'>
+        {`
+import { useColorContext } from '@project-r/styleguide'
+
+const Component = ({ children }) => {
+  const [colorScheme] = useColorContext()
+  return (
+    <div
+      {...colorScheme.set('backgroundColor', 'default')}
+      {...colorScheme.set('color', 'text')}
+    >
+      {children}
+    </div>
+  )
+})
+      `.trim()}
+      </CodeSpecimen>
+    )}
+
+[Development Guide](/dev/colors)
+  `}
+    {['light', 'dark'].map(colorSchemeKey => {
+      const colors = colorDefinitions[colorSchemeKey]
+      return (
+        <div
+          {...css({
+            color: colors.text,
+            backgroundColor: colors.default,
+            // headlines & paragraphs
+            '& > div > *': {
+              color: `${colors.text} !important`
+            },
+            // ColorSpecimen text block
+            '& .css-1uvsawy': {
+              color: `${colors.text} !important`,
+              backgroundColor: `${colors.hover} !important`
+            }
+          })}
+        >
+          {markdown`
+# ${colorSchemeKey[0].toUpperCase()}${colorSchemeKey.slice(1)}
 
 ${(
   <Fragment>
-    <CodeSpecimen lang='js'>
-      {`import { colors } from '@project-r/styleguide'`}
-    </CodeSpecimen>
     <ColorSpecimen span={3} name='primary' value={colors.primary} />
-    <ColorSpecimen span={2} name='secondary' value={colors.secondary} />
-    <ColorSpecimen span={1} name='disabled' value={colors.disabled} />
-    <ColorSpecimen span={3} name='primaryBg' value={colors.primaryBg} />
-    <ColorSpecimen span={2} name='secondaryBg' value={colors.secondaryBg} />
-    <ColorSpecimen span={1} name='divider' value={colors.divider} />
-
-    <ColorSpecimen span={4} name='text' value={colors.text} />
-    <ColorSpecimen span={2} name='lightText' value={colors.lightText} />
-
+    <ColorSpecimen span={2} name='primaryHover' value={colors.primaryHover} />
     <ColorSpecimen span={1} name='error' value={colors.error} />
-    <ColorSpecimen span={1} name='online' value={colors.online} />
-    <ColorSpecimen span={1} name='social' value={colors.social} />
-  </Fragment>
-)}
 
-### Negative colors
+    <ColorSpecimen span={3} name='text' value={colors.text} />
+    <ColorSpecimen span={2} name='textSoft' value={colors.textSoft} />
+    <ColorSpecimen span={1} name='disabled' value={colors.disabled} />
 
-${(
-  <Fragment>
+    <ColorSpecimen span={2} name='default' value={colors.default} />
+    <ColorSpecimen span={1} name='overlay' value={colors.overlay} />
+    <ColorSpecimen span={1} name='divider' value={colors.divider} />
+    <ColorSpecimen span={1} name='hover' value={colors.hover} />
+    <ColorSpecimen span={1} name='alert' value={colors.alert} />
+
     <ColorSpecimen
-      span={1}
-      name='negative.containerBg'
-      value={colors.negative.containerBg}
+      span={2}
+      name='defaultInverted'
+      value={colors.defaultInverted}
     />
     <ColorSpecimen
       span={1}
-      name='negative.primaryBg'
-      value={colors.negative.primaryBg}
+      name='overlayInverted'
+      value={colors.overlayInverted}
     />
     <ColorSpecimen
       span={1}
-      name='negative.divider'
-      value={colors.negative.divider}
-    />
-    <ColorSpecimen span={1} name='negative.text' value={colors.negative.text} />
-    <ColorSpecimen
-      span={1}
-      name='negative.lightText'
-      value={colors.negative.lightText}
-    />
-    <ColorSpecimen
-      span={1}
-      name='negative.error'
-      value={colors.negative.error}
+      name='dividerInverted'
+      value={colors.dividerInverted}
     />
   </Fragment>
 )}
 
-## Formats
+## Sections
 
 ${(
   <Fragment>
-    <ColorSpecimen span={1} name='editorial' value={colors.editorial} />
-    <ColorSpecimen span={1} name='feuilleton' value={colors.feuilleton} />
-    <ColorSpecimen span={1} name='scribble' value={colors.scribble} />
-    <ColorSpecimen span={1} name='meta' value={colors.meta} />
+    <ColorSpecimen
+      span={2}
+      name='accentColorBriefing'
+      value={colors.accentColorBriefing}
+    />
+    <ColorSpecimen
+      span={2}
+      name='accentColorInteraction'
+      value={colors.accentColorInteraction}
+    />
+    <ColorSpecimen
+      span={2}
+      name='accentColorOppinion'
+      value={colors.accentColorOppinion}
+    />
+    <ColorSpecimen
+      span={2}
+      name='accentColorFormats'
+      value={colors.accentColorFormats}
+    />
+    <ColorSpecimen
+      span={2}
+      name='accentColorMeta'
+      value={colors.accentColorMeta}
+    />
+    <ColorSpecimen
+      span={2}
+      name='accentColorAudio'
+      value={colors.accentColorAudio}
+    />
   </Fragment>
 )}
 
@@ -77,35 +133,17 @@ ${[100, 80, 60].map(intensity => (
   <ColorSpecimen
     span={1}
     name={`sequential${intensity}`}
-    value={colors.light[`sequential${intensity}`]}
+    value={colors[`sequential${intensity}`]}
   />
 ))}
 ${[60, 80, 100].map(intensity => (
   <ColorSpecimen
     span={1}
     name={`opposite${intensity}`}
-    value={colors.light[`opposite${intensity}`]}
+    value={colors[`opposite${intensity}`]}
   />
 ))}
-${(<ColorSpecimen span={1} name='neutral' value={colors.light.neutral} />)}
-
-### Dark
-
-${[100, 80, 60].map(intensity => (
-  <ColorSpecimen
-    span={1}
-    name={`sequential${intensity}`}
-    value={colors.dark[`sequential${intensity}`]}
-  />
-))}
-${[60, 80, 100].map(intensity => (
-  <ColorSpecimen
-    span={1}
-    name={`opposite${intensity}`}
-    value={colors.dark[`opposite${intensity}`]}
-  />
-))}
-${(<ColorSpecimen span={1} name='neutral' value={colors.dark.neutral} />)}
+${(<ColorSpecimen span={1} name='neutral' value={colors.neutral} />)}
 
 ### Discrete
 
@@ -115,4 +153,9 @@ ${colors.discrete.map((c, i) => (
   <ColorSpecimen span={1} name={`discrete.${i}`} value={c} />
 ))}
 
-`
+`}
+        </div>
+      )
+    })}
+  </>
+)
