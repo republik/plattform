@@ -37,6 +37,7 @@ const Component = ({ children }) => {
       const colors = colorDefinitions[colorSchemeKey]
       return (
         <div
+          key={colorSchemeKey}
           {...css({
             color: colors.text,
             backgroundColor: colors.default,

@@ -39,7 +39,7 @@ const t = createFormatter(require('./lib/translations.json').data)
 
 ReactDOM.render(
   <DiscussionContext.Provider value={createSampleDiscussionContextValue({ t })}>
-    <ColorContextProvider root colorScheme='auto'>
+    <ColorContextProvider root colorSchemeKey='auto'>
       <Catalog
         title='Style Guide'
         theme={theme}
