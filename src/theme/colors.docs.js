@@ -73,16 +73,39 @@ ${(
 
 Most charts will use sequential colors, e.g. bars all in the first sequential color and one highlight in the second. Opposite colors are used for diverging ranges, with an optional neutral color in the middle.
 
-${colors.sequential3.map((c, i) => (
-  <ColorSpecimen span={1} name={`sequential.${i}`} value={c} />
+${[100, 80, 60].map(intensity => (
+  <ColorSpecimen
+    span={1}
+    name={`sequential${intensity}`}
+    value={colors.light[`sequential${intensity}`]}
+  />
 ))}
-${[]
-  .concat(colors.opposite3)
-  .reverse()
-  .map((c, i) => (
-    <ColorSpecimen span={1} name={`opposite.${2 - i}`} value={c} />
-  ))}
-${<ColorSpecimen span={1} name='neutral' value={colors.neutral} />}
+${[60, 80, 100].map(intensity => (
+  <ColorSpecimen
+    span={1}
+    name={`opposite${intensity}`}
+    value={colors.light[`opposite${intensity}`]}
+  />
+))}
+${(<ColorSpecimen span={1} name='neutral' value={colors.light.neutral} />)}
+
+### Dark
+
+${[100, 80, 60].map(intensity => (
+  <ColorSpecimen
+    span={1}
+    name={`sequential${intensity}`}
+    value={colors.dark[`sequential${intensity}`]}
+  />
+))}
+${[60, 80, 100].map(intensity => (
+  <ColorSpecimen
+    span={1}
+    name={`opposite${intensity}`}
+    value={colors.dark[`opposite${intensity}`]}
+  />
+))}
+${(<ColorSpecimen span={1} name='neutral' value={colors.dark.neutral} />)}
 
 ### Discrete
 
