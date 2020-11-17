@@ -43,25 +43,6 @@ export const sortBy = (array, accessor) =>
       ascending(array.indexOf(a), array.indexOf(b)) // stable sort
   )
 
-export const measure = onMeasure => {
-  let ref
-  let rafHandle
-  const update = () => {
-    onMeasure(ref, ref.getBoundingClientRect())
-  }
-  return newRef => {
-    ref = newRef
-    if (ref) {
-      window.addEventListener('resize', update)
-      // raf needed to wait for glamor css styles
-      rafHandle = window.requestAnimationFrame(update)
-    } else {
-      window.removeEventListener('resize', update)
-      window.cancelAnimationFrame(rafHandle)
-    }
-  }
-}
-
 const thousandSeparator = '\u2019'
 const swissNumbers = formatLocale({
   decimal: ',',

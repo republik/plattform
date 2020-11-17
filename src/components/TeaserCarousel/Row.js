@@ -1,6 +1,6 @@
 import { css } from 'glamor'
 import PropTypes from 'prop-types'
-import React, { useRef, useState, useContext, useEffect, useMemo } from 'react'
+import React, { useRef, useState, useContext, useEffect } from 'react'
 import scrollIntoView from 'scroll-into-view'
 import ChevronLeft from 'react-icons/lib/md/keyboard-arrow-left'
 import ChevronRight from 'react-icons/lib/md/keyboard-arrow-right'

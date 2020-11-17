@@ -2,15 +2,12 @@ import PropTypes from 'prop-types'
 import React, { useState, useEffect, useRef, useMemo } from 'react'
 import { css } from 'glamor'
 
-import { measure } from './utils'
 import Bar, { Lollipop } from './Bars'
 import TimeBar from './TimeBars'
 import { Line, Slope } from './Lines'
 import ScatterPlot from './ScatterPlots'
 import { GenericMap, ProjectedMap, SwissMap } from './Maps'
 import Hemicycle from './Hemicycle'
-
-import colors from '../../theme/colors'
 
 import { mUp } from '../../theme/mediaQueries'
 import {
@@ -129,7 +126,7 @@ const Chart = props => {
     }
     const measure = () => {
       if (ref.current) {
-        const { width, height } = ref.current.getBoundingClientRect()
+        const { width } = ref.current.getBoundingClientRect()
         setWidth(width)
       }
     }
