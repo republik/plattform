@@ -1,3 +1,5 @@
+const debug = require('debug')('publikator:lib:phases')
+
 const phases = [
   {
     key: 'draft',
@@ -49,51 +51,87 @@ const phases = [
   }
 ]
 
+const maybeCheckTags = (phase) => {
+  return phase.tags && {
+    name: 'tags',
+    expected: true,
+    predicate: (repo) => phase.tags.every(
+      tag => !!repo.tags?.nodes?.find(node => node.name === tag)
+    )
+  }
+}
+
+const maybeCheckPublished = (phase) => {
+  return typeof phase.scheduled === 'boolean' && {
+    name: 'published',
+    expected: phase.published,
+    predicate: (repo) => !!repo.latestPublications.length
+  }
+}
+
+const maybeCheckScheduled = (phase) => {
+  return typeof phase.scheduled === 'boolean' && {
+    name: 'scheduled',
+    expected: phase.scheduled,
+    predicate: (repo) => !!repo.latestPublications.find(
+      p => p.meta.scheduledAt && !p.live && p.name.indexOf('prepublication') === -1
+    )
+  }
+}
+
+const maybeCheckLive = (phase) => {
+  return typeof phase.live === 'boolean' && {
+    name: 'live',
+    expected: phase.live,
+    predicate: (repo) => !!repo.latestPublications.find(
+      p => p.live && !p.prepublication
+    )
+  }
+}
+
+const runChecks = (repo, checks) => {
+  const hasAllPassed = checks
+    .filter(Boolean)
+    .every(check => {
+      const { name, expected, predicate } = check
+      const hasPassed = expected === predicate(repo)
+
+      debug('runChecks', { repo: repo.id, name, hasPassed })
+      return hasPassed
+    })
+
+  debug('runChecks', { repo: repo.id, checks: checks.length, hasAllPassed })
+
+  return hasAllPassed
+}
+
 const getPhases = () => ([ ...phases])
 
-const getReachedPhases = (repo) => getPhases().filter(phase => {
-  const checks = []
+const hasReachedPhase = (repo, phase) => {
+  const checks = [
+    maybeCheckTags(phase),
+    maybeCheckPublished(phase),
+    maybeCheckScheduled(phase),
+    maybeCheckLive(phase),
+  ]
 
-  if (phase.tags) {
-    checks.push({
-      check: 'tags',
-      expected: true,
-      value: phase.tags.every(tag => !!repo.tags?.nodes?.find(node => node.name === tag))
-    })
+  const hasReached = !!runChecks(repo, checks)
+  debug('hasReachedPhase', { repo: repo.id, phase: phase.key, hasReached })
+
+  return hasReached
+}
+
+const getCurrentPhase = (repo) => {
+  const phases = getPhases().reverse()
+  const currentPhase = phases.find(phase => hasReachedPhase(repo, phase))
+  if (!currentPhase) {
+    throw new Error(`Failing to determine current phase repo "${repo.id}" is in`)
   }
 
-  if ([true, false].includes(phase.published)) {
-    checks.push({
-      check: 'published',
-      expected: phase.published,
-      value: !!repo.latestPublications.length
-    })
-  }
+  debug('getCurrentPhase', { repo: repo.id, phase: currentPhase.key })
 
-  if ([true, false].includes(phase.scheduled)) {
-    checks.push({
-      check: 'scheduled',
-      expected: phase.scheduled,
-      value: !!repo.latestPublications.find(
-        p => p.meta.scheduledAt && !p.live && p.name.indexOf('prepublication') === -1
-      )
-    })
-  }
-
-  if ([true, false].includes(phase.live)) {
-    checks.push({
-      check: 'live',
-      expected: phase.live,
-      value: !!repo.latestPublications.find(
-        p => p.live && !p.prepublication
-      )
-    })
-  }
-
-  return checks.every(check => check.expected === check.value)
-})
-
-const getCurrentPhase = (repo) => getReachedPhases(repo).pop()
+  return currentPhase
+}
 
 module.exports = {
   getPhases,
