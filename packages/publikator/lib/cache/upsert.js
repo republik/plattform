@@ -214,7 +214,14 @@ const upsert = async (
   },
   { elastic },
 ) => {
-  const doc = (await elastic.get(getPath(id)))?.body || {}
+  let doc = {}
+
+  const { body: hasDoc } = await elastic.exists(getPath(id))
+
+  if (hasDoc) {
+    const result = await elastic.get(getPath(id))
+    doc = result?.body
+  }
 
   if (!updatedAt) {
     updatedAt = new Date()
