@@ -148,16 +148,22 @@ export const TeaserFrontTileRow = ({
   const [colorScheme] = useColorContext()
   const autoBorders = css({
     '& .tile': {
-      borderTop: `1px solid ${colorScheme.divider}`
+      borderTopWidth: 1,
+      borderTopStyle: 'solid',
+      borderTopColor: colorScheme.getCSSColor('divider')
     },
     [mUp]: {
       '& .tile': {
-        borderLeft: `1px solid ${colorScheme.divider}`
+        borderLeftWidth: 1,
+        borderLeftStyle: 'solid',
+        borderLeftColor: colorScheme.getCSSColor('divider')
       }
     },
     [breakoutUp]: {
       '& .tile:nth-child(2n+1)': {
-        borderLeft: `1px solid ${colorScheme.divider}`
+        borderLeftWidth: 1,
+        borderLeftStyle: 'solid',
+        borderLeftColor: colorScheme.getCSSColor('divider')
       }
     }
   })
@@ -172,7 +178,9 @@ export const TeaserFrontTileRow = ({
       ? css({
           '& .tile': {
             textAlign: 'left',
-            borderTop: `1px solid ${colorScheme.divider}`,
+            borderTopWidth: 1,
+            borderTopStyle: 'solid',
+            borderTopColor: colorScheme.getCSSColor('divider'),
             padding: '25px 0',
             [mUp]: {
               padding: '25px 0'

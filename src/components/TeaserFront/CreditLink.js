@@ -12,16 +12,15 @@ const getHoverColor = labColor =>
 const CreditLink = React.forwardRef(
   ({ attributes, children, color, collapsedColor, ...props }, ref) => {
     const [colorScheme] = useColorContext()
-    const textColor = color ? color : colorScheme.text
-    const labColor = lab(textColor)
     const labCollapsedColor = collapsedColor && lab(collapsedColor)
-    const hoverColor = color ? getHoverColor(labColor) : colorScheme.lightText
 
     const baseColorStyle = {
-      color: textColor,
+      color: color || colorScheme.getCSSColor('text'),
       '@media (hover)': {
         ':hover': {
-          color: hoverColor
+          color: color
+            ? getHoverColor(lab(color))
+            : colorScheme.getCSSColor('textSoft')
         }
       }
     }

@@ -24,15 +24,12 @@ const styles = {
 
 const Subheader = ({ children, singleColumn }) => {
   const [colorScheme] = useColorContext()
-  const colors = css({
-    color: colorScheme.text
-  })
 
   return (
     <h2
       {...styles.subheader}
       {...(singleColumn ? {} : styles.spaced)}
-      {...colors}
+      {...colorScheme.set('color', 'text')}
     >
       {children}
     </h2>

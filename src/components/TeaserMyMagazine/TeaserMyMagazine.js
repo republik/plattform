@@ -41,10 +41,8 @@ const TeaserMyMagazine = ({
 
   return (
     <div
-      style={{
-        // for color inherit below, e.g. TeaserSectionTitle
-        color: colorScheme.text
-      }}
+      // for color inherit below, e.g. TeaserSectionTitle
+      {...colorScheme.set('color', 'text')}
     >
       <section {...css(styles.section)}>
         <div role='group' {...css(styles.row, styles.withHighlight)}>
@@ -97,7 +95,7 @@ const TeaserMyMagazine = ({
                 return (
                   <div
                     {...styles.tile}
-                    style={{ border: `1px solid ${colorScheme.divider}` }}
+                    {...colorScheme.set('borderColor', 'divider')}
                     key={id}
                   >
                     {formatMeta ? (
@@ -115,7 +113,7 @@ const TeaserMyMagazine = ({
                       <Link href={path} passHref>
                         <a
                           {...styles.tileHeadline}
-                          style={{ color: colorScheme.text }}
+                          {...colorScheme.set('color', 'text')}
                         >
                           {limitedTitle(title, 100)}
                         </a>
@@ -220,6 +218,8 @@ const styles = {
     justifyContent: 'space-between',
     alignItems: 'flex-start',
     marginBottom: 16,
+    borderWidth: 1,
+    borderStyle: 'solid',
     ':last-child': {
       marginBottom: 30,
       [mUp]: {

@@ -118,7 +118,9 @@ const Chart = props => {
   const width = fixedWidth || stateWidth
   const ReactChart = ReactCharts[config.type]
 
-  const colorRanges = useMemo(() => createRanges(colorScheme), [colorScheme])
+  const colorRanges = useMemo(() => createRanges(colorScheme.ranges), [
+    colorScheme
+  ])
 
   const ref = useRef()
   useEffect(() => {

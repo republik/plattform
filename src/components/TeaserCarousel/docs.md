@@ -2,8 +2,8 @@ A `<TeaserCarousel />` is a row of tiles through which the user can scroll horiz
 
 Supported props:
 - `bgColor` (string): Sets the carousel background color, (default: colorsScheme.default).
-- `color` (string): Sets the text color (default: colorScheme.text). Overrides tile text color if no color is set on tiles.
-- `outline` (string|bool): Sets tile outline color default (undefined = no outline, true = colorScheme.divider).
+- `color` (string): Sets the text color (default: text from colorScheme). Overrides tile text color if no color is set on tiles.
+- `outline` (string|bool): Sets tile outline color default (undefined = no outline, true = divider from colorScheme).
 - `bigger` (bool): use bigger style for cards
 - `article` (bool): margin and smaller max width for tiles (optimised to align with article column)
 

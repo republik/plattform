@@ -136,7 +136,8 @@ const colors = {
     opposite80: 'rgb(187,21,26)',
     opposite60: 'rgb(239,69,51)',
     neutral: '#bbb',
-    discrete
+    discrete,
+    chartsInverted: '#000000'
   },
   dark: {
     logo: '#FFFFFF',
@@ -184,7 +185,8 @@ const colors = {
     opposite80: 'rgb(239,69,51)',
     opposite60: 'rgb(252, 138, 107)',
     neutral: '#bbb',
-    discrete
+    discrete,
+    chartsInverted: '#FFFFFF'
   },
   mappings: {
     format: {
@@ -195,9 +197,8 @@ const colors = {
       '#07809a': 'accentColorBriefing'
     },
     charts: {
-      '#000': 'accentColorMeta',
-      '#000000': 'accentColorMeta',
-      '#111111': 'accentColorMeta'
+      '#000': 'chartsInverted',
+      '#000000': 'chartsInverted'
     }
   }
 }

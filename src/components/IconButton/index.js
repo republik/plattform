@@ -45,13 +45,13 @@ const IconButton = React.forwardRef(
         <Icon
           {...styles.icon}
           size={ICON_SIZE}
-          fill={fill || colorScheme.text}
+          {...colorScheme.set('fill', fill || 'text')}
         />
         {label && (
           <span
             {...styles.label}
             {...styles.long}
-            style={{ color: fill || colorScheme.text }}
+            {...colorScheme.set('color', fill || 'text')}
           >
             {label}
           </span>
@@ -60,7 +60,7 @@ const IconButton = React.forwardRef(
           <span
             {...styles.label}
             {...styles.short}
-            style={{ color: fill || colorScheme.text }}
+            {...colorScheme.set('color', fill || 'text')}
           >
             {labelShort}
           </span>
