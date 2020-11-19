@@ -17,6 +17,7 @@ const IconButton = React.forwardRef(
       labelShort,
       title,
       fill,
+      fillColorName,
       onClick,
       children,
       style
@@ -26,6 +27,8 @@ const IconButton = React.forwardRef(
     const Element = href ? 'a' : 'button'
     const customStyles = style || null
     const [colorScheme] = useColorContext()
+
+    const fillValue = fill || fillColorName || 'text'
 
     return (
       <Element
@@ -45,13 +48,13 @@ const IconButton = React.forwardRef(
         <Icon
           {...styles.icon}
           size={ICON_SIZE}
-          {...colorScheme.set('fill', fill || 'text')}
+          {...colorScheme.set('fill', fillValue)}
         />
         {label && (
           <span
             {...styles.label}
             {...styles.long}
-            {...colorScheme.set('color', fill || 'text')}
+            {...colorScheme.set('color', fillValue)}
           >
             {label}
           </span>
@@ -60,7 +63,7 @@ const IconButton = React.forwardRef(
           <span
             {...styles.label}
             {...styles.short}
-            {...colorScheme.set('color', fill || 'text')}
+            {...colorScheme.set('color', fillValue)}
           >
             {labelShort}
           </span>
