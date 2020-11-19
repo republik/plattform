@@ -9,6 +9,7 @@ import { Header } from './Header'
 import PlayIcon from 'react-icons/lib/md/play-arrow'
 import { convertStyleToRem } from '../Typography/utils'
 import { useColorContext } from '../Colors/useColorContext'
+import RawHtml from '../RawHtml'
 
 const styles = {
   container: css({
@@ -28,12 +29,11 @@ const styles = {
     }
   }),
   text: css({
+    wordWrap: 'break-word',
     ...convertStyleToRem(sansSerifRegular15),
     [mUp]: {
       ...convertStyleToRem(sansSerifRegular18)
-    },
-    wordWrap: 'break-word',
-    '& a': { linkStyle }
+    }
   }),
   mediaContainer: css({
     display: 'inline-block',
@@ -48,6 +48,8 @@ const styles = {
     top: 'calc(50% - 40px)'
   })
 }
+
+const Text = props => <p {...styles.text} {...props} />
 
 const Tweet = ({
   attributes,
@@ -75,11 +77,7 @@ const Tweet = ({
         handle={userScreenName}
         date={date}
       />
-      <p
-        {...styles.text}
-        {...colorScheme.set('color', 'text')}
-        dangerouslySetInnerHTML={{ __html: html }}
-      />
+      <RawHtml type={Text} dangerouslySetInnerHTML={{ __html: html }} />
       {image && (
         <Figure>
           <a href={url} {...styles.mediaContainer}>
