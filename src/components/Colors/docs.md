@@ -24,6 +24,8 @@ Force dark mode:
 </ColorContextProvider>
 ```
 
+Be careful with this one: democracy dies in darkness.
+
 You may also only force a section within your React tree by using nested `ColorContextProvider` without the root flag:
 
 ```react
@@ -151,3 +153,108 @@ Instead use a native `span` to set your color:
 ```
 
 Notable exceptions: setting fill on icons. We'll ensure that our icon components always support setting a `fill` via `colorScheme.set` from the outside.
+
+## Local Extensions
+
+E.g. for charts.
+
+```react
+<ColorContextLocalExtension localColors={{
+  light: {
+    chart1: '#007fff'
+  },
+  dark: {
+    chart1: '#ff0099'
+  }
+}} localMappings={{
+  charts: {
+    '#007fff': 'chart1'
+  }
+}}>
+  <GetColorScheme>
+    {(colorScheme) => <>
+      <div
+        {...colorScheme.set('backgroundColor', 'chart1')}
+        style={{
+          width: 40,
+          height: 20
+        }} />
+      <div
+        {...colorScheme.set('backgroundColor', '#007fff', 'charts')}
+        style={{
+          width: 40,
+          height: 20
+        }} />
+    </>}
+  </GetColorScheme>
+</ColorContextLocalExtension>
+```
+
+```react|span-3,dark
+<ColorContextProvider colorSchemeKey='dark'>
+<ColorContextLocalExtension localColors={{
+  light: {
+    chart1: '#007fff'
+  },
+  dark: {
+    chart1: '#ff0099'
+  }
+}} localMappings={{
+  charts: {
+    '#007fff': 'chart1'
+  }
+}}>
+  <GetColorScheme>
+    {(colorScheme) => <>
+      <div
+        {...colorScheme.set('backgroundColor', 'chart1')}
+        style={{
+          width: 40,
+          height: 20
+        }} />
+      <div
+        {...colorScheme.set('backgroundColor', '#007fff', 'charts')}
+        style={{
+          width: 40,
+          height: 20
+        }} />
+    </>}
+  </GetColorScheme>
+</ColorContextLocalExtension>
+</ColorContextProvider>
+```
+
+```react|span-3
+<ColorContextProvider colorSchemeKey='light'>
+<ColorContextLocalExtension localColors={{
+  light: {
+    chart1: '#007fff'
+  },
+  dark: {
+    chart1: '#ff0099'
+  }
+}} localMappings={{
+  charts: {
+    '#007fff': 'chart1'
+  }
+}}>
+  <GetColorScheme>
+    {(colorScheme) => <>
+      <div
+        {...colorScheme.set('backgroundColor', 'chart1')}
+        style={{
+          width: 40,
+          height: 20
+        }} />
+      <div
+        {...colorScheme.set('backgroundColor', '#007fff', 'charts')}
+        style={{
+          width: 40,
+          height: 20
+        }} />
+    </>}
+  </GetColorScheme>
+</ColorContextLocalExtension>
+</ColorContextProvider>
+```
+

@@ -15,7 +15,10 @@ import { fontFaces } from './theme/fonts'
 import { createFormatter } from './lib/translate'
 import { DiscussionContext } from './components/Discussion/DiscussionContext'
 import { createSampleDiscussionContextValue } from './components/Discussion/DiscussionContext.docs'
-import { ColorContextProvider } from './components/Colors/ColorContext'
+import {
+  ColorContextProvider,
+  useColorContext
+} from './components/Colors/ColorContext'
 
 simulations(true)
 // prevent speedy in catalog
@@ -941,7 +944,14 @@ ReactDOM.render(
                   Container: require('./templates/Article/Container').default,
                   ...require('./components/Typography'),
                   ColorContextProvider,
-                  ...require('./components/Colors/useColorContext'),
+                  ColorContextLocalExtension: require('./components/Colors/ColorContext')
+                    .ColorContextLocalExtension,
+                  useColorContext,
+                  GetColorScheme: ({ children }) => {
+                    const [colorScheme] = useColorContext()
+
+                    return children(colorScheme)
+                  },
                   css
                 }
               }

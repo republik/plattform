@@ -202,12 +202,7 @@ const colors = {
   }
 }
 
-// identify all variable color keys
-export const variableColorKeys = Object.keys(colors.light).filter(
-  color => colors.light[color] !== colors.dark[color]
-)
-
-//add all deprecated colors, but only if they don't exist in new colors (no overwrites)
+// add all deprecated colors, but only if they don't exist in new colors (no overwrites)
 Object.keys(colorsDeprecated).forEach(key => {
   if (!colors[key]) {
     colors[key] = colorsDeprecated[key]

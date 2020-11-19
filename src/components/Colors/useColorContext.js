@@ -1,7 +1,1 @@
-import { useContext } from 'react'
-import ColorContext from './ColorContext'
-
-export const useColorContext = () => {
-  const colorContext = useContext(ColorContext)
-  return [colorContext]
-}
+export { useColorContext } from './ColorContext'

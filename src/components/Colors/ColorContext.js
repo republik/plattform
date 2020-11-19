@@ -1,20 +1,29 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState, useContext } from 'react'
 import PropTypes from 'prop-types'
 import { css } from 'glamor'
-import colors, { variableColorKeys } from '../../theme/colors'
+import colors from '../../theme/colors'
 import memoize from 'lodash/memoize'
 
+const getVariableColorKeys = colors =>
+  Object.keys(colors.light).filter(
+    color => colors.light[color] !== colors.dark[color]
+  )
+
+// identify all variable color keys
+const variableColorKeys = getVariableColorKeys(colors)
+
 const createScheme = specificColors => {
-  const colorScheme = {
+  const colorDefinitions = {
     ...colors,
     ...specificColors
   }
 
-  const accessCSSColor = colorScheme.cssColors
-    ? color => colorScheme.cssColors[color] || colorScheme[color] || color
-    : color => colorScheme[color] || color
+  const accessCSSColor = colorDefinitions.cssColors
+    ? color =>
+        colorDefinitions.cssColors[color] || colorDefinitions[color] || color
+    : color => colorDefinitions[color] || color
 
-  const { mappings = {} } = colorScheme
+  const { mappings = {} } = colorDefinitions
 
   const getCSSColor = (color, mappingName) => {
     const mapping = mappings[mappingName] || {}
@@ -28,7 +37,9 @@ const createScheme = specificColors => {
   }
 
   return {
-    ...colorScheme,
+    schemeKey: colorDefinitions.schemeKey,
+    CSSVarSupport: colorDefinitions.CSSVarSupport,
+    colorDefinitions,
     sequential: [
       'sequential100',
       'sequential95',
@@ -41,19 +52,25 @@ const createScheme = specificColors => {
       'sequential60',
       'sequential55',
       'sequential50'
-    ].map(key => colorScheme[key]),
+    ].map(key => colorDefinitions[key]),
     sequential3: ['sequential100', 'sequential80', 'sequential60'].map(
-      key => colorScheme[key]
+      key => colorDefinitions[key]
     ),
     opposite3: ['opposite100', 'opposite80', 'opposite60'].map(
-      key => colorScheme[key]
+      key => colorDefinitions[key]
     ),
+    discrete: colorDefinitions.discrete,
     set: memoize(createColorRule, (...args) => args.join('.')),
     getCSSColor
   }
 }
 
 const ColorContext = React.createContext(createScheme(colors.light))
+
+export const useColorContext = () => {
+  const colorContext = useContext(ColorContext)
+  return [colorContext]
+}
 
 const generateCSSColorDefinitions = colors => {
   return variableColorKeys
@@ -62,11 +79,87 @@ const generateCSSColorDefinitions = colors => {
 }
 
 // ensure only main colors are available via context
-const reduceMainColors = (mapper = key => key) =>
-  variableColorKeys.reduce((c, key) => {
+const getObjectForKeys = (colorKeys, mapper = key => key) =>
+  colorKeys.reduce((c, key) => {
     c[key] = mapper(key)
     return c
   }, {})
+
+export const ColorContextLocalExtension = ({
+  children,
+  localColors = {},
+  localMappings = {}
+}) => {
+  const [{ schemeKey, CSSVarSupport, colorDefinitions }] = useColorContext()
+
+  const [colorValue, cssVarRule] = useMemo(() => {
+    const { mappings = {} } = colorDefinitions
+
+    const variableLocalColorKeys = getVariableColorKeys(localColors)
+
+    const extendedColorDefinitions = {
+      ...colorDefinitions,
+      ...localColors[schemeKey === 'auto' ? 'light' : schemeKey],
+      ...(CSSVarSupport
+        ? getObjectForKeys(variableLocalColorKeys, key => `var(--color-${key})`)
+        : {}),
+      mappings: {
+        ...mappings,
+        ...getObjectForKeys(Object.keys(localMappings), key => {
+          return {
+            ...mappings[key],
+            ...localMappings[key]
+          }
+        })
+      },
+      cssColors:
+        schemeKey === 'auto'
+          ? {
+              ...colorDefinitions.cssColors,
+              ...getObjectForKeys(variableLocalColorKeys, key => [
+                localColors.light[key],
+                `var(--color-${key})`
+              ])
+            }
+          : undefined
+    }
+
+    const lightColorCSSDefs = variableLocalColorKeys.reduce((defs, key) => {
+      defs[`--color-${key}`] = localColors.light[key]
+      return defs
+    }, {})
+    const darkColorCSSDefs = variableLocalColorKeys.reduce((defs, key) => {
+      defs[`--color-${key}`] = localColors.dark[key]
+      return defs
+    }, {})
+
+    return [
+      createScheme(extendedColorDefinitions),
+      css({
+        // light auto
+        ...lightColorCSSDefs,
+        '[data-user-color-scheme="dark"] &': {
+          // dark user
+          ...darkColorCSSDefs
+        },
+        '@media (prefers-color-scheme: dark)': {
+          // dark auto
+          ...darkColorCSSDefs,
+          '[data-user-color-scheme="light"] &': {
+            // light user
+            ...lightColorCSSDefs
+          }
+        }
+      })
+    ]
+  }, [colorDefinitions, localColors, localMappings, CSSVarSupport, schemeKey])
+
+  return (
+    <ColorContext.Provider value={colorValue}>
+      <div {...cssVarRule}>{children}</div>
+    </ColorContext.Provider>
+  )
+}
 
 export const ColorContextProvider = ({
   colorSchemeKey = 'auto',
@@ -93,18 +186,22 @@ export const ColorContextProvider = ({
   const colorValue = useMemo(() => {
     if (colorSchemeKey === 'auto') {
       return createScheme({
-        isSupported: CSSVarSupport,
+        schemeKey: colorSchemeKey,
+        CSSVarSupport,
         ...colors.light,
         ...(CSSVarSupport
-          ? reduceMainColors(key => `var(--color-${key})`)
+          ? getObjectForKeys(variableColorKeys, key => `var(--color-${key})`)
           : {}),
-        cssColors: reduceMainColors(key => [
+        cssColors: getObjectForKeys(variableColorKeys, key => [
           colors.light[key],
           `var(--color-${key})`
         ])
       })
     }
-    return createScheme(colors[colorSchemeKey])
+    return createScheme({
+      schemeKey: colorSchemeKey,
+      ...colors[colorSchemeKey]
+    })
   }, [colorSchemeKey, CSSVarSupport])
 
   return (
