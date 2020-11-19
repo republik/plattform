@@ -20,6 +20,7 @@ import { fontRule } from '../Typography/Interaction'
 import { Note } from '../Typography/Editorial'
 import { convertStyleToRem, pxToRem } from '../Typography/utils'
 import { useColorContext } from '../Colors/useColorContext'
+import { ColorContextLocalExtension } from '../Colors/ColorContext'
 
 export const ReactCharts = {
   Bar,
@@ -137,7 +138,31 @@ const Chart = props => {
     }
   }, [fixedWidth])
 
-  return (
+  const colorContextExtension = useMemo(() => {
+    if (!config.colorMapDark) {
+      return null
+    }
+    const keys = Object.keys(config.colorMapDark)
+    return {
+      localColors: keys.reduce(
+        (localColors, key, i) => {
+          localColors.dark[`charts${i}`] = config.colorMapDark[key]
+          localColors.light[`charts${i}`] = key
+          return localColors
+        },
+        { dark: {}, light: {} }
+      ),
+      localMappings: keys.reduce(
+        (mappings, key, i) => {
+          mappings.charts[key] = `charts${i}`
+          return mappings
+        },
+        { charts: {} }
+      )
+    }
+  }, [config])
+
+  const content = (
     <div
       ref={fixedWidth ? undefined : ref}
       style={{
@@ -158,6 +183,16 @@ const Chart = props => {
       )}
     </div>
   )
+
+  if (colorContextExtension) {
+    return (
+      <ColorContextLocalExtension {...colorContextExtension}>
+        {content}
+      </ColorContextLocalExtension>
+    )
+  }
+
+  return content
 }
 
 Chart.propTypes = {

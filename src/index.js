@@ -755,6 +755,7 @@ ReactDOM.render(
                 title: 'Bars',
                 imports: {
                   ...require('./components/Typography'),
+                  ColorContextProvider,
                   ChartTitle: require('./components/Chart').ChartTitle,
                   ChartLead: require('./components/Chart').ChartLead,
                   ChartLegend: require('./components/Chart').ChartLegend,
