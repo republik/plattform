@@ -248,7 +248,7 @@ If needed this can be overwritten with a custom `inlineLabelPosition`. Valid val
       "colorRange": [
         "#fdd49e", "#fdbb84", "#fc8d59"
       ],
-      "colorMapDark": {
+      "colorDarkMapping": {
         "#fdd49e": "#807dba",
         "#fdbb84": "#6a51a3",
         "#fc8d59": "#54278f"
@@ -279,7 +279,7 @@ Verzicht auf ca. 3500 Kilometer mit ÖV,-79,a,
 
 ## Dark Colors
 
-Maybe you've noticed the `colorMapDark` above. It can be used to switch out colors when in dark mode. This is how it looks when forced into dark:
+Maybe you've noticed the `colorDarkMapping` above. It can be used to switch out colors when in dark mode. This is how it looks when forced into dark:
 
 ```react|dark
 <ColorContextProvider colorSchemeKey='dark'>
@@ -293,7 +293,7 @@ Maybe you've noticed the `colorMapDark` above. It can be used to switch out colo
       "colorRange": [
         "#fdd49e", "#fdbb84", "#fc8d59"
       ],
-      "colorMapDark": {
+      "colorDarkMapping": {
         "#fdd49e": "#807dba",
         "#fdbb84": "#6a51a3",
         "#fc8d59": "#54278f"

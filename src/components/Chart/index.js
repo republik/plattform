@@ -141,14 +141,14 @@ const Chart = props => {
   }, [fixedWidth])
 
   const colorContextExtension = useMemo(() => {
-    if (!config.colorMapDark) {
+    if (!config.colorDarkMapping) {
       return null
     }
-    const keys = Object.keys(config.colorMapDark)
+    const keys = Object.keys(config.colorDarkMapping)
     return {
       localColors: keys.reduce(
         (localColors, key, i) => {
-          localColors.dark[`charts${i}`] = config.colorMapDark[key]
+          localColors.dark[`charts${i}`] = config.colorDarkMapping[key]
           localColors.light[`charts${i}`] = key
           return localColors
         },
