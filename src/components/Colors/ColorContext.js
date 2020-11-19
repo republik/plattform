@@ -163,6 +163,34 @@ export const ColorContextLocalExtension = ({
   )
 }
 
+export const ColorHtmlBodyColors = ({ colorSchemeKey = 'auto' }) => {
+  return (
+    <style
+      key={colorSchemeKey}
+      dangerouslySetInnerHTML={{
+        __html:
+          colorSchemeKey === 'auto'
+            ? [
+                // default light
+                `html, body { background-color: ${colors.light.default}; color: ${colors.light.text}; }`,
+                // dark via user preference
+                `html[data-user-color-scheme="dark"], html[data-user-color-scheme="dark"] body { background-color: ${colors.dark.default}; color: ${colors.dark.text}; }`,
+                // os dark preference
+                `@media (prefers-color-scheme: dark) {`,
+                [
+                  // auto dark via media query
+                  `html, body { background-color: ${colors.dark.default}; color: ${colors.dark.text}; }`,
+                  // light via user preference when os is dark
+                  `html[data-user-color-scheme="light"], html[data-user-color-scheme="light"] body { background-color: ${colors.light.default}; color: ${colors.light.text}; }`
+                ].join('\n'),
+                `}`
+              ].join('\n')
+            : `html, body { background-color: ${colors[colorSchemeKey].default}; color: ${colors[colorSchemeKey].text}; }`
+      }}
+    />
+  )
+}
+
 export const ColorContextProvider = ({
   colorSchemeKey = 'auto',
   root = false,
@@ -208,36 +236,29 @@ export const ColorContextProvider = ({
 
   return (
     <ColorContext.Provider value={colorValue}>
-      {root && (
+      {root && colorSchemeKey === 'auto' && (
         <style
           key={colorSchemeKey}
           dangerouslySetInnerHTML={{
-            __html:
-              colorSchemeKey === 'auto'
-                ? [
-                    // default light
-                    `html, body { background-color: ${colors.light.default}; color: ${colors.light.text}; }`,
-                    `:root { ${generateCSSColorDefinitions(colors.light)} }`,
-                    // dark via user preference
-                    `html[data-user-color-scheme="dark"], html[data-user-color-scheme="dark"] body { background-color: ${colors.dark.default}; color: ${colors.dark.text}; }`,
-                    `:root[data-user-color-scheme="dark"] { ${generateCSSColorDefinitions(
-                      colors.dark
-                    )} }`,
-                    // os dark preference
-                    `@media (prefers-color-scheme: dark) {`,
-                    [
-                      // auto dark via media query
-                      `html, body { background-color: ${colors.dark.default}; color: ${colors.dark.text}; }`,
-                      `:root { ${generateCSSColorDefinitions(colors.dark)} }`,
-                      // light via user preference when os is dark
-                      `html[data-user-color-scheme="light"], html[data-user-color-scheme="light"] body { background-color: ${colors.light.default}; color: ${colors.light.text}; }`,
-                      `:root[data-user-color-scheme="light"] { ${generateCSSColorDefinitions(
-                        colors.light
-                      )} }`
-                    ].join('\n'),
-                    `}`
-                  ].join('\n')
-                : `html, body { background-color: ${colorValue.default}; color: ${colorValue.text}; }`
+            __html: [
+              // default light
+              `:root { ${generateCSSColorDefinitions(colors.light)} }`,
+              // dark via user preference
+              `:root[data-user-color-scheme="dark"] { ${generateCSSColorDefinitions(
+                colors.dark
+              )} }`,
+              // os dark preference
+              `@media (prefers-color-scheme: dark) {`,
+              [
+                // auto dark via media query
+                `:root { ${generateCSSColorDefinitions(colors.dark)} }`,
+                // light via user preference when os is dark
+                `:root[data-user-color-scheme="light"] { ${generateCSSColorDefinitions(
+                  colors.light
+                )} }`
+              ].join('\n'),
+              `}`
+            ].join('\n')
           }}
         />
       )}

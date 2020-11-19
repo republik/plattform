@@ -40,7 +40,9 @@ export { Collapsable } from './components/Collapsable'
 export { default as CalloutMenu } from './components/Callout/CalloutMenu'
 export {
   default as ColorContext,
-  ColorContextProvider
+  ColorContextProvider,
+  ColorContextLocalExtension,
+  ColorHtmlBodyColors
 } from './components/Colors/ColorContext'
 export { useColorContext } from './components/Colors/useColorContext'
 export {
