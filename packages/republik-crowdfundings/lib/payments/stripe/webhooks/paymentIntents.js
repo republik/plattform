@@ -13,7 +13,7 @@ module.exports = {
     */
     'payment_intent.succeeded',
   ],
-  handle: async (event, _pgdb, t, _redis, connectionContext) => {
+  handle: async (event, _pgdb, t, _redis, connectionContext, companyId) => {
     const context = {
       ...connectionContext,
       t,
@@ -26,8 +26,9 @@ module.exports = {
       // If the paymentIntent was created indirectly e.g. via createSubscription
       // the metadata is not set.
       // In here we are only interested in non subscription PaymentIntents
-      // so let's ignore the others
-
+      // so let's ignore the others.
+      // Removing this shortcut creates an unnecessary race between this and the
+      // invoicePaymentSucceeded webhook.
       return 503
     }
 
@@ -39,11 +40,11 @@ module.exports = {
 
     const { pledge } = await makePledgeSuccessfulWithCharge(
       {
-        pledgeId,
         charge,
+        companyId,
       },
       context,
-    )
+    ).catch((e) => {})
 
     if (!pledge) {
       console.warn(`${event.type} pledge not found for id: ${pledgeId}`)

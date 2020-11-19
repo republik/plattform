@@ -63,5 +63,9 @@ module.exports = async (pgdb) => {
     accounts,
     accountForCompanyId: (companyId) =>
       accounts.find((a) => a.company.id === companyId),
+    accountForAccountId: (accountId) =>
+      accounts.find((a) => a.accountId === accountId),
+    companyIdForAccountId: (accountId) =>
+      accounts.find((a) => a.accountId === accountId)?.company.id,
   }
 }

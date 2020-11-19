@@ -2,6 +2,7 @@ const generateMemberships = require('../generateMemberships')
 const { sendPledgeConfirmations } = require('../Mail')
 const slack = require('@orbiting/backend-modules-republik/lib/slack')
 const { refreshPotForPledgeId } = require('../membershipPot')
+const getClients = require('./stripe/clients')
 
 const forUpdate = async ({ pledgeId, fn, pgdb }) => {
   const transaction = await pgdb.transactionBegin()
@@ -116,20 +117,57 @@ const savePaymentDedup = async ({
   return payment
 }
 
-// This method is only suitable for !subscription pledges as it only calls
-// generateMemberships (via changeStatus) and doesn't generate periods.
-// See invoicePaymentSucceeded for how subscriptions are handled.
+// This method handles !subscription and subscription pledges
 const makePledgeSuccessfulWithCharge = async (
-  { pledgeId, charge },
+  args, // must include: companyId, (charge or chargeId)
   context,
 ) => {
-  const { pgdb } = context
+  const { companyId } = args
+  const { pgdb, t } = context
+
+  const { accountForCompanyId } = await getClients(pgdb)
+  const { stripe } = accountForCompanyId(companyId) || {}
+  if (!stripe) {
+    console.error(`stripe not found for companyId: ${companyId}`)
+    throw new Error(t('api/unexpected'))
+  }
+
+  let charge = args.charge
+  if (!charge) {
+    charge = await stripe.charges.retrieve(args.chargeId)
+  }
+  if (!charge) {
+    console.error(`missing charge for chargeId: ${args.chargeId}`)
+    throw new Error(t('api/unexpected'))
+  }
+
+  let pledgeId = charge.metadata?.pledgeId // !subscription
+  let subscription
+  if (!pledgeId && charge.invoice) {
+    // subscription
+    // get pledgeId via charge.invoice.subscription
+    const { invoice: invoiceId } = charge
+    const invoice = await stripe.invoices.retrieve(invoiceId, {
+      expand: ['subscription', 'payment_intent'],
+    })
+    subscription = invoice?.subscription
+    pledgeId = subscription?.metadata?.pledgeId
+  }
+
+  if (!pledgeId) {
+    console.error(`missing pledgeId for chargeId: ${charge.id}`)
+    throw new Error(t('api/unexpected'))
+  }
 
   const { pledge, updatedPledge } = await forUpdate({
     pledgeId,
     pgdb,
     fn: async ({ pledge, transaction }) => {
       if (!pledge) {
+        return { pledge }
+      }
+      if (charge.status !== 'succeeded') {
+        console.warn('makePledgeSuccessfulWithCharge charge.status!==succeeded')
         return { pledge }
       }
 
@@ -143,7 +181,7 @@ const makePledgeSuccessfulWithCharge = async (
 
       const newStatus = 'SUCCESSFUL'
       let updatedPledge
-      if (pledge.status !== newStatus) {
+      if (pledge.status === 'DRAFT') {
         updatedPledge = await changeStatus(
           {
             pledge,
@@ -152,6 +190,77 @@ const makePledgeSuccessfulWithCharge = async (
           },
           context,
         )
+      }
+
+      if (subscription) {
+        const memberships = await transaction.public.memberships.find({
+          pledgeId,
+        })
+        const firstNotification = memberships[0].subscriptionId === null
+        const beginDate = new Date(subscription.current_period_start * 1000)
+        const endDate = new Date(subscription.current_period_end * 1000)
+
+        if (firstNotification) {
+          // remember subscriptionId
+          await transaction.public.memberships.update(
+            {
+              id: memberships.map((m) => m.id),
+            },
+            {
+              subscriptionId: subscription.id,
+            },
+          )
+          // synchronize beginDate and endDate with stripe
+          await transaction.query(
+            `
+            UPDATE "membershipPeriods" mp
+            SET
+              "webhookEventId" = :webhookEventId,
+              "beginDate" = :beginDate,
+              "endDate" = :endDate,
+              "updatedAt" = :now
+            WHERE
+              ARRAY[mp."membershipId"] && :membershipIds AND
+              mp."webhookEventId" is null
+          `,
+            {
+              webhookEventId: charge.id,
+              beginDate,
+              endDate,
+              now: new Date(),
+              membershipIds: memberships.map((m) => m.id),
+            },
+          )
+        } else {
+          // check for duplicate event
+          if (
+            !(await transaction.public.membershipPeriods.findFirst({
+              webhookEventId: charge.id,
+            }))
+          ) {
+            // insert membershipPeriods
+            await Promise.all(
+              memberships.map((membership) => {
+                return transaction.public.membershipPeriods.insert({
+                  membershipId: membership.id,
+                  pledgeId: pledge.id,
+                  beginDate,
+                  endDate,
+                  webhookEventId: charge.id,
+                })
+              }),
+            )
+            await transaction.public.memberships.update(
+              {
+                id: memberships.map((m) => m.id),
+              },
+              {
+                active: true,
+                updatedAt: new Date(),
+              },
+            )
+          }
+        }
       }
 
       return { pledge, updatedPledge }
@@ -174,6 +283,5 @@ module.exports = {
   forUpdate,
   changeStatus,
   afterChange,
-  savePaymentDedup,
   makePledgeSuccessfulWithCharge,
 }
