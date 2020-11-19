@@ -190,7 +190,9 @@ const colors = {
     format: {
       '#000': 'accentColorMeta',
       '#000000': 'accentColorMeta',
-      '#282828': 'accentColorMeta'
+      '#282828': 'accentColorMeta',
+      '#07809A': 'accentColorBriefing',
+      '#07809a': 'accentColorBriefing'
     },
     charts: {
       '#000': 'accentColorMeta',
