@@ -227,7 +227,7 @@ const LineGroup = props => {
                       cx={startX - Y_CONNECTOR_PADDING - Y_CONNECTOR / 2}
                       cy={startLabelY + 0.5}
                       r={Y_CONNECTOR / 2}
-                      fill={lineColor}
+                      {...colorScheme.set('fill', lineColor, 'charts')}
                     />
                   )}
                   <text
@@ -243,7 +243,11 @@ const LineGroup = props => {
                 </g>
               )}
               {band && line.find(d => d.datum[`${band}_lower`]) && (
-                <path fill={lineColor} fillOpacity='0.2' d={bandArea(line)} />
+                <path
+                  {...colorScheme.set('fill', lineColor, 'charts')}
+                  fillOpacity='0.2'
+                  d={bandArea(line)}
+                />
               )}
               <path
                 fill='none'
@@ -259,7 +263,7 @@ const LineGroup = props => {
                       cx={endX + Y_CONNECTOR_PADDING + Y_CONNECTOR / 2}
                       cy={endLabelY + 0.5}
                       r={Y_CONNECTOR / 2}
-                      fill={lineColor}
+                      {...colorScheme.set('fill', lineColor, 'charts')}
                     />
                   )}
                   <text

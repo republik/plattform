@@ -72,7 +72,7 @@ const ColorLegend = ({ title, shape, values, maxWidth, inline }) => {
                   styles.color,
                   styles[shape === 'square' ? 'square' : 'circle']
                 )}
-                style={{ backgroundColor: value.color }}
+                {...colorScheme.set('backgroundColor', value.color, 'charts')}
               />
             )}
             {text}{' '}

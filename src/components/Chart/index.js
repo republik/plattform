@@ -147,6 +147,8 @@ const Chart = props => {
       {!!width && (
         <ReactChart
           {...config}
+          // make colorScheme available for class components—maps
+          colorScheme={colorScheme}
           tLabel={tLabel}
           colorRanges={colorRanges}
           width={width}

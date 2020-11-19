@@ -134,7 +134,7 @@ const Hemicycle = props => {
               return (
                 <path
                   key={`primaryPath${i}`}
-                  fill={fill}
+                  {...colorScheme.set('fill', fill, 'charts')}
                   d={arc({
                     outerRadius: outerRadiusPrimary,
                     innerRadius: innerRadiusPrimary,
@@ -203,7 +203,7 @@ const Hemicycle = props => {
               return (
                 <path
                   key={`secondaryPath${i}`}
-                  fill={fill}
+                  {...colorScheme.set('fill', fill, 'charts')}
                   d={arc({
                     outerRadius: outerRadiusSecondary,
                     innerRadius: innerRadiusSecondary,

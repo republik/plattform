@@ -371,7 +371,11 @@ const ScatterPlot = ({
             <circle
               key={symbol.key}
               style={{ opacity }}
-              fill={colorMapper(colorAccessor(symbol.value))}
+              {...colorScheme.set(
+                'fill',
+                colorMapper(colorAccessor(symbol.value)),
+                'charts'
+              )}
               cx={symbol.cx}
               cy={symbol.cy}
               r={symbol.r}

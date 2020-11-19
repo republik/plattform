@@ -310,7 +310,11 @@ const TimeBarChart = props => {
                     width={barWidth}
                     height={segment.height}
                     shapeRendering='crispEdges'
-                    fill={color(colorAccessor(segment))}
+                    {...colorScheme.set(
+                      'fill',
+                      color(colorAccessor(segment)),
+                      'charts'
+                    )}
                   />
                 ))}
               </g>
