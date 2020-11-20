@@ -1,10 +1,13 @@
 const getStripeClients = require('./clients')
 const Promise = require('bluebird')
 
+const CACHE_KEY = 'paymentMethods'
+
 const getPaymentMethods = async ({
   userId,
   pgdb,
   clients, // optional
+  acceptCachedData = false,
 }) => {
   const { platform, connectedAccounts } =
     clients || (await getStripeClients(pgdb))
@@ -21,6 +24,10 @@ const getPaymentMethods = async ({
   }
   if (customers.length !== connectedAccounts.length + 1) {
     throw new Error(`missing stripeCustomer for userId: ${userId}`)
+  }
+
+  if (acceptCachedData && customer.cache?.[CACHE_KEY]) {
+    return customer.cache[CACHE_KEY]
   }
 
   const [
@@ -77,7 +84,7 @@ const getPaymentMethods = async ({
     }
   }
 
-  return paymentMethods.data.map((pm) => ({
+  const result = paymentMethods.data.map((pm) => ({
     id: pm.id,
     isDefault:
       pm.id === stripeCustomer.invoice_settings?.default_payment_method,
@@ -92,6 +99,18 @@ const getPaymentMethods = async ({
     companyId: platform.company.id,
     connectedPaymentMethods: pm.connectedPaymentMethods,
   }))
+
+  await pgdb.public.stripeCustomers.updateOne(
+    { id: customer.id },
+    {
+      cache: {
+        ...customer.cache,
+        [CACHE_KEY]: result,
+      },
+    },
+  )
+
+  return result
 }
 
 exports.getPaymentMethods = getPaymentMethods
@@ -100,8 +119,14 @@ exports.getDefaultPaymentMethod = async ({
   userId,
   pgdb,
   clients, // optional
+  acceptCachedData,
 }) => {
-  const paymentMethods = await getPaymentMethods({ userId, pgdb, clients })
+  const paymentMethods = await getPaymentMethods({
+    userId,
+    pgdb,
+    clients,
+    acceptCachedData,
+  })
   return paymentMethods.find((pm) => pm.isDefault)
 }
 
@@ -112,6 +137,7 @@ exports.getPaymentMethodForCompany = async ({
   pgdb,
   clients: _clients, // optional
   t,
+  acceptCachedData,
 }) => {
   const clients = _clients || (await getStripeClients(pgdb))
 
@@ -120,6 +146,7 @@ exports.getPaymentMethodForCompany = async ({
     userId,
     pgdb,
     clients,
+    acceptCachedData,
   })
 
   const platformPaymentMethod = paymentMethods.find((pm) =>

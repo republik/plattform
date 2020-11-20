@@ -3,6 +3,7 @@ const _ = {
 }
 const { STRIPE_PLATFORM, STRIPE_CONNECTED_ACCOUNTS } = process.env
 
+// TODO cache in memory
 module.exports = async (pgdb) => {
   const accountNames = [
     STRIPE_PLATFORM,

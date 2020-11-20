@@ -1,18 +1,25 @@
 const getStripeClients = require('./clients')
 
-const getPaymentSources = async (userId, pgdb) => {
+const CACHE_KEY = 'paymentSources'
+
+const getPaymentSources = async (userId, pgdb, acceptCachedData = false) => {
   const { platform } = await getStripeClients(pgdb)
   if (!platform) {
     return []
   }
+
   const customer = await pgdb.public.stripeCustomers.findOne({
     userId,
     companyId: platform.company.id,
   })
-
   if (!customer) {
     return []
   }
+
+  if (acceptCachedData && customer.cache?.[CACHE_KEY]) {
+    return customer.cache[CACHE_KEY]
+  }
+
   const stripeCustomer = await platform.stripe.customers.retrieve(customer.id, {
     expand: ['sources'],
   })
@@ -23,7 +30,8 @@ const getPaymentSources = async (userId, pgdb) => {
   ) {
     return []
   }
-  return stripeCustomer.sources.data.map((source) => ({
+
+  const result = stripeCustomer.sources.data.map((source) => ({
     id: source.id,
     isDefault: source.id === stripeCustomer.default_source,
     status: source.status.toUpperCase(),
@@ -32,11 +40,23 @@ const getPaymentSources = async (userId, pgdb) => {
     expMonth: source.card.exp_month,
     expYear: source.card.exp_year,
   }))
+
+  await pgdb.public.stripeCustomers.updateOne(
+    { id: customer.id },
+    {
+      cache: {
+        ...customer.cache,
+        [CACHE_KEY]: result,
+      },
+    },
+  )
+
+  return result
 }
 
 exports.getPaymentSources = getPaymentSources
 
-exports.getDefaultPaymentSource = async (userId, pgdb) => {
-  const paymentSources = await getPaymentSources(userId, pgdb)
+exports.getDefaultPaymentSource = async (userId, pgdb, acceptCachedData) => {
+  const paymentSources = await getPaymentSources(userId, pgdb, acceptCachedData)
   return paymentSources.find((s) => s.isDefault)
 }

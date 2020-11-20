@@ -96,6 +96,7 @@ const suggest = async (membershipId, pgdb) => {
   const defaultPaymentMethod = await getDefaultPaymentMethod({
     userId: membership.userId,
     pgdb,
+    acceptCachedData: true,
   })
 
   let defaultPaymentSource
@@ -103,6 +104,7 @@ const suggest = async (membershipId, pgdb) => {
     defaultPaymentSource = await getDefaultPaymentSource(
       membership.userId,
       pgdb,
+      true,
     )
   }
 
