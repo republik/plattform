@@ -13,6 +13,7 @@ const { getDefaultPaymentSource } = require('./payments/stripe/paymentSource')
 
 const { getDefaultPaymentMethod } = require('./payments/stripe/paymentMethod')
 const createPaymentIntent = require('./payments/stripe/createPaymentIntent')
+const Promise = require('bluebird')
 
 const suggest = async (membershipId, pgdb) => {
   // Find membership
@@ -22,15 +23,20 @@ const suggest = async (membershipId, pgdb) => {
     return false
   }
 
-  // Find current periods
-  const membershipPeriods = await pgdb.public.membershipPeriods.find({
-    membershipId: membership.id,
-  })
-
-  // Find pledgeOptions
-  const relatedPledgeOptions = await pgdb.public.pledgeOptions.find({
-    or: [{ membershipId }, { pledgeId: membership.pledgeId }],
-  })
+  // load a bunch of stuff we'r going to need later
+  const [
+    membershipPeriods,
+    relatedPledgeOptions,
+    membershipTypes,
+  ] = await Promise.all([
+    pgdb.public.membershipPeriods.find({
+      membershipId: membership.id,
+    }),
+    pgdb.public.pledgeOptions.find({
+      or: [{ membershipId }, { pledgeId: membership.pledgeId }],
+    }),
+    pgdb.public.membershipTypes.findAll(),
+  ])
 
   if (relatedPledgeOptions.length < 1) {
     return false
@@ -47,7 +53,6 @@ const suggest = async (membershipId, pgdb) => {
   }
 
   // to get membership-related rewardId
-  const membershipTypes = await pgdb.public.membershipTypes.findAll()
   const membershipPackageOptions = await pgdb.public.packageOptions.find({
     rewardId: membershipTypes.map((mt) => mt.rewardId),
   })
