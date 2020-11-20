@@ -62,8 +62,10 @@ const styles = {
   })
 }
 
-export const Table = ({ children }) => (
-  <table {...styles.table}>{children}</table>
+export const Table = ({ children, style }) => (
+  <table {...styles.table} style={style}>
+    {children}
+  </table>
 )
 export const Tr = ({ children }) => <tr {...styles.tr}>{children}</tr>
 export const Th = ({ children, style }) => (

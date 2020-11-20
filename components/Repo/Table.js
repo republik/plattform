@@ -366,7 +366,7 @@ class RepoList extends Component {
           </div>
         )}
 
-        <Table>
+        <Table style={{ marginTop: templates && -15 }}>
           <thead>
             <Tr>
               <Th style={{ width: '28%' }}>{t('repo/table/col/title')}</Th>
