@@ -528,7 +528,8 @@ describe('addPaymentSource', () => {
       pspPayload: {},
     })
     expect(visaResult.errors).toBeFalsy()
-    expect(visaResult.data.addPaymentSource.length).toBe(2)
+    // only the default is returned
+    expect(visaResult.data.addPaymentSource.length).toBe(1)
     expect(visaResult.data).toEqual({
       addPaymentSource: [
         {
@@ -537,13 +538,6 @@ describe('addPaymentSource', () => {
           brand: 'Visa',
           expMonth: parseInt(Cards.Visa.exp_month, 10),
           expYear: parseInt(Cards.Visa.exp_year, 10),
-        },
-        {
-          isDefault: false,
-          status: 'CHARGEABLE',
-          brand: 'Visa',
-          expMonth: parseInt(Cards.Untrusted.exp_month, 10),
-          expYear: parseInt(Cards.Untrusted.exp_year, 10),
         },
       ],
     })
