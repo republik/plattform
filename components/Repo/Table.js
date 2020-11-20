@@ -161,7 +161,7 @@ const styles = {
     marginRight: 6
   }),
   pageInfo: css({
-    float: 'right',
+    marginTop: 10,
     textAlign: 'right'
   })
 }
@@ -195,6 +195,37 @@ const Phase = ({ phase, onClick, disabled, t }) => {
     </span>
   )
 }
+
+const PageInfo = withT(({ t, repos, loading, fetchMore }) => {
+  return (
+    repos && (
+      <div {...styles.pageInfo}>
+        <Label>
+          {repos.nodes.length === repos.totalCount
+            ? t('repo/table/pageInfo/total', {
+                count: repos.totalCount
+              })
+            : t('repo/table/pageInfo/loadedTotal', {
+                loaded: repos.nodes.length,
+                total: repos.totalCount
+              })}
+          <br />
+          {!loading && repos.pageInfo.hasNextPage && (
+            <a
+              {...linkRule}
+              href='#'
+              onClick={() => {
+                fetchMore({ after: repos.pageInfo.endCursor })
+              }}
+            >
+              {t('repo/table/pageInfo/loadMore')}
+            </a>
+          )}
+        </Label>
+      </div>
+    )
+  )
+})
 
 const SEARCH_MIN_LENGTH = 3
 
@@ -329,30 +360,6 @@ class RepoList extends Component {
               </Link>
             )
           })}
-          {data.repos && (
-            <Label {...styles.pageInfo}>
-              {data.repos.nodes.length === data.repos.totalCount
-                ? t('repo/table/pageInfo/total', {
-                    count: data.repos.totalCount
-                  })
-                : t('repo/table/pageInfo/loadedTotal', {
-                    loaded: data.repos.nodes.length,
-                    total: data.repos.totalCount
-                  })}
-              <br />
-              {!data.loading && data.repos.pageInfo.hasNextPage && (
-                <a
-                  {...linkRule}
-                  href='#'
-                  onClick={() => {
-                    fetchMore({ after: data.repos.pageInfo.endCursor })
-                  }}
-                >
-                  {t('repo/table/pageInfo/loadMore')}
-                </a>
-              )}
-            </Label>
-          )}
         </div>
         <Table>
           <thead>
@@ -538,6 +545,11 @@ class RepoList extends Component {
             )}
           </tbody>
         </Table>
+        <PageInfo
+          repos={data.repos}
+          loading={data.loading}
+          fetchMore={fetchMore}
+        />
       </div>
     )
   }
