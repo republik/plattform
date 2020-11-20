@@ -636,18 +636,20 @@ describe('payPledge', () => {
     )
     expect(pledgePaymentBeforeCharge).toBeFalsy()
 
+    const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY_COMPANY_TWO)
+    const charges = await stripe.charges.list({
+      limit: 1,
+    })
+    const chargeId = charges.data[0].id
+
     // simulate successful payment of the pledge
     await invoicePaymentSuccess(
       {
-        pledgeId,
-        total: 24000,
-        chargeId: 'TEST',
-        start: Math.floor(Date.now() / 1000),
-        end: Math.floor(Date.now() / 1000) + 86400, // 24 hours
+        chargeId,
       },
       pgDatabase(),
       global.instance.context,
-      "c0000000-0000-0000-0001-000000000002",
+      'c0000000-0000-0000-0001-000000000002',
     )
 
     await chargeSuccess(
@@ -661,6 +663,7 @@ describe('payPledge', () => {
     const pledgePayment = await pgDatabase().public.pledgePayments.findOne({
       pledgeId,
     })
+    expect(pledgePayment).toBeTruthy()
     const payment = await pgDatabase().public.payments.findOne({
       id: pledgePayment.paymentId,
     })
@@ -680,10 +683,10 @@ describe('payPledge', () => {
       moment().add('23', 'hours').isBefore(moment(periods[0].endDate)),
     ).toBeTruthy()
     expect(
-      moment().add('1', 'day').isAfter(moment(periods[0].endDate)),
+      moment().add('1', 'month').isAfter(moment(periods[0].endDate)),
     ).toBeTruthy()
 
-    await chargeRefund({ chargeId: 'TEST' }, pgDatabase())
+    await chargeRefund({ chargeId }, pgDatabase())
     const { status } = await pgDatabase().public.payments.findFirst({
       id: payment.id,
     })

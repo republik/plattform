@@ -7,30 +7,14 @@ const customerSubscription = require('../lib/payments/stripe/webhooks/customerSu
 const t = (text) => text
 
 const invoicePaymentSuccess = async (
-  { pledgeId, total, chargeId, start, end },
+  { chargeId },
   pgdb, context, companyId
 ) => {
   const event = {
-    id: `INVOICE_PAYMENT_${pledgeId}`,
+    id: `INVOICE_PAYMENT_${chargeId}`,
     data: {
       object: {
-        charge: `CHARGE_${chargeId}`,
-        total,
-        lines: {
-          data: [
-            {
-              id: `SUBSCRIPTION_${chargeId}`,
-              metadata: {
-                pledgeId,
-              },
-              period: {
-                start,
-                end,
-              },
-              type: 'subscription',
-            },
-          ],
-        },
+        charge: chargeId,
       },
     },
   }
@@ -74,7 +58,7 @@ const chargeRefund = async ({ chargeId }, pgdb) => {
   const event = {
     data: {
       object: {
-        id: `CHARGE_${chargeId}`,
+        id: chargeId,
       },
     },
   }

@@ -34,7 +34,10 @@ module.exports = async ({ paymentIntentId, companyId }, context) => {
         companyId,
       },
       context,
-    ).catch((e) => {})
+    ).catch((e) => {
+      console.warn(e)
+      return {}
+    })
     if (!pledge) {
       throw new Error(t('api/pledge/404'))
     }

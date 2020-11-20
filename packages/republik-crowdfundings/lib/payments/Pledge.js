@@ -118,6 +118,7 @@ const savePaymentDedup = async ({
 }
 
 // This method handles !subscription and subscription pledges
+// and is idempotent.
 const makePledgeSuccessfulWithCharge = async (
   args, // must include: companyId, (charge or chargeId)
   context,

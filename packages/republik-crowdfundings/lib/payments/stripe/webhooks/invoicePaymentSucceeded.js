@@ -16,17 +16,19 @@ module.exports = {
     }
 
     const paymentIntentId = event.data?.object?.payment_intent
-    // object.lines.data[0] is the subscription
-    const pledgeId = event.data?.object?.lines?.data[0]?.metadata?.pledgeId
-    // stripe/payPledge might be waiting for clientSecret
-    // publish that no auth is required
-    await redis.publish(
-      `pledge:${pledgeId}:paymentIntent`,
-      JSON.stringify({
-        id: paymentIntentId,
-        clientSecret: 'no-auth-required',
-      }),
-    )
+    if (paymentIntentId) {
+      // object.lines.data[0] is the subscription
+      const pledgeId = event.data?.object?.lines?.data[0]?.metadata?.pledgeId
+      // stripe/payPledge might be waiting for clientSecret
+      // publish that no auth is required
+      await redis.publish(
+        `pledge:${pledgeId}:paymentIntent`,
+        JSON.stringify({
+          id: paymentIntentId,
+          clientSecret: 'no-auth-required',
+        }),
+      )
+    }
 
     const chargeId = event.data?.object?.charge
     if (!chargeId) {
@@ -40,7 +42,10 @@ module.exports = {
         companyId,
       },
       context,
-    ).catch((e) => {})
+    ).catch((e) => {
+      console.warn(e)
+      return {}
+    })
 
     if (!pledge) {
       return 503

@@ -44,7 +44,10 @@ module.exports = {
         companyId,
       },
       context,
-    ).catch((e) => {})
+    ).catch((e) => {
+      console.warn(e)
+      return {}
+    })
 
     if (!pledge) {
       console.warn(`${event.type} pledge not found for id: ${pledgeId}`)
