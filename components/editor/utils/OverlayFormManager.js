@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import SlatePropTypes from 'slate-prop-types'
 import { css } from 'glamor'
+import { useColorContext } from '@project-r/styleguide'
 
 import MdEdit from 'react-icons/lib/md/edit'
 
@@ -20,11 +21,14 @@ const styles = {
   })
 }
 
-const EditButton = ({ onClick }) => (
-  <div {...styles.editButton} role='button' onClick={onClick}>
-    <MdEdit />
-  </div>
-)
+const EditButton = ({ onClick }) => {
+  const [colorScheme] = useColorContext()
+  return (
+    <div {...styles.editButton} role='button' onClick={onClick}>
+      <MdEdit {...colorScheme.set('fill', 'text')} />
+    </div>
+  )
+}
 
 class OverlayFormManager extends Component {
   constructor(...args) {
