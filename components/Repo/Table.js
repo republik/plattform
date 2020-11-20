@@ -197,34 +197,33 @@ const Phase = ({ phase, onClick, disabled, t }) => {
 }
 
 const PageInfo = withT(({ t, repos, loading, fetchMore }) => {
-  return (
-    repos && (
-      <div {...styles.pageInfo}>
-        <Label>
-          {repos.nodes.length === repos.totalCount
-            ? t('repo/table/pageInfo/total', {
-                count: repos.totalCount
-              })
-            : t('repo/table/pageInfo/loadedTotal', {
-                loaded: repos.nodes.length,
-                total: repos.totalCount
-              })}
-          <br />
-          {!loading && repos.pageInfo.hasNextPage && (
-            <a
-              {...linkRule}
-              href='#'
-              onClick={() => {
-                fetchMore({ after: repos.pageInfo.endCursor })
-              }}
-            >
-              {t('repo/table/pageInfo/loadMore')}
-            </a>
-          )}
-        </Label>
-      </div>
-    )
-  )
+  return repos ? (
+    <div {...styles.pageInfo}>
+      <Label>
+        {repos.nodes.length === repos.totalCount
+          ? t('repo/table/pageInfo/total', {
+              count: repos.totalCount
+            })
+          : t('repo/table/pageInfo/loadedTotal', {
+              loaded: repos.nodes.length,
+              total: repos.totalCount
+            })}
+        <br />
+        {!loading && repos.pageInfo.hasNextPage && (
+          <a
+            {...linkRule}
+            href='#'
+            onClick={e => {
+              e.preventDefault()
+              fetchMore({ after: repos.pageInfo.endCursor })
+            }}
+          >
+            {t('repo/table/pageInfo/loadMore')}
+          </a>
+        )}
+      </Label>
+    </div>
+  ) : null
 })
 
 const SEARCH_MIN_LENGTH = 3
@@ -350,6 +349,7 @@ class RepoList extends Component {
                 key={phase.key}
                 route='index'
                 replace
+                scroll={false}
                 params={getParams({ phase: active ? null : phase.key })}
               >
                 <Phase
@@ -392,18 +392,7 @@ class RepoList extends Component {
                   <Td colSpan='8'>{t('repo/search/noResults')}</Td>
                 </Tr>
               )}
-            {data.loading || data.error ? (
-              <tr>
-                <td colSpan='8'>
-                  <Loader
-                    loading={data.loading}
-                    error={data.error}
-                    style={{ height: '80vh' }}
-                  />
-                </td>
-              </tr>
-            ) : (
-              data.repos &&
+            {data.repos &&
               data.repos.nodes
                 .map(repo => ({ repo }))
                 .sort((a, b) =>
@@ -541,7 +530,13 @@ class RepoList extends Component {
                       </Td>
                     </Tr>
                   )
-                })
+                })}
+            {(data.loading || data.error) && (
+              <tr>
+                <td colSpan='8'>
+                  <Loader loading={data.loading} error={data.error} />
+                </td>
+              </tr>
             )}
           </tbody>
         </Table>
