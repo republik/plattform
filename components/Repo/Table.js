@@ -152,13 +152,15 @@ const styles = {
     paddingBottom: 80
   }),
   filterBar: css({
-    marginBottom: 20
+    paddingBottom: 15,
+    borderBottom: `1px solid ${colors.divider}`
   }),
   phase: css({
     color: '#fff',
     borderRadius: 3,
     padding: '3px 6px',
-    marginRight: 6
+    marginRight: 6,
+    display: 'inline-block'
   }),
   pageInfo: css({
     marginTop: 10,
@@ -183,7 +185,7 @@ const Phase = ({ phase, onClick, disabled, t }) => {
   const { color } = phases.find(p => p.key === phase)
 
   return (
-    <span
+    <div
       {...styles.phase}
       style={{
         backgroundColor: disabled ? 'gray' : color,
@@ -192,7 +194,7 @@ const Phase = ({ phase, onClick, disabled, t }) => {
       onClick={onClick}
     >
       {t(`repo/phase/${phase}`, undefined, phase)}
-    </span>
+    </div>
   )
 }
 
@@ -340,27 +342,30 @@ class RepoList extends Component {
           onChange={onChangeSearch}
         />
 
-        <div {...styles.filterBar}>
-          {phases.map(phase => {
-            const active =
-              activeFilterPhase && activeFilterPhase.key === phase.key
-            return (
-              <Link
-                key={phase.key}
-                route='index'
-                replace
-                scroll={false}
-                params={getParams({ phase: active ? null : phase.key })}
-              >
-                <Phase
-                  t={t}
-                  phase={phase.key}
-                  disabled={activeFilterPhase && !active}
-                />
-              </Link>
-            )
-          })}
-        </div>
+        {!templates && (
+          <div {...styles.filterBar}>
+            {phases.map(phase => {
+              const active =
+                activeFilterPhase && activeFilterPhase.key === phase.key
+              return (
+                <Link
+                  key={phase.key}
+                  route='index'
+                  replace
+                  scroll={false}
+                  params={getParams({ phase: active ? null : phase.key })}
+                >
+                  <Phase
+                    t={t}
+                    phase={phase.key}
+                    disabled={activeFilterPhase && !active}
+                  />
+                </Link>
+              )
+            })}
+          </div>
+        )}
+
         <Table>
           <thead>
             <Tr>
@@ -379,7 +384,9 @@ class RepoList extends Component {
                   {t(`repo/table/col/${field}`, undefined, field)}
                 </ThOrder>
               ))}
-              <Th style={{ width: '10%' }}>{t('repo/table/col/phase')}</Th>
+              <Th style={{ width: '10%' }}>
+                {!templates ? t('repo/table/col/phase') : ''}
+              </Th>
 
               <Th style={{ width: 70 }} />
             </Tr>
@@ -477,7 +484,7 @@ class RepoList extends Component {
                         />
                       </TdNum>
                       <Td>
-                        <Phase t={t} phase={currentPhase} />
+                        {!templates && <Phase t={t} phase={currentPhase} />}
                       </Td>
                       <Td style={{ textAlign: 'right' }}>
                         {repo.latestPublications

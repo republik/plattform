@@ -18,7 +18,6 @@ const styles = {
       textAlign: 'left',
       fontWeight: 'normal',
       padding: 8,
-      borderTop: `1px solid ${colors.divider}`,
       borderBottom: `1px solid ${colors.divider}`,
       ':first-child': {
         paddingLeft: 0
