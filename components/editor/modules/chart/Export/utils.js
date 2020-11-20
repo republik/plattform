@@ -13,6 +13,19 @@ export const getSvgNode = (chartElement, width = 660) => {
   const svg = document.importNode(template.content.querySelector('svg'), true)
   svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg')
   svg.style.margin = '0 auto'
+
+  document.body.appendChild(svg)
+  ;[
+    ...svg.querySelectorAll(
+      'circle,ellipse,line,path,polygon,polyline,rect,text,use'
+    )
+  ].forEach(node => {
+    const compStyles = window.getComputedStyle(node)
+    node.setAttribute('fill', compStyles.getPropertyValue('fill'))
+    node.setAttribute('stroke', compStyles.getPropertyValue('stroke'))
+  })
+  document.body.removeChild(svg)
+
   return svg
 }
 
