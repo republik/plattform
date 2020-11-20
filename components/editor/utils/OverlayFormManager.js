@@ -11,8 +11,6 @@ import OverlayForm from './OverlayForm'
 const styles = {
   editButton: css({
     position: 'absolute',
-    left: -40,
-    top: 0,
     zIndex: 1,
     fontSize: 24,
     ':hover': {
@@ -21,10 +19,19 @@ const styles = {
   })
 }
 
-const EditButton = ({ onClick }) => {
+const EditButton = ({ onClick, size, parentType }) => {
   const [colorScheme] = useColorContext()
+
   return (
-    <div {...styles.editButton} role='button' onClick={onClick}>
+    <div
+      {...styles.editButton}
+      role='button'
+      onClick={onClick}
+      style={{
+        top: size === 'breakout' || !parentType ? -40 : 0,
+        left: !parentType ? 0 : -40
+      }}
+    >
       <MdEdit {...colorScheme.set('fill', 'text')} />
     </div>
   )
@@ -43,7 +50,6 @@ class OverlayFormManager extends Component {
       node,
       attributes,
       onChange,
-      showEditButton,
       component,
       preview,
       extra,
@@ -53,6 +59,7 @@ class OverlayFormManager extends Component {
       this.setState({ showModal: true })
     }
     const showModal = this.state.showModal || node.data.get('isNew')
+    const parent = editor.value.document.getParent(node.key)
 
     return (
       <div
@@ -60,7 +67,11 @@ class OverlayFormManager extends Component {
         style={{ position: 'relative' }}
         onDoubleClick={startEditing}
       >
-        {showEditButton && <EditButton onClick={startEditing} />}
+        <EditButton
+          size={node.data.get('size')}
+          parentType={parent.type}
+          onClick={startEditing}
+        />
         {showModal && (
           <OverlayForm
             preview={preview}
@@ -84,12 +95,7 @@ class OverlayFormManager extends Component {
   }
 }
 
-OverlayFormManager.defaultProps = {
-  showEditButton: true
-}
-
 OverlayFormManager.propTypes = {
-  showEditButton: PropTypes.bool.isRequired,
   onChange: PropTypes.func.isRequired,
   children: PropTypes.func.isRequired,
   component: PropTypes.node,
