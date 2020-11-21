@@ -9,9 +9,7 @@ import gql from 'graphql-tag'
 import { Link } from '../../lib/routes'
 import Loader from '../Loader'
 import withT from '../../lib/withT'
-import { ascending } from 'd3-array'
 import * as fragments from '../../lib/graphql/fragments'
-import { milestoneNames } from '../Repo/workflow'
 
 const timeFormat = swissTime.format('%d. %B %Y, %H:%M Uhr')
 
@@ -68,6 +66,19 @@ const styles = {
   })
 }
 
+const checklistMilestones = [
+  'startCreation',
+  'finalEditing',
+  'startCR',
+  'startProduction',
+  'startProofReading',
+  'proofReadingOk',
+  'numbersOk',
+  'imagesOk',
+  'factCheckOk',
+  'finalControl'
+]
+
 class Checklist extends Component {
   constructor(props) {
     super(props)
@@ -93,21 +104,11 @@ class Checklist extends Component {
         loading={loading}
         error={error}
         render={() => {
-          const allMilestones = milestones
-            .filter(m => !m.immutable && m.name !== 'meta')
-            .concat(
-              milestoneNames
-                .filter(name => !milestones.find(m => m.name === name))
-                .map(name => ({
-                  name
-                }))
-            )
-            .sort((a, b) =>
-              ascending(
-                milestoneNames.indexOf(a.name),
-                milestoneNames.indexOf(b.name)
-              )
-            )
+          const allMilestones = checklistMilestones.map(name => ({
+            name,
+            ...milestones.find(m => m.name === name)
+          }))
+
           return (
             <div>
               {allMilestones.map(({ name, author, commit }) => (
