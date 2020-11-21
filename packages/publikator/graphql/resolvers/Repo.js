@@ -1,5 +1,6 @@
 const uniqBy = require('lodash/uniqBy')
 const yaml = require('../../lib/yaml')
+const phases = require('../../lib/phases')
 const { descending } = require('d3-array')
 const zipArray = require('../../lib/zipArray')
 const {
@@ -143,4 +144,7 @@ module.exports = {
     const { isTemplate } = await getRepo(repo.id)
     return isTemplate
   },
+  currentPhase: async (repo, args, context) => {
+    return phases.getPhase(repo.currentPhase)
+  }
 }

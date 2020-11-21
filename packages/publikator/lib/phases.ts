@@ -2,6 +2,8 @@ const debug = require('debug')('publikator:lib:phases')
 
 interface Phase {
   key: string
+  color: string
+  lock: boolean
   tags?: string[]
   published?: boolean
   scheduled?: boolean
@@ -39,34 +41,50 @@ interface Check {
 const phases: Phase[] = [
   {
     key: 'draft',
+    color: 'Indigo',
+    lock: false,
     tags: [],
   },
   {
     key: 'creation',
+    color: 'Gold',
+    lock: false,
     tags: ['startCreation'],
   },
   {
     key: 'finalEditing',
+    color: 'Orange',
+    lock: false,
     tags: ['finalEditing'],
   },
   {
     key: 'cr',
+    color: 'Chocolate',
+    lock: false,
     tags: ['startCR'],
   },
   {
     key: 'production',
+    color: 'Tomato',
+    lock: true,
     tags: ['startProduction'],
   },
   {
     key: 'proofReading',
+    color: 'HotPink',
+    lock: true,
     tags: ['startProofReading'],
   },
   {
     key: 'finalControl',
+    color: 'Fuchsia',
+    lock: true,
     tags: ['proofReadingOk'],
   },
   {
     key: 'ready',
+    color: 'MediumSeaGreen',
+    lock: true,
     tags: [
       'proofReadingOk',
       'numbersOk',
@@ -77,11 +95,15 @@ const phases: Phase[] = [
   },
   {
     key: 'scheduled',
+    color: 'Turquoise',
+    lock: true,
     published: true,
     scheduled: true,
   },
   {
     key: 'published',
+    color: 'RoyalBlue',
+    lock: true,
     published: true,
     live: true,
   }
@@ -173,7 +195,12 @@ const getCurrentPhase = (repo: Repo) => {
   return currentPhase
 }
 
+const getPhase = (key: String) => {
+  return getPhases().find(phase => phase.key === key)
+}
+
 module.exports = {
   getPhases,
-  getCurrentPhase
+  getCurrentPhase,
+  getPhase
 }

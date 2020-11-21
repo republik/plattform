@@ -115,6 +115,7 @@ module.exports = async (__, args, context) => {
 
   const data = {
     nodes: body.hits.hits.map(client.mapHit),
+    aggregations: body.aggregations,
     totalCount: body.hits.total,
     pageInfo: {
       hasNextPage,

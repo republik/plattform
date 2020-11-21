@@ -25,8 +25,31 @@ type Repo {
   isTemplate: Boolean!
 }
 
+interface RepoPhaseInterface {
+  key: RepoPhaseKey!
+  color: String!
+  lock: Boolean!
+  label: String!
+}
+
+type RepoPhase implements RepoPhaseInterface {
+  key: RepoPhaseKey!
+  color: String!
+  lock: Boolean!
+  label: String!
+}
+
+type RepoPhaseWithCount implements RepoPhaseInterface {
+  key: RepoPhaseKey!
+  color: String!
+  lock: Boolean!
+  label: String!
+  count: Int!
+}
+
 type RepoConnection {
   nodes: [Repo]
+  phases: [RepoPhaseWithCount]
   pageInfo: PublikatorPageInfo!
   totalCount: Int!
   totalDiskUsage: Int
@@ -51,7 +74,7 @@ input RepoOrderBy {
   direction: OrderDirection!
 }
 
-enum RepoPhase {
+enum RepoPhaseKey {
 ${getPhases().map(p => p.key).join('\n')}
 }
 

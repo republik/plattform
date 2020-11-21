@@ -29,7 +29,7 @@ type queries {
     # can not be combined with orderBy
     search: String
     template: String
-    phases: [RepoPhase!]
+    phases: [RepoPhaseKey!]
     orderBy: RepoOrderBy
     isTemplate: Boolean
   ): RepoConnection!
