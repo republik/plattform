@@ -27,7 +27,6 @@ import { matchType } from 'mdast-react-render/lib/utils'
 import { renderMdast } from 'mdast-react-render'
 
 import EditMetaDate from './EditMetaDate'
-import { phases } from './workflow'
 import RepoAdd from './Add'
 import { withRouter } from 'next/router'
 
@@ -46,7 +45,7 @@ export const filterAndOrderRepos = gql`
   query repoListSearch(
     $after: String
     $search: String
-    $phases: [RepoPhase!]
+    $phases: [RepoPhaseKey!]
     $orderBy: RepoOrderBy
     $isTemplate: Boolean
   ) {
@@ -58,6 +57,11 @@ export const filterAndOrderRepos = gql`
       orderBy: $orderBy
       isTemplate: $isTemplate
     ) {
+      phases {
+        key
+        color
+        label
+      }
       totalCount
       pageInfo {
         endCursor
@@ -105,10 +109,6 @@ export const filterAndOrderRepos = gql`
             }
           }
         }
-        milestones {
-          name
-          immutable
-        }
         latestPublications {
           name
           prepublication
@@ -122,7 +122,11 @@ export const filterAndOrderRepos = gql`
             }
           }
         }
-        currentPhase
+        currentPhase {
+          key
+          color
+          label
+        }
       }
     }
   }
@@ -181,22 +185,18 @@ const orderFields = [
   }
 ]
 
-const Phase = ({ phase, onClick, disabled, t }) => {
-  const { color } = phases.find(p => p.key === phase)
-
-  return (
-    <div
-      {...styles.phase}
-      style={{
-        backgroundColor: disabled ? 'gray' : color,
-        cursor: onClick ? 'pointer' : 'default'
-      }}
-      onClick={onClick}
-    >
-      {t(`repo/phase/${phase}`, undefined, phase)}
-    </div>
-  )
-}
+const Phase = ({ phase, onClick, disabled }) => (
+  <div
+    {...styles.phase}
+    style={{
+      backgroundColor: disabled ? 'gray' : phase.color,
+      cursor: onClick ? 'pointer' : 'default'
+    }}
+    onClick={onClick}
+  >
+    {phase.label}
+  </div>
+)
 
 const PageInfo = withT(({ t, repos, loading, fetchMore }) => {
   return repos ? (
@@ -321,8 +321,6 @@ class RepoList extends Component {
       order => order.field === orderField
     )
 
-    const activeFilterPhase = phases.find(phase => phase.key === filterPhase)
-
     const orderAccessor = activeOrderField
       ? activeOrderField.accessor
       : orderFields[0].accessor
@@ -342,24 +340,20 @@ class RepoList extends Component {
           onChange={onChangeSearch}
         />
 
-        {!templates && (
+        {!templates && data.repos?.phases.length && (
           <div {...styles.filterBar}>
-            {phases.map(phase => {
-              const active =
-                activeFilterPhase && activeFilterPhase.key === phase.key
+            {data.repos?.phases.map(phase => {
+              const isActive = filterPhase && filterPhase === phase.key
+
               return (
                 <Link
                   key={phase.key}
                   route='index'
                   replace
                   scroll={false}
-                  params={getParams({ phase: active ? null : phase.key })}
+                  params={getParams({ phase: isActive ? null : phase.key })}
                 >
-                  <Phase
-                    t={t}
-                    phase={phase.key}
-                    disabled={activeFilterPhase && !active}
-                  />
+                  <Phase phase={phase} disabled={filterPhase && !isActive} />
                 </Link>
               )
             })}
@@ -483,9 +477,7 @@ class RepoList extends Component {
                           }
                         />
                       </TdNum>
-                      <Td>
-                        {!templates && <Phase t={t} phase={currentPhase} />}
-                      </Td>
+                      <Td>{!templates && <Phase phase={currentPhase} />}</Td>
                       <Td style={{ textAlign: 'right' }}>
                         {repo.latestPublications
                           .filter(
