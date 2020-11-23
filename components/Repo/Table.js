@@ -235,7 +235,8 @@ class RepoList extends Component {
     super(props)
 
     this.state = {
-      search: this.props.search
+      search: this.props.search,
+      showLoader: false
     }
 
     this.debouncedRouting = debounce(params => {
@@ -257,6 +258,16 @@ class RepoList extends Component {
         search: undefined
       })
     }
+    if (nextProps.router.query.phase !== this.props.router.query.phase) {
+      this.setState({
+        showLoader: true
+      })
+    }
+    if (this.state.showLoader && !nextProps.data.loading) {
+      this.setState({
+        showLoader: false
+      })
+    }
   }
 
   render() {
@@ -273,7 +284,7 @@ class RepoList extends Component {
 
     const { templates } = query
 
-    const { search } = this.state
+    const { search, showLoader } = this.state
 
     const getParams = ({
       field = orderField,
@@ -307,7 +318,7 @@ class RepoList extends Component {
       }
 
       this.setState(
-        { search: value },
+        { search: value, showLoader: true },
         this.debouncedRouting.bind(this, {
           templates,
           ...getParams({ q: value })
@@ -386,14 +397,15 @@ class RepoList extends Component {
             </Tr>
           </thead>
           <tbody>
-            {!(data.loading || data.error) &&
+            {!(showLoader || data.loading || data.error) &&
               data.repos &&
               data.repos.nodes.length === 0 && (
                 <Tr>
                   <Td colSpan='8'>{t('repo/search/noResults')}</Td>
                 </Tr>
               )}
-            {data.repos &&
+            {!showLoader &&
+              data.repos &&
               data.repos.nodes
                 .map(repo => ({ repo }))
                 .sort((a, b) =>
