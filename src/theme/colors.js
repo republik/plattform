@@ -165,9 +165,9 @@ const colors = {
     accentColorAudio: '#FFFFFF',
     overlayShadow: '0 0 15px rgba(0,0,0,0.3)',
     fadeOutGradientDefault:
-      'linear-gradient(0deg, rgba(31,31,31,1) 0%, rgba(31,31,31,0) 100%)',
+      'linear-gradient(0deg, rgba(25,25,25,1) 0%, rgba(25,25,25,0) 100%)',
     fadeOutGradientOverlay:
-      'linear-gradient(0deg, rgba(35,35,35,1) 0%, rgba(35,35,35,0) 100%)',
+      'linear-gradient(0deg, rgba(31,31,31,1) 0%, rgba(31,31,31,0) 100%)',
     displayLight: 'none',
     displayDark: 'block',
     sequential100: 'rgb(24, 100, 170)',
