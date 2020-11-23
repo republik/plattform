@@ -182,6 +182,26 @@ The default colors automatically adjust to the color context.
 </ColorContextProvider>
 ```
 
+And format colors are mapped:
+
+```react|react,span-3
+<ColorContextProvider colorSchemeKey='dark'>
+  <TeaserCarousel outline>
+   <TeaserSectionTitle>Empfehlungen</TeaserSectionTitle>
+    <TeaserCarouselTileContainer>
+      <TeaserCarouselTile onClick={() => console.log("click on first tile")}>
+        <TeaserCarouselFormat color='#000'>
+          Meta
+        </TeaserCarouselFormat>
+        <TeaserCarouselHeadline.Editorial>
+          Was wir mit Ihrem Geld anstellen
+        </TeaserCarouselHeadline.Editorial>
+      </TeaserCarouselTile>
+    </TeaserCarouselTileContainer>
+  </TeaserCarousel>
+</ColorContextProvider>
+```
+
 ```react|span-6,responsive
 <TeaserCarousel bgColor='#000' color='#fff' bigger>
   <TeaserSectionTitle>Serien</TeaserSectionTitle>

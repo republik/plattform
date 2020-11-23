@@ -12,8 +12,8 @@ const styles = css({
 
 const Format = ({ children, color }) => {
   const context = React.useContext(CarouselContext)
+  const mapping = context.color === defaultValue.color ? 'format' : undefined
   const textColor = color || context.color
-  const mapping = textColor === defaultValue.color ? 'format' : undefined
   const [colorScheme] = useColorContext()
   return (
     <div {...colorScheme.set('color', textColor, mapping)} {...styles}>
