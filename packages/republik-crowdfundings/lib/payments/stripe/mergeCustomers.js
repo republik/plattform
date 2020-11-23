@@ -1,6 +1,7 @@
 const getClients = require('./clients')
 const Promise = require('bluebird')
 const debug = require('debug')('crowdfundings:stripe:merge')
+const { getDefaultPaymentMethod } = require('./paymentMethod')
 
 const createMoveStripeCustomers = (pgdb) => async (fromUserId, toUserId) => {
   await pgdb.public.stripeCustomers.delete({ userId: toUserId })
@@ -81,6 +82,34 @@ module.exports = async ({
   if (hasSubscriptions(sourceCustomers)) {
     debug('only source has subscriptions, move source to target')
     return moveStripeCustomers(sourceUserId, targetUserId)
+  }
+
+  // check paymentMethods
+  const getDefaultPaymentMethods = async (customers) =>
+    Promise.map(customers, (cus) =>
+      getDefaultPaymentMethod({
+        userId: cus.userId,
+        pgdb,
+        clients,
+        acceptCachedData: true,
+      }),
+    ).then((a) => a.filter(Boolean))
+
+  const getPaymentMethodExp = (pm) =>
+    parseInt(`${pm.card.expYear}${pm.card.expMonth}`)
+
+  const sourcePMs = await getDefaultPaymentMethods(sourceStripeCustomers)
+  const targetPMs = await getDefaultPaymentMethods(targetStripeCustomers)
+  if (sourcePMs.length) {
+    if (!targetPMs.length) {
+      debug('source has paymentSources, target not, move source to target')
+      return moveStripeCustomers(sourceUserId, targetUserId)
+    }
+    // both have paymentMethods
+    if (getPaymentMethodExp(sourcePMs[0]) > getPaymentMethodExp(targetPMs[0])) {
+      debug("source's PM card expires after target's, move source to target")
+      return moveStripeCustomers(sourceUserId, targetUserId)
+    }
   }
 
   // check sources
