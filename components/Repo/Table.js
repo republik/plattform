@@ -3,7 +3,6 @@ import { css } from 'glamor'
 import { graphql, compose } from 'react-apollo'
 import gql from 'graphql-tag'
 import { descending, ascending } from 'd3-array'
-import debounce from 'lodash.debounce'
 
 import withT from '../../lib/withT'
 import { Link, Router } from '../../lib/routes'
@@ -58,11 +57,6 @@ export const filterAndOrderRepos = gql`
       orderBy: $orderBy
       isTemplate: $isTemplate
     ) {
-      phases {
-        key
-        color
-        label
-      }
       totalCount
       pageInfo {
         endCursor
@@ -130,6 +124,14 @@ export const filterAndOrderRepos = gql`
         }
       }
     }
+    phasesAgg: reposSearch(search: $search, isTemplate: false) {
+      phases {
+        key
+        color
+        label
+        count
+      }
+    }
   }
 `
 
@@ -186,16 +188,17 @@ const orderFields = [
   }
 ]
 
-const Phase = ({ phase, onClick, disabled }) => (
+const Phase = ({ phase, onClick, disabled, isActive }) => (
   <div
     {...styles.phase}
     style={{
       backgroundColor: disabled ? 'gray' : phase.color,
-      cursor: onClick ? 'pointer' : 'default'
+      cursor: onClick ? 'pointer' : 'default',
+      opacity: phase.count === 0 && !isActive ? 0.5 : 1
     }}
     onClick={onClick}
   >
-    {phase.label}
+    {phase.label} {phase.count ? `(${phase.count})` : ''}
   </div>
 )
 
@@ -292,9 +295,9 @@ const RepoList = ({
         onChange={onChangeSearch}
       />
 
-      {!templates && data.repos?.phases.length && (
+      {!templates && data.phasesAgg?.phases.length && (
         <div {...styles.filterBar}>
-          {data.repos?.phases.map(currentPhase => {
+          {data.phasesAgg?.phases.map(currentPhase => {
             const isActive = phase && phase === currentPhase.key
 
             return (
@@ -305,7 +308,11 @@ const RepoList = ({
                 scroll={false}
                 params={{ ...query, phase: isActive ? null : currentPhase.key }}
               >
-                <Phase phase={currentPhase} disabled={phase && !isActive} />
+                <Phase
+                  phase={currentPhase}
+                  disabled={phase && !isActive}
+                  isActive={isActive}
+                />
               </Link>
             )
           })}
