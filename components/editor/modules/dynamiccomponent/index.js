@@ -65,8 +65,8 @@ const DynamicComponent = ({ rule, subModules, TYPE }) => {
       type: TYPE,
       isVoid: true,
       data: {
-        src: (SG_DYNAMIC_COMPONENT_BASE_URLS || '').split(',')[0],
-        autoHtml: true
+        identifier: 'TK',
+        autoHtml: false
       }
     })
 

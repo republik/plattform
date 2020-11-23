@@ -8,7 +8,9 @@ import {
   OverlayToolbar,
   OverlayToolbarClose,
   OverlayBody,
-  mediaQueries
+  mediaQueries,
+  ColorContextProvider,
+  useColorContext
 } from '@project-r/styleguide'
 
 const previewWidth = 290
@@ -25,9 +27,6 @@ const styles = {
     }
   }),
   preview: css({
-    overflow: 'auto',
-    position: 'relative',
-    zIndex: 0,
     [mediaQueries.mUp]: {
       float: 'left',
       width: previewWidth
@@ -39,37 +38,60 @@ const styles = {
       width: `calc(100% - ${previewWidth}px)`,
       paddingLeft: 20
     }
+  }),
+  contextBackground: css({
+    position: 'relative',
+    zIndex: 0,
+    overflow: 'auto',
+    padding: '10px 15px',
+    margin: '0 -15px'
   })
 }
 
-class OverlayForm extends Component {
-  constructor(...args) {
-    super(...args)
-  }
-  render() {
-    const { onClose, preview, extra, children } = this.props
+const ContextBackground = ({ children }) => {
+  const [colorScheme] = useColorContext()
 
-    return (
-      <Overlay
-        onClose={onClose}
-        mUpStyle={{ maxWidth: '80vw', marginTop: '5vh' }}
-      >
-        <OverlayToolbar>
-          <OverlayToolbarClose onClick={onClose} />
-        </OverlayToolbar>
+  return (
+    <div
+      {...colorScheme.set('color', 'text')}
+      {...colorScheme.set('backgroundColor', 'default')}
+      {...styles.contextBackground}
+    >
+      {children}
+    </div>
+  )
+}
 
-        <OverlayBody>
-          <div {...styles.preview}>
-            {preview}
-            <br />
-            {extra}
-          </div>
-          <div {...styles.edit}>{children}</div>
-          <br style={{ clear: 'both' }} />
-        </OverlayBody>
-      </Overlay>
-    )
-  }
+const OverlayForm = props => {
+  const [colorScheme] = useColorContext()
+  const { onClose, preview, extra, children } = props
+
+  return (
+    <Overlay
+      onClose={onClose}
+      mUpStyle={{ maxWidth: '80vw', marginTop: '5vh' }}
+    >
+      <OverlayToolbar>
+        <OverlayToolbarClose onClick={onClose} />
+      </OverlayToolbar>
+
+      <OverlayBody>
+        <div {...styles.preview}>
+          <ContextBackground>{preview}</ContextBackground>
+          <br />
+          <ColorContextProvider
+            colorSchemeKey={colorScheme.schemeKey === 'dark' ? 'light' : 'dark'}
+          >
+            <ContextBackground>{preview}</ContextBackground>
+          </ColorContextProvider>
+          <br />
+          {extra}
+        </div>
+        <div {...styles.edit}>{children}</div>
+        <br style={{ clear: 'both' }} />
+      </OverlayBody>
+    </Overlay>
+  )
 }
 
 OverlayForm.propTypes = {

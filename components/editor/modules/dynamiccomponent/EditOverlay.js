@@ -193,7 +193,7 @@ const EditOverlay = props => {
     })
   }
   return (
-    <OverlayFormManager showEditButton={false} {...props} onChange={onChange}>
+    <OverlayFormManager {...props} onChange={onChange}>
       {({ data, onChange }) => (
         <Form
           data={data}
