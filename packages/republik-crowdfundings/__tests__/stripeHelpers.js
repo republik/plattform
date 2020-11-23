@@ -152,10 +152,21 @@ const createSource = async ({ total, card, ...metadata }) => {
   return source
 }
 
+const createPaymentMethod = async ({ card, ...metadata }) => {
+  const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY_COMPANY_ONE)
+  const paymentMethod = await stripe.paymentMethods.create({
+    type: 'card',
+    card,
+    metadata,
+  })
+  return paymentMethod
+}
+
 // see typesOfIntereset in webhookHandler.js
 module.exports = {
   Cards,
   createSource,
+  createPaymentMethod,
   resetCustomers,
   invoicePaymentSuccess,
   invoicePaymentFail,

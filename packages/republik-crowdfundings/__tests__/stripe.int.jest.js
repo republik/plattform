@@ -14,6 +14,7 @@ const {
 const {
   Cards,
   createSource,
+  createPaymentMethod,
   resetCustomers,
   invoicePaymentSuccess,
   chargeSuccess,
@@ -80,6 +81,35 @@ const addPaymentSource = ({
     },
   })
 }
+
+const ADD_PAYMENT_METHOD_MUTATION = `
+  mutation addPaymentMethod(
+    $stripePlatformPaymentMethodId: ID!
+    $companyId: ID!
+  ) {
+    addPaymentMethod(
+      stripePlatformPaymentMethodId: $stripePlatformPaymentMethodId
+      companyId: $companyId
+    ) {
+      stripeClientSecret
+    }
+  }
+`
+
+const addPaymentMethod = ({
+  paymentMethodId,
+  companyId,
+  apolloFetch = global.instance.apolloFetch,
+}) => {
+  return apolloFetch({
+    query: ADD_PAYMENT_METHOD_MUTATION,
+    variables: {
+      stripePlatformPaymentMethodId: paymentMethodId,
+      companyId,
+    },
+  })
+}
+
 
 describe('merge customers', () => {
   const mergeCustomers = require('../lib/payments/stripe/mergeCustomers')
@@ -360,6 +390,83 @@ describe('merge customers', () => {
     await addPaymentSource({
       sourceId: sourceTarget.id,
       pspPayload: '',
+      apolloFetch: apolloFetchTarget,
+    })
+    expect(
+      await pgdb.public.stripeCustomers
+        .find({ userId: userTarget.id })
+        .then((r) => r.length),
+    ).toBe(2)
+
+    await mergeCustomers({
+      targetUserId: userTarget.id,
+      sourceUserId: userSource.id,
+      pgdb,
+    })
+
+    expect(
+      await pgdb.public.stripeCustomers
+        .find({ userId: userSource.id })
+        .then((r) => r.length),
+    ).toBe(0)
+
+    const targetStripeCustomers = await pgdb.public.stripeCustomers.find({
+      userId: userTarget.id,
+    })
+    expect(targetStripeCustomers.length).toBe(2)
+    expect(
+      targetStripeCustomers.filter(
+        (cust) =>
+          sourceStripeCustomers.findIndex((cust2) => cust2.id === cust.id) > -1,
+      ).length,
+    ).toBe(2)
+
+    await Promise.all([
+      signOut({ apolloFetch: apolloFetchSource }),
+      signOut({ apolloFetch: apolloFetchTarget }),
+    ])
+  })
+
+  test.only("source's PaymentMethod card expires after target's, move source to target", async () => {
+    const { pgdb } = global.instance.context
+    const pmSource = await createPaymentMethod({
+      card: {
+        ...Cards.Visa,
+        exp_month: '12',
+      },
+    })
+    const pmTarget = await createPaymentMethod({
+      card: {
+        ...Cards.Visa,
+        exp_month: '11',
+      },
+    })
+
+    const { apolloFetch: apolloFetchSource } = await signIn({
+      user: userSource,
+      newCookieStore: true,
+    })
+    const { apolloFetch: apolloFetchTarget } = await signIn({
+      user: userTarget,
+      newCookieStore: true,
+    })
+
+    // platform
+    const companyId = 'c0000000-0000-0000-0001-000000000001'
+
+    await addPaymentMethod({
+      paymentMethodId: pmSource.id,
+      companyId,
+      apolloFetch: apolloFetchSource,
+    })
+    const sourceStripeCustomers = await pgdb.public.stripeCustomers.find({
+      userId: userSource.id,
+    })
+    expect(sourceStripeCustomers.length).toBe(2)
+
+    await addPaymentMethod({
+      paymentMethodId: pmTarget.id,
+      companyId,
       apolloFetch: apolloFetchTarget,
     })
     expect(
