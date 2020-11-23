@@ -18,7 +18,6 @@ const styles = {
       textAlign: 'left',
       fontWeight: 'normal',
       padding: 8,
-      borderTop: `1px solid ${colors.divider}`,
       borderBottom: `1px solid ${colors.divider}`,
       ':first-child': {
         paddingLeft: 0
@@ -63,8 +62,10 @@ const styles = {
   })
 }
 
-export const Table = ({ children }) => (
-  <table {...styles.table}>{children}</table>
+export const Table = ({ children, style }) => (
+  <table {...styles.table} style={style}>
+    {children}
+  </table>
 )
 export const Tr = ({ children }) => <tr {...styles.tr}>{children}</tr>
 export const Th = ({ children, style }) => (

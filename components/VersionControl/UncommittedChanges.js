@@ -26,7 +26,6 @@ import OfflineIcon from 'react-icons/lib/md/signal-wifi-off' // portable-wifi-of
 import createDebug from 'debug'
 
 import { getMilestones } from './Checklist'
-import { lockAfterMilestones } from '../Repo/workflow'
 
 import { parseJSONObject } from '../../lib/safeJSON'
 
@@ -41,6 +40,9 @@ const getUncommittedChanges = gql`
         id
         email
         name
+      }
+      currentPhase {
+        lock
       }
     }
   }
@@ -146,23 +148,15 @@ export const withUncommitedChanges = ({ options } = {}) => WrappedComponent => {
     render() {
       const {
         data: { loading, error, repo },
-        milestones,
         me,
         ownProps
       } = this.props
 
       const users = [].concat((repo && repo.uncommittedChanges) || [])
 
-      const reachedLockPhase =
-        milestones &&
-        milestones.find(m => lockAfterMilestones.indexOf(m.name) !== -1)
+      const isLocked = repo && repo.currentPhase.lock
       const meIsProducer = me && me.roles.find(role => role === 'producer')
-      if (
-        reachedLockPhase &&
-        !meIsProducer &&
-        ghostProducer &&
-        ghostProducer.id
-      ) {
+      if (isLocked && !meIsProducer && ghostProducer.id) {
         users.push(ghostProducer)
       }
 
@@ -196,7 +190,7 @@ export const withUncommitedChanges = ({ options } = {}) => WrappedComponent => {
       options: props => ({
         fetchPolicy: 'network-only',
         pollInterval: UNCOMMITTED_CHANGES_POLL_INTERVAL_MS,
-        variables: props,
+        variables: { repoId: props.repoId },
         ...(typeof options === 'function' ? options(props) : options)
       }),
       props: ({ data, ownProps }) => {
