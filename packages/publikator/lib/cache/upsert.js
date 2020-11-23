@@ -249,7 +249,7 @@ const upsert = async (
     ...getCurrentPhase(partialDoc, doc)
   }
 
-  debug('upsert', id, partialDoc)
+  debug('upsert', id)
 
   await elastic.update({
     ...getPath(id),
