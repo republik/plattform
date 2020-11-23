@@ -115,11 +115,11 @@ const styles = {
   long: css({
     display: 'none',
     [mUp]: {
-      display: 'initial'
+      display: 'inline'
     }
   }),
   short: css({
-    display: 'initial',
+    display: 'inline',
     [mUp]: {
       display: 'none'
     }
