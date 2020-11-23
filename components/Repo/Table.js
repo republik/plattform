@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { useState, useEffect } from 'react'
 import { css } from 'glamor'
 import { graphql, compose } from 'react-apollo'
 import gql from 'graphql-tag'
@@ -29,6 +29,7 @@ import { renderMdast } from 'mdast-react-render'
 import EditMetaDate from './EditMetaDate'
 import RepoAdd from './Add'
 import { withRouter } from 'next/router'
+import { useDebounce } from '@project-r/styleguide/lib/lib/useDebounce'
 
 export const editRepoMeta = gql`
   mutation editRepoMeta($repoId: ID!, $publishDate: DateTime) {
@@ -230,348 +231,271 @@ const PageInfo = withT(({ t, repos, loading, fetchMore }) => {
 
 const SEARCH_MIN_LENGTH = 3
 
-class RepoList extends Component {
-  constructor(props) {
-    super(props)
+const RepoList = ({
+  t,
+  data = {},
+  router: { query = {} },
+  editRepoMeta,
+  fetchMore
+}) => {
+  const [showLoader, setLoader] = useState(false)
+  const [search, setSearch] = useState(query.q)
+  const [slowParams] = useDebounce({ ...query, q: search || null }, 500)
 
-    this.state = {
-      search: this.props.search,
-      showLoader: false
-    }
+  useEffect(() => {
+    Router.replaceRoute('index', slowParams)
+  }, [slowParams])
 
-    this.debouncedRouting = debounce(params => {
-      Router.replaceRoute('index', params)
-    }, 500)
-  }
+  useEffect(() => {
+    setLoader(true)
+  }, [query.q, query.phase])
 
-  componentWillUnmount() {
-    if (this.debouncedRouting && this.debouncedRouting.cancel) {
-      this.debouncedRouting.cancel()
-    }
-  }
+  useEffect(() => {
+    if (showLoader && !data.loading) setLoader(false)
+  }, [data.loading])
 
-  UNSAFE_componentWillReceiveProps(nextProps) {
-    if (
-      nextProps.router.query.templates !== this.props.router.query.templates
-    ) {
-      this.setState({
-        search: undefined
-      })
-    }
-    if (nextProps.router.query.phase !== this.props.router.query.phase) {
-      this.setState({
-        showLoader: true
-      })
-    }
-    if (this.state.showLoader && !nextProps.data.loading) {
-      this.setState({
-        showLoader: false
-      })
-    }
-  }
+  const { q, phase, templates, orderBy = '' } = query
 
-  render() {
-    const {
-      t,
-      data = {},
-      orderField,
-      orderDirection,
-      phase: filterPhase,
-      editRepoMeta,
-      fetchMore,
-      router: { query }
-    } = this.props
+  const [orderField, orderDirection] = orderBy.split('-').filter(Boolean)
+  const orderCompare = orderDirection === 'DESC' ? descending : ascending
 
-    const { templates } = query
+  const getOrder = ({ field, order = false }) =>
+    [
+      field,
+      orderField === field && order
+        ? orderDirection === 'DESC'
+          ? 'ASC'
+          : 'DESC'
+        : orderDirection
+    ].join('-')
 
-    const { search, showLoader } = this.state
+  const onChangeSearch = (_, value) => setSearch(value)
 
-    const getParams = ({
-      field = orderField,
-      phase = filterPhase,
-      q = search,
-      order = false
-    }) => {
-      const params = {
-        orderBy: [
-          field,
-          orderField === field && order
-            ? orderDirection === 'DESC'
-              ? 'ASC'
-              : 'DESC'
-            : orderDirection
-        ].join('-')
-      }
-      if (phase) {
-        params.phase = phase
-      }
-      if (q) {
-        params.q = q
-      }
+  const activeOrderField = orderFields.find(order => order.field === orderField)
 
-      return params
-    }
+  const orderAccessor = activeOrderField
+    ? activeOrderField.accessor
+    : orderFields[0].accessor
 
-    const onChangeSearch = (_, value) => {
-      if (this.debouncedRouting && this.debouncedRouting.cancel) {
-        this.debouncedRouting.cancel()
-      }
+  return (
+    <div {...styles.container}>
+      <RepoAdd isTemplate={templates} />
 
-      this.setState(
-        { search: value, showLoader: true },
-        this.debouncedRouting.bind(this, {
-          templates,
-          ...getParams({ q: value })
-        })
-      )
-    }
+      <Field
+        label={t('repo/search/field/label')}
+        value={search}
+        error={
+          q &&
+          q.length < SEARCH_MIN_LENGTH &&
+          t('repo/search/field/minLength', { count: SEARCH_MIN_LENGTH })
+        }
+        onChange={onChangeSearch}
+      />
 
-    const orderCompare = orderDirection === 'DESC' ? descending : ascending
+      {!templates && data.repos?.phases.length && (
+        <div {...styles.filterBar}>
+          {data.repos?.phases.map(currentPhase => {
+            const isActive = phase && phase === currentPhase.key
 
-    const activeOrderField = orderFields.find(
-      order => order.field === orderField
-    )
+            return (
+              <Link
+                key={currentPhase.key}
+                route='index'
+                replace
+                scroll={false}
+                params={{ ...query, phase: isActive ? null : currentPhase.key }}
+              >
+                <Phase phase={currentPhase} disabled={phase && !isActive} />
+              </Link>
+            )
+          })}
+        </div>
+      )}
 
-    const orderAccessor = activeOrderField
-      ? activeOrderField.accessor
-      : orderFields[0].accessor
+      <Table style={{ marginTop: templates && -15 }}>
+        <thead>
+          <Tr>
+            <Th style={{ width: '28%' }}>{t('repo/table/col/title')}</Th>
+            <Th style={{ width: '20%' }}>{t('repo/table/col/credits')}</Th>
+            {orderFields.map(({ field, width }) => (
+              <ThOrder
+                key={field}
+                route='index'
+                params={{ ...query, orderBy: getOrder({ field, order: true }) }}
+                activeDirection={orderDirection}
+                activeField={orderField}
+                field={field}
+                style={{ width }}
+              >
+                {t(`repo/table/col/${field}`, undefined, field)}
+              </ThOrder>
+            ))}
+            <Th style={{ width: '10%' }}>
+              {!templates ? t('repo/table/col/phase') : ''}
+            </Th>
 
-    return (
-      <div {...styles.container}>
-        <RepoAdd isTemplate={templates} />
-
-        <Field
-          label={t('repo/search/field/label')}
-          value={search}
-          error={
-            search &&
-            search.length < SEARCH_MIN_LENGTH &&
-            t('repo/search/field/minLength', { count: SEARCH_MIN_LENGTH })
-          }
-          onChange={onChangeSearch}
-        />
-
-        {!templates && data.repos?.phases.length && (
-          <div {...styles.filterBar}>
-            {data.repos?.phases.map(phase => {
-              const isActive = filterPhase && filterPhase === phase.key
-
-              return (
-                <Link
-                  key={phase.key}
-                  route='index'
-                  replace
-                  scroll={false}
-                  params={getParams({ phase: isActive ? null : phase.key })}
-                >
-                  <Phase phase={phase} disabled={filterPhase && !isActive} />
-                </Link>
-              )
-            })}
-          </div>
-        )}
-
-        <Table style={{ marginTop: templates && -15 }}>
-          <thead>
-            <Tr>
-              <Th style={{ width: '28%' }}>{t('repo/table/col/title')}</Th>
-              <Th style={{ width: '20%' }}>{t('repo/table/col/credits')}</Th>
-              {orderFields.map(({ field, width }) => (
-                <ThOrder
-                  key={field}
-                  route='index'
-                  params={getParams({ field, order: true })}
-                  activeDirection={orderDirection}
-                  activeField={orderField}
-                  field={field}
-                  style={{ width }}
-                >
-                  {t(`repo/table/col/${field}`, undefined, field)}
-                </ThOrder>
-              ))}
-              <Th style={{ width: '10%' }}>
-                {!templates ? t('repo/table/col/phase') : ''}
-              </Th>
-
-              <Th style={{ width: 70 }} />
-            </Tr>
-          </thead>
-          <tbody>
-            {!(showLoader || data.loading || data.error) &&
-              data.repos &&
-              data.repos.nodes.length === 0 && (
-                <Tr>
-                  <Td colSpan='8'>{t('repo/search/noResults')}</Td>
-                </Tr>
-              )}
-            {!showLoader &&
-              data.repos &&
-              data.repos.nodes
-                .map(repo => ({ repo }))
-                .sort((a, b) =>
-                  orderCompare(orderAccessor(a.repo), orderAccessor(b.repo))
-                )
-                .map(({ repo }) => {
-                  const {
-                    id,
-                    meta: { publishDate },
-                    latestCommit: {
-                      date,
-                      author: { name: authorName },
-                      message,
-                      document: { meta }
-                    },
-                    currentPhase
-                  } = repo
-
-                  const label =
-                    (meta.series && meta.series.title) ||
-                    (meta.section &&
-                      meta.section.meta &&
-                      meta.section.meta.title) ||
-                    (meta.format &&
-                      meta.format.meta &&
-                      meta.format.meta.title) ||
-                    (meta.dossier &&
-                      meta.dossier.meta &&
-                      meta.dossier.meta.title) ||
-                    (meta.template !== 'article' &&
-                      t(
-                        `repo/add/template/${meta.template}`,
-                        null,
-                        meta.template
-                      ))
-
-                  return (
-                    <Tr key={id}>
-                      <Td>
-                        {label && (
-                          <>
-                            <Label>{label}</Label>
-                            <br />
-                          </>
-                        )}
-                        <Link
-                          route='repo/tree'
-                          params={{ repoId: id.split('/') }}
-                        >
-                          <a {...linkRule} title={id}>
-                            {meta.title ||
-                              id.replace(
-                                [GITHUB_ORG, REPO_PREFIX || ''].join('/'),
-                                ''
-                              )}
-                          </a>
-                        </Link>
-                      </Td>
-                      <Td>
-                        {meta.credits &&
-                          intersperse(
-                            renderMdast(
-                              meta.credits.filter(link.matchMdast),
-                              creditSchema
-                            ),
-                            () => ', '
-                          )}
-                      </Td>
-                      <TdNum>
-                        {displayDateTime(date)}
-                        <br />
-                        <Label>
-                          {authorName}: «{message}»
-                        </Label>
-                      </TdNum>
-                      <TdNum>
-                        <EditMetaDate
-                          value={publishDate}
-                          onChange={value =>
-                            editRepoMeta({ repoId: id, publishDate: value })
-                          }
-                        />
-                      </TdNum>
-                      <Td>{!templates && <Phase phase={currentPhase} />}</Td>
-                      <Td style={{ textAlign: 'right' }}>
-                        {repo.latestPublications
-                          .filter(
-                            publication =>
-                              publication.document && publication.prepublication
-                          )
-                          .map(
-                            ({
-                              name,
-                              document: {
-                                meta: { path, slug }
-                              }
-                            }) => (
-                              <a
-                                key={name}
-                                href={`${FRONTEND_BASE_URL}${path ||
-                                  '/' + slug}`}
-                              >
-                                <LockIcon color={colors.primary} />
-                              </a>
-                            )
-                          )}{' '}
-                        {repo.latestPublications
-                          .filter(
-                            publication =>
-                              publication.document &&
-                              !publication.prepublication &&
-                              publication.live
-                          )
-                          .map(
-                            ({
-                              name,
-                              document: {
-                                meta: { path, slug }
-                              }
-                            }) => (
-                              <a
-                                key={name}
-                                href={`${FRONTEND_BASE_URL}${path ||
-                                  '/' + slug}`}
-                              >
-                                <PublicIcon color={colors.primary} />
-                              </a>
-                            )
-                          )}{' '}
-                        <a href={`https://github.com/${id}`}>
-                          <GithubIcon color={colors.primary} />
-                        </a>
-                      </Td>
-                    </Tr>
-                  )
-                })}
-            {(data.loading || data.error) && (
-              <tr>
-                <td colSpan='8'>
-                  <Loader loading={data.loading} error={data.error} />
-                </td>
-              </tr>
+            <Th style={{ width: 70 }} />
+          </Tr>
+        </thead>
+        <tbody>
+          {!(showLoader || data.loading || data.error) &&
+            data.repos &&
+            data.repos.nodes.length === 0 && (
+              <Tr>
+                <Td colSpan='8'>{t('repo/search/noResults')}</Td>
+              </Tr>
             )}
-          </tbody>
-        </Table>
-        <PageInfo
-          repos={data.repos}
-          loading={data.loading}
-          fetchMore={fetchMore}
-        />
-      </div>
-    )
-  }
+          {!showLoader &&
+            data.repos &&
+            data.repos.nodes
+              .map(repo => ({ repo }))
+              .sort((a, b) =>
+                orderCompare(orderAccessor(a.repo), orderAccessor(b.repo))
+              )
+              .map(({ repo }) => {
+                const {
+                  id,
+                  meta: { publishDate },
+                  latestCommit: {
+                    date,
+                    author: { name: authorName },
+                    message,
+                    document: { meta }
+                  },
+                  currentPhase
+                } = repo
+
+                const label =
+                  (meta.series && meta.series.title) ||
+                  (meta.section &&
+                    meta.section.meta &&
+                    meta.section.meta.title) ||
+                  (meta.format && meta.format.meta && meta.format.meta.title) ||
+                  (meta.dossier &&
+                    meta.dossier.meta &&
+                    meta.dossier.meta.title) ||
+                  (meta.template !== 'article' &&
+                    t(
+                      `repo/add/template/${meta.template}`,
+                      null,
+                      meta.template
+                    ))
+
+                return (
+                  <Tr key={id}>
+                    <Td>
+                      {label && (
+                        <>
+                          <Label>{label}</Label>
+                          <br />
+                        </>
+                      )}
+                      <Link
+                        route='repo/tree'
+                        params={{ repoId: id.split('/') }}
+                      >
+                        <a {...linkRule} title={id}>
+                          {meta.title ||
+                            id.replace(
+                              [GITHUB_ORG, REPO_PREFIX || ''].join('/'),
+                              ''
+                            )}
+                        </a>
+                      </Link>
+                    </Td>
+                    <Td>
+                      {meta.credits &&
+                        intersperse(
+                          renderMdast(
+                            meta.credits.filter(link.matchMdast),
+                            creditSchema
+                          ),
+                          () => ', '
+                        )}
+                    </Td>
+                    <TdNum>
+                      {displayDateTime(date)}
+                      <br />
+                      <Label>
+                        {authorName}: «{message}»
+                      </Label>
+                    </TdNum>
+                    <TdNum>
+                      <EditMetaDate
+                        value={publishDate}
+                        onChange={value =>
+                          editRepoMeta({ repoId: id, publishDate: value })
+                        }
+                      />
+                    </TdNum>
+                    <Td>{!templates && <Phase phase={currentPhase} />}</Td>
+                    <Td style={{ textAlign: 'right' }}>
+                      {repo.latestPublications
+                        .filter(
+                          publication =>
+                            publication.document && publication.prepublication
+                        )
+                        .map(({ name, document: { meta: { path, slug } } }) => (
+                          <a
+                            key={name}
+                            href={`${FRONTEND_BASE_URL}${path || '/' + slug}`}
+                          >
+                            <LockIcon color={colors.primary} />
+                          </a>
+                        ))}{' '}
+                      {repo.latestPublications
+                        .filter(
+                          publication =>
+                            publication.document &&
+                            !publication.prepublication &&
+                            publication.live
+                        )
+                        .map(({ name, document: { meta: { path, slug } } }) => (
+                          <a
+                            key={name}
+                            href={`${FRONTEND_BASE_URL}${path || '/' + slug}`}
+                          >
+                            <PublicIcon color={colors.primary} />
+                          </a>
+                        ))}{' '}
+                      <a href={`https://github.com/${id}`}>
+                        <GithubIcon color={colors.primary} />
+                      </a>
+                    </Td>
+                  </Tr>
+                )
+              })}
+          {(data.loading || data.error) && (
+            <tr>
+              <td colSpan='8'>
+                <Loader loading={data.loading} error={data.error} />
+              </td>
+            </tr>
+          )}
+        </tbody>
+      </Table>
+      <PageInfo
+        repos={data.repos}
+        loading={data.loading}
+        fetchMore={fetchMore}
+      />
+    </div>
+  )
 }
 
 const RepoListWithQuery = compose(
   withT,
   withRouter,
   graphql(filterAndOrderRepos, {
-    options: ({ search, router }) => ({
+    options: ({ router }) => ({
       fetchPolicy: 'cache-and-network',
       ssr: false,
       notifyOnNetworkStatusChange: true,
       variables: {
         search:
-          search && search.length >= SEARCH_MIN_LENGTH ? search : undefined,
+          router.query?.q && router.query.q.length >= SEARCH_MIN_LENGTH
+            ? router.query.q
+            : undefined,
         orderBy: { field: 'PUSHED_AT', direction: 'DESC' },
         isTemplate: !!router.query.templates,
         ...(router.query?.phase && { phases: [router.query.phase] })

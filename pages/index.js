@@ -28,14 +28,14 @@ const IndexNav = compose(
     <span>
       <IndexNavLink
         route='index'
-        params={{}}
+        params={{ ...query, templates: null }}
         label={t('repo/table/nav/documents')}
         isActive={!onTemplates}
       />
       <span>&nbsp;</span>
       <IndexNavLink
         route='index'
-        params={{ templates: true }}
+        params={{ ...query, templates: true, phase: null }}
         label={t('repo/table/nav/templates')}
         isActive={onTemplates}
       />
@@ -44,9 +44,6 @@ const IndexNav = compose(
 })
 
 const Index = ({ router: { query } }) => {
-  const [orderField, orderDirection] = (query.orderBy || '')
-    .split('-')
-    .filter(Boolean)
   return (
     <Frame>
       <Frame.Header isTemplate={!!query.templates}>
@@ -60,12 +57,7 @@ const Index = ({ router: { query } }) => {
         </Frame.Header.Section>
       </Frame.Header>
       <Frame.Body raw>
-        <RepoTable
-          orderField={orderField}
-          orderDirection={orderDirection}
-          phase={query.phase}
-          search={query.q}
-        />
+        <RepoTable />
       </Frame.Body>
     </Frame>
   )
