@@ -1881,6 +1881,46 @@
     {
       "key": "api/email/payment/reminder/last/BENEFACTOR/subject",
       "value": "LETZTE MAHNUNG Republik-Mitgliedschaft"
+    },
+    {
+      "key": "api/repo/phase/draft",
+      "value": "Entwurf"
+    },
+    {
+      "key": "api/repo/phase/creation",
+      "value": "Peer"
+    },
+    {
+      "key": "api/repo/phase/finalEditing",
+      "value": "Abschlussredaktion"
+    },
+    {
+      "key": "api/repo/phase/cr",
+      "value": "CR"
+    },
+    {
+      "key": "api/repo/phase/production",
+      "value": "Produktion"
+    },
+    {
+      "key": "api/repo/phase/proofReading",
+      "value": "Korrektorat"
+    },
+    {
+      "key": "api/repo/phase/finalControl",
+      "value": "Endkontrolle"
+    },
+    {
+      "key": "api/repo/phase/ready",
+      "value": "Ready"
+    },
+    {
+      "key": "api/repo/phase/scheduled",
+      "value": "Terminiert"
+    },
+    {
+      "key": "api/repo/phase/published",
+      "value": "Publiziert"
     }
   ]
 }
