@@ -3,6 +3,7 @@ import { css } from 'glamor'
 import { graphql, compose } from 'react-apollo'
 import gql from 'graphql-tag'
 import { descending, ascending } from 'd3-array'
+import debounce from 'lodash.debounce'
 
 import withT from '../../lib/withT'
 import { Link, Router } from '../../lib/routes'
@@ -28,7 +29,6 @@ import { renderMdast } from 'mdast-react-render'
 import EditMetaDate from './EditMetaDate'
 import RepoAdd from './Add'
 import { withRouter } from 'next/router'
-import { useDebounce } from '@project-r/styleguide/lib/lib/useDebounce'
 
 export const editRepoMeta = gql`
   mutation editRepoMeta($repoId: ID!, $publishDate: DateTime) {
@@ -243,11 +243,21 @@ const RepoList = ({
 }) => {
   const [showLoader, setLoader] = useState(false)
   const [search, setSearch] = useState(query.q)
-  const [slowParams] = useDebounce({ ...query, q: search || null }, 500)
+  const [debouncedRouting, setDebouncedRouting] = useState()
 
   useEffect(() => {
-    Router.replaceRoute('index', slowParams)
-  }, [slowParams])
+    if (debouncedRouting && debouncedRouting.cancel) {
+      debouncedRouting.cancel()
+    }
+    setDebouncedRouting(
+      debounce(() => {
+        Router.replaceRoute('index', { ...query, q: search || null })
+      }, 500)
+    )
+    return (
+      debouncedRouting && debouncedRouting.cancel && debouncedRouting.cancel()
+    )
+  }, [search])
 
   useEffect(() => {
     setLoader(true)
@@ -257,15 +267,20 @@ const RepoList = ({
     if (showLoader && !data.loading) setLoader(false)
   }, [data.loading])
 
-  const { q, phase, templates, orderBy = '' } = query
+  const {
+    q,
+    phase,
+    templates,
+    orderBy = `${orderFields[0].field}-DESC`
+  } = query
 
   const [orderField, orderDirection] = orderBy.split('-').filter(Boolean)
   const orderCompare = orderDirection === 'DESC' ? descending : ascending
 
-  const getOrder = ({ field, order = false }) =>
+  const getOrder = field =>
     [
       field,
-      orderField === field && order
+      orderField === field
         ? orderDirection === 'DESC'
           ? 'ASC'
           : 'DESC'
@@ -328,7 +343,7 @@ const RepoList = ({
               <ThOrder
                 key={field}
                 route='index'
-                params={{ ...query, orderBy: getOrder({ field, order: true }) }}
+                params={{ ...query, orderBy: getOrder(field) }}
                 activeDirection={orderDirection}
                 activeField={orderField}
                 field={field}
@@ -549,10 +564,5 @@ const RepoListWithQuery = compose(
     })
   })
 )(RepoList)
-
-RepoListWithQuery.defaultProps = {
-  orderField: orderFields[0].field,
-  orderDirection: 'DESC'
-}
 
 export default RepoListWithQuery
