@@ -3,8 +3,13 @@ const _ = {
 }
 const { STRIPE_PLATFORM, STRIPE_CONNECTED_ACCOUNTS } = process.env
 
-// TODO cache in memory
+let cache
+
 module.exports = async (pgdb) => {
+  if (cache) {
+    return cache
+  }
+
   const accountNames = [
     STRIPE_PLATFORM,
     ...(STRIPE_CONNECTED_ACCOUNTS || '').split(','),
@@ -58,7 +63,7 @@ module.exports = async (pgdb) => {
     }
   })
 
-  return {
+  cache = {
     platform: accounts.find((a) => a.name === STRIPE_PLATFORM),
     connectedAccounts: accounts.filter((a) => a.name !== STRIPE_PLATFORM),
     accounts,
@@ -69,4 +74,5 @@ module.exports = async (pgdb) => {
     companyIdForAccountId: (accountId) =>
       accounts.find((a) => a.accountId === accountId)?.company.id,
   }
+  return cache
 }
