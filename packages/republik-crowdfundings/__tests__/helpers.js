@@ -86,6 +86,9 @@ const PAY_PLEDGE_MUTATION = `
       pledgeId
       userId
       emailVerify
+      stripeClientSecret
+      stripePaymentIntentId
+      companyId
     }
   }
 `
@@ -318,6 +321,140 @@ const checkSeed = async () => {
   })
 }
 
+const ADD_PAYMENT_SOURCE_MUTATION = `
+  mutation addPaymentSource($sourceId: String!, $pspPayload: JSON!) {
+    addPaymentSource(sourceId: $sourceId, pspPayload: $pspPayload) {
+      isDefault
+      status
+      brand
+      expMonth
+      expYear
+    }
+  }
+`
+
+const addPaymentSource = ({
+  sourceId,
+  pspPayload,
+  apolloFetch = global.instance.apolloFetch,
+}) => {
+  return apolloFetch({
+    query: ADD_PAYMENT_SOURCE_MUTATION,
+    variables: {
+      sourceId,
+      pspPayload,
+    },
+  })
+}
+
+const ADD_PAYMENT_METHOD_MUTATION = `
+  mutation addPaymentMethod(
+    $stripePlatformPaymentMethodId: ID!
+    $companyId: ID!
+  ) {
+    addPaymentMethod(
+      stripePlatformPaymentMethodId: $stripePlatformPaymentMethodId
+      companyId: $companyId
+    ) {
+      stripeClientSecret
+    }
+  }
+`
+
+const addPaymentMethod = ({
+  paymentMethodId,
+  companyId,
+  apolloFetch = global.instance.apolloFetch,
+}) => {
+  return apolloFetch({
+    query: ADD_PAYMENT_METHOD_MUTATION,
+    variables: {
+      stripePlatformPaymentMethodId: paymentMethodId,
+      companyId,
+    },
+  })
+}
+
+const DEFAULT_PAYMENT_SOURCE_QUERY = `
+  query defaultPaymentSource {
+    me {
+      id
+      defaultPaymentSource {
+        id
+        isDefault
+        brand
+        last4
+        expMonth
+        expYear
+        isExpired
+      }
+    }
+  }
+`
+
+const getDefaultPaymentSource = ({
+  apolloFetch = global.instance.apolloFetch,
+} = {}) => {
+  return apolloFetch({
+    query: DEFAULT_PAYMENT_SOURCE_QUERY,
+  })
+}
+
+const SET_DEFAULT_PAYMENT_METHOD_QUERY = `
+  mutation setDefaultPaymentMethod($stripePlatformPaymentMethodId: ID!) {
+    setDefaultPaymentMethod(
+      stripePlatformPaymentMethodId: $stripePlatformPaymentMethodId
+    ) {
+      id
+      isDefault
+      brand
+      last4
+      expMonth
+      expYear
+      isExpired
+    }
+  }
+`
+
+const setDefaultPaymentMethod = ({
+  paymentMethodId,
+  apolloFetch = global.instance.apolloFetch,
+}) => {
+  return apolloFetch({
+    query: SET_DEFAULT_PAYMENT_METHOD_QUERY,
+    variables: {
+      stripePlatformPaymentMethodId: paymentMethodId,
+    },
+  })
+}
+
+const SYNC_PAYMENT_INTENT_QUERY = `
+  mutation syncPaymentIntent($stripePaymentIntentId: ID!, $companyId: ID!) {
+    syncPaymentIntent(
+      stripePaymentIntentId: $stripePaymentIntentId
+      companyId: $companyId
+    ) {
+      pledgeStatus
+      updatedPledge
+    }
+  }
+`
+
+const syncPaymentIntent = ({
+  paymentIntentId,
+  companyId,
+  apolloFetch = global.instance.apolloFetch,
+}) => {
+  return apolloFetch({
+    query: SYNC_PAYMENT_INTENT_QUERY,
+    variables: {
+      stripePaymentIntentId: paymentIntentId,
+      companyId,
+    },
+  })
+}
+
+
 module.exports = {
   prepareNewPledge,
   submitPledge,
@@ -325,4 +462,9 @@ module.exports = {
   payPledge,
   cancelPledge,
   checkSeed,
+  addPaymentSource,
+  addPaymentMethod,
+  getDefaultPaymentSource,
+  setDefaultPaymentMethod,
+  syncPaymentIntent
 }

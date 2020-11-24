@@ -7,7 +7,7 @@ const customerSubscription = require('../lib/payments/stripe/webhooks/customerSu
 const t = (text) => text
 
 const invoicePaymentSuccess = async (
-  { chargeId },
+  { chargeId, paymentIntentId },
   pgdb, context, companyId
 ) => {
   const event = {
@@ -15,6 +15,7 @@ const invoicePaymentSuccess = async (
     data: {
       object: {
         charge: chargeId,
+        payment_intent: paymentIntentId
       },
     },
   }
@@ -135,6 +136,24 @@ const Cards = {
     number: '4000000000000259',
     cvc: '105',
     exp_month: '12',
+    exp_year: '2025',
+  },
+  AuthNever: {
+    number: '378282246310005',
+    cvc: '111',
+    exp_month: '01',
+    exp_year: '2025',
+  },
+  AuthFirst: {
+    number: '4000002500003155',
+    cvc: '112',
+    exp_month: '02',
+    exp_year: '2025',
+  },
+  AuthAlways: {
+    number: '4000002760003184',
+    cvc: '113',
+    exp_month: '02',
     exp_year: '2025',
   },
 }

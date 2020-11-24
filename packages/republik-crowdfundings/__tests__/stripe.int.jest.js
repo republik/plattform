@@ -1,4 +1,5 @@
 const { Instance } = require('@orbiting/backend-modules-test')
+const sleep = require('await-sleep')
 
 // hardcoded to not accidentally empty prod
 process.env.STRIPE_PLATFORM = 'COMPANY_ONE'
@@ -27,6 +28,11 @@ const {
   PAYMENT_METHODS,
   payPledge,
   checkSeed,
+  addPaymentSource,
+  addPaymentMethod,
+  getDefaultPaymentSource,
+  setDefaultPaymentMethod,
+  syncPaymentIntent
 } = require('./helpers')
 const seedCrowdfundings = require('../seeds/seedCrowdfundings')
 
@@ -56,60 +62,7 @@ beforeEach(async () => {
 const pgDatabase = () => global.instance.context.pgdb
 const i18n = (arg) => global.instance.context.t(arg)
 
-const ADD_PAYMENT_SOURCE_MUTATION = `
-  mutation addPaymentSource($sourceId: String!, $pspPayload: JSON!) {
-    addPaymentSource(sourceId: $sourceId, pspPayload: $pspPayload) {
-      isDefault
-      status
-      brand
-      expMonth
-      expYear
-    }
-  }
-`
-
-const addPaymentSource = ({
-  sourceId,
-  pspPayload,
-  apolloFetch = global.instance.apolloFetch,
-}) => {
-  return apolloFetch({
-    query: ADD_PAYMENT_SOURCE_MUTATION,
-    variables: {
-      sourceId,
-      pspPayload,
-    },
-  })
-}
-
-const ADD_PAYMENT_METHOD_MUTATION = `
-  mutation addPaymentMethod(
-    $stripePlatformPaymentMethodId: ID!
-    $companyId: ID!
-  ) {
-    addPaymentMethod(
-      stripePlatformPaymentMethodId: $stripePlatformPaymentMethodId
-      companyId: $companyId
-    ) {
-      stripeClientSecret
-    }
-  }
-`
-
-const addPaymentMethod = ({
-  paymentMethodId,
-  companyId,
-  apolloFetch = global.instance.apolloFetch,
-}) => {
-  return apolloFetch({
-    query: ADD_PAYMENT_METHOD_MUTATION,
-    variables: {
-      stripePlatformPaymentMethodId: paymentMethodId,
-      companyId,
-    },
-  })
-}
-
+const PLATFORM_COMPANY_ID = 'c0000000-0000-0000-0001-000000000001'
 
 describe('merge customers', () => {
   const mergeCustomers = require('../lib/payments/stripe/mergeCustomers')
@@ -129,7 +82,7 @@ describe('merge customers', () => {
       newCookieStore: true,
     })
 
-    const result = await addPaymentSource({
+    await addPaymentSource({
       sourceId: source.id,
       pspPayload: '',
       apolloFetch: apolloFetchTarget,
@@ -182,7 +135,7 @@ describe('merge customers', () => {
       newCookieStore: true,
     })
 
-    const result = await addPaymentSource({
+    await addPaymentSource({
       sourceId: source.id,
       pspPayload: '',
       apolloFetch: apolloFetchSource,
@@ -427,7 +380,7 @@ describe('merge customers', () => {
     ])
   })
 
-  test.only("source's PaymentMethod card expires after target's, move source to target", async () => {
+  test("source's PaymentMethod card expires after target's, move source to target", async () => {
     const { pgdb } = global.instance.context
     const pmSource = await createPaymentMethod({
       card: {
@@ -451,12 +404,9 @@ describe('merge customers', () => {
       newCookieStore: true,
     })
 
-    // platform
-    const companyId = 'c0000000-0000-0000-0001-000000000001'
-
     await addPaymentMethod({
       paymentMethodId: pmSource.id,
-      companyId,
+      companyId: PLATFORM_COMPANY_ID,
       apolloFetch: apolloFetchSource,
     })
     const sourceStripeCustomers = await pgdb.public.stripeCustomers.find({
@@ -466,7 +416,7 @@ describe('merge customers', () => {
 
     await addPaymentMethod({
       paymentMethodId: pmTarget.id,
-      companyId,
+      companyId: PLATFORM_COMPANY_ID,
       apolloFetch: apolloFetchTarget,
     })
     expect(
@@ -658,7 +608,282 @@ describe('addPaymentSource', () => {
   })
 })
 
-describe('payPledge', () => {
+describe('addPaymentMethod', () => {
+  test('adding a paymentMethod as anonymous', async () => {
+    await signIn({ user: Users.Anonymous })
+    const pm = await createPaymentMethod({ card: Cards.Visa })
+    const result = await addPaymentMethod({
+      paymentMethodId: pm.id,
+      companyId: PLATFORM_COMPANY_ID,
+    })
+    expect(result.errors[0].message).toBe(i18n('api/signIn'))
+    await signOut()
+  })
+
+  // confirmCardSetup is not possible in nodeJS
+  test('adding a paymentMethod', async () => {
+    await signIn({ user: Users.Member })
+    const pm = await createPaymentMethod({ card: Cards.Visa })
+    const result = await addPaymentMethod({
+      paymentMethodId: pm.id,
+      companyId: PLATFORM_COMPANY_ID,
+    })
+    expect(result.errors).toBeFalsy()
+    expect(result.data?.addPaymentMethod?.stripeClientSecret).toBeTruthy()
+    await signOut()
+  })
+
+  test('setDefaultPaymentMethod', async () => {
+    await signIn({ user: Users.Member })
+
+    const pm1 = await createPaymentMethod({ card: Cards.Visa })
+    const addResult1 = await addPaymentMethod({
+      paymentMethodId: pm1.id,
+      companyId: PLATFORM_COMPANY_ID,
+    })
+    expect(addResult1.errors).toBeFalsy()
+    expect(addResult1.data?.addPaymentMethod?.stripeClientSecret).toBeTruthy()
+
+    const defaultPaymentSource1 = await getDefaultPaymentSource()
+    // for new customers on addPaymentMethod it's made the default
+    expect(defaultPaymentSource1.data?.me?.defaultPaymentSource?.id).toBe(pm1.id)
+
+    const pm2 = await createPaymentMethod({ card: Cards.AuthFirst })
+    const addResult2 = await addPaymentMethod({
+      paymentMethodId: pm2.id,
+      companyId: PLATFORM_COMPANY_ID,
+    })
+    expect(addResult2.errors).toBeFalsy()
+    expect(addResult2.data?.addPaymentMethod?.stripeClientSecret).toBeTruthy()
+
+    const defaultPaymentSource2 = await getDefaultPaymentSource()
+    expect(defaultPaymentSource2.data?.me?.defaultPaymentSource?.id).toBe(pm1.id)
+
+    await setDefaultPaymentMethod({
+      paymentMethodId: pm2.id
+    })
+
+    const defaultPaymentSource3 = await getDefaultPaymentSource()
+    expect(defaultPaymentSource3.data?.me?.defaultPaymentSource?.id).toBe(pm2.id)
+
+    await setDefaultPaymentMethod({
+      paymentMethodId: pm1.id
+    })
+
+    const defaultPaymentSource4 = await getDefaultPaymentSource()
+    expect(defaultPaymentSource4.data?.me?.defaultPaymentSource?.id).toBe(pm1.id)
+
+    await signOut()
+  })
+})
+
+describe('payPledge (paymentMethod)', () => {
+  test('ABO pledge with STRIPE (no auth)', async () => {
+    const { pledgeId } = await prepareNewPledge()
+
+    const paymentMethod = await createPaymentMethod({ card: Cards.AuthNever })
+    const payPledgeResult = await payPledge({
+      pledgeId,
+      method: PAYMENT_METHODS.STRIPE,
+      sourceId: paymentMethod.id,
+    })
+    expect(payPledgeResult.errors).toBeFalsy()
+    expect(payPledgeResult.data?.payPledge?.pledgeId).toBe(pledgeId)
+    expect(payPledgeResult.data?.payPledge?.stripeClientSecret).toBeFalsy()
+    expect(payPledgeResult.data?.payPledge?.stripePaymentIntentId).toBeTruthy()
+    expect(payPledgeResult.data?.payPledge?.companyId).toBe(PLATFORM_COMPANY_ID)
+
+    const {
+      stripePaymentIntentId: paymentIntentId,
+      companyId
+    } = payPledgeResult.data.payPledge
+
+    const pledge1 = await pgDatabase().public.pledges.findOne({
+      id: pledgeId
+    })
+    expect(pledge1).toBeTruthy()
+    expect(pledge1.status).toBe('DRAFT')
+    const pledgePayment1 = await pgDatabase().public.pledgePayments.findOne({
+      pledgeId,
+    })
+    expect(pledgePayment1).toBeFalsy()
+
+    const syncResult = await syncPaymentIntent({
+      paymentIntentId,
+      companyId
+    })
+    expect(syncResult.errors).toBeFalsy()
+    expect(syncResult.data?.syncPaymentIntent?.pledgeStatus).toBe('SUCCESSFUL')
+    expect(syncResult.data?.syncPaymentIntent?.updatedPledge).toBeTruthy()
+
+    const pledgePayment2 = await pgDatabase().public.pledgePayments.findOne({
+      pledgeId,
+    })
+    expect(pledgePayment2).toBeTruthy()
+    const payment = await pgDatabase().public.payments.findOne({
+      id: pledgePayment2.paymentId,
+    })
+    expect(payment.status).toBe('PAID')
+
+    const membership = await pgDatabase().public.memberships.findOne({
+      pledgeId,
+    })
+    expect(membership.active).toBe(true)
+    expect(membership.voucherable).toBe(false)
+
+    const periods = await pgDatabase().public.membershipPeriods.find({
+      membershipId: membership.id,
+    })
+    expect(periods.length === 1).toBeTruthy()
+    expect(
+      moment().add('360', 'days').isBefore(moment(periods[0].endDate)),
+    ).toBeTruthy()
+    expect(
+      moment().add('1', 'year').isAfter(moment(periods[0].endDate)),
+    ).toBeTruthy()
+  })
+
+  test('ABO pledge with STRIPE (auth)', async () => {
+    const { pledgeId } = await prepareNewPledge()
+
+    const paymentMethod = await createPaymentMethod({ card: Cards.AuthFirst })
+    const payPledgeResult = await payPledge({
+      pledgeId,
+      method: PAYMENT_METHODS.STRIPE,
+      sourceId: paymentMethod.id,
+    })
+    expect(payPledgeResult.errors).toBeFalsy()
+    expect(payPledgeResult.data?.payPledge?.pledgeId).toBe(pledgeId)
+    expect(payPledgeResult.data?.payPledge?.stripeClientSecret).toBeTruthy()
+    expect(payPledgeResult.data?.payPledge?.stripePaymentIntentId).toBeTruthy()
+    expect(payPledgeResult.data?.payPledge?.companyId).toBe(PLATFORM_COMPANY_ID)
+
+    const {
+      stripePaymentIntentId: paymentIntentId,
+      companyId
+    } = payPledgeResult.data.payPledge
+
+    const pledge1 = await pgDatabase().public.pledges.findOne({
+      id: pledgeId
+    })
+    expect(pledge1).toBeTruthy()
+    expect(pledge1.status).toBe('DRAFT')
+    const pledgePayment1 = await pgDatabase().public.pledgePayments.findOne({
+      pledgeId,
+    })
+    expect(pledgePayment1).toBeFalsy()
+
+    const syncResult = await syncPaymentIntent({
+      paymentIntentId,
+      companyId
+    })
+    expect(syncResult.errors).toBeFalsy()
+    expect(syncResult.data?.syncPaymentIntent?.pledgeStatus).toBe('DRAFT')
+    expect(syncResult.data?.syncPaymentIntent?.updatedPledge).toBeFalsy()
+
+    //no way to do confirmCardPayment without a browser
+  })
+
+  test('MONTHLY_ABO pledge with STRIPE (no auth) and then refund', async () => {
+    const companyId = 'c0000000-0000-0000-0001-000000000002'
+    await signIn({ user: Users.Member })
+
+    const { pledgeId } = await prepareNewPledge({
+      templateId: '00000000-0000-0000-0008-000000000002',
+    })
+    const paymentMethod = await createPaymentMethod({ card: Cards.AuthNever })
+    const payPledgePromise = payPledge({
+      pledgeId,
+      method: PAYMENT_METHODS.STRIPE,
+      sourceId: paymentMethod.id,
+    })
+
+    await sleep(12000)
+    const customer = await pgDatabase().public.stripeCustomers.findOne({
+      companyId,
+    })
+
+    const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY_COMPANY_TWO)
+    const paymentIntents = await stripe.paymentIntents.list({
+      limit: 4,
+    })
+    expect(paymentIntents.data?.length).toBeTruthy()
+    const ourPaymentIntent = paymentIntents.data.find(pi => pi.customer === customer.id)
+    expect(ourPaymentIntent).toBeTruthy()
+    const chargeId = ourPaymentIntent.charges.data[0].id
+    expect(chargeId).toBeTruthy()
+
+    // simulate successful payment of the pledge
+    await invoicePaymentSuccess(
+      {
+        chargeId,
+        paymentIntentId: ourPaymentIntent.id
+      },
+      pgDatabase(),
+      global.instance.context,
+      companyId
+    )
+
+    const payPledgeResult = await payPledgePromise
+    expect(payPledgeResult.errors).toBeFalsy()
+    expect(payPledgeResult.data?.payPledge?.pledgeId).toBe(pledgeId)
+    expect(payPledgeResult.data?.payPledge?.stripeClientSecret).toBeFalsy()
+    expect(payPledgeResult.data?.payPledge?.stripePaymentIntentId).toBe(ourPaymentIntent.id)
+    expect(payPledgeResult.data?.payPledge?.companyId).toBe(companyId)
+    const {
+      stripePaymentIntentId: paymentIntentId,
+    } = payPledgeResult.data.payPledge
+
+    const pledge = await pgDatabase().public.pledges.findOne({
+      id: pledgeId
+    })
+    expect(pledge).toBeTruthy()
+    expect(pledge.status).toBe('SUCCESSFUL')
+    const pledgePayment = await pgDatabase().public.pledgePayments.findOne({
+      pledgeId,
+    })
+    expect(pledgePayment).toBeTruthy()
+
+    const payment = await pgDatabase().public.payments.findOne({
+      id: pledgePayment.paymentId,
+    })
+    expect(payment.status).toBe('PAID')
+
+    const membership = await pgDatabase().public.memberships.findOne({
+      pledgeId,
+    })
+    expect(membership.active).toBe(true)
+    expect(membership.voucherable).toBe(false)
+
+    const periods = await pgDatabase().public.membershipPeriods.find({
+      membershipId: membership.id,
+    })
+    expect(periods.length === 1).toBeTruthy()
+    expect(
+      moment().add('23', 'hours').isBefore(moment(periods[0].endDate)),
+    ).toBeTruthy()
+    expect(
+      moment().add('1', 'month').isAfter(moment(periods[0].endDate)),
+    ).toBeTruthy()
+
+    const syncResult = await syncPaymentIntent({
+      paymentIntentId,
+      companyId
+    })
+    expect(syncResult.errors).toBeFalsy()
+    expect(syncResult.data?.syncPaymentIntent?.pledgeStatus).toBe('SUCCESSFUL')
+    expect(syncResult.data?.syncPaymentIntent?.updatedPledge).toBeFalsy()
+
+    await chargeRefund({ chargeId }, pgDatabase())
+    const { status } = await pgDatabase().public.payments.findFirst({
+      id: payment.id,
+    })
+    expect(status).toBe('REFUNDED')
+  })
+
+})
+
+describe('payPledge (source)', () => {
   test('ABO pledge with PAYMENTSLIP (post-payment)', async () => {
     const { pledgeId } = await prepareNewPledge()
     const result = await payPledge({

@@ -9,7 +9,11 @@ const sleep = require('await-sleep')
 const Redis = require('@orbiting/backend-modules-base/lib/Redis')
 
 module.exports = (args) => {
-  const { sourceId } = args
+  const { sourceId, t } = args
+  if (!sourceId) {
+    console.error('missing sourceId', args)
+    throw new Error(t('api/unexpected'))
+  }
   if (sourceId.startsWith('src_')) {
     return payWithSource(args)
   } else {
@@ -139,7 +143,6 @@ const payWithSource = async ({
   }
 }
 
-// TODO check the usage of transaction / pgdb
 const payWithPaymentMethod = async ({
   pledgeId,
   total,
@@ -148,7 +151,6 @@ const payWithPaymentMethod = async ({
   makeDefault = false,
   userId,
   pkg,
-  transaction,
   pgdb,
   t,
 }) => {
@@ -224,7 +226,7 @@ const payWithPaymentMethod = async ({
       metadata: {
         pledgeId,
       },
-      pgdb: transaction,
+      pgdb,
       clients,
     })
 

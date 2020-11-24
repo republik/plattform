@@ -23,11 +23,10 @@ module.exports = async ({ paymentIntentId, companyId }, context) => {
 
   const charge = paymentIntent.charges?.data[0]
   if (!charge) {
-    console.error(`charge not found for paymentIntentId: ${paymentIntentId}`)
-    throw new Error(t(`api/unexpected`))
+    console.error(`charge not found for paymentIntentId: ${paymentIntentId}. Did you call confirmCardPayment?`)
   }
 
-  if (paymentIntent.status === 'succeeded') {
+  if (charge && paymentIntent.status === 'succeeded') {
     const { pledge, updatedPledge } = await makePledgeSuccessfulWithCharge(
       {
         charge,

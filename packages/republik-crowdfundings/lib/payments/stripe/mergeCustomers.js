@@ -91,7 +91,6 @@ module.exports = async ({
         userId: cus.userId,
         pgdb,
         clients,
-        acceptCachedData: true,
       }),
     ).then((a) => a.filter(Boolean))
 
