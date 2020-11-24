@@ -1,18 +1,7 @@
 const { makePledgeSuccessfulWithCharge } = require('../../Pledge')
 
 module.exports = {
-  eventTypes: [
-    /*
-    TODO: cleanup
-    'payment_intent.amount_capturable_updated',
-    'payment_intent.canceled',
-    'payment_intent.created',
-    'payment_intent.payment_failed',
-    'payment_intent.processing',
-    'payment_intent.requires_action',
-    */
-    'payment_intent.succeeded',
-  ],
+  eventTypes: ['payment_intent.succeeded'],
   handle: async (event, _pgdb, t, _redis, connectionContext, companyId) => {
     const context = {
       ...connectionContext,
