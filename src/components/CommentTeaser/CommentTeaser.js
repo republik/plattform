@@ -31,7 +31,10 @@ const styles = {
   body: css({
     ...serifRegular14,
     wordWrap: 'break-word',
-    margin: '10px 0'
+    margin: '10px 0',
+    '& p': {
+      ...serifRegular14
+    }
   }),
   link: css({
     color: 'inherit',
@@ -75,6 +78,7 @@ export const CommentTeaser = ({
   onClick,
   highlighted,
   menu,
+  children,
   ...comment
 }) => {
   const {
@@ -162,6 +166,7 @@ export const CommentTeaser = ({
           <CommentBodyParagraph>
             <Link comment={comment} discussion={discussion} passHref>
               <a {...styles.link} {...highlightEMRule}>
+                {!!children && children}
                 {!!preview && !highlight && (
                   <Fragment>
                     {preview.string}

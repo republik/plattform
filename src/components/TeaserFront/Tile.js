@@ -81,6 +81,7 @@ const Tile = ({
   color,
   bgColor,
   align,
+  textLeft,
   aboveTheFold,
   onlyImage,
   singleColumn
@@ -96,7 +97,8 @@ const Tile = ({
   let containerStyle = {
     backgroundColor: bgColor,
     cursor: onClick ? 'pointer' : 'default',
-    justifyContent
+    justifyContent,
+    textAlign: textLeft ? 'left' : null
   }
 
   if (onlyImage) {
