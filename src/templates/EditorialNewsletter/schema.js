@@ -176,7 +176,11 @@ const createNewsletterSchema = ({
       pixelNote: 'Auflösung: min. 1200x (proportionaler Schnitt)',
       insertButtonText: 'Bild',
       insertTypes: ['PARAGRAPH'],
-      type: 'CENTERFIGURE'
+      type: 'CENTERFIGURE',
+      plainOption: true
+    },
+    props: (node, index, parent) => {
+      return node.data
     },
     rules: [
       {
@@ -185,13 +189,15 @@ const createNewsletterSchema = ({
         props: (node, index, parent) => {
           const { src, srcDark } = extractImages(node)
           const displayWidth = 600
+          const { plain } = parent.data
 
           return {
             ...FigureImage.utils.getResizedSrcs(src, displayWidth),
             dark:
               srcDark &&
               FigureImage.utils.getResizedSrcs(srcDark, displayWidth),
-            alt: node.children[0].alt
+            alt: node.children[0].alt,
+            plain
           }
         },
         editorModule: 'figureImage',

@@ -49,6 +49,22 @@ Das Rothaus _Foto: Laurent Burst_
 
 <hr /></section>
 
+## Ein Chart
+
+Weit hinten, hinter den Wortbergen, fern der Länder Vokalien und Konsonantien leben die Blindtexte. Abgeschieden wohnen sie in Buchstabhausen an der Küste des Semantik, eines grossen Sprachozeans.
+
+<section><h6>FIGURE</h6>
+
+\`\`\`
+{"plain": true}
+\`\`\`
+
+![](/static/nl-chart.png?size=1318x540)
+
+Neue Spitaleinweisungen; gleitender Mittelwert über 7 Tage. Die Daten nach dem 13. November sind vermutlich noch unvollständig, deshalb haben wir sie nicht berücksichtigt. Stand: 20.11.2020. Quelle: Bundesamt für Gesundheit.
+
+<hr /></section>
+
 Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
 
 <section><h6>QUOTE</h6>
@@ -170,6 +186,22 @@ Duis autem vel eum iriure **Something bold.** dolor in *italics...* hendrerit in
 ![](/static/landscape.jpg?size=2000x1411)
 
 Das Rothaus _Foto: Laurent Burst_
+
+<hr /></section>
+
+## Ein Chart
+
+Weit hinten, hinter den Wortbergen, fern der Länder Vokalien und Konsonantien leben die Blindtexte. Abgeschieden wohnen sie in Buchstabhausen an der Küste des Semantik, eines grossen Sprachozeans.
+
+<section><h6>FIGURE</h6>
+
+\`\`\`
+{"plain": true}
+\`\`\`
+
+![](/static/nl-chart.png?size=1318x540)
+
+Neue Spitaleinweisungen; gleitender Mittelwert über 7 Tage. Die Daten nach dem 13. November sind vermutlich noch unvollständig, deshalb haben wir sie nicht berücksichtigt. Stand: 20.11.2020. Quelle: Bundesamt für Gesundheit.
 
 <hr /></section>
 

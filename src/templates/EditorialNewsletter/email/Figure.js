@@ -2,13 +2,13 @@ import React from 'react'
 import { fontFamilies } from '../../../theme/fonts'
 import { imageResizeUrl } from 'mdast-react-render/lib/utils'
 
-export const Image = ({ src, alt }) => (
+export const Image = ({ src, alt, plain }) => (
   <img
     key='image'
     style={{
       border: '0px',
-      borderTop: '1px solid #555',
-      paddingTop: '13px',
+      borderTop: plain ? undefined : '1px solid #555',
+      paddingTop: plain ? undefined : '13px',
       width: '640px',
       height: 'auto',
       margin: '0px',
