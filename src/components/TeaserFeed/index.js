@@ -64,7 +64,10 @@ export const TeaserFeed = ({
 }) => {
   const formatMeta = (format && format.meta) || {}
   const Headline =
-    formatMeta.kind === 'meta' || metaKind === 'meta' || template === 'format'
+    formatMeta.kind === 'meta' ||
+    metaKind === 'meta' ||
+    template === 'format' ||
+    template === 'page'
       ? Headlines.Interaction
       : formatMeta.kind === 'scribble' || metaKind === 'scribble'
       ? Headlines.Scribble
