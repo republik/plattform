@@ -1,5 +1,5 @@
 {
-  "updated": "2020-11-23T16:49:20.971Z",
+  "updated": "2020-11-26T14:05:42.417Z",
   "title": "live",
   "data": [
     {
@@ -565,6 +565,10 @@
     {
       "key": "metaData/field/figureFloat",
       "value": "Für Text optimieren (Desktop Float)"
+    },
+    {
+      "key": "metaData/field/plain",
+      "value": "Ohne Aussparung"
     },
     {
       "key": "metaData/audio",

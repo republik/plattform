@@ -69,7 +69,9 @@ export default options => {
         data: {
           float: node.data.float,
           size: node.data.size,
-          excludeFromGallery: node.data.excludeFromGallery === true
+          excludeFromGallery: node.data.excludeFromGallery === true,
+          captionRight: node.data.captionRight,
+          plain: node.data.plain
         },
         nodes: [
           imageSerializer.fromMdast(imageParagraph, 0, node, rest),

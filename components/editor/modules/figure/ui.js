@@ -21,6 +21,7 @@ function createUI({
   const {
     sizes = [],
     captionRight = false,
+    plainOption = false,
     pixelNote = false,
     insertButtonText
   } = editorOptions || {}
@@ -105,6 +106,14 @@ function createUI({
                           captionBlock.data.get('captionRight') || false
                       })}
                       onInputChange={onInputChange(captionBlock)}
+                    />
+                  )}
+                  {plainOption && (
+                    <MetaForm
+                      data={Map({
+                        plain: block.data.get('plain') || false
+                      })}
+                      onInputChange={onInputChange(block)}
                     />
                   )}
                   {!!applicableSizes.length && (
