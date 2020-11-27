@@ -128,7 +128,10 @@ ReactDOM.render(
               {
                 path: '/components/container',
                 title: 'Container',
-                imports: require('./components/Grid'),
+                imports: {
+                  MoreIcon: require('./components/Icons').MoreIcon,
+                  ...require('./components/Grid')
+                },
                 src: require('./components/Grid/docs.md')
               },
               {
@@ -149,7 +152,7 @@ ReactDOM.render(
                   css,
                   merge,
                   Button: require('./components/Button'),
-                  AudioIcon: require('react-icons/lib/md/volume-up'),
+                  ...require('./components/Icons'),
                   plainButtonRule: require('./components/Button')
                     .plainButtonRule
                 },
@@ -160,7 +163,7 @@ ReactDOM.render(
                 title: 'IconButton',
                 imports: {
                   css,
-                  BookmarkIcon: require('react-icons/lib/md/bookmark'),
+                  ...require('./components/Icons').BookmarkIcon,
                   IconButton: require('./components/IconButton')
                 },
                 src: require('./components/IconButton/docs.md')
@@ -249,7 +252,8 @@ ReactDOM.render(
                 title: 'Callout',
                 imports: {
                   CalloutMenu: require('./components/Callout/CalloutMenu'),
-                  NotificationIcon: require('react-icons/lib/md/notifications')
+                  NotificationIcon: require('./components/Icons')
+                    .NotificationIcon
                 },
                 src: require('./components/Callout/docs.md')
               }
@@ -271,7 +275,7 @@ ReactDOM.render(
                   FieldSet: require('./components/Form/FieldSet.js'),
                   MaskedInput: require('react-maskedinput'),
                   AutosizeInput: require('react-textarea-autosize'),
-                  SearchIcon: require('react-icons/lib/md/search')
+                  SearchIcon: require('./components/Icons').SearchIcon
                 },
                 src: require('./components/Form/docs.md')
               },
@@ -324,7 +328,7 @@ ReactDOM.render(
                   css,
                   ...require('./components/Typography'),
                   Autocomplete: require('./components/Form/Autocomplete.js'),
-                  SearchIcon: require('react-icons/lib/md/search')
+                  SearchIcon: require('./components/Icons').SearchIcon
                 },
                 src: require('./components/Form/Autocomplete.docs.md')
               },
@@ -451,7 +455,7 @@ ReactDOM.render(
                 imports: {
                   css,
                   ...require('./components/Typography'),
-                  Tweet: require('./components/Social/Tweet'),
+                  Tweet: require('./components/Icons').Tweet,
                   Center: require('./components/Center')
                 },
                 src: require('./components/Social/docs.md')
@@ -474,6 +478,7 @@ ReactDOM.render(
                 imports: {
                   css,
                   ...require('./components/Typography'),
+                  ...require('./components/Icons'),
                   ...require('./components/Figure'),
                   Center: require('./components/Center'),
                   Fragment,
@@ -534,8 +539,7 @@ ReactDOM.render(
                   t,
                   ...require('./components/Typography'),
                   ...require('./components/TeaserFeed'),
-                  AudioIcon: require('react-icons/lib/md/volume-up'),
-                  BookmarkIcon: require('react-icons/lib/md/bookmark-outline'),
+                  ...require('./components/Icons'),
                   Center: require('./components/Center')
                 },
                 src: require('./components/TeaserFeed/docs.md')
@@ -619,7 +623,7 @@ ReactDOM.render(
                   ...require('./components/TeaserMyMagazine/__docs__'),
                   ...require('./components/TeaserFeed'),
                   ...require('./components/Progress'),
-                  BookmarkIcon: require('react-icons/lib/md/bookmark'),
+                  BookmarkIcon: require('./components/Icons').BookmarkIcon,
                   IconButton: require('./components/IconButton')
                 },
                 src: require('./components/TeaserMyMagazine/docs.md')

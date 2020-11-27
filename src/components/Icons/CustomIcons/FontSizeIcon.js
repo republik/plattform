@@ -1,7 +1,7 @@
 import React from 'react'
 import colors from '../../../theme/colors'
 
-const Icon = ({ size = '1em', fill = colors.text, ...props }) => (
+const Icon = ({ size = '1em', fill, ...props }) => (
   <svg width={size} height={size} viewBox='0 0 24 24' {...props}>
     <path
       fill={fill}

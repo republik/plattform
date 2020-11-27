@@ -1,7 +1,7 @@
 import React from 'react'
 import colors from '../../../theme/colors'
 
-const SearchMenuIcon = ({ size = '1em', fill = colors.text, ...props }) => (
+const SearchMenuIcon = ({ size = '1em', fill, ...props }) => (
   <svg width={size} height={size} viewBox='0 0 26 18' {...props}>
     <path
       fillRule='evenodd'
