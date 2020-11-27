@@ -479,7 +479,7 @@ const createSchema = ({ Link = DefaultLink, t = () => '', ...rest } = {}) => {
     props: node => {
       return node.data
     },
-    editorModule: 'teaser',
+    editorModule: 'teasercomment',
     editorOptions: {
       type: 'COMMENT',
       teaserType: 'comment',
