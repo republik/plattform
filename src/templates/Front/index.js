@@ -441,13 +441,6 @@ const createSchema = ({ Link = DefaultLink, t = () => '', ...rest } = {}) => {
     ]
   }
 
-  const paragraph = {
-    matchMdast: matchParagraph,
-    component: Typography.P,
-    editorModule: 'paragraph',
-    rules: paragraphRules
-  }
-
   const frontTileComment = {
     matchMdast: matchTeaserType('comment'),
     component: ({ children, ...props }) => {
@@ -463,7 +456,7 @@ const createSchema = ({ Link = DefaultLink, t = () => '', ...rest } = {}) => {
         title: props.discussionTitle
       }
       return (
-        <TeaserFrontTile align='top' textLeft aboveTheFold={true}>
+        <TeaserFrontTile align='top' textLeft aboveTheFold>
           <CommentTeaser
             t={t}
             id={props.commentId}
@@ -479,26 +472,12 @@ const createSchema = ({ Link = DefaultLink, t = () => '', ...rest } = {}) => {
     props: node => {
       return node.data
     },
-    editorModule: 'teaser',
+    editorModule: 'paragraph',
     editorOptions: {
-      type: 'FRONTTILE',
-      teaserType: 'frontTile',
-      showUI: false,
-      formOptions: [
-        'formatUrl',
-        'color',
-        'bgColor',
-        'center',
-        'titleSize',
-        'showImage',
-        'onlyImage',
-        'image',
-        'byline',
-        'kind',
-        'feuilleton'
-      ]
+      type: 'COMMENT',
+      placeholder: 'Lorem ipsum…'
     },
-    rules: [paragraph]
+    rules: [paragraphRules]
   }
 
   const carouselSubject = {
