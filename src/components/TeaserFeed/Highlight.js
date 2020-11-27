@@ -1,7 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { css } from 'glamor'
-import colors from '../../theme/colors'
 import { mUp } from '../../theme/mediaQueries'
 import { convertStyleToRem } from '../Typography/utils'
 import {
@@ -10,6 +9,7 @@ import {
   sansSerifRegular16,
   sansSerifRegular18
 } from '../Typography/styles'
+import { useColorContext } from '../Colors/useColorContext'
 
 const styles = {
   main: css({
@@ -17,11 +17,9 @@ const styles = {
     margin: '10px 0 5px 0',
     [mUp]: {
       ...convertStyleToRem(sansSerifRegular18)
-    },
-    color: colors.text
+    }
   }),
   label: css({
-    color: colors.lightText,
     ...convertStyleToRem(sansSerifMedium14),
     [mUp]: {
       ...convertStyleToRem(sansSerifMedium16)
@@ -30,9 +28,15 @@ const styles = {
 }
 
 const Highlight = ({ children, label }) => {
+  const [colorScheme] = useColorContext()
   return (
-    <p {...styles.main}>
-      {!!label && <span {...styles.label}>{label}:</span>} {children}
+    <p {...styles.main} {...colorScheme.set('color', 'text')}>
+      {!!label && (
+        <span {...styles.label} {...colorScheme.set('color', 'textSoft')}>
+          {label}:
+        </span>
+      )}{' '}
+      {children}
     </p>
   )
 }

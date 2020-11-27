@@ -13,6 +13,7 @@ const styles = {
     display: 'block',
     marginBottom: 15,
     ...sansSerifMedium22,
+    textDecoration: 'none',
     '& svg': {
       width: 22,
       height: 22,
@@ -31,15 +32,13 @@ const styles = {
   small: css({
     color: 'inherit',
     ...sansSerifMedium16,
+    textDecoration: 'none',
     '& svg': {
       marginTop: -1,
       width: 16,
       height: 16,
       marginLeft: 4
     }
-  }),
-  link: css({
-    textDecoration: 'none'
   })
 }
 
@@ -47,7 +46,7 @@ const SectionTitle = React.forwardRef(
   ({ children, small, onClick, href }, ref) => {
     const style = small ? styles.small : styles.container
     return href ? (
-      <a href={href} onClick={onClick} {...style} {...styles.link} ref={ref}>
+      <a href={href} onClick={onClick} {...style} ref={ref}>
         {children}
         {<ChevronRightIcon style={{ verticalAlign: 'middle' }} />}
       </a>

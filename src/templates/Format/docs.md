@@ -29,7 +29,7 @@ Defaults:
 }
 \`\`\`
 
-![](/static/dada.jpg)
+![](/static/dada.jpg) ![](/static/dada_dark.png)
 
 <hr /></section>
 

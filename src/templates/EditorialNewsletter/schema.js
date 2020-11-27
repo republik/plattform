@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link, Br } from './email/Paragraph'
+import { Br } from './email/Paragraph'
 import HR from './email/HR'
 import Blockquote, {
   BlockquoteText,
@@ -10,14 +10,18 @@ import {
   matchType,
   matchZone,
   matchHeading,
-  matchParagraph,
-  matchImageParagraph
+  matchParagraph
 } from 'mdast-react-render/lib/utils'
 
 import { FigureImage } from '../../components/Figure'
 import { If, Else, Variable } from '../../components/Variables'
 
-import { getDatePath, matchFigure, extractImage } from '../Article/utils'
+import {
+  extractImages,
+  getDatePath,
+  matchFigure,
+  matchImagesParagraph
+} from '../Article/utils'
 
 const matchLast = (node, index, parent) => index === parent.children.length - 1
 
@@ -38,7 +42,8 @@ const createNewsletterSchema = ({
   List,
   ListItem,
   ListP,
-  variableContext
+  variableContext,
+  A
 } = {}) => {
   const matchSpan = matchType('span')
   const globalInlines = [
@@ -89,7 +94,7 @@ const createNewsletterSchema = ({
 
   const link = {
     matchMdast: matchType('link'),
-    component: Link,
+    component: A,
     props: node => ({
       title: node.title,
       href: node.url
@@ -171,19 +176,28 @@ const createNewsletterSchema = ({
       pixelNote: 'Auflösung: min. 1200x (proportionaler Schnitt)',
       insertButtonText: 'Bild',
       insertTypes: ['PARAGRAPH'],
-      type: 'CENTERFIGURE'
+      type: 'CENTERFIGURE',
+      plainOption: true
+    },
+    props: (node, index, parent) => {
+      return node.data
     },
     rules: [
       {
-        matchMdast: matchImageParagraph,
+        matchMdast: matchImagesParagraph,
         component: Image,
         props: (node, index, parent) => {
-          const src = extractImage(node)
+          const { src, srcDark } = extractImages(node)
           const displayWidth = 600
+          const { plain } = parent.data
 
           return {
             ...FigureImage.utils.getResizedSrcs(src, displayWidth),
-            alt: node.children[0].alt
+            dark:
+              srcDark &&
+              FigureImage.utils.getResizedSrcs(srcDark, displayWidth),
+            alt: node.children[0].alt,
+            plain
           }
         },
         editorModule: 'figureImage',
@@ -206,15 +220,18 @@ const createNewsletterSchema = ({
     },
     rules: [
       {
-        matchMdast: matchImageParagraph,
+        matchMdast: matchImagesParagraph,
         component: CoverImage,
         props: (node, index, parent) => {
-          const src = extractImage(node)
+          const { src, srcDark } = extractImages(node)
           const displayWidth = 1280
           const setMaxWidth = parent.data.size !== undefined
 
           return {
             ...FigureImage.utils.getResizedSrcs(src, displayWidth, setMaxWidth),
+            dark:
+              srcDark &&
+              FigureImage.utils.getResizedSrcs(srcDark, displayWidth),
             alt: node.children[0].alt
           }
         },

@@ -1,8 +1,8 @@
 import React from 'react'
 
 export const defaultValue = {
-  bgColor: '#fff',
-  color: '#000'
+  bgColor: 'default',
+  color: 'text'
 }
 
 const CarouselContext = React.createContext(defaultValue)

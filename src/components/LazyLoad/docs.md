@@ -1,18 +1,20 @@
 ### `<LazyLoad />`
 
-Awaits the viewport approaching to render its children. It works by rendering a span wrapper which should act as an placeholder—reserving the right amount of space. When `!process.browser` the children will be rendered in a `<noscript>` tag before being visible.
+Awaits the viewport approaching to render its children. It works by rendering a wrapper which should act as an placeholder—reserving the right amount of space. When `!process.browser` the children will be rendered in a `<noscript>` tag before being visible.
 
 #### Properties
 
 - `visible` bool, overwrite laziness—e.g. server rendered first items
 - `offset` number, default 0.5, distance in viewport height to start rendering
+- `type` React element, default div
 - `style` object, applied to wrapper
 - `attributes` object, spread onto the wrapper
+- `consistentPlaceholder` bool, render noscript and always keep placeholder around, use this if you need consistent SSR page size and noscript support
 - `children` node, the lazy loaded content
 
 ### `<LazyImage />`
 
-A convenience wrapper for width filling images with an known aspect ratio. It takes care of the placeholder.
+A convenience wrapper for width filling images with an known aspect ratio. It takes care of the placeholder—consistent with SSR and noscript support.
 
 #### Properties
 
@@ -28,7 +30,6 @@ A convenience wrapper for width filling images with an known aspect ratio. It ta
     By default a LazyLoad wrapped component will only load once it's half the screen height away. There is an image below, in 1.5 screen heights:
   </P>
   <LazyLoad style={{
-    display: 'block',
     position: 'relative',
     paddingBottom: `${100 / (2000 / 1411)}%`,
     backgroundColor: 'rgba(0,0,0,0.1)'

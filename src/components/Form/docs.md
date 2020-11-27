@@ -59,25 +59,6 @@ state: {
   onDec={() => setState({value: state.value - 10})} />
 ```
 
-### Black and White
-
-```react|span-3
-<Field black label='Label' />
-```
-
-```react|span-3,dark
-<Field white label='Label' />
-```
-
-Also works with error display
-```react|span-3
-<Field 
-  black 
-  label='Label' 
-  error='You clearly did something wrong' />
-```
-
-
 ### Change and Validation
 
 `onChange` gets called with the following arguments:

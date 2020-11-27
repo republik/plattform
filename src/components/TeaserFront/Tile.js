@@ -7,6 +7,7 @@ import LazyLoad from '../LazyLoad'
 import { mUp } from './mediaQueries'
 import Text from './Text'
 import { useColorContext } from '../Colors/useColorContext'
+import SwitchImage from '../Figure/SwitchImage'
 
 const IMAGE_SIZE = {
   small: 220,
@@ -73,6 +74,7 @@ const Tile = ({
   children,
   attributes,
   image,
+  imageDark,
   byline,
   alt,
   onClick,
@@ -84,14 +86,15 @@ const Tile = ({
   singleColumn
 }) => {
   const [colorScheme] = useColorContext()
-  const background = bgColor || colorScheme.containerBg
-  const textColor = color || colorScheme.text
   const justifyContent =
     align === 'top' ? 'flex-start' : align === 'bottom' ? 'flex-end' : ''
   const imageProps =
     image && FigureImage.utils.getResizedSrcs(image, IMAGE_SIZE.large, false)
+  const imageDarkProps =
+    imageDark &&
+    FigureImage.utils.getResizedSrcs(imageDark, IMAGE_SIZE.large, false)
   let containerStyle = {
-    background,
+    backgroundColor: bgColor,
     cursor: onClick ? 'pointer' : 'default',
     justifyContent
   }
@@ -104,6 +107,7 @@ const Tile = ({
     <div
       {...attributes}
       onClick={onClick}
+      {...colorScheme.set('backgroundColor', 'default')}
       style={containerStyle}
       // The styles of the container are defined
       // on the parent component <TileRow />
@@ -117,19 +121,23 @@ const Tile = ({
         >
           <LazyLoad
             visible={aboveTheFold}
-            style={{ position: 'relative', fontSize: 0 }}
+            consistentPlaceholder
+            type='span'
+            style={{
+              position: 'relative',
+              fontSize: 0,
+              display: 'inline-block'
+            }}
           >
-            <img
+            <SwitchImage
               src={imageProps.src}
               srcSet={imageProps.srcSet}
+              dark={imageDarkProps}
               alt={alt}
               {...(onlyImage ? styles.onlyImage : styles.image)}
             />
             {byline && (
-              <FigureByline
-                position='rightCompact'
-                style={{ color: textColor }}
-              >
+              <FigureByline position='rightCompact' style={{ color }}>
                 {byline}
               </FigureByline>
             )}
@@ -139,7 +147,7 @@ const Tile = ({
       {!onlyImage && (
         <div {...(singleColumn ? {} : styles.textContainer)}>
           <Text
-            color={textColor}
+            color={color}
             maxWidth={singleColumn ? undefined : '600px'}
             margin={'0 auto'}
           >

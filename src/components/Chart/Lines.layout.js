@@ -10,7 +10,8 @@ import {
   runSort,
   groupBy,
   deduplicate,
-  unsafeDatumFn
+  unsafeDatumFn,
+  sortBy
 } from './utils'
 
 import { getColorMapper } from './colorMaps'
@@ -30,8 +31,9 @@ export const AXIS_BOTTOM_HEIGHT = 24
 const AXIS_BOTTOM_CUTOFF_HEIGHT = 40
 const AXIS_BOTTOM_XUNIT_HEIGHT = 12
 
-export const Y_CONNECTOR = 6
+export const Y_CONNECTOR = 7
 export const Y_CONNECTOR_PADDING = 4
+export const Y_LABEL_HEIGHT = 14
 const Y_END_LABEL_SPACE = 3 // width of space between label and value
 
 const valueGauger = createTextGauger(VALUE_FONT, {
@@ -46,6 +48,26 @@ const labelGauger = createTextGauger(LABEL_FONT, {
 export const yScales = {
   linear: scaleLinear,
   log: scaleLog
+}
+
+const calculateAndMoveLabelY = (linesWithLayout, propery) => {
+  let labelsMoved = 0
+  let lastY = -Infinity
+  sortBy(
+    linesWithLayout.filter(
+      line => line[`${propery}Value`] || line[`${propery}Label`]
+    ),
+    line => line[`${propery}Y`]
+  ).forEach(line => {
+    let labelY = line[`${propery}Y`]
+    let nextY = lastY + Y_LABEL_HEIGHT
+    if (nextY > labelY) {
+      labelY = nextY
+      labelsMoved += 1
+    }
+    line[`${propery}LabelY`] = lastY = labelY
+  })
+  return labelsMoved
 }
 
 export default props => {
@@ -176,6 +198,7 @@ export default props => {
   let startValueSizes = []
   let endValueSizes = []
   let endLabelSizes = []
+  let yNeedsConnectors = false
 
   const highlight = props.highlight
     ? unsafeDatumFn(props.highlight)
@@ -204,10 +227,16 @@ export default props => {
           stroked: stroke(start.datum),
           lineColor: color(colorAccessor(start)),
           startValue: label && startValue && yFormat(start.value),
-          endValue: label && yFormat(end.value),
-          endLabel: label && endLabel && ` ${colorAccessor(end)}`
+          endValue: label && props.endValue && yFormat(end.value),
+          endLabel: label && endLabel && ` ${colorAccessor(end)}`,
+          startY: y(start.value),
+          endY: y(end.value)
         }
       })
+      let labelsMoved = 0
+      labelsMoved += calculateAndMoveLabelY(linesWithLabels, 'start')
+      labelsMoved += calculateAndMoveLabelY(linesWithLabels, 'end')
+      yNeedsConnectors = yNeedsConnectors || labelsMoved > 1
 
       if (startValue) {
         startValueSizes = startValueSizes.concat(
@@ -255,8 +284,10 @@ export default props => {
 
   const whiteSpacePadding = groupedData.length > 1 && props.columns > 1 ? 15 : 0
 
+  const yConnectorSize = yNeedsConnectors
+    ? Y_CONNECTOR + Y_CONNECTOR_PADDING * 2
+    : Y_CONNECTOR_PADDING * 2
   if (!mini) {
-    const yConnectorSize = Y_CONNECTOR + Y_CONNECTOR_PADDING * 2
     const startValueSize = startValue
       ? Math.ceil(max(startValueSizes) + yConnectorSize)
       : 0
@@ -322,6 +353,8 @@ export default props => {
     yAxis,
     yCut,
     yCutHeight,
+    yConnectorSize,
+    yNeedsConnectors,
     yAnnotations: translatedYAnnotations,
     xAnnotations: translatedXAnnotations,
     colorLegend,

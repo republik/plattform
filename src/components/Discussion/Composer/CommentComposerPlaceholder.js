@@ -1,24 +1,17 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { css } from 'glamor'
-import colors from '../../../theme/colors'
 import { serifRegular16 } from '../../Typography/styles'
 import { convertStyleToRem, pxToRem } from '../../Typography/utils'
+import { useColorContext } from '../../Colors/useColorContext'
 
 const styles = {
   root: css({
     ...convertStyleToRem(serifRegular16),
-    color: colors.lightText,
     display: 'flex',
     alignItems: 'center',
-    background: colors.secondaryBg,
     padding: '8px',
     height: pxToRem('56px'),
-    cursor: 'pointer',
-    '@media (hover)': {
-      ':hover': {
-        color: colors.text
-      }
-    }
+    cursor: 'pointer'
   }),
   profilePicture: css({
     display: 'block',
@@ -36,15 +29,35 @@ const styles = {
   })
 }
 
-export const CommentComposerPlaceholder = ({ t, displayAuthor, onClick }) => (
-  <div {...styles.root} onClick={onClick}>
-    {displayAuthor.profilePicture && (
-      <img
-        {...styles.profilePicture}
-        src={displayAuthor.profilePicture}
-        alt=''
-      />
-    )}
-    <div {...styles.meta}>{t('styleguide/CommentComposer/placeholder')}</div>
-  </div>
-)
+export const CommentComposerPlaceholder = ({ t, displayAuthor, onClick }) => {
+  const [colorScheme] = useColorContext()
+  const rootHover = useMemo(
+    () =>
+      css({
+        '@media (hover)': {
+          ':hover': {
+            color: colorScheme.getCSSColor('text')
+          }
+        }
+      }),
+    [colorScheme]
+  )
+  return (
+    <div
+      {...styles.root}
+      {...colorScheme.set('background', 'hover')}
+      {...colorScheme.set('color', 'textSoft')}
+      {...rootHover}
+      onClick={onClick}
+    >
+      {displayAuthor.profilePicture && (
+        <img
+          {...styles.profilePicture}
+          src={displayAuthor.profilePicture}
+          alt=''
+        />
+      )}
+      <div {...styles.meta}>{t('styleguide/CommentComposer/placeholder')}</div>
+    </div>
+  )
+}

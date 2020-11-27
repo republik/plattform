@@ -1,8 +1,7 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { css, merge } from 'glamor'
 // options: speaker-notes-off, block, clear, visibility-off, remove-circle
 import CommentCountIcon from './CommentCountIcon'
-import colors from '../../../../theme/colors'
 import { sansSerifMedium14 } from '../../../Typography/styles'
 import { DiscussionContext, formatTimeRelative } from '../../DiscussionContext'
 import { timeFormat } from '../../../../lib/timeFormat'
@@ -16,6 +15,7 @@ import {
   ReportIcon,
   FeaturedIcon
 } from '../../../Icons'
+import { useColorContext } from '../../../Colors/useColorContext'
 
 const dateFormat = timeFormat('%d.%m.%Y')
 const hmFormat = timeFormat('%H:%M')
@@ -23,7 +23,6 @@ const hmFormat = timeFormat('%H:%M')
 const styles = {
   root: css({
     ...sansSerifMedium14,
-    color: colors.text,
     height: '40px',
     display: 'flex',
     alignItems: 'center',
@@ -41,7 +40,6 @@ const styles = {
     alignItems: 'center'
   }),
   voteDivider: css({
-    color: colors.text,
     padding: '0 2px'
   }),
   iconButton: css({
@@ -53,13 +51,8 @@ const styles = {
     display: 'block',
     cursor: 'pointer',
     height: '100%',
-    color: colors.text,
     '& svg': {
       margin: '0 auto'
-    },
-    '&[disabled]': {
-      cursor: 'inherit',
-      color: colors.disabled
     }
   }),
   voteButton: css({
@@ -68,18 +61,6 @@ const styles = {
     textAlign: 'center',
     height: '40px',
     margin: 0,
-    '& > svg': {
-      display: 'block',
-      flexShrink: 0
-    }
-  }),
-  selectedVoteButton: css({
-    lineHeight: 1,
-    fontSize: '24px',
-    textAlign: 'center',
-    height: '40px',
-    margin: 0,
-    color: colors.primary,
     '& > svg': {
       display: 'block',
       flexShrink: 0
@@ -94,7 +75,6 @@ const styles = {
     textOverflow: 'ellipsis',
     overflow: 'hidden',
     verticalAlign: 'middle',
-    color: colors.text,
     marginTop: -1,
     paddingLeft: 4,
     ...sansSerifMedium14
@@ -125,13 +105,13 @@ export const Actions = ({
     DiscussionContext
   )
   const { displayAuthor, userWaitUntil } = discussion
-
   const onShare = () => actions.shareComment(comment)
 
   const canUnpublish = (isAdmin || userCanEdit) && published
   const onUnpublish = canUnpublish
     ? () => actions.unpublishComment(comment)
     : undefined
+  const [colorScheme] = useColorContext()
 
   /*
    * The onClick functions are wired up such that when the user clicks a particular button twice,
@@ -175,10 +155,9 @@ export const Actions = ({
   }
 
   return (
-    <div {...styles.root}>
+    <div {...styles.root} {...colorScheme.set('color', 'text')}>
       {onExpand && (
         <IconButton
-          type='left'
           onClick={onExpand}
           title={t('styleguide/CommentActions/expand')}
         >
@@ -190,51 +169,55 @@ export const Actions = ({
       )}
       {onReply && !!displayAuthor && (
         <IconButton
-          type='left'
           disabled={!!replyBlockedMessage}
           onClick={onReply}
           title={replyBlockedMessage || t('styleguide/CommentActions/answer')}
         >
           <ReplyIcon
-            fill={replyBlockedMessage ? colors.disabled : colors.text}
+            {...colorScheme.set(
+              'fill',
+              replyBlockedMessage ? 'disabled' : 'text'
+            )}
           />
         </IconButton>
       )}
       {userCanEdit && onEdit && (
         <IconButton
-          type='left'
           onClick={onEdit}
           title={t('styleguide/CommentActions/edit')}
         >
-          <EditIcon />
+          <EditIcon {...colorScheme.set('fill', 'text')} />
         </IconButton>
       )}
       {onUnpublish && (
         <IconButton
-          type='left'
           onClick={onUnpublish}
           title={t('styleguide/CommentActions/unpublish')}
         >
-          <UnpublishIcon />
+          <UnpublishIcon {...colorScheme.set('fill', 'text')} />
         </IconButton>
       )}
       <IconButton
-        type='left'
         onClick={onShare}
         title={t('styleguide/CommentActions/share')}
       >
-        <ShareIcon />
+        <ShareIcon {...colorScheme.set('fill', 'text')} />
       </IconButton>
       {userCanReport && onReport && (
         <IconButton
-          type='left'
           disabled={userReportedAt}
           onClick={handleReport}
           title={t('styleguide/CommentActions/report')}
         >
           <span>
-            <ReportIcon fill={userReportedAt ? colors.disabled : colors.text} />
-            {numReports > 0 && <span {...styles.text}>{numReports}</span>}
+            <ReportIcon
+              {...colorScheme.set('fill', userReportedAt ? 'disabled' : 'text')}
+            />
+            {numReports > 0 && (
+              <span {...styles.text} {...colorScheme.set('color', 'text')}>
+                {numReports}
+              </span>
+            )}
           </span>
         </IconButton>
       )}
@@ -255,12 +238,15 @@ export const Actions = ({
               actions.featureComment && (() => actions.featureComment(comment))
             }
           >
-            <FeaturedIcon fill={featuredText ? colors.primary : undefined} />
+            <FeaturedIcon
+              {...colorScheme.set('fill', featuredText ? 'primary' : 'text')}
+            />
           </IconButton>
         )}
         <div {...styles.vote}>
           <IconButton
-            type={userVote === 'UP' ? 'selectedVote' : 'vote'}
+            selected={userVote === 'UP'}
+            vote={true}
             onClick={onUpvote}
             title={t('styleguide/CommentActions/upvote')}
           >
@@ -274,7 +260,9 @@ export const Actions = ({
             {upVotes}
           </span>
         </div>
-        <div {...styles.voteDivider}>/</div>
+        <div {...styles.voteDivider} {...colorScheme.set('color', 'text')}>
+          /
+        </div>
         <div {...styles.vote}>
           <span
             title={t.pluralize('styleguide/CommentActions/downvote/count', {
@@ -284,7 +272,8 @@ export const Actions = ({
             {downVotes}
           </span>
           <IconButton
-            type={userVote === 'DOWN' ? 'selectedVote' : 'vote'}
+            selected={userVote === 'DOWN'}
+            vote={true}
             onClick={onDownvote}
             title={t('styleguide/CommentActions/downvote')}
           >
@@ -296,13 +285,31 @@ export const Actions = ({
   )
 }
 
-const IconButton = ({ type, onClick, title, children }) => (
-  <button
-    {...merge(styles.iconButton, styles[`${type}Button`])}
-    title={title}
-    disabled={!onClick}
-    onClick={onClick}
-  >
-    {children}
-  </button>
-)
+const IconButton = ({ vote, selected, onClick, title, children }) => {
+  const [colorScheme] = useColorContext()
+  const iconButtonStyleRules = useMemo(
+    () =>
+      css({
+        color: colorScheme.getCSSColor(selected ? 'primary' : 'text'),
+        '&[disabled]': {
+          cursor: 'inherit',
+          color: colorScheme.getCSSColor('disabled')
+        }
+      }),
+    [colorScheme, selected]
+  )
+  return (
+    <button
+      {...merge(
+        styles.iconButton,
+        vote ? styles.voteButton : styles.leftButton
+      )}
+      {...iconButtonStyleRules}
+      title={title}
+      disabled={!onClick}
+      onClick={onClick}
+    >
+      {children}
+    </button>
+  )
+}

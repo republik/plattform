@@ -23,7 +23,7 @@ year,gender,at_age,value
 1990,Total,0,75.35
 2015,Total,0,80.57
     `.trim()} />
-  <Editorial.Note>Quelle: <Editorial.A href='http://www.humanmortality.de/'>Human Mortality Database</Editorial.A>. University of California, Berkeley (USA) und Max-Planck-Institut </Editorial.Note>
+  <ChartLegend>Quelle: <Editorial.A href='http://www.humanmortality.de/'>Human Mortality Database</Editorial.A>. University of California, Berkeley (USA) und Max-Planck-Institut </ChartLegend>
 </div>
 ```
 

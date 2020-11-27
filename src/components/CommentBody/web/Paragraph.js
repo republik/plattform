@@ -9,6 +9,7 @@ import {
   serifRegular16
 } from '../../Typography/styles'
 import { convertStyleToRem } from '../../Typography/utils'
+import { useColorContext } from '../../Colors/useColorContext'
 
 const styles = {
   p: css({
@@ -25,7 +26,6 @@ const styles = {
     }
   }),
   code: css({
-    backgroundColor: '#f7f7f7',
     borderRadius: '2px',
     display: 'inline-block',
     fontSize: '90%',
@@ -55,6 +55,13 @@ export const Definition = ({ children }) => (
   <p {...styles.definition}>{children}</p>
 )
 
-export const Code = ({ children }) => <code {...styles.code}>{children}</code>
+export const Code = ({ children }) => {
+  const [colorScheme] = useColorContext()
+  return (
+    <code {...styles.code} {...colorScheme.set('backgroundColor', 'hover')}>
+      {children}
+    </code>
+  )
+}
 
 export default Paragraph

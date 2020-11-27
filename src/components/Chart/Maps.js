@@ -19,14 +19,11 @@ import ContextBox, { ContextBoxValue } from './ContextBox'
 
 import { sansSerifMedium14 } from '../Typography/styles'
 
-import colors from '../../theme/colors'
-
 const FEATURE_BG = '#E0E0E0'
 
 const styles = {
   columnTitle: css({
-    ...sansSerifMedium14,
-    fill: colors.text
+    ...sansSerifMedium14
   }),
   interactivePath: css({
     userSelect: 'none',
@@ -52,7 +49,8 @@ const Points = ({
   sizeRangeMax,
   hoverPoint,
   setHoverPoint,
-  opacity
+  opacity,
+  colorScheme
 }) => {
   const valueAccessor = d => (isNaN(d.value) ? 1 : d.value)
 
@@ -96,7 +94,7 @@ const Points = ({
               <circle
                 cy={-MARKER_HEIGHT}
                 r={MARKER_RADIUS}
-                fill={color}
+                {...colorScheme.set('fill', color, 'charts')}
                 stroke='white'
                 strokeWidth='1'
               />
@@ -104,7 +102,7 @@ const Points = ({
             {marker && (
               <line
                 y2={-MARKER_HEIGHT}
-                stroke={color}
+                {...colorScheme.set('stroke', color, 'charts')}
                 strokeWidth='2'
                 shapeRendering='crispEdges'
               />
@@ -121,7 +119,7 @@ const Points = ({
                 )}
                 <path
                   d={symbolPath(d)}
-                  fill={color}
+                  {...colorScheme.set('fill', color, 'charts')}
                   style={{
                     opacity
                   }}
@@ -317,7 +315,6 @@ export class GenericMap extends Component {
     const { props, state } = this
     const {
       width,
-      children,
       mini,
       tLabel,
       description,
@@ -325,7 +322,8 @@ export class GenericMap extends Component {
       colorLegendSize,
       colorLegendPosition,
       missingDataColor,
-      opacity
+      opacity,
+      colorScheme
     } = props
     const { loading, error, geoJson, hoverPoint } = state
 
@@ -379,6 +377,21 @@ export class GenericMap extends Component {
 
     return (
       <div style={{ position: 'relative' }}>
+        <div style={legendStyle}>
+          {!!props.geotiffLegendTitle && (
+            <ColorLegend
+              title={tLabel(props.geotiffLegendTitle)}
+              values={props.geotiffLegend}
+            />
+          )}
+          {!!props.colorLegend && (
+            <ColorLegend
+              title={tLabel(props.legendTitle)}
+              shape={props.shape}
+              values={colorLegendValues}
+            />
+          )}
+        </div>
         <svg width={width} height={columnHeight * rows}>
           <desc>{description}</desc>
           {groupedData.map(({ values: groupData, key: title }) => {
@@ -393,6 +406,7 @@ export class GenericMap extends Component {
                   x={paddingLeft + mapWidth / 2}
                   textAnchor='middle'
                   {...styles.columnTitle}
+                  {...colorScheme.set('fill', 'text')}
                 >
                   {tLabel(title)}
                 </text>
@@ -425,7 +439,7 @@ export class GenericMap extends Component {
                       return (
                         <path
                           key={feature.id}
-                          fill={fill}
+                          {...colorScheme.set('fill', fill, 'charts')}
                           d={feature.path}
                           {...styles.interactivePath}
                           onTouchStart={() =>
@@ -474,6 +488,7 @@ export class GenericMap extends Component {
                   {props.points && (
                     <Points
                       data={data}
+                      colorScheme={colorScheme}
                       colorScale={colorScale}
                       colorAccessor={colorAccessor}
                       domain={domain}
@@ -502,24 +517,6 @@ export class GenericMap extends Component {
             <Loader loading={loading} error={error} />
           </div>
         )}
-        <div>
-          <div style={legendStyle}>
-            {!!props.geotiffLegendTitle && (
-              <ColorLegend
-                title={tLabel(props.geotiffLegendTitle)}
-                values={props.geotiffLegend}
-              />
-            )}
-            {!!props.colorLegend && (
-              <ColorLegend
-                title={tLabel(props.legendTitle)}
-                shape={props.shape}
-                values={colorLegendValues}
-              />
-            )}
-          </div>
-          {children}
-        </div>
         {hasTooltips && this.renderTooltips()}
         {this.renderPointTooltip()}
       </div>
@@ -537,7 +534,6 @@ const featuresShape = PropTypes.shape({
 })
 
 export const propTypes = {
-  children: PropTypes.node,
   values: PropTypes.array.isRequired,
   width: PropTypes.number.isRequired,
   // full width map, dynamic height
@@ -614,7 +610,7 @@ GenericMap.defaultProps = {
   points: false,
   pointAttributes: [],
   choropleth: false,
-  missingDataColor: colors.divider,
+  missingDataColor: 'divider',
   ignoreMissingFeature: false,
   feature: 'feature',
   shape: 'circle',

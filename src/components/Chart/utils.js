@@ -3,7 +3,6 @@ import { ascending, descending, max as d3Max } from 'd3-array'
 import { rgb } from 'd3-color'
 import React, { createElement, Fragment } from 'react'
 import PropTypes from 'prop-types'
-import colors from '../../theme/colors'
 
 export const groupBy = (array, key) => {
   const keys = []
@@ -43,25 +42,6 @@ export const sortBy = (array, accessor) =>
       ascending(accessor(a), accessor(b)) ||
       ascending(array.indexOf(a), array.indexOf(b)) // stable sort
   )
-
-export const measure = onMeasure => {
-  let ref
-  let rafHandle
-  const update = () => {
-    onMeasure(ref, ref.getBoundingClientRect())
-  }
-  return newRef => {
-    ref = newRef
-    if (ref) {
-      window.addEventListener('resize', update)
-      // raf needed to wait for glamor css styles
-      rafHandle = window.requestAnimationFrame(update)
-    } else {
-      window.removeEventListener('resize', update)
-      window.cancelAnimationFrame(rafHandle)
-    }
-  }
-}
 
 const thousandSeparator = '\u2019'
 const swissNumbers = formatLocale({
@@ -260,7 +240,6 @@ subsup.svg = subSupSplitter((tag, key, text) => {
 
 export const transparentAxisStroke = 'rgba(0,0,0,0.17)'
 export const circleFill = '#fff'
-export const baseLineColor = colors.text
 
 export const deduplicate = (d, i, all) => all.indexOf(d) === i
 
@@ -273,5 +252,5 @@ export const unsafeDatumFn = code => new Function('datum', `return ${code}`)
 export const getTextColor = bgColor => {
   const color = rgb(bgColor)
   const yiq = (color.r * 299 + color.g * 587 + color.b * 114) / 1000
-  return yiq >= 128 ? 'black' : 'white'
+  return yiq >= 128 ? 'text' : 'textInverted'
 }

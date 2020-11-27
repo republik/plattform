@@ -1,6 +1,5 @@
 import React from 'react'
 import { css } from 'glamor'
-import colors from '../../theme/colors'
 import { mUp } from '../../theme/mediaQueries'
 import {
   serifTitle20,
@@ -11,10 +10,10 @@ import {
   cursiveTitle22
 } from '../Typography/styles'
 import { convertStyleToRem, pxToRem } from '../Typography/utils'
+import { useColorContext } from '../Colors/useColorContext'
 
 const styles = {
   base: css({
-    color: colors.text,
     margin: 0,
     marginBottom: 6,
     [mUp]: {
@@ -42,20 +41,41 @@ const styles = {
   })
 }
 
-export const Editorial = ({ children, style }) => (
-  <h1 {...styles.base} {...styles.editorial} style={style}>
-    {children}
-  </h1>
-)
+export const Editorial = ({ children, formatColor }) => {
+  const [colorScheme] = useColorContext()
+  return (
+    <h1
+      {...styles.base}
+      {...styles.editorial}
+      {...colorScheme.set('color', formatColor || 'text', 'format')}
+    >
+      {children}
+    </h1>
+  )
+}
 
-export const Interaction = ({ children, style }) => (
-  <h1 {...styles.base} {...styles.interaction} style={style}>
-    {children}
-  </h1>
-)
+export const Interaction = ({ children, formatColor }) => {
+  const [colorScheme] = useColorContext()
+  return (
+    <h1
+      {...styles.base}
+      {...styles.interaction}
+      {...colorScheme.set('color', formatColor || 'text', 'format')}
+    >
+      {children}
+    </h1>
+  )
+}
 
-export const Scribble = ({ children, style }) => (
-  <h1 {...styles.base} {...styles.scribble} style={style}>
-    {children}
-  </h1>
-)
+export const Scribble = ({ children, formatColor }) => {
+  const [colorScheme] = useColorContext()
+  return (
+    <h1
+      {...styles.base}
+      {...styles.scribble}
+      {...colorScheme.set('color', formatColor || 'text', 'format')}
+    >
+      {children}
+    </h1>
+  )
+}

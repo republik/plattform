@@ -1,51 +1,44 @@
-import { createElement } from 'react'
-import { css, merge } from 'glamor'
-import {
-  linkBlackStyle,
-  linkWhiteStyle,
-  linkErrorStyle,
-  linkErrorStyleNegative,
-  linkStyle
-} from '../Typography'
+import React, { useMemo } from 'react'
+import { css } from 'glamor'
 import PropTypes from 'prop-types'
-import colors from '../../theme/colors'
+import { useColorContext } from '../Colors/useColorContext'
+import { underline } from '../../lib/styleMixins'
 
 const styles = {
   default: css({
-    '& a': linkStyle,
     '& ul, & ol': {
       overflow: 'hidden'
     }
-  }),
-  black: css({
-    color: '#000000',
-    '& a': linkBlackStyle
-  }),
-  white: css({
-    color: colors.negative.text,
-    '& a': linkWhiteStyle
-  }),
-  error: css({
-    color: colors.error,
-    '& a': linkErrorStyle
-  }),
-  errorWhite: css({
-    color: colors.negative.error,
-    '& a': linkErrorStyleNegative
   })
 }
 
-const RawHtml = ({ type, dangerouslySetInnerHTML, black, white, error }) =>
-  createElement(type, {
-    ...merge(
-      styles.default,
-      black && styles.black,
-      white && styles.white,
-      error && styles.error,
-      error && white && styles.errorWhite
-    ),
-    dangerouslySetInnerHTML
-  })
+const RawHtml = ({ type: Type, dangerouslySetInnerHTML, error }) => {
+  const [colorScheme] = useColorContext()
+  const colorRule = useMemo(
+    () =>
+      css({
+        color: colorScheme.getCSSColor(error ? 'error' : 'text'),
+        '& a': {
+          ...underline,
+          color: colorScheme.getCSSColor(error ? 'error' : 'text'),
+          '@media (hover)': {
+            ':hover': {
+              color: colorScheme.getCSSColor(error ? 'error' : 'textSoft')
+            }
+          }
+        }
+      }),
+    [colorScheme, error]
+  )
+
+  return (
+    <Type
+      {...styles.default}
+      {...colorRule}
+      dangerouslySetInnerHTML={dangerouslySetInnerHTML}
+    />
+  )
+}
 
 RawHtml.defaultProps = {
   type: 'span'

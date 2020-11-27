@@ -1,15 +1,13 @@
 import { css } from 'glamor'
 import PropTypes from 'prop-types'
-import React, { useRef, useState, useContext, useEffect, useMemo } from 'react'
+import React, { useRef, useState, useContext, useEffect } from 'react'
 import scrollIntoView from 'scroll-into-view'
 
 import { ChevronLeftIcon, ChevronRightIcon } from '../Icons'
-
 import { PADDING, TILE_MARGIN_RIGHT } from './constants'
 import CarouselContext from './Context'
-import { color } from 'd3-color'
-
 import { plainButtonRule } from '../Button'
+import { useColorContext } from '../Colors/useColorContext'
 
 const styles = {
   container: css({
@@ -52,6 +50,19 @@ const styles = {
       transition: 'opacity 200ms'
     }
   }),
+  arrowBg: css({
+    display: 'block',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    opacity: 0.7
+  }),
+  arrowIcon: css({
+    // ontop of arrowBg
+    position: 'relative'
+  }),
   arrowHoverable: css({
     '@media (hover)': {
       '[role=group]:hover > &': {
@@ -66,11 +77,7 @@ const Row = ({ children }) => {
   const context = useContext(CarouselContext)
   const overflow = useRef()
   const [{ left, right }, setArrows] = useState({ left: false, right: false })
-  const lightBg = useMemo(() => {
-    const bg = color(context.bgColor)
-    bg.opacity = 0.7
-    return bg.toString()
-  }, [context.bgColor])
+  const [colorScheme] = useColorContext()
 
   useEffect(() => {
     const scroller = overflow.current
@@ -117,7 +124,7 @@ const Row = ({ children }) => {
       <button
         {...styles.arrow}
         {...(left && styles.arrowHoverable)}
-        style={{ left: 0, backgroundColor: lightBg }}
+        style={{ left: 0 }}
         onClick={() => {
           const scroller = overflow.current
           const clientWidth = scroller.clientWidth
@@ -135,12 +142,20 @@ const Row = ({ children }) => {
           })
         }}
       >
-        <ChevronLeftIcon size={50} fill={context.color} />
+        <span
+          {...styles.arrowBg}
+          {...colorScheme.set('backgroundColor', context.bgColor)}
+        />
+        <ChevronLeftIcon
+          size={50}
+          {...colorScheme.set('fill', context.color)}
+        />
       </button>
+
       <button
         {...styles.arrow}
         {...(right && styles.arrowHoverable)}
-        style={{ right: 0, backgroundColor: lightBg }}
+        style={{ right: 0 }}
         onClick={() => {
           const scroller = overflow.current
           const clientWidth = scroller.clientWidth
@@ -164,7 +179,14 @@ const Row = ({ children }) => {
           })
         }}
       >
-        <ChevronRightIcon size={50} fill={context.color} />
+        <span
+          {...styles.arrowBg}
+          {...colorScheme.set('backgroundColor', context.bgColor)}
+        />
+        <ChevronRightIcon
+          size={50}
+          {...colorScheme.set('fill', context.color)}
+        />
       </button>
     </div>
   )

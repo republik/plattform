@@ -42,3 +42,7 @@ You can pass props to the dynamic component via the `props` prop.
   src='/static/dynamic_hello.js'
   props={{text: 'Hi there!'}} />
 ```
+
+## Identifier-based Component
+
+Alternately, you can specify an `identifier` instead of a `src`. This identifier is then mapped to a specific component in the frontend. Use a [Proxy](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy) if you want to catch all, e.g. for displaying a placeholder in a CMS. Props can be passed to the component same as described above. 

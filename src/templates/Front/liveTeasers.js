@@ -8,10 +8,11 @@ import { TeaserFeed } from '../../components/TeaserFeed'
 import { TeaserActiveDebates } from '../../components/TeaserActiveDebates'
 
 import { TeaserSectionTitle } from '../../components/TeaserShared'
+import { TeaserMyMagazine } from '../../components/TeaserMyMagazine'
 
 import Center from '../../components/Center'
 import Loader from '../../components/Loader'
-
+import LazyLoad from '../../components/LazyLoad'
 import { mUp } from '../../theme/mediaQueries'
 
 const styles = {
@@ -25,8 +26,28 @@ const styles = {
   })
 }
 
+const LAZYLOADER_DIALOG_HEIGHT = 300
+const LAZYLOADER_MYMAGAZINE_HEIGHT = 210
+
 const DefaultLink = ({ children }) => children
 const withData = Component => props => <Component {...props} data={{}} />
+const Placeholder = ({ attributes, children, minHeight }) => (
+  <div
+    attributes={attributes}
+    style={{
+      padding: '20px 0',
+      backgroundColor: '#111',
+      color: '#f0f0f0',
+      textAlign: 'center',
+      minHeight,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center'
+    }}
+  >
+    {children}
+  </div>
+)
 
 const createLiveTeasers = ({
   Link = DefaultLink,
@@ -34,8 +55,77 @@ const createLiveTeasers = ({
   DiscussionLink = DefaultLink,
   t,
   withFeedData = withData,
-  withDiscussionsData = withData
+  withDiscussionsData = withData,
+  withMyMagazineData = withData,
+  ActionBar,
+  showMyMagazine = true
 }) => {
+  const MyMagazineWithData = withMyMagazineData(
+    ({
+      data,
+      title,
+      bookmarksUrl,
+      bookmarksLabel,
+      notificationsUrl,
+      notificationsLabel,
+      placeholder
+    }) => {
+      return (
+        <Loader
+          error={data.error}
+          loading={data.loading}
+          style={{ minHeight: LAZYLOADER_MYMAGAZINE_HEIGHT }}
+          render={() => {
+            return (
+              <TeaserMyMagazine
+                placeholder={placeholder}
+                latestSubscribedArticles={data.latestSubscribedArticles}
+                latestProgressOrBookmarkedArticles={
+                  data.latestProgressOrBookmarkedArticles
+                }
+                title={title}
+                bookmarksLabel={bookmarksLabel}
+                bookmarksUrl={bookmarksUrl}
+                notificationsLabel={notificationsLabel}
+                notificationsUrl={notificationsUrl}
+                Link={Link}
+                ActionBar={ActionBar}
+              />
+            )
+          }}
+        />
+      )
+    }
+  )
+
+  const DiscussionWithData = withDiscussionsData(
+    ({ attributes, data, url, label }) => {
+      return (
+        <Loader
+          error={data.error}
+          loading={data.loading}
+          style={{ minHeight: LAZYLOADER_DIALOG_HEIGHT }}
+          render={() => {
+            return (
+              <div {...styles.dialogContainer}>
+                <TeaserActiveDebates
+                  t={t}
+                  CommentLink={CommentLink}
+                  DiscussionLink={DiscussionLink}
+                  discussions={data.discussions}
+                >
+                  <Link href={url} passHref>
+                    <TeaserSectionTitle href={url}>{label}</TeaserSectionTitle>
+                  </Link>
+                </TeaserActiveDebates>
+              </div>
+            )
+          }}
+        />
+      )
+    }
+  )
+
   const extractRepoIds = children => {
     if (!children) {
       return []
@@ -141,33 +231,13 @@ const createLiveTeasers = ({
       matchMdast: node =>
         matchZone('LIVETEASER')(node) && node.data.id === 'dialog',
       props: node => node.data,
-      component: withDiscussionsData(({ attributes, data, url, label }) => {
+      component: props => {
         return (
-          <Loader
-            error={data.error}
-            loading={data.loading}
-            style={{ minHeight: 600 }}
-            render={() => {
-              return (
-                <div {...styles.dialogContainer}>
-                  <TeaserActiveDebates
-                    t={t}
-                    CommentLink={CommentLink}
-                    DiscussionLink={DiscussionLink}
-                    discussions={data.discussions}
-                  >
-                    <Link href={url} passHref>
-                      <TeaserSectionTitle href={url}>
-                        {label}
-                      </TeaserSectionTitle>
-                    </Link>
-                  </TeaserActiveDebates>
-                </div>
-              )
-            }}
-          />
+          <LazyLoad style={{ minHeight: LAZYLOADER_DIALOG_HEIGHT }}>
+            <DiscussionWithData {...props} />
+          </LazyLoad>
         )
-      }),
+      },
       isVoid: true,
       editorModule: 'liveteaser',
       editorOptions: {
@@ -198,22 +268,62 @@ const createLiveTeasers = ({
     },
     {
       matchMdast: node =>
+        matchZone('LIVETEASER')(node) && node.data.id === 'mymagazine',
+      props: node => node.data,
+      component: props => {
+        if (!showMyMagazine) {
+          return null
+        }
+        return (
+          <LazyLoad
+            style={{
+              minHeight: LAZYLOADER_MYMAGAZINE_HEIGHT
+            }}
+          >
+            <MyMagazineWithData
+              placeholder={
+                props.editorPreview && (
+                  <Placeholder minHeight={LAZYLOADER_MYMAGAZINE_HEIGHT}>
+                    Meine Republik
+                  </Placeholder>
+                )
+              }
+              {...props}
+            />
+          </LazyLoad>
+        )
+      },
+      isVoid: true,
+      editorModule: 'liveteaser',
+      editorOptions: {
+        type: 'LIVETEASERMYMAGAZINE',
+        insertButtonText: 'Meine Republik',
+        insertId: 'mymagazine',
+        form: [
+          {
+            key: 'title'
+          },
+          {
+            key: 'bookmarksLabel'
+          },
+          {
+            key: 'bookmarksUrl'
+          },
+          {
+            key: 'notificationsLabel'
+          },
+          {
+            key: 'notificationsUrl'
+          }
+        ]
+      }
+    },
+    {
+      matchMdast: node =>
         matchZone('LIVETEASER')(node) && node.data.id === 'end',
       props: node => node.data,
       component: ({ attributes, data, url, label }) => {
-        return (
-          <div
-            attributes={attributes}
-            style={{
-              padding: '20px 0',
-              backgroundColor: '#111',
-              color: '#f0f0f0',
-              textAlign: 'center'
-            }}
-          >
-            The End
-          </div>
-        )
+        return <Placeholder attributes={attributes}>The End</Placeholder>
       },
       isVoid: true,
       editorModule: 'liveteaser',

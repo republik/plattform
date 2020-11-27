@@ -22,12 +22,13 @@ const styles = {
 
 export const Caption = ({ children, attributes }) => {
   const [colorScheme] = useColorContext()
-  const colors = css({
-    color: colorScheme.text
-  })
 
   return (
-    <figcaption {...attributes} {...styles.caption} {...colors}>
+    <figcaption
+      {...attributes}
+      {...styles.caption}
+      {...colorScheme.set('color', 'text')}
+    >
       {children}
     </figcaption>
   )

@@ -9,7 +9,6 @@ import colors from '../../theme/colors'
 import { renderMdast } from 'mdast-react-render'
 import { timeFormat } from '../../lib/timeFormat'
 import { Editorial } from '../Typography'
-
 import { matchType } from 'mdast-react-render/lib/utils'
 import Highlight from './Highlight'
 
@@ -65,7 +64,10 @@ export const TeaserFeed = ({
 }) => {
   const formatMeta = (format && format.meta) || {}
   const Headline =
-    formatMeta.kind === 'meta' || metaKind === 'meta' || template === 'format'
+    formatMeta.kind === 'meta' ||
+    metaKind === 'meta' ||
+    template === 'format' ||
+    template === 'page'
       ? Headlines.Interaction
       : formatMeta.kind === 'scribble' || metaKind === 'scribble'
       ? Headlines.Scribble
@@ -85,11 +87,11 @@ export const TeaserFeed = ({
     <Container
       highlighted={highlighted}
       format={format}
-      color={borderColor}
+      formatColor={borderColor}
       Link={Link}
       menu={menu}
     >
-      <Headline style={{ color: titleColor }}>
+      <Headline formatColor={titleColor}>
         <Link href={path} passHref>
           <a {...styles.link} href={path}>
             {title}

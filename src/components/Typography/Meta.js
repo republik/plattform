@@ -31,13 +31,9 @@ const metaHeadline = css({
 })
 
 export const Headline = ({ children, ...props }) => {
-  const [
-    {
-      rules: { textColor }
-    }
-  ] = useColorContext()
+  const [colorScheme] = useColorContext()
   return (
-    <h1 {...props} {...metaHeadline} {...textColor}>
+    <h1 {...props} {...metaHeadline} {...colorScheme.set('color', 'text')}>
       {children}
     </h1>
   )
@@ -53,13 +49,14 @@ const subhead = css({
 })
 
 export const Subhead = ({ children, attributes, ...props }) => {
-  const [
-    {
-      rules: { textColor }
-    }
-  ] = useColorContext()
+  const [colorScheme] = useColorContext()
   return (
-    <h2 {...attributes} {...props} {...subhead} {...textColor}>
+    <h2
+      {...attributes}
+      {...props}
+      {...subhead}
+      {...colorScheme.set('color', 'text')}
+    >
       {children}
     </h2>
   )
@@ -84,13 +81,14 @@ const metaP = css({
 })
 
 export const P = ({ children, ...props }) => {
-  const [
-    {
-      rules: { textColor }
-    }
-  ] = useColorContext()
+  const [colorScheme] = useColorContext()
   return (
-    <p {...props} {...metaP} {...fontRule} {...textColor}>
+    <p
+      {...props}
+      {...metaP}
+      {...fontRule}
+      {...colorScheme.set('color', 'text')}
+    >
       {children}
     </p>
   )
@@ -107,13 +105,15 @@ const lead = css({
 })
 
 export const Lead = ({ children, attributes, ...props }) => {
-  const [
-    {
-      rules: { textColor }
-    }
-  ] = useColorContext()
+  const [colorScheme] = useColorContext()
   return (
-    <p {...attributes} {...props} {...lead} {...textColor} {...fontRule}>
+    <p
+      {...attributes}
+      {...props}
+      {...lead}
+      {...colorScheme.set('color', 'text')}
+      {...fontRule}
+    >
       {children}
     </p>
   )

@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import { css } from 'glamor'
 import { imageSizeInfo } from 'mdast-react-render/lib/utils'
@@ -7,10 +7,10 @@ import LazyImage from '../LazyLoad/Image'
 import { GalleryIcon } from '../Icons'
 import { sansSerifRegular12, sansSerifRegular15 } from '../Typography/styles'
 import { mUp } from '../../theme/mediaQueries'
+import SwitchImage from './SwitchImage'
 
 const styles = {
   image: css({
-    display: 'block',
     width: '100%'
   }),
   imageContainer: css({
@@ -46,78 +46,91 @@ const GalleryButton = ({ gallerySize, onClick }) => {
   )
 }
 
-class Image extends Component {
-  render() {
-    const {
-      src,
-      srcSet,
-      alt,
-      attributes = {},
-      maxWidth,
-      size: sizeProp,
-      aboveTheFold,
-      enableGallery = false,
-      gallerySize
-    } = this.props
+const Image = (props, context) => {
+  const {
+    src,
+    dark,
+    srcSet,
+    alt,
+    attributes = {},
+    maxWidth,
+    size: sizeProp,
+    aboveTheFold,
+    enableGallery = false,
+    gallerySize
+  } = props
 
-    const onClick = enableGallery
-      ? () => this.context.toggleGallery && this.context.toggleGallery(src)
-      : () => {}
+  const onClick =
+    enableGallery && context.toggleGallery
+      ? () => context.toggleGallery(src)
+      : undefined
 
-    const size = sizeProp || (sizeProp === undefined && imageSizeInfo(src))
-    const aspectRatio = size ? size.width / size.height : undefined
+  const size = sizeProp || (sizeProp === undefined && imageSizeInfo(src))
+  let aspectRatio = size ? size.width / size.height : undefined
+  if (dark?.size) {
+    aspectRatio = Math.min(aspectRatio, dark.size.width / dark.size.height)
+  }
 
-    const image = isFinite(aspectRatio) ? (
-      <LazyImage
-        attributes={attributes}
-        visible={aboveTheFold}
-        aspectRatio={aspectRatio}
-        src={src}
-        srcSet={srcSet}
-        alt={alt}
-        onClick={onClick}
-      />
-    ) : (
-      <img
-        {...attributes}
-        {...styles.image}
-        src={src}
-        srcSet={srcSet}
-        alt={alt}
-        onClick={onClick}
-      />
-    )
+  const image = isFinite(aspectRatio) ? (
+    <LazyImage
+      attributes={attributes}
+      visible={aboveTheFold}
+      aspectRatio={aspectRatio}
+      src={src}
+      dark={dark}
+      srcSet={srcSet}
+      alt={alt}
+      onClick={onClick}
+    />
+  ) : (
+    <SwitchImage
+      {...attributes}
+      {...styles.image}
+      src={src}
+      srcSet={srcSet}
+      dark={dark}
+      alt={alt}
+      onClick={onClick}
+    />
+  )
 
-    let wrappedImage = image
+  let wrappedImage = image
 
-    if (maxWidth) {
-      wrappedImage = (
-        <span {...styles.maxWidth} style={{ maxWidth }}>
-          {wrappedImage}
-        </span>
-      )
-    }
+  if (maxWidth) {
     wrappedImage = (
-      <>
+      <span {...styles.maxWidth} style={{ maxWidth }}>
         {wrappedImage}
-        {gallerySize > 0 && (
-          <GalleryButton gallerySize={gallerySize} onClick={onClick} />
-        )}
-      </>
-    )
-    return (
-      <div
-        {...styles.imageContainer}
-        style={{ cursor: enableGallery ? 'zoom-in' : undefined }}
-      >
-        {wrappedImage}
-      </div>
+      </span>
     )
   }
+  wrappedImage = (
+    <>
+      {wrappedImage}
+      {gallerySize > 0 && (
+        <GalleryButton gallerySize={gallerySize} onClick={onClick} />
+      )}
+    </>
+  )
+  return (
+    <div
+      {...styles.imageContainer}
+      style={{
+        cursor: enableGallery // during SSR context.toggleGallery and therefore onClick are not present
+          ? 'zoom-in'
+          : undefined
+      }}
+    >
+      {wrappedImage}
+    </div>
+  )
 }
 
 Image.propTypes = {
   src: PropTypes.string.isRequired,
+  dark: PropTypes.shape({
+    src: PropTypes.string.isRequired,
+    srcSet: PropTypes.string
+  }),
   srcSet: PropTypes.string,
   alt: PropTypes.string,
   size: PropTypes.shape({

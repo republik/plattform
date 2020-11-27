@@ -1,9 +1,8 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import PropTypes from 'prop-types'
 import { css } from 'glamor'
 import Textarea from 'react-textarea-autosize'
 import scrollIntoView from 'scroll-into-view'
-import colors from '../../../theme/colors'
 import { mBreakPoint } from '../../../theme/mediaQueries'
 import { serifRegular16, sansSerifRegular12 } from '../../Typography/styles'
 
@@ -12,14 +11,13 @@ import { DiscussionContext } from '../DiscussionContext'
 import { convertStyleToRem } from '../../Typography/utils'
 import { Embed } from '../Internal/Comment'
 import { useDebounce } from '../../../lib/useDebounce'
-
+import { useColorContext } from '../../Colors/useColorContext'
 import Loader from '../../Loader'
 
 const styles = {
   root: css({}),
   background: css({
-    position: 'relative',
-    background: colors.secondaryBg
+    position: 'relative'
   }),
   textArea: css({
     display: 'block',
@@ -32,14 +30,7 @@ const styles = {
     border: 'none',
     outline: 'none',
     boxSizing: 'border-box',
-    ...convertStyleToRem(serifRegular16),
-    color: colors.text
-  }),
-  textAreaEmpty: css({
-    color: colors.lightText,
-    '::-webkit-input-placeholder': {
-      color: colors.lightText
-    }
+    ...convertStyleToRem(serifRegular16)
   }),
   textAreaLimit: css({
     paddingBottom: '28px'
@@ -50,6 +41,10 @@ const styles = {
     position: 'absolute',
     bottom: 6,
     left: 8
+  }),
+  withBorderBottom: css({
+    borderBottomWidth: 1,
+    borderBottomStyle: 'solid'
   })
 }
 
@@ -75,7 +70,7 @@ export const CommentComposer = props => {
     commentId,
     autoFocus = true
   } = props
-
+  const [colorScheme] = useColorContext()
   /*
    * Refs
    *
@@ -244,11 +239,25 @@ export const CommentComposer = props => {
     }
   }
 
+  const textAreaEmptyRule = useMemo(
+    () =>
+      css({
+        color: colorScheme.getCSSColor('textSoft'),
+        '::-webkit-input-placeholder': {
+          color: colorScheme.getCSSColor('textSoft')
+        }
+      }),
+    [colorScheme]
+  )
+
   return (
     <div ref={root} {...styles.root}>
-      <div {...styles.background}>
+      <div {...styles.background} {...colorScheme.set('background', 'hover')}>
         {!hideHeader && (
-          <div style={{ borderBottom: '1px solid white' }}>
+          <div
+            {...styles.withBorderBottom}
+            {...colorScheme.set('borderColor', 'default')}
+          >
             <Header
               t={t}
               displayAuthor={displayAuthor}
@@ -259,7 +268,10 @@ export const CommentComposer = props => {
 
         {/* Tags are only available in the root composer! */}
         {isRoot && tags && (
-          <div style={{ borderBottom: '1px solid white' }}>
+          <div
+            {...styles.withBorderBottom}
+            {...colorScheme.set('borderColor', 'default')}
+          >
             <Tags tags={tags} onChange={setTagValue} value={tagValue} />
           </div>
         )}
@@ -267,8 +279,9 @@ export const CommentComposer = props => {
         <Textarea
           inputRef={textareaRef}
           {...styles.textArea}
+          {...colorScheme.set('color', 'text')}
           {...(maxLength ? styles.textAreaLimit : {})}
-          {...(text === '' ? styles.textAreaEmpty : {})}
+          {...(text === '' ? textAreaEmptyRule : {})}
           placeholder={t('styleguide/CommentComposer/placeholder')}
           value={text}
           rows='1'
@@ -313,20 +326,20 @@ CommentComposer.propTypes = {
 }
 
 const MaxLengthIndicator = ({ maxLength, length }) => {
+  const [colorScheme] = useColorContext()
   const remaining = maxLength - length
-  const color =
-    remaining < 0
-      ? colors.error
-      : remaining < 21
-      ? colors.text
-      : colors.lightText
-
   if (remaining > maxLength * 0.33) {
     return null
   }
 
   return (
-    <div {...styles.maxLengthIndicator} style={{ color }}>
+    <div
+      {...styles.maxLengthIndicator}
+      {...colorScheme.set(
+        'color',
+        remaining < 0 ? 'error' : remaining < 21 ? 'text' : 'textSoft'
+      )}
+    >
       {remaining}
     </div>
   )

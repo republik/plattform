@@ -14,7 +14,7 @@ import {
   matchTeaser,
   matchTeaserType,
   matchTeaserGroup,
-  extractImage,
+  extractImages,
   globalInlines,
   skipMdastImage,
   styles
@@ -197,6 +197,9 @@ const createTeasers = ({ t, Link, plattformUnauthorizedZoneText }) => {
           singleColumn={singleColumn}
           attributes={attributes}
           {...props}
+          // darkmode support in article "read more" teaser
+          color={undefined}
+          bgColor={undefined}
         >
           {children}
         </TeaserFrontTile>
@@ -204,7 +207,7 @@ const createTeasers = ({ t, Link, plattformUnauthorizedZoneText }) => {
     ),
     props: (node, index, parent, { ancestors }) => ({
       singleColumn: getSingleColumn(ancestors),
-      image: extractImage(node.children[0]),
+      ...extractImages(node.children[0], 'image'),
       ...node.data
     }),
     editorModule: 'teaser',
@@ -212,7 +215,14 @@ const createTeasers = ({ t, Link, plattformUnauthorizedZoneText }) => {
       type: 'ARTICLETILE',
       teaserType: 'articleTile',
       showUI: false,
-      formOptions: ['formatUrl', 'formatColor', 'showImage', 'image', 'kind']
+      formOptions: [
+        'formatUrl',
+        'formatColor',
+        'showImage',
+        'image',
+        'imageDark',
+        'kind'
+      ]
     },
     rules: [
       skipMdastImage,
@@ -403,7 +413,7 @@ const createTeasers = ({ t, Link, plattformUnauthorizedZoneText }) => {
       )
     },
     props: node => ({
-      image: extractImage(node.children[0]),
+      ...extractImages(node.children[0], 'image'),
       ...node.data
     }),
     editorModule: 'teaser',
@@ -414,6 +424,7 @@ const createTeasers = ({ t, Link, plattformUnauthorizedZoneText }) => {
       formOptions: [
         'formatUrl',
         'image',
+        'imageDark',
         'byline',
         'kind',
         'showImage',
@@ -483,7 +494,7 @@ const createTeasers = ({ t, Link, plattformUnauthorizedZoneText }) => {
       formTitle: 'Carousel',
       formOptions: ['noAdapt', 'color', 'bgColor', 'outline', 'bigger', 'grid'],
       defaultValues: {
-        outline: '#D7D7D7'
+        outline: true
       }
     },
     rules: [

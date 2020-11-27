@@ -1,16 +1,13 @@
 import PropTypes from 'prop-types'
-import React, { Component } from 'react'
+import React, { useState, useEffect, useRef, useMemo } from 'react'
 import { css } from 'glamor'
 
-import { measure } from './utils'
 import Bar, { Lollipop } from './Bars'
 import TimeBar from './TimeBars'
 import { Line, Slope } from './Lines'
 import ScatterPlot from './ScatterPlots'
 import { GenericMap, ProjectedMap, SwissMap } from './Maps'
 import Hemicycle from './Hemicycle'
-
-import colors from '../../theme/colors'
 
 import { mUp } from '../../theme/mediaQueries'
 import {
@@ -20,7 +17,10 @@ import {
   sansSerifRegular19
 } from '../Typography/styles'
 import { fontRule } from '../Typography/Interaction'
+import { Note } from '../Typography/Editorial'
 import { convertStyleToRem, pxToRem } from '../Typography/utils'
+import { useColorContext } from '../Colors/useColorContext'
+import { ColorContextLocalExtension } from '../Colors/ColorContext'
 
 export const ReactCharts = {
   Bar,
@@ -54,8 +54,6 @@ const createRanges = ({
   }
 }
 
-const colorRanges = createRanges(colors)
-
 const styles = {
   h: css({
     ...convertStyleToRem(sansSerifMedium19),
@@ -63,7 +61,6 @@ const styles = {
     [mUp]: {
       ...convertStyleToRem(sansSerifMedium22)
     },
-    color: colors.text,
     margin: 0,
     marginBottom: 15,
     '& + p': {
@@ -71,7 +68,6 @@ const styles = {
     }
   }),
   p: css({
-    color: colors.text,
     ...convertStyleToRem(sansSerifRegular16),
     [mUp]: {
       ...convertStyleToRem(sansSerifRegular19)
@@ -81,57 +77,124 @@ const styles = {
   })
 }
 
-export const ChartTitle = ({ children, ...props }) => (
-  <h3 {...props} {...styles.h}>
-    {children}
-  </h3>
-)
+export const ChartTitle = ({ children, ...props }) => {
+  const [colorScheme] = useColorContext()
+  return (
+    <h3 {...props} {...styles.h} {...colorScheme.set('color', 'text')}>
+      {children}
+    </h3>
+  )
+}
 
-export const ChartLead = ({ children, ...props }) => (
-  <p {...props} {...styles.p} {...fontRule}>
-    {children}
-  </p>
-)
+export const ChartLead = ({ children, ...props }) => {
+  const [colorScheme] = useColorContext()
+  return (
+    <p
+      {...props}
+      {...styles.p}
+      {...colorScheme.set('color', 'text')}
+      {...fontRule}
+    >
+      {children}
+    </p>
+  )
+}
 
-class Chart extends Component {
-  constructor(props) {
-    super(props)
+export const ChartLegend = ({ children, ...props }) => {
+  const [colorScheme] = useColorContext()
+  return (
+    <Note {...colorScheme.set('color', 'text')} style={{ marginTop: 15 }}>
+      {children}
+    </Note>
+  )
+}
 
-    this.state = {
-      width: 290
+const Chart = props => {
+  const [colorScheme] = useColorContext()
+  const [stateWidth, setWidth] = useState(290)
+
+  const { width: fixedWidth, config, tLabel } = props
+
+  const width = fixedWidth || stateWidth
+  const ReactChart = ReactCharts[config.type]
+
+  const colorRanges = useMemo(() => createRanges(colorScheme.ranges), [
+    colorScheme
+  ])
+
+  const ref = useRef()
+  useEffect(() => {
+    if (fixedWidth) {
+      return
     }
-    this.measure = measure((ref, { width }) => {
-      if (width !== this.state.width) {
-        this.setState({ width })
+    const measure = () => {
+      if (ref.current) {
+        const { width } = ref.current.getBoundingClientRect()
+        setWidth(width)
       }
-    })
-  }
-  render() {
-    const { width: fixedWidth, config, tLabel } = this.props
+    }
+    window.addEventListener('resize', measure)
+    measure()
+    return () => {
+      window.removeEventListener('resize', measure)
+    }
+  }, [fixedWidth])
 
-    const width = fixedWidth || this.state.width
-    const ReactChart = ReactCharts[config.type]
+  const colorContextExtension = useMemo(() => {
+    if (!config.colorDarkMapping) {
+      return null
+    }
+    const keys = Object.keys(config.colorDarkMapping)
+    return {
+      localColors: keys.reduce(
+        (localColors, key, i) => {
+          localColors.dark[`charts${i}`] = config.colorDarkMapping[key]
+          localColors.light[`charts${i}`] = key
+          return localColors
+        },
+        { dark: {}, light: {} }
+      ),
+      localMappings: keys.reduce(
+        (mappings, key, i) => {
+          mappings.charts[key] = `charts${i}`
+          return mappings
+        },
+        { charts: {} }
+      )
+    }
+  }, [config])
 
+  const content = (
+    <div
+      ref={fixedWidth ? undefined : ref}
+      style={{
+        maxWidth: config.maxWidth
+      }}
+    >
+      {!!width && (
+        <ReactChart
+          {...config}
+          // make colorScheme available for class components—maps
+          colorScheme={colorScheme}
+          tLabel={tLabel}
+          colorRanges={colorRanges}
+          width={width}
+          values={props.values}
+          description={config.description}
+        />
+      )}
+    </div>
+  )
+
+  if (colorContextExtension) {
     return (
-      <div
-        ref={fixedWidth ? undefined : this.measure}
-        style={{
-          maxWidth: config.maxWidth
-        }}
-      >
-        {!!width && (
-          <ReactChart
-            {...config}
-            tLabel={tLabel}
-            colorRanges={colorRanges}
-            width={width}
-            values={this.props.values}
-            description={config.description}
-          />
-        )}
-      </div>
+      <ColorContextLocalExtension {...colorContextExtension}>
+        {content}
+      </ColorContextLocalExtension>
     )
   }
+
+  return content
 }
 
 Chart.propTypes = {

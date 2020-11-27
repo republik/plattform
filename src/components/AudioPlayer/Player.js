@@ -9,10 +9,8 @@ import globalState from '../../lib/globalMediaState'
 
 import { breakoutStyles } from '../Center'
 import { InlineSpinner } from '../Spinner'
-import { A, linkRule } from '../Typography'
 import { sansSerifRegular12, sansSerifRegular15 } from '../Typography/styles'
 import { mUp } from '../../theme/mediaQueries'
-import colors from '../../theme/colors'
 import {
   PlayIcon,
   PauseIcon,
@@ -20,6 +18,7 @@ import {
   DownloadIcon,
   CloseIcon
 } from '../Icons'
+import { useColorContext } from '../Colors/useColorContext'
 
 const ZINDEX_AUDIOPLAYER_ICONS = 6
 const ZINDEX_AUDIOPLAYER_SCRUB = 3
@@ -124,7 +123,6 @@ const styles = {
   progress: css({
     position: 'absolute',
     zIndex: ZINDEX_AUDIOPLAYER_PROGRESS,
-    backgroundColor: colors.text,
     left: 0,
     height: PROGRESS_HEIGHT
   }),
@@ -136,7 +134,6 @@ const styles = {
     fontSize: '16px',
     lineHeight: '25px',
     height: '30px',
-    color: colors.text,
     [mUp]: {
       fontSize: '19px'
     }
@@ -160,16 +157,13 @@ const styles = {
   }),
   totalDuration: css({
     ...barStyle,
-    backgroundColor: '#e8e8ed',
     zIndex: ZINDEX_AUDIOPLAYER_TOTAL
   }),
   timeRange: css({
-    backgroundColor: '#bebdcb',
     position: 'absolute',
     height: PROGRESS_HEIGHT
   }),
   sourceError: css({
-    color: colors.disabled,
     height: '25px',
     ...ellipsize,
     ...sansSerifRegular12,
@@ -179,7 +173,7 @@ const styles = {
       lineHeight: '25px'
     }
   }),
-  retry: css(linkRule, {
+  retry: css({
     cursor: 'pointer'
   }),
   titlebox: css({
@@ -191,7 +185,6 @@ const styles = {
     top: '-4px',
     borderRadius: 6,
     position: 'absolute',
-    backgroundColor: 'black',
     width: SLIDERTHUMB_SIZE,
     height: SLIDERTHUMB_SIZE,
     transition: 'opacity ease-out 0.3s'
@@ -210,9 +203,7 @@ export const getFormattedTime = secs => {
   !!hours && dateTime.setHours(hours)
   !!minutes && dateTime.setMinutes(minutes)
   !!seconds && dateTime.setSeconds(seconds)
-  return !!hours
-    ? hoursDurationFormat(dateTime)
-    : minutesDurationFormat(dateTime)
+  return hours ? hoursDurationFormat(dateTime) : minutesDurationFormat(dateTime)
 }
 
 class AudioPlayer extends Component {
@@ -463,6 +454,7 @@ class AudioPlayer extends Component {
       title,
       fixed,
       sourcePath,
+      colorScheme,
       Link = DefaultLink
     } = this.props
     const {
@@ -484,8 +476,7 @@ class AudioPlayer extends Component {
       top: loading ? '0px' : fixed ? '-12px' : '1px'
     }
     const timeTextStyle = {
-      fontSize: fixed ? '16px' : '19px',
-      color: colors.lightText
+      fontSize: fixed ? '16px' : '19px'
     }
 
     let timeRanges = []
@@ -494,7 +485,6 @@ class AudioPlayer extends Component {
         timeRanges.push({ start: buffered.start(i), end: buffered.end(i) })
       }
     }
-
     return (
       <div
         {...merge(styles.wrapper, breakoutStyles[size])}
@@ -581,10 +571,17 @@ class AudioPlayer extends Component {
               {!playing && (
                 <PlayIcon
                   size={SIZE.play}
-                  fill={playEnabled ? '#000' : colors.disabled}
+                  {...(playEnabled
+                    ? colorScheme.set('fill', 'text')
+                    : colorScheme.set('fill', 'disabled'))}
                 />
               )}
-              {playing && <PauseIcon size={SIZE.play} fill='#000' />}
+              {playing && (
+                <PauseIcon
+                  size={SIZE.play}
+                  {...colorScheme.set('fill', 'text')}
+                />
+              )}
             </button>
             <button
               {...styles.button}
@@ -593,7 +590,9 @@ class AudioPlayer extends Component {
             >
               <RewindIcon
                 size={SIZE.rewind}
-                fill={playEnabled && progress > 0 ? '#000' : colors.disabled}
+                {...(playEnabled && progress > 0
+                  ? colorScheme.set('fill', 'text')
+                  : colorScheme.set('fill', 'disabled'))}
               />
             </button>
           </div>
@@ -605,11 +604,17 @@ class AudioPlayer extends Component {
                   download
                   title={t('styleguide/AudioPlayer/download')}
                 >
-                  <DownloadIcon size={SIZE.download} fill={'#000'} />
+                  <DownloadIcon
+                    size={SIZE.download}
+                    {...colorScheme.set('fill', 'text')}
+                  />
                 </a>
               )}
               {!playEnabled && (
-                <DownloadIcon size={SIZE.download} fill={colors.disabled} />
+                <DownloadIcon
+                  size={SIZE.download}
+                  {...colorScheme.set('fill', 'disabled')}
+                />
               )}
             </div>
           )}
@@ -619,10 +624,17 @@ class AudioPlayer extends Component {
               {...styles.close}
               onClick={closeHandler}
             >
-              <CloseIcon size={SIZE.close} fill={'#000'} />
+              <CloseIcon
+                size={SIZE.close}
+                {...colorScheme.set('fill', 'text')}
+              />
             </button>
           )}
-          <div {...styles.uiText} style={uiTextStyle}>
+          <div
+            {...styles.uiText}
+            {...colorScheme.set('color', 'text')}
+            style={uiTextStyle}
+          >
             {loading && (
               <InlineSpinner
                 size={25}
@@ -632,21 +644,33 @@ class AudioPlayer extends Component {
             {!loading && title && fixed && (
               <div {...styles.time}>
                 <Link href={sourcePath} passHref>
-                  <A style={{ color: colors.text }} href={sourcePath}>
+                  <a
+                    {...colorScheme.set('color', 'text')}
+                    style={{ textDecoration: 'none' }}
+                    href={sourcePath}
+                  >
                     {title}
-                  </A>
+                  </a>
                 </Link>
               </div>
             )}
             {!loading && (
-              <div {...styles.time} style={timeTextStyle} tabIndex='0'>
+              <div
+                {...styles.time}
+                style={timeTextStyle}
+                {...colorScheme.set('color', 'textSoft')}
+                tabIndex='0'
+              >
                 {this.formattedCurrentTime && this.formattedCurrentTime}
                 {this.formattedCurrentTime && this.formattedDuration && ' / '}
                 {this.formattedDuration && this.formattedDuration}
               </div>
             )}
             {sourceError && !loading && (
-              <div {...styles.sourceError}>
+              <div
+                {...styles.sourceError}
+                {...colorScheme.set('color', 'disabled')}
+              >
                 {t('styleguide/AudioPlayer/sourceError')}{' '}
                 <span onClick={() => this.reload()} {...styles.retry}>
                   {t('styleguide/AudioPlayer/sourceErrorTryAgain')}
@@ -660,9 +684,14 @@ class AudioPlayer extends Component {
             ? styles.scrubberBottom
             : styles.scrubberTop)}
         >
-          <div {...styles.progress} style={{ width: `${progress * 100}%` }} />
+          <div
+            {...styles.progress}
+            {...colorScheme.set('backgroundColor', 'text')}
+            style={{ width: `${progress * 100}%` }}
+          />
           <div
             {...styles.sliderThumb}
+            {...colorScheme.set('backgroundColor', 'defaultInverted')}
             style={{
               opacity: playing || progress > 0 ? 1 : 0,
               left: `calc(${progress * 100}% - ${progress *
@@ -677,12 +706,16 @@ class AudioPlayer extends Component {
             onTouchEnd={this.scrubEnd}
             onMouseDown={this.scrubStart}
           />
-          <div {...styles.buffer}>
+          <div
+            {...styles.buffer}
+            {...colorScheme.set('backgroundColor', 'divider')}
+          >
             {this.audio &&
               timeRanges.map(({ start, end }, index) => (
                 <span
                   key={index}
                   {...styles.timeRange}
+                  {...colorScheme.set('backgroundColor', 'dividerInverted')}
                   style={{
                     left: `${(start / this.audio.duration) * 100}%`,
                     width: `${((end - start) / this.audio.duration) * 100}%`
@@ -690,7 +723,10 @@ class AudioPlayer extends Component {
                 />
               ))}
           </div>
-          <div {...styles.totalDuration} />
+          <div
+            {...styles.totalDuration}
+            {...colorScheme.set('backgroundColor', 'default')}
+          />
         </div>
       </div>
     )
@@ -733,4 +769,9 @@ AudioPlayer.contextTypes = {
   saveMediaProgress: PropTypes.func
 }
 
-export default AudioPlayer
+const AudioPlayerWithColorContext = ({ ...props }) => {
+  const [colorScheme] = useColorContext()
+  return <AudioPlayer {...props} colorScheme={colorScheme} />
+}
+
+export default AudioPlayerWithColorContext

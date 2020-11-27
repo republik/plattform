@@ -2,7 +2,6 @@ import { css } from 'glamor'
 import PropTypes from 'prop-types'
 import React from 'react'
 import { fontStyles } from '../../theme/fonts'
-
 import CarouselContext from './Context'
 
 const styles = {

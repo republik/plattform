@@ -194,6 +194,23 @@ The `collapsable` attribute collapses the infobox, unless the content height is 
 </div>
 ```
 
+For very long infoboxes, we scroll back to the title once the infobox has been closed.
+
+```react
+<div>
+<InfoBox collapsable t={t}>
+  <InfoBoxTitle>I am a big box</InfoBoxTitle>
+  <InfoBoxText>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Mattis rhoncus urna neque viverra justo nec ultrices dui. Pharetra massa massa ultricies mi quis hendrerit dolor magna. Felis eget nunc lobortis mattis. Eu augue ut lectus arcu bibendum at varius vel pharetra. Et netus et malesuada fames ac turpis egestas. Auctor urna nunc id cursus metus. Condimentum mattis pellentesque id nibh tortor id aliquet lectus. Dolor sit amet consectetur adipiscing elit pellentesque habitant morbi tristique. Sed felis eget velit aliquet sagittis id. Sit amet justo donec enim diam vulputate. Nulla facilisi nullam vehicula ipsum a arcu. Venenatis urna cursus eget nunc. In egestas erat imperdiet sed euismod nisi. Scelerisque in dictum non consectetur a. Proin libero nunc consequat interdum. Lorem ipsum dolor sit amet consectetur adipiscing elit. Risus pretium quam vulputate dignissim suspendisse. Elementum integer enim neque volutpat ac tincidunt vitae. Suscipit tellus mauris a diam maecenas.</InfoBoxText>
+  <InfoBoxText>Mauris vitae ultricies leo integer malesuada nunc vel risus commodo. Eget duis at tellus at urna condimentum. Sed cras ornare arcu dui vivamus arcu felis bibendum. Donec et odio pellentesque diam volutpat commodo sed egestas egestas. Gravida dictum fusce ut placerat orci nulla pellentesque dignissim enim. Ultricies tristique nulla aliquet enim tortor at auctor. Faucibus pulvinar elementum integer enim. Massa ultricies mi quis hendrerit dolor magna eget. Lacus vestibulum sed arcu non odio euismod lacinia. Porttitor eget dolor morbi non arcu. Dui ut ornare lectus sit amet. Sodales neque sodales ut etiam sit. Eleifend mi in nulla posuere sollicitudin aliquam. Aenean pharetra magna ac placerat vestibulum lectus mauris ultrices. Mi bibendum neque egestas congue. Elementum nisi quis eleifend quam adipiscing vitae proin sagittis. Faucibus vitae aliquet nec ullamcorper sit amet risus nullam. Dignissim diam quis enim lobortis. Varius duis at consectetur lorem.</InfoBoxText>
+  <InfoBoxText>Sed turpis tincidunt id aliquet risus feugiat in ante. Lectus urna duis convallis convallis tellus id interdum velit laoreet. At urna condimentum mattis pellentesque id. Consequat nisl vel pretium lectus quam id leo in vitae. Mattis rhoncus urna neque viverra. In mollis nunc sed id semper risus. Elit ut aliquam purus sit amet luctus venenatis lectus magna. In cursus turpis massa tincidunt dui ut. Et ligula ullamcorper malesuada proin libero nunc consequat. Cursus risus at ultrices mi tempus imperdiet.</InfoBoxText>
+  <InfoBoxText>At tellus at urna condimentum. Neque laoreet suspendisse interdum consectetur libero id faucibus. Gravida arcu ac tortor dignissim convallis aenean et tortor at. Bibendum arcu vitae elementum curabitur vitae nunc sed. Quis varius quam quisque id diam vel quam elementum. Nisl condimentum id venenatis a condimentum. Pretium nibh ipsum consequat nisl vel pretium lectus quam. Aliquam nulla facilisi cras fermentum odio eu. Sed euismod nisi porta lorem mollis aliquam ut porttitor leo. Nunc lobortis mattis aliquam faucibus purus in massa tempor nec. Volutpat blandit aliquam etiam erat. Et magnis dis parturient montes nascetur ridiculus mus. Aliquam id diam maecenas ultricies mi eget mauris pharetra. Faucibus ornare suspendisse sed nisi lacus sed viverra. Tellus in metus vulputate eu scelerisque felis imperdiet proin. Ipsum dolor sit amet consectetur adipiscing elit ut. Eros in cursus turpis massa tincidunt dui.</InfoBoxText>
+  <InfoBoxText>Nisl nunc mi ipsum faucibus vitae aliquet nec ullamcorper sit. A pellentesque sit amet porttitor eget dolor morbi non arcu. Odio morbi quis commodo odio. Porttitor massa id neque aliquam vestibulum morbi blandit. Cras sed felis eget velit aliquet. Vitae auctor eu augue ut lectus. Morbi tincidunt augue interdum velit euismod. Nulla malesuada pellentesque elit eget gravida cum sociis natoque penatibus. Consequat nisl vel pretium lectus quam id. Enim diam vulputate ut pharetra sit. Odio morbi quis commodo odio aenean sed adipiscing diam. Turpis massa tincidunt dui ut ornare lectus sit amet. Libero volutpat sed cras ornare.</InfoBoxText>  
+</InfoBox>
+</div>
+```
+
+
+
 ### `<InfoBoxSubhead />` and `<InfoBoxListItem />`
 
 ```react

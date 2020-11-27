@@ -6,8 +6,9 @@ import { FigureByline, FigureImage } from '../Figure'
 import { mUp } from '../TeaserFront/mediaQueries'
 import Text from '../TeaserFront/Text'
 import { serifRegular16, serifRegular18 } from '../Typography/styles'
-
 import CarouselContext from './Context'
+import { useColorContext } from '../Colors/useColorContext'
+import SwitchImage from '../Figure/SwitchImage'
 
 import {
   PADDING,
@@ -91,13 +92,11 @@ const styles = {
     margin: '0 auto'
   }),
   image: css({
-    display: 'block',
     height: '100%',
     maxWidth: '100%',
     maxHeight: IMAGE_SIZE.maxHeight
   }),
   imageBigger: css({
-    display: 'block',
     margin: '0 auto',
     maxWidth: '100%',
     objectFit: 'contain'
@@ -107,26 +106,30 @@ const styles = {
 const Tile = ({
   count,
   image,
+  imageDark,
   alt,
   onClick,
   aboveTheFold,
   byline,
   children,
-  ...rest
+  bgColor: tileBgColor,
+  color: tileColor,
+  outline: tileOutlineColor,
+  bigger: tileBigger
 }) => {
+  const [colorScheme] = useColorContext()
   const context = React.useContext(CarouselContext)
 
-  const color = rest.color || context.color
-  const bgColor = rest.bgColor || context.bgColor
-  const outline = rest.outline || context.outline
-  const bigger = rest.bigger || context.bigger
+  const color = tileColor || context.color
+  const bgColor = tileBgColor || context.bgColor
+  const bigger = tileBigger || context.bigger
+  const outline = tileOutlineColor || context.outline
 
   const tileStyle = merge(
     styles.tile,
     {
-      border: outline ? `1px solid ${outline}` : 'none',
-      color,
-      backgroundColor: bgColor,
+      borderWidth: outline && 1,
+      borderStyle: outline && 'solid',
       cursor: onClick ? 'pointer' : 'default',
       padding: bigger ? '0 0 20px 0' : '30px 15px',
       alignItems: bigger ? 'flex-start' : 'center'
@@ -141,6 +144,8 @@ const Tile = ({
   })
 
   const imageProps = image && FigureImage.utils.getResizedSrcs(image, 450, true)
+  const imageDarkProps =
+    imageDark && FigureImage.utils.getResizedSrcs(imageDark, 450, true)
   const imageContainerStyles = bigger
     ? styles.imageContainerBigger
     : styles.imageContainer
@@ -155,7 +160,15 @@ const Tile = ({
       : false
 
   return (
-    <div {...tileStyle} onClick={onClick} className='tile'>
+    <div
+      {...tileStyle}
+      {...colorScheme.set('backgroundColor', bgColor)}
+      {...(outline &&
+        colorScheme.set('borderColor', outline === true ? 'divider' : outline))}
+      {...colorScheme.set('color', color)}
+      onClick={onClick}
+      className='tile'
+    >
       <div {...containerStyle}>
         {/* Image */}
         {imageProps && !isPortrait && (
@@ -163,13 +176,11 @@ const Tile = ({
             <FigureImage
               aboveTheFold={aboveTheFold}
               {...imageProps}
+              dark={imageDarkProps}
               alt={alt}
             />
             {byline && (
-              <FigureByline
-                position={bigger ? 'belowRight' : 'rightCompact'}
-                style={{ color }}
-              >
+              <FigureByline position={bigger ? 'belowRight' : 'rightCompact'}>
                 {byline}
               </FigureByline>
             )}
@@ -178,17 +189,15 @@ const Tile = ({
         {imageProps && isPortrait && (
           <div {...imageContainerStyles}>
             <div {...styles.imageWrapper}>
-              <img
+              <SwitchImage
                 {...imageStyles}
                 src={imageProps.src}
                 srcSet={imageProps.srcSet}
+                dark={imageDarkProps}
                 alt={alt}
               />
               {byline && (
-                <FigureByline
-                  position={bigger ? 'aboveRight' : 'rightCompact'}
-                  style={{ color }}
-                >
+                <FigureByline position={bigger ? 'aboveRight' : 'rightCompact'}>
                   {byline}
                 </FigureByline>
               )}
@@ -197,11 +206,12 @@ const Tile = ({
         )}
         {/* Body */}
         <div>
-          <Text color={color} margin={'0 auto'}>
+          <Text color={color} margin='0 auto'>
             {children}
             {!!count && (
               <TeaserCarouselArticleCount
                 count={count}
+                // inverted
                 bgColor={color}
                 color={bgColor}
               />

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import colors from '../../theme/colors'
 import { mUp } from '../../theme/mediaQueries'
 import { fontStyles as _fontStyles } from '../../theme/fonts'
@@ -10,6 +10,7 @@ import * as _Scribble from './Scribble'
 import { css } from 'glamor'
 import { convertStyleToRem } from './utils'
 import { underline } from '../../lib/styleMixins'
+import { useColorContext } from '../Colors/useColorContext'
 
 // Namespaced exports.
 export const Editorial = { ..._Editorial }
@@ -26,9 +27,6 @@ export const fontStyles = {
 export const linkStyle = {
   textDecoration: 'none',
   color: colors.primary,
-  ':visited': {
-    color: colors.primary
-  },
   '@media (hover)': {
     ':hover': {
       color: colors.secondary
@@ -134,8 +132,7 @@ const styles = {
     marginBottom: 30
   }),
   label: css({
-    ...convertStyleToRem(fontStyles.sansSerifRegular14),
-    color: colors.secondary
+    ...convertStyleToRem(fontStyles.sansSerifRegular14)
   }),
   quote: css({
     ...fontStyles.sansSerifRegular21,
@@ -143,11 +140,27 @@ const styles = {
   })
 }
 
-export const A = React.forwardRef(({ children, ...props }, ref) => (
-  <a {...props} {...linkRule} ref={ref}>
-    {children}
-  </a>
-))
+export const A = React.forwardRef(({ children, ...props }, ref) => {
+  const [colorScheme] = useColorContext()
+  const linkStyleRule = useMemo(
+    () =>
+      css({
+        textDecoration: 'none',
+        color: colorScheme.getCSSColor('primary'),
+        '@media (hover)': {
+          ':hover': {
+            color: colorScheme.getCSSColor('primaryHover')
+          }
+        }
+      }),
+    [colorScheme]
+  )
+  return (
+    <a {...props} {...linkStyleRule} ref={ref}>
+      {children}
+    </a>
+  )
+})
 
 export const H1 = ({ children, ...props }) => (
   <h1 {...props} {...styles.h1}>
@@ -173,11 +186,14 @@ export const P = ({ children, ...props }) => (
   </p>
 )
 
-export const Label = ({ children, ...props }) => (
-  <span {...props} {...styles.label}>
-    {children}
-  </span>
-)
+export const Label = ({ children, ...props }) => {
+  const [colorScheme] = useColorContext()
+  return (
+    <span {...props} {...styles.label} {...colorScheme.set('color', 'text')}>
+      {children}
+    </span>
+  )
+}
 
 const subSupStyles = {
   base: css({

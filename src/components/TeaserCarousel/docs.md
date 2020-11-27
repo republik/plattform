@@ -1,9 +1,9 @@
 A `<TeaserCarousel />` is a row of tiles through which the user can scroll horizontally.
 
 Supported props:
-- `color` (string): The text color (default: `#fff`).
-- `bgColor` (string): The background color (default: `#000`).
-- `outline` (string): The default outline color for cards.
+- `bgColor` (string): Sets the carousel background color, (default: colorsScheme.default).
+- `color` (string): Sets the text color (default: text from colorScheme). Overrides tile text color if no color is set on tiles.
+- `outline` (string|bool): Sets tile outline color default (undefined = no outline, true = divider from colorScheme).
 - `bigger` (bool): use bigger style for cards
 - `article` (bool): margin and smaller max width for tiles (optimised to align with article column)
 
@@ -14,7 +14,7 @@ Below 4 tiles, each tile will use 33% of the space available, up to a maximum of
 The media queries are defined in [`FrontTile`](/teaserfronttile).
 
 ```react|responsive
-<TeaserCarousel outline='#D7D7D7'>
+<TeaserCarousel outline>
   <TeaserSectionTitle href="/rezensionen" onClick={(e) => {
     e.preventDefault()
   }}>
@@ -34,7 +34,7 @@ The media queries are defined in [`FrontTile`](/teaserfronttile).
         Der Norweger gehört zu den schrulligsssen Autoren der Gegenwart.
       </TeaserCarouselLead>
       <Editorial.Credit>
-        Von <Editorial.A  color='#000' href='#'>Jan Wilm</Editorial.A >, 05.07.2019
+        Von <Editorial.A href='#'>Jan Wilm</Editorial.A >, 05.07.2019
       </Editorial.Credit>
 
     </TeaserCarouselTile>
@@ -52,7 +52,7 @@ The media queries are defined in [`FrontTile`](/teaserfronttile).
         Der Blockbuster-Regisseur zeigt den Ersten Weltkrieg.
       </TeaserCarouselLead>
       <Editorial.Credit>
-        Von <Editorial.A  color='#000' href='#'>Simon Spiegel</Editorial.A >, 05.07.2019
+        Von <Editorial.A href='#'>Simon Spiegel</Editorial.A >, 05.07.2019
       </Editorial.Credit>
     </TeaserCarouselTile>
 
@@ -64,7 +64,7 @@ The media queries are defined in [`FrontTile`](/teaserfronttile).
         «Heaven’s Vault» ist ein aussergewöhnliches Adventure-Game.
       </TeaserCarouselLead>
       <Editorial.Credit>
-        Von <Editorial.A  color='#000' href='#'>Christof Zurschmitten</Editorial.A >, 05.07.2019
+        Von <Editorial.A href='#'>Christof Zurschmitten</Editorial.A >, 05.07.2019
       </Editorial.Credit>
     </TeaserCarouselTile>
 
@@ -77,7 +77,7 @@ The media queries are defined in [`FrontTile`](/teaserfronttile).
         Die Essays und Gedichte von Monika Rinck sind das originellste Denkabenteuer.
       </TeaserCarouselLead>
       <Editorial.Credit>
-        Von <Editorial.A  color='#000' href='#'>Daniel Graf</Editorial.A >, 05.07.2019
+        Von <Editorial.A href='#'>Daniel Graf</Editorial.A >, 05.07.2019
       </Editorial.Credit>
     </TeaserCarouselTile>
 
@@ -92,7 +92,7 @@ The media queries are defined in [`FrontTile`](/teaserfronttile).
         Das Fotomuseum Winterthur zeigt eine beeindruckende Schau.
       </TeaserCarouselLead>
       <Editorial.Credit>
-        Von <Editorial.A  color='#000' href='#'>Daniel Binswanger</Editorial.A >, 05.07.2019
+        Von <Editorial.A href='#'>Daniel Binswanger</Editorial.A >, 05.07.2019
       </Editorial.Credit>
     </TeaserCarouselTile>
   </TeaserCarouselTileContainer>
@@ -100,11 +100,10 @@ The media queries are defined in [`FrontTile`](/teaserfronttile).
 ```
 
 ```react|span-6
-<TeaserCarousel outline='#D7D7D7'>
+<TeaserCarousel outline>
  <TeaserSectionTitle>Kolumnen</TeaserSectionTitle>
   <TeaserCarouselTileContainer>
-
-    <TeaserCarouselTile image='/static/carousel/binswanger.png?size=2480x2521' onClick={() => console.log("click on first tile")}>
+    <TeaserCarouselTile image='/static/carousel/binswanger.png?size=2480x2521' imageDark='/static/carousel/binswanger_dark.png?size=2480x2521' onClick={() => console.log("click on first tile")}>
       <TeaserCarouselFormat color='#00B4FF'>
         Binswanger
       </TeaserCarouselFormat>
@@ -135,9 +134,72 @@ The media queries are defined in [`FrontTile`](/teaserfronttile).
         Von <Editorial.A href='#'>Marcel Alexander Niggli</Editorial.A >, 05.07.2019
       </Editorial.Credit>
     </TeaserCarouselTile>
-
- </TeaserCarouselTileContainer>
+  </TeaserCarouselTileContainer>
 </TeaserCarousel>
+```
+
+The default colors automatically adjust to the color context.
+
+```react|react,span-3
+<ColorContextProvider colorSchemeKey='dark'>
+  <TeaserCarousel outline>
+   <TeaserSectionTitle>Kolumnen</TeaserSectionTitle>
+    <TeaserCarouselTileContainer>
+      <TeaserCarouselTile image='/static/carousel/binswanger.png?size=2480x2521' imageDark='/static/carousel/binswanger_dark.png?size=2480x2521' onClick={() => console.log("click on first tile")}>
+        <TeaserCarouselFormat color='#00B4FF'>
+          Binswanger
+        </TeaserCarouselFormat>
+        <TeaserCarouselHeadline.Editorial>
+          «Was verbindet die rechtspopulsistischen Parteien eigentlich?»
+        </TeaserCarouselHeadline.Editorial>
+        <Editorial.Credit>
+          Von <Editorial.A href='#'>Daniel Binswanger</Editorial.A >, 05.07.2019
+        </Editorial.Credit>
+      </TeaserCarouselTile>
+    </TeaserCarouselTileContainer>
+  </TeaserCarousel>
+</ColorContextProvider>
+```
+
+```react|react,span-3
+<ColorContextProvider colorSchemeKey='light'>
+  <TeaserCarousel outline>
+   <TeaserSectionTitle>Kolumnen</TeaserSectionTitle>
+    <TeaserCarouselTileContainer>
+      <TeaserCarouselTile image='/static/carousel/binswanger.png?size=2480x2521' imageDark='/static/carousel/binswanger_dark.png?size=2480x2521' onClick={() => console.log("click on first tile")}>
+        <TeaserCarouselFormat color='#00B4FF'>
+          Binswanger
+        </TeaserCarouselFormat>
+        <TeaserCarouselHeadline.Editorial>
+          «Was verbindet die rechtspopulsistischen Parteien eigentlich?»
+        </TeaserCarouselHeadline.Editorial>
+        <Editorial.Credit>
+          Von <Editorial.A href='#'>Daniel Binswanger</Editorial.A >, 05.07.2019
+        </Editorial.Credit>
+      </TeaserCarouselTile>
+    </TeaserCarouselTileContainer>
+  </TeaserCarousel>
+</ColorContextProvider>
+```
+
+And format colors are mapped:
+
+```react|react,span-3
+<ColorContextProvider colorSchemeKey='dark'>
+  <TeaserCarousel outline>
+   <TeaserSectionTitle>Empfehlungen</TeaserSectionTitle>
+    <TeaserCarouselTileContainer>
+      <TeaserCarouselTile onClick={() => console.log("click on first tile")}>
+        <TeaserCarouselFormat color='#000'>
+          Meta
+        </TeaserCarouselFormat>
+        <TeaserCarouselHeadline.Editorial>
+          Was wir mit Ihrem Geld anstellen
+        </TeaserCarouselHeadline.Editorial>
+      </TeaserCarouselTile>
+    </TeaserCarouselTileContainer>
+  </TeaserCarousel>
+</ColorContextProvider>
 ```
 
 ```react|span-6,responsive
@@ -214,7 +276,7 @@ Supported props:
 ```react|span-2
 <TeaserCarouselTile
   image='/static/carousel/calle.png?size=332x248'
-  outline='#D7D7D7'
+  outline
 >
   <TeaserCarouselFormat>
     Kunst
@@ -229,14 +291,14 @@ Supported props:
     Das Fotomuseum Winterthur zeigt eine beeindruckende Schau.
   </TeaserCarouselLead>
   <Editorial.Credit>
-    Von <Editorial.A  color='#000' href='#'>Daniel Binswanger</Editorial.A >, 05.07.2019
+    Von <Editorial.A href='#'>Daniel Binswanger</Editorial.A >, 05.07.2019
   </Editorial.Credit>
 </TeaserCarouselTile>
 ```
 ```react|span-2
 <TeaserCarouselTile
-  image='/static/carousel/binswanger.png?size=2480x2521'
-  outline='#D7D7D7'
+  image='/static/carousel/binswanger.png?size=2480x2521' imageDark='/static/carousel/binswanger_dark.png?size=2480x2521'
+  outline
   onClick={() => console.log("click on tile")}
 >
   <TeaserCarouselFormat

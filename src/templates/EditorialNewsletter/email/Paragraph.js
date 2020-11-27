@@ -1,7 +1,7 @@
 import React from 'react'
-import colors from '../../../theme/colors'
 import { fontFamilies } from '../../../theme/fonts'
 import { Editorial } from '../../../components/Typography'
+import colors from '../../../theme/colors'
 
 export const paragraphStyle = {
   color: colors.text,
@@ -17,7 +17,7 @@ export const linkStyle = {
 }
 
 export const Br = () => <br />
-export const Link = ({ children, href, title }) => (
+export const A = ({ children, href, title }) => (
   <a href={href} title={title} style={linkStyle}>
     {children}
   </a>

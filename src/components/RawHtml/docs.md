@@ -21,27 +21,7 @@ By default the HTML is rendered inside a `<span>` element. The `type` property c
 
 ```react|span-6
 <RawHtml
-  type={Interaction.H1}
-  dangerouslySetInnerHTML={{
-    __html: '<b>Bold</b> und <a href="#">Link</a>'
-  }}
-/>
-```
-
-```react|span-6
-<RawHtml
-  black
-  type={Interaction.H1}
-  dangerouslySetInnerHTML={{
-    __html: '<b>Bold</b> und <a href="#">Link</a>'
-  }}
-/>
-```
-
-```react|span-6
-<RawHtml
-  white
-  type={Interaction.H1}
+  type={Interaction.P}
   dangerouslySetInnerHTML={{
     __html: '<b>Bold</b> und <a href="#">Link</a>'
   }}
@@ -51,7 +31,7 @@ By default the HTML is rendered inside a `<span>` element. The `type` property c
 ```react|span-6
 <RawHtml
   error
-  type={Interaction.H1}
+  type={Interaction.P}
   dangerouslySetInnerHTML={{
     __html: 'Error and <a href="#">Link</a>'
   }}

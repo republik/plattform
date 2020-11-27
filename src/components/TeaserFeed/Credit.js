@@ -1,10 +1,10 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { css } from 'glamor'
-import colors from '../../theme/colors'
 import { mUp } from '../../theme/mediaQueries'
 import { sansSerifRegular14, sansSerifRegular15 } from '../Typography/styles'
 import { convertStyleToRem } from '../Typography/utils'
+import { useColorContext } from '../Colors/useColorContext'
 
 const styles = {
   main: css({
@@ -12,13 +12,17 @@ const styles = {
     ...convertStyleToRem(sansSerifRegular14),
     [mUp]: {
       ...convertStyleToRem(sansSerifRegular15)
-    },
-    color: colors.text
+    }
   })
 }
 
 const Credit = ({ children }) => {
-  return <p {...styles.main}>{children}</p>
+  const [colorScheme] = useColorContext()
+  return (
+    <p {...styles.main} {...colorScheme.set('color', 'text')}>
+      {children}
+    </p>
+  )
 }
 
 Credit.propTypes = {

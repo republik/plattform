@@ -1,12 +1,12 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { css } from 'glamor'
 import { TwitterIcon } from '../Icons'
-import colors from '../../theme/colors'
 import { mUp } from '../../theme/mediaQueries'
 import { sansSerifMedium16, sansSerifRegular14 } from '../Typography/styles'
 import { ellipsize } from '../../lib/styleMixins'
 import { timeFormat } from '../../lib/timeFormat'
 import { convertStyleToRem, pxToRem } from '../Typography/utils'
+import { useColorContext } from '../Colors/useColorContext'
 
 export const profilePictureSize = 40
 export const profilePictureMargin = 10
@@ -30,7 +30,8 @@ const styles = {
     )} ${pxToRem(-profilePictureBorderSize)} ${pxToRem(
       -profilePictureBorderSize
     )}`,
-    border: `${pxToRem(profilePictureBorderSize)} solid white`
+    borderWidth: `${pxToRem(profilePictureBorderSize)}`,
+    borderStyle: 'solid'
   }),
   meta: css({
     alignSelf: 'stretch',
@@ -42,7 +43,7 @@ const styles = {
   name: css({
     ...convertStyleToRem(sansSerifMedium16),
     lineHeight: pxToRem('20px'),
-    color: colors.text,
+    color: 'inherit',
     display: 'flex',
     alignItems: 'center',
     paddingRight: '15px'
@@ -53,7 +54,6 @@ const styles = {
   subline: css({
     ...convertStyleToRem(sansSerifRegular14),
     lineHeight: pxToRem('20px'),
-    color: colors.text,
     display: 'flex',
     alignItems: 'center'
   }),
@@ -62,7 +62,6 @@ const styles = {
     overflow: 'hidden'
   }),
   icon: css({
-    color: '#CDCDCD',
     position: 'absolute',
     right: 0,
     top: '2px',
@@ -77,25 +76,31 @@ const styles = {
   }),
   link: css({
     textDecoration: 'none',
-    color: colors.text,
-    ':visited': {
-      color: colors.text
-    },
-    '@media (hover)': {
-      ':hover': {
-        color: colors.lightText
-      }
-    }
+    color: 'inherit'
   })
 }
 
 const dateFormat = timeFormat('%d. %B %Y')
 
-const Link = ({ href, children }) => (
-  <a href={href} {...styles.link}>
-    {children}
-  </a>
-)
+const Link = ({ href, children }) => {
+  const [colorScheme] = useColorContext()
+  const hoverRule = useMemo(
+    () =>
+      css({
+        '@media (hover)': {
+          ':hover': {
+            color: colorScheme.getCSSColor('textSoft')
+          }
+        }
+      }),
+    [colorScheme]
+  )
+  return (
+    <a href={href} {...styles.link} {...hoverRule}>
+      {children}
+    </a>
+  )
+}
 
 const UserLink = ({ handle, children }) => (
   <Link href={`https://twitter.com/${handle}`}>{children}</Link>
@@ -103,13 +108,22 @@ const UserLink = ({ handle, children }) => (
 
 export const Header = ({ url, userProfileImageUrl, name, handle, date }) => {
   const cleanHandle = handle && handle.replace('@', '')
+  const [colorScheme] = useColorContext()
   return (
-    <div {...styles.root}>
+    <div {...styles.root} {...colorScheme.set('color', 'text')}>
       <UserLink handle={cleanHandle}>
-        <img {...styles.profilePicture} src={userProfileImageUrl} alt='' />
+        <img
+          {...styles.profilePicture}
+          {...colorScheme.set('borderColor', 'default')}
+          src={userProfileImageUrl}
+          alt=''
+        />
       </UserLink>
       <Link href={url}>
-        <TwitterIcon {...styles.icon} />
+        <TwitterIcon
+          {...styles.icon}
+          {...colorScheme.set('color', 'divider')}
+        />
       </Link>
       <div {...styles.meta}>
         <div {...styles.name}>

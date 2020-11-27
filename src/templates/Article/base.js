@@ -21,20 +21,20 @@ import {
   matchHeading,
   matchType,
   matchZone,
-  matchParagraph,
-  matchImageParagraph
+  matchParagraph
 } from 'mdast-react-render/lib/utils'
 
 import {
   matchFigure,
   getDisplayWidth,
-  extractImage,
   globalInlines,
   styles,
-  mdastToString
+  mdastToString,
+  extractImages,
+  matchImagesParagraph
 } from './utils'
 
-const createBase = ({ metaBody }) => {
+const createBase = ({ metaBody, metaHeadlines }) => {
   const link = {
     matchMdast: matchType('link'),
     props: node => ({
@@ -129,12 +129,15 @@ const createBase = ({ metaBody }) => {
     props: node => ({
       slug: slug(mdastToString(node))
     }),
-    component: ({ children, slug }) => (
-      <Typography.Subhead>
-        <a {...styles.anchor} id={slug} />
-        {children}
-      </Typography.Subhead>
-    ),
+    component: ({ children, slug }) => {
+      const Subhead = metaHeadlines ? Meta.Subhead : Typography.Subhead
+      return (
+        <Subhead>
+          <a {...styles.anchor} id={slug} />
+          {children}
+        </Subhead>
+      )
+    },
     editorModule: 'headline',
     editorOptions: {
       type: 'H2',
@@ -168,16 +171,17 @@ const createBase = ({ metaBody }) => {
   }
 
   const figureImage = {
-    matchMdast: matchImageParagraph,
+    matchMdast: matchImagesParagraph,
     component: FigureImage,
     props: (node, index, parent, { ancestors }) => {
       const rootNode = ancestors[ancestors.length - 1]
       const meta = rootNode ? rootNode.meta : {}
 
-      const src = extractImage(node)
+      const { src, srcDark } = extractImages(node)
       const displayWidth = getDisplayWidth(ancestors)
       const enableGallery =
-        meta.gallery && (parent.data ? !parent.data.excludeFromGallery : true)
+        meta.gallery !== false &&
+        (parent.data ? !parent.data.excludeFromGallery : true)
 
       const group = ancestors.find(matchZone('FIGUREGROUP'))
 
@@ -202,6 +206,8 @@ const createBase = ({ metaBody }) => {
 
       return {
         ...FigureImage.utils.getResizedSrcs(src, displayWidth),
+        dark:
+          srcDark && FigureImage.utils.getResizedSrcs(srcDark, displayWidth),
         alt: node.children[0].alt,
         enableGallery,
         gallerySize,

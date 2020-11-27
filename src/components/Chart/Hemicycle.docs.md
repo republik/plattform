@@ -33,7 +33,7 @@ CSP,2011,1
 MCR,2011,1
 SVP,2011,65
     `.trim()} />
-  <Editorial.Note>Quelle: BFS.</Editorial.Note>
+  <ChartLegend>Quelle: BFS.</ChartLegend>
 </div>
 ```
 # Single
@@ -63,7 +63,7 @@ CSP,2015,1
 MCR,2015,1
 SVP,2015,65
     `.trim()} />
-  <Editorial.Note>Quelle: BFS.</Editorial.Note>
+  <ChartLegend>Quelle: BFS.</ChartLegend>
 </div>
 ```
 

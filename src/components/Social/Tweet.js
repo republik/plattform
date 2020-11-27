@@ -1,7 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { css } from 'glamor'
-import colors from '../../theme/colors'
 import { mUp } from '../../theme/mediaQueries'
 import { linkStyle, linkRule } from '../Typography'
 import { sansSerifRegular15, sansSerifRegular18 } from '../Typography/styles'
@@ -9,13 +8,17 @@ import { Figure, FigureImage, FigureCaption } from '../Figure'
 import { Header } from './Header'
 import { PlayIcon } from '../Icons'
 import { convertStyleToRem } from '../Typography/utils'
+import { useColorContext } from '../Colors/useColorContext'
+import RawHtml from '../RawHtml'
 
 const styles = {
   container: css({
     display: 'block',
     textDecoration: 'none',
-    borderBottom: `1px solid ${colors.text}`,
-    borderTop: `1px solid ${colors.text}`,
+    borderBottomWidth: 1,
+    borderBottomStyle: 'solid',
+    borderTopWidth: 1,
+    borderTopStyle: 'solid',
     margin: '36px auto',
     paddingTop: '10px',
     position: 'relative',
@@ -26,12 +29,11 @@ const styles = {
     }
   }),
   text: css({
+    wordWrap: 'break-word',
     ...convertStyleToRem(sansSerifRegular15),
     [mUp]: {
       ...convertStyleToRem(sansSerifRegular18)
-    },
-    color: colors.text,
-    '& a': linkStyle
+    }
   }),
   mediaContainer: css({
     display: 'inline-block',
@@ -47,6 +49,8 @@ const styles = {
   })
 }
 
+const Text = props => <p {...styles.text} {...props} />
+
 const Tweet = ({
   attributes,
   html,
@@ -59,8 +63,13 @@ const Tweet = ({
   more,
   playable
 }) => {
+  const [colorScheme] = useColorContext()
   return (
-    <div {...attributes} {...styles.container}>
+    <div
+      {...attributes}
+      {...styles.container}
+      {...colorScheme.set('borderColor', 'text')}
+    >
       <Header
         url={url}
         userProfileImageUrl={userProfileImageUrl}
@@ -68,7 +77,7 @@ const Tweet = ({
         handle={userScreenName}
         date={date}
       />
-      <p {...styles.text} dangerouslySetInnerHTML={{ __html: html }} />
+      <RawHtml type={Text} dangerouslySetInnerHTML={{ __html: html }} />
       {image && (
         <Figure>
           <a href={url} {...styles.mediaContainer}>

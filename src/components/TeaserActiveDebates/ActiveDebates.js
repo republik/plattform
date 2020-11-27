@@ -128,7 +128,8 @@ ActiveDebates.data = {
         lastDays: +lastDays,
         first: +first,
         featured: +featured
-      }
+      },
+      ssr: false
     }),
     props: ({ data, ownProps: { first = 4 } }) => {
       let discussions

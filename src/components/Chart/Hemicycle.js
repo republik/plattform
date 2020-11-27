@@ -4,23 +4,20 @@ import { css } from 'glamor'
 import partition from 'lodash/partition'
 import ColorLegend from './ColorLegend'
 import { sum } from 'd3-array'
-
 import {
   sansSerifMedium14,
   sansSerifRegular12,
   sansSerifRegular14
 } from '../Typography/styles'
-import colors from '../../theme/colors'
 
 import { arc as d3arc } from 'd3-shape'
 import { getTextColor } from './utils'
-
 import { getColorMapper } from './colorMaps'
+import { useColorContext } from '../Colors/useColorContext'
 
 const styles = {
   axis: css({
-    ...sansSerifRegular12,
-    fill: colors.lightText
+    ...sansSerifRegular12
   }),
   labelStrong: css({
     ...sansSerifMedium14
@@ -64,7 +61,7 @@ const Hemicycle = props => {
   }
 
   const color = getColorMapper(props)
-
+  const [colorScheme] = useColorContext()
   const primaryGroupLabel = values.length > 0 && values[0][group]
 
   const labelheight = 18
@@ -108,10 +105,19 @@ const Hemicycle = props => {
                 ? innerRadiusSecondary
                 : innerRadiusPrimary)
             }
-            stroke={'rgba(0,0,0,0.17)'}
+            {...colorScheme.set('stroke', 'text')}
+            style={{
+              opacity: 0.17
+            }}
           />
           {middleAnnotation && (
-            <text {...styles.axis} x={5} y={0} alignmentBaseline='hanging'>
+            <text
+              {...styles.axis}
+              {...colorScheme.set('fill', 'textSoft')}
+              x={5}
+              y={0}
+              alignmentBaseline='hanging'
+            >
               {middleAnnotation}
             </text>
           )}
@@ -122,26 +128,25 @@ const Hemicycle = props => {
           })`}
         >
           <g transform={`translate(${w >> 1},${hemicycleOffset})`}>
-            {primaryAngles.map(d => {
+            {primaryAngles.map((d, i) => {
               const datum = primaryVals.find(g => g.label === d[2])
               const fill = color(datum[colorProp])
               return (
-                <>
-                  <path
-                    fill={fill}
-                    d={arc({
-                      outerRadius: outerRadiusPrimary,
-                      innerRadius: innerRadiusPrimary,
-                      startAngle: d[0],
-                      endAngle: d[1] + 0.001
-                    })}
-                  />
-                </>
+                <path
+                  key={`primaryPath${i}`}
+                  {...colorScheme.set('fill', fill, 'charts')}
+                  d={arc({
+                    outerRadius: outerRadiusPrimary,
+                    innerRadius: innerRadiusPrimary,
+                    startAngle: d[0],
+                    endAngle: d[1] + 0.001
+                  })}
+                />
               )
             })}
             {primaryAngles
               .filter((d, i) => primaryVals[i].value >= inlineLabelThreshold)
-              .map(d => {
+              .map((d, i) => {
                 const isMajorParty = Math.abs(d[1] - d[0]) > MAX_ARC / 10
                 const datum = primaryVals.find(g => g.label === d[2])
                 const fill = color(datum[colorProp])
@@ -164,14 +169,16 @@ const Hemicycle = props => {
                     : 'start'
 
                 return (
-                  <g transform={`translate(${x},${y})`}>
+                  <g key={`primaryText${i}`} transform={`translate(${x},${y})`}>
                     <text
                       {...styles.label}
                       x={0}
                       y={0}
                       textAnchor={textAnchor}
                       alignmentBaseline='hanging'
-                      fill={isMajorParty ? getTextColor(fill) : '#000'}
+                      {...(isMajorParty
+                        ? colorScheme.set('fill', getTextColor(fill))
+                        : colorScheme.set('fill', 'text'))}
                     >
                       {d[2]}
                     </text>
@@ -181,36 +188,44 @@ const Hemicycle = props => {
                       y={labelheight * 0.9}
                       textAnchor={textAnchor}
                       alignmentBaseline='hanging'
-                      fill={isMajorParty ? getTextColor(fill) : '#000'}
+                      {...(isMajorParty
+                        ? colorScheme.set('fill', getTextColor(fill))
+                        : colorScheme.set('fill', 'text'))}
                     >
                       {datum.value}
                     </text>
                   </g>
                 )
               })}
-            {secondaryAngles.map(d => {
+            {secondaryAngles.map((d, i) => {
               const datum = secondaryVals.find(g => g.label === d[2])
               const fill = color(datum[colorProp])
               return (
-                <>
-                  <path
-                    fill={fill}
-                    d={arc({
-                      outerRadius: outerRadiusSecondary,
-                      innerRadius: innerRadiusSecondary,
-                      startAngle: d[0],
-                      endAngle: d[1] + 0.001
-                    })}
-                  />
-                </>
+                <path
+                  key={`secondaryPath${i}`}
+                  {...colorScheme.set('fill', fill, 'charts')}
+                  d={arc({
+                    outerRadius: outerRadiusSecondary,
+                    innerRadius: innerRadiusSecondary,
+                    startAngle: d[0],
+                    endAngle: d[1] + 0.001
+                  })}
+                />
               )
             })}
           </g>
-          <text {...styles.labelStrong} x={0} y={h} textAnchor='start'>
+          <text
+            {...styles.labelStrong}
+            {...colorScheme.set('fill', 'text')}
+            x={0}
+            y={h}
+            textAnchor='start'
+          >
             {primaryGroupLabel}
           </text>
           <text
             {...styles.labelStrong}
+            {...colorScheme.set('fill', 'text')}
             x={hemicycleWidth * 0.3}
             y={h}
             textAnchor='start'
@@ -219,6 +234,7 @@ const Hemicycle = props => {
           </text>
           <text
             {...styles.label}
+            {...colorScheme.set('fill', 'text')}
             x={hemicycleWidth >> 1}
             y={h - labelheight}
             textAnchor='middle'
@@ -254,7 +270,8 @@ export const propTypes = {
   values: PropTypes.arrayOf(
     PropTypes.shape({
       label: PropTypes.string.isRequired,
-      value: PropTypes.number.isRequired
+      value: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+        .isRequired
     })
   ).isRequired
 }

@@ -20,7 +20,7 @@ Schweiz,0.279
 USA,0.264
 Irland,0.236
     `.trim()} />
-  <Editorial.Note>Quelle: OECD 2015. Revenue Statistics 1965-2014. Bundesministerium der Finanzen 2016. Die wichtigsten Steuern im internationalen Vergleich 2015.</Editorial.Note>
+  <ChartLegend>Quelle: OECD 2015. Revenue Statistics 1965-2014. Bundesministerium der Finanzen 2016. Die wichtigsten Steuern im internationalen Vergleich 2015.</ChartLegend>
 </div>
 ```
 
@@ -63,7 +63,7 @@ Gesundheit und Sport,Betriebliche Weiterbildung,0.19
 "Natur, Technik, Computer",Betriebliche Weiterbildung,0.24
 nicht oder nur einstellig klassifizierbar,Betriebliche Weiterbildung,0.04
     `.trim()} />
-  <Editorial.Note>Quelle: Adult Education Survey 2014.</Editorial.Note>
+  <ChartLegend>Quelle: Adult Education Survey 2014.</ChartLegend>
 </div>
 ```
 
@@ -108,7 +108,7 @@ Sexuelle Belästigung,etwas,0.167
 Sexuelle Belästigung,ziemlich,0.047
 Sexuelle Belästigung,sehr stark,0.093
     `.trim()} />
-  <Editorial.Note>Quelle: Deutscher Viktimisierungssurvey 2012.</Editorial.Note>
+  <ChartLegend>Quelle: Deutscher Viktimisierungssurvey 2012.</ChartLegend>
 </div>
 ```
 
@@ -176,7 +176,7 @@ Bern,Nein,0.278,
 Luzern,Ja,0.687,
 Luzern,Nein,0.313,
     `.trim()} />
-  <Editorial.Note>Quelle: <Editorial.A href="https://www.bk.admin.ch/ch/d/pore/va/20180923/det620.html">Bundeskanzlei</Editorial.A></Editorial.Note>
+  <ChartLegend>Quelle: <Editorial.A href="https://www.bk.admin.ch/ch/d/pore/va/20180923/det620.html">Bundeskanzlei</Editorial.A></ChartLegend>
 </div>
 ```
 
@@ -201,7 +201,7 @@ Thomas,494,https://www.republik.ch/~tpreusse
 Peter,464
 Daniel,415,https://www.republik.ch/~daniel
     `.trim()} />
-  <Editorial.Note>Quelle: <Editorial.A href="https://www.bk.admin.ch/ch/d/pore/va/20180923/det620.html">Bundeskanzlei</Editorial.A></Editorial.Note>
+  <ChartLegend>Quelle: <Editorial.A href="https://www.bk.admin.ch/ch/d/pore/va/20180923/det620.html">Bundeskanzlei</Editorial.A></ChartLegend>
 </div>
 ```
 
@@ -248,6 +248,11 @@ If needed this can be overwritten with a custom `inlineLabelPosition`. Valid val
       "colorRange": [
         "#fdd49e", "#fdbb84", "#fc8d59"
       ],
+      "colorDarkMapping": {
+        "#fdd49e": "#807dba",
+        "#fdbb84": "#6a51a3",
+        "#fc8d59": "#54278f"
+      },
       "inlineValue": true,
       "inlineLabel": "label",
       "inlineLabelPosition": "pos"
@@ -270,5 +275,50 @@ Verzicht auf 8 bis 15 Stunden Flug pro Jahr,-2074,a,center
 Verzicht auf ca. 3500 Kilometer mit ÖV,-79,a,
     `.trim()} />
 </div>
+```
+
+## Dark Colors
+
+Maybe you've noticed the `colorDarkMapping` above. It can be used to switch out colors when in dark mode. This is how it looks when forced into dark:
+
+```react|dark
+<ColorContextProvider colorSchemeKey='dark'>
+  <CsvChart
+    config={{
+      "type": "Bar",
+      "y": "category",
+      "sort": "none",
+      "colorSort": "none",
+      "color": "label",
+      "colorRange": [
+        "#fdd49e", "#fdbb84", "#fc8d59"
+      ],
+      "colorDarkMapping": {
+        "#fdd49e": "#807dba",
+        "#fdbb84": "#6a51a3",
+        "#fc8d59": "#54278f"
+      },
+      "inlineValue": true,
+      "inlineLabel": "label",
+      "inlineLabelPosition": "pos"
+    }}
+    values={`
+category,value,label,pos
+Ca. 3500 Kilometer mehr mit ÖV,79,a,
+8 bis 15 Stunden mehr Flug pro Jahr,2074,a,center
+9 bis 16 Stunden mehr Flug pro Jahr,2074,a,
+9 bis 16 Stunden mehr Flug pro Jahr,200,b,
+10 bis 16 Stunden mehr Flug pro Jahr,2074,a,
+10 bis 16 Stunden mehr Flug pro Jahr,200,b,right
+10 bis 16 Stunden mehr Flug pro Jahr,200,c,left
+Verzicht auf 10 bis 16 Stunden Flug pro Jahr,-2074,a,
+Verzicht auf 10 bis 16 Stunden Flug pro Jahr,-200,b,left
+Verzicht auf 10 bis 16 Stunden Flug pro Jahr,-200,c,right
+Verzicht auf 9 bis 16 Stunden Flug pro Jahr,-2074,a,
+Verzicht auf 9 bis 16 Stunden Flug pro Jahr,-200,b,
+Verzicht auf 8 bis 15 Stunden Flug pro Jahr,-2074,a,center
+Verzicht auf ca. 3500 Kilometer mit ÖV,-79,a,
+    `.trim()} />
+</ColorContextProvider>
 ```
 

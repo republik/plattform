@@ -11,7 +11,7 @@ import * as Scribble from '../../components/Typography/Scribble'
 import { TeaserFeed } from '../../components/TeaserFeed'
 import IllustrationHtml from '../../components/IllustrationHtml'
 import CsvChart from '../../components/Chart/Csv'
-import { ChartTitle, ChartLead } from '../../components/Chart'
+import { ChartTitle, ChartLead, ChartLegend } from '../../components/Chart'
 import ErrorBoundary from '../../components/ErrorBoundary'
 
 import { Figure, CoverTextTitleBlockHeadline } from '../../components/Figure'
@@ -97,7 +97,7 @@ const mdastPlaceholder = '\u2063'
 const DefaultLink = ({ children }) => children
 
 const createSchema = ({
-  documentEditorOptions = {},
+  documentEditorOptions = { skipCredits: false },
   customMetaFields = [
     {
       label: 'Bildergalerie aktiv',
@@ -157,12 +157,14 @@ const createSchema = ({
   t = () => '',
   plattformUnauthorizedZoneText,
   dynamicComponentRequire,
+  dynamicComponentIdentifiers,
   previewTeaser,
   getVideoPlayerProps = props => props,
   onAudioCoverClick,
-  metaBody = false
+  metaBody = false,
+  metaHeadlines = false
 } = {}) => {
-  const base = createBase({ metaBody })
+  const base = createBase({ metaBody, metaHeadlines })
   const blocks = createBlocks({
     COVER_TYPE,
     base,
@@ -178,6 +180,7 @@ const createSchema = ({
   const dynamicComponent = createDynamicComponent({
     t,
     dynamicComponentRequire,
+    dynamicComponentIdentifiers,
     insertButtonText: 'Dynamic Component',
     type: DYNAMICCOMPONENT_TYPE
   })
@@ -189,9 +192,7 @@ const createSchema = ({
       {
         matchMdast: matchType('root'),
         component: Container,
-        props: node => ({
-          meta: node.meta
-        }),
+        props: node => ({}),
         editorModule: 'documentPlain',
         editorOptions: documentEditorOptions,
         rules: [
@@ -257,7 +258,7 @@ const createSchema = ({
                     (meta && meta.kind)
 
                   const Headline =
-                    kind === 'meta'
+                    metaHeadlines || kind === 'meta'
                       ? Meta.Headline
                       : kind === 'scribble'
                       ? Scribble.Headline
@@ -569,10 +570,8 @@ const createSchema = ({
                   {
                     matchMdast: (node, index, parent) =>
                       matchParagraph(node) && matchLast(node, index, parent),
-                    component: Editorial.Note,
-                    props: () => ({
-                      style: { marginTop: 10 }
-                    }),
+                    component: ChartLegend,
+                    props: () => ({}),
                     editorModule: 'paragraph',
                     editorOptions: {
                       type: 'CHARTNOTE',

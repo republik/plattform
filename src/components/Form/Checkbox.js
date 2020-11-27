@@ -1,22 +1,76 @@
 import React from 'react'
-import { css, merge } from 'glamor'
-import colors from '../../theme/colors'
+import { css } from 'glamor'
 import { fontFamilies } from '../../theme/fonts'
 import { pxToRem } from '../Typography/utils'
+import { useColorContext } from '../Colors/useColorContext'
+
+const Checkbox = ({
+  children,
+  name,
+  checked,
+  disabled,
+  onChange,
+  black,
+  error
+}) => {
+  const [colorScheme] = useColorContext()
+  const labelColor = error
+    ? colorScheme.set('color', 'error')
+    : disabled
+    ? colorScheme.set('color', 'disabled')
+    : colorScheme.set('color', 'text')
+
+  const checkMarkBorderColor = error
+    ? colorScheme.set('borderColor', 'error')
+    : disabled
+    ? colorScheme.set('borderColor', 'disabled')
+    : black
+    ? colorScheme.set('borderColor', '#000')
+    : colorScheme.set('borderColor', 'text')
+
+  const checkMarkFill = error
+    ? colorScheme.set('fill', 'error')
+    : disabled
+    ? colorScheme.set('fill', 'disabled')
+    : black
+    ? colorScheme.set('fill', '#000')
+    : colorScheme.set('fill', 'primary')
+  return (
+    <label {...styles.label} {...labelColor}>
+      <span {...styles.box}>
+        {checked ? (
+          <svg {...checkMarkFill} width='18' height='18' viewBox='0 0 18 18'>
+            <path
+              d='M0 0h18v18H0V0zm7 14L2 9.192l1.4-1.346L7 11.308 14.6 4 16 5.346 7 14z'
+              fill={'inherit'}
+              fillRule='evenodd'
+            />
+          </svg>
+        ) : (
+          <span {...styles.unchecked} {...checkMarkBorderColor} />
+        )}
+      </span>
+      <input
+        {...styles.input}
+        name={name}
+        type='checkbox'
+        checked={checked}
+        disabled={disabled}
+        onChange={event => {
+          onChange(event, event.target.checked)
+        }}
+      />
+      {children}
+    </label>
+  )
+}
 
 const styles = {
   label: css({
     fontSize: pxToRem(16),
     lineHeight: pxToRem(20),
-    color: colors.text,
     fontFamily: fontFamilies.sansSerifRegular,
     cursor: 'pointer'
-  }),
-  labelDisabled: css({
-    color: colors.disabled
-  }),
-  labelError: css({
-    color: colors.error
   }),
   input: css({
     display: 'none'
@@ -26,16 +80,8 @@ const styles = {
     boxSizing: 'border-box',
     width: 18,
     height: 18,
-    border: `1px solid ${colors.secondary}`
-  }),
-  disabled: css({
-    border: `1px solid ${colors.disabled}`
-  }),
-  uncheckedBlack: css({
-    borderColor: '#000000'
-  }),
-  uncheckedError: css({
-    borderColor: colors.error
+    borderWidth: 1,
+    borderStyle: 'solid'
   }),
   box: css({
     display: 'inline-block',
@@ -46,61 +92,4 @@ const styles = {
   })
 }
 
-const Checked = ({ disabled, black, error }) => (
-  <svg width='18' height='18' viewBox='0 0 18 18'>
-    <path
-      d='M0 0h18v18H0V0zm7 14L2 9.192l1.4-1.346L7 11.308 14.6 4 16 5.346 7 14z'
-      fill={
-        (disabled && colors.disabled) ||
-        (error && colors.error) ||
-        (black && '#000000') ||
-        colors.primary
-      }
-      fillRule='evenodd'
-    />
-  </svg>
-)
-
-export default ({
-  children,
-  name,
-  checked,
-  disabled,
-  onChange,
-  black,
-  error
-}) => (
-  <label
-    {...merge(
-      styles.label,
-      disabled && styles.labelDisabled,
-      error && styles.labelError
-    )}
-  >
-    <span {...styles.box}>
-      {checked ? (
-        <Checked disabled={disabled} black={black} error={error} />
-      ) : (
-        <span
-          {...merge(
-            styles.unchecked,
-            disabled && styles.disabled,
-            black && styles.uncheckedBlack,
-            error && styles.uncheckedError
-          )}
-        />
-      )}
-    </span>
-    <input
-      {...styles.input}
-      name={name}
-      type='checkbox'
-      checked={checked}
-      disabled={disabled}
-      onChange={event => {
-        onChange(event, event.target.checked)
-      }}
-    />
-    {children}
-  </label>
-)
+export default Checkbox

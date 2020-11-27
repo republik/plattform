@@ -4,8 +4,8 @@ import React from 'react'
 
 import CarouselContext, { defaultValue } from './Context'
 import { PADDING, TILE_MAX_WIDTH } from './constants'
-
 import { MAX_WIDTH } from '../Center'
+import { useColorContext } from '../Colors/useColorContext'
 
 const styles = {
   carousel: css({
@@ -14,15 +14,16 @@ const styles = {
 }
 
 export const Carousel = ({
-  bgColor,
-  color,
-  outline,
   bigger,
   children,
   tileCount: tileCountFromProps,
   article,
+  outline,
+  bgColor,
+  color,
   grid
 }) => {
+  const [colorScheme] = useColorContext()
   const row = children && children[1]
   const tileCount =
     tileCountFromProps ||
@@ -47,9 +48,9 @@ export const Carousel = ({
     >
       <section
         {...styles.carousel}
+        {...colorScheme.set('backgroundColor', bgColor)}
+        {...colorScheme.set('color', color || 'inherit')}
         style={{
-          backgroundColor: bgColor,
-          color: color ? color : 'inherit',
           margin: article ? '20px 0' : undefined
         }}
       >
@@ -75,7 +76,7 @@ export default React.memo(Carousel)
 Carousel.propTypes = {
   bgColor: PropTypes.string,
   color: PropTypes.string,
-  outline: PropTypes.string,
+  outline: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   bigger: PropTypes.bool,
   children: PropTypes.node
 }
