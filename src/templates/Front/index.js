@@ -441,6 +441,13 @@ const createSchema = ({ Link = DefaultLink, t = () => '', ...rest } = {}) => {
     ]
   }
 
+  const paragraph = {
+    matchMdast: matchParagraph,
+    component: Typography.P,
+    editorModule: 'paragraph',
+    rules: paragraphRules
+  }
+
   const frontTileComment = {
     matchMdast: matchTeaserType('comment'),
     component: ({ children, ...props }) => {
@@ -472,12 +479,14 @@ const createSchema = ({ Link = DefaultLink, t = () => '', ...rest } = {}) => {
     props: node => {
       return node.data
     },
-    editorModule: 'paragraph',
+    editorModule: 'teaser',
     editorOptions: {
       type: 'COMMENT',
-      placeholder: 'Lorem ipsum…'
+      teaserType: 'comment',
+      showUI: false,
+      formOptions: []
     },
-    rules: [paragraphRules]
+    rules: [paragraph]
   }
 
   const carouselSubject = {
