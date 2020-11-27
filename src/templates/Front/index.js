@@ -4,7 +4,9 @@ import {
   matchType,
   matchZone,
   matchParagraph,
-  matchHeading
+  matchHeading,
+  matchImageParagraph,
+  matchImage
 } from 'mdast-react-render/lib/utils'
 
 import colors from '../../theme/colors'
@@ -677,6 +679,11 @@ const createSchema = ({ Link = DefaultLink, t = () => '', ...rest } = {}) => {
     ]
   }
 
+  const matchTeaserGroupType = teaserType => node =>
+    matchZone('TEASERGROUP')(node) &&
+    node.children.length &&
+    matchTeaserType(teaserType)(node.children[0])
+
   const schema = {
     getPath: ({ slug }) => `/${(slug || '').split('/').pop()}`,
     rules: [
@@ -704,9 +711,7 @@ const createSchema = ({ Link = DefaultLink, t = () => '', ...rest } = {}) => {
           frontTypoTeaser,
           frontSplitTeaser,
           {
-            matchMdast: node => {
-              return matchZone('TEASERGROUP')(node)
-            },
+            matchMdast: matchTeaserGroupType('frontTile'),
             props: node => ({
               columns: node.data.columns,
               mobileColumns: node.data.mobileColumns
@@ -723,7 +728,27 @@ const createSchema = ({ Link = DefaultLink, t = () => '', ...rest } = {}) => {
               type: 'FRONTTILEROW',
               insertButton: 'Front Tile Row'
             },
-            rules: [frontTileTeaser, frontTileComment]
+            rules: [frontTileTeaser]
+          },
+          {
+            matchMdast: matchTeaserGroupType('comment'),
+            props: node => ({
+              columns: node.data.columns,
+              mobileColumns: node.data.mobileColumns
+            }),
+            component: ({ children, attributes, ...props }) => {
+              return (
+                <TeaserFrontTileRow attributes={attributes} {...props}>
+                  {children}
+                </TeaserFrontTileRow>
+              )
+            },
+            editorModule: 'teasergroup',
+            editorOptions: {
+              type: 'COMMENTROW',
+              insertButton: 'Comment Row'
+            },
+            rules: [frontTileComment]
           },
           carousel,
           ...createLiveTeasers({
