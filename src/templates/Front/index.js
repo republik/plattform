@@ -4,9 +4,7 @@ import {
   matchType,
   matchZone,
   matchParagraph,
-  matchHeading,
-  matchImageParagraph,
-  matchImage
+  matchHeading
 } from 'mdast-react-render/lib/utils'
 
 import colors from '../../theme/colors'
@@ -48,13 +46,10 @@ import {
   extractImage,
   extractImages,
   globalInlines,
-  styles,
-  paragraphRules
+  styles
 } from '../Article/utils'
 
 import createLiveTeasers from './liveTeasers'
-import CommentTeaser from '../../components/CommentTeaser/CommentTeaser'
-import * as Typography from '../../components/Typography'
 
 export const subject = {
   matchMdast: matchHeading(2),
@@ -443,54 +438,6 @@ const createSchema = ({ Link = DefaultLink, t = () => '', ...rest } = {}) => {
     ]
   }
 
-  const paragraph = {
-    matchMdast: matchParagraph,
-    component: Typography.P,
-    editorModule: 'paragraph',
-    rules: paragraphRules
-  }
-
-  const frontTileComment = {
-    matchMdast: matchTeaserType('comment'),
-    component: ({ children, ...props }) => {
-      const author = {
-        profilePicture: props.authorProfilePicture,
-        name: props.authorName,
-        credential: {
-          description: props.authorCredentialDescription,
-          verified: props.authorCredentialVerified
-        }
-      }
-      const discussion = {
-        title: props.discussionTitle
-      }
-      return (
-        <TeaserFrontTile align='top' textLeft aboveTheFold>
-          <CommentTeaser
-            t={t}
-            id={props.commentId}
-            createdAt={props.commentCreatedAt}
-            displayAuthor={author}
-            discussion={discussion}
-          >
-            {children}
-          </CommentTeaser>
-        </TeaserFrontTile>
-      )
-    },
-    props: node => {
-      return node.data
-    },
-    editorModule: 'teasercomment',
-    editorOptions: {
-      type: 'COMMENT',
-      teaserType: 'comment',
-      showUI: false,
-      formOptions: []
-    },
-    rules: [paragraph]
-  }
-
   const carouselSubject = {
     matchMdast: matchHeading(2),
     component: ({ children, attributes, ...props }) => (
@@ -679,11 +626,6 @@ const createSchema = ({ Link = DefaultLink, t = () => '', ...rest } = {}) => {
     ]
   }
 
-  const matchTeaserGroupType = teaserType => node =>
-    matchZone('TEASERGROUP')(node) &&
-    node.children.length &&
-    matchTeaserType(teaserType)(node.children[0])
-
   const schema = {
     getPath: ({ slug }) => `/${(slug || '').split('/').pop()}`,
     rules: [
@@ -711,7 +653,9 @@ const createSchema = ({ Link = DefaultLink, t = () => '', ...rest } = {}) => {
           frontTypoTeaser,
           frontSplitTeaser,
           {
-            matchMdast: matchTeaserGroupType('frontTile'),
+            matchMdast: node => {
+              return matchZone('TEASERGROUP')(node)
+            },
             props: node => ({
               columns: node.data.columns,
               mobileColumns: node.data.mobileColumns
@@ -729,26 +673,6 @@ const createSchema = ({ Link = DefaultLink, t = () => '', ...rest } = {}) => {
               insertButton: 'Front Tile Row'
             },
             rules: [frontTileTeaser]
-          },
-          {
-            matchMdast: matchTeaserGroupType('comment'),
-            props: node => ({
-              columns: node.data.columns,
-              mobileColumns: node.data.mobileColumns
-            }),
-            component: ({ children, attributes, ...props }) => {
-              return (
-                <TeaserFrontTileRow attributes={attributes} {...props}>
-                  {children}
-                </TeaserFrontTileRow>
-              )
-            },
-            editorModule: 'teasergroup',
-            editorOptions: {
-              type: 'COMMENTROW',
-              insertButton: 'Comment Row'
-            },
-            rules: [frontTileComment]
           },
           carousel,
           ...createLiveTeasers({

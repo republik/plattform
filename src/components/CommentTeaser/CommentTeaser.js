@@ -6,11 +6,7 @@ import { mUp } from '../../theme/mediaQueries'
 import { underline } from '../../lib/styleMixins'
 import { inQuotes } from '../../lib/inQuotes'
 import { useMediaQuery } from '../../lib/useMediaQuery'
-import {
-  serifRegular14,
-  sansSerifMedium15,
-  sansSerifRegular15
-} from '../Typography/styles'
+import { serifRegular14, sansSerifMedium15 } from '../Typography/styles'
 import { A } from '../Typography/'
 import { P } from '../Typography/Editorial'
 import { CommentBodyParagraph } from '../CommentBody/web'
@@ -21,7 +17,6 @@ import {
   DiscussionContext,
   formatTimeRelative
 } from '../Discussion/DiscussionContext'
-import { convertStyleToRem, pxToRem } from '../Typography/utils'
 
 const styles = {
   root: css({
