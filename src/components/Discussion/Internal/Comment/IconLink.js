@@ -1,6 +1,6 @@
 import { css } from 'glamor'
 import PropTypes from 'prop-types'
-import React from 'react'
+import React, { useMemo } from 'react'
 import { sansSerifMedium16 } from '../../../Typography/styles'
 import { useColorContext } from '../../../Colors/useColorContext'
 
@@ -8,7 +8,6 @@ const DEFAULT_PADDING = 5
 
 const styles = {
   link: css({
-    color: 'inherit',
     display: 'inline-block',
     maxWidth: '100%',
     textDecoration: 'none',
@@ -16,11 +15,6 @@ const styles = {
     whiteSpace: 'nowrap',
     paddingLeft: DEFAULT_PADDING,
     paddingRight: DEFAULT_PADDING,
-    '@media(hover)': {
-      '[href]:hover > *': {
-        opacity: 0.6
-      }
-    },
     ':first-child': {
       paddingLeft: 0
     },
@@ -62,18 +56,34 @@ export const IconLink = ({
     marginLeft: small ? 0 : 20,
     ...style
   }
+  const linkStyleRule = useMemo(
+    () =>
+      css({
+        color: colorScheme.getCSSColor('primary'),
+        fill: colorScheme.getCSSColor('primary'),
+        '@media (hover)': {
+          ':hover': {
+            color: colorScheme.getCSSColor('primaryHover'),
+            fill: colorScheme.getCSSColor('primaryHover')
+          }
+        }
+      }),
+    [colorScheme]
+  )
 
   return (
-    <a href={href} onClick={onClick} {...styles.link} style={patchedStyle}>
+    <a
+      href={href}
+      onClick={onClick}
+      {...styles.link}
+      {...linkStyleRule}
+      style={patchedStyle}
+    >
       <span {...styles.icon}>
-        <Icon size={dimension} {...colorScheme.set('fill', 'primary')} />
+        <Icon size={dimension} />
       </span>
       {discussionCommentsCount > 0 && (
-        <span
-          {...styles.text}
-          {...colorScheme.set('color', 'primary')}
-          style={{ fontSize, lineHeight }}
-        >
+        <span {...styles.text} style={{ fontSize, lineHeight }}>
           {discussionCommentsCount}
         </span>
       )}

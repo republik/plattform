@@ -3,15 +3,15 @@ import { css } from 'glamor'
 import get from 'lodash/get'
 
 import { mUp } from '../../theme/mediaQueries'
-import { ellipsize, underline } from '../../lib/styleMixins'
+import { underline } from '../../lib/styleMixins'
 import { inQuotes } from '../../lib/inQuotes'
 import { useMediaQuery } from '../../lib/useMediaQuery'
-import { serifRegular14, sansSerifRegular14 } from '../Typography/styles'
+import { serifRegular14, sansSerifMedium15 } from '../Typography/styles'
 import { A } from '../Typography/'
 import { CommentBodyParagraph } from '../CommentBody/web'
-import { Context, Header } from '../Discussion/Internal/Comment'
+import { IconLink, Context, Header } from '../Discussion/Internal/Comment'
 import RawHtml from '../RawHtml/'
-import { useColorContext } from '../Colors/useColorContext'
+import { useColorContext } from '../Colors/ColorContext'
 import {
   DiscussionContext,
   formatTimeRelative
@@ -51,12 +51,9 @@ const styles = {
     }
   }),
   footer: css({
-    ...sansSerifRegular14,
+    ...sansSerifMedium15,
     display: 'flex',
-    justifyContent: 'space-between'
-  }),
-  discussionReference: css({
-    ...ellipsize,
+    justifyContent: 'space-between',
     position: 'relative'
   }),
   icon: css({
@@ -67,6 +64,14 @@ const styles = {
   timeago: css({
     flexShrink: 0,
     paddingLeft: 10
+  }),
+  imageContainer: css({
+    marginTop: 10
+  }),
+  image: css({
+    borderBottomWidth: 1,
+    borderBottomStyle: 'solid',
+    width: '100%'
   })
 }
 
@@ -94,6 +99,9 @@ export const CommentTeaser = ({
   const isDesktop = useMediaQuery(mUp)
   const [colorScheme] = useColorContext()
   const highlight = get(highlights, '[0].fragments[0]', '').trim()
+  const documentPreview = discussion?.document?.meta?.twitterImage
+  const commentCount = discussion?.comments?.totalCount
+  const titleLink = <A>{inQuotes(discussion.title)}</A>
 
   const endsWithPunctuation =
     highlight &&
@@ -135,7 +143,7 @@ export const CommentTeaser = ({
       <div
         id={id}
         {...styles.root}
-        {...colorScheme.set('borderColor', 'text')}
+        {...colorScheme.set('borderColor', 'divider')}
         {...(highlighted && colorScheme.set('backgroundColor', 'hover'))}
       >
         {displayAuthor && (
@@ -187,41 +195,68 @@ export const CommentTeaser = ({
             </Link>
           </CommentBodyParagraph>
         </div>
-        <div {...styles.footer}>
-          <div
-            {...styles.discussionReference}
-            {...colorScheme.set('color', 'textSoft')}
-          >
-            {t.elements(
-              `styleguide/CommentTeaser/${
-                parentIds && parentIds.length ? 'reply' : 'comment'
-              }/link`,
-              {
-                link: (
-                  <Link
-                    key={`link-${id}`}
-                    comment={comment}
-                    discussion={discussion}
-                    passHref
-                  >
-                    <A>{inQuotes(discussion.title)}</A>
-                  </Link>
-                )
-              }
+
+        {documentPreview && (
+          <div {...styles.imageContainer}>
+            {documentPreview && (
+              <img
+                src={documentPreview}
+                alt={discussion?.title}
+                {...styles.image}
+                {...colorScheme.set('borderColor', 'divider')}
+              />
             )}
           </div>
-          {!displayAuthor && (
-            <div {...styles.timeago} {...colorScheme.set('color', 'textSoft')}>
-              <Link comment={comment} discussion={discussion} passHref>
+        )}
+
+        <div {...styles.footer}>
+          <Link
+            key={`link-${id}`}
+            comment={comment}
+            discussion={discussion}
+            passHref
+          >
+            <span>
+              {commentCount ? (
+                <span>
+                  <IconLink
+                    href=''
+                    onClick={e => e.preventDefault()}
+                    discussionCommentsCount={commentCount}
+                    small
+                    style={{
+                      marginTop: -2,
+                      paddingRight: 0,
+                      verticalAlign: 'top'
+                    }}
+                  />{' '}
+                  weitere Beiträge zu {titleLink}
+                </span>
+              ) : (
+                t.elements(
+                  `styleguide/CommentTeaser/${
+                    parentIds && parentIds.length ? 'reply' : 'comment'
+                  }/link`,
+                  {
+                    link: titleLink
+                  }
+                )
+              )}
+            </span>
+            {!displayAuthor && (
+              <span
+                {...styles.timeago}
+                {...colorScheme.set('color', 'textSoft')}
+              >
                 <a {...styles.linkUnderline} suppressHydrationWarning>
                   {formatTimeRelative(new Date(createdAt), {
                     ...clock,
                     direction: 'past'
                   })}
                 </a>
-              </Link>
-            </div>
-          )}
+              </span>
+            )}
+          </Link>
         </div>
       </div>
     </DiscussionContext.Provider>

@@ -197,3 +197,32 @@ Props:
   t={t}
 />
 ```
+
+```react|noSource,span-3
+<CommentTeaser
+  id="X"
+  createdAt="2019-01-01"
+  displayAuthor={{
+    profilePicture: '/static/profilePicture1.png',
+    name: 'Christof Moser',
+    credential: {description: 'Journalist', verified: true}
+  }}
+  preview={{
+    string: "Die Zeitungskäufe von Christoph Blocher, die Selbstideologisierung der NZZ, die <em>Frankenstein</em>-Monster-Strategie der Tamedia."
+  }}
+  parentIds={["somecommentid"]}
+  timeago={isoString => 'gerade eben'}
+  discussion={{
+    title: "Der Crowdfunding-Code gegen die Frankenstein-Monster-Strategie",
+    comments: {
+        totalCount: 147
+    },
+    document: {
+        meta: {
+            twitterImage: '/static/tweet_preview.jpg'
+        }
+    }
+  }}
+  t={t}
+/>
+```

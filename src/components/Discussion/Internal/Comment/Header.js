@@ -120,7 +120,7 @@ const styles = {
     flexShrink: 0,
     display: 'inline-block',
     marginLeft: pxToRem(4),
-    marginTop: pxToRem(-2)
+    marginTop: pxToRem(2)
   }),
   link: css({
     color: 'inherit',
