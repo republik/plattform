@@ -19,9 +19,6 @@ import {
   INFOBOX_IMAGE_SIZES,
   INFOBOX_DEFAULT_IMAGE_SIZE
 } from '../../components/InfoBox'
-import * as Editorial from '../../components/Typography/Editorial'
-import globalMediaState, { parseTimeHash } from '../../lib/globalMediaState'
-import scrollIntoView from 'scroll-into-view'
 
 export const matchInfoBox = matchZone('INFOBOX')
 export const matchQuote = matchZone('QUOTE')
@@ -126,83 +123,6 @@ export const styles = {
     }
   })
 }
-
-export const link = {
-  matchMdast: matchType('link'),
-  props: node => ({
-    title: node.title,
-    href: node.url
-  }),
-  component: props => {
-    const { href } = props
-    // workaround app issues with hash url by handling them ourselves and preventing the default behaviour
-    if (href && href.slice(0, 3) === '#t=') {
-      return (
-        <Editorial.A
-          {...props}
-          onClick={e => {
-            const time = parseTimeHash(href)
-            if (time !== false) {
-              e.preventDefault()
-              globalMediaState.setTime(time)
-            }
-          }}
-        />
-      )
-    }
-    if (href && href[0] === '#') {
-      return (
-        <Editorial.A
-          {...props}
-          onClick={e => {
-            const ele = document.getElementById(href.substr(1))
-            if (ele) {
-              e.preventDefault()
-              scrollIntoView(ele, { time: 0, align: { top: 0 } })
-            }
-          }}
-        />
-      )
-    }
-    return <Editorial.A {...props} />
-  },
-  editorModule: 'link',
-  rules: globalInlines
-}
-
-export const paragraphFormatting = [
-  {
-    matchMdast: matchType('strong'),
-    component: ({ attributes, children }) => (
-      <strong {...attributes}>{children}</strong>
-    ),
-    editorModule: 'mark',
-    editorOptions: {
-      type: 'STRONG',
-      mdastType: 'strong'
-    }
-  },
-  {
-    matchMdast: matchType('emphasis'),
-    component: ({ attributes, children }) => (
-      <em {...attributes}>{children}</em>
-    ),
-    editorModule: 'mark',
-    editorOptions: {
-      type: 'EMPHASIS',
-      mdastType: 'emphasis'
-    }
-  }
-]
-
-export const paragraphRules = [
-  ...globalInlines,
-  ...paragraphFormatting,
-  {
-    ...link,
-    rules: [...globalInlines, ...paragraphFormatting]
-  }
-]
 
 const slugDateFormat = timeFormat('%Y/%m/%d')
 

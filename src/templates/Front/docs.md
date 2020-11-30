@@ -1,6 +1,7 @@
 ```code|lang-jsx
 import Link from 'next/link'
 import createFrontSchema from '@project-r/styleguide/lib/templates/Front'
+
 const schema = createFrontSchema({
   Link
 })
@@ -51,67 +52,6 @@ This will be wrapped around and links (headlines and credits) and the whole teas
 Foto: [Thomas Vuillemin on Unsplash](https://unsplash.com/photos/c1_K8Qfd_iQ)
 
 <hr /></section>
-
-
-
-
-<section><h6>TEASERGROUP</h6>
-
-\`\`\`
-{
-  "columns": 2
-}
-\`\`\`
-
-<section><h6>TEASER</h6>
-
-\`\`\`
-{
-  "teaserType": "comment",
-  "authorName": "Vladislav Moser",
-  "authorProfilePicture": "/static/profilePicture1.png",
-  "authorCredentialDescription": "Bette-R than Transylvania",
-  "authorCredentialVerified": true,
-  "commentId": "xxx",
-  "commentCreatedAt": "2019-01-01",
-  "discussionHref": "/",
-  "discussionTotalComments": 42,
-  "discussionTitle": "Der heilige Pfarrer",
-  "articleShareImage": "/"
-}
-\`\`\`
-
-Lorem ipsum **blablabla** [link]()
-
-<hr /></section>
-
-<section><h6>TEASER</h6>
-
-\`\`\`
-{
-  "teaserType": "comment",
-  "authorName": "Vladimir Moser",
-  "authorProfilePicture": "/static/profilePicture1.png",
-  "authorCredentialDescription": "Not a drop!",
-  "authorCredentialVerified": false,
-  "commentId": "xxx",
-  "commentCreatedAt": "2019-01-01",
-  "discussionHref": "/",
-  "discussionTotalComments": 42,
-  "discussionTitle": "Vampire in the Middle",
-  "articleShareImage": "/"
-}
-\`\`\`
-
-Lorem ipsum blablabla (add more complex MD stuff to test as soon as this works)
-
-<hr /></section>
-
-<hr /></section>
-
-
-
-
 
 <section><h6>TEASERGROUP</h6>
 

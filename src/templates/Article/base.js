@@ -1,4 +1,6 @@
 import React from 'react'
+import scrollIntoView from 'scroll-into-view'
+import globalMediaState, { parseTimeHash } from '../../lib/globalMediaState'
 
 import * as Editorial from '../../components/Typography/Editorial'
 import * as Meta from '../../components/Typography/Meta'
@@ -29,12 +31,87 @@ import {
   styles,
   mdastToString,
   extractImages,
-  matchImagesParagraph,
-  paragraphRules,
-  link
+  matchImagesParagraph
 } from './utils'
 
 const createBase = ({ metaBody, metaHeadlines }) => {
+  const link = {
+    matchMdast: matchType('link'),
+    props: node => ({
+      title: node.title,
+      href: node.url
+    }),
+    component: props => {
+      const { href } = props
+      // workaround app issues with hash url by handling them ourselves and preventing the default behaviour
+      if (href && href.slice(0, 3) === '#t=') {
+        return (
+          <Editorial.A
+            {...props}
+            onClick={e => {
+              const time = parseTimeHash(href)
+              if (time !== false) {
+                e.preventDefault()
+                globalMediaState.setTime(time)
+              }
+            }}
+          />
+        )
+      }
+      if (href && href[0] === '#') {
+        return (
+          <Editorial.A
+            {...props}
+            onClick={e => {
+              const ele = document.getElementById(href.substr(1))
+              if (ele) {
+                e.preventDefault()
+                scrollIntoView(ele, { time: 0, align: { top: 0 } })
+              }
+            }}
+          />
+        )
+      }
+      return <Editorial.A {...props} />
+    },
+    editorModule: 'link',
+    rules: globalInlines
+  }
+
+  const paragraphFormatting = [
+    {
+      matchMdast: matchType('strong'),
+      component: ({ attributes, children }) => (
+        <strong {...attributes}>{children}</strong>
+      ),
+      editorModule: 'mark',
+      editorOptions: {
+        type: 'STRONG',
+        mdastType: 'strong'
+      }
+    },
+    {
+      matchMdast: matchType('emphasis'),
+      component: ({ attributes, children }) => (
+        <em {...attributes}>{children}</em>
+      ),
+      editorModule: 'mark',
+      editorOptions: {
+        type: 'EMPHASIS',
+        mdastType: 'emphasis'
+      }
+    }
+  ]
+
+  const paragraphRules = [
+    ...globalInlines,
+    ...paragraphFormatting,
+    {
+      ...link,
+      rules: [...globalInlines, ...paragraphFormatting]
+    }
+  ]
+
   const Typography = metaBody ? Meta : Editorial
 
   const paragraph = {
