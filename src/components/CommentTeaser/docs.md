@@ -9,7 +9,6 @@ Props:
 - `tags`: An optional array of tags. Currently only the first tag is used, but that might change in the future.
 - `parentIds`: The comment's array of parent ids. Used to determine whether it's a comment or a reply.
 - `createdAt`: The comment's creation timestamp.
-- `timeago`: A function that renders a human-readable version of `createdAt`.
 - `highlighted`: Adds a background to the teaser
 - `menu`: Adds a more icon to the right and a callout menu
 - `Link`: A Next.js like `<Link />` component, receiving these props:
@@ -41,7 +40,6 @@ Props:
     string: "Die Zeitungskäufe von Christoph Blocher, die Selbstideologisierung der NZZ, die Frankenstein-Monster-Strategie der Tamedia: Ehrlich gesagt wäre es uns lieber",
     more: true
   }}
-  timeago={isoString => 'gerade eben'}
   discussion={{
     title: "Der Crowdfunding-Code"
   }}
@@ -58,7 +56,6 @@ Props:
     string: "Die Zeitungskäufe von Christoph Blocher, die Selbstideologisierung der NZZ, die Frankenstein-Monster-Strategie der Tamedia: Ehrlich gesagt wäre es uns lieber",
     more: true
   }}
-  timeago={isoString => 'gerade eben'}
   discussion={{
     title: "Der Crowdfunding-Code gegen die Frankenstein-Monster-Strategie"
   }}
@@ -79,7 +76,6 @@ Props:
     string: "Die Zeitungskäufe von Christoph Blocher, die Selbstideologisierung der NZZ, die Frankenstein-Monster-Strategie der Tamedia: Ehrlich gesagt wäre es uns lieber",
     more: true
   }}
-  timeago={isoString => 'gerade eben'}
   discussion={{
     title: "Der Crowdfunding"
   }}
@@ -101,7 +97,6 @@ Props:
     string: "Die Zeitungskäufe von Christoph Blocher, die Selbstideologisierung der NZZ, die Frankenstein-Monster-Strategie der Tamedia: Ehrlich gesagt wäre es uns lieber",
     more: true
   }}
-  timeago={isoString => 'gerade eben'}
   discussion={{
     title: "Der Crowdfunding-Code gegen die Frankenstein-Monster-Strategie"
   }}
@@ -125,7 +120,6 @@ Props:
     }
   ]}
   parentIds={["somecommentid"]}
-  timeago={isoString => 'gerade eben'}
   discussion={{
     title: "Der Crowdfunding-Code gegen die Frankenstein-Monster-Strategie"
   }}
@@ -146,7 +140,6 @@ Props:
     string: "FrankensteinSuperLangesMonsterWortOverflowVerhinderungsStrategieFrankensteinSuperLangesMonsterWortOverflowVerhinderungsStrategie ist word-wrap: break-word."
   }}
   parentIds={["somecommentid"]}
-  timeago={isoString => 'gerade eben'}
   discussion={{
     title: "Der Crowdfunding-Code gegen die Frankenstein-Monster-Strategie"
   }}
@@ -168,7 +161,6 @@ Props:
     string: "Die Zeitungskäufe von Christoph Blocher, die Selbstideologisierung der NZZ, die <em>Frankenstein</em>-Monster-Strategie der Tamedia."
   }}
   parentIds={["somecommentid"]}
-  timeago={isoString => 'gerade eben'}
   discussion={{
     title: "Der Crowdfunding-Code gegen die Frankenstein-Monster-Strategie"
   }}
@@ -190,7 +182,6 @@ Props:
     string: "Die Zeitungskäufe von Christoph Blocher, die Selbstideologisierung der NZZ, die <em>Frankenstein</em>-Monster-Strategie der Tamedia."
   }}
   parentIds={["somecommentid"]}
-  timeago={isoString => 'gerade eben'}
   discussion={{
     title: "Der Crowdfunding-Code gegen die Frankenstein-Monster-Strategie"
   }}
@@ -207,11 +198,7 @@ Props:
     name: 'Christof Moser',
     credential: {description: 'Journalist', verified: true}
   }}
-  preview={{
-    string: "Die Zeitungskäufe von Christoph Blocher, die Selbstideologisierung der NZZ, die <em>Frankenstein</em>-Monster-Strategie der Tamedia."
-  }}
-  parentIds={["somecommentid"]}
-  timeago={isoString => 'gerade eben'}
+  featuredText="The trouble with having an open mind, of course, is that people will insist on coming along and trying to put things in it."
   discussion={{
     title: "Der Crowdfunding-Code gegen die Frankenstein-Monster-Strategie",
     comments: {

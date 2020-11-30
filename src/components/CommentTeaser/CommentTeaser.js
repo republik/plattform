@@ -6,8 +6,13 @@ import { mUp } from '../../theme/mediaQueries'
 import { underline } from '../../lib/styleMixins'
 import { inQuotes } from '../../lib/inQuotes'
 import { useMediaQuery } from '../../lib/useMediaQuery'
-import { serifRegular14, sansSerifMedium15 } from '../Typography/styles'
+import {
+  serifRegular14,
+  sansSerifMedium15,
+  sansSerifRegular15
+} from '../Typography/styles'
 import { A } from '../Typography/'
+import { P } from '../Typography/Editorial'
 import { CommentBodyParagraph } from '../CommentBody/web'
 import { IconLink, Context, Header } from '../Discussion/Internal/Comment'
 import RawHtml from '../RawHtml/'
@@ -16,6 +21,7 @@ import {
   DiscussionContext,
   formatTimeRelative
 } from '../Discussion/DiscussionContext'
+import { convertStyleToRem, pxToRem } from '../Typography/utils'
 
 const styles = {
   root: css({
@@ -31,10 +37,7 @@ const styles = {
   body: css({
     ...serifRegular14,
     wordWrap: 'break-word',
-    margin: '10px 0',
-    '& p': {
-      ...serifRegular14
-    }
+    margin: '10px 0'
   }),
   link: css({
     color: 'inherit',
@@ -66,7 +69,9 @@ const styles = {
     paddingLeft: 10
   }),
   imageContainer: css({
-    marginTop: 10
+    [mUp]: {
+      marginTop: 20
+    }
   }),
   image: css({
     borderBottomWidth: 1,
@@ -93,6 +98,7 @@ export const CommentTeaser = ({
     parentIds,
     displayAuthor,
     preview,
+    featuredText,
     highlights,
     createdAt
   } = comment
@@ -174,7 +180,7 @@ export const CommentTeaser = ({
           <CommentBodyParagraph>
             <Link comment={comment} discussion={discussion} passHref>
               <a {...styles.link} {...highlightEMRule}>
-                {!!children && children}
+                {!!featuredText && <P>{inQuotes(featuredText)}</P>}
                 {!!preview && !highlight && (
                   <Fragment>
                     {preview.string}
