@@ -4,6 +4,7 @@ interface Phase {
   key: string
   color: string
   lock: boolean
+  fallback?: boolean
   tags?: string[]
   published?: boolean
   scheduled?: boolean
@@ -32,10 +33,10 @@ interface CheckPredicate {
 }
 
 interface Check {
-  name: string,
-  conditions: boolean,
-  expected: boolean,
-  predicate: CheckPredicate 
+  name: string
+  conditions: boolean
+  expected: boolean
+  predicate: CheckPredicate
 }
 
 const phases: Phase[] = [
@@ -43,6 +44,7 @@ const phases: Phase[] = [
     key: 'draft',
     color: 'Indigo',
     lock: false,
+    fallback: true,
     tags: [],
   },
   {
@@ -91,7 +93,7 @@ const phases: Phase[] = [
       'imagesOk',
       'factCheckOk',
       'finalControl',
-    ]
+    ],
   },
   {
     key: 'scheduled',
@@ -106,17 +108,22 @@ const phases: Phase[] = [
     lock: true,
     published: true,
     live: true,
-  }
+  },
 ]
+
+if (!phases.find((p) => p.fallback)) {
+  throw new Error('At least one phase needs fallback flag')
+}
 
 const maybeCheckTags = function (phase: Phase): Check {
   return {
     name: 'tags',
     conditions: !!phase.tags,
     expected: true,
-    predicate: (repo: Repo) => !!phase.tags?.every(
-      tag => !!repo.tags?.nodes?.find(n => n.name === tag)
-    )
+    predicate: (repo: Repo) =>
+      !!phase.tags?.every(
+        (tag) => !!repo.tags?.nodes?.find((n) => n.name === tag),
+      ),
   }
 }
 
@@ -125,7 +132,7 @@ const maybeCheckPublished = function (phase: Phase): Check {
     name: 'published',
     conditions: typeof phase.published === 'boolean',
     expected: !!phase.published,
-    predicate: (repo: Repo) => !!repo.latestPublications.length
+    predicate: (repo: Repo) => !!repo.latestPublications.length,
   }
 }
 
@@ -134,9 +141,13 @@ const maybeCheckScheduled = function (phase: Phase): Check {
     name: 'scheduled',
     conditions: typeof phase.scheduled === 'boolean',
     expected: !!phase.scheduled,
-    predicate: (repo: Repo) => !!repo.latestPublications.find(
-      p => p.meta.scheduledAt && !p.live && p.name.indexOf('prepublication') === -1
-    )
+    predicate: (repo: Repo) =>
+      !!repo.latestPublications.find(
+        (p) =>
+          p.meta.scheduledAt &&
+          !p.live &&
+          p.name.indexOf('prepublication') === -1,
+      ),
   }
 }
 
@@ -145,16 +156,17 @@ const maybeCheckLive = function (phase: Phase): Check {
     name: 'live',
     conditions: typeof phase.live === 'boolean',
     expected: !!phase.live,
-    predicate: (repo: Repo) => !!repo.latestPublications.find(
-      p => p.live && p.name.indexOf('prepublication') === -1
-    )
+    predicate: (repo: Repo) =>
+      !!repo.latestPublications.find(
+        (p) => p.live && p.name.indexOf('prepublication') === -1,
+      ),
   }
 }
 
 const runChecks = (repo: Repo, checks: Check[]) => {
   const hasAllPassed = checks
-    .filter(check => check.conditions)
-    .every(check => {
+    .filter((check) => check.conditions)
+    .every((check) => {
       const { name, expected, predicate } = check
       const hasPassed = expected === predicate(repo)
 
@@ -167,7 +179,7 @@ const runChecks = (repo: Repo, checks: Check[]) => {
   return hasAllPassed
 }
 
-const getPhases = () => ([ ...phases])
+const getPhases = () => [...phases]
 
 const hasReachedPhase = (repo: Repo, phase: Phase) => {
   const checks: Check[] = [
@@ -185,9 +197,11 @@ const hasReachedPhase = (repo: Repo, phase: Phase) => {
 
 const getCurrentPhase = (repo: Repo) => {
   const phases = getPhases().reverse()
-  const currentPhase = phases.find(phase => hasReachedPhase(repo, phase))
+  const currentPhase = phases.find((phase) => hasReachedPhase(repo, phase))
   if (!currentPhase) {
-    throw new Error(`Failing to determine current phase repo "${repo.id}" is in`)
+    throw new Error(
+      `Failing to determine current phase repo "${repo.id}" is in`,
+    )
   }
 
   debug('getCurrentPhase', { repo: repo.id, phase: currentPhase.key })
@@ -195,12 +209,17 @@ const getCurrentPhase = (repo: Repo) => {
   return currentPhase
 }
 
-const getPhase = (key: String) => {
-  return getPhases().find(phase => phase.key === key)
+const getPhase = (key: string) => {
+  return getPhases().find((phase) => phase.key === key)
+}
+
+const getFallbackPhase = () => {
+  return getPhases().find((phase) => phase.fallback)
 }
 
 module.exports = {
   getPhases,
   getCurrentPhase,
-  getPhase
+  getPhase,
+  getFallbackPhase,
 }

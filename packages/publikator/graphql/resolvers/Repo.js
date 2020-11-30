@@ -145,6 +145,11 @@ module.exports = {
     return isTemplate
   },
   currentPhase: async (repo, args, context) => {
+    // A missing commit indicates a not yet created repository
+    if (!repo.latestCommit) {
+      return phases.getFallbackPhase()
+    }
+
     return phases.getPhase(repo.currentPhase)
-  }
+  },
 }
