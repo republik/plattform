@@ -41,6 +41,7 @@ type Employee {
   name: String
   title: String
   greeting: String
+  pitch: String
   user: User
 }
 `
