@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 const { promises: fs } = require('fs')
 const htmlToText = require('html-to-text')
-const defaultFormat = require('html-to-text/lib/formatter')
 const he = require('he')
 const path = require('path')
 const Promise = require('bluebird')
@@ -16,9 +15,8 @@ const argv = yargs
   .options('domain', {
     alias: 'd',
     type: 'string',
-    default: 'republik.ch'
-  })
-  .argv
+    default: 'republik.ch',
+  }).argv
 
 const filterNonHtml = (file) => path.extname(file) !== '.html'
 const filterUnspecifiedTemplates = (file) =>
@@ -26,7 +24,7 @@ const filterUnspecifiedTemplates = (file) =>
 
 /**
  * Process an anchor
- * 
+ *
  * @see https://github.com/html-to-text/node-html-to-text/blob/6.0.0/lib/formatter.js#L151-L193
  *
  * Customized to:
@@ -35,23 +33,36 @@ const filterUnspecifiedTemplates = (file) =>
  *
  */
 const formatAnchorRepublik = (elem, walk, builder, formatOptions) => {
-  function getHref () {
-    if (formatOptions.ignoreHref) { return ''; }
-    if (!elem.attribs || !elem.attribs.href) { return '' }
+  function getHref() {
+    if (formatOptions.ignoreHref) {
+      return ''
+    }
+    if (!elem.attribs || !elem.attribs.href) {
+      return ''
+    }
     let href = elem.attribs.href.replace(/^mailto:/, '')
-    if (formatOptions.noAnchorUrl && href[0] === '#') { return '' }
-    href = (formatOptions.baseUrl && href[0] === '/')
-      ? formatOptions.baseUrl + href
-      : href;
-    return he.decode(href, builder.options.decodeOptions);
+    if (formatOptions.noAnchorUrl && href[0] === '#') {
+      return ''
+    }
+    href =
+      formatOptions.baseUrl && href[0] === '/'
+        ? formatOptions.baseUrl + href
+        : href
+    return he.decode(href, builder.options.decodeOptions)
   }
   const href = getHref()
   if (!href) {
     walk(elem.children, builder)
   } else {
     const text = elem.children
-      .filter(elem => elem.type === 'text' && !elem.children)
-      .map(elem => elem.data.split(' ').map(string => string.trim()).filter(Boolean).join(' '))
+      .filter((elem) => elem.type === 'text' && !elem.children)
+      .map((elem) =>
+        elem.data
+          .split(' ')
+          .map((string) => string.trim())
+          .filter(Boolean)
+          .join(' '),
+      )
       .join(' ')
 
     if (useHrefOnly(text, href)) {
@@ -59,10 +70,8 @@ const formatAnchorRepublik = (elem, walk, builder, formatOptions) => {
     } else if (formatOptions.hideLinkHrefIfSameAsText) {
       builder.addInline(text, true)
       builder.addInline(
-        formatOptions.noLinkBrackets
-          ? ' ' + href + ' '
-          : ' [' + href + ' ]',
-        true
+        formatOptions.noLinkBrackets ? ' ' + href + ' ' : ' [' + href + ' ]',
+        true,
       )
     }
   }
@@ -72,8 +81,8 @@ const formatAnchorRepublik = (elem, walk, builder, formatOptions) => {
  * Compares an achor text and href link. Returns true if href string
  * is deemd enough to represent anchor.
  *
- * @param {string} text 
- * @param {string} href 
+ * @param {string} text
+ * @param {string} href
  */
 const useHrefOnly = (text, href) => {
   // Return true if text and href are the same
@@ -97,7 +106,7 @@ const useHrefOnly = (text, href) => {
 
   /**
    * Returns true if text contains domain and href is a handlebar tag
-   * 
+   *
    * Example:
    *   text: www.republik.ch/merci
    *   href: {{link_merci}}
@@ -109,7 +118,7 @@ const useHrefOnly = (text, href) => {
 
   /**
    * Returns true if text is part of href
-   * 
+   *
    * Example:
    *   text: republik.ch/foobar
    *   href: https://www.republik.ch/foobar
@@ -135,28 +144,26 @@ const run = async () => {
     const html = await fs.readFile(file, 'utf8')
     await fs.writeFile(
       file.replace(/\.html$/gi, '.txt'),
-      htmlToText
-        .fromString(html, {
-          decodeOptions: {
-            strict: true,
+      htmlToText.fromString(html, {
+        decodeOptions: {
+          strict: true,
+        },
+        formatters: {
+          formatAnchorRepublik,
+        },
+        tags: {
+          img: {
+            format: 'skip',
           },
-          formatters: {
-            formatAnchorRepublik
-          },
-          tags: {
-            img: {
-              format: 'skip'
+          a: {
+            format: 'formatAnchorRepublik',
+            options: {
+              noLinkBrackets: true,
+              hideLinkHrefIfSameAsText: true,
             },
-            a: {
-              format: 'formatAnchorRepublik',
-              options: {
-                noLinkBrackets: true,
-                hideLinkHrefIfSameAsText: true
-              }
-            }
-          }
-        })
-        ,
+          },
+        },
+      }),
       { encoding: 'utf8', flag: 'w' },
     )
   })
