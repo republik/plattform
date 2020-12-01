@@ -129,6 +129,19 @@ const find = async (args, { elastic }) => {
     })
   }
 
+  if (args.phases?.length) {
+    query.bool.must.push({ terms: { 'currentPhase.keyword': args.phases } })
+  }
+
+  const aggs = {
+    phases: {
+      terms: {
+        field: 'currentPhase.keyword',
+        min_doc_count: 0,
+      },
+    },
+  }
+
   return elastic.search({
     index: utils.getIndexAlias('repo', 'read'),
     from: args.from,
@@ -137,6 +150,7 @@ const find = async (args, { elastic }) => {
       ...getSort(args),
       ...getSourceFilter(),
       query,
+      aggs,
     },
   })
 }

@@ -247,6 +247,10 @@ At least the android emulator doesn't use the hosts dns resolver
 yarn run run-android
 ```
 
+### Postfinance Import
+
+see [packages/republik-crowdfundings/lib/scheduler/payments/README.md](packages/republik-crowdfundings/lib/scheduler/payments/README.md).
+
 ## Licensing
 
 The source code and it's documentation is licensed under [GNU AGPLv3](LICENSE)+.

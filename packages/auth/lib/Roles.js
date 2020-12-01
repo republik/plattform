@@ -2,6 +2,18 @@ const t = require('./t')
 
 const roles = ['editor']
 const specialRoles = ['accountant', 'admin', 'editor', 'supporter']
+const exposableRoles = [
+  'accomplice',
+  'accountant',
+  'admin',
+  'associate',
+  'debater',
+  'editor',
+  'member',
+  'producer',
+  'supporter',
+  'tester',
+]
 
 const userHasRole = (user, role) => {
   return user && user.roles && user.roles.indexOf(role) > -1
@@ -107,6 +119,7 @@ const isRoleClaimableByMe = (role, me) =>
 module.exports = {
   roles,
   specialRoles,
+  exposableRoles,
   userHasRole,
   ensureUserHasRole,
   userIsInRoles,

@@ -1,3 +1,5 @@
+const { getPhases } = require('../lib/phases')
+
 module.exports = `
 scalar DateTime
 scalar JSON
@@ -17,13 +19,37 @@ type Repo {
   unpublished: Boolean!
 
   meta: RepoMeta!
+  currentPhase: RepoPhase!
 
   isArchived: Boolean!
   isTemplate: Boolean!
 }
 
+interface RepoPhaseInterface {
+  key: RepoPhaseKey!
+  color: String!
+  lock: Boolean!
+  label: String!
+}
+
+type RepoPhase implements RepoPhaseInterface {
+  key: RepoPhaseKey!
+  color: String!
+  lock: Boolean!
+  label: String!
+}
+
+type RepoPhaseWithCount implements RepoPhaseInterface {
+  key: RepoPhaseKey!
+  color: String!
+  lock: Boolean!
+  label: String!
+  count: Int!
+}
+
 type RepoConnection {
   nodes: [Repo]
+  phases: [RepoPhaseWithCount]
   pageInfo: PublikatorPageInfo!
   totalCount: Int!
   totalDiskUsage: Int
@@ -46,6 +72,12 @@ type RepoMeta {
 input RepoOrderBy {
   field: RepoOrderField!
   direction: OrderDirection!
+}
+
+enum RepoPhaseKey {
+${getPhases()
+  .map((p) => p.key)
+  .join('\n')}
 }
 
 enum RepoOrderField {

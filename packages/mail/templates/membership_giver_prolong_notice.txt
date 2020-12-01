@@ -5,12 +5,18 @@ Herzlichen Dank für Ihre Grosszügigkeit und Ihr Vertrauen.
 Sie haben {{#if `gifted_memberships_count == 1`}}eine Mitgliedschaft{{elseif
 `gifted_memberships_count > 1`}}mehrere Mitgliedschaften{{/if}} verschenkt.
 
-{{#if `gifted_memberships_count == 1`}} Diese Mitgliedschaft endet bald.
+{{#if `gifted_memberships_count == 1`}}
 
-{{elseif `gifted_memberships_count > 1`}} Diese Mitgliedschaften enden bald.
+Diese Mitgliedschaft endet bald.
 
-{{/if}} Schenken Sie noch ein weiteres Jahr unabhängige und werbefreie
-Einordnung und Vertiefung anstelle einer Flut von Nachrichten?
+{{elseif `gifted_memberships_count > 1`}}
+
+Diese Mitgliedschaften enden bald.
+
+{{/if}}
+
+Schenken Sie noch ein weiteres Jahr unabhängige und werbefreie Einordnung und
+Vertiefung anstelle einer Flut von Nachrichten?
 
 Jede Mitgliedschaft unterstützt die Republik und die Idee hinter unserem Projekt
 einer wirklich unabhängigen vierten Gewalt und zentralen demokratischen
@@ -21,9 +27,9 @@ Folgende{{#if `gifted_memberships_count == 1`}} Mitgliedschaft steht{{elseif
 `gifted_memberships_count > 1`}} Mitgliedschaften stehen{{/if}} zur Verlängerung
 an:
 
-* 
-* {{this.olabel}}
-* 
+   {{#options}}
+ * {{this.olabel}}
+   {{/options}}
 
 Klicken Sie hier, um {{#if `gifted_memberships_count == 1`}}die
 Geschenkmitgliedschaft{{elseif `gifted_memberships_count > 1`}}die
@@ -44,14 +50,14 @@ Ihre Crew der Republik
 Die Republik ist ein unabhängiges und werbefreies digitales Magazin für Politik,
 Wirtschaft, Gesellschaft und Kultur. Es wird von seinen Leserinnen und Lesern
 finanziert und erscheint von Montag bis Samstag mit täglich ein bis drei neuen
-Beiträgen. In der App, auf der Website und als Newsletter. 
+Beiträgen. In der App, auf der Website und als Newsletter.
 
 
 Republik AG
 Sihlhallenstrasse 1, CH-8004 Zürich
-{{frontend_base_url}} 
-kontakt@republik.ch 
+{{frontend_base_url}}
+kontakt@republik.ch
 
-Unser Manifest {{link_manifest}} 
-Das Impressum {{link_imprint}} 
+Unser Manifest {{link_manifest}}
+Das Impressum {{link_imprint}}
 Häufig gestellte Fragen {{link_faq}}

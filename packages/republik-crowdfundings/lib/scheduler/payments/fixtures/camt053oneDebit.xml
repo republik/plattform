@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Document xmlns="urn:iso:std:iso:20022:tech:xsd:camt.053.001.04"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:iso:std:iso:20022:tech:xsd:camt.053.001.04 camt.053.001.04.xsd">
+  <BkToCstmrStmt>
+    <Stmt>
+      <Acct>
+        <Id>
+          <IBAN>CH0000000000999999999</IBAN>
+        </Id>
+        <Ownr>
+          <Nm>Project R Genossenschaft Zürich</Nm>
+        </Ownr>
+      </Acct>
+      <Ntry>
+        <CdtDbtInd>DEBIT</CdtDbtInd>
+      </Ntry>
+    </Stmt>
+  </BkToCstmrStmt>
+</Document>

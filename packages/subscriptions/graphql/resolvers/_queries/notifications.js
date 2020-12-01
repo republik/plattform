@@ -1,5 +1,6 @@
 const { ensureSignedIn } = require('@orbiting/backend-modules-auth')
 const paginate = require('../../../lib/paginateNotificationConnection')
+const moment = require('moment')
 
 const MAX_RECORDS = 1000
 
@@ -10,6 +11,9 @@ module.exports = async (_, args, context) => {
   const nodes = await pgdb.public.notifications.find(
     {
       ...(args.onlyUnread ? { readAt: null } : {}),
+      ...(args.lastDays
+        ? { 'updatedAt >=': moment().subtract(args.lastDays, 'days') }
+        : {}),
       ...(args.filter ? { eventObjectType: args.filter } : {}),
       userId: me.id,
     },

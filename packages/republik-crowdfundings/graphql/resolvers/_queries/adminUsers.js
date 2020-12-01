@@ -87,7 +87,7 @@ const patterns = [
     name: 'user full name',
     test: /(?<word>.+)/i,
     query: `
-        SELECT
+      SELECT
         concat_ws(' ', u."firstName", u."lastName") <->> :word AS word_sim,
         u.id "userId"
       FROM users u

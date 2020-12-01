@@ -1,7 +1,9 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
 const logger = console
 
-module.exports = async (_, args, { pgdb, req, t }) => {
+module.exports = async (_, args, context) => {
+  const { pgdb, req, t } = context
+
   Roles.ensureUserHasRole(req.user, 'supporter')
 
   const { id } = args
