@@ -40,6 +40,7 @@ const getUncommittedChanges = gql`
         id
         email
         name
+        portrait(properties: { width: 160, height: 160 })
       }
       currentPhase {
         lock
@@ -57,6 +58,7 @@ const uncommittedChangesSubscription = gql`
         id
         email
         name
+        portrait(properties: { width: 160, height: 160 })
       }
     }
   }
@@ -105,7 +107,9 @@ const styles = {
 
 styles.initials = merge(styles.box, {
   backgroundColor: '#ccc',
-  textTransform: 'uppercase'
+  textTransform: 'uppercase',
+  backgroundPosition: 'center center',
+  backgroundSize: '150%'
 })
 
 styles.emptyBox = merge(styles.box, {
@@ -264,8 +268,15 @@ const Initials = ({ uncommittedChanges, t }) => (
     )}
     {uncommittedChanges.users.length ? (
       uncommittedChanges.users.map(user => (
-        <span key={user.id} {...css(styles.initials)} title={user.email}>
-          {getInitials(user)}
+        <span
+          key={user.id}
+          {...css(styles.initials)}
+          title={`${user.name} (${user.email})`}
+          style={{
+            backgroundImage: user.portrait ? `url(${user.portrait})` : undefined
+          }}
+        >
+          {!user.portrait && getInitials(user)}
         </span>
       ))
     ) : (
