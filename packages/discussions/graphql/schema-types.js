@@ -1,3 +1,5 @@
+const { getFeaturedTargets } = require('../lib/Comment')
+
 module.exports = `
 
 type Credential {
@@ -218,8 +220,7 @@ type Comment {
 }
 
 enum CommentFeaturedTarget {
-  DEFAULT
-  MARKETING
+${getFeaturedTargets().join('\n')}
 }
 
 type MentioningDocument {

@@ -1,8 +1,10 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
 const slack = require('../../../lib/slack')
 
+const { getDefaultFeaturedTarget } = require('../../../lib/Comment')
+
 module.exports = async (_, args, context) => {
-  const { id, content, targets = ['DEFAULT'] } = args
+  const { id, content, targets = [getDefaultFeaturedTarget()] } = args
   const { pgdb, user: me, t, loaders, pubsub } = context
 
   Roles.ensureUserHasRole(me, 'editor')
