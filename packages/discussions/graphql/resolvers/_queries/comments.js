@@ -1,3 +1,4 @@
+const { getDefaultFeaturedTarget } = require('../../../lib/Comment')
 const getSortKey = require('../../../lib/sortKey')
 
 const MAX_LIMIT = 100
@@ -23,7 +24,7 @@ module.exports = async (_, args, context, info) => {
     focusId,
     lastId,
     featured,
-    featuredTarget
+    featuredTarget = getDefaultFeaturedTarget()
   } = options
 
   if (limit > MAX_LIMIT) {

@@ -4,7 +4,7 @@ const slack = require('../../../lib/slack')
 const { getDefaultFeaturedTarget } = require('../../../lib/Comment')
 
 module.exports = async (_, args, context) => {
-  const { id, content, targets = [getDefaultFeaturedTarget()] } = args
+  const { id, content, targets = [] } = args
   const { pgdb, user: me, t, loaders, pubsub } = context
 
   Roles.ensureUserHasRole(me, 'editor')
@@ -15,11 +15,9 @@ module.exports = async (_, args, context) => {
   }
   const discussion = await loaders.Discussion.byId.load(comment.discussionId)
 
-  console.log({
-    featuredAt: content ? new Date() : null,
-    featuredContent: content || null,
-    featuredTargets: content ? targets : null,
-  })
+  if (!targets.length) {
+    targets.push(getDefaultFeaturedTarget())
+  }
 
   const newComment = await pgdb.public.comments.updateAndGetOne(
     { id },
