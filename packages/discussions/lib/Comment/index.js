@@ -4,7 +4,7 @@ const featuredTargets = [
 ]
 
 if (!featuredTargets.find((t) => t.default)) {
-  throw new Error('At least featuredTarget needs default flag')
+  throw new Error('At least one featuredTarget needs default flag')
 }
 
 const getFeaturedTargets = () => {
