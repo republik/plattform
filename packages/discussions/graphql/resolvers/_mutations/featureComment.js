@@ -41,6 +41,7 @@ module.exports = async (_, args, context) => {
       newComment,
       discussion,
       content,
+      targets,
       !!content,
       context,
     ),

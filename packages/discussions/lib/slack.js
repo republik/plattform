@@ -108,6 +108,7 @@ exports.publishCommentFeatured = async (
   comment,
   discussion,
   featuredText,
+  featuredTargets,
   featured,
   context,
 ) => {
@@ -119,10 +120,12 @@ exports.publishCommentFeatured = async (
         author,
       )}*`
 
+  const targets = featuredTargets.join(', ')
+
   const content = featured
     ? `${action} from <${await getCommentLink(comment, discussion, context)}|${
         discussion.title
-      }>:\n${featuredText}`
+      }> for target(s) ${targets}:\n${featuredText}`
     : `${action} from <${await getCommentLink(comment, discussion, context)}|${
         discussion.title
       }>`
