@@ -101,9 +101,6 @@ type PackageOption {
   additionalPeriods: [MembershipPeriod!]
 
   accessGranted: Boolean
-
-  # If true, option reward is delivered
-  postalDelivery: Boolean!
 }
 
 input PackageOptionInput {
@@ -121,6 +118,7 @@ input PackageOptionInput {
 type Goodie {
   id: ID!
   name: String!
+  requireAddress: Boolean!
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -135,6 +133,7 @@ enum MembershipTypeInterval {
 type MembershipType {
   id: ID!
   name: String!
+  requireAddress: Boolean!
   interval: MembershipTypeInterval!
   minPeriods: Int!
   maxPeriods: Int!

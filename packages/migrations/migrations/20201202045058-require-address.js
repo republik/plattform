@@ -1,7 +1,7 @@
 const run = require('../run.js')
 
 const dir = 'packages/republik-crowdfundings/migrations/sqls'
-const file = '20201110093139-pkg-option-shipped'
+const file = '20201202045058-require-address'
 
 exports.up = (db) =>
   run(db, dir, `${file}-up.sql`)
