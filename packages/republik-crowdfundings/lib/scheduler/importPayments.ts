@@ -257,7 +257,7 @@ const insertPayments = async ({
     return await postfinancePaymentsTable.insert(record)
   })
 
-  return (await Promise.all(insertPromises)).reduce((a, b) => a + b)
+  return (await Promise.all(insertPromises)).reduce((a, b) => a + b, 0)
 }
 
 interface PostfinancePaymentRecord {

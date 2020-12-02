@@ -1,4 +1,5 @@
 {
+  "exclude": ["docker-data/"],
   "compilerOptions": {
     "target": "ES2019",
     "module": "commonjs",

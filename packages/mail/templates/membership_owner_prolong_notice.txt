@@ -9,10 +9,11 @@ Ganz gleich, ob Sie uns einmal pro Woche, einmal pro Monat oder einmal pro Jahr
 lesen – mit Ihrem Beitrag stärken Sie kritischen Journalismus, die vierte Gewalt
 und die Demokratie.
 
-Jetzt erneuern {{prolong_url}} Als Magazin bieten wir Einordnung und Vertiefung
-anstelle einer Flut von Nachrichten. Wir recherchieren, um Missstände
-aufzudecken, oft monatelang. Und diskutieren über drängende Fragen der
-Gegenwart.
+Jetzt erneuern {{prolong_url}}
+
+Als Magazin bieten wir Einordnung und Vertiefung anstelle einer Flut von
+Nachrichten. Wir recherchieren, um Missstände aufzudecken, oft monatelang. Und
+diskutieren über drängende Fragen der Gegenwart.
 
 Die Republik ist aber noch mehr. Wir sind ein Projekt gegen den Zynismus, den
 Vormarsch der Autoritären und gegen die Diktatur der Angst. Und stehen für die
@@ -23,8 +24,8 @@ Magazin über ihre Leserinnen und Leser.
 
 Nun haben Sie die Wahl:
 Sie bleiben an Bord und investieren damit weiter in die Republik und ihre Idee.
-{{prolong_url}} 
-Sie kündigen Ihre Mitgliedschaft bis zum {{cancel_until_date}}. 
+{{prolong_url}}
+Sie kündigen Ihre Mitgliedschaft bis zum {{cancel_until_date}}.
 
 Wie auch immer Sie entscheiden: Wir hoffen, dass wir Sie im vergangenen Jahr
 immer wieder erfolgreich informiert, unterhalten, geärgert und beglückt haben.
@@ -36,14 +37,14 @@ Ihre Crew der Republik
 Die Republik ist ein unabhängiges und werbefreies digitales Magazin für Politik,
 Wirtschaft, Gesellschaft und Kultur. Es wird von seinen Leserinnen und Lesern
 finanziert und erscheint von Montag bis Samstag mit täglich ein bis drei neuen
-Beiträgen. In der App, auf der Website und als Newsletter. 
+Beiträgen. In der App, auf der Website und als Newsletter.
 
 
 Republik AG
 Sihlhallenstrasse 1, CH-8004 Zürich
-{{frontend_base_url}} 
-kontakt@republik.ch 
+{{frontend_base_url}}
+kontakt@republik.ch
 
-Unser Manifest {{link_manifest}} 
-Das Impressum {{link_imprint}} 
+Unser Manifest {{link_manifest}}
+Das Impressum {{link_imprint}}
 Häufig gestellte Fragen {{link_faq}}

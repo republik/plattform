@@ -68,6 +68,39 @@
                     </p>
                     {{/if}}
 
+                    <table
+                      width="100%"
+                      border="0"
+                      cellspacing="0"
+                      cellpadding="0"
+                    >
+                      <tr>
+                        <td>
+                          <table border="0" cellspacing="0" cellpadding="0">
+                            <tr>
+                              <td align="center" bgcolor="#3CAD00">
+                                <a
+                                  href="{{LINK_CLAIM_PREFILLED}}"
+                                  style="font-size:20px;{{sg_font_style_sans_serif_regular}}color:#ffffff;text-decoration:none;border-radius:0;padding:15px 30px 15px 30px;border:1px solid #3CAD00;display:inline-block;"
+                                  >Jetzt anmelden</a
+                                >
+                              </td>
+                            </tr>
+                          </table>
+                        </td>
+                      </tr>
+                    </table>
+                    <p>
+                      Falls dieser Button nicht funktioniert: Öffnen Sie bitte
+                      <a href="{{LINK_CLAIM_PREFILLED}}"
+                        >{{LINK_CLAIM_CONTEXTLESS}}</a
+                      >, und geben Sie dann Ihren Namen, Ihre E-Mail-Adresse und
+                      den folgenden Gutscheincode ein:
+                      <span style="font-family: monospace"
+                        >{{GRANT_VOUCHER_CODE}}</span
+                      >. Der Gutscheincode ist gültig bis zum {{GRANT_BEGIN_BEFORE}}.
+                    </p>
+
                     <p>
                       Die Republik erscheint von Montag bis Samstag mit täglich
                       ein bis drei neuen Beiträgen.
@@ -99,43 +132,6 @@
                       Lösungen von Fall zu Fall, für Offenheit gegenüber Kritik,
                       für Respektlosigkeit gegenüber der Macht und Respekt vor
                       dem Menschen.
-                    </p>
-
-                    <p>
-                      Um die Republik näher kennenzulernen, melden Sie sich
-                      einfach vor dem {{GRANT_BEGIN_BEFORE}} hier an:
-                    </p>
-                    <table
-                      width="100%"
-                      border="0"
-                      cellspacing="0"
-                      cellpadding="0"
-                    >
-                      <tr>
-                        <td>
-                          <table border="0" cellspacing="0" cellpadding="0">
-                            <tr>
-                              <td align="center" bgcolor="#3CAD00">
-                                <a
-                                  href="{{LINK_CLAIM_PREFILLED}}"
-                                  style="font-size:20px;{{sg_font_style_sans_serif_regular}}color:#ffffff;text-decoration:none;border-radius:0;padding:15px 30px 15px 30px;border:1px solid #3CAD00;display:inline-block;"
-                                  >Jetzt anmelden</a
-                                >
-                              </td>
-                            </tr>
-                          </table>
-                        </td>
-                      </tr>
-                    </table>
-                    <p>
-                      Falls dieser Button nicht funktioniert: Öffnen Sie bitte
-                      <a href="{{LINK_CLAIM_PREFILLED}}"
-                        >{{LINK_CLAIM_CONTEXTLESS}}</a
-                      >, und geben Sie dann Ihren Namen, Ihre E-Mail-Adresse und
-                      den folgenden Gutscheincode ein:
-                      <span style="font-family: monospace"
-                        >{{GRANT_VOUCHER_CODE}}</span
-                      >
                     </p>
                     {{/unless}} {{#if RECIPIENT_HAS_MEMBERSHIPS}}
                     <p>
