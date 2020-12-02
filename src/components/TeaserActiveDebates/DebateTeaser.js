@@ -2,16 +2,17 @@ import { css } from 'glamor'
 import PropTypes from 'prop-types'
 import React from 'react'
 import { ActiveDebateComment, ActiveDebateHeader } from '.'
-import colors from '../../theme/colors'
 import { mUp } from '../../theme/mediaQueries'
 import { useMediaQuery } from '../../lib/useMediaQuery'
 import { Header as UserProfile } from '../Discussion/Internal/Comment'
 import { DiscussionContext } from '../Discussion/DiscussionContext'
-import { sansSerifMedium16, sansSerifRegular14 } from '../Typography/styles'
+import { sansSerifRegular14 } from '../Typography/styles'
+import { useColorContext } from '../Colors/ColorContext'
 
 const styles = {
   root: css({
-    borderTop: `1px solid #C8C8C8`,
+    borderTopWidth: 1,
+    borderTopStyle: 'solid',
     margin: '0 0 30px 0',
     paddingTop: 10
   }),
@@ -32,17 +33,6 @@ const styles = {
     flexDirection: 'column',
     justifyContent: 'space-around',
     alignItems: 'flex-start'
-  }),
-  authorName: css({
-    flexShrink: 0,
-    paddingLeft: 10,
-    color: colors.text,
-    ...sansSerifMedium16
-  }),
-  timeago: css({
-    color: colors.lightText,
-    flexShrink: 0,
-    paddingLeft: 10
   })
 }
 
@@ -54,6 +44,7 @@ export const DebateTeaser = ({
   DiscussionLink = DefaultLink,
   CommentLink = DefaultLink
 }) => {
+  const [colorScheme] = useColorContext()
   const isDesktop = useMediaQuery(mUp)
 
   /*
@@ -72,7 +63,7 @@ export const DebateTeaser = ({
 
   return (
     <DiscussionContext.Provider value={discussionContextValue}>
-      <div {...styles.root}>
+      <div {...styles.root} {...colorScheme.set('borderColor', 'divider')}>
         <DiscussionLink discussion={discussion} passHref>
           <ActiveDebateHeader
             t={t}
