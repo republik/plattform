@@ -102,7 +102,6 @@ export const CommentTeaser = ({
   const highlight = get(highlights, '[0].fragments[0]', '').trim()
   const documentPreview = discussion?.document?.meta?.twitterImage
   const commentCount = discussion?.comments?.totalCount
-  const titleLink = <A>{inQuotes(discussion.title)}</A>
 
   const endsWithPunctuation =
     highlight &&
@@ -211,53 +210,59 @@ export const CommentTeaser = ({
         )}
 
         <div {...styles.footer}>
-          <Link
-            key={`link-${id}`}
-            comment={comment}
-            discussion={discussion}
-            passHref
-          >
-            <span>
-              {commentCount ? (
-                <span>
-                  <IconLink
-                    href=''
-                    onClick={e => e.preventDefault()}
-                    discussionCommentsCount={commentCount}
-                    small
-                    style={{
-                      marginTop: -2,
-                      paddingRight: 0,
-                      verticalAlign: 'top'
-                    }}
-                  />{' '}
-                  weitere Beiträge zu {titleLink}
-                </span>
-              ) : (
-                t.elements(
-                  `styleguide/CommentTeaser/${
-                    parentIds && parentIds.length ? 'reply' : 'comment'
-                  }/link`,
-                  {
-                    link: titleLink
-                  }
+          <div>
+            {t.elements(
+              `styleguide/CommentTeaser/${
+                parentIds && parentIds.length
+                  ? 'reply'
+                  : commentCount
+                  ? 'commentWithCount'
+                  : 'comment'
+              }/link`,
+              {
+                count: (
+                  <Link
+                    key={`link-${id}`}
+                    comment={comment}
+                    discussion={discussion}
+                    passHref
+                  >
+                    <IconLink
+                      discussionCommentsCount={commentCount}
+                      small
+                      style={{
+                        marginTop: -2,
+                        paddingRight: 0,
+                        verticalAlign: 'top'
+                      }}
+                    />
+                  </Link>
+                ),
+                link: (
+                  <Link
+                    key={`link-${id}`}
+                    comment={comment}
+                    discussion={discussion}
+                    passHref
+                  >
+                    <A>{inQuotes(discussion.title)}</A>
+                  </Link>
                 )
-              )}
-            </span>
-            {!displayAuthor && (
-              <span
-                {...styles.timeago}
-                {...colorScheme.set('color', 'textSoft')}
-              >
+              }
+            )}
+          </div>
+          {!displayAuthor && (
+            <div {...styles.timeago} {...colorScheme.set('color', 'textSoft')}>
+              <Link comment={comment} discussion={discussion} passHref>
                 <a {...styles.linkUnderline} suppressHydrationWarning>
                   {formatTimeRelative(new Date(createdAt), {
                     ...clock,
                     direction: 'past'
                   })}
                 </a>
-              </span>
-            )}
-          </Link>
+              </Link>
+            </div>
+          )}
         </div>
       </div>
     </DiscussionContext.Provider>
