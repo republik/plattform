@@ -214,8 +214,13 @@ type Comment {
 
   featuredAt: DateTime
   featuredText: String
+  featuredTargets: [CommentFeaturedTarget!]
 }
 
+enum CommentFeaturedTarget {
+  DEFAULT
+  MARKETING
+}
 
 type MentioningDocument {
   document: Document!

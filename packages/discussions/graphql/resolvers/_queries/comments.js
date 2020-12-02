@@ -23,6 +23,7 @@ module.exports = async (_, args, context, info) => {
     focusId,
     lastId,
     featured,
+    featuredTarget
   } = options
 
   if (limit > MAX_LIMIT) {
@@ -40,6 +41,7 @@ module.exports = async (_, args, context, info) => {
     }
     ${toDepth >= 0 ? 'c."depth" <= :toDepth AND' : ''}
     ${featured ? 'c."featuredAt" IS NOT NULL AND' : ''}
+    ${featuredTarget ? ':featuredTarget = ANY(c."featuredTargets") AND' : ''}
     c."published" = true AND
     c."adminUnpublished" = false
   `
@@ -67,7 +69,9 @@ module.exports = async (_, args, context, info) => {
       ${queryJoin}
       WHERE
         ${queryWhere}
-    `),
+    `, {
+      featuredTarget
+    }),
     pgdb.query(
       `
       SELECT
@@ -99,6 +103,7 @@ module.exports = async (_, args, context, info) => {
         lastId: lastId || null,
         limit,
         offset,
+        featuredTarget
       },
     ),
   ])

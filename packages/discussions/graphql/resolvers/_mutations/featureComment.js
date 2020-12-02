@@ -2,7 +2,7 @@ const { Roles } = require('@orbiting/backend-modules-auth')
 const slack = require('../../../lib/slack')
 
 module.exports = async (_, args, context) => {
-  const { id, content } = args
+  const { id, content, targets = ['DEFAULT'] } = args
   const { pgdb, user: me, t, loaders, pubsub } = context
 
   Roles.ensureUserHasRole(me, 'editor')
@@ -13,11 +13,18 @@ module.exports = async (_, args, context) => {
   }
   const discussion = await loaders.Discussion.byId.load(comment.discussionId)
 
+  console.log({
+    featuredAt: content ? new Date() : null,
+    featuredContent: content || null,
+    featuredTargets: content ? targets : null,
+  })
+
   const newComment = await pgdb.public.comments.updateAndGetOne(
     { id },
     {
       featuredAt: content ? new Date() : null,
       featuredContent: content || null,
+      featuredTargets: content ? targets : null,
     },
   )
 
