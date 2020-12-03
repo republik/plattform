@@ -202,13 +202,17 @@ const evaluate = async ({
       ...beginEnd,
     })
 
+    const isOwnMembership = membership.userId === package_.user.id
     // If membership stems from ABO_GIVE_MONTHS package, default ABO option
-    if (membership.pledge.package.name === 'ABO_GIVE_MONTHS') {
+    if (
+      isOwnMembership &&
+      membership.pledge.package.name === 'ABO_GIVE_MONTHS'
+    ) {
       if (packageOption.membershipType.name === 'ABO') {
         payload.defaultAmount = 1
       }
     } else {
-      if (membership.userId === package_.user.id) {
+      if (isOwnMembership) {
         // If options is to extend membership, set defaultAmount to 1 if reward
         // of current packageOption evaluated is same as in evaluated
         // membership.

@@ -118,6 +118,7 @@ input PackageOptionInput {
 type Goodie {
   id: ID!
   name: String!
+  requireAddress: Boolean!
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -132,6 +133,7 @@ enum MembershipTypeInterval {
 type MembershipType {
   id: ID!
   name: String!
+  requireAddress: Boolean!
   interval: MembershipTypeInterval!
   minPeriods: Int!
   maxPeriods: Int!
