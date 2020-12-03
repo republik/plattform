@@ -1,3 +1,5 @@
+const { getFeaturedTargets } = require('../lib/Comment')
+
 module.exports = `
 
 type Credential {
@@ -214,8 +216,12 @@ type Comment {
 
   featuredAt: DateTime
   featuredText: String
+  featuredTargets: [CommentFeaturedTarget!]
 }
 
+enum CommentFeaturedTarget {
+${getFeaturedTargets().join('\n')}
+}
 
 type MentioningDocument {
   document: Document!
