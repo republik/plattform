@@ -14,7 +14,7 @@ export const inQuotes = (str, marks = defaultMarks) => {
     return quotedStr
   }
   quotedStr = quotedStr
-    .replaceAll(marks.outerOpening, marks.innerOpening)
-    .replaceAll(marks.outerClosing, marks.innerClosing)
+    .replace(new RegExp(marks.outerOpening, 'g'), marks.innerOpening)
+    .replace(new RegExp(marks.outerClosing, 'g'), marks.innerClosing)
   return marks.outerOpening + quotedStr + marks.outerClosing
 }
