@@ -222,7 +222,7 @@ export const CommentTeaser = ({
               {
                 count: (
                   <Link
-                    key={`link-${id}`}
+                    key={`link-count-${id}`}
                     comment={comment}
                     discussion={discussion}
                     passHref
@@ -240,7 +240,7 @@ export const CommentTeaser = ({
                 ),
                 link: (
                   <Link
-                    key={`link-${id}`}
+                    key={`link-title-${id}`}
                     comment={comment}
                     discussion={discussion}
                     passHref
