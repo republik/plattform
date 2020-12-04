@@ -191,7 +191,10 @@ module.exports = {
     return []
   },
   async address(user, args, { loaders, user: me }) {
-    if (Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter'])) {
+    if (
+      Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter']) ||
+      isFieldExposed(user, 'address')
+    ) {
       return (
         user._raw.addressId && loaders.Address.byId.load(user._raw.addressId)
       )
