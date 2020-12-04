@@ -201,13 +201,9 @@ Props:
   featuredText="The trouble with having an open mind, of course, is that people will insist on coming along and trying to put things in it."
   discussion={{
     title: "Der Crowdfunding-Code gegen die Frankenstein-Monster-Strategie",
+    image: "/static/tweet_preview.jpg",
     comments: {
         totalCount: 147
-    },
-    document: {
-        meta: {
-            twitterImage: '/static/tweet_preview.jpg'
-        }
     }
   }}
   t={t}

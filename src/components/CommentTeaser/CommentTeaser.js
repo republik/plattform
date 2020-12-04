@@ -100,7 +100,6 @@ export const CommentTeaser = ({
   const isDesktop = useMediaQuery(mUp)
   const [colorScheme] = useColorContext()
   const highlight = get(highlights, '[0].fragments[0]', '').trim()
-  const documentPreview = discussion?.document?.meta?.twitterImage
   const commentCount = discussion?.comments?.totalCount
 
   const endsWithPunctuation =
@@ -196,16 +195,14 @@ export const CommentTeaser = ({
           </CommentBodyParagraph>
         </div>
 
-        {documentPreview && (
+        {discussion?.image && (
           <div {...styles.imageContainer}>
-            {documentPreview && (
-              <img
-                src={documentPreview}
-                alt={discussion?.title}
-                {...styles.image}
-                {...colorScheme.set('borderColor', 'divider')}
-              />
-            )}
+            <img
+              src={discussion.image}
+              alt={discussion?.title}
+              {...styles.image}
+              {...colorScheme.set('borderColor', 'divider')}
+            />
           </div>
         )}
 
