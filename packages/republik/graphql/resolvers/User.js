@@ -190,14 +190,11 @@ module.exports = {
     }
     return []
   },
-  async address(user, args, { pgdb, user: me }) {
+  async address(user, args, { loaders, user: me }) {
     if (Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter'])) {
-      if (!user._raw.addressId) {
-        return null
-      }
-      return pgdb.public.addresses.findOne({
-        id: user._raw.addressId,
-      })
+      return (
+        user._raw.addressId && loaders.Address.byId.load(user._raw.addressId)
+      )
     }
     return null
   },

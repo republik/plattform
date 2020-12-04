@@ -97,12 +97,15 @@ type UserConnection {
 }
 
 type Address {
+  id: ID!
   name: String
   line1: String!
   line2: String
   postalCode: String!
   city: String!
   country: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 input AddressInput {
