@@ -24,6 +24,10 @@ const quotedTitle = inQuotes('My title')  // '«My title»'
 ```
 
 ```react
+<Editorial.Subhead>{inQuotes('An der «Republik-Bar» und «zu Hause» mit Carla Del Ponte')}</Editorial.Subhead>
+```
+
+```react
 <Editorial.Subhead>
   {inQuotes(
     'An der „Republik-Bar“ mit Carla Del Ponte',
