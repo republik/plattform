@@ -17,6 +17,7 @@ const {
 } = require('@orbiting/backend-modules-auth')
 const { hasUserActiveMembership } = require('@orbiting/backend-modules-utils')
 const {
+  insertAddress,
   upsertAddress,
 } = require('@orbiting/backend-modules-republik/lib/address')
 
@@ -393,6 +394,11 @@ module.exports = async (_, args, context) => {
       }
     }
 
+    const shippingAddress = await insertAddress(
+      pledge.shippingAddress,
+      transaction,
+    )
+
     // insert pledge
     let newPledge = {
       userId: user.id,
@@ -403,6 +409,7 @@ module.exports = async (_, args, context) => {
       payload: pledge.payload,
       messageToClaimers: pledge.messageToClaimers,
       status: 'DRAFT',
+      shippingAddressId: shippingAddress?.id,
     }
     newPledge = await transaction.public.pledges.insertAndGet(newPledge)
 

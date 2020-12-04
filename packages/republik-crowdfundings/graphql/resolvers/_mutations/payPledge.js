@@ -168,6 +168,18 @@ module.exports = async (_, args, context) => {
       throw new Error(t('api/unexpected'))
     }
 
+    if (pledgePayment.shippingAddress) {
+      const address = await upsertAddress(
+        { ...pledgePayment.shippingAddress, id: pledge.shippingAddressId },
+        transaction,
+      )
+
+      await transaction.public.pledges.updateAndGetOne(
+        { id: pledge.id },
+        { shippingAddressId: address.id },
+      )
+    }
+
     if (pledge.status !== pledgeStatus) {
       // generate Memberships
       if (pledgeStatus === 'SUCCESSFUL') {
