@@ -235,6 +235,7 @@ input PledgeInput {
   options: [PackageOptionInput!]!
   total: Int!
   user: UserInput!
+  address: AddressInput
   reason: String
   messageToClaimers: String
   accessToken: ID

@@ -3,41 +3,9 @@ const { PAYMENT_DEADLINE_DAYS } = require('./helpers')
 module.exports = async ({
   pledgeId,
   total,
-  address,
   paperInvoice = false,
-  userId,
   transaction,
-  t,
-  logger = console,
 }) => {
-  if (address) {
-    // insert address
-    const newAddress = await transaction.public.addresses.insertAndGet(address)
-    await transaction.public.users.updateAndGetOne(
-      {
-        id: userId,
-      },
-      {
-        addressId: newAddress.id,
-      },
-    )
-  } else {
-    const hasAddress = await transaction.public.users.findFirst({
-      id: userId,
-      'addressId !=': null,
-    })
-    if (!hasAddress) {
-      logger.error('PAYMENTSLIP payments must include an address', {
-        userId,
-        pledgeId,
-        total,
-        address,
-        paperInvoice,
-      })
-      throw new Error(t('api/unexpected'))
-    }
-  }
-
   // only count PAYMENTSLIP payments up to CHF 1000.- immediately
   const pledgeStatus = total > 100000 ? 'WAITING_FOR_PAYMENT' : 'SUCCESSFUL'
 

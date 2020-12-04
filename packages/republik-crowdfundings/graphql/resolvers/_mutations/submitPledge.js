@@ -16,6 +16,9 @@ const {
   AccessToken: { getUserByAccessToken, ensureCanPledgePackage },
 } = require('@orbiting/backend-modules-auth')
 const { hasUserActiveMembership } = require('@orbiting/backend-modules-utils')
+const {
+  upsertAddress,
+} = require('@orbiting/backend-modules-republik/lib/address')
 
 module.exports = async (_, args, context) => {
   const { pgdb, req, t } = context
@@ -254,7 +257,7 @@ module.exports = async (_, args, context) => {
         )
         throw new Error(t('api/unexpected'))
       }
-      user = req.user
+      user = req.user._raw
 
       // load possible exising PF alias, only exists if the user is logged in,
       // otherwise he can't have an alias already
@@ -278,7 +281,7 @@ module.exports = async (_, args, context) => {
             emailVerify: true,
           }
         }
-        user = accessTokenUser
+        user = accessTokenUser._raw
       } else {
         user = await transaction.public.users.findOne({
           email: pledge.user.email,
@@ -295,33 +298,38 @@ module.exports = async (_, args, context) => {
           }
         } else if (!user) {
           // create user
-          user = await transaction.public.users.insertAndGet(
-            {
-              email: pledge.user.email,
-              firstName: pledge.user.firstName,
-              lastName: pledge.user.lastName,
-              birthday: pledge.user.birthday,
-              phoneNumber: pledge.user.phoneNumber,
-            },
-            { skipUndefined: true },
-          )
+          user = await transaction.public.users.insertAndGet({
+            email: pledge.user.email,
+          })
         }
       }
     }
+
     // update user details
     if (
       user.firstName !== pledge.user.firstName ||
       user.lastName !== pledge.user.lastName ||
       user.birthday !== pledge.user.birthday ||
-      user.phoneNumber !== pledge.user.phoneNumber
+      user.phoneNumber !== pledge.user.phoneNumber ||
+      pledge.address
     ) {
+      const address =
+        pledge.address &&
+        (await upsertAddress(
+          { ...pledge.address, id: user.addressId },
+          transaction,
+        ))
+
       user = await transaction.public.users.updateAndGetOne(
         { id: user.id },
         {
-          firstName: pledge.user.firstName,
-          lastName: pledge.user.lastName,
-          birthday: pledge.user.birthday,
-          phoneNumber: pledge.user.phoneNumber,
+          ...(pledge.user.firstName && { firstName: pledge.user.firstName }),
+          ...(pledge.user.lastName && { lastName: pledge.user.lastName }),
+          ...(pledge.user.birthday && { birthday: pledge.user.birthday }),
+          ...(pledge.user.phoneNumber && {
+            phoneNumber: pledge.user.phoneNumber,
+          }),
+          ...(address?.id && { addressId: address?.id }),
         },
       )
     }

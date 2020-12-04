@@ -7,6 +7,9 @@ const payPledgePaypal = require('../../../lib/payments/paypal/payPledge')
 const payPledgePostfinance = require('../../../lib/payments/postfinance/payPledge')
 const payPledgeStripe = require('../../../lib/payments/stripe/payPledge')
 const slack = require('@orbiting/backend-modules-republik/lib/slack')
+const {
+  upsertAddress,
+} = require('@orbiting/backend-modules-republik/lib/address')
 const Promise = require('bluebird')
 
 module.exports = async (_, args, context) => {
@@ -107,7 +110,6 @@ module.exports = async (_, args, context) => {
       pledgeStatus = await payPledgePaymentslip({
         pledgeId: pledge.id,
         total: pledge.total,
-        address: pledgePayment.address,
         paperInvoice: pledgePayment.paperInvoice,
         userId: user.id,
         transaction,
@@ -181,6 +183,20 @@ module.exports = async (_, args, context) => {
           status: pledgeStatus,
           sendConfirmMail: true,
         },
+      )
+    }
+
+    const address =
+      pledgePayment.address &&
+      (await upsertAddress(
+        { ...pledgePayment.address, id: user.addressId },
+        transaction,
+      ))
+
+    if (address) {
+      user = await transaction.public.users.updateAndGetOne(
+        { id: user.id },
+        { addressId: address.id },
       )
     }
 
