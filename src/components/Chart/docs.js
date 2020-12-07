@@ -166,7 +166,7 @@ const chartPages = charts.map(key => {
 const allProps = markdown`
 ## All Props
 
-${<TableSpecimen rows={options} />}
+${(<TableSpecimen rows={options} />)}
 
 `
 
@@ -178,6 +178,12 @@ import { Chart, ChartTitle, ChartLead } from '@project-r/styleguide/chart'
 ~~~
 
 The charts are also available as simple, importable functions on [observablehq.com](https://observablehq.com/@republik/charts).
+
+## Limitations
+
+Due to SVG limitations, performance begins to suffer from 5000 points onwards. Trying to render over 10'000 data points will not end well for anyone.
+
+This threshold might be lower for maps, as they often use a thousand points or more to render the underlying geography. Mind the map!
 
 ## Credits
 
