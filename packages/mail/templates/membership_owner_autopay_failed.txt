@@ -1,5 +1,4 @@
-Sehr geehrte Dame
-Sehr geehrter Herr
+Guten Tag
 
 {{#if `attempt_number == 3`}}
 

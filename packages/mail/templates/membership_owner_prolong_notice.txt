@@ -2,7 +2,7 @@ Guten Tag
 
 Ihre Mitgliedschaft erneuert sich am {{end_date}}.
 
-Wir freuen uns, Sie weiterhin an Bord zu haben, denn die Republik und die Idee
+Wir freuen uns, Sie bei uns an Bord zu haben, denn die Republik und die Idee
 hinter unserem gemeinsamen Projekt brauchen Sie!
 
 Ganz gleich, ob Sie uns einmal pro Woche, einmal pro Monat oder einmal pro Jahr
@@ -25,7 +25,7 @@ Magazin über ihre Leserinnen und Leser.
 Nun haben Sie die Wahl:
 Sie bleiben an Bord und investieren damit weiter in die Republik und ihre Idee.
 {{prolong_url}}
-Sie kündigen Ihre Mitgliedschaft bis zum {{cancel_until_date}}.
+Sie kündigen Ihre Mitgliedschaft bis zum {{cancel_until_date}}. {{cancel_url}}
 
 Wie auch immer Sie entscheiden: Wir hoffen, dass wir Sie im vergangenen Jahr
 immer wieder erfolgreich informiert, unterhalten, geärgert und beglückt haben.

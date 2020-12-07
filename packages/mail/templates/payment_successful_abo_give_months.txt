@@ -20,7 +20,7 @@ nur auf die Seite {{link_claim}} gehen. Und ihn dort eingeben.
 {{#if `goodies_count == 1`}} Auch Ihr bestelltes Republik-Objekt eignet sich
 perfekt für die Code-Übergabe. {{elseif `goodies_count > 1`}} Auch Ihre
 bestellten Republik-Objekte eignen sich perfekt für die Code-Übergabe. {{/if}}
-Bücher und Taschen liefern wir innerhalb von 7 Werktagen.
+Wir liefern Ihnen die Bestellung innerhalb von 7 Werktagen.
 
    {{#options}} {{#if `this.otype == "Goodie"`}}
  * {{this.oamount}} {{this.olabel}}

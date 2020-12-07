@@ -33,8 +33,8 @@ Stellen Sie dafür bitte sicher, dass Sie Ihre Adresse unter
 
 {{#if `goodies_count == 1`}} Sie haben sich zu Ihrer Gönner-Mitgliedschaft noch
 ein Republik-Objekt gegönnt. {{elseif `goodies_count > 1`}} Sie haben sich zu
-Ihrer Gönner-Mitgliedschaft noch mehrere Republik-Objekte gegönnt. {{/if}}
-Bücher und Taschen liefern wir innerhalb von 7 Werktagen.
+Ihrer Gönner-Mitgliedschaft noch mehrere Republik-Objekte gegönnt. {{/if}} Diese
+liefern wir innerhalb von 7 Werktagen.
 
    {{#options}} {{#if `this.otype == "Goodie"`}}
  * {{this.oamount}} {{this.olabel}}

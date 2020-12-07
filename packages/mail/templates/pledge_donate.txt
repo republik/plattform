@@ -11,9 +11,9 @@ gegenüber der Macht und Respekt vor dem Menschen.
 Mit Ihrem Geld fördern Sie die Republik – und damit auch eine unabhängige vierte
 Gewalt als zentrale Institution unserer Demokratie.
 
-Wichtige Informationen zu den Zahlungsformalitäten Ihrer Spende:
-
 {{#if `payment_method == "PAYMENTSLIP"`}}
+
+Wichtige Informationen zu den Zahlungsformalitäten Ihrer Spende:
 
 Sie haben den Weg der Banküberweisung für Ihre Spende gewählt.
 Bitte überweisen Sie {{total_formatted}} an:

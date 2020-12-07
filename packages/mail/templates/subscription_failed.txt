@@ -10,6 +10,10 @@ belastbar ist.
 Falls Sie eine andere Kreditkarte verwenden wollen, können Sie die nötigen
 Änderungen hier jederzeit vornehmen: {{link_account}}
 
+Und für den Fall, dass Sie sich vorstellen könnten, längerfristig bei uns an
+Bord zu bleiben, würden wir uns sehr freuen, wenn Sie bei dieser Gelegenheit auf
+eine Jahresmitgliedschaft {{link_offer_abo}} wechselten.
+
 Wenn wir Ihre Karte weiterhin nicht belasten können, gehen wir davon aus, dass
 Sie die Republik nicht mehr lesen möchten, und deaktivieren Ihr Abonnement.
 

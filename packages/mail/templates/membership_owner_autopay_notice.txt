@@ -1,5 +1,4 @@
-Sehr geehrte Dame
-Sehr geehrter Herr
+Guten Tag
 
 Am {{end_date}} erneuert sich Ihre Mitgliedschaft um ein weiteres Jahr.
 Herzlichen Dank für Ihre Unterstützung. Wir sind sehr froh, Sie an Bord zu
