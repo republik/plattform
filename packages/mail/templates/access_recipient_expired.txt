@@ -38,7 +38,8 @@ Die Republik-Abonnemente/-Mitgliedschaften in der Übersicht:
  1. Monatsabonnement {{link_offer_monthly_abo}} CHF 22.–/Monat
     
     Mit diesem Abo erhalten Sie viel Kontext und Vertiefung – ohne dass Sie Teil
-    unserer Genossenschaft werden.
+    unserer Genossenschaft werden. Verlängert sich automatisch, kann aber
+    jederzeit und ohne Frist gekündigt werden.
 
  2. Jahresmitgliedschaft {{link_offer_abo}} CHF 240.–/Jahr
     
