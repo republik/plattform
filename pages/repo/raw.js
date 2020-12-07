@@ -239,10 +239,9 @@ export default compose(
                 'CodeMirror-linenumbers',
                 foldCode && 'CodeMirror-foldgutter'
               ].filter(Boolean),
-              foldOptions: foldCode &&
-                process.browser && {
-                  rangeFinder: require('codemirror').fold.xml
-                }
+              foldOptions: foldCode && {
+                rangeFinder: require('codemirror').fold.xml
+              }
             }}
             onBeforeChange={(editor, data, value) => {
               setMd(value)
