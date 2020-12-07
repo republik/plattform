@@ -225,6 +225,7 @@ type Pledge {
   donation: Int!
   payments: [PledgePayment!]!
   user: User!
+  shippingAddress: Address
   reason: String
   memberships: [Membership!]!
   createdAt: DateTime!
@@ -235,6 +236,8 @@ input PledgeInput {
   options: [PackageOptionInput!]!
   total: Int!
   user: UserInput!
+  address: AddressInput
+  shippingAddress: AddressInput
   reason: String
   messageToClaimers: String
   accessToken: ID
@@ -257,6 +260,7 @@ input PledgePaymentInput {
   pspPayload: JSON
   makeDefault: Boolean
   address: AddressInput
+  shippingAddress: AddressInput
 }
 
 enum PaymentMethod {

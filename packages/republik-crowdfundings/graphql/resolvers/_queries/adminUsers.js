@@ -29,13 +29,29 @@ const patterns = [
               THEN a.name
               ELSE concat_ws(' ', u."firstName", u."lastName", a.name)
             END,
-            a.line1, a.line2, a."postalCode", a.city, a.country),
+            a.line1, a.line2, a."postalCode", a.city, a.country
+          ),
           '  ',
           ' '
         ) <->> :word AS word_sim,
         u.id "userId"
       FROM "users" u
-      JOIN "addresses" a ON u."addressId" = a.id
+      JOIN "addresses" a ON a.id = u."addressId"
+
+      UNION
+
+      SELECT
+        replace(
+          concat_ws(
+            ' ',
+            a.name, a.line1, a.line2, a."postalCode", a.city, a.country
+          ),
+          '  ',
+          ' '
+        ) <->> :word AS word_sim,
+        p."userId" "userId"
+      FROM "pledges" p
+      JOIN "addresses" a ON a.id = p."shippingAddressId"
     `,
   },
   {

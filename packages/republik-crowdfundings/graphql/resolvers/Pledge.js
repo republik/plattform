@@ -108,4 +108,16 @@ module.exports = {
       return membership
     })
   },
+  async shippingAddress(pledge, args, { loaders, user: me }) {
+    const user = await loaders.User.byId.load(pledge.userId)
+
+    if (!Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter'])) {
+      return null
+    }
+
+    return (
+      pledge.shippingAddressId &&
+      loaders.Address.byId.load(pledge.shippingAddressId)
+    )
+  },
 }
