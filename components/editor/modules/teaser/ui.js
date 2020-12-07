@@ -17,7 +17,7 @@ import { Block, Text } from 'slate'
 
 import { getNewBlock } from './'
 
-import { getSubmodules } from './serializer'
+import { getSerializer, getSubmodules } from './serializer'
 
 import ArrowLeftIcon from 'react-icons/lib/md/arrow-back'
 import ArrowRightIcon from 'react-icons/lib/md/arrow-forward'
@@ -26,6 +26,7 @@ import ArrowDownIcon from 'react-icons/lib/md/arrow-downward'
 import CloseIcon from 'react-icons/lib/md/close'
 import MoveIntoIcon from 'react-icons/lib/md/subdirectory-arrow-right'
 import MoveToEndIcon from 'react-icons/lib/md/vertical-align-bottom'
+import CopyToClipboard from 'react-icons/lib/md/content-copy'
 
 import UIForm from '../../UIForm'
 import ImageInput from '../../utils/ImageInput'
@@ -35,6 +36,7 @@ import RepoSearch from '../../utils/RepoSearch'
 import { AutoSlugLinkInfo } from '../../utils/github'
 
 import withT from '../../../../lib/withT'
+import { stringify } from '@orbiting/remark-preset/src'
 
 const textPositions = [
   { value: 'top', text: 'Top' },
@@ -575,7 +577,12 @@ export const TeaserForm = ({ subModuleResolver, ...options }) => {
 
 const MarkButton = props => <span {...buttonStyles.mark} {...props} />
 
-export const TeaserInlineUI = ({ editor, node, removable = true }) => {
+export const TeaserInlineUI = ({
+  editor,
+  node,
+  serializer,
+  removable = true
+}) => {
   const parentNode = parent(editor.state.value, node.key)
   const index = parentNode.nodes.indexOf(node)
 
@@ -601,6 +608,16 @@ export const TeaserInlineUI = ({ editor, node, removable = true }) => {
     nextNode.type === 'CAROUSEL' &&
     node.type !== 'CAROUSEL' &&
     nextNode.nodes.get(1)
+
+  const copyToClipboard = event => {
+    event.preventDefault()
+    const md = stringify({
+      type: 'root',
+      meta: {},
+      children: [serializer.serialize({ document: node })]
+    })
+    console.log(md)
+  }
 
   const copyIntoHandler = event => {
     event.preventDefault()
@@ -679,6 +696,14 @@ export const TeaserInlineUI = ({ editor, node, removable = true }) => {
                 <MoveToEndIcon size={24} />
               </MarkButton>
             )}
+            {
+              <MarkButton
+                onMouseDown={copyToClipboard}
+                title='Copy to clipboard'
+              >
+                <CopyToClipboard size={24} />
+              </MarkButton>
+            }
           </P>
         </div>
       </div>
