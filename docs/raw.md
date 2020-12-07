@@ -3,10 +3,11 @@
 Der Quellcode-Editor ist über einen Link im Sidebar des normalen Editors zugänglich: 
 > ![](./images/templating/quellcode-link.png)
 
-Es gibt 2 wichtige Usecases dafür:
+Es gibt 3 wichtige Usecases dafür:
 
-* [Templating](#Templating): bestehende Dokumente kopieren und als Muster für neue Dokumente verwenden
+* [Templating](#templating): bestehende Dokumente kopieren und als Muster für neue Dokumente verwenden
 * [Copy-paste](#copy-paste): komplexe Elemente (z.B. Liste, Infoboxen) in einem Dokument verschieben
+* [Copy-paste, Front Edition](#copy-paste-front-edition): Kacheln von der Front in ein anderes Dokument duplizieren (e.g. Marketingseite)
 
 ## Templating
 
@@ -53,3 +54,14 @@ Komplexe Elemente im selben Dokument verschieben. Hier wollen wir z.B. eine Umfr
 
 - Et voila!
 > ![](./images/copypaste/end-result.png) 
+
+## Copy-paste, Front Edition
+
+Kacheln von der Front in ein anderes Dokument duplizieren (e.g. Marketingseite)
+
+– Kachel Markdown durch das inline UI Menu kopieren:
+> ![](./images/copypastefront/inline.png)
+
+ - Im Zieldokument den Quellcode-Editor öffnen und mit Ctrl/Cmd-V das Markdown reinkopieren, am einfachsten am Anfang des Dokumentes (kann immer später durch das inline Menu geschoben werden).
+ > ![](./images/copypastefront/copy.png)
+ 
