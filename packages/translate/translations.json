@@ -451,6 +451,14 @@
       "value": "Bücher «Republik bei Stromausfall»"
     },
     {
+      "key": "api/email/option/goodie/mask/1",
+      "value": "Republik-Maske"
+    },
+    {
+      "key": "api/email/option/goodie/mask/other",
+      "value": "Republik-Masken"
+    },
+    {
       "key": "api/email/option/membershiptype/abo/1",
       "value": "Abo und Mitgliedschaft"
     },
