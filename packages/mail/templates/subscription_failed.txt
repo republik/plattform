@@ -8,7 +8,7 @@ Wir danken Ihnen dafür, dass Sie sicherstellen, dass Ihre Kreditkarte wieder
 belastbar ist.
 
 Falls Sie eine andere Kreditkarte verwenden wollen, können Sie die nötigen
-Änderungen hier jederzeit vornehmen: {{link_account}}
+Änderungen hier jederzeit vornehmen: {{link_account_goto}}
 
 Und für den Fall, dass Sie sich vorstellen könnten, längerfristig bei uns an
 Bord zu bleiben, würden wir uns sehr freuen, wenn Sie bei dieser Gelegenheit auf

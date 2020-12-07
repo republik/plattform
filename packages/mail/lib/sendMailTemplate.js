@@ -82,6 +82,10 @@ const envMergeVars = [
     content: `${FRONTEND_BASE_URL}/konto`,
   },
   {
+    name: 'link_account_goto',
+    content: `${FRONTEND_BASE_URL}/angebote?goto=account`,
+  },
+  {
     name: 'link_account_abos',
     content: `${FRONTEND_BASE_URL}/konto#abos`,
   },

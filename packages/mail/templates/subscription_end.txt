@@ -2,7 +2,7 @@ Guten Tag
 
 {{#if is_automatic_overdue_cancel}}
 
-Leider konnten wir Ihr Republik-Monatsabonnement {{link_account_abos}}
+Leider konnten wir Ihr Republik-Monatsabonnement {{link_account_abos_goto}}
 wiederholt nicht von Ihrer Kreditkarte abbuchen und mussten es aus diesem Grund
 deaktivieren.
 
@@ -24,7 +24,7 @@ Wir würden uns sehr freuen, wenn Sie zu einem späteren Zeitpunkt wieder bei un
 vorbeischauten.
 
 Sie sind jederzeit willkommen und können Ihr Monatsabo hier ganz einfach wieder
-aktivieren {{link_account_abos}} .
+aktivieren {{link_account_abos_goto}} .
 
 {{/if}}
 
