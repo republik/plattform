@@ -4,9 +4,10 @@ import {
   Dropdown,
   Checkbox,
   Label,
-  P
+  P,
+  useColorContext
 } from '@project-r/styleguide'
-import React from 'react'
+import React, { useState } from 'react'
 import { css } from 'glamor'
 import { buttonStyles, createPropertyForm, matchBlock } from '../../utils'
 import { allBlocks, parent, childIndex, depth } from '../../utils/selection'
@@ -17,7 +18,7 @@ import { Block, Text } from 'slate'
 
 import { getNewBlock } from './'
 
-import { getSerializer, getSubmodules } from './serializer'
+import { getSubmodules } from './serializer'
 
 import ArrowLeftIcon from 'react-icons/lib/md/arrow-back'
 import ArrowRightIcon from 'react-icons/lib/md/arrow-forward'
@@ -27,6 +28,7 @@ import CloseIcon from 'react-icons/lib/md/close'
 import MoveIntoIcon from 'react-icons/lib/md/subdirectory-arrow-right'
 import MoveToEndIcon from 'react-icons/lib/md/vertical-align-bottom'
 import CopyToClipboard from 'react-icons/lib/md/content-copy'
+import Check from 'react-icons/lib/md/check'
 
 import UIForm from '../../UIForm'
 import ImageInput from '../../utils/ImageInput'
@@ -36,7 +38,8 @@ import RepoSearch from '../../utils/RepoSearch'
 import { AutoSlugLinkInfo } from '../../utils/github'
 
 import withT from '../../../../lib/withT'
-import { stringify } from '@orbiting/remark-preset/src'
+import { stringify } from '@orbiting/remark-preset'
+import copyToClipboard from 'clipboard-copy'
 
 const textPositions = [
   { value: 'top', text: 'Top' },
@@ -577,6 +580,34 @@ export const TeaserForm = ({ subModuleResolver, ...options }) => {
 
 const MarkButton = props => <span {...buttonStyles.mark} {...props} />
 
+const CopyMdButton = ({ node, serializer }) => {
+  const [success, setSuccess] = useState(false)
+  const [colorScheme] = useColorContext()
+  const copyMd = event => {
+    event.preventDefault()
+    const mdast = serializer.serialize({ document: node })
+    const md = stringify({
+      type: 'root',
+      meta: {},
+      children: [mdast]
+    })
+    copyToClipboard(md).then(() => setSuccess(true))
+  }
+
+  return (
+    <MarkButton
+      onMouseDown={copyMd}
+      title={success ? 'Copied to clipboard!' : 'Copy to clipboard'}
+    >
+      {success ? (
+        <Check size={24} {...colorScheme.set('fill', 'primary')} />
+      ) : (
+        <CopyToClipboard size={24} />
+      )}
+    </MarkButton>
+  )
+}
+
 export const TeaserInlineUI = ({
   editor,
   node,
@@ -608,16 +639,6 @@ export const TeaserInlineUI = ({
     nextNode.type === 'CAROUSEL' &&
     node.type !== 'CAROUSEL' &&
     nextNode.nodes.get(1)
-
-  const copyToClipboard = event => {
-    event.preventDefault()
-    const md = stringify({
-      type: 'root',
-      meta: {},
-      children: [serializer.serialize({ document: node })]
-    })
-    console.log(md)
-  }
 
   const copyIntoHandler = event => {
     event.preventDefault()
@@ -696,14 +717,7 @@ export const TeaserInlineUI = ({
                 <MoveToEndIcon size={24} />
               </MarkButton>
             )}
-            {
-              <MarkButton
-                onMouseDown={copyToClipboard}
-                title='Copy to clipboard'
-              >
-                <CopyToClipboard size={24} />
-              </MarkButton>
-            }
+            <CopyMdButton node={node} serializer={serializer} />
           </P>
         </div>
       </div>
