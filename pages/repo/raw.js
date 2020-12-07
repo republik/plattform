@@ -93,6 +93,7 @@ export default compose(
   const [store, setStore] = useState(undefined)
   const [md, setMd] = useState('')
   const [meta, setMeta] = useState(undefined)
+  const [foldCode, setFoldCode] = useState(false)
   const [editMeta, setEditMeta] = useState(false)
   const [validity, setValidity] = useState(true)
 
@@ -139,6 +140,8 @@ export default compose(
   useEffect(() => {
     if (!store) return
     setMeta(store.get('editorState').meta)
+    const documentSchema = store.get('editorState').meta?.template || schema
+    setFoldCode(documentSchema !== 'front')
     const editorMdast = { ...store.get('editorState'), meta: {} }
     setMd(stringify(editorMdast))
   }, [store])
@@ -231,11 +234,15 @@ export default compose(
               lineWrapping: true,
               smartIndent: false,
               viewportMargin: Infinity,
-              foldGutter: true,
-              gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
-              foldOptions: process.browser && {
-                rangeFinder: require('codemirror').fold.xml
-              }
+              foldGutter: foldCode,
+              gutters: [
+                'CodeMirror-linenumbers',
+                foldCode && 'CodeMirror-foldgutter'
+              ].filter(Boolean),
+              foldOptions: foldCode &&
+                process.browser && {
+                  rangeFinder: require('codemirror').fold.xml
+                }
             }}
             onBeforeChange={(editor, data, value) => {
               setMd(value)
