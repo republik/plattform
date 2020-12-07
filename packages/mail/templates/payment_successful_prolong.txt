@@ -42,9 +42,6 @@ unterstützen. Wir haben die Beschenkte darüber per E-Mail informiert.
 {{elseif `goodies_count > 1`}} Sie haben sich noch mehrere Republik-Objekte
 gegönnt. {{/if}} Diese liefern wir innerhalb von 7 Werktagen.
 
-Stellen Sie dafür bitte sicher, dass Sie Ihre Adresse unter
-{{link_account_account}} korrekt eingetragen haben.
-
 {{/if}}
 
 Herzlich

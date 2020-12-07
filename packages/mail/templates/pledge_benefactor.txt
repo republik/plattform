@@ -32,9 +32,6 @@ exklusiven Republik-Anstecker in Gold sowie einer signierten Ausgabe von
 Constantin Seibts Buch «Deadline – Wie man besser schreibt
 https://keinundaber.ch/de/literary-work/deadline/ » zu.
 
-Stellen Sie dafür bitte sicher, dass Sie Ihre Adresse unter
-{{link_account_account}} korrekt eingetragen haben.
-
 {{/if}}
 
 Informationen zur Zahlung Ihres Abonnements und Ihrer Gönnerschaft:
@@ -80,9 +77,6 @@ zu schreiben, sonst funktioniert die Zuordnung nicht. Danke!
 ein Republik-Objekt gegönnt. {{elseif `goodies_count > 1`}} Sie haben sich zu
 Ihrer Gönner-Mitgliedschaft noch mehrere Republik-Objekte gegönnt. {{/if}} Diese
 liefern wir innerhalb von 7 Werktagen.
-
-Stellen Sie dafür bitte sicher, dass Sie Ihre Adresse unter
-{{link_account_account}} korrekt eingetragen haben.
 
 {{/if}} {{/unless}}
 

@@ -29,9 +29,6 @@ Wir liefern Ihnen die Bestellung innerhalb von 7 Werktagen.
  * {{this.oamount}} {{this.olabel}}
    {{/if}} {{/options}}
 
-Stellen Sie dafür bitte sicher, dass Sie Ihre Adresse unter
-{{link_account_account}} korrekt eingetragen haben.
-
 {{/if}} {{#if `num_access_granted_memberships > 0`}} {{#if
 `num_access_granted_memberships == 1`}}
 

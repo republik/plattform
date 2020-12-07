@@ -17,9 +17,6 @@ Vielen Dank für Ihre Bestellung. Hier die wichtigsten Informationen dazu:
 Bücher liefern wir innerhalb von 7 Werktagen. {{#if waiting_for_payment}}Der
 Versand erfolgt erst nach Zahlungseingang.{{/if}}
 
-Stellen Sie bitte sicher, dass Sie Ihre Adresse unter {{link_account_account}}
-korrekt eingetragen haben.
-
 {{#if `payment_method == "PAYMENTSLIP"`}}
 
 Sie haben eine Banküberweisung als Zahlungsweg gewählt.

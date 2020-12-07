@@ -16,9 +16,6 @@ Ihre Zahlung ist erfolgreich bei uns eingegangen. Vielen Dank!
 
 Bücher liefern wir innerhalb von 7 Werktagen.
 
-Stellen Sie bitte sicher, dass Sie Ihre Adresse unter {{link_account_account}}
-korrekt eingetragen haben.
-
 Wir wünschen Ihnen anregende Lektüre mit der «Republik bei Stromausfall».
 
 Herzlich

@@ -71,9 +71,6 @@ Republik-Objekt gegönnt. {{elseif `goodies_count > 1`}} Sie haben sich zu Ihrer
 Mitgliedschaft noch mehrere Republik-Objekte gegönnt. {{/if}} Diese liefern wir
 innerhalb von 7 Werktagen.
 
-Stellen Sie dafür bitte sicher, dass Sie Ihre Adresse unter
-{{link_account_account}} korrekt eingetragen haben.
-
 {{/if}} {{/unless}}
 
 Vielen Dank!
