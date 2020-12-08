@@ -139,10 +139,6 @@ module.exports = {
     key ? getKeyId(key) : null,
   ),
   email: (user, ...rest) => {
-    // special case for pledging: check packages/republik-crowdfundings/graphql/resolvers/Pledge.js
-    if (user._exposeEmail) {
-      return user.email
-    }
     return exposeAccessField('emailAccessRole', 'email')(user, ...rest)
   },
   emailAccessRole(user, args, { user: me }) {
