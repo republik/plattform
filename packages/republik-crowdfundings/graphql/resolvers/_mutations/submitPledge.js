@@ -289,7 +289,7 @@ module.exports = async (_, args, context) => {
         }) // try to load existing user by email
         if (
           user &&
-          !!(await transaction.public.pledges.findFirst({
+          !!(await transaction.public.pledges.count({
             userId: user.id,
             'status !=': 'DRAFT',
           }))
