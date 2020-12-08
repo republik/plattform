@@ -1,4 +1,4 @@
-const { Roles, transformUser } = require('@orbiting/backend-modules-auth')
+const { Roles } = require('@orbiting/backend-modules-auth')
 const { ascending, descending } = require('d3-array')
 
 module.exports = {
@@ -51,16 +51,15 @@ module.exports = {
   async package(pledge, args, { pgdb }) {
     return pgdb.public.packages.findOne({ id: pledge.packageId })
   },
-  async user(pledge, args, { pgdb }) {
-    const user = transformUser(
-      await pgdb.public.users.findOne({
-        id: pledge.userId,
-      }),
-    )
-    if (user && !user.verified && pledge.status === 'DRAFT') {
+  async user(pledge, args, { pgdb, loaders }) {
+    const user = await loaders.User.byId.load(pledge.userId)
+
+    if (user && !user._raw.verified && pledge.status === 'DRAFT') {
       return {
         ...user,
-        _exposeEmail: true,
+        _scopeConfig: {
+          exposeFields: ['firstName', 'lastName', 'email'],
+        },
       }
     }
     return user
@@ -111,7 +110,12 @@ module.exports = {
   async shippingAddress(pledge, args, { loaders, user: me }) {
     const user = await loaders.User.byId.load(pledge.userId)
 
-    if (!Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter'])) {
+    const isExposableDraft = !user._raw.verified && pledge.status === 'DRAFT'
+
+    if (
+      !Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter']) &&
+      !isExposableDraft
+    ) {
       return null
     }
 
