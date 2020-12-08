@@ -1,5 +1,4 @@
-Sehr geehrte Dame
-Sehr geehrter Herr
+Guten Tag
 
 Wir haben Ihre Mitgliedschaft automatisch um ein weiteres Jahr verlängert und
 dafür Ihre {{autopay_card_brand}}-Kreditkarte mit den Endziffern

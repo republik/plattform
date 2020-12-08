@@ -3,7 +3,7 @@ Guten Tag
 Wie Sie wissen, erneuert sich Ihre Mitgliedschaft schon am {{end_date}} um ein
 weiteres Jahr.
 
-Wir freuen uns, Sie weiterhin an Bord zu haben, denn die Republik und die Idee
+Wir freuen uns, Sie bei uns an Bord zu haben, denn die Republik und die Idee
 hinter unserem gemeinsamen Projekt brauchen Sie.
 
 Jetzt erneuern {{prolong_url}}

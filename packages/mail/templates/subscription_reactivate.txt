@@ -10,8 +10,8 @@ erhalten Sie mit dieser E-Mail auch Ihren Status als Verlegerin oder Verleger
 zurück.
 
 Die von Ihnen angegebene Kreditkarte belasten wir monatlich mit CHF 22.–.
-Ihre persönliche Übersicht zu Ihrem Abonnement finden Sie hier {{link_account}}
-.
+Ihre persönliche Übersicht zu Ihrem Abonnement finden Sie hier
+{{link_account_abos_goto}} .
 
 Am gleichen Ort können Sie alle Einstellungen vornehmen (und z. B.
 Kreditkarteninformationen ändern) oder das Abo auch wieder jederzeit kündigen.
