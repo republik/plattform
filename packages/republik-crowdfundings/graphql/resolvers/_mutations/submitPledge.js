@@ -289,7 +289,10 @@ module.exports = async (_, args, context) => {
         }) // try to load existing user by email
         if (
           user &&
-          !!(await transaction.public.pledges.findFirst({ userId: user.id }))
+          !!(await transaction.public.pledges.findFirst({
+            userId: user.id,
+            'status !=': 'DRAFT',
+          }))
         ) {
           // user has pledges
           await transaction.transactionRollback()
