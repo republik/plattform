@@ -36,6 +36,7 @@ export const GET_USER = gql`
       lastName
       birthday
       address {
+        id
         name
         line1
         line2
@@ -65,6 +66,19 @@ export const UPDATE_USER = gql`
       address: $address
     ) {
       id
+      name
+      firstName
+      lastName
+      phoneNumber
+      address {
+        id
+        name
+        line1
+        line2
+        postalCode
+        city
+        country
+      }
     }
   }
 `

@@ -25,6 +25,7 @@ import MovePledge from './MovePledge'
 import ResolvePledgeToPayment from './ResolvePledgeToPayment'
 import CancelPledge from './CancelPledge'
 import UpdatePayment from './UpdatePayment'
+import UpdateAddress from './UpdateAddress'
 const { Link } = routes
 
 
@@ -66,6 +67,15 @@ const GET_PLEDGES = gql`
         memberships {
           ...MembershipDetails
         }
+        shippingAddress {
+          id
+          name
+          line1
+          line2
+          postalCode
+          city
+          country
+        }
         payments {
           id
           total
@@ -106,6 +116,7 @@ const GET_PLEDGES = gql`
 const PledgeCard = ({ pledge, ...props }) => {
   const payment = pledge.payments[0]
   const membership = pledge.memberships[0]
+  const { shippingAddress } = pledge
   return (
     <tr
       {...merge(tableStyles.row, tableStyles.selectableRow)}
@@ -122,6 +133,10 @@ const PledgeCard = ({ pledge, ...props }) => {
         </Label>
         <br />
         <Label>ID: {pledge.id}</Label>
+        {shippingAddress && <>
+          <br />
+          <Label>Lieferadresse: {shippingAddress.name}, {shippingAddress.city}</Label>
+        </>}
       </td>
       <td {...tableStyles.paddedCell}>
         {chfFormat(pledge.total / 100)}
@@ -156,10 +171,31 @@ const PledgeDetails = ({ userId, pledge, ...props }) => {
     .concat(pledge.options.map(option => option.membership))
     .filter(Boolean)
 
+  const { shippingAddress } = pledge
+
   return (
     <tr {...tableStyles.emphasisedRow} {...props}>
       <td {...tableStyles.paddedCell} colSpan={2}>
           <DL>
+            {shippingAddress && <>
+              <DT>Lieferadresse</DT>
+              <DD>{shippingAddress.name}</DD>
+              <DD>{shippingAddress.line1}</DD>
+              {shippingAddress.line2 && (
+                <DD>{shippingAddress.line2}</DD>
+              )}
+              <DD>{[shippingAddress.postalCode, shippingAddress.city]
+                .filter(Boolean)
+                .join(' ')}</DD>
+              {shippingAddress.country && (
+                <DD>{shippingAddress.country}</DD>
+              )}
+              <DD>
+                <UpdateAddress
+                  address={shippingAddress}
+                 />
+               </DD>
+            </>}
             <DT>Donation</DT>
             <DD>{chfFormat(pledge.donation / 100)}</DD>
             {!!pledge.reason && (
