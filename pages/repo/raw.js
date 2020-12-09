@@ -239,7 +239,7 @@ export default compose(
                 'CodeMirror-linenumbers',
                 foldCode && 'CodeMirror-foldgutter'
               ].filter(Boolean),
-              foldOptions: foldCode && {
+              foldOptions: process.browser && foldCode && {
                 rangeFinder: require('codemirror').fold.xml
               }
             }}
