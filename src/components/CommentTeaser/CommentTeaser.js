@@ -199,7 +199,7 @@ export const CommentTeaser = ({
           <div {...styles.imageContainer}>
             <img
               src={discussion.image}
-              alt={discussion?.title}
+              alt={discussion?.title || ''}
               {...styles.image}
               {...colorScheme.set('borderColor', 'divider')}
             />
