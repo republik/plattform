@@ -405,8 +405,13 @@ const TimeBarChart = props => {
                 {...styles.annotationText}
                 {...colorScheme.set('fill', 'text')}
               >
-                {tLabel(annotation.label)} {yAxis.format(annotation.value)}{' '}
-                {tLabel(annotation.unit)}
+                {tLabel(annotation.label)}
+                {annotation.showValue !== false && (
+                  <>
+                    {' '}
+                    {yAxis.format(annotation.value)} {tLabel(annotation.unit)}
+                  </>
+                )}
               </text>
             </g>
           ))}
@@ -423,18 +428,21 @@ const TimeBarChart = props => {
               return null
             }
 
+            const showValue = annotation.showValue !== false
             const labelText = tLabel(annotation.label)
-            const valueText = [
-              tLabel(annotation.valuePrefix),
-              yAxis.format(annotation.value),
-              annotation.unit ? ' ' : '',
-              tLabel(annotation.unit)
-            ]
-              .filter(Boolean)
-              .join('')
+            const valueText =
+              showValue &&
+              [
+                tLabel(annotation.valuePrefix),
+                yAxis.format(annotation.value),
+                annotation.unit ? ' ' : '',
+                tLabel(annotation.unit)
+              ]
+                .filter(Boolean)
+                .join('')
             const textSize = Math.max(
               labelGauger(labelText || ''),
-              valueGauger(valueText)
+              valueGauger(valueText || '')
             )
 
             const x1 = range
@@ -489,21 +497,31 @@ const TimeBarChart = props => {
                 <text
                   x={tx}
                   textAnchor={textAnchor}
-                  dy={isBottom ? '2.7em' : '-1.8em'}
+                  dy={
+                    showValue
+                      ? isBottom
+                        ? '2.7em'
+                        : '-1.8em'
+                      : isBottom
+                      ? '1.4em'
+                      : '-0.5em'
+                  }
                   {...styles.annotationText}
                   {...colorScheme.set('fill', 'text')}
                 >
                   {labelText}
                 </text>
-                <text
-                  x={tx}
-                  textAnchor={textAnchor}
-                  dy={isBottom ? '1.4em' : '-0.5em'}
-                  {...styles.annotationValue}
-                  {...colorScheme.set('fill', 'text')}
-                >
-                  {valueText}
-                </text>
+                {showValue && (
+                  <text
+                    x={tx}
+                    textAnchor={textAnchor}
+                    dy={isBottom ? '1.4em' : '-0.5em'}
+                    {...styles.annotationValue}
+                    {...colorScheme.set('fill', 'text')}
+                  >
+                    {valueText}
+                  </text>
+                )}
               </g>
             )
           })}
@@ -536,7 +554,8 @@ export const propTypes = {
       unit: PropTypes.string,
       label: PropTypes.string.isRequired,
       x: PropTypes.string,
-      dy: PropTypes.string
+      dy: PropTypes.string,
+      showValue: PropTypes.bool
     })
   ).isRequired,
   timeParse: PropTypes.string.isRequired,
@@ -557,7 +576,8 @@ export const propTypes = {
       x1: PropTypes.string,
       x2: PropTypes.string,
       ghost: PropTypes.bool,
-      position: PropTypes.oneOf(['top', 'bottom'])
+      position: PropTypes.oneOf(['top', 'bottom']),
+      showValue: PropTypes.bool
     })
   ).isRequired,
   unit: PropTypes.string,

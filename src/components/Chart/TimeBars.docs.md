@@ -587,7 +587,7 @@ year,typ,value
       "xIntervalStep": 6,
       "xAnnotations": [
         {"x1": "2019-07", "x2": "2019-07","value": 5, "unit": "Punkte", "label": "Ziel 2020"}, 
-        {"x1": "2019-07", "x2": "2019-07","value": 4,"label": "Stand jetzt","position": "bottom"},
+        {"x1": "2019-07", "x2": "2019-07","value": 4,"label": "Stand jetzt","position": "bottom","showValue": false},
         {"x": "2022-01", "value": 7, "ghost": true}
       ]
     }}
