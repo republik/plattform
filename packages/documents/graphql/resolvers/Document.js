@@ -6,6 +6,7 @@ const {
   processRepoImageUrlsInMeta,
   processImageUrlsInContent,
   processEmbedsInContent,
+  processNodeModifiersInContent,
 } = require('../../lib/process')
 const { getMeta } = require('../../lib/meta')
 
@@ -80,6 +81,7 @@ module.exports = {
       }
 
       processMembersOnlyZonesInContent(doc.content, context.user)
+      processNodeModifiersInContent(doc.content, context.user)
     }
     return doc.content
   },
@@ -161,6 +163,7 @@ module.exports = {
           processImageUrlsInContent(node, addWebpSuffix)
         }
         processMembersOnlyZonesInContent(node, context.user)
+        processNodeModifiersInContent(node, context.user)
 
         return extractIdsFromNode(node, doc.meta.repoId)
       })
