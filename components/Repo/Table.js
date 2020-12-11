@@ -303,11 +303,8 @@ const RepoList = ({
           {!showLoader &&
             data.repos &&
             data.repos.nodes
-              .map(repo => ({ repo }))
-              .sort((a, b) =>
-                orderCompare(orderAccessor(a.repo), orderAccessor(b.repo))
-              )
-              .map(({ repo }) => {
+              .sort((a, b) => orderCompare(orderAccessor(a), orderAccessor(b)))
+              .map(repo => {
                 const {
                   id,
                   meta: { publishDate },
