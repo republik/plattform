@@ -13,7 +13,9 @@ const styles = {
     maxWidth: '100%',
     minHeight: 40,
     paddingTop: '7px !important',
-    paddingBottom: '6px !important'
+    paddingBottom: '6px !important',
+    fontFamily: 'Courier, Courier New, monospace',
+    fontSize: 14
   })
 }
 
@@ -65,7 +67,7 @@ class JSONField extends Component {
       <Field
         label={label}
         value={
-          stateValue === undefined ? JSON.stringify(value, null, 2) : stateValue
+          stateValue === undefined ? JSON.stringify(value, null, 4) : stateValue
         }
         renderInput={this.renderInput}
         onChange={(_, value) => {
