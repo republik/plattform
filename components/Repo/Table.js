@@ -3,44 +3,19 @@ import { css } from 'glamor'
 import { graphql, compose } from 'react-apollo'
 import gql from 'graphql-tag'
 import { descending, ascending } from 'd3-array'
+import { withRouter } from 'next/router'
+
+import { linkRule, Label, colors } from '@project-r/styleguide'
 
 import withT from '../../lib/withT'
-import { Link } from '../../lib/routes'
-import { intersperse } from '../../lib/utils/helpers'
-import { swissTime } from '../../lib/utils/format'
-
-import GithubIcon from 'react-icons/lib/fa/github'
-import LockIcon from 'react-icons/lib/md/lock'
-import PublicIcon from 'react-icons/lib/md/public'
-
-import { linkRule, A, Label, colors } from '@project-r/styleguide'
-
-import { Table, Tr, Th, ThOrder, Td, TdNum } from '../Table'
-
-import Loader from '../Loader'
-
 import { FRONTEND_BASE_URL } from '../../lib/settings'
 
-import { matchType } from 'mdast-react-render/lib/utils'
+import { Table, Tr, Th, ThOrder, Td } from '../Table'
+import Loader from '../Loader'
 
-import { renderMdast } from 'mdast-react-render'
-
-import EditMetaDate from './EditMetaDate'
-import { withRouter } from 'next/router'
-import PhaseFilter, { Phase } from './Phases'
+import PhaseFilter from './Phases'
 import DebouncedSearch, { SEARCH_MIN_LENGTH } from './Search'
-import { getLabel, getTitle, isPrepublished, isPublished } from './utils'
-
-export const editRepoMeta = gql`
-  mutation editRepoMeta($repoId: ID!, $publishDate: DateTime) {
-    editRepoMeta(repoId: $repoId, publishDate: $publishDate) {
-      id
-      meta {
-        publishDate
-      }
-    }
-  }
-`
+import RepoRow from './Row'
 
 export const filterAndOrderRepos = gql`
   query repoListSearch(
@@ -136,24 +111,6 @@ export const filterAndOrderRepos = gql`
   }
 `
 
-const dateTimeFormat = '%d.%m %H:%M'
-const formatDateTime = swissTime.format(dateTimeFormat)
-
-export const displayDateTime = string =>
-  string && formatDateTime(new Date(string))
-
-const link = {
-  matchMdast: matchType('link'),
-  props: node => ({
-    title: node.title,
-    href: node.url
-  }),
-  component: A
-}
-const creditSchema = {
-  rules: [link]
-}
-
 const styles = {
   filterBar: css({
     paddingBottom: 15,
@@ -226,7 +183,6 @@ const RepoList = ({
     query,
     query: { q, phase, view, orderBy = `${orderFields[0].field}-DESC` }
   },
-  editRepoMeta,
   fetchMore
 }) => {
   const [showLoader, setLoader] = useState(false)
@@ -304,77 +260,9 @@ const RepoList = ({
             data.repos &&
             data.repos.nodes
               .sort((a, b) => orderCompare(orderAccessor(a), orderAccessor(b)))
-              .map(repo => {
-                const {
-                  id,
-                  meta: { publishDate },
-                  latestCommit: {
-                    date,
-                    author: { name: authorName },
-                    message,
-                    document: { meta }
-                  },
-                  currentPhase
-                } = repo
-                const label = getLabel(repo)
-                return (
-                  <Tr key={id}>
-                    <Td>
-                      {label && (
-                        <>
-                          <Label>{label}</Label>
-                          <br />
-                        </>
-                      )}
-                      <Link
-                        route='repo/tree'
-                        params={{ repoId: id.split('/') }}
-                      >
-                        <a {...linkRule} title={id}>
-                          {getTitle(repo)}
-                        </a>
-                      </Link>
-                    </Td>
-                    <Td>
-                      {meta.credits &&
-                        intersperse(
-                          renderMdast(
-                            meta.credits.filter(link.matchMdast),
-                            creditSchema
-                          ),
-                          () => ', '
-                        )}
-                    </Td>
-                    <TdNum>
-                      {displayDateTime(date)}
-                      <br />
-                      <Label>
-                        {authorName}: «{message}»
-                      </Label>
-                    </TdNum>
-                    <TdNum>
-                      <EditMetaDate
-                        value={publishDate}
-                        onChange={value =>
-                          editRepoMeta({ repoId: id, publishDate: value })
-                        }
-                      />
-                    </TdNum>
-                    <Td>{showPhases && <Phase phase={currentPhase} />}</Td>
-                    <Td style={{ textAlign: 'right' }}>
-                      {repo.latestPublications
-                        .filter(isPrepublished)
-                        .map(PublicationLink(LockIcon))}{' '}
-                      {repo.latestPublications
-                        .filter(isPublished)
-                        .map(PublicationLink(PublicIcon))}{' '}
-                      <a href={`https://github.com/${id}`}>
-                        <GithubIcon color={colors.primary} />
-                      </a>
-                    </Td>
-                  </Tr>
-                )
-              })}
+              .map(repo => (
+                <RepoRow key={repo.id} repo={repo} showPhases={showPhases} />
+              ))}
           {(data.loading || data.error) && (
             <tr>
               <td colSpan='8'>
@@ -444,11 +332,6 @@ const RepoListWithQuery = compose(
             }
           }
         })
-    })
-  }),
-  graphql(editRepoMeta, {
-    props: ({ mutate }) => ({
-      editRepoMeta: variables => mutate({ variables })
     })
   })
 )(RepoList)

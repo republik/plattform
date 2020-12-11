@@ -1,5 +1,9 @@
 import { t } from '../../lib/withT'
 import { GITHUB_ORG, REPO_PREFIX } from '../../lib/settings'
+import { swissTime } from '../../lib/utils/format'
+
+const dateTimeFormat = '%d.%m %H:%M'
+const formatDateTime = swissTime.format(dateTimeFormat)
 
 export const getLabel = repo => {
   const {
@@ -32,3 +36,6 @@ export const isPrepublished = publication =>
 
 export const isPublished = publication =>
   publication.document && !publication.prepublication && publication.live
+
+export const displayDateTime = string =>
+  string && formatDateTime(new Date(string))

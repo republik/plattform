@@ -1,16 +1,18 @@
 import React from 'react'
 import { withRouter } from 'next/router'
 import { compose } from 'react-apollo'
+import { css } from 'glamor'
+
+import { linkRule } from '@project-r/styleguide'
+
+import { Link } from '../lib/routes'
+import withT from '../lib/withT'
 
 import withAuthorization from '../components/Auth/withAuthorization'
-
+import Calendar from '../components/Calendar'
 import Frame from '../components/Frame'
 import RepoTable from '../components/Repo/Table'
-import { Link } from '../lib/routes'
-import { linkRule } from '@project-r/styleguide'
-import withT from '../lib/withT'
 import RepoAdd from '../components/Repo/Add'
-import { css } from 'glamor'
 
 const styles = {
   container: css({
@@ -76,7 +78,7 @@ const Index = ({
     <Frame.Body raw>
       <div {...styles.container}>
         {view === 'calendar' ? (
-          <span>Calendar</span>
+          <Calendar />
         ) : (
           <>
             <RepoAdd isTemplate={view === 'templates'} />

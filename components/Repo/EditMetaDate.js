@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { css } from 'glamor'
 import MaskedInput from 'react-maskedinput'
 
-import { displayDateTime } from './Table'
+import { displayDateTime } from './utils'
 import { timeParse, timeFormat } from 'd3-time-format'
 
 const loading = css.keyframes({
