@@ -67,6 +67,7 @@ const RepoRow = compose(
     })
   })
 )(({ repo, showPhases }) => {
+  console.log(repo)
   const {
     id,
     meta: { publishDate },
