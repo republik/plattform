@@ -1,5 +1,5 @@
 {
-  "updated": "2020-11-26T14:05:42.417Z",
+  "updated": "2020-12-11T13:19:13.713Z",
   "title": "live",
   "data": [
     {
@@ -249,6 +249,10 @@
     {
       "key": "repo/table/nav/templates",
       "value": "Templates"
+    },
+    {
+      "key": "repo/table/nav/calendar",
+      "value": "Wochenvorschau"
     },
     {
       "key": "repo/table/pageInfo/loadMore",

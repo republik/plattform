@@ -3,10 +3,9 @@ import { css } from 'glamor'
 import { graphql, compose } from 'react-apollo'
 import gql from 'graphql-tag'
 import { descending, ascending } from 'd3-array'
-import debounce from 'lodash.debounce'
 
 import withT from '../../lib/withT'
-import { Link, Router } from '../../lib/routes'
+import { Link } from '../../lib/routes'
 import { intersperse } from '../../lib/utils/helpers'
 import { swissTime } from '../../lib/utils/format'
 
@@ -14,7 +13,7 @@ import GithubIcon from 'react-icons/lib/fa/github'
 import LockIcon from 'react-icons/lib/md/lock'
 import PublicIcon from 'react-icons/lib/md/public'
 
-import { linkRule, A, Label, colors, Field } from '@project-r/styleguide'
+import { linkRule, A, Label, colors } from '@project-r/styleguide'
 
 import { Table, Tr, Th, ThOrder, Td, TdNum } from '../Table'
 
@@ -27,8 +26,9 @@ import { matchType } from 'mdast-react-render/lib/utils'
 import { renderMdast } from 'mdast-react-render'
 
 import EditMetaDate from './EditMetaDate'
-import RepoAdd from './Add'
 import { withRouter } from 'next/router'
+import PhaseFilter, { Phase } from './Phases'
+import DebouncedSearch, { SEARCH_MIN_LENGTH } from './Search'
 
 export const editRepoMeta = gql`
   mutation editRepoMeta($repoId: ID!, $publishDate: DateTime) {
@@ -154,20 +154,9 @@ const creditSchema = {
 }
 
 const styles = {
-  container: css({
-    padding: 20,
-    paddingBottom: 80
-  }),
   filterBar: css({
     paddingBottom: 15,
     borderBottom: `1px solid ${colors.divider}`
-  }),
-  phase: css({
-    color: '#fff',
-    borderRadius: 3,
-    padding: '3px 6px',
-    marginRight: 6,
-    display: 'inline-block'
   }),
   pageInfo: css({
     marginTop: 10,
@@ -187,20 +176,6 @@ const orderFields = [
     accessor: repo => new Date(repo.meta.publishDate)
   }
 ]
-
-const Phase = ({ phase, onClick, disabled, isActive }) => (
-  <div
-    {...styles.phase}
-    style={{
-      backgroundColor: disabled ? 'gray' : phase.color,
-      cursor: onClick ? 'pointer' : 'default',
-      opacity: phase.count === 0 && !isActive ? 0.5 : 1
-    }}
-    onClick={onClick}
-  >
-    {phase.label} {phase.count ? `(${phase.count})` : ''}
-  </div>
-)
 
 const PageInfo = withT(({ t, repos, loading, fetchMore }) => {
   return repos ? (
@@ -232,47 +207,27 @@ const PageInfo = withT(({ t, repos, loading, fetchMore }) => {
   ) : null
 })
 
-const SEARCH_MIN_LENGTH = 3
-
 const RepoList = ({
   t,
   data = {},
-  router: { query = {} },
+  router: {
+    query,
+    query: { q, phase, view, orderBy = `${orderFields[0].field}-DESC` }
+  },
   editRepoMeta,
   fetchMore
 }) => {
   const [showLoader, setLoader] = useState(false)
-  const [search, setSearch] = useState(query.q)
-  const [debouncedRouting, setDebouncedRouting] = useState()
-
-  useEffect(() => {
-    if (debouncedRouting && debouncedRouting.cancel) {
-      debouncedRouting.cancel()
-    }
-    setDebouncedRouting(
-      debounce(() => {
-        Router.replaceRoute('index', { ...query, q: search || null })
-      }, 500)
-    )
-    return (
-      debouncedRouting && debouncedRouting.cancel && debouncedRouting.cancel()
-    )
-  }, [search])
 
   useEffect(() => {
     setLoader(true)
-  }, [query.q, query.phase])
+  }, [q, phase])
 
   useEffect(() => {
     if (showLoader && !data.loading) setLoader(false)
   }, [data.loading])
 
-  const {
-    q,
-    phase,
-    templates,
-    orderBy = `${orderFields[0].field}-DESC`
-  } = query
+  const showPhases = view !== 'templates'
 
   const [orderField, orderDirection] = orderBy.split('-').filter(Boolean)
   const orderCompare = orderDirection === 'DESC' ? descending : ascending
@@ -287,8 +242,6 @@ const RepoList = ({
         : orderDirection
     ].join('-')
 
-  const onChangeSearch = (_, value) => setSearch(value)
-
   const activeOrderField = orderFields.find(order => order.field === orderField)
 
   const orderAccessor = activeOrderField
@@ -296,45 +249,13 @@ const RepoList = ({
     : orderFields[0].accessor
 
   return (
-    <div {...styles.container}>
-      <RepoAdd isTemplate={templates} />
-
-      <Field
-        label={t('repo/search/field/label')}
-        value={search}
-        error={
-          q &&
-          q.length < SEARCH_MIN_LENGTH &&
-          t('repo/search/field/minLength', { count: SEARCH_MIN_LENGTH })
-        }
-        onChange={onChangeSearch}
-      />
-
-      {!templates && data.phasesAgg?.phases.length && (
-        <div {...styles.filterBar}>
-          {data.phasesAgg?.phases.map(currentPhase => {
-            const isActive = phase && phase === currentPhase.key
-
-            return (
-              <Link
-                key={currentPhase.key}
-                route='index'
-                replace
-                scroll={false}
-                params={{ ...query, phase: isActive ? null : currentPhase.key }}
-              >
-                <Phase
-                  phase={currentPhase}
-                  disabled={phase && !isActive}
-                  isActive={isActive}
-                />
-              </Link>
-            )
-          })}
-        </div>
+    <>
+      <DebouncedSearch />
+      {showPhases && data.phasesAgg?.phases.length && (
+        <PhaseFilter phases={data.phasesAgg?.phases} />
       )}
 
-      <Table style={{ marginTop: templates && -15 }}>
+      <Table style={{ marginTop: !showPhases && -15 }}>
         <thead>
           <Tr>
             <Th style={{ width: '28%' }}>{t('repo/table/col/title')}</Th>
@@ -353,7 +274,7 @@ const RepoList = ({
               </ThOrder>
             ))}
             <Th style={{ width: '10%' }}>
-              {!templates ? t('repo/table/col/phase') : ''}
+              {showPhases ? t('repo/table/col/phase') : ''}
             </Th>
 
             <Th style={{ width: 70 }} />
@@ -450,7 +371,7 @@ const RepoList = ({
                         }
                       />
                     </TdNum>
-                    <Td>{!templates && <Phase phase={currentPhase} />}</Td>
+                    <Td>{showPhases && <Phase phase={currentPhase} />}</Td>
                     <Td style={{ textAlign: 'right' }}>
                       {repo.latestPublications
                         .filter(
@@ -501,7 +422,7 @@ const RepoList = ({
         loading={data.loading}
         fetchMore={fetchMore}
       />
-    </div>
+    </>
   )
 }
 
@@ -519,7 +440,7 @@ const RepoListWithQuery = compose(
             ? router.query.q
             : undefined,
         orderBy: { field: 'PUSHED_AT', direction: 'DESC' },
-        isTemplate: !!router.query.templates,
+        isTemplate: router.query.view === 'templates',
         ...(router.query?.phase && { phases: [router.query.phase] })
       }
     }),
