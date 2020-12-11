@@ -78,9 +78,11 @@ const Index = ({
         {view === 'calendar' ? (
           <span>Calendar</span>
         ) : (
-          <RepoAdd isTemplate={view === 'templates'} />
+          <>
+            <RepoAdd isTemplate={view === 'templates'} />
+            <RepoTable />
+          </>
         )}
-        <RepoTable />
       </div>
     </Frame.Body>
   </Frame>

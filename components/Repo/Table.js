@@ -29,6 +29,7 @@ import EditMetaDate from './EditMetaDate'
 import { withRouter } from 'next/router'
 import PhaseFilter, { Phase } from './Phases'
 import DebouncedSearch, { SEARCH_MIN_LENGTH } from './Search'
+import { getLabel, getTitle, isPrepublished, isPublished } from './utils'
 
 export const editRepoMeta = gql`
   mutation editRepoMeta($repoId: ID!, $publishDate: DateTime) {
@@ -207,6 +208,17 @@ const PageInfo = withT(({ t, repos, loading, fetchMore }) => {
   ) : null
 })
 
+const PublicationLink = Icon => ({
+  name,
+  document: {
+    meta: { path, slug }
+  }
+}) => (
+  <a key={name} href={`${FRONTEND_BASE_URL}${path || '/' + slug}`}>
+    <Icon color={colors.primary} />
+  </a>
+)
+
 const RepoList = ({
   t,
   data = {},
@@ -307,23 +319,7 @@ const RepoList = ({
                   },
                   currentPhase
                 } = repo
-
-                const label =
-                  (meta.series && meta.series.title) ||
-                  (meta.section &&
-                    meta.section.meta &&
-                    meta.section.meta.title) ||
-                  (meta.format && meta.format.meta && meta.format.meta.title) ||
-                  (meta.dossier &&
-                    meta.dossier.meta &&
-                    meta.dossier.meta.title) ||
-                  (meta.template !== 'article' &&
-                    t(
-                      `repo/add/template/${meta.template}`,
-                      null,
-                      meta.template
-                    ))
-
+                const label = getLabel(repo)
                 return (
                   <Tr key={id}>
                     <Td>
@@ -338,11 +334,7 @@ const RepoList = ({
                         params={{ repoId: id.split('/') }}
                       >
                         <a {...linkRule} title={id}>
-                          {meta.title ||
-                            id.replace(
-                              [GITHUB_ORG, REPO_PREFIX || ''].join('/'),
-                              ''
-                            )}
+                          {getTitle(repo)}
                         </a>
                       </Link>
                     </Td>
@@ -374,33 +366,11 @@ const RepoList = ({
                     <Td>{showPhases && <Phase phase={currentPhase} />}</Td>
                     <Td style={{ textAlign: 'right' }}>
                       {repo.latestPublications
-                        .filter(
-                          publication =>
-                            publication.document && publication.prepublication
-                        )
-                        .map(({ name, document: { meta: { path, slug } } }) => (
-                          <a
-                            key={name}
-                            href={`${FRONTEND_BASE_URL}${path || '/' + slug}`}
-                          >
-                            <LockIcon color={colors.primary} />
-                          </a>
-                        ))}{' '}
+                        .filter(isPrepublished)
+                        .map(PublicationLink(LockIcon))}{' '}
                       {repo.latestPublications
-                        .filter(
-                          publication =>
-                            publication.document &&
-                            !publication.prepublication &&
-                            publication.live
-                        )
-                        .map(({ name, document: { meta: { path, slug } } }) => (
-                          <a
-                            key={name}
-                            href={`${FRONTEND_BASE_URL}${path || '/' + slug}`}
-                          >
-                            <PublicIcon color={colors.primary} />
-                          </a>
-                        ))}{' '}
+                        .filter(isPublished)
+                        .map(PublicationLink(PublicIcon))}{' '}
                       <a href={`https://github.com/${id}`}>
                         <GithubIcon color={colors.primary} />
                       </a>
