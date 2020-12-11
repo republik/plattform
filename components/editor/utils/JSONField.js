@@ -14,8 +14,8 @@ const styles = {
     minHeight: 40,
     paddingTop: '7px !important',
     paddingBottom: '6px !important',
-    fontFamily: 'Courier, Courier New, monospace',
-    fontSize: 14
+    fontFamily: 'Courier, Courier New, monospace !important',
+    fontSize: '14px !important'
   })
 }
 
@@ -25,8 +25,8 @@ export const renderAutoSize = ({ onBlur, onPaste } = {}) => ({
   ...inputProps
 }) => (
   <AutosizeInput
-    {...styles.autoSize}
     {...inputProps}
+    {...styles.autoSize}
     onBlur={e => {
       onBlur && onBlur(e)
       fieldOnBlur && fieldOnBlur(e)
