@@ -19,7 +19,7 @@ import { Table, Tr, Th, ThOrder, Td, TdNum } from '../Table'
 
 import Loader from '../Loader'
 
-import { GITHUB_ORG, REPO_PREFIX, FRONTEND_BASE_URL } from '../../lib/settings'
+import { FRONTEND_BASE_URL } from '../../lib/settings'
 
 import { matchType } from 'mdast-react-render/lib/utils'
 
