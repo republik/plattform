@@ -189,8 +189,10 @@ const alterRepoTag = (tag, doc) => {
 const getCurrentPhase = (partialDoc, doc) => {
   const repo = {
     ...doc._source,
-    ...partialDoc.latestPublications && { latestPublications: partialDoc.latestPublications },
-    ...partialDoc.tags && { tags: partialDoc.tags }
+    ...(partialDoc.latestPublications && {
+      latestPublications: partialDoc.latestPublications,
+    }),
+    ...(partialDoc.tags && { tags: partialDoc.tags }),
   }
 
   return { currentPhase: phases.getCurrentPhase(repo).key }
@@ -246,7 +248,7 @@ const upsert = async (
 
   partialDoc = {
     ...partialDoc,
-    ...getCurrentPhase(partialDoc, doc)
+    ...getCurrentPhase(partialDoc, doc),
   }
 
   debug('upsert', id)

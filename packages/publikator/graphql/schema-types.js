@@ -69,9 +69,9 @@ type RepoMeta {
   briefingUrl: String
 }
 
-input RepoDateRange {
+input RepoPublishDateRange {
   from: DateTime!
-  before: DateTime!
+  until: DateTime!
 }
 
 input RepoOrderBy {

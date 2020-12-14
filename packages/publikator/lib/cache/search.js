@@ -133,12 +133,12 @@ const find = async (args, { elastic }) => {
     query.bool.must.push({ terms: { 'currentPhase.keyword': args.phases } })
   }
 
-  if (args.dateRange) {
+  if (args.publishDateRange) {
     query.bool.must.push({
       range: {
         'meta.publishDate': {
-          gte: args.dateRange.from,
-          lt: args.dateRange.before,
+          gte: args.publishDateRange.from,
+          lt: args.publishDateRange.until,
         },
       },
     })
