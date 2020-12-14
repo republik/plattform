@@ -284,7 +284,8 @@ const RepoListWithQuery = compose(
             : undefined,
         orderBy: { field: 'PUSHED_AT', direction: 'DESC' },
         isTemplate: router.query.view === 'templates',
-        ...(router.query?.phase && { phases: [router.query.phase] })
+        ...(router.query?.phase &&
+          router.query.view !== 'templates' && { phases: [router.query.phase] })
       }
     }),
     props: ({ data, ownProps }) => ({

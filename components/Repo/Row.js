@@ -66,7 +66,7 @@ const RepoRow = compose(
       editRepoMeta: variables => mutate({ variables })
     })
   })
-)(({ repo, showPhases }) => {
+)(({ repo, showPhases, editRepoMeta }) => {
   console.log(repo)
   const {
     id,

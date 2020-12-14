@@ -49,7 +49,7 @@ const IndexNav = compose(
           <span>&nbsp;</span>
           <IndexNavLink
             route='index'
-            params={{ ...query, view, phase: null }}
+            params={{ ...query, view }}
             label={t(`repo/table/nav/${view}`)}
             isActive={query.view === view}
           />

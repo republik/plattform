@@ -1,9 +1,25 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { css } from 'glamor'
-import { Label, linkRule, useColorContext } from '@project-r/styleguide'
+import { Label, useColorContext } from '@project-r/styleguide'
 import { getLabel, getTitle } from '../Repo/utils'
-import { Link } from '../../lib/routes'
+import { Link, Router } from '../../lib/routes'
 import { Phase } from '../Repo/Phases'
+import gql from 'graphql-tag'
+import { compose, graphql } from 'react-apollo'
+import { withRouter } from 'next/router'
+import { swissTime } from '../../lib/utils/format'
+import {
+  columnDateFormat,
+  datePickerFormat,
+  getDaysFromUrl,
+  getUrlDate,
+  getUrlWeekEnd,
+  getUrlWeekStart,
+  isCurrentWeek,
+  now,
+  offsetUrlWeek,
+  reformatUrlDate
+} from './utils'
 
 const DAYS = [
   'Monday',
@@ -15,87 +31,59 @@ const DAYS = [
   'Sunday'
 ]
 
-const mockRepo = {
-  id: 'republik-dev/article-master-of-the-universe',
-  meta: {
-    publishDate: '2020-04-08T10:32:30.254Z',
-    __typename: 'RepoMeta'
-  },
-  latestCommit: {
-    id: '93db7494c8635b7fcbbe353a2e5b4008354540a5',
-    date: '2020-04-23T15:34:23.000Z',
-    message: 'fixed bug?',
-    author: {
-      name: 'Anna Traussnig',
-      __typename: 'Author'
-    },
-    document: {
-      id:
-        'cmVwbzpyZXB1Ymxpay1kZXYvYXJ0aWNsZS1tYXN0ZXItb2YtdGhlLXVuaXZlcnNlOjkzZGI3NDk0Yzg2MzViN2ZjYmJlMzUzYTJlNWI0MDA4MzU0NTQwYTU=',
-      meta: {
-        template: 'article',
-        title: 'Masters of the Universe',
-        credits: [
-          {
-            type: 'text',
-            value: 'Von '
-          },
-          {
-            type: 'link',
-            title: null,
-            url: '/~ca9c46ca-a21b-4f6e-aad3-1010acd419d5',
-            children: [
-              {
-                type: 'text',
-                value: 'Anna Traussnig'
-              }
-            ]
-          },
-          {
-            type: 'text',
-            value: ', 08.04.2020'
+const reposPerWeek = gql`
+  query repoWeek($publishDateRange: RepoPublishDateRange) {
+    reposSearch(first: 100, publishDateRange: $publishDateRange) {
+      nodes {
+        id
+        meta {
+          publishDate
+        }
+        latestCommit {
+          id
+          date
+          message
+          author {
+            name
           }
-        ],
-        series: {
-          title: 'SciFi',
-          __typename: 'Series'
-        },
-        section: null,
-        format: null,
-        dossier: null,
-        __typename: 'Meta'
-      },
-      __typename: 'Document'
-    },
-    __typename: 'Commit'
-  },
-  latestPublications: [
-    {
-      name: 'v11',
-      prepublication: false,
-      live: true,
-      scheduledAt: null,
-      document: {
-        id:
-          'cmVwdWJsaWstZGV2L2FydGljbGUtbWFzdGVyLW9mLXRoZS11bml2ZXJzZS80MmEwZDBjZTQ3MzM1ZWJmNTQwZmIwYWFhMjExZWRlYTI0ZGUyODllL3YxMQ==',
-        meta: {
-          path: '/2020/04/08/masters-of-the-universe',
-          slug: 'masters-of-the-universe',
-          __typename: 'Meta'
-        },
-        __typename: 'Document'
-      },
-      __typename: 'Publication'
+          document {
+            id
+            meta {
+              template
+              title
+              series {
+                title
+              }
+              section {
+                id
+                meta {
+                  title
+                }
+              }
+              format {
+                id
+                meta {
+                  title
+                }
+              }
+              dossier {
+                id
+                meta {
+                  title
+                }
+              }
+            }
+          }
+        }
+        currentPhase {
+          key
+          color
+          label
+        }
+      }
     }
-  ],
-  currentPhase: {
-    key: 'published',
-    color: 'RoyalBlue',
-    label: 'Publiziert',
-    __typename: 'RepoPhase'
-  },
-  __typename: 'Repo'
-}
+  }
+`
 
 const styles = {
   calendar: css({
@@ -108,6 +96,7 @@ const styles = {
     borderLeftStyle: 'solid'
   }),
   repo: css({
+    cursor: 'pointer',
     borderWidth: 1,
     borderStyle: 'solid',
     margin: 10,
@@ -121,48 +110,136 @@ const styles = {
   })
 }
 
-const Repo = () => {
+const Repo = ({ repo }) => {
   const [colorScheme] = useColorContext()
-  const { id, currentPhase } = mockRepo
-  const label = getLabel(mockRepo)
+  const { id, currentPhase } = repo
+  const label = getLabel(repo)
   return (
-    <div {...styles.repo} {...colorScheme.set('borderColor', 'divider')}>
-      {label && (
-        <div {...styles.label}>
-          <Label>{label}</Label>
+    <Link route='repo/tree' params={{ repoId: id.split('/') }} passHref>
+      <div {...styles.repo} {...colorScheme.set('borderColor', 'divider')}>
+        {label && (
+          <div {...styles.label}>
+            <Label>{label}</Label>
+          </div>
+        )}
+        {getTitle(repo)}
+        <div {...styles.phase}>
+          <Phase phase={currentPhase} />
         </div>
-      )}
-      <Link route='repo/tree' params={{ repoId: id.split('/') }}>
-        <a {...linkRule} title={id}>
-          {getTitle(mockRepo)}
-        </a>
-      </Link>
-      <div {...styles.phase}>
-        <Phase phase={currentPhase} />
+      </div>
+    </Link>
+  )
+}
+
+const WeekDay = ({ weekday: { date, repos } }) => {
+  const [colorScheme] = useColorContext()
+
+  return (
+    <div {...styles.weekday} {...colorScheme.set('borderLeftColor', 'divider')}>
+      <strong style={{ paddingLeft: 5 }}>
+        {reformatUrlDate(date, columnDateFormat)}
+      </strong>
+      <div>
+        {repos.map(repo => (
+          <Repo key={repo.id} repo={repo} />
+        ))}
       </div>
     </div>
   )
 }
 
-const WeekDay = ({ weekday }) => {
-  const [colorScheme] = useColorContext()
+const Calendar = ({
+  router: {
+    query,
+    query: { from = getUrlWeekStart(now), until = getUrlWeekEnd(now) }
+  },
+  data: { reposSearch: repos }
+}) => {
+  const [days, setDays] = useState([])
+  const [calendar, setCalendar] = useState([])
 
+  useEffect(() => {
+    setDays(getDaysFromUrl(from, until))
+  }, [from, until])
+
+  useEffect(() => {
+    let weekDays = days.map(date => ({ date, repos: [] }))
+    if (!repos?.nodes?.length) {
+      return setCalendar(weekDays)
+    }
+    setCalendar(
+      repos.nodes.reduce(
+        (acc, repo) =>
+          acc.map(weekDay => {
+            return weekDay.date !== repo.meta.publishDate.split('T')[0]
+              ? weekDay
+              : {
+                  ...weekDay,
+                  repos: weekDay.repos.concat(repo)
+                }
+          }),
+        weekDays
+      )
+    )
+  }, [repos, days])
+
+  const changeDates = dates =>
+    Router.replaceRoute('index', { ...query, ...dates })
+
+  const offsetDates = offset =>
+    changeDates({
+      from: offsetUrlWeek(from, offset),
+      until: offsetUrlWeek(until, offset)
+    })
+
+  const resetDates = () =>
+    changeDates({
+      from: getUrlWeekStart(now),
+      until: getUrlWeekEnd(now)
+    })
   return (
-    <div {...styles.weekday} {...colorScheme.set('borderLeftColor', 'divider')}>
-      <strong style={{ paddingLeft: 5 }}>{weekday}</strong>
-      <Repo />
-      <Repo />
-      <Repo />
+    <div>
+      <span>
+        <button onClick={() => offsetDates(-1)}>Previous</button>
+        {reformatUrlDate(from, datePickerFormat)} -{' '}
+        {reformatUrlDate(until, datePickerFormat)}
+        <button onClick={() => offsetDates(1)}>Next</button>
+        <button onClick={resetDates}>Reset</button>
+        <br />
+        <br />
+        {isCurrentWeek(from) ? 'current week' : 'other week'}
+        <br />
+        <br />
+      </span>
+      <div {...styles.calendar}>
+        {calendar.map(day => (
+          <WeekDay key={day} weekday={day} />
+        ))}
+      </div>
     </div>
   )
 }
 
-const Calendar = () => (
-  <div {...styles.calendar}>
-    {DAYS.map(day => (
-      <WeekDay key={day} weekday={day} />
-    ))}
-  </div>
-)
-
-export default Calendar
+export default compose(
+  withRouter,
+  graphql(reposPerWeek, {
+    options: ({
+      router: {
+        query: { from, until }
+      }
+    }) => {
+      return {
+        fetchPolicy: 'network-only',
+        ssr: false,
+        notifyOnNetworkStatusChange: true,
+        variables: {
+          publishDateRange: from &&
+            until && {
+              from,
+              until
+            }
+        }
+      }
+    }
+  })
+)(Calendar)
