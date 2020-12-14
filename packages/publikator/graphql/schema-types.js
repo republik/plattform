@@ -69,13 +69,20 @@ type RepoMeta {
   briefingUrl: String
 }
 
+input RepoDateRange {
+  from: DateTime!
+  before: DateTime!
+}
+
 input RepoOrderBy {
   field: RepoOrderField!
   direction: OrderDirection!
 }
 
 enum RepoPhaseKey {
-${getPhases().map(p => p.key).join('\n')}
+${getPhases()
+  .map((p) => p.key)
+  .join('\n')}
 }
 
 enum RepoOrderField {

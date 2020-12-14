@@ -125,7 +125,7 @@ const find = async (args, { elastic }) => {
 
   if (args.template) {
     query.bool.must.push({
-      term: { 'contentMeta.template': args.template },
+      term: { 'meta.template': args.template },
     })
   }
 
@@ -133,13 +133,24 @@ const find = async (args, { elastic }) => {
     query.bool.must.push({ terms: { 'currentPhase.keyword': args.phases } })
   }
 
+  if (args.dateRange) {
+    query.bool.must.push({
+      range: {
+        'contentMeta.publishDate': {
+          gte: args.dateRange.from,
+          lt: args.dateRange.before,
+        },
+      },
+    })
+  }
+
   const aggs = {
     phases: {
       terms: {
         field: 'currentPhase.keyword',
-        min_doc_count: 0
-      }
-    }
+        min_doc_count: 0,
+      },
+    },
   }
 
   return elastic.search({
@@ -150,7 +161,7 @@ const find = async (args, { elastic }) => {
       ...getSort(args),
       ...getSourceFilter(),
       query,
-      aggs
+      aggs,
     },
   })
 }
