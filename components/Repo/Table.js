@@ -8,7 +8,6 @@ import { withRouter } from 'next/router'
 import { linkRule, Label, colors } from '@project-r/styleguide'
 
 import withT from '../../lib/withT'
-import { FRONTEND_BASE_URL } from '../../lib/settings'
 
 import { Table, Tr, Th, ThOrder, Td } from '../Table'
 import Loader from '../Loader'
@@ -164,17 +163,6 @@ const PageInfo = withT(({ t, repos, loading, fetchMore }) => {
     </div>
   ) : null
 })
-
-const PublicationLink = Icon => ({
-  name,
-  document: {
-    meta: { path, slug }
-  }
-}) => (
-  <a key={name} href={`${FRONTEND_BASE_URL}${path || '/' + slug}`}>
-    <Icon color={colors.primary} />
-  </a>
-)
 
 const RepoList = ({
   t,
