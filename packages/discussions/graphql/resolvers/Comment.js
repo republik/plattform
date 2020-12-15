@@ -193,7 +193,7 @@ module.exports = {
   displayAuthor: async (comment, args, context) => {
     const { user: me, t, loaders } = context
 
-    const user = loaders.User.byId.load(comment.userId)
+    const user = await loaders.User.byId.load(comment.userId)
 
     if (
       (!comment.published && !Roles.userIsMe(user, me)) ||
