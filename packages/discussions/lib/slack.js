@@ -65,7 +65,7 @@ exports.publishCommentUnpublish = async (
   const author = await getDisplayAuthor(comment, {}, context)
 
   const action = update.adminUnpublished
-    ? `:point_up: *${user.name}* unupblished comment by *${getProfileLink(
+    ? `:point_up: *${user.name}* unpublished comment by *${getProfileLink(
         author,
       )}*`
     : `:put_litter_in_its_place: *${getProfileLink(author)}* unpublished`
