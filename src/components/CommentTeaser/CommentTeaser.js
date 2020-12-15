@@ -91,8 +91,6 @@ export const CommentTeaser = ({
     discussion,
     tags,
     parentIds,
-    published,
-    adminUnpublished,
     displayAuthor,
     preview,
     featuredText,
@@ -153,8 +151,6 @@ export const CommentTeaser = ({
               t={t}
               comment={{
                 id,
-                published,
-                adminUnpublished,
                 displayAuthor,
                 createdAt
               }}
