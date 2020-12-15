@@ -140,6 +140,14 @@
       "value": "Rolle definieren"
     },
     {
+      "key": "styleguide/comment/header/unpublishedByUser",
+      "value": "Beitrag zurückgezogen"
+    },
+    {
+      "key": "styleguide/comment/header/unpublishedByAdmin",
+      "value": "Beitrag von Redaktion verborgen"
+    },
+    {
       "key": "styleguide/comment/edit/submit",
       "value": "bearbeiten"
     },
@@ -149,11 +157,11 @@
     },
     {
       "key": "styleguide/comment/unpublished/userCanEdit",
-      "value": "Bearbeiten Sie den Beitrag um ihn erneut zu publizieren."
+      "value": "Bearbeiten Sie den Beitrag, um ihn erneut zu publizieren."
     },
     {
       "key": "styleguide/comment/adminUnpublished",
-      "value": "Leider mussen wir Ihren Beitrag unveröffentlichen. Wenden sie sich an kontakt@republik.ch."
+      "value": "Leider mussten wir Ihren Beitrag verbergen. Wenden Sie sich bitte an kontakt@republik.ch."
     },
     {
       "key": "styleguide/AudioPlayer/aria",
