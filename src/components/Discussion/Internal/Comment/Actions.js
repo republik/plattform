@@ -195,13 +195,15 @@ export const Actions = ({
           <UnpublishIcon {...colorScheme.set('fill', 'text')} />
         </IconButton>
       )}
-      <IconButton
-        onClick={onShare}
-        title={t('styleguide/CommentActions/share')}
-      >
-        <ShareIcon {...colorScheme.set('fill', 'text')} />
-      </IconButton>
-      {userCanReport && onReport && (
+      {published && (
+        <IconButton
+          onClick={onShare}
+          title={t('styleguide/CommentActions/share')}
+        >
+          <ShareIcon {...colorScheme.set('fill', 'text')} />
+        </IconButton>
+      )}
+      {published && userCanReport && onReport && (
         <IconButton
           disabled={userReportedAt}
           onClick={handleReport}
@@ -219,66 +221,69 @@ export const Actions = ({
           </span>
         </IconButton>
       )}
-      <div {...styles.votes}>
-        {!!(featuredText || actions.featureComment) && (
-          <IconButton
-            type='left'
-            title={
-              featuredAt
-                ? t('styleguide/CommentActions/featured', {
-                    date: dateFormat(new Date(featuredAt)),
-                    time: hmFormat(new Date(featuredAt)),
-                    text: featuredText
-                  })
-                : t('styleguide/CommentActions/feature')
-            }
-            onClick={
-              actions.featureComment && (() => actions.featureComment(comment))
-            }
-          >
-            <FeaturedIcon
-              {...colorScheme.set('fill', featuredText ? 'primary' : 'text')}
-            />
-          </IconButton>
-        )}
-        <div {...styles.vote}>
-          <IconButton
-            selected={userVote === 'UP'}
-            vote={true}
-            onClick={onUpvote}
-            title={t('styleguide/CommentActions/upvote')}
-          >
-            <MdKeyboardArrowUp />
-          </IconButton>
-          <span
-            title={t.pluralize('styleguide/CommentActions/upvote/count', {
-              count: upVotes
-            })}
-          >
-            {upVotes}
-          </span>
+      {published && (
+        <div {...styles.votes}>
+          {!!(featuredText || actions.featureComment) && (
+            <IconButton
+              type='left'
+              title={
+                featuredAt
+                  ? t('styleguide/CommentActions/featured', {
+                      date: dateFormat(new Date(featuredAt)),
+                      time: hmFormat(new Date(featuredAt)),
+                      text: featuredText
+                    })
+                  : t('styleguide/CommentActions/feature')
+              }
+              onClick={
+                actions.featureComment &&
+                (() => actions.featureComment(comment))
+              }
+            >
+              <FeaturedIcon
+                {...colorScheme.set('fill', featuredText ? 'primary' : 'text')}
+              />
+            </IconButton>
+          )}
+          <div {...styles.vote}>
+            <IconButton
+              selected={userVote === 'UP'}
+              vote={true}
+              onClick={onUpvote}
+              title={t('styleguide/CommentActions/upvote')}
+            >
+              <MdKeyboardArrowUp />
+            </IconButton>
+            <span
+              title={t.pluralize('styleguide/CommentActions/upvote/count', {
+                count: upVotes
+              })}
+            >
+              {upVotes}
+            </span>
+          </div>
+          <div {...styles.voteDivider} {...colorScheme.set('color', 'text')}>
+            /
+          </div>
+          <div {...styles.vote}>
+            <span
+              title={t.pluralize('styleguide/CommentActions/downvote/count', {
+                count: downVotes
+              })}
+            >
+              {downVotes}
+            </span>
+            <IconButton
+              selected={userVote === 'DOWN'}
+              vote={true}
+              onClick={onDownvote}
+              title={t('styleguide/CommentActions/downvote')}
+            >
+              <MdKeyboardArrowDown />
+            </IconButton>
+          </div>
         </div>
-        <div {...styles.voteDivider} {...colorScheme.set('color', 'text')}>
-          /
-        </div>
-        <div {...styles.vote}>
-          <span
-            title={t.pluralize('styleguide/CommentActions/downvote/count', {
-              count: downVotes
-            })}
-          >
-            {downVotes}
-          </span>
-          <IconButton
-            selected={userVote === 'DOWN'}
-            vote={true}
-            onClick={onDownvote}
-            title={t('styleguide/CommentActions/downvote')}
-          >
-            <MdKeyboardArrowDown />
-          </IconButton>
-        </div>
-      </div>
+      )}
     </div>
   )
 }
