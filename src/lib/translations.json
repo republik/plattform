@@ -141,11 +141,11 @@
     },
     {
       "key": "styleguide/comment/header/unpublishedByUser",
-      "value": "Beitrag zurückgezogen"
+      "value": "(von User zurückgezogen)"
     },
     {
       "key": "styleguide/comment/header/unpublishedByAdmin",
-      "value": "Beitrag von Redaktion verborgen"
+      "value": "(von der Redaktion verborgen)"
     },
     {
       "key": "styleguide/comment/edit/submit",
