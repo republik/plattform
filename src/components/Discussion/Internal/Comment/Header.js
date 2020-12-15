@@ -163,8 +163,8 @@ export const Header = ({ t, comment, menu, isExpanded, onToggle }) => {
     displayAuthor,
     updatedAt,
     createdAt,
-    published,
-    adminUnpublished,
+    published = true,
+    adminUnpublished = false,
     comments,
     parentIds = []
   } = comment
