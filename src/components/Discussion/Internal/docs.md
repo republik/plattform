@@ -121,6 +121,18 @@ If the comment is below a certain depth, we hide the profile picture and instead
 />
 ```
 
+Comments can be unpublished. Header will replace author with a label.
+
+```react|noSource
+<Comment.Header t={t} comment={comments.comment3} />
+```
+
+If comment was unpublished by admin (`adminUnpublish`), label will indicate that.
+
+```react|noSource
+<Comment.Header t={t} comment={comments.comment4} />
+```
+
 #### Body
 
 The **Body** component (shown on the left) includes the optional **Context** component (shown right) above the comment text. Context is a bold title line and optional description line. The context lines do not wrap, they are cut of with an ellipsis.
@@ -150,11 +162,7 @@ The body component automatically collapses the text if it's too long. Whether co
 <Comment.Body t={t} comment={comments.comment5} context={commentContext} />
 ```
 
-Comments can be unpublished. These comments are still visible, but the content is replaced with a placeholder.
-
-```react|noSource
-<Comment.Body t={t} comment={comments.comment2} />
-```
+Comments can be unpublished. Content is dropped.
 
 If the comment is unpublished by the user themselves, they will still see the content, can edit it and publish again. If the comment was unpublished by an admin the user will see a different note.
 
