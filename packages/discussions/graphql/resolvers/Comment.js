@@ -103,12 +103,6 @@ module.exports = {
   published: ({ published, adminUnpublished }) =>
     published && !adminUnpublished,
 
-  adminUnpublished: ({ userId, adminUnpublished }, args, { user }) =>
-    Roles.userIsInRoles(user, ['editor', 'admin']) ||
-    (user && userId && userId === user.id)
-      ? adminUnpublished
-      : null,
-
   content: async (comment, args, context) => {
     const strip = args && args.strip !== null ? args.strip : false
     const text = await textForComment(comment, strip, context)
@@ -145,15 +139,31 @@ module.exports = {
       ? content.length - (embedUrl ? embedUrl.length : 0)
       : null,
 
-  score: (comment) => comment.upVotes - comment.downVotes,
+  upVotes: (comment) => {
+    const { published, adminUnpublished, upVotes } = comment
+    return (published && !adminUnpublished && upVotes) || 0
+  },
+
+  downVotes: (comment) => {
+    const { published, adminUnpublished, downVotes } = comment
+    return (published && !adminUnpublished && downVotes) || 0
+  },
+
+  score: (comment) => {
+    const { published, adminUnpublished, upVotes, downVotes } = comment
+    return (published && !adminUnpublished && upVotes - downVotes) || 0
+  },
 
   userCanEdit: ({ userId }, args, { user }) => user && userId === user.id,
 
-  userVote: ({ votes }, args, { user }) => {
-    const userVote = user && votes.find((v) => v.userId === user.id)
-    if (userVote) {
+  userVote: (comment, args, { user: me }) => {
+    const { published, adminUnpublished, votes } = comment
+    const userVote = me && votes.find((vote) => vote.userId === me.id)
+
+    if (published && !adminUnpublished && userVote) {
       return userVote.vote === -1 ? 'DOWN' : 'UP'
     }
+
     return null
   },
 
@@ -181,7 +191,22 @@ module.exports = {
   },
 
   displayAuthor: async (comment, args, context) => {
-    const { t, loaders } = context
+    const { user: me, t, loaders } = context
+
+    const user = loaders.User.byId.load(comment.userId)
+
+    if (
+      (!comment.published && !Roles.userIsMe(user, me)) ||
+      comment.adminUnpublished
+    ) {
+      return {
+        id: 'hidden',
+        name: t('api/comment/hidden/displayName'),
+        profilePicture: null,
+        anonymity: true,
+        username: null,
+      }
+    }
 
     const id = crypto
       .createHmac('sha256', DISPLAY_AUTHOR_SECRET)
