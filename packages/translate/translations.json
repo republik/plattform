@@ -719,6 +719,10 @@
       "value": "Sie können nur Ihre eigenen Beiträge bearbeiten."
     },
     {
+      "key": "api/comment/hidden/displayName",
+      "value": "Verborgen"
+    },
+    {
       "key": "api/comment/anonymous/displayName",
       "value": "Anonym"
     },
