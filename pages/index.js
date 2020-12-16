@@ -15,9 +15,8 @@ import RepoTable from '../components/Repo/Table'
 import RepoAdd from '../components/Repo/Add'
 
 const styles = {
-  container: css({
-    padding: 20,
-    paddingBottom: 80
+  defaultContainer: css({
+    padding: 20
   })
 }
 
@@ -76,16 +75,14 @@ const Index = ({
       </Frame.Header.Section>
     </Frame.Header>
     <Frame.Body raw>
-      <div {...styles.container}>
-        {view === 'calendar' ? (
-          <Calendar />
-        ) : (
-          <>
-            <RepoAdd isTemplate={view === 'templates'} />
-            <RepoTable />
-          </>
-        )}
-      </div>
+      {view === 'calendar' ? (
+        <Calendar />
+      ) : (
+        <div {...styles.defaultContainer}>
+          <RepoAdd isTemplate={view === 'templates'} />
+          <RepoTable />
+        </div>
+      )}
     </Frame.Body>
   </Frame>
 )

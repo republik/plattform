@@ -11,7 +11,7 @@ const styles = {
     borderLeftStyle: 'solid'
   }),
   containerPast: css({
-    opacity: 0.5
+    opacity: 0.8
   }),
   dateHeading: css({
     display: 'block',
@@ -33,11 +33,12 @@ const Day = ({ day: { date, repos }, isPast }) => {
       {...styles.container}
       {...(isPast && styles.containerPast)}
       {...colorScheme.set('borderLeftColor', 'divider')}
+      {...colorScheme.set('color', isPast ? 'textSoft' : 'text')}
     >
       <DateHeading date={date} />
       <div>
         {repos.map(repo => (
-          <Repo key={repo.id} repo={repo} />
+          <Repo key={repo.id} repo={repo} isPast={isPast} />
         ))}
       </div>
     </div>

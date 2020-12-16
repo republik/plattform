@@ -1,25 +1,37 @@
 import React from 'react'
-import { css } from 'glamor'
+import { css, merge } from 'glamor'
 import { Link } from '../../lib/routes'
 import { withRouter } from 'next/router'
+import { fontStyles } from '@project-r/styleguide'
 
 const styles = {
   phase: css({
     color: '#fff',
-    borderRadius: 3,
-    padding: '3px 6px',
-    marginRight: 6,
-    display: 'inline-block'
+    padding: '5px 10px',
+    display: 'inline-block',
+    ...fontStyles.sansSerifRegular14,
+    letterSpacing: 0.5
+  }),
+  phaseLarge: css({
+    margin: '0 6px 6px 0',
+    ...fontStyles.sansSerifRegular16
   })
 }
 
-export const Phase = ({ phase, onClick, disabled, isActive }) => (
+export const Phase = ({
+  phase,
+  onClick,
+  disabled,
+  discrete,
+  isActive,
+  large
+}) => (
   <div
-    {...styles.phase}
+    {...merge(styles.phase, large && styles.phaseLarge)}
     style={{
       backgroundColor: disabled ? 'gray' : phase.color,
       cursor: onClick ? 'pointer' : 'default',
-      opacity: phase.count === 0 && !isActive ? 0.5 : 1
+      opacity: discrete || (phase.count === 0 && !isActive) ? 0.5 : 1
     }}
     onClick={onClick}
   >
@@ -51,6 +63,7 @@ const PhaseFilter = withRouter(
               phase={p}
               disabled={phase && !isActive}
               isActive={isActive}
+              large
             />
           </Link>
         )

@@ -72,8 +72,11 @@ const reposPerWeek = gql`
 
 const styles = {
   container: css({
+    padding: 20
+  }),
+  calendar: css({
     display: 'flex',
-    minHeight: 500,
+    height: 'calc(100vh - 210px)',
     marginTop: 15
   })
 }
@@ -111,14 +114,14 @@ const Calendar = ({
     })
 
   return (
-    <div>
+    <div {...styles.container}>
       <Nav>
         <NavButton goBack={offsetDates(-1)} />
         <CurrentDates from={from} until={until} />
         <NavButton goForth={offsetDates(1)} />
         <ResetLink reset={resetDates} />
       </Nav>
-      <div {...styles.container}>
+      <div {...styles.calendar}>
         {calendar.map(day => (
           <Day
             key={day.date}

@@ -21,7 +21,13 @@ const styles = {
   navButton: {
     display: 'inline-block',
     margin: 0
-  }
+  },
+  resetButton: css({
+    marginLeft: 20,
+    ':hover': {
+      textDecoration: 'underline'
+    }
+  })
 }
 
 export const Nav = ({ children }) => (
@@ -38,7 +44,7 @@ export const NavButton = ({ goBack, goForth }) => (
 )
 
 export const ResetLink = withT(({ t, reset }) => (
-  <button {...plainButtonRule} onClick={reset} style={{ marginLeft: 20 }}>
+  <button {...plainButtonRule} {...styles.resetButton} onClick={reset}>
     {t('repo/calendar/nav/reset')}
   </button>
 ))
