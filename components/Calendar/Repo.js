@@ -1,12 +1,7 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { css } from 'glamor'
 import { Link } from '../../lib/routes'
-import {
-  fontStyles,
-  useColorContext,
-  inQuotes,
-  underline
-} from '@project-r/styleguide'
+import { fontStyles, useColorContext, inQuotes } from '@project-r/styleguide'
 import { getLabel, getTitle } from '../Repo/utils'
 import { Phase } from '../Repo/Phases'
 
@@ -16,7 +11,8 @@ const styles = {
     borderWidth: 1,
     borderStyle: 'solid',
     margin: 10,
-    padding: 5
+    padding: 5,
+    transition: 'all 0.5s'
   }),
   title: css({
     textDecoration: 'underline',
@@ -34,29 +30,40 @@ const styles = {
   })
 }
 
+const CommitMsg = ({ msg }) => (
+  <span {...styles.commitMsg}>{inQuotes(msg)}</span>
+)
+
 const Repo = ({ repo, isNewsletterX, isPast }) => {
   const [colorScheme] = useColorContext()
   const { id, currentPhase } = repo
   const label = getLabel(repo)
   const isNewsletter =
     repo.latestCommit.document.meta.template === 'editorialNewsletter'
+
+  const colorStyles = useMemo(
+    () =>
+      css({
+        borderColor: colorScheme.getCSSColor('divider'),
+        backgroundColor: colorScheme.getCSSColor(
+          isNewsletter ? 'hover' : 'default'
+        ),
+        '@media (hover)': {
+          ':hover': {
+            borderColor: colorScheme.getCSSColor('hover')
+          }
+        }
+      }),
+    [colorScheme]
+  )
   return (
     <Link route='repo/tree' params={{ repoId: id.split('/') }} passHref>
-      <div
-        {...styles.container}
-        {...colorScheme.set('borderColor', 'divider')}
-        {...colorScheme.set(
-          'backgroundColor',
-          isNewsletter ? 'hover' : 'default'
-        )}
-      >
+      <div {...styles.container} {...colorStyles}>
         {label && <div {...styles.label}>{label}</div>}
         <div {...styles.title}>{getTitle(repo)}</div>
         <div {...styles.status}>
           {isNewsletter ? (
-            <span {...styles.commitMsg}>
-              {inQuotes(repo.latestCommit.message)}
-            </span>
+            <CommitMsg msg={repo.latestCommit.message} />
           ) : (
             <Phase phase={currentPhase} discrete={isPast} />
           )}
