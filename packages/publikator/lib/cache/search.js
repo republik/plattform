@@ -133,13 +133,24 @@ const find = async (args, { elastic }) => {
     query.bool.must.push({ terms: { 'currentPhase.keyword': args.phases } })
   }
 
+  if (args.publishDateRange) {
+    query.bool.must.push({
+      range: {
+        'meta.publishDate': {
+          gte: args.publishDateRange.from,
+          lt: args.publishDateRange.until,
+        },
+      },
+    })
+  }
+
   const aggs = {
     phases: {
       terms: {
         field: 'currentPhase.keyword',
-        min_doc_count: 0
-      }
-    }
+        min_doc_count: 0,
+      },
+    },
   }
 
   return elastic.search({
@@ -150,7 +161,7 @@ const find = async (args, { elastic }) => {
       ...getSort(args),
       ...getSourceFilter(),
       query,
-      aggs
+      aggs,
     },
   })
 }
