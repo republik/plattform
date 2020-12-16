@@ -127,7 +127,7 @@ Comments can be unpublished. Header will replace author with a label.
 <Comment.Header t={t} comment={comments.comment3} />
 ```
 
-If comment was unpublished by admin (`adminUnpublish`), label will indicate that.
+If comment was unpublished by admin (`adminUnpublished`), label will indicate that.
 
 ```react|noSource
 <Comment.Header t={t} comment={comments.comment4} />
