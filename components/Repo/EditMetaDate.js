@@ -73,7 +73,8 @@ const EditMeta = ({ publishDate, repoId, editRepoMeta }) => {
   const formattedPublishDate = publishDate
     ? formatDate(new Date(publishDate))
     : ''
-  const formattedFormValue = formValue || formattedPublishDate
+  const formattedFormValue =
+    formValue !== undefined ? formValue : formattedPublishDate
 
   return (
     <span {...styles.span} onClick={() => setEditing(true)}>
