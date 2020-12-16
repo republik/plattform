@@ -29,6 +29,8 @@ export const offsetUrlWeek = (urlDate, offset) => {
 export const isCurrentWeek = urlDate =>
   +timeMonday.floor(now) === +parseUrlDate(urlDate)
 
+export const isPast = urlDate => +now > +parseUrlDate(urlDate)
+
 export const getDaysFromUrl = (urlDateFrom, urlDateUntil) =>
   timeDay
     .range(parseUrlDate(urlDateFrom), parseUrlDate(urlDateUntil))

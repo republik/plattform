@@ -10,6 +10,7 @@ import {
   getUrlWeekEnd,
   getUrlWeekStart,
   isCurrentWeek,
+  isPast,
   now,
   offsetUrlWeek,
   reformatUrlDate
@@ -114,14 +115,14 @@ const Calendar = ({
         <button onClick={() => offsetDates(1)}>Next</button>
         <button onClick={resetDates}>Reset</button>
         <br />
-        <br />
-        {isCurrentWeek(from) ? 'current week' : 'other week'}
-        <br />
-        <br />
       </span>
       <div {...styles.container}>
         {calendar.map(day => (
-          <Day key={day.date} day={day} />
+          <Day
+            key={day.date}
+            day={day}
+            isPast={isCurrentWeek(from) && isPast(day.date)}
+          />
         ))}
       </div>
     </div>

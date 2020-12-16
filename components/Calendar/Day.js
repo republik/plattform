@@ -9,15 +9,19 @@ const styles = {
     flex: 1,
     borderLeftWidth: 1,
     borderLeftStyle: 'solid'
+  }),
+  containerPast: css({
+    opacity: 0.5
   })
 }
 
-const Day = ({ day: { date, repos } }) => {
+const Day = ({ day: { date, repos }, isPast }) => {
   const [colorScheme] = useColorContext()
 
   return (
     <div
       {...styles.container}
+      {...(isPast && styles.containerPast)}
       {...colorScheme.set('borderLeftColor', 'divider')}
     >
       <strong style={{ paddingLeft: 5 }}>
