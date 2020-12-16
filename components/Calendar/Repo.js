@@ -34,13 +34,9 @@ const CommitMsg = ({ msg }) => (
   <span {...styles.commitMsg}>{inQuotes(msg)}</span>
 )
 
-const Repo = ({ repo, isNewsletterX, isPast }) => {
+const Repo = ({ repo, isNewsletter, isPast }) => {
   const [colorScheme] = useColorContext()
   const { id, currentPhase } = repo
-  const label = getLabel(repo)
-  const isNewsletter =
-    repo.latestCommit.document.meta.template === 'editorialNewsletter'
-
   const colorStyles = useMemo(
     () =>
       css({
@@ -54,8 +50,9 @@ const Repo = ({ repo, isNewsletterX, isPast }) => {
           }
         }
       }),
-    [colorScheme]
+    [colorScheme, isNewsletter]
   )
+  const label = getLabel(repo)
   return (
     <Link route='repo/tree' params={{ repoId: id.split('/') }} passHref>
       <div {...styles.container} {...colorStyles}>

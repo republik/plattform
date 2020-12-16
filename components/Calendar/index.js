@@ -73,12 +73,13 @@ const reposPerWeek = gql`
 const styles = {
   container: css({
     padding: 20,
-    minWidth: 960,
+    minWidth: 1200,
+    maxWidth: 1600,
     overflow: 'scroll'
   }),
   calendar: css({
     display: 'flex',
-    height: 'calc(100vh - 210px)',
+    minHeight: 'calc(100vh - 210px)',
     marginTop: 15
   })
 }

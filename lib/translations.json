@@ -1,5 +1,5 @@
 {
-  "updated": "2020-12-16T12:02:48.322Z",
+  "updated": "2020-12-16T15:00:26.076Z",
   "title": "live",
   "data": [
     {
@@ -297,6 +297,14 @@
     {
       "key": "repo/calendar/nav/reset",
       "value": "zur aktuellen Woche"
+    },
+    {
+      "key": "repo/calendar/newsletters",
+      "value": "Newsletter"
+    },
+    {
+      "key": "repo/calendar/articles",
+      "value": "Beiträge"
     },
     {
       "key": "repo/archive/confirm",
