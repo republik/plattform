@@ -8,6 +8,7 @@ import { Phase } from '../Repo/Phases'
 const styles = {
   container: css({
     cursor: 'pointer',
+    maxWidth: 200,
     borderWidth: 1,
     borderStyle: 'solid',
     margin: 10,

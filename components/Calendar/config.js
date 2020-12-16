@@ -1,12 +1,18 @@
 export const placeholders = {
   newsletters: [
     {
-      match: null,
-      placeholder: null
+      matchDate: null,
+      matchRepo: null,
+      placeholderRepo: {
+        meta: {
+          publishDate: null
+        }
+      }
     },
     {
-      match: null,
-      placeholder: null
+      matchDate: null,
+      matchRepo: null,
+      placeholderRepo: null
     }
   ]
 }

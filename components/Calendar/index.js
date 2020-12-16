@@ -74,7 +74,7 @@ const styles = {
   container: css({
     padding: 20,
     minWidth: 1200,
-    maxWidth: 1600,
+    maxWidth: 2200,
     overflow: 'scroll'
   }),
   calendar: css({

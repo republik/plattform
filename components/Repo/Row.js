@@ -26,17 +26,6 @@ import {
   isPublished
 } from './utils'
 
-const editRepoMeta = gql`
-  mutation editRepoMeta($repoId: ID!, $publishDate: DateTime) {
-    editRepoMeta(repoId: $repoId, publishDate: $publishDate) {
-      id
-      meta {
-        publishDate
-      }
-    }
-  }
-`
-
 const link = {
   matchMdast: matchType('link'),
   props: node => ({
@@ -60,13 +49,7 @@ const PublicationLink = Icon => ({
   </a>
 )
 
-const RepoRow = compose(
-  graphql(editRepoMeta, {
-    props: ({ mutate }) => ({
-      editRepoMeta: variables => mutate({ variables })
-    })
-  })
-)(({ repo, showPhases, editRepoMeta }) => {
+const RepoRow = ({ repo, showPhases }) => {
   const {
     id,
     meta: { publishDate },
@@ -109,10 +92,7 @@ const RepoRow = compose(
         </Label>
       </TdNum>
       <TdNum>
-        <EditMetaDate
-          value={publishDate}
-          onChange={value => editRepoMeta({ repoId: id, publishDate: value })}
-        />
+        <EditMetaDate publishDate={publishDate} repoId={id} />
       </TdNum>
       <Td>{showPhases && <Phase phase={currentPhase} />}</Td>
       <Td style={{ textAlign: 'right' }}>
@@ -128,6 +108,6 @@ const RepoRow = compose(
       </Td>
     </Tr>
   )
-})
+}
 
 export default RepoRow

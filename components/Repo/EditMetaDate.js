@@ -4,6 +4,8 @@ import MaskedInput from 'react-maskedinput'
 
 import { displayDateTime } from './utils'
 import { timeParse, timeFormat } from 'd3-time-format'
+import { compose, graphql } from 'react-apollo'
+import gql from 'graphql-tag'
 
 const loading = css.keyframes({
   'from, to': {
@@ -41,6 +43,17 @@ const dateMask = dateFormat.replace('%Y', '1111').replace(/%(d|m|y|H|M)/g, '11')
 const parseDate = timeParse(dateFormat)
 const formatDate = timeFormat(dateFormat)
 
+const editRepoMeta = gql`
+  mutation editRepoMeta($repoId: ID!, $publishDate: DateTime) {
+    editRepoMeta(repoId: $repoId, publishDate: $publishDate) {
+      id
+      meta {
+        publishDate
+      }
+    }
+  }
+`
+
 class EditMeta extends Component {
   constructor(...args) {
     super(...args)
@@ -52,14 +65,26 @@ class EditMeta extends Component {
     this.setRef = ref => {
       this.ref = ref
     }
+    this.resetState = this.resetState.bind(this)
   }
+
+  resetState() {
+    this.setState({
+      editing: false,
+      value: undefined,
+      disabled: false
+    })
+  }
+
   render() {
     const { editing, disabled } = this.state
-    const { value, onChange } = this.props
+    const { publishDate, repoId, editRepoMeta } = this.props
 
-    const formattedPropValue = value ? formatDate(new Date(value)) : ''
+    const formattedPublishDate = publishDate
+      ? formatDate(new Date(publishDate))
+      : ''
     let formattedValue =
-      this.state.value !== undefined ? this.state.value : formattedPropValue
+      this.state.value !== undefined ? this.state.value : formattedPublishDate
 
     return (
       <span
@@ -82,34 +107,27 @@ class EditMeta extends Component {
                 if (!parsedValue && formattedValue !== '') {
                   return
                 }
-                if (formattedPropValue === formattedValue) {
+                if (formattedPublishDate === formattedValue) {
                   this.ref.blur()
                 }
 
                 this.setState({ disabled: true })
-                onChange(parsedValue ? parsedValue.toISOString() : null)
-                  .then(() => {
-                    this.setState({
-                      editing: false,
-                      value: undefined,
-                      disabled: false
-                    })
-                  })
+                editRepoMeta({
+                  repoId,
+                  publishDate: parsedValue ? parsedValue.toISOString() : null
+                })
+                  .then(this.resetState)
                   .catch(() => {
                     this.setState({ disabled: false })
                   })
                 this.ref.blur()
               }
               if (event.key === 'Escape') {
-                this.setState({
-                  editing: false,
-                  value: undefined,
-                  disabled: false
-                })
+                this.resetState()
               }
             }}
             onBlur={() => {
-              if (formattedPropValue === formattedValue) {
+              if (formattedPublishDate === formattedValue) {
                 this.setState({ editing: false, value: undefined })
               }
             }}
@@ -118,11 +136,17 @@ class EditMeta extends Component {
             mask={dateMask}
           />
         ) : (
-          displayDateTime(value)
+          displayDateTime(publishDate)
         )}
       </span>
     )
   }
 }
 
-export default EditMeta
+export default compose(
+  graphql(editRepoMeta, {
+    props: ({ mutate }) => ({
+      editRepoMeta: variables => mutate({ variables })
+    })
+  })
+)(EditMeta)

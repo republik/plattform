@@ -28,7 +28,7 @@ const styles = {
   templateHeading: css({
     display: 'block',
     marginBottom: 10,
-    paddingLeft: 5,
+    paddingLeft: 10,
     ...fontStyles.sansSerifRegular14
   }),
   templateContainer: css({
