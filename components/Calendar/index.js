@@ -122,7 +122,7 @@ const Calendar = ({
         <NavButton goBack={offsetDates(-1)} />
         <CurrentDates from={from} until={until} />
         <NavButton goForth={offsetDates(1)} />
-        <ResetLink reset={resetDates} />
+        {!isCurrentWeek(from) && <ResetLink reset={resetDates} />}
       </Nav>
       <div {...styles.calendar}>
         {calendar.map(day => (
