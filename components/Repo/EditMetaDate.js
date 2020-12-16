@@ -109,12 +109,7 @@ const EditMeta = ({ publishDate, repoId, editRepoMeta }) => {
               resetForm()
             }
           }}
-          onBlur={() => {
-            if (formattedPublishDate === formattedFormValue) {
-              setEditing(false)
-              setFormValue(undefined)
-            }
-          }}
+          onBlur={resetForm}
           onChange={event => setFormValue(event.target.value)}
           placeholderChar={'_'}
           mask={dateMask}
