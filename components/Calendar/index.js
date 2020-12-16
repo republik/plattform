@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react'
-import { css } from 'glamor'
-import { Label, useColorContext } from '@project-r/styleguide'
-import { getLabel, getTitle } from '../Repo/utils'
-import { Link, Router } from '../../lib/routes'
-import { Phase } from '../Repo/Phases'
 import gql from 'graphql-tag'
+import { css } from 'glamor'
 import { compose, graphql } from 'react-apollo'
 import { withRouter } from 'next/router'
-import { swissTime } from '../../lib/utils/format'
+import { group } from 'd3-array'
+import { Link, Router } from '../../lib/routes'
+import { Label, useColorContext } from '@project-r/styleguide'
+import { getLabel, getTitle } from '../Repo/utils'
+import { Phase } from '../Repo/Phases'
 import {
   columnDateFormat,
   datePickerFormat,
@@ -20,16 +20,6 @@ import {
   offsetUrlWeek,
   reformatUrlDate
 } from './utils'
-
-const DAYS = [
-  'Monday',
-  'Tuesday',
-  'Wednesday',
-  'Thursday',
-  'Friday',
-  'Saturday',
-  'Sunday'
-]
 
 const reposPerWeek = gql`
   query repoWeek($publishDateRange: RepoPublishDateRange) {
@@ -155,33 +145,28 @@ const Calendar = ({
   },
   data: { reposSearch: repos }
 }) => {
-  const [days, setDays] = useState([])
   const [calendar, setCalendar] = useState([])
 
   useEffect(() => {
-    setDays(getDaysFromUrl(from, until))
-  }, [from, until])
+    const calendarDays = getDaysFromUrl(from, until).map(date => ({
+      date,
+      repos: []
+    }))
 
-  useEffect(() => {
-    let weekDays = days.map(date => ({ date, repos: [] }))
-    if (!repos?.nodes?.length) {
-      return setCalendar(weekDays)
+    if (!repos?.nodes) {
+      return setCalendar(calendarDays)
     }
-    setCalendar(
-      repos.nodes.reduce(
-        (acc, repo) =>
-          acc.map(weekDay => {
-            return weekDay.date !== repo.meta.publishDate.split('T')[0]
-              ? weekDay
-              : {
-                  ...weekDay,
-                  repos: weekDay.repos.concat(repo)
-                }
-          }),
-        weekDays
-      )
+
+    const reposByDay = group(repos.nodes, repo =>
+      getUrlDate(new Date(repo.meta.publishDate))
     )
-  }, [repos, days])
+    setCalendar(
+      calendarDays.map(day => ({
+        ...day,
+        repos: reposByDay.get(day.date) || []
+      }))
+    )
+  }, [repos])
 
   const changeDates = dates =>
     Router.replaceRoute('index', { ...query, ...dates })
