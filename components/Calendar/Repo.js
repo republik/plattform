@@ -4,6 +4,7 @@ import { Link } from '../../lib/routes'
 import { fontStyles, useColorContext, inQuotes } from '@project-r/styleguide'
 import { getLabel, getTitle } from '../Repo/utils'
 import { Phase } from '../Repo/Phases'
+import EditMetaDate from '../Repo/EditMetaDate'
 
 const styles = {
   container: css({
@@ -26,6 +27,10 @@ const styles = {
   status: css({
     marginTop: 10
   }),
+  editDate: css({
+    ...fontStyles.sansSerifRegular14,
+    marginBottom: 10
+  }),
   commitMsg: css({
     ...fontStyles.sansSerifRegular14
   })
@@ -37,7 +42,11 @@ const CommitMsg = ({ msg }) => (
 
 const Repo = ({ repo, isNewsletter, isPast }) => {
   const [colorScheme] = useColorContext()
-  const { id, currentPhase } = repo
+  const {
+    id,
+    currentPhase,
+    meta: { publishDate }
+  } = repo
   const colorStyles = useMemo(
     () =>
       css({
@@ -63,7 +72,16 @@ const Repo = ({ repo, isNewsletter, isPast }) => {
           {isNewsletter ? (
             <CommitMsg msg={repo.latestCommit.message} />
           ) : (
-            <Phase phase={currentPhase} discrete={isPast} />
+            <>
+              <div
+                onClick={e => e.preventDefault()}
+                {...styles.editDate}
+                {...colorScheme.set('color', 'textSoft')}
+              >
+                <EditMetaDate publishDate={publishDate} repoId={id} />
+              </div>
+              <Phase phase={currentPhase} discrete={isPast} />
+            </>
           )}
         </div>
       </div>
