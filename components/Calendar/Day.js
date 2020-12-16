@@ -1,6 +1,6 @@
 import React from 'react'
 import { css } from 'glamor'
-import { useColorContext } from '@project-r/styleguide'
+import { fontStyles, useColorContext } from '@project-r/styleguide'
 import { columnDateFormat, reformatUrlDate } from './utils'
 import Repo from './Repo'
 
@@ -12,8 +12,18 @@ const styles = {
   }),
   containerPast: css({
     opacity: 0.5
+  }),
+  dateHeading: css({
+    display: 'block',
+    paddingLeft: 5,
+    marginBottom: 15,
+    ...fontStyles.sansSerifMedium14
   })
 }
+
+const DateHeading = ({ date }) => (
+  <span {...styles.dateHeading}>{reformatUrlDate(date, columnDateFormat)}</span>
+)
 
 const Day = ({ day: { date, repos }, isPast }) => {
   const [colorScheme] = useColorContext()
@@ -24,9 +34,7 @@ const Day = ({ day: { date, repos }, isPast }) => {
       {...(isPast && styles.containerPast)}
       {...colorScheme.set('borderLeftColor', 'divider')}
     >
-      <strong style={{ paddingLeft: 5 }}>
-        {reformatUrlDate(date, columnDateFormat)}
-      </strong>
+      <DateHeading date={date} />
       <div>
         {repos.map(repo => (
           <Repo key={repo.id} repo={repo} />

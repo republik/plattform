@@ -4,6 +4,7 @@ import { css } from 'glamor'
 import { compose, graphql } from 'react-apollo'
 import { withRouter } from 'next/router'
 import { Router } from '../../lib/routes'
+import { fontFamilies } from '@project-r/styleguide'
 import {
   datePickerFormat,
   getPublicationCalendar,
@@ -72,20 +73,29 @@ const reposPerWeek = gql`
 `
 
 const styles = {
+  navigation: css({
+    padding: '15px 0',
+    fontFamily: fontFamilies.sansSerifMedium
+  }),
   container: css({
     display: 'flex',
-    minHeight: 500
+    minHeight: 500,
+    marginTop: 15
   })
 }
 
 const Calendar = ({
   router: {
     query,
-    query: { from = getUrlWeekStart(now), until = getUrlWeekEnd(now) }
+    query: { from, until }
   },
   data: { reposSearch: repos }
 }) => {
   const [calendar, setCalendar] = useState([])
+
+  useEffect(() => {
+    !(from && until) && resetDates()
+  }, [])
 
   useEffect(() => {
     setCalendar(getPublicationCalendar(from, until, repos))
@@ -108,14 +118,14 @@ const Calendar = ({
 
   return (
     <div>
-      <span>
+      <div {...styles.navigation}>
         <button onClick={() => offsetDates(-1)}>Previous</button>
         {reformatUrlDate(from, datePickerFormat)} -{' '}
         {reformatUrlDate(until, datePickerFormat)}
         <button onClick={() => offsetDates(1)}>Next</button>
         <button onClick={resetDates}>Reset</button>
         <br />
-      </span>
+      </div>
       <div {...styles.container}>
         {calendar.map(day => (
           <Day

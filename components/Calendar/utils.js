@@ -5,7 +5,7 @@ import { group } from 'd3-array'
 export const now = new Date()
 
 export const urlDateFormat = '%Y-%m-%d'
-export const datePickerFormat = '%d-%m-%y'
+export const datePickerFormat = '%d.%m.%y'
 export const columnDateFormat = '%A, %d.%m'
 
 export const getUrlDate = swissTime.format(urlDateFormat)
@@ -37,6 +37,7 @@ export const getDaysFromUrl = (urlDateFrom, urlDateUntil) =>
     .map(getUrlDate)
 
 export const getPublicationCalendar = (from, until, repos = { nodes: [] }) => {
+  if (!from || !until) return
   const reposByDay = group(repos.nodes, repo =>
     getUrlDate(new Date(repo.meta.publishDate))
   )
