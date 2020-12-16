@@ -6,7 +6,7 @@ import Repo from './Repo'
 
 const styles = {
   container: css({
-    flex: 1,
+    flex: '1 1 0',
     borderLeftWidth: 1,
     borderLeftStyle: 'solid'
   }),

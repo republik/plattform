@@ -1,5 +1,5 @@
 {
-  "updated": "2020-12-11T13:19:13.713Z",
+  "updated": "2020-12-16T12:02:48.322Z",
   "title": "live",
   "data": [
     {
@@ -293,6 +293,10 @@
     {
       "key": "repo/table/col/productionDeadline",
       "value": "Produktions-Deadline"
+    },
+    {
+      "key": "repo/calendar/nav/reset",
+      "value": "zur aktuellen Woche"
     },
     {
       "key": "repo/archive/confirm",

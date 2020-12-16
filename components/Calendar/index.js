@@ -4,19 +4,17 @@ import { css } from 'glamor'
 import { compose, graphql } from 'react-apollo'
 import { withRouter } from 'next/router'
 import { Router } from '../../lib/routes'
-import { fontFamilies } from '@project-r/styleguide'
 import {
-  datePickerFormat,
   getPublicationCalendar,
   getUrlWeekEnd,
   getUrlWeekStart,
   isCurrentWeek,
   isPast,
   now,
-  offsetUrlWeek,
-  reformatUrlDate
+  offsetUrlWeek
 } from './utils'
 import Day from './Day'
+import { CurrentDates, Nav, NavButton, ResetLink } from './Nav'
 
 const reposPerWeek = gql`
   query repoWeek($publishDateRange: RepoPublishDateRange) {
@@ -73,10 +71,6 @@ const reposPerWeek = gql`
 `
 
 const styles = {
-  navigation: css({
-    padding: '15px 0',
-    fontFamily: fontFamilies.sansSerifMedium
-  }),
   container: css({
     display: 'flex',
     minHeight: 500,
@@ -104,7 +98,7 @@ const Calendar = ({
   const changeDates = dates =>
     Router.replaceRoute('index', { ...query, ...dates })
 
-  const offsetDates = offset =>
+  const offsetDates = offset => () =>
     changeDates({
       from: offsetUrlWeek(from, offset),
       until: offsetUrlWeek(until, offset)
@@ -118,14 +112,12 @@ const Calendar = ({
 
   return (
     <div>
-      <div {...styles.navigation}>
-        <button onClick={() => offsetDates(-1)}>Previous</button>
-        {reformatUrlDate(from, datePickerFormat)} -{' '}
-        {reformatUrlDate(until, datePickerFormat)}
-        <button onClick={() => offsetDates(1)}>Next</button>
-        <button onClick={resetDates}>Reset</button>
-        <br />
-      </div>
+      <Nav>
+        <NavButton goBack={offsetDates(-1)} />
+        <CurrentDates from={from} until={until} />
+        <NavButton goForth={offsetDates(1)} />
+        <ResetLink reset={resetDates} />
+      </Nav>
       <div {...styles.container}>
         {calendar.map(day => (
           <Day
