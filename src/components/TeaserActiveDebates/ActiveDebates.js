@@ -176,6 +176,7 @@ ActiveDebates.data = {
           // - max 2 for first discussion, max 1 for the rest
           const nodes = discussion.comments.nodes.filter(comment => {
             if (
+              !comment.published ||
               (!comment.preview && !comment.highlight) ||
               !remainingComments ||
               !remainingCommentsPerDiscussion ||
@@ -241,6 +242,7 @@ query getFrontDiscussions($lastDays: Int!, $first: Int!, $featured: Int!) {
         totalCount
         nodes {
           id
+          published
           preview(length: 240) {
             string
             more
