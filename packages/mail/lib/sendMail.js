@@ -51,7 +51,7 @@ module.exports = async (mail, context, log) => {
       // Default method to send emails
       const mandrill = MandrillInterface({ logger: console })
       if (mandrill.isUsable(mail, message)) {
-        return mandrill.send(mail)
+        return mandrill.send(message)
       }
 
       return [{ error: 'No mailing interface usable', status: 'error' }]
