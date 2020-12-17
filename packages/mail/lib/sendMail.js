@@ -13,6 +13,7 @@ const {
   DEFAULT_MAIL_FROM_ADDRESS,
   DEFAULT_MAIL_FROM_NAME,
   SEND_MAILS_TAGS,
+  SEND_MAILS_SUBJECT_PREFIX,
 } = process.env
 
 // usage
@@ -33,6 +34,10 @@ module.exports = async (mail, context, log) => {
   mail.from_email = mail.fromEmail || DEFAULT_MAIL_FROM_ADDRESS
   mail.from_name = mail.fromName || DEFAULT_MAIL_FROM_NAME
   mail.tags = tags
+  mail.subject =
+    (SEND_MAILS_SUBJECT_PREFIX &&
+      `[${SEND_MAILS_SUBJECT_PREFIX}] ${mail.subject}`) ||
+    mail.subject
   delete mail.fromName
   delete mail.fromEmail
 
