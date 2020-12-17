@@ -22,6 +22,7 @@ const {
   DEFAULT_MAIL_FROM_ADDRESS,
   DEFAULT_MAIL_FROM_NAME,
   SEND_MAILS_TAGS,
+  SEND_MAILS_SUBJECT_PREFIX,
   FRONTEND_BASE_URL,
   SG_FONT_STYLES,
   SG_FONT_FACES,
@@ -247,7 +248,10 @@ module.exports = async (mail, context, log) => {
 
   const message = {
     to: [{ email: mail.to }],
-    subject: mail.subject,
+    subject:
+      (SEND_MAILS_SUBJECT_PREFIX &&
+        `[${SEND_MAILS_SUBJECT_PREFIX}] ${mail.subject}`) ||
+      mail.subject,
     from_email: mail.fromEmail || DEFAULT_MAIL_FROM_ADDRESS,
     from_name: mail.fromName || DEFAULT_MAIL_FROM_NAME,
     html,
