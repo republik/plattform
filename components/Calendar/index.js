@@ -89,17 +89,11 @@ const Calendar = ({
     query,
     query: { from, until }
   },
-  data: { reposSearch: repos }
+  data
 }) => {
-  const [calendar, setCalendar] = useState([])
-
   useEffect(() => {
     !(from && until) && resetDates()
   }, [])
-
-  useEffect(() => {
-    setCalendar(getPublicationCalendar(from, until, repos))
-  }, [from, until, repos])
 
   const changeDates = dates =>
     Router.replaceRoute('index', { ...query, ...dates })
@@ -115,6 +109,12 @@ const Calendar = ({
       from: getUrlWeekStart(now),
       until: getUrlWeekEnd(now)
     })
+
+  const calendar = getPublicationCalendar(
+    from,
+    until,
+    data?.reposSearch?.nodes || []
+  )
 
   return (
     <div {...styles.container}>
@@ -144,19 +144,19 @@ export default compose(
       router: {
         query: { from, until }
       }
-    }) => {
-      return {
-        fetchPolicy: 'network-only',
-        ssr: false,
-        notifyOnNetworkStatusChange: true,
-        variables: {
-          publishDateRange: from &&
-            until && {
-              from,
-              until
-            }
+    }) => ({
+      fetchPolicy: 'network-only',
+      variables: {
+        publishDateRange: {
+          from,
+          until
         }
       }
-    }
+    }),
+    skip: ({
+      router: {
+        query: { from, until }
+      }
+    }) => !from || !until
   })
 )(Calendar)

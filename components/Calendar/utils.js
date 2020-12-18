@@ -29,18 +29,19 @@ export const offsetUrlWeek = (urlDate, offset) => {
 export const isCurrentWeek = urlDate =>
   +timeMonday.floor(now) === +parseUrlDate(urlDate)
 
-export const isPast = urlDate => +now > +parseUrlDate(urlDate)
+export const isPast = urlDate => +timeDay.floor(now) > +parseUrlDate(urlDate)
 
 export const getDaysFromUrl = (urlDateFrom, urlDateUntil) =>
   timeDay
     .range(parseUrlDate(urlDateFrom), parseUrlDate(urlDateUntil))
     .map(getUrlDate)
 
-export const getPublicationCalendar = (from, until, repos = { nodes: [] }) => {
+export const getPublicationCalendar = (from, until, repos) => {
   if (!from || !until) return
-  const reposByDay = group(repos.nodes, repo =>
+  const reposByDay = group(repos, repo =>
     getUrlDate(new Date(repo.meta.publishDate))
   )
+  console.log(repos, reposByDay)
   return getDaysFromUrl(from, until).map(day => ({
     date: day,
     repos: reposByDay.get(day) || []
