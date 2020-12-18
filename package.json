@@ -19,7 +19,7 @@
     "lint": "eslint --fix .",
     "precommit": "npm run test:unit && lint-staged",
     "translations": "gsheets --key=1qPubCKz2YzbcFkRfF0MrgRqD0KLsgRPxoZfG5G3tHOA --title=live --pretty --out lib/translations.json",
-    "sg:link": "./scripts/sg_link.sh" , "preinstall": "npm run sg:unlink",
+    "sg:link": "./scripts/sg_link.sh",
     "sg:unlink": "./scripts/sg_unlink.sh"
   },
   "repository": {
@@ -67,7 +67,7 @@
   },
   "dependencies": {
     "@orbiting/remark-preset": "^1.2.4",
-    "@project-r/styleguide": "10.8.0",
+    "@project-r/styleguide": "10.11.0",
     "@project-r/template-newsletter": "^1.5.0",
     "apollo-cache-inmemory": "^1.6.6",
     "apollo-client": "^2.6.10",
