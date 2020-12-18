@@ -115,7 +115,10 @@ const EditMeta = ({ publishDate, repoId, propagateEditing, editRepoMeta }) => {
                 repoId,
                 publishDate: parsedValue ? parsedValue.toISOString() : null
               })
-                .then(ref.blur)
+                .then(() => {
+                  resetForm()
+                  ref.blur()
+                })
                 .catch(() => {
                   setDisabled(false)
                 })

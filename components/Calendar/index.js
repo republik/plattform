@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import gql from 'graphql-tag'
 import { css } from 'glamor'
 import { compose, graphql } from 'react-apollo'
