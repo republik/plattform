@@ -1,18 +1,15 @@
-export const placeholders = {
+// TODOS: put in ENV?
+export const placeholdersConfig = {
   newsletters: [
     {
-      matchDate: null,
-      matchRepo: null,
-      placeholderRepo: {
-        meta: {
-          publishDate: null
-        }
-      }
+      publicationDays: [1, 2, 3, 4, 5],
+      publicationTime: '4:30',
+      repoId: 'template-www'
     },
     {
-      matchDate: null,
-      matchRepo: null,
-      placeholderRepo: null
+      publicationDays: [6],
+      publicationTime: '05:30',
+      repoId: 'template-weekend'
     }
   ]
 }

@@ -757,7 +757,9 @@ export class EditorPage extends Component {
       didUnlock
     } = this.state
 
-    const isTemplate = repo ? repo.isTemplate : router.query.isTemplate
+    const isTemplate = repo
+      ? repo.isTemplate
+      : router.query.isTemplate === 'true'
     const isNew = commitId === 'new'
     const error = data.error || templateError || this.state.error
     const showLoading =
