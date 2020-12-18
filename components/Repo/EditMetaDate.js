@@ -55,14 +55,30 @@ const editRepoMeta = gql`
   }
 `
 
-const EditMeta = ({ publishDate, repoId, editRepoMeta }) => {
+const PublishDate = ({ date }) =>
+  date ? (
+    <span>
+      {displayDateTime(date)}{' '}
+      <EditIcon style={{ marginTop: -4, marginLeft: 5 }} />
+    </span>
+  ) : null
+
+const EditMeta = ({ publishDate, repoId, propagateEditing, editRepoMeta }) => {
   const [editing, setEditing] = useState(false)
   const [disabled, setDisabled] = useState(false)
   const [formValue, setFormValue] = useState(undefined)
   const [ref, setRef] = useState(null)
 
   useEffect(() => {
-    if (ref) ref.focus()
+    propagateEditing && propagateEditing(editing)
+  }, [editing])
+
+  useEffect(() => {
+    if (ref) {
+      ref.focus()
+    } else {
+      resetForm()
+    }
   }, [ref])
 
   const resetForm = () => {
@@ -99,14 +115,13 @@ const EditMeta = ({ publishDate, repoId, editRepoMeta }) => {
                 repoId,
                 publishDate: parsedValue ? parsedValue.toISOString() : null
               })
-                .then(resetForm)
+                .then(ref.blur)
                 .catch(() => {
                   setDisabled(false)
                 })
-              ref.blur()
             }
             if (event.key === 'Escape') {
-              resetForm()
+              ref.blur()
             }
           }}
           onBlur={resetForm}
@@ -115,9 +130,7 @@ const EditMeta = ({ publishDate, repoId, editRepoMeta }) => {
           mask={dateMask}
         />
       ) : (
-        <span>
-          {displayDateTime(publishDate)} <EditIcon />
-        </span>
+        <PublishDate date={publishDate} />
       )}
     </span>
   )

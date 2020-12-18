@@ -37,11 +37,10 @@ export const getDaysFromUrl = (urlDateFrom, urlDateUntil) =>
     .map(getUrlDate)
 
 export const getPublicationCalendar = (from, until, repos) => {
-  if (!from || !until) return
+  if (!from || !until) return []
   const reposByDay = group(repos, repo =>
     getUrlDate(new Date(repo.meta.publishDate))
   )
-  console.log(repos, reposByDay)
   return getDaysFromUrl(from, until).map(day => ({
     date: day,
     repos: reposByDay.get(day) || []

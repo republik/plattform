@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { useMemo, useState } from 'react'
 import { css } from 'glamor'
 import { Link } from '../../lib/routes'
 import { fontStyles, useColorContext, inQuotes } from '@project-r/styleguide'
@@ -42,6 +42,7 @@ const CommitMsg = ({ msg }) => (
 
 const Repo = ({ repo, isNewsletter, isPast }) => {
   const [colorScheme] = useColorContext()
+  const [editing, setEditing] = useState(false)
   const {
     id,
     currentPhase,
@@ -51,6 +52,7 @@ const Repo = ({ repo, isNewsletter, isPast }) => {
     () =>
       css({
         borderColor: colorScheme.getCSSColor('divider'),
+        color: editing && colorScheme.getCSSColor('text'),
         backgroundColor: colorScheme.getCSSColor(
           isNewsletter ? 'hover' : 'default'
         ),
@@ -60,7 +62,7 @@ const Repo = ({ repo, isNewsletter, isPast }) => {
           }
         }
       }),
-    [colorScheme, isNewsletter]
+    [colorScheme, isNewsletter, editing]
   )
   const label = getLabel(repo)
   return (
@@ -78,7 +80,11 @@ const Repo = ({ repo, isNewsletter, isPast }) => {
                 {...styles.editDate}
                 {...colorScheme.set('color', 'textSoft')}
               >
-                <EditMetaDate publishDate={publishDate} repoId={id} />
+                <EditMetaDate
+                  publishDate={publishDate}
+                  repoId={id}
+                  propagateEditing={setEditing}
+                />
               </div>
               <Phase phase={currentPhase} discrete={isPast} />
             </>

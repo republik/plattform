@@ -12,9 +12,6 @@ const styles = {
     display: 'flex',
     flexDirection: 'column'
   }),
-  containerPast: css({
-    opacity: 0.8
-  }),
   reposContainer: css({
     borderLeftWidth: 1,
     borderLeftStyle: 'solid',
@@ -71,7 +68,6 @@ const Day = ({ day: { date, repos }, isPast }) => {
   return (
     <div
       {...styles.container}
-      {...(isPast && styles.containerPast)}
       {...colorScheme.set('color', isPast ? 'textSoft' : 'text')}
     >
       <DateHeading date={date} />
