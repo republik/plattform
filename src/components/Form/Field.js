@@ -41,17 +41,7 @@ const styles = {
     borderRadius: 0,
     backgroundColor: 'transparent'
   }),
-  codeField: css({
-    fontFamily: 'Courier, Courier New, monospace',
-    fontSize: 14
-  }),
   labelText: css({
-    position: 'absolute',
-    left: X_PADDING,
-    top: LINE_HEIGHT + Y_PADDING,
-    transition: 'top 200ms, font-size 200ms'
-  }),
-  labelTextCode: css({
     position: 'absolute',
     left: X_PADDING,
     top: LINE_HEIGHT + Y_PADDING,
@@ -135,8 +125,7 @@ const Field = ({
   onDec,
   icon,
   disabled,
-  value,
-  isCodeField
+  value
 }) => {
   let [isFocused, setIsFocused] = useState(false)
   const [isValidating, setIsValidating] = useState(false)
@@ -183,8 +172,7 @@ const Field = ({
     styles.field,
     styleRules.field,
     browserIconStyle,
-    iconStyle,
-    isCodeField && styles.codeField
+    iconStyle
   )
 
   return (
