@@ -72,7 +72,6 @@ packages/publikator/seeds/seeds.json
 local
 
 # files generated from typescript
-packages/assets/express/paymentslip.js
 packages/auth/index.js
 packages/auth/lib/index.js
 packages/auth/lib/transformUser.js
