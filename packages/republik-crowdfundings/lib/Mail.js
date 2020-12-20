@@ -909,7 +909,7 @@ mail.getPledgeMergeVars = async (
         name: 'not_paymentslip',
         content: payment.method !== 'PAYMENTSLIP',
       },
-      paymentslip.isRedeemable(payment) && {
+      paymentslip.isApplicable(payment) && {
         type: 'application/pdf',
         name: `Einzahlungsschein ${payment.hrid}.pdf`,
         content: (await paymentslip.generate(payment)).toString('base64'),

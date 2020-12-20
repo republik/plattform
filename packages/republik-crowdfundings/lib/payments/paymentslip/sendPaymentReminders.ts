@@ -246,7 +246,7 @@ async function send({
         { name: 'COMPANY_NAME', content: payment.companyName },
       ],
       attachments: [
-        paymentslip.isRedeemable(resolvedPayment) && {
+        paymentslip.isApplicable(resolvedPayment) && {
           type: 'application/pdf',
           name: `Einzahlungsschein ${payment.hrid}.pdf`,
           content: (await paymentslip.generate(resolvedPayment)).toString(

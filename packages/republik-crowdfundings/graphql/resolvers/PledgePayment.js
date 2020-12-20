@@ -49,7 +49,7 @@ module.exports = {
       context,
     )
 
-    if (!paymentslip.isRedeemable(resolvedPayment)) {
+    if (!paymentslip.isApplicable(resolvedPayment)) {
       return null
     }
 

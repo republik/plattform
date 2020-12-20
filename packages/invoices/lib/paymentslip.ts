@@ -129,7 +129,7 @@ export async function resolve(
   }
 }
 
-export function isRedeemable(payment: PaymentResolved): boolean {
+export function isApplicable(payment: PaymentResolved): boolean {
   if (!payment.id) {
     return false
   }

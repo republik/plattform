@@ -26,7 +26,7 @@ const middleware = async (
     const { hrid } = req.params
     const payment = await paymentslip.resolve({ hrid }, context)
 
-    if (!paymentslip.isRedeemable(payment)) {
+    if (!paymentslip.isApplicable(payment)) {
       return next()
     }
 
