@@ -12,6 +12,7 @@ const {
   timeFormat,
   formatPriceChf,
 } = require('@orbiting/backend-modules-formats')
+const { paymentslip } = require('@orbiting/backend-modules-invoices')
 
 const { getLastEndDate } = require('./utils')
 
@@ -194,6 +195,14 @@ mail.sendPledgeConfirmations = async ({ userId, pgdb, t }) => {
 
       const templateName = `pledge_${package_.name.toLowerCase()}`
 
+      const pledgeMergeVars = await mail.getPledgeMergeVars(
+        { pledge, user, package_ },
+        { pgdb, t },
+      )
+
+      const globalMergeVars = pledgeMergeVars.filter((v) => !v.type)
+      const attachments = pledgeMergeVars.filter((v) => !!v.type)
+
       return sendMailTemplate(
         {
           to: user.email,
@@ -201,10 +210,8 @@ mail.sendPledgeConfirmations = async ({ userId, pgdb, t }) => {
           subject: t(`api/email/${templateName}/subject`),
           templateName,
           mergeLanguage: 'handlebars',
-          globalMergeVars: await mail.getPledgeMergeVars(
-            { pledge, user, package_ },
-            { pgdb, t },
-          ),
+          globalMergeVars,
+          attachments,
         },
         { pgdb },
       )
@@ -226,6 +233,13 @@ mail.sendPaymentSuccessful = async ({ pledgeId, pgdb, t }) => {
 
   const templateName = `payment_successful_${package_.name.toLowerCase()}`
 
+  const pledgeMergeVars = await mail.getPledgeMergeVars(
+    { pledge, user, package_ },
+    { pgdb, t },
+  )
+
+  const globalMergeVars = pledgeMergeVars.filter((v) => !v.type)
+
   return sendMailTemplate(
     {
       to: user.email,
@@ -233,10 +247,7 @@ mail.sendPaymentSuccessful = async ({ pledgeId, pgdb, t }) => {
       subject: t(`api/email/${templateName}/subject`),
       templateName,
       mergeLanguage: 'handlebars',
-      globalMergeVars: await mail.getPledgeMergeVars(
-        { pledge, user, package_ },
-        { pgdb, t },
-      ),
+      globalMergeVars,
     },
     { pgdb },
   )
@@ -666,9 +677,10 @@ mail.getPledgeMergeVars = async (
     { pledgeId: pledge.id },
     { orderBy: ['createdAt desc'] },
   )
-  const payment = pledgePayment
-    ? await pgdb.public.payments.findOne({ id: pledgePayment.paymentId })
-    : {}
+  const payment = await paymentslip.resolve(
+    { id: pledgePayment.paymentId },
+    { pgdb, t },
+  )
 
   const pledgeOptions = await pgdb.public.pledgeOptions.find(
     {
@@ -880,26 +892,29 @@ mail.getPledgeMergeVars = async (
       name: 'payment_method',
       content: payment.method,
     },
-    ...(payment
-      ? [
-          {
-            name: 'HRID',
-            content: payment.hrid,
-          },
-          {
-            name: 'due_date',
-            content: dateFormat(payment.dueDate),
-          },
-          {
-            name: 'paymentslip',
-            content: payment.method === 'PAYMENTSLIP',
-          },
-          {
-            name: 'not_paymentslip',
-            content: payment.method !== 'PAYMENTSLIP',
-          },
-        ]
-      : []),
+    ...(payment?.id && [
+      {
+        name: 'HRID',
+        content: payment.hrid,
+      },
+      {
+        name: 'due_date',
+        content: dateFormat(payment.dueDate),
+      },
+      {
+        name: 'paymentslip',
+        content: payment.method === 'PAYMENTSLIP',
+      },
+      {
+        name: 'not_paymentslip',
+        content: payment.method !== 'PAYMENTSLIP',
+      },
+      paymentslip.isRedeemable(payment) && {
+        type: 'application/pdf',
+        name: `Einzahlungsschein ${payment.hrid}.pdf`,
+        content: (await paymentslip.generate(payment)).toString('base64'),
+      },
+    ]),
     {
       name: 'waiting_for_payment',
       content: pledge.status === 'WAITING_FOR_PAYMENT',
