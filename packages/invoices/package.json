@@ -20,6 +20,7 @@
     "link": "yarn link"
   },
   "dependencies": {
+    "iso-11649": "^1.0.1",
     "swissqrbill": "^2.1.0"
   }
 }

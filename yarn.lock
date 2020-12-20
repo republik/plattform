@@ -7980,6 +7980,18 @@ isexe@^2.0.0:
   resolved "https://registry.yarnpkg.com/isexe/-/isexe-2.0.0.tgz#e8fbf374dc556ff8947a10dcb0572d633f2cfa10"
   integrity sha1-6PvzdNxVb/iUehDcsFctYz8s+hA=
 
+iso-11649@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/iso-11649/-/iso-11649-1.0.1.tgz#f38fbef5f4d69aed26fdd4f6b43a7f9ad360efc7"
+  integrity sha512-Up8D8qLnqD5QNzt41cuqmq9lcc9LyVL28ou1DSNaMXOFFcYgUml3wsGBXU2MIq/mnwKIqBnWLtzjs+BSzZ4RKw==
+  dependencies:
+    iso-7064 "1.0.1"
+
+iso-7064@1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/iso-7064/-/iso-7064-1.0.1.tgz#161133ae81d8624f2b12b9ae519c11e132862d64"
+  integrity sha512-aqQcl2zsNyoTWDdUuO89zoV6BqCin8TvhpGwPyD9QR4AyWNbdGdzG6GGG6U9gB9S1E/4u+mzSW0HOoafTkrjJw==
+
 isobject@^2.0.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/isobject/-/isobject-2.1.0.tgz#f065561096a3f1da2ef46272f815c840d87e0c89"
