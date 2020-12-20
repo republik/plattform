@@ -1,5 +1,5 @@
 import React from 'react'
-import { Label, colors } from '@project-r/styleguide'
+import { A, Label, colors } from '@project-r/styleguide'
 import { chfFormat } from '../../../lib/utils/formats'
 import routes from '../../../server/routes'
 
@@ -130,7 +130,12 @@ const Table = ({ items, sort, onSort, ...props }) => {
                 {address && [address.line1, address.line2, [address.postalCode, address.city].join(' ')].filter(Boolean).join(', ')}
               </td>
               <td>{chfFormat(payment.total / 100)}</td>
-              <td>{payment.hrid}</td>
+              <td>
+                {payment.paymentslipUrl
+                  ? <A href={payment.paymentslipUrl} target='_blank'>{payment.hrid}</A>
+                  : payment.hrid
+                }
+              </td>
               <td>{payment.status}</td>
             </tr>
           )
