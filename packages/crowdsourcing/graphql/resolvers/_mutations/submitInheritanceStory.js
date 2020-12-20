@@ -1,10 +1,10 @@
-const { sendMail } = require('@orbiting/backend-modules-mail') // holt nur was in {} verlangt wurde
+const { sendMailTemplate } = require('@orbiting/backend-modules-mail') // holt nur was in {} verlangt wurde
 const { ensureStringLength } = require('@orbiting/backend-modules-utils')
 const validator = require('validator')
 
 const { CS_INHERITANCE_TO, CS_INHERITANCE_SUBJECT } = process.env
 
-module.exports = (_, args, context) => {
+module.exports = async (_, args, context) => {
   const { t } = context
   const {
     email,
@@ -65,7 +65,7 @@ ${content ? 'Erbgeschichte: ' + content : ''}
 
 `
 
-  return sendMail(
+  await sendMailTemplate(
     {
       to: CS_INHERITANCE_TO,
       subject: CS_INHERITANCE_SUBJECT,
@@ -76,4 +76,6 @@ ${content ? 'Erbgeschichte: ' + content : ''}
       logMessage: false,
     },
   )
+
+  return true
 }
