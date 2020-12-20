@@ -283,6 +283,7 @@ type PledgePayment {
   total: Int!
   status: PaymentStatus!
   hrid: String
+  paymentslipUrl: String
   pspId: String
   dueDate: DateTime
   # every payment should link to
