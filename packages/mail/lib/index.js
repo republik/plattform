@@ -3,7 +3,6 @@ const handlers = {
   getNewsletterSettings: require('./getNewsletterSettings'),
   mailLog: require('./mailLog'),
   moveNewsletterSubscriptions: require('./moveNewsletterSubscriptions'),
-  sendMail: require('./sendMail'),
   sendMailTemplate: require('./sendMailTemplate'),
   unsubscribeEmail: require('./unsubscribeEmail'),
   updateMergeFields: require('./updateMergeFields'),
