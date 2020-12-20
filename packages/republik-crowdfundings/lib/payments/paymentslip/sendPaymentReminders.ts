@@ -1,10 +1,14 @@
 import moment from 'moment'
 import { PgDb } from 'pogi'
 import { Nominal } from 'simplytyped'
-import { getAmountOfUnmatchedPayments, getLatestImportSecondsAgo } from './helpers'
+import {
+  getAmountOfUnmatchedPayments,
+  getLatestImportSecondsAgo,
+} from './helpers'
 import { formatPrice } from '@orbiting/backend-modules-formats'
 import { Context } from '@orbiting/backend-modules-types'
 import { publishFinance } from '@orbiting/backend-modules-republik/lib/slack'
+import { paymentslip } from '@orbiting/backend-modules-invoices'
 
 const { sendMailTemplate } = require('@orbiting/backend-modules-mail')
 const { PAYMENT_DEADLINE_DAYS } = require('./helpers')
@@ -48,18 +52,15 @@ export async function sendPaymentReminders(
 
   const outstandingPayments = await getOutstandingPayments(pgdb)
 
-  const [
-    firstRemindersSent,
-    secondRemindersSent
-  ] = await Promise.all([
+  const [firstRemindersSent, secondRemindersSent] = await Promise.all([
     sendFirstReminder(outstandingPayments, context, dryRun),
-    sendSecondReminder(outstandingPayments, context, dryRun)
+    sendSecondReminder(outstandingPayments, context, dryRun),
   ])
 
   const message = generateReport({
     dryRun,
     firstRemindersSent,
-    secondRemindersSent
+    secondRemindersSent,
   })
 
   await publishFinance(message)
@@ -69,7 +70,7 @@ export async function sendPaymentReminders(
 function generateReport({
   dryRun,
   firstRemindersSent,
-  secondRemindersSent
+  secondRemindersSent,
 }: {
   dryRun: boolean
   firstRemindersSent: number
@@ -228,6 +229,11 @@ async function send({
     `api/email/payment/reminder${isLast ? '/last' : ''}/default/subject`,
   ])
 
+  const resolvedPayment = await paymentslip.resolve(
+    { hrid: payment.hrid },
+    context,
+  )
+
   await sendMailTemplate(
     {
       to: payment.email,
@@ -238,6 +244,15 @@ async function send({
         { name: 'TOTAL', content: formatPrice(payment.total) },
         { name: 'HRID', content: payment.hrid },
         { name: 'COMPANY_NAME', content: payment.companyName },
+      ],
+      attachments: [
+        paymentslip.isRedeemable(resolvedPayment) && {
+          type: 'application/pdf',
+          name: `Einzahlungsschein ${payment.hrid}.pdf`,
+          content: (await paymentslip.generate(resolvedPayment)).toString(
+            'base64',
+          ),
+        },
       ],
     },
     context,
