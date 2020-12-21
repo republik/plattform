@@ -14,4 +14,12 @@ module.exports = (context) => ({
     null,
     (key, rows) => rows.filter((row) => row.userId === key),
   ),
+  byUserIdWithInactive: createDataLoader(
+    (userIds) =>
+      context.pgdb.public.discussionSuspensions.find({
+        userId: userIds,
+      }),
+    null,
+    (key, rows) => rows.filter((row) => row.userId === key),
+  ),
 })

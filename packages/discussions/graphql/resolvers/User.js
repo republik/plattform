@@ -73,4 +73,38 @@ module.exports = {
       nodes,
     }
   },
+
+  isSuspended: async (user, args, { loaders, user: me }) => {
+    if (Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter'])) {
+      return !!(await loaders.DiscussionSuspension.byUserId.load(user.id))
+        .length
+    }
+
+    return null
+  },
+  suspendedUntil: async (user, args, { loaders, user: me }) => {
+    if (Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter'])) {
+      const suspensions = await loaders.DiscussionSuspension.byUserId.load(
+        user.id,
+      )
+
+      if (suspensions.length) {
+        const until = Math.max(...suspensions.map((s) => s.endAt))
+        return new Date(until)
+      }
+    }
+
+    return null
+  },
+  suspensions: async (user, args, { pgdb, loaders, user: me }) => {
+    if (Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter'])) {
+      if (args.withInactive) {
+        return loaders.DiscussionSuspension.byUserIdWithInactive.load(user.id)
+      }
+
+      return loaders.DiscussionSuspension.byUserId.load(user.id)
+    }
+
+    return null
+  },
 }

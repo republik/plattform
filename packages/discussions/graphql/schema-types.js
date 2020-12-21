@@ -16,6 +16,10 @@ extend type User {
 
   defaultDiscussionNotificationOption: DiscussionNotificationOption
   discussionNotificationChannels: [DiscussionNotificationChannel!]!
+
+  isSuspended: Boolean
+  suspendedUntil: DateTime
+  suspensions(withInactive: Boolean): [DiscussionSuspension!]
 }
 
 enum Permission {
@@ -33,6 +37,16 @@ enum DiscussionNotificationChannel {
   WEB
   EMAIL
   APP
+}
+
+type DiscussionSuspension {
+  id: ID!
+  user: User!
+  beginAt: DateTime!
+  endAt: DateTime!
+  reason: String
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 type DiscussionRules {
