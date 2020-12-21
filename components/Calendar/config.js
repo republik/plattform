@@ -17,5 +17,12 @@ export const placeholderRepos = {
       publicationTime: '4:30',
       repoId: `${GITHUB_ORG}/template-weekend`
     }
+  ],
+  articles: [
+    {
+      publicationDays: [3],
+      publicationTime: '4:30',
+      repoId: `${GITHUB_ORG}/template-am`
+    }
   ]
 }

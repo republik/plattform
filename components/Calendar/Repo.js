@@ -13,12 +13,8 @@ import EditMetaDate from '../Repo/EditMetaDate'
 import { graphql } from 'react-apollo'
 import { GITHUB_ORG } from '../../lib/settings'
 import { getPlaceholder } from './graphql'
-import {
-  columnDateFormat,
-  getSpecialPrefix,
-  getUrlDate,
-  reformatUrlDate
-} from './utils'
+import { getSpecialPrefix, getUrlDate } from './utils'
+import withT from '../../lib/withT'
 
 const styles = {
   container: css({
@@ -47,6 +43,10 @@ const styles = {
   }),
   commitMsg: css({
     ...fontStyles.sansSerifRegular14
+  }),
+  placeholder: css({
+    ...fontStyles.sansSerifItalic,
+    textTransform: 'capitalize'
   })
 }
 
@@ -133,7 +133,7 @@ const RepoLink = ({ repo, placeholderDate, children }) => {
   )
 }
 
-const Repo = ({ repo, isNewsletter, isPast, placeholderDate }) => {
+const Repo = withT(({ t, repo, isNewsletter, isPast, placeholderDate }) => {
   const [colorScheme] = useColorContext()
   const {
     id,
@@ -152,8 +152,12 @@ const Repo = ({ repo, isNewsletter, isPast, placeholderDate }) => {
         )}
       >
         <RepoLabel repo={repo} />
-        <div {...styles.title} className='title'>
-          {placeholderDate ? '...?' : getTitle(repo)}
+        <div {...styles.title}>
+          {placeholderDate ? (
+            <span {...styles.placeholder}>{t('repo/add/submit')}</span>
+          ) : (
+            <span className='title'>{getTitle(repo)}</span>
+          )}
         </div>
         {!placeholderDate && (
           <div {...styles.status}>
@@ -170,6 +174,6 @@ const Repo = ({ repo, isNewsletter, isPast, placeholderDate }) => {
       </div>
     </RepoLink>
   )
-}
+})
 
 export default Repo
