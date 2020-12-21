@@ -13,6 +13,7 @@ import EditMetaDate from '../Repo/EditMetaDate'
 import { graphql } from 'react-apollo'
 import { GITHUB_ORG } from '../../lib/settings'
 import gql from 'graphql-tag'
+import { repoFragment } from './index'
 
 const styles = {
   container: css({
@@ -44,54 +45,13 @@ const styles = {
   })
 }
 
-// TODO: extra shared fragment for repo data (cf. index.js)
 const getPlaceholder = gql`
   query getPlaceholder($repoId: ID!) {
     repo(id: $repoId) {
-      id
-      meta {
-        publishDate
-      }
-      latestCommit {
-        id
-        date
-        message
-        author {
-          name
-        }
-        document {
-          id
-          meta {
-            template
-            title
-            series {
-              title
-            }
-            section {
-              id
-              meta {
-                title
-              }
-            }
-            format {
-              id
-              meta {
-                title
-                color
-                kind
-              }
-            }
-            dossier {
-              id
-              meta {
-                title
-              }
-            }
-          }
-        }
-      }
+      ...CalendarRepoFragment
     }
   }
+  ${repoFragment}
 `
 
 export const Placeholder = graphql(getPlaceholder, {
