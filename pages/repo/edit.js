@@ -708,7 +708,9 @@ export class EditorPage extends Component {
           editRepoMeta({
             repoId,
             publishDate
-          }).then(() => this.commitCleanup(data))
+          }).then(() => {
+            this.commitCleanup(data)
+          })
         } else {
           this.commitCleanup(data)
         }

@@ -7,6 +7,7 @@ import { displayDateTime } from './utils'
 import { timeParse, timeFormat } from 'd3-time-format'
 import { compose, graphql } from 'react-apollo'
 import gql from 'graphql-tag'
+import { EditPageRepo } from '../../lib/graphql/fragments'
 
 const loading = css.keyframes({
   'from, to': {
@@ -47,12 +48,10 @@ const formatDate = timeFormat(dateFormat)
 const editRepoMeta = gql`
   mutation editRepoMeta($repoId: ID!, $publishDate: DateTime) {
     editRepoMeta(repoId: $repoId, publishDate: $publishDate) {
-      id
-      meta {
-        publishDate
-      }
+      ...EditPageRepo
     }
   }
+  ${EditPageRepo}
 `
 
 export const withEditRepoMeta = graphql(editRepoMeta, {
