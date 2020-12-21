@@ -3,7 +3,7 @@ import { withRouter } from 'next/router'
 import { compose } from 'react-apollo'
 import { css } from 'glamor'
 
-import { linkRule } from '@project-r/styleguide'
+import { A } from '@project-r/styleguide'
 
 import { Link } from '../lib/routes'
 import withT from '../lib/withT'
@@ -25,7 +25,7 @@ const IndexNavLink = ({ isActive, route, params, label }) =>
     <span>{label} </span>
   ) : (
     <Link route={route} params={params}>
-      <a {...linkRule}>{label} </a>
+      <A href='#'>{label} </A>
     </Link>
   )
 

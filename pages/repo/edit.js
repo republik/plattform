@@ -652,7 +652,7 @@ export class EditorPage extends Component {
   commitHandler() {
     const {
       router: {
-        query: { repoId, commitId, isTemplate }
+        query: { repoId, commitId, isTemplate, publishDate }
       },
       commitMutation,
       data,
@@ -690,7 +690,8 @@ export class EditorPage extends Component {
           repoId: repoId.split('/'),
           commitId: data.commit.id,
           isTemplate: null,
-          templateRepoId: null
+          templateRepoId: null,
+          publishDate: null
         })
       })
       .catch(e => {

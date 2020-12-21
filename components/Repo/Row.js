@@ -1,14 +1,11 @@
 import React from 'react'
-import { compose, graphql } from 'react-apollo'
-import gql from 'graphql-tag'
-
 import GithubIcon from 'react-icons/lib/fa/github'
 import LockIcon from 'react-icons/lib/md/lock'
 import PublicIcon from 'react-icons/lib/md/public'
 import { renderMdast } from 'mdast-react-render'
 import { matchType } from 'mdast-react-render/lib/utils'
 
-import { linkRule, A, Label, colors } from '@project-r/styleguide'
+import { A, Label, colors } from '@project-r/styleguide'
 
 import { Link } from '../../lib/routes'
 import { intersperse } from '../../lib/utils/helpers'
@@ -72,9 +69,9 @@ const RepoRow = ({ repo, showPhases }) => {
           </>
         )}
         <Link route='repo/tree' params={{ repoId: id.split('/') }}>
-          <a {...linkRule} title={id}>
+          <A title={id} href='#'>
             {getTitle(repo)}
-          </a>
+          </A>
         </Link>
       </Td>
       <Td>
