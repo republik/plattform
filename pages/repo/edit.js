@@ -52,6 +52,7 @@ import SettingsIcon from 'react-icons/lib/fa/cogs'
 import createDebug from 'debug'
 import { DARK_MODE_KEY } from '../../components/editor/modules/meta/DarkModeForm'
 import { findTitleLeaf } from '../../lib/utils/helpers'
+import { withEditRepoMeta } from '../../components/Repo/EditMetaDate'
 
 const commitMutation = gql`
   mutation commit(
@@ -649,12 +650,35 @@ export class EditorPage extends Component {
     }
   }
 
+  commitCleanup(data) {
+    const {
+      router: {
+        query: { repoId }
+      }
+    } = this.props
+
+    this.store.clear()
+    this.concludeChanges()
+
+    this.setState({
+      committing: false
+    })
+    Router.replaceRoute('repo/edit', {
+      repoId: repoId.split('/'),
+      commitId: data.commit.id,
+      isTemplate: null,
+      templateRepoId: null,
+      publishDate: null
+    })
+  }
+
   commitHandler() {
     const {
       router: {
         query: { repoId, commitId, isTemplate, publishDate }
       },
       commitMutation,
+      editRepoMeta,
       data,
       t
     } = this.props
@@ -680,19 +704,14 @@ export class EditorPage extends Component {
       }
     })
       .then(({ data }) => {
-        this.store.clear()
-        this.concludeChanges()
-
-        this.setState({
-          committing: false
-        })
-        Router.replaceRoute('repo/edit', {
-          repoId: repoId.split('/'),
-          commitId: data.commit.id,
-          isTemplate: null,
-          templateRepoId: null,
-          publishDate: null
-        })
+        if (publishDate) {
+          editRepoMeta({
+            repoId,
+            publishDate
+          }).then(() => this.commitCleanup(data))
+        } else {
+          this.commitCleanup(data)
+        }
       })
       .catch(e => {
         console.error(e)
@@ -1027,5 +1046,6 @@ export default compose(
         })
     })
   }),
-  withUncommittedChangesMutation
+  withUncommittedChangesMutation,
+  withEditRepoMeta
 )(EditorPage)

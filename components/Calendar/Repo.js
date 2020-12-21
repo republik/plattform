@@ -111,6 +111,7 @@ const PlaceholderLink = ({ repo, placeholderDate, children }) => {
         commitId: 'new',
         title,
         schema: template,
+        templateRepoId: id,
         publishDate: placeholderDate
       }}
       passHref

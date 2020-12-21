@@ -55,6 +55,12 @@ const editRepoMeta = gql`
   }
 `
 
+export const withEditRepoMeta = graphql(editRepoMeta, {
+  props: ({ mutate }) => ({
+    editRepoMeta: variables => mutate({ variables })
+  })
+})
+
 const PublishDate = ({ date }) =>
   date ? (
     <span>
@@ -135,10 +141,4 @@ const EditMeta = ({ publishDate, repoId, editRepoMeta }) => {
   )
 }
 
-export default compose(
-  graphql(editRepoMeta, {
-    props: ({ mutate }) => ({
-      editRepoMeta: variables => mutate({ variables })
-    })
-  })
-)(EditMeta)
+export default compose(withEditRepoMeta)(EditMeta)
