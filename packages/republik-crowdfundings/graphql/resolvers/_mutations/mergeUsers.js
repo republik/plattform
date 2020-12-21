@@ -141,6 +141,7 @@ module.exports = async (_, args, context) => {
     await transaction.public.comments.update(from, to)
     await transaction.public.credentials.update(from, to)
     await transaction.public.consents.update(from, to)
+    await transaction.public.discussionSuspensions.update(from, to)
 
     await mergeCustomers({
       targetUserId: targetUser.id,
@@ -221,7 +222,7 @@ module.exports = async (_, args, context) => {
       () =>
         transaction.public.mailLog.update(
           { userId: null, email: sourceUser.email },
-          to
+          to,
         ),
       () => transaction.public.notifications.update(from, to),
       () =>
