@@ -1,6 +1,6 @@
 import React from 'react'
 import { css } from 'glamor'
-import { fontStyles, useColorContext } from '@project-r/styleguide'
+import { fontStyles } from '@project-r/styleguide'
 import {
   columnDateFormat,
   getIsoDate,
@@ -19,8 +19,6 @@ const styles = {
     flexDirection: 'column'
   }),
   reposContainer: css({
-    borderLeftWidth: 1,
-    borderLeftStyle: 'solid',
     flexGrow: 1
   }),
   dateHeading: css({
@@ -31,7 +29,6 @@ const styles = {
   templateHeading: css({
     display: 'block',
     marginBottom: 10,
-    paddingLeft: 10,
     ...fontStyles.sansSerifRegular14
   }),
   templateContainer: css({
@@ -43,11 +40,12 @@ const TemplateHeading = withT(({ t, template }) => (
   <span {...styles.templateHeading}>{t(`repo/calendar/${template}`)}</span>
 ))
 
-const ReposByTemplate = ({ template, repos = [], date, ...props }) => {
-  const placeholders =
-    (placeholdersConfig[template] || []).filter(placeholder =>
-      matchWeekDays(date, placeholder.publicationDays)
-    ) || []
+const ReposByTemplate = ({ template, repos = [], date, isPast, ...props }) => {
+  const placeholders = isPast
+    ? []
+    : (placeholdersConfig[template] || []).filter(placeholder =>
+        matchWeekDays(date, placeholder.publicationDays)
+      ) || []
 
   const reposAndPlaceholders = placeholders.reduce((acc, placeholder) => {
     const isInList = repos.find(
@@ -55,7 +53,7 @@ const ReposByTemplate = ({ template, repos = [], date, ...props }) => {
         repo.id
           .split('/')[1]
           .startsWith(placeholder.repoId.replace('template-', ''))
-      // TODO: store prefixes somewhere
+      // TODO: store prefixes somewhere template-www -> wwww-meine-intanze
     )
     return isInList
       ? acc
@@ -68,7 +66,7 @@ const ReposByTemplate = ({ template, repos = [], date, ...props }) => {
         })
   }, repos)
 
-  return repos ? (
+  return reposAndPlaceholders?.length ? (
     <div {...styles.templateContainer}>
       <TemplateHeading template={template} />
       {reposAndPlaceholders
@@ -80,9 +78,14 @@ const ReposByTemplate = ({ template, repos = [], date, ...props }) => {
         )
         .map(repo =>
           repo.isPlaceholder ? (
-            <Placeholder key={repo.repoId} placeholder={repo} {...props} />
+            <Placeholder
+              key={repo.repoId}
+              placeholder={repo}
+              isPast={isPast}
+              {...props}
+            />
           ) : (
-            <Repo key={repo.id} repo={repo} {...props} />
+            <Repo key={repo.id} repo={repo} isPast={isPast} {...props} />
           )
         )}
     </div>
@@ -93,28 +96,22 @@ const DateHeading = ({ date }) => (
   <span {...styles.dateHeading}>{reformatUrlDate(date, columnDateFormat)}</span>
 )
 
-const Day = ({ day: { date, repos }, isPast }) => {
-  const [colorScheme] = useColorContext()
+const Day = ({ day: { date, repos }, isPast, discrete }) => {
   const reposByTemplate = group(repos, repo =>
     repo.latestCommit.document.meta.template === 'editorialNewsletter'
       ? 'newsletter'
       : 'other'
   )
   return (
-    <div
-      {...styles.container}
-      {...colorScheme.set('color', isPast ? 'textSoft' : 'text')}
-    >
+    <div {...styles.container} style={{ opacity: discrete ? 0.5 : 1 }}>
       <DateHeading date={date} />
-      <div
-        {...styles.reposContainer}
-        {...colorScheme.set('borderLeftColor', 'divider')}
-      >
+      <div {...styles.reposContainer}>
         <ReposByTemplate
           repos={reposByTemplate.get('newsletter')}
           template='newsletters'
           date={date}
           isPast={isPast}
+          discrete={discrete}
           isNewsletter
         />
         <ReposByTemplate
@@ -122,6 +119,7 @@ const Day = ({ day: { date, repos }, isPast }) => {
           template='articles'
           date={date}
           isPast={isPast}
+          discrete={discrete}
         />
       </div>
     </div>

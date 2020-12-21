@@ -63,15 +63,11 @@ const PublishDate = ({ date }) =>
     </span>
   ) : null
 
-const EditMeta = ({ publishDate, repoId, propagateEditing, editRepoMeta }) => {
+const EditMeta = ({ publishDate, repoId, editRepoMeta }) => {
   const [editing, setEditing] = useState(false)
   const [disabled, setDisabled] = useState(false)
   const [formValue, setFormValue] = useState(undefined)
   const [ref, setRef] = useState(null)
-
-  useEffect(() => {
-    propagateEditing && propagateEditing(editing)
-  }, [editing])
 
   useEffect(() => {
     if (ref) {

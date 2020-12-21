@@ -1,7 +1,12 @@
 import React, { useMemo, useState } from 'react'
 import { css } from 'glamor'
 import { Link } from '../../lib/routes'
-import { fontStyles, useColorContext, inQuotes } from '@project-r/styleguide'
+import {
+  fontStyles,
+  useColorContext,
+  inQuotes,
+  colors
+} from '@project-r/styleguide'
 import { getLabel, getTitle } from '../Repo/utils'
 import { Phase } from '../Repo/Phases'
 import EditMetaDate from '../Repo/EditMetaDate'
@@ -12,16 +17,16 @@ import gql from 'graphql-tag'
 const styles = {
   container: css({
     cursor: 'pointer',
-    maxWidth: 200,
     borderWidth: 1,
     borderStyle: 'solid',
-    margin: 10,
+    margin: '0 20px 10px 0',
     padding: 5,
-    transition: 'all 0.5s'
+    ':hover .title': {
+      textDecoration: 'underline'
+    }
   }),
   title: css({
-    textDecoration: 'underline',
-    padding: '5px 0'
+    padding: '5px 5px 5px 0'
   }),
   label: css({
     marginBottom: 10,
@@ -72,6 +77,8 @@ const getPlaceholder = gql`
               id
               meta {
                 title
+                color
+                kind
               }
             }
             dossier {
@@ -97,11 +104,13 @@ export const Placeholder = graphql(getPlaceholder, {
   return repo ? <Repo repo={repo} {...props} isPlaceholder /> : null
 })
 
-const CommitMsg = ({ msg }) => (
-  <span {...styles.commitMsg}>{inQuotes(msg)}</span>
+const CommitMsg = ({ commit }) => (
+  <span {...styles.commitMsg}>
+    {commit.author.name}: {inQuotes(commit.message)}
+  </span>
 )
 
-const Repo = ({ repo, isNewsletter, isPast, isPlaceholder }) => {
+const Repo = ({ repo, isNewsletter, isPast, isPlaceholder, discrete }) => {
   const [colorScheme] = useColorContext()
   const [editing, setEditing] = useState(false)
 
@@ -113,16 +122,12 @@ const Repo = ({ repo, isNewsletter, isPast, isPlaceholder }) => {
   const colorStyles = useMemo(
     () =>
       css({
-        borderColor: colorScheme.getCSSColor('divider'),
-        color: editing && colorScheme.getCSSColor('text'),
+        borderColor: colorScheme.getCSSColor(
+          isNewsletter ? 'hover' : 'divider'
+        ),
         backgroundColor: colorScheme.getCSSColor(
           isNewsletter ? 'hover' : 'default'
-        ),
-        '@media (hover)': {
-          ':hover': {
-            borderColor: colorScheme.getCSSColor('hover')
-          }
-        }
+        )
       }),
     [colorScheme, isNewsletter, editing]
   )
@@ -133,12 +138,25 @@ const Repo = ({ repo, isNewsletter, isPast, isPlaceholder }) => {
   return (
     <Link route='repo/tree' params={{ repoId: id.split('/') }} passHref>
       <div {...styles.container} {...colorStyles}>
-        {label && <div {...styles.label}>{label}</div>}
-        <div {...styles.title}>{getTitle(repo)}</div>
+        {label && (
+          <div
+            {...styles.label}
+            style={{
+              color:
+                repo.latestCommit.document.meta.format?.meta.color ||
+                colors[repo.latestCommit.document.meta.format?.meta.kind]
+            }}
+          >
+            {label}
+          </div>
+        )}
+        <div {...styles.title} className='title'>
+          {getTitle(repo)}
+        </div>
         {!isPlaceholder && (
           <div {...styles.status}>
             {isNewsletter ? (
-              <CommitMsg msg={repo.latestCommit.message} />
+              <CommitMsg commit={repo.latestCommit} />
             ) : (
               <>
                 <div
@@ -146,13 +164,11 @@ const Repo = ({ repo, isNewsletter, isPast, isPlaceholder }) => {
                   {...styles.editDate}
                   {...colorScheme.set('color', 'textSoft')}
                 >
-                  <EditMetaDate
-                    publishDate={publishDate}
-                    repoId={id}
-                    propagateEditing={setEditing}
-                  />
+                  {!isPast && (
+                    <EditMetaDate publishDate={publishDate} repoId={id} />
+                  )}
                 </div>
-                <Phase phase={currentPhase} discrete={isPast} />
+                <Phase phase={currentPhase} />
               </>
             )}
           </div>

@@ -1,4 +1,4 @@
-// TODOS: put in ENV?
+// TODOS: put in ENV? Nooooooo!!!!!
 export const placeholdersConfig = {
   newsletters: [
     {
@@ -7,8 +7,13 @@ export const placeholdersConfig = {
       repoId: 'template-www'
     },
     {
+      publicationDays: [1, 2, 3, 4, 5],
+      publicationTime: '19:00',
+      repoId: 'template-covid-19-uhr-nl'
+    },
+    {
       publicationDays: [6],
-      publicationTime: '05:30',
+      publicationTime: '5:30',
       repoId: 'template-weekend'
     }
   ]

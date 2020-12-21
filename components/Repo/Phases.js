@@ -7,7 +7,7 @@ import { fontStyles } from '@project-r/styleguide'
 const styles = {
   phase: css({
     color: '#fff',
-    padding: '5px 10px',
+    padding: '3px 6px',
     display: 'inline-block',
     ...fontStyles.sansSerifRegular14,
     letterSpacing: 0.5
@@ -18,20 +18,13 @@ const styles = {
   })
 }
 
-export const Phase = ({
-  phase,
-  onClick,
-  disabled,
-  discrete,
-  isActive,
-  large
-}) => (
+export const Phase = ({ phase, onClick, disabled, isActive, large }) => (
   <div
     {...merge(styles.phase, large && styles.phaseLarge)}
     style={{
       backgroundColor: disabled ? 'gray' : phase.color,
       cursor: onClick ? 'pointer' : 'default',
-      opacity: discrete || (phase.count === 0 && !isActive) ? 0.5 : 1
+      opacity: phase.count === 0 && !isActive ? 0.5 : 1
     }}
     onClick={onClick}
   >

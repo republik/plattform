@@ -49,6 +49,8 @@ const reposPerWeek = gql`
                 id
                 meta {
                   title
+                  color
+                  kind
                 }
               }
               dossier {
@@ -129,7 +131,8 @@ const Calendar = ({
           <Day
             key={day.date}
             day={day}
-            isPast={isCurrentWeek(from) && isPast(day.date)}
+            isPast={isPast(day.date)}
+            discrete={isPast(day.date) && isCurrentWeek(from)}
           />
         ))}
       </div>

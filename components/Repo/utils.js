@@ -12,10 +12,10 @@ export const getLabel = repo => {
     }
   } = repo
   return (
-    (meta.series && meta.series.title) ||
-    (meta.section && meta.section.meta && meta.section.meta.title) ||
-    (meta.format && meta.format.meta && meta.format.meta.title) ||
-    (meta.dossier && meta.dossier.meta && meta.dossier.meta.title) ||
+    meta.series?.title ||
+    meta.section?.meta.title ||
+    meta.format?.meta.title ||
+    meta.dossier?.meta.title ||
     (meta.template !== 'article' &&
       t(`repo/add/template/${meta.template}`, null, meta.template))
   )
