@@ -218,6 +218,7 @@ query getFrontDiscussions($lastDays: Int!, $first: Int!, $featured: Int!) {
     id
     nodes {
       id
+      published
       displayAuthor {
         id
         ...AuthorMetaData
