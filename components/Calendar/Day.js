@@ -19,9 +19,6 @@ const styles = {
     display: 'flex',
     flexDirection: 'column'
   }),
-  reposContainer: css({
-    flexGrow: 1
-  }),
   dateHeading: css({
     display: 'block',
     marginBottom: 10,
@@ -41,24 +38,30 @@ const TemplateHeading = withT(({ t, template }) => (
   <span {...styles.templateHeading}>{t(`repo/calendar/${template}`)}</span>
 ))
 
-const Repos = ({ repos, ...props }) => (
-  <>
-    {repos
-      .sort((repo1, repo2) =>
-        ascending(
-          new Date(repo1.meta.publishDate),
-          new Date(repo2.meta.publishDate)
-        )
-      )
-      .map(repo =>
+const Repos = ({ repos, ...props }) => {
+  const sortedRepos = repos.sort((repo1, repo2) =>
+    ascending(
+      new Date(repo1.meta.publishDate),
+      new Date(repo2.meta.publishDate)
+    )
+  )
+  return (
+    <>
+      {sortedRepos.map(repo =>
         repo.isPlaceholder ? (
-          <Placeholder key={repo.repoId} placeholder={repo} {...props} />
+          <Placeholder
+            key={repo.repoId}
+            repoId={repo.repoId}
+            placeholderDate={repo.meta.publishDate}
+            {...props}
+          />
         ) : (
           <Repo key={repo.id} repo={repo} {...props} />
         )
       )}
-  </>
-)
+    </>
+  )
+}
 
 const ReposByTemplate = ({
   template,
@@ -86,6 +89,7 @@ const ReposByTemplate = ({
       <TemplateHeading template={template} />
       <Repos
         repos={reposAndPlaceholders}
+        date={date}
         isPast={isPast}
         isNewsletter={isNewsletter}
       />
@@ -106,21 +110,19 @@ const Day = ({ day: { date, repos }, isPast, discrete }) => {
   return (
     <div {...styles.container} style={{ opacity: discrete ? 0.5 : 1 }}>
       <DateHeading date={date} />
-      <div {...styles.reposContainer}>
-        <ReposByTemplate
-          repos={reposByTemplate.get('newsletter')}
-          template='newsletters'
-          date={date}
-          isPast={isPast}
-          isNewsletter
-        />
-        <ReposByTemplate
-          repos={reposByTemplate.get('other')}
-          template='articles'
-          date={date}
-          isPast={isPast}
-        />
-      </div>
+      <ReposByTemplate
+        repos={reposByTemplate.get('newsletter')}
+        template='newsletters'
+        date={date}
+        isPast={isPast}
+        isNewsletter
+      />
+      <ReposByTemplate
+        repos={reposByTemplate.get('other')}
+        template='articles'
+        date={date}
+        isPast={isPast}
+      />
     </div>
   )
 }

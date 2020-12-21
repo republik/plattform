@@ -44,7 +44,7 @@ const IndexNav = compose(
         isActive={!query.view}
       />
       {views.map(view => (
-        <>
+        <span key={view}>
           <span>&nbsp;</span>
           <IndexNavLink
             route='index'
@@ -52,7 +52,7 @@ const IndexNav = compose(
             label={t(`repo/table/nav/${view}`)}
             isActive={query.view === view}
           />
-        </>
+        </span>
       ))}
     </span>
   )

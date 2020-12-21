@@ -63,11 +63,12 @@ export const getPlaceholders = (placeholders = [], date) => {
   )
 }
 
+export const getSpecialPrefix = templateId =>
+  templateId.split('/')[1].replace(TEMPLATE_PREFIX, '')
+
 export const containsRepoFromTemplate = (repos, templateRepoId) =>
-  repos.find(repo =>
-    repo.id
-      .split('/')[1]
-      .startsWith(templateRepoId.replace(TEMPLATE_PREFIX, ''))
+  !!repos.find(repo =>
+    repo.id.split('/')[1].startsWith(getSpecialPrefix(templateRepoId))
   )
 
 export const reformatPlaceholder = (placeholder, publishDate) => ({

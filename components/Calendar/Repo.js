@@ -13,6 +13,12 @@ import EditMetaDate from '../Repo/EditMetaDate'
 import { graphql } from 'react-apollo'
 import { GITHUB_ORG } from '../../lib/settings'
 import { getPlaceholder } from './graphql'
+import {
+  columnDateFormat,
+  getSpecialPrefix,
+  getUrlDate,
+  reformatUrlDate
+} from './utils'
 
 const styles = {
   container: css({
@@ -44,15 +50,11 @@ const styles = {
   })
 }
 
-export const Placeholder = graphql(getPlaceholder, {
-  options: ({ placeholder }) => ({
-    variables: {
-      repoId: `${GITHUB_ORG}/${placeholder.repoId}`
-    }
-  })
-})(({ data: { repo }, ...props }) => {
-  return repo ? <Repo repo={repo} {...props} isPlaceholder /> : null
-})
+export const Placeholder = graphql(getPlaceholder)(
+  ({ data: { repo }, ...props }) => {
+    return repo ? <Repo repo={repo} {...props} /> : null
+  }
+)
 
 const RepoLabel = ({ repo }) => {
   const label = getLabel(repo)
@@ -90,16 +92,57 @@ const CommitMsg = ({ commit }) => (
   </span>
 )
 
-const Repo = ({ repo, isNewsletter, isPast, isPlaceholder }) => {
+const PlaceholderLink = ({ repo, placeholderDate, children }) => {
+  const {
+    id,
+    latestCommit: {
+      document: {
+        meta: { title, template }
+      }
+    }
+  } = repo
+  const urlDate = getUrlDate(new Date(placeholderDate))
+
+  return (
+    <Link
+      route='repo/edit'
+      params={{
+        repoId: [GITHUB_ORG, `${getSpecialPrefix(id)}-${urlDate}`],
+        commitId: 'new',
+        title,
+        schema: template,
+        publishDate: placeholderDate
+      }}
+      passHref
+    >
+      {children}
+    </Link>
+  )
+}
+
+const RepoLink = ({ repo, placeholderDate, children }) => {
+  const { id } = repo
+  return placeholderDate ? (
+    <PlaceholderLink repo={repo} placeholderDate={placeholderDate}>
+      {children}
+    </PlaceholderLink>
+  ) : (
+    <Link route='repo/tree' params={{ repoId: id.split('/') }} passHref>
+      {children}
+    </Link>
+  )
+}
+
+const Repo = ({ repo, isNewsletter, isPast, placeholderDate }) => {
   const [colorScheme] = useColorContext()
   const {
     id,
     currentPhase,
-    meta: { publishDate }
+    meta: { publishDate },
+    latestCommit
   } = repo
-  // TODO: correct URL + set publication date for placeholders
   return (
-    <Link route='repo/tree' params={{ repoId: id.split('/') }} passHref>
+    <RepoLink repo={repo} placeholderDate={placeholderDate}>
       <div
         {...styles.container}
         {...colorScheme.set('borderColor', isNewsletter ? 'hover' : 'divider')}
@@ -110,22 +153,22 @@ const Repo = ({ repo, isNewsletter, isPast, isPlaceholder }) => {
       >
         <RepoLabel repo={repo} />
         <div {...styles.title} className='title'>
-          {getTitle(repo)}
+          {placeholderDate ? '...?' : getTitle(repo)}
         </div>
-        {!isPlaceholder && (
+        {!placeholderDate && (
           <div {...styles.status}>
             {!isPast && !isNewsletter && (
               <PublicationDate repoId={id} publishDate={publishDate} />
             )}
             {isNewsletter ? (
-              <CommitMsg commit={repo.latestCommit} />
+              <CommitMsg commit={latestCommit} />
             ) : (
               <Phase phase={currentPhase} />
             )}
           </div>
         )}
       </div>
-    </Link>
+    </RepoLink>
   )
 }
 
