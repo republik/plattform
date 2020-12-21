@@ -1,5 +1,4 @@
-// TODOS: put in ENV? Nooooooo!!!!!
-export const placeholdersConfig = {
+export const placeholderRepos = {
   newsletters: [
     {
       publicationDays: [1, 2, 3, 4, 5],

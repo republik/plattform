@@ -3,14 +3,15 @@ import { css } from 'glamor'
 import { fontStyles } from '@project-r/styleguide'
 import {
   columnDateFormat,
-  getIsoDate,
-  matchWeekDays,
+  containsRepoFromTemplate,
+  getPlaceholders,
+  reformatPlaceholder,
   reformatUrlDate
 } from './utils'
 import Repo, { Placeholder } from './Repo'
 import { ascending, group } from 'd3-array'
 import withT from '../../lib/withT'
-import { placeholdersConfig } from './config'
+import { placeholderRepos } from './config'
 
 const styles = {
   container: css({
@@ -40,56 +41,56 @@ const TemplateHeading = withT(({ t, template }) => (
   <span {...styles.templateHeading}>{t(`repo/calendar/${template}`)}</span>
 ))
 
-const ReposByTemplate = ({ template, repos = [], date, isPast, ...props }) => {
-  const placeholders = isPast
-    ? []
-    : (placeholdersConfig[template] || []).filter(placeholder =>
-        matchWeekDays(date, placeholder.publicationDays)
-      ) || []
+const Repos = ({ repos, ...props }) => (
+  <>
+    {repos
+      .sort((repo1, repo2) =>
+        ascending(
+          new Date(repo1.meta.publishDate),
+          new Date(repo2.meta.publishDate)
+        )
+      )
+      .map(repo =>
+        repo.isPlaceholder ? (
+          <Placeholder key={repo.repoId} placeholder={repo} {...props} />
+        ) : (
+          <Repo key={repo.id} repo={repo} {...props} />
+        )
+      )}
+  </>
+)
 
-  const reposAndPlaceholders = placeholders.reduce((acc, placeholder) => {
-    const isInList = repos.find(
-      repo =>
-        repo.id
-          .split('/')[1]
-          .startsWith(placeholder.repoId.replace('template-', ''))
-      // TODO: store prefixes somewhere template-www -> wwww-meine-intanze
-    )
-    return isInList
-      ? acc
-      : acc.concat({
-          ...placeholder,
-          meta: {
-            publishDate: getIsoDate(date, placeholder.publicationTime)
-          },
-          isPlaceholder: true
-        })
-  }, repos)
+const ReposByTemplate = ({
+  template,
+  repos = [],
+  date,
+  isPast,
+  isNewsletter
+}) => {
+  const reposAndPlaceholders = isPast
+    ? repos
+    : getPlaceholders(placeholderRepos[template], date).reduce(
+        (acc, placeholder) => {
+          const isInList = containsRepoFromTemplate(repos, placeholder.repoId)
+          return isInList
+            ? acc
+            : acc.concat(reformatPlaceholder(placeholder, date))
+        },
+        repos
+      )
 
-  return reposAndPlaceholders?.length ? (
+  if (!reposAndPlaceholders.length) return null
+
+  return (
     <div {...styles.templateContainer}>
       <TemplateHeading template={template} />
-      {reposAndPlaceholders
-        .sort((repo1, repo2) =>
-          ascending(
-            new Date(repo1.meta.publishDate),
-            new Date(repo2.meta.publishDate)
-          )
-        )
-        .map(repo =>
-          repo.isPlaceholder ? (
-            <Placeholder
-              key={repo.repoId}
-              placeholder={repo}
-              isPast={isPast}
-              {...props}
-            />
-          ) : (
-            <Repo key={repo.id} repo={repo} isPast={isPast} {...props} />
-          )
-        )}
+      <Repos
+        repos={reposAndPlaceholders}
+        isPast={isPast}
+        isNewsletter={isNewsletter}
+      />
     </div>
-  ) : null
+  )
 }
 
 const DateHeading = ({ date }) => (
@@ -111,7 +112,6 @@ const Day = ({ day: { date, repos }, isPast, discrete }) => {
           template='newsletters'
           date={date}
           isPast={isPast}
-          discrete={discrete}
           isNewsletter
         />
         <ReposByTemplate
@@ -119,7 +119,6 @@ const Day = ({ day: { date, repos }, isPast, discrete }) => {
           template='articles'
           date={date}
           isPast={isPast}
-          discrete={discrete}
         />
       </div>
     </div>

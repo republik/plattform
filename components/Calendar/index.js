@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react'
-import gql from 'graphql-tag'
 import { css } from 'glamor'
 import { compose, graphql } from 'react-apollo'
 import { withRouter } from 'next/router'
@@ -15,69 +14,7 @@ import {
 } from './utils'
 import Day from './Day'
 import { CurrentDates, Nav, NavButton, ResetLink } from './Nav'
-
-export const repoFragment = `
-  fragment CalendarRepoFragment on Repo {
-    id
-    meta {
-      publishDate
-    }
-    latestCommit {
-      id
-      date
-      message
-      author {
-        name
-      }
-      document {
-        id
-        meta {
-          template
-          title
-          series {
-            title
-          }
-          section {
-            id
-            meta {
-              title
-            }
-          }
-          format {
-            id
-            meta {
-              title
-              color
-              kind
-            }
-          }
-          dossier {
-            id
-            meta {
-              title
-            }
-          }
-        }
-      }
-    }
-  }
-`
-
-const reposPerWeek = gql`
-  query repoWeek($publishDateRange: RepoPublishDateRange) {
-    reposSearch(first: 100, publishDateRange: $publishDateRange) {
-      nodes {
-        ...CalendarRepoFragment
-        currentPhase {
-          key
-          color
-          label
-        }
-      }
-    }
-  }
-  ${repoFragment}
-`
+import { reposPerWeek } from './graphql'
 
 const styles = {
   container: css({

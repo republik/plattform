@@ -1,6 +1,7 @@
 import { timeMonday, timeWeek, timeDay } from 'd3-time'
 import { swissTime } from '../../lib/utils/format'
 import { group } from 'd3-array'
+import { TEMPLATE_PREFIX } from '../../lib/settings'
 
 export const now = new Date()
 
@@ -55,3 +56,24 @@ export const getPublicationCalendar = (from, until, repos) => {
     repos: reposByDay.get(day) || []
   }))
 }
+
+export const getPlaceholders = (placeholders = [], date) => {
+  return placeholders.filter(placeholder =>
+    matchWeekDays(date, placeholder.publicationDays)
+  )
+}
+
+export const containsRepoFromTemplate = (repos, templateRepoId) =>
+  repos.find(repo =>
+    repo.id
+      .split('/')[1]
+      .startsWith(templateRepoId.replace(TEMPLATE_PREFIX, ''))
+  )
+
+export const reformatPlaceholder = (placeholder, publishDate) => ({
+  ...placeholder,
+  meta: {
+    publishDate: getIsoDate(publishDate, placeholder.publicationTime)
+  },
+  isPlaceholder: true
+})

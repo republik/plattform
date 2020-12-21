@@ -18,7 +18,12 @@ import {
   linkRule
 } from '@project-r/styleguide'
 
-import { GITHUB_ORG, TEMPLATES, REPO_PREFIX } from '../../lib/settings'
+import {
+  GITHUB_ORG,
+  TEMPLATES,
+  REPO_PREFIX,
+  TEMPLATE_PREFIX
+} from '../../lib/settings'
 import gql from 'graphql-tag'
 import { compose, graphql } from 'react-apollo'
 import { withRouter } from 'next/router'
@@ -150,7 +155,7 @@ const TemplatePicker = compose(
         onChange({
           schema: item.value,
           templateRepoId: undefined,
-          templatePrefix: undefined
+          specialPrefix: undefined
         })
       }}
     />
@@ -170,7 +175,7 @@ const TemplatePicker = compose(
             onChange({
               schema: newTemplate.value,
               templateRepoId: newTemplate.repoId,
-              templatePrefix: newTemplate.slug
+              specialPrefix: newTemplate.slug
                 ? newTemplate.slug + '-'
                 : undefined
             })
@@ -197,11 +202,11 @@ class RepoAdd extends Component {
     }
   }
   getSlug() {
-    const { title, schema, templatePrefix } = this.state
+    const { title, schema, specialPrefix } = this.state
     const { isTemplate } = this.props
     const prefix = (isTemplate
-      ? [REPO_PREFIX, 'template-']
-      : [REPO_PREFIX, templatePrefix || schemas[schema]?.repoPrefix]
+      ? [REPO_PREFIX, TEMPLATE_PREFIX]
+      : [REPO_PREFIX, specialPrefix || schemas[schema]?.repoPrefix]
     )
       .filter(Boolean)
       .join('')
