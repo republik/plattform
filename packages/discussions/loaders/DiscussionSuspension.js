@@ -1,6 +1,16 @@
 const createDataLoader = require('@orbiting/backend-modules-dataloader')
 
 module.exports = (context) => ({
+  clear: async (userId) => {
+    const {
+      loaders: {
+        DiscussionSuspension: { byUserId, byUserIdWithInactive },
+      },
+    } = context
+
+    byUserId.clear(userId)
+    byUserIdWithInactive.clear(userId)
+  },
   byUserId: createDataLoader(
     (userIds) => {
       const now = new Date()
