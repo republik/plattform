@@ -7,7 +7,7 @@ import {
   fontFamilies,
   plainButtonRule
 } from '@project-r/styleguide'
-import { datePickerFormat, reformatUrlDate } from './utils'
+import { datePickerFormat, reformatUrlDate } from '../../lib/utils/calendar'
 import withT from '../../lib/withT'
 
 const styles = {

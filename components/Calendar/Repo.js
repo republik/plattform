@@ -7,13 +7,14 @@ import {
   inQuotes,
   colors
 } from '@project-r/styleguide'
-import { getLabel, getTitle } from '../Repo/utils'
 import { Phase } from '../Repo/Phases'
 import EditMetaDate from '../Repo/EditMetaDate'
 import { graphql } from 'react-apollo'
 import { GITHUB_ORG } from '../../lib/settings'
 import { getPlaceholder } from './graphql'
-import { getRandomString, getSpecialPrefix, getUrlDate } from './utils'
+import { getRandomString } from '../../lib/utils/name'
+import { getLabel, getTitle, getTemplateRepoPrefix } from '../../lib/utils/repo'
+import { getUrlDate } from '../../lib/utils/calendar'
 import withT from '../../lib/withT'
 
 const styles = {
@@ -109,7 +110,7 @@ const PlaceholderLink = ({ repo, placeholderDate, children }) => {
       params={{
         repoId: [
           GITHUB_ORG,
-          `${getSpecialPrefix(id)}-${getRandomString()}-${urlDate}`
+          `${getTemplateRepoPrefix(id)}-${getRandomString()}-${urlDate}`
         ],
         commitId: 'new',
         title,
@@ -156,11 +157,11 @@ const Repo = withT(({ t, repo, isNewsletter, isPast, placeholderDate }) => {
         )}
       >
         <RepoLabel repo={repo} />
-        <div {...styles.title}>
+        <div {...styles.title} className='title'>
           {placeholderDate ? (
             <span {...styles.placeholder}>{t('repo/add/submit')}</span>
           ) : (
-            <span className='title'>{getTitle(repo)}</span>
+            getTitle(repo)
           )}
         </div>
         {!placeholderDate && (

@@ -11,7 +11,7 @@ import {
   isPast,
   now,
   offsetUrlWeek
-} from './utils'
+} from '../../lib/utils/calendar'
 import Day from './Day'
 import { CurrentDates, Nav, NavButton, ResetLink } from './Nav'
 import { reposPerWeek } from './graphql'

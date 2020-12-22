@@ -3,11 +3,11 @@ import { css } from 'glamor'
 import MaskedInput from 'react-maskedinput'
 import EditIcon from 'react-icons/lib/md/edit'
 
-import { displayDateTime } from './utils'
 import { timeParse, timeFormat } from 'd3-time-format'
 import { compose, graphql } from 'react-apollo'
 import gql from 'graphql-tag'
 import { EditPageRepo } from '../../lib/graphql/fragments'
+import { displayDateTime } from '../../lib/utils/calendar'
 
 const loading = css.keyframes({
   'from, to': {

@@ -16,12 +16,12 @@ import { Tr, Td, TdNum } from '../Table'
 import EditMetaDate from './EditMetaDate'
 import { Phase } from './Phases'
 import {
-  displayDateTime,
   getLabel,
   getTitle,
   isPrepublished,
   isPublished
-} from './utils'
+} from '../../lib/utils/repo'
+import { displayDateTime } from '../../lib/utils/calendar'
 
 const link = {
   matchMdast: matchType('link'),

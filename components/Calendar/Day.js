@@ -3,11 +3,11 @@ import { css } from 'glamor'
 import { fontStyles } from '@project-r/styleguide'
 import {
   columnDateFormat,
-  containsRepoFromTemplate,
   getPlaceholders,
   reformatPlaceholder,
   reformatUrlDate
-} from './utils'
+} from '../../lib/utils/calendar'
+import { containsRepoFromTemplate } from '../../lib/utils/repo'
 import Repo, { Placeholder } from './Repo'
 import { ascending, group } from 'd3-array'
 import withT from '../../lib/withT'

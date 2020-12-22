@@ -155,7 +155,7 @@ const TemplatePicker = compose(
         onChange({
           schema: item.value,
           templateRepoId: undefined,
-          specialPrefix: undefined
+          templateRepoPrefix: undefined
         })
       }}
     />
@@ -175,7 +175,7 @@ const TemplatePicker = compose(
             onChange({
               schema: newTemplate.value,
               templateRepoId: newTemplate.repoId,
-              specialPrefix: newTemplate.slug
+              templateRepoPrefix: newTemplate.slug
                 ? newTemplate.slug + '-'
                 : undefined
             })
@@ -202,11 +202,11 @@ class RepoAdd extends Component {
     }
   }
   getSlug() {
-    const { title, schema, specialPrefix } = this.state
+    const { title, schema, templateRepoPrefix } = this.state
     const { isTemplate } = this.props
     const prefix = (isTemplate
       ? [REPO_PREFIX, TEMPLATE_PREFIX]
-      : [REPO_PREFIX, specialPrefix || schemas[schema]?.repoPrefix]
+      : [REPO_PREFIX, templateRepoPrefix || schemas[schema]?.repoPrefix]
     )
       .filter(Boolean)
       .join('')
