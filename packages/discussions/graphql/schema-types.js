@@ -45,6 +45,7 @@ type DiscussionSuspension {
   beginAt: DateTime!
   endAt: DateTime!
   reason: String
+  issuer: User
   createdAt: DateTime!
   updatedAt: DateTime!
 }

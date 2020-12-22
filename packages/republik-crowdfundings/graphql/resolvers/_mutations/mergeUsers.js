@@ -142,6 +142,10 @@ module.exports = async (_, args, context) => {
     await transaction.public.credentials.update(from, to)
     await transaction.public.consents.update(from, to)
     await transaction.public.discussionSuspensions.update(from, to)
+    await transaction.public.discussionSuspensions.update(
+      { issuerUserId: sourceUser.id },
+      { issuerUserId: targetUser.id },
+    )
 
     await mergeCustomers({
       targetUserId: targetUser.id,
