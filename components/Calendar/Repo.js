@@ -13,7 +13,7 @@ import EditMetaDate from '../Repo/EditMetaDate'
 import { graphql } from 'react-apollo'
 import { GITHUB_ORG } from '../../lib/settings'
 import { getPlaceholder } from './graphql'
-import { getSpecialPrefix, getUrlDate } from './utils'
+import { getRandomString, getSpecialPrefix, getUrlDate } from './utils'
 import withT from '../../lib/withT'
 
 const styles = {
@@ -45,7 +45,7 @@ const styles = {
     ...fontStyles.sansSerifRegular14
   }),
   placeholder: css({
-    ...fontStyles.sansSerifItalic,
+    fontStyle: 'italic',
     textTransform: 'capitalize'
   })
 }
@@ -107,7 +107,10 @@ const PlaceholderLink = ({ repo, placeholderDate, children }) => {
     <Link
       route='repo/edit'
       params={{
-        repoId: [GITHUB_ORG, `${getSpecialPrefix(id)}-${urlDate}`],
+        repoId: [
+          GITHUB_ORG,
+          `${getSpecialPrefix(id)}-${getRandomString()}-${urlDate}`
+        ],
         commitId: 'new',
         title,
         schema: template,
