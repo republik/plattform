@@ -146,8 +146,8 @@ exports.publishUserSuspended = async (suspensions, user, context) => {
   ].join('\n')
 
   return publish(SLACK_CHANNEL_COMMENTS_ADMIN, content, {
-    unfurl_links: true,
-    unfurl_media: true,
+    unfurl_links: false,
+    unfurl_media: false,
   })
 }
 
@@ -158,7 +158,7 @@ exports.publishUserUnsuspended = async (suspensions, user, context) => {
   ].join('\n')
 
   return publish(SLACK_CHANNEL_COMMENTS_ADMIN, content, {
-    unfurl_links: true,
-    unfurl_media: true,
+    unfurl_links: false,
+    unfurl_media: false,
   })
 }
