@@ -24,8 +24,8 @@ const IndexNavLink = ({ isActive, route, params, label }) =>
   isActive ? (
     <span>{label} </span>
   ) : (
-    <Link route={route} params={params}>
-      <A href='#'>{label} </A>
+    <Link route={route} params={params} passHref>
+      <A>{label} </A>
     </Link>
   )
 

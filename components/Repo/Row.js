@@ -68,10 +68,8 @@ const RepoRow = ({ repo, showPhases }) => {
             <br />
           </>
         )}
-        <Link route='repo/tree' params={{ repoId: id.split('/') }}>
-          <A title={id} href='#'>
-            {getTitle(repo)}
-          </A>
+        <Link route='repo/tree' params={{ repoId: id.split('/') }} passHref>
+          <A title={id}>{getTitle(repo)}</A>
         </Link>
       </Td>
       <Td>
