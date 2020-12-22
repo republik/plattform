@@ -2,7 +2,7 @@ import React from 'react'
 import { css, merge } from 'glamor'
 import { Link } from '../../lib/routes'
 import { withRouter } from 'next/router'
-import { fontStyles } from '@project-r/styleguide'
+import { A, fontStyles } from '@project-r/styleguide'
 
 const styles = {
   phase: css({
@@ -18,13 +18,14 @@ const styles = {
   })
 }
 
-export const Phase = ({ phase, onClick, disabled, isActive, large }) => (
+export const Phase = ({ phase, onClick, disabled, isActive, large, style }) => (
   <div
     {...merge(styles.phase, large && styles.phaseLarge)}
     style={{
       backgroundColor: disabled ? 'gray' : phase.color,
       cursor: onClick ? 'pointer' : 'default',
-      opacity: phase.count === 0 && !isActive ? 0.5 : 1
+      opacity: phase.count === 0 && !isActive ? 0.5 : 1,
+      ...style
     }}
     onClick={onClick}
   >
@@ -51,13 +52,17 @@ const PhaseFilter = withRouter(
             replace
             scroll={false}
             params={{ ...query, phase: isActive ? null : p.key }}
+            passHref
           >
-            <Phase
-              phase={p}
-              disabled={phase && !isActive}
-              isActive={isActive}
-              large
-            />
+            <A>
+              <Phase
+                phase={p}
+                disabled={phase && !isActive}
+                isActive={isActive}
+                large
+                style={{ cursor: 'pointer' }}
+              />
+            </A>
           </Link>
         )
       })}
