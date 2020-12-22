@@ -1,5 +1,7 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
 
+const slack = require('../../../lib/slack')
+
 const DEFAULT_INTERVAL_DAYS = 7
 
 module.exports = async (_, args, context) => {
@@ -26,5 +28,10 @@ module.exports = async (_, args, context) => {
 
   loaders.DiscussionSuspension.clear(args.id)
 
-  return loaders.User.byId.load(args.id)
+  const suspensions = await loaders.DiscussionSuspension.byUserId.load(args.id)
+  const user = await loaders.User.byId.load(args.id)
+
+  await slack.publishUserSuspended(suspensions, user, context)
+
+  return user
 }
