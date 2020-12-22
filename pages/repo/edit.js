@@ -763,7 +763,7 @@ export class EditorPage extends Component {
       uncommittedChanges,
       t
     } = this.props
-    const { repoId, commitId } = router.query
+    const { repoId, commitId, publishDate } = router.query
     const { loading, repo } = data
     const { loading: templateLoading, error: templateError } = templateData
     const {
@@ -782,6 +782,10 @@ export class EditorPage extends Component {
     const isTemplate = repo
       ? repo.isTemplate
       : router.query.isTemplate === 'true'
+    const meta = {
+      ...repo?.meta,
+      publishDate: publishDate || repo?.meta?.publishDate
+    }
     const isNew = commitId === 'new'
     const error = data.error || templateError || this.state.error
     const showLoading =
@@ -895,7 +899,7 @@ export class EditorPage extends Component {
                     ref={this.editorRef}
                     schema={schema}
                     isTemplate={isTemplate}
-                    meta={repo ? repo.meta : {}}
+                    meta={meta}
                     value={editorState}
                     onChange={this.changeHandler}
                     onDocumentChange={this.documentChangeHandler}
