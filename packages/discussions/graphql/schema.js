@@ -91,6 +91,9 @@ type mutations {
     content: String
     targets: [CommentFeaturedTarget!]
   ): Comment!
+
+  suspendUser(id: ID!, until: DateTime, reason: String): User!
+  unsuspendUser(id: ID!): User!
 }
 
 type subscriptions {

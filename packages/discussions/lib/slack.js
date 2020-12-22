@@ -135,3 +135,30 @@ exports.publishCommentFeatured = async (
     unfurl_media: false,
   })
 }
+
+exports.publishUserSuspended = async (suspensions, user, context) => {
+  const until = Math.max(...suspensions.map((s) => s.endAt))
+
+  const content = [
+    `:children_crossing: *${getProfileLink(user)} suspended*`,
+    `ends on ${new Date(until).toISOString()}`,
+    `issued by ${getProfileLink(context.user)}`,
+  ].join('\n')
+
+  return publish(SLACK_CHANNEL_COMMENTS_ADMIN, content, {
+    unfurl_links: true,
+    unfurl_media: true,
+  })
+}
+
+exports.publishUserUnsuspended = async (suspensions, user, context) => {
+  const content = [
+    `:dove_of_peace: *${getProfileLink(user)} unsuspended early*`,
+    `by ${getProfileLink(context.user)}`,
+  ].join('\n')
+
+  return publish(SLACK_CHANNEL_COMMENTS_ADMIN, content, {
+    unfurl_links: true,
+    unfurl_media: true,
+  })
+}
