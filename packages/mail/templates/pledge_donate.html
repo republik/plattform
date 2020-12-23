@@ -43,7 +43,9 @@
                   <td style="padding: 20px">
                     <p>Guten Tag</p>
                     <p>
-                      Herzlichen Dank für Ihre grosszügige Spende!<br />
+                      Herzlichen Dank für Ihre grosszügige Spende.
+                    </p>
+                    <p>
                       Und die Unterstützung unseres einzigartigen Projektes
                       gegen den Zynismus, den Vormarsch der Autoritären und
                       gegen die Diktatur der Angst.
@@ -60,38 +62,16 @@
                       unserer Demokratie.
                     </p>
 
-                    {{#if `payment_method == "PAYMENTSLIP"`}}
+                    {{#if paymentslip}}
                     <p>
-                      Wichtige Informationen zu den Zahlungsformalitäten Ihrer
-                      Spende:
+                      Anbei finden Sie eine QR-Rechnung. Wir bitten Sie, den
+                      Gesamtbetrag in Höhe von {{total_formatted}} bis am
+                      {{due_date}} zu begleichen.
                     </p>
                     <p>
-                      Sie haben den Weg der Banküberweisung für Ihre Spende
-                      gewählt.<br />
-                      Bitte überweisen Sie {{total_formatted}} an:
-                    </p>
-                    <p>
-                      PC 61-11760-6<br />
-                      IBAN: CH50 0900 0000 6101 1760 6<br />
-                      BIC: POFICHBEXXX
-                    </p>
-                    <p>
-                      lautend auf:<br />
-                      Project R Genossenschaft<br />
-                      Sihlhallenstrasse 1<br />
-                      8004 Zürich
-                    </p>
-                    <p>
-                      <strong
-                        >Bitte vergessen Sie nicht, {{HRID}} in das Feld
-                        «Betreff» des Einzahlungsscheins zu schreiben, sonst
-                        funktioniert die Zuordnung nicht. Danke!</strong
-                      >
-                    </p>
-                    {{else}}
-                    <p>
-                      Ihre Spende von {{total_formatted}} ist erfolgreich bei
-                      uns eingegangen, vielen Dank!
+                      Die QR-Rechnung ersetzt den Einzahlungsschein. Sie können damit
+                      die Zahlung via Mobile-Banking, E-Banking oder am Schalter bei
+                      Bank und Post auslösen.
                     </p>
                     {{/if}}
 

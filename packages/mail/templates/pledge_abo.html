@@ -42,12 +42,6 @@
                 <tr>
                   <td style="padding: 20px">
                     <p>Guten Tag</p>
-                    <p>
-                      Und willkommen an Bord!<br />
-                      Wir freuen uns sehr, Sie bei der Republik begrüssen zu
-                      dürfen.
-                    </p>
-
                     {{#if waiting_for_payment}}
                     <p>
                       Wir sind Ihnen sehr dankbar für Ihren grosszügigen
@@ -74,54 +68,9 @@
                         >Hier finden Sie die Gebrauchsanleitung</a
                       >, die die wichtigsten davon klärt.
                     </p>
-                    <p>
-                      Wir schicken Ihnen, unserer neusten Verlegerin, unserem
-                      neusten Verleger, auch regelmässig Neuigkeiten aus
-                      Redaktion und Verlag: zu Vorhaben, Hintergründen,
-                      Entscheidungen und Fehlern. Sie können Kritik üben und
-                      Vorschläge machen. Und sich mit Ihren Kolleginnen und
-                      Kollegen in der Verlagsetage austauschen.
-                    </p>
                     {{/if}}
 
-                    <p>
-                      <strong
-                        >Informationen zur Zahlung Ihrer Mitgliedschaft:</strong
-                      >
-                    </p>
-
-                    {{#if `payment_method != "PAYMENTSLIP"`}}
-                    <p>
-                      Ihre Zahlung ist erfolgreich bei uns eingegangen,
-                      herzlichen Dank!
-                    </p>
-                    {{/if}} {{#if `payment_method == "PAYMENTSLIP"`}}
-                    <p>
-                      Sie haben eine Banküberweisung als Zahlungsweg gewählt.
-                    </p>
-                    <p>
-                      Bitte überweisen Sie {{total_formatted}} bis spätestens
-                      <strong>{{due_date}}</strong> an:
-                    </p>
-                    <p>
-                      PC 61-11760-6<br />
-                      IBAN: CH50 0900 0000 6101 1760 6<br />
-                      BIC: POFICHBEXXX
-                    </p>
-                    <p>lautend auf:</p>
-                    <p>
-                      Project R Genossenschaft<br />
-                      Sihlhallenstrasse 1<br />
-                      8004 Zürich
-                    </p>
-                    <p>
-                      <strong
-                        >Bitte vergessen Sie nicht, {{HRID}} in das Feld
-                        «Betreff» des Einzahlungsscheins zu schreiben, sonst
-                        funktioniert die Zuordnung nicht. Danke!</strong
-                      >
-                    </p>
-                    {{/if}}
+                    <p>Hier die wichtigsten Informationen über Ihren Kauf.</p>
 
                     <ul>
                       {{#options}}
@@ -153,9 +102,21 @@
                     </p>
                     {{/if}} {{/unless}}
 
+                    {{#if paymentslip}}
                     <p>
-                      Vielen Dank!<br />
-                      Und viel Vergnügen beim Start mit der Republik.
+                      Anbei finden Sie eine QR-Rechnung. Wir bitten Sie, den
+                      Gesamtbetrag in Höhe von {{total_formatted}} bis am
+                      {{due_date}} zu begleichen.
+                    </p>
+                    <p>
+                      Die QR-Rechnung ersetzt den Einzahlungsschein. Sie können damit
+                      die Zahlung via Mobile-Banking, E-Banking oder am Schalter bei
+                      Bank und Post auslösen.
+                    </p>
+                    {{/if}}
+
+                    <p>
+                      Wir wünschen Ihnen viel Vergnügen mit der Republik.
                     </p>
                     <p>Ihre Crew der Republik</p>
                   </td>
