@@ -145,7 +145,7 @@ export function isApplicable(payment: PaymentResolved): boolean {
   return true
 }
 
-function toCountryCode(string: string): string {
+function getCountryCode(string: string): string {
   switch (string.trim().toLowerCase()) {
     case 'deutschland':
       return 'DE'
@@ -169,7 +169,7 @@ function toCountryCode(string: string): string {
   }
 }
 
-function toSwissQrBillData(payment: PaymentResolved): BillData {
+function getSwissQrBillData(payment: PaymentResolved): BillData {
   if (!payment.hrid) {
     throw new Error('Payment HR-ID missing')
   }
@@ -195,7 +195,7 @@ function toSwissQrBillData(payment: PaymentResolved): BillData {
   return {
     currency: 'CHF',
     amount: payment.total / 100,
-    reference: toReference(`HRID${payment.hrid}`),
+    reference: getReference(payment.hrid),
     message: `HR-ID: ${payment.hrid} (via QR)`,
     creditor: {
       account,
@@ -203,7 +203,7 @@ function toSwissQrBillData(payment: PaymentResolved): BillData {
       address: creditorAddress.line1,
       zip: Number(creditorAddress.postalCode),
       city: creditorAddress.city,
-      country: toCountryCode(creditorAddress.country),
+      country: getCountryCode(creditorAddress.country),
     },
     ...(debtorAddress &&
       Number(debtorAddress.postalCode) && {
@@ -212,13 +212,13 @@ function toSwissQrBillData(payment: PaymentResolved): BillData {
           address: debtorAddress.line1,
           zip: Number(debtorAddress.postalCode),
           city: debtorAddress.city,
-          country: toCountryCode(creditorAddress.country),
+          country: getCountryCode(creditorAddress.country),
         },
       }),
   }
 }
 
-export function toReference(hrid: string, pretty?: boolean): string {
+export function getReference(hrid: string, pretty?: boolean): string {
   if (!hrid) {
     throw new Error('hrid is missing')
   }
@@ -230,7 +230,7 @@ export function toReference(hrid: string, pretty?: boolean): string {
 }
 
 export async function generate(payment: PaymentResolved): Promise<Buffer> {
-  const data = await toSwissQrBillData(payment)
+  const data = await getSwissQrBillData(payment)
 
   return new Promise((resolve, reject) => {
     try {
