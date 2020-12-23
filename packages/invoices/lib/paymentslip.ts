@@ -196,7 +196,6 @@ function getSwissQrBillData(payment: PaymentResolved): BillData {
     currency: 'CHF',
     amount: payment.total / 100,
     reference: getReference(payment.hrid),
-    message: `HR-ID: ${payment.hrid} (via QR)`,
     creditor: {
       account,
       name: creditorAddress.name,
