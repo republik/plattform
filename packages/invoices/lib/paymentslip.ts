@@ -1,5 +1,5 @@
 import { PDF, data as BillData } from 'swissqrbill'
-import { generate as generateReference } from 'iso-11649'
+import { generate as generateReference } from 'node-iso11649'
 
 import { Context } from '@orbiting/backend-modules-types'
 
