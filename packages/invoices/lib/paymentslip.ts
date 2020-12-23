@@ -170,6 +170,10 @@ function toCountryCode(string: string): string {
 }
 
 function toSwissQrBillData(payment: PaymentResolved): BillData {
+  if (!payment.hrid) {
+    throw new Error('Payment HR-ID missing')
+  }
+
   const account = payment?.pledge?.package?.bankAccount?.iban
 
   if (!account) {
@@ -191,7 +195,7 @@ function toSwissQrBillData(payment: PaymentResolved): BillData {
   return {
     currency: 'CHF',
     amount: payment.total / 100,
-    reference: generateReference(`HRID${payment.hrid}`),
+    reference: toReference(`HRID${payment.hrid}`),
     message: `HR-ID: ${payment.hrid} (via QR)`,
     creditor: {
       account,
@@ -212,6 +216,17 @@ function toSwissQrBillData(payment: PaymentResolved): BillData {
         },
       }),
   }
+}
+
+export function toReference(hrid: string, pretty?: boolean): string {
+  if (!hrid) {
+    throw new Error('hrid is missing')
+  }
+
+  return generateReference({
+    reference: `HRID${hrid}`,
+    pretty
+  })
 }
 
 export async function generate(payment: PaymentResolved): Promise<Buffer> {
