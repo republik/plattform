@@ -8,6 +8,9 @@ const { paymentslip } = require('@orbiting/backend-modules-invoices')
 const { PUBLIC_URL } = process.env
 
 module.exports = {
+  reference(payment, args) {
+    return paymentslip.toReference(payment.hrid, args.pretty)
+  },
   async user(payment, args, { pgdb }) {
     const users = await pgdb.query(
       `
