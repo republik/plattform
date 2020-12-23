@@ -1,6 +1,6 @@
 Guten Tag
 
-Herzlichen Dank für Ihre grosszügige Wachstums-Spende!
+Herzlichen Dank für Ihre grosszügige Wachstums-Spende.
 
 
 
@@ -10,29 +10,13 @@ eine Mitgliedschaft.
 Mit Ihrem Geld fördern Sie das Wachstum der Republik – und damit auch eine
 unabhängige vierte Gewalt als zentrale Institution unserer Demokratie.
 
-Wichtige Informationen zu den Zahlungsformalitäten Ihrer Spende:
+{{#if paymentslip}}
 
-{{#if `payment_method == "PAYMENTSLIP"`}}
+Anbei finden Sie eine QR-Rechnung. Wir bitten Sie, den Gesamtbetrag in Höhe von
+{{total_formatted}} bis am {{due_date}} zu begleichen.
 
-Sie haben den Weg der Banküberweisung für Ihre Spende gewählt.
-Bitte überweisen Sie {{total_formatted}} an:
-
-PC 61-11760-6
-IBAN: CH50 0900 0000 6101 1760 6
-BIC: POFICHBEXXX
-
-lautend auf:
-Project R Genossenschaft
-Sihlhallenstrasse 1
-8004 Zürich
-
-Bitte vergessen Sie nicht, {{HRID}} in das Feld «Betreff» des Einzahlungsscheins
-zu schreiben, sonst funktioniert die Zuordnung nicht. Danke!
-
-{{else}}
-
-Ihre Spende von {{total_formatted}} ist erfolgreich bei uns eingegangen, vielen
-Dank!
+Die QR-Rechnung ersetzt den Einzahlungsschein. Sie können damit die Zahlung via
+Mobile-Banking, E-Banking oder am Schalter bei Bank und Post auslösen.
 
 {{/if}}
 

@@ -17,29 +17,6 @@ und Respekt vor dem Menschen.
 
 Hier die wichtigsten Informationen über Ihre Verlängerung.
 
-{{#if `payment_method == "PAYMENTSLIP"`}}
-
-Sie haben Banküberweisung als Weg der Zahlung gewählt.
-Bitte überweisen Sie {{total_formatted}} bis spätestens {{due_date}}. an:
-
-PC 61-11760-6
-IBAN: CH50 0900 0000 6101 1760 6
-BIC: POFICHBEXXX
-
-lautend auf:
-Project R Genossenschaft
-Sihlhallenstrasse 1
-8004 Zürich
-
-Bitte vergessen Sie nicht, {{HRID}} in das Feld «Betreff» des Einzahlungsscheins
-zu schreiben, sonst funktioniert die Zuordnung nicht. Danke!
-
-{{else}}
-
-Ihre Zahlung in Höhe von {{total_formatted}} ist erfolgreich bei uns
-eingegangen, herzlichen Dank!
-
-{{/if}}
    {{#options}}
  * {{#if `this.oamount > 1`}} {{this.oamount}} {{this.olabel}} à
    {{this.oprice_formatted}}: {{this.ototal_formatted}} {{else}}
@@ -78,7 +55,15 @@ informiert.
 {{elseif `goodies_count > 1`}} Sie haben sich noch mehrere Republik-Objekte
 gegönnt. {{/if}} Diese liefern wir innerhalb von 7 Werktagen.
 
-{{/if}} {{/unless}}
+{{/if}} {{/unless}} {{#if paymentslip}}
+
+Anbei finden Sie eine QR-Rechnung. Wir bitten Sie, den Gesamtbetrag in Höhe von
+{{total_formatted}} bis am {{due_date}} zu begleichen.
+
+Die QR-Rechnung ersetzt den Einzahlungsschein. Sie können damit die Zahlung via
+Mobile-Banking, E-Banking oder am Schalter bei Bank und Post auslösen.
+
+{{/if}}
 
 Herzlich
 
