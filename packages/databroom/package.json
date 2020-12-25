@@ -1,0 +1,20 @@
+{
+  "name": "@orbiting/backend-modules-databroom",
+  "version": "1.0.0",
+  "description": "Checks and removes obsolete data",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/orbiting/backends.git"
+  },
+  "author": "Patrick Venetz <patrick.venetz@republik.ch>",
+  "license": "AGPL-3.0",
+  "bugs": {
+    "url": "https://github.com/orbiting/backends/issues"
+  },
+  "homepage": "https://github.com/orbiting/backends#readme",
+  "dependencies": {
+    "@types/bluebird": "^3.5.33",
+    "fast-glob": "^3.2.4"
+  }
+}
