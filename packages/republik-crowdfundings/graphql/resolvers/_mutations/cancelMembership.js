@@ -82,6 +82,7 @@ module.exports = async (_, args, context) => {
         email: user.email,
         name: user.name,
         endDate,
+        active: cancelledMembership.active,
         membershipType: membership.membershipType,
         reasonGiven: details.reason && details.reason.length > 1,
         t,
