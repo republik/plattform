@@ -246,6 +246,7 @@ mail.sendMembershipCancellation = async ({
   email,
   name,
   endDate,
+  active,
   membershipType,
   reasonGiven,
   t,
@@ -265,6 +266,10 @@ mail.sendMembershipCancellation = async ({
         {
           name: 'end_date',
           content: dateFormat(endDate),
+        },
+        {
+          name: 'membership_active',
+          content: active,
         },
         {
           name: 'membership_type',
