@@ -234,6 +234,8 @@ async function send({
     context,
   )
 
+  const creditor = resolvedPayment.pledge?.package?.bankAccount
+
   await sendMailTemplate(
     {
       to: payment.email,
@@ -241,17 +243,28 @@ async function send({
       subject: emailSubject,
       templateName: isLast ? 'cf_payment_reminder_last' : 'cf_payment_reminder',
       globalMergeVars: [
-        { name: 'TOTAL', content: formatPrice(payment.total) },
-        { name: 'HRID', content: payment.hrid },
-        { name: 'COMPANY_NAME', content: payment.companyName },
+        {
+          name: 'total',
+          content: formatPrice(resolvedPayment.total),
+        },
+        {
+          name: 'iban',
+          content: creditor?.iban?.match(/.{1,4}/g)?.join(' '),
+        },
+        {
+          name: 'reference',
+          content: paymentslip.getReference(resolvedPayment.hrid, true),
+        },
       ],
       attachments: [
-        paymentslip.isApplicable(resolvedPayment) && {
+        {
           type: 'application/pdf',
-          name: `Einzahlungsschein ${payment.hrid}.pdf`,
-          content: (await paymentslip.generate(resolvedPayment)).toString(
-            'base64',
-          ),
+          name: [
+            'QR-Rechnung',
+            creditor?.address?.name,
+            paymentslip.getReference(resolvedPayment.hrid, true)
+          ].filter(Boolean).join(' ') + '.pdf',
+          content: (await paymentslip.generate(resolvedPayment)).toString('base64'),
         },
       ],
     },
