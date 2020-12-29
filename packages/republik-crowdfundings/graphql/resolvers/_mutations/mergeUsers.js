@@ -211,9 +211,46 @@ module.exports = async (_, args, context) => {
       await transaction.public.addresses.deleteOne({ id: addressIds[0] })
     }
 
+    // anonymize user answers, as an answer record can't be assigned to another user
+    const answers = await transaction.public.answers.find(from)
+    const questionnaireIds = [...new Set(answers.map(a => a.questionnaireId))]
+    const questionnaireSubmissions = await transaction.public.questionnaireSubmissions.find({
+      ...from,
+      questionnaireId: questionnaireIds,
+    })
+
+    for (const questionnaireId of questionnaireIds) {
+      const hasSubmission = questionnaireSubmissions.find(s => s.questionnaireId === questionnaireId)
+
+      // insert questionnaireSubmission record if missing
+      if (!hasSubmission) {
+        const questionnaireAnswers = answers.filter(a => a.questionnaireId = questionnaireId)
+
+        // use latest answer.createdAt as questionnaireSubmission.createdAt
+        const latestAnswerDate = new Date(Math.max(...questionnaireAnswers.map((a) => a.createdAt)))
+
+        await transaction.public.questionnaireSubmissions.insert({
+          questionnaireId,
+          userId: from.userId,
+          createdAt: latestAnswerDate,
+          updatedAt: latestAnswerDate,
+        })
+      }
+
+      await transaction.public.answers.update(
+        { 
+          ...from,
+          questionnaireId
+        },
+        { 
+          userId: null,
+          pseudonym: uuid(),
+        }
+      )
+    }
+
     // try to move other stuff without failing
     const operations = [
-      () => transaction.public.answers.update(from, to),
       () => transaction.public.ballots.update(from, to),
       () => transaction.public.cards.update(from, to),
       () => transaction.public.collectionDocumentItems.update(from, to),
