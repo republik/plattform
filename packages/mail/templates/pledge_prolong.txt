@@ -15,7 +15,7 @@ und Respekt vor dem Menschen.
 
 {{/if}}
 
-Hier die wichtigsten Informationen über Ihre Verlängerung.
+Details zum Kauf:
 
    {{#options}}
  * {{#if `this.oamount > 1`}} {{this.oamount}} {{this.olabel}} à

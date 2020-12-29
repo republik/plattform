@@ -28,7 +28,7 @@ https://keinundaber.ch/de/literary-work/deadline/ » zu.
 
 {{/if}}
 
-Hier die wichtigsten Informationen über Ihr Investment.
+Details zum Kauf:
 
    {{#options}}
  * {{#if `this.oamount > 1`}} {{this.oamount}} {{this.olabel}} à

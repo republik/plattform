@@ -1,6 +1,6 @@
 Guten Tag
 
-Vielen Dank für Ihre Bestellung. Hier die wichtigsten Informationen dazu:
+Vielen Dank für Ihre Bestellung.
 
    {{#options}}
  * {{#if `this.oamount > 1`}} {{this.oamount}} {{this.olabel}} à

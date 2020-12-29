@@ -19,7 +19,7 @@ davon klärt.
 
 {{/if}}
 
-Hier die wichtigsten Informationen über Ihren Kauf.
+Details zum Kauf:
 
    {{#options}}
  * {{#if `this.oamount > 1`}} {{this.oamount}} {{this.olabel}} à
