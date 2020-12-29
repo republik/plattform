@@ -810,6 +810,8 @@ mail.getPledgeMergeVars = async (
     (m) => !!m.accessGranted,
   ).length
 
+  const creditor = payment.pledge?.package?.bankAccount
+
   return [
     // Purchase itself
     {
@@ -894,7 +896,7 @@ mail.getPledgeMergeVars = async (
     },
     ...(payment?.id && [
       {
-        name: 'HRID',
+        name: 'hrid',
         content: payment.hrid,
       },
       {
@@ -909,9 +911,21 @@ mail.getPledgeMergeVars = async (
         name: 'not_paymentslip',
         content: payment.method !== 'PAYMENTSLIP',
       },
+      {
+        name: 'iban',
+        content: creditor.iban.match(/.{1,4}/g).join(' '),
+      },
+      {
+        name: 'reference',
+        content: paymentslip.getReference(payment.hrid, true),
+      },
       paymentslip.isApplicable(payment) && {
         type: 'application/pdf',
-        name: `Einzahlungsschein ${payment.hrid}.pdf`,
+        name: [
+          'QR-Rechnung',
+          creditor?.address?.name,
+          paymentslip.getReference(payment.hrid, true)
+        ].filter(Boolean).join(' ') + '.pdf',
         content: (await paymentslip.generate(payment)).toString('base64'),
       },
     ]),
