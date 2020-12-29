@@ -14,9 +14,16 @@ Fall, für Offenheit gegenüber Kritik, für Respektlosigkeit gegenüber der Mac
 und Respekt vor dem Menschen.
 
 Falls sich unsere Buchhaltung nicht irrt, ist allerdings Ihr Mitgliedschafts-
-oder Unterstützungsbeitrag in der Höhe von CHF {{TOTAL}} noch ausstehend.
+oder Unterstützungsbeitrag in der Höhe von CHF {{total}} noch ausstehend.
+
 Dürfen wir Sie freundlich bitten, den Betrag in den nächsten Tagen zu
 überweisen?
+
+Zahlungsinformationen:
+
+ * IBAN: {{iban}}
+ * Referenz: {{reference}}
+ * Betrag: CHF {{total}}
 
 Anbei finden Sie eine QR-Rechnung.
 
