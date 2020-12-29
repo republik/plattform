@@ -41,8 +41,14 @@ innerhalb von 7 Werktagen.
 
 {{/if}} {{/unless}} {{#if paymentslip}}
 
-Anbei finden Sie eine QR-Rechnung. Wir bitten Sie, den Gesamtbetrag in Höhe von
-{{total_formatted}} bis am {{due_date}} zu begleichen.
+Zahlungsinformationen:
+
+ * IBAN: {{iban}}
+ * Referenz: {{reference}}
+ * Betrag: {{total_formatted}}
+ * Zahlbar bis: {{due_date}}
+
+Anbei finden Sie eine QR-Rechnung.
 
 Die QR-Rechnung ersetzt den Einzahlungsschein. Sie können damit die Zahlung via
 Mobile Banking, E-Banking oder am Schalter bei Bank und Post auslösen.

@@ -103,10 +103,15 @@
                     {{/if}} {{/unless}}
 
                     {{#if paymentslip}}
+                    <p>Zahlungsinformationen:</p>
+                    <ul>
+                      <li>IBAN: {{iban}}</li>
+                      <li>Referenz: {{reference}}</li>
+                      <li>Betrag: {{total_formatted}}</li>
+                      <li>Zahlbar bis: {{due_date}}</li>
+                    </ul>
                     <p>
-                      Anbei finden Sie eine QR-Rechnung. Wir bitten Sie, den
-                      Gesamtbetrag in Höhe von {{total_formatted}} bis am
-                      {{due_date}} zu begleichen.
+                      Anbei finden Sie eine QR-Rechnung.
                     </p>
                     <p>
                       Die QR-Rechnung ersetzt den Einzahlungsschein. Sie können damit
