@@ -48,3 +48,11 @@ the entries from the following db table from production: `postfinanceImports`.
 
 If contains the files from the Sftp server. All files that `isImported === FALSE`
 will be imported.
+
+## Documentation
+
+### camt.053
+
+camt.053 (account statement) is part of ISO 20022 XML format and files Postfinance provides.
+
+- [Postfinance «Technical Specifications Manual»](https://www.postfinance.ch/content/dam/pfch/doc/cust/download/tech_spez_biz_man_en_new.pdf)

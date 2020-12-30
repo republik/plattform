@@ -77,8 +77,9 @@ packages/auth/lib/index.js
 packages/auth/lib/transformUser.js
 packages/auth/loaders/User.js
 packages/dataloader/**/*.js
+packages/invoices/**/*.js
 packages/publikator/lib/phases.js
-packages/republik-crowdfundings/lib/scheduler/importPayments.js
-packages/republik-crowdfundings/lib/scheduler/payments/*.js
 packages/republik-crowdfundings/lib/payments/paymentslip/helpers.js
 packages/republik-crowdfundings/lib/payments/paymentslip/sendPaymentReminders.js
+packages/republik-crowdfundings/lib/scheduler/importPayments.js
+packages/republik-crowdfundings/lib/scheduler/payments/*.js

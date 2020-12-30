@@ -1,7 +1,6 @@
-Sehr geehrte Dame
-Sehr geehrter Herr
+Guten Tag
 
-Vielen Dank für Ihre Bestellung. Hier die wichtigsten Informationen dazu:
+Vielen Dank für Ihre Bestellung.
 
    {{#options}}
  * {{#if `this.oamount > 1`}} {{this.oamount}} {{this.olabel}} à
@@ -17,29 +16,19 @@ Vielen Dank für Ihre Bestellung. Hier die wichtigsten Informationen dazu:
 Bücher liefern wir innerhalb von 7 Werktagen. {{#if waiting_for_payment}}Der
 Versand erfolgt erst nach Zahlungseingang.{{/if}}
 
-{{#if `payment_method == "PAYMENTSLIP"`}}
+{{#if paymentslip}}
 
-Sie haben eine Banküberweisung als Zahlungsweg gewählt.
+Zahlungsinformationen:
 
-Bitte überweisen Sie {{total_formatted}} bis spätestens {{due_date}} an:
+ * IBAN: {{iban}}
+ * Referenz: {{reference}}
+ * Betrag: {{total_formatted}}
+ * Zahlbar bis: {{due_date}}
 
-PC 61-11760-6
-IBAN: CH50 0900 0000 6101 1760 6
-BIC: POFICHBEXXX
-Mitteilung: {{HRID}}
+Anbei finden Sie eine QR-Rechnung.
 
-lautend auf:
-
-Project R Genossenschaft
-Sihlhallenstrasse 1
-8004 Zürich
-
-Vergessen Sie nicht, {{HRID}} in das Feld «Betreff» des Einzahlungsscheins zu
-schreiben, sonst funktioniert die Zuordnung nicht. Danke!
-
-{{else}}
-
-Wir wünschen Ihnen anregende Lektüre mit der «Republik bei Stromausfall».
+Die QR-Rechnung ersetzt den Einzahlungsschein. Sie können damit die Zahlung via
+Mobile Banking, E-Banking oder am Schalter bei Bank und Post auslösen.
 
 {{/if}}
 

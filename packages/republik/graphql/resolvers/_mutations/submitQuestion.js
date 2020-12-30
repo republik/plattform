@@ -1,12 +1,12 @@
 const { ensureSignedIn } = require('@orbiting/backend-modules-auth')
-const { sendMailTemplate, sendMail } = require('@orbiting/backend-modules-mail')
+const { sendMailTemplate } = require('@orbiting/backend-modules-mail')
 
 module.exports = async (_, args, context) => {
   const { user, req, t } = context
   ensureSignedIn(req)
 
   const { question } = args
-  let name = user.firstName
+  const name = user.firstName
     ? [' - ', user.firstName, user.lastName].join(' ')
     : ''
 
@@ -15,7 +15,7 @@ module.exports = async (_, args, context) => {
     process.env.DEFAULT_MAIL_FROM_ADDRESS
 
   await Promise.all([
-    sendMail(
+    sendMailTemplate(
       {
         to: mailAddress,
         fromEmail: mailAddress,

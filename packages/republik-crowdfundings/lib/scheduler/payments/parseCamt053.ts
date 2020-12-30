@@ -1,6 +1,8 @@
 import parser from 'fast-xml-parser'
 import { Nominal } from 'simplytyped'
 
+import { paymentslip } from '@orbiting/backend-modules-invoices'
+
 type Amount = Nominal<string, 'amount'>
 type AmountInCents = Nominal<number, 'cents'>
 type Avisierungstext = Nominal<string, 'avisierungstext'>
@@ -37,7 +39,14 @@ type TransactionDetails = {
   Refs?: {
     InstrId?: string
   }
-  RmtInf?: { Ustrd?: string | string[] }
+  RmtInf?: {
+    Ustrd?: string | string[]
+    Strd?: {
+      CdtrRefInf?: {
+        Ref?: string
+      }
+    } 
+  }
 }
 
 type TransactionCode =
@@ -246,6 +255,11 @@ function getMitteilung(
 
   if (match) return match[1]
 
+  const creditorReference = transactionDetails?.RmtInf?.Strd?.CdtrRefInf?.Ref
+  const referenceHrId = creditorReference && paymentslip.getHrId(creditorReference)
+
+  if (referenceHrId) return referenceHrId
+
   let remittanceInformation = transactionDetails?.RmtInf?.Ustrd
   if (!remittanceInformation) {
     return null
@@ -255,7 +269,11 @@ function getMitteilung(
     remittanceInformation = remittanceInformation.join(' ')
   }
 
-  return remittanceInformation?.match(/\b([A-Za-z0-9]{6})\b/)?.[1] || null
+  return (
+    paymentslip.getHrId(remittanceInformation) ||
+    remittanceInformation?.match(/\b([A-Za-z0-9]{6})\b/)?.[1] ||
+    null
+  )
 }
 
 function getAvisierungstext(creditEntry: CreditEntry): Avisierungstext | void {

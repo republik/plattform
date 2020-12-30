@@ -46,41 +46,27 @@
                     <p>
                       Falls sich unsere Buchhaltung nicht irrt, ist Ihr
                       Mitgliedschafts- oder Unterstützungsbeitrag in der Höhe
-                      von CHF {{TOTAL}} aber weiterhin ausstehend.<br />
+                      von CHF {{total}} aber weiterhin ausstehend.
+                    </p>
+                    <p>
                       Dürfen wir Sie freundlich bitten, den Betrag in den
                       nächsten Tagen zu überweisen? Unser Projekt ist auf Ihren
                       Beitrag angewiesen.
                     </p>
+                    <p>Zahlungsinformationen:</p>
+                    <ul>
+                      <li>IBAN: {{iban}}</li>
+                      <li>Referenz: {{reference}}</li>
+                      <li>Betrag: CHF {{total}}</li>
+                    </ul>
                     <p>
-                      Bitte geben Sie bei der Zahlung Ihren Namen und den
-                      folgenden Code als Zahlungszweck an (so können wir Ihre
-                      Zahlung zuordnen): <strong>{{HRID}}</strong>
+                      Anbei finden Sie eine QR-Rechnung.
                     </p>
-                    {{#if `COMPANY_NAME == "REPUBLIK"`}}
                     <p>
-                      PC 61-229215-3<br />
-                      IBAN: CH23 0900 0000 6122 9215 3<br />
-                      BIC: POFICHBEXXX
+                      Die QR-Rechnung ersetzt den Einzahlungsschein. Sie können damit
+                      die Zahlung via Mobile Banking, E-Banking oder am Schalter bei
+                      Bank und Post auslösen.
                     </p>
-                    <p>lautend auf:</p>
-                    <p>
-                      Republik AG<br />
-                      Sihlhallenstrasse 1<br />
-                      8004 Zürich
-                    </p>
-                    {{/if}} {{#if `COMPANY_NAME == "PROJECT_R"`}}
-                    <p>
-                      PC 61-11760-6<br />
-                      IBAN: CH50 0900 0000 6101 1760 6<br />
-                      BIC: POFICHBEXXX
-                    </p>
-                    <p>lautend auf:</p>
-                    <p>
-                      Project R Genossenschaft<br />
-                      Sihlhallenstrasse 1<br />
-                      8004 Zürich
-                    </p>
-                    {{/if}}
                     <p>
                       Sollte sich Ihre Zahlung mit dieser Zahlungserinnerung
                       kreuzen, erachten Sie unsere E-Mail als gegenstandslos.

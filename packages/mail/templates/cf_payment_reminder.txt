@@ -14,38 +14,21 @@ Fall, für Offenheit gegenüber Kritik, für Respektlosigkeit gegenüber der Mac
 und Respekt vor dem Menschen.
 
 Falls sich unsere Buchhaltung nicht irrt, ist allerdings Ihr Mitgliedschafts-
-oder Unterstützungsbeitrag in der Höhe von CHF {{TOTAL}} noch ausstehend.
+oder Unterstützungsbeitrag in der Höhe von CHF {{total}} noch ausstehend.
+
 Dürfen wir Sie freundlich bitten, den Betrag in den nächsten Tagen zu
 überweisen?
 
-Bitte geben Sie bei der Zahlung Ihren Namen und den folgenden Code als
-Zahlungszweck an (so können wir Ihre Zahlung zuordnen): {{HRID}}
+Zahlungsinformationen:
 
-{{#if `COMPANY_NAME == "REPUBLIK"`}}
+ * IBAN: {{iban}}
+ * Referenz: {{reference}}
+ * Betrag: CHF {{total}}
 
-PC 61-229215-3
-IBAN: CH23 0900 0000 6122 9215 3
-BIC: POFICHBEXXX
+Anbei finden Sie eine QR-Rechnung.
 
-lautend auf:
-
-Republik AG
-Sihlhallenstrasse 1
-8004 Zürich
-
-{{/if}} {{#if `COMPANY_NAME == "PROJECT_R"`}}
-
-PC 61-11760-6
-IBAN: CH50 0900 0000 6101 1760 6
-BIC: POFICHBEXXX
-
-lautend auf:
-
-Project R Genossenschaft
-Sihlhallenstrasse 1
-8004 Zürich
-
-{{/if}}
+Die QR-Rechnung ersetzt den Einzahlungsschein. Sie können damit die Zahlung via
+Mobile Banking, E-Banking oder am Schalter bei Bank und Post auslösen.
 
 Sollte sich Ihre Überweisung mit dieser Zahlungserinnerung kreuzen, erachten Sie
 unsere E-Mail als gegenstandslos. Haben Sie sonst Fragen, melden Sie sich

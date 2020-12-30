@@ -44,7 +44,7 @@
                     <p>Guten Tag</p>
                     <p>
                       Vielen Dank, dass Sie die Verbreitung der Republik mit
-                      einem Geschenkabonnement unterstützen!
+                      einem Geschenkabonnement unterstützen.
                     </p>
 
                     {{#if voucher_codes}}
@@ -80,59 +80,38 @@
                       <li>{{this.oamount}} {{this.olabel}}</li>
                       {{/if}} {{/options}}
                     </ul>
-                    {{/if}} {{/if}}
+                    <br />
+                    {{/if}}
+                    {{/if}}
+                    
+                    {{#if waiting_for_payment}}
+                    <p>
+                      <strong>Da der Gesamtbetrag Ihrer Bestellung die magische
+                        Grenze von CHF 1000.– übersteigt, schicken wir Ihnen die
+                        Gutscheincodes erst nach Zahlungseingang.</strong>
+                    </p>
+                    {{/if}}
 
+                    {{#if paymentslip}}
+                    <p>Zahlungsinformationen:</p>
+                    <ul>
+                      <li>IBAN: {{iban}}</li>
+                      <li>Referenz: {{reference}}</li>
+                      <li>Betrag: {{total_formatted}}</li>
+                      <li>Zahlbar bis: {{due_date}}</li>
+                    </ul>
                     <p>
-                      <strong
-                        >Informationen zur Zahlung Ihres
-                        Geschenkabonnements:</strong
-                      >
-                    </p>
-
-                    {{#if `payment_method != "PAYMENTSLIP"`}}
-                    <p>
-                      Ihre Zahlung ist erfolgreich bei uns eingegangen,
-                      herzlichen Dank!
-                    </p>
-                    {{/if}} {{#if `payment_method == "PAYMENTSLIP"`}}
-                    <p>
-                      Sie haben eine Banküberweisung als Zahlungsweg gewählt.
+                      Anbei finden Sie eine QR-Rechnung.
                     </p>
                     <p>
-                      Bitte überweisen Sie {{total_formatted}} bis spätestens
-                      {{due_date}} an:
-                    </p>
-                    <p>
-                      PC 61-229215-3<br />
-                      IBAN: CH23 0900 0000 6122 9215 3 <br />
-                      BIC: POFICHBEXXX
-                    </p>
-                    <p>lautend auf:</p>
-                    <p>
-                      Republik AG<br />
-                      Sihlhallenstrasse 1<br />
-                      8004 Zürich
-                    </p>
-                    <p>
-                      <strong
-                        >Bitte vergessen Sie nicht, {{HRID}} in das Feld
-                        «Betreff» des Einzahlungsscheins zu schreiben, sonst
-                        funktioniert die Zuordnung nicht. Danke!</strong
-                      >
-                    </p>
-                    {{/if}} {{#if waiting_for_payment}}<br />
-                    <p>
-                      <strong
-                        >Da der Gesamtbetrag Ihrer Bestellung die magische
-                        Grenze von CHF 1000.– übersteigt, erhalten Sie die
-                        Gutscheincodes erst nach Zahlungseingang.</strong
-                      >
+                      Die QR-Rechnung ersetzt den Einzahlungsschein. Sie können damit
+                      die Zahlung via Mobile Banking, E-Banking oder am Schalter bei
+                      Bank und Post auslösen.
                     </p>
                     {{/if}}
 
                     <p>
-                      Vielen Dank!<br />
-                      Und viel Freude beim Verschenken der Republik.
+                      Wir wünschen Ihnen viel Freude beim Verschenken der Republik.
                     </p>
                     <p>Ihre Crew der Republik</p>
                   </td>

@@ -61,40 +61,8 @@
                     {{/if}}
 
                     <p>
-                      Hier die wichtigsten Informationen über Ihre Verlängerung.
+                      Details zum Kauf:
                     </p>
-
-                    {{#if `payment_method == "PAYMENTSLIP"`}}
-                    <p>
-                      Sie haben Banküberweisung als Weg der Zahlung gewählt.<br />
-                      Bitte überweisen Sie {{total_formatted}} bis spätestens
-                      {{due_date}}. an:
-                    </p>
-                    <p>
-                      PC 61-11760-6<br />
-                      IBAN: CH50 0900 0000 6101 1760 6<br />
-                      BIC: POFICHBEXXX
-                    </p>
-                    <p>
-                      lautend auf:<br />
-                      Project R Genossenschaft<br />
-                      Sihlhallenstrasse 1<br />
-                      8004 Zürich
-                    </p>
-                    <p>
-                      <strong
-                        >Bitte vergessen Sie nicht, {{HRID}} in das Feld
-                        «Betreff» des Einzahlungsscheins zu schreiben, sonst
-                        funktioniert die Zuordnung nicht. Danke!</strong
-                      >
-                    </p>
-                    {{else}}
-                    <p>
-                      Ihre Zahlung in Höhe von {{total_formatted}} ist
-                      erfolgreich bei uns eingegangen, herzlichen Dank!
-                    </p>
-                    {{/if}}
-
                     <ul>
                       {{#options}}
                       <li>
@@ -149,6 +117,24 @@
                       Werktagen.
                     </p>
                     {{/if}} {{/unless}}
+
+                    {{#if paymentslip}}
+                    <p>Zahlungsinformationen:</p>
+                    <ul>
+                      <li>IBAN: {{iban}}</li>
+                      <li>Referenz: {{reference}}</li>
+                      <li>Betrag: {{total_formatted}}</li>
+                      <li>Zahlbar bis: {{due_date}}</li>
+                    </ul>
+                    <p>
+                      Anbei finden Sie eine QR-Rechnung.
+                    </p>
+                    <p>
+                      Die QR-Rechnung ersetzt den Einzahlungsschein. Sie können damit
+                      die Zahlung via Mobile Banking, E-Banking oder am Schalter bei
+                      Bank und Post auslösen.
+                    </p>
+                    {{/if}}
 
                     <p>Herzlich</p>
                     <p>Ihre Crew der Republik</p>

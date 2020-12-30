@@ -3,12 +3,12 @@ Guten Tag
 {{#if waiting_for_payment}}
 
 Vielen Dank, dass Sie die Verbreitung der Republik mit einer
-Geschenk-Mitgliedschaft unterstützen!
+Geschenk-Mitgliedschaft unterstützen.
 
 {{/if}} {{#if voucher_codes}} {{#unless waiting_for_payment}}
 
 Vielen Dank, dass Sie die Verbreitung der Republik mit einer
-Geschenk-Mitgliedschaft unterstützen!
+Geschenk-Mitgliedschaft unterstützen.
 
 {{/unless}}
 
@@ -55,43 +55,28 @@ Wir werden nun, zusammen mit unseren Komplizen, passende Empfängerinnen für Ih
 Geschenk suchen und Sie informieren, wann immer eine Mitgliedschaft eingelöst
 wird.
 
-{{/if}} {{/if}}
+{{/if}} {{/if}} {{#if waiting_for_payment}}
 
-Informationen zur Zahlung:
+Da der Gesamtbetrag Ihrer Bestellung die magische Grenze von CHF 1000
+übersteigt, schicken wir Ihnen die Gutscheincodes erst nach Zahlungseingang.
 
-{{#if `payment_method != "PAYMENTSLIP"`}}
+{{/if}} {{#if paymentslip}}
 
-Ihre Zahlung ist erfolgreich bei uns eingegangen, herzlichen Dank!
+Zahlungsinformationen:
 
-{{/if}} {{#if `payment_method == "PAYMENTSLIP"`}}
+ * IBAN: {{iban}}
+ * Referenz: {{reference}}
+ * Betrag: {{total_formatted}}
+ * Zahlbar bis: {{due_date}}
 
-Sie haben eine Banküberweisung als Zahlungsweg gewählt.
+Anbei finden Sie eine QR-Rechnung.
 
-Bitte überweisen Sie {{total_formatted}} bis spätestens {{due_date}} an:
-
-PC 61-11760-6
-IBAN: CH50 0900 0000 6101 1760 6
-BIC: POFICHBEXXX
-
-lautend auf:
-
-Project R Genossenschaft
-Sihlhallenstrasse 1
-8004 Zürich
-
-Bitte vergessen Sie nicht, {{HRID}} in das Feld «Betreff» des Einzahlungsscheins
-zu schreiben, sonst funktioniert die Zuordnung nicht. Danke!
-
-{{/if}} {{#if waiting_for_payment}}
-
-
-Da der Gesamtbetrag Ihrer Bestellung die magische Grenze von CHF 1000.–
-übersteigt, erhalten Sie die Gutscheincodes erst nach Zahlungseingang.
+Die QR-Rechnung ersetzt den Einzahlungsschein. Sie können damit die Zahlung via
+Mobile Banking, E-Banking oder am Schalter bei Bank und Post auslösen.
 
 {{/if}}
 
-Vielen Dank! {{#if voucher_codes}}
-Und viel Freude beim Verschenken der Republik. {{/if}}
+Wir wünschen Ihnen viel Freude beim Verschenken der Republik.
 
 Ihre Crew der Republik
 

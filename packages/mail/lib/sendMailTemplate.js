@@ -255,14 +255,20 @@ module.exports = async (mail, context, log) => {
     from_email: mail.fromEmail || DEFAULT_MAIL_FROM_ADDRESS,
     from_name: mail.fromName || DEFAULT_MAIL_FROM_NAME,
     html,
-    text,
+    text: text || mail.text,
     merge_language: mail.mergeLanguage || 'handlebars',
     global_merge_vars: mergeVars,
     auto_text: !text,
     tags,
+    attachments: mail.attachments,
   }
 
-  debug({ ...message, html: !!message.html, text: !!message.text })
+  debug({
+    ...message,
+    html: !!message.html,
+    text: !!message.text,
+    attachments: message.attachments?.map(({ name, type }) => ({ name, type })),
+  })
 
   const sendFunc = sendResultNormalizer(
     shouldScheduleMessage(mail, message),
@@ -291,7 +297,15 @@ module.exports = async (mail, context, log) => {
   return send({
     log,
     sendFunc,
-    message: { ...message, html: !!message.html, text: !!message.text },
+    message: {
+      ...message,
+      html: !!message.html,
+      text: !!message.text,
+      attachments: message.attachments?.map(({ name, type }) => ({
+        name,
+        type,
+      })),
+    },
     email: message.to[0].email,
     template: mail.templateName,
     context,

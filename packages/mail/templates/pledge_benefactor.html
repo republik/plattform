@@ -43,7 +43,6 @@
                   <td style="padding: 20px">
                     <p>Guten Tag</p>
                     <p>
-                      Und willkommen an Bord!<br />
                       Herzlichen Dank für Ihr aussergewöhnliches Investment in
                       unser Magazin und die Republik-Idee.
                     </p>
@@ -74,14 +73,6 @@
                         >Hier finden Sie die Gebrauchsanleitung</a
                       >, die die wichtigsten davon klärt.
                     </p>
-                    <p>
-                      Wir schicken Ihnen, unserer neusten Verlegerin, unserem
-                      neusten Verleger, auch regelmässig Neuigkeiten aus
-                      Redaktion und Verlag: zu Vorhaben, Hintergründen,
-                      Entscheidungen und Fehlern. Sie können Kritik üben und
-                      Vorschläge machen. Und sich mit Ihren Kolleginnen und
-                      Kollegen in der Verlagsetage austauschen.
-                    </p>
 
                     <p>
                       Um uns für Ihre besonders grosse Unterstützung ein kleines
@@ -96,45 +87,8 @@
                     {{/if}}
 
                     <p>
-                      <strong
-                        >Informationen zur Zahlung Ihres Abonnements und Ihrer
-                        Gönnerschaft:</strong
-                      >
+                      Details zum Kauf:
                     </p>
-
-                    {{#if `payment_method != "PAYMENTSLIP"`}}
-                    <p>
-                      Ihre Zahlung ist erfolgreich bei uns eingegangen,
-                      herzlichen Dank!
-                    </p>
-                    {{/if}} {{#if `payment_method == "PAYMENTSLIP"`}}
-                    <p>
-                      Sie haben eine Banküberweisung als Zahlungsweg gewählt.
-                    </p>
-                    <p>
-                      Bitte überweisen Sie {{total_formatted}} bis spätestens
-                      {{due_date}} an:
-                    </p>
-                    <p>
-                      PC 61-11760-6<br />
-                      IBAN: CH50 0900 0000 6101 1760 6<br />
-                      BIC: POFICHBEXXX
-                    </p>
-                    <p>lautend auf:</p>
-                    <p>
-                      Project R Genossenschaft<br />
-                      Sihlhallenstrasse 1<br />
-                      8004 Zürich
-                    </p>
-                    <p>
-                      <strong
-                        >Bitte vergessen Sie nicht, {{HRID}} in das Feld
-                        «Betreff» des Einzahlungsscheins zu schreiben, sonst
-                        funktioniert die Zuordnung nicht. Danke!</strong
-                      >
-                    </p>
-                    {{/if}}
-
                     <ul>
                       {{#options}}
                       <li>
@@ -166,9 +120,26 @@
                     </p>
                     {{/if}} {{/unless}}
 
+                    {{#if paymentslip}}
+                    <p>Zahlungsinformationen:</p>
+                    <ul>
+                      <li>IBAN: {{iban}}</li>
+                      <li>Referenz: {{reference}}</li>
+                      <li>Betrag: {{total_formatted}}</li>
+                      <li>Zahlbar bis: {{due_date}}</li>
+                    </ul>
                     <p>
-                      Vielen Dank!<br />
-                      Und viel Vergnügen beim Start mit der Republik.
+                      Anbei finden Sie eine QR-Rechnung.
+                    </p>
+                    <p>
+                      Die QR-Rechnung ersetzt den Einzahlungsschein. Sie können damit
+                      die Zahlung via Mobile Banking, E-Banking oder am Schalter bei
+                      Bank und Post auslösen.
+                    </p>
+                    {{/if}}
+
+                    <p>
+                      Wir wünschen Ihnen viel Vergnügen mit der Republik.
                     </p>
                     <p>Ihre Crew der Republik</p>
                   </td>
