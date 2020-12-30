@@ -1,5 +1,8 @@
 import { PDF, data as BillData } from 'swissqrbill'
-import { generate as generateReference } from 'node-iso11649'
+import {
+  generate as generateReference,
+  validate as validateReference
+} from 'node-iso11649'
 
 import { Context } from '@orbiting/backend-modules-types'
 
@@ -226,6 +229,20 @@ export function getReference(hrid: string, pretty?: boolean): string {
     reference: `HRID${hrid}`,
     pretty
   })
+}
+
+export function getHrId(string: string): string | null {
+  const [reference, hrid] = string.replace(/[^A-Za-z0-9]/g, '').match(/RF\d\dHRID([A-Za-z0-9]{6})/) || []
+
+  if (!reference) {
+    return null
+  }
+
+  if (!validateReference(reference)) {
+    return null
+  }
+
+  return hrid
 }
 
 export async function generate(payment: PaymentResolved): Promise<Buffer> {
