@@ -102,6 +102,7 @@ const paymentsQuery = gql`
         total
         status
         hrid
+        paymentslipUrl
         user {
           id
           name

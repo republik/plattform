@@ -82,6 +82,7 @@ const GET_PLEDGES = gql`
           status
           method
           hrid
+          paymentslipUrl
           pspId
           paperInvoice
           dueDate
@@ -330,7 +331,12 @@ const PaymentDetails = ({ payment, ...props}) => {
             <DT>Total</DT>
             <DD>{chfFormat(payment.total / 100)}</DD>
             <DT>HR-ID</DT>
-            <DD>{payment.hrid}</DD>
+            <DD>
+              {payment.paymentslipUrl
+                ? <A href={payment.paymentslipUrl} target='_blank'>{payment.hrid}</A>
+                : payment.hrid
+              }
+            </DD>
           </DL>
         </div>
         {(payment.dueDate || payment.method) && (
