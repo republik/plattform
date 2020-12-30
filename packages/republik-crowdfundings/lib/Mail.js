@@ -682,7 +682,7 @@ mail.getPledgeMergeVars = async (
     { pledgeId: pledge.id },
     { orderBy: ['createdAt desc'] },
   )
-  const payment = await paymentslip.resolve(
+  const payment = pledgePayment && await paymentslip.resolve(
     { id: pledgePayment.paymentId },
     { pgdb, t },
   )
@@ -815,7 +815,7 @@ mail.getPledgeMergeVars = async (
     (m) => !!m.accessGranted,
   ).length
 
-  const creditor = payment.pledge?.package?.bankAccount
+  const creditor = payment?.pledge?.package?.bankAccount
 
   return [
     // Purchase itself
@@ -895,11 +895,11 @@ mail.getPledgeMergeVars = async (
     },
 
     // Payment
-    {
-      name: 'payment_method',
-      content: payment.method,
-    },
-    ...(payment?.id && [
+    ...(payment?.id ? [
+      {
+        name: 'payment_method',
+        content: payment.method,
+      },
       {
         name: 'hrid',
         content: payment.hrid,
@@ -933,7 +933,8 @@ mail.getPledgeMergeVars = async (
         ].filter(Boolean).join(' ') + '.pdf',
         content: (await paymentslip.generate(payment)).toString('base64'),
       },
-    ]),
+    ] : []),
+
     {
       name: 'waiting_for_payment',
       content: pledge.status === 'WAITING_FOR_PAYMENT',
