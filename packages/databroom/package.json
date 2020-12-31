@@ -15,6 +15,7 @@
   "homepage": "https://github.com/orbiting/backends#readme",
   "dependencies": {
     "@types/bluebird": "^3.5.33",
+    "@types/debug": "^4.1.5",
     "fast-glob": "^3.2.4"
   }
 }

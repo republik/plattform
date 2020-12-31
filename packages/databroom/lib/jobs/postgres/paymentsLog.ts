@@ -1,10 +1,10 @@
 import { mapPogiTable, Options, DatabroomContext, Job } from '../../index'
 
-interface Consent {
+interface PaymentsLog {
   id: string
 }
 
-const AGE_DAYS = 365
+const AGE_DAYS = 90
 const NICE_ROW_LIMIT = 100
 
 export default module.exports = function setup(options: Options, context: DatabroomContext): Job {
@@ -16,7 +16,6 @@ export default module.exports = function setup(options: Options, context: Databr
     async clean() {
       const qryConditions = {
         'createdAt <': now.setDate(now.getDate() - AGE_DAYS),
-        'ip !=': null,
       }
 
       const qryOptions = {
@@ -25,19 +24,16 @@ export default module.exports = function setup(options: Options, context: Databr
 
       const tx = await pgdb.transactionBegin()
       try {
-        const handler = async function (row: Consent): Promise<void> {
-          debug('set ip to null on %s', row.id)
+        const handler = async function (row: PaymentsLog): Promise<void> {
+          debug('delete %s', row.id)
 
           if (!dryRun) {
-            await tx.public.consents.update(
-              { id: row.id },
-              { ip: null }
-            )
+            await tx.public.paymentsLog.delete({ id: row.id })
           }
         }
 
         await mapPogiTable(
-          'consents',
+          'paymentsLog',
           qryConditions,
           qryOptions,
           handler,

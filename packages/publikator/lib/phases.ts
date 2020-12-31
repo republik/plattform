@@ -1,6 +1,4 @@
-import Debug from 'debug'
-
-const debug = Debug('publikator:lib:phases')
+import { debug as _debug } from 'debug'
 
 interface Phase {
   key: string
@@ -36,6 +34,8 @@ interface Check {
   expected: boolean
   predicate: CheckPredicate
 }
+
+const debug = _debug('publikator:lib:phases')
 
 const phases: Phase[] = [
   {
