@@ -5,7 +5,6 @@ import fg from 'fast-glob'
 
 import { Context } from '@orbiting/backend-modules-types'
 
-
 export interface Options {
   dryRun?: boolean
   nice?: boolean
@@ -25,6 +24,8 @@ export interface JobFn {
 interface ProcessStreamHandler {
   (row: any): Promise<any>
 }
+
+export const NICE_ROWS_LIMIT_FACTOR = 0.01
 
 const debug = _debug('databroom')
 
@@ -55,12 +56,13 @@ export async function setup(options: Options, context: Context): Promise<JobFn[]
 export async function forEachRow(
   table: string,
   conditions: object,
-  options: object,
+  options: Options,
   handler: ProcessStreamHandler,
   context: JobContext
 ): Promise<void> {
   const hrstart = process.hrtime()
   const { pgdb, debug: _debug } = context
+  const { nice } = options
   const debug = _debug
 
   debug('table: %s', table)
@@ -75,8 +77,12 @@ export async function forEachRow(
   debug('%i rows found', count)
 
   const qryOptions = {
-    ...options,
+    ...nice && { limit: Math.ceil(count * NICE_ROWS_LIMIT_FACTOR) },
     stream: true,
+  }
+
+  if (nice) {
+    debug('be nice, use query options: %o', qryOptions)
   }
 
   const qryStream = await pogiTable.find(qryConditions, qryOptions)

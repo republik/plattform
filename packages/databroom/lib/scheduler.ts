@@ -20,7 +20,7 @@ const init = async (context: Context) => {
     runFunc: async (args: any, context: any) => {
       const { dryRun } = args
 
-      const jobFns = await setup({ dryRun }, context)
+      const jobFns = await setup({ dryRun, nice: true }, context)
       debug('%i jobs set up', jobFns.length)
     
       await Promise.each(jobFns, fn => fn())

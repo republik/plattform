@@ -5,20 +5,15 @@ interface AccessEvent {
 }
 
 const AGE_DAYS = 90
-const NICE_ROW_LIMIT = 1000
 
 export default module.exports = function setup(options: Options, context: JobContext): JobFn {
   const { pgdb, debug } = context
-  const { dryRun, nice } = options
+  const { dryRun } = options
   const now = new Date()
 
   return async function () {
     const qryConditions = {
       'createdAt <': now.setDate(now.getDate() - AGE_DAYS),
-    }
-
-    const qryOptions = {
-      ...nice && { limit: NICE_ROW_LIMIT }
     }
 
     const tx = await pgdb.transactionBegin()
@@ -35,7 +30,7 @@ export default module.exports = function setup(options: Options, context: JobCon
       await forEachRow(
         'accessEvents',
         qryConditions,
-        qryOptions,
+        options,
         handler,
         context,
       )

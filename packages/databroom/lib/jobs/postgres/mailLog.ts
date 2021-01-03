@@ -1,4 +1,4 @@
-import { processStream, Options, JobContext, JobFn } from '../../index'
+import { NICE_ROWS_LIMIT_FACTOR, processStream, Options, JobContext, JobFn } from '../../index'
 
 interface MailLog {
   id: string
@@ -11,7 +11,6 @@ interface MailLog {
 }
 
 const AGE_DAYS = 90
-const NICE_ROW_LIMIT = 1000
 
 export default module.exports = function setup(options: Options, context: JobContext): JobFn {
   const { pgdb, debug } = context
@@ -57,12 +56,16 @@ export default module.exports = function setup(options: Options, context: JobCon
       )
       debug('%i rows found', count)
 
+      if (nice) {
+        debug('be nice, limit to %i rows', Math.ceil(count * NICE_ROWS_LIMIT_FACTOR))
+      }
+
       const qryStream = await pgdb.queryAsStream(
         [
           `SELECT * FROM "mailLog"`,
           `WHERE "createdAt" < '${new Date(createdBefore).toISOString()}'`,
           `AND (info->'message'->>'to') IS NOT NULL`,
-          nice && `LIMIT ${NICE_ROW_LIMIT}`
+          nice && `LIMIT ${Math.ceil(count * NICE_ROWS_LIMIT_FACTOR)}`
         ].filter(Boolean).join(' '),
       )
 
