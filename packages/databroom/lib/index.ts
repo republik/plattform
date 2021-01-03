@@ -26,6 +26,7 @@ interface ProcessStreamHandler {
 }
 
 export const NICE_ROWS_LIMIT_FACTOR = 0.01
+export const NICE_ROWS_LIMIT_MINIMUM = 100
 
 const debug = _debug('databroom')
 
@@ -76,8 +77,13 @@ export async function forEachRow(
   const count = await pogiTable.count(qryConditions)
   debug('%i rows found', count)
 
+  const limit = Math.max(
+    Math.ceil(count * NICE_ROWS_LIMIT_FACTOR),
+    NICE_ROWS_LIMIT_MINIMUM,
+  )
+
   const qryOptions = {
-    ...nice && { limit: Math.ceil(count * NICE_ROWS_LIMIT_FACTOR) },
+    ...nice && { limit },
     stream: true,
   }
 
