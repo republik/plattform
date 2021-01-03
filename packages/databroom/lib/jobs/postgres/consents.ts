@@ -5,7 +5,7 @@ interface Consent {
 }
 
 const AGE_DAYS = 365
-const NICE_ROW_LIMIT = 100
+const NICE_ROW_LIMIT = 1000
 
 export default module.exports = function setup(options: Options, context: JobContext): JobFn {
   const { pgdb, debug } = context
