@@ -60,19 +60,19 @@ export async function forEachRow(
   context: JobContext
 ): Promise<void> {
   const hrstart = process.hrtime()
-  const { pgdb, debug } = context
-  const debugTable = debug
+  const { pgdb, debug: _debug } = context
+  const debug = _debug
 
-  debugTable('table: %s', table)
-  debugTable('conditions: %o', conditions)
-  debugTable('options: %o', options)
+  debug('table: %s', table)
+  debug('conditions: %o', conditions)
+  debug('options: %o', options)
 
   const qryConditions = conditions
   const pogiTable = pgdb.public[table]
 
-  debugTable('counting rows ...')
+  debug('counting rows ...')
   const count = await pogiTable.count(qryConditions)
-  debugTable('%i rows found', count)
+  debug('%i rows found', count)
 
   const qryOptions = {
     ...options,
@@ -81,15 +81,15 @@ export async function forEachRow(
 
   const qryStream = await pogiTable.find(qryConditions, qryOptions)
 
-  debugTable('processing stream with handler ...')
+  debug('processing stream with handler ...')
   await processStream(
     qryStream,
     handler
   )
-  debugTable('processing stream is done')
+  debug('processing stream is done')
 
   const [seconds] = process.hrtime(hrstart)
-  debugTable('duration: %ds', seconds)
+  debug('duration: %ds', seconds)
 }
 
 export async function processStream(stream: stream.Readable, rowHandler: ProcessStreamHandler): Promise<void> {
