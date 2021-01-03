@@ -1,35 +1,34 @@
-import fg from 'fast-glob'
-import { Debugger } from 'debug'
 import { basename } from 'path'
+import { debug as _debug, Debugger } from 'debug'
 import * as stream from 'stream'
+import fg from 'fast-glob'
 
 import { Context } from '@orbiting/backend-modules-types'
 
-export interface DatabroomContext extends Context {
-  debug: Debugger
-}
 
 export interface Options {
   dryRun?: boolean
   nice?: boolean
 }
+export interface JobContext extends Context {
+  debug: Debugger
+}
 
-
-interface LibJob {
+interface JobMeta {
   name: string
   path: string
 }
-export interface Job {
-  clean(): Promise<any>
+export interface JobFn {
+  (): Promise<any>
 }
 
 interface ProcessStreamHandler {
   (row: any): Promise<any>
 }
 
+const debug = _debug('databroom')
 
-async function getJobs(context: DatabroomContext): Promise<LibJob[]> {
-  const { debug } = context
+async function getJobs(): Promise<JobMeta[]> {
   const glob = 'jobs/**/*.js'
 
   debug('find in %s with "%s', __dirname, glob)
@@ -42,39 +41,38 @@ async function getJobs(context: DatabroomContext): Promise<LibJob[]> {
   return paths.map(path => ({ name: basename(path, '.js'), path }))
 }
 
-export async function setupJobs(options: Options, context: DatabroomContext): Promise<Job[]> {
-  const { debug } = context
+export async function setup(options: Options, context: Context): Promise<JobFn[]> {
+  debug('setup job fns with %o', options)
 
-  debug(options)
-
-  const jobs = await getJobs({ ...context, debug: debug.extend('getJobs') })
+  const jobs = await getJobs()
 
   return jobs.map(job => {
     debug('setup %s', job.name)
-    return require(job.path)(options, { ...context, debug: debug.extend(job.name) })
+    return require(job.path)(options, { ...context, debug: debug.extend(`job:${job.name}`) })
   })
 }
 
-export async function mapPogiTable(
+export async function forEachRow(
   table: string,
   conditions: object,
   options: object,
   handler: ProcessStreamHandler,
-  context: DatabroomContext
-) {
-  const { pgdb, debug: _debug } = context
-  const debug = _debug.extend('mapRows')
+  context: JobContext
+): Promise<void> {
+  const hrstart = process.hrtime()
+  const { pgdb, debug } = context
+  const debugTable = debug
 
-  debug('table: %s', table)
-  debug('conditions: %o', conditions)
-  debug('options: %o', options)
+  debugTable('table: %s', table)
+  debugTable('conditions: %o', conditions)
+  debugTable('options: %o', options)
 
   const qryConditions = conditions
   const pogiTable = pgdb.public[table]
 
-  debug('counting rows ...')
+  debugTable('counting rows ...')
   const count = await pogiTable.count(qryConditions)
-  debug('%i rows found', count)
+  debugTable('%i rows found', count)
 
   const qryOptions = {
     ...options,
@@ -83,12 +81,15 @@ export async function mapPogiTable(
 
   const qryStream = await pogiTable.find(qryConditions, qryOptions)
 
-  debug('processing stream with handler ...')
+  debugTable('processing stream with handler ...')
   await processStream(
     qryStream,
     handler
   )
-  debug('processing stream is done')
+  debugTable('processing stream is done')
+
+  const [seconds] = process.hrtime(hrstart)
+  debugTable('duration: %ds', seconds)
 }
 
 export async function processStream(stream: stream.Readable, rowHandler: ProcessStreamHandler): Promise<void> {

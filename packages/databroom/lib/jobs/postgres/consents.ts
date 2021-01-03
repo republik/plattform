@@ -1,4 +1,4 @@
-import { mapPogiTable, Options, DatabroomContext, Job } from '../../index'
+import { forEachRow, Options, JobContext, JobFn } from '../../index'
 
 interface Consent {
   id: string
@@ -7,48 +7,46 @@ interface Consent {
 const AGE_DAYS = 365
 const NICE_ROW_LIMIT = 100
 
-export default module.exports = function setup(options: Options, context: DatabroomContext): Job {
+export default module.exports = function setup(options: Options, context: JobContext): JobFn {
   const { pgdb, debug } = context
   const { dryRun, nice } = options
   const now = new Date()
 
-  return {
-    async clean() {
-      const qryConditions = {
-        'createdAt <': now.setDate(now.getDate() - AGE_DAYS),
-        'ip !=': null,
-      }
+  return async function() {
+    const qryConditions = {
+      'createdAt <': now.setDate(now.getDate() - AGE_DAYS),
+      'ip !=': null,
+    }
 
-      const qryOptions = {
-        ...nice && { limit: NICE_ROW_LIMIT }
-      }
+    const qryOptions = {
+      ...nice && { limit: NICE_ROW_LIMIT }
+    }
 
-      const tx = await pgdb.transactionBegin()
-      try {
-        const handler = async function (row: Consent): Promise<void> {
-          debug('set ip to null on %s', row.id)
+    const tx = await pgdb.transactionBegin()
+    try {
+      const handler = async function (row: Consent): Promise<void> {
+        debug('set ip to null on %s', row.id)
 
-          if (!dryRun) {
-            await tx.public.consents.update(
-              { id: row.id },
-              { ip: null }
-            )
-          }
+        if (!dryRun) {
+          await tx.public.consents.update(
+            { id: row.id },
+            { ip: null }
+          )
         }
-
-        await mapPogiTable(
-          'consents',
-          qryConditions,
-          qryOptions,
-          handler,
-          context,
-        )
-
-        await tx.transactionCommit()
-      } catch (e) {
-        await tx.transactionRollback()
-        throw e
       }
-    },
+
+      await forEachRow(
+        'consents',
+        qryConditions,
+        qryOptions,
+        handler,
+        context,
+      )
+
+      await tx.transactionCommit()
+    } catch (e) {
+      await tx.transactionRollback()
+      throw e
+    }
   }
 }

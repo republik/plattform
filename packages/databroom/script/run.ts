@@ -1,12 +1,12 @@
+import { debug as _debug } from 'debug'
 import Promise from 'bluebird'
 import yargs from 'yargs'
-import { debug as _debug } from 'debug'
 
 require('@orbiting/backend-modules-env').config()
 import base from '@orbiting/backend-modules-base'
 import { Context } from '@orbiting/backend-modules-types'
 
-import { setupJobs } from '../lib'
+import { setup } from '../lib'
 
 const argv = yargs
   .option('dryRun', {
@@ -19,27 +19,32 @@ const argv = yargs
   })
   .argv
 
-
 const debug = _debug('databroom:script:run')
 debug('%o', argv)
+
+const broom = async (context: Context) => {
+  debug('ConnectionContext available')
+
+  const { dryRun, nice } = argv
+  const options = { dryRun, nice }
+
+  const jobFns = await setup(options, context)
+  debug('%i jobs set up', jobFns.length)
+
+  await Promise.each(jobFns, fn => fn())
+}
 
 base.lib.ConnectionContext
   .create('databroom')
   .then(async (context: Context) => {
-    debug('ConnectionContext available')
-  
-    const { dryRun, nice } = argv
-    const options = { dryRun, nice }
-
-    const jobs = await setupJobs(
-      options,
-      { ...context, debug: debug.extend('setupJobs') }
-    )
-    debug('%i jobs set up', jobs.length)
-
-    await Promise.each(jobs, job => job?.clean())
+    await broom(context).catch((error: any) => {
+      console.error(error)
+    })
 
     return context
   })
   .then((context: Context) => base.lib.ConnectionContext.close(context))
+  .catch((error: any) => {
+    console.error(error)
+  })
   .finally(() => debug('done'))
