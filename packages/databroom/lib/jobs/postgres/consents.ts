@@ -24,8 +24,9 @@ export default module.exports = function setup(options: Options, context: JobCon
 
     const tx = await pgdb.transactionBegin()
     try {
+      const handlerDebug = debug.extend('handler')
       const handler = async function (row: Consent): Promise<void> {
-        debug('set ip to null on %s', row.id)
+        handlerDebug('set ip to null on %s', row.id)
 
         if (!dryRun) {
           await tx.public.consents.update(

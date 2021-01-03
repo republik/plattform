@@ -24,8 +24,9 @@ export default module.exports = function setup(options: Options, context: JobCon
 
     try {
       const createdBefore = now.setDate(now.getDate() - AGE_DAYS)
+      const handlerDebug = debug.extend('handler')
       const handler = async function (row: MailLog): Promise<void> {
-        debug('tidy info json in %s', row.id)
+        handlerDebug('tidy info json in %s', row.id)
 
         if (!dryRun) {
           const info = {

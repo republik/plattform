@@ -23,8 +23,9 @@ export default module.exports = function setup(options: Options, context: JobCon
 
     const tx = await pgdb.transactionBegin()
     try {
+      const handlerDebug = debug.extend('handler')
       const handler = async function (row: PreviewEvent): Promise<void> {
-        debug('delete %s', row.id)
+        handlerDebug('delete %s', row.id)
 
         if (!dryRun) {
           await tx.public.previewEvents.delete({ id: row.id })

@@ -11,13 +11,35 @@ import { setup } from '../lib'
 const argv = yargs
   .option('dryRun', {
     description: 'Don\'t make changes',
+    boolean: true,
     default: true,
   })
   .option('nice', {
     description: 'Avoid overpowering data sources',
+    boolean: true,
     default: true,
   })
+  .option('verbose', {
+    alias: 'v',
+    description: 'Make run more talkative',
+    boolean: true,
+    default: false,
+  })
+  .option('very-verbose', {
+    alias: 'vv',
+    description: 'Make run very talkative',
+    boolean: true,
+    default: false,
+  })
   .argv
+
+if (argv.verbose) {
+  _debug.enable('databroom:*,-databroom:job:*:handler')
+}
+
+if (argv.veryVerbose) {
+  _debug.enable('databroom:*')
+}
 
 const debug = _debug('databroom:script:run')
 debug('%o', argv)
