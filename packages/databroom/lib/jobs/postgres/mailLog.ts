@@ -24,9 +24,13 @@ export default module.exports = function setup(options: Options, context: JobCon
 
     try {
       const createdBefore = now.setDate(now.getDate() - AGE_DAYS)
+
+      debug('table: mailLog')
+      debug('conditions: %o', { createdBefore })
+
       const handlerDebug = debug.extend('handler')
       const handler = async function (row: MailLog): Promise<void> {
-        handlerDebug('tidy info json in %s', row.id)
+        handlerDebug('tidy info in %s', row.id)
 
         if (!dryRun) {
           const info = {
@@ -43,16 +47,28 @@ export default module.exports = function setup(options: Options, context: JobCon
         }
       }
 
+      debug('counting rows ...')
+      const count = await pgdb.queryOneField(
+        [
+          `SELECT COUNT(*) FROM "mailLog"`,
+          `WHERE "createdAt" < '${new Date(createdBefore).toISOString()}'`,
+          `AND (info->'message'->>'to') IS NOT NULL`,
+        ].filter(Boolean).join(' '),
+      )
+      debug('%i rows found', count)
+
+      const qryStream = await pgdb.queryAsStream(
+        [
+          `SELECT * FROM "mailLog"`,
+          `WHERE "createdAt" < '${new Date(createdBefore).toISOString()}'`,
+          `AND (info->'message'->>'to') IS NOT NULL`,
+          nice && `LIMIT ${NICE_ROW_LIMIT}`
+        ].filter(Boolean).join(' '),
+      )
+
       debug('processing stream with handler ...')
       await processStream(
-        await pgdb.queryAsStream(
-          [
-            `SELECT * FROM "mailLog"`,
-            `WHERE "createdAt" < '${new Date(createdBefore).toISOString()}'`,
-            `AND (info->'message'->>'to') IS NOT NULL`,
-            nice && `LIMIT ${NICE_ROW_LIMIT}`
-          ].filter(Boolean).join(' '),
-        ),
+        qryStream,
         handler,
       )
       debug('processing stream is done')
