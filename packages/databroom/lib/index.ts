@@ -98,10 +98,7 @@ export async function forEachRow(
     fields,
     stream: true,
   }
-
-  if (nice) {
-    debug('be nice, use query options: %o', qryOptions)
-  }
+  debug('query options: %o', qryOptions)
 
   const qryStream = await pogiTable.find(qryConditions, qryOptions)
 
