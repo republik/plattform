@@ -100,6 +100,7 @@
     "is-uuid": "^1.0.2",
     "isomorphic-unfetch": "^3.0.0",
     "js-yaml": "^3.14.0",
+    "jsonlint-mod": "^1.7.6",
     "lodash.debounce": "^4.0.8",
     "mdast-react-render": "^1.2.0",
     "next": "^9.5.4",

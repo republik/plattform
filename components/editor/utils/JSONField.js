@@ -1,10 +1,19 @@
 import React, { Component } from 'react'
 import { css } from 'glamor'
 import PropTypes from 'prop-types'
-
 import AutosizeInput from 'react-textarea-autosize'
+import { Controlled as CodeMirror } from 'react-codemirror2'
+import { colors, fontFamilies, Label } from '@project-r/styleguide'
 
-import { Field } from '@project-r/styleguide'
+// CodeMirror can only run in the browser
+if (process.browser && window) {
+  window.jsonlint = require('jsonlint-mod')
+  require('codemirror/mode/javascript/javascript')
+  require('codemirror/addon/edit/matchbrackets')
+  require('codemirror/addon/edit/closebrackets')
+  require('codemirror/addon/lint/lint')
+  require('codemirror/addon/lint/json-lint')
+}
 
 const styles = {
   autoSize: css({
@@ -16,6 +25,20 @@ const styles = {
     paddingBottom: '6px !important',
     fontFamily: 'Courier, Courier New, monospace !important',
     fontSize: '14px !important'
+  }),
+  codemirror: css({
+    padding: '10px 0',
+    '& .CodeMirror': {
+      height: 'auto',
+      margin: '10px 80px 20px 0',
+      fontFamily: fontFamilies.monospaceRegular,
+      fontSize: 14,
+      color: colors.text
+    },
+    '& .CodeMirror-lines': {
+      backgroundColor: colors.light.hover,
+      padding: 5
+    }
   })
 }
 
@@ -42,48 +65,44 @@ class JSONField extends Component {
     this.state = {
       value: undefined
     }
-    this.renderInput = renderAutoSize({
-      onBlur: e => {
-        const value = e.target.value
-        if (!value) {
-          return
-        }
-        let data
-        try {
-          data = JSON.parse(value)
-        } catch (e) {}
-        if (data) {
-          this.setState({
-            value: undefined
-          })
-        }
-      }
-    })
   }
   render() {
     const { label, value, onChange } = this.props
     const stateValue = this.state.value
     return (
-      <Field
-        label={label}
-        value={
-          stateValue === undefined ? JSON.stringify(value, null, 2) : stateValue
-        }
-        renderInput={this.renderInput}
-        onChange={(_, value) => {
-          let data
-          try {
-            data = JSON.parse(value)
-          } catch (e) {}
-          if (data) {
-            onChange(data)
+      <div {...styles.codemirror}>
+        <Label style={{ paddingLeft: 5 }}>{label}</Label>
+        <CodeMirror
+          value={
+            stateValue === undefined
+              ? JSON.stringify(value, null, 2)
+              : stateValue
           }
+          options={{
+            mode: 'application/json',
+            theme: 'neo',
+            gutters: ['CodeMirror-linenumbers'],
+            lineNumbers: true,
+            line: true,
+            lint: true,
+            matchBrackets: true,
+            autoCloseBrackets: true
+          }}
+          onBeforeChange={(editor, data, value) => {
+            let json
+            try {
+              json = JSON.parse(value)
+            } catch (e) {}
+            if (json) {
+              onChange(json)
+            }
 
-          if (this.state.value !== value) {
-            this.setState({ value })
-          }
-        }}
-      />
+            if (this.state.value !== value) {
+              this.setState({ value })
+            }
+          }}
+        />
+      </div>
     )
   }
 }
