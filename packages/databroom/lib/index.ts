@@ -41,7 +41,6 @@ const debug = _debug('databroom')
 
 async function getJobs(): Promise<JobMeta[]> {
   const glob = 'jobs/**/*.js'
-  // const glob = 'jobs/**/eventLog.js'
 
   debug('find in %s with "%s', __dirname, glob)
   const paths = await fg(
@@ -84,6 +83,11 @@ export async function forEachRow(
   const qryConditions = conditions
   const pogiTable = pgdb.public[table]
 
+  if (!pogiTable) {
+    debug('table %s does not exist', table)
+    return
+  }
+
   debug('counting rows ...')
   const count = await pogiTable.count(qryConditions)
   debug('%i rows found', count)
@@ -120,30 +124,38 @@ export async function processStream(stream: stream.Readable, handlers: Handlers)
   const rowsBatch: any[] = []
 
   return new Promise((resolve, reject) => {
-    stream.on('data', async (row) => {
-      stream.pause()
+    stream.on('data', async function onData(row) {
+      try {
+        stream.pause()
 
-      const maybeRow = await rowHandler(row)
+        const maybeRow = await rowHandler(row)
 
-      if (batchHandler) {
-        rowsBatch.push(maybeRow || row)
+        if (batchHandler) {
+          rowsBatch.push(maybeRow || row)
 
-        if (rowsBatch.length >= BATCH_SIZE) {
+          if (rowsBatch.length >= BATCH_SIZE) {
+            await batchHandler(rowsBatch)
+            rowsBatch.length = 0
+          }
+        }
+
+        stream.resume()
+      } catch(e) {
+        reject(e)
+      }
+    })
+
+    stream.on('end', async function onEnd() {
+      try {
+        if (batchHandler && rowsBatch.length > 0) {
           await batchHandler(rowsBatch)
           rowsBatch.length = 0
         }
+
+        resolve()
+      } catch (e) {
+        reject(e)
       }
-
-      stream.resume()
-    })
-
-    stream.on('end', async () => {
-      if (batchHandler && rowsBatch.length > 0) {
-        await batchHandler(rowsBatch)
-        rowsBatch.length = 0
-      }
-
-      resolve()
     })
 
     stream.on('error', reject)

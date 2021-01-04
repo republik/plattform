@@ -59,9 +59,7 @@ const broom = async (context: Context) => {
 base.lib.ConnectionContext
   .create('databroom')
   .then(async (context: Context) => {
-    await broom(context).catch((error: any) => {
-      console.error(error)
-    })
+    await broom(context).catch((error: any) => { console.error(error) })
 
     return context
   })
@@ -69,4 +67,3 @@ base.lib.ConnectionContext
   .catch((error: any) => {
     console.error(error)
   })
-  .finally(() => debug('done'))
