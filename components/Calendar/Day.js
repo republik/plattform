@@ -11,7 +11,9 @@ import { containsRepoFromTemplate } from '../../lib/utils/repo'
 import Repo, { Placeholder } from './Repo'
 import { ascending, group } from 'd3-array'
 import withT from '../../lib/withT'
-import { placeholderRepos } from './config'
+import { parseJSONObject } from '../../lib/safeJSON'
+import { WEEK_TEMPLATE_REPOS } from '../../lib/settings'
+const templateRepos = parseJSONObject(WEEK_TEMPLATE_REPOS)
 
 const styles = {
   container: css({
@@ -72,7 +74,7 @@ const ReposByTemplate = ({
 }) => {
   const reposAndPlaceholders = isPast
     ? repos
-    : getPlaceholders(placeholderRepos[template], date).reduce(
+    : getPlaceholders(templateRepos[template], date).reduce(
         (acc, placeholder) => {
           const isInList = containsRepoFromTemplate(repos, placeholder.repoId)
           return isInList
