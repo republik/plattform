@@ -10,7 +10,7 @@ import { setup } from '../lib'
 
 const argv = yargs
   .option('dryRun', {
-    description: 'Don\'t make changes',
+    description: 'Don\'t make changes (rollback instead of commit)',
     boolean: true,
     default: true,
   })

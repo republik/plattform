@@ -1,9 +1,5 @@
 import { forEachRow, Options, JobContext, JobFn } from '../../index'
 
-interface PreviewEvent {
-  id: string
-}
-
 const AGE_DAYS = 90
 
 export default module.exports = function setup(options: Options, context: JobContext): JobFn {
@@ -19,23 +15,22 @@ export default module.exports = function setup(options: Options, context: JobCon
     const tx = await pgdb.transactionBegin()
     try {
       const handlerDebug = debug.extend('handler')
-      const handler = async function (row: PreviewEvent): Promise<void> {
-        handlerDebug('delete %s', row.id)
+      const batchHandler = async function (ids: string[]): Promise<void> {
+        debug('delete %s rows', ids.length)
+        handlerDebug('delete ids: %o', ids)
 
-        if (!dryRun) {
-          await tx.public.previewEvents.delete({ id: row.id })
-        }
+        await tx.public.previewEvents.delete({ id: ids })
       }
 
       await forEachRow(
         'previewEvents',
         qryConditions,
         options,
-        handler,
+        { batchHandler },
         context,
       )
 
-      await tx.transactionCommit()
+      await (dryRun && tx.transactionRollback()) || tx.transactionCommit()
     } catch (e) {
       await tx.transactionRollback()
       throw e

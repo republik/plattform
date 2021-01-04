@@ -28,22 +28,26 @@ export default module.exports = function setup(options: Options, context: JobCon
       debug('conditions: %o', { createdBefore })
 
       const handlerDebug = debug.extend('handler')
-      const handler = async function (row: MailLog): Promise<void> {
-        handlerDebug('tidy info in %s', row.id)
-
-        if (!dryRun) {
-          const info = {
-            message: {
-              subject: row.info?.message?.subject
-            },
-            template: row.info?.template
-          }
-
-          await tx.public.mailLog.update(
-            { id: row.id },
-            { info }
-          )
+      const rowHandler = async function (row: MailLog): Promise<any> {
+        const info = {
+          message: {
+            subject: row.info?.message?.subject
+          },
+          template: row.info?.template
         }
+
+        handlerDebug('tidy info in %s: %o', row.id, info)
+
+        await tx.public.mailLog.update(
+          { id: row.id },
+          { info }
+        )
+
+        return row.id
+      }
+
+      const batchHandler = async function (ids: string[]): Promise<void> {
+        debug('updated %i rows', ids.length)
       }
 
       debug('counting rows ...')
@@ -67,7 +71,7 @@ export default module.exports = function setup(options: Options, context: JobCon
 
       const qryStream = await pgdb.queryAsStream(
         [
-          `SELECT * FROM "mailLog"`,
+          `SELECT id, info FROM "mailLog"`,
           `WHERE "createdAt" < '${new Date(createdBefore).toISOString()}'`,
           `AND (info->'message'->>'to') IS NOT NULL`,
           nice && `LIMIT ${limit}`
@@ -77,14 +81,14 @@ export default module.exports = function setup(options: Options, context: JobCon
       debug('processing stream with handler ...')
       await processStream(
         qryStream,
-        handler,
+        { rowHandler, batchHandler },
       )
       debug('processing stream is done')
 
       const [seconds] = process.hrtime(hrstart)
       debug('duration: %ds', seconds)
 
-      await tx.transactionCommit()
+      await (dryRun && tx.transactionRollback()) || tx.transactionCommit()
     } catch (e) {
       await tx.transactionRollback()
       throw e

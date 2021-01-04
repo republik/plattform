@@ -1,9 +1,5 @@
 import { forEachRow, Options, JobContext, JobFn } from '../../index'
 
-interface Consent {
-  id: string
-}
-
 const AGE_DAYS = 365
 
 export default module.exports = function setup(options: Options, context: JobContext): JobFn {
@@ -20,26 +16,25 @@ export default module.exports = function setup(options: Options, context: JobCon
     const tx = await pgdb.transactionBegin()
     try {
       const handlerDebug = debug.extend('handler')
-      const handler = async function (row: Consent): Promise<void> {
-        handlerDebug('set ip to null on %s', row.id)
+      const batchHandler = async function (ids: string[]): Promise<void> {
+        debug('delete %s rows', ids.length)
+        handlerDebug('delete ids: %o', ids)
 
-        if (!dryRun) {
-          await tx.public.consents.update(
-            { id: row.id },
-            { ip: null }
-          )
-        }
+        await tx.public.consents.update(
+          { id: ids },
+          { ip: null }
+        )
       }
 
       await forEachRow(
         'consents',
         qryConditions,
         options,
-        handler,
+        { batchHandler },
         context,
       )
 
-      await tx.transactionCommit()
+      await (dryRun && tx.transactionRollback()) || tx.transactionCommit()
     } catch (e) {
       await tx.transactionRollback()
       throw e

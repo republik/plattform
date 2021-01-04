@@ -21,17 +21,27 @@ export interface JobFn {
   (): Promise<any>
 }
 
-interface ProcessStreamHandler {
+interface RowHandler {
   (row: any): Promise<any>
 }
+interface BatchHandler {
+  (row: any[]): Promise<void>
+}
 
+interface Handlers {
+  rowHandler?: RowHandler
+  batchHandler?: BatchHandler
+}
+
+const BATCH_SIZE = 1000
 export const NICE_ROWS_LIMIT_FACTOR = 0.01
-export const NICE_ROWS_LIMIT_MINIMUM = 1000 * 10 // 10'000 rows
+export const NICE_ROWS_LIMIT_MINIMUM = BATCH_SIZE * 10
 
 const debug = _debug('databroom')
 
 async function getJobs(): Promise<JobMeta[]> {
   const glob = 'jobs/**/*.js'
+  // const glob = 'jobs/**/eventLog.js'
 
   debug('find in %s with "%s', __dirname, glob)
   const paths = await fg(
@@ -58,8 +68,8 @@ export async function forEachRow(
   table: string,
   conditions: object,
   options: Options,
-  handler: ProcessStreamHandler,
-  context: JobContext
+  handlers: Handlers,
+  context: JobContext,
 ): Promise<void> {
   const hrstart = process.hrtime()
   const { pgdb, debug: _debug } = context
@@ -96,7 +106,7 @@ export async function forEachRow(
   debug('processing stream with handler ...')
   await processStream(
     qryStream,
-    handler
+    handlers,
   )
   debug('processing stream is done')
 
@@ -104,15 +114,39 @@ export async function forEachRow(
   debug('duration: %ds', seconds)
 }
 
-export async function processStream(stream: stream.Readable, rowHandler: ProcessStreamHandler): Promise<void> {
+export async function processStream(stream: stream.Readable, handlers: Handlers): Promise<void> {
+  const { rowHandler: _rowHandler, batchHandler } = handlers
+
+  const rowHandler = _rowHandler || function defaultRowHandler(row: any) { return row.id }
+  const rowsBatch: any[] = []
+
   return new Promise((resolve, reject) => {
     stream.on('data', async (row) => {
       stream.pause()
-      await rowHandler(row)
+
+      const maybeRow = await rowHandler(row)
+
+      if (batchHandler) {
+        rowsBatch.push(maybeRow || row)
+
+        if (rowsBatch.length >= BATCH_SIZE) {
+          await batchHandler(rowsBatch)
+          rowsBatch.length = 0
+        }
+      }
+
       stream.resume()
     })
 
-    stream.on('end', resolve)
+    stream.on('end', async () => {
+      if (batchHandler && rowsBatch.length > 0) {
+        await batchHandler(rowsBatch)
+        rowsBatch.length = 0
+      }
+
+      resolve()
+    })
+
     stream.on('error', reject)
   })
 }
