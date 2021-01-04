@@ -1,13 +1,9 @@
 import { NICE_ROWS_LIMIT_FACTOR, NICE_ROWS_LIMIT_MINIMUM, processStream, Options, JobContext, JobFn } from '../../index'
 
-interface MailLog {
+interface SelectFields {
   id: string
-  info: {
-    message?: {
-      subject?: string
-    }
-    template?: string
-  }
+  subject: string
+  template: string
 }
 
 const AGE_DAYS = 90
@@ -28,12 +24,14 @@ export default module.exports = function setup(options: Options, context: JobCon
       debug('conditions: %o', { createdBefore })
 
       const handlerDebug = debug.extend('handler')
-      const rowHandler = async function (row: MailLog): Promise<any> {
+      const rowHandler = async function (row: SelectFields): Promise<any> {
+        const { subject, template } = row
+
         const info = {
           message: {
-            subject: row.info?.message?.subject
+            subject
           },
-          template: row.info?.template
+          template
         }
 
         handlerDebug('tidy info in %s: %o', row.id, info)
@@ -71,7 +69,8 @@ export default module.exports = function setup(options: Options, context: JobCon
 
       const qryStream = await pgdb.queryAsStream(
         [
-          `SELECT id, info FROM "mailLog"`,
+          `SELECT id, info->'message'->>'subject' "subject", info->>'template' "template"`,
+          `FROM "mailLog"`,
           `WHERE "createdAt" < '${new Date(createdBefore).toISOString()}'`,
           `AND (info->'message'->>'to') IS NOT NULL`,
           nice && `LIMIT ${limit}`
