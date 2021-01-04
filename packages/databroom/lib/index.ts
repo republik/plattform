@@ -26,7 +26,7 @@ interface ProcessStreamHandler {
 }
 
 export const NICE_ROWS_LIMIT_FACTOR = 0.01
-export const NICE_ROWS_LIMIT_MINIMUM = 100
+export const NICE_ROWS_LIMIT_MINIMUM = 1000 * 10 // 10'000 rows
 
 const debug = _debug('databroom')
 
