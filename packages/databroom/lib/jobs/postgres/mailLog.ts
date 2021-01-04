@@ -24,7 +24,7 @@ export default module.exports = function setup(options: Options, context: JobCon
 
         await tx.public.mailLog.query([
           `UPDATE "mailLog"`,
-          `SET info = ('{"message": {"subject": "' || (info->'message'->>'subject')::text || '"}, "template": "' || (info->>'template')::text || '"}')::jsonb`,
+          `SET info = jsonb_strip_nulls(jsonb_build_object('message', jsonb_build_object('subject', info->'message'->'subject'), 'template', info->'template'))`,
           `WHERE "id" IN (${ids.map(id => `'${id}'`).join(',')})`,
         ].join(' '))
       }
