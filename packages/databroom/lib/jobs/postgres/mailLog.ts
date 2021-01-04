@@ -1,11 +1,5 @@
 import { NICE_ROWS_LIMIT_FACTOR, NICE_ROWS_LIMIT_MINIMUM, processStream, Options, JobContext, JobFn } from '../../index'
 
-interface SelectFields {
-  id: string
-  subject: string
-  template: string
-}
-
 const AGE_DAYS = 90
 
 export default module.exports = function setup(options: Options, context: JobContext): JobFn {
@@ -24,28 +18,15 @@ export default module.exports = function setup(options: Options, context: JobCon
       debug('conditions: %o', { createdBefore })
 
       const handlerDebug = debug.extend('handler')
-      const rowHandler = async function (row: SelectFields): Promise<any> {
-        const { subject, template } = row
-
-        const info = {
-          message: {
-            subject
-          },
-          template
-        }
-
-        handlerDebug('tidy info in %s: %o', row.id, info)
-
-        await tx.public.mailLog.update(
-          { id: row.id },
-          { info }
-        )
-
-        return row.id
-      }
-
       const batchHandler = async function (ids: string[]): Promise<void> {
-        debug('updated %i rows', ids.length)
+        debug('update %i rows', ids.length)
+        handlerDebug('update ids: %o', ids)
+
+        await tx.public.mailLog.query([
+          `UPDATE "mailLog"`,
+          `SET info = ('{"message": {"subject": "' || (info->'message'->>'subject')::text || '"}, "template": "' || (info->>'template')::text || '"}')::jsonb`,
+          `WHERE "id" IN (${ids.map(id => `'${id}'`).join(',')})`,
+        ].join(' '))
       }
 
       debug('counting rows ...')
@@ -69,7 +50,7 @@ export default module.exports = function setup(options: Options, context: JobCon
 
       const qryStream = await pgdb.queryAsStream(
         [
-          `SELECT id, info->'message'->>'subject' "subject", info->>'template' "template"`,
+          `SELECT id`,
           `FROM "mailLog"`,
           `WHERE "createdAt" < '${new Date(createdBefore).toISOString()}'`,
           `AND (info->'message'->>'to') IS NOT NULL`,
@@ -80,7 +61,7 @@ export default module.exports = function setup(options: Options, context: JobCon
       debug('processing stream with handler ...')
       await processStream(
         qryStream,
-        { rowHandler, batchHandler },
+        { batchHandler },
       )
       debug('processing stream is done')
 
