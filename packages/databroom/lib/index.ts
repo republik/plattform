@@ -70,6 +70,7 @@ export async function forEachRow(
   options: Options,
   handlers: Handlers,
   context: JobContext,
+  fields: string[] = ['id'],
 ): Promise<void> {
   const hrstart = process.hrtime()
   const { pgdb, debug: _debug } = context
@@ -94,6 +95,7 @@ export async function forEachRow(
 
   const qryOptions = {
     ...nice && { limit },
+    fields,
     stream: true,
   }
 
