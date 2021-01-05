@@ -249,12 +249,6 @@ function getMitteilung(
   avisierungstext: Avisierungstext,
   transactionDetails?: TransactionDetails,
 ): string | null {
-  const match = avisierungstext.match(
-    /.*?MITTEILUNGEN:.*?\s([A-Za-z0-9]{6})(\s.*?|$)/,
-  )
-
-  if (match) return match[1]
-
   const creditorReference = transactionDetails?.RmtInf?.Strd?.CdtrRefInf?.Ref
   const referenceHrId = creditorReference && paymentslip.getHrId(creditorReference)
 
@@ -272,6 +266,7 @@ function getMitteilung(
   return (
     paymentslip.getHrId(remittanceInformation) ||
     remittanceInformation?.match(/\b([A-Za-z0-9]{6})\b/)?.[1] ||
+    avisierungstext.match(/.*?MITTEILUNGEN:.*?\s([A-Za-z0-9]{6})(\s.*?|$)/)?.[1] ||
     null
   )
 }
