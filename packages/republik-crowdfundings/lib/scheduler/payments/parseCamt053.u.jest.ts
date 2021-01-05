@@ -45,6 +45,9 @@ describe('parseCamt053():', () => {
     const paymentEntries = parseCamt053(xmlString)
     expect(paymentEntries[0].mitteilung).toEqual('AAAAAA')
     expect(paymentEntries[1].mitteilung).toEqual('BBBBBB')
+    expect(paymentEntries[2].mitteilung).toEqual('CCCCCC')
+    expect(paymentEntries[3].mitteilung).toEqual('EEEEEE')
+    expect(paymentEntries[4].mitteilung).toEqual('FFFFFF')
   })
 
   it('falls back to remittance information for `Mitteilung`', async () => {
@@ -55,6 +58,7 @@ describe('parseCamt053():', () => {
     expect(paymentEntries[2].mitteilung).toEqual('AAAAAA')
     expect(paymentEntries[3].mitteilung).toEqual('CCCCCC')
     expect(paymentEntries[4].mitteilung).toEqual(null)
+    expect(paymentEntries[5].mitteilung).toEqual('EEEEEE')
   })
 
   it('returns the reference for the sanned cash deposit', async () => {
