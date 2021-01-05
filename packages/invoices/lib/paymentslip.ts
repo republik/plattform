@@ -232,7 +232,7 @@ export function getReference(hrid: string, pretty?: boolean): string {
 }
 
 export function getHrId(string: string): string | null {
-  const [reference, hrid] = string.replace(/[^A-Za-z0-9]/g, '').match(/RF\d\dHRID([A-Za-z0-9]{6})/) || []
+  const [reference, hrid] = string.replace(/[^A-Za-z0-9]/g, '').match(/RF\d\d0{0,11}HRID([A-Za-z0-9]{6})/) || []
 
   if (!reference) {
     return null
