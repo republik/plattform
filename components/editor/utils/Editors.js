@@ -43,7 +43,14 @@ const CodeMirrorField = ({ label, value, onChange, onPaste, options }) => (
     <Label style={{ paddingLeft: 5 }}>{label}</Label>
     <CodeMirror
       value={value}
-      options={options}
+      options={{
+        theme: 'neo',
+        gutters: ['CodeMirror-linenumbers'],
+        lineNumbers: true,
+        line: true,
+        lineWrapping: true,
+        ...options
+      }}
       onBeforeChange={(editor, data, value) => {
         onChange(value)
       }}
@@ -59,12 +66,7 @@ export const PlainEditor = ({ label, value, onChange, onPaste, mode }) => (
     label={label}
     value={value}
     options={{
-      mode: mode || 'text',
-      theme: 'neo',
-      gutters: ['CodeMirror-linenumbers'],
-      lineNumbers: true,
-      line: true,
-      lineWrapping: true
+      mode: mode || 'text'
     }}
     onChange={value => {
       onChange(value)
@@ -86,10 +88,6 @@ export const JSONEditor = ({ label, value, onChange }) => {
       }
       options={{
         mode: 'application/json',
-        theme: 'neo',
-        gutters: ['CodeMirror-linenumbers'],
-        lineNumbers: true,
-        line: true,
         lint: true,
         matchBrackets: true,
         autoCloseBrackets: true
