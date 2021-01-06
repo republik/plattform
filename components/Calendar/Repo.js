@@ -28,6 +28,10 @@ const styles = {
       textDecoration: 'underline'
     }
   }),
+  link: css({
+    color: 'inherit',
+    textDecoration: 'none'
+  }),
   title: css({
     padding: '5px 5px 5px 0'
   }),
@@ -129,11 +133,11 @@ const RepoLink = ({ repo, placeholderDate, children }) => {
   const { id } = repo
   return placeholderDate ? (
     <PlaceholderLink repo={repo} placeholderDate={placeholderDate}>
-      {children}
+      <a {...styles.link}>{children}</a>
     </PlaceholderLink>
   ) : (
     <Link route='repo/tree' params={{ repoId: id.split('/') }} passHref>
-      {children}
+      <a {...styles.link}>{children}</a>
     </Link>
   )
 }
