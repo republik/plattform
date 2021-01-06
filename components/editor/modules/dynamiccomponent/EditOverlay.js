@@ -3,7 +3,7 @@ import { fromJS } from 'immutable'
 import debounce from 'lodash.debounce'
 
 import OverlayFormManager from '../../utils/OverlayFormManager'
-import JSONField, { NumberedField } from '../../utils/JSONField'
+import { JSONEditor, PlainEditor } from '../../utils/Editors'
 
 import { Interaction, Label, Radio } from '@project-r/styleguide'
 
@@ -148,7 +148,7 @@ class Form extends Component {
           })}
         </Interaction.P>
         <Interaction.P>
-          <JSONField
+          <JSONEditor
             label='Config'
             value={config}
             onChange={value => {
@@ -160,7 +160,7 @@ class Form extends Component {
           />
         </Interaction.P>
         <Interaction.P>
-          <NumberedField
+          <PlainEditor
             label='SSR-HTML'
             value={html}
             mode='htmlmixed'

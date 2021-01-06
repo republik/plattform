@@ -2,7 +2,7 @@ import React, { Fragment } from 'react'
 import { tsvParse, csvFormat } from 'd3-dsv'
 
 import OverlayFormManager from '../../utils/OverlayFormManager'
-import JSONField, { NumberedField } from '../../utils/JSONField'
+import { JSONEditor, PlainEditor } from '../../utils/Editors'
 
 import { Interaction, Label, Radio } from '@project-r/styleguide'
 
@@ -91,14 +91,14 @@ export default props => (
               )
             })}
           </Interaction.P>
-          <JSONField
+          <JSONEditor
             label='JSON Config'
             value={config}
             onChange={value => {
               onChange(data.set('config', value))
             }}
           />
-          <NumberedField
+          <PlainEditor
             label='CSV Data'
             value={data.get('values')}
             onChange={value => onChange(data.set('values', value))}

@@ -54,7 +54,7 @@ const CodeMirrorField = ({ label, value, onChange, onPaste, options }) => (
   </div>
 )
 
-export const NumberedField = ({ label, value, onChange, onPaste, mode }) => (
+export const PlainEditor = ({ label, value, onChange, onPaste, mode }) => (
   <CodeMirrorField
     label={label}
     value={value}
@@ -75,7 +75,7 @@ export const NumberedField = ({ label, value, onChange, onPaste, mode }) => (
   />
 )
 
-const JSONField = ({ label, value, onChange }) => {
+export const JSONEditor = ({ label, value, onChange }) => {
   const [stateValue, setStateValue] = useState(undefined)
 
   return (
@@ -116,5 +116,3 @@ CodeMirrorField.propTypes = {
   value: PropTypes.object,
   onChange: PropTypes.func.isRequired
 }
-
-export default JSONField
