@@ -36,7 +36,7 @@ const Calendar = ({
     query,
     query: { from, until }
   },
-  data: { loading, error, reposSearch }
+  data = {}
 }) => {
   useEffect(() => {
     !(from && until) && resetDates()
@@ -57,6 +57,8 @@ const Calendar = ({
       until: getUrlWeekEnd(now)
     })
 
+  const { loading, error, reposSearch } = data
+
   return (
     <div {...styles.container}>
       <Nav>
@@ -67,7 +69,7 @@ const Calendar = ({
       </Nav>
       <div {...styles.calendar}>
         <Loader
-          loading={true}
+          loading={loading}
           error={error}
           height={300}
           render={() => {
