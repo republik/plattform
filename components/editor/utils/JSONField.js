@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { useState } from 'react'
 import { css } from 'glamor'
 import PropTypes from 'prop-types'
 import AutosizeInput from 'react-textarea-autosize'
@@ -9,6 +9,7 @@ import { colors, fontFamilies, Label } from '@project-r/styleguide'
 if (process.browser && window) {
   window.jsonlint = require('jsonlint-mod')
   require('codemirror/mode/javascript/javascript')
+  require('codemirror/mode/htmlmixed/htmlmixed')
   require('codemirror/addon/edit/matchbrackets')
   require('codemirror/addon/edit/closebrackets')
   require('codemirror/addon/lint/lint')
@@ -42,69 +43,65 @@ const styles = {
   })
 }
 
-export const renderAutoSize = ({ onBlur, onPaste } = {}) => ({
-  ref,
-  onBlur: fieldOnBlur,
-  ...inputProps
-}) => (
-  <AutosizeInput
-    {...inputProps}
-    {...styles.autoSize}
-    onBlur={e => {
-      onBlur && onBlur(e)
-      fieldOnBlur && fieldOnBlur(e)
-    }}
-    onPaste={onPaste}
-    inputRef={ref}
-  />
+export const NumberedField = ({ label, value, onChange, onPaste, mode }) => (
+  <div {...styles.codemirror}>
+    <Label style={{ paddingLeft: 5 }}>{label}</Label>
+    <CodeMirror
+      value={value}
+      options={{
+        mode: mode || 'text',
+        theme: 'neo',
+        gutters: ['CodeMirror-linenumbers'],
+        lineNumbers: true,
+        line: true,
+        lineWrapping: true
+      }}
+      onBeforeChange={(editor, data, value) => {
+        onChange(value)
+      }}
+      onPaste={(editor, event) => {
+        onPaste && onPaste(event)
+      }}
+    />
+  </div>
 )
 
-class JSONField extends Component {
-  constructor(...args) {
-    super(...args)
-    this.state = {
-      value: undefined
-    }
-  }
-  render() {
-    const { label, value, onChange } = this.props
-    const stateValue = this.state.value
-    return (
-      <div {...styles.codemirror}>
-        <Label style={{ paddingLeft: 5 }}>{label}</Label>
-        <CodeMirror
-          value={
-            stateValue === undefined
-              ? JSON.stringify(value, null, 2)
-              : stateValue
-          }
-          options={{
-            mode: 'application/json',
-            theme: 'neo',
-            gutters: ['CodeMirror-linenumbers'],
-            lineNumbers: true,
-            line: true,
-            lint: true,
-            matchBrackets: true,
-            autoCloseBrackets: true
-          }}
-          onBeforeChange={(editor, data, value) => {
-            let json
-            try {
-              json = JSON.parse(value)
-            } catch (e) {}
-            if (json) {
-              onChange(json)
-            }
+const JSONField = ({ label, value, onChange }) => {
+  const [stateValue, setStateValue] = useState(undefined)
 
-            if (this.state.value !== value) {
-              this.setState({ value })
-            }
-          }}
-        />
-      </div>
-    )
-  }
+  return (
+    <div {...styles.codemirror}>
+      <Label style={{ paddingLeft: 5 }}>{label}</Label>
+      <CodeMirror
+        value={
+          stateValue === undefined ? JSON.stringify(value, null, 2) : stateValue
+        }
+        options={{
+          mode: 'application/json',
+          theme: 'neo',
+          gutters: ['CodeMirror-linenumbers'],
+          lineNumbers: true,
+          line: true,
+          lint: true,
+          matchBrackets: true,
+          autoCloseBrackets: true
+        }}
+        onBeforeChange={(editor, data, value) => {
+          let json
+          try {
+            json = JSON.parse(value)
+          } catch (e) {}
+          if (json) {
+            onChange(json)
+          }
+
+          if (stateValue !== value) {
+            setStateValue(value)
+          }
+        }}
+      />
+    </div>
+  )
 }
 
 JSONField.propTypes = {

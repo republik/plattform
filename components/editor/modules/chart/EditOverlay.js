@@ -2,9 +2,9 @@ import React, { Fragment } from 'react'
 import { tsvParse, csvFormat } from 'd3-dsv'
 
 import OverlayFormManager from '../../utils/OverlayFormManager'
-import JSONField, { renderAutoSize } from '../../utils/JSONField'
+import JSONField, { NumberedField } from '../../utils/JSONField'
 
-import { Interaction, Label, Field, Radio } from '@project-r/styleguide'
+import { Interaction, Label, Radio } from '@project-r/styleguide'
 
 import Export from './Export'
 
@@ -98,25 +98,20 @@ export default props => (
               onChange(data.set('config', value))
             }}
           />
-          <Field
+          <NumberedField
             label='CSV Data'
-            name='values'
             value={data.get('values')}
-            renderInput={renderAutoSize({
-              onPaste: e => {
-                const clipboardData = e.clipboardData || window.clipboardData
-                let parsedTsv
-                try {
-                  parsedTsv = tsvParse(clipboardData.getData('Text'))
-                } catch (e) {}
-                if (parsedTsv && parsedTsv.columns.length > 1) {
-                  e.preventDefault()
-                  onChange(data.set('values', csvFormat(parsedTsv)))
-                }
+            onChange={value => onChange(data.set('values', value))}
+            onPaste={e => {
+              const clipboardData = e.clipboardData || window.clipboardData
+              let parsedTsv
+              try {
+                parsedTsv = tsvParse(clipboardData.getData('Text'))
+              } catch (e) {}
+              if (parsedTsv && parsedTsv.columns.length > 1) {
+                e.preventDefault()
+                onChange(data.set('values', csvFormat(parsedTsv)))
               }
-            })}
-            onChange={(_, value) => {
-              onChange(data.set('values', value))
             }}
           />
         </Fragment>
