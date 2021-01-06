@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { css } from 'glamor'
 import PropTypes from 'prop-types'
-import AutosizeInput from 'react-textarea-autosize'
 import { Controlled as CodeMirror } from 'react-codemirror2'
 import { colors, fontFamilies, Label } from '@project-r/styleguide'
 
@@ -17,16 +16,6 @@ if (process.browser && window) {
 }
 
 const styles = {
-  autoSize: css({
-    width: '100%',
-    minWidth: '100%',
-    maxWidth: '100%',
-    minHeight: 40,
-    paddingTop: '7px !important',
-    paddingBottom: '6px !important',
-    fontFamily: 'Courier, Courier New, monospace !important',
-    fontSize: '14px !important'
-  }),
   codemirror: css({
     padding: '10px 0',
     '& .CodeMirror': {
@@ -38,24 +27,23 @@ const styles = {
     },
     '& .CodeMirror-lines': {
       backgroundColor: colors.light.hover,
-      padding: 5
+      paddingTop: 7,
+      paddingBottom: 6,
+      minHeight: 40
+    },
+    '& .CodeMirror-cursor': {
+      width: 1,
+      background: colors.light.text
     }
   })
 }
 
-export const NumberedField = ({ label, value, onChange, onPaste, mode }) => (
+const CodeMirrorField = ({ label, value, onChange, onPaste, options }) => (
   <div {...styles.codemirror}>
     <Label style={{ paddingLeft: 5 }}>{label}</Label>
     <CodeMirror
       value={value}
-      options={{
-        mode: mode || 'text',
-        theme: 'neo',
-        gutters: ['CodeMirror-linenumbers'],
-        lineNumbers: true,
-        line: true,
-        lineWrapping: true
-      }}
+      options={options}
       onBeforeChange={(editor, data, value) => {
         onChange(value)
       }}
@@ -66,45 +54,64 @@ export const NumberedField = ({ label, value, onChange, onPaste, mode }) => (
   </div>
 )
 
+export const NumberedField = ({ label, value, onChange, onPaste, mode }) => (
+  <CodeMirrorField
+    label={label}
+    value={value}
+    options={{
+      mode: mode || 'text',
+      theme: 'neo',
+      gutters: ['CodeMirror-linenumbers'],
+      lineNumbers: true,
+      line: true,
+      lineWrapping: true
+    }}
+    onChange={value => {
+      onChange(value)
+    }}
+    onPaste={event => {
+      onPaste(event)
+    }}
+  />
+)
+
 const JSONField = ({ label, value, onChange }) => {
   const [stateValue, setStateValue] = useState(undefined)
 
   return (
-    <div {...styles.codemirror}>
-      <Label style={{ paddingLeft: 5 }}>{label}</Label>
-      <CodeMirror
-        value={
-          stateValue === undefined ? JSON.stringify(value, null, 2) : stateValue
+    <CodeMirrorField
+      label={label}
+      value={
+        stateValue === undefined ? JSON.stringify(value, null, 2) : stateValue
+      }
+      options={{
+        mode: 'application/json',
+        theme: 'neo',
+        gutters: ['CodeMirror-linenumbers'],
+        lineNumbers: true,
+        line: true,
+        lint: true,
+        matchBrackets: true,
+        autoCloseBrackets: true
+      }}
+      onChange={value => {
+        let json
+        try {
+          json = JSON.parse(value)
+        } catch (e) {}
+        if (json) {
+          onChange(json)
         }
-        options={{
-          mode: 'application/json',
-          theme: 'neo',
-          gutters: ['CodeMirror-linenumbers'],
-          lineNumbers: true,
-          line: true,
-          lint: true,
-          matchBrackets: true,
-          autoCloseBrackets: true
-        }}
-        onBeforeChange={(editor, data, value) => {
-          let json
-          try {
-            json = JSON.parse(value)
-          } catch (e) {}
-          if (json) {
-            onChange(json)
-          }
 
-          if (stateValue !== value) {
-            setStateValue(value)
-          }
-        }}
-      />
-    </div>
+        if (stateValue !== value) {
+          setStateValue(value)
+        }
+      }}
+    />
   )
 }
 
-JSONField.propTypes = {
+CodeMirrorField.propTypes = {
   label: PropTypes.string.isRequired,
   value: PropTypes.object,
   onChange: PropTypes.func.isRequired
