@@ -15,6 +15,7 @@ import {
 import Day from './Day'
 import { CurrentDates, Nav, NavButton, ResetLink } from './Nav'
 import { reposPerWeek } from './graphql'
+import { Loader } from '@project-r/styleguide'
 
 const styles = {
   container: css({
@@ -35,7 +36,7 @@ const Calendar = ({
     query,
     query: { from, until }
   },
-  data
+  data: { loading, error, reposSearch }
 }) => {
   useEffect(() => {
     !(from && until) && resetDates()
@@ -56,12 +57,6 @@ const Calendar = ({
       until: getUrlWeekEnd(now)
     })
 
-  const calendar = getPublicationCalendar(
-    from,
-    until,
-    data?.reposSearch?.nodes || []
-  )
-
   return (
     <div {...styles.container}>
       <Nav>
@@ -71,14 +66,30 @@ const Calendar = ({
         {!isCurrentWeek(from) && <ResetLink reset={resetDates} />}
       </Nav>
       <div {...styles.calendar}>
-        {calendar.map(day => (
-          <Day
-            key={day.date}
-            day={day}
-            isPast={isPast(day.date)}
-            discrete={isPast(day.date) && isCurrentWeek(from)}
-          />
-        ))}
+        <Loader
+          loading={true}
+          error={error}
+          height={300}
+          render={() => {
+            const calendar = getPublicationCalendar(
+              from,
+              until,
+              reposSearch?.nodes || []
+            )
+            return (
+              <>
+                {calendar.map(day => (
+                  <Day
+                    key={day.date}
+                    day={day}
+                    isPast={isPast(day.date)}
+                    discrete={isPast(day.date) && isCurrentWeek(from)}
+                  />
+                ))}
+              </>
+            )
+          }}
+        />
       </div>
     </div>
   )
