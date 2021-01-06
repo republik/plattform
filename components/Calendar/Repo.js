@@ -12,7 +12,6 @@ import EditMetaDate from '../Repo/EditMetaDate'
 import { graphql } from 'react-apollo'
 import { GITHUB_ORG } from '../../lib/settings'
 import { getPlaceholder } from './graphql'
-import { getRandomString } from '../../lib/utils/name'
 import { getLabel, getTitle, getTemplateRepoPrefix } from '../../lib/utils/repo'
 import { getUrlDate } from '../../lib/utils/calendar'
 import withT from '../../lib/withT'
@@ -112,10 +111,7 @@ const PlaceholderLink = ({ repo, placeholderDate, children }) => {
     <Link
       route='repo/edit'
       params={{
-        repoId: [
-          GITHUB_ORG,
-          `${getTemplateRepoPrefix(id)}-${getRandomString()}-${urlDate}`
-        ],
+        repoId: [GITHUB_ORG, `${getTemplateRepoPrefix(id)}-${urlDate}`],
         commitId: 'new',
         title,
         schema: template,
