@@ -94,6 +94,26 @@ const createBuckets = (now) => [
     handler: mailings,
   },
   {
+    name: 'membership_owner_prolong_abo_give_months_notice_0',
+    endDate: {
+      min: getMinEndDate(now, -3),
+      max: getMaxEndDate(now, 0),
+    },
+    predicate: ({ id: userId, membershipType, membershipAutoPay, autoPay }) => {
+      console.log({ userId, membershipType })
+      return (
+        membershipType === 'ABO_GIVE_MONTHS' &&
+        (membershipAutoPay === false ||
+          (membershipAutoPay === true &&
+            (!autoPay || (autoPay && userId !== autoPay.userId))))
+      )
+    },
+    payload: {
+      templateName: 'membership_owner_prolong_abo_give_months_notice_0',
+    },
+    handler: mailings,
+  },
+  {
     name: 'membership_owner_prolong_winback_7',
     endDate: {
       min: getMinEndDate(now, -10),
@@ -227,6 +247,8 @@ const getBuckets = async ({ now }, context) => {
         { ignoreAutoPayFlag: true },
         { ...context, user },
       ).then((date) => date && moment(date))
+
+      console.log(user.membershipType, prolongBeforeDate)
 
       stats.numNeedProlongProgress++
 
