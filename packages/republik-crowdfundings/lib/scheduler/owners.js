@@ -100,7 +100,6 @@ const createBuckets = (now) => [
       max: getMaxEndDate(now, 0),
     },
     predicate: ({ id: userId, membershipType, membershipAutoPay, autoPay }) => {
-      console.log({ userId, membershipType })
       return (
         membershipType === 'ABO_GIVE_MONTHS' &&
         (membershipAutoPay === false ||
@@ -247,8 +246,6 @@ const getBuckets = async ({ now }, context) => {
         { ignoreAutoPayFlag: true },
         { ...context, user },
       ).then((date) => date && moment(date))
-
-      console.log(user.membershipType, prolongBeforeDate)
 
       stats.numNeedProlongProgress++
 
