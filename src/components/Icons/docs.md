@@ -30,6 +30,7 @@ The default Icon style is Material. For brands we rely on Ionic icons. There are
 
 <br />
 <Interaction.H3>UI Actions</Interaction.H3>
+<IconButton Icon={DarkmodeIcon} label="DarkmodeIcon" />
 <IconButton Icon={SearchMenuIcon} label="SearchMenuIcon" />
 <IconButton Icon={BackIcon} label="BackIcon" />
 <IconButton Icon={CloseIcon} label="CloseIcon" />

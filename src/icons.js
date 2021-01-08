@@ -77,4 +77,4 @@ export {
   LogoGoogleIcon,
   LogoAppleIcon,
   LogoFacebookIcon
-} from './components/Chart'
+} from './components/Icons'

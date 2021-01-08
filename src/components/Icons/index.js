@@ -58,7 +58,8 @@ import {
   MdFavorite,
   MdStars,
   MdTrendingFlat,
-  MdFolder
+  MdFolder,
+  MdBrightness2
 } from 'react-icons/md'
 import {
   IoLogoTwitter,
@@ -159,3 +160,4 @@ export const KeyboardArrowRightIcon = MdKeyboardArrowRight
 export const LogoGoogleIcon = IoLogoGoogle
 export const LogoAppleIcon = IoLogoApple
 export const LogoFacebookIcon = IoLogoFacebook
+export const DarkmodeIcon = MdBrightness2
