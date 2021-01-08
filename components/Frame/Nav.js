@@ -1,25 +1,23 @@
 import React from 'react'
 import { compose } from 'react-apollo'
 import Router, { withRouter } from 'next/router'
-import {
-  BrandMark,
-  colors,
-  Interaction,
-  mediaQueries
-} from '@project-r/styleguide'
+import { BrandMark, Interaction, mediaQueries } from '@project-r/styleguide'
 import { css } from 'glamor'
 import withT from '../../lib/withT'
-import Frame from './index'
 
 const styles = {
   nav: css({
     paddingTop: 15,
     paddingLeft: 15,
     verticalAlign: 'top',
-    display: 'inline-block',
+    display: 'flex',
     [mediaQueries.onlyS]: {
       fontSize: 14
     }
+  }),
+  navContent: css({
+    display: 'flex',
+    flexDirection: 'column'
   }),
   appLink: css({
     color: 'inherit',
@@ -75,13 +73,14 @@ export const Nav = ({ t, router, children }) => {
       >
         <BrandMark />
       </a>
-      <Interaction.H2 style={{ display: 'inline-block' }}>
-        <a href='/' onClick={onLogoClick} {...styles.appLink}>
-          {t('app/name')}
-        </a>
-      </Interaction.H2>
-      <br />
-      {children}
+      <div {...styles.navContent}>
+        <Interaction.H2 style={{ display: 'inline-block' }}>
+          <a href='/' onClick={onLogoClick} {...styles.appLink}>
+            {t('app/name')}
+          </a>
+        </Interaction.H2>
+        <div>{children}</div>
+      </div>
     </div>
   )
 }
