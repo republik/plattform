@@ -31,14 +31,14 @@ const styles = {
     }
   }),
   preview: css({
-    flex: 2,
+    flex: '1 1 50%',
     overflow: 'hidden'
   }),
   innerPreview: css({
     padding: '0 15px'
   }),
   edit: css({
-    flex: 1,
+    flex: '1 1 50%',
     [mediaQueries.mUp]: {
       paddingLeft: 20
     }
