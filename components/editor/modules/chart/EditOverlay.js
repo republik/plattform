@@ -2,7 +2,7 @@ import React, { Fragment } from 'react'
 import { tsvParse, csvFormat } from 'd3-dsv'
 
 import OverlayFormManager from '../../utils/OverlayFormManager'
-import { JSONEditor, PlainEditor } from '../../utils/Editors'
+import { JSONEditor, PlainEditor } from '../../utils/CodeEditorFields'
 
 import { Interaction, Label, Radio } from '@project-r/styleguide'
 

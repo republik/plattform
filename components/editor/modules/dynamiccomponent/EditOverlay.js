@@ -3,7 +3,7 @@ import { fromJS } from 'immutable'
 import debounce from 'lodash.debounce'
 
 import OverlayFormManager from '../../utils/OverlayFormManager'
-import { JSONEditor, PlainEditor } from '../../utils/Editors'
+import { JSONEditor, PlainEditor } from '../../utils/CodeEditorFields'
 
 import { Interaction, Label, Radio } from '@project-r/styleguide'
 
