@@ -16,6 +16,12 @@ import { getLabel, getTitle, getTemplateRepoPrefix } from '../../lib/utils/repo'
 import { getUrlDate } from '../../lib/utils/calendar'
 import withT from '../../lib/withT'
 
+const ellipsisRule = {
+  whiteSpace: 'nowrap',
+  overflow: 'hidden',
+  textOverflow: 'ellipsis'
+}
+
 const styles = {
   container: css({
     cursor: 'pointer',
@@ -32,14 +38,17 @@ const styles = {
     textDecoration: 'none'
   }),
   title: css({
-    padding: '5px 5px 5px 0'
+    padding: '5px 5px 5px 0',
+    ...ellipsisRule
   }),
   label: css({
     marginBottom: 10,
-    ...fontStyles.sansSerifMedium14
+    ...fontStyles.sansSerifMedium14,
+    ...ellipsisRule
   }),
   status: css({
-    marginTop: 10
+    marginTop: 10,
+    ...ellipsisRule
   }),
   editDate: css({
     ...fontStyles.sansSerifRegular14,
@@ -60,19 +69,19 @@ export const Placeholder = graphql(getPlaceholder)(
   }
 )
 
-const RepoLabel = ({ repo }) => {
+const RepoLabel = ({ repo, isNewsletter }) => {
+  const [colorScheme] = useColorContext()
   const label = getLabel(repo)
-  if (!label) return null
   const format = repo.latestCommit.document.meta.format
   const formatColor = format?.meta.color || colors[format?.meta.kind]
   return (
     <div
       {...styles.label}
       style={{
-        color: formatColor
+        color: label ? formatColor : colorScheme.getCSSColor('textSoft')
       }}
     >
-      {label}
+      {label || (isNewsletter ? 'Newsletter' : 'Beitrag')}
     </div>
   )
 }
@@ -156,7 +165,7 @@ const Repo = withT(({ t, repo, isNewsletter, isPast, placeholderDate }) => {
           isNewsletter ? 'hover' : 'default'
         )}
       >
-        <RepoLabel repo={repo} />
+        <RepoLabel repo={repo} isNewsletter={isNewsletter} />
         <div {...styles.title} className='title'>
           {placeholderDate ? (
             <span {...styles.placeholder}>{t('repo/add/submit')}</span>

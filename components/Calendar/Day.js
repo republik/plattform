@@ -17,7 +17,9 @@ const templateRepos = parseJSONObject(WEEK_TEMPLATE_REPOS)
 
 const styles = {
   container: css({
-    flex: '1 1 0',
+    flexGrow: 1,
+    flexBasis: 0,
+    overflow: 'hidden',
     display: 'flex',
     flexDirection: 'column'
   }),
