@@ -16,12 +16,12 @@ Wie Sie wissen, finanziert sich die Republik als unabhängiges und werbefreies
 Magazin über ihre Leserinnen und Leser.
 
 Sie haben die Wahl:
-Sie bleiben an Bord und investieren weiter in die Republik und ihre Idee.
-Hierfür müssen Sie nur die Rechnung für ein weiteres Jahr Mitgliedschaft
-bezahlen. {{prolong_url}}
 
-Oder: Sie kündigen Ihre Mitgliedschaft {{cancel_url}} bis zum
-{{cancel_until_date}}.
+ * Sie bleiben an Bord und investieren weiter in die Republik und ihre Idee.
+   Hierfür müssen Sie nur die Rechnung für ein weiteres Jahr Mitgliedschaft
+   bezahlen. {{prolong_url}}
+ * Oder: Sie kündigen Ihre Mitgliedschaft {{cancel_url}} bis zum
+   {{cancel_until_date}}.
 
 Wie auch immer Sie entscheiden: Wir hoffen, dass wir Sie im vergangenen Jahr
 immer wieder erfolgreich informiert, unterhalten, geärgert und beglückt haben.
