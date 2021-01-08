@@ -1,11 +1,9 @@
 Guten Tag
 
-{{#if `RECIPIENT_EMAIL != GRANTER_EMAIL`}}
-
-Am {{GRANT_BEGIN}} hat {{GRANTER_NAME}} mit Ihnen das Republik-Abonnement
-geteilt.
-
-{{/if}}
+{{#if `RECIPIENT_EMAIL != GRANTER_EMAIL`}} Am {{GRANT_BEGIN}} hat
+{{GRANTER_NAME}} mit Ihnen das Republik-Abonnement geteilt. {{else}} Bis zum
+{{GRANT_END}} durften wir Sie probeweise als Leserin oder Leser an Bord der
+Republik haben.
 
 Für einen Einblick in unser unabhängiges, werbefreies digitales Magazin für
 Politik, Wirtschaft, Gesellschaft und Kultur. Und in unser Projekt gegen den
@@ -68,17 +66,8 @@ Herzlich
 
 Ihre Crew der Republik
 
-Die Republik ist ein unabhängiges und werbefreies digitales Magazin für Politik,
-Wirtschaft, Gesellschaft und Kultur. Es wird von seinen Leserinnen und Lesern
-finanziert und erscheint von Montag bis Samstag mit täglich ein bis drei neuen
-Beiträgen. In der App, auf der Website und als Newsletter.
-
 
 Republik AG
 Sihlhallenstrasse 1, CH-8004 Zürich
 {{frontend_base_url}}
 kontakt@republik.ch
-
-Unser Manifest {{link_manifest}}
-Das Impressum {{link_imprint}}
-Häufig gestellte Fragen {{link_faq}}

@@ -23,9 +23,11 @@ Wie Sie wissen, finanziert sich die Republik als unabhängiges und werbefreies
 Magazin über ihre Leserinnen und Leser.
 
 Nun haben Sie die Wahl:
-Sie bleiben an Bord und investieren damit weiter in die Republik und ihre Idee.
-{{prolong_url}}
-Sie kündigen Ihre Mitgliedschaft bis zum {{cancel_until_date}}. {{cancel_url}}
+
+ * Sie bleiben an Bord und investieren damit weiter in die Republik und ihre
+   Idee. {{prolong_url}}
+ * Sie kündigen Ihre Mitgliedschaft bis zum {{cancel_until_date}}.
+   {{cancel_url}}
 
 Wie auch immer Sie entscheiden: Wir hoffen, dass wir Sie im vergangenen Jahr
 immer wieder erfolgreich informiert, unterhalten, geärgert und beglückt haben.
@@ -34,17 +36,8 @@ Herzlich
 
 Ihre Crew der Republik
 
-Die Republik ist ein unabhängiges und werbefreies digitales Magazin für Politik,
-Wirtschaft, Gesellschaft und Kultur. Es wird von seinen Leserinnen und Lesern
-finanziert und erscheint von Montag bis Samstag mit täglich ein bis drei neuen
-Beiträgen. In der App, auf der Website und als Newsletter.
-
 
 Republik AG
 Sihlhallenstrasse 1, CH-8004 Zürich
 {{frontend_base_url}}
 kontakt@republik.ch
-
-Unser Manifest {{link_manifest}}
-Das Impressum {{link_imprint}}
-Häufig gestellte Fragen {{link_faq}}

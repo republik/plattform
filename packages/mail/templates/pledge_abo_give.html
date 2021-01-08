@@ -82,7 +82,9 @@
                       innerhalb von 7 Werktagen.
                     </p>
 
-                    <ul>
+                    <ul
+                      style="color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}"
+                    >
                       {{#options}} {{#if `this.otype == "Goodie"`}}
                       <li>{{this.oamount}} {{this.olabel}}</li>
                       {{/if}} {{/options}}
@@ -116,52 +118,41 @@
                       informieren, wann immer eine Mitgliedschaft eingelöst
                       wird.
                     </p>
-                    {{/if}} {{/if}}
-                    
-                    {{#if waiting_for_payment}}
+                    {{/if}} {{/if}} {{#if waiting_for_payment}}
                     <p>
-                      <strong>Da der Gesamtbetrag Ihrer Bestellung die magische
+                      <strong
+                        >Da der Gesamtbetrag Ihrer Bestellung die magische
                         Grenze von CHF 1000 übersteigt, schicken wir Ihnen die
-                        Gutscheincodes erst nach Zahlungseingang.</strong>
+                        Gutscheincodes erst nach Zahlungseingang.</strong
+                      >
                     </p>
-                    {{/if}}
-
-                    {{#if paymentslip}}
+                    {{/if}} {{#if paymentslip}}
                     <p>Zahlungsinformationen:</p>
-                    <ul>
+                    <ul
+                      style="color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}"
+                    >
                       <li>IBAN: {{iban}}</li>
                       <li>Referenz: {{reference}}</li>
                       <li>Betrag: {{total_formatted}}</li>
                       <li>Zahlbar bis: {{due_date}}</li>
                     </ul>
+                    <p>Anbei finden Sie eine QR-Rechnung.</p>
                     <p>
-                      Anbei finden Sie eine QR-Rechnung.
-                    </p>
-                    <p>
-                      Die QR-Rechnung ersetzt den Einzahlungsschein. Sie können damit
-                      die Zahlung via Mobile Banking, E-Banking oder am Schalter bei
-                      Bank und Post auslösen.
+                      Die QR-Rechnung ersetzt den Einzahlungsschein. Sie können
+                      damit die Zahlung via Mobile Banking, E-Banking oder am
+                      Schalter bei Bank und Post auslösen.
                     </p>
                     {{/if}}
 
                     <p>
-                      Wir wünschen Ihnen viel Freude beim Verschenken der Republik.
+                      Wir wünschen Ihnen viel Freude beim Verschenken der
+                      Republik.
                     </p>
                     <p>Ihre Crew der Republik</p>
                   </td>
                 </tr>
                 <tr>
                   <td style="padding: 20px">
-                    <p
-                      style="font-size:14px;line-height:20px;{{sg_font_style_sans_serif_regular}}"
-                    >
-                      Die Republik ist ein unabhängiges und werbefreies
-                      digitales Magazin für Politik, Wirtschaft, Gesellschaft
-                      und Kultur. Es wird von seinen Leserinnen und Lesern
-                      finanziert und erscheint von Montag bis Samstag mit
-                      täglich ein bis drei neuen Beiträgen. In der App, auf der
-                      Website und als Newsletter.
-                    </p>
                     <p
                       style="color:#282828;font-size:14px;line-height:20px;{{sg_font_style_sans_serif_regular}}"
                     >
@@ -184,13 +175,6 @@
                       <a href="mailto:kontakt@republik.ch"
                         >kontakt@republik.ch</a
                       >
-                    </p>
-                    <p
-                      style="font-size:14px;line-height:20px;{{sg_font_style_sans_serif_regular}}"
-                    >
-                      <a href="{{link_manifest}}">Unser Manifest</a><br />
-                      <a href="{{link_imprint}}">Das Impressum</a><br />
-                      <a href="{{link_faq}}">Häufig gestellte Fragen</a>
                     </p>
                   </td>
                 </tr>

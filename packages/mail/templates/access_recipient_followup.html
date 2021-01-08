@@ -42,14 +42,13 @@
                 <tr>
                   <td style="padding: 20px">
                     <p>Guten Tag</p>
-
-                    {{#if `RECIPIENT_EMAIL != GRANTER_EMAIL`}}
                     <p>
-                      Am {{GRANT_BEGIN}} hat {{GRANTER_NAME}} mit Ihnen das
-                      Republik-Abonnement geteilt.
+                      {{#if `RECIPIENT_EMAIL != GRANTER_EMAIL`}} Am
+                      {{GRANT_BEGIN}} hat {{GRANTER_NAME}} mit Ihnen das
+                      Republik-Abonnement geteilt. {{else}} Bis zum
+                      {{GRANT_END}} durften wir Sie probeweise als Leserin oder
+                      Leser an Bord der Republik haben.
                     </p>
-                    {{/if}}
-
                     <p>
                       Für einen Einblick in unser unabhängiges, werbefreies
                       digitales Magazin für Politik, Wirtschaft, Gesellschaft
@@ -104,10 +103,10 @@
                         <p
                           style="color:#282828;font-size:14px;line-height:20px;{{sg_font_style_sans_serif_regular}}"
                         >
-                          Mit diesem Abo erhalten Sie viel Kontext und Vertiefung
-                          – ohne dass Sie Teil unserer Genossenschaft werden.
-                          Verlängert sich automatisch, kann aber jederzeit und
-                          ohne Frist gekündigt werden. 
+                          Mit diesem Abo erhalten Sie viel Kontext und
+                          Vertiefung – ohne dass Sie Teil unserer Genossenschaft
+                          werden. Verlängert sich automatisch, kann aber
+                          jederzeit und ohne Frist gekündigt werden.
                         </p>
                       </li>
                       <li>
@@ -116,9 +115,10 @@
                         <p
                           style="color:#282828;font-size:14px;line-height:20px;{{sg_font_style_sans_serif_regular}}"
                         >
-                          Mit dieser Mitgliedschaft erhalten Sie unabhängigen und
-                          werbefreien Qualitätsjournalismus und sind gleichzeitig
-                          Teil der Republik-Community und der Project R Genossenschaft.
+                          Mit dieser Mitgliedschaft erhalten Sie unabhängigen
+                          und werbefreien Qualitätsjournalismus und sind
+                          gleichzeitig Teil der Republik-Community und der
+                          Project R Genossenschaft.
                         </p>
                       </li>
                       <li>
@@ -175,16 +175,6 @@
                 <tr>
                   <td style="padding: 20px">
                     <p
-                      style="font-size:14px;line-height:20px;{{sg_font_style_sans_serif_regular}}"
-                    >
-                      Die Republik ist ein unabhängiges und werbefreies
-                      digitales Magazin für Politik, Wirtschaft, Gesellschaft
-                      und Kultur. Es wird von seinen Leserinnen und Lesern
-                      finanziert und erscheint von Montag bis Samstag mit
-                      täglich ein bis drei neuen Beiträgen. In der App, auf der
-                      Website und als Newsletter.
-                    </p>
-                    <p
                       style="color:#282828;font-size:14px;line-height:20px;{{sg_font_style_sans_serif_regular}}"
                     >
                       <img
@@ -206,13 +196,6 @@
                       <a href="mailto:kontakt@republik.ch"
                         >kontakt@republik.ch</a
                       >
-                    </p>
-                    <p
-                      style="font-size:14px;line-height:20px;{{sg_font_style_sans_serif_regular}}"
-                    >
-                      <a href="{{link_manifest}}">Unser Manifest</a><br />
-                      <a href="{{link_imprint}}">Das Impressum</a><br />
-                      <a href="{{link_faq}}">Häufig gestellte Fragen</a>
                     </p>
                   </td>
                 </tr>
