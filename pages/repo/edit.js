@@ -52,6 +52,7 @@ import SettingsIcon from 'react-icons/lib/fa/cogs'
 import createDebug from 'debug'
 import { DARK_MODE_KEY } from '../../components/editor/modules/meta/DarkModeForm'
 import { findTitleLeaf } from '../../lib/utils/helpers'
+import { withEditRepoMeta } from '../../components/Repo/EditMetaDate'
 
 const commitMutation = gql`
   mutation commit(
@@ -649,12 +650,35 @@ export class EditorPage extends Component {
     }
   }
 
+  commitCleanup(data) {
+    const {
+      router: {
+        query: { repoId }
+      }
+    } = this.props
+
+    this.store.clear()
+    this.concludeChanges()
+
+    this.setState({
+      committing: false
+    })
+    Router.replaceRoute('repo/edit', {
+      repoId: repoId.split('/'),
+      commitId: data.commit.id,
+      isTemplate: null,
+      templateRepoId: null,
+      publishDate: null
+    })
+  }
+
   commitHandler() {
     const {
       router: {
-        query: { repoId, commitId, isTemplate }
+        query: { repoId, commitId, isTemplate, publishDate }
       },
       commitMutation,
+      editRepoMeta,
       data,
       t
     } = this.props
@@ -680,18 +704,16 @@ export class EditorPage extends Component {
       }
     })
       .then(({ data }) => {
-        this.store.clear()
-        this.concludeChanges()
-
-        this.setState({
-          committing: false
-        })
-        Router.replaceRoute('repo/edit', {
-          repoId: repoId.split('/'),
-          commitId: data.commit.id,
-          isTemplate: null,
-          templateRepoId: null
-        })
+        if (publishDate) {
+          editRepoMeta({
+            repoId,
+            publishDate
+          }).then(() => {
+            this.commitCleanup(data)
+          })
+        } else {
+          this.commitCleanup(data)
+        }
       })
       .catch(e => {
         console.error(e)
@@ -741,7 +763,7 @@ export class EditorPage extends Component {
       uncommittedChanges,
       t
     } = this.props
-    const { repoId, commitId } = router.query
+    const { repoId, commitId, publishDate } = router.query
     const { loading, repo } = data
     const { loading: templateLoading, error: templateError } = templateData
     const {
@@ -757,7 +779,13 @@ export class EditorPage extends Component {
       didUnlock
     } = this.state
 
-    const isTemplate = repo ? repo.isTemplate : router.query.isTemplate
+    const isTemplate = repo
+      ? repo.isTemplate
+      : router.query.isTemplate === 'true'
+    const meta = {
+      ...repo?.meta,
+      publishDate: publishDate || repo?.meta?.publishDate
+    }
     const isNew = commitId === 'new'
     const error = data.error || templateError || this.state.error
     const showLoading =
@@ -871,7 +899,7 @@ export class EditorPage extends Component {
                     ref={this.editorRef}
                     schema={schema}
                     isTemplate={isTemplate}
-                    meta={repo ? repo.meta : {}}
+                    meta={meta}
                     value={editorState}
                     onChange={this.changeHandler}
                     onDocumentChange={this.documentChangeHandler}
@@ -1024,5 +1052,6 @@ export default compose(
         })
     })
   }),
-  withUncommittedChangesMutation
+  withUncommittedChangesMutation,
+  withEditRepoMeta
 )(EditorPage)
