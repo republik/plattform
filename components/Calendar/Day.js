@@ -34,15 +34,11 @@ const styles = {
     ...fontStyles.sansSerifRegular14
   }),
   templateContainer: css({
-    paddingBottom: 20
+    padding: '10px 0 20px'
   })
 }
 
-const TemplateHeading = withT(({ t, template }) => (
-  <span {...styles.templateHeading}>{t(`repo/calendar/${template}`)}</span>
-))
-
-const Repos = ({ repos, ...props }) => {
+const Repos = ({ repos, isNewsletter, ...props }) => {
   const sortedRepos = repos.sort((repo1, repo2) =>
     ascending(
       new Date(repo1.meta.publishDate),
@@ -50,20 +46,29 @@ const Repos = ({ repos, ...props }) => {
     )
   )
   return (
-    <>
+    <div
+      {...styles.templateContainer}
+      style={{ height: isNewsletter ? 225 : 'auto' }}
+    >
       {sortedRepos.map(repo =>
         repo.isPlaceholder ? (
           <Placeholder
             key={repo.repoId}
             repoId={repo.repoId}
             placeholderDate={repo.meta.publishDate}
+            isNewsletter={isNewsletter}
             {...props}
           />
         ) : (
-          <Repo key={repo.id} repo={repo} {...props} />
+          <Repo
+            key={repo.id}
+            repo={repo}
+            isNewsletter={isNewsletter}
+            {...props}
+          />
         )
       )}
-    </>
+    </div>
   )
 }
 
@@ -86,18 +91,13 @@ const ReposByTemplate = ({
         repos
       )
 
-  if (!reposAndPlaceholders.length) return null
-
   return (
-    <div {...styles.templateContainer}>
-      <TemplateHeading template={template} />
-      <Repos
-        repos={reposAndPlaceholders}
-        date={date}
-        isPast={isPast}
-        isNewsletter={isNewsletter}
-      />
-    </div>
+    <Repos
+      repos={reposAndPlaceholders}
+      date={date}
+      isPast={isPast}
+      isNewsletter={isNewsletter}
+    />
   )
 }
 
