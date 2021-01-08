@@ -17,10 +17,10 @@ if (process.browser && window) {
 
 const styles = {
   codemirror: css({
-    padding: '10px 0',
+    padding: '30px 0 0',
     '& .CodeMirror': {
       height: 'auto',
-      margin: '10px 80px 20px 0',
+      margin: '10px 0 20px',
       fontFamily: fontFamilies.monospaceRegular,
       fontSize: 14,
       color: colors.text
@@ -40,7 +40,7 @@ const styles = {
 
 const CodeMirrorField = ({ label, value, onChange, onPaste, options }) => (
   <div {...styles.codemirror}>
-    <Label style={{ paddingLeft: 5 }}>{label}</Label>
+    <Label>{label}</Label>
     <CodeMirror
       value={value}
       options={{
