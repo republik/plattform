@@ -1,11 +1,9 @@
 Guten Tag
 
-{{#if `RECIPIENT_EMAIL != GRANTER_EMAIL`}}
-
-Am {{GRANT_BEGIN}} hat {{GRANTER_NAME}} mit Ihnen das Republik-Abonnement
-geteilt.
-
-{{/if}}
+{{#if `RECIPIENT_EMAIL != GRANTER_EMAIL`}} Am {{GRANT_BEGIN}} hat
+{{GRANTER_NAME}} mit Ihnen das Republik-Abonnement geteilt. {{else}} Bis zum
+{{GRANT_END}} durften wir Sie probeweise als Leserin oder Leser an Bord der
+Republik haben.
 
 Für einen Einblick in unser unabhängiges, werbefreies digitales Magazin für
 Politik, Wirtschaft, Gesellschaft und Kultur. Und in unser Projekt gegen den
