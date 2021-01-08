@@ -1,7 +1,7 @@
 import React from 'react'
 import { css } from 'glamor'
 
-import { colors, Interaction, mediaQueries } from '@project-r/styleguide'
+import { colors } from '@project-r/styleguide'
 
 import LoadingBar from './LoadingBar'
 import { HEADER_HEIGHT, ZINDEX_HEADER } from './constants'

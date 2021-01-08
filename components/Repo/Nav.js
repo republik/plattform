@@ -4,7 +4,7 @@ import { compose } from 'react-apollo'
 import { withRouter } from 'next/router'
 import { Link } from '../../lib/routes'
 import { css } from 'glamor'
-import { colors, linkRule } from '@project-r/styleguide'
+import { colors, A } from '@project-r/styleguide'
 import withT from '../../lib/withT'
 import { intersperse } from '../../lib/utils/helpers'
 
@@ -53,8 +53,8 @@ const Nav = ({ router, route, isNew, prefix, t }) => {
             )
           }
           return (
-            <Link key={item.route} route={item.route} params={params}>
-              <a {...linkRule}>{label} </a>
+            <Link key={item.route} route={item.route} params={params} passHref>
+              <A>{label} </A>
             </Link>
           )
         }),

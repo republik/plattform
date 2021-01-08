@@ -1,5 +1,5 @@
 {
-  "updated": "2020-11-26T14:05:42.417Z",
+  "updated": "2020-12-16T15:54:51.994Z",
   "title": "live",
   "data": [
     {
@@ -251,6 +251,10 @@
       "value": "Templates"
     },
     {
+      "key": "repo/table/nav/calendar",
+      "value": "Wochenvorschau"
+    },
+    {
       "key": "repo/table/pageInfo/loadMore",
       "value": "mehr laden"
     },
@@ -289,6 +293,18 @@
     {
       "key": "repo/table/col/productionDeadline",
       "value": "Produktions-Deadline"
+    },
+    {
+      "key": "repo/calendar/nav/reset",
+      "value": "zur aktuellen Woche"
+    },
+    {
+      "key": "repo/calendar/newsletters",
+      "value": "Newsletter"
+    },
+    {
+      "key": "repo/calendar/articles",
+      "value": "Beiträge"
     },
     {
       "key": "repo/archive/confirm",

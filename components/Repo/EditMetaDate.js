@@ -1,9 +1,13 @@
-import React, { Component } from 'react'
+import React, { useEffect, useState } from 'react'
 import { css } from 'glamor'
 import MaskedInput from 'react-maskedinput'
+import EditIcon from 'react-icons/lib/md/edit'
 
-import { displayDateTime } from './Table'
 import { timeParse, timeFormat } from 'd3-time-format'
+import { compose, graphql } from 'react-apollo'
+import gql from 'graphql-tag'
+import { EditPageRepo } from '../../lib/graphql/fragments'
+import { displayDateTime } from '../../lib/utils/calendar'
 
 const loading = css.keyframes({
   'from, to': {
@@ -41,88 +45,99 @@ const dateMask = dateFormat.replace('%Y', '1111').replace(/%(d|m|y|H|M)/g, '11')
 const parseDate = timeParse(dateFormat)
 const formatDate = timeFormat(dateFormat)
 
-class EditMeta extends Component {
-  constructor(...args) {
-    super(...args)
-    this.state = {
-      editing: false,
-      disabled: false,
-      value: undefined
-    }
-    this.setRef = ref => {
-      this.ref = ref
+const editRepoMeta = gql`
+  mutation editRepoMeta($repoId: ID!, $publishDate: DateTime) {
+    editRepoMeta(repoId: $repoId, publishDate: $publishDate) {
+      ...EditPageRepo
     }
   }
-  render() {
-    const { editing, disabled } = this.state
-    const { value, onChange } = this.props
+  ${EditPageRepo}
+`
 
-    const formattedPropValue = value ? formatDate(new Date(value)) : ''
-    let formattedValue =
-      this.state.value !== undefined ? this.state.value : formattedPropValue
+export const withEditRepoMeta = graphql(editRepoMeta, {
+  props: ({ mutate }) => ({
+    editRepoMeta: variables => mutate({ variables })
+  })
+})
 
-    return (
-      <span
-        {...styles.span}
-        onClick={() => {
-          this.setState({ editing: true }, () => {
-            this.ref.focus()
-          })
-        }}
-      >
-        {editing ? (
-          <MaskedInput
-            value={formattedValue}
-            disabled={disabled}
-            ref={this.setRef}
-            {...styles.mask}
-            onKeyUp={event => {
-              if (event.key === 'Enter') {
-                const parsedValue = parseDate(formattedValue)
-                if (!parsedValue && formattedValue !== '') {
-                  return
-                }
-                if (formattedPropValue === formattedValue) {
-                  this.ref.blur()
-                }
+const PublishDate = ({ date }) =>
+  date ? (
+    <span>
+      {displayDateTime(date)}{' '}
+      <EditIcon style={{ marginTop: -4, marginLeft: 5 }} />
+    </span>
+  ) : null
 
-                this.setState({ disabled: true })
-                onChange(parsedValue ? parsedValue.toISOString() : null)
-                  .then(() => {
-                    this.setState({
-                      editing: false,
-                      value: undefined,
-                      disabled: false
-                    })
-                  })
-                  .catch(() => {
-                    this.setState({ disabled: false })
-                  })
-                this.ref.blur()
+const EditMeta = ({ publishDate, repoId, editRepoMeta }) => {
+  const [editing, setEditing] = useState(false)
+  const [disabled, setDisabled] = useState(false)
+  const [formValue, setFormValue] = useState(undefined)
+  const [ref, setRef] = useState(null)
+
+  useEffect(() => {
+    if (ref) {
+      ref.focus()
+    } else {
+      resetForm()
+    }
+  }, [ref])
+
+  const resetForm = () => {
+    setEditing(false)
+    setDisabled(false)
+    setFormValue(undefined)
+  }
+  const formattedPublishDate = publishDate
+    ? formatDate(new Date(publishDate))
+    : ''
+  const formattedFormValue =
+    formValue !== undefined ? formValue : formattedPublishDate
+
+  return (
+    <span {...styles.span} onClick={() => setEditing(true)}>
+      {editing ? (
+        <MaskedInput
+          value={formattedFormValue}
+          disabled={disabled}
+          ref={setRef}
+          {...styles.mask}
+          onKeyUp={event => {
+            if (event.key === 'Enter') {
+              const parsedValue = parseDate(formattedFormValue)
+              if (!parsedValue && formattedFormValue !== '') {
+                return
               }
-              if (event.key === 'Escape') {
-                this.setState({
-                  editing: false,
-                  value: undefined,
-                  disabled: false
+              if (formattedPublishDate === formattedFormValue) {
+                ref.blur()
+              }
+
+              setDisabled(true)
+              editRepoMeta({
+                repoId,
+                publishDate: parsedValue ? parsedValue.toISOString() : null
+              })
+                .then(() => {
+                  resetForm()
+                  ref.blur()
                 })
-              }
-            }}
-            onBlur={() => {
-              if (formattedPropValue === formattedValue) {
-                this.setState({ editing: false, value: undefined })
-              }
-            }}
-            onChange={event => this.setState({ value: event.target.value })}
-            placeholderChar={'_'}
-            mask={dateMask}
-          />
-        ) : (
-          displayDateTime(value)
-        )}
-      </span>
-    )
-  }
+                .catch(() => {
+                  setDisabled(false)
+                })
+            }
+            if (event.key === 'Escape') {
+              ref.blur()
+            }
+          }}
+          onBlur={resetForm}
+          onChange={event => setFormValue(event.target.value)}
+          placeholderChar={'_'}
+          mask={dateMask}
+        />
+      ) : (
+        <PublishDate date={publishDate} />
+      )}
+    </span>
+  )
 }
 
-export default EditMeta
+export default compose(withEditRepoMeta)(EditMeta)
