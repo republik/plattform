@@ -58,9 +58,6 @@ export const Body = ({ t, comment, context }) => {
 
   return (
     <>
-      {!published && (
-        <div {...styles.unpublished}>{t('styleguide/comment/unpublished')}</div>
-      )}
       {bodyNode}
       {userCanEdit &&
         (() => {

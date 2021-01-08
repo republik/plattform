@@ -11,7 +11,13 @@ const hasAncestor = (node, predicate) => {
   return false
 }
 
-const CalloutMenu = ({ children, Element, align, initiallyOpen }) => {
+const CalloutMenu = ({
+  children,
+  Element,
+  align,
+  initiallyOpen,
+  contentPaddingMobile
+}) => {
   const [showMenu, setMenu] = React.useState(initiallyOpen)
   const toggleRef = React.useRef()
 
@@ -32,7 +38,11 @@ const CalloutMenu = ({ children, Element, align, initiallyOpen }) => {
   return (
     <>
       {showMenu && (
-        <Callout onClose={() => setMenu(false)} align={align}>
+        <Callout
+          onClose={() => setMenu(false)}
+          align={align}
+          contentPaddingMobile={contentPaddingMobile}
+        >
           {children}
         </Callout>
       )}

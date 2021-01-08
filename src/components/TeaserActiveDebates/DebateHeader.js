@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import React from 'react'
 import { IconLink } from '../Discussion/Internal/Comment'
 import { sansSerifMedium16 } from '../Typography/styles'
-import colors from '../../theme/colors'
+import { useColorContext } from '../Colors/ColorContext'
 
 const styles = {
   header: css({
@@ -14,17 +14,22 @@ const styles = {
   title: css({
     ...sansSerifMedium16,
     marginRight: 10,
-    color: colors.text,
     textDecoration: 'none'
   })
 }
 
 const DebateHeader = React.forwardRef(
   ({ title, commentCount, href, onClick }, ref) => {
+    const [colorScheme] = useColorContext()
     return (
       <div {...styles.header} ref={ref}>
         {title && (
-          <a href={href} onClick={onClick} {...styles.title}>
+          <a
+            href={href}
+            onClick={onClick}
+            {...styles.title}
+            {...colorScheme.set('color', 'text')}
+          >
             {title}
           </a>
         )}

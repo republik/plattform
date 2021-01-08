@@ -12,6 +12,7 @@ A clickable component that accepts icons and lables and renders them. If href is
 - `target`: target for href
 - `children`: renders children after label
 - `style`: allows to overwrite styles on the top component
+- `size`: overwrite default size (24px)
 
 ```react|responsive
 <div style={{display:'flex'}}>

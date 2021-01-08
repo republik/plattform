@@ -119,7 +119,7 @@ const styles = {
     flexShrink: 0,
     display: 'inline-block',
     marginLeft: pxToRem(4),
-    marginTop: pxToRem(-2)
+    marginTop: pxToRem(2)
   }),
   link: css({
     color: 'inherit',
@@ -162,6 +162,8 @@ export const Header = ({ t, comment, menu, isExpanded, onToggle }) => {
     displayAuthor,
     updatedAt,
     createdAt,
+    published = true,
+    adminUnpublished = false,
     comments,
     parentIds = []
   } = comment
@@ -186,7 +188,7 @@ export const Header = ({ t, comment, menu, isExpanded, onToggle }) => {
       {(() => {
         const n = parentIds.length - config.nestLimit
         if (n < 0) {
-          if (!profilePicture) {
+          if (!profilePicture || !published) {
             return null
           }
           return (
@@ -213,43 +215,54 @@ export const Header = ({ t, comment, menu, isExpanded, onToggle }) => {
         }
       })()}
       <div {...styles.center}>
-        <Link displayAuthor={displayAuthor} passHref>
-          <a {...styles.name} {...colorScheme.set('color', 'text')}>
-            {name}
-          </a>
-        </Link>
+        {!published && (
+          <div {...styles.name} {...colorScheme.set('color', 'textSoft')}>
+            {(adminUnpublished &&
+              t('styleguide/comment/header/unpublishedByAdmin')) ||
+              t('styleguide/comment/header/unpublishedByUser')}
+          </div>
+        )}
+        {published && (
+          <Link displayAuthor={displayAuthor} passHref>
+            <a {...styles.name} {...colorScheme.set('color', 'text')}>
+              {name}
+            </a>
+          </Link>
+        )}
         <div {...styles.meta} {...colorScheme.set('color', 'textSoft')}>
-          {credential && (
-            <div
-              {...styles.credential}
-              title={
-                credential.verified
-                  ? t(
-                      'styleguide/comment/header/verifiedCredential',
-                      undefined,
-                      ''
-                    )
-                  : undefined
-              }
-            >
+          {published && credential && (
+            <>
               <div
-                {...styles.descriptionText}
-                {...colorScheme.set(
-                  'color',
-                  credential.verified ? 'text' : 'textSoft'
-                )}
+                {...styles.credential}
+                title={
+                  credential.verified
+                    ? t(
+                        'styleguide/comment/header/verifiedCredential',
+                        undefined,
+                        ''
+                      )
+                    : undefined
+                }
               >
-                {credential.description}
+                <div
+                  {...styles.descriptionText}
+                  {...colorScheme.set(
+                    'color',
+                    credential.verified ? 'text' : 'textSoft'
+                  )}
+                >
+                  {credential.description}
+                </div>
+                {credential.verified && (
+                  <CheckIcon
+                    {...styles.verifiedCheck}
+                    {...colorScheme.set('color', 'primary')}
+                  />
+                )}
               </div>
-              {credential.verified && (
-                <CheckIcon
-                  {...styles.verifiedCheck}
-                  {...colorScheme.set('color', 'primary')}
-                />
-              )}
-            </div>
+              <div style={{ whiteSpace: 'pre' }}>{' · '}</div>
+            </>
           )}
-          {credential && <div style={{ whiteSpace: 'pre' }}>{' · '}</div>}
           <div
             {...styles.timeago}
             {...colorScheme.set('color', 'textSoft')}
@@ -264,7 +277,7 @@ export const Header = ({ t, comment, menu, isExpanded, onToggle }) => {
               </a>
             </Link>
           </div>
-          {isUpdated && (
+          {published && isUpdated && (
             <div
               {...styles.timeago}
               {...colorScheme.set('color', 'textSoft')}

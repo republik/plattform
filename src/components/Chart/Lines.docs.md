@@ -6065,7 +6065,8 @@ Also if you have multiple charts after each other with varying end labels you ca
           "x2": "2020-03-26",
           "value": 13801,
           "unit": " Personen",
-          "label": "bereits vor 10 Tagen infiziert"
+          "label": "bereits vor 10 Tagen infiziert",
+          "showValue": false
         }
       ]
     }}

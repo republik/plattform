@@ -3,14 +3,13 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { mUp } from '../../theme/mediaQueries'
 import { ActiveDebateTeaser } from '.'
+import { useColorContext } from '../Colors/ColorContext'
 
 const styles = {
   section: css({
     margin: '0 auto',
     maxWidth: 1300,
     padding: '40px 15px 10px',
-    backgroundColor: '#FFFFFF',
-    color: '#000000',
     [mUp]: {
       padding: '50px 15px 40px'
     }
@@ -53,6 +52,7 @@ const ActiveDebates = ({
   DiscussionLink,
   children
 }) => {
+  const [colorScheme] = useColorContext()
   const highlighted = discussions.filter(discussion =>
     discussion.comments.nodes.some(comment =>
       comment.hasOwnProperty('highlight')
@@ -67,7 +67,11 @@ const ActiveDebates = ({
     )
 
     return (
-      <section {...styles.section}>
+      <section
+        {...styles.section}
+        {...colorScheme.set('color', 'logo')}
+        {...colorScheme.set('backgroundColor', 'default')}
+      >
         {children}
         <div role='group' {...css(styles.row, styles.withHighlight)}>
           <div {...styles.left}>
@@ -172,6 +176,7 @@ ActiveDebates.data = {
           // - max 2 for first discussion, max 1 for the rest
           const nodes = discussion.comments.nodes.filter(comment => {
             if (
+              !comment.published ||
               (!comment.preview && !comment.highlight) ||
               !remainingComments ||
               !remainingCommentsPerDiscussion ||
@@ -213,6 +218,7 @@ query getFrontDiscussions($lastDays: Int!, $first: Int!, $featured: Int!) {
     id
     nodes {
       id
+      published
       displayAuthor {
         id
         ...AuthorMetaData
@@ -237,6 +243,7 @@ query getFrontDiscussions($lastDays: Int!, $first: Int!, $featured: Int!) {
         totalCount
         nodes {
           id
+          published
           preview(length: 240) {
             string
             more

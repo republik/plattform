@@ -334,7 +334,13 @@ const LineGroup = props => {
             {...styles.annotationText}
             {...colorScheme.set('fill', 'text')}
           >
-            {annotation.label} {annotation.formattedValue} {annotation.unit}
+            {annotation.label}
+            {annotation.showValue !== false && (
+              <>
+                {' '}
+                {annotation.formattedValue} {annotation.unit}
+              </>
+            )}
           </text>
         </g>
       ))}
@@ -366,6 +372,7 @@ const LineGroup = props => {
         }
 
         const isBottom = annotation.position === 'bottom'
+        const showValue = annotation.showValue !== false
 
         return (
           <g
@@ -397,22 +404,32 @@ const LineGroup = props => {
             <text
               x={tx}
               textAnchor={textAnchor}
-              dy={isBottom ? '2.7em' : '-1.8em'}
+              dy={
+                showValue
+                  ? isBottom
+                    ? '2.7em'
+                    : '-1.8em'
+                  : isBottom
+                  ? '1.4em'
+                  : '-0.5em'
+              }
               {...styles.annotationText}
               {...colorScheme.set('fill', 'text')}
             >
               {annotation.label}
             </text>
-            <text
-              x={tx}
-              textAnchor={textAnchor}
-              dy={isBottom ? '1.4em' : '-0.5em'}
-              {...styles.annotationValue}
-              {...colorScheme.set('fill', 'text')}
-            >
-              {annotation.valuePrefix}
-              {annotation.formattedValue} {annotation.unit}
-            </text>
+            {showValue && (
+              <text
+                x={tx}
+                textAnchor={textAnchor}
+                dy={isBottom ? '1.4em' : '-0.5em'}
+                {...styles.annotationValue}
+                {...colorScheme.set('fill', 'text')}
+              >
+                {annotation.valuePrefix}
+                {annotation.formattedValue} {annotation.unit}
+              </text>
+            )}
           </g>
         )
       })}
@@ -703,7 +720,8 @@ export const propTypes = {
       unit: PropTypes.string,
       label: PropTypes.string,
       x: PropTypes.string,
-      dy: PropTypes.string
+      dy: PropTypes.string,
+      showValue: PropTypes.bool
     })
   ),
   xAnnotations: PropTypes.arrayOf(
@@ -715,7 +733,8 @@ export const propTypes = {
       x: PropTypes.string,
       x1: PropTypes.string,
       x2: PropTypes.string,
-      position: PropTypes.oneOf(['top', 'bottom'])
+      position: PropTypes.oneOf(['top', 'bottom']),
+      showValue: PropTypes.bool
     })
   ),
   tLabel: PropTypes.func.isRequired,

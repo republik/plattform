@@ -5,10 +5,11 @@ A fixed callout animating in from the bottom on mobile and a in place callout on
 - `initiallyOpen`: boolean, note: after a click outside of it, it hides again
 - `icon`: React element
 - `align`: `left` (default) or `right`, alignment on desktop
+- `contentPaddingMobile`: set padding of callout content. (Defaults to "safari safe": `'15px 15px 50px'`).
 
 ```react|responsive
 <div style={{ padding: 20 }}>
-  <CalloutMenu Element={(props) => <NotificationIcon size={24} {...props}/> } initiallyOpen>
+  <CalloutMenu Element={(props) => <NotificationIcon size={24} {...props}/> } initiallyOpen contentPadding={16}>
     Hello&nbsp;World
   </CalloutMenu>
 </div>

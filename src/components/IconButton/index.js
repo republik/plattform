@@ -20,7 +20,8 @@ const IconButton = React.forwardRef(
       fillColorName,
       onClick,
       children,
-      style
+      style,
+      size
     },
     ref
   ) => {
@@ -47,7 +48,7 @@ const IconButton = React.forwardRef(
       >
         <Icon
           {...styles.icon}
-          size={ICON_SIZE}
+          size={size || ICON_SIZE}
           {...colorScheme.set('fill', fillValue)}
         />
         {label && (

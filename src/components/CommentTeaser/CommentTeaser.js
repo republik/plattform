@@ -3,15 +3,16 @@ import { css } from 'glamor'
 import get from 'lodash/get'
 
 import { mUp } from '../../theme/mediaQueries'
-import { ellipsize, underline } from '../../lib/styleMixins'
+import { underline } from '../../lib/styleMixins'
 import { inQuotes } from '../../lib/inQuotes'
 import { useMediaQuery } from '../../lib/useMediaQuery'
-import { serifRegular14, sansSerifRegular14 } from '../Typography/styles'
+import { serifRegular14, sansSerifMedium15 } from '../Typography/styles'
 import { A } from '../Typography/'
+import { P } from '../Typography/Editorial'
 import { CommentBodyParagraph } from '../CommentBody/web'
-import { Context, Header } from '../Discussion/Internal/Comment'
+import { IconLink, Context, Header } from '../Discussion/Internal/Comment'
 import RawHtml from '../RawHtml/'
-import { useColorContext } from '../Colors/useColorContext'
+import { useColorContext } from '../Colors/ColorContext'
 import {
   DiscussionContext,
   formatTimeRelative
@@ -49,12 +50,9 @@ const styles = {
     }
   }),
   footer: css({
-    ...sansSerifRegular14,
+    ...sansSerifMedium15,
     display: 'flex',
-    justifyContent: 'space-between'
-  }),
-  discussionReference: css({
-    ...ellipsize,
+    justifyContent: 'space-between',
     position: 'relative'
   }),
   icon: css({
@@ -65,6 +63,16 @@ const styles = {
   timeago: css({
     flexShrink: 0,
     paddingLeft: 10
+  }),
+  imageContainer: css({
+    [mUp]: {
+      marginTop: 20
+    }
+  }),
+  image: css({
+    borderBottomWidth: 1,
+    borderBottomStyle: 'solid',
+    width: '100%'
   })
 }
 
@@ -76,6 +84,7 @@ export const CommentTeaser = ({
   onClick,
   highlighted,
   menu,
+  children,
   ...comment
 }) => {
   const {
@@ -85,12 +94,14 @@ export const CommentTeaser = ({
     parentIds,
     displayAuthor,
     preview,
+    featuredText,
     highlights,
     createdAt
   } = comment
   const isDesktop = useMediaQuery(mUp)
   const [colorScheme] = useColorContext()
   const highlight = get(highlights, '[0].fragments[0]', '').trim()
+  const commentCount = discussion?.comments?.totalCount
 
   const endsWithPunctuation =
     highlight &&
@@ -132,14 +143,18 @@ export const CommentTeaser = ({
       <div
         id={id}
         {...styles.root}
-        {...colorScheme.set('borderColor', 'text')}
+        {...colorScheme.set('borderColor', 'divider')}
         {...(highlighted && colorScheme.set('backgroundColor', 'hover'))}
       >
         {displayAuthor && (
           <div {...styles.header}>
             <Header
               t={t}
-              comment={{ id, displayAuthor, createdAt }}
+              comment={{
+                id,
+                displayAuthor,
+                createdAt
+              }}
               menu={menu}
             />
           </div>
@@ -163,6 +178,7 @@ export const CommentTeaser = ({
           <CommentBodyParagraph>
             <Link comment={comment} discussion={discussion} passHref>
               <a {...styles.link} {...highlightEMRule}>
+                {!!featuredText && <P>{inQuotes(featuredText)}</P>}
                 {!!preview && !highlight && (
                   <Fragment>
                     {preview.string}
@@ -183,19 +199,50 @@ export const CommentTeaser = ({
             </Link>
           </CommentBodyParagraph>
         </div>
+
+        {discussion?.image && (
+          <div {...styles.imageContainer}>
+            <img
+              src={discussion.image}
+              alt={discussion?.title || ''}
+              {...styles.image}
+              {...colorScheme.set('borderColor', 'divider')}
+            />
+          </div>
+        )}
+
         <div {...styles.footer}>
-          <div
-            {...styles.discussionReference}
-            {...colorScheme.set('color', 'textSoft')}
-          >
+          <div>
             {t.elements(
               `styleguide/CommentTeaser/${
-                parentIds && parentIds.length ? 'reply' : 'comment'
+                parentIds && parentIds.length
+                  ? 'reply'
+                  : commentCount
+                  ? 'commentWithCount'
+                  : 'comment'
               }/link`,
               {
+                count: (
+                  <Link
+                    key={`link-count-${id}`}
+                    comment={comment}
+                    discussion={discussion}
+                    passHref
+                  >
+                    <IconLink
+                      discussionCommentsCount={commentCount}
+                      small
+                      style={{
+                        marginTop: -2,
+                        paddingRight: 0,
+                        verticalAlign: 'top'
+                      }}
+                    />
+                  </Link>
+                ),
                 link: (
                   <Link
-                    key={`link-${id}`}
+                    key={`link-title-${id}`}
                     comment={comment}
                     discussion={discussion}
                     passHref

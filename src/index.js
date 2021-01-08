@@ -725,7 +725,7 @@ ReactDOM.render(
                 path: '/templates/front',
                 title: 'Front',
                 imports: {
-                  schema: require('./templates/Front').default(),
+                  schema: require('./templates/Front').default({ t }),
                   ...require('./templates/docs'),
                   renderMdast: require('mdast-react-render').renderMdast
                 },

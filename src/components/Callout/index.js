@@ -45,14 +45,12 @@ const styles = {
     left: 0,
     bottom: -400,
     right: 0,
-    padding: '15px 15px 80px',
     animation: `0.3s ${slideUp} 0.2s forwards`,
     textAlign: 'left',
     [mUp]: {
       bottom: 'auto',
       top: 20,
       left: 'auto',
-      padding: 10,
       animation: 'none'
     }
   }),
@@ -80,7 +78,12 @@ const styles = {
   }
 }
 
-const Callout = ({ children, align = 'left', onClose }) => {
+const Callout = ({
+  children,
+  align = 'left',
+  onClose,
+  contentPaddingMobile = '15px 15px 50px'
+}) => {
   const [colorScheme] = useColorContext()
   const calloutRule = useMemo(
     () =>
@@ -95,6 +98,7 @@ const Callout = ({ children, align = 'left', onClose }) => {
   return (
     <div {...styles.calloutContainer} onClick={onClose}>
       <div
+        {...css({ padding: contentPaddingMobile, [mUp]: { padding: 10 } })}
         {...styles.callout}
         {...styles[align].callout}
         {...calloutRule}

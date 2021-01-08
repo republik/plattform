@@ -1,5 +1,13 @@
 Vertical bars are a nice line chart alternative for change over time of one (stacked) series.
 
+## Limitations
+
+One very physical limitation is the width of a (small) mobile screen: 320px. If one accounts for the whitespace needs of the chart itself, we are left with around 250px of usable space for our bars. This translates to **250 data points** along the X-axis.
+
+More than that and the calculated width of the bar ends up at 0, which isn't very useful at all.
+
+## Examples 
+
 ```react
 <div>
   <ChartTitle>Entwicklung der Treibhausgas-Emissionen in Deutschland</ChartTitle>
@@ -587,7 +595,7 @@ year,typ,value
       "xIntervalStep": 6,
       "xAnnotations": [
         {"x1": "2019-07", "x2": "2019-07","value": 5, "unit": "Punkte", "label": "Ziel 2020"}, 
-        {"x1": "2019-07", "x2": "2019-07","value": 4,"label": "Stand jetzt","position": "bottom"},
+        {"x1": "2019-07", "x2": "2019-07","value": 4,"label": "Stand jetzt","position": "bottom","showValue": false},
         {"x": "2022-01", "value": 7, "ghost": true}
       ]
     }}
