@@ -75,43 +75,43 @@
                       innerhalb von 7 Werktagen.
                     </p>
 
-                    <ul>
+                    <ul
+                      style="color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}"
+                    >
                       {{#options}} {{#if `this.otype == "Goodie"`}}
                       <li>{{this.oamount}} {{this.olabel}}</li>
                       {{/if}} {{/options}}
                     </ul>
                     <br />
-                    {{/if}}
-                    {{/if}}
-                    
-                    {{#if waiting_for_payment}}
+                    {{/if}} {{/if}} {{#if waiting_for_payment}}
                     <p>
-                      <strong>Da der Gesamtbetrag Ihrer Bestellung die magische
+                      <strong
+                        >Da der Gesamtbetrag Ihrer Bestellung die magische
                         Grenze von CHF 1000.– übersteigt, schicken wir Ihnen die
-                        Gutscheincodes erst nach Zahlungseingang.</strong>
+                        Gutscheincodes erst nach Zahlungseingang.</strong
+                      >
                     </p>
-                    {{/if}}
-
-                    {{#if paymentslip}}
+                    {{/if}} {{#if paymentslip}}
                     <p>Zahlungsinformationen:</p>
-                    <ul>
+                    <ul
+                      style="color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}"
+                    >
                       <li>IBAN: {{iban}}</li>
                       <li>Referenz: {{reference}}</li>
                       <li>Betrag: {{total_formatted}}</li>
                       <li>Zahlbar bis: {{due_date}}</li>
                     </ul>
+                    <p>Anbei finden Sie eine QR-Rechnung.</p>
                     <p>
-                      Anbei finden Sie eine QR-Rechnung.
-                    </p>
-                    <p>
-                      Die QR-Rechnung ersetzt den Einzahlungsschein. Sie können damit
-                      die Zahlung via Mobile Banking, E-Banking oder am Schalter bei
-                      Bank und Post auslösen.
+                      Die QR-Rechnung ersetzt den Einzahlungsschein. Sie können
+                      damit die Zahlung via Mobile Banking, E-Banking oder am
+                      Schalter bei Bank und Post auslösen.
                     </p>
                     {{/if}}
 
                     <p>
-                      Wir wünschen Ihnen viel Freude beim Verschenken der Republik.
+                      Wir wünschen Ihnen viel Freude beim Verschenken der
+                      Republik.
                     </p>
                     <p>Ihre Crew der Republik</p>
                   </td>

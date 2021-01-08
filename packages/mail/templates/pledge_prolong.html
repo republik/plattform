@@ -60,10 +60,10 @@
                     </p>
                     {{/if}}
 
-                    <p>
-                      Details zum Kauf:
-                    </p>
-                    <ul>
+                    <p>Details zum Kauf:</p>
+                    <ul
+                      style="color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}"
+                    >
                       {{#options}}
                       <li>
                         {{#if `this.oamount > 1`}} {{this.oamount}}
@@ -104,8 +104,8 @@
                     {{elseif `gifted_memberships_count > 1`}}
                     <p>
                       Vielen Dank, dass Sie die Republik anderen zukommen
-                      lassen: Sie verlängern Geschenkmitgliedschaften. Wir
-                      haben die Beschenkten darüber per E-Mail informiert.
+                      lassen: Sie verlängern Geschenkmitgliedschaften. Wir haben
+                      die Beschenkten darüber per E-Mail informiert.
                     </p>
                     {{/if}} {{#unless waiting_for_payment}} {{#if
                     goodies_count}}
@@ -113,26 +113,23 @@
                       {{#if `goodies_count == 1`}} Sie haben sich noch ein
                       Republik-Objekt gegönnt. {{elseif `goodies_count > 1`}}
                       Sie haben sich noch mehrere Republik-Objekte gegönnt.
-                      {{/if}} Diese liefern wir innerhalb von 7
-                      Werktagen.
+                      {{/if}} Diese liefern wir innerhalb von 7 Werktagen.
                     </p>
-                    {{/if}} {{/unless}}
-
-                    {{#if paymentslip}}
+                    {{/if}} {{/unless}} {{#if paymentslip}}
                     <p>Zahlungsinformationen:</p>
-                    <ul>
+                    <ul
+                      style="color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}"
+                    >
                       <li>IBAN: {{iban}}</li>
                       <li>Referenz: {{reference}}</li>
                       <li>Betrag: {{total_formatted}}</li>
                       <li>Zahlbar bis: {{due_date}}</li>
                     </ul>
+                    <p>Anbei finden Sie eine QR-Rechnung.</p>
                     <p>
-                      Anbei finden Sie eine QR-Rechnung.
-                    </p>
-                    <p>
-                      Die QR-Rechnung ersetzt den Einzahlungsschein. Sie können damit
-                      die Zahlung via Mobile Banking, E-Banking oder am Schalter bei
-                      Bank und Post auslösen.
+                      Die QR-Rechnung ersetzt den Einzahlungsschein. Sie können
+                      damit die Zahlung via Mobile Banking, E-Banking oder am
+                      Schalter bei Bank und Post auslösen.
                     </p>
                     {{/if}}
 

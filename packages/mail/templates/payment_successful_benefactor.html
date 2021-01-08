@@ -94,11 +94,13 @@
                       Gönner-Mitgliedschaft noch ein Republik-Objekt gegönnt.
                       {{elseif `goodies_count > 1`}} Sie haben sich zu Ihrer
                       Gönner-Mitgliedschaft noch mehrere Republik-Objekte
-                      gegönnt. {{/if}} Diese liefern wir innerhalb
-                      von 7 Werktagen.
+                      gegönnt. {{/if}} Diese liefern wir innerhalb von 7
+                      Werktagen.
                     </p>
 
-                    <ul>
+                    <ul
+                      style="color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}"
+                    >
                       {{#options}} {{#if `this.otype == "Goodie"`}}
                       <li>{{this.oamount}} {{this.olabel}}</li>
                       {{/if}} {{/options}}

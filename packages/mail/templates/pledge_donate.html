@@ -42,9 +42,7 @@
                 <tr>
                   <td style="padding: 20px">
                     <p>Guten Tag</p>
-                    <p>
-                      Herzlichen Dank für Ihre grosszügige Spende.
-                    </p>
+                    <p>Herzlichen Dank für Ihre grosszügige Spende.</p>
                     <p>
                       Und die Unterstützung unseres einzigartigen Projektes
                       gegen den Zynismus, den Vormarsch der Autoritären und
@@ -64,19 +62,19 @@
 
                     {{#if paymentslip}}
                     <p>Zahlungsinformationen:</p>
-                    <ul>
+                    <ul
+                      style="color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}"
+                    >
                       <li>IBAN: {{iban}}</li>
                       <li>Referenz: {{reference}}</li>
                       <li>Betrag: {{total_formatted}}</li>
                       <li>Zahlbar bis: {{due_date}}</li>
                     </ul>
+                    <p>Anbei finden Sie eine QR-Rechnung.</p>
                     <p>
-                      Anbei finden Sie eine QR-Rechnung.
-                    </p>
-                    <p>
-                      Die QR-Rechnung ersetzt den Einzahlungsschein. Sie können damit
-                      die Zahlung via Mobile Banking, E-Banking oder am Schalter bei
-                      Bank und Post auslösen.
+                      Die QR-Rechnung ersetzt den Einzahlungsschein. Sie können
+                      damit die Zahlung via Mobile Banking, E-Banking oder am
+                      Schalter bei Bank und Post auslösen.
                     </p>
                     {{/if}}
 
