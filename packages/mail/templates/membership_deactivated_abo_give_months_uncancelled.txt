@@ -1,0 +1,54 @@
+Abonnement jetzt reaktivieren {{prolong_url}}
+
+
+--------------------------------------------------------------------------------
+
+Guten Tag
+
+Schade, sind Sie nicht mehr Teil der Republik und der Idee hinter unserem
+Projekt!
+
+Wir haben Ihnen eine E-Mail für die Verlängerung oder Kündigung Ihres
+Abonnements geschickt. Aber darauf noch keine Antwort erhalten. Einen
+Zahlungseingang für die Verlängerung Ihres Abonnements können wir bis heute auch
+nicht verzeichnen.
+
+Deshalb verlieren Ihre Zugangsdaten ab sofort leider ihre Gültigkeit.
+
+Wenn Sie schlicht alle E-Mails übersehen haben – lösen Sie jetzt eine
+Jahresmitgliedschaft {{prolong_url}} . Das dauert nicht einmal drei Minuten.
+
+Falls Sie uns lieber kurzfristiger unterstützen wollen, gibt es die Möglichkeit,
+ein (unbegrenztes) Monatsabo {{link_offer_monthly_abo}} zu kaufen. Das kostet
+nur CHF 22 im Monat, wird Ihrer Kreditkarte belastet und verlängert sich
+automatisch – kann dabei aber jederzeit und ohne Frist gekündigt werden.
+
+Auch mit diesem Abo erhalten Sie viel Kontext und Vertiefung und stärken den
+kritischen Journalismus, die vierte Gewalt und unser Projekt gegen den Zynismus
+und die Diktatur der Angst. Einfach ohne dass Sie Teil unserer Genossenschaft
+sind.
+
+Und wenn Sie einen finanziellen Engpass haben, schreiben Sie uns auf
+kontakt@republik.ch . Wir finden eine Lösung!
+
+Sollte uns hingegen ein Fehler unterlaufen sein, nehmen Sie bitte ebenfalls so
+schnell wie möglich Kontakt mit uns auf: kontakt@republik.ch .
+
+Herzlich
+
+Ihre Crew der Republik
+
+Die Republik ist ein unabhängiges und werbefreies digitales Magazin für Politik,
+Wirtschaft, Gesellschaft und Kultur. Es wird von seinen Leserinnen und Lesern
+finanziert und erscheint von Montag bis Samstag mit täglich ein bis drei neuen
+Beiträgen. In der App, auf der Website und als Newsletter.
+
+
+Republik AG
+Sihlhallenstrasse 1, CH-8004 Zürich
+{{frontend_base_url}}
+kontakt@republik.ch
+
+Unser Manifest {{link_manifest}}
+Das Impressum {{link_imprint}}
+Häufig gestellte Fragen {{link_faq}}

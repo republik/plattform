@@ -1,0 +1,36 @@
+Guten Tag
+
+Heute endet Ihr Republik-Abonnement. Herzlichen Dank für Ihr Interesse und Ihre
+Neugier bis hierhin!
+
+Wir würden uns sehr freuen, wenn Sie weiter an Bord blieben. {{prolong_url}}
+
+Jede Mitgliedschaft, jedes Abo unterstützt die Republik und die Idee einer
+wirklich unabhängigen vierten Gewalt und zentralen demokratischen Institution.
+Und stärkt unser gemeinsames Projekt gegen den Zynismus, den Vormarsch der
+Autoritären und gegen die Diktatur der Angst.
+
+Sie wollen lieber auf ein anderes Abonnement wechseln? Hier entlang
+{{link_offers_overview}} .
+
+Sollten Sie das nicht tun, verlieren Ihre Zugangsdaten am {{grace_end_date}}
+leider ihre Gültigkeit.
+
+Herzlich
+
+Ihre Crew der Republik
+
+Die Republik ist ein unabhängiges und werbefreies digitales Magazin für Politik,
+Wirtschaft, Gesellschaft und Kultur. Es wird von seinen Leserinnen und Lesern
+finanziert und erscheint von Montag bis Samstag mit täglich ein bis drei neuen
+Beiträgen. In der App, auf der Website und als Newsletter.
+
+
+Republik AG
+Sihlhallenstrasse 1, CH-8004 Zürich
+{{frontend_base_url}}
+kontakt@republik.ch
+
+Unser Manifest {{link_manifest}}
+Das Impressum {{link_imprint}}
+Häufig gestellte Fragen {{link_faq}}

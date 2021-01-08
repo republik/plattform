@@ -99,17 +99,6 @@ module.exports = {
 
       memberships = await resolveMemberships({ memberships, pgdb })
 
-      const activeMembership = memberships.find((m) => m.active)
-      if (
-        activeMembership &&
-        activeMembership.membershipType.name === 'ABO_GIVE_MONTHS'
-      ) {
-        debug(
-          'active membership type "ABO_GIVE_MONTHS", return prolongBeforeDate: null',
-        )
-        return null
-      }
-
       const eligableMemberships = findEligableMemberships({
         memberships,
         user,
@@ -138,6 +127,7 @@ module.exports = {
         return null
       }
 
+      const activeMembership = memberships.find((m) => m.active)
       const lastEndDate = moment(getLastEndDate(allMembershipPeriods))
       if (!ignoreAutoPayFlag && activeMembership && activeMembership.autoPay) {
         const autoPay = await autoPaySuggest(activeMembership.id, pgdb)
