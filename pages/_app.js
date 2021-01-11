@@ -7,6 +7,7 @@ import withApolloClient from '../lib/apollo/withApolloClient'
 import Track from '../components/Track'
 
 import 'codemirror/lib/codemirror.css'
+import 'codemirror/addon/lint/lint.css'
 import 'codemirror/addon/fold/foldgutter.css'
 import 'codemirror/theme/neo.css'
 

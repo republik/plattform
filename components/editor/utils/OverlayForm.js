@@ -1,5 +1,4 @@
-import React, { Component } from 'react'
-import ReactDOM from 'react-dom'
+import React from 'react'
 import PropTypes from 'prop-types'
 import { css } from 'glamor'
 
@@ -13,8 +12,6 @@ import {
   useColorContext
 } from '@project-r/styleguide'
 
-const previewWidth = 290
-
 const styles = {
   editButton: css({
     position: 'absolute',
@@ -26,16 +23,23 @@ const styles = {
       cursor: 'pointer'
     }
   }),
-  preview: css({
+  container: css({
+    display: 'flex',
+    flexDirection: 'column',
     [mediaQueries.mUp]: {
-      float: 'left',
-      width: previewWidth
+      flexDirection: 'row'
     }
   }),
+  preview: css({
+    flex: '1 1 50%',
+    overflow: 'hidden'
+  }),
+  innerPreview: css({
+    padding: '0 15px'
+  }),
   edit: css({
+    flex: '1 1 50%',
     [mediaQueries.mUp]: {
-      float: 'left',
-      width: `calc(100% - ${previewWidth}px)`,
       paddingLeft: 20
     }
   }),
@@ -76,19 +80,24 @@ const OverlayForm = props => {
       </OverlayToolbar>
 
       <OverlayBody>
-        <div {...styles.preview}>
-          <ContextBackground>{preview}</ContextBackground>
-          <br />
-          <ColorContextProvider
-            colorSchemeKey={colorScheme.schemeKey === 'dark' ? 'light' : 'dark'}
-          >
-            <ContextBackground>{preview}</ContextBackground>
-          </ColorContextProvider>
-          <br />
-          {extra}
+        <div {...styles.container}>
+          <div {...styles.preview}>
+            <div {...styles.innerPreview}>
+              <ContextBackground>{preview}</ContextBackground>
+              <br />
+              <ColorContextProvider
+                colorSchemeKey={
+                  colorScheme.schemeKey === 'dark' ? 'light' : 'dark'
+                }
+              >
+                <ContextBackground>{preview}</ContextBackground>
+              </ColorContextProvider>
+              <br />
+              {extra}
+            </div>
+          </div>
+          <div {...styles.edit}>{children}</div>
         </div>
-        <div {...styles.edit}>{children}</div>
-        <br style={{ clear: 'both' }} />
       </OverlayBody>
     </Overlay>
   )

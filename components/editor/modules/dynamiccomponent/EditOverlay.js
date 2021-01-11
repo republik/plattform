@@ -3,9 +3,9 @@ import { fromJS } from 'immutable'
 import debounce from 'lodash.debounce'
 
 import OverlayFormManager from '../../utils/OverlayFormManager'
-import JSONField, { renderAutoSize } from '../../utils/JSONField'
+import { JSONEditor, PlainEditor } from '../../utils/CodeEditorFields'
 
-import { Interaction, Label, Radio, Field } from '@project-r/styleguide'
+import { Interaction, Label, Radio } from '@project-r/styleguide'
 
 import { getHtml } from './utils'
 
@@ -148,7 +148,7 @@ class Form extends Component {
           })}
         </Interaction.P>
         <Interaction.P>
-          <JSONField
+          <JSONEditor
             label='Config'
             value={config}
             onChange={value => {
@@ -160,11 +160,11 @@ class Form extends Component {
           />
         </Interaction.P>
         <Interaction.P>
-          <Field
+          <PlainEditor
             label='SSR-HTML'
             value={html}
-            renderInput={renderAutoSize()}
-            onChange={(_, value) => {
+            mode='htmlmixed'
+            onChange={value => {
               let newData = data.set('html', value)
               if (newData.get('autoHtml')) {
                 newData = newData.set('autoHtml', false)
