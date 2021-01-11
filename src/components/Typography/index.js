@@ -162,29 +162,41 @@ export const A = React.forwardRef(({ children, ...props }, ref) => {
   )
 })
 
-export const H1 = ({ children, ...props }) => (
-  <h1 {...props} {...styles.h1}>
-    {children}
-  </h1>
-)
+export const H1 = ({ children, ...props }) => {
+  const [colorScheme] = useColorContext()
+  return (
+    <h1 {...props} {...styles.h1} {...colorScheme.set('color', 'text')}>
+      {children}
+    </h1>
+  )
+}
 
-export const H2 = ({ children, ...props }) => (
-  <h2 {...props} {...styles.h2}>
-    {children}
-  </h2>
-)
+export const H2 = ({ children, ...props }) => {
+  const [colorScheme] = useColorContext()
+  return (
+    <h2 {...props} {...styles.h2} {...colorScheme.set('color', 'text')}>
+      {children}
+    </h2>
+  )
+}
 
-export const Lead = ({ children, ...props }) => (
-  <p {...props} {...styles.lead}>
-    {children}
-  </p>
-)
+export const Lead = ({ children, ...props }) => {
+  const [colorScheme] = useColorContext()
+  return (
+    <p {...props} {...styles.lead} {...colorScheme.set('color', 'text')}>
+      {children}
+    </p>
+  )
+}
 
-export const P = ({ children, ...props }) => (
-  <p {...props} {...styles.p}>
-    {children}
-  </p>
-)
+export const P = ({ children, ...props }) => {
+  const [colorScheme] = useColorContext()
+  return (
+    <p {...props} {...styles.p} {...colorScheme.set('color', 'text')}>
+      {children}
+    </p>
+  )
+}
 
 export const Label = ({ children, ...props }) => {
   const [colorScheme] = useColorContext()

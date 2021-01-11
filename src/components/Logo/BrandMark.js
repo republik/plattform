@@ -1,6 +1,7 @@
 import React from 'react'
 import { css } from 'glamor'
 import SG from '../../theme/env'
+import { useColorContext } from '../Colors/ColorContext'
 
 const VIEWBOX = SG.BRAND_MARK_VIEWBOX || '0 0 4 4'
 const PATH = SG.BRAND_MARK_PATH || 'M0 4 L1 0 L4 4 Z'
@@ -40,16 +41,19 @@ const styles = {
   })
 }
 
-const R = ({ fill }) => (
-  <div {...styles.container}>
-    <svg {...styles.svg} viewBox={VIEWBOX}>
-      <path fill={fill} d={PATH} />
-    </svg>
-  </div>
-)
-
-R.defaultProps = {
-  fill: '#000'
+const R = ({ fill }) => {
+  const [colorScheme] = useColorContext()
+  return (
+    <div {...styles.container}>
+      <svg
+        {...styles.svg}
+        viewBox={VIEWBOX}
+        {...colorScheme.set('fill', 'logo')}
+      >
+        <path d={PATH} fill={fill} />
+      </svg>
+    </div>
+  )
 }
 
 export default R
