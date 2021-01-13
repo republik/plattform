@@ -1,4 +1,7 @@
-const logger = console
+const {
+  upsertAddress,
+} = require('@orbiting/backend-modules-republik/lib/address')
+
 const payPledgePaymentslip = require('../../../lib/payments/paymentslip/payPledge')
 const payPledgePaypal = require('../../../lib/payments/paypal/payPledge')
 const payPledgePostfinance = require('../../../lib/payments/postfinance/payPledge')
@@ -8,6 +11,8 @@ const {
   changeStatus,
   afterChange,
 } = require('../../../lib/payments/Pledge')
+
+const logger = console
 
 module.exports = async (_, args, context) => {
   const { pgdb, req, t } = context
@@ -165,6 +170,21 @@ module.exports = async (_, args, context) => {
           context,
         )
       }
+
+      const address =
+        pledgePayment.address &&
+        (await upsertAddress(
+          { ...pledgePayment.address, id: user.addressId },
+          transaction,
+        ))
+
+      if (address) {
+        await transaction.public.users.update(
+          { id: user.id },
+          { addressId: address.id },
+        )
+      }
+
       return {
         updatedPledge,
         pledgeResponse,

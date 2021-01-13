@@ -1,5 +1,4 @@
 const { merge } = require('apollo-modules-node')
-const cluster = require('cluster')
 
 const {
   server: Server,
@@ -10,7 +9,6 @@ const {
 } = require('@orbiting/backend-modules-search')
 const { t } = require('@orbiting/backend-modules-translate')
 const SlackGreeter = require('@orbiting/backend-modules-slack/lib/SlackGreeter')
-const { graphql: auth } = require('@orbiting/backend-modules-auth')
 const { graphql: documents } = require('@orbiting/backend-modules-documents')
 const {
   graphql: redirections,
@@ -125,6 +123,7 @@ const run = async (workerId, config) => {
     require('@orbiting/backend-modules-gsheets/express/gsheets'),
     require('@orbiting/backend-modules-maillog/express/Mandrill/webhook'),
     require('@orbiting/backend-modules-publikator/express/uncommittedChanges'),
+    require('@orbiting/backend-modules-invoices/express'),
   ]
 
   if (MAIL_EXPRESS_RENDER) {

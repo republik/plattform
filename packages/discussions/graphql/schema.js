@@ -24,6 +24,7 @@ type queries {
     focusId: ID
     lastId: ID
     featured: Boolean
+    featuredTarget: CommentFeaturedTarget
   ): CommentConnection!
 
   commentPreview(
@@ -88,7 +89,11 @@ type mutations {
   featureComment(
     id: ID!
     content: String
+    targets: [CommentFeaturedTarget!]
   ): Comment!
+
+  suspendUser(id: ID!, until: DateTime, reason: String): User!
+  unsuspendUser(id: ID!): User!
 }
 
 type subscriptions {

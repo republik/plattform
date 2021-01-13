@@ -160,10 +160,13 @@ PgDb.connect()
       })
 
     unclassifiedAuthors.map(({ author, path }) => {
-      console.warn(
-        `WARNING: Unclassified author "${author}" in ${path}. Add to data/classifiedAuthors.tsv`,
-      )
+      console.warn(author, path)
     })
+
+    const unclassifiedAuthorNames = [
+      ...new Set(unclassifiedAuthors.map(({ author }) => author)),
+    ].sort()
+    unclassifiedAuthorNames.map((authorName) => console.warn(authorName))
 
     const stats = {
       begin: argv.begin.toISOString(),

@@ -42,12 +42,6 @@
                 <tr>
                   <td style="padding: 20px">
                     <p>Guten Tag</p>
-                    <p>
-                      Und willkommen an Bord!<br />
-                      Wir freuen uns sehr, Sie bei der Republik begrüssen zu
-                      dürfen.
-                    </p>
-
                     {{#if waiting_for_payment}}
                     <p>
                       Wir sind Ihnen sehr dankbar für Ihren grosszügigen
@@ -74,56 +68,12 @@
                         >Hier finden Sie die Gebrauchsanleitung</a
                       >, die die wichtigsten davon klärt.
                     </p>
-                    <p>
-                      Wir schicken Ihnen, unserer neusten Verlegerin, unserem
-                      neusten Verleger, auch regelmässig Neuigkeiten aus
-                      Redaktion und Verlag: zu Vorhaben, Hintergründen,
-                      Entscheidungen und Fehlern. Sie können Kritik üben und
-                      Vorschläge machen. Und sich mit Ihren Kolleginnen und
-                      Kollegen in der Verlagsetage austauschen.
-                    </p>
                     {{/if}}
 
-                    <p>
-                      <strong
-                        >Informationen zur Zahlung Ihrer Mitgliedschaft:</strong
-                      >
-                    </p>
-
-                    {{#if `payment_method != "PAYMENTSLIP"`}}
-                    <p>
-                      Ihre Zahlung ist erfolgreich bei uns eingegangen,
-                      herzlichen Dank!
-                    </p>
-                    {{/if}} {{#if `payment_method == "PAYMENTSLIP"`}}
-                    <p>
-                      Sie haben eine Banküberweisung als Zahlungsweg gewählt.
-                    </p>
-                    <p>
-                      Bitte überweisen Sie {{total_formatted}} bis spätestens
-                      <strong>{{due_date}}</strong> an:
-                    </p>
-                    <p>
-                      PC 61-11760-6<br />
-                      IBAN: CH50 0900 0000 6101 1760 6<br />
-                      BIC: POFICHBEXXX
-                    </p>
-                    <p>lautend auf:</p>
-                    <p>
-                      Project R Genossenschaft<br />
-                      Sihlhallenstrasse 1<br />
-                      8004 Zürich
-                    </p>
-                    <p>
-                      <strong
-                        >Bitte vergessen Sie nicht, {{HRID}} in das Feld
-                        «Betreff» des Einzahlungsscheins zu schreiben, sonst
-                        funktioniert die Zuordnung nicht. Danke!</strong
-                      >
-                    </p>
-                    {{/if}}
-
-                    <ul>
+                    <p>Details zum Kauf:</p>
+                    <ul
+                      style="color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}"
+                    >
                       {{#options}}
                       <li>
                         {{#if `this.oamount > 1`}} {{this.oamount}}
@@ -149,38 +99,32 @@
                       Mitgliedschaft noch ein Republik-Objekt gegönnt. {{elseif
                       `goodies_count > 1`}} Sie haben sich zu Ihrer
                       Mitgliedschaft noch mehrere Republik-Objekte gegönnt.
-                      {{/if}} Bücher und Taschen liefern wir innerhalb von 7
-                      Werktagen.
+                      {{/if}} Diese liefern wir innerhalb von 7 Werktagen.
                     </p>
+                    {{/if}} {{/unless}} {{#if paymentslip}}
+                    <p>Zahlungsinformationen:</p>
+                    <ul
+                      style="color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}"
+                    >
+                      <li>IBAN: {{iban}}</li>
+                      <li>Referenz: {{reference}}</li>
+                      <li>Betrag: {{total_formatted}}</li>
+                      <li>Zahlbar bis: {{due_date}}</li>
+                    </ul>
+                    <p>Anbei finden Sie eine QR-Rechnung.</p>
                     <p>
-                      <strong
-                        >Stellen Sie dafür bitte sicher, dass Sie Ihre Adresse
-                        unter
-                        <a href="{{link_account_account}}">{{link_account}}</a>
-                        korrekt eingetragen haben.</strong
-                      >
+                      Die QR-Rechnung ersetzt den Einzahlungsschein. Sie können
+                      damit die Zahlung via Mobile Banking, E-Banking oder am
+                      Schalter bei Bank und Post auslösen.
                     </p>
-                    {{/if}} {{/unless}}
+                    {{/if}}
 
-                    <p>
-                      Vielen Dank!<br />
-                      Und viel Vergnügen beim Start mit der Republik.
-                    </p>
+                    <p>Wir wünschen Ihnen viel Vergnügen mit der Republik.</p>
                     <p>Ihre Crew der Republik</p>
                   </td>
                 </tr>
                 <tr>
                   <td style="padding: 20px">
-                    <p
-                      style="font-size:14px;line-height:20px;{{sg_font_style_sans_serif_regular}}"
-                    >
-                      Die Republik ist ein unabhängiges und werbefreies
-                      digitales Magazin für Politik, Wirtschaft, Gesellschaft
-                      und Kultur. Es wird von seinen Leserinnen und Lesern
-                      finanziert und erscheint von Montag bis Samstag mit
-                      täglich ein bis drei neuen Beiträgen. In der App, auf der
-                      Website und als Newsletter.
-                    </p>
                     <p
                       style="color:#282828;font-size:14px;line-height:20px;{{sg_font_style_sans_serif_regular}}"
                     >
@@ -203,13 +147,6 @@
                       <a href="mailto:kontakt@republik.ch"
                         >kontakt@republik.ch</a
                       >
-                    </p>
-                    <p
-                      style="font-size:14px;line-height:20px;{{sg_font_style_sans_serif_regular}}"
-                    >
-                      <a href="{{link_manifest}}">Unser Manifest</a><br />
-                      <a href="{{link_imprint}}">Das Impressum</a><br />
-                      <a href="{{link_faq}}">Häufig gestellte Fragen</a>
                     </p>
                   </td>
                 </tr>

@@ -22,6 +22,7 @@ const {
   DEFAULT_MAIL_FROM_ADDRESS,
   DEFAULT_MAIL_FROM_NAME,
   SEND_MAILS_TAGS,
+  SEND_MAILS_SUBJECT_PREFIX,
   FRONTEND_BASE_URL,
   SG_FONT_STYLES,
   SG_FONT_FACES,
@@ -80,6 +81,10 @@ const envMergeVars = [
   {
     name: 'link_account',
     content: `${FRONTEND_BASE_URL}/konto`,
+  },
+  {
+    name: 'link_account_goto',
+    content: `${FRONTEND_BASE_URL}/angebote?goto=account`,
   },
   {
     name: 'link_account_abos',
@@ -243,18 +248,27 @@ module.exports = async (mail, context, log) => {
 
   const message = {
     to: [{ email: mail.to }],
-    subject: mail.subject,
+    subject:
+      (SEND_MAILS_SUBJECT_PREFIX &&
+        `[${SEND_MAILS_SUBJECT_PREFIX}] ${mail.subject}`) ||
+      mail.subject,
     from_email: mail.fromEmail || DEFAULT_MAIL_FROM_ADDRESS,
     from_name: mail.fromName || DEFAULT_MAIL_FROM_NAME,
     html,
-    text,
+    text: text || mail.text,
     merge_language: mail.mergeLanguage || 'handlebars',
     global_merge_vars: mergeVars,
     auto_text: !text,
     tags,
+    attachments: mail.attachments,
   }
 
-  debug({ ...message, html: !!message.html, text: !!message.text })
+  debug({
+    ...message,
+    html: !!message.html,
+    text: !!message.text,
+    attachments: message.attachments?.map(({ name, type }) => ({ name, type })),
+  })
 
   const sendFunc = sendResultNormalizer(
     shouldScheduleMessage(mail, message),
@@ -283,7 +297,15 @@ module.exports = async (mail, context, log) => {
   return send({
     log,
     sendFunc,
-    message: { ...message, html: !!message.html, text: !!message.text },
+    message: {
+      ...message,
+      html: !!message.html,
+      text: !!message.text,
+      attachments: message.attachments?.map(({ name, type }) => ({
+        name,
+        type,
+      })),
+    },
     email: message.to[0].email,
     template: mail.templateName,
     context,

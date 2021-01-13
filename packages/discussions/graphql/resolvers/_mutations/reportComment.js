@@ -1,6 +1,8 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
 const slack = require('../../../lib/slack')
 
+const { REPORTS_NOTIFY_THRESHOLD = 2 } = process.env
+
 module.exports = async (_, args, context) => {
   const { id } = args
   const { pgdb, user: me, t, loaders } = context
@@ -53,7 +55,7 @@ module.exports = async (_, args, context) => {
 
   if (newComment) {
     await loaders.Comment.byId.clear(commentId)
-    if (newComment.reports.length > 1) {
+    if (newComment.reports.length >= REPORTS_NOTIFY_THRESHOLD) {
       slack.publishCommentReport(me, newComment, discussion, context)
     }
   }

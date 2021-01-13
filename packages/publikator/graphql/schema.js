@@ -27,6 +27,7 @@ type queries {
     before: String
     after: String
     # can not be combined with orderBy
+    publishDateRange: RepoPublishDateRange
     search: String
     template: String
     phases: [RepoPhaseKey!]

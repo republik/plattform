@@ -5,6 +5,7 @@ const checkEnv = require('check-env')
 const compression = require('compression')
 const timeout = require('connect-timeout')
 const helmet = require('helmet')
+const sleep = require('await-sleep')
 
 const graphql = require('./express/graphql')
 const graphiql = require('./express/graphiql')
@@ -21,6 +22,7 @@ const {
   COOKIE_DOMAIN,
   COOKIE_NAME,
   IGNORE_SSL_HOSTNAME,
+  REQ_DELAY_MS,
   REQ_TIMEOUT,
 } = process.env
 
@@ -76,6 +78,14 @@ const start = async (
     })
   }
 
+  // artifical delay requests
+  if (DEV && REQ_DELAY_MS) {
+    server.all('*', async (req, res, next) => {
+      await sleep(REQ_DELAY_MS)
+      next()
+    })
+  }
+
   // add req._log()
   server.use(requestLog)
 
@@ -113,7 +123,7 @@ const start = async (
   graphiql(server)
 
   for (const middleware of middlewares) {
-    await middleware(server, pgdb, t, redis, connectionContext)
+    await middleware(server, pgdb, t, redis, createGraphqlContext())
   }
 
   let closed = false

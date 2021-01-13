@@ -40,12 +40,25 @@ describe('parseCamt053():', () => {
     expect(gutschrift).toBe(24000)
   })
 
+  it('recognizes creditor reference', async () => {
+    const xmlString = await loadFixture('reference')
+    const paymentEntries = parseCamt053(xmlString)
+    expect(paymentEntries[0].mitteilung).toEqual('AAAAAA')
+    expect(paymentEntries[1].mitteilung).toEqual('BBBBBB')
+    expect(paymentEntries[2].mitteilung).toEqual('CCCCCC')
+    expect(paymentEntries[3].mitteilung).toEqual('EEEEEE')
+    expect(paymentEntries[4].mitteilung).toEqual('FFFFFF')
+  })
+
   it('falls back to remittance information for `Mitteilung`', async () => {
     const xmlString = await loadFixture('mitteilung')
     const paymentEntries = parseCamt053(xmlString)
     expect(paymentEntries[0].mitteilung).toEqual('BBBBBB')
     expect(paymentEntries[1].mitteilung).toEqual('AAAAAA')
     expect(paymentEntries[2].mitteilung).toEqual('AAAAAA')
+    expect(paymentEntries[3].mitteilung).toEqual('CCCCCC')
+    expect(paymentEntries[4].mitteilung).toEqual(null)
+    expect(paymentEntries[5].mitteilung).toEqual('EEEEEE')
   })
 
   it('returns the reference for the sanned cash deposit', async () => {

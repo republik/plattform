@@ -16,7 +16,7 @@ const { suggest: autoPaySuggest } = require('../AutoPay')
 const mailings = require('./owners/mailings')
 const charging = require('./owners/charging')
 
-const { PARKING_USER_ID, MEMBERSHIP_SCHEDULER_USER_LIMIT = 100 } = process.env
+const { PARKING_USER_ID, MEMBERSHIP_SCHEDULER_USER_LIMIT } = process.env
 
 const STATS_INTERVAL_SECS = 3
 const DAYS_BEFORE_END_DATE = 29
@@ -94,6 +94,25 @@ const createBuckets = (now) => [
     handler: mailings,
   },
   {
+    name: 'membership_owner_prolong_abo_give_months_notice_0',
+    endDate: {
+      min: getMinEndDate(now, -3),
+      max: getMaxEndDate(now, 0),
+    },
+    predicate: ({ id: userId, membershipType, membershipAutoPay, autoPay }) => {
+      return (
+        membershipType === 'ABO_GIVE_MONTHS' &&
+        (membershipAutoPay === false ||
+          (membershipAutoPay === true &&
+            (!autoPay || (autoPay && userId !== autoPay.userId))))
+      )
+    },
+    payload: {
+      templateName: 'membership_owner_prolong_abo_give_months_notice_0',
+    },
+    handler: mailings,
+  },
+  {
     name: 'membership_owner_prolong_winback_7',
     endDate: {
       min: getMinEndDate(now, -10),
@@ -162,30 +181,31 @@ const getBuckets = async ({ now }, context) => {
   const users = await pgdb
     .query(
       `
-    SELECT
-      u.*,
-      m.id AS "membershipId",
-      m."sequenceNumber" AS "membershipSequenceNumber",
-      m."graceInterval" AS "membershipGraceInterval",
-      m."autoPay" AS "membershipAutoPay",
-      mt.name AS "membershipType"
-    FROM
-      memberships m
-    INNER JOIN
-      users u ON m."userId" = u.id
-    INNER JOIN
-      "membershipTypes" mt ON m."membershipTypeId" = mt.id
-    WHERE
-      m."userId" != :PARKING_USER_ID
-      AND m.active = true
-      AND m.renew = true
-    ORDER BY RANDOM()
-    LIMIT :MEMBERSHIP_SCHEDULER_USER_LIMIT
-  `,
-      {
-        PARKING_USER_ID,
-        MEMBERSHIP_SCHEDULER_USER_LIMIT,
-      },
+      SELECT
+        u.*,
+        m.id AS "membershipId",
+        m."sequenceNumber" AS "membershipSequenceNumber",
+        m."graceInterval" AS "membershipGraceInterval",
+        m."autoPay" AS "membershipAutoPay",
+        mt.name AS "membershipType"
+      FROM
+        memberships m
+      INNER JOIN
+        users u ON m."userId" = u.id
+      INNER JOIN
+        "membershipTypes" mt ON m."membershipTypeId" = mt.id
+      WHERE
+        m."userId" != :PARKING_USER_ID
+        AND m.active = true
+        AND m.renew = true
+      ORDER BY RANDOM()
+      ${
+        MEMBERSHIP_SCHEDULER_USER_LIMIT
+          ? `LIMIT ${MEMBERSHIP_SCHEDULER_USER_LIMIT}`
+          : ''
+      }
+      `,
+      { PARKING_USER_ID },
     )
     .then((users) =>
       users.map((user) => ({

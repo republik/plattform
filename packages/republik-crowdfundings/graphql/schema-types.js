@@ -120,6 +120,7 @@ input PackageOptionInput {
 type Goodie {
   id: ID!
   name: String!
+  requireAddress: Boolean!
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -134,6 +135,7 @@ enum MembershipTypeInterval {
 type MembershipType {
   id: ID!
   name: String!
+  requireAddress: Boolean!
   interval: MembershipTypeInterval!
   minPeriods: Int!
   maxPeriods: Int!
@@ -225,6 +227,7 @@ type Pledge {
   donation: Int!
   payments: [PledgePayment!]!
   user: User!
+  shippingAddress: Address
   reason: String
   memberships: [Membership!]!
   createdAt: DateTime!
@@ -235,6 +238,8 @@ input PledgeInput {
   options: [PackageOptionInput!]!
   total: Int!
   user: UserInput!
+  address: AddressInput
+  shippingAddress: AddressInput
   reason: String
   messageToClaimers: String
   accessToken: ID
@@ -270,6 +275,7 @@ input PledgePaymentInput {
   pspPayload: JSON
   makeDefault: Boolean
   address: AddressInput
+  shippingAddress: AddressInput
 }
 
 type AddPaymentMethodResponse {
@@ -297,6 +303,8 @@ type PledgePayment {
   total: Int!
   status: PaymentStatus!
   hrid: String
+  reference(pretty: Boolean): String
+  paymentslipUrl: String
   pspId: String
   dueDate: DateTime
   # every payment should link to

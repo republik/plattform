@@ -3,6 +3,8 @@ const {
   Roles: { userIsInRoles },
 } = require('@orbiting/backend-modules-auth')
 
+const modifiers = require('./modifiers')
+
 const { DOCUMENTS_RESTRICT_TO_ROLES } = process.env
 
 const processRepoImageUrlsInContent = (mdast, fn) => {
@@ -78,10 +80,22 @@ const processMembersOnlyZonesInContent = (mdast, user) => {
   })
 }
 
+const processNodeModifiersInContent = (mdast, user) => {
+  visit(mdast, 'zone', (node) => {
+    node.data?.modifiers?.forEach?.(({ name, ...settings }) =>
+      modifiers[name]?.(settings, node, user),
+    )
+
+    // Prevent modifiers prop to be exposed
+    delete node.data?.modifiers
+  })
+}
+
 module.exports = {
   processMembersOnlyZonesInContent,
   processRepoImageUrlsInContent,
   processRepoImageUrlsInMeta,
   processImageUrlsInContent,
   processEmbedsInContent,
+  processNodeModifiersInContent,
 }

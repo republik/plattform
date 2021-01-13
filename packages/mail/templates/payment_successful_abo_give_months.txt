@@ -20,14 +20,11 @@ nur auf die Seite {{link_claim}} gehen. Und ihn dort eingeben.
 {{#if `goodies_count == 1`}} Auch Ihr bestelltes Republik-Objekt eignet sich
 perfekt für die Code-Übergabe. {{elseif `goodies_count > 1`}} Auch Ihre
 bestellten Republik-Objekte eignen sich perfekt für die Code-Übergabe. {{/if}}
-Bücher und Taschen liefern wir innerhalb von 7 Werktagen.
+Wir liefern Ihnen die Bestellung innerhalb von 7 Werktagen.
 
    {{#options}} {{#if `this.otype == "Goodie"`}}
  * {{this.oamount}} {{this.olabel}}
    {{/if}} {{/options}}
-
-Stellen Sie dafür bitte sicher, dass Sie Ihre Adresse unter
-{{link_account_account}} korrekt eingetragen haben.
 
 {{/if}}
 
@@ -36,17 +33,8 @@ Und viel Freude beim Verschenken der Republik.
 
 Ihre Crew der Republik
 
-Die Republik ist ein unabhängiges und werbefreies digitales Magazin für Politik,
-Wirtschaft, Gesellschaft und Kultur. Es wird von seinen Leserinnen und Lesern
-finanziert und erscheint von Montag bis Samstag mit täglich ein bis drei neuen
-Beiträgen. In der App, auf der Website und als Newsletter.
-
 
 Republik AG
 Sihlhallenstrasse 1, CH-8004 Zürich
 {{frontend_base_url}}
 kontakt@republik.ch
-
-Unser Manifest {{link_manifest}}
-Das Impressum {{link_imprint}}
-Häufig gestellte Fragen {{link_faq}}

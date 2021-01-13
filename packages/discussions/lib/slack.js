@@ -65,7 +65,7 @@ exports.publishCommentUnpublish = async (
   const author = await getDisplayAuthor(comment, {}, context)
 
   const action = update.adminUnpublished
-    ? `:point_up: *${user.name}* unupblished comment by *${getProfileLink(
+    ? `:point_up: *${user.name}* unpublished comment by *${getProfileLink(
         author,
       )}*`
     : `:put_litter_in_its_place: *${getProfileLink(author)}* unpublished`
@@ -108,6 +108,7 @@ exports.publishCommentFeatured = async (
   comment,
   discussion,
   featuredText,
+  featuredTargets,
   featured,
   context,
 ) => {
@@ -119,13 +120,42 @@ exports.publishCommentFeatured = async (
         author,
       )}*`
 
+  const targets = featuredTargets.join(', ')
+
   const content = featured
     ? `${action} from <${await getCommentLink(comment, discussion, context)}|${
         discussion.title
-      }>:\n${featuredText}`
+      }> for target(s) ${targets}:\n${featuredText}`
     : `${action} from <${await getCommentLink(comment, discussion, context)}|${
         discussion.title
       }>`
+
+  return publish(SLACK_CHANNEL_COMMENTS_ADMIN, content, {
+    unfurl_links: false,
+    unfurl_media: false,
+  })
+}
+
+exports.publishUserSuspended = async (suspensions, user, context) => {
+  const until = Math.max(...suspensions.map((s) => s.endAt))
+
+  const content = [
+    `:children_crossing: *${getProfileLink(user)} suspended*`,
+    `ends on ${new Date(until).toISOString()}`,
+    `issued by ${getProfileLink(context.user)}`,
+  ].join('\n')
+
+  return publish(SLACK_CHANNEL_COMMENTS_ADMIN, content, {
+    unfurl_links: false,
+    unfurl_media: false,
+  })
+}
+
+exports.publishUserUnsuspended = async (suspensions, user, context) => {
+  const content = [
+    `:dove_of_peace: *${getProfileLink(user)} unsuspended early*`,
+    `by ${getProfileLink(context.user)}`,
+  ].join('\n')
 
   return publish(SLACK_CHANNEL_COMMENTS_ADMIN, content, {
     unfurl_links: false,

@@ -1,7 +1,7 @@
 Guten Tag
 
 Vielen Dank, dass Sie die Verbreitung der Republik mit einem Geschenkabonnement
-unterstützen!
+unterstützen.
 
 {{#if voucher_codes}}
 
@@ -21,66 +21,40 @@ nur auf die Seite {{link_claim}} gehen. Und den Code dort eingeben.
 {{#if `goodies_count == 1`}} Auch Ihr bestelltes Republik-Objekt eignet sich
 perfekt für die Code-Übergabe. {{elseif `goodies_count > 1`}} Auch Ihre
 bestellten Republik-Objekte eignen sich perfekt für die Code-Übergabe. {{/if}}
-Bücher und Taschen liefern wir innerhalb von 7 Werktagen.
+Wir liefern Ihnen die Bestellung innerhalb von 7 Werktagen.
 
    {{#options}} {{#if `this.otype == "Goodie"`}}
  * {{this.oamount}} {{this.olabel}}
    {{/if}} {{/options}}
 
-Stellen Sie dafür bitte sicher, dass Sie Ihre Adresse unter
-{{link_account_account}} korrekt eingetragen haben.
 
-{{/if}} {{/if}}
-
-Informationen zur Zahlung Ihres Geschenkabonnements:
-
-{{#if `payment_method != "PAYMENTSLIP"`}}
-
-Ihre Zahlung ist erfolgreich bei uns eingegangen, herzlichen Dank!
-
-{{/if}} {{#if `payment_method == "PAYMENTSLIP"`}}
-
-Sie haben eine Banküberweisung als Zahlungsweg gewählt.
-
-Bitte überweisen Sie {{total_formatted}} bis spätestens {{due_date}} an:
-
-PC 61-229215-3
-IBAN: CH23 0900 0000 6122 9215 3
-BIC: POFICHBEXXX
-
-lautend auf:
-
-Republik AG
-Sihlhallenstrasse 1
-8004 Zürich
-
-Bitte vergessen Sie nicht, {{HRID}} in das Feld «Betreff» des Einzahlungsscheins
-zu schreiben, sonst funktioniert die Zuordnung nicht. Danke!
-
-{{/if}} {{#if waiting_for_payment}}
-
+{{/if}} {{/if}} {{#if waiting_for_payment}}
 
 Da der Gesamtbetrag Ihrer Bestellung die magische Grenze von CHF 1000.–
-übersteigt, erhalten Sie die Gutscheincodes erst nach Zahlungseingang.
+übersteigt, schicken wir Ihnen die Gutscheincodes erst nach Zahlungseingang.
+
+{{/if}} {{#if paymentslip}}
+
+Zahlungsinformationen:
+
+ * IBAN: {{iban}}
+ * Referenz: {{reference}}
+ * Betrag: {{total_formatted}}
+ * Zahlbar bis: {{due_date}}
+
+Anbei finden Sie eine QR-Rechnung.
+
+Die QR-Rechnung ersetzt den Einzahlungsschein. Sie können damit die Zahlung via
+Mobile Banking, E-Banking oder am Schalter bei Bank und Post auslösen.
 
 {{/if}}
 
-Vielen Dank!
-Und viel Freude beim Verschenken der Republik.
+Wir wünschen Ihnen viel Freude beim Verschenken der Republik.
 
 Ihre Crew der Republik
-
-Die Republik ist ein unabhängiges und werbefreies digitales Magazin für Politik,
-Wirtschaft, Gesellschaft und Kultur. Es wird von seinen Leserinnen und Lesern
-finanziert und erscheint von Montag bis Samstag mit täglich ein bis drei neuen
-Beiträgen. In der App, auf der Website und als Newsletter.
 
 
 Republik AG
 Sihlhallenstrasse 1, CH-8004 Zürich
 {{frontend_base_url}}
 kontakt@republik.ch
-
-Unser Manifest {{link_manifest}}
-Das Impressum {{link_imprint}}
-Häufig gestellte Fragen {{link_faq}}

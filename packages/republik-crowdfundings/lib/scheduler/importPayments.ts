@@ -383,12 +383,7 @@ const extendWithImageAndAccountId = (
 }: PaymentEntry): PostfinancePaymentRecord => {
   let image = null
   if (imageReference) {
-    image = images[imageReference].png
-    if (!image) {
-      throw new Error(
-        `Import failed: image with reference ${imageReference} missing.`,
-      )
-    }
+    image = images[imageReference]?.png
   }
 
   const bankAccountId = ibanToBankAccountId.get(iban)

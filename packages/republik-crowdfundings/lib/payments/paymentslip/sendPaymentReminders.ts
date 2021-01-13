@@ -8,6 +8,7 @@ import {
 import { formatPrice } from '@orbiting/backend-modules-formats'
 import { Context } from '@orbiting/backend-modules-types'
 import { publishFinance } from '@orbiting/backend-modules-republik/lib/slack'
+import { paymentslip } from '@orbiting/backend-modules-invoices'
 
 const { sendMailTemplate } = require('@orbiting/backend-modules-mail')
 const { PAYMENT_DEADLINE_DAYS } = require('./helpers')
@@ -228,6 +229,13 @@ async function send({
     `api/email/payment/reminder${isLast ? '/last' : ''}/default/subject`,
   ])
 
+  const resolvedPayment = await paymentslip.resolve(
+    { hrid: payment.hrid },
+    context,
+  )
+
+  const creditor = resolvedPayment.pledge?.package?.bankAccount
+
   await sendMailTemplate(
     {
       to: payment.email,
@@ -235,9 +243,34 @@ async function send({
       subject: emailSubject,
       templateName: isLast ? 'cf_payment_reminder_last' : 'cf_payment_reminder',
       globalMergeVars: [
-        { name: 'TOTAL', content: formatPrice(payment.total) },
-        { name: 'HRID', content: payment.hrid },
-        { name: 'COMPANY_NAME', content: payment.companyName },
+        {
+          name: 'total',
+          content: formatPrice(resolvedPayment.total),
+        },
+        {
+          name: 'iban',
+          content: creditor?.iban?.match(/.{1,4}/g)?.join(' '),
+        },
+        {
+          name: 'reference',
+          content: paymentslip.getReference(resolvedPayment.hrid, true),
+        },
+      ],
+      attachments: [
+        {
+          type: 'application/pdf',
+          name:
+            [
+              'QR-Rechnung',
+              creditor?.address?.name,
+              paymentslip.getReference(resolvedPayment.hrid, true),
+            ]
+              .filter(Boolean)
+              .join(' ') + '.pdf',
+          content: (await paymentslip.generate(resolvedPayment)).toString(
+            'base64',
+          ),
+        },
       ],
     },
     context,

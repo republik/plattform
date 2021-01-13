@@ -1,28 +1,16 @@
-const { DISCUSSION_BANS } = process.env
+module.exports = async ({ minInterval, id }, _, context) => {
+  const { pgdb, user, loaders } = context
 
-// arrayOf(Shape({"userId":String,"expire":String}))
-let BANS = []
-if (DISCUSSION_BANS) {
-  try {
-    BANS = BANS.concat(JSON.parse(DISCUSSION_BANS)).filter(Boolean)
-  } catch (e) {
-    console.warn('invalid DISCUSSION_BANS env, no bans will be active')
-  }
-}
-
-module.exports = async ({ minInterval, id }, _, { pgdb, user }) => {
   if (!user) {
     return null
   }
-  if (BANS.length) {
-    const userBan = BANS.find((ban) => ban.userId === user.id)
-    if (userBan) {
-      const expire = new Date(userBan.expire)
-      if (new Date() < expire) {
-        return expire
-      }
-    }
+
+  const suspensions = await loaders.DiscussionSuspension.byUserId.load(user.id)
+  if (suspensions.length) {
+    const until = Math.max(...suspensions.map((s) => s.endAt))
+    return new Date(until)
   }
+
   if (!minInterval) {
     return null
   }

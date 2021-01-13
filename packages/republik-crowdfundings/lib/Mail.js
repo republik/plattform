@@ -12,6 +12,7 @@ const {
   timeFormat,
   formatPriceChf,
 } = require('@orbiting/backend-modules-formats')
+const { paymentslip } = require('@orbiting/backend-modules-invoices')
 
 const { getLastEndDate } = require('./utils')
 
@@ -200,6 +201,14 @@ mail.sendPledgeConfirmations = async ({ userId, pgdb, t }) => {
 
       const templateName = `pledge_${package_.name.toLowerCase()}`
 
+      const pledgeMergeVars = await mail.getPledgeMergeVars(
+        { pledge, user, package_ },
+        { pgdb, t },
+      )
+
+      const globalMergeVars = pledgeMergeVars.filter((v) => !v.type)
+      const attachments = pledgeMergeVars.filter((v) => !!v.type)
+
       return sendMailTemplate(
         {
           to: user.email,
@@ -207,10 +216,8 @@ mail.sendPledgeConfirmations = async ({ userId, pgdb, t }) => {
           subject: t(`api/email/${templateName}/subject`),
           templateName,
           mergeLanguage: 'handlebars',
-          globalMergeVars: await mail.getPledgeMergeVars(
-            { pledge, user, package_ },
-            { pgdb, t },
-          ),
+          globalMergeVars,
+          attachments,
         },
         { pgdb },
       )
@@ -232,6 +239,13 @@ mail.sendPaymentSuccessful = async ({ pledgeId, pgdb, t }) => {
 
   const templateName = `payment_successful_${package_.name.toLowerCase()}`
 
+  const pledgeMergeVars = await mail.getPledgeMergeVars(
+    { pledge, user, package_ },
+    { pgdb, t },
+  )
+
+  const globalMergeVars = pledgeMergeVars.filter((v) => !v.type)
+
   return sendMailTemplate(
     {
       to: user.email,
@@ -239,10 +253,7 @@ mail.sendPaymentSuccessful = async ({ pledgeId, pgdb, t }) => {
       subject: t(`api/email/${templateName}/subject`),
       templateName,
       mergeLanguage: 'handlebars',
-      globalMergeVars: await mail.getPledgeMergeVars(
-        { pledge, user, package_ },
-        { pgdb, t },
-      ),
+      globalMergeVars,
     },
     { pgdb },
   )
@@ -252,6 +263,7 @@ mail.sendMembershipCancellation = async ({
   email,
   name,
   endDate,
+  active,
   membershipType,
   reasonGiven,
   t,
@@ -271,6 +283,10 @@ mail.sendMembershipCancellation = async ({
         {
           name: 'end_date',
           content: dateFormat(endDate),
+        },
+        {
+          name: 'membership_active',
+          content: active,
         },
         {
           name: 'membership_type',
@@ -676,9 +692,9 @@ mail.getPledgeMergeVars = async (
     { pledgeId: pledge.id },
     { orderBy: ['createdAt desc'] },
   )
-  const payment = pledgePayment
-    ? await pgdb.public.payments.findOne({ id: pledgePayment.paymentId })
-    : {}
+  const payment =
+    pledgePayment &&
+    (await paymentslip.resolve({ id: pledgePayment.paymentId }, { pgdb, t }))
 
   const pledgeOptions = await pgdb.public.pledgeOptions.find(
     {
@@ -808,6 +824,8 @@ mail.getPledgeMergeVars = async (
     (m) => !!m.accessGranted,
   ).length
 
+  const creditor = payment?.pledge?.package?.bankAccount
+
   return [
     // Purchase itself
     {
@@ -886,14 +904,14 @@ mail.getPledgeMergeVars = async (
     },
 
     // Payment
-    {
-      name: 'payment_method',
-      content: payment.method,
-    },
-    ...(payment
+    ...(payment?.id
       ? [
           {
-            name: 'HRID',
+            name: 'payment_method',
+            content: payment.method,
+          },
+          {
+            name: 'hrid',
             content: payment.hrid,
           },
           {
@@ -908,8 +926,29 @@ mail.getPledgeMergeVars = async (
             name: 'not_paymentslip',
             content: payment.method !== 'PAYMENTSLIP',
           },
+          {
+            name: 'iban',
+            content: creditor.iban.match(/.{1,4}/g).join(' '),
+          },
+          {
+            name: 'reference',
+            content: paymentslip.getReference(payment.hrid, true),
+          },
+          paymentslip.isApplicable(payment) && {
+            type: 'application/pdf',
+            name:
+              [
+                'QR-Rechnung',
+                creditor?.address?.name,
+                paymentslip.getReference(payment.hrid, true),
+              ]
+                .filter(Boolean)
+                .join(' ') + '.pdf',
+            content: (await paymentslip.generate(payment)).toString('base64'),
+          },
         ]
       : []),
+
     {
       name: 'waiting_for_payment',
       content: pledge.status === 'WAITING_FOR_PAYMENT',

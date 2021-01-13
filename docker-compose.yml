@@ -33,14 +33,14 @@ services:
       - elastic
 
   redis:
-    image: redis:alpine
+    image: redis:4.0.14-alpine
     ports:
       - 6379:6379
     volumes:
       - ./docker-data/redis:/data:delegated
 
   postgres:
-    image: postgres:12
+    image: postgres:12.4
     environment:
       - POSTGRES_HOST_AUTH_METHOD=trust
     volumes:

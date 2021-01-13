@@ -25,6 +25,7 @@ const scopeConfigs = {
       'email',
       'firstName',
       'lastName',
+      'address',
       'hasAddress',
       'paymentSources',
       'customPackages',
@@ -37,6 +38,7 @@ const scopeConfigs = {
       'email',
       'firstName',
       'lastName',
+      'address',
       'hasAddress',
       'paymentSources',
       'customPackages',
@@ -53,6 +55,10 @@ const scopeConfigs = {
     authorizeSession: true,
     ttlDays: 5,
     expireAtFormat: 'YYYY-MM-DDTHH:mm:ss.SSSZZ',
+  },
+  INVOICE: {
+    allowedReqPaths: [/^\/invoices\/paymentslip\/(.{6})\.pdf?$/],
+    ttlDays: 5,
   },
 }
 
@@ -177,6 +183,11 @@ const ensureCanPledgePackage = (user, packageName) => {
 const hasAuthorizeSession = (user) =>
   !!(user && user._scopeConfig && user._scopeConfig.authorizeSession)
 
+const isReqPathAllowed = (user, req) =>
+  !!user?._scopeConfig?.allowedReqPaths?.some((pattern) =>
+    pattern.test(req.path),
+  )
+
 module.exports = {
   generateForUser,
   generateForUserByUser,
@@ -184,4 +195,5 @@ module.exports = {
   isFieldExposed,
   ensureCanPledgePackage,
   hasAuthorizeSession,
+  isReqPathAllowed,
 }

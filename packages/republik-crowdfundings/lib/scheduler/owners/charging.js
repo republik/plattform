@@ -136,10 +136,16 @@ module.exports = async (user, bucket, context) => {
           ].join('\n'),
         )
       } else {
+        const emoji =
+          (payload.attemptNumber === 1 && ':hourglass_flowing_sand:') ||
+          (payload.attemptNumber === 2 && ':hourglass_flowing_sand:') ||
+          (payload.attemptNumber === 3 && ':hourglass:') ||
+          ':x:'
+
         await slackPublish(
           SLACK_CHANNEL_AUTOPAY,
           [
-            `:x: Fehler bei automatischer Abbuchung (${payload.attemptNumber}. Versuch):`,
+            `${emoji} Fehler bei automatischer Abbuchung (${payload.attemptNumber}. Versuch):`,
             `*${chargeAttempt.error.name}: ${chargeAttempt.error.message}*`,
             `Betrag: ${formatPrice(
               autoPay.total,

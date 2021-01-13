@@ -44,8 +44,6 @@
     "ERROR_PAGE_URL": {
       "required": true
     },
-    "EXO_KEY": "",
-    "EXO_SECRET": "",
     "FOUNDELASTICSEARCH_URL": {
       "required": true
     },
@@ -137,9 +135,6 @@
       "required": true
     },
     "REQ_TIMEOUT": {
-      "required": true
-    },
-    "S3BUCKET": {
       "required": true
     },
     "SEND_MAILS": "false",

@@ -58,6 +58,11 @@ type mutations {
     disclosures: String
   ): User!
 
+  updateAddress(
+    id: ID!,
+    address: AddressInput!
+  ): Address!
+
   publishCredential(
     description: String
   ): Credential

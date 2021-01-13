@@ -459,6 +459,14 @@
       "value": "Bücher «Republik bei Stromausfall»"
     },
     {
+      "key": "api/email/option/goodie/mask/1",
+      "value": "Republik-Maske"
+    },
+    {
+      "key": "api/email/option/goodie/mask/other",
+      "value": "Republik-Masken"
+    },
+    {
       "key": "api/email/option/membershiptype/abo/1",
       "value": "Abo und Mitgliedschaft"
     },
@@ -643,6 +651,10 @@
       "value": "Ihre Abonnementsrechnung"
     },
     {
+      "key": "api/email/membership_owner_prolong_abo_give_months_notice_0/subject",
+      "value": "Ihr letzter Tag an Bord"
+    },
+    {
       "key": "api/email/membership_owner_prolong_winback_7/subject",
       "value": "Ihr Mitgliedschaftsbeitrag ist überfällig"
     },
@@ -665,6 +677,10 @@
     {
       "key": "api/email/membership_deactivated_benefactor_abo_uncancelled/sequenceNumber/true/subject",
       "value": "Ihre Mitgliedschaft Nr. {sequenceNumber} wurde deaktiviert"
+    },
+    {
+      "key": "api/email/membership_deactivated_abo_give_months_uncancelled/subject",
+      "value": "Ihr Republik-Abonnement wurde deaktiviert"
     },
     {
       "key": "api/email/membership_deactivated/subject",
@@ -717,6 +733,10 @@
     {
       "key": "api/comment/notYours",
       "value": "Sie können nur Ihre eigenen Beiträge bearbeiten."
+    },
+    {
+      "key": "api/comment/hidden/displayName",
+      "value": "Verborgen"
     },
     {
       "key": "api/comment/anonymous/displayName",
