@@ -268,7 +268,7 @@ export const ColorContextProvider = ({
 }
 
 ColorContextProvider.propTypes = {
-  colorSchemeKey: PropTypes.oneOf(['light', 'dark', 'auto']).isRequired
+  colorSchemeKey: PropTypes.oneOf(['light', 'dark', 'auto'])
 }
 
 export default ColorContext

@@ -25,7 +25,7 @@ const Checkbox = ({
     : disabled
     ? colorScheme.set('borderColor', 'disabled')
     : black
-    ? colorScheme.set('borderColor', '#000')
+    ? colorScheme.set('borderColor', 'logo')
     : colorScheme.set('borderColor', 'text')
 
   const checkMarkFill = error
@@ -33,7 +33,7 @@ const Checkbox = ({
     : disabled
     ? colorScheme.set('fill', 'disabled')
     : black
-    ? colorScheme.set('fill', '#000')
+    ? colorScheme.set('fill', 'logo')
     : colorScheme.set('fill', 'primary')
   return (
     <label {...styles.label} {...labelColor}>
