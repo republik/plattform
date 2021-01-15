@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { css } from 'glamor'
 import { mUp } from '../../theme/mediaQueries'
-import { linkRule } from '../Typography'
+import { A } from '../Typography'
 import { sansSerifRegular15, sansSerifRegular18 } from '../Typography/styles'
 import { Figure, FigureImage, FigureCaption } from '../Figure'
 import { Header } from './Header'
@@ -90,9 +90,7 @@ const Tweet = ({
           </a>
           {more && (
             <FigureCaption>
-              <a href={url} {...linkRule}>
-                {more}
-              </a>
+              <A href={url}>{more}</A>
             </FigureCaption>
           )}
         </Figure>
