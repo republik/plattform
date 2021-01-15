@@ -8,6 +8,7 @@ import { mUp } from './mediaQueries'
 import Text from './Text'
 import { useColorContext } from '../Colors/useColorContext'
 import SwitchImage from '../Figure/SwitchImage'
+import { ColorContextProvider } from '../Colors/ColorContext'
 
 const IMAGE_SIZE = {
   small: 220,
@@ -106,58 +107,60 @@ const Tile = ({
   }
 
   return (
-    <div
-      {...attributes}
-      onClick={onClick}
-      {...colorScheme.set('backgroundColor', 'default')}
-      style={containerStyle}
-      // The styles of the container are defined
-      // on the parent component <TileRow />
-      // with CSS children selectors, they depend
-      // on the column number given as prop.
-      className='tile'
-    >
-      {imageProps && (
-        <div
-          {...(onlyImage ? styles.onlyImageContainer : styles.imageContainer)}
-        >
-          <LazyLoad
-            visible={aboveTheFold}
-            consistentPlaceholder
-            type='span'
-            style={{
-              position: 'relative',
-              fontSize: 0,
-              display: 'inline-block'
-            }}
+    <ColorContextProvider colorSchemeKey='light'>
+      <div
+        {...attributes}
+        onClick={onClick}
+        {...colorScheme.set('backgroundColor', 'default')}
+        style={containerStyle}
+        // The styles of the container are defined
+        // on the parent component <TileRow />
+        // with CSS children selectors, they depend
+        // on the column number given as prop.
+        className='tile'
+      >
+        {imageProps && (
+          <div
+            {...(onlyImage ? styles.onlyImageContainer : styles.imageContainer)}
           >
-            <SwitchImage
-              src={imageProps.src}
-              srcSet={imageProps.srcSet}
-              dark={imageDarkProps}
-              alt={alt}
-              {...(onlyImage ? styles.onlyImage : styles.image)}
-            />
-            {byline && (
-              <FigureByline position='rightCompact' style={{ color }}>
-                {byline}
-              </FigureByline>
-            )}
-          </LazyLoad>
-        </div>
-      )}
-      {!onlyImage && (
-        <div {...(singleColumn ? {} : styles.textContainer)}>
-          <Text
-            color={color}
-            maxWidth={singleColumn ? undefined : '600px'}
-            margin={'0 auto'}
-          >
-            {children}
-          </Text>
-        </div>
-      )}
-    </div>
+            <LazyLoad
+              visible={aboveTheFold}
+              consistentPlaceholder
+              type='span'
+              style={{
+                position: 'relative',
+                fontSize: 0,
+                display: 'inline-block'
+              }}
+            >
+              <SwitchImage
+                src={imageProps.src}
+                srcSet={imageProps.srcSet}
+                dark={imageDarkProps}
+                alt={alt}
+                {...(onlyImage ? styles.onlyImage : styles.image)}
+              />
+              {byline && (
+                <FigureByline position='rightCompact' style={{ color }}>
+                  {byline}
+                </FigureByline>
+              )}
+            </LazyLoad>
+          </div>
+        )}
+        {!onlyImage && (
+          <div {...(singleColumn ? {} : styles.textContainer)}>
+            <Text
+              color={color}
+              maxWidth={singleColumn ? undefined : '600px'}
+              margin={'0 auto'}
+            >
+              {children}
+            </Text>
+          </div>
+        )}
+      </div>
+    </ColorContextProvider>
   )
 }
 
