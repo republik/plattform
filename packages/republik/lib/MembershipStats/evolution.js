@@ -203,7 +203,7 @@ const populate = async (context, resultFn) => {
   const [{ minBeginDate, maxEndDate }] = await pgdb.query(`
     SELECT
       MIN("beginDate") "minBeginDate",
-      MAX("endDate") "maxEndDate"
+      LEAST(MAX("endDate"), now() + '2 years'::interval) "maxEndDate"
 
     FROM "membershipPeriods"
   `)
