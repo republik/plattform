@@ -59,7 +59,8 @@ const styles = {
   }),
   placeholder: css({
     fontStyle: 'italic',
-    textTransform: 'capitalize'
+    textTransform: 'capitalize',
+    lineHeight: '2rem'
   })
 }
 
@@ -142,7 +143,9 @@ const RepoLink = ({ repo, placeholderDate, children }) => {
     </PlaceholderLink>
   ) : (
     <Link route='repo/tree' params={{ repoId: id.split('/') }} passHref>
-      <a {...styles.link}>{children}</a>
+      <a title={getTitle(repo)} {...styles.link}>
+        {children}
+      </a>
     </Link>
   )
 }

@@ -9,20 +9,12 @@ import {
 } from '../../lib/utils/calendar'
 import { containsRepoFromTemplate } from '../../lib/utils/repo'
 import Repo, { Placeholder } from './Repo'
-import { ascending, group } from 'd3-array'
-import withT from '../../lib/withT'
+import { ascending } from 'd3-array'
 import { parseJSONObject } from '../../lib/safeJSON'
 import { WEEK_TEMPLATE_REPOS } from '../../lib/settings'
 const templateRepos = parseJSONObject(WEEK_TEMPLATE_REPOS)
 
 const styles = {
-  container: css({
-    flexGrow: 1,
-    flexBasis: 0,
-    overflow: 'hidden',
-    display: 'flex',
-    flexDirection: 'column'
-  }),
   dateHeading: css({
     display: 'block',
     marginBottom: 10,
@@ -34,7 +26,7 @@ const styles = {
     ...fontStyles.sansSerifRegular14
   }),
   templateContainer: css({
-    padding: '10px 0 20px'
+    padding: '10px 0 0'
   })
 }
 
@@ -46,10 +38,7 @@ const Repos = ({ repos, isNewsletter, ...props }) => {
     )
   )
   return (
-    <div
-      {...styles.templateContainer}
-      style={{ height: isNewsletter ? 225 : 'auto' }}
-    >
+    <div {...styles.templateContainer}>
       {sortedRepos.map(repo =>
         repo.isPlaceholder ? (
           <Placeholder
@@ -72,7 +61,7 @@ const Repos = ({ repos, isNewsletter, ...props }) => {
   )
 }
 
-const ReposByTemplate = ({
+export const ReposByTemplate = ({
   template,
   repos = [],
   date,
@@ -101,34 +90,6 @@ const ReposByTemplate = ({
   )
 }
 
-const DateHeading = ({ date }) => (
+export const DateHeading = ({ date }) => (
   <span {...styles.dateHeading}>{reformatUrlDate(date, columnDateFormat)}</span>
 )
-
-const Day = ({ day: { date, repos }, isPast, discrete }) => {
-  const reposByTemplate = group(repos, repo =>
-    repo.latestCommit.document.meta.template === 'editorialNewsletter'
-      ? 'newsletter'
-      : 'other'
-  )
-  return (
-    <div {...styles.container} style={{ opacity: discrete ? 0.5 : 1 }}>
-      <DateHeading date={date} />
-      <ReposByTemplate
-        repos={reposByTemplate.get('newsletter')}
-        template='newsletters'
-        date={date}
-        isPast={isPast}
-        isNewsletter
-      />
-      <ReposByTemplate
-        repos={reposByTemplate.get('other')}
-        template='articles'
-        date={date}
-        isPast={isPast}
-      />
-    </div>
-  )
-}
-
-export default Day
