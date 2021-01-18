@@ -15,8 +15,7 @@ import {
   mediaQueries,
   colors,
   fontFamilies,
-  Checkbox,
-  linkRule
+  Checkbox
 } from '@project-r/styleguide'
 import { Router } from '../../lib/routes'
 import CircleIcon from 'react-icons/lib/md/lens'
@@ -212,13 +211,12 @@ export default compose(
       <Frame.Body raw>
         <div {...styles}>
           <div className='Info'>
-            <a
+            <A
               href='https://github.com/orbiting/publikator-frontend/blob/master/docs/raw.md'
               target='_blank'
-              {...linkRule}
             >
               <InfoIcon />
-            </a>
+            </A>
           </div>
           <div className='Checkbox' style={{ opacity: editMeta ? 0.5 : 1 }}>
             <Checkbox checked={editMeta} onChange={onEditMeta}>

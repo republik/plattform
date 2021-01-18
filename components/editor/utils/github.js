@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react'
 
-import { linkRule, Label } from '@project-r/styleguide'
+import { A, Label } from '@project-r/styleguide'
 
 import { Link } from '../../../lib/routes'
 import { GITHUB_ORG } from '../../../lib/settings'
@@ -53,10 +53,10 @@ export const RepoLink = ({
           repoId: info.id.split('/')
         }}
       >
-        <a {...linkRule}>
+        <A>
           {info.name}
           {info.hash ? `#${info.hash}` : ''}
-        </a>
+        </A>
       </Link>
     </Wrapper>
   )

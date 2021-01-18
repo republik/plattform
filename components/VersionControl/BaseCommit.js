@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { css } from 'glamor'
-import { Label, linkRule } from '@project-r/styleguide'
+import { Label, A } from '@project-r/styleguide'
 import { descending } from 'd3-array'
 import { compose } from 'react-apollo'
 import { Link } from '../../lib/routes'
@@ -36,7 +36,7 @@ class BaseCommit extends Component {
           <div>
             <Label {...styles.commitsBehind}>
               <Link route='repo/tree' params={{ repoId: repoId.split('/') }}>
-                <a {...linkRule}>
+                <A>
                   {commitsBehind !== null && (
                     <span>
                       {t.pluralize('baseCommit/commitsBehind', {
@@ -44,7 +44,7 @@ class BaseCommit extends Component {
                       })}
                     </span>
                   )}
-                </a>
+                </A>
               </Link>
             </Label>
             <Label>{t('baseCommit/title')}</Label>
