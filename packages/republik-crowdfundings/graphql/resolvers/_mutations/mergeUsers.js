@@ -68,7 +68,7 @@ module.exports = async (_, args, context) => {
       },
     )
 
-    const newUser = await transaction.public.users.updateAndGetOne(
+    await transaction.public.users.updateOne(
       {
         id: targetUser.id,
       },
@@ -203,31 +203,31 @@ module.exports = async (_, args, context) => {
       await transaction.public.sessions.updateOne({ id: session.id }, { sess })
     }
 
-    // remove addresses
-    const addressIds = users
-      .filter((u) => u.addressId && u.addressId !== newUser.addressId)
-      .map((u) => u.addressId)
-    if (addressIds.length) {
-      await transaction.public.addresses.deleteOne({ id: addressIds[0] })
-    }
-
     // anonymize user answers, as an answer record can't be assigned to another user
     const answers = await transaction.public.answers.find(from)
-    const questionnaireIds = [...new Set(answers.map(a => a.questionnaireId))]
-    const questionnaireSubmissions = await transaction.public.questionnaireSubmissions.find({
-      ...from,
-      questionnaireId: questionnaireIds,
-    })
+    const questionnaireIds = [...new Set(answers.map((a) => a.questionnaireId))]
+    const questionnaireSubmissions =
+      !!questionnaireIds.length &&
+      (await transaction.public.questionnaireSubmissions.find({
+        ...from,
+        questionnaireId: questionnaireIds,
+      }))
 
     for (const questionnaireId of questionnaireIds) {
-      const hasSubmission = questionnaireSubmissions.find(s => s.questionnaireId === questionnaireId)
+      const hasSubmission = questionnaireSubmissions.find(
+        (s) => s.questionnaireId === questionnaireId,
+      )
 
       // insert questionnaireSubmission record if missing
       if (!hasSubmission) {
-        const questionnaireAnswers = answers.filter(a => a.questionnaireId = questionnaireId)
+        const questionnaireAnswers = answers.filter(
+          (a) => (a.questionnaireId = questionnaireId),
+        )
 
         // use latest answer.createdAt as questionnaireSubmission.createdAt
-        const latestAnswerDate = new Date(Math.max(...questionnaireAnswers.map((a) => a.createdAt)))
+        const latestAnswerDate = new Date(
+          Math.max(...questionnaireAnswers.map((a) => a.createdAt)),
+        )
 
         await transaction.public.questionnaireSubmissions.insert({
           questionnaireId,
@@ -238,14 +238,14 @@ module.exports = async (_, args, context) => {
       }
 
       await transaction.public.answers.update(
-        { 
+        {
           ...from,
-          questionnaireId
+          questionnaireId,
         },
-        { 
+        {
           userId: null,
           pseudonym: uuid(),
-        }
+        },
       )
     }
 
