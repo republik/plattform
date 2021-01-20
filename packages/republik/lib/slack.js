@@ -35,6 +35,7 @@ exports.publishMonitor = async (_user, message) => {
 
 exports.publishMembership = async (
   _user,
+  _me,
   membershipTypeName,
   action,
   details,
@@ -50,7 +51,10 @@ exports.publishMembership = async (
         .filter(Boolean)
         .join('\n')
     }
-    const content = `*${user.name}* (${user.email}): ${action} (${membershipTypeName}) ${detailsString}
+
+    const actionString = _user.id === _me.id ? action : `${action} (support)`
+
+    const content = `*${user.name}* (${user.email}): ${actionString} (${membershipTypeName}) ${detailsString}
 ${ADMIN_FRONTEND_BASE_URL}/users/${user.id}
 `
     return await publish(SLACK_CHANNEL_ADMIN, content)
