@@ -47,9 +47,8 @@ https://play.google.com/store/apps/details?id=app.republik&hl=de_CH .
 {{#unless grants_count}}
 
 Oder haben Sie neugierige Freundinnen und Bekannte, denen Sie gerne einen
-Probezugriff auf die Republik ermöglichen würden? Sie haben ein Kontingent von
-fünf 14-Tage-Probeabos, die Sie zu jeder Zeit vergeben können
-{{link_account_share}} .
+Probezugriff auf die Republik ermöglichen würden? Sie können ihnen drei Wochen
+Probelesen schenken {{link_account_share}} .
 
 {{/unless}}
 

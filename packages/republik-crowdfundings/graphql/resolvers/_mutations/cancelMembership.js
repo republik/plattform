@@ -9,6 +9,7 @@ module.exports = async (_, args, context) => {
   const transaction = pgdb.isTransactionActive()
     ? await pgdb
     : await pgdb.transactionBegin()
+  const me = req.user
 
   try {
     const { id: membershipId, immediately = false, details } = args
@@ -37,7 +38,7 @@ module.exports = async (_, args, context) => {
     const user = await transaction.public.users
       .findOne({ id: membership.userId })
       .then(transformUser)
-    Roles.ensureUserIsMeOrInRoles(user, req.user, ['supporter'])
+    Roles.ensureUserIsMeOrInRoles(user, me, ['supporter'])
 
     if (membership.active === false) {
       throw new Error(t('api/membership/cancel/isInactive'))
@@ -50,8 +51,7 @@ module.exports = async (_, args, context) => {
       id: membership.membershipTypeId,
     })
 
-    const cancelledViaSupport =
-      user.id !== req.user.id || details.cancelledViaSupport
+    const cancelledViaSupport = user.id !== me.id || details.cancelledViaSupport
 
     const cancelledMembership = await cancelMembership(
       membership,
@@ -92,13 +92,13 @@ module.exports = async (_, args, context) => {
 
     await slack.publishMembership(
       user,
+      me,
       membership.membershipType.name,
       'cancelMembership',
       {
-        ...details,
+        reason: details.reason,
         category: getLabel(details, {}, context),
       },
-      t,
     )
 
     const cache = createCache({ prefix: `User:${user.id}` }, context)
