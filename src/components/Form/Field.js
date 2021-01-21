@@ -112,144 +112,151 @@ const ArrowDown = ({ size, fill, ...props }) => (
   </svg>
 )
 
-const Field = ({
-  onChange,
-  name,
-  autoComplete,
-  type,
-  simulate: sim,
-  label,
-  error,
-  renderInput,
-  onInc,
-  onDec,
-  icon,
-  disabled,
-  value
-}) => {
-  let [isFocused, setIsFocused] = useState(false)
-  const [isValidating, setIsValidating] = useState(false)
-  const [isDirty, setIsDirty] = useState(false)
-  const [localStateValue, setLocalStateValue] = useState('')
-  const inputRef = useRef()
-  const [colorScheme] = useColorContext()
+const Field = React.forwardRef(
+  (
+    {
+      onChange,
+      name,
+      autoComplete,
+      type,
+      simulate: sim,
+      label,
+      error,
+      renderInput,
+      onInc,
+      onDec,
+      icon,
+      disabled,
+      value
+    },
+    forwardRef
+  ) => {
+    let [isFocused, setIsFocused] = useState(false)
+    const [isValidating, setIsValidating] = useState(false)
+    const [isDirty, setIsDirty] = useState(false)
+    const [localStateValue, setLocalStateValue] = useState('')
+    const ownRef = useRef()
+    const [colorScheme] = useColorContext()
 
-  if (sim && sim.indexOf('focus') !== -1) {
-    isFocused = true
-  }
+    const inputRef = forwardRef || ownRef
 
-  const simulationClassName = sim && simulate(sim).toString()
-  const fieldValue = value !== undefined ? value : localStateValue
-  const hasIncrease = !!onInc
-  const hasDecrease = !!onDec
-  const hasValue =
-    fieldValue !== undefined &&
-    fieldValue !== null &&
-    String(fieldValue).length !== 0
-  const browserIconStyle =
-    hasIncrease || icon ? styles.noBrowserIcon : undefined
-  const iconStyle = icon ? styles.fieldIcon : undefined
-
-  const styleRules = useMemo(() => {
-    return {
-      labelText: css({
-        color: colorScheme.getCSSColor(
-          error ? 'error' : isFocused ? 'primary' : 'disabled'
-        )
-      }),
-      field: css({
-        borderColor: colorScheme.getCSSColor(
-          error ? 'error' : isFocused ? 'primary' : 'divider'
-        ),
-        color: colorScheme.getCSSColor(
-          error ? 'error' : disabled ? 'disabled' : 'text'
-        )
-      })
+    if (sim && sim.indexOf('focus') !== -1) {
+      isFocused = true
     }
-  }, [colorScheme, isFocused, error, disabled])
 
-  const fStyle = merge(
-    styles.field,
-    styleRules.field,
-    browserIconStyle,
-    iconStyle
-  )
+    const simulationClassName = sim && simulate(sim).toString()
+    const fieldValue = value !== undefined ? value : localStateValue
+    const hasIncrease = !!onInc
+    const hasDecrease = !!onDec
+    const hasValue =
+      fieldValue !== undefined &&
+      fieldValue !== null &&
+      String(fieldValue).length !== 0
+    const browserIconStyle =
+      hasIncrease || icon ? styles.noBrowserIcon : undefined
+    const iconStyle = icon ? styles.fieldIcon : undefined
 
-  return (
-    <label {...styles.container}>
-      {renderInput({
-        disabled,
-        name,
-        autoComplete,
-        type,
-        ref: inputRef,
-        onChange: event => {
-          let v = event.target.value
-          if (onChange) {
-            onChange(event, v, isValidating)
-            setIsDirty(true)
-          } else {
-            setIsDirty(true)
-            setLocalStateValue(v)
-          }
-        },
-        value,
-        onFocus: () => setIsFocused(true),
-        onBlur: event => {
-          const v = event.target.value
-          if (!isValidating && onChange && isDirty) {
-            onChange(event, v, true)
-          }
-          setIsFocused(false)
-          setIsValidating(isDirty)
-        },
-        className: [fStyle.toString(), simulationClassName]
-          .filter(Boolean)
-          .join(' ')
-      })}
-      <span
-        {...styles.labelText}
-        {...((isFocused || hasValue || error) && styles.labelTextFocused)}
-        {...styleRules.labelText}
-      >
-        {error || label}
-      </span>
-      {!disabled && hasDecrease && (
-        <ArrowDown
-          {...(isFocused
-            ? colorScheme.set('fill', 'primary')
-            : colorScheme.set('fill', 'disabled'))}
-          size={FIELD_HEIGHT / 2}
-          onClick={e => {
-            e.preventDefault()
-            e.stopPropagation()
-            onDec()
-            if (inputRef.current) {
-              inputRef.current.focus()
+    const styleRules = useMemo(() => {
+      return {
+        labelText: css({
+          color: colorScheme.getCSSColor(
+            error ? 'error' : isFocused ? 'primary' : 'disabled'
+          )
+        }),
+        field: css({
+          borderColor: colorScheme.getCSSColor(
+            error ? 'error' : isFocused ? 'primary' : 'divider'
+          ),
+          color: colorScheme.getCSSColor(
+            error ? 'error' : disabled ? 'disabled' : 'text'
+          )
+        })
+      }
+    }, [colorScheme, isFocused, error, disabled])
+
+    const fStyle = merge(
+      styles.field,
+      styleRules.field,
+      browserIconStyle,
+      iconStyle
+    )
+
+    return (
+      <label {...styles.container}>
+        {renderInput({
+          disabled,
+          name,
+          autoComplete,
+          type,
+          ref: inputRef,
+          onChange: event => {
+            let v = event.target.value
+            if (onChange) {
+              onChange(event, v, isValidating)
+              setIsDirty(true)
+            } else {
+              setIsDirty(true)
+              setLocalStateValue(v)
             }
-          }}
-        />
-      )}
-      {!disabled && hasIncrease && (
-        <ArrowUp
-          {...(isFocused
-            ? colorScheme.set('fill', 'primary')
-            : colorScheme.set('fill', 'disabled'))}
-          size={FIELD_HEIGHT / 2}
-          onClick={e => {
-            e.preventDefault()
-            e.stopPropagation()
-            onInc()
-            if (inputRef.current) {
-              inputRef.current.focus()
+          },
+          value,
+          onFocus: () => setIsFocused(true),
+          onBlur: event => {
+            const v = event.target.value
+            if (!isValidating && onChange && isDirty) {
+              onChange(event, v, true)
             }
-          }}
-        />
-      )}
-      {icon && <span {...styles.iconWrapper}>{icon}</span>}
-    </label>
-  )
-}
+            setIsFocused(false)
+            setIsValidating(isDirty)
+          },
+          className: [fStyle.toString(), simulationClassName]
+            .filter(Boolean)
+            .join(' ')
+        })}
+        <span
+          {...styles.labelText}
+          {...((isFocused || hasValue || error) && styles.labelTextFocused)}
+          {...styleRules.labelText}
+        >
+          {error || label}
+        </span>
+        {!disabled && hasDecrease && (
+          <ArrowDown
+            {...(isFocused
+              ? colorScheme.set('fill', 'primary')
+              : colorScheme.set('fill', 'disabled'))}
+            size={FIELD_HEIGHT / 2}
+            onClick={e => {
+              e.preventDefault()
+              e.stopPropagation()
+              onDec()
+              if (inputRef.current) {
+                inputRef.current.focus()
+              }
+            }}
+          />
+        )}
+        {!disabled && hasIncrease && (
+          <ArrowUp
+            {...(isFocused
+              ? colorScheme.set('fill', 'primary')
+              : colorScheme.set('fill', 'disabled'))}
+            size={FIELD_HEIGHT / 2}
+            onClick={e => {
+              e.preventDefault()
+              e.stopPropagation()
+              onInc()
+              if (inputRef.current) {
+                inputRef.current.focus()
+              }
+            }}
+          />
+        )}
+        {icon && <span {...styles.iconWrapper}>{icon}</span>}
+      </label>
+    )
+  }
+)
 
 Field.propTypes = {
   error: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
