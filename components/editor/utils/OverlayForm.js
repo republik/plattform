@@ -109,7 +109,7 @@ const OverlayForm = ({ onClose, preview, extra, children }) => {
                 <br />
                 <div>
                   <A href='#' onClick={onViewSwitch}>
-                    {mobileView ? 'full view' : 'mobile view'}
+                    {mobileView ? 'normal view' : 'mobile view'}
                   </A>
                 </div>
                 <br />
