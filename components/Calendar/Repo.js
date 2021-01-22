@@ -87,7 +87,7 @@ const RepoLabel = ({ repo, isNewsletter }) => {
   )
 }
 
-const PublicationDate = ({ repoId, publishDate }) => {
+const PublicationDate = ({ repoId, publishDate, readOnly }) => {
   const [colorScheme] = useColorContext()
   return (
     <div
@@ -95,7 +95,11 @@ const PublicationDate = ({ repoId, publishDate }) => {
       {...styles.editDate}
       {...colorScheme.set('color', 'textSoft')}
     >
-      <EditMetaDate publishDate={publishDate} repoId={repoId} />
+      <EditMetaDate
+        publishDate={publishDate}
+        repoId={repoId}
+        readOnly={readOnly}
+      />
     </div>
   )
 }
@@ -167,6 +171,7 @@ const Repo = withT(({ t, repo, isNewsletter, isPast, placeholderDate }) => {
           'backgroundColor',
           isNewsletter ? 'hover' : 'default'
         )}
+        style={{ paddingBottom: placeholderDate ? 20 : 5 }}
       >
         <RepoLabel repo={repo} isNewsletter={isNewsletter} />
         <div {...styles.title} className='title'>
@@ -178,8 +183,12 @@ const Repo = withT(({ t, repo, isNewsletter, isPast, placeholderDate }) => {
         </div>
         {!placeholderDate && (
           <div {...styles.status}>
-            {!isPast && !isNewsletter && (
-              <PublicationDate repoId={id} publishDate={publishDate} />
+            {!isNewsletter && (
+              <PublicationDate
+                repoId={id}
+                publishDate={publishDate}
+                readOnly={isPast}
+              />
             )}
             {isNewsletter ? (
               <CommitMsg commit={latestCommit} />

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { css } from 'glamor'
 
@@ -9,8 +9,11 @@ import {
   OverlayBody,
   mediaQueries,
   ColorContextProvider,
-  useColorContext
+  useColorContext,
+  A
 } from '@project-r/styleguide'
+
+const mobilePreviewWidth = 320
 
 const styles = {
   editButton: css({
@@ -35,7 +38,8 @@ const styles = {
     overflow: 'hidden'
   }),
   innerPreview: css({
-    padding: '0 15px'
+    padding: '0 15px',
+    overflow: 'hidden'
   }),
   edit: css({
     flex: '1 1 50%',
@@ -46,7 +50,6 @@ const styles = {
   contextBackground: css({
     position: 'relative',
     zIndex: 0,
-    overflow: 'auto',
     padding: '10px 15px',
     margin: '0 -15px'
   })
@@ -66,9 +69,18 @@ const ContextBackground = ({ children }) => {
   )
 }
 
-const OverlayForm = props => {
+const OverlayForm = ({ onClose, preview, extra, children }) => {
   const [colorScheme] = useColorContext()
-  const { onClose, preview, extra, children } = props
+  const [mobileView, setMobileView] = useState(false)
+  const [renderedPreview, setRenderedPreview] = useState(preview)
+
+  useEffect(() => setRenderedPreview(preview), [mobileView])
+
+  const onViewSwitch = e => {
+    e.preventDefault()
+    setRenderedPreview(null) // otherwise svg doesn't resize
+    setMobileView(!mobileView)
+  }
 
   return (
     <Overlay
@@ -82,18 +94,27 @@ const OverlayForm = props => {
       <OverlayBody>
         <div {...styles.container}>
           <div {...styles.preview}>
-            <div {...styles.innerPreview}>
-              <ContextBackground>{preview}</ContextBackground>
-              <br />
-              <ColorContextProvider
-                colorSchemeKey={
-                  colorScheme.schemeKey === 'dark' ? 'light' : 'dark'
-                }
-              >
-                <ContextBackground>{preview}</ContextBackground>
-              </ColorContextProvider>
-              <br />
-              {extra}
+            <div style={{ width: mobileView ? mobilePreviewWidth : null }}>
+              <div {...styles.innerPreview}>
+                <ContextBackground>{renderedPreview}</ContextBackground>
+                <br />
+                <ColorContextProvider
+                  colorSchemeKey={
+                    colorScheme.schemeKey === 'dark' ? 'light' : 'dark'
+                  }
+                >
+                  <ContextBackground>{renderedPreview}</ContextBackground>
+                </ColorContextProvider>
+                <br />
+                <br />
+                <div>
+                  <A href='#' onClick={onViewSwitch}>
+                    {mobileView ? 'full view' : 'mobile view'}
+                  </A>
+                </div>
+                <br />
+                {extra}
+              </div>
             </div>
           </div>
           <div {...styles.edit}>{children}</div>

@@ -57,7 +57,7 @@ const CalendarByTemplate = ({
           <div
             key={date}
             {...styles.day}
-            style={{ opacity: isPast(day.date) && currentWeek ? 0.5 : 1 }}
+            style={{ opacity: isPast(day.date) && currentWeek ? 0.6 : 1 }}
           >
             {withHeading && <DateHeading date={date} />}
             <ReposByTemplate
