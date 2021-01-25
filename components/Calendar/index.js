@@ -12,10 +12,11 @@ import {
   now,
   offsetUrlWeek
 } from '../../lib/utils/calendar'
-import Day from './Day'
+import { DateHeading, ReposByTemplate } from './Day'
 import { CurrentDates, Nav, NavButton, ResetLink } from './Nav'
 import { reposPerWeek } from './graphql'
 import { Loader } from '@project-r/styleguide'
+import { group } from 'd3-array'
 
 const styles = {
   container: css({
@@ -25,10 +26,52 @@ const styles = {
     overflow: 'scroll'
   }),
   calendar: css({
+    marginTop: 15,
     display: 'flex',
-    minHeight: 'calc(100vh - 210px)',
-    marginTop: 15
+    flexDirection: 'column'
+  }),
+  calendarByTemplate: css({
+    display: 'flex'
+  }),
+  day: css({
+    flexGrow: 1,
+    flexBasis: 0,
+    display: 'flex',
+    flexDirection: 'column',
+    overflow: 'hidden'
   })
+}
+
+const CalendarByTemplate = ({
+  template,
+  calendar,
+  isNewsletter,
+  withHeading,
+  currentWeek
+}) => {
+  return (
+    <div {...styles.calendarByTemplate}>
+      {calendar.map(day => {
+        const { date, repos } = day
+        return (
+          <div
+            key={date}
+            {...styles.day}
+            style={{ opacity: isPast(day.date) && currentWeek ? 0.6 : 1 }}
+          >
+            {withHeading && <DateHeading date={date} />}
+            <ReposByTemplate
+              repos={repos}
+              template={template}
+              isNewsletter={isNewsletter}
+              date={date}
+              isPast={isPast(day.date)}
+            />
+          </div>
+        )
+      })}
+    </div>
+  )
 }
 
 const Calendar = ({
@@ -58,6 +101,7 @@ const Calendar = ({
     })
 
   const { loading, error, reposSearch } = data
+  const currentWeek = isCurrentWeek(from)
 
   return (
     <div {...styles.container}>
@@ -65,34 +109,46 @@ const Calendar = ({
         <NavButton goBack={offsetDates(-1)} />
         <CurrentDates from={from} until={until} />
         <NavButton goForth={offsetDates(1)} />
-        {!isCurrentWeek(from) && <ResetLink reset={resetDates} />}
+        {!currentWeek && <ResetLink reset={resetDates} />}
       </Nav>
-      <div {...styles.calendar}>
-        <Loader
-          loading={loading}
-          error={error}
-          height={300}
-          render={() => {
-            const calendar = getPublicationCalendar(
-              from,
-              until,
-              reposSearch?.nodes || []
-            )
-            return (
-              <>
-                {calendar.map(day => (
-                  <Day
-                    key={day.date}
-                    day={day}
-                    isPast={isPast(day.date)}
-                    discrete={isPast(day.date) && isCurrentWeek(from)}
-                  />
-                ))}
-              </>
-            )
-          }}
-        />
-      </div>
+      <Loader
+        loading={loading}
+        error={error}
+        height={300}
+        render={() => {
+          const reposByTemplate = group(reposSearch?.nodes || [], repo =>
+            repo.latestCommit.document.meta.template === 'editorialNewsletter'
+              ? 'newsletter'
+              : 'other'
+          )
+          const newslettersCalendar = getPublicationCalendar(
+            from,
+            until,
+            reposByTemplate.get('newsletter')
+          )
+          const articlesCalendar = getPublicationCalendar(
+            from,
+            until,
+            reposByTemplate.get('other')
+          )
+          return (
+            <div {...styles.calendar}>
+              <CalendarByTemplate
+                template='newsletters'
+                calendar={newslettersCalendar}
+                isNewsletter
+                withHeading
+                currentWeek={currentWeek}
+              />
+              <CalendarByTemplate
+                template='articles'
+                calendar={articlesCalendar}
+                currentWeek={currentWeek}
+              />
+            </div>
+          )
+        }}
+      />
     </div>
   )
 }

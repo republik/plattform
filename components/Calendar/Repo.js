@@ -16,13 +16,19 @@ import { getLabel, getTitle, getTemplateRepoPrefix } from '../../lib/utils/repo'
 import { getUrlDate } from '../../lib/utils/calendar'
 import withT from '../../lib/withT'
 
+const ellipsisRule = {
+  whiteSpace: 'nowrap',
+  overflow: 'hidden',
+  textOverflow: 'ellipsis'
+}
+
 const styles = {
   container: css({
     cursor: 'pointer',
     borderWidth: 1,
     borderStyle: 'solid',
     margin: '0 20px 10px 0',
-    padding: 5,
+    padding: 8,
     ':hover .title': {
       textDecoration: 'underline'
     }
@@ -32,14 +38,16 @@ const styles = {
     textDecoration: 'none'
   }),
   title: css({
-    padding: '5px 5px 5px 0'
+    ...ellipsisRule
   }),
   label: css({
     marginBottom: 10,
-    ...fontStyles.sansSerifMedium14
+    ...fontStyles.sansSerifMedium14,
+    ...ellipsisRule
   }),
   status: css({
-    marginTop: 10
+    marginTop: 10,
+    ...ellipsisRule
   }),
   editDate: css({
     ...fontStyles.sansSerifRegular14,
@@ -50,7 +58,8 @@ const styles = {
   }),
   placeholder: css({
     fontStyle: 'italic',
-    textTransform: 'capitalize'
+    textTransform: 'capitalize',
+    lineHeight: '2rem'
   })
 }
 
@@ -60,24 +69,24 @@ export const Placeholder = graphql(getPlaceholder)(
   }
 )
 
-const RepoLabel = ({ repo }) => {
+const RepoLabel = ({ repo, isNewsletter }) => {
+  const [colorScheme] = useColorContext()
   const label = getLabel(repo)
-  if (!label) return null
   const format = repo.latestCommit.document.meta.format
   const formatColor = format?.meta.color || colors[format?.meta.kind]
   return (
     <div
       {...styles.label}
       style={{
-        color: formatColor
+        color: label ? formatColor : colorScheme.getCSSColor('textSoft')
       }}
     >
-      {label}
+      {label || (isNewsletter ? 'Newsletter' : 'Beitrag')}
     </div>
   )
 }
 
-const PublicationDate = ({ repoId, publishDate }) => {
+const PublicationDate = ({ repoId, publishDate, readOnly }) => {
   const [colorScheme] = useColorContext()
   return (
     <div
@@ -85,7 +94,11 @@ const PublicationDate = ({ repoId, publishDate }) => {
       {...styles.editDate}
       {...colorScheme.set('color', 'textSoft')}
     >
-      <EditMetaDate publishDate={publishDate} repoId={repoId} />
+      <EditMetaDate
+        publishDate={publishDate}
+        repoId={repoId}
+        readOnly={readOnly}
+      />
     </div>
   )
 }
@@ -133,7 +146,9 @@ const RepoLink = ({ repo, placeholderDate, children }) => {
     </PlaceholderLink>
   ) : (
     <Link route='repo/tree' params={{ repoId: id.split('/') }} passHref>
-      <a {...styles.link}>{children}</a>
+      <a title={getTitle(repo)} {...styles.link}>
+        {children}
+      </a>
     </Link>
   )
 }
@@ -155,8 +170,9 @@ const Repo = withT(({ t, repo, isNewsletter, isPast, placeholderDate }) => {
           'backgroundColor',
           isNewsletter ? 'hover' : 'default'
         )}
+        style={{ paddingBottom: placeholderDate ? 20 : 5 }}
       >
-        <RepoLabel repo={repo} />
+        <RepoLabel repo={repo} isNewsletter={isNewsletter} />
         <div {...styles.title} className='title'>
           {placeholderDate ? (
             <span {...styles.placeholder}>{t('repo/add/submit')}</span>
@@ -166,8 +182,12 @@ const Repo = withT(({ t, repo, isNewsletter, isPast, placeholderDate }) => {
         </div>
         {!placeholderDate && (
           <div {...styles.status}>
-            {!isPast && !isNewsletter && (
-              <PublicationDate repoId={id} publishDate={publishDate} />
+            {!isNewsletter && (
+              <PublicationDate
+                repoId={id}
+                publishDate={publishDate}
+                readOnly={isPast}
+              />
             )}
             {isNewsletter ? (
               <CommitMsg commit={latestCommit} />

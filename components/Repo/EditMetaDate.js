@@ -60,15 +60,15 @@ export const withEditRepoMeta = graphql(editRepoMeta, {
   })
 })
 
-const PublishDate = ({ date }) =>
+const PublishDate = ({ date, readOnly }) =>
   date ? (
     <span>
       {displayDateTime(date)}{' '}
-      <EditIcon style={{ marginTop: -4, marginLeft: 5 }} />
+      {!readOnly && <EditIcon style={{ marginTop: -4, marginLeft: 5 }} />}
     </span>
   ) : null
 
-const EditMeta = ({ publishDate, repoId, editRepoMeta }) => {
+const EditMeta = ({ publishDate, repoId, editRepoMeta, readOnly }) => {
   const [editing, setEditing] = useState(false)
   const [disabled, setDisabled] = useState(false)
   const [formValue, setFormValue] = useState(undefined)
@@ -94,7 +94,7 @@ const EditMeta = ({ publishDate, repoId, editRepoMeta }) => {
     formValue !== undefined ? formValue : formattedPublishDate
 
   return (
-    <span {...styles.span} onClick={() => setEditing(true)}>
+    <span {...styles.span} onClick={() => !readOnly && setEditing(true)}>
       {editing ? (
         <MaskedInput
           value={formattedFormValue}
@@ -134,7 +134,7 @@ const EditMeta = ({ publishDate, repoId, editRepoMeta }) => {
           mask={dateMask}
         />
       ) : (
-        <PublishDate date={publishDate} />
+        <PublishDate date={publishDate} readOnly={readOnly} />
       )}
     </span>
   )

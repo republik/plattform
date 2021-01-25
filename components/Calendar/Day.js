@@ -9,18 +9,12 @@ import {
 } from '../../lib/utils/calendar'
 import { containsRepoFromTemplate } from '../../lib/utils/repo'
 import Repo, { Placeholder } from './Repo'
-import { ascending, group } from 'd3-array'
-import withT from '../../lib/withT'
+import { ascending } from 'd3-array'
 import { parseJSONObject } from '../../lib/safeJSON'
 import { WEEK_TEMPLATE_REPOS } from '../../lib/settings'
 const templateRepos = parseJSONObject(WEEK_TEMPLATE_REPOS)
 
 const styles = {
-  container: css({
-    flex: '1 1 0',
-    display: 'flex',
-    flexDirection: 'column'
-  }),
   dateHeading: css({
     display: 'block',
     marginBottom: 10,
@@ -32,15 +26,11 @@ const styles = {
     ...fontStyles.sansSerifRegular14
   }),
   templateContainer: css({
-    paddingBottom: 20
+    padding: '10px 0 0'
   })
 }
 
-const TemplateHeading = withT(({ t, template }) => (
-  <span {...styles.templateHeading}>{t(`repo/calendar/${template}`)}</span>
-))
-
-const Repos = ({ repos, ...props }) => {
+const Repos = ({ repos, isNewsletter, ...props }) => {
   const sortedRepos = repos.sort((repo1, repo2) =>
     ascending(
       new Date(repo1.meta.publishDate),
@@ -48,24 +38,30 @@ const Repos = ({ repos, ...props }) => {
     )
   )
   return (
-    <>
+    <div {...styles.templateContainer}>
       {sortedRepos.map(repo =>
         repo.isPlaceholder ? (
           <Placeholder
             key={repo.repoId}
             repoId={repo.repoId}
             placeholderDate={repo.meta.publishDate}
+            isNewsletter={isNewsletter}
             {...props}
           />
         ) : (
-          <Repo key={repo.id} repo={repo} {...props} />
+          <Repo
+            key={repo.id}
+            repo={repo}
+            isNewsletter={isNewsletter}
+            {...props}
+          />
         )
       )}
-    </>
+    </div>
   )
 }
 
-const ReposByTemplate = ({
+export const ReposByTemplate = ({
   template,
   repos = [],
   date,
@@ -84,49 +80,16 @@ const ReposByTemplate = ({
         repos
       )
 
-  if (!reposAndPlaceholders.length) return null
-
   return (
-    <div {...styles.templateContainer}>
-      <TemplateHeading template={template} />
-      <Repos
-        repos={reposAndPlaceholders}
-        date={date}
-        isPast={isPast}
-        isNewsletter={isNewsletter}
-      />
-    </div>
+    <Repos
+      repos={reposAndPlaceholders}
+      date={date}
+      isPast={isPast}
+      isNewsletter={isNewsletter}
+    />
   )
 }
 
-const DateHeading = ({ date }) => (
+export const DateHeading = ({ date }) => (
   <span {...styles.dateHeading}>{reformatUrlDate(date, columnDateFormat)}</span>
 )
-
-const Day = ({ day: { date, repos }, isPast, discrete }) => {
-  const reposByTemplate = group(repos, repo =>
-    repo.latestCommit.document.meta.template === 'editorialNewsletter'
-      ? 'newsletter'
-      : 'other'
-  )
-  return (
-    <div {...styles.container} style={{ opacity: discrete ? 0.5 : 1 }}>
-      <DateHeading date={date} />
-      <ReposByTemplate
-        repos={reposByTemplate.get('newsletter')}
-        template='newsletters'
-        date={date}
-        isPast={isPast}
-        isNewsletter
-      />
-      <ReposByTemplate
-        repos={reposByTemplate.get('other')}
-        template='articles'
-        date={date}
-        isPast={isPast}
-      />
-    </div>
-  )
-}
-
-export default Day
