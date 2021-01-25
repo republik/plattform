@@ -28,7 +28,7 @@ const styles = {
     borderWidth: 1,
     borderStyle: 'solid',
     margin: '0 20px 10px 0',
-    padding: 5,
+    padding: 8,
     ':hover .title': {
       textDecoration: 'underline'
     }
@@ -38,7 +38,6 @@ const styles = {
     textDecoration: 'none'
   }),
   title: css({
-    padding: '5px 5px 5px 0',
     ...ellipsisRule
   }),
   label: css({
