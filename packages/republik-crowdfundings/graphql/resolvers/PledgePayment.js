@@ -3,13 +3,13 @@ const {
   AccessToken,
   transformUser,
 } = require('@orbiting/backend-modules-auth')
-const { paymentslip } = require('@orbiting/backend-modules-invoices')
+const invoices = require('@orbiting/backend-modules-invoices')
 
 const { PUBLIC_URL } = process.env
 
 module.exports = {
   reference(payment, args) {
-    return paymentslip.getReference(payment.hrid, args.pretty)
+    return invoices.commons.getReference(payment.hrid, args.pretty)
   },
   async user(payment, args, { pgdb }) {
     const users = await pgdb.query(
@@ -47,12 +47,12 @@ module.exports = {
   },
   async paymentslipUrl(payment, args, context) {
     const { user: me } = context
-    const resolvedPayment = await paymentslip.resolve(
+    const resolvedPayment = await invoices.commons.resolvePayment(
       { id: payment.id },
       context,
     )
 
-    if (!paymentslip.isApplicable(resolvedPayment)) {
+    if (!invoices.paymentslip.isApplicable(resolvedPayment)) {
       return null
     }
 

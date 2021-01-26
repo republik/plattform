@@ -1,5 +1,5 @@
 import { Express } from 'express'
-import * as paymentslip from '../lib/paymentslip'
+import * as invoices from '../'
 
 const { AccessToken } = require('@orbiting/backend-modules-auth')
 
@@ -10,6 +10,15 @@ const middleware = async (
   _redis: any,
   context: any,
 ) => {
+  server.get('/invoices/:hrid.pdf', async (req, res) => {
+    // @TODO: AccessToken-Check
+
+    const { hrid } = req.params
+    const payment = await invoices.commons.resolvePayment({ hrid }, context)
+
+    res.json(payment)
+  })
+
   server.get('/invoices/paymentslip/:hrid.pdf', async (req, res, next) => {
     const { token } = req.query
 
@@ -24,9 +33,9 @@ const middleware = async (
     }
 
     const { hrid } = req.params
-    const payment = await paymentslip.resolve({ hrid }, context)
+    const payment = await invoices.commons.resolvePayment({ hrid }, context)
 
-    if (!paymentslip.isApplicable(payment)) {
+    if (!invoices.paymentslip.isApplicable(payment)) {
       return next()
     }
 
@@ -34,7 +43,7 @@ const middleware = async (
       return next()
     }
 
-    const pdf = await paymentslip.generate(payment)
+    const pdf = await invoices.paymentslip.generate(payment)
 
     res
       .writeHead(200, {
