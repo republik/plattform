@@ -1,5 +1,4 @@
 const debug = require('debug')('collections:lib:stats:last')
-const Promise = require('bluebird')
 
 const {
   cache: { create },
@@ -7,7 +6,7 @@ const {
 
 const interval = '30 days'
 
-const QUERY_CACHE_TTL_SECONDS = 60 * 60 * 24 // A day
+const QUERY_CACHE_TTL_SECONDS = 60 * 60 * 24 * 8 // A week and a day
 
 const buildQuery = (last) => `
 WITH "documentsMedias" AS (

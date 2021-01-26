@@ -5,7 +5,7 @@ const {
 } = require('@orbiting/backend-modules-utils')
 const { buildQuery } = require('./last')
 
-const QUERY_CACHE_TTL_SECONDS = 60 * 60 * 24 // A day
+const QUERY_CACHE_TTL_SECONDS = 60 * 60 * 24 * 8 // A week and a day
 
 const createCache = (context) =>
   create(
