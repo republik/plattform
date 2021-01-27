@@ -33,8 +33,8 @@ const styles = {
     [mUp]: {
       display: 'block',
       transform: 'rotate(-45deg)',
-      width: 12,
-      height: 12,
+      width: 14,
+      height: 14,
       position: 'absolute',
       top: -7
     }
@@ -57,7 +57,7 @@ const styles = {
   right: {
     callout: css({
       [mUp]: {
-        right: -30,
+        right: -9,
         left: 'auto'
       }
     }),
@@ -68,7 +68,7 @@ const styles = {
   left: {
     callout: css({
       [mUp]: {
-        left: -30,
+        left: -9,
         right: 'auto'
       }
     }),
