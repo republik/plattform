@@ -82,6 +82,7 @@ const GET_PLEDGES = gql`
           status
           method
           hrid
+          invoiceUrl
           paymentslipUrl
           pspId
           paperInvoice
@@ -306,6 +307,8 @@ const PledgeDetails = ({ userId, pledge, ...props }) => {
 }
 
 const PaymentDetails = ({ payment, ...props}) => {
+  const hridUrl = payment.invoiceUrl || payment.paymentslipUrl
+
   return (
     <div {...props}>
       <SectionSubhead>
@@ -332,8 +335,8 @@ const PaymentDetails = ({ payment, ...props}) => {
             <DD>{chfFormat(payment.total / 100)}</DD>
             <DT>HR-ID</DT>
             <DD>
-              {payment.paymentslipUrl
-                ? <A href={payment.paymentslipUrl} target='_blank'>{payment.hrid}</A>
+              {hridUrl
+                ? <A href={hridUrl} target='_blank'>{payment.hrid}</A>
                 : payment.hrid
               }
             </DD>
