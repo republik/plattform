@@ -6,6 +6,7 @@ import { Format } from './Format'
 import CalloutMenu from '../Callout/CalloutMenu'
 import MoreIcon from 'react-icons/lib/md/more-vert'
 import { useColorContext } from '../Colors/useColorContext'
+import IconButton from '../IconButton'
 
 const styles = {
   main: css({
@@ -27,7 +28,7 @@ const styles = {
 }
 
 const MoreIconWithProps = props => (
-  <MoreIcon width='calc(1em + 7px)' {...props} />
+  <IconButton title='Mehr' Icon={MoreIcon} {...props} />
 )
 
 const Teaser = ({
