@@ -1,7 +1,6 @@
 import { PDF } from 'swissqrbill'
 
 import {
-  PaymentResolved,
   PaymentMethod,
   PaymentStatus,
   getSwissQrBillData,
