@@ -46,7 +46,9 @@ const CalloutMenu = ({
           {children}
         </Callout>
       )}
-      <Element ref={toggleRef} onClick={() => setMenu(!showMenu)} />
+      <div style={{ cursor: 'pointer', zIndex: 1 }}>
+        <Element ref={toggleRef} onClick={() => setMenu(!showMenu)} />
+      </div>
     </>
   )
 }

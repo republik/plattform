@@ -57,7 +57,7 @@ const styles = {
   right: {
     callout: css({
       [mUp]: {
-        right: -9,
+        right: -30,
         left: 'auto'
       }
     }),
@@ -68,7 +68,7 @@ const styles = {
   left: {
     callout: css({
       [mUp]: {
-        left: -9,
+        left: -30,
         right: 'auto'
       }
     }),
@@ -90,7 +90,7 @@ const Callout = ({
       css({
         backgroundColor: colorScheme.getCSSColor('overlay'),
         [mUp]: {
-          boxShadow: colorScheme.getCSSColor('overlayShadow')
+          boxShadow: `inset 0px -50px 50px -30px colorScheme.getCSSColor('overlayShadow')`
         }
       }),
     [colorScheme]
