@@ -378,7 +378,11 @@ const createSchema = ({ Link = DefaultLink, t = () => '', ...rest } = {}) => {
     matchMdast: matchTeaserType('frontTile'),
     component: ({ children, attributes, ...props }) => (
       <Link href={props.url}>
-        <TeaserFrontTile attributes={attributes} {...props}>
+        <TeaserFrontTile
+          attributes={attributes}
+          colorSchemeKey='light'
+          {...props}
+        >
           {children}
         </TeaserFrontTile>
       </Link>

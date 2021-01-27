@@ -85,7 +85,8 @@ const Tile = ({
   textLeft,
   aboveTheFold,
   onlyImage,
-  singleColumn
+  singleColumn,
+  colorSchemeKey
 }) => {
   const [colorScheme] = useColorContext()
   const justifyContent =
@@ -107,7 +108,7 @@ const Tile = ({
   }
 
   return (
-    <ColorContextProvider colorSchemeKey='light'>
+    <ColorContextProvider colorSchemeKey={colorSchemeKey}>
       <div
         {...attributes}
         onClick={onClick}
