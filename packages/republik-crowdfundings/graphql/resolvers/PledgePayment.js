@@ -45,6 +45,27 @@ module.exports = {
     }
     return transformUser(users[0])
   },
+  async invoiceUrl(payment, args, context) {
+    const { user: me } = context
+
+    if (!Roles.userIsInRoles(me, ['admin', 'supporter'])) {
+      return null
+    }
+
+    const resolvedPayment = await invoices.commons.resolvePayment(
+      { id: payment.id },
+      context,
+    )
+
+    if (!invoices.invoice.isApplicable(resolvedPayment)) {
+      return null
+    }
+
+    const user = resolvedPayment?.pledge?.user
+
+    const token = AccessToken.generateForUser(user, 'INVOICE')
+    return `${PUBLIC_URL}/invoices/${payment.hrid}.pdf?token=${token}`
+  },
   async paymentslipUrl(payment, args, context) {
     const { user: me } = context
     const resolvedPayment = await invoices.commons.resolvePayment(
