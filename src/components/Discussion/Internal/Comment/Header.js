@@ -16,6 +16,7 @@ import * as config from '../../config'
 import { convertStyleToRem, pxToRem } from '../../../Typography/utils'
 import CalloutMenu from '../../../Callout/CalloutMenu'
 import { useColorContext } from '../../../Colors/useColorContext'
+import IconButton from '../../../IconButton'
 
 export const profilePictureSize = 40
 export const profilePictureMargin = 10
@@ -154,7 +155,9 @@ const styles = {
 
 const dateTimeFormat = timeFormat('%d. %B %Y %H:%M')
 const titleDate = string => dateTimeFormat(new Date(string))
-const MoreIconWithProps = props => <MoreIcon {...props} />
+const MoreIconWithProps = props => (
+  <IconButton title='Mehr' Icon={MoreIcon} {...props} />
+)
 
 export const Header = ({ t, comment, menu, isExpanded, onToggle }) => {
   const { clock, discussion, Link } = React.useContext(DiscussionContext)

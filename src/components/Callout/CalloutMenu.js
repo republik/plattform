@@ -36,7 +36,7 @@ const CalloutMenu = ({
   }, [showMenu])
 
   return (
-    <>
+    <div style={{ position: 'relative' }} ref={toggleRef}>
       {showMenu && (
         <Callout
           onClose={() => setMenu(false)}
@@ -46,8 +46,8 @@ const CalloutMenu = ({
           {children}
         </Callout>
       )}
-      <Element ref={toggleRef} onClick={() => setMenu(!showMenu)} />
-    </>
+      <Element onClick={() => setMenu(!showMenu)} />
+    </div>
   )
 }
 
