@@ -1,3 +1,4 @@
+import { data as BillData } from 'swissqrbill'
 import {
   generate as generateReference,
   validate as validateReference,
@@ -14,7 +15,7 @@ interface PaymentHridInput {
 }
 
 export interface PaymentResolved extends Payment {
-  pledge?: Pledge
+  pledge: Pledge
 }
 
 export enum PaymentMethod {
@@ -38,18 +39,60 @@ interface Payment {
   method: PaymentMethod
   status: PaymentStatus
   total: number
+  createdAt: Date
 }
 
 interface PledgePayment {
   pledgeId: string
-  pledge?: Pledge
+  pledge: Pledge
 }
 
 interface Pledge {
+  id: string
   packageId: string
   package: Package
   userId: string
   user: User
+  options: PledgeOption[]
+  donation: number
+  total: number
+}
+
+export interface PledgeOption {
+  id: string
+  templateId: string
+  membershipId: string
+  amount: number
+  price: number
+  periods: number
+  option?: PackageOption
+  period?: Period
+}
+
+interface PackageOption {
+  id: string
+  rewardId?: string
+  reward?: Reward
+}
+
+interface Reward {
+  rewardId: string
+  rewardType: string
+  name: string
+  interval: string
+}
+
+interface Period {
+  id: string
+  membershipId: string
+  membership?: Membership
+  beginDate: Date
+  endDate: Date
+}
+
+interface Membership {
+  id: string
+  sequenceNumber: number
 }
 
 interface Package {
@@ -61,15 +104,20 @@ interface BankAccount {
   iban: string
   addressId?: string
   address?: Address
+  image?: Buffer
+  canInvoice: boolean
 }
 
-interface User {
+export interface User {
   id: string
+  email: string
+  firstName: string
+  lastName: string
   addressId?: string
   address?: Address
 }
 
-interface Address {
+export interface Address {
   id: string
   name: string
   line1: string
@@ -77,6 +125,14 @@ interface Address {
   postalCode: string
   city: string
   country: string
+}
+
+export interface IsApplicableFn {
+  (payment: PaymentResolved): boolean
+}
+
+export interface GenerateFn {
+  (payment: PaymentResolved, context?: Context): Promise<Buffer>
 }
 
 export async function resolvePayment(
@@ -91,9 +147,84 @@ export async function resolvePayment(
     payment?.id &&
     (await pgdb.public.pledgePayments.findOne({ paymentId: payment.id }))
 
+  const periods: Period[] =
+    pledgePayment?.pledgeId &&
+    (await pgdb.public.membershipPeriods.find({
+      pledgeId: pledgePayment.pledgeId,
+    }))
+
+  const memberships: Membership[] =
+    (periods.length &&
+      (await pgdb.public.memberships.find({
+        id: periods.map((p) => p.membershipId),
+      }))) ||
+    []
+
+  periods.forEach((period, index, periods) => {
+    periods[index].membership = memberships.find(
+      (m) => m.id === period.membershipId,
+    )
+  })
+
+  const pledgeOptions: PledgeOption[] =
+    (pledgePayment?.pledgeId &&
+      (await pgdb.public.pledgeOptions.find(
+        {
+          pledgeId: pledgePayment.pledgeId,
+          'amount >': 0,
+        },
+        {
+          orderBy: {
+            amount: 'desc',
+          },
+        },
+      ))) ||
+    []
+
+  const packageOptions: PackageOption[] =
+    (pledgeOptions.length &&
+      (await pgdb.public.packageOptions.find({
+        id: pledgeOptions.map((o) => o.templateId),
+      }))) ||
+    []
+
+  const rewardGoodies: Reward[] =
+    (pledgeOptions.length &&
+      (await pgdb.public.goodies.find({
+        rewardId: packageOptions.map((o) => o.rewardId),
+      }))) ||
+    []
+
+  const rewardMembershipTypes: Reward[] =
+    (pledgeOptions.length &&
+      (await pgdb.public.membershipTypes.find({
+        rewardId: packageOptions.map((o) => o.rewardId),
+      }))) ||
+    []
+
+  const rewards: Reward[] = [...rewardGoodies, ...rewardMembershipTypes]
+
+  packageOptions.forEach((packageOption, index, packageOptions) => {
+    packageOptions[index].reward = rewards.find(
+      (r) => r.rewardId === packageOption.rewardId,
+    )
+  })
+
+  pledgeOptions.forEach((pledgeOption, index, pledgeOptions) => {
+    pledgeOptions[index].option = packageOptions.find(
+      (o) => o.id === pledgeOption.templateId,
+    )
+
+    pledgeOptions[index].period = periods.find(
+      (p) => p.membershipId === pledgeOption.membershipId,
+    )
+  })
+
   const pledge: Pledge =
     pledgePayment?.pledgeId &&
     (await pgdb.public.pledges.findOne({ id: pledgePayment.pledgeId }))
+
+  pledge.options = pledgeOptions
 
   const pkg: Package =
     pledge?.packageId &&
@@ -136,7 +267,7 @@ export async function resolvePayment(
   }
 }
 
-export function getCountryCode(string: string): string {
+function getCountryCode(string: string): string {
   switch (string.trim().toLowerCase()) {
     case 'deutschland':
       return 'DE'
@@ -186,4 +317,52 @@ export function getHrId(string: string): string | null {
   }
 
   return hrid
+}
+
+export function getSwissQrBillData(payment: PaymentResolved): BillData {
+  if (!payment.hrid) {
+    throw new Error('Payment HR-ID missing')
+  }
+
+  const account = payment?.pledge?.package?.bankAccount?.iban
+
+  if (!account) {
+    throw new Error('Creditor IBAN missing')
+  }
+
+  const creditorAddress = payment?.pledge?.package?.bankAccount?.address
+
+  if (!creditorAddress) {
+    throw new Error('Creditor address missing')
+  }
+
+  if (!Number(creditorAddress.postalCode)) {
+    throw new Error('Creditor address postal code is not a number')
+  }
+
+  const debtorAddress = payment?.pledge?.user?.address
+
+  return {
+    currency: 'CHF',
+    amount: payment.total / 100,
+    reference: getReference(payment.hrid),
+    creditor: {
+      account,
+      name: creditorAddress.name,
+      address: creditorAddress.line1,
+      zip: Number(creditorAddress.postalCode),
+      city: creditorAddress.city,
+      country: getCountryCode(creditorAddress.country),
+    },
+    ...(debtorAddress &&
+      Number(debtorAddress.postalCode) && {
+        debtor: {
+          name: debtorAddress.name,
+          address: debtorAddress.line1,
+          zip: Number(debtorAddress.postalCode),
+          city: debtorAddress.city,
+          country: getCountryCode(creditorAddress.country),
+        },
+      }),
+  }
 }
