@@ -108,7 +108,9 @@ const Table = ({ items, sort, onSort, ...props }) => {
       </thead>
       <tbody>
         {items.map((payment, index) => {
-          const { user, user: { address } } = payment
+          const { user, user: { address }, invoiceUrl, paymentslipUrl } = payment
+          const hridUrl = invoiceUrl || paymentslipUrl
+
           return (
             <tr key={`payment-${index}`} {...styles.row}>
               <td>{displayDate(payment.createdAt)}</td>
@@ -131,8 +133,8 @@ const Table = ({ items, sort, onSort, ...props }) => {
               </td>
               <td>{chfFormat(payment.total / 100)}</td>
               <td>
-                {payment.paymentslipUrl
-                  ? <A href={payment.paymentslipUrl} target='_blank'>{payment.hrid}</A>
+                {hridUrl
+                  ? <A href={hridUrl} target='_blank'>{payment.hrid}</A>
                   : payment.hrid
                 }
               </td>
