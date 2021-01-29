@@ -24,7 +24,8 @@ const styles = {
     borderTopStyle: 'solid',
     margin: 0,
     paddingTop: 10,
-    paddingBottom: 40
+    paddingBottom: 40,
+    textAlign: 'left'
   }),
   header: css({
     marginBottom: 10
@@ -71,7 +72,10 @@ const styles = {
   image: css({
     borderBottomWidth: 1,
     borderBottomStyle: 'solid',
-    width: '100%'
+    width: '100%',
+    [mUp]: {
+      marginTop: 20
+    }
   })
 }
 
@@ -202,6 +206,7 @@ export const CommentTeaser = ({
         {discussion?.image && (
           <div {...styles.imageContainer}>
             <img
+              style={{ maxWidth: '100%', maxHeight: '100%' }}
               src={discussion.image}
               alt={discussion?.title || ''}
               {...styles.image}

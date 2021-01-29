@@ -38,6 +38,7 @@ const CalloutMenu = ({
     }
   }, [showMenu])
 
+  // wrapping div needed for robust positioning of <Callout />
   return (
     <div
       {...(padded && styles.padded)}
