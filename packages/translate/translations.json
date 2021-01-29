@@ -1952,11 +1952,19 @@
     },
     {
       "key": "api/invoices/PAID/meta",
-      "value": "Datum: {date}\nBelegnummer: {reference}\nZahlungsmittel: {paymentMethod}"
+      "value": "Datum: {date}\nBelegnummer: {reference}\nZahlungsart: {paymentMethod}"
     },
     {
       "key": "api/invoices/meta",
-      "value": "Datum: {date}\nRechnungsnummer: {reference}\nZahlungsmittel: {paymentMethod}"
+      "value": "Datum: {date}\nRechnungsnummer: {reference}\nZahlungsart: {paymentMethod}"
+    },
+    {
+      "key": "api/invoices/creditor/PROJECT_R",
+      "value": "{address}\n\nwww.republik.ch\nkontakt@republik.ch"
+    },
+    {
+      "key": "api/invoices/creditor",
+      "value": "{address}"
     },
     {
       "key": "api/invoices/paymentMethod/STRIPE",

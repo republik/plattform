@@ -97,7 +97,13 @@ interface Membership {
 
 interface Package {
   companyId: string
+  company: Company
   bankAccount?: BankAccount
+}
+
+interface Company {
+  id: string
+  name: string
 }
 
 interface BankAccount {
@@ -230,6 +236,10 @@ export async function resolvePayment(
     pledge?.packageId &&
     (await pgdb.public.packages.findOne({ id: pledge.packageId }))
 
+  const company: Company =
+    pkg?.companyId &&
+    (await pgdb.public.companies.findOne({ id: pkg.companyId }))
+
   const bankAccount: BankAccount =
     pkg?.companyId &&
     (await pgdb.public.bankAccounts.findOne({
@@ -254,6 +264,7 @@ export async function resolvePayment(
       ...pledge,
       package: {
         ...pkg,
+        company,
         bankAccount: {
           ...bankAccount,
           address: bankAccountAddress,

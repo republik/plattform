@@ -25,7 +25,7 @@ const formatDate = timeFormat('%x')
 const PADDING_MM = 20 // 2cm
 const CREDITOR_INDENT_MM = 140 // 14cm
 const REGULAR_FONT_SIZE = 11
-const DEBTOR_FONT_SIZE = 12
+const DEBTOR_FONT_SIZE = 11
 const TITLE_FONT_SIZE = 16
 const REGULAR_FONT_NAME = 'Helvetica'
 const BOLD_FONT_NAME = 'Helvetica-Bold'
@@ -50,7 +50,10 @@ function addTopLeftPadding(doc: PDF) {
   doc.x = doc.y = utils.mmToPoints(PADDING_MM)
 }
 
-function addCreditor(doc: PDF, payment: PaymentResolved) {
+function addCreditor(doc: PDF, payment: PaymentResolved, context: Context) {
+  const { t } = context
+
+  const companyName = payment?.pledge.package.company.name
   const creditorAddress = payment?.pledge.package.bankAccount?.address
   const image = payment?.pledge.package.bankAccount?.image
 
@@ -73,17 +76,22 @@ function addCreditor(doc: PDF, payment: PaymentResolved) {
     doc.image(dataUri, { fit: [utils.mmToPoints(45), 100] }).moveDown()
   }
 
+  const address = [
+    creditorAddress.name,
+    creditorAddress.line1,
+    creditorAddress.line2,
+    `${Number(creditorAddress.postalCode)} ${creditorAddress.city}`,
+  ]
+    .filter(Boolean)
+    .join('\n')
+
   doc
     .fontSize(REGULAR_FONT_SIZE)
     .text(
-      [
-        creditorAddress.name,
-        creditorAddress.line1,
-        creditorAddress.line2,
-        `${Number(creditorAddress.postalCode)} ${creditorAddress.city}`,
-      ]
-        .filter(Boolean)
-        .join('\n'),
+      t.first(
+        [`api/invoices/creditor/${companyName}`, `api/invoices/creditor`],
+        { address },
+      ),
     )
     .moveDown()
 
@@ -113,7 +121,6 @@ function getDebtorEmail(user: User): string {
 function addDebtor(doc: PDF, payment: PaymentResolved) {
   doc
     .fontSize(DEBTOR_FONT_SIZE)
-    .moveDown()
     .text(
       getDebtorAddress(payment?.pledge.user.address) ||
         getDebtorEmail(payment?.pledge.user),
@@ -130,7 +137,7 @@ function addMeta(doc: PDF, payment: PaymentResolved, context: Context) {
 
   doc
     .fontSize(TITLE_FONT_SIZE)
-    .moveDown(2)
+    .moveDown()
     .text(t.first([`api/invoices/${status}/title`, 'api/invoices/title']))
     .fontSize(REGULAR_FONT_SIZE)
     .moveDown()
@@ -306,7 +313,7 @@ export const generate: GenerateFn = function (payment, context) {
       })
 
       addTopLeftPadding(doc)
-      addCreditor(doc, payment)
+      addCreditor(doc, payment, context)
       addDebtor(doc, payment)
       addMeta(doc, payment, context)
       addTable(doc, payment, context)
