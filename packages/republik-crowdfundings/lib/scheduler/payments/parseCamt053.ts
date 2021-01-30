@@ -262,14 +262,11 @@ function getMitteilung(
   }
 
   return (
-    (remittanceInformation && paymentslip.getHrId(remittanceInformation)) ||
-    (avisierungstext && paymentslip.getHrId(avisierungstext)) ||
-    (remittanceInformation &&
-      remittanceInformation?.match(/\b([A-Za-z0-9]{6})\b/)?.[1]) ||
-    (avisierungstext &&
-      avisierungstext.match(
-        /.*?MITTEILUNGEN:.*?\s([A-Za-z0-9]{6})(\s.*?|$)/,
-      )?.[1]) ||
+    paymentslip.getHrId(remittanceInformation || avisierungstext) ||
+    remittanceInformation?.match(/\b([A-Za-z0-9]{6})\b/)?.[1] ||
+    avisierungstext.match(
+      /.*?MITTEILUNGEN:.*?\s([A-Za-z0-9]{6})(\s.*?|$)/,
+    )?.[1] ||
     null
   )
 }
