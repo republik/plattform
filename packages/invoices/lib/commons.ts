@@ -308,7 +308,7 @@ export function getReference(hrid: string, pretty?: boolean): string {
   }
 
   return generateReference({
-    reference: `HRID${hrid}`,
+    reference: `HRID${hrid.toUpperCase()}`,
     pretty,
   })
 }
@@ -316,8 +316,8 @@ export function getReference(hrid: string, pretty?: boolean): string {
 export function getHrId(string: string): string | null {
   const [reference, hrid] =
     string
-      .replace(/[^A-Za-z0-9]/g, '')
-      .match(/RF\d\d0{0,11}HRID([A-Za-z0-9]{6})/) || []
+      .replace(/[^A-Z0-9]/gi, '')
+      .match(/RF\d\d0{0,11}HRID([A-Z0-9]{6})/i) || []
 
   if (!reference) {
     return null
@@ -327,7 +327,7 @@ export function getHrId(string: string): string | null {
     return null
   }
 
-  return hrid
+  return hrid.toUpperCase()
 }
 
 export function getSwissQrBillData(payment: PaymentResolved): BillData {

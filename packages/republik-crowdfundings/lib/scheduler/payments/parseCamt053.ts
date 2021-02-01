@@ -256,16 +256,13 @@ function getMitteilung(
   if (referenceHrId) return referenceHrId
 
   let remittanceInformation = transactionDetails?.RmtInf?.Ustrd
-  if (!remittanceInformation) {
-    return null
-  }
 
   if (Array.isArray(remittanceInformation)) {
     remittanceInformation = remittanceInformation.join(' ')
   }
 
   return (
-    invoices.commons.getHrId(remittanceInformation) ||
+    invoices.commons.getHrId(remittanceInformation || avisierungstext) ||
     remittanceInformation?.match(/\b([A-Za-z0-9]{6})\b/)?.[1] ||
     avisierungstext.match(
       /.*?MITTEILUNGEN:.*?\s([A-Za-z0-9]{6})(\s.*?|$)/,
