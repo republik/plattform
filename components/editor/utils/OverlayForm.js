@@ -74,7 +74,7 @@ const OverlayForm = ({ onClose, preview, extra, children }) => {
   const [mobileView, setMobileView] = useState(false)
   const [renderedPreview, setRenderedPreview] = useState(preview)
 
-  useEffect(() => setRenderedPreview(preview), [mobileView])
+  useEffect(() => setRenderedPreview(preview), [mobileView, preview])
 
   const onViewSwitch = e => {
     e.preventDefault()
