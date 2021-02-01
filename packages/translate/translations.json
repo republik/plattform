@@ -2003,6 +2003,10 @@
       "value": "Ermässigung"
     },
     {
+      "key": "api/invoices/table/PROJECT_R/total",
+      "value": "Gesamtbetrag (nicht MWST-pflichtig)"
+    },
+    {
       "key": "api/invoices/table/total",
       "value": "Gesamtbetrag"
     },

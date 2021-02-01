@@ -251,6 +251,7 @@ function addTable(doc: PDF, payment: PaymentResolved, context: Context) {
   const { t } = context
 
   const pledgeTotal = payment.pledge?.total || 0
+  const companyName = payment?.pledge.package.company.name
 
   const header = getTableRow(
     t('api/invoices/table/option'),
@@ -282,9 +283,17 @@ function addTable(doc: PDF, payment: PaymentResolved, context: Context) {
     )
   }
 
-  const total = getTableRow(t('api/invoices/table/total'), null, pledgeTotal, {
-    bold: true,
-  })
+  const total = getTableRow(
+    t.first([
+      `api/invoices/table/${companyName}/total`,
+      'api/invoices/table/total',
+    ]),
+    null,
+    pledgeTotal,
+    {
+      bold: true,
+    },
+  )
 
   rows.push(total)
 
