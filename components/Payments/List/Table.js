@@ -108,8 +108,7 @@ const Table = ({ items, sort, onSort, ...props }) => {
       </thead>
       <tbody>
         {items.map((payment, index) => {
-          const { user, user: { address }, invoiceUrl, paymentslipUrl } = payment
-          const hridUrl = invoiceUrl || paymentslipUrl
+          const { user, user: { address } } = payment
 
           return (
             <tr key={`payment-${index}`} {...styles.row}>
@@ -132,12 +131,7 @@ const Table = ({ items, sort, onSort, ...props }) => {
                 {address && [address.line1, address.line2, [address.postalCode, address.city].join(' ')].filter(Boolean).join(', ')}
               </td>
               <td>{chfFormat(payment.total / 100)}</td>
-              <td>
-                {hridUrl
-                  ? <A href={hridUrl} target='_blank'>{payment.hrid}</A>
-                  : payment.hrid
-                }
-              </td>
+              <td>{payment.hrid}</td>
               <td>{payment.status}</td>
             </tr>
           )
