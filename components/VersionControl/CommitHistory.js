@@ -45,6 +45,7 @@ class CommitHistory extends Component {
               <li key={commit.id} {...styles.commit}>
                 {commit.id !== commitId ? (
                   <Link
+                    passHref
                     route='repo/edit'
                     params={{
                       repoId: repoPath,

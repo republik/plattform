@@ -151,6 +151,7 @@ class Checklist extends Component {
                   {!!commit && (
                     <span {...styles.commit}>
                       <Link
+                        passHref
                         route='repo/edit'
                         params={{
                           repoId: repoId.split('/'),
