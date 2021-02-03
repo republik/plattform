@@ -11,6 +11,11 @@ const processRepoImageUrlsInContent = (mdast, fn) => {
   visit(mdast, 'image', (node) => {
     node.url = fn(node.url)
   })
+  visit(mdast, 'zone', (node) => {
+    if (node.data?.formatLogo) {
+      node.data.formatLogo = fn(node.data.formatLogo)
+    }
+  })
 }
 
 const processRepoImageUrlsInMeta = (mdast, fn) => {
@@ -22,6 +27,9 @@ const processRepoImageUrlsInMeta = (mdast, fn) => {
     })
     const series = mdast.meta.series
     if (series && Array.isArray(series.episodes)) {
+      if (series.logo) {
+        series.logo = fn(series.logo)
+      }
       series.episodes.forEach((episode) => {
         if (episode.image) {
           episode.image = fn(episode.image)
