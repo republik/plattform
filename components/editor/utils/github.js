@@ -48,6 +48,7 @@ export const RepoLink = ({
   return (
     <Wrapper>
       <Link
+        passHref
         route='repo/tree'
         params={{
           repoId: info.id.split('/')

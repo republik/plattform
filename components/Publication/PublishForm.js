@@ -246,6 +246,7 @@ const Form = ({
             params={{
               repoId: repo.id.split('/')
             }}
+            passHref
           >
             <A>{t('publish/commit/change')}</A>
           </Link>
@@ -475,6 +476,7 @@ const Form = ({
                       params={{
                         repoId: repoId.split('/')
                       }}
+                      passHref
                     >
                       <A>{repoId.replace(`${GITHUB_ORG}/`, '')}</A>
                     </Link>

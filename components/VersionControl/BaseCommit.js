@@ -35,7 +35,11 @@ class BaseCommit extends Component {
         {commit && (
           <div>
             <Label {...styles.commitsBehind}>
-              <Link route='repo/tree' params={{ repoId: repoId.split('/') }}>
+              <Link
+                route='repo/tree'
+                params={{ repoId: repoId.split('/') }}
+                passHref
+              >
                 <A>
                   {commitsBehind !== null && (
                     <span>
