@@ -74,7 +74,7 @@ const styles = {
     borderBottomStyle: 'solid',
     width: '100%',
     [mUp]: {
-      marginTop: 20
+      marginTop: 10
     }
   })
 }
@@ -204,15 +204,13 @@ export const CommentTeaser = ({
         </div>
 
         {discussion?.image && (
-          <div {...styles.imageContainer}>
-            <img
-              style={{ maxWidth: '100%', maxHeight: '100%' }}
-              src={discussion.image}
-              alt={discussion?.title || ''}
-              {...styles.image}
-              {...colorScheme.set('borderColor', 'divider')}
-            />
-          </div>
+          <img
+            style={{ maxWidth: '100%', maxHeight: '100%' }}
+            src={discussion.image}
+            alt={discussion?.title || ''}
+            {...styles.image}
+            {...colorScheme.set('borderColor', 'divider')}
+          />
         )}
 
         <div {...styles.footer}>
