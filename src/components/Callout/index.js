@@ -90,7 +90,7 @@ const Callout = ({
       css({
         backgroundColor: colorScheme.getCSSColor('overlay'),
         [mUp]: {
-          boxShadow: colorScheme.getCSSColor('overlay')
+          boxShadow: colorScheme.getCSSColor('overlayShadow')
         }
       }),
     [colorScheme]
