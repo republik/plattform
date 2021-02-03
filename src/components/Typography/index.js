@@ -34,6 +34,8 @@ export const linkStyle = {
   }
 }
 
+export const linkRule = css(linkStyle)
+
 export const linkBlackStyle = css({
   ...underline,
   color: '#000000',

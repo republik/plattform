@@ -111,6 +111,7 @@ export { Container, NarrowContainer } from './components/Grid'
 export {
   fontStyles,
   linkBlackStyle,
+  linkRule,
   A,
   H1,
   H2,
