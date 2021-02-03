@@ -48,9 +48,9 @@ const R = ({ fill }) => {
       <svg
         {...styles.svg}
         viewBox={VIEWBOX}
-        {...colorScheme.set('fill', 'logo')}
+        {...colorScheme.set('fill', fill || 'logo')}
       >
-        <path d={PATH} fill={fill} />
+        <path d={PATH} />
       </svg>
     </div>
   )
