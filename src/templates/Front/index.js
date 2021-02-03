@@ -50,6 +50,7 @@ import {
 } from '../Article/utils'
 
 import createLiveTeasers from './liveTeasers'
+import { ColorContextProvider } from '../../components/Colors/ColorContext'
 
 export const subject = {
   matchMdast: matchHeading(2),
@@ -377,15 +378,13 @@ const createSchema = ({ Link = DefaultLink, t = () => '', ...rest } = {}) => {
   const frontTileTeaser = {
     matchMdast: matchTeaserType('frontTile'),
     component: ({ children, attributes, ...props }) => (
-      <Link href={props.url}>
-        <TeaserFrontTile
-          attributes={attributes}
-          colorSchemeKey='light'
-          {...props}
-        >
-          {children}
-        </TeaserFrontTile>
-      </Link>
+      <ColorContextProvider colorSchemeKey='light'>
+        <Link href={props.url}>
+          <TeaserFrontTile attributes={attributes} {...props}>
+            {children}
+          </TeaserFrontTile>
+        </Link>
+      </ColorContextProvider>
     ),
     props: (node, index, parent, { ancestors }) => {
       const aboveTheFold = ancestors[1].children.indexOf(ancestors[0]) < 2
