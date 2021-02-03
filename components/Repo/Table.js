@@ -5,7 +5,7 @@ import gql from 'graphql-tag'
 import { descending, ascending } from 'd3-array'
 import { withRouter } from 'next/router'
 
-import { linkRule, Label, colors } from '@project-r/styleguide'
+import { A, Label, colors } from '@project-r/styleguide'
 
 import withT from '../../lib/withT'
 
@@ -148,8 +148,7 @@ const PageInfo = withT(({ t, repos, loading, fetchMore }) => {
             })}
         <br />
         {!loading && repos.pageInfo.hasNextPage && (
-          <a
-            {...linkRule}
+          <A
             href='#'
             onClick={e => {
               e.preventDefault()
@@ -157,7 +156,7 @@ const PageInfo = withT(({ t, repos, loading, fetchMore }) => {
             }}
           >
             {t('repo/table/pageInfo/loadMore')}
-          </a>
+          </A>
         )}
       </Label>
     </div>

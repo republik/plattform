@@ -19,7 +19,6 @@ import {
   Interaction,
   Editorial,
   Label,
-  linkRule,
   Button,
   Field,
   Checkbox,
@@ -247,8 +246,9 @@ const Form = ({
             params={{
               repoId: repo.id.split('/')
             }}
+            passHref
           >
-            <a {...linkRule}>{t('publish/commit/change')}</a>
+            <A>{t('publish/commit/change')}</A>
           </Link>
         </Label>
       </Interaction.P>
@@ -476,10 +476,9 @@ const Form = ({
                       params={{
                         repoId: repoId.split('/')
                       }}
+                      passHref
                     >
-                      <a {...linkRule}>
-                        {repoId.replace(`${GITHUB_ORG}/`, '')}
-                      </a>
+                      <A>{repoId.replace(`${GITHUB_ORG}/`, '')}</A>
                     </Link>
                   </li>
                 ))}

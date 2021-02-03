@@ -15,7 +15,7 @@ import {
   mediaQueries,
   colors,
   Loader,
-  linkRule
+  A
 } from '@project-r/styleguide'
 
 import {
@@ -263,14 +263,13 @@ class RepoAdd extends Component {
         <Interaction.H2>
           {t(`repo/add${isTemplate ? '/template/' : '/'}title`)}
           {isTemplate && (
-            <a
+            <A
               {...styles.infoLink}
               href='https://github.com/orbiting/publikator-frontend/blob/master/docs/templates.md'
               target='_blank'
-              {...linkRule}
             >
               <InfoIcon />
-            </a>
+            </A>
           )}
         </Interaction.H2>
         <form

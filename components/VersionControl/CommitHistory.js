@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from '../../lib/routes'
-import { colors, linkRule, Interaction } from '@project-r/styleguide'
+import { colors, A, Interaction } from '@project-r/styleguide'
 import { css } from 'glamor'
 import { compose } from 'react-apollo'
 import { swissTime } from '../../lib/utils/format'
@@ -45,13 +45,14 @@ class CommitHistory extends Component {
               <li key={commit.id} {...styles.commit}>
                 {commit.id !== commitId ? (
                   <Link
+                    passHref
                     route='repo/edit'
                     params={{
                       repoId: repoPath,
                       commitId: commit.id
                     }}
                   >
-                    <a {...linkRule}>{commit.message}</a>
+                    <A>{commit.message}</A>
                   </Link>
                 ) : (
                   <span>{commit.message}</span>
@@ -64,7 +65,7 @@ class CommitHistory extends Component {
             ))}
           </ul>
           <Link route='repo/tree' params={{ repoId: repoPath }}>
-            <a {...linkRule}>{t('commitHistory/more')}</a>
+            <A>{t('commitHistory/more')}</A>
           </Link>
         </div>
       )

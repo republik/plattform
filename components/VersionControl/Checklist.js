@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { css } from 'glamor'
-import { Checkbox, colors, linkRule } from '@project-r/styleguide'
+import { Checkbox, colors, A } from '@project-r/styleguide'
 import { getName } from '../../lib/utils/name'
 import { swissTime } from '../../lib/utils/format'
 import { graphql, compose } from 'react-apollo'
@@ -151,13 +151,14 @@ class Checklist extends Component {
                   {!!commit && (
                     <span {...styles.commit}>
                       <Link
+                        passHref
                         route='repo/edit'
                         params={{
                           repoId: repoId.split('/'),
                           commitId: commit.id
                         }}
                       >
-                        <a {...linkRule}>{commit.message}</a>
+                        <A>{commit.message}</A>
                       </Link>
 
                       {getName(author) !== getName(commit.author) && (
