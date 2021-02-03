@@ -90,7 +90,7 @@ const Callout = ({
       css({
         backgroundColor: colorScheme.getCSSColor('overlay'),
         [mUp]: {
-          boxShadow: `inset 0px -50px 50px -30px colorScheme.getCSSColor('overlayShadow')`
+          boxShadow: colorScheme.getCSSColor('overlay')
         }
       }),
     [colorScheme]
@@ -104,7 +104,11 @@ const Callout = ({
         {...calloutRule}
         onClick={e => e.stopPropagation()}
       >
-        <div {...styles.arrow} {...calloutRule} {...styles[align].arrow} />
+        <div
+          {...styles.arrow}
+          {...colorScheme.set('backgroundColor', 'overlay')}
+          {...styles[align].arrow}
+        />
         {children}
       </div>
     </div>
