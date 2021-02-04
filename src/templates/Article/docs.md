@@ -124,7 +124,30 @@ Von [Franz Kafka](<>) (Text) und [Everett Collection](<>) (Bilder), 13. Juli 201
 ```
 
 ```react|noSource
-<Markdown schema={schema}>{`
+<Markdown schema={schema} rootData={{
+  repoId: 'republik/serie-f50-1',
+  series: {
+    title: 'Frauenstimmen',
+    logo: '/static/50Jahre_Frauenwahlrecht_positiv.svg',
+    logoDark: '/static/50Jahre_Frauenwahlrecht_negativ.svg',
+    episodes: [
+      {
+        label: 'Auftakt',
+        document: {
+          repoId: 'republik/serie-f50',
+          meta: {path: '#auftakt'}
+        }
+      },
+      {
+        label: 'Folge 1',
+        document: {
+          repoId: 'republik/serie-f50-1',
+          meta: {path: '#folge-1'}
+        }
+      }
+    ]
+  }
+}}>{`
 <section><h6>TITLE</h6>
 
 # Gregor Samsa eines Morgens aus unruhigen Träumen
@@ -138,6 +161,8 @@ Von [Franz Kafka](<>) (Text) und [Everett Collection](<>) (Bilder), 13. Juli 201
 <hr /></section>
 `}</Markdown>
 ```
+
+A format line is only rendered for a series if it's not the starter episode with the label «Auftakt».
 
 ### `center`
 

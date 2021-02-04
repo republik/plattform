@@ -2,6 +2,8 @@ A `<TeaserFeed />` is a concise article teaser used in a feed context.
 
 Supported props:
 - `format`: An optional format which appears on top of the headline.
+- `series`: An optinal series with episodes, will appear on top of the headline unless it's the started epsiode.
+- `repoId`: An optional repo id to help detect the right series episode when paths do not suffice
 - `kind`: String `meta` or `editorial` (default)
 - `color`: Color for top border and title
 - `Link`, a Next.js like `<Link />` component
@@ -14,6 +16,7 @@ Supported props:
 - `highlighted`: highlights the teaser
 
 Data props:
+- `path`
 - `title`
 - `description`
 - `credits`
@@ -56,20 +59,6 @@ Only using title is great for compact feeds:
 
 ```react
 <TeaserFeed format={{meta: {title: 'Format'}}}
-  title='The quick brown fox jumps over the lazy dog'
-  description='Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores.'
-  credits={[
-    {type: 'text', value: 'An article by '},
-    {type: 'link', url: 'https://republik.ch/~moser', children: [{type: 'text', value: 'Christof Moser'}]},
-    {type: 'text', value: ', 31.12.2017'},
-  ]}
-  t={t}
-  prepublication={true}
-/>
-```
-
-```react
-<TeaserFeed series={{title: 'Serien-Titel', episodes: [{ document: { meta: { path: '/'}}}]}}
   title='The quick brown fox jumps over the lazy dog'
   description='Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores.'
   credits={[
@@ -164,7 +153,7 @@ Add an excerpt of the content using the highlight prop (if `highlightLabel` is o
 />
 ```
 
-Highlighted teaser
+### Highlighted
 
 ```react
 <TeaserFeed
@@ -176,5 +165,38 @@ Highlighted teaser
       {type: 'text', value: ', 31.12.2017'},
     ]}
     highlighted
+/>
+```
+
+
+### Series
+
+```react
+<TeaserFeed series={{title: 'Die Serie', episodes: [{ label: 'Auftakt', document: { meta: { path: '#auftakt'}}}, { label: 'Folge 1', document: { meta: { path: '#folge-1'}}}]}}
+  path='#auftakt'
+  title='Die Serie'
+  description='Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores.'
+  credits={[
+    {type: 'text', value: 'Von '},
+    {type: 'link', url: 'https://republik.ch/~moser', children: [{type: 'text', value: 'Christof Moser'}]},
+    {type: 'text', value: ', 04.02.2021'},
+  ]}
+  t={t}
+  prepublication={true}
+/>
+```
+
+```react
+<TeaserFeed series={{title: 'Die Serie', episodes: [{ label: 'Auftakt', document: { meta: { path: '#auftakt'}}}, { label: 'Folge 1', document: { meta: { path: '#folge-1'}}}]}}
+  path='#folge-1'
+  title='War es Mord?'
+  description='Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores.'
+  credits={[
+    {type: 'text', value: 'Von '},
+    {type: 'link', url: 'https://republik.ch/~moser', children: [{type: 'text', value: 'Christof Moser'}]},
+    {type: 'text', value: ', 04.02.2021'},
+  ]}
+  t={t}
+  prepublication={true}
 />
 ```

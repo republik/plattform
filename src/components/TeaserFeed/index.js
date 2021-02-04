@@ -49,6 +49,7 @@ export const TeaserFeed = ({
   template,
   format,
   path,
+  repoId,
   title,
   description,
   highlight,
@@ -92,6 +93,8 @@ export const TeaserFeed = ({
       formatColor={borderColor}
       Link={Link}
       menu={menu}
+      repoId={repoId}
+      path={path}
     >
       <Headline formatColor={titleColor}>
         <Link href={path} passHref>

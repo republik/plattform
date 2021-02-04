@@ -7,6 +7,7 @@ import CalloutMenu from '../Callout/CalloutMenu'
 import MoreIcon from 'react-icons/lib/md/more-vert'
 import { useColorContext } from '../Colors/useColorContext'
 import IconButton from '../IconButton'
+import { getFormatLine } from './utils'
 
 const styles = {
   main: css({
@@ -36,11 +37,20 @@ const Teaser = ({
   formatColor,
   format,
   series,
+  repoId,
+  path,
   Link,
   highlighted,
   menu
 }) => {
   const [colorScheme] = useColorContext()
+
+  const formatLine = getFormatLine({
+    format,
+    series,
+    repoId,
+    path
+  })
 
   return (
     <div
@@ -59,25 +69,15 @@ const Teaser = ({
           </CalloutMenu>
         </div>
       )}
-      {format && format.meta ? (
+      {formatLine.title && (
         <Format color={formatColor}>
-          <Link href={format.meta.path} passHref>
-            <a {...styles.link} href={format.meta.path}>
-              {format.meta.title}
+          <Link href={formatLine.path} passHref>
+            <a {...styles.link} href={formatLine.path}>
+              {formatLine.title}
             </a>
           </Link>
         </Format>
-      ) : series && series.episodes[0]?.document?.meta.path ? (
-        <Format>
-          <Link href={series.episodes[0]?.document?.meta.path} passHref>
-            <a {...styles.link} href={series.episodes[0]?.document?.meta.path}>
-              {series.title}
-            </a>
-          </Link>
-        </Format>
-      ) : series ? (
-        <Format>{series.title}</Format>
-      ) : null}
+      )}
       {children}
     </div>
   )
