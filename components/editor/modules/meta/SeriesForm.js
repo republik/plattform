@@ -190,6 +190,7 @@ export default withT(({ t, editor, node, onInputChange }) => {
             <ImageInput
               label='Logo Nachtmodus'
               maxWidth={100}
+              dark
               src={value.logoDark}
               onChange={(_, logoDark) => {
                 onSeriesChange({
