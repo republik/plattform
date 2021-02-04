@@ -31,11 +31,27 @@ const resolveRepoId = (field) => async (meta, args, context) => {
     if (field === 'series') {
       // however in publikator
       // the episodes { document } need another loop
-      const episodes = meta[field].episodes || []
-      for (const episode of episodes) {
-        // ensure not already resolved by previous run or after publication
-        if (typeof episode.document === 'string') {
-          episode.document = await getDocFromMetaLink(episode.document, context)
+      if (
+        meta[field].episodes?.find(
+          (episode) => typeof episode.document === 'string',
+        )
+      ) {
+        // copy object, prevent modifying content.meta
+        const episodes = [].concat(meta[field].episodes).map((episode) => ({
+          ...episode,
+        }))
+        for (const episode of episodes) {
+          // ensure not already resolved by previous run
+          if (typeof episode.document === 'string') {
+            episode.document = await getDocFromMetaLink(
+              episode.document,
+              context,
+            )
+          }
+        }
+        return {
+          ...meta[field],
+          episodes,
         }
       }
     }
