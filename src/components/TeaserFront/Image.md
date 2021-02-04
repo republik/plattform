@@ -9,6 +9,7 @@ Supported props:
 - `onlyImage`: Whether to render only the image (without the text block).
 - `maxWidth`: useful for e.g. gifs that have solid color edges, see example below
 
+- 
 A `<TeaserFrontImageHeadline />` should be used. The default font size can be changed with either of these props:d
 - `medium`: Whether the font size shoud be increased to medium.
 - `large`: Whether the font size shoud be increased to large.
@@ -303,3 +304,19 @@ Photo by Thomas Vuillemin on [Unsplash](https://unsplash.com/photos/c1_K8Qfd_iQ)
 </TeaserFrontImage>
 ```
 
+## With Logo
+```react
+<TeaserFrontImage image='/static/desert.jpg' byline='Foto: Thomas Vuillemin'
+  textPosition='bottomright'
+  color='#fff' bgColor='#000'>
+  <TeaserFrontLogo logo='/static/50Jahre_Frauenwahlrecht_negativ.svg' />
+  <Editorial.Format>Neutrum</Editorial.Format>
+  <TeaserFrontImageHeadline.Editorial small>The sand</TeaserFrontImageHeadline.Editorial>
+  <TeaserFrontLead>
+    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.
+  </TeaserFrontLead>
+  <TeaserFrontCredit>
+    An article by <TeaserFrontCreditLink href='#' color='#fff'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
+  </TeaserFrontCredit>
+</TeaserFrontImage>
+```

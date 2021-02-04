@@ -16,6 +16,7 @@ A `<TeaserFrontSplitHeadline />` should be used.
   image='/static/rothaus_portrait.jpg'
   byline='Foto: Laurent Burst'
   color='#fff' bgColor='#000'>
+  <TeaserFrontLogo logo='/static/50Jahre_Frauenwahlrecht_negativ.svg' logoAlt='Neutrum' />
   <Editorial.Format>Neutrum</Editorial.Format>
   <TeaserFrontSplitHeadline.Editorial>Es ist kalt in Österreich</TeaserFrontSplitHeadline.Editorial>
   <TeaserFrontLead>

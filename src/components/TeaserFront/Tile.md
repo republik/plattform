@@ -332,6 +332,22 @@ E.g. article collection in article (related articles).
 </TeaserFrontTileRow>
 ```
 
+### With a Format/Series logo 
+
+```react
+<TeaserFrontTileRow>
+  <TeaserFrontTile image='/static/rothaus_landscape.jpg'  byline='Foto: Laurent Burst' color='#fff' bgColor='#000'>
+    <TeaserFrontLogo logo='/static/50Jahre_Frauenwahlrecht_negativ.svg' alt='50 Jahre Frauenstimmrecht'/>
+    <TeaserFrontTileHeadline.Editorial>The quick fox</TeaserFrontTileHeadline.Editorial>
+    <TeaserFrontLead>
+      Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.
+    </TeaserFrontLead>
+    <TeaserFrontCredit>
+      An article by <TeaserFrontCreditLink color='#fff' href='#' color='#fff'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
+  </TeaserFrontTile>
+</TeaserFrontTileRow>
+```
+
 ```react
 <TeaserFrontTileRow>
   <TeaserFrontTile onlyImage image='/static/video.jpg'>
