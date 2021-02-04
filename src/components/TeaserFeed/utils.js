@@ -1,6 +1,6 @@
 import colors from '../../theme/colors'
 
-export const getFormatLine = ({ format, series, repoId, path }) => {
+export const getFormatLine = ({ title, format, series, repoId, path }) => {
   if (format?.meta) {
     return {
       title: format.meta.title,
@@ -19,6 +19,13 @@ export const getFormatLine = ({ format, series, repoId, path }) => {
     )
 
     if (currentEpisode && currentEpisode === starterEpisode) {
+      return {}
+    }
+    // back off if title already contain series title to avoid doubling
+    if (
+      title &&
+      title.toLowerCase().indexOf(series.title.toLowerCase()) !== -1
+    ) {
       return {}
     }
 

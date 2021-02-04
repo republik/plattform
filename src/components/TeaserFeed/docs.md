@@ -182,7 +182,6 @@ Add an excerpt of the content using the highlight prop (if `highlightLabel` is o
     {type: 'text', value: ', 04.02.2021'},
   ]}
   t={t}
-  prepublication={true}
 />
 ```
 
@@ -197,6 +196,21 @@ Add an excerpt of the content using the highlight prop (if `highlightLabel` is o
     {type: 'text', value: ', 04.02.2021'},
   ]}
   t={t}
-  prepublication={true}
+/>
+```
+
+For legacy purposes we back off if the title contains the series title:
+
+```react
+<TeaserFeed series={{title: 'Die Serie', episodes: [{ label: 'Auftakt', document: { meta: { path: '#auftakt'}}}, { label: 'Folge 1', document: { meta: { path: '#folge-1'}}}]}}
+  path='#folge-1'
+  title='Die Serie, Folge 1: War es Mord?'
+  description='Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores.'
+  credits={[
+    {type: 'text', value: 'Von '},
+    {type: 'link', url: 'https://republik.ch/~moser', children: [{type: 'text', value: 'Christof Moser'}]},
+    {type: 'text', value: ', 04.02.2021'},
+  ]}
+  t={t}
 />
 ```

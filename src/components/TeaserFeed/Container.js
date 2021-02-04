@@ -38,6 +38,7 @@ const Teaser = ({
   format,
   series,
   repoId,
+  title,
   path,
   Link,
   highlighted,
@@ -49,7 +50,8 @@ const Teaser = ({
     format,
     series,
     repoId,
-    path
+    path,
+    title
   })
 
   return (
