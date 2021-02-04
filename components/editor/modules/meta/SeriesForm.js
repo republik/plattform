@@ -173,18 +173,33 @@ export default withT(({ t, editor, node, onInputChange }) => {
               })
             }}
           />
-          <ImageInput
-            label='Logo'
-            maxWidth={100}
-            src={value.logo}
-            onChange={(_, logo) => {
-              onSeriesChange({
-                ...value,
-                logo
-              })
-            }}
-          />
-          <br />
+          <div style={{ float: 'left' }}>
+            <ImageInput
+              label='Logo'
+              maxWidth={100}
+              src={value.logo}
+              onChange={(_, logo) => {
+                onSeriesChange({
+                  ...value,
+                  logo
+                })
+              }}
+            />
+          </div>
+          <div style={{ float: 'left' }}>
+            <ImageInput
+              label='Logo Nachtmodus'
+              maxWidth={100}
+              src={value.logoDark}
+              onChange={(_, logoDark) => {
+                onSeriesChange({
+                  ...value,
+                  logoDark
+                })
+              }}
+            />
+          </div>
+          <br style={{ clear: 'both' }} />
           {episodes.map((episode, i) => {
             const { document: episodeDoc, ...values } = episode
             const keys = Set(['label', 'title', 'image', 'publishDate'])
