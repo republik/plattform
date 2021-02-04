@@ -23,7 +23,8 @@ import {
   TeaserFrontLead,
   TeaserFrontCredit,
   TeaserFrontCreditLink,
-  TeaserFrontSubject
+  TeaserFrontSubject,
+  TeaserFrontLogo
 } from '../../components/TeaserFront'
 
 import {
@@ -173,19 +174,36 @@ const createSchema = ({ Link = DefaultLink, t = () => '', ...rest } = {}) => {
 
   const format = {
     matchMdast: matchHeading(6),
-    component: ({ children, attributes, href, color, collapsedColor }) => (
-      <TeaserFrontFormat color={color} collapsedColor={collapsedColor}>
-        <Link href={href} passHref>
-          <a href={href} {...styles.link}>
-            {children}
-          </a>
-        </Link>
-      </TeaserFrontFormat>
+    component: ({
+      children,
+      attributes,
+      href,
+      logo,
+      color,
+      collapsedColor
+    }) => (
+      <>
+        {logo && (
+          <Link href={href} passHref>
+            <a href={href} {...styles.link}>
+              <TeaserFrontLogo logo={logo} />
+            </a>
+          </Link>
+        )}
+        <TeaserFrontFormat color={color} collapsedColor={collapsedColor}>
+          <Link href={href} passHref>
+            <a href={href} {...styles.link}>
+              {children}
+            </a>
+          </Link>
+        </TeaserFrontFormat>
+      </>
     ),
     props(node, index, parent, { ancestors }) {
       const teaser = ancestors.find(matchTeaser)
       return {
         href: teaser ? teaser.data.formatUrl : undefined,
+        logo: teaser ? teaser.data.formatLogo : undefined,
         color:
           teaser && teaser.data.feuilleton
             ? teaser.data.color || colors.feuilleton
@@ -229,6 +247,7 @@ const createSchema = ({ Link = DefaultLink, t = () => '', ...rest } = {}) => {
       insertButtonText: 'Front Image',
       formOptions: [
         'formatUrl',
+        'formatLogo',
         'textPosition',
         'color',
         'bgColor',
@@ -288,6 +307,7 @@ const createSchema = ({ Link = DefaultLink, t = () => '', ...rest } = {}) => {
       insertButtonText: 'Front Split',
       formOptions: [
         'formatUrl',
+        'formatLogo',
         'color',
         'bgColor',
         'center',
@@ -343,6 +363,7 @@ const createSchema = ({ Link = DefaultLink, t = () => '', ...rest } = {}) => {
       insertButtonText: 'Front Typo',
       formOptions: [
         'formatUrl',
+        'formatLogo',
         'color',
         'bgColor',
         'kind',
@@ -401,6 +422,7 @@ const createSchema = ({ Link = DefaultLink, t = () => '', ...rest } = {}) => {
       showUI: false,
       formOptions: [
         'formatUrl',
+        'formatLogo',
         'color',
         'bgColor',
         'center',
