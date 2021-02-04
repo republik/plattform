@@ -173,7 +173,7 @@ export default withT(({ t, editor, node, onInputChange }) => {
               })
             }}
           />
-          <div style={{ float: 'left' }}>
+          <div style={{ float: 'left', marginRight: 15 }}>
             <ImageInput
               label='Logo'
               maxWidth={100}
@@ -200,6 +200,7 @@ export default withT(({ t, editor, node, onInputChange }) => {
             />
           </div>
           <br style={{ clear: 'both' }} />
+          <br />
           {episodes.map((episode, i) => {
             const { document: episodeDoc, ...values } = episode
             const keys = Set(['label', 'title', 'image', 'publishDate'])
