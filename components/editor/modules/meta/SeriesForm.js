@@ -3,6 +3,7 @@ import { Set, Map } from 'immutable'
 
 import { A, Label, Radio, Field, Dropdown } from '@project-r/styleguide'
 
+import ImageInput from '../../utils/ImageInput'
 import MetaForm from '../../utils/MetaForm'
 import withT from '../../../../lib/withT'
 
@@ -29,7 +30,7 @@ export default withT(({ t, editor, node, onInputChange }) => {
   const onSeriesChange = onChange('series')
 
   const isEpisode = typeof value === 'string'
-  const isMaster = !!value && !isEpisode
+  const isMain = !!value && !isEpisode
 
   const role = (
     <Fragment>
@@ -45,7 +46,7 @@ export default withT(({ t, editor, node, onInputChange }) => {
       </Radio>{' '}
       &nbsp;{' '}
       <Radio
-        checked={isMaster}
+        checked={isMain}
         onChange={event => {
           event.preventDefault()
           onSeriesChange({
@@ -54,7 +55,7 @@ export default withT(({ t, editor, node, onInputChange }) => {
           })
         }}
       >
-        {t('metaData/series/master')}
+        {t('metaData/series/main')}
       </Radio>{' '}
       &nbsp;{' '}
       <Radio
@@ -69,7 +70,7 @@ export default withT(({ t, editor, node, onInputChange }) => {
     </Fragment>
   )
 
-  const episodes = isMaster && value.episodes
+  const episodes = isMain && value.episodes
   const onEpisodeChange = episodes => {
     onSeriesChange({
       ...value,
@@ -84,7 +85,7 @@ export default withT(({ t, editor, node, onInputChange }) => {
       <Label>{t('metaData/series/label')}</Label>
       <br />
       {role}
-      {(isMaster || isEpisode) && (
+      {(isMain || isEpisode) && (
         <UIForm getWidth={() => '25%'}>
           <Dropdown
             black
@@ -147,14 +148,14 @@ export default withT(({ t, editor, node, onInputChange }) => {
       )}
       {isEpisode && (
         <RepoSelect
-          label={t('metaData/series/master')}
+          label={t('metaData/series/main')}
           value={value}
           onChange={(_, url) => {
             onSeriesChange(url || '')
           }}
         />
       )}
-      {isMaster && (
+      {isMain && (
         <div
           style={{
             backgroundColor: '#fff',
@@ -168,10 +169,37 @@ export default withT(({ t, editor, node, onInputChange }) => {
             onChange={(_, title) => {
               onSeriesChange({
                 ...value,
-                title: title
+                title
               })
             }}
           />
+          <div style={{ float: 'left' }}>
+            <ImageInput
+              label='Logo'
+              maxWidth={100}
+              src={value.logo}
+              onChange={(_, logo) => {
+                onSeriesChange({
+                  ...value,
+                  logo
+                })
+              }}
+            />
+          </div>
+          <div style={{ float: 'left' }}>
+            <ImageInput
+              label='Logo Nachtmodus'
+              maxWidth={100}
+              src={value.logoDark}
+              onChange={(_, logoDark) => {
+                onSeriesChange({
+                  ...value,
+                  logoDark
+                })
+              }}
+            />
+          </div>
+          <br style={{ clear: 'both' }} />
           {episodes.map((episode, i) => {
             const { document: episodeDoc, ...values } = episode
             const keys = Set(['label', 'title', 'image', 'publishDate'])

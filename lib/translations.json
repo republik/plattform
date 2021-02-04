@@ -1,5 +1,5 @@
 {
-  "updated": "2020-12-16T15:54:51.994Z",
+  "updated": "2021-02-04T00:19:40.274Z",
   "title": "live",
   "data": [
     {
@@ -627,8 +627,8 @@
       "value": "Keine"
     },
     {
-      "key": "metaData/series/master",
-      "value": "Master"
+      "key": "metaData/series/main",
+      "value": "Auftakt"
     },
     {
       "key": "metaData/series/title/label",

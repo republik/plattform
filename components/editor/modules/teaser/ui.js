@@ -429,6 +429,14 @@ const Form = withT(({ node, onChange, onTypeChange, options, t }) => {
           Feuilleton
         </Checkbox>
       )}
+      {options.includes('formatLogo') && (
+        <ImageInput
+          label='Format Logo'
+          maxWidth={100}
+          src={node.data.get('formatLogo')}
+          onChange={onChange('formatLogo')}
+        />
+      )}
     </UIForm>
   )
 })
