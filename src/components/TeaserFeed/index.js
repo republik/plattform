@@ -60,7 +60,8 @@ export const TeaserFeed = ({
   t,
   Link = DefaultLink,
   menu,
-  highlighted
+  highlighted,
+  series
 }) => {
   const formatMeta = (format && format.meta) || {}
   const Headline =
@@ -87,6 +88,7 @@ export const TeaserFeed = ({
     <Container
       highlighted={highlighted}
       format={format}
+      series={series}
       formatColor={borderColor}
       Link={Link}
       menu={menu}

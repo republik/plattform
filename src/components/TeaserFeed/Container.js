@@ -35,7 +35,7 @@ const Teaser = ({
   children,
   formatColor,
   format,
-  interaction,
+  series,
   Link,
   highlighted,
   menu
@@ -59,7 +59,7 @@ const Teaser = ({
           </CalloutMenu>
         </div>
       )}
-      {format && format.meta && (
+      {format && format.meta ? (
         <Format color={formatColor}>
           <Link href={format.meta.path} passHref>
             <a {...styles.link} href={format.meta.path}>
@@ -67,7 +67,17 @@ const Teaser = ({
             </a>
           </Link>
         </Format>
-      )}
+      ) : series && series.episodes[0]?.document?.meta.path ? (
+        <Format>
+          <Link href={series.episodes[0]?.document?.meta.path} passHref>
+            <a {...styles.link} href={series.episodes[0]?.document?.meta.path}>
+              {series.title}
+            </a>
+          </Link>
+        </Format>
+      ) : series ? (
+        <Format>{series.title}</Format>
+      ) : null}
       {children}
     </div>
   )

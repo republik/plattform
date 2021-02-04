@@ -69,6 +69,20 @@ Only using title is great for compact feeds:
 ```
 
 ```react
+<TeaserFeed series={{title: 'Serien-Titel', episodes: [{ document: { meta: { path: '/'}}}]}}
+  title='The quick brown fox jumps over the lazy dog'
+  description='Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores.'
+  credits={[
+    {type: 'text', value: 'An article by '},
+    {type: 'link', url: 'https://republik.ch/~moser', children: [{type: 'text', value: 'Christof Moser'}]},
+    {type: 'text', value: ', 31.12.2017'},
+  ]}
+  t={t}
+  prepublication={true}
+/>
+```
+
+```react
 <TeaserFeed kind='editorial' format={{meta: {title: 'Format'}}}
   title='The quick brown fox jumps over the lazy dog'
   description='Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores.'
