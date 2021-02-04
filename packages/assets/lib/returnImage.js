@@ -94,7 +94,9 @@ module.exports = async ({
 
     // svg is not detected by fileTypeStream
     if (
-      (!mime || mime === 'application/octet-stream') &&
+      (!mime ||
+        mime === 'application/octet-stream' ||
+        mime === 'application/xml') &&
       path &&
       new RegExp(/\.svg(\.webp)?$/).test(path)
     ) {
