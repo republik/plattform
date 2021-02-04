@@ -99,7 +99,8 @@ export default ({ rule, subModules, TYPE }) => {
             // pass format to title through context
             meta: node.meta,
             format: node.format,
-            section: node.section
+            section: node.section,
+            series: node.series
           }
         })
       }

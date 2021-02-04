@@ -495,7 +495,9 @@ export class EditorPage extends Component {
             ...commit.document.content,
             // add format & section to root mdast node
             format: commit.document.meta.format,
-            section: commit.document.meta.section
+            section: commit.document.meta.section,
+            series: commit.document.meta.series,
+            repoId: commit.document.repoId
           })
         )
 
@@ -531,7 +533,9 @@ export class EditorPage extends Component {
         ...commit.document.content,
         // add format & section to root mdast node
         format: commit.document.meta.format,
-        section: commit.document.meta.section
+        section: commit.document.meta.section,
+        series: commit.document.meta.series,
+        repoId: commit.document.repoId
       }
 
       committedEditorState = this.editor.serializer.deserialize(json)

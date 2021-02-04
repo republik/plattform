@@ -104,6 +104,38 @@ const MetaData = ({
       })
     })
   }
+  const onRepoInputChange = key => (_, __, item) => {
+    editor.change(change => {
+      change.setNodeByKey(node.key, {
+        data: item
+          ? node.data.set(key, `https://github.com/${item.value.id}`)
+          : node.data.remove(key)
+      })
+      const titleNode = change.value.document.findDescendant(
+        node => node.type === 'TITLE'
+      )
+      if (titleNode) {
+        let data = item ? item.value.latestCommit.document : undefined
+        if (key === 'series' && data) {
+          data = data.meta.series
+        }
+        const newData = {
+          ...titleNode.data.toJS(),
+          [key]: data
+        }
+        change.setNodeByKey(titleNode.key, {
+          data: newData
+        })
+        titleNode.nodes.forEach(node => {
+          change.setNodeByKey(node.key, {
+            data: newData
+          })
+        })
+      }
+    })
+  }
+  const titleNode = value.document.findDescendant(node => node.type === 'TITLE')
+  const titleData = titleNode ? titleNode.data.toJS() : {}
 
   const dataAsJs = node.data.toJS()
   const customFieldsByRef = nest()
@@ -189,7 +221,6 @@ const MetaData = ({
               customField.label ||
               t(`metaData/field/${customField.key}`, undefined, customField.key)
             const value = node.data.get(customField.key)
-            const onChange = onInputChange(customField.key)
             const rootDocDataKeys = ['format', 'section']
 
             return (
@@ -200,39 +231,8 @@ const MetaData = ({
                 template={customField.key}
                 onChange={
                   rootDocDataKeys.includes(customField.key)
-                    ? (_, __, item) => {
-                        editor.change(change => {
-                          change.setNodeByKey(node.key, {
-                            data: item
-                              ? node.data.set(
-                                  customField.key,
-                                  `https://github.com/${item.value.id}`
-                                )
-                              : node.data.remove(customField.key)
-                          })
-                          let titleNode = change.value.document.findDescendant(
-                            node => node.type === 'TITLE'
-                          )
-                          if (titleNode) {
-                            const doc = item
-                              ? item.value.latestCommit.document
-                              : undefined
-                            const newData = {
-                              ...titleNode.data.toJS(),
-                              [customField.key]: doc
-                            }
-                            change.setNodeByKey(titleNode.key, {
-                              data: newData
-                            })
-                            titleNode.nodes.forEach(node => {
-                              change.setNodeByKey(node.key, {
-                                data: newData
-                              })
-                            })
-                          }
-                        })
-                      }
-                    : onChange
+                    ? onRepoInputChange(customField.key)
+                    : onInputChange(customField.key)
                 }
               />
             )
@@ -247,12 +247,25 @@ const MetaData = ({
           black
           getWidth={() => '50%'}
         />
-        {!!series && <SeriesForm editor={editor} node={node} />}
+        {!!series && (
+          <SeriesForm
+            editor={editor}
+            node={node}
+            onRepoInputChange={onRepoInputChange}
+          />
+        )}
         {!!Teaser && (
           <div>
             <Label>{t('metaData/preview')}</Label>
             <br />
-            <Teaser {...dataAsJs} credits={undefined} />
+            <Teaser
+              {...dataAsJs}
+              repoId={titleData.repoId}
+              section={titleData.section}
+              format={titleData.format}
+              series={titleData.series}
+              credits={undefined}
+            />
           </div>
         )}
         {!!darkMode && (

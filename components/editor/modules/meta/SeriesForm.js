@@ -10,7 +10,7 @@ import withT from '../../../../lib/withT'
 import RepoSelect from './RepoSelect'
 import UIForm from '../../UIForm'
 
-export default withT(({ t, editor, node, onInputChange }) => {
+export default withT(({ t, editor, node, onRepoInputChange }) => {
   const coverTextAnchors = [null, 'top', 'middle', 'bottom'].map(value => ({
     value,
     text: t(`metaData/series/coverText/anchor/${value}`)
@@ -150,9 +150,7 @@ export default withT(({ t, editor, node, onInputChange }) => {
         <RepoSelect
           label={t('metaData/series/main')}
           value={value}
-          onChange={(_, url) => {
-            onSeriesChange(url || '')
-          }}
+          onChange={onRepoInputChange('series')}
         />
       )}
       {isMain && (

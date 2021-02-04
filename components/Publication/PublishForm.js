@@ -93,6 +93,7 @@ export const getRepoWithCommit = gql`
         }
         document {
           id
+          repoId
           content
           meta {
             slug
@@ -125,6 +126,22 @@ export const getRepoWithCommit = gql`
                 title
                 color
                 kind
+              }
+            }
+            series {
+              title
+              logo
+              logoDark
+              episodes {
+                title
+                label
+                document {
+                  id
+                  repoId
+                  meta {
+                    path
+                  }
+                }
               }
             }
           }
@@ -621,7 +638,9 @@ const Preview = withMe(
               {
                 ...commit.document.content,
                 format: commit.document.meta.format,
-                section: commit.document.meta.section
+                section: commit.document.meta.section,
+                series: commit.document.meta.series,
+                repoId: commit.document.repoId
               },
               schema
             )}
