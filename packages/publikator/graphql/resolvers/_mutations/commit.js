@@ -193,6 +193,17 @@ module.exports = async (_, args, context) => {
           })(),
         )
       }
+      if (series.logoDark) {
+        promises.push(
+          (async () => {
+            series.logoDark = await importFromRepo(
+              series.logoDark,
+              images,
+              repoId,
+            )
+          })(),
+        )
+      }
       series.episodes.forEach((episode) => {
         if (episode.image) {
           promises.push(
@@ -250,6 +261,13 @@ module.exports = async (_, args, context) => {
         promises.push(
           (async () => {
             series.logo = await extractImage(series.logo, images)
+          })(),
+        )
+      }
+      if (series.logoDark) {
+        promises.push(
+          (async () => {
+            series.logoDark = await extractImage(series.logoDark, images)
           })(),
         )
       }

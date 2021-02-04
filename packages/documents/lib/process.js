@@ -30,6 +30,9 @@ const processRepoImageUrlsInMeta = (mdast, fn) => {
       if (series.logo) {
         series.logo = fn(series.logo)
       }
+      if (series.logoDark) {
+        series.logoDark = fn(series.logoDark)
+      }
       series.episodes.forEach((episode) => {
         if (episode.image) {
           episode.image = fn(episode.image)
