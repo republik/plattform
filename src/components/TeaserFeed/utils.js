@@ -23,7 +23,7 @@ export const getFormatLine = ({ title, format, series, repoId, path }) => {
     }
     // back off if title already contain series title to avoid doubling
     if (
-      title &&
+      typeof title === 'string' &&
       title.toLowerCase().indexOf(series.title.toLowerCase()) !== -1
     ) {
       return {}
