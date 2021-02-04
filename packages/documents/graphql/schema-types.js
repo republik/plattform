@@ -5,6 +5,8 @@ scalar JSON
 
 type Series {
   title: String!
+  logo: String
+  logoDark: String
   episodes: [Episode!]!
 }
 
