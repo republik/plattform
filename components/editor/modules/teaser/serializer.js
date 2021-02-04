@@ -113,12 +113,20 @@ const fromMdast = ({ TYPE, subModules, rule }) => (
               columns: 3
             }
           : undefined
+      const formatHeadlinePatches =
+        node.type === 'FRONTFORMAT'
+          ? {
+              logo: data.formatLogo,
+              url: data.formatUrl
+            }
+          : undefined
       return {
         ...node,
         data: {
           ...node.data,
           ...data,
-          ...articleTilePatches
+          ...articleTilePatches,
+          ...formatHeadlinePatches
         }
       }
     })
