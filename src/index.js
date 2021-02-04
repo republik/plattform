@@ -395,7 +395,8 @@ ReactDOM.render(
                 imports: {
                   css,
                   ...require('./components/Typography'),
-                  TitleBlock: require('./components/TitleBlock')
+                  TitleBlock: require('./components/TitleBlock'),
+                  TeaserFrontLogo: require('./components/TeaserFront/Logo')
                 },
                 src: require('./components/TitleBlock/docs.md')
               },
