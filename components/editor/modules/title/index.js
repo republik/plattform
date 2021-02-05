@@ -49,7 +49,7 @@ export default ({ rule, subModules, TYPE }) => {
       const { format, section, series } = rest.context
       // skip coverText for now
       const { coverText, ...meta } = rest.context.meta
-      if (format || section || meta) {
+      if (format || section || meta || series) {
         // enhance all immediate children with format and section
         // - needed for headline
         nodes = nodes.map(node => ({
@@ -65,14 +65,15 @@ export default ({ rule, subModules, TYPE }) => {
           ...node.data,
           meta,
           format,
-          section
+          section,
+          series
         },
         nodes
       }
     },
     toMdast: (object, index, parent, rest) => {
       // omit format and section
-      const { format, section, meta, ...data } = object.data
+      const { format, section, meta, series, ...data } = object.data
       return {
         type: 'zone',
         identifier,
@@ -101,6 +102,7 @@ export default ({ rule, subModules, TYPE }) => {
       {
         renderNode({ node, children, attributes }) {
           if (!serializerRule.match(node)) return
+
           return (
             <Container {...node.data.toJS()} attributes={attributes}>
               {children}
