@@ -171,6 +171,8 @@ Add an excerpt of the content using the highlight prop (if `highlightLabel` is o
 
 ### Series
 
+_TBD: Format lines for series are currently disabled._
+
 ```react
 <TeaserFeed series={{title: 'Die Serie', episodes: [{ label: 'Auftakt', document: { meta: { path: '#auftakt'}}}, { label: 'Folge 1', document: { meta: { path: '#folge-1'}}}]}}
   path='#auftakt'

@@ -162,6 +162,8 @@ Von [Franz Kafka](<>) (Text) und [Everett Collection](<>) (Bilder), 13. Juli 201
 `}</Markdown>
 ```
 
+_TBD: Format lines for series are currently disabled._
+
 A format line is only rendered for a series if it's not the starter episode with the label «Auftakt».
 
 ### `center`
