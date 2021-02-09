@@ -103,6 +103,15 @@ module.exports = async ({
       mime = 'image/svg+xml'
     }
 
+    // apks are detected as zip by fileTypeStream
+    if (
+      (!mime || mime === 'application/zip') &&
+      path &&
+      new RegExp(/\.apk$/).test(path)
+    ) {
+      mime = 'application/vnd.android.package-archive'
+    }
+
     // fix content type if necessary
     // - e.g. requests to github always return Content-Type: text/plain
     // - s3 svg need to be rewritten from application/octet-stream to image/svg+xml
