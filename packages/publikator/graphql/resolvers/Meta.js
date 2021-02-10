@@ -26,7 +26,7 @@ const getDocFromMetaLink = async (url, context) => {
 
 const resolveSeriesEpisodes = async (series, context) => {
   if (
-    series.episodes?.find((episode) => typeof episode.document === 'string')
+    series?.episodes?.find((episode) => typeof episode.document === 'string')
   ) {
     // copy object, prevent modifying content.meta
     const episodes = [].concat(series.episodes).map((episode) => ({
