@@ -41,55 +41,52 @@ const styles = {
   })
 }
 
-export const IconLink = ({
-  href,
-  onClick,
-  discussionCommentsCount,
-  style,
-  small
-}) => {
-  const [colorScheme] = useColorContext()
-  const dimension = small ? 22 : 24
-  const fontSize = small ? '15px' : undefined
-  const lineHeight = small ? '20px' : undefined
-  const patchedStyle = {
-    marginLeft: small ? 0 : 20,
-    ...style
-  }
-  const linkStyleRule = useMemo(
-    () =>
-      css({
-        color: colorScheme.getCSSColor('primary'),
-        fill: colorScheme.getCSSColor('primary'),
-        '@media (hover)': {
-          ':hover': {
-            color: colorScheme.getCSSColor('primaryHover'),
-            fill: colorScheme.getCSSColor('primaryHover')
+export const IconLink = React.forwardRef(
+  ({ href, onClick, discussionCommentsCount, style, small }, ref) => {
+    const [colorScheme] = useColorContext()
+    const dimension = small ? 22 : 24
+    const fontSize = small ? '15px' : undefined
+    const lineHeight = small ? '20px' : undefined
+    const patchedStyle = {
+      marginLeft: small ? 0 : 20,
+      ...style
+    }
+    const linkStyleRule = useMemo(
+      () =>
+        css({
+          color: colorScheme.getCSSColor('primary'),
+          fill: colorScheme.getCSSColor('primary'),
+          '@media (hover)': {
+            ':hover': {
+              color: colorScheme.getCSSColor('primaryHover'),
+              fill: colorScheme.getCSSColor('primaryHover')
+            }
           }
-        }
-      }),
-    [colorScheme]
-  )
+        }),
+      [colorScheme]
+    )
 
-  return (
-    <a
-      href={href}
-      onClick={onClick}
-      {...styles.link}
-      {...linkStyleRule}
-      style={patchedStyle}
-    >
-      <span {...styles.icon}>
-        <Icon size={dimension} />
-      </span>
-      {discussionCommentsCount > 0 && (
-        <span {...styles.text} style={{ fontSize, lineHeight }}>
-          {discussionCommentsCount}
+    return (
+      <a
+        ref={ref}
+        href={href}
+        onClick={onClick}
+        {...styles.link}
+        {...linkStyleRule}
+        style={patchedStyle}
+      >
+        <span {...styles.icon}>
+          <Icon size={dimension} />
         </span>
-      )}
-    </a>
-  )
-}
+        {discussionCommentsCount > 0 && (
+          <span {...styles.text} style={{ fontSize, lineHeight }}>
+            {discussionCommentsCount}
+          </span>
+        )}
+      </a>
+    )
+  }
+)
 
 IconLink.propTypes = {
   href: PropTypes.string,
