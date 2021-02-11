@@ -17,5 +17,6 @@ export {
   default as CommentBodyParagraph,
   Code as CommentBodyCode,
   Definition as CommentBodyDefinition,
-  Heading as CommentBodyHeading
+  Heading as CommentBodyHeading,
+  FeaturedText as CommentBodyFeaturedText
 } from './Paragraph'

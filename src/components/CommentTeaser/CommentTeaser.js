@@ -8,8 +8,10 @@ import { inQuotes } from '../../lib/inQuotes'
 import { useMediaQuery } from '../../lib/useMediaQuery'
 import { serifRegular14, sansSerifMedium15 } from '../Typography/styles'
 import { A } from '../Typography/'
-import { P } from '../Typography/Editorial'
-import { CommentBodyParagraph } from '../CommentBody/web'
+import {
+  CommentBodyParagraph,
+  CommentBodyFeaturedText
+} from '../CommentBody/web'
 import { IconLink, Context, Header } from '../Discussion/Internal/Comment'
 import RawHtml from '../RawHtml/'
 import { useColorContext } from '../Colors/ColorContext'
@@ -181,7 +183,11 @@ export const CommentTeaser = ({
           <CommentBodyParagraph>
             <Link comment={comment} discussion={discussion} passHref>
               <a {...styles.link} {...highlightEMRule}>
-                {!!featuredText && <P>{inQuotes(featuredText)}</P>}
+                {!!featuredText && (
+                  <CommentBodyFeaturedText>
+                    {inQuotes(featuredText)}
+                  </CommentBodyFeaturedText>
+                )}
                 {!!preview && !highlight && (
                   <Fragment>
                     {preview.string}
