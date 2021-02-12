@@ -78,11 +78,15 @@ export const PlainEditor = ({ label, value, onChange, onPaste, mode }) => (
 )
 
 export const JSONEditor = ({ label, value, onChange }) => {
-  const [stateValue, setStateValue] = useState('')
+  const [stateValue, setStateValue] = useState(null)
+  const [chartType, setChartType] = useState(null)
 
   useEffect(() => {
-    const stringifiedValue = JSON.stringify(value, null, 2)
-    setStateValue(stringifiedValue)
+    if (!stateValue || chartType !== value.type) {
+      const stringified = JSON.stringify(value, null, 2)
+      setStateValue(stringified)
+      setChartType(value.type)
+    }
   }, [value])
 
   return (
@@ -101,6 +105,7 @@ export const JSONEditor = ({ label, value, onChange }) => {
           json = JSON.parse(newValue)
         } catch (e) {}
         if (json) {
+          setChartType(json.type)
           onChange(json)
         }
 
