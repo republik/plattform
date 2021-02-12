@@ -2,7 +2,7 @@ import 'core-js/fn/array/from'
 import 'core-js/fn/array/find'
 import 'core-js/es6'
 
-import React, { Fragment } from 'react'
+import React, { Fragment, useState } from 'react'
 import ReactDOM from 'react-dom'
 import { Catalog, ReactSpecimen } from '@catalog/core'
 import { simulations, speedy, css, merge } from 'glamor'
@@ -40,14 +40,33 @@ document.body.appendChild(styleTag)
 
 const t = createFormatter(require('./lib/translations.json').data)
 
+const DarkModeSwitch = ({ colorSchemeKey, setColorSchemeKey }) => (
+  <button
+    onClick={() =>
+      setColorSchemeKey(colorSchemeKey === 'light' ? 'dark' : 'light')
+    }
+  >
+    {colorSchemeKey}
+  </button>
+)
+
 const Styleguide = () => {
-  const colorSchemeKey = 'dark'
+  const [colorSchemeKey, setColorSchemeKey] = useState('dark')
   return (
     <DiscussionContext.Provider
       value={createSampleDiscussionContextValue({ t })}
     >
       <ColorContextProvider root colorSchemeKey={colorSchemeKey}>
-        <div className={`${colorSchemeKey}-mode`}>
+        <div
+          className={`${colorSchemeKey}-mode`}
+          style={{ position: 'relative' }}
+        >
+          <div style={{ position: 'absolute', zIndex: 10 }}>
+            <DarkModeSwitch
+              colorSchemeKey={colorSchemeKey}
+              setColorSchemeKey={setColorSchemeKey}
+            />
+          </div>
           <Catalog
             title='Style Guide'
             theme={theme[colorSchemeKey]}
