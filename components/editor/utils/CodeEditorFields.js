@@ -3,6 +3,7 @@ import { css } from 'glamor'
 import PropTypes from 'prop-types'
 import { Controlled as CodeMirror } from 'react-codemirror2'
 import { colors, fontFamilies, Label } from '@project-r/styleguide'
+import { usePrevious } from '@project-r/styleguide/lib/lib/usePrevious'
 
 // CodeMirror can only run in the browser
 if (process.browser && window) {
@@ -79,15 +80,14 @@ export const PlainEditor = ({ label, value, onChange, onPaste, mode }) => (
 
 export const JSONEditor = ({ label, value, onChange }) => {
   const [stateValue, setStateValue] = useState(null)
-  const [chartType, setChartType] = useState(null)
+  const previousValue = usePrevious(value)
 
   useEffect(() => {
-    if (!stateValue || chartType !== value.type) {
+    if (JSON.stringify(previousValue) !== JSON.stringify(value)) {
       const stringified = JSON.stringify(value, null, 2)
       setStateValue(stringified)
-      setChartType(value.type)
     }
-  }, [value])
+  }, [value, previousValue])
 
   return (
     <CodeMirrorField
@@ -105,7 +105,6 @@ export const JSONEditor = ({ label, value, onChange }) => {
           json = JSON.parse(newValue)
         } catch (e) {}
         if (json) {
-          setChartType(json.type)
           onChange(json)
         }
 
