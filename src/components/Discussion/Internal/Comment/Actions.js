@@ -8,7 +8,7 @@ import UnpublishIcon from 'react-icons/lib/md/visibility-off'
 import ReportIcon from 'react-icons/lib/md/flag'
 import EditIcon from 'react-icons/lib/md/edit'
 import ReplyIcon from 'react-icons/lib/md/reply'
-import ShareIcon from 'react-icons/lib/md/share'
+import ShareIcon from '../../../Icons/CustomIcons/ShareIconIOS'
 import FeaturedIcon from 'react-icons/lib/md/star-outline'
 import { sansSerifMedium14 } from '../../../Typography/styles'
 import { DiscussionContext, formatTimeRelative } from '../../DiscussionContext'
@@ -195,14 +195,6 @@ export const Actions = ({
           <UnpublishIcon {...colorScheme.set('fill', 'text')} />
         </IconButton>
       )}
-      {published && (
-        <IconButton
-          onClick={onShare}
-          title={t('styleguide/CommentActions/share')}
-        >
-          <ShareIcon {...colorScheme.set('fill', 'text')} />
-        </IconButton>
-      )}
       {published && userCanReport && onReport && (
         <IconButton
           disabled={userReportedAt}
@@ -219,6 +211,14 @@ export const Actions = ({
               </span>
             )}
           </span>
+        </IconButton>
+      )}
+      {published && (
+        <IconButton
+          onClick={onShare}
+          title={t('styleguide/CommentActions/share')}
+        >
+          <ShareIcon {...colorScheme.set('fill', 'text')} />
         </IconButton>
       )}
       {published && (
