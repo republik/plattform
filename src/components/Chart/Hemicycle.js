@@ -176,9 +176,7 @@ const Hemicycle = props => {
                       y={0}
                       textAnchor={textAnchor}
                       alignmentBaseline='hanging'
-                      {...(isMajorParty
-                        ? colorScheme.set('fill', getTextColor(fill))
-                        : colorScheme.set('fill', 'text'))}
+                      fill={getTextColor(fill)}
                     >
                       {d[2]}
                     </text>
@@ -188,9 +186,7 @@ const Hemicycle = props => {
                       y={labelheight * 0.9}
                       textAnchor={textAnchor}
                       alignmentBaseline='hanging'
-                      {...(isMajorParty
-                        ? colorScheme.set('fill', getTextColor(fill))
-                        : colorScheme.set('fill', 'text'))}
+                      fill={getTextColor(fill)}
                     >
                       {datum.value}
                     </text>

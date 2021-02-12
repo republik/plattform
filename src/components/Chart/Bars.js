@@ -472,10 +472,7 @@ const BarChart = props => {
                                 y={bar.style.inlineTop}
                                 dy='1em'
                                 fontSize={bar.style.fontSize}
-                                {...colorScheme.set(
-                                  'fill',
-                                  getTextColor(segment.color)
-                                )}
+                                fill={getTextColor(segment.color)}
                                 textAnchor={iTextAnchor}
                               >
                                 {subsup.svg(
@@ -495,10 +492,7 @@ const BarChart = props => {
                                   }
                                   dy='1em'
                                   fontSize={bar.style.secondaryFontSize}
-                                  {...colorScheme.set(
-                                    'fill',
-                                    getTextColor(segment.color)
-                                  )}
+                                  fill={getTextColor(segment.color)}
                                   textAnchor={iTextAnchor}
                                 >
                                   {subsup.svg(
