@@ -253,5 +253,5 @@ export const unsafeDatumFn = code => new Function('datum', `return ${code}`)
 export const getTextColor = bgColor => {
   const color = rgb(bgColor)
   const yiq = (color.r * 299 + color.g * 587 + color.b * 114) / 1000
-  return yiq >= 128 ? colors.light.text : colors.light.textInverted
+  return yiq >= 128 ? 'white' : 'black'
 }
