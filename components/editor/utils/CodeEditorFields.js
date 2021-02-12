@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { css } from 'glamor'
 import PropTypes from 'prop-types'
 import { Controlled as CodeMirror } from 'react-codemirror2'
@@ -78,31 +78,34 @@ export const PlainEditor = ({ label, value, onChange, onPaste, mode }) => (
 )
 
 export const JSONEditor = ({ label, value, onChange }) => {
-  const [stateValue, setStateValue] = useState(undefined)
+  const [stateValue, setStateValue] = useState('')
+
+  useEffect(() => {
+    const stringifiedValue = JSON.stringify(value, null, 2)
+    setStateValue(stringifiedValue)
+  }, [value])
 
   return (
     <CodeMirrorField
       label={label}
-      value={
-        stateValue === undefined ? JSON.stringify(value, null, 2) : stateValue
-      }
+      value={stateValue}
       options={{
         mode: 'application/json',
         lint: true,
         matchBrackets: true,
         autoCloseBrackets: true
       }}
-      onChange={value => {
+      onChange={newValue => {
         let json
         try {
-          json = JSON.parse(value)
+          json = JSON.parse(newValue)
         } catch (e) {}
         if (json) {
           onChange(json)
         }
 
-        if (stateValue !== value) {
-          setStateValue(value)
+        if (stateValue !== newValue) {
+          setStateValue(newValue)
         }
       }}
     />
