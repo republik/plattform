@@ -1,26 +1,18 @@
-const _ = require('lodash')
-
 const bulk = require('../../lib/indexPgTable')
 
-const transform = function (row) {
+async function transform(row) {
   row.__sort = {
     date: row.createdAt,
   }
 
+  const credential =
+    (await this.payload.getCredentials(row.id))?.description.trim() || null
+
   row.resolved = {
-    credential: null,
+    credential,
   }
 
-  const credential = _.find(this.payload.credentials, {
-    userId: row.id,
-    isListed: true,
-  })
-
-  if (credential && credential.description.length > 0) {
-    row.resolved.credential = credential.description.trim()
-  }
-
-  row.name = `${row.firstName || ''} ${row.lastName || ''}`.trim()
+  row.name = [row.firstName, row.lastName].join(' ').trim()
 
   return row
 }
@@ -29,12 +21,12 @@ const getDefaultResource = async ({ pgdb }) => {
   return {
     table: pgdb.public.users,
     payload: {
-      credentials: await pgdb.public.credentials.find(
-        {},
-        {
-          fields: ['id', 'userId', 'description', 'isListed'],
-        },
-      ),
+      getCredentials: async function (userId) {
+        return pgdb.public.credentials.findOne(
+          { userId, isListed: true },
+          { fields: ['id', 'userId', 'description', 'isListed'], limit: 1 },
+        )
+      },
     },
     transform,
   }
