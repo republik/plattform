@@ -19,6 +19,7 @@ import {
   ColorContextProvider,
   useColorContext
 } from './components/Colors/ColorContext'
+import MdBrightness2 from 'react-icons/lib/md/brightness-2'
 
 simulations(true)
 // prevent speedy in catalog
@@ -40,15 +41,27 @@ document.body.appendChild(styleTag)
 
 const t = createFormatter(require('./lib/translations.json').data)
 
-const DarkModeSwitch = ({ colorSchemeKey, setColorSchemeKey }) => (
-  <button
-    onClick={() =>
-      setColorSchemeKey(colorSchemeKey === 'light' ? 'dark' : 'light')
-    }
-  >
-    {colorSchemeKey}
-  </button>
-)
+const darkModeSwitch = css({
+  outline: 'none',
+  WebkitAppearance: 'none',
+  background: 'transparent',
+  border: 'none',
+  cursor: 'pointer'
+})
+
+const DarkModeSwitch = ({ setColorSchemeKey, colorSchemeKey }) => {
+  const [colorScheme] = useColorContext()
+  const otherColorSchemeKey = colorSchemeKey === 'light' ? 'dark' : 'light'
+  return (
+    <button
+      {...darkModeSwitch}
+      title={`Switch to ${otherColorSchemeKey} mode`}
+      onClick={() => setColorSchemeKey(otherColorSchemeKey)}
+    >
+      <MdBrightness2 {...colorScheme.set('fill', 'text')} />
+    </button>
+  )
+}
 
 const Styleguide = () => {
   const [colorSchemeKey, setColorSchemeKey] = useState('light')
@@ -58,7 +71,7 @@ const Styleguide = () => {
     >
       <ColorContextProvider root colorSchemeKey={colorSchemeKey}>
         <div className={`${colorSchemeKey}-mode`}>
-          <div style={{ position: 'fixed', zIndex: 10 }}>
+          <div style={{ position: 'fixed', zIndex: 1, right: 10, top: 12 }}>
             <DarkModeSwitch
               colorSchemeKey={colorSchemeKey}
               setColorSchemeKey={setColorSchemeKey}
