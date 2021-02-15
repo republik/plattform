@@ -51,17 +51,14 @@ const DarkModeSwitch = ({ colorSchemeKey, setColorSchemeKey }) => (
 )
 
 const Styleguide = () => {
-  const [colorSchemeKey, setColorSchemeKey] = useState('dark')
+  const [colorSchemeKey, setColorSchemeKey] = useState('light')
   return (
     <DiscussionContext.Provider
       value={createSampleDiscussionContextValue({ t })}
     >
       <ColorContextProvider root colorSchemeKey={colorSchemeKey}>
-        <div
-          className={`${colorSchemeKey}-mode`}
-          style={{ position: 'relative' }}
-        >
-          <div style={{ position: 'absolute', zIndex: 10 }}>
+        <div className={`${colorSchemeKey}-mode`}>
+          <div style={{ position: 'fixed', zIndex: 10 }}>
             <DarkModeSwitch
               colorSchemeKey={colorSchemeKey}
               setColorSchemeKey={setColorSchemeKey}

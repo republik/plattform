@@ -1,10 +1,22 @@
 import { fontFamilies } from './theme/fonts'
 
+const LIGHT_CHECKBOARD =
+  'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAAAAACoWZBhAAAAF0lEQVQI12P4BAI/QICBFCaYBPNJYQIAkUZftTbC4sIAAAAASUVORK5CYII='
+const DARK_CHECKBOARD =
+  'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAAAAACoWZBhAAAAFklEQVQI12NQBQF2EGAghQkmwXxSmADZJQiZ2ZZ46gAAAABJRU5ErkJggg=='
+
+const fontStyles = {
+  fontFamily: fontFamilies.sansSerifRegular,
+  fontHeading: fontFamilies.sansSerifMedium,
+  fontMono: fontFamilies.monospaceRegular,
+  baseFontSize: 18
+}
+
 export default {
   light: {
     background: '#F6F8F7',
     textColor: '#282828',
-    codeColor: 'rgb(8, 48, 107)',
+    codeColor: '#282828',
     linkColor: '#00AA00',
 
     // NavigationBar background color, but also sometimes used as a foreground
@@ -27,7 +39,7 @@ export default {
     sidebarColorText: '#282828',
     sidebarColorTextActive: '#008800',
     sidebarColorLine: '#DADDDC',
-    sidebarColorHeading: '#00AA00',
+    sidebarColorHeading: '#282828',
 
     // Used in the html, react, and image specimens.
     bgLight: '#FFFFFF',
@@ -43,21 +55,15 @@ export default {
       string: { color: 'rgb(75, 151, 201)' }
     },
 
-    checkerboardPatternLight:
-      'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAAAAACoWZBhAAAAF0lEQVQI12P4BAI/QICBFCaYBPNJYQIAkUZftTbC4sIAAAAASUVORK5CYII=',
-    checkerboardPatternDark:
-      'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAAAAACoWZBhAAAAFklEQVQI12NQBQF2EGAghQkmwXxSmADZJQiZ2ZZ46gAAAABJRU5ErkJggg==',
+    checkerboardPatternLight: LIGHT_CHECKBOARD,
+    checkerboardPatternDark: DARK_CHECKBOARD,
 
-    fontFamily: fontFamilies.sansSerifRegular,
-    fontHeading: fontFamilies.sansSerifMedium,
-    fontMono: fontFamilies.monospaceRegular,
-
-    baseFontSize: 18
+    ...fontStyles
   },
   dark: {
     background: '#292929',
     textColor: '#F0F0F0',
-    codeColor: 'rgb(24, 100, 170)',
+    codeColor: '#F0F0F0',
     linkColor: '#00AA00',
 
     // NavigationBar background color, but also sometimes used as a foreground
@@ -80,7 +86,7 @@ export default {
     sidebarColorText: '#F0F0F0',
     sidebarColorTextActive: '#008800',
     sidebarColorLine: '#4C4D4C',
-    sidebarColorHeading: '#00AA00',
+    sidebarColorHeading: '#F0F0F0',
 
     // Used in the html, react, and image specimens.
     bgLight: '#191919',
@@ -96,15 +102,9 @@ export default {
       string: { color: 'rgb(147, 195, 223)' }
     },
 
-    checkerboardPatternDark:
-      'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAAAAACoWZBhAAAAF0lEQVQI12P4BAI/QICBFCaYBPNJYQIAkUZftTbC4sIAAAAASUVORK5CYII=',
-    checkerboardPatternLight:
-      'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAAAAACoWZBhAAAAFklEQVQI12NQBQF2EGAghQkmwXxSmADZJQiZ2ZZ46gAAAABJRU5ErkJggg==',
+    checkerboardPatternDark: LIGHT_CHECKBOARD,
+    checkerboardPatternLight: DARK_CHECKBOARD,
 
-    fontFamily: fontFamilies.sansSerifRegular,
-    fontHeading: fontFamilies.sansSerifMedium,
-    fontMono: fontFamilies.monospaceRegular,
-
-    baseFontSize: 18
+    ...fontStyles
   }
 }
