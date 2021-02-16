@@ -361,6 +361,8 @@ class Tree extends Component {
                           </Label>
                         </Interaction.P>
                       )}
+                    </div>
+                    <div style={{ marginRight: 10 }}>
                       <Diff repoId={repoId} commit={commit} />
                     </div>
                   </div>

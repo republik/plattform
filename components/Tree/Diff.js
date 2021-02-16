@@ -1,20 +1,26 @@
 import React, { useState } from 'react'
+import { css } from 'glamor'
 import { Query } from 'react-apollo'
 import gql from 'graphql-tag'
 import ReactDiffViewer, { DiffMethod } from 'react-diff-viewer'
 import MdClose from 'react-icons/lib/md/close'
 import MdMoreHoriz from 'react-icons/lib/md/more-horiz'
+import MdWrapText from 'react-icons/lib/md/wrap-text'
 
 import {
   Overlay,
   OverlayToolbar,
   OverlayToolbarConfirm,
   OverlayBody,
-  Label,
-  A,
   Loader,
   Interaction
 } from '@project-r/styleguide'
+
+const styles = {
+  linkDiff: css({
+    cursor: 'pointer'
+  })
+}
 
 export const TREE_DIFF_QUERY = gql`
   query TreeDiff($repoId: ID!, $commitId: ID!, $parentCommitId: ID!) {
@@ -58,11 +64,7 @@ export default function TreeDiff(props) {
 
   return (
     <>
-      <Label>
-        <A href='#' onClick={handleOnClick}>
-          Änderungen zeigen
-        </A>
-      </Label>
+      <MdWrapText size={18} {...styles.linkDiff} onClick={handleOnClick} />
       {isVisible && (
         <Query query={TREE_DIFF_QUERY} variables={variables}>
           {({ loading, error, data }) => (
