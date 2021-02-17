@@ -181,7 +181,17 @@ type MembershipStats {
     min: DateTime!
     max: DateTime!
   ): Int!
+  """
+  Returns age distribution for users with active memberships
+  """
+  ages: [AgeStats!]!
+  """
+  Returns name distribution for users with active memberships including gender categorization
+  """
+  names: [NameStats!]!
+  geo: [GeoStats!]!
 }
+
 type MemberStats {
   count: Int!
 }
@@ -208,6 +218,23 @@ type MembershipPeriodStatsDay {
   date: Date!
   cancelCount: Int!
   prolongCount: Int!
+}
+
+type AgeStats {
+  age: Int
+  count: Int!
+}
+
+type NameStats {
+  firstName: String
+  gender: String
+  count: Int!
+}
+
+type GeoStats {
+  country: String
+  postalCode: String
+  count: Int!
 }
 
 type StatementUserConnection {
@@ -238,11 +265,23 @@ type RevenueStats {
     min: DateTime!
     max: DateTime
   ): RevenueStatsSurplus!
+
+  """
+  Returns revenues segments of active memberships per year
+  """
+  segments: [RevenueSegments!]!
 }
 
 type RevenueStatsSurplus {
   total: Int!
   updatedAt: DateTime!
+}
+
+type RevenueSegments {
+  year: String!,
+  aboType: String,
+  aboPrice: String,
+  count: Int!
 }
 
 type MembershipStatsEvolution {
