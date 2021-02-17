@@ -94,11 +94,22 @@ module.exports = async ({
 
     // svg is not detected by fileTypeStream
     if (
-      (!mime || mime === 'application/octet-stream') &&
+      (!mime ||
+        mime === 'application/octet-stream' ||
+        mime === 'application/xml') &&
       path &&
       new RegExp(/\.svg(\.webp)?$/).test(path)
     ) {
       mime = 'image/svg+xml'
+    }
+
+    // apks are detected as zip by fileTypeStream
+    if (
+      (!mime || mime === 'application/zip') &&
+      path &&
+      new RegExp(/\.apk$/).test(path)
+    ) {
+      mime = 'application/vnd.android.package-archive'
     }
 
     // fix content type if necessary

@@ -57,7 +57,10 @@ const scopeConfigs = {
     expireAtFormat: 'YYYY-MM-DDTHH:mm:ss.SSSZZ',
   },
   INVOICE: {
-    allowedReqPaths: [/^\/invoices\/paymentslip\/(.{6})\.pdf?$/],
+    allowedReqPaths: [
+      /^\/invoices\/(.{6})\.pdf?$/,
+      /^\/invoices\/paymentslip\/(.{6})\.pdf?$/,
+    ],
     ttlDays: 5,
   },
 }

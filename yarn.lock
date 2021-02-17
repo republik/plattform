@@ -12445,22 +12445,22 @@ svg-parser@^2.0.4:
   resolved "https://registry.yarnpkg.com/svg-parser/-/svg-parser-2.0.4.tgz#fdc2e29e13951736140b76cb122c8ee6630eb6b5"
   integrity sha512-e4hG1hRwoOdRb37cIMSgzNsxyzKfayW6VOflrwvR+/bzrkyxY/31WkbgnQpgtrNp1SdpJvpUAGTa/ZoiPNDuRQ==
 
-svgpath@^2.2.3:
+svgpath@^2.3.0:
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/svgpath/-/svgpath-2.3.0.tgz#efc76705deab6bd1774e9f0ed038bb661b5e4d23"
   integrity sha512-N/4UDu3Y2ICik0daMmFW1tplw0XPs1nVIEVYkTiQfj9/JQZeEtAKaSYwheCwje1I4pQ5r22fGpoaNIvGgsyJyg==
 
-swissqrbill@^2.1.0:
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/swissqrbill/-/swissqrbill-2.1.0.tgz#6f6a9b800179c78bb867ca48091cc41de70c2476"
-  integrity sha512-+blw1vs6WPyBJS6tWE03YcYU/h9/7Kp+i/V9QoRpRHMkUBZW4kmhqu/TGODQ/N/1Dljqhta1pcjhX7EXIdXpNw==
+swissqrbill@^2.3.0:
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/swissqrbill/-/swissqrbill-2.3.0.tgz#0f04014c1a53575336ba38a3bea3ef4d60f79c36"
+  integrity sha512-ySgH7KTKi+9sqgePRceofumBKUXKAQxfWV9oHWYkePInVzYiOBrcJndvnWlcEkN7MqVskRcnR8zG/LDu9Qz3Bw==
   dependencies:
     "@schoero/qrcode" "^1.4.5"
     blob-stream "^0.1.3"
     iban "0.0.14"
     pdfkit "^0.11.0"
     svg-parser "^2.0.4"
-    svgpath "^2.2.3"
+    svgpath "^2.3.0"
 
 symbol-observable@^1.0.4:
   version "1.2.0"

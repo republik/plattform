@@ -1941,6 +1941,174 @@
     {
       "key": "api/repo/phase/published",
       "value": "Publiziert"
+    },
+    {
+      "key": "api/invoices/PAID/title",
+      "value": "Beleg"
+    },
+    {
+      "key": "api/invoices/title",
+      "value": "Rechnung"
+    },
+    {
+      "key": "api/invoices/PAID/meta",
+      "value": "Datum: {date}\nBelegnummer: {reference}\nZahlungsart: {paymentMethod}"
+    },
+    {
+      "key": "api/invoices/meta",
+      "value": "Datum: {date}\nRechnungsnummer: {reference}\nZahlungsart: {paymentMethod}"
+    },
+    {
+      "key": "api/invoices/creditor/PROJECT_R",
+      "value": "{address}\n\nwww.republik.ch\nkontakt@republik.ch"
+    },
+    {
+      "key": "api/invoices/creditor",
+      "value": "{address}"
+    },
+    {
+      "key": "api/invoices/paymentMethod/STRIPE",
+      "value": "Kreditkarte"
+    },
+    {
+      "key": "api/invoices/paymentMethod/POSTFINANCECARD",
+      "value": "Postcard"
+    },
+    {
+      "key": "api/invoices/paymentMethod/PAYPAL",
+      "value": "PayPal"
+    },
+    {
+      "key": "api/invoices/paymentMethod/PAYMENTSLIP",
+      "value": "Rechnung"
+    },
+    {
+      "key": "api/invoices/table/option",
+      "value": "Artikel"
+    },
+    {
+      "key": "api/invoices/table/units",
+      "value": "Menge"
+    },
+    {
+      "key": "api/invoices/table/rowTotal",
+      "value": "Betrag in CHF"
+    },
+    {
+      "key": "api/invoices/table/donation",
+      "value": "Spende"
+    },
+    {
+      "key": "api/invoices/table/discount",
+      "value": "Ermässigung"
+    },
+    {
+      "key": "api/invoices/table/PROJECT_R/total",
+      "value": "Gesamtbetrag (nicht MWST-pflichtig)"
+    },
+    {
+      "key": "api/invoices/table/total",
+      "value": "Gesamtbetrag"
+    },
+    {
+      "key": "api/invoices/option/Goodie/NOTEBOOK/1",
+      "value": "Notizbuch"
+    },
+    {
+      "key": "api/invoices/option/Goodie/NOTEBOOK/other",
+      "value": "Notizbücher"
+    },
+    {
+      "key": "api/invoices/option/Goodie/TOTEBAG/1",
+      "value": "Tasche"
+    },
+    {
+      "key": "api/invoices/option/Goodie/TOTEBAG/other",
+      "value": "Taschen"
+    },
+    {
+      "key": "api/invoices/option/Goodie/TABLEBOOK/1",
+      "value": "Buch «Republik bei Stromausfall»"
+    },
+    {
+      "key": "api/invoices/option/Goodie/TABLEBOOK/other",
+      "value": "Bücher «Republik bei Stromausfall»"
+    },
+    {
+      "key": "api/invoices/option/Goodie/MASK/1",
+      "value": "Republik-Maske"
+    },
+    {
+      "key": "api/invoices/option/Goodie/MASK/other",
+      "value": "Republik-Masken"
+    },
+    {
+      "key": "api/invoices/option/MembershipType/ABO/1",
+      "value": "Abo und Mitgliedschaft"
+    },
+    {
+      "key": "api/invoices/option/MembershipType/ABO/other",
+      "value": "Abo und Mitgliedschaften"
+    },
+    {
+      "key": "api/invoices/option/MembershipType/BENEFACTOR_ABO/1",
+      "value": "Gönner-Mitgliedschaft"
+    },
+    {
+      "key": "api/invoices/option/MembershipType/BENEFACTOR_ABO/other",
+      "value": "Gönner-Mitgliedschaften"
+    },
+    {
+      "key": "api/invoices/option/MembershipType/MONTHLY_ABO/1",
+      "value": "Monats-Abo"
+    },
+    {
+      "key": "api/invoices/option/MembershipType/MONTHLY_ABO/other",
+      "value": "Monats-Abos"
+    },
+    {
+      "key": "api/invoices/option/MembershipType/ABO_GIVE_MONTHS/1",
+      "value": "Monats-Abo als Geschenk für {interval}"
+    },
+    {
+      "key": "api/invoices/option/MembershipType/ABO_GIVE_MONTHS/other",
+      "value": "Monats-Abos als Geschenk für {interval}"
+    },
+    {
+      "key": "api/invoices/option/interval/year/periods/1",
+      "value": "ein Jahr"
+    },
+    {
+      "key": "api/invoices/option/interval/year/periods/other",
+      "value": "{count} Jahre"
+    },
+    {
+      "key": "api/invoices/option/interval/month/periods/1",
+      "value": "einen Monat"
+    },
+    {
+      "key": "api/invoices/option/interval/month/periods/other",
+      "value": "{count} Monate"
+    },
+    {
+      "key": "api/invoices/option/interval/week/periods/1",
+      "value": "eine Woche"
+    },
+    {
+      "key": "api/invoices/option/interval/week/count/other",
+      "value": "{count} Wochen"
+    },
+    {
+      "key": "api/invoices/option/interval/day/periods/1",
+      "value": "einen Tag"
+    },
+    {
+      "key": "api/invoices/option/interval/day/periods/other",
+      "value": "{count} Tage"
+    },
+    {
+      "key": "api/invoices/option/MembershipType/withPeriod/meta",
+      "value": "#{sequenceNumber}\n{period}"
     }
   ]
 }

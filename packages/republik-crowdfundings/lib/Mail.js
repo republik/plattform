@@ -12,7 +12,7 @@ const {
   timeFormat,
   formatPriceChf,
 } = require('@orbiting/backend-modules-formats')
-const { paymentslip } = require('@orbiting/backend-modules-invoices')
+const invoices = require('@orbiting/backend-modules-invoices')
 
 const { getLastEndDate } = require('./utils')
 
@@ -682,10 +682,12 @@ mail.getPledgeMergeVars = async (
     { pledgeId: pledge.id },
     { orderBy: ['createdAt desc'] },
   )
-  const payment = pledgePayment && await paymentslip.resolve(
-    { id: pledgePayment.paymentId },
-    { pgdb, t },
-  )
+  const payment =
+    pledgePayment &&
+    (await invoices.commons.resolvePayment(
+      { id: pledgePayment.paymentId },
+      { pgdb, t },
+    ))
 
   const pledgeOptions = await pgdb.public.pledgeOptions.find(
     {
@@ -895,45 +897,52 @@ mail.getPledgeMergeVars = async (
     },
 
     // Payment
-    ...(payment?.id ? [
-      {
-        name: 'payment_method',
-        content: payment.method,
-      },
-      {
-        name: 'hrid',
-        content: payment.hrid,
-      },
-      {
-        name: 'due_date',
-        content: dateFormat(payment.dueDate),
-      },
-      {
-        name: 'paymentslip',
-        content: payment.method === 'PAYMENTSLIP',
-      },
-      {
-        name: 'not_paymentslip',
-        content: payment.method !== 'PAYMENTSLIP',
-      },
-      {
-        name: 'iban',
-        content: creditor.iban.match(/.{1,4}/g).join(' '),
-      },
-      {
-        name: 'reference',
-        content: paymentslip.getReference(payment.hrid, true),
-      },
-      paymentslip.isApplicable(payment) && {
-        type: 'application/pdf',
-        name: [
-          'QR-Rechnung',
-          creditor?.address?.name,
-          paymentslip.getReference(payment.hrid, true)
-        ].filter(Boolean).join(' ') + '.pdf',
-        content: (await paymentslip.generate(payment)).toString('base64'),
-      },
-    ] : []),
+    ...(payment?.id
+      ? [
+          {
+            name: 'payment_method',
+            content: payment.method,
+          },
+          {
+            name: 'hrid',
+            content: payment.hrid,
+          },
+          {
+            name: 'due_date',
+            content: dateFormat(payment.dueDate),
+          },
+          {
+            name: 'paymentslip',
+            content: payment.method === 'PAYMENTSLIP',
+          },
+          {
+            name: 'not_paymentslip',
+            content: payment.method !== 'PAYMENTSLIP',
+          },
+          {
+            name: 'iban',
+            content: creditor.iban.match(/.{1,4}/g).join(' '),
+          },
+          {
+            name: 'reference',
+            content: invoices.commons.getReference(payment.hrid, true),
+          },
+          invoices.paymentslip.isApplicable(payment) && {
+            type: 'application/pdf',
+            name:
+              [
+                'QR-Rechnung',
+                creditor?.address?.name,
+                invoices.commons.getReference(payment.hrid, true),
+              ]
+                .filter(Boolean)
+                .join(' ') + '.pdf',
+            content: (await invoices.paymentslip.generate(payment)).toString(
+              'base64',
+            ),
+          },
+        ]
+      : []),
 
     {
       name: 'waiting_for_payment',

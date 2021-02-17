@@ -59,6 +59,8 @@ describe('parseCamt053():', () => {
     expect(paymentEntries[3].mitteilung).toEqual('CCCCCC')
     expect(paymentEntries[4].mitteilung).toEqual(null)
     expect(paymentEntries[5].mitteilung).toEqual('EEEEEE')
+    expect(paymentEntries[6].mitteilung).toEqual('FFFFFF')
+    expect(paymentEntries[7].mitteilung).toEqual('GGGGGG')
   })
 
   it('returns the reference for the sanned cash deposit', async () => {
