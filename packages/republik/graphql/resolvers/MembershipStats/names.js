@@ -1,21 +1,21 @@
-module.exports = (_, args, context) => {
-  const { pgdb } = context
+const { createCache } = require('../../../lib/MembershipStats/names')
 
-  /* Returns distribution of first names and their gender of active members */
+module.exports = async (_, args, context) => {
+  // Fetch pre-populated data
+  const data = await createCache(context).get()
 
-  return pgdb.query(`
-    SELECT
-      u."firstName" AS "firstName",
-      g.gender AS gender,
-      count(distinct u.id) AS count
-    FROM users u
-    JOIN
-      memberships m
-      ON m."userId" = u.id
-    JOIN "statisticsNameGender" g
-      ON u."firstName" = g."firstName"
-    WHERE m.active = true
-    GROUP BY 1, 2
-    ORDER BY 3 DESC
-  `)
+  // In case pre-populated data is not available...
+  if (!data) {
+    throw new Error(
+      'Unable to retrieve pre-populated data for MembershipStats.names',
+    )
+  }
+
+  // Retrieve pre-populated data.
+  const { result: buckets = [], updatedAt = new Date() } = data
+
+  return {
+    buckets,
+    updatedAt,
+  }
 }

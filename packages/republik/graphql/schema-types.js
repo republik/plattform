@@ -188,7 +188,7 @@ type MembershipStats {
   """
   Returns name distribution for users with active memberships including gender categorization
   """
-  names: [NameStats!]!
+  names:  MembershipStatsNames!
   geo: [GeoStats!]!
 }
 
@@ -230,8 +230,13 @@ type MembershipStatsAgesBucket {
   count: Int!
 }
 
-type NameStats {
-  firstName: String
+type MembershipStatsNames {
+  buckets: [MembershipStatsNamesBucket!]!
+  updatedAt: DateTime!
+}
+
+type MembershipStatsNamesBucket {
+  key: String
   gender: String
   count: Int!
 }
