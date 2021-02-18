@@ -83,7 +83,7 @@ export const JSONEditor = ({ label, value, onChange }) => {
   const previousValue = usePrevious(value)
 
   useEffect(() => {
-    if (JSON.stringify(previousValue) !== JSON.stringify(value)) {
+    if (!previousValue || value.type !== previousValue.type) {
       const stringified = JSON.stringify(value, null, 2)
       setStateValue(stringified)
     }
