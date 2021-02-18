@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Script will populate underlying data for MembershipStats.evolution
+ * Script will populate underlying data for RevenueStats.membershipTypes
  *
  * No options or arguments available.
  */

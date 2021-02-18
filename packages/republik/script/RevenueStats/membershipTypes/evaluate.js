@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Script will evaluate data for MembershipStats.evolution and print result.
+ * Script will evaluate data for RevenueStats.membershipTypes and print result.
  *
  * No options or arguments available.
  */
