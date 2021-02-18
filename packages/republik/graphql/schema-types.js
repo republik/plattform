@@ -188,7 +188,7 @@ type MembershipStats {
   """
   Returns name distribution for users with active memberships including gender categorization
   """
-  names:  MembershipStatsNames!
+  names(first: Int): MembershipStatsNames!
   geo: [GeoStats!]!
 }
 

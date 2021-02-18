@@ -1,6 +1,23 @@
 const { createCache } = require('../../../lib/MembershipStats/names')
 
+/*
+{
+  membershipStats {
+  	names {
+      updatedAt
+      buckets(first: 10) {
+        key
+        sex
+        count
+      }
+    }
+  }
+}
+*/
+
 module.exports = async (_, args, context) => {
+  const { first = 100 } = args
+
   // Fetch pre-populated data
   const data = await createCache(context).get()
 
@@ -12,10 +29,10 @@ module.exports = async (_, args, context) => {
   }
 
   // Retrieve pre-populated data.
-  const { result: buckets = [], updatedAt = new Date() } = data
+  const { result = [], updatedAt = new Date() } = data
 
   return {
-    buckets,
+    buckets: result.slice(0, first),
     updatedAt,
   }
 }
