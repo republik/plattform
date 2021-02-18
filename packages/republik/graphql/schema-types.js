@@ -184,7 +184,7 @@ type MembershipStats {
   """
   Returns age distribution for users with active memberships
   """
-  ages: [AgeStats!]!
+  ages: MembershipStatsAges!
   """
   Returns name distribution for users with active memberships including gender categorization
   """
@@ -220,8 +220,13 @@ type MembershipPeriodStatsDay {
   prolongCount: Int!
 }
 
-type AgeStats {
-  age: Int
+type MembershipStatsAges {
+  buckets: [MembershipStatsAgesBucket!]!
+  updatedAt: DateTime!
+}
+
+type MembershipStatsAgesBucket {
+  key: Int
   count: Int!
 }
 

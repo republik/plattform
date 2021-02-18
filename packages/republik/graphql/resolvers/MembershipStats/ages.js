@@ -1,18 +1,21 @@
-module.exports = (_, args, context) => {
-  const { pgdb } = context
+const { createCache } = require('../../../lib/MembershipStats/ages')
 
-  /* Returns age distribution of active members */
+module.exports = async (_, args, context) => {
+  // Fetch pre-populated data
+  const data = await createCache(context).get()
 
-  return pgdb.query(`
-    SELECT
-      extract(year from age(birthday)) AS age,
-      count(distinct u.id) AS count
-    FROM users u
-    JOIN
-      memberships m
-      ON m."userId" = u.id
-    WHERE m.active = true
-    GROUP BY 1
-    ORDER BY 1
-`)
+  // In case pre-populated data is not available...
+  if (!data) {
+    throw new Error(
+      'Unable to retrieve pre-populated data for MembershipStats.ages',
+    )
+  }
+
+  // Retrieve pre-populated data.
+  const { result: buckets = [], updatedAt = new Date() } = data
+
+  return {
+    buckets,
+    updatedAt,
+  }
 }
