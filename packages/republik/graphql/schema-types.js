@@ -189,7 +189,7 @@ type MembershipStats {
   Returns name distribution for users with active memberships including gender categorization
   """
   names(first: Int): MembershipStatsNames!
-  geo: [GeoStats!]!
+  geo: MembershipStatsGeo
 }
 
 type MemberStats {
@@ -247,10 +247,21 @@ enum Sex {
   BOTH
 }
 
+type MembershipStatsGeo {
+  buckets: [MembershipStatsGeoBucket!]!
+  updatedAt: DateTime!
+}
 
-type GeoStats {
+type MembershipStatsGeoBucket {
   country: String
   postalCode: String
+  lat: Float
+  lon: Float
+  buckets: [MembershipStatsGeoCountBucket!]!
+}
+
+type MembershipStatsGeoCountBucket {
+  key: String
   count: Int!
 }
 

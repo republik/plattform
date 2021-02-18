@@ -1,20 +1,5 @@
 const { createCache } = require('../../../lib/MembershipStats/names')
 
-/*
-{
-  membershipStats {
-  	names {
-      updatedAt
-      buckets(first: 10) {
-        key
-        sex
-        count
-      }
-    }
-  }
-}
-*/
-
 module.exports = async (_, args, context) => {
   const { first = 100 } = args
 
