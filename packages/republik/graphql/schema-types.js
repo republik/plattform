@@ -237,9 +237,16 @@ type MembershipStatsNames {
 
 type MembershipStatsNamesBucket {
   key: String
-  gender: String
+  sex: Sex
   count: Int!
 }
+
+enum Sex {
+  FEMALE
+  MALE
+  BOTH
+}
+
 
 type GeoStats {
   country: String
