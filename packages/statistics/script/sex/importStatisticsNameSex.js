@@ -20,28 +20,28 @@ PgDb.connect()
 
     const transaction = await pgdb.transactionBegin()
 
-    console.log('Truncate db table statisticsNameGender...')
-    await transaction.query(`TRUNCATE TABLE "statisticsNameGender"`)
+    console.log('Truncate db table statisticsNameSex...')
+    await transaction.query(`TRUNCATE TABLE "statisticsNameSex"`)
 
     console.log('Parse csv and insert into db table...')
     csvParse(input, async (row) => {
       let femaleCount = parseInt(row.female, 10)
       let maleCount = parseInt(row.male, 10)
-      let gender = 'both'
+      let sex = 'both'
 
       if (isNaN(femaleCount) || femaleCount === 0) {
         femaleCount = null
-        gender = 'male'
+        sex = 'male'
       } else if (isNaN(maleCount) || maleCount === 0) {
         maleCount = null
-        gender = 'female'
+        sex = 'female'
       }
 
-      await transaction.public.statisticsNameGender.insert({
+      await transaction.public.statisticsNameSex.insert({
         firstName: row.firstname,
         femaleCount,
         maleCount,
-        gender,
+        sex,
       })
     })
 

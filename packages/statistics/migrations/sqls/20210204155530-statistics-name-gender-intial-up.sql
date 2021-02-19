@@ -1,4 +1,4 @@
-CREATE TABLE "statisticsNameGender" (
+CREATE TABLE IF NOT EXISTS "statisticsNameGender" (
   "firstName" citext PRIMARY KEY,
   "femaleCount" integer,
   "maleCount" integer,
