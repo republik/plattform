@@ -30,7 +30,6 @@ export const filterRepos = gql`
               shortTitle
               image
               description
-              subject
               credits
               kind
               color

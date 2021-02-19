@@ -53,12 +53,10 @@ export default ({ rule, subModules, TYPE }) => {
     if (title) {
       const headline = title.nodes.first()
       const headlineText = headline ? headline.text : ''
-      const subject = title.nodes.get(1)
       const lead = title.nodes.get(2)
 
       newData = newData
         .set('title', headlineText)
-        .set('subject', subject ? subject.text : '')
         .set('description', lead ? lead.text : '')
         .set('slug', slugify(headlineText))
     } else if (fallbackTitle) {
