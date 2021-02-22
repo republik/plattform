@@ -24,13 +24,13 @@ const populate = async (context, resultFn) => {
   const result = await pgdb.query(`
     SELECT
       g."firstName" AS key,
-      upper(g.gender) AS sex,
+      upper(g.sex) AS sex,
       count(distinct u.id) AS count
     FROM users u
     JOIN
       memberships m
       ON m."userId" = u.id
-    LEFT JOIN "statisticsNameGender" g
+    LEFT JOIN "statisticsNameSex" g
       ON split_part(trim(u."firstName"), ' ', 1) = g."firstName"
     WHERE m.active = true
     GROUP BY 1, 2
