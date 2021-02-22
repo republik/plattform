@@ -998,6 +998,16 @@ const Styleguide = () => {
                       },
                       css
                     }
+                  },
+                  {
+                    path: '/dev/shareImageGenerator',
+                    title: 'ShareImageGenerator',
+                    src: require('./components/ShareImageGenerator/docs.md'),
+                    imports: {
+                      ...require('./components/Typography'),
+                      ShareImageGenerator: require('./components/ShareImageGenerator'),
+                      css
+                    }
                   }
                 ]
               }
