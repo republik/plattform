@@ -14,7 +14,7 @@ const postalCodeParsers = {
   BE: (code) => code.replace(/^B[\s-]*/i, '').split(' ')[0],
   DK: (code) => code.replace(/^DK[\s-]*/i, '').split(' ')[0],
   IT: (code) => code.replace(/^I[\s-]*/i, '').split(' ')[0],
-  NL: (code) => parseInt(code).toString(),
+  NL: (code) => parseInt(code.replace(/^NL[\s-]*/i, '')).toString(),
 }
 
 const createCache = (context) =>
@@ -51,13 +51,7 @@ const populate = async (context, resultFn) => {
     GROUP BY m.id, a.id
   `)
 
-  const countries = await pgdb.query(`
-    SELECT 
-      code,
-      name,
-      "searchNames"
-    FROM "statisticsGeoCountry"
-  `)
+  const countries = await pgdb.public.statisticsGeoCountry.findAll()
 
   const geo = {}
 
@@ -73,7 +67,6 @@ const populate = async (context, resultFn) => {
       const { name: countryName, code: countryCode } = country
       const postalCodeParser = postalCodeParsers[countryCode]
 
-      // trim! and string converions?
       const parsedPostalCode = postalCodeParser
         ? postalCodeParser(membership.postalCode)
         : membership.postalCode

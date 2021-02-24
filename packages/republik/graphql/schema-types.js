@@ -186,10 +186,17 @@ type MembershipStats {
   """
   ages: MembershipStatsAges!
   """
-  Returns name distribution for users with active memberships including gender categorization
+  Returns name distribution for users with active memberships including sex categorization
   """
   names(first: Int): MembershipStatsNames!
+  """
+  Returns active membership counts per country/postalCode and year
+  """
   geo: MembershipStatsGeo
+  """
+  Returns active membership counts per city and year 
+  """
+  geoCities: MembershipStatsgeoCities
 }
 
 type MemberStats {
@@ -263,6 +270,22 @@ type MembershipStatsGeoBucket {
 type MembershipStatsGeoCountBucket {
   key: String
   count: Int!
+}
+
+type MembershipStatsgeoCities {
+  buckets: [MembershipStatsgeoCitiesBucket!]!
+  updatedAt: DateTime!
+}
+
+type MembershipStatsgeoCitiesBucket {
+  city: String
+  buckets: [MembershipStatsgeoCitiesCountBucket!]!
+}
+
+type MembershipStatsgeoCitiesCountBucket {
+  key: String
+  count: Int!
+  percentage: Float!
 }
 
 type StatementUserConnection {
