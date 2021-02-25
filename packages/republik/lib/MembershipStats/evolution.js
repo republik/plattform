@@ -7,12 +7,31 @@ const {
 
 const QUERY_CACHE_TTL_SECONDS = 60 * 60 * 24 * 8 // A week and a day
 
+const CROWDFUNDER_THRESHOLD_DATE = '2017-05-01 00:00:00+02'
+const LOYALIST_THRESHOLD_DATE = '2018-01-16 00:00:00+02'
+
 const query = `
 WITH "minMaxDates" AS (
-  SELECT m.id, m.active, m.renew, m."autoPay", mt.name "membershipTypeName", MIN(mp."beginDate") "minBeginDate", MAX(mp."endDate") "maxEndDate"
+  SELECT
+    m.id,
+    m.active,
+    m.renew,
+    m."autoPay",
+    mt.name "membershipTypeName",
+    MIN(mp."beginDate") "minBeginDate",
+    MAX(mp."endDate") "maxEndDate",
+
+    m."userId",
+    MIN(um."createdAt") "minCreatedAt"
+
   FROM "memberships" m
   JOIN "membershipPeriods" mp ON mp."membershipId" = m.id
   JOIN "membershipTypes" mt ON mt.id = m."membershipTypeId"
+
+  -- all memberships belonging to user with periods
+  JOIN "memberships" um ON um."userId" = m."userId"
+  JOIN "membershipPeriods" ump ON ump."membershipId" = um.id
+
   WHERE m."userId" != 'f0512927-7e03-4ecc-b14f-601386a2a249' -- Jefferson
   GROUP BY m.id, mt.id
 ), "membershipDonation" AS (
@@ -52,29 +71,29 @@ WITH "minMaxDates" AS (
 SELECT
   to_char("first" at time zone :TZ, 'YYYY-MM') "key",
 
-  COUNT(*) FILTER (
+  COUNT(id) FILTER (
     WHERE "maxEndDate" >= "first"
     AND "minBeginDate" < "first"
   ) "activeBeginningOfMonth",
 
-  COUNT(*) FILTER (
+  COUNT(id) FILTER (
     WHERE "minBeginDate" >= "first"
     AND "minBeginDate" <= "last"
   ) "gaining",
 
-  COUNT(*) FILTER (
+  COUNT(id) FILTER (
     WHERE "minBeginDate" >= "first"
     AND "minBeginDate" <= "last"
     AND "membershipDonation"."membershipId" IS NOT NULL
   ) "gainingWithDonation",
 
-  COUNT(*) FILTER (
+  COUNT(id) FILTER (
     WHERE "minBeginDate" >= "first"
     AND "minBeginDate" <= "last"
     AND "membershipDonation"."membershipId" IS NULL
   ) "gainingWithoutDonation",
 
-  COUNT(*) FILTER (
+  COUNT(id) FILTER (
     WHERE "maxEndDate" >= "first"
     AND "maxEndDate" <= "last"
 
@@ -82,32 +101,44 @@ SELECT
 
   -- Data up until now
 
-  COUNT(*) FILTER (
+  COUNT(id) FILTER (
     WHERE "maxEndDate" >= "first"
     AND "maxEndDate" <= LEAST(NOW(), "last")
     AND active = FALSE
   ) "ended",
 
-  COUNT(*) FILTER (
+  COUNT(id) FILTER (
     WHERE "maxEndDate" >= "first"
     AND "maxEndDate" <= LEAST(NOW(), "last")
     AND active = FALSE
     AND renew = TRUE
   ) "expired",
 
-  COUNT(*) FILTER (
+  COUNT(id) FILTER (
     WHERE "maxEndDate" >= "first"
     AND "maxEndDate" <= LEAST(NOW(), "last")
     AND active = FALSE
     AND renew = FALSE
   ) "cancelled",
 
-  COUNT(*) FILTER (
+  COUNT(id) FILTER (
     WHERE "maxEndDate" >= LEAST(NOW(), "last")
     AND "minBeginDate" < LEAST(NOW(), "last")
   ) "active",
 
-  COUNT(*) FILTER (
+  COUNT(DISTINCT "userId") FILTER (
+    WHERE "maxEndDate" >= LEAST(NOW(), "last")
+    AND "minBeginDate" < LEAST(NOW(), "last")
+    AND "minCreatedAt" < :crowdfunderThresholdDate::timestamp
+  ) "activeCrowdfunders",
+
+  COUNT(DISTINCT "userId") FILTER (
+    WHERE "maxEndDate" >= LEAST(NOW(), "last")
+    AND "minBeginDate" < LEAST(NOW(), "last")
+    AND "minCreatedAt" < :loyalistThresholdDate::timestamp
+  ) "activeLoyalists",
+
+  COUNT(id) FILTER (
     WHERE "maxEndDate" >= :min::timestamp
     AND "maxEndDate" <= LEAST(NOW(), "last")
     AND active = TRUE
@@ -116,57 +147,69 @@ SELECT
 
   -- Data to end of month
 
-  COUNT(*) FILTER (
+  COUNT(id) FILTER (
     WHERE "maxEndDate" >= "first"
     AND "maxEndDate" <= "last"
   ) "endedEndOfMonth",
 
-  COUNT(*) FILTER (
+  COUNT(id) FILTER (
     WHERE "maxEndDate" >= "first"
     AND "maxEndDate" <= "last"
     AND renew = TRUE
   ) "expiredEndOfMonth",
 
-  COUNT(*) FILTER (
+  COUNT(id) FILTER (
     WHERE "maxEndDate" >= "first"
     AND "maxEndDate" <= "last"
     AND renew = FALSE
   ) "cancelledEndOfMonth",
 
-  COUNT(*) FILTER (
+  COUNT(id) FILTER (
     WHERE "maxEndDate" >= "last"
     AND "minBeginDate" < "last"
   ) "activeEndOfMonth",
 
-  COUNT(*) FILTER (
+  COUNT(id) FILTER (
     WHERE "maxEndDate" >= "last"
     AND "minBeginDate" < "last"
     AND "membershipDonation"."membershipId" IS NOT NULL
   ) "activeEndOfMonthWithDonation",
 
-  COUNT(*) FILTER (
+  COUNT(id) FILTER (
     WHERE "maxEndDate" >= "last"
     AND "minBeginDate" < "last"
     AND "membershipDonation"."membershipId" IS NULL
   ) "activeEndOfMonthWithoutDonation",
 
+  COUNT(DISTINCT "userId") FILTER (
+    WHERE "maxEndDate" >= "last"
+    AND "minBeginDate" < "last"
+    AND "minCreatedAt" < :crowdfunderThresholdDate::timestamp
+  ) "activeCrowdfundersEndOfMonth",
+
+  COUNT(DISTINCT "userId") FILTER (
+    WHERE "maxEndDate" >= "last"
+    AND "minBeginDate" < "last"
+    AND "minCreatedAt" < :loyalistThresholdDate::timestamp
+  ) "activeLoyalistsEndOfMonth",
+
   -- Data based on membership active state
 
-  COUNT(*) FILTER (
+  COUNT(id) FILTER (
     WHERE "maxEndDate" >= "first"
     AND "maxEndDate" <= "last"
     AND active = TRUE
     AND renew = TRUE
   ) "prolongable",
 
-  COUNT(*) FILTER (
+  COUNT(id) FILTER (
     WHERE "maxEndDate" >= :min::timestamp
     AND "maxEndDate" <= "last"
     AND active = TRUE
     AND renew = TRUE
   ) "pending",
 
-  COUNT(*) FILTER (
+  COUNT(id) FILTER (
     WHERE "maxEndDate" >= :min::timestamp
     AND "maxEndDate" <= "last"
     AND active = TRUE
@@ -216,6 +259,8 @@ const populate = async (context, resultFn) => {
     min,
     max,
     TZ: process.env.TZ || 'Europe/Zurich',
+    crowdfunderThresholdDate: CROWDFUNDER_THRESHOLD_DATE,
+    loyalistThresholdDate: LOYALIST_THRESHOLD_DATE,
   })
 
   if (resultFn) {

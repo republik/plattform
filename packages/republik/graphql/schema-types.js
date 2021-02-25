@@ -371,6 +371,10 @@ type MembershipStatsEvolutionBucket {
   cancelled: Int!
   "Amount of memberships which are active (periods)"
   active: Int!
+  "Amount of still or again active crowdfunding memberships (periods)"
+  activeCrowdfunders: Int!
+  "Amount of still or again active loyalist memberships (periods)"
+  activeLoyalists: Int!
   "Amount of memberships which are overdue"
   overdue: Int!
 
@@ -383,6 +387,10 @@ type MembershipStatsEvolutionBucket {
 
   "Amount of active memberships at end of month"
   activeEndOfMonth: Int!
+  "Amount of still or again active crowdfunding memberships at end of month"
+  activeCrowdfunders: Int!
+  "Amount of still or again active loyalist memberships at end of month"
+  activeLoyalists: Int!
   "Amount of active memberships at end of month with a donation"
   activeEndOfMonthWithDonation: Int!
   "Amount of active memberships at end of month without a donation"
