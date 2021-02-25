@@ -388,9 +388,9 @@ type MembershipStatsEvolutionBucket {
   "Amount of active memberships at end of month"
   activeEndOfMonth: Int!
   "Amount of still or again active crowdfunding memberships at end of month"
-  activeCrowdfunders: Int!
+  activeCrowdfundersEndOfMonth: Int!
   "Amount of still or again active loyalist memberships at end of month"
-  activeLoyalists: Int!
+  activeLoyalistsEndOfMonth: Int!
   "Amount of active memberships at end of month with a donation"
   activeEndOfMonthWithDonation: Int!
   "Amount of active memberships at end of month without a donation"
