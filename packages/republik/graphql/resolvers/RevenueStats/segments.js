@@ -1,4 +1,4 @@
-const { createCache } = require('../../../lib/RevenueStats/membershipTypes')
+const { createCache } = require('../../../lib/RevenueStats/segments')
 
 module.exports = async (_, args, context) => {
   // Fetch pre-populated data
@@ -7,7 +7,7 @@ module.exports = async (_, args, context) => {
   // In case pre-populated data is not available...
   if (!data) {
     throw new Error(
-      'Unable to retrieve pre-populated data for RevenueStats.membershipTypes',
+      'Unable to retrieve pre-populated data for RevenueStats.segments',
     )
   }
 

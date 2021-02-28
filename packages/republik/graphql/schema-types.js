@@ -320,7 +320,7 @@ type RevenueStats {
   """
   Returns revenue segments
   """
-  membershipTypes: RevenueStatsMembershipTypes!
+  segments: RevenueStatsSegments!
 }
 
 type RevenueStatsSurplus {
@@ -328,17 +328,17 @@ type RevenueStatsSurplus {
   updatedAt: DateTime!
 }
 
-type RevenueStatsMembershipTypes {
-  buckets: [RevenueStatsMembershipTypesDateBucket!]!
+type RevenueStatsSegments {
+  buckets: [RevenueStatsSegmentsDateBucket!]!
   updatedAt: DateTime!
 }
 
-type RevenueStatsMembershipTypesDateBucket {
+type RevenueStatsSegmentsDateBucket {
   key: String!
-  buckets: [RevenueStatsMembershipTypesBucket!]!
+  buckets: [RevenueStatsSegmentsBucket!]!
 }
 
-type RevenueStatsMembershipTypesBucket {
+type RevenueStatsSegmentsBucket {
   key: String!
   amount: Int!
   sum: Int!

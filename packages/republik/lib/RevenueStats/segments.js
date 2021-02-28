@@ -1,4 +1,4 @@
-const debug = require('debug')('republik:lib:RevenueStats:membershipTypes')
+const debug = require('debug')('republik:lib:RevenueStats:segments')
 const { get, set } = require('lodash')
 const { ascending } = require('d3-array')
 
@@ -18,7 +18,7 @@ SELECT
   COALESCE(p.total, pay.total) "total",
   p.donation,
   COALESCE(r.type::text, 'DONATE') "kind",
-  COALESCE(mt.name, g.name, 'DONATE') "reward",
+  COALESCE(mt.name, g.name, 'DONATE') "segment",
   COALESCE(po.amount, 1) "amount",
   COALESCE(po.periods, 1) "periods",
   COALESCE(po.price, 0) "price"
@@ -73,19 +73,19 @@ const handleStream = async (stream, handleRowFn) => {
 
 /**
  * Increase data counters
- *  - [created date unit].buckets[reward].amount
- *  - [created date unit].buckets[reward].sum
+ *  - [created date unit].buckets[segment].amount
+ *  - [created date unit].buckets[segment].sum
  */
 const addRow = (row, data) => {
-  const { createdAtUnit, reward, kind } = row
+  const { createdAtUnit, segment, kind } = row
 
-  const node = get(data, [createdAtUnit, 'buckets', reward], {
+  const node = get(data, [createdAtUnit, 'buckets', segment], {
     kind,
     amount: 0,
     sum: 0,
   })
 
-  set(data, [createdAtUnit, 'buckets', reward], {
+  set(data, [createdAtUnit, 'buckets', segment], {
     ...node,
     amount: node.amount + row.amount * (row.periods || 1),
     sum:
@@ -96,22 +96,22 @@ const addRow = (row, data) => {
 
 /**
  * Decrease data counters
- *  - [updated date unit].buckets[reward].amount
- *  - [updated date unit].buckets[reward].sum
+ *  - [updated date unit].buckets[segment].amount
+ *  - [updated date unit].buckets[segment].sum
  *
  * Decreases counters only if payment is cancelled or refunded.
  */
 const subtractRow = (row, data) => {
   if (['CANCELLED', 'REFUNDED'].includes(row.status)) {
-    const { updatedAtUnit, reward, kind } = row
+    const { updatedAtUnit, segment, kind } = row
 
-    const node = get(data, [updatedAtUnit, 'buckets', reward], {
+    const node = get(data, [updatedAtUnit, 'buckets', segment], {
       kind,
       amount: 0,
       sum: 0,
     })
 
-    set(data, [updatedAtUnit, 'buckets', reward], {
+    set(data, [updatedAtUnit, 'buckets', segment], {
       ...node,
       amount: node.amount - row.amount * (row.periods || 1),
       sum:
@@ -161,8 +161,8 @@ const subtractPaymentDonation = (row, data) => {
  * data: {
       "unit 1": {
         buckets: {
-          "reward a": { amount: 10, sum: 200 },
-          "reward b": { amount: 10, sum: 200 },
+          "segment a": { amount: 10, sum: 200 },
+          "segment b": { amount: 10, sum: 200 },
           ...
         },
         paymentDonations: {
@@ -173,8 +173,8 @@ const subtractPaymentDonation = (row, data) => {
       },
       "unit 2": {
         buckets: {
-          "reward a": { amount: 10, sum: 200 },
-          "reward b": { amount: 10, sum: 200 },
+          "segment a": { amount: 10, sum: 200 },
+          "segment b": { amount: 10, sum: 200 },
           ...
         },
         paymentDonations: {
@@ -191,8 +191,8 @@ const subtractPaymentDonation = (row, data) => {
     {
       key: "unit 1",
       buckets: [
-        { key: "reward a", amount: 10, sum: 200 },
-        { key: "reward b", amount: 10, sum: 200 },
+        { key: "segment a", amount: 10, sum: 200 },
+        { key: "segment b", amount: 10, sum: 200 },
         ...
       ],
       paymentDonations: { ... }
@@ -200,8 +200,8 @@ const subtractPaymentDonation = (row, data) => {
     {
       key: "unit 2",
       buckets: [
-        { key: "reward a", amount: 10, sum: 200 },
-        { key: "reward b", amount: 10, sum: 200 },
+        { key: "segment a", amount: 10, sum: 200 },
+        { key: "segment b", amount: 10, sum: 200 },
         ...
       ],
       paymentDonations: { ... }
@@ -227,7 +227,7 @@ const flattenData = (data) => {
 }
 
 /**
- * Spreads payment donations to MembershipType reward buckets.
+ * Spreads payment donations to segments buckets.
  */
 const spreadPaymentDonations = (bucket) => {
   const { buckets, paymentDonation } = bucket
@@ -282,7 +282,7 @@ const createCache = (context) =>
   create(
     {
       namespace: 'republik',
-      prefix: 'RevenueStats:membershipTypes',
+      prefix: 'RevenueStats:segments',
       key: 'any',
       ttl: QUERY_CACHE_TTL_SECONDS,
     },

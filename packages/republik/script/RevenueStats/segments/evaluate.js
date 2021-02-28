@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Script will evaluate data for RevenueStats.membershipTypes and print result.
+ * Script will evaluate data for RevenueStats.segments and print result.
  *
  * No options or arguments available.
  */
@@ -9,10 +9,10 @@ const {
   lib: { ConnectionContext },
 } = require('@orbiting/backend-modules-base')
 
-const { populate } = require('../../../lib/RevenueStats/membershipTypes')
+const { populate } = require('../../../lib/RevenueStats/segments')
 
 const applicationName =
-  'backends republik script RevenueStats membershipTypes evaluate'
+  'backends republik script RevenueStats segments evaluate'
 
 ConnectionContext.create(applicationName)
   .then(async (context) => {
