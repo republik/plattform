@@ -340,7 +340,9 @@ type RevenueStatsSegmentsDateBucket {
 
 type RevenueStatsSegmentsBucket {
   key: String!
+  "Amount of units sold"
   amount: Int!
+  "Revenue"
   sum: Int!
 }
 
