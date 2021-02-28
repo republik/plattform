@@ -318,7 +318,7 @@ type RevenueStats {
   ): RevenueStatsSurplus!
 
   """
-  Returns revenues segments of active memberships per year
+  Returns revenue segments
   """
   membershipTypes: RevenueStatsMembershipTypes!
 }
@@ -329,16 +329,19 @@ type RevenueStatsSurplus {
 }
 
 type RevenueStatsMembershipTypes {
-  buckets: [RevenueStatsMembershipTypesBucket!]!
+  buckets: [RevenueStatsMembershipTypesDateBucket!]!
   updatedAt: DateTime!
+}
+
+type RevenueStatsMembershipTypesDateBucket {
+  key: String!
+  buckets: [RevenueStatsMembershipTypesBucket!]!
 }
 
 type RevenueStatsMembershipTypesBucket {
   key: String!
-  type: MembershipType!
-  regular: Int!
-  withDonation: Int!
-  withDiscount: Int!
+  amount: Int!
+  sum: Int!
 }
 
 type MembershipStatsEvolution {
