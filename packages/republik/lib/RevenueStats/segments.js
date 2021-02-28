@@ -129,7 +129,7 @@ const addPaymentDontation = (row, data) => {
   const { kind, donation, createdAtUnit, id } = row
 
   if (kind !== 'DONATE' && donation !== 0) {
-    set(data, [createdAtUnit, 'paymentDontation', `${id}:add`], donation)
+    set(data, [createdAtUnit, 'paymentDonation', `${id}:add`], donation)
   }
 }
 
@@ -165,7 +165,7 @@ const subtractPaymentDonation = (row, data) => {
           "segment b": { amount: 10, sum: 200 },
           ...
         },
-        paymentDonations: {
+        paymentDonation: {
           "pledge 1:add": 100,
           "pledge 2:add": -20,
           ...
@@ -177,7 +177,7 @@ const subtractPaymentDonation = (row, data) => {
           "segment b": { amount: 10, sum: 200 },
           ...
         },
-        paymentDonations: {
+        paymentDonation: {
           "pledge 1:add": 100,
           "pledge 2:add": -20,
           "pledge 2:subtract": 50,
@@ -195,7 +195,7 @@ const subtractPaymentDonation = (row, data) => {
         { key: "segment b", amount: 10, sum: 200 },
         ...
       ],
-      paymentDonations: { ... }
+      paymentDonation: { ... }
     },
     {
       key: "unit 2",
@@ -204,7 +204,7 @@ const subtractPaymentDonation = (row, data) => {
         { key: "segment b", amount: 10, sum: 200 },
         ...
       ],
-      paymentDonations: { ... }
+      paymentDonation: { ... }
     },
     ...
   ]
