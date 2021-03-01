@@ -21,10 +21,6 @@ const populate = async (context, resultFn) => {
 
   const { pgdb } = context
 
-  /* 
-    key: Int
-    count: Int!
-    */
   const result = await pgdb.query(`
     SELECT
       extract(year from age(birthday)) AS key,
