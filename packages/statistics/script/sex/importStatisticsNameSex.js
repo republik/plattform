@@ -21,7 +21,7 @@ PgDb.connect()
     const transaction = await pgdb.transactionBegin()
 
     console.log('Truncate db table statisticsNameSex...')
-    await transaction.query(`TRUNCATE TABLE "statisticsNameSex"`)
+    await transaction.public.statisticsNameSex.truncate()
 
     console.log('Parse csv and insert into db table...')
     csvParse(input, async (row) => {

@@ -1,7 +1,7 @@
 const debug = require('debug')('republik:lib:RevenueStats:segments')
 
 const {
-cache: { create },
+  cache: { create },
 } = require('@orbiting/backend-modules-utils')
 
 const QUERY_CACHE_TTL_SECONDS = 60 * 60 * 24 * 8 // A week and a day
@@ -21,11 +21,11 @@ WITH "totals" AS (
       pay.total "paymentTotal",
 
       -- Memberships
-      date(p."createdAt") != date(ppay."createdAt") "autoPay",
+      p."createdAt"::date != ppay."createdAt"::date "autoPay",
 
       LEAST(pom.price, 24000) "membershipPrice",
       CASE
-        WHEN pkg.name != 'MONTHLY_ABO' AND date(p."createdAt") != date(ppay."createdAt")
+        WHEN pkg.name != 'MONTHLY_ABO' AND p."createdAt"::date != ppay."createdAt"::date
           THEN 24000
         WHEN pkg.name != 'MONTHLY_ABO' AND (m.id IS NULL OR m."userId" = p."userId") AND pkg.group != 'GIVE'
           THEN pom.amount * COALESCE(pom.periods, 1) * LEAST(pom.price, 24000)
@@ -53,7 +53,7 @@ WITH "totals" AS (
     JOIN "pledgePayments" ppay ON ppay."paymentId" = pay.id
     JOIN "pledges" p ON p.id = ppay."pledgeId"
     JOIN "packages" pkg ON p."packageId" = pkg.id
-    LEFT JOIN "pledgeOptions" po ON po."pledgeId" = p.id AND date(p."createdAt") = date(ppay."createdAt")
+    LEFT JOIN "pledgeOptions" po ON po."pledgeId" = p.id AND p."createdAt"::date = ppay."createdAt"::date
     LEFT JOIN "pledgeOptions" pom
       ON pom.id = po.id AND
       pom."templateId" IN (SELECT id FROM "packageOptionsWithRewardType" WHERE type = 'MembershipType')
@@ -65,7 +65,7 @@ WITH "totals" AS (
   )
 
   SELECT
-    to_char(rd."paymentCreatedAt" AT TIME ZONE :TZ, :BUCKET_DATE_FORMAT) "unit",
+    TO_CHAR(rd."paymentCreatedAt" AT TIME ZONE :TZ, :BUCKET_DATE_FORMAT) "unit",
     rd."paymentId",
     rd."paymentTotal",
     rd."paymentTotal"
@@ -117,12 +117,12 @@ const populate = async (context, resultFn) => {
     TZ: process.env.TZ || 'Europe/Zurich',
   })
 
-  const result = buckets.map(bucket => {
-    const { unit, total } = bucket
+  const result = buckets.map((bucket) => {
+    const { unit, total } = bucket
 
     const segments = Object.keys(bucket)
-      .filter(bucketKey => !['unit', 'total'].includes(bucketKey))
-      .map(segmentKey => ({
+      .filter((bucketKey) => !['unit', 'total'].includes(bucketKey))
+      .map((segmentKey) => ({
         key: segmentKey,
         sum: Math.round(bucket[segmentKey] / 100),
         share: bucket[segmentKey] / total,
@@ -130,7 +130,7 @@ const populate = async (context, resultFn) => {
 
     return {
       key: unit,
-      buckets: segments
+      buckets: segments,
     }
   })
 

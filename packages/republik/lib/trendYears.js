@@ -1,7 +1,7 @@
 const getYears = async (pgdb) => {
   const minYearPeriod = await pgdb.query(`
     SELECT 
-      extract(year from "beginDate") as "minYear"
+      EXTRACT(YEAR FROM "beginDate") "minYear"
     FROM "membershipPeriods"
     ORDER BY 1
     LIMIT 1
