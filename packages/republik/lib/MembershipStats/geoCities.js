@@ -44,6 +44,24 @@ const populate = async (context, resultFn) => {
     GROUP BY m.id, a.id
   `)
 
+  const topCities = await pgdb.queryOneColumn(`
+    SELECT
+      LOWER(TRIM(a.city))
+    FROM "memberships" m
+    JOIN "users" u 
+      ON m."userId" = u.id
+    LEFT JOIN "addresses" a
+      ON a.id = u."addressId"
+    WHERE m.active = true
+      AND a.city IS NOT NULL 
+      AND a.city != ' ' 
+      AND a.city != '.' 
+      AND a.city != '-'
+    GROUP BY 1
+    ORDER BY COUNT(DISTINCT u.id) DESC
+    LIMIT 5
+  `)
+
   const countries = await pgdb.public.statisticsGeoCountry.findAll()
 
   const cities = {}
@@ -57,7 +75,7 @@ const populate = async (context, resultFn) => {
     })
 
     let key = membership.city?.toLowerCase().trim()
-    if (!['zürich', 'bern', 'basel', 'winterthur', 'luzern'].includes(key)) {
+    if (!topCities.includes(key)) {
       key =
         country && country.name === 'Schweiz'
           ? 'otherCHAddress'
