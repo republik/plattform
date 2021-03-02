@@ -340,10 +340,13 @@ type RevenueStatsSegmentsDateBucket {
 
 type RevenueStatsSegmentsBucket {
   key: String!
+  label: String!
   "Amount of units sold"
-  amount: Int!
+  amount: Int @deprecated(reason: "No units count at this level.")
   "Revenue"
-  sum: Int!
+  sum: Int! @deprecated(reason: "Use \`share\` instead.")
+  "Share"
+  share: Float!
 }
 
 type MembershipStatsEvolution {

@@ -2069,6 +2069,26 @@
     {
       "key": "api/invoices/option/MembershipType/withPeriod/meta",
       "value": "#{sequenceNumber}\n{period}"
+    },
+    {
+      "key": "api/republik/revenueStats/segment/membership",
+      "value": "Jahresmitgliedschaften"
+    },
+    {
+      "key": "api/republik/revenueStats/segment/give",
+      "value": "Mitgliedschaften und Monats-Abos als Geschenk"
+    },
+    {
+      "key": "api/republik/revenueStats/segment/abo",
+      "value": "Monats-Abos"
+    },
+    {
+      "key": "api/republik/revenueStats/segment/goodie",
+      "value": "Waren wie Bücher, Taschen und Masken"
+    },
+    {
+      "key": "api/republik/revenueStats/segment/donation",
+      "value": "Spenden"
     }
   ]
 }
