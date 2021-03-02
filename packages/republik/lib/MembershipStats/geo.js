@@ -58,10 +58,10 @@ const populate = async (context, resultFn) => {
   const geo = {}
 
   for (const membership of memberships) {
-    const country = countries.find((country) => {
+    const country = !!membership.country.trim() && countries.find((country) => {
       return (
         country.name === membership.country ||
-        country.searchNames.indexOf(membership.country?.toLowerCase()) > -1
+        country.searchNames.includes(membership.country.toLowerCase().trim())
       )
     })
 
