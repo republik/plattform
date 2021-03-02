@@ -41,7 +41,8 @@ CREATE TABLE publikator.milestones (
 );
 
 -- change id::uuid to id::text as publikator.repos.id is text
-ALTER TABLE "public"."notifyTableChangeQueue" ALTER COLUMN "id" TYPE text;
+ALTER TABLE public."notifyTableChangeQueue"
+  ALTER COLUMN "id" TYPE text;
 
 -- notify_table_change() executed on INSERT, UPDATE, CHANGE of
 -- "publikator.repos"
