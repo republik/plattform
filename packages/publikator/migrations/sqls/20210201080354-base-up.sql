@@ -25,10 +25,20 @@ CREATE TABLE publikator.commits (
 
 CREATE UNIQUE INDEX "commits_repoId_hash_idx" ON publikator.commits("repoId" text_ops,hash text_ops);
 
+CREATE DOMAIN "milestoneScopeDomain" AS TEXT
+  CONSTRAINT "milestoneScopeDomainCheck"
+    CHECK(
+      VALUE IN (
+        'milestone',
+        'publication',
+        'prepublication'
+      )
+    );
+
 CREATE TABLE publikator.milestones (
   id uuid DEFAULT uuid_generate_v4() PRIMARY KEY,
   "repoId" text NOT NULL REFERENCES publikator.repos(id) ON DELETE CASCADE ON UPDATE CASCADE,
-  scope text NOT NULL DEFAULT 'milestone'::text,
+  scope "milestoneScopeDomain" NOT NULL DEFAULT 'milestone'::"milestoneScopeDomain",
   "commitId" uuid NOT NULL REFERENCES publikator.commits(id) ON DELETE RESTRICT ON UPDATE CASCADE,
   name text NOT NULL,
   meta jsonb NOT NULL DEFAULT '{}'::jsonb,
