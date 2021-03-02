@@ -260,6 +260,7 @@ type MembershipStatsGeo {
 }
 
 type MembershipStatsGeoBucket {
+  key: String
   country: String
   postalCode: String
   lat: Float
@@ -278,7 +279,8 @@ type MembershipStatsgeoCities {
 }
 
 type MembershipStatsgeoCitiesBucket {
-  city: String
+  key: String
+  city: String @deprecated(reason: "Use \`key\` instead.")
   buckets: [MembershipStatsgeoCitiesCountBucket!]!
 }
 

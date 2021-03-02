@@ -120,6 +120,7 @@ const populate = async (context, resultFn) => {
     const { buckets, ...restGeo } = geo[key]
 
     return {
+      key,
       ...restGeo,
       buckets: Object.keys(buckets).map((bucketKey) => {
         const bucket = buckets[bucketKey]
