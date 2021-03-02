@@ -12,7 +12,6 @@ const getYears = async (pgdb) => {
   for (let year = minYear; year <= maxYear; year++) {
     years.push(year.toString())
   }
-  console.log(years)
   return years
 }
 
