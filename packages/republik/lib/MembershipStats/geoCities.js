@@ -1,5 +1,6 @@
 const debug = require('debug')('republik:lib:MembershipStats:geoCities')
 const moment = require('moment')
+const { getYears } = require('../trendYears')
 
 const {
   cache: { create },
@@ -22,6 +23,7 @@ const populate = async (context, resultFn) => {
   debug('populate')
 
   const { pgdb } = context
+  const years = await getYears(pgdb)
 
   const memberships = await pgdb.query(`
     SELECT
@@ -62,12 +64,11 @@ const populate = async (context, resultFn) => {
           : 'otherAddress'
     }
     if (!cities[key]) {
-      const buckets = {
-        2018: { count: 0 },
-        2019: { count: 0 },
-        2020: { count: 0 },
-        2021: { count: 0 },
-      }
+      const buckets = {}
+
+      years.forEach((year) => {
+        buckets[year] = { count: 0 }
+      })
 
       Object.assign(cities, {
         [key]: {
@@ -75,7 +76,7 @@ const populate = async (context, resultFn) => {
         },
       })
     }
-    ;['2018', '2019', '2020', '2021'].forEach((year) => {
+    years.forEach((year) => {
       const yearBegin = moment(year)
       const yearEnd = yearBegin.clone().add(1, 'year')
 

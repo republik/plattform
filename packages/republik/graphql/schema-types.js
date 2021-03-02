@@ -285,7 +285,6 @@ type MembershipStatsgeoCitiesBucket {
 type MembershipStatsgeoCitiesCountBucket {
   key: String
   count: Int!
-  percentage: Float!
 }
 
 type StatementUserConnection {
