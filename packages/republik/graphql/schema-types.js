@@ -228,6 +228,7 @@ type MembershipPeriodStatsDay {
 }
 
 type MembershipStatsAges {
+  averageAge: Float
   buckets: [MembershipStatsAgesBucket!]!
   updatedAt: DateTime!
 }

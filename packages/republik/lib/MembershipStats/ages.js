@@ -34,12 +34,27 @@ const populate = async (context, resultFn) => {
     ORDER BY 1
   `)
 
+  const ageDeclarations = result.filter((row) => row.key !== null)
+  const totalAgesSum = ageDeclarations.reduce((acc, age) => {
+    return acc + age.key * age.count
+  }, 0)
+  const numberAgeDeclarations = ageDeclarations.reduce((acc, cur) => {
+    return acc + cur.count
+  }, 0)
+
   if (resultFn) {
-    return resultFn(result)
+    return resultFn({
+      averageAge: totalAgesSum / numberAgeDeclarations,
+      result,
+    })
   }
 
   // Cache said data.
-  await createCache(context).set({ result, updatedAt: new Date() })
+  await createCache(context).set({
+    averageAge: totalAgesSum / numberAgeDeclarations,
+    result,
+    updatedAt: new Date(),
+  })
 }
 
 module.exports = {

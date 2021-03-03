@@ -12,9 +12,10 @@ module.exports = async (_, args, context) => {
   }
 
   // Retrieve pre-populated data.
-  const { result: buckets = [], updatedAt = new Date() } = data
+  const { averageAge, result: buckets = [], updatedAt = new Date() } = data
 
   return {
+    averageAge,
     buckets,
     updatedAt,
   }
