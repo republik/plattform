@@ -18,23 +18,18 @@ const styles = {
     zIndex: zIndex.overlay,
     transition: 'opacity .12s ease-in-out',
     background: 'rgba(0,0,0,.2)',
-    [mUp]: {
-      overflowY: 'auto',
-      WebkitOverflowScrolling: 'touch'
-    }
+    overflowY: 'auto',
+    WebkitOverflowScrolling: 'touch'
   }),
   inner: css({
     position: 'relative',
     zIndex: 1, // to establish a stacking context
-    height: '100vh',
-    overflowY: 'auto',
-    WebkitOverflowScrolling: 'touch',
+    minHeight: '100vh',
     [mUp]: {
       maxWidth: '600px',
       minHeight: '60vh',
       height: 'auto',
-      margin: '20vh auto 20vh',
-      overflowY: 'visible'
+      margin: '20vh auto 20vh'
     }
   })
 }
@@ -71,11 +66,11 @@ const Overlay = props => {
       setSsrMode(false)
     }
   }, [ssrMode])
-  const [innerRef] = useBodyScrollLock(!ssrMode)
+  const [scrollRef] = useBodyScrollLock(!ssrMode)
   const element = (
     <OverlayRenderer
       {...props}
-      innerRef={innerRef}
+      scrollRef={scrollRef}
       isVisible={isVisible}
       ssrMode={ssrMode}
     />
@@ -102,7 +97,7 @@ export const OverlayRenderer = ({
   children,
   onClose,
   ssrMode,
-  innerRef
+  scrollRef
 }) => {
   const close = e => {
     if (e.target === e.currentTarget) {
@@ -117,13 +112,13 @@ export const OverlayRenderer = ({
       {...(ssrMode && { [ssrAttribute]: true })}
       style={{ opacity: isVisible ? 1 : 0 }}
       onClick={close}
+      ref={scrollRef}
     >
       <div
         {...merge(styles.inner, mUpStyle && { [mUp]: mUpStyle })}
         {...colorScheme.set('backgroundColor', 'overlay')}
         {...colorScheme.set('boxShadow', 'overlay')}
         {...colorScheme.set('color', 'text')}
-        ref={innerRef}
       >
         {children}
       </div>
