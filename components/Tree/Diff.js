@@ -62,6 +62,13 @@ export default function TreeDiff(props) {
     parentCommitId: props.commit.parentIds?.[0]
   }
 
+  const newStyles = {
+    diffContainer: { wordBreak: 'break-word' },
+    wordDiff: { display: 'inline' },
+    wordAdded: { display: 'inline' },
+    wordRemoved: { display: 'inline' }
+  }
+
   return (
     <>
       <MdWrapText size={18} {...styles.linkDiff} onClick={handleOnClick} />
@@ -90,6 +97,8 @@ export default function TreeDiff(props) {
                   render={() => (
                     <ReactDiffViewer
                       newValue={data.repo.commit.markdown}
+                      styles={newStyles}
+                      splitView={false}
                       oldValue={data.repo.parentCommit.markdown}
                       compareMethod={DiffMethod.WORDS_WITH_SPACE}
                       extraLinesSurroundingDiff={1}
