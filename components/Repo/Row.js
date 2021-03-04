@@ -37,10 +37,10 @@ const creditSchema = {
 const PublicationLink = Icon => ({
   name,
   document: {
-    meta: { path, slug }
+    meta: { path }
   }
 }) => (
-  <a key={name} href={`${FRONTEND_BASE_URL}${path || '/' + slug}`}>
+  <a key={name} href={`${FRONTEND_BASE_URL}${path}`}>
     <Icon color={colors.primary} />
   </a>
 )
