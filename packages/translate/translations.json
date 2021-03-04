@@ -315,52 +315,12 @@
       "value": "User, welche eine Membership eingelöst habe können zurzeit nicht gelöscht werden. Bitte wenden Sie sich an die IT."
     },
     {
-      "key": "api/payment/invoice/vat",
-      "value": "inkl. MWST-Satz {value}%"
+      "key": "api/payment/paymentMethod/404",
+      "value": "Die PaymentMethod konnte nicht gefunden werden."
     },
     {
-      "key": "api/payment/invoice/item/package/MONTHLY_ABO",
-      "value": "Monats-Abonnement"
-    },
-    {
-      "key": "api/payment/invoice/item/package/BENEFACTOR",
-      "value": "Gönner-Mitgliedschaft"
-    },
-    {
-      "key": "api/payment/invoice/item/package/ABO",
-      "value": "Abo und Mitgliedschaft für ein Jahr"
-    },
-    {
-      "key": "api/payment/invoice/item/package/ABO_GIVE",
-      "value": "Verschenken \"Abo und Mitgliedschaft für ein Jahr\""
-    },
-    {
-      "key": "api/payment/invoice/item/package/ABO_GIVE_MONTHS",
-      "value": "Verschenken \"Monats-Abo als Geschenk\""
-    },
-    {
-      "key": "api/payment/invoice/item/package/DONATE",
-      "value": "Spende"
-    },
-    {
-      "key": "api/payment/invoice/item/goodie/TABLEBOOK",
-      "value": "Buch «Republik bei Stromausfall»"
-    },
-    {
-      "key": "api/payment/invoice/item/goodie/NOTEBOOK",
-      "value": "Notizbuch"
-    },
-    {
-      "key": "api/payment/invoice/item/goodie/TOTEBAG",
-      "value": "Tasche"
-    },
-    {
-      "key": "api/payment/invoice/item/donation",
-      "value": "Spende"
-    },
-    {
-      "key": "api/payment/invoice/item/discount",
-      "value": "Ermässigung"
+      "key": "api/payment/paymentIntent/404",
+      "value": "Der PaymentIntent konnte nicht gefunden werden."
     },
     {
       "key": "api/payment/paymentMethod/404",
@@ -372,15 +332,15 @@
     },
     {
       "key": "api/email/membership_prolong_notice/subject",
-      "value": "Ihr Republik-Abo wurde verlängert"
+      "value": "Ihre Republik-Mitgliedschaft wurde verlängert"
     },
     {
       "key": "api/email/pledge_abo/subject",
-      "value": "Ihr Republik-Abo: Willkommen bei der Republik!"
+      "value": "Ihre Mitgliedschaft: Willkommen bei der Republik"
     },
     {
       "key": "api/email/pledge_abo_give/subject",
-      "value": "Ihre Bestellung: Jahres-Abo und Mitgliedschaft als Geschenk"
+      "value": "Ihre Bestellung: Mitgliedschaft als Geschenk"
     },
     {
       "key": "api/email/pledge_abo_give_months/subject",
@@ -388,7 +348,7 @@
     },
     {
       "key": "api/email/pledge_monthly_abo/subject",
-      "value": "Ihr Republik Monats-Abo: Willkommen bei der Republik"
+      "value": "Ihr Abo: Willkommen bei der Republik"
     },
     {
       "key": "api/email/pledge_donate/subject",
@@ -396,7 +356,7 @@
     },
     {
       "key": "api/email/pledge_benefactor/subject",
-      "value": "Ihr Republik-Abo: Willkommen bei der Republik!"
+      "value": "Ihre Mitgliedschaft: Willkommen bei der Republik"
     },
     {
       "key": "api/email/pledge_prolong/subject",
@@ -404,7 +364,7 @@
     },
     {
       "key": "api/email/pledge_tablebook/subject",
-      "value": "Ihre Bestellung: «Republik bei Stromausfall»"
+      "value": "Ihre Bestellung: Buch «Republik bei Stromausfall»"
     },
     {
       "key": "api/email/payment_successful_abo/subject",
@@ -468,11 +428,11 @@
     },
     {
       "key": "api/email/option/membershiptype/abo/1",
-      "value": "Abo und Mitgliedschaft"
+      "value": "Jahresmitgliedschaft"
     },
     {
       "key": "api/email/option/membershiptype/abo/other",
-      "value": "Abo und Mitgliedschaften"
+      "value": "Jahresmitgliedschaften"
     },
     {
       "key": "api/email/option/membershiptype/benefactor_abo/1",
@@ -1949,6 +1909,194 @@
     {
       "key": "api/repo/phase/published",
       "value": "Publiziert"
+    },
+    {
+      "key": "api/invoices/PAID/title",
+      "value": "Beleg"
+    },
+    {
+      "key": "api/invoices/title",
+      "value": "Rechnung"
+    },
+    {
+      "key": "api/invoices/PAID/meta",
+      "value": "Datum: {date}\nBelegnummer: {reference}\nZahlungsart: {paymentMethod}"
+    },
+    {
+      "key": "api/invoices/meta",
+      "value": "Datum: {date}\nRechnungsnummer: {reference}\nZahlungsart: {paymentMethod}"
+    },
+    {
+      "key": "api/invoices/creditor/PROJECT_R",
+      "value": "{address}\n\nwww.republik.ch\nkontakt@republik.ch"
+    },
+    {
+      "key": "api/invoices/creditor",
+      "value": "{address}"
+    },
+    {
+      "key": "api/invoices/paymentMethod/STRIPE",
+      "value": "Kreditkarte"
+    },
+    {
+      "key": "api/invoices/paymentMethod/POSTFINANCECARD",
+      "value": "Postcard"
+    },
+    {
+      "key": "api/invoices/paymentMethod/PAYPAL",
+      "value": "PayPal"
+    },
+    {
+      "key": "api/invoices/paymentMethod/PAYMENTSLIP",
+      "value": "Rechnung"
+    },
+    {
+      "key": "api/invoices/table/option",
+      "value": "Artikel"
+    },
+    {
+      "key": "api/invoices/table/units",
+      "value": "Menge"
+    },
+    {
+      "key": "api/invoices/table/rowTotal",
+      "value": "Betrag in CHF"
+    },
+    {
+      "key": "api/invoices/table/donation",
+      "value": "Spende"
+    },
+    {
+      "key": "api/invoices/table/discount",
+      "value": "Ermässigung"
+    },
+    {
+      "key": "api/invoices/table/PROJECT_R/total",
+      "value": "Gesamtbetrag (nicht MWST-pflichtig)"
+    },
+    {
+      "key": "api/invoices/table/total",
+      "value": "Gesamtbetrag"
+    },
+    {
+      "key": "api/invoices/option/Goodie/NOTEBOOK/1",
+      "value": "Notizbuch"
+    },
+    {
+      "key": "api/invoices/option/Goodie/NOTEBOOK/other",
+      "value": "Notizbücher"
+    },
+    {
+      "key": "api/invoices/option/Goodie/TOTEBAG/1",
+      "value": "Tasche"
+    },
+    {
+      "key": "api/invoices/option/Goodie/TOTEBAG/other",
+      "value": "Taschen"
+    },
+    {
+      "key": "api/invoices/option/Goodie/TABLEBOOK/1",
+      "value": "Buch «Republik bei Stromausfall»"
+    },
+    {
+      "key": "api/invoices/option/Goodie/TABLEBOOK/other",
+      "value": "Bücher «Republik bei Stromausfall»"
+    },
+    {
+      "key": "api/invoices/option/Goodie/MASK/1",
+      "value": "Republik-Maske"
+    },
+    {
+      "key": "api/invoices/option/Goodie/MASK/other",
+      "value": "Republik-Masken"
+    },
+    {
+      "key": "api/invoices/option/MembershipType/ABO/1",
+      "value": "Jahresmitgliedschaft"
+    },
+    {
+      "key": "api/invoices/option/MembershipType/ABO/other",
+      "value": "Jahresmitgliedschaften"
+    },
+    {
+      "key": "api/invoices/option/MembershipType/BENEFACTOR_ABO/1",
+      "value": "Gönner-Mitgliedschaft"
+    },
+    {
+      "key": "api/invoices/option/MembershipType/BENEFACTOR_ABO/other",
+      "value": "Gönner-Mitgliedschaften"
+    },
+    {
+      "key": "api/invoices/option/MembershipType/MONTHLY_ABO/1",
+      "value": "Monats-Abo"
+    },
+    {
+      "key": "api/invoices/option/MembershipType/MONTHLY_ABO/other",
+      "value": "Monats-Abos"
+    },
+    {
+      "key": "api/invoices/option/MembershipType/ABO_GIVE_MONTHS/1",
+      "value": "Monats-Abo als Geschenk für {interval}"
+    },
+    {
+      "key": "api/invoices/option/MembershipType/ABO_GIVE_MONTHS/other",
+      "value": "Monats-Abos als Geschenk für {interval}"
+    },
+    {
+      "key": "api/invoices/option/interval/year/periods/1",
+      "value": "ein Jahr"
+    },
+    {
+      "key": "api/invoices/option/interval/year/periods/other",
+      "value": "{count} Jahre"
+    },
+    {
+      "key": "api/invoices/option/interval/month/periods/1",
+      "value": "einen Monat"
+    },
+    {
+      "key": "api/invoices/option/interval/month/periods/other",
+      "value": "{count} Monate"
+    },
+    {
+      "key": "api/invoices/option/interval/week/periods/1",
+      "value": "eine Woche"
+    },
+    {
+      "key": "api/invoices/option/interval/week/count/other",
+      "value": "{count} Wochen"
+    },
+    {
+      "key": "api/invoices/option/interval/day/periods/1",
+      "value": "einen Tag"
+    },
+    {
+      "key": "api/invoices/option/interval/day/periods/other",
+      "value": "{count} Tage"
+    },
+    {
+      "key": "api/invoices/option/MembershipType/withPeriod/meta",
+      "value": "#{sequenceNumber}\n{period}"
+    },
+    {
+      "key": "api/republik/revenueStats/segment/membership",
+      "value": "Jahresmitgliedschaften"
+    },
+    {
+      "key": "api/republik/revenueStats/segment/give",
+      "value": "Mitgliedschaften und Monats-Abos als Geschenk"
+    },
+    {
+      "key": "api/republik/revenueStats/segment/abo",
+      "value": "Monats-Abos"
+    },
+    {
+      "key": "api/republik/revenueStats/segment/goodie",
+      "value": "Waren wie Bücher, Taschen und Masken"
+    },
+    {
+      "key": "api/republik/revenueStats/segment/donation",
+      "value": "Spenden"
     }
   ]
 }

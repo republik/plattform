@@ -163,10 +163,9 @@ module.exports = async (_, args, context) => {
 
     await slack.publishMembership(
       user,
+      me,
       membershipType.name,
-      user.id === me.id
-        ? 'reactivateMembership'
-        : 'reactivateMembership (support)',
+      'reactivateMembership',
     )
 
     const cache = createCache({ prefix: `User:${user.id}` }, context)

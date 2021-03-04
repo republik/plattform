@@ -158,6 +158,19 @@ module.exports = async (_, args, context) => {
       })(),
     )
   })
+  visit(mdast, 'zone', (node) => {
+    if (node.data?.formatLogo) {
+      promises.push(
+        (async () => {
+          node.data.formatLogo = await importFromRepo(
+            node.data.formatLogo,
+            images,
+            repoId,
+          )
+        })(),
+      )
+    }
+  })
   if (mdast.meta) {
     promises.push(
       ...Object.keys(mdast.meta).map(async (key) => {
@@ -173,6 +186,24 @@ module.exports = async (_, args, context) => {
 
     const series = mdast.meta.series
     if (series && Array.isArray(series.episodes)) {
+      if (series.logo) {
+        promises.push(
+          (async () => {
+            series.logo = await importFromRepo(series.logo, images, repoId)
+          })(),
+        )
+      }
+      if (series.logoDark) {
+        promises.push(
+          (async () => {
+            series.logoDark = await importFromRepo(
+              series.logoDark,
+              images,
+              repoId,
+            )
+          })(),
+        )
+      }
       series.episodes.forEach((episode) => {
         if (episode.image) {
           promises.push(
@@ -203,6 +234,18 @@ module.exports = async (_, args, context) => {
       })(),
     )
   })
+  visit(mdast, 'zone', (node) => {
+    if (node.data?.formatLogo) {
+      promises.push(
+        (async () => {
+          node.data.formatLogo = await extractImage(
+            node.data.formatLogo,
+            images,
+          )
+        })(),
+      )
+    }
+  })
   if (mdast.meta) {
     promises.push(
       ...Object.keys(mdast.meta).map(async (key) => {
@@ -214,6 +257,20 @@ module.exports = async (_, args, context) => {
 
     const series = mdast.meta.series
     if (series && Array.isArray(series.episodes)) {
+      if (series.logo) {
+        promises.push(
+          (async () => {
+            series.logo = await extractImage(series.logo, images)
+          })(),
+        )
+      }
+      if (series.logoDark) {
+        promises.push(
+          (async () => {
+            series.logoDark = await extractImage(series.logoDark, images)
+          })(),
+        )
+      }
       series.episodes.forEach((episode) => {
         if (episode.image) {
           promises.push(

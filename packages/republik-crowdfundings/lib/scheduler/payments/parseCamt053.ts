@@ -1,7 +1,7 @@
 import parser from 'fast-xml-parser'
 import { Nominal } from 'simplytyped'
 
-import { paymentslip } from '@orbiting/backend-modules-invoices'
+import * as invoices from '@orbiting/backend-modules-invoices'
 
 type Amount = Nominal<string, 'amount'>
 type AmountInCents = Nominal<number, 'cents'>
@@ -251,21 +251,18 @@ function getMitteilung(
 ): string | null {
   const creditorReference = transactionDetails?.RmtInf?.Strd?.CdtrRefInf?.Ref
   const referenceHrId =
-    creditorReference && paymentslip.getHrId(creditorReference)
+    creditorReference && invoices.commons.getHrId(creditorReference)
 
   if (referenceHrId) return referenceHrId
 
   let remittanceInformation = transactionDetails?.RmtInf?.Ustrd
-  if (!remittanceInformation) {
-    return null
-  }
 
   if (Array.isArray(remittanceInformation)) {
     remittanceInformation = remittanceInformation.join(' ')
   }
 
   return (
-    paymentslip.getHrId(remittanceInformation) ||
+    invoices.commons.getHrId(remittanceInformation || avisierungstext) ||
     remittanceInformation?.match(/\b([A-Za-z0-9]{6})\b/)?.[1] ||
     avisierungstext.match(
       /.*?MITTEILUNGEN:.*?\s([A-Za-z0-9]{6})(\s.*?|$)/,

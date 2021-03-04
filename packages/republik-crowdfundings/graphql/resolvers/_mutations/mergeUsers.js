@@ -68,7 +68,7 @@ module.exports = async (_, args, context) => {
       },
     )
 
-    const newUser = await transaction.public.users.updateAndGetOne(
+    await transaction.public.users.updateOne(
       {
         id: targetUser.id,
       },
@@ -203,23 +203,15 @@ module.exports = async (_, args, context) => {
       await transaction.public.sessions.updateOne({ id: session.id }, { sess })
     }
 
-    // remove addresses
-    const addressIds = users
-      .filter((u) => u.addressId && u.addressId !== newUser.addressId)
-      .map((u) => u.addressId)
-    if (addressIds.length) {
-      await transaction.public.addresses.deleteOne({ id: addressIds[0] })
-    }
-
     // anonymize user answers, as an answer record can't be assigned to another user
     const answers = await transaction.public.answers.find(from)
     const questionnaireIds = [...new Set(answers.map((a) => a.questionnaireId))]
-    const questionnaireSubmissions = await transaction.public.questionnaireSubmissions.find(
-      {
+    const questionnaireSubmissions =
+      !!questionnaireIds.length &&
+      (await transaction.public.questionnaireSubmissions.find({
         ...from,
         questionnaireId: questionnaireIds,
-      },
-    )
+      }))
 
     for (const questionnaireId of questionnaireIds) {
       const hasSubmission = questionnaireSubmissions.find(

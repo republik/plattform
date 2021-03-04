@@ -5,15 +5,10 @@ const {
 const repo = require('./Repo')
 const commit = require('./Commit')
 
-const resolveRepoId = (field) => async (meta, args, context) => {
+const getDocFromMetaLink = async (url, context) => {
   const { t } = context
-  // after publication: return fields resolved by documents/Document.meta
-  // on series master documents this is the series info
-  if (typeof meta[field] === 'object') {
-    return meta[field]
-  }
 
-  const { repoId } = resolve.getRepoId(meta[field])
+  const { repoId } = resolve.getRepoId(url)
   if (!repoId) {
     return null
   }
@@ -26,11 +21,49 @@ const resolveRepoId = (field) => async (meta, args, context) => {
       }
     })
   const doc = latestCommit && (await commit.document(latestCommit, {}, context))
+  return doc || null
+}
 
+const resolveSeriesEpisodes = async (series, context) => {
+  if (
+    series?.episodes?.find((episode) => typeof episode.document === 'string')
+  ) {
+    // copy object, prevent modifying content.meta
+    const episodes = [].concat(series.episodes).map((episode) => ({
+      ...episode,
+    }))
+    for (const episode of episodes) {
+      // ensure not already resolved by previous run
+      if (typeof episode.document === 'string') {
+        episode.document = await getDocFromMetaLink(episode.document, context)
+      }
+    }
+    return {
+      ...series,
+      episodes,
+    }
+  }
+  return series
+}
+
+const resolveRepoId = (field) => async (meta, args, context) => {
+  // after publication: return fields resolved by documents/Document.meta
+  // on series master documents this is the series info
+  if (typeof meta[field] === 'object') {
+    if (field === 'series') {
+      // however in publikator
+      // the episodes { document } need another loop
+      return resolveSeriesEpisodes(meta[field], context)
+    }
+
+    return meta[field]
+  }
+
+  const doc = await getDocFromMetaLink(meta[field], context)
   // for series episodes we don't want to return the master
   // document but its meta.series info object
   if (field === 'series' && doc) {
-    return doc.content.meta.series
+    return resolveSeriesEpisodes(doc.content.meta.series, context)
   }
 
   return doc || null

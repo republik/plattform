@@ -1,9 +1,10 @@
 #!/usr/bin/env node
 // splits a front repo into two, based on a date
+// - clone the magazine front locally and then reference its path
+// - usually the necessary id is the last one from a year
 //
-// usage: place the magazine repo folder (containing article.md and images folder)
-// next to this script and run it
-// ./splitFront.js --id 2l7waBIDo --path ~/Articles/magazine
+// usage:
+// ./splitFront.js --id WDjhX_a1H --path ~/Articles/magazine
 
 const Promise = require('bluebird')
 const { promises: fs } = require('fs')

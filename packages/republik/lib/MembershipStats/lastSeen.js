@@ -5,7 +5,7 @@ const {
 } = require('@orbiting/backend-modules-utils')
 
 const LAST_SEEN_AGO = '30 days'
-const QUERY_CACHE_TTL_SECONDS = 60 * 60 * 24 // A day
+const QUERY_CACHE_TTL_SECONDS = 60 * 60 * 24 * 8 // A week and a day
 
 const query = `
 WITH "sessionsLastSeen" AS (

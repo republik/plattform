@@ -5,6 +5,8 @@ scalar JSON
 
 type Series {
   title: String!
+  logo: String
+  logoDark: String
   episodes: [Episode!]!
 }
 
@@ -44,7 +46,7 @@ type Meta {
   image: String
   emailSubject: String
   description: String
-  subject: String
+  subject: String @deprecated(reason: "parse \`Document.content\` instead")
   facebookTitle: String
   facebookImage: String
   facebookDescription: String

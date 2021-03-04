@@ -12,7 +12,7 @@ const {
   timeFormat,
   formatPriceChf,
 } = require('@orbiting/backend-modules-formats')
-const { paymentslip } = require('@orbiting/backend-modules-invoices')
+const invoices = require('@orbiting/backend-modules-invoices')
 
 const { getLastEndDate } = require('./utils')
 
@@ -694,7 +694,10 @@ mail.getPledgeMergeVars = async (
   )
   const payment =
     pledgePayment &&
-    (await paymentslip.resolve({ id: pledgePayment.paymentId }, { pgdb, t }))
+    (await invoices.commons.resolvePayment(
+      { id: pledgePayment.paymentId },
+      { pgdb, t },
+    ))
 
   const pledgeOptions = await pgdb.public.pledgeOptions.find(
     {
@@ -932,19 +935,21 @@ mail.getPledgeMergeVars = async (
           },
           {
             name: 'reference',
-            content: paymentslip.getReference(payment.hrid, true),
+            content: invoices.commons.getReference(payment.hrid, true),
           },
-          paymentslip.isApplicable(payment) && {
+          invoices.paymentslip.isApplicable(payment) && {
             type: 'application/pdf',
             name:
               [
                 'QR-Rechnung',
                 creditor?.address?.name,
-                paymentslip.getReference(payment.hrid, true),
+                invoices.commons.getReference(payment.hrid, true),
               ]
                 .filter(Boolean)
                 .join(' ') + '.pdf',
-            content: (await paymentslip.generate(payment)).toString('base64'),
+            content: (await invoices.paymentslip.generate(payment)).toString(
+              'base64',
+            ),
           },
         ]
       : []),

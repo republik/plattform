@@ -304,6 +304,7 @@ type PledgePayment {
   status: PaymentStatus!
   hrid: String
   reference(pretty: Boolean): String
+  invoiceUrl: String
   paymentslipUrl: String
   pspId: String
   dueDate: DateTime
