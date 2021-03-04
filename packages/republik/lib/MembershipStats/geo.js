@@ -8,14 +8,17 @@ const {
 
 const QUERY_CACHE_TTL_SECONDS = 60 * 60 * 24 * 8 // A week and a day
 
+// selected 4 digit postal codes do not have leading 0s as 5 digit codes do, so we can use parseInt() in that cases
 const postalCodeParsers = {
-  CH: (code) => parseInt(code.replace(/^CH[\s-]*/i, '')).toString(),
-  DE: (code) => code.replace(/^D[\s-]*/i, '').split(' ')[0],
-  AT: (code) => code.replace(/^A[\s-]*/i, '').split(' ')[0],
-  BE: (code) => code.replace(/^B[\s-]*/i, '').split(' ')[0],
-  DK: (code) => code.replace(/^DK[\s-]*/i, '').split(' ')[0],
-  IT: (code) => code.replace(/^I[\s-]*/i, '').split(' ')[0],
-  NL: (code) => parseInt(code.replace(/^NL[\s-]*/i, '')).toString(),
+  CH: (code) => parseInt(code.replace(/^CH[\s-]*/i, '')).toString(), // 4-digit code
+  AT: (code) => parseInt(code.replace(/^A[\s-]*/i, '')).toString(), // 4-digit code
+  BE: (code) => parseInt(code.replace(/^B[\s-]*/i, '')).toString(), // 4-digit code
+  DK: (code) => parseInt(code.replace(/^DK[\s-]*/i, '')).toString(), // 4-digit code
+  NL: (code) => parseInt(code.replace(/^NL[\s-]*/i, '')).toString(), // we have 4-digit code in our database but official rule is: 4 digits + 2 upper case letters
+  DE: (code) => code.replace(/^D[\s-]*/i, '').split(' ')[0], // 5-digit code
+  IT: (code) => code.replace(/^I[\s-]*/i, '').split(' ')[0], // 5-digit code
+  ES: (code) => code.replace(/^ES[\s-]*/i, '').split(' ')[0], // 5-digit code
+  FR: (code) => code.replace(/^F[\s-]*/i, '').split(' ')[0], // 5-digit code
 }
 
 const createCache = (context) =>
@@ -72,9 +75,10 @@ const populate = async (context, resultFn) => {
       const { name: countryName, code: countryCode } = country
       const postalCodeParser = postalCodeParsers[countryCode]
 
+      const membershipPostalCode = membership.postalCode?.trim()
       const parsedPostalCode = postalCodeParser
-        ? postalCodeParser(membership.postalCode)
-        : membership.postalCode
+        ? postalCodeParser(membershipPostalCode)
+        : membershipPostalCode
 
       const postalCodeDetail = await pgdb.public.statisticsGeoPostalCode.findOne(
         { countryCode, postalCode: parsedPostalCode.trim() },
