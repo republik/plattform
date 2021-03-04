@@ -281,7 +281,6 @@ type MembershipStatsgeoCities {
 
 type MembershipStatsgeoCitiesBucket {
   key: String
-  city: String @deprecated(reason: "Use \`key\` instead.")
   buckets: [MembershipStatsgeoCitiesCountBucket!]!
 }
 
@@ -343,10 +342,6 @@ type RevenueStatsSegmentsDateBucket {
 type RevenueStatsSegmentsBucket {
   key: String!
   label: String!
-  "Amount of units sold"
-  amount: Int @deprecated(reason: "No units count at this level.")
-  "Revenue"
-  sum: Int! @deprecated(reason: "Use \`share\` instead.")
   "Share"
   share: Float!
 }

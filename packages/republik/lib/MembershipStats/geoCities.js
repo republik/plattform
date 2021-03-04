@@ -112,7 +112,6 @@ const populate = async (context, resultFn) => {
 
     return {
       key,
-      city: key,
       buckets: Object.keys(buckets).map((bucketKey) => {
         const bucket = buckets[bucketKey]
 

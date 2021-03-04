@@ -124,7 +124,6 @@ const populate = async (context, resultFn) => {
       .filter((bucketKey) => !['unit', 'total'].includes(bucketKey))
       .map((segmentKey) => ({
         key: segmentKey,
-        sum: Math.round(bucket[segmentKey] / 100),
         share: bucket[segmentKey] / total,
       }))
 
