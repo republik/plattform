@@ -99,7 +99,7 @@ export const breakoutStyles = {
 }
 
 const Center = ({ children, attributes = {}, ...props }) => (
-  <div {...styles.center} {...attributes} {...props}>
+  <div {...styles.center} {...attributes} {...props} className='center'>
     {children}
   </div>
 )
