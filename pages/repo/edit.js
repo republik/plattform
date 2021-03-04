@@ -4,6 +4,7 @@ import { graphql, compose } from 'react-apollo'
 import gql from 'graphql-tag'
 import { Value, resetKeyGenerator } from 'slate'
 import debounce from 'lodash.debounce'
+import { timeFormat } from 'd3-time-format'
 
 import withAuthorization from '../../components/Auth/withAuthorization'
 
@@ -119,13 +120,18 @@ const getTemplateById = gql`
 const debug = createDebug('publikator:pages:edit')
 const TEST = process.env.NODE_ENV === 'test'
 
-const addWarning = message => state => ({
-  showSidebar: true,
-  warnings: [message, ...state.warnings].filter(
-    // de-dup
-    (message, i, all) => all.indexOf(message) === i
-  )
-})
+const formatTime = timeFormat('%H:%M')
+const addWarning = message => {
+  const time = formatTime(new Date())
+  const timedMessage = `${time} ${message}`
+  return state => ({
+    showSidebar: true,
+    warnings: [timedMessage, ...state.warnings].filter(
+      // de-dup
+      (message, i, all) => all.indexOf(message) === i
+    )
+  })
+}
 
 const rmWarning = message => state => ({
   warnings: state.warnings.filter(warning => warning !== message)
@@ -805,9 +811,15 @@ export class EditorPage extends Component {
     const dark = editorState && editorState.document.data.get(DARK_MODE_KEY)
 
     const sidebarPrependChildren = [
-      ...warnings
-        .filter(Boolean)
-        .map((m, i) => <Warning key={`warning-${i}`} message={m} />),
+      ...warnings.filter(Boolean).map((m, i) => (
+        <Warning
+          key={`warning-${i}`}
+          message={m}
+          onRemove={() => {
+            this.setState(rmWarning(m))
+          }}
+        />
+      )),
       !showLoading && repo && (
         <BranchingNotice
           key='branching-notice'
