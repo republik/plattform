@@ -181,7 +181,24 @@ type MembershipStats {
     min: DateTime!
     max: DateTime!
   ): Int!
+  """
+  Returns age distribution for users with active memberships
+  """
+  ages: MembershipStatsAges!
+  """
+  Returns name distribution for users with active memberships including sex categorization
+  """
+  names(first: Int): MembershipStatsNames!
+  """
+  Returns active membership counts per country/postalCode and year
+  """
+  geo: MembershipStatsGeo
+  """
+  Returns active membership counts per city and year 
+  """
+  geoCities: MembershipStatsgeoCities
 }
+
 type MemberStats {
   count: Int!
 }
@@ -208,6 +225,68 @@ type MembershipPeriodStatsDay {
   date: Date!
   cancelCount: Int!
   prolongCount: Int!
+}
+
+type MembershipStatsAges {
+  averageAge: Float
+  buckets: [MembershipStatsAgesBucket!]!
+  updatedAt: DateTime!
+}
+
+type MembershipStatsAgesBucket {
+  key: Int
+  count: Int!
+}
+
+type MembershipStatsNames {
+  buckets: [MembershipStatsNamesBucket!]!
+  updatedAt: DateTime!
+}
+
+type MembershipStatsNamesBucket {
+  key: String
+  sex: Sex
+  count: Int!
+}
+
+enum Sex {
+  FEMALE
+  MALE
+  BOTH
+}
+
+type MembershipStatsGeo {
+  buckets: [MembershipStatsGeoBucket!]!
+  updatedAt: DateTime!
+}
+
+type MembershipStatsGeoBucket {
+  key: String
+  country: String
+  postalCode: String
+  lat: Float
+  lon: Float
+  buckets: [MembershipStatsGeoCountBucket!]!
+}
+
+type MembershipStatsGeoCountBucket {
+  key: String
+  count: Int!
+}
+
+type MembershipStatsgeoCities {
+  buckets: [MembershipStatsgeoCitiesBucket!]!
+  updatedAt: DateTime!
+}
+
+type MembershipStatsgeoCitiesBucket {
+  key: String
+  buckets: [MembershipStatsgeoCitiesCountBucket!]!
+}
+
+type MembershipStatsgeoCitiesCountBucket {
+  key: String
+  count: Int!
 }
 
 type StatementUserConnection {
@@ -238,11 +317,33 @@ type RevenueStats {
     min: DateTime!
     max: DateTime
   ): RevenueStatsSurplus!
+
+  """
+  Returns revenue segments
+  """
+  segments: RevenueStatsSegments!
 }
 
 type RevenueStatsSurplus {
   total: Int!
   updatedAt: DateTime!
+}
+
+type RevenueStatsSegments {
+  buckets: [RevenueStatsSegmentsDateBucket!]!
+  updatedAt: DateTime!
+}
+
+type RevenueStatsSegmentsDateBucket {
+  key: String!
+  buckets: [RevenueStatsSegmentsBucket!]!
+}
+
+type RevenueStatsSegmentsBucket {
+  key: String!
+  label: String!
+  "Share"
+  share: Float!
 }
 
 type MembershipStatsEvolution {
@@ -275,6 +376,10 @@ type MembershipStatsEvolutionBucket {
   cancelled: Int!
   "Amount of memberships which are active (periods)"
   active: Int!
+  "Amount of still or again active crowdfunding memberships (periods)"
+  activeCrowdfunders: Int!
+  "Amount of still or again active loyalist memberships (periods)"
+  activeLoyalists: Int!
   "Amount of memberships which are overdue"
   overdue: Int!
 
@@ -287,6 +392,10 @@ type MembershipStatsEvolutionBucket {
 
   "Amount of active memberships at end of month"
   activeEndOfMonth: Int!
+  "Amount of still or again active crowdfunding memberships at end of month"
+  activeCrowdfundersEndOfMonth: Int!
+  "Amount of still or again active loyalist memberships at end of month"
+  activeLoyalistsEndOfMonth: Int!
   "Amount of active memberships at end of month with a donation"
   activeEndOfMonthWithDonation: Int!
   "Amount of active memberships at end of month without a donation"
