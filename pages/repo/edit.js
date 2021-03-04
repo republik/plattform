@@ -459,6 +459,14 @@ export class EditorPage extends Component {
       return
     }
 
+    if (commitId && !repo.commit) {
+      this.setState(addWarning(t('commit/warn/commit404')))
+      Router.replaceRoute('repo/edit', {
+        repoId: repoId.split('/')
+      })
+      return
+    }
+
     const { schema } = this.state
     if (!schema) {
       const commit =
