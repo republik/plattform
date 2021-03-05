@@ -10,7 +10,7 @@ const {
 } = process.env
 
 const keyPrefix = `search:cache:${
-  SEARCH_CACHE_COMPRESSION ? 'compressed:' : 'uncompressed'
+  SEARCH_CACHE_COMPRESSION ? 'compressed:' : 'uncompressed:'
 }`
 
 const getRedisKey = (query) => `${keyPrefix}${hashQuery(query)}`
@@ -80,7 +80,7 @@ const createSet = (redis) => async (query, data, options = {}) => {
 }
 
 const createInvalidate = (redis) => async () => {
-  debug('search:cache')('INVALIDATE')
+  debug('search:cache:invalidate')(`${keyPrefix}*`)
   await redis
     .scanMap({
       pattern: `${keyPrefix}*`,
