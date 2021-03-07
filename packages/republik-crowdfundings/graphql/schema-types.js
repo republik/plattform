@@ -197,8 +197,8 @@ union Reward = Goodie | MembershipType
 
 input UserInput {
   email: String!
-  firstName: String!
-  lastName: String!
+  firstName: String
+  lastName: String
   birthday: Date
   phoneNumber: String
 }
@@ -237,7 +237,7 @@ type Pledge {
 input PledgeInput {
   options: [PackageOptionInput!]!
   total: Int!
-  user: UserInput!
+  user: UserInput
   address: AddressInput
   shippingAddress: AddressInput
   reason: String

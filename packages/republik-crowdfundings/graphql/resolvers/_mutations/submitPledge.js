@@ -249,11 +249,11 @@ module.exports = async (_, args, context) => {
     if (req.user) {
       // user logged in
       if (
-        req.user.email !== pledge.user.email ||
+        (pledge.user && req.user.email !== pledge.user.email) ||
         (accessTokenUser && req.user.email !== accessTokenUser.email)
       ) {
         logger.error(
-          'req.user.email and pledge.user.email dont match, signout first.',
+          'req.user.email does not match, signout or remove access token first.',
           { req: req._log(), args },
         )
         throw new Error(t('api/unexpected'))
@@ -275,7 +275,7 @@ module.exports = async (_, args, context) => {
       }
     } else {
       if (accessTokenUser) {
-        if (pledge.user.email !== accessTokenUser.email) {
+        if (pledge.user && pledge.user.email !== accessTokenUser.email) {
           await transaction.transactionRollback()
           return {
             // user must logout before he can submitPledge
@@ -284,6 +284,9 @@ module.exports = async (_, args, context) => {
         }
         user = accessTokenUser._raw
       } else {
+        if (!pledge.user) {
+          throw new Error(t('api/signIn'))
+        }
         user = await transaction.public.users.findOne({
           email: pledge.user.email,
         }) // try to load existing user by email
@@ -311,10 +314,11 @@ module.exports = async (_, args, context) => {
 
     // update user details
     if (
-      user.firstName !== pledge.user.firstName ||
-      user.lastName !== pledge.user.lastName ||
-      user.birthday !== pledge.user.birthday ||
-      user.phoneNumber !== pledge.user.phoneNumber ||
+      (pledge.user &&
+        (user.firstName !== pledge.user.firstName ||
+          user.lastName !== pledge.user.lastName ||
+          user.birthday !== pledge.user.birthday ||
+          user.phoneNumber !== pledge.user.phoneNumber)) ||
       pledge.address
     ) {
       const address =
@@ -327,11 +331,13 @@ module.exports = async (_, args, context) => {
       user = await transaction.public.users.updateAndGetOne(
         { id: user.id },
         {
-          ...(pledge.user.firstName && { firstName: pledge.user.firstName }),
-          ...(pledge.user.lastName && { lastName: pledge.user.lastName }),
-          ...(pledge.user.birthday && { birthday: pledge.user.birthday }),
-          ...(pledge.user.phoneNumber && {
-            phoneNumber: pledge.user.phoneNumber,
+          ...(pledge.user && {
+            ...(pledge.user.firstName && { firstName: pledge.user.firstName }),
+            ...(pledge.user.lastName && { lastName: pledge.user.lastName }),
+            ...(pledge.user.birthday && { birthday: pledge.user.birthday }),
+            ...(pledge.user.phoneNumber && {
+              phoneNumber: pledge.user.phoneNumber,
+            }),
           }),
           ...(address?.id && { addressId: address?.id }),
         },
