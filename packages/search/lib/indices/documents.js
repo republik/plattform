@@ -328,9 +328,6 @@ module.exports = {
         versionName: {
           type: 'keyword',
         },
-        milestoneCommitId: {
-          type: 'keyword',
-        },
 
         contentString: {
           type: 'text',

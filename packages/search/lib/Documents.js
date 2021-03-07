@@ -146,9 +146,6 @@ const schema = {
   versionName: {
     criteria: termCriteriaBuilder('versionName'),
   },
-  milestoneCommitId: {
-    criteria: termCriteriaBuilder('milestoneCommitId'),
-  },
   userId: {
     criteria: termCriteriaBuilder('meta.credits.url'),
     parser: (value) => `/~${value}`,
@@ -215,13 +212,7 @@ const schema = {
   },
 }
 
-const getElasticDoc = ({
-  doc,
-  commitId,
-  versionName,
-  milestoneCommitId,
-  resolved,
-}) => {
+const getElasticDoc = ({ doc, commitId, versionName, resolved }) => {
   const meta = doc.content.meta
   const id = getDocumentId({ repoId: meta.repoId, commitId, versionName })
   return {
@@ -232,7 +223,6 @@ const getElasticDoc = ({
     id,
     commitId,
     versionName,
-    milestoneCommitId,
     meta, // doc.meta === doc.content.meta
     resolved: !_.isEmpty(resolved) ? resolved : undefined,
     content: doc.content,
