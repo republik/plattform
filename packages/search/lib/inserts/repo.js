@@ -1,86 +1,146 @@
-const Redis = require('@orbiting/backend-modules-base/lib/Redis')
-const getRepos = require('@orbiting/backend-modules-publikator/graphql/resolvers/_queries/repos')
+const visit = require('unist-util-visit')
+
 const {
-  latestPublications: getLatestPublications,
-} = require('@orbiting/backend-modules-publikator/graphql/resolvers/Repo')
-const {
-  upsert: repoCacheUpsert,
-} = require('@orbiting/backend-modules-publikator/lib/cache/upsert')
+  mdastContentToString,
+} = require('@orbiting/backend-modules-search/lib/utils')
+const { mdastToString } = require('@orbiting/backend-modules-utils')
+const { parse: mdastParse } = require('@orbiting/remark-preset')
 
-const iterateRepos = async (context, callback) => {
-  let pageInfo
-  let pageCounter = 0
+const bulk = require('../indexPgTable')
 
-  do {
-    console.info(`requesting repos (page ${pageCounter++}) ...`)
+function getCommit(restCommit) {
+  const { id, message, createdAt } = restCommit
+  return { id, message, createdAt }
+}
 
-    const repos = await getRepos(
-      null,
-      {
-        first: 20,
-        orderBy: {
-          field: 'PUSHED_AT',
-          direction: 'DESC',
-        },
-        ...(pageInfo && pageInfo.hasNextPage
-          ? { after: pageInfo.endCursor }
-          : {}),
-      },
-      context,
-    )
+function getCommitStrings(mdast) {
+  if (!mdast) {
+    return
+  }
 
-    pageInfo = repos.pageInfo
+  const strings = {}
 
-    for (const repo of repos.nodes) {
-      await callback(repo, await getLatestPublications(repo, null, context))
+  const text = mdastContentToString(mdast)
+  text && Object.assign(strings, { text })
+
+  visit(mdast, 'zone', (node) => {
+    if (node.identifier === 'TITLE') {
+      const title = mdastToString({
+        children: node.children.filter(
+          (n) => n.type === 'heading' && n.depth === 1,
+        ),
+      }).trim()
+
+      const subject = mdastToString({
+        children: node.children.filter(
+          (n) => n.type === 'heading' && n.depth === 2,
+        ),
+      }).trim()
+
+      const lead = mdastToString({
+        children: [
+          node.children.filter((n) => n.type === 'paragraph')[0],
+        ].filter(Boolean),
+      }).trim()
+
+      const credits = mdastToString({
+        children: [
+          node.children.filter((n) => n.type === 'paragraph')[1],
+        ].filter(Boolean),
+      }).trim()
+
+      Object.assign(strings, {
+        title,
+        subject,
+        lead,
+        credits,
+      })
     }
-  } while (pageInfo && pageInfo.hasNextPage)
+  })
+
+  return { strings }
+}
+
+function getCommitMeta(meta) {
+  const { series, ...restMeta } = meta
+
+  const seriesMeta = {}
+
+  if (series) {
+    if (typeof series === 'string') {
+      const seriesEpisode = series
+      Object.assign(seriesMeta, { seriesEpisode })
+    }
+
+    if (typeof meta.series === 'object') {
+      const seriesMaster = {
+        ...meta.series,
+        episodes: meta.series.episodes.map((episode) => {
+          const { publishDate, ...restEpisode } = episode
+
+          return {
+            ...restEpisode,
+            ...(publishDate && { publishDate }),
+          }
+        }),
+      }
+
+      Object.assign(seriesMeta, { seriesMaster })
+    }
+
+    return {
+      meta: {
+        ...restMeta,
+        ...seriesMeta,
+      },
+    }
+  }
+
+  return { meta: restMeta }
+}
+
+async function transform(row) {
+  const { content, meta, ...restCommit } = await this.payload.getLatestCommit(
+    row.id,
+  )
+
+  const mdast = mdastParse(content)
+
+  return {
+    ...row,
+    commit: {
+      ...getCommit(restCommit),
+      ...getCommitStrings(mdast),
+      ...getCommitMeta(meta),
+    },
+  }
+}
+
+const getDefaultResource = async ({ pgdb }) => {
+  return {
+    table: pgdb.publikator.repos,
+    payload: {
+      getLatestCommit: async function (repoId) {
+        return pgdb.publikator.commits.findOne(
+          { repoId },
+          { orderBy: { createdAt: 'desc' }, limit: 1 },
+        )
+      },
+    },
+    transform,
+  }
 }
 
 module.exports = {
   before: () => {},
-  insert: async ({ indexName, type: indexType, elastic, pgdb }) => {
-    const stats = { [indexType]: { added: 0, total: 0 } }
-    const statsInterval = setInterval(() => {
-      console.log(indexName, stats)
-    }, 1 * 1000)
-
-    const context = {
-      redis: Redis.connect(),
-      pgdb,
-      user: {
-        name: 'publikator-pullelasticsearch',
-        email: 'ruggedly@republik.ch',
-        roles: ['editor'],
-      },
+  insert: async ({ resource, ...rest }) => {
+    resource = {
+      ...(await getDefaultResource({ resource, ...rest })),
+      ...resource,
     }
 
-    await iterateRepos(context, async (repo, publications) => {
-      stats[indexType].total++
-      stats[indexType].added++
-
-      await repoCacheUpsert(
-        {
-          commit: repo.latestCommit,
-          content: repo.latestCommit.document.content,
-          createdAt: repo.createdAt,
-          isArchived: repo.isArchived,
-          isTemplate: repo.isTemplate,
-          id: repo.id,
-          meta: repo.meta,
-          name: repo.id.split('/')[1],
-          publications,
-          tags: repo.tags,
-          updatedAt: repo.updatedAt,
-          refresh: false,
-        },
-        { elastic },
-      )
-    })
-
-    clearInterval(statsInterval)
-
-    console.log(indexName, stats)
+    return bulk.index({ resource, ...rest })
   },
   after: () => {},
+  final: () => {},
 }

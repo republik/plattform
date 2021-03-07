@@ -51,4 +51,5 @@ module.exports = {
     return bulk.index({ resource, ...rest })
   },
   after: () => {},
+  final: () => {},
 }
