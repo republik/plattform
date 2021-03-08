@@ -1,5 +1,3 @@
-const editRepoMeta = require('../graphql/resolvers/_mutations/editRepoMeta')
-const { upsert: upsertDiscussion } = require('./Discussion')
 const visit = require('unist-util-visit')
 const debug = require('debug')('publikator:lib:Document')
 const mp3Duration = require('@rocka/mp3-duration')
@@ -13,6 +11,9 @@ const {
 const {
   getAuthorUserIds,
 } = require('@orbiting/backend-modules-documents/lib/meta')
+
+const { upsert: upsertDiscussion } = require('./Discussion')
+const { updateRepo } = require('./postgres')
 
 const slugDateFormat = timeFormat('%Y/%m/%d')
 
@@ -81,14 +82,7 @@ const prepareMetaForPublish = async ({
   }
 
   if (savePublishDate) {
-    await editRepoMeta(
-      null,
-      {
-        repoId,
-        ...(savePublishDate ? { publishDate } : {}),
-      },
-      context,
-    )
+    await updateRepo(repoId, { publishDate }, context.pgdb)
   }
 
   let credits = []
@@ -108,6 +102,7 @@ const prepareMetaForPublish = async ({
   const { audioSourceMp3, audioSourceAac, audioSourceOgg } = doc.content.meta
   let durationMs = 0
   if (audioSourceMp3) {
+    debug(repoId, 'fetching audio source', audioSourceMp3)
     durationMs = await fetch(audioSourceMp3)
       .then((res) => res.buffer())
       .then((res) => mp3Duration(res))
@@ -116,6 +111,7 @@ const prepareMetaForPublish = async ({
       .catch((e) => {
         console.error(
           `Could not download/measure audioSourceMp3 (${audioSourceMp3})`,
+          e,
         )
         return 0
       })

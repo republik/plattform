@@ -2,39 +2,39 @@ const debug = require('debug')('publikator:mutation:removeMilestone')
 const {
   Roles: { ensureUserHasRole },
 } = require('@orbiting/backend-modules-auth')
-const { createGithubClients } = require('../../../lib/github')
-const { upsert: repoCacheUpsert } = require('../../../lib/cache/upsert')
+
+const { updateCurrentPhase } = require('../../../lib/postgres')
 
 module.exports = async (_, { repoId, name }, context) => {
-  const { user, pubsub } = context
+  const { user, pgdb, pubsub } = context
   ensureUserHasRole(user, 'editor')
-  const { githubRest } = await createGithubClients()
 
   debug({ repoId, name })
 
-  const [login, repoName] = repoId.split('/')
-  await githubRest.git.deleteRef({
-    owner: login,
-    repo: repoName,
-    ref: `tags/${name}`,
-  })
+  const tx = await pgdb.transactionBegin()
 
-  await pubsub.publish('repoUpdate', {
-    repoUpdate: {
-      id: repoId,
-    },
-  })
+  try {
+    await tx.publikator.milestones.deleteOne({
+      repoId,
+      name,
+    })
 
-  await repoCacheUpsert(
-    {
-      id: repoId,
-      tag: {
-        action: 'remove',
-        name,
+    await updateCurrentPhase(repoId, tx)
+
+    await tx.transactionCommit()
+
+    await pubsub.publish('repoUpdate', {
+      repoUpdate: {
+        id: repoId,
       },
-    },
-    context,
-  )
+    })
 
-  return true
+    return true
+  } catch (e) {
+    await tx.transactionRollback()
+
+    debug('rollback', { repoId, user: user.id })
+
+    throw e
+  }
 }

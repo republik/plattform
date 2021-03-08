@@ -2,26 +2,18 @@ const {
   lib: { resolve },
 } = require('@orbiting/backend-modules-documents')
 
-const repo = require('./Repo')
 const commit = require('./Commit')
 
 const getDocFromMetaLink = async (url, context) => {
-  const { t } = context
-
   const { repoId } = resolve.getRepoId(url)
   if (!repoId) {
     return null
   }
 
-  const latestCommit = await repo
-    .latestCommit({ id: repoId }, null, context)
-    .catch((e) => {
-      if (e.message !== t('api/github/unavailable')) {
-        throw e
-      }
-    })
-  const doc = latestCommit && (await commit.document(latestCommit, {}, context))
-  return doc || null
+  const latestCommit = await context.loaders.Commit.byRepoIdLatest.load(repoId)
+  return (
+    (latestCommit && (await commit.document(latestCommit, {}, context))) || null
+  )
 }
 
 const resolveSeriesEpisodes = async (series, context) => {

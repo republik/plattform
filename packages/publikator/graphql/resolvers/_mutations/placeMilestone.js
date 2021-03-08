@@ -2,74 +2,64 @@ const debug = require('debug')('publikator:mutation:placeMilestone')
 const {
   Roles: { ensureUserHasRole },
 } = require('@orbiting/backend-modules-auth')
-const { createGithubClients, gitAuthor } = require('../../../lib/github')
-const { upsert: repoCacheUpsert } = require('../../../lib/cache/upsert')
+const { updateCurrentPhase } = require('../../../lib/postgres')
+const yaml = require('../../../lib/yaml')
 
 module.exports = async (
   _,
-  { repoId, commitId, name: _name, message },
+  { repoId, commitId, name: _name, message, meta },
   context,
 ) => {
-  const { user, pubsub } = context
+  const { user, pgdb, pubsub } = context
   ensureUserHasRole(user, 'editor')
-  const { githubRest } = await createGithubClients()
 
   const name = _name.replace(/\s/g, '-')
 
-  debug({ repoId, commitId, name, message })
+  debug({ repoId, commitId, name, message, meta })
 
-  const [login, repoName] = repoId.split('/')
-  const tag = await githubRest.git
-    .createTag({
-      owner: login,
-      repo: repoName,
-      tag: name,
-      message,
-      object: commitId,
-      type: 'commit',
-      tagger: gitAuthor(user),
+  const tx = await pgdb.transactionBegin()
+
+  try {
+    const hasMilestone = await tx.publikator.milestones.count({
+      repoId,
+      name,
     })
-    .then((result) => result.data)
 
-  await githubRest.git.createRef({
-    owner: login,
-    repo: repoName,
-    ref: `refs/tags/${name}`,
-    sha: tag.sha,
-  })
+    if (hasMilestone) {
+      throw new Error(`milestone "${name}" on ${repoId} exists already`)
+    }
 
-  await repoCacheUpsert(
-    {
-      id: repoId,
-      tag: {
-        action: 'add',
-        name,
-      },
-    },
-    context,
-  )
+    const author = {
+      name: user.name,
+      email: user.email,
+    }
 
-  await pubsub.publish('repoUpdate', {
-    repoUpdate: {
-      id: repoId,
-    },
-  })
+    const milestone = await tx.publikator.milestones.insertAndGet({
+      repoId,
+      commitId,
+      name,
+      meta: meta || yaml.parse(message),
+      userId: user.id,
+      author,
+      scope: 'milestone',
+    })
 
-  return {
-    ...tag,
-    name: tag.tag,
-    date: tag.tagger.date,
-    author: {
-      ...tag.tagger,
-    },
-    commit: {
-      id: tag.object.sha,
-      repo: {
+    await updateCurrentPhase(repoId, tx)
+
+    await tx.transactionCommit()
+
+    await pubsub.publish('repoUpdate', {
+      repoUpdate: {
         id: repoId,
       },
-    },
-    repo: {
-      id: repoId,
-    },
+    })
+
+    return milestone
+  } catch (e) {
+    await tx.transactionRollback()
+
+    debug('rollback', { repoId, user: user.id })
+
+    throw e
   }
 }

@@ -1,5 +1,3 @@
-const { createGithubClients } = require('../../lib/github')
-const MDAST = require('@orbiting/remark-preset')
 const {
   lib: { createRepoUrlPrefixer, createUrlPrefixer },
 } = require('@orbiting/backend-modules-assets')
@@ -12,114 +10,41 @@ const {
     },
   },
 } = require('@orbiting/backend-modules-documents')
-const debug = require('debug')('publikator:commit')
 
 module.exports = {
-  document: async (
-    { id: commitId, repo: { id: repoId }, document: existingDocument },
-    { publicAssets = false },
-    { user, redis },
-  ) => {
+  author: async (commit, args, context) => {
+    const user =
+      commit.userId && (await context.loaders.User.byId.load(commit.userId))
+
+    if (user) {
+      return {
+        name: [user.firstName, user.lastName].join(' ').trim() || user.email,
+        email: user.email,
+        user,
+      }
+    }
+
+    return {
+      name: commit.author.name,
+      email: commit.author.email,
+    }
+  },
+  markdown: async (commit, args, context) => {
+    const { markdown } = await context.loaders.Commit.byIdMarkdown.load(
+      commit.id,
+    )
+
+    return markdown
+  },
+  document: async (commit, { publicAssets = false }, context) => {
+    const { repoId, document: existingDocument } = commit
     if (existingDocument) {
       return existingDocument
     }
 
-    let mdast
+    const { mdast } = await context.loaders.Commit.byIdMdast.load(commit.id)
 
-    const redisKey = `repos:${repoId}/commits/${commitId}/document/mdast`
-    const redisMdast = await redis.getAsync(redisKey)
-    redis.expireAsync(redisKey, redis.__defaultExpireSeconds)
-    if (redisMdast) {
-      debug('document: redis HIT (%s)', redisKey)
-      mdast = JSON.parse(redisMdast)
-    } else {
-      debug('document: redis MISS (%s)', redisKey)
-      const { githubApolloFetch, githubRest } = await createGithubClients()
-      const [login, repoName] = repoId.split('/')
-
-      const {
-        data: { repository },
-      } = await githubApolloFetch({
-        query: `
-          query document(
-            $login: String!,
-            $repoName: String!,
-            $blobExpression: String!
-          ) {
-            repository(owner: $login, name: $repoName) {
-              blob: object(expression: $blobExpression) {
-                ... on Blob {
-                  oid
-                }
-              }
-            }
-          }
-        `,
-        variables: {
-          login,
-          repoName,
-          blobExpression: `${commitId}:article.md`,
-        },
-      })
-
-      if (!repository.blob) {
-        console.warn(`no document found for ${repoId}`)
-        return {
-          content: {},
-          meta: {},
-        }
-      }
-
-      const blobParams = {
-        owner: login,
-        repo: repoName,
-        file_sha: repository.blob.oid,
-      }
-
-      let blobResult, error
-      try {
-        blobResult = await githubRest.git.getBlob(blobParams)
-      } catch (e) {
-        error = e
-        blobResult = null
-      }
-
-      if (
-        error ||
-        !blobResult ||
-        !blobResult.data ||
-        !blobResult.data.content
-      ) {
-        console.error('getBlob failed for ', { ...blobParams, commitId, error })
-        throw new Error(`getBlob failed for sha ${repository.blob.oid}`)
-      }
-
-      try {
-        mdast = MDAST.parse(
-          Buffer.from(blobResult.data.content, 'base64').toString('utf8'),
-        )
-      } catch (e) {
-        console.error(e)
-      }
-      if (mdast) {
-        await redis.setAsync(
-          redisKey,
-          JSON.stringify(mdast),
-          'EX',
-          redis.__defaultExpireSeconds,
-        )
-      } else {
-        mdast = MDAST.parse('Dokument fehlerhaft. Reden Sie mit der IT.')
-      }
-    }
-
-    // prefix repo image's urls
-    const repoImagePaths = []
-    const prefixRepoUrl = createRepoUrlPrefixer(
-      repoId,
-      publicAssets,
-      repoImagePaths,
-    )
+    const prefixRepoUrl = createRepoUrlPrefixer(repoId, publicAssets)
     processRepoImageUrlsInContent(mdast, prefixRepoUrl)
     processRepoImageUrlsInMeta(mdast, prefixRepoUrl)
 
@@ -128,10 +53,9 @@ module.exports = {
     processImageUrlsInContent(mdast, prefixUrl)
 
     return {
-      id: Buffer.from(`repo:${repoId}:${commitId}`).toString('base64'),
+      id: Buffer.from(`repo:${commit.repoId}:${commit.id}`).toString('base64'),
       repoId,
       content: mdast,
-      repoImagePaths,
     }
   },
 }

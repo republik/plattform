@@ -1,4 +1,4 @@
-const { publicationVersionRegex } = require('../../lib/github')
+const { publicationVersionRegex } = require('../../lib/postgres')
 
 const MilestoneInterface = require('./MilestoneInterface')
 

@@ -78,6 +78,7 @@ packages/auth/lib/transformUser.js
 packages/auth/loaders/User.js
 packages/dataloader/**/*.js
 packages/invoices/**/*.js
+packages/publikator/lib/cache/**/*.js
 packages/publikator/lib/phases.js
 packages/publikator/loaders/**/*.js
 packages/republik-crowdfundings/lib/payments/paymentslip/helpers.js

@@ -2,29 +2,15 @@ const {
   Roles: { ensureUserHasRole },
 } = require('@orbiting/backend-modules-auth')
 
-const client = require('../../../lib/cache/search')
-
 module.exports = async (_, args, context) => {
-  const { user } = context
+  const { user, loaders } = context
   ensureUserHasRole(user, 'editor')
 
-  const { body } = await client.find(
-    {
-      first: 1,
-      id: args.id,
-    },
-    context,
-  )
+  const repo = await loaders.Repo.byId.load(args.id)
 
-  const cachedRepo = body.hits.hits[0]
-  if (cachedRepo) {
-    // repo.latestPublications must always be fresh
-    // otherwise resolvers/Repo latestPublications uses stale information after publishing a new doc
-    delete cachedRepo.latestPublications
-    return client.mapHit(cachedRepo)
+  if (!repo) {
+    throw new Error(`repo "${args.id}" does not exist`)
   }
 
-  return {
-    id: args.id,
-  }
+  return repo
 }

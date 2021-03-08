@@ -191,7 +191,7 @@ module.exports = {
           stats[indexType].added++
         })
       },
-      { concurrency: 100 },
+      { concurrency: 10 },
     )
 
     clearInterval(statsInterval)
