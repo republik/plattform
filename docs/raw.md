@@ -35,7 +35,7 @@ Bestehende Dokumente kopieren und als Muster für neue Dokumente verwenden:
 
 ## Copy-paste
 
-Komplexe Elemente im selben Dokument verschieben. Hier wollen wir z.B. eine Umfrage in die Mitte des Artikel verschieben:
+Komplexe Elemente im selben Dokument verschieben. Hier wollen wir z.B. eine Umfrage in die Mitte des Artikels verschieben:
 > ![](./images/copypaste/init.png)
  
 - Den Quellcode-Editor öffnen.
@@ -59,9 +59,9 @@ Komplexe Elemente im selben Dokument verschieben. Hier wollen wir z.B. eine Umfr
 
 Kacheln von der Front in ein anderes Dokument duplizieren (e.g. Marketingseite)
 
-– Kachel Markdown durch das inline UI Menu kopieren:
+–  Im Text der Kachel rein: dann wird ein Menu sichtbar (oben links in der Kachel). Kachel Markdown durch das inline UI Menu kopieren:
 > ![](./images/copypastefront/inline.png)
 
- - Im Zieldokument den Quellcode-Editor öffnen und mit Ctrl/Cmd-V das Markdown reinkopieren, am einfachsten am Anfang des Dokumentes (kann immer später durch das inline Menu geschoben werden).
+ - Im Zieldokument den Quellcode-Editor öffnen und mit Ctrl/Cmd-V das Markdown reinkopieren, entweder ganz oben, ganz unten, oder nach einen `<hr /></section>` Tag.
  > ![](./images/copypastefront/copy.png)
  
