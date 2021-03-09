@@ -2,11 +2,22 @@ import React, { Component } from 'react'
 import { graphql, compose } from 'react-apollo'
 import gql from 'graphql-tag'
 
+import LockIcon from 'react-icons/lib/md/lock'
+import PublicIcon from 'react-icons/lib/md/public'
+
+import {
+  InlineSpinner,
+  Interaction,
+  Label,
+  A,
+  colors
+} from '@project-r/styleguide'
+
 import withT from '../../lib/withT'
 import { getName } from '../../lib/utils/name'
+import { FRONTEND_BASE_URL } from '../../lib/settings'
 import Loader from '../Loader'
 import List, { Item, Highlight } from '../List'
-import { InlineSpinner, Interaction, Label, A } from '@project-r/styleguide'
 import { swissTime } from '../../lib/utils/format'
 import ErrorMessage from '../ErrorMessage'
 
@@ -32,6 +43,12 @@ export const getRepoWithPublications = gql`
         author {
           name
           email
+        }
+        document {
+          id
+          meta {
+            path
+          }
         }
       }
     }
@@ -68,6 +85,20 @@ class CurrentPublications extends Component {
               <List>
                 {repo.latestPublications.map(publication => (
                   <Item key={publication.name}>
+                    {publication.live && publication.document?.meta?.path && (
+                      <div style={{ float: 'right' }}>
+                        <a
+                          href={`${FRONTEND_BASE_URL}${publication.document.meta.path}`}
+                        >
+                          {publication.prepublication && (
+                            <LockIcon color={colors.primary} />
+                          )}
+                          {!publication.prepublication && (
+                            <PublicIcon color={colors.primary} />
+                          )}
+                        </a>
+                      </div>
+                    )}
                     {publication.prepublication &&
                       t('publication/current/prepublication')}{' '}
                     <Highlight>{publication.name}</Highlight>{' '}

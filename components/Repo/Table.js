@@ -88,7 +88,6 @@ export const filterAndOrderRepos = gql`
             id
             meta {
               path
-              slug
             }
           }
         }

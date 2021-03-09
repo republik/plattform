@@ -111,6 +111,7 @@
     "react-apollo": "^2.1.11",
     "react-codemirror2": "^7.2.1",
     "react-color": "^2.18.1",
+    "react-diff-viewer": "^3.1.1",
     "react-dom": "^16.13.1",
     "react-frame-component": "^4.1.2",
     "react-icons": "^2.2.5",
