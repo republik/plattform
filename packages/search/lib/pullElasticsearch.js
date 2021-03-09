@@ -69,7 +69,7 @@ module.exports = async ({
          * to 7.0. Not setting include_type_name will result in a
          * deprecation warning. Indices which don’t have an explicit
          * type will use the dummy type name _doc.
-         * 
+         *
          * @see https://www.elastic.co/guide/en/elasticsearch/reference/current/removal-of-types.html
          */
         include_type_name: true,
@@ -148,6 +148,15 @@ module.exports = async ({
           },
         })
       }
+
+      debug('call final', { readAlias, index })
+      await inserts.dict[name].final({
+        indexName: index,
+        type,
+        elastic,
+        pgdb,
+        redis,
+      })
 
       const { body: indices } = await elastic.indices.getAlias({
         index: getIndexAlias(name, '*'),

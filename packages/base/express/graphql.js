@@ -46,6 +46,7 @@ module.exports = (
     debug: true,
     introspection: true,
     playground: false, // see ./graphiql.js
+    tracing: NODE_ENV === 'development',
     subscriptions: {
       onConnect: async (connectionParams, websocket) => {
         try {

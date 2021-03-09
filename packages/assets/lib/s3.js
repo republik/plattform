@@ -48,7 +48,7 @@ const upload = async ({ stream, path, mimeType, bucket }) => {
     .promise()
 }
 
-const getHead = async ({ path, bucket }) => {
+const hasHead = async ({ path, bucket }) => {
   if (path[0] === '/') {
     throw new Error('path must not be absolute')
   }
@@ -57,19 +57,18 @@ const getHead = async ({ path, bucket }) => {
     throw new Error('s3 not available')
   }
 
-  let result
   try {
-    result = await s3
+    await s3
       .headObject({
         Key: path,
         Bucket: bucket,
       })
       .promise()
+
+    return true
   } catch (e) {
     return false
   }
-
-  return result
 }
 
 const del = async ({ path, bucket }) => {
@@ -116,7 +115,7 @@ const get = ({ region = AWS_REGION, bucket, path }) => {
 
 module.exports = {
   upload,
-  getHead,
+  hasHead,
   get,
   del,
 }

@@ -6,11 +6,9 @@ const index = indices.dict.documents
 const { getIndexAlias } = require('@orbiting/backend-modules-search/lib/utils')
 const { handleRedirection } = require('./Document')
 const {
-  latestPublications: getLatestPublications,
-  meta: getRepoMeta,
-} = require('../graphql/resolvers/Repo')
-const { upsertRef, deleteRef } = require('./github')
-const { upsert: repoCacheUpsert } = require('./cache/upsert')
+  maybeDelcareMilestonePublished,
+  updateCurrentPhase,
+} = require('./postgres')
 const { notifyPublish } = require('./Notifications')
 const { upsert: upsertDiscussion } = require('./Discussion')
 
@@ -44,8 +42,8 @@ const init = async (context) => {
   const scheduler = await intervalScheduler.init({
     name: 'publication',
     context,
-    runFunc: async (args, context) => {
-      const { pgdb, redis, elastic } = context
+    runFunc: async () => {
+      const { pgdb, redis, elastic, pubsub } = context
 
       const docs = await getScheduledDocuments(elastic)
 
@@ -55,18 +53,39 @@ const init = async (context) => {
 
       await Promise.each(docs, async (doc) => {
         // repos:republik/article-briefing-aus-bern-14/scheduled-publication
+        const versionName = doc.versionName
         const repoId = doc.meta.repoId
         const prepublication = doc.meta.prepublication
         const scheduledAt = doc.meta.scheduledAt
         const notifySubscribers = doc.meta.notifySubscribers
 
-        const ref = `scheduled-${
-          prepublication ? 'prepublication' : 'publication'
-        }`
         console.log(`scheduler: publishing ${repoId}`)
 
-        const newRef = ref.replace('scheduled-', '')
-        const newRefs = [newRef]
+        const tx = await pgdb.transactionBegin()
+        try {
+          const milestone = await pgdb.publikator.milestones.findOne({
+            repoId,
+            name: versionName,
+          })
+
+          await maybeDelcareMilestonePublished(milestone, tx)
+          await updateCurrentPhase(repoId, tx)
+
+          if (milestone.scope === 'publication') {
+            await handleRedirection(repoId, doc.content.meta, {
+              ...context,
+              pgdb: tx,
+            })
+          }
+
+          await tx.transactionCommit()
+        } catch (e) {
+          await tx.transactionRollback()
+
+          debug('rollback', { repoId })
+
+          throw e
+        }
 
         const {
           lib: {
@@ -82,37 +101,10 @@ const init = async (context) => {
           redis,
         })
 
-        if (newRef === 'publication') {
-          await handleRedirection(repoId, doc.content.meta, { elastic, pgdb })
-          newRefs.push('prepublication')
-        }
-
-        await Promise.all([
-          publish.afterScheduled(),
-          ...newRefs.map((_ref) =>
-            upsertRef(repoId, `tags/${_ref}`, doc.milestoneCommitId),
-          ),
-          deleteRef(repoId, `tags/${ref}`, true),
-        ]).catch((e) => {
-          console.error('Error: one or more promises failed:')
-          console.error(e)
-        })
+        await publish.afterScheduled()
 
         // flush dataloaders
         await context.loaders.Document.byRepoId.clear(repoId)
-
-        await repoCacheUpsert(
-          {
-            id: repoId,
-            meta: await getRepoMeta({ id: repoId }, null, context),
-            publications: await getLatestPublications(
-              { id: repoId },
-              null,
-              context,
-            ),
-          },
-          context,
-        )
 
         await upsertDiscussion(doc.meta, context)
 
@@ -122,11 +114,16 @@ const init = async (context) => {
           })
         }
 
+        await pubsub.publish('repoUpdate', {
+          repoUpdate: {
+            id: repoId,
+          },
+        })
+
         debug('published', {
           repoId: doc.meta.repoId,
           versionName: doc.versionName,
           scheduledAt: doc.meta.scheduledAt,
-          refs: newRefs,
         })
       })
     },

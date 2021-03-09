@@ -1,38 +1,24 @@
+const { descending } = require('d3-array')
+const querystring = require('querystring')
+// const sleep = require('await-sleep')
+const debug = require('debug')('publikator:mutation:publish')
+const uniq = require('lodash/uniq')
+
 const {
   Roles: { ensureUserHasRole },
 } = require('@orbiting/backend-modules-auth')
-const { descending } = require('d3-array')
-const querystring = require('querystring')
-const sleep = require('await-sleep')
-const yaml = require('../../../lib/yaml')
 const {
-  createGithubClients,
-  publicationVersionRegex,
-  getAnnotatedTags,
-  upsertRef,
-  deleteRef,
-} = require('../../../lib/github')
-const {
-  createCampaign,
-  updateCampaign,
-  updateCampaignContent,
-  getCampaign,
-} = require('../../../lib/mailchimp')
-
-const placeMilestone = require('./placeMilestone')
-const { document: getDocument } = require('../Commit')
-const editRepoMeta = require('./editRepoMeta')
-const {
-  latestPublications: getLatestPublications,
-  meta: getRepoMeta,
-} = require('../Repo')
-const {
-  Redirections: { get: getRedirections },
-} = require('@orbiting/backend-modules-redirections')
-const {
-  prepareMetaForPublish,
-  handleRedirection,
-} = require('../../../lib/Document')
+  lib: {
+    Documents: {
+      createPublish,
+      getElasticDoc,
+      isPathUsed,
+      findTemplates,
+      addRelatedDocs,
+    },
+    utils: { getIndexAlias },
+  },
+} = require('@orbiting/backend-modules-search')
 const {
   lib: {
     html: { get: getHTML },
@@ -40,16 +26,28 @@ const {
   },
 } = require('@orbiting/backend-modules-documents')
 const {
-  lib: {
-    Repo: { uploadImages },
-  },
-} = require('@orbiting/backend-modules-assets')
-const uniq = require('lodash/uniq')
-const { upsert: repoCacheUpsert } = require('../../../lib/cache/upsert')
-
+  Redirections: { get: getRedirections },
+} = require('@orbiting/backend-modules-redirections')
 const { purgeUrls } = require('@orbiting/backend-modules-keyCDN')
 
+const {
+  maybeDelcareMilestonePublished,
+  updateCurrentPhase,
+  updateRepo,
+  publicationVersionRegex,
+} = require('../../../lib/postgres')
+const {
+  createCampaign,
+  updateCampaign,
+  updateCampaignContent,
+  getCampaign,
+} = require('../../../lib/mailchimp')
+const {
+  prepareMetaForPublish,
+  handleRedirection,
+} = require('../../../lib/Document')
 const { notifyPublish } = require('../../../lib/Notifications')
+const { document: getDocument } = require('../Commit')
 
 const {
   FRONTEND_BASE_URL,
@@ -71,31 +69,14 @@ module.exports = async (
   },
   context,
 ) => {
-  const { user, t, redis, pubsub, elastic } = context
+  const { user, t, redis, elastic, pgdb, pubsub, loaders } = context
   ensureUserHasRole(user, 'editor')
 
   if (DISABLE_PUBLISH) {
     throw new Error(t('api/publish/disabled'))
   }
 
-  const { githubRest } = await createGithubClients()
   const now = new Date()
-
-  // TODO investigate why this fires
-  // Error: queries.search defined in resolvers, but not in schema
-  // if it's put at root level
-  const {
-    lib: {
-      Documents: {
-        createPublish,
-        getElasticDoc,
-        isPathUsed,
-        findTemplates,
-        addRelatedDocs,
-      },
-      utils: { getIndexAlias },
-    },
-  } = require('@orbiting/backend-modules-search')
 
   // check max scheduledAt
   let scheduledAt
@@ -115,16 +96,18 @@ module.exports = async (
     }
   }
 
+  const commit = await context.loaders.Commit.byId.load(commitId)
+  const { meta: repoMeta } = await context.loaders.Repo.byId.load(repoId)
+
   // load and check document
   const doc = await getDocument(
-    { id: commitId, repo: { id: repoId } },
+    commit, // { id: commitId, repo: { id: repoId }, repoId },
     { publicAssets: true },
     context,
   )
   if (doc.content.meta.template !== 'front' && !doc.content.meta.slug) {
     throw new Error(t('api/publish/document/slug/404'))
   }
-  const repoMeta = await getRepoMeta({ id: repoId }, null, context)
 
   const indexType = 'Document'
 
@@ -222,9 +205,6 @@ module.exports = async (
     discussionId: doc.content.meta.discussionId,
   }
 
-  // upload images to S3
-  await uploadImages(repoId, doc.repoImagePaths)
-
   // check if slug is taken
   const newPath = doc.content.meta.path
 
@@ -253,20 +233,15 @@ module.exports = async (
   // fail early if mailchimp not available
   let campaignId
   if (updateMailchimp) {
-    const campaignKey = `repos:${repoId}/mailchimp/campaignId`
-    campaignId = await redis.getAsync(campaignKey)
-    redis.expireAsync(repoId, redis.__defaultExpireSeconds)
-    if (!campaignId) {
-      if (repoMeta && repoMeta.mailchimpCampaignId) {
-        campaignId = repoMeta.mailchimpCampaignId
-      }
-    }
+    campaignId = repoMeta.mailchimpCampaignId
+
     if (campaignId) {
       const { status } = await getCampaign({ id: campaignId })
       if (status === 404) {
         campaignId = null
       }
     }
+
     if (!campaignId) {
       const { id } = await createCampaign()
         .then((response) => response.json())
@@ -276,32 +251,20 @@ module.exports = async (
         })
 
       campaignId = id
-      await redis.setAsync(
-        campaignKey,
-        campaignId,
-        'EX',
-        redis.__defaultExpireSeconds,
-      )
-      await editRepoMeta(
-        null,
-        {
-          repoId,
-          mailchimpCampaignId: campaignId,
-        },
-        context,
-      )
     }
   }
 
   // calc version number
-  const latestPublicationVersion = await getAnnotatedTags(repoId, context).then(
-    (tags) =>
+  const latestPublicationVersion = await context.loaders.Milestone.byRepoId
+    .load(repoId)
+    .then((tags) =>
       tags
         .filter((tag) => publicationVersionRegex.test(tag.name))
         .map((tag) => parseInt(publicationVersionRegex.exec(tag.name)[1]))
         .sort((a, b) => descending(a, b))
         .shift(),
-  )
+    )
+
   const versionNumber = latestPublicationVersion
     ? latestPublicationVersion + 1
     : 1
@@ -309,40 +272,45 @@ module.exports = async (
     ? `v${versionNumber}-prepublication`
     : `v${versionNumber}`
 
-  const message = yaml.stringify({
-    scheduledAt,
-    updateMailchimp,
-    notifySubscribers,
-  })
+  const meta = {
+    ...(updateMailchimp && { updateMailchimp }),
+    ...(notifySubscribers && { notifySubscribers }),
+  }
 
-  const milestone = await placeMilestone(
-    null,
-    {
+  const scope = (prepublication && 'prepublication') || 'publication'
+
+  const author = {
+    name: user.name,
+    email: user.email,
+  }
+
+  const tx = await pgdb.transactionBegin()
+  try {
+    const milestone = await pgdb.publikator.milestones.insertAndGet({
       repoId,
-      commitId,
+      commitId: commit.id,
       name: versionName,
-      message,
-    },
-    context,
-  )
+      meta,
+      userId: user.id,
+      author,
+      createdAt: now,
+      scope,
+      scheduledAt: scheduledAt || now,
+      publishedAt: (!scheduledAt && now) || null,
+    })
 
-  // move ref
-  let ref = prepublication ? 'prepublication' : 'publication'
-  if (scheduledAt) {
-    ref = `scheduled-${ref}`
+    await maybeDelcareMilestonePublished(milestone, tx)
+    await updateCurrentPhase(repoId, tx)
+    await updateRepo(repoId, { mailchimpCampaignId: campaignId }, tx)
+
+    await tx.transactionCommit()
+  } catch (e) {
+    await tx.transactionRollback()
+
+    debug('rollback', { repoId, user: user.id })
+
+    throw e
   }
-  let gitOps = [upsertRef(repoId, `tags/${ref}`, milestone.sha)]
-  if (!scheduledAt) {
-    if (ref === 'publication') {
-      // prepublication moves along with publication
-      gitOps = gitOps.concat(
-        upsertRef(repoId, 'tags/prepublication', milestone.sha),
-      )
-    }
-    // overwrite previous scheduling
-    gitOps = gitOps.concat(deleteRef(repoId, `tags/scheduled-${ref}`, true))
-  }
-  await Promise.all(gitOps)
 
   const resolved = {}
 
@@ -386,7 +354,6 @@ module.exports = async (
     doc,
     commitId,
     versionName,
-    milestoneCommitId: milestone.sha,
     resolved,
   })
 
@@ -399,33 +366,10 @@ module.exports = async (
   })
   await insert()
   await after()
-  await sleep(2 * 1000)
+  // await sleep(1000 * 2) // @TODO Decide on wheter to add this again
 
   // flush dataloaders
   await context.loaders.Document.byRepoId.clear(repoId)
-
-  await repoCacheUpsert(
-    {
-      id: repoId,
-      meta: repoMeta,
-      publications: await getLatestPublications({ id: repoId }, null, context),
-    },
-    context,
-  )
-
-  // release for nice view on github
-  // this is optional, the release is not read back again
-  const [login, repoName] = repoId.split('/')
-  await githubRest.repos
-    .createRelease({
-      owner: login,
-      repo: repoName,
-      tag_name: milestone.name,
-      name: versionName,
-      draft: false,
-      prerelease: prepublication,
-    })
-    .then((response) => response.data)
 
   // do the mailchimp update
   if (campaignId) {
@@ -492,22 +436,18 @@ module.exports = async (
     '?images=0&download=1',
     '?download=1&images=0',
   ]
-  purgeUrls(purgeQueries.map((q) => `/pdf${newPath}.pdf${q}`))
+  await purgeUrls(purgeQueries.map((q) => `/pdf${newPath}.pdf${q}`))
 
   if (notifySubscribers && !prepublication && !scheduledAt) {
     await notifyPublish(repoId, context)
   }
 
+  const publication = (
+    await loaders.Milestone.Publication.byRepoId.load(repoId)
+  ).find((p) => p.name === versionName)
+
   return {
     unresolvedRepoIds,
-    publication: {
-      ...milestone,
-      live: !scheduledAt,
-      meta: {
-        scheduledAt,
-        updateMailchimp,
-      },
-      document: doc.content,
-    },
+    publication,
   }
 }

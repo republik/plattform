@@ -1,50 +1,77 @@
+const debug = require('debug')('publikator:mutation:archive')
 const Promise = require('bluebird')
 const {
   Roles: { ensureUserHasRole },
 } = require('@orbiting/backend-modules-auth')
+const {
+  lib: {
+    Documents: { unpublish: unpublishDocument },
+  },
+} = require('@orbiting/backend-modules-search')
 
-const { latestPublications: getLatestPublications } = require('../Repo')
-const { archiveRepo } = require('../../../lib/github')
-const { upsert: repoCacheUpsert } = require('../../../lib/cache/upsert')
+const { updateCurrentPhase } = require('../../../lib/postgres')
 
-const unpublishMutation = require('./unpublish')
+async function archiveRepo(repoId, unpublish, context) {
+  const { t, pgdb, elastic, redis, pubsub } = context
+
+  const publications = await context.loaders.Milestone.Publication.byRepoId.load(
+    repoId,
+  )
+
+  if (publications.length && !unpublish) {
+    throw new Error(t('api/archive/error/published', { repoId }))
+  }
+
+  const tx = await pgdb.transactionBegin()
+
+  try {
+    const now = new Date()
+
+    // unpublish
+    const commits = await tx.publikator.commits.find(
+      { repoId },
+      { fields: ['id'] },
+    )
+
+    await tx.publikator.milestones.update(
+      {
+        commitId: commits.map((c) => c.id),
+        scope: ['publication', 'prepublication'],
+        revokedAt: null,
+      },
+      { revokedAt: now },
+    )
+
+    await unpublishDocument(elastic, redis, repoId)
+
+    // Actual archiving
+    await tx.publikator.repos.updateOne({ id: repoId }, { archivedAt: now })
+
+    await updateCurrentPhase(repoId, tx)
+
+    await tx.transactionCommit()
+  } catch (e) {
+    await tx.transactionRollback()
+
+    debug('rollback', { repoId })
+
+    throw e
+  }
+
+  await pubsub.publish('repoUpdate', {
+    repoUpdate: {
+      id: repoId,
+    },
+  })
+}
 
 module.exports = async (_, { repoIds, unpublish = false }, context) => {
-  const { user, pubsub, t } = context
+  const { user } = context
   ensureUserHasRole(user, 'editor')
 
-  await Promise.each(repoIds, async (repoId) => {
-    const publications = await getLatestPublications(
-      { id: repoId },
-      null,
-      context,
-    )
-
-    if (publications.length > 0) {
-      if (!unpublish) {
-        // Unable to archive published repository. Unpublish first.
-        throw new Error(t('api/archive/error/published', { repoId }))
-      }
-
-      await unpublishMutation(_, { repoId }, context)
-    }
-
-    await archiveRepo(repoId)
-
-    await repoCacheUpsert(
-      {
-        id: repoId,
-        isArchived: true,
-      },
-      context,
-    )
-
-    await pubsub.publish('repoUpdate', {
-      repoUpdate: {
-        id: repoId,
-      },
-    })
-  })
+  await Promise.map(repoIds, (repoId) =>
+    archiveRepo(repoId, unpublish, context),
+  )
 
   return {
     nodes: repoIds.map((id) => ({ id })),

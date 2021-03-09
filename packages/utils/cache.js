@@ -4,28 +4,28 @@ const getRedisKey = ({ namespace, prefix, key }) =>
   `${namespace}:${prefix}:${key}`
 
 const createGet = ({ options, redis }) =>
-  async function () {
-    const key = getRedisKey(options)
-    const payload = await redis.getAsync(key)
-    debug('cache:get')(`${payload ? 'HIT' : 'MISS'} %s`, key)
+  async function (key = options.key) {
+    const redisKey = getRedisKey({ ...options, key })
+    const payload = await redis.getAsync(redisKey)
+    debug('cache:get')(`${payload ? 'HIT' : 'MISS'} %s`, redisKey)
 
     return payload ? JSON.parse(payload) : payload
   }
 
 const createSet = ({ options, redis }) =>
-  async function (payload) {
+  async function (payload, key = options.key) {
     let payloadString
 
     try {
       payloadString = JSON.stringify(payload)
     } catch (e) {
-      console.info(e, options.key)
+      console.info(e, key)
     }
 
     if (payloadString) {
-      const key = getRedisKey(options)
-      debug('cache:set')('PUT %s', key)
-      return redis.setAsync(key, payloadString, 'EX', options.ttl || 60)
+      const redisKey = getRedisKey({ ...options, key })
+      debug('cache:set')('PUT %s', redisKey)
+      return redis.setAsync(redisKey, payloadString, 'EX', options.ttl || 60)
     }
   }
 
@@ -43,7 +43,7 @@ const createCache = ({ options }) =>
 
     let data
     if (!options.forceRecache) {
-      data = await this.get()
+      data = await this.get(options.key)
 
       if (data) {
         return data.payload
@@ -52,7 +52,7 @@ const createCache = ({ options }) =>
 
     data = { payload: await payloadFunction() }
 
-    await this.set(data)
+    await this.set(data, options.key)
 
     return data.payload
   }
@@ -62,8 +62,8 @@ const createInvalidate = ({ options, redis }) =>
     debug('cache')('INVALIDATE')
     await redis
       .scanMap({
-        pattern: `${options.namespace}:${options.prefix}*`,
-        mapFn: (key, client) => client.delAsync(key),
+        pattern: `${options.namespace}:${options.prefix}:*`,
+        mapFn: (address, client) => client.delAsync(address),
       })
       .catch(() => {}) // fails if no keys are matched
   }
@@ -71,6 +71,7 @@ const createInvalidate = ({ options, redis }) =>
 module.exports.create = (options_, { redis }) => {
   const options = {
     namespace: 'cache',
+    key: 'any',
     ...options_,
   }
 
@@ -80,10 +81,6 @@ module.exports.create = (options_, { redis }) => {
 
   if (!options.prefix) {
     throw new Error('options.prefix is missing but required')
-  }
-
-  if (!options.key) {
-    throw new Error('options.key is missing but required')
   }
 
   if (options.disabled) {

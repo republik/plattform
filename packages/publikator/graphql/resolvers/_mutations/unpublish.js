@@ -1,56 +1,63 @@
 const {
   Roles: { ensureUserHasRole },
 } = require('@orbiting/backend-modules-auth')
+const debug = require('debug')('publikator:mutation:unpublish')
 
-const { deleteRef } = require('../../../lib/github')
-const {
-  latestPublications: getLatestPublications,
-  meta: getRepoMeta,
-} = require('../Repo')
-const { upsert: repoCacheUpsert } = require('../../../lib/cache/upsert')
+const { updateCurrentPhase } = require('../../../lib/postgres')
 
 const { DISABLE_PUBLISH } = process.env
 
 module.exports = async (_, { repoId }, context) => {
-  const { user, t, redis, pubsub, elastic } = context
+  const { user, t, pgdb, redis, elastic, pubsub } = context
   ensureUserHasRole(user, 'editor')
 
   if (DISABLE_PUBLISH) {
     throw new Error(t('api/publish/disabled'))
   }
 
-  const scheduledRefs = ['scheduled-publication', 'scheduled-prepublication']
-  const refs = ['publication', 'prepublication', ...scheduledRefs]
+  const now = new Date()
 
-  await Promise.all(
-    refs.map((ref) => deleteRef(repoId, `tags/${ref}`, true)),
-  ).catch((e) => {
-    console.error('Error: could not delete ref on github')
-    console.error(e)
-  })
+  const tx = await pgdb.transactionBegin()
 
-  const {
-    lib: {
-      Documents: { unpublish },
-    },
-  } = require('@orbiting/backend-modules-search')
+  try {
+    const commits = await tx.publikator.commits.find(
+      { repoId },
+      { fields: ['id'] },
+    )
 
-  await unpublish(elastic, redis, repoId)
+    await tx.publikator.milestones.update(
+      {
+        commitId: commits.map((c) => c.id),
+        scope: ['publication', 'prepublication'],
+        revokedAt: null,
+      },
+      { revokedAt: now },
+    )
 
-  await repoCacheUpsert(
-    {
-      id: repoId,
-      meta: await getRepoMeta({ id: repoId }, null, context),
-      publications: await getLatestPublications({ id: repoId }, null, context),
-    },
-    context,
-  )
+    await updateCurrentPhase(repoId, tx)
 
-  await pubsub.publish('repoUpdate', {
-    repoUpdate: {
-      id: repoId,
-    },
-  })
+    const {
+      lib: {
+        Documents: { unpublish },
+      },
+    } = require('@orbiting/backend-modules-search')
+
+    await unpublish(elastic, redis, repoId)
+
+    await tx.transactionCommit()
+
+    await pubsub.publish('repoUpdate', {
+      repoUpdate: {
+        id: repoId,
+      },
+    })
+  } catch (e) {
+    await tx.transactionRollback()
+
+    debug('rollback', { repoId, user: user.id })
+
+    throw e
+  }
 
   return true
 }
