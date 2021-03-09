@@ -65,7 +65,11 @@ const PreviewFrame = ({ previewScreenSize, commitId, repoId }) => {
             ? iframeRef.current.clientWidth *
               Math.min(heightScaleFactor, widthScaleFactor)
             : iframeRef.current.clientWidth
-        setLeftSpace(windowWidth / 2 - (iFrameWidth / 2 - 16))
+        const scaledWindowWidth =
+          exeedsWindowHeight || exeedsWindowWidth
+            ? windowWidth / Math.min(heightScaleFactor, widthScaleFactor)
+            : windowWidth
+        setLeftSpace(scaledWindowWidth / 2 - iFrameWidth / 2)
       }
     }
 
