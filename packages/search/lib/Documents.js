@@ -2,6 +2,7 @@ const _ = require('lodash')
 const debug = require('debug')('search:lib:Documents')
 const isUUID = require('is-uuid')
 const visit = require('unist-util-visit')
+const sleep = require('await-sleep')
 
 const {
   resolve: { extractUserUrl, getRepoId },
@@ -30,6 +31,9 @@ const { getIndexAlias, mdastContentToString } = require('./utils')
 const SHORT_DURATION_MINS = 5
 const MIDDLE_DURATION_MINS = 15
 const LONG_DURATION_MINS = 30
+
+// Seconds to wait for ElasticSearch to reindex update data
+const REINDEX_AWAIT_SECS = 2
 
 const { GITHUB_LOGIN, GITHUB_ORGS } = process.env
 
@@ -502,6 +506,8 @@ const unpublish = async (elastic, redis, repoId) => {
       },
     },
   })
+
+  await sleep(1000 * REINDEX_AWAIT_SECS)
   await createCache(redis).invalidate()
 }
 
@@ -535,6 +541,7 @@ const publish = (elastic, redis, elasticDoc, hasPrepublication) => ({
       elasticDoc.id,
     )
 
+    await sleep(1000 * REINDEX_AWAIT_SECS)
     await createCache(redis).invalidate()
   },
 })
@@ -564,6 +571,7 @@ const prepublish = (elastic, redis, elasticDoc) => ({
 
     await resetScheduledAt(elastic, true, elasticDoc.meta.repoId, elasticDoc.id)
 
+    await sleep(1000 * REINDEX_AWAIT_SECS)
     await createCache(redis).invalidate()
   },
 })
@@ -617,6 +625,7 @@ const publishScheduled = (elastic, redis, elasticDoc) => ({
       elasticDoc.id,
     )
 
+    await sleep(1000 * REINDEX_AWAIT_SECS)
     await createCache(redis).invalidate()
   },
 })
@@ -665,6 +674,7 @@ const prepublishScheduled = (elastic, redis, elasticDoc) => ({
       elasticDoc.id,
     )
 
+    await sleep(1000 * REINDEX_AWAIT_SECS)
     await createCache(redis).invalidate()
   },
 })
