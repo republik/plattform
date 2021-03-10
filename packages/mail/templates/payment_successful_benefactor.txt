@@ -21,10 +21,9 @@ sich mit Ihren Kolleginnen und Kollegen in der Verlagsetage austauschen.
 {{/if}}
 
 Um uns für Ihre besonders grosse Unterstützung ein kleines bisschen zu
-revanchieren, schicken wir Ihnen postwendend das Gönnerpaket mit Manifest, dem
-exklusiven Republik-Anstecker in Gold sowie einer signierten Ausgabe von
-Constantin Seibts Buch «Deadline – Wie man besser schreibt
-https://keinundaber.ch/de/literary-work/deadline/ » zu.
+revanchieren, schicken wir Ihnen postwendend das Gönnerpaket mit Manifest und
+einer signierten Ausgabe von Constantin Seibts Buch «Deadline – Wie man besser
+schreibt https://keinundaber.ch/de/literary-work/deadline/ » zu.
 
 {{#if goodies_count}}
 
