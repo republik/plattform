@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React from 'react'
 import { withRouter } from 'next/router'
 import { graphql, compose } from 'react-apollo'
 import gql from 'graphql-tag'
@@ -27,19 +27,16 @@ const getCommitById = gql`
 `
 
 const PreviewPage = ({ dark, router, data = {} }) => {
-  const {
-    loading,
-    error,
-    repo: {
-      commit: { document }
-    }
-  } = data
+  const { loading, error, repo: { commit: { document } = {} } = {} } = data
   const { repoId, commitId } = router.query
+
   const storeKey = [repoId, commitId].join('/')
   const store = initLocalStore(storeKey)
   let localState = store.get('editorState')
 
-  const schema = getSchema(document.meta.template)
+  const schema = getSchema(
+    localState?.meta?.template || document?.meta?.template
+  )
 
   return (
     <Frame.Body raw>
@@ -50,11 +47,11 @@ const PreviewPage = ({ dark, router, data = {} }) => {
           <ColorContextProvider colorSchemeKey={dark ? 'dark' : 'light'}>
             {renderMdast(
               {
-                ...(localState ? localState : document.content),
-                format: document.meta.format,
-                section: document.meta.section,
-                series: document.meta.series,
-                repoId: document.repoId
+                ...(localState || document?.content),
+                format: document?.meta?.format,
+                section: document?.meta?.section,
+                series: document?.meta?.series,
+                repoId
               },
               schema
             )}

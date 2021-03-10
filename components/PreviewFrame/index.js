@@ -4,6 +4,8 @@ import { FRONTEND_BASE_URL } from '../../lib/settings'
 
 import { SIDEBAR_WIDTH } from '../Sidebar'
 
+const PREVIEW_PADDING = 16
+
 const screenSizes = {
   phone: {
     width: 320,
@@ -33,8 +35,9 @@ const PreviewFrame = ({ previewScreenSize, commitId, repoId }) => {
 
   useEffect(() => {
     const handleResize = () => {
-      const windowHeight = window.innerHeight - 90 - 32
-      const windowWidth = window.innerWidth - SIDEBAR_WIDTH - 32
+      const windowHeight = window.innerHeight - 90 - PREVIEW_PADDING * 2
+      const windowWidth =
+        window.innerWidth - SIDEBAR_WIDTH - PREVIEW_PADDING * 2
 
       const exeedsWindowWidth =
         windowWidth <= screenSizes[previewScreenSize].width
@@ -90,7 +93,7 @@ const PreviewFrame = ({ previewScreenSize, commitId, repoId }) => {
           transformOrigin: '0 0',
           border: 'none',
           resize: 'both',
-          margin: 16
+          margin: PREVIEW_PADDING
         }}
         {...colorScheme.set('backgroundColor', 'default')}
         src={URL}

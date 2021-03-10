@@ -10,7 +10,6 @@ import MdPhoneIphone from 'react-icons/lib/md/phone-iphone'
 import MdTabletMac from 'react-icons/lib/md/tablet-mac'
 import MdLaptopMac from 'react-icons/lib/md/laptop-mac'
 import MdDesktopMac from 'react-icons/lib/md/desktop-mac'
-import MdFullscreen from 'react-icons/lib/md/fullscreen'
 
 const styles = {
   container: css({
@@ -53,11 +52,6 @@ const screenSizes = [
     name: 'desktop',
     label: 'Desktop',
     Icon: MdDesktopMac
-  },
-  {
-    name: null,
-    label: 'Editor',
-    Icon: MdFullscreen
   }
 ]
 
