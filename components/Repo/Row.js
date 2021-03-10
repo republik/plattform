@@ -1,5 +1,4 @@
 import React from 'react'
-import GithubIcon from 'react-icons/lib/fa/github'
 import LockIcon from 'react-icons/lib/md/lock'
 import PublicIcon from 'react-icons/lib/md/public'
 import { renderMdast } from 'mdast-react-render'
@@ -38,10 +37,10 @@ const creditSchema = {
 const PublicationLink = Icon => ({
   name,
   document: {
-    meta: { path, slug }
+    meta: { path }
   }
 }) => (
-  <a key={name} href={`${FRONTEND_BASE_URL}${path || '/' + slug}`}>
+  <a key={name} href={`${FRONTEND_BASE_URL}${path}`}>
     <Icon color={colors.primary} />
   </a>
 )
@@ -97,9 +96,6 @@ const RepoRow = ({ repo, showPhases }) => {
         {repo.latestPublications
           .filter(isPublished)
           .map(PublicationLink(PublicIcon))}{' '}
-        <a href={`https://github.com/${id}`}>
-          <GithubIcon color={colors.primary} />
-        </a>
       </Td>
     </Tr>
   )

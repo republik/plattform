@@ -9,8 +9,7 @@ import { Link } from '../../lib/routes'
 import withT from '../../lib/withT'
 import { swissTime } from '../../lib/utils/format'
 import { transformData } from './transformData'
-
-import GithubIcon from 'react-icons/lib/fa/github'
+import Diff from './Diff'
 
 const timeFormat = swissTime.format('%d. %B %Y, %H:%M Uhr')
 
@@ -364,19 +363,7 @@ class Tree extends Component {
                       )}
                     </div>
                     <div style={{ marginRight: 10 }}>
-                      <Interaction.P>
-                        <Label style={{ fontSize: 20 }}>
-                          {/* short_path=75b25ca opens the rich-diff for files named article.md.
-                            still not sure how it's constructed though */}
-                          <a
-                            href={`https://github.com/${repoId}/commit/${commit.id}?short_path=75b25ca`}
-                            target='_blank'
-                            {...styles.link}
-                          >
-                            <GithubIcon />
-                          </a>
-                        </Label>
-                      </Interaction.P>
+                      <Diff repoId={repoId} commit={commit} />
                     </div>
                   </div>
                 </li>

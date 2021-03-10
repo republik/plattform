@@ -1,5 +1,5 @@
 {
-  "updated": "2021-02-04T00:19:40.274Z",
+  "updated": "2021-03-04T13:04:47.004Z",
   "title": "live",
   "data": [
     {
@@ -961,6 +961,10 @@
     {
       "key": "commit/warn/uncommittedChangesError",
       "value": "Deine Aktivität konnte nicht gemeldet werden."
+    },
+    {
+      "key": "commit/warn/commit404",
+      "value": "Commit wurde nicht gefunden. Die neuste Version wurde geladen."
     },
     {
       "key": "commit/warn/failed",
