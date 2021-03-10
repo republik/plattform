@@ -13,6 +13,7 @@ export const filterRepos = gql`
       after: $after
       search: $search
       template: $template
+      isTemplate: false
     ) {
       totalCount
       pageInfo {
