@@ -51,7 +51,7 @@ const find = async (args: any, { elastic }: GraphqlContext) => {
     'commit.strings.title',
     'commit.strings.lead',
     'commit.strings.credits',
-    'meta.title',
+    'commit.meta.title',
   ]
 
   const query: any = {
