@@ -366,7 +366,6 @@ module.exports = async (
   })
   await insert()
   await after()
-  // await sleep(1000 * 2) // @TODO Decide on wheter to add this again
 
   // flush dataloaders
   await context.loaders.Document.byRepoId.clear(repoId)
