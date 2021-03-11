@@ -24,12 +24,13 @@ const styles = {
     display: 'block',
     textAlign: 'center',
     padding: '20px 8px',
+    margin: '8px 0',
     width: '100%',
     minWidth: '100%',
     maxWidth: '100%',
     minHeight: '60px',
     background: 'transparent',
-    border: '1px solid black',
+    border: '1px solid',
     outline: 'none',
     boxSizing: 'border-box'
   })
@@ -37,6 +38,8 @@ const styles = {
 
 const ShareImageGenerator = ({ format }) => {
   const [coloredBackground, setColoredBackground] = useState(false)
+  const [backgroundImage, setBackgroundImage] = useState(true)
+  const [textPosition, setTextPosition] = useState('bottom')
   const [text, setText] = useState()
   const [fontSize, setFontSize] = useState(60)
   const [fontStyle, setFontStyle] = useState(fontStyles.serifBold)
@@ -108,9 +111,32 @@ const ShareImageGenerator = ({ format }) => {
           />
         </div>
       </div>
+      {format?.type === 'Kolumnen' ? (
+        <>
+          <Checkbox
+            checked={backgroundImage}
+            onChange={() => setBackgroundImage(!backgroundImage)}
+          >
+            Mit Hintergrundbild
+          </Checkbox>
+          {backgroundImage ? (
+            <Dropdown
+              label='Textposition'
+              items={[
+                { value: 'top', text: 'Oben' },
+                { value: 'center', text: 'Mitte' },
+                { value: 'bottom', text: 'Unten' }
+              ]}
+              value={textPosition}
+              onChange={item => setTextPosition(item.value)}
+            />
+          ) : null}
+        </>
+      ) : null}
       <Textarea
         {...styles.textArea}
         {...colorScheme.set('color', 'text')}
+        {...colorScheme.set('borderColor', 'divider')}
         {...(text === '' ? textAreaEmptyRule : {})}
         placeholder={'Text für Social Image'}
         value={text}
@@ -124,6 +150,9 @@ const ShareImageGenerator = ({ format }) => {
         text={text}
         fontSize={fontSize}
         fontStyle={fontStyle}
+        // below only used for Kolumnen
+        textPosition={textPosition}
+        backgroundImage={backgroundImage}
       />
     </div>
   )

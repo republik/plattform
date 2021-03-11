@@ -898,6 +898,21 @@ const Styleguide = () => {
                 ]
               },
               {
+                title: 'Brand',
+                pages: [
+                  {
+                    path: '/dev/shareImageGenerator',
+                    title: 'ShareImageGenerator',
+                    src: require('./components/ShareImageGenerator/docs.md'),
+                    imports: {
+                      ...require('./components/Typography'),
+                      ShareImageGenerator: require('./components/ShareImageGenerator'),
+                      css
+                    }
+                  }
+                ]
+              },
+              {
                 title: 'Development',
                 pages: [
                   {
@@ -996,16 +1011,6 @@ const Styleguide = () => {
 
                         return children(colorScheme)
                       },
-                      css
-                    }
-                  },
-                  {
-                    path: '/dev/shareImageGenerator',
-                    title: 'ShareImageGenerator',
-                    src: require('./components/ShareImageGenerator/docs.md'),
-                    imports: {
-                      ...require('./components/Typography'),
-                      ShareImageGenerator: require('./components/ShareImageGenerator'),
                       css
                     }
                   }

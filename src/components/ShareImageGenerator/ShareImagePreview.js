@@ -9,7 +9,9 @@ const KURSIVFORMATE = ['Aus der Arena', 'Ctrl-Alt-R', 'Happening']
 
 const styles = {
   container: css({
-    zoom: '50%',
+    transform: `scale(${0.5})`,
+    transformOrigin: '0 0',
+    marginBottom: -HEIGHT / 2,
     position: 'relative',
     width: WIDTH,
     height: HEIGHT,
@@ -19,12 +21,11 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'center',
     padding: 48,
-    margin: 0,
     overflow: 'hidden'
   }),
   kolumnenContainer: css({
-    alignItems: 'flex-end',
-    justifyContent: 'flex-end'
+    justifyContent: 'flex-end',
+    alignItems: 'flex-end'
   }),
   textContainer: css({
     width: '100%',
@@ -50,23 +51,38 @@ const styles = {
 
 const ShareImagePreview = ({
   format,
-  text = 'Hier kommt ein Text',
+  text = 'Text für Social Image',
   coloredBackground,
   fontSize,
-  fontStyle
+  fontStyle,
+  textPosition,
+  backgroundImage
 }) => {
   return (
     <div
       {...styles.container}
-      {...(format?.type === 'Kolumnen' && styles.kolumnenContainer)}
+      {...(format?.type === 'Kolumnen' &&
+        backgroundImage &&
+        styles.kolumnenContainer)}
       style={{
         backgroundImage: `url(${
-          format?.backgroundImage && coloredBackground
+          !backgroundImage
+            ? ''
+            : format?.backgroundImage && coloredBackground
             ? format?.backgroundImageColor
             : format?.backgroundImage
         })`,
         backgroundSize: 'cover',
-        backgroundColor: coloredBackground ? format?.color : '#FFF'
+        backgroundColor: coloredBackground ? format?.color : '#FFF',
+        justifyContent:
+          format?.type === 'Kolumnen' &&
+          backgroundImage &&
+          textPosition === 'top'
+            ? 'flex-start'
+            : format?.type === 'Kolumnen' &&
+              backgroundImage &&
+              textPosition === 'center' &&
+              'center'
       }}
     >
       {KOLUMNEN.includes(format?.title) ? (
@@ -79,7 +95,7 @@ const ShareImagePreview = ({
           {...styles.formatTitle}
           style={{
             color: coloredBackground ? '#FFF' : format?.color,
-            width: format?.type === 'Kolumnen' && '80%'
+            width: format?.type === 'Kolumnen' && backgroundImage && '80%'
           }}
         >
           {format.title}
@@ -92,7 +108,7 @@ const ShareImagePreview = ({
           ...(KURSIVFORMATE.includes(format?.title) && fontStyles.cursiveTitle),
           fontSize: fontSize,
           color: coloredBackground ? '#FFF' : '#000',
-          width: format?.type === 'Kolumnen' && '80%'
+          width: format?.type === 'Kolumnen' && backgroundImage && '80%'
         }}
       >
         {text}
