@@ -35,27 +35,24 @@ const PreviewFrame = ({ previewScreenSize, commitId, repoId }) => {
 
   useEffect(() => {
     const handleResize = () => {
-      const windowHeight = window.innerHeight - 90
-      const windowWidth = window.innerWidth - SIDEBAR_WIDTH - 2 * PREVIEW_MARGIN
-
-      const exceedsWindowWidth =
-        windowWidth <= screenSizes[previewScreenSize].width
-      const exceedsWindowHeight =
-        windowHeight <= screenSizes[previewScreenSize].height
+      const availableHeight = window.innerHeight - 90 - 2 * PREVIEW_MARGIN
+      const availableWidth =
+        window.innerWidth - SIDEBAR_WIDTH - 2 * PREVIEW_MARGIN
 
       const widthScaleFactor =
-        windowWidth / screenSizes[previewScreenSize].width
+        availableWidth / screenSizes[previewScreenSize].width
       const heightScaleFactor =
-        windowHeight / screenSizes[previewScreenSize].height
-      const currentScaleFactor =
-        exceedsWindowHeight || exceedsWindowWidth
-          ? Math.min(widthScaleFactor, heightScaleFactor)
-          : 1
+        availableHeight / screenSizes[previewScreenSize].height
+      const currentScaleFactor = Math.min(
+        widthScaleFactor,
+        heightScaleFactor,
+        1
+      )
       setScaleFactor(currentScaleFactor)
 
       const scaledPreviewWidth =
         screenSizes[previewScreenSize].width * currentScaleFactor
-      setLeftSpace((windowWidth - scaledPreviewWidth) / 2)
+      setLeftSpace((availableWidth - scaledPreviewWidth) / 2)
     }
 
     handleResize()
