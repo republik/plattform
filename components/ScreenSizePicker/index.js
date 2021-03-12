@@ -4,7 +4,9 @@ import {
   plainButtonRule,
   fontStyles,
   useColorContext,
-  Checkbox
+  Checkbox,
+  Interaction,
+  colors
 } from '@project-r/styleguide'
 
 import MdPhoneIphone from 'react-icons/lib/md/phone-iphone'
@@ -30,6 +32,10 @@ const styles = {
   label: css({
     ...fontStyles.sansSerifRegular12,
     marginTop: 4
+  }),
+  divider: css({
+    borderBottom: `1px solid ${colors.divider}`,
+    margin: '16px 0'
   })
 }
 
@@ -65,6 +71,7 @@ const ScreenSizePicker = ({
   const [colorScheme] = useColorContext()
   return (
     <>
+      <Interaction.P style={{ marginBottom: 16 }}>Vorschau</Interaction.P>
       <div {...styles.container}>
         {screenSizes.map(size => {
           const isSelected = selectedScreenSize === size.name
@@ -93,14 +100,18 @@ const ScreenSizePicker = ({
           )
         })}
       </div>
+      <div {...styles.divider} />
       {selectedScreenSize ? (
-        <Checkbox
-          black
-          checked={previewDarkmode}
-          onChange={() => onDarkmodeToggle()}
-        >
-          Nachtmodus
-        </Checkbox>
+        <>
+          <Interaction.P style={{ marginBottom: 16 }}>Nachtmodus</Interaction.P>
+          <Checkbox
+            black
+            checked={previewDarkmode}
+            onChange={() => onDarkmodeToggle()}
+          >
+            {previewDarkmode ? 'Aktiv' : 'Aus'}
+          </Checkbox>
+        </>
       ) : null}
     </>
   )
