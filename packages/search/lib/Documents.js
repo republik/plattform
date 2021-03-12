@@ -2,6 +2,7 @@ const _ = require('lodash')
 const debug = require('debug')('search:lib:Documents')
 const isUUID = require('is-uuid')
 const visit = require('unist-util-visit')
+const sleep = require('await-sleep')
 
 const {
   resolve: { extractUserUrl, getRepoId },
@@ -30,6 +31,9 @@ const { getIndexAlias, mdastContentToString } = require('./utils')
 const SHORT_DURATION_MINS = 5
 const MIDDLE_DURATION_MINS = 15
 const LONG_DURATION_MINS = 30
+
+// Seconds to wait for ElasticSearch to reindex update data
+const REINDEX_AWAIT_SECS = 2
 
 const { GITHUB_LOGIN, GITHUB_ORGS } = process.env
 
@@ -146,9 +150,6 @@ const schema = {
   versionName: {
     criteria: termCriteriaBuilder('versionName'),
   },
-  milestoneCommitId: {
-    criteria: termCriteriaBuilder('milestoneCommitId'),
-  },
   userId: {
     criteria: termCriteriaBuilder('meta.credits.url'),
     parser: (value) => `/~${value}`,
@@ -215,13 +216,7 @@ const schema = {
   },
 }
 
-const getElasticDoc = ({
-  doc,
-  commitId,
-  versionName,
-  milestoneCommitId,
-  resolved,
-}) => {
+const getElasticDoc = ({ doc, commitId, versionName, resolved }) => {
   const meta = doc.content.meta
   const id = getDocumentId({ repoId: meta.repoId, commitId, versionName })
   return {
@@ -232,7 +227,6 @@ const getElasticDoc = ({
     id,
     commitId,
     versionName,
-    milestoneCommitId,
     meta, // doc.meta === doc.content.meta
     resolved: !_.isEmpty(resolved) ? resolved : undefined,
     content: doc.content,
@@ -512,6 +506,8 @@ const unpublish = async (elastic, redis, repoId) => {
       },
     },
   })
+
+  await sleep(1000 * REINDEX_AWAIT_SECS)
   await createCache(redis).invalidate()
 }
 
@@ -545,6 +541,7 @@ const publish = (elastic, redis, elasticDoc, hasPrepublication) => ({
       elasticDoc.id,
     )
 
+    await sleep(1000 * REINDEX_AWAIT_SECS)
     await createCache(redis).invalidate()
   },
 })
@@ -574,6 +571,7 @@ const prepublish = (elastic, redis, elasticDoc) => ({
 
     await resetScheduledAt(elastic, true, elasticDoc.meta.repoId, elasticDoc.id)
 
+    await sleep(1000 * REINDEX_AWAIT_SECS)
     await createCache(redis).invalidate()
   },
 })
@@ -627,6 +625,7 @@ const publishScheduled = (elastic, redis, elasticDoc) => ({
       elasticDoc.id,
     )
 
+    await sleep(1000 * REINDEX_AWAIT_SECS)
     await createCache(redis).invalidate()
   },
 })
@@ -675,6 +674,7 @@ const prepublishScheduled = (elastic, redis, elasticDoc) => ({
       elasticDoc.id,
     )
 
+    await sleep(1000 * REINDEX_AWAIT_SECS)
     await createCache(redis).invalidate()
   },
 })

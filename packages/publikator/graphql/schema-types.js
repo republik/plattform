@@ -8,7 +8,7 @@ type Repo {
   id: ID!
   commits(first: Int, before: String, after: String): CommitConnection!
   latestCommit: Commit!
-  commit(id: ID!): Commit!
+  commit(id: ID!): Commit
   uncommittedChanges: [User!]!
   milestones: [Milestone!]!
   # nothing or latest prepublication and/or latest publication
@@ -52,7 +52,7 @@ type RepoConnection {
   phases: [RepoPhaseWithCount]
   pageInfo: PublikatorPageInfo!
   totalCount: Int!
-  totalDiskUsage: Int
+  totalDiskUsage: Int @deprecated(reason: "Do not use anymore. Part of GitHub heydays.")
 }
 
 type PublikatorPageInfo {
@@ -143,10 +143,9 @@ type Commit {
   message: String
   author: Author!
   date: DateTime!
+  markdown: String!
   document: Document!
   repo: Repo!
-
-# files: [File]!
 }
 
 type CommitConnection {

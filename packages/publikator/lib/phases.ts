@@ -11,25 +11,21 @@ interface Phase {
   live?: boolean
 }
 
-interface RepoLatestPublication {
+interface Milestone {
+  scope: 'milestone' | 'publication' | 'prepublication'
   name: string
-  prepublication: boolean
-  live: boolean
-  meta: {
-    scheduledAt?: Date
-  }
+  createdAt: Date
+  scheduledAt?: Date
+  publishedAt?: Date
+  revokedAt?: Date
 }
 
 interface Repo {
-  id: number
-  latestPublications: RepoLatestPublication[]
-  tags: {
-    nodes: { name: string }[]
-  }
+  id: string
 }
 
 interface CheckPredicate {
-  (repo: Repo): boolean
+  (milestones: Milestone[]): boolean
 }
 
 interface Check {
@@ -120,9 +116,10 @@ const maybeCheckTags = function (phase: Phase): Check {
     name: 'tags',
     conditions: !!phase.tags,
     expected: true,
-    predicate: (repo: Repo) =>
+    predicate: (milestones) =>
       !!phase.tags?.every(
-        (tag) => !!repo.tags?.nodes?.find((n) => n.name === tag),
+        (tag) =>
+          !!milestones.find((m) => m.scope === 'milestone' && m.name === tag),
       ),
   }
 }
@@ -132,7 +129,8 @@ const maybeCheckPublished = function (phase: Phase): Check {
     name: 'published',
     conditions: typeof phase.published === 'boolean',
     expected: !!phase.published,
-    predicate: (repo: Repo) => !!repo.latestPublications.length,
+    predicate: (milestones) =>
+      !!milestones.find((m) => m.scope === 'publication' && !m.revokedAt),
   }
 }
 
@@ -141,12 +139,13 @@ const maybeCheckScheduled = function (phase: Phase): Check {
     name: 'scheduled',
     conditions: typeof phase.scheduled === 'boolean',
     expected: !!phase.scheduled,
-    predicate: (repo: Repo) =>
-      !!repo.latestPublications.find(
-        (p) =>
-          p.meta.scheduledAt &&
-          !p.live &&
-          p.name.indexOf('prepublication') === -1,
+    predicate: (milestones) =>
+      !!milestones.find(
+        (m) =>
+          m.scope === 'publication' &&
+          m.scheduledAt &&
+          !m.publishedAt &&
+          !m.revokedAt,
       ),
   }
 }
@@ -156,19 +155,19 @@ const maybeCheckLive = function (phase: Phase): Check {
     name: 'live',
     conditions: typeof phase.live === 'boolean',
     expected: !!phase.live,
-    predicate: (repo: Repo) =>
-      !!repo.latestPublications.find(
-        (p) => p.live && p.name.indexOf('prepublication') === -1,
+    predicate: (milestones) =>
+      !!milestones.find(
+        (m) => m.scope === 'publication' && m.publishedAt && !m.revokedAt,
       ),
   }
 }
 
-const runChecks = (repo: Repo, checks: Check[]) => {
+const runChecks = (repo: Repo, milestones: Milestone[], checks: Check[]) => {
   const hasAllPassed = checks
     .filter((check) => check.conditions)
     .every((check) => {
       const { name, expected, predicate } = check
-      const hasPassed = expected === predicate(repo)
+      const hasPassed = expected === predicate(milestones)
 
       debug('runChecks', { repo: repo.id, name, hasPassed })
       return hasPassed
@@ -181,7 +180,7 @@ const runChecks = (repo: Repo, checks: Check[]) => {
 
 const getPhases = () => [...phases]
 
-const hasReachedPhase = (repo: Repo, phase: Phase) => {
+const hasReachedPhase = (repo: Repo, milestones: Milestone[], phase: Phase) => {
   const checks: Check[] = [
     maybeCheckTags(phase),
     maybeCheckPublished(phase),
@@ -189,15 +188,17 @@ const hasReachedPhase = (repo: Repo, phase: Phase) => {
     maybeCheckLive(phase),
   ]
 
-  const hasReached = !!runChecks(repo, checks)
+  const hasReached = !!runChecks(repo, milestones, checks)
   debug('hasReachedPhase', { repo: repo.id, phase: phase.key, hasReached })
 
   return hasReached
 }
 
-const getCurrentPhase = (repo: Repo) => {
+const getCurrentPhase = (repo: Repo, milestones: Milestone[]) => {
   const phases = getPhases().reverse()
-  const currentPhase = phases.find((phase) => hasReachedPhase(repo, phase))
+  const currentPhase = phases.find((phase) =>
+    hasReachedPhase(repo, milestones, phase),
+  )
   if (!currentPhase) {
     throw new Error(
       `Failing to determine current phase repo "${repo.id}" is in`,

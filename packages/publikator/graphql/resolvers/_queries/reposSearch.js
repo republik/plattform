@@ -1,17 +1,8 @@
 const debug = require('debug')('publikator:resolver:query:search')
+
 const {
   Roles: { ensureUserHasRole },
 } = require('@orbiting/backend-modules-auth')
-const {
-  getDocumentId,
-} = require('@orbiting/backend-modules-search/lib/Documents')
-const {
-  graphql: {
-    resolvers: {
-      queries: { documents: getDocuments },
-    },
-  },
-} = require('@orbiting/backend-modules-documents')
 
 const client = require('../../../lib/cache/search')
 
@@ -21,48 +12,6 @@ const encodeCursor = (payload) => {
 
 const decodeCursor = (cursor) => {
   return JSON.parse(Buffer.from(cursor, 'base64').toString())
-}
-
-/**
- * Wanders through an array of repos, and generates document IDs for all
- * available (latestest) publications. Can be used to later link.
- *
- * @param  {Array} repos
- * @return {Array}        Document IDs
- */
-const getPublicationDocumentIds = (repos) => {
-  const ids = []
-
-  repos.forEach((repo) => {
-    if (repo.latestPublications) {
-      repo.latestPublications.forEach((publication) => {
-        ids.push(
-          getDocumentId({
-            repoId: publication.repo.id,
-            commitId: publication.commit.id,
-            versionName: publication.name,
-          }),
-        )
-      })
-    }
-  })
-
-  return ids
-}
-
-const mapDocuments = (documents, publication) =>
-  Object.assign(publication, {
-    document: documents.nodes.find(findDocumentId.bind(this, publication)),
-  })
-
-const findDocumentId = (publication, document) => {
-  const documentId = getDocumentId({
-    repoId: publication.repo.id,
-    commitId: publication.commit.id,
-    versionName: publication.name,
-  })
-
-  return document.id === documentId
 }
 
 module.exports = async (__, args, context) => {
@@ -115,8 +64,16 @@ module.exports = async (__, args, context) => {
   const hasNextPage = first > 0 && body.hits.total > from + first
   const hasPreviousPage = from > 0
 
+  const {
+    hits: { hits },
+  } = body
+
+  const repos = hits.length
+    ? await context.pgdb.publikator.repos.find({ id: hits.map((n) => n._id) })
+    : []
+
   const data = {
-    nodes: body.hits.hits.map(client.mapHit),
+    nodes: repos,
     aggregations: body.aggregations,
     totalCount: body.hits.total,
     pageInfo: {
@@ -148,37 +105,6 @@ module.exports = async (__, args, context) => {
         : null,
     },
   }
-
-  // The following secion will find all retrieved document IDs in publications,
-  // fetch documents and merge it corresponding documents to each publication.
-  // A publication will hold only one document.
-  //
-  // Albeit document resolver could a similar job, performing a "collected"
-  // query here cost one query to ElasticSearch while leaving it to document
-  // resolvers would each fire a query.
-  const documentIds = getPublicationDocumentIds(data.nodes)
-
-  const documents = await getDocuments(
-    null,
-    { first: documentIds.length, ids: documentIds },
-    context,
-  )
-
-  // Append documents to publications
-  data.nodes = data.nodes.map((repo) => {
-    if (repo.latestPublications) {
-      repo.latestPublications = repo.latestPublications.map(
-        mapDocuments.bind(this, documents),
-      )
-    }
-    if (repo.latestCommit) {
-      repo.latestCommit.document = documents.nodes.find(
-        (d) => d.commitId === repo.latestCommit.id,
-      )
-    }
-
-    return repo
-  })
 
   return data
 }

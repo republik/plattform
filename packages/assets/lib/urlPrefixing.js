@@ -1,7 +1,7 @@
 const { URL } = require('url')
 const querystring = require('querystring')
 const crypto = require('crypto')
-const { getS3UrlForGithubPath } = require('./Repo')
+const { getS3Url } = require('./Repo')
 
 const { ASSETS_SERVER_BASE_URL, ASSETS_HMAC_KEY } = process.env
 
@@ -27,11 +27,8 @@ module.exports = {
     }
     return (path) => {
       if (path && path.indexOf('images/') === 0) {
-        let url
-        if (_public) {
-          url = new URL(getS3UrlForGithubPath(repoId, path))
-        } else {
-          url = new URL(`${ASSETS_SERVER_BASE_URL}/github/${repoId}/${path}`)
+        const url = new URL(getS3Url(repoId, path))
+        if (!_public) {
           url.hash = querystring.stringify({
             [originalKey]: path,
           })

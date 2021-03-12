@@ -149,6 +149,15 @@ module.exports = async ({
         })
       }
 
+      debug('call final', { readAlias, index })
+      await inserts.dict[name].final({
+        indexName: index,
+        type,
+        elastic,
+        pgdb,
+        redis,
+      })
+
       const { body: indices } = await elastic.indices.getAlias({
         index: getIndexAlias(name, '*'),
       })

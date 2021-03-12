@@ -1,6 +1,7 @@
 require('@orbiting/backend-modules-env').config()
 
 const debug = require('debug')('search:lib:notifyListener')
+const get = require('lodash/get')
 
 const mappings = require('./indices')
 const inserts = require('./inserts')
@@ -13,28 +14,48 @@ const stats = { notifications: 0 }
 const cascadeUpdateConfig = {
   credentials: [
     {
-      table: 'users', // update all users
+      source: 'public.credentials',
+      target: 'public.users', // update all users
       via: 'userId', // via credentials.userId
       where: 'id', // where user.id === <via>
     },
     {
-      table: 'comments', // update all comments
+      source: 'public.credentials',
+      target: 'public.comments', // update all comments
       via: 'userId', // via credentials.userId
       where: 'userId', // where comments.userid === <via>
     },
   ],
   discussions: [
     {
-      table: 'comments', // update all comments
+      source: 'public.discussions',
+      target: 'public.comments', // update all comments
       via: 'id', // via discussions.id
       where: 'discussionId', // where comments.discussionId === <via>
     },
   ],
   discussionPreferences: [
     {
-      table: 'comments', // update all comments
+      source: 'public.discussionPreferences', // update all comments
+      target: 'public.comments', // update all comments
       via: 'discussionId', // via discussionPreferences.discussionId
       where: 'discussionId', // where comments.discussionId === <via>
+    },
+  ],
+  commits: [
+    {
+      source: 'publikator.commits',
+      target: 'publikator.repos', // update all repos
+      via: 'repoId', // via commits.repoId
+      where: 'id', // where repos.id === <via>
+    },
+  ],
+  milestones: [
+    {
+      source: 'publikator.milestones',
+      target: 'publikator.repos', // update all repos
+      via: 'repoId', // via milestones.repoId
+      where: 'id', // where repos.id === <via>
     },
   ],
 }
@@ -48,7 +69,10 @@ const updateCascade = async function ({ table, rows }, { pgdb, elastic }) {
         const sources =
           config.via === 'id'
             ? rows.map((row) => ({ id: row.id }))
-            : await pgdb.public[table].find({ id: rows.map((row) => row.id) })
+            : await get(pgdb, config.source).find(
+                { id: rows.map((row) => row.id) },
+                { fields: [config.via] },
+              )
 
         const sourceIds = sources.map((source) => source[config.via])
 
@@ -56,7 +80,7 @@ const updateCascade = async function ({ table, rows }, { pgdb, elastic }) {
           return
         }
 
-        const updateRows = await pgdb.public[config.table].find(
+        const updateRows = await get(pgdb, config.target).find(
           { [config.where]: sourceIds },
           { fields: ['id'] },
         )
@@ -64,7 +88,9 @@ const updateCascade = async function ({ table, rows }, { pgdb, elastic }) {
         return notificationHandler(
           {
             rows: updateRows,
-            payload: JSON.stringify({ table: config.table }),
+            payload: JSON.stringify({
+              table: get(pgdb, config.target).desc.name,
+            }),
           },
           { pgdb, elastic },
         )
@@ -104,7 +130,7 @@ const notificationHandler = async (
     )
 
     if (mappings.dict[table]) {
-      const { type, name } = mappings.dict[table]
+      const { type, name, path } = mappings.dict[table]
       const { insert } = inserts.dict[name]
 
       const updateIds = rows
@@ -122,7 +148,7 @@ const notificationHandler = async (
         pgdb,
         elastic,
         resource: {
-          table: tx.public[table],
+          table: get(tx, path),
           where: { id: updateIds.length > 0 ? updateIds : null },
           delete: deleteIds,
         },

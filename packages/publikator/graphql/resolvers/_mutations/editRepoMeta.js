@@ -1,23 +1,13 @@
+const debug = require('debug')('publikator:mutation:editRepoMeta')
 const {
   Roles: { ensureUserHasRole },
 } = require('@orbiting/backend-modules-auth')
-const {
-  getAnnotatedTag,
-  createGithubClients,
-  upsertRef,
-  gitAuthor,
-} = require('../../../lib/github')
-const yaml = require('../../../lib/yaml')
-const { upsert: repoCacheUpsert } = require('../../../lib/cache/upsert')
 
-const { latestCommit: getLatestCommit } = require('../Repo')
-
-const TAG_NAME = 'meta'
+const { updateRepo } = require('../../../lib/postgres')
 
 module.exports = async (_, args, context) => {
-  const { user, pubsub } = context
+  const { user, pgdb, pubsub } = context
   ensureUserHasRole(user, 'editor')
-  const { githubRest } = await createGithubClients()
 
   const {
     repoId,
@@ -29,10 +19,7 @@ module.exports = async (_, args, context) => {
     discussionId,
   } = args
 
-  const tag = await getAnnotatedTag(repoId, TAG_NAME, context)
-
-  const meta = {
-    ...(tag ? yaml.parse(tag.message) : {}),
+  const updatedMeta = {
     ...(creationDeadline !== undefined && { creationDeadline }),
     ...(productionDeadline !== undefined && { productionDeadline }),
     ...(publishDate !== undefined && { publishDate }),
@@ -40,47 +27,26 @@ module.exports = async (_, args, context) => {
     ...(mailchimpCampaignId !== undefined && { mailchimpCampaignId }),
     ...(discussionId !== undefined && { discussionId }),
   }
-  const message = yaml.stringify(meta)
 
-  const commitId = tag
-    ? tag.commit.id
-    : await getLatestCommit({ id: repoId }, null, context).then((c) => c.id)
+  const tx = await pgdb.transactionBegin()
 
-  const [login, repoName] = repoId.split('/')
-  const newTag = await githubRest.git
-    .createTag({
-      owner: login,
-      repo: repoName,
-      tag: TAG_NAME,
-      message,
-      object: commitId,
-      type: 'commit',
-      tagger: gitAuthor(user),
-    })
-    .then((result) => result.data)
-    .catch((e) => console.error(e))
+  try {
+    const repo = await updateRepo(repoId, updatedMeta, tx)
 
-  await upsertRef(repoId, `tags/${TAG_NAME}`, newTag.sha)
+    await tx.transactionCommit()
 
-  await repoCacheUpsert(
-    {
-      id: repoId,
-      meta,
-    },
-    context,
-  )
-
-  // pubsub not available if called by pullRedis
-  if (pubsub) {
     await pubsub.publish('repoUpdate', {
       repoUpdate: {
         id: repoId,
       },
     })
-  }
 
-  return {
-    id: repoId,
-    meta,
+    return repo
+  } catch (e) {
+    await tx.transactionRollback()
+
+    debug('rollback', { repoId, user: user.id })
+
+    throw e
   }
 }

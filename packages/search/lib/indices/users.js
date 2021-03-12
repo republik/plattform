@@ -3,6 +3,7 @@ const type = 'User'
 module.exports = {
   type,
   name: type.toLowerCase(),
+  path: 'public.users',
   search: {
     termFields: {
       name: {

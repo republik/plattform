@@ -205,9 +205,7 @@ module.exports = {
   },
   linkedDocuments(doc, args, context, info) {
     const hasDossierRepoId = doc.meta.template === 'dossier' && doc.meta.repoId
-
     const hasFormatRepoId = doc.meta.template === 'format' && doc.meta.repoId
-
     const hasSectionRepoId = doc.meta.template === 'section' && doc.meta.repoId
 
     if (!hasDossierRepoId && !hasFormatRepoId && !hasSectionRepoId) {

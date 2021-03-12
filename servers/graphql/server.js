@@ -47,6 +47,7 @@ const loaderBuilders = {
   ...require('@orbiting/backend-modules-embeds/loaders'),
   ...require('@orbiting/backend-modules-republik-crowdfundings/loaders'),
   ...require('@orbiting/backend-modules-republik/loaders'),
+  ...require('@orbiting/backend-modules-publikator/loaders'),
 }
 
 const {

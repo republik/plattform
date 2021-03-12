@@ -1,73 +1,68 @@
-const {
-  lib: { clients: createGithubClients },
-} = require('@orbiting/backend-modules-github')
-const { upload: uploadS3, getHead } = require('./s3')
-const Promise = require('bluebird')
+const { upload, hasHead } = require('./s3')
 const debug = require('debug')('assets:lib:Repo')
 
-const CONCURRENCY = 2
+const {
+  ASSETS_SERVER_BASE_URL,
+  AWS_S3_BUCKET,
+  AWS_S3_REPO_KEY_PREFIX = 'repos',
+} = process.env
 
-const { ASSETS_SERVER_BASE_URL, AWS_S3_BUCKET } = process.env
+const getS3Url = (repoId, path) => {
+  const s3Path = getS3Path(repoId, path)
 
-const getS3UrlForGithubPath = (repoId, path) =>
-  `${ASSETS_SERVER_BASE_URL}/s3/${AWS_S3_BUCKET}/github/${repoId}/${path}`
+  return `${ASSETS_SERVER_BASE_URL}/s3/${AWS_S3_BUCKET}/${s3Path}`
+}
 
-const getS3PathForGithubPath = (repoId, path) =>
-  `github/${repoId}/${path.split('?').shift()}`
+const getS3Path = (repoId, path) => {
+  return `${AWS_S3_REPO_KEY_PREFIX}/${repoId}/${path.split('?').shift()}`
+}
 
-const uploadImages = async (repoId, paths) => {
-  const { githubRest } = await createGithubClients()
-  const [owner, repo] = repoId.split('/')
+const isImageUploaded = (repoId, image) => {
+  const bucket = AWS_S3_BUCKET
+  const path = getS3Path(repoId, image.path)
 
-  await Promise.map(
-    paths,
-    async (path) => {
-      // the filename is the blobSha
-      const blobSha = path.split('/').pop().split('.')[0]
+  return hasHead({ bucket, path })
+}
 
-      const s3Path = getS3PathForGithubPath(repoId, path)
+const uploadImage = async (repoId, image) => {
+  const bucket = AWS_S3_BUCKET
+  const path = getS3Path(repoId, image.path)
 
-      if (!(await getHead({ bucket: AWS_S3_BUCKET, path: s3Path }))) {
-        let result
-        let error
+  debug('uploading %s in bucket %s...', path, bucket)
 
-        try {
-          result = await githubRest.git.getBlob({
-            owner,
-            repo,
-            file_sha: blobSha,
-          })
-        } catch (e) {
-          error = e
-          result = null
-        }
+  try {
+    await upload({
+      stream: image.blob,
+      path,
+      bucket: AWS_S3_BUCKET,
+    })
+  } catch (e) {
+    console.error(e)
+    throw new Error('upload image failed miserably')
+  }
 
-        if (error || !result || !result.data || !result.data.content) {
-          console.error('getBlob failed for ', {
-            owner,
-            repo,
-            blobSha,
-            path,
-            error,
-          })
-          throw new Error(`getBlob failed for: ${s3Path}`)
-        }
+  debug('uploaded %s in bucket %s', path, bucket)
 
-        return uploadS3({
-          stream: Buffer.from(result.data.content, 'base64'),
-          path: s3Path,
-          bucket: AWS_S3_BUCKET,
-        })
-      } else {
-        debug('uploadImages exists %s', s3Path)
-      }
-    },
-    { concurrency: CONCURRENCY },
-  )
+  return true
+}
+
+const maybeUploadImage = async (repoId, image) => {
+  const bucket = AWS_S3_BUCKET
+  const path = getS3Path(repoId, image.path)
+
+  if (await isImageUploaded(repoId, image)) {
+    debug('object %s exists already in bucket %s', path, bucket)
+    return false
+  }
+
+  await uploadImage(repoId, image)
+
+  return true
 }
 
 module.exports = {
-  getS3UrlForGithubPath,
-  getS3PathForGithubPath,
-  uploadImages,
+  getS3Url,
+  isImageUploaded,
+  uploadImage,
+  maybeUploadImage,
 }

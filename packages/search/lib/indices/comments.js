@@ -3,6 +3,7 @@ const type = 'Comment'
 module.exports = {
   type,
   name: type.toLowerCase(),
+  path: 'public.comments',
   search: {
     termFields: {
       contentString: {
