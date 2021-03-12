@@ -164,7 +164,9 @@ const createSchema = ({
   getVideoPlayerProps = props => props,
   onAudioCoverClick,
   metaBody = false,
-  metaHeadlines = false
+  metaHeadlines = false,
+  skipContainer = false,
+  skipCenter = false
 } = {}) => {
   const base = createBase({ metaBody, metaHeadlines })
   const blocks = createBlocks({
@@ -193,8 +195,8 @@ const createSchema = ({
     rules: [
       {
         matchMdast: matchType('root'),
-        component: Container,
-        props: node => ({}),
+        component: ({ children }) =>
+          skipContainer ? children : <Container>{children}</Container>,
         editorModule: 'documentPlain',
         editorOptions: documentEditorOptions,
         rules: [
@@ -384,7 +386,8 @@ const createSchema = ({
           },
           {
             matchMdast: matchZone('CENTER'),
-            component: Center,
+            component: ({ children }) =>
+              skipCenter ? children : <Center>{children}</Center>,
             // prevent empty data object forward to component
             // - Center spreads all props onto its div
             props: () => ({}),

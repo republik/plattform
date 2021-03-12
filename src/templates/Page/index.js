@@ -12,6 +12,8 @@ const createSchema = ({
   titleBlockPrepend = null,
   getPath = ({ slug }) => `/${(slug || '').split('/').pop()}`,
   metaHeadlines = true,
+  skipContainer = false,
+  skipCenter = false,
   ...args
 } = {}) => {
   return createArticleSchema({
@@ -39,6 +41,8 @@ const createSchema = ({
     paynotes,
     Link,
     metaHeadlines,
+    skipContainer,
+    skipCenter,
     ...args
   })
 }
