@@ -29,6 +29,8 @@ import {
 } from '../../components/VersionControl/UncommittedChanges'
 import Sidebar from '../../components/Sidebar'
 import Warning from '../../components/Sidebar/Warning'
+import ScreeenSizePicker from '../../components/ScreenSizePicker'
+import PreviewFrame from '../../components/PreviewFrame'
 
 import Loader from '../../components/Loader'
 import CharCount from '../../components/CharCount'
@@ -190,7 +192,9 @@ export class EditorPage extends Component {
       acknowledgedUsers: [],
       activeUsers: [],
       showSidebar: true,
-      readOnly: true
+      readOnly: true,
+      previewScreenSize: null,
+      previewDarkmode: false
     }
 
     this.lock = state => {
@@ -830,7 +834,6 @@ export class EditorPage extends Component {
       !showLoading && repo && repo.isArchived && <RepoArchivedBanner />
     ].filter(Boolean)
     const sidebarDisabled = !!(showLoading || error)
-
     return (
       <Frame raw>
         <Frame.Header
@@ -919,16 +922,31 @@ export class EditorPage extends Component {
                   />
                 )}
                 <ColorContextProvider colorSchemeKey={dark ? 'dark' : 'light'}>
-                  <Editor
-                    ref={this.editorRef}
-                    schema={schema}
-                    isTemplate={isTemplate}
-                    meta={meta}
-                    value={editorState}
-                    onChange={this.changeHandler}
-                    onDocumentChange={this.documentChangeHandler}
-                    readOnly={readOnly}
-                  />
+                  {this.state.previewScreenSize !== null ? (
+                    <ColorContextProvider
+                      colorSchemeKey={
+                        this.state.previewDarkmode ? 'dark' : 'light'
+                      }
+                    >
+                      <PreviewFrame
+                        previewScreenSize={this.state.previewScreenSize}
+                        repoId={repoId}
+                        commitId={commitId}
+                        darkmode={this.state.previewDarkmode}
+                      />
+                    </ColorContextProvider>
+                  ) : (
+                    <Editor
+                      ref={this.editorRef}
+                      schema={schema}
+                      isTemplate={isTemplate}
+                      meta={meta}
+                      value={editorState}
+                      onChange={this.changeHandler}
+                      onDocumentChange={this.documentChangeHandler}
+                      readOnly={readOnly}
+                    />
+                  )}
                 </ColorContextProvider>
               </div>
             )}
@@ -938,6 +956,12 @@ export class EditorPage extends Component {
             isDisabled={sidebarDisabled}
             selectedTabId={readOnly ? 'workflow' : 'edit'}
             isOpen={showSidebar}
+            onTabChange={activeTab => {
+              if (activeTab !== 'view') {
+                // reset device preivew when navigation away from view
+                this.setState({ previewScreenSize: null })
+              }
+            }}
           >
             {!readOnly && (
               <Sidebar.Tab tabId='edit' label='Editieren'>
@@ -967,6 +991,20 @@ export class EditorPage extends Component {
                 commit={repo && (repo.commit || repo.latestCommit)}
                 isNew={isNew}
                 hasUncommittedChanges={hasUncommittedChanges}
+              />
+            </Sidebar.Tab>
+            <Sidebar.Tab tabId='view' label='Ansicht'>
+              <ScreeenSizePicker
+                selectedScreenSize={this.state.previewScreenSize}
+                onSelect={screenSize => {
+                  this.setState({ previewScreenSize: screenSize })
+                }}
+                onDarkmodeToggle={() =>
+                  this.setState({
+                    previewDarkmode: !this.state.previewDarkmode
+                  })
+                }
+                previewDarkmode={this.state.previewDarkmode}
               />
             </Sidebar.Tab>
           </Sidebar>

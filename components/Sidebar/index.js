@@ -3,25 +3,17 @@ import { css } from 'glamor'
 import { HEADER_HEIGHT, ZINDEX_SIDEBAR } from '../Frame/constants'
 import { colors, Label } from '@project-r/styleguide'
 
-const SIDEBAR_WIDTH_SMALL = 270
-const SIDEBAR_WIDTH_LARGE = 340
+export const SIDEBAR_WIDTH = 300
 
 const styles = {
   container: css({
     position: 'fixed',
     top: HEADER_HEIGHT,
-    width: SIDEBAR_WIDTH_SMALL,
-    right: -SIDEBAR_WIDTH_SMALL,
+    width: SIDEBAR_WIDTH,
+    right: -SIDEBAR_WIDTH,
     transition: 'right 0.2s ease',
     '&.open': {
       right: 0
-    },
-    '@media only screen and (min-width: 1400px)': {
-      width: SIDEBAR_WIDTH_LARGE,
-      right: -SIDEBAR_WIDTH_LARGE,
-      '&.open': {
-        right: 0
-      }
     },
     bottom: 0,
     overflow: 'auto',
@@ -86,6 +78,7 @@ export default class Sidebar extends Component {
   }
 
   tabClickHandler(id) {
+    this.props.onTabChange(id)
     this.setState({
       selectedTabId: id
     })
