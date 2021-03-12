@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react'
 import { useColorContext } from '@project-r/styleguide'
-import { FRONTEND_BASE_URL } from '../../lib/settings'
+import { PUBLIC_BASE_URL } from '../../lib/settings'
 
 import { SIDEBAR_WIDTH } from '../Sidebar'
 import { HEADER_HEIGHT } from '../Frame/constants'
@@ -32,7 +32,7 @@ const PreviewFrame = ({ previewScreenSize, commitId, repoId, darkmode }) => {
   const [colorScheme] = useColorContext()
   const iframeRef = useRef()
 
-  const URL = `${FRONTEND_BASE_URL}/repo/${repoId}/preview?commitId=${commitId}&darkmode=${darkmode}`
+  const URL = `${PUBLIC_BASE_URL}/repo/${repoId}/preview?commitId=${commitId}&darkmode=${darkmode}`
   useEffect(() => {
     const handleResize = () => {
       const availableHeight =
