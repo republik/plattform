@@ -35,7 +35,7 @@ const PreviewFrame = ({ previewScreenSize, commitId, repoId }) => {
 
   useEffect(() => {
     const handleResize = () => {
-      const windowHeight = window.innerHeight
+      const windowHeight = window.innerHeight - 90
       const windowWidth = window.innerWidth - SIDEBAR_WIDTH
 
       const actualPreviewWidth =
