@@ -4,7 +4,7 @@ import { FRONTEND_BASE_URL } from '../../lib/settings'
 
 import { SIDEBAR_WIDTH } from '../Sidebar'
 
-const PREVIEW_PADDING = 16
+const PREVIEW_MARGIN = 16
 
 const screenSizes = {
   phone: {
@@ -35,45 +35,28 @@ const PreviewFrame = ({ previewScreenSize, commitId, repoId }) => {
 
   useEffect(() => {
     const handleResize = () => {
-      const windowHeight = window.innerHeight - 90 - PREVIEW_PADDING * 2
-      const windowWidth =
-        window.innerWidth - SIDEBAR_WIDTH - PREVIEW_PADDING * 2
+      const windowHeight = window.innerHeight
+      const windowWidth = window.innerWidth - SIDEBAR_WIDTH
 
-      const exeedsWindowWidth =
-        windowWidth <= screenSizes[previewScreenSize].width
-      const exeedsWindowHeight =
-        windowHeight <= screenSizes[previewScreenSize].height
+      const actualPreviewWidth =
+        screenSizes[previewScreenSize].width + 2 * PREVIEW_MARGIN
+      const actualPreviewHeight =
+        screenSizes[previewScreenSize].height + 2 * PREVIEW_MARGIN
 
-      const widthScaleFactor =
-        windowWidth / screenSizes[previewScreenSize].width
-      const heightScaleFactor =
-        windowHeight / screenSizes[previewScreenSize].height
+      const exceedsWindowWidth = windowWidth <= actualPreviewWidth
+      const exceedsWindowHeight = windowHeight <= actualPreviewHeight
 
-      if (
-        // if screensize is larger than either window with or height
-        exeedsWindowHeight ||
-        exeedsWindowWidth
-      ) {
-        setScaleFactor(Math.min(widthScaleFactor, heightScaleFactor))
-      } else {
-        setScaleFactor(1)
-      }
+      const widthScaleFactor = windowWidth / actualPreviewWidth
+      const heightScaleFactor = windowHeight / actualPreviewHeight
+      const currentScaleFactor =
+        exceedsWindowHeight || exceedsWindowWidth
+          ? Math.min(widthScaleFactor, heightScaleFactor)
+          : 1
+      setScaleFactor(currentScaleFactor)
 
-      if (windowWidth <= screenSizes[previewScreenSize].width) {
-        // if screensize exeeds window with, don't reposition
-        setLeftSpace(0)
-      } else {
-        const iFrameWidth =
-          exeedsWindowHeight || exeedsWindowWidth
-            ? iframeRef.current.clientWidth *
-              Math.min(heightScaleFactor, widthScaleFactor)
-            : iframeRef.current.clientWidth
-        const scaledWindowWidth =
-          exeedsWindowHeight || exeedsWindowWidth
-            ? windowWidth / Math.min(heightScaleFactor, widthScaleFactor)
-            : windowWidth
-        setLeftSpace(scaledWindowWidth / 2 - iFrameWidth / 2)
-      }
+      const scaledPreviewWidth =
+        screenSizes[previewScreenSize].width * currentScaleFactor
+      setLeftSpace((windowWidth - scaledPreviewWidth) / 2)
     }
 
     handleResize()
@@ -89,11 +72,12 @@ const PreviewFrame = ({ previewScreenSize, commitId, repoId }) => {
         ref={iframeRef}
         style={{
           ...screenSizes[previewScreenSize],
-          transform: `scale(${scaleFactor}) translateX(${leftSpace}px)`,
-          transformOrigin: '0 0',
+          transform: `scale(${scaleFactor})`,
+          transformOrigin: `0 0`,
           border: 'none',
           resize: 'both',
-          margin: PREVIEW_PADDING
+          margin: PREVIEW_MARGIN,
+          marginLeft: leftSpace
         }}
         {...colorScheme.set('backgroundColor', 'default')}
         src={URL}
