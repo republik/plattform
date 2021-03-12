@@ -9,8 +9,8 @@ const styles = {
   nav: css({
     paddingTop: 15,
     paddingLeft: 15,
-    verticalAlign: 'top',
     display: 'flex',
+    alignItems: 'center',
     [mediaQueries.onlyS]: {
       fontSize: 14
     }
@@ -24,12 +24,9 @@ const styles = {
     textDecoration: 'none'
   }),
   logo: css({
-    display: 'inline-block',
-    width: 50,
-    float: 'left',
+    width: 38,
     marginRight: 20,
-    verticalAlign: 'top',
-    lineHeight: 0
+    marginTop: 4
   }),
   logoWithChildren: css({
     [mediaQueries.onlyS]: {
