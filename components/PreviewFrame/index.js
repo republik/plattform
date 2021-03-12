@@ -3,6 +3,7 @@ import { useColorContext } from '@project-r/styleguide'
 import { FRONTEND_BASE_URL } from '../../lib/settings'
 
 import { SIDEBAR_WIDTH } from '../Sidebar'
+import { HEADER_HEIGHT } from '../Frame/constants'
 
 const PREVIEW_MARGIN = 16
 
@@ -35,7 +36,8 @@ const PreviewFrame = ({ previewScreenSize, commitId, repoId }) => {
 
   useEffect(() => {
     const handleResize = () => {
-      const availableHeight = window.innerHeight - 90 - 2 * PREVIEW_MARGIN
+      const availableHeight =
+        window.innerHeight - HEADER_HEIGHT - 2 * PREVIEW_MARGIN
       const availableWidth =
         window.innerWidth - SIDEBAR_WIDTH - 2 * PREVIEW_MARGIN
 
