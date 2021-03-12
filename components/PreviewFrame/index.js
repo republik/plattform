@@ -36,18 +36,17 @@ const PreviewFrame = ({ previewScreenSize, commitId, repoId }) => {
   useEffect(() => {
     const handleResize = () => {
       const windowHeight = window.innerHeight - 90
-      const windowWidth = window.innerWidth - SIDEBAR_WIDTH
+      const windowWidth = window.innerWidth - SIDEBAR_WIDTH - 2 * PREVIEW_MARGIN
 
-      const actualPreviewWidth =
-        screenSizes[previewScreenSize].width + 2 * PREVIEW_MARGIN
-      const actualPreviewHeight =
-        screenSizes[previewScreenSize].height + 2 * PREVIEW_MARGIN
+      const exceedsWindowWidth =
+        windowWidth <= screenSizes[previewScreenSize].width
+      const exceedsWindowHeight =
+        windowHeight <= screenSizes[previewScreenSize].height
 
-      const exceedsWindowWidth = windowWidth <= actualPreviewWidth
-      const exceedsWindowHeight = windowHeight <= actualPreviewHeight
-
-      const widthScaleFactor = windowWidth / actualPreviewWidth
-      const heightScaleFactor = windowHeight / actualPreviewHeight
+      const widthScaleFactor =
+        windowWidth / screenSizes[previewScreenSize].width
+      const heightScaleFactor =
+        windowHeight / screenSizes[previewScreenSize].height
       const currentScaleFactor =
         exceedsWindowHeight || exceedsWindowWidth
           ? Math.min(widthScaleFactor, heightScaleFactor)
@@ -77,7 +76,7 @@ const PreviewFrame = ({ previewScreenSize, commitId, repoId }) => {
           border: 'none',
           resize: 'both',
           margin: PREVIEW_MARGIN,
-          marginLeft: leftSpace
+          marginLeft: PREVIEW_MARGIN + leftSpace
         }}
         {...colorScheme.set('backgroundColor', 'default')}
         src={URL}
