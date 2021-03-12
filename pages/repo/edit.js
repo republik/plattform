@@ -193,7 +193,8 @@ export class EditorPage extends Component {
       activeUsers: [],
       showSidebar: true,
       readOnly: true,
-      previewScreenSize: null
+      previewScreenSize: null,
+      previewDarkmode: false
     }
 
     this.lock = state => {
@@ -922,11 +923,18 @@ export class EditorPage extends Component {
                 )}
                 <ColorContextProvider colorSchemeKey={dark ? 'dark' : 'light'}>
                   {this.state.previewScreenSize !== null ? (
-                    <PreviewFrame
-                      previewScreenSize={this.state.previewScreenSize}
-                      repoId={repoId}
-                      commitId={commitId}
-                    />
+                    <ColorContextProvider
+                      colorSchemeKey={
+                        this.state.previewDarkmode ? 'dark' : 'light'
+                      }
+                    >
+                      <PreviewFrame
+                        previewScreenSize={this.state.previewScreenSize}
+                        repoId={repoId}
+                        commitId={commitId}
+                        darkmode={this.state.previewDarkmode}
+                      />
+                    </ColorContextProvider>
                   ) : (
                     <Editor
                       ref={this.editorRef}
@@ -991,6 +999,12 @@ export class EditorPage extends Component {
                 onSelect={screenSize => {
                   this.setState({ previewScreenSize: screenSize })
                 }}
+                onDarkmodeToggle={() =>
+                  this.setState({
+                    previewDarkmode: !this.state.previewDarkmode
+                  })
+                }
+                previewDarkmode={this.state.previewDarkmode}
               />
             </Sidebar.Tab>
           </Sidebar>

@@ -26,14 +26,13 @@ const screenSizes = {
   }
 }
 
-const PreviewFrame = ({ previewScreenSize, commitId, repoId }) => {
+const PreviewFrame = ({ previewScreenSize, commitId, repoId, darkmode }) => {
   const [scaleFactor, setScaleFactor] = useState(1)
   const [leftSpace, setLeftSpace] = useState(0)
   const [colorScheme] = useColorContext()
   const iframeRef = useRef()
 
-  const URL = `${FRONTEND_BASE_URL}/repo/${repoId}/preview?commitId=${commitId}`
-
+  const URL = `${FRONTEND_BASE_URL}/repo/${repoId}/preview?commitId=${commitId}&darkmode=${darkmode}`
   useEffect(() => {
     const handleResize = () => {
       const availableHeight =

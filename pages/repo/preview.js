@@ -26,9 +26,9 @@ const getCommitById = gql`
   ${fragments.CommitWithDocument}
 `
 
-const PreviewPage = ({ dark, router, data = {} }) => {
+const PreviewPage = ({ router, data = {} }) => {
   const { loading, error, repo: { commit: { document } = {} } = {} } = data
-  const { repoId, commitId } = router.query
+  const { repoId, commitId, darkmode } = router.query
 
   const storeKey = [repoId, commitId].join('/')
   const store = initLocalStore(storeKey)
@@ -37,27 +37,30 @@ const PreviewPage = ({ dark, router, data = {} }) => {
   const schema = getSchema(
     localState?.meta?.template || document?.meta?.template
   )
-
   return (
     <Frame.Body raw>
-      <Loader
-        loading={loading}
-        error={error}
-        render={() => (
-          <ColorContextProvider colorSchemeKey={dark ? 'dark' : 'light'}>
-            {renderMdast(
-              {
-                ...(localState || document?.content),
-                format: document?.meta?.format,
-                section: document?.meta?.section,
-                series: document?.meta?.series,
-                repoId
-              },
-              schema
-            )}
-          </ColorContextProvider>
-        )}
-      />
+      <ColorContextProvider
+        colorSchemeKey={darkmode === 'true' ? 'dark' : 'light'}
+      >
+        <Loader
+          loading={loading}
+          error={error}
+          render={() => (
+            <>
+              {renderMdast(
+                {
+                  ...(localState || document?.content),
+                  format: document?.meta?.format,
+                  section: document?.meta?.section,
+                  series: document?.meta?.series,
+                  repoId
+                },
+                schema
+              )}
+            </>
+          )}
+        />
+      </ColorContextProvider>
     </Frame.Body>
   )
 }

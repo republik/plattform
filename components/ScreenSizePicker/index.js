@@ -3,7 +3,8 @@ import { css } from 'glamor'
 import {
   plainButtonRule,
   fontStyles,
-  useColorContext
+  useColorContext,
+  Checkbox
 } from '@project-r/styleguide'
 
 import MdPhoneIphone from 'react-icons/lib/md/phone-iphone'
@@ -55,37 +56,53 @@ const screenSizes = [
   }
 ]
 
-const ScreenSizePicker = ({ onSelect, selectedScreenSize }) => {
+const ScreenSizePicker = ({
+  onSelect,
+  selectedScreenSize,
+  onDarkmodeToggle,
+  previewDarkmode
+}) => {
   const [colorScheme] = useColorContext()
   return (
-    <div {...styles.container}>
-      {screenSizes.map(size => {
-        const isSelected = selectedScreenSize === size.name
-        return (
-          <button
-            key={size.name}
-            {...colorScheme.set(
-              'backgroundColor',
-              isSelected ? 'text' : 'default'
-            )}
-            {...styles.iconContainer}
-            {...plainButtonRule}
-            onClick={() => onSelect(size.name)}
-          >
-            <size.Icon
-              {...colorScheme.set('fill', isSelected ? 'default' : 'text')}
-              size={24}
-            />
-            <span
-              {...colorScheme.set('color', isSelected ? 'default' : 'text')}
-              {...styles.label}
+    <>
+      <div {...styles.container}>
+        {screenSizes.map(size => {
+          const isSelected = selectedScreenSize === size.name
+          return (
+            <button
+              key={size.name}
+              {...colorScheme.set(
+                'backgroundColor',
+                isSelected ? 'text' : 'default'
+              )}
+              {...styles.iconContainer}
+              {...plainButtonRule}
+              onClick={() => onSelect(size.name)}
             >
-              {size.label}
-            </span>
-          </button>
-        )
-      })}
-    </div>
+              <size.Icon
+                {...colorScheme.set('fill', isSelected ? 'default' : 'text')}
+                size={24}
+              />
+              <span
+                {...colorScheme.set('color', isSelected ? 'default' : 'text')}
+                {...styles.label}
+              >
+                {size.label}
+              </span>
+            </button>
+          )
+        })}
+      </div>
+      {selectedScreenSize ? (
+        <Checkbox
+          black
+          checked={previewDarkmode}
+          onChange={() => onDarkmodeToggle()}
+        >
+          Nachtmodus
+        </Checkbox>
+      ) : null}
+    </>
   )
 }
 
