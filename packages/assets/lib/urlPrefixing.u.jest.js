@@ -25,6 +25,7 @@ test('oneway', () => {
   const url = 'images/asdf.jpg?test=true'
   const prefixUrl = createRepoUrlPrefixer(repo, true)
   const newUrl = prefixUrl(url)
+  expect(newUrl).toMatch(url)
   expect(-1).toBe(newUrl.indexOf('#'))
   expect(newUrl).toBe(unprefixUrl(newUrl))
 })
