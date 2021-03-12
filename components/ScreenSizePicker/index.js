@@ -109,7 +109,7 @@ const ScreenSizePicker = ({
             checked={previewDarkmode}
             onChange={() => onDarkmodeToggle()}
           >
-            {previewDarkmode ? 'Aktiv' : 'Aus'}
+            Ein
           </Checkbox>
         </>
       ) : null}
