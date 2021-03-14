@@ -6,6 +6,8 @@ import Pause from 'react-icons/lib/md/pause'
 import Rewind from 'react-icons/lib/md/skip-previous'
 import Close from 'react-icons/lib/md/close'
 import Download from 'react-icons/lib/md/file-download'
+import Forward from 'react-icons/lib/md/forward-30'
+import Replay from 'react-icons/lib/md/replay-30'
 
 import { ellipsize } from '../../lib/styleMixins'
 import { timeFormat } from '../../lib/timeFormat'
@@ -36,7 +38,9 @@ const SIZE = {
   play: 30,
   rewind: 26,
   close: 30,
-  download: 22
+  download: 22,
+  forward: 22,
+  replay: 22
 }
 
 const barStyle = {
@@ -93,7 +97,7 @@ const styles = {
   download: css({
     position: 'absolute',
     top: '50%',
-    left: SIZE.rewind + SIZE.play + ICON_SPACING,
+    left: SIZE.play + SIZE.rewind + SIZE.replay + SIZE.forward + ICON_SPACING,
     marginTop: -10,
     textAlign: 'center'
   }),
@@ -462,7 +466,11 @@ class AudioPlayer extends Component {
     } = this.state
     const isVideo = src.mp4 || src.hls
     const leftIconsWidth =
-      SIZE.rewind + SIZE.play + (download ? SIZE.download + ICON_SPACING : 0)
+      SIZE.play +
+      SIZE.rewind +
+      SIZE.replay +
+      SIZE.forward +
+      (download ? SIZE.download + ICON_SPACING : 0)
     const rightIconsWidth = closeHandler ? SIZE.close : 0
     const uiTextStyle = {
       maxWidth: `calc(100% - ${leftIconsWidth + rightIconsWidth + 20}px)`,
@@ -582,6 +590,42 @@ class AudioPlayer extends Component {
             >
               <Rewind
                 size={SIZE.rewind}
+                {...(playEnabled && progress > 0
+                  ? colorScheme.set('fill', 'text')
+                  : colorScheme.set('fill', 'disabled'))}
+              />
+            </button>
+            <button
+              {...styles.button}
+              onClick={
+                playEnabled
+                  ? () => {
+                      this.setTime(this.audio.currentTime - 30)
+                    }
+                  : null
+              }
+              title={t('styleguide/AudioPlayer/partialrewind')}
+            >
+              <Replay
+                size={SIZE.replay}
+                {...(playEnabled && progress > 0
+                  ? colorScheme.set('fill', 'text')
+                  : colorScheme.set('fill', 'disabled'))}
+              />
+            </button>
+            <button
+              {...styles.button}
+              onClick={
+                playEnabled
+                  ? () => {
+                      this.setTime(this.audio.currentTime + 30)
+                    }
+                  : null
+              }
+              title={t('styleguide/AudioPlayer/partialfastforward')}
+            >
+              <Forward
+                size={SIZE.forward}
                 {...(playEnabled && progress > 0
                   ? colorScheme.set('fill', 'text')
                   : colorScheme.set('fill', 'disabled'))}
