@@ -213,7 +213,6 @@ class Editor extends Component {
   }
   render() {
     const { value, readOnly, hide } = this.props
-    console.log(hide)
     return (
       <Container hide={hide}>
         <Loader
