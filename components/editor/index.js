@@ -143,7 +143,11 @@ const styles = {
   })
 }
 
-const Container = ({ children }) => <div {...styles.container}>{children}</div>
+const Container = ({ children, hide }) => (
+  <div {...styles.container} style={{ display: hide ? 'none' : 'block' }}>
+    {children}
+  </div>
+)
 
 const Document = ({ children, readOnly }) => (
   <article
@@ -208,9 +212,9 @@ class Editor extends Component {
     }
   }
   render() {
-    const { value, readOnly } = this.props
+    const { value, readOnly, hide } = this.props
     return (
-      <Container>
+      <Container hide={hide}>
         <Loader
           loading={!value}
           render={() => (

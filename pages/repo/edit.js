@@ -935,18 +935,18 @@ export class EditorPage extends Component {
                         darkmode={this.state.previewDarkmode}
                       />
                     </ColorContextProvider>
-                  ) : (
-                    <Editor
-                      ref={this.editorRef}
-                      schema={schema}
-                      isTemplate={isTemplate}
-                      meta={meta}
-                      value={editorState}
-                      onChange={this.changeHandler}
-                      onDocumentChange={this.documentChangeHandler}
-                      readOnly={readOnly}
-                    />
-                  )}
+                  ) : null}
+                  <Editor
+                    ref={this.editorRef}
+                    schema={schema}
+                    isTemplate={isTemplate}
+                    meta={meta}
+                    value={editorState}
+                    onChange={this.changeHandler}
+                    onDocumentChange={this.documentChangeHandler}
+                    readOnly={readOnly}
+                    hide={this.state.previewScreenSize !== null}
+                  />
                 </ColorContextProvider>
               </div>
             )}
