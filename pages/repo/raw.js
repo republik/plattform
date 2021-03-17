@@ -99,6 +99,7 @@ export default compose(
   const goToEditor = e => {
     if (e) e.preventDefault()
     Router.pushRoute('repo/edit', {
+      ...router.query,
       repoId: repoId.split('/'),
       commitId,
       ...(commitId === 'new' ? { schema: schema || template, isTemplate } : {})
@@ -151,12 +152,12 @@ export default compose(
 
   return (
     <Frame raw>
-      <Frame.Header isTemplate={isTemplate}>
+      <Frame.Header isTemplate={isTemplate === 'true'}>
         <Frame.Header.Section align='left'>
           <Frame.Nav>
             <RepoNav
               route='repo/edit'
-              prefix={isTemplate ? 'template' : 'document'}
+              prefix={isTemplate === 'true' ? 'template' : 'document'}
             />
           </Frame.Nav>
         </Frame.Header.Section>
