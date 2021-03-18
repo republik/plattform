@@ -1,11 +1,9 @@
 import React from 'react'
 import { css } from 'glamor'
-import { fontFamilies, fontStyles } from '../../theme/fonts'
+import { fontFamilies } from '../../theme/fonts'
 
 const WIDTH = 1200
 const HEIGHT = 628
-const KOLUMNEN = ['Binswanger', 'Blickwechsel']
-const KURSIVFORMATE = ['Aus der Arena', 'Ctrl-Alt-R', 'Happening']
 
 const styles = {
   container: css({
@@ -85,7 +83,7 @@ const ShareImagePreview = ({
               'center'
       }}
     >
-      {KOLUMNEN.includes(format?.title) ? (
+      {format?.backgroundImage ? (
         <img {...styles.kolumnenImage} src={format?.image} />
       ) : format?.image ? (
         <img {...styles.formatImage} src={format?.image} />
@@ -105,7 +103,6 @@ const ShareImagePreview = ({
         {...styles.textContainer}
         style={{
           ...(fontStyle && fontStyle),
-          ...(KURSIVFORMATE.includes(format?.title) && fontStyles.cursiveTitle),
           fontSize: fontSize,
           color: coloredBackground ? '#FFF' : '#000',
           width: format?.type === 'Kolumnen' && backgroundImage && '80%'

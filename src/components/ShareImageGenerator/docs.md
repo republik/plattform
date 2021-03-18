@@ -21,26 +21,28 @@ Supported props:
 ```
 
 ## Meta
-Setting type to 'Meta' enables to choose between Sans-Serif and Serif fonts.
+'Meta' uses the format.kind value to set the font. If no value is provided it defaults to Rubis
 ```react
 <ShareImageGenerator
   format={{ 
     title: 'Meta',
     type: 'Meta',
-    color: '#000'
+    color: '#000',
+    kind: 'meta'
   }}
 />
 ```
 
 
 ## Formate
-Automatically chooses cursive font based on title.
+'Format' uses the format.kind value to set the font. If no value is provided it defaults to Rubis.
 ```react
 <ShareImageGenerator
   format={{ 
     title: 'Aus der Arena',
     type: 'Format',
-    color: '#D74132'
+    color: '#D74132',
+    kind: 'scribble'
   }}
 />
 ```

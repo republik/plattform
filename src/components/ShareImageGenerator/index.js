@@ -76,6 +76,15 @@ const ShareImageGenerator = ({ format }) => {
     }
   ]
 
+  const fontStyleFromKind =
+    format?.kind === 'scribble'
+      ? fontStyles.cursiveTitle
+      : format?.kind === 'editorial'
+      ? fontStyles.serifBold
+      : format?.kind === 'meta'
+      ? fontStyles.sansSerifRegular
+      : undefined
+
   return (
     <div {...styles.container}>
       <div {...styles.controlsContainer}>
@@ -87,7 +96,7 @@ const ShareImageGenerator = ({ format }) => {
             Hintergrundfarbe
           </Checkbox>
         </div>
-        {!format || format?.type === 'Meta' || format?.type === 'Dialog' ? (
+        {!format || format?.type === 'Dialog' ? (
           <div style={{ width: 160 }}>
             <Dropdown
               label='Schriftart'
@@ -149,7 +158,7 @@ const ShareImageGenerator = ({ format }) => {
         coloredBackground={coloredBackground}
         text={text}
         fontSize={fontSize}
-        fontStyle={fontStyle}
+        fontStyle={fontStyleFromKind || fontStyle}
         // below only used for Kolumnen
         textPosition={textPosition}
         backgroundImage={backgroundImage}
