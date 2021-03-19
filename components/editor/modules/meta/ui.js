@@ -3,15 +3,7 @@ import { css } from 'glamor'
 import { Map, Set } from 'immutable'
 import { nest } from 'd3-collection'
 
-import {
-  A,
-  Interaction,
-  Dropdown,
-  Field,
-  Checkbox,
-  Label,
-  colors
-} from '@project-r/styleguide'
+import { Interaction, Checkbox, Label, colors } from '@project-r/styleguide'
 
 import withT from '../../../../lib/withT'
 import slugify from '../../../../lib/utils/slug'
@@ -19,7 +11,6 @@ import { FRONTEND_BASE_URL } from '../../../../lib/settings'
 
 import MetaForm from '../../utils/MetaForm'
 import SlugField from '../../utils/SlugField'
-import FBPreview from './FBPreview'
 import TwitterPreview from './TwitterPreview'
 import RepoSelect from './RepoSelect'
 import SeriesForm from './SeriesForm'
@@ -27,6 +18,7 @@ import PaynotesForm from './PaynotesForm'
 import AudioForm from './AudioForm'
 import UIForm from '../../UIForm'
 import DarkModeForm, { DARK_MODE_KEY } from './DarkModeForm'
+import ShareImageForm from './ShareImageForm'
 
 const styles = {
   container: css({
@@ -44,7 +36,8 @@ const styles = {
   })
 }
 
-const getWidth = key => (key.match(/title|feed|emailSubject/i) ? '100%' : '')
+export const getWidth = key =>
+  key.match(/title|feed|emailSubject/i) ? '100%' : ''
 
 const MetaData = ({
   value,
@@ -77,7 +70,7 @@ const MetaData = ({
     node.data.filter((_, key) => genericKeys.has(key))
   )
 
-  const fbKeys = Set(['facebookTitle', 'facebookImage', 'facebookDescription'])
+  const fbKeys = Set(['facebookTitle', 'facebookDescription'])
   const fbDefaultValues = Map(fbKeys.map(key => [key, '']))
   const fbData = fbDefaultValues.merge(
     node.data.filter((_, key) => fbKeys.has(key))
@@ -136,6 +129,8 @@ const MetaData = ({
   }
   const titleNode = value.document.findDescendant(node => node.type === 'TITLE')
   const titleData = titleNode ? titleNode.data.toJS() : {}
+
+  console.log(titleData.format)
 
   const dataAsJs = node.data.toJS()
   const customFieldsByRef = nest()
@@ -280,12 +275,22 @@ const MetaData = ({
         <MetaForm
           data={fbData}
           onInputChange={onInputChange}
-          black
           getWidth={getWidth}
         />
         <Label>{t('metaData/preview')}</Label>
         <br />
-        <FBPreview data={node.data} />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <ShareImageForm
+          onInputChange={onInputChange}
+          mediumKey='facebook'
+          data={node.data}
+          format={titleData?.format}
+        />
         <br />
         <br />
         <br />
