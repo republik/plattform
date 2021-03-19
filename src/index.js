@@ -110,15 +110,6 @@ const Styleguide = () => {
                 title: 'Base',
                 pages: [
                   {
-                    path: '/logo',
-                    title: 'Logo',
-                    imports: {
-                      Logo: require('./components/Logo'),
-                      BrandMark: require('./components/Logo/BrandMark')
-                    },
-                    src: require('./components/Logo/docs.md')
-                  },
-                  {
                     path: '/typography',
                     title: 'Typography',
                     imports: {
@@ -901,8 +892,17 @@ const Styleguide = () => {
                 title: 'Brand',
                 pages: [
                   {
+                    path: '/logo',
+                    title: 'Logo',
+                    imports: {
+                      Logo: require('./components/Logo'),
+                      BrandMark: require('./components/Logo/BrandMark')
+                    },
+                    src: require('./components/Logo/docs.md')
+                  },
+                  {
                     path: '/dev/shareImageGenerator',
-                    title: 'ShareImageGenerator',
+                    title: 'Share Image',
                     src: require('./components/ShareImageGenerator/docs.md'),
                     imports: {
                       ...require('./components/Typography'),
