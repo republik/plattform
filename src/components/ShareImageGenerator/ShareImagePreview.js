@@ -1,6 +1,6 @@
 import React from 'react'
 import { css } from 'glamor'
-import { fontFamilies } from '../../theme/fonts'
+import { fontFamilies, fontStyles } from '../../theme/fonts'
 
 const WIDTH = 1200
 const HEIGHT = 628
@@ -17,12 +17,10 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    justifyContent: 'center',
     padding: 48,
     overflow: 'hidden'
   }),
   kolumnenContainer: css({
-    justifyContent: 'flex-end',
     alignItems: 'flex-end'
   }),
   textContainer: css({
@@ -47,53 +45,52 @@ const styles = {
   })
 }
 
+const formatFonts = {
+  scribble: fontStyles.cursiveTitle,
+  editorial: fontStyles.serifBold,
+  meta: fontStyles.sansSerifRegular
+}
+
+const columnImageJustify = {
+  top: 'flex-start',
+  bottom: 'flex-end'
+}
+
 const ShareImagePreview = ({
   format,
   text = 'Text für Social Image',
-  coloredBackground,
   fontSize,
-  fontStyle,
+  coloredBackground,
+  backgroundImage,
   textPosition,
-  backgroundImage
+  customFontStyle
 }) => {
+  const fontStyle = customFontStyle || formatFonts[format?.kind]
+  const isColumn = format?.type === 'Kolumnen'
+  const columnImage =
+    isColumn &&
+    backgroundImage &&
+    (coloredBackground ? format?.shareImageColor : format?.shareImage)
+
   return (
     <div
       {...styles.container}
-      {...(format?.type === 'Kolumnen' &&
-        backgroundImage &&
-        styles.kolumnenContainer)}
+      {...(columnImage && styles.kolumnenContainer)}
       style={{
-        backgroundImage: `url(${
-          !backgroundImage
-            ? ''
-            : format?.backgroundImage && coloredBackground
-            ? format?.backgroundImageColor
-            : format?.backgroundImage
-        })`,
+        backgroundImage: columnImage && `url(${columnImage})`,
         backgroundSize: 'cover',
         backgroundColor: coloredBackground ? format?.color : '#FFF',
         justifyContent:
-          format?.type === 'Kolumnen' &&
-          backgroundImage &&
-          textPosition === 'top'
-            ? 'flex-start'
-            : format?.type === 'Kolumnen' &&
-              backgroundImage &&
-              textPosition === 'center' &&
-              'center'
+          (columnImage && columnImageJustify[textPosition]) || 'center'
       }}
     >
-      {format?.backgroundImage ? (
-        <img {...styles.kolumnenImage} src={format?.image} />
-      ) : format?.image ? (
-        <img {...styles.formatImage} src={format?.image} />
-      ) : null}
+      {format?.image && <img {...styles.formatImage} src={format?.image} />}
       {format?.title && (
         <div
           {...styles.formatTitle}
           style={{
             color: coloredBackground ? '#FFF' : format?.color,
-            width: format?.type === 'Kolumnen' && backgroundImage && '80%'
+            width: columnImage && '80%'
           }}
         >
           {format.title}
@@ -103,9 +100,9 @@ const ShareImagePreview = ({
         {...styles.textContainer}
         style={{
           ...(fontStyle && fontStyle),
-          fontSize: fontSize,
+          fontSize,
           color: coloredBackground ? '#FFF' : '#000',
-          width: format?.type === 'Kolumnen' && backgroundImage && '80%'
+          width: columnImage && '80%'
         }}
       >
         {text}

@@ -90,8 +90,8 @@ Setting type to 'Dialog' enables to choose between Sans-Serif and Serif fonts.
     title: 'Binswanger',
     type: 'Kolumnen',
     color: '#D2933C',
-    backgroundImage: 'https://republik-assets.s3.eu-central-1.amazonaws.com/assets/binswanger.png',
-    backgroundImageColor: 'https://republik-assets.s3.eu-central-1.amazonaws.com/assets/binswanger-bg.png',
+    shareImage: 'https://republik-assets.s3.eu-central-1.amazonaws.com/assets/binswanger.png',
+    shareImageColor: 'https://republik-assets.s3.eu-central-1.amazonaws.com/assets/binswanger-bg.png',
   }}
 />
 ```

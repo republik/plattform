@@ -76,15 +76,6 @@ const ShareImageGenerator = ({ format }) => {
     }
   ]
 
-  const fontStyleFromKind =
-    format?.kind === 'scribble'
-      ? fontStyles.cursiveTitle
-      : format?.kind === 'editorial'
-      ? fontStyles.serifBold
-      : format?.kind === 'meta'
-      ? fontStyles.sansSerifRegular
-      : undefined
-
   return (
     <div {...styles.container}>
       <div {...styles.controlsContainer}>
@@ -158,7 +149,7 @@ const ShareImageGenerator = ({ format }) => {
         coloredBackground={coloredBackground}
         text={text}
         fontSize={fontSize}
-        fontStyle={fontStyleFromKind || fontStyle}
+        customFontStyle={fontStyle}
         // below only used for Kolumnen
         textPosition={textPosition}
         backgroundImage={backgroundImage}
