@@ -750,28 +750,24 @@ export class EditorPage extends Component {
       })
   }
 
-  goToRaw() {
+  goToRaw(isTemplate) {
     const {
       router: {
-        query: { repoId, commitId }
-      },
-      data
+        query: { repoId, commitId, schema, template }
+      }
     } = this.props
     const { editorState } = this.state
     const serializedState = this.editor.serializer.serialize(editorState)
     this.beginChanges()
     this.store.set('editorState', serializedState)
     Router.pushRoute('repo/raw', {
+      ...this.props.router.query,
       repoId: repoId.split('/'),
       commitId,
-      isTemplate:
-        this.props.router.query.isTemplate || data?.repo?.isTemplate
-          ? true
-          : null,
+      isTemplate: isTemplate,
       ...(commitId === 'new'
         ? {
-            schema:
-              this.props.router.query.schema || this.props.router.query.template
+            schema: schema || template
           }
         : {})
     })
@@ -966,7 +962,7 @@ export class EditorPage extends Component {
             {!readOnly && (
               <Sidebar.Tab tabId='edit' label='Editieren'>
                 <button
-                  onClick={this.goToRaw}
+                  onClick={() => this.goToRaw(isTemplate)}
                   {...plainButtonRule}
                   style={{ color: colors.primary }}
                 >
