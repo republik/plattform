@@ -1,121 +1,107 @@
 import React from 'react'
-import { css } from 'glamor'
-
 import withT from '../../../../lib/withT'
-import { Map, Set } from 'immutable'
-import FBPreview from './FBPreview'
-import TwitterPreview from './TwitterPreview'
+import { Map } from 'immutable'
 import PropTypes from 'prop-types'
 import MetaForm from '../../utils/MetaForm'
 import { getWidth } from './ui'
-import { ShareImageGenerator } from '@project-r/styleguide'
+import {
+  ShareImageGenerator,
+  addSocialPrefix,
+  SharePreviewFacebook,
+  SharePreviewTwitter
+} from '@project-r/styleguide'
 
-const styles = {
-  title: css({
-    display: 'block',
-    marginBottom: 5
-  }),
-  container: css({
-    backgroundColor: '#fff',
-    padding: '5px 10px 15px',
-    marginBottom: 15
-  }),
-  close: css({
-    float: 'right'
-  }),
-  add: css({
-    marginTop: 10,
-    fontSize: 14
-  }),
-  help: css({
-    margin: '0 0 10px'
-  })
-}
-
-// 'format' and 'backgroundImage' come from other data
-
-const SUPPORTED_MEDIA = ['facebook', 'twitter']
+export const SOCIAL_MEDIA = ['facebook', 'twitter']
 const SWITCH_KEY = 'showUploader'
 
 const previews = {
-  facebook: FBPreview,
-  twitter: TwitterPreview
+  facebook: SharePreviewFacebook,
+  twitter: SharePreviewTwitter
 }
 
-const formKeys = Set([
-  'text',
-  'fontSize',
-  'coloredBackground', // bool
-  'backgroundImage', // bool only if column
-  'textPosition', // only if column
-  'customFontSize' // only if no format
-  // format
-  //
-])
-
-const capitalise = word => word.replace(/^\w/, c => c.toUpperCase())
-const addMediumPrefix = mediumKey => key => mediumKey + capitalise(key)
-const processKeys = (keys, mediumKey) =>
-  Set(keys.map(addMediumPrefix(mediumKey)))
-
-const BaseForm = ({ mediumKey, data, onInputChange }) => {
-  const baseKeys = processKeys(
-    ['title', 'description', 'showUploader'],
-    mediumKey
+const BaseForm = ({ withPrefix, data, onInputChange, format }) => {
+  const initValues = Map([
+    ['title', ''],
+    ['description', ''],
+    ['showUploader', !format]
+  ])
+  const prefixedValues = initValues.mapKeys(withPrefix)
+  const initData = prefixedValues.merge(
+    data.filter((_, key) => prefixedValues.has(key))
   )
-  const baseDefaultValues = Map(
-    baseKeys.map(key => [key, key === addMediumPrefix(SWITCH_KEY) ? false : ''])
-  )
-  const baseData = baseDefaultValues.merge(
-    data.filter((_, key) => baseKeys.has(key))
-  )
-  return <MetaForm data={baseData} onInputChange={onInputChange} />
+  return <MetaForm data={initData} onInputChange={onInputChange} />
 }
 
-const UploadImage = ({ mediumKey, data, onInputChange, Preview }) => {
-  const imageKeys = processKeys(['image'], mediumKey)
-  const imageDefaultValues = Map(imageKeys.map(key => [key, '']))
-  const imageData = imageDefaultValues.merge(
-    data.filter((_, key) => imageKeys.has(key))
+const UploadImage = ({ withPrefix, data, onInputChange }) => {
+  const initValues = Map([[withPrefix('image'), '']])
+  const initData = initValues.merge(
+    data.filter((_, key) => initValues.has(key))
   )
   return (
-    <>
-      <MetaForm
-        data={imageData}
-        onInputChange={onInputChange}
-        getWidth={getWidth}
-      />
-      <Preview data={data} />
-    </>
+    <MetaForm
+      data={initData}
+      onInputChange={onInputChange}
+      getWidth={getWidth}
+    />
   )
 }
 
-const GenerateImage = ({ mediumKey, data, onInputChange, Preview, format }) => (
-  <>
-    <ShareImageGenerator format={format} />
-    <Preview data={data} />
-  </>
-)
+const GenerateImage = ({
+  withPrefix,
+  data,
+  onInputChange,
+  socialKey,
+  format
+}) => {
+  const initValues = Map([
+    ['coloredBackground', false],
+    ['backgroundImage', true],
+    ['textPosition', 'bottom'],
+    ['fontSize', 60],
+    ['fontStyle', 'serifBold'],
+    ['text', '']
+  ])
+  const prefixedValues = initValues.mapKeys(withPrefix)
+  const initData = prefixedValues.merge(
+    data.filter((_, key) => prefixedValues.has(key))
+  )
+  return (
+    <ShareImageGenerator
+      format={format}
+      data={initData}
+      onInputChange={onInputChange}
+      socialKey={socialKey}
+    />
+  )
+}
 
 const ShareImageForm = withT(
-  ({ t, onInputChange, mediumKey, format, data }) => {
-    const showUploader = data.get(addMediumPrefix(mediumKey)(SWITCH_KEY))
+  ({ t, onInputChange, socialKey, format, data }) => {
+    const withPrefix = addSocialPrefix(socialKey)
+    const showUploader = data.get(withPrefix(SWITCH_KEY))
     const ImageHandler = showUploader ? UploadImage : GenerateImage
-    const Preview = previews[mediumKey]
+    const Preview = previews[socialKey]
 
     return (
       <>
         <BaseForm
-          mediumKey={mediumKey}
+          withPrefix={withPrefix}
           data={data}
           onInputChange={onInputChange}
+          format={format}
         />
         <ImageHandler
           format={format}
-          mediumKey={mediumKey}
+          withPrefix={withPrefix}
+          socialKey={socialKey}
           data={data}
           onInputChange={onInputChange}
-          Preview={Preview}
+        />
+        <Preview
+          title={data.get(withPrefix('title')) || data.get('title')}
+          descrition={
+            data.get(withPrefix('description')) || data.get('description')
+          }
         />
       </>
     )
@@ -123,7 +109,7 @@ const ShareImageForm = withT(
 )
 
 ShareImageForm.propTypes = {
-  mediumKey: PropTypes.oneOf(SUPPORTED_MEDIA).isRequired
+  socialKey: PropTypes.oneOf(SOCIAL_MEDIA).isRequired
 }
 
 export default ShareImageForm

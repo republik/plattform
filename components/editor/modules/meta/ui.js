@@ -11,14 +11,13 @@ import { FRONTEND_BASE_URL } from '../../../../lib/settings'
 
 import MetaForm from '../../utils/MetaForm'
 import SlugField from '../../utils/SlugField'
-import TwitterPreview from './TwitterPreview'
 import RepoSelect from './RepoSelect'
 import SeriesForm from './SeriesForm'
 import PaynotesForm from './PaynotesForm'
 import AudioForm from './AudioForm'
 import UIForm from '../../UIForm'
 import DarkModeForm, { DARK_MODE_KEY } from './DarkModeForm'
-import ShareImageForm from './ShareImageForm'
+import ShareImageForm, { SOCIAL_MEDIA } from './ShareImageForm'
 
 const styles = {
   container: css({
@@ -70,22 +69,6 @@ const MetaData = ({
     node.data.filter((_, key) => genericKeys.has(key))
   )
 
-  const fbKeys = Set(['facebookTitle', 'facebookDescription'])
-  const fbDefaultValues = Map(fbKeys.map(key => [key, '']))
-  const fbData = fbDefaultValues.merge(
-    node.data.filter((_, key) => fbKeys.has(key))
-  )
-
-  const twitterKeys = Set([
-    'twitterTitle',
-    'twitterImage',
-    'twitterDescription'
-  ])
-  const twitterDefaultValues = Map(twitterKeys.map(key => [key, '']))
-  const twitterData = twitterDefaultValues.merge(
-    node.data.filter((_, key) => twitterKeys.has(key))
-  )
-
   const onInputChange = key => (_, inputValue) => {
     const newData = key !== 'auto' ? node.data.remove('auto') : node.data
     editor.change(change => {
@@ -129,8 +112,6 @@ const MetaData = ({
   }
   const titleNode = value.document.findDescendant(node => node.type === 'TITLE')
   const titleData = titleNode ? titleNode.data.toJS() : {}
-
-  console.log(titleData.format)
 
   const dataAsJs = node.data.toJS()
   const customFieldsByRef = nest()
@@ -269,43 +250,15 @@ const MetaData = ({
             onChange={onInputChange(DARK_MODE_KEY)}
           />
         )}
-        <br />
-        <br />
-        <br />
-        <MetaForm
-          data={fbData}
-          onInputChange={onInputChange}
-          getWidth={getWidth}
-        />
-        <Label>{t('metaData/preview')}</Label>
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <ShareImageForm
-          onInputChange={onInputChange}
-          mediumKey='facebook'
-          data={node.data}
-          format={titleData?.format}
-        />
-        <br />
-        <br />
-        <br />
-        <MetaForm
-          data={twitterData}
-          onInputChange={onInputChange}
-          black
-          getWidth={getWidth}
-        />
-        <Label>{t('metaData/preview')}</Label>
-        <br />
-        <TwitterPreview data={node.data} />
-        <br />
-        <br />
-        <br />
+        {SOCIAL_MEDIA.map(socialMedium => (
+          <ShareImageForm
+            key={socialMedium}
+            socialKey={socialMedium}
+            data={node.data}
+            onInputChange={onInputChange}
+            format={titleData?.format}
+          />
+        ))}
         <AudioForm editor={editor} node={node} onInputChange={onInputChange} />
         <br />
         <br />
