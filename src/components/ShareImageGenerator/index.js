@@ -36,13 +36,13 @@ const styles = {
   })
 }
 
-const ShareImageGenerator = ({ format }) => {
+const ShareImageGenerator = ({ format, data, onInputChange }) => {
   const [coloredBackground, setColoredBackground] = useState(false)
   const [backgroundImage, setBackgroundImage] = useState(true)
   const [textPosition, setTextPosition] = useState('bottom')
-  const [text, setText] = useState()
   const [fontSize, setFontSize] = useState(60)
   const [fontStyle, setFontStyle] = useState(fontStyles.serifBold)
+  const [text, setText] = useState()
   const [colorScheme] = useColorContext()
 
   const textAreaEmptyRule = useMemo(
@@ -58,17 +58,17 @@ const ShareImageGenerator = ({ format }) => {
 
   const fontDropdownItems = [
     {
-      value: fontStyles.serifBold,
+      value: 'serifBold',
       text: 'Republik',
       element: <span style={{ ...fontStyles.serifBold }}>Republik</span>
     },
     {
-      value: fontStyles.cursiveTitle,
+      value: 'cursiveTitle',
       text: 'Cursive',
       element: <span style={{ ...fontStyles.cursiveTitle }}>Cursive</span>
     },
     {
-      value: fontStyles.sansSerifRegular,
+      value: 'sansSerifRegular',
       text: 'GT America',
       element: (
         <span style={{ ...fontStyles.sansSerifRegular }}>GT America</span>

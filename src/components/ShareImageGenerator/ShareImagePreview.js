@@ -46,9 +46,9 @@ const styles = {
 }
 
 const formatFonts = {
-  scribble: fontStyles.cursiveTitle,
-  editorial: fontStyles.serifBold,
-  meta: fontStyles.sansSerifRegular
+  scribble: 'cursiveTitle',
+  editorial: 'serifBold',
+  meta: 'sansSerifRegular'
 }
 
 const columnImageJustify = {
@@ -65,7 +65,8 @@ const ShareImagePreview = ({
   textPosition,
   customFontStyle
 }) => {
-  const fontStyle = customFontStyle || formatFonts[format?.kind]
+  const fontStyleKey = customFontStyle || formatFonts[format?.kind]
+  const fontStyle = fontStyles[fontStyleKey]
   const isColumn = format?.type === 'Kolumnen'
   const columnImage =
     isColumn &&
