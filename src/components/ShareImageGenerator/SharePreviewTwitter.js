@@ -1,6 +1,5 @@
 import React from 'react'
 import { css } from 'glamor'
-import { PREVIEW_WIDTH } from './ShareImagePreview'
 
 export const imageStyle = css({
   borderTopLeftRadius: 15,
@@ -13,13 +12,11 @@ const styles = {
     fontSize: 14,
     backgroundColor: '#fff',
     color: '#000',
-    width: PREVIEW_WIDTH,
-    borderBottomRadius: 15,
+    width: 600,
+    borderBottomRightRadius: 15,
+    borderBottomLeftRadius: 15,
     border: '1px solid rgb(204, 214, 221)',
     borderTop: 'none',
-    overflow: 'hidden'
-  }),
-  text: css({
     padding: '10.5px 14px',
     fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif',
     maxHeight: 120,
@@ -56,11 +53,9 @@ const styles = {
 
 const SharePreviewTwitter = ({ title, description }) => (
   <div {...styles.container}>
-    <div {...styles.text}>
-      <div {...styles.title}>{title}</div>
-      <div {...styles.description}>{description}</div>
-      <div {...styles.domain}>republik.ch</div>
-    </div>
+    <div {...styles.title}>{title}</div>
+    <div {...styles.description}>{description}</div>
+    <div {...styles.domain}>republik.ch</div>
   </div>
 )
 

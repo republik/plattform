@@ -6,8 +6,6 @@ import { imageStyle } from './SharePreviewTwitter'
 const WIDTH = 1200
 const HEIGHT = 628
 
-export const PREVIEW_WIDTH = 600
-
 const imageStyles = {
   twitter: imageStyle
 }

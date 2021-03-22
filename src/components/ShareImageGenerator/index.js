@@ -10,6 +10,10 @@ import { useColorContext } from '../Colors/useColorContext'
 import { fontStyles } from '../../theme/fonts'
 
 const styles = {
+  container: css({
+    width: 600,
+    margin: 0
+  }),
   controlsContainer: css({
     display: 'flex',
     justifyContent: 'space-between'
@@ -78,7 +82,7 @@ const ShareImageGenerator = ({ format, data, onInputChange, socialKey }) => {
   const placeholderText = `Text für ${capitalise(socialKey)}`
 
   return (
-    <>
+    <div {...styles.container}>
       <div {...styles.controlsContainer}>
         <div style={{ width: 160, display: 'flex', alignItems: 'center' }}>
           <Checkbox
@@ -158,7 +162,7 @@ const ShareImageGenerator = ({ format, data, onInputChange, socialKey }) => {
         placeholderText={placeholderText}
         socialKey={socialKey}
       />
-    </>
+    </div>
   )
 }
 

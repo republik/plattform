@@ -1,14 +1,11 @@
 import React from 'react'
 import { css } from 'glamor'
-import { PREVIEW_WIDTH } from './ShareImagePreview'
 
 const styles = {
   container: css({
     backgroundColor: '#fff',
     color: '#000',
-    width: PREVIEW_WIDTH
-  }),
-  text: css({
+    width: 600,
     padding: '10px 12px',
     maxHeight: 120,
     overflow: 'hidden'
@@ -42,11 +39,9 @@ const styles = {
 
 const SharePreviewFacebook = ({ title, description }) => (
   <div {...styles.container}>
-    <div {...styles.text}>
-      <div {...styles.title}>{title}</div>
-      <div {...styles.description}>{description}</div>
-      <div {...styles.domain}>republik.ch</div>
-    </div>
+    <div {...styles.title}>{title}</div>
+    <div {...styles.description}>{description}</div>
+    <div {...styles.domain}>republik.ch</div>
   </div>
 )
 
