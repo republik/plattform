@@ -58,12 +58,13 @@ const columnImageJustify = {
 
 const ShareImagePreview = ({
   format,
-  text = 'Text für Social Image',
+  text,
   fontSize,
   coloredBackground,
   backgroundImage,
   textPosition,
-  customFontStyle
+  customFontStyle,
+  placeholderText
 }) => {
   const fontStyleKey = customFontStyle || formatFonts[format?.kind]
   const fontStyle = fontStyles[fontStyleKey]
@@ -72,6 +73,7 @@ const ShareImagePreview = ({
     isColumn &&
     backgroundImage &&
     (coloredBackground ? format?.shareImageColor : format?.shareImage)
+  const displayedText = !text || text === '' ? placeholderText : text
 
   return (
     <div
@@ -106,7 +108,7 @@ const ShareImagePreview = ({
           width: columnImage && '80%'
         }}
       >
-        {text}
+        {displayedText}
       </div>
     </div>
   )

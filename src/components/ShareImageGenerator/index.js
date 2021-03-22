@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react'
+import React, { useMemo } from 'react'
 import { css } from 'glamor'
 import Textarea from 'react-textarea-autosize'
 
@@ -10,24 +10,17 @@ import { useColorContext } from '../Colors/useColorContext'
 import { fontStyles } from '../../theme/fonts'
 
 const styles = {
-  container: css({
-    width: 600,
-    margin: 0
-  }),
   controlsContainer: css({
-    width: 600,
-    margin: 0,
     display: 'flex',
     justifyContent: 'space-between'
   }),
+  // TODO: discuss custom textarea styling (@Olivier)
   textArea: css({
     display: 'block',
     textAlign: 'center',
     padding: '20px 8px',
     margin: '8px 0',
-    width: '100%',
-    minWidth: '100%',
-    maxWidth: '100%',
+    width: '600px',
     minHeight: '60px',
     background: 'transparent',
     border: '1px solid',
@@ -36,13 +29,11 @@ const styles = {
   })
 }
 
-const ShareImageGenerator = ({ format, data, onInputChange }) => {
-  const [coloredBackground, setColoredBackground] = useState(false)
-  const [backgroundImage, setBackgroundImage] = useState(true)
-  const [textPosition, setTextPosition] = useState('bottom')
-  const [fontSize, setFontSize] = useState(60)
-  const [fontStyle, setFontStyle] = useState(fontStyles.serifBold)
-  const [text, setText] = useState()
+const capitalise = word => word.replace(/^\w/, c => c.toUpperCase())
+
+export const addSocialPrefix = socialKey => key => socialKey + capitalise(key)
+
+const ShareImageGenerator = ({ format, data, onInputChange, socialKey }) => {
   const [colorScheme] = useColorContext()
 
   const textAreaEmptyRule = useMemo(
@@ -76,13 +67,23 @@ const ShareImageGenerator = ({ format, data, onInputChange }) => {
     }
   ]
 
+  const withPrefix = useMemo(() => addSocialPrefix(socialKey), [socialKey])
+
+  const getData = key => data.get(withPrefix(key))
+  const onChange = key => onInputChange(withPrefix(key))
+  const onChangeValue = (key, value) => onChange(key)(undefined, value)
+  const incrementFontSize = increment => () =>
+    onChange('fontSize')(undefined, getData('fontSize') + increment)
+
+  const placeholderText = `Text für ${capitalise(socialKey)}`
+
   return (
-    <div {...styles.container}>
+    <>
       <div {...styles.controlsContainer}>
         <div style={{ width: 160, display: 'flex', alignItems: 'center' }}>
           <Checkbox
-            checked={coloredBackground}
-            onChange={() => setColoredBackground(!coloredBackground)}
+            checked={getData('coloredBackground')}
+            onChange={onChange('coloredBackground')}
           >
             Hintergrundfarbe
           </Checkbox>
@@ -92,34 +93,34 @@ const ShareImageGenerator = ({ format, data, onInputChange }) => {
             <Dropdown
               label='Schriftart'
               items={
-                format?.type === 'Meta' || format?.type === 'Dialog'
+                format?.type === 'Dialog'
                   ? [fontDropdownItems[0], fontDropdownItems[2]]
                   : fontDropdownItems
               }
-              value={fontStyle}
-              onChange={item => setFontStyle(item.value)}
+              value={getData('fontStyle')}
+              onChange={item => onChangeValue('fontStyle', item.value)}
             />
           </div>
         ) : null}
         <div style={{ width: 100 }}>
           <Field
             label='Schriftgrösse'
-            value={fontSize}
-            onChange={e => setFontSize(e.target.value)}
-            onInc={() => setFontSize(fontSize + 1)}
-            onDec={() => setFontSize(fontSize - 1)}
+            value={getData('fontSize')}
+            onChange={onChange('fontSize')}
+            onInc={incrementFontSize(1)}
+            onDec={incrementFontSize(-1)}
           />
         </div>
       </div>
       {format?.type === 'Kolumnen' ? (
         <>
           <Checkbox
-            checked={backgroundImage}
-            onChange={() => setBackgroundImage(!backgroundImage)}
+            checked={getData('backgroundImage')}
+            onChange={onChange('backgroundImage')}
           >
             Mit Hintergrundbild
           </Checkbox>
-          {backgroundImage ? (
+          {getData('backgroundImage') ? (
             <Dropdown
               label='Textposition'
               items={[
@@ -127,8 +128,8 @@ const ShareImageGenerator = ({ format, data, onInputChange }) => {
                 { value: 'center', text: 'Mitte' },
                 { value: 'bottom', text: 'Unten' }
               ]}
-              value={textPosition}
-              onChange={item => setTextPosition(item.value)}
+              value={getData('textPosition')}
+              onChange={item => onChange('textPosition', item.value)}
             />
           ) : null}
         </>
@@ -137,24 +138,26 @@ const ShareImageGenerator = ({ format, data, onInputChange }) => {
         {...styles.textArea}
         {...colorScheme.set('color', 'text')}
         {...colorScheme.set('borderColor', 'divider')}
-        {...(text === '' ? textAreaEmptyRule : {})}
-        placeholder={'Text für Social Image'}
-        value={text}
+        {...(getData('text') === '' && textAreaEmptyRule)}
+        placeholder={placeholderText}
+        value={getData('text')}
         rows='1'
-        onChange={e => setText(e.target.value)}
+        onChange={e => onChangeValue('text', e.target.value)}
       />
 
       <ShareImagePreview
         format={format}
-        coloredBackground={coloredBackground}
-        text={text}
-        fontSize={fontSize}
-        customFontStyle={fontStyle}
+        coloredBackground={getData('coloredBackground')}
+        text={getData('text')}
+        fontSize={getData('fontSize')}
+        customFontStyle={getData('fontStyle')}
         // below only used for Kolumnen
-        textPosition={textPosition}
-        backgroundImage={backgroundImage}
+        textPosition={getData('textPosition')}
+        backgroundImage={getData('backgroundImage')}
+        // only used in conjunction with generator
+        placeholderText={placeholderText}
       />
-    </div>
+    </>
   )
 }
 
