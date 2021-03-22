@@ -71,6 +71,7 @@ const GenerateImage = ({
       data={initData}
       onInputChange={onInputChange}
       socialKey={socialKey}
+      embedPreview
     />
   )
 }
