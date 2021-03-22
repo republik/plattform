@@ -19,7 +19,11 @@ type queries {
 
   # search for users
   # required role: editor
-  users(search: String!, role: String): [User]!
+  users(
+    search: String!
+    role: String
+    isListed: Boolean
+  ): [User]!
 
   # search for an unverified session by token
   unauthorizedSession(email: String!, token: SignInToken!): UnauthorizedSession
