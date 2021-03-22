@@ -103,6 +103,7 @@ const phases: Phase[] = [
     color: 'RoyalBlue',
     lock: true,
     published: true,
+    scheduled: false,
     live: true,
   },
 ]
