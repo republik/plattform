@@ -156,6 +156,7 @@ const ShareImageGenerator = ({ format, data, onInputChange, socialKey }) => {
         backgroundImage={getData('backgroundImage')}
         // only used in conjunction with generator
         placeholderText={placeholderText}
+        socialKey={socialKey}
       />
     </>
   )

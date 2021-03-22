@@ -1,9 +1,16 @@
 import React from 'react'
 import { css } from 'glamor'
 import { fontFamilies, fontStyles } from '../../theme/fonts'
+import { imageStyle } from './SharePreviewTwitter'
 
 const WIDTH = 1200
 const HEIGHT = 628
+
+export const PREVIEW_WIDTH = 600
+
+const imageStyles = {
+  twitter: imageStyle
+}
 
 const styles = {
   container: css({
@@ -64,7 +71,8 @@ const ShareImagePreview = ({
   backgroundImage,
   textPosition,
   customFontStyle,
-  placeholderText
+  placeholderText,
+  socialKey
 }) => {
   const fontStyleKey = customFontStyle || formatFonts[format?.kind]
   const fontStyle = fontStyles[fontStyleKey]
@@ -78,6 +86,7 @@ const ShareImagePreview = ({
   return (
     <div
       {...styles.container}
+      {...imageStyles[socialKey]}
       {...(columnImage && styles.kolumnenContainer)}
       style={{
         backgroundImage: columnImage && `url(${columnImage})`,
