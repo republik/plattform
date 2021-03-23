@@ -23,6 +23,7 @@ type queries {
     search: String!
     role: String
     isListed: Boolean
+    hasPublicProfile: Boolean
   ): [User]!
 
   # search for an unverified session by token
