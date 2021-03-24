@@ -16,7 +16,8 @@ const styles = {
   }),
   controlsContainer: css({
     display: 'flex',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
+    alignItems: 'center'
   }),
   // TODO: discuss custom textarea styling (@Olivier)
   textArea: css({
@@ -90,7 +91,7 @@ const ShareImageGenerator = ({
   return (
     <div {...styles.container}>
       <div {...styles.controlsContainer}>
-        <div style={{ width: 160, display: 'flex', alignItems: 'center' }}>
+        <div style={{ width: 160 }}>
           <Checkbox
             checked={getData('coloredBackground')}
             onChange={onChange('coloredBackground')}
@@ -123,7 +124,7 @@ const ShareImageGenerator = ({
         </div>
       </div>
       {format?.type === 'Kolumnen' ? (
-        <>
+        <div {...styles.controlsContainer}>
           <Checkbox
             checked={getData('backgroundImage')}
             onChange={onChange('backgroundImage')}
@@ -131,18 +132,23 @@ const ShareImageGenerator = ({
             Mit Hintergrundbild
           </Checkbox>
           {getData('backgroundImage') ? (
-            <Dropdown
-              label='Textposition'
-              items={[
-                { value: 'top', text: 'Oben' },
-                { value: 'center', text: 'Mitte' },
-                { value: 'bottom', text: 'Unten' }
-              ]}
-              value={getData('textPosition')}
-              onChange={item => onChange('textPosition', item.value)}
-            />
+            <div style={{ width: 160 }}>
+              <Dropdown
+                label='Textposition'
+                items={[
+                  { value: 'top', text: 'Oben' },
+                  { value: 'center', text: 'Mitte' },
+                  { value: 'bottom', text: 'Unten' }
+                ]}
+                value={getData('textPosition')}
+                onChange={item => {
+                  onChangeValue('textPosition', item.value)
+                }}
+              />
+            </div>
           ) : null}
-        </>
+          <div style={{ width: 100, height: 75 }} />
+        </div>
       ) : null}
       <Textarea
         {...styles.textArea}
