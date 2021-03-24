@@ -50,6 +50,14 @@ const createSchema = ({
         key: 'color'
       },
       {
+        label: 'Sharebild (Hintergrund weiss)',
+        key: 'shareImage'
+      },
+      {
+        label: 'Sharebild (mit Hintergrundfarbe)',
+        key: 'shareImageColor'
+      },
+      {
         label: 'Dossier',
         key: 'dossier',
         ref: 'repo'

@@ -56,7 +56,7 @@ const formatFonts = {
   meta: 'sansSerifRegular'
 }
 
-const columnImageJustify = {
+const shareImageJustify = {
   top: 'flex-start',
   bottom: 'flex-end'
 }
@@ -75,24 +75,24 @@ const ShareImagePreview = ({
 }) => {
   const fontStyleKey = customFontStyle || formatFonts[format?.kind]
   const fontStyle = fontStyles[fontStyleKey]
-  const isColumn = format?.type === 'Kolumnen'
-  const columnImage =
-    isColumn &&
+  const shareImage =
     backgroundImage &&
-    (coloredBackground ? format?.shareImageColor : format?.shareImage)
+    (coloredBackground
+      ? format?.shareImageColor || format?.shareImage
+      : format?.shareImage)
   const displayedText = !text || text === '' ? placeholderText : text
 
   return (
     <div
       {...styles.container}
       {...(embedPreview && imageStyles[socialKey])}
-      {...(columnImage && styles.kolumnenContainer)}
+      {...(shareImage && styles.kolumnenContainer)}
       style={{
-        backgroundImage: columnImage && `url(${columnImage})`,
+        backgroundImage: shareImage && `url(${shareImage})`,
         backgroundSize: 'cover',
         backgroundColor: coloredBackground ? format?.color : '#FFF',
         justifyContent:
-          (columnImage && columnImageJustify[textPosition]) || 'center'
+          (shareImage && shareImageJustify[textPosition]) || 'center'
       }}
     >
       {format?.image && <img {...styles.formatImage} src={format?.image} />}
@@ -101,7 +101,7 @@ const ShareImagePreview = ({
           {...styles.formatTitle}
           style={{
             color: coloredBackground ? '#FFF' : format?.color,
-            width: columnImage && '80%'
+            width: shareImage && '80%'
           }}
         >
           {format.title}
@@ -113,7 +113,7 @@ const ShareImagePreview = ({
           ...(fontStyle && fontStyle),
           fontSize,
           color: coloredBackground ? '#FFF' : '#000',
-          width: columnImage && '80%'
+          width: shareImage && '80%'
         }}
       >
         {displayedText}

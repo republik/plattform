@@ -123,7 +123,7 @@ const ShareImageGenerator = ({
           />
         </div>
       </div>
-      {format?.type === 'Kolumnen' ? (
+      {format?.shareImage ? (
         <div {...styles.controlsContainer}>
           <Checkbox
             checked={getData('backgroundImage')}
@@ -169,7 +169,6 @@ const ShareImageGenerator = ({
         text={getData('text')}
         fontSize={getData('fontSize')}
         customFontStyle={getData('fontStyle')}
-        // below only used for Kolumnen
         textPosition={getData('textPosition')}
         backgroundImage={getData('backgroundImage')}
         // only used in conjunction with generator
