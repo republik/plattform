@@ -904,10 +904,12 @@ const Styleguide = () => {
                   {
                     path: '/dev/shareImageGenerator',
                     title: 'Share Image',
-                    src: require('./components/ShareImageGenerator/docs.md'),
+                    src: require('./components/ShareImage/docs.md'),
                     imports: {
                       ...require('./components/Typography'),
-                      ShareImageGenerator: require('./components/ShareImageGenerator'),
+                      ShareImageGenerator: require('./components/ShareImage'),
+                      ShareImagePreview: require('./components/ShareImage/ShareImagePreview'),
+                      SharePreviewTwitter: require('./components/ShareImage/SharePreviewTwitter'),
                       Map
                     }
                   }

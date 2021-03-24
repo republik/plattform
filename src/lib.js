@@ -160,9 +160,9 @@ export { VariableContext } from './components/Variables'
 export {
   default as ShareImageGenerator,
   addSocialPrefix
-} from './components/ShareImageGenerator'
-export { default as SharePreviewFacebook } from './components/ShareImageGenerator/SharePreviewFacebook'
+} from './components/ShareImage'
+export { default as SharePreviewFacebook } from './components/ShareImage/SharePreviewFacebook'
 export {
   default as SharePreviewTwitter,
   imageStyle
-} from './components/ShareImageGenerator/SharePreviewTwitter'
+} from './components/ShareImage/SharePreviewTwitter'

@@ -1,8 +1,71 @@
+`<ShareImagePreview />` renders an in-browser preview of the share image. Say hello to dynamically generated images for social media. 
+
+Supported props:
+
+- `text`
+- `fontSize`
+- `format`: see `<ShareImageGenerator />` docs for a detailed run-through of the supported formats
+- `coloredBackground`: boolean. The color itself comes from the format.
+- `backgroundImage`: boolean. Columns only (caricature portraits).
+- `textPosition`: `top`, `center` or `bottom`. Conditional to the presence of `backgroundImage`.
+- `customFontStyle`: used for specific formats or in absence of a format 
+- `placeholderText`: used in conjunction with the generator
+- `socialKey`: either `twitter` or `facebook`. Used in conjunction with the generator and required by `embedPreview`.
+- `embedPreview`: add styles specific to social media platform.
+
+```react
+<ShareImagePreview 
+  fontSize={120}
+  text='Arriva Arena!'
+  coloredBackground
+  format={{ 
+    title: 'Aus der Arena',
+    type: 'Format',
+    color: '#D74132',
+    kind: 'scribble'
+  }}
+/>
+```
+
+## Share Image Social Media Preview
+
+`<ShareImagePreview />` can be used in `embedPreview` mode, together with `<SharePreviewTwitter />` or `<SharePreviewFacebook />`.
+
+Supported props:
+
+- `title`
+- `description`
+
+```react
+<div>
+  <ShareImagePreview 
+    fontSize={60}
+    text='Am helllichten Tag'
+    backgroundImage
+    textPosition='bottom'
+    format={{ 
+      title: 'Binswanger',
+      type: 'Kolumnen',
+      color: '#D2933C',
+      shareImage: 'https://republik-assets.s3.eu-central-1.amazonaws.com/assets/binswanger.png',
+      shareImageColor: 'https://republik-assets.s3.eu-central-1.amazonaws.com/assets/binswanger-bg.png',
+    }}
+    socialKey='twitter'
+    embedPreview
+  />
+ <SharePreviewTwitter 
+    title='Es geschah am helllichten Tag' 
+    description='In den USA läuft der Amtsenthebungs­prozess gegen Donald Trump. Er zeigt, wie wenig es braucht, um eine Demokratie zu zerstören.' />
+</div>
+```
+
+# Share Image Generator
+
 A `<ShareImageGenerator />` takes a format type and returns a form to create a share image for that specific format type style.
 
 Supported props:
 
-- `socialKey`: Either `twitter` or `facebook`
+- `socialKey`: required. Either `twitter` or `facebook`
 - `data` and `onInputChange`: an immutable `Map` and a setter. Both based on meta data model from Publikator 
 - `format`: The name of a format supported are:
 
