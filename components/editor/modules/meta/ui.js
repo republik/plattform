@@ -256,7 +256,7 @@ const MetaData = ({
             socialKey={socialMedium}
             data={node.data}
             onInputChange={onInputChange}
-            format={titleData?.format}
+            format={titleData?.format?.meta}
           />
         ))}
         <AudioForm editor={editor} node={node} onInputChange={onInputChange} />
