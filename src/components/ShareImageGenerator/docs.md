@@ -14,10 +14,7 @@ state: { value: [['twitterColoredBackground', false],['twitterBackgroundImage', 
 ---
 <ShareImageGenerator 
   data={Map(state.value)}
-  onInputChange={key => (_, inputValue) => {
-    const newData = Map(state.value).set(key, inputValue)
-    setState({value: newData})}
-  }
+  onInputChange={key => (_, inputValue) => setState({value: Map(state.value).set(key, inputValue)})}
   socialKey='twitter'
 />
 ```
@@ -29,10 +26,7 @@ state: { value: [['twitterColoredBackground', false],['twitterBackgroundImage', 
 ---
 <ShareImageGenerator
   data={Map(state.value)}
-  onInputChange={key => (_, inputValue) => {
-    const newData = Map(state.value).set(key, inputValue)
-    setState({value: newData})}
-  }
+  onInputChange={key => (_, inputValue) => setState({value: Map(state.value).set(key, inputValue)})}
   socialKey='twitter'
   format={{ 
     color: '#000'
@@ -47,10 +41,7 @@ state: { value: [['twitterColoredBackground', false],['twitterBackgroundImage', 
 ---
 <ShareImageGenerator
   data={Map(state.value)}
-  onInputChange={key => (_, inputValue) => {
-    const newData = Map(state.value).set(key, inputValue)
-    setState({value: newData})}
-  }
+  onInputChange={key => (_, inputValue) => setState({value: Map(state.value).set(key, inputValue)})}
   socialKey='twitter'
   format={{ 
     title: 'Meta',
@@ -69,10 +60,7 @@ state: { value: [['twitterColoredBackground', false],['twitterBackgroundImage', 
 ---
 <ShareImageGenerator
   data={Map(state.value)}
-  onInputChange={key => (_, inputValue) => {
-    const newData = Map(state.value).set(key, inputValue)
-    setState({value: newData})}
-  }
+  onInputChange={key => (_, inputValue) => setState({value: Map(state.value).set(key, inputValue)})}
   socialKey='twitter'
   format={{ 
     title: 'Aus der Arena',
@@ -89,10 +77,7 @@ state: { value: [['twitterColoredBackground', false],['twitterBackgroundImage', 
 ---
 <ShareImageGenerator
   data={Map(state.value)}
-  onInputChange={key => (_, inputValue) => {
-    const newData = Map(state.value).set(key, inputValue)
-    setState({value: newData})}
-  }
+  onInputChange={key => (_, inputValue) => setState({value: Map(state.value).set(key, inputValue)})}
   socialKey='twitter'
   format={{ 
     title: 'Briefing aus Bern',
@@ -109,10 +94,7 @@ state: { value: [['twitterColoredBackground', false],['twitterBackgroundImage', 
 ---
 <ShareImageGenerator
   data={Map(state.value)}
-  onInputChange={key => (_, inputValue) => {
-    const newData = Map(state.value).set(key, inputValue)
-    setState({value: newData})}
-  }
+  onInputChange={key => (_, inputValue) => setState({value: Map(state.value).set(key, inputValue)})}
   socialKey='twitter'
   format={{ 
     title: 'Aktuelles',
@@ -130,10 +112,7 @@ state: { value: [['twitterColoredBackground', false],['twitterBackgroundImage', 
 ---
 <ShareImageGenerator
   data={Map(state.value)}
-  onInputChange={key => (_, inputValue) => {
-    const newData = Map(state.value).set(key, inputValue)
-    setState({value: newData})}
-  }
+  onInputChange={key => (_, inputValue) => setState({value: Map(state.value).set(key, inputValue)})}
   socialKey='twitter'
   format={{ 
     title: 'Dialog',
@@ -149,10 +128,7 @@ state: { value: [['twitterColoredBackground', false],['twitterBackgroundImage', 
 ---
 <ShareImageGenerator
   data={Map(state.value)}
-  onInputChange={key => (_, inputValue) => {
-    const newData = Map(state.value).set(key, inputValue)
-    setState({value: newData})}
-  }
+  onInputChange={key => (_, inputValue) => setState({value: Map(state.value).set(key, inputValue)})}
   socialKey='twitter'
   format={{ 
     title: 'Binswanger',

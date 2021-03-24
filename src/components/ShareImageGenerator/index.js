@@ -131,8 +131,8 @@ const ShareImageGenerator = ({
           >
             Mit Hintergrundbild
           </Checkbox>
-          {getData('backgroundImage') ? (
-            <div style={{ width: 160 }}>
+          <div style={{ width: 160 }}>
+            {getData('backgroundImage') ? (
               <Dropdown
                 label='Textposition'
                 items={[
@@ -145,8 +145,10 @@ const ShareImageGenerator = ({
                   onChangeValue('textPosition', item.value)
                 }}
               />
-            </div>
-          ) : null}
+            ) : (
+              <Field label='Textposition' value='Mitte' disabled />
+            )}
+          </div>
           <div style={{ width: 100, height: 75 }} />
         </div>
       ) : null}
