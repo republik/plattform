@@ -64,6 +64,8 @@ type Meta {
   section: Document
   format: Document
   dossier: Document
+  shareImage: String
+  shareImageColor: String
 
   credits: JSON
   audioSource: AudioSource
