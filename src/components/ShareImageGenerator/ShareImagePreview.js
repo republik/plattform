@@ -70,7 +70,8 @@ const ShareImagePreview = ({
   textPosition,
   customFontStyle,
   placeholderText,
-  socialKey
+  socialKey,
+  embedPreview
 }) => {
   const fontStyleKey = customFontStyle || formatFonts[format?.kind]
   const fontStyle = fontStyles[fontStyleKey]
@@ -84,7 +85,7 @@ const ShareImagePreview = ({
   return (
     <div
       {...styles.container}
-      {...imageStyles[socialKey]}
+      {...(embedPreview && imageStyles[socialKey])}
       {...(columnImage && styles.kolumnenContainer)}
       style={{
         backgroundImage: columnImage && `url(${columnImage})`,

@@ -6,6 +6,7 @@ import React, { Fragment, useState } from 'react'
 import ReactDOM from 'react-dom'
 import { Catalog, ReactSpecimen } from '@catalog/core'
 import { simulations, speedy, css, merge } from 'glamor'
+import { Map } from 'immutable'
 import theme from './catalogTheme'
 import './global.css'
 import './catalogTheme.css'
@@ -907,7 +908,7 @@ const Styleguide = () => {
                     imports: {
                       ...require('./components/Typography'),
                       ShareImageGenerator: require('./components/ShareImageGenerator'),
-                      css
+                      Map
                     }
                   }
                 ]

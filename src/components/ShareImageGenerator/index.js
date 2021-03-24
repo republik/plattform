@@ -37,7 +37,13 @@ const capitalise = word => word.replace(/^\w/, c => c.toUpperCase())
 
 export const addSocialPrefix = socialKey => key => socialKey + capitalise(key)
 
-const ShareImageGenerator = ({ format, data, onInputChange, socialKey }) => {
+const ShareImageGenerator = ({
+  format,
+  data,
+  onInputChange,
+  socialKey,
+  embedPreview
+}) => {
   const [colorScheme] = useColorContext()
 
   const textAreaEmptyRule = useMemo(
@@ -161,6 +167,7 @@ const ShareImageGenerator = ({ format, data, onInputChange, socialKey }) => {
         // only used in conjunction with generator
         placeholderText={placeholderText}
         socialKey={socialKey}
+        embedPreview={embedPreview}
       />
     </div>
   )

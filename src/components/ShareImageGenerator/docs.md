@@ -2,18 +2,38 @@ A `<ShareImageGenerator />` takes a format type and returns a form to create a s
 
 Supported props:
 
-- `format`: The name of a format supported are: editorial.
+- `socialKey`: Either `twitter` or `facebook`
+- `data` and `onInputChange`: an immutable `Map` and a setter. Both based on meta data model from Publikator 
+- `format`: The name of a format supported are:
 
 
 ## Editorial / Default / No Format
 
 ```react
-<ShareImageGenerator />
+state: { value: [['twitterColoredBackground', false],['twitterBackgroundImage', true],['twitterTextPosition', 'bottom'],['twitterFontSize', 60],['twitterFontStyle', 'serifBold'],['twitterText', '']] }
+---
+<ShareImageGenerator 
+  data={Map(state.value)}
+  onInputChange={key => (_, inputValue) => {
+    const newData = Map(state.value).set(key, inputValue)
+    setState({value: newData})}
+  }
+  socialKey='twitter'
+/>
 ```
+
 
 ## Editorial
 ```react
+state: { value: [['twitterColoredBackground', false],['twitterBackgroundImage', true],['twitterTextPosition', 'bottom'],['twitterFontSize', 60],['twitterFontStyle', 'serifBold'],['twitterText', '']] }
+---
 <ShareImageGenerator
+  data={Map(state.value)}
+  onInputChange={key => (_, inputValue) => {
+    const newData = Map(state.value).set(key, inputValue)
+    setState({value: newData})}
+  }
+  socialKey='twitter'
   format={{ 
     color: '#000'
   }}
@@ -23,7 +43,15 @@ Supported props:
 ## Meta
 'Meta' uses the format.kind value to set the font. If no value is provided it defaults to Rubis
 ```react
+state: { value: [['twitterColoredBackground', false],['twitterBackgroundImage', true],['twitterTextPosition', 'bottom'],['twitterFontSize', 60],['twitterFontStyle', 'serifBold'],['twitterText', '']] }
+---
 <ShareImageGenerator
+  data={Map(state.value)}
+  onInputChange={key => (_, inputValue) => {
+    const newData = Map(state.value).set(key, inputValue)
+    setState({value: newData})}
+  }
+  socialKey='twitter'
   format={{ 
     title: 'Meta',
     type: 'Meta',
@@ -37,7 +65,15 @@ Supported props:
 ## Formate
 'Format' uses the format.kind value to set the font. If no value is provided it defaults to Rubis.
 ```react
+state: { value: [['twitterColoredBackground', false],['twitterBackgroundImage', true],['twitterTextPosition', 'bottom'],['twitterFontSize', 60],['twitterFontStyle', 'serifBold'],['twitterText', '']] }
+---
 <ShareImageGenerator
+  data={Map(state.value)}
+  onInputChange={key => (_, inputValue) => {
+    const newData = Map(state.value).set(key, inputValue)
+    setState({value: newData})}
+  }
+  socialKey='twitter'
   format={{ 
     title: 'Aus der Arena',
     type: 'Format',
@@ -49,7 +85,15 @@ Supported props:
 
 ## Briefing
 ```react
+state: { value: [['twitterColoredBackground', false],['twitterBackgroundImage', true],['twitterTextPosition', 'bottom'],['twitterFontSize', 60],['twitterFontStyle', 'serifBold'],['twitterText', '']] }
+---
 <ShareImageGenerator
+  data={Map(state.value)}
+  onInputChange={key => (_, inputValue) => {
+    const newData = Map(state.value).set(key, inputValue)
+    setState({value: newData})}
+  }
+  socialKey='twitter'
   format={{ 
     title: 'Briefing aus Bern',
     type: 'Briefings',
@@ -61,7 +105,15 @@ Supported props:
 
 ## Aktuelles
 ```react
+state: { value: [['twitterColoredBackground', false],['twitterBackgroundImage', true],['twitterTextPosition', 'bottom'],['twitterFontSize', 60],['twitterFontStyle', 'serifBold'],['twitterText', '']] }
+---
 <ShareImageGenerator
+  data={Map(state.value)}
+  onInputChange={key => (_, inputValue) => {
+    const newData = Map(state.value).set(key, inputValue)
+    setState({value: newData})}
+  }
+  socialKey='twitter'
   format={{ 
     title: 'Aktuelles',
     type: 'Briefings',
@@ -74,7 +126,15 @@ Supported props:
 Setting type to 'Dialog' enables to choose between Sans-Serif and Serif fonts.
 
 ```react
+state: { value: [['twitterColoredBackground', false],['twitterBackgroundImage', true],['twitterTextPosition', 'bottom'],['twitterFontSize', 60],['twitterFontStyle', 'serifBold'],['twitterText', '']] }
+---
 <ShareImageGenerator
+  data={Map(state.value)}
+  onInputChange={key => (_, inputValue) => {
+    const newData = Map(state.value).set(key, inputValue)
+    setState({value: newData})}
+  }
+  socialKey='twitter'
   format={{ 
     title: 'Dialog',
     type: 'Dialog',
@@ -85,7 +145,15 @@ Setting type to 'Dialog' enables to choose between Sans-Serif and Serif fonts.
 
 ## Kolumne
 ```react
+state: { value: [['twitterColoredBackground', false],['twitterBackgroundImage', true],['twitterTextPosition', 'bottom'],['twitterFontSize', 60],['twitterFontStyle', 'serifBold'],['twitterText', '']] }
+---
 <ShareImageGenerator
+  data={Map(state.value)}
+  onInputChange={key => (_, inputValue) => {
+    const newData = Map(state.value).set(key, inputValue)
+    setState({value: newData})}
+  }
+  socialKey='twitter'
   format={{ 
     title: 'Binswanger',
     type: 'Kolumnen',
