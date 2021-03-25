@@ -1,5 +1,5 @@
 const {
-  lib: { createRepoUrlPrefixer, createUrlPrefixer },
+  lib: { createRepoUrlPrefixer, createProxyUrlPrefixer },
 } = require('@orbiting/backend-modules-assets')
 const {
   lib: {
@@ -44,13 +44,14 @@ module.exports = {
 
     const { mdast } = await context.loaders.Commit.byIdMdast.load(commit.id)
 
-    const prefixRepoUrl = createRepoUrlPrefixer(repoId, publicAssets)
-    processRepoImageUrlsInContent(mdast, prefixRepoUrl)
-    processRepoImageUrlsInMeta(mdast, prefixRepoUrl)
+    const prefix = createRepoUrlPrefixer(repoId, publicAssets)
+    const proxy = createProxyUrlPrefixer()
 
-    // prefix embed image's urls
-    const prefixUrl = createUrlPrefixer(publicAssets)
-    processImageUrlsInContent(mdast, prefixUrl)
+    await Promise.all([
+      processRepoImageUrlsInContent(mdast, prefix),
+      processRepoImageUrlsInMeta(mdast, prefix),
+      processImageUrlsInContent(mdast, proxy),
+    ])
 
     return {
       id: Buffer.from(`repo:${commit.repoId}:${commit.id}`).toString('base64'),

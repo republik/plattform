@@ -1,8 +1,8 @@
 const moment = require('moment')
 const {
-  createUrlPrefixer,
+  createProxyUrlPrefixer,
 } = require('@orbiting/backend-modules-assets/lib/urlPrefixing')
-const proxyUrl = createUrlPrefixer()
+const proxyUrl = createProxyUrlPrefixer()
 const Redlock = require('redlock')
 const debug = require('debug')('embeds:lib:fetchAndStore')
 const twitter = require('./twitter')
