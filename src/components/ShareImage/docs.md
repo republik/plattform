@@ -90,7 +90,6 @@ state: { value: [['twitterColoredBackground', false],['twitterBackgroundImage', 
 />
 ```
 
-
 ## Editorial
 ```react
 state: { value: [['twitterColoredBackground', false],['twitterBackgroundImage', true],['twitterTextPosition', 'bottom'],['twitterFontSize', 60],['twitterFontStyle', 'serifBold'],['twitterText', '']] }

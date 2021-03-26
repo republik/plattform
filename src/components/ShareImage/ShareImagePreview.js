@@ -64,14 +64,14 @@ const shareImageJustify = {
 const ShareImagePreview = ({
   format,
   text,
-  fontSize = 60,
   coloredBackground,
   illuBackground,
-  textPosition,
   customFontStyle,
   placeholderText,
   socialKey,
-  embedPreview
+  embedPreview,
+  textPosition = 'bottom',
+  fontSize = 60
 }) => {
   const fontStyleKey = customFontStyle || formatFonts[format?.kind]
   const fontStyle = fontStyles[fontStyleKey]
