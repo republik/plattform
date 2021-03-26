@@ -66,7 +66,7 @@ const processRepoImageUrlsInMeta = async (mdast, fn) => {
   return Promise.all(fns.map((fn) => fn()))
 }
 
-const processImageUrlsInContent = async (mdast, fn) => {
+const processEmbedImageUrlsInContent = async (mdast, fn) => {
   const fns = []
 
   visit(mdast, 'zone', (node) => {
@@ -140,7 +140,7 @@ module.exports = {
   processMembersOnlyZonesInContent,
   processRepoImageUrlsInContent,
   processRepoImageUrlsInMeta,
-  processImageUrlsInContent,
+  processEmbedImageUrlsInContent,
   processEmbedsInContent,
   processNodeModifiersInContent,
 }

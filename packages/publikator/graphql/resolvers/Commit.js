@@ -6,7 +6,7 @@ const {
     process: {
       processRepoImageUrlsInContent,
       processRepoImageUrlsInMeta,
-      processImageUrlsInContent,
+      processEmbedImageUrlsInContent,
     },
   },
 } = require('@orbiting/backend-modules-documents')
@@ -50,7 +50,7 @@ module.exports = {
     await Promise.all([
       processRepoImageUrlsInContent(mdast, prefix),
       processRepoImageUrlsInMeta(mdast, prefix),
-      processImageUrlsInContent(mdast, proxy),
+      processEmbedImageUrlsInContent(mdast, proxy),
     ])
 
     return {

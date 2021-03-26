@@ -5,7 +5,7 @@ const {
   processMembersOnlyZonesInContent,
   processRepoImageUrlsInContent,
   processRepoImageUrlsInMeta,
-  processImageUrlsInContent,
+  processEmbedImageUrlsInContent,
   processEmbedsInContent,
   processNodeModifiersInContent,
 } = require('../../lib/process')
@@ -79,7 +79,7 @@ module.exports = {
       if (shouldDeliverWebP(webp, context.req)) {
         await Promise.all([
           processRepoImageUrlsInContent(doc.content, addWebpSuffix),
-          processImageUrlsInContent(doc.content, addWebpSuffix),
+          processEmbedImageUrlsInContent(doc.content, addWebpSuffix),
         ])
       }
 
@@ -164,7 +164,7 @@ module.exports = {
         if (shouldAddWebpSuffix) {
           await Promise.all([
             processRepoImageUrlsInContent(node, addWebpSuffix),
-            processImageUrlsInContent(node, addWebpSuffix),
+            processEmbedImageUrlsInContent(node, addWebpSuffix),
           ])
         }
 
