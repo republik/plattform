@@ -15,7 +15,7 @@ import ImageInput from '../../utils/ImageInput'
 import withT from '../../../../lib/withT'
 
 export const SOCIAL_MEDIA = ['facebook', 'twitter']
-const SWITCH_KEY = 'showGenerator'
+const SWITCH_KEY = 'generated'
 
 const previews = {
   facebook: SharePreviewFacebook,
@@ -26,7 +26,7 @@ const BaseForm = ({ withPrefix, data, onInputChange }) => {
   const initValues = Map([
     ['title', ''],
     ['description', ''],
-    ['showGenerator', false]
+    ['generated', false]
   ])
   const prefixedValues = initValues.mapKeys(withPrefix)
   const initData = prefixedValues.merge(
@@ -89,8 +89,8 @@ const GenerateImage = ({
 
 const ShareImageForm = ({ onInputChange, socialKey, format, data }) => {
   const withPrefix = addSocialPrefix(socialKey)
-  const showGenerator = data.get(withPrefix(SWITCH_KEY))
-  const ImageHandler = showGenerator ? GenerateImage : UploadImage
+  const generated = data.get(withPrefix(SWITCH_KEY))
+  const ImageHandler = generated ? GenerateImage : UploadImage
   const Preview = previews[socialKey]
   return (
     <div>

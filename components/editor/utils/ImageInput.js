@@ -15,8 +15,8 @@ const styles = {
   close: css({
     position: 'absolute',
     background: 'rgba(255, 255, 255, 0.5)',
-    right: 2,
-    marginTop: 2,
+    right: 7,
+    marginTop: 7,
     cursor: 'pointer'
   })
 }
