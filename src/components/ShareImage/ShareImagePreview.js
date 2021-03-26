@@ -88,7 +88,7 @@ const ShareImagePreview = ({
       {...(embedPreview && imageStyles[socialKey])}
       {...(shareImage && styles.kolumnenContainer)}
       style={{
-        illuBackground: shareImage && `url(${shareImage})`,
+        backgroundImage: shareImage && `url(${shareImage})`,
         backgroundSize: 'cover',
         backgroundColor: coloredBackground ? format?.color : '#FFF',
         justifyContent:
