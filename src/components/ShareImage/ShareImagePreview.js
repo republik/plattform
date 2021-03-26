@@ -66,7 +66,7 @@ const ShareImagePreview = ({
   text,
   fontSize,
   coloredBackground,
-  backgroundImage,
+  illuBackground,
   textPosition,
   customFontStyle,
   placeholderText,
@@ -76,7 +76,7 @@ const ShareImagePreview = ({
   const fontStyleKey = customFontStyle || formatFonts[format?.kind]
   const fontStyle = fontStyles[fontStyleKey]
   const shareImage =
-    backgroundImage &&
+    illuBackground &&
     (coloredBackground
       ? format?.shareImageColor || format?.shareImage
       : format?.shareImage)
@@ -88,7 +88,7 @@ const ShareImagePreview = ({
       {...(embedPreview && imageStyles[socialKey])}
       {...(shareImage && styles.kolumnenContainer)}
       style={{
-        backgroundImage: shareImage && `url(${shareImage})`,
+        illuBackground: shareImage && `url(${shareImage})`,
         backgroundSize: 'cover',
         backgroundColor: coloredBackground ? format?.color : '#FFF',
         justifyContent:

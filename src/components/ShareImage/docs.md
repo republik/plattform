@@ -6,8 +6,8 @@ Supported props:
 - `fontSize`
 - `format`: see `<ShareImageGenerator />` docs for a detailed run-through of the supported formats
 - `coloredBackground`: boolean. The color itself comes from the format.
-- `backgroundImage`: boolean. Columns only (caricature portraits).
-- `textPosition`: `top`, `center` or `bottom`. Conditional to the presence of `backgroundImage`.
+- `illuBackground`: boolean. Columns only (caricature portraits).
+- `textPosition`: `top`, `center` or `bottom`. Conditional to the presence of `illuBackground`.
 - `customFontStyle`: used for specific formats or in absence of a format 
 - `placeholderText`: used in conjunction with the generator
 - `socialKey`: either `twitter` or `facebook`. Used in conjunction with the generator and required by `embedPreview`.
@@ -41,7 +41,7 @@ Supported props:
   <ShareImagePreview 
     fontSize={60}
     text='Am helllichten Tag'
-    backgroundImage
+    illuBackground
     textPosition='bottom'
     format={{ 
       title: 'Binswanger',

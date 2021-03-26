@@ -128,13 +128,13 @@ const ShareImageGenerator = ({
       {format?.shareImage ? (
         <div {...styles.controlsContainer}>
           <Checkbox
-            checked={getData('backgroundImage')}
-            onChange={onChange('backgroundImage')}
+            checked={getData('illuBackground')}
+            onChange={onChange('illuBackground')}
           >
             Mit Hintergrundbild
           </Checkbox>
           <div style={{ width: 160 }}>
-            {getData('backgroundImage') ? (
+            {getData('illuBackground') ? (
               <Dropdown
                 label='Textposition'
                 items={[
@@ -172,7 +172,7 @@ const ShareImageGenerator = ({
         fontSize={getData('fontSize')}
         customFontStyle={getData('fontStyle')}
         textPosition={getData('textPosition')}
-        backgroundImage={getData('backgroundImage')}
+        illuBackground={getData('illuBackground')}
         // only used in conjunction with generator
         placeholderText={placeholderText}
         socialKey={socialKey}
