@@ -17,7 +17,21 @@ const styles = {
   controlsContainer: css({
     display: 'flex',
     justifyContent: 'space-between',
-    alignItems: 'center'
+    alignItems: 'center',
+    flexWrap: 'wrap'
+  }),
+  controlItem: css({
+    margin: '0 32px 0 0',
+    maxWidth: 180,
+    '&:last-of-type ': {
+      margin: 0
+    }
+  }),
+  checkboxContainer: css({
+    minHeight: 60,
+    display: 'flex',
+    alignItems: 'center',
+    paddingTop: 8
   }),
   textArea: css({
     display: 'block',
@@ -63,18 +77,46 @@ const ShareImageGenerator = ({
     {
       value: 'serifBold',
       text: 'Republik',
-      element: <span style={{ ...fontStyles.serifBold }}>Republik</span>
+      element: (
+        <span
+          style={{
+            ...fontStyles.serifBold,
+            fontSize: 16,
+            lineHeight: '18px'
+          }}
+        >
+          Republik
+        </span>
+      )
     },
     {
       value: 'cursiveTitle',
       text: 'Cursive',
-      element: <span style={{ ...fontStyles.cursiveTitle }}>Cursive</span>
+      element: (
+        <span
+          style={{
+            ...fontStyles.cursiveTitle,
+            fontSize: 16,
+            lineHeight: '18px'
+          }}
+        >
+          Cursive
+        </span>
+      )
     },
     {
       value: 'sansSerifRegular',
       text: 'GT America',
       element: (
-        <span style={{ ...fontStyles.sansSerifRegular }}>GT America</span>
+        <span
+          style={{
+            ...fontStyles.sansSerifRegular,
+            fontSize: 16,
+            lineHeight: '18px'
+          }}
+        >
+          GT America
+        </span>
       )
     }
   ]
@@ -92,16 +134,8 @@ const ShareImageGenerator = ({
   return (
     <div {...styles.container}>
       <div {...styles.controlsContainer}>
-        <div style={{ width: 160 }}>
-          <Checkbox
-            checked={getData('coloredBackground')}
-            onChange={onChange('coloredBackground')}
-          >
-            Hintergrundfarbe
-          </Checkbox>
-        </div>
         {!format || formatType === 'Dialog' ? (
-          <div style={{ width: 160 }}>
+          <div {...styles.controlItem} style={{ minWidth: 160 }}>
             <Dropdown
               label='Schriftart'
               items={
@@ -114,7 +148,7 @@ const ShareImageGenerator = ({
             />
           </div>
         ) : null}
-        <div style={{ width: 100 }}>
+        <div {...styles.controlItem}>
           <Field
             label='Schriftgrösse'
             value={getData('fontSize')}
@@ -125,16 +159,8 @@ const ShareImageGenerator = ({
             onDec={incrementFontSize(-1)}
           />
         </div>
-      </div>
-      {format?.shareImage ? (
-        <div {...styles.controlsContainer}>
-          <Checkbox
-            checked={getData('illuBackground')}
-            onChange={onChange('illuBackground')}
-          >
-            Mit Hintergrundbild
-          </Checkbox>
-          <div style={{ width: 160 }}>
+        {format?.shareImage ? (
+          <div {...styles.controlItem} style={{ maxWidth: 160 }}>
             {getData('illuBackground') ? (
               <Dropdown
                 label='Textposition'
@@ -152,9 +178,27 @@ const ShareImageGenerator = ({
               <Field label='Textposition' value='Mitte' disabled />
             )}
           </div>
-          <div style={{ width: 100, height: 75 }} />
+        ) : null}
+        <div {...styles.controlItem} {...styles.checkboxContainer}>
+          <Checkbox
+            checked={getData('coloredBackground')}
+            onChange={onChange('coloredBackground')}
+          >
+            Hintergrundfarbe
+          </Checkbox>
         </div>
-      ) : null}
+        {format?.shareImage ? (
+          <div {...styles.controlItem} {...styles.checkboxContainer}>
+            <Checkbox
+              checked={getData('illuBackground')}
+              onChange={onChange('illuBackground')}
+            >
+              Mit Hintergrundbild
+            </Checkbox>
+          </div>
+        ) : null}
+      </div>
+
       <Textarea
         {...styles.textArea}
         {...colorScheme.set('color', 'text')}
