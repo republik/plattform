@@ -7,6 +7,9 @@ const fetch = require('isomorphic-unfetch')
 const MDAST = require('@orbiting/remark-preset')
 const {
   lib: {
+    isDataUrl,
+    isHttpUrl,
+    hasOriginalKeyHash,
     createRepoUrlUnprefixer,
     Repo: { maybeUploadImage },
   },
@@ -42,8 +45,7 @@ const generateImageData = async (blob) => {
 }
 
 const maybeFetchToBlob = async (url) => {
-  if (!url.match(/^https?:/) || !url.match(/originalURL=/)) {
-    // check if maybe republik URL?
+  if (!isHttpUrl(url) || !hasOriginalKeyHash(url)) {
     return false
   }
 
@@ -53,7 +55,7 @@ const maybeFetchToBlob = async (url) => {
 }
 
 const maybeDataUriToBlob = async (url) => {
-  if (!url.match(/^data:/)) {
+  if (!isDataUrl(url)) {
     return false
   }
 
