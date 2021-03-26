@@ -64,7 +64,7 @@ const shareImageJustify = {
 const ShareImagePreview = ({
   format,
   text,
-  fontSize,
+  fontSize = 60,
   coloredBackground,
   illuBackground,
   textPosition,
