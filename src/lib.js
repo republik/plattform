@@ -161,8 +161,6 @@ export {
   default as ShareImageGenerator,
   addSocialPrefix
 } from './components/ShareImage'
+export { socialPreviewStyles } from './components/ShareImage/ShareImagePreview'
 export { default as SharePreviewFacebook } from './components/ShareImage/SharePreviewFacebook'
-export {
-  default as SharePreviewTwitter,
-  imageStyle
-} from './components/ShareImage/SharePreviewTwitter'
+export { default as SharePreviewTwitter } from './components/ShareImage/SharePreviewTwitter'

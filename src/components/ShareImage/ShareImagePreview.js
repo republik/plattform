@@ -6,7 +6,7 @@ import { imageStyle } from './SharePreviewTwitter'
 const WIDTH = 1200
 const HEIGHT = 628
 
-const imageStyles = {
+export const socialPreviewStyles = {
   twitter: imageStyle
 }
 
@@ -85,14 +85,15 @@ const ShareImagePreview = ({
   return (
     <div
       {...styles.container}
-      {...(embedPreview && imageStyles[socialKey])}
+      {...(embedPreview && socialPreviewStyles[socialKey])}
       {...(shareImage && styles.kolumnenContainer)}
       style={{
         backgroundImage: shareImage && `url(${shareImage})`,
         backgroundSize: 'cover',
         backgroundColor: coloredBackground ? format?.color : '#FFF',
         justifyContent:
-          (shareImage && shareImageJustify[textPosition]) || 'center'
+          (shareImage && shareImageJustify[textPosition]) || 'center',
+        borderWidth: embedPreview ? 2 : 0
       }}
     >
       {format?.image && <img {...styles.formatImage} src={format?.image} />}

@@ -4,7 +4,7 @@ import { css } from 'glamor'
 export const imageStyle = css({
   borderTopLeftRadius: 15,
   borderTopRightRadius: 15,
-  border: '2px solid rgb(204, 214, 221)'
+  border: '1px solid rgb(204, 214, 221)'
 })
 
 const styles = {
