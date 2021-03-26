@@ -67,7 +67,7 @@ Supported props:
 
 - `socialKey`: required. Either `twitter` or `facebook`
 - `data` and `onInputChange`: an immutable `Map` and a setter. Both based on meta data model from Publikator 
-- `format`: The name of a format supported are:
+- `format`: the metadata of the article's format. The name of a format supported are:
 
 
 ## Editorial / Default / No Format

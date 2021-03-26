@@ -117,7 +117,9 @@ const ShareImageGenerator = ({
           <Field
             label='Schriftgrösse'
             value={getData('fontSize')}
-            onChange={onChange('fontSize')}
+            onChange={(e, value) =>
+              onChangeValue('fontSize', Number(value) || undefined)
+            }
             onInc={incrementFontSize(1)}
             onDec={incrementFontSize(-1)}
           />
