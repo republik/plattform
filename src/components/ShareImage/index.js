@@ -22,7 +22,7 @@ const styles = {
   }),
   controlItem: css({
     margin: '0 32px 0 0',
-    maxWidth: 180,
+    maxWidth: 170,
     '&:last-of-type ': {
       margin: 0
     }
@@ -135,7 +135,7 @@ const ShareImageGenerator = ({
     <div {...styles.container}>
       <div {...styles.controlsContainer}>
         {!format || formatType === 'Dialog' ? (
-          <div {...styles.controlItem} style={{ minWidth: 160 }}>
+          <div {...styles.controlItem} style={{ minWidth: 170 }}>
             <Dropdown
               label='Schriftart'
               items={
@@ -160,7 +160,7 @@ const ShareImageGenerator = ({
           />
         </div>
         {format?.shareImage ? (
-          <div {...styles.controlItem} style={{ maxWidth: 160 }}>
+          <div {...styles.controlItem} style={{ minWidth: 170 }}>
             {getData('illuBackground') ? (
               <Dropdown
                 label='Textposition'
