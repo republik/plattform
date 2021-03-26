@@ -23,6 +23,10 @@ const createRepoIdMatcher = (repoId) => (string) => {
   return !!(string?.indexOf(`/${repoId}/`) >= 0)
 }
 
+const isDataUrl = (string) => {
+  return !!string?.startsWith('data:')
+}
+
 const isHttpUrl = (string) => {
   return !!string?.startsWith('http')
 }
@@ -45,6 +49,12 @@ const isProxyUrl = (string) => {
 
 module.exports = {
   authenticate,
+  createRepoIdMatcher,
+  isDataUrl,
+  isHttpUrl,
+  isImagePath,
+  hasOriginalKeyHash,
+  isProxyUrl,
 
   createRepoUrlPrefixer: (repoId, isPublic = false) => {
     if (!repoId) {
