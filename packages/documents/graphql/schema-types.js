@@ -50,9 +50,23 @@ type Meta {
   facebookTitle: String
   facebookImage: String
   facebookDescription: String
+  facebookGenerated: Boolean
+  facebookText: String
+  facebookFontSize: Int
+  facebookFontStyle: String
+  facebookColoredBackground: Boolean
+  facebookIlluBackground: Boolean
+  facebookTextPosition: String
   twitterTitle: String
   twitterImage: String
   twitterDescription: String
+  twitterGenerated: Boolean
+  twitterText: String
+  twitterFontSize: Int
+  twitterFontStyle: String
+  twitterColoredBackground: Boolean
+  twitterIlluBackground: Boolean
+  twitterTextPosition: String
   prepublication: Boolean
   publishDate: DateTime
   lastPublishedAt: DateTime
