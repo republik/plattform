@@ -20,7 +20,11 @@ Supported props:
   coloredBackground
   format={{ 
     title: 'Aus der Arena',
-    type: 'Format',
+    section: {
+      meta: {
+        title: 'Format' 
+      }
+    },
     color: '#D74132',
     kind: 'scribble'
   }}
@@ -38,14 +42,18 @@ Supported props:
 
 ```react
 <div>
-  <ShareImagePreview 
+  <ShareImagePreview
     fontSize={60}
     text='Am helllichten Tag'
     illuBackground
     textPosition='bottom'
     format={{ 
       title: 'Binswanger',
-      type: 'Kolumnen',
+      section: {
+        meta: {
+          title: 'Kolumnen' 
+        }
+      },
       color: '#D2933C',
       shareImage: 'https://republik-assets.s3.eu-central-1.amazonaws.com/assets/binswanger.png',
       shareImageColor: 'https://republik-assets.s3.eu-central-1.amazonaws.com/assets/binswanger-bg.png',
@@ -108,7 +116,11 @@ state: { value: [['twitterColoredBackground', false],['twitterBackgroundImage', 
   socialKey='twitter'
   format={{ 
     title: 'Meta',
-    type: 'Meta',
+    section: {
+      meta: {
+        title: 'Meta' 
+      }
+    },
     color: '#000',
     kind: 'meta'
   }}
@@ -127,7 +139,11 @@ state: { value: [['twitterColoredBackground', false],['twitterBackgroundImage', 
   socialKey='twitter'
   format={{ 
     title: 'Aus der Arena',
-    type: 'Format',
+    section: {
+      meta: {
+        title: 'Format' 
+      }
+    },
     color: '#D74132',
     kind: 'scribble'
   }}
@@ -144,7 +160,11 @@ state: { value: [['twitterColoredBackground', false],['twitterBackgroundImage', 
   socialKey='twitter'
   format={{ 
     title: 'Briefing aus Bern',
-    type: 'Briefings',
+    section: {
+      meta: {
+        title: 'Briefings' 
+      }
+    },
     color: '#00809C',
     image: 'https://cdn.repub.ch/s3/republik-assets/github/republik/section-durch-die-woche/images/90509b3fc4639b59801bcd0f73dcba1a2433aa8c.png?size=1890x945'
   }}
@@ -161,7 +181,11 @@ state: { value: [['twitterColoredBackground', false],['twitterBackgroundImage', 
   socialKey='twitter'
   format={{ 
     title: 'Aktuelles',
-    type: 'Briefings',
+    section: {
+      meta: {
+        title: 'Briefings' 
+      }
+    },
     color: '#00809C'
   }}
 />
@@ -179,7 +203,11 @@ state: { value: [['twitterColoredBackground', false],['twitterBackgroundImage', 
   socialKey='twitter'
   format={{ 
     title: 'Dialog',
-    type: 'Dialog',
+    section: {
+      meta: {
+        title: 'Dialog' 
+      }
+    },
     color: '#3CAD00'
   }}
 />
@@ -195,7 +223,11 @@ state: { value: [['twitterColoredBackground', false],['twitterBackgroundImage', 
   socialKey='twitter'
   format={{ 
     title: 'Binswanger',
-    type: 'Kolumnen',
+    section: {
+      meta: {
+        title: 'Kolumnen' 
+      }
+    },
     color: '#D2933C',
     shareImage: 'https://republik-assets.s3.eu-central-1.amazonaws.com/assets/binswanger.png',
     shareImageColor: 'https://republik-assets.s3.eu-central-1.amazonaws.com/assets/binswanger-bg.png',

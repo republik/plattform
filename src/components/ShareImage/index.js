@@ -19,7 +19,6 @@ const styles = {
     justifyContent: 'space-between',
     alignItems: 'center'
   }),
-  // TODO: discuss custom textarea styling (@Olivier)
   textArea: css({
     display: 'block',
     textAlign: 'center',
@@ -46,6 +45,8 @@ const ShareImageGenerator = ({
   embedPreview
 }) => {
   const [colorScheme] = useColorContext()
+
+  const formatType = format?.section?.meta?.title
 
   const textAreaEmptyRule = useMemo(
     () =>
@@ -99,12 +100,12 @@ const ShareImageGenerator = ({
             Hintergrundfarbe
           </Checkbox>
         </div>
-        {!format || format?.type === 'Dialog' ? (
+        {!format || formatType === 'Dialog' ? (
           <div style={{ width: 160 }}>
             <Dropdown
               label='Schriftart'
               items={
-                format?.type === 'Dialog'
+                formatType === 'Dialog'
                   ? [fontDropdownItems[0], fontDropdownItems[2]]
                   : fontDropdownItems
               }
