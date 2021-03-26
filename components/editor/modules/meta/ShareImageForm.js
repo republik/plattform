@@ -7,9 +7,12 @@ import {
   addSocialPrefix,
   SharePreviewFacebook,
   SharePreviewTwitter,
+  socialPreviewStyles,
   Label
 } from '@project-r/styleguide'
 import { capitalize } from '../../../../lib/utils/format'
+import ImageInput from '../../utils/ImageInput'
+import withT from '../../../../lib/withT'
 
 export const SOCIAL_MEDIA = ['facebook', 'twitter']
 const SWITCH_KEY = 'showGenerator'
@@ -32,19 +35,27 @@ const BaseForm = ({ withPrefix, data, onInputChange }) => {
   return <MetaForm data={initData} onInputChange={onInputChange} />
 }
 
-const UploadImage = ({ withPrefix, data, onInputChange }) => {
-  const initValues = Map([[withPrefix('image'), '']])
-  const initData = initValues.merge(
-    data.filter((_, key) => initValues.has(key))
-  )
-  return (
-    <MetaForm
-      data={initData}
-      onInputChange={onInputChange}
-      getWidth={() => '620px'}
-    />
-  )
-}
+const UploadImage = withT(
+  ({ t, withPrefix, data, onInputChange, socialKey }) => {
+    const imageKey = withPrefix('image')
+    const labelHeight = 17 + 5
+
+    return (
+      <div
+        style={{ height: 314 + labelHeight, width: 600, overflow: 'hidden' }}
+      >
+        <ImageInput
+          maxWidth='100%'
+          maxHeight={314}
+          imageStyles={socialPreviewStyles[socialKey]}
+          label={t(`metaData/field/${imageKey}`)}
+          src={data.get(imageKey)}
+          onChange={onInputChange(imageKey)}
+        />
+      </div>
+    )
+  }
+)
 
 const GenerateImage = ({
   withPrefix,
