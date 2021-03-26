@@ -1,5 +1,5 @@
 {
-  "updated": "2021-03-04T13:04:47.004Z",
+  "updated": "2021-03-26T12:37:48.924Z",
   "title": "live",
   "data": [
     {
@@ -543,24 +543,32 @@
       "value": "E-Mail-Betreff"
     },
     {
+      "key": "metaData/field/facebookShowGenerator",
+      "value": "Sharetafel bauen"
+    },
+    {
       "key": "metaData/field/facebookTitle",
-      "value": "Facebook Titel"
+      "value": "Titel"
     },
     {
       "key": "metaData/field/facebookDescription",
-      "value": "Facebook Deskription"
+      "value": "Deskription"
     },
     {
       "key": "metaData/field/facebookImage",
       "value": "Facebook Bild"
     },
     {
+      "key": "metaData/field/twitterShowGenerator",
+      "value": "Sharetafel bauen"
+    },
+    {
       "key": "metaData/field/twitterTitle",
-      "value": "Twitter Titel"
+      "value": "Titel"
     },
     {
       "key": "metaData/field/twitterDescription",
-      "value": "Twitter Deskription"
+      "value": "Deskription"
     },
     {
       "key": "metaData/field/twitterImage",

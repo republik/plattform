@@ -250,14 +250,22 @@ const MetaData = ({
             onChange={onInputChange(DARK_MODE_KEY)}
           />
         )}
+        <br />
+        <br />
+        <br />
         {SOCIAL_MEDIA.map(socialMedium => (
-          <ShareImageForm
-            key={socialMedium}
-            socialKey={socialMedium}
-            data={node.data}
-            onInputChange={onInputChange}
-            format={titleData?.format?.meta}
-          />
+          <>
+            <ShareImageForm
+              key={socialMedium}
+              socialKey={socialMedium}
+              data={node.data}
+              onInputChange={onInputChange}
+              format={titleData?.format?.meta}
+            />
+            <br />
+            <br />
+            <br />
+          </>
         ))}
         <AudioForm editor={editor} node={node} onInputChange={onInputChange} />
         <br />
