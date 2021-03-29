@@ -8,7 +8,8 @@ import {
   SharePreviewFacebook,
   SharePreviewTwitter,
   socialPreviewStyles,
-  Label
+  Label,
+  SHARE_IMAGE_DEFAULTS
 } from '@project-r/styleguide'
 import { capitalize } from '../../../../lib/utils/format'
 import ImageInput from '../../utils/ImageInput'
@@ -64,12 +65,13 @@ const GenerateImage = ({
   socialKey,
   format
 }) => {
+  // TODO: export defaults from SG (all in one place)
   const initValues = Map([
     ['coloredBackground', false],
     ['illuBackground', false],
-    ['textPosition', 'bottom'],
-    ['fontSize', 60],
-    ['fontStyle', 'serifBold'],
+    ['textPosition', SHARE_IMAGE_DEFAULTS.textPosition],
+    ['fontSize', SHARE_IMAGE_DEFAULTS.fontSize],
+    ['fontStyle', SHARE_IMAGE_DEFAULTS.fontStyle],
     ['text', '']
   ])
   const prefixedValues = initValues.mapKeys(withPrefix)
