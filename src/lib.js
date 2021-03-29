@@ -164,7 +164,9 @@ export {
 export {
   default as ShareImagePreview,
   socialPreviewStyles,
-  SHARE_IMAGE_DEFAULTS
+  SHARE_IMAGE_DEFAULTS,
+  SHARE_IMAGE_HEIGHT,
+  SHARE_IMAGE_WIDTH
 } from './components/ShareImage/ShareImagePreview'
 export { default as SharePreviewFacebook } from './components/ShareImage/SharePreviewFacebook'
 export { default as SharePreviewTwitter } from './components/ShareImage/SharePreviewTwitter'
