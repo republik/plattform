@@ -65,7 +65,6 @@ const GenerateImage = ({
   socialKey,
   format
 }) => {
-  // TODO: export defaults from SG (all in one place)
   const initValues = Map([
     ['coloredBackground', false],
     ['illuBackground', false],
