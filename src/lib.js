@@ -163,7 +163,8 @@ export {
 } from './components/ShareImage'
 export {
   default as ShareImagePreview,
-  socialPreviewStyles
+  socialPreviewStyles,
+  SHARE_IMAGE_DEFAULTS
 } from './components/ShareImage/ShareImagePreview'
 export { default as SharePreviewFacebook } from './components/ShareImage/SharePreviewFacebook'
 export { default as SharePreviewTwitter } from './components/ShareImage/SharePreviewTwitter'

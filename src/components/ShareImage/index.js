@@ -49,6 +49,10 @@ const styles = {
 
 const capitalise = word => word.replace(/^\w/, c => c.toUpperCase())
 
+const getFormatType = format => format?.section?.meta?.title
+export const hasCustomFontStyle = format =>
+  !format || getFormatType(format) === 'Dialog'
+
 export const addSocialPrefix = socialKey => key => socialKey + capitalise(key)
 
 const ShareImageGenerator = ({
@@ -60,7 +64,7 @@ const ShareImageGenerator = ({
 }) => {
   const [colorScheme] = useColorContext()
 
-  const formatType = format?.section?.meta?.title
+  const formatType = getFormatType(format)
 
   const textAreaEmptyRule = useMemo(
     () =>
@@ -134,7 +138,7 @@ const ShareImageGenerator = ({
   return (
     <div {...styles.container}>
       <div {...styles.controlsContainer}>
-        {!format || formatType === 'Dialog' ? (
+        {hasCustomFontStyle(format) ? (
           <div {...styles.controlItem} style={{ minWidth: 170 }}>
             <Dropdown
               label='Schriftart'

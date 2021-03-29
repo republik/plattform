@@ -2,6 +2,7 @@ import React from 'react'
 import { css } from 'glamor'
 import { fontFamilies, fontStyles } from '../../theme/fonts'
 import { imageStyle } from './SharePreviewTwitter'
+import { hasCustomFontStyle } from './index'
 
 const WIDTH = 1200
 const HEIGHT = 628
@@ -61,19 +62,27 @@ const shareImageJustify = {
   bottom: 'flex-end'
 }
 
+export const SHARE_IMAGE_DEFAULTS = {
+  customFontStyle: 'serifBold',
+  textPosition: 'bottom',
+  fontSize: 60
+}
+
 const ShareImagePreview = ({
   format,
   text,
   coloredBackground,
   illuBackground,
-  customFontStyle,
   placeholderText,
   socialKey,
   embedPreview,
-  textPosition = 'bottom',
-  fontSize = 60
+  customFontStyle = SHARE_IMAGE_DEFAULTS.customFontStyle,
+  textPosition = SHARE_IMAGE_DEFAULTS.position,
+  fontSize = SHARE_IMAGE_DEFAULTS.fontSize
 }) => {
-  const fontStyleKey = customFontStyle || formatFonts[format?.kind]
+  const fontStyleKey = hasCustomFontStyle(format)
+    ? customFontStyle
+    : formatFonts[format?.kind]
   const fontStyle = fontStyles[fontStyleKey]
   const shareImage =
     illuBackground &&
