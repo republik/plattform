@@ -28,6 +28,7 @@ Supported props:
     color: '#D74132',
     kind: 'scribble'
   }}
+  placeholderText='Text für Twitter'
 />
 ```
 
@@ -59,6 +60,7 @@ Supported props:
       shareImageColor: 'https://republik-assets.s3.eu-central-1.amazonaws.com/assets/binswanger-bg.png',
     }}
     socialKey='twitter'
+    placeholderText='Text für Twitter'
     embedPreview
   />
  <SharePreviewTwitter 

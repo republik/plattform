@@ -4,8 +4,8 @@ import { fontFamilies, fontStyles } from '../../theme/fonts'
 import { imageStyle } from './SharePreviewTwitter'
 import { hasCustomFontStyle } from './index'
 
-const WIDTH = 1200
-const HEIGHT = 628
+export const SHARE_IMAGE_WIDTH = 1200
+export const SHARE_IMAGE_HEIGHT = 628
 
 export const socialPreviewStyles = {
   twitter: imageStyle
@@ -13,18 +13,20 @@ export const socialPreviewStyles = {
 
 const styles = {
   container: css({
-    transform: `scale(${0.5})`,
-    transformOrigin: '0 0',
-    marginBottom: -HEIGHT / 2,
     position: 'relative',
-    width: WIDTH,
-    height: HEIGHT,
+    width: SHARE_IMAGE_WIDTH,
+    height: SHARE_IMAGE_HEIGHT,
     backgroundColor: '#000',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
     padding: 48,
     overflow: 'hidden'
+  }),
+  containerHalfSize: css({
+    transform: `scale(${0.5})`,
+    transformOrigin: '0 0',
+    marginBottom: -SHARE_IMAGE_HEIGHT / 2
   }),
   kolumnenContainer: css({
     alignItems: 'flex-end'
@@ -94,6 +96,7 @@ const ShareImagePreview = ({
   return (
     <div
       {...styles.container}
+      {...(placeholderText && styles.containerHalfSize)}
       {...(embedPreview && socialPreviewStyles[socialKey])}
       {...(shareImage && styles.kolumnenContainer)}
       style={{
