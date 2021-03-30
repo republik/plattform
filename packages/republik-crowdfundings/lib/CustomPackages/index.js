@@ -308,6 +308,24 @@ const getCustomOptions = async (package_) => {
 
   return (
     options
+      .filter(
+        (option) =>
+          // Options with a non-membership reward shall be kept either
+          // way, likes goodies aswell options with a membership reward
+          // that would profit not this user like gifted memberships.
+          option.reward.type !== 'MembershipType' ||
+          option.membership.user.id !== package_.user.id ||
+          // User should only see options for the most recently ended membership.
+          // So, for membership-rewarding options, we check first if there
+          // is a membership with more recent periods. If not, we keep option.
+          !options.find(
+            (o) =>
+              o.membership?.user.id === package_.user.id &&
+              o.membership?.id !== option.membership.id &&
+              o.membership?.latestPeriod.endDate >
+                option.membership.latestPeriod.endDate,
+          ),
+      )
       .filter(Boolean)
       // Sort by price
       .sort((a, b) => descending(a.price, b.price))
@@ -523,6 +541,9 @@ const resolveMemberships = async ({ memberships, pgdb }) => {
     )
     memberships[index].periods = membershipPeriods.filter(
       (period) => period.membershipId === membership.id,
+    )
+    memberships[index].latestPeriod = getPeriodEndingLast(
+      memberships[index].periods,
     )
   })
 
