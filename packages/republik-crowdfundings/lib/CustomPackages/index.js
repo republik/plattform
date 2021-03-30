@@ -126,6 +126,12 @@ const evaluate = async ({
       return false
     }
 
+    // Gifted memberships can not be extended if their no longer active
+    if (!membership.active && membership.user.id !== package_.user.id) {
+      debug('only owner can extend inactive membership')
+      return false
+    }
+
     // Can membership.membershipType be extended?
     // Not all membershipTypes can be extended
     if (!EXTENDABLE_MEMBERSHIP_TYPES.includes(membershipType.name)) {
