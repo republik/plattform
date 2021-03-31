@@ -420,6 +420,8 @@ const BarChart = props => {
             iXOffset
           }
         })
+        // The sorting ensures that sequences with a label will be rendered last,
+        // preventing overflowing labels to be painted over by the next sequence.
         .sort(a => {
           if (!inlineLabel) {
             return 1
