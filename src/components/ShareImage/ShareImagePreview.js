@@ -3,6 +3,7 @@ import { css } from 'glamor'
 import { fontFamilies, fontStyles } from '../../theme/fonts'
 import { imageStyle } from './SharePreviewTwitter'
 import { hasCustomFontStyle } from './index'
+import colors from '../../theme/colors'
 
 export const SHARE_IMAGE_WIDTH = 1200
 export const SHARE_IMAGE_HEIGHT = 628
@@ -92,6 +93,7 @@ const ShareImagePreview = ({
       ? format?.shareImageColor || format?.shareImage
       : format?.shareImage)
   const displayedText = !text || text === '' ? placeholderText : text
+  const formatColor = format?.color || colors[format.kind]
 
   return (
     <div
@@ -113,7 +115,7 @@ const ShareImagePreview = ({
         <div
           {...styles.formatTitle}
           style={{
-            color: coloredBackground ? '#FFF' : format?.color,
+            color: coloredBackground ? '#FFF' : formatColor,
             width: shareImage && '80%'
           }}
         >
