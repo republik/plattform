@@ -819,6 +819,16 @@ mail.getPledgeMergeVars = async (
 
   const creditor = payment?.pledge?.package?.bankAccount
 
+  const membershipTypeMonthly = await pgdb.public.membershipTypes.findOne({
+    name: 'MONTHLY_ABO',
+  })
+  const hasActiveMonthly =
+    pledgerMemberships.filter(
+      (membership) =>
+        membership.active &&
+        membership.membershipTypeId === membershipTypeMonthly.id,
+    ).length > 0
+
   return [
     // Purchase itself
     {
@@ -995,6 +1005,10 @@ mail.getPledgeMergeVars = async (
     {
       name: 'link_claim',
       content: `${FRONTEND_BASE_URL}/abholen`,
+    },
+    {
+      name: 'pledger_memberships_active_monthly',
+      content: hasActiveMonthly,
     },
   ]
 }
