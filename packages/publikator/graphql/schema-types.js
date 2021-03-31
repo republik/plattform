@@ -15,9 +15,6 @@ type Repo {
   # nothing if repo is unpublished
   latestPublications: [Publication]!
 
-  mailchimpUrl: String
-  unpublished: Boolean!
-
   meta: RepoMeta!
   currentPhase: RepoPhase!
 

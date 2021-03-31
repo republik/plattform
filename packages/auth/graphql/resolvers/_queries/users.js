@@ -1,13 +1,22 @@
 const Roles = require('../../../lib/Roles')
 const transformUser = require('../../../lib/transformUser')
 
-module.exports = async (_, { search, role }, { pgdb, user }) => {
+module.exports = async (
+  _,
+  { search, role, isListed, hasPublicProfile },
+  { pgdb, user },
+) => {
   Roles.ensureUserHasRole(user, 'editor')
 
-  const whereClause = role
-    ? `WHERE
-      roles @> :role`
-    : ''
+  const whereClauses = [
+    role && 'roles @> :role',
+    [true, false].includes(isListed) &&
+      '"isListed" = :isListed AND "isAdminUnlisted" = FALSE',
+    [true, false].includes(hasPublicProfile) &&
+      '"hasPublicProfile" = :hasPublicProfile',
+  ]
+    .filter(Boolean)
+    .join(' AND ')
 
   const users = await pgdb.query(
     `
@@ -25,7 +34,7 @@ module.exports = async (_, { search, role }, { pgdb, user }) => {
       ) <-> :search AS dist
     FROM
       users u
-    ${whereClause}
+    ${whereClauses && `WHERE ${whereClauses}`}
     ORDER BY
       word_sim, dist
     LIMIT :limit
@@ -33,6 +42,10 @@ module.exports = async (_, { search, role }, { pgdb, user }) => {
     {
       search: search.trim(),
       role: role ? JSON.stringify([role]) : null,
+      isListed: [true, false].includes(isListed) ? isListed : null,
+      hasPublicProfile: [true, false].includes(hasPublicProfile)
+        ? hasPublicProfile
+        : null,
       limit: 30,
     },
   )

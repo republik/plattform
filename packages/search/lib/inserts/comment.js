@@ -1,21 +1,30 @@
-const _ = require('lodash')
+const Promise = require('bluebird')
 
 const { remark } = require('@orbiting/backend-modules-utils')
 
 const bulk = require('../../lib/indexPgTable')
 const { mdastContentToString } = require('../utils')
 
-const transform = function (row) {
-  const user = _.find(this.payload.users, { id: row.userId })
+async function transform(row) {
+  const { userId, discussionId } = row
 
-  const discussion = _.find(this.payload.discussions, { id: row.discussionId })
-  const isAnonymityEnforced = discussion.anonymity === 'ENFORCED'
-
-  const discussionPreferences = _.find(this.payload.discussionPreferences, {
-    userId: row.userId,
-    discussionId: row.discussionId,
+  const {
+    user,
+    discussion,
+    discussionPreferences,
+    credentials,
+  } = await Promise.props({
+    user: this.payload.getUser(userId),
+    discussion: this.payload.getDiscussion(discussionId),
+    discussionPreferences: this.payload.getDiscussionPreferences(
+      userId,
+      discussionId,
+    ),
+    credentials: this.payload.getCredentials(userId),
   })
-  const isAnonymous = discussionPreferences && discussionPreferences.anonymous
+
+  const isAnonymityEnforced = discussion.anonymity === 'ENFORCED'
+  const isAnonymous = !!discussionPreferences?.anonymous
 
   row.resolved = {
     user: null,
@@ -25,28 +34,16 @@ const transform = function (row) {
   }
 
   if (user && !isAnonymityEnforced && !isAnonymous) {
-    let credential = false
-
-    // Find attached credential to discussion
-    if (discussionPreferences && discussionPreferences.credentialId) {
-      credential = _.find(this.payload.credentials, {
-        id: discussionPreferences.credentialId,
-      })
-    }
-
-    if (!credential || credential.length === 0) {
-      credential = _.find(this.payload.credentials, {
-        userId: user.id,
-        isListed: true,
-      })
-    }
+    const credential =
+      credentials.find((c) => c.id === discussionPreferences?.credentialId) ||
+      credentials.find((c) => c.isListed)
 
     row.resolved.user = {
       facebookId: user.facebookId,
       firstName: user.firstName,
       lastName: user.lastName,
-      name: `${user.firstName} ${user.lastName}`,
-      credential: credential ? credential.description : undefined,
+      name: [user.firstName, user.lastName].join(' ').trim(),
+      credential: credential?.description || undefined,
       twitterHandle: user.twitterHandle,
       username: user.username,
     }
@@ -65,37 +62,42 @@ const getDefaultResource = async ({ pgdb }) => {
   return {
     table: pgdb.public.comments,
     payload: {
-      users: await pgdb.public.users.find(
-        {},
-        {
-          fields: [
-            'id',
-            'firstName',
-            'lastName',
-            'username',
-            'twitterHandle',
-            'facebookId',
-          ],
-        },
-      ),
-      discussions: await pgdb.public.discussions.find(
-        {},
-        {
-          fields: ['id', 'anonymity', 'hidden'],
-        },
-      ),
-      discussionPreferences: await pgdb.public.discussionPreferences.find(
-        {},
-        {
-          fields: ['userId', 'discussionId', 'anonymous', 'credentialId'],
-        },
-      ),
-      credentials: await pgdb.public.credentials.find(
-        {},
-        {
-          fields: ['id', 'userId', 'description', 'isListed'],
-        },
-      ),
+      getUser: async function (id) {
+        return pgdb.public.users.findOne(
+          { id },
+          {
+            fields: [
+              'id',
+              'firstName',
+              'lastName',
+              'username',
+              'twitterHandle',
+              'facebookId',
+            ],
+          },
+        )
+      },
+      getDiscussion: async function (id) {
+        return pgdb.public.discussions.findOne(
+          { id },
+          { fields: ['anonymity', 'hidden'] },
+        )
+      },
+      getDiscussionPreferences: async function (userId, discussionId) {
+        return pgdb.public.discussionPreferences.findOne(
+          {
+            userId,
+            discussionId,
+          },
+          { fields: ['anonymous', 'credentialId'] },
+        )
+      },
+      getCredentials: async function (userId) {
+        return pgdb.public.credentials.find(
+          { userId },
+          { fields: ['id', 'userId', 'description', 'isListed'] },
+        )
+      },
     },
     transform,
   }

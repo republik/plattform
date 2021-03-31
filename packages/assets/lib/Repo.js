@@ -7,10 +7,10 @@ const {
   AWS_S3_REPO_KEY_PREFIX = 'repos',
 } = process.env
 
-const getS3Url = (repoId, path) => {
-  const s3Path = getS3Path(repoId, path)
+const BUCKET_URL = `${ASSETS_SERVER_BASE_URL}/s3/${AWS_S3_BUCKET}`
 
-  return `${ASSETS_SERVER_BASE_URL}/s3/${AWS_S3_BUCKET}/${s3Path}`
+const getS3Url = (repoId, path) => {
+  return `${BUCKET_URL}/${AWS_S3_REPO_KEY_PREFIX}/${repoId}/${path}`
 }
 
 const getS3Path = (repoId, path) => {
