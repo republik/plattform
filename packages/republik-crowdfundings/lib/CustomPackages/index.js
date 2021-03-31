@@ -97,7 +97,7 @@ const evaluate = async ({
   debug('evaluate')
 
   const { membershipType: packageOptionMembershipType } = packageOption
-  const { membershipType, membershipPeriods } = membership
+  const { membershipType, periods } = membership
 
   const now = moment()
 
@@ -149,12 +149,12 @@ const evaluate = async ({
     // Has membership any membershipPeriods?
     // Indicates whether a membership is or was active. Only those can be
     // extended.
-    if (membershipPeriods.length === 0) {
+    if (periods.length === 0) {
       debug('membership has no membershipPeriods')
       return false
     }
 
-    let lastEndDate = getPeriodEndingLast(membershipPeriods).endDate
+    let lastEndDate = getPeriodEndingLast(periods).endDate
 
     // A membership can be renewed 364 days before it ends at the most
     if (!lenient && moment(lastEndDate).isAfter(now.clone().add(364, 'days'))) {
@@ -323,8 +323,8 @@ const getCustomOptions = async (package_) => {
       // Sort by membership "endDate", ascending
       .sort((a, b) =>
         ascending(
-          a.membership && getLastEndDate(a.membership.membershipPeriods),
-          b.membership && getLastEndDate(b.membership.membershipPeriods),
+          a.membership && getLastEndDate(a.membership.periods),
+          b.membership && getLastEndDate(b.membership.periods),
         ),
       )
       // Sort by userID, own ones up top.
@@ -344,7 +344,7 @@ const getCustomOptions = async (package_) => {
     user: {
       memberhips[] {
         membershipType
-        membershipPeriods[]
+        periods[]
         pledge {
           package
         }
@@ -403,13 +403,6 @@ const resolvePackages = async ({
         })
       : []
 
-  const membershipPeriods =
-    memberships.length > 0
-      ? await pgdb.public.membershipPeriods.find({
-          membershipId: memberships.map((membership) => membership.id),
-        })
-      : []
-
   memberships.forEach((membership, index, memberships) => {
     const user = users.find((user) => user.id === membership.userId)
     memberships[index].user = user
@@ -417,10 +410,6 @@ const resolvePackages = async ({
       .filter(Boolean)
       .join(' ')
       .trim()
-
-    memberships[index].membershipPeriods = membershipPeriods.filter(
-      (membershipPeriod) => membershipPeriod.membershipId === membership.id,
-    )
   })
 
   Object.assign(pledger, { memberships })
@@ -532,7 +521,6 @@ const resolveMemberships = async ({ memberships, pgdb }) => {
     memberships[index].pledge = membershipPledges.find(
       (membershipPledge) => membershipPledge.id === membership.pledgeId,
     )
-
     memberships[index].periods = membershipPeriods.filter(
       (period) => period.membershipId === membership.id,
     )
