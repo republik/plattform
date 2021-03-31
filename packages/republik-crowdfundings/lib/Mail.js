@@ -814,15 +814,17 @@ mail.getPledgeMergeVars = async (
 
   const creditor = payment?.pledge?.package?.bankAccount
 
-  const membershipTypeMonthly = await pgdb.public.membershipTypes.findOne({
-    name: 'MONTHLY_ABO',
-  })
-  const hasActiveMonthly =
-    pledgerMemberships.filter(
-      (membership) =>
-        membership.active &&
-        membership.membershipTypeId === membershipTypeMonthly.id,
-    ).length > 0
+  const monthlyActiveMemberships = await pgdb.queryOneColumn(`
+    SELECT m.id 
+    FROM memberships m
+    JOIN "membershipTypes" t
+      ON m."membershipTypeId" = t.id
+    WHERE m."userId" = '${user.id}'
+      AND t.name = 'MONTHLY_ABO'
+      AND m.active = TRUE
+  `)
+
+  const hasActiveMonthly = monthlyActiveMemberships.length > 0
 
   return [
     // Purchase itself
