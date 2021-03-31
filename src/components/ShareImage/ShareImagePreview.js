@@ -93,7 +93,7 @@ const ShareImagePreview = ({
       ? format?.shareImageColor || format?.shareImage
       : format?.shareImage)
   const displayedText = !text || text === '' ? placeholderText : text
-  const formatColor = format?.color || colors[format.kind]
+  const formatColor = format?.color || colors[format?.kind]
 
   return (
     <div

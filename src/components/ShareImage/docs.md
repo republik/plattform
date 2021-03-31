@@ -145,7 +145,6 @@ state: { value: [['twitterColoredBackground', false],['twitterBackgroundImage', 
         title: 'Format' 
       }
     },
-    color: '#D74132',
     kind: 'scribble'
   }}
 />
