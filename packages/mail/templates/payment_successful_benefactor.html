@@ -49,7 +49,22 @@
                       >
                     </p>
 
-                    {{#if `total > 1000`}}
+                    {{#if `total > 1000`}} {{#if
+                    pledger_memberships_active_monthly}}
+                    <!-- TODO: Satz Jahresabo aktiviert, wenn Monatsabo ausläuft ergänzen -->
+                    <p>
+                      Dass Sie uns mit einer Jahresmitgliedschaft längerfristig
+                      unterstützen, freut und ehrt uns. Herzlichen Dank für Ihr
+                      Vertrauen.
+                    </p>
+                    <p>
+                      Mit Ihrer Mitgliedschaft erhalten Sie weiterhin von Montag
+                      bis Samstag ein hochwertiges digitales Magazin. Sie
+                      unterstützen damit eine wirklich unabhängige vierte
+                      Gewalt. Und sind neu auch Teil der Project R
+                      Genossenschaft.
+                    </p>
+                    {{else}}
                     <p>
                       Sie können ab sofort
                       <a href="{{link_signin}}">das Magazin lesen</a>, an
@@ -75,7 +90,7 @@
                       Vorschläge machen. Und sich mit Ihren Kolleginnen und
                       Kollegen in der Verlagsetage austauschen.
                     </p>
-                    {{/if}}
+                    {{/if}} {{/if}}
 
                     <p>
                       Um uns für Ihre besonders grosse Unterstützung ein kleines
