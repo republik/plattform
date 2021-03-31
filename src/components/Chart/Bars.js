@@ -570,7 +570,7 @@ const BarChart = props => {
                               {...styles.barLabel}
                               {...colorScheme.set('fill', 'text')}
                               x={
-                                valueTextStartAnchor
+                                segment.valueTextStartAnchor
                                   ? segment.x +
                                     segment.width +
                                     4 +
@@ -581,7 +581,7 @@ const BarChart = props => {
                                     (isLollipop ? 8 : 0)
                               }
                               textAnchor={
-                                valueTextStartAnchor ? 'start' : 'end'
+                                segment.valueTextStartAnchor ? 'start' : 'end'
                               }
                               y={bar.height / 2}
                               dy='.35em'
