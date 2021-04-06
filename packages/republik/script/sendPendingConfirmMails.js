@@ -8,7 +8,7 @@ const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
 const {
   sendPledgeConfirmations,
 } = require('@orbiting/backend-modules-republik-crowdfundings/lib/Mail')
-const t = require('../lib/t')
+const { t } = require('@orbiting/backend-modules-translate')
 
 const run = async () => {
   const pgdb = await PgDb.connect()
