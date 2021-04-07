@@ -7,7 +7,7 @@ const DEV = process.env.NODE_ENV && process.env.NODE_ENV !== 'production'
 
 const { PORT, CORS_ALLOWLIST_URL } = process.env
 
-let additionalMiddlewares = []
+const additionalMiddlewares = []
 let httpServer
 
 const addMiddleware = (middleware) => {
@@ -41,12 +41,12 @@ const start = (workerId) => {
   basicAuthMiddleware(server)
 
   // special middlewares
-  for (let middleware of additionalMiddlewares) {
+  for (const middleware of additionalMiddlewares) {
     middleware(server)
   }
 
   // middlewares
-  for (let key of Object.keys(middlewares)) {
+  for (const key of Object.keys(middlewares)) {
     middlewares[key](server)
   }
 
@@ -59,6 +59,7 @@ const start = (workerId) => {
       console.info(`server is running on http://localhost:${PORT}`)
     }
   }
+  server.use(express.static('public'))
   httpServer = server.listen(PORT, callback)
 
   return httpServer
