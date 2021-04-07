@@ -84,14 +84,17 @@ export default module.exports = function (context: GraphqlContext) {
   }
 
   return {
-    byId: createDataLoader(async (ids: readonly string[]) => {
-      const commitIds = ids.filter(v4)
-      return (
-        (commitIds.length &&
-          (await commits.find({ id: commitIds }, { fields }))) ||
-        []
-      )
-    }),
+    byId: createDataLoader(
+      async (ids: readonly string[]) => {
+        const commitIds = ids.filter(v4)
+        return (
+          (commitIds.length &&
+            (await commits.find({ id: commitIds }, { fields }))) ||
+          []
+        )
+      }, 
+      { cache: false }
+    ),
     byIdMarkdown: createDataLoader(async (ids: readonly string[]) =>
       getTransformedContentByIds(
         ids,
@@ -101,6 +104,7 @@ export default module.exports = function (context: GraphqlContext) {
         }),
         'markdown',
       ),
+      { cache: false },
     ),
     byIdMdast: createDataLoader(async (ids: readonly string[]) =>
       getTransformedContentByIds(
@@ -111,6 +115,7 @@ export default module.exports = function (context: GraphqlContext) {
         }),
         'mdast',
       ),
+      { cache: false }
     ),
     byRepoId: createDataLoader(
       (ids: readonly string[]) =>
@@ -118,7 +123,7 @@ export default module.exports = function (context: GraphqlContext) {
           { repoId: ids },
           { fields, orderBy: { createdAt: 'desc' } },
         ),
-      null,
+      { cache: false },
       (key, rows) => rows.filter((row) => row.repoId === key),
     ),
     byRepoIdLatest: createDataLoader(
@@ -134,7 +139,7 @@ export default module.exports = function (context: GraphqlContext) {
           `,
           { ids },
         ),
-      null,
+      { cache: false },
       (key, rows) => rows.find((row) => row.repoId === key),
     ),
   }
