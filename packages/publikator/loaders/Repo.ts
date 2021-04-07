@@ -15,10 +15,8 @@ interface Repo {
 export default module.exports = function (context: GraphqlContext) {
   const repos: PgTable<Repo> = context.pgdb.publikator.repos
   return {
-    byId: createDataLoader(
-      (ids: readonly string[]) =>
-        repos.find({ id: ids }, { orderBy: { updatedAt: 'desc' } }),
-      { cache: false },
-    ),
+    byId: createDataLoader(function (ids: readonly string[]) {
+      return repos.find({ id: ids }, { orderBy: { updatedAt: 'desc' } })
+    }),
   }
 }

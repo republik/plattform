@@ -5,7 +5,7 @@ import { GraphqlContext } from '@orbiting/backend-modules-types'
 
 interface Milestone {
   id: string
-  scope: MilestoneScope
+  scope: 'publication' | 'prepublication' | 'milestone'
   repoId: string
   commitId: string
   name: string
@@ -18,8 +18,6 @@ interface Milestone {
   revokedAt?: Date
 }
 
-type MilestoneScope = 'publication' | 'prepublication' | 'milestone'
-
 interface MilestoneAuthor {
   name: string
   email: string
@@ -31,7 +29,7 @@ export default module.exports = function (context: GraphqlContext) {
     byRepoId: createDataLoader(
       (ids: readonly string[]) =>
         milestones.find({ repoId: ids }, { orderBy: { createdAt: 'asc' } }),
-      { cache: false },
+      null,
       (key, rows) => rows.filter((row) => row.repoId === key),
     ),
     Publication: {
@@ -45,7 +43,7 @@ export default module.exports = function (context: GraphqlContext) {
             },
             { orderBy: { createdAt: 'asc' } },
           ),
-        { cache: false },
+        null,
         (key, rows) => rows.filter((row) => row.repoId === key),
       ),
     },
