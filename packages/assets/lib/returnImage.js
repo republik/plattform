@@ -23,6 +23,7 @@ const pipeHeaders = [
   'Access-Control-Allow-Origin',
   'Link',
   'Content-Disposition',
+  'X-Robots-Tag',
 ]
 
 const supportedFormats = ['jpeg', 'png', 'webp']
