@@ -1,2 +1,8 @@
+User-agent: *
+Allow: /frontend/static/
+
+User-agent: *
+Disallow: /frontend/
+
 User-Agent: *
 Disallow: /pdf/
