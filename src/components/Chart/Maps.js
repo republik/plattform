@@ -392,133 +392,135 @@ export class GenericMap extends Component {
             />
           )}
         </div>
-        <svg width={width} height={columnHeight * rows}>
-          <desc>{description}</desc>
-          {groupedData.map(({ values: groupData, key: title }) => {
-            const geotiff = geotiffs[title]
-            return (
-              <g
-                key={title || 1}
-                transform={`translate(${gx(title)},${gy(title)})`}
-              >
-                <text
-                  dy='1.5em'
-                  x={paddingLeft + mapWidth / 2}
-                  textAnchor='middle'
-                  {...styles.columnTitle}
-                  {...colorScheme.set('fill', 'text')}
+        <div style={{ position: 'relative' }}>
+          <svg width={width} height={columnHeight * rows}>
+            <desc>{description}</desc>
+            {groupedData.map(({ values: groupData, key: title }) => {
+              const geotiff = geotiffs[title]
+              return (
+                <g
+                  key={title || 1}
+                  transform={`translate(${gx(title)},${gy(title)})`}
                 >
-                  {tLabel(title)}
-                </text>
-                <g transform={`translate(0,${paddingTop})`}>
-                  {!choropleth &&
-                    featuresWithPaths.map(feature => {
-                      return (
-                        <path
-                          key={feature.id}
-                          fill={FEATURE_BG}
-                          stroke='white'
-                          strokeWidth={1}
-                          d={feature.path}
-                        />
-                      )
-                    })}
-                  {choropleth &&
-                    hasGeoJson &&
-                    groupData.map(d => {
-                      const { feature } = d
-                      if (!feature) {
-                        return null
-                      }
-                      let fill
-                      if (d.empty) {
-                        fill = missingDataColor
-                      } else {
-                        fill = colorScale(colorAccessor(d))
-                      }
-                      return (
-                        <path
-                          key={feature.id}
-                          {...colorScheme.set('fill', fill, 'charts')}
-                          d={feature.path}
-                          {...styles.interactivePath}
-                          onTouchStart={() =>
-                            this.setState({ hoverFeature: feature, title })
-                          }
-                          onTouchEnd={() =>
-                            this.setState({
-                              hoverFeature: undefined,
-                              title: undefined
-                            })
-                          }
-                          onMouseEnter={() =>
-                            this.setState({ hoverFeature: feature, title })
-                          }
-                          onMouseLeave={() =>
-                            this.setState({
-                              hoverFeature: undefined,
-                              title: undefined
-                            })
-                          }
-                        />
-                      )
-                    })}
-                  {hasTooltips &&
-                    featuresWithPaths
-                      .filter(feature => feature.id === hoverFeature.id)
-                      .map(feature => (
-                        <path
-                          key={`stroke-${feature.id}`}
-                          fill='none'
-                          pointerEvents='none'
-                          stroke='black'
-                          strokeWidth={1}
-                          d={feature.path}
-                        />
-                      ))}
-                  {geotiff && <image {...geotiff} />}
-                  {compositionBorderPath && (
-                    <path
-                      fill='none'
-                      stroke='black'
-                      strokeWidth={1}
-                      d={compositionBorderPath}
-                    />
-                  )}
-                  {props.points && (
-                    <Points
-                      data={data}
-                      colorScheme={colorScheme}
-                      colorScale={colorScale}
-                      colorAccessor={colorAccessor}
-                      domain={domain}
-                      project={projectPoint}
-                      shape={props.shape}
-                      sizeRangeMax={props.sizeRangeMax}
-                      hoverPoint={hoverPoint}
-                      setHoverPoint={this.setHoverPoint}
-                      opacity={opacity}
-                    />
-                  )}
+                  <text
+                    dy='1.5em'
+                    x={paddingLeft + mapWidth / 2}
+                    textAnchor='middle'
+                    {...styles.columnTitle}
+                    {...colorScheme.set('fill', 'text')}
+                  >
+                    {tLabel(title)}
+                  </text>
+                  <g transform={`translate(0,${paddingTop})`}>
+                    {!choropleth &&
+                      featuresWithPaths.map(feature => {
+                        return (
+                          <path
+                            key={feature.id}
+                            fill={FEATURE_BG}
+                            stroke='white'
+                            strokeWidth={1}
+                            d={feature.path}
+                          />
+                        )
+                      })}
+                    {choropleth &&
+                      hasGeoJson &&
+                      groupData.map(d => {
+                        const { feature } = d
+                        if (!feature) {
+                          return null
+                        }
+                        let fill
+                        if (d.empty) {
+                          fill = missingDataColor
+                        } else {
+                          fill = colorScale(colorAccessor(d))
+                        }
+                        return (
+                          <path
+                            key={feature.id}
+                            {...colorScheme.set('fill', fill, 'charts')}
+                            d={feature.path}
+                            {...styles.interactivePath}
+                            onTouchStart={() =>
+                              this.setState({ hoverFeature: feature, title })
+                            }
+                            onTouchEnd={() =>
+                              this.setState({
+                                hoverFeature: undefined,
+                                title: undefined
+                              })
+                            }
+                            onMouseEnter={() =>
+                              this.setState({ hoverFeature: feature, title })
+                            }
+                            onMouseLeave={() =>
+                              this.setState({
+                                hoverFeature: undefined,
+                                title: undefined
+                              })
+                            }
+                          />
+                        )
+                      })}
+                    {hasTooltips &&
+                      featuresWithPaths
+                        .filter(feature => feature.id === hoverFeature.id)
+                        .map(feature => (
+                          <path
+                            key={`stroke-${feature.id}`}
+                            fill='none'
+                            pointerEvents='none'
+                            stroke='black'
+                            strokeWidth={1}
+                            d={feature.path}
+                          />
+                        ))}
+                    {geotiff && <image {...geotiff} />}
+                    {compositionBorderPath && (
+                      <path
+                        fill='none'
+                        stroke='black'
+                        strokeWidth={1}
+                        d={compositionBorderPath}
+                      />
+                    )}
+                    {props.points && (
+                      <Points
+                        data={data}
+                        colorScheme={colorScheme}
+                        colorScale={colorScale}
+                        colorAccessor={colorAccessor}
+                        domain={domain}
+                        project={projectPoint}
+                        shape={props.shape}
+                        sizeRangeMax={props.sizeRangeMax}
+                        hoverPoint={hoverPoint}
+                        setHoverPoint={this.setHoverPoint}
+                        opacity={opacity}
+                      />
+                    )}
+                  </g>
                 </g>
-              </g>
-            )
-          })}
-        </svg>
-        {(!hasGeoJson || !!error) && (
-          <div
-            style={{
-              position: 'absolute',
-              left: paddingLeft,
-              top: paddingTop,
-              width: mapSpace
-            }}
-          >
-            <Loader loading={loading} error={error} />
-          </div>
-        )}
-        {hasTooltips && this.renderTooltips()}
-        {this.renderPointTooltip()}
+              )
+            })}
+          </svg>
+          {(!hasGeoJson || !!error) && (
+            <div
+              style={{
+                position: 'absolute',
+                left: paddingLeft,
+                top: paddingTop,
+                width: mapSpace
+              }}
+            >
+              <Loader loading={loading} error={error} />
+            </div>
+          )}
+          {hasTooltips && this.renderTooltips()}
+          {this.renderPointTooltip()}
+        </div>
       </div>
     )
   }
