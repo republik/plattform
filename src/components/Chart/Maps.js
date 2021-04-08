@@ -109,7 +109,7 @@ const Points = ({
             )}
             {!marker && (
               <>
-                {hoverPoint === d && (
+                {hoverPoint?.datum === d.datum && (
                   <path
                     d={symbolPath(d)}
                     fill='none'
@@ -204,9 +204,6 @@ export class GenericMap extends Component {
     fetchJsonCacheData.clear()
     fetchJson.cache.clear()
   }
-  setHoverPoint = point => {
-    this.setState({ hoverPoint: point })
-  }
   renderTooltips() {
     const props = this.props
     const { width, tLabel, missingDataLegend } = props
@@ -260,27 +257,27 @@ export class GenericMap extends Component {
       })
     )
   }
-  renderPointTooltip() {
-    const {
-      hoverPoint,
-      layout: { projectPoint, numberFormat }
-    } = this.state
-    const { width, pointLabel, pointAttributes, unit } = this.props
-
-    if (!hoverPoint) {
-      return null
+  setHoverPoint = displayPoint => {
+    if (!displayPoint) {
+      this.setState({ hoverPoint: null })
+      return
     }
 
-    const [x, y] = projectPoint([hoverPoint.datum.lon, hoverPoint.datum.lat])
-
+    const { datum } = displayPoint
+    const {
+      layout: { projectPoint, numberFormat }
+    } = this.state
+    const { pointLabel, pointAttributes } = this.props
+    const [x, y] = projectPoint([datum.lon, datum.lat])
+    const label = datum[pointLabel]
     const value =
-      hoverPoint.datum.value !== undefined &&
-      (isNaN(hoverPoint.datum.value)
-        ? String(hoverPoint.datum.value).trim()
-        : numberFormat(hoverPoint.datum.value))
+      datum.value !== undefined &&
+      (isNaN(datum.value)
+        ? String(datum.value).trim()
+        : numberFormat(datum.value))
 
     const body = pointAttributes.map(t => {
-      const val = hoverPoint.datum[t]
+      const val = datum[t]
       if (val) {
         return (
           <Fragment key={t}>
@@ -292,24 +289,48 @@ export class GenericMap extends Component {
         return null
       }
     })
-
-    if (value || body.length > 0 || hoverPoint.datum[pointLabel]) {
-      return (
-        <ContextBox orientation='top' x={x} y={y} contextWidth={width}>
-          <ContextBoxValue label={hoverPoint.datum[pointLabel]}>
-            {value && (
-              <>
-                {`${value} `}
-                {subsup(unit)}
-                <br />
-              </>
-            )}
-            {body}
-          </ContextBoxValue>
-        </ContextBox>
-      )
+    if (label || value || body.length) {
+      this.setState({
+        hoverPoint: {
+          x,
+          y,
+          label,
+          value,
+          body,
+          datum
+        }
+      })
+    } else {
+      this.setState({ hoverPoint: null })
     }
-    return null
+  }
+  renderPointTooltip() {
+    const { hoverPoint } = this.state
+    const { width, unit } = this.props
+
+    if (!hoverPoint) {
+      return null
+    }
+
+    return (
+      <ContextBox
+        orientation='top'
+        x={hoverPoint.x}
+        y={hoverPoint.y}
+        contextWidth={width}
+      >
+        <ContextBoxValue label={hoverPoint.label}>
+          {hoverPoint.value && (
+            <>
+              {`${hoverPoint.value} `}
+              {subsup(unit)}
+              <br />
+            </>
+          )}
+          {hoverPoint.body}
+        </ContextBoxValue>
+      </ContextBox>
+    )
   }
   render() {
     const { props, state } = this
@@ -349,12 +370,8 @@ export class GenericMap extends Component {
       compositionBorderPath,
       colorLegendValues
     } = this.state.layout
-
     let legendStyle
-    if (
-      mapSpace * colorLegendSize - paddingLeft >= props.colorLegendMinWidth ||
-      mini
-    ) {
+    if (mapSpace * colorLegendSize >= props.colorLegendMinWidth || mini) {
       legendStyle = {
         position: 'absolute'
       }
