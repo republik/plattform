@@ -228,10 +228,15 @@ if (SG_FONT_STYLES) {
 //  fromName: 'Jefferson',
 //  subject: 'dear friend',
 //  templateName: 'MANDRIL TEMPLATE',
-//  globalMergeVars: {
+//  globalMergeVars: [{
 //    name: 'VARNAME',
 //    content: 'replaced with this'
-//  }
+//  }],
+//  attachments: [{
+//    type: 'application/pdf',
+//    name: 'SOMETHING.pdf',
+//    content: '<base64 encoded content>'
+//  }]
 // })
 module.exports = async (mail, context, log) => {
   // sanitize
