@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Subscription } from 'react-apollo'
 import NewerVersionIcon from 'react-icons/lib/md/call-split'
 
@@ -46,26 +46,33 @@ const WarningButton = ({ repoId }) => (
   </Link>
 )
 
-const BranchingNotice = ({ asIcon, repoId, currentCommitId }) => (
-  <Subscription subscription={repoSubscription} variables={{ repoId }}>
-    {({ data = {}, loading = true }) => {
-      const lastestCommit = data.repoUpdate && data.repoUpdate.commits.nodes[0]
+const BranchingNotice = ({ asIcon, repoId, currentCommitId }) => {
+  const [isStale, setIsStale] = useState(false)
 
-      if (
-        loading ||
-        (lastestCommit && lastestCommit.id === currentCommitId) ||
-        !repoId
-      ) {
-        return null
-      }
+  if (isStale) {
+    if (asIcon) {
+      return <WarningIcon repoId={repoId} />
+    }
 
-      if (asIcon) {
-        return <WarningIcon repoId={repoId} />
-      }
+    return <WarningButton repoId={repoId} />
+  }
 
-      return <WarningButton repoId={repoId} />
-    }}
-  </Subscription>
-)
+  return (
+    <Subscription
+      subscription={repoSubscription}
+      variables={{ repoId }}
+      onSubscriptionData={({ subscriptionData: { data } }) => {
+        if (
+          data &&
+          data.repoChange &&
+          data.repoChange.commit &&
+          data.repoChange.commit.id !== currentCommitId
+        ) {
+          setIsStale(true)
+        }
+      }}
+    />
+  )
+}
 
 export default BranchingNotice
