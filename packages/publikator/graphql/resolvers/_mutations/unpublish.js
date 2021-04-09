@@ -8,7 +8,7 @@ const { updateCurrentPhase } = require('../../../lib/postgres')
 const { DISABLE_PUBLISH } = process.env
 
 module.exports = async (_, { repoId }, context) => {
-  const { user, t, pgdb, redis, elastic, pubsub } = context
+  const { user, t, pgdb, redis, elastic } = context
   ensureUserHasRole(user, 'editor')
 
   if (DISABLE_PUBLISH) {
@@ -45,12 +45,6 @@ module.exports = async (_, { repoId }, context) => {
     await unpublish(elastic, redis, repoId)
 
     await tx.transactionCommit()
-
-    await pubsub.publish('repoUpdate', {
-      repoUpdate: {
-        id: repoId,
-      },
-    })
   } catch (e) {
     await tx.transactionRollback()
 
