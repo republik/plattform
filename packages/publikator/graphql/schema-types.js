@@ -167,4 +167,18 @@ enum Action {
   create
   delete
 }
+
+type RepoUpdate {
+  mutation: RepoUpdateMutationType!
+  repo: Repo
+  commit: Commit
+  milestone: Milestone
+}
+
+enum RepoUpdateMutationType {
+  CREATED
+  UPDATED
+  DELETED
+}
+
 `
