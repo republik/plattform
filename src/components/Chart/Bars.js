@@ -10,6 +10,7 @@ import { fontFamilies } from '../../theme/fonts'
 import { underline } from '../../lib/styleMixins'
 import { useColorContext } from '../Colors/useColorContext'
 
+import { sansSerifRegular12 as LABEL_FONT } from '../Typography/styles'
 import {
   calculateAxis,
   groupBy,
@@ -21,6 +22,7 @@ import {
   getTextColor
 } from './utils'
 import ColorLegend from './ColorLegend'
+import { createTextGauger } from '../../lib/textGauger'
 
 import { getColorMapper } from './colorMaps'
 
@@ -123,6 +125,11 @@ const styles = {
     borderRadius: '4px'
   })
 }
+
+const labelGauger = createTextGauger(LABEL_FONT, {
+  dimension: 'width',
+  html: true
+})
 
 const BarChart = props => {
   const {
@@ -320,21 +327,39 @@ const BarChart = props => {
         d.valueTextStartAnchor =
           (d.value >= 0 && isLast) || (d.value < 0 && i !== 0)
         const isLastSegment = isLast && i !== 0
+
+        d.inlineLabel = [
+          inlineValue && xAxis.format(d.value),
+          inlineValueUnit && inlineValueUnit,
+          inlineLabel && d.datum[inlineLabel]
+        ].join(' ')
+        d.inlineLabelTextWidth = labelGauger(d.inlineLabelText)
+        const needsInlineTextShift = d.width <= d.inlineLabelTextWidth
+
         d.inlinePos =
           d.datum[inlineLabelPosition] ||
           (d.value >= 0
-            ? isLastSegment
+            ? isLastSegment && !needsInlineTextShift
               ? 'right'
               : 'left'
-            : isLastSegment
+            : isLastSegment && !needsInlineTextShift
             ? 'left'
             : 'right')
+
+        d.shiftInlineText = isLast && needsInlineTextShift
+
         if (d.inlinePos === 'right') {
           d.iTextAnchor = 'end'
           d.iXOffset = d.width - 5
+          if (d.shiftInlineText) {
+            d.iXOffset = -5
+          }
         } else if (d.inlinePos === 'left') {
           d.iTextAnchor = 'start'
           d.iXOffset = 5
+          if (d.shiftInlineText) {
+            d.iXOffset = d.width + 5
+          }
         } else {
           d.iTextAnchor = 'middle'
           d.iXOffset = d.width / 2
@@ -464,16 +489,15 @@ const BarChart = props => {
                             y={bar.style.inlineTop}
                             dy='1em'
                             fontSize={bar.style.fontSize}
-                            fill={getTextColor(segment.color)}
+                            {...colorScheme.set(
+                              'fill',
+                              segment.shiftInlineText
+                                ? 'text'
+                                : getTextColor(segment.color)
+                            )}
                             textAnchor={segment.iTextAnchor}
                           >
-                            {subsup.svg(
-                              [
-                                inlineValue && xAxis.format(segment.value),
-                                inlineValueUnit && inlineValueUnit,
-                                inlineLabel && segment.datum[inlineLabel]
-                              ].join(' ')
-                            )}
+                            {subsup.svg(segment.inlineLabel)}
                           </text>
                           {inlineSecondaryLabel && (
                             <text
@@ -482,7 +506,12 @@ const BarChart = props => {
                               y={bar.style.inlineTop + bar.style.fontSize + 5}
                               dy='1em'
                               fontSize={bar.style.secondaryFontSize}
-                              fill={getTextColor(segment.color)}
+                              {...colorScheme.set(
+                                'fill',
+                                segment.shiftInlineText
+                                  ? 'text'
+                                  : getTextColor(segment.color)
+                              )}
                               textAnchor={segment.iTextAnchor}
                             >
                               {subsup.svg(segment.datum[inlineSecondaryLabel])}
