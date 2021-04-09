@@ -104,6 +104,6 @@ type subscriptions {
   ): Repo! @deprecated(reason: "use \`repoChange\` subscrption instead")
   repoChange(
     repoId: ID!
-  ): RepoUpdate!
+  ): RepoChange!
 }
 `
