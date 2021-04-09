@@ -48,9 +48,18 @@ module.exports = async (
 
     await tx.transactionCommit()
 
+    // @TODO: Safe to remove, once repoChange is adopted
     await pubsub.publish('repoUpdate', {
       repoUpdate: {
         id: repoId,
+      },
+    })
+
+    await pubsub.publish('repoChange', {
+      repoChange: {
+        repoId,
+        mutation: 'CREATED',
+        milestone,
       },
     })
 

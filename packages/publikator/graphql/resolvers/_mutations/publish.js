@@ -421,6 +421,7 @@ module.exports = async (
     })
   }
 
+  // @TODO: Safe to remove, once repoChange is adopted
   await pubsub.publish('repoUpdate', {
     repoUpdate: {
       id: repoId,
@@ -444,6 +445,14 @@ module.exports = async (
   const publication = (
     await loaders.Milestone.Publication.byRepoId.load(repoId)
   ).find((p) => p.name === versionName)
+
+  await pubsub.publish('repoChange', {
+    repoChange: {
+      repoId,
+      mutation: 'CREATED',
+      milestone: publication,
+    },
+  })
 
   return {
     unresolvedRepoIds,
