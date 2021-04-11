@@ -53,17 +53,16 @@ export const getRepoHistory = gql`
 `
 
 const treeRepoSubscription = gql`
-  subscription onRepoUpdate($repoId: ID!) {
-    repoUpdate(repoId: $repoId) {
-      id
-      isArchived
-      isTemplate
-      commits(first: 1) {
-        nodes {
-          ...SimpleCommit
-        }
+  subscription onRepoChange($repoId: ID!) {
+    repoChange(repoId: $repoId) {
+      mutation
+      repo {
+        isArchived
       }
-      milestones {
+      commit {
+        ...SimpleCommit
+      }
+      milestone {
         ...SimpleMilestone
       }
     }
@@ -108,36 +107,37 @@ class EditorPage extends Component {
           if (!subscriptionData.data) {
             return prev
           }
-          const newLatestCommit = path(
-            ['commits', 'nodes', 0],
-            subscriptionData.data.repoUpdate
-          )
-          const currentLatestCommit = path(
-            ['repo', 'commits', 'nodes', 0],
-            prev
-          )
 
-          const { milestones } = subscriptionData.data.repoUpdate
-          if (newLatestCommit !== currentLatestCommit) {
-            const nextNodes = [
-              newLatestCommit,
-              ...prev.repo.commits.nodes
-            ].filter((value, index, self) => {
-              return self.findIndex(v => v.id === value.id) === index
-            })
-            return {
-              ...prev,
-              repo: {
-                ...prev.repo,
-                commits: {
-                  ...prev.repo.commits,
-                  nodes: nextNodes
-                },
-                milestones
-              }
+          const {
+            mutation,
+            repo,
+            commit,
+            milestone
+          } = subscriptionData.data.repoChange
+
+          const updatedRepo = { ...prev.repo, ...repo }
+          const updatedCommitNodes = [
+            commit,
+            ...prev.repo.commits.nodes
+          ].filter(Boolean)
+          const updatedMilestones = [milestone, ...prev.repo.milestones]
+            .filter(Boolean)
+            .filter(
+              m =>
+                (mutation === 'DELETED' && m.name !== milestone.name) ||
+                mutation !== 'DELETED'
+            )
+
+          return {
+            ...prev,
+            repo: {
+              ...updatedRepo,
+              commits: {
+                ...prev.repo.commits,
+                nodes: updatedCommitNodes
+              },
+              milestones: updatedMilestones
             }
-          } else {
-            return prev
           }
         }
       })

@@ -31,16 +31,18 @@ export const getCommits = gql`
 `
 
 export const repoSubscription = gql`
-  subscription onRepoUpdate($repoId: ID!) {
-    repoUpdate(repoId: $repoId) {
-      id
-      commits(first: 1) {
-        nodes {
-          ...SimpleCommit
-        }
+  subscription onRepoChange($repoId: ID!) {
+    repoChange(repoId: $repoId) {
+      mutation
+      repo {
+        ...EditPageRepo
+      }
+      commit {
+        ...SimpleCommit
       }
     }
   }
+  ${fragments.EditPageRepo}
   ${fragments.SimpleCommit}
 `
 
@@ -74,24 +76,24 @@ class EditSidebar extends Component {
           if (!subscriptionData.data) {
             return prev
           }
-          const { commits } = subscriptionData.data.repoUpdate
-          if (commits && commits.nodes.length) {
-            return {
-              ...prev,
-              repo: {
-                ...prev.repo,
-                commits: {
-                  ...prev.repo.commits,
-                  nodes: [...commits.nodes, ...prev.repo.commits.nodes].filter(
-                    ({ id }, i, all) =>
-                      // deduplicate by id
-                      i === all.findIndex(repo => repo.id === id)
-                  )
-                }
+
+          const { repo, commit } = subscriptionData.data.repoChange
+
+          const updatedRepo = { ...prev.repo, ...repo }
+          const updatedCommitNodes = [
+            commit,
+            ...prev.repo.commits.nodes
+          ].filter(Boolean)
+
+          return {
+            ...prev,
+            repo: {
+              ...updatedRepo,
+              commits: {
+                ...prev.repo.commits,
+                nodes: updatedCommitNodes
               }
             }
-          } else {
-            return prev
           }
         }
       })
