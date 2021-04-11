@@ -447,7 +447,7 @@ const Index = ({ userId }) => {
                       href={`${REPUBLIK_FRONTEND_URL}/angebote?package=PROLONG&token=${accessToken}`}
                       target="_blank"
                     >
-                      Verlängerns-Link ohne anmelden
+                      Verlängerungs-Link ohne Anmelden
                     </A>
                     <br />
                     <Label>In einem neuen, privaten Fenster öffnen.</Label>
