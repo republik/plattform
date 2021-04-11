@@ -133,10 +133,8 @@ export default class UpdatePayment extends Component {
                           />}
                           <Button
                             primary
-                            disabled={!reason}
-                            onClick={this.submitHandler(
-                              updatePayment
-                            )}
+                            disabled={payment.status === 'WAITING' && !reason}
+                            onClick={this.submitHandler(updatePayment)}
                           >
                             {payment.status === 'WAITING_FOR_REFUND' && 'Auf REFUNDED setzen.'}
                             {payment.status === 'WAITING' && 'Auf PAID setzen.'}
