@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Fragment } from 'react'
 import { css } from 'glamor'
 import { Map, Set } from 'immutable'
 import { nest } from 'd3-collection'
@@ -260,7 +260,7 @@ const MetaData = ({
         <br />
         <br />
         {SOCIAL_MEDIA.map(socialMedium => (
-          <>
+          <Fragment key={socialMedium}>
             <ShareImageForm
               key={socialMedium}
               socialKey={socialMedium}
@@ -271,7 +271,7 @@ const MetaData = ({
             <br />
             <br />
             <br />
-          </>
+          </Fragment>
         ))}
         <AudioForm editor={editor} node={node} onInputChange={onInputChange} />
         <br />
