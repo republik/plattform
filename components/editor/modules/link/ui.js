@@ -20,7 +20,7 @@ import { createInlineButton, matchInline, buttonStyles } from '../../utils'
 
 const getUsers = gql`
   query getUsers($search: String!) {
-    users(search: $search) {
+    users(search: $search, hasPublicProfile: true) {
       firstName
       lastName
       email

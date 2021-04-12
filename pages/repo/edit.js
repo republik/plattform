@@ -827,7 +827,9 @@ export class EditorPage extends Component {
           currentCommitId={commitId}
         />
       ),
-      !showLoading && repo && repo.isArchived && <RepoArchivedBanner />
+      !showLoading && repo && repo.isArchived && (
+        <RepoArchivedBanner key='repo-archived-banner' />
+      )
     ].filter(Boolean)
     const sidebarDisabled = !!(showLoading || error)
     return (
