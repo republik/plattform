@@ -170,7 +170,8 @@ export class EditorPage extends Component {
       }
       this.setState({
         didUnlock: false,
-        acknowledgedUsers: []
+        acknowledgedUsers: [],
+        previewScreenSize: null
       })
       this.store.clear()
       this.loadState(this.props)
