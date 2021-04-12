@@ -1,6 +1,6 @@
 `<ShareImagePreview />` renders an in-browser preview of the share image. Say hello to dynamically generated images for social media. 
 
-Supported props:
+Current props are supported:
 
 - `text`
 - `fontSize`
