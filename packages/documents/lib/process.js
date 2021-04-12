@@ -14,18 +14,18 @@ const { DOCUMENTS_RESTRICT_TO_ROLES } = process.env
 const processRepoImageUrlsInContent = async (mdast, fn) => {
   const fns = []
 
-  visit(mdast, 'image', (node) =>
+  visit(mdast, 'image', (node) => {
     fns.push(async () => {
       node.url = await fn(node.url)
-    }),
-  )
-  visit(mdast, 'zone', (node) =>
-    fns.push(async () => {
-      if (node.data?.formatLogo) {
+    })
+  })
+  visit(mdast, 'zone', (node) => {
+    if (node.data?.formatLogo) {
+      fns.push(async () => {
         node.data.formatLogo = await fn(node.data.formatLogo)
-      }
-    }),
-  )
+      })
+    }
+  })
 
   return Promise.all(fns.map((fn) => fn()))
 }
