@@ -3,10 +3,7 @@ import { css } from 'glamor'
 import {
   plainButtonRule,
   fontStyles,
-  useColorContext,
-  Checkbox,
-  Interaction,
-  colors
+  useColorContext
 } from '@project-r/styleguide'
 
 import MdPhoneIphone from 'react-icons/lib/md/phone-iphone'
@@ -29,13 +26,22 @@ const styles = {
     justifyContent: 'center',
     alignItems: 'center'
   }),
+  containerInline: css({
+    display: 'flex',
+    justifyContent: 'center'
+  }),
+  inconContainerInline: css({
+    flex: 'none',
+    padding: '4px 4px',
+    margin: '0 8px',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center'
+  }),
   label: css({
     ...fontStyles.sansSerifRegular12,
     marginTop: 4
-  }),
-  divider: css({
-    borderBottom: `1px solid ${colors.divider}`,
-    margin: '16px 0'
   })
 }
 
@@ -62,17 +68,12 @@ const screenSizes = [
   }
 ]
 
-const ScreenSizePicker = ({
-  onSelect,
-  selectedScreenSize,
-  onDarkmodeToggle,
-  previewDarkmode
-}) => {
+const ScreenSizePicker = ({ onSelect, selectedScreenSize, inline }) => {
   const [colorScheme] = useColorContext()
+
   return (
     <>
-      <Interaction.P style={{ marginBottom: 16 }}>Vorschau</Interaction.P>
-      <div {...styles.container}>
+      <div {...(inline ? styles.containerInline : styles.container)}>
         {screenSizes.map(size => {
           const isSelected = selectedScreenSize === size.name
           return (
@@ -80,39 +81,28 @@ const ScreenSizePicker = ({
               key={size.name}
               {...colorScheme.set(
                 'backgroundColor',
-                isSelected ? 'text' : 'default'
+                isSelected ? 'text' : 'none'
               )}
-              {...styles.iconContainer}
+              {...(inline ? styles.inconContainerInline : styles.iconContainer)}
               {...plainButtonRule}
               onClick={() => onSelect(size.name)}
             >
               <size.Icon
                 {...colorScheme.set('fill', isSelected ? 'default' : 'text')}
-                size={24}
+                size={inline ? 18 : 24}
               />
-              <span
-                {...colorScheme.set('color', isSelected ? 'default' : 'text')}
-                {...styles.label}
-              >
-                {size.label}
-              </span>
+              {!inline ? (
+                <span
+                  {...colorScheme.set('color', isSelected ? 'default' : 'text')}
+                  {...styles.label}
+                >
+                  {size.label}
+                </span>
+              ) : null}
             </button>
           )
         })}
       </div>
-      <div {...styles.divider} />
-      {selectedScreenSize ? (
-        <>
-          <Interaction.P style={{ marginBottom: 16 }}>Nachtmodus</Interaction.P>
-          <Checkbox
-            black
-            checked={previewDarkmode}
-            onChange={() => onDarkmodeToggle()}
-          >
-            Ein
-          </Checkbox>
-        </>
-      ) : null}
     </>
   )
 }
