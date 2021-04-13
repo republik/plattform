@@ -50,6 +50,14 @@ async function archiveRepo(repoId, unpublish, context) {
     await updateCurrentPhase(repoId, tx)
 
     await tx.transactionCommit()
+
+    await pubsub.publish('repoChange', {
+      repoChange: {
+        repoId,
+        mutation: 'UPDATED',
+        repo: await pgdb.publikator.repos.findOne({ id: repoId }),
+      },
+    })
   } catch (e) {
     await tx.transactionRollback()
 
@@ -58,6 +66,7 @@ async function archiveRepo(repoId, unpublish, context) {
     throw e
   }
 
+  // @TODO: Safe to remove, once repoChange is adopted
   await pubsub.publish('repoUpdate', {
     repoUpdate: {
       id: repoId,
