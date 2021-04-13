@@ -144,7 +144,8 @@ const styles = {
     width: '500px',
     padding: '16px 24px 100px 24px',
     backgroundColor: 'white',
-    overflow: 'scroll'
+    overflow: 'scroll',
+    overscrollBehavior: 'contain'
   }),
   column: css({
     padding: '1em'
