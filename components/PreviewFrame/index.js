@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react'
-import { useColorContext } from '@project-r/styleguide'
+import { useColorContext, Loader } from '@project-r/styleguide'
 import { PUBLIC_BASE_URL } from '../../lib/settings'
 
 import { SIDEBAR_WIDTH } from '../Sidebar'
@@ -35,6 +35,7 @@ const PreviewFrame = ({
 }) => {
   const [scaleFactor, setScaleFactor] = useState(1)
   const [leftSpace, setLeftSpace] = useState(0)
+  const [iframeLoading, setIframeLoading] = useState(true)
   const [colorScheme] = useColorContext()
   const iframeRef = useRef()
 
@@ -71,18 +72,37 @@ const PreviewFrame = ({
     }
   }, [previewScreenSize, sideBarWidthConstant])
 
+  useEffect(() => {
+    setIframeLoading(true)
+  }, [darkmode])
+
+  const iframeStyle = {
+    ...screenSizes[previewScreenSize],
+    minWidth: 'unset',
+    transform: `scale(${scaleFactor})`,
+    transformOrigin: `0 0`,
+    border: 'none',
+    resize: 'both',
+    margin: PREVIEW_MARGIN,
+    marginLeft: PREVIEW_MARGIN + leftSpace
+  }
   return (
     <>
+      <div
+        style={{
+          ...iframeStyle,
+          display: iframeLoading ? 'block' : 'none'
+        }}
+        {...colorScheme.set('backgroundColor', 'default')}
+      >
+        <Loader loading={iframeLoading} />
+      </div>
       <iframe
         ref={iframeRef}
+        onLoad={() => setIframeLoading(false)}
         style={{
-          ...screenSizes[previewScreenSize],
-          transform: `scale(${scaleFactor})`,
-          transformOrigin: `0 0`,
-          border: 'none',
-          resize: 'both',
-          margin: PREVIEW_MARGIN,
-          marginLeft: PREVIEW_MARGIN + leftSpace
+          ...iframeStyle,
+          display: !iframeLoading ? 'block' : 'none'
         }}
         {...colorScheme.set('backgroundColor', 'default')}
         src={URL}
