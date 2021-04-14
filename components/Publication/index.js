@@ -5,43 +5,14 @@ import withT from '../../lib/withT'
 import { Loader, ColorContextProvider } from '@project-r/styleguide'
 import { css } from 'glamor'
 
-import { getRepoWithPublications } from './Current'
 import DarkmodeToggle from './DarkmodeToggle'
 import PublicationForm from './PublicationForm'
 
 import PreviewFrame from '../PreviewFrame'
 import RepoArchivedBanner from '../Repo/ArchivedBanner'
-import { getRepoHistory, COMMIT_LIMIT } from '../../pages/repo/tree'
 import ScreeenSizePicker from '../ScreenSizePicker'
 
 const PUBLICATION_COLUMN_WIDTH = 500
-
-const publishMutation = gql`
-  mutation publish(
-    $repoId: ID!
-    $commitId: ID!
-    $prepublication: Boolean!
-    $scheduledAt: DateTime
-    $updateMailchimp: Boolean!
-    $ignoreUnresolvedRepoIds: Boolean
-    $notifySubscribers: Boolean
-  ) {
-    publish(
-      repoId: $repoId
-      commitId: $commitId
-      prepublication: $prepublication
-      scheduledAt: $scheduledAt
-      updateMailchimp: $updateMailchimp
-      ignoreUnresolvedRepoIds: $ignoreUnresolvedRepoIds
-      notifySubscribers: $notifySubscribers
-    ) {
-      unresolvedRepoIds
-      publication {
-        name
-      }
-    }
-  }
-`
 
 export const getRepoWithCommit = gql`
   query repoWithCommit($repoId: ID!, $commitId: ID!) {
@@ -160,7 +131,7 @@ const styles = {
   })
 }
 
-const PublishForm = ({ t, data, publish }) => {
+const PublishForm = ({ t, data }) => {
   const { loading, error, repo } = data
   const [previewScreenSize, setPreviewScreenSize] = useState('phone')
   const [previewDarkmode, setPreviewDarkmode] = useState(false)
@@ -180,12 +151,7 @@ const PublishForm = ({ t, data, publish }) => {
           return (
             <>
               <div {...styles.formContainer}>
-                <PublicationForm
-                  t={t}
-                  repo={repo}
-                  commit={commit}
-                  publish={publish}
-                />
+                <PublicationForm t={t} repo={repo} commit={commit} />
               </div>
               <ColorContextProvider
                 colorSchemeKey={previewDarkmode ? 'dark' : 'light'}
@@ -225,30 +191,4 @@ const PublishForm = ({ t, data, publish }) => {
   )
 }
 
-export default compose(
-  withT,
-  graphql(publishMutation, {
-    props: ({ mutate, ownProps }) => ({
-      publish: variables =>
-        mutate({
-          variables,
-          refetchQueries: [
-            {
-              query: getRepoHistory,
-              variables: {
-                repoId: ownProps.repoId,
-                first: COMMIT_LIMIT
-              }
-            },
-            {
-              query: getRepoWithPublications,
-              variables: {
-                repoId: ownProps.repoId
-              }
-            }
-          ]
-        })
-    })
-  }),
-  graphql(getRepoWithCommit)
-)(PublishForm)
+export default compose(withT, graphql(getRepoWithCommit))(PublishForm)

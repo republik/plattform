@@ -1,7 +1,11 @@
 import React, { Fragment, useState } from 'react'
+import { graphql, compose } from 'react-apollo'
 import { css } from 'glamor'
+import gql from 'graphql-tag'
 
 import ErrorMessage from '../ErrorMessage'
+import { getRepoWithPublications } from './Current'
+import { getRepoHistory, COMMIT_LIMIT } from '../../pages/repo/tree'
 
 import { GITHUB_ORG, FRONTEND_BASE_URL } from '../../lib/settings'
 import { Link, Router } from '../../lib/routes'
@@ -23,6 +27,33 @@ import {
 import MaskedInput from 'react-maskedinput'
 import { getSchema } from '../Templates'
 import useValidation from './useValidation'
+
+const publishMutation = gql`
+  mutation publish(
+    $repoId: ID!
+    $commitId: ID!
+    $prepublication: Boolean!
+    $scheduledAt: DateTime
+    $updateMailchimp: Boolean!
+    $ignoreUnresolvedRepoIds: Boolean
+    $notifySubscribers: Boolean
+  ) {
+    publish(
+      repoId: $repoId
+      commitId: $commitId
+      prepublication: $prepublication
+      scheduledAt: $scheduledAt
+      updateMailchimp: $updateMailchimp
+      ignoreUnresolvedRepoIds: $ignoreUnresolvedRepoIds
+      notifySubscribers: $notifySubscribers
+    ) {
+      unresolvedRepoIds
+      publication {
+        name
+      }
+    }
+  }
+`
 
 const styles = {
   mask: css({
@@ -426,4 +457,28 @@ const Form = ({
   )
 }
 
-export default Form
+export default compose(
+  graphql(publishMutation, {
+    props: ({ mutate, ownProps }) => ({
+      publish: variables =>
+        mutate({
+          variables,
+          refetchQueries: [
+            {
+              query: getRepoHistory,
+              variables: {
+                repoId: ownProps.repoId,
+                first: COMMIT_LIMIT
+              }
+            },
+            {
+              query: getRepoWithPublications,
+              variables: {
+                repoId: ownProps.repoId
+              }
+            }
+          ]
+        })
+    })
+  })
+)(Form)
