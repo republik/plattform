@@ -80,6 +80,29 @@ const styles = {
   })
 }
 
+const ReplyIconButton = ({ userWaitUntil, clock, onReply, colorScheme, t }) => {
+  const now = useCurrentMinute()
+  let replyBlockedMessage
+  const waitUntilDate = userWaitUntil && new Date(userWaitUntil)
+  if (waitUntilDate && waitUntilDate > now) {
+    replyBlockedMessage = t('styleguide/CommentComposer/wait', {
+      time: formatTimeRelative(waitUntilDate, { ...clock, now })
+    })
+  }
+
+  return (
+    <IconButton
+      disabled={!!replyBlockedMessage}
+      onClick={onReply}
+      title={replyBlockedMessage || t('styleguide/CommentActions/answer')}
+    >
+      <ReplyIcon
+        {...colorScheme.set('fill', replyBlockedMessage ? 'disabled' : 'text')}
+      />
+    </IconButton>
+  )
+}
+
 export const Actions = ({
   t,
   comment,
@@ -138,16 +161,6 @@ export const Actions = ({
     }
   })()
 
-  const now = useCurrentMinute()
-  const replyBlockedMessage = (() => {
-    const waitUntilDate = userWaitUntil && new Date(userWaitUntil)
-    if (waitUntilDate && waitUntilDate > now) {
-      return t('styleguide/CommentComposer/wait', {
-        time: formatTimeRelative(waitUntilDate, { ...clock, now })
-      })
-    }
-  })()
-
   const handleReport = () => {
     if (window.confirm(t('styleguide/CommentActions/reportMessage'))) {
       onReport()
@@ -168,18 +181,13 @@ export const Actions = ({
         </IconButton>
       )}
       {onReply && !!displayAuthor && (
-        <IconButton
-          disabled={!!replyBlockedMessage}
-          onClick={onReply}
-          title={replyBlockedMessage || t('styleguide/CommentActions/answer')}
-        >
-          <ReplyIcon
-            {...colorScheme.set(
-              'fill',
-              replyBlockedMessage ? 'disabled' : 'text'
-            )}
-          />
-        </IconButton>
+        <ReplyIconButton
+          onReply={onReply}
+          colorScheme={colorScheme}
+          t={t}
+          userWaitUntil={userWaitUntil}
+          clock={clock}
+        />
       )}
       {userCanEdit && onEdit && (
         <IconButton

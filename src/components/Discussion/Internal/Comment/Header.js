@@ -10,14 +10,14 @@ import { onlyS } from '../../../../theme/mediaQueries'
 
 import { ellipsize, underline } from '../../../../lib/styleMixins'
 import { timeFormat } from '../../../../lib/timeFormat'
-import { useCurrentMinute } from '../../../../lib/useCurrentMinute'
-
-import { DiscussionContext, formatTimeRelative } from '../../DiscussionContext'
+import { DiscussionContext } from '../../DiscussionContext'
 import * as config from '../../config'
 import { convertStyleToRem, pxToRem } from '../../../Typography/utils'
 import CalloutMenu from '../../../Callout/CalloutMenu'
 import { useColorContext } from '../../../Colors/useColorContext'
 import IconButton from '../../../IconButton'
+
+import RelativeTime from './RelativeTime'
 
 export const profilePictureSize = 40
 export const profilePictureMargin = 10
@@ -162,7 +162,6 @@ const MoreIconWithProps = props => (
 
 export const Header = ({ t, comment, menu, isExpanded, onToggle }) => {
   const { clock, discussion, Link } = React.useContext(DiscussionContext)
-  const now = useCurrentMinute()
 
   const [colorScheme] = useColorContext()
   const {
@@ -276,12 +275,8 @@ export const Header = ({ t, comment, menu, isExpanded, onToggle }) => {
             title={titleDate(createdAt)}
           >
             <Link discussion={discussion} comment={comment} passHref>
-              <a {...styles.linkUnderline} suppressHydrationWarning>
-                {formatTimeRelative(new Date(createdAt), {
-                  ...clock,
-                  now,
-                  direction: 'past'
-                })}
+              <a {...styles.linkUnderline}>
+                <RelativeTime {...clock} date={createdAt} />
               </a>
             </Link>
           </div>

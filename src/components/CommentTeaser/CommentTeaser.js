@@ -15,6 +15,7 @@ import {
   CommentBodyFeaturedText
 } from '../CommentBody/web'
 import { IconLink, Context, Header } from '../Discussion/Internal/Comment'
+import RelativeTime from '../Discussion/Internal/Comment/RelativeTime'
 import RawHtml from '../RawHtml/'
 import { useColorContext } from '../Colors/ColorContext'
 import {
@@ -266,12 +267,8 @@ export const CommentTeaser = ({
           {!displayAuthor && (
             <div {...styles.timeago} {...colorScheme.set('color', 'textSoft')}>
               <Link comment={comment} discussion={discussion} passHref>
-                <a {...styles.linkUnderline} suppressHydrationWarning>
-                  {formatTimeRelative(new Date(createdAt), {
-                    ...clock,
-                    now,
-                    direction: 'past'
-                  })}
+                <a {...styles.linkUnderline}>
+                  <RelativeTime {...clock} date={createdAt} />
                 </a>
               </Link>
             </div>

@@ -241,6 +241,25 @@ The buttons / icons below the comment. The reply button is disabled if the discu
 </DiscussionContext.Provider>
 ```
 
+
+```react|noSource,span-2
+<DiscussionContext.Provider
+  value={createSampleDiscussionContextValue({ 
+    t,
+    userWaitUntil: '2050-01-01'
+  })}
+>
+  <Comment.Actions
+    t={t}
+    comment={comments.withAdminActions}
+    onUnpublish={() => {}}
+    onReport={() => {}}
+    onReply={() => {}}
+    onEdit={() => {}}
+  />
+</DiscussionContext.Provider>
+```
+
 ```react|noSource,span-2
 <Comment.Actions
   t={t}

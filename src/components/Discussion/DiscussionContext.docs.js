@@ -8,7 +8,8 @@ import React from 'react'
 export const createSampleDiscussionContextValue = ({
   t,
   isAdmin = false,
-  actions = {}
+  actions = {},
+  userWaitUntil = null
 }) => ({
   /**
    * Admin users have elevated priviledges, they can for example unpublish
@@ -42,7 +43,7 @@ export const createSampleDiscussionContextValue = ({
      * ISO 8601 string. If set then the user must wait until that time before
      * they can write another comment.
      */
-    userWaitUntil: null,
+    userWaitUntil,
 
     rules: {
       maxLength: null

@@ -1,5 +1,5 @@
 {
-  "updated": "2020-12-02T09:44:47.421Z",
+  "updated": "2021-04-14T20:45:47.534Z",
   "title": "live",
   "data": [
     {
@@ -25,6 +25,10 @@
     {
       "key": "styleguide/CommentComposer/etiquette",
       "value": "Etikette"
+    },
+    {
+      "key": "styleguide/CommentComposer/wait",
+      "value": "Sie können {time} wieder einen Beitrag schreiben."
     },
     {
       "key": "styleguide/CommentActions/expand",
@@ -141,7 +145,7 @@
     },
     {
       "key": "styleguide/comment/header/unpublishedByUser",
-      "value": "(von User zurückgezogen)"
+      "value": "(durch User zurückgezogen)"
     },
     {
       "key": "styleguide/comment/header/unpublishedByAdmin",
