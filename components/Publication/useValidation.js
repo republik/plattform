@@ -78,13 +78,12 @@ const useValidation = ({ meta, content, t, updateMailchimp }) => {
       t('publish/validation/emailSubject/empty')
   ].filter(Boolean)
 
-  const socialWarnings = SOCIAL_MEDIA.map(socialKey =>
-    meta[`${socialKey}Generated`]
-      ? !meta[`${socialKey}Text`] &&
-        t(`publish/validation/${socialKey}Text/empty`)
-      : !meta[`${socialKey}Image`] &&
-        !meta.image &&
-        t(`publish/validation/${socialKey}Image/empty`)
+  const socialWarnings = SOCIAL_MEDIA.map(
+    socialKey =>
+      !meta.shareText &&
+      !meta[`${socialKey}Image`] &&
+      !meta.image &&
+      t(`publish/validation/${socialKey}Image/empty`)
   )
 
   const warnings = []

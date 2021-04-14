@@ -3,13 +3,7 @@ import { css } from 'glamor'
 import { Map, Set } from 'immutable'
 import { nest } from 'd3-collection'
 
-import {
-  Interaction,
-  Checkbox,
-  Label,
-  colors,
-  ColorContextProvider
-} from '@project-r/styleguide'
+import { Interaction, Checkbox, Label, colors } from '@project-r/styleguide'
 
 import withT from '../../../../lib/withT'
 import slugify from '../../../../lib/utils/slug'
@@ -259,20 +253,14 @@ const MetaData = ({
         <br />
         <br />
         <br />
-        {SOCIAL_MEDIA.map(socialMedium => (
-          <Fragment key={socialMedium}>
-            <ShareImageForm
-              key={socialMedium}
-              socialKey={socialMedium}
-              data={node.data}
-              onInputChange={onInputChange}
-              format={titleData?.format?.meta}
-            />
-            <br />
-            <br />
-            <br />
-          </Fragment>
-        ))}
+        <ShareImageForm
+          data={node.data}
+          onInputChange={onInputChange}
+          format={titleData?.format?.meta}
+        />
+        <br />
+        <br />
+        <br />
         <AudioForm editor={editor} node={node} onInputChange={onInputChange} />
         <br />
         <br />

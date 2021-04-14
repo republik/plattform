@@ -1,5 +1,5 @@
 {
-  "updated": "2021-03-26T14:22:43.394Z",
+  "updated": "2021-04-14T14:47:27.587Z",
   "title": "live",
   "data": [
     {
@@ -1115,16 +1115,8 @@
       "value": "Bild für Facebook fehlt"
     },
     {
-      "key": "publish/validation/facebookText/empty",
-      "value": "Text für Facebook Sharetafel fehlt"
-    },
-    {
       "key": "publish/validation/twitterImage/empty",
       "value": "Bild für Twitter fehlt"
-    },
-    {
-      "key": "publish/validation/twitterText/empty",
-      "value": "Text für Twitter Sharetafel fehlt"
     },
     {
       "key": "publish/error/unresolvedRepoIds",
