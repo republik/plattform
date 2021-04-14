@@ -127,18 +127,19 @@ const TEST = process.env.NODE_ENV === 'test'
 const formatTime = timeFormat('%H:%M')
 const addWarning = message => {
   const time = formatTime(new Date())
-  const timedMessage = `${time} ${message}`
-  return state => ({
-    showSidebar: true,
-    warnings: [timedMessage, ...state.warnings].filter(
-      // de-dup
-      (message, i, all) => all.indexOf(message) === i
-    )
-  })
+  return state => {
+    return {
+      showSidebar: true,
+      warnings: [{ time, message }, ...state.warnings].filter(
+        // de-dup
+        ({ message }, i, all) => all.findIndex(w => w.message === message) === i
+      )
+    }
+  }
 }
 
 const rmWarning = message => state => ({
-  warnings: state.warnings.filter(warning => warning !== message)
+  warnings: state.warnings.filter(warning => warning.message !== message)
 })
 
 const SIDEBAR_ICON_SIZE = 30
@@ -303,7 +304,7 @@ export class EditorPage extends Component {
         this.setState(rmWarning(warning))
       })
       .catch(error => {
-        console.error(error)
+        console.error(warning, error)
         this.setState(addWarning(warning))
       })
   }
@@ -814,12 +815,12 @@ export class EditorPage extends Component {
     const dark = editorState && editorState.document.data.get(DARK_MODE_KEY)
 
     const sidebarPrependChildren = [
-      ...warnings.filter(Boolean).map((m, i) => (
+      ...warnings.filter(Boolean).map(({ time, message }, i) => (
         <Warning
           key={`warning-${i}`}
-          message={m}
+          message={`${time} ${message}`}
           onRemove={() => {
-            this.setState(rmWarning(m))
+            this.setState(rmWarning(message))
           }}
         />
       )),
@@ -830,7 +831,9 @@ export class EditorPage extends Component {
           currentCommitId={commitId}
         />
       ),
-      !showLoading && repo && repo.isArchived && <RepoArchivedBanner />
+      !showLoading && repo && repo.isArchived && (
+        <RepoArchivedBanner key='repo-archived-banner' />
+      )
     ].filter(Boolean)
     const sidebarDisabled = !!(showLoading || error)
     return (
