@@ -6,7 +6,6 @@ import React, { Fragment, useState } from 'react'
 import ReactDOM from 'react-dom'
 import { Catalog, ReactSpecimen } from '@catalog/core'
 import { simulations, speedy, css, merge } from 'glamor'
-import { Map } from 'immutable'
 import theme from './catalogTheme'
 import './global.css'
 import './catalogTheme.css'
@@ -108,8 +107,17 @@ const Styleguide = () => {
                 src: require('./README.md')
               },
               {
-                title: 'Base',
+                title: 'Brand',
                 pages: [
+                  {
+                    path: '/logo',
+                    title: 'Logo',
+                    imports: {
+                      Logo: require('./components/Logo'),
+                      BrandMark: require('./components/Logo/BrandMark')
+                    },
+                    src: require('./components/Logo/docs.md')
+                  },
                   {
                     path: '/typography',
                     title: 'Typography',
@@ -125,6 +133,17 @@ const Styleguide = () => {
                     path: '/colors',
                     title: 'Colors',
                     component: require('./theme/colors.docs.js')
+                  },
+                  {
+                    path: '/share-image',
+                    title: 'Share Image',
+                    src: require('./components/ShareImage/docs.md'),
+                    imports: {
+                      ...require('./components/Typography'),
+                      ShareImageGenerator: require('./components/ShareImage'),
+                      ShareImagePreview: require('./components/ShareImage/ShareImagePreview'),
+                      SharePreviewTwitter: require('./components/ShareImage/SharePreviewTwitter')
+                    }
                   }
                 ]
               },
@@ -886,32 +905,6 @@ const Styleguide = () => {
                       t
                     },
                     src: require('./components/Chart/Hemicycle.docs.md')
-                  }
-                ]
-              },
-              {
-                title: 'Brand',
-                pages: [
-                  {
-                    path: '/logo',
-                    title: 'Logo',
-                    imports: {
-                      Logo: require('./components/Logo'),
-                      BrandMark: require('./components/Logo/BrandMark')
-                    },
-                    src: require('./components/Logo/docs.md')
-                  },
-                  {
-                    path: '/dev/shareImageGenerator',
-                    title: 'Share Image',
-                    src: require('./components/ShareImage/docs.md'),
-                    imports: {
-                      ...require('./components/Typography'),
-                      ShareImageGenerator: require('./components/ShareImage'),
-                      ShareImagePreview: require('./components/ShareImage/ShareImagePreview'),
-                      SharePreviewTwitter: require('./components/ShareImage/SharePreviewTwitter'),
-                      Map
-                    }
                   }
                 ]
               },
