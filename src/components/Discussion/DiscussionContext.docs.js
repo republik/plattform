@@ -96,7 +96,6 @@ export const createSampleDiscussionContextValue = ({
    * The current time, isDesktop and a translate function for timeahead, timeago and timeduration.
    */
   clock: {
-    now: Date.now(),
     isDesktop: true,
     t
   },

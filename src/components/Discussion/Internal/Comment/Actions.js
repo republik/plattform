@@ -14,6 +14,7 @@ import { sansSerifMedium14 } from '../../../Typography/styles'
 import { DiscussionContext, formatTimeRelative } from '../../DiscussionContext'
 import { timeFormat } from '../../../../lib/timeFormat'
 import { useColorContext } from '../../../Colors/useColorContext'
+import useCurrentMinute from '../../../../lib/useCurrentMinute'
 
 const dateFormat = timeFormat('%d.%m.%Y')
 const hmFormat = timeFormat('%H:%M')
@@ -137,11 +138,12 @@ export const Actions = ({
     }
   })()
 
+  const now = useCurrentMinute()
   const replyBlockedMessage = (() => {
     const waitUntilDate = userWaitUntil && new Date(userWaitUntil)
-    if (waitUntilDate && waitUntilDate > clock.now) {
+    if (waitUntilDate && waitUntilDate > now) {
       return t('styleguide/CommentComposer/wait', {
-        time: formatTimeRelative(waitUntilDate, clock)
+        time: formatTimeRelative(waitUntilDate, { ...clock, now })
       })
     }
   })()

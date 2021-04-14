@@ -10,6 +10,7 @@ import { onlyS } from '../../../../theme/mediaQueries'
 
 import { ellipsize, underline } from '../../../../lib/styleMixins'
 import { timeFormat } from '../../../../lib/timeFormat'
+import useCurrentMinute from '../../../../lib/useCurrentMinute'
 
 import { DiscussionContext, formatTimeRelative } from '../../DiscussionContext'
 import * as config from '../../config'
@@ -161,6 +162,8 @@ const MoreIconWithProps = props => (
 
 export const Header = ({ t, comment, menu, isExpanded, onToggle }) => {
   const { clock, discussion, Link } = React.useContext(DiscussionContext)
+  const now = useCurrentMinute()
+
   const [colorScheme] = useColorContext()
   const {
     displayAuthor,
@@ -276,6 +279,7 @@ export const Header = ({ t, comment, menu, isExpanded, onToggle }) => {
               <a {...styles.linkUnderline} suppressHydrationWarning>
                 {formatTimeRelative(new Date(createdAt), {
                   ...clock,
+                  now,
                   direction: 'past'
                 })}
               </a>
