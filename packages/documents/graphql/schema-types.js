@@ -50,23 +50,13 @@ type Meta {
   facebookTitle: String
   facebookImage: String
   facebookDescription: String
-  facebookGenerated: Boolean
-  facebookText: String
-  facebookFontSize: Int
-  facebookFontStyle: String
-  facebookColoredBackground: Boolean
-  facebookIlluBackground: Boolean
-  facebookTextPosition: String
   twitterTitle: String
   twitterImage: String
   twitterDescription: String
-  twitterGenerated: Boolean
-  twitterText: String
-  twitterFontSize: Int
-  twitterFontStyle: String
-  twitterColoredBackground: Boolean
-  twitterIlluBackground: Boolean
-  twitterTextPosition: String
+  shareText: String
+  shareFontSize: Int
+  shareInverted: Boolean
+  shareTextPosition: String
   prepublication: Boolean
   publishDate: DateTime
   lastPublishedAt: DateTime
@@ -78,8 +68,8 @@ type Meta {
   section: Document
   format: Document
   dossier: Document
-  shareImage: String
-  shareImageColor: String
+  shareBackgroundImage: String
+  shareBackgroundImageInverted: String
 
   credits: JSON
   audioSource: AudioSource
