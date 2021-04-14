@@ -97,7 +97,7 @@ const ShareImagePreview = ({
       style={{
         backgroundImage: shareImage && `url(${shareImage})`,
         backgroundSize: 'cover',
-        backgroundColor: inverted ? format?.color : '#FFF',
+        backgroundColor: inverted ? formatColor : '#FFF',
         justifyContent:
           (shareImage &&
             shareImageJustify[
