@@ -17,7 +17,7 @@ import {
   Checkbox,
   A,
   HR,
-  colors
+  useColorContext
 } from '@project-r/styleguide'
 
 import MaskedInput from 'react-maskedinput'
@@ -81,7 +81,7 @@ const Form = ({
     t,
     updateMailchimp
   })
-
+  const [colorScheme] = useColorContext()
   const hasErrors = errors.length > 0
 
   const scheduledAtDate = scheduledAtParser(scheduledAt)
@@ -141,7 +141,10 @@ const Form = ({
 
       {hasErrors && (
         <>
-          <div style={{ backgroundColor: colors.error, padding: 8 }}>
+          <div
+            {...colorScheme.set('backgroundColor', 'error')}
+            style={{ padding: 8 }}
+          >
             <Label style={{ color: 'white' }}>
               {t('publish/validation/hasErrors')}
             </Label>
@@ -160,7 +163,10 @@ const Form = ({
       )}
       {warnings.length > 0 && (
         <>
-          <div style={{ backgroundColor: colors.social, padding: 8 }}>
+          <div
+            {...colorScheme.set('backgroundColor', '#e0aa14')}
+            style={{ padding: 8 }}
+          >
             <Label style={{ color: 'white' }}>
               {t('publish/validation/hasWarnings')}
             </Label>
@@ -195,13 +201,14 @@ const Form = ({
               {links.map((link, i) => (
                 <li key={i}>
                   <Interaction.P
-                    style={{
-                      color: link.errors.length
-                        ? colors.error
+                    {...colorScheme.set(
+                      'color',
+                      link.errors.length
+                        ? 'error'
                         : link.warnings.length
-                        ? colors.social
+                        ? '#e0aa14'
                         : undefined
-                    }}
+                    )}
                   >
                     {t.elements('publish/validation/link', {
                       text: link.text,
