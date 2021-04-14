@@ -7,7 +7,7 @@ const startTimer = () => {
   const currentTime = new Date()
   const msLeft = 1000 - currentTime.getMilliseconds()
   const msToNextMinute = (60 - currentTime.getSeconds()) * 1000 + msLeft
-  // ensure timer runs in new minute and with at least 5 seconds in between
+  // ensure timer runs in new minute and with at least 5 seconds in between runs
   const msToNextRun = Math.max(msToNextMinute + 500, 5 * 1000)
   clearTimeout(timeout)
   timeout = setTimeout(() => {

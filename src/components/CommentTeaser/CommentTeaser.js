@@ -6,7 +6,6 @@ import { mUp } from '../../theme/mediaQueries'
 import { underline } from '../../lib/styleMixins'
 import { inQuotes } from '../../lib/inQuotes'
 import { useMediaQuery } from '../../lib/useMediaQuery'
-import { useCurrentMinute } from '../../lib/useCurrentMinute'
 
 import { serifRegular14, sansSerifMedium15 } from '../Typography/styles'
 import { A } from '../Typography/'
@@ -124,7 +123,6 @@ export const CommentTeaser = ({
    * A reduced version of DiscussionContext value, just enough so we can render
    * the Comment Header component.
    */
-  const now = useCurrentMinute()
   const clock = {
     t,
     isDesktop
