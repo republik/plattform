@@ -51,11 +51,11 @@ const createSchema = ({
       },
       {
         label: 'Sharebild (Hintergrund weiss)',
-        key: 'shareImage'
+        key: 'shareBackgroundImage'
       },
       {
         label: 'Sharebild (mit Hintergrundfarbe)',
-        key: 'shareImageColor'
+        key: 'shareBackgroundImageInverted'
       },
       {
         label: 'Dossier',
