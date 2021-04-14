@@ -5,10 +5,8 @@ Current props are supported:
 - `text`
 - `fontSize`
 - `format`: see `<ShareImageGenerator />` docs for a detailed run-through of the supported formats
-- `coloredBackground`: boolean. The color itself comes from the format.
-- `illuBackground`: boolean. Columns only (caricature portraits).
-- `textPosition`: `top`, `center` or `bottom`. Conditional to the presence of `illuBackground`.
-- `customFontStyle`: used for specific formats or in absence of a format 
+- `inverted`: boolean. White background/colored text vs colored background/white text.
+- `textPosition`: `top`, `center` or `bottom`. 
 - `placeholderText`: used in conjunction with the generator
 - `socialKey`: either `twitter` or `facebook`. Used in conjunction with the generator and required by `embedPreview`.
 - `embedPreview`: add styles specific to social media platform.
@@ -17,7 +15,7 @@ Current props are supported:
 <ShareImagePreview 
   fontSize={120}
   text='Arriva Arena!'
-  coloredBackground
+  inverted
   format={{ 
     title: 'Aus der Arena',
     section: {
@@ -46,7 +44,6 @@ Supported props:
   <ShareImagePreview
     fontSize={60}
     text='Am helllichten Tag'
-    illuBackground
     textPosition='bottom'
     format={{ 
       title: 'Binswanger',
@@ -74,7 +71,6 @@ Supported props:
 A `<ShareImageGenerator />` takes a format type and returns a form to create a share image for that specific format type style.
 
 Supported props:
-
 - `socialKey`: required. Either `twitter` or `facebook`
 - `data` and `onInputChange`: an immutable `Map` and a setter. Both based on meta data model from Publikator 
 - `format`: the metadata of the article's format. The name of a format supported are:

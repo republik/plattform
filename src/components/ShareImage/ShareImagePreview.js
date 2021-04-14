@@ -1,8 +1,7 @@
 import React from 'react'
 import { css } from 'glamor'
-import { fontFamilies, fontStyles } from '../../theme/fonts'
+import { fontStyles } from '../../theme/fonts'
 import { imageStyle } from './SharePreviewTwitter'
-import { hasCustomFontStyle } from './index'
 import colors from '../../theme/colors'
 
 export const SHARE_IMAGE_WIDTH = 1200
@@ -36,12 +35,11 @@ const styles = {
     width: '100%',
     whiteSpace: 'pre-wrap',
     textAlign: 'center',
-    fontFamily: fontFamilies.serifBold,
-    fontWeight: 700,
+    ...fontStyles.serifBold,
     zIndex: 1
   }),
   formatTitle: css({
-    fontFamily: fontFamilies.sansSerifMedium,
+    ...fontStyles.sansSerifMedium,
     marginBottom: 18,
     fontSize: 44,
     width: '100%',
@@ -74,24 +72,19 @@ export const SHARE_IMAGE_DEFAULTS = {
 const ShareImagePreview = ({
   format,
   text,
-  coloredBackground,
-  illuBackground,
+  inverted,
   placeholderText,
   socialKey,
   embedPreview,
-  customFontStyle = SHARE_IMAGE_DEFAULTS.customFontStyle,
   textPosition = SHARE_IMAGE_DEFAULTS.position,
   fontSize = SHARE_IMAGE_DEFAULTS.fontSize
 }) => {
-  const fontStyleKey = hasCustomFontStyle(format)
-    ? customFontStyle
-    : formatFonts[format?.kind]
-  const fontStyle = fontStyles[fontStyleKey]
+  const fontStyle = fontStyles[formatFonts[format?.kind] || 'editorial']
   const shareImage =
-    illuBackground &&
-    (coloredBackground
-      ? format?.shareImageColor || format?.shareImage
-      : format?.shareImage)
+    format?.shareBackgroundImage &&
+    (inverted
+      ? format?.shareBackgroundImageInverted || format?.shareBackgroundImage
+      : format?.shareBackgroundImage)
   const displayedText = !text || text === '' ? placeholderText : text
   const formatColor = format?.color || colors[format?.kind]
 
@@ -104,7 +97,7 @@ const ShareImagePreview = ({
       style={{
         backgroundImage: shareImage && `url(${shareImage})`,
         backgroundSize: 'cover',
-        backgroundColor: coloredBackground ? format?.color : '#FFF',
+        backgroundColor: inverted ? format?.color : '#FFF',
         justifyContent:
           (shareImage && shareImageJustify[textPosition]) || 'center',
         borderWidth: embedPreview ? 2 : 0
@@ -115,7 +108,7 @@ const ShareImagePreview = ({
         <div
           {...styles.formatTitle}
           style={{
-            color: coloredBackground ? '#FFF' : formatColor,
+            color: inverted ? '#FFF' : formatColor,
             width: shareImage && '80%'
           }}
         >
@@ -127,7 +120,7 @@ const ShareImagePreview = ({
         style={{
           ...(fontStyle && fontStyle),
           fontSize,
-          color: coloredBackground ? '#FFF' : '#000',
+          color: inverted ? '#FFF' : '#000',
           width: shareImage && '80%'
         }}
       >

@@ -47,24 +47,28 @@ const styles = {
   })
 }
 
-const capitalise = word => word.replace(/^\w/, c => c.toUpperCase())
+const PLACEHOLDER_TEXT = 'Text für Sharebild'
 
 const getFormatType = format => format?.section?.meta?.title
 export const hasCustomFontStyle = format =>
   !format || getFormatType(format) === 'Dialog'
 
-export const addSocialPrefix = socialKey => key => socialKey + capitalise(key)
-
 const ShareImageGenerator = ({
   format,
-  data,
-  onInputChange,
+  fontSize,
+  onFontSizeChange,
+  onFontSizeInc,
+  onFontSizeDec,
+  textPosition,
+  onTextPositionChange,
+  inverted,
+  onInvertedChange,
+  text,
+  onTextChange,
   socialKey,
   embedPreview
 }) => {
   const [colorScheme] = useColorContext()
-
-  const formatType = getFormatType(format)
 
   const textAreaEmptyRule = useMemo(
     () =>
@@ -77,153 +81,58 @@ const ShareImageGenerator = ({
     [colorScheme]
   )
 
-  const fontDropdownItems = [
-    {
-      value: 'serifBold',
-      text: 'Republik',
-      element: (
-        <span
-          style={{
-            ...fontStyles.serifBold,
-            fontSize: 16,
-            lineHeight: '18px'
-          }}
-        >
-          Republik
-        </span>
-      )
-    },
-    {
-      value: 'cursiveTitle',
-      text: 'Cursive',
-      element: (
-        <span
-          style={{
-            ...fontStyles.cursiveTitle,
-            fontSize: 16,
-            lineHeight: '18px'
-          }}
-        >
-          Cursive
-        </span>
-      )
-    },
-    {
-      value: 'sansSerifRegular',
-      text: 'GT America',
-      element: (
-        <span
-          style={{
-            ...fontStyles.sansSerifRegular,
-            fontSize: 16,
-            lineHeight: '18px'
-          }}
-        >
-          GT America
-        </span>
-      )
-    }
-  ]
-
-  const withPrefix = useMemo(() => addSocialPrefix(socialKey), [socialKey])
-
-  const getData = key => data.get(withPrefix(key))
-  const onChange = key => onInputChange(withPrefix(key))
-  const onChangeValue = (key, value) => onChange(key)(undefined, value)
-  const incrementFontSize = increment => () =>
-    onChange('fontSize')(undefined, getData('fontSize') + increment)
-
-  const placeholderText = `Text für ${capitalise(socialKey)}`
-
   return (
     <div {...styles.container}>
       <div {...styles.controlsContainer}>
-        {hasCustomFontStyle(format) ? (
-          <div {...styles.controlItem} style={{ minWidth: 170 }}>
-            <Dropdown
-              label='Schriftart'
-              items={
-                formatType === 'Dialog'
-                  ? [fontDropdownItems[0], fontDropdownItems[2]]
-                  : fontDropdownItems
-              }
-              value={getData('fontStyle')}
-              onChange={item => onChangeValue('fontStyle', item.value)}
-            />
-          </div>
-        ) : null}
         <div {...styles.controlItem}>
           <Field
             label='Schriftgrösse'
-            value={getData('fontSize')}
-            onChange={(e, value) =>
-              onChangeValue('fontSize', Number(value) || undefined)
-            }
-            onInc={incrementFontSize(1)}
-            onDec={incrementFontSize(-1)}
+            value={fontSize}
+            onChange={onFontSizeChange}
+            onInc={onFontSizeInc}
+            onDec={onFontSizeDec}
           />
         </div>
-        {format?.shareImage ? (
+        {format?.shareBackgroundImage ? (
           <div {...styles.controlItem} style={{ minWidth: 170 }}>
-            {getData('illuBackground') ? (
-              <Dropdown
-                label='Textposition'
-                items={[
-                  { value: 'top', text: 'Oben' },
-                  { value: 'center', text: 'Mitte' },
-                  { value: 'bottom', text: 'Unten' }
-                ]}
-                value={getData('textPosition')}
-                onChange={item => {
-                  onChangeValue('textPosition', item.value)
-                }}
-              />
-            ) : (
-              <Field label='Textposition' value='Mitte' disabled />
-            )}
+            <Dropdown
+              label='Textposition'
+              items={[
+                { value: 'top', text: 'Oben' },
+                { value: 'center', text: 'Mitte' },
+                { value: 'bottom', text: 'Unten' }
+              ]}
+              value={textPosition}
+              onChange={onTextPositionChange}
+            />
           </div>
         ) : null}
         <div {...styles.controlItem} {...styles.checkboxContainer}>
-          <Checkbox
-            checked={getData('coloredBackground')}
-            onChange={onChange('coloredBackground')}
-          >
+          <Checkbox checked={inverted} onChange={onInvertedChange}>
             Hintergrundfarbe
           </Checkbox>
         </div>
-        {format?.shareImage ? (
-          <div {...styles.controlItem} {...styles.checkboxContainer}>
-            <Checkbox
-              checked={getData('illuBackground')}
-              onChange={onChange('illuBackground')}
-            >
-              Mit Hintergrundbild
-            </Checkbox>
-          </div>
-        ) : null}
       </div>
 
       <Textarea
         {...styles.textArea}
         {...colorScheme.set('color', 'text')}
         {...colorScheme.set('borderColor', 'divider')}
-        {...(getData('text') === '' && textAreaEmptyRule)}
-        placeholder={placeholderText}
-        value={getData('text')}
+        {...(text === '' && textAreaEmptyRule)}
+        placeholder={PLACEHOLDER_TEXT}
+        value={text}
         rows='1'
-        onChange={e => onChangeValue('text', e.target.value)}
+        onChange={onTextChange}
       />
 
       <ShareImagePreview
         format={format}
-        coloredBackground={getData('coloredBackground')}
-        text={getData('text')}
-        fontSize={getData('fontSize')}
-        customFontStyle={getData('fontStyle')}
-        textPosition={getData('textPosition')}
-        illuBackground={getData('illuBackground')}
+        inverted={inverted}
+        text={text}
+        fontSize={fontSize}
+        textPosition={textPosition}
         // only used in conjunction with generator
-        placeholderText={placeholderText}
+        placeholderText={PLACEHOLDER_TEXT}
         socialKey={socialKey}
         embedPreview={embedPreview}
       />
