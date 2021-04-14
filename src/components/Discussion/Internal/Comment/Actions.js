@@ -14,7 +14,7 @@ import { sansSerifMedium14 } from '../../../Typography/styles'
 import { DiscussionContext, formatTimeRelative } from '../../DiscussionContext'
 import { timeFormat } from '../../../../lib/timeFormat'
 import { useColorContext } from '../../../Colors/useColorContext'
-import useCurrentMinute from '../../../../lib/useCurrentMinute'
+import { useCurrentMinute } from '../../../../lib/useCurrentMinute'
 
 const dateFormat = timeFormat('%d.%m.%Y')
 const hmFormat = timeFormat('%H:%M')

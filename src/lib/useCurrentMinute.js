@@ -28,7 +28,7 @@ const rmSetter = setter => {
   }
 }
 
-const useCurrentMinute = () => {
+export const useCurrentMinute = () => {
   const [now, setNow] = useState(() => Date.now())
   useEffect(() => {
     addSetter(setNow)
@@ -38,5 +38,3 @@ const useCurrentMinute = () => {
   }, [])
   return now
 }
-
-export default useCurrentMinute

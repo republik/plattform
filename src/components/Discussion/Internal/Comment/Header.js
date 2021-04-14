@@ -10,7 +10,7 @@ import { onlyS } from '../../../../theme/mediaQueries'
 
 import { ellipsize, underline } from '../../../../lib/styleMixins'
 import { timeFormat } from '../../../../lib/timeFormat'
-import useCurrentMinute from '../../../../lib/useCurrentMinute'
+import { useCurrentMinute } from '../../../../lib/useCurrentMinute'
 
 import { DiscussionContext, formatTimeRelative } from '../../DiscussionContext'
 import * as config from '../../config'
