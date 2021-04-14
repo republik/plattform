@@ -3,6 +3,7 @@ import { css } from 'glamor'
 import { fontStyles } from '../../theme/fonts'
 import { imageStyle } from './SharePreviewTwitter'
 import colors from '../../theme/colors'
+import { PLACEHOLDER_TEXT } from './index'
 
 export const SHARE_IMAGE_WIDTH = 1200
 export const SHARE_IMAGE_HEIGHT = 628
@@ -73,11 +74,9 @@ const ShareImagePreview = ({
   format,
   text,
   inverted,
-  placeholderText,
-  socialKey,
-  embedPreview,
-  textPosition = SHARE_IMAGE_DEFAULTS.position,
-  fontSize = SHARE_IMAGE_DEFAULTS.fontSize
+  preview,
+  fontSize,
+  textPosition
 }) => {
   const fontStyle = fontStyles[formatFonts[format?.kind] || 'editorial']
   const shareImage =
@@ -85,22 +84,27 @@ const ShareImagePreview = ({
     (inverted
       ? format?.shareBackgroundImageInverted || format?.shareBackgroundImage
       : format?.shareBackgroundImage)
-  const displayedText = !text || text === '' ? placeholderText : text
+  const displayedText = !text || text === '' ? PLACEHOLDER_TEXT : text
   const formatColor = format?.color || colors[format?.kind]
+  const socialPreview = socialPreviewStyles[preview]
 
   return (
     <div
       {...styles.container}
-      {...(placeholderText && styles.containerHalfSize)}
-      {...(embedPreview && socialPreviewStyles[socialKey])}
+      {...(preview && styles.containerHalfSize)}
+      {...socialPreview}
       {...(shareImage && styles.kolumnenContainer)}
       style={{
         backgroundImage: shareImage && `url(${shareImage})`,
         backgroundSize: 'cover',
         backgroundColor: inverted ? format?.color : '#FFF',
         justifyContent:
-          (shareImage && shareImageJustify[textPosition]) || 'center',
-        borderWidth: embedPreview ? 2 : 0
+          (shareImage &&
+            shareImageJustify[
+              textPosition || SHARE_IMAGE_DEFAULTS.textPosition
+            ]) ||
+          'center',
+        borderWidth: socialPreview ? 2 : 0
       }}
     >
       {format?.image && <img {...styles.formatImage} src={format?.image} />}
@@ -118,8 +122,8 @@ const ShareImagePreview = ({
       <div
         {...styles.textContainer}
         style={{
-          ...(fontStyle && fontStyle),
-          fontSize,
+          ...fontStyle,
+          fontSize: fontSize || SHARE_IMAGE_DEFAULTS.fontSize,
           color: inverted ? '#FFF' : '#000',
           width: shareImage && '80%'
         }}

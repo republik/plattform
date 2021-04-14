@@ -2,12 +2,10 @@ import React, { useMemo } from 'react'
 import { css } from 'glamor'
 import Textarea from 'react-textarea-autosize'
 
-import ShareImagePreview from './ShareImagePreview'
 import Checkbox from '../Form/Checkbox'
 import Dropdown from '../Form/Dropdown'
 import Field from '../Form/Field'
 import { useColorContext } from '../Colors/useColorContext'
-import { fontStyles } from '../../theme/fonts'
 
 const styles = {
   container: css({
@@ -47,7 +45,7 @@ const styles = {
   })
 }
 
-const PLACEHOLDER_TEXT = 'Text für Sharebild'
+export const PLACEHOLDER_TEXT = 'Text für Sharebild'
 
 const getFormatType = format => format?.section?.meta?.title
 export const hasCustomFontStyle = format =>
@@ -64,9 +62,7 @@ const ShareImageGenerator = ({
   inverted,
   onInvertedChange,
   text,
-  onTextChange,
-  socialKey,
-  embedPreview
+  onTextChange
 }) => {
   const [colorScheme] = useColorContext()
 
@@ -123,18 +119,6 @@ const ShareImageGenerator = ({
         value={text}
         rows='1'
         onChange={onTextChange}
-      />
-
-      <ShareImagePreview
-        format={format}
-        inverted={inverted}
-        text={text}
-        fontSize={fontSize}
-        textPosition={textPosition}
-        // only used in conjunction with generator
-        placeholderText={PLACEHOLDER_TEXT}
-        socialKey={socialKey}
-        embedPreview={embedPreview}
       />
     </div>
   )

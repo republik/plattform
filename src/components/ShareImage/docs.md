@@ -1,15 +1,13 @@
 `<ShareImagePreview />` renders an in-browser preview of the share image. Say hello to dynamically generated images for social media. 
 
-Current props are supported:
+This component supports the following props:
 
 - `text`
 - `fontSize`
 - `format`: see `<ShareImageGenerator />` docs for a detailed run-through of the supported formats
 - `inverted`: boolean. White background/colored text vs colored background/white text.
 - `textPosition`: `top`, `center` or `bottom`. 
-- `placeholderText`: used in conjunction with the generator
-- `socialKey`: either `twitter` or `facebook`. Used in conjunction with the generator and required by `embedPreview`.
-- `embedPreview`: add styles specific to social media platform.
+- `preview`: either boolean, `twitter`, or `facebook`. Scales down the image for preview purposes. Add styles specific to social media platform.
 
 ```react
 <ShareImagePreview 
@@ -26,7 +24,7 @@ Current props are supported:
     color: '#D74132',
     kind: 'scribble'
   }}
-  placeholderText='Text für Twitter'
+  preview
 />
 ```
 
@@ -53,16 +51,15 @@ Supported props:
         }
       },
       color: '#D2933C',
-      shareImage: 'https://republik-assets.s3.eu-central-1.amazonaws.com/assets/binswanger.png',
-      shareImageColor: 'https://republik-assets.s3.eu-central-1.amazonaws.com/assets/binswanger-bg.png',
+      shareBackgroundImage: 'https://republik-assets.s3.eu-central-1.amazonaws.com/assets/binswanger.png',
+      shareBackgroundImageInverted: 'https://republik-assets.s3.eu-central-1.amazonaws.com/assets/binswanger-bg.png',
     }}
-    socialKey='twitter'
-    placeholderText='Text für Twitter'
-    embedPreview
+    preview='twitter'
   />
- <SharePreviewTwitter 
+  <SharePreviewTwitter 
     title='Es geschah am helllichten Tag' 
-    description='In den USA läuft der Amtsenthebungs­prozess gegen Donald Trump. Er zeigt, wie wenig es braucht, um eine Demokratie zu zerstören.' />
+    description='In den USA läuft der Amtsenthebungs­prozess gegen Donald Trump. Er zeigt, wie wenig es braucht, um eine Demokratie zu zerstören.' 
+  />
 </div>
 ```
 
@@ -71,47 +68,88 @@ Supported props:
 A `<ShareImageGenerator />` takes a format type and returns a form to create a share image for that specific format type style.
 
 Supported props:
-- `socialKey`: required. Either `twitter` or `facebook`
-- `data` and `onInputChange`: an immutable `Map` and a setter. Both based on meta data model from Publikator 
+- `fontSize`
+- `onFontSizeChange`
+- `onFontSizeInc`
+- `onFontSizeDec`
+- `textPosition`
+- `onTextPositionChange`
+- `inverted`
+- `onInvertedChange`
+- `text`
+- `onTextChange`
 - `format`: the metadata of the article's format. The name of a format supported are:
 
 
 ## Editorial / Default / No Format
 
 ```react
-state: { value: [['twitterColoredBackground', false],['twitterBackgroundImage', true],['twitterTextPosition', 'bottom'],['twitterFontSize', 60],['twitterFontStyle', 'serifBold'],['twitterText', '']] }
+state: { 
+  fontSize: 60,
+  inverted: false,
+  text: 'Alle meine Ente'
+}
 ---
-<ShareImageGenerator 
-  data={Map(state.value)}
-  onInputChange={key => (_, inputValue) => setState({value: Map(state.value).set(key, inputValue)})}
-  socialKey='twitter'
-/>
+<div>
+  <ShareImageGenerator
+    fontSize={state.fontSize}
+    onFontSizeChange={(e, value) => setState({ fontSize: Number(value) || '' })}
+    onFontSizeInc={(e, value) => setState({ fontSize: (state.fontSize || 60) + 1})}
+    onFontSizeDec={(e, value) => setState({ fontSize: Math.max(state.fontSize - 1, 0)})}
+    inverted={state.inverted}
+    onInvertedChange={(e, value) => setState({ inverted: value })}
+    text={state.text}
+    onTextChange={e => setState({ text: e.target.value})}
+  />
+  <ShareImagePreview
+    fontSize={state.fontSize}
+    inverted={state.inverted}
+    text={state.text}
+    preview
+  />
+</div>
 ```
 
 ## Editorial
 ```react
-state: { value: [['twitterColoredBackground', false],['twitterBackgroundImage', true],['twitterTextPosition', 'bottom'],['twitterFontSize', 60],['twitterFontStyle', 'serifBold'],['twitterText', '']] }
----
-<ShareImageGenerator
-  data={Map(state.value)}
-  onInputChange={key => (_, inputValue) => setState({value: Map(state.value).set(key, inputValue)})}
-  socialKey='twitter'
-  format={{ 
+state: { 
+  fontSize: 60,
+  inverted: false,
+  text: '',
+  format: { 
     color: '#000'
-  }}
-/>
+  }
+}
+---
+<div>
+  <ShareImageGenerator
+    fontSize={state.fontSize}
+    onFontSizeChange={(e, value) => setState({ fontSize: Number(value) || '' })}
+    onFontSizeInc={(e, value) => setState({ fontSize: (state.fontSize || 60) + 1})}
+    onFontSizeDec={(e, value) => setState({ fontSize: Math.max(state.fontSize - 1, 0)})}
+    inverted={state.inverted}
+    onInvertedChange={(e, value) => setState({ inverted: value })}
+    text={state.text}
+    onTextChange={e => setState({ text: e.target.value})}
+    format={state.format}
+  />
+  <ShareImagePreview
+    fontSize={state.fontSize}
+    inverted={state.inverted}
+    text={state.text}
+    format={state.format}
+    preview
+  />
+</div>
 ```
 
 ## Meta
-'Meta' uses the format.kind value to set the font. If no value is provided it defaults to Rubis
 ```react
-state: { value: [['twitterColoredBackground', false],['twitterBackgroundImage', true],['twitterTextPosition', 'bottom'],['twitterFontSize', 60],['twitterFontStyle', 'serifBold'],['twitterText', '']] }
----
-<ShareImageGenerator
-  data={Map(state.value)}
-  onInputChange={key => (_, inputValue) => setState({value: Map(state.value).set(key, inputValue)})}
-  socialKey='twitter'
-  format={{ 
+state: { 
+  fontSize: 60,
+  inverted: false,
+  text: '',
+  format: { 
     title: 'Meta',
     section: {
       meta: {
@@ -120,21 +158,40 @@ state: { value: [['twitterColoredBackground', false],['twitterBackgroundImage', 
     },
     color: '#000',
     kind: 'meta'
-  }}
-/>
+  }
+}
+---
+<div>
+  <ShareImageGenerator
+    fontSize={state.fontSize}
+    onFontSizeChange={(e, value) => setState({ fontSize: Number(value) || '' })}
+    onFontSizeInc={(e, value) => setState({ fontSize: (state.fontSize || 60) + 1})}
+    onFontSizeDec={(e, value) => setState({ fontSize: Math.max(state.fontSize - 1, 0)})}
+    inverted={state.inverted}
+    onInvertedChange={(e, value) => setState({ inverted: value })}
+    text={state.text}
+    onTextChange={e => setState({ text: e.target.value})}
+    format={state.format}
+  />
+  <ShareImagePreview
+    fontSize={state.fontSize}
+    inverted={state.inverted}
+    text={state.text}
+    format={state.format}
+    preview
+  />
+</div>
 ```
-
 
 ## Formate
 'Format' uses the format.kind value to set the font. If no value is provided it defaults to Rubis.
+
 ```react
-state: { value: [['twitterColoredBackground', false],['twitterBackgroundImage', true],['twitterTextPosition', 'bottom'],['twitterFontSize', 60],['twitterFontStyle', 'serifBold'],['twitterText', '']] }
----
-<ShareImageGenerator
-  data={Map(state.value)}
-  onInputChange={key => (_, inputValue) => setState({value: Map(state.value).set(key, inputValue)})}
-  socialKey='twitter'
-  format={{ 
+state: { 
+  fontSize: 60,
+  inverted: false,
+  text: '',
+  format: { 
     title: 'Aus der Arena',
     section: {
       meta: {
@@ -142,19 +199,39 @@ state: { value: [['twitterColoredBackground', false],['twitterBackgroundImage', 
       }
     },
     kind: 'scribble'
-  }}
-/>
+  }
+}
+---
+<div>
+  <ShareImageGenerator
+    fontSize={state.fontSize}
+    onFontSizeChange={(e, value) => setState({ fontSize: Number(value) || '' })}
+    onFontSizeInc={(e, value) => setState({ fontSize: (state.fontSize || 60) + 1})}
+    onFontSizeDec={(e, value) => setState({ fontSize: Math.max(state.fontSize - 1, 0)})}
+    inverted={state.inverted}
+    onInvertedChange={(e, value) => setState({ inverted: value })}
+    text={state.text}
+    onTextChange={e => setState({ text: e.target.value})}
+    format={state.format}
+  />
+  <ShareImagePreview
+    fontSize={state.fontSize}
+    inverted={state.inverted}
+    text={state.text}
+    format={state.format}
+    preview
+  />
+</div>
 ```
 
 ## Briefing
+
 ```react
-state: { value: [['twitterColoredBackground', false],['twitterBackgroundImage', true],['twitterTextPosition', 'bottom'],['twitterFontSize', 60],['twitterFontStyle', 'serifBold'],['twitterText', '']] }
----
-<ShareImageGenerator
-  data={Map(state.value)}
-  onInputChange={key => (_, inputValue) => setState({value: Map(state.value).set(key, inputValue)})}
-  socialKey='twitter'
-  format={{ 
+state: { 
+  fontSize: 60,
+  inverted: false,
+  text: '',
+  format: { 
     title: 'Briefing aus Bern',
     section: {
       meta: {
@@ -163,19 +240,39 @@ state: { value: [['twitterColoredBackground', false],['twitterBackgroundImage', 
     },
     color: '#00809C',
     image: 'https://cdn.repub.ch/s3/republik-assets/github/republik/section-durch-die-woche/images/90509b3fc4639b59801bcd0f73dcba1a2433aa8c.png?size=1890x945'
-  }}
-/>
+  }
+}
+---
+<div>
+  <ShareImageGenerator
+    fontSize={state.fontSize}
+    onFontSizeChange={(e, value) => setState({ fontSize: Number(value) || '' })}
+    onFontSizeInc={(e, value) => setState({ fontSize: (state.fontSize || 60) + 1})}
+    onFontSizeDec={(e, value) => setState({ fontSize: Math.max(state.fontSize - 1, 0)})}
+    inverted={state.inverted}
+    onInvertedChange={(e, value) => setState({ inverted: value })}
+    text={state.text}
+    onTextChange={e => setState({ text: e.target.value})}
+    format={state.format}
+  />
+  <ShareImagePreview
+    fontSize={state.fontSize}
+    inverted={state.inverted}
+    text={state.text}
+    format={state.format}
+    preview
+  />
+</div>
 ```
 
 ## Aktuelles
+
 ```react
-state: { value: [['twitterColoredBackground', false],['twitterBackgroundImage', true],['twitterTextPosition', 'bottom'],['twitterFontSize', 60],['twitterFontStyle', 'serifBold'],['twitterText', '']] }
----
-<ShareImageGenerator
-  data={Map(state.value)}
-  onInputChange={key => (_, inputValue) => setState({value: Map(state.value).set(key, inputValue)})}
-  socialKey='twitter'
-  format={{ 
+state: { 
+  fontSize: 60,
+  inverted: false,
+  text: '',
+  format: { 
     title: 'Aktuelles',
     section: {
       meta: {
@@ -183,41 +280,81 @@ state: { value: [['twitterColoredBackground', false],['twitterBackgroundImage', 
       }
     },
     color: '#00809C'
-  }}
-/>
+  }
+}
+---
+<div>
+  <ShareImageGenerator
+    fontSize={state.fontSize}
+    onFontSizeChange={(e, value) => setState({ fontSize: Number(value) || '' })}
+    onFontSizeInc={(e, value) => setState({ fontSize: (state.fontSize || 60) + 1})}
+    onFontSizeDec={(e, value) => setState({ fontSize: Math.max(state.fontSize - 1, 0)})}
+    inverted={state.inverted}
+    onInvertedChange={(e, value) => setState({ inverted: value })}
+    text={state.text}
+    onTextChange={e => setState({ text: e.target.value})}
+    format={state.format}
+  />
+  <ShareImagePreview
+    fontSize={state.fontSize}
+    inverted={state.inverted}
+    text={state.text}
+    format={state.format}
+    preview
+  />
+</div>
 ```
 
 ## Dialog
-Setting type to 'Dialog' enables to choose between Sans-Serif and Serif fonts.
 
 ```react
-state: { value: [['twitterColoredBackground', false],['twitterBackgroundImage', true],['twitterTextPosition', 'bottom'],['twitterFontSize', 60],['twitterFontStyle', 'serifBold'],['twitterText', '']] }
----
-<ShareImageGenerator
-  data={Map(state.value)}
-  onInputChange={key => (_, inputValue) => setState({value: Map(state.value).set(key, inputValue)})}
-  socialKey='twitter'
-  format={{ 
+state: { 
+  fontSize: 60,
+  inverted: false,
+  text: '',
+  format: { 
     title: 'Dialog',
     section: {
       meta: {
         title: 'Dialog' 
       }
     },
-    color: '#3CAD00'
-  }}
-/>
+    color: '#3CAD00',
+    kind: 'meta'
+  }
+}
+---
+<div>
+  <ShareImageGenerator
+    fontSize={state.fontSize}
+    onFontSizeChange={(e, value) => setState({ fontSize: Number(value) || '' })}
+    onFontSizeInc={(e, value) => setState({ fontSize: (state.fontSize || 60) + 1})}
+    onFontSizeDec={(e, value) => setState({ fontSize: Math.max(state.fontSize - 1, 0)})}
+    inverted={state.inverted}
+    onInvertedChange={(e, value) => setState({ inverted: value })}
+    text={state.text}
+    onTextChange={e => setState({ text: e.target.value})}
+    format={state.format}
+  />
+  <ShareImagePreview
+    fontSize={state.fontSize}
+    inverted={state.inverted}
+    text={state.text}
+    format={state.format}
+    preview
+  />
+</div>
 ```
 
 ## Kolumne
+
 ```react
-state: { value: [['twitterColoredBackground', false],['twitterBackgroundImage', true],['twitterTextPosition', 'bottom'],['twitterFontSize', 60],['twitterFontStyle', 'serifBold'],['twitterText', '']] }
----
-<ShareImageGenerator
-  data={Map(state.value)}
-  onInputChange={key => (_, inputValue) => setState({value: Map(state.value).set(key, inputValue)})}
-  socialKey='twitter'
-  format={{ 
+state: { 
+  fontSize: 60,
+  inverted: false,
+  text: '',
+  textPosition: 'bottom',
+  format: { 
     title: 'Binswanger',
     section: {
       meta: {
@@ -225,8 +362,33 @@ state: { value: [['twitterColoredBackground', false],['twitterBackgroundImage', 
       }
     },
     color: '#D2933C',
-    shareImage: 'https://republik-assets.s3.eu-central-1.amazonaws.com/assets/binswanger.png',
-    shareImageColor: 'https://republik-assets.s3.eu-central-1.amazonaws.com/assets/binswanger-bg.png',
-  }}
-/>
+    shareBackgroundImage: 'https://republik-assets.s3.eu-central-1.amazonaws.com/assets/binswanger.png',
+    shareBackgroundImageInverted: 'https://republik-assets.s3.eu-central-1.amazonaws.com/assets/binswanger-bg.png'
+  }
+}
+---
+<div>
+  <ShareImageGenerator
+    fontSize={state.fontSize}
+    onFontSizeChange={(e, value) => setState({ fontSize: Number(value) || '' })}
+    onFontSizeInc={(e, value) => setState({ fontSize: (state.fontSize || 60) + 1})}
+    onFontSizeDec={(e, value) => setState({ fontSize: Math.max(state.fontSize - 1, 0)})}
+    inverted={state.inverted}
+    onInvertedChange={(e, value) => setState({ inverted: value })}
+    text={state.text}
+    onTextChange={e => setState({ text: e.target.value})}
+    textPosition={state.textPosition}
+    onTextPositionChange={item => setState({ textPosition: item.value })}
+    format={state.format}
+  />
+  <ShareImagePreview
+    fontSize={state.fontSize}
+    inverted={state.inverted}
+    text={state.text}
+    textPosition={state.textPosition}
+    format={state.format}
+    preview
+  />
+</div>
 ```
+
