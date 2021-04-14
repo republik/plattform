@@ -40,14 +40,14 @@ const PreviewFrame = ({
   const iframeRef = useRef()
 
   const URL = `${PUBLIC_BASE_URL}/repo/${repoId}/preview?commitId=${commitId}&darkmode=${darkmode}`
-  const sideBarWidthConstant = sideBarWidth || SIDEBAR_WIDTH
+  const currentSideBarWidth = sideBarWidth || SIDEBAR_WIDTH
 
   useEffect(() => {
     const handleResize = () => {
       const availableHeight =
         window.innerHeight - HEADER_HEIGHT - 2 * PREVIEW_MARGIN
       const availableWidth =
-        window.innerWidth - sideBarWidthConstant - 2 * PREVIEW_MARGIN
+        window.innerWidth - currentSideBarWidth - 2 * PREVIEW_MARGIN
 
       const widthScaleFactor =
         availableWidth / screenSizes[previewScreenSize].width
@@ -70,7 +70,7 @@ const PreviewFrame = ({
     return () => {
       window.removeEventListener('resize', handleResize)
     }
-  }, [previewScreenSize, sideBarWidthConstant])
+  }, [previewScreenSize, currentSideBarWidth])
 
   useEffect(() => {
     setIframeLoading(true)

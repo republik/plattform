@@ -30,7 +30,7 @@ const styles = {
     display: 'flex',
     justifyContent: 'center'
   }),
-  inconContainerInline: css({
+  iconContainerInline: css({
     flex: 'none',
     padding: '4px 4px',
     margin: '0 8px',
@@ -83,7 +83,7 @@ const ScreenSizePicker = ({ onSelect, selectedScreenSize, inline }) => {
                 'backgroundColor',
                 isSelected ? 'text' : 'none'
               )}
-              {...(inline ? styles.inconContainerInline : styles.iconContainer)}
+              {...(inline ? styles.iconContainerInline : styles.iconContainer)}
               {...plainButtonRule}
               onClick={() => onSelect(size.name)}
             >
