@@ -341,7 +341,7 @@ export default props => {
     x: d.x ? xParser(d.x) : undefined,
     x1: d.x1 ? xParser(d.x1) : undefined,
     x2: d.x2 ? xParser(d.x2) : undefined,
-    labelSize: labelGauger(d.label || '')
+    labelSize: d.label ? labelGauger(d.label) : 0
   }))
 
   return {
