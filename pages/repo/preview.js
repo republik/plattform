@@ -35,7 +35,13 @@ const PreviewPage = ({ router, data = {} }) => {
   let localState = store.get('editorState')
 
   const template = localState?.meta?.template || document?.meta?.template
-  const schema = useMemo(() => getSchema(template), [template])
+
+  const schema = useMemo(() => {
+    if (!template) {
+      return
+    }
+    return getSchema(template)
+  }, [template])
 
   return (
     <Frame.Body raw>
@@ -45,20 +51,25 @@ const PreviewPage = ({ router, data = {} }) => {
         <Loader
           loading={loading}
           error={error}
-          render={() => (
-            <>
-              {renderMdast(
-                {
-                  ...(localState || document.content),
-                  format: document.meta.format,
-                  section: document.meta.section,
-                  series: document.meta.series,
-                  repoId
-                },
-                schema
-              )}
-            </>
-          )}
+          render={() => {
+            if (!schema) {
+              return null
+            }
+            return (
+              <>
+                {renderMdast(
+                  {
+                    ...(localState || document.content),
+                    format: document.meta.format,
+                    section: document.meta.section,
+                    series: document.meta.series,
+                    repoId
+                  },
+                  schema
+                )}
+              </>
+            )
+          }}
         />
       </ColorContextProvider>
     </Frame.Body>
