@@ -76,5 +76,7 @@ export {
   KeyboardArrowRightIcon,
   LogoGoogleIcon,
   LogoAppleIcon,
-  LogoFacebookIcon
+  LogoFacebookIcon,
+  ForwardIcon,
+  ReplayIcon
 } from './components/Icons'

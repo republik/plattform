@@ -19,7 +19,7 @@ import {
   ColorContextProvider,
   useColorContext
 } from './components/Colors/ColorContext'
-import MdBrightness2 from 'react-icons/lib/md/brightness-2'
+import { DarkmodeIcon } from './components/Icons'
 
 simulations(true)
 // prevent speedy in catalog
@@ -58,7 +58,7 @@ const DarkModeSwitch = ({ setColorSchemeKey, colorSchemeKey }) => {
       title={`Switch to ${otherColorSchemeKey} mode`}
       onClick={() => setColorSchemeKey(otherColorSchemeKey)}
     >
-      <MdBrightness2 {...colorScheme.set('fill', 'text')} />
+      <DarkmodeIcon {...colorScheme.set('fill', 'text')} />
     </button>
   )
 }

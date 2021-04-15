@@ -58,6 +58,8 @@ The default Icon style is Material. For brands we rely on Ionic icons. There are
 <br />
 <Interaction.H3>Media</Interaction.H3>
 <IconButton Icon={PlayIcon} label="PlayIcon" />
+<IconButton Icon={ForwardIcon} label="ForwardIcon" />
+<IconButton Icon={ReplayIcon} label="ReplayIcon" />
 <IconButton Icon={PauseIcon} label="PauseIcon" />
 <IconButton Icon={RewindIcon} label="RewindIcon" />
 <IconButton Icon={DownloadIcon} label="DownloadIcon" />
