@@ -54,7 +54,6 @@ export const DebateTeaser = ({
   const discussionContextValue = {
     discussion,
     clock: {
-      now: Date.now(),
       isDesktop,
       t
     },

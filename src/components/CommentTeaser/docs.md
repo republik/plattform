@@ -35,7 +35,7 @@ Props:
 ```react|noSource,span-3
 <CommentTeaser
   id="X"
-  createdAt="2019-01-01"
+  createdAt={(new Date()).toISOString()}
   preview={{
     string: "Die Zeitungskäufe von Christoph Blocher, die Selbstideologisierung der NZZ, die Frankenstein-Monster-Strategie der Tamedia: Ehrlich gesagt wäre es uns lieber",
     more: true
@@ -66,7 +66,7 @@ Props:
 ```react|noSource,span-3
 <CommentTeaser
   id="X"
-  createdAt="2019-01-01"
+  createdAt={(new Date()).toISOString()}
   displayAuthor={{
     profilePicture: '/static/profilePicture1.png',
     name: 'Christof Moser',

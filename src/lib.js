@@ -146,6 +146,7 @@ export { CommentList } from './components/Discussion/Tree'
 export { DiscussionContext } from './components/Discussion/DiscussionContext'
 
 export { useMediaQuery } from './lib/useMediaQuery'
+export { useCurrentMinute } from './lib/useCurrentMinute'
 export { useBoundingClientRect } from './lib/useBoundingClientRect'
 export { usePrevious } from './lib/usePrevious'
 export { useDebounce } from './lib/useDebounce'
