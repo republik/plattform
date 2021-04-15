@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react'
 import { useColorContext, Loader } from '@project-r/styleguide'
-import { PUBLIC_BASE_URL } from '../../lib/settings'
 
 import { SIDEBAR_WIDTH } from '../Sidebar'
 import { HEADER_HEIGHT } from '../Frame/constants'
@@ -39,7 +38,7 @@ const PreviewFrame = ({
   const [colorScheme] = useColorContext()
   const iframeRef = useRef()
 
-  const URL = `${PUBLIC_BASE_URL}/repo/${repoId}/preview?commitId=${commitId}&darkmode=${darkmode}`
+  const iframeSrc = `/repo/${repoId}/preview?commitId=${commitId}&darkmode=${darkmode}`
   const currentSideBarWidth = sideBarWidth || SIDEBAR_WIDTH
 
   useEffect(() => {
@@ -105,7 +104,7 @@ const PreviewFrame = ({
           display: !iframeLoading ? 'block' : 'none'
         }}
         {...colorScheme.set('backgroundColor', 'default')}
-        src={URL}
+        src={iframeSrc}
       />
       <div
         style={{
