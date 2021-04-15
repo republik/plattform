@@ -1,5 +1,4 @@
 import React from 'react'
-import colors from '../../../theme/colors'
 
 const Etiqette = ({ size = '1em', fill, ...props }) => (
   <svg width={size} height={size} viewBox='0 0 26 16' {...props}>

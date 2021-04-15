@@ -1,5 +1,4 @@
 import React from 'react'
-import colors from '../../../theme/colors'
 
 // Based on MdExitToApp
 const Icon = ({ size = '1em', fill, ...props }) => (

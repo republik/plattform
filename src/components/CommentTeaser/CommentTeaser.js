@@ -19,7 +19,6 @@ import {
   DiscussionContext,
   formatTimeRelative
 } from '../Discussion/DiscussionContext'
-import { NewPageIcon } from '../Icons'
 
 const styles = {
   root: css({
