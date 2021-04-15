@@ -131,10 +131,43 @@ const styles = {
   })
 }
 
-const PublishForm = ({ t, data }) => {
-  const { loading, error, repo } = data
+const Preview = ({ commit }) => {
   const [previewScreenSize, setPreviewScreenSize] = useState('phone')
   const [previewDarkmode, setPreviewDarkmode] = useState(false)
+  return (
+    <ColorContextProvider colorSchemeKey={previewDarkmode ? 'dark' : 'light'}>
+      <div style={{ paddingTop: 40 }}>
+        <div style={{ marginRight: PUBLICATION_COLUMN_WIDTH }}>
+          <ScreeenSizePicker
+            selectedScreenSize={previewScreenSize}
+            onSelect={screenSize => {
+              setPreviewScreenSize(screenSize)
+            }}
+            inline={true}
+          />
+          <div {...styles.darkmodeButton}>
+            <DarkmodeToggle
+              previewDarkmode={previewDarkmode}
+              onToggle={() => setPreviewDarkmode(!previewDarkmode)}
+            />
+          </div>
+        </div>
+        <div>
+          <PreviewFrame
+            previewScreenSize={previewScreenSize}
+            repoId={commit.document.repoId}
+            commitId={commit.id}
+            darkmode={previewDarkmode}
+            sideBarWidth={PUBLICATION_COLUMN_WIDTH}
+          />
+        </div>
+      </div>
+    </ColorContextProvider>
+  )
+}
+
+const PublishForm = ({ t, data }) => {
+  const { loading, error, repo } = data
 
   return (
     <>
@@ -153,36 +186,7 @@ const PublishForm = ({ t, data }) => {
               <div {...styles.formContainer}>
                 <PublicationForm t={t} repo={repo} commit={commit} />
               </div>
-              <ColorContextProvider
-                colorSchemeKey={previewDarkmode ? 'dark' : 'light'}
-              >
-                <div style={{ paddingTop: 40 }}>
-                  <div style={{ marginRight: PUBLICATION_COLUMN_WIDTH }}>
-                    <ScreeenSizePicker
-                      selectedScreenSize={previewScreenSize}
-                      onSelect={screenSize => {
-                        setPreviewScreenSize(screenSize)
-                      }}
-                      inline={true}
-                    />
-                    <div {...styles.darkmodeButton}>
-                      <DarkmodeToggle
-                        previewDarkmode={previewDarkmode}
-                        onToggle={() => setPreviewDarkmode(!previewDarkmode)}
-                      />
-                    </div>
-                  </div>
-                  <div>
-                    <PreviewFrame
-                      previewScreenSize={previewScreenSize}
-                      repoId={commit.document.repoId}
-                      commitId={commit.id}
-                      darkmode={previewDarkmode}
-                      sideBarWidth={PUBLICATION_COLUMN_WIDTH}
-                    />
-                  </div>
-                </div>
-              </ColorContextProvider>
+              <Preview commit={commit} />
             </>
           )
         }}
