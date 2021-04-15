@@ -90,7 +90,8 @@ const PreviewFrame = ({
       <div
         style={{
           ...iframeStyle,
-          display: iframeLoading ? 'block' : 'none'
+          position: 'absolute',
+          zIndex: iframeLoading ? 2 : -1
         }}
         {...colorScheme.set('backgroundColor', 'default')}
       >
@@ -100,8 +101,7 @@ const PreviewFrame = ({
         ref={iframeRef}
         onLoad={() => setIframeLoading(false)}
         style={{
-          ...iframeStyle,
-          display: !iframeLoading ? 'block' : 'none'
+          ...iframeStyle
         }}
         {...colorScheme.set('backgroundColor', 'default')}
         src={iframeSrc}

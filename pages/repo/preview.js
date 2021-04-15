@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { withRouter } from 'next/router'
 import { graphql, compose } from 'react-apollo'
 import gql from 'graphql-tag'
@@ -34,9 +34,9 @@ const PreviewPage = ({ router, data = {} }) => {
   const store = initLocalStore(storeKey)
   let localState = store.get('editorState')
 
-  const schema = getSchema(
-    localState?.meta?.template || document?.meta?.template
-  )
+  const template = localState?.meta?.template || document?.meta?.template
+  const schema = useMemo(() => getSchema(template), [template])
+
   return (
     <Frame.Body raw>
       <ColorContextProvider
@@ -49,10 +49,10 @@ const PreviewPage = ({ router, data = {} }) => {
             <>
               {renderMdast(
                 {
-                  ...(localState || document?.content),
-                  format: document?.meta?.format,
-                  section: document?.meta?.section,
-                  series: document?.meta?.series,
+                  ...(localState || document.content),
+                  format: document.meta.format,
+                  section: document.meta.section,
+                  series: document.meta.series,
                   repoId
                 },
                 schema
