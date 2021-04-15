@@ -14,7 +14,8 @@ import { mUp } from '../../theme/mediaQueries'
 import {
   PlayIcon,
   PauseIcon,
-  RewindIcon,
+  ForwardIcon,
+  ReplayIcon,
   DownloadIcon,
   CloseIcon
 } from '../Icons'
@@ -36,9 +37,10 @@ const ICON_SPACING = 8
 
 const SIZE = {
   play: 30,
-  rewind: 26,
   close: 30,
-  download: 22
+  download: 22,
+  forward: 22,
+  replay: 22
 }
 
 const barStyle = {
@@ -98,7 +100,7 @@ const styles = {
   download: css({
     position: 'absolute',
     top: '50%',
-    left: SIZE.rewind + SIZE.play + ICON_SPACING,
+    left: SIZE.play + SIZE.replay + SIZE.forward + ICON_SPACING,
     marginTop: -10,
     textAlign: 'center'
   }),
@@ -467,7 +469,10 @@ class AudioPlayer extends Component {
     } = this.state
     const isVideo = src.mp4 || src.hls
     const leftIconsWidth =
-      SIZE.rewind + SIZE.play + (download ? SIZE.download + ICON_SPACING : 0)
+      SIZE.play +
+      SIZE.replay +
+      SIZE.forward +
+      (download ? SIZE.download + ICON_SPACING : 0)
     const rightIconsWidth = closeHandler ? SIZE.close : 0
     const uiTextStyle = {
       maxWidth: `calc(100% - ${leftIconsWidth + rightIconsWidth + 20}px)`,
@@ -564,6 +569,24 @@ class AudioPlayer extends Component {
           <div {...styles.buttons}>
             <button
               {...styles.button}
+              onClick={
+                playEnabled
+                  ? () => {
+                      this.setTime(this.audio.currentTime - 10)
+                    }
+                  : null
+              }
+              title={t('styleguide/AudioPlayer/partialrewind')}
+            >
+              <ReplayIcon
+                size={SIZE.replay}
+                {...(playEnabled && progress > 0
+                  ? colorScheme.set('fill', 'text')
+                  : colorScheme.set('fill', 'disabled'))}
+              />
+            </button>
+            <button
+              {...styles.button}
               onClick={playEnabled ? this.toggle : null}
               title={t(`styleguide/AudioPlayer/${playing ? 'pause' : 'play'}`)}
               aria-live='assertive'
@@ -585,11 +608,17 @@ class AudioPlayer extends Component {
             </button>
             <button
               {...styles.button}
-              onClick={playEnabled ? () => this.setTime(0) : null}
-              title={t('styleguide/AudioPlayer/rewind')}
+              onClick={
+                playEnabled
+                  ? () => {
+                      this.setTime(this.audio.currentTime + 30)
+                    }
+                  : null
+              }
+              title={t('styleguide/AudioPlayer/partialfastforward')}
             >
-              <RewindIcon
-                size={SIZE.rewind}
+              <ForwardIcon
+                size={SIZE.forward}
                 {...(playEnabled && progress > 0
                   ? colorScheme.set('fill', 'text')
                   : colorScheme.set('fill', 'disabled'))}

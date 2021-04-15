@@ -6,7 +6,9 @@ import {
   sansSerifRegular12,
   sansSerifRegular15,
   serifRegular14,
-  serifRegular16
+  serifRegular16,
+  serifRegular17,
+  serifRegular19
 } from '../../Typography/styles'
 import { convertStyleToRem } from '../../Typography/utils'
 import { useColorContext } from '../../Colors/useColorContext'
@@ -40,10 +42,20 @@ const styles = {
     '& ~ &': {
       marginTop: -5
     }
+  }),
+  featuredText: css({
+    ...convertStyleToRem(serifRegular17),
+    [mUp]: {
+      ...convertStyleToRem(serifRegular19)
+    }
   })
 }
 
 const Paragraph = ({ children }) => <p {...styles.p}>{children}</p>
+
+export const FeaturedText = ({ children }) => (
+  <span {...styles.featuredText}>{children}</span>
+)
 
 export const Heading = ({ children }) => (
   <Paragraph>

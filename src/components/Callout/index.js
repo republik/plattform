@@ -33,8 +33,8 @@ const styles = {
     [mUp]: {
       display: 'block',
       transform: 'rotate(-45deg)',
-      width: 12,
-      height: 12,
+      width: 14,
+      height: 14,
       position: 'absolute',
       top: -7
     }
@@ -104,7 +104,11 @@ const Callout = ({
         {...calloutRule}
         onClick={e => e.stopPropagation()}
       >
-        <div {...styles.arrow} {...calloutRule} {...styles[align].arrow} />
+        <div
+          {...styles.arrow}
+          {...colorScheme.set('backgroundColor', 'overlay')}
+          {...styles[align].arrow}
+        />
         {children}
       </div>
     </div>

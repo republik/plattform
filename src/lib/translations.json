@@ -176,10 +176,6 @@
       "value": "Anhalten"
     },
     {
-      "key": "styleguide/AudioPlayer/rewind",
-      "value": "Von Anfang an"
-    },
-    {
       "key": "styleguide/AudioPlayer/download",
       "value": "Herunterladen"
     },
@@ -198,6 +194,14 @@
     {
       "key": "styleguide/AudioPlayer/sourceErrorTryAgain",
       "value": "Nochmal versuchen"
+    },
+    {
+      "key": "styleguide/AudioPlayer/partialrewind",
+      "value": "10 Sekunden zurück"
+    },
+    {
+      "key": "styleguide/AudioPlayer/partialfastforward",
+      "value": "30 Sekunden vorwärts"
     },
     {
       "key": "styleguide/video/dnt/note",

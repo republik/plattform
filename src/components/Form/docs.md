@@ -59,6 +59,33 @@ state: {
   onDec={() => setState({value: state.value - 10})} />
 ```
 
+### Ref
+
+The ref is forwarded for e.g. programatic focussing.
+
+```react
+state: {
+  value: 240
+}
+---
+<RefComponent>
+  {(ref) => (
+    <div>
+      <Field
+        label='Betrag'
+        ref={ref}
+        value={state.value}
+        onChange={(_, value) => setState({value})}
+        onInc={() => setState({value: state.value + 10})}
+        onDec={() => setState({value: state.value - 10})} />
+      <Button onClick={() => {
+        ref.current.focus()
+      }}>Focus Now</Button>
+    </div>
+  )}
+</RefComponent>
+```
+
 ### Change and Validation
 
 `onChange` gets called with the following arguments:
@@ -94,7 +121,7 @@ state: {
 
 ### Integration with Third-Party
 
-Integration is possible with any input component which support `value`, `onChange`, `onFocus`, `onBlur` and `className`. To do so use a custom `renderInput`, see example below.
+Integration is possible with any input component which support `value`, `onChange`, `onFocus`, `onBlur`, `className` and `ref` (`.focus()` is used for inc and dec). To do so use a custom `renderInput`, see example below.
 
 #### Example with `react-maskedinput`
 

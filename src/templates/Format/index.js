@@ -22,7 +22,7 @@ const createSchema = ({
   customMetaFields = [],
   series = false,
   darkMode = true,
-  paynotes = false,
+  paynotes = true,
   titleBlockPrepend = null,
   titleMargin = true,
   titleBlockRule,

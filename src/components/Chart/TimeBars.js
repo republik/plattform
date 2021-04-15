@@ -441,8 +441,8 @@ const TimeBarChart = props => {
                 .filter(Boolean)
                 .join('')
             const textSize = Math.max(
-              labelGauger(labelText || ''),
-              valueGauger(valueText || '')
+              labelText ? labelGauger(labelText) : 0,
+              valueText ? valueGauger(valueText) : 0
             )
 
             const x1 = range

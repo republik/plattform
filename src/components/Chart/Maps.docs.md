@@ -1,6 +1,6 @@
 ## GenericMap
 
-The Equal Earth projection, by Bojan Šavrič et al., 2018.
+The Equal Earth projection, by Bojan Šavrič et al., 2018. Below with a few colorful points on top. Grey «Null Island» without a tooltip. The rest with.
 
 ```react
 <div>
@@ -10,21 +10,31 @@ The Equal Earth projection, by Bojan Šavrič et al., 2018.
       "colorLegend": false,
       "heightRatio": 0.5,
       "points": true,
+      "sizeRangeMax": 25,
       "pointLabel": "name",
       "opacity": 1,
-      "colorRange": ["#000"],
+      "color": "category",
+      "colorMap": {
+        "Hometowns": "#1f77b4",
+        "Darling Cities": "#d62728",
+        "Null Island": "#7f7f7f"
+      },
+      "colorLegend": true,
+      "colorLegendSize": 0.1,
+      "colorLegendMinWidth": 80,
       "features": {
         "url": "/static/geo/world-atlas-110m.json",
         "object": "land"
       }
     }}
     values={`
-lat,lon,name
-47.366667,8.55,"Zürich"
-40.712778,-74.005833,"New York"
-35.683889,139.774444,"Tokyo"
-39.933333,116.383333,"Peking"
-49.28098,-123.12244,"Vancouver"
+lat,lon,name,category
+47.366667,8.55,"Zürich",Hometowns
+40.712778,-74.005833,"New York",Darling Cities
+35.683889,139.774444,"Tokyo",Darling Cities
+31.228611,121.474722,"Shanghai",Darling Cities
+49.28098,-123.12244,"Vancouver",Hometowns
+0,0,,Null Island
 `.trim()} />
   <ChartLegend>Geobasis: <Editorial.A href="https://github.com/topojson/world-atlas">World Atlas TopoJSON</Editorial.A></ChartLegend>
 </div>

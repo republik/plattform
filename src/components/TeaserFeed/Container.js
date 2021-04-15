@@ -6,6 +6,8 @@ import { Format } from './Format'
 import CalloutMenu from '../Callout/CalloutMenu'
 import { MoreIcon } from '../Icons'
 import { useColorContext } from '../Colors/useColorContext'
+import IconButton from '../IconButton'
+import { getFormatLine } from './utils'
 
 const styles = {
   main: css({
@@ -27,19 +29,30 @@ const styles = {
 }
 
 const MoreIconWithProps = props => (
-  <MoreIcon width='calc(1em + 7px)' {...props} />
+  <IconButton title='Mehr' Icon={MoreIcon} {...props} />
 )
 
 const Teaser = ({
   children,
   formatColor,
   format,
-  interaction,
+  series,
+  repoId,
+  title,
+  path,
   Link,
   highlighted,
   menu
 }) => {
   const [colorScheme] = useColorContext()
+
+  const formatLine = getFormatLine({
+    format,
+    series,
+    repoId,
+    path,
+    title
+  })
 
   return (
     <div
@@ -58,11 +71,11 @@ const Teaser = ({
           </CalloutMenu>
         </div>
       )}
-      {format && format.meta && (
+      {formatLine.title && (
         <Format color={formatColor}>
-          <Link href={format.meta.path} passHref>
-            <a {...styles.link} href={format.meta.path}>
-              {format.meta.title}
+          <Link href={formatLine.path} passHref>
+            <a {...styles.link} href={formatLine.path}>
+              {formatLine.title}
             </a>
           </Link>
         </Format>

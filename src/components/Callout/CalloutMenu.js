@@ -1,5 +1,7 @@
 import React from 'react'
 import Callout from './index'
+import { css } from 'glamor'
+import { mUp } from '../../theme/mediaQueries'
 
 const hasAncestor = (node, predicate) => {
   if (predicate(node)) {
@@ -16,7 +18,8 @@ const CalloutMenu = ({
   Element,
   align,
   initiallyOpen,
-  contentPaddingMobile
+  contentPaddingMobile,
+  padded
 }) => {
   const [showMenu, setMenu] = React.useState(initiallyOpen)
   const toggleRef = React.useRef()
@@ -35,8 +38,13 @@ const CalloutMenu = ({
     }
   }, [showMenu])
 
+  // wrapping div needed for robust positioning of <Callout />
   return (
-    <>
+    <div
+      {...(padded && styles.padded)}
+      style={{ position: 'relative' }}
+      ref={toggleRef}
+    >
       {showMenu && (
         <Callout
           onClose={() => setMenu(false)}
@@ -46,9 +54,18 @@ const CalloutMenu = ({
           {children}
         </Callout>
       )}
-      <Element ref={toggleRef} onClick={() => setMenu(!showMenu)} />
-    </>
+      <Element onClick={() => setMenu(!showMenu)} />
+    </div>
   )
+}
+
+const styles = {
+  padded: css({
+    marginRight: 20,
+    [mUp]: {
+      marginRight: 24
+    }
+  })
 }
 
 export default CalloutMenu

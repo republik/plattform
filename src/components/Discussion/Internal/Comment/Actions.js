@@ -197,14 +197,6 @@ export const Actions = ({
           <UnpublishIcon {...colorScheme.set('fill', 'text')} />
         </IconButton>
       )}
-      {published && (
-        <IconButton
-          onClick={onShare}
-          title={t('styleguide/CommentActions/share')}
-        >
-          <ShareIcon {...colorScheme.set('fill', 'text')} />
-        </IconButton>
-      )}
       {published && userCanReport && onReport && (
         <IconButton
           disabled={userReportedAt}
@@ -221,6 +213,14 @@ export const Actions = ({
               </span>
             )}
           </span>
+        </IconButton>
+      )}
+      {published && (
+        <IconButton
+          onClick={onShare}
+          title={t('styleguide/CommentActions/share')}
+        >
+          <ShareIcon {...colorScheme.set('fill', 'text')} />
         </IconButton>
       )}
       {published && (

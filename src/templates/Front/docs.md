@@ -506,5 +506,37 @@ Foto: [Laurent Burst](/~349ef65b-119a-4d3e-9176-26517855d342 "Laurent Burst")
 
 <hr /></section>
 
+<section><h6>TEASER</h6>
+
+\`\`\`
+{
+  "bgColor": "SandyBrown",
+  "byline": "Foto: Thomas Vuillemin",
+  "center": false,
+  "color": "#fff",
+  "kind": "editorial",
+  "portrait": true,
+  "reverse": false,
+  "teaserType": "frontImage",
+  "textPosition": "bottomleft",
+  "titleSize": "standard",
+  "url": "https://www.republik.ch/",
+  "formatUrl": "https://www.republik.ch/manifest",
+  "formatLogo": "/static/50Jahre_Frauenwahlrecht_negativ.svg"
+}
+\`\`\`
+
+![](/static/desert.jpg?size=4323x2962)
+
+###### 50 Jahre Frauenstimmrecht
+
+# 10% CEO
+
+#### Der Frauenanteil in den Geschäftsleitungen der 100 grössten Schweizer Arbeitgebenden stagniert.
+
+Foto: [Thomas Vuillemin on Unsplash](https://unsplash.com/photos/c1_K8Qfd_iQ)
+
+<hr /></section>
+
 `}</Markdown>
 ```

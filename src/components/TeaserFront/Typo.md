@@ -90,3 +90,14 @@ A `<TeaserFrontTypoHeadline />` should be used. The default font size can be cha
   </TeaserFrontCredit>
 </TeaserFrontTypo>
 ```
+
+```react
+<TeaserFrontTypo color='#000' bgColor='#fff'>
+  <TeaserFrontLogo logo='/static/50Jahre_Frauenwahlrecht_positiv.svg' alt='50 Jahre Frauenstimmrecht' />
+  <Editorial.Format>50 Jahre Frauenstimmrecht</Editorial.Format>
+  <TeaserFrontTypoHeadline.Interaction small>Mehr Geld für ausländische Autorinnen oder einen Bundeshaus&shy;korrespondent?</TeaserFrontTypoHeadline.Interaction>
+  <TeaserFrontCredit>
+    <TeaserFrontCreditLink color='#000' href='#'>Constantin Seibt</TeaserFrontCreditLink> fragt nach<br />31. December 2017
+  </TeaserFrontCredit>
+</TeaserFrontTypo>
+```

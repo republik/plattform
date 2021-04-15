@@ -21,6 +21,9 @@ import { Video } from '../../components/Video'
 import { VideoPlayer } from '../../components/VideoPlayer'
 import { AudioPlayer } from '../../components/AudioPlayer'
 
+import { TeaserFrontLogo } from '../../components/TeaserFront'
+import { getFormatLine } from '../../components/TeaserFeed/utils'
+
 import {
   matchType,
   matchZone,
@@ -31,7 +34,6 @@ import {
 
 import { matchLast, globalInlines, styles, getDatePath } from './utils'
 
-import colors from '../../theme/colors'
 import createBase from './base'
 import createBlocks from './blocks'
 import createTeasers from './teasers'
@@ -162,7 +164,9 @@ const createSchema = ({
   getVideoPlayerProps = props => props,
   onAudioCoverClick,
   metaBody = false,
-  metaHeadlines = false
+  metaHeadlines = false,
+  skipContainer = false,
+  skipCenter = false
 } = {}) => {
   const base = createBase({ metaBody, metaHeadlines })
   const blocks = createBlocks({
@@ -191,8 +195,8 @@ const createSchema = ({
     rules: [
       {
         matchMdast: matchType('root'),
-        component: Container,
-        props: node => ({}),
+        component: ({ children }) =>
+          skipContainer ? children : <Container>{children}</Container>,
         editorModule: 'documentPlain',
         editorOptions: documentEditorOptions,
         rules: [
@@ -222,28 +226,56 @@ const createSchema = ({
           addProgressProps(dynamicComponent),
           titleBlockRule || {
             matchMdast: matchZone('TITLE'),
-            component: ({ children, format, ...props }) => (
-              <TitleBlock {...props} format={format} margin={titleMargin}>
-                {titleBlockPrepend}
-                {format && format.meta && (
-                  <Editorial.Format
-                    color={format.meta.color || colors[format.meta.kind]}
-                    contentEditable={false}
-                  >
-                    <Link href={format.meta.path} passHref>
-                      <a {...styles.link} href={format.meta.path}>
-                        {format.meta.title}
-                      </a>
-                    </Link>
-                  </Editorial.Format>
-                )}
-                {children}
-              </TitleBlock>
-            ),
-            props: (node, index, parent, { ancestors }) => ({
-              center: node.data.center,
-              format: ancestors[ancestors.length - 1].format
-            }),
+            component: ({
+              children,
+              format,
+              series,
+              repoId,
+              path,
+              ...props
+            }) => {
+              const formatLine = getFormatLine({
+                format,
+                series,
+                repoId,
+                path
+              })
+
+              return (
+                <TitleBlock {...props} format={format} margin={titleMargin}>
+                  {titleBlockPrepend}
+                  {formatLine.logo && (
+                    <TeaserFrontLogo
+                      logo={formatLine.logo}
+                      logoDark={formatLine.logoDark}
+                    />
+                  )}
+                  {formatLine.title && (
+                    <Editorial.Format
+                      color={formatLine.color}
+                      contentEditable={false}
+                    >
+                      <Link href={formatLine.path} passHref>
+                        <a {...styles.link} href={formatLine.path}>
+                          {formatLine.title}
+                        </a>
+                      </Link>
+                    </Editorial.Format>
+                  )}
+                  {children}
+                </TitleBlock>
+              )
+            },
+            props: (node, index, parent, { ancestors }) => {
+              const root = ancestors[ancestors.length - 1]
+              return {
+                center: node.data.center,
+                format: root.format,
+                series: root.series,
+                repoId: root.repoId,
+                path: root.meta?.path
+              }
+            },
             editorModule: 'title',
             editorOptions: {
               coverType: COVER_TYPE,
@@ -354,7 +386,8 @@ const createSchema = ({
           },
           {
             matchMdast: matchZone('CENTER'),
-            component: Center,
+            component: ({ children }) =>
+              skipCenter ? children : <Center>{children}</Center>,
             // prevent empty data object forward to component
             // - Center spreads all props onto its div
             props: () => ({}),

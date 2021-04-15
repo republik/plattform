@@ -27,6 +27,7 @@ const styles = {
 const TitleBlock = ({ children, attributes, center, margin }) => {
   return (
     <section
+      className='title-block'
       {...attributes}
       {...merge(styles.container, margin && styles.containerMargin)}
       style={{

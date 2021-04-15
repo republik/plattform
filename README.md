@@ -99,7 +99,7 @@ They may be prefixed with `REACT_APP_` for [CRA compatibility](https://github.co
 
 This style guide is build with [Catalog](https://interactivethings.github.io/catalog/). You can write documentation in Markdown and React.
 
-You will need [Node.js 6.9](https://nodejs.org/en/download/current/) or higher.
+You will need [Node.js 14](https://nodejs.org/en/download/current/) or higher.
 
 To start the development server run:
 
