@@ -98,27 +98,41 @@ const PreviewText = ({ data, socialKey }) => {
   )
 }
 
-const ShareImageForm = withT(({ t, onInputChange, format, data }) => {
+const ShareImageForm = withT(({ t, editor, node, onInputChange, format }) => {
   const [generated, setGenerated] = useState(
-    !!format || !!data.get('shareText')
+    !!format || !!node.data.get('shareText')
   )
 
   useEffect(() => {
     if (generated) {
-      !data.get('shareTextPosition') &&
-        onInputChange('shareTextPosition')(
-          undefined,
-          SHARE_IMAGE_DEFAULTS.textPosition
-        )
-      !data.get('shareFontSize') &&
-        onInputChange('shareFontSize')(undefined, SHARE_IMAGE_DEFAULTS.fontSize)
+      editor.change(change => {
+        change.setNodeByKey(node.key, {
+          data: node.data
+            .set(
+              'shareTextPosition',
+              node.data.get('shareTextPosition') ||
+                SHARE_IMAGE_DEFAULTS.textPosition
+            )
+            .set(
+              'shareFontSize',
+              node.data.get('shareFontSize') || SHARE_IMAGE_DEFAULTS.fontSize
+            )
+        })
+      })
     } else {
-      onInputChange('shareInverted')(undefined, undefined)
-      onInputChange('shareTextPosition')(undefined, undefined)
-      onInputChange('shareFontSize')(undefined, undefined)
-      onInputChange('shareText')(undefined, undefined)
+      editor.change(change => {
+        change.setNodeByKey(node.key, {
+          data: node.data
+            .remove('shareInverted')
+            .remove('shareTextPosition')
+            .remove('shareFontSize')
+            .remove('shareText')
+        })
+      })
     }
   }, [generated])
+
+  const data = node.data
 
   return (
     <div>

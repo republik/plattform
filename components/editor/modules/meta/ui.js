@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import React from 'react'
 import { css } from 'glamor'
 import { Map, Set } from 'immutable'
 import { nest } from 'd3-collection'
@@ -17,7 +17,7 @@ import PaynotesForm from './PaynotesForm'
 import AudioForm from './AudioForm'
 import UIForm from '../../UIForm'
 import DarkModeForm, { DARK_MODE_KEY } from './DarkModeForm'
-import ShareImageForm, { SOCIAL_MEDIA } from './ShareImageForm'
+import ShareImageForm from './ShareImageForm'
 
 const styles = {
   container: css({
@@ -254,9 +254,10 @@ const MetaData = ({
         <br />
         <br />
         <ShareImageForm
-          data={node.data}
           onInputChange={onInputChange}
           format={titleData?.format?.meta}
+          editor={editor}
+          node={node}
         />
         <br />
         <br />
