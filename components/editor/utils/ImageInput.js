@@ -15,8 +15,8 @@ const styles = {
   close: css({
     position: 'absolute',
     background: 'rgba(255, 255, 255, 0.5)',
-    right: 2,
-    marginTop: 2,
+    right: 7,
+    marginTop: 7,
     cursor: 'pointer'
   })
 }
@@ -61,7 +61,16 @@ const readImage = (onChange, t) => e => {
   reader.readAsDataURL(file)
 }
 
-const ImageInput = ({ onChange, t, src, dark, label, maxWidth = 200 }) => (
+const ImageInput = ({
+  onChange,
+  t,
+  src,
+  dark,
+  label,
+  maxHeight,
+  imageStyles,
+  maxWidth = 200
+}) => (
   <div style={{ position: 'relative' }}>
     <label>
       <Label {...styles.label}>{label}</Label>
@@ -76,8 +85,11 @@ const ImageInput = ({ onChange, t, src, dark, label, maxWidth = 200 }) => (
       )}
       <img
         src={src || '/static/placeholder.png'}
+        {...imageStyles}
         style={{
           maxWidth,
+          maxHeight,
+          objectFit: 'cover',
           width: src ? undefined : '100%',
           backgroundColor: dark ? '#1F1F1F' : '#fff'
         }}
