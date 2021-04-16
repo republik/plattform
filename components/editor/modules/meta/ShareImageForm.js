@@ -8,10 +8,12 @@ import {
   SharePreviewTwitter,
   socialPreviewStyles,
   Label,
-  SHARE_IMAGE_DEFAULTS
+  SHARE_IMAGE_DEFAULTS,
+  Radio
 } from '@project-r/styleguide'
 import ImageInput from '../../utils/ImageInput'
 import withT from '../../../../lib/withT'
+import { capitalize } from '../../../../lib/utils/format'
 
 export const SOCIAL_MEDIA = ['facebook', 'twitter']
 
@@ -28,7 +30,13 @@ const BaseForm = ({ socialKey, data, onInputChange }) => {
   const initData = initValues.merge(
     data.filter((_, key) => initValues.has(key))
   )
-  return <MetaForm data={initData} onInputChange={onInputChange} />
+  return (
+    <MetaForm
+      data={initData}
+      onInputChange={onInputChange}
+      getWidth={() => 620}
+    />
+  )
 }
 
 const UploadImage = withT(({ t, data, onInputChange, socialKey }) => {
@@ -84,23 +92,25 @@ const PreviewText = ({ data, socialKey }) => {
   return (
     <Preview
       title={data.get(socialKey + 'Title') || data.get('title')}
-      descrition={
+      description={
         data.get(socialKey + 'Description') || data.get('description')
       }
     />
   )
 }
 
-const ShareImageForm = ({ onInputChange, format, data }) => {
-  const [generated, setGenerated] = useState(true)
+const ShareImageForm = withT(({ t, onInputChange, format, data }) => {
+  const [generated, setGenerated] = useState(!!format)
 
   useEffect(() => {
     if (generated) {
-      data.set('shareInverted', false)
-      data.set('shareTextPosition', SHARE_IMAGE_DEFAULTS.textPosition)
-      data.set('shareFontSize', SHARE_IMAGE_DEFAULTS.fontSize)
-      data.set('shareText', '')
+      console.log('generated')
+      !data.get('shareTextPosition') &&
+        data.set('shareTextPosition', SHARE_IMAGE_DEFAULTS.textPosition)
+      !data.get('shareFontSize') &&
+        data.set('shareFontSize', SHARE_IMAGE_DEFAULTS.fontSize)
     } else {
+      console.log('upload')
       data.remove('shareInverted')
       data.remove('shareTextPosition')
       data.remove('shareFontSize')
@@ -110,10 +120,26 @@ const ShareImageForm = ({ onInputChange, format, data }) => {
 
   return (
     <div>
-      <Label>Sharebild Metadaten</Label>
-      <div>SWITCH</div>
-      <br />
-
+      <Label style={{ display: 'block', paddingBottom: 5 }}>Social Media</Label>
+      <div>
+        <Radio
+          checked={!generated}
+          onChange={() => setGenerated(false)}
+          style={{ marginRight: 30 }}
+        >
+          Bilder hochladen
+        </Radio>
+        <Radio checked={generated} onChange={() => setGenerated(true)}>
+          Tafel bauen
+        </Radio>
+      </div>
+      {generated && (
+        <GenerateImage
+          format={format}
+          data={data}
+          onInputChange={onInputChange}
+        />
+      )}
       {SOCIAL_MEDIA.map(socialKey => (
         <Fragment key={socialKey}>
           <BaseForm
@@ -121,29 +147,9 @@ const ShareImageForm = ({ onInputChange, format, data }) => {
             data={data}
             onInputChange={onInputChange}
           />
-          <br />
-          {!generated && (
+          {generated ? (
             <>
-              <UploadImage
-                socialKey={socialKey}
-                data={data}
-                onInputChange={onInputChange}
-              />
-              <PreviewText data={data} socialKey={socialKey} />
-            </>
-          )}
-        </Fragment>
-      ))}
-
-      {generated && (
-        <>
-          <GenerateImage
-            format={format}
-            data={data}
-            onInputChange={onInputChange}
-          />
-          {SOCIAL_MEDIA.map(socialKey => (
-            <Fragment key={socialKey}>
+              <Label>{t(`metaData/field/${socialKey}Preview`)}</Label>
               <ShareImagePreview
                 fontSize={data.get('shareFontSize')}
                 inverted={data.get('shareInverted')}
@@ -152,13 +158,20 @@ const ShareImageForm = ({ onInputChange, format, data }) => {
                 format={format}
                 preview={socialKey}
               />
-              <PreviewText data={data} socialKey={socialKey} />
-            </Fragment>
-          ))}
-        </>
-      )}
+            </>
+          ) : (
+            <UploadImage
+              socialKey={socialKey}
+              data={data}
+              onInputChange={onInputChange}
+            />
+          )}
+          <PreviewText data={data} socialKey={socialKey} />
+          <br />
+        </Fragment>
+      ))}
     </div>
   )
-}
+})
 
 export default ShareImageForm
