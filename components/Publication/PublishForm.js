@@ -102,12 +102,13 @@ export const getRepoWithCommit = gql`
             title
             description
             image
+            facebookTitle
             facebookDescription
             facebookImage
-            facebookTitle
+            twitterTitle
             twitterDescription
             twitterImage
-            twitterTitle
+            shareText
             format {
               id
               repoId

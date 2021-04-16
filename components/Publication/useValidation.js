@@ -5,6 +5,7 @@ import { parse } from 'url'
 import { FRONTEND_BASE_URL } from '../../lib/settings'
 
 import { Editorial } from '@project-r/styleguide'
+import { SOCIAL_MEDIA } from '../editor/modules/meta/ShareImageForm'
 
 const mdastToString = node =>
   node
@@ -77,19 +78,23 @@ const useValidation = ({ meta, content, t, updateMailchimp }) => {
       t('publish/validation/emailSubject/empty')
   ].filter(Boolean)
 
+  const socialWarnings = SOCIAL_MEDIA.map(
+    socialKey =>
+      !meta.shareText &&
+      !meta[`${socialKey}Image`] &&
+      !meta.image &&
+      t(`publish/validation/${socialKey}Image/empty`)
+  )
+
   const warnings = []
     .concat(
       meta.template !== 'front'
         ? [
             !meta.title && t('publish/validation/title/empty'),
-            !meta.description && t('publish/validation/description/empty'),
-            !meta.facebookImage &&
-              !meta.image &&
-              t('publish/validation/facebookImage/empty'),
-            !meta.twitterImage &&
-              !meta.image &&
-              t('publish/validation/twitterImage/empty')
-          ].filter(Boolean)
+            !meta.description && t('publish/validation/description/empty')
+          ]
+            .concat(socialWarnings)
+            .filter(Boolean)
         : []
     )
     .concat(

@@ -3,15 +3,7 @@ import { css } from 'glamor'
 import { Map, Set } from 'immutable'
 import { nest } from 'd3-collection'
 
-import {
-  A,
-  Interaction,
-  Dropdown,
-  Field,
-  Checkbox,
-  Label,
-  colors
-} from '@project-r/styleguide'
+import { Interaction, Checkbox, Label, colors } from '@project-r/styleguide'
 
 import withT from '../../../../lib/withT'
 import slugify from '../../../../lib/utils/slug'
@@ -19,14 +11,13 @@ import { FRONTEND_BASE_URL } from '../../../../lib/settings'
 
 import MetaForm from '../../utils/MetaForm'
 import SlugField from '../../utils/SlugField'
-import FBPreview from './FBPreview'
-import TwitterPreview from './TwitterPreview'
 import RepoSelect from './RepoSelect'
 import SeriesForm from './SeriesForm'
 import PaynotesForm from './PaynotesForm'
 import AudioForm from './AudioForm'
 import UIForm from '../../UIForm'
 import DarkModeForm, { DARK_MODE_KEY } from './DarkModeForm'
+import ShareImageForm from './ShareImageForm'
 
 const styles = {
   container: css({
@@ -44,7 +35,8 @@ const styles = {
   })
 }
 
-const getWidth = key => (key.match(/title|feed|emailSubject/i) ? '100%' : '')
+export const getWidth = key =>
+  key.match(/title|feed|emailSubject/i) ? '100%' : ''
 
 const MetaData = ({
   value,
@@ -75,22 +67,6 @@ const MetaData = ({
   )
   const genericData = genericDefaultValues.merge(
     node.data.filter((_, key) => genericKeys.has(key))
-  )
-
-  const fbKeys = Set(['facebookTitle', 'facebookImage', 'facebookDescription'])
-  const fbDefaultValues = Map(fbKeys.map(key => [key, '']))
-  const fbData = fbDefaultValues.merge(
-    node.data.filter((_, key) => fbKeys.has(key))
-  )
-
-  const twitterKeys = Set([
-    'twitterTitle',
-    'twitterImage',
-    'twitterDescription'
-  ])
-  const twitterDefaultValues = Map(twitterKeys.map(key => [key, '']))
-  const twitterData = twitterDefaultValues.merge(
-    node.data.filter((_, key) => twitterKeys.has(key))
   )
 
   const onInputChange = key => (_, inputValue) => {
@@ -277,27 +253,12 @@ const MetaData = ({
         <br />
         <br />
         <br />
-        <MetaForm
-          data={fbData}
+        <ShareImageForm
           onInputChange={onInputChange}
-          black
-          getWidth={getWidth}
+          format={titleData?.format?.meta}
+          editor={editor}
+          node={node}
         />
-        <Label>{t('metaData/preview')}</Label>
-        <br />
-        <FBPreview data={node.data} />
-        <br />
-        <br />
-        <br />
-        <MetaForm
-          data={twitterData}
-          onInputChange={onInputChange}
-          black
-          getWidth={getWidth}
-        />
-        <Label>{t('metaData/preview')}</Label>
-        <br />
-        <TwitterPreview data={node.data} />
         <br />
         <br />
         <br />
