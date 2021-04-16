@@ -1,5 +1,5 @@
 {
-  "updated": "2021-04-16T07:46:28.603Z",
+  "updated": "2021-04-16T09:27:55.304Z",
   "title": "live",
   "data": [
     {
@@ -464,7 +464,7 @@
     },
     {
       "key": "metaData/field/auto",
-      "value": "Automatisch vom Titelblock ableiten (Titel, Deskription & Slug)"
+      "value": "Automatisch vom Titelblock ableiten (Titel, Lead & Slug)"
     },
     {
       "key": "metaData/field/shortTitle",
@@ -484,7 +484,7 @@
     },
     {
       "key": "metaData/field/description",
-      "value": "Deskription"
+      "value": "Lead"
     },
     {
       "key": "metaData/field/image",
@@ -548,7 +548,7 @@
     },
     {
       "key": "metaData/field/facebookDescription",
-      "value": "Facebook Deskription"
+      "value": "Facebook Lead"
     },
     {
       "key": "metaData/field/facebookImage",
@@ -564,7 +564,7 @@
     },
     {
       "key": "metaData/field/twitterDescription",
-      "value": "Twitter Deskription"
+      "value": "Twitter Lead"
     },
     {
       "key": "metaData/field/twitterImage",
@@ -1108,7 +1108,7 @@
     },
     {
       "key": "publish/validation/description/empty",
-      "value": "Metadaten-Deskription fehlt"
+      "value": "Metadaten-Lead fehlt"
     },
     {
       "key": "publish/validation/facebookImage/empty",
