@@ -69,6 +69,7 @@ const ImageInput = ({
   label,
   maxHeight,
   imageStyles,
+  placeholder,
   maxWidth = 200
 }) => (
   <div style={{ position: 'relative' }}>
@@ -84,7 +85,7 @@ const ImageInput = ({
         />
       )}
       <img
-        src={src || '/static/placeholder.png'}
+        src={src || placeholder || '/static/placeholder.png'}
         {...imageStyles}
         style={{
           maxWidth,

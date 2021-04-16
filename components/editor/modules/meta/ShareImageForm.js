@@ -50,6 +50,7 @@ const UploadImage = withT(({ t, data, onInputChange, socialKey }) => {
         imageStyles={socialPreviewStyles[socialKey]}
         label={t(`metaData/field/${imageKey}`)}
         src={data.get(imageKey)}
+        placeholder={data.get('image')}
         onChange={onInputChange(imageKey)}
       />
     </div>
@@ -99,9 +100,13 @@ const PreviewText = ({ data, socialKey }) => {
 }
 
 const ShareImageForm = withT(({ t, editor, node, onInputChange, format }) => {
-  const generated = !!(node.data.get('shareText') || node.data.get('shareFontSize') || node.data.get('shareTextPosition'))
+  const generated = !!(
+    node.data.get('shareText') ||
+    node.data.get('shareFontSize') ||
+    node.data.get('shareTextPosition')
+  )
 
-  const setGenerated = (generated) => {
+  const setGenerated = generated => {
     if (generated) {
       editor.change(change => {
         change.setNodeByKey(node.key, {
