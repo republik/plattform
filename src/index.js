@@ -107,7 +107,7 @@ const Styleguide = () => {
                 src: require('./README.md')
               },
               {
-                title: 'Base',
+                title: 'Brand',
                 pages: [
                   {
                     path: '/logo',
@@ -144,6 +144,17 @@ const Styleguide = () => {
                       IconButton: require('./components/IconButton')
                     },
                     src: require('./components/Icons/docs.md')
+                  },
+                  {
+                    path: '/share-image',
+                    title: 'Share Image',
+                    src: require('./components/ShareImage/docs.md'),
+                    imports: {
+                      ...require('./components/Typography'),
+                      ShareImageGenerator: require('./components/ShareImage'),
+                      ShareImagePreview: require('./components/ShareImage/ShareImagePreview'),
+                      SharePreviewTwitter: require('./components/ShareImage/SharePreviewTwitter')
+                    }
                   }
                 ]
               },
