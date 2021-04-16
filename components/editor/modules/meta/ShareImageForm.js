@@ -13,7 +13,6 @@ import {
 } from '@project-r/styleguide'
 import ImageInput from '../../utils/ImageInput'
 import withT from '../../../../lib/withT'
-import { capitalize } from '../../../../lib/utils/format'
 
 export const SOCIAL_MEDIA = ['facebook', 'twitter']
 
