@@ -34,6 +34,8 @@ export const filterRepos = gql`
               credits
               kind
               color
+              shareBackgroundImage
+              shareBackgroundImageInverted
               format {
                 id
                 repoId
