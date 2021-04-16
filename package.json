@@ -134,8 +134,8 @@
     }
   },
   "dependencies": {
-    "body-scroll-lock": "3.0.3",
-    "react-icons": "^4.2.0"
+    "@react-icons/all-files": "^4.1.0",
+    "body-scroll-lock": "3.0.3"
   },
   "browserslist": [
     ">0.2%",

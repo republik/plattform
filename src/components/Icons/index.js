@@ -1,77 +1,75 @@
-import {
-  MdPictureAsPdf,
-  MdFileDownload,
-  MdVolumeUp,
-  MdBookmark,
-  MdBookmarkBorder,
-  MdSearch,
-  MdPlayArrow,
-  MdPause,
-  MdSkipPrevious,
-  MdClose,
-  MdOpenInNew,
-  MdMood,
-  MdKeyboardArrowDown,
-  MdKeyboardArrowUp,
-  MdKeyboardArrowLeft,
-  MdKeyboardArrowRight,
-  MdFlag,
-  MdEdit,
-  MdVisibilityOff,
-  MdReply,
-  MdStarBorder,
-  MdMoreVert,
-  MdCheck,
-  MdFilter,
-  MdChevronLeft,
-  MdChevronRight,
-  MdFullscreen,
-  MdFullscreenExit,
-  MdMic,
-  MdPlayCircleOutline,
-  MdQueryBuilder,
-  MdMail,
-  MdMailOutline,
-  MdPhonelink,
-  MdLink,
-  MdHighlightOff,
-  MdLaunch,
-  MdRssFeed,
-  MdArrowDownward,
-  MdArrowForward,
-  MdExpandMore,
-  MdExpandLess,
-  MdDone,
-  MdNotificationsActive,
-  MdNotifications,
-  MdNotificationsOff,
-  MdNotificationsNone,
-  MdRotateLeft,
-  MdList,
-  MdFilterList,
-  MdAdd,
-  MdRemove,
-  MdAccountBox,
-  MdNoteAdd,
-  MdVpnKey,
-  MdLanguage,
-  MdFavorite,
-  MdStars,
-  MdTrendingFlat,
-  MdFolder,
-  MdBrightness2,
-  MdForward30,
-  MdReplay10
-} from 'react-icons/md'
-import {
-  IoLogoTwitter,
-  IoLogoYoutube,
-  IoLogoVimeo,
-  IoLogoWhatsapp,
-  IoLogoGoogle,
-  IoLogoApple,
-  IoLogoFacebook
-} from 'react-icons/io'
+import { MdPictureAsPdf } from '@react-icons/all-files/md/MdPictureAsPdf'
+import { MdFileDownload } from '@react-icons/all-files/md/MdFileDownload'
+import { MdVolumeUp } from '@react-icons/all-files/md/MdVolumeUp'
+import { MdBookmark } from '@react-icons/all-files/md/MdBookmark'
+import { MdBookmarkBorder } from '@react-icons/all-files/md/MdBookmarkBorder'
+import { MdSearch } from '@react-icons/all-files/md/MdSearch'
+import { MdPlayArrow } from '@react-icons/all-files/md/MdPlayArrow'
+import { MdPause } from '@react-icons/all-files/md/MdPause'
+import { MdSkipPrevious } from '@react-icons/all-files/md/MdSkipPrevious'
+import { MdClose } from '@react-icons/all-files/md/MdClose'
+import { MdOpenInNew } from '@react-icons/all-files/md/MdOpenInNew'
+import { MdMood } from '@react-icons/all-files/md/MdMood'
+import { MdKeyboardArrowDown } from '@react-icons/all-files/md/MdKeyboardArrowDown'
+import { MdKeyboardArrowUp } from '@react-icons/all-files/md/MdKeyboardArrowUp'
+import { MdKeyboardArrowLeft } from '@react-icons/all-files/md/MdKeyboardArrowLeft'
+import { MdKeyboardArrowRight } from '@react-icons/all-files/md/MdKeyboardArrowRight'
+import { MdFlag } from '@react-icons/all-files/md/MdFlag'
+import { MdEdit } from '@react-icons/all-files/md/MdEdit'
+import { MdVisibilityOff } from '@react-icons/all-files/md/MdVisibilityOff'
+import { MdReply } from '@react-icons/all-files/md/MdReply'
+import { MdStarBorder } from '@react-icons/all-files/md/MdStarBorder'
+import { MdMoreVert } from '@react-icons/all-files/md/MdMoreVert'
+import { MdCheck } from '@react-icons/all-files/md/MdCheck'
+import { MdFilter } from '@react-icons/all-files/md/MdFilter'
+import { MdChevronLeft } from '@react-icons/all-files/md/MdChevronLeft'
+import { MdChevronRight } from '@react-icons/all-files/md/MdChevronRight'
+import { MdFullscreen } from '@react-icons/all-files/md/MdFullscreen'
+import { MdFullscreenExit } from '@react-icons/all-files/md/MdFullscreenExit'
+import { MdMic } from '@react-icons/all-files/md/MdMic'
+import { MdPlayCircleOutline } from '@react-icons/all-files/md/MdPlayCircleOutline'
+import { MdQueryBuilder } from '@react-icons/all-files/md/MdQueryBuilder'
+import { MdMail } from '@react-icons/all-files/md/MdMail'
+import { MdMailOutline } from '@react-icons/all-files/md/MdMailOutline'
+import { MdPhonelink } from '@react-icons/all-files/md/MdPhonelink'
+import { MdLink } from '@react-icons/all-files/md/MdLink'
+import { MdHighlightOff } from '@react-icons/all-files/md/MdHighlightOff'
+import { MdLaunch } from '@react-icons/all-files/md/MdLaunch'
+import { MdRssFeed } from '@react-icons/all-files/md/MdRssFeed'
+import { MdArrowDownward } from '@react-icons/all-files/md/MdArrowDownward'
+import { MdArrowForward } from '@react-icons/all-files/md/MdArrowForward'
+import { MdExpandMore } from '@react-icons/all-files/md/MdExpandMore'
+import { MdExpandLess } from '@react-icons/all-files/md/MdExpandLess'
+import { MdDone } from '@react-icons/all-files/md/MdDone'
+import { MdNotificationsActive } from '@react-icons/all-files/md/MdNotificationsActive'
+import { MdNotifications } from '@react-icons/all-files/md/MdNotifications'
+import { MdNotificationsOff } from '@react-icons/all-files/md/MdNotificationsOff'
+import { MdNotificationsNone } from '@react-icons/all-files/md/MdNotificationsNone'
+import { MdRotateLeft } from '@react-icons/all-files/md/MdRotateLeft'
+import { MdList } from '@react-icons/all-files/md/MdList'
+import { MdFilterList } from '@react-icons/all-files/md/MdFilterList'
+import { MdAdd } from '@react-icons/all-files/md/MdAdd'
+import { MdRemove } from '@react-icons/all-files/md/MdRemove'
+import { MdAccountBox } from '@react-icons/all-files/md/MdAccountBox'
+import { MdNoteAdd } from '@react-icons/all-files/md/MdNoteAdd'
+import { MdVpnKey } from '@react-icons/all-files/md/MdVpnKey'
+import { MdLanguage } from '@react-icons/all-files/md/MdLanguage'
+import { MdFavorite } from '@react-icons/all-files/md/MdFavorite'
+import { MdStars } from '@react-icons/all-files/md/MdStars'
+import { MdTrendingFlat } from '@react-icons/all-files/md/MdTrendingFlat'
+import { MdFolder } from '@react-icons/all-files/md/MdFolder'
+import { MdBrightness2 } from '@react-icons/all-files/md/MdBrightness2'
+import { MdForward30 } from '@react-icons/all-files/md/MdForward30'
+import { MdReplay10 } from '@react-icons/all-files/md/MdReplay10'
+
+import { IoLogoTwitter } from '@react-icons/all-files/io/IoLogoTwitter'
+import { IoLogoYoutube } from '@react-icons/all-files/io/IoLogoYoutube'
+import { IoLogoVimeo } from '@react-icons/all-files/io/IoLogoVimeo'
+import { IoLogoWhatsapp } from '@react-icons/all-files/io/IoLogoWhatsapp'
+import { IoLogoGoogle } from '@react-icons/all-files/io/IoLogoGoogle'
+import { IoLogoApple } from '@react-icons/all-files/io/IoLogoApple'
+import { IoLogoFacebook } from '@react-icons/all-files/io/IoLogoFacebook'
+
 import ShareIOS from './CustomIcons/ShareIOS'
 import CustomMarkdownIcon from './CustomIcons/MarkdownIcon'
 import CustomBackIcon from './CustomIcons/BackIcon'
