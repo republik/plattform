@@ -100,21 +100,24 @@ const PreviewText = ({ data, socialKey }) => {
 }
 
 const ShareImageForm = withT(({ t, onInputChange, format, data }) => {
-  const [generated, setGenerated] = useState(!!format)
+  const [generated, setGenerated] = useState(
+    !!format || !!data.get('shareText')
+  )
 
   useEffect(() => {
     if (generated) {
-      console.log('generated')
       !data.get('shareTextPosition') &&
-        data.set('shareTextPosition', SHARE_IMAGE_DEFAULTS.textPosition)
+        onInputChange('shareTextPosition')(
+          undefined,
+          SHARE_IMAGE_DEFAULTS.textPosition
+        )
       !data.get('shareFontSize') &&
-        data.set('shareFontSize', SHARE_IMAGE_DEFAULTS.fontSize)
+        onInputChange('shareFontSize')(undefined, SHARE_IMAGE_DEFAULTS.fontSize)
     } else {
-      console.log('upload')
-      data.remove('shareInverted')
-      data.remove('shareTextPosition')
-      data.remove('shareFontSize')
-      data.remove('shareText')
+      onInputChange('shareInverted')(undefined, undefined)
+      onInputChange('shareTextPosition')(undefined, undefined)
+      onInputChange('shareFontSize')(undefined, undefined)
+      onInputChange('shareText')(undefined, undefined)
     }
   }, [generated])
 
@@ -134,11 +137,14 @@ const ShareImageForm = withT(({ t, onInputChange, format, data }) => {
         </Radio>
       </div>
       {generated && (
-        <GenerateImage
-          format={format}
-          data={data}
-          onInputChange={onInputChange}
-        />
+        <>
+          <br />
+          <GenerateImage
+            format={format}
+            data={data}
+            onInputChange={onInputChange}
+          />
+        </>
       )}
       {SOCIAL_MEDIA.map(socialKey => (
         <Fragment key={socialKey}>
