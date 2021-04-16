@@ -107,7 +107,9 @@ const ShareImagePreview = ({
         borderWidth: socialPreview ? 2 : 0
       }}
     >
-      {format?.image && <img {...styles.formatImage} src={format?.image} />}
+      {format?.image && !shareImage && (
+        <img {...styles.formatImage} src={format?.image} />
+      )}
       {format?.title && (
         <div
           {...styles.formatTitle}
