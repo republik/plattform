@@ -46,7 +46,7 @@ const PreviewFrame = ({
       const availableHeight =
         window.innerHeight - HEADER_HEIGHT - 2 * PREVIEW_MARGIN
       const availableWidth =
-        window.innerWidth - currentSideBarWidth - 2 * PREVIEW_MARGIN
+        document.body.clientWidth - currentSideBarWidth - 2 * PREVIEW_MARGIN
 
       const widthScaleFactor =
         availableWidth / screenSizes[previewScreenSize].width

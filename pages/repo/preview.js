@@ -26,7 +26,7 @@ const getCommitById = gql`
   ${fragments.CommitWithDocument}
 `
 
-const PreviewPage = ({ router, data = {} }) => {
+const PreviewPage = ({ t, router, data = {} }) => {
   const { loading, error, repo: { commit: { document } = {} } = {} } = data
   const { repoId, commitId, darkmode } = router.query
 
@@ -43,6 +43,8 @@ const PreviewPage = ({ router, data = {} }) => {
     return getSchema(template)
   }, [template])
 
+  const notFound = !schema ? t('publish/preview/404') : undefined
+
   return (
     <Frame.Body raw>
       <ColorContextProvider
@@ -50,7 +52,7 @@ const PreviewPage = ({ router, data = {} }) => {
       >
         <Loader
           loading={loading}
-          error={error}
+          error={error || notFound}
           render={() => {
             if (!schema) {
               return null
@@ -58,13 +60,21 @@ const PreviewPage = ({ router, data = {} }) => {
             return (
               <>
                 {renderMdast(
-                  {
-                    ...(localState || document.content),
-                    format: document.meta.format,
-                    section: document.meta.section,
-                    series: document.meta.series,
-                    repoId
-                  },
+                  localState
+                    ? {
+                        ...localState,
+                        format: localState.meta?.format,
+                        section: localState.meta?.section,
+                        series: localState.meta?.series,
+                        repoId
+                      }
+                    : {
+                        ...document.content,
+                        format: document.meta.format,
+                        section: document.meta.section,
+                        series: document.meta.series,
+                        repoId
+                      },
                   schema
                 )}
               </>
