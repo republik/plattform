@@ -99,11 +99,9 @@ const PreviewText = ({ data, socialKey }) => {
 }
 
 const ShareImageForm = withT(({ t, editor, node, onInputChange, format }) => {
-  const [generated, setGenerated] = useState(
-    !!format || !!node.data.get('shareText')
-  )
+  const generated = !!(node.data.get('shareText') || node.data.get('shareFontSize') || node.data.get('shareTextPosition'))
 
-  useEffect(() => {
+  const setGenerated = (generated) => {
     if (generated) {
       editor.change(change => {
         change.setNodeByKey(node.key, {
@@ -130,7 +128,7 @@ const ShareImageForm = withT(({ t, editor, node, onInputChange, format }) => {
         })
       })
     }
-  }, [generated])
+  }
 
   const data = node.data
 
