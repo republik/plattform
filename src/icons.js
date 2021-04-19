@@ -1,4 +1,5 @@
 export {
+  IconContextProvider,
   PdfIcon,
   ShareIcon,
   AudioIcon,
@@ -80,5 +81,3 @@ export {
   ForwardIcon,
   ReplayIcon
 } from './components/Icons'
-
-export { IconContextProvider } from './components/IconButton'
