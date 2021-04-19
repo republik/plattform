@@ -48,7 +48,7 @@ const SectionTitle = React.forwardRef(
     return href ? (
       <a href={href} onClick={onClick} {...style} ref={ref}>
         {children}
-        {<ChevronRightIcon style={{ verticalAlign: 'middle' }} />}
+        {<ChevronRightIcon />}
       </a>
     ) : (
       <span onClick={onClick} {...style} ref={ref}>

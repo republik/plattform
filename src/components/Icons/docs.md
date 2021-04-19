@@ -1,9 +1,27 @@
+## IconContextProvider
+
+The styleguide exports IconContextProvider, which can be wrapped around an app to provide global CSS for Icons.
+
+```code|lang-js
+import {
+  IconContextProvider
+} from '@project-r/styleguide/icons'
+```
+
+Add a root icon context provider, e.g. in your frame component. Possible props are: `color`, `size`, `className`, `style`, `attr`, `title` :
+
+```react
+<IconContextProvider value={{ color: "blue", size: "4em", style: {transform: 'rotateZ(45deg)'} }}>
+  <PdfIcon />
+</IconContextProvider>
+```
+
+## Icon
+
 - `fill`: fill for icon, default inherit
 - `size`: size, default is "1em"
 
-
 The default Icon style is Material. For brands we rely on Ionic icons. There are a couple of custom icons, some which are Material, but are not yet part of react-icons, some which are custom creations but comply with Material stroke width and padding.
-
 
 ```react
 <div>
@@ -36,7 +54,7 @@ The default Icon style is Material. For brands we rely on Ionic icons. There are
 <IconButton Icon={CloseIcon} label="CloseIcon" />
 <IconButton Icon={SearchIcon} label="SearchIcon" />
 <IconButton Icon={FullscreenIcon} label="FullscreenIcon" />
-<IconButton Icon={FullscreenExitIcon} label="FullscreenExitIcon Exit" />
+<IconButton Icon={FullscreenExitIcon} label="FullscreenExitIcon" />
 <IconButton Icon={RotateLeftIcon} label="RotateLeftIcon" />
 <IconButton Icon={ListIcon} label="ListIcon" />
 <IconButton Icon={FilterListIcon} label="FilterListIcon" />
@@ -89,10 +107,10 @@ The default Icon style is Material. For brands we rely on Ionic icons. There are
 <IconButton Icon={LogoGoogleIcon} label="LogoGoogleIcon" />
 <IconButton Icon={LogoAppleIcon} label="LogoAppleIcon" />
 <IconButton Icon={LogoFacebookIcon} label="LogoFacebookIcon" />
-<IconButton Icon={MailIcon} label="MailIcon Filled" />
+<IconButton Icon={MailIcon} label="MailIcon" />
 <IconButton Icon={MailOutlineIcon} label="MailOutlineIcon" />
 <IconButton Icon={LinkIcon} label="LinkIcon" />
-<IconButton Icon={RssFeedIcon} label="RssFeedIcon Feed" />
+<IconButton Icon={RssFeedIcon} label="RssFeedIcon" />
 
 <br />
 <Interaction.H3>User</Interaction.H3>

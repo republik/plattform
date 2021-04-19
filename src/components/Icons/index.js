@@ -84,7 +84,7 @@ import CustomChartIcon from './CustomIcons/MdInsertChartOutlined'
 import CustomSearchMenuIcon from './CustomIcons/SearchMenuIcon'
 import CustomSpotifyIcon from './CustomIcons/SpotifyIcon'
 
-export const IconContextProvder = ({ children, value }) => {
+export const IconContextProvider = ({ children, value }) => {
   return <IconContext.Provider value={value}>{children}</IconContext.Provider>
 }
 

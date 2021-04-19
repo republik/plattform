@@ -89,10 +89,7 @@ const styles = {
     top: '50%',
     left: 0,
     marginTop: -15,
-    textAlign: 'center',
-    '& svg': {
-      verticalAlign: 'middle'
-    }
+    textAlign: 'center'
   }),
   button: css({
     ...buttonStyle

@@ -59,10 +59,6 @@ const styles = {
     bottom: 0,
     opacity: 0.7
   }),
-  arrowIcon: css({
-    // ontop of arrowBg
-    position: 'relative'
-  }),
   arrowHoverable: css({
     '@media (hover)': {
       '[role=group]:hover > &': {
