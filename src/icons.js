@@ -80,3 +80,5 @@ export {
   ForwardIcon,
   ReplayIcon
 } from './components/Icons'
+
+export { IconContextProvider } from './components/IconButton'

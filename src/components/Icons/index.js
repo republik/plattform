@@ -1,3 +1,5 @@
+import React from 'react'
+import { IconContext } from '@react-icons/all-files'
 import { MdPictureAsPdf } from '@react-icons/all-files/md/MdPictureAsPdf'
 import { MdFileDownload } from '@react-icons/all-files/md/MdFileDownload'
 import { MdVolumeUp } from '@react-icons/all-files/md/MdVolumeUp'
@@ -81,6 +83,10 @@ import CustomReadIcon from './CustomIcons/MdCheckCircleOutlined'
 import CustomChartIcon from './CustomIcons/MdInsertChartOutlined'
 import CustomSearchMenuIcon from './CustomIcons/SearchMenuIcon'
 import CustomSpotifyIcon from './CustomIcons/SpotifyIcon'
+
+export const IconContextProvder = ({ children, value }) => {
+  return <IconContext.Provider value={value}>{children}</IconContext.Provider>
+}
 
 export const PdfIcon = MdPictureAsPdf
 export const ShareIcon = ShareIOS
