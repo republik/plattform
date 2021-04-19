@@ -36,7 +36,7 @@ const styles = {
     width: '100%',
     whiteSpace: 'pre-wrap',
     textAlign: 'center',
-    ...fontStyles.serifBold,
+    ...fontStyles.serifTitle,
     zIndex: 1
   }),
   formatTitle: css({
@@ -55,7 +55,7 @@ const styles = {
 
 const formatFonts = {
   scribble: 'cursiveTitle',
-  editorial: 'serifBold',
+  editorial: 'serifTitle',
   meta: 'sansSerifRegular'
 }
 
@@ -65,7 +65,7 @@ const shareImageJustify = {
 }
 
 export const SHARE_IMAGE_DEFAULTS = {
-  customFontStyle: 'serifBold',
+  customFontStyle: 'serifTitle',
   textPosition: 'bottom',
   fontSize: 60
 }
