@@ -132,5 +132,13 @@ The default Icon style is Material. For brands we rely on Ionic icons. There are
 <IconButton Icon={HighlightOffIcon} label="HighlightOffIcon" />
 <IconButton Icon={LaunchIcon} label="LaunchIcon" />
 <IconButton Icon={DoneIcon} label="DoneIcon" />
+<br />
+
+<Interaction.H3>Publikator</Interaction.H3>
+<IconButton Icon={BoldIcon} label="BoldIcon" />
+<IconButton Icon={ItalicIcon} label="ItalicIcon" />
+<IconButton Icon={StrikethroughIcon} label="StrikethroughIcon" />
+<IconButton Icon={SubscriptIcon} label="SubscriptIcon" />
+<IconButton Icon={SuperscriptIcon} label="SuperscriptIcon" />
 </div>
 ```

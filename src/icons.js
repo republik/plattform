@@ -84,5 +84,10 @@ export {
   CheckCircleIcon,
   TelegramIcon,
   ThreemaIcon,
-  LockIcon
+  LockIcon,
+  BoldIcon,
+  ItalicIcon,
+  StrikethroughIcon,
+  SubscriptIcon,
+  SuperscriptIcon
 } from './components/Icons'

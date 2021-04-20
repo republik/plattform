@@ -1,7 +1,8 @@
 import React from 'react'
+import CustomIconBase from './CustomIconBase'
 
-const SearchMenuIcon = ({ size = '1em', fill, ...props }) => (
-  <svg width={size} height={size} viewBox='0 0 26 18' {...props}>
+export const SearchMenuIcon = ({ fill, ...props }) => (
+  <CustomIconBase viewBox='0 0 26 18' {...props}>
     <path
       fillRule='evenodd'
       d='M6.22222 10.4444C8.55409 10.4444 10.4444 8.55409 10.4444 6.22222C10.4444 3.89035 8.55409 2 6.22222 2C3.89035 2 2 3.89035 2 6.22222C2 8.55409 3.89035 10.4444 6.22222 10.4444ZM6.22222 12.4444C9.65866 12.4444 12.4444 9.65866 12.4444 6.22222C12.4444 2.78578 9.65866 0 6.22222 0C2.78578 0 0 2.78578 0 6.22222C0 9.65866 2.78578 12.4444 6.22222 12.4444Z'
@@ -27,7 +28,5 @@ const SearchMenuIcon = ({ size = '1em', fill, ...props }) => (
       d='M18 13C18 12.4477 18.4477 12 19 12L25 12C25.5523 12 26 12.4477 26 13C26 13.5523 25.5523 14 25 14L19 14C18.4477 14 18 13.5523 18 13Z'
       fill={fill}
     />
-  </svg>
+  </CustomIconBase>
 )
-
-export default SearchMenuIcon
