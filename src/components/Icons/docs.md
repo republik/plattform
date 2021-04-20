@@ -61,6 +61,7 @@ The default Icon style is Material. For brands we rely on Ionic icons. There are
 <IconButton Icon={AddIcon} label="AddIcon" />
 <IconButton Icon={RemoveIcon} label="RemoveIcon" />
 <IconButton Icon={AccountBoxIcon} label="AccountBoxIcon" />
+<IconButton Icon={CheckCircleIcon} label="CheckCircleIcon" />
 
 <br />
 <Interaction.H3>Arrows</Interaction.H3>
@@ -70,8 +71,8 @@ The default Icon style is Material. For brands we rely on Ionic icons. There are
 <IconButton Icon={ExpandLessIcon} label="ExpandLessIcon" />
 <IconButton Icon={ChevronLeftIcon} label="ChevronLeftIcon" />
 <IconButton Icon={ChevronRightIcon} label="ChevronRightIcon" />
-<IconButton Icon={KeyboardArrowLeftIcon} label="KeyboardArrowLeftIcon" />
-<IconButton Icon={KeyboardArrowRightIcon} label="KeyboardArrowRightIcon" />
+<IconButton Icon={ArrowLeftIcon} label="ArrowLeftIcon" />
+<IconButton Icon={ArrowRightIcon} label="ArrowRightIcon" />
 
 <br />
 <Interaction.H3>Media</Interaction.H3>
@@ -104,9 +105,12 @@ The default Icon style is Material. For brands we rely on Ionic icons. There are
 <IconButton Icon={VimeoIcon} label="VimeoIcon" />
 <IconButton Icon={YoutubeIcon} label="YoutubeIcon" />
 <IconButton Icon={SpotifyIcon} label="SpotifyIcon" />
-<IconButton Icon={LogoGoogleIcon} label="LogoGoogleIcon" />
-<IconButton Icon={LogoAppleIcon} label="LogoAppleIcon" />
-<IconButton Icon={LogoFacebookIcon} label="LogoFacebookIcon" />
+<IconButton Icon={GoogleIcon} label="GoogleIcon" />
+<IconButton Icon={AppleIcon} label="AppleIcon" />
+<IconButton Icon={FacebookIcon} label="FacebookIcon" />
+<IconButton Icon={InstagramIcon} label="InstagramIcon" />
+<IconButton Icon={TelegramIcon} label="TelegramIcon" />
+<IconButton Icon={ThreemaIcon} label="ThreemaIcon" />
 <IconButton Icon={MailIcon} label="MailIcon" />
 <IconButton Icon={MailOutlineIcon} label="MailOutlineIcon" />
 <IconButton Icon={LinkIcon} label="LinkIcon" />
@@ -117,6 +121,7 @@ The default Icon style is Material. For brands we rely on Ionic icons. There are
 <IconButton Icon={NoteAddIcon} label="NoteAddIcon" />
 <IconButton Icon={VpnKeyIcon} label="VpnKeyIcon" />
 <IconButton Icon={LanguageIcon} label="LanguageIcon" />
+<IconButton Icon={LockIcon} label="LockIcon" />
 
 <br />
 <Interaction.H3>Campaigns</Interaction.H3>

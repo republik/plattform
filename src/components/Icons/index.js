@@ -63,6 +63,8 @@ import { MdFolder } from '@react-icons/all-files/md/MdFolder'
 import { MdBrightness2 } from '@react-icons/all-files/md/MdBrightness2'
 import { MdForward30 } from '@react-icons/all-files/md/MdForward30'
 import { MdReplay10 } from '@react-icons/all-files/md/MdReplay10'
+import { MdCheckCircle } from '@react-icons/all-files/md/MdCheckCircle'
+import { MdLock } from '@react-icons/all-files/md/MdLock'
 
 import { IoLogoTwitter } from '@react-icons/all-files/io/IoLogoTwitter'
 import { IoLogoYoutube } from '@react-icons/all-files/io/IoLogoYoutube'
@@ -71,6 +73,9 @@ import { IoLogoWhatsapp } from '@react-icons/all-files/io/IoLogoWhatsapp'
 import { IoLogoGoogle } from '@react-icons/all-files/io/IoLogoGoogle'
 import { IoLogoApple } from '@react-icons/all-files/io/IoLogoApple'
 import { IoLogoFacebook } from '@react-icons/all-files/io/IoLogoFacebook'
+import { AiFillInstagram } from '@react-icons/all-files/ai/AiFillInstagram'
+import { FaTelegramPlane } from '@react-icons/all-files/fa/FaTelegramPlane'
+import { SiThreema } from '@react-icons/all-files/si/SiThreema'
 
 import ShareIOS from './CustomIcons/ShareIOS'
 import CustomMarkdownIcon from './CustomIcons/MarkdownIcon'
@@ -108,6 +113,8 @@ export const MarkdownIcon = CustomMarkdownIcon
 export const MoodIcon = MdMood
 export const ArrowDownIcon = MdKeyboardArrowDown
 export const ArrowUpIcon = MdKeyboardArrowUp
+export const ArrowLeftIcon = MdKeyboardArrowLeft
+export const ArrowRightIcon = MdKeyboardArrowRight
 export const ReportIcon = MdFlag
 export const EditIcon = MdEdit
 export const UnpublishIcon = MdVisibilityOff
@@ -137,6 +144,7 @@ export const ReadingTimeIcon = MdQueryBuilder
 export const NotificationsOffIcon = MdNotificationsOff
 export const NotificationsNoneIcon = MdNotificationsNone
 export const RotateLeftIcon = MdRotateLeft
+export const RevertIcon = MdRotateLeft
 export const ListIcon = MdList
 export const FilterListIcon = MdFilterList
 export const AddIcon = MdAdd
@@ -161,11 +169,15 @@ export const ExpandMoreIcon = MdExpandMore
 export const ExpandLessIcon = MdExpandLess
 export const DoneIcon = MdDone
 export const NotificationsActiveIcon = MdNotificationsActive
-export const KeyboardArrowLeftIcon = MdKeyboardArrowLeft
-export const KeyboardArrowRightIcon = MdKeyboardArrowRight
-export const LogoGoogleIcon = IoLogoGoogle
-export const LogoAppleIcon = IoLogoApple
-export const LogoFacebookIcon = IoLogoFacebook
+export const FollowIcon = MdNotificationsActive
+export const GoogleIcon = IoLogoGoogle
+export const AppleIcon = IoLogoApple
+export const FacebookIcon = IoLogoFacebook
+export const InstagramIcon = AiFillInstagram
 export const DarkmodeIcon = MdBrightness2
 export const ForwardIcon = MdForward30
 export const ReplayIcon = MdReplay10
+export const CheckCircleIcon = MdCheckCircle
+export const TelegramIcon = FaTelegramPlane
+export const ThreemaIcon = SiThreema
+export const LockIcon = MdLock

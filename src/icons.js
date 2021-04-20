@@ -73,11 +73,16 @@ export {
   ExpandLessIcon,
   DoneIcon,
   NotificationsActiveIcon,
-  KeyboardArrowLeftIcon,
-  KeyboardArrowRightIcon,
-  LogoGoogleIcon,
-  LogoAppleIcon,
-  LogoFacebookIcon,
+  ArrowLeftIcon,
+  ArrowRightIcon,
+  GoogleIcon,
+  AppleIcon,
+  FacebookIcon,
+  InstagramIcon,
   ForwardIcon,
-  ReplayIcon
+  ReplayIcon,
+  CheckCircleIcon,
+  TelegramIcon,
+  ThreemaIcon,
+  LockIcon
 } from './components/Icons'
