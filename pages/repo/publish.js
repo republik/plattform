@@ -6,7 +6,7 @@ import withAuthorization from '../../components/Auth/withAuthorization'
 
 import Frame from '../../components/Frame'
 import RepoNav from '../../components/Repo/Nav'
-import PublishForm from '../../components/Publication/PublishForm'
+import Publication from '../../components/Publication'
 
 import withT from '../../lib/withT'
 
@@ -29,9 +29,8 @@ const Page = ({
           <Frame.Me />
         </Frame.Header.Section>
       </Frame.Header>
-      <Frame.Body>
-        <h1>{t('publish/title')}</h1>
-        <PublishForm repoId={repoId} commitId={commitId} t={t} />
+      <Frame.Body raw={true}>
+        <Publication repoId={repoId} commitId={commitId} t={t} />
       </Frame.Body>
     </Frame>
   )

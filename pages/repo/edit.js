@@ -29,7 +29,7 @@ import {
 } from '../../components/VersionControl/UncommittedChanges'
 import Sidebar from '../../components/Sidebar'
 import Warning from '../../components/Sidebar/Warning'
-import ScreeenSizePicker from '../../components/ScreenSizePicker'
+import ScreenSizePicker from '../../components/ScreenSizePicker'
 import PreviewFrame from '../../components/PreviewFrame'
 
 import Loader from '../../components/Loader'
@@ -48,7 +48,9 @@ import * as fragments from '../../lib/graphql/fragments'
 import {
   ColorContextProvider,
   colors,
-  plainButtonRule
+  plainButtonRule,
+  Interaction,
+  Checkbox
 } from '@project-r/styleguide'
 import SettingsIcon from 'react-icons/lib/fa/cogs'
 
@@ -171,7 +173,8 @@ export class EditorPage extends Component {
       }
       this.setState({
         didUnlock: false,
-        acknowledgedUsers: []
+        acknowledgedUsers: [],
+        previewScreenSize: null
       })
       this.store.clear()
       this.loadState(this.props)
@@ -993,18 +996,33 @@ export class EditorPage extends Component {
               />
             </Sidebar.Tab>
             <Sidebar.Tab tabId='view' label='Ansicht'>
-              <ScreeenSizePicker
+              <Interaction.P style={{ marginBottom: 16 }}>
+                Vorschau
+              </Interaction.P>
+              <ScreenSizePicker
                 selectedScreenSize={this.state.previewScreenSize}
                 onSelect={screenSize => {
                   this.setState({ previewScreenSize: screenSize })
                 }}
-                onDarkmodeToggle={() =>
-                  this.setState({
-                    previewDarkmode: !this.state.previewDarkmode
-                  })
-                }
-                previewDarkmode={this.state.previewDarkmode}
               />
+              {this.state.previewScreenSize ? (
+                <>
+                  <Interaction.P style={{ marginBottom: 16 }}>
+                    Nachtmodus
+                  </Interaction.P>
+                  <Checkbox
+                    black
+                    checked={this.state.previewDarkmode}
+                    onChange={() =>
+                      this.setState({
+                        previewDarkmode: !this.state.previewDarkmode
+                      })
+                    }
+                  >
+                    Ein
+                  </Checkbox>
+                </>
+              ) : null}
             </Sidebar.Tab>
           </Sidebar>
         </Frame.Body>

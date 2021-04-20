@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { withRouter } from 'next/router'
 import { graphql, compose } from 'react-apollo'
 import gql from 'graphql-tag'
@@ -26,7 +26,7 @@ const getCommitById = gql`
   ${fragments.CommitWithDocument}
 `
 
-const PreviewPage = ({ router, data = {} }) => {
+const PreviewPage = ({ t, router, data = {} }) => {
   const { loading, error, repo: { commit: { document } = {} } = {} } = data
   const { repoId, commitId, darkmode } = router.query
 
@@ -34,9 +34,17 @@ const PreviewPage = ({ router, data = {} }) => {
   const store = initLocalStore(storeKey)
   let localState = store.get('editorState')
 
-  const schema = getSchema(
-    localState?.meta?.template || document?.meta?.template
-  )
+  const template = localState?.meta?.template || document?.meta?.template
+
+  const schema = useMemo(() => {
+    if (!template) {
+      return
+    }
+    return getSchema(template)
+  }, [template])
+
+  const notFound = !schema ? t('publish/preview/404') : undefined
+
   return (
     <Frame.Body raw>
       <ColorContextProvider
@@ -44,21 +52,34 @@ const PreviewPage = ({ router, data = {} }) => {
       >
         <Loader
           loading={loading}
-          error={error}
-          render={() => (
-            <>
-              {renderMdast(
-                {
-                  ...(localState || document?.content),
-                  format: document?.meta?.format,
-                  section: document?.meta?.section,
-                  series: document?.meta?.series,
-                  repoId
-                },
-                schema
-              )}
-            </>
-          )}
+          error={error || notFound}
+          render={() => {
+            if (!schema) {
+              return null
+            }
+            return (
+              <>
+                {renderMdast(
+                  localState
+                    ? {
+                        ...localState,
+                        format: localState.meta?.format,
+                        section: localState.meta?.section,
+                        series: localState.meta?.series,
+                        repoId
+                      }
+                    : {
+                        ...document.content,
+                        format: document.meta.format,
+                        section: document.meta.section,
+                        series: document.meta.series,
+                        repoId
+                      },
+                  schema
+                )}
+              </>
+            )
+          }}
         />
       </ColorContextProvider>
     </Frame.Body>

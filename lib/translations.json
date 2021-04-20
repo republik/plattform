@@ -999,6 +999,10 @@
       "value": "Desktop"
     },
     {
+      "key": "publish/preview/404",
+      "value": "Dokument oder Schema nicht verfügbar."
+    },
+    {
       "key": "publish/commit/selected",
       "value": "Ausgewählte Version"
     },

@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react'
-import { useColorContext } from '@project-r/styleguide'
-import { PUBLIC_BASE_URL } from '../../lib/settings'
+import { useColorContext, Loader } from '@project-r/styleguide'
 
 import { SIDEBAR_WIDTH } from '../Sidebar'
 import { HEADER_HEIGHT } from '../Frame/constants'
@@ -26,19 +25,28 @@ const screenSizes = {
   }
 }
 
-const PreviewFrame = ({ previewScreenSize, commitId, repoId, darkmode }) => {
+const PreviewFrame = ({
+  previewScreenSize,
+  commitId,
+  repoId,
+  darkmode,
+  sideBarWidth
+}) => {
   const [scaleFactor, setScaleFactor] = useState(1)
   const [leftSpace, setLeftSpace] = useState(0)
+  const [iframeLoading, setIframeLoading] = useState(true)
   const [colorScheme] = useColorContext()
   const iframeRef = useRef()
 
-  const URL = `${PUBLIC_BASE_URL}/repo/${repoId}/preview?commitId=${commitId}&darkmode=${darkmode}`
+  const iframeSrc = `/repo/${repoId}/preview?commitId=${commitId}&darkmode=${darkmode}`
+  const currentSideBarWidth = sideBarWidth || SIDEBAR_WIDTH
+
   useEffect(() => {
     const handleResize = () => {
       const availableHeight =
         window.innerHeight - HEADER_HEIGHT - 2 * PREVIEW_MARGIN
       const availableWidth =
-        window.innerWidth - SIDEBAR_WIDTH - 2 * PREVIEW_MARGIN
+        document.body.clientWidth - currentSideBarWidth - 2 * PREVIEW_MARGIN
 
       const widthScaleFactor =
         availableWidth / screenSizes[previewScreenSize].width
@@ -61,23 +69,42 @@ const PreviewFrame = ({ previewScreenSize, commitId, repoId, darkmode }) => {
     return () => {
       window.removeEventListener('resize', handleResize)
     }
-  }, [previewScreenSize])
+  }, [previewScreenSize, currentSideBarWidth])
 
+  useEffect(() => {
+    setIframeLoading(true)
+  }, [darkmode])
+
+  const iframeStyle = {
+    ...screenSizes[previewScreenSize],
+    minWidth: 'unset',
+    transform: `scale(${scaleFactor})`,
+    transformOrigin: `0 0`,
+    border: 'none',
+    resize: 'both',
+    margin: PREVIEW_MARGIN,
+    marginLeft: PREVIEW_MARGIN + leftSpace
+  }
   return (
     <>
-      <iframe
-        ref={iframeRef}
+      <div
         style={{
-          ...screenSizes[previewScreenSize],
-          transform: `scale(${scaleFactor})`,
-          transformOrigin: `0 0`,
-          border: 'none',
-          resize: 'both',
-          margin: PREVIEW_MARGIN,
-          marginLeft: PREVIEW_MARGIN + leftSpace
+          ...iframeStyle,
+          position: 'absolute',
+          zIndex: iframeLoading ? 2 : -1
         }}
         {...colorScheme.set('backgroundColor', 'default')}
-        src={URL}
+      >
+        <Loader loading={iframeLoading} />
+      </div>
+      <iframe
+        ref={iframeRef}
+        onLoad={() => setIframeLoading(false)}
+        style={{
+          ...iframeStyle
+        }}
+        {...colorScheme.set('backgroundColor', 'default')}
+        src={iframeSrc}
       />
       <div
         style={{

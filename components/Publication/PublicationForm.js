@@ -1,20 +1,17 @@
-import React, { Fragment, useState, useMemo } from 'react'
+import React, { Fragment, useState } from 'react'
 import { graphql, compose } from 'react-apollo'
-import gql from 'graphql-tag'
 import { css } from 'glamor'
+import gql from 'graphql-tag'
 
 import ErrorMessage from '../ErrorMessage'
-import IFrame from '../IFrame'
+import { getRepoWithPublications } from './Current'
+import { getRepoHistory, COMMIT_LIMIT } from '../../pages/repo/tree'
 
 import { GITHUB_ORG, FRONTEND_BASE_URL } from '../../lib/settings'
-import { intersperse } from '../../lib/utils/helpers'
-import withT from '../../lib/withT'
-import withMe from '../../lib/withMe'
 import { Link, Router } from '../../lib/routes'
 import { swissTime } from '../../lib/utils/format'
 
 import {
-  Loader,
   InlineSpinner,
   Interaction,
   Editorial,
@@ -23,20 +20,12 @@ import {
   Field,
   Checkbox,
   A,
-  colors,
-  VariableContext
+  HR,
+  useColorContext
 } from '@project-r/styleguide'
 
 import MaskedInput from 'react-maskedinput'
-
-import { getRepoHistory, COMMIT_LIMIT } from '../../pages/repo/tree'
-import { getRepoWithPublications } from './Current'
-
-import { renderMdast } from 'mdast-react-render'
-
-import { getSchema } from '../../components/Templates'
-import RepoArchivedBanner from '../../components/Repo/ArchivedBanner'
-
+import { getSchema } from '../Templates'
 import useValidation from './useValidation'
 
 const publishMutation = gql`
@@ -66,99 +55,6 @@ const publishMutation = gql`
   }
 `
 
-const timeFormat = swissTime.format('%d. %B %Y, %H:%M Uhr')
-
-export const getRepoWithCommit = gql`
-  query repoWithCommit($repoId: ID!, $commitId: ID!) {
-    repo(id: $repoId) {
-      id
-      isArchived
-      meta {
-        publishDate
-      }
-      latestPublications {
-        date
-        name
-        live
-        prepublication
-        scheduledAt
-      }
-      commit(id: $commitId) {
-        id
-        message
-        date
-        author {
-          email
-          name
-        }
-        document {
-          id
-          repoId
-          content
-          meta {
-            slug
-            emailSubject
-            template
-            title
-            description
-            image
-            facebookTitle
-            facebookDescription
-            facebookImage
-            twitterTitle
-            twitterDescription
-            twitterImage
-            shareText
-            format {
-              id
-              repoId
-              meta {
-                path
-                title
-                color
-                kind
-              }
-            }
-            section {
-              id
-              repoId
-              meta {
-                path
-                title
-                color
-                kind
-              }
-            }
-            series {
-              title
-              logo
-              logoDark
-              episodes {
-                title
-                label
-                document {
-                  id
-                  repoId
-                  meta {
-                    path
-                  }
-                }
-              }
-            }
-          }
-          subscribedBy(
-            includeParents: true
-            onlyEligibles: true
-            uniqueUsers: true
-          ) {
-            totalCount
-          }
-        }
-      }
-    }
-  }
-`
-
 const styles = {
   mask: css({
     '::placeholder': {
@@ -172,30 +68,11 @@ const styles = {
   })
 }
 
+const timeFormat = swissTime.format('%d. %B %Y, %H:%M Uhr')
+
 const scheduledAtFormat = '%d.%m.%Y %H:%M'
 const scheduledAtParser = swissTime.parse(scheduledAtFormat)
 const scheduledAtFormater = swissTime.format(scheduledAtFormat)
-
-const PADDING_X = 5
-
-const PREVIEW_SIZES = [
-  {
-    label: 'mobile',
-    width: 320,
-    height: 480,
-    paddingTop: 40,
-    paddingBottom: 40,
-    borderRadius: 10
-  },
-  {
-    label: 'desktop',
-    width: 1024,
-    height: 800,
-    paddingTop: PADDING_X,
-    paddingBottom: PADDING_X,
-    borderRadius: 3
-  }
-]
 
 const Form = ({
   t,
@@ -235,7 +112,7 @@ const Form = ({
     t,
     updateMailchimp
   })
-
+  const [colorScheme] = useColorContext()
   const hasErrors = errors.length > 0
 
   const scheduledAtDate = scheduledAtParser(scheduledAt)
@@ -250,7 +127,10 @@ const Form = ({
 
   return (
     <>
-      <Label>{t('publish/commit/selected')}</Label>
+      <Interaction.H2>{t('publish/title')}</Interaction.H2>
+      <br />
+
+      <Interaction.H3>{t('publish/commit/selected')}</Interaction.H3>
       <Interaction.P>{commit.message}</Interaction.P>
       <Label>
         {commit.author.name}
@@ -270,14 +150,15 @@ const Form = ({
           </Link>
         </Label>
       </Interaction.P>
+      <HR />
 
-      <br />
-      <br />
-
-      <Label>{t('publish/meta/date/label')}</Label>
+      <Interaction.H3>{t('publish/meta/date/label')}</Interaction.H3>
       <Interaction.P>{timeFormat(designatedPublishDate)}</Interaction.P>
-      <Label>{t('publish/meta/path/label')}</Label>
-      <Interaction.P>
+      <Label>
+        <strong>
+          {t('publish/meta/path/label')}
+          {': '}
+        </strong>
         {FRONTEND_BASE_URL.replace(/https?:\/\/(www\.)?/, '')}
         {content.meta.path ||
           (schema.getPath
@@ -286,48 +167,53 @@ const Form = ({
                 publishDate: designatedPublishDate
               })
             : `/${meta.slug}`)}
-      </Interaction.P>
-
-      <br />
-      <br />
+      </Label>
+      <HR />
 
       {hasErrors && (
         <>
-          <Interaction.P style={{ color: colors.error }}>
-            {t('publish/validation/hasErrors')}
-          </Interaction.P>
-          <ul style={{ color: colors.error }}>
-            {errors.map((error, i) => (
-              <li key={i}>
-                <Interaction.P style={{ color: colors.error }}>
-                  {error}
-                </Interaction.P>
-              </li>
-            ))}
-          </ul>
-          <br />
-          <br />
+          <div
+            {...colorScheme.set('backgroundColor', 'error')}
+            style={{ padding: 8 }}
+          >
+            <Label style={{ color: 'white' }}>
+              {t('publish/validation/hasErrors')}
+            </Label>
+            <ul style={{ color: 'white', margin: '0.5em 0' }}>
+              {errors.map((error, i) => (
+                <li key={i}>
+                  <Interaction.P style={{ color: 'white' }}>
+                    {error}
+                  </Interaction.P>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <HR />
         </>
       )}
       {warnings.length > 0 && (
         <>
-          <Interaction.P style={{ color: colors.social }}>
-            {t('publish/validation/hasWarnings')}
-          </Interaction.P>
-          <ul style={{ color: colors.social }}>
-            {warnings.map((warning, i) => (
-              <li key={i}>
-                <Interaction.P style={{ color: colors.social }}>
-                  {warning}
-                </Interaction.P>
-              </li>
-            ))}
-          </ul>
-          <br />
-          <br />
+          <div
+            {...colorScheme.set('backgroundColor', '#e0aa14')}
+            style={{ padding: 8 }}
+          >
+            <Label style={{ color: 'white' }}>
+              {t('publish/validation/hasWarnings')}
+            </Label>
+            <ul style={{ color: 'white', margin: '0.5em 0' }}>
+              {warnings.map((warning, i) => (
+                <li key={i}>
+                  <Interaction.P style={{ color: 'white' }}>
+                    {warning}
+                  </Interaction.P>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <HR />
         </>
       )}
-
       {links.length > 0 && (
         <>
           <Interaction.P>
@@ -346,13 +232,14 @@ const Form = ({
               {links.map((link, i) => (
                 <li key={i}>
                   <Interaction.P
-                    style={{
-                      color: link.errors.length
-                        ? colors.error
+                    {...colorScheme.set(
+                      'color',
+                      link.errors.length
+                        ? 'error'
                         : link.warnings.length
-                        ? colors.social
+                        ? '#e0aa14'
                         : undefined
-                    }}
+                    )}
                   >
                     {t.elements('publish/validation/link', {
                       text: link.text,
@@ -570,121 +457,7 @@ const Form = ({
   )
 }
 
-const Preview = withMe(
-  ({
-    t,
-    me,
-    commit,
-    commit: {
-      document: { meta }
-    }
-  }) => {
-    const [size, setSize] = useState(PREVIEW_SIZES[0])
-    const variables = useMemo(
-      () => (me ? { firstName: me.firstName, lastName: me.lastName } : {}),
-      [me]
-    )
-
-    const schema = getSchema(meta.template)
-
-    return (
-      <>
-        <Interaction.H2>{t('publish/preview/title')}</Interaction.H2>
-        <Interaction.P>
-          {intersperse(
-            PREVIEW_SIZES.map(previewSize => {
-              const label = t(
-                `publish/preview/${previewSize.label}`,
-                undefined,
-                previewSize.label
-              )
-              if (previewSize === size) {
-                return label
-              }
-              return (
-                <A
-                  key={label}
-                  href='#'
-                  onClick={e => {
-                    e.preventDefault()
-                    setSize(previewSize)
-                  }}
-                >
-                  {label}
-                </A>
-              )
-            }),
-            () => ' '
-          )}
-        </Interaction.P>
-
-        <IFrame
-          size={size}
-          style={{
-            // transition: 'padding 400ms, border-radius 400ms, width 400ms',
-            paddingLeft: PADDING_X,
-            paddingRight: PADDING_X,
-            paddingTop: size.paddingTop,
-            paddingBottom: size.paddingBottom,
-            borderRadius: size.borderRadius,
-            backgroundColor: '#eee',
-            width: size.width + PADDING_X * 2
-          }}
-          dark={
-            commit.document.content && commit.document.content.meta.darkMode
-          }
-        >
-          <VariableContext.Provider value={variables}>
-            {renderMdast(
-              {
-                ...commit.document.content,
-                format: commit.document.meta.format,
-                section: commit.document.meta.section,
-                series: commit.document.meta.series,
-                repoId: commit.document.repoId
-              },
-              schema
-            )}
-          </VariableContext.Provider>
-        </IFrame>
-      </>
-    )
-  }
-)
-
-const PublishForm = ({ t, data, publish }) => {
-  const { loading, error, repo } = data
-
-  return (
-    <div>
-      <Loader
-        loading={loading}
-        error={error}
-        render={() => {
-          const { isArchived, commit } = repo
-
-          if (isArchived) {
-            return <RepoArchivedBanner />
-          }
-
-          return (
-            <div>
-              <Form t={t} repo={repo} commit={commit} publish={publish} />
-
-              <br />
-              <br />
-
-              <Preview t={t} commit={commit} />
-            </div>
-          )
-        }}
-      />
-    </div>
-  )
-}
-
 export default compose(
-  withT,
   graphql(publishMutation, {
     props: ({ mutate, ownProps }) => ({
       publish: variables =>
@@ -707,6 +480,5 @@ export default compose(
           ]
         })
     })
-  }),
-  graphql(getRepoWithCommit)
-)(PublishForm)
+  })
+)(Form)
