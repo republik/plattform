@@ -50,6 +50,10 @@ const styles = {
       transition: 'opacity 200ms'
     }
   }),
+  arrowIcon: css({
+    // ontop of arrowBg
+    position: 'relative'
+  }),
   arrowBg: css({
     display: 'block',
     position: 'absolute',
@@ -144,6 +148,7 @@ const Row = ({ children }) => {
         />
         <ChevronLeftIcon
           size={50}
+          {...styles.arrowIcon}
           {...colorScheme.set('fill', context.color)}
         />
       </button>
@@ -181,6 +186,7 @@ const Row = ({ children }) => {
         />
         <ChevronRightIcon
           size={50}
+          {...styles.arrowIcon}
           {...colorScheme.set('fill', context.color)}
         />
       </button>
