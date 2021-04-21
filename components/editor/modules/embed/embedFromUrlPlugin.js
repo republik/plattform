@@ -1,6 +1,5 @@
 export default ({ matchSource, matchUrl, getQueryParams, TYPE }) => ({
   onKeyDown(event, change) {
-    console.log(TYPE)
     if (event.key !== 'Enter') return
     if (event.shiftKey !== false) return
 
