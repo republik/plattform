@@ -108,5 +108,6 @@ export {
   StarFilledIcon,
   NewerVersionIcon,
   OfflineIcon,
-  CircleFilledIcon
+  CircleFilledIcon,
+  SettingsIcon
 } from './components/Icons'
