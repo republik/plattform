@@ -1,16 +1,20 @@
 import React, { Fragment } from 'react'
-import { Checkbox, Radio, Label } from '@project-r/styleguide'
+import { Checkbox, Radio, Label, Field } from '@project-r/styleguide'
 import { createPropertyForm } from '../../utils'
+import AutosizeInput from 'react-textarea-autosize'
 
-export default ({ TYPE, editorOptions }) => {
-  const isVideoBlock = block => block.type === 'EMBEDVIDEO'
-  const { sizes = [] } = editorOptions || {}
+const isBlockType = blockType => block => block.type === blockType
 
+const isVideoBlock = isBlockType('EMBEDVIDEO')
+const isCommentBlock = isBlockType('EMBEDCOMMENT')
+
+export default ({ TYPE, editorOptions = {} }) => {
   const VideoForm = createPropertyForm({
     isDisabled: ({ value }) => {
       return !value.blocks.some(isVideoBlock)
     }
   })(({ disabled, value, onChange }) => {
+    const { sizes = [] } = editorOptions
     if (disabled) {
       return null
     }
@@ -20,7 +24,7 @@ export default ({ TYPE, editorOptions }) => {
           const src = block.data.get('src')
           return (
             <div key={`video-${i}`}>
-              {!!sizes.length && (
+              {!!editorOptions?.sizes?.length && (
                 <p style={{ margin: '10px 0' }}>
                   <Label
                     style={{ display: 'inline-block', marginBottom: '5px' }}
@@ -118,7 +122,52 @@ export default ({ TYPE, editorOptions }) => {
     )
   })
 
+  const CommentForm = createPropertyForm({
+    isDisabled: ({ value }) => {
+      return !value.blocks.some(isCommentBlock)
+    }
+  })(({ disabled, value, onChange }) => {
+    if (disabled) {
+      return null
+    }
+    console.log('comment form')
+    return (
+      <div>
+        {value.blocks.filter(isCommentBlock).map((block, i) => {
+          const text = block.data.get('text')
+          console.log(text, i)
+          return (
+            <div key={`comment-${i}`}>
+              <p style={{ margin: '10px 0' }}>
+                <Label style={{ display: 'inline-block', marginBottom: '5px' }}>
+                  Comment #{i + 1}
+                </Label>
+                <br />
+                <Field
+                  label='text'
+                  name='text'
+                  value={text}
+                  renderInput={({ ref, ...inputProps }) => (
+                    <AutosizeInput {...inputProps} inputRef={ref} />
+                  )}
+                  onChange={event => {
+                    let change = value.change().setNodeByKey(block.key, {
+                      data: block.data.merge({
+                        text: event.target.value
+                      })
+                    })
+                    onChange(change)
+                  }}
+                />
+              </p>
+            </div>
+          )
+        })}
+      </div>
+    )
+  })
+
   return {
-    forms: [VideoForm]
+    forms: [VideoForm, CommentForm]
   }
 }
