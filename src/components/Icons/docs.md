@@ -145,5 +145,24 @@ Icons that are used in Publikator only, are exported seperately via `@project-r/
 <IconButton Icon={StrikethroughIcon} label="StrikethroughIcon" />
 <IconButton Icon={SubscriptIcon} label="SubscriptIcon" />
 <IconButton Icon={SuperscriptIcon} label="SuperscriptIcon" />
+<IconButton Icon={InfoOutlineIcon} label="InfoOutlineIcon" />
+<IconButton Icon={CopyToClippboardIcon} label="CopyToClippboardIcon" />
+<IconButton Icon={MoveToEndIcon} label="MoveToEndIcon" />
+<IconButton Icon={MoveIntoIcon} label="MoveIntoIcon" />
+<IconButton Icon={InsertVarIcon} label="InsertVarIcon" />
+<IconButton Icon={PublicIcon} label="PublicIcon" />
+<IconButton Icon={DevicePhoneIcon} label="DevicePhoneIcon" />
+<IconButton Icon={DeviceTabletIcon} label="DeviceTabletIcon" />
+<IconButton Icon={DeviceLaptopIcon} label="DeviceLaptopIcon" />
+<IconButton Icon={DeviceDesktopIcon} label="DeviceDesktopIcon" />
+<IconButton Icon={DropDownIcon} label="DropDownIcon" />
+<IconButton Icon={DropUpIcon} label="DropUpIcon" />
+<IconButton Icon={TextDiffIcon} label="TextDiffIcon" />
+<IconButton Icon={MoreHorizIcon} label="MoreHorizIcon" />
+<IconButton Icon={LockOpenIcon} label="LockOpenIcon" />
+<IconButton Icon={StarFilledIcon} label="StarFilledIcon" />
+<IconButton Icon={NewerVersionIcon} label="NewerVersionIcon" />
+<IconButton Icon={OfflineIcon} label="OfflineIcon" />
+<IconButton Icon={CircleFilledIcon} label="CircleFilledIcon" />
 </div>
 ```
