@@ -38,6 +38,7 @@ import createBase from './base'
 import createBlocks from './blocks'
 import createTeasers from './teasers'
 import createDynamicComponent from './dynamicComponent'
+import CommentTeaser from '../../components/CommentTeaser/CommentTeaser'
 
 const getProgressId = (node, index, parent, { ancestors }) => {
   if (parent.identifier === 'CENTER') {
@@ -517,7 +518,19 @@ const createSchema = ({
               {
                 matchMdast: matchZone('EMBEDCOMMENT'),
                 component: ({ attributes, data, url }) => {
-                  return <span>COMMENT EMBED</span>
+                  return (
+                    <CommentTeaser
+                      attributes={attributes}
+                      createdAt={new Date(data.createdAt)}
+                      displayAuthor={data.displayAuthor}
+                      preview={{
+                        string: data.text,
+                        more: false
+                      }}
+                      discussion={data.discussion}
+                      t={t}
+                    />
+                  )
                 },
                 props: node => ({
                   data: {
