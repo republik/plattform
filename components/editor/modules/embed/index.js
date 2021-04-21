@@ -76,6 +76,20 @@ export const getTwitterEmbed = gql`
   }
 `
 
+export const getCommentEmbed = gql`
+  query getCommentEmbed($id: ID!) {
+    comments(focusId: $id) {
+      focus {
+        displayAuthor {
+          name
+          profilePicture
+        }
+        content
+      }
+    }
+  }
+`
+
 const fromMdast = ({ TYPE }) => node => {
   const deepNodes = node.children.reduce(
     (children, child) => children.concat(child).concat(child.children),
@@ -186,6 +200,8 @@ const YOUTUBE_REGEX = /^http(?:s?):\/\/(?:www\.)?youtu(?:be\.com\/watch\?v=|\.be
 // One capturing group at match[1] that catches the video id
 const VIMEO_REGEX = /^(?:http|https)?:\/\/(?:www\.)?vimeo.com\/(?:channels\/(?:\w+\/)?|groups\/(?:[^/]*)\/videos\/|)(\d+)(?:|\/\?)$/
 
+const COMMENT_REGEX = /^https?:\/\/localhost:3010\/dialog\?t=article&id=[a-f\d-]+&focus=([a-f\d-]+)$/
+
 const matchVideoUrl = url => YOUTUBE_REGEX.test(url) || VIMEO_REGEX.test(url)
 
 const getVideoQueryParams = url => {
@@ -216,6 +232,18 @@ const getTwitterQueryParams = url => {
   throw new Error(`No valid twitter embed URL: ${url}`)
 }
 
+const matchCommentUrl = url => COMMENT_REGEX.test(url)
+
+const getCommentQueryParams = url => {
+  if (COMMENT_REGEX.test(url)) {
+    return {
+      embedType: 'CommentEmbed',
+      id: COMMENT_REGEX.exec(url)[1]
+    }
+  }
+  throw new Error(`No valid comment embed URL: ${url}`)
+}
+
 export const createEmbedVideoModule = moduleFactory({
   matchUrl: matchVideoUrl,
   getQueryParams: getVideoQueryParams,
@@ -226,4 +254,10 @@ export const createEmbedTwitterModule = moduleFactory({
   matchUrl: matchTwitterUrl,
   getQueryParams: getTwitterQueryParams,
   query: getTwitterEmbed
+})
+
+export const createEmbedCommentModule = moduleFactory({
+  matchUrl: matchCommentUrl,
+  getQueryParams: getCommentQueryParams,
+  query: getCommentEmbed
 })
