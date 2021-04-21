@@ -514,6 +514,23 @@ const createSchema = ({
                 },
                 isVoid: true
               },
+              {
+                matchMdast: matchZone('EMBEDCOMMENT'),
+                component: ({ attributes, data, url }) => {
+                  return <span>COMMENT EMBED</span>
+                },
+                props: node => ({
+                  data: {
+                    ...node.data,
+                    url: node.children[0].children[0].url
+                  }
+                }),
+                editorModule: 'embedComment',
+                editorOptions: {
+                  lookupType: 'PARAGRAPH'
+                },
+                isVoid: true
+              },
               blocks.infoBox,
               blocks.pullQuote,
               base.paragraph,
