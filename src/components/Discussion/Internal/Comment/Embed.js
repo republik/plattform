@@ -9,7 +9,7 @@ import {
 } from '../../../Typography/styles'
 import { mUp } from '../../../../theme/mediaQueries'
 import { linkStyle } from '../../../Typography'
-import TwitterIcon from 'react-icons/lib/fa/twitter'
+import { TwitterIcon } from '../../../Icons'
 import { useColorContext } from '../../../Colors/useColorContext'
 import { timeFormat } from '../../../../lib/timeFormat'
 

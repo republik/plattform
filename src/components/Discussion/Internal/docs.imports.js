@@ -6,9 +6,6 @@ import { exampleShortMdast, exampleLongMdast } from '../__docs__/exampleMdast'
 import * as CommentComponents from './Comment'
 import * as ComposerComponents from './Composer'
 
-export { default as MdMarkdown } from 'react-icons/lib/go/markdown'
-export { default as MdMood } from 'react-icons/lib/md/mood'
-
 export { DiscussionContext } from '../DiscussionContext'
 export { LoadMore1 } from '../Tree/LoadMore'
 export const Comment = { ...CommentComponents }

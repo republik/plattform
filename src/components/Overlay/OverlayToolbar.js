@@ -1,8 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { css } from 'glamor'
-import MdClose from 'react-icons/lib/md/close'
 
+import { CloseIcon } from '../Icons'
 import { useColorContext } from '../Colors/useColorContext'
 import { mUp } from '../../theme/mediaQueries'
 import { sansSerifRegular16 } from '../Typography/styles'
@@ -85,7 +85,7 @@ export const OverlayToolbarClose = ({ onClick }) => {
   const [colorScheme] = useColorContext()
   return (
     <button {...styles.close} onClick={onClick}>
-      <MdClose {...colorScheme.set('fill', 'text')} />
+      <CloseIcon {...colorScheme.set('fill', 'text')} />
     </button>
   )
 }

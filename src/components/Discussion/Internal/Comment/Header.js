@@ -1,7 +1,6 @@
 import React, { useMemo } from 'react'
 import { css } from 'glamor'
-import MdCheck from 'react-icons/lib/md/check'
-import MoreIcon from 'react-icons/lib/md/more-vert'
+import { CheckIcon, MoreIcon } from '../../../Icons'
 import {
   sansSerifMedium16,
   sansSerifRegular14
@@ -260,7 +259,7 @@ export const Header = ({ t, comment, menu, isExpanded, onToggle }) => {
                   {credential.description}
                 </div>
                 {credential.verified && (
-                  <MdCheck
+                  <CheckIcon
                     {...styles.verifiedCheck}
                     {...colorScheme.set('color', 'primary')}
                   />

@@ -2,8 +2,8 @@ import { css } from 'glamor'
 import PropTypes from 'prop-types'
 import React, { useRef, useState, useContext, useEffect } from 'react'
 import scrollIntoView from 'scroll-into-view'
-import ChevronLeft from 'react-icons/lib/md/keyboard-arrow-left'
-import ChevronRight from 'react-icons/lib/md/keyboard-arrow-right'
+
+import { ChevronLeftIcon, ChevronRightIcon } from '../Icons'
 import { PADDING, TILE_MARGIN_RIGHT } from './constants'
 import CarouselContext from './Context'
 import { plainButtonRule } from '../Button'
@@ -50,6 +50,10 @@ const styles = {
       transition: 'opacity 200ms'
     }
   }),
+  arrowIcon: css({
+    // ontop of arrowBg
+    position: 'relative'
+  }),
   arrowBg: css({
     display: 'block',
     position: 'absolute',
@@ -58,10 +62,6 @@ const styles = {
     right: 0,
     bottom: 0,
     opacity: 0.7
-  }),
-  arrowIcon: css({
-    // ontop of arrowBg
-    position: 'relative'
   }),
   arrowHoverable: css({
     '@media (hover)': {
@@ -146,7 +146,7 @@ const Row = ({ children }) => {
           {...styles.arrowBg}
           {...colorScheme.set('backgroundColor', context.bgColor)}
         />
-        <ChevronLeft
+        <ChevronLeftIcon
           size={50}
           {...styles.arrowIcon}
           {...colorScheme.set('fill', context.color)}
@@ -184,7 +184,7 @@ const Row = ({ children }) => {
           {...styles.arrowBg}
           {...colorScheme.set('backgroundColor', context.bgColor)}
         />
-        <ChevronRight
+        <ChevronRightIcon
           size={50}
           {...styles.arrowIcon}
           {...colorScheme.set('fill', context.color)}

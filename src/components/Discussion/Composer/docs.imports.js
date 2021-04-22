@@ -1,8 +1,5 @@
 import React from 'react'
 
-import { default as MdMarkdown } from 'react-icons/lib/go/markdown'
-import { default as MdMood } from 'react-icons/lib/md/mood'
-
 import { createFormatter } from '../../../lib/translate'
 import { Editorial } from '../../Typography'
 
@@ -10,6 +7,7 @@ import { default as Button } from '../../Button'
 import { SecondaryAction } from '../Internal/Composer'
 import { CommentComposer } from './CommentComposer'
 import { DiscussionContext } from '../DiscussionContext'
+import { MarkdownIcon, MoodIcon } from '../../Icons'
 
 export { CommentComposerPlaceholder } from './CommentComposerPlaceholder'
 
@@ -71,10 +69,10 @@ export const CommentComposerPlayground = () => {
     composerSecondaryActions: (
       <>
         <SecondaryAction>
-          <MdMood height={26} width={26} />
+          <MoodIcon size={26} />
         </SecondaryAction>
         <SecondaryAction>
-          <MdMarkdown height={26} width={26} />
+          <MarkdownIcon size={26} />
         </SecondaryAction>
       </>
     )

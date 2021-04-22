@@ -1,12 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { css, merge } from 'glamor'
-import Play from 'react-icons/lib/md/play-arrow'
-import Pause from 'react-icons/lib/md/pause'
-import Close from 'react-icons/lib/md/close'
-import Download from 'react-icons/lib/md/file-download'
-import Forward from 'react-icons/lib/md/forward-30'
-import Replay from 'react-icons/lib/md/replay-10'
 
 import { ellipsize } from '../../lib/styleMixins'
 import { timeFormat } from '../../lib/timeFormat'
@@ -17,6 +11,14 @@ import { breakoutStyles } from '../Center'
 import { InlineSpinner } from '../Spinner'
 import { sansSerifRegular12, sansSerifRegular15 } from '../Typography/styles'
 import { mUp } from '../../theme/mediaQueries'
+import {
+  PlayIcon,
+  PauseIcon,
+  ForwardIcon,
+  ReplayIcon,
+  DownloadIcon,
+  CloseIcon
+} from '../Icons'
 import { useColorContext } from '../Colors/useColorContext'
 
 const ZINDEX_AUDIOPLAYER_ICONS = 6
@@ -573,7 +575,7 @@ class AudioPlayer extends Component {
               }
               title={t('styleguide/AudioPlayer/partialrewind')}
             >
-              <Replay
+              <ReplayIcon
                 size={SIZE.replay}
                 {...(playEnabled && progress > 0
                   ? colorScheme.set('fill', 'text')
@@ -587,7 +589,7 @@ class AudioPlayer extends Component {
               aria-live='assertive'
             >
               {!playing && (
-                <Play
+                <PlayIcon
                   size={SIZE.play}
                   {...(playEnabled
                     ? colorScheme.set('fill', 'text')
@@ -595,7 +597,10 @@ class AudioPlayer extends Component {
                 />
               )}
               {playing && (
-                <Pause size={SIZE.play} {...colorScheme.set('fill', 'text')} />
+                <PauseIcon
+                  size={SIZE.play}
+                  {...colorScheme.set('fill', 'text')}
+                />
               )}
             </button>
             <button
@@ -609,7 +614,7 @@ class AudioPlayer extends Component {
               }
               title={t('styleguide/AudioPlayer/partialfastforward')}
             >
-              <Forward
+              <ForwardIcon
                 size={SIZE.forward}
                 {...(playEnabled && progress > 0
                   ? colorScheme.set('fill', 'text')
@@ -625,14 +630,14 @@ class AudioPlayer extends Component {
                   download
                   title={t('styleguide/AudioPlayer/download')}
                 >
-                  <Download
+                  <DownloadIcon
                     size={SIZE.download}
                     {...colorScheme.set('fill', 'text')}
                   />
                 </a>
               )}
               {!playEnabled && (
-                <Download
+                <DownloadIcon
                   size={SIZE.download}
                   {...colorScheme.set('fill', 'disabled')}
                 />
@@ -645,7 +650,10 @@ class AudioPlayer extends Component {
               {...styles.close}
               onClick={closeHandler}
             >
-              <Close size={SIZE.close} {...colorScheme.set('fill', 'text')} />
+              <CloseIcon
+                size={SIZE.close}
+                {...colorScheme.set('fill', 'text')}
+              />
             </button>
           )}
           <div

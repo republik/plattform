@@ -1,18 +1,20 @@
 import React, { useMemo } from 'react'
 import { css, merge } from 'glamor'
-import MdKeyboardArrowDown from 'react-icons/lib/md/keyboard-arrow-down'
-import MdKeyboardArrowUp from 'react-icons/lib/md/keyboard-arrow-up'
 // options: speaker-notes-off, block, clear, visibility-off, remove-circle
 import CommentCountIcon from './CommentCountIcon'
-import UnpublishIcon from 'react-icons/lib/md/visibility-off'
-import ReportIcon from 'react-icons/lib/md/flag'
-import EditIcon from 'react-icons/lib/md/edit'
-import ReplyIcon from 'react-icons/lib/md/reply'
-import ShareIcon from '../../../Icons/CustomIcons/ShareIconIOS'
-import FeaturedIcon from 'react-icons/lib/md/star-outline'
 import { sansSerifMedium14 } from '../../../Typography/styles'
 import { DiscussionContext, formatTimeRelative } from '../../DiscussionContext'
 import { timeFormat } from '../../../../lib/timeFormat'
+import {
+  ShareIcon,
+  EditIcon,
+  ReplyIcon,
+  ArrowDownIcon,
+  ArrowUpIcon,
+  UnpublishIcon,
+  ReportIcon,
+  FeaturedIcon
+} from '../../../Icons'
 import { useColorContext } from '../../../Colors/useColorContext'
 import { useCurrentMinute } from '../../../../lib/useCurrentMinute'
 
@@ -262,7 +264,7 @@ export const Actions = ({
               onClick={onUpvote}
               title={t('styleguide/CommentActions/upvote')}
             >
-              <MdKeyboardArrowUp />
+              <ArrowUpIcon />
             </IconButton>
             <span
               title={t.pluralize('styleguide/CommentActions/upvote/count', {
@@ -289,7 +291,7 @@ export const Actions = ({
               onClick={onDownvote}
               title={t('styleguide/CommentActions/downvote')}
             >
-              <MdKeyboardArrowDown />
+              <ArrowDownIcon />
             </IconButton>
           </div>
         </div>

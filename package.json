@@ -94,7 +94,8 @@
   "files": [
     "lib",
     "src",
-    "chart.js"
+    "chart.js",
+    "icons.js"
   ],
   "main": "./lib/lib.js",
   "author": "Thomas Preusse <t@preus.se> (https://t.preus.se/)",
@@ -133,8 +134,8 @@
     }
   },
   "dependencies": {
-    "body-scroll-lock": "3.0.3",
-    "react-icons": "^2.2.7"
+    "@react-icons/all-files": "^4.1.0",
+    "body-scroll-lock": "3.0.3"
   },
   "browserslist": [
     ">0.2%",
