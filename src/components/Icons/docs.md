@@ -135,7 +135,7 @@ The default Icon style is Material. For brands we rely on Ionic icons. There are
 </div>
 ```
 
-<!-- Icons that are used in Publikator only, are exported seperately via `@project-r/styleguide/icons-publikator`
+<!-- Until module export and tree shaking issues are resolved, publikator icons aren't part of the icons library
 
 ```react
 <div>
