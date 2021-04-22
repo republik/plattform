@@ -134,35 +134,3 @@ The default Icon style is Material. For brands we rely on Ionic icons. There are
 <IconButton Icon={DoneIcon} label="DoneIcon" />
 </div>
 ```
-
-<!-- Until module export and tree shaking issues are resolved, publikator icons aren't part of the icons library
-
-```react
-<div>
-<Interaction.H3>Publikator</Interaction.H3>
-<IconButton Icon={BoldIcon} label="BoldIcon" />
-<IconButton Icon={ItalicIcon} label="ItalicIcon" />
-<IconButton Icon={StrikethroughIcon} label="StrikethroughIcon" />
-<IconButton Icon={SubscriptIcon} label="SubscriptIcon" />
-<IconButton Icon={SuperscriptIcon} label="SuperscriptIcon" />
-<IconButton Icon={InfoOutlineIcon} label="InfoOutlineIcon" />
-<IconButton Icon={CopyToClippboardIcon} label="CopyToClippboardIcon" />
-<IconButton Icon={MoveToEndIcon} label="MoveToEndIcon" />
-<IconButton Icon={MoveIntoIcon} label="MoveIntoIcon" />
-<IconButton Icon={InsertVarIcon} label="InsertVarIcon" />
-<IconButton Icon={PublicIcon} label="PublicIcon" />
-<IconButton Icon={DevicePhoneIcon} label="DevicePhoneIcon" />
-<IconButton Icon={DeviceTabletIcon} label="DeviceTabletIcon" />
-<IconButton Icon={DeviceLaptopIcon} label="DeviceLaptopIcon" />
-<IconButton Icon={DeviceDesktopIcon} label="DeviceDesktopIcon" />
-<IconButton Icon={DropDownIcon} label="DropDownIcon" />
-<IconButton Icon={DropUpIcon} label="DropUpIcon" />
-<IconButton Icon={TextDiffIcon} label="TextDiffIcon" />
-<IconButton Icon={MoreHorizIcon} label="MoreHorizIcon" />
-<IconButton Icon={LockOpenIcon} label="LockOpenIcon" />
-<IconButton Icon={StarFilledIcon} label="StarFilledIcon" />
-<IconButton Icon={NewerVersionIcon} label="NewerVersionIcon" />
-<IconButton Icon={OfflineIcon} label="OfflineIcon" />
-<IconButton Icon={CircleFilledIcon} label="CircleFilledIcon" />
-</div>
-``` -->
