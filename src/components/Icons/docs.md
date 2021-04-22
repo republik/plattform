@@ -8,10 +8,10 @@ import {
 } from '@project-r/styleguide/icons'
 ```
 
-Add a root icon context provider, e.g. in your frame component. Possible props are: `color`, `size`, `className`, `style`, `attr`, `title` :
+We assume a context providing `{ style: { verticalAlign: 'middle' }}` is wrapped around the app or frame where the style guide is used for icons to align nicely. For additional options see the [`@react-icons/all-files` readme](https://www.npmjs.com/package/@react-icons/all-files#configuration).
 
 ```react
-<IconContextProvider value={{ color: "blue", size: "4em", style: {transform: 'rotateZ(45deg)'} }}>
+<IconContextProvider value={{ style: { verticalAlign: 'middle' } }}>
   <PdfIcon />
 </IconContextProvider>
 ```
