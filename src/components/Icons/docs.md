@@ -135,7 +135,7 @@ The default Icon style is Material. For brands we rely on Ionic icons. There are
 </div>
 ```
 
-Icons that are used in Publikator only, are exported seperately via `@project-r/styleguide/icons-publikator`
+<!-- Icons that are used in Publikator only, are exported seperately via `@project-r/styleguide/icons-publikator`
 
 ```react
 <div>
@@ -165,4 +165,4 @@ Icons that are used in Publikator only, are exported seperately via `@project-r/
 <IconButton Icon={OfflineIcon} label="OfflineIcon" />
 <IconButton Icon={CircleFilledIcon} label="CircleFilledIcon" />
 </div>
-```
+``` -->
