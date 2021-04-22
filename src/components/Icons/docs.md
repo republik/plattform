@@ -1,6 +1,6 @@
 ## IconContextProvider
 
-The styleguide exports IconContextProvider, which can be wrapped around an app to provide global CSS for Icons.
+The styleguide exports `IconContextProvider`, which can be wrapped around an app to provide default props, like inline styles, for icons.
 
 ```code|lang-js
 import {
