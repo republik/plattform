@@ -36,7 +36,7 @@ The default Icon style is Material. For brands we rely on Ionic icons. There are
 <IconButton Icon={NotificationIcon} label="NotificationIcon" />
 <IconButton Icon={NotificationsOffIcon} label="NotificationsOffIcon" />
 <IconButton Icon={NotificationsNoneIcon} label="NotificationsNoneIcon" />
-<IconButton Icon={NotificationsActiveIcon} label="NotificationsActiveIcon" />
+<IconButton Icon={NotificationsActiveIcon} label="NotificationsActiveIcon || FollowIcon" />
 <IconButton Icon={GalleryIcon} label="GalleryIcon" />
 <IconButton Icon={CheckIcon} label="CheckIcon" />
 <IconButton Icon={CheckSmallIcon} label="CheckSmallIcon" />
@@ -55,7 +55,7 @@ The default Icon style is Material. For brands we rely on Ionic icons. There are
 <IconButton Icon={SearchIcon} label="SearchIcon" />
 <IconButton Icon={FullscreenIcon} label="FullscreenIcon" />
 <IconButton Icon={FullscreenExitIcon} label="FullscreenExitIcon" />
-<IconButton Icon={RotateLeftIcon} label="RotateLeftIcon" />
+<IconButton Icon={RotateLeftIcon} label="RotateLeftIcon || RevertIcon" />
 <IconButton Icon={ListIcon} label="ListIcon" />
 <IconButton Icon={FilterListIcon} label="FilterListIcon" />
 <IconButton Icon={AddIcon} label="AddIcon" />

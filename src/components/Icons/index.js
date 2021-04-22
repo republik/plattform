@@ -59,6 +59,7 @@ export { MdNotifications as NotificationIcon } from '@react-icons/all-files/md/M
 export { MdNotificationsOff as NotificationsOffIcon } from '@react-icons/all-files/md/MdNotificationsOff'
 export { MdNotificationsNone as NotificationsNoneIcon } from '@react-icons/all-files/md/MdNotificationsNone'
 export { MdRotateLeft as RotateLeftIcon } from '@react-icons/all-files/md/MdRotateLeft'
+export { MdRotateLeft as RevertIcon } from '@react-icons/all-files/md/MdRotateLeft'
 export { MdList as ListIcon } from '@react-icons/all-files/md/MdList'
 export { MdFilterList as FilterListIcon } from '@react-icons/all-files/md/MdFilterList'
 export { MdAdd as AddIcon } from '@react-icons/all-files/md/MdAdd'
