@@ -53,6 +53,10 @@ type Meta {
   twitterTitle: String
   twitterImage: String
   twitterDescription: String
+  shareText: String
+  shareFontSize: Int
+  shareInverted: Boolean
+  shareTextPosition: String
   prepublication: Boolean
   publishDate: DateTime
   lastPublishedAt: DateTime
@@ -64,6 +68,8 @@ type Meta {
   section: Document
   format: Document
   dossier: Document
+  shareBackgroundImage: String
+  shareBackgroundImageInverted: String
 
   credits: JSON
   audioSource: AudioSource

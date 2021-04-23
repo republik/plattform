@@ -15,9 +15,6 @@ type Repo {
   # nothing if repo is unpublished
   latestPublications: [Publication]!
 
-  mailchimpUrl: String
-  unpublished: Boolean!
-
   meta: RepoMeta!
   currentPhase: RepoPhase!
 
@@ -170,4 +167,18 @@ enum Action {
   create
   delete
 }
+
+type RepoChange {
+  mutation: RepoChangeMutationType!
+  repo: Repo
+  commit: Commit
+  milestone: Milestone
+}
+
+enum RepoChangeMutationType {
+  CREATED
+  UPDATED
+  DELETED
+}
+
 `

@@ -1,10 +1,11 @@
 const crypto = require('crypto')
+const Promise = require('bluebird')
 const { contentUrlResolver, metaUrlResolver } = require('../../lib/resolve')
 const {
   processMembersOnlyZonesInContent,
   processRepoImageUrlsInContent,
   processRepoImageUrlsInMeta,
-  processImageUrlsInContent,
+  processEmbedImageUrlsInContent,
   processEmbedsInContent,
   processNodeModifiersInContent,
 } = require('../../lib/process')
@@ -56,7 +57,7 @@ module.exports = {
         .join('/')
     )
   },
-  content(doc, { urlPrefix, searchString, webp }, context, info) {
+  async content(doc, { urlPrefix, searchString, webp }, context, info) {
     // we only do auto slugging when in a published documents context
     // - this is easiest detectable by _all being present from documents resolver
     // - alt check info.path for documents / document being the root
@@ -76,8 +77,10 @@ module.exports = {
       )
 
       if (shouldDeliverWebP(webp, context.req)) {
-        processRepoImageUrlsInContent(doc.content, addWebpSuffix)
-        processImageUrlsInContent(doc.content, addWebpSuffix)
+        await Promise.all([
+          processRepoImageUrlsInContent(doc.content, addWebpSuffix),
+          processEmbedImageUrlsInContent(doc.content, addWebpSuffix),
+        ])
       }
 
       processMembersOnlyZonesInContent(doc.content, context.user)
@@ -85,7 +88,7 @@ module.exports = {
     }
     return doc.content
   },
-  meta(doc, { urlPrefix, searchString, webp }, context, info) {
+  async meta(doc, { urlPrefix, searchString, webp }, context, info) {
     const meta = getMeta(doc)
     if (doc._all) {
       metaUrlResolver(
@@ -98,7 +101,7 @@ module.exports = {
       )
 
       if (shouldDeliverWebP(webp, context.req)) {
-        processRepoImageUrlsInMeta(doc.content, addWebpSuffix)
+        await processRepoImageUrlsInMeta(doc.content, addWebpSuffix)
       }
     }
     return meta
@@ -157,11 +160,14 @@ module.exports = {
 
       const shouldAddWebpSuffix = shouldDeliverWebP(webp, context.req)
 
-      const idsFromNodes = nodes.map((node) => {
+      const idsFromNodes = await Promise.map(nodes, async (node) => {
         if (shouldAddWebpSuffix) {
-          processRepoImageUrlsInContent(node, addWebpSuffix)
-          processImageUrlsInContent(node, addWebpSuffix)
+          await Promise.all([
+            processRepoImageUrlsInContent(node, addWebpSuffix),
+            processEmbedImageUrlsInContent(node, addWebpSuffix),
+          ])
         }
+
         processMembersOnlyZonesInContent(node, context.user)
         processNodeModifiersInContent(node, context.user)
 
@@ -236,9 +242,9 @@ module.exports = {
 
     return getDocuments(doc, args, context, info)
   },
-  embeds(doc, { types = [] }, context, info) {
+  async embeds(doc, { types = [] }, context, info) {
     const embeds = []
-    processEmbedsInContent(doc.content, (embed) => {
+    await processEmbedsInContent(doc.content, (embed) => {
       if (!types.length || types.includes(embed.__typename)) {
         embeds.push(embed)
       }

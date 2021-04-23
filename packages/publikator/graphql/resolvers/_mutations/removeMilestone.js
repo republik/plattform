@@ -14,18 +14,33 @@ module.exports = async (_, { repoId, name }, context) => {
   const tx = await pgdb.transactionBegin()
 
   try {
-    await tx.publikator.milestones.deleteOne({
+    const milestone = await tx.publikator.milestones.findOne({
       repoId,
       name,
     })
+
+    if (!milestone) {
+      throw new Error(`milestone "${name}" on ${repoId} does not exist`)
+    }
+
+    await tx.publikator.milestones.deleteOne({ id: milestone.id })
 
     await updateCurrentPhase(repoId, tx)
 
     await tx.transactionCommit()
 
+    // @TODO: Safe to remove, once repoChange is adopted
     await pubsub.publish('repoUpdate', {
       repoUpdate: {
         id: repoId,
+      },
+    })
+
+    await pubsub.publish('repoChange', {
+      repoChange: {
+        repoId,
+        mutation: 'DELETED',
+        milestone,
       },
     })
 

@@ -6,7 +6,7 @@ const {
 const { updateRepo } = require('../../../lib/postgres')
 
 module.exports = async (_, args, context) => {
-  const { user, pgdb, pubsub } = context
+  const { user, pgdb } = context
   ensureUserHasRole(user, 'editor')
 
   const {
@@ -34,12 +34,6 @@ module.exports = async (_, args, context) => {
     const repo = await updateRepo(repoId, updatedMeta, tx)
 
     await tx.transactionCommit()
-
-    await pubsub.publish('repoUpdate', {
-      repoUpdate: {
-        id: repoId,
-      },
-    })
 
     return repo
   } catch (e) {

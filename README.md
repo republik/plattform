@@ -106,6 +106,7 @@ yarn install
 createdb republik
 yarn run db:migrate:up
 yarn run db:seed
+yarn run pull:elasticsearch
 ```
 
 ### 5. Run

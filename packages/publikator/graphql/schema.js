@@ -101,6 +101,9 @@ type subscriptions {
   # (commit, place-/removeMilestone, un-publish)
   repoUpdate(
     repoId: ID
-  ): Repo!
+  ): Repo! @deprecated(reason: "use \`repoChange\` subscrption instead")
+  repoChange(
+    repoId: ID!
+  ): RepoChange!
 }
 `

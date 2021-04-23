@@ -3,7 +3,20 @@ Guten Tag
 Ihre Zahlung ist erfolgreich bei uns eingegangen.
 Herzlichen Dank!
 
-{{#if `total > 1000`}}
+{{#if `total > 1000`}} {{#if pledger_memberships_active_monthly}}
+
+Dass Sie uns mit einer Jahresmitgliedschaft längerfristig unterstützen, freut
+und ehrt uns. Herzlichen Dank für Ihr Vertrauen.
+
+Wir werden Ihre Mitgliedschaft automatisch aktivieren, sobald die aktuelle
+Periode Ihres Monats-Abos ausgelaufen ist. So können Sie dann nahtlos
+weiterlesen.
+
+Mit der Jahresmitgliedschaft erhalten Sie weiterhin von Montag bis Samstag ein
+hochwertiges digitales Magazin. Sie unterstützen damit eine wirklich unabhängige
+vierte Gewalt. Und sind neu auch Teil der Project R Genossenschaft.
+
+{{else}}
 
 Sie können ab sofort das Magazin lesen {{link_signin}} , an sämtlichen Debatten
 teilnehmen {{link_dialog}} , eine öffentliche Profilseite aufschalten
@@ -18,7 +31,7 @@ regelmässig Neuigkeiten aus Redaktion und Verlag: zu Vorhaben, Hintergründen,
 Entscheidungen und Fehlern. Sie können Kritik üben und Vorschläge machen. Und
 sich mit Ihren Kolleginnen und Kollegen in der Verlagsetage austauschen.
 
-{{/if}}
+{{/if}} {{/if}}
 
 Um uns für Ihre besonders grosse Unterstützung ein kleines bisschen zu
 revanchieren, schicken wir Ihnen postwendend das Gönnerpaket mit Manifest und

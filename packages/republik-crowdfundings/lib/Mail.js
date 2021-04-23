@@ -26,7 +26,6 @@ const {
   MAILCHIMP_INTEREST_NEWSLETTER_DAILY,
   MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY,
   MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR,
-  MAILCHIMP_INTEREST_NEWSLETTER_COVID19,
   MAILCHIMP_INTEREST_NEWSLETTER_ACCOMPLICE,
   FRONTEND_BASE_URL,
 } = process.env
@@ -43,10 +42,6 @@ const mail = createMail([
   {
     name: 'PROJECTR',
     interestId: MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR,
-  },
-  {
-    name: 'COVID19',
-    interestId: MAILCHIMP_INTEREST_NEWSLETTER_COVID19,
   },
   {
     name: 'ACCOMPLICE',
@@ -829,6 +824,18 @@ mail.getPledgeMergeVars = async (
 
   const creditor = payment?.pledge?.package?.bankAccount
 
+  const monthlyActiveMemberships = await pgdb.queryOneColumn(`
+    SELECT m.id 
+    FROM memberships m
+    JOIN "membershipTypes" t
+      ON m."membershipTypeId" = t.id
+    WHERE m."userId" = '${user.id}'
+      AND t.name = 'MONTHLY_ABO'
+      AND m.active = TRUE
+  `)
+
+  const hasActiveMonthly = monthlyActiveMemberships.length > 0
+
   return [
     // Purchase itself
     {
@@ -1005,6 +1012,10 @@ mail.getPledgeMergeVars = async (
     {
       name: 'link_claim',
       content: `${FRONTEND_BASE_URL}/abholen`,
+    },
+    {
+      name: 'pledger_memberships_active_monthly',
+      content: hasActiveMonthly,
     },
   ]
 }

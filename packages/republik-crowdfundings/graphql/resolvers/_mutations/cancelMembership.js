@@ -90,6 +90,8 @@ module.exports = async (_, args, context) => {
       })
     }
 
+    await mail.enforceSubscriptions({ pgdb, userId: user.id })
+
     await slack.publishMembership(
       user,
       me,
