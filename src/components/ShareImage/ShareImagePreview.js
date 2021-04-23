@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useRef, useEffect, useState } from 'react'
 import { css } from 'glamor'
 import { fontStyles } from '../../theme/fonts'
 import { imageStyle } from './SharePreviewTwitter'
@@ -7,6 +7,7 @@ import { PLACEHOLDER_TEXT } from './index'
 
 export const SHARE_IMAGE_WIDTH = 1200
 export const SHARE_IMAGE_HEIGHT = 628
+export const SHARE_IMAGE_PADDING = 48
 
 export const socialPreviewStyles = {
   twitter: imageStyle
@@ -21,8 +22,9 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    padding: 48,
-    overflow: 'hidden'
+    padding: SHARE_IMAGE_PADDING,
+    overflow: 'hidden',
+    wordWrap: 'break-word'
   }),
   containerHalfSize: css({
     transform: `scale(${0.5})`,
@@ -34,9 +36,10 @@ const styles = {
   }),
   textContainer: css({
     width: '100%',
+    maxHeight: SHARE_IMAGE_HEIGHT - 2 * SHARE_IMAGE_PADDING,
+    overflow: 'hidden',
     whiteSpace: 'pre-wrap',
     textAlign: 'center',
-    ...fontStyles.serifTitle,
     zIndex: 1
   }),
   formatTitle: css({
@@ -78,7 +81,7 @@ const ShareImagePreview = ({
   fontSize,
   textPosition
 }) => {
-  const fontStyle = fontStyles[formatFonts[format?.kind] || 'editorial']
+  const fontStyle = fontStyles[formatFonts[format?.kind] || 'serifTitle']
   const shareImage =
     format?.shareBackgroundImage &&
     (inverted
@@ -87,6 +90,29 @@ const ShareImagePreview = ({
   const displayedText = !text || text === '' ? PLACEHOLDER_TEXT : text
   const formatColor = format?.color || colors[format?.kind]
   const socialPreview = socialPreviewStyles[preview]
+
+  const [reservedVerticalSpace, setReservedVerticalSpace] = useState(0)
+  const [textContainerOverflow, setTextContainerOverflow] = useState(false)
+  const formatImageRef = useRef()
+  const formatTitleRef = useRef()
+  const textContainerRef = useRef()
+
+  useEffect(() => {
+    const formatImageHeight = format?.image
+      ? formatImageRef.current.clientHeight
+      : 0
+    const formatTitleHeight = format?.title
+      ? formatTitleRef.current.clientHeight
+      : 0
+    setReservedVerticalSpace(formatImageHeight + formatTitleHeight)
+  }, [format])
+
+  useEffect(() => {
+    setTextContainerOverflow(
+      textContainerRef.current.scrollHeight >
+        textContainerRef.current.clientHeight
+    )
+  }, [text, fontSize])
 
   return (
     <div
@@ -108,10 +134,11 @@ const ShareImagePreview = ({
       }}
     >
       {format?.image && !shareImage && (
-        <img {...styles.formatImage} src={format?.image} />
+        <img ref={formatImageRef} {...styles.formatImage} src={format?.image} />
       )}
       {format?.title && (
         <div
+          ref={formatTitleRef}
           {...styles.formatTitle}
           style={{
             color: inverted ? '#FFF' : formatColor,
@@ -123,11 +150,16 @@ const ShareImagePreview = ({
       )}
       <div
         {...styles.textContainer}
+        ref={textContainerRef}
         style={{
           ...fontStyle,
           fontSize: fontSize || SHARE_IMAGE_DEFAULTS.fontSize,
           color: inverted ? '#FFF' : '#000',
-          width: shareImage && '80%'
+          width: shareImage && '80%',
+          backgroundColor:
+            preview && textContainerOverflow ? 'red' : 'transparent',
+          maxHeight:
+            SHARE_IMAGE_HEIGHT - 2 * SHARE_IMAGE_PADDING - reservedVerticalSpace
         }}
       >
         {displayedText}
