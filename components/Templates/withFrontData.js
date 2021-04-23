@@ -1,7 +1,7 @@
 import { graphql } from 'react-apollo'
 import gql from 'graphql-tag'
-import { TeaserActiveDebates } from '@project-r/styleguide/lib/components/TeaserActiveDebates'
-import { TeaserMyMagazine } from '@project-r/styleguide/lib/components/TeaserMyMagazine'
+import { TeaserActiveDebates } from '@project-r/styleguide/lib/components/TeaserActiveDebates' // should this be such?
+import { TeaserMyMagazine } from '@project-r/styleguide/lib/components/TeaserMyMagazine' // ditto
 
 const feedQuery = gql`
   query getFrontFeed(

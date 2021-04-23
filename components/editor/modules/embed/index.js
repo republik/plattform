@@ -81,20 +81,7 @@ export const getCommentEmbed = gql`
     comments(focusId: $id) {
       focus {
         id
-        createdAt
-        displayAuthor {
-          id
-          name
-          profilePicture
-          credential {
-            description
-            verified
-          }
-        }
         text
-        discussion {
-          title
-        }
       }
     }
   }

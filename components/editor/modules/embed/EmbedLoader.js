@@ -51,7 +51,8 @@ export default (query, Component) => {
             t.setNodeByKey(node.key, {
               data: {
                 ...data.embed,
-                ...data.comments?.focus,
+                id: data.comments?.focus?.id,
+                text: data.comments?.focus?.text,
                 url: node.data.get('url')
               }
             })
