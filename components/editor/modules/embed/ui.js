@@ -1,17 +1,16 @@
 import React, { Fragment } from 'react'
 import { Checkbox, Radio, Label, Field } from '@project-r/styleguide'
-import { createPropertyForm } from '../../utils'
+import { createPropertyForm, matchBlock } from '../../utils'
 import AutosizeInput from 'react-textarea-autosize'
 
-const isBlockType = blockType => block => block.type === blockType
-
-const isVideoBlock = isBlockType('EMBEDVIDEO')
-const isCommentBlock = isBlockType('EMBEDCOMMENT')
+const isVideoBlock = matchBlock('EMBEDVIDEO')
+const isCommentBlock = matchBlock('EMBEDCOMMENT')
 
 export default ({ TYPE, editorOptions = {} }) => {
+  const isMatch = matchBlock(TYPE)
   const VideoForm = createPropertyForm({
     isDisabled: ({ value }) => {
-      return !value.blocks.some(isVideoBlock)
+      return TYPE !== 'EMBEDVIDEO' && !value.blocks.some(isMatch)
     }
   })(({ disabled, value, onChange }) => {
     const { sizes = [] } = editorOptions
@@ -20,7 +19,7 @@ export default ({ TYPE, editorOptions = {} }) => {
     }
     return (
       <div>
-        {value.blocks.filter(isVideoBlock).map((block, i) => {
+        {value.blocks.filter(isMatch).map((block, i) => {
           const src = block.data.get('src')
           return (
             <div key={`video-${i}`}>
@@ -124,18 +123,16 @@ export default ({ TYPE, editorOptions = {} }) => {
 
   const CommentForm = createPropertyForm({
     isDisabled: ({ value }) => {
-      return !value.blocks.some(isCommentBlock)
+      return TYPE !== 'EMBEDCOMMENT' || !value.blocks.some(isMatch)
     }
   })(({ disabled, value, onChange }) => {
     if (disabled) {
       return null
     }
-    console.log('comment form')
     return (
       <div>
-        {value.blocks.filter(isCommentBlock).map((block, i) => {
+        {value.blocks.filter(isMatch).map((block, i) => {
           const text = block.data.get('text')
-          console.log(text, i)
           return (
             <div key={`comment-${i}`}>
               <p style={{ margin: '10px 0' }}>
