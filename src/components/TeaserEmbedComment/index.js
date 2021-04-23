@@ -1,24 +1,15 @@
 import React from 'react'
 import CommentTeaser from '../CommentTeaser/CommentTeaser'
 
-const TeaserEmbedComment = ({
-  createdAt,
-  displayAuthor,
-  id,
-  discussion,
-  text,
-  t,
-  attributes
-}) => (
+const TeaserEmbedComment = ({ savedData, liveData, t }) => (
   <CommentTeaser
-    attributes={attributes}
-    createdAt={new Date(createdAt)}
-    displayAuthor={displayAuthor}
+    createdAt={new Date(liveData.createdAt)}
+    displayAuthor={liveData.displayAuthor}
     preview={{
-      string: text,
+      string: savedData.text,
       more: false
     }}
-    discussion={discussion}
+    discussion={liveData.discussion}
     t={t}
   />
 )
@@ -27,15 +18,18 @@ export default TeaserEmbedComment
 
 TeaserEmbedComment.data = {
   config: {
-    options: {
+    options: ({ data }) => ({
+      variables: {
+        id: data.id
+      },
       ssr: false
-    },
+    }),
     props: ({ data }) => {
       return {
-        data: {
+        liveData: {
           loading: data.loading,
           error: data.error,
-          displayAuthor: data.comments?.displayAuthor
+          ...data.comments?.focus
         }
       }
     }
@@ -55,7 +49,6 @@ TeaserEmbedComment.data = {
               verified
             }
           }
-          text
           discussion {
             title
           }

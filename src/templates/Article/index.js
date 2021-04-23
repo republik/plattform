@@ -39,6 +39,10 @@ import createBlocks from './blocks'
 import createTeasers from './teasers'
 import createDynamicComponent from './dynamicComponent'
 import CommentTeaser from '../../components/CommentTeaser/CommentTeaser'
+import Loader from '../../components/Loader'
+import { TeaserSectionTitle } from '../../components/TeaserShared'
+import TeaserEmbedComment from '../../components/TeaserEmbedComment'
+import LazyLoad from '../../components/LazyLoad'
 
 const getProgressId = (node, index, parent, { ancestors }) => {
   if (parent.identifier === 'CENTER') {
@@ -98,6 +102,8 @@ export const DYNAMICCOMPONENT_TYPE = 'DYNAMICCOMPONENT'
 
 const mdastPlaceholder = '\u2063'
 const DefaultLink = ({ children }) => children
+
+const withData = Component => props => <Component {...props} data={{}} />
 
 const createSchema = ({
   documentEditorOptions = { skipCredits: false },
@@ -167,7 +173,8 @@ const createSchema = ({
   metaBody = false,
   metaHeadlines = false,
   skipContainer = false,
-  skipCenter = false
+  skipCenter = false,
+  withCommentData = withData
 } = {}) => {
   const base = createBase({ metaBody, metaHeadlines })
   const blocks = createBlocks({
@@ -517,26 +524,22 @@ const createSchema = ({
               },
               {
                 matchMdast: matchZone('EMBEDCOMMENT'),
-                component: ({ attributes, data, url }) => {
+                component: withCommentData(({ data, liveData }) => {
                   return (
-                    <CommentTeaser
-                      attributes={attributes}
-                      createdAt={new Date(data.createdAt)}
-                      displayAuthor={data.displayAuthor}
-                      preview={{
-                        string: data.text,
-                        more: false
+                    <Loader
+                      error={liveData.error}
+                      loading={liveData.loading}
+                      render={() => {
+                        return (
+                          <TeaserEmbedComment
+                            savedData={data}
+                            liveData={liveData}
+                            t={t}
+                          />
+                        )
                       }}
-                      discussion={data.discussion}
-                      t={t}
                     />
                   )
-                },
-                props: node => ({
-                  data: {
-                    ...node.data,
-                    url: node.children[0].children[0].url
-                  }
                 }),
                 editorModule: 'embedComment',
                 editorOptions: {

@@ -167,3 +167,5 @@ export {
 } from './components/ShareImage/ShareImagePreview'
 export { default as SharePreviewFacebook } from './components/ShareImage/SharePreviewFacebook'
 export { default as SharePreviewTwitter } from './components/ShareImage/SharePreviewTwitter'
+
+export { default as TeaserEmbedComment } from './components/TeaserEmbedComment'
