@@ -3,14 +3,11 @@ import { Checkbox, Radio, Label, Field } from '@project-r/styleguide'
 import { createPropertyForm, matchBlock } from '../../utils'
 import AutosizeInput from 'react-textarea-autosize'
 
-const isVideoBlock = matchBlock('EMBEDVIDEO')
-const isCommentBlock = matchBlock('EMBEDCOMMENT')
-
 export default ({ TYPE, editorOptions = {} }) => {
   const isMatch = matchBlock(TYPE)
   const VideoForm = createPropertyForm({
     isDisabled: ({ value }) => {
-      return TYPE !== 'EMBEDVIDEO' && !value.blocks.some(isMatch)
+      return !value.blocks.some(isMatch)
     }
   })(({ disabled, value, onChange }) => {
     const { sizes = [] } = editorOptions
@@ -123,7 +120,7 @@ export default ({ TYPE, editorOptions = {} }) => {
 
   const CommentForm = createPropertyForm({
     isDisabled: ({ value }) => {
-      return TYPE !== 'EMBEDCOMMENT' || !value.blocks.some(isMatch)
+      return !value.blocks.some(isMatch)
     }
   })(({ disabled, value, onChange }) => {
     if (disabled) {
@@ -165,6 +162,9 @@ export default ({ TYPE, editorOptions = {} }) => {
   })
 
   return {
-    forms: [VideoForm, CommentForm]
+    forms: [
+      TYPE === 'EMBEDVIDEO' && VideoForm,
+      TYPE === 'EMBEDCOMMENT' && CommentForm
+    ].filter(Boolean)
   }
 }
