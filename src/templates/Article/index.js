@@ -525,6 +525,7 @@ const createSchema = ({
               {
                 matchMdast: matchZone('EMBEDCOMMENT'),
                 component: withCommentData(({ data, liveData }) => {
+                  if (!liveData) return null
                   return (
                     <Loader
                       error={liveData.error}

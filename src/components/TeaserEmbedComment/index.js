@@ -18,6 +18,7 @@ export default TeaserEmbedComment
 
 TeaserEmbedComment.data = {
   config: {
+    skip: props => !props.data,
     options: ({ data }) => ({
       variables: {
         id: data.id
