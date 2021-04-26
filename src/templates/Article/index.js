@@ -174,7 +174,8 @@ const createSchema = ({
   metaHeadlines = false,
   skipContainer = false,
   skipCenter = false,
-  withCommentData = withData
+  withCommentData = withData,
+  CommentLink = DefaultLink
 } = {}) => {
   const base = createBase({ metaBody, metaHeadlines })
   const blocks = createBlocks({
@@ -531,7 +532,6 @@ const createSchema = ({
                   }
                 }),
                 component: withCommentData(({ data, liveData }) => {
-                  console.log(data)
                   return (
                     <Loader
                       error={liveData?.error}
@@ -542,6 +542,7 @@ const createSchema = ({
                             data={data}
                             liveData={liveData}
                             t={t}
+                            Link={CommentLink}
                           />
                         )
                       }}
