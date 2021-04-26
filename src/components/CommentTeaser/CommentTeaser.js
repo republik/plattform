@@ -221,47 +221,49 @@ export const CommentTeaser = ({
         )}
 
         <div {...styles.footer}>
-          <div>
-            {t.elements(
-              `styleguide/CommentTeaser/${
-                parentIds && parentIds.length
-                  ? 'reply'
-                  : commentCount
-                  ? 'commentWithCount'
-                  : 'comment'
-              }/link`,
-              {
-                count: (
-                  <Link
-                    key={`link-count-${id}`}
-                    comment={comment}
-                    discussion={discussion}
-                    passHref
-                  >
-                    <IconLink
-                      discussionCommentsCount={commentCount}
-                      small
-                      style={{
-                        marginTop: -2,
-                        paddingRight: 0,
-                        verticalAlign: 'top'
-                      }}
-                    />
-                  </Link>
-                ),
-                link: (
-                  <Link
-                    key={`link-title-${id}`}
-                    comment={comment}
-                    discussion={discussion}
-                    passHref
-                  >
-                    <A>{inQuotes(discussion.title)}</A>
-                  </Link>
-                )
-              }
-            )}
-          </div>
+          {discussion?.title && (
+            <div>
+              {t.elements(
+                `styleguide/CommentTeaser/${
+                  parentIds && parentIds.length
+                    ? 'reply'
+                    : commentCount
+                    ? 'commentWithCount'
+                    : 'comment'
+                }/link`,
+                {
+                  count: (
+                    <Link
+                      key={`link-count-${id}`}
+                      comment={comment}
+                      discussion={discussion}
+                      passHref
+                    >
+                      <IconLink
+                        discussionCommentsCount={commentCount}
+                        small
+                        style={{
+                          marginTop: -2,
+                          paddingRight: 0,
+                          verticalAlign: 'top'
+                        }}
+                      />
+                    </Link>
+                  ),
+                  link: (
+                    <Link
+                      key={`link-title-${id}`}
+                      comment={comment}
+                      discussion={discussion}
+                      passHref
+                    >
+                      <A>{inQuotes(discussion.title)}</A>
+                    </Link>
+                  )
+                }
+              )}
+            </div>
+          )}
           {!displayAuthor && (
             <div {...styles.timeago} {...colorScheme.set('color', 'textSoft')}>
               <Link comment={comment} discussion={discussion} passHref>
