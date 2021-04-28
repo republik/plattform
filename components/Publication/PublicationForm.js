@@ -467,14 +467,14 @@ export default compose(
             {
               query: getRepoHistory,
               variables: {
-                repoId: ownProps.repoId,
+                repoId: ownProps.repo?.id,
                 first: COMMIT_LIMIT
               }
             },
             {
               query: getRepoWithPublications,
               variables: {
-                repoId: ownProps.repoId
+                repoId: ownProps.repo?.id
               }
             }
           ]
