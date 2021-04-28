@@ -10,6 +10,7 @@ import embedFromUrlPlugin from './embedFromUrlPlugin'
 import EmbedLoader from './EmbedLoader'
 
 import gql from 'graphql-tag'
+import { FRONTEND_BASE_URL } from '../../../../lib/settings'
 
 export const getVideoEmbed = gql`
   query getVideoEmbed($id: ID!, $embedType: EmbedType!) {
@@ -197,7 +198,9 @@ const YOUTUBE_REGEX = /^http(?:s?):\/\/(?:www\.)?youtu(?:be\.com\/watch\?v=|\.be
 // One capturing group at match[1] that catches the video id
 const VIMEO_REGEX = /^(?:http|https)?:\/\/(?:www\.)?vimeo.com\/(?:channels\/(?:\w+\/)?|groups\/(?:[^/]*)\/videos\/|)(\d+)(?:|\/\?)$/
 
-const COMMENT_REGEX = /^https?:\/\/localhost:3010\/(?:(?:dialog\?t=article&id=[a-f\d-]+&)|(?:beitrag\/diskussion\?))focus=([a-f\d-]+)$/
+const COMMENT_REGEX = new RegExp(
+  `^${FRONTEND_BASE_URL}/(?:(?:dialog\\?t=article&id=[a-f\\d-]+&)|(?:beitrag/diskussion\\?))focus=([a-f\\d-]+)$`
+)
 
 const matchVideoUrl = url => YOUTUBE_REGEX.test(url) || VIMEO_REGEX.test(url)
 
