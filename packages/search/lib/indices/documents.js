@@ -196,12 +196,6 @@ module.exports = {
     },
   },
   analysis: {
-    normalizer: {
-      republik_strict: {
-        type: 'custom',
-        filter: ['german_normalization', 'lowercase', 'asciifolding'],
-      },
-    },
     filter: {
       german_stemmer: {
         type: 'stemmer',
