@@ -20,6 +20,7 @@ const styles = {
     margin: '36px auto',
     position: 'relative',
     maxWidth: '455px',
+    whiteSpace: 'normal',
     [mUp]: {
       margin: '45px auto'
     }
@@ -30,9 +31,9 @@ const TeaserEmbedComment = ({ data, liveData, t, Link }) => {
   const isDesktop = useMediaQuery(mUp)
   const [colorScheme] = useColorContext()
   const displayComment =
-    liveData.comment.published && !liveData.comment.adminUnpublished
+    liveData.comment.published && !liveData.comment?.adminUnpublished
   const comment = {
-    ...liveData.comment,
+    ...liveData?.comment,
     content: displayComment && parse(data.text)
   }
   const clock = {
@@ -40,6 +41,8 @@ const TeaserEmbedComment = ({ data, liveData, t, Link }) => {
     isDesktop
   }
   const discussionContextValue = { discussion: comment.discussion, clock, Link }
+
+  console.log(parse(data.text))
   return (
     <DiscussionContext.Provider value={discussionContextValue}>
       <div
