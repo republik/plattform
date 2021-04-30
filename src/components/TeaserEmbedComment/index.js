@@ -1,19 +1,63 @@
 import React from 'react'
-import CommentTeaser from '../CommentTeaser/CommentTeaser'
+import * as Comment from '../Discussion/Internal/Comment'
+import { parse } from '@orbiting/remark-preset'
+import DiscussionFooter from '../CommentTeaser/DiscussionFooter'
+import { DiscussionContext } from '../Discussion/DiscussionContext'
+import { useMediaQuery } from '../../lib/useMediaQuery'
+import { mUp } from '../../theme/mediaQueries'
+import { css } from 'glamor'
+import { useColorContext } from '../Colors/ColorContext'
+
+const styles = {
+  root: css({
+    borderTopWidth: 1,
+    borderTopStyle: 'solid',
+    borderBottomWidth: 1,
+    borderBottomStyle: 'solid',
+    paddingTop: 10,
+    paddingBottom: 10,
+    textAlign: 'left',
+    margin: '36px auto',
+    position: 'relative',
+    maxWidth: '455px',
+    [mUp]: {
+      margin: '45px auto'
+    }
+  })
+}
 
 const TeaserEmbedComment = ({ data, liveData, t, Link }) => {
+  const isDesktop = useMediaQuery(mUp)
+  const [colorScheme] = useColorContext()
+  const displayComment =
+    liveData.comment.published && !liveData.comment.adminUnpublished
+  const comment = {
+    ...liveData.comment,
+    content: displayComment && parse(data.text)
+  }
+  const clock = {
+    t,
+    isDesktop
+  }
+  const discussionContextValue = { discussion: comment.discussion, clock, Link }
   return (
-    <CommentTeaser
-      createdAt={new Date(liveData?.createdAt)}
-      displayAuthor={liveData?.displayAuthor}
-      preview={{
-        string: data?.text || 'Ein Kommentar',
-        more: false
-      }}
-      discussion={liveData?.discussion}
-      t={t}
-      Link={Link}
-    />
+    <DiscussionContext.Provider value={discussionContextValue}>
+      <div
+        id={comment.id}
+        {...styles.root}
+        {...colorScheme.set('color', 'text')}
+      >
+        <Comment.Header t={t} comment={comment} />
+        <div style={{ margin: '10px 0' }}>
+          <Comment.Body
+            t={t}
+            comment={comment}
+            context={comment.tags[0] ? { title: comment.tags[0] } : undefined}
+          />
+        </div>
+        <DiscussionFooter comment={comment} t={t} Link={Link} />
+      </div>
+    </DiscussionContext.Provider>
   )
 }
 
@@ -28,48 +72,36 @@ TeaserEmbedComment.data = {
         id: data.id
       },
       ssr: false
-    }),
-    props: ({ liveData }) => {
-      return {
-        liveData: {
-          loading: liveData.loading,
-          error: liveData.error,
-          ...liveData.comments?.focus
-        }
-      }
-    }
+    })
   },
   query: `
     query getCommentEmbed($id: ID!) {
-      comments(focusId: $id) {
-        focus {
+      comment(id: $id) {
+        id
+        createdAt
+        updatedAt
+        published
+        adminUnpublished
+        tags
+        displayAuthor {
           id
-          createdAt
-          displayAuthor {
-            id
-            name
-            slug
-            credential {
-              description
-              verified
-            }
-            profilePicture
+          name
+          slug
+          credential {
+            description
+            verified
           }
-          discussion {
+          profilePicture
+        }
+        discussion {
+          id
+          title
+          path
+          document {
             id
-            title
-            path
-            document {
-              id
-              meta {
-                title
-                path
-                template
-                ownDiscussion {
-                  id
-                  closed
-                }
-              }
+            meta {
+              title
+              path
             }
           }
         }
