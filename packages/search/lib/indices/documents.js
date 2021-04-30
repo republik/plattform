@@ -68,12 +68,13 @@ module.exports = {
       query,
       functions: [
         {
+          // push primary templates
           filter: {
             terms: {
-              'meta.template': ['format', 'section', 'dossier', 'page'],
+              'meta.template': ['article', 'format', 'dossier'],
             },
           },
-          weight: 20,
+          weight: 2,
         },
         {
           filter: {
