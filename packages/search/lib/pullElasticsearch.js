@@ -35,6 +35,22 @@ module.exports = async ({
       const writeAlias = getIndexAlias(name, 'write')
       const index = getDateTimeIndex(name)
 
+      /**
+       * Remove index masquerading as a write alias.
+       *
+       * Indices named like write aliases are inadvertantly created when
+       * backends is posting data to ElasticSearch before mapping, indices
+       * and aliases are setup.
+       */
+      const {
+        body: [writeAliasAsIndex],
+      } = await elastic.cat.indices({ index: `${writeAlias}*`, format: 'json' })
+
+      if (writeAlias === writeAliasAsIndex?.index) {
+        debug('delete index masquerading as alias', { writeAlias })
+        await elastic.indices.delete({ index: writeAlias })
+      }
+
       if (doSwitch) {
         debug('remove write alias', { writeAlias, index })
         const { body: hasWriteAlias } = await elastic.indices.existsAlias({
