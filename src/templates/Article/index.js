@@ -525,21 +525,18 @@ const createSchema = ({
               },
               {
                 matchMdast: matchZone('EMBEDCOMMENT'),
-                props: node => ({
-                  data: {
-                    ...node.data,
-                    url: node.children[0].children[0].url
-                  }
-                }),
-                component: withCommentData(({ data, liveData }) => {
+                props: node => ({ nodeData: node.data }),
+                component: withCommentData(({ nodeData, liveData }) => {
+                  console.log(nodeData, liveData)
+                  if (!liveData) return null
                   return (
                     <Loader
-                      error={liveData?.error}
-                      loading={liveData?.loading}
+                      error={liveData.error}
+                      loading={liveData.loading}
                       render={() => {
                         return (
                           <TeaserEmbedComment
-                            data={data}
+                            nodeData={nodeData}
                             liveData={liveData}
                             t={t}
                             Link={CommentLink}

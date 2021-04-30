@@ -27,22 +27,20 @@ const styles = {
   })
 }
 
-const TeaserEmbedComment = ({ data, liveData, t, Link }) => {
+const TeaserEmbedComment = ({ nodeData, liveData, t, Link }) => {
   const isDesktop = useMediaQuery(mUp)
   const [colorScheme] = useColorContext()
   const displayComment =
-    liveData.comment.published && !liveData.comment?.adminUnpublished
+    liveData.comment.published && !liveData.comment.adminUnpublished
   const comment = {
-    ...liveData?.comment,
-    content: displayComment && parse(data.text)
+    ...liveData.comment,
+    content: displayComment && parse(nodeData.text)
   }
   const clock = {
     t,
     isDesktop
   }
   const discussionContextValue = { discussion: comment.discussion, clock, Link }
-
-  console.log(parse(data.text))
   return (
     <DiscussionContext.Provider value={discussionContextValue}>
       <div
@@ -69,10 +67,10 @@ export default TeaserEmbedComment
 TeaserEmbedComment.data = {
   config: {
     name: 'liveData',
-    skip: props => !props.data,
-    options: ({ data }) => ({
+    skip: props => !props.nodeData,
+    options: ({ nodeData }) => ({
       variables: {
-        id: data.id
+        id: nodeData.id
       },
       ssr: false
     })
