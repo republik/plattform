@@ -38,40 +38,30 @@ module.exports = {
   search: {
     termFields: {
       'meta.title': {
-        boost: 2,
         highlight: {
           number_of_fragments: 0,
         },
       },
       'meta.shortTitle': {
-        boost: 2,
         highlight: {
           number_of_fragments: 0,
         },
       },
+      'resolved.meta.dossier.meta.title': {},
+      'resolved.meta.format.meta.title': {},
+      'resolved.meta.section.meta.title': {},
+      'meta.seriesEpisodes.title': {},
       'meta.description': {
-        boost: 2,
         highlight: {
           number_of_fragments: 0,
         },
       },
-      'meta.creditsString': {
-        boost: 3,
-      },
+      'meta.creditsString': { boost: 2 },
       contentString: {
         highlight: {
           boundary_scanner_locale: 'de-CH',
           fragment_size: 300,
         },
-      },
-      'resolved.meta.dossier.meta.title': {
-        boost: 3,
-      },
-      'resolved.meta.format.meta.title': {
-        boost: 3,
-      },
-      'resolved.meta.section.meta.title': {
-        boost: 3,
       },
     },
     functionScore: (query) => ({
