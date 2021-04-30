@@ -1,8 +1,3 @@
-const {
-  meta: { getWordsPerMinute },
-} = require('@orbiting/backend-modules-documents/lib')
-const { MIDDLE_DURATION_MINS } = require('../Documents')
-
 const keywordPartial = {
   fields: {
     keyword: {
@@ -77,38 +72,13 @@ module.exports = {
           weight: 2,
         },
         {
-          filter: {
-            match: {
-              'meta.isSeriesMaster': true,
+          // decay, via "scale" reducing relative "weight" from 1 to 0.5
+          linear: {
+            '__sort.date': {
+              offset: '90d',
+              scale: '275d',
             },
           },
-          weight: 20,
-        },
-        {
-          filter: {
-            match: {
-              'meta.isSeriesEpisode': true,
-            },
-          },
-          weight: 10,
-        },
-        {
-          filter: {
-            range: {
-              'contentString.count': {
-                gte: getWordsPerMinute() * MIDDLE_DURATION_MINS,
-              },
-            },
-          },
-          weight: 5,
-        },
-        {
-          filter: {
-            match: {
-              'meta.template': 'editorialNewsletter',
-            },
-          },
-          weight: 0.1,
         },
       ],
     }),
