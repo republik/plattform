@@ -202,6 +202,19 @@ module.exports = {
         filter: ['german_normalization', 'lowercase', 'asciifolding'],
       },
     },
+    filter: {
+      german_stemmer: {
+        type: 'stemmer',
+        language: 'light_german',
+      },
+    },
+    analyzer: {
+      german_with_stopwords: {
+        // @see https://www.elastic.co/guide/en/elasticsearch/reference/6.8/analysis-lang-analyzer.html#german-analyzer
+        tokenizer: 'standard',
+        filter: ['lowercase', 'german_normalization', 'german_stemmer'],
+      },
+    },
   },
   mapping: {
     [type]: {
@@ -237,14 +250,7 @@ module.exports = {
                       properties: {
                         title: {
                           type: 'text',
-                          analyzer: 'german',
-                          fields: {
-                            keyword: {
-                              type: 'keyword',
-                              normalizer: 'republik_strict',
-                              ignore_above: 256,
-                            },
-                          },
+                          analyzer: 'german_with_stopwords',
                         },
                         description: {
                           type: 'text',
@@ -266,14 +272,7 @@ module.exports = {
                       properties: {
                         title: {
                           type: 'text',
-                          analyzer: 'german',
-                          fields: {
-                            keyword: {
-                              type: 'keyword',
-                              normalizer: 'republik_strict',
-                              ignore_above: 256,
-                            },
-                          },
+                          analyzer: 'german_with_stopwords',
                         },
                         description: {
                           type: 'text',
@@ -295,14 +294,7 @@ module.exports = {
                       properties: {
                         title: {
                           type: 'text',
-                          analyzer: 'german',
-                          fields: {
-                            keyword: {
-                              type: 'keyword',
-                              normalizer: 'republik_strict',
-                              ignore_above: 256,
-                            },
-                          },
+                          analyzer: 'german_with_stopwords',
                         },
                         description: {
                           type: 'text',
@@ -339,10 +331,6 @@ module.exports = {
               analyzer: 'standard',
               store: true,
             },
-            keyword: {
-              type: 'keyword',
-              ignore_above: 256,
-            },
           },
         },
         content: {
@@ -358,11 +346,11 @@ module.exports = {
             },
             title: {
               type: 'text',
-              analyzer: 'german',
+              analyzer: 'german_with_stopwords',
             },
             shortTitle: {
               type: 'text',
-              analyzer: 'german',
+              analyzer: 'german_with_stopwords',
             },
             description: {
               type: 'text',
@@ -383,7 +371,6 @@ module.exports = {
             slug: {
               type: 'text',
               ...keywordPartial,
-              analyzer: 'german',
             },
             path: {
               type: 'text',
@@ -394,15 +381,15 @@ module.exports = {
             },
             creditsString: {
               type: 'text',
-              analyzer: 'german',
+              analyzer: 'german_with_stopwords',
             },
             credits: {
               ...mdastPartial,
             },
             authors: {
               type: 'text',
+              analyzer: 'german_with_stopwords',
               ...keywordPartial,
-              analyzer: 'german',
             },
             dossier: {
               type: 'keyword',
@@ -441,20 +428,20 @@ module.exports = {
                     },
                     label: {
                       type: 'text',
-                      ...keywordPartial,
+                      analyzer: 'german_with_stopwords',
                     },
                     publishDate: {
                       type: 'date',
                     },
                     title: {
                       type: 'text',
-                      ...keywordPartial,
+                      analyzer: 'german_with_stopwords',
                     },
                   },
                 },
                 title: {
                   type: 'text',
-                  ...keywordPartial,
+                  analyzer: 'german_with_stopwords',
                 },
               },
             },
