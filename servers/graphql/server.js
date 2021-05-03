@@ -25,9 +25,6 @@ const {
   graphql: collections,
 } = require('@orbiting/backend-modules-collections')
 const {
-  graphql: crowdsourcing,
-} = require('@orbiting/backend-modules-crowdsourcing')
-const {
   graphql: subscriptions,
 } = require('@orbiting/backend-modules-subscriptions')
 const { graphql: cards } = require('@orbiting/backend-modules-cards')
@@ -110,7 +107,6 @@ const run = async (workerId, config) => {
     access,
     voting,
     collections,
-    crowdsourcing,
     subscriptions,
     cards,
     maillog,
