@@ -257,7 +257,9 @@ const collect = async (
   debug('enrich %o', { idSite, period, date, segment })
   const rows = enrichData({ data }, { docs })
 
+  debug('insert rows %o', { idSite, period, date, segment, rows: rows.length })
   await insertRows({ rows, pgdb })
+
   debug('done with %o', { idSite, period, date, segment, rows: rows.length })
 }
 
