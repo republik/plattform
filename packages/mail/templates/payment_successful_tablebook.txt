@@ -14,7 +14,7 @@ Ihre Zahlung ist erfolgreich bei uns eingegangen. Vielen Dank!
    {{/if}}
  * Total: {{total_formatted}}
 
-Bücher liefern wir innerhalb von 7 Werktagen.
+Bücher liefern wir bis Ende Mai.
 
 Wir wünschen Ihnen anregende Lektüre mit der «Republik bei Stromausfall».
 
