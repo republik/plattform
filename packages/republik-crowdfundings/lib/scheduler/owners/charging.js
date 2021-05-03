@@ -78,15 +78,15 @@ module.exports = async (user, bucket, context) => {
       redis,
     )
 
-    const isNextAttemptLast = previousAttempts.length + 2 === attempts.length
+    const isLastAttempt = previousAttempts.length + 1 === attempts.length
     const payload = {
       chargeAttemptStatus: chargeAttempt.status,
       chargeAttemptError: chargeAttempt.error,
       attemptNumber: previousAttempts.length + 1,
-      isLastAttempt: previousAttempts.length + 1 === attempts.length,
-      isNextAttemptLast,
+      isLastAttempt,
+      isNextAttemptLast: previousAttempts.length + 2 === attempts.length,
       nextAttemptDate:
-        !isNextAttemptLast &&
+        !isLastAttempt &&
         moment(
           Math.max(
             moment().add(backOffMinutes, 'minutes'),
