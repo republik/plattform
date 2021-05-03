@@ -56,6 +56,9 @@ const publishMutation = gql`
 `
 
 const styles = {
+  scrollContainer: css({
+    padding: '16px 24px 100px 24px'
+  }),
   mask: css({
     '::placeholder': {
       color: 'transparent'
@@ -126,7 +129,7 @@ const Form = ({
     : new Date()
 
   return (
-    <>
+    <div {...styles.scrollContainer}>
       <Interaction.H2>{t('publish/title')}</Interaction.H2>
       <br />
 
@@ -453,7 +456,7 @@ const Form = ({
           </Button>
         </div>
       )}
-    </>
+    </div>
   )
 }
 
