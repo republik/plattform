@@ -34,7 +34,7 @@ const compute = ({ data, index, percentile }) => {
 
   const percentiles = {}
 
-  Object.keys(data).map((key) => {
+  Object.keys(data).forEach((key) => {
     if (index && index[`${key}.${percentile}`]) {
       percentiles[key] = (1 / index[`${key}.${percentile}`]) * data[key]
     }

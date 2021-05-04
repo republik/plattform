@@ -1,8 +1,7 @@
 const debug = require('debug')('statistics:lib:matomo:collect')
 const Promise = require('bluebird')
-const url = require('url')
 
-const { findByPaths, toPath } = require('../elastic/documents')
+const { find, toPath } = require('../elastic/documents')
 
 const getPageUrlDetails = async (
   { url },
@@ -19,7 +18,7 @@ const getPageUrlDetails = async (
     actionName: url,
 
     // Not to overwrite (1)
-    method: 'Transitions.getTransitionsForAction',
+    method: 'Transitions.getTransitionsForAction', // @see https://developer.matomo.org/api-reference/reporting-api#Transitions
     actionType: 'url',
   })
 }
@@ -41,14 +40,17 @@ const addBucket = (buckets, name, number = 0) => {
   buckets[name] += number
 }
 
-const transformPageUrlDetails = ({ pageMetrics, previousPages, referrers }) => {
+const transformPageUrlDetails = (
+  { pageMetrics, previousPages, referrers },
+  { docs },
+) => {
   const buckets = {}
 
-  previousPages.map(({ referrals }) => {
+  previousPages.forEach(({ referrals }) => {
     addBucket(buckets, 'previousPages.referrals', parseInt(referrals))
   })
 
-  referrers.map((referrer) => {
+  referrers.forEach((referrer) => {
     const { shortName, visits, details = [] } = referrer
 
     // Matomo will return shortName "Direct Entry" instead of "direct" of there is
@@ -62,14 +64,18 @@ const transformPageUrlDetails = ({ pageMetrics, previousPages, referrers }) => {
     addBucket(buckets, `${shortName}.referrals`)
 
     // An array with details e.g. Social Media
-    details.map((detail) => {
+    details.forEach((detail) => {
       const { label, referrals } = detail
 
       addBucket(buckets, `${shortName}.referrals`, parseInt(referrals))
 
       if (
         shortName === 'campaign' &&
-        label.match(/^republik\/news?lew?tter-editorial.+/)
+        docs.find(
+          ({ meta }) =>
+            meta.template === 'editorialNewsletter' &&
+            label.includes(meta.repoId.slice(0, 69)), // Matomo truncates campaign labels to 70 chars
+        )
       ) {
         addBucket(buckets, 'campaign.newsletter.referrals', parseInt(referrals))
       }
@@ -92,13 +98,13 @@ const transformPageUrlDetails = ({ pageMetrics, previousPages, referrers }) => {
   return { ...pageMetrics, ...buckets }
 }
 
-const getData = async ({ idSite, period, date, segment }, { matomo }) => {
+const getData = async ({ idSite, period, date, segment }, { matomo, docs }) => {
   const data = []
 
   await matomo.scroll(
     {
       idSite,
-      method: 'Actions.getPageUrls',
+      method: 'Actions.getPageUrls', // @see https://developer.matomo.org/api-reference/reporting-api#Actions
       period,
       date,
       segment,
@@ -107,7 +113,7 @@ const getData = async ({ idSite, period, date, segment }, { matomo }) => {
     },
     {
       rowCallback: async (node) => {
-        node.parsedUrl = node.url && url.parse(node.url)
+        node.parsedUrl = node.url && new URL(node.url)
         if (!isPageUrlWanted(node)) {
           return false
         }
@@ -124,13 +130,14 @@ const getData = async ({ idSite, period, date, segment }, { matomo }) => {
         }
 
         const transformedDetails = await transformPageUrlDetails(details, {
-          period,
-          date,
+          docs,
         })
 
-        const pageUrl = url.format(
-          Object.assign({}, node.parsedUrl, { search: null, hash: null }),
-        )
+        const pageUrl = Object.assign(new URL(node.parsedUrl), {
+          search: '',
+          hash: '',
+        }).toString()
+
         const result = {
           idSite,
           period,
@@ -184,7 +191,7 @@ const getData = async ({ idSite, period, date, segment }, { matomo }) => {
   return data
 }
 
-const enrichData = async ({ data }, { elastic }) => {
+const enrichData = ({ data }, { docs }) => {
   const limit = 100
   let offset = 0
   let paths = []
@@ -192,22 +199,9 @@ const enrichData = async ({ data }, { elastic }) => {
   do {
     debug('enrichData', { limit, offset })
 
-    paths = data.slice(offset, offset + limit).map(({ url }) => toPath(url))
+    paths = data.slice(offset, offset + limit)
 
-    const docs = await findByPaths(
-      {
-        paths,
-        props: [
-          'meta.path',
-          'meta.repoId',
-          'meta.template',
-          'meta.publishDate',
-        ],
-      },
-      { elastic },
-    )
-
-    docs.map(({ meta }) => {
+    docs.forEach(({ meta }) => {
       const index = data.findIndex(({ url }) => toPath(url) === meta.path)
       const { repoId, template, publishDate } = meta
       data[index] = { ...data[index], repoId, template, publishDate }
@@ -246,13 +240,26 @@ const collect = async (
   { idSite, period, date, segment },
   { pgdb, matomo, elastic },
 ) => {
+  debug('published docs (meta)')
+  const docs = await find(
+    {
+      props: ['meta.path', 'meta.repoId', 'meta.template', 'meta.publishDate'],
+    },
+    { elastic },
+  )
+
   debug('collect %o', { idSite, period, date, segment })
-  const data = await getData({ idSite, period, date, segment }, { matomo })
+  const data = await getData(
+    { idSite, period, date, segment },
+    { matomo, docs },
+  )
 
   debug('enrich %o', { idSite, period, date, segment })
-  const rows = await enrichData({ data }, { elastic })
+  const rows = enrichData({ data }, { docs })
 
+  debug('insert rows %o', { idSite, period, date, segment, rows: rows.length })
   await insertRows({ rows, pgdb })
+
   debug('done with %o', { idSite, period, date, segment, rows: rows.length })
 }
 
