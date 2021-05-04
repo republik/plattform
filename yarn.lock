@@ -2820,10 +2820,10 @@ await-sleep@0.0.1, await-sleep@^0.0.1:
   resolved "https://registry.yarnpkg.com/await-sleep/-/await-sleep-0.0.1.tgz#044532e49f1f4219d2030d79f517d64569a27d50"
   integrity sha512-H3X3eAxwGpeNIk/yvFOs8g7500Q1YvzrxjSC9TNgLGtjrMFxPwhDdcT34QNs2iGWpZ+5WKkMJdjDoYs+Sw+TaA==
 
-aws-sdk@^2.693.0:
-  version "2.898.0"
-  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.898.0.tgz#fd07b9748d302fccc2d1e069ae313e911b526578"
-  integrity sha512-6XxsKEDgDEQlLAVrPDNO01UgflCaKJlp6bYTSxv2z50ApTktadwSr/uJgpaBdAiZ8EKVlWN4UgM7vgOmrI/MPg==
+aws-sdk@^2.899.0:
+  version "2.899.0"
+  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.899.0.tgz#fac90b8926707b3e9dcd1e7d5937cfa71c0be5ca"
+  integrity sha512-k8jSANDQGvTyyj1f/7Hj4SWaV61/gjj/BopRmavAr6n1ayjXtUeVrV8G29+ABD3V82pHXDqLq47bqNmZ9m86xQ==
   dependencies:
     buffer "4.9.2"
     events "1.1.1"
