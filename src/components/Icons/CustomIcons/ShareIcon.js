@@ -1,15 +1,23 @@
 import React, { useEffect, useState } from 'react'
 import CustomIconBase from './CustomIconBase'
 import { MdShare } from '@react-icons/all-files/md/MdShare'
+let defaultIsGoogleOS = undefined
 
 export const ShareIcon = ({ fill, ...props }) => {
-  const [useAndroidIcon, setUseAndroidIcon] = useState(false)
+  const [isGoogleOS, setIsGoogleOS] = useState(defaultIsGoogleOS)
   useEffect(() => {
-    const userAgent =
-      typeof window.navigator === 'undefined' ? '' : window.navigator.userAgent
-    setUseAndroidIcon(Boolean(userAgent.match(/Android|CrOS/)))
-  }, [])
-  if (useAndroidIcon) {
+    if (isGoogleOS !== undefined) {
+      return // prevent unnecessary set state / re-renders
+    }
+    // set default value for all subsequent renders, e.g. client side navigation
+    defaultIsGoogleOS = !!window.navigator.userAgent.match(/Android|CrOS/)
+    // re-render this component with certain value
+    setIsGoogleOS(defaultIsGoogleOS)
+  }, [isGoogleOS])
+  if (isGoogleOS === undefined) {
+    // empty placeholder, avoid flickering between icons on Android
+    return <CustomIconBase {...props} />
+  } else if (isGoogleOS) {
     return <MdShare {...props} />
   } else {
     return (
