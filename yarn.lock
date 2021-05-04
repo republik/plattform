@@ -1508,13 +1508,13 @@
     stringify-entities "^1.3.1"
     unified "^6.1.5"
 
-"@project-r/styleguide@^10.9.0":
-  version "10.18.6"
-  resolved "https://registry.yarnpkg.com/@project-r/styleguide/-/styleguide-10.18.6.tgz#d53fd48fab0ccdfac57787bde5a9920c23cdffe4"
-  integrity sha512-eS+4cJSxpCmPp+klZ7VENsWeCAYuxk7rNR/wywZdY8f8pIfnKVsHG57D8emynO8xmm2ume9E99clAXbiFKx2mg==
+"@project-r/styleguide@^11.3.0":
+  version "11.3.0"
+  resolved "https://registry.yarnpkg.com/@project-r/styleguide/-/styleguide-11.3.0.tgz#f1870b57df69abff1095751a0aabf89b412bd542"
+  integrity sha512-oljIumwDNQk4U/icI1kqQut3PZmXVNvx9aI6Ovl3JPfH+R6SXsmraY+tnnpROlqx/YG+FuaTCwgVhO3niZZQtg==
   dependencies:
+    "@react-icons/all-files" "^4.1.0"
     body-scroll-lock "3.0.3"
-    react-icons "^2.2.7"
 
 "@project-r/template-newsletter@^1.5.0":
   version "1.5.0"
@@ -1573,6 +1573,11 @@
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@protobufjs/utf8/-/utf8-1.1.0.tgz#a777360b5b39a1a2e5106f8e858f2fd2d060c570"
   integrity sha1-p3c2C1s5oaLlEG+OhY8v0tBgxXA=
+
+"@react-icons/all-files@^4.1.0":
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/@react-icons/all-files/-/all-files-4.1.0.tgz#477284873a0821928224b6fc84c62d2534d6650b"
+  integrity sha512-hxBI2UOuVaI3O/BhQfhtb4kcGn9ft12RWAFVMUeNjqqhLsHvFtzIkFaptBJpFDANTKoDfdVoHTKZDlwKCACbMQ==
 
 "@rocka/mp3-duration@^2.0.0":
   version "2.0.0"
@@ -10448,18 +10453,6 @@ react-dom@^16.13.1:
     object-assign "^4.1.1"
     prop-types "^15.6.2"
     scheduler "^0.19.1"
-
-react-icon-base@2.1.0:
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/react-icon-base/-/react-icon-base-2.1.0.tgz#a196e33fdf1e7aaa1fda3aefbb68bdad9e82a79d"
-  integrity sha1-oZbjP98eeqof2jrvu2i9rZ6Cp50=
-
-react-icons@^2.2.7:
-  version "2.2.7"
-  resolved "https://registry.yarnpkg.com/react-icons/-/react-icons-2.2.7.tgz#d7860826b258557510dac10680abea5ca23cf650"
-  integrity sha512-0n4lcGqzJFcIQLoQytLdJCE0DKSA9dkwEZRYoGrIDJZFvIT6Hbajx5mv9geqhqFiNjUgtxg8kPyDfjlhymbGFg==
-  dependencies:
-    react-icon-base "2.1.0"
 
 react-is@^16.7.0, react-is@^16.8.1:
   version "16.13.1"
