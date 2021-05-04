@@ -89,7 +89,7 @@ export { AiFillInstagram as InstagramIcon } from '@react-icons/all-files/ai/AiFi
 export { FaTelegramPlane as TelegramIcon } from '@react-icons/all-files/fa/FaTelegramPlane'
 export { SiThreema as ThreemaIcon } from '@react-icons/all-files/si/SiThreema'
 
-export { ShareIOS as ShareIcon } from './CustomIcons/ShareIOS'
+export { ShareIcon } from './CustomIcons/ShareIcon'
 export { MarkdownIcon } from './CustomIcons/MarkdownIcon'
 export { BackIcon } from './CustomIcons/BackIcon'
 export { DiscussionIcon } from './CustomIcons/DiscussionIcon'
