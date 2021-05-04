@@ -2,6 +2,7 @@ import React, { useRef, useEffect, useState } from 'react'
 import { css } from 'glamor'
 import { fontStyles } from '../../theme/fonts'
 import { imageStyle } from './SharePreviewTwitter'
+import { Label } from '../Typography'
 import colors from '../../theme/colors'
 import { PLACEHOLDER_TEXT } from './index'
 
@@ -53,7 +54,8 @@ const styles = {
   formatImage: css({
     height: 260,
     zIndex: 1
-  })
+  }),
+  errorLabel: css({})
 }
 
 const formatFonts = {
@@ -70,7 +72,7 @@ const shareImageJustify = {
 export const SHARE_IMAGE_DEFAULTS = {
   customFontStyle: 'serifTitle',
   textPosition: 'bottom',
-  fontSize: 60
+  fontSize: 56
 }
 
 const ShareImagePreview = ({
@@ -115,56 +117,69 @@ const ShareImagePreview = ({
   }, [text, fontSize])
 
   return (
-    <div
-      {...styles.container}
-      {...(preview && styles.containerHalfSize)}
-      {...socialPreview}
-      {...(shareImage && styles.kolumnenContainer)}
-      style={{
-        backgroundImage: shareImage && `url(${shareImage})`,
-        backgroundSize: 'cover',
-        backgroundColor: inverted ? formatColor : '#FFF',
-        justifyContent:
-          (shareImage &&
-            shareImageJustify[
-              textPosition || SHARE_IMAGE_DEFAULTS.textPosition
-            ]) ||
-          'center',
-        borderWidth: socialPreview ? 2 : 0
-      }}
-    >
-      {format?.image && !shareImage && (
-        <img ref={formatImageRef} {...styles.formatImage} src={format?.image} />
-      )}
-      {format?.title && (
-        <div
-          ref={formatTitleRef}
-          {...styles.formatTitle}
-          style={{
-            color: inverted ? '#FFF' : formatColor,
-            width: shareImage && '80%'
-          }}
-        >
-          {format.title}
-        </div>
-      )}
+    <>
+      {preview && textContainerOverflow ? (
+        <Label>
+          Der Text ist zu gross. Reduziere Schriftgrösse oder Anzahl Zeilen.
+        </Label>
+      ) : null}
       <div
-        {...styles.textContainer}
-        ref={textContainerRef}
+        {...styles.container}
+        {...(preview && styles.containerHalfSize)}
+        {...socialPreview}
+        {...(shareImage && styles.kolumnenContainer)}
         style={{
-          ...fontStyle,
-          fontSize: fontSize || SHARE_IMAGE_DEFAULTS.fontSize,
-          color: inverted ? '#FFF' : '#000',
-          width: shareImage && '80%',
-          backgroundColor:
-            preview && textContainerOverflow ? 'red' : 'transparent',
-          maxHeight:
-            SHARE_IMAGE_HEIGHT - 2 * SHARE_IMAGE_PADDING - reservedVerticalSpace
+          backgroundImage: shareImage && `url(${shareImage})`,
+          backgroundSize: 'cover',
+          backgroundColor: inverted ? formatColor : '#FFF',
+          justifyContent:
+            (shareImage &&
+              shareImageJustify[
+                textPosition || SHARE_IMAGE_DEFAULTS.textPosition
+              ]) ||
+            'center',
+          borderWidth: socialPreview ? 2 : 0
         }}
       >
-        {displayedText}
+        {format?.image && !shareImage && (
+          <img
+            ref={formatImageRef}
+            {...styles.formatImage}
+            src={format?.image}
+          />
+        )}
+        {format?.title && (
+          <div
+            ref={formatTitleRef}
+            {...styles.formatTitle}
+            style={{
+              color: inverted ? '#FFF' : formatColor,
+              width: shareImage && '80%'
+            }}
+          >
+            {format.title}
+          </div>
+        )}
+        <div
+          {...styles.textContainer}
+          ref={textContainerRef}
+          style={{
+            ...fontStyle,
+            fontSize: fontSize || SHARE_IMAGE_DEFAULTS.fontSize,
+            color: inverted ? '#FFF' : '#000',
+            width: shareImage && '80%',
+            border:
+              preview && textContainerOverflow ? '1px dotted red' : 'none',
+            maxHeight:
+              SHARE_IMAGE_HEIGHT -
+              2 * SHARE_IMAGE_PADDING -
+              reservedVerticalSpace
+          }}
+        >
+          {displayedText}
+        </div>
       </div>
-    </div>
+    </>
   )
 }
 
