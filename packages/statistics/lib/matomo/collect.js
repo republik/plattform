@@ -18,7 +18,7 @@ const getPageUrlDetails = async (
     actionName: url,
 
     // Not to overwrite (1)
-    method: 'Transitions.getTransitionsForAction',
+    method: 'Transitions.getTransitionsForAction', // @see https://developer.matomo.org/api-reference/reporting-api#Transitions
     actionType: 'url',
   })
 }
@@ -74,7 +74,7 @@ const transformPageUrlDetails = (
         docs.find(
           ({ meta }) =>
             meta.template === 'editorialNewsletter' &&
-            meta.repoId === label.trim(),
+            label.includes(meta.repoId.slice(0, 69)), // Matomo truncates campaign labels to 70 chars
         )
       ) {
         addBucket(buckets, 'campaign.newsletter.referrals', parseInt(referrals))
@@ -104,7 +104,7 @@ const getData = async ({ idSite, period, date, segment }, { matomo, docs }) => {
   await matomo.scroll(
     {
       idSite,
-      method: 'Actions.getPageUrls',
+      method: 'Actions.getPageUrls', // @see https://developer.matomo.org/api-reference/reporting-api#Actions
       period,
       date,
       segment,
