@@ -111,7 +111,6 @@ const createShould = function (
           query: getSimpleQueryStringQuery(searchTerm),
           fields,
           default_operator: 'AND',
-          analyzer: 'german',
         },
       }
 

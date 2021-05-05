@@ -153,11 +153,16 @@ const prepareMetaForPublish = async ({
   // and not having to touch the series key
   let seriesEpisodes
   if (typeof docMeta.series === 'object') {
-    seriesEpisodes = docMeta.series.episodes.map((e) => {
-      if (e.publishDate === '') {
-        e.publishDate = null
-      }
-    })
+    seriesEpisodes = {
+      title: docMeta.series.title,
+      episodes: docMeta.series.episodes.map((episode) => {
+        if (episode.publishDate === '') {
+          episode.publishDate = null
+        }
+
+        return episode
+      }),
+    }
   }
 
   // transform docMeta

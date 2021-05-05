@@ -4,26 +4,32 @@ const utils = require('@orbiting/backend-modules-search/lib/utils')
 
 const toPath = (url) => url.replace('https://www.republik.ch', '')
 
-const findByPaths = async ({ paths = [], props = ['meta'] }, { elastic }) => {
-  debug('findByPaths() %o', { paths })
+const find = async ({ props = ['meta'], must = [] }, { elastic }) => {
+  debug('find() %o', { props })
 
   const { body } = await elastic.search({
     index: utils.getIndexAlias('document', 'read'),
     _source: props,
-    size: paths.length * 2,
+    size: 10000,
     body: {
       query: {
         bool: {
-          must: [
-            { terms: { 'meta.path.keyword': paths } },
-            { term: { '__state.published': true } },
-          ],
+          must: [{ term: { '__state.published': true } }, ...must],
         },
       },
     },
   })
 
   return body?.hits?.hits?.map((hit) => hit._source)
+}
+
+const findByPaths = async ({ paths = [], props = ['meta'] }, { elastic }) => {
+  debug('findByPaths() %o', { paths })
+
+  return find(
+    { must: [{ terms: { 'meta.path.keyword': paths } }], props },
+    { elastic },
+  )
 }
 
 module.exports = (_, { elastic }) => ({
@@ -33,7 +39,7 @@ module.exports = (_, { elastic }) => ({
 
     const documents = await findByPaths({ paths }, { elastic })
 
-    documents.map((document) => {
+    documents.forEach((document) => {
       const index = pluckedRows.findIndex(
         ({ url }) => toPath(url) === document.meta.path,
       )
@@ -45,4 +51,5 @@ module.exports = (_, { elastic }) => ({
 })
 
 module.exports.toPath = toPath
+module.exports.find = find
 module.exports.findByPaths = findByPaths
