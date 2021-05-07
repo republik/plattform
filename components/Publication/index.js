@@ -114,7 +114,6 @@ const styles = {
     height: '100%',
     right: 0,
     width: '500px',
-    padding: '16px 24px 100px 24px',
     backgroundColor: 'white',
     overflow: 'scroll',
     overscrollBehavior: 'contain'
