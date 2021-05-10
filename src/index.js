@@ -943,7 +943,10 @@ const Styleguide = () => {
                         Field: require('./components/Form/Field.js'),
                         ...require('./components/Typography'),
                         t: createFormatter([
-                          { key: 'styleguide/Hello/generic', value: 'Hallo!' },
+                          {
+                            key: 'styleguide/Hello/generic',
+                            value: 'Hallo!'
+                          },
                           {
                             key: 'styleguide/Hello/greetings',
                             value: 'Hallo {name}'
@@ -972,7 +975,10 @@ const Styleguide = () => {
                             key: 'styleguide/Hello/label/visits',
                             value: 'Anzahl Besuche'
                           },
-                          { key: 'styleguide/Hello/label/name', value: 'Name' },
+                          {
+                            key: 'styleguide/Hello/label/name',
+                            value: 'Name'
+                          },
                           {
                             key: 'styleguide/Hello/html',
                             value: 'Hallo<br />{link}'

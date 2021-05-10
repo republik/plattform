@@ -115,6 +115,7 @@ The default Icon style is Material. For brands we rely on Ionic icons. There are
 <IconButton Icon={MailOutlineIcon} label="MailOutlineIcon" />
 <IconButton Icon={LinkIcon} label="LinkIcon" />
 <IconButton Icon={RssFeedIcon} label="RssFeedIcon" />
+<IconButton Icon={OpenSourceIcon} label="OpenSourceIcon" />
 
 <br />
 <Interaction.H3>User</Interaction.H3>
