@@ -17,7 +17,6 @@ export const socialPreviewStyles = {
 const styles = {
   container: css({
     position: 'relative',
-    marginTop: 4,
     width: SHARE_IMAGE_WIDTH,
     height: SHARE_IMAGE_HEIGHT,
     backgroundColor: '#000',
