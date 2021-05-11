@@ -309,7 +309,7 @@ function isDebitCardPayment(creditEntry: CreditEntry) {
 function toCents(s: Amount): AmountInCents {
   const n = parseFloat(s)
   if (isNaN(n)) throw new Error(`Amount is not a number: ${n}`)
-  return (n * 100) as AmountInCents
+  return Math.round(n * 100) as AmountInCents
 }
 
 function matchDebitor(
