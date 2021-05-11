@@ -171,7 +171,11 @@ const ShareImageForm = withT(({ t, editor, node, onInputChange, format }) => {
           />
           {generated ? (
             <>
-              <Label>{t(`metaData/field/${socialKey}Preview`)}</Label>
+              <Label>
+                {t(`metaData/field/${socialKey}Preview`)}
+                {/* linebreak necessary because shareimage applies additional error label below */}
+                <br />
+              </Label>
               <ShareImagePreview
                 fontSize={data.get('shareFontSize')}
                 inverted={data.get('shareInverted')}
