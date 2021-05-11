@@ -167,25 +167,6 @@ module.exports = {
   age: exposeAccessField('ageAccessRole', 'birthday', (dob) =>
     dob ? age(dob) : null,
   ),
-  async credentials(user, args, { pgdb, user: me }) {
-    const canAccessListed = canAccessBasics(user, me)
-    const canAccessAll = Roles.userIsMeOrInRoles(user, me, [
-      'admin',
-      'supporter',
-    ])
-    if (canAccessListed || canAccessAll) {
-      // ToDo: optimize for statements (adds 40ms per 100 records)
-      const all = await pgdb.public.credentials.find({
-        userId: user.id,
-      })
-      if (canAccessAll) {
-        return all
-      }
-      const allListed = all.filter((c) => c.isListed)
-      return allListed
-    }
-    return []
-  },
   async address(user, args, { loaders, user: me }) {
     if (
       Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter']) ||

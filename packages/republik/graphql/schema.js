@@ -68,8 +68,11 @@ type mutations {
   ): Credential
 
   verifyCredential(
-    userId: ID!
-    description: String!
+    id: ID!
+  ): Credential
+
+  removeCredentialVerification(
+    id: ID!
   ): Credential
 
   # if userId is null, the logged in user's subscription is changed
