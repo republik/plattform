@@ -17,6 +17,7 @@ export const socialPreviewStyles = {
 const styles = {
   container: css({
     position: 'relative',
+    marginTop: 4,
     width: SHARE_IMAGE_WIDTH,
     height: SHARE_IMAGE_HEIGHT,
     backgroundColor: '#000',
@@ -137,8 +138,7 @@ const ShareImagePreview = ({
               shareImageJustify[
                 textPosition || SHARE_IMAGE_DEFAULTS.textPosition
               ]) ||
-            'center',
-          borderWidth: socialPreview ? 2 : 0
+            'center'
         }}
       >
         {format?.image && !shareImage && (
