@@ -38,9 +38,7 @@ import createBase from './base'
 import createBlocks from './blocks'
 import createTeasers from './teasers'
 import createDynamicComponent from './dynamicComponent'
-import CommentTeaser from '../../components/CommentTeaser/CommentTeaser'
 import Loader from '../../components/Loader'
-import { TeaserSectionTitle } from '../../components/TeaserShared'
 import TeaserEmbedComment from '../../components/TeaserEmbedComment'
 import LazyLoad from '../../components/LazyLoad'
 
@@ -99,6 +97,8 @@ const addProgressProps = rule => ({
 
 export const COVER_TYPE = 'COVERFIGURE'
 export const DYNAMICCOMPONENT_TYPE = 'DYNAMICCOMPONENT'
+
+const LAZYLOADER_COMMENT_HEIGHT = 250
 
 const mdastPlaceholder = '\u2063'
 const DefaultLink = ({ children }) => children
@@ -197,6 +197,28 @@ const createSchema = ({
     insertButtonText: 'Dynamic Component',
     type: DYNAMICCOMPONENT_TYPE
   })
+
+  const TeaserEmbedCommentWithData = withCommentData(
+    ({ nodeData, liveData }) => {
+      return (
+        <Loader
+          error={liveData.error}
+          loading={liveData.loading}
+          style={{ minHeight: LAZYLOADER_COMMENT_HEIGHT }}
+          render={() => {
+            return (
+              <TeaserEmbedComment
+                nodeData={nodeData}
+                liveData={liveData}
+                t={t}
+                Link={CommentLink}
+              />
+            )
+          }}
+        />
+      )
+    }
+  )
 
   return {
     repoPrefix,
@@ -526,26 +548,13 @@ const createSchema = ({
               {
                 matchMdast: matchZone('EMBEDCOMMENT'),
                 props: node => ({ nodeData: node.data }),
-                component: withCommentData(({ nodeData, liveData }) => {
-                  console.log(nodeData, liveData)
-                  if (!liveData) return null
+                component: props => {
                   return (
-                    <Loader
-                      error={liveData.error}
-                      loading={liveData.loading}
-                      render={() => {
-                        return (
-                          <TeaserEmbedComment
-                            nodeData={nodeData}
-                            liveData={liveData}
-                            t={t}
-                            Link={CommentLink}
-                          />
-                        )
-                      }}
-                    />
+                    <LazyLoad style={{ minHeight: LAZYLOADER_COMMENT_HEIGHT }}>
+                      <TeaserEmbedCommentWithData {...props} />
+                    </LazyLoad>
                   )
-                }),
+                },
                 editorModule: 'embedComment',
                 editorOptions: {
                   lookupType: 'PARAGRAPH'
