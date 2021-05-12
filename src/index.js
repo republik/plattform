@@ -924,6 +924,19 @@ const Styleguide = () => {
                         t
                       },
                       src: require('./components/Chart/Hemicycle.docs.md')
+                    },
+                    {
+                      path: '/charts/tables',
+                      title: 'Tables',
+                      imports: {
+                        ...require('./components/Typography'),
+                        ChartTitle: require('./components/Chart').ChartTitle,
+                        ChartLead: require('./components/Chart').ChartLead,
+                        ChartLegend: require('./components/Chart').ChartLegend,
+                        CsvChart: require('./components/Chart/Csv'),
+                        t
+                      },
+                      src: require('./components/Chart/Tables.docs.md')
                     }
                   ]
                 },
