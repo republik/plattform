@@ -27,14 +27,14 @@ const styles = {
   })
 }
 
-const TeaserEmbedComment = ({ nodeData, liveData, t, Link }) => {
+const TeaserEmbedComment = ({ data, liveData, t, Link }) => {
   const isDesktop = useMediaQuery(mUp)
   const [colorScheme] = useColorContext()
   const displayComment =
     liveData.comment.published && !liveData.comment.adminUnpublished
   const comment = {
     ...liveData.comment,
-    content: displayComment && parse(nodeData.text)
+    content: displayComment && parse(data.text)
   }
   const clock = {
     t,
@@ -67,16 +67,16 @@ export default TeaserEmbedComment
 TeaserEmbedComment.data = {
   config: {
     name: 'liveData',
-    skip: props => !props.nodeData,
-    options: ({ nodeData }) => ({
+    skip: props => !props.data,
+    options: ({ data }) => ({
       variables: {
-        id: nodeData.id
+        id: data.id
       },
       ssr: false
     })
   },
   query: `
-    query getCommentEmbed($id: ID!) {
+    query getLiveCommentEmbed($id: ID!) {
       comment(id: $id) {
         id
         createdAt

@@ -198,27 +198,30 @@ const createSchema = ({
     type: DYNAMICCOMPONENT_TYPE
   })
 
-  const TeaserEmbedCommentWithData = withCommentData(
-    ({ nodeData, liveData }) => {
-      return (
-        <Loader
-          error={liveData.error}
-          loading={liveData.loading}
-          style={{ minHeight: LAZYLOADER_COMMENT_HEIGHT }}
-          render={() => {
-            return (
-              <TeaserEmbedComment
-                nodeData={nodeData}
-                liveData={liveData}
-                t={t}
-                Link={CommentLink}
-              />
-            )
-          }}
-        />
-      )
-    }
-  )
+  const TeaserEmbedCommentWithData = withCommentData(({ data, liveData }) => {
+    return (
+      <Loader
+        error={
+          (liveData && liveData.error) ||
+          (!liveData.comment &&
+            !liveData.loading &&
+            'Der Beitrag konnte nicht gefunden werden.')
+        }
+        loading={!liveData || liveData.loading}
+        style={{ minHeight: LAZYLOADER_COMMENT_HEIGHT }}
+        render={() => {
+          return (
+            <TeaserEmbedComment
+              data={data}
+              liveData={liveData}
+              t={t}
+              Link={CommentLink}
+            />
+          )
+        }}
+      />
+    )
+  })
 
   return {
     repoPrefix,
@@ -547,7 +550,7 @@ const createSchema = ({
               },
               {
                 matchMdast: matchZone('EMBEDCOMMENT'),
-                props: node => ({ nodeData: node.data }),
+                props: node => ({ data: node.data }),
                 component: props => {
                   return (
                     <LazyLoad style={{ minHeight: LAZYLOADER_COMMENT_HEIGHT }}>
