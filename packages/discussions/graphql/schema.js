@@ -26,6 +26,7 @@ type queries {
     featured: Boolean
     featuredTarget: CommentFeaturedTarget
   ): CommentConnection!
+  comment(id: ID!): Comment!
 
   commentPreview(
     id: ID
