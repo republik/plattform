@@ -182,6 +182,7 @@ Tables.propTypes = propTypes
 
 Tables.defaultProps = {
   color: 'label',
+  colorRange: 'sequential',
   values: []
 }
 
