@@ -262,11 +262,11 @@ const BarChart = props => {
         height: style.height,
         segments: barSegments,
         first,
-        max: barSegments.reduce(
+        sumPositiv: barSegments.reduce(
           (sum, segment) => sum + Math.max(0, segment.value),
           0
         ),
-        min: barSegments.reduce(
+        sumNegative: barSegments.reduce(
           (sum, segment) => sum + Math.min(0, segment.value),
           0
         )
@@ -276,8 +276,8 @@ const BarChart = props => {
     return {
       title,
       bars,
-      max: max(bars, bar => bar.max),
-      min: min(bars, bar => bar.min),
+      maxPositiv: max(bars, bar => bar.sumPositiv),
+      minNegative: min(bars, bar => bar.sumNegative),
       height: gY,
       firstBarY
     }
@@ -285,8 +285,14 @@ const BarChart = props => {
 
   // setup x scale
   const xDomain = props.domain || [
-    Math.min(0, min(groupedData.map(d => d.min).concat(props.xTicks || []))),
-    Math.max(0, max(groupedData.map(d => d.max).concat(props.xTicks || [])))
+    Math.min(
+      0,
+      min(groupedData.map(d => d.minNegative).concat(props.xTicks || []))
+    ),
+    Math.max(
+      0,
+      max(groupedData.map(d => d.maxPositiv).concat(props.xTicks || []))
+    )
   ]
   const x = scaleLinear()
     .domain(xDomain)
@@ -314,13 +320,13 @@ const BarChart = props => {
   // stack bars
   groupedData.forEach(group => {
     group.bars.forEach(bar => {
-      let xPosPositiv = xZero
-      let xPosNegativ = xZero
+      let xPosPositive = xZero
+      let xPosNegative = xZero
       bar.segments.forEach((d, i) => {
         d.color = color(colorAccessor(d))
         const size = x(d.value) - xZero
         d.x =
-          size > 0 ? Math.floor(xPosPositiv) : Math.floor(xPosNegativ + size)
+          size > 0 ? Math.floor(xPosPositive) : Math.floor(xPosNegative + size)
 
         d.width = Math.ceil(Math.abs(size))
         // snap last to last xTick if within one pixel
@@ -333,9 +339,9 @@ const BarChart = props => {
         }
 
         if (size > 0) {
-          xPosPositiv += size
+          xPosPositive += size
         } else {
-          xPosNegativ += size
+          xPosNegative += size
         }
         const isLast = last(bar.segments, i)
         d.valueTextStartAnchor =
@@ -379,8 +385,8 @@ const BarChart = props => {
           d.iXOffset = d.width / 2
         }
       })
-      bar.xPosPositiv = xPosPositiv
-      bar.xPosNegativ = xPosNegativ
+      bar.xPosPositive = xPosPositive
+      bar.xPosNegative = xPosNegative
     })
   })
 
@@ -466,8 +472,8 @@ const BarChart = props => {
               </text>
               {group.bars.map(bar => {
                 const href = bar.first.datum[link]
-                const hasNegativeValues = bar.xPosNegativ !== xZero
-                const hasPositiveValues = bar.xPosPositiv !== xZero
+                const hasNegativeValues = bar.xPosNegative !== xZero
+                const hasPositiveValues = bar.xPosPositive !== xZero
                 let barLabel = (
                   <text
                     {...styles.barLabel}
@@ -610,28 +616,28 @@ const BarChart = props => {
                       ))}
                     {showBarValues && (
                       <>
-                        {bar.min && (
+                        {bar.sumNegative && (
                           <text
                             {...styles.barLabel}
                             {...colorScheme.set('fill', 'text')}
-                            x={bar.xPosNegativ - 6 - (isLollipop ? 8 : 0)}
+                            x={bar.xPosNegative - 6 - (isLollipop ? 8 : 0)}
                             textAnchor='end'
                             y={bar.y + bar.height / 2}
                             dy='.35em'
                           >
-                            {xAxis.format(bar.min)}
+                            {xAxis.format(bar.sumNegative)}
                           </text>
                         )}
-                        {bar.max && (
+                        {bar.sumPositiv && (
                           <text
                             {...styles.barLabel}
                             {...colorScheme.set('fill', 'text')}
-                            x={bar.xPosPositiv + 6 + (isLollipop ? 8 : 0)}
+                            x={bar.xPosPositive + 6 + (isLollipop ? 8 : 0)}
                             textAnchor='start'
                             y={bar.y + bar.height / 2}
                             dy='.35em'
                           >
-                            {xAxis.format(bar.max)}
+                            {xAxis.format(bar.sumPositiv)}
                           </text>
                         )}
                       </>
