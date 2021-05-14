@@ -232,6 +232,47 @@ Absinth,-0.8
 
 ## Advanced Labeling
 
+### Bar Values
+
+Bar values can also work in advanced cases if one wants to display the total of a bar.
+
+```react
+<div>
+  <CsvChart
+    config={{
+      "type": "Bar",
+      "y": "category",
+      "sort": "none",
+      "colorSort": "none",
+      "color": "label",
+      "colorRange": [
+        "#fdd49e", "#fdbb84", "#fc8d59"
+      ],
+      "colorDarkMapping": {
+        "#fdd49e": "#807dba",
+        "#fdbb84": "#6a51a3",
+        "#fc8d59": "#54278f"
+      },
+      "showBarValues": true
+    }}
+    values={`
+category,value,label,pos
+Ca. 3500 Kilometer mehr mit ÖV,79,a,
+10 bis 16 Stunden mehr Flug pro Jahr,2074,a,
+10 bis 16 Stunden mehr Flug pro Jahr,200,b,right
+10 bis 16 Stunden mehr Flug pro Jahr,200,c,left
+Verzicht auf 10 bis 16 Stunden Flug pro Jahr,-2074,a,
+Verzicht auf 10 bis 16 Stunden Flug pro Jahr,-200,b,left
+Verzicht auf 10 bis 16 Stunden Flug pro Jahr,-200,c,right
+Verzicht auf ca. 3500 Kilometer mit ÖV,-79,a,
+Yin und Yang,-100,,
+Yin und Yang,100,,
+    `.trim()} />
+</div>
+```
+
+### Inline Positions
+
 By default the first and middle bar segment labels are `left` and the last (if not also the first) is `right` ordiented. For negative values `right` and `left` are flipped.
 
 If needed this can be overwritten with a custom `inlineLabelPosition`. Valid values are: `left`, `right`, `center`.

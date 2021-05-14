@@ -365,6 +365,8 @@ const BarChart = props => {
           d.iXOffset = d.width / 2
         }
       })
+      bar.xPosPositiv = xPosPositiv
+      bar.xPosNegativ = xPosNegativ
     })
   })
 
@@ -555,30 +557,6 @@ const BarChart = props => {
                           strokeWidth={bar.style.stroke}
                         />
                       )}
-                      {showBarValues && (
-                        <text
-                          {...styles.barLabel}
-                          {...colorScheme.set('fill', 'text')}
-                          x={
-                            segment.valueTextStartAnchor
-                              ? segment.x +
-                                segment.width +
-                                4 +
-                                (isLollipop ? 8 : 0)
-                              : segment.x +
-                                (segment.value >= 0 ? segment.width : 0) -
-                                4 -
-                                (isLollipop ? 8 : 0)
-                          }
-                          textAnchor={
-                            segment.valueTextStartAnchor ? 'start' : 'end'
-                          }
-                          y={bar.height / 2}
-                          dy='.35em'
-                        >
-                          {xAxis.format(segment.value)}
-                        </text>
-                      )}
                     </g>
                   )
                 }))
@@ -602,6 +580,34 @@ const BarChart = props => {
                       .map((segment, i) => (
                         <segment.Component key={`seg${i}`} />
                       ))}
+                    {showBarValues && (
+                      <>
+                        {bar.min && (
+                          <text
+                            {...styles.barLabel}
+                            {...colorScheme.set('fill', 'text')}
+                            x={bar.xPosNegativ - 6 - (isLollipop ? 8 : 0)}
+                            textAnchor='end'
+                            y={bar.y + bar.height / 2}
+                            dy='.35em'
+                          >
+                            {xAxis.format(bar.min)}
+                          </text>
+                        )}
+                        {bar.max && (
+                          <text
+                            {...styles.barLabel}
+                            {...colorScheme.set('fill', 'text')}
+                            x={bar.xPosPositiv + 6 + (isLollipop ? 8 : 0)}
+                            textAnchor='start'
+                            y={bar.y + bar.height / 2}
+                            dy='.35em'
+                          >
+                            {xAxis.format(bar.max)}
+                          </text>
+                        )}
+                      </>
+                    )}
                   </g>
                 )
               })}
