@@ -11,6 +11,7 @@ import EmbedLoader from './EmbedLoader'
 
 import gql from 'graphql-tag'
 import { FRONTEND_BASE_URL } from '../../../../lib/settings'
+import { stringify, parse } from '@orbiting/remark-preset'
 
 export const getVideoEmbed = gql`
   query getVideoEmbed($id: ID!, $embedType: EmbedType!) {
@@ -79,11 +80,10 @@ export const getTwitterEmbed = gql`
 
 export const getCommentEmbed = gql`
   query getCommentEmbed($id: ID!) {
-    comments(focusId: $id) {
-      focus {
-        id
-        text
-      }
+    embed: comment(id: $id) {
+      __typename
+      id
+      text
     }
   }
 `
@@ -102,6 +102,9 @@ const fromMdast = ({ TYPE }) => node => {
     isVoid: true,
     data: {
       ...node.data,
+      ...(node.data.__typename === 'Comment' && {
+        content: stringify(node.data.content)
+      }),
       url: link.url
     }
   }
@@ -112,7 +115,12 @@ const toMdast = ({ TYPE }) => node => {
   return {
     type: 'zone',
     identifier: TYPE,
-    data,
+    data: {
+      ...data,
+      ...(node.data.__typename === 'Comment' && {
+        content: parse(node.data.content)
+      })
+    },
     children: [
       {
         type: 'paragraph',

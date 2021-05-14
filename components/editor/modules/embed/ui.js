@@ -129,7 +129,7 @@ export default ({ TYPE, editorOptions = {} }) => {
     return (
       <div>
         {value.blocks.filter(isMatch).map((block, i) => {
-          const text = block.data.get('text')
+          const content = block.data.get('content')
           return (
             <div key={`comment-${i}`}>
               <p style={{ margin: '10px 0' }}>
@@ -138,16 +138,16 @@ export default ({ TYPE, editorOptions = {} }) => {
                 </Label>
                 <br />
                 <Field
-                  label='text'
-                  name='text'
-                  value={text}
+                  label='Inhalt'
+                  name='comment-content'
+                  value={content}
                   renderInput={({ ref, ...inputProps }) => (
                     <AutosizeInput {...inputProps} inputRef={ref} />
                   )}
                   onChange={event => {
                     let change = value.change().setNodeByKey(block.key, {
                       data: block.data.merge({
-                        text: event.target.value
+                        content: event.target.value
                       })
                     })
                     onChange(change)
