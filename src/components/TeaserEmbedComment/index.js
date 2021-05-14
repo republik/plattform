@@ -1,6 +1,5 @@
 import React from 'react'
 import * as Comment from '../Discussion/Internal/Comment'
-import { parse } from '@orbiting/remark-preset'
 import DiscussionFooter from '../CommentTeaser/DiscussionFooter'
 import { DiscussionContext } from '../Discussion/DiscussionContext'
 import { useMediaQuery } from '../../lib/useMediaQuery'
@@ -34,8 +33,9 @@ const TeaserEmbedComment = ({ data, liveData, t, Link }) => {
     liveData.comment.published && !liveData.comment.adminUnpublished
   const comment = {
     ...liveData.comment,
-    content: displayComment && parse(data.text)
+    content: displayComment && data.content
   }
+  console.log(data.content)
   const clock = {
     t,
     isDesktop
