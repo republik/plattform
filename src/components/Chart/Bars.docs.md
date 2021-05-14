@@ -253,7 +253,8 @@ Bar values can also work in advanced cases if one wants to display the total of 
         "#fdbb84": "#6a51a3",
         "#fc8d59": "#54278f"
       },
-      "showBarValues": true
+      "showBarValues": true,
+      "xTicks": [0]
     }}
     values={`
 category,value,label,pos

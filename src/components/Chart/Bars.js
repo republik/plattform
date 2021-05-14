@@ -305,19 +305,33 @@ const BarChart = props => {
     }
   )
 
+  const xTicks = props.xTicks || (showBarValues ? [] : xAxis.ticks)
+  const hasXTicks = !inlineValue && !!xTicks.length
+
+  const xZero = x(0)
+  const xLastTick = hasXTicks && x(xTicks[xTicks.length - 1])
+
   // stack bars
   groupedData.forEach(group => {
     group.bars.forEach(bar => {
-      const xZero = x(0)
       let xPosPositiv = xZero
       let xPosNegativ = xZero
       bar.segments.forEach((d, i) => {
         d.color = color(colorAccessor(d))
         const size = x(d.value) - xZero
-        d.x = size > 0 ? Math.floor(xPosPositiv) : Math.ceil(xPosNegativ + size)
+        d.x =
+          size > 0 ? Math.floor(xPosPositiv) : Math.floor(xPosNegativ + size)
 
-        d.width =
-          Math.ceil(Math.abs(size)) + (size && last(bar.segments, i) ? 1 : 0)
+        d.width = Math.ceil(Math.abs(size))
+        // snap last to last xTick if within one pixel
+        if (
+          xLastTick &&
+          last(bar.segments, i) &&
+          Math.abs(xLastTick - d.x - d.width) === 1
+        ) {
+          d.width += xLastTick - d.x - d.width
+        }
+
         if (size > 0) {
           xPosPositiv += size
         } else {
@@ -369,9 +383,6 @@ const BarChart = props => {
       bar.xPosNegativ = xPosNegativ
     })
   })
-
-  const xTicks = props.xTicks || (showBarValues ? [] : xAxis.ticks)
-  const hasXTicks = !inlineValue && !!xTicks.length
 
   const isLollipop = props.barStyle === 'lollipop'
 
@@ -455,6 +466,8 @@ const BarChart = props => {
               </text>
               {group.bars.map(bar => {
                 const href = bar.first.datum[link]
+                const hasNegativeValues = bar.xPosNegativ !== xZero
+                const hasPositiveValues = bar.xPosPositiv !== xZero
                 let barLabel = (
                   <text
                     {...styles.barLabel}
@@ -462,8 +475,23 @@ const BarChart = props => {
                     {...(href && barLabelLinkHoverRule)}
                     y={bar.labelY}
                     dy='0.9em'
-                    x={x(0) + (highlightZero ? (bar.max <= 0 ? -2 : 2) : 0)}
-                    textAnchor={bar.max <= 0 ? 'end' : 'start'}
+                    x={
+                      x(0) +
+                      (highlightZero
+                        ? hasPositiveValues && hasNegativeValues
+                          ? 0
+                          : hasPositiveValues
+                          ? 2
+                          : -2
+                        : 0)
+                    }
+                    textAnchor={
+                      hasPositiveValues && hasNegativeValues
+                        ? 'middle'
+                        : hasPositiveValues
+                        ? 'start'
+                        : 'end'
+                    }
                   >
                     {subsup.svg(bar.first.label)}
                   </text>
