@@ -241,33 +241,39 @@ Bar values can also work in advanced cases if one wants to display the total of 
   <CsvChart
     config={{
       "type": "Bar",
-      "y": "category",
-      "sort": "none",
-      "colorSort": "none",
-      "color": "label",
-      "colorRange": [
-        "#fdd49e", "#fdbb84", "#fc8d59"
-      ],
-      "colorDarkMapping": {
-        "#fdd49e": "#807dba",
-        "#fdbb84": "#6a51a3",
-        "#fc8d59": "#54278f"
-      },
+      "y": "gender",
+      "color": "age",
+      "colorLegend": true,
       "showBarValues": true,
+      "sort": "none",
+      "domain": [-2000, 20000],
       "xTicks": [0]
     }}
     values={`
-category,value,label,pos
-Ca. 3500 Kilometer mehr mit ÖV,79,a,
-10 bis 16 Stunden mehr Flug pro Jahr,2074,a,
-10 bis 16 Stunden mehr Flug pro Jahr,200,b,right
-10 bis 16 Stunden mehr Flug pro Jahr,200,c,left
-Verzicht auf 10 bis 16 Stunden Flug pro Jahr,-2074,a,
-Verzicht auf 10 bis 16 Stunden Flug pro Jahr,-200,b,left
-Verzicht auf 10 bis 16 Stunden Flug pro Jahr,-200,c,right
-Verzicht auf ca. 3500 Kilometer mit ÖV,-79,a,
-Yin und Yang,-100,,
-Yin und Yang,100,,
+age,gender,value
+0-9,Women,71
+10-19,Women,504
+20-29,Women,2270
+30-39,Women,2351
+40-49,Women,2728
+50-59,Women,3233
+60-69,Women,1613
+70-79,Women,1315
+80+,Women,2468
+0-9,Men,84
+10-19,Men,361
+20-29,Men,1534
+30-39,Men,1761
+40-49,Men,2042
+50-59,Men,2964
+60-69,Men,2034
+70-79,Men,1566
+80+,Men,1597
+80+,Cats,-100
+0-9,Cats,100
+10-19,Cats,100
+20-29,Cats,10
+80+,Dogs,-200
     `.trim()} />
 </div>
 ```
