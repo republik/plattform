@@ -1,10 +1,12 @@
 import React, { useMemo, useState } from 'react'
 import PropTypes from 'prop-types'
 import { css } from 'glamor'
-import { scaleThreshold } from 'd3-scale'
+import { scaleThreshold, scaleLinear, scaleTime } from 'd3-scale'
 import { extent, range } from 'd3-array'
+import { line } from 'd3-shape'
 
 import { sansSerifMedium14, sansSerifRegular12 } from '../Typography/styles'
+import { getColorMapper } from './colorMaps'
 
 import { getTextColor } from './utils'
 
@@ -46,7 +48,8 @@ const styles = {
   }),
   cell: css({
     padding: '12px 12px',
-    flexDirection: 'column'
+    flexDirection: 'column',
+    maxHeight: '60px'
   })
 }
 
@@ -98,7 +101,7 @@ const Tables = props => {
     }
   }
 
-  const sortedData = mapValues.sort((a, b) => {
+  let sortedData = mapValues.sort((a, b) => {
     if (typeof a[sortBy.key] === 'string') {
       return sortBy.order === 'desc'
         ? a[sortBy.key].localeCompare(b[sortBy.key])
@@ -108,6 +111,144 @@ const Tables = props => {
       ? NaN2Zero(b[sortBy.key]) - NaN2Zero(a[sortBy.key])
       : NaN2Zero(a[sortBy.key]) - NaN2Zero(b[sortBy.key])
   })
+
+  if (props.sparkline !== undefined) {
+    sortedData = prepareSparklineData(sortedData)
+  }
+
+  function prepareSparklineData(data) {
+    const xAxis = props.sparkline.xAxis
+    const yAxis = props.sparkline.yAxis
+    const column = props.sparkline.column
+
+    let sparkLineData = []
+    data.map(entry => {
+      // element already exists
+      const columnExists = sparkLineData.findIndex(
+        item => entry[column] === item[column]
+      )
+
+      if (columnExists === -1) {
+        sparkLineData.push(entry)
+      }
+    })
+
+    sparkLineData = sparkLineData.map(item => {
+      const xAxisValues = data
+        .filter(entry => entry[column] === item[column])
+        .map(entry => new Date(entry[xAxis]))
+      const yAxisValues = data
+        .filter(entry => entry[column] === item[column])
+        .map(entry => NaN2Zero(entry[yAxis]))
+      const values = xAxisValues.map((x, i) => {
+        return {
+          x: x,
+          y: yAxisValues[i]
+        }
+      })
+      const width = 100
+      const xAxisScale = scaleTime()
+        .domain([
+          new Date(xAxisValues[0]),
+          new Date(xAxisValues[xAxisValues.length - 1])
+        ])
+        .range([5, width - 5])
+      const height = 20
+      const yAxisScale = scaleLinear()
+        .domain([Math.min(...yAxisValues), Math.max(...yAxisValues)])
+        .range([height - 5, 5])
+
+      item.sparkline = {
+        path: line()
+          .x(d => xAxisScale(d.x))
+          .y(d => yAxisScale(d.y)),
+        values: values,
+        width: width,
+        height: height
+      }
+
+      return item
+    })
+
+    if (!props.columns.includes('sparkline')) {
+      props.columns.push('sparkline')
+      props.columnHeaders.push('sparkline')
+      props.mobileHeaders.push('sparkline')
+
+      // remove columns used as x and yAxis
+      props.columns.splice(props.columns.indexOf(props.sparkline.xAxis), 1)
+      props.columns.splice(props.columns.indexOf(props.sparkline.yAxis), 1)
+      props.columnHeaders.splice(
+        props.columnHeaders.indexOf(props.sparkline.xAxis),
+        1
+      )
+      props.columnHeaders.splice(
+        props.columnHeaders.indexOf(props.sparkline.yAxis),
+        1
+      )
+      props.mobileHeaders.splice(
+        props.mobileHeaders.indexOf(props.sparkline.xAxis),
+        1
+      )
+      props.mobileHeaders.splice(
+        props.mobileHeaders.indexOf(props.sparkline.yAxis),
+        1
+      )
+    }
+
+    return sparkLineData
+  }
+
+  function Row(props) {
+    return (
+      <div key={`row-${props.i}`} {...styles.row}>
+        {columns.map((column, i) => (
+          <Cell {...props} row={props.row} column={column} i={i} />
+        ))}
+      </div>
+    )
+  }
+
+  function Cell(props) {
+    if (props.column === 'sparkline') {
+      const color = getColorMapper(props)
+      const sparkline = props.row.sparkline
+      return (
+        <div key={`cell-${props.i}`} {...styles.cell} {...dynamicStyles.cell}>
+          <svg
+            width='100%'
+            height='100%'
+            viewBox={`0 0 ${sparkline.width} ${sparkline.height}`}
+          >
+            <path
+              d={sparkline.path(sparkline.values)}
+              stroke={color(props.row.party)}
+              fill='none'
+            />
+          </svg>
+        </div>
+      )
+    } else {
+      return (
+        <div
+          key={`cell-${props.i}`}
+          {...styles.cell}
+          {...dynamicStyles.cell}
+          style={{
+            backgroundColor:
+              colorBy === props.column
+                ? colorScale(props.row[props.column])
+                : 'transparent',
+            color:
+              colorBy === props.column &&
+              getTextColor(colorScale(props.row[props.column]))
+          }}
+        >
+          {props.row[props.column]}
+        </div>
+      )
+    }
+  }
 
   const colorDomain = extent(mapValues, d => d[colorBy])
   const colorRange = props.colorRanges[props.colorRange]
@@ -133,25 +274,7 @@ const Tables = props => {
       </div>
       <div>
         {sortedData.map((row, i) => (
-          <div key={`row-${i}`} {...styles.row}>
-            {columns.map((column, i) => (
-              <div
-                key={`cell-${i}`}
-                {...styles.cell}
-                {...dynamicStyles.cell}
-                style={{
-                  backgroundColor:
-                    colorBy === column
-                      ? colorScale(row[column])
-                      : 'transparent',
-                  color:
-                    colorBy === column && getTextColor(colorScale(row[column]))
-                }}
-              >
-                {row[column]}
-              </div>
-            ))}
-          </div>
+          <Row {...props} row={row} i={i} />
         ))}
       </div>
     </section>
@@ -170,6 +293,7 @@ export const propTypes = {
     sequential3: PropTypes.array.isRequired,
     discrete: PropTypes.array.isRequired
   }).isRequired,
+  sparkLine: PropTypes.object,
   values: PropTypes.arrayOf(
     PropTypes.shape({
       value: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
