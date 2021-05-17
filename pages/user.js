@@ -10,6 +10,7 @@ import { css } from 'glamor'
 
 import User from '../components/Users/Particulars'
 import Email from '../components/Users/Email'
+import Credentials from '../components/Users/Credentials'
 import NewsletterSubscriptions from '../components/Users/NewsletterSubscriptions'
 import Roles from '../components/Users/Roles'
 import ProfileHeader from '../components/Users/ProfileHeader'
@@ -31,12 +32,12 @@ const styles = {
     flexDirection: 'row',
     flexWrap: 'wrap',
     '& > *': {
-      flex: '0 0 25%'
-    }
+      flex: '0 0 25%',
+    },
   }),
   fifty: css({
-    flex: '0 0 50%'
-  })
+    flex: '0 0 50%',
+  }),
 }
 
 const SectionSwitch = ({ userId, section }) => {
@@ -47,50 +48,52 @@ const SectionSwitch = ({ userId, section }) => {
     return <MailLog userId={userId} />
   }
   if (section === 'sessions') {
-    return <Fragment>
-      <Sessions userId={userId} />
-      <EventLog userId={userId} />
-    </Fragment>
+    return (
+      <Fragment>
+        <Sessions userId={userId} />
+        <EventLog userId={userId} />
+      </Fragment>
+    )
   }
 
-  return <div {...styles.row}>
-    <div>
-      <User userId={userId} />
-      <Email userId={userId} />
+  return (
+    <div {...styles.row}>
+      <div>
+        <User userId={userId} />
+        <Email userId={userId} />
+        <Credentials userId={userId} />
+      </div>
+      <div>
+        <NewsletterSubscriptions userId={userId} />
+        <Roles userId={userId} />
+        <Actions userId={userId} />
+      </div>
+      <div {...styles.fifty}>
+        <AuthSettings userId={userId} />
+        <MailLog userId={userId} narrow={2} />
+        <AdminNotes userId={userId} />
+      </div>
+      <div {...styles.fifty}>
+        <Memberships userId={userId} />
+      </div>
+      <div {...styles.fifty}>
+        <Pledges userId={userId} />
+      </div>
     </div>
-    <div>
-      <NewsletterSubscriptions userId={userId} />
-      <Roles userId={userId} />
-      <Actions userId={userId} />
-    </div>
-    <div {...styles.fifty}>
-      <AuthSettings userId={userId} />
-      <MailLog userId={userId} narrow={2} />
-      <AdminNotes userId={userId} />
-    </div>
-    <div {...styles.fifty}>
-      <Memberships userId={userId} />
-    </div>
-    <div {...styles.fifty}>
-      <Pledges userId={userId} />
-    </div>
-  </div>
+  )
 }
 
 export default compose(
   withRouter,
-  enforceAuthorization(['supporter'])
-)(props => {
+  enforceAuthorization(['supporter']),
+)((props) => {
   const { userId, section = 'index' } = props.router.query
   return (
     <App>
       <Body>
         <Header />
         <Content id="content">
-          <ProfileHeader
-            userId={userId}
-            section={section}
-          />
+          <ProfileHeader userId={userId} section={section} />
           <SectionSwitch userId={userId} section={section} />
         </Content>
       </Body>
