@@ -6,7 +6,7 @@ const cookieParser = require('cookie-parser')
 const { transformUser } = require('@orbiting/backend-modules-auth')
 const util = require('util')
 
-const { NODE_ENV, WS_KEEPALIVE_INTERVAL, RES_KEEPALIVE } = process.env
+const { NODE_ENV, WS_KEEPALIVE_INTERVAL } = process.env
 
 module.exports = (
   server,
@@ -111,10 +111,6 @@ module.exports = (
       return response
     },
   })
-
-  if (RES_KEEPALIVE) {
-    server.use('/graphql', require('./keepalive'))
-  }
 
   apolloServer.applyMiddleware({
     app: server,

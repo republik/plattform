@@ -43,5 +43,8 @@
     "helmet": "^3.22.0",
     "pogi": "^2.9.1",
     "redis": "^3.0.2"
+  },
+  "devDependencies": {
+    "@types/debug": "^4.1.5"
   }
 }
