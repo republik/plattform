@@ -202,12 +202,12 @@ const createSchema = ({
     return (
       <Loader
         error={
-          (liveData && liveData.error) ||
-          (!liveData.comment &&
-            !liveData.loading &&
+          liveData.error ||
+          (!liveData.loading &&
+            !liveData.comment &&
             'Der Beitrag konnte nicht gefunden werden.')
         }
-        loading={!liveData || liveData.loading}
+        loading={liveData.loading}
         style={{ minHeight: LAZYLOADER_COMMENT_HEIGHT }}
         render={() => {
           return (
