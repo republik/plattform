@@ -35,6 +35,22 @@ module.exports = async ({
       const writeAlias = getIndexAlias(name, 'write')
       const index = getDateTimeIndex(name)
 
+      /**
+       * Remove index masquerading as a write alias.
+       *
+       * Indices named like write aliases are inadvertantly created when
+       * backends is posting data to ElasticSearch before mapping, indices
+       * and aliases are setup.
+       */
+      const {
+        body: [writeAliasAsIndex],
+      } = await elastic.cat.indices({ index: `${writeAlias}*`, format: 'json' })
+
+      if (writeAlias === writeAliasAsIndex?.index) {
+        debug('delete index masquerading as alias', { writeAlias })
+        await elastic.indices.delete({ index: writeAlias })
+      }
+
       if (doSwitch) {
         debug('remove write alias', { writeAlias, index })
         const { body: hasWriteAlias } = await elastic.indices.existsAlias({
@@ -58,33 +74,42 @@ module.exports = async ({
         Object.assign(aliases, { [writeAlias]: {} })
       }
 
-      await elastic.indices.create({
-        index,
-        /**
-         * In [ElasticSearch] 6.8, the index creation, index template,
-         * and mapping APIs support a query string parameter
-         * (include_type_name) which indicates whether requests and
-         * responses should include a type name. It defaults to true,
-         * and should be set to an explicit value to prepare to upgrade
-         * to 7.0. Not setting include_type_name will result in a
-         * deprecation warning. Indices which don’t have an explicit
-         * type will use the dummy type name _doc.
-         *
-         * @see https://www.elastic.co/guide/en/elasticsearch/reference/current/removal-of-types.html
-         */
-        include_type_name: true,
-        body: {
-          aliases,
-          mappings: {
-            ...mapping,
+      await elastic.indices
+        .create({
+          index,
+          /**
+           * In [ElasticSearch] 6.8, the index creation, index template,
+           * and mapping APIs support a query string parameter
+           * (include_type_name) which indicates whether requests and
+           * responses should include a type name. It defaults to true,
+           * and should be set to an explicit value to prepare to upgrade
+           * to 7.0. Not setting include_type_name will result in a
+           * deprecation warning. Indices which don’t have an explicit
+           * type will use the dummy type name _doc.
+           *
+           * @see https://www.elastic.co/guide/en/elasticsearch/reference/current/removal-of-types.html
+           */
+          include_type_name: true,
+          body: {
+            aliases,
+            mappings: {
+              ...mapping,
+            },
+            settings: {
+              analysis,
+              // Disable refresh_interval to allow speedier bulk operations
+              refresh_interval: -1,
+            },
           },
-          settings: {
-            analysis,
-            // Disable refresh_interval to allow speedier bulk operations
-            refresh_interval: -1,
-          },
-        },
-      })
+        })
+        .catch((e) => {
+          console.error(
+            `Error while creating index "%s" occured: %o`,
+            index,
+            e.meta.body,
+          )
+          throw new Error(`Error while creating index`)
+        })
 
       if (doInserts) {
         if (inserts.dict[name].before) {

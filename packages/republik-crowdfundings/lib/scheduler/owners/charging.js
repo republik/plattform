@@ -90,17 +90,17 @@ module.exports = async (user, bucket, context) => {
       t,
     )
 
-    const isNextAttemptLast = previousAttempts.length + 2 === attempts.length
+    const isLastAttempt = previousAttempts.length + 1 === attempts.length
     const payload = {
       chargeAttemptStatus: chargeAttempt.status,
       chargeAttemptError: chargeAttempt.error,
       attemptNumber: previousAttempts.length + 1,
       authenticationRequired:
         chargeAttempt.error?.raw?.code === 'authentication_required',
-      isLastAttempt: previousAttempts.length + 1 === attempts.length,
-      isNextAttemptLast,
+      isLastAttempt,
+      isNextAttemptLast: previousAttempts.length + 2 === attempts.length,
       nextAttemptDate:
-        !isNextAttemptLast &&
+        !isLastAttempt &&
         moment(
           Math.max(
             moment().add(backOffMinutes, 'minutes'),

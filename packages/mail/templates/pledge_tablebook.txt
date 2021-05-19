@@ -13,8 +13,8 @@ Vielen Dank für Ihre Bestellung.
    {{/if}}
  * Total: {{total_formatted}}
 
-Bücher liefern wir innerhalb von 7 Werktagen. {{#if waiting_for_payment}}Der
-Versand erfolgt erst nach Zahlungseingang.{{/if}}
+Bücher liefern wir bis Ende Mai. {{#if waiting_for_payment}}Der Versand erfolgt
+erst nach Zahlungseingang.{{/if}}
 
 {{#if paymentslip}}
 

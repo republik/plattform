@@ -1,8 +1,3 @@
-const {
-  meta: { getWordsPerMinute },
-} = require('@orbiting/backend-modules-documents/lib')
-const { MIDDLE_DURATION_MINS } = require('../Documents')
-
 const keywordPartial = {
   fields: {
     keyword: {
@@ -38,86 +33,52 @@ module.exports = {
   search: {
     termFields: {
       'meta.title': {
-        boost: 2,
         highlight: {
           number_of_fragments: 0,
         },
       },
       'meta.shortTitle': {
-        boost: 2,
         highlight: {
           number_of_fragments: 0,
         },
       },
+      'resolved.meta.dossier.meta.title': {},
+      'resolved.meta.format.meta.title': {},
+      'resolved.meta.section.meta.title': {},
+      'meta.seriesEpisodes.title': {},
       'meta.description': {
-        boost: 2,
         highlight: {
           number_of_fragments: 0,
         },
       },
-      'meta.creditsString': {
-        boost: 3,
-      },
+      'meta.creditsString': { boost: 2 },
       contentString: {
         highlight: {
           boundary_scanner_locale: 'de-CH',
           fragment_size: 300,
         },
       },
-      'resolved.meta.dossier.meta.title': {
-        boost: 3,
-      },
-      'resolved.meta.format.meta.title': {
-        boost: 3,
-      },
-      'resolved.meta.section.meta.title': {
-        boost: 3,
-      },
     },
     functionScore: (query) => ({
       query,
       functions: [
         {
+          // push primary templates
           filter: {
             terms: {
-              'meta.template': ['format', 'section', 'dossier', 'page'],
+              'meta.template': ['article', 'format', 'dossier'],
             },
           },
-          weight: 20,
+          weight: 2,
         },
         {
-          filter: {
-            match: {
-              'meta.isSeriesMaster': true,
+          // decay, via "scale" reducing relative "weight" from 1 to 0.5
+          linear: {
+            '__sort.date': {
+              offset: '90d',
+              scale: '275d',
             },
           },
-          weight: 20,
-        },
-        {
-          filter: {
-            match: {
-              'meta.isSeriesEpisode': true,
-            },
-          },
-          weight: 10,
-        },
-        {
-          filter: {
-            range: {
-              'contentString.count': {
-                gte: getWordsPerMinute() * MIDDLE_DURATION_MINS,
-              },
-            },
-          },
-          weight: 5,
-        },
-        {
-          filter: {
-            match: {
-              'meta.template': 'editorialNewsletter',
-            },
-          },
-          weight: 0.1,
         },
       ],
     }),
@@ -196,10 +157,17 @@ module.exports = {
     },
   },
   analysis: {
-    normalizer: {
-      republik_strict: {
-        type: 'custom',
-        filter: ['german_normalization', 'lowercase', 'asciifolding'],
+    filter: {
+      german_stemmer: {
+        type: 'stemmer',
+        language: 'light_german',
+      },
+    },
+    analyzer: {
+      german_with_stopwords: {
+        // @see https://www.elastic.co/guide/en/elasticsearch/reference/6.8/analysis-lang-analyzer.html#german-analyzer
+        tokenizer: 'standard',
+        filter: ['lowercase', 'german_normalization', 'german_stemmer'],
       },
     },
   },
@@ -237,14 +205,7 @@ module.exports = {
                       properties: {
                         title: {
                           type: 'text',
-                          analyzer: 'german',
-                          fields: {
-                            keyword: {
-                              type: 'keyword',
-                              normalizer: 'republik_strict',
-                              ignore_above: 256,
-                            },
-                          },
+                          analyzer: 'german_with_stopwords',
                         },
                         description: {
                           type: 'text',
@@ -266,14 +227,7 @@ module.exports = {
                       properties: {
                         title: {
                           type: 'text',
-                          analyzer: 'german',
-                          fields: {
-                            keyword: {
-                              type: 'keyword',
-                              normalizer: 'republik_strict',
-                              ignore_above: 256,
-                            },
-                          },
+                          analyzer: 'german_with_stopwords',
                         },
                         description: {
                           type: 'text',
@@ -295,14 +249,7 @@ module.exports = {
                       properties: {
                         title: {
                           type: 'text',
-                          analyzer: 'german',
-                          fields: {
-                            keyword: {
-                              type: 'keyword',
-                              normalizer: 'republik_strict',
-                              ignore_above: 256,
-                            },
-                          },
+                          analyzer: 'german_with_stopwords',
                         },
                         description: {
                           type: 'text',
@@ -339,10 +286,6 @@ module.exports = {
               analyzer: 'standard',
               store: true,
             },
-            keyword: {
-              type: 'keyword',
-              ignore_above: 256,
-            },
           },
         },
         content: {
@@ -358,11 +301,11 @@ module.exports = {
             },
             title: {
               type: 'text',
-              analyzer: 'german',
+              analyzer: 'german_with_stopwords',
             },
             shortTitle: {
               type: 'text',
-              analyzer: 'german',
+              analyzer: 'german_with_stopwords',
             },
             description: {
               type: 'text',
@@ -383,7 +326,6 @@ module.exports = {
             slug: {
               type: 'text',
               ...keywordPartial,
-              analyzer: 'german',
             },
             path: {
               type: 'text',
@@ -394,15 +336,15 @@ module.exports = {
             },
             creditsString: {
               type: 'text',
-              analyzer: 'german',
+              analyzer: 'german_with_stopwords',
             },
             credits: {
               ...mdastPartial,
             },
             authors: {
               type: 'text',
+              analyzer: 'german_with_stopwords',
               ...keywordPartial,
-              analyzer: 'german',
             },
             dossier: {
               type: 'keyword',
@@ -441,20 +383,20 @@ module.exports = {
                     },
                     label: {
                       type: 'text',
-                      ...keywordPartial,
+                      analyzer: 'german_with_stopwords',
                     },
                     publishDate: {
                       type: 'date',
                     },
                     title: {
                       type: 'text',
-                      ...keywordPartial,
+                      analyzer: 'german_with_stopwords',
                     },
                   },
                 },
                 title: {
                   type: 'text',
-                  ...keywordPartial,
+                  analyzer: 'german_with_stopwords',
                 },
               },
             },

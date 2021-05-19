@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 require('@orbiting/backend-modules-env').config()
 
 const yargs = require('yargs')
