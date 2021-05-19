@@ -1,5 +1,5 @@
 {
-  "updated": "2021-04-16T09:27:55.304Z",
+  "updated": "2021-05-19T13:03:30.803Z",
   "title": "live",
   "data": [
     {
@@ -999,10 +999,6 @@
       "value": "Desktop"
     },
     {
-      "key": "publish/preview/404",
-      "value": "Dokument oder Schema nicht verfügbar."
-    },
-    {
       "key": "publish/commit/selected",
       "value": "Ausgewählte Version"
     },
@@ -1475,6 +1471,18 @@
       "value": "Rolle definieren"
     },
     {
+      "key": "styleguide/comment/header/unpublishedByUser",
+      "value": "(durch User zurückgezogen)"
+    },
+    {
+      "key": "styleguide/comment/header/unpublishedByAdmin",
+      "value": "(von der Redaktion verborgen)"
+    },
+    {
+      "key": "styleguide/comment/header/unavailable",
+      "value": "(Autorenschaft nicht verfügbar)"
+    },
+    {
       "key": "styleguide/comment/edit/submit",
       "value": "bearbeiten"
     },
@@ -1509,6 +1517,10 @@
     {
       "key": "pages/raw/metadata",
       "value": "Metadaten bearbeiten"
+    },
+    {
+      "key": "publish/preview/404",
+      "value": "Dokument oder Schema nicht verfügbar."
     }
   ]
 }

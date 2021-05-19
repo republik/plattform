@@ -10,8 +10,10 @@ import embedFromUrlPlugin from './embedFromUrlPlugin'
 import EmbedLoader from './EmbedLoader'
 
 import gql from 'graphql-tag'
+import { FRONTEND_BASE_URL } from '../../../../lib/settings'
+import { stringify, parse } from '@orbiting/remark-preset'
 
-export const getVideoEmbed = gql`
+const getVideoEmbed = gql`
   query getVideoEmbed($id: ID!, $embedType: EmbedType!) {
     embed(id: $id, embedType: $embedType) {
       __typename
@@ -54,7 +56,7 @@ export const getVideoEmbed = gql`
   }
 `
 
-export const getTwitterEmbed = gql`
+const getTwitterEmbed = gql`
   query getTwitterEmbed($id: ID!, $embedType: EmbedType!) {
     embed(id: $id, embedType: $embedType) {
       __typename
@@ -76,6 +78,25 @@ export const getTwitterEmbed = gql`
   }
 `
 
+const getCommentEmbed = gql`
+  query getCommentEmbed($id: ID!) {
+    embed: comment(id: $id) {
+      __typename
+      id
+      text
+      tags
+      createdAt
+      updatedAt
+      parentIds
+      discussion {
+        id
+        title
+        path
+      }
+    }
+  }
+`
+
 const fromMdast = ({ TYPE }) => node => {
   const deepNodes = node.children.reduce(
     (children, child) => children.concat(child).concat(child.children),
@@ -90,6 +111,9 @@ const fromMdast = ({ TYPE }) => node => {
     isVoid: true,
     data: {
       ...node.data,
+      ...(node.data.__typename === 'Comment' && {
+        content: stringify(node.data.content)
+      }),
       url: link.url
     }
   }
@@ -100,7 +124,12 @@ const toMdast = ({ TYPE }) => node => {
   return {
     type: 'zone',
     identifier: TYPE,
-    data,
+    data: {
+      ...data,
+      ...(node.data.__typename === 'Comment' && {
+        content: parse(node.data.content)
+      })
+    },
     children: [
       {
         type: 'paragraph',
@@ -186,6 +215,10 @@ const YOUTUBE_REGEX = /^http(?:s?):\/\/(?:www\.)?youtu(?:be\.com\/watch\?v=|\.be
 // One capturing group at match[1] that catches the video id
 const VIMEO_REGEX = /^(?:http|https)?:\/\/(?:www\.)?vimeo.com\/(?:channels\/(?:\w+\/)?|groups\/(?:[^/]*)\/videos\/|)(\d+)(?:|\/\?)$/
 
+const COMMENT_REGEX = new RegExp(
+  `^${FRONTEND_BASE_URL}\\/.+[?&]focus=([a-f\\d-]{36})`
+)
+
 const matchVideoUrl = url => YOUTUBE_REGEX.test(url) || VIMEO_REGEX.test(url)
 
 const getVideoQueryParams = url => {
@@ -216,6 +249,18 @@ const getTwitterQueryParams = url => {
   throw new Error(`No valid twitter embed URL: ${url}`)
 }
 
+const matchCommentUrl = url => COMMENT_REGEX.test(url)
+
+const getCommentQueryParams = url => {
+  if (COMMENT_REGEX.test(url)) {
+    return {
+      embedType: 'CommentEmbed',
+      id: COMMENT_REGEX.exec(url)[1]
+    }
+  }
+  throw new Error(`No valid comment embed URL: ${url}`)
+}
+
 export const createEmbedVideoModule = moduleFactory({
   matchUrl: matchVideoUrl,
   getQueryParams: getVideoQueryParams,
@@ -226,4 +271,10 @@ export const createEmbedTwitterModule = moduleFactory({
   matchUrl: matchTwitterUrl,
   getQueryParams: getTwitterQueryParams,
   query: getTwitterEmbed
+})
+
+export const createEmbedCommentModule = moduleFactory({
+  matchUrl: matchCommentUrl,
+  getQueryParams: getCommentQueryParams,
+  query: getCommentEmbed
 })

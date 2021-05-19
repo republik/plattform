@@ -15,6 +15,7 @@ import { t } from '../../lib/withT'
 
 import dynamicComponentRequire from '../editor/modules/dynamiccomponent/require'
 import dynamicComponentIdentifiers from '../editor/modules/dynamiccomponent/identifiers'
+import * as withArticleData from './withArticleData'
 import * as withFrontData from './withFrontData'
 
 const NoOpLink = ({ children }) =>
@@ -33,7 +34,8 @@ const schemas = {
   article: createArticleSchema({
     t,
     dynamicComponentRequire,
-    dynamicComponentIdentifiers
+    dynamicComponentIdentifiers,
+    ...withArticleData
   }),
   front: createFrontSchema({
     Link: NoOpLink,

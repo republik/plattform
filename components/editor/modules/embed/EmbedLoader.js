@@ -1,6 +1,7 @@
 import React from 'react'
 import Loader from '../../../Loader'
 import { colors } from '@project-r/styleguide'
+import { parse } from '@orbiting/remark-preset'
 import { css } from 'glamor'
 // TMP: work around for missing t
 // - rm all t code here after styelguide 5.62.1
@@ -51,6 +52,9 @@ export default (query, Component) => {
             t.setNodeByKey(node.key, {
               data: {
                 ...data.embed,
+                ...(data.embed.__typename === 'Comment'
+                  ? { content: data.embed.text, text: undefined }
+                  : {}),
                 url: node.data.get('url')
               }
             })
@@ -71,6 +75,15 @@ export default (query, Component) => {
           loading={loading}
           error={error}
           render={() => {
+            let content = node.data.get('content')
+            if (node.data.get('__typename') === 'Comment') {
+              try {
+                content = parse(content)
+              } catch (e) {
+                content = parse('Invalid markdown.')
+              }
+            }
+
             return (
               <div
                 {...styles.border}
@@ -78,7 +91,12 @@ export default (query, Component) => {
                 data-active={active}
                 contentEditable={false}
               >
-                <Component data={node.data.set('t', t).toJS()} />
+                <Component
+                  data={node.data
+                    .set('t', t)
+                    .set('content', content)
+                    .toJS()}
+                />
               </div>
             )
           }}

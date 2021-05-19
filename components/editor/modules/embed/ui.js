@@ -1,26 +1,26 @@
 import React, { Fragment } from 'react'
-import { Checkbox, Radio, Label } from '@project-r/styleguide'
-import { createPropertyForm } from '../../utils'
+import { Checkbox, Radio, Label, Field } from '@project-r/styleguide'
+import { createPropertyForm, matchBlock } from '../../utils'
+import AutosizeInput from 'react-textarea-autosize'
 
-export default ({ TYPE, editorOptions }) => {
-  const isVideoBlock = block => block.type === 'EMBEDVIDEO'
-  const { sizes = [] } = editorOptions || {}
-
+export default ({ TYPE, editorOptions = {} }) => {
+  const isMatch = matchBlock(TYPE)
   const VideoForm = createPropertyForm({
     isDisabled: ({ value }) => {
-      return !value.blocks.some(isVideoBlock)
+      return !value.blocks.some(isMatch)
     }
   })(({ disabled, value, onChange }) => {
+    const { sizes = [] } = editorOptions
     if (disabled) {
       return null
     }
     return (
       <div>
-        {value.blocks.filter(isVideoBlock).map((block, i) => {
+        {value.blocks.filter(isMatch).map((block, i) => {
           const src = block.data.get('src')
           return (
             <div key={`video-${i}`}>
-              {!!sizes.length && (
+              {!!editorOptions?.sizes?.length && (
                 <p style={{ margin: '10px 0' }}>
                   <Label
                     style={{ display: 'inline-block', marginBottom: '5px' }}
@@ -118,7 +118,53 @@ export default ({ TYPE, editorOptions }) => {
     )
   })
 
+  const CommentForm = createPropertyForm({
+    isDisabled: ({ value }) => {
+      return !value.blocks.some(isMatch)
+    }
+  })(({ disabled, value, onChange }) => {
+    if (disabled) {
+      return null
+    }
+    return (
+      <div>
+        {value.blocks.filter(isMatch).map((block, i) => {
+          const content = block.data.get('content')
+          return (
+            <div key={`comment-${i}`}>
+              <p style={{ margin: '10px 0' }}>
+                <Label style={{ display: 'inline-block', marginBottom: '5px' }}>
+                  Comment #{i + 1}
+                </Label>
+                <br />
+                <Field
+                  label='Inhalt'
+                  name='comment-content'
+                  value={content}
+                  renderInput={({ ref, ...inputProps }) => (
+                    <AutosizeInput {...inputProps} inputRef={ref} />
+                  )}
+                  onChange={event => {
+                    let change = value.change().setNodeByKey(block.key, {
+                      data: block.data.merge({
+                        content: event.target.value
+                      })
+                    })
+                    onChange(change)
+                  }}
+                />
+              </p>
+            </div>
+          )
+        })}
+      </div>
+    )
+  })
+
   return {
-    forms: [VideoForm]
+    forms: [
+      TYPE === 'EMBEDVIDEO' && VideoForm,
+      TYPE === 'EMBEDCOMMENT' && CommentForm
+    ].filter(Boolean)
   }
 }

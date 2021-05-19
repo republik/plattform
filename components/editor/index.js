@@ -25,7 +25,8 @@ import createTeaserModule from './modules/teaser'
 import createTeaserGroupModule from './modules/teasergroup'
 import {
   createEmbedVideoModule,
-  createEmbedTwitterModule
+  createEmbedTwitterModule,
+  createEmbedCommentModule
 } from './modules/embed'
 import createBlockQuoteModule from './modules/blockquote'
 import createLogbookModule from './modules/logbook'
@@ -52,6 +53,7 @@ import createVariableConditionModule from './modules/variable/condition'
 const moduleCreators = {
   embedVideo: createEmbedVideoModule,
   embedTwitter: createEmbedTwitterModule,
+  embedComment: createEmbedCommentModule,
   document: createDocumentModule,
   documentPlain: createDocumentPlainModule,
   cover: createCoverModule,
