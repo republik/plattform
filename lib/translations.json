@@ -1,5 +1,5 @@
 {
-  "updated": "2021-04-16T09:27:55.304Z",
+  "updated": "2021-05-19T07:16:54.339Z",
   "title": "live",
   "data": [
     {
@@ -999,10 +999,6 @@
       "value": "Desktop"
     },
     {
-      "key": "publish/preview/404",
-      "value": "Dokument oder Schema nicht verfügbar."
-    },
-    {
       "key": "publish/commit/selected",
       "value": "Ausgewählte Version"
     },
@@ -1473,6 +1469,18 @@
     {
       "key": "styleguide/comment/header/credentialMissing",
       "value": "Rolle definieren"
+    },
+    {
+      "key": "styleguide/comment/header/unpublishedByUser",
+      "value": "(durch User zurückgezogen)"
+    },
+    {
+      "key": "styleguide/comment/header/unpublishedByAdmin",
+      "value": "(von der Redaktion verborgen)"
+    },
+    {
+      "key": "styleguide/comment/header/unavailable",
+      "value": "(Autorenschaft nicht verfügbar)"
     },
     {
       "key": "styleguide/comment/edit/submit",

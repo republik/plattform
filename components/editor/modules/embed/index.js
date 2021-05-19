@@ -13,7 +13,7 @@ import gql from 'graphql-tag'
 import { FRONTEND_BASE_URL } from '../../../../lib/settings'
 import { stringify, parse } from '@orbiting/remark-preset'
 
-export const getVideoEmbed = gql`
+const getVideoEmbed = gql`
   query getVideoEmbed($id: ID!, $embedType: EmbedType!) {
     embed(id: $id, embedType: $embedType) {
       __typename
@@ -56,7 +56,7 @@ export const getVideoEmbed = gql`
   }
 `
 
-export const getTwitterEmbed = gql`
+const getTwitterEmbed = gql`
   query getTwitterEmbed($id: ID!, $embedType: EmbedType!) {
     embed(id: $id, embedType: $embedType) {
       __typename
@@ -78,12 +78,21 @@ export const getTwitterEmbed = gql`
   }
 `
 
-export const getCommentEmbed = gql`
+const getCommentEmbed = gql`
   query getCommentEmbed($id: ID!) {
     embed: comment(id: $id) {
       __typename
       id
       text
+      tags
+      createdAt
+      updatedAt
+      parentIds
+      discussion {
+        id
+        title
+        path
+      }
     }
   }
 `
