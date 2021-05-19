@@ -29,34 +29,54 @@ const styles = {
 const TeaserEmbedComment = ({ data, liveData, t, Link }) => {
   const isDesktop = useMediaQuery(mUp)
   const [colorScheme] = useColorContext()
-  const displayComment =
-    liveData.comment.published && !liveData.comment.adminUnpublished
-  const comment = {
-    ...liveData.comment,
-    content: displayComment && data.content
-  }
-  console.log(data.content)
+
+  const metaDataComment = liveData?.comment
+    ? {
+        ...liveData?.comment,
+        // content is based on thise dates
+        createdAt: data.createdAt,
+        updatedAt: data.updatedAt
+      }
+    : {
+        // placeholder while loading or if no longer available
+        id: data.id,
+        createdAt: data.createdAt,
+        updatedAt: data.updatedAt,
+        published: liveData ? false : true,
+        unavailable: liveData && !liveData.loading,
+        displayAuthor: {
+          name: t('styleguide/comment/header/loading')
+        },
+        discussion: data.discussion || {}
+      }
+
+  const contentComment = data
+
   const clock = {
     t,
     isDesktop
   }
-  const discussionContextValue = { discussion: comment.discussion, clock, Link }
+  const discussionContextValue = {
+    discussion: metaDataComment.discussion,
+    clock,
+    Link
+  }
   return (
     <DiscussionContext.Provider value={discussionContextValue}>
-      <div
-        id={comment.id}
-        {...styles.root}
-        {...colorScheme.set('color', 'text')}
-      >
-        <Comment.Header t={t} comment={comment} />
+      <div id={data.id} {...styles.root} {...colorScheme.set('color', 'text')}>
+        <Comment.Header t={t} comment={metaDataComment} />
         <div style={{ margin: '10px 0' }}>
           <Comment.Body
             t={t}
-            comment={comment}
-            context={comment.tags[0] ? { title: comment.tags[0] } : undefined}
+            comment={contentComment}
+            context={
+              contentComment.tags && contentComment.tags[0]
+                ? { title: contentComment.tags[0] }
+                : undefined
+            }
           />
         </div>
-        <DiscussionFooter comment={comment} t={t} Link={Link} />
+        <DiscussionFooter comment={metaDataComment} t={t} Link={Link} />
       </div>
     </DiscussionContext.Provider>
   )
@@ -71,8 +91,7 @@ TeaserEmbedComment.data = {
     options: ({ data }) => ({
       variables: {
         id: data.id
-      },
-      ssr: false
+      }
     })
   },
   query: `
@@ -81,9 +100,8 @@ TeaserEmbedComment.data = {
         id
         createdAt
         updatedAt
-        published
-        adminUnpublished
         tags
+        parentIds
         displayAuthor {
           id
           name

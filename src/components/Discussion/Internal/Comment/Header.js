@@ -169,6 +169,7 @@ export const Header = ({ t, comment, menu, isExpanded, onToggle }) => {
     createdAt,
     published = true,
     adminUnpublished = false,
+    unavailable,
     comments,
     parentIds = []
   } = comment
@@ -222,9 +223,11 @@ export const Header = ({ t, comment, menu, isExpanded, onToggle }) => {
       <div {...styles.center}>
         {!published && (
           <div {...styles.name} {...colorScheme.set('color', 'textSoft')}>
-            {(adminUnpublished &&
-              t('styleguide/comment/header/unpublishedByAdmin')) ||
-              t('styleguide/comment/header/unpublishedByUser')}
+            {adminUnpublished
+              ? t('styleguide/comment/header/unpublishedByAdmin')
+              : unavailable
+              ? t('styleguide/comment/header/unavailable')
+              : t('styleguide/comment/header/unpublishedByUser')}
           </div>
         )}
         {published && (

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 
 import Container from './Container'
 import Center from '../../components/Center'
@@ -38,9 +38,7 @@ import createBase from './base'
 import createBlocks from './blocks'
 import createTeasers from './teasers'
 import createDynamicComponent from './dynamicComponent'
-import Loader from '../../components/Loader'
 import TeaserEmbedComment from '../../components/TeaserEmbedComment'
-import LazyLoad from '../../components/LazyLoad'
 
 const getProgressId = (node, index, parent, { ancestors }) => {
   if (parent.identifier === 'CENTER') {
@@ -97,8 +95,6 @@ const addProgressProps = rule => ({
 
 export const COVER_TYPE = 'COVERFIGURE'
 export const DYNAMICCOMPONENT_TYPE = 'DYNAMICCOMPONENT'
-
-const LAZYLOADER_COMMENT_HEIGHT = 250
 
 const mdastPlaceholder = '\u2063'
 const DefaultLink = ({ children }) => children
@@ -198,30 +194,19 @@ const createSchema = ({
     type: DYNAMICCOMPONENT_TYPE
   })
 
-  const TeaserEmbedCommentWithData = withCommentData(({ data, liveData }) => {
-    return (
-      <Loader
-        error={
-          liveData.error ||
-          (!liveData.loading &&
-            !liveData.comment &&
-            'Der Beitrag konnte nicht gefunden werden.')
-        }
-        loading={liveData.loading}
-        style={{ minHeight: LAZYLOADER_COMMENT_HEIGHT }}
-        render={() => {
-          return (
-            <TeaserEmbedComment
-              data={data}
-              liveData={liveData}
-              t={t}
-              Link={CommentLink}
-            />
-          )
-        }}
-      />
-    )
-  })
+  const TeaserEmbedCommentWithLiveData = withCommentData(TeaserEmbedComment)
+  const TeaserEmbedCommentSwitch = props => {
+    const [isMounted, setIsMounted] = useState()
+    useEffect(() => {
+      setIsMounted(true)
+    }, [])
+
+    const Embed = isMounted
+      ? TeaserEmbedCommentWithLiveData
+      : TeaserEmbedComment
+
+    return <Embed {...props} t={t} Link={CommentLink} />
+  }
 
   return {
     repoPrefix,
@@ -550,14 +535,13 @@ const createSchema = ({
               },
               {
                 matchMdast: matchZone('EMBEDCOMMENT'),
-                props: node => ({ data: node.data }),
-                component: props => {
-                  return (
-                    <LazyLoad style={{ minHeight: LAZYLOADER_COMMENT_HEIGHT }}>
-                      <TeaserEmbedCommentWithData {...props} />
-                    </LazyLoad>
-                  )
-                },
+                props: node => ({
+                  data: {
+                    ...node.data,
+                    url: node.children[0].children[0].url
+                  }
+                }),
+                component: TeaserEmbedCommentSwitch,
                 editorModule: 'embedComment',
                 editorOptions: {
                   lookupType: 'PARAGRAPH'
