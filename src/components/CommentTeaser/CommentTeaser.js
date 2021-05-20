@@ -3,7 +3,6 @@ import { css } from 'glamor'
 import get from 'lodash/get'
 
 import { mUp } from '../../theme/mediaQueries'
-import { underline } from '../../lib/styleMixins'
 import { inQuotes } from '../../lib/inQuotes'
 import { useMediaQuery } from '../../lib/useMediaQuery'
 
@@ -39,29 +38,6 @@ const styles = {
     color: 'inherit',
     textDecoration: 'none',
     cursor: 'pointer'
-  }),
-  linkUnderline: css({
-    color: 'inherit',
-    textDecoration: 'none',
-    '@media (hover)': {
-      ':hover': {
-        ...underline
-      }
-    }
-  }),
-  icon: css({
-    position: 'absolute',
-    right: 0,
-    marginTop: '-2px'
-  }),
-  timeago: css({
-    flexShrink: 0,
-    paddingLeft: 10
-  }),
-  imageContainer: css({
-    [mUp]: {
-      marginTop: 20
-    }
   }),
   image: css({
     borderBottomWidth: 1,
