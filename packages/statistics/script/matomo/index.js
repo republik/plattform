@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 require('@orbiting/backend-modules-env').config()
 
-const debug = require('debug')('statistics:script:determineIndex')
+const debug = require('debug')('statistics:script:matomo:index')
 const moment = require('moment')
 const yargs = require('yargs')
 

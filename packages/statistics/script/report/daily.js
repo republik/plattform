@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 require('@orbiting/backend-modules-env').config()
 
-const debug = require('debug')('statistics:script:postReport')
+const debug = require('debug')('statistics:script:report:daily')
 const moment = require('moment')
 const Promise = require('bluebird')
 const yargs = require('yargs')
@@ -25,17 +25,20 @@ moment.locale('de-CH')
 const SEGMENT_MEMBER = 'dimension1=@member'
 
 const argv = yargs
-  .option('date', {
-    alias: 'd',
-    coerce: moment,
-  })
   .option('relativeDate', {
     describe: 'ISO 8601 Time Interval e.g. P14D',
     alias: 'r',
     coerce: (input) => {
+      if (!input) {
+        return undefined
+      }
+
       return moment().subtract(moment.duration(input))
     },
-    conclicts: ['date'],
+  })
+  .option('date', {
+    alias: 'd',
+    coerce: moment,
   })
   .option('limit', {
     alias: 'l',
@@ -88,9 +91,10 @@ const getUrls = async ({ date, limit }, { pgdb }) => {
 
     FROM "statisticsMatomo" sm
     WHERE
-      sm."publishDate" BETWEEN '${date.format(
-        'YYYY-MM-DD',
-      )}' AND '${date.clone().add(1, 'day').format('YYYY-MM-DD')}'
+      sm."publishDate" BETWEEN '${date.format('YYYY-MM-DD')}' AND '${date
+      .clone()
+      .add(1, 'day')
+      .format('YYYY-MM-DD')}'
       AND sm.date = '${date.format('YYYY-MM-DD')}'
       AND sm.segment IS NULL
       AND sm.template = 'article'
@@ -189,7 +193,7 @@ const getUltradashboardUrlReportLink = (url) =>
 Promise.all([PgDb.connect(), Elasticsearch.connect()]).spread(
   async (pgdb, elastic) => {
     const { limit, idSite, indexYear, channel, dryRun } = argv
-    const date = argv.date || argv.relativeDate
+    const date = argv.relativeDate || argv.date
 
     debug('Generate and post report %o', {
       date: date.toISOString(),
