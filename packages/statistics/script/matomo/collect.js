@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 require('@orbiting/backend-modules-env').config()
 
-const debug = require('debug')('statistics:script:collectMatomo')
+const debug = require('debug')('statistics:script:matomo:collect')
 const moment = require('moment')
 const Promise = require('bluebird')
 const yargs = require('yargs')
@@ -19,9 +19,12 @@ const argv = yargs
     describe: 'ISO 8601 Time Interval e.g. P14D',
     alias: 'r',
     coerce: (input) => {
+      if (!input) {
+        return undefined
+      }
+
       return moment().subtract(moment.duration(input))
     },
-    conclicts: ['firstDate', 'lastDate'],
   })
   .option('firstDate', {
     alias: 'f',
@@ -54,10 +57,6 @@ const argv = yargs
       return `Check --firstDate, --lastDate. Date in --firstDate must be before date in --lastDate.`
     }
 
-    if (!(argv.firstDate && argv.lastDate) && !argv.relativeDate) {
-      return `Check options. Either provide relative date, or first and last date.`
-    }
-
     return true
   })
   .help()
@@ -68,16 +67,16 @@ Promise.all([PgDb.connect(), Elasticsearch.connect()]).spread(
     const { idSite, segment } = argv
     const dates = []
 
-    for (
-      let date = argv.firstDate;
-      date <= argv.lastDate;
-      date = date.clone().add(1, 'day')
-    ) {
-      dates.push(date.format('YYYY-MM-DD'))
-    }
-
     if (argv.relativeDate) {
       dates.push(argv.relativeDate.format('YYYY-MM-DD'))
+    } else {
+      for (
+        let date = argv.firstDate;
+        date <= argv.lastDate;
+        date = date.clone().add(1, 'day')
+      ) {
+        dates.push(date.format('YYYY-MM-DD'))
+      }
     }
 
     debug({ dates: dates.length })
