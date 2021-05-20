@@ -3,7 +3,7 @@ import { PgTable } from 'pogi'
 import createDataLoader from '@orbiting/backend-modules-dataloader'
 import { GraphqlContext } from '@orbiting/backend-modules-types'
 
-interface Repo {
+export interface Repo {
   id: string
   meta: any
   currentPhase: string
