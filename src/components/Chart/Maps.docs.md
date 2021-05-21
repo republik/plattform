@@ -726,12 +726,12 @@ make topo/ch-cantons.json PROPERTIES="name --id-property=abbr" REPROJECT=true
       "features": {
         "url": "/static/geo/ch-cantons.json",
         "object": "cantons"
-      }
+      },
+      "missingDataLegend": "keine Daten"
     }}
     values={`
 feature,value
-ZH,0.487
-BE,0.491
+BE,0
 LU,0.543
 UR,0.624
 SZ,0.615

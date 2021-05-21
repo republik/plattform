@@ -43,7 +43,7 @@ export default (props, geoJson) => {
     return {
       datum: d,
       value: value,
-      empty: !value && !d[props.color],
+      empty: !(value || value === 0) && !d[props.color],
       featureId: String(d[props.feature])
     }
   })

@@ -245,7 +245,9 @@ export class GenericMap extends Component {
                     missingDataLegend
                   ) : (
                     <Fragment>
-                      {d.value ? `${numberFormat(d.value)} ${props.unit}` : ''}
+                      {d.value || d.value === 0
+                        ? `${numberFormat(d.value)} ${props.unit}`
+                        : ''}
                       {!!d.value && ordinalValue && <br />}
                       {ordinalValue}
                     </Fragment>
