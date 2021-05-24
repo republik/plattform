@@ -25,7 +25,7 @@ module.exports = async (pgdb) => {
   const companies = await pgdb.public.companies.find({
     name: accountNames,
   })
-  if (companies.length < accountNames) {
+  if (companies.length !== accountNames.length) {
     const missing = _.difference(
       accountNames,
       companies.map((c) => c.name),
