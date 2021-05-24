@@ -254,6 +254,7 @@ type PledgeResponse {
   pfSHA: String
   # returned by payPledge if confirmCardPayment is expected
   stripeClientSecret: String
+  stripePublishableKey: String
   # returned by payPledge if PaymentIntent is used
   # can be used by client to call the syncPaymentIntent migration
   stripePaymentIntentId: ID
@@ -281,6 +282,7 @@ input PledgePaymentInput {
 type AddPaymentMethodResponse {
   # returned confirmCardSetup is expected
   stripeClientSecret: String
+  stripePublishableKey: String
 }
 
 enum PaymentMethod {

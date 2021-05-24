@@ -62,12 +62,12 @@ module.exports = async (
   }
 
   // get stripe client for companyId
-  const { stripe } = clients.accountForCompanyId(companyId)
-  if (!stripe) {
+  const account = clients.accountForCompanyId(companyId)
+  if (!account) {
     throw new Error(`could not find account for companyId: ${companyId}`)
   }
 
-  const setupIntent = await stripe.setupIntents.create({
+  const setupIntent = await account.stripe.setupIntents.create({
     customer: customer.id,
     payment_method: paymentMethodId,
     usage: 'off_session',
@@ -75,5 +75,6 @@ module.exports = async (
 
   return {
     stripeClientSecret: setupIntent.client_secret,
+    stripePublishableKey: account.publishableKey,
   }
 }

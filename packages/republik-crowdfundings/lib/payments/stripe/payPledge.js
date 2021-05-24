@@ -254,9 +254,16 @@ const payWithPaymentMethod = async ({
     Redis.disconnect(subscriber)
   }
 
+  // get stripe client for companyId
+  const account = clients.accountForCompanyId(pkg.companyId)
+  if (!account) {
+    throw new Error(`could not find account for companyId: ${pkg.companyId}`)
+  }
+
   return {
     status: 'DRAFT',
     stripeClientSecret,
+    stripePublishableKey: account.publishableKey,
     stripePaymentIntentId,
     companyId: pkg.companyId,
   }

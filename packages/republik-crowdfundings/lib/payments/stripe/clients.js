@@ -39,6 +39,14 @@ module.exports = async (pgdb) => {
       throw new Error(`missing STRIPE_SECRET_KEY_${accountName}`)
     }
 
+    const publishableKey = process.env[`STRIPE_PUBLISHABLE_KEY_${accountName}`]
+    if (!publishableKey) {
+      throw new Error(`missing STRIPE_PUBLISHABLE_KEY_${accountName}`)
+    }
+    if (!publishableKey.startsWith('pk_')) {
+      throw new Error(`wrong STRIPE_PUBLISHABLE_KEY_${accountName}`)
+    }
+
     const accountId = process.env[`STRIPE_ACCOUNT_ID_${accountName}`]
     if (!accountId) {
       throw new Error(`missing STRIPE_ACCOUNT_ID_${accountName}`)
@@ -55,6 +63,7 @@ module.exports = async (pgdb) => {
 
     const company = companies.find((c) => c.name === accountName)
     return {
+      publishableKey,
       name: accountName,
       stripe: require('stripe')(key, { apiVersion: '2020-08-27' }),
       accountId,
