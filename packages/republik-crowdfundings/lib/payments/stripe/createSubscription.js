@@ -29,5 +29,6 @@ module.exports = async ({
     customer: customer.id,
     items: [{ plan }],
     metadata,
+    expand: ['latest_invoice', 'latest_invoice.payment_intent'],
   })
 }

@@ -5,8 +5,6 @@ const addSource = require('./addSource')
 const addPaymentMethod = require('./addPaymentMethod')
 const getClients = require('./clients')
 const createPaymentIntent = require('./createPaymentIntent')
-const sleep = require('await-sleep')
-const Redis = require('@orbiting/backend-modules-base/lib/Redis')
 
 module.exports = (args) => {
   const { sourceId, t } = args
@@ -156,8 +154,6 @@ const payWithPaymentMethod = async ({
 }) => {
   const { companyId } = pkg
 
-  const isSubscription = pkg.name === 'MONTHLY_ABO'
-
   if (!stripePlatformPaymentMethodId) {
     console.error('missing stripePlatformPaymentMethodId')
     throw new Error(t('api/unexpected'))
@@ -186,10 +182,29 @@ const payWithPaymentMethod = async ({
     })
   }
 
-  let stripeClientSecret
-  let stripePaymentIntentId
-  if (!isSubscription) {
-    const paymentIntent = await createPaymentIntent({
+  const isSubscription = pkg.name === 'MONTHLY_ABO'
+  let paymentIntent
+  if (isSubscription) {
+    const subscription = await createSubscription({
+      plan: pkg.name,
+      userId,
+      companyId,
+      metadata: {
+        pledgeId,
+      },
+      pgdb,
+      clients,
+    })
+
+    paymentIntent = subscription.latest_invoice?.payment_intent
+    if (!paymentIntent) {
+      console.error(
+        `payPledge didn't receive the paymentIntent for subscription pledgeId: ${pledgeId}`,
+      )
+      throw new Error(t('api/unexpected'))
+    }
+  } else {
+    paymentIntent = await createPaymentIntent({
       userId,
       companyId,
       platformPaymentMethodId: stripePlatformPaymentMethodId,
@@ -199,65 +214,19 @@ const payWithPaymentMethod = async ({
       clients,
       t,
     })
-    stripePaymentIntentId = paymentIntent.id
-    if (paymentIntent.status !== 'succeeded') {
-      stripeClientSecret = paymentIntent.client_secret
-    }
-  } else {
-    // subscribe to get clientSecret from webhooks:
-    // invoicePaymentActionRequired or invoicePaymentSucceeded
-    let noAuthRequired
-    const subscriber = Redis.connect()
-    subscriber.on('message', (channel, rawMessage) => {
-      const { id, clientSecret } = JSON.parse(rawMessage)
-      stripePaymentIntentId = id
-      if (clientSecret === 'no-auth-required') {
-        noAuthRequired = true
-      } else {
-        stripeClientSecret = clientSecret
-      }
-    })
-    subscriber.subscribe(`pledge:${pledgeId}:paymentIntent`)
+  }
 
-    await createSubscription({
-      plan: pkg.name,
-      userId,
-      companyId: pkg.companyId,
-      metadata: {
-        pledgeId,
-      },
-      pgdb,
-      clients,
-    })
-
-    // wait 25s max
-    const maxMs = new Date().getTime() + 25 * 1000
-    await (async () => {
-      while (
-        !noAuthRequired && // eslint-disable-line no-unmodified-loop-condition
-        !stripeClientSecret && // eslint-disable-line no-unmodified-loop-condition
-        new Date().getTime() < maxMs
-      ) {
-        await sleep(500)
-      }
-    })()
-
-    // we didn't receive a webhook (or redis publish) in time
-    if (!stripePaymentIntentId) {
-      console.error(
-        `payPledge didn't receive the paymentIntent in time for pledgeId: ${pledgeId}`,
-      )
-      throw new Error(t('api/unexpected'))
-    }
-
-    subscriber.unsubscribe()
-    Redis.disconnect(subscriber)
+  let stripeClientSecret
+  const stripePaymentIntentId = paymentIntent.id
+  if (paymentIntent.status !== 'succeeded') {
+    stripeClientSecret = paymentIntent.client_secret
   }
 
   // get stripe client for companyId
-  const account = clients.accountForCompanyId(pkg.companyId)
+  const account = clients.accountForCompanyId(companyId)
   if (!account) {
-    throw new Error(`could not find account for companyId: ${pkg.companyId}`)
+    console.error(`could not find account for companyId: ${companyId}`)
+    throw new Error(t('api/unexpected'))
   }
 
   return {
@@ -265,6 +234,6 @@ const payWithPaymentMethod = async ({
     stripeClientSecret,
     stripePublishableKey: account.publishableKey,
     stripePaymentIntentId,
-    companyId: pkg.companyId,
+    companyId,
   }
 }
