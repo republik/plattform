@@ -57,9 +57,10 @@ const Component = ({ children }) => {
 
 ${(
   <Fragment>
-    <ColorSpecimen span={3} name='primary' value={colors.primary} />
+    <ColorSpecimen span={2} name='primary' value={colors.primary} />
     <ColorSpecimen span={2} name='primaryHover' value={colors.primaryHover} />
     <ColorSpecimen span={1} name='error' value={colors.error} />
+    <ColorSpecimen span={1} name='warning' value={colors.warning} />
 
     <ColorSpecimen span={3} name='text' value={colors.text} />
     <ColorSpecimen span={2} name='textSoft' value={colors.textSoft} />

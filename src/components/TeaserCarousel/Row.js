@@ -73,11 +73,27 @@ const styles = {
   })
 }
 
-const Row = ({ children }) => {
+const Row = ({ initialScrollTile, children }) => {
   const context = useContext(CarouselContext)
   const overflow = useRef()
   const [{ left, right }, setArrows] = useState({ left: false, right: false })
   const [colorScheme] = useColorContext()
+
+  useEffect(() => {
+    if (!initialScrollTile) {
+      return
+    }
+    const scroller = overflow.current
+    const target = Array.from(scroller.children)[initialScrollTile]
+    scrollIntoView(target, {
+      time: 400,
+      align: {
+        left: 0,
+        leftOffset: TILE_MARGIN_RIGHT,
+        ...getTop()
+      }
+    })
+  }, [initialScrollTile])
 
   useEffect(() => {
     const scroller = overflow.current
@@ -128,6 +144,7 @@ const Row = ({ children }) => {
         onClick={() => {
           const scroller = overflow.current
           const clientWidth = scroller.clientWidth
+          console.log(Array.from(scroller.children))
           const target = Array.from(scroller.children).find(element => {
             const { left } = element.getBoundingClientRect()
             return left + clientWidth >= 0

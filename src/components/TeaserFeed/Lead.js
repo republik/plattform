@@ -2,15 +2,15 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { css } from 'glamor'
 import { mUp } from '../../theme/mediaQueries'
-import { serifRegular17, serifRegular19 } from '../Typography/styles'
+import { serifRegular15, serifRegular17 } from '../Typography/styles'
 import { convertStyleToRem } from '../Typography/utils'
 
 const styles = {
   main: css({
-    ...convertStyleToRem(serifRegular17),
+    ...convertStyleToRem(serifRegular15),
     margin: '0 0 5px 0',
     [mUp]: {
-      ...convertStyleToRem(serifRegular19)
+      ...convertStyleToRem(serifRegular17)
     }
   })
 }

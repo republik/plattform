@@ -697,6 +697,23 @@ const Styleguide = () => {
                       src: require('./components/TeaserCarousel/docs.md')
                     },
                     {
+                      path: '/seriesnav',
+                      title: 'SeriesNav',
+                      imports: {
+                        ColorContextProvider,
+                        css,
+                        t,
+                        ...require('./components/TeaserCarousel'),
+                        ...require('./components/SeriesNav'),
+                        ...require('./components/SeriesNav/__docs__'),
+                        ...require('./components/Typography'),
+                        ...require('./components/Progress'),
+                        ...require('./components/Icons'),
+                        IconButton: require('./components/IconButton')
+                      },
+                      src: require('./components/SeriesNav/docs.md')
+                    },
+                    {
                       path: '/teasershared',
                       title: 'Shared',
                       imports: {
