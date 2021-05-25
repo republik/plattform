@@ -167,6 +167,7 @@ const ShareImagePreview = ({
             fontSize: fontSize || SHARE_IMAGE_DEFAULTS.fontSize,
             color: inverted ? '#FFF' : '#000',
             width: shareImage && '80%',
+            lineHeight: 1.25,
             border:
               preview && textContainerOverflow ? '1px dotted red' : 'none',
             maxHeight:
