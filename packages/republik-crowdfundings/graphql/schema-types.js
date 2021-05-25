@@ -274,7 +274,7 @@ input PledgePaymentInput {
   # can be a stripe Source id or a stripe PaymentMethod id (both must have been created on the platform's account)
   sourceId: String
   pspPayload: JSON
-  makeDefault: Boolean
+  makeDefault: Boolean @deprecated(reason: "use \`setDefaultPaymentMethod\` mutation after successful confirmCardPayment instead")
   address: AddressInput
   shippingAddress: AddressInput
 }

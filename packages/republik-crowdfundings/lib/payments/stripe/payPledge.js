@@ -145,8 +145,6 @@ const payWithPaymentMethod = async ({
   pledgeId,
   total,
   stripePlatformPaymentMethodId,
-  pspPayload,
-  makeDefault = false,
   userId,
   pkg,
   pgdb,
