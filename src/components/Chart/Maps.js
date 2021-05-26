@@ -206,7 +206,13 @@ export class GenericMap extends Component {
   }
   renderTooltips() {
     const props = this.props
-    const { width, tLabel, missingDataLegend } = props
+    const {
+      width,
+      tLabel,
+      missingDataLegend,
+      tooltipLabel,
+      tooltipText
+    } = props
 
     const { paddingTop, gx, gy, groupedData, numberFormat } = this.state.layout
 
@@ -230,27 +236,35 @@ export class GenericMap extends Component {
               >
                 <ContextBoxValue
                   label={
-                    title === groupTitle
+                    tooltipLabel
+                      ? tooltipLabel
+                      : title === groupTitle
                       ? hoverFeature.properties.name
                       : tLabel(groupTitle)
                   }
                 >
-                  {groupTitle && title === groupTitle && (
-                    <Fragment>
-                      {tLabel(groupTitle)}
-                      <br />
-                    </Fragment>
-                  )}
-                  {d.empty ? (
-                    missingDataLegend
+                  {tooltipText ? (
+                    tooltipText
                   ) : (
-                    <Fragment>
-                      {d.value || d.value === 0
-                        ? `${numberFormat(d.value)} ${props.unit}`
-                        : ''}
-                      {!!d.value && ordinalValue && <br />}
-                      {ordinalValue}
-                    </Fragment>
+                    <>
+                      {groupTitle && title === groupTitle && (
+                        <Fragment>
+                          {tLabel(groupTitle)}
+                          <br />
+                        </Fragment>
+                      )}
+                      {d.empty ? (
+                        missingDataLegend
+                      ) : (
+                        <Fragment>
+                          {d.value || d.value === 0
+                            ? `${numberFormat(d.value)} ${props.unit}`
+                            : ''}
+                          {!!d.value && ordinalValue && <br />}
+                          {ordinalValue}
+                        </Fragment>
+                      )}
+                    </>
                   )}
                 </ContextBoxValue>
               </ContextBox>
@@ -308,7 +322,7 @@ export class GenericMap extends Component {
   }
   renderPointTooltip() {
     const { hoverPoint } = this.state
-    const { width, unit } = this.props
+    const { width, unit, tooltipLabel, tooltipText } = this.props
 
     if (!hoverPoint) {
       return null
@@ -321,15 +335,20 @@ export class GenericMap extends Component {
         y={hoverPoint.y}
         contextWidth={width}
       >
-        <ContextBoxValue label={hoverPoint.label}>
-          {hoverPoint.value && (
+        <ContextBoxValue label={tooltipLabel ? tooltipLabel : hoverPoint.label}>
+          {tooltipText ? (
+            tooltipText
+          ) : (
             <>
-              {`${hoverPoint.value} `}
-              {subsup(unit)}
-              <br />
+              hoverPoint.value && (
+              <>
+                {`${hoverPoint.value} `}
+                {subsup(unit)}
+                <br />
+              </>
+              ){hoverPoint.body}
             </>
           )}
-          {hoverPoint.body}
         </ContextBoxValue>
       </ContextBox>
     )
@@ -614,7 +633,9 @@ export const propTypes = {
   tLabel: PropTypes.func.isRequired,
   description: PropTypes.string,
   color: PropTypes.string,
-  opacity: PropTypes.number.isRequired
+  opacity: PropTypes.number.isRequired,
+  tooltipLabel: PropTypes.string,
+  tooltipText: PropTypes.string
 }
 
 GenericMap.propTypes = propTypes
