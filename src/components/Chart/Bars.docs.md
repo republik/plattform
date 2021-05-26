@@ -325,6 +325,48 @@ Verzicht auf ca. 3500 Kilometer mit ÖV,-79,a,
 </div>
 ```
 
+### Skip Labels
+
+```react
+<div>
+  <CsvChart
+    config={{
+      "type": "Bar",
+      "y": "type",
+      "column": "category",
+      "columnSort": "none",
+      "sort": "descending",
+      "color": "type",
+      "minInnerWidth": 260,
+      "domain": [
+        0,
+        15000
+      ],
+      "xTicks": [
+        0,
+        5000,
+        10000,
+        15000
+      ],
+      "colorRange": [
+        "#2ca02c",
+        "#9467bd"
+      ],
+      "colorLegend": true,
+      "skipYLabels": true
+    }}
+    values={`
+category,type,value,Q_lower,Q_upper
+"Geschäftsführung, leitende Funktion",Mann,11100,8665,14523,
+"Geschäftsführung, leitende Funktion",Frau,8825,6786,11668,
+"Führungskräfte Gastronomie, Handel",Mann,6050,5047,7411,
+"Führungskräfte Gastronomie, Handel",Frau,4900,4613,5512,
+Ärztinnen,Mann,9709,7262,13265,
+Ärztinnen,Frau,7491,6395,9452
+    `.trim()} />
+</div>
+```
+
 ## Dark Colors
 
 Maybe you've noticed the `colorDarkMapping` above. It can be used to switch out colors when in dark mode. This is how it looks when forced into dark:

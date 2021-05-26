@@ -146,7 +146,8 @@ const BarChart = props => {
     inlineLabel,
     inlineSecondaryLabel,
     inlineLabelPosition,
-    link
+    link,
+    skipYLabels
   } = props
   const [colorScheme] = useColorContext()
   const possibleColumns = Math.floor(
@@ -240,7 +241,7 @@ const BarChart = props => {
 
       gY += marginBottom
       let labelY = gY
-      if (first.label) {
+      if (!skipYLabels && first.label) {
         gY += BAR_LABEL_HEIGHT
       }
       gY += style.marginTop
@@ -248,7 +249,6 @@ const BarChart = props => {
       if (firstBarY === undefined) {
         firstBarY = gY
       }
-
       gY += style.height
       marginBottom = style.marginBottom
 
@@ -474,7 +474,7 @@ const BarChart = props => {
                 const href = bar.first.datum[link]
                 const hasNegativeValues = bar.xPosNegative !== xZero
                 const hasPositiveValues = bar.xPosPositive !== xZero
-                let barLabel = (
+                let barLabel = skipYLabels ? null : (
                   <text
                     {...styles.barLabel}
                     {...colorScheme.set('fill', 'text')}
@@ -747,7 +747,8 @@ export const propTypes = {
   inlineLabelPosition: PropTypes.string,
   tLabel: PropTypes.func.isRequired,
   description: PropTypes.string,
-  showBarValues: PropTypes.bool
+  showBarValues: PropTypes.bool,
+  skipYLabels: PropTypes.bool
 }
 
 BarChart.propTypes = propTypes
@@ -756,7 +757,8 @@ BarChart.defaultProps = {
   columns: 1,
   minInnerWidth: 140,
   barStyle: 'small',
-  numberFormat: 's'
+  numberFormat: 's',
+  skipYLabels: false
 }
 
 export const Lollipop = props => <BarChart {...props} />
