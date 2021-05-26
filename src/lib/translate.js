@@ -1,3 +1,17 @@
+export const getReplacementKeys = message =>
+  message.match(/[^{\}]+(?=})/g) || []
+
+export const replaceKeys = (message, replacements) => {
+  let withReplacements = message
+  Object.keys(replacements).forEach(replacementKey => {
+    withReplacements = withReplacements.replace(
+      `{${replacementKey}}`,
+      replacements[replacementKey]
+    )
+  })
+  return withReplacements
+}
+
 export const createPlaceholderFormatter = (placeholder = '') => {
   const formatter = () => placeholder
   formatter.elements = () => [placeholder]
@@ -18,12 +32,7 @@ export const createFormatter = translations => {
     let message =
       index[key] || (missingValue !== undefined ? missingValue : `TK(${key})`)
     if (replacements) {
-      Object.keys(replacements).forEach(replacementKey => {
-        message = message.replace(
-          `{${replacementKey}}`,
-          replacements[replacementKey]
-        )
-      })
+      message = replaceKeys(message, replacements)
     }
     return message
   }

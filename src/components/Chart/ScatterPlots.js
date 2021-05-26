@@ -5,7 +5,7 @@ import { css } from 'glamor'
 import ColorLegend from './ColorLegend'
 import { scaleLinear, scaleLog, scaleSqrt } from 'd3-scale'
 import { extent, ascending, min, max } from 'd3-array'
-import ContextBox, { ContextBoxValue } from './ContextBox'
+import ContextBox, { ContextBoxValue, contextT } from './ContextBox'
 import {
   calculateAxis,
   subsup,
@@ -20,6 +20,7 @@ import { getColorMapper } from './colorMaps'
 import { sansSerifRegular12, sansSerifMedium12 } from '../Typography/styles'
 import { intersperse } from '../../lib/helpers'
 import { useColorContext } from '../Colors/useColorContext'
+import { getReplacementKeys, replaceKeys } from '../../lib/translate'
 
 const X_TICK_HEIGHT = 6
 
@@ -44,60 +45,64 @@ const styles = {
   })
 }
 
-const ScatterPlot = ({
-  values,
-  width,
-  height,
-  heightRatio,
-  x,
-  xUnit,
-  xNice,
-  xTicks,
-  xLines,
-  xScale,
-  xNumberFormat,
-  xShowValue,
-  y,
-  yUnit,
-  yNice,
-  yTicks,
-  yLines,
-  yScale,
-  yNumberFormat,
-  yShowValue,
-  numberFormat,
-  opacity,
-  color,
-  colorLegend,
-  colorLegendValues,
-  colorRange,
-  colorRanges,
-  colorMap,
-  colorSort,
-  size,
-  sizeRange,
-  sizeRangeMax,
-  sizeUnit,
-  sizeNumberFormat,
-  sizeShowValue,
-  label,
-  inlineLabel,
-  inlineLabelPosition,
-  inlineSecondaryLabel,
-  detail,
-  tLabel,
-  description,
-  paddingTop,
-  paddingRight,
-  paddingBottom,
-  paddingLeft
-}) => {
+const ScatterPlot = props => {
   const [hover, setHover] = useState([])
   const [hoverTouch, setHoverTouch] = useState()
 
   const containerRef = useRef()
   const hoverRectRef = useRef()
   const [colorScheme] = useColorContext()
+
+  const {
+    values,
+    width,
+    height,
+    heightRatio,
+    x,
+    xUnit,
+    xNice,
+    xTicks,
+    xLines,
+    xScale,
+    xNumberFormat,
+    xShowValue,
+    y,
+    yUnit,
+    yNice,
+    yTicks,
+    yLines,
+    yScale,
+    yNumberFormat,
+    yShowValue,
+    numberFormat,
+    opacity,
+    color,
+    colorLegend,
+    colorLegendValues,
+    colorRange,
+    colorRanges,
+    colorMap,
+    colorSort,
+    size,
+    sizeRange,
+    sizeRangeMax,
+    sizeUnit,
+    sizeNumberFormat,
+    sizeShowValue,
+    label,
+    inlineLabel,
+    inlineLabelPosition,
+    inlineSecondaryLabel,
+    detail,
+    tLabel,
+    description,
+    paddingTop,
+    paddingRight,
+    paddingBottom,
+    paddingLeft,
+    tooltipLabel,
+    tooltipText
+  } = props
 
   const data = values
     .filter(d => d[x] && d[x].length > 0 && d[y] && d[y].length > 0)
@@ -318,45 +323,68 @@ const ScatterPlot = ({
         y={cy + (top ? -yOffset : yOffset)}
         contextWidth={width}
       >
-        {hover.map(({ value }, i) => (
-          <ContextBoxValue
-            key={`${value.datum[label]}${i}`}
-            label={value.datum[label]}
-          >
-            {intersperse(
-              []
-                .concat(
-                  value.datum[detail] &&
-                    value.datum[detail]
-                      .split('\n')
-                      .map((d, i) => (
-                        <Fragment key={`d${i}`}>{subsup(d)}</Fragment>
-                      ))
-                )
-                .concat([
-                  yShowValue && (
-                    <Fragment key='y'>
-                      {yFormat(value.y)} {subsup(yUnit)}
-                    </Fragment>
-                  ),
-                  xShowValue && (
-                    <Fragment key='x'>
-                      {xFormat(value.x)} {subsup(xUnit)}
-                    </Fragment>
-                  ),
-                  sizeShowValue && (
-                    <Fragment key='size'>
-                      {sizeFormat(value.size)} {subsup(sizeUnit)}
-                    </Fragment>
-                  )
-                ])
-                .filter(Boolean),
-              (item, index) => (
-                <br key={`br${index}`} />
-              )
-            )}
-          </ContextBoxValue>
-        ))}
+        {hover.map(({ value }, i) => {
+          const formattedValues = {
+            y: yFormat(value.y),
+            x: xFormat(value.x),
+            size: sizeFormat(value.size)
+          }
+          const contextT = text => {
+            const replacements = getReplacementKeys(text).reduce(
+              (acc, replacementKey) => {
+                acc[replacementKey] =
+                  acc[replacementKey] ||
+                  value[replacementKey] ||
+                  value.datum[replacementKey] ||
+                  props[replacementKey]
+                return acc
+              },
+              formattedValues
+            )
+            return replaceKeys(text, replacements)
+          }
+          const splitLines = text => {
+            return text
+              .split('\n')
+              .map((d, i) => <Fragment key={`d${i}`}>{subsup(d)}</Fragment>)
+          }
+          const splitFragments = fragments =>
+            intersperse(fragments, (item, index) => <br key={`br${index}`} />)
+
+          return (
+            <ContextBoxValue
+              key={`${value.datum[label]}${i}`}
+              label={tooltipLabel ? contextT(tooltipLabel) : value.datum[label]}
+            >
+              {splitFragments(
+                tooltipText
+                  ? splitLines(contextT(tooltipText))
+                  : []
+                      .concat(
+                        value.datum[detail] && splitLines(value.datum[detail])
+                      )
+                      .concat([
+                        yShowValue && (
+                          <Fragment key='y'>
+                            {formattedValues.y} {subsup(yUnit)}
+                          </Fragment>
+                        ),
+                        xShowValue && (
+                          <Fragment key='x'>
+                            {formattedValues.x} {subsup(xUnit)}
+                          </Fragment>
+                        ),
+                        sizeShowValue && (
+                          <Fragment key='size'>
+                            {formattedValues.size} {subsup(sizeUnit)}
+                          </Fragment>
+                        )
+                      ])
+                      .filter(Boolean)
+              )}
+            </ContextBoxValue>
+          )
+        })}
       </ContextBox>
     )
   }
@@ -616,7 +644,9 @@ export const propTypes = {
   paddingTop: PropTypes.number.isRequired,
   paddingRight: PropTypes.number.isRequired,
   paddingBottom: PropTypes.number.isRequired,
-  paddingLeft: PropTypes.number.isRequired
+  paddingLeft: PropTypes.number.isRequired,
+  tooltipLabel: PropTypes.string,
+  tooltipText: PropTypes.string
 }
 
 ScatterPlot.defaultProps = {

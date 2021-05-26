@@ -1,5 +1,5 @@
-Scratterplots make a scientist out of every reader. 
-Go forth and make correlations visible, and tell everyone it proofs nothing!
+Scatter plots make a scientist out of every reader.
+Go forth and make correlations visible, and tell everyone it proves nothing!
 
 ```react
 <div>
@@ -305,3 +305,55 @@ year,label,detail,family,position,lrgen,vote_abs,inline_pos,inline,inline_countr
 </div>
 ```
 
+## Custom Tooltip
+
+```react
+<div>
+  <CsvChart
+    config={{
+      "type": "ScatterPlot",
+      "label": "geo",
+      "x": "income pp 2014",
+      "y": "co2 pp 2014",
+      "yUnit": "tons of CO<sub>2</sub>",
+      "xUnit": "GDP per capita (USD)",
+      "yNumberFormat": ".2f",
+      "yScale": "log",
+      "xScale": "log",
+      "tooltipLabel": "The case of {geo}",
+      "tooltipText": "Average Joe in {geo} emits {y} {yUnit} yearly.\nThey earn {x} USD."
+    }}
+    values={`
+geo,income pp 2014,co2 pp 2014,region
+Liberia,805,0.213,Africa
+Libya,15100,9.19,Africa
+Lithuania,26300,4.33,FSU
+Luxembourg,93800,17.4,Europe
+"Macedonia, FYR",12300,3.61,Asia
+Madagascar,1370,0.13,Africa
+Malawi,1090,0.0748,Africa
+Malaysia,24200,8.03,Asia
+Maldives,11900,3.27,Asia
+Mali,1870,0.0832,Africa
+Malta,32300,5.51,Europe
+Marshall Islands,3660,1.94,Europe
+Mauritania,3660,0.667,Africa
+Mauritius,18300,3.36,Africa
+Mexico,16500,3.87,Americas
+"Micronesia, Fed. Sts.",3180,1.45,Oceania
+Moldova,4760,1.21,Europe
+Monaco,58300,1.21,Europe
+Mongolia,11300,7.13,Asia
+Montenegro,14800,3.52,Europe
+Morocco,7070,1.74,Africa
+Mozambique,1080,0.31,Africa
+Myanmar,4770,0.417,Asia
+Namibia,9630,1.58,Africa
+Nauru,12600,4.31,Africa
+Nepal,2270,0.284,Asia
+      `.trim()} />
+  <ChartLegend>
+    Quelle: <Editorial.A href='https://gapm.io/dgdppc'>Gapminder</Editorial.A> basierend auf World Bank, A. Maddison, M. Lindgren, IMF & mehr (Einkommen) und <Editorial.A href='http://cdiac.ess-dive.lbl.gov/trends/emis/meth_reg.html'>CDIAC</Editorial.A> (CO<Sub>2</Sub>)
+  </ChartLegend>
+</div>
+```
