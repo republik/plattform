@@ -325,7 +325,11 @@ Verzicht auf ca. 3500 Kilometer mit ÖV,-79,a,
 </div>
 ```
 
-### Skip Labels
+### X-Ticks
+
+Beispiel [hier](/charts/lollipops#x-ticks).
+
+### Skip Y Labels
 
 ```react
 <div>

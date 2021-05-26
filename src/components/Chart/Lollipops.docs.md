@@ -77,3 +77,35 @@ Reisebüros,-0.975,-1.000,-0.950
     `.trim()} />
 </div>
 ```
+
+## X-Ticks
+
+```react
+<div>
+  <CsvChart
+    config={{
+      "type": "Lollipop",
+      "y": "category",
+      "sort": "none",
+      "band": "Q",
+      "bandLegend": "in diesem Bereich liegt die Hälfte aller Löhne",
+      "domain": [
+        0,
+        15000
+      ],
+      "xUnit": "CHF",
+      "xTicks": [
+        0,
+        6502,
+        10000,
+        15000
+      ]
+    }}
+    values={`
+category,value,Q_lower,Q_upper
+Informationstechnologie,8900,6918,11373
+Forschung und Entwicklung,8764,7143,11837
+Energieversorgung,8210,6873,10182
+    `.trim()} />
+</div>
+```

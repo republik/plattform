@@ -147,7 +147,8 @@ const BarChart = props => {
     inlineSecondaryLabel,
     inlineLabelPosition,
     link,
-    skipYLabels
+    skipYLabels,
+    xUnit
   } = props
   const [colorScheme] = useColorContext()
   const possibleColumns = Math.floor(
@@ -688,7 +689,7 @@ const BarChart = props => {
                           dy='-0.5em'
                           textAnchor={textAnchor}
                         >
-                          {xAxis.axisFormat(tick, isLast)}
+                          {xAxis.axisFormat(tick, isLast)} {isLast && xUnit}
                         </text>
                       </g>
                     )
@@ -748,7 +749,8 @@ export const propTypes = {
   tLabel: PropTypes.func.isRequired,
   description: PropTypes.string,
   showBarValues: PropTypes.bool,
-  skipYLabels: PropTypes.bool
+  skipYLabels: PropTypes.bool,
+  xUnit: PropTypes.string
 }
 
 BarChart.propTypes = propTypes
