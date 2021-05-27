@@ -9,7 +9,7 @@ const { makePledgeSuccessfulWithCharge } = require('../../Pledge')
 // but not the charge details
 module.exports = {
   eventTypes: ['invoice.payment_succeeded'],
-  handle: async (event, t, connectionContext, companyId) => {
+  handle: async (event, pgdb, t, redis, connectionContext, companyId) => {
     const context = {
       ...connectionContext,
       t,
