@@ -42,7 +42,14 @@ const styles = {
   })
 }
 
-const SeriesNavTile = ({ episode, current, inline, ActionBar }) => {
+const SeriesNavTile = ({
+  episode,
+  current,
+  inline,
+  ActionBar,
+  Link,
+  PayNote
+}) => {
   const [colorScheme] = useColorContext()
   const localColors = current
     ? {
@@ -57,7 +64,9 @@ const SeriesNavTile = ({ episode, current, inline, ActionBar }) => {
       }
     : { light: {}, dark: {} }
   const inactiveTile =
-    !current && (!episode.document.meta.path || !episode.isReadable)
+    !PayNote &&
+    !current &&
+    (!episode?.document?.meta?.path || !episode.isReadable)
 
   return (
     <div
@@ -74,12 +83,17 @@ const SeriesNavTile = ({ episode, current, inline, ActionBar }) => {
         )}
       >
         <ColorContextLocalExtension localColors={localColors}>
-          <SeriesNavTileContent
-            inline={inline}
-            episode={episode}
-            current={current}
-            ActionBar={ActionBar}
-          />
+          {PayNote ? (
+            <PayNote />
+          ) : (
+            <SeriesNavTileContent
+              inline={inline}
+              episode={episode}
+              current={current}
+              ActionBar={ActionBar}
+              Link={Link}
+            />
+          )}
         </ColorContextLocalExtension>
       </div>
     </div>

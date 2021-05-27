@@ -188,7 +188,6 @@ Von [Franz Kafka](<>) (Text) und [Everett Collection](<>) (Bilder), 13. Juli 201
 `}</Markdown>
 ```
 
-
 ## Figure
 
 ```react|noSource
@@ -955,7 +954,7 @@ Note: collections at the end of a document do not get a `progressId` to avoid �
 
 <section><h6>ARTICLECOLLECTION</h6>
 
-## 
+##
 
 <section><h6>TEASERGROUP</h6>
 
@@ -985,7 +984,7 @@ Note: collections at the end of a document do not get a `progressId` to avoid �
 
 # Unser doppeltes Klimadilemma
 
-## 
+##
 
 #### Weshalb es auch für die kleine Schweiz von grossem Interesse sein sollte, den Klimawandel zu bremsen.
 
@@ -1001,7 +1000,7 @@ Damit das Layout nun nicht nackt im Raume steht und sich klein und leer vorkommt
 
 <section><h6>ARTICLECOLLECTION</h6>
 
-## 
+##
 
 <section><h6>TEASERGROUP</h6>
 
@@ -1026,11 +1025,11 @@ Damit das Layout nun nicht nackt im Raume steht und sich klein und leer vorkommt
 }
 \`\`\`
 
-###### 
+######
 
 # Das Land, wo bald die Zitronen blühn
 
-## 
+##
 
 #### Die Schweiz wird zu einem mediterranen Land. Für die Landwirtschaft ein Glück: Es werden Melonen, Reis und Topweine wachsen. Aber sind die Bauern bereit?
 
@@ -1079,7 +1078,6 @@ Von [Barbara Villiger Heilig](/~5f45d6a3-ff52-4e67-9925-92447f43d2e1 "Barbara Vi
 
 `}</Markdown>
 ```
-
 
 ### Carousel
 
@@ -1131,11 +1129,11 @@ Der Nahe Osten ist eine geographische Bezeichnung, die heute im Allgemeinen für
 
 ![](/static/brigitte_meyer.jpg?size=1000x1000)
 
-###### 
+######
 
 # Mara
 
-## 
+##
 
 #### Die weitsichtige Bildchefin
 
@@ -1163,11 +1161,11 @@ Der Nahe Osten ist eine geographische Bezeichnung, die heute im Allgemeinen für
 
 ![](/static/christof_moser.jpg?size=500x500)
 
-###### 
+######
 
 # Tarek
 
-## 
+##
 
 #### Der bittersüsse Chefredaktor
 
@@ -1183,5 +1181,33 @@ Reise planen: Flug mit einer Dauer von rund 4 Stunden.
 
 <hr /></section>
 
+`}</Markdown>
+```
+
+### Series Navigation
+
+```react|noSource
+<Markdown schema={schema} rootData={{
+  document
+}}>{`
+<section><h6>SERIES_NAV</h6>
+
+<hr /></section>
+`}</Markdown>
+```
+
+```react|noSource
+<Markdown schema={schema} rootData={{
+  document
+}}>{`
+<section><h6>SERIES_NAV</h6>
+
+\`\`\`
+{
+  "inline": true,
+}
+\`\`\`
+
+<hr /></section>
 `}</Markdown>
 ```

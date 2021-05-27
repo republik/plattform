@@ -17,6 +17,7 @@
       </span>
       )
     }
+    PayNote={TestPayNote}
   />
 ```
 
@@ -26,5 +27,6 @@ Inline
   <SeriesNav
     document={document}
     inline={true}
+    PayNote={TestPayNote}
   />
 ```

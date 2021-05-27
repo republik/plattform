@@ -26,7 +26,6 @@ const Grid = ({ initialScrollTile, height, children }) => {
     }
     const scroller = overflow.current
     const target = Array.from(scroller.children)[initialScrollTile]
-    console.log(overflow.current)
     scrollIntoView(target, {
       time: 400,
       top: 0,

@@ -1,13 +1,15 @@
 import React from 'react'
 import { css } from 'glamor'
 import { mUp } from '../../theme/mediaQueries'
+import PropTypes from 'prop-types'
 import {
   TeaserCarousel,
   TeaserCarouselTileContainer
 } from '../../components/TeaserCarousel'
 import SeriesNavTile from './SeriesNavTile'
 import { useColorContext } from '../Colors/useColorContext'
-import { plainButtonRule } from '../Button'
+
+const DEFAULT_PAYNOTE_INDEX = 2
 
 const styles = {
   hline: css({
@@ -21,12 +23,29 @@ const styles = {
   })
 }
 
-function SeriesNav({ document, inline, ActionBar, height }) {
+function SeriesNav({ document, inline, height, ActionBar, Link, PayNote }) {
   const [colorScheme] = useColorContext()
 
+  // case if no document.id is present
   const currentTile = document.meta.series.episodes.filter(
     episode => episode?.document.id === document?.id
   )[0]
+
+  const payNote = { isPayNote: true }
+
+  const episodes =
+    PayNote && !inline
+      ? [
+          ...document.meta.series.episodes.slice(
+            0,
+            currentTile ? currentTile.document.id : DEFAULT_PAYNOTE_INDEX
+          ),
+          payNote,
+          ...document.meta.series.episodes.slice(
+            currentTile ? currentTile.document.id : DEFAULT_PAYNOTE_INDEX
+          )
+        ]
+      : [...document.meta.series.episodes]
 
   return (
     <>
@@ -44,27 +63,47 @@ function SeriesNav({ document, inline, ActionBar, height }) {
       <TeaserCarousel grid={!inline}>
         <TeaserCarouselTileContainer
           height={height}
-          initialScrollTile={currentTile.document.id}
+          initialScrollTile={currentTile?.document?.id}
         >
-          {document.meta.series.episodes.map(episode => (
-            <SeriesNavTile
-              key={episode.title}
-              current={document?.id === episode?.document.id}
-              episode={episode}
-              inline={inline}
-              ActionBar={ActionBar}
-            />
-          ))}
+          {episodes.map(episode => {
+            return (
+              <SeriesNavTile
+                key={episode.title}
+                PayNote={episode.isPayNote && PayNote}
+                current={document?.id === episode?.document?.id}
+                episode={episode}
+                inline={inline}
+                ActionBar={ActionBar}
+                Link={Link}
+              />
+            )
+          })}
         </TeaserCarouselTileContainer>
       </TeaserCarousel>
+
       {inline ? (
-        <hr {...styles.hline} {...colorScheme.set('borderColor', 'divider')} />
+        <>
+          <hr
+            {...styles.hline}
+            {...colorScheme.set('borderColor', 'divider')}
+          />
+          {PayNote && <PayNote />}
+        </>
       ) : null}
     </>
   )
 }
 
 const WrappedSeriesNav = props => <SeriesNav {...props} />
+
+SeriesNav.propTypes = {
+  document: PropTypes.object.isRequired,
+  ActionBar: PropTypes.func.isRequired,
+  Link: PropTypes.func.isRequired,
+  PayNote: PropTypes.func,
+  inline: PropTypes.bool,
+  height: PropTypes.number
+}
 
 export default WrappedSeriesNav
 

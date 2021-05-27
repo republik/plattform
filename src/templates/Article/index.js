@@ -687,6 +687,7 @@ const createSchema = ({
           },
           addProgressProps(base.centerFigure),
           teasers.carousel,
+          teasers.seriesNav,
           {
             matchMdast: () => false,
             editorModule: 'specialchars'

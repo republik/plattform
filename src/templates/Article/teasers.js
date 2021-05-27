@@ -46,6 +46,7 @@ import { subject } from '../Front'
 
 import { Breakout } from '../../components/Center'
 import RawHtml from '../../components/RawHtml'
+import { SeriesNav } from '../../components/SeriesNav'
 
 import * as Editorial from '../../components/Typography/Editorial'
 
@@ -517,8 +518,29 @@ const createTeasers = ({ t, Link, plattformUnauthorizedZoneText }) => {
     ]
   }
 
+  const seriesNav = {
+    matchMdast: matchZone('SERIES_NAV'),
+    component: ({ ...props }) => {
+      return <SeriesNav {...props} Link={Link} />
+    },
+    props: (node, index, parent, { ancestors }) => {
+      const root = ancestors[ancestors.length - 1]
+      console.log(node, index, parent, root)
+      return {
+        document: root.document,
+        inline: root.inline,
+        ActionBar: () => null,
+        PayNote: () => null
+      }
+    },
+    rules: [],
+    editorModule: 'seriesNav',
+    isVoid: true
+  }
+
   return {
     carousel,
+    seriesNav,
     articleCollection: {
       matchMdast: matchZone('ARTICLECOLLECTION'),
       component: ({

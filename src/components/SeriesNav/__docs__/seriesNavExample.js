@@ -1,3 +1,6 @@
+import React from 'react'
+import { useColorContext } from '../../Colors/useColorContext'
+
 export const document = {
   id: 3,
   meta: {
@@ -89,4 +92,13 @@ export const document = {
       ]
     }
   }
+}
+
+export const TestPayNote = () => {
+  const [colorScheme] = useColorContext()
+  return (
+    <div {...colorScheme.set('backgroundColor', 'default')}>
+      <p {...colorScheme.set('color', 'text')}>Paynote</p>
+    </div>
+  )
 }

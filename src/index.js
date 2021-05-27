@@ -734,6 +734,7 @@ const Styleguide = () => {
                         schema: require('./templates/Article').default({
                           t
                         }),
+                        ...require('./components/SeriesNav/__docs__'),
                         ...require('./templates/docs'),
                         renderMdast: require('mdast-react-render').renderMdast
                       },
