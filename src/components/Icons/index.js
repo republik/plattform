@@ -88,6 +88,7 @@ export { IoLogoFacebook as FacebookIcon } from '@react-icons/all-files/io/IoLogo
 export { AiFillInstagram as InstagramIcon } from '@react-icons/all-files/ai/AiFillInstagram'
 export { FaTelegramPlane as TelegramIcon } from '@react-icons/all-files/fa/FaTelegramPlane'
 export { SiThreema as ThreemaIcon } from '@react-icons/all-files/si/SiThreema'
+export { DiOpensource as OpenSourceIcon } from '@react-icons/all-files/di/DiOpensource'
 
 export { ShareIcon } from './CustomIcons/ShareIcon'
 export { MarkdownIcon } from './CustomIcons/MarkdownIcon'

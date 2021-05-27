@@ -85,6 +85,7 @@ export { CheckCircleIcon } from './components/Icons'
 export { TelegramIcon } from './components/Icons'
 export { ThreemaIcon } from './components/Icons'
 export { LockIcon } from './components/Icons'
+export { OpenSourceIcon } from './components/Icons'
 
 // Publikator
 // export { BoldIcon } from './components/Icons'
