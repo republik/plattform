@@ -1,9 +1,8 @@
 Guten Tag
 
 Wir haben Ihre Mitgliedschaft automatisch um ein weiteres Jahr verlängert und
-dafür Ihre {{autopay_card_brand}}-Kreditkarte mit den Endziffern
-{{autopay_card_last4}} mit {{autopay_total}} belastet. Wir bedanken uns für Ihre
-Treue und Ihr Vertrauen.
+dafür Ihre {{autopay_card_brand}} mit den Endziffern {{autopay_card_last4}} mit
+{{autopay_total}} belastet. Wir bedanken uns für Ihre Treue und Ihr Vertrauen.
 
 Ihre Mitgliedschaft läuft neu bis zum {{prolonged_end_date}}.
 

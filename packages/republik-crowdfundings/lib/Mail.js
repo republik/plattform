@@ -530,7 +530,10 @@ mail.prepareMembershipOwnerNotice = async (
       autoPay &&
         autoPay.card && {
           name: 'autopay_card_brand',
-          content: autoPay.card.brand,
+          content: t.first([
+            `api/email/card/${autoPay.card.brand}`,
+            `api/email/card`,
+          ]),
         },
       autoPay &&
         autoPay.card && {
@@ -596,7 +599,10 @@ mail.sendMembershipOwnerAutoPay = async ({ autoPay, payload, pgdb, t }) => {
         },
         autoPay.card && {
           name: 'autopay_card_brand',
-          content: autoPay.card.brand,
+          content: t.first([
+            `api/email/card/${autoPay.card.brand}`,
+            `api/email/card`,
+          ]),
         },
         autoPay.card && {
           name: 'autopay_card_last4',
