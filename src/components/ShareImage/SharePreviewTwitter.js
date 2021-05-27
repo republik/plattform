@@ -4,7 +4,9 @@ import { css } from 'glamor'
 export const imageStyle = css({
   borderTopLeftRadius: 15,
   borderTopRightRadius: 15,
-  border: '1px solid rgb(204, 214, 221)'
+  // boxshadow of image is 2x that of text container beacuse
+  // a scale 0.5 is applied on it.
+  boxShadow: '0px 0px 2px 2px rgb(204, 214, 221)'
 })
 
 const styles = {
@@ -15,8 +17,7 @@ const styles = {
     width: 600,
     borderBottomRightRadius: 15,
     borderBottomLeftRadius: 15,
-    border: '1px solid rgb(204, 214, 221)',
-    borderTop: 'none',
+    boxShadow: '0px 0px 1px 1px rgb(204, 214, 221)',
     padding: '10.5px 14px',
     fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif',
     maxHeight: 120,

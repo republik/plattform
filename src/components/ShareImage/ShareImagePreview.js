@@ -1,12 +1,14 @@
-import React from 'react'
+import React, { useRef, useEffect, useState } from 'react'
 import { css } from 'glamor'
 import { fontStyles } from '../../theme/fonts'
 import { imageStyle } from './SharePreviewTwitter'
+import { Label } from '../Typography'
 import colors from '../../theme/colors'
 import { PLACEHOLDER_TEXT } from './index'
 
 export const SHARE_IMAGE_WIDTH = 1200
 export const SHARE_IMAGE_HEIGHT = 628
+export const SHARE_IMAGE_PADDING = 48
 
 export const socialPreviewStyles = {
   twitter: imageStyle
@@ -21,8 +23,9 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    padding: 48,
-    overflow: 'hidden'
+    padding: SHARE_IMAGE_PADDING,
+    overflow: 'hidden',
+    wordWrap: 'break-word'
   }),
   containerHalfSize: css({
     transform: `scale(${0.5})`,
@@ -34,9 +37,10 @@ const styles = {
   }),
   textContainer: css({
     width: '100%',
+    maxHeight: SHARE_IMAGE_HEIGHT - 2 * SHARE_IMAGE_PADDING,
+    overflow: 'hidden',
     whiteSpace: 'pre-wrap',
     textAlign: 'center',
-    ...fontStyles.serifTitle,
     zIndex: 1
   }),
   formatTitle: css({
@@ -50,7 +54,8 @@ const styles = {
   formatImage: css({
     height: 260,
     zIndex: 1
-  })
+  }),
+  errorLabel: css({})
 }
 
 const formatFonts = {
@@ -67,7 +72,7 @@ const shareImageJustify = {
 export const SHARE_IMAGE_DEFAULTS = {
   customFontStyle: 'serifTitle',
   textPosition: 'bottom',
-  fontSize: 60
+  fontSize: 56
 }
 
 const ShareImagePreview = ({
@@ -78,7 +83,7 @@ const ShareImagePreview = ({
   fontSize,
   textPosition
 }) => {
-  const fontStyle = fontStyles[formatFonts[format?.kind] || 'editorial']
+  const fontStyle = fontStyles[formatFonts[format?.kind] || 'serifTitle']
   const shareImage =
     format?.shareBackgroundImage &&
     (inverted
@@ -88,51 +93,93 @@ const ShareImagePreview = ({
   const formatColor = format?.color || colors[format?.kind]
   const socialPreview = socialPreviewStyles[preview]
 
+  const [reservedVerticalSpace, setReservedVerticalSpace] = useState(0)
+  const [textContainerOverflow, setTextContainerOverflow] = useState(false)
+  const formatImageRef = useRef()
+  const formatTitleRef = useRef()
+  const textContainerRef = useRef()
+
+  useEffect(() => {
+    const formatImageHeight = format?.image
+      ? formatImageRef.current.clientHeight
+      : 0
+    const formatTitleHeight = format?.title
+      ? formatTitleRef.current.clientHeight
+      : 0
+    setReservedVerticalSpace(formatImageHeight + formatTitleHeight)
+  }, [format])
+
+  useEffect(() => {
+    setTextContainerOverflow(
+      textContainerRef.current.scrollHeight >
+        textContainerRef.current.clientHeight
+    )
+  }, [text, fontSize])
+
   return (
-    <div
-      {...styles.container}
-      {...(preview && styles.containerHalfSize)}
-      {...socialPreview}
-      {...(shareImage && styles.kolumnenContainer)}
-      style={{
-        backgroundImage: shareImage && `url(${shareImage})`,
-        backgroundSize: 'cover',
-        backgroundColor: inverted ? formatColor : '#FFF',
-        justifyContent:
-          (shareImage &&
-            shareImageJustify[
-              textPosition || SHARE_IMAGE_DEFAULTS.textPosition
-            ]) ||
-          'center',
-        borderWidth: socialPreview ? 2 : 0
-      }}
-    >
-      {format?.image && !shareImage && (
-        <img {...styles.formatImage} src={format?.image} />
-      )}
-      {format?.title && (
-        <div
-          {...styles.formatTitle}
-          style={{
-            color: inverted ? '#FFF' : formatColor,
-            width: shareImage && '80%'
-          }}
-        >
-          {format.title}
-        </div>
-      )}
+    <>
+      {preview && textContainerOverflow ? (
+        <Label>
+          Der Text ist zu gross. Reduziere Schriftgrösse oder Anzahl Zeilen.
+        </Label>
+      ) : null}
       <div
-        {...styles.textContainer}
+        {...styles.container}
+        {...(preview && styles.containerHalfSize)}
+        {...socialPreview}
+        {...(shareImage && styles.kolumnenContainer)}
         style={{
-          ...fontStyle,
-          fontSize: fontSize || SHARE_IMAGE_DEFAULTS.fontSize,
-          color: inverted ? '#FFF' : '#000',
-          width: shareImage && '80%'
+          backgroundImage: shareImage && `url(${shareImage})`,
+          backgroundSize: 'cover',
+          backgroundColor: inverted ? formatColor : '#FFF',
+          justifyContent:
+            (shareImage &&
+              shareImageJustify[
+                textPosition || SHARE_IMAGE_DEFAULTS.textPosition
+              ]) ||
+            'center'
         }}
       >
-        {displayedText}
+        {format?.image && !shareImage && (
+          <img
+            ref={formatImageRef}
+            {...styles.formatImage}
+            src={format?.image}
+          />
+        )}
+        {format?.title && (
+          <div
+            ref={formatTitleRef}
+            {...styles.formatTitle}
+            style={{
+              color: inverted ? '#FFF' : formatColor,
+              width: shareImage && '80%'
+            }}
+          >
+            {format.title}
+          </div>
+        )}
+        <div
+          {...styles.textContainer}
+          ref={textContainerRef}
+          style={{
+            ...fontStyle,
+            fontSize: fontSize || SHARE_IMAGE_DEFAULTS.fontSize,
+            color: inverted ? '#FFF' : '#000',
+            width: shareImage && '80%',
+            lineHeight: 1.25,
+            border:
+              preview && textContainerOverflow ? '1px dotted red' : 'none',
+            maxHeight:
+              SHARE_IMAGE_HEIGHT -
+              2 * SHARE_IMAGE_PADDING -
+              reservedVerticalSpace
+          }}
+        >
+          {displayedText}
+        </div>
       </div>
-    </div>
+    </>
   )
 }
 

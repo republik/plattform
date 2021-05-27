@@ -58,3 +58,16 @@ test('calculateAxis with two decimal digit ticks', assert => {
   )
   assert.end()
 })
+
+test('thousand separator', assert => {
+  const axis = calculateAxis('s', tLabel, [-10000, 10000], 'Gini-Koeffizient', {
+    ticks: []
+  })
+
+  assert.equal(axis.format(-1000), '-1000', 'format without thousand separator')
+  assert.equal(axis.format(1000), '1000', 'format without thousand separator')
+
+  assert.equal(axis.format(-10000), '-10’000', 'format with thousand separator')
+  assert.equal(axis.format(10000), '10’000', 'format with thousand separator')
+  assert.end()
+})

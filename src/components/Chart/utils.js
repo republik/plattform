@@ -73,7 +73,7 @@ const sFormat = (tLabel, precision = 4, pow, type = 'r') => {
   const numberFormat4 = swissNumbers.format('d')
   const numberFormat5 = swissNumbers.format(',d')
   const numberFormat = value => {
-    if (String(Math.round(value)).length > 4) {
+    if (String(Math.abs(Math.round(value))).length > 4) {
       return numberFormat5(value)
     }
     return numberFormat4(value)
@@ -82,7 +82,7 @@ const sFormat = (tLabel, precision = 4, pow, type = 'r') => {
   const numberFormatWithSuffix4 = swissNumbers.format(`.${precision}${type}`)
   const numberFormatWithSuffix5 = swissNumbers.format(`,.${precision}${type}`)
   const numberFormatWithSuffix = value => {
-    if (String(Math.round(value)).length > 4) {
+    if (String(Math.abs(Math.round(value))).length > 4) {
       return numberFormatWithSuffix5(value)
     }
     return numberFormatWithSuffix4(value)
@@ -107,7 +107,7 @@ export const getFormat = (numberFormat, tLabel) => {
     specifier.comma = false
     const numberFormat4 = swissNumbers.format(specifier)
     return value => {
-      if (String(Math.round(value)).length > 4) {
+      if (String(Math.abs(Math.round(value))).length > 4) {
         return numberFormat5(value)
       }
       return numberFormat4(value)

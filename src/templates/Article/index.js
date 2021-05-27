@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 
 import Container from './Container'
 import Center from '../../components/Center'
@@ -38,6 +38,7 @@ import createBase from './base'
 import createBlocks from './blocks'
 import createTeasers from './teasers'
 import createDynamicComponent from './dynamicComponent'
+import TeaserEmbedComment from '../../components/TeaserEmbedComment'
 
 const getProgressId = (node, index, parent, { ancestors }) => {
   if (parent.identifier === 'CENTER') {
@@ -97,6 +98,8 @@ export const DYNAMICCOMPONENT_TYPE = 'DYNAMICCOMPONENT'
 
 const mdastPlaceholder = '\u2063'
 const DefaultLink = ({ children }) => children
+
+const withData = Component => props => <Component {...props} data={{}} />
 
 const createSchema = ({
   documentEditorOptions = { skipCredits: false },
@@ -166,7 +169,9 @@ const createSchema = ({
   metaBody = false,
   metaHeadlines = false,
   skipContainer = false,
-  skipCenter = false
+  skipCenter = false,
+  withCommentData = withData,
+  CommentLink = DefaultLink
 } = {}) => {
   const base = createBase({ metaBody, metaHeadlines })
   const blocks = createBlocks({
@@ -188,6 +193,20 @@ const createSchema = ({
     insertButtonText: 'Dynamic Component',
     type: DYNAMICCOMPONENT_TYPE
   })
+
+  const TeaserEmbedCommentWithLiveData = withCommentData(TeaserEmbedComment)
+  const TeaserEmbedCommentSwitch = props => {
+    const [isMounted, setIsMounted] = useState()
+    useEffect(() => {
+      setIsMounted(true)
+    }, [])
+
+    const Embed = isMounted
+      ? TeaserEmbedCommentWithLiveData
+      : TeaserEmbedComment
+
+    return <Embed {...props} t={t} Link={CommentLink} />
+  }
 
   return {
     repoPrefix,
@@ -511,6 +530,21 @@ const createSchema = ({
                       props: { size: 'tiny' }
                     }
                   ]
+                },
+                isVoid: true
+              },
+              {
+                matchMdast: matchZone('EMBEDCOMMENT'),
+                props: node => ({
+                  data: {
+                    ...node.data,
+                    url: node.children[0].children[0].url
+                  }
+                }),
+                component: TeaserEmbedCommentSwitch,
+                editorModule: 'embedComment',
+                editorOptions: {
+                  lookupType: 'PARAGRAPH'
                 },
                 isVoid: true
               },

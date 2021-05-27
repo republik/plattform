@@ -262,11 +262,11 @@ const BarChart = props => {
         height: style.height,
         segments: barSegments,
         first,
-        max: barSegments.reduce(
+        sumPositiv: barSegments.reduce(
           (sum, segment) => sum + Math.max(0, segment.value),
           0
         ),
-        min: barSegments.reduce(
+        sumNegative: barSegments.reduce(
           (sum, segment) => sum + Math.min(0, segment.value),
           0
         )
@@ -276,8 +276,8 @@ const BarChart = props => {
     return {
       title,
       bars,
-      max: max(bars, bar => bar.max),
-      min: min(bars, bar => bar.min),
+      maxPositiv: max(bars, bar => bar.sumPositiv),
+      minNegative: min(bars, bar => bar.sumNegative),
       height: gY,
       firstBarY
     }
@@ -285,8 +285,14 @@ const BarChart = props => {
 
   // setup x scale
   const xDomain = props.domain || [
-    Math.min(0, min(groupedData.map(d => d.min).concat(props.xTicks || []))),
-    Math.max(0, max(groupedData.map(d => d.max).concat(props.xTicks || [])))
+    Math.min(
+      0,
+      min(groupedData.map(d => d.minNegative).concat(props.xTicks || []))
+    ),
+    Math.max(
+      0,
+      max(groupedData.map(d => d.maxPositiv).concat(props.xTicks || []))
+    )
   ]
   const x = scaleLinear()
     .domain(xDomain)
@@ -305,23 +311,37 @@ const BarChart = props => {
     }
   )
 
+  const xTicks = props.xTicks || (showBarValues ? [] : xAxis.ticks)
+  const hasXTicks = !inlineValue && !!xTicks.length
+
+  const xZero = x(0)
+  const xLastTick = hasXTicks && x(xTicks[xTicks.length - 1])
+
   // stack bars
   groupedData.forEach(group => {
     group.bars.forEach(bar => {
-      const xZero = x(0)
-      let xPosPositiv = xZero
-      let xPosNegativ = xZero
+      let xPosPositive = xZero
+      let xPosNegative = xZero
       bar.segments.forEach((d, i) => {
         d.color = color(colorAccessor(d))
         const size = x(d.value) - xZero
-        d.x = size > 0 ? Math.floor(xPosPositiv) : Math.ceil(xPosNegativ + size)
+        d.x =
+          size > 0 ? Math.floor(xPosPositive) : Math.floor(xPosNegative + size)
 
-        d.width =
-          Math.ceil(Math.abs(size)) + (size && last(bar.segments, i) ? 1 : 0)
+        d.width = Math.ceil(Math.abs(size))
+        // snap last to last xTick if within one pixel
+        if (
+          xLastTick &&
+          last(bar.segments, i) &&
+          Math.abs(xLastTick - d.x - d.width) === 1
+        ) {
+          d.width += xLastTick - d.x - d.width
+        }
+
         if (size > 0) {
-          xPosPositiv += size
+          xPosPositive += size
         } else {
-          xPosNegativ += size
+          xPosNegative += size
         }
         const isLast = last(bar.segments, i)
         d.valueTextStartAnchor =
@@ -365,11 +385,10 @@ const BarChart = props => {
           d.iXOffset = d.width / 2
         }
       })
+      bar.xPosPositive = xPosPositive
+      bar.xPosNegative = xPosNegative
     })
   })
-
-  const xTicks = props.xTicks || (showBarValues ? [] : xAxis.ticks)
-  const hasXTicks = !inlineValue && !!xTicks.length
 
   const isLollipop = props.barStyle === 'lollipop'
 
@@ -453,6 +472,8 @@ const BarChart = props => {
               </text>
               {group.bars.map(bar => {
                 const href = bar.first.datum[link]
+                const hasNegativeValues = bar.xPosNegative !== xZero
+                const hasPositiveValues = bar.xPosPositive !== xZero
                 let barLabel = (
                   <text
                     {...styles.barLabel}
@@ -460,8 +481,23 @@ const BarChart = props => {
                     {...(href && barLabelLinkHoverRule)}
                     y={bar.labelY}
                     dy='0.9em'
-                    x={x(0) + (highlightZero ? (bar.max <= 0 ? -2 : 2) : 0)}
-                    textAnchor={bar.max <= 0 ? 'end' : 'start'}
+                    x={
+                      x(0) +
+                      (highlightZero
+                        ? hasPositiveValues && hasNegativeValues
+                          ? 0
+                          : hasPositiveValues
+                          ? 2
+                          : -2
+                        : 0)
+                    }
+                    textAnchor={
+                      hasPositiveValues && hasNegativeValues
+                        ? 'middle'
+                        : hasPositiveValues
+                        ? 'start'
+                        : 'end'
+                    }
                   >
                     {subsup.svg(bar.first.label)}
                   </text>
@@ -471,137 +507,145 @@ const BarChart = props => {
                   // eslint-disable-next-line jsx-a11y/anchor-is-valid
                   barLabel = <a xlinkHref={href}>{barLabel}</a>
                 }
-                const segments = bar.segments.map(segment => ({
-                  data: segment,
-                  Component: () => (
-                    <g transform={`translate(0,${bar.y})`}>
-                      <rect
-                        x={segment.x}
-                        {...colorScheme.set('fill', segment.color, 'charts')}
-                        width={segment.width}
-                        height={bar.height}
-                      />
-                      {(inlineValue || inlineLabel) && (
-                        <Fragment>
-                          <text
-                            {...styles.inlineLabel}
-                            x={segment.x + segment.iXOffset}
-                            y={bar.style.inlineTop}
-                            dy='1em'
-                            fontSize={bar.style.fontSize}
-                            {...colorScheme.set(
-                              'fill',
-                              segment.shiftInlineText
-                                ? 'text'
-                                : getTextColor(segment.color)
-                            )}
-                            textAnchor={segment.iTextAnchor}
-                          >
-                            {subsup.svg(segment.inlineLabel)}
-                          </text>
-                          {inlineSecondaryLabel && (
-                            <text
-                              {...styles.inlineLabel}
-                              x={segment.x + segment.iXOffset}
-                              y={bar.style.inlineTop + bar.style.fontSize + 5}
-                              dy='1em'
-                              fontSize={bar.style.secondaryFontSize}
-                              {...colorScheme.set(
-                                'fill',
-                                segment.shiftInlineText
-                                  ? 'text'
-                                  : getTextColor(segment.color)
-                              )}
-                              textAnchor={segment.iTextAnchor}
-                            >
-                              {subsup.svg(segment.datum[inlineSecondaryLabel])}
-                            </text>
-                          )}
-                        </Fragment>
-                      )}
-                      {isLollipop && band && (
-                        <rect
-                          rx={bar.style.popHeight / 2}
-                          ry={bar.style.popHeight / 2}
-                          x={x(+segment.datum[`${band}_lower`])}
-                          y={bar.height / 2 - bar.style.popHeight / 2}
-                          width={
-                            x(+segment.datum[`${band}_upper`]) -
-                            x(+segment.datum[`${band}_lower`])
-                          }
-                          {...colorScheme.set('fill', segment.color, 'charts')}
-                          height={bar.style.popHeight}
-                          fillOpacity='0.3'
-                        />
-                      )}
-                      {isLollipop && (
-                        <circle
-                          cx={
-                            segment.x +
-                            (segment.value >= 0 ? segment.width - 1 : 0)
-                          }
-                          cy={bar.height / 2}
-                          r={
-                            Math.floor(
-                              bar.style.popHeight - bar.style.stroke / 2
-                            ) / 2
-                          }
-                          {...colorScheme.set('fill', 'textInverted')}
-                          {...colorScheme.set(
-                            'stroke',
-                            segment.color,
-                            'charts'
-                          )}
-                          strokeWidth={bar.style.stroke}
-                        />
-                      )}
-                      {showBarValues && (
-                        <text
-                          {...styles.barLabel}
-                          {...colorScheme.set('fill', 'text')}
-                          x={
-                            segment.valueTextStartAnchor
-                              ? segment.x +
-                                segment.width +
-                                4 +
-                                (isLollipop ? 8 : 0)
-                              : segment.x +
-                                (segment.value >= 0 ? segment.width : 0) -
-                                4 -
-                                (isLollipop ? 8 : 0)
-                          }
-                          textAnchor={
-                            segment.valueTextStartAnchor ? 'start' : 'end'
-                          }
-                          y={bar.height / 2}
-                          dy='.35em'
-                        >
-                          {xAxis.format(segment.value)}
-                        </text>
-                      )}
-                    </g>
-                  )
-                }))
 
                 return (
                   <g key={`bar${bar.y}`}>
                     {barLabel}
-                    {segments
+                    {bar.segments
                       .sort((a, b) => {
                         if (
                           !inlineLabel ||
-                          (a.data.datum[inlineLabel] &&
-                            b.data.datum[inlineLabel]) ||
-                          (!a.data.datum[inlineLabel] &&
-                            !b.data.datum[inlineLabel])
+                          (a.datum[inlineLabel] && b.datum[inlineLabel]) ||
+                          (!a.datum[inlineLabel] && !b.datum[inlineLabel])
                         ) {
                           return 0
                         }
-                        return a.data.datum[inlineLabel] ? 1 : -1
+                        return a.datum[inlineLabel] ? 1 : -1
                       })
                       .map((segment, i) => (
-                        <segment.Component key={`seg${i}`} />
+                        <g key={`seg${i}`} transform={`translate(0,${bar.y})`}>
+                          <rect
+                            x={segment.x}
+                            {...colorScheme.set(
+                              'fill',
+                              segment.color,
+                              'charts'
+                            )}
+                            width={segment.width}
+                            height={bar.height}
+                          />
+                          {(inlineValue || inlineLabel) && (
+                            <Fragment>
+                              <text
+                                {...styles.inlineLabel}
+                                x={segment.x + segment.iXOffset}
+                                y={bar.style.inlineTop}
+                                dy='1em'
+                                fontSize={bar.style.fontSize}
+                                {...colorScheme.set(
+                                  'fill',
+                                  segment.shiftInlineText
+                                    ? 'text'
+                                    : getTextColor(segment.color)
+                                )}
+                                textAnchor={segment.iTextAnchor}
+                              >
+                                {subsup.svg(segment.inlineLabel)}
+                              </text>
+                              {inlineSecondaryLabel && (
+                                <text
+                                  {...styles.inlineLabel}
+                                  x={segment.x + segment.iXOffset}
+                                  y={
+                                    bar.style.inlineTop + bar.style.fontSize + 5
+                                  }
+                                  dy='1em'
+                                  fontSize={bar.style.secondaryFontSize}
+                                  {...colorScheme.set(
+                                    'fill',
+                                    segment.shiftInlineText
+                                      ? 'text'
+                                      : getTextColor(segment.color)
+                                  )}
+                                  textAnchor={segment.iTextAnchor}
+                                >
+                                  {subsup.svg(
+                                    segment.datum[inlineSecondaryLabel]
+                                  )}
+                                </text>
+                              )}
+                            </Fragment>
+                          )}
+                          {isLollipop && band && (
+                            <rect
+                              rx={bar.style.popHeight / 2}
+                              ry={bar.style.popHeight / 2}
+                              x={x(+segment.datum[`${band}_lower`])}
+                              y={bar.height / 2 - bar.style.popHeight / 2}
+                              width={
+                                x(+segment.datum[`${band}_upper`]) -
+                                x(+segment.datum[`${band}_lower`])
+                              }
+                              {...colorScheme.set(
+                                'fill',
+                                segment.color,
+                                'charts'
+                              )}
+                              height={bar.style.popHeight}
+                              fillOpacity='0.3'
+                            />
+                          )}
+                          {isLollipop && (
+                            <circle
+                              cx={
+                                segment.x +
+                                (segment.value >= 0 ? segment.width - 1 : 0)
+                              }
+                              cy={bar.height / 2}
+                              r={
+                                Math.floor(
+                                  bar.style.popHeight - bar.style.stroke / 2
+                                ) / 2
+                              }
+                              {...colorScheme.set('fill', 'textInverted')}
+                              {...colorScheme.set(
+                                'stroke',
+                                segment.color,
+                                'charts'
+                              )}
+                              strokeWidth={bar.style.stroke}
+                            />
+                          )}
+                        </g>
                       ))}
+                    {showBarValues && (
+                      <>
+                        {bar.sumNegative && (
+                          <text
+                            {...styles.barLabel}
+                            {...colorScheme.set('fill', 'text')}
+                            x={bar.xPosNegative - 6 - (isLollipop ? 8 : 0)}
+                            textAnchor='end'
+                            y={bar.y + bar.height / 2}
+                            dy='.35em'
+                          >
+                            {xAxis.format(bar.sumNegative)}
+                          </text>
+                        )}
+                        {bar.sumPositiv && (
+                          <text
+                            {...styles.barLabel}
+                            {...colorScheme.set('fill', 'text')}
+                            x={bar.xPosPositive + 6 + (isLollipop ? 8 : 0)}
+                            textAnchor='start'
+                            y={bar.y + bar.height / 2}
+                            dy='.35em'
+                          >
+                            {xAxis.format(bar.sumPositiv)}
+                          </text>
+                        )}
+                      </>
+                    )}
                   </g>
                 )
               })}

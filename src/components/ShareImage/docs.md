@@ -40,7 +40,7 @@ Supported props:
 ```react
 <div>
   <ShareImagePreview
-    fontSize={60}
+    fontSize={56}
     text='Am helllichten Tag'
     textPosition='bottom'
     format={{ 
@@ -85,7 +85,7 @@ Supported props:
 
 ```react
 state: { 
-  fontSize: 60,
+  fontSize: 56,
   inverted: false,
   text: 'Alle meine Ente'
 }
@@ -94,7 +94,7 @@ state: {
   <ShareImageGenerator
     fontSize={state.fontSize}
     onFontSizeChange={(e, value) => setState({ fontSize: Number(value) || '' })}
-    onFontSizeInc={(e, value) => setState({ fontSize: (state.fontSize || 60) + 1})}
+    onFontSizeInc={(e, value) => setState({ fontSize: (state.fontSize || 56) + 1})}
     onFontSizeDec={(e, value) => setState({ fontSize: Math.max(state.fontSize - 1, 0)})}
     inverted={state.inverted}
     onInvertedChange={(e, value) => setState({ inverted: value })}
@@ -113,7 +113,7 @@ state: {
 ## Editorial
 ```react
 state: { 
-  fontSize: 60,
+  fontSize: 56,
   inverted: false,
   text: '',
   format: { 
@@ -125,7 +125,7 @@ state: {
   <ShareImageGenerator
     fontSize={state.fontSize}
     onFontSizeChange={(e, value) => setState({ fontSize: Number(value) || '' })}
-    onFontSizeInc={(e, value) => setState({ fontSize: (state.fontSize || 60) + 1})}
+    onFontSizeInc={(e, value) => setState({ fontSize: (state.fontSize || 56) + 1})}
     onFontSizeDec={(e, value) => setState({ fontSize: Math.max(state.fontSize - 1, 0)})}
     inverted={state.inverted}
     onInvertedChange={(e, value) => setState({ inverted: value })}
@@ -146,7 +146,7 @@ state: {
 ## Meta
 ```react
 state: { 
-  fontSize: 60,
+  fontSize: 56,
   inverted: false,
   text: '',
   format: { 
@@ -165,7 +165,7 @@ state: {
   <ShareImageGenerator
     fontSize={state.fontSize}
     onFontSizeChange={(e, value) => setState({ fontSize: Number(value) || '' })}
-    onFontSizeInc={(e, value) => setState({ fontSize: (state.fontSize || 60) + 1})}
+    onFontSizeInc={(e, value) => setState({ fontSize: (state.fontSize || 56) + 1})}
     onFontSizeDec={(e, value) => setState({ fontSize: Math.max(state.fontSize - 1, 0)})}
     inverted={state.inverted}
     onInvertedChange={(e, value) => setState({ inverted: value })}
@@ -188,7 +188,7 @@ state: {
 
 ```react
 state: { 
-  fontSize: 60,
+  fontSize: 56,
   inverted: false,
   text: '',
   format: { 
@@ -206,7 +206,7 @@ state: {
   <ShareImageGenerator
     fontSize={state.fontSize}
     onFontSizeChange={(e, value) => setState({ fontSize: Number(value) || '' })}
-    onFontSizeInc={(e, value) => setState({ fontSize: (state.fontSize || 60) + 1})}
+    onFontSizeInc={(e, value) => setState({ fontSize: (state.fontSize || 56) + 1})}
     onFontSizeDec={(e, value) => setState({ fontSize: Math.max(state.fontSize - 1, 0)})}
     inverted={state.inverted}
     onInvertedChange={(e, value) => setState({ inverted: value })}
@@ -228,7 +228,7 @@ state: {
 
 ```react
 state: { 
-  fontSize: 60,
+  fontSize: 56,
   inverted: false,
   text: '',
   format: { 
@@ -247,7 +247,7 @@ state: {
   <ShareImageGenerator
     fontSize={state.fontSize}
     onFontSizeChange={(e, value) => setState({ fontSize: Number(value) || '' })}
-    onFontSizeInc={(e, value) => setState({ fontSize: (state.fontSize || 60) + 1})}
+    onFontSizeInc={(e, value) => setState({ fontSize: (state.fontSize || 56) + 1})}
     onFontSizeDec={(e, value) => setState({ fontSize: Math.max(state.fontSize - 1, 0)})}
     inverted={state.inverted}
     onInvertedChange={(e, value) => setState({ inverted: value })}
@@ -269,7 +269,7 @@ state: {
 
 ```react
 state: { 
-  fontSize: 60,
+  fontSize: 56,
   inverted: false,
   text: '',
   format: { 
@@ -287,7 +287,7 @@ state: {
   <ShareImageGenerator
     fontSize={state.fontSize}
     onFontSizeChange={(e, value) => setState({ fontSize: Number(value) || '' })}
-    onFontSizeInc={(e, value) => setState({ fontSize: (state.fontSize || 60) + 1})}
+    onFontSizeInc={(e, value) => setState({ fontSize: (state.fontSize || 56) + 1})}
     onFontSizeDec={(e, value) => setState({ fontSize: Math.max(state.fontSize - 1, 0)})}
     inverted={state.inverted}
     onInvertedChange={(e, value) => setState({ inverted: value })}
@@ -309,7 +309,7 @@ state: {
 
 ```react
 state: { 
-  fontSize: 60,
+  fontSize: 56,
   inverted: false,
   text: '',
   format: { 
@@ -328,7 +328,7 @@ state: {
   <ShareImageGenerator
     fontSize={state.fontSize}
     onFontSizeChange={(e, value) => setState({ fontSize: Number(value) || '' })}
-    onFontSizeInc={(e, value) => setState({ fontSize: (state.fontSize || 60) + 1})}
+    onFontSizeInc={(e, value) => setState({ fontSize: (state.fontSize || 56) + 1})}
     onFontSizeDec={(e, value) => setState({ fontSize: Math.max(state.fontSize - 1, 0)})}
     inverted={state.inverted}
     onInvertedChange={(e, value) => setState({ inverted: value })}
@@ -350,7 +350,7 @@ state: {
 
 ```react
 state: { 
-  fontSize: 60,
+  fontSize: 56,
   inverted: false,
   text: '',
   textPosition: 'bottom',
@@ -371,7 +371,7 @@ state: {
   <ShareImageGenerator
     fontSize={state.fontSize}
     onFontSizeChange={(e, value) => setState({ fontSize: Number(value) || '' })}
-    onFontSizeInc={(e, value) => setState({ fontSize: (state.fontSize || 60) + 1})}
+    onFontSizeInc={(e, value) => setState({ fontSize: (state.fontSize || 56) + 1})}
     onFontSizeDec={(e, value) => setState({ fontSize: Math.max(state.fontSize - 1, 0)})}
     inverted={state.inverted}
     onInvertedChange={(e, value) => setState({ inverted: value })}

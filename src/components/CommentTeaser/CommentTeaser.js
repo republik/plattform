@@ -3,24 +3,19 @@ import { css } from 'glamor'
 import get from 'lodash/get'
 
 import { mUp } from '../../theme/mediaQueries'
-import { underline } from '../../lib/styleMixins'
 import { inQuotes } from '../../lib/inQuotes'
 import { useMediaQuery } from '../../lib/useMediaQuery'
 
-import { serifRegular14, sansSerifMedium15 } from '../Typography/styles'
-import { A } from '../Typography/'
+import { serifRegular14 } from '../Typography/styles'
 import {
   CommentBodyParagraph,
   CommentBodyFeaturedText
 } from '../CommentBody/web'
-import { IconLink, Context, Header } from '../Discussion/Internal/Comment'
-import RelativeTime from '../Discussion/Internal/Comment/RelativeTime'
+import { Context, Header } from '../Discussion/Internal/Comment'
 import RawHtml from '../RawHtml/'
 import { useColorContext } from '../Colors/ColorContext'
-import {
-  DiscussionContext,
-  formatTimeRelative
-} from '../Discussion/DiscussionContext'
+import { DiscussionContext } from '../Discussion/DiscussionContext'
+import DiscussionFooter from './DiscussionFooter'
 
 const styles = {
   root: css({
@@ -43,35 +38,6 @@ const styles = {
     color: 'inherit',
     textDecoration: 'none',
     cursor: 'pointer'
-  }),
-  linkUnderline: css({
-    color: 'inherit',
-    textDecoration: 'none',
-    '@media (hover)': {
-      ':hover': {
-        ...underline
-      }
-    }
-  }),
-  footer: css({
-    ...sansSerifMedium15,
-    display: 'flex',
-    justifyContent: 'space-between',
-    position: 'relative'
-  }),
-  icon: css({
-    position: 'absolute',
-    right: 0,
-    marginTop: '-2px'
-  }),
-  timeago: css({
-    flexShrink: 0,
-    paddingLeft: 10
-  }),
-  imageContainer: css({
-    [mUp]: {
-      marginTop: 20
-    }
   }),
   image: css({
     borderBottomWidth: 1,
@@ -98,7 +64,6 @@ export const CommentTeaser = ({
     id,
     discussion,
     tags,
-    parentIds,
     displayAuthor,
     preview,
     featuredText,
@@ -108,7 +73,6 @@ export const CommentTeaser = ({
   const isDesktop = useMediaQuery(mUp)
   const [colorScheme] = useColorContext()
   const highlight = get(highlights, '[0].fragments[0]', '').trim()
-  const commentCount = discussion?.comments?.totalCount
 
   const endsWithPunctuation =
     highlight &&
@@ -220,58 +184,7 @@ export const CommentTeaser = ({
           />
         )}
 
-        <div {...styles.footer}>
-          <div>
-            {t.elements(
-              `styleguide/CommentTeaser/${
-                parentIds && parentIds.length
-                  ? 'reply'
-                  : commentCount
-                  ? 'commentWithCount'
-                  : 'comment'
-              }/link`,
-              {
-                count: (
-                  <Link
-                    key={`link-count-${id}`}
-                    comment={comment}
-                    discussion={discussion}
-                    passHref
-                  >
-                    <IconLink
-                      discussionCommentsCount={commentCount}
-                      small
-                      style={{
-                        marginTop: -2,
-                        paddingRight: 0,
-                        verticalAlign: 'top'
-                      }}
-                    />
-                  </Link>
-                ),
-                link: (
-                  <Link
-                    key={`link-title-${id}`}
-                    comment={comment}
-                    discussion={discussion}
-                    passHref
-                  >
-                    <A>{inQuotes(discussion.title)}</A>
-                  </Link>
-                )
-              }
-            )}
-          </div>
-          {!displayAuthor && (
-            <div {...styles.timeago} {...colorScheme.set('color', 'textSoft')}>
-              <Link comment={comment} discussion={discussion} passHref>
-                <a {...styles.linkUnderline}>
-                  <RelativeTime {...clock} date={createdAt} />
-                </a>
-              </Link>
-            </div>
-          )}
-        </div>
+        <DiscussionFooter comment={comment} t={t} Link={Link} />
       </div>
     </DiscussionContext.Provider>
   )
