@@ -10,17 +10,12 @@ import fetch from 'isomorphic-unfetch'
 import { css } from 'glamor'
 import memoize from 'lodash/memoize'
 import { feature as topojsonFeature, mesh as topojsonMesh } from 'topojson'
-
-import { subsup } from './utils'
-
 import Loader from '../Loader'
-
 import ContextBox, {
   ContextBoxValue,
   formatLines,
   mergeFragments
 } from './ContextBox'
-
 import { sansSerifMedium14 } from '../Typography/styles'
 import { getReplacementKeys, replaceKeys } from '../../lib/translate'
 
@@ -228,9 +223,45 @@ export class GenericMap extends Component {
       groupedData.map(({ values: groupData, key: groupTitle }) => {
         return groupData
           .filter(datum => datum.feature === hoverFeature)
-          .map((d, i) => {
+          .map(d => {
             const [[x0, y0], [x1]] = d.feature.bounds()
-            const ordinalValue = d.datum && d.datum[props.color]
+            const formattedValues = {
+              color: d.datum && d.datum[props.color],
+              value: (d.value || d.value === 0) && numberFormat(d.value)
+            }
+            const contextT = text => {
+              const replacements = getReplacementKeys(text).reduce(
+                (acc, replacementKey) => {
+                  acc[replacementKey] =
+                    acc[replacementKey] ||
+                    hoverFeature.properties[replacementKey] ||
+                    d.datum[replacementKey] ||
+                    this.props[replacementKey]
+                  return acc
+                },
+                formattedValues
+              )
+              return replaceKeys(text, replacements)
+            }
+            const label = tooltipLabel
+              ? contextT(tooltipLabel)
+              : title === groupTitle
+              ? hoverFeature.properties.name
+              : tLabel(groupTitle)
+            const body = mergeFragments(
+              tooltipBody
+                ? formatLines(contextT(tooltipBody))
+                : [
+                    groupTitle && title === groupTitle && tLabel(groupTitle),
+                    formattedValues.value &&
+                      `${formattedValues.value} ${props.unit}`,
+                    formattedValues.color,
+                    d.empty && missingDataLegend
+                  ]
+                    .filter(Boolean)
+                    .map(formatLines)
+            )
+
             return (
               <ContextBox
                 key={d.feature.id}
@@ -239,39 +270,7 @@ export class GenericMap extends Component {
                 y={gy(groupTitle) + paddingTop + y0 - 15}
                 contextWidth={width}
               >
-                <ContextBoxValue
-                  label={
-                    tooltipLabel
-                      ? tooltipLabel
-                      : title === groupTitle
-                      ? hoverFeature.properties.name
-                      : tLabel(groupTitle)
-                  }
-                >
-                  {tooltipBody ? (
-                    tooltipBody
-                  ) : (
-                    <>
-                      {groupTitle && title === groupTitle && (
-                        <Fragment>
-                          {tLabel(groupTitle)}
-                          <br />
-                        </Fragment>
-                      )}
-                      {d.empty ? (
-                        missingDataLegend
-                      ) : (
-                        <Fragment>
-                          {d.value || d.value === 0
-                            ? `${numberFormat(d.value)} ${props.unit}`
-                            : ''}
-                          {!!d.value && ordinalValue && <br />}
-                          {ordinalValue}
-                        </Fragment>
-                      )}
-                    </>
-                  )}
-                </ContextBoxValue>
+                <ContextBoxValue label={label}>{body}</ContextBoxValue>
               </ContextBox>
             )
           })

@@ -185,7 +185,7 @@ lat,lon,name,category
         object: 'land',
       },
       tooltipLabel: '{name}, {Land}',
-      tooltipBody: 'CO<sub>2</sub> footprint of {value} tons a year.\nThinking of moving to {name}?'
+      tooltipBody: 'CO<sub>2</sub> footprint: {value} tons per year per person.\nThinking of moving to {name}?'
     }}
     values={`
       lon,lat,name,value,Land
@@ -582,7 +582,7 @@ npx -p topojson geo2topo -q 1e5 nuts=nuts-projected-clean.json cb=nuts-compositi
 
 #### `geoConicConformal`
 
-Europe without composition. Custom tooltip example.
+Europe without composition.
 
 ```
 npm i -g ndjson-cli d3-dsv
@@ -647,9 +647,7 @@ npx -p topojson toposimplify -p 1 < nuts-topo.json > nuts2013-20m-l2-custom-gdp.
       "features": {
         "url": "/static/geo/nuts2013-20m-l2-custom-gdp.json",
         "object": "nuts"
-      },
-      "tooltipLabel": "Test Label",
-      "tooltipBody": "Text text text."
+      }
     }}
     values={data.nuts13mCHdGDP} />
   <ChartLegend>Quelle: Eurostat. Das BIP pro Kopf ist nach Kaufkraft bereinigt. Geobasis: <Editorial.A href="https://ec.europa.eu/eurostat/web/gisco/geodata/reference-data/administrative-units-statistical-units/nuts">NUTS 2013 20M L2</Editorial.A>, ohne entlegene Gebiete, fusionierte Schweiz</ChartLegend>
@@ -907,36 +905,38 @@ JU,0.257
       "features": {
         "url": "/static/geo/ch-cantons-wo-lakes.json",
         "object": "cantons"
-      }
+      },
+      "tooltipLabel": "What about {name}?",
+      "tooltipBody": "{value} of people in {name} ({feature}) voted in favour of purchasing new military airplanes.\nBtw, did you know that they speak {language} in this canton?"
     }}
     values={`
-feature,value
-ZH,0.487
-BE,0.491
-LU,0.543
-UR,0.624
-SZ,0.615
-OW,0.638
-NW,0.682
-GL,0.599
-ZG,0.6
-FR,0.406
-SO,0.503
-BS,0.323
-BL,0.425
-SH,0.494
-AR,0.511
-AI,0.608
-SG,0.5
-GR,0.507
-AG,0.519
-TG,0.556
-TI,0.453
-VD,0.349
-VS,0.381
-NE,0.309
-GE,0.322
-JU,0.257
+feature,value,language
+ZH,0.487,German
+BE,0.491,German
+LU,0.543,German
+UR,0.624,German
+SZ,0.615,German
+OW,0.638,German
+NW,0.682,German
+GL,0.599,German
+ZG,0.6,German
+FR,0.406,French and German
+SO,0.503,German
+BS,0.323,German
+BL,0.425,German
+SH,0.494,German
+AR,0.511,German
+AI,0.608,German
+SG,0.5,German
+GR,0.507,German
+AG,0.519,German
+TG,0.556,German
+TI,0.453,Italian
+VD,0.349,French
+VS,0.381,French and German
+NE,0.309,French
+GE,0.322,French
+JU,0.257,French
     `.trim()} />
   <ChartLegend>Quelle: <Editorial.A href="https://www.bk.admin.ch/ch/d/pore/va/20140518/can584.html">Bundeskanzlei</Editorial.A></ChartLegend>
 </div>
