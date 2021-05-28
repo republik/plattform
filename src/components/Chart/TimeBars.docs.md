@@ -756,3 +756,57 @@ year,value,color
   </ChartLegend>
 </div>
 ```
+
+### Ordinal x scale
+
+```react
+<div>
+  <ChartTitle>Die meisten Betriebe sind 10 bis 20 Hektaren gross</ChartTitle>
+  <ChartLead>Anteil der Betriebe nach Nutzfläche in Hektaren</ChartLead>
+  <CsvChart
+    config={{
+      "type": "TimeBar",
+      "x": "category",
+      "yTicks": [
+        0,
+        0.2,
+        0.4
+      ],
+      "color": "year",
+      "colorRange": [
+        "#004529"
+      ],
+      "labelFilter": "false",
+      "colorLegendValues": [
+        "2018"
+      ],
+      "xScale": "ordinal",
+      "unit": "der landwirtschaftlichen Betriebe",
+      "numberFormat": ".1%",
+      "xTicks": [
+        "< 1",
+        "1–3",
+        "3–5",
+        "5–10",
+        "10–20",
+        "20–30",
+        "30–50",
+        "> 50"
+      ]
+    }}
+    values={`
+year,category,value
+2018,< 1,0.041748603791395
+2018,1–3,0.06330134507984
+2018,3–5,0.049535908125541
+2018,5–10,0.132777471879179
+2018,10–20,0.292476205458979
+2018,20–30,0.207976087469519
+2018,30–50,0.156218044521356
+2018,> 50,0.055966333674192
+    `.trim()} />
+  <ChartLegend>
+    Daten für das Jahr 2019 sind nicht verfügbar. Quelle:  <Editorial.A href='https://www.bfs.admin.ch/bfs/de/home/statistiken/kataloge-datenbanken/tabellen.assetdetail.8346709.html'>Bundesamt für Statistik</Editorial.A>
+  </ChartLegend>
+</div>
+```
