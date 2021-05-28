@@ -1,11 +1,15 @@
-import React, { Fragment, useEffect, useState, useRef } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import PropTypes from 'prop-types'
 import { css } from 'glamor'
 
 import ColorLegend from './ColorLegend'
 import { scaleLinear, scaleLog, scaleSqrt } from 'd3-scale'
 import { extent, ascending, min, max } from 'd3-array'
-import ContextBox, { ContextBoxValue, contextT } from './ContextBox'
+import ContextBox, {
+  ContextBoxValue,
+  mergeFragments,
+  formatLines
+} from './ContextBox'
 import {
   calculateAxis,
   subsup,
@@ -18,7 +22,6 @@ import {
 } from './utils'
 import { getColorMapper } from './colorMaps'
 import { sansSerifRegular12, sansSerifMedium12 } from '../Typography/styles'
-import { intersperse } from '../../lib/helpers'
 import { useColorContext } from '../Colors/useColorContext'
 import { getReplacementKeys, replaceKeys } from '../../lib/translate'
 
@@ -343,22 +346,14 @@ const ScatterPlot = props => {
             )
             return replaceKeys(text, replacements)
           }
-          const splitLines = text => {
-            return text
-              .split('\n')
-              .map((d, i) => <Fragment key={`d${i}`}>{subsup(d)}</Fragment>)
-          }
-          const splitFragments = fragments =>
-            intersperse(fragments, (item, index) => <br key={`br${index}`} />)
-
           return (
             <ContextBoxValue
               key={`${value.datum[label]}${i}`}
               label={tooltipLabel ? contextT(tooltipLabel) : value.datum[label]}
             >
-              {splitFragments(
+              {mergeFragments(
                 tooltipBody
-                  ? splitLines(contextT(tooltipBody))
+                  ? formatLines(contextT(tooltipBody))
                   : [
                       value.datum[detail],
                       yShowValue && `${formattedValues.y} ${yUnit}`,
@@ -366,7 +361,7 @@ const ScatterPlot = props => {
                       sizeShowValue && `${formattedValues.size} ${sizeUnit}`
                     ]
                       .filter(Boolean)
-                      .map(splitLines)
+                      .map(formatLines)
               )}
             </ContextBoxValue>
           )

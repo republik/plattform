@@ -15,9 +15,14 @@ import { subsup } from './utils'
 
 import Loader from '../Loader'
 
-import ContextBox, { ContextBoxValue } from './ContextBox'
+import ContextBox, {
+  ContextBoxValue,
+  formatLines,
+  mergeFragments
+} from './ContextBox'
 
 import { sansSerifMedium14 } from '../Typography/styles'
+import { getReplacementKeys, replaceKeys } from '../../lib/translate'
 
 const FEATURE_BG = '#E0E0E0'
 
@@ -211,7 +216,7 @@ export class GenericMap extends Component {
       tLabel,
       missingDataLegend,
       tooltipLabel,
-      tooltipText
+      tooltipBody
     } = props
 
     const { paddingTop, gx, gy, groupedData, numberFormat } = this.state.layout
@@ -243,8 +248,8 @@ export class GenericMap extends Component {
                       : tLabel(groupTitle)
                   }
                 >
-                  {tooltipText ? (
-                    tooltipText
+                  {tooltipBody ? (
+                    tooltipBody
                   ) : (
                     <>
                       {groupTitle && title === groupTitle && (
@@ -283,37 +288,52 @@ export class GenericMap extends Component {
     const {
       layout: { projectPoint, numberFormat }
     } = this.state
-    const { pointLabel, pointAttributes } = this.props
+    const {
+      pointLabel,
+      pointAttributes,
+      unit,
+      tooltipLabel,
+      tooltipBody
+    } = this.props
     const [x, y] = projectPoint([datum.lon, datum.lat])
-    const label = datum[pointLabel]
+
     const value =
       datum.value !== undefined &&
       (isNaN(datum.value)
         ? String(datum.value).trim()
         : numberFormat(datum.value))
 
-    const body = pointAttributes.map(t => {
-      const val = datum[t]
-      if (val) {
-        return (
-          <Fragment key={t}>
-            {subsup(val)}
-            <br />
-          </Fragment>
-        )
-      } else {
-        return null
-      }
-    })
-    if (label || value || body.length) {
+    const contextT = text => {
+      const replacements = getReplacementKeys(text).reduce(
+        (acc, replacementKey) => {
+          acc[replacementKey] =
+            acc[replacementKey] ||
+            datum[replacementKey] ||
+            this.props[replacementKey]
+          return acc
+        },
+        { value }
+      )
+      return replaceKeys(text, replacements)
+    }
+
+    const label = tooltipLabel ? contextT(tooltipLabel) : datum[pointLabel]
+    const body = mergeFragments(
+      tooltipBody
+        ? formatLines(contextT(tooltipBody))
+        : [value && `${value} ${unit}`]
+            .concat(pointAttributes.map(t => datum[t]))
+            .filter(Boolean)
+            .map(formatLines)
+    )
+
+    if (label || body.length) {
       this.setState({
         hoverPoint: {
           x,
           y,
           label,
-          value,
-          body,
-          datum
+          body
         }
       })
     } else {
@@ -322,7 +342,7 @@ export class GenericMap extends Component {
   }
   renderPointTooltip() {
     const { hoverPoint } = this.state
-    const { width, unit, tooltipLabel, tooltipText } = this.props
+    const { width } = this.props
 
     if (!hoverPoint) {
       return null
@@ -335,20 +355,8 @@ export class GenericMap extends Component {
         y={hoverPoint.y}
         contextWidth={width}
       >
-        <ContextBoxValue label={tooltipLabel ? tooltipLabel : hoverPoint.label}>
-          {tooltipText ? (
-            tooltipText
-          ) : (
-            <>
-              hoverPoint.value && (
-              <>
-                {`${hoverPoint.value} `}
-                {subsup(unit)}
-                <br />
-              </>
-              ){hoverPoint.body}
-            </>
-          )}
+        <ContextBoxValue label={hoverPoint.label}>
+          {hoverPoint.body}
         </ContextBoxValue>
       </ContextBox>
     )
@@ -635,7 +643,7 @@ export const propTypes = {
   color: PropTypes.string,
   opacity: PropTypes.number.isRequired,
   tooltipLabel: PropTypes.string,
-  tooltipText: PropTypes.string
+  tooltipBody: PropTypes.string
 }
 
 GenericMap.propTypes = propTypes

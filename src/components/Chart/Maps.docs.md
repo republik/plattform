@@ -176,8 +176,6 @@ lat,lon,name,category
       type: 'GenericMap',
       heightRatio: 0.5,
       points: true,
-      pointLabel: 'name',
-      pointAttributes: ['Land'],
       colorLegend: false,
       sizeRangeMax: 300,
       unit: 't CO<sub>2</sub> pro Kopf',
@@ -186,8 +184,8 @@ lat,lon,name,category
           '/static/geo/world-atlas-110m.json',
         object: 'land',
       },
-      "tooltipLabel": "Test Label",
-      "tooltipText": "Text text text."
+      tooltipLabel: '{name}, {Land}',
+      tooltipBody: 'CO<sub>2</sub> footprint of {value} tons a year.\nThinking of moving to {name}?'
     }}
     values={`
       lon,lat,name,value,Land
@@ -651,7 +649,7 @@ npx -p topojson toposimplify -p 1 < nuts-topo.json > nuts2013-20m-l2-custom-gdp.
         "object": "nuts"
       },
       "tooltipLabel": "Test Label",
-      "tooltipText": "Text text text."
+      "tooltipBody": "Text text text."
     }}
     values={data.nuts13mCHdGDP} />
   <ChartLegend>Quelle: Eurostat. Das BIP pro Kopf ist nach Kaufkraft bereinigt. Geobasis: <Editorial.A href="https://ec.europa.eu/eurostat/web/gisco/geodata/reference-data/administrative-units-statistical-units/nuts">NUTS 2013 20M L2</Editorial.A>, ohne entlegene Gebiete, fusionierte Schweiz</ChartLegend>
