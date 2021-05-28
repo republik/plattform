@@ -90,8 +90,7 @@ const getObjectForKeys = (colorKeys, mapper = key => key) =>
 export const ColorContextLocalExtension = ({
   children,
   localColors = {},
-  localMappings = {},
-  ...props
+  localMappings = {}
 }) => {
   const [{ schemeKey, CSSVarSupport, colorDefinitions }] = useColorContext()
 
@@ -159,9 +158,7 @@ export const ColorContextLocalExtension = ({
 
   return (
     <ColorContext.Provider value={colorValue}>
-      <div {...cssVarRule} {...props}>
-        {children}
-      </div>
+      <div {...cssVarRule}>{children}</div>
     </ColorContext.Provider>
   )
 }
