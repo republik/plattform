@@ -101,7 +101,7 @@ const ScatterPlot = props => {
     paddingBottom,
     paddingLeft,
     tooltipLabel,
-    tooltipText
+    tooltipBody
   } = props
 
   const data = values
@@ -357,30 +357,16 @@ const ScatterPlot = props => {
               label={tooltipLabel ? contextT(tooltipLabel) : value.datum[label]}
             >
               {splitFragments(
-                tooltipText
-                  ? splitLines(contextT(tooltipText))
-                  : []
-                      .concat(
-                        value.datum[detail] && splitLines(value.datum[detail])
-                      )
-                      .concat([
-                        yShowValue && (
-                          <Fragment key='y'>
-                            {formattedValues.y} {subsup(yUnit)}
-                          </Fragment>
-                        ),
-                        xShowValue && (
-                          <Fragment key='x'>
-                            {formattedValues.x} {subsup(xUnit)}
-                          </Fragment>
-                        ),
-                        sizeShowValue && (
-                          <Fragment key='size'>
-                            {formattedValues.size} {subsup(sizeUnit)}
-                          </Fragment>
-                        )
-                      ])
+                tooltipBody
+                  ? splitLines(contextT(tooltipBody))
+                  : [
+                      value.datum[detail],
+                      yShowValue && `${formattedValues.y} ${yUnit}`,
+                      xShowValue && `${formattedValues.x} ${xUnit}`,
+                      sizeShowValue && `${formattedValues.size} ${sizeUnit}`
+                    ]
                       .filter(Boolean)
+                      .map(splitLines)
               )}
             </ContextBoxValue>
           )
@@ -646,7 +632,7 @@ export const propTypes = {
   paddingBottom: PropTypes.number.isRequired,
   paddingLeft: PropTypes.number.isRequired,
   tooltipLabel: PropTypes.string,
-  tooltipText: PropTypes.string
+  tooltipBody: PropTypes.string
 }
 
 ScatterPlot.defaultProps = {

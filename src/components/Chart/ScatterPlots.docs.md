@@ -313,6 +313,7 @@ year,label,detail,family,position,lrgen,vote_abs,inline_pos,inline,inline_countr
     config={{
       "type": "ScatterPlot",
       "label": "geo",
+      "color": "region",
       "x": "income pp 2014",
       "y": "co2 pp 2014",
       "yUnit": "tons of CO<sub>2</sub>",
@@ -321,7 +322,7 @@ year,label,detail,family,position,lrgen,vote_abs,inline_pos,inline,inline_countr
       "yScale": "log",
       "xScale": "log",
       "tooltipLabel": "The case of {geo}",
-      "tooltipText": "Average Joe in {geo} emits {y} {yUnit} yearly.\nThey earn {x} USD."
+      "tooltipBody": "Average Joe in {geo} emitted {y} {yUnit} in 2014.\nIn the same period of time, Joe worked and worked and earned himself {x} USD."
     }}
     values={`
 geo,income pp 2014,co2 pp 2014,region
@@ -352,8 +353,5 @@ Namibia,9630,1.58,Africa
 Nauru,12600,4.31,Africa
 Nepal,2270,0.284,Asia
       `.trim()} />
-  <ChartLegend>
-    Quelle: <Editorial.A href='https://gapm.io/dgdppc'>Gapminder</Editorial.A> basierend auf World Bank, A. Maddison, M. Lindgren, IMF & mehr (Einkommen) und <Editorial.A href='http://cdiac.ess-dive.lbl.gov/trends/emis/meth_reg.html'>CDIAC</Editorial.A> (CO<Sub>2</Sub>)
-  </ChartLegend>
 </div>
 ```
