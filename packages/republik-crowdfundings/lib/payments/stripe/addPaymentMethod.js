@@ -1,4 +1,5 @@
 const getClients = require('./clients')
+const { forgetUpdateDefault } = require('./paymentMethod')
 
 // Deduplication based on the card (like in addSource) is not possible here.
 // The paymentMethod must be attached otherwise there is no customer <> payment
@@ -9,17 +10,17 @@ module.exports = async ({
   pgdb,
   clients, // optional
   makeDefault = false,
-  t,
 }) => {
   const { platform, connectedAccounts } = clients || (await getClients(pgdb))
+  const companyId = platform.company.id
 
   const customer = await pgdb.public.stripeCustomers.findOne({
     userId,
-    companyId: platform.company.id,
+    companyId,
   })
   if (!customer) {
     throw new Error(
-      `could not find stripeCustomer for userId: ${userId} companyId: ${platform.company.id}`,
+      `could not find stripeCustomer for userId: ${userId} companyId: ${companyId}`,
     )
   }
 
@@ -34,6 +35,8 @@ module.exports = async ({
       },
     })
   }
+
+  await forgetUpdateDefault(customer, pgdb)
 
   for (const connectedAccount of connectedAccounts) {
     const connectedCustomer = await pgdb.public.stripeCustomers.findOne({
@@ -109,6 +112,8 @@ module.exports = async ({
         },
       )
     }
+
+    await forgetUpdateDefault(connectedCustomer, pgdb)
   }
 
   return paymentMethodId

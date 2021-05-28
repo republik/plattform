@@ -1,11 +1,16 @@
-const getClients = require('./clients')
 const { makePledgeSuccessfulWithCharge } = require('../Pledge')
+
+const getClients = require('./clients')
+const addPaymentMethod = require('./addPaymentMethod')
+const {
+  maybeUpdateDefault: maybeUpdateDefaultPaymentMethod,
+} = require('./paymentMethod')
 
 module.exports = async ({ paymentIntentId, companyId }, context) => {
   const { pgdb, t } = context
 
-  const { accountForCompanyId } = await getClients(pgdb)
-  const { stripe } = accountForCompanyId(companyId) || {}
+  const clients = await getClients(pgdb)
+  const { stripe } = clients.accountForCompanyId(companyId) || {}
   if (!stripe) {
     console.error(`stripe not found for companyId: ${companyId}`)
     throw new Error(t('api/unexpected'))
@@ -23,7 +28,9 @@ module.exports = async ({ paymentIntentId, companyId }, context) => {
 
   const charge = paymentIntent.charges?.data[0]
   if (!charge) {
-    console.error(`charge not found for paymentIntentId: ${paymentIntentId}. Did you call confirmCardPayment?`)
+    console.error(
+      `charge not found for paymentIntentId: ${paymentIntentId}. Did you call confirmCardPayment?`,
+    )
   }
 
   if (charge && paymentIntent.status === 'succeeded') {
@@ -40,6 +47,13 @@ module.exports = async ({ paymentIntentId, companyId }, context) => {
     if (!pledge) {
       throw new Error(t('api/pledge/404'))
     }
+
+    await maybeUpdateDefaultPaymentMethod(
+      updatedPledge?.userId || pledge.userId,
+      addPaymentMethod,
+      pgdb,
+    ).catch((e) => console.warn(e))
+
     return {
       pledgeStatus: updatedPledge?.status || pledge.status,
       updatedPledge: !!updatedPledge,

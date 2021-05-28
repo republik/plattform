@@ -1,7 +1,10 @@
-const getStripeClients = require('./clients')
 const Promise = require('bluebird')
+const debug = require('debug')('crowdfundings:lib:payments:stripe:paymenMethod')
+
+const getStripeClients = require('./clients')
 
 const CACHE_KEY = 'paymentMethods'
+const UPDATE_DEFAULT_TTL = 1000 * 60 * 60 // 1 hour
 
 const getPaymentMethods = async ({
   userId,
@@ -30,36 +33,33 @@ const getPaymentMethods = async ({
     return customer.cache[CACHE_KEY]
   }
 
-  const [
-    stripeCustomer,
-    paymentMethods,
-    connectedAccountsPaymentMethods,
-  ] = await Promise.all([
-    platform.stripe.customers.retrieve(customer.id),
-    platform.stripe.paymentMethods.list({
-      customer: customer.id,
-      type: 'card',
-    }),
-    Promise.map(connectedAccounts, async (connectedAccount) => {
-      const connectedCustomer = customers.find(
-        (c) => c.companyId === connectedAccount.company.id,
-      )
-      const cpms = await platform.stripe.paymentMethods.list(
-        {
-          customer: connectedCustomer.id,
-          type: 'card',
-        },
-        {
-          stripeAccount: connectedAccount.accountId,
-        },
-      )
-      return {
-        companyId: connectedAccount.company.id,
-        accountId: connectedAccount.accountId,
-        paymentMethods: cpms.data,
-      }
-    }),
-  ])
+  const [stripeCustomer, paymentMethods, connectedAccountsPaymentMethods] =
+    await Promise.all([
+      platform.stripe.customers.retrieve(customer.id),
+      platform.stripe.paymentMethods.list({
+        customer: customer.id,
+        type: 'card',
+      }),
+      Promise.map(connectedAccounts, async (connectedAccount) => {
+        const connectedCustomer = customers.find(
+          (c) => c.companyId === connectedAccount.company.id,
+        )
+        const cpms = await platform.stripe.paymentMethods.list(
+          {
+            customer: connectedCustomer.id,
+            type: 'card',
+          },
+          {
+            stripeAccount: connectedAccount.accountId,
+          },
+        )
+        return {
+          companyId: connectedAccount.company.id,
+          accountId: connectedAccount.accountId,
+          paymentMethods: cpms.data,
+        }
+      }),
+    ])
   if (!stripeCustomer || !paymentMethods) {
     return []
   }
@@ -170,4 +170,91 @@ exports.getPaymentMethodForCompany = async ({
   }
 
   return paymentMethod
+}
+
+/**
+ * Remember which Stripe payment method ID should become default.
+ */
+exports.rememberUpdateDefault = async (
+  paymentMethodId,
+  userId,
+  companyId,
+  pgdb,
+) => {
+  debug('rememberUpdateDefault %o', { paymentMethodId, userId, companyId })
+
+  const customer = await pgdb.public.stripeCustomers.findOne({
+    userId,
+    companyId,
+  })
+  const { payload = {} } = customer
+
+  const updateDefault = {
+    paymentMethodId,
+    requestedAt: new Date(),
+  }
+
+  await pgdb.public.stripeCustomers.updateOne(
+    { userId, companyId },
+    {
+      payload: { updateDefault, ...payload },
+      updatedAt: new Date(),
+    },
+  )
+}
+
+/**
+ * Find and maybe set Stripe payment method ID to default.
+ */
+exports.maybeUpdateDefault = async (userId, addPaymentMethod, pgdb) => {
+  debug('maybeUpdateDefault %o', { userId })
+
+  const clients = await getStripeClients(pgdb)
+
+  const customer = await pgdb.public.stripeCustomers.findOne({
+    userId,
+    'payload !=': null,
+  })
+
+  if (customer?.payload?.updateDefault) {
+    const { updateDefault } = customer.payload
+
+    const { paymentMethodId, requestedAt } = updateDefault
+    if (
+      new Date(requestedAt).getTime() >=
+      new Date().getTime() - UPDATE_DEFAULT_TTL
+    ) {
+      debug('updateDefault', { userId, paymentMethodId, requestedAt })
+      await addPaymentMethod({
+        paymentMethodId,
+        userId,
+        makeDefault: true,
+        pgdb,
+        clients,
+      })
+    } else {
+      debug('updateDefault expired', { paymentMethodId, requestedAt })
+      this.forgetUpdateDefault(userId, pgdb)
+    }
+  }
+}
+
+/**
+ * Forget which Stripe payment method ID should become default.
+ */
+exports.forgetUpdateDefault = async (customer, pgdb) => {
+  debug('forgetUpdateDefault %o', { customer: customer.id })
+
+  if (customer?.payload?.updateDefault) {
+    const { id } = customer
+    const { updateDefault, ...rest } = customer.payload
+
+    await pgdb.public.stripeCustomers.updateOne(
+      { id },
+      {
+        payload: rest,
+        updatedAt: new Date(),
+      },
+    )
+  }
 }

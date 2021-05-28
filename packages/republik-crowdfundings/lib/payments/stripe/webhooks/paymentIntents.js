@@ -1,8 +1,13 @@
 const { makePledgeSuccessfulWithCharge } = require('../../Pledge')
 
+const addPaymentMethod = require('../addPaymentMethod')
+const {
+  maybeUpdateDefault: maybeUpdateDefaultPaymentMethod,
+} = require('../paymentMethod')
+
 module.exports = {
   eventTypes: ['payment_intent.succeeded'],
-  handle: async (event, _pgdb, t, _redis, connectionContext, companyId) => {
+  handle: async (event, pgdb, t, _redis, connectionContext, companyId) => {
     const context = {
       ...connectionContext,
       t,
@@ -43,6 +48,12 @@ module.exports = {
       console.warn(`${event.type} pledge not found for id: ${pledgeId}`)
       return 503
     }
+
+    await maybeUpdateDefaultPaymentMethod(
+      pledge.userId,
+      addPaymentMethod,
+      pgdb,
+    ).catch((e) => console.warn(e))
 
     return 200
   },

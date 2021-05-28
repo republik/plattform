@@ -5,6 +5,10 @@ const addSource = require('./addSource')
 const addPaymentMethod = require('./addPaymentMethod')
 const getClients = require('./clients')
 const createPaymentIntent = require('./createPaymentIntent')
+const {
+  rememberUpdateDefault: rememberUpdateDefaultPaymentMethod,
+  maybeUpdateDefault: maybeUpdateDefaultPaymentMethod,
+} = require('./paymentMethod')
 
 module.exports = (args) => {
   const { sourceId, t } = args
@@ -149,6 +153,7 @@ const payWithPaymentMethod = async ({
   pledgeId,
   total,
   stripePlatformPaymentMethodId,
+  makeDefault = false,
   userId,
   pkg,
   pgdb,
@@ -163,12 +168,11 @@ const payWithPaymentMethod = async ({
 
   const clients = await getClients(pgdb)
 
-  // save paymentMethodId (to platform and connectedAccounts)
-  if (
-    !(await pgdb.public.stripeCustomers.findFirst({
-      userId,
-    }))
-  ) {
+  const isExistingCustomer = !!(await pgdb.public.stripeCustomers.count({
+    userId,
+  }))
+
+  if (!isExistingCustomer) {
     await createCustomer({
       paymentMethodId: stripePlatformPaymentMethodId,
       userId,
@@ -182,6 +186,15 @@ const payWithPaymentMethod = async ({
       pgdb,
       clients,
     })
+
+    if (makeDefault) {
+      await rememberUpdateDefaultPaymentMethod(
+        stripePlatformPaymentMethodId,
+        userId,
+        companyId,
+        pgdb,
+      )
+    }
   }
 
   const isSubscription = pkg.name === 'MONTHLY_ABO'
@@ -218,10 +231,15 @@ const payWithPaymentMethod = async ({
     })
   }
 
-  let stripeClientSecret
   const stripePaymentIntentId = paymentIntent.id
-  if (paymentIntent.status !== 'succeeded') {
-    stripeClientSecret = paymentIntent.client_secret
+  const stripeClientSecret =
+    (paymentIntent.status !== 'succeeded' && paymentIntent.client_secret) ||
+    undefined
+
+  if (paymentIntent.status === 'succeeded') {
+    await maybeUpdateDefaultPaymentMethod(userId, addPaymentMethod, pgdb).catch(
+      (e) => console.warn(e),
+    )
   }
 
   // get stripe client for companyId
