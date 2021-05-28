@@ -21,7 +21,8 @@ const styles = {
     }
   }),
   titleInline: css({
-    ...serifTitle16
+    ...serifTitle16,
+    marginBottom: 0
   }),
   lead: css({
     ...serifRegular15,

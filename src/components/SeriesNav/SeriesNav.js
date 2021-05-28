@@ -38,13 +38,13 @@ const styles = {
 function SeriesNav({ document, inline, height, ActionBar, Link, PayNote }) {
   const [colorScheme] = useColorContext()
 
-  // case if no document.id is present
   const currentTile = document.meta.series.episodes.filter(
     episode => episode?.document.id === document?.id
   )[0]
 
   const payNote = { isPayNote: true }
 
+  //add paynote after current episode or to third card if no current episode
   const episodes =
     PayNote && !inline
       ? [
