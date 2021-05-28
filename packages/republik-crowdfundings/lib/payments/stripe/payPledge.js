@@ -25,19 +25,23 @@ module.exports = (args) => {
 }
 
 const throwStripeError = (e, { pledgeId, t, kind }) => {
-  console.info(`stripe ${kind} failed`, { pledgeId, e })
   if (e.type === 'StripeCardError') {
     const translatedError = t('api/pay/stripe/' + e.code)
     if (translatedError) {
+      console.warn('stripe error', { pledgeId, kind, e })
       throw new Error(translatedError)
     } else {
-      console.warn('translation not found for stripe error', { pledgeId, e })
+      console.warn('translation not found for stripe error', {
+        pledgeId,
+        kind,
+        e,
+      })
       throw new Error(e.message)
     }
-  } else {
-    console.error('unknown error on stripe charge', { pledgeId, e })
-    throw new Error(t('api/unexpected'))
   }
+
+  console.error('unknown error on stripe charge', { pledgeId, kind, e })
+  throw new Error(t('api/unexpected'))
 }
 
 const payWithSource = async ({
