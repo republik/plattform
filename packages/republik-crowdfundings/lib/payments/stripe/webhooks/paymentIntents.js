@@ -8,7 +8,8 @@ module.exports = {
       t,
     }
 
-    const pledgeId = event.data?.object?.metadata?.pledgeId
+    const paymentIntent = event.data?.object
+    const pledgeId = paymentIntent?.metadata?.pledgeId
     if (!pledgeId) {
       // This event only has metadata set if the paymentIntent originates
       // from stripe/payPledge paymentIntents.create.
@@ -18,10 +19,10 @@ module.exports = {
       // so let's ignore the others.
       // Removing this shortcut creates an unnecessary race between this and the
       // invoicePaymentSucceeded webhook.
-      return 503
+      return 200
     }
 
-    const charge = event?.data?.object?.charges?.data[0]
+    const charge = paymentIntent?.charges?.data[0]
     if (!charge) {
       console.warn(`${event.type} without charge`)
       return 503
