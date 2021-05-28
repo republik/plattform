@@ -604,6 +604,7 @@ export const propTypes = {
   thresholds: PropTypes.arrayOf(PropTypes.number),
   extent: PropTypes.arrayOf(PropTypes.number),
   colorLegend: PropTypes.bool.isRequired,
+  colorLegendLabels: PropTypes.arrayOf(PropTypes.string),
   colorLegendSize: PropTypes.number.isRequired,
   colorLegendMinWidth: PropTypes.number.isRequired,
   colorLegendPosition: PropTypes.string,

@@ -85,7 +85,7 @@ export default (props, geoJson) => {
 
     colorScale.domain(domain).range(colorRange || props.colorRanges.sequential)
 
-    colorValues = colorScale.range().map(value => {
+    colorValues = colorScale.range().map((value, i) => {
       const extent = colorScale.invertExtent(value)
       const safeExtent = [
         extent[0] === undefined ? valuesExtent[0] : extent[0],
@@ -93,9 +93,11 @@ export default (props, geoJson) => {
       ]
       return {
         value: safeExtent[0],
-        label: `${numberFormat(safeExtent[0])} ${tLabel('bis')} ${numberFormat(
-          safeExtent[1]
-        )}`
+        label:
+          (props.colorLegendLabels && props.colorLegendLabels[i]) ||
+          `${numberFormat(safeExtent[0])} ${tLabel('bis')} ${numberFormat(
+            safeExtent[1]
+          )}`
       }
     })
   }
