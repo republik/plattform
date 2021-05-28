@@ -79,7 +79,7 @@ const SeriesNavTile = ({
         {...styles.tileContainer}
         {...colorScheme.set(
           'backgroundColor',
-          current ? 'defaultInverted' : 'default'
+          current ? 'defaultInverted' : 'transparent'
         )}
       >
         <ColorContextLocalExtension localColors={localColors}>

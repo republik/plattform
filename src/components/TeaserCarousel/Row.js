@@ -73,7 +73,7 @@ const styles = {
   })
 }
 
-const Row = ({ initialScrollTile, children }) => {
+const Row = ({ initialScrollTile, children, style }) => {
   const context = useContext(CarouselContext)
   const overflow = useRef()
   const [{ left, right }, setArrows] = useState({ left: false, right: false })
@@ -131,7 +131,7 @@ const Row = ({ initialScrollTile, children }) => {
   }
 
   return (
-    <div role='group' {...styles.container}>
+    <div role='group' {...styles.container} style={{ ...style }}>
       <div {...styles.overflow} ref={overflow}>
         <div {...styles.pad} />
         {children}

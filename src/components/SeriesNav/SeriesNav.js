@@ -8,6 +8,8 @@ import {
 } from '../../components/TeaserCarousel'
 import SeriesNavTile from './SeriesNavTile'
 import { useColorContext } from '../Colors/useColorContext'
+import { serifBold16, serifRegular14 } from '../Typography/styles'
+import { Breakout } from '../../components/Center'
 
 const DEFAULT_PAYNOTE_INDEX = 2
 
@@ -16,10 +18,20 @@ const styles = {
     borderWidth: 0,
     borderTopWidth: 1,
     borderStyle: 'solid',
-    margin: '15px 0',
+    margin: 0,
+    marginBottom: 15,
     [mUp]: {
       display: 'none'
     }
+  }),
+  title: css({
+    ...serifBold16,
+    marginBottom: 4
+  }),
+  description: css({
+    ...serifRegular14,
+    margin: 0,
+    marginBottom: 30
   })
 }
 
@@ -50,20 +62,24 @@ function SeriesNav({ document, inline, height, ActionBar, Link, PayNote }) {
   return (
     <>
       {inline ? (
-        <>
+        <Breakout>
           <hr
             {...styles.hline}
             {...colorScheme.set('borderColor', 'divider')}
           />
-          <h2>{document.meta.series.title}</h2>
-          <p>{document.meta.series.description}</p>
-        </>
+          <h3 {...styles.title}>{document.meta.series.title}</h3>
+          <p {...styles.description}>{document.meta.series.description}</p>
+        </Breakout>
       ) : null}
 
-      <TeaserCarousel grid={!inline}>
+      <TeaserCarousel
+        grid={!inline}
+        style={{ padding: 0, backgroundColor: 'transparent' }}
+      >
         <TeaserCarouselTileContainer
           height={height}
           initialScrollTile={currentTile?.document?.id}
+          style={{ padding: 0 }}
         >
           {episodes.map(episode => {
             return (

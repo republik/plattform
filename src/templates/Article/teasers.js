@@ -61,7 +61,13 @@ const articleTileSubject = {
   }
 }
 
-const createTeasers = ({ t, Link, plattformUnauthorizedZoneText }) => {
+const createTeasers = ({
+  t,
+  Link,
+  ActionBar,
+  PayNote,
+  plattformUnauthorizedZoneText
+}) => {
   const teaserTitle = (type, Headline) => ({
     matchMdast: matchHeading(1),
     component: ({ children, href, ...props }) => (
@@ -521,16 +527,16 @@ const createTeasers = ({ t, Link, plattformUnauthorizedZoneText }) => {
   const seriesNav = {
     matchMdast: matchZone('SERIES_NAV'),
     component: ({ ...props }) => {
-      return <SeriesNav {...props} Link={Link} />
+      return <SeriesNav {...props} />
     },
     props: (node, index, parent, { ancestors }) => {
       const root = ancestors[ancestors.length - 1]
-      console.log(node, index, parent, root)
       return {
         document: root.document,
         inline: root.inline,
-        ActionBar: () => null,
-        PayNote: () => null
+        ActionBar: ActionBar,
+        PayNote: PayNote,
+        Link: Link
       }
     },
     rules: [],

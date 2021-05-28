@@ -4,7 +4,7 @@ import CarouselContext from './Context'
 import Grid from './Grid'
 import Row from './Row'
 
-const Container = ({ initialScrollTile, children, height }) => {
+const Container = ({ initialScrollTile, children, height, style }) => {
   const context = useContext(CarouselContext)
   if (context.grid) {
     return (
@@ -13,7 +13,11 @@ const Container = ({ initialScrollTile, children, height }) => {
       </Grid>
     )
   }
-  return <Row initialScrollTile={initialScrollTile}>{children}</Row>
+  return (
+    <Row initialScrollTile={initialScrollTile} style={style}>
+      {children}
+    </Row>
+  )
 }
 
 export default Container

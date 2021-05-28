@@ -7,7 +7,8 @@ export const document = {
     series: {
       title: 'Eyes Wide Shut',
       logo: null,
-      description: 'Description',
+      description:
+        'Wieso sind Verschwörungs­theorien plötzlich allgegenwärtig? Wie entstehen sie, was verbindet sie?',
       episodes: [
         {
           title:
