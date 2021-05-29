@@ -239,8 +239,9 @@ exports.maybeUpdateDefault = async (userId, addPaymentMethod, pgdb) => {
       })
     } else {
       debug('updateDefault expired', { paymentMethodId, requestedAt })
-      this.forgetUpdateDefault(userId, pgdb)
     }
+
+    this.forgetUpdateDefault(userId, pgdb)
   }
 }
 
