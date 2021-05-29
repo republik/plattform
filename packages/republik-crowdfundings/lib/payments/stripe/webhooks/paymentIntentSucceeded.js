@@ -1,10 +1,21 @@
-const { makePledgeSuccessfulWithCharge } = require('../../Pledge')
+const debug = require('debug')(
+  'crowdfundings:lib:payments:stripe:webhooks:paymentIntentSucceeded',
+)
 
+const { makePledgeSuccessfulWithCharge } = require('../../Pledge')
 const addPaymentMethod = require('../addPaymentMethod')
 const {
   maybeUpdateDefault: maybeUpdateDefaultPaymentMethod,
 } = require('../paymentMethod')
 
+/**
+ * Takes care of a payment intent without an invoice attached
+ *
+ * Payment intents without invoices are all transactions but subscriptions
+ * on Stripe.
+ *
+ * (Subscriptions are handeled in ./invoicePaymentSucceeded)
+ */
 module.exports = {
   eventTypes: ['payment_intent.succeeded'],
   handle: async (event, pgdb, t, _redis, connectionContext, companyId) => {
@@ -14,16 +25,12 @@ module.exports = {
     }
 
     const paymentIntent = event.data?.object
-    const pledgeId = paymentIntent?.metadata?.pledgeId
-    if (!pledgeId) {
-      // This event only has metadata set if the paymentIntent originates
-      // from stripe/payPledge paymentIntents.create.
-      // If the paymentIntent was created indirectly e.g. via createSubscription
-      // the metadata is not set.
-      // In here we are only interested in non subscription PaymentIntents
-      // so let's ignore the others.
-      // Removing this shortcut creates an unnecessary race between this and the
-      // invoicePaymentSucceeded webhook.
+
+    const invoiceId = paymentIntent?.invoice
+    if (invoiceId) {
+      // If payment intent is linked to an invoice, ignore this event
+      // because ./invoicePaymentSucceeded will take care of it.
+      debug('payment intent w/ invoice: ignore event')
       return 200
     }
 
@@ -45,7 +52,7 @@ module.exports = {
     })
 
     if (!pledge) {
-      console.warn(`${event.type} pledge not found for id: ${pledgeId}`)
+      console.warn(`${event.type} pledge not found for charge id: ${charge.id}`)
       return 503
     }
 
