@@ -9,14 +9,6 @@ const {
   maybeUpdateDefault: maybeUpdateDefaultPaymentMethod,
 } = require('../paymentMethod')
 
-// used by stripe subscriptions (source or paymentMethod)
-// paymentIntent for one time payments don't create an invoice
-// so this is only used for subscriptions
-//
-// invoice.payment_succeeded includes:
-// pledgeId, charge total and charge id
-// but not the charge details
-
 /**
  * Takes care of an invoice payment
  *
