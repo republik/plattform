@@ -186,15 +186,15 @@ const payWithPaymentMethod = async ({
       pgdb,
       clients,
     })
+  }
 
-    if (makeDefault) {
-      await rememberUpdateDefaultPaymentMethod(
-        stripePlatformPaymentMethodId,
-        userId,
-        companyId,
-        pgdb,
-      )
-    }
+  if (makeDefault) {
+    await rememberUpdateDefaultPaymentMethod(
+      stripePlatformPaymentMethodId,
+      userId,
+      companyId,
+      pgdb,
+    )
   }
 
   const isSubscription = pkg.name === 'MONTHLY_ABO'
