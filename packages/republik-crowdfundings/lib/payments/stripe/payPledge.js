@@ -204,11 +204,13 @@ const payWithPaymentMethod = async ({
       plan: pkg.name,
       userId,
       companyId,
+      platformPaymentMethodId: stripePlatformPaymentMethodId,
       metadata: {
         pledgeId,
       },
       pgdb,
       clients,
+      t,
     })
 
     paymentIntent = subscription.latest_invoice?.payment_intent
