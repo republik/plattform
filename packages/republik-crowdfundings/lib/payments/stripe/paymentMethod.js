@@ -213,10 +213,13 @@ exports.maybeUpdateDefault = async (userId, addPaymentMethod, pgdb) => {
 
   const clients = await getStripeClients(pgdb)
 
-  const customer = await pgdb.public.stripeCustomers.findOne({
-    userId,
-    'payload !=': null,
-  })
+  const customer = await pgdb.public.stripeCustomers.findOne(
+    { userId },
+    {
+      orderBy: { updatedAt: 'DESC' },
+      limit: 1,
+    },
+  )
 
   if (customer?.payload?.updateDefault) {
     const { updateDefault } = customer.payload
