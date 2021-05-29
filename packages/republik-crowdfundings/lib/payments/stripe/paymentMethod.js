@@ -1,5 +1,7 @@
 const Promise = require('bluebird')
-const debug = require('debug')('crowdfundings:lib:payments:stripe:paymenMethod')
+const debug = require('debug')(
+  'crowdfundings:lib:payments:stripe:paymentMethod',
+)
 
 const getStripeClients = require('./clients')
 

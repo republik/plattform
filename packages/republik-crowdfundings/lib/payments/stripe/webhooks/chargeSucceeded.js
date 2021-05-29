@@ -1,4 +1,6 @@
-const debug = require('debug')('crowdfundings:webhooks:stripe')
+const debug = require('debug')(
+  'crowdfundings:lib:payments:stripe:webhooks:chargeSucceeded',
+)
 const _ = {
   get: require('lodash/get'),
 }
