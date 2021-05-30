@@ -4,7 +4,12 @@ import gql from 'graphql-tag'
 import { MdDone as SaveIcon } from 'react-icons/md'
 import { Checkbox, Loader, InlineSpinner } from '@project-r/styleguide'
 
-import { InteractiveSection, SectionTitle, TextButton } from '../Display/utils'
+import {
+  InteractiveSection,
+  Section,
+  SectionTitle,
+  TextButton,
+} from '../../Display/utils'
 
 const GET_CREDENTIALS = gql`
   query user($id: String) {
@@ -14,6 +19,7 @@ const GET_CREDENTIALS = gql`
         id
         description
         verified
+        isListed
       }
     }
   }
@@ -35,8 +41,6 @@ const REMOVE_CREDENTIAL_VERIFICATION = gql`
   }
 `
 
-/* TODO: Naming, styling, choose right place */
-
 class UpdateCredential extends Component {
   constructor(props) {
     super(props)
@@ -57,7 +61,7 @@ class UpdateCredential extends Component {
   render() {
     const {
       user: { id: userId },
-      credential: { id: credentialId, description, verified },
+      credential: { id: credentialId, description, verified, isListed },
     } = this.props
     const { value } = this.state
     return (
@@ -86,7 +90,7 @@ class UpdateCredential extends Component {
                     })
                   }
                 >
-                  {description}
+                  {description} <span>{isListed ? '(öffentlich)' : ''}</span>
                 </Checkbox>
                 <span style={{ float: 'right' }}>
                   {loading ? (
@@ -110,35 +114,40 @@ class UpdateCredential extends Component {
 
 const Credentials = ({ userId }) => {
   return (
-    <Query query={GET_CREDENTIALS} variables={{ id: userId }}>
-      {({ loading, error, data }) => {
-        const isInitialLoading = loading && !(data && data.user)
-        return (
-          <Loader
-            loading={isInitialLoading}
-            error={error}
-            render={() => {
-              const { user } = data
-              const { credentials } = user
+    <Section>
+      <SectionTitle>Rollen verifizieren</SectionTitle>
+      <Query query={GET_CREDENTIALS} variables={{ id: userId }}>
+        {({ loading, error, data }) => {
+          const isInitialLoading = loading && !(data && data.user)
+          return (
+            <Loader
+              loading={isInitialLoading}
+              error={error}
+              render={() => {
+                const { user } = data
+                const { credentials } = user
 
-              return (
-                <InteractiveSection>
-                  <SectionTitle>Rollen</SectionTitle>
-
-                  {credentials.map((credential) => (
-                    <UpdateCredential
-                      key={`${credential.description}-${credential.verified}`}
-                      user={user}
-                      credential={credential}
-                    />
-                  ))}
-                </InteractiveSection>
-              )
-            }}
-          />
-        )
-      }}
-    </Query>
+                if (credentials.length > 0) {
+                  return (
+                    <InteractiveSection>
+                      {credentials.map((credential) => (
+                        <UpdateCredential
+                          key={`${credential.description}-${credential.verified}`}
+                          user={user}
+                          credential={credential}
+                        />
+                      ))}
+                    </InteractiveSection>
+                  )
+                } else {
+                  return <div>Keine (nicht-anonymen) Rollen vorhanden</div>
+                }
+              }}
+            />
+          )
+        }}
+      </Query>
+    </Section>
   )
 }
 

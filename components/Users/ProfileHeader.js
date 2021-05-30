@@ -6,7 +6,7 @@ import {
   fontStyles,
   Loader,
   Interaction,
-  A
+  A,
 } from '@project-r/styleguide'
 import Head from 'next/head'
 
@@ -21,25 +21,25 @@ const styles = {
     position: 'sticky',
     top: -20,
     zIndex: 10,
-    borderBottom: `1px solid ${colors.disabled}`
+    borderBottom: `1px solid ${colors.disabled}`,
   }),
   byline: css({
-    ...fontStyles.sansSerifRegular16
+    ...fontStyles.sansSerifRegular16,
   }),
   portrait: css({
     float: 'left',
     height: '50px',
-    marginRight: '10px'
+    marginRight: '10px',
   }),
   navLink: css({
     color: '#000',
     padding: '0 3px',
     textDecoration: 'none',
     '&[data-active="true"]': {
-      textDecoration: 'underline'
+      textDecoration: 'underline',
     },
-    marginRight: 5
-  })
+    marginRight: 5,
+  }),
 }
 
 export const GET_PROFILE = gql`
@@ -59,9 +59,9 @@ export const GET_PROFILE = gql`
 const Subnav = ({ userId, section }) => (
   <div>
     <Link
-      route='user'
+      route="user"
       params={{
-        userId
+        userId,
       }}
     >
       <a {...styles.navLink} data-active={section === 'index'}>
@@ -69,45 +69,47 @@ const Subnav = ({ userId, section }) => (
       </a>
     </Link>
     <Link
-      route='user'
+      route="user"
       params={{
         userId,
-        section: 'sessions'
+        section: 'sessions',
       }}
     >
-      <a
-        {...styles.navLink}
-        data-active={section === 'sessions'}
-      >
+      <a {...styles.navLink} data-active={section === 'sessions'}>
         Sessions
       </a>
     </Link>
     <Link
-      route='user'
+      route="user"
       params={{
         userId,
-        section: 'access-grants'
+        section: 'access-grants',
       }}
     >
-      <a
-        {...styles.navLink}
-        data-active={section === 'access-grants'}
-      >
+      <a {...styles.navLink} data-active={section === 'access-grants'}>
         Access Grants
       </a>
     </Link>
     <Link
-      route='user'
+      route="user"
       params={{
         userId,
-        section: 'maillog'
+        section: 'maillog',
       }}
     >
-      <a
-        {...styles.navLink}
-        data-active={section === 'maillog'}
-      >
+      <a {...styles.navLink} data-active={section === 'maillog'}>
         E-Mails
+      </a>
+    </Link>
+    <Link
+      route="user"
+      params={{
+        userId,
+        section: 'dialog',
+      }}
+    >
+      <a {...styles.navLink} data-active={section === 'dialog'}>
+        Dialog
       </a>
     </Link>
   </div>
@@ -117,37 +119,37 @@ const ProfileHeader = ({ userId, section }) => {
   return (
     <Query query={GET_PROFILE} variables={{ id: userId }}>
       {({ loading, error, data }) => {
-        const isInitialLoading =
-          loading && !(data && data.user)
+        const isInitialLoading = loading && !(data && data.user)
         return (
           <Loader
             loading={isInitialLoading}
             error={isInitialLoading && error}
             render={() => {
               const { user } = data
-              const name = [user.firstName, user.lastName].filter(Boolean).join(' ')
+              const name = [user.firstName, user.lastName]
+                .filter(Boolean)
+                .join(' ')
               const byline = [
                 user.email && name && (
-                  <A
-                    key="mail"
-                    href={`mailto:${user.email}`}
-                  >
+                  <A key="mail" href={`mailto:${user.email}`}>
                     {user.email}
                   </A>
                 ),
                 user.phoneNumber && (
-                  <A
-                    key="phone"
-                    href={`tel:${user.phoneNumber}`}
-                  >
+                  <A key="phone" href={`tel:${user.phoneNumber}`}>
                     {user.phoneNumber}
                   </A>
                 ),
                 <span key="profile">
-                  <A key="profile-link" href={`${REPUBLIK_FRONTEND_URL}/~${user.username || user.id}`} target="_blank">
+                  <A
+                    key="profile-link"
+                    href={`${REPUBLIK_FRONTEND_URL}/~${user.username ||
+                      user.id}`}
+                    target="_blank"
+                  >
                     {user.username || 'Profil-Seite'}
                   </A>
-                </span>
+                </span>,
               ]
                 .filter(Boolean)
                 .reduce((acc, v) => [...acc, ' | ', v], [])
@@ -155,28 +157,24 @@ const ProfileHeader = ({ userId, section }) => {
               return (
                 <Section {...styles.header}>
                   <Head>
-                    <title>{section !== 'index' ? `${section}: ` : ''}{name ? `${name} (${user.email.split('@')[1]})`  : user.email} – Admin</title>
+                    <title>
+                      {section !== 'index' ? `${section}: ` : ''}
+                      {name
+                        ? `${name} (${user.email.split('@')[1]})`
+                        : user.email}{' '}
+                      – Admin
+                    </title>
                   </Head>
-                  <div style={{clear: 'both', margin: '0 2px'}}>
+                  <div style={{ clear: 'both', margin: '0 2px' }}>
                     {user.portrait && (
-                      <img
-                        src={user.portrait}
-                        {...styles.portrait}
-                      />
+                      <img src={user.portrait} {...styles.portrait} />
                     )}
-                    <Interaction.H3>
-                      {name || user.email}
-                    </Interaction.H3>
-                    <div {...styles.byline}>
-                      {byline}
-                    </div>
+                    <Interaction.H3>{name || user.email}</Interaction.H3>
+                    <div {...styles.byline}>{byline}</div>
                   </div>
-                  <div style={{clear: 'both', margin: '10px 0'}}>
-                    <Subnav
-                    userId={userId}
-                    section={section}
-                    />
-                    </div>
+                  <div style={{ clear: 'both', margin: '10px 0' }}>
+                    <Subnav userId={userId} section={section} />
+                  </div>
                 </Section>
               )
             }}
@@ -185,6 +183,6 @@ const ProfileHeader = ({ userId, section }) => {
       }}
     </Query>
   )
-};
+}
 
-export default ProfileHeader;
+export default ProfileHeader

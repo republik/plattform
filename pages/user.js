@@ -10,7 +10,6 @@ import { css } from 'glamor'
 
 import User from '../components/Users/Particulars'
 import Email from '../components/Users/Email'
-import Credentials from '../components/Users/Credentials'
 import NewsletterSubscriptions from '../components/Users/NewsletterSubscriptions'
 import Roles from '../components/Users/Roles'
 import ProfileHeader from '../components/Users/ProfileHeader'
@@ -25,6 +24,7 @@ import Access from '../components/Users/Access'
 import Sessions from '../components/Users/Sessions'
 import Actions from '../components/Users/Actions'
 import MailLog from '../components/Users/MailLog'
+import Dialog from '../components/Users/Dialog'
 
 const styles = {
   row: css({
@@ -55,13 +55,15 @@ const SectionSwitch = ({ userId, section }) => {
       </Fragment>
     )
   }
+  if (section === 'dialog') {
+    return <Dialog userId={userId} />
+  }
 
   return (
     <div {...styles.row}>
       <div>
         <User userId={userId} />
         <Email userId={userId} />
-        <Credentials userId={userId} />
       </div>
       <div>
         <NewsletterSubscriptions userId={userId} />
