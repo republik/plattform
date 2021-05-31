@@ -80,19 +80,30 @@ const TimeBarChart = props => {
     tLabel,
     description,
     yAnnotations,
-    xAnnotations
+    xAnnotations,
+    xScale
   } = props
 
   const paddingTop = 24
   const [colorScheme] = useColorContext()
+
   let data = values
   if (props.filter) {
     const filter = unsafeDatumFn(props.filter)
     data = data.filter(filter)
   }
-  const xParser = timeParse(props.timeParse)
-  const xParserFormat = timeFormat(props.timeParse)
-  const xNormalizer = d => xParserFormat(xParser(d))
+  let xParser = d => d
+  let xParserFormat = d => d
+  let xNormalizer = d => d
+  let xFormat = d => d
+  let xSort = d => d
+  if (xScale === 'time') {
+    xParser = timeParse(props.timeParse)
+    xParserFormat = timeFormat(props.timeParse)
+    xNormalizer = d => xParserFormat(xParser(d))
+    xFormat = timeFormat(props.timeFormat || props.timeParse)
+    xSort = ascending
+  }
   data = data
     .filter(d => d.value && d.value.length > 0)
     .map(d => {
@@ -134,7 +145,7 @@ const TimeBarChart = props => {
               0,
               min(bars, d => d.down)
             ),
-            max(bars, d => d.up)
+            Math.max(max(bars, d => d.up))
           ]
     )
     .range([innerHeight, 0])
@@ -175,6 +186,7 @@ const TimeBarChart = props => {
       ticks: props.yTicks
     }
   )
+
   const yTicks = props.yTicks || yAxis.ticks
   // ensure highest value is last
   // - the last value is labled with the unit
@@ -194,7 +206,7 @@ const TimeBarChart = props => {
     )
     .filter(deduplicate)
     .map(xParser)
-    .sort(ascending)
+    .sort(xSort)
     .map(xParserFormat)
 
   const xPadding = props.padding
@@ -269,8 +281,6 @@ const TimeBarChart = props => {
     return lines
   }, [])
 
-  const xFormat = timeFormat(props.timeFormat || props.timeParse)
-
   const colorLegendValues = []
     .concat(
       props.colorLegend &&
@@ -335,30 +345,27 @@ const TimeBarChart = props => {
                 />
               )
             })}
-            {xTicks.map(tick => {
-              return (
-                <g
-                  key={tick}
-                  transform={`translate(${x(tick) +
-                    Math.round(barWidth / 2)},0)`}
+            {xTicks.map(tick => (
+              <g
+                key={tick}
+                transform={`translate(${x(tick) + Math.round(barWidth / 2)},0)`}
+              >
+                <line
+                  {...styles.axisXLine}
+                  {...colorScheme.set('stroke', 'text')}
+                  y2={X_TICK_HEIGHT}
+                />
+                <text
+                  {...styles.axisLabel}
+                  {...colorScheme.set('fill', 'text')}
+                  y={X_TICK_HEIGHT + 5}
+                  dy='0.6em'
+                  textAnchor='middle'
                 >
-                  <line
-                    {...styles.axisXLine}
-                    {...colorScheme.set('stroke', 'text')}
-                    y2={X_TICK_HEIGHT}
-                  />
-                  <text
-                    {...styles.axisLabel}
-                    {...colorScheme.set('fill', 'text')}
-                    y={X_TICK_HEIGHT + 5}
-                    dy='0.6em'
-                    textAnchor='middle'
-                  >
-                    {xFormat(xParser(tick))}
-                  </text>
-                </g>
-              )
-            })}
+                  {xFormat(xParser(tick))}
+                </text>
+              </g>
+            ))}
           </g>
           {yTicks.map((tick, i) => (
             <g key={tick} transform={`translate(0,${y(tick)})`}>
@@ -566,6 +573,7 @@ export const propTypes = {
   xTicks: PropTypes.arrayOf(
     PropTypes.oneOfType([PropTypes.number, PropTypes.string])
   ),
+  xScale: PropTypes.oneOf(['time', 'ordinal']),
   xAnnotations: PropTypes.arrayOf(
     PropTypes.shape({
       valuePrefix: PropTypes.string,
@@ -591,6 +599,7 @@ TimeBarChart.propTypes = propTypes
 
 TimeBarChart.defaultProps = {
   x: 'year',
+  xScale: 'time',
   xBandPadding: 0.25,
   timeParse: '%Y',
   numberFormat: 's',

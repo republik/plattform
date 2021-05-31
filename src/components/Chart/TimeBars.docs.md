@@ -757,7 +757,7 @@ year,value,color
 </div>
 ```
 
-### Ordinal x scale
+### Ordinal Scale
 
 ```react
 <div>
@@ -770,6 +770,10 @@ year,value,color
       "yTicks": [
         0,
         0.2,
+        0.4
+      ],
+      "domain": [
+        0,
         0.4
       ],
       "color": "year",
