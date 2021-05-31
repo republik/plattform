@@ -1,5 +1,7 @@
 const debug = require('debug')('crowdfundings:lib:payments:stripe:payPledge')
 
+const { RequirePaymentMethodError } = require('./Errors')
+
 const createCustomer = require('./createCustomer')
 const createCharge = require('./createCharge')
 const createSubscription = require('./createSubscription')
@@ -25,16 +27,16 @@ module.exports = (args) => {
       ...args,
       stripePlatformPaymentMethodId: args.sourceId,
     }).catch((e) => {
-      throwStripeError(e, { ...args, kind: 'paymentIntent' })
+      throwError(e, { ...args, kind: 'paymentIntent' })
     })
   }
 }
 
-const throwStripeError = (e, { pledgeId, t, kind }) => {
+const throwError = (e, { pledgeId, t, kind }) => {
   if (e.type === 'StripeCardError') {
     const translatedError = t('api/pay/stripe/' + e.code)
     if (translatedError) {
-      console.warn('stripe error', { pledgeId, kind, e })
+      console.warn(e, { pledgeId, kind })
       throw new Error(translatedError)
     } else {
       console.warn('translation not found for stripe error', {
@@ -46,7 +48,12 @@ const throwStripeError = (e, { pledgeId, t, kind }) => {
     }
   }
 
-  console.error('unknown error on stripe charge', { pledgeId, kind, e })
+  if (e.name === 'RequirePaymentMethodError') {
+    console.warn(e, { pledgeId, kind })
+    throw new Error(t('api/pay/stripe/card_declined'))
+  }
+
+  console.error(e, { pledgeId, kind })
   throw new Error(t('api/unexpected'))
 }
 
@@ -122,7 +129,7 @@ const payWithSource = async ({
       })
     }
   } catch (e) {
-    throwStripeError(e, { pledgeId, t, kind: 'charge' })
+    throwError(e, { pledgeId, t, kind: 'charge' })
   }
 
   // for subscriptions the payment doesn't exist yet
@@ -164,8 +171,7 @@ const payWithPaymentMethod = async ({
   const { companyId } = pkg
 
   if (!stripePlatformPaymentMethodId) {
-    console.error('missing stripePlatformPaymentMethodId')
-    throw new Error(t('api/unexpected'))
+    throw new Error(t('missing stripePlatformPaymentMethodId'))
   }
 
   const clients = await getClients(pgdb)
@@ -217,10 +223,9 @@ const payWithPaymentMethod = async ({
 
     paymentIntent = subscription.latest_invoice?.payment_intent
     if (!paymentIntent) {
-      console.error(
+      throw new Error(
         `payPledge didn't receive the paymentIntent for subscription pledgeId: ${pledgeId}`,
       )
-      throw new Error(t('api/unexpected'))
     }
   } else {
     paymentIntent = await createPaymentIntent({
@@ -235,16 +240,7 @@ const payWithPaymentMethod = async ({
     })
   }
 
-  const stripePaymentIntentId = paymentIntent.id
-  const stripeClientSecret =
-    (paymentIntent.status !== 'succeeded' && paymentIntent.client_secret) ||
-    undefined
-
-  if (paymentIntent.status === 'succeeded') {
-    await maybeUpdateDefaultPaymentMethod(userId, addPaymentMethod, pgdb).catch(
-      (e) => console.warn(e),
-    )
-  } else {
+  if (paymentIntent.status !== 'succeeded') {
     debug('unsuccessful payment intent %o', {
       pledgeId,
       companyId,
@@ -254,20 +250,40 @@ const payWithPaymentMethod = async ({
       intentStatus: paymentIntent.status,
       client_secret: !!paymentIntent.client_secret,
     })
+  } else {
+    await maybeUpdateDefaultPaymentMethod(userId, addPaymentMethod, pgdb).catch(
+      (e) => console.warn(e),
+    )
   }
+
+  // We consider a payment intent requiring (another) payment method as failed.
+  if (paymentIntent.status === 'requires_payment_method') {
+    throw new RequirePaymentMethodError(paymentIntent)
+  }
+
+  if (paymentIntent.status === 'canceled') {
+    throw new Error('payment_intent.status returned "canceled"')
+  }
+
+  const isClientSecretNecessary = [
+    'requires_confirmation',
+    'requires_action',
+  ].includes(paymentIntent.status)
+  const stripePaymentIntentId = paymentIntent.id
+  const stripeClientSecret =
+    (isClientSecretNecessary && paymentIntent.client_secret) || undefined
 
   // get stripe client for companyId
   const account = clients.accountForCompanyId(companyId)
   if (!account) {
-    console.error(`could not find account for companyId: ${companyId}`)
-    throw new Error(t('api/unexpected'))
+    throw new Error(`could not find account for companyId: ${companyId}`)
   }
 
   return {
     status: 'DRAFT',
+    stripePaymentIntentId,
     stripeClientSecret,
     stripePublishableKey: account.publishableKey,
-    stripePaymentIntentId,
     companyId,
   }
 }
