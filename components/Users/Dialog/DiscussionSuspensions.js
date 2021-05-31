@@ -47,17 +47,11 @@ const Suspensions = ({ userId }) => {
                   <div>
                     <SectionSubhead>Aktuell </SectionSubhead>
                     {suspendedHeader}
-                    <SectionSubhead>Vergangene Sperrungen </SectionSubhead>
+                    <SectionSubhead>Alle Sperrungen </SectionSubhead>
                     <List>
                       {suspensions
                         .sort((a, b) => {
-                          if (a.beginAt > b.beginAt) {
-                            return -1
-                          }
-                          if (b.beginAt > a.beginAt) {
-                            return 1
-                          }
-                          return 0
+                          return new Date(b.beginAt) - new Date(a.beginAt)
                         })
                         .map((suspension) => (
                           <Item>
