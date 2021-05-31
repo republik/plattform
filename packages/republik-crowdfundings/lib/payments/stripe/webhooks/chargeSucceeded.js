@@ -1,12 +1,15 @@
-const debug = require('debug')('crowdfundings:webhooks:stripe')
+const debug = require('debug')(
+  'crowdfundings:lib:payments:stripe:webhooks:chargeSucceeded',
+)
 const _ = {
   get: require('lodash/get'),
 }
 
 // charge.succeeded contains all the charge details
-// but not the pledgeId
-// if this event arrives before invoice.payment_succeeded
-// we reject it and wait for the webhook to fire again
+// but not the pledgeId.
+// If this event arrives before invoice.payment_succeeded
+// we reject it and wait for the webhook to fire again.
+// This handler only adds the charge object to pspPayload of the payment
 module.exports = {
   eventTypes: ['charge.succeeded'],
   handle: async (event, pgdb, t) => {

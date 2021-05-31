@@ -4,7 +4,7 @@ Guten Tag
 
 Ihre Mitgliedschaft erneuerte sich am {{end_date}} um ein weiteres Jahr.
 Bedauerlicherweise konnten wir erneut den Jahresbeitrag von {{autopay_total}}
-Ihrer hinterlegten {{autopay_card_brand}}-Kreditkarte mit den Endziffern
+Ihrer hinterlegten {{autopay_card_brand}} mit den Endziffern
 {{autopay_card_last4}} nicht belasten.
 
 Wir unternehmen am {{attempt_next_at}} einen letzten Versuch und bitten Sie, bis
@@ -21,8 +21,8 @@ haben die Möglichkeit, die Höhe Ihres Mitgliederbeitrags selbst zu bestimmen
 
 Ihre Mitgliedschaft erneuerte sich am {{end_date}} um ein weiteres Jahr. Trotz
 mehrfachen Versuchen konnten wir den Jahresbeitrag von {{autopay_total}} Ihrer
-hinterlegten {{autopay_card_brand}}-Kreditkarte mit den Endziffern
-{{autopay_card_last4}} nicht belasten.
+hinterlegten {{autopay_card_brand}} mit den Endziffern {{autopay_card_last4}}
+nicht belasten.
 
 Wir sehen uns daher zu unserem grossen Bedauern gezwungen, Ihre Mitgliedschaft
 am {{grace_end_date}} zu deaktivieren.
@@ -36,10 +36,15 @@ Ihre Mitgliedschaft erneuerte sich am {{end_date}} um ein weiteres Jahr. Bei
 Ihrem letzten Kauf haben Sie angegeben, dass Sie uns erlauben, Ihre hinterlegte
 Kreditkarte automatisch zu belasten. Bedauerlicherweise konnten wir den
 Jahresbeitrag von {{autopay_total}} von Ihrer hinterlegten
-{{autopay_card_brand}}-Kreditkarte mit den Endziffern {{autopay_card_last4}}
-nicht abbuchen.
+{{autopay_card_brand}} mit den Endziffern {{autopay_card_last4}} nicht abbuchen.
 
-{{#if attempt_is_last}}
+{{#if authentication_required}}
+
+Dies weil Ihre Kreditkarte verlangt, dass Buchungen von Ihnen online bestätigt
+werden. Wir bitten Sie daher Ihre Mitgliedschaft hier manuell zu erneuern
+{{prolong_url}} .
+
+{{elseif attempt_is_last}}
 
 Wir sehen uns daher zu unserem grossen Bedauern gezwungen, Ihre Mitgliedschaft
 am {{grace_end_date}} zu deaktivieren.

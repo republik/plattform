@@ -24,7 +24,7 @@ module.exports = async (_, args, context, info) => {
     focusId,
     lastId,
     featured,
-    featuredTarget = featured && getDefaultFeaturedTarget()
+    featuredTarget = featured && getDefaultFeaturedTarget(),
   } = options
 
   if (limit > MAX_LIMIT) {
@@ -61,7 +61,8 @@ module.exports = async (_, args, context, info) => {
   }
 
   const [numComments, comments] = await Promise.all([
-    pgdb.queryOneField(`
+    pgdb.queryOneField(
+      `
       SELECT
         COUNT(*)
       FROM
@@ -69,9 +70,11 @@ module.exports = async (_, args, context, info) => {
       ${queryJoin}
       WHERE
         ${queryWhere}
-    `, {
-      featuredTarget
-    }),
+    `,
+      {
+        featuredTarget,
+      },
+    ),
     pgdb.query(
       `
       SELECT
@@ -103,7 +106,7 @@ module.exports = async (_, args, context, info) => {
         lastId: lastId || null,
         limit,
         offset,
-        featuredTarget
+        featuredTarget,
       },
     ),
   ])

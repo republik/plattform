@@ -248,7 +248,7 @@ module.exports = async (pledgeId, pgdb, t, redis) => {
       subscribeToEditorialNewsletters,
     })
   } catch (e) {
-    console.error('enforceSubscriptions failed in generateMemberships', e)
+    console.warn('enforceSubscriptions failed in generateMemberships. This error is ignored, continuing...', e)
   }
 
   const cache = createCache({ prefix: `User:${user.id}` }, { redis })

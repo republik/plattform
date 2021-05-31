@@ -47,7 +47,7 @@
                       Ihre Mitgliedschaft erneuerte sich am {{end_date}} um ein
                       weiteres Jahr. Bedauerlicherweise konnten wir erneut den
                       Jahresbeitrag von {{autopay_total}} Ihrer hinterlegten
-                      {{autopay_card_brand}}-Kreditkarte mit den Endziffern
+                      {{autopay_card_brand}} mit den Endziffern
                       {{autopay_card_last4}} nicht belasten.
                     </p>
                     <p>
@@ -73,7 +73,7 @@
                       Ihre Mitgliedschaft erneuerte sich am {{end_date}} um ein
                       weiteres Jahr. Trotz mehrfachen Versuchen konnten wir den
                       Jahresbeitrag von {{autopay_total}} Ihrer hinterlegten
-                      {{autopay_card_brand}}-Kreditkarte mit den Endziffern
+                      {{autopay_card_brand}} mit den Endziffern
                       {{autopay_card_last4}} nicht belasten.
                     </p>
                     <p>
@@ -93,10 +93,18 @@
                       dass Sie uns erlauben, Ihre hinterlegte Kreditkarte
                       automatisch zu belasten. Bedauerlicherweise konnten wir
                       den Jahresbeitrag von {{autopay_total}} von Ihrer
-                      hinterlegten {{autopay_card_brand}}-Kreditkarte mit den
-                      Endziffern {{autopay_card_last4}} nicht abbuchen.
+                      hinterlegten {{autopay_card_brand}} mit den Endziffern
+                      {{autopay_card_last4}} nicht abbuchen.
                     </p>
-                    {{#if attempt_is_last}}
+                    {{#if authentication_required}}
+                    <p>
+                      Dies weil Ihre Kreditkarte verlangt, dass Buchungen von
+                      Ihnen online bestätigt werden. Wir bitten Sie daher
+                      <a href="{{prolong_url}}"
+                        >Ihre Mitgliedschaft hier manuell zu erneuern</a
+                      >.
+                    </p>
+                    {{elseif attempt_is_last}}
                     <p>
                       Wir sehen uns daher zu unserem grossen Bedauern gezwungen,
                       Ihre Mitgliedschaft am {{grace_end_date}} zu deaktivieren.

@@ -35,6 +35,9 @@ module.exports = {
     {
       files: ['**/*.js'],
       extends: ['standard', 'prettier', 'plugin:prettier/recommended'],
+      rules: {
+        camelcase: 'off',
+      },
     },
     {
       files: ['**/*.jest.js'],

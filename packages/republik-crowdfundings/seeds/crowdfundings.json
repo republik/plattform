@@ -40,6 +40,10 @@
     {
       "id": "00000000-0000-0000-0004-000000000003",
       "type": "MembershipType"
+    },
+    {
+      "id": "00000000-0000-0000-0004-000000000020",
+      "type": "MembershipType"
     }
   ],
   "goodies": [
@@ -68,6 +72,18 @@
       "name": "MONTHLY_ABO",
       "price": 3500,
       "interval": "month"
+    },
+    {
+      "id": "00000000-0000-0000-0006-000000000020",
+      "rewardId": "00000000-0000-0000-0004-000000000020",
+      "rewardType": "MembershipType",
+      "companyId": "c0000000-0000-0000-0001-000000000002",
+      "name": "ABO",
+      "price": 18000,
+      "interval": "month",
+      "minPeriods": 1,
+      "maxPeriods": 6,
+      "defaultPeriods": 6
     }
   ],
   "packages": [
@@ -106,6 +122,22 @@
       "name": "PRESENT",
       "paymentMethods": "{STRIPE,POSTFINANCECARD,PAYPAL,PAYMENTSLIP}",
       "isAutoActivateUserMembership": false
+    },
+    {
+      "id": "00000000-0000-0000-0007-000000000010",
+      "crowdfundingId": "f0000000-0000-0000-0002-000000000001",
+      "companyId": "c0000000-0000-0000-0001-000000000001",
+      "name": "PROLONG",
+      "paymentMethods": "{STRIPE,POSTFINANCECARD,PAYPAL,PAYMENTSLIP}",
+      "isAutoActivateUserMembership": false,
+      "custom": true
+    },
+    {
+      "id": "00000000-0000-0000-0007-000000000020",
+      "crowdfundingId": "f0000000-0000-0000-0002-000000000001",
+      "companyId": "c0000000-0000-0000-0001-000000000002",
+      "name": "ABO_COMPANY_TWO",
+      "paymentMethods": "{STRIPE,POSTFINANCECARD,PAYPAL,PAYMENTSLIP}"
     }
   ],
   "packageOptions": [
@@ -168,6 +200,46 @@
       "maxAmount": 1,
       "defaultAmount": 1,
       "price": 24000,
+      "userPrice": false
+    },
+    {
+      "id": "00000000-0000-0000-0008-000000000010",
+      "packageId": "00000000-0000-0000-0007-000000000010",
+      "rewardId": "00000000-0000-0000-0004-000000000002",
+      "minAmount": 0,
+      "maxAmount": 1,
+      "defaultAmount": 0,
+      "price": 24000,
+      "userPrice": true
+    },
+    {
+      "id": "00000000-0000-0000-0008-000000000011",
+      "packageId": "00000000-0000-0000-0007-000000000010",
+      "rewardId": "00000000-0000-0000-0004-000000000002",
+      "minAmount": 0,
+      "maxAmount": 1,
+      "defaultAmount": 0,
+      "price": 100000,
+      "userPrice": false
+    },
+    {
+      "id": "00000000-0000-0000-0008-000000000012",
+      "packageId": "00000000-0000-0000-0007-000000000010",
+      "rewardId": "00000000-0000-0000-0004-000000000001",
+      "minAmount": 0,
+      "maxAmount": 10,
+      "defaultAmount": 0,
+      "price": 3000,
+      "userPrice": false
+    },
+    {
+      "id": "00000000-0000-0000-0008-000000000020",
+      "packageId": "00000000-0000-0000-0007-000000000020",
+      "rewardId": "00000000-0000-0000-0004-000000000020",
+      "minAmount": 1,
+      "maxAmount": 1,
+      "defaultAmount": 1,
+      "price": 12000,
       "userPrice": false
     }
   ]

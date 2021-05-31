@@ -86,18 +86,21 @@ module.exports = async (
 
     /**
      * Check if new total is lower than expected minimum total
-     * 
+     *
      * Due to currency exchange rates, new total can not be lower than
      * 90 precent of minimum.
      */
     const expectedMinTotal = minTotal(pledgeOptions, packageOptions) * 0.9
     if (newTotal < expectedMinTotal) {
-      logger.error(`total (${payment.total}) must be >= (${expectedMinTotal})`, {
-        req: req._log(),
-        args,
-        payment,
-        expectedMinTotal,
-      })
+      logger.error(
+        `total (${payment.total}) must be >= (${expectedMinTotal})`,
+        {
+          req: req._log(),
+          args,
+          payment,
+          expectedMinTotal,
+        },
+      )
       throw new Error(
         t('api/pledge/resolve/payment/notEnough', {
           total: newTotal / 100.0,

@@ -1,9 +1,63 @@
+const debug = require('debug')('crowdfundings:lib:payments:stripe:payPledge')
+
+const { RequiresPaymentMethodError } = require('./Errors')
+
 const createCustomer = require('./createCustomer')
 const createCharge = require('./createCharge')
 const createSubscription = require('./createSubscription')
 const addSource = require('./addSource')
+const addPaymentMethod = require('./addPaymentMethod')
+const getClients = require('./clients')
+const createPaymentIntent = require('./createPaymentIntent')
+const {
+  rememberUpdateDefault: rememberUpdateDefaultPaymentMethod,
+  maybeUpdateDefault: maybeUpdateDefaultPaymentMethod,
+} = require('./paymentMethod')
 
-module.exports = async ({
+module.exports = (args) => {
+  const { sourceId, t } = args
+  if (!sourceId) {
+    console.error('missing sourceId', args)
+    throw new Error(t('api/unexpected'))
+  }
+  if (sourceId.startsWith('src_')) {
+    return payWithSource(args)
+  } else {
+    return payWithPaymentMethod({
+      ...args,
+      stripePlatformPaymentMethodId: args.sourceId,
+    }).catch((e) => {
+      throwError(e, { ...args, kind: 'paymentIntent' })
+    })
+  }
+}
+
+const throwError = (e, { pledgeId, t, kind }) => {
+  if (e.type === 'StripeCardError') {
+    const translatedError = t('api/pay/stripe/' + e.code)
+    if (translatedError) {
+      console.warn(e, { pledgeId, kind })
+      throw new Error(translatedError)
+    } else {
+      console.warn('translation not found for stripe error', {
+        pledgeId,
+        kind,
+        e,
+      })
+      throw new Error(e.message)
+    }
+  }
+
+  if (e.name === 'RequiresPaymentMethodError') {
+    console.warn(e, { pledgeId, kind })
+    throw new Error(t('api/pay/stripe/card_declined'))
+  }
+
+  console.error(e, { pledgeId, kind })
+  throw new Error(t('api/unexpected'))
+}
+
+const payWithSource = async ({
   pledgeId,
   total,
   sourceId,
@@ -14,14 +68,14 @@ module.exports = async ({
   transaction,
   pgdb,
   t,
-  logger = console,
 }) => {
   const isSubscription = pkg.name === 'MONTHLY_ABO'
+
+  // old charge threeDSecure
   const threeDSecure = pspPayload && pspPayload.type === 'three_d_secure'
   const rememberSourceId = threeDSecure
     ? pspPayload.three_d_secure.card
     : sourceId
-
   if (isSubscription && threeDSecure) {
     throw new Error(t('api/payment/subscription/threeDsecure/notSupported'))
   }
@@ -31,7 +85,11 @@ module.exports = async ({
     let deduplicatedSourceId
     if (!(await pgdb.public.stripeCustomers.findFirst({ userId }))) {
       if (!rememberSourceId) {
-        logger.error('missing sourceId', { userId, pledgeId, sourceId })
+        console.error('missing sourceId', {
+          userId,
+          pledgeId,
+          sourceId,
+        })
         throw new Error(t('api/unexpected'))
       }
       await createCustomer({
@@ -71,19 +129,7 @@ module.exports = async ({
       })
     }
   } catch (e) {
-    logger.info('stripe charge failed', { pledgeId, e })
-    if (e.type === 'StripeCardError') {
-      const translatedError = t('api/pay/stripe/' + e.code)
-      if (translatedError) {
-        throw new Error(translatedError)
-      } else {
-        logger.warn('translation not found for stripe error', { pledgeId, e })
-        throw new Error(e.message)
-      }
-    } else {
-      logger.error('unknown error on stripe charge', { pledgeId, e })
-      throw new Error(t('api/unexpected'))
-    }
+    throwError(e, { pledgeId, t, kind: 'charge' })
   }
 
   // for subscriptions the payment doesn't exist yet
@@ -107,5 +153,137 @@ module.exports = async ({
     })
   }
 
-  return 'SUCCESSFUL'
+  return {
+    status: 'SUCCESSFUL',
+  }
+}
+
+const payWithPaymentMethod = async ({
+  pledgeId,
+  total,
+  stripePlatformPaymentMethodId,
+  makeDefault = false,
+  userId,
+  pkg,
+  pgdb,
+  t,
+}) => {
+  const { companyId } = pkg
+
+  if (!stripePlatformPaymentMethodId) {
+    throw new Error(t('missing stripePlatformPaymentMethodId'))
+  }
+
+  const clients = await getClients(pgdb)
+
+  const isExistingCustomer = !!(await pgdb.public.stripeCustomers.count({
+    userId,
+  }))
+
+  if (!isExistingCustomer) {
+    await createCustomer({
+      paymentMethodId: stripePlatformPaymentMethodId,
+      userId,
+      pgdb,
+      clients,
+    })
+  } else {
+    await addPaymentMethod({
+      paymentMethodId: stripePlatformPaymentMethodId,
+      userId,
+      pgdb,
+      clients,
+    })
+  }
+
+  if (makeDefault) {
+    await rememberUpdateDefaultPaymentMethod(
+      stripePlatformPaymentMethodId,
+      userId,
+      companyId,
+      pgdb,
+    )
+  }
+
+  const isSubscription = pkg.name === 'MONTHLY_ABO'
+  let paymentIntent
+  if (isSubscription) {
+    const subscription = await createSubscription({
+      plan: pkg.name,
+      userId,
+      companyId,
+      platformPaymentMethodId: stripePlatformPaymentMethodId,
+      metadata: {
+        pledgeId,
+      },
+      pgdb,
+      clients,
+      t,
+    })
+
+    paymentIntent = subscription.latest_invoice?.payment_intent
+    if (!paymentIntent) {
+      throw new Error(
+        `payPledge didn't receive the paymentIntent for subscription pledgeId: ${pledgeId}`,
+      )
+    }
+  } else {
+    paymentIntent = await createPaymentIntent({
+      userId,
+      companyId,
+      platformPaymentMethodId: stripePlatformPaymentMethodId,
+      total,
+      pledgeId,
+      pgdb,
+      clients,
+      t,
+    })
+  }
+
+  if (paymentIntent.status !== 'succeeded') {
+    debug('unsuccessful payment intent %o', {
+      pledgeId,
+      companyId,
+      packageName: pkg.name,
+      isSubscription,
+      intentId: paymentIntent.id,
+      intentStatus: paymentIntent.status,
+      client_secret: !!paymentIntent.client_secret,
+    })
+  } else {
+    await maybeUpdateDefaultPaymentMethod(userId, addPaymentMethod, pgdb).catch(
+      (e) => console.warn(e),
+    )
+  }
+
+  // We consider a payment intent requiring (another) payment method as failed.
+  if (paymentIntent.status === 'requires_payment_method') {
+    throw new RequiresPaymentMethodError(paymentIntent)
+  }
+
+  if (paymentIntent.status === 'canceled') {
+    throw new Error('payment_intent.status returned "canceled"')
+  }
+
+  const isClientSecretNecessary = [
+    'requires_confirmation',
+    'requires_action',
+  ].includes(paymentIntent.status)
+  const stripePaymentIntentId = paymentIntent.id
+  const stripeClientSecret =
+    (isClientSecretNecessary && paymentIntent.client_secret) || undefined
+
+  // get stripe client for companyId
+  const account = clients.accountForCompanyId(companyId)
+  if (!account) {
+    throw new Error(`could not find account for companyId: ${companyId}`)
+  }
+
+  return {
+    status: 'DRAFT',
+    stripePaymentIntentId,
+    stripeClientSecret,
+    stripePublishableKey: account.publishableKey,
+    companyId,
+  }
 }

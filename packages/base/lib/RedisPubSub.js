@@ -1,11 +1,14 @@
 const { RedisPubSub } = require('graphql-redis-subscriptions')
 const { withFilter } = require('apollo-server')
-const { getConnectionOptions } = require('./Redis')
 
-const connect = () =>
-  new RedisPubSub({
-    connection: getConnectionOptions(),
+const { connect: connectRedis } = require('./Redis')
+
+const connect = () => {
+  return new RedisPubSub({
+    publisher: connectRedis(),
+    subscriber: connectRedis(),
   })
+}
 
 const disconnect = (pubsub) => {
   pubsub.getSubscriber().quit()

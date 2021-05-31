@@ -5,12 +5,21 @@ const execAndLog = (command) =>
   exec(command).catch((e) => console.log(`${command}\n${e.stderr}`))
 
 const create = (name) =>
-  execAndLog(`psql -c 'create database ${name};' -U postgres`)
+  execAndLog(
+    `psql -c 'create database ${name};' -U ${
+      process.env.PG_USER || 'postgres'
+    } -d postgres`,
+  )
 
 const drop = (name) =>
-  execAndLog(`psql -c 'drop database ${name};' -U postgres`)
+  execAndLog(
+    `psql -c 'drop database ${name};' -U ${
+      process.env.PG_USER || 'postgres'
+    } -d postgres`,
+  )
 
-const getDatabaseUrl = (name) => `postgres://postgres@localhost:5432/${name}`
+const getDatabaseUrl = (name) =>
+  `postgres://${process.env.PG_USER || 'postgres'}@localhost:5432/${name}`
 
 const migrateUp = (url) =>
   execAndLog(`DATABASE_URL=${url} yarn run db:migrate:up`)
