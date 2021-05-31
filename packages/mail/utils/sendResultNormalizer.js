@@ -40,7 +40,10 @@ module.exports = (
   }
 
   const result = results && results[0]
-  const wasSent = !!result && ['sent', 'queued'].includes(result.status) && !result.reject_reason
+  const wasSent =
+    !!result &&
+    ['sent', 'queued'].includes(result.status) &&
+    !result.reject_reason
 
   return {
     result,

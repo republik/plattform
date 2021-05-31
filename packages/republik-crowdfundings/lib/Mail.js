@@ -171,13 +171,19 @@ mail.sendMembershipProlongConfirmation = async ({
 }
 
 mail.sendPledgeConfirmations = async ({ userId, pgdb, t }) => {
-  const user = await pgdb.public.users.findOne({ id: userId })
+  const user = await pgdb.public.users.findOne({
+    id: userId,
+    verified: true,
+  })
+  if (!user) {
+    return
+  }
+
   const pledges = await pgdb.public.pledges.find({
     userId: user.id,
     'status !=': 'CANCELLED',
     sendConfirmMail: true,
   })
-
   if (!pledges.length) {
     return
   }
@@ -524,7 +530,10 @@ mail.prepareMembershipOwnerNotice = async (
       autoPay &&
         autoPay.card && {
           name: 'autopay_card_brand',
-          content: autoPay.card.brand,
+          content: t.first([
+            `api/email/card/${autoPay.card.brand}`,
+            `api/email/card`,
+          ]),
         },
       autoPay &&
         autoPay.card && {
@@ -590,7 +599,10 @@ mail.sendMembershipOwnerAutoPay = async ({ autoPay, payload, pgdb, t }) => {
         },
         autoPay.card && {
           name: 'autopay_card_brand',
-          content: autoPay.card.brand,
+          content: t.first([
+            `api/email/card/${autoPay.card.brand}`,
+            `api/email/card`,
+          ]),
         },
         autoPay.card && {
           name: 'autopay_card_last4',
@@ -599,6 +611,10 @@ mail.sendMembershipOwnerAutoPay = async ({ autoPay, payload, pgdb, t }) => {
         {
           name: 'attempt_number',
           content: payload.attemptNumber,
+        },
+        {
+          name: 'authentication_required',
+          content: payload.authenticationRequired,
         },
         {
           name: 'attempt_is_last',

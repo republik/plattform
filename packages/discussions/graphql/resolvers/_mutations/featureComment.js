@@ -1,7 +1,7 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
 const slack = require('../../../lib/slack')
 
-const { getDefaultFeaturedTarget } = require('../../../lib/Comment')
+const { getDefaultFeaturedTarget } = require('../../../lib/Comment')
 
 module.exports = async (_, args, context) => {
   const { id, content, targets = [] } = args

@@ -2,18 +2,28 @@ const bodyParser = require('body-parser')
 const logger = console
 const payPledgePF = require('../lib/payments/postfinance/payPledge')
 const payPledgePaypal = require('../lib/payments/paypal/payPledge')
-const generateMemberships = require('../lib/generateMemberships')
-const { refreshPotForPledgeId } = require('../lib/membershipPot')
-const { sendPledgeConfirmations } = require('../lib/Mail')
 const debug = require('debug')('crowdfundings:webhooks:all')
-const Promise = require('bluebird')
 
 const getWebhookHandler = require('../lib/payments/stripe/webhookHandler')
+const {
+  forUpdate,
+  changeStatus,
+  afterChange,
+} = require('../lib/payments/Pledge')
 
 const { STRIPE_TEST_MODE } = process.env
 
-module.exports = async (server, pgdb, t, redis) => {
-  const handleWebhook = await getWebhookHandler({ pgdb, t })
+module.exports = async (server, pgdb, t, redis, connectionContext) => {
+  const handleWebhook = await getWebhookHandler({
+    pgdb,
+    t,
+    redis,
+    connectionContext,
+  })
+  const context = {
+    ...connectionContext,
+    t,
+  }
 
   const handleStripeWebhook = async (req, res, connected) => {
     const body = JSON.parse(req.body.toString('utf8'))
@@ -83,72 +93,49 @@ module.exports = async (server, pgdb, t, redis) => {
     }
 
     const pledgeId = body.orderID
-    let updatedPledge
-    const transaction = await pgdb.transactionBegin()
-    try {
-      // load pledge
-      // FOR UPDATE to wait on other transactions
-      const pledge = (
-        await transaction.query(
-          `
-        SELECT *
-        FROM pledges
-        WHERE id = :pledgeId
-        FOR UPDATE
-      `,
-          {
-            pledgeId,
-          },
-        )
-      )[0]
+    const { updatedPledge } = await forUpdate({
+      pledgeId,
+      pgdb,
+      fn: async ({ pledge, transaction }) => {
+        if (pledge && pledge.status !== 'SUCCESSFUL') {
+          debug('pf run payPledgePF via webhook')
 
-      if (pledge && pledge.status !== 'SUCCESSFUL') {
-        debug('pf run payPledgePF via webhook')
-
-        const pspPayload = {
-          ...body,
-        }
-        const pledgeStatus = await payPledgePF({
-          pledgeId: pledge.id,
-          total: pledge.total,
-          pspPayload,
-          userId: pledge.userId,
-          transaction,
-          t,
-          logger,
-        })
-        if (pledge.status !== pledgeStatus) {
-          // generate Memberships
-          if (pledgeStatus === 'SUCCESSFUL') {
-            await generateMemberships(pledge.id, transaction, t, redis)
+          const pspPayload = {
+            ...body,
           }
-
-          // update pledge status
-          updatedPledge = await transaction.public.pledges.updateAndGetOne(
-            {
-              id: pledge.id,
-            },
-            {
-              status: pledgeStatus,
-              sendConfirmMail: true,
-            },
-          )
+          const newStatus = await payPledgePF({
+            pledgeId: pledge.id,
+            total: pledge.total,
+            pspPayload,
+            userId: pledge.userId,
+            transaction,
+            t,
+            logger,
+          })
+          if (pledge.status !== newStatus) {
+            return {
+              updatedPledge: await changeStatus(
+                {
+                  pledge,
+                  newStatus,
+                  transaction,
+                },
+                context,
+              ),
+            }
+          }
         }
-      }
-      await transaction.transactionCommit()
-    } catch (e) {
-      await transaction.transactionRollback()
-      logger.info('transaction rollback', { req: req._log(), error: e })
-      throw e
-    }
+        return { updatedPledge: null }
+      },
+    })
 
     if (updatedPledge) {
-      await Promise.all([
-        sendPledgeConfirmations({ userId: updatedPledge.userId, pgdb, t }),
-        refreshPotForPledgeId(updatedPledge.id, { pgdb }),
-      ]).catch((e) => {
-        console.error('error after payPledge', e)
-      })
+      await afterChange(
+        {
+          pledge: updatedPledge,
+        },
+        context,
+      )
     }
   })
 
@@ -173,71 +160,48 @@ module.exports = async (server, pgdb, t, redis) => {
       if (body.payment_status === 'Completed') {
         const pledgeId = body.item_name
 
-        let updatedPledge
-        const transaction = await pgdb.transactionBegin()
-        try {
-          // load pledge
-          // FOR UPDATE to wait on other transactions
-          const pledge = (
-            await transaction.query(
-              `
-            SELECT *
-            FROM pledges
-            WHERE id = :pledgeId
-            FOR UPDATE
-          `,
-              {
-                pledgeId,
-              },
-            )
-          )[0]
-
-          if (pledge && pledge.status !== 'SUCCESSFUL') {
-            const pspPayload = {
-              ...body,
-              tx: body.txn_id, // normalize with redirect params
-              webhook: true,
-            }
-            const pledgeStatus = await payPledgePaypal({
-              pledgeId: pledge.id,
-              total: pledge.total,
-              pspPayload,
-              transaction,
-              t,
-              logger,
-            })
-            if (pledge.status !== pledgeStatus) {
-              // generate Memberships
-              if (pledgeStatus === 'SUCCESSFUL') {
-                await generateMemberships(pledge.id, transaction, t, redis)
+        const { updatedPledge } = await forUpdate({
+          pledgeId,
+          pgdb,
+          fn: async ({ pledge, transaction }) => {
+            if (pledge && pledge.status !== 'SUCCESSFUL') {
+              const pspPayload = {
+                ...body,
+                tx: body.txn_id, // normalize with redirect params
+                webhook: true,
               }
-
-              // update pledge status
-              updatedPledge = await transaction.public.pledges.updateAndGetOne(
-                {
-                  id: pledge.id,
-                },
-                {
-                  status: pledgeStatus,
-                  sendConfirmMail: true,
-                },
-              )
+              const newStatus = await payPledgePaypal({
+                pledgeId: pledge.id,
+                total: pledge.total,
+                pspPayload,
+                transaction,
+                t,
+                logger,
+              })
+              if (pledge.status !== newStatus) {
+                return {
+                  updatedPledge: await changeStatus(
+                    {
+                      pledge,
+                      newStatus,
+                      transaction,
+                    },
+                    context,
+                  ),
+                }
+              }
             }
-          }
-          await transaction.transactionCommit()
-        } catch (e) {
-          await transaction.transactionRollback()
-          logger.info('transaction rollback', { req: req._log(), error: e })
-          throw e
-        }
+            return { updatedPledge: null }
+          },
+        })
 
         if (updatedPledge) {
-          await Promise.all([
-            sendPledgeConfirmations({ userId: updatedPledge.userId, pgdb, t }),
-            refreshPotForPledgeId(updatedPledge.id, { pgdb }),
-          ]).catch((e) => {
-            console.error('error after payPledge', e)
-          })
+          await afterChange(
+            {
+              pledge: updatedPledge,
+            },
+            context,
+          )
         }
       }
     },

@@ -1,9 +1,11 @@
 const getClients = require('./clients')
 const addSource = require('./addSource')
+const addPaymentMethod = require('./addPaymentMethod')
 
 // this method doesn't check if the user has a stripe customer already
 module.exports = async ({
   sourceId,
+  paymentMethodId,
   userId,
   pgdb,
   clients, // optional
@@ -14,29 +16,30 @@ module.exports = async ({
     id: userId,
   })
 
-  const customer = await platform.stripe.customers.create({
+  const stripeCustomer = await platform.stripe.customers.create({
     email: user.email,
     metadata: {
       userId,
     },
   })
 
-  await pgdb.public.stripeCustomers.insert({
-    id: customer.id,
+  const customer = await pgdb.public.stripeCustomers.insertAndGet({
+    id: stripeCustomer.id,
     userId,
     companyId: platform.company.id,
   })
 
-  for (let connectedAccount of connectedAccounts) {
-    const connectedCustomer = await connectedAccount.stripe.customers.create({
-      email: user.email,
-      metadata: {
-        userId,
-      },
-    })
+  for (const connectedAccount of connectedAccounts) {
+    const connectedStripeCustomer =
+      await connectedAccount.stripe.customers.create({
+        email: user.email,
+        metadata: {
+          userId,
+        },
+      })
 
     await pgdb.public.stripeCustomers.insert({
-      id: connectedCustomer.id,
+      id: connectedStripeCustomer.id,
       userId,
       companyId: connectedAccount.company.id,
     })
@@ -49,5 +52,14 @@ module.exports = async ({
       pgdb,
       clients,
     })
+  } else if (paymentMethodId) {
+    await addPaymentMethod({
+      paymentMethodId,
+      userId,
+      pgdb,
+      clients,
+    })
   }
+
+  return customer
 }

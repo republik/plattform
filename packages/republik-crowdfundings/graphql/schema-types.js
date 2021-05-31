@@ -8,7 +8,9 @@ extend type User {
   memberships: [Membership!]!
   activeMembership: Membership
 
-  paymentSources: [PaymentSource!]!
+  # stripe Sources and PaymentMethods
+  paymentSources: [PaymentSource!]! @deprecated(reason: "use \`defaultPaymentSource\` instead")
+  defaultPaymentSource: PaymentSource
 
   # Custom-tailored packages available for User
   customPackages(crowdfundingName: String): [Package!]
@@ -195,8 +197,8 @@ union Reward = Goodie | MembershipType
 
 input UserInput {
   email: String!
-  firstName: String!
-  lastName: String!
+  firstName: String
+  lastName: String
   birthday: Date
   phoneNumber: String
 }
@@ -235,7 +237,7 @@ type Pledge {
 input PledgeInput {
   options: [PackageOptionInput!]!
   total: Int!
-  user: UserInput!
+  user: UserInput
   address: AddressInput
   shippingAddress: AddressInput
   reason: String
@@ -250,17 +252,37 @@ type PledgeResponse {
   emailVerify: Boolean
   pfAliasId: String
   pfSHA: String
+  # returned by payPledge if confirmCardPayment is expected
+  stripeClientSecret: String
+  stripePublishableKey: String
+  # returned by payPledge if PaymentIntent is used
+  # can be used by client to call the syncPaymentIntent migration
+  stripePaymentIntentId: ID
+  # returned by payPledge if PaymentIntent is used
+  companyId: ID
+}
+
+type SyncPledgeResponse {
+  pledgeStatus: PledgeStatus!
+  updatedPledge: Boolean!
 }
 
 input PledgePaymentInput {
   pledgeId: ID!
   method: PaymentMethod!
   paperInvoice: Boolean
+  # can be a stripe Source id or a stripe PaymentMethod id (both must have been created on the platform's account)
   sourceId: String
   pspPayload: JSON
-  makeDefault: Boolean
+  makeDefault: Boolean @deprecated(reason: "use \`setDefaultPaymentMethod\` mutation after successful confirmCardPayment instead")
   address: AddressInput
   shippingAddress: AddressInput
+}
+
+type AddPaymentMethodResponse {
+  # returned confirmCardSetup is expected
+  stripeClientSecret: String
+  stripePublishableKey: String
 }
 
 enum PaymentMethod {
@@ -309,15 +331,20 @@ enum PaymentSourceStatus {
   FAILED
   PENDING
 }
+# can be stripe source or paymentMethod
+# id starts with:
+# src_: Source
+# pm_: PaymentMethod
 type PaymentSource {
   id: String!
   isDefault: Boolean!
+  # is always CHARGEABLE for PaymentSources
   status: PaymentSourceStatus!
   brand: String!
   last4: String!
   expMonth: Int!
   expYear: Int!
-  # is source expired now
+  # is card expired now
   isExpired: Boolean!
 }
 

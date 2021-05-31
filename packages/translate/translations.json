@@ -323,6 +323,14 @@
       "value": "Der PaymentIntent konnte nicht gefunden werden."
     },
     {
+      "key": "api/payment/paymentMethod/404",
+      "value": "Die PaymentMethod konnte nicht gefunden werden."
+    },
+    {
+      "key": "api/payment/paymentIntent/404",
+      "value": "Der PaymentIntent konnte nicht gefunden werden."
+    },
+    {
       "key": "api/email/membership_prolong_notice/subject",
       "value": "Ihre Republik-Mitgliedschaft wurde verlängert"
     },
@@ -2089,6 +2097,38 @@
     {
       "key": "api/republik/revenueStats/segment/donation",
       "value": "Spenden"
+    },
+    {
+      "key": "api/email/card",
+      "value": "Kreditkarte"
+    },
+    {
+      "key": "api/email/card/amex",
+      "value": "American-Express-Kreditkarte"
+    },
+    {
+      "key": "api/email/card/diners",
+      "value": "Diners-Club-Kreditkarte"
+    },
+    {
+      "key": "api/email/card/discover",
+      "value": "Discover-Kreditkarte"
+    },
+    {
+      "key": "api/email/card/jcb",
+      "value": "JCB-Kreditkarte"
+    },
+    {
+      "key": "api/email/card/mastercard",
+      "value": "MasterCard-Kreditkarte"
+    },
+    {
+      "key": "api/email/card/unionpay",
+      "value": "UnionPay-Kreditkarte"
+    },
+    {
+      "key": "api/email/card/visa",
+      "value": "Visa-Kreditkarte"
     }
   ]
 }

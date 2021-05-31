@@ -25,7 +25,12 @@ module.exports = async ({
   let existingSource
   if (deduplicate) {
     const source = await platform.stripe.sources.retrieve(sourceId)
-    const stripeCustomer = await platform.stripe.customers.retrieve(customer.id)
+    const stripeCustomer = await platform.stripe.customers.retrieve(
+      customer.id,
+      {
+        expand: ['sources'],
+      },
+    )
 
     // see _mutations/addPaymentSource
     if (source.type === 'three_d_secure') {
@@ -55,7 +60,7 @@ module.exports = async ({
     })
   }
 
-  for (let connectedAccount of connectedAccounts) {
+  for (const connectedAccount of connectedAccounts) {
     const connectedCustomer = await pgdb.public.stripeCustomers.findOne({
       userId,
       companyId: connectedAccount.company.id,
@@ -75,6 +80,7 @@ module.exports = async ({
     if (existingSource) {
       const connectedCustomerStripe = await connectedAccount.stripe.customers.retrieve(
         connectedCustomer.id,
+        { expand: ['sources'] },
       )
       connectedSource = connectedCustomerStripe.sources.data.find(
         (s) =>

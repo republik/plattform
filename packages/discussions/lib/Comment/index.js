@@ -1,6 +1,6 @@
 const featuredTargets = [
   { key: 'DEFAULT', default: true },
-  { key: 'MARKETING' }
+  { key: 'MARKETING' },
 ]
 
 if (!featuredTargets.find((t) => t.default)) {
@@ -8,11 +8,11 @@ if (!featuredTargets.find((t) => t.default)) {
 }
 
 const getFeaturedTargets = () => {
-  return featuredTargets.map(t => t.key)
+  return featuredTargets.map((t) => t.key)
 }
 
 const getDefaultFeaturedTarget = () => {
-  return featuredTargets.find(t => t.default)?.key
+  return featuredTargets.find((t) => t.default)?.key
 }
 
 module.exports = {

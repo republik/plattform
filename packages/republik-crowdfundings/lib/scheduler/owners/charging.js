@@ -41,9 +41,20 @@ module.exports = async (user, bucket, context) => {
     return
   }
 
-  // Back off if last attempt was too recent
+  // Back off if last attempt failed due to PaymentIntent.authentication_required and the same paymentMethod would be used this time or was too recent
   const mostRecentAttempt = previousAttempts[0]
   if (mostRecentAttempt) {
+    if (
+      mostRecentAttempt.error?.raw?.code === 'authentication_required' &&
+      (!mostRecentAttempt.sourceId ||
+        mostRecentAttempt.sourceId === user.user.autoPay.sourceId)
+    ) {
+      debug(
+        'backing off, most recent attempt failed with authentication_required and no new payment source',
+      )
+      return
+    }
+
     const waitUntil = moment(mostRecentAttempt.createdAt).add(
       backOffMinutes,
       'minutes',
@@ -76,6 +87,7 @@ module.exports = async (user, bucket, context) => {
       membershipId,
       pgdb,
       redis,
+      t,
     )
 
     const isLastAttempt = previousAttempts.length + 1 === attempts.length
@@ -83,6 +95,8 @@ module.exports = async (user, bucket, context) => {
       chargeAttemptStatus: chargeAttempt.status,
       chargeAttemptError: chargeAttempt.error,
       attemptNumber: previousAttempts.length + 1,
+      authenticationRequired:
+        chargeAttempt.error?.raw?.code === 'authentication_required',
       isLastAttempt,
       isNextAttemptLast: previousAttempts.length + 2 === attempts.length,
       nextAttemptDate:

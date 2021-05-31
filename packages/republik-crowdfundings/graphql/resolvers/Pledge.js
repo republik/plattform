@@ -54,7 +54,7 @@ module.exports = {
   async user(pledge, args, { pgdb, loaders }) {
     const user = await loaders.User.byId.load(pledge.userId)
 
-    if (user && !user._raw.verified && pledge.status === 'DRAFT') {
+    if (user && (!user._raw.verified || pledge.status === 'DRAFT')) {
       return {
         ...user,
         _scopeConfig: {
@@ -62,6 +62,7 @@ module.exports = {
         },
       }
     }
+
     return user
   },
   async payments(pledge, args, { pgdb, user: me }) {

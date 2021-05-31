@@ -38,6 +38,7 @@ module.exports = async ({
       // find this source on customer
       const stripeCustomer = await account.stripe.customers.retrieve(
         customer.id,
+        { expand: ['sources'] },
       )
 
       const originalSourceChecksum =

@@ -13,3 +13,5 @@
 
 # [log]
 #   level = "DEBUG"
+
+[accessLog]

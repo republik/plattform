@@ -3,7 +3,13 @@ const _ = {
 }
 const { STRIPE_PLATFORM, STRIPE_CONNECTED_ACCOUNTS } = process.env
 
+let cache
+
 module.exports = async (pgdb) => {
+  if (cache) {
+    return cache
+  }
+
   const accountNames = [
     STRIPE_PLATFORM,
     ...(STRIPE_CONNECTED_ACCOUNTS || '').split(','),
@@ -19,7 +25,7 @@ module.exports = async (pgdb) => {
   const companies = await pgdb.public.companies.find({
     name: accountNames,
   })
-  if (companies.length < accountNames) {
+  if (companies.length !== accountNames.length) {
     const missing = _.difference(
       accountNames,
       companies.map((c) => c.name),
@@ -31,6 +37,14 @@ module.exports = async (pgdb) => {
     const key = process.env[`STRIPE_SECRET_KEY_${accountName}`]
     if (!key) {
       throw new Error(`missing STRIPE_SECRET_KEY_${accountName}`)
+    }
+
+    const publishableKey = process.env[`STRIPE_PUBLISHABLE_KEY_${accountName}`]
+    if (!publishableKey) {
+      throw new Error(`missing STRIPE_PUBLISHABLE_KEY_${accountName}`)
+    }
+    if (!publishableKey.startsWith('pk_')) {
+      throw new Error(`wrong STRIPE_PUBLISHABLE_KEY_${accountName}`)
     }
 
     const accountId = process.env[`STRIPE_ACCOUNT_ID_${accountName}`]
@@ -49,17 +63,25 @@ module.exports = async (pgdb) => {
 
     const company = companies.find((c) => c.name === accountName)
     return {
+      publishableKey,
       name: accountName,
-      stripe: require('stripe')(key),
+      stripe: require('stripe')(key, { apiVersion: '2020-08-27' }),
       accountId,
       endpointSecret,
       company,
     }
   })
 
-  return {
+  cache = {
     platform: accounts.find((a) => a.name === STRIPE_PLATFORM),
     connectedAccounts: accounts.filter((a) => a.name !== STRIPE_PLATFORM),
     accounts,
+    accountForCompanyId: (companyId) =>
+      accounts.find((a) => a.company.id === companyId),
+    accountForAccountId: (accountId) =>
+      accounts.find((a) => a.accountId === accountId),
+    companyIdForAccountId: (accountId) =>
+      accounts.find((a) => a.accountId === accountId)?.company.id,
   }
+  return cache
 }

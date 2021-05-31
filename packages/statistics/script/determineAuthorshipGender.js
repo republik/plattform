@@ -163,7 +163,9 @@ PgDb.connect()
       console.warn(author, path)
     })
 
-    const unclassifiedAuthorNames = [...new Set(unclassifiedAuthors.map(({ author }) => author))].sort()
+    const unclassifiedAuthorNames = [
+      ...new Set(unclassifiedAuthors.map(({ author }) => author)),
+    ].sort()
     unclassifiedAuthorNames.map((authorName) => console.warn(authorName))
 
     const stats = {
