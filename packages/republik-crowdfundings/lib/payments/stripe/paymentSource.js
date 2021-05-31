@@ -2,6 +2,30 @@ const getStripeClients = require('./clients')
 
 const CACHE_KEY = 'paymentSources'
 
+/**
+ * Maps legacy Card.brand to PaymentMethod.card.brand
+ * - "American Express" to "amex"
+ * - "Diners Club" to "diners"
+ * - any brand to lower case string
+ *
+ *
+ * @see https://stripe.com/docs/api/cards/object#card_object-brand
+ * @see https://stripe.com/docs/api/payment_methods/object#payment_method_object-card
+ *
+ * @param {string} brand
+ * @returns {string}
+ */
+function mapCardBrand(brand) {
+  switch (brand) {
+    case 'American Express':
+      return 'amex'
+    case 'Diners Club':
+      return 'diners'
+    default:
+      return brand.toLowerCase()
+  }
+}
+
 const getPaymentSources = async (userId, pgdb, acceptCachedData = false) => {
   const { platform } = await getStripeClients(pgdb)
   if (!platform) {
@@ -35,7 +59,7 @@ const getPaymentSources = async (userId, pgdb, acceptCachedData = false) => {
     id: source.id,
     isDefault: source.id === stripeCustomer.default_source,
     status: source.status.toUpperCase(),
-    brand: source.card.brand,
+    brand: mapCardBrand(source.card.brand),
     last4: source.card.last4,
     expMonth: source.card.exp_month,
     expYear: source.card.exp_year,
