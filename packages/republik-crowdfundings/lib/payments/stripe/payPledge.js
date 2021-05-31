@@ -1,3 +1,5 @@
+const debug = require('debug')('crowdfundings:lib:payments:stripe:payPledge')
+
 const createCustomer = require('./createCustomer')
 const createCharge = require('./createCharge')
 const createSubscription = require('./createSubscription')
@@ -242,6 +244,16 @@ const payWithPaymentMethod = async ({
     await maybeUpdateDefaultPaymentMethod(userId, addPaymentMethod, pgdb).catch(
       (e) => console.warn(e),
     )
+  } else {
+    debug('unsuccessful payment intent %o', {
+      pledgeId,
+      companyId,
+      packageName: pkg.name,
+      isSubscription,
+      intentId: paymentIntent.id,
+      intentStatus: paymentIntent.status,
+      client_secret: !!paymentIntent.client_secret,
+    })
   }
 
   // get stripe client for companyId
