@@ -814,3 +814,56 @@ year,category,value
   </ChartLegend>
 </div>
 ```
+
+### Small Multiples
+
+
+```react
+<div>
+  <ChartTitle>Das Sterben setzt später ein</ChartTitle>
+  <ChartLead>Überleben der Engländerinnen und Waliser</ChartLead>
+  <CsvChart
+    config={{
+      "type": "TimeBar",
+      "x": "age",
+      "column": "date",
+      "columns": 3,
+      "xScale": "linear",
+      "numberFormat": ".0%",
+      "xNumberFormat": "s",
+      "xTicks": [
+        20,
+        40,
+        60,
+        80,
+        100
+      ],
+      "xUnit": "Alter",
+      "unit": "Anteil der Überlebenden",
+    }}
+    values={`
+age,date,value
+0,1851,1
+20,1851,0.659
+40,1851,0.54
+60,1851,0.376
+80,1851,0.089
+100,1851,0
+0,1931,1
+20,1931,0.875
+40,1931,0.812
+60,1931,0.652
+80,1931,0.193
+100,1931,0
+0,2011,1
+20,2011,0.993
+40,2011,0.981
+60,2011,0.925
+80,2011,0.634
+100,2011,0.021
+    `.trim()} />
+  <ChartLegend>
+    Quelle: <Editorial.A href='https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationprojections/compendium/nationalpopulationprojections/2014basedreferencevolumeseriespp2/chapter4mortality2014basednationalpopulationprojectionsreferencevolume'>Office for National Statistics</Editorial.A>
+  </ChartLegend>
+</div>
+```

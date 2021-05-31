@@ -29,6 +29,7 @@ const intervals = Object.keys(d3Intervals)
     return all
   }, {})
 
+const COLUMN_PADDING = 20
 const X_TICK_HEIGHT = 3
 const AXIS_BOTTOM_HEIGHT = 24
 
@@ -86,6 +87,16 @@ const TimeBarChart = props => {
 
   const paddingTop = 24
   const [colorScheme] = useColorContext()
+
+  const possibleColumns = Math.floor(
+    width / (props.minInnerWidth + COLUMN_PADDING)
+  )
+  const columns =
+    possibleColumns >= props.columns
+      ? props.columns
+      : Math.max(possibleColumns, 1)
+  const columnWidth =
+    Math.floor((width - COLUMN_PADDING * (columns - 1)) / columns) - 1
 
   let data = values
   if (props.filter) {
@@ -573,7 +584,7 @@ export const propTypes = {
   xTicks: PropTypes.arrayOf(
     PropTypes.oneOfType([PropTypes.number, PropTypes.string])
   ),
-  xScale: PropTypes.oneOf(['time', 'ordinal']),
+  xScale: PropTypes.oneOf(['time', 'ordinal', 'linear']),
   xAnnotations: PropTypes.arrayOf(
     PropTypes.shape({
       valuePrefix: PropTypes.string,
@@ -592,7 +603,8 @@ export const propTypes = {
   numberFormat: PropTypes.string.isRequired,
   filter: PropTypes.string,
   tLabel: PropTypes.func.isRequired,
-  description: PropTypes.string
+  description: PropTypes.string,
+  columns: PropTypes.number.isRequired
 }
 
 TimeBarChart.propTypes = propTypes
@@ -609,7 +621,8 @@ TimeBarChart.defaultProps = {
   colorLegend: true,
   xIntervalStep: 1,
   yAnnotations: [],
-  xAnnotations: []
+  xAnnotations: [],
+  columns: 1
 }
 
 export default TimeBarChart
