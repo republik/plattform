@@ -1,6 +1,6 @@
 const debug = require('debug')('crowdfundings:lib:payments:stripe:payPledge')
 
-const { RequirePaymentMethodError } = require('./Errors')
+const { RequiresPaymentMethodError } = require('./Errors')
 
 const createCustomer = require('./createCustomer')
 const createCharge = require('./createCharge')
@@ -48,7 +48,7 @@ const throwError = (e, { pledgeId, t, kind }) => {
     }
   }
 
-  if (e.name === 'RequirePaymentMethodError') {
+  if (e.name === 'RequiresPaymentMethodError') {
     console.warn(e, { pledgeId, kind })
     throw new Error(t('api/pay/stripe/card_declined'))
   }
@@ -258,7 +258,7 @@ const payWithPaymentMethod = async ({
 
   // We consider a payment intent requiring (another) payment method as failed.
   if (paymentIntent.status === 'requires_payment_method') {
-    throw new RequirePaymentMethodError(paymentIntent)
+    throw new RequiresPaymentMethodError(paymentIntent)
   }
 
   if (paymentIntent.status === 'canceled') {

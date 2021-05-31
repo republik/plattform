@@ -1,8 +1,8 @@
-class RequirePaymentMethodError extends Error {
+class RequiresPaymentMethodError extends Error {
   constructor(paymentIntent) {
     super()
     this.message = 'payment intent requires an (other) payment method'
-    this.name = 'RequirePaymentMethodError'
+    this.name = 'RequiresPaymentMethodError'
     this.paymentIntent = {
       id: paymentIntent.id,
       status: paymentIntent.status,
@@ -10,4 +10,4 @@ class RequirePaymentMethodError extends Error {
   }
 }
 
-module.exports.RequirePaymentMethodError = RequirePaymentMethodError
+module.exports.RequiresPaymentMethodError = RequiresPaymentMethodError
