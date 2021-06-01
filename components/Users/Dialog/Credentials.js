@@ -114,40 +114,38 @@ class UpdateCredential extends Component {
 
 const Credentials = ({ userId }) => {
   return (
-    <Section>
-      <SectionTitle>Rollen verifizieren</SectionTitle>
-      <Query query={GET_CREDENTIALS} variables={{ id: userId }}>
-        {({ loading, error, data }) => {
-          const isInitialLoading = loading && !(data && data.user)
-          return (
-            <Loader
-              loading={isInitialLoading}
-              error={error}
-              render={() => {
-                const { user } = data
-                const { credentials } = user
+    <Query query={GET_CREDENTIALS} variables={{ id: userId }}>
+      {({ loading, error, data }) => {
+        const isInitialLoading = loading && !(data && data.user)
+        return (
+          <Loader
+            loading={isInitialLoading}
+            error={error}
+            render={() => {
+              const { user } = data
+              const { credentials } = user
 
-                if (credentials.length > 0) {
-                  return (
-                    <InteractiveSection>
-                      {credentials.map((credential) => (
-                        <UpdateCredential
-                          key={`${credential.description}-${credential.verified}`}
-                          user={user}
-                          credential={credential}
-                        />
-                      ))}
-                    </InteractiveSection>
-                  )
-                } else {
-                  return <div>Keine (nicht-anonymen) Rollen vorhanden</div>
-                }
-              }}
-            />
-          )
-        }}
-      </Query>
-    </Section>
+              if (credentials.length > 0) {
+                return (
+                  <InteractiveSection>
+                    <SectionTitle>Rollen verifizieren</SectionTitle>
+                    {credentials.map((credential) => (
+                      <UpdateCredential
+                        key={`${credential.description}-${credential.verified}`}
+                        user={user}
+                        credential={credential}
+                      />
+                    ))}
+                  </InteractiveSection>
+                )
+              } else {
+                return <div>Keine (nicht-anonymen) Rollen vorhanden</div>
+              }
+            }}
+          />
+        )
+      }}
+    </Query>
   )
 }
 
