@@ -302,248 +302,272 @@ const TimeBarChart = props => {
     )
     .filter(Boolean)
 
+  let groupedData = [
+    {
+      x: 0,
+      y: paddingTop,
+      bars,
+      xAnnotations,
+      yAnnotations
+    }
+  ]
+
   return (
     <>
       <ColorLegend inline values={colorLegendValues} />
       <svg width={width} height={innerHeight + paddingTop + AXIS_BOTTOM_HEIGHT}>
         <desc>{description}</desc>
-        <g transform={`translate(0,${paddingTop})`}>
-          {xAnnotations
-            .filter(annotation => annotation.ghost)
-            .map((annotation, i) => (
-              <rect
-                key={`ghost-${i}`}
-                x={x(xNormalizer(annotation.x))}
-                y={y(annotation.value)}
-                width={barWidth}
-                height={y(0) - y(annotation.value)}
-                shapeRendering='crispEdges'
-                {...colorScheme.set('fill', 'divider')}
-              />
-            ))}
-          {bars.map(bar => {
-            return (
-              <g key={bar.x} transform={`translate(${x(bar.x)},0)`}>
-                {bar.segments.map((segment, i) => (
-                  <rect
-                    key={i}
-                    y={segment.y}
-                    width={barWidth}
-                    height={segment.height}
-                    shapeRendering='crispEdges'
-                    {...colorScheme.set(
-                      'fill',
-                      color(colorAccessor(segment)),
-                      'charts'
-                    )}
-                  />
-                ))}
-              </g>
-            )
-          })}
-          <g transform={`translate(0,${innerHeight})`}>
-            {baseLines.map((line, i) => {
-              return (
-                <line
-                  key={i}
-                  x1={line.x1}
-                  x2={line.x2}
-                  {...styles.axisXLine}
-                  {...(baseTick !== 0
-                    ? colorScheme.set('stroke', 'text')
-                    : colorScheme.set('stroke', 'divider'))}
-                  strokeDasharray={line.gap ? '2 2' : 'none'}
+        {groupedData.map(group => (
+          <g
+            key={`group${group.title || 1}`}
+            transform={`translate(${group.x},${group.y})`}
+          >
+            <text
+              dy='1.5em'
+              y={paddingTop}
+              {...styles.groupTitle}
+              {...colorScheme.set('fill', 'text')}
+            >
+              {group.title}
+            </text>
+            {group.xAnnotations
+              .filter(annotation => annotation.ghost)
+              .map((annotation, i) => (
+                <rect
+                  key={`ghost-${i}`}
+                  x={x(xNormalizer(annotation.x))}
+                  y={y(annotation.value)}
+                  width={barWidth}
+                  height={y(0) - y(annotation.value)}
+                  shapeRendering='crispEdges'
+                  {...colorScheme.set('fill', 'divider')}
                 />
+              ))}
+            {group.bars.map(bar => {
+              return (
+                <g key={bar.x} transform={`translate(${x(bar.x)},0)`}>
+                  {bar.segments.map((segment, i) => (
+                    <rect
+                      key={i}
+                      y={segment.y}
+                      width={barWidth}
+                      height={segment.height}
+                      shapeRendering='crispEdges'
+                      {...colorScheme.set(
+                        'fill',
+                        color(colorAccessor(segment)),
+                        'charts'
+                      )}
+                    />
+                  ))}
+                </g>
               )
             })}
-            {xTicks.map(tick => (
-              <g
-                key={tick}
-                transform={`translate(${x(tick) + Math.round(barWidth / 2)},0)`}
-              >
-                <line
-                  {...styles.axisXLine}
-                  {...colorScheme.set('stroke', 'text')}
-                  y2={X_TICK_HEIGHT}
-                />
+            <g transform={`translate(0,${innerHeight})`}>
+              {baseLines.map((line, i) => {
+                return (
+                  <line
+                    key={i}
+                    x1={line.x1}
+                    x2={line.x2}
+                    {...styles.axisXLine}
+                    {...(baseTick !== 0
+                      ? colorScheme.set('stroke', 'text')
+                      : colorScheme.set('stroke', 'divider'))}
+                    strokeDasharray={line.gap ? '2 2' : 'none'}
+                  />
+                )
+              })}
+              {xTicks.map(tick => (
+                <g
+                  key={tick}
+                  transform={`translate(${x(tick) +
+                    Math.round(barWidth / 2)},0)`}
+                >
+                  <line
+                    {...styles.axisXLine}
+                    {...colorScheme.set('stroke', 'text')}
+                    y2={X_TICK_HEIGHT}
+                  />
+                  <text
+                    {...styles.axisLabel}
+                    {...colorScheme.set('fill', 'text')}
+                    y={X_TICK_HEIGHT + 5}
+                    dy='0.6em'
+                    textAnchor='middle'
+                  >
+                    {xFormat(xParser(tick))}
+                  </text>
+                </g>
+              ))}
+            </g>
+            {yTicks.map((tick, i) => (
+              <g key={tick} transform={`translate(0,${y(tick)})`}>
+                {tick !== baseTick && (
+                  <line
+                    {...styles.axisYLine}
+                    {...colorScheme.set('stroke', 'text')}
+                    style={{
+                      opacity: tick === 0 ? 0.8 : 0.17
+                    }}
+                    x2={width}
+                  />
+                )}
                 <text
                   {...styles.axisLabel}
                   {...colorScheme.set('fill', 'text')}
-                  y={X_TICK_HEIGHT + 5}
-                  dy='0.6em'
-                  textAnchor='middle'
+                  dy='-3px'
                 >
-                  {xFormat(xParser(tick))}
+                  {yAxis.axisFormat(tick, last(yTicks, i))}
                 </text>
               </g>
             ))}
-          </g>
-          {yTicks.map((tick, i) => (
-            <g key={tick} transform={`translate(0,${y(tick)})`}>
-              {tick !== baseTick && (
-                <line
-                  {...styles.axisYLine}
-                  {...colorScheme.set('stroke', 'text')}
-                  style={{
-                    opacity: tick === 0 ? 0.8 : 0.17
-                  }}
-                  x2={width}
-                />
-              )}
-              <text
-                {...styles.axisLabel}
-                {...colorScheme.set('fill', 'text')}
-                dy='-3px'
-              >
-                {yAxis.axisFormat(tick, last(yTicks, i))}
-              </text>
-            </g>
-          ))}
-          {yAnnotations.map((annotation, i) => (
-            <g
-              key={`y-annotation-${i}`}
-              transform={`translate(0,${y(annotation.value)})`}
-            >
-              <line
-                x1={0}
-                x2={width}
-                {...styles.annotationLine}
-                {...colorScheme.set('stroke', 'text')}
-              />
-              <circle
-                r='3.5'
-                cx={annotation.x ? x(xNormalizer(annotation.x)) : 4}
-                {...colorScheme.set('stroke', 'text')}
-                {...colorScheme.set('fill', 'textInverted')}
-              />
-              <text
-                x={width}
-                textAnchor='end'
-                dy={annotation.dy || '-0.4em'}
-                {...styles.annotationText}
-                {...colorScheme.set('fill', 'text')}
-              >
-                {tLabel(annotation.label)}
-                {annotation.showValue !== false && (
-                  <>
-                    {' '}
-                    {yAxis.format(annotation.value)} {tLabel(annotation.unit)}
-                  </>
-                )}
-              </text>
-            </g>
-          ))}
-          {xAnnotations.map((annotation, i) => {
-            const range =
-              annotation.x1 !== undefined && annotation.x2 !== undefined
-
-            if (
-              annotation.ghost &&
-              !annotation.valuePrefix &&
-              !annotation.label &&
-              !annotation.position
-            ) {
-              return null
-            }
-
-            const showValue = annotation.showValue !== false
-            const labelText = tLabel(annotation.label)
-            const valueText =
-              showValue &&
-              [
-                tLabel(annotation.valuePrefix),
-                yAxis.format(annotation.value),
-                annotation.unit ? ' ' : '',
-                tLabel(annotation.unit)
-              ]
-                .filter(Boolean)
-                .join('')
-            const textSize = Math.max(
-              labelText ? labelGauger(labelText) : 0,
-              valueText ? valueGauger(valueText) : 0
-            )
-
-            const x1 = range
-              ? x(xNormalizer(annotation.x1))
-              : x(xNormalizer(annotation.x))
-            const x2 = range
-              ? x(xNormalizer(annotation.x2)) + barWidth
-              : x1 + Math.max(barWidth, 8)
-
-            let textAnchor = 'middle'
-            if (x1 + (x2 - x1) / 2 + textSize / 2 > width) {
-              textAnchor = 'end'
-              if ((range ? x2 : x1) - textSize < 0) {
-                textAnchor = 'start'
-              }
-            }
-            let tx = x1
-            if (textAnchor === 'end') {
-              tx = x2
-            }
-            if (textAnchor === 'middle') {
-              tx = x1 + (x2 - x1) / 2
-            }
-            const isBottom = annotation.position === 'bottom'
-            return (
+            {group.yAnnotations.map((annotation, i) => (
               <g
-                key={`x-annotation-${i}`}
+                key={`y-annotation-${i}`}
                 transform={`translate(0,${y(annotation.value)})`}
               >
                 <line
-                  x1={x1}
-                  x2={x2}
-                  {...(range
-                    ? styles.annotationLine
-                    : styles.annotationLineValue)}
+                  x1={0}
+                  x2={width}
+                  {...styles.annotationLine}
                   {...colorScheme.set('stroke', 'text')}
                 />
                 <circle
                   r='3.5'
-                  cx={x1}
+                  cx={annotation.x ? x(xNormalizer(annotation.x)) : 4}
                   {...colorScheme.set('stroke', 'text')}
                   {...colorScheme.set('fill', 'textInverted')}
                 />
-                {range && (
-                  <circle
-                    r='3.5'
-                    cx={x2}
-                    {...colorScheme.set('stroke', 'text')}
-                    {...colorScheme.set('fill', 'textInverted')}
-                  />
-                )}
                 <text
-                  x={tx}
-                  textAnchor={textAnchor}
-                  dy={
-                    showValue
-                      ? isBottom
-                        ? '2.7em'
-                        : '-1.8em'
-                      : isBottom
-                      ? '1.4em'
-                      : '-0.5em'
-                  }
+                  x={width}
+                  textAnchor='end'
+                  dy={annotation.dy || '-0.4em'}
                   {...styles.annotationText}
                   {...colorScheme.set('fill', 'text')}
                 >
-                  {labelText}
+                  {tLabel(annotation.label)}
+                  {annotation.showValue !== false && (
+                    <>
+                      {' '}
+                      {yAxis.format(annotation.value)} {tLabel(annotation.unit)}
+                    </>
+                  )}
                 </text>
-                {showValue && (
+              </g>
+            ))}
+            {group.xAnnotations.map((annotation, i) => {
+              const range =
+                annotation.x1 !== undefined && annotation.x2 !== undefined
+
+              if (
+                annotation.ghost &&
+                !annotation.valuePrefix &&
+                !annotation.label &&
+                !annotation.position
+              ) {
+                return null
+              }
+
+              const showValue = annotation.showValue !== false
+              const labelText = tLabel(annotation.label)
+              const valueText =
+                showValue &&
+                [
+                  tLabel(annotation.valuePrefix),
+                  yAxis.format(annotation.value),
+                  annotation.unit ? ' ' : '',
+                  tLabel(annotation.unit)
+                ]
+                  .filter(Boolean)
+                  .join('')
+              const textSize = Math.max(
+                labelText ? labelGauger(labelText) : 0,
+                valueText ? valueGauger(valueText) : 0
+              )
+
+              const x1 = range
+                ? x(xNormalizer(annotation.x1))
+                : x(xNormalizer(annotation.x))
+              const x2 = range
+                ? x(xNormalizer(annotation.x2)) + barWidth
+                : x1 + Math.max(barWidth, 8)
+
+              let textAnchor = 'middle'
+              if (x1 + (x2 - x1) / 2 + textSize / 2 > width) {
+                textAnchor = 'end'
+                if ((range ? x2 : x1) - textSize < 0) {
+                  textAnchor = 'start'
+                }
+              }
+              let tx = x1
+              if (textAnchor === 'end') {
+                tx = x2
+              }
+              if (textAnchor === 'middle') {
+                tx = x1 + (x2 - x1) / 2
+              }
+              const isBottom = annotation.position === 'bottom'
+              return (
+                <g
+                  key={`x-annotation-${i}`}
+                  transform={`translate(0,${y(annotation.value)})`}
+                >
+                  <line
+                    x1={x1}
+                    x2={x2}
+                    {...(range
+                      ? styles.annotationLine
+                      : styles.annotationLineValue)}
+                    {...colorScheme.set('stroke', 'text')}
+                  />
+                  <circle
+                    r='3.5'
+                    cx={x1}
+                    {...colorScheme.set('stroke', 'text')}
+                    {...colorScheme.set('fill', 'textInverted')}
+                  />
+                  {range && (
+                    <circle
+                      r='3.5'
+                      cx={x2}
+                      {...colorScheme.set('stroke', 'text')}
+                      {...colorScheme.set('fill', 'textInverted')}
+                    />
+                  )}
                   <text
                     x={tx}
                     textAnchor={textAnchor}
-                    dy={isBottom ? '1.4em' : '-0.5em'}
-                    {...styles.annotationValue}
+                    dy={
+                      showValue
+                        ? isBottom
+                          ? '2.7em'
+                          : '-1.8em'
+                        : isBottom
+                        ? '1.4em'
+                        : '-0.5em'
+                    }
+                    {...styles.annotationText}
                     {...colorScheme.set('fill', 'text')}
                   >
-                    {valueText}
+                    {labelText}
                   </text>
-                )}
-              </g>
-            )
-          })}
-        </g>
+                  {showValue && (
+                    <text
+                      x={tx}
+                      textAnchor={textAnchor}
+                      dy={isBottom ? '1.4em' : '-0.5em'}
+                      {...styles.annotationValue}
+                      {...colorScheme.set('fill', 'text')}
+                    >
+                      {valueText}
+                    </text>
+                  )}
+                </g>
+              )
+            })}
+          </g>
+        ))}
       </svg>
     </>
   )
