@@ -139,7 +139,12 @@ const Credentials = ({ userId }) => {
                   </InteractiveSection>
                 )
               } else {
-                return <div>Keine (nicht-anonymen) Rollen vorhanden</div>
+                return (
+                  <Section>
+                    <SectionTitle>Rollen verifizieren</SectionTitle>Keine
+                    (nicht-anonymen) Rollen vorhanden
+                  </Section>
+                )
               }
             }}
           />
