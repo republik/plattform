@@ -42,15 +42,14 @@
                 <tr>
                   <td style="padding: 20px">
                     <p>Guten Tag</p>
-
-                    {{#if `RECIPIENT_EMAIL != GRANTER_EMAIL`}}
                     <p>
-                      Seit dem {{GRANT_BEGIN}} durften wir Sie dank einer
-                      Empfehlung von {{GRANTER_NAME}} probeweise als Leserin
-                      oder Leser an Bord der Republik haben.
+                      {{#if `RECIPIENT_EMAIL != GRANTER_EMAIL`}}Seit dem
+                      {{GRANT_BEGIN}} durften wir Sie dank einer Empfehlung von
+                      {{GRANTER_NAME}} probeweise als Leserin oder Leser an Bord
+                      der Republik haben.{{else}}Seit dem {{GRANT_BEGIN}}
+                      durften wir Sie probeweise als Leserin oder Leser an Bord
+                      der Republik haben.{{/if}}
                     </p>
-                    {{/if}}
-
                     <p>Hat Ihnen unser Magazin gefallen?</p>
                     <p>
                       Finden Sie unsere Idee eines unabhängigen und werbefreien
