@@ -49,6 +49,7 @@ import createLiveTeaserModule from './modules/liveteaser'
 import createButtonModule from './modules/button'
 import createVariableModule from './modules/variable'
 import createVariableConditionModule from './modules/variable/condition'
+import createSeriesNavModule from './modules/seriesnav'
 
 const moduleCreators = {
   embedVideo: createEmbedVideoModule,
@@ -95,7 +96,8 @@ const moduleCreators = {
   liveteaser: createLiveTeaserModule,
   button: createButtonModule,
   variable: createVariableModule,
-  variableCondition: createVariableConditionModule
+  variableCondition: createVariableConditionModule,
+  seriesNav: createSeriesNavModule
 }
 const initModule = (rule, context = {}) => {
   const { editorModule, editorOptions = {} } = rule

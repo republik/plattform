@@ -87,14 +87,24 @@ const MetaData = ({
           ? node.data.set(key, `https://github.com/${item.value.id}`)
           : node.data.remove(key)
       })
+      let data = item ? item.value.latestCommit.document : undefined
+      if (key === 'series' && data) {
+        data = data.meta.series
+
+        const seriesNavNodes = change.value.document.findDescendants(
+          node => node.type === 'SERIES_NAV'
+        )
+        seriesNavNodes.forEach(node => {
+          change.setNodeByKey(node.key, {
+            data: node.data.set('series', data)
+          })
+        })
+      }
+
       const titleNode = change.value.document.findDescendant(
         node => node.type === 'TITLE'
       )
       if (titleNode) {
-        let data = item ? item.value.latestCommit.document : undefined
-        if (key === 'series' && data) {
-          data = data.meta.series
-        }
         const newData = {
           ...titleNode.data.toJS(),
           [key]: data
