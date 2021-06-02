@@ -37,14 +37,18 @@ const styles = {
 
 function SeriesNav({ document, inline, height, ActionBar, Link, PayNote }) {
   const [colorScheme] = useColorContext()
+  console.log('styleguide', document)
+  if (!document.meta.series) {
+    return <div>No Series Object</div>
+  }
 
   const currentTile = document.meta.series.episodes.filter(
-    episode => episode?.document.id === document?.id
+    episode => episode.document && episode.document?.id === document.id
   )[0]
 
+  console.log(currentTile)
+  // add paynote object after current episode or to third card if no current episode
   const payNote = { isPayNote: true }
-
-  //add paynote after current episode or to third card if no current episode
   const episodes =
     PayNote && !inline
       ? [
@@ -78,7 +82,7 @@ function SeriesNav({ document, inline, height, ActionBar, Link, PayNote }) {
       >
         <TeaserCarouselTileContainer
           height={height}
-          initialScrollTile={currentTile?.document?.id}
+          initialScrollTile={currentTile && currentTile.document.id}
           style={{ padding: 0 }}
         >
           {episodes.map(episode => {

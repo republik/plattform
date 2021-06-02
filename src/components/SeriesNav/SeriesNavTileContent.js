@@ -59,11 +59,17 @@ const SeriesNavTileContent = ({
       FigureImage.utils.getResizedSrcs(episode.image, 300, true)
     : episode.image &&
       FigureImage.utils.getResizedSrcs(episode.image, 600, true)
-  const isLink = episode.document.meta.path && episode.isReadable && !current
+
+  console.log(imageProps)
+  const isLink =
+    episode.document &&
+    episode.document?.meta?.path &&
+    episode.isReadable &&
+    !current
 
   const LinkContainer = ({ children }) =>
     isLink ? (
-      <Link href={episode.document.meta.path} passHref>
+      <Link href={episode.document?.meta?.path} passHref>
         <a {...styles.plainlink}>{children}</a>
       </Link>
     ) : (
@@ -77,12 +83,13 @@ const SeriesNavTileContent = ({
           {current ? 'Sie lesen: ' : null}
           {episode.label}
         </p>
-        <FigureImage
-          {...imageProps}
-          //TODO proper alt image text
-          alt={episode.title}
-        />
-
+        {imageProps ? (
+          <FigureImage
+            {...imageProps}
+            //TODO proper alt image text
+            alt={episode.title}
+          />
+        ) : null}
         <h2 {...styles.titleInline} {...colorScheme.set('color', 'text')}>
           {episode.title}
         </h2>
@@ -97,12 +104,13 @@ const SeriesNavTileContent = ({
           {current ? 'Sie lesen: ' : null}
           {episode.label}
         </p>
-        <FigureImage
-          {...imageProps}
-          //TODO proper alt image text
-          alt={episode.title}
-        />
-
+        {imageProps ? (
+          <FigureImage
+            {...imageProps}
+            //TODO proper alt image text
+            alt={episode.title}
+          />
+        ) : null}
         <h2 {...styles.title} {...colorScheme.set('color', 'text')}>
           {episode.title}
         </h2>
