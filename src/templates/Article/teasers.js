@@ -541,6 +541,9 @@ const createTeasers = ({
     },
     rules: [],
     editorModule: 'seriesNav',
+    editorOptions: {
+      insertTypes: ['PARAGRAPH']
+    },
     isVoid: true
   }
 
