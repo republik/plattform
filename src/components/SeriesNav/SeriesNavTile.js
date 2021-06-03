@@ -48,7 +48,8 @@ const SeriesNavTile = ({
   inline,
   ActionBar,
   Link,
-  PayNote
+  PayNote,
+  onEpisodeClick
 }) => {
   const [colorScheme] = useColorContext()
   const localColors = current
@@ -63,10 +64,9 @@ const SeriesNavTile = ({
         }
       }
     : { light: {}, dark: {} }
-  const inactiveTile =
-    !PayNote &&
-    !current &&
-    (!episode?.document?.meta?.path || !episode.isReadable)
+  const inactiveTile = !PayNote && !current && !episode?.document?.meta?.path
+  // TODO: support isReadable
+  //(!episode?.document?.meta?.path || !episode.isReadable)
 
   return (
     <div
@@ -92,6 +92,7 @@ const SeriesNavTile = ({
               current={current}
               ActionBar={ActionBar}
               Link={Link}
+              onEpisodeClick={onEpisodeClick}
             />
           )}
         </ColorContextLocalExtension>

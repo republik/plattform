@@ -51,7 +51,8 @@ const SeriesNavTileContent = ({
   episode,
   current,
   ActionBar,
-  Link = DefaultLink
+  Link = DefaultLink,
+  onEpisodeClick
 }) => {
   const [colorScheme] = useColorContext()
   const imageProps = inline
@@ -60,17 +61,21 @@ const SeriesNavTileContent = ({
     : episode.image &&
       FigureImage.utils.getResizedSrcs(episode.image, 600, true)
 
-  console.log(imageProps)
   const isLink =
     episode.document &&
     episode.document?.meta?.path &&
-    episode.isReadable &&
+    // TODO: implement isReadable
+    // episode.isReadable &&
     !current
+
+  console.log(isLink)
 
   const LinkContainer = ({ children }) =>
     isLink ? (
-      <Link href={episode.document?.meta?.path} passHref>
-        <a {...styles.plainlink}>{children}</a>
+      <Link href={episode.document.meta.path} passHref>
+        <a {...styles.plainlink} onClick={() => onEpisodeClick()}>
+          {children}
+        </a>
       </Link>
     ) : (
       <>{children}</>
@@ -118,8 +123,9 @@ const SeriesNavTileContent = ({
           {episode.lead}
         </p>
       </LinkContainer>
-
-      <ActionBar mode='bookmark' document={episode} />
+      {!!episode.document && (
+        <ActionBar mode='bookmark' document={episode.document} />
+      )}
     </>
   )
 }

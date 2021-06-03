@@ -169,3 +169,4 @@ export { default as SharePreviewFacebook } from './components/ShareImage/SharePr
 export { default as SharePreviewTwitter } from './components/ShareImage/SharePreviewTwitter'
 
 export { default as TeaserEmbedComment } from './components/TeaserEmbedComment'
+export { SeriesNav } from './components/SeriesNav'

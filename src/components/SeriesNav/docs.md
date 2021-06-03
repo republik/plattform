@@ -2,7 +2,8 @@
 
 ```react
   <SeriesNav
-    document={document}
+    documentId={documentId}
+    series={series}
     height={500}
     ActionBar={ () => (
       <span style={{ display: 'flex' }}>

@@ -14,6 +14,14 @@ import { Breakout } from '../../components/Center'
 const DEFAULT_PAYNOTE_INDEX = 2
 
 const styles = {
+  container: css({
+    maxWidth: 1230,
+    margin: '0 auto',
+    padding: '0 15px',
+    [mUp]: {
+      padding: '0 30px'
+    }
+  }),
   hline: css({
     borderWidth: 0,
     borderTopWidth: 1,
@@ -35,44 +43,51 @@ const styles = {
   })
 }
 
-function SeriesNav({ document, inline, height, ActionBar, Link, PayNote }) {
+function SeriesNav({
+  documentId,
+  series,
+  inline,
+  height,
+  ActionBar,
+  Link,
+  PayNote,
+  onEpisodeClick
+}) {
   const [colorScheme] = useColorContext()
-  console.log('styleguide', document)
-  if (!document.meta.series) {
+  if (!series) {
     return <div>No Series Object</div>
   }
 
-  const currentTile = document.meta.series.episodes.filter(
-    episode => episode.document && episode.document?.id === document.id
+  const currentTile = series.episodes.filter(
+    episode => episode.document && episode.document?.id === documentId
   )[0]
 
-  console.log(currentTile)
   // add paynote object after current episode or to third card if no current episode
   const payNote = { isPayNote: true }
   const episodes =
     PayNote && !inline
       ? [
-          ...document.meta.series.episodes.slice(
+          ...series.episodes.slice(
             0,
             currentTile ? currentTile.document.id : DEFAULT_PAYNOTE_INDEX
           ),
           payNote,
-          ...document.meta.series.episodes.slice(
+          ...series.episodes.slice(
             currentTile ? currentTile.document.id : DEFAULT_PAYNOTE_INDEX
           )
         ]
-      : [...document.meta.series.episodes]
+      : [...series.episodes]
 
   return (
-    <>
+    <div {...styles.container}>
       {inline ? (
         <Breakout>
           <hr
             {...styles.hline}
             {...colorScheme.set('borderColor', 'divider')}
           />
-          <h3 {...styles.title}>{document.meta.series.title}</h3>
-          <p {...styles.description}>{document.meta.series.description}</p>
+          <h3 {...styles.title}>{series.title}</h3>
+          <p {...styles.description}>{series.description}</p>
         </Breakout>
       ) : null}
 
@@ -89,12 +104,13 @@ function SeriesNav({ document, inline, height, ActionBar, Link, PayNote }) {
             return (
               <SeriesNavTile
                 key={episode.title}
-                PayNote={episode.isPayNote && PayNote}
-                current={document?.id === episode?.document?.id}
+                PayNote={PayNote && episode.isPayNote && PayNote}
+                current={documentId && documentId === episode?.document?.id}
                 episode={episode}
                 inline={inline}
                 ActionBar={ActionBar}
                 Link={Link}
+                onEpisodeClick={onEpisodeClick}
               />
             )
           })}
@@ -110,7 +126,7 @@ function SeriesNav({ document, inline, height, ActionBar, Link, PayNote }) {
           {PayNote && <PayNote />}
         </>
       ) : null}
-    </>
+    </div>
   )
 }
 
