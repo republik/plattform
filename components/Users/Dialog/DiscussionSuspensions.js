@@ -7,8 +7,9 @@ import {
   SectionSubhead,
   DT,
   DD,
+  dateDiff,
 } from '../../Display/utils'
-import { Loader } from '@project-r/styleguide'
+import { Loader, Label } from '@project-r/styleguide'
 import List, { Item } from '../../List'
 
 const GET_SUSPENSIONS = gql`
@@ -43,11 +44,12 @@ const Suspensions = ({ userId }) => {
                 const suspendedHeader = isSuspended
                   ? `gesperrt bis am ${displayDate(suspendedUntil)}`
                   : 'nicht gesperrt'
+
                 return (
                   <div>
-                    <SectionSubhead>Aktuell </SectionSubhead>
-                    {suspendedHeader}
-                    <SectionSubhead>Alle Sperrungen </SectionSubhead>
+                    <SectionSubhead>Aktuell {suspendedHeader}</SectionSubhead>
+
+                    <SectionSubhead>Alle Sperrungen</SectionSubhead>
                     <List>
                       {suspensions
                         .sort((a, b) => {
@@ -57,10 +59,15 @@ const Suspensions = ({ userId }) => {
                           <Item>
                             <DT>
                               {displayDate(suspension.beginAt)} -{' '}
-                              {displayDate(suspension.endAt)}
+                              {displayDate(suspension.endAt)} (
+                              {dateDiff(suspension.beginAt, suspension.endAt)})
                             </DT>
                             <DD>
-                              {suspension.reason ? suspension.reason : '--'}
+                              <Label>
+                                {suspension.reason
+                                  ? suspension.reason
+                                  : 'kein Grund angegeben'}
+                              </Label>
                             </DD>
                           </Item>
                         ))}

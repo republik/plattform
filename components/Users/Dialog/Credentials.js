@@ -90,7 +90,7 @@ class UpdateCredential extends Component {
                     })
                   }
                 >
-                  {description} <span>{isListed ? '(öffentlich)' : ''}</span>
+                  {description} <span>{isListed ? '(Profil-Rolle)' : ''}</span>
                 </Checkbox>
                 <span style={{ float: 'right' }}>
                   {loading ? (
@@ -124,6 +124,14 @@ const Credentials = ({ userId }) => {
             render={() => {
               const { user } = data
               const { credentials } = user
+              const profileRole = credentials.find(
+                (credential) => credential.isListed,
+              )
+              if (profileRole) {
+                credentials.unshift(
+                  credentials.splice(credentials.indexOf(profileRole), 1)[0],
+                )
+              }
 
               if (credentials.length > 0) {
                 return (
