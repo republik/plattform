@@ -68,8 +68,6 @@ const SeriesNavTileContent = ({
     // episode.isReadable &&
     !current
 
-  console.log(isLink)
-
   const LinkContainer = ({ children }) =>
     isLink ? (
       <Link href={episode.document.meta.path} passHref>

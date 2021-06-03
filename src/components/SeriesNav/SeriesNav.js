@@ -64,16 +64,31 @@ function SeriesNav({
 
   // add paynote object after current episode or to third card if no current episode
   const payNote = { isPayNote: true }
+  console.log(currentTile, currentTile.document.id)
   const episodes =
     PayNote && !inline
       ? [
           ...series.episodes.slice(
             0,
-            currentTile ? currentTile.document.id : DEFAULT_PAYNOTE_INDEX
+            currentTile
+              ? Math.max(
+                  series.episodes.findIndex(
+                    episode => episode.document.id === currentTile.document.id
+                  ) + 1,
+                  DEFAULT_PAYNOTE_INDEX
+                )
+              : DEFAULT_PAYNOTE_INDEX
           ),
           payNote,
           ...series.episodes.slice(
-            currentTile ? currentTile.document.id : DEFAULT_PAYNOTE_INDEX
+            currentTile
+              ? Math.max(
+                  series.episodes.findIndex(
+                    episode => episode.document.id === currentTile.document.id
+                  ) + 1,
+                  DEFAULT_PAYNOTE_INDEX
+                )
+              : DEFAULT_PAYNOTE_INDEX
           )
         ]
       : [...series.episodes]
