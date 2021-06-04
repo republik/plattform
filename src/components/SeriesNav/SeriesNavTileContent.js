@@ -121,8 +121,8 @@ const SeriesNavTileContent = ({
           {episode.lead}
         </p>
       </LinkContainer>
-      {!!episode.document && (
-        <ActionBar mode='bookmark' document={episode.document} />
+      {!!episode.document && !!ActionBar && (
+        <ActionBar mode='seriesEpisode' document={episode.document} />
       )}
     </>
   )

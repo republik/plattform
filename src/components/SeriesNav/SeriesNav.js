@@ -64,7 +64,6 @@ function SeriesNav({
 
   // add paynote object after current episode or to third card if no current episode
   const payNote = { isPayNote: true }
-  console.log(currentTile, currentTile.document.id)
   const episodes =
     PayNote && !inline
       ? [
@@ -148,7 +147,8 @@ function SeriesNav({
 const WrappedSeriesNav = props => <SeriesNav {...props} />
 
 SeriesNav.propTypes = {
-  document: PropTypes.object.isRequired,
+  documentId: PropTypes.string.isRequired,
+  series: PropTypes.object.isRequired,
   ActionBar: PropTypes.func.isRequired,
   Link: PropTypes.func.isRequired,
   PayNote: PropTypes.func,

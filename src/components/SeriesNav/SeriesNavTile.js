@@ -52,18 +52,19 @@ const SeriesNavTile = ({
   onEpisodeClick
 }) => {
   const [colorScheme] = useColorContext()
-  const localColors = current
-    ? {
-        light: {
-          default: '#191919',
-          text: '#f0f0f0'
-        },
-        dark: {
-          default: '#ffffff',
-          text: '#282828'
+  const localColors =
+    current || !!PayNote
+      ? {
+          light: {
+            default: '#191919',
+            text: '#f0f0f0'
+          },
+          dark: {
+            default: '#ffffff',
+            text: '#282828'
+          }
         }
-      }
-    : { light: {}, dark: {} }
+      : { light: {}, dark: {} }
   const inactiveTile = !PayNote && !current && !episode?.document?.meta?.path
   // TODO: support isReadable
   //(!episode?.document?.meta?.path || !episode.isReadable)
@@ -79,7 +80,7 @@ const SeriesNavTile = ({
         {...styles.tileContainer}
         {...colorScheme.set(
           'backgroundColor',
-          current ? 'defaultInverted' : 'transparent'
+          current || !!PayNote ? 'defaultInverted' : 'transparent'
         )}
       >
         <ColorContextLocalExtension localColors={localColors}>
