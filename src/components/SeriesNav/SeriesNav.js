@@ -8,19 +8,25 @@ import {
 } from '../../components/TeaserCarousel'
 import SeriesNavTile from './SeriesNavTile'
 import { useColorContext } from '../Colors/useColorContext'
+import { ColorContextLocalExtension } from '../Colors/ColorContext'
 import { serifBold16, serifRegular14 } from '../Typography/styles'
-import { Breakout } from '../../components/Center'
+import Center, { Breakout } from '../../components/Center'
 
 const DEFAULT_PAYNOTE_INDEX = 2
 
 const styles = {
   container: css({
-    maxWidth: 1230,
+    maxWidth: 1120,
     margin: '0 auto',
     padding: '0 15px',
     [mUp]: {
       padding: '0 30px'
     }
+  }),
+  containerInline: css({
+    margin: '0 auto',
+    padding: 0,
+    width: '100%'
   }),
   hline: css({
     borderWidth: 0,
@@ -62,6 +68,17 @@ function SeriesNav({
     episode => episode.document && episode.document?.id === documentId
   )[0]
 
+  const localColors = {
+    light: {
+      default: '#191919',
+      text: '#f0f0f0'
+    },
+    dark: {
+      default: '#ffffff',
+      text: '#282828'
+    }
+  }
+
   // add paynote object after current episode or to third card if no current episode
   const payNote = { isPayNote: true }
   const episodes =
@@ -93,26 +110,34 @@ function SeriesNav({
       : [...series.episodes]
 
   return (
-    <div {...styles.container}>
+    <div {...(inline ? styles.containerInline : styles.container)}>
       {inline ? (
-        <Breakout>
-          <hr
-            {...styles.hline}
-            {...colorScheme.set('borderColor', 'divider')}
-          />
-          <h3 {...styles.title}>{series.title}</h3>
-          <p {...styles.description}>{series.description}</p>
-        </Breakout>
+        <Center>
+          <Breakout size='breakout'>
+            <hr
+              {...styles.hline}
+              {...colorScheme.set('borderColor', 'divider')}
+            />
+            <h3 {...styles.title}>{series.title}</h3>
+            <p {...styles.description}>{series.description}</p>
+          </Breakout>
+        </Center>
       ) : null}
 
       <TeaserCarousel
         grid={!inline}
-        style={{ padding: 0, backgroundColor: 'transparent' }}
+        style={{
+          padding: 0,
+          backgroundColor: 'transparent'
+        }}
       >
         <TeaserCarouselTileContainer
           height={height}
           initialScrollTile={currentTile && currentTile.document.id}
-          style={{ padding: 0 }}
+          style={{
+            padding: 0,
+            justifyContent: inline ? 'center' : 'flex-start'
+          }}
         >
           {episodes.map(episode => {
             return (
@@ -132,13 +157,13 @@ function SeriesNav({
       </TeaserCarousel>
 
       {inline ? (
-        <>
+        <ColorContextLocalExtension localColors={localColors}>
           <hr
             {...styles.hline}
             {...colorScheme.set('borderColor', 'divider')}
           />
-          {PayNote && <PayNote />}
-        </>
+          {PayNote && <PayNote inline={inline} />}
+        </ColorContextLocalExtension>
       ) : null}
     </div>
   )
