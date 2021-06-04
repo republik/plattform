@@ -129,9 +129,7 @@ function SeriesNav({
           style={{
             padding: 0
           }}
-          overflowStyle={{
-            justifyContent: inline ? 'center' : 'flex-start'
-          }}
+          overflowCentered
         >
           {episodes.map(episode => {
             return (

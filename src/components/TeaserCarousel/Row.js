@@ -75,10 +75,11 @@ const styles = {
   })
 }
 
-const Row = ({ initialScrollTileIndex, children, style, overflowStyle }) => {
+const Row = ({ initialScrollTileIndex, children, style, overflowCentered }) => {
   const context = useContext(CarouselContext)
   const overflow = useRef()
   const [{ left, right }, setArrows] = useState({ left: false, right: false })
+  const [exeedsWindowWidth, setExeedsWindowWidth] = useState(undefined)
   const [colorScheme] = useColorContext()
 
   useEffect(() => {
@@ -114,6 +115,8 @@ const Row = ({ initialScrollTileIndex, children, style, overflowStyle }) => {
         }
         return current
       })
+      setExeedsWindowWidth(scroller.clientWidth < scroller.scrollWidth)
+      console.log(scroller.clientWidth < scroller.scrollWidth)
     }
     scroller.addEventListener('scroll', measure)
     window.addEventListener('resize', measure)
@@ -131,10 +134,17 @@ const Row = ({ initialScrollTileIndex, children, style, overflowStyle }) => {
       topOffset: scroller.getBoundingClientRect().top
     }
   }
+  console.log('ofc', overflowCentered && exeedsWindowWidth)
 
   return (
     <div role='group' {...styles.container} style={{ ...style }}>
-      <div {...styles.overflow} style={{ ...overflowStyle }} ref={overflow}>
+      <div
+        {...styles.overflow}
+        style={{
+          justifyContent: overflowCentered && !exeedsWindowWidth && 'center'
+        }}
+        ref={overflow}
+      >
         <div {...styles.pad} />
         {children}
         <div {...styles.pad} style={{ width: PADDING - TILE_MARGIN_RIGHT }} />

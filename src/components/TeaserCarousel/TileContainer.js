@@ -9,7 +9,7 @@ const Container = ({
   children,
   height,
   style,
-  overflowStyle
+  overflowCentered
 }) => {
   const context = useContext(CarouselContext)
   if (context.grid) {
@@ -23,7 +23,7 @@ const Container = ({
     <Row
       initialScrollTileIndex={initialScrollTileIndex}
       style={style}
-      overflowStyle={overflowStyle}
+      overflowCentered={overflowCentered}
     >
       {children}
     </Row>
