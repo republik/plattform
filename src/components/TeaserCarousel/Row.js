@@ -12,7 +12,9 @@ import { useColorContext } from '../Colors/useColorContext'
 const styles = {
   container: css({
     position: 'relative',
-    margin: `-${PADDING}px -${PADDING}px 0`,
+    // TODO: figure out -padding problem
+    // margin: `-${PADDING}px -${PADDING}px 0`,
+    margin: 0,
     padding: `${PADDING}px 0`,
     width: 'auto'
   }),
@@ -73,18 +75,18 @@ const styles = {
   })
 }
 
-const Row = ({ initialScrollTile, children, style }) => {
+const Row = ({ initialScrollTileIndex, children, style, overflowStyle }) => {
   const context = useContext(CarouselContext)
   const overflow = useRef()
   const [{ left, right }, setArrows] = useState({ left: false, right: false })
   const [colorScheme] = useColorContext()
 
   useEffect(() => {
-    if (!initialScrollTile) {
+    if (!initialScrollTileIndex) {
       return
     }
     const scroller = overflow.current
-    const target = Array.from(scroller.children)[initialScrollTile]
+    const target = Array.from(scroller.children)[initialScrollTileIndex]
     scrollIntoView(target, {
       time: 400,
       align: {
@@ -93,7 +95,7 @@ const Row = ({ initialScrollTile, children, style }) => {
         ...getTop()
       }
     })
-  }, [initialScrollTile])
+  }, [initialScrollTileIndex])
 
   useEffect(() => {
     const scroller = overflow.current
@@ -132,7 +134,7 @@ const Row = ({ initialScrollTile, children, style }) => {
 
   return (
     <div role='group' {...styles.container} style={{ ...style }}>
-      <div {...styles.overflow} ref={overflow}>
+      <div {...styles.overflow} style={{ ...overflowStyle }} ref={overflow}>
         <div {...styles.pad} />
         {children}
         <div {...styles.pad} style={{ width: PADDING - TILE_MARGIN_RIGHT }} />

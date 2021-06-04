@@ -17,21 +17,21 @@ const styles = {
   })
 }
 
-const Grid = ({ initialScrollTile, height, children }) => {
+const Grid = ({ initialScrollTileIndex, height, children }) => {
   const overflow = useRef()
 
   useEffect(() => {
-    if (!initialScrollTile) {
+    if (!initialScrollTileIndex) {
       return
     }
     const scroller = overflow.current
-    const target = Array.from(scroller.children)[initialScrollTile]
+    const target = Array.from(scroller.children)[initialScrollTileIndex]
     scrollIntoView(target, {
       time: 400,
       top: 0,
       topOffset: 100
     })
-  }, [initialScrollTile])
+  }, [initialScrollTileIndex])
 
   return (
     <div

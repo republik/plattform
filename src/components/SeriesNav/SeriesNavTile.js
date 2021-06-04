@@ -33,8 +33,8 @@ const styles = {
   inlineTile: css({
     marginRight: TILE_MARGIN_RIGHT,
     width: '20%',
-    minWidth: 200,
-    maxWidth: TILE_MAX_WIDTH,
+    minWidth: 150,
+    maxWidth: 170,
     ':last-of-type': { margin: 0 }
   }),
   tileContainer: css({

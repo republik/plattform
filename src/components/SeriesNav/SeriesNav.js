@@ -10,7 +10,7 @@ import SeriesNavTile from './SeriesNavTile'
 import { useColorContext } from '../Colors/useColorContext'
 import { ColorContextLocalExtension } from '../Colors/ColorContext'
 import { serifBold16, serifRegular14 } from '../Typography/styles'
-import Center, { Breakout } from '../../components/Center'
+import Center from '../../components/Center'
 
 const DEFAULT_PAYNOTE_INDEX = 2
 
@@ -68,6 +68,10 @@ function SeriesNav({
     episode => episode.document && episode.document?.id === documentId
   )[0]
 
+  const currentTileIndex = series.episodes.findIndex(
+    episode => episode.document.id === currentTile.document.id
+  )
+
   const localColors = {
     light: {
       default: '#191919',
@@ -87,23 +91,13 @@ function SeriesNav({
           ...series.episodes.slice(
             0,
             currentTile
-              ? Math.max(
-                  series.episodes.findIndex(
-                    episode => episode.document.id === currentTile.document.id
-                  ) + 1,
-                  DEFAULT_PAYNOTE_INDEX
-                )
+              ? Math.max(currentTileIndex + 1, DEFAULT_PAYNOTE_INDEX)
               : DEFAULT_PAYNOTE_INDEX
           ),
           payNote,
           ...series.episodes.slice(
             currentTile
-              ? Math.max(
-                  series.episodes.findIndex(
-                    episode => episode.document.id === currentTile.document.id
-                  ) + 1,
-                  DEFAULT_PAYNOTE_INDEX
-                )
+              ? Math.max(currentTileIndex + 1, DEFAULT_PAYNOTE_INDEX)
               : DEFAULT_PAYNOTE_INDEX
           )
         ]
@@ -113,14 +107,12 @@ function SeriesNav({
     <div {...(inline ? styles.containerInline : styles.container)}>
       {inline ? (
         <Center>
-          <Breakout size='breakout'>
-            <hr
-              {...styles.hline}
-              {...colorScheme.set('borderColor', 'divider')}
-            />
-            <h3 {...styles.title}>{series.title}</h3>
-            <p {...styles.description}>{series.description}</p>
-          </Breakout>
+          <hr
+            {...styles.hline}
+            {...colorScheme.set('borderColor', 'divider')}
+          />
+          <h3 {...styles.title}>{series.title}</h3>
+          <p {...styles.description}>{series.description}</p>
         </Center>
       ) : null}
 
@@ -133,9 +125,11 @@ function SeriesNav({
       >
         <TeaserCarouselTileContainer
           height={height}
-          initialScrollTile={currentTile && currentTile.document.id}
+          initialScrollTileIndex={currentTileIndex}
           style={{
-            padding: 0,
+            padding: 0
+          }}
+          overflowStyle={{
             justifyContent: inline ? 'center' : 'flex-start'
           }}
         >
@@ -158,11 +152,14 @@ function SeriesNav({
 
       {inline ? (
         <ColorContextLocalExtension localColors={localColors}>
-          <hr
-            {...styles.hline}
-            {...colorScheme.set('borderColor', 'divider')}
-          />
-          {PayNote && <PayNote inline={inline} />}
+          {PayNote ? (
+            <PayNote inline={inline} />
+          ) : (
+            <hr
+              {...styles.hline}
+              {...colorScheme.set('borderColor', 'divider')}
+            />
+          )}
         </ColorContextLocalExtension>
       ) : null}
     </div>

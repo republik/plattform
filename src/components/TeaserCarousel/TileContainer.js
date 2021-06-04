@@ -4,17 +4,27 @@ import CarouselContext from './Context'
 import Grid from './Grid'
 import Row from './Row'
 
-const Container = ({ initialScrollTile, children, height, style }) => {
+const Container = ({
+  initialScrollTileIndex,
+  children,
+  height,
+  style,
+  overflowStyle
+}) => {
   const context = useContext(CarouselContext)
   if (context.grid) {
     return (
-      <Grid initialScrollTile={initialScrollTile} height={height}>
+      <Grid initialScrollTileIndex={initialScrollTileIndex} height={height}>
         {children}
       </Grid>
     )
   }
   return (
-    <Row initialScrollTile={initialScrollTile} style={style}>
+    <Row
+      initialScrollTileIndex={initialScrollTileIndex}
+      style={style}
+      overflowStyle={overflowStyle}
+    >
       {children}
     </Row>
   )
