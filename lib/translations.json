@@ -1,5 +1,5 @@
 {
-  "updated": "2021-05-20T13:14:17.219Z",
+  "updated": "2021-06-04T06:55:50.640Z",
   "title": "live",
   "data": [
     {
@@ -491,6 +491,10 @@
       "value": "Bild"
     },
     {
+      "key": "metaData/field/lead",
+      "value": "Lead"
+    },
+    {
       "key": "metaData/field/slug",
       "value": "Web-Slug"
     },
@@ -641,6 +645,10 @@
     {
       "key": "metaData/series/title/label",
       "value": "Title"
+    },
+    {
+      "key": "metaData/series/description",
+      "value": "Serienbeschrieb"
     },
     {
       "key": "metaData/series/episode",

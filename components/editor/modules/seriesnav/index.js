@@ -111,14 +111,11 @@ const SeriesNavPlugin = ({ rule, subModules, TYPE }) => {
               {...attributes}
             >
               <SeriesNav
-                document={{
-                  meta: {
-                    series
-                  }
-                }}
+                documentId={undefined}
+                series={series}
                 inline={node.data.get('inline')}
                 ActionBar={DummyActionBar}
-                PayNote={NoOp}
+                PayNote={undefined}
                 Link={DefaultLink}
               />
             </div>

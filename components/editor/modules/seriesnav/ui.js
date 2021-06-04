@@ -52,6 +52,7 @@ const createSeriesNavUI = ({ TYPE, newBlock, zone }) => {
     if (!node) {
       return null
     }
+    console.log('layout', node.data)
     return (
       <UIForm>
         <Label>Layout</Label>

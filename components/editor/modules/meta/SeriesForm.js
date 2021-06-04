@@ -1,7 +1,8 @@
 import React, { Fragment } from 'react'
 import { Set, Map } from 'immutable'
-
+import { css } from 'glamor'
 import { A, Label, Radio, Field, Dropdown } from '@project-r/styleguide'
+import AutosizeInput from 'react-textarea-autosize'
 
 import ImageInput from '../../utils/ImageInput'
 import MetaForm from '../../utils/MetaForm'
@@ -9,6 +10,14 @@ import withT from '../../../../lib/withT'
 
 import RepoSelect from './RepoSelect'
 import UIForm from '../../UIForm'
+
+const styles = {
+  autoSize: css({
+    minHeight: 40,
+    paddingTop: '7px !important',
+    paddingBottom: '6px !important'
+  })
+}
 
 export default withT(({ t, editor, node, onRepoInputChange }) => {
   const coverTextAnchors = [null, 'top', 'middle', 'bottom'].map(value => ({
@@ -171,6 +180,24 @@ export default withT(({ t, editor, node, onRepoInputChange }) => {
               })
             }}
           />
+          <Field
+            label={t('metaData/series/description')}
+            autoSize={true}
+            renderInput={({ ref, ...inputProps }) => (
+              <AutosizeInput
+                {...styles.autoSize}
+                {...inputProps}
+                inputRef={ref}
+              />
+            )}
+            value={value.description}
+            onChange={(_, description) => {
+              onSeriesChange({
+                ...value,
+                description
+              })
+            }}
+          />
           <div style={{ float: 'left', marginRight: 15 }}>
             <ImageInput
               label='Logo'
@@ -202,7 +229,7 @@ export default withT(({ t, editor, node, onRepoInputChange }) => {
           <br />
           {episodes.map((episode, i) => {
             const { document: episodeDoc, ...values } = episode
-            const keys = Set(['label', 'title', 'image', 'publishDate'])
+            const keys = Set(['label', 'title', 'image', 'publishDate', 'lead'])
             const defaultValues = Map(keys.map(key => [key, '']))
 
             const onEpisodeFieldChange = key => (_, keyValue) => {
