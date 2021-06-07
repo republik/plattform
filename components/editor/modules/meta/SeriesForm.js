@@ -198,6 +198,16 @@ export default withT(({ t, editor, node, onRepoInputChange }) => {
               })
             }}
           />
+          <RepoSelect
+            label={t('metaData/series/overview')}
+            value={value.overview}
+            onChange={(_, overview) => {
+              onSeriesChange({
+                ...value,
+                overview
+              })
+            }}
+          />
           <div style={{ float: 'left', marginRight: 15 }}>
             <ImageInput
               label='Logo'
