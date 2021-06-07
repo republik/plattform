@@ -50,69 +50,100 @@ export const yScales = {
   log: scaleLog
 }
 
-const calculateAndMoveLabelY = (linesWithLayout, propery) => {
+const calculateAndMoveLabelY = (linesWithLayout, property) => {
   let labelsMoved = 0
   let lastY = -Infinity
   sortBy(
     linesWithLayout.filter(
-      line => line[`${propery}Value`] || line[`${propery}Label`]
+      line => line[`${property}Value`] || line[`${property}Label`]
     ),
-    line => line[`${propery}Y`]
+    line => line[`${property}Y`]
   ).forEach(line => {
-    let labelY = line[`${propery}Y`]
+    let labelY = line[`${property}Y`]
     let nextY = lastY + Y_LABEL_HEIGHT
     if (nextY > labelY) {
       labelY = nextY
       labelsMoved += 1
     }
-    line[`${propery}LabelY`] = lastY = labelY
+    line[`${property}LabelY`] = lastY = labelY
   })
   return labelsMoved
 }
 
+const identityFn = x => x
+
+const getXParser = (xScale, userTimeParse) => {
+  if (xScale === 'time') {
+    return timeParse(userTimeParse)
+  } else if (xScale === 'linear') {
+    return x => +x
+  }
+  return identityFn
+}
+
+const getDataFilter = userFilter =>
+  userFilter ? unsafeDatumFn(userFilter) : identityFn
+
+const categorizeData = category => d => {
+  if (category) {
+    const categorize = unsafeDatumFn(category)
+    return {
+      ...d,
+      category: categorize(d.datum)
+    }
+  }
+  return d
+}
+
+const parseData = (x, xParser) => d => ({
+  datum: d,
+  x: xParser(d[x]),
+  value: +d.value
+})
+
+const containsValues = d => d.value && d.value.length > 0
+
+const xAccessor = d => d.x
+
+const valueAccessor = d => d.value
+
+const appendAnnotations = (values, annotations) =>
+  annotations ? values.concat(annotations.map(valueAccessor)) : values
+
+const groupInColumns = (data, column, columnFilter) =>
+  columnFilter
+    ? columnFilter
+        .map(({ test, title }) => {
+          const filter = unsafeDatumFn(test)
+          return {
+            key: title,
+            values: data.filter(d => filter(d.datum))
+          }
+        })
+        .reduce((all, group) => all.concat(group.values), [])
+    : groupBy(data, d => d.datum[column])
+
+const groupLines = (color, category) =>
+  category ? d => d.category : d => d.datum[color]
+
+const groupByLines = (color, category) => ({ values, key }) => ({
+  key,
+  values: groupBy(values, groupLines(color, category))
+})
+
 export default props => {
   const { values, mini, yAnnotations, xAnnotations, tLabel, band } = props
+  const xParser = getXParser(props.xScale, props.timeParse)
+
   let data = values
-  if (props.filter) {
-    const filter = unsafeDatumFn(props.filter)
-    data = data.filter(filter)
-  }
-  let xParser = x => x
-  if (props.xScale === 'time') {
-    xParser = timeParse(props.timeParse)
-  } else if (props.xScale === 'linear') {
-    xParser = x => +x
-  }
-  data = data
-    .filter(d => d.value && d.value.length > 0)
-    .map(d => ({
-      datum: d,
-      x: xParser(d[props.x]),
-      value: +d.value
-    }))
-  if (props.category) {
-    const categorize = unsafeDatumFn(props.category)
-    data.forEach(d => {
-      d.category = categorize(d.datum)
-    })
-  }
-  const xAccessor = d => d.x
+    .filter(getDataFilter(props.filter))
+    .filter(containsValues)
+    .map(parseData(props.x, xParser))
+    .map(categorizeData(props.category))
+
   runSort(props.xSort, data, xAccessor)
 
-  let groupedData
-  if (props.columnFilter) {
-    groupedData = props.columnFilter.map(({ test, title }) => {
-      const filter = unsafeDatumFn(test)
-      return {
-        key: title,
-        values: data.filter(d => filter(d.datum))
-      }
-    })
-    data = groupedData.reduce((all, group) => all.concat(group.values), [])
-  } else {
-    groupedData = groupBy(data, d => d.datum[props.column])
-  }
-  const lineGroup = props.category ? d => d.category : d => d.datum[props.color]
+  let groupedData = groupInColumns(data, props.column, props.columnFilter)
 
   const logScale = props.yScale === 'log'
   const forceZero = !logScale && props.zero
@@ -138,13 +169,10 @@ export default props => {
     : props.height
   const columnHeight = innerHeight + paddingTop + paddingBottom
 
-  let yValues = data.map(d => d.value)
-  if (yAnnotations) {
-    yValues = yValues.concat(yAnnotations.map(d => d.value))
-  }
-  if (xAnnotations) {
-    yValues = yValues.concat(xAnnotations.map(d => d.value))
-  }
+  let yValues = data.map(valueAccessor)
+  yValues = appendAnnotations(yValues, yAnnotations)
+  yValues = appendAnnotations(yValues, xAnnotations)
+
   if (band) {
     const dataWithBand = data.filter(d => d.datum[`${band}_lower`])
     yValues = yValues
@@ -172,13 +200,6 @@ export default props => {
     .filter(Boolean)
   runSort(props.colorSort, colorValues)
 
-  let colorRange = props.colorRanges[props.colorRange] || props.colorRange
-  if (!colorRange) {
-    colorRange =
-      colorValues.length > 3
-        ? props.colorRanges.discrete
-        : props.colorRanges.sequential3
-  }
   const color = getColorMapper(props, colorValues)
 
   const yAxis = calculateAxis(
@@ -200,39 +221,43 @@ export default props => {
   let endLabelSizes = []
   let yNeedsConnectors = false
 
-  const highlight = props.highlight
-    ? unsafeDatumFn(props.highlight)
-    : () => false
-  const stroke = props.stroke ? unsafeDatumFn(props.stroke) : () => false
   const labelFilter = props.labelFilter
     ? unsafeDatumFn(props.labelFilter)
     : () => true
+
+  const addLabels = (color, colorAccessor, labelFilter, yFormat, y) => ({
+    values: line
+  }) => {
+    const start = line[0]
+    const end = line[line.length - 1]
+    const label = labelFilter(start.datum)
+
+    const isHighlight = props.highlight
+      ? unsafeDatumFn(props.highlight)
+      : () => false
+    const hasStroke = props.stroke ? unsafeDatumFn(props.stroke) : () => false
+
+    return {
+      line,
+      start,
+      end,
+      highlighted: isHighlight(start.datum),
+      stroked: hasStroke(start.datum),
+      lineColor: color(colorAccessor(start)),
+      startValue: label && props.startValue && yFormat(start.value),
+      endValue: label && props.endValue && yFormat(end.value),
+      endLabel: label && props.endLabel && ` ${colorAccessor(end)}`,
+      startY: y(start.value),
+      endY: y(end.value)
+    }
+  }
+
   groupedData = groupedData
-    .map(({ values, key }) => ({
-      key,
-      values: groupBy(values, lineGroup)
-    }))
+    .map(groupByLines(props.color, props.category))
     .map(({ values: lines, key }) => {
-      const linesWithLabels = lines.map(({ values: line }) => {
-        const start = line[0]
-        const end = line[line.length - 1]
-
-        const label = labelFilter(start.datum)
-
-        return {
-          line,
-          start,
-          end,
-          highlighted: highlight(start.datum),
-          stroked: stroke(start.datum),
-          lineColor: color(colorAccessor(start)),
-          startValue: label && startValue && yFormat(start.value),
-          endValue: label && props.endValue && yFormat(end.value),
-          endLabel: label && endLabel && ` ${colorAccessor(end)}`,
-          startY: y(start.value),
-          endY: y(end.value)
-        }
-      })
+      const linesWithLabels = lines.map(
+        addLabels(color, colorAccessor, labelFilter, yFormat, y, props)
+      )
       let labelsMoved = 0
       labelsMoved += calculateAndMoveLabelY(linesWithLabels, 'start')
       labelsMoved += calculateAndMoveLabelY(linesWithLabels, 'end')
@@ -279,14 +304,14 @@ export default props => {
     !mini &&
     colorValuesForLegend.length > 0 &&
     (!endLabel || props.colorLegend === true)
-  let paddingLeft = 0
-  let paddingRight = 0
-
-  const whiteSpacePadding = groupedData.length > 1 && props.columns > 1 ? 15 : 0
 
   const yConnectorSize = yNeedsConnectors
     ? Y_CONNECTOR + Y_CONNECTOR_PADDING * 2
     : Y_CONNECTOR_PADDING * 2
+
+  const whiteSpacePadding = groupedData.length > 1 && props.columns > 1 ? 15 : 0
+  let paddingLeft = 0
+  let paddingRight = 0
   if (!mini) {
     const startValueSize = startValue
       ? Math.ceil(max(startValueSizes) + yConnectorSize)
@@ -303,6 +328,7 @@ export default props => {
         props.endLabelWidth !== undefined
           ? props.endLabelWidth
           : endValueSize + Math.ceil(max(endLabelSizes))
+      // don't show label if too big
       if (startValueSize + endLabelWidth > props.width - props.minInnerWidth) {
         colorLegend = true
         groupedData.forEach(({ values: lines }) => {
