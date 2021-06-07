@@ -60,7 +60,17 @@ export default withT(({ t, editor, node, onRepoInputChange }) => {
           event.preventDefault()
           onSeriesChange({
             title: '',
-            episodes: [{ title: '', publishDate: '', document: null }]
+            description: '',
+            overview: null,
+            episodes: [
+              {
+                label: '',
+                title: '',
+                lead: '',
+                publishDate: '',
+                document: null
+              }
+            ]
           })
         }}
       >
