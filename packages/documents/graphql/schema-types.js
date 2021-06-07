@@ -5,14 +5,16 @@ scalar JSON
 
 type Series {
   title: String!
+  description: String
   logo: String
   logoDark: String
   episodes: [Episode!]!
 }
 
 type Episode {
-  title: String
   label: String
+  title: String
+  lead: String
   image: String
   publishDate: DateTime
   document: Document
