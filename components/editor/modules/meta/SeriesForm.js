@@ -229,7 +229,7 @@ export default withT(({ t, editor, node, onRepoInputChange }) => {
           <br />
           {episodes.map((episode, i) => {
             const { document: episodeDoc, ...values } = episode
-            const keys = Set(['label', 'title', 'image', 'publishDate', 'lead'])
+            const keys = Set(['label', 'title', 'lead', 'image', 'publishDate'])
             const defaultValues = Map(keys.map(key => [key, '']))
 
             const onEpisodeFieldChange = key => (_, keyValue) => {
@@ -279,7 +279,9 @@ export default withT(({ t, editor, node, onRepoInputChange }) => {
               e.preventDefault()
               onEpisodeChange(
                 episodes.concat({
+                  label: '',
                   title: '',
+                  lead: '',
                   publishDate: '',
                   document: null
                 })

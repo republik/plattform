@@ -191,7 +191,7 @@ class Form extends Component {
               )
             } else {
               let renderInput
-              if (key.match(/title|description|quote|shortTitle/i)) {
+              if (key.match(/title|lead|description|quote|shortTitle/i)) {
                 renderInput = ({ ref, ...inputProps }) => (
                   <AutosizeInput
                     {...styles.autoSize}
