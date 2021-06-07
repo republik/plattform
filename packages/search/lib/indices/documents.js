@@ -373,6 +373,17 @@ module.exports = {
             },
             seriesEpisodes: {
               properties: {
+                title: {
+                  type: 'text',
+                  analyzer: 'german_with_stopwords',
+                },
+                description: {
+                  type: 'text',
+                  analyzer: 'german',
+                },
+                overview: {
+                  type: 'keyword', // Document
+                },
                 episodes: {
                   properties: {
                     document: {
@@ -397,14 +408,6 @@ module.exports = {
                       analyzer: 'german_with_stopwords',
                     },
                   },
-                },
-                title: {
-                  type: 'text',
-                  analyzer: 'german_with_stopwords',
-                },
-                description: {
-                  type: 'text',
-                  analyzer: 'german_with_stopwords',
                 },
               },
             },
