@@ -8,6 +8,7 @@ type Series {
   description: String
   logo: String
   logoDark: String
+  overview: Document
   episodes: [Episode!]!
 }
 
