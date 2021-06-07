@@ -381,20 +381,28 @@ module.exports = {
                     image: {
                       type: 'keyword',
                     },
-                    label: {
-                      type: 'text',
-                      analyzer: 'german_with_stopwords',
-                    },
                     publishDate: {
                       type: 'date',
                     },
+                    lead: {
+                      type: 'text',
+                      analyzer: 'german_with_stopwords',
+                    },
                     title: {
+                      type: 'text',
+                      analyzer: 'german_with_stopwords',
+                    },
+                    label: {
                       type: 'text',
                       analyzer: 'german_with_stopwords',
                     },
                   },
                 },
                 title: {
+                  type: 'text',
+                  analyzer: 'german_with_stopwords',
+                },
+                description: {
                   type: 'text',
                   analyzer: 'german_with_stopwords',
                 },
