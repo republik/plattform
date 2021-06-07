@@ -830,16 +830,12 @@ year,category,value
       "columns": 3,
       "xScale": "linear",
       "numberFormat": ".0%",
-      "xNumberFormat": "s",
       "xTicks": [
         20,
-        40,
         60,
-        80,
         100
       ],
-      "xUnit": "Alter",
-      "unit": "Anteil der Überlebenden",
+      "xUnit": "Alter"
     }}
     values={`
 age,date,value

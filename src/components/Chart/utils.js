@@ -254,3 +254,9 @@ export const getTextColor = bgColor => {
   const yiq = (color.r * 299 + color.g * 587 + color.b * 114) / 1000
   return yiq >= 128 ? 'black' : 'white'
 }
+
+export const xAccessor = d => d.x
+
+export const hasValues = d => d.value && d.value.length > 0
+
+export const identityFn = x => x

@@ -11,7 +11,10 @@ import {
   groupBy,
   deduplicate,
   unsafeDatumFn,
-  sortBy
+  sortBy,
+  hasValues,
+  identityFn,
+  xAccessor
 } from './utils'
 
 import { getColorMapper } from './colorMaps'
@@ -70,8 +73,6 @@ const calculateAndMoveLabelY = (linesWithLayout, property) => {
   return labelsMoved
 }
 
-const identityFn = x => x
-
 const getXParser = (xScale, userTimeParse) => {
   if (xScale === 'time') {
     return timeParse(userTimeParse)
@@ -100,10 +101,6 @@ const parseData = (x, xParser) => d => ({
   x: xParser(d[x]),
   value: +d.value
 })
-
-const containsValues = d => d.value && d.value.length > 0
-
-const xAccessor = d => d.x
 
 const valueAccessor = d => d.value
 
@@ -137,7 +134,7 @@ export default props => {
 
   let data = values
     .filter(getDataFilter(props.filter))
-    .filter(containsValues)
+    .filter(hasValues)
     .map(parseData(props.x, xParser))
     .map(categorizeData(props.category))
 
