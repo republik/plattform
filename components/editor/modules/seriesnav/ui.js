@@ -1,6 +1,6 @@
 import React from 'react'
 import { buttonStyles, createPropertyForm, matchBlock } from '../../utils'
-import { Radio, Label } from '@project-r/styleguide'
+import { Checkbox, Label } from '@project-r/styleguide'
 
 import { allBlocks, parent, childIndex, depth } from '../../utils/selection'
 
@@ -60,24 +60,20 @@ const createSeriesNavUI = ({ TYPE, newBlock, zone }) => {
     if (!node) {
       return null
     }
-    console.log('layout', node.data)
+    const onGridChange = (_, checked) => {
+      onChange(
+        value.change().setNodeByKey(node.key, {
+          data: node.data.set('grid', checked)
+        })
+      )
+    }
+
     return (
       <UIForm>
         <Label>Layout</Label>
-        <Radio
-          value='grid'
-          checked={node.data.get('layout') === 'grid'}
-          onChange={event => onChange('inline', null, event.target.value)}
-        >
+        <Checkbox checked={node.data.get('grid')} onChange={onGridChange}>
           Grid
-        </Radio>
-        <Radio
-          value='inline'
-          checked={node.data.get('layout') === 'inline'}
-          onChange={event => onChange('inline', null, event.target.value)}
-        >
-          Inline
-        </Radio>
+        </Checkbox>
       </UIForm>
     )
   }

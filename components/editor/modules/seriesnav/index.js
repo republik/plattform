@@ -119,7 +119,7 @@ const SeriesNavPlugin = ({ rule, subModules, TYPE }) => {
               <SeriesNav
                 documentId={undefined}
                 series={series}
-                inline={node.data.get('inline')}
+                inline={!node.data.get('grid')}
                 ActionBar={DummyActionBar}
                 PayNote={undefined}
                 Link={DefaultLink}
