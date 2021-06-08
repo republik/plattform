@@ -98,8 +98,11 @@ const SeriesNavPlugin = ({ rule, subModules, TYPE }) => {
         renderNode({ node, editor: { value }, attributes }) {
           if (!zone.match(node)) return
 
-          const series = node.data.get('series')
-          console.log('node', node.data)
+          const titleNode = value.document.findDescendant(
+            node => node.type === 'TITLE'
+          )
+          const series = titleNode.data.get('series')
+
           const active = value.blocks.some(block => block.key === node.key)
           return (
             <div
