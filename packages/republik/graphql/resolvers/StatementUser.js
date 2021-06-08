@@ -1,4 +1,4 @@
-const { slug, portrait, credentials } = require('./User.js')
+const { slug, portrait, credentials } = require('./User')
 const {
   updatedAt,
 } = require('@orbiting/backend-modules-auth/graphql/resolvers/User')

@@ -3,6 +3,7 @@ const { getFeaturedTargets } = require('../lib/Comment')
 module.exports = `
 
 type Credential {
+  id: ID!
   description: String!
   verified: Boolean!
   isListed: Boolean!
