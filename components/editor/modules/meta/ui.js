@@ -91,7 +91,7 @@ const MetaData = ({
       if (key === 'series' && data) {
         data = data.meta.series
 
-        const seriesNavNodes = change.value.document.findDescendants(
+        const seriesNavNodes = change.value.document.filterDescendants(
           node => node.type === 'SERIES_NAV'
         )
         seriesNavNodes.forEach(node => {
