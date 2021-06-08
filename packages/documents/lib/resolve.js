@@ -248,6 +248,7 @@ const metaUrlResolver = (
     if (
       index <= 1 ||
       !episode.document?.meta?.path ||
+      episode.document.meta.path === meta.path ||
       !DOCUMENTS_RESTRICT_TO_ROLES ||
       user === undefined ||
       userIsInRoles(user, DOCUMENTS_RESTRICT_TO_ROLES.split(','))
