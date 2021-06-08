@@ -32,6 +32,9 @@ const styles = {
   }),
   label: css({
     marginTop: 0,
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
     ...sansSerifRegular12,
     [mUp]: {
       ...sansSerifRegular14
