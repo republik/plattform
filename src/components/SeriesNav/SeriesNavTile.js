@@ -66,8 +66,6 @@ const SeriesNavTile = ({
         }
       : { light: {}, dark: {} }
   const inactiveTile = !PayNote && !current && !episode?.document?.meta?.path
-  // TODO: support isReadable
-  //(!episode?.document?.meta?.path || !episode.isReadable)
 
   return (
     <div

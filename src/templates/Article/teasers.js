@@ -532,7 +532,8 @@ const createTeasers = ({
     props: (node, index, parent, { ancestors }) => {
       const root = ancestors[ancestors.length - 1]
       return {
-        document: root.document,
+        documentId: root.documentId,
+        series: root.series,
         inline: root.inline,
         ActionBar: ActionBar,
         PayNote: PayNote,

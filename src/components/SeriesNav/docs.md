@@ -26,7 +26,8 @@ Inline
 
 ```react
   <SeriesNav
-    document={document}
+    documentId={documentId}
+    series={series}
     inline={true}
     PayNote={TestPayNote}
   />

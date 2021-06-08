@@ -192,7 +192,8 @@ WrappedSeriesNav.data = {
         data: {
           loading: data.loading,
           error: data.error,
-          document: data.document
+          documentId: data.document.id,
+          series: data.document.meta.series
         }
       }
     }
@@ -209,7 +210,6 @@ WrappedSeriesNav.data = {
             title
             label
             image
-            publishDate
             document {
               id
             }

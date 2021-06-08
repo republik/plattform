@@ -61,12 +61,7 @@ const SeriesNavTileContent = ({
     : episode.image &&
       FigureImage.utils.getResizedSrcs(episode.image, 600, true)
 
-  const isLink =
-    episode.document &&
-    episode.document?.meta?.path &&
-    // TODO: implement isReadable
-    // episode.isReadable &&
-    !current
+  const isLink = episode.document && episode.document?.meta?.path && !current
 
   const LinkContainer = ({ children }) =>
     isLink ? (
@@ -86,13 +81,7 @@ const SeriesNavTileContent = ({
           {current ? 'Sie lesen: ' : null}
           {episode.label}
         </p>
-        {imageProps ? (
-          <FigureImage
-            {...imageProps}
-            //TODO proper alt image text
-            alt={episode.title}
-          />
-        ) : null}
+        {imageProps ? <FigureImage {...imageProps} alt='' /> : null}
         <h2 {...styles.titleInline} {...colorScheme.set('color', 'text')}>
           {episode.title}
         </h2>
@@ -107,13 +96,7 @@ const SeriesNavTileContent = ({
           {current ? 'Sie lesen: ' : null}
           {episode.label}
         </p>
-        {imageProps ? (
-          <FigureImage
-            {...imageProps}
-            //TODO proper alt image text
-            alt={episode.title}
-          />
-        ) : null}
+        {imageProps ? <FigureImage {...imageProps} alt='' /> : null}
         <h2 {...styles.title} {...colorScheme.set('color', 'text')}>
           {episode.title}
         </h2>
