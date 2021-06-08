@@ -353,8 +353,8 @@ const createSchema = ({
               },
               {
                 matchMdast: matchHeading(2),
-                component: ({ children, attributes, ...props }) => (
-                  <Editorial.Subject attributes={attributes} {...props}>
+                component: ({ children, attributes }) => (
+                  <Editorial.Subject attributes={attributes}>
                     {children}
                   </Editorial.Subject>
                 ),
