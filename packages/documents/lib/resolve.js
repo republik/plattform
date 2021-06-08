@@ -234,6 +234,7 @@ const metaUrlResolver = (
   errors,
   urlPrefix,
   searchString,
+  user,
 ) => {
   const urlReplacer = createUrlReplacer(
     allDocuments,
@@ -242,6 +243,20 @@ const metaUrlResolver = (
     urlPrefix,
     searchString,
   )
+
+  meta.series?.episodes?.forEach((episode, index) => {
+    if (
+      index <= 1 ||
+      !episode.document?.meta?.path ||
+      !DOCUMENTS_RESTRICT_TO_ROLES ||
+      user === undefined ||
+      userIsInRoles(user, DOCUMENTS_RESTRICT_TO_ROLES.split(','))
+    ) {
+      return
+    }
+
+    episode.document = undefined
+  })
 
   meta.credits &&
     meta.credits
