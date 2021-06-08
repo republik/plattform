@@ -69,7 +69,8 @@ function SeriesNav({
   )[0]
 
   const currentTileIndex = series.episodes.findIndex(
-    episode => episode.document.id === currentTile.document.id
+    episode =>
+      episode.document && episode.document.id === currentTile.document.id
   )
 
   const localColors = {
