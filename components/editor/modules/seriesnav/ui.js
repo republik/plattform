@@ -1,7 +1,8 @@
 import React from 'react'
 import { buttonStyles, createPropertyForm, matchBlock } from '../../utils'
 import { Radio, Label } from '@project-r/styleguide'
-import injectBlock from '../../utils/injectBlock'
+
+import { allBlocks, parent, childIndex, depth } from '../../utils/selection'
 
 import UIForm from '../../UIForm'
 
@@ -15,17 +16,24 @@ const createSeriesNavUI = ({ TYPE, newBlock, zone }) => {
     const SeriesNavButtonClickHandler = event => {
       event.preventDefault()
       if (!disabled) {
-        // onChange(
-        //   value.change()
-        //     .call(injectBlock, newBlock(value.document.data.toJS()))
-        // )
+        const blocks = allBlocks(value)
+        const rootBlocks = blocks.filter(n => depth(value, n.key) === 1)
 
+        const currentBlock = blocks.first()
+        const currentRootBlock = rootBlocks.first()
         onChange(
           value
             .change()
+            .splitBlockAtRange(
+              value.selection,
+              depth(value, currentBlock.key),
+              {
+                normalize: false
+              }
+            )
             .insertNodeByKey(
-              value.document.key,
-              value.document.nodes.size,
+              parent(value, currentRootBlock.key).key,
+              childIndex(value, currentRootBlock.key) + 1,
               newBlock(value.document.data.toJS())
             )
         )

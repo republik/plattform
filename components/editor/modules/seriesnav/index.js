@@ -10,6 +10,8 @@ import { Block } from 'slate'
 import { matchBlock } from '../../utils'
 import MarkdownSerializer from 'slate-mdast-serializer'
 
+import { TeaserInlineUI } from '../teaser/ui'
+
 // gleich wie special
 import createUi from './ui'
 
@@ -95,7 +97,7 @@ const SeriesNavPlugin = ({ rule, subModules, TYPE }) => {
     ui: createUi({ TYPE, newBlock, zone }),
     plugins: [
       {
-        renderNode({ node, editor: { value }, attributes }) {
+        renderNode({ node, editor, editor: { value }, attributes }) {
           if (!zone.match(node)) return
 
           const titleNode = value.document.findDescendant(
@@ -103,16 +105,17 @@ const SeriesNavPlugin = ({ rule, subModules, TYPE }) => {
           )
           const series = titleNode.data.get('series')
 
-          const active = value.blocks.some(block => block.key === node.key)
+          const isSelected = value.blocks.some(block => block.key === node.key)
           return (
-            <div
-              style={{
-                transition: 'outline-color 0.2s',
-                outline: '4px solid transparent',
-                outlineColor: active ? colors.primary : 'transparent'
-              }}
-              {...attributes}
-            >
+            <div {...attributes}>
+              {isSelected && (
+                <TeaserInlineUI
+                  key='ui'
+                  copyable={false}
+                  node={node}
+                  editor={editor}
+                />
+              )}
               <SeriesNav
                 documentId={undefined}
                 series={series}

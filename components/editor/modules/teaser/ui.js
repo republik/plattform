@@ -620,7 +620,8 @@ export const TeaserInlineUI = ({
   editor,
   node,
   serializer,
-  removable = true
+  removable = true,
+  copyable = true
 }) => {
   const parentNode = parent(editor.state.value, node.key)
   const index = parentNode.nodes.indexOf(node)
@@ -725,7 +726,7 @@ export const TeaserInlineUI = ({
                 <MoveToEndIcon size={24} />
               </MarkButton>
             )}
-            <CopyMdButton node={node} serializer={serializer} />
+            {copyable && <CopyMdButton node={node} serializer={serializer} />}
           </P>
         </div>
       </div>
