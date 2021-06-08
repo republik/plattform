@@ -12,7 +12,7 @@ module.exports = async (_, args, { pgdb, req, user: me, t }) => {
       id,
     },
     {
-      verified: true,
+      verified: false,
     },
   )
 }

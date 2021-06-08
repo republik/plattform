@@ -100,6 +100,38 @@ module.exports = {
     }
     return null
   },
+  async credentials(user, args, { user: me, loaders }) {
+    const canAccessAll = Roles.userIsMe(user, me)
+    const canAccessNonAnonymous = Roles.userIsInRoles(me, [
+      'admin',
+      'supporter',
+    ])
+    const canAccessListed = Roles.userIsMeOrProfileVisible(user, me)
+
+    // credentials are filtered according to access rights
+    // i.e. filtering has to follow the order below because depending on
+    // how extensive these rights are the returned list of credentials
+    // gets smaller
+    if (canAccessAll || canAccessNonAnonymous || canAccessListed) {
+      const all = await loaders.Credential.byUserId.load(user.id)
+      if (canAccessAll) {
+        return all
+      }
+      if (canAccessNonAnonymous) {
+        return all.filter(
+          (credential) =>
+            credential.usedNonAnonymous ||
+            (!credential.usedNonAnonymous && !credential.usedAnonymous),
+        )
+      }
+      if (canAccessListed) {
+        return all.filter((credential) => credential.isListed)
+      }
+    }
+
+    return []
+  },
+
   portrait(user, args, { user: me, req, allowAccess = false }) {
     if (allowAccess || canAccessBasics(user, me)) {
       const { portraitUrl } = user._raw
@@ -167,25 +199,6 @@ module.exports = {
   age: exposeAccessField('ageAccessRole', 'birthday', (dob) =>
     dob ? age(dob) : null,
   ),
-  async credentials(user, args, { pgdb, user: me }) {
-    const canAccessListed = canAccessBasics(user, me)
-    const canAccessAll = Roles.userIsMeOrInRoles(user, me, [
-      'admin',
-      'supporter',
-    ])
-    if (canAccessListed || canAccessAll) {
-      // ToDo: optimize for statements (adds 40ms per 100 records)
-      const all = await pgdb.public.credentials.find({
-        userId: user.id,
-      })
-      if (canAccessAll) {
-        return all
-      }
-      const allListed = all.filter((c) => c.isListed)
-      return allListed
-    }
-    return []
-  },
   async address(user, args, { loaders, user: me }) {
     if (
       Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter']) ||
