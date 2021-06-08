@@ -534,7 +534,7 @@ const createTeasers = ({
       return {
         documentId: root.documentId,
         series: root.series,
-        inline: root.inline,
+        inline: !node.data.grid,
         ActionBar: ActionBar,
         PayNote: PayNote,
         Link: Link

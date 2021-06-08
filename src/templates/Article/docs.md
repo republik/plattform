@@ -1192,12 +1192,18 @@ Reise planen: Flug mit einer Dauer von rund 4 Stunden.
 }}>{`
 <section><h6>SERIES_NAV</h6>
 
+\`\`\`
+{
+  "grid": true
+}
+\`\`\`
+
 <hr /></section>
 `}</Markdown>
 ```
 
 ```react|noSource
-<Markdown schema={schema} rootData={{ inline: true,
+<Markdown schema={schema} rootData={{
   documentId: documentId, series: series
 }}>{`
 <section><h6>SERIES_NAV</h6>
