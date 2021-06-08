@@ -1,5 +1,5 @@
 {
-  "updated": "2021-06-07T16:07:23.836Z",
+  "updated": "2021-06-08T11:48:39.543Z",
   "title": "live",
   "data": [
     {
@@ -640,7 +640,7 @@
     },
     {
       "key": "metaData/series/main",
-      "value": "Auftakt"
+      "value": "Übersicht"
     },
     {
       "key": "metaData/series/title/label",
@@ -653,6 +653,10 @@
     {
       "key": "metaData/series/overview",
       "value": "Dokument Serienübersicht"
+    },
+    {
+      "key": "metaData/series/overview/note",
+      "value": "Im Normalfall: Eine Selbstreferenz auf dieses Dokument mit den Metadaten zur Serie und einem Episoden-Grid. Ausnahme: alte Serien vor Sommer 2021."
     },
     {
       "key": "metaData/series/episode",

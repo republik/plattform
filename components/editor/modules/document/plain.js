@@ -98,7 +98,8 @@ export default ({ rule, subModules, TYPE }) => {
             meta: node.meta,
             format: node.format,
             section: node.section,
-            series: node.series
+            series: node.series,
+            repoId: node.repoId
           }
         })
       }
@@ -126,9 +127,10 @@ export default ({ rule, subModules, TYPE }) => {
     rules: [documentRule]
   })
 
-  const newDocument = ({ title = '', schema = '' }, me) =>
-    serializer.deserialize(
-      parse(`---
+  const newDocument = ({ title = '', schema = '', repoId }, me) =>
+    serializer.deserialize({
+      repoId,
+      ...parse(`---
 ${safeDump({ template: schema, title, auto: true, feed: true, gallery: true })}
 ---
 ${
@@ -171,7 +173,7 @@ ${titleModule ? 'Text' : title}
 
 <hr/></section>
 `)
-    )
+    })
 
   const Container = rule.component
 

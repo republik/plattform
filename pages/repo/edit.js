@@ -597,7 +597,9 @@ export class EditorPage extends Component {
             ...localState,
             // add format & section to root mdast node
             format: repo?.commit?.document?.meta?.format,
-            section: repo?.commit?.document?.meta?.section
+            section: repo?.commit?.document?.meta?.section,
+            series: repo?.commit?.document?.meta?.series,
+            repoId: repo?.commit?.document?.repoId
           })
           debug('loadState', 'using local mdast document', localEditorState)
         }

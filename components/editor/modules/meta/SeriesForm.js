@@ -19,7 +19,7 @@ const styles = {
   })
 }
 
-export default withT(({ t, editor, node, onRepoInputChange }) => {
+export default withT(({ t, editor, node, onRepoInputChange, repoId }) => {
   const coverTextAnchors = [null, 'top', 'middle', 'bottom'].map(value => ({
     value,
     text: t(`metaData/series/coverText/anchor/${value}`)
@@ -61,7 +61,7 @@ export default withT(({ t, editor, node, onRepoInputChange }) => {
           onSeriesChange({
             title: '',
             description: '',
-            overview: null,
+            overview: `https://github.com/${repoId}`,
             episodes: [
               {
                 label: '',
@@ -218,6 +218,9 @@ export default withT(({ t, editor, node, onRepoInputChange }) => {
               })
             }}
           />
+          <Label style={{ display: 'block', marginTop: -5, marginBottom: 10 }}>
+            {t('metaData/series/overview/note')}
+          </Label>
           <div style={{ float: 'left', marginRight: 15 }}>
             <ImageInput
               label='Logo'

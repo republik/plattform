@@ -235,6 +235,7 @@ const MetaData = ({
         />
         {!!series && (
           <SeriesForm
+            repoId={titleData.repoId}
             editor={editor}
             node={node}
             onRepoInputChange={onRepoInputChange}
