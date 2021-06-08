@@ -86,21 +86,15 @@ function SeriesNav({
 
   // add paynote object after current episode or to third card if no current episode
   const payNote = { isPayNote: true }
+  const payNotePosition = currentTile
+    ? Math.max(currentTileIndex + 1, DEFAULT_PAYNOTE_INDEX)
+    : DEFAULT_PAYNOTE_INDEX
   const episodes =
     PayNote && !inline
       ? [
-          ...series.episodes.slice(
-            0,
-            currentTile
-              ? Math.max(currentTileIndex + 1, DEFAULT_PAYNOTE_INDEX)
-              : DEFAULT_PAYNOTE_INDEX
-          ),
+          ...series.episodes.slice(0, payNotePosition),
           payNote,
-          ...series.episodes.slice(
-            currentTile
-              ? Math.max(currentTileIndex + 1, DEFAULT_PAYNOTE_INDEX)
-              : DEFAULT_PAYNOTE_INDEX
-          )
+          ...series.episodes.slice(payNotePosition)
         ]
       : [...series.episodes]
 
@@ -165,8 +159,6 @@ function SeriesNav({
   )
 }
 
-const WrappedSeriesNav = props => <SeriesNav {...props} />
-
 SeriesNav.propTypes = {
   documentId: PropTypes.string.isRequired,
   series: PropTypes.object.isRequired,
@@ -177,9 +169,9 @@ SeriesNav.propTypes = {
   height: PropTypes.number
 }
 
-export default WrappedSeriesNav
+export default SeriesNav
 
-WrappedSeriesNav.data = {
+SeriesNav.data = {
   config: {
     options: ({ data }) => ({
       variables: {

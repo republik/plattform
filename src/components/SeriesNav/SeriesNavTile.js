@@ -6,13 +6,12 @@ import { useColorContext } from '../Colors/useColorContext'
 import {
   PADDING,
   TILE_MARGIN_RIGHT,
-  TILE_MAX_WIDTH,
   TILE_GRID_PADDING
 } from '../TeaserCarousel/constants'
 
 import SeriesNavTileContent from './SeriesNavTileContent'
 
-const GRID_MIN_WIDTH = 345
+const GRID_MIN_WIDTH = 340
 const OUTER_CONTAINER_PADDING = PADDING
 
 const styles = {
