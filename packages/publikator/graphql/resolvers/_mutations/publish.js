@@ -49,12 +49,8 @@ const {
 const { notifyPublish } = require('../../../lib/Notifications')
 const { document: getDocument } = require('../Commit')
 
-const {
-  FRONTEND_BASE_URL,
-  PIWIK_URL_BASE,
-  PIWIK_SITE_ID,
-  DISABLE_PUBLISH,
-} = process.env
+const { FRONTEND_BASE_URL, PIWIK_URL_BASE, PIWIK_SITE_ID, DISABLE_PUBLISH } =
+  process.env
 
 module.exports = async (
   _,
@@ -171,7 +167,9 @@ module.exports = async (
 
   metaFieldResolver(resolvedDoc.content.meta, _all, unresolvedRepoIds)
 
-  unresolvedRepoIds = uniq(unresolvedRepoIds)
+  unresolvedRepoIds = uniq(unresolvedRepoIds).filter(
+    (unresolvedRepoId) => unresolvedRepoId !== repoId,
+  )
 
   if (
     unresolvedRepoIds.length &&
