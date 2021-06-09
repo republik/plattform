@@ -55,7 +55,7 @@ const SeriesNavTileContent = ({
   current,
   ActionBar,
   Link = DefaultLink,
-  onEpisodeClick
+  onEpisodeClick = () => {}
 }) => {
   const [colorScheme] = useColorContext()
   const imageProps = inline

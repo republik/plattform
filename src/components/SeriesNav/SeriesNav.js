@@ -9,7 +9,7 @@ import {
 import SeriesNavTile from './SeriesNavTile'
 import { useColorContext } from '../Colors/useColorContext'
 import { ColorContextLocalExtension } from '../Colors/ColorContext'
-import { serifBold16, serifRegular14 } from '../Typography/styles'
+import { serifBold19, serifRegular17, serifBold17 } from '../Typography/styles'
 import Center from '../../components/Center'
 
 const DEFAULT_PAYNOTE_INDEX = 2
@@ -39,15 +39,25 @@ const styles = {
     }
   }),
   title: css({
-    ...serifBold16,
-    marginBottom: 4
+    ...serifBold17,
+    marginBottom: 4,
+    [mUp]: {
+      ...serifBold19
+    }
   }),
   description: css({
-    ...serifRegular14,
+    ...serifRegular17,
     margin: 0,
-    marginBottom: 30
+    marginBottom: 5
+  }),
+  plainlink: css({
+    textDecoration: 'none',
+    color: 'inherit',
+    cursor: 'pointer'
   })
 }
+
+const DefaultLink = ({ children }) => children
 
 function SeriesNav({
   documentId,
@@ -55,7 +65,7 @@ function SeriesNav({
   inline,
   height,
   ActionBar,
-  Link,
+  Link = DefaultLink,
   PayNote,
   onEpisodeClick
 }) {
@@ -99,7 +109,7 @@ function SeriesNav({
           ...series.episodes.slice(payNotePosition)
         ]
       : [...series.episodes]
-
+  console.log(series.overview?.meta?.path)
   return (
     <div {...(inline ? styles.containerInline : styles.container)}>
       {inline ? (
@@ -108,7 +118,15 @@ function SeriesNav({
             {...styles.hline}
             {...colorScheme.set('borderColor', 'divider')}
           />
-          <h3 {...styles.title}>{series.title}</h3>
+          {series.overview?.meta?.path ? (
+            <Link href={series.overview.meta.path} passHref>
+              <a {...styles.plainlink}>
+                <h3 {...styles.title}>{series.title}</h3>
+              </a>
+            </Link>
+          ) : (
+            <h3 {...styles.title}>{series.title}</h3>
+          )}
           <p {...styles.description}>{series.description}</p>
         </Center>
       ) : null}

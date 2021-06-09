@@ -7,6 +7,11 @@ export const series = {
   logo: null,
   description:
     'Wieso sind Verschwörungs­theorien plötzlich allgegenwärtig? Wie entstehen sie, was verbindet sie?',
+  overview: {
+    meta: {
+      path: '/path-to-series-overview'
+    }
+  },
   episodes: [
     {
       title:
