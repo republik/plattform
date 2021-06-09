@@ -1,5 +1,6 @@
 import * as d3Intervals from 'd3-time'
-import { deduplicate } from './utils'
+import { deduplicate, groupBy, xAccessor } from './utils'
+import { max, min } from 'd3-array'
 
 export const intervals = Object.keys(d3Intervals)
   .filter(key => key.match(/^time/) && key !== 'timeInterval')
@@ -105,8 +106,6 @@ export const getXDomain = (
     : xValues
 }
 
-export const sumSegments = (sum, segment) => sum + segment.value
-
 export const getAnnotationsXValues = (annotations, xNormalizer) =>
   annotations
     .reduce(
@@ -116,3 +115,26 @@ export const getAnnotationsXValues = (annotations, xNormalizer) =>
     )
     .filter(Boolean)
     .map(xNormalizer) // ensure format
+
+const sumSegments = (sum, segment) => sum + segment.value
+
+const mergeSegments = ({ values: segments, key: x }) => ({
+  segments,
+  up: segments.filter(segment => segment.value > 0).reduce(sumSegments, 0),
+  down: segments.filter(segment => segment.value < 0).reduce(sumSegments, 0),
+  x
+})
+
+export const processSegments = data => ({
+  bars: groupBy(data.values, xAccessor).map(mergeSegments),
+  key: data.key
+})
+
+const getGroupMin = group => min(group.bars, d => d.down)
+
+const getGroupMax = group => max(group.bars, d => d.up)
+
+export const getMin = groupedData =>
+  Math.min([0].concat(groupedData.map(getGroupMin)))
+
+export const getMax = groupedData => Math.max(groupedData.map(getGroupMax))

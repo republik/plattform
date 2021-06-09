@@ -1,8 +1,9 @@
 import { formatLocale, formatSpecifier, precisionFixed } from 'd3-format'
-import { ascending, descending, max as d3Max } from 'd3-array'
+import { ascending, descending, max as d3Max, range } from 'd3-array'
 import { rgb } from 'd3-color'
 import React, { createElement, Fragment } from 'react'
 import PropTypes from 'prop-types'
+import { scaleOrdinal } from 'd3-scale'
 
 export const groupBy = (array, key) => {
   const keys = []
@@ -260,3 +261,92 @@ export const xAccessor = d => d.x
 export const hasValues = d => d.value && d.value.length > 0
 
 export const identityFn = x => x
+
+export const getDataFilter = userFilter =>
+  userFilter ? unsafeDatumFn(userFilter) : identityFn
+
+export const groupInColumns = (data, column, columnFilter) =>
+  columnFilter
+    ? columnFilter
+        .map(({ test, title }) => {
+          const filter = unsafeDatumFn(test)
+          return {
+            key: title,
+            values: data.filter(d => filter(d.datum))
+          }
+        })
+        .reduce((all, group) => all.concat(group.values), [])
+    : groupBy(data, d => d.datum[column])
+
+const getColumnCount = (
+  itemCount,
+  userColumns,
+  width,
+  minWidth,
+  paddingLeft,
+  paddingRight
+) => {
+  const possibleColumns = Math.floor(
+    width / (minWidth + paddingLeft + paddingRight)
+  )
+  let columns = userColumns
+  if (possibleColumns < userColumns) {
+    columns = Math.max(possibleColumns, 1)
+    // decrease columns if it does not lead to new rows
+    // e.g. four items, 4 desired columns, 3 possible => go with 2 columns
+    if (
+      Math.ceil(itemCount / columns) === Math.ceil(itemCount / (columns - 1))
+    ) {
+      columns -= 1
+    }
+  }
+  return columns
+}
+
+const xTranslateFn = (groups, columns, columnWidth) =>
+  scaleOrdinal()
+    .domain(groups)
+    .range(range(columns).map(d => d * columnWidth))
+
+const yTranslateFn = (groups, columns, columnHeight, columnMargin) =>
+  scaleOrdinal()
+    .domain(groups)
+    .range(
+      range(groups.length).map(d => {
+        const row = Math.floor(d / columns)
+        return row * columnHeight + row * columnMargin
+      })
+    )
+
+export const getColumnLayout = (
+  userColumns,
+  groupedData,
+  width,
+  minWidth,
+  columnHeight,
+  columnSort,
+  paddingLeft,
+  paddingRight,
+  columnMargin
+) => {
+  const itemCount = groupedData.length
+  const columns = getColumnCount(
+    itemCount,
+    userColumns,
+    width,
+    minWidth,
+    paddingLeft,
+    paddingRight
+  )
+  const columnWidth = Math.floor(width / columns) - 1
+  const innerWidth = columnWidth - paddingLeft - paddingRight
+  const rows = Math.ceil(itemCount / columns)
+  const height = rows * columnHeight + (rows - 1) * columnMargin
+
+  let groups = groupedData.map(g => g.key)
+  runSort(columnSort, groups)
+  const gx = xTranslateFn(groups, columns, columnWidth)
+  const gy = yTranslateFn(groups, columns, columnHeight, columnMargin)
+
+  return { height, innerWidth, gx, gy }
+}

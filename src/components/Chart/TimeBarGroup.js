@@ -22,7 +22,8 @@ const styles = {
 }
 
 const TimeBarGroup = ({
-  group,
+  bars,
+  title,
   xAnnotations,
   yAnnotations,
   baseLines,
@@ -50,7 +51,7 @@ const TimeBarGroup = ({
         {...styles.groupTitle}
         {...colorScheme.set('fill', 'text')}
       >
-        {group.title}
+        {title}
       </text>
       {xAnnotations
         .filter(annotation => annotation.ghost)
@@ -65,7 +66,7 @@ const TimeBarGroup = ({
             {...colorScheme.set('fill', 'divider')}
           />
         ))}
-      {group.bars.map(bar => {
+      {bars.map(bar => {
         return (
           <g key={bar.x} transform={`translate(${x(bar.x)},0)`}>
             {bar.segments.map((segment, i) => (

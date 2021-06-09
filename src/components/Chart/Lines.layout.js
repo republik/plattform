@@ -14,7 +14,9 @@ import {
   sortBy,
   hasValues,
   identityFn,
-  xAccessor
+  xAccessor,
+  getDataFilter,
+  groupInColumns
 } from './utils'
 
 import { getColorMapper } from './colorMaps'
@@ -82,9 +84,6 @@ const getXParser = (xScale, userTimeParse) => {
   return identityFn
 }
 
-const getDataFilter = userFilter =>
-  userFilter ? unsafeDatumFn(userFilter) : identityFn
-
 const categorizeData = category => d => {
   if (category) {
     const categorize = unsafeDatumFn(category)
@@ -106,19 +105,6 @@ const valueAccessor = d => d.value
 
 const appendAnnotations = (values, annotations) =>
   annotations ? values.concat(annotations.map(valueAccessor)) : values
-
-const groupInColumns = (data, column, columnFilter) =>
-  columnFilter
-    ? columnFilter
-        .map(({ test, title }) => {
-          const filter = unsafeDatumFn(test)
-          return {
-            key: title,
-            values: data.filter(d => filter(d.datum))
-          }
-        })
-        .reduce((all, group) => all.concat(group.values), [])
-    : groupBy(data, d => d.datum[column])
 
 const groupLines = (color, category) =>
   category ? d => d.category : d => d.datum[color]

@@ -31,7 +31,9 @@ import {
   runSort,
   sortPropType,
   sortBy,
-  getFormat
+  getFormat,
+  xAccessor,
+  getColumnLayout
 } from './utils'
 import ColorLegend from './ColorLegend'
 
@@ -103,7 +105,6 @@ const LineGroup = props => {
     yAxisFormat,
     x,
     xTicks,
-    xAccessor,
     xFormat,
     xUnit,
     width,
@@ -505,24 +506,17 @@ const LineChart = props => {
 
   const [colorScheme] = useColorContext()
 
-  const possibleColumns = Math.floor(
-    width / (props.minInnerWidth + paddingLeft + paddingRight)
+  const { height, innerWidth, gx, gy } = getColumnLayout(
+    props.columns,
+    groupedData,
+    width,
+    props.minInnerWidth,
+    columnHeight,
+    props.columnSort,
+    paddingLeft,
+    paddingRight,
+    Y_GROUP_MARGIN
   )
-  let columns = props.columns
-  if (possibleColumns < props.columns) {
-    columns = Math.max(possibleColumns, 1)
-    // decrease columns if it does not lead to new rows
-    // e.g. four items, 4 desired columns, 3 possible => go with 2 columns
-    if (
-      Math.ceil(groupedData.length / columns) ===
-      Math.ceil(groupedData.length / (columns - 1))
-    ) {
-      columns -= 1
-    }
-  }
-
-  const columnWidth = Math.floor(width / columns) - 1
-  const innerWidth = columnWidth - paddingLeft - paddingRight
 
   let xTicks = props.xTicks && props.xTicks.map(xParser)
   const xValues = data.map(xAccessor).concat(xTicks || [])
@@ -575,22 +569,6 @@ const LineChart = props => {
   }
   x.range([0, innerWidth])
 
-  let groups = groupedData.map(g => g.key)
-  runSort(props.columnSort, groups)
-
-  const rows = Math.ceil(groups.length / columns)
-  const gx = scaleOrdinal()
-    .domain(groups)
-    .range(range(columns).map(d => d * columnWidth))
-  const gy = scaleOrdinal()
-    .domain(groups)
-    .range(
-      range(groups.length).map(d => {
-        const row = Math.floor(d / columns)
-        return row * columnHeight + row * Y_GROUP_MARGIN
-      })
-    )
-
   const visibleColorLegendValues = []
     .concat(props.colorLegend !== false && colorLegend && colorLegendValues)
     .concat(
@@ -617,10 +595,7 @@ const LineChart = props => {
       <div style={{ paddingLeft, paddingRight }}>
         <ColorLegend inline values={visibleColorLegendValues} />
       </div>
-      <svg
-        width={width}
-        height={rows * columnHeight + (rows - 1) * Y_GROUP_MARGIN}
-      >
+      <svg width={width} height={height}>
         <desc>{description}</desc>
         {groupedData.map(({ values: lines, key }) => {
           return (
