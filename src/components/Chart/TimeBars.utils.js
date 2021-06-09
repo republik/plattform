@@ -52,13 +52,13 @@ export const getBaselines = (xDomain, x, width) => {
   }, [])
 }
 
-const getInterval = (xInterval, xProp, timeParse) =>
+const getIntervals = (xInterval, xProp, timeParse) =>
   intervals[xInterval] ||
   (xProp === 'year' && timeParse === '%Y' && intervals.year)
 
-const getIntervalDomain = (
+const insertXGaps = (
   xValues,
-  interval,
+  intervals,
   xIntervalStep,
   xParser,
   xParserFormat,
@@ -73,7 +73,7 @@ const getIntervalDomain = (
   )
   return xValues.reduce((values, value, index, all) => {
     values.push(value)
-    const next = interval.offset(xParser(value), xIntervalStep)
+    const next = intervals.offset(xParser(value), xIntervalStep)
     if (all.indexOf(xParserFormat(next)) === -1 && index !== all.length - 1) {
       for (let i = 0; i < gapsNeeded; i++) {
         values.push(`GAP|${value}|${i}`)
@@ -83,7 +83,7 @@ const getIntervalDomain = (
   }, [])
 }
 
-export const getXDomain = (
+export const insertXDomainGaps = (
   xValues,
   xInterval,
   xProp,
@@ -93,16 +93,9 @@ export const getXDomain = (
   xParserFormat,
   x
 ) => {
-  const interval = getInterval(xInterval, xProp, timeParse)
-  return interval
-    ? getIntervalDomain(
-        xValues,
-        interval,
-        xIntervalStep,
-        xParser,
-        xParserFormat,
-        x
-      )
+  const intervals = getIntervals(xInterval, xProp, timeParse)
+  return intervals
+    ? insertXGaps(xValues, intervals, xIntervalStep, xParser, xParserFormat, x)
     : xValues
 }
 
@@ -134,7 +127,8 @@ const getGroupMin = group => min(group.bars, d => d.down)
 
 const getGroupMax = group => max(group.bars, d => d.up)
 
-export const getMin = groupedData =>
-  Math.min([0].concat(groupedData.map(getGroupMin)))
+export const getMin = groupedData => {
+  return min([0].concat(groupedData.map(getGroupMin)))
+}
 
-export const getMax = groupedData => Math.max(groupedData.map(getGroupMax))
+export const getMax = groupedData => max(groupedData.map(getGroupMax))

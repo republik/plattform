@@ -831,8 +831,7 @@ year,category,value
       "xScale": "linear",
       "numberFormat": ".0%",
       "xTicks": [
-        20,
-        60,
+        0,
         100
       ],
       "xUnit": "Alter"

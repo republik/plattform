@@ -1,8 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { css } from 'glamor'
-import { range, min, max } from 'd3-array'
-import { scaleOrdinal, scalePoint, scaleTime, scaleLinear } from 'd3-scale'
+import { min, max } from 'd3-array'
+import { scalePoint, scaleTime, scaleLinear } from 'd3-scale'
 import { line as lineShape, area as areaShape } from 'd3-shape'
 import { timeYear } from 'd3-time'
 import { useColorContext } from '../Colors/useColorContext'
@@ -28,7 +28,6 @@ import layout, {
 import {
   subsup,
   deduplicate,
-  runSort,
   sortPropType,
   sortBy,
   getFormat,

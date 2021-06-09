@@ -1,6 +1,9 @@
 import React from 'react'
 import { css } from 'glamor'
-import { sansSerifRegular12 as LABEL_FONT } from '../Typography/styles'
+import {
+  sansSerifMedium14,
+  sansSerifRegular12 as LABEL_FONT
+} from '../Typography/styles'
 import { last } from './utils'
 import { useColorContext } from '../Colors/useColorContext'
 import { XAnnotation, YAnnotation } from './TimeBarsAnnotations'
@@ -8,6 +11,9 @@ import { XAnnotation, YAnnotation } from './TimeBarsAnnotations'
 const X_TICK_HEIGHT = 3
 
 const styles = {
+  columnTitle: css({
+    ...sansSerifMedium14
+  }),
   axisLabel: css({
     ...LABEL_FONT
   }),
@@ -35,10 +41,10 @@ const TimeBarGroup = ({
   xFormat,
   xParser,
   yAxis,
-  width,
   tLabel,
-  innerHeight,
-  color
+  color,
+  width,
+  xAxisPos
 }) => {
   const [colorScheme] = useColorContext()
   const barWidth = x.bandwidth()
@@ -46,13 +52,15 @@ const TimeBarGroup = ({
 
   return (
     <>
-      <text
-        dy='1.5em'
-        {...styles.groupTitle}
-        {...colorScheme.set('fill', 'text')}
-      >
-        {title}
-      </text>
+      {title && (
+        <text
+          dy='1.5em'
+          {...styles.columnTitle}
+          {...colorScheme.set('fill', 'text')}
+        >
+          {title}
+        </text>
+      )}
       {xAnnotations
         .filter(annotation => annotation.ghost)
         .map((annotation, i) => (
@@ -82,7 +90,7 @@ const TimeBarGroup = ({
           </g>
         )
       })}
-      <g transform={`translate(0,${innerHeight})`}>
+      <g transform={`translate(0,${xAxisPos})`}>
         {baseLines.map((line, i) => {
           return (
             <line

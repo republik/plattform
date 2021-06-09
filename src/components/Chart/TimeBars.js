@@ -19,7 +19,7 @@ import ColorLegend from './ColorLegend'
 import TimeBarGroup from './TimeBarGroup'
 import {
   getBaselines,
-  getXDomain,
+  insertXDomainGaps,
   getXTicks,
   normalizeData,
   intervals,
@@ -29,9 +29,11 @@ import {
   getMin
 } from './TimeBars.utils'
 
+const COLUMN_TITLE_HEIGHT = 24
 const AXIS_BOTTOM_HEIGHT = 24
 const PADDING_TOP = 24
 const COLUMN_PADDING = 20
+const PADDING_SIDES = 0
 
 const TimeBarChart = props => {
   const {
@@ -43,11 +45,11 @@ const TimeBarChart = props => {
     yAnnotations,
     xAnnotations,
     xScale,
-    xTicks,
     xInterval,
     xIntervalStep,
+    domain,
     padding,
-    domain
+    height: innerHeight
   } = props
 
   let xParser = identityFn
@@ -61,6 +63,10 @@ const TimeBarChart = props => {
     xNormalizer = d => xParserFormat(xParser(d))
     xFormat = timeFormat(props.timeFormat || props.timeParse)
     xSort = ascending
+  } else if (xScale === 'linear') {
+    xParser = x => +x
+    xParserFormat = x => x.toString()
+    xSort = ascending
   }
 
   let data = values
@@ -72,13 +78,28 @@ const TimeBarChart = props => {
     processSegments
   )
 
-  const innerHeight =
-    props.height - (mini ? PADDING_TOP + AXIS_BOTTOM_HEIGHT : 0)
+  const columnTitleHeight = props.column ? COLUMN_TITLE_HEIGHT : 0
+  const columnHeight =
+    innerHeight +
+    columnTitleHeight +
+    (mini ? 0 : PADDING_TOP + AXIS_BOTTOM_HEIGHT)
+  const { height, innerWidth, gx, gy } = getColumnLayout(
+    props.columns,
+    groupedData,
+    width,
+    props.minInnerWidth,
+    columnHeight,
+    props.columnSort,
+    PADDING_SIDES,
+    PADDING_SIDES,
+    COLUMN_PADDING
+  )
+
   const y = scaleLinear()
     .domain(
       props.domain ? props.domain : [getMin(groupedData), getMax(groupedData)]
     )
-    .range([innerHeight, 0])
+    .range([columnHeight - PADDING_TOP, AXIS_BOTTOM_HEIGHT + columnTitleHeight])
 
   if (!domain) {
     y.nice(3)
@@ -129,17 +150,19 @@ const TimeBarChart = props => {
     .sort(xSort)
     .map(xParserFormat)
 
+  console.log(xValues)
+
   const x = scaleBand()
     .domain(xValues)
-    .range([padding, width - padding])
+    .range([padding, innerWidth - padding])
     .padding(props.xBandPadding)
     .round(true)
 
-  const xDomain = getXDomain(
+  const xDomain = insertXDomainGaps(
     xValues,
     xInterval,
     props.x,
-    timeParse,
+    props.timeParse,
     xIntervalStep,
     xParser,
     xParserFormat,
@@ -147,18 +170,6 @@ const TimeBarChart = props => {
   )
 
   x.domain(xDomain).round(true)
-
-  const { height, innerWidth, gx, gy } = getColumnLayout(
-    props.columns,
-    groupedData,
-    width,
-    props.minInnerWidth,
-    innerHeight,
-    props.columnSort,
-    COLUMN_PADDING,
-    COLUMN_PADDING,
-    COLUMN_PADDING
-  )
 
   const colorAccessor = d => d.datum[props.color]
 
@@ -180,7 +191,8 @@ const TimeBarChart = props => {
     )
     .filter(Boolean)
 
-  console.log(groupedData)
+  const baseLines = getBaselines(xDomain, x, innerWidth)
+  const xTicks = getXTicks(props.xTicks, xValues, xNormalizer, x)
 
   return (
     <>
@@ -191,15 +203,15 @@ const TimeBarChart = props => {
           return (
             <g
               key={key || 1}
-              transform={`translate(${gx(key) + COLUMN_PADDING},${gy(key)})`}
+              transform={`translate(${gx(key) + PADDING_SIDES},${gy(key)})`}
             >
               <TimeBarGroup
                 bars={bars}
                 title={key}
                 xAnnotations={xAnnotations}
                 yAnnotations={yAnnotations}
-                baseLines={getBaselines(xDomain, x, width)}
-                xTicks={getXTicks(xTicks, xValues, xNormalizer, x)}
+                baseLines={baseLines}
+                xTicks={xTicks}
                 yTicks={yTicks}
                 x={x}
                 y={y}
@@ -207,10 +219,10 @@ const TimeBarChart = props => {
                 xFormat={xFormat}
                 xParser={xParser}
                 yAxis={yAxis}
-                width={width}
+                width={innerWidth}
+                xAxisPos={innerHeight + PADDING_TOP + columnTitleHeight}
                 tLabel={tLabel}
                 color={d => color(colorAccessor(d))}
-                innerHeight={innerHeight}
               />
             </g>
           )
@@ -283,7 +295,8 @@ export const propTypes = {
       test: PropTypes.string.isRequired
     })
   ),
-  columns: PropTypes.number.isRequired
+  columns: PropTypes.number.isRequired,
+  minInnerWidth: PropTypes.number.isRequired
 }
 
 TimeBarChart.propTypes = propTypes
@@ -301,7 +314,8 @@ TimeBarChart.defaultProps = {
   xIntervalStep: 1,
   yAnnotations: [],
   xAnnotations: [],
-  columns: 1
+  columns: 1,
+  minInnerWidth: 240
 }
 
 export default TimeBarChart
