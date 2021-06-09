@@ -33,7 +33,7 @@ const COLUMN_TITLE_HEIGHT = 24
 const AXIS_BOTTOM_HEIGHT = 24
 const PADDING_TOP = 24
 const COLUMN_PADDING = 20
-const PADDING_SIDES = 0
+const PADDING_SIDES = 20
 
 const TimeBarChart = props => {
   const {
@@ -49,7 +49,8 @@ const TimeBarChart = props => {
     xIntervalStep,
     domain,
     padding,
-    height: innerHeight
+    height: innerHeight,
+    skipRowPadding
   } = props
 
   let xParser = identityFn
@@ -92,7 +93,8 @@ const TimeBarChart = props => {
     props.columnSort,
     PADDING_SIDES,
     PADDING_SIDES,
-    COLUMN_PADDING
+    COLUMN_PADDING,
+    skipRowPadding
   )
 
   const y = scaleLinear()
@@ -150,8 +152,6 @@ const TimeBarChart = props => {
     .sort(xSort)
     .map(xParserFormat)
 
-  console.log(xValues)
-
   const x = scaleBand()
     .domain(xValues)
     .range([padding, innerWidth - padding])
@@ -201,10 +201,7 @@ const TimeBarChart = props => {
         <desc>{description}</desc>
         {groupedData.map(({ bars, key }) => {
           return (
-            <g
-              key={key || 1}
-              transform={`translate(${gx(key) + PADDING_SIDES},${gy(key)})`}
-            >
+            <g key={key || 1} transform={`translate(${gx(key)},${gy(key)})`}>
               <TimeBarGroup
                 bars={bars}
                 title={key}
@@ -296,7 +293,8 @@ export const propTypes = {
     })
   ),
   columns: PropTypes.number.isRequired,
-  minInnerWidth: PropTypes.number.isRequired
+  minInnerWidth: PropTypes.number.isRequired,
+  skipRowPadding: PropTypes.bool
 }
 
 TimeBarChart.propTypes = propTypes
@@ -315,7 +313,8 @@ TimeBarChart.defaultProps = {
   yAnnotations: [],
   xAnnotations: [],
   columns: 1,
-  minInnerWidth: 240
+  minInnerWidth: 240,
+  skipRowPadding: true
 }
 
 export default TimeBarChart

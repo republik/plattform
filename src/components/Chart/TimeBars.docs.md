@@ -825,10 +825,12 @@ year,category,value
   <CsvChart
     config={{
       "type": "TimeBar",
+      "unit": "Überlebende",
       "x": "age",
       "column": "date",
       "columns": 3,
       "xScale": "linear",
+      "padding": 10,
       "numberFormat": ".0%",
       "xTicks": [
         0,

@@ -284,10 +284,12 @@ const getColumnCount = (
   width,
   minWidth,
   paddingLeft,
-  paddingRight
+  paddingRight,
+  skipRowPadding
 ) => {
   const possibleColumns = Math.floor(
-    width / (minWidth + paddingLeft + paddingRight)
+    (width + (skipRowPadding ? paddingLeft + paddingRight : 0)) /
+      (minWidth + paddingLeft + paddingRight)
   )
   let columns = userColumns
   if (possibleColumns < userColumns) {
@@ -303,10 +305,14 @@ const getColumnCount = (
   return columns
 }
 
-const xTranslateFn = (groups, columns, columnWidth) =>
+const xTranslateFn = (groups, columns, innerWidth, paddingLeft, paddingRight) =>
   scaleOrdinal()
     .domain(groups)
-    .range(range(columns).map(d => d * columnWidth))
+    .range(
+      range(columns).map(d => {
+        return d * (innerWidth + paddingRight + paddingLeft)
+      })
+    )
 
 const yTranslateFn = (groups, columns, columnHeight, columnMargin) =>
   scaleOrdinal()
@@ -327,7 +333,8 @@ export const getColumnLayout = (
   columnSort,
   paddingLeft,
   paddingRight,
-  columnMargin
+  columnMargin,
+  skipRowPadding
 ) => {
   const itemCount = groupedData.length
   const columns = getColumnCount(
@@ -336,16 +343,29 @@ export const getColumnLayout = (
     width,
     minWidth,
     paddingLeft,
-    paddingRight
+    paddingRight,
+    skipRowPadding
   )
-  const columnWidth = Math.floor(width / columns) - 1
-  const innerWidth = columnWidth - paddingLeft - paddingRight
   const rows = Math.ceil(itemCount / columns)
   const height = rows * columnHeight + (rows - 1) * columnMargin
+  // account for start and end of columns missing padding when skipping row padding
+  const innerWidth =
+    Math.floor(
+      (width -
+        (paddingLeft + paddingRight) *
+          (skipRowPadding ? columns - 1 : columns)) /
+        columns
+    ) - 1
 
   let groups = groupedData.map(g => g.key)
   runSort(columnSort, groups)
-  const gx = xTranslateFn(groups, columns, columnWidth)
+  const gx = xTranslateFn(
+    groups,
+    columns,
+    innerWidth,
+    paddingLeft,
+    paddingRight
+  )
   const gy = yTranslateFn(groups, columns, columnHeight, columnMargin)
 
   return { height, innerWidth, gx, gy }
