@@ -1,5 +1,5 @@
 const Promise = require('bluebird')
-const { hyphenate } = require('hyphen/de-CH-1901')
+const { hyphenate } = require('hyphen/de-ch-1901')
 
 const {
   lib: { resolve },
