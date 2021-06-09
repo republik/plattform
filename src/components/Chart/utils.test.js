@@ -59,6 +59,15 @@ test('calculateAxis with two decimal digit ticks', assert => {
   assert.end()
 })
 
+test('calculateAxis with percentages', assert => {
+  const yAxis = calculateAxis('.1%', tLabel, [0, 0.15], '%', {
+    ticks: [0, 0.05, 0.1, 0.15]
+  })
+  assert.equal(yAxis.axisFormat(0.05), '5', 'format without ,0 on axis')
+  assert.equal(yAxis.format(0.05), '5,0%', 'format with ,0 outside of axis')
+  assert.end()
+})
+
 test('thousand separator', assert => {
   const axis = calculateAxis('s', tLabel, [-10000, 10000], 'Gini-Koeffizient', {
     ticks: []

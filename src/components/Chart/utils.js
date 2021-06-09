@@ -140,7 +140,7 @@ export const calculateAxis = (
   let regularFormat
   let lastFormat
   if (specifier.type === '%') {
-    let fullStep = +(step * 100).toFixed(specifier.precision)
+    let fullStep = +(ticks[1] * 100).toFixed(specifier.precision)
     let fullMax = +(max * 100).toFixed(specifier.precision)
     specifier.precision = precisionFixed(
       fullStep - Math.floor(fullStep) || fullMax - Math.floor(fullMax)
