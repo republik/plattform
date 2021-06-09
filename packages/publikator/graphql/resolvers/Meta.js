@@ -1,3 +1,6 @@
+const Promise = require('bluebird')
+const { hyphenate } = require('hyphen/de-CH-1901')
+
 const {
   lib: { resolve },
 } = require('@orbiting/backend-modules-documents')
@@ -17,25 +20,24 @@ const getDocFromMetaLink = async (url, context) => {
 }
 
 const resolveSeriesEpisodes = async (series, context) => {
-  if (
-    series?.episodes?.find((episode) => typeof episode.document === 'string')
-  ) {
-    // copy object, prevent modifying content.meta
-    const episodes = [].concat(series.episodes).map((episode) => ({
-      ...episode,
-    }))
-    for (const episode of episodes) {
-      // ensure not already resolved by previous run
-      if (typeof episode.document === 'string') {
-        episode.document = await getDocFromMetaLink(episode.document, context)
-      }
-    }
+  const episodes = await Promise.map(series.episodes || [], async (episode) => {
+    const { label, title, lead, document } = episode
+
     return {
-      ...series,
-      episodes,
+      ...episode,
+      ...(label && { label: await hyphenate(label) }),
+      ...(title && { title: await hyphenate(title) }),
+      ...(lead && { lead: await hyphenate(lead) }),
+      ...(typeof document === 'string' && {
+        document: await getDocFromMetaLink(document, context),
+      }),
     }
+  })
+
+  return {
+    ...series,
+    ...(episodes && { episodes }),
   }
-  return series
 }
 
 const resolveRepoId = (field) => async (meta, args, context) => {
