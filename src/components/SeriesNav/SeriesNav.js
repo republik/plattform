@@ -74,16 +74,10 @@ function SeriesNav({
     return <div>No Series Object</div>
   }
 
-  const currentTile = series.episodes.filter(
-    episode => episode.document && episode.document?.id === documentId
-  )[0]
-
-  const currentTileIndex =
-    currentTile &&
-    series.episodes.findIndex(
-      episode =>
-        episode.document && episode.document.id === currentTile.document.id
-    )
+  const currentTile =
+    documentId &&
+    series.episodes.find(episode => episode.document?.id === documentId)
+  const currentTileIndex = series.episodes.indexOf(currentTile)
 
   const localColors = {
     light: {
