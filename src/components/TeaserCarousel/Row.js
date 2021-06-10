@@ -91,14 +91,9 @@ const Row = ({
     }
     const scroller = overflow.current
     const target = Array.from(scroller.children)[initialScrollTileIndex]
-    scrollIntoView(target, {
-      time: 400,
-      align: {
-        left: 0,
-        leftOffset: TILE_MARGIN_RIGHT,
-        ...getTop()
-      }
-    })
+    setTimeout(() => {
+      scroller.scrollLeft += target.getBoundingClientRect().left
+    }, 200)
   }, [initialScrollTileIndex])
 
   useEffect(() => {
