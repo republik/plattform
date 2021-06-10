@@ -13,7 +13,7 @@ const createSeriesNavUI = ({ TYPE, newBlock, zone }) => {
       value.isBlurred ||
       !value.blocks.every(n => insertTypes.includes(n.type)) ||
       !value.document.data.has('series')
-    const SeriesNavButtonClickHandler = event => {
+    const clickHandler = event => {
       event.preventDefault()
       if (!disabled) {
         const blocks = allBlocks(value)
@@ -45,7 +45,7 @@ const createSeriesNavUI = ({ TYPE, newBlock, zone }) => {
         {...buttonStyles.insert}
         data-disabled={disabled}
         data-visible
-        onMouseDown={SeriesNavButtonClickHandler}
+        onMouseDown={clickHandler}
       >
         Serien Navigation
       </span>

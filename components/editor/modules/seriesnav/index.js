@@ -1,10 +1,4 @@
 import React from 'react'
-import { colors, IconButton, ProgressCircle } from '@project-r/styleguide'
-import {
-  ReadingTimeIcon,
-  BookmarkIcon,
-  DiscussionIcon
-} from '@project-r/styleguide/icons'
 import { Block } from 'slate'
 
 import { matchBlock } from '../../utils'
@@ -12,28 +6,8 @@ import MarkdownSerializer from 'slate-mdast-serializer'
 
 import { TeaserInlineUI } from '../teaser/ui'
 
-// gleich wie special
 import createUi from './ui'
 
-const DummyActionBar = () => (
-  <span style={{ display: 'flex' }}>
-    <IconButton Icon={ReadingTimeIcon} label="10'" labelShort="10'" />
-    <IconButton Icon={BookmarkIcon} />
-    <IconButton
-      Icon={() => <ProgressCircle progress={23} size={24} />}
-      label='23%'
-      labelShort='23%'
-    />
-    <IconButton
-      fill='#00AA00'
-      Icon={DiscussionIcon}
-      label='30'
-      labelShort='30'
-    />
-  </span>
-)
-
-const NoOp = () => null
 const DefaultLink = ({ children }) => children
 
 const SeriesNavPlugin = ({ rule, subModules, TYPE }) => {
@@ -120,7 +94,6 @@ const SeriesNavPlugin = ({ rule, subModules, TYPE }) => {
                 repoId={titleNode.data.get('repoId')}
                 series={series}
                 inline={!node.data.get('grid')}
-                ActionBar={DummyActionBar}
                 PayNote={undefined}
                 Link={DefaultLink}
               />
