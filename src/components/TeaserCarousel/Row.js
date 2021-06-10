@@ -12,9 +12,7 @@ import { useColorContext } from '../Colors/useColorContext'
 const styles = {
   container: css({
     position: 'relative',
-    // TODO: figure out -padding problem
-    // margin: `-${PADDING}px -${PADDING}px 0`,
-    margin: 0,
+    margin: `-${PADDING}px -${PADDING}px 0`,
     padding: `${PADDING}px 0`,
     width: 'auto'
   }),
@@ -116,7 +114,6 @@ const Row = ({ initialScrollTileIndex, children, style, overflowCentered }) => {
         return current
       })
       setExeedsWindowWidth(scroller.clientWidth < scroller.scrollWidth)
-      console.log(scroller.clientWidth < scroller.scrollWidth)
     }
     scroller.addEventListener('scroll', measure)
     window.addEventListener('resize', measure)
@@ -134,10 +131,13 @@ const Row = ({ initialScrollTileIndex, children, style, overflowCentered }) => {
       topOffset: scroller.getBoundingClientRect().top
     }
   }
-  console.log('ofc', overflowCentered && exeedsWindowWidth)
 
   return (
-    <div role='group' {...styles.container} style={{ ...style }}>
+    <div
+      role='group'
+      {...styles.container}
+      style={{ ...style, margin: overflowCentered && 0 }}
+    >
       <div
         {...styles.overflow}
         style={{
@@ -156,7 +156,6 @@ const Row = ({ initialScrollTileIndex, children, style, overflowCentered }) => {
         onClick={() => {
           const scroller = overflow.current
           const clientWidth = scroller.clientWidth
-          console.log(Array.from(scroller.children))
           const target = Array.from(scroller.children).find(element => {
             const { left } = element.getBoundingClientRect()
             return left + clientWidth >= 0

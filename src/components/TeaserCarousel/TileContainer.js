@@ -7,16 +7,13 @@ import Row from './Row'
 const Container = ({
   initialScrollTileIndex,
   children,
-  height,
   style,
   overflowCentered
 }) => {
   const context = useContext(CarouselContext)
   if (context.grid) {
     return (
-      <Grid initialScrollTileIndex={initialScrollTileIndex} height={height}>
-        {children}
-      </Grid>
+      <Grid initialScrollTileIndex={initialScrollTileIndex}>{children}</Grid>
     )
   }
   return (

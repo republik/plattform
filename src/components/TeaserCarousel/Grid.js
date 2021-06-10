@@ -11,13 +11,10 @@ const styles = {
     marginLeft: -TILE_GRID_PADDING,
     marginRight: -TILE_GRID_PADDING,
     width: `calc(100% + ${TILE_GRID_PADDING * 2}px)`
-  }),
-  overflow: css({
-    overflowY: 'scroll'
   })
 }
 
-const Grid = ({ initialScrollTileIndex, height, children }) => {
+const Grid = ({ initialScrollTileIndex, children }) => {
   const overflow = useRef()
 
   useEffect(() => {
@@ -34,15 +31,7 @@ const Grid = ({ initialScrollTileIndex, height, children }) => {
   }, [initialScrollTileIndex])
 
   return (
-    <div
-      role='group'
-      ref={overflow}
-      {...styles.container}
-      style={{
-        height
-      }}
-      {...(height && styles.overflow)}
-    >
+    <div role='group' ref={overflow} {...styles.container}>
       {children}
     </div>
   )

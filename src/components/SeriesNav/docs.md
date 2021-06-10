@@ -1,10 +1,9 @@
 # Series Navigation
 
-```react
+```react|responsive
   <SeriesNav
     documentId={documentId}
     series={series}
-    height={500}
     ActionBar={ () => (
       <span style={{ display: 'flex' }}>
         <IconButton Icon={ReadingTimeIcon} label="10'" labelShort="10'" />
@@ -24,7 +23,7 @@
 
 Inline
 
-```react
+```react|responsive
   <SeriesNav
     documentId={documentId}
     series={series}

@@ -6,22 +6,19 @@ import {
   TeaserCarousel,
   TeaserCarouselTileContainer
 } from '../../components/TeaserCarousel'
-import SeriesNavTile from './SeriesNavTile'
 import { useColorContext } from '../Colors/useColorContext'
 import { ColorContextLocalExtension } from '../Colors/ColorContext'
 import { serifBold19, serifRegular17, serifBold17 } from '../Typography/styles'
-import Center from '../../components/Center'
+import Center, { BREAKOUT_SIZES } from '../../components/Center'
+import SeriesNavTile from './SeriesNavTile'
 
 const DEFAULT_PAYNOTE_INDEX = 2
 
 const styles = {
   container: css({
-    maxWidth: 1120,
+    maxWidth: BREAKOUT_SIZES['breakout'],
     margin: '0 auto',
-    padding: '0 15px',
-    [mUp]: {
-      padding: '0 30px'
-    }
+    padding: '0 15px'
   }),
   containerInline: css({
     margin: '0 auto',
@@ -63,7 +60,6 @@ function SeriesNav({
   documentId,
   series,
   inline,
-  height,
   ActionBar,
   Link = DefaultLink,
   PayNote,
@@ -91,7 +87,7 @@ function SeriesNav({
   }
 
   // add paynote object after current episode or to third card if no current episode
-  const payNote = { isPayNote: true }
+  const payNoteObject = { isPayNote: true }
   const payNotePosition = currentTile
     ? Math.max(currentTileIndex + 1, DEFAULT_PAYNOTE_INDEX)
     : DEFAULT_PAYNOTE_INDEX
@@ -99,11 +95,11 @@ function SeriesNav({
     PayNote && !inline
       ? [
           ...series.episodes.slice(0, payNotePosition),
-          payNote,
+          payNoteObject,
           ...series.episodes.slice(payNotePosition)
         ]
       : [...series.episodes]
-  console.log(series.overview?.meta?.path)
+
   return (
     <div {...(inline ? styles.containerInline : styles.container)}>
       {inline ? (
@@ -133,7 +129,6 @@ function SeriesNav({
         }}
       >
         <TeaserCarouselTileContainer
-          height={height}
           initialScrollTileIndex={currentTileIndex}
           style={{
             padding: 0
@@ -180,7 +175,8 @@ SeriesNav.propTypes = {
   Link: PropTypes.func.isRequired,
   PayNote: PropTypes.func,
   inline: PropTypes.bool,
-  height: PropTypes.number
+  height: PropTypes.number,
+  onEpisodeClick: PropTypes.func
 }
 
 export default SeriesNav

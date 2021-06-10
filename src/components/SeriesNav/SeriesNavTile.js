@@ -11,7 +11,7 @@ import {
 
 import SeriesNavTileContent from './SeriesNavTileContent'
 
-const GRID_MIN_WIDTH = 340
+const GRID_MIN_WIDTH = 315
 const OUTER_CONTAINER_PADDING = PADDING
 
 const styles = {
