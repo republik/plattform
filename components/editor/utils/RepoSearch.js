@@ -56,11 +56,15 @@ export const filterRepos = gql`
               }
               series {
                 title
+                description
                 logo
                 logoDark
                 episodes {
                   title
+                  publishDate
                   label
+                  lead
+                  image
                   document {
                     id
                     repoId

@@ -77,11 +77,15 @@ export const getRepoWithCommit = gql`
             }
             series {
               title
+              description
               logo
               logoDark
               episodes {
                 title
+                publishDate
                 label
+                lead
+                image
                 document {
                   id
                   repoId
