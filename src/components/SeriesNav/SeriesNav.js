@@ -142,16 +142,16 @@ function SeriesNav({
       </TeaserCarousel>
 
       {inline ? (
-        <ColorContextLocalExtension localColors={localColors}>
-          {PayNote ? (
+        {PayNote ? (
+          <ColorContextLocalExtension localColors={localColors}>
             <PayNote inline={inline} />
-          ) : (
-            <hr
-              {...styles.hline}
-              {...colorScheme.set('borderColor', 'divider')}
-            />
-          )}
-        </ColorContextLocalExtension>
+          </ColorContextLocalExtension>
+        ) : (
+          <hr
+            {...styles.hline}
+            {...colorScheme.set('borderColor', 'divider')}
+          />
+        )}
       ) : null}
     </div>
   )
