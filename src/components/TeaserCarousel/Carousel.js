@@ -53,8 +53,7 @@ export const Carousel = ({
         {...colorScheme.set('color', color || 'inherit')}
         style={{
           margin: article ? '20px 0' : undefined,
-          padding: isSeriesNav && 0,
-          backgroundColor: isSeriesNav && 'transparent'
+          padding: isSeriesNav ? 0 : undefined
         }}
       >
         <div

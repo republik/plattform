@@ -126,23 +126,25 @@ const Row = ({ initialScrollTileIndex, children, isSeriesNav }) => {
     }
   }
 
+  const shouldCenter = isSeriesNav && !(left || right)
+
   return (
     <div
       role='group'
       {...styles.container}
-      style={{ padding: isSeriesNav && 0, margin: isSeriesNav && 0 }}
+      style={isSeriesNav ? { padding: 0, margin: 0 } : undefined}
     >
       <div {...styles.overflow} ref={overflow}>
         <div
           {...styles.pad}
-          style={{ margin: isSeriesNav ? 'auto' : undefined }}
+          style={{ margin: shouldCenter ? 'auto' : undefined }}
         />
         {children}
         <div
           {...styles.pad}
           style={{
             width: PADDING - TILE_MARGIN_RIGHT,
-            margin: isSeriesNav ? 'auto' : undefined
+            margin: shouldCenter ? 'auto' : undefined
           }}
         />
       </div>

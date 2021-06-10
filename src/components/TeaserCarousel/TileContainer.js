@@ -7,9 +7,7 @@ import Row from './Row'
 const Container = ({ initialScrollTileIndex, children, isSeriesNav }) => {
   const context = useContext(CarouselContext)
   if (context.grid) {
-    return (
-      <Grid initialScrollTileIndex={initialScrollTileIndex}>{children}</Grid>
-    )
+    return <Grid>{children}</Grid>
   }
   return (
     <Row
