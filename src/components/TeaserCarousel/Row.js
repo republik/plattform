@@ -73,7 +73,12 @@ const styles = {
   })
 }
 
-const Row = ({ initialScrollTileIndex, children, style, overflowCentered }) => {
+const Row = ({
+  initialScrollTileIndex,
+  children,
+  isSeriesNav,
+  overflowCentered
+}) => {
   const context = useContext(CarouselContext)
   const overflow = useRef()
   const [{ left, right }, setArrows] = useState({ left: false, right: false })
@@ -136,7 +141,7 @@ const Row = ({ initialScrollTileIndex, children, style, overflowCentered }) => {
     <div
       role='group'
       {...styles.container}
-      style={{ ...style, margin: overflowCentered && 0 }}
+      style={{ padding: isSeriesNav && 0, margin: overflowCentered && 0 }}
     >
       <div
         {...styles.overflow}

@@ -22,7 +22,7 @@ export const Carousel = ({
   bgColor,
   color,
   grid,
-  style
+  isSeriesNav
 }) => {
   const [colorScheme] = useColorContext()
   const row = children && children[1]
@@ -53,7 +53,8 @@ export const Carousel = ({
         {...colorScheme.set('color', color || 'inherit')}
         style={{
           margin: article ? '20px 0' : undefined,
-          ...style
+          padding: isSeriesNav && 0,
+          backgroundColor: isSeriesNav && 'transparent'
         }}
       >
         <div

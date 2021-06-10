@@ -118,18 +118,10 @@ function SeriesNav({
         </Center>
       ) : null}
 
-      <TeaserCarousel
-        grid={!inline}
-        style={{
-          padding: 0,
-          backgroundColor: 'transparent'
-        }}
-      >
+      <TeaserCarousel grid={!inline} isSeriesNav>
         <TeaserCarouselTileContainer
           initialScrollTileIndex={currentTileIndex}
-          style={{
-            padding: 0
-          }}
+          isSeriesNav
           overflowCentered
         >
           {episodes.map(episode => {

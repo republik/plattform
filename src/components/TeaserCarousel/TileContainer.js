@@ -7,7 +7,7 @@ import Row from './Row'
 const Container = ({
   initialScrollTileIndex,
   children,
-  style,
+  isSeriesNav,
   overflowCentered
 }) => {
   const context = useContext(CarouselContext)
@@ -19,7 +19,7 @@ const Container = ({
   return (
     <Row
       initialScrollTileIndex={initialScrollTileIndex}
-      style={style}
+      isSeriesNav={isSeriesNav}
       overflowCentered={overflowCentered}
     >
       {children}
