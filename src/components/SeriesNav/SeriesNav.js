@@ -8,7 +8,12 @@ import {
 } from '../../components/TeaserCarousel'
 import { useColorContext } from '../Colors/useColorContext'
 import { ColorContextLocalExtension } from '../Colors/ColorContext'
-import { serifBold19, serifRegular17, serifBold17 } from '../Typography/styles'
+import {
+  sansSerifMedium16,
+  sansSerifMedium19,
+  sansSerifRegular15,
+  sansSerifRegular18
+} from '../Typography/styles'
 import Center, { BREAKOUT_SIZES } from '../../components/Center'
 import SeriesNavTile from './SeriesNavTile'
 import { localInvertedColors } from '../../theme/colors'
@@ -37,14 +42,17 @@ const styles = {
     }
   }),
   title: css({
-    ...serifBold17,
-    marginBottom: 4,
+    ...sansSerifMedium16,
+    marginBottom: 0,
     [mUp]: {
-      ...serifBold19
+      ...sansSerifMedium19
     }
   }),
   description: css({
-    ...serifRegular17,
+    ...sansSerifRegular15,
+    [mUp]: {
+      ...sansSerifRegular18
+    },
     margin: 0,
     marginBottom: 5
   }),
@@ -87,6 +95,9 @@ function SeriesNav({
         ]
       : [...series.episodes]
 
+  const titlePath =
+    series.overview?.meta?.path || series.episodes[0]?.meta?.path
+
   return (
     <div {...(inline ? styles.containerInline : styles.container)}>
       {inline ? (
@@ -95,15 +106,15 @@ function SeriesNav({
             {...styles.hline}
             {...colorScheme.set('borderColor', 'divider')}
           />
-          {series.overview?.meta?.path ? (
-            <Link href={series.overview.meta.path} passHref>
-              <a {...styles.plainlink}>
-                <h3 {...styles.title}>{series.title}</h3>
-              </a>
-            </Link>
-          ) : (
-            <h3 {...styles.title}>{series.title}</h3>
-          )}
+          <h3 {...styles.title}>
+            {titlePath ? (
+              <Link href={titlePath} passHref>
+                <a {...styles.plainlink}>{series.title}</a>
+              </Link>
+            ) : (
+              series.title
+            )}
+          </h3>
           <p {...styles.description}>{series.description}</p>
         </Center>
       ) : null}
