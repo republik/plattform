@@ -98,8 +98,8 @@ export const DYNAMICCOMPONENT_TYPE = 'DYNAMICCOMPONENT'
 
 const mdastPlaceholder = '\u2063'
 const DefaultLink = ({ children }) => children
-const DefaultActionBar = () => <div>ActionBar</div>
-const DefaultPayNote = () => <div>PayNote</div>
+const DefaultActionBar = () => null
+const DefaultPayNote = () => null
 
 const withData = Component => props => <Component {...props} data={{}} />
 
