@@ -532,7 +532,7 @@ const createTeasers = ({
     props: (node, index, parent, { ancestors }) => {
       const root = ancestors[ancestors.length - 1]
       return {
-        documentId: root.documentId,
+        repoId: root.repoId,
         series: root.series,
         inline: !node.data.grid,
         ActionBar: ActionBar,

@@ -2,7 +2,7 @@
 
 ```react|responsive
   <SeriesNav
-    documentId={documentId}
+    repoId={repoId}
     series={series}
     ActionBar={ () => (
       <span style={{ display: 'flex' }}>
@@ -25,7 +25,7 @@ Inline
 
 ```react|responsive
   <SeriesNav
-    documentId={documentId}
+    repoId={repoId}
     series={series}
     inline={true}
     PayNote={TestPayNote}

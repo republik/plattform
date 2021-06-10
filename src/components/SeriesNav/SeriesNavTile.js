@@ -75,7 +75,7 @@ const SeriesNavTile = ({
       style={{
         opacity: inactiveTile ? 0.6 : 1
       }}
-      data-document-id={episode?.document?.id}
+      data-repo-id={episode?.document?.repoId}
     >
       <div
         {...styles.tileContainer}

@@ -58,7 +58,7 @@ const styles = {
 const DefaultLink = ({ children }) => children
 
 function SeriesNav({
-  documentId,
+  repoId,
   series,
   inline,
   ActionBar,
@@ -69,8 +69,8 @@ function SeriesNav({
   const [colorScheme] = useColorContext()
 
   const currentTile =
-    documentId &&
-    series.episodes.find(episode => episode.document?.id === documentId)
+    repoId &&
+    series.episodes.find(episode => episode.document?.repoId === repoId)
   const currentTileIndex = currentTile && series.episodes.indexOf(currentTile)
 
   // add paynote object after current episode or to third card if no current episode
@@ -118,7 +118,7 @@ function SeriesNav({
               <SeriesNavTile
                 key={i}
                 PayNote={episode.isPayNote && PayNote}
-                current={documentId && documentId === episode?.document?.id}
+                current={repoId && repoId === episode?.document?.repoId}
                 episode={episode}
                 inline={inline}
                 ActionBar={ActionBar}
@@ -149,7 +149,7 @@ function SeriesNav({
 }
 
 SeriesNav.propTypes = {
-  documentId: PropTypes.string,
+  repoId: PropTypes.string,
   series: PropTypes.object.isRequired,
   ActionBar: PropTypes.func,
   Link: PropTypes.func,

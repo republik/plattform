@@ -1188,7 +1188,7 @@ Reise planen: Flug mit einer Dauer von rund 4 Stunden.
 
 ```react|noSource
 <Markdown schema={schema} rootData={{
-  documentId, series
+  repoId, series
 }}>{`
 <section><h6>SERIES_NAV</h6>
 
@@ -1204,7 +1204,7 @@ Reise planen: Flug mit einer Dauer von rund 4 Stunden.
 
 ```react|noSource
 <Markdown schema={schema} rootData={{
-  documentId: documentId, series: series
+  repoId, series
 }}>{`
 <section><h6>SERIES_NAV</h6>
 
