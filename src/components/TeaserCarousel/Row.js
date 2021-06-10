@@ -77,7 +77,6 @@ const Row = ({ initialScrollTileIndex, children, isSeriesNav }) => {
   const context = useContext(CarouselContext)
   const overflow = useRef()
   const [{ left, right }, setArrows] = useState({ left: false, right: false })
-  const [exeedsWindowWidth, setExeedsWindowWidth] = useState(undefined)
   const [colorScheme] = useColorContext()
 
   useEffect(() => {
@@ -85,10 +84,11 @@ const Row = ({ initialScrollTileIndex, children, isSeriesNav }) => {
       return
     }
     const scroller = overflow.current
-    const target = Array.from(scroller.children)[initialScrollTileIndex]
-    setTimeout(() => {
-      scroller.scrollLeft += target.getBoundingClientRect().left
-    }, 200)
+    const target = Array.from(scroller.children)[initialScrollTileIndex + 1] // + 1 for pad element
+
+    scroller.scrollLeft += Math.round(
+      target.getBoundingClientRect().left - PADDING
+    )
   }, [initialScrollTileIndex])
 
   useEffect(() => {
@@ -108,7 +108,6 @@ const Row = ({ initialScrollTileIndex, children, isSeriesNav }) => {
         }
         return current
       })
-      setExeedsWindowWidth(scroller.clientWidth < scroller.scrollWidth)
     }
     scroller.addEventListener('scroll', measure)
     window.addEventListener('resize', measure)
@@ -133,16 +132,19 @@ const Row = ({ initialScrollTileIndex, children, isSeriesNav }) => {
       {...styles.container}
       style={{ padding: isSeriesNav && 0, margin: isSeriesNav && 0 }}
     >
-      <div
-        {...styles.overflow}
-        style={{
-          justifyContent: isSeriesNav && !exeedsWindowWidth && 'center'
-        }}
-        ref={overflow}
-      >
-        <div {...styles.pad} />
+      <div {...styles.overflow} ref={overflow}>
+        <div
+          {...styles.pad}
+          style={{ margin: isSeriesNav ? 'auto' : undefined }}
+        />
         {children}
-        <div {...styles.pad} style={{ width: PADDING - TILE_MARGIN_RIGHT }} />
+        <div
+          {...styles.pad}
+          style={{
+            width: PADDING - TILE_MARGIN_RIGHT,
+            margin: isSeriesNav ? 'auto' : undefined
+          }}
+        />
       </div>
       <button
         {...styles.arrow}

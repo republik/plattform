@@ -113,10 +113,10 @@ function SeriesNav({
           initialScrollTileIndex={currentTileIndex}
           isSeriesNav
         >
-          {episodes.map(episode => {
+          {episodes.map((episode, i) => {
             return (
               <SeriesNavTile
-                key={episode.title}
+                key={i}
                 PayNote={PayNote && episode.isPayNote && PayNote}
                 current={documentId && documentId === episode?.document?.id}
                 episode={episode}
@@ -149,10 +149,10 @@ function SeriesNav({
 }
 
 SeriesNav.propTypes = {
-  documentId: PropTypes.string.isRequired,
+  documentId: PropTypes.string,
   series: PropTypes.object.isRequired,
-  ActionBar: PropTypes.func.isRequired,
-  Link: PropTypes.func.isRequired,
+  ActionBar: PropTypes.func,
+  Link: PropTypes.func,
   PayNote: PropTypes.func,
   inline: PropTypes.bool,
   height: PropTypes.number,
