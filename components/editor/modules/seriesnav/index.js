@@ -117,7 +117,7 @@ const SeriesNavPlugin = ({ rule, subModules, TYPE }) => {
                 />
               )}
               <SeriesNav
-                documentId={undefined}
+                repoId={titleNode.data.get('repoId')}
                 series={series}
                 inline={!node.data.get('grid')}
                 ActionBar={DummyActionBar}
