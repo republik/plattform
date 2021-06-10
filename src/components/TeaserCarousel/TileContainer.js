@@ -8,12 +8,7 @@ const Container = ({ initialScrollTileIndex, children, isSeriesNav }) => {
   const context = useContext(CarouselContext)
   if (context.grid) {
     return (
-      <Grid
-        initialScrollTileIndex={initialScrollTileIndex}
-        isSeriesNav={isSeriesNav}
-      >
-        {children}
-      </Grid>
+      <Grid initialScrollTileIndex={initialScrollTileIndex}>{children}</Grid>
     )
   }
   return (

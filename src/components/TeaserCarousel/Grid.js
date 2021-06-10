@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react'
 import { css } from 'glamor'
+import scrollIntoView from 'scroll-into-view'
 
 import { TILE_GRID_PADDING } from './constants'
 
@@ -10,32 +11,27 @@ const styles = {
     marginLeft: -TILE_GRID_PADDING,
     marginRight: -TILE_GRID_PADDING,
     width: `calc(100% + ${TILE_GRID_PADDING * 2}px)`
-  }),
-  seriesNav: css({
-    height: '100%',
-    overflowY: 'scroll'
   })
 }
 
-const Grid = ({ initialScrollTileIndex, children, isSeriesNav }) => {
+const Grid = ({ initialScrollTileIndex, children }) => {
   const overflow = useRef()
 
   useEffect(() => {
-    if (!initialScrollTileIndex || !isSeriesNav) {
+    if (!initialScrollTileIndex) {
       return
     }
     const scroller = overflow.current
     const target = Array.from(scroller.children)[initialScrollTileIndex]
-    scroller.scrollTop += target.getBoundingClientRect().top
+    scrollIntoView(target, {
+      time: 100,
+      top: 0,
+      topOffset: 100
+    })
   }, [initialScrollTileIndex])
 
   return (
-    <div
-      role='group'
-      ref={overflow}
-      {...styles.container}
-      {...(isSeriesNav && styles.seriesNav)}
-    >
+    <div role='group' ref={overflow} {...styles.container}>
       {children}
     </div>
   )
