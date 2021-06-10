@@ -4,12 +4,7 @@ import CarouselContext from './Context'
 import Grid from './Grid'
 import Row from './Row'
 
-const Container = ({
-  initialScrollTileIndex,
-  children,
-  isSeriesNav,
-  overflowCentered
-}) => {
+const Container = ({ initialScrollTileIndex, children, isSeriesNav }) => {
   const context = useContext(CarouselContext)
   if (context.grid) {
     return (
@@ -25,7 +20,6 @@ const Container = ({
     <Row
       initialScrollTileIndex={initialScrollTileIndex}
       isSeriesNav={isSeriesNav}
-      overflowCentered={overflowCentered}
     >
       {children}
     </Row>

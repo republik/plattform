@@ -71,7 +71,7 @@ function SeriesNav({
   const currentTile =
     documentId &&
     series.episodes.find(episode => episode.document?.id === documentId)
-  const currentTileIndex = series.episodes.indexOf(currentTile)
+  const currentTileIndex = currentTile && series.episodes.indexOf(currentTile)
 
   // add paynote object after current episode or to third card if no current episode
   const payNoteObject = { isPayNote: true }
@@ -112,7 +112,6 @@ function SeriesNav({
         <TeaserCarouselTileContainer
           initialScrollTileIndex={currentTileIndex}
           isSeriesNav
-          overflowCentered
         >
           {episodes.map(episode => {
             return (

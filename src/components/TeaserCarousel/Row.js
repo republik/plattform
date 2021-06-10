@@ -73,12 +73,7 @@ const styles = {
   })
 }
 
-const Row = ({
-  initialScrollTileIndex,
-  children,
-  isSeriesNav,
-  overflowCentered
-}) => {
+const Row = ({ initialScrollTileIndex, children, isSeriesNav }) => {
   const context = useContext(CarouselContext)
   const overflow = useRef()
   const [{ left, right }, setArrows] = useState({ left: false, right: false })
@@ -86,7 +81,7 @@ const Row = ({
   const [colorScheme] = useColorContext()
 
   useEffect(() => {
-    if (!initialScrollTileIndex) {
+    if (!(initialScrollTileIndex > 0)) {
       return
     }
     const scroller = overflow.current
@@ -136,12 +131,12 @@ const Row = ({
     <div
       role='group'
       {...styles.container}
-      style={{ padding: isSeriesNav && 0, margin: overflowCentered && 0 }}
+      style={{ padding: isSeriesNav && 0, margin: isSeriesNav && 0 }}
     >
       <div
         {...styles.overflow}
         style={{
-          justifyContent: overflowCentered && !exeedsWindowWidth && 'center'
+          justifyContent: isSeriesNav && !exeedsWindowWidth && 'center'
         }}
         ref={overflow}
       >

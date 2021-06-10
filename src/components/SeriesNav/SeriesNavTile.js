@@ -11,6 +11,8 @@ import {
 
 import SeriesNavTileContent from './SeriesNavTileContent'
 
+import { localInvertedColors } from '../../theme/colors'
+
 const GRID_MIN_WIDTH = 315
 const OUTER_CONTAINER_PADDING = PADDING
 
@@ -51,20 +53,7 @@ const SeriesNavTile = ({
   onEpisodeClick
 }) => {
   const [colorScheme] = useColorContext()
-  const localColors =
-    current || !!PayNote
-      ? {
-          light: {
-            default: '#191919',
-            text: '#f0f0f0'
-          },
-          dark: {
-            default: '#ffffff',
-            text: '#282828'
-          }
-        }
-      : { light: {}, dark: {} }
-  const inactiveTile = !PayNote && !current && !episode?.document?.meta?.path
+
   const isInverted = !!(current || PayNote)
   const content = PayNote ? (
     <PayNote />
@@ -78,6 +67,8 @@ const SeriesNavTile = ({
       onEpisodeClick={onEpisodeClick}
     />
   )
+  const inactiveTile = !isInverted && !episode?.document?.meta?.path
+
   return (
     <div
       {...(inline ? styles.inlineTile : styles.tile)}
@@ -93,7 +84,7 @@ const SeriesNavTile = ({
         )}
       >
         {isInverted ? (
-          <ColorContextLocalExtension localColors={localColors}>
+          <ColorContextLocalExtension localColors={localInvertedColors}>
             {content}
           </ColorContextLocalExtension>
         ) : (
