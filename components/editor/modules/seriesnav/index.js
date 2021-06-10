@@ -7,6 +7,7 @@ import MarkdownSerializer from 'slate-mdast-serializer'
 import { TeaserInlineUI } from '../teaser/ui'
 
 import createUi from './ui'
+import ErrorMessage from '../../../ErrorMessage'
 
 const DefaultLink = ({ children }) => children
 
@@ -39,18 +40,18 @@ const SeriesNavPlugin = ({ rule, subModules, TYPE }) => {
     }
   }
 
-  const newBlock = data =>
+  const newBlock = (context, nodeData = {}) =>
     Block.fromJSON(
       zone.fromMdast(
         {
           type: 'zone',
           identifier: 'SERIES_NAV',
-          data: {}
+          data: nodeData
         },
         0,
         undefined,
         {
-          context: data
+          context
         }
       )
     )
@@ -77,7 +78,6 @@ const SeriesNavPlugin = ({ rule, subModules, TYPE }) => {
           const titleNode = value.document.findDescendant(
             node => node.type === 'TITLE'
           )
-          const series = titleNode.data.get('series')
 
           const isSelected = value.blocks.some(block => block.key === node.key)
           return (
@@ -90,13 +90,17 @@ const SeriesNavPlugin = ({ rule, subModules, TYPE }) => {
                   editor={editor}
                 />
               )}
-              <SeriesNav
-                repoId={titleNode.data.get('repoId')}
-                series={series}
-                inline={!node.data.get('grid')}
-                PayNote={undefined}
-                Link={DefaultLink}
-              />
+              {titleNode && titleNode.data.get('series')?.episodes ? (
+                <SeriesNav
+                  repoId={titleNode.data.get('repoId')}
+                  series={titleNode.data.get('series')}
+                  inline={!node.data.get('grid')}
+                  PayNote={undefined}
+                  Link={DefaultLink}
+                />
+              ) : (
+                <ErrorMessage error='Serien Episoden Daten fehlen. Bitte commiten.' />
+              )}
             </div>
           )
         },

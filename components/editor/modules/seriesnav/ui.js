@@ -12,7 +12,7 @@ const createSeriesNavUI = ({ TYPE, newBlock, zone }) => {
     const disabled =
       value.isBlurred ||
       !value.blocks.every(n => insertTypes.includes(n.type)) ||
-      !value.document.data.has('series')
+      !value.document.data.get('series')
     const clickHandler = event => {
       event.preventDefault()
       if (!disabled) {
@@ -21,6 +21,16 @@ const createSeriesNavUI = ({ TYPE, newBlock, zone }) => {
 
         const currentBlock = blocks.first()
         const currentRootBlock = rootBlocks.first()
+
+        const titleNode = value.document.findDescendant(
+          node => node.type === 'TITLE'
+        )
+
+        const repoId = titleNode.data.get('repoId')
+        const isOverview =
+          repoId === titleNode.data.get('series')?.overview?.repoId ||
+          value.document.data.get('series')?.overview?.endsWith(repoId)
+
         onChange(
           value
             .change()
@@ -34,7 +44,10 @@ const createSeriesNavUI = ({ TYPE, newBlock, zone }) => {
             .insertNodeByKey(
               parent(value, currentRootBlock.key).key,
               childIndex(value, currentRootBlock.key) + 1,
-              newBlock(value.document.data.toJS())
+              newBlock(
+                value.document.data.toJS(),
+                isOverview ? { grid: true } : undefined
+              )
             )
         )
       }

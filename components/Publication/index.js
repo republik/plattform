@@ -80,6 +80,15 @@ export const getRepoWithCommit = gql`
               description
               logo
               logoDark
+              ${
+                '' /*Pending Backend Fix `overview {
+                id
+                repoId
+                meta {
+                  path
+                }
+              }`*/
+              }
               episodes {
                 title
                 publishDate

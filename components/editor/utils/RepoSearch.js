@@ -59,6 +59,15 @@ export const filterRepos = gql`
                 description
                 logo
                 logoDark
+                ${
+                  '' /*Pending Backend Fix `overview {
+                  id
+                  repoId
+                  meta {
+                    path
+                  }
+                }`*/
+                }
                 episodes {
                   title
                   publishDate
