@@ -1,7 +1,7 @@
 import React from 'react'
-import { useColorContext } from '../../Colors/useColorContext'
+import { Interaction } from '../../Typography'
 
-export const documentId = 3
+export const documentId = '3'
 export const series = {
   title: 'Eyes Wide Shut',
   logo: null,
@@ -22,7 +22,7 @@ export const series = {
       image:
         'https://cdn.repub.ch/s3/republik-assets/repos/republik/article-eyes-wide-shut-intro/images/46aa5bada5040b2faf3d1ba7d4e05d529f0275e2.jpeg?size=1706x1280',
       document: {
-        id: 1,
+        id: '1',
         meta: {
           path: '/2021/01/05/eyes-wide-shut'
         }
@@ -36,7 +36,7 @@ export const series = {
       image:
         'https://cdn.repub.ch/s3/republik-assets/repos/republik/article-eyes-wide-shut-intro/images/f5089e65d1098452dbf160ebd8d883045f7d83c4.jpeg?size=1648x1236',
       document: {
-        id: 2,
+        id: '2',
         meta: {
           path: '/2021/01/05/willkommen-im-fledermausland'
         }
@@ -50,7 +50,7 @@ export const series = {
       image:
         'https://cdn.repub.ch/s3/republik-assets/repos/republik/article-eyes-wide-shut-intro/images/e008f9cfe43f8050e1e7172cae31bd25ba28f1ff.jpeg?size=1920x1440',
       document: {
-        id: 3,
+        id: '3',
         meta: {
           path: '/2021/01/08/und-ploetzlich-all-diese-helikopter-am-himmel'
         }
@@ -64,7 +64,7 @@ export const series = {
       image:
         'https://cdn.repub.ch/s3/republik-assets/repos/republik/article-eyes-wide-shut-intro/images/376d8819e818421b3c4f033092843005dfe49fcb.jpeg?size=1788x1341',
       document: {
-        id: 4,
+        id: '4',
         meta: {
           path: '/2021/01/12/wir-toeten-die-halbe-menschheit'
         }
@@ -82,10 +82,9 @@ export const series = {
 }
 
 export const TestPayNote = () => {
-  const [colorScheme] = useColorContext()
   return (
-    <div {...colorScheme.set('backgroundColor', 'default')}>
-      <p {...colorScheme.set('color', 'text')}>Paynote</p>
+    <div style={{ height: '100%' }}>
+      <Interaction.P>Jetzt Probelesen</Interaction.P>
     </div>
   )
 }

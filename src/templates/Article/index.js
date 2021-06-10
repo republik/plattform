@@ -175,7 +175,7 @@ const createSchema = ({
   withCommentData = withData,
   CommentLink = DefaultLink,
   ActionBar = DefaultActionBar,
-  PayNote = DefaultPayNote
+  PayNote
 } = {}) => {
   const base = createBase({ metaBody, metaHeadlines })
   const blocks = createBlocks({

@@ -732,7 +732,9 @@ const Styleguide = () => {
                       title: 'Article',
                       imports: {
                         schema: require('./templates/Article').default({
-                          t
+                          t,
+                          PayNote: require('./components/SeriesNav/__docs__')
+                            .TestPayNote
                         }),
                         ...require('./components/SeriesNav/__docs__'),
                         ...require('./templates/docs'),

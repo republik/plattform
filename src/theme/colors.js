@@ -204,14 +204,8 @@ const colors = {
 }
 
 export const localInvertedColors = {
-  light: {
-    default: '#191919',
-    text: '#f0f0f0'
-  },
-  dark: {
-    default: '#ffffff',
-    text: '#282828'
-  }
+  light: colors.dark,
+  dark: colors.light
 }
 
 // add all deprecated colors, but only if they don't exist in new colors (no overwrites)
