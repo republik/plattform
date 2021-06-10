@@ -117,7 +117,7 @@ function SeriesNav({
             return (
               <SeriesNavTile
                 key={i}
-                PayNote={PayNote && episode.isPayNote && PayNote}
+                PayNote={episode.isPayNote && PayNote}
                 current={documentId && documentId === episode?.document?.id}
                 episode={episode}
                 inline={inline}

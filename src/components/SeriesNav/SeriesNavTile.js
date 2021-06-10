@@ -75,13 +75,12 @@ const SeriesNavTile = ({
       style={{
         opacity: inactiveTile ? 0.6 : 1
       }}
+      data-document-id={episode?.document?.id}
     >
       <div
         {...styles.tileContainer}
-        {...colorScheme.set(
-          'backgroundColor',
-          current || !!PayNote ? 'defaultInverted' : 'transparent'
-        )}
+        {...(isInverted &&
+          colorScheme.set('backgroundColor', 'defaultInverted'))}
       >
         {isInverted ? (
           <ColorContextLocalExtension localColors={localInvertedColors}>
