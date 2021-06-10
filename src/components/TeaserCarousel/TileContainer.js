@@ -13,7 +13,12 @@ const Container = ({
   const context = useContext(CarouselContext)
   if (context.grid) {
     return (
-      <Grid initialScrollTileIndex={initialScrollTileIndex}>{children}</Grid>
+      <Grid
+        initialScrollTileIndex={initialScrollTileIndex}
+        isSeriesNav={isSeriesNav}
+      >
+        {children}
+      </Grid>
     )
   }
   return (
