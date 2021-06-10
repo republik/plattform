@@ -129,11 +129,7 @@ const Row = ({ initialScrollTileIndex, children, isSeriesNav }) => {
   const shouldCenter = isSeriesNav && !(left || right)
 
   return (
-    <div
-      role='group'
-      {...styles.container}
-      style={isSeriesNav ? { padding: 0, margin: 0 } : undefined}
-    >
+    <div role='group' {...styles.container}>
       <div {...styles.overflow} ref={overflow}>
         <div
           {...styles.pad}
