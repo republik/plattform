@@ -66,9 +66,6 @@ function SeriesNav({
   onEpisodeClick
 }) {
   const [colorScheme] = useColorContext()
-  if (!series) {
-    return <div>No Series Object</div>
-  }
 
   const currentTile =
     documentId &&
