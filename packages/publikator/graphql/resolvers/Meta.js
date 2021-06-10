@@ -20,6 +20,10 @@ const getDocFromMetaLink = async (url, context) => {
 }
 
 const resolveSeriesEpisodes = async (series, context) => {
+  if (!series) {
+    return series
+  }
+
   const episodes = await Promise.map(series.episodes || [], async (episode) => {
     const { label, title, lead, document } = episode
 
