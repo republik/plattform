@@ -65,7 +65,19 @@ const SeriesNavTile = ({
         }
       : { light: {}, dark: {} }
   const inactiveTile = !PayNote && !current && !episode?.document?.meta?.path
-
+  const isInverted = !!(current || PayNote)
+  const content = PayNote ? (
+    <PayNote />
+  ) : (
+    <SeriesNavTileContent
+      inline={inline}
+      episode={episode}
+      current={current}
+      ActionBar={ActionBar}
+      Link={Link}
+      onEpisodeClick={onEpisodeClick}
+    />
+  )
   return (
     <div
       {...(inline ? styles.inlineTile : styles.tile)}
@@ -80,20 +92,13 @@ const SeriesNavTile = ({
           current || !!PayNote ? 'defaultInverted' : 'transparent'
         )}
       >
-        <ColorContextLocalExtension localColors={localColors}>
-          {PayNote ? (
-            <PayNote />
-          ) : (
-            <SeriesNavTileContent
-              inline={inline}
-              episode={episode}
-              current={current}
-              ActionBar={ActionBar}
-              Link={Link}
-              onEpisodeClick={onEpisodeClick}
-            />
-          )}
-        </ColorContextLocalExtension>
+        {isInverted ? (
+          <ColorContextLocalExtension localColors={localColors}>
+            {content}
+          </ColorContextLocalExtension>
+        ) : (
+          content
+        )}
       </div>
     </div>
   )

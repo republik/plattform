@@ -11,6 +11,7 @@ import { ColorContextLocalExtension } from '../Colors/ColorContext'
 import { serifBold19, serifRegular17, serifBold17 } from '../Typography/styles'
 import Center, { BREAKOUT_SIZES } from '../../components/Center'
 import SeriesNavTile from './SeriesNavTile'
+import { localInvertedColors } from '../../theme/colors'
 
 const DEFAULT_PAYNOTE_INDEX = 2
 
@@ -72,17 +73,6 @@ function SeriesNav({
     series.episodes.find(episode => episode.document?.id === documentId)
   const currentTileIndex = series.episodes.indexOf(currentTile)
 
-  const localColors = {
-    light: {
-      default: '#191919',
-      text: '#f0f0f0'
-    },
-    dark: {
-      default: '#ffffff',
-      text: '#282828'
-    }
-  }
-
   // add paynote object after current episode or to third card if no current episode
   const payNoteObject = { isPayNote: true }
   const payNotePosition = currentTile
@@ -142,16 +132,18 @@ function SeriesNav({
       </TeaserCarousel>
 
       {inline ? (
-        {PayNote ? (
-          <ColorContextLocalExtension localColors={localColors}>
-            <PayNote inline={inline} />
-          </ColorContextLocalExtension>
-        ) : (
-          <hr
-            {...styles.hline}
-            {...colorScheme.set('borderColor', 'divider')}
-          />
-        )}
+        <>
+          {PayNote ? (
+            <ColorContextLocalExtension localColors={localInvertedColors}>
+              <PayNote inline={inline} />
+            </ColorContextLocalExtension>
+          ) : (
+            <hr
+              {...styles.hline}
+              {...colorScheme.set('borderColor', 'divider')}
+            />
+          )}
+        </>
       ) : null}
     </div>
   )
