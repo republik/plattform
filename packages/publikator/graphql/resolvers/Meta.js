@@ -25,13 +25,14 @@ const resolveSeriesEpisodes = async (series, context) => {
   }
 
   const episodes = await Promise.map(series.episodes || [], async (episode) => {
-    const { label, title, lead, document } = episode
+    const { label, title, lead, publishDate, document } = episode
 
     return {
       ...episode,
       ...(label && { label: await hyphenate(label) }),
       ...(title && { title: await hyphenate(title) }),
       ...(lead && { lead: await hyphenate(lead) }),
+      ...(!publishDate && { publishDate: null }),
       ...(typeof document === 'string' && {
         document: await getDocFromMetaLink(document, context),
       }),
