@@ -1187,9 +1187,22 @@ Reise planen: Flug mit einer Dauer von rund 4 Stunden.
 ### Series Navigation
 
 ```react|noSource
-<Markdown schema={schema} rootData={{
-  repoId, series
+<Markdown schema={customSchema({
+  titleBreakout: true
+})} rootData={{
+  repoId: '0', // overview page
+  series
 }}>{`
+<section><h6>TITLE</h6>
+
+# Eyes Wide Shut
+
+Wieso sind Verschwörungs­theorien während der Covid-19-Pandemie plötzlich allgegenwärtig? Wie entstehen sie, was verbindet sie? Und wie umgehen damit?
+
+Von Daniel Ryser, Olivier Würgler (Text) und Matthieu Bourel (Illustration/Animation), 05.01.2021
+
+<hr /></section>
+
 <section><h6>SERIES_NAV</h6>
 
 \`\`\`

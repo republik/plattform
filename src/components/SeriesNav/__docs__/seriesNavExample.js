@@ -9,6 +9,7 @@ export const series = {
   description:
     'Wieso sind Verschwörungs­theorien plötzlich allgegenwärtig? Wie entstehen sie, was verbindet sie?',
   overview: {
+    repoId: '0',
     meta: {
       path: '/path-to-series-overview'
     }

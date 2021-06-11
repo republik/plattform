@@ -736,6 +736,13 @@ const Styleguide = () => {
                           PayNote: require('./components/SeriesNav/__docs__')
                             .TestPayNote
                         }),
+                        customSchema: options =>
+                          require('./templates/Article').default({
+                            t,
+                            PayNote: require('./components/SeriesNav/__docs__')
+                              .TestPayNote,
+                            ...options
+                          }),
                         ...require('./components/SeriesNav/__docs__'),
                         ...require('./templates/docs'),
                         renderMdast: require('mdast-react-render').renderMdast
