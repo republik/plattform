@@ -252,19 +252,24 @@ export default withT(({ t, editor, node, onRepoInputChange, repoId }) => {
           {episodes.map((episode, i) => {
             // omit publishDate, no longer used
             const { document: episodeDoc, publishDate: _, ...values } = episode
-            const keys = Set(['label', 'title', 'lead', 'image'])
+            const keys = Set(['label', 'image', 'title', 'lead'])
             const defaultValues = Map(keys.map(key => [key, '']))
 
-            const onEpisodeFieldChange = key => (_, keyValue) => {
+            const onEpisodeFieldsChange = newData => {
               onEpisodeChange(
                 episodes
                   .slice(0, i)
                   .concat({
                     ...episode,
-                    [key]: keyValue
+                    ...newData
                   })
                   .concat(episodes.slice(i + 1))
               )
+            }
+            const onEpisodeFieldChange = key => (_, keyValue) => {
+              onEpisodeFieldsChange({
+                [key]: keyValue
+              })
             }
             return (
               <Fragment key={`episode-${i}`}>
@@ -281,17 +286,29 @@ export default withT(({ t, editor, node, onRepoInputChange, repoId }) => {
                   {t('metaData/series/episodes/rm')}
                 </A>
                 <br />
+                <RepoSelect
+                  label={t('metaData/series/episodes/document')}
+                  value={episodeDoc}
+                  onChange={(_, url, item) => {
+                    const newData = {
+                      document: url
+                    }
+                    const meta = item?.value?.latestCommit?.document?.meta
+                    if (meta) {
+                      if (!values.title) {
+                        newData.title = meta.title
+                      }
+                      if (!values.lead) {
+                        newData.lead = meta.description
+                      }
+                    }
+                    onEpisodeFieldsChange(newData)
+                  }}
+                />
                 <MetaForm
                   data={defaultValues.merge(values)}
                   onInputChange={onEpisodeFieldChange}
                   getWidth={() => '50%'}
-                />
-                <RepoSelect
-                  label={t('metaData/series/episodes/document')}
-                  value={episodeDoc}
-                  onChange={(_, url) => {
-                    onEpisodeFieldChange('document')(undefined, url)
-                  }}
                 />
               </Fragment>
             )
