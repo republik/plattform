@@ -83,85 +83,89 @@ const extractUserUrl = (url) => {
   )
 }
 
-const createUrlReplacer = (
-  allDocuments = [],
-  usernames = [],
-  errors = [],
-  urlPrefix = '',
-  searchString = '',
-) => (url, stripDocLinks) => {
-  const userInfo = extractUserPath(url)
-  if (userInfo) {
-    const user = usernames.find((u) => u.id === userInfo.id)
-    if (user) {
-      return [
-        urlPrefix,
-        userInfo.path.replace(user.id, user.username),
-        searchString,
-      ].join('')
+const createUrlReplacer =
+  (
+    allDocuments = [],
+    usernames = [],
+    errors = [],
+    urlPrefix = '',
+    searchString = '',
+  ) =>
+  (url, stripDocLinks) => {
+    const userInfo = extractUserPath(url)
+    if (userInfo) {
+      const user = usernames.find((u) => u.id === userInfo.id)
+      if (user) {
+        return [
+          urlPrefix,
+          userInfo.path.replace(user.id, user.username),
+          searchString,
+        ].join('')
+      }
     }
-  }
 
-  const { repoId, parsedUrl } = getRepoId(url, 'autoSlug')
-  // {url} lacks {repoId} and is nothing to resolve further.
-  if (!repoId) {
-    return url
-  }
+    const { repoId, parsedUrl } = getRepoId(url, 'autoSlug')
+    // {url} lacks {repoId} and is nothing to resolve further.
+    if (!repoId) {
+      return url
+    }
 
-  // Return early if {stripDocLinks} argument is set as nothing has to be resolved.
-  if (stripDocLinks) {
+    // Return early if {stripDocLinks} argument is set as nothing has to be resolved.
+    if (stripDocLinks) {
+      return ''
+    }
+
+    const linkedDoc = allDocuments.find((d) => d.meta.repoId === repoId)
+
+    if (linkedDoc) {
+      // Stitch and parse simple URL version including arguments {urlPrefix}, {searchString}
+      const resolvedUrl = new URL(
+        `${urlPrefix}${linkedDoc.content.meta.path}${searchString}`,
+        FRONTEND_BASE_URL,
+      )
+
+      // Replace {parsedUrl.hash} with {resolvedUrl.hash}
+      resolvedUrl.hash = parsedUrl.hash
+
+      // Merge {parsedUrl.searchParams} into {resolvedUrl.searchParams}
+      // parsedUrl overwrites same keys in resolvedUrl.
+      // resolvedUrl may contain searchParams from parsed {searchString}.
+      parsedUrl.searchParams.forEach((value, name) =>
+        resolvedUrl.searchParams.set(name, value),
+      )
+
+      // If {urlPrefix} is set, return stringified {resolvedUrl}.
+      if (urlPrefix) {
+        return resolvedUrl.toString()
+      }
+
+      // If {urlPrefix} is not set, replace {FRONTEND_BASE_URL} to return relative URLs.
+      return resolvedUrl
+        .toString()
+        .replace(new RegExp(`^${FRONTEND_BASE_URL}`), '')
+    } else {
+      errors.push(repoId)
+    }
+
+    // autoSlug links pointing to not published or missing documents are stripped
     return ''
   }
 
-  const linkedDoc = allDocuments.find((d) => d.meta.repoId === repoId)
-
-  if (linkedDoc) {
-    // Stitch and parse simple URL version including arguments {urlPrefix}, {searchString}
-    const resolvedUrl = new URL(
-      `${urlPrefix}${linkedDoc.content.meta.path}${searchString}`,
-      FRONTEND_BASE_URL,
-    )
-
-    // Replace {parsedUrl.hash} with {resolvedUrl.hash}
-    resolvedUrl.hash = parsedUrl.hash
-
-    // Merge {parsedUrl.searchParams} into {resolvedUrl.searchParams}
-    // parsedUrl overwrites same keys in resolvedUrl.
-    // resolvedUrl may contain searchParams from parsed {searchString}.
-    parsedUrl.searchParams.forEach((value, name) =>
-      resolvedUrl.searchParams.set(name, value),
-    )
-
-    // If {urlPrefix} is set, return stringified {resolvedUrl}.
-    if (urlPrefix) {
-      return resolvedUrl.toString()
+const createResolver =
+  (allDocuments, errors = []) =>
+  (url) => {
+    const { repoId } = getRepoId(url)
+    if (!repoId) {
+      return null
     }
-
-    // If {urlPrefix} is not set, replace {FRONTEND_BASE_URL} to return relative URLs.
-    return resolvedUrl
-      .toString()
-      .replace(new RegExp(`^${FRONTEND_BASE_URL}`), '')
-  } else {
-    errors.push(repoId)
-  }
-
-  // autoSlug links pointing to not published or missing documents are stripped
-  return ''
-}
-
-const createResolver = (allDocuments, errors = []) => (url) => {
-  const { repoId } = getRepoId(url)
-  if (!repoId) {
+    const linkedDoc = allDocuments.find((d) => d.meta.repoId === repoId)
+    if (linkedDoc) {
+      return linkedDoc
+    } else {
+      errors.push(repoId)
+    }
     return null
   }
-  const linkedDoc = allDocuments.find((d) => d.meta.repoId === repoId)
-  if (linkedDoc) {
-    return linkedDoc
-  } else {
-    errors.push(repoId)
-  }
-  return null
-}
 
 const contentUrlResolver = (
   doc,
@@ -230,6 +234,7 @@ const metaUrlResolver = (
   errors,
   urlPrefix,
   searchString,
+  user,
 ) => {
   const urlReplacer = createUrlReplacer(
     allDocuments,
@@ -238,6 +243,21 @@ const metaUrlResolver = (
     urlPrefix,
     searchString,
   )
+
+  meta.series?.episodes?.forEach((episode, index) => {
+    if (
+      index <= 1 ||
+      !episode.document?.meta?.path ||
+      episode.document.meta.path === meta.path ||
+      !DOCUMENTS_RESTRICT_TO_ROLES ||
+      user === undefined ||
+      userIsInRoles(user, DOCUMENTS_RESTRICT_TO_ROLES.split(','))
+    ) {
+      return
+    }
+
+    episode.document = undefined
+  })
 
   meta.credits &&
     meta.credits
@@ -260,6 +280,7 @@ const metaFieldResolver = (meta, allDocuments = [], errors) => {
   if (series) {
     series = {
       ...series,
+      ...(series.overview && { overview: resolver(series.overview) }),
       episodes: (series.episodes || []).map((episode) => ({
         ...episode,
         document: resolver(episode.document),

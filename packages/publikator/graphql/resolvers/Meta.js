@@ -1,8 +1,12 @@
+const Promise = require('bluebird')
+const { hyphenate } = require('hyphen/de-ch-1901')
+
 const {
   lib: { resolve },
 } = require('@orbiting/backend-modules-documents')
 
 const commit = require('./Commit')
+const { getPath } = require('../../lib/Document')
 
 const getDocFromMetaLink = async (url, context) => {
   const { repoId } = resolve.getRepoId(url)
@@ -17,25 +21,32 @@ const getDocFromMetaLink = async (url, context) => {
 }
 
 const resolveSeriesEpisodes = async (series, context) => {
-  if (
-    series?.episodes?.find((episode) => typeof episode.document === 'string')
-  ) {
-    // copy object, prevent modifying content.meta
-    const episodes = [].concat(series.episodes).map((episode) => ({
-      ...episode,
-    }))
-    for (const episode of episodes) {
-      // ensure not already resolved by previous run
-      if (typeof episode.document === 'string') {
-        episode.document = await getDocFromMetaLink(episode.document, context)
-      }
-    }
-    return {
-      ...series,
-      episodes,
-    }
+  if (!series) {
+    return series
   }
-  return series
+
+  const episodes = await Promise.map(series.episodes || [], async (episode) => {
+    const { title, publishDate, document } = episode
+
+    return {
+      ...episode,
+      ...(title && { title: await hyphenate(title, { minWordLength: 11 }) }),
+      ...(!publishDate && { publishDate: null }),
+      ...(typeof document === 'string' && {
+        document: await getDocFromMetaLink(document, context),
+      }),
+    }
+  })
+
+  const { overview } = series
+
+  return {
+    ...series,
+    ...(typeof overview === 'string' && {
+      overview: await getDocFromMetaLink(overview, context),
+    }),
+    ...(episodes && { episodes }),
+  }
 }
 
 const resolveRepoId = (field) => async (meta, args, context) => {
@@ -61,9 +72,25 @@ const resolveRepoId = (field) => async (meta, args, context) => {
   return doc || null
 }
 
+const resolvePath = (meta) => {
+  if (meta.path) {
+    return meta.path
+  }
+
+  // {meta.path} is mocked if Document.meta.path is missing. It comes
+  // in handy when resolving unpublished documents (e.g. via latest
+  // commit).
+  return getPath({
+    ...meta,
+    slug: `${meta.slug}---mocked`,
+    publishDate: new Date(),
+  })
+}
+
 module.exports = {
   format: resolveRepoId('format'),
   section: resolveRepoId('section'),
   dossier: resolveRepoId('dossier'),
   series: resolveRepoId('series'),
+  path: resolvePath,
 }

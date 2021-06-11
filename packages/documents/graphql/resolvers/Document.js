@@ -98,6 +98,7 @@ module.exports = {
         undefined,
         urlPrefix,
         searchString,
+        context.user || null,
       )
 
       if (shouldDeliverWebP(webp, context.req)) {

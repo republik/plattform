@@ -17,11 +17,11 @@ const { updateRepo } = require('./postgres')
 
 const slugDateFormat = timeFormat('%Y/%m/%d')
 
-const getPath = (docMeta) => {
-  const { slug, template, publishDate, path } = docMeta
+const getPath = ({ slug, template, publishDate, path }) => {
   if (path) {
     return path
   }
+
   const cleanedSlug =
     slug && slug.indexOf('/') > -1
       ? new RegExp(/.*\/(.*)/g).exec(slug)[1] // ignore everything before the last /
@@ -149,13 +149,16 @@ const prepareMetaForPublish = async ({
 
   const isSeriesMaster = typeof docMeta.series === 'object'
   const isSeriesEpisode = typeof docMeta.series === 'string'
+
   // map series episodes to the key seriesEpisodes to have consistent types
   // and not having to touch the series key
   let seriesEpisodes
   if (typeof docMeta.series === 'object') {
+    const { title, description, episodes } = docMeta.series
     seriesEpisodes = {
-      title: docMeta.series.title,
-      episodes: docMeta.series.episodes.map((episode) => {
+      title,
+      description,
+      episodes: episodes.map((episode) => {
         if (episode.publishDate === '') {
           episode.publishDate = null
         }
@@ -223,6 +226,7 @@ const handleRedirection = async (repoId, newDocMeta, context) => {
 }
 
 module.exports = {
+  getPath,
   prepareMetaForPublish,
   handleRedirection,
 }
