@@ -38,8 +38,13 @@ const resolveSeriesEpisodes = async (series, context) => {
     }
   })
 
+  const { overview } = series
+
   return {
     ...series,
+    ...(typeof overview === 'string' && {
+      overview: await getDocFromMetaLink(overview, context),
+    }),
     ...(episodes && { episodes }),
   }
 }
