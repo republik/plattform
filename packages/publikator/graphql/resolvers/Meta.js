@@ -6,6 +6,7 @@ const {
 } = require('@orbiting/backend-modules-documents')
 
 const commit = require('./Commit')
+const { getPath } = require('../../lib/Document')
 
 const getDocFromMetaLink = async (url, context) => {
   const { repoId } = resolve.getRepoId(url)
@@ -73,9 +74,25 @@ const resolveRepoId = (field) => async (meta, args, context) => {
   return doc || null
 }
 
+const resolvePath = (meta) => {
+  if (meta.path) {
+    return meta.path
+  }
+
+  // {meta.path} is mocked if Document.meta.path is missing. It comes
+  // in handy when resolving unpublished documents (e.g. via latest
+  // commit).
+  return getPath({
+    ...meta,
+    slug: `${meta.slug}---mocked`,
+    publishDate: new Date(),
+  })
+}
+
 module.exports = {
   format: resolveRepoId('format'),
   section: resolveRepoId('section'),
   dossier: resolveRepoId('dossier'),
   series: resolveRepoId('series'),
+  path: resolvePath,
 }
