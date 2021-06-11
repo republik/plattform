@@ -17,7 +17,6 @@ import Memberships from '../components/Users/Memberships'
 import Pledges from '../components/Users/Pledges'
 import AdminNotes from '../components/Users/AdminNotes'
 import AuthSettings from '../components/Users/AuthSettings'
-import LatestActivity from '../components/Users/LatestActivity'
 
 import EventLog from '../components/Users/EventLog'
 import Access from '../components/Users/Access'
@@ -32,12 +31,12 @@ const styles = {
     flexDirection: 'row',
     flexWrap: 'wrap',
     '& > *': {
-      flex: '0 0 25%',
-    },
+      flex: '0 0 25%'
+    }
   }),
   fifty: css({
-    flex: '0 0 50%',
-  }),
+    flex: '0 0 50%'
+  })
 }
 
 const SectionSwitch = ({ userId, section }) => {
@@ -87,14 +86,14 @@ const SectionSwitch = ({ userId, section }) => {
 
 export default compose(
   withRouter,
-  enforceAuthorization(['supporter']),
-)((props) => {
+  enforceAuthorization(['supporter'])
+)(props => {
   const { userId, section = 'index' } = props.router.query
   return (
     <App>
       <Body>
         <Header />
-        <Content id="content">
+        <Content id='content'>
           <ProfileHeader userId={userId} section={section} />
           <SectionSwitch userId={userId} section={section} />
         </Content>
