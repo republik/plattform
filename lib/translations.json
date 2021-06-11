@@ -1,5 +1,5 @@
 {
-  "updated": "2021-05-20T13:14:17.219Z",
+  "updated": "2021-06-08T11:48:39.543Z",
   "title": "live",
   "data": [
     {
@@ -491,6 +491,10 @@
       "value": "Bild"
     },
     {
+      "key": "metaData/field/lead",
+      "value": "Lead"
+    },
+    {
       "key": "metaData/field/slug",
       "value": "Web-Slug"
     },
@@ -636,11 +640,23 @@
     },
     {
       "key": "metaData/series/main",
-      "value": "Auftakt"
+      "value": "Übersicht"
     },
     {
       "key": "metaData/series/title/label",
       "value": "Title"
+    },
+    {
+      "key": "metaData/series/description",
+      "value": "Serienbeschrieb"
+    },
+    {
+      "key": "metaData/series/overview",
+      "value": "Dokument Serienübersicht"
+    },
+    {
+      "key": "metaData/series/overview/note",
+      "value": "Im Normalfall: Eine Selbstreferenz auf dieses Dokument mit den Metadaten zur Serie und einem Episoden-Grid. Ausnahme: alte Serien vor Sommer 2021."
     },
     {
       "key": "metaData/series/episode",

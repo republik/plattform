@@ -46,7 +46,7 @@ export default ({ rule, subModules, TYPE }) => {
         writableNode,
         rest
       )
-      const { format, section, series } = rest.context
+      const { format, section, series, repoId } = rest.context
       // skip coverText for now
       const { coverText, ...meta } = rest.context.meta
       if (format || section || meta || series) {
@@ -66,7 +66,8 @@ export default ({ rule, subModules, TYPE }) => {
           meta,
           format,
           section,
-          series
+          series,
+          repoId
         },
         nodes
       }

@@ -1,7 +1,8 @@
 import React, { Fragment } from 'react'
 import { Set, Map } from 'immutable'
-
+import { css } from 'glamor'
 import { A, Label, Radio, Field, Dropdown } from '@project-r/styleguide'
+import AutosizeInput from 'react-textarea-autosize'
 
 import ImageInput from '../../utils/ImageInput'
 import MetaForm from '../../utils/MetaForm'
@@ -10,7 +11,15 @@ import withT from '../../../../lib/withT'
 import RepoSelect from './RepoSelect'
 import UIForm from '../../UIForm'
 
-export default withT(({ t, editor, node, onRepoInputChange }) => {
+const styles = {
+  autoSize: css({
+    minHeight: 40,
+    paddingTop: '7px !important',
+    paddingBottom: '6px !important'
+  })
+}
+
+export default withT(({ t, editor, node, onRepoInputChange, repoId }) => {
   const coverTextAnchors = [null, 'top', 'middle', 'bottom'].map(value => ({
     value,
     text: t(`metaData/series/coverText/anchor/${value}`)
@@ -51,7 +60,17 @@ export default withT(({ t, editor, node, onRepoInputChange }) => {
           event.preventDefault()
           onSeriesChange({
             title: '',
-            episodes: [{ title: '', publishDate: '', document: null }]
+            description: '',
+            overview: `https://github.com/${repoId}`,
+            episodes: [
+              {
+                label: '',
+                title: '',
+                lead: '',
+                publishDate: '',
+                document: null
+              }
+            ]
           })
         }}
       >
@@ -171,6 +190,37 @@ export default withT(({ t, editor, node, onRepoInputChange }) => {
               })
             }}
           />
+          <Field
+            label={t('metaData/series/description')}
+            autoSize={true}
+            renderInput={({ ref, ...inputProps }) => (
+              <AutosizeInput
+                {...styles.autoSize}
+                {...inputProps}
+                inputRef={ref}
+              />
+            )}
+            value={value.description}
+            onChange={(_, description) => {
+              onSeriesChange({
+                ...value,
+                description
+              })
+            }}
+          />
+          <RepoSelect
+            label={t('metaData/series/overview')}
+            value={value.overview}
+            onChange={(_, overview) => {
+              onSeriesChange({
+                ...value,
+                overview
+              })
+            }}
+          />
+          <Label style={{ display: 'block', marginTop: -5, marginBottom: 10 }}>
+            {t('metaData/series/overview/note')}
+          </Label>
           <div style={{ float: 'left', marginRight: 15 }}>
             <ImageInput
               label='Logo'
@@ -202,7 +252,7 @@ export default withT(({ t, editor, node, onRepoInputChange }) => {
           <br />
           {episodes.map((episode, i) => {
             const { document: episodeDoc, ...values } = episode
-            const keys = Set(['label', 'title', 'image', 'publishDate'])
+            const keys = Set(['label', 'title', 'lead', 'image', 'publishDate'])
             const defaultValues = Map(keys.map(key => [key, '']))
 
             const onEpisodeFieldChange = key => (_, keyValue) => {
@@ -252,7 +302,9 @@ export default withT(({ t, editor, node, onRepoInputChange }) => {
               e.preventDefault()
               onEpisodeChange(
                 episodes.concat({
+                  label: '',
                   title: '',
+                  lead: '',
                   publishDate: '',
                   document: null
                 })

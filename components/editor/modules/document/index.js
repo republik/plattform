@@ -141,9 +141,10 @@ export default ({ rule, subModules, TYPE }) => {
     rules: [documentRule]
   })
 
-  const newDocument = ({ title }) =>
-    serializer.deserialize(
-      parse(
+  const newDocument = ({ title, repoId }) =>
+    serializer.deserialize({
+      repoId,
+      ...parse(
         `<section><h6>${coverModule.TYPE}</h6>
 
 # ${title}
@@ -157,7 +158,7 @@ Ladies and Gentlemen,
 <hr/></section>
 `
       )
-    )
+    })
 
   const Container = rule.component
 

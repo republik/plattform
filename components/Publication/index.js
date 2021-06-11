@@ -77,11 +77,24 @@ export const getRepoWithCommit = gql`
             }
             series {
               title
+              description
               logo
               logoDark
+              ${
+                '' /*Pending Backend Fix `overview {
+                id
+                repoId
+                meta {
+                  path
+                }
+              }`*/
+              }
               episodes {
                 title
+                publishDate
                 label
+                lead
+                image
                 document {
                   id
                   repoId
