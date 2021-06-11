@@ -6,7 +6,7 @@ import { InfoBoxTitle, InfoBoxText, INFOBOX_IMAGE_SIZES } from '../InfoBox'
 import { FigureImage } from '../Figure'
 import { ColorContextLocalExtension } from '../Colors/ColorContext'
 import { useColorContext } from '../Colors/useColorContext'
-import Center, { BREAKOUT_SIZES } from '../Center'
+import Center, { PADDED_MAX_WIDTH_BREAKOUT } from '../Center'
 import SeriesNavTile from './SeriesNavTile'
 import { localInvertedColors } from '../../theme/colors'
 
@@ -14,7 +14,7 @@ const DEFAULT_PAYNOTE_INDEX = 2
 
 const styles = {
   container: css({
-    maxWidth: BREAKOUT_SIZES['breakout'],
+    maxWidth: PADDED_MAX_WIDTH_BREAKOUT,
     margin: '0 auto',
     padding: 0
   }),

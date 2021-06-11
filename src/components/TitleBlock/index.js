@@ -1,12 +1,18 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { MAX_WIDTH, PADDING, BREAKOUT, BREAKOUT_SIZES } from '../Center'
+import {
+  PADDED_MAX_WIDTH,
+  PADDED_MAX_WIDTH_BREAKOUT,
+  MAX_WIDTH,
+  PADDING,
+  BREAKOUT
+} from '../Center'
 import { css, merge } from 'glamor'
 import { mUp } from '../../theme/mediaQueries'
 
 const styles = {
   container: css({
-    maxWidth: MAX_WIDTH + PADDING * 2,
+    maxWidth: PADDED_MAX_WIDTH,
     margin: '0 auto',
     paddingTop: 30,
     paddingLeft: PADDING,
@@ -35,7 +41,7 @@ const TitleBlock = ({ children, attributes, center, margin, breakout }) => {
         maxWidth: center
           ? MAX_WIDTH + BREAKOUT + PADDING
           : breakout
-          ? BREAKOUT_SIZES.breakout
+          ? PADDED_MAX_WIDTH_BREAKOUT
           : undefined
       }}
     >

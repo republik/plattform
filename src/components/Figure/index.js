@@ -5,7 +5,13 @@ import { css, merge } from 'glamor'
 import { AudioIcon } from '../Icons'
 
 import { mUp } from '../../theme/mediaQueries'
-import { breakoutStyles, MAX_WIDTH, PADDING, BREAKOUT_SIZES } from '../Center'
+import {
+  breakoutStyles,
+  PADDED_MAX_WIDTH,
+  MAX_WIDTH,
+  PADDING,
+  BREAKOUT_SIZES
+} from '../Center'
 
 import { plainButtonRule } from '../Button'
 
@@ -43,7 +49,7 @@ const styles = {
   }),
   coverBreakout: css({
     margin: '30px auto 20px auto',
-    maxWidth: MAX_WIDTH + PADDING * 2,
+    maxWidth: PADDED_MAX_WIDTH,
     padding: PADDING
   }),
   coverText: css({
@@ -116,7 +122,7 @@ const styles = {
 const figureBreakout = {
   ...breakoutStyles,
   center: css({
-    maxWidth: MAX_WIDTH + PADDING * 2,
+    maxWidth: PADDED_MAX_WIDTH,
     padding: PADDING,
     marginLeft: 'auto',
     marginRight: 'auto',
