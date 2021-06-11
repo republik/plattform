@@ -83,9 +83,9 @@ export const series = {
   ]
 }
 
-export const TestPayNote = () => {
+export const TestPayNote = ({ inline }) => {
   return (
-    <div style={{ height: '100%' }}>
+    <div style={{ height: '100%', padding: inline ? 5 : undefined }}>
       <Interaction.P>Jetzt Probelesen</Interaction.P>
     </div>
   )

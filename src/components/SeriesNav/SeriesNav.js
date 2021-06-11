@@ -5,6 +5,7 @@ import { TeaserCarousel, TeaserCarouselTileContainer } from '../TeaserCarousel'
 import { InfoBoxTitle, InfoBoxText, INFOBOX_IMAGE_SIZES } from '../InfoBox'
 import { FigureImage } from '../Figure'
 import { ColorContextLocalExtension } from '../Colors/ColorContext'
+import { useColorContext } from '../Colors/useColorContext'
 import Center, { BREAKOUT_SIZES } from '../Center'
 import SeriesNavTile from './SeriesNavTile'
 import { localInvertedColors } from '../../theme/colors'
@@ -44,6 +45,8 @@ function SeriesNav({
   PayNote,
   onEpisodeClick
 }) {
+  const [colorScheme] = useColorContext()
+
   const currentTile =
     repoId &&
     series.episodes.find(episode => episode.document?.repoId === repoId)
@@ -129,9 +132,11 @@ function SeriesNav({
       </TeaserCarousel>
 
       {inline && PayNote && (
-        <ColorContextLocalExtension localColors={localInvertedColors}>
-          <PayNote inline={inline} />
-        </ColorContextLocalExtension>
+        <div {...colorScheme.set('backgroundColor', 'defaultInverted')}>
+          <ColorContextLocalExtension localColors={localInvertedColors}>
+            <PayNote inline />
+          </ColorContextLocalExtension>
+        </div>
       )}
     </div>
   )
