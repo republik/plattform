@@ -1,20 +1,11 @@
 import React from 'react'
 import { css } from 'glamor'
-import { mUp } from '../../theme/mediaQueries'
 import PropTypes from 'prop-types'
-import {
-  TeaserCarousel,
-  TeaserCarouselTileContainer
-} from '../../components/TeaserCarousel'
-import { useColorContext } from '../Colors/useColorContext'
+import { TeaserCarousel, TeaserCarouselTileContainer } from '../TeaserCarousel'
+import { InfoBoxTitle, InfoBoxText, INFOBOX_IMAGE_SIZES } from '../InfoBox'
+import { FigureImage } from '../Figure'
 import { ColorContextLocalExtension } from '../Colors/ColorContext'
-import {
-  sansSerifMedium16,
-  sansSerifMedium19,
-  sansSerifRegular15,
-  sansSerifRegular18
-} from '../Typography/styles'
-import Center, { BREAKOUT_SIZES } from '../../components/Center'
+import Center, { BREAKOUT_SIZES } from '../Center'
 import SeriesNavTile from './SeriesNavTile'
 import { localInvertedColors } from '../../theme/colors'
 
@@ -24,37 +15,15 @@ const styles = {
   container: css({
     maxWidth: BREAKOUT_SIZES['breakout'],
     margin: '0 auto',
-    padding: '0 15px'
+    padding: 0
   }),
   containerInline: css({
     margin: '0 auto',
     padding: 0,
     width: '100%'
   }),
-  hline: css({
-    borderWidth: 0,
-    borderTopWidth: 1,
-    borderStyle: 'solid',
-    margin: 0,
-    marginBottom: 15,
-    [mUp]: {
-      display: 'none'
-    }
-  }),
-  title: css({
-    ...sansSerifMedium16,
-    marginBottom: 0,
-    [mUp]: {
-      ...sansSerifMedium19
-    }
-  }),
-  description: css({
-    ...sansSerifRegular15,
-    [mUp]: {
-      ...sansSerifRegular18
-    },
-    margin: 0,
-    marginBottom: 5
+  infoBoxContainer: css({
+    display: 'flex'
   }),
   plainlink: css({
     textDecoration: 'none',
@@ -74,8 +43,6 @@ function SeriesNav({
   PayNote,
   onEpisodeClick
 }) {
-  const [colorScheme] = useColorContext()
-
   const currentTile =
     repoId &&
     series.episodes.find(episode => episode.document?.repoId === repoId)
@@ -98,24 +65,41 @@ function SeriesNav({
   const titlePath =
     series.overview?.meta?.path || series.episodes[0]?.meta?.path
 
+  const logoProps =
+    series.logo &&
+    FigureImage.utils.getResizedSrcs(series.logo, INFOBOX_IMAGE_SIZES.XS, false)
+  const logoDarkProps =
+    series.logoDark &&
+    FigureImage.utils.getResizedSrcs(
+      series.logoDark,
+      INFOBOX_IMAGE_SIZES.XS,
+      false
+    )
+
   return (
     <div {...(inline ? styles.containerInline : styles.container)}>
       {inline ? (
-        <Center>
-          <hr
-            {...styles.hline}
-            {...colorScheme.set('borderColor', 'divider')}
-          />
-          <h3 {...styles.title}>
-            {titlePath ? (
-              <Link href={titlePath} passHref>
-                <a {...styles.plainlink}>{series.title}</a>
-              </Link>
-            ) : (
-              series.title
-            )}
-          </h3>
-          <p {...styles.description}>{series.description}</p>
+        <Center {...styles.infoBoxContainer}>
+          {series.logo && (
+            <FigureImage
+              maxWidth={INFOBOX_IMAGE_SIZES.XS}
+              {...logoProps}
+              dark={logoDarkProps}
+              alt=''
+            />
+          )}
+          <div style={{ marginLeft: series.logo && 16 }}>
+            <InfoBoxTitle>
+              {titlePath ? (
+                <Link href={titlePath} passHref>
+                  <a {...styles.plainlink}>{series.title}</a>
+                </Link>
+              ) : (
+                series.title
+              )}
+            </InfoBoxTitle>
+            <InfoBoxText>{series.description}</InfoBoxText>
+          </div>
         </Center>
       ) : null}
 
@@ -141,20 +125,11 @@ function SeriesNav({
         </TeaserCarouselTileContainer>
       </TeaserCarousel>
 
-      {inline ? (
-        <>
-          {PayNote ? (
-            <ColorContextLocalExtension localColors={localInvertedColors}>
-              <PayNote inline={inline} />
-            </ColorContextLocalExtension>
-          ) : (
-            <hr
-              {...styles.hline}
-              {...colorScheme.set('borderColor', 'divider')}
-            />
-          )}
-        </>
-      ) : null}
+      {inline && PayNote && (
+        <ColorContextLocalExtension localColors={localInvertedColors}>
+          <PayNote inline={inline} />
+        </ColorContextLocalExtension>
+      )}
     </div>
   )
 }

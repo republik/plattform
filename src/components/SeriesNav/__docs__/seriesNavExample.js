@@ -4,7 +4,8 @@ import { Interaction } from '../../Typography'
 export const repoId = '3'
 export const series = {
   title: 'Eyes Wide Shut',
-  logo: null,
+  logo: '/static/50Jahre_Frauenwahlrecht_positiv.svg',
+  logoDark: '/static/50Jahre_Frauenwahlrecht_negativ.svg',
   description:
     'Wieso sind Verschwörungs­theorien plötzlich allgegenwärtig? Wie entstehen sie, was verbindet sie?',
   overview: {
