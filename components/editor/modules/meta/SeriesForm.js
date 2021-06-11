@@ -1,7 +1,14 @@
 import React, { Fragment } from 'react'
 import { Set, Map } from 'immutable'
 import { css } from 'glamor'
-import { A, Label, Radio, Field, Dropdown } from '@project-r/styleguide'
+import {
+  A,
+  Label,
+  Radio,
+  Field,
+  Dropdown,
+  Interaction
+} from '@project-r/styleguide'
 import AutosizeInput from 'react-textarea-autosize'
 
 import ImageInput from '../../utils/ImageInput'
@@ -273,18 +280,62 @@ export default withT(({ t, editor, node, onRepoInputChange, repoId }) => {
             }
             return (
               <Fragment key={`episode-${i}`}>
-                <Label>{t('metaData/series/episodes/label')}</Label> &nbsp;{' '}
-                <A
-                  href='#remove'
-                  onClick={e => {
-                    e.preventDefault()
-                    onEpisodeChange(
-                      episodes.slice(0, i).concat(episodes.slice(i + 1))
-                    )
-                  }}
-                >
-                  {t('metaData/series/episodes/rm')}
-                </A>
+                <Interaction.H2>
+                  {t('metaData/series/episodes/label')} &nbsp;{' '}
+                  <Label>
+                    {i !== 0 && (
+                      <>
+                        <A
+                          href='#up'
+                          onClick={e => {
+                            e.preventDefault()
+                            onEpisodeChange(
+                              episodes
+                                .slice(0, i - 1)
+                                .concat(episode)
+                                .concat(episodes.slice(i - 1, i))
+                                .concat(episodes.slice(i + 1))
+                            )
+                          }}
+                        >
+                          {t('metaData/series/episodes/up')}
+                        </A>{' '}
+                        &nbsp;{' '}
+                      </>
+                    )}
+                    {i !== episodes.length - 1 && (
+                      <>
+                        <A
+                          href='#down'
+                          onClick={e => {
+                            e.preventDefault()
+                            onEpisodeChange(
+                              episodes
+                                .slice(0, i)
+                                .concat(episodes.slice(i + 1, i + 2))
+                                .concat(episode)
+                                .concat(episodes.slice(i + 2))
+                            )
+                          }}
+                        >
+                          {t('metaData/series/episodes/down')}
+                        </A>{' '}
+                        &nbsp;{' '}
+                      </>
+                    )}
+                    <A
+                      href='#remove'
+                      onClick={e => {
+                        e.preventDefault()
+                        onEpisodeChange(
+                          episodes.slice(0, i).concat(episodes.slice(i + 1))
+                        )
+                      }}
+                    >
+                      {t('metaData/series/episodes/rm')}
+                    </A>
+                  </Label>
+                </Interaction.H2>
                 <br />
                 <RepoSelect
                   label={t('metaData/series/episodes/document')}
