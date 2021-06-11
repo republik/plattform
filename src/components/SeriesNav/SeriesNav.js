@@ -22,9 +22,8 @@ const DEFAULT_PAYNOTE_INDEX = 2
 
 const styles = {
   container: css({
-    maxWidth: BREAKOUT_SIZES['breakout'],
-    margin: '0 auto',
-    padding: '0 15px'
+    maxWidth: BREAKOUT_SIZES.breakout,
+    margin: '0 auto'
   }),
   containerInline: css({
     margin: '0 auto',

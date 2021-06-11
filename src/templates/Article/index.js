@@ -154,6 +154,7 @@ const createSchema = ({
   titleBlockRule,
   titleBlockPrepend = null,
   titleMargin = true,
+  titleBreakout = false,
   repoPrefix = 'article-',
   series = true,
   darkMode = true,
@@ -294,6 +295,7 @@ const createSchema = ({
               const root = ancestors[ancestors.length - 1]
               return {
                 center: node.data.center,
+                breakout: node.data.breakout ?? titleBreakout,
                 format: root.format,
                 series: root.series,
                 repoId: root.repoId,
