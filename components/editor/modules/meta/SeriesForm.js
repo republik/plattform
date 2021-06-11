@@ -67,7 +67,6 @@ export default withT(({ t, editor, node, onRepoInputChange, repoId }) => {
                 label: '',
                 title: '',
                 lead: '',
-                publishDate: '',
                 document: null
               }
             ]
@@ -251,8 +250,9 @@ export default withT(({ t, editor, node, onRepoInputChange, repoId }) => {
           <br style={{ clear: 'both' }} />
           <br />
           {episodes.map((episode, i) => {
-            const { document: episodeDoc, ...values } = episode
-            const keys = Set(['label', 'title', 'lead', 'image', 'publishDate'])
+            // omit publishDate, no longer used
+            const { document: episodeDoc, publishDate: _, ...values } = episode
+            const keys = Set(['label', 'title', 'lead', 'image'])
             const defaultValues = Map(keys.map(key => [key, '']))
 
             const onEpisodeFieldChange = key => (_, keyValue) => {
@@ -305,7 +305,6 @@ export default withT(({ t, editor, node, onRepoInputChange, repoId }) => {
                   label: '',
                   title: '',
                   lead: '',
-                  publishDate: '',
                   document: null
                 })
               )
