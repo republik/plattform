@@ -259,7 +259,7 @@ export default withT(({ t, editor, node, onRepoInputChange, repoId }) => {
           {episodes.map((episode, i) => {
             // omit publishDate, no longer used
             const { document: episodeDoc, publishDate: _, ...values } = episode
-            const keys = Set(['label', 'image', 'title', 'lead'])
+            const keys = Set(['title', 'lead', 'label', 'image'])
             const defaultValues = Map(keys.map(key => [key, '']))
 
             const onEpisodeFieldsChange = newData => {
@@ -279,7 +279,7 @@ export default withT(({ t, editor, node, onRepoInputChange, repoId }) => {
               })
             }
             return (
-              <Fragment key={`episode-${i}`}>
+              <div style={{ marginBottom: 20 }} key={`episode-${i}`}>
                 <Interaction.H2>
                   {t('metaData/series/episodes/label')} &nbsp;{' '}
                   <Label>
@@ -336,7 +336,6 @@ export default withT(({ t, editor, node, onRepoInputChange, repoId }) => {
                     </A>
                   </Label>
                 </Interaction.H2>
-                <br />
                 <RepoSelect
                   label={t('metaData/series/episodes/document')}
                   value={episodeDoc}
@@ -361,7 +360,7 @@ export default withT(({ t, editor, node, onRepoInputChange, repoId }) => {
                   onInputChange={onEpisodeFieldChange}
                   getWidth={() => '50%'}
                 />
-              </Fragment>
+              </div>
             )
           })}
           <A
