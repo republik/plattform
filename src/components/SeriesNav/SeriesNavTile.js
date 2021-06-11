@@ -20,15 +20,14 @@ const styles = {
   tile: css({
     marginBottom: 20,
     width: '100%',
+    padding: TILE_GRID_PADDING,
     [`@media only screen and (min-width: ${OUTER_CONTAINER_PADDING * 2 +
       GRID_MIN_WIDTH * 2}px)`]: {
-      width: '50%',
-      padding: `0px ${TILE_GRID_PADDING}px 0 ${TILE_GRID_PADDING}px`
+      width: '50%'
     },
     [`@media only screen and (min-width: ${OUTER_CONTAINER_PADDING * 2 +
       GRID_MIN_WIDTH * 3}px)`]: {
-      width: '33.33%',
-      padding: `0px ${TILE_GRID_PADDING}px 0 ${TILE_GRID_PADDING}px`
+      width: '33.33%'
     }
   }),
   inlineTile: css({

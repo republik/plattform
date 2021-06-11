@@ -1,6 +1,6 @@
 # Series Navigation
 
-```react|responsive
+```react
   <SeriesNav
     repoId={repoId}
     series={series}
@@ -23,7 +23,7 @@
 
 Inline
 
-```react|responsive
+```react
   <SeriesNav
     repoId={repoId}
     series={series}
