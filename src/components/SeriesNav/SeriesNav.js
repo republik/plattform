@@ -26,6 +26,9 @@ const styles = {
   infoBoxContainer: css({
     display: 'flex'
   }),
+  infoBoxTextArea: css({
+    flexGrow: 1
+  }),
   plainlink: css({
     textDecoration: 'none',
     color: 'inherit',
@@ -92,7 +95,10 @@ function SeriesNav({
                 alt=''
               />
             )}
-            <div style={{ marginLeft: series.logo && 16 }}>
+            <div
+              {...styles.infoBoxTextArea}
+              style={{ marginLeft: series.logo && 16 }}
+            >
               <InfoBoxTitle>
                 {titlePath ? (
                   <Link href={titlePath} passHref>
