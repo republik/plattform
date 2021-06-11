@@ -18,28 +18,25 @@ const OUTER_CONTAINER_PADDING = PADDING
 
 const styles = {
   tile: css({
-    padding: `0px 0px 20px 0px`,
+    marginBottom: 20,
     width: '100%',
     [`@media only screen and (min-width: ${OUTER_CONTAINER_PADDING * 2 +
       GRID_MIN_WIDTH * 2}px)`]: {
       width: '50%',
-      padding: `0px ${TILE_GRID_PADDING}px 20px ${TILE_GRID_PADDING}px`
+      padding: `0px ${TILE_GRID_PADDING}px 0 ${TILE_GRID_PADDING}px`
     },
     [`@media only screen and (min-width: ${OUTER_CONTAINER_PADDING * 2 +
       GRID_MIN_WIDTH * 3}px)`]: {
       width: '33.33%',
-      padding: `0px ${TILE_GRID_PADDING}px 20px ${TILE_GRID_PADDING}px`
+      padding: `0px ${TILE_GRID_PADDING}px 0 ${TILE_GRID_PADDING}px`
     }
   }),
   inlineTile: css({
     marginRight: TILE_MARGIN_RIGHT,
+    padding: 7,
     width: '20%',
     minWidth: 150,
-    maxWidth: 170,
-    ':last-of-type': { margin: 0 }
-  }),
-  tileContainer: css({
-    padding: 6
+    maxWidth: 170
   })
 }
 
@@ -72,24 +69,19 @@ const SeriesNavTile = ({
   return (
     <div
       {...(inline ? styles.inlineTile : styles.tile)}
+      {...(isInverted && colorScheme.set('backgroundColor', 'defaultInverted'))}
       style={{
         opacity: inactiveTile ? 0.6 : 1
       }}
       data-repo-id={episode?.document?.repoId}
     >
-      <div
-        {...styles.tileContainer}
-        {...(isInverted &&
-          colorScheme.set('backgroundColor', 'defaultInverted'))}
-      >
-        {isInverted ? (
-          <ColorContextLocalExtension localColors={localInvertedColors}>
-            {content}
-          </ColorContextLocalExtension>
-        ) : (
-          content
-        )}
-      </div>
+      {isInverted ? (
+        <ColorContextLocalExtension localColors={localInvertedColors}>
+          {content}
+        </ColorContextLocalExtension>
+      ) : (
+        content
+      )}
     </div>
   )
 }

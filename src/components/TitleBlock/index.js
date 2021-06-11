@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { MAX_WIDTH, PADDING, BREAKOUT } from '../Center'
+import { MAX_WIDTH, PADDING, BREAKOUT, BREAKOUT_SIZES } from '../Center'
 import { css, merge } from 'glamor'
 import { mUp } from '../../theme/mediaQueries'
 
@@ -24,7 +24,7 @@ const styles = {
   })
 }
 
-const TitleBlock = ({ children, attributes, center, margin }) => {
+const TitleBlock = ({ children, attributes, center, margin, breakout }) => {
   return (
     <section
       className='title-block'
@@ -32,7 +32,11 @@ const TitleBlock = ({ children, attributes, center, margin }) => {
       {...merge(styles.container, margin && styles.containerMargin)}
       style={{
         textAlign: center ? 'center' : undefined,
-        maxWidth: center ? MAX_WIDTH + BREAKOUT + PADDING : undefined
+        maxWidth: center
+          ? MAX_WIDTH + BREAKOUT + PADDING
+          : breakout
+          ? BREAKOUT_SIZES.breakout
+          : undefined
       }}
     >
       {children}
