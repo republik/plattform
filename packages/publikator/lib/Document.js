@@ -17,11 +17,11 @@ const { updateRepo } = require('./postgres')
 
 const slugDateFormat = timeFormat('%Y/%m/%d')
 
-const getPath = (docMeta) => {
-  const { slug, template, publishDate, path } = docMeta
+const getPath = ({ slug, template, publishDate, path }) => {
   if (path) {
     return path
   }
+
   const cleanedSlug =
     slug && slug.indexOf('/') > -1
       ? new RegExp(/.*\/(.*)/g).exec(slug)[1] // ignore everything before the last /
@@ -226,6 +226,7 @@ const handleRedirection = async (repoId, newDocMeta, context) => {
 }
 
 module.exports = {
+  getPath,
   prepareMetaForPublish,
   handleRedirection,
 }
