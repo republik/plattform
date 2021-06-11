@@ -1,7 +1,14 @@
 import React, { Fragment } from 'react'
 import { Set, Map } from 'immutable'
 import { css } from 'glamor'
-import { A, Label, Radio, Field, Dropdown } from '@project-r/styleguide'
+import {
+  A,
+  Label,
+  Radio,
+  Field,
+  Dropdown,
+  Interaction
+} from '@project-r/styleguide'
 import AutosizeInput from 'react-textarea-autosize'
 
 import ImageInput from '../../utils/ImageInput'
@@ -67,7 +74,6 @@ export default withT(({ t, editor, node, onRepoInputChange, repoId }) => {
                 label: '',
                 title: '',
                 lead: '',
-                publishDate: '',
                 document: null
               }
             ]
@@ -251,49 +257,110 @@ export default withT(({ t, editor, node, onRepoInputChange, repoId }) => {
           <br style={{ clear: 'both' }} />
           <br />
           {episodes.map((episode, i) => {
-            const { document: episodeDoc, ...values } = episode
-            const keys = Set(['label', 'title', 'lead', 'image', 'publishDate'])
+            // omit publishDate, no longer used
+            const { document: episodeDoc, publishDate: _, ...values } = episode
+            const keys = Set(['title', 'lead', 'label', 'image'])
             const defaultValues = Map(keys.map(key => [key, '']))
 
-            const onEpisodeFieldChange = key => (_, keyValue) => {
+            const onEpisodeFieldsChange = newData => {
               onEpisodeChange(
                 episodes
                   .slice(0, i)
                   .concat({
                     ...episode,
-                    [key]: keyValue
+                    ...newData
                   })
                   .concat(episodes.slice(i + 1))
               )
             }
+            const onEpisodeFieldChange = key => (_, keyValue) => {
+              onEpisodeFieldsChange({
+                [key]: keyValue
+              })
+            }
             return (
-              <Fragment key={`episode-${i}`}>
-                <Label>{t('metaData/series/episodes/label')}</Label> &nbsp;{' '}
-                <A
-                  href='#remove'
-                  onClick={e => {
-                    e.preventDefault()
-                    onEpisodeChange(
-                      episodes.slice(0, i).concat(episodes.slice(i + 1))
-                    )
+              <div style={{ marginBottom: 20 }} key={`episode-${i}`}>
+                <Interaction.H2>
+                  {t('metaData/series/episodes/label')} &nbsp;{' '}
+                  <Label>
+                    {i !== 0 && (
+                      <>
+                        <A
+                          href='#up'
+                          onClick={e => {
+                            e.preventDefault()
+                            onEpisodeChange(
+                              episodes
+                                .slice(0, i - 1)
+                                .concat(episode)
+                                .concat(episodes.slice(i - 1, i))
+                                .concat(episodes.slice(i + 1))
+                            )
+                          }}
+                        >
+                          {t('metaData/series/episodes/up')}
+                        </A>{' '}
+                        &nbsp;{' '}
+                      </>
+                    )}
+                    {i !== episodes.length - 1 && (
+                      <>
+                        <A
+                          href='#down'
+                          onClick={e => {
+                            e.preventDefault()
+                            onEpisodeChange(
+                              episodes
+                                .slice(0, i)
+                                .concat(episodes.slice(i + 1, i + 2))
+                                .concat(episode)
+                                .concat(episodes.slice(i + 2))
+                            )
+                          }}
+                        >
+                          {t('metaData/series/episodes/down')}
+                        </A>{' '}
+                        &nbsp;{' '}
+                      </>
+                    )}
+                    <A
+                      href='#remove'
+                      onClick={e => {
+                        e.preventDefault()
+                        onEpisodeChange(
+                          episodes.slice(0, i).concat(episodes.slice(i + 1))
+                        )
+                      }}
+                    >
+                      {t('metaData/series/episodes/rm')}
+                    </A>
+                  </Label>
+                </Interaction.H2>
+                <RepoSelect
+                  label={t('metaData/series/episodes/document')}
+                  value={episodeDoc}
+                  onChange={(_, url, item) => {
+                    const newData = {
+                      document: url
+                    }
+                    const meta = item?.value?.latestCommit?.document?.meta
+                    if (meta) {
+                      if (!values.title) {
+                        newData.title = meta.title
+                      }
+                      if (!values.lead) {
+                        newData.lead = meta.description
+                      }
+                    }
+                    onEpisodeFieldsChange(newData)
                   }}
-                >
-                  {t('metaData/series/episodes/rm')}
-                </A>
-                <br />
+                />
                 <MetaForm
                   data={defaultValues.merge(values)}
                   onInputChange={onEpisodeFieldChange}
                   getWidth={() => '50%'}
                 />
-                <RepoSelect
-                  label={t('metaData/series/episodes/document')}
-                  value={episodeDoc}
-                  onChange={(_, url) => {
-                    onEpisodeFieldChange('document')(undefined, url)
-                  }}
-                />
-              </Fragment>
+              </div>
             )
           })}
           <A
@@ -305,7 +372,6 @@ export default withT(({ t, editor, node, onRepoInputChange, repoId }) => {
                   label: '',
                   title: '',
                   lead: '',
-                  publishDate: '',
                   document: null
                 })
               )

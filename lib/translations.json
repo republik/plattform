@@ -1,5 +1,5 @@
 {
-  "updated": "2021-06-08T11:48:39.543Z",
+  "updated": "2021-06-11T15:00:52.798Z",
   "title": "live",
   "data": [
     {
@@ -673,6 +673,14 @@
     {
       "key": "metaData/series/episodes/rm",
       "value": "entfernen"
+    },
+    {
+      "key": "metaData/series/episodes/up",
+      "value": "hoch"
+    },
+    {
+      "key": "metaData/series/episodes/down",
+      "value": "runter"
     },
     {
       "key": "metaData/series/episodes/document",
