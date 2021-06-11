@@ -6,6 +6,8 @@ import { allBlocks, parent, childIndex, depth } from '../../utils/selection'
 
 import UIForm from '../../UIForm'
 
+import { isSeriesOverview } from './utils'
+
 const createSeriesNavUI = ({ TYPE, newBlock, zone }) => {
   const SeriesNavButton = ({ value, onChange }) => {
     const insertTypes = ['PARAGRAPH']
@@ -22,14 +24,7 @@ const createSeriesNavUI = ({ TYPE, newBlock, zone }) => {
         const currentBlock = blocks.first()
         const currentRootBlock = rootBlocks.first()
 
-        const titleNode = value.document.findDescendant(
-          node => node.type === 'TITLE'
-        )
-
-        const repoId = titleNode.data.get('repoId')
-        const isOverview =
-          repoId === titleNode.data.get('series')?.overview?.repoId ||
-          value.document.data.get('series')?.overview?.endsWith(repoId)
+        const isOverview = isSeriesOverview(value.document)
 
         onChange(
           value

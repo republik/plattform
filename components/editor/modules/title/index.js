@@ -5,6 +5,8 @@ import { findNode } from '../../utils/serialization'
 import { matchBlock } from '../../utils'
 import createUi from './ui'
 
+import { isSeriesOverview } from '../seriesnav/utils'
+
 export default ({ rule, subModules, TYPE }) => {
   const editorOptions = rule.editorOptions || {}
 
@@ -101,11 +103,19 @@ export default ({ rule, subModules, TYPE }) => {
     }),
     plugins: [
       {
-        renderNode({ node, children, attributes }) {
+        renderNode({ editor, node, children, attributes }) {
           if (!serializerRule.match(node)) return
 
+          const props = node.data.toJS()
+
           return (
-            <Container {...node.data.toJS()} attributes={attributes}>
+            <Container
+              {...props}
+              breakout={
+                props.breakout ?? isSeriesOverview(editor.value.document)
+              }
+              attributes={attributes}
+            >
               {children}
             </Container>
           )
