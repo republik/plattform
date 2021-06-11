@@ -30,7 +30,7 @@ const resolveSeriesEpisodes = async (series, context) => {
 
     return {
       ...episode,
-      ...(title && { title: await hyphenate(title) }),
+      ...(title && { title: await hyphenate(title, { minWordLength: 11 }) }),
       ...(!publishDate && { publishDate: null }),
       ...(typeof document === 'string' && {
         document: await getDocFromMetaLink(document, context),
