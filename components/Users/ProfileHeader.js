@@ -1,3 +1,4 @@
+import React from 'react'
 import { Query } from 'react-apollo'
 import { css } from 'glamor'
 import gql from 'graphql-tag'
@@ -6,7 +7,7 @@ import {
   fontStyles,
   Loader,
   Interaction,
-  A,
+  A
 } from '@project-r/styleguide'
 import Head from 'next/head'
 
@@ -21,25 +22,25 @@ const styles = {
     position: 'sticky',
     top: -20,
     zIndex: 10,
-    borderBottom: `1px solid ${colors.disabled}`,
+    borderBottom: `1px solid ${colors.disabled}`
   }),
   byline: css({
-    ...fontStyles.sansSerifRegular16,
+    ...fontStyles.sansSerifRegular16
   }),
   portrait: css({
     float: 'left',
     height: '50px',
-    marginRight: '10px',
+    marginRight: '10px'
   }),
   navLink: css({
     color: '#000',
     padding: '0 3px',
     textDecoration: 'none',
     '&[data-active="true"]': {
-      textDecoration: 'underline',
+      textDecoration: 'underline'
     },
-    marginRight: 5,
-  }),
+    marginRight: 5
+  })
 }
 
 export const GET_PROFILE = gql`
@@ -59,9 +60,9 @@ export const GET_PROFILE = gql`
 const Subnav = ({ userId, section }) => (
   <div>
     <Link
-      route="user"
+      route='user'
       params={{
-        userId,
+        userId
       }}
     >
       <a {...styles.navLink} data-active={section === 'index'}>
@@ -69,10 +70,10 @@ const Subnav = ({ userId, section }) => (
       </a>
     </Link>
     <Link
-      route="user"
+      route='user'
       params={{
         userId,
-        section: 'sessions',
+        section: 'sessions'
       }}
     >
       <a {...styles.navLink} data-active={section === 'sessions'}>
@@ -80,10 +81,10 @@ const Subnav = ({ userId, section }) => (
       </a>
     </Link>
     <Link
-      route="user"
+      route='user'
       params={{
         userId,
-        section: 'access-grants',
+        section: 'access-grants'
       }}
     >
       <a {...styles.navLink} data-active={section === 'access-grants'}>
@@ -91,10 +92,10 @@ const Subnav = ({ userId, section }) => (
       </a>
     </Link>
     <Link
-      route="user"
+      route='user'
       params={{
         userId,
-        section: 'maillog',
+        section: 'maillog'
       }}
     >
       <a {...styles.navLink} data-active={section === 'maillog'}>
@@ -102,10 +103,10 @@ const Subnav = ({ userId, section }) => (
       </a>
     </Link>
     <Link
-      route="user"
+      route='user'
       params={{
         userId,
-        section: 'dialog',
+        section: 'dialog'
       }}
     >
       <a {...styles.navLink} data-active={section === 'dialog'}>
@@ -131,25 +132,25 @@ const ProfileHeader = ({ userId, section }) => {
                 .join(' ')
               const byline = [
                 user.email && name && (
-                  <A key="mail" href={`mailto:${user.email}`}>
+                  <A key='mail' href={`mailto:${user.email}`}>
                     {user.email}
                   </A>
                 ),
                 user.phoneNumber && (
-                  <A key="phone" href={`tel:${user.phoneNumber}`}>
+                  <A key='phone' href={`tel:${user.phoneNumber}`}>
                     {user.phoneNumber}
                   </A>
                 ),
-                <span key="profile">
+                <span key='profile'>
                   <A
-                    key="profile-link"
+                    key='profile-link'
                     href={`${REPUBLIK_FRONTEND_URL}/~${user.username ||
                       user.id}`}
-                    target="_blank"
+                    target='_blank'
                   >
                     {user.username || 'Profil-Seite'}
                   </A>
-                </span>,
+                </span>
               ]
                 .filter(Boolean)
                 .reduce((acc, v) => [...acc, ' | ', v], [])

@@ -1,3 +1,4 @@
+import React from 'react'
 import gql from 'graphql-tag'
 import { Query } from 'react-apollo'
 import {
@@ -7,7 +8,7 @@ import {
   SectionSubhead,
   DT,
   DD,
-  dateDiff,
+  dateDiff
 } from '../../Display/utils'
 import { Loader, Label } from '@project-r/styleguide'
 import List, { Item } from '../../List'
@@ -55,8 +56,8 @@ const Suspensions = ({ userId }) => {
                         .sort((a, b) => {
                           return new Date(b.beginAt) - new Date(a.beginAt)
                         })
-                        .map((suspension) => (
-                          <Item>
+                        .map((suspension, i) => (
+                          <Item key={i}>
                             <DT>
                               {displayDate(suspension.beginAt)} -{' '}
                               {displayDate(suspension.endAt)} (

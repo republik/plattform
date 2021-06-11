@@ -1,3 +1,4 @@
+import React from 'react'
 import { Component } from 'react'
 import { Query, Mutation } from 'react-apollo'
 import gql from 'graphql-tag'
@@ -8,7 +9,7 @@ import {
   InteractiveSection,
   Section,
   SectionTitle,
-  TextButton,
+  TextButton
 } from '../../Display/utils'
 
 const GET_CREDENTIALS = gql`
@@ -45,14 +46,14 @@ class UpdateCredential extends Component {
   constructor(props) {
     super(props)
     const {
-      credential: { verified },
+      credential: { verified }
     } = this.props
 
     this.state = {
-      value: verified,
+      value: verified
     }
 
-    this.handleSubmit = (mutation) => (event) => {
+    this.handleSubmit = mutation => event => {
       event.preventDefault()
       mutation()
     }
@@ -61,7 +62,7 @@ class UpdateCredential extends Component {
   render() {
     const {
       user: { id: userId },
-      credential: { id: credentialId, description, verified, isListed },
+      credential: { id: credentialId, description, verified, isListed }
     } = this.props
     const { value } = this.state
     return (
@@ -72,9 +73,9 @@ class UpdateCredential extends Component {
           {
             query: GET_CREDENTIALS,
             variables: {
-              id: userId,
-            },
-          },
+              id: userId
+            }
+          }
         ]}
       >
         {(mutation, { loading }) => {
@@ -86,7 +87,7 @@ class UpdateCredential extends Component {
                   disabled={loading}
                   onChange={(_, checked) =>
                     this.setState({
-                      value: checked,
+                      value: checked
                     })
                   }
                 >
@@ -96,7 +97,7 @@ class UpdateCredential extends Component {
                   {loading ? (
                     <InlineSpinner size={22} />
                   ) : verified !== value ? (
-                    <TextButton type="submit">
+                    <TextButton type='submit'>
                       <SaveIcon size={22} />
                     </TextButton>
                   ) : (
@@ -125,11 +126,11 @@ const Credentials = ({ userId }) => {
               const { user } = data
               const { credentials } = user
               const profileRole = credentials.find(
-                (credential) => credential.isListed,
+                credential => credential.isListed
               )
               if (profileRole) {
                 credentials.unshift(
-                  credentials.splice(credentials.indexOf(profileRole), 1)[0],
+                  credentials.splice(credentials.indexOf(profileRole), 1)[0]
                 )
               }
 
@@ -137,7 +138,7 @@ const Credentials = ({ userId }) => {
                 return (
                   <InteractiveSection>
                     <SectionTitle>Rollen verifizieren</SectionTitle>
-                    {credentials.map((credential) => (
+                    {credentials.map(credential => (
                       <UpdateCredential
                         key={`${credential.description}-${credential.verified}`}
                         user={user}
