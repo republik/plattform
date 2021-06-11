@@ -38,6 +38,7 @@ function SeriesNav({
   repoId,
   series,
   inline,
+  inlineAfterDescription,
   ActionBar,
   Link = DefaultLink,
   PayNote,
@@ -48,8 +49,7 @@ function SeriesNav({
     series.episodes.find(episode => episode.document?.repoId === repoId)
   const currentTileIndex = currentTile && series.episodes.indexOf(currentTile)
 
-  // add paynote object after current episode or to third card if no current episode
-  const payNoteObject = { isPayNote: true }
+  // add paynote after current episode or to third card if no current episode
   const payNotePosition = currentTile
     ? Math.max(currentTileIndex + 1, DEFAULT_PAYNOTE_INDEX)
     : DEFAULT_PAYNOTE_INDEX
@@ -57,7 +57,7 @@ function SeriesNav({
     PayNote && !inline
       ? [
           ...series.episodes.slice(0, payNotePosition),
-          payNoteObject,
+          { isPayNote: true }, // placeholder object to trigger special tile
           ...series.episodes.slice(payNotePosition)
         ]
       : [...series.episodes]
@@ -79,27 +79,30 @@ function SeriesNav({
   return (
     <div {...(inline ? styles.containerInline : styles.container)}>
       {inline ? (
-        <Center {...styles.infoBoxContainer}>
-          {series.logo && (
-            <FigureImage
-              maxWidth={INFOBOX_IMAGE_SIZES.XS}
-              {...logoProps}
-              dark={logoDarkProps}
-              alt=''
-            />
-          )}
-          <div style={{ marginLeft: series.logo && 16 }}>
-            <InfoBoxTitle>
-              {titlePath ? (
-                <Link href={titlePath} passHref>
-                  <a {...styles.plainlink}>{series.title}</a>
-                </Link>
-              ) : (
-                series.title
-              )}
-            </InfoBoxTitle>
-            <InfoBoxText>{series.description}</InfoBoxText>
+        <Center>
+          <div {...styles.infoBoxContainer}>
+            {series.logo && (
+              <FigureImage
+                maxWidth={INFOBOX_IMAGE_SIZES.XS}
+                {...logoProps}
+                dark={logoDarkProps}
+                alt=''
+              />
+            )}
+            <div style={{ marginLeft: series.logo && 16 }}>
+              <InfoBoxTitle>
+                {titlePath ? (
+                  <Link href={titlePath} passHref>
+                    <a {...styles.plainlink}>{series.title}</a>
+                  </Link>
+                ) : (
+                  series.title
+                )}
+              </InfoBoxTitle>
+              <InfoBoxText>{series.description}</InfoBoxText>
+            </div>
           </div>
+          {inlineAfterDescription}
         </Center>
       ) : null}
 
