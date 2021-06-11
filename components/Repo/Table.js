@@ -57,6 +57,17 @@ export const filterAndOrderRepos = gql`
               credits
               series {
                 title
+                overview {
+                  id
+                  repoId
+                }
+                episodes {
+                  label
+                  document {
+                    id
+                    repoId
+                  }
+                }
               }
               section {
                 id

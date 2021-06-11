@@ -331,6 +331,14 @@
       "value": "Template wurde archiviert und kann nicht bearbeitet oder verwendet werden."
     },
     {
+      "key": "repo/label/series/episode",
+      "value": "Episode {number}"
+    },
+    {
+      "key": "repo/label/series/overview",
+      "value": "Serie"
+    },
+    {
       "key": "baseCommit/title",
       "value": "Ausgangsversion:"
     },

@@ -20,6 +20,17 @@ const repoFragment = `
           title
           series {
             title
+            overview {
+              id
+              repoId
+            }
+            episodes {
+              label
+              document {
+                id
+                repoId
+              }
+            }
           }
           section {
             id
