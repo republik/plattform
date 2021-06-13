@@ -88,7 +88,7 @@ function SeriesNav({
     <div {...(inline ? styles.containerInline : styles.container)}>
       {inline ? (
         <Center>
-          <InfoBox figureSize='XXS' margin={false}>
+          <InfoBox figureSize={series.logo && 'XXS'} margin={false}>
             {series.logo && (
               <Figure>
                 <FigureImage
