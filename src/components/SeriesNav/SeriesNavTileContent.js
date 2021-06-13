@@ -55,7 +55,8 @@ const SeriesNavTileContent = ({
   current,
   ActionBar,
   Link = DefaultLink,
-  onEpisodeClick = () => {}
+  onEpisodeClick,
+  aboveTheFold
 }) => {
   const [colorScheme] = useColorContext()
   const imageProps = inline
@@ -69,7 +70,7 @@ const SeriesNavTileContent = ({
   const LinkContainer = ({ children }) =>
     isLink ? (
       <Link href={episode.document.meta.path} passHref>
-        <a {...styles.plainlink} onClick={() => onEpisodeClick()}>
+        <a {...styles.plainlink} onClick={onEpisodeClick}>
           {children}
         </a>
       </Link>
@@ -81,10 +82,11 @@ const SeriesNavTileContent = ({
     return (
       <LinkContainer>
         <p {...styles.label} {...colorScheme.set('color', 'text')}>
-          {current ? 'Sie lesen: ' : null}
-          {episode.label}
+          {`${current ? 'Sie lesen: ' : ''}${episode.label}`}
         </p>
-        {imageProps ? <FigureImage {...imageProps} alt='' /> : null}
+        {imageProps ? (
+          <FigureImage aboveTheFold={aboveTheFold} {...imageProps} alt='' />
+        ) : null}
         <h2 {...styles.titleInline} {...colorScheme.set('color', 'text')}>
           {episode.title}
         </h2>
@@ -99,7 +101,9 @@ const SeriesNavTileContent = ({
           {current ? 'Sie lesen: ' : null}
           {episode.label}
         </p>
-        {imageProps ? <FigureImage {...imageProps} alt='' /> : null}
+        {imageProps ? (
+          <FigureImage aboveTheFold={aboveTheFold} {...imageProps} alt='' />
+        ) : null}
         <h2 {...styles.title} {...colorScheme.set('color', 'text')}>
           {episode.title}
         </h2>

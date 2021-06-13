@@ -49,7 +49,8 @@ const SeriesNavTile = ({
   repoId,
   context,
   PayNote,
-  onEpisodeClick
+  onEpisodeClick,
+  aboveTheFold
 }) => {
   const [colorScheme] = useColorContext()
 
@@ -64,6 +65,7 @@ const SeriesNavTile = ({
       ActionBar={ActionBar}
       Link={Link}
       onEpisodeClick={onEpisodeClick}
+      aboveTheFold={aboveTheFold}
     />
   )
   const inactiveTile = !isInverted && !episode?.document?.meta?.path

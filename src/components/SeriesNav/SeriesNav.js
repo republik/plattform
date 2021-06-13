@@ -45,7 +45,8 @@ function SeriesNav({
   Link = DefaultLink,
   context,
   PayNote,
-  onEpisodeClick
+  onEpisodeClick,
+  aboveTheFold
 }) {
   const [colorScheme] = useColorContext()
 
@@ -94,6 +95,7 @@ function SeriesNav({
               <Figure>
                 <FigureImage
                   maxWidth={INFOBOX_IMAGE_SIZES.XXS}
+                  aboveTheFold={aboveTheFold}
                   {...logoProps}
                   dark={logoDarkProps}
                   alt=''
@@ -134,6 +136,7 @@ function SeriesNav({
                 ActionBar={ActionBar}
                 Link={Link}
                 onEpisodeClick={onEpisodeClick}
+                aboveTheFold={aboveTheFold}
               />
             )
           })}
