@@ -45,6 +45,9 @@ const SeriesNavTile = ({
   inline,
   ActionBar,
   Link,
+  index,
+  repoId,
+  context,
   PayNote,
   onEpisodeClick
 }) => {
@@ -52,7 +55,7 @@ const SeriesNavTile = ({
 
   const isInverted = !!(current || PayNote)
   const content = PayNote ? (
-    <PayNote />
+    <PayNote context={context} repoId={repoId} index={index} />
   ) : (
     <SeriesNavTileContent
       inline={inline}

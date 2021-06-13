@@ -43,6 +43,7 @@ function SeriesNav({
   inlineAfterDescription,
   ActionBar,
   Link = DefaultLink,
+  context,
   PayNote,
   onEpisodeClick
 }) {
@@ -123,6 +124,9 @@ function SeriesNav({
             return (
               <SeriesNavTile
                 key={i}
+                index={i}
+                repoId={repoId}
+                context={context}
                 PayNote={episode.isPayNote && PayNote}
                 current={repoId && repoId === episode?.document?.repoId}
                 episode={episode}
@@ -139,7 +143,7 @@ function SeriesNav({
       {inline && PayNote && (
         <div {...colorScheme.set('backgroundColor', 'defaultInverted')}>
           <ColorContextLocalExtension localColors={localInvertedColors}>
-            <PayNote inline />
+            <PayNote context={context} repoId={repoId} inline />
           </ColorContextLocalExtension>
         </div>
       )}
