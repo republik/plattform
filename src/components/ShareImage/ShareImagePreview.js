@@ -145,6 +145,7 @@ const ShareImagePreview = ({
             ref={formatImageRef}
             {...styles.formatImage}
             src={format?.image}
+            alt=''
           />
         )}
         {format?.title && (

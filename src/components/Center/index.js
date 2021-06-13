@@ -24,7 +24,7 @@ const floatStyle = {
   marginRight: FLOAT_MARGIN,
   marginBottom: FLOAT_MARGIN / 2,
   width: '100%',
-  ['[data-can-breakout=true] &']: {
+  '[data-can-breakout=true] &': {
     marginLeft: -BREAKOUT
   }
 }
@@ -57,7 +57,7 @@ export const breakoutStyles = {
   normal: css({}),
   breakout: css({
     [breakoutUp]: {
-      ['[data-can-breakout=true] &']: {
+      '[data-can-breakout=true] &': {
         marginLeft: -BREAKOUT,
         marginRight: -BREAKOUT,
         width: `calc(100% + ${BREAKOUT * 2}px)`
@@ -66,7 +66,7 @@ export const breakoutStyles = {
   }),
   breakoutLeft: css({
     [breakoutUp]: {
-      ['[data-can-breakout=true] &']: {
+      '[data-can-breakout=true] &': {
         marginLeft: -BREAKOUT,
         width: `calc(100% + ${BREAKOUT}px)`
       }
