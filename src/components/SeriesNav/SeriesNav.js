@@ -2,8 +2,13 @@ import React from 'react'
 import { css } from 'glamor'
 import PropTypes from 'prop-types'
 import { TeaserCarousel, TeaserCarouselTileContainer } from '../TeaserCarousel'
-import { InfoBoxTitle, InfoBoxText, INFOBOX_IMAGE_SIZES } from '../InfoBox'
-import { FigureImage } from '../Figure'
+import {
+  InfoBox,
+  InfoBoxTitle,
+  InfoBoxText,
+  INFOBOX_IMAGE_SIZES
+} from '../InfoBox'
+import { Figure, FigureImage } from '../Figure'
 import { ColorContextLocalExtension } from '../Colors/ColorContext'
 import { useColorContext } from '../Colors/useColorContext'
 import Center, { PADDED_MAX_WIDTH_BREAKOUT } from '../Center'
@@ -23,16 +28,9 @@ const styles = {
     padding: 0,
     width: '100%'
   }),
-  infoBoxContainer: css({
-    display: 'flex'
-  }),
-  infoBoxTextArea: css({
-    flexGrow: 1
-  }),
   plainlink: css({
     textDecoration: 'none',
-    color: 'inherit',
-    cursor: 'pointer'
+    color: 'inherit'
   })
 }
 
@@ -73,12 +71,16 @@ function SeriesNav({
 
   const logoProps =
     series.logo &&
-    FigureImage.utils.getResizedSrcs(series.logo, INFOBOX_IMAGE_SIZES.XS, false)
+    FigureImage.utils.getResizedSrcs(
+      series.logo,
+      INFOBOX_IMAGE_SIZES.XXS,
+      false
+    )
   const logoDarkProps =
     series.logoDark &&
     FigureImage.utils.getResizedSrcs(
       series.logoDark,
-      INFOBOX_IMAGE_SIZES.XS,
+      INFOBOX_IMAGE_SIZES.XXS,
       false
     )
 
@@ -86,31 +88,28 @@ function SeriesNav({
     <div {...(inline ? styles.containerInline : styles.container)}>
       {inline ? (
         <Center>
-          <div {...styles.infoBoxContainer}>
+          <InfoBox figureSize='XXS' margin={false}>
             {series.logo && (
-              <FigureImage
-                maxWidth={INFOBOX_IMAGE_SIZES.XS}
-                {...logoProps}
-                dark={logoDarkProps}
-                alt=''
-              />
+              <Figure>
+                <FigureImage
+                  maxWidth={INFOBOX_IMAGE_SIZES.XXS}
+                  {...logoProps}
+                  dark={logoDarkProps}
+                  alt=''
+                />
+              </Figure>
             )}
-            <div
-              {...styles.infoBoxTextArea}
-              style={{ marginLeft: series.logo && 16 }}
-            >
-              <InfoBoxTitle>
-                {titlePath ? (
-                  <Link href={titlePath} passHref>
-                    <a {...styles.plainlink}>{series.title}</a>
-                  </Link>
-                ) : (
-                  series.title
-                )}
-              </InfoBoxTitle>
-              <InfoBoxText>{series.description}</InfoBoxText>
-            </div>
-          </div>
+            <InfoBoxTitle>
+              {titlePath ? (
+                <Link href={titlePath} passHref>
+                  <a {...styles.plainlink}>{series.title}</a>
+                </Link>
+              ) : (
+                series.title
+              )}
+            </InfoBoxTitle>
+            <InfoBoxText>{series.description}</InfoBoxText>
+          </InfoBox>
           {inlineAfterDescription}
         </Center>
       ) : null}

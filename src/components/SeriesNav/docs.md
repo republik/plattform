@@ -1,5 +1,3 @@
-# Series Navigation
-
 ```react
   <SeriesNav
     repoId={repoId}
@@ -21,7 +19,7 @@
   />
 ```
 
-Inline
+## Inline
 
 ```react
   <SeriesNav
