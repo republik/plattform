@@ -8,7 +8,9 @@ import {
   serifRegular15,
   serifRegular17,
   sansSerifRegular14,
-  sansSerifRegular12
+  sansSerifRegular12,
+  sansSerifMedium14,
+  sansSerifMedium12
 } from '../Typography/styles'
 import { useColorContext } from '../Colors/useColorContext'
 import { FigureImage } from '../Figure'
@@ -38,6 +40,12 @@ const styles = {
     ...sansSerifRegular12,
     [mUp]: {
       ...sansSerifRegular14
+    }
+  }),
+  currentLabel: css({
+    ...sansSerifMedium12,
+    [mUp]: {
+      ...sansSerifMedium14
     }
   }),
   plainlink: css({
@@ -81,7 +89,11 @@ const SeriesNavTileContent = ({
   if (inline) {
     return (
       <LinkContainer>
-        <p {...styles.label} {...colorScheme.set('color', 'text')}>
+        <p
+          {...styles.label}
+          {...(current && styles.currentLabel)}
+          {...colorScheme.set('color', 'text')}
+        >
           {`${current ? 'Sie lesen: ' : ''}${episode.label}`}
         </p>
         {imageProps ? (
@@ -97,7 +109,11 @@ const SeriesNavTileContent = ({
   return (
     <>
       <LinkContainer>
-        <p {...styles.label} {...colorScheme.set('color', 'text')}>
+        <p
+          {...styles.label}
+          {...(current && styles.currentLabel)}
+          {...colorScheme.set('color', 'text')}
+        >
           {current ? 'Sie lesen: ' : null}
           {episode.label}
         </p>

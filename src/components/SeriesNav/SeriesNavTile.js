@@ -2,7 +2,6 @@ import React from 'react'
 import { css } from 'glamor'
 
 import { ColorContextLocalExtension } from '../Colors/ColorContext'
-import { useColorContext } from '../Colors/useColorContext'
 import {
   PADDING,
   TILE_MARGIN_RIGHT,
@@ -52,9 +51,7 @@ const SeriesNavTile = ({
   onEpisodeClick,
   aboveTheFold
 }) => {
-  const [colorScheme] = useColorContext()
-
-  const isInverted = !!(current || PayNote)
+  const isInverted = !!PayNote
   const content = PayNote ? (
     <PayNote context={context} repoId={repoId} index={index} />
   ) : (
@@ -73,7 +70,6 @@ const SeriesNavTile = ({
   return (
     <div
       {...(inline ? styles.inlineTile : styles.tile)}
-      {...(isInverted && colorScheme.set('backgroundColor', 'defaultInverted'))}
       style={{
         opacity: inactiveTile ? 0.6 : 1
       }}

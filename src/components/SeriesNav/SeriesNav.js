@@ -10,10 +10,10 @@ import {
 } from '../InfoBox'
 import { Figure, FigureImage } from '../Figure'
 import { ColorContextLocalExtension } from '../Colors/ColorContext'
-import { useColorContext } from '../Colors/useColorContext'
 import Center, { PADDED_MAX_WIDTH_BREAKOUT } from '../Center'
 import SeriesNavTile from './SeriesNavTile'
 import { localInvertedColors } from '../../theme/colors'
+import { Editorial } from '../Typography'
 
 const DEFAULT_PAYNOTE_INDEX = 2
 
@@ -48,8 +48,6 @@ function SeriesNav({
   onEpisodeClick,
   aboveTheFold
 }) {
-  const [colorScheme] = useColorContext()
-
   const currentTile =
     repoId &&
     series.episodes.find(episode => episode.document?.repoId === repoId)
@@ -111,7 +109,14 @@ function SeriesNav({
                 series.title
               )}
             </InfoBoxTitle>
-            <InfoBoxText>{series.description}</InfoBoxText>
+            <InfoBoxText>
+              <span>
+                {series.description}{' '}
+                <Link href={titlePath} passHref>
+                  <Editorial.A>Zur Serien-Übersicht</Editorial.A>
+                </Link>
+              </span>
+            </InfoBoxText>
           </InfoBox>
           {inlineAfterDescription}
         </Center>
@@ -144,7 +149,7 @@ function SeriesNav({
       </TeaserCarousel>
 
       {inline && PayNote && (
-        <div {...colorScheme.set('backgroundColor', 'defaultInverted')}>
+        <div>
           <ColorContextLocalExtension localColors={localInvertedColors}>
             <PayNote context={context} repoId={repoId} inline />
           </ColorContextLocalExtension>

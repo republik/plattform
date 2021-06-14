@@ -1,5 +1,6 @@
 import React from 'react'
 import { Interaction } from '../../Typography'
+import { useColorContext } from '../../Colors/ColorContext'
 
 export const repoId = '3'
 export const series = {
@@ -84,8 +85,12 @@ export const series = {
 }
 
 export const TestPayNote = ({ inline }) => {
+  const [colorScheme] = useColorContext()
   return (
-    <div style={{ height: '100%', padding: inline ? 5 : undefined }}>
+    <div
+      style={{ height: '100%', padding: inline ? 5 : undefined }}
+      {...colorScheme.set('backgroundColor', 'default')}
+    >
       <Interaction.P>Jetzt Probelesen</Interaction.P>
     </div>
   )
