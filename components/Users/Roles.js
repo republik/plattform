@@ -1,18 +1,11 @@
+import React from 'react'
 import { Component } from 'react'
 import { Query, Mutation } from 'react-apollo'
 import gql from 'graphql-tag'
 import { MdDone as SaveIcon } from 'react-icons/md'
-import {
-  Checkbox,
-  Loader,
-  InlineSpinner
-} from '@project-r/styleguide'
+import { Checkbox, Loader, InlineSpinner } from '@project-r/styleguide'
 
-import {
-  InteractiveSection,
-  SectionTitle,
-  TextButton
-} from '../Display/utils'
+import { InteractiveSection, SectionTitle, TextButton } from '../Display/utils'
 
 const ROLES = [
   'editor',
@@ -21,7 +14,8 @@ const ROLES = [
   'accountant',
   'admin',
   'accomplice',
-  'tester'
+  'tester',
+  'debater'
 ]
 
 const GET_ROLES = gql`
@@ -34,10 +28,7 @@ const GET_ROLES = gql`
 `
 
 const REMOVE_USER_FROM_ROLE = gql`
-  mutation removeUserFromRole(
-    $userId: ID!
-    $role: String!
-  ) {
+  mutation removeUserFromRole($userId: ID!, $role: String!) {
     removeUserFromRole(userId: $userId, role: $role) {
       id
     }
@@ -79,9 +70,7 @@ class UpdateRole extends Component {
     const { value, initialValue } = this.state
     return (
       <Mutation
-        mutation={
-          value ? ADD_USER_TO_ROLE : REMOVE_USER_FROM_ROLE
-        }
+        mutation={value ? ADD_USER_TO_ROLE : REMOVE_USER_FROM_ROLE}
         variables={{ userId: id, role }}
         refetchQueries={() => [
           {
@@ -107,17 +96,14 @@ class UpdateRole extends Component {
                 >
                   {role.replace(
                     /(\w)\w*/,
-                    (match, group) =>
-                      `${group.toUpperCase()}${match.substr(
-                        1
-                      )}`
+                    (match, group) => `${group.toUpperCase()}${match.substr(1)}`
                   )}
                 </Checkbox>
                 <span style={{ float: 'right' }}>
                   {loading ? (
                     <InlineSpinner size={22} />
                   ) : initialValue !== value ? (
-                    <TextButton type="submit">
+                    <TextButton type='submit'>
                       <SaveIcon size={22} />
                     </TextButton>
                   ) : (
@@ -126,10 +112,10 @@ class UpdateRole extends Component {
                 </span>
               </p>
             </form>
-          );
+          )
         }}
       </Mutation>
-    );
+    )
   }
 }
 
@@ -137,8 +123,7 @@ const Roles = ({ userId }) => {
   return (
     <Query query={GET_ROLES} variables={{ id: userId }}>
       {({ loading, error, data }) => {
-        const isInitialLoading =
-          loading && !(data && data.user)
+        const isInitialLoading = loading && !(data && data.user)
         return (
           <Loader
             loading={isInitialLoading}
@@ -151,9 +136,7 @@ const Roles = ({ userId }) => {
                   <SectionTitle>Rollen</SectionTitle>
                   {ROLES.map(role => (
                     <UpdateRole
-                      key={`${role}-${user.roles.includes(
-                        role
-                      )}`}
+                      key={`${role}-${user.roles.includes(role)}`}
                       user={user}
                       role={role}
                     />
@@ -166,6 +149,6 @@ const Roles = ({ userId }) => {
       }}
     </Query>
   )
-};
+}
 
-export default Roles;
+export default Roles

@@ -1,6 +1,9 @@
+import React from 'react'
 import { css, merge } from 'glamor'
 import { fontStyles, colors } from '@project-r/styleguide'
 import { swissTime } from '../../lib/utils/formats'
+import { intervalToDuration, formatDuration } from 'date-fns'
+import { de } from 'date-fns/locale'
 
 export const displayStyles = {
   section: css({
@@ -83,25 +86,31 @@ export const displayDate = rawDate => {
   return dateFormat(new Date(rawDate))
 }
 
-const dateTimeFormat = swissTime.format(
-  '%d.%m.%Y, %H:%M Uhr'
-)
+const dateTimeFormat = swissTime.format('%d.%m.%Y, %H:%M Uhr')
 export const displayDateTime = rawDate => {
   return dateTimeFormat(new Date(rawDate))
 }
 
-export const Section = props => (
-  <div {...props} {...displayStyles.section} />
-)
+export const dateDiff = (startDate, endDate) => {
+  if (startDate && endDate) {
+    const interval = intervalToDuration({
+      start: new Date(startDate),
+      end: new Date(endDate)
+    })
+    return formatDuration(interval, {
+      format: ['years', 'months', 'days'],
+      locale: de
+    })
+  }
+}
+
+export const Section = props => <div {...props} {...displayStyles.section} />
 
 export const InteractiveSection = props => (
   <div
     {...props}
-    tabIndex="0"
-    {...merge(
-      displayStyles.section,
-      displayStyles.interactiveSection
-    )}
+    tabIndex='0'
+    {...merge(displayStyles.section, displayStyles.interactiveSection)}
   />
 )
 
@@ -125,14 +134,8 @@ export const TextButton = props => (
   <button {...props} {...displayStyles.textButton} />
 )
 
-export const DL = props => (
-  <div {...props} {...displayStyles.definitionList} />
-)
+export const DL = props => <div {...props} {...displayStyles.definitionList} />
 
-export const DT = props => (
-  <div {...props} {...displayStyles.definitionTitle} />
-)
+export const DT = props => <div {...props} {...displayStyles.definitionTitle} />
 
-export const DD = props => (
-  <div {...props} {...displayStyles.definition} />
-)
+export const DD = props => <div {...props} {...displayStyles.definition} />
