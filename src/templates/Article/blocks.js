@@ -293,7 +293,8 @@ const createBlocks = ({ base, COVER_TYPE, t, onAudioCoverClick }) => {
         text,
         audio: meta.audioCover && {
           ...meta.audioCover,
-          onClick: onAudioCoverClick
+          onClick: onAudioCoverClick,
+          meta
         }
       }
     },

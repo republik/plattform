@@ -176,7 +176,7 @@ export const CoverTextTitleBlockHeadline = ({ children, attributes }) => (
   </div>
 )
 
-const AudioButton = ({ color, backgroundColor, onClick }) => {
+const AudioButton = ({ color, backgroundColor, onClick, meta }) => {
   const pulse = css.keyframes({
     '0%': { boxShadow: `0 0 0 0 ${backgroundColor}` },
     '70%': { boxShadow: `0 0 0 10px transparent` },
@@ -186,7 +186,9 @@ const AudioButton = ({ color, backgroundColor, onClick }) => {
   return (
     <button
       {...styles.coverAudio}
-      onClick={onClick}
+      onClick={() => {
+        onClick(meta)
+      }}
       style={{
         color,
         backgroundColor
