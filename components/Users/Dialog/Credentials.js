@@ -1,5 +1,4 @@
-import React from 'react'
-import { Component } from 'react'
+import React, { useState } from 'react'
 import { Query, Mutation } from 'react-apollo'
 import gql from 'graphql-tag'
 import { MdDone as SaveIcon } from 'react-icons/md'
@@ -41,76 +40,54 @@ const REMOVE_CREDENTIAL_VERIFICATION = gql`
     }
   }
 `
-
-class UpdateCredential extends Component {
-  constructor(props) {
-    super(props)
-    const {
-      credential: { verified }
-    } = this.props
-
-    this.state = {
-      value: verified
-    }
-
-    this.handleSubmit = mutation => event => {
-      event.preventDefault()
-      mutation()
-    }
+const UpdateCredential = ({
+  credential: { id: credentialId, description, verified, isListed },
+  user: { id: userId }
+}) => {
+  const [value, setValue] = useState(verified)
+  const handleSubmit = mutation => event => {
+    event.preventDefault()
+    mutation()
   }
-
-  render() {
-    const {
-      user: { id: userId },
-      credential: { id: credentialId, description, verified, isListed }
-    } = this.props
-    const { value } = this.state
-    return (
-      <Mutation
-        mutation={value ? VERIFY_CREDENTIAL : REMOVE_CREDENTIAL_VERIFICATION}
-        variables={{ id: credentialId }}
-        refetchQueries={() => [
-          {
-            query: GET_CREDENTIALS,
-            variables: {
-              id: userId
-            }
+  return (
+    <Mutation
+      mutation={value ? VERIFY_CREDENTIAL : REMOVE_CREDENTIAL_VERIFICATION}
+      variables={{ id: credentialId }}
+      refetchQueries={() => [
+        {
+          query: GET_CREDENTIALS,
+          variables: {
+            id: userId
           }
-        ]}
-      >
-        {(mutation, { loading }) => {
-          return (
-            <form onSubmit={this.handleSubmit(mutation)}>
-              <p>
-                <Checkbox
-                  checked={value}
-                  disabled={loading}
-                  onChange={(_, checked) =>
-                    this.setState({
-                      value: checked
-                    })
-                  }
-                >
-                  {description} <span>{isListed ? '(Profil-Rolle)' : ''}</span>
-                </Checkbox>
-                <span style={{ float: 'right' }}>
-                  {loading ? (
-                    <InlineSpinner size={22} />
-                  ) : verified !== value ? (
-                    <TextButton type='submit'>
-                      <SaveIcon size={22} />
-                    </TextButton>
-                  ) : (
-                    undefined
-                  )}
-                </span>
-              </p>
-            </form>
-          )
-        }}
-      </Mutation>
-    )
-  }
+        }
+      ]}
+    >
+      {(mutation, { loading }) => {
+        return (
+          <form onSubmit={handleSubmit(mutation)}>
+            <p>
+              <Checkbox
+                checked={value}
+                disabled={loading}
+                onChange={(_, checked) => setValue(checked)}
+              >
+                {description} <span>{isListed ? '(Profil-Rolle)' : ''}</span>
+              </Checkbox>
+              <span style={{ float: 'right' }}>
+                {loading ? (
+                  <InlineSpinner size={22} />
+                ) : verified !== value ? (
+                  <TextButton type='submit'>
+                    <SaveIcon size={22} />
+                  </TextButton>
+                ) : null}
+              </span>
+            </p>
+          </form>
+        )
+      }}
+    </Mutation>
+  )
 }
 
 const Credentials = ({ userId }) => {
