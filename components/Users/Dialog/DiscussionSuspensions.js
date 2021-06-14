@@ -45,12 +45,13 @@ const Suspensions = ({ userId }) => {
                 const suspendedHeader = isSuspended
                   ? `gesperrt bis am ${displayDate(suspendedUntil)}`
                   : 'nicht gesperrt'
-
+                console.log(suspensions)
                 return (
                   <div>
                     <SectionSubhead>Aktuell {suspendedHeader}</SectionSubhead>
-
-                    <SectionSubhead>Alle Sperrungen</SectionSubhead>
+                    {!!suspensions.length && (
+                      <SectionSubhead>Alle Sperrungen</SectionSubhead>
+                    )}
                     <List>
                       {suspensions
                         .sort((a, b) => {
