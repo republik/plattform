@@ -49,8 +49,7 @@ const TimeBarChart = props => {
     xIntervalStep,
     domain,
     padding,
-    height: innerHeight,
-    skipRowPadding
+    height: innerHeight
   } = props
 
   let xParser = identityFn
@@ -94,7 +93,7 @@ const TimeBarChart = props => {
     PADDING_SIDES,
     PADDING_SIDES,
     COLUMN_PADDING,
-    skipRowPadding
+    true
   )
 
   const y = scaleLinear()
@@ -293,8 +292,7 @@ export const propTypes = {
     })
   ),
   columns: PropTypes.number.isRequired,
-  minInnerWidth: PropTypes.number.isRequired,
-  skipRowPadding: PropTypes.bool
+  minInnerWidth: PropTypes.number.isRequired
 }
 
 TimeBarChart.propTypes = propTypes
@@ -313,8 +311,7 @@ TimeBarChart.defaultProps = {
   yAnnotations: [],
   xAnnotations: [],
   columns: 1,
-  minInnerWidth: 240,
-  skipRowPadding: true
+  minInnerWidth: 240
 }
 
 export default TimeBarChart
