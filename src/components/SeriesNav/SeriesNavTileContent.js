@@ -97,7 +97,7 @@ const SeriesNavTileContent = ({
           {...(current ? styles.labelMedium : styles.labelRegular)}
           {...colorScheme.set('color', 'text')}
         >
-          {current ? `${t('styleguide/SeriesNav/current')} ` : null}
+          {current ? `${t('styleguide/SeriesNav/current')} ` : ''}
           {episode.label}
         </p>
         {imageProps ? (
@@ -118,7 +118,7 @@ const SeriesNavTileContent = ({
           {...(current ? styles.labelMedium : styles.labelRegular)}
           {...colorScheme.set('color', 'text')}
         >
-          {current ? 'Sie lesen: ' : null}
+          {current ? 'Sie lesen: ' : ''}
           {episode.label}
         </p>
         {imageProps ? (

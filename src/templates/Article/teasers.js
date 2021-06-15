@@ -527,7 +527,7 @@ const createTeasers = ({
   const seriesNav = {
     matchMdast: matchZone('SERIES_NAV'),
     component: ({ ...props }) => {
-      return <SeriesNav {...props} />
+      return <SeriesNav t={t} {...props} />
     },
     props: (node, index, parent, { ancestors }) => {
       const root = ancestors[ancestors.length - 1]
@@ -537,8 +537,7 @@ const createTeasers = ({
         inline: !node.data.grid,
         ActionBar: ActionBar,
         PayNote: PayNote,
-        Link: Link,
-        t: t
+        Link: Link
       }
     },
     rules: [],
