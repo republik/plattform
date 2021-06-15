@@ -147,7 +147,6 @@ const BarChart = props => {
     inlineSecondaryLabel,
     inlineLabelPosition,
     link,
-    skipYLabels,
     unit
   } = props
   const [colorScheme] = useColorContext()
@@ -199,6 +198,8 @@ const BarChart = props => {
     groupedData = groupBy(data, d => d.datum[props.column])
   }
   runSort(props.columnSort, groupedData, d => d.key)
+
+  const skipYLabels = props.y === props.color && groupedData.length > 1
 
   // compute colors
   const colorAccessor = props.color
@@ -416,7 +417,7 @@ const BarChart = props => {
 
   const colorLegendValues = []
     .concat(
-      props.colorLegend &&
+      (props.colorLegend || skipYLabels) &&
         (props.colorLegendValues || colorValues).map(colorValue => ({
           color: color(colorValue),
           label: colorValue
@@ -749,7 +750,6 @@ export const propTypes = {
   tLabel: PropTypes.func.isRequired,
   description: PropTypes.string,
   showBarValues: PropTypes.bool,
-  skipYLabels: PropTypes.bool,
   unit: PropTypes.string
 }
 
@@ -759,8 +759,7 @@ BarChart.defaultProps = {
   columns: 1,
   minInnerWidth: 140,
   barStyle: 'small',
-  numberFormat: 's',
-  skipYLabels: false
+  numberFormat: 's'
 }
 
 export const Lollipop = props => <BarChart {...props} />

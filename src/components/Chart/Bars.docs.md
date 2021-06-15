@@ -331,6 +331,8 @@ Beispiel [hier](/charts/lollipops#x-ticks).
 
 ### Skip Y Labels
 
+When `y` and `color` point to the same data attribute (example below: `type`), the system automatically shows the color legend and hides the y labels. (Except if we have only a single group.)
+
 ```react
 <div>
   <CsvChart
@@ -355,9 +357,7 @@ Beispiel [hier](/charts/lollipops#x-ticks).
       "colorRange": [
         "#2ca02c",
         "#9467bd"
-      ],
-      "colorLegend": true,
-      "skipYLabels": true
+      ]
     }}
     values={`
 category,type,value,Q_lower,Q_upper
