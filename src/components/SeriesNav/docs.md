@@ -16,6 +16,7 @@
       )
     }
     PayNote={TestPayNote}
+    t={t}
   />
 ```
 
@@ -27,5 +28,6 @@
     series={series}
     inline={true}
     PayNote={TestPayNote}
+    t={t}
   />
 ```

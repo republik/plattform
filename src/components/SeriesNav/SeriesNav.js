@@ -37,6 +37,7 @@ const styles = {
 const DefaultLink = ({ children }) => children
 
 function SeriesNav({
+  t,
   repoId,
   series,
   inline,
@@ -115,7 +116,9 @@ function SeriesNav({
                 <>
                   {' '}
                   <Link href={titlePath} passHref>
-                    <Editorial.A>Zur Serienübersicht</Editorial.A>
+                    <Editorial.A>
+                      {t('styleguide/SeriesNav/seriesoverview')}
+                    </Editorial.A>
                   </Link>
                 </>
               )}
@@ -145,6 +148,7 @@ function SeriesNav({
                 Link={Link}
                 onEpisodeClick={onEpisodeClick}
                 aboveTheFold={aboveTheFold}
+                t={t}
               />
             )
           })}
@@ -168,7 +172,8 @@ SeriesNav.propTypes = {
   PayNote: PropTypes.func,
   inline: PropTypes.bool,
   height: PropTypes.number,
-  onEpisodeClick: PropTypes.func
+  onEpisodeClick: PropTypes.func,
+  t: PropTypes.func.isRequired
 }
 
 export default SeriesNav

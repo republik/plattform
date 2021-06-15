@@ -60,6 +60,7 @@ const styles = {
 const DefaultLink = ({ children }) => children
 
 const SeriesNavTileContent = ({
+  t,
   inline,
   episode,
   current,
@@ -96,7 +97,8 @@ const SeriesNavTileContent = ({
           {...(current ? styles.labelMedium : styles.labelRegular)}
           {...colorScheme.set('color', 'text')}
         >
-          {`${current ? 'Sie lesen: ' : ''}${episode.label}`}
+          {current ? `${t('styleguide/SeriesNav/current')} ` : null}
+          {episode.label}
         </p>
         {imageProps ? (
           <FigureImage aboveTheFold={aboveTheFold} {...imageProps} alt='' />

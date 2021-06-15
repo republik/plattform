@@ -40,6 +40,7 @@ const styles = {
 }
 
 const SeriesNavTile = ({
+  t,
   episode,
   current,
   inline,
@@ -64,6 +65,7 @@ const SeriesNavTile = ({
       Link={Link}
       onEpisodeClick={onEpisodeClick}
       aboveTheFold={aboveTheFold}
+      t={t}
     />
   )
   const inactiveTile = !isInverted && !episode?.document?.meta?.path

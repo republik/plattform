@@ -537,7 +537,8 @@ const createTeasers = ({
         inline: !node.data.grid,
         ActionBar: ActionBar,
         PayNote: PayNote,
-        Link: Link
+        Link: Link,
+        t: t
       }
     },
     rules: [],

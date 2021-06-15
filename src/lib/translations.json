@@ -1,5 +1,5 @@
 {
-  "updated": "2021-05-19T07:12:31.421Z",
+  "updated": "2021-06-15T13:41:23.989Z",
   "title": "live",
   "data": [
     {
@@ -122,6 +122,14 @@
       "key": "styleguide/CommentTreeCollapse/label",
       "value": "ausblenden",
       "undefined": " "
+    },
+    {
+      "key": "styleguide/SeriesNav/seriesoverview",
+      "value": "Zur Serienübersicht"
+    },
+    {
+      "key": "styleguide/SeriesNav/current",
+      "value": "Sie lesen:"
     },
     {
       "key": "styleguide/comment/header/updated",
