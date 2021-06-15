@@ -148,7 +148,7 @@ const BarChart = props => {
     inlineLabelPosition,
     link,
     skipYLabels,
-    xUnit
+    unit
   } = props
   const [colorScheme] = useColorContext()
   const possibleColumns = Math.floor(
@@ -689,7 +689,7 @@ const BarChart = props => {
                           dy='-0.5em'
                           textAnchor={textAnchor}
                         >
-                          {xAxis.axisFormat(tick, isLast)} {isLast && xUnit}
+                          {xAxis.axisFormat(tick, isLast)} {isLast && unit}
                         </text>
                       </g>
                     )
@@ -750,7 +750,7 @@ export const propTypes = {
   description: PropTypes.string,
   showBarValues: PropTypes.bool,
   skipYLabels: PropTypes.bool,
-  xUnit: PropTypes.string
+  unit: PropTypes.string
 }
 
 BarChart.propTypes = propTypes

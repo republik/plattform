@@ -3,6 +3,147 @@
   <ChartTitle>Entwicklung der Lebenserwartung bei Geburt</ChartTitle>
   <CsvChart
     config={{
+         "type": "Line",
+         "x": "Year",
+         "color": "Kategorie",
+         "numberFormat": ".1f",
+         "colorSort": "none",
+         "colorRange": [
+           "#2ca02c",
+           "#1f77b4",
+           "#9467bd",
+           "#d62728",
+           "#afe9af",
+           "#a8d2f0",
+           "#cdb8e0",
+           "#efa9a9"
+         ],
+         "xTicks": [
+           1990,
+           2000,
+           2010,
+           2020
+         ],
+         "yTicks": [
+           0,
+           5,
+           10,
+           15,
+           20
+         ],
+         "zero": true,
+         "colorLegendValues": [
+           "Gebäude",
+           "Industrie",
+           "Verkehr"
+         ],
+         "unit": "Millionen Tonnen CO₂-Äquivalente",
+         "padding": 0
+    }}
+    values={`
+Year,value,Kategorie
+1990,16.68707824,Gebäude
+1991,18.05194274,Gebäude
+1992,18.09329725,Gebäude
+1993,17.48507501,Gebäude
+1994,16.20992106,Gebäude
+1995,17.26006467,Gebäude
+1996,18.11708099,Gebäude
+1997,16.68899547,Gebäude
+1998,17.5080471,Gebäude
+1999,16.84181695,Gebäude
+2000,15.75120534,Gebäude
+2001,17.10731478,Gebäude
+2002,15.97387146,Gebäude
+2003,16.97606302,Gebäude
+2004,16.83757501,Gebäude
+2005,17.07141439,Gebäude
+2006,16.22567164,Gebäude
+2007,14.41288971,Gebäude
+2008,15.28401051,Gebäude
+2009,14.86295941,Gebäude
+2010,16.04670585,Gebäude
+2011,12.88289997,Gebäude
+2012,14.11488336,Gebäude
+2013,15.03445227,Gebäude
+2014,11.66755323,Gebäude
+2015,12.51484079,Gebäude
+2016,12.97861237,Gebäude
+2017,12.35861971,Gebäude
+2018,11.19580062,Gebäude
+2019,11.19900512,Gebäude
+1990,14.89598487,Verkehr
+1991,15.37671266,Verkehr
+1992,15.69575363,Verkehr
+1993,14.61781419,Verkehr
+1994,14.79924345,Verkehr
+1995,14.46774651,Verkehr
+1996,14.52064756,Verkehr
+1997,15.08714377,Verkehr
+1998,15.29523595,Verkehr
+1999,15.89063363,Verkehr
+2000,16.12837739,Verkehr
+2001,15.82507474,Verkehr
+2002,15.75449154,Verkehr
+2003,15.90458731,Verkehr
+2004,15.92534173,Verkehr
+2005,15.99705002,Verkehr
+2006,16.11860075,Verkehr
+2007,16.43633668,Verkehr
+2008,16.78195697,Verkehr
+2009,16.57927146,Verkehr
+2010,16.47438539,Verkehr
+2011,16.28243706,Verkehr
+2012,16.40780138,Verkehr
+2013,16.31877825,Verkehr
+2014,16.21754676,Verkehr
+2015,15.47897836,Verkehr
+2016,15.31784692,Verkehr
+2017,15.0440416,Verkehr
+2018,15.0446639,Verkehr
+2019,14.9963658,Verkehr
+1990,13.59041509,Industrie
+1991,13.77591391,Industrie
+1992,13.23924051,Industrie
+1993,12.5350695,Industrie
+1994,12.65941527,Industrie
+1995,12.68894505,Industrie
+1996,12.49220094,Industrie
+1997,12.29980099,Industrie
+1998,12.74235621,Industrie
+1999,12.63328193,Industrie
+2000,12.64133938,Industrie
+2001,13.01134694,Industrie
+2002,12.65280459,Industrie
+2003,12.57989787,Industrie
+2004,13.16920802,Industrie
+2005,13.41706448,Industrie
+2006,13.70091919,Industrie
+2007,13.19780835,Industrie
+2008,13.24616221,Industrie
+2009,12.58392509,Industrie
+2010,13.11208145,Industrie
+2011,12.36601996,Industrie
+2012,12.23549169,Industrie
+2013,12.36421539,Industrie
+2014,11.79000042,Industrie
+2015,11.25667692,Industrie
+2016,11.37419723,Industrie
+2017,11.38499292,Industrie
+2018,11.20070623,Industrie
+2019,11.20996598,Industrie
+    `.trim()} />
+  <ChartLegend>Quelle: <Editorial.A href='http://www.humanmortality.de/'>Human Mortality Database</Editorial.A>. University of California, Berkeley (USA) und Max-Planck-Institut </ChartLegend>
+</div>
+```
+
+
+
+```react
+<div>
+  <ChartTitle>Entwicklung der Lebenserwartung bei Geburt</ChartTitle>
+  <CsvChart
+    config={{
       "type": "Line",
       "unit": "Jahre",
       "numberFormat": ".1f",
