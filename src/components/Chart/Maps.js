@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react'
+import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { scaleLinear } from 'd3-scale'
 import { descending, max } from 'd3-array'
@@ -17,7 +17,7 @@ import ContextBox, {
   mergeFragments
 } from './ContextBox'
 import { sansSerifMedium14 } from '../Typography/styles'
-import { getReplacementKeys, replaceKeys } from '../../lib/translate'
+import { replaceKeys } from '../../lib/translate'
 
 const FEATURE_BG = '#E0E0E0'
 
@@ -225,24 +225,14 @@ export class GenericMap extends Component {
           .filter(datum => datum.feature === hoverFeature)
           .map(d => {
             const [[x0, y0], [x1]] = d.feature.bounds()
-            const formattedValues = {
-              color: d.datum && d.datum[props.color],
-              value: (d.value || d.value === 0) && numberFormat(d.value)
+            const replacements = {
+              ...hoverFeature.properties,
+              ...d.datum,
+              value: d.value || d.value === 0,
+              formattedValue:
+                (d.value || d.value === 0) && numberFormat(d.value)
             }
-            const contextT = text => {
-              const replacements = getReplacementKeys(text).reduce(
-                (acc, replacementKey) => {
-                  acc[replacementKey] =
-                    acc[replacementKey] ||
-                    hoverFeature.properties[replacementKey] ||
-                    d.datum[replacementKey] ||
-                    this.props[replacementKey]
-                  return acc
-                },
-                formattedValues
-              )
-              return replaceKeys(text, replacements)
-            }
+            const contextT = text => replaceKeys(text, replacements)
             const label = tooltipLabel
               ? contextT(tooltipLabel)
               : title === groupTitle
@@ -253,9 +243,9 @@ export class GenericMap extends Component {
                 ? formatLines(contextT(tooltipBody))
                 : [
                     groupTitle && title === groupTitle && tLabel(groupTitle),
-                    formattedValues.value &&
-                      `${formattedValues.value} ${props.unit}`,
-                    formattedValues.color,
+                    replacements.formattedValue &&
+                      `${replacements.formattedValue} ${props.unit}`,
+                    d.datum && d.datum[props.color],
                     d.empty && missingDataLegend
                   ]
                     .filter(Boolean)
@@ -301,21 +291,12 @@ export class GenericMap extends Component {
       (isNaN(datum.value)
         ? String(datum.value).trim()
         : numberFormat(datum.value))
-
-    const contextT = text => {
-      const replacements = getReplacementKeys(text).reduce(
-        (acc, replacementKey) => {
-          acc[replacementKey] =
-            acc[replacementKey] ||
-            datum[replacementKey] ||
-            this.props[replacementKey]
-          return acc
-        },
-        { value }
-      )
-      return replaceKeys(text, replacements)
+    const replacements = {
+      ...datum,
+      formattedValue: value
     }
 
+    const contextT = text => replaceKeys(text, replacements)
     const label = tooltipLabel ? contextT(tooltipLabel) : datum[pointLabel]
     const body = mergeFragments(
       tooltipBody

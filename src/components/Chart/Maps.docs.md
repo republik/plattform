@@ -169,6 +169,10 @@ lat,lon,name,category
 
 ### Map with custom tooltips
 
+**Tooltip**: supported properties:
+- `formattedValue`
+- point attributes, e.g. `name`, or `Land`
+
 ```react
 <div>
   <CsvChart
@@ -185,7 +189,7 @@ lat,lon,name,category
         object: 'land',
       },
       tooltipLabel: '{name}, {Land}',
-      tooltipBody: 'CO<sub>2</sub> footprint: {value} tons per year per person.\nThinking of moving to {name}?'
+      tooltipBody: 'CO<sub>2</sub> footprint: {formattedValue} tons per year per person.\nThinking of moving to {name}?'
     }}
     values={`
       lon,lat,name,value,Land
@@ -890,7 +894,13 @@ JU,0.257
 
 #### Without Lakes
 
-Choropleth custom legends set with the `thresholdsLegend` prop. This acts as a substitute for the `thresholds` array. No label text set means default text.
+**Tooltip:** following replacements are supported:
+- `value`: the raw number, e.g. `0.487`
+- `formattedValue`: the formatted number, e.g. `49%`
+- data point attributes, e.g. `language`
+- feature attributes, as defined in the features json file, e.g. `name` (the name of the feature) or `feature` (its key)
+
+**Pro tip:** define your own color legend with the `thresholdsLegend` prop. To revert to the default label for a given color, just omit the `label` attribute.
 
 ```react
 <div>
@@ -914,7 +924,7 @@ Choropleth custom legends set with the `thresholdsLegend` prop. This acts as a s
         "object": "cantons"
       },
       "tooltipLabel": "What about {name}?",
-      "tooltipBody": "{value} of people in {name} ({feature}) voted in favour of purchasing new military airplanes.\nBtw, did you know that they speak {language} in this canton?"
+      "tooltipBody": "{formattedValue} of people in {name} ({feature}) voted in favour of purchasing new military airplanes.\nBtw, did you know that they speak {language} in this canton?"
     }}
     values={`
 feature,value,language
