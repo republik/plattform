@@ -19,6 +19,7 @@ const styles = {
   tile: css({
     marginBottom: 20,
     width: '100%',
+    minWidth: GRID_MIN_WIDTH,
     padding: TILE_GRID_PADDING,
     [`@media only screen and (min-width: ${OUTER_CONTAINER_PADDING * 2 +
       GRID_MIN_WIDTH * 2}px)`]: {
