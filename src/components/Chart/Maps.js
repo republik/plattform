@@ -602,6 +602,12 @@ export const propTypes = {
   ),
   columns: PropTypes.number.isRequired,
   thresholds: PropTypes.arrayOf(PropTypes.number),
+  thresholdsLegend: PropTypes.arrayOf(
+    PropTypes.shape({
+      minValue: PropTypes.number,
+      label: PropTypes.string
+    })
+  ),
   extent: PropTypes.arrayOf(PropTypes.number),
   colorLegend: PropTypes.bool.isRequired,
   colorLegendLabels: PropTypes.arrayOf(PropTypes.string),

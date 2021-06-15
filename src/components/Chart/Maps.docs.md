@@ -890,6 +890,8 @@ JU,0.257
 
 #### Without Lakes
 
+Choropleth custom legends set with the `thresholdsLegend` prop. This acts as a substitute for the `thresholds` array. No label text set means default text.
+
 ```react
 <div>
   <ChartTitle>Fonds zur Beschaffung des Kampfflugzeugs Gripen</ChartTitle>
@@ -900,9 +902,13 @@ JU,0.257
       "unit": "Jastimmen",
       "choropleth": true,
       "numberFormat": ".0%",
-      "thresholds": [0.3,0.4,0.5,0.6,0.7],
-      "colorLegendLabels": ["unter 30%", "", "", "", "", "über 70%"],
-      "colorRange": ["rgb(103,0,13)", "rgb(187,21,26)", "rgb(239,69,51)", "rgb(75,151,201)", "rgb(24,100,170)", "rgb(8,48,107)"],
+      "thresholdsLegend": [
+        {"label": "Roses are red"}, 
+        {minValue: 0.4, "label": "Gripens are blue"}, 
+        {minValue: 0.5, "label": "I want seven of them"}, 
+        {minValue: 0.6, "label": "And so do you"}
+      ], 
+      "colorRange": ["rgb(187,21,26)", "rgb(239,69,51)", "rgb(75,151,201)", "rgb(24,100,170)"],
       "features": {
         "url": "/static/geo/ch-cantons-wo-lakes.json",
         "object": "cantons"
