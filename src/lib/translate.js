@@ -1,6 +1,3 @@
-export const getReplacementKeys = message =>
-  message.match(/[^{\}]+(?=})/g) || []
-
 export const replaceKeys = (message, replacements) => {
   let withReplacements = message
   Object.keys(replacements).forEach(replacementKey => {

@@ -169,7 +169,7 @@ lat,lon,name,category
 
 ### Map with custom tooltips
 
-**Tooltip**: supported properties:
+Supported replacements:
 - `formattedValue`
 - point attributes, e.g. `name`, or `Land`
 

@@ -307,6 +307,11 @@ year,label,detail,family,position,lrgen,vote_abs,inline_pos,inline,inline_countr
 
 ## Custom Tooltip
 
+Supported replacements:
+- `x`, `y` and `size`: raw values,
+- `formattedX`, `formattedY` and `formattedSize`: values in their respective formats
+- data point attributes, e.g. `geo` or `region`
+
 ```react
 <div>
   <CsvChart
@@ -322,7 +327,7 @@ year,label,detail,family,position,lrgen,vote_abs,inline_pos,inline,inline_countr
       "yScale": "log",
       "xScale": "log",
       "tooltipLabel": "The case of {geo}",
-      "tooltipBody": "Average Joe in {geo} emitted {y} {yUnit} in 2014.\nIn the same period of time, Joe worked and worked and earned himself {x} USD."
+      "tooltipBody": "Average Joe in {geo} emitted {formattedY} tons of CO<sub>2</sub> in 2014.\nIn the same period of time, Joe worked and worked and earned himself {formattedX} USD."
     }}
     values={`
 geo,income pp 2014,co2 pp 2014,region

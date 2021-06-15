@@ -23,7 +23,7 @@ import {
 import { getColorMapper } from './colorMaps'
 import { sansSerifRegular12, sansSerifMedium12 } from '../Typography/styles'
 import { useColorContext } from '../Colors/useColorContext'
-import { getReplacementKeys, replaceKeys } from '../../lib/translate'
+import { replaceKeys } from '../../lib/translate'
 
 const X_TICK_HEIGHT = 6
 
@@ -327,25 +327,16 @@ const ScatterPlot = props => {
         contextWidth={width}
       >
         {hover.map(({ value }, i) => {
-          const formattedValues = {
-            y: yFormat(value.y),
-            x: xFormat(value.x),
-            size: sizeFormat(value.size)
+          const replacements = {
+            ...value.datum,
+            y: value.y,
+            x: value.x,
+            size: value.size,
+            formattedY: yFormat(value.y),
+            formattedX: xFormat(value.x),
+            formattedSize: sizeFormat(value.size)
           }
-          const contextT = text => {
-            const replacements = getReplacementKeys(text).reduce(
-              (acc, replacementKey) => {
-                acc[replacementKey] =
-                  acc[replacementKey] ||
-                  value[replacementKey] ||
-                  value.datum[replacementKey] ||
-                  props[replacementKey]
-                return acc
-              },
-              formattedValues
-            )
-            return replaceKeys(text, replacements)
-          }
+          const contextT = text => replaceKeys(text, replacements)
           return (
             <ContextBoxValue
               key={`${value.datum[label]}${i}`}
@@ -356,9 +347,10 @@ const ScatterPlot = props => {
                   ? formatLines(contextT(tooltipBody))
                   : [
                       value.datum[detail],
-                      yShowValue && `${formattedValues.y} ${yUnit}`,
-                      xShowValue && `${formattedValues.x} ${xUnit}`,
-                      sizeShowValue && `${formattedValues.size} ${sizeUnit}`
+                      yShowValue && `${replacements.formattedY} ${yUnit}`,
+                      xShowValue && `${replacements.formattedX} ${xUnit}`,
+                      sizeShowValue &&
+                        `${replacements.formattedSize} ${sizeUnit}`
                     ]
                       .filter(Boolean)
                       .map(formatLines)
