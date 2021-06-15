@@ -244,7 +244,8 @@ export default props => {
       let labelsMoved = 0
       labelsMoved += calculateAndMoveLabelY(linesWithLabels, 'start')
       labelsMoved += calculateAndMoveLabelY(linesWithLabels, 'end')
-      yNeedsConnectors = yNeedsConnectors || labelsMoved >= 1
+      yNeedsConnectors =
+        yNeedsConnectors || (labelsMoved >= 1 && linesWithLabels.length > 2)
 
       if (startValue) {
         startValueSizes = startValueSizes.concat(
