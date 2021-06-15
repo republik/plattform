@@ -111,10 +111,15 @@ function SeriesNav({
             </InfoBoxTitle>
             <InfoBoxText>
               <span>
-                {series.description}{' '}
-                <Link href={titlePath} passHref>
-                  <Editorial.A>Zur Serien-Übersicht</Editorial.A>
-                </Link>
+                {series.description}
+                {titlePath && (
+                  <>
+                    {' '}
+                    <Link href={titlePath} passHref>
+                      <Editorial.A>Zur Serien-Übersicht</Editorial.A>
+                    </Link>
+                  </>
+                )}
               </span>
             </InfoBoxText>
           </InfoBox>
