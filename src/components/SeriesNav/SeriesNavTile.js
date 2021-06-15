@@ -2,7 +2,6 @@ import React from 'react'
 import { css } from 'glamor'
 
 import { ColorContextLocalExtension } from '../Colors/ColorContext'
-import { useColorContext } from '../Colors/useColorContext'
 import {
   PADDING,
   TILE_MARGIN_RIGHT,
@@ -20,6 +19,7 @@ const styles = {
   tile: css({
     marginBottom: 20,
     width: '100%',
+    minWidth: GRID_MIN_WIDTH,
     padding: TILE_GRID_PADDING,
     [`@media only screen and (min-width: ${OUTER_CONTAINER_PADDING * 2 +
       GRID_MIN_WIDTH * 2}px)`]: {
@@ -40,6 +40,7 @@ const styles = {
 }
 
 const SeriesNavTile = ({
+  t,
   episode,
   current,
   inline,
@@ -52,9 +53,7 @@ const SeriesNavTile = ({
   onEpisodeClick,
   aboveTheFold
 }) => {
-  const [colorScheme] = useColorContext()
-
-  const isInverted = !!(current || PayNote)
+  const isInverted = !!PayNote
   const content = PayNote ? (
     <PayNote context={context} repoId={repoId} index={index} />
   ) : (
@@ -66,6 +65,7 @@ const SeriesNavTile = ({
       Link={Link}
       onEpisodeClick={onEpisodeClick}
       aboveTheFold={aboveTheFold}
+      t={t}
     />
   )
   const inactiveTile = !isInverted && !episode?.document?.meta?.path
@@ -73,7 +73,6 @@ const SeriesNavTile = ({
   return (
     <div
       {...(inline ? styles.inlineTile : styles.tile)}
-      {...(isInverted && colorScheme.set('backgroundColor', 'defaultInverted'))}
       style={{
         opacity: inactiveTile ? 0.6 : 1
       }}

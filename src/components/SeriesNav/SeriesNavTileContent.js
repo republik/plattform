@@ -8,7 +8,9 @@ import {
   serifRegular15,
   serifRegular17,
   sansSerifRegular14,
-  sansSerifRegular12
+  sansSerifRegular12,
+  sansSerifMedium14,
+  sansSerifMedium12
 } from '../Typography/styles'
 import { useColorContext } from '../Colors/useColorContext'
 import { FigureImage } from '../Figure'
@@ -34,10 +36,18 @@ const styles = {
     marginTop: 0,
     overflow: 'hidden',
     textOverflow: 'ellipsis',
-    whiteSpace: 'nowrap',
+    whiteSpace: 'nowrap'
+  }),
+  labelRegular: css({
     ...sansSerifRegular12,
     [mUp]: {
       ...sansSerifRegular14
+    }
+  }),
+  labelMedium: css({
+    ...sansSerifMedium12,
+    [mUp]: {
+      ...sansSerifMedium14
     }
   }),
   plainlink: css({
@@ -50,6 +60,7 @@ const styles = {
 const DefaultLink = ({ children }) => children
 
 const SeriesNavTileContent = ({
+  t,
   inline,
   episode,
   current,
@@ -81,8 +92,13 @@ const SeriesNavTileContent = ({
   if (inline) {
     return (
       <LinkContainer>
-        <p {...styles.label} {...colorScheme.set('color', 'text')}>
-          {`${current ? 'Sie lesen: ' : ''}${episode.label}`}
+        <p
+          {...styles.label}
+          {...(current ? styles.labelMedium : styles.labelRegular)}
+          {...colorScheme.set('color', 'text')}
+        >
+          {current ? `${t('styleguide/SeriesNav/current')} ` : ''}
+          {episode.label}
         </p>
         {imageProps ? (
           <FigureImage aboveTheFold={aboveTheFold} {...imageProps} alt='' />
@@ -97,8 +113,12 @@ const SeriesNavTileContent = ({
   return (
     <>
       <LinkContainer>
-        <p {...styles.label} {...colorScheme.set('color', 'text')}>
-          {current ? 'Sie lesen: ' : null}
+        <p
+          {...styles.label}
+          {...(current ? styles.labelMedium : styles.labelRegular)}
+          {...colorScheme.set('color', 'text')}
+        >
+          {current ? 'Sie lesen: ' : ''}
           {episode.label}
         </p>
         {imageProps ? (

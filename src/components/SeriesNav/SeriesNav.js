@@ -10,10 +10,10 @@ import {
 } from '../InfoBox'
 import { Figure, FigureImage } from '../Figure'
 import { ColorContextLocalExtension } from '../Colors/ColorContext'
-import { useColorContext } from '../Colors/useColorContext'
 import Center, { PADDED_MAX_WIDTH_BREAKOUT } from '../Center'
 import SeriesNavTile from './SeriesNavTile'
 import { localInvertedColors } from '../../theme/colors'
+import { Editorial } from '../Typography'
 
 const DEFAULT_PAYNOTE_INDEX = 2
 
@@ -37,6 +37,7 @@ const styles = {
 const DefaultLink = ({ children }) => children
 
 function SeriesNav({
+  t,
   repoId,
   series,
   inline,
@@ -48,8 +49,6 @@ function SeriesNav({
   onEpisodeClick,
   aboveTheFold
 }) {
-  const [colorScheme] = useColorContext()
-
   const currentTile =
     repoId &&
     series.episodes.find(episode => episode.document?.repoId === repoId)
@@ -111,7 +110,19 @@ function SeriesNav({
                 series.title
               )}
             </InfoBoxTitle>
-            <InfoBoxText>{series.description}</InfoBoxText>
+            <InfoBoxText>
+              {series.description}
+              {titlePath && (
+                <>
+                  {' '}
+                  <Link href={titlePath} passHref>
+                    <Editorial.A>
+                      {t('styleguide/SeriesNav/seriesoverview')}
+                    </Editorial.A>
+                  </Link>
+                </>
+              )}
+            </InfoBoxText>
           </InfoBox>
           {inlineAfterDescription}
         </Center>
@@ -137,6 +148,7 @@ function SeriesNav({
                 Link={Link}
                 onEpisodeClick={onEpisodeClick}
                 aboveTheFold={aboveTheFold}
+                t={t}
               />
             )
           })}
@@ -144,11 +156,9 @@ function SeriesNav({
       </TeaserCarousel>
 
       {inline && PayNote && (
-        <div {...colorScheme.set('backgroundColor', 'defaultInverted')}>
-          <ColorContextLocalExtension localColors={localInvertedColors}>
-            <PayNote context={context} repoId={repoId} inline />
-          </ColorContextLocalExtension>
-        </div>
+        <ColorContextLocalExtension localColors={localInvertedColors}>
+          <PayNote context={context} repoId={repoId} inline />
+        </ColorContextLocalExtension>
       )}
     </div>
   )
@@ -162,7 +172,8 @@ SeriesNav.propTypes = {
   PayNote: PropTypes.func,
   inline: PropTypes.bool,
   height: PropTypes.number,
-  onEpisodeClick: PropTypes.func
+  onEpisodeClick: PropTypes.func,
+  t: PropTypes.func.isRequired
 }
 
 export default SeriesNav
