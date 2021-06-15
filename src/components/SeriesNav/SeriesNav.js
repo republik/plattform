@@ -110,17 +110,15 @@ function SeriesNav({
               )}
             </InfoBoxTitle>
             <InfoBoxText>
-              <span>
-                {series.description}
-                {titlePath && (
-                  <>
-                    {' '}
-                    <Link href={titlePath} passHref>
-                      <Editorial.A>Zur Serien-Übersicht</Editorial.A>
-                    </Link>
-                  </>
-                )}
-              </span>
+              {series.description}
+              {titlePath && (
+                <>
+                  {' '}
+                  <Link href={titlePath} passHref>
+                    <Editorial.A>Zur Serienübersicht</Editorial.A>
+                  </Link>
+                </>
+              )}
             </InfoBoxText>
           </InfoBox>
           {inlineAfterDescription}
@@ -154,11 +152,9 @@ function SeriesNav({
       </TeaserCarousel>
 
       {inline && PayNote && (
-        <div>
-          <ColorContextLocalExtension localColors={localInvertedColors}>
-            <PayNote context={context} repoId={repoId} inline />
-          </ColorContextLocalExtension>
-        </div>
+        <ColorContextLocalExtension localColors={localInvertedColors}>
+          <PayNote context={context} repoId={repoId} inline />
+        </ColorContextLocalExtension>
       )}
     </div>
   )

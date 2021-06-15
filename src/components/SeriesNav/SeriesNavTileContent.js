@@ -36,13 +36,15 @@ const styles = {
     marginTop: 0,
     overflow: 'hidden',
     textOverflow: 'ellipsis',
-    whiteSpace: 'nowrap',
+    whiteSpace: 'nowrap'
+  }),
+  labelRegular: css({
     ...sansSerifRegular12,
     [mUp]: {
       ...sansSerifRegular14
     }
   }),
-  currentLabel: css({
+  labelMedium: css({
     ...sansSerifMedium12,
     [mUp]: {
       ...sansSerifMedium14
@@ -91,7 +93,7 @@ const SeriesNavTileContent = ({
       <LinkContainer>
         <p
           {...styles.label}
-          {...(current && styles.currentLabel)}
+          {...(current ? styles.labelMedium : styles.labelRegular)}
           {...colorScheme.set('color', 'text')}
         >
           {`${current ? 'Sie lesen: ' : ''}${episode.label}`}
@@ -111,7 +113,7 @@ const SeriesNavTileContent = ({
       <LinkContainer>
         <p
           {...styles.label}
-          {...(current && styles.currentLabel)}
+          {...(current ? styles.labelMedium : styles.labelRegular)}
           {...colorScheme.set('color', 'text')}
         >
           {current ? 'Sie lesen: ' : null}
