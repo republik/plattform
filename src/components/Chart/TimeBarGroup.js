@@ -32,19 +32,16 @@ const TimeBarGroup = ({
   title,
   xAnnotations,
   yAnnotations,
-  baseLines,
-  xTicks,
   yTicks,
   x,
   y,
   xNormalizer,
-  xFormat,
-  xParser,
   yAxis,
   tLabel,
   color,
   width,
-  xAxisPos
+  xAxisPos,
+  xAxis
 }) => {
   const [colorScheme] = useColorContext()
   const barWidth = x.bandwidth()
@@ -90,43 +87,7 @@ const TimeBarGroup = ({
           </g>
         )
       })}
-      <g transform={`translate(0,${xAxisPos})`}>
-        {baseLines.map((line, i) => {
-          return (
-            <line
-              key={i}
-              x1={line.x1}
-              x2={line.x2}
-              {...styles.axisXLine}
-              {...(baseTick !== 0
-                ? colorScheme.set('stroke', 'text')
-                : colorScheme.set('stroke', 'divider'))}
-              strokeDasharray={line.gap ? '2 2' : 'none'}
-            />
-          )
-        })}
-        {xTicks.map(tick => (
-          <g
-            key={tick}
-            transform={`translate(${x(tick) + Math.round(barWidth / 2)},0)`}
-          >
-            <line
-              {...styles.axisXLine}
-              {...colorScheme.set('stroke', 'text')}
-              y2={X_TICK_HEIGHT}
-            />
-            <text
-              {...styles.axisLabel}
-              {...colorScheme.set('fill', 'text')}
-              y={X_TICK_HEIGHT + 5}
-              dy='0.6em'
-              textAnchor='middle'
-            >
-              {xFormat(xParser(tick))}
-            </text>
-          </g>
-        ))}
-      </g>
+      <g transform={`translate(0,${xAxisPos})`}>{xAxis}</g>
       {yTicks.map((tick, i) => (
         <g key={tick} transform={`translate(0,${y(tick)})`}>
           {tick !== baseTick && (

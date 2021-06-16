@@ -918,7 +918,7 @@ JU,0.257
         {minValue: 0.5, "label": "I want seven of them"}, 
         {minValue: 0.6, "label": "And so do you"}
       ], 
-      "colorRange": ["rgb(239,69,51)", "rgb(75,151,201)", "rgb(24,100,170)", "rgb(8,48,107)"],
+      "colorRange": ["rgb(187,21,26)", "rgb(239,69,51)", "rgb(75,151,201)", "rgb(24,100,170)"],
       "features": {
         "url": "/static/geo/ch-cantons-wo-lakes.json",
         "object": "cantons"

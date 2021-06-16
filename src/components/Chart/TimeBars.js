@@ -18,9 +18,7 @@ import { getColorMapper } from './colorMaps'
 import ColorLegend from './ColorLegend'
 import TimeBarGroup from './TimeBarGroup'
 import {
-  getBaselines,
   insertXDomainGaps,
-  getXTicks,
   normalizeData,
   intervals,
   getAnnotationsXValues,
@@ -28,6 +26,7 @@ import {
   getMax,
   getMin
 } from './TimeBars.utils'
+import XAxis from './XAxis'
 
 const COLUMN_TITLE_HEIGHT = 24
 const AXIS_BOTTOM_HEIGHT = 24
@@ -47,6 +46,7 @@ const TimeBarChart = props => {
     xScale,
     xInterval,
     xIntervalStep,
+    xTicks,
     domain,
     padding,
     height: innerHeight
@@ -190,8 +190,18 @@ const TimeBarChart = props => {
     )
     .filter(Boolean)
 
-  const baseLines = getBaselines(xDomain, x, innerWidth)
-  const xTicks = getXTicks(props.xTicks, xValues, xNormalizer, x)
+  const xAxis = (
+    <XAxis
+      xTicks={xTicks}
+      width={innerWidth}
+      xValues={xValues}
+      xNormalizer={xNormalizer}
+      x={x}
+      xDomain={xDomain}
+      format={x => xFormat(xParser(x))}
+      strong={y.domain()[0] !== 0}
+    />
+  )
 
   return (
     <>
@@ -206,16 +216,13 @@ const TimeBarChart = props => {
                 title={key}
                 xAnnotations={xAnnotations}
                 yAnnotations={yAnnotations}
-                baseLines={baseLines}
-                xTicks={xTicks}
                 yTicks={yTicks}
                 x={x}
                 y={y}
                 xNormalizer={xNormalizer}
-                xFormat={xFormat}
-                xParser={xParser}
                 yAxis={yAxis}
                 width={innerWidth}
+                xAxis={xAxis}
                 xAxisPos={innerHeight + PADDING_TOP + columnTitleHeight}
                 tLabel={tLabel}
                 color={d => color(colorAccessor(d))}
