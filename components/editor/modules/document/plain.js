@@ -9,6 +9,8 @@ import MarkdownSerializer from 'slate-mdast-serializer'
 import createPasteHtml from './createPasteHtml'
 import { safeDump } from 'js-yaml'
 
+import { mdastToString } from '../../../../lib/utils/helpers'
+
 const pubDateFormat = swissTime.format('%d.%m.%Y')
 
 export default ({ rule, subModules, TYPE }) => {
@@ -118,7 +120,16 @@ export default ({ rule, subModules, TYPE }) => {
       return {
         type: 'root',
         meta: object.data,
-        children: childSerializer.toMdast(object.nodes, 0, object, rest)
+        children: childSerializer
+          .toMdast(object.nodes, 0, object, rest)
+          .filter(mdNode => {
+            return !(
+              mdNode.identifier === centerModule.TYPE &&
+              mdNode.children.length === 1 &&
+              mdNode.children[0].type === 'paragraph' &&
+              mdastToString(mdNode.children[0]) === ''
+            )
+          })
       }
     }
   }

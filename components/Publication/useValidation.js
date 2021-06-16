@@ -3,16 +3,10 @@ import visit from 'unist-util-visit'
 import isUUID from 'is-uuid'
 import { parse } from 'url'
 import { FRONTEND_BASE_URL } from '../../lib/settings'
+import { mdastToString } from '../../lib/utils/helpers'
 
 import { Editorial } from '@project-r/styleguide'
 import { SOCIAL_MEDIA } from '../editor/modules/meta/ShareImageForm'
-
-const mdastToString = node =>
-  node
-    ? node.value ||
-      (node.children && node.children.map(mdastToString).join('')) ||
-      ''
-    : ''
 
 const FRONTEND_HOSTNAME = FRONTEND_BASE_URL && parse(FRONTEND_BASE_URL).hostname
 
