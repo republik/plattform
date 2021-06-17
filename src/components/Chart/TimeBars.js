@@ -56,7 +56,7 @@ const TimeBarChart = props => {
   let xParserFormat = identityFn
   let xNormalizer = identityFn
   let xFormat = identityFn
-  let xSort = identityFn
+  let xSort = (a, b) => 0
   if (xScale === 'time') {
     xParser = timeParse(props.timeParse)
     xParserFormat = timeFormat(props.timeParse)

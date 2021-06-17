@@ -766,6 +766,111 @@ year,value,color
   <CsvChart
     config={{
       "type": "TimeBar",
+      "x": "key",
+      "unit": "Verlegerinnen",
+      "xTicks": [20, 40, 60, 80, 100],
+      "xScale": "ordinal",
+      "padding": 0,  
+    }}
+    values={`
+key,value
+18, 0
+19, 3
+20, 4
+21, 11
+22, 16
+23, 23
+24, 37
+25, 53
+26, 37
+27, 49
+28, 57
+29, 73
+30, 107
+31, 129
+32, 121
+33, 138
+34, 153
+35, 132
+36, 160
+37, 171
+38, 168
+39, 158
+40, 159
+41, 176
+42, 146
+43, 143
+44, 143
+45, 141
+46, 133
+47, 149
+48, 140
+49, 171
+50, 140
+51, 162
+52, 166
+53, 153
+54, 155
+55, 198
+56, 164
+57, 173
+58, 202
+59, 142
+60, 139
+61, 154
+62, 148
+63, 173
+64, 140
+65, 126
+66, 141
+67, 161
+68, 142
+69, 156
+70, 147
+71, 123
+72, 102
+73, 103
+74, 96
+75, 88
+76, 87
+77, 59
+78, 49
+79, 33
+80, 26
+81, 21
+82, 19
+83, 8
+84, 12
+85, 7
+86, 8
+87, 8
+88, 3
+89, 3
+90, 0
+91, 1
+92, 0
+93, 1
+94, 1
+95, 0
+96, 0
+97, 0
+98, 1
+99, 0
+100, 0
+    `.trim()} />
+  <ChartLegend>
+    Daten für das Jahr 2019 sind nicht verfügbar. Quelle:  <Editorial.A href='https://www.bfs.admin.ch/bfs/de/home/statistiken/kataloge-datenbanken/tabellen.assetdetail.8346709.html'>Bundesamt für Statistik</Editorial.A>
+  </ChartLegend>
+</div>
+```
+
+```react
+<div>
+  <ChartTitle>Die meisten Betriebe sind 10 bis 20 Hektaren gross</ChartTitle>
+  <ChartLead>Anteil der Betriebe nach Nutzfläche in Hektaren</ChartLead>
+  <CsvChart
+    config={{
+      "type": "TimeBar",
       "x": "category",
       "yTicks": [
         0,
