@@ -91,10 +91,26 @@ const MailchimpInterface = ({ logger }) => {
         throw new NewsletterMemberMailError({ error, email })
       }
     },
-    async deleteMember(email) {
+    async archiveMember(email) {
+      debug(`archiving ${email}`)
       const url = this.buildMembersApiUrl(email)
       try {
         const response = await this.fetchAuthenticated('DELETE', url)
+        if (response.status >= MINIMUM_HTTP_RESPONSE_STATUS_ERROR) {
+          debug(`could not delete member: ${email}`)
+          return null
+        }
+        return true
+      } catch (error) {
+        logger.error(`mailchimp -> exception: ${error.message}`)
+        throw new NewsletterMemberMailError({ error, email })
+      }
+    },
+    async deleteMember(email) {
+      debug(`deleting ${email}`)
+      const url = this.buildMembersApiUrl(email) + '/actions/delete-permanent'
+      try {
+        const response = await this.fetchAuthenticated('POST', url)
         if (response.status >= MINIMUM_HTTP_RESPONSE_STATUS_ERROR) {
           debug(`could not delete member: ${email}`)
           return null

@@ -14,11 +14,8 @@ module.exports = async ({ user, newEmail }) => {
     member &&
     member.status !== MailchimpInterface.MemberStatus.Unsubscribed
   ) {
-    // unsubscribe oldEmail
-    await mailchimp.updateMember(oldEmail, {
-      email_address: oldEmail,
-      status: MailchimpInterface.MemberStatus.Unsubscribed,
-    })
+    // archive oldEmail
+    await mailchimp.archiveMember(oldEmail)
     // subscribe newEmail
     await mailchimp.updateMember(newEmail, {
       email_address: newEmail,
