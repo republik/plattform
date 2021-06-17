@@ -8,8 +8,6 @@ import { last } from './utils'
 import { useColorContext } from '../Colors/useColorContext'
 import { XAnnotation, YAnnotation } from './TimeBarsAnnotations'
 
-const X_TICK_HEIGHT = 3
-
 const styles = {
   columnTitle: css({
     ...sansSerifMedium14

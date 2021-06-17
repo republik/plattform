@@ -761,8 +761,8 @@ year,value,color
 
 ```react
 <div>
-  <ChartTitle>Die meisten Betriebe sind 10 bis 20 Hektaren gross</ChartTitle>
-  <ChartLead>Anteil der Betriebe nach Nutzfläche in Hektaren</ChartLead>
+  <ChartTitle>Alle Generationen sind gut vertreten</ChartTitle>
+  <ChartLead>Aktuelle Altersverteilung bei Verlegerinnen mit angegebenem Geburtsdatum</ChartLead>
   <CsvChart
     config={{
       "type": "TimeBar",
@@ -872,22 +872,9 @@ key,value
     config={{
       "type": "TimeBar",
       "x": "category",
-      "yTicks": [
-        0,
-        0.2,
-        0.4
-      ],
-      "domain": [
-        0,
-        0.4
-      ],
       "color": "year",
       "colorRange": [
         "#004529"
-      ],
-      "labelFilter": "false",
-      "colorLegendValues": [
-        "2018"
       ],
       "xScale": "ordinal",
       "unit": "der landwirtschaftlichen Betriebe",

@@ -327,7 +327,7 @@ Verzicht auf ca. 3500 Kilometer mit ÖV,-79,a,
 
 ### X-Ticks
 
-Beispiel [hier](/charts/lollipops#x-ticks).
+See [lollipop example](/charts/lollipops#x-ticks).
 
 ### Skip Y Labels
 
@@ -343,17 +343,7 @@ When `y` and `color` point to the same data attribute (example below: `type`), t
       "columnSort": "none",
       "sort": "descending",
       "color": "type",
-      "minInnerWidth": 260,
-      "domain": [
-        0,
-        15000
-      ],
-      "xTicks": [
-        0,
-        5000,
-        10000,
-        15000
-      ],
+      "showBarValues": true,
       "colorRange": [
         "#2ca02c",
         "#9467bd"
