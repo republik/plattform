@@ -300,6 +300,8 @@ Supported replacements:
 
 ### World Wide Country Choropleth
 
+Use `missingDataLegend` to define a label for missing data. Without `missingDataLegend` it will complain about missing data, ensuring that you do not miss or miss match a country (or with other base data e.g. a small municipality).
+
 ```react
 <div>
   <CsvChart
@@ -857,12 +859,12 @@ make topo/ch-cantons.json PROPERTIES="name --id-property=abbr" REPROJECT=true
       "features": {
         "url": "/static/geo/ch-cantons.json",
         "object": "cantons"
-      },
-      "missingDataLegend": "keine Daten"
+      }
     }}
     values={`
 feature,value
-BE,0
+ZH,0.487
+BE,0.491
 LU,0.543
 UR,0.624
 SZ,0.615
@@ -929,7 +931,7 @@ JU,0.257
     values={`
 feature,value,language
 ZH,0.487,German
-BE,0.491,German
+BE,0.491,French and German
 LU,0.543,German
 UR,0.624,German
 SZ,0.615,German
@@ -945,7 +947,7 @@ SH,0.494,German
 AR,0.511,German
 AI,0.608,German
 SG,0.5,German
-GR,0.507,German
+GR,0.507,"German, Italian and Romansh"
 AG,0.519,German
 TG,0.556,German
 TI,0.453,Italian
