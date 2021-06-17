@@ -787,14 +787,11 @@ year,value,color
       "xScale": "ordinal",
       "unit": "der landwirtschaftlichen Betriebe",
       "numberFormat": ".1%",
+      "padding": 10,
       "xTicks": [
-        "< 1",
         "1–3",
-        "3–5",
         "5–10",
-        "10–20",
         "20–30",
-        "30–50",
         "> 50"
       ]
     }}
