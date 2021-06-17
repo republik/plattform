@@ -1,5 +1,5 @@
 {
-  "updated": "2021-06-11T15:00:52.798Z",
+  "updated": "2021-06-17T11:49:12.811Z",
   "title": "live",
   "data": [
     {
@@ -1557,6 +1557,14 @@
     {
       "key": "publish/preview/404",
       "value": "Dokument oder Schema nicht verfügbar."
+    },
+    {
+      "key": "styleguide/SeriesNav/seriesoverview",
+      "value": "Zur Serienübersicht"
+    },
+    {
+      "key": "styleguide/SeriesNav/current",
+      "value": "Sie lesen:"
     }
   ]
 }
