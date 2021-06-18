@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { css } from 'glamor'
 
@@ -10,10 +10,10 @@ import {
   mediaQueries,
   ColorContextProvider,
   useColorContext,
-  A
+  Checkbox
 } from '@project-r/styleguide'
 
-const mobilePreviewWidth = 320
+const previewWidth = 290
 
 const styles = {
   editButton: css({
@@ -26,24 +26,16 @@ const styles = {
       cursor: 'pointer'
     }
   }),
-  container: css({
-    display: 'flex',
-    flexDirection: 'column',
+  preview: css({
     [mediaQueries.mUp]: {
-      flexDirection: 'row'
+      float: 'left',
+      width: previewWidth
     }
   }),
-  preview: css({
-    flex: '1 1 50%',
-    overflow: 'hidden'
-  }),
-  innerPreview: css({
-    padding: '0 15px',
-    overflow: 'hidden'
-  }),
   edit: css({
-    flex: '1 1 50%',
     [mediaQueries.mUp]: {
+      float: 'left',
+      width: `calc(100% - ${previewWidth}px)`,
       paddingLeft: 20
     }
   }),
@@ -69,18 +61,15 @@ const ContextBackground = ({ children }) => {
   )
 }
 
-const OverlayForm = ({ onClose, preview, extra, children }) => {
+const OverlayForm = ({
+  onClose,
+  preview,
+  extra,
+  children,
+  autoDarkModePreview = true
+}) => {
   const [colorScheme] = useColorContext()
-  const [mobileView, setMobileView] = useState(false)
-  const [renderedPreview, setRenderedPreview] = useState(preview)
-
-  useEffect(() => setRenderedPreview(preview), [mobileView, preview])
-
-  const onViewSwitch = e => {
-    e.preventDefault()
-    setRenderedPreview(null) // otherwise svg doesn't resize
-    setMobileView(!mobileView)
-  }
+  const [showDarkMode, setShowDarkMode] = useState(autoDarkModePreview)
 
   return (
     <Overlay
@@ -92,33 +81,31 @@ const OverlayForm = ({ onClose, preview, extra, children }) => {
       </OverlayToolbar>
 
       <OverlayBody>
-        <div {...styles.container}>
-          <div {...styles.preview}>
-            <div style={{ width: mobileView ? mobilePreviewWidth : null }}>
-              <div {...styles.innerPreview}>
-                <ContextBackground>{renderedPreview}</ContextBackground>
-                <br />
-                <ColorContextProvider
-                  colorSchemeKey={
-                    colorScheme.schemeKey === 'dark' ? 'light' : 'dark'
-                  }
-                >
-                  <ContextBackground>{renderedPreview}</ContextBackground>
-                </ColorContextProvider>
-                <br />
-                <br />
-                <div>
-                  <A href='#' onClick={onViewSwitch}>
-                    {mobileView ? 'normal view' : 'mobile view'}
-                  </A>
-                </div>
-                <br />
-                {extra}
-              </div>
-            </div>
-          </div>
-          <div {...styles.edit}>{children}</div>
+        <div {...styles.preview}>
+          <ContextBackground>{preview}</ContextBackground>
+          <br />
+          <Checkbox
+            checked={showDarkMode}
+            onChange={(_, checked) => setShowDarkMode(checked)}
+          >
+            Nachtmodus Vorschau
+          </Checkbox>
+          {showDarkMode && (
+            <ColorContextProvider
+              colorSchemeKey={
+                colorScheme.schemeKey === 'dark' ? 'light' : 'dark'
+              }
+            >
+              <ContextBackground>{preview}</ContextBackground>
+            </ColorContextProvider>
+          )}
+          <br />
+          <br />
+          <br />
+          {extra}
         </div>
+        <div {...styles.edit}>{children}</div>
+        <br style={{ clear: 'both' }} />
       </OverlayBody>
     </Overlay>
   )

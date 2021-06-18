@@ -71,7 +71,13 @@ export default ({ rule, subModules, TYPE }) => {
             />
           )
 
-          return <EditOverlay {...props} preview={chart} />
+          return (
+            <EditOverlay
+              autoDarkModePreview={values?.length < 500}
+              {...props}
+              preview={chart}
+            />
+          )
         },
         schema: {
           blocks: {

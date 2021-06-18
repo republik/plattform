@@ -52,6 +52,7 @@ class OverlayFormManager extends Component {
       onChange,
       component,
       preview,
+      autoDarkModePreview,
       extra,
       children
     } = this.props
@@ -75,6 +76,7 @@ class OverlayFormManager extends Component {
         {showModal && (
           <OverlayForm
             preview={preview}
+            autoDarkModePreview={autoDarkModePreview}
             extra={extra}
             onClose={() => {
               this.setState({ showModal: false })
