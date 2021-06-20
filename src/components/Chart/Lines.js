@@ -738,6 +738,105 @@ Line.defaultProps = {
   yNice: 3
 }
 
+export const createSchema = ({ fields, defaults }) => {
+  return {
+    type: 'object',
+    title: 'LineChartConfig',
+    format: 'grid',
+    options: {
+      grid_columns: 4
+    },
+    properties: {
+      x: {
+        type: 'string',
+        enum: fields,
+        default: Line.defaultProps.x || defaults.x || ''
+      },
+      color: {
+        type: 'string',
+        enum: fields,
+        default: Line.defaultProps.color || defaults.color || ''
+      },
+      xScale: {
+        type: 'string',
+        enum: ['time', 'ordinal', 'linear'],
+        default: Line.defaultProps.xScale
+      },
+      yScale: {
+        type: 'string',
+        enum: ['log', 'linear'],
+        default: Line.defaultProps.yScale
+      },
+      timeParse: {
+        type: 'string',
+        default: Line.defaultProps.timeParse
+      },
+      timeFormat: {
+        type: 'string',
+        default: Line.defaultProps.timeFormat
+      },
+      numberFormat: {
+        type: 'string',
+        default: Line.defaultProps.numberFormat
+      },
+      unit: {
+        type: 'string',
+        default: Line.defaultProps.unit
+      },
+      startValue: {
+        type: 'boolean',
+        format: 'checkbox',
+        default: Line.defaultProps.startValue
+      },
+      endValue: {
+        type: 'boolean',
+        format: 'checkbox',
+        default: Line.defaultProps.endValue
+      },
+      endLabel: {
+        type: 'boolean',
+        format: 'checkbox',
+        default: Line.defaultProps.endLabel
+      },
+      endDy: {
+        type: 'string',
+        default: Line.defaultProps.endDy || defaults.endDy
+      },
+      column: {
+        type: 'string',
+        enum: fields,
+        default: Line.defaultProps.column || defaults.column || ''
+      },
+      columns: {
+        type: 'integer',
+        default: 1
+      },
+      columnSort: {
+        type: 'string',
+        enum: ['none', 'ascending', 'descending'],
+        default: Line.defaultProps.columnSort || defaults.columnSort || ''
+      },
+      minInnerWidth: {
+        type: 'integer',
+        default: 110
+      },
+      height: {
+        type: 'integer',
+        default: 240
+      },
+      yNice: {
+        type: 'integer',
+        default: 3
+      },
+      sort: {
+        type: 'string',
+        enum: ['none', 'ascending', 'descending'],
+        default: Line.defaultProps.sort || defaults.sort || ''
+      }
+    }
+  }
+}
+
 export const Slope = props => <LineChart {...props} />
 
 Slope.defaultProps = {

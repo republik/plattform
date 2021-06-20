@@ -845,6 +845,20 @@ const Styleguide = () => {
                       component: require('./components/Chart/docs.js').default
                     },
                     {
+                      path: '/charts/editor',
+                      title: 'Editor Prototype',
+                      imports: {
+                        ...require('./components/Typography'),
+                        JSONEditor: require('./components/Chart/JSONEditor'),
+                        createLineSchema: require('./components/Chart/Lines')
+                          .createSchema,
+                        ErrorBoundary: require('./components/ErrorBoundary'),
+                        CsvChart: require('./components/Chart/Csv'),
+                        t
+                      },
+                      src: require('./components/Chart/Editor.docs.md')
+                    },
+                    {
                       path: '/charts/bars',
                       title: 'Bars',
                       imports: {
