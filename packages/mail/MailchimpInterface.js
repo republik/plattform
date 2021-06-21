@@ -91,6 +91,14 @@ const MailchimpInterface = ({ logger }) => {
         throw new NewsletterMemberMailError({ error, email })
       }
     },
+    /* 
+    MailChimp differs between archiving and permanently deleting members
+    For further reference see API docs: 
+      - archiving: https://mailchimp.com/developer/marketing/api/list-members/archive-list-member/
+      - deleting: https://mailchimp.com/developer/marketing/api/list-members/delete-list-member/
+    And more information about the differences of unsubscribe, archive and delete:
+    https://www.chimpanswers.com/cleaning-your-mailchimp-audience/
+    */
     async archiveMember(email) {
       debug(`archiving ${email}`)
       const url = this.buildMembersApiUrl(email)
