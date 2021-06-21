@@ -6,7 +6,10 @@ state: {}
     fields: ['year','gender','at_age'],
     defaults: {}
   })} onChange={setState} />
-  <ErrorBoundary key={JSON.stringify(state)}>
+  <ErrorBoundary
+    key={JSON.stringify(state)}
+    showException
+    failureMessage={t('styleguide/charts/error')}>
     <CsvChart
       config={{
         "type": "Line",

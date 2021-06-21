@@ -743,9 +743,6 @@ export const createSchema = ({ fields, defaults }) => {
     type: 'object',
     title: 'LineChartConfig',
     format: 'grid',
-    options: {
-      grid_columns: 4
-    },
     properties: {
       x: {
         type: 'string',
