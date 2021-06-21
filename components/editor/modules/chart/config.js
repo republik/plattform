@@ -1,17 +1,7 @@
-export const chartTypes = [
-  'Bar',
-  'TimeBar',
-  'Lollipop',
-  'Line',
-  'Slope',
-  'ScatterPlot',
-  'ProjectedMap',
-  'SwissMap',
-  'Hemicycle'
-]
-
-export const chartData = {
-  Bar: {
+export const baseCharts = [
+  {
+    name: 'Bars',
+    screenshot: '/static/charts/bars.png',
     config: {
       type: 'Bar',
       numberFormat: '.0%',
@@ -30,7 +20,159 @@ USA,0.264
 Irland,0.236
 `
   },
-  TimeBar: {
+  {
+    name: 'Stacked Bars',
+    screenshot: '/static/charts/stacked-bars.png',
+    config: {
+      type: 'Bar',
+      y: 'category',
+      sort: 'none',
+      colorSort: 'none',
+      color: 'label',
+      colorRange: ['#fdd49e', '#fdbb84', '#fc8d59'],
+      colorDarkMapping: {
+        '#fdd49e': '#807dba',
+        '#fdbb84': '#6a51a3',
+        '#fc8d59': '#54278f'
+      },
+      inlineValue: true,
+      inlineLabel: 'label',
+      inlineLabelPosition: 'pos'
+    },
+    values: `
+category,value,label,pos
+Ca. 3500 Kilometer mehr mit ÖV,79,a,
+8 bis 15 Stunden mehr Flug pro Jahr,2074,a,center
+9 bis 16 Stunden mehr Flug pro Jahr,2074,a,
+9 bis 16 Stunden mehr Flug pro Jahr,200,b,
+10 bis 16 Stunden mehr Flug pro Jahr,2074,a,
+10 bis 16 Stunden mehr Flug pro Jahr,200,b,right
+10 bis 16 Stunden mehr Flug pro Jahr,200,c,left
+Verzicht auf 10 bis 16 Stunden Flug pro Jahr,-2074,a,
+Verzicht auf 10 bis 16 Stunden Flug pro Jahr,-200,b,left
+Verzicht auf 10 bis 16 Stunden Flug pro Jahr,-200,c,right
+Verzicht auf 9 bis 16 Stunden Flug pro Jahr,-2074,a,
+Verzicht auf 9 bis 16 Stunden Flug pro Jahr,-200,b,
+Verzicht auf 8 bis 15 Stunden Flug pro Jahr,-2074,a,center
+Verzicht auf ca. 3500 Kilometer mit ÖV,-79,a,
+`
+  },
+  {
+    name: 'Multi Bars',
+    screenshot: '/static/charts/multi-bars.png',
+    config: {
+      type: 'Bar',
+      color: 'type',
+      colorSort: 'none',
+      numberFormat: '%',
+      sort: 'none',
+      column: 'type',
+      y: 'category',
+      columns: 3,
+      minInnerWidth: 250
+    },
+    values: `
+category,type,value
+"Sprachen, Kultur, Politik",Nicht-berufsbezogene Weiterbildung,0.32
+Pädagogik und Sozialkompetenz,Nicht-berufsbezogene Weiterbildung,0.07
+Gesundheit und Sport,Nicht-berufsbezogene Weiterbildung,0.26
+"Wirtschaft, Arbeit, Recht",Nicht-berufsbezogene Weiterbildung,0.12
+"Natur, Technik, Computer",Nicht-berufsbezogene Weiterbildung,0.23
+nicht oder nur einstellig klassifizierbar,Nicht-berufsbezogene Weiterbildung,0.01
+"Sprachen, Kultur, Politik",Individuelle berufsbezogene Weiterbildung,0.15
+Pädagogik und Sozialkompetenz,Individuelle berufsbezogene Weiterbildung,0.17
+Gesundheit und Sport,Individuelle berufsbezogene Weiterbildung,0.21
+"Wirtschaft, Arbeit, Recht",Individuelle berufsbezogene Weiterbildung,0.26
+"Natur, Technik, Computer",Individuelle berufsbezogene Weiterbildung,0.17
+`
+  },
+  {
+    name: 'Filled Bars',
+    screenshot: '/static/charts/filled-bars.png',
+    config: {
+      type: 'Bar',
+      numberFormat: '%',
+      color: 'concern',
+      colorRange: 'diverging2',
+      colorLegend: true,
+      y: 'category',
+      domain: [0, 1],
+      sort: 'none',
+      colorSort: 'none',
+      highlight: "datum.category == 'Allgemein'"
+    },
+    values: `
+category,concern,value
+Allgemein,gar nicht,0.416
+Allgemein,etwas,0.413
+Allgemein,ziemlich,0.124
+Allgemein,sehr stark,0.047
+Körperverletzung,gar nicht,0.535
+Körperverletzung,etwas,0.299
+Körperverletzung,ziemlich,0.073
+Körperverletzung,sehr stark,0.093
+Einbruch,gar nicht,0.427
+Einbruch,etwas,0.39
+Einbruch,ziemlich,0.077
+Einbruch,sehr stark,0.107
+Raub,gar nicht,0.464
+Raub,etwas,0.352
+Raub,ziemlich,0.074
+Raub,sehr stark,0.11
+Sexuelle Belästigung,gar nicht,0.692
+Sexuelle Belästigung,etwas,0.167
+Sexuelle Belästigung,ziemlich,0.047
+Sexuelle Belästigung,sehr stark,0.093
+`
+  },
+  {
+    name: 'Timebars',
+    screenshot: '/static/charts/timebars.png',
+    config: {
+      type: 'TimeBar',
+      color: 'type',
+      colorMap: {
+        Überschuss: '#90AA00',
+        Defizit: '#542785'
+      },
+      xTicks: [1990, 2000, 2010, 2016],
+      yTicks: [10000000000, 5000000000, 0, -5000000000, -10000000000],
+      numberFormat: '.3s'
+    },
+    values: `
+year,value,type
+1990,1057658360.08,Überschuss
+1991,-2011523534.73,Defizit
+1992,-2863480070.89,Defizit
+1993,-7818499172.36,Defizit
+1994,-5102405964.07,Defizit
+1995,-3262732301.78,Defizit
+1996,-3743144543.84,Defizit
+1997,-5269452952.95,Defizit
+1998,-857851361.56,Defizit
+1999,-2351879865.72,Defizit
+2000,3969594868.51,Überschuss
+2001,-224765129.41,Defizit
+2002,-2628735642.11,Defizit
+2003,-2800591858.81,Defizit
+2004,-1655861976.03,Defizit
+2005,-121162004.28,Defizit
+2006,2534297019.44,Überschuss
+2007,4126837070.11,Überschuss
+2008,7296651427.23,Überschuss
+2009,2721390296.13,Überschuss
+2010,3567528923.07,Überschuss
+2011,1912378916.33,Überschuss
+2012,1261617831.17,Überschuss
+2013,1331670681.45,Überschuss
+2014,-123948563.32,Defizit
+2015,2337300888.72,Überschuss
+2016,751559663.61,Überschuss
+`
+  },
+  {
+    name: 'Stacked Timebars',
+    screenshot: '/static/charts/stacked-timebars.png',
     config: {
       type: 'TimeBar',
       color: 'gas',
@@ -178,25 +320,66 @@ Stickstofftrifluorid,2015,11885.2000
 Stickstofftrifluorid,2016,12000.0000
 `
   },
-  Lollipop: {
+  {
+    name: 'Multi Timebars',
+    screenshot: '/static/charts/multi-timebars.png',
     config: {
-      type: 'Lollipop',
-      y: 'category',
-      sort: 'none',
-      band: 'Q',
-      bandLegend: 'in diesem Bereich liegt die Hälfte aller Löhne',
-      domain: [0, 15000],
-      unit: 'CHF',
-      xTicks: [0, 6502, 10000, 15000]
+      type: 'TimeBar',
+      unit: 'Überlebende',
+      x: 'age',
+      column: 'date',
+      columns: 3,
+      xScale: 'linear',
+      padding: 10,
+      numberFormat: '.0%',
+      xTicks: [0, 100],
+      xUnit: 'Alter'
     },
     values: `
-category,value,Q_lower,Q_upper
-Informationstechnologie,8900,6918,11373
-Forschung und Entwicklung,8764,7143,11837
-Energieversorgung,8210,6873,10182
+age,date,value
+0,1851,1
+20,1851,0.659
+40,1851,0.54
+60,1851,0.376
+80,1851,0.089
+100,1851,0
+0,1931,1
+20,1931,0.875
+40,1931,0.812
+60,1931,0.652
+80,1931,0.193
+100,1931,0
 `
   },
-  Line: {
+  {
+    name: 'Ordinal Timebars',
+    screenshot: '/static/charts/ordinal-timebars.png',
+    config: {
+      type: 'TimeBar',
+      x: 'category',
+      color: 'year',
+      colorRange: ['#004529'],
+      xScale: 'ordinal',
+      unit: 'der landwirtschaftlichen Betriebe',
+      numberFormat: '.1%',
+      padding: 10,
+      xTicks: ['1–3', '5–10', '20–30', '> 50']
+    },
+    values: `
+year,category,value
+2018,< 1,0.041748603791395
+2018,1–3,0.06330134507984
+2018,3–5,0.049535908125541
+2018,5–10,0.132777471879179
+2018,10–20,0.292476205458979
+2018,20–30,0.207976087469519
+2018,30–50,0.156218044521356
+2018,> 50,0.055966333674192
+`
+  },
+  {
+    name: 'Lines',
+    screenshot: '/static/charts/lines.png',
     config: {
       type: 'Line',
       unit: 'Jahre',
@@ -257,7 +440,95 @@ year,gender,at_age,value
 2015,Total,0,80.57
 `
   },
-  Slope: {
+  {
+    name: 'Bands',
+    screenshot: '/static/charts/bands.png',
+    config: {
+      numberFormat: '.2f',
+      color: 'category',
+      band: 'confidence95',
+      bandLegend: '95-Prozent-Konfidenzintervall',
+      type: 'Line'
+    },
+    values: `
+category,year,value,confidence95_lower,confidence95_upper
+Oberste Einkommen,1991,7.70388503,7.55473859,7.85303157
+Oberste Einkommen,1992,7.31237031,7.14783672,7.47690388
+Oberste Einkommen,1993,7.05771049,6.89426273,7.22115857
+Oberste Einkommen,1994,7.26254451,7.13745479,7.38763448
+Oberste Einkommen,1995,7.12396028,6.79629487,7.45162612
+Oberste Einkommen,1996,7.20730586,7.03792944,7.37668237
+Oberste Einkommen,1997,7.35054646,7.09085513,7.61023759
+Oberste Einkommen,1998,7.31048811,7.18978234,7.43119410
+Oberste Einkommen,1999,7.31499167,7.09225644,7.53772651
+Oberste Einkommen,2000,7.43113140,7.37079312,7.49146961
+Oberste Einkommen,2001,7.21670608,7.09378583,7.33962672
+Oberste Einkommen,2002,7.25964278,7.12030801,7.39897719
+Oberste Einkommen,2003,7.17693254,7.02270067,7.33116400
+Oberste Einkommen,2004,7.01958149,6.86757144,7.17159120
+Oberste Einkommen,2005,6.97619338,6.81720873,7.13517813
+Oberste Einkommen,2006,7.11799206,7.00116320,7.23482064
+Oberste Einkommen,2007,7.11373370,6.91485941,7.31260812
+Oberste Einkommen,2008,7.23273389,7.07946258,7.38600487
+Oberste Einkommen,2009,7.04101494,6.90843652,7.17359378
+Oberste Einkommen,2010,7.24250971,7.08551859,7.39950110
+Oberste Einkommen,2011,7.18729546,7.09688701,7.27770386
+Oberste Einkommen,2012,7.24192507,7.03733352,7.44651696
+Oberste Einkommen,2013,7.30490000,7.18216251,7.42763783
+Oberste Einkommen,2014,7.37813382,7.23891745,7.51735010
+Unterste Einkommen,1991,6.59219716,5.97275408,7.21163981
+Unterste Einkommen,1992,6.44213742,6.01034235,6.87393213
+Unterste Einkommen,1993,6.70573324,6.34278379,7.06868281
+Unterste Einkommen,1994,6.16818299,5.64157807,6.69478763
+Unterste Einkommen,1995,6.02004351,5.69419482,6.34589193
+Unterste Einkommen,1996,6.07633580,5.70647180,6.44620002
+Unterste Einkommen,1997,5.80750421,5.60348859,6.01151976
+Unterste Einkommen,1998,6.40939891,5.96369471,6.85510336
+Unterste Einkommen,1999,6.37915153,5.78367563,6.97462706
+Unterste Einkommen,2000,6.52467965,6.23936947,6.80998986
+Unterste Einkommen,2001,6.39326613,6.01490468,6.77162772
+Unterste Einkommen,2002,6.46966442,6.10404591,6.83528324
+Unterste Einkommen,2003,5.86378442,5.47713885,6.25042978
+Unterste Einkommen,2004,5.42127334,5.08393568,5.75861078
+Unterste Einkommen,2005,5.93505081,5.37149613,6.49860579
+Unterste Einkommen,2006,6.09851513,5.90034267,6.29668740
+Unterste Einkommen,2007,5.93678717,5.52273282,6.35084143
+Unterste Einkommen,2008,6.31126331,5.80801400,6.81451217
+Unterste Einkommen,2009,6.27139018,5.88651339,6.65626654
+Unterste Einkommen,2010,6.31624841,5.98233719,6.65015965
+Unterste Einkommen,2011,6.47754732,6.23046817,6.72462617
+Unterste Einkommen,2012,6.53496432,6.10142285,6.96850532
+Unterste Einkommen,2013,6.59633765,6.23829044,6.95438515
+Unterste Einkommen,2014,6.85379000,6.69934954,7.00823007
+Gesamt,1991,7.27869,7.20332,7.35407
+Gesamt,1992,7.06308,6.99279,7.13337
+Gesamt,1993,6.96109,6.93000,6.99218
+Gesamt,1994,6.86758,6.77587,6.95928
+Gesamt,1995,6.83180,6.75502,6.90858
+Gesamt,1996,6.81936,6.75502,6.90858
+Gesamt,1997,6.81966,6.74775,6.89157
+Gesamt,1998,6.87913,6.80111,6.95715
+Gesamt,1999,6.91494,6.82023,7.00965
+Gesamt,2000,7.10757,7.05554,7.15961
+Gesamt,2001,6.90476,6.85910,6.95043
+Gesamt,2002,6.88928,6.84473,6.93383
+Gesamt,2003,6.76875,6.72208,6.81542
+Gesamt,2004,6.74274,6.72208,6.81542
+Gesamt,2005,6.71687,6.63086,6.80287
+Gesamt,2006,6.79813,6.75289,6.84336
+Gesamt,2007,6.77577,6.70156,6.84999
+Gesamt,2008,6.74164,6.66124,6.82203
+Gesamt,2009,6.81263,6.71438,6.91088
+Gesamt,2010,6.90226,6.83339,6.97112
+Gesamt,2011,7.01994,6.97718,7.06270
+Gesamt,2012,7.00601,6.94204,7.06998
+Gesamt,2013,7.05254,7.00163,7.10346
+Gesamt,2014,7.13645,7.11445,7.15846
+`
+  },
+  {
+    name: 'Slopes',
+    screenshot: '/static/charts/slopes.png',
     config: {
       color: 'country',
       colorSort: 'none',
@@ -281,7 +552,29 @@ year,country,value
 2016,Italien,0.565762240476037
 `
   },
-  ScatterPlot: {
+  {
+    name: 'Lollipops',
+    screenshot: '/static/charts/lollipops.png',
+    config: {
+      type: 'Lollipop',
+      y: 'category',
+      sort: 'none',
+      band: 'Q',
+      bandLegend: 'in diesem Bereich liegt die Hälfte aller Löhne',
+      domain: [0, 15000],
+      unit: 'CHF',
+      xTicks: [0, 6502, 10000, 15000]
+    },
+    values: `
+category,value,Q_lower,Q_upper
+Informationstechnologie,8900,6918,11373
+Forschung und Entwicklung,8764,7143,11837
+Energieversorgung,8210,6873,10182
+`
+  },
+  {
+    name: 'Scatter Plot',
+    screenshot: '/static/charts/scatter-plot.png',
     config: {
       type: 'ScatterPlot',
       label: 'geo',
@@ -299,6 +592,100 @@ year,country,value
     },
     values: `
 geo,income pp 2014,co2 pp 2014,region
+Afghanistan,1780,0.299,Asia
+Albania,10700,1.96,Europe
+Algeria,13500,3.72,Africa
+Andorra,44900,5.83,Africa
+Angola,6260,1.29,Africa
+Antigua and Barbuda,19500,5.38,Africa
+Argentina,18800,4.75,Americas
+Armenia,7970,1.9,FSU
+Australia,43400,15.4,Oceania
+Austria,44100,6.8,Europe
+Azerbaijan,16700,3.94,Asia
+Bahamas,22300,6.32,Americas
+Bahrain,44400,23.4,Asia
+Bangladesh,2970,0.459,Asia
+Barbados,15300,4.49,Americas
+Belarus,17900,6.69,FSU
+Belgium,41400,8.32,Europe
+Belize,8050,1.41,Americas
+Benin,2000,0.614,Africa
+Bhutan,7370,1.29,Asia
+Bolivia,6330,1.93,Americas
+Bosnia and Herzegovina,10500,6.23,Europe
+Botswana,15900,3.24,Africa
+Brazil,15400,2.59,Americas
+Brunei,76100,22.1,Asia
+Bulgaria,16300,5.87,Europe
+Burkina Faso,1540,0.162,Africa
+Burundi,803,0.0445,Africa
+Cambodia,3120,0.438,Asia
+Cameroon,2900,0.315,Africa
+Canada,42900,15.1,Americas
+Cape Verde,5930,0.933,Africa
+Central African Republic,602,0.0666,Africa
+Chad,2080,0.0538,Africa
+Chile,22200,4.69,Americas
+China,12800,7.4,Asia
+Colombia,12700,1.76,Americas
+Comoros,1430,0.203,Africa
+"Congo, Dem. Rep.",726,0.0634,Africa
+"Congo, Rep.",5540,0.635,Africa
+Costa Rica,14400,1.63,Americas
+Cote d'Ivoire,3060,0.49,Africa
+Croatia,20100,3.96,Europe
+Cuba,20000,3.05,Americas
+Cyprus,29700,5.26,Europe
+Czech Republic,29100,9.1,Europe
+Denmark,45100,5.91,Europe
+Djibouti,3000,0.792,Africa
+Dominica,10400,1.86,Africa
+Dominican Republic,12600,2.07,Americas
+Ecuador,10900,2.76,Americas
+Egypt,9880,2.2,Africa
+El Salvador,7710,1,Americas
+Equatorial Guinea,31200,4.73,Africa
+Eritrea,1200,0.147,Africa
+Estonia,27000,14.8,Europe
+Ethiopia,1430,0.119,Africa
+Fiji,8350,1.32,Oceania
+Finland,39000,8.66,Europe
+France,37500,4.72,Europe
+Gabon,16700,2.77,Africa
+Gambia,1560,0.268,Africa
+Georgia,8750,2.25,FSU
+Germany,43400,8.83,Europe
+Ghana,3870,0.537,Africa
+Greece,24000,5.98,Europe
+Grenada,12000,2.28,Americas
+Guatemala,7150,1.15,Americas
+Guinea,1210,0.207,Africa
+Guinea-Bissau,1390,0.157,Africa
+Guyana,6890,2.63,Americas
+Haiti,1650,0.271,Americas
+Honduras,4230,1.08,Americas
+Hungary,24000,4.29,Europe
+Iceland,41400,6.04,Europe
+India,5390,1.73,Asia
+Indonesia,10000,1.82,Asia
+Iran,16500,8.28,Asia
+Iraq,14700,4.81,Asia
+Ireland,48900,7.27,Europe
+Israel,31800,8.13,Asia
+Italy,33900,5.38,Europe
+Jamaica,8050,2.59,Americas
+Japan,37300,9.47,Asia
+Jordan,8620,3,Asia
+Kazakhstan,23600,14.2,FSU
+Kenya,2750,0.31,Africa
+Kiribati,1840,0.564,Africa
+Kuwait,70800,25.2,Asia
+Kyrgyz Republic,3180,1.66,Asia
+Lao,5130,0.297,Asia
+Latvia,22300,3.46,FSU
+Lebanon,13500,4.3,Asia
+Lesotho,2660,1.15,Africa
 Liberia,805,0.213,Africa
 Libya,15100,9.19,Africa
 Lithuania,26300,4.33,FSU
@@ -325,9 +712,84 @@ Myanmar,4770,0.417,Asia
 Namibia,9630,1.58,Africa
 Nauru,12600,4.31,Africa
 Nepal,2270,0.284,Asia
+Netherlands,45700,9.91,Europe
+New Zealand,34500,7.59,Oceania
+Nicaragua,4790,0.809,Americas
+Niger,900,0.111,Africa
+Nigeria,5670,0.546,Africa
+North Korea,1390,1.61,Asia
+Norway,63300,9.27,Europe
+Oman,40300,15.4,Asia
+Pakistan,4580,0.896,Asia
+Palau,13300,12.3,Asia
+Palestine,2640,0.626,Asia
+Panama,19900,2.25,Americas
+Papua New Guinea,2620,0.815,Oceania
+Paraguay,8500,0.87,Americas
+Peru,11500,1.99,Americas
+Philippines,6590,1.06,Asia
+Poland,24300,7.46,Europe
+Portugal,26000,4.3,Europe
+Qatar,121000,45.4,Asia
+Romania,19700,3.5,Europe
+Russia,24900,11.9,FSU
+Rwanda,1620,0.074,Africa
+Samoa,5510,1.03,Oceania
+San Marino,39100,1.03,Oceania
+Sao Tome and Principe,2890,0.594,Africa
+Saudi Arabia,50000,19.5,Asia
+Senegal,2220,0.609,Africa
+Serbia,13100,4.24,Europe
+Seychelles,25200,5.31,Europe
+Sierra Leone,1690,0.185,Africa
+Singapore,80300,10.3,Asia
+Slovak Republic,27200,5.65,Europe
+Slovenia,28500,6.19,Europe
+Solomon Islands,2020,0.35,Oceania
+Somalia,621,0.045,Africa
+South Africa,12500,8.98,Africa
+South Korea,33400,11.7,Asia
+South Sudan,1990,0.13,Africa
+Spain,31200,5.03,Europe
+Sri Lanka,10700,0.892,Asia
+St. Kitts and Nevis,23500,4.3,Asia
+St. Lucia,10500,2.31,Asia
+St. Vincent and the Grenadines,10300,1.91,Asia
+Sudan,4190,0.407,Africa
+Suriname,15300,3.63,Americas
+Swaziland,8080,0.929,Africa
+Sweden,44200,4.48,Europe
+Switzerland,56700,4.29,Europe
+Syria,4300,1.6,Asia
+Tajikistan,2550,0.62,Asia
+Tanzania,2400,0.221,Africa
+Thailand,14900,4.62,Asia
+Timor-Leste,2110,0.387,Asia
+Togo,1320,0.363,Africa
+Tonga,5030,1.14,Oceania
+Trinidad and Tobago,31600,34.2,Americas
+Tunisia,10800,2.59,Africa
+Turkey,22400,4.49,Europe
+Turkmenistan,14300,12.5,Asia
+Tuvalu,3270,1.01,Asia
+Uganda,1670,0.135,Africa
+Ukraine,8240,5.06,FSU
+United Arab Emirates,64100,23.3,Asia
+United Kingdom,38000,6.46,Europe
+United States,51800,16.5,Americas
+Uruguay,19800,1.97,Americas
+Uzbekistan,5370,3.45,FSU
+Vanuatu,2890,0.595,Oceania
+Venezuela,16700,6.03,Americas
+Vietnam,5370,1.8,Asia
+Yemen,3770,0.865,Asia
+Zambia,3630,0.288,Africa
+Zimbabwe,1910,0.78,Africa
 `
   },
-  ProjectedMap: {
+  {
+    name: 'Projected Map',
+    screenshot: '/static/charts/bars.png',
     config: {
       type: 'GenericMap',
       heightRatio: 0.5,
@@ -364,7 +826,9 @@ Nepal,2270,0.284,Asia
       -73.6943,45.5521,"Montreal",10.136,"Canada"
 `
   },
-  SwissMap: {
+  {
+    name: 'Swiss Map',
+    screenshot: '/static/charts/bars.png',
     config: {
       type: 'SwissMap',
       legendTitle: 'Jastimmen',
@@ -422,7 +886,9 @@ GE,0.322,French
 JU,0.257,French
 `
   },
-  Hemicycle: {
+  {
+    name: 'Hemicycle',
+    screenshot: '/static/charts/hemicycle.png',
     config: {
       type: 'Hemicycle',
       unit: 'Sitze'
@@ -443,4 +909,4 @@ MCR,2015,1
 SVP,2015,65
 `
   }
-}
+]

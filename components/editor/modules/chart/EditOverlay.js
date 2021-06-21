@@ -4,10 +4,37 @@ import { tsvParse, csvFormat } from 'd3-dsv'
 import OverlayFormManager from '../../utils/OverlayFormManager'
 import { JSONEditor, PlainEditor } from '../../utils/CodeEditorFields'
 
-import { Interaction, Label, Radio } from '@project-r/styleguide'
+import { Interaction, Label, Radio, fontStyles } from '@project-r/styleguide'
 
 import Export from './Export'
-import { chartData, chartTypes } from './config'
+import { baseCharts } from './config'
+import { css } from 'glamor'
+
+const styles = {
+  chartWrapper: css({
+    display: 'grid',
+    gridTemplateColumns: 'repeat(4, 1fr)',
+    gridAutoRows: 120
+  }),
+  chartButton: css({
+    whiteSpace: 'nowrap',
+    padding: 30,
+    textAlign: 'center',
+    ...fontStyles.sansSerifRegular14,
+    cursor: 'pointer',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center'
+  }),
+  chartImage: css({
+    height: 'auto',
+    width: 40
+  }),
+  chartButtonText: css({
+    display: 'block',
+    marginTop: 'auto'
+  })
+}
 
 export default props => (
   <OverlayFormManager
@@ -30,8 +57,6 @@ export default props => (
   >
     {({ data, onChange }) => {
       const config = data.get('config') || {}
-      console.log('config', config)
-
       return (
         <Fragment>
           <Interaction.P>
@@ -62,33 +87,31 @@ export default props => (
             })}
           </Interaction.P>
           <Interaction.P>
-            <Label>Typ</Label>
+            <Label>Base Config</Label>
             <br />
-            {chartTypes.map(type => {
-              const checked = config.type === type
-              return (
-                <Fragment key={type}>
-                  <Radio
-                    checked={checked}
-                    onChange={() => {
-                      if (!checked) {
-                        onChange(
-                          data
-                            .set('config', {
-                              ...chartData[type].config,
-                              size: config.size
-                            })
-                            .set('values', chartData[type].values.trim())
-                        )
-                      }
+            <div {...styles.chartWrapper}>
+              {baseCharts.map(chart => {
+                return (
+                  <div
+                    key={chart.name}
+                    {...styles.chartButton}
+                    onClick={() => {
+                      onChange(
+                        data
+                          .set('config', {
+                            ...chart.config,
+                            size: config.size
+                          })
+                          .set('values', chart.values.trim())
+                      )
                     }}
-                    style={{ whiteSpace: 'nowrap', marginRight: 10 }}
                   >
-                    {type}
-                  </Radio>{' '}
-                </Fragment>
-              )
-            })}
+                    <img src={chart.screenshot} {...styles.chartImage} />
+                    <span {...styles.chartButtonText}>{chart.name}</span>
+                  </div>
+                )
+              })}
+            </div>
           </Interaction.P>
           <JSONEditor
             label='JSON Config'
