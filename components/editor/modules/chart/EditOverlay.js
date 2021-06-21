@@ -7,6 +7,7 @@ import { JSONEditor, PlainEditor } from '../../utils/CodeEditorFields'
 import { Interaction, Label, Radio } from '@project-r/styleguide'
 
 import Export from './Export'
+import { chartData, chartTypes } from './config'
 
 export default props => (
   <OverlayFormManager
@@ -29,6 +30,7 @@ export default props => (
   >
     {({ data, onChange }) => {
       const config = data.get('config') || {}
+      console.log('config', config)
 
       return (
         <Fragment>
@@ -62,17 +64,7 @@ export default props => (
           <Interaction.P>
             <Label>Typ</Label>
             <br />
-            {[
-              'Bar',
-              'TimeBar',
-              'Lollipop',
-              'Line',
-              'Slope',
-              'ScatterPlot',
-              'ProjectedMap',
-              'SwissMap',
-              'Hemicycle'
-            ].map(type => {
+            {chartTypes.map(type => {
               const checked = config.type === type
               return (
                 <Fragment key={type}>
@@ -80,7 +72,14 @@ export default props => (
                     checked={checked}
                     onChange={() => {
                       if (!checked) {
-                        onChange(data.set('config', { ...config, type }))
+                        onChange(
+                          data
+                            .set('config', {
+                              ...chartData[type].config,
+                              size: config.size
+                            })
+                            .set('values', chartData[type].values.trim())
+                        )
                       }
                     }}
                     style={{ whiteSpace: 'nowrap', marginRight: 10 }}
