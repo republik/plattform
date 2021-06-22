@@ -52,6 +52,22 @@ const removeMemberRole = async (grant, user, findFn, pgdb) => {
   return false
 }
 
+const addRole = async (grant, user, pgdb, role) => {
+  debug(`add ${role} role`, { grant: grant.id, user: user.id })
+
+  if (!Roles.userHasRole(user, role)) {
+    await Roles.addUserToRole(user.id, role, pgdb)
+    await eventsLib.log(grant, `role.${role}.add`, pgdb)
+
+    debug(`role "${role}" was missing, added`, user.id)
+
+    return true
+  } else {
+    await eventsLib.log(grant, `role.${role}.present`, pgdb)
+  }
+  return false
+}
+
 const findGiftableMemberships = async (pgdb) =>
   pgdb.query(`
     SELECT
@@ -75,5 +91,6 @@ const findGiftableMemberships = async (pgdb) =>
 module.exports = {
   addMemberRole,
   removeMemberRole,
+  addRole,
   findGiftableMemberships,
 }

@@ -190,9 +190,16 @@ const claim = async (voucherCode, payload, user, t, pgdb, redis, mail) => {
     })
   }
 
+  const hasAddedMemberRole = await membershipsLib.addMemberRole(
+    grant,
+    recipient,
+    pgdb,
+  )
+
   const subscribeToEditorialNewsletters =
+    campaign.config?.subscribeToEditorialNewsletters ||
     perks.some(({ settings }) => !!settings.subscribeToEditorialNewsletters) ||
-    (await membershipsLib.addMemberRole(grant, recipient, pgdb))
+    hasAddedMemberRole
 
   await mail.enforceSubscriptions({
     userId: recipient.id,
@@ -310,10 +317,16 @@ const request = async (granter, campaignId, payload, t, pgdb, redis, mail) => {
       eventsLib.log(grant, `perk.${name}`, pgdb)
     })
   }
+  const hasAddedMemberRole = await membershipsLib.addMemberRole(
+    grant,
+    granter,
+    pgdb,
+  )
 
   const subscribeToEditorialNewsletters =
+    campaign.config?.subscribeToEditorialNewsletters ||
     perks.some(({ settings }) => !!settings.subscribeToEditorialNewsletters) ||
-    (await membershipsLib.addMemberRole(grant, granter, pgdb))
+    hasAddedMemberRole
 
   await mail.enforceSubscriptions({
     userId: grant.granter.id,
