@@ -18,7 +18,7 @@ const styles = {
   }),
   chartButton: css({
     whiteSpace: 'nowrap',
-    padding: 30,
+    padding: '30px 15px',
     textAlign: 'center',
     ...fontStyles.sansSerifRegular14,
     cursor: 'pointer',
@@ -27,8 +27,8 @@ const styles = {
     alignItems: 'center'
   }),
   chartImage: css({
-    height: 'auto',
-    width: 40
+    maxWidth: 60,
+    maxHeight: 40
   }),
   chartButtonText: css({
     display: 'block',
@@ -60,7 +60,7 @@ export default props => (
       return (
         <Fragment>
           <Interaction.P>
-            <Label>Size</Label>
+            <Label>Grösse wählen:</Label>
             <br />
             {[
               { label: 'Normal', size: undefined },
@@ -87,7 +87,7 @@ export default props => (
             })}
           </Interaction.P>
           <Interaction.P>
-            <Label>Base Config</Label>
+            <Label>Vorlage wählen (opt):</Label>
             <br />
             <div {...styles.chartWrapper}>
               {baseCharts.map(chart => {

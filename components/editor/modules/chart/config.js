@@ -25,36 +25,34 @@ Irland,0.236
     screenshot: '/static/charts/stacked-bars.png',
     config: {
       type: 'Bar',
-      y: 'category',
+      y: 'gender',
+      color: 'age',
+      colorLegend: true,
+      showBarValues: true,
       sort: 'none',
-      colorSort: 'none',
-      color: 'label',
-      colorRange: ['#fdd49e', '#fdbb84', '#fc8d59'],
-      colorDarkMapping: {
-        '#fdd49e': '#807dba',
-        '#fdbb84': '#6a51a3',
-        '#fc8d59': '#54278f'
-      },
-      inlineValue: true,
-      inlineLabel: 'label',
-      inlineLabelPosition: 'pos'
+      domain: [-2000, 20000],
+      xTicks: [0]
     },
     values: `
-category,value,label,pos
-Ca. 3500 Kilometer mehr mit ÖV,79,a,
-8 bis 15 Stunden mehr Flug pro Jahr,2074,a,center
-9 bis 16 Stunden mehr Flug pro Jahr,2074,a,
-9 bis 16 Stunden mehr Flug pro Jahr,200,b,
-10 bis 16 Stunden mehr Flug pro Jahr,2074,a,
-10 bis 16 Stunden mehr Flug pro Jahr,200,b,right
-10 bis 16 Stunden mehr Flug pro Jahr,200,c,left
-Verzicht auf 10 bis 16 Stunden Flug pro Jahr,-2074,a,
-Verzicht auf 10 bis 16 Stunden Flug pro Jahr,-200,b,left
-Verzicht auf 10 bis 16 Stunden Flug pro Jahr,-200,c,right
-Verzicht auf 9 bis 16 Stunden Flug pro Jahr,-2074,a,
-Verzicht auf 9 bis 16 Stunden Flug pro Jahr,-200,b,
-Verzicht auf 8 bis 15 Stunden Flug pro Jahr,-2074,a,center
-Verzicht auf ca. 3500 Kilometer mit ÖV,-79,a,
+age,gender,value
+0-9,Women,71
+10-19,Women,504
+20-29,Women,2270
+30-39,Women,2351
+40-49,Women,2728
+50-59,Women,3233
+60-69,Women,1613
+70-79,Women,1315
+80+,Women,2468
+0-9,Men,84
+10-19,Men,361
+20-29,Men,1534
+30-39,Men,1761
+40-49,Men,2042
+50-59,Men,2964
+60-69,Men,2034
+70-79,Men,1566
+80+,Men,1597
 `
   },
   {
@@ -789,7 +787,7 @@ Zimbabwe,1910,0.78,Africa
   },
   {
     name: 'Projected Map',
-    screenshot: '/static/charts/bars.png',
+    screenshot: '/static/charts/projected-map.png',
     config: {
       type: 'GenericMap',
       heightRatio: 0.5,
@@ -800,7 +798,7 @@ Zimbabwe,1910,0.78,Africa
       sizeRangeMax: 300,
       unit: 't CO<sub>2</sub> pro Kopf',
       features: {
-        url: 'https://styleguide.republik.ch/static/geo/world-atlas-110m.json',
+        url: '/static/geo_temp/world-atlas-110m.json',
         object: 'land'
       }
     },
@@ -828,7 +826,7 @@ Zimbabwe,1910,0.78,Africa
   },
   {
     name: 'Swiss Map',
-    screenshot: '/static/charts/bars.png',
+    screenshot: '/static/charts/swiss-map.png',
     config: {
       type: 'SwissMap',
       legendTitle: 'Jastimmen',
@@ -848,8 +846,7 @@ Zimbabwe,1910,0.78,Africa
         'rgb(24,100,170)'
       ],
       features: {
-        url:
-          'https://styleguide.republik.ch/static/geo/ch-cantons-wo-lakes.json',
+        url: '/static/geo_temp/ch-cantons-wo-lakes.json',
         object: 'cantons'
       },
       tooltipLabel: 'What about {name}?',
