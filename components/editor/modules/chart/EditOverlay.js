@@ -4,37 +4,10 @@ import { tsvParse, csvFormat } from 'd3-dsv'
 import OverlayFormManager from '../../utils/OverlayFormManager'
 import { JSONEditor, PlainEditor } from '../../utils/CodeEditorFields'
 
-import { Interaction, Label, Radio, fontStyles } from '@project-r/styleguide'
+import { Interaction, Label, Radio } from '@project-r/styleguide'
 
 import Export from './Export'
-import { baseCharts } from './config'
-import { css } from 'glamor'
-
-const styles = {
-  chartWrapper: css({
-    display: 'grid',
-    gridTemplateColumns: 'repeat(4, 1fr)',
-    gridAutoRows: 120
-  }),
-  chartButton: css({
-    whiteSpace: 'nowrap',
-    padding: '30px 15px',
-    textAlign: 'center',
-    ...fontStyles.sansSerifRegular14,
-    cursor: 'pointer',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center'
-  }),
-  chartImage: css({
-    maxWidth: 60,
-    maxHeight: 40
-  }),
-  chartButtonText: css({
-    display: 'block',
-    marginTop: 'auto'
-  })
-}
+import ChartSelector, { ResetChart } from './ChartSelector'
 
 export default props => (
   <OverlayFormManager
@@ -57,6 +30,7 @@ export default props => (
   >
     {({ data, onChange }) => {
       const config = data.get('config') || {}
+      const showEditor = !!config?.type
       return (
         <Fragment>
           <Interaction.P>
@@ -86,56 +60,36 @@ export default props => (
               )
             })}
           </Interaction.P>
-          <Interaction.P>
-            <Label>Vorlage wählen (opt):</Label>
-            <br />
-            <div {...styles.chartWrapper}>
-              {baseCharts.map(chart => {
-                return (
-                  <div
-                    key={chart.name}
-                    {...styles.chartButton}
-                    onClick={() => {
-                      onChange(
-                        data
-                          .set('config', {
-                            ...chart.config,
-                            size: config.size
-                          })
-                          .set('values', chart.values.trim())
-                      )
-                    }}
-                  >
-                    <img src={chart.screenshot} {...styles.chartImage} />
-                    <span {...styles.chartButtonText}>{chart.name}</span>
-                  </div>
-                )
-              })}
-            </div>
-          </Interaction.P>
-          <JSONEditor
-            label='JSON Config'
-            value={config}
-            onChange={value => {
-              onChange(data.set('config', value))
-            }}
-          />
-          <PlainEditor
-            label='CSV Data'
-            value={data.get('values')}
-            onChange={value => onChange(data.set('values', value))}
-            onPaste={e => {
-              const clipboardData = e.clipboardData || window.clipboardData
-              let parsedTsv
-              try {
-                parsedTsv = tsvParse(clipboardData.getData('Text'))
-              } catch (e) {}
-              if (parsedTsv && parsedTsv.columns.length > 1) {
-                e.preventDefault()
-                onChange(data.set('values', csvFormat(parsedTsv)))
-              }
-            }}
-          />
+          {showEditor ? (
+            <>
+              <ResetChart data={data} onChange={onChange} />
+              <JSONEditor
+                label='JSON Config'
+                value={config}
+                onChange={value => {
+                  onChange(data.set('config', value))
+                }}
+              />
+              <PlainEditor
+                label='CSV Data'
+                value={data.get('values')}
+                onChange={value => onChange(data.set('values', value))}
+                onPaste={e => {
+                  const clipboardData = e.clipboardData || window.clipboardData
+                  let parsedTsv
+                  try {
+                    parsedTsv = tsvParse(clipboardData.getData('Text'))
+                  } catch (e) {}
+                  if (parsedTsv && parsedTsv.columns.length > 1) {
+                    e.preventDefault()
+                    onChange(data.set('values', csvFormat(parsedTsv)))
+                  }
+                }}
+              />
+            </>
+          ) : (
+            <ChartSelector data={data} onChange={onChange} />
+          )}
         </Fragment>
       )
     }}
