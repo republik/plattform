@@ -10,20 +10,14 @@ module.exports = async ({ user, newEmail }) => {
 
   const mailchimp = MailchimpInterface({ logger })
   const member = await mailchimp.getMember(oldEmail)
-  if (
-    member &&
-    member.status !== MailchimpInterface.MemberStatus.Unsubscribed
-  ) {
-    // unsubscribe oldEmail
-    await mailchimp.updateMember(oldEmail, {
-      email_address: oldEmail,
-      status: MailchimpInterface.MemberStatus.Unsubscribed,
-    })
-    // subscribe newEmail
+  if (member) {
+    // archive oldEmail
+    await mailchimp.archiveMember(oldEmail)
+    // subscribe newEmail with old member status and interests
     await mailchimp.updateMember(newEmail, {
       email_address: newEmail,
-      status_if_new: MailchimpInterface.MemberStatus.Subscribed,
-      status: MailchimpInterface.MemberStatus.Subscribed,
+      status_if_new: member.status,
+      status: member.status,
       interests: member.interests,
     })
     return true
