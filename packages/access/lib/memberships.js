@@ -27,7 +27,7 @@ const addMemberRole = async (grant, user, pgdb) => {
   if (!hasMembership) {
     return await addRole(grant, user, pgdb, 'member')
   } else {
-    await eventsLib.log(grant, 'user.active.membership', pgdb)
+    await eventsLib.log(grant, 'recipient.active.membership', pgdb)
   }
 
   return false
