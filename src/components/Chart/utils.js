@@ -234,7 +234,9 @@ subsup.svg = subSupSplitter((tag, key, text) => {
       </tspan>
       {/* reset dy: https://stackoverflow.com/a/33711370 */}
       {/* adds a zero width space */}
-      <tspan dy={`-${dy}`}>{'\u200b'}</tspan>
+      <tspan dy={tag === 'sub' ? `-${dy}` : dy.slice(1)} fontSize='75%'>
+        {'\u200b'}
+      </tspan>
     </Fragment>
   )
 })
