@@ -455,13 +455,16 @@ const search = async (__, args, context, info) => {
     cache.set(query, result, options)
   }
 
-  const hasNextPage = first > 0 && result.hits.total > from + first
+  const { total } = result.hits
+  const totalCount = Number.isFinite(total?.value) ? total.value : total
+
+  const hasNextPage = first > 0 && totalCount > from + first
   const hasPreviousPage = from > 0
 
   const response = {
     nodes: result.hits.hits.map(mapHit),
     aggregations: mapAggregations(result, t),
-    totalCount: result.hits.total,
+    totalCount,
     pageInfo: {
       hasNextPage,
       endCursor: hasNextPage
@@ -503,7 +506,7 @@ const search = async (__, args, context, info) => {
 
   if (!recursive && SEARCH_TRACK) {
     const took = cacheHIT ? 0 : result.took
-    const total = result.hits.total
+    const total = totalCount
     const hits = result.hits.hits.map((hit) => _.omit(hit, '_source'))
     const aggs = result.aggregations
 

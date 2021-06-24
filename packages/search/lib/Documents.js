@@ -723,9 +723,12 @@ const isPathUsed = async function (elastic, path, repoId) {
     },
   })
 
-  debug('findUsedPath', { path, repoId, total: body.hits.total })
+  const total = body.hits.total
+  const totalCount = Number.isFinite(total?.value) ? total.value : total
 
-  return !!body.hits.total
+  debug('findUsedPath', { path, repoId, totalCount })
+
+  return totalCount > 0
 }
 
 const findPublished = async function (elastic, repoId) {
