@@ -1199,6 +1199,10 @@
       "value": "Sie können diese Mitgliedschaft nicht auf Ihr eigenes Konto einlösen."
     },
     {
+      "key": "api/access/perk/accessWithRole/grantRevoked/error",
+      "value": "Ihr Gutscheincode ist leider ungültig. Da hat sich vielleicht ein Vertipper eingeschlichen, oder der Gutscheincode ist bereits abgelaufen."
+    },
+    {
       "key": "api/access/resolvers/AccessGrant/status/invalidated",
       "value": "nicht mehr gültig"
     },
