@@ -96,6 +96,7 @@ module.exports = async ({
               ...mapping,
             },
             settings: {
+              number_of_shards: 5,
               analysis,
               // Disable refresh_interval to allow speedier bulk operations
               refresh_interval: -1,
