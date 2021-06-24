@@ -63,7 +63,7 @@ const grantPerks = async (grant, recipient, campaign, t, pgdb, redis, mail) =>
       }
 
       const settings = perk[name]
-      const result = await perks[name].give(
+      const { eventLogExtend, ...result } = await perks[name].give(
         campaign,
         grant,
         recipient,
@@ -80,8 +80,7 @@ const grantPerks = async (grant, recipient, campaign, t, pgdb, redis, mail) =>
         recipient: recipient.id,
         settings,
       })
-
-      return { name, settings, result }
+      return { name, settings, eventLogExtend, result }
     },
     { concurrency: 1 },
   )
@@ -311,10 +310,12 @@ const request = async (granter, campaignId, payload, t, pgdb, redis, mail) => {
     grant.perks = {}
 
     await Promise.map(perks, (perk) => {
-      const { name, ...other } = perk
+      const { name, eventLogExtend, ...other } = perk
       grant.perks[perk.name] = other
 
-      eventsLib.log(grant, `perk.${name}`, pgdb)
+      const event = `perk.${name}${eventLogExtend || ''}`
+
+      eventsLib.log(grant, event, pgdb)
     })
   }
   const hasAddedMemberRole = await membershipsLib.addMemberRole(

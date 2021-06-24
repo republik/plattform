@@ -1,24 +1,12 @@
 const debug = require('debug')('access:lib:perks:accessWithRole')
 
-const { hasUserActiveMembership } = require('@orbiting/backend-modules-utils')
 const { addRole } = require('../memberships')
 
 const give = async (campaign, grant, recipient, settings, t, pgdb) => {
   if (grant.revokedAt) {
-    throw new Error(t('api/access/perk/giftMembership/grantRevoked/error'))
+    throw new Error(t('api/access/perk/accessWithRole/grantRevoked/error'))
   }
 
-  if (grant.granter.id === recipient.id) {
-    throw new Error(t('api/access/perk/giftMembership/selfClaim/error'))
-  }
-
-  const hasActiveMembership = await hasUserActiveMembership(recipient, pgdb)
-
-  if (hasActiveMembership) {
-    throw new Error(
-      t('api/access/perk/giftMembership/hasActiveMembership/error'),
-    )
-  }
   const isRoleAdded = await addRole(grant, recipient, pgdb, settings.role)
 
   if (isRoleAdded) {
@@ -29,6 +17,7 @@ const give = async (campaign, grant, recipient, settings, t, pgdb) => {
     return {
       recipient: recipient.id,
       addedRole: settings.role,
+      eventLogExtend: `.${settings.role}`,
     }
   }
 
