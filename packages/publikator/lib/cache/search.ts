@@ -37,7 +37,7 @@ const getSort = (args: any) => {
 
 const getSourceFilter = () => ({
   _source: {
-    exclude: ['*'],
+    excludes: ['*'],
   },
 })
 
