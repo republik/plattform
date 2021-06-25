@@ -10,8 +10,6 @@ Go forth and make correlations visible, and tell everyone it proves nothing!
       "type": "ScatterPlot",
       "label": "geo",
       "color": "region",
-      "column": "region",
-      "columns": 3,
       "x": "income pp 2014",
       "y": "co2 pp 2014",
       "yUnit": "Tonnen CO<sub>2</sub>",
