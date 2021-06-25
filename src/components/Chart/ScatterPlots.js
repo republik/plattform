@@ -260,7 +260,7 @@ const ScatterPlot = ({
                 annotations={annotations.filter(
                   annotation => !annotation.column || annotation.column === key
                 )}
-                {...contextBoxProps}
+                contextBoxProps={contextBoxProps}
               />
             </div>
           )

@@ -58,7 +58,7 @@ const ScatterPlotGroup = ({
   getColor,
   xUnit,
   annotations,
-  ...contextBoxProps
+  contextBoxProps
 }) => {
   const [hover, setHover] = useState([])
   const [hoverTouch, setHoverTouch] = useState()

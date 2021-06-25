@@ -33,6 +33,9 @@ const Box = ({
   const { cx, cy, r } = hover.sort((a, b) => ascending(a.cy, b.cy))[0]
   const top = hoverTouch || cy > height / 3
   const yOffset = r + (hoverTouch ? 40 : 12)
+
+  console.log(xUnit)
+
   return (
     <ContextBox
       orientation={top ? 'top' : 'below'}
