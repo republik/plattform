@@ -88,9 +88,11 @@ const TimeBarChart = props => {
     groupedData,
     width,
     props.minInnerWidth,
-    columnHeight,
+    () => columnHeight,
     props.columnSort,
+    0,
     PADDING_SIDES,
+    0,
     PADDING_SIDES,
     COLUMN_PADDING,
     true

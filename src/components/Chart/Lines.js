@@ -510,10 +510,12 @@ const LineChart = props => {
     groupedData,
     width,
     props.minInnerWidth,
-    columnHeight,
+    () => columnHeight,
     props.columnSort,
-    paddingLeft,
+    0,
     paddingRight,
+    0,
+    paddingLeft,
     Y_GROUP_MARGIN
   )
 
