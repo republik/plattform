@@ -150,7 +150,7 @@ const ScatterPlot = ({
   const plotY = getPlot(
     yScale,
     yValues,
-    [innerHeight + paddingTop, paddingBottom],
+    [innerHeight + paddingTop, paddingBottom + columnTitleHeight],
     yNice,
     innerHeight
   )
