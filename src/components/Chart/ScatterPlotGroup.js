@@ -188,7 +188,7 @@ const ScatterPlotGroup = ({
             <line
               {...styles.axisLine}
               {...colorScheme.set('stroke', 'text')}
-              x2={width - yLinesPaddingLeft}
+              x2={width + paddingRight - yLinesPaddingLeft}
               style={{
                 opacity: base || (base === undefined && tick === 0) ? 0.8 : 0.17
               }}
@@ -215,7 +215,9 @@ const ScatterPlotGroup = ({
           return (
             <g
               key={`x${tick}`}
-              transform={`translate(${plotX(tick)},${height + X_TICK_HEIGHT})`}
+              transform={`translate(${plotX(tick)},${paddingTop +
+                height +
+                X_TICK_HEIGHT})`}
             >
               <line
                 {...styles.axisLine}
@@ -247,8 +249,8 @@ const ScatterPlotGroup = ({
           )
         })}
         <text
-          x={width}
-          y={height + 28 + X_TICK_HEIGHT}
+          x={width + paddingRight}
+          y={paddingTop + height + 28 + X_TICK_HEIGHT}
           textAnchor='end'
           {...styles.axisLabel}
           {...colorScheme.set('fill', 'text')}

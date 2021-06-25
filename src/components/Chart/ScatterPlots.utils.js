@@ -14,8 +14,13 @@ const getNice = (nice, plotDimension) =>
     ? Math.min(Math.max(Math.round(plotDimension / 150), 3), 5)
     : nice
 
-export const getPlot = (scale, values, range, nice, plotDimension) =>
-  scales[scale]()
+export const getPlot = (scale, values, range, nice, plotDimension) => {
+  const plotScale = scales[scale]()
     .domain(extent(values))
     .range(range)
-    .nice(getNice(nice, plotDimension))
+  const niceValue = getNice(nice, plotDimension)
+  if (niceValue) {
+    plotScale.nice(niceValue)
+  }
+  return plotScale
+}

@@ -119,7 +119,7 @@ const ScatterPlot = ({
   const plotX = getPlot(
     xScale,
     xValues,
-    [paddingLeft, innerWidth],
+    [paddingLeft, innerWidth + paddingRight],
     xNice,
     innerWidth
   )
@@ -145,7 +145,7 @@ const ScatterPlot = ({
   const plotY = getPlot(
     yScale,
     yValues,
-    [innerHeight, paddingTop + columnTitleHeight],
+    [innerHeight + paddingTop, paddingBottom],
     yNice,
     innerHeight
   )

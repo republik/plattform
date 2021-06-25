@@ -352,13 +352,11 @@ export const getColumnLayout = (
   )
   const rows = Math.ceil(itemCount / columns)
   // account for start and end of columns missing padding when skipping row padding
-  const innerWidth =
-    Math.floor(
-      (width -
-        (paddingLeft + paddingRight) *
-          (skipRowPadding ? columns - 1 : columns)) /
-        columns
-    ) - 1
+  const innerWidth = Math.floor(
+    (width -
+      (paddingLeft + paddingRight) * (skipRowPadding ? columns - 1 : columns)) /
+      columns
+  )
   const innerHeight = getHeight(innerWidth)
   const columnHeight = innerHeight + paddingBottom + paddingTop
   const height = rows * columnHeight + (rows - 1) * columnMargin
