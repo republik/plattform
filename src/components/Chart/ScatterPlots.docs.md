@@ -377,7 +377,7 @@ You may use [this helper to calculate linear regression coordinates](https://obs
       "y": "JaInProzent",
       "yUnit": "Ja-Stimmen-Anteil",
       "xUnit": "Wähleranteile (Nationalratswahl 2019)",
-      "numberFormat": "%",
+      "numberFormat": ".2%",
       "colorMap": "swissPartyColors",
       "opacity": 0.6,
       "color": "partei",
