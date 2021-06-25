@@ -35,7 +35,7 @@ services:
       - ./docker-data/redis:/data:delegated
 
   postgres:
-    image: postgres:12.4
+    image: postgres:12.7
     environment:
       - POSTGRES_HOST_AUTH_METHOD=trust
     volumes:
