@@ -102,14 +102,14 @@ const ScatterPlot = ({
   const { height, innerWidth, innerHeight, gx, gy } = getColumnLayout(
     columns,
     groupedData,
-    width,
+    width - paddingLeft - paddingRight,
     minInnerWidth,
     innerWidth => (userHeight || innerWidth * heightRatio) + columnTitleHeight,
     columnSort,
     paddingTop,
-    paddingRight,
+    paddingRight + COLUMN_PADDING / 2,
     paddingBottom,
-    paddingLeft,
+    paddingLeft + COLUMN_PADDING / 2,
     COLUMN_PADDING,
     true
   )
@@ -121,7 +121,7 @@ const ScatterPlot = ({
   const plotX = getPlot(
     xScale,
     xValues,
-    [paddingLeft, innerWidth + paddingRight],
+    [paddingLeft, innerWidth + paddingLeft],
     xNice,
     innerWidth
   )

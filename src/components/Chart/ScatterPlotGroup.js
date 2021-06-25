@@ -202,7 +202,7 @@ const ScatterPlotGroup = ({
             <line
               {...styles.axisLine}
               {...colorScheme.set('stroke', 'text')}
-              x2={width + paddingRight - yLinesPaddingLeft}
+              x2={width + paddingLeft - yLinesPaddingLeft}
               style={{
                 opacity: base || (base === undefined && tick === 0) ? 0.8 : 0.17
               }}
@@ -263,7 +263,7 @@ const ScatterPlotGroup = ({
           )
         })}
         <text
-          x={width + paddingRight}
+          x={width + paddingLeft}
           y={paddingTop + height + 28 + X_TICK_HEIGHT}
           textAnchor='end'
           {...styles.axisLabel}
