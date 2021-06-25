@@ -3,7 +3,6 @@ import { css } from 'glamor'
 import PropTypes from 'prop-types'
 import { Controlled as CodeMirror } from 'react-codemirror2'
 import { colors, fontFamilies, Label } from '@project-r/styleguide'
-import { usePrevious } from '@project-r/styleguide/lib/lib/usePrevious'
 
 // CodeMirror can only run in the browser
 if (process.browser && window) {
@@ -39,7 +38,15 @@ const styles = {
   })
 }
 
-const CodeMirrorField = ({ label, value, onChange, onPaste, options }) => (
+const CodeMirrorField = ({
+  label,
+  value,
+  onChange,
+  onPaste,
+  options,
+  onFocus,
+  onBlur
+}) => (
   <div {...styles.codemirror}>
     <Label>{label}</Label>
     <CodeMirror
@@ -57,6 +64,12 @@ const CodeMirrorField = ({ label, value, onChange, onPaste, options }) => (
       }}
       onPaste={(editor, event) => {
         onPaste && onPaste(event)
+      }}
+      onBlur={(editor, event) => {
+        onBlur && onBlur(event)
+      }}
+      onFocus={(editor, event) => {
+        onFocus && onFocus(event)
       }}
     />
   </div>
@@ -78,19 +91,24 @@ export const PlainEditor = ({ label, value, onChange, onPaste, mode }) => (
   />
 )
 
-export const JSONEditor = ({ label, value, onChange }) => {
+const stringify = json => (json ? JSON.stringify(json, null, 2) : '')
+
+export const JSONEditor = ({ label, config, onChange }) => {
   const [stateValue, setStateValue] = useState(null)
-  const previousValue = usePrevious(value)
 
   useEffect(() => {
-    if (!previousValue || value.type !== previousValue.type) {
-      const stringified = JSON.stringify(value, null, 2)
-      setStateValue(stringified)
+    if (!stateValue) {
+      setStateValue(stringify(config))
     }
-  }, [value, previousValue])
+  }, [config])
 
   return (
     <CodeMirrorField
+      onFocus={() => setStateValue(stringify(config))}
+      onBlur={() => {
+        console.log('on blur', stateValue)
+        setStateValue(stringify(JSON.parse(stateValue)))
+      }}
       label={label}
       value={stateValue}
       options={{
@@ -107,10 +125,7 @@ export const JSONEditor = ({ label, value, onChange }) => {
         if (json) {
           onChange(json)
         }
-
-        if (stateValue !== newValue) {
-          setStateValue(newValue)
-        }
+        setStateValue(newValue)
       }}
     />
   )

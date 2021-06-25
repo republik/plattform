@@ -30,6 +30,7 @@ export default props => (
   >
     {({ data, onChange }) => {
       const config = data.get('config') || {}
+      console.log('top level config', config)
       const showEditor = !!config?.type
       return (
         <Fragment>
@@ -65,9 +66,10 @@ export default props => (
               <ResetChart data={data} onChange={onChange} />
               <JSONEditor
                 label='JSON Config'
-                value={config}
-                onChange={value => {
-                  onChange(data.set('config', value))
+                config={config}
+                onChange={newConfig => {
+                  console.log(newConfig)
+                  onChange(data.set('config', newConfig))
                 }}
               />
               <PlainEditor

@@ -2,7 +2,6 @@ import React from 'react'
 import { Interaction, Label, fontStyles, A } from '@project-r/styleguide'
 import { baseCharts } from './config'
 import { css } from 'glamor'
-import MdAdd from 'react-icons/lib/md/add'
 
 const styles = {
   chartWrapper: css({
