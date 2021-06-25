@@ -183,17 +183,17 @@ const ScatterPlot = ({
   const yLinesPaddingLeft = paddingLeft < 2 ? paddingLeft : 0
 
   const showColorLegend = color !== column
-  const displayedColorLegendValues =
-    showColorLegend &&
-    []
-      .concat(
-        colorLegend &&
-          (colorLegendValues || colorValues).map(colorValue => ({
-            color: colorMapper(colorValue),
-            label: colorValue
-          }))
-      )
-      .filter(Boolean)
+  const displayedColorLegendValues = showColorLegend
+    ? []
+        .concat(
+          colorLegend &&
+            (colorLegendValues || colorValues).map(colorValue => ({
+              color: colorMapper(colorValue),
+              label: colorValue
+            }))
+        )
+        .filter(Boolean)
+    : []
 
   const rSize = scaleSqrt()
     .domain([0, max(data, d => d.size)])
