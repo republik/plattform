@@ -82,7 +82,8 @@ const ScatterPlot = ({
   columnSort,
   columnFilter,
   columns,
-  minInnerWidth
+  minInnerWidth,
+  annotations
 }) => {
   const data = values
     .filter(d => d[x] && d[x].length > 0 && d[y] && d[y].length > 0)
@@ -116,6 +117,8 @@ const ScatterPlot = ({
 
   // setup x axis
   const xValues = aggregateValues(data, xAccessor, xTicks, xLines)
+    .concat(annotations.map(annotation => annotation.x1))
+    .concat(annotations.map(annotation => annotation.x2))
   const plotX = getPlot(
     xScale,
     xValues,
@@ -142,6 +145,8 @@ const ScatterPlot = ({
 
   // setup y axis
   const yValues = aggregateValues(data, yAccessor, yTicks, yLines)
+    .concat(annotations.map(annotation => annotation.y1))
+    .concat(annotations.map(annotation => annotation.y2))
   const plotY = getPlot(
     yScale,
     yValues,
@@ -253,6 +258,9 @@ const ScatterPlot = ({
                 maxYLine={maxYLine}
                 getColor={d => colorMapper(colorAccessor(d))}
                 xUnit={xUnit}
+                annotations={annotations.filter(
+                  annotation => !annotation.column || annotation.column === key
+                )}
                 {...contextBoxProps}
               />
             </div>
@@ -336,7 +344,17 @@ export const propTypes = {
     })
   ),
   columns: PropTypes.number.isRequired,
-  minInnerWidth: PropTypes.number.isRequired
+  minInnerWidth: PropTypes.number.isRequired,
+  annotations: PropTypes.arrayOf(
+    PropTypes.shape({
+      column: PropTypes.string,
+      x1: PropTypes.string.isRequired,
+      x2: PropTypes.string.isRequired,
+      y1: PropTypes.string.isRequired,
+      y2: PropTypes.string.isRequired,
+      label: PropTypes.string
+    }).isRequired
+  ).isRequired
 }
 
 ScatterPlot.defaultProps = {
@@ -359,7 +377,8 @@ ScatterPlot.defaultProps = {
   heightRatio: 1,
   sizeShowValue: false,
   columns: 1,
-  minInnerWidth: 240
+  minInnerWidth: 240,
+  annotations: []
 }
 
 ScatterPlot.propTypes = propTypes

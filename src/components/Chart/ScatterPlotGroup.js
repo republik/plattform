@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef, Fragment } from 'react'
 import { css } from 'glamor'
-import { min } from 'd3-array'
+import { min, ascending } from 'd3-array'
 import { subsup, last } from './utils'
 import { sansSerifRegular12 } from '../Typography/styles'
 import { useColorContext } from '../Colors/useColorContext'
@@ -16,6 +16,16 @@ const styles = {
   axisLine: css({
     strokeWidth: '1px',
     shapeRendering: 'crispEdges'
+  }),
+  annotationLine: css({
+    strokeWidth: '1px',
+    fillRule: 'evenodd',
+    strokeLinecap: 'round',
+    strokeDasharray: '1,3',
+    strokeLinejoin: 'round'
+  }),
+  annotationText: css({
+    ...sansSerifRegular12
   })
 }
 
@@ -44,6 +54,7 @@ const ScatterPlotGroup = ({
   maxYLine,
   getColor,
   xUnit,
+  annotations,
   ...contextBoxProps
 }) => {
   const [hover, setHover] = useState([])
@@ -257,6 +268,60 @@ const ScatterPlotGroup = ({
         >
           {xUnit}
         </text>
+        {annotations.map((annotation, i) => {
+          const x1 = plotX(annotation.x1)
+          const x2 = plotX(annotation.x2)
+          const y1 = plotY(annotation.y1)
+          const y2 = plotY(annotation.y2)
+
+          const xSortedPoints = [
+            [x1, y1],
+            [x2, y2]
+          ].sort((a, b) => ascending(a[0], b[0]))
+
+          return (
+            <Fragment key={`a${i}`}>
+              <line
+                x1={x1}
+                x2={x2}
+                y1={y1}
+                y2={y2}
+                {...styles.annotationLine}
+                {...colorScheme.set('stroke', 'text')}
+              />
+              <circle
+                r='3.5'
+                cx={x1}
+                cy={y1}
+                {...colorScheme.set('stroke', 'text')}
+                {...colorScheme.set('fill', 'textInverted')}
+              />
+              <circle
+                r='3.5'
+                cx={x2}
+                cy={y2}
+                {...colorScheme.set('stroke', 'text')}
+                {...colorScheme.set('fill', 'textInverted')}
+              />
+              {annotation.label && (
+                <text
+                  x={x1 + (x2 - x1) / 2}
+                  y={y1 + (y2 - y1) / 2}
+                  textAnchor='start'
+                  dy={
+                    xSortedPoints[0][1] > xSortedPoints[1][1]
+                      ? '1.2em'
+                      : '-0.4em'
+                  }
+                  {...styles.annotationText}
+                  {...colorScheme.set('fill', 'text')}
+                >
+                  {subsup.svg(annotation.label)}
+                </text>
+              )}
+            </Fragment>
+          )
+        })}
         <rect
           fill='transparent'
           width={plotWidth}
