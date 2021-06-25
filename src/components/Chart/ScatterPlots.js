@@ -22,6 +22,7 @@ import { aggregateValues, getPlot, tickAccessor } from './ScatterPlots.utils'
 import ScatterPlotGroup from './ScatterPlotGroup'
 
 const COLUMN_PADDING = 20
+const COLUMN_TITLE_HEIGHT = 30
 
 export const scales = {
   linear: scaleLinear,
@@ -97,12 +98,13 @@ const ScatterPlot = ({
 
   const groupedData = groupInColumns(data, column, columnFilter)
 
+  const columnTitleHeight = column ? COLUMN_TITLE_HEIGHT : 0
   const { height, innerWidth, innerHeight, gx, gy } = getColumnLayout(
     columns,
     groupedData,
     width,
     minInnerWidth,
-    innerWidth => userHeight || innerWidth * heightRatio,
+    innerWidth => (userHeight || innerWidth * heightRatio) + columnTitleHeight,
     columnSort,
     paddingTop,
     paddingRight,
@@ -117,7 +119,7 @@ const ScatterPlot = ({
   const plotX = getPlot(
     xScale,
     xValues,
-    [paddingLeft, innerWidth + paddingLeft],
+    [paddingLeft, innerWidth],
     xNice,
     innerWidth
   )
@@ -143,7 +145,7 @@ const ScatterPlot = ({
   const plotY = getPlot(
     yScale,
     yValues,
-    [innerHeight + paddingTop, paddingTop],
+    [innerHeight, paddingTop + columnTitleHeight],
     yNice,
     innerHeight
   )
@@ -244,6 +246,7 @@ const ScatterPlot = ({
                 paddingTop={paddingTop}
                 paddingLeft={paddingLeft}
                 paddingRight={paddingRight}
+                paddingBottom={paddingBottom}
                 yLinesPaddingLeft={yLinesPaddingLeft}
                 xAxis={xAxis}
                 yAxis={yAxis}

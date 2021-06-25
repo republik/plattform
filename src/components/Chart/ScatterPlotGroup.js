@@ -37,6 +37,7 @@ const ScatterPlotGroup = ({
   paddingTop,
   paddingLeft,
   paddingRight,
+  paddingBottom,
   yLinesPaddingLeft,
   xAxis,
   yAxis,
@@ -51,6 +52,9 @@ const ScatterPlotGroup = ({
   const containerRef = useRef()
   const hoverRectRef = useRef()
   const [colorScheme] = useColorContext()
+
+  const plotHeight = height + paddingBottom + paddingTop
+  const plotWidth = width + paddingLeft + paddingRight
 
   const symbols = values.map((value, i) => {
     return {
@@ -129,7 +133,7 @@ const ScatterPlotGroup = ({
 
   return (
     <div ref={containerRef}>
-      <svg width={width} height={height}>
+      <svg width={plotWidth} height={plotHeight}>
         <desc>{description}</desc>
         {title && (
           <text
@@ -184,7 +188,7 @@ const ScatterPlotGroup = ({
             <line
               {...styles.axisLine}
               {...colorScheme.set('stroke', 'text')}
-              x2={width - paddingRight - yLinesPaddingLeft}
+              x2={width - yLinesPaddingLeft}
               style={{
                 opacity: base || (base === undefined && tick === 0) ? 0.8 : 0.17
               }}
@@ -211,9 +215,7 @@ const ScatterPlotGroup = ({
           return (
             <g
               key={`x${tick}`}
-              transform={`translate(${plotX(tick)},${paddingTop +
-                height +
-                X_TICK_HEIGHT})`}
+              transform={`translate(${plotX(tick)},${height + X_TICK_HEIGHT})`}
             >
               <line
                 {...styles.axisLine}
@@ -245,8 +247,8 @@ const ScatterPlotGroup = ({
           )
         })}
         <text
-          x={paddingLeft + width}
-          y={paddingTop + height + 28 + X_TICK_HEIGHT}
+          x={width}
+          y={height + 28 + X_TICK_HEIGHT}
           textAnchor='end'
           {...styles.axisLabel}
           {...colorScheme.set('fill', 'text')}
@@ -255,8 +257,8 @@ const ScatterPlotGroup = ({
         </text>
         <rect
           fill='transparent'
-          width={width}
-          height={height}
+          width={plotWidth}
+          height={plotHeight}
           onMouseEnter={e => focus(e)}
           onMouseMove={e => focus(e)}
           onMouseLeave={e => blur(e)}
@@ -270,8 +272,8 @@ const ScatterPlotGroup = ({
         />
       </svg>
       <ScatterPlotContextBox
-        width={width}
-        height={height}
+        width={plotWidth}
+        height={plotHeight}
         xFormat={xAxis.format}
         yFormat={yAxis.format}
         hover={hover}
