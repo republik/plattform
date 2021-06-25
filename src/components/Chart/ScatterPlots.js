@@ -1,10 +1,9 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { css } from 'glamor'
 
 import ColorLegend from './ColorLegend'
 import { scaleLinear, scaleLog, scaleSqrt } from 'd3-scale'
-import { ascending, min, max } from 'd3-array'
+import { ascending, max } from 'd3-array'
 import {
   calculateAxis,
   runSort,
@@ -21,8 +20,8 @@ import { getColorMapper } from './colorMaps'
 import { aggregateValues, getPlot, tickAccessor } from './ScatterPlots.utils'
 import ScatterPlotGroup from './ScatterPlotGroup'
 
-const COLUMN_PADDING = 20
-const COLUMN_TITLE_HEIGHT = 30
+const COLUMN_PADDING = 28
+const COLUMN_TITLE_HEIGHT = 24
 
 export const scales = {
   linear: scaleLinear,
@@ -150,7 +149,7 @@ const ScatterPlot = ({
   const plotY = getPlot(
     yScale,
     yValues,
-    [innerHeight + paddingTop, paddingBottom + columnTitleHeight],
+    [innerHeight + paddingTop, paddingTop + columnTitleHeight],
     yNice,
     innerHeight
   )

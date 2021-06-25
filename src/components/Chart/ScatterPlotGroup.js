@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef, Fragment } from 'react'
 import { css } from 'glamor'
 import { min, ascending } from 'd3-array'
 import { subsup, last } from './utils'
-import { sansSerifRegular12 } from '../Typography/styles'
+import { sansSerifMedium14, sansSerifRegular12 } from '../Typography/styles'
 import { useColorContext } from '../Colors/useColorContext'
 import ScatterPlotContextBox from './ScatterPlotContextBox'
 import { InlineLabel } from './ScatterPlotElements'
@@ -10,6 +10,9 @@ import { InlineLabel } from './ScatterPlotElements'
 const X_TICK_HEIGHT = 6
 
 const styles = {
+  columnTitle: css({
+    ...sansSerifMedium14
+  }),
   axisLabel: css({
     ...sansSerifRegular12
   }),
