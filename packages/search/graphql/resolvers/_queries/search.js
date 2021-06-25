@@ -432,6 +432,7 @@ const search = async (__, args, context, info) => {
     index: indicesList.map(({ name }) => getIndexAlias(name, 'read')),
     from,
     size: first,
+    track_total_hits: true,
     body: createQuery(
       search,
       filter,

@@ -115,6 +115,7 @@ const find = async (args: any, { elastic }: GraphqlContext) => {
     index: utils.getIndexAlias('repo', 'read'),
     from: args.from,
     size: args.first,
+    track_total_hits: true,
     body: {
       ...getSort(args),
       ...getSourceFilter(),
