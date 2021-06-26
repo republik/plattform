@@ -314,7 +314,7 @@ const parseOptions = (options) => {
   try {
     return JSON.parse(Buffer.from(options, 'base64').toString())
   } catch (e) {
-    console.info('failed to parse options:', options, e)
+    console.warn('failed to parse options:', options, e)
   }
   return {}
 }
@@ -392,11 +392,13 @@ const search = async (__, args, context, info) => {
     withoutChildren = withoutContent && !hasFieldRequested('children', info)
   }
 
-  const options = after
-    ? { ...args, ...parseOptions(after) }
-    : before
-    ? { ...args, ...parseOptions(before) }
-    : args
+  /**
+   * If cursors {after} (1) or {before} (2) are provided, their contents
+   * replace options provided: Changing search term or {first} won't have
+   * any effect.
+   */
+  const options =
+    (after && parseOptions(after)) || (before && parseOptions(before)) || args
 
   const {
     search,
