@@ -50,6 +50,6 @@
   "devDependencies": {
     "gsheets": "^2.0.0",
     "nodemon": "^2.0.4",
-    "ws": "^7.3.0"
+    "ws": "^7.4.6"
   }
 }
