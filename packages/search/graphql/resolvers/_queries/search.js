@@ -412,11 +412,27 @@ const search = async (__, args, context, info) => {
 
   debug('options', JSON.stringify(options))
 
+  /**
+   * {filterObj} is a shorthand for adding items to {filterArray}.
+   *
+   * Here we iterate through {filterObj} props, transform them into a
+   * filter item (key, value, not) and append them to {filterArray}. It
+   * will no append a filter item if present already.
+   */
   Object.keys(filterObj).forEach((key) => {
-    filterArray.push({
-      key,
-      value: filterObj[key],
-    })
+    const value = filterObj[key]
+    const not = false
+
+    const hasFilter = !!filterArray.find(
+      (f) =>
+        f.key === key &&
+        JSON.stringify(f.value) === JSON.stringify(value) &&
+        f.not === not,
+    )
+
+    if (!hasFilter) {
+      filterArray.push({ key, value, not })
+    }
   })
 
   const filter = reduceFilters(filterArray)
