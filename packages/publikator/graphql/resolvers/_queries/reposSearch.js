@@ -61,12 +61,13 @@ module.exports = async (__, args, context) => {
     context,
   )
 
-  const hasNextPage = first > 0 && body.hits.total > from + first
-  const hasPreviousPage = from > 0
-
   const {
-    hits: { hits },
+    hits: { total, hits },
   } = body
+  const totalCount = Number.isFinite(total?.value) ? total.value : total
+
+  const hasNextPage = first > 0 && totalCount > from + first
+  const hasPreviousPage = from > 0
 
   const repos = hits.length
     ? await context.pgdb.publikator.repos.find({ id: hits.map((n) => n._id) })
@@ -75,7 +76,7 @@ module.exports = async (__, args, context) => {
   const data = {
     nodes: repos,
     aggregations: body.aggregations,
-    totalCount: body.hits.total,
+    totalCount,
     pageInfo: {
       hasNextPage,
       endCursor: hasNextPage

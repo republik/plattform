@@ -2,16 +2,11 @@ version: '3.4'
 services:
   elastic:
     # in order to get elastic to work, see https://www.elastic.co/guide/en/elasticsearch/reference/current/docker.html#docker-cli-run-prod-mode
-    image: docker.elastic.co/elasticsearch/elasticsearch:6.8.10
+    image: docker.elastic.co/elasticsearch/elasticsearch-oss:7.10.2
     container_name: elasticsearch
     environment:
       - cluster.routing.allocation.disk.threshold_enabled=false
       - 'ES_JAVA_OPTS=-Xms1024m -Xmx1024m'
-      - xpack.graph.enabled=false
-      - xpack.ml.enabled=false
-      - xpack.monitoring.enabled=false
-      - xpack.security.enabled=false
-      - xpack.watcher.enabled=false
       - ELASTIC_PASSWORD=elastic
       - 'discovery.type=single-node'
       - TAKE_FILE_OWNERSHIP=true
@@ -25,7 +20,7 @@ services:
       - 9200:9200
 
   kibana:
-    image: docker.elastic.co/kibana/kibana:6.8.10
+    image: docker.elastic.co/kibana/kibana-oss:7.10.2
     container_name: kibana
     ports:
       - 5601:5601
@@ -40,7 +35,7 @@ services:
       - ./docker-data/redis:/data:delegated
 
   postgres:
-    image: postgres:12.4
+    image: postgres:12.7
     environment:
       - POSTGRES_HOST_AUTH_METHOD=trust
     volumes:
