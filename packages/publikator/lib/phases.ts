@@ -1,4 +1,6 @@
-const debug = require('debug')('publikator:lib:phases')
+import Debug from 'debug'
+
+const debug = Debug('publikator:lib:phases')
 
 interface Phase {
   key: string

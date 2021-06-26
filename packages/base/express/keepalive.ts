@@ -9,9 +9,9 @@
  * Inspired by https://spin.atomicobject.com/2018/05/15/extending-heroku-timeout-node/
  */
 import { Request, Response, NextFunction } from 'express'
-import _debug from 'debug'
+import Debug from 'debug'
 
-const debug = _debug('base:express:keepalive')
+const debug = Debug('base:express:keepalive')
 
 interface State {
   count: number
