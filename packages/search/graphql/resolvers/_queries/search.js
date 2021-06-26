@@ -25,7 +25,7 @@ const _ = require('lodash')
 const { v4: uuid } = require('uuid')
 
 const indices = require('../../../lib/indices')
-const { getIndexAlias, getDateIndex } = require('../../../lib/utils')
+const { getIndexAlias } = require('../../../lib/utils')
 
 const reduceFilters = filterReducer(documentSchema)
 const createElasticFilter = elasticFilterBuilder(documentSchema)
@@ -34,8 +34,6 @@ const schemaAggregations = extractAggs(documentSchema)
 const getFieldList = require('@orbiting/graphql-list-fields')
 
 const createCache = require('../../../lib/cache')
-
-const { SEARCH_TRACK = false } = process.env
 
 const DEV = process.env.NODE_ENV && process.env.NODE_ENV !== 'production'
 
@@ -448,7 +446,6 @@ const search = async (__, args, context, info) => {
   debug('ES query', JSON.stringify(query))
 
   let result = await cache.get(query)
-  const cacheHIT = !!result
   if (!result) {
     const { body } = await elastic.search(query)
     result = body
@@ -503,45 +500,6 @@ const search = async (__, args, context, info) => {
       context,
       withoutContent,
     })
-  }
-
-  if (!recursive && SEARCH_TRACK) {
-    const took = cacheHIT ? 0 : result.took
-    const total = totalCount
-    const hits = result.hits.hits.map((hit) => _.omit(hit, '_source'))
-    const aggs = result.aggregations
-
-    const filters = options.filters
-      ? options.filters.map((filter) => {
-          if (typeof filter.value !== 'string') {
-            filter.value = JSON.stringify(filter.value)
-          }
-
-          return filter
-        })
-      : []
-
-    // not await tracking
-    elastic
-      .index({
-        index: getDateIndex('searches'),
-        type: 'Search',
-        body: {
-          date: new Date(),
-          trackingId,
-          roles: user && user.roles,
-          took,
-          cache: cacheHIT,
-          options: Object.assign({}, options, { filters }),
-          query,
-          total,
-          hits,
-          aggs,
-        },
-      })
-      .catch((err) => {
-        console.error('search, tracking', err)
-      })
   }
 
   return response
