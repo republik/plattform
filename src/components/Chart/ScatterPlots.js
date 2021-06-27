@@ -58,6 +58,7 @@ const ScatterPlot = ({
   colorRanges,
   colorMap,
   colorSort,
+  colorDarkMapping,
   size,
   sizeRange,
   sizeRangeMax,
@@ -261,6 +262,8 @@ const ScatterPlot = ({
                   annotation => !annotation.column || annotation.column === key
                 )}
                 contextBoxProps={contextBoxProps}
+                // canvas does not support dark mapping yet
+                useCanvas={!colorDarkMapping}
               />
             </div>
           )
