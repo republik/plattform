@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, Fragment } from 'react'
+import React, { useEffect, useState, useRef, useMemo, Fragment } from 'react'
 import { css } from 'glamor'
 import { min, ascending } from 'd3-array'
 import { subsup, last } from './utils'
@@ -6,6 +6,7 @@ import { sansSerifMedium14, sansSerifRegular12 } from '../Typography/styles'
 import { useColorContext } from '../Colors/useColorContext'
 import ScatterPlotContextBox from './ScatterPlotContextBox'
 import { InlineLabel } from './ScatterPlotElements'
+import ScatterPlotCanvas from './ScatterPlotCanvas'
 
 const X_TICK_HEIGHT = 6
 
@@ -58,7 +59,8 @@ const ScatterPlotGroup = ({
   getColor,
   xUnit,
   annotations,
-  contextBoxProps
+  contextBoxProps,
+  useCanvas
 }) => {
   const [hover, setHover] = useState([])
   const [hoverTouch, setHoverTouch] = useState()
@@ -70,15 +72,19 @@ const ScatterPlotGroup = ({
   const plotHeight = height + paddingBottom + paddingTop
   const plotWidth = width + paddingLeft + paddingRight
 
-  const symbols = values.map((value, i) => {
-    return {
-      key: `symbol${i}`,
-      value,
-      cx: plotX(value.x),
-      cy: plotY(value.y),
-      r: rSize(value.size)
-    }
-  })
+  const symbols = useMemo(
+    () =>
+      values.map((value, i) => {
+        return {
+          key: `symbol${i}`,
+          value,
+          cx: plotX(value.x),
+          cy: plotY(value.y),
+          r: rSize(value.size)
+        }
+      }),
+    [values, plotX, plotY, rSize]
+  )
 
   const focusRef = useRef()
   const focus = (focusRef.current = event => {
@@ -146,8 +152,21 @@ const ScatterPlotGroup = ({
   }, [])
 
   return (
-    <div ref={containerRef}>
-      <svg width={plotWidth} height={plotHeight}>
+    <div ref={containerRef} style={{ position: 'relative' }}>
+      {useCanvas && (
+        <ScatterPlotCanvas
+          opacity={opacity}
+          symbols={symbols}
+          getColor={getColor}
+          width={plotWidth}
+          height={plotHeight}
+        />
+      )}
+      <svg
+        width={plotWidth}
+        height={plotHeight}
+        style={{ position: 'relative' }}
+      >
         <desc>{description}</desc>
         {title && (
           <text
@@ -158,16 +177,17 @@ const ScatterPlotGroup = ({
             {title}
           </text>
         )}
-        {symbols.map(symbol => (
-          <circle
-            key={symbol.key}
-            style={{ opacity }}
-            {...colorScheme.set('fill', getColor(symbol.value), 'charts')}
-            cx={symbol.cx}
-            cy={symbol.cy}
-            r={symbol.r}
-          />
-        ))}
+        {!useCanvas &&
+          symbols.map(symbol => (
+            <circle
+              key={symbol.key}
+              fillOpacity={opacity}
+              {...colorScheme.set('fill', getColor(symbol.value), 'charts')}
+              cx={symbol.cx}
+              cy={symbol.cy}
+              r={symbol.r}
+            />
+          ))}
         {(inlineLabel || inlineSecondaryLabel) &&
           symbols
             .filter(
