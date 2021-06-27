@@ -26,7 +26,7 @@ const ScatterPlotCanvas = ({ symbols, width, height, getColor, opacity }) => {
     })
 
     ctx.restore()
-  }, [symbols, width, height])
+  }, [symbols, width, height, opacity, getColor])
 
   return (
     <canvas
