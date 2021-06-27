@@ -109,9 +109,25 @@ export const ChartLegend = ({ children, ...props }) => {
   )
 }
 
+const ssrAttribute = 'data-chart-ssr'
+
 const Chart = props => {
   const [colorScheme] = useColorContext()
-  const [stateWidth, setWidth] = useState(290)
+
+  const isDomAvailable = typeof document !== 'undefined'
+  const [ssrMode, setSsrMode] = useState(
+    () =>
+      !isDomAvailable ||
+      (isDomAvailable &&
+        document.querySelectorAll(`[${ssrAttribute}]`).length > 0)
+  )
+  useEffect(() => {
+    if (ssrMode) {
+      setSsrMode(false)
+    }
+  }, [ssrMode])
+
+  const [stateWidth, setWidth] = useState(ssrMode ? 290 : undefined)
 
   const { width: fixedWidth, config, tLabel } = props
 
@@ -166,6 +182,7 @@ const Chart = props => {
 
   const content = (
     <div
+      {...(ssrMode && { [ssrAttribute]: true })}
       ref={fixedWidth ? undefined : ref}
       style={{
         maxWidth: config.maxWidth
