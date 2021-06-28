@@ -22,6 +22,8 @@ const {
   COOKIE_DOMAIN,
   COOKIE_NAME,
   IGNORE_SSL_HOSTNAME,
+  RES_KEEPALIVE_INTERVALS_SECS,
+  RES_KEEPALIVE_MAX_SECS,
   REQ_DELAY_MS,
   REQ_TIMEOUT,
 } = process.env
@@ -31,6 +33,7 @@ const {
   express: { auth: Auth },
 } = require('@orbiting/backend-modules-auth')
 const requestLog = require('./express/requestLog')
+const keepalive = require('./express/keepalive')
 
 // init httpServer and express and start listening
 const start = async (
@@ -88,6 +91,15 @@ const start = async (
 
   // add req._log()
   server.use(requestLog)
+
+  if (RES_KEEPALIVE_INTERVALS_SECS) {
+    try {
+      const intervalsSecs = JSON.parse(RES_KEEPALIVE_INTERVALS_SECS)
+      server.use(keepalive(intervalsSecs, RES_KEEPALIVE_MAX_SECS))
+    } catch (e) {
+      console.warn(e)
+    }
+  }
 
   // monitor timeouts
   if (REQ_TIMEOUT) {
