@@ -6,6 +6,7 @@ import withT from '../../../../lib/withT'
 import { focusPrevious } from '../../utils/keyHandlers'
 
 import EditOverlay from './EditOverlay'
+import Placeholder from '../dynamiccomponent/Placeholder'
 
 export default ({ rule, subModules, TYPE }) => {
   const CsvChart = withT(rule.component)
@@ -59,7 +60,7 @@ export default ({ rule, subModules, TYPE }) => {
           const config = node.data.get('config') || {}
           const values = node.data.get('values')
 
-          const chart = (
+          const chart = config.type ? (
             <CsvChart
               key={JSON.stringify({
                 values,
@@ -69,6 +70,8 @@ export default ({ rule, subModules, TYPE }) => {
               values={values}
               config={config}
             />
+          ) : (
+            <Placeholder identifier='CHART' type='' />
           )
 
           return (

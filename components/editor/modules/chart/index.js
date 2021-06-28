@@ -54,7 +54,6 @@ export default ({ rule, subModules, TYPE }) => {
     rules: [serializerRule]
   })
 
-  const random = () => Math.round(Math.random() * 10) / 10
   const newBlock = () =>
     Block.create({
       type: TYPE,
