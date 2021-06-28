@@ -93,8 +93,12 @@ const start = async (
   server.use(requestLog)
 
   if (RES_KEEPALIVE_INTERVALS_SECS) {
-    const intervalsSecs = JSON.parse(RES_KEEPALIVE_INTERVALS_SECS || [25])
-    server.use(keepalive(intervalsSecs, RES_KEEPALIVE_MAX_SECS))
+    try {
+      const intervalsSecs = JSON.parse(RES_KEEPALIVE_INTERVALS_SECS)
+      server.use(keepalive(intervalsSecs, RES_KEEPALIVE_MAX_SECS))
+    } catch (e) {
+      console.warn(e)
+    }
   }
 
   // monitor timeouts
