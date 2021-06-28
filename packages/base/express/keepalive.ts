@@ -33,8 +33,9 @@ module.exports = (intervalsSecs: number[], maxSecs?: number) => {
   }
 
   // Seconds after which keepalive will withdraw if response is is not finished
-  // or closed. It's either {maxSecs} or last entry in {intervalsSecs}.
-  const withdrawAfterSecs = maxSecs || intervalsSecs[intervalsSecs.length - 1]
+  // or closed. It's either {maxSecs} or sum of {intervalSecs[]} plus 5 secs.
+  const sumIntervals = intervalsSecs.reduce((prev, curr) => +prev + +curr, 0)
+  const withdrawAfterSecs = maxSecs || sumIntervals + 5
 
   debug('return keepaliveMiddleware %o', { intervalsSecs, withdrawAfterSecs })
   return function keepaliveMiddleware(
