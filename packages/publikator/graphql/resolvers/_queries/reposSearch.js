@@ -11,7 +11,13 @@ const encodeCursor = (payload) => {
 }
 
 const decodeCursor = (cursor) => {
-  return JSON.parse(Buffer.from(cursor, 'base64').toString())
+  try {
+    return JSON.parse(Buffer.from(cursor, 'base64').toString())
+  } catch (e) {
+    console.warn('failed to parse cursor:', cursor, e)
+  }
+
+  return false
 }
 
 module.exports = async (__, args, context) => {
@@ -23,17 +29,15 @@ module.exports = async (__, args, context) => {
     throw new Error('"last" argument is not implemented')
   }
 
-  // This overwrites parameters passed via "before" cursor
-  const before = args.before ? decodeCursor(args.before) : {}
-  Object.keys(before).forEach((key) => {
-    args[key] = before[key]
-  })
+  const { after, before } = args
 
-  // This overwrites parameters passed via "after" cursor
-  const after = args.after ? decodeCursor(args.after) : {}
-  Object.keys(after).forEach((key) => {
-    args[key] = after[key]
-  })
+  /**
+   * If cursors {after} (1) or {before} (2) are provided, their contents
+   * replace options provided: Changing search term or {first} won't have
+   * any effect.
+   */
+  const options =
+    (after && decodeCursor(after)) || (before && decodeCursor(before)) || args
 
   const {
     first = 10,
@@ -45,7 +49,7 @@ module.exports = async (__, args, context) => {
     isTemplate,
     publishDateRange,
     // last - "last" parameter is not implemented in search API
-  } = args
+  } = options
 
   const { body } = await client.find(
     {

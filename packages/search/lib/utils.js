@@ -12,13 +12,6 @@ const getDateTime = () =>
   new Date().toISOString().slice(0, -5).replace(/[^\d]/g, '-')
 
 /**
- * @example "2018-05-24"
- * @return {String} [description]
- */
-const getDate = () =>
-  new Date().toISOString().slice(0, -14).replace(/[^\d]/g, '-')
-
-/**
  * @param  {String} name An index name without prefix
  * @param  {String} type Operation, like "read", "write"
  * @return {String}      An alias name for an index
@@ -32,13 +25,6 @@ const getIndexAlias = (name, type) =>
  */
 const getDateTimeIndex = (name) =>
   [ES_INDEX_PREFIX, name, getDateTime()].filter(Boolean).join('-')
-
-/**
- * @param  {String} name An index name without prefix
- * @return {String}      An index name with a date
- */
-const getDateIndex = (name) =>
-  [ES_INDEX_PREFIX, name, getDate()].filter(Boolean).join('-')
 
 /**
  * A filter to remove nodes from an mdast with a predicate. Will remove a node
@@ -93,7 +79,6 @@ const mdastContentToString = (mdast) =>
 module.exports = {
   getIndexAlias,
   getDateTimeIndex,
-  getDateIndex,
   mdastFilter,
   mdastContentToString,
 }
