@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react'
-import { css } from 'glamor'
+import React, { useMemo, useRef, useState } from 'react'
+import { css, merge } from 'glamor'
 import PropTypes from 'prop-types'
 import { Controlled as CodeMirror } from 'react-codemirror2'
-import { colors, fontFamilies, Label } from '@project-r/styleguide'
+import { A, colors, fontFamilies, Label } from '@project-r/styleguide'
 
 // CodeMirror can only run in the browser
 if (process.browser && window) {
@@ -27,8 +27,6 @@ const styles = {
     },
     '& .CodeMirror-lines': {
       backgroundColor: colors.light.hover,
-      paddingTop: 7,
-      paddingBottom: 6,
       minHeight: 40
     },
     '& .CodeMirror-cursor': {
@@ -45,42 +43,78 @@ const CodeMirrorField = ({
   onPaste,
   options,
   onFocus,
-  onBlur
-}) => (
-  <div {...styles.codemirror}>
-    <Label>{label}</Label>
-    <CodeMirror
-      value={value}
-      options={{
-        theme: 'neo',
-        gutters: ['CodeMirror-linenumbers'],
-        lineNumbers: true,
-        line: true,
-        lineWrapping: true,
-        ...options
-      }}
-      onBeforeChange={(editor, data, value) => {
-        onChange(value)
-      }}
-      onPaste={(editor, event) => {
-        onPaste && onPaste(event)
-      }}
-      onBlur={(editor, event) => {
-        onBlur && onBlur(event)
-      }}
-      onFocus={(editor, event) => {
-        onFocus && onFocus(event)
-      }}
-    />
-  </div>
-)
+  onBlur,
+  linesShown
+}) => {
+  const [scroll, setScroll] = useState(!!linesShown)
+  const style = useMemo(
+    () =>
+      css({
+        '& .CodeMirror': {
+          height: scroll ? Math.round(LINE_HEIGHT * linesShown) : 'auto'
+        }
+      }),
+    [scroll]
+  )
+  return (
+    <div {...merge(styles.codemirror, style)}>
+      <Label>
+        <span>{label}</span>
+        {linesShown && (
+          <A
+            style={{ float: 'right' }}
+            href='#toggle-lines'
+            onClick={() => setScroll(!scroll)}
+          >
+            {scroll ? 'More stuff' : 'Less fluff'}
+          </A>
+        )}
+      </Label>
+      <CodeMirror
+        value={value}
+        options={{
+          theme: 'neo',
+          gutters: ['CodeMirror-linenumbers'],
+          lineNumbers: true,
+          line: true,
+          lineWrapping: true,
+          ...options
+        }}
+        onBeforeChange={(editor, data, value) => {
+          onChange(value)
+        }}
+        onPaste={(editor, event) => {
+          onPaste && onPaste(event)
+        }}
+        onBlur={(editor, event) => {
+          onBlur && onBlur(event)
+        }}
+        onFocus={(editor, event) => {
+          onFocus && onFocus(event)
+        }}
+      />
+    </div>
+  )
+}
 
-export const PlainEditor = ({ label, value, onChange, onPaste, mode }) => (
+const LINE_HEIGHT = 20.133
+
+export const PlainEditor = ({
+  label,
+  value,
+  onChange,
+  onPaste,
+  mode,
+  linesShown,
+  readOnly
+}) => (
   <CodeMirrorField
     label={label}
     value={value}
+    linesShown={linesShown}
     options={{
-      mode: mode || 'text'
+      mode: mode || 'text',
+      readOnly
     }}
     onChange={value => {
       onChange(value)
@@ -93,29 +127,35 @@ export const PlainEditor = ({ label, value, onChange, onPaste, mode }) => (
 
 const stringify = json => (json ? JSON.stringify(json, null, 2) : '')
 
-export const JSONEditor = ({ label, config, onChange }) => {
-  const [stateValue, setStateValue] = useState(null)
-
-  useEffect(() => {
-    if (!stateValue) {
-      setStateValue(stringify(config))
-    }
-  }, [config])
+export const JSONEditor = ({
+  label,
+  config,
+  onChange,
+  linesShown,
+  readOnly
+}) => {
+  const [stateValue, setStateValue] = useState('')
+  const configRef = useRef()
+  configRef.current = config
+  const valueRef = useRef()
+  valueRef.current = stateValue
 
   return (
     <CodeMirrorField
-      onFocus={() => setStateValue(stringify(config))}
+      onFocus={() => setStateValue(stringify(configRef.current))}
       onBlur={() => {
-        console.log('on blur', stateValue)
-        setStateValue(stringify(JSON.parse(stateValue)))
+        setStateValue(stringify(JSON.parse(valueRef.current)))
       }}
       label={label}
       value={stateValue}
+      linesShown={linesShown}
       options={{
         mode: 'application/json',
         lint: true,
         matchBrackets: true,
-        autoCloseBrackets: true
+        autoCloseBrackets: true,
+        autofocus: true,
+        readOnly
       }}
       onChange={newValue => {
         let json
