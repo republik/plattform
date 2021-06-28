@@ -57,10 +57,10 @@ module.exports = (intervalsSecs: number[], maxSecs?: number) => {
      */
     const getInterval = () => {
       if (state.count >= intervalsSecs.length) {
-        return 1000 * intervalsSecs[intervalsSecs.length - 1]
+        return 1000 * +intervalsSecs[intervalsSecs.length - 1]
       }
 
-      return 1000 * intervalsSecs[state.count]
+      return 1000 * +intervalsSecs[state.count]
     }
 
     /**
