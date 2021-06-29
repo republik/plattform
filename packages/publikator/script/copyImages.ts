@@ -83,18 +83,25 @@ const createMaybeUpload = (repoId: string, origin: string) => {
   }
 }
 
-const argv: { origin: string; after: moment.Moment } = yargs
-  .option('origin', {
-    description: 'Publicly accessible URL to fetch images from',
-    required: true,
-    default: 'https://assets.republik.space/s3/republik-assets/repos/republik',
-  })
-  .option('after', {
-    description: 'Check commits created after this date',
-    required: true,
-    default: moment().subtract(30, 'days'),
-    coerce: moment,
-  }).argv
+const argv: { origin: string; after: moment.Moment; concurrency: number } =
+  yargs
+    .option('origin', {
+      description: 'Publicly accessible URL to fetch images from',
+      required: true,
+      default:
+        'https://assets.republik.space/s3/republik-assets/repos/republik',
+    })
+    .option('after', {
+      description: 'Check commits created after this date',
+      required: true,
+      default: moment().subtract(30, 'days'),
+      coerce: moment,
+    })
+    .option('concurrency', {
+      description: 'Concurrent image handler',
+      required: true,
+      default: 10,
+    }).argv
 
 const applicationName = 'backends publikator script copyImages'
 
@@ -133,7 +140,9 @@ ConnectionContext.create(applicationName)
       })
       debug('%i image paths found (%s)', imagePaths.size, repoId)
 
-      await Promise.each(imagePaths, maybeUpload)
+      await Promise.map(imagePaths, maybeUpload, {
+        concurrency: argv.concurrency,
+      })
     }).catch((e) => {
       console.error(e.message)
     })
