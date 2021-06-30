@@ -1,8 +1,14 @@
-import React, { useMemo, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { css, merge } from 'glamor'
 import PropTypes from 'prop-types'
 import { Controlled as CodeMirror } from 'react-codemirror2'
-import { A, colors, fontFamilies, Label } from '@project-r/styleguide'
+import {
+  A,
+  colors,
+  fontFamilies,
+  Label,
+  useDebounce
+} from '@project-r/styleguide'
 
 // CodeMirror can only run in the browser
 if (process.browser && window) {
@@ -15,6 +21,8 @@ if (process.browser && window) {
   require('codemirror/addon/lint/json-lint')
 }
 
+const LINE_HEIGHT = 21
+
 const styles = {
   codemirror: css({
     padding: '30px 0 0',
@@ -26,8 +34,7 @@ const styles = {
       color: colors.text
     },
     '& .CodeMirror-lines': {
-      backgroundColor: colors.light.hover,
-      minHeight: 40
+      backgroundColor: colors.light.hover
     },
     '& .CodeMirror-cursor': {
       width: 1,
@@ -51,7 +58,8 @@ const CodeMirrorField = ({
     () =>
       css({
         '& .CodeMirror': {
-          height: scroll ? Math.round(LINE_HEIGHT * linesShown) : 'auto'
+          height: scroll ? Math.round(LINE_HEIGHT * linesShown) : 'auto',
+          overflowY: 'scroll'
         }
       }),
     [scroll]
@@ -97,8 +105,6 @@ const CodeMirrorField = ({
   )
 }
 
-const LINE_HEIGHT = 20.133
-
 export const PlainEditor = ({
   label,
   value,
@@ -107,23 +113,21 @@ export const PlainEditor = ({
   mode,
   linesShown,
   readOnly
-}) => (
-  <CodeMirrorField
-    label={label}
-    value={value}
-    linesShown={linesShown}
-    options={{
-      mode: mode || 'text',
-      readOnly
-    }}
-    onChange={value => {
-      onChange(value)
-    }}
-    onPaste={event => {
-      onPaste(event)
-    }}
-  />
-)
+}) => {
+  return (
+    <CodeMirrorField
+      label={label}
+      value={value}
+      linesShown={linesShown}
+      options={{
+        mode: mode || 'text',
+        readOnly
+      }}
+      onChange={onChange}
+      onPaste={onPaste}
+    />
+  )
+}
 
 const stringify = json => (json ? JSON.stringify(json, null, 2) : '')
 
@@ -135,10 +139,21 @@ export const JSONEditor = ({
   readOnly
 }) => {
   const [stateValue, setStateValue] = useState('')
+  const [debouncedStateValue] = useDebounce(stateValue, 300)
   const configRef = useRef()
   configRef.current = config
   const valueRef = useRef()
   valueRef.current = stateValue
+
+  useEffect(() => {
+    let json
+    try {
+      json = JSON.parse(debouncedStateValue)
+    } catch (e) {}
+    if (json) {
+      onChange(json)
+    }
+  }, [debouncedStateValue])
 
   return (
     <CodeMirrorField
@@ -158,13 +173,6 @@ export const JSONEditor = ({
         readOnly
       }}
       onChange={newValue => {
-        let json
-        try {
-          json = JSON.parse(newValue)
-        } catch (e) {}
-        if (json) {
-          onChange(json)
-        }
         setStateValue(newValue)
       }}
     />
