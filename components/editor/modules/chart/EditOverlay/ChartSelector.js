@@ -16,9 +16,15 @@ const styles = {
     gridTemplateColumns: 'repeat(4, 1fr)',
     gridAutoRows: 120
   }),
+  chartButtonContainer: css({
+    height: '100%',
+    display: 'flex'
+  }),
   chartButton: css({
+    height: '100%',
+    width: 130,
     whiteSpace: 'nowrap',
-    padding: '30px 10px 30px 0px',
+    padding: '30px 10px',
     textAlign: 'center',
     ...fontStyles.sansSerifRegular14,
     cursor: 'pointer',
@@ -108,14 +114,15 @@ const ChartSelector = ({ onChange, data, CsvChart }) => {
         <div {...styles.chartWrapper}>
           {baseCharts.map(chart => {
             return (
-              <div
-                key={chart.name}
-                {...styles.chartButton}
-                {...styles.discreteButton}
-                onClick={() => preselect(chart)}
-              >
-                <img src={chart.screenshot} {...styles.chartImage} />
-                <span {...styles.chartButtonText}>{chart.name}</span>
+              <div key={chart.name} {...styles.chartButtonContainer}>
+                <div
+                  {...styles.chartButton}
+                  {...styles.discreteButton}
+                  onClick={() => preselect(chart)}
+                >
+                  <img src={chart.screenshot} {...styles.chartImage} />
+                  <span {...styles.chartButtonText}>{chart.name}</span>
+                </div>
               </div>
             )
           })}
