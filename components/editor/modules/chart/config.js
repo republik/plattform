@@ -1,3 +1,10 @@
+export const sizes = [
+  { label: 'Normal', size: undefined },
+  { label: 'Klein', size: 'narrow' },
+  { label: 'Gross', size: 'breakout' },
+  { label: 'Links', size: 'floatTiny' }
+]
+
 export const baseCharts = [
   {
     name: 'Bars',
@@ -30,7 +37,7 @@ Irland,0.236
       colorLegend: true,
       showBarValues: true,
       sort: 'none',
-      domain: [-2000, 20000],
+      domain: [0, 20000],
       xTicks: [0]
     },
     values: `
@@ -803,25 +810,25 @@ Zimbabwe,1910,0.78,Africa
       }
     },
     values: `
-      lon,lat,name,value,Land
-      -81.6662,41.4609,"Cleveland",24.7086,"USA"
-      126.6235,45.72794,"Harbin",5.8252,"China"
-      114.4906,38.05647,"Shijiazhuang",7.409,"China"
-      117.2686,31.84478,"Hefei",6.4152,"China"
-      -1.97333,52.5129,"Birmingham",10.5696,"UK"
-      76.8976,43.2746,"Almaty",13.8718,"Kazakhstan"
-      125.2966,43.87748,"Changchun",7.5739,"China"
-      -76.6564,39.3269,"Baltimore",20.2459,"USA"
-      2.11335,41.4789,"Barcelona",7.1442,"Spain"
-      106.6912,10.87065,"Ho Chi Minh City",2.2753,"Viet Nam"
-      78.4717,17.4518,"Hyderabad",3.1619,"India"
-      18.5775,-33.9625,"Cape Town",7.7099,"South Africa"
-      4.41519,51.9588,"Rotterdam",11.0501,"Netherlands"
-      -70.6611,-33.4681,"Santiago",4.3807,"Chile"
-      117.0421,36.67991,"Jinan",8.5077,"China"
-      -117.1063,32.7846,"San Diego",14.4791,"USA"
-      -90.3813,38.6951,"St. Louis",24.0629,"USA"
-      -73.6943,45.5521,"Montreal",10.136,"Canada"
+lon,lat,name,value,Land
+-81.6662,41.4609,"Cleveland",24.7086,"USA"
+126.6235,45.72794,"Harbin",5.8252,"China"
+114.4906,38.05647,"Shijiazhuang",7.409,"China"
+117.2686,31.84478,"Hefei",6.4152,"China"
+-1.97333,52.5129,"Birmingham",10.5696,"UK"
+76.8976,43.2746,"Almaty",13.8718,"Kazakhstan"
+125.2966,43.87748,"Changchun",7.5739,"China"
+-76.6564,39.3269,"Baltimore",20.2459,"USA"
+2.11335,41.4789,"Barcelona",7.1442,"Spain"
+106.6912,10.87065,"Ho Chi Minh City",2.2753,"Viet Nam"
+78.4717,17.4518,"Hyderabad",3.1619,"India"
+18.5775,-33.9625,"Cape Town",7.7099,"South Africa"
+4.41519,51.9588,"Rotterdam",11.0501,"Netherlands"
+-70.6611,-33.4681,"Santiago",4.3807,"Chile"
+117.0421,36.67991,"Jinan",8.5077,"China"
+-117.1063,32.7846,"San Diego",14.4791,"USA"
+-90.3813,38.6951,"St. Louis",24.0629,"USA"
+-73.6943,45.5521,"Montreal",10.136,"Canada"
 `
   },
   {
