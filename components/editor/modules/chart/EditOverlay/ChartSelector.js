@@ -54,6 +54,9 @@ const styles = {
     ':hover': {
       textDecoration: 'underline'
     }
+  }),
+  warning: css({
+    display: 'block'
   })
 }
 
@@ -67,11 +70,11 @@ const ChartPreview = ({ CsvChart, chart }) => {
         <br />
         <CsvChart config={chart.config} values={values} />
       </div>
-      <div {...styles.chartPreviewColumn}>
+      <div>
         <PlainEditor
           label='Datenstruktur'
           value={values}
-          linesShown={2}
+          linesShown={3}
           readOnly
         />
         <JSONEditor
@@ -102,6 +105,16 @@ const ChartSelector = ({ onChange, data, CsvChart }) => {
     preselect(undefined)
     nextAccordionItem()
   }
+  const hasData = data.get('values') != ''
+  const hasConfig = !!config.type
+  const warning =
+    hasData && hasConfig
+      ? 'Daten und Einstellungen'
+      : hasData
+      ? 'Daten'
+      : hasConfig
+      ? 'Einstellungen'
+      : false
   return (
     <>
       {preselected ? (
@@ -128,7 +141,7 @@ const ChartSelector = ({ onChange, data, CsvChart }) => {
           })}
         </div>
       )}
-      <div style={{ padding: '20px 0' }}>
+      <div style={{ padding: '10px 0' }}>
         {preselected ? (
           <Label>
             <button
@@ -162,8 +175,13 @@ const ChartSelector = ({ onChange, data, CsvChart }) => {
               {...styles.greenButton}
               onClick={nextAccordionItem}
             >
-              Ohne Vorlage weiter
+              Danke, nein.
             </button>
+          </Label>
+        )}
+        {preselected && warning && (
+          <Label {...styles.warning}>
+            <em>Sie haben schon {warning} definiert.</em>
           </Label>
         )}
       </div>

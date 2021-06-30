@@ -1,10 +1,9 @@
-import React, { Fragment, useContext } from 'react'
-import { Radio, AccordionContext } from '@project-r/styleguide'
+import React, { Fragment } from 'react'
+import { Radio } from '@project-r/styleguide'
 import { sizes } from '../config'
 
 const SizeSelector = ({ onChange, data }) => {
   const config = data.get('config') || {}
-  const { setActiveItemIndex } = useContext(AccordionContext)
 
   return (
     <>
@@ -17,7 +16,6 @@ const SizeSelector = ({ onChange, data }) => {
               onChange={() => {
                 if (!checked) {
                   onChange(data.set('config', { ...config, size }))
-                  setActiveItemIndex('chartSelector')
                 }
               }}
               style={{ whiteSpace: 'nowrap', marginRight: 10 }}

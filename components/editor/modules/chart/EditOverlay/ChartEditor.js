@@ -9,24 +9,19 @@ import {
   AccordionItemBody,
   AccordionContext
 } from '@project-r/styleguide'
-import { sizes } from '../config'
 
 const ChartEditor = ({ data, onChange, CsvChart }) => {
-  const { setActiveItemIndex } = useContext(AccordionContext)
+  const { activeItemIndex, setActiveItemIndex } = useContext(AccordionContext)
 
   useEffect(() => {
     const config = data.get('config') || {}
     setActiveItemIndex(config.type ? 'configInput' : 'chartSelector')
   }, [])
 
-  const size = sizes.find(s => s.size === data.get('config')?.size)
-
   return (
     <>
       <AccordionItem eventKey='sizeSelector'>
-        <AccordionItemHeader>
-          Grösse: {size.label.toLowerCase()}
-        </AccordionItemHeader>
+        <AccordionItemHeader>Grösse ändern</AccordionItemHeader>
         <AccordionItemBody>
           <SizeSelector onChange={onChange} data={data} />
         </AccordionItemBody>
@@ -61,13 +56,15 @@ const ChartEditor = ({ data, onChange, CsvChart }) => {
       <AccordionItem eventKey='configInput'>
         <AccordionItemHeader>Einstellungen anpassen</AccordionItemHeader>
         <AccordionItemBody>
-          <JSONEditor
-            label='JSON'
-            config={data.get('config')}
-            onChange={newConfig => {
-              onChange(data.set('config', newConfig))
-            }}
-          />
+          {activeItemIndex === 'configInput' && (
+            <JSONEditor
+              label='JSON'
+              config={data.get('config')}
+              onChange={newConfig => {
+                onChange(data.set('config', newConfig))
+              }}
+            />
+          )}
         </AccordionItemBody>
       </AccordionItem>
     </>
