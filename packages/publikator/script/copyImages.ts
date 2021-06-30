@@ -109,9 +109,18 @@ ConnectionContext.create(applicationName)
   .then(async (context: ConnectionContext) => {
     const { pgdb } = context
 
-    const repos = await pgdb.publikator.repos.findAll({
-      orderBy: { createdAt: 'DESC' },
-    })
+    const repos = await pgdb.query(
+      `
+        SELECT
+          DISTINCT ON ("repoId")
+          "repoId" "id"
+        FROM publikator.commits
+        WHERE "createdAt" >= :after
+        ORDER BY "repoId", "createdAt" DESC
+      `,
+      { after: argv.after },
+    )
+
     debug('%i repos found', repos.length)
 
     await Promise.each(repos, async (repo: Repo) => {
