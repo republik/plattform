@@ -9,19 +9,24 @@ import {
   AccordionItemBody,
   AccordionContext
 } from '@project-r/styleguide'
+import { sizes } from '../config'
 
-const ChartEditor = ({ data, onChange }) => {
+const ChartEditor = ({ data, onChange, CsvChart }) => {
   const { setActiveItemIndex } = useContext(AccordionContext)
 
   useEffect(() => {
-    const config = data.get('config')
-    setActiveItemIndex(config.type ? 'configInput' : 'sizeSelector')
+    const config = data.get('config') || {}
+    setActiveItemIndex(config.type ? 'configInput' : 'chartSelector')
   }, [])
+
+  const size = sizes.find(s => s.size === data.get('config')?.size)
 
   return (
     <>
       <AccordionItem eventKey='sizeSelector'>
-        <AccordionItemHeader>Grösse wählen</AccordionItemHeader>
+        <AccordionItemHeader>
+          Grösse: {size.label.toLowerCase()}
+        </AccordionItemHeader>
         <AccordionItemBody>
           <SizeSelector onChange={onChange} data={data} />
         </AccordionItemBody>
@@ -29,11 +34,11 @@ const ChartEditor = ({ data, onChange }) => {
       <AccordionItem eventKey='chartSelector'>
         <AccordionItemHeader>Vorlage durchsuchen</AccordionItemHeader>
         <AccordionItemBody>
-          <ChartSelector data={data} onChange={onChange} />
+          <ChartSelector data={data} onChange={onChange} CsvChart={CsvChart} />
         </AccordionItemBody>
       </AccordionItem>
       <AccordionItem eventKey='dataInput'>
-        <AccordionItemHeader>Daten kopieren</AccordionItemHeader>
+        <AccordionItemHeader>Daten bearbeiten</AccordionItemHeader>
         <AccordionItemBody>
           <PlainEditor
             label='CSV'

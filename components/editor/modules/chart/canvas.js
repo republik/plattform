@@ -71,7 +71,7 @@ export default ({ rule, subModules, TYPE }) => {
               config={config}
             />
           ) : (
-            <Placeholder identifier='CHART' type='' />
+            <Placeholder identifier='neues Chart' type='' />
           )
 
           return (
@@ -79,6 +79,7 @@ export default ({ rule, subModules, TYPE }) => {
               autoDarkModePreview={values?.length < 500}
               {...props}
               preview={chart}
+              CsvChart={CsvChart}
             />
           )
         },

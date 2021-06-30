@@ -80,15 +80,8 @@ age,gender,value
 category,type,value
 "Sprachen, Kultur, Politik",Nicht-berufsbezogene Weiterbildung,0.32
 Pädagogik und Sozialkompetenz,Nicht-berufsbezogene Weiterbildung,0.07
-Gesundheit und Sport,Nicht-berufsbezogene Weiterbildung,0.26
-"Wirtschaft, Arbeit, Recht",Nicht-berufsbezogene Weiterbildung,0.12
-"Natur, Technik, Computer",Nicht-berufsbezogene Weiterbildung,0.23
-nicht oder nur einstellig klassifizierbar,Nicht-berufsbezogene Weiterbildung,0.01
 "Sprachen, Kultur, Politik",Individuelle berufsbezogene Weiterbildung,0.15
 Pädagogik und Sozialkompetenz,Individuelle berufsbezogene Weiterbildung,0.17
-Gesundheit und Sport,Individuelle berufsbezogene Weiterbildung,0.21
-"Wirtschaft, Arbeit, Recht",Individuelle berufsbezogene Weiterbildung,0.26
-"Natur, Technik, Computer",Individuelle berufsbezogene Weiterbildung,0.17
 `
   },
   {
@@ -538,9 +531,9 @@ Gesamt,2014,7.13645,7.11445,7.15846
       color: 'country',
       colorSort: 'none',
       colorLegend: false,
-      colorRange: ['#d62728', '#ff7f0e', '#1f77b4', '#2ca02c'],
+      colorRange: ['#d62728', '#ff7f0e'],
       column: 'country',
-      columns: 4,
+      columns: 2,
       columnSort: 'none',
       numberFormat: '.0%',
       type: 'Slope'
@@ -549,12 +542,8 @@ Gesamt,2014,7.13645,7.11445,7.15846
 year,country,value
 1870,Österreich,0.689443115818244
 1870,Deutschland,0.806969593440383
-1870,Frankreich,0.814144174923129
-1870,Italien,0.51349504612231
 2016,Österreich,0.727798978073863
 2016,Deutschland,0.75740573054783
-2016,Frankreich,0.626705905180777
-2016,Italien,0.565762240476037
 `
   },
   {

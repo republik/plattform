@@ -51,7 +51,8 @@ const CodeMirrorField = ({
   options,
   onFocus,
   onBlur,
-  linesShown
+  linesShown,
+  showExpand
 }) => {
   const [scroll, setScroll] = useState(!!linesShown)
   const style = useMemo(
@@ -70,13 +71,13 @@ const CodeMirrorField = ({
       {showLabel && (
         <Label>
           {label && <span>{label}</span>}
-          {linesShown && (
+          {linesShown && showExpand && (
             <A
               style={{ float: 'right' }}
               href='#toggle-lines'
               onClick={() => setScroll(!scroll)}
             >
-              {scroll ? 'More stuff' : 'Less fluff'}
+              {scroll ? 'expand' : 'hide'}
             </A>
           )}
         </Label>
@@ -115,7 +116,8 @@ export const PlainEditor = ({
   onPaste,
   mode,
   linesShown,
-  readOnly
+  readOnly,
+  showExpand
 }) => {
   return (
     <CodeMirrorField
@@ -139,7 +141,8 @@ export const JSONEditor = ({
   config,
   onChange,
   linesShown,
-  readOnly
+  readOnly,
+  showExpand
 }) => {
   const [stateValue, setStateValue] = useState('')
   const [debouncedStateValue] = useDebounce(stateValue, 300)
@@ -154,7 +157,7 @@ export const JSONEditor = ({
       json = JSON.parse(debouncedStateValue)
     } catch (e) {}
     if (json) {
-      onChange(json)
+      onChange && onChange(json)
     }
   }, [debouncedStateValue])
 

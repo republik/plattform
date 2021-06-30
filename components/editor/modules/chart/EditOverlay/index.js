@@ -25,7 +25,11 @@ export default props => (
   >
     {({ data, onChange }) => (
       <Accordion>
-        <ChartEditor data={data} onChange={onChange} />
+        <ChartEditor
+          data={data}
+          onChange={onChange}
+          CsvChart={props.CsvChart}
+        />
       </Accordion>
     )}
   </OverlayFormManager>
