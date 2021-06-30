@@ -12,7 +12,7 @@ const {
 
 const { stringify: yamlStringify } = require('../lib/yaml')
 
-interface Commit {
+export interface Commit {
   id: string
   repoId: string
   parentIds: string[]

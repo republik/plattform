@@ -71,6 +71,7 @@
     "roleUsers": "node packages/auth/script/roleUsers",
     "translations": "cd packages/translate && yarn translations && cd -",
     "pull:elasticsearch": "packages/search/script/pullElasticsearch.js",
+    "pull:images": "packages/publikator/script/copyImages.js",
     "populate:membershipStats:evolution": "packages/republik/script/MembershipStats/evolution/populate.js",
     "populate:membershipStats:lastSeen": "packages/republik/script/MembershipStats/lastSeen/populate.js",
     "populate:membershipStats:ages": "packages/republik/script/MembershipStats/ages/populate.js",
