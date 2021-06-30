@@ -1,13 +1,13 @@
-import React, { Fragment } from 'react'
-import { Interaction, Label, Radio } from '@project-r/styleguide'
-import { sizes } from './config'
+import React, { Fragment, useContext } from 'react'
+import { Radio, AccordionContext } from '@project-r/styleguide'
+import { sizes } from '../config'
 
 const SizeSelector = ({ onChange, data }) => {
   const config = data.get('config') || {}
+  const { setActiveItemIndex } = useContext(AccordionContext)
+
   return (
-    <Interaction.P>
-      <Label>Grösse wählen:</Label>
-      <br />
+    <>
       {sizes.map(({ label, size }) => {
         const checked = config.size === size
         return (
@@ -17,6 +17,7 @@ const SizeSelector = ({ onChange, data }) => {
               onChange={() => {
                 if (!checked) {
                   onChange(data.set('config', { ...config, size }))
+                  setActiveItemIndex('chartSelector')
                 }
               }}
               style={{ whiteSpace: 'nowrap', marginRight: 10 }}
@@ -26,7 +27,7 @@ const SizeSelector = ({ onChange, data }) => {
           </Fragment>
         )
       })}
-    </Interaction.P>
+    </>
   )
 }
 

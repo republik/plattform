@@ -25,7 +25,7 @@ const LINE_HEIGHT = 21
 
 const styles = {
   codemirror: css({
-    padding: '30px 0 0',
+    padding: 0,
     '& .CodeMirror': {
       height: 'auto',
       margin: '10px 0 20px',
@@ -57,27 +57,30 @@ const CodeMirrorField = ({
   const style = useMemo(
     () =>
       css({
-        '& .CodeMirror': {
-          height: scroll ? Math.round(LINE_HEIGHT * linesShown) : 'auto',
+        '& .CodeMirror': scroll && {
+          height: Math.round(LINE_HEIGHT * linesShown),
           overflowY: 'scroll'
         }
       }),
     [scroll]
   )
+  const showLabel = label || linesShown
   return (
     <div {...merge(styles.codemirror, style)}>
-      <Label>
-        <span>{label}</span>
-        {linesShown && (
-          <A
-            style={{ float: 'right' }}
-            href='#toggle-lines'
-            onClick={() => setScroll(!scroll)}
-          >
-            {scroll ? 'More stuff' : 'Less fluff'}
-          </A>
-        )}
-      </Label>
+      {showLabel && (
+        <Label>
+          {label && <span>{label}</span>}
+          {linesShown && (
+            <A
+              style={{ float: 'right' }}
+              href='#toggle-lines'
+              onClick={() => setScroll(!scroll)}
+            >
+              {scroll ? 'More stuff' : 'Less fluff'}
+            </A>
+          )}
+        </Label>
+      )}
       <CodeMirror
         value={value}
         options={{

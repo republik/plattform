@@ -1,6 +1,6 @@
 import React from 'react'
 import { Interaction, Label, fontStyles, A } from '@project-r/styleguide'
-import { baseCharts } from './config'
+import { baseCharts } from '../config'
 import { css } from 'glamor'
 
 const styles = {
@@ -11,7 +11,7 @@ const styles = {
   }),
   chartButton: css({
     whiteSpace: 'nowrap',
-    padding: '30px 30px 30px 0px',
+    padding: '30px 10px 30px 0px',
     textAlign: 'center',
     ...fontStyles.sansSerifRegular14,
     cursor: 'pointer',
@@ -53,33 +53,29 @@ export const ResetChart = ({ onChange, data }) => {
 const ChartSelector = ({ onChange, data }) => {
   const config = data.get('config') || {}
   return (
-    <Interaction.P>
-      <Label>Vorlage wählen</Label>
-      <br />
-      <div {...styles.chartWrapper}>
-        {baseCharts.map(chart => {
-          return (
-            <div
-              key={chart.name}
-              {...styles.chartButton}
-              onClick={() => {
-                onChange(
-                  data
-                    .set('config', {
-                      ...chart.config,
-                      size: config.size
-                    })
-                    .set('values', chart.values.trim())
-                )
-              }}
-            >
-              <img src={chart.screenshot} {...styles.chartImage} />
-              <span {...styles.chartButtonText}>{chart.name}</span>
-            </div>
-          )
-        })}
-      </div>
-    </Interaction.P>
+    <div {...styles.chartWrapper}>
+      {baseCharts.map(chart => {
+        return (
+          <div
+            key={chart.name}
+            {...styles.chartButton}
+            onClick={() => {
+              onChange(
+                data
+                  .set('config', {
+                    ...chart.config,
+                    size: config.size
+                  })
+                  .set('values', chart.values.trim())
+              )
+            }}
+          >
+            <img src={chart.screenshot} {...styles.chartImage} />
+            <span {...styles.chartButtonText}>{chart.name}</span>
+          </div>
+        )
+      })}
+    </div>
   )
 }
 
