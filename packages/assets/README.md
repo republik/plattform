@@ -14,12 +14,6 @@ See [servers/assets/.env.example](servers/assets/.env.example) for the required 
 
 ### Endpoints
 
-- `/github/:org/:repo/.../gitObjectId.suffix(.webp)`
-
-  gets the blob identified by it's :gitObjectId from github :org/:repo
-
-  ENVs: `GITHUB_LOGIN`, `GITHUB_APP_ID`, `GITHUB_APP_KEY`, `GITHUB_INSTALLATION_ID`
-
 - `/proxy(.webp)?originalURL=:url&mac=:mac`
 
   proxies :originalURL

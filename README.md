@@ -130,14 +130,12 @@ No ENV variabeles are loaded from any file in production, you yourself are respo
 
 Checkout [.env.example](.env.example), [servers/assets/.env.example](servers/assets/.env.example) for which ENVs are required and their descriptions. Check the packages' README for further config options.
 
-You will quickly run into errors and limitations if you run with the example envs. You probably want to do the following three rather soon:
+You will quickly run into errors and limitations if you run with the example envs. You probably want to do the following two rather soon:
 
-1. [Setup GitHub](packages/publikator#github)
-   - `GITHUB_*` in the root `.env`
-2. MailChimp and Mandrill
+1. MailChimp and Mandrill
    - `MAILCHIMP_URL`, `MAILCHIMP_API_KEY`, `MANDRILL_API_KEY` in `.env`
    - `MAILCHIMP_*` in `.env` (less important)
-3. S3 Bucket
+2. S3 Bucket
    - `AWS_*` in the root `.env`
 
 ### Special setup: develop on two hosts

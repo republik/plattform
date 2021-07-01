@@ -50,15 +50,6 @@
     "FRONTEND_BASE_URL": {
       "required": true
     },
-    "GITHUB_APP_ID": {
-      "required": true
-    },
-    "GITHUB_APP_KEY": {
-      "required": true
-    },
-    "GITHUB_INSTALLATION_ID": {
-      "required": true
-    },
     "GITHUB_LOGIN": {
       "required": true
     },
