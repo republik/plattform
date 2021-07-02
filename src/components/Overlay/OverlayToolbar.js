@@ -37,6 +37,7 @@ const styles = {
     outline: 'none',
     padding: '0',
     background: 'transparent',
+    marginLeft: 'auto',
     // For some reason 'justify-content' doesn't work in iOS, so
     // use auto margin to center the icon inside the button.
     '& > svg': {
