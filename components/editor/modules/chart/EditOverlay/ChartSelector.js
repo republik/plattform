@@ -4,11 +4,14 @@ import {
   fontStyles,
   AccordionContext,
   plainButtonRule,
-  colors
+  Button,
+  A,
+  Interaction
 } from '@project-r/styleguide'
 import { baseCharts } from '../config'
 import { css } from 'glamor'
 import { JSONEditor, PlainEditor } from '../../../utils/CodeEditorFields'
+import BackIcon from 'react-icons/lib/md/chevron-left'
 
 const styles = {
   chartWrapper: css({
@@ -44,47 +47,47 @@ const styles = {
     display: 'grid',
     gridTemplateColumns: 'repeat(2, 1fr)',
     gridGap: 20,
-    padding: 10
-  }),
-  greenButton: css({
-    color: colors.primary
+    marginTop: 20
   }),
   discreteButton: css({
-    float: 'right',
+    display: 'block',
+    marginBottom: 30,
     ':hover': {
       textDecoration: 'underline'
     }
   }),
-  warning: css({
-    display: 'block'
+  buttons: css({
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center'
   })
 }
 
 const ChartPreview = ({ CsvChart, chart }) => {
   const values = chart.values.trim()
   return (
-    <div {...styles.chartPreviewContainer}>
-      <div {...styles.chartPreviewColumn}>
-        <Label>Chart Typ: {chart.config.type}</Label>
-        <br />
-        <br />
-        <CsvChart config={chart.config} values={values} />
+    <>
+      <Interaction.P>{chart.config.type}</Interaction.P>
+      <div {...styles.chartPreviewContainer}>
+        <div style={{ marginTop: 5 }}>
+          <CsvChart config={chart.config} values={values} />
+        </div>
+        <div>
+          <PlainEditor
+            label='Datenstruktur'
+            value={values}
+            linesShown={3}
+            readOnly
+          />
+          <JSONEditor
+            label='Einstellungen'
+            config={chart.config}
+            linesShown={10}
+            readOnly
+          />
+        </div>
       </div>
-      <div>
-        <PlainEditor
-          label='Datenstruktur'
-          value={values}
-          linesShown={3}
-          readOnly
-        />
-        <JSONEditor
-          label='Einstellungen'
-          config={chart.config}
-          linesShown={10}
-          readOnly
-        />
-      </div>
-    </div>
+    </>
   )
 }
 
@@ -105,87 +108,49 @@ const ChartSelector = ({ onChange, data, CsvChart }) => {
     preselect(undefined)
     nextAccordionItem()
   }
-  const hasData = data.get('values') != ''
-  const hasConfig = !!config.type
-  const warning =
-    hasData && hasConfig
-      ? 'Daten und Einstellungen'
-      : hasData
-      ? 'Daten'
-      : hasConfig
-      ? 'Einstellungen'
-      : false
-  return (
+  const hasChanges = data.get('values') != '' || !!config.type
+  return preselected ? (
     <>
-      {preselected ? (
-        <ChartPreview
-          chart={preselected}
-          CsvChart={CsvChart}
-          onSelect={onSelect}
-        />
-      ) : (
-        <div {...styles.chartWrapper}>
-          {baseCharts.map(chart => {
-            return (
-              <div key={chart.name} {...styles.chartButtonContainer}>
-                <div
-                  {...styles.chartButton}
-                  {...styles.discreteButton}
-                  onClick={() => preselect(chart)}
-                >
-                  <img src={chart.screenshot} {...styles.chartImage} />
-                  <span {...styles.chartButtonText}>{chart.name}</span>
-                </div>
-              </div>
-            )
-          })}
-        </div>
-      )}
-      <div style={{ padding: '10px 0' }}>
-        {preselected ? (
-          <Label>
-            <button
-              {...plainButtonRule}
-              {...styles.greenButton}
-              onClick={() => onSelect(preselected)}
-            >
-              Vorlage übernehmen
-            </button>{' '}
-            (oder nur{' '}
-            <button
-              {...plainButtonRule}
-              {...styles.greenButton}
-              onClick={() => onSelect(preselected, true)}
-            >
-              Einstellungen kopieren
-            </button>
-            )
-            <button
-              {...plainButtonRule}
-              {...styles.discreteButton}
-              onClick={() => preselect(undefined)}
-            >
-              Weitere Beispiele anschauen
-            </button>
-          </Label>
-        ) : (
-          <Label>
-            <button
-              {...plainButtonRule}
-              {...styles.greenButton}
-              onClick={nextAccordionItem}
-            >
-              Danke, nein.
-            </button>
-          </Label>
-        )}
-        {preselected && warning && (
-          <Label {...styles.warning}>
-            <em>Sie haben schon {warning} definiert.</em>
-          </Label>
-        )}
+      <Label>
+        <button
+          {...plainButtonRule}
+          {...styles.discreteButton}
+          onClick={() => preselect(undefined)}
+        >
+          <BackIcon size={16} /> Vorlage durchsuchen
+        </button>
+      </Label>
+      <ChartPreview
+        chart={preselected}
+        CsvChart={CsvChart}
+        onSelect={onSelect}
+      />
+      <div {...styles.buttons}>
+        <Button onClick={() => onSelect(preselected)}>Überschreiben</Button>
+        <Interaction.P style={{ marginLeft: 30 }}>
+          <A href='#copy-settings' onClick={() => onSelect(preselected, true)}>
+            Einstellungen kopieren
+          </A>
+        </Interaction.P>
       </div>
     </>
+  ) : (
+    <div {...styles.chartWrapper}>
+      {baseCharts.map(chart => {
+        return (
+          <div key={chart.name} {...styles.chartButtonContainer}>
+            <div
+              {...styles.chartButton}
+              {...styles.discreteButton}
+              onClick={() => (hasChanges ? preselect(chart) : onSelect(chart))}
+            >
+              <img src={chart.screenshot} {...styles.chartImage} />
+              <span {...styles.chartButtonText}>{chart.name}</span>
+            </div>
+          </div>
+        )
+      })}
+    </div>
   )
 }
 
