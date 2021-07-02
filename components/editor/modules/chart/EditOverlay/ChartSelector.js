@@ -2,13 +2,12 @@ import React, { useContext, useState } from 'react'
 import {
   Label,
   fontStyles,
-  AccordionContext,
   plainButtonRule,
   Button,
   A,
   Interaction
 } from '@project-r/styleguide'
-import { baseCharts } from '../config'
+import { baseCharts } from './config'
 import { css } from 'glamor'
 import { JSONEditor, PlainEditor } from '../../../utils/CodeEditorFields'
 import BackIcon from 'react-icons/lib/md/chevron-left'
@@ -46,8 +45,8 @@ const styles = {
   chartPreviewContainer: css({
     display: 'grid',
     gridTemplateColumns: 'repeat(2, 1fr)',
-    gridGap: 20,
-    marginTop: 20
+    gridGap: 40,
+    margin: '20px 0'
   }),
   discreteButton: css({
     display: 'block',
@@ -67,24 +66,19 @@ const ChartPreview = ({ CsvChart, chart }) => {
   const values = chart.values.trim()
   return (
     <>
-      <Interaction.P>{chart.config.type}</Interaction.P>
+      <Interaction.P>{chart.name}</Interaction.P>
       <div {...styles.chartPreviewContainer}>
-        <div style={{ marginTop: 5 }}>
-          <CsvChart config={chart.config} values={values} />
-        </div>
         <div>
+          <JSONEditor label='Einstellungen' config={chart.config} readOnly />
           <PlainEditor
             label='Datenstruktur'
             value={values}
-            linesShown={3}
+            linesShown={2}
             readOnly
           />
-          <JSONEditor
-            label='Einstellungen'
-            config={chart.config}
-            linesShown={10}
-            readOnly
-          />
+        </div>
+        <div style={{ marginTop: 5 }}>
+          <CsvChart config={chart.config} values={values} />
         </div>
       </div>
     </>
@@ -93,9 +87,7 @@ const ChartPreview = ({ CsvChart, chart }) => {
 
 const ChartSelector = ({ onChange, data, CsvChart }) => {
   const [preselected, preselect] = useState()
-  const { setActiveItemIndex } = useContext(AccordionContext)
   const config = data.get('config') || {}
-  const nextAccordionItem = () => setActiveItemIndex('dataInput')
   const onSelect = (chart, configOnly = false) => {
     onChange(
       data
@@ -106,7 +98,6 @@ const ChartSelector = ({ onChange, data, CsvChart }) => {
         .set('values', configOnly ? data.get('values') : chart.values.trim())
     )
     preselect(undefined)
-    nextAccordionItem()
   }
   const hasChanges = data.get('values') != '' || !!config.type
   return preselected ? (

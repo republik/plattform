@@ -11,6 +11,7 @@ import {
   Overlay,
   OverlayToolbar,
   OverlayToolbarConfirm,
+  OverlayToolbarClose,
   OverlayBody,
   Loader,
   Interaction
@@ -85,10 +86,7 @@ export default function TreeDiff(props) {
                 >
                   {props.commit.message}
                 </Interaction.Emphasis>
-                <OverlayToolbarConfirm
-                  onClick={handleOnClose}
-                  label={<MdClose size={24} />}
-                />
+                <OverlayToolbarClose onClick={handleOnClose} />
               </OverlayToolbar>
               <OverlayBody style={{ fontSize: 13 }}>
                 <Loader

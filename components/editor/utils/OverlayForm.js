@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
-import { css } from 'glamor'
+import { css, merge } from 'glamor'
 
 import {
   Overlay,
@@ -29,14 +29,21 @@ const styles = {
   preview: css({
     [mediaQueries.mUp]: {
       float: 'left',
-      width: previewWidth
+      width: previewWidth,
+      marginRight: 20
     }
   }),
   edit: css({
     [mediaQueries.mUp]: {
       float: 'left',
-      width: `calc(100% - ${previewWidth}px)`,
-      paddingLeft: 20
+      width: `calc(100% - ${previewWidth + 20}px)`,
+      paddingRight: 40
+    }
+  }),
+  noPreview: css({
+    [mediaQueries.mUp]: {
+      width: '100%',
+      paddingRight: 0
     }
   }),
   contextBackground: css({
@@ -66,6 +73,8 @@ const OverlayForm = ({
   preview,
   extra,
   children,
+  overlayToolBarActions,
+  showPreview = true,
   autoDarkModePreview = true
 }) => {
   const [colorScheme] = useColorContext()
@@ -77,34 +86,39 @@ const OverlayForm = ({
       mUpStyle={{ maxWidth: '80vw', marginTop: '5vh' }}
     >
       <OverlayToolbar>
+        <div style={{ padding: '15px 20px' }}>{overlayToolBarActions}</div>
         <OverlayToolbarClose onClick={onClose} />
       </OverlayToolbar>
 
       <OverlayBody>
-        <div {...styles.preview}>
-          <ContextBackground>{preview}</ContextBackground>
-          <br />
-          <Checkbox
-            checked={showDarkMode}
-            onChange={(_, checked) => setShowDarkMode(checked)}
-          >
-            Nachtmodus Vorschau
-          </Checkbox>
-          {showDarkMode && (
-            <ColorContextProvider
-              colorSchemeKey={
-                colorScheme.schemeKey === 'dark' ? 'light' : 'dark'
-              }
-            >
-              <ContextBackground>{preview}</ContextBackground>
-            </ColorContextProvider>
-          )}
-          <br />
-          <br />
-          <br />
-          {extra}
+        <div {...merge(styles.edit, !showPreview && styles.noPreview)}>
+          {children}
         </div>
-        <div {...styles.edit}>{children}</div>
+        {showPreview && (
+          <div {...styles.preview}>
+            <ContextBackground>{preview}</ContextBackground>
+            <br />
+            <Checkbox
+              checked={showDarkMode}
+              onChange={(_, checked) => setShowDarkMode(checked)}
+            >
+              Nachtmodus Vorschau
+            </Checkbox>
+            {showDarkMode && (
+              <ColorContextProvider
+                colorSchemeKey={
+                  colorScheme.schemeKey === 'dark' ? 'light' : 'dark'
+                }
+              >
+                <ContextBackground>{preview}</ContextBackground>
+              </ColorContextProvider>
+            )}
+            <br />
+            <br />
+            <br />
+            {extra}
+          </div>
+        )}
         <br style={{ clear: 'both' }} />
       </OverlayBody>
     </Overlay>
