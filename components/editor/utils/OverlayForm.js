@@ -86,7 +86,7 @@ const OverlayForm = ({
       mUpStyle={{ maxWidth: '80vw', marginTop: '5vh' }}
     >
       <OverlayToolbar>
-        <div style={{ padding: '15px 20px' }}>{overlayToolBarActions}</div>
+        {overlayToolBarActions}
         <OverlayToolbarClose onClick={onClose} />
       </OverlayToolbar>
 

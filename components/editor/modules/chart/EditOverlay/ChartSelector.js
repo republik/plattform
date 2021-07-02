@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useState } from 'react'
 import {
   Label,
   fontStyles,
@@ -85,9 +85,10 @@ const ChartPreview = ({ CsvChart, chart }) => {
   )
 }
 
-const ChartSelector = ({ onChange, data, CsvChart }) => {
+const ChartSelector = ({ onChange, data, CsvChart, setTab }) => {
   const [preselected, preselect] = useState()
   const config = data.get('config') || {}
+
   const onSelect = (chart, configOnly = false) => {
     onChange(
       data
@@ -98,6 +99,7 @@ const ChartSelector = ({ onChange, data, CsvChart }) => {
         .set('values', configOnly ? data.get('values') : chart.values.trim())
     )
     preselect(undefined)
+    setTab('chart')
   }
   const hasChanges = data.get('values') != '' || !!config.type
   return preselected ? (

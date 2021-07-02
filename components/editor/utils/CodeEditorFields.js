@@ -1,14 +1,8 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react'
-import { css, merge } from 'glamor'
+import React, { useEffect, useRef, useState } from 'react'
+import { css } from 'glamor'
 import PropTypes from 'prop-types'
 import { Controlled as CodeMirror } from 'react-codemirror2'
-import {
-  A,
-  colors,
-  fontFamilies,
-  Label,
-  useDebounce
-} from '@project-r/styleguide'
+import { colors, fontFamilies, Label, useDebounce } from '@project-r/styleguide'
 
 // CodeMirror can only run in the browser
 if (process.browser && window) {
@@ -21,14 +15,16 @@ if (process.browser && window) {
   require('codemirror/addon/lint/json-lint')
 }
 
-const LINE_HEIGHT = 21
+const LINE_HEIGHT = 20.4
 
 const styles = {
+  cmContainer: css({
+    margin: '10px 0 20px'
+  }),
   codemirror: css({
     padding: 0,
     '& .CodeMirror': {
       height: 'auto',
-      margin: '10px 0 20px',
       fontFamily: fontFamilies.monospaceRegular,
       fontSize: 14,
       color: colors.text
@@ -51,60 +47,47 @@ const CodeMirrorField = ({
   options,
   onFocus,
   onBlur,
-  linesShown,
-  showExpand
+  linesShown
 }) => {
-  const [scroll, setScroll] = useState(!!linesShown)
-  const style = useMemo(
-    () =>
-      css({
-        '& .CodeMirror': scroll && {
-          height: Math.round(LINE_HEIGHT * linesShown),
-          overflowY: 'scroll'
-        }
-      }),
-    [scroll]
-  )
   const showLabel = label || linesShown
   return (
-    <div {...merge(styles.codemirror, style)}>
-      {showLabel && (
-        <Label>
-          {label && <span>{label}</span>}
-          {linesShown && showExpand && (
-            <A
-              style={{ float: 'right' }}
-              href='#toggle-lines'
-              onClick={() => setScroll(!scroll)}
-            >
-              {scroll ? 'expand' : 'hide'}
-            </A>
-          )}
-        </Label>
-      )}
-      <CodeMirror
-        value={value}
-        options={{
-          theme: 'neo',
-          gutters: ['CodeMirror-linenumbers'],
-          lineNumbers: true,
-          line: true,
-          lineWrapping: true,
-          ...options
-        }}
-        onBeforeChange={(editor, data, value) => {
-          onChange(value)
-        }}
-        onPaste={(editor, event) => {
-          onPaste && onPaste(event)
-        }}
-        onBlur={(editor, event) => {
-          onBlur && onBlur(event)
-        }}
-        onFocus={(editor, event) => {
-          onFocus && onFocus(event)
-        }}
-      />
+    <div {...styles.codemirror} {...styles.cmContainer}>
+      {showLabel && <Label>{label && <span>{label}</span>}</Label>}
+      <div
+        {...styles.cmContainer}
+        style={
+          linesShown
+            ? {
+                maxHeight: Math.round(LINE_HEIGHT * linesShown),
+                overflowY: 'scroll'
+              }
+            : null
+        }
+      >
+        <CodeMirror
+          value={value}
+          options={{
+            theme: 'neo',
+            gutters: ['CodeMirror-linenumbers'],
+            lineNumbers: true,
+            line: true,
+            lineWrapping: true,
+            ...options
+          }}
+          onBeforeChange={(editor, data, value) => {
+            onChange(value)
+          }}
+          onPaste={(editor, event) => {
+            onPaste && onPaste(event)
+          }}
+          onBlur={(editor, event) => {
+            onBlur && onBlur(event)
+          }}
+          onFocus={(editor, event) => {
+            onFocus && onFocus(event)
+          }}
+        />
+      </div>
     </div>
   )
 }
@@ -116,8 +99,7 @@ export const PlainEditor = ({
   onPaste,
   mode,
   linesShown,
-  readOnly,
-  showExpand
+  readOnly
 }) => {
   return (
     <CodeMirrorField
@@ -141,8 +123,7 @@ export const JSONEditor = ({
   config,
   onChange,
   linesShown,
-  readOnly,
-  showExpand
+  readOnly
 }) => {
   const [stateValue, setStateValue] = useState('')
   const [debouncedStateValue] = useDebounce(stateValue, 300)

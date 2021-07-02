@@ -3,24 +3,56 @@ import OverlayFormManager from '../../../utils/OverlayFormManager'
 import Export from '../Export'
 import ChartEditor from './ChartEditor'
 import ChartSelector from './ChartSelector'
-import { plainButtonRule } from '@project-r/styleguide'
+import { plainButtonRule, fontStyles } from '@project-r/styleguide'
+import { css } from 'glamor'
 
-const tabs = ['edit', 'templates']
+const tabs = ['chart', 'templates']
 const tabConfig = {
-  edit: { body: ChartEditor, label: 'Bearbeiten', showPreview: true },
+  chart: { body: ChartEditor, label: 'Chart', showPreview: true },
   templates: { body: ChartSelector, label: 'Vorlage', showPreview: false }
 }
 
-const Tab = ({ tabKey, setTab, isActive }) => (
-  <button {...plainButtonRule} onClick={() => setTab(tabKey)}>
-    {tabConfig[tabKey].label}
-  </button>
-)
+const styles = {
+  tabContainer: css({
+    height: '100%',
+    display: 'flex',
+    lineHeight: '16px'
+  }),
+  tab: css({
+    margin: '0 15px',
+    '@media (hover)': {
+      ':hover': {
+        textDecoration: 'underline',
+        textDecorationSkip: 'ink'
+      }
+    },
+    '&.is-active': {
+      ...fontStyles.sansSerifMedium,
+      lineHeight: '16px'
+    }
+  })
+}
+
+const Tab = ({ tabKey, setTab, isActive }) => {
+  return (
+    <button
+      {...plainButtonRule}
+      {...styles.tab}
+      onClick={() => setTab(tabKey)}
+      className={isActive ? 'is-active' : ''}
+    >
+      {tabConfig[tabKey].label}
+    </button>
+  )
+}
+
+const hasData = node =>
+  node.data.get('config')?.type || node.data.get('values') != ''
 
 export default props => {
-  const [tab, setTab] = useState('templates')
+  const [tab, setTab] = useState(hasData(props.node) ? 'chart' : 'templates')
   const overlayToolBarActions = (
-    <>
+    <div {...styles.tabContainer}>
       {tabs.map(tabKey => (
         <Tab
           key={tabKey}
@@ -29,7 +61,7 @@ export default props => {
           isActive={tab === tabKey}
         />
       ))}
-    </>
+    </div>
   )
   const TabBody = tabConfig[tab].body
 
@@ -55,7 +87,12 @@ export default props => {
       }}
     >
       {({ data, onChange }) => (
-        <TabBody data={data} onChange={onChange} CsvChart={props.CsvChart} />
+        <TabBody
+          data={data}
+          onChange={onChange}
+          CsvChart={props.CsvChart}
+          setTab={setTab}
+        />
       )}
     </OverlayFormManager>
   )

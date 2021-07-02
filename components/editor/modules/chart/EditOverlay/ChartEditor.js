@@ -18,6 +18,7 @@ const ChartEditor = ({ data, onChange }) => {
         label='CSV Daten'
         value={data.get('values')}
         onChange={value => onChange(data.set('values', value))}
+        linesShown={20}
         onPaste={e => {
           const clipboardData = e.clipboardData || window.clipboardData
           let parsedTsv
