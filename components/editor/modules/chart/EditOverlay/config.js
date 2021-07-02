@@ -7,7 +7,7 @@ export const sizes = [
 
 export const baseCharts = [
   {
-    name: 'Bars',
+    name: 'Simple Bars',
     screenshot: '/static/charts/bars.png',
     config: {
       type: 'Bar',
@@ -63,7 +63,7 @@ age,gender,value
 `
   },
   {
-    name: 'Multi Bars',
+    name: 'Bar Columns',
     screenshot: '/static/charts/multi-bars.png',
     config: {
       type: 'Bar',
@@ -85,7 +85,7 @@ Pädagogik und Sozialkompetenz,Individuelle berufsbezogene Weiterbildung,0.17
 `
   },
   {
-    name: 'Filled Bars',
+    name: 'Full-Width Bars',
     screenshot: '/static/charts/filled-bars.png',
     config: {
       type: 'Bar',
@@ -124,7 +124,7 @@ Sexuelle Belästigung,sehr stark,0.093
 `
   },
   {
-    name: 'Timebars',
+    name: 'Simple Timebars',
     screenshot: '/static/charts/timebars.png',
     config: {
       type: 'TimeBar',
@@ -319,7 +319,7 @@ Stickstofftrifluorid,2016,12000.0000
 `
   },
   {
-    name: 'Multi Timebars',
+    name: 'Timebar Columns',
     screenshot: '/static/charts/multi-timebars.png',
     config: {
       type: 'TimeBar',
@@ -439,7 +439,7 @@ year,gender,at_age,value
 `
   },
   {
-    name: 'Bands',
+    name: 'Confidence Bands',
     screenshot: '/static/charts/bands.png',
     config: {
       numberFormat: '.2f',
@@ -568,6 +568,7 @@ Energieversorgung,8210,6873,10182
   },
   {
     name: 'Scatter Plot',
+    large: true,
     screenshot: '/static/charts/scatter-plot.png',
     config: {
       type: 'ScatterPlot',
@@ -782,7 +783,8 @@ Zimbabwe,1910,0.78,Africa
 `
   },
   {
-    name: 'Projected Map',
+    name: 'World Map',
+    large: true,
     screenshot: '/static/charts/projected-map.png',
     config: {
       type: 'GenericMap',

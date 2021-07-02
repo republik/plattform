@@ -8,7 +8,7 @@ import {
   Interaction
 } from '@project-r/styleguide'
 import { baseCharts } from './config'
-import { css } from 'glamor'
+import { css, merge } from 'glamor'
 import { JSONEditor, PlainEditor } from '../../../utils/CodeEditorFields'
 import BackIcon from 'react-icons/lib/md/chevron-left'
 import { styles as overlayStyles } from '../../../utils/OverlayForm'
@@ -24,10 +24,9 @@ const styles = {
     display: 'flex'
   }),
   chartButton: css({
-    height: '100%',
-    width: 130,
+    height: 80,
+    width: 120,
     whiteSpace: 'nowrap',
-    padding: '30px 10px',
     textAlign: 'center',
     ...fontStyles.sansSerifRegular14,
     cursor: 'pointer',
@@ -37,11 +36,19 @@ const styles = {
   }),
   chartImage: css({
     maxWidth: 60,
-    maxHeight: 40
+    maxHeight: 30,
+    marginTop: 'auto'
+  }),
+  chartImageLarge: css({
+    maxWidth: 130,
+    maxHeight: 50
   }),
   chartButtonText: css({
     display: 'block',
-    marginTop: 'auto'
+    marginTop: 'auto',
+    ':hover': {
+      textDecoration: 'underline'
+    }
   }),
   discreteButton: css({
     display: 'block',
@@ -129,10 +136,15 @@ const ChartSelector = ({ onChange, data, CsvChart, setTab }) => {
           <div key={chart.name} {...styles.chartButtonContainer}>
             <div
               {...styles.chartButton}
-              {...styles.discreteButton}
               onClick={() => (hasChanges ? preselect(chart) : onSelect(chart))}
             >
-              <img src={chart.screenshot} {...styles.chartImage} />
+              <img
+                src={chart.screenshot}
+                {...merge(
+                  styles.chartImage,
+                  chart.large && styles.chartImageLarge
+                )}
+              />
               <span {...styles.chartButtonText}>{chart.name}</span>
             </div>
           </div>
