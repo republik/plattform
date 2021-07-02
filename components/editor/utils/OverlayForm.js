@@ -15,7 +15,7 @@ import {
 
 const previewWidth = 290
 
-const styles = {
+export const styles = {
   editButton: css({
     position: 'absolute',
     left: -40,

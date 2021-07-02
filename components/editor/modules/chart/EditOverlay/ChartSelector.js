@@ -11,6 +11,7 @@ import { baseCharts } from './config'
 import { css } from 'glamor'
 import { JSONEditor, PlainEditor } from '../../../utils/CodeEditorFields'
 import BackIcon from 'react-icons/lib/md/chevron-left'
+import { styles as overlayStyles } from '../../../utils/OverlayForm'
 
 const styles = {
   chartWrapper: css({
@@ -42,12 +43,6 @@ const styles = {
     display: 'block',
     marginTop: 'auto'
   }),
-  chartPreviewContainer: css({
-    display: 'grid',
-    gridTemplateColumns: 'repeat(2, 1fr)',
-    gridGap: 40,
-    margin: '20px 0'
-  }),
   discreteButton: css({
     display: 'block',
     marginBottom: 30,
@@ -58,7 +53,8 @@ const styles = {
   buttons: css({
     display: 'flex',
     flexDirection: 'row',
-    alignItems: 'center'
+    alignItems: 'center',
+    marginTop: 15
   })
 }
 
@@ -67,20 +63,19 @@ const ChartPreview = ({ CsvChart, chart }) => {
   return (
     <>
       <Interaction.P>{chart.name}</Interaction.P>
-      <div {...styles.chartPreviewContainer}>
-        <div>
-          <JSONEditor label='Einstellungen' config={chart.config} readOnly />
-          <PlainEditor
-            label='Datenstruktur'
-            value={values}
-            linesShown={2}
-            readOnly
-          />
-        </div>
-        <div style={{ marginTop: 5 }}>
-          <CsvChart config={chart.config} values={values} />
-        </div>
+      <div {...overlayStyles.edit}>
+        <JSONEditor label='Einstellungen' config={chart.config} readOnly />
+        <PlainEditor
+          label='CSV Daten'
+          value={values}
+          linesShown={10}
+          readOnly
+        />
       </div>
+      <div {...overlayStyles.preview}>
+        <CsvChart config={chart.config} values={values} />
+      </div>
+      <br style={{ clear: 'both' }} />
     </>
   )
 }
