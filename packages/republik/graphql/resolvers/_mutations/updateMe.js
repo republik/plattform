@@ -326,7 +326,13 @@ module.exports = async (_, args, context) => {
       me._raw.portraitUrl &&
       updatedUser.portraitUrl !== me._raw.portraitUrl
     ) {
-      await Portrait.del(me._raw.portraitUrl)
+      await Portrait.del(me._raw.portraitUrl).catch((e) =>
+        console.warn('Unable to delete portraitUrl after update: %o', {
+          portraitUrl: me._raw.portraitUrl,
+          error: e.message,
+          user: me.id,
+        }),
+      )
     }
 
     await mail.updateMergeFields({ user: updatedUser })
@@ -335,8 +341,14 @@ module.exports = async (_, args, context) => {
   } catch (e) {
     await transaction.transactionRollback()
 
-    if (portraitUrl) {
-      await Portrait.del(portraitUrl)
+    if (portraitUrl !== me._raw.portraitUrl) {
+      await Portrait.del(portraitUrl).catch((e) =>
+        console.warn('Unable to delete portraitUrl after rolling back: %o', {
+          portraitUrl,
+          error: e.message,
+          user: me.id,
+        }),
+      )
     }
 
     console.log('updateMe', e)
