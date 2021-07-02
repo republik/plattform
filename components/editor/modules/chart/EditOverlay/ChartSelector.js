@@ -32,7 +32,10 @@ const styles = {
     cursor: 'pointer',
     display: 'flex',
     flexDirection: 'column',
-    alignItems: 'center'
+    alignItems: 'center',
+    ':hover': {
+      textDecoration: 'underline'
+    }
   }),
   chartImage: css({
     maxWidth: 60,
@@ -52,10 +55,7 @@ const styles = {
   }),
   discreteButton: css({
     display: 'block',
-    marginBottom: 30,
-    ':hover': {
-      textDecoration: 'underline'
-    }
+    marginBottom: 30
   }),
   buttons: css({
     display: 'flex',
