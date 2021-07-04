@@ -783,60 +783,218 @@ Zimbabwe,1910,0.78,Africa
 `
   },
   {
-    name: 'World Map',
+    name: 'Choropleth Welt',
     large: true,
-    screenshot: '/static/charts/projected-map.png',
+    screenshot: '/static/charts/world-map.png',
     config: {
       type: 'GenericMap',
-      heightRatio: 0.5,
-      points: true,
-      pointLabel: 'name',
-      pointAttributes: ['Land'],
-      colorLegend: false,
-      sizeRangeMax: 300,
-      unit: 't CO<sub>2</sub> pro Kopf',
+      colorLegend: true,
+      heightRatio: 0.469,
+      choropleth: true,
+      opacity: 1,
+      thresholds: [30, 40, 50, 60, 70, 80, 90],
+      colorRange: [
+        '#800026',
+        '#bd0026',
+        '#e31a1c',
+        '#fc4e2a',
+        '#fd8d3c',
+        '#feb24c',
+        '#fed976',
+        '#ffeda0'
+      ],
       features: {
-        url: '/static/geo_temp/world-atlas-110m.json',
-        object: 'land'
-      }
+        url:
+          'https://cdn.repub.ch/s3/republik-assets/assets/geo/world-atlas-110m-without-antarctic.json',
+        object: 'countries'
+      },
+      missingDataLegend: 'Nicht untersucht',
+      label: 'label',
+      legendTitle: 'Medienfreiheit',
+      colorLegendPosition: 'left',
+      colorLegendSize: 0.17,
+      colorLegendMinWidth: 90
     },
     values: `
-lon,lat,name,value,Land
--81.6662,41.4609,"Cleveland",24.7086,"USA"
-126.6235,45.72794,"Harbin",5.8252,"China"
-114.4906,38.05647,"Shijiazhuang",7.409,"China"
-117.2686,31.84478,"Hefei",6.4152,"China"
--1.97333,52.5129,"Birmingham",10.5696,"UK"
-76.8976,43.2746,"Almaty",13.8718,"Kazakhstan"
-125.2966,43.87748,"Changchun",7.5739,"China"
--76.6564,39.3269,"Baltimore",20.2459,"USA"
-2.11335,41.4789,"Barcelona",7.1442,"Spain"
-106.6912,10.87065,"Ho Chi Minh City",2.2753,"Viet Nam"
-78.4717,17.4518,"Hyderabad",3.1619,"India"
-18.5775,-33.9625,"Cape Town",7.7099,"South Africa"
-4.41519,51.9588,"Rotterdam",11.0501,"Netherlands"
--70.6611,-33.4681,"Santiago",4.3807,"Chile"
-117.0421,36.67991,"Jinan",8.5077,"China"
--117.1063,32.7846,"San Diego",14.4791,"USA"
--90.3813,38.6951,"St. Louis",24.0629,"USA"
--73.6943,45.5521,"Montreal",10.136,"Canada"
+feature,value
+004,62.3
+024,66.08
+008,69.75
+784,57.31
+032,71.22
+051,71.4
+036,79.79
+040,84.22
+031,41.52
+108,44.67
+056,87.43
+204,64.89
+854,76.53
+050,50.63
+100,64.94
+070,71.49
+112,50.25
+084,72.5
+068,64.63
+076,65.95
+096,50.35
+064,71.1
+072,76.44
+140,57.13
+124,84.71
+756,89.38
+152,72.69
+156,21.52
+384,71.06
+120,56.72
+180,50.91
+178,63.44
+170,57.34
+188,89.47
+192,36.19
+196,79.55
+203,76.43
+276,87.84
+262,23.27
+208,91.87
+214,72.1
+012,54.48
+218,67.38
+818,43.18
+232,16.5
+724,77.84
+233,87.39
+231,67.18
+246,92.07
+242,72.59
+250,77.08
+266,62.8
+826,77.07
+268,71.41
+288,77.74
+324,65.66
+270,69.38
+624,67.94
+226,43.62
+300,71.2
+320,64.26
+328,73.37
+340,51.8
+191,71.49
+332,69.8
+348,69.16
+360,63.18
+356,54.67
+372,87.4
+364,35.19
+368,44.63
+352,84.88
+376,69.16
+380,76.31
+388,89.49
+400,57.92
+392,71.14
+398,45.89
+404,66.28
+417,69.81
+116,54.54
+410,76.3
+414,65.7
+418,35.72
+422,66.81
+430,67.75
+434,44.23
+144,58.06
+426,69.55
+440,78.81
+442,84.54
+428,81.44
+504,57.12
+498,68.84
+450,72.32
+484,54.55
+807,68.72
+466,65.88
+104,55.23
+499,66.17
+496,70.39
+508,66.21
+478,67.46
+454,70.68
+458,66.88
+516,80.75
+562,71.75
+566,64.37
+558,64.19
+528,90.04
+578,92.16
+524,64.9
+554,89.31
+512,56.58
+586,54.48
+591,70.22
+604,69.06
+608,56.46
+598,76.07
+616,71.35
+408,14.18
+620,88.17
+600,67.03
+634,57.49
+642,74.09
+643,51.08
+646,49.66
+682,37.86
+729,44.67
+686,76.01
+694,69.72
+222,70.3
+706,44.55
+688,68.38
+728,55.51
+740,82.5
+703,77.33
+705,77.36
+752,90.75
+748,54.85
+760,27.43
+148,60.3
+768,70.67
+764,55.06
+762,44.66
+795,14.56
+626,70.1
+780,76.78
+788,70.55
+792,49.98
+158,76.24
+834,59.75
+800,59.05
+804,67.48
+858,84.21
+840,76.15
+860,46.93
+862,54.34
+704,25.29
+887,41.75
+710,77.59
+894,63
+716,59.05
+KOS,70.67
+CYN,70.21
 `
   },
   {
-    name: 'Swiss Map',
+    name: 'Choropleth Kantone',
     screenshot: '/static/charts/swiss-map.png',
     config: {
-      type: 'SwissMap',
+      type: 'ProjectedMap',
+      heightRatio: 0.63,
       legendTitle: 'Jastimmen',
       unit: 'Jastimmen',
       choropleth: true,
       numberFormat: '.0%',
-      thresholdsLegend: [
-        { label: 'Roses are red' },
-        { minValue: 0.4, label: 'Gripens are blue' },
-        { minValue: 0.5, label: 'I want seven of them' },
-        { minValue: 0.6, label: 'And so do you' }
-      ],
+      thresholds: [0.4, 0.5, 0.6],
       colorRange: [
         'rgb(187,21,26)',
         'rgb(239,69,51)',
@@ -844,41 +1002,39 @@ lon,lat,name,value,Land
         'rgb(24,100,170)'
       ],
       features: {
-        url: '/static/geo_temp/ch-cantons-wo-lakes.json',
+        url:
+          'https://cdn.repub.ch/s3/republik-assets/assets/geo/epsg2056-projected-ch-cantons-wo-lakes.json',
         object: 'cantons'
-      },
-      tooltipLabel: 'What about {name}?',
-      tooltipBody:
-        '{formattedValue} of people in {name} ({feature}) voted in favour of purchasing new military airplanes.\nBtw, did you know that they speak {language} in this canton?'
+      }
     },
     values: `
-feature,value,language
-ZH,0.487,German
-BE,0.491,French and German
-LU,0.543,German
-UR,0.624,German
-SZ,0.615,German
-OW,0.638,German
-NW,0.682,German
-GL,0.599,German
-ZG,0.6,German
-FR,0.406,French and German
-SO,0.503,German
-BS,0.323,German
-BL,0.425,German
-SH,0.494,German
-AR,0.511,German
-AI,0.608,German
-SG,0.5,German
-GR,0.507,"German, Italian and Romansh"
-AG,0.519,German
-TG,0.556,German
-TI,0.453,Italian
-VD,0.349,French
-VS,0.381,French and German
-NE,0.309,French
-GE,0.322,French
-JU,0.257,French
+feature,value
+ZH,0.487
+BE,0.491
+LU,0.543
+UR,0.624
+SZ,0.615
+OW,0.638
+NW,0.682
+GL,0.599
+ZG,0.6
+FR,0.406
+SO,0.503
+BS,0.323
+BL,0.425
+SH,0.494
+AR,0.511
+AI,0.608
+SG,0.5
+GR,0.507
+AG,0.519
+TG,0.556
+TI,0.453
+VD,0.349
+VS,0.381
+NE,0.309
+GE,0.322
+JU,0.257
 `
   },
   {
