@@ -58,7 +58,6 @@ const styles = {
     outline: 'none',
     background: 'transparent',
     ...sansSerifRegular16,
-    margin: '0 0 0 auto',
     padding: '0 12px',
     [mUp]: {
       padding: '0 20px'

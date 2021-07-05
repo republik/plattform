@@ -10,8 +10,8 @@ span: 2
 ---
 <OverlayRenderer isVisible onClose={() => {}}>
   <OverlayToolbar>
-    <OverlayToolbarClose onClick={() => {}} />
     <OverlayToolbarConfirm label='Speichern' onClick={() => {}} />
+    <OverlayToolbarClose onClick={() => {}} />
   </OverlayToolbar>
 </OverlayRenderer>
 ```
@@ -23,8 +23,8 @@ span: 4
 ---
 <OverlayRenderer isVisible onClose={() => {}}>
   <OverlayToolbar>
-    <OverlayToolbarClose onClick={() => {}} />
     <OverlayToolbarConfirm label='Speichern' onClick={() => {}} />
+    <OverlayToolbarClose onClick={() => {}} />
   </OverlayToolbar>
 </OverlayRenderer>
 ```
@@ -75,8 +75,8 @@ The `<OverlayToolbar />` serves as a container for `<OverlayToolbarClose />` and
 ```react|noSource,plain,frame,span-2
 <div style={{height: 48}}>
   <OverlayToolbar>
-    <OverlayToolbarClose onClick={() => {}} />
     <OverlayToolbarConfirm label='Speichern' onClick={() => {}} />
+    <OverlayToolbarClose onClick={() => {}} />
   </OverlayToolbar>
 </div>
 ```
@@ -104,8 +104,8 @@ responsive: Desktop small
 ---
 <OverlayRenderer isVisible onClose={() => {}}>
   <OverlayToolbar>
-    <OverlayToolbarClose onClick={() => {}} />
     <OverlayToolbarConfirm label='Speichern' onClick={() => {}} />
+    <OverlayToolbarClose onClick={() => {}} />
   </OverlayToolbar>
 
   <OverlayBody>
