@@ -71,13 +71,9 @@ module.exports = async (_, args, context) => {
 
       let newSubscription
       if (subscription.status === 'active') {
-        // https://stripe.com/docs/subscriptions/canceling-pausing#reactivating-canceled-subscriptions
         newSubscription = await reactivateSubscription({
           id: membership.subscriptionId,
-          item: {
-            id: subscription.items.data[0].id,
-            plan: membershipType.name,
-          },
+          item_id: subscription.items.data[0].id,
           companyId: membershipType.companyId,
           pgdb: transaction,
         })
