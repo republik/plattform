@@ -99,13 +99,7 @@ export {
   CommentBodyParagraph
 } from './components/CommentBody/web'
 export { CommentTeaser } from './components/CommentTeaser'
-export {
-  Overlay,
-  OverlayToolbar,
-  OverlayToolbarClose,
-  OverlayToolbarConfirm,
-  OverlayBody
-} from './components/Overlay'
+export { Overlay, OverlayToolbar, OverlayBody } from './components/Overlay'
 
 export { Container, NarrowContainer } from './components/Grid'
 export {

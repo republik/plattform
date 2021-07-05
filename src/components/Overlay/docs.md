@@ -9,10 +9,7 @@ responsive: Mobile
 span: 2
 ---
 <OverlayRenderer isVisible onClose={() => {}}>
-  <OverlayToolbar>
-    <OverlayToolbarConfirm label='Speichern' onClick={() => {}} />
-    <OverlayToolbarClose onClick={() => {}} />
-  </OverlayToolbar>
+  <OverlayToolbar title='Traditional Title' onClose={() => undefined} />
 </OverlayRenderer>
 ```
 ```react
@@ -22,10 +19,7 @@ responsive: Desktop small
 span: 4
 ---
 <OverlayRenderer isVisible onClose={() => {}}>
-  <OverlayToolbar>
-    <OverlayToolbarConfirm label='Speichern' onClick={() => {}} />
-    <OverlayToolbarClose onClick={() => {}} />
-  </OverlayToolbar>
+  <OverlayToolbar title='Tragicomic Title' onClose={() => undefined} />
 </OverlayRenderer>
 ```
 
@@ -41,10 +35,7 @@ state: {isOpen: false, sliderValue}
 
   {state.isOpen && (
     <Overlay onClose={() => {setState({isOpen: false})}}>
-      <OverlayToolbar>
-        <OverlayToolbarClose onClick={() => {setState({isOpen: false})}} />
-      </OverlayToolbar>
-
+      <OverlayToolbar onClose={() => {setState({isOpen: false})}} />
       <OverlayBody>
         <Interaction.P style={{height: '100vh'}}>
           This is a placeholder to make the overlay content taller than the viewport
@@ -70,28 +61,33 @@ state: {isOpen: false, sliderValue}
 
 ## `<OverlayToolbar />` et al.
 
-The `<OverlayToolbar />` serves as a container for `<OverlayToolbarClose />` and `<OverlayToolbarConfirm />`. Both inner elements are optional.
+The `<OverlayToolbar />` can take as input:
+    
+- `onClose`: renders a close button to the right
+- `title`: can either be a string or a more sophisticated element (e.g. button or tabs)
 
-```react|noSource,plain,frame,span-2
+```react|noSource,plain,frame,span-3
 <div style={{height: 48}}>
-  <OverlayToolbar>
-    <OverlayToolbarConfirm label='Speichern' onClick={() => {}} />
-    <OverlayToolbarClose onClick={() => {}} />
-  </OverlayToolbar>
+  <OverlayToolbar title='Tantalizing Title'  onClose={() => undefined} />
 </div>
 ```
-```react|noSource,plain,frame,span-2
+```react|noSource,plain,frame,span-3
 <div style={{height: 48}}>
-  <OverlayToolbar>
-    <OverlayToolbarClose onClick={() => {}} />
-  </OverlayToolbar>
+  <OverlayToolbar onClose={() => undefined} />
 </div>
 ```
-```react|noSource,plain,frame,span-2
+```react|noSource,plain,frame,span-3
+state: {tab: 1}
+---
 <div style={{height: 48}}>
-  <OverlayToolbar>
-    <OverlayToolbarConfirm label='Speichern' onClick={() => {}} />
-  </OverlayToolbar>
+  <OverlayToolbar 
+   title={
+      <div>
+        <span style={{ cursor: 'pointer', fontWeight: state.tab == 1 ? 500 : 300, marginRight: 10 }} onClick={() => {setState({tab: 1})}}>One Tab</span>
+        <span style={{ cursor: 'pointer', fontWeight: state.tab == 2 ? 500 : 300 }} onClick={() => {setState({tab: 2})}}>Two Tabs</span>
+      </div>
+   } 
+  />
 </div>
 ```
 
@@ -103,11 +99,7 @@ Wrap the content in a `<OverlayBody />`. It adds appropriate amount of padding a
 responsive: Desktop small
 ---
 <OverlayRenderer isVisible onClose={() => {}}>
-  <OverlayToolbar>
-    <OverlayToolbarConfirm label='Speichern' onClick={() => {}} />
-    <OverlayToolbarClose onClick={() => {}} />
-  </OverlayToolbar>
-
+  <OverlayToolbar title='Tyrannicidal Title' onClose={() => undefined} />
   <OverlayBody>
     <Interaction.P>
       The overlay body be here.
