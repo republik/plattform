@@ -5,7 +5,8 @@ import {
   plainButtonRule,
   Button,
   A,
-  Interaction
+  Interaction,
+  mediaQueries
 } from '@project-r/styleguide'
 import { baseCharts } from './config'
 import { css, merge } from 'glamor'
@@ -16,8 +17,12 @@ import { styles as overlayStyles } from '../../../utils/OverlayForm'
 const styles = {
   chartWrapper: css({
     display: 'grid',
-    gridTemplateColumns: 'repeat(4, 1fr)',
-    gridAutoRows: 120
+    gridTemplateColumns: 'repeat(2, 1fr)',
+    gridRowGap: 20,
+    [mediaQueries.mUp]: {
+      gridTemplateColumns: 'repeat(4, 1fr)',
+      gridRowGap: 40
+    }
   }),
   chartButtonContainer: css({
     height: '100%',
@@ -27,14 +32,17 @@ const styles = {
     height: 80,
     width: 120,
     whiteSpace: 'nowrap',
-    textAlign: 'center',
     ...fontStyles.sansSerifRegular14,
     cursor: 'pointer',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
+    margin: '0 auto',
     ':hover': {
       textDecoration: 'underline'
+    },
+    [mediaQueries.mUp]: {
+      marginLeft: 0
     }
   }),
   chartImage: css({
@@ -133,20 +141,19 @@ const ChartSelector = ({ onChange, data, CsvChart, setTab }) => {
     <div {...styles.chartWrapper}>
       {baseCharts.map(chart => {
         return (
-          <div key={chart.name} {...styles.chartButtonContainer}>
-            <div
-              {...styles.chartButton}
-              onClick={() => (hasChanges ? preselect(chart) : onSelect(chart))}
-            >
-              <img
-                src={chart.screenshot}
-                {...merge(
-                  styles.chartImage,
-                  chart.large && styles.chartImageLarge
-                )}
-              />
-              <span {...styles.chartButtonText}>{chart.name}</span>
-            </div>
+          <div
+            key={chart.name}
+            {...styles.chartButton}
+            onClick={() => (hasChanges ? preselect(chart) : onSelect(chart))}
+          >
+            <img
+              src={chart.screenshot}
+              {...merge(
+                styles.chartImage,
+                chart.large && styles.chartImageLarge
+              )}
+            />
+            <span {...styles.chartButtonText}>{chart.name}</span>
           </div>
         )
       })}
