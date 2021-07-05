@@ -65,6 +65,7 @@ The `<OverlayToolbar />` can take as input:
     
 - `onClose`: renders a close button to the right
 - `title`: can either be a string or a more sophisticated element (e.g. button or tabs)
+- `children`: if one wishes to render something custom
 
 ```react|noSource,plain,frame,span-3
 <div style={{height: 48}}>
@@ -73,7 +74,9 @@ The `<OverlayToolbar />` can take as input:
 ```
 ```react|noSource,plain,frame,span-3
 <div style={{height: 48}}>
-  <OverlayToolbar onClose={() => undefined} />
+  <OverlayToolbar onClose={() => undefined} title='test'>
+    <span style={{ fontSize: 9, position: 'absolute', top: 18, left: 42 }}>BETA</span>
+  </OverlayToolbar>
 </div>
 ```
 ```react|noSource,plain,frame,span-3
