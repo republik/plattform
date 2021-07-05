@@ -9,7 +9,7 @@ import { css } from 'glamor'
 const tabs = ['chart', 'templates']
 const tabConfig = {
   chart: { body: ChartEditor, label: 'Chart', showPreview: true },
-  templates: { body: ChartSelector, label: 'Vorlage', showPreview: false }
+  templates: { body: ChartSelector, label: 'Vorlagen', showPreview: false }
 }
 
 const styles = {
