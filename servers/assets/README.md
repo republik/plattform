@@ -25,13 +25,6 @@ ASSETS_SERVER_BASE_URL=http://localhost:3021
 # must be in sync with republik-backend and publikator-backend
 ASSETS_HMAC_KEY=aiy3sheYoobahb4eth1ohs4aoPaezeeg
 
-# GITHUB auth server images from github repos
-# Follow the "Auth - Github" section of republik-backend to get these
-GITHUB_LOGIN=
-GITHUB_APP_ID=
-GITHUB_INSTALLATION_ID=
-GITHUB_APP_KEY=
-
 # base url used on /frontend
 FRONTEND_BASE_URL=http://localhost:3010
 
