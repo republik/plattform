@@ -50,26 +50,6 @@ Pädagogik und Sozialkompetenz,Individuelle berufsbezogene Weiterbildung,0.17
 `
   },
   {
-    name: 'Lollipops',
-    screenshot: '/static/charts/lollipops.png',
-    config: {
-      type: 'Lollipop',
-      y: 'category',
-      sort: 'none',
-      band: 'Q',
-      bandLegend: 'in diesem Bereich liegt die Hälfte aller Löhne',
-      domain: [0, 15000],
-      unit: 'CHF',
-      xTicks: [0, 6502, 10000, 15000]
-    },
-    values: `
-category,value,Q_lower,Q_upper
-Informationstechnologie,8900,6918,11373
-Forschung und Entwicklung,8764,7143,11837
-Energieversorgung,8210,6873,10182
-`
-  },
-  {
     name: 'Stacked Bars',
     screenshot: '/static/charts/filled-bars.png',
     config: {
@@ -106,6 +86,26 @@ Sexuelle Belästigung,gar nicht,0.692
 Sexuelle Belästigung,etwas,0.167
 Sexuelle Belästigung,ziemlich,0.047
 Sexuelle Belästigung,sehr stark,0.093
+`
+  },
+  {
+    name: 'Lollipops',
+    screenshot: '/static/charts/lollipops.png',
+    config: {
+      type: 'Lollipop',
+      y: 'category',
+      sort: 'none',
+      band: 'Q',
+      bandLegend: 'in diesem Bereich liegt die Hälfte aller Löhne',
+      domain: [0, 15000],
+      unit: 'CHF',
+      xTicks: [0, 6502, 10000, 15000]
+    },
+    values: `
+category,value,Q_lower,Q_upper
+Informationstechnologie,8900,6918,11373
+Forschung und Entwicklung,8764,7143,11837
+Energieversorgung,8210,6873,10182
 `
   },
   {
@@ -151,6 +151,37 @@ year,value,type
 2014,-123948563.32,Defizit
 2015,2337300888.72,Überschuss
 2016,751559663.61,Überschuss
+`
+  },
+  {
+    name: 'Timebar Columns',
+    screenshot: '/static/charts/multi-timebars.png',
+    config: {
+      type: 'TimeBar',
+      unit: 'Überlebende',
+      x: 'age',
+      column: 'date',
+      columns: 3,
+      xScale: 'linear',
+      padding: 10,
+      numberFormat: '.0%',
+      xTicks: [0, 100],
+      xUnit: 'Alter'
+    },
+    values: `
+age,date,value
+0,1851,1
+20,1851,0.659
+40,1851,0.54
+60,1851,0.376
+80,1851,0.089
+100,1851,0
+0,1931,1
+20,1931,0.875
+40,1931,0.812
+60,1931,0.652
+80,1931,0.193
+100,1931,0
 `
   },
   {
@@ -301,37 +332,6 @@ Stickstofftrifluorid,2013,16030.4000
 Stickstofftrifluorid,2014,20278.8000
 Stickstofftrifluorid,2015,11885.2000
 Stickstofftrifluorid,2016,12000.0000
-`
-  },
-  {
-    name: 'Timebar Columns',
-    screenshot: '/static/charts/multi-timebars.png',
-    config: {
-      type: 'TimeBar',
-      unit: 'Überlebende',
-      x: 'age',
-      column: 'date',
-      columns: 3,
-      xScale: 'linear',
-      padding: 10,
-      numberFormat: '.0%',
-      xTicks: [0, 100],
-      xUnit: 'Alter'
-    },
-    values: `
-age,date,value
-0,1851,1
-20,1851,0.659
-40,1851,0.54
-60,1851,0.376
-80,1851,0.089
-100,1851,0
-0,1931,1
-20,1931,0.875
-40,1931,0.812
-60,1931,0.652
-80,1931,0.193
-100,1931,0
 `
   },
   {

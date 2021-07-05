@@ -120,7 +120,7 @@ const ChartSelector = ({ onChange, data, CsvChart, setTab }) => {
           {...styles.discreteButton}
           onClick={() => preselect(undefined)}
         >
-          <BackIcon size={16} /> Vorlage durchsuchen
+          <BackIcon size={16} /> Vorlagen durchsuchen
         </button>
       </Label>
       <ChartPreview
