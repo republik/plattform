@@ -1,4 +1,4 @@
-import { Component } from 'react'
+import React, { Component } from 'react'
 import { css } from 'glamor'
 
 import { MdError } from 'react-icons/md'
@@ -10,15 +10,10 @@ import {
   Label,
   Overlay,
   OverlayToolbar,
-  OverlayToolbarClose,
   OverlayBody
 } from '@project-r/styleguide'
 
-const {
-  H2,
-  H3,
-  P
-} = Interaction
+const { H2, H3, P } = Interaction
 
 const styles = {
   error: css({
@@ -34,7 +29,7 @@ const styles = {
 export default class Status extends Component {
   constructor(props) {
     super(props)
-  
+
     this.state = {
       isOpen: false
     }
@@ -43,7 +38,7 @@ export default class Status extends Component {
       e.preventDefault()
       this.setState(() => ({ isOpen: true }))
     }
-  
+
     this.closeHandler = () => {
       this.setState(() => ({ isOpen: false }))
     }
@@ -71,12 +66,11 @@ export default class Status extends Component {
         )}
         {isOpen && (
           <Overlay onClose={this.closeHandler}>
-            <OverlayToolbar>
-              <OverlayToolbarClose onClick={this.closeHandler} />
-            </OverlayToolbar>
-
+            <OverlayToolbar onClose={this.closeHandler} />
             <OverlayBody>
-              <H2><MdError size='1.2em' {...styles.icon} /> Problem</H2>
+              <H2>
+                <MdError size='1.2em' {...styles.icon} /> Problem
+              </H2>
               <br />
               <H3>Status: {status}</H3>
               <br />
@@ -88,4 +82,3 @@ export default class Status extends Component {
     )
   }
 }
-

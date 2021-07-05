@@ -1,4 +1,4 @@
-import { Component, Fragment } from 'react'
+import React, { Component, Fragment } from 'react'
 import { Mutation } from 'react-apollo'
 import gql from 'graphql-tag'
 
@@ -7,31 +7,19 @@ import {
   Overlay,
   OverlayBody,
   OverlayToolbar,
-  OverlayToolbarClose,
   Interaction,
   Loader
 } from '@project-r/styleguide'
 
 import SearchUser from '../../Form/SearchUser'
-import {
-  displayDateTime,
-  TextButton
-} from '../../Display/utils'
-
-
+import { displayDateTime, TextButton } from '../../Display/utils'
 
 const MOVE_MEMBERSHIP = gql`
-mutation moveMembership(
-  $membershipId: ID!
-  $userId: ID!
-) {
-  moveMembership(
-    membershipId: $membershipId
-    userId: $userId
-  ) {
-    id
+  mutation moveMembership($membershipId: ID!, $userId: ID!) {
+    moveMembership(membershipId: $membershipId, userId: $userId) {
+      id
+    }
   }
-}
 `
 
 export default class MoveMembership extends Component {
@@ -56,9 +44,7 @@ export default class MoveMembership extends Component {
           membershipId: this.props.membership.id,
           userId: this.state.user.id
         }
-      }).then(() =>
-        this.setState(() => ({ user: null, isOpen: false }))
-      )
+      }).then(() => this.setState(() => ({ user: null, isOpen: false })))
     }
   }
 
@@ -76,18 +62,11 @@ export default class MoveMembership extends Component {
         </TextButton>
 
         {isOpen && (
-          <Mutation
-            mutation={MOVE_MEMBERSHIP}
-            refetchQueries={refetchQueries}
-          >
+          <Mutation mutation={MOVE_MEMBERSHIP} refetchQueries={refetchQueries}>
             {(movePledge, { loading, error }) => {
               return (
                 <Overlay onClose={this.closeHandler}>
-                  <OverlayToolbar>
-                    <OverlayToolbarClose
-                      onClick={this.closeHandler}
-                    />
-                  </OverlayToolbar>
+                  <OverlayToolbar onClose={this.closeHandler} />
                   <OverlayBody>
                     <Loader
                       loading={loading}
@@ -100,12 +79,9 @@ export default class MoveMembership extends Component {
                           <br />
                           <Interaction.P>
                             #{membership.sequenceNumber} –{' '}
-                            {membership.type.name.split('_').join(' ')}{' '}
-                            –{' '}
-                            {displayDateTime(membership.createdAt)}{' '}
-                            –{' '}
-                            {(!!membership.renew && 'ACTIVE') ||
-                              'INACTIVE'}
+                            {membership.type.name.split('_').join(' ')} –{' '}
+                            {displayDateTime(membership.createdAt)} –{' '}
+                            {(!!membership.renew && 'ACTIVE') || 'INACTIVE'}
                           </Interaction.P>
                           {membership.periods.map((period, i) => (
                             <span key={`period-${i}`}>
@@ -115,18 +91,14 @@ export default class MoveMembership extends Component {
                             </span>
                           ))}
                           <SearchUser
-                            label="User auswählen"
+                            label='User auswählen'
                             value={user}
-                            onChange={
-                              this.userChangeHandler
-                            }
+                            onChange={this.userChangeHandler}
                           />
                           <Button
                             primary
                             disabled={!user}
-                            onClick={this.submitHandler(
-                              movePledge
-                            )}
+                            onClick={this.submitHandler(movePledge)}
                           >
                             Speichern
                           </Button>

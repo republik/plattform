@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import React from 'react'
 import { Mutation } from 'react-apollo'
 import gql from 'graphql-tag'
 
@@ -8,7 +8,6 @@ import {
   Overlay,
   OverlayBody,
   OverlayToolbar,
-  OverlayToolbarClose,
   Button,
   Dropdown,
   Field,
@@ -89,9 +88,7 @@ class AppendPeriod extends React.Component {
               </TextButton>
               {this.state.showForm && (
                 <Overlay onClose={onClose}>
-                  <OverlayToolbar>
-                    <OverlayToolbarClose onClick={onClose} />
-                  </OverlayToolbar>
+                  <OverlayToolbar onClose={onClose} />
                   <OverlayBody>
                     <Interaction.P>
                       #{membership.sequenceNumber} –{' '}
@@ -102,7 +99,7 @@ class AppendPeriod extends React.Component {
                       Zeit hinzufügen
                     </Interaction.H3>
                     <Field
-                      label="Betrag"
+                      label='Betrag'
                       value={this.state.duration}
                       onChange={(_, value) => {
                         if (value.match(/\D/)) {
@@ -117,7 +114,7 @@ class AppendPeriod extends React.Component {
                       onDec={ondec}
                     />
                     <Dropdown
-                      label="Einheit"
+                      label='Einheit'
                       items={durationUnits}
                       value={this.state.durationUnit}
                       onChange={item => {

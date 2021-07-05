@@ -1,4 +1,4 @@
-import { Component, Fragment } from 'react'
+import React, { Component, Fragment } from 'react'
 import { Mutation, Query } from 'react-apollo'
 import gql from 'graphql-tag'
 import TextareaAutosize from 'react-autosize-textarea'
@@ -8,7 +8,6 @@ import {
   Overlay,
   OverlayBody,
   OverlayToolbar,
-  OverlayToolbarClose,
   Interaction,
   Radio,
   Checkbox,
@@ -16,48 +15,42 @@ import {
   Loader
 } from '@project-r/styleguide'
 
-import {
-  TextButton,
-  displayDate
-} from '../../Display/utils'
+import { TextButton, displayDate } from '../../Display/utils'
 
 const GET_CANCELLATION_CATEGORIES = gql`
-query cancellationCategories {
-  cancellationCategories(showMore: true) {
-    type
-    label
+  query cancellationCategories {
+    cancellationCategories(showMore: true) {
+      type
+      label
+    }
   }
-}`
-
+`
 
 const CANCEL_MEMBERSHIP = gql`
-mutation cancelMembership(
-  $membershipId: ID!
-  $immediately: Boolean
-  $details: CancellationInput!
-) {
-  cancelMembership(
-    id: $membershipId
-    immediately: $immediately
-    details: $details
+  mutation cancelMembership(
+    $membershipId: ID!
+    $immediately: Boolean
+    $details: CancellationInput!
   ) {
-    id
+    cancelMembership(
+      id: $membershipId
+      immediately: $immediately
+      details: $details
+    ) {
+      id
+    }
   }
-}
 `
 
 const UPDATE_CANCELLATION = gql`
-mutation updateMembershipCancellation(
-  $cancellationId: ID!
-  $details: CancellationInput!
-) {
-  updateMembershipCancellation(
-    id: $cancellationId
-    details: $details
+  mutation updateMembershipCancellation(
+    $cancellationId: ID!
+    $details: CancellationInput!
   ) {
-    id
+    updateMembershipCancellation(id: $cancellationId, details: $details) {
+      id
+    }
   }
-}
 `
 
 export default class CancelPledge extends Component {
@@ -115,12 +108,10 @@ export default class CancelPledge extends Component {
             reason,
             type: cancellationType,
             suppressConfirmation,
-            suppressWinback,
+            suppressWinback
           }
         }
-      }).then(() =>
-        this.setState(() => ({ isOpen: false }))
-      )
+      }).then(() => this.setState(() => ({ isOpen: false })))
     }
   }
 
@@ -135,7 +126,7 @@ export default class CancelPledge extends Component {
             this.setState({ isOpen: true })
           }}
         >
-          { isEditing ? 'editieren' : 'künden' }
+          {isEditing ? 'editieren' : 'künden'}
         </TextButton>
 
         {isOpen && (
@@ -146,61 +137,68 @@ export default class CancelPledge extends Component {
             {(cancelPledge, { loading, error }) => {
               return (
                 <Overlay onClose={this.closeHandler}>
-                  <OverlayToolbar>
-                    <OverlayToolbarClose
-                      onClick={this.closeHandler}
-                    />
-                  </OverlayToolbar>
+                  <OverlayToolbar onClose={this.closeHandler} />
                   <OverlayBody>
-                    <Query query={GET_CANCELLATION_CATEGORIES}>{({ loading: queryLoading, error: queryError, data: queryData}) => {
-                      const { cancellationCategories } = queryData || {}
-                      return (
-                        <Loader
-                          loading={loading || queryLoading}
-                          error={error || queryError}
-                          render={() => (
-                            <Fragment>
-                              <Interaction.H2>
-                                {isEditing ? 'Kündigung editieren' : 'Membership canceln'}
-                              </Interaction.H2>
-                              <br />
-                              <Interaction.P>
-                                #{membership.sequenceNumber} –{' '}
-                                {membership.type.name.split('_').join(' ')}{' '}
-                                –{' '}
-                                {displayDate(membership.createdAt)}{' '}
-                                –{' '}
-                                {(!!membership.renew && 'ACTIVE') ||
-                                'INACTIVE'}
-                              </Interaction.P>
-                              {membership.periods.map((period, i) => (
-                                <span key={`period-${i}`}>
-                                {displayDate(period.beginDate)}
-                                {' - '}
-                                {displayDate(period.endDate)}
-                                </span>
-                              ))}
-                              <br />
-                              {cancellationCategories &&
-                                cancellationCategories.map(({ type, label }) => (
-                                  <Interaction.P key={type}>
-                                    <Radio
-                                      value={cancellationType}
-                                      checked={cancellationType === type}
-                                      onChange={() => this.setState({ cancellationType: type })}
-                                    >
-                                      {label}
-                                    </Radio>
-                                  </Interaction.P>)
-                                )}
+                    <Query query={GET_CANCELLATION_CATEGORIES}>
+                      {({
+                        loading: queryLoading,
+                        error: queryError,
+                        data: queryData
+                      }) => {
+                        const { cancellationCategories } = queryData || {}
+                        return (
+                          <Loader
+                            loading={loading || queryLoading}
+                            error={error || queryError}
+                            render={() => (
+                              <Fragment>
+                                <Interaction.H2>
+                                  {isEditing
+                                    ? 'Kündigung editieren'
+                                    : 'Membership canceln'}
+                                </Interaction.H2>
+                                <br />
+                                <Interaction.P>
+                                  #{membership.sequenceNumber} –{' '}
+                                  {membership.type.name.split('_').join(' ')} –{' '}
+                                  {displayDate(membership.createdAt)} –{' '}
+                                  {(!!membership.renew && 'ACTIVE') ||
+                                    'INACTIVE'}
+                                </Interaction.P>
+                                {membership.periods.map((period, i) => (
+                                  <span key={`period-${i}`}>
+                                    {displayDate(period.beginDate)}
+                                    {' - '}
+                                    {displayDate(period.endDate)}
+                                  </span>
+                                ))}
+                                <br />
+                                {cancellationCategories &&
+                                  cancellationCategories.map(
+                                    ({ type, label }) => (
+                                      <Interaction.P key={type}>
+                                        <Radio
+                                          value={cancellationType}
+                                          checked={cancellationType === type}
+                                          onChange={() =>
+                                            this.setState({
+                                              cancellationType: type
+                                            })
+                                          }
+                                        >
+                                          {label}
+                                        </Radio>
+                                      </Interaction.P>
+                                    )
+                                  )}
                                 <Field
                                   value={reason}
                                   label={'Erläuterungen'}
                                   onChange={this.reasonChangeHandler}
                                   renderInput={props => (
                                     <TextareaAutosize
-                                    {...props}
-                                    style={{ lineHeight: '30px' }}
+                                      {...props}
+                                      style={{ lineHeight: '30px' }}
                                     />
                                   )}
                                 />
@@ -216,7 +214,9 @@ export default class CancelPledge extends Component {
                                 <p>
                                   <Checkbox
                                     checked={this.state.suppressConfirmation}
-                                    onChange={this.suppressConfirmationChangeHandler}
+                                    onChange={
+                                      this.suppressConfirmationChangeHandler
+                                    }
                                     disabled={isEditing}
                                   >
                                     Kündigungsbestätigung unterdrücken
@@ -226,7 +226,11 @@ export default class CancelPledge extends Component {
                                   <Checkbox
                                     checked={this.state.suppressWinback}
                                     onChange={this.suppressWinbackChangeHandler}
-                                    disabled={cancellation && (cancellation.winbackSentAt || !cancellation.winbackCanBeSent)}
+                                    disabled={
+                                      cancellation &&
+                                      (cancellation.winbackSentAt ||
+                                        !cancellation.winbackCanBeSent)
+                                    }
                                   >
                                     Winback unterdrücken
                                   </Checkbox>
@@ -240,9 +244,10 @@ export default class CancelPledge extends Component {
                                 </Button>
                               </Fragment>
                             )}
-                        />
-                      )
-                    }}</Query>
+                          />
+                        )
+                      }}
+                    </Query>
                   </OverlayBody>
                 </Overlay>
               )
