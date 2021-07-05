@@ -15,15 +15,14 @@ const tabConfig = {
 const styles = {
   tabContainer: css({
     height: '100%',
-    display: 'flex',
-    lineHeight: '16px'
+    display: 'flex'
   }),
   tab: css({
-    margin: '0 15px',
+    marginRight: 15,
+    ...fontStyles.sansSerifRegular,
     '@media (hover)': {
       ':hover': {
-        textDecoration: 'underline',
-        textDecorationSkip: 'ink'
+        textDecoration: 'underline'
       }
     },
     '&.is-active': {
@@ -51,7 +50,7 @@ const hasData = node =>
 
 export default props => {
   const [tab, setTab] = useState(hasData(props.node) ? 'chart' : 'templates')
-  const overlayToolBarActions = (
+  const title = (
     <div {...styles.tabContainer}>
       {tabs.map(tabKey => (
         <Tab
@@ -68,7 +67,7 @@ export default props => {
   return (
     <OverlayFormManager
       {...props}
-      overlayToolBarActions={overlayToolBarActions}
+      title={title}
       showPreview={tabConfig[tab].showPreview}
       extra={<Export chart={props.preview} />}
       onChange={data => {
