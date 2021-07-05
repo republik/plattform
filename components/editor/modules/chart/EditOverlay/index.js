@@ -5,11 +5,13 @@ import ChartEditor from './ChartEditor'
 import ChartSelector from './ChartSelector'
 import { plainButtonRule, fontStyles } from '@project-r/styleguide'
 import { css } from 'glamor'
+import ChartCatalog from './ChartCatalog'
 
-const tabs = ['chart', 'templates']
+const tabs = ['chart', 'templates', 'catalog']
 const tabConfig = {
   chart: { body: ChartEditor, label: 'Chart', showPreview: true },
-  templates: { body: ChartSelector, label: 'Vorlage', showPreview: false }
+  templates: { body: ChartSelector, label: 'Vorlage', showPreview: false },
+  catalog: { body: ChartCatalog, label: 'Katalog', showPreview: false }
 }
 
 const styles = {
@@ -49,7 +51,7 @@ const Tab = ({ tabKey, setTab, isActive }) => {
 const hasData = node =>
   node.data.get('config')?.type || node.data.get('values') != ''
 
-export default props => {
+const Overlay = props => {
   const [tab, setTab] = useState(hasData(props.node) ? 'chart' : 'templates')
   const overlayToolBarActions = (
     <div {...styles.tabContainer}>
@@ -97,3 +99,5 @@ export default props => {
     </OverlayFormManager>
   )
 }
+
+export default Overlay
