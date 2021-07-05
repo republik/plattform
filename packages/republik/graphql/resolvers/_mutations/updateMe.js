@@ -40,21 +40,18 @@ const MAX_PHONE_NUMBER_LENGTH = 20 // 20 (15 digits but let's give 5 spaces for 
 const MAX_FIRSTNAME_LENGTH = 32
 const MAX_LASTNAME_LENGTH = 32
 
-const createEnsureStringLengthForProfile = (values, t) => (
-  key,
-  translationKey,
-  max,
-  min = 0,
-) =>
-  ensureStringLength(values[key], {
-    min,
-    max,
-    error: t(`profile/generic/${min > 0 ? 'notInRange' : 'tooLong'}`, {
-      key: t(translationKey),
-      max,
+const createEnsureStringLengthForProfile =
+  (values, t) =>
+  (key, translationKey, max, min = 0) =>
+    ensureStringLength(values[key], {
       min,
-    }),
-  })
+      max,
+      error: t(`profile/generic/${min > 0 ? 'notInRange' : 'tooLong'}`, {
+        key: t(translationKey),
+        max,
+        min,
+      }),
+    })
 
 module.exports = async (_, args, context) => {
   const { pgdb, req, user: me, t, mail } = context
@@ -212,16 +209,6 @@ module.exports = async (_, args, context) => {
     }
   }
 
-  let portraitUrl = portrait === null ? null : undefined
-
-  if (portrait) {
-    portraitUrl = await Portrait.upload(portrait)
-    await Portrait.del(me._raw.portraitUrl)
-  } else if (portrait === null && me._raw.portraitUrl) {
-    await Portrait.del(me._raw.portraitUrl)
-    portraitUrl = null
-  }
-
   if (username !== undefined && username !== null) {
     await checkUsername(username, me, pgdb)
   }
@@ -247,6 +234,14 @@ module.exports = async (_, args, context) => {
       throw new Error(t('api/pgpPublicKey/invalid'))
     }
   }
+
+  // {portrait} is an argument, which can either contain a a b64 encoded image,
+  // be null or undefined.
+  // If image is provided, we'll attempt to upload it and update portraitUrl
+  // If null is set, we will delete current image after Postgres transaction
+  // If undefined is set, we won't tinker with portrait URL
+  const portraitUrl =
+    (portrait && (await Portrait.upload(portrait))) || portrait
 
   const transaction = await pgdb.transactionBegin()
   const now = new Date()
@@ -326,15 +321,41 @@ module.exports = async (_, args, context) => {
     await transaction.transactionCommit()
 
     const updatedUser = await pgdb.public.users.findOne({ id: me.id })
+
+    if (
+      me._raw.portraitUrl &&
+      updatedUser.portraitUrl !== me._raw.portraitUrl
+    ) {
+      await Portrait.del(me._raw.portraitUrl).catch((e) =>
+        console.warn('Unable to delete portraitUrl after update: %o', {
+          portraitUrl: me._raw.portraitUrl,
+          error: e.message,
+          user: me.id,
+        }),
+      )
+    }
+
     await mail.updateMergeFields({ user: updatedUser })
 
     return transformUser(updatedUser)
   } catch (e) {
     await transaction.transactionRollback()
+
+    if (portraitUrl !== me._raw.portraitUrl) {
+      await Portrait.del(portraitUrl).catch((e) =>
+        console.warn('Unable to delete portraitUrl after rolling back: %o', {
+          portraitUrl,
+          error: e.message,
+          user: me.id,
+        }),
+      )
+    }
+
     console.log('updateMe', e)
     if (e.translated) {
       throw e
     }
+
     throw new Error(t('api/unexpected'))
   }
 }

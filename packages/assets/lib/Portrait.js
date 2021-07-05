@@ -3,6 +3,7 @@ const checkEnv = require('check-env')
 const S3 = require('./s3')
 const querystring = require('querystring')
 const sharp = require('sharp')
+const debug = require('debug')('assets:lib:Portrait')
 
 checkEnv(['ASSETS_SERVER_BASE_URL'])
 
@@ -51,6 +52,9 @@ const upload = async (portrait, dry = false) => {
   const query = querystring.stringify({
     size: `${meta.width}x${meta.height}`,
   })
+
+  debug('upload: %o', { AWS_S3_BUCKET, portraitPath })
+
   return `${ASSETS_SERVER_BASE_URL}/s3/${AWS_S3_BUCKET}/${portraitPath}?${query}`
 }
 
@@ -59,6 +63,7 @@ const del = (portraitUrl) => {
     return
   }
   const [, bucket, path] = new RegExp(/.*?s3\/(.*?)\/(.*?)\?/).exec(portraitUrl)
+  debug('del: %o', { bucket, path })
   return S3.del({ bucket, path })
 }
 
