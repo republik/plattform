@@ -15,6 +15,7 @@ const debug = _debug('republik:script:fixMissingPortraitUrls')
 
 interface User {
   id: number
+  isListed: boolean
   portraitUrl?: string
 }
 
@@ -72,14 +73,18 @@ ConnectionContext.create(applicationName)
         if (headers) {
           debug('fetchable portraitUrl: %o', { id: user.id, portraitUrl })
         } else {
-          debug('not fetchable portraitUrl: %o', { id: user.id, portraitUrl })
-          console.log([user.id, user.portraitUrl].join('\t'))
+          debug('not fetchable portraitUrl: %o', {
+            id: user.id,
+            isListed: user.isListed,
+            portraitUrl,
+          })
+          console.log([user.id, user.isListed, user.portraitUrl].join('\t'))
 
           if (!argv['dry-run']) {
             debug('set portraitUrl to null: %O', { id: user.id })
             await pgdb.public.users.update(
               { id: user.id },
-              { portraitUrl: null },
+              { portraitUrl: null, isListed: false },
             )
           }
         }
