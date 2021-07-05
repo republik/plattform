@@ -88,3 +88,4 @@ packages/republik-crowdfundings/lib/payments/paymentslip/helpers.js
 packages/republik-crowdfundings/lib/payments/paymentslip/sendPaymentReminders.js
 packages/republik-crowdfundings/lib/scheduler/importPayments.js
 packages/republik-crowdfundings/lib/scheduler/payments/*.js
+packages/republik/script/fixMissingPortraitUrls.js
