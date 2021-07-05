@@ -7,7 +7,7 @@ export const sizes = [
 
 export const baseCharts = [
   {
-    name: 'Simple Bars',
+    name: 'Bars',
     screenshot: '/static/charts/bars.png',
     config: {
       type: 'Bar',
@@ -25,41 +25,6 @@ Deutschland,0.369,0
 Schweiz,0.279,1
 USA,0.264,0
 Irland,0.236,0
-`
-  },
-  {
-    name: 'Stacked Bars',
-    screenshot: '/static/charts/stacked-bars.png',
-    config: {
-      type: 'Bar',
-      y: 'gender',
-      color: 'age',
-      colorLegend: true,
-      showBarValues: true,
-      sort: 'none',
-      domain: [0, 20000],
-      xTicks: [0]
-    },
-    values: `
-age,gender,value
-0-9,Women,71
-10-19,Women,504
-20-29,Women,2270
-30-39,Women,2351
-40-49,Women,2728
-50-59,Women,3233
-60-69,Women,1613
-70-79,Women,1315
-80+,Women,2468
-0-9,Men,84
-10-19,Men,361
-20-29,Men,1534
-30-39,Men,1761
-40-49,Men,2042
-50-59,Men,2964
-60-69,Men,2034
-70-79,Men,1566
-80+,Men,1597
 `
   },
   {
@@ -85,7 +50,27 @@ Pädagogik und Sozialkompetenz,Individuelle berufsbezogene Weiterbildung,0.17
 `
   },
   {
-    name: 'Full-Width Bars',
+    name: 'Lollipops',
+    screenshot: '/static/charts/lollipops.png',
+    config: {
+      type: 'Lollipop',
+      y: 'category',
+      sort: 'none',
+      band: 'Q',
+      bandLegend: 'in diesem Bereich liegt die Hälfte aller Löhne',
+      domain: [0, 15000],
+      unit: 'CHF',
+      xTicks: [0, 6502, 10000, 15000]
+    },
+    values: `
+category,value,Q_lower,Q_upper
+Informationstechnologie,8900,6918,11373
+Forschung und Entwicklung,8764,7143,11837
+Energieversorgung,8210,6873,10182
+`
+  },
+  {
+    name: 'Stacked Bars',
     screenshot: '/static/charts/filled-bars.png',
     config: {
       type: 'Bar',
@@ -124,7 +109,7 @@ Sexuelle Belästigung,sehr stark,0.093
 `
   },
   {
-    name: 'Simple Timebars',
+    name: 'Timebars',
     screenshot: '/static/charts/timebars.png',
     config: {
       type: 'TimeBar',
@@ -350,7 +335,7 @@ age,date,value
 `
   },
   {
-    name: 'Ordinal Timebars',
+    name: 'Histogram (Ordinal)',
     screenshot: '/static/charts/ordinal-timebars.png',
     config: {
       type: 'TimeBar',
@@ -437,6 +422,88 @@ year,gender,at_age,value
 2014,Total,0,80.92
 2015,Total,0,80.57
 `
+  },
+  {
+    name: 'Stroked Line',
+    screenshot: '/static/charts/lines-stroke.png',
+    config: {
+      type: 'Line',
+      height: 240,
+      sort: 'none',
+      color: 'type',
+      colorSort: 'none',
+      unit: 'Personen',
+      numberFormat: 's',
+      x: 'date',
+      timeParse: '%Y-%m-%d',
+      timeFormat: '%d.%m.',
+      colorMap: {
+        'positiv Getestete': 'rgba(31, 119, 180, 1)',
+        'bereits Infizierte': 'rgba(127,191,123, 0.9)'
+      },
+      labelFilter: 'false',
+      colorLegend: true,
+      stroke: 'datum.type !== "positiv Getestete"',
+      yNice: 0,
+      yTicks: [0, 2500, 5000, 7500, 10000, 12500],
+      xTicks: ['2020-03-01', '2020-03-16', '2020-03-26'],
+      paddingTop: 8,
+      xAnnotations: [
+        {
+          x1: '2020-03-16',
+          x2: '2020-03-26',
+          value: 13801,
+          unit: ' Personen',
+          label: 'bereits vor 10 Tagen infiziert',
+          showValue: false
+        }
+      ]
+    },
+    values: `
+type,date,value
+positiv Getestete,2020-03-01,70
+positiv Getestete,2020-03-02,102
+positiv Getestete,2020-03-03,135
+positiv Getestete,2020-03-04,195
+positiv Getestete,2020-03-05,254
+positiv Getestete,2020-03-06,327
+positiv Getestete,2020-03-07,376
+positiv Getestete,2020-03-08,438
+positiv Getestete,2020-03-09,623
+positiv Getestete,2020-03-10,823
+positiv Getestete,2020-03-11,1135
+positiv Getestete,2020-03-12,1461
+positiv Getestete,2020-03-13,1873
+positiv Getestete,2020-03-14,2294
+positiv Getestete,2020-03-15,2611
+positiv Getestete,2020-03-16,3611
+positiv Getestete,2020-03-17,4583
+positiv Getestete,2020-03-18,5734
+positiv Getestete,2020-03-19,6572
+positiv Getestete,2020-03-20,7716
+positiv Getestete,2020-03-21,8413
+positiv Getestete,2020-03-22,8948
+positiv Getestete,2020-03-23,10416
+positiv Getestete,2020-03-24,11664
+positiv Getestete,2020-03-25,12726
+positiv Getestete,2020-03-26,13801
+bereits Infizierte,2020-03-01,1135
+bereits Infizierte,2020-03-02,1461
+bereits Infizierte,2020-03-03,1873
+bereits Infizierte,2020-03-04,2294
+bereits Infizierte,2020-03-05,2611
+bereits Infizierte,2020-03-06,3611
+bereits Infizierte,2020-03-07,4583
+bereits Infizierte,2020-03-08,5734
+bereits Infizierte,2020-03-09,6572
+bereits Infizierte,2020-03-10,7716
+bereits Infizierte,2020-03-11,8413
+bereits Infizierte,2020-03-12,8948
+bereits Infizierte,2020-03-13,10416
+bereits Infizierte,2020-03-14,11664
+bereits Infizierte,2020-03-15,12726
+bereits Infizierte,2020-03-16,13801
+    `
   },
   {
     name: 'Confidence Bands',
@@ -544,26 +611,6 @@ year,country,value
 1870,Deutschland,0.806969593440383
 2016,Österreich,0.727798978073863
 2016,Deutschland,0.75740573054783
-`
-  },
-  {
-    name: 'Lollipops',
-    screenshot: '/static/charts/lollipops.png',
-    config: {
-      type: 'Lollipop',
-      y: 'category',
-      sort: 'none',
-      band: 'Q',
-      bandLegend: 'in diesem Bereich liegt die Hälfte aller Löhne',
-      domain: [0, 15000],
-      unit: 'CHF',
-      xTicks: [0, 6502, 10000, 15000]
-    },
-    values: `
-category,value,Q_lower,Q_upper
-Informationstechnologie,8900,6918,11373
-Forschung und Entwicklung,8764,7143,11837
-Energieversorgung,8210,6873,10182
 `
   },
   {
@@ -783,7 +830,7 @@ Zimbabwe,1910,0.78,Africa
 `
   },
   {
-    name: 'Choropleth Welt',
+    name: 'World Choropleth',
     large: true,
     screenshot: '/static/charts/world-map.png',
     config: {
@@ -985,7 +1032,7 @@ CYN,70.21
 `
   },
   {
-    name: 'Choropleth Kantone',
+    name: 'Canton Choropleth',
     screenshot: '/static/charts/swiss-map.png',
     config: {
       type: 'ProjectedMap',
