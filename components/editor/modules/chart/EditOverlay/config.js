@@ -13,18 +13,18 @@ export const baseCharts = [
       type: 'Bar',
       numberFormat: '.0%',
       y: 'country',
-      category: "datum.country == 'Schweiz' ? '1' : '0'",
+      color: 'highlight',
       showBarValues: true
     },
     values: `
-country,value
-Frankreich,0.455
-Österreich,0.435
-Italien,0.433
-Deutschland,0.369
-Schweiz,0.279
-USA,0.264
-Irland,0.236
+country,value,highlight
+Frankreich,0.455,0
+Österreich,0.435,0
+Italien,0.433,0
+Deutschland,0.369,0
+Schweiz,0.279,1
+USA,0.264,0
+Irland,0.236,0
 `
   },
   {
@@ -384,7 +384,7 @@ year,category,value
       numberFormat: '.1f',
       zero: false,
       colorRange: ['#C40046', '#F2BF18', '#F28502'],
-      category: 'datum.gender'
+      color: 'gender'
     },
     values: `
 year,gender,at_age,value
