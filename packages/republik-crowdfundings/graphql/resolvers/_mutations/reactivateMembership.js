@@ -86,6 +86,7 @@ module.exports = async (_, args, context) => {
             pledgeId: membership.pledgeId,
             membershipId,
           },
+          errIfIncomplete: true,
           pgdb: transaction,
         })
 
