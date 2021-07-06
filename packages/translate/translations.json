@@ -203,6 +203,10 @@
       "value": "Während der Bearbeitung der Karte ist ein Fehler aufgetreten."
     },
     {
+      "key": "api/pay/stripe/subscription_payment_intent_requires_action",
+      "value": "Ihre Kreditkarte lässt sich nicht dazu verwenden, um ein Monats-Abo zu reaktivieren. Bitte melden Sie sich bei kontakt@republik.ch"
+    },
+    {
       "key": "api/paypal/deny",
       "value": "Die Zahlung ist leider fehlgeschlagen. Bitte wählen Sie ein anderes Zahlungsmittel, um Ihre Bestellung abzuschliessen."
     },
