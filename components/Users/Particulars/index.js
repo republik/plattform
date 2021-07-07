@@ -7,7 +7,6 @@ import {
   Overlay,
   OverlayBody,
   OverlayToolbar,
-  OverlayToolbarClose,
   Loader,
   InlineSpinner
 } from '@project-r/styleguide'
@@ -112,9 +111,7 @@ const UpdateUser = ({ user, onSubmit, ...props }) => (
             <UserForm
               key={user.id}
               user={user}
-              onSubmit={variables =>
-                onSubmit(updateUser({ variables }))
-              }
+              onSubmit={variables => onSubmit(updateUser({ variables }))}
             />
           )}
         />
@@ -126,9 +123,7 @@ const UpdateUser = ({ user, onSubmit, ...props }) => (
 const UserCard = ({ user }) => {
   const postalCodeAndCity =
     user.address &&
-    [user.address.postalCode, user.address.city]
-      .filter(Boolean)
-      .join(' ')
+    [user.address.postalCode, user.address.city].filter(Boolean).join(' ')
   return (
     <Fragment>
       <DL>
@@ -155,15 +150,9 @@ const UserCard = ({ user }) => {
           <Fragment>
             <DD>{user.address.name}</DD>
             <DD>{user.address.line1}</DD>
-            {user.address.line2 && (
-              <DD>{user.address.line2}</DD>
-            )}
-            {postalCodeAndCity && (
-              <DD>{postalCodeAndCity}</DD>
-            )}
-            {user.address.country && (
-              <DD>{user.address.country}</DD>
-            )}
+            {user.address.line2 && <DD>{user.address.line2}</DD>}
+            {postalCodeAndCity && <DD>{postalCodeAndCity}</DD>}
+            {user.address.country && <DD>{user.address.country}</DD>}
           </Fragment>
         )}
       </DL>
@@ -184,8 +173,7 @@ export default class User extends Component {
       isOpen: false
     }
 
-    this.closeHandler = () =>
-      this.setState({ isOpen: false })
+    this.closeHandler = () => this.setState({ isOpen: false })
     this.openHandler = () => this.setState({ isOpen: true })
   }
 
@@ -195,8 +183,7 @@ export default class User extends Component {
     return (
       <Query query={GET_USER} variables={{ id: userId }}>
         {({ loading, error, data }) => {
-          const isInitialLoading =
-            loading && !(data && data.user)
+          const isInitialLoading = loading && !(data && data.user)
           const isLoading = loading && !isInitialLoading
 
           return (
@@ -216,7 +203,7 @@ export default class User extends Component {
                         </div>
                       )}
                       <TextButton
-                        className="show-on-focus"
+                        className='show-on-focus'
                         onClick={this.openHandler}
                       >
                         <EditIcon size={28} />
@@ -224,18 +211,12 @@ export default class User extends Component {
                     </SectionMenu>
                     {isOpen && (
                       <Overlay onClose={this.closeHandler}>
-                        <OverlayToolbar>
-                          <OverlayToolbarClose
-                            onClick={this.closeHandler}
-                          />
-                        </OverlayToolbar>
+                        <OverlayToolbar onClose={this.closeHandler} />
                         <OverlayBody>
                           <UpdateUser
                             user={user}
                             onSubmit={promise =>
-                              promise.then(
-                                this.closeHandler
-                              )
+                              promise.then(this.closeHandler)
                             }
                           />
                         </OverlayBody>

@@ -1,4 +1,4 @@
-import { Component, Fragment } from 'react'
+import React, { Component, Fragment } from 'react'
 import { Mutation } from 'react-apollo'
 import gql from 'graphql-tag'
 
@@ -9,29 +9,17 @@ import {
   Loader,
   Overlay,
   OverlayBody,
-  OverlayToolbar,
-  OverlayToolbarClose,
+  OverlayToolbar
 } from '@project-r/styleguide'
 
-import {
-  displayDate,
-  SectionSubhead,
-  TextButton
-} from '../../Display/utils'
-
+import { displayDate, SectionSubhead, TextButton } from '../../Display/utils'
 
 const DELETE_USER = gql`
-mutation deleteUser(
-  $userId: ID!
-  $unpublishComments: Boolean!
-) {
-  deleteUser(
-    userId: $userId
-    unpublishComments: $unpublishComments
-  ) {
-    id
+  mutation deleteUser($userId: ID!, $unpublishComments: Boolean!) {
+    deleteUser(userId: $userId, unpublishComments: $unpublishComments) {
+      id
+    }
   }
-}
 `
 
 export default class DeleteUser extends Component {
@@ -53,9 +41,7 @@ export default class DeleteUser extends Component {
           userId: this.props.userId,
           unpublishComments: !!this.state.unpublishComments
         }
-      }).then(() =>
-        window.location.replace('/users')
-      )
+      }).then(() => window.location.replace('/users'))
     }
   }
 
@@ -65,7 +51,9 @@ export default class DeleteUser extends Component {
     return (
       <Fragment>
         {!!deletedAt && (
-          <SectionSubhead>Nutzer gelöscht am {displayDate(deletedAt)}</SectionSubhead>
+          <SectionSubhead>
+            Nutzer gelöscht am {displayDate(deletedAt)}
+          </SectionSubhead>
         )}
         {!deletedAt && (
           <TextButton
@@ -78,27 +66,18 @@ export default class DeleteUser extends Component {
         )}
 
         {isOpen && !deletedAt && (
-          <Mutation
-            mutation={DELETE_USER}
-            refetchQueries={refetchQueries}
-          >
+          <Mutation mutation={DELETE_USER} refetchQueries={refetchQueries}>
             {(deleteUser, { loading, error }) => {
               return (
                 <Overlay onClose={this.closeHandler}>
-                  <OverlayToolbar>
-                    <OverlayToolbarClose
-                      onClick={this.closeHandler}
-                    />
-                  </OverlayToolbar>
+                  <OverlayToolbar onClose={this.closeHandler} />
                   <OverlayBody>
                     <Loader
                       loading={loading}
                       error={error}
                       render={() => (
                         <Fragment>
-                          <Interaction.H2>
-                            User löschen
-                          </Interaction.H2>
+                          <Interaction.H2>User löschen</Interaction.H2>
                           <br />
                           <Checkbox
                             checked={unpublishComments}

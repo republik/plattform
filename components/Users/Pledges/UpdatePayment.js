@@ -1,4 +1,4 @@
-import { Component, Fragment } from 'react'
+import React, { Component, Fragment } from 'react'
 import { Mutation } from 'react-apollo'
 import gql from 'graphql-tag'
 import Textarea from 'react-textarea-autosize'
@@ -9,7 +9,6 @@ import {
   Overlay,
   OverlayBody,
   OverlayToolbar,
-  OverlayToolbarClose,
   Interaction,
   Field,
   Loader
@@ -23,11 +22,7 @@ const UPDATE_PAYMENT = gql`
     $status: PaymentStatus!
     $reason: String
   ) {
-    updatePayment(
-      paymentId: $paymentId
-      status: $status
-      reason: $reason
-    ) {
+    updatePayment(paymentId: $paymentId, status: $status, reason: $reason) {
       id
       status
     }
@@ -91,52 +86,42 @@ export default class UpdatePayment extends Component {
         </TextButton>
 
         {isOpen && (
-          <Mutation
-            mutation={UPDATE_PAYMENT}
-            refetchQueries={refetchQueries}
-          >
+          <Mutation mutation={UPDATE_PAYMENT} refetchQueries={refetchQueries}>
             {(updatePayment, { loading, error }) => {
               return (
                 <Overlay onClose={this.closeHandler}>
-                  <OverlayToolbar>
-                    <OverlayToolbarClose
-                      onClick={this.closeHandler}
-                    />
-                  </OverlayToolbar>
+                  <OverlayToolbar onClose={this.closeHandler} />
                   <OverlayBody>
                     <Loader
                       loading={loading}
                       error={error}
                       render={() => (
                         <Fragment>
-                          <Interaction.H2>
-                            Payment aktualisieren
-                          </Interaction.H2>
-                          {payment.status === 'WAITING' && <Field
-                            label="Grund"
-                            value={reason}
-                            renderInput={inputProps => (
-                              <Textarea
-                                {...inputProps}
-                                {...css({
-                                  minHeight: 40,
-                                  paddingTop:
-                                    '7px !important',
-                                  paddingBottom:
-                                    '6px !important'
-                                })}
-                              />
-                            )}
-                            onChange={
-                              this.reasonChangeHandler
-                            }
-                          />}
+                          <Interaction.H2>Payment aktualisieren</Interaction.H2>
+                          {payment.status === 'WAITING' && (
+                            <Field
+                              label='Grund'
+                              value={reason}
+                              renderInput={inputProps => (
+                                <Textarea
+                                  {...inputProps}
+                                  {...css({
+                                    minHeight: 40,
+                                    paddingTop: '7px !important',
+                                    paddingBottom: '6px !important'
+                                  })}
+                                />
+                              )}
+                              onChange={this.reasonChangeHandler}
+                            />
+                          )}
                           <Button
                             primary
                             disabled={payment.status === 'WAITING' && !reason}
                             onClick={this.submitHandler(updatePayment)}
                           >
-                            {payment.status === 'WAITING_FOR_REFUND' && 'Auf REFUNDED setzen.'}
+                            {payment.status === 'WAITING_FOR_REFUND' &&
+                              'Auf REFUNDED setzen.'}
                             {payment.status === 'WAITING' && 'Auf PAID setzen.'}
                           </Button>
                         </Fragment>

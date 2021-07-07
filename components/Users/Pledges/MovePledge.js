@@ -1,4 +1,4 @@
-import { Component, Fragment } from 'react'
+import React, { Component, Fragment } from 'react'
 import { Mutation } from 'react-apollo'
 import gql from 'graphql-tag'
 
@@ -7,17 +7,13 @@ import {
   Overlay,
   OverlayBody,
   OverlayToolbar,
-  OverlayToolbarClose,
   Interaction,
   Label,
   Loader
 } from '@project-r/styleguide'
 
 import SearchUser from '../../Form/SearchUser'
-import {
-  displayDateTime,
-  TextButton
-} from '../../Display/utils'
+import { displayDateTime, TextButton } from '../../Display/utils'
 
 const MOVE_PLEDGE = gql`
   mutation movePledge($pledgeId: ID!, $userId: ID!) {
@@ -49,9 +45,7 @@ export default class MovePledge extends Component {
           pledgeId: this.props.pledge.id,
           userId: this.state.user.id
         }
-      }).then(() =>
-        this.setState(() => ({ user: null, isOpen: false }))
-      )
+      }).then(() => this.setState(() => ({ user: null, isOpen: false })))
     }
   }
 
@@ -69,63 +63,41 @@ export default class MovePledge extends Component {
         </TextButton>
 
         {isOpen && (
-          <Mutation
-            mutation={MOVE_PLEDGE}
-            refetchQueries={refetchQueries}
-          >
+          <Mutation mutation={MOVE_PLEDGE} refetchQueries={refetchQueries}>
             {(movePledge, { loading, error }) => {
               return (
                 <Overlay onClose={this.closeHandler}>
-                  <OverlayToolbar>
-                    <OverlayToolbarClose
-                      onClick={this.closeHandler}
-                    />
-                  </OverlayToolbar>
+                  <OverlayToolbar onClose={this.closeHandler} />
                   <OverlayBody>
                     <Loader
                       loading={loading}
                       error={error}
                       render={() => (
                         <Fragment>
-                          <Interaction.H2>
-                            Pledge verschieben
-                          </Interaction.H2>
+                          <Interaction.H2>Pledge verschieben</Interaction.H2>
                           <br />
                           <Interaction.H3>
-                            {pledge.package.name
-                              .split('_')
-                              .join(' ')}{' '}
-                            –{' '}
-                            {displayDateTime(
-                              pledge.createdAt
-                            )}{' '}
-                            – {pledge.status}
+                            {pledge.package.name.split('_').join(' ')} –{' '}
+                            {displayDateTime(pledge.createdAt)} –{' '}
+                            {pledge.status}
                             <br />
                             <Label>
                               Created:{' '}
-                              {displayDateTime(
-                                new Date(pledge.createdAt)
-                              )}
+                              {displayDateTime(new Date(pledge.createdAt))}
                               {' – '}
                               Updated:{' '}
-                              {displayDateTime(
-                                new Date(pledge.updatedAt)
-                              )}
+                              {displayDateTime(new Date(pledge.updatedAt))}
                             </Label>
                           </Interaction.H3>
                           <SearchUser
-                            label="User auswählen"
+                            label='User auswählen'
                             value={user}
-                            onChange={
-                              this.userChangeHandler
-                            }
+                            onChange={this.userChangeHandler}
                           />
                           <Button
                             primary
                             disabled={!user}
-                            onClick={this.submitHandler(
-                              movePledge
-                            )}
+                            onClick={this.submitHandler(movePledge)}
                           >
                             Speichern
                           </Button>

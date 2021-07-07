@@ -1,4 +1,4 @@
-import { Component, Fragment } from 'react'
+import React, { Component, Fragment } from 'react'
 import { Mutation } from 'react-apollo'
 import gql from 'graphql-tag'
 
@@ -7,16 +7,11 @@ import {
   Overlay,
   OverlayBody,
   OverlayToolbar,
-  OverlayToolbarClose,
   Interaction,
   Loader
 } from '@project-r/styleguide'
 
-import {
-  TextButton
-} from '../../Display/utils'
-
-
+import { TextButton } from '../../Display/utils'
 
 const REACTIVATE_MEMBERSHIP = gql`
   mutation reactivateMembership($membershipId: ID!) {
@@ -42,9 +37,7 @@ export default class ReactivateMembership extends Component {
         variables: {
           membershipId: this.props.membership.id
         }
-      }).then(() =>
-        this.setState(() => ({ isOpen: false }))
-      )
+      }).then(() => this.setState(() => ({ isOpen: false })))
     }
   }
 
@@ -69,26 +62,18 @@ export default class ReactivateMembership extends Component {
             {(reactivateMembership, { loading, error }) => {
               return (
                 <Overlay onClose={this.closeHandler}>
-                  <OverlayToolbar>
-                    <OverlayToolbarClose
-                      onClick={this.closeHandler}
-                    />
-                  </OverlayToolbar>
+                  <OverlayToolbar onClose={this.closeHandler} />
                   <OverlayBody>
                     <Loader
                       loading={loading}
                       error={error}
                       render={() => (
                         <Fragment>
-                          <Interaction.H2>
-                            Bist du dir sicher?
-                          </Interaction.H2>
+                          <Interaction.H2>Bist du dir sicher?</Interaction.H2>
                           <br />
                           <Button
                             primary
-                            onClick={this.submitHandler(
-                              reactivateMembership
-                            )}
+                            onClick={this.submitHandler(reactivateMembership)}
                           >
                             Ja
                           </Button>

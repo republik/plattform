@@ -1,4 +1,4 @@
-import { Component, Fragment } from 'react'
+import React, { Component, Fragment } from 'react'
 import { Mutation } from 'react-apollo'
 import gql from 'graphql-tag'
 
@@ -7,14 +7,11 @@ import {
   Overlay,
   OverlayBody,
   OverlayToolbar,
-  OverlayToolbarClose,
   Interaction,
   Loader
 } from '@project-r/styleguide'
 
-import {
-  TextButton
-} from '../../Display/utils'
+import { TextButton } from '../../Display/utils'
 
 const CANCEL_PLEDGE = gql`
   mutation cancelPledge($pledgeId: ID!) {
@@ -41,9 +38,7 @@ export default class CancelPledge extends Component {
         variables: {
           pledgeId: this.props.pledge.id
         }
-      }).then(() =>
-        this.setState(() => ({ isOpen: false }))
-      )
+      }).then(() => this.setState(() => ({ isOpen: false })))
     }
   }
 
@@ -61,33 +56,22 @@ export default class CancelPledge extends Component {
         </TextButton>
 
         {isOpen && (
-          <Mutation
-            mutation={CANCEL_PLEDGE}
-            refetchQueries={refetchQueries}
-          >
+          <Mutation mutation={CANCEL_PLEDGE} refetchQueries={refetchQueries}>
             {(cancelPledge, { loading, error }) => {
               return (
                 <Overlay onClose={this.closeHandler}>
-                  <OverlayToolbar>
-                    <OverlayToolbarClose
-                      onClick={this.closeHandler}
-                    />
-                  </OverlayToolbar>
+                  <OverlayToolbar onClose={this.closeHandler} />
                   <OverlayBody>
                     <Loader
                       loading={loading}
                       error={error}
                       render={() => (
                         <Fragment>
-                          <Interaction.H2>
-                            Bist du dir sicher?
-                          </Interaction.H2>
+                          <Interaction.H2>Bist du dir sicher?</Interaction.H2>
                           <br />
                           <Button
                             primary
-                            onClick={this.submitHandler(
-                              cancelPledge
-                            )}
+                            onClick={this.submitHandler(cancelPledge)}
                           >
                             Ja
                           </Button>

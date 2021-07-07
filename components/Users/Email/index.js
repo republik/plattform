@@ -7,7 +7,6 @@ import {
   Overlay,
   OverlayBody,
   OverlayToolbar,
-  OverlayToolbarClose,
   Loader,
   InlineSpinner
 } from '@project-r/styleguide'
@@ -22,8 +21,6 @@ import {
 } from '../../Display/utils'
 
 import EmailForm from './EmailForm'
-
-import { GET_PROFILE } from '../ProfileHeader'
 
 const GET_EMAIL = gql`
   query user($id: String) {
@@ -44,11 +41,7 @@ const UPDATE_EMAIL = gql`
 `
 
 const UpdateEmail = ({ user, onSubmit, ...props }) => (
-  <Mutation
-    {...props}
-    mutation={UPDATE_EMAIL}
-    variables={{ id: user.id }}
-  >
+  <Mutation {...props} mutation={UPDATE_EMAIL} variables={{ id: user.id }}>
     {(updateUser, { loading, error }) => {
       return (
         <Loader
@@ -58,9 +51,7 @@ const UpdateEmail = ({ user, onSubmit, ...props }) => (
             <EmailForm
               key={user.id}
               user={user}
-              onSubmit={variables =>
-                onSubmit(updateUser({ variables }))
-              }
+              onSubmit={variables => onSubmit(updateUser({ variables }))}
             />
           )}
         />
@@ -83,8 +74,7 @@ export default class Email extends Component {
       isOpen: false
     }
 
-    this.closeHandler = () =>
-      this.setState({ isOpen: false })
+    this.closeHandler = () => this.setState({ isOpen: false })
     this.openHandler = () => this.setState({ isOpen: true })
   }
 
@@ -94,8 +84,7 @@ export default class Email extends Component {
     return (
       <Query query={GET_EMAIL} variables={{ id: userId }}>
         {({ loading, error, data }) => {
-          const isInitialLoading =
-            loading && !(data && data.user)
+          const isInitialLoading = loading && !(data && data.user)
           const isLoading = loading && !isInitialLoading
 
           return (
@@ -114,7 +103,7 @@ export default class Email extends Component {
                         </div>
                       )}
                       <TextButton
-                        className="show-on-focus"
+                        className='show-on-focus'
                         onClick={this.openHandler}
                       >
                         <EditIcon size={28} />
@@ -122,18 +111,12 @@ export default class Email extends Component {
                     </SectionMenu>
                     {isOpen && (
                       <Overlay onClose={this.closeHandler}>
-                        <OverlayToolbar>
-                          <OverlayToolbarClose
-                            onClick={this.closeHandler}
-                          />
-                        </OverlayToolbar>
+                        <OverlayToolbar onClose={this.closeHandler} />
                         <OverlayBody>
                           <UpdateEmail
                             user={user}
                             onSubmit={promise =>
-                              promise.then(
-                                this.closeHandler
-                              )
+                              promise.then(this.closeHandler)
                             }
                           />
                         </OverlayBody>

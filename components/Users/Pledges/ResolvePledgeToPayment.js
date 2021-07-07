@@ -1,4 +1,4 @@
-import { Component, Fragment } from 'react'
+import React, { Component, Fragment } from 'react'
 import { Mutation } from 'react-apollo'
 import gql from 'graphql-tag'
 import Textarea from 'react-textarea-autosize'
@@ -9,7 +9,6 @@ import {
   Overlay,
   OverlayBody,
   OverlayToolbar,
-  OverlayToolbarClose,
   Interaction,
   Field,
   Loader
@@ -18,14 +17,8 @@ import {
 import { TextButton } from '../../Display/utils'
 
 const RESOLVE_PLEDGE_TO_PAYMENT = gql`
-  mutation resolvePledgeToPayment(
-    $pledgeId: ID!
-    $reason: String!
-  ) {
-    resolvePledgeToPayment(
-      pledgeId: $pledgeId
-      reason: $reason
-    ) {
+  mutation resolvePledgeToPayment($pledgeId: ID!, $reason: String!) {
+    resolvePledgeToPayment(pledgeId: $pledgeId, reason: $reason) {
       id
       status
     }
@@ -54,9 +47,7 @@ export default class ResolvePledgeToPayment extends Component {
           pledgeId: this.props.pledge.id,
           reason: this.state.reason
         }
-      }).then(() =>
-        this.setState(() => ({ reason: '', isOpen: false }))
-      )
+      }).then(() => this.setState(() => ({ reason: '', isOpen: false })))
     }
   }
 
@@ -81,45 +72,33 @@ export default class ResolvePledgeToPayment extends Component {
             {(movePledge, { loading, error }) => {
               return (
                 <Overlay onClose={this.closeHandler}>
-                  <OverlayToolbar>
-                    <OverlayToolbarClose
-                      onClick={this.closeHandler}
-                    />
-                  </OverlayToolbar>
+                  <OverlayToolbar onClose={this.closeHandler} />
                   <OverlayBody>
                     <Loader
                       loading={loading}
                       error={error}
                       render={() => (
                         <Fragment>
-                          <Interaction.H2>
-                            Pledge resolven
-                          </Interaction.H2>
+                          <Interaction.H2>Pledge resolven</Interaction.H2>
                           <Field
-                            label="Grund"
+                            label='Grund'
                             value={reason}
                             renderInput={inputProps => (
                               <Textarea
                                 {...inputProps}
                                 {...css({
                                   minHeight: 40,
-                                  paddingTop:
-                                    '7px !important',
-                                  paddingBottom:
-                                    '6px !important'
+                                  paddingTop: '7px !important',
+                                  paddingBottom: '6px !important'
                                 })}
                               />
                             )}
-                            onChange={
-                              this.reasonChangeHandler
-                            }
+                            onChange={this.reasonChangeHandler}
                           />
                           <Button
                             primary
                             disabled={!reason}
-                            onClick={this.submitHandler(
-                              movePledge
-                            )}
+                            onClick={this.submitHandler(movePledge)}
                           >
                             Speichern
                           </Button>

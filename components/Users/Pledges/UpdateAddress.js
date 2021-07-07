@@ -1,4 +1,4 @@
-import { Component, Fragment } from 'react'
+import React, { Component, Fragment } from 'react'
 import { Mutation } from 'react-apollo'
 import gql from 'graphql-tag'
 
@@ -7,15 +7,11 @@ import {
   Overlay,
   OverlayBody,
   OverlayToolbar,
-  OverlayToolbarClose,
-  Interaction,
   Loader,
   FieldSet
 } from '@project-r/styleguide'
 
-import {
-  TextButton
-} from '../../Display/utils'
+import { TextButton } from '../../Display/utils'
 
 import AddressFieldSet from '../Particulars/AddressFieldSet'
 
@@ -61,9 +57,7 @@ export default class UpdateAddress extends Component {
             country: values.country
           }
         }
-      }).then(() =>
-        this.setState({ isOpen: false })
-      )
+      }).then(() => this.setState({ isOpen: false }))
     }
   }
 
@@ -80,17 +74,11 @@ export default class UpdateAddress extends Component {
         </TextButton>
 
         {isOpen && (
-          <Mutation
-            mutation={MUTATION}
-          >
+          <Mutation mutation={MUTATION}>
             {(mutate, { loading, error }) => {
               return (
                 <Overlay onClose={this.closeHandler}>
-                  <OverlayToolbar>
-                    <OverlayToolbarClose
-                      onClick={this.closeHandler}
-                    />
-                  </OverlayToolbar>
+                  <OverlayToolbar onClose={this.closeHandler} />
                   <OverlayBody>
                     <Loader
                       loading={loading}
@@ -103,12 +91,7 @@ export default class UpdateAddress extends Component {
                             }}
                             {...this.state}
                           />
-                          <Button
-                            primary
-                            onClick={this.submitHandler(
-                              mutate
-                            )}
-                          >
+                          <Button primary onClick={this.submitHandler(mutate)}>
                             ändern
                           </Button>
                         </Fragment>
