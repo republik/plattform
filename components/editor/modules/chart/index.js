@@ -54,7 +54,6 @@ export default ({ rule, subModules, TYPE }) => {
     rules: [serializerRule]
   })
 
-  const random = () => Math.round(Math.random() * 10) / 10
   const newBlock = () =>
     Block.create({
       type: TYPE,
@@ -65,8 +64,8 @@ export default ({ rule, subModules, TYPE }) => {
             m.TYPE === CANVAS_TYPE
               ? {
                   isNew: true,
-                  config: { type: 'Bar', y: 'label' },
-                  values: `label,value\nA,${random()}\nB,${random()}`
+                  config: {},
+                  values: ''
                 }
               : undefined
         })

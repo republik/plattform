@@ -9,12 +9,13 @@ const styles = {
   })
 }
 
-const Placeholder = ({ identifier }) => {
+const Placeholder = ({ identifier, type = 'Dynamic Component' }) => {
   const [colorScheme] = useColorContext()
   return (
     <div {...styles.box} {...colorScheme.set('background', 'alert')}>
-      <small {...colorScheme.set('color', 'textSoft')}>Dynamic Component</small>
-      <br />
+      {!!type && (
+        <small {...colorScheme.set('color', 'textSoft')}>{type}</small>
+      )}
       <Interaction.P style={{ marginBottom: 0 }}>{identifier}</Interaction.P>
     </div>
   )

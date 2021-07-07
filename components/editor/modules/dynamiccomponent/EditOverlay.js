@@ -150,7 +150,7 @@ class Form extends Component {
         <Interaction.P>
           <JSONEditor
             label='Config'
-            value={config}
+            config={config}
             onChange={value => {
               onChange(fromJS(value).set('html', html))
               if (value.autoHtml) {
