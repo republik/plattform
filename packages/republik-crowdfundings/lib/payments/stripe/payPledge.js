@@ -1,6 +1,6 @@
 const debug = require('debug')('crowdfundings:lib:payments:stripe:payPledge')
 
-const { RequiresPaymentMethodError } = require('./Errors')
+const { RequiresPaymentMethodError, throwError } = require('./Errors')
 
 const createCustomer = require('./createCustomer')
 const createCharge = require('./createCharge')
@@ -30,31 +30,6 @@ module.exports = (args) => {
       throwError(e, { ...args, kind: 'paymentIntent' })
     })
   }
-}
-
-const throwError = (e, { pledgeId, t, kind }) => {
-  if (e.type === 'StripeCardError') {
-    const translatedError = t('api/pay/stripe/' + e.code)
-    if (translatedError) {
-      console.warn(e, { pledgeId, kind })
-      throw new Error(translatedError)
-    } else {
-      console.warn('translation not found for stripe error', {
-        pledgeId,
-        kind,
-        e,
-      })
-      throw new Error(e.message)
-    }
-  }
-
-  if (e.name === 'RequiresPaymentMethodError') {
-    console.warn(e, { pledgeId, kind })
-    throw new Error(t('api/pay/stripe/card_declined'))
-  }
-
-  console.error(e, { pledgeId, kind })
-  throw new Error(t('api/unexpected'))
 }
 
 const payWithSource = async ({

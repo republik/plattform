@@ -1,24 +1,24 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
-const getSubscription = require('../../../lib/payments/stripe/getSubscription')
-const createSubscription = require('../../../lib/payments/stripe/createSubscription')
-const reactivateSubscription = require('../../../lib/payments/stripe/reactivateSubscription')
-const slack = require('@orbiting/backend-modules-republik/lib/slack')
-const createCache = require('../../../lib/cache')
 const { sendMailTemplate } = require('@orbiting/backend-modules-mail')
+const slack = require('@orbiting/backend-modules-republik/lib/slack')
+
+const { throwError } = require('../../../lib/payments/stripe/Errors')
+const createCache = require('../../../lib/cache')
+const createSubscription = require('../../../lib/payments/stripe/createSubscription')
+const getSubscription = require('../../../lib/payments/stripe/getSubscription')
+const reactivateSubscription = require('../../../lib/payments/stripe/reactivateSubscription')
 
 module.exports = async (_, args, context) => {
   const {
     pgdb,
-    req,
     user: me,
     t,
     mail: { enforceSubscriptions },
   } = context
-  const transaction = await pgdb.transactionBegin()
   const now = new Date()
+  const { id: membershipId } = args
+  const transaction = await pgdb.transactionBegin()
   try {
-    const { id: membershipId } = args
-
     const membership = await transaction
       .query(
         `
@@ -86,6 +86,7 @@ module.exports = async (_, args, context) => {
             pledgeId: membership.pledgeId,
             membershipId,
           },
+          errIfIncomplete: true,
           pgdb: transaction,
         })
 
@@ -170,7 +171,6 @@ module.exports = async (_, args, context) => {
     return newMembership
   } catch (e) {
     await transaction.transactionRollback()
-    console.info('transaction rollback', { req: req._log(), args, error: e })
-    throw e
+    throwError(e, { membershipId, t, kind: 'reactivateMembership' })
   }
 }
