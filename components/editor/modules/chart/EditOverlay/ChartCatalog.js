@@ -51,12 +51,7 @@ const styles = {
     position: 'relative'
   }),
   actions: css({
-    position: 'absolute',
-    right: 0,
-    top: 15,
-    '& button': {
-      padding: '7px 0'
-    }
+    display: 'flex'
   })
 }
 
@@ -79,10 +74,10 @@ const RenderChart = ({ node }) => {
 
 const ChartCode = ({ values, config }) => {
   return (
-    <Center style={{ marginTop: -40 }}>
+    <>
       <JSONEditor label='Einstellungen' config={config} readOnly />
       <PlainEditor label='CSV Daten' value={values} linesShown={10} readOnly />
-    </Center>
+    </>
   )
 }
 
@@ -91,35 +86,37 @@ const ChartContainer = ({ chart }) => {
 
   const node = JSON.parse(JSON.stringify(chart.entity.node))
   return (
-    <div {...styles.container}>
-      <div {...styles.actions}>
-        <IconButton
-          Icon={Public}
-          onClick={() => undefined}
-          title='Zur Republik Beitrag'
-          size={16}
-        />
-        <IconButton
-          Icon={Edit}
-          onClick={() => undefined}
-          title='Zur Publikator Dokument'
-          size={16}
-        />
-        <IconButton
-          Icon={Code}
-          onClick={() => setShowCode(!showCode)}
-          size={18}
-          title={showCode ? 'Code ausblenden' : 'Code anzeigen'}
-        />
-      </div>
+    <>
       <RenderChart node={node} />
-      {showCode && (
-        <ChartCode
-          config={node.data}
-          values={node.children.find(n => n.type === 'code')?.value}
-        />
-      )}
-    </div>
+      <Center style={{ marginTop: -30, marginBottom: 60 }}>
+        <div {...styles.actions}>
+          <IconButton
+            Icon={Public}
+            onClick={() => undefined}
+            label='Beitrag'
+            size={16}
+          />
+          <IconButton
+            Icon={Edit}
+            onClick={() => undefined}
+            label='Dokument'
+            size={16}
+          />
+          <IconButton
+            Icon={Code}
+            onClick={() => setShowCode(!showCode)}
+            size={20}
+            label='Code'
+          />
+        </div>
+        {showCode && (
+          <ChartCode
+            config={node.data}
+            values={node.children.find(n => n.type === 'code')?.value}
+          />
+        )}
+      </Center>
+    </>
   )
 }
 
