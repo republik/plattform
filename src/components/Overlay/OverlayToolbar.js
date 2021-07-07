@@ -5,7 +5,7 @@ import { css } from 'glamor'
 import { CloseIcon } from '../Icons'
 import { useColorContext } from '../Colors/useColorContext'
 import { mUp } from '../../theme/mediaQueries'
-import { sansSerifMedium16, sansSerifRegular15 } from '../Typography/styles'
+import { sansSerifMedium16 } from '../Typography/styles'
 
 export const height = 48
 
@@ -51,29 +51,7 @@ const styles = {
       width: '48px',
       flexBasis: '48px'
     }
-  }),
-  tag: css({
-    ...sansSerifRegular15,
-    display: 'inline-block',
-    padding: '3px 9px',
-    borderRadius: 3,
-    lineHeight: '21px',
-    height: 28,
-    color: '#fff',
-    pointerEvents: 'none',
-    position: 'absolute',
-    right: 60,
-    top: 9
   })
-}
-
-const Tag = ({ text }) => {
-  const [colorScheme] = useColorContext()
-  return (
-    <span {...styles.tag} {...colorScheme.set('background', 'sequential60')}>
-      {text}
-    </span>
-  )
 }
 
 const OverlayToolbarClose = ({ onClick }) => {
