@@ -7,59 +7,24 @@ export const sizes = [
 
 export const baseCharts = [
   {
-    name: 'Simple Bars',
+    name: 'Bars',
     screenshot: '/static/charts/bars.png',
     config: {
       type: 'Bar',
       numberFormat: '.0%',
       y: 'country',
-      category: "datum.country == 'Schweiz' ? '1' : '0'",
+      color: 'highlight',
       showBarValues: true
     },
     values: `
-country,value
-Frankreich,0.455
-Österreich,0.435
-Italien,0.433
-Deutschland,0.369
-Schweiz,0.279
-USA,0.264
-Irland,0.236
-`
-  },
-  {
-    name: 'Stacked Bars',
-    screenshot: '/static/charts/stacked-bars.png',
-    config: {
-      type: 'Bar',
-      y: 'gender',
-      color: 'age',
-      colorLegend: true,
-      showBarValues: true,
-      sort: 'none',
-      domain: [0, 20000],
-      xTicks: [0]
-    },
-    values: `
-age,gender,value
-0-9,Women,71
-10-19,Women,504
-20-29,Women,2270
-30-39,Women,2351
-40-49,Women,2728
-50-59,Women,3233
-60-69,Women,1613
-70-79,Women,1315
-80+,Women,2468
-0-9,Men,84
-10-19,Men,361
-20-29,Men,1534
-30-39,Men,1761
-40-49,Men,2042
-50-59,Men,2964
-60-69,Men,2034
-70-79,Men,1566
-80+,Men,1597
+country,value,highlight
+Frankreich,0.455,0
+Österreich,0.435,0
+Italien,0.433,0
+Deutschland,0.369,0
+Schweiz,0.279,1
+USA,0.264,0
+Irland,0.236,0
 `
   },
   {
@@ -85,7 +50,7 @@ Pädagogik und Sozialkompetenz,Individuelle berufsbezogene Weiterbildung,0.17
 `
   },
   {
-    name: 'Full-Width Bars',
+    name: 'Stacked Bars',
     screenshot: '/static/charts/filled-bars.png',
     config: {
       type: 'Bar',
@@ -124,7 +89,27 @@ Sexuelle Belästigung,sehr stark,0.093
 `
   },
   {
-    name: 'Simple Timebars',
+    name: 'Lollipops',
+    screenshot: '/static/charts/lollipops.png',
+    config: {
+      type: 'Lollipop',
+      y: 'category',
+      sort: 'none',
+      band: 'Q',
+      bandLegend: 'in diesem Bereich liegt die Hälfte aller Löhne',
+      domain: [0, 15000],
+      unit: 'CHF',
+      xTicks: [0, 6502, 10000, 15000]
+    },
+    values: `
+category,value,Q_lower,Q_upper
+Informationstechnologie,8900,6918,11373
+Forschung und Entwicklung,8764,7143,11837
+Energieversorgung,8210,6873,10182
+`
+  },
+  {
+    name: 'Timebars',
     screenshot: '/static/charts/timebars.png',
     config: {
       type: 'TimeBar',
@@ -166,6 +151,37 @@ year,value,type
 2014,-123948563.32,Defizit
 2015,2337300888.72,Überschuss
 2016,751559663.61,Überschuss
+`
+  },
+  {
+    name: 'Timebar Columns',
+    screenshot: '/static/charts/multi-timebars.png',
+    config: {
+      type: 'TimeBar',
+      unit: 'Überlebende',
+      x: 'age',
+      column: 'date',
+      columns: 3,
+      xScale: 'linear',
+      padding: 10,
+      numberFormat: '.0%',
+      xTicks: [0, 100],
+      xUnit: 'Alter'
+    },
+    values: `
+age,date,value
+0,1851,1
+20,1851,0.659
+40,1851,0.54
+60,1851,0.376
+80,1851,0.089
+100,1851,0
+0,1931,1
+20,1931,0.875
+40,1931,0.812
+60,1931,0.652
+80,1931,0.193
+100,1931,0
 `
   },
   {
@@ -319,38 +335,7 @@ Stickstofftrifluorid,2016,12000.0000
 `
   },
   {
-    name: 'Timebar Columns',
-    screenshot: '/static/charts/multi-timebars.png',
-    config: {
-      type: 'TimeBar',
-      unit: 'Überlebende',
-      x: 'age',
-      column: 'date',
-      columns: 3,
-      xScale: 'linear',
-      padding: 10,
-      numberFormat: '.0%',
-      xTicks: [0, 100],
-      xUnit: 'Alter'
-    },
-    values: `
-age,date,value
-0,1851,1
-20,1851,0.659
-40,1851,0.54
-60,1851,0.376
-80,1851,0.089
-100,1851,0
-0,1931,1
-20,1931,0.875
-40,1931,0.812
-60,1931,0.652
-80,1931,0.193
-100,1931,0
-`
-  },
-  {
-    name: 'Ordinal Timebars',
+    name: 'Histogram (Ordinal)',
     screenshot: '/static/charts/ordinal-timebars.png',
     config: {
       type: 'TimeBar',
@@ -384,7 +369,7 @@ year,category,value
       numberFormat: '.1f',
       zero: false,
       colorRange: ['#C40046', '#F2BF18', '#F28502'],
-      category: 'datum.gender'
+      color: 'gender'
     },
     values: `
 year,gender,at_age,value
@@ -437,6 +422,88 @@ year,gender,at_age,value
 2014,Total,0,80.92
 2015,Total,0,80.57
 `
+  },
+  {
+    name: 'Stroked Line',
+    screenshot: '/static/charts/lines-stroke.png',
+    config: {
+      type: 'Line',
+      height: 240,
+      sort: 'none',
+      color: 'type',
+      colorSort: 'none',
+      unit: 'Personen',
+      numberFormat: 's',
+      x: 'date',
+      timeParse: '%Y-%m-%d',
+      timeFormat: '%d.%m.',
+      colorMap: {
+        'positiv Getestete': 'rgba(31, 119, 180, 1)',
+        'bereits Infizierte': 'rgba(127,191,123, 0.9)'
+      },
+      labelFilter: 'false',
+      colorLegend: true,
+      stroke: 'datum.type !== "positiv Getestete"',
+      yNice: 0,
+      yTicks: [0, 2500, 5000, 7500, 10000, 12500],
+      xTicks: ['2020-03-01', '2020-03-16', '2020-03-26'],
+      paddingTop: 8,
+      xAnnotations: [
+        {
+          x1: '2020-03-16',
+          x2: '2020-03-26',
+          value: 13801,
+          unit: ' Personen',
+          label: 'bereits vor 10 Tagen infiziert',
+          showValue: false
+        }
+      ]
+    },
+    values: `
+type,date,value
+positiv Getestete,2020-03-01,70
+positiv Getestete,2020-03-02,102
+positiv Getestete,2020-03-03,135
+positiv Getestete,2020-03-04,195
+positiv Getestete,2020-03-05,254
+positiv Getestete,2020-03-06,327
+positiv Getestete,2020-03-07,376
+positiv Getestete,2020-03-08,438
+positiv Getestete,2020-03-09,623
+positiv Getestete,2020-03-10,823
+positiv Getestete,2020-03-11,1135
+positiv Getestete,2020-03-12,1461
+positiv Getestete,2020-03-13,1873
+positiv Getestete,2020-03-14,2294
+positiv Getestete,2020-03-15,2611
+positiv Getestete,2020-03-16,3611
+positiv Getestete,2020-03-17,4583
+positiv Getestete,2020-03-18,5734
+positiv Getestete,2020-03-19,6572
+positiv Getestete,2020-03-20,7716
+positiv Getestete,2020-03-21,8413
+positiv Getestete,2020-03-22,8948
+positiv Getestete,2020-03-23,10416
+positiv Getestete,2020-03-24,11664
+positiv Getestete,2020-03-25,12726
+positiv Getestete,2020-03-26,13801
+bereits Infizierte,2020-03-01,1135
+bereits Infizierte,2020-03-02,1461
+bereits Infizierte,2020-03-03,1873
+bereits Infizierte,2020-03-04,2294
+bereits Infizierte,2020-03-05,2611
+bereits Infizierte,2020-03-06,3611
+bereits Infizierte,2020-03-07,4583
+bereits Infizierte,2020-03-08,5734
+bereits Infizierte,2020-03-09,6572
+bereits Infizierte,2020-03-10,7716
+bereits Infizierte,2020-03-11,8413
+bereits Infizierte,2020-03-12,8948
+bereits Infizierte,2020-03-13,10416
+bereits Infizierte,2020-03-14,11664
+bereits Infizierte,2020-03-15,12726
+bereits Infizierte,2020-03-16,13801
+    `
   },
   {
     name: 'Confidence Bands',
@@ -544,26 +611,6 @@ year,country,value
 1870,Deutschland,0.806969593440383
 2016,Österreich,0.727798978073863
 2016,Deutschland,0.75740573054783
-`
-  },
-  {
-    name: 'Lollipops',
-    screenshot: '/static/charts/lollipops.png',
-    config: {
-      type: 'Lollipop',
-      y: 'category',
-      sort: 'none',
-      band: 'Q',
-      bandLegend: 'in diesem Bereich liegt die Hälfte aller Löhne',
-      domain: [0, 15000],
-      unit: 'CHF',
-      xTicks: [0, 6502, 10000, 15000]
-    },
-    values: `
-category,value,Q_lower,Q_upper
-Informationstechnologie,8900,6918,11373
-Forschung und Entwicklung,8764,7143,11837
-Energieversorgung,8210,6873,10182
 `
   },
   {
@@ -783,60 +830,218 @@ Zimbabwe,1910,0.78,Africa
 `
   },
   {
-    name: 'World Map',
+    name: 'World Choropleth',
     large: true,
-    screenshot: '/static/charts/projected-map.png',
+    screenshot: '/static/charts/world-map.png',
     config: {
       type: 'GenericMap',
-      heightRatio: 0.5,
-      points: true,
-      pointLabel: 'name',
-      pointAttributes: ['Land'],
-      colorLegend: false,
-      sizeRangeMax: 300,
-      unit: 't CO<sub>2</sub> pro Kopf',
+      colorLegend: true,
+      heightRatio: 0.469,
+      choropleth: true,
+      opacity: 1,
+      thresholds: [30, 40, 50, 60, 70, 80, 90],
+      colorRange: [
+        '#800026',
+        '#bd0026',
+        '#e31a1c',
+        '#fc4e2a',
+        '#fd8d3c',
+        '#feb24c',
+        '#fed976',
+        '#ffeda0'
+      ],
       features: {
-        url: '/static/geo_temp/world-atlas-110m.json',
-        object: 'land'
-      }
+        url:
+          'https://cdn.repub.ch/s3/republik-assets/assets/geo/world-atlas-110m-without-antarctic.json',
+        object: 'countries'
+      },
+      missingDataLegend: 'Nicht untersucht',
+      label: 'label',
+      legendTitle: 'Medienfreiheit',
+      colorLegendPosition: 'left',
+      colorLegendSize: 0.17,
+      colorLegendMinWidth: 90
     },
     values: `
-lon,lat,name,value,Land
--81.6662,41.4609,"Cleveland",24.7086,"USA"
-126.6235,45.72794,"Harbin",5.8252,"China"
-114.4906,38.05647,"Shijiazhuang",7.409,"China"
-117.2686,31.84478,"Hefei",6.4152,"China"
--1.97333,52.5129,"Birmingham",10.5696,"UK"
-76.8976,43.2746,"Almaty",13.8718,"Kazakhstan"
-125.2966,43.87748,"Changchun",7.5739,"China"
--76.6564,39.3269,"Baltimore",20.2459,"USA"
-2.11335,41.4789,"Barcelona",7.1442,"Spain"
-106.6912,10.87065,"Ho Chi Minh City",2.2753,"Viet Nam"
-78.4717,17.4518,"Hyderabad",3.1619,"India"
-18.5775,-33.9625,"Cape Town",7.7099,"South Africa"
-4.41519,51.9588,"Rotterdam",11.0501,"Netherlands"
--70.6611,-33.4681,"Santiago",4.3807,"Chile"
-117.0421,36.67991,"Jinan",8.5077,"China"
--117.1063,32.7846,"San Diego",14.4791,"USA"
--90.3813,38.6951,"St. Louis",24.0629,"USA"
--73.6943,45.5521,"Montreal",10.136,"Canada"
+feature,value
+004,62.3
+024,66.08
+008,69.75
+784,57.31
+032,71.22
+051,71.4
+036,79.79
+040,84.22
+031,41.52
+108,44.67
+056,87.43
+204,64.89
+854,76.53
+050,50.63
+100,64.94
+070,71.49
+112,50.25
+084,72.5
+068,64.63
+076,65.95
+096,50.35
+064,71.1
+072,76.44
+140,57.13
+124,84.71
+756,89.38
+152,72.69
+156,21.52
+384,71.06
+120,56.72
+180,50.91
+178,63.44
+170,57.34
+188,89.47
+192,36.19
+196,79.55
+203,76.43
+276,87.84
+262,23.27
+208,91.87
+214,72.1
+012,54.48
+218,67.38
+818,43.18
+232,16.5
+724,77.84
+233,87.39
+231,67.18
+246,92.07
+242,72.59
+250,77.08
+266,62.8
+826,77.07
+268,71.41
+288,77.74
+324,65.66
+270,69.38
+624,67.94
+226,43.62
+300,71.2
+320,64.26
+328,73.37
+340,51.8
+191,71.49
+332,69.8
+348,69.16
+360,63.18
+356,54.67
+372,87.4
+364,35.19
+368,44.63
+352,84.88
+376,69.16
+380,76.31
+388,89.49
+400,57.92
+392,71.14
+398,45.89
+404,66.28
+417,69.81
+116,54.54
+410,76.3
+414,65.7
+418,35.72
+422,66.81
+430,67.75
+434,44.23
+144,58.06
+426,69.55
+440,78.81
+442,84.54
+428,81.44
+504,57.12
+498,68.84
+450,72.32
+484,54.55
+807,68.72
+466,65.88
+104,55.23
+499,66.17
+496,70.39
+508,66.21
+478,67.46
+454,70.68
+458,66.88
+516,80.75
+562,71.75
+566,64.37
+558,64.19
+528,90.04
+578,92.16
+524,64.9
+554,89.31
+512,56.58
+586,54.48
+591,70.22
+604,69.06
+608,56.46
+598,76.07
+616,71.35
+408,14.18
+620,88.17
+600,67.03
+634,57.49
+642,74.09
+643,51.08
+646,49.66
+682,37.86
+729,44.67
+686,76.01
+694,69.72
+222,70.3
+706,44.55
+688,68.38
+728,55.51
+740,82.5
+703,77.33
+705,77.36
+752,90.75
+748,54.85
+760,27.43
+148,60.3
+768,70.67
+764,55.06
+762,44.66
+795,14.56
+626,70.1
+780,76.78
+788,70.55
+792,49.98
+158,76.24
+834,59.75
+800,59.05
+804,67.48
+858,84.21
+840,76.15
+860,46.93
+862,54.34
+704,25.29
+887,41.75
+710,77.59
+894,63
+716,59.05
+KOS,70.67
+CYN,70.21
 `
   },
   {
-    name: 'Swiss Map',
+    name: 'Canton Choropleth',
     screenshot: '/static/charts/swiss-map.png',
     config: {
-      type: 'SwissMap',
+      type: 'ProjectedMap',
+      heightRatio: 0.63,
       legendTitle: 'Jastimmen',
       unit: 'Jastimmen',
       choropleth: true,
       numberFormat: '.0%',
-      thresholdsLegend: [
-        { label: 'Roses are red' },
-        { minValue: 0.4, label: 'Gripens are blue' },
-        { minValue: 0.5, label: 'I want seven of them' },
-        { minValue: 0.6, label: 'And so do you' }
-      ],
+      thresholds: [0.4, 0.5, 0.6],
       colorRange: [
         'rgb(187,21,26)',
         'rgb(239,69,51)',
@@ -844,41 +1049,39 @@ lon,lat,name,value,Land
         'rgb(24,100,170)'
       ],
       features: {
-        url: '/static/geo_temp/ch-cantons-wo-lakes.json',
+        url:
+          'https://cdn.repub.ch/s3/republik-assets/assets/geo/epsg2056-projected-ch-cantons-wo-lakes.json',
         object: 'cantons'
-      },
-      tooltipLabel: 'What about {name}?',
-      tooltipBody:
-        '{formattedValue} of people in {name} ({feature}) voted in favour of purchasing new military airplanes.\nBtw, did you know that they speak {language} in this canton?'
+      }
     },
     values: `
-feature,value,language
-ZH,0.487,German
-BE,0.491,French and German
-LU,0.543,German
-UR,0.624,German
-SZ,0.615,German
-OW,0.638,German
-NW,0.682,German
-GL,0.599,German
-ZG,0.6,German
-FR,0.406,French and German
-SO,0.503,German
-BS,0.323,German
-BL,0.425,German
-SH,0.494,German
-AR,0.511,German
-AI,0.608,German
-SG,0.5,German
-GR,0.507,"German, Italian and Romansh"
-AG,0.519,German
-TG,0.556,German
-TI,0.453,Italian
-VD,0.349,French
-VS,0.381,French and German
-NE,0.309,French
-GE,0.322,French
-JU,0.257,French
+feature,value
+ZH,0.487
+BE,0.491
+LU,0.543
+UR,0.624
+SZ,0.615
+OW,0.638
+NW,0.682
+GL,0.599
+ZG,0.6
+FR,0.406
+SO,0.503
+BS,0.323
+BL,0.425
+SH,0.494
+AR,0.511
+AI,0.608
+SG,0.5
+GR,0.507
+AG,0.519
+TG,0.556
+TI,0.453
+VD,0.349
+VS,0.381
+NE,0.309
+GE,0.322
+JU,0.257
 `
   },
   {

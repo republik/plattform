@@ -55,7 +55,7 @@ class OverlayFormManager extends Component {
       autoDarkModePreview,
       extra,
       showPreview,
-      overlayToolBarActions,
+      title,
       children
     } = this.props
     const startEditing = () => {
@@ -80,7 +80,7 @@ class OverlayFormManager extends Component {
             preview={preview}
             autoDarkModePreview={autoDarkModePreview}
             showPreview={showPreview}
-            overlayToolBarActions={overlayToolBarActions}
+            title={title}
             extra={extra}
             onClose={() => {
               this.setState({ showModal: false })

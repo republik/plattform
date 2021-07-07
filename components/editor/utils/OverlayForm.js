@@ -5,7 +5,6 @@ import { css, merge } from 'glamor'
 import {
   Overlay,
   OverlayToolbar,
-  OverlayToolbarClose,
   OverlayBody,
   mediaQueries,
   ColorContextProvider,
@@ -73,7 +72,7 @@ const OverlayForm = ({
   preview,
   extra,
   children,
-  overlayToolBarActions,
+  title,
   showPreview = true,
   autoDarkModePreview = true
 }) => {
@@ -85,11 +84,7 @@ const OverlayForm = ({
       onClose={onClose}
       mUpStyle={{ maxWidth: '80vw', marginTop: '5vh' }}
     >
-      <OverlayToolbar>
-        {overlayToolBarActions}
-        <OverlayToolbarClose onClick={onClose} />
-      </OverlayToolbar>
-
+      <OverlayToolbar onClose={onClose} title={title} />
       <OverlayBody>
         <div {...merge(styles.edit, !showPreview && styles.noPreview)}>
           {children}
