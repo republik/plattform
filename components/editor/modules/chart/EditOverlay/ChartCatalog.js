@@ -1,6 +1,10 @@
 import React from 'react'
 import gql from 'graphql-tag'
 import { compose, graphql } from 'react-apollo'
+import { chartData } from './data'
+import { getSchema } from '../../../../Templates'
+import { renderMdast } from 'mdast-react-render'
+import { stringify, parse } from '@orbiting/remark-preset'
 
 const getZones = gql`
   query getZones {
@@ -37,9 +41,28 @@ const getZones = gql`
   }
 `
 
-const ChartCatalog = compose(graphql(getZones))(({ data }) => {
-  console.log(data)
-  return 'Chart Catalog'
-})
+export const RenderChart = ({ node }) => {
+  const schema = getSchema('article')
+  const fullMdast = {
+    type: 'root',
+    children: [
+      {
+        data: {},
+        identifier: 'CENTER',
+        type: 'zone',
+        children: [node]
+      }
+    ],
+    meta: {}
+  }
+  return <>{renderMdast(fullMdast, schema)}</>
+}
+
+//const ChartCatalog = compose(graphql(getZones))(({ data }) => {
+const ChartCatalog = () => {
+  return chartData.data.search.nodes.map((chart, i) => (
+    <RenderChart key={i} node={JSON.parse(JSON.stringify(chart.entity.node))} />
+  ))
+}
 
 export default ChartCatalog

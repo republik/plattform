@@ -1,4 +1,4 @@
-export const data = {
+export const chartData = {
   data: {
     search: {
       totalCount: 298,

@@ -11,7 +11,7 @@ const tabs = ['chart', 'templates', 'catalog']
 const tabConfig = {
   chart: { body: ChartEditor, label: 'Chart', showPreview: true },
   templates: { body: ChartSelector, label: 'Vorlagen', showPreview: false },
-  catalog: { body: ChartCatalog, label: 'Katalog', showPreview: false }
+  catalog: { body: ChartCatalog, label: 'Archiv', showPreview: false }
 }
 
 const styles = {
