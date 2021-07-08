@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { css } from 'glamor'
 import MarkdownSerializer from 'slate-mdast-serializer'
 import AutosizeInput from 'react-textarea-autosize'
 import MemoIcon from 'react-icons/lib/md/comment'
 import DeleteIcon from 'react-icons/lib/md/delete-forever'
+import withMe from '../../../../lib/withMe'
 
 import {
   Field,
@@ -12,10 +13,11 @@ import {
   OverlayBody,
   useColorContext,
   fontStyles,
-  IconButton
+  IconButton,
+  Label
 } from '@project-r/styleguide'
 
-import { CloseIcon, EditIcon, CheckIcon } from '@project-r/styleguide/icons'
+import { EditIcon, CheckIcon } from '@project-r/styleguide/icons'
 
 import { matchInline, createInlineButton, buttonStyles } from '../../utils'
 
@@ -27,9 +29,7 @@ const fadeIn = css.keyframes('fadeIn', {
 const styles = {
   contextMenu: css({
     position: 'absolute',
-    top: 25,
-    left: '50%',
-    transform: 'translateX(-50%)',
+    maxWidth: 300,
     padding: 8,
     cursor: 'pointer',
     opacity: 0,
@@ -38,7 +38,7 @@ const styles = {
     zIndex: 1,
     display: 'flex',
     flexDirection: 'column',
-    borderRadius: 4
+    borderRadius: 6
   }),
   contextMenuContainer: css({
     display: 'flex',
@@ -97,9 +97,11 @@ const deserialize = json => {
   }
 }
 
-const Memo = ({ editor, node, children, isSelected }) => {
+const Memo = ({ editor, node, children, isSelected, me }) => {
   const [colorScheme] = useColorContext()
+  const markedTextRef = useRef()
   const [showModal, setShowModal] = useState()
+  const [markedTextHeight, setMarkedTextHeight] = useState(0)
   const [memoRef, setMemoRef] = useState()
   const [memo, setMemo] = useState()
   const [color, setColor] = useState()
@@ -109,6 +111,17 @@ const Memo = ({ editor, node, children, isSelected }) => {
   useEffect(() => {
     !node.data.get('touched') && open()
   }, [node.data.get('touched')])
+
+  useEffect(() => {
+    const handleResize = () => {
+      setMarkedTextHeight(markedTextRef.current.clientHeight)
+    }
+    handleResize()
+    addEventListener('resize', handleResize)
+    return () => {
+      removeEventListener('resize', handleResize)
+    }
+  }, [])
 
   useEffect(() => {
     if (memoRef) {
@@ -141,6 +154,7 @@ const Memo = ({ editor, node, children, isSelected }) => {
       change.setNodeByKey(node.key, {
         data: node.data.merge({
           memo: serialize(memo),
+          userName: me.firstName,
           touched: true
         })
       })
@@ -199,12 +213,12 @@ const Memo = ({ editor, node, children, isSelected }) => {
         </Overlay>
       )}
       <span
+        ref={markedTextRef}
         style={{
           backgroundColor: isSelected
             ? `rgb(${getMarkerColor(color).join(',')},0.8)`
             : `rgba(${getMarkerColor(color).join(',')},0.4)`,
-          paddingTop: '.2em',
-          paddingBottom: '.2em'
+          display: 'inline-block'
         }}
         onDoubleClick={open}
       >
@@ -214,9 +228,11 @@ const Memo = ({ editor, node, children, isSelected }) => {
             {...styles.contextMenu}
             {...colorScheme.set('boxShadow', 'overlayShadow')}
             style={{
-              backgroundColor: `rgb(${getMarkerColor(color).join(',')})`
+              backgroundColor: `rgb(${getMarkerColor(color).join(',')})`,
+              top: markedTextHeight + 12
             }}
           >
+            <Label>{node.data.get('userName')}</Label>
             <div {...styles.memo}>{memo}</div>
             <div {...styles.contextMenuContainer}>
               <div {...styles.colorSelectors}>
@@ -233,8 +249,10 @@ const Memo = ({ editor, node, children, isSelected }) => {
                   />
                 ))}
               </div>
-              <IconButton onClick={open} Icon={EditIcon} />
-              <IconButton onClick={remove} Icon={DeleteIcon} />
+              <div style={{ display: 'flex' }}>
+                <IconButton onClick={open} Icon={EditIcon} />
+                <IconButton onClick={remove} Icon={DeleteIcon} />
+              </div>
             </div>
           </span>
         )}
@@ -242,6 +260,12 @@ const Memo = ({ editor, node, children, isSelected }) => {
     </>
   )
 }
+
+const WrappedMemo = withMe(({ me, children, ...props }) => (
+  <Memo {...props} me={me}>
+    {children}
+  </Memo>
+))
 
 const MemoModule = ({ rule, TYPE }) => {
   const memo = {
@@ -307,7 +331,7 @@ const MemoModule = ({ rule, TYPE }) => {
           const { children, ...rest } = props
           if (!memo.match(rest.node)) return
 
-          return <Memo {...rest}>{children}</Memo>
+          return <WrappedMemo {...rest}>{children}</WrappedMemo>
         }
       }
     ]
