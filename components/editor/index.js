@@ -14,6 +14,7 @@ import createParagraphModule from './modules/paragraph'
 import createBlockTextModule from './modules/blocktext'
 import createLinkModule from './modules/link'
 import createMarkModule from './modules/mark'
+import createMemoModule from './modules/memo'
 import createListModule from './modules/list'
 import createListItemModule from './modules/list/item'
 import createFigureModule from './modules/figure'
@@ -63,6 +64,7 @@ const moduleCreators = {
   paragraph: createParagraphModule,
   link: createLinkModule,
   mark: createMarkModule,
+  memo: createMemoModule,
   // for @project-r/template-newsletter compat
   // - change when updating project r
   blockquote: createBlockQuoteModule,
