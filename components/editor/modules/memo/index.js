@@ -3,20 +3,19 @@ import { css } from 'glamor'
 import MarkdownSerializer from 'slate-mdast-serializer'
 import AutosizeInput from 'react-textarea-autosize'
 import MemoIcon from 'react-icons/lib/md/comment'
+import DeleteIcon from 'react-icons/lib/md/delete-forever'
 
 import {
   Field,
+  Overlay,
+  OverlayToolbar,
+  OverlayBody,
   useColorContext,
   fontStyles,
   IconButton
 } from '@project-r/styleguide'
 
-import {
-  CloseIcon,
-  EditIcon,
-  RemoveIcon,
-  CheckIcon
-} from '@project-r/styleguide/icons'
+import { CloseIcon, EditIcon, CheckIcon } from '@project-r/styleguide/icons'
 
 import { matchInline, createInlineButton, buttonStyles } from '../../utils'
 
@@ -29,27 +28,31 @@ const styles = {
   contextMenu: css({
     position: 'absolute',
     top: 25,
+    left: '50%',
+    transform: 'translateX(-50%)',
     padding: 8,
     cursor: 'pointer',
     opacity: 0,
     animation: `${fadeIn} 150ms ease-in 150ms`,
     animationFillMode: 'forwards',
     zIndex: 1,
-    borderRadius: 4,
-    ...fontStyles.sansSerifRegular16
+    display: 'flex',
+    flexDirection: 'column',
+    borderRadius: 4
   }),
   contextMenuContainer: css({
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'flex-end'
+    justifyContent: 'space-between'
   }),
-  editButton: css({
-    position: 'absolute',
-    left: -40,
-    marginTop: -30,
-    ':hover': {
-      cursor: 'pointer'
-    }
+  memo: css({
+    marginBottom: 16,
+    ...fontStyles.sansSerifRegular16
+  }),
+  colorSelectors: css({
+    display: 'flex',
+    alignItems: 'center',
+    marginRight: 24
   }),
   autoSize: css({
     paddingTop: '7px !important',
@@ -57,9 +60,10 @@ const styles = {
   }),
   marker: css({
     borderRadius: '100%',
-    marginLeft: 16,
-    width: 20,
-    height: 20,
+    border: '1px solid rgba(0,0,0,0.5)',
+    marginRight: 6,
+    width: 16,
+    height: 16,
     verticalAlign: 'middle'
   })
 }
@@ -95,7 +99,7 @@ const deserialize = json => {
 
 const Memo = ({ editor, node, children, isSelected }) => {
   const [colorScheme] = useColorContext()
-  const [isEditing, setIsEditing] = useState(false)
+  const [showModal, setShowModal] = useState()
   const [memoRef, setMemoRef] = useState()
   const [memo, setMemo] = useState()
   const [color, setColor] = useState()
@@ -115,14 +119,12 @@ const Memo = ({ editor, node, children, isSelected }) => {
 
   const change = (e, value) => {
     e?.preventDefault?.()
-
     setMemo(value)
     value !== memo && setDirty(true)
   }
 
   const colorize = color => e => {
     e?.preventDefault?.()
-
     setColor(color)
     editor.change(change => {
       change.setNodeByKey(node.key, {
@@ -135,7 +137,6 @@ const Memo = ({ editor, node, children, isSelected }) => {
 
   const submit = e => {
     e?.preventDefault?.()
-
     editor.change(change => {
       change.setNodeByKey(node.key, {
         data: node.data.merge({
@@ -144,20 +145,24 @@ const Memo = ({ editor, node, children, isSelected }) => {
         })
       })
     })
-
+    close()
     !memo.length && remove()
   }
 
   const open = e => {
     e?.preventDefault?.()
-
     setMemo(deserialize(node.data.get('memo')))
     setDirty(false)
+    setShowModal(true)
+  }
+
+  const close = e => {
+    e?.preventDefault?.()
+    setShowModal(false)
   }
 
   const remove = e => {
     e?.preventDefault?.()
-
     editor.change(change => {
       change.unwrapInline(node.type)
     })
@@ -165,6 +170,34 @@ const Memo = ({ editor, node, children, isSelected }) => {
 
   return (
     <>
+      {showModal && (
+        <Overlay mUpStyle={{ maxWidth: 720, minHeight: 0 }} onClose={close}>
+          <OverlayToolbar onClose={close} />
+          <OverlayBody>
+            <Field
+              ref={setMemoRef}
+              label={'Memo'}
+              name='memo'
+              value={memo}
+              onChange={change}
+              renderInput={({ ref, ...inputProps }) => (
+                <AutosizeInput
+                  {...inputProps}
+                  {...styles.autoSize}
+                  inputRef={ref}
+                />
+              )}
+            />
+            <IconButton
+              onClick={submit}
+              Icon={memo?.length ? CheckIcon : DeleteIcon}
+              disabled={!dirty}
+            >
+              {memo?.length ? 'Übernehmen' : 'Entfernen'}
+            </IconButton>
+          </OverlayBody>
+        </Overlay>
+      )}
       <span
         style={{
           backgroundColor: isSelected
@@ -176,67 +209,36 @@ const Memo = ({ editor, node, children, isSelected }) => {
         onDoubleClick={open}
       >
         {children}
-      </span>
-      {isSelected && (
-        <span
-          {...styles.contextMenu}
-          {...colorScheme.set('boxShadow', 'overlayShadow')}
-          style={{
-            backgroundColor: `rgb(${getMarkerColor(color).join(',')})`
-          }}
-        >
-          <div>
-            <div {...styles.contextMenuContainer} style={{}}>
-              {Object.keys(markerColors).map((markerColor, index) => (
-                <div
-                  key={`marker-color-${index}`}
-                  {...styles.marker}
-                  style={{
-                    backgroundColor: `rgb(${getMarkerColor(markerColor).join(
-                      ','
-                    )})`,
-                    border: color === markerColor ? '1px solid' : 'none'
-                  }}
-                  onClick={colorize(markerColor)}
-                />
-              ))}
-            </div>
-            {!isEditing ? (
-              <div>{memo}</div>
-            ) : (
-              <Field
-                ref={setMemoRef}
-                label={'Memo'}
-                name='memo'
-                value={memo}
-                onChange={change}
-                renderInput={({ ref, ...inputProps }) => (
-                  <AutosizeInput
-                    {...inputProps}
-                    {...styles.autoSize}
-                    inputRef={ref}
+        {isSelected && (
+          <span
+            {...styles.contextMenu}
+            {...colorScheme.set('boxShadow', 'overlayShadow')}
+            style={{
+              backgroundColor: `rgb(${getMarkerColor(color).join(',')})`
+            }}
+          >
+            <div {...styles.memo}>{memo}</div>
+            <div {...styles.contextMenuContainer}>
+              <div {...styles.colorSelectors}>
+                {Object.keys(markerColors).map((markerColor, index) => (
+                  <div
+                    key={`marker-color-${index}`}
+                    {...styles.marker}
+                    style={{
+                      backgroundColor: `rgb(${getMarkerColor(markerColor).join(
+                        ','
+                      )})`
+                    }}
+                    onClick={colorize(markerColor)}
                   />
-                )}
-              />
-            )}
-          </div>
-          <div {...styles.contextMenuContainer}>
-            {isEditing && (
-              <IconButton
-                onClick={submit}
-                Icon={CheckIcon}
-                label={memo?.length ? 'Übernehmen' : 'Entfernen'}
-              />
-            )}
-            <IconButton
-              onClick={() => setIsEditing(!isEditing)}
-              Icon={isEditing ? CloseIcon : EditIcon}
-              label={isEditing ? 'abbrechen' : 'editieren'}
-            />
-            <IconButton onClick={remove} Icon={RemoveIcon} label='löschen' />
-          </div>
-        </span>
-      )}
+                ))}
+              </div>
+              <IconButton onClick={open} Icon={EditIcon} />
+              <IconButton onClick={remove} Icon={DeleteIcon} />
+            </div>
+          </span>
+        )}
+      </span>
     </>
   )
 }
