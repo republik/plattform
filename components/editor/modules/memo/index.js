@@ -9,14 +9,12 @@ import EditIcon from 'react-icons/lib/md/edit'
 
 import {
   Field,
+  Button,
   Overlay,
   OverlayToolbar,
-  OverlayToolbarClose,
-  OverlayToolbarConfirm,
   OverlayBody,
   useColorContext,
   fontStyles,
-  Interaction,
   A
 } from '@project-r/styleguide'
 
@@ -176,15 +174,7 @@ const Memo = props => {
     <>
       {showModal && (
         <Overlay mUpStyle={{ maxWidth: 720, minHeight: 0 }} onClose={close}>
-          <OverlayToolbar>
-            <OverlayToolbarClose onClick={close} />
-            {dirty && (
-              <OverlayToolbarConfirm
-                label={memo.length ? 'Übernehmen' : 'Entfernen'}
-                onClick={submit}
-              />
-            )}
-          </OverlayToolbar>
+          <OverlayToolbar onClose={close} />
 
           <OverlayBody>
             <Field
@@ -201,6 +191,9 @@ const Memo = props => {
                 />
               )}
             />
+            <Button onClick={submit} disabled={!dirty}>
+              {memo.length ? 'Übernehmen' : 'Entfernen'}
+            </Button>
           </OverlayBody>
         </Overlay>
       )}
