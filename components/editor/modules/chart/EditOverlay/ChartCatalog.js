@@ -5,7 +5,7 @@ import { chartData } from './data'
 import { getSchema } from '../../../../Templates'
 import { renderMdast } from 'mdast-react-render'
 import { JSONEditor, PlainEditor } from '../../../utils/CodeEditorFields'
-import { Center, IconButton, useColorContext } from '@project-r/styleguide'
+import { Center, IconButton, Loader } from '@project-r/styleguide'
 import Code from 'react-icons/lib/md/code'
 import Edit from 'react-icons/lib/md/edit'
 import Public from 'react-icons/lib/md/public'
@@ -56,6 +56,8 @@ const styles = {
   })
 }
 
+const resetSize = node => ({ ...node, data: { ...node.data, size: undefined } })
+
 const RenderChart = ({ node }) => {
   const schema = getSchema('article')
   const fullMdast = {
@@ -65,7 +67,7 @@ const RenderChart = ({ node }) => {
         data: {},
         identifier: 'CENTER',
         type: 'zone',
-        children: [node]
+        children: [resetSize(node)]
       }
     ],
     meta: {}
@@ -121,18 +123,28 @@ const ChartContainer = ({ chart }) => {
   )
 }
 
-//const ChartCatalog = compose(graphql(getZones))(({ data }) => {
-const ChartCatalog = () => {
-  return (
-    <>
-      <Center>
-        <TypeSelector />
-      </Center>
-      {chartData.data.search.nodes.map((chart, i) => (
-        <ChartContainer key={i} chart={chart} />
-      ))}
-    </>
+const ChartCatalog = compose(graphql(getZones))(
+  ({ data: { loading, error, search } }) => (
+    <Loader
+      loading={loading}
+      error={error}
+      render={() => {
+        if (!search) {
+          return null
+        }
+        return (
+          <>
+            <Center>
+              <TypeSelector />
+            </Center>
+            {search.nodes.map((chart, i) => (
+              <ChartContainer key={i} chart={chart} />
+            ))}
+          </>
+        )
+      }}
+    />
   )
-}
+)
 
 export default ChartCatalog
