@@ -10,6 +10,7 @@ import Code from 'react-icons/lib/md/code'
 import Edit from 'react-icons/lib/md/edit'
 import Public from 'react-icons/lib/md/public'
 import { css } from 'glamor'
+import TypeSelector from './TypeSelector'
 
 const getZones = gql`
   query getZones {
@@ -122,9 +123,16 @@ const ChartContainer = ({ chart }) => {
 
 //const ChartCatalog = compose(graphql(getZones))(({ data }) => {
 const ChartCatalog = () => {
-  return chartData.data.search.nodes.map((chart, i) => (
-    <ChartContainer key={i} chart={chart} />
-  ))
+  return (
+    <>
+      <Center>
+        <TypeSelector />
+      </Center>
+      {chartData.data.search.nodes.map((chart, i) => (
+        <ChartContainer key={i} chart={chart} />
+      ))}
+    </>
+  )
 }
 
 export default ChartCatalog

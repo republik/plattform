@@ -1,3 +1,15 @@
+export const chartTypes = [
+  { label: 'Alle', value: undefined },
+  { label: 'Bars', value: 'Bar' },
+  { label: 'Lollipops', value: 'Lollipop' },
+  { label: 'Timebars', value: 'TimeBar' },
+  { label: 'Lines', value: 'Line' },
+  { label: 'Slopes', value: 'Slope' },
+  { label: 'Scatter Plots', value: 'ScatterPlot' },
+  { label: 'World Maps', value: 'GenericMap' },
+  { label: 'Swiss Maps', value: 'ProjectedMap' }
+]
+
 export const sizes = [
   { label: 'Normal', size: undefined },
   { label: 'Klein', size: 'narrow' },
