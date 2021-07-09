@@ -1,14 +1,10 @@
 const debug = require('debug')('crowdfundings:lib:scheduler:changeover')
 const moment = require('moment')
 const Promise = require('bluebird')
-const { ascending } = require('d3-array')
 
-const {
-  resolveMemberships,
-  findDormantMemberships,
-} = require('../CustomPackages')
+const { resolveMemberships } = require('../CustomPackages')
 const createCache = require('../cache')
-const { getLastEndDate } = require('../utils')
+const electDormantMembership = require('../electDormantMembership')
 
 const { PARKING_USER_ID } = process.env
 
@@ -56,65 +52,32 @@ const changeover = async (
   const stats = { changeover: 0 }
 
   await Promise.each(users, async (user) => {
-    // Find all memberships a user owns
-    let userMemberships = await pgdb.public.memberships.find({
+    const activeMemberships = await pgdb.public.memberships.find({
       userId: user.id,
+      active: true,
     })
 
-    userMemberships = await resolveMemberships({
-      memberships: userMemberships,
-      pgdb,
-    })
-
-    if (userMemberships.filter((m) => m.active).length > 1) {
+    if (activeMemberships.length > 1) {
       console.error('changeover failed: multiple active memberships found', {
-        user,
+        user: user.id,
       })
       return
     }
 
-    const activeMembership = userMemberships.find((m) => m.active)
-    if (moment(getLastEndDate(activeMembership.periods)) > endDate) {
-      console.error('changeover failed: active memberships ends later', {
-        user,
-        endDate,
+    const activeMembership = (
+      await resolveMemberships({
+        memberships: activeMemberships,
+        pgdb,
       })
+    )[0]
+
+    const electedDormantMembership = await electDormantMembership(
+      { id: user.id },
+      pgdb,
+    )
+    if (!electedDormantMembership) {
       return
     }
-
-    const dormantMemberships = findDormantMemberships({
-      memberships: userMemberships,
-      user: { id: user.id },
-    })
-
-    // End here if there is no dormant membership to be found
-    if (dormantMemberships.length < 1) {
-      return
-    }
-
-    // Elect a dormant membership to activate. Rule is to elect dormant
-    // membership with lowest sequenceNumber.
-    // Sorts sequenceNumber ascending, uses first row. Will overwrite, if a
-    // membershipType BENEFACTOR_ABO comes by.
-    const electedDormantMembership = dormantMemberships
-      .sort((a, b) => ascending(a.sequenceNumber, b.sequenceNumber))
-      .reduce(
-        (acc, curr) =>
-          (!acc && curr) ||
-          (acc.membershipType.name !== 'BENEFACTOR_ABO' &&
-            curr.membershipType.name === 'BENEFACTOR_ABO' &&
-            curr) ||
-          acc,
-      )
-
-    debug({
-      activeMembership: activeMembership.id,
-      electedDormantMembership: {
-        id: electedDormantMembership.id,
-        type: electedDormantMembership.membershipType.name,
-      },
-      dryRun,
-    })
 
     stats.changeover++
 
@@ -127,15 +90,16 @@ const changeover = async (
     try {
       const now = moment()
 
-      const sunsetMembership = await transaction.public.memberships.updateAndGetOne(
-        { id: activeMembership.id },
-        {
-          succeedingMembershipId: electedDormantMembership.id,
-          active: false,
-          renew: false,
-          updatedAt: now,
-        },
-      )
+      const sunsetMembership =
+        await transaction.public.memberships.updateAndGetOne(
+          { id: activeMembership.id },
+          {
+            succeedingMembershipId: electedDormantMembership.id,
+            active: false,
+            renew: false,
+            updatedAt: now,
+          },
+        )
 
       if (!sunsetMembership) {
         console.error('changeover failed: unable to sunset membership', {
@@ -144,24 +108,24 @@ const changeover = async (
         throw new Error('Unable to unset membership')
       }
 
-      const membershipCancellations = await transaction.public.membershipCancellations.find(
-        {
+      const membershipCancellations =
+        await transaction.public.membershipCancellations.find({
           membershipId: sunsetMembership.id,
           'category !=': 'SYSTEM',
           revokedAt: null,
-        },
-      )
+        })
 
-      const activatedMembership = await transaction.public.memberships.updateAndGetOne(
-        { id: electedDormantMembership.id },
-        {
-          active: true,
-          renew: !membershipCancellations.length,
-          voucherCode: null,
-          voucherable: false,
-          updatedAt: now,
-        },
-      )
+      const activatedMembership =
+        await transaction.public.memberships.updateAndGetOne(
+          { id: electedDormantMembership.id },
+          {
+            active: true,
+            renew: !membershipCancellations.length,
+            voucherCode: null,
+            voucherable: false,
+            updatedAt: now,
+          },
+        )
 
       if (!activatedMembership) {
         console.error(
@@ -171,13 +135,10 @@ const changeover = async (
         throw new Error('Unable to activate elected membership')
       }
 
+      const { initialPeriods, initialInterval } = electedDormantMembership
+
       const beginDate = now
-      const endDate = beginDate
-        .clone()
-        .add(
-          electedDormantMembership.initialPeriods,
-          electedDormantMembership.initialInterval,
-        )
+      const endDate = beginDate.clone().add(initialPeriods, initialInterval)
 
       const insertedPeriods = await transaction.public.membershipPeriods.insert(
         {
