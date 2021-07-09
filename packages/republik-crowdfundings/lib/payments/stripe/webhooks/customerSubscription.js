@@ -3,8 +3,9 @@ const _ = { get: require('lodash/get') }
 const { sendMailTemplate } = require('@orbiting/backend-modules-mail')
 
 const { enforceSubscriptions } = require('../../../Mail')
-const activateYearlyMembership = require('../../../activateYearlyMembership')
+const activateMembership = require('../../../activateMembership')
 const { forUpdate } = require('../../Pledge')
+const electDormantMembership = require('../../../electDormantMembership')
 
 const DEV = process.env.NODE_ENV ? process.env.NODE_ENV !== 'production' : true
 
@@ -28,11 +29,10 @@ module.exports = {
           return 503
         }
 
-        const existingMembership = await transaction.public.memberships.findFirst(
-          {
+        const existingMembership =
+          await transaction.public.memberships.findFirst({
             pledgeId,
-          },
-        )
+          })
 
         if (subscription.cancel_at_period_end) {
           await transaction.public.memberships.update(
@@ -70,18 +70,18 @@ module.exports = {
             },
           )
 
-          const nextMembership = await activateYearlyMembership(
-            await transaction.public.memberships.find({
-              userId: existingMembership.userId,
-            }),
+          const user = await transaction.public.users.findOne({
+            id: pledge.userId,
+          })
+
+          const changeoverMembership = await electDormantMembership(
+            user,
             transaction,
           )
 
-          if (existingMembership.active && !nextMembership) {
-            const user = await transaction.public.users.findOne({
-              id: pledge.userId,
-            })
-
+          if (changeoverMembership) {
+            await activateMembership(changeoverMembership, user, t, transaction)
+          } else if (existingMembership.active && !changeoverMembership) {
             await sendMailTemplate(
               {
                 to: user.email,
