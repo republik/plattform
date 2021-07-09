@@ -1,16 +1,17 @@
 import React, { useState } from 'react'
 import gql from 'graphql-tag'
 import { compose, graphql } from 'react-apollo'
-import { chartData } from './data'
 import { getSchema } from '../../../../Templates'
 import { renderMdast } from 'mdast-react-render'
 import { JSONEditor, PlainEditor } from '../../../utils/CodeEditorFields'
-import { Center, IconButton, Loader } from '@project-r/styleguide'
+import { Center, colors, IconButton, Loader } from '@project-r/styleguide'
 import Code from 'react-icons/lib/md/code'
 import Edit from 'react-icons/lib/md/edit'
 import Public from 'react-icons/lib/md/public'
 import { css } from 'glamor'
 import TypeSelector from './TypeSelector'
+import { FRONTEND_BASE_URL } from '../../../../../lib/settings'
+import Link from 'next/link'
 
 const getZones = gql`
   query getZones {
@@ -35,6 +36,7 @@ const getZones = gql`
             node
             document {
               id
+              repoId
               meta {
                 title
                 path
@@ -95,13 +97,15 @@ const ChartContainer = ({ chart }) => {
         <div {...styles.actions}>
           <IconButton
             Icon={Public}
-            onClick={() => undefined}
+            href={`${FRONTEND_BASE_URL}${chart.entity.document.meta.path}`}
+            target='_blank'
             label='Beitrag'
             size={16}
           />
           <IconButton
             Icon={Edit}
-            onClick={() => undefined}
+            href={`/repo/${chart.entity.document.repoId}/edit`}
+            target='_blank'
             label='Dokument'
             size={16}
           />
