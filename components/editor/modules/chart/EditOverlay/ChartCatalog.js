@@ -197,6 +197,9 @@ const ChartContainer = ({ chart }) => {
 
 const Results = compose(
   graphql(getZones, {
+    options: () => ({
+      fetchPolicy: 'network-only'
+    }),
     props: ({ data }) => ({
       data,
       fetchMore: ({ after, before }) =>
@@ -233,7 +236,7 @@ const ChartCatalog = () => {
   const [colorScheme] = useColorContext()
   const [selectedType, selectType] = useState(undefined)
   const [searchText, setSearchText] = useState('')
-  const [slowSearchText] = useDebounce(searchText, 200)
+  const [slowSearchText] = useDebounce(searchText, 500)
 
   const filters = DEFAULT_FILTERS.concat(
     selectedType && [{ key: 'documentZoneDataType', value: selectedType }]
