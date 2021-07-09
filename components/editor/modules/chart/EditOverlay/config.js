@@ -7,7 +7,7 @@ export const chartTypes = [
   { label: 'Slope', value: 'Slope' },
   { label: 'Scatter Plot', value: 'ScatterPlot' },
   { label: 'Weltkarte', value: 'GenericMap' },
-  { label: 'Weltregion/Schweiz', value: 'ProjectedMap' },
+  { label: 'Schweiz/Region', value: 'ProjectedMap' },
   { label: 'Hemicycle', value: 'Hemicycle' }
 ]
 

@@ -19,13 +19,14 @@ const styles = {
   })
 }
 
-export const Tab = ({ tabKey, label, setTab, isActive }) => {
+export const Tab = ({ tabKey, label, setTab, isActive, style }) => {
   return (
     <button
       {...plainButtonRule}
       {...styles.tab}
       onClick={() => setTab(tabKey)}
       className={isActive ? 'is-active' : ''}
+      style={style}
     >
       {label}
     </button>

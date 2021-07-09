@@ -11,7 +11,10 @@ import {
   Loader,
   useColorContext,
   useDebounce,
-  Field
+  Field,
+  A,
+  fontStyles,
+  mediaQueries
 } from '@project-r/styleguide'
 import Code from 'react-icons/lib/md/code'
 import Edit from 'react-icons/lib/md/edit'
@@ -26,16 +29,25 @@ const DEFAULT_FILTERS = [
 ]
 
 const getZones = gql`
-  query getZones($filters: [SearchGenericFilterInput!], $search: String) {
+  query getZones(
+    $filters: [SearchGenericFilterInput!]
+    $search: String
+    $before: String
+    $after: String
+  ) {
     search(
       first: 10
       sort: { key: publishedAt, direction: DESC }
       filters: $filters
       search: $search
+      before: $before
+      after: $after
     ) {
       totalCount
       pageInfo {
         hasNextPage
+        hasPreviousPage
+        startCursor
         endCursor
       }
       nodes {
@@ -65,10 +77,56 @@ const styles = {
   }),
   actions: css({
     display: 'flex'
+  }),
+  footerAction: css({
+    paddingBottom: 30,
+    ...fontStyles.sansSerifRegular16,
+    [mediaQueries.mUp]: {
+      ...fontStyles.sansSerifRegular21
+    }
   })
 }
 
 const resetSize = node => ({ ...node, data: { ...node.data, size: undefined } })
+
+const PaginationLink = ({ onClick, label, style }) => (
+  <A
+    {...styles.footerAction}
+    style={style}
+    href='#'
+    onClick={e => {
+      e.preventDefault()
+      onClick()
+      window.scrollTo(0, 0)
+    }}
+  >
+    {label}
+  </A>
+)
+
+const Pagination = ({
+  search: {
+    pageInfo: { hasNextPage, hasPreviousPage, startCursor, endCursor }
+  },
+  fetchMore
+}) => (
+  <Center>
+    {hasPreviousPage && (
+      <PaginationLink
+        style={{ float: 'left' }}
+        label='Zurück'
+        onClick={() => fetchMore({ before: startCursor })}
+      />
+    )}
+    {hasNextPage && (
+      <PaginationLink
+        style={{ float: 'right' }}
+        label='Weiter'
+        onClick={() => fetchMore({ after: endCursor })}
+      />
+    )}
+  </Center>
+)
 
 const RenderChart = ({ node }) => {
   const schema = getSchema('article')
@@ -137,26 +195,39 @@ const ChartContainer = ({ chart }) => {
   )
 }
 
-const Results = compose(graphql(getZones))(
-  ({ data: { loading, error, search } }) => (
-    <Loader
-      loading={loading}
-      error={error}
-      render={() => {
-        if (!search) {
-          return null
-        }
-        return (
-          <>
-            {search.nodes.map((chart, i) => (
-              <ChartContainer key={i} chart={chart} />
-            ))}
-          </>
-        )
-      }}
-    />
-  )
-)
+const Results = compose(
+  graphql(getZones, {
+    props: ({ data }) => ({
+      data,
+      fetchMore: ({ after, before }) =>
+        data.fetchMore({
+          variables: {
+            after,
+            before
+          },
+          updateQuery: (previousResult, { fetchMoreResult }) => fetchMoreResult
+        })
+    })
+  })
+)(({ data: { loading, error, search }, fetchMore }) => (
+  <Loader
+    loading={loading}
+    error={error}
+    render={() => {
+      if (!search) {
+        return null
+      }
+      return (
+        <>
+          {search.nodes.map((chart, i) => (
+            <ChartContainer key={i} chart={chart} />
+          ))}
+          <Pagination search={search} fetchMore={fetchMore} />
+        </>
+      )
+    }}
+  />
+))
 
 const ChartCatalog = () => {
   const [colorScheme] = useColorContext()
@@ -169,7 +240,7 @@ const ChartCatalog = () => {
   ).filter(Boolean)
   return (
     <>
-      <Center>
+      <Center style={{ marginBottom: 20 }}>
         <Field
           label='Suche'
           value={searchText}

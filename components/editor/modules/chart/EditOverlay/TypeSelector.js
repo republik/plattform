@@ -17,6 +17,7 @@ const TypeSelector = ({ selected, select }) => {
           label={label}
           setTab={select}
           isActive={value === selected}
+          style={{ marginRight: 30 }}
         />
       ))}
     </div>
