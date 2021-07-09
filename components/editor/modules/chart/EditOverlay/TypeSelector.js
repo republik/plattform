@@ -1,31 +1,25 @@
-import React, { Fragment } from 'react'
-import { Radio, Interaction, Label } from '@project-r/styleguide'
+import React from 'react'
 import { chartTypes } from './config'
+import { Tab } from './Tabs'
+import { css } from 'glamor'
+
+const styles = {
+  tabContainer: css({})
+}
 
 const TypeSelector = ({ selected, select }) => {
   return (
-    <Interaction.P style={{ marginBottom: 20 }}>
-      <Label>Chart Typ</Label>
-      <br />
-      {chartTypes.map(({ label, value }) => {
-        const checked = value === selected
-        return (
-          <Fragment key={value || label}>
-            <Radio
-              checked={checked}
-              onChange={() => {
-                if (!checked) {
-                  select(value)
-                }
-              }}
-              style={{ whiteSpace: 'nowrap', marginRight: 10 }}
-            >
-              {label || value}
-            </Radio>{' '}
-          </Fragment>
-        )
-      })}
-    </Interaction.P>
+    <div {...styles.tabContainer}>
+      {chartTypes.map(({ label, value }) => (
+        <Tab
+          key={value || label}
+          tabKey={value}
+          label={label}
+          setTab={select}
+          isActive={value === selected}
+        />
+      ))}
+    </div>
   )
 }
 

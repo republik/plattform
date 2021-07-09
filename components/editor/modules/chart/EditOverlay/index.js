@@ -3,9 +3,9 @@ import OverlayFormManager from '../../../utils/OverlayFormManager'
 import Export from '../Export'
 import ChartEditor from './ChartEditor'
 import ChartSelector from './ChartSelector'
-import { plainButtonRule, fontStyles } from '@project-r/styleguide'
-import { css } from 'glamor'
 import ChartCatalog from './ChartCatalog'
+import { Tab } from './Tabs'
+import { css } from 'glamor'
 
 const tabs = ['chart', 'templates', 'catalog']
 const tabConfig = {
@@ -18,33 +18,7 @@ const styles = {
   tabContainer: css({
     height: '100%',
     display: 'flex'
-  }),
-  tab: css({
-    marginRight: 15,
-    ...fontStyles.sansSerifRegular,
-    '@media (hover)': {
-      ':hover': {
-        textDecoration: 'underline'
-      }
-    },
-    '&.is-active': {
-      ...fontStyles.sansSerifMedium,
-      lineHeight: '16px'
-    }
   })
-}
-
-const Tab = ({ tabKey, setTab, isActive }) => {
-  return (
-    <button
-      {...plainButtonRule}
-      {...styles.tab}
-      onClick={() => setTab(tabKey)}
-      className={isActive ? 'is-active' : ''}
-    >
-      {tabConfig[tabKey].label}
-    </button>
-  )
 }
 
 const hasData = node =>
@@ -58,6 +32,7 @@ const Overlay = props => {
         <Tab
           key={tabKey}
           tabKey={tabKey}
+          label={tabConfig[tabKey].label}
           setTab={setTab}
           isActive={tab === tabKey}
         />
