@@ -4,24 +4,34 @@ import { compose, graphql } from 'react-apollo'
 import { getSchema } from '../../../../Templates'
 import { renderMdast } from 'mdast-react-render'
 import { JSONEditor, PlainEditor } from '../../../utils/CodeEditorFields'
-import { Center, colors, IconButton, Loader } from '@project-r/styleguide'
+import { CloseIcon } from '@project-r/styleguide/icons'
+import {
+  Center,
+  IconButton,
+  Loader,
+  useColorContext,
+  useDebounce,
+  Field
+} from '@project-r/styleguide'
 import Code from 'react-icons/lib/md/code'
 import Edit from 'react-icons/lib/md/edit'
 import Public from 'react-icons/lib/md/public'
 import { css } from 'glamor'
 import TypeSelector from './TypeSelector'
 import { FRONTEND_BASE_URL } from '../../../../../lib/settings'
-import Link from 'next/link'
+
+const DEFAULT_FILTERS = [
+  { key: 'type', value: 'DocumentZone' },
+  { key: 'documentZoneIdentifier', value: 'CHART' }
+]
 
 const getZones = gql`
-  query getZones {
+  query getZones($filters: [SearchGenericFilterInput!], $search: String) {
     search(
       first: 10
       sort: { key: publishedAt, direction: DESC }
-      filters: [
-        { key: "type", value: "DocumentZone" }
-        { key: "documentZoneIdentifier", value: "CHART" }
-      ]
+      filters: $filters
+      search: $search
     ) {
       totalCount
       pageInfo {
@@ -127,7 +137,7 @@ const ChartContainer = ({ chart }) => {
   )
 }
 
-const ChartCatalog = compose(graphql(getZones))(
+const Results = compose(graphql(getZones))(
   ({ data: { loading, error, search } }) => (
     <Loader
       loading={loading}
@@ -138,9 +148,6 @@ const ChartCatalog = compose(graphql(getZones))(
         }
         return (
           <>
-            <Center>
-              <TypeSelector />
-            </Center>
             {search.nodes.map((chart, i) => (
               <ChartContainer key={i} chart={chart} />
             ))}
@@ -150,5 +157,41 @@ const ChartCatalog = compose(graphql(getZones))(
     />
   )
 )
+
+const ChartCatalog = () => {
+  const [colorScheme] = useColorContext()
+  const [selectedType, selectType] = useState(undefined)
+  const [searchText, setSearchText] = useState('')
+  const [slowSearchText] = useDebounce(searchText, 200)
+
+  const filters = DEFAULT_FILTERS.concat(
+    selectedType && [{ key: 'documentZoneDataType', value: selectedType }]
+  ).filter(Boolean)
+  return (
+    <>
+      <Center>
+        <Field
+          label='Suche'
+          value={searchText}
+          onChange={(_, value) => {
+            setSearchText(value)
+          }}
+          icon={
+            searchText && (
+              <CloseIcon
+                style={{ cursor: 'pointer' }}
+                size={30}
+                onClick={() => setSearchText('')}
+                {...colorScheme.set('fill', 'text')}
+              />
+            )
+          }
+        />
+        <TypeSelector selected={selectedType} select={selectType} />
+      </Center>
+      <Results filters={filters} search={slowSearchText} />
+    </>
+  )
+}
 
 export default ChartCatalog

@@ -1,9 +1,8 @@
-import React, { Fragment, useState } from 'react'
+import React, { Fragment } from 'react'
 import { Radio, Interaction, Label } from '@project-r/styleguide'
 import { chartTypes } from './config'
 
-const TypeSelector = () => {
-  const [selected, select] = useState(undefined)
+const TypeSelector = ({ selected, select }) => {
   return (
     <Interaction.P style={{ marginBottom: 20 }}>
       <Label>Chart Typ</Label>
