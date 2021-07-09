@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import gql from 'graphql-tag'
 import { compose, graphql } from 'react-apollo'
 import { getSchema } from '../../../../Templates'
@@ -22,6 +22,7 @@ import Public from 'react-icons/lib/md/public'
 import { css } from 'glamor'
 import TypeSelector from './TypeSelector'
 import { FRONTEND_BASE_URL } from '../../../../../lib/settings'
+import scrollIntoView from 'scroll-into-view'
 
 const DEFAULT_FILTERS = [
   { key: 'type', value: 'DocumentZone' },
@@ -89,40 +90,54 @@ const styles = {
 
 const resetSize = node => ({ ...node, data: { ...node.data, size: undefined } })
 
-const PaginationLink = ({ onClick, label, style }) => (
-  <A
-    {...styles.footerAction}
-    style={style}
-    href='#'
-    onClick={e => {
-      e.preventDefault()
-      onClick()
-      window.scrollTo(0, 0)
-    }}
-  >
-    {label}
-  </A>
-)
+const PaginationLink = ({ onClick, label, style, containerRef }) => {
+  return (
+    <A
+      {...styles.footerAction}
+      style={style}
+      href='#'
+      onClick={e => {
+        e.preventDefault()
+        onClick()
+        scrollIntoView(containerRef.current, {
+          time: 0,
+          align: {
+            top: 0
+          }
+        })
+      }}
+    >
+      {label}
+    </A>
+  )
+}
 
 const Pagination = ({
   search: {
     pageInfo: { hasNextPage, hasPreviousPage, startCursor, endCursor }
   },
-  fetchMore
+  fetchMore,
+  containerRef
 }) => (
   <Center>
     {hasPreviousPage && (
       <PaginationLink
         style={{ float: 'left' }}
         label='Zurück'
-        onClick={() => fetchMore({ before: startCursor })}
+        containerRef={containerRef}
+        onClick={() => {
+          fetchMore({ before: startCursor })
+        }}
       />
     )}
     {hasNextPage && (
       <PaginationLink
         style={{ float: 'right' }}
         label='Weiter'
-        onClick={() => fetchMore({ after: endCursor })}
+        containerRef={containerRef}
+        onClick={() => {
+          fetchMore({ after: endCursor })
+        }}
       />
     )}
   </Center>
@@ -212,7 +227,7 @@ const Results = compose(
         })
     })
   })
-)(({ data: { loading, error, search }, fetchMore }) => (
+)(({ data: { loading, error, search }, fetchMore, containerRef }) => (
   <Loader
     loading={loading}
     error={error}
@@ -225,7 +240,11 @@ const Results = compose(
           {search.nodes.map((chart, i) => (
             <ChartContainer key={i} chart={chart} />
           ))}
-          <Pagination search={search} fetchMore={fetchMore} />
+          <Pagination
+            search={search}
+            fetchMore={fetchMore}
+            containerRef={containerRef}
+          />
         </>
       )
     }}
@@ -237,12 +256,13 @@ const ChartCatalog = () => {
   const [selectedType, selectType] = useState(undefined)
   const [searchText, setSearchText] = useState('')
   const [slowSearchText] = useDebounce(searchText, 500)
+  const containerRef = useRef()
 
   const filters = DEFAULT_FILTERS.concat(
     selectedType && [{ key: 'documentZoneDataType', value: selectedType }]
   ).filter(Boolean)
   return (
-    <>
+    <div ref={containerRef}>
       <Center style={{ marginBottom: 20 }}>
         <Field
           label='Suche'
@@ -263,8 +283,12 @@ const ChartCatalog = () => {
         />
         <TypeSelector selected={selectedType} select={selectType} />
       </Center>
-      <Results filters={filters} search={slowSearchText} />
-    </>
+      <Results
+        filters={filters}
+        search={slowSearchText}
+        containerRef={containerRef}
+      />
+    </div>
   )
 }
 
