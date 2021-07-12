@@ -26,10 +26,9 @@ module.exports = async (membership, user, t, pgdb) => {
 
   if (!hasActiveMembership) {
     // generate interval
-    const beginDate = now.clone()
-    const endDate = beginDate
-      .clone()
-      .add(membership.initialPeriods, membership.initialInterval)
+    const { initialPeriods, initialInterval } = membership
+    const beginDate = now
+    const endDate = beginDate.clone().add(initialPeriods, initialInterval)
 
     await pgdb.public.membershipPeriods.insert({
       membershipId: membership.id,
