@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import gql from 'graphql-tag'
 import { compose, graphql } from 'react-apollo'
 import { getSchema } from '../../../../Templates'
@@ -269,34 +269,31 @@ const Results = compose(
 const TextSearch = ({ setText }) => {
   const [colorScheme] = useColorContext()
   const [formText, setFormText] = useState('')
+  const [debouncedText] = useDebounce(formText, 500)
+  useEffect(() => {
+    setText(debouncedText)
+  }, [debouncedText])
+
   return (
-    <form
-      onSubmit={e => {
-        e.preventDefault()
-        setText(formText)
+    <Field
+      label='Suche'
+      value={formText}
+      onChange={(_, value) => {
+        setFormText(value)
       }}
-    >
-      <Field
-        label='Suche'
-        value={formText}
-        onChange={(_, value) => {
-          setFormText(value)
-        }}
-        icon={
-          formText && (
-            <CloseIcon
-              style={{ cursor: 'pointer' }}
-              size={30}
-              onClick={() => {
-                setFormText('')
-                setText('')
-              }}
-              {...colorScheme.set('fill', 'text')}
-            />
-          )
-        }
-      />
-    </form>
+      icon={
+        formText && (
+          <CloseIcon
+            style={{ cursor: 'pointer' }}
+            size={30}
+            onClick={() => {
+              setFormText('')
+            }}
+            {...colorScheme.set('fill', 'text')}
+          />
+        )
+      }
+    />
   )
 }
 

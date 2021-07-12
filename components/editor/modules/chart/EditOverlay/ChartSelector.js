@@ -3,8 +3,6 @@ import {
   Label,
   fontStyles,
   plainButtonRule,
-  Button,
-  A,
   Interaction,
   mediaQueries
 } from '@project-r/styleguide'
@@ -65,12 +63,6 @@ const styles = {
   discreteButton: css({
     display: 'block',
     marginBottom: 30
-  }),
-  buttons: css({
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 15
   })
 }
 
