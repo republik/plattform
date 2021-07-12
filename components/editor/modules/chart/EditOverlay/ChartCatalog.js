@@ -14,7 +14,8 @@ import {
   Field,
   A,
   fontStyles,
-  mediaQueries
+  mediaQueries,
+  Interaction
 } from '@project-r/styleguide'
 import Code from 'react-icons/lib/md/code'
 import Edit from 'react-icons/lib/md/edit'
@@ -244,6 +245,13 @@ const Results = compose(
       render={() => {
         if (!search) {
           return null
+        }
+        if (!search.nodes?.length) {
+          return (
+            <Center>
+              <Interaction.P>Keine Resultate</Interaction.P>
+            </Center>
+          )
         }
         return (
           <>
