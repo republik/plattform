@@ -213,6 +213,7 @@ const ChartContainer = ({ chart }) => {
 const Results = compose(
   graphql(getZones, {
     options: () => ({
+      // otherwise pagination info is cached
       fetchPolicy: 'network-only'
     }),
     props: ({ data }) => ({
@@ -251,11 +252,43 @@ const Results = compose(
   />
 ))
 
-const ChartCatalog = () => {
+const TextSearch = ({ setText }) => {
   const [colorScheme] = useColorContext()
+  const [formText, setFormText] = useState('')
+  return (
+    <form
+      onSubmit={e => {
+        e.preventDefault()
+        setText(formText)
+      }}
+    >
+      <Field
+        label='Suche'
+        value={formText}
+        onChange={(_, value) => {
+          setFormText(value)
+        }}
+        icon={
+          formText && (
+            <CloseIcon
+              style={{ cursor: 'pointer' }}
+              size={30}
+              onClick={() => {
+                setFormText('')
+                setText('')
+              }}
+              {...colorScheme.set('fill', 'text')}
+            />
+          )
+        }
+      />
+    </form>
+  )
+}
+
+const ChartCatalog = () => {
   const [selectedType, selectType] = useState(undefined)
   const [searchText, setSearchText] = useState('')
-  const [slowSearchText] = useDebounce(searchText, 500)
   const containerRef = useRef()
 
   const filters = DEFAULT_FILTERS.concat(
@@ -264,28 +297,12 @@ const ChartCatalog = () => {
   return (
     <div ref={containerRef}>
       <Center style={{ marginBottom: 20 }}>
-        <Field
-          label='Suche'
-          value={searchText}
-          onChange={(_, value) => {
-            setSearchText(value)
-          }}
-          icon={
-            searchText && (
-              <CloseIcon
-                style={{ cursor: 'pointer' }}
-                size={30}
-                onClick={() => setSearchText('')}
-                {...colorScheme.set('fill', 'text')}
-              />
-            )
-          }
-        />
+        <TextSearch setText={setSearchText} />
         <TypeSelector selected={selectedType} select={selectType} />
       </Center>
       <Results
         filters={filters}
-        search={slowSearchText}
+        search={searchText}
         containerRef={containerRef}
       />
     </div>
