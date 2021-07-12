@@ -62,14 +62,26 @@ const Overlay = props => {
         })
       }}
     >
-      {({ data, onChange }) => (
-        <TabBody
-          data={data}
-          onChange={onChange}
-          CsvChart={props.CsvChart}
-          setTab={setTab}
-        />
-      )}
+      {({ data, onChange }) => {
+        const onChartSelect = (config, values, cleanup) => {
+          onChange(
+            data
+              .set('config', config)
+              .set('values', values ? values.trim() : data.get('values'))
+          )
+          cleanup && cleanup()
+          setTab('chart')
+        }
+        return (
+          <TabBody
+            data={data}
+            onChange={onChange}
+            CsvChart={props.CsvChart}
+            setTab={setTab}
+            onChartSelect={onChartSelect}
+          />
+        )
+      }}
     </OverlayFormManager>
   )
 }

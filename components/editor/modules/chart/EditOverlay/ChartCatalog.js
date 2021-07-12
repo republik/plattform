@@ -23,6 +23,7 @@ import { css } from 'glamor'
 import TypeSelector from './TypeSelector'
 import { FRONTEND_BASE_URL } from '../../../../../lib/settings'
 import scrollIntoView from 'scroll-into-view'
+import ChartActions from './ChartActions'
 
 const DEFAULT_FILTERS = [
   { key: 'type', value: 'DocumentZone' },
@@ -160,16 +161,17 @@ const RenderChart = ({ node }) => {
   return <>{renderMdast(fullMdast, schema)}</>
 }
 
-const ChartCode = ({ values, config }) => {
+const ChartCode = ({ values, config, onChartSelect }) => {
   return (
     <>
       <JSONEditor label='Einstellungen' config={config} readOnly />
       <PlainEditor label='CSV Daten' value={values} linesShown={10} readOnly />
+      <ChartActions config={config} values={values} onSelect={onChartSelect} />
     </>
   )
 }
 
-const ChartContainer = ({ chart }) => {
+const ChartContainer = ({ chart, onChartSelect }) => {
   const [showCode, setShowCode] = useState(false)
 
   const node = JSON.parse(JSON.stringify(chart.entity.node))
@@ -203,6 +205,7 @@ const ChartContainer = ({ chart }) => {
           <ChartCode
             config={node.data}
             values={node.children.find(n => n.type === 'code')?.value}
+            onChartSelect={onChartSelect}
           />
         )}
       </Center>
@@ -228,29 +231,40 @@ const Results = compose(
         })
     })
   })
-)(({ data: { loading, error, search }, fetchMore, containerRef }) => (
-  <Loader
-    loading={loading}
-    error={error}
-    render={() => {
-      if (!search) {
-        return null
-      }
-      return (
-        <>
-          {search.nodes.map((chart, i) => (
-            <ChartContainer key={i} chart={chart} />
-          ))}
-          <Pagination
-            search={search}
-            fetchMore={fetchMore}
-            containerRef={containerRef}
-          />
-        </>
-      )
-    }}
-  />
-))
+)(
+  ({
+    data: { loading, error, search },
+    fetchMore,
+    containerRef,
+    onChartSelect
+  }) => (
+    <Loader
+      loading={loading}
+      error={error}
+      render={() => {
+        if (!search) {
+          return null
+        }
+        return (
+          <>
+            {search.nodes.map((chart, i) => (
+              <ChartContainer
+                key={i}
+                chart={chart}
+                onChartSelect={onChartSelect}
+              />
+            ))}
+            <Pagination
+              search={search}
+              fetchMore={fetchMore}
+              containerRef={containerRef}
+            />
+          </>
+        )
+      }}
+    />
+  )
+)
 
 const TextSearch = ({ setText }) => {
   const [colorScheme] = useColorContext()
@@ -286,7 +300,7 @@ const TextSearch = ({ setText }) => {
   )
 }
 
-const ChartCatalog = () => {
+const ChartCatalog = ({ onChartSelect }) => {
   const [selectedType, selectType] = useState(undefined)
   const [searchText, setSearchText] = useState('')
   const containerRef = useRef()
@@ -304,6 +318,7 @@ const ChartCatalog = () => {
         filters={filters}
         search={searchText}
         containerRef={containerRef}
+        onChartSelect={onChartSelect}
       />
     </div>
   )

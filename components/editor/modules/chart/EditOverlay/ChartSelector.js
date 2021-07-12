@@ -13,6 +13,7 @@ import { css, merge } from 'glamor'
 import { JSONEditor, PlainEditor } from '../../../utils/CodeEditorFields'
 import BackIcon from 'react-icons/lib/md/chevron-left'
 import { styles as overlayStyles } from '../../../utils/OverlayForm'
+import ChartActions from './ChartActions'
 
 const styles = {
   chartWrapper: css({
@@ -95,23 +96,11 @@ const ChartPreview = ({ CsvChart, chart }) => {
   )
 }
 
-const ChartSelector = ({ onChange, data, CsvChart, setTab }) => {
-  const [preselected, preselect] = useState()
+const ChartSelector = ({ data, CsvChart, onChartSelect }) => {
+  const [preselected, preselect] = useState(undefined)
   const config = data.get('config') || {}
-
-  const onSelect = (chart, configOnly = false) => {
-    onChange(
-      data
-        .set('config', {
-          ...chart.config,
-          size: config.size
-        })
-        .set('values', configOnly ? data.get('values') : chart.values.trim())
-    )
-    preselect(undefined)
-    setTab('chart')
-  }
   const hasChanges = data.get('values') != '' || !!config.type
+
   return preselected ? (
     <>
       <Label>
@@ -123,19 +112,17 @@ const ChartSelector = ({ onChange, data, CsvChart, setTab }) => {
           <BackIcon size={16} /> Vorlagen durchsuchen
         </button>
       </Label>
-      <ChartPreview
-        chart={preselected}
-        CsvChart={CsvChart}
-        onSelect={onSelect}
+      <ChartPreview chart={preselected} CsvChart={CsvChart} />
+      <ChartActions
+        onSelect={onChartSelect}
+        config={{
+          ...preselected.config,
+          size: config.size
+        }}
+        values={preselected.values.trim()}
+        cleanup={() => preselect(undefined)}
+        buttonText='Überschreiben'
       />
-      <div {...styles.buttons}>
-        <Button onClick={() => onSelect(preselected)}>Überschreiben</Button>
-        <Interaction.P style={{ marginLeft: 30 }}>
-          <A href='#copy-settings' onClick={() => onSelect(preselected, true)}>
-            Einstellungen kopieren
-          </A>
-        </Interaction.P>
-      </div>
     </>
   ) : (
     <div {...styles.chartWrapper}>
@@ -144,7 +131,17 @@ const ChartSelector = ({ onChange, data, CsvChart, setTab }) => {
           <div
             key={chart.name}
             {...styles.chartButton}
-            onClick={() => (hasChanges ? preselect(chart) : onSelect(chart))}
+            onClick={() =>
+              hasChanges
+                ? preselect(chart)
+                : onChartSelect(
+                    {
+                      ...chart.config,
+                      size: config.size
+                    },
+                    chart.values.trim()
+                  )
+            }
           >
             <img
               src={chart.screenshot}
