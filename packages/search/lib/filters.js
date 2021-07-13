@@ -45,7 +45,11 @@ const dateRangeCriteriaBuilder =
 const rangeCriteriaBuilder =
   (fieldName) =>
   (value, { filter, ranges }) => {
-    const range = ranges.find((range) => range.key === value.toLowerCase())
+    const range = ranges.find(
+      (range) =>
+        range.key === value.toLowerCase() ||
+        String(range.from) === value.toLowerCase(),
+    )
 
     return {
       clause: 'must',
@@ -66,7 +70,7 @@ const rangeCriteriaBuilder =
 // converts a filter array (with generic value as string) to a (typed) filter obj
 // adds a type filter if the schema implies it and no type filter
 // is explicitly added
-const filterReducer = (schema) => (filters) => {
+const filterReducer = (schemas) => (filters) => {
   const getFilter = (key, value, not) => {
     const filterData = {
       key,
@@ -87,8 +91,9 @@ const filterReducer = (schema) => (filters) => {
   let filter = filters.reduce((filterObj, { key, value, not }) => {
     debug('filterReducer', { key, value, not })
 
-    const schemaEntry = schema[key]
-    debug('schemaEntry', schema[key])
+    const schema = schemas.find((schema) => !!schema[key])
+    const schemaEntry = schema?.[key]
+    debug('schemaEntry', schemaEntry)
     if (!schemaEntry) {
       console.warn('missing schemaEntry for filter:', { key, value })
       return filterObj
@@ -151,11 +156,12 @@ const getFilterValue = (filter, key) => {
 }
 
 // converts a filter obj to elastic syntax
-const elasticFilterBuilder = (schema) => (filterInput) => {
+const elasticFilterBuilder = (schemas) => (filterInput) => {
   return {
     bool: Object.keys(filterInput).reduce((boolFilter, hash) => {
       const { key, value, options } = filterInput[hash]
 
+      const schema = schemas.find((schema) => !!schema[key])
       const schemaEntry = schema[key]
       if (!schemaEntry) {
         throw new Error(`Missing schemaEntry for filter: ${key}`)

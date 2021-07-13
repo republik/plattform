@@ -27,9 +27,9 @@ const { v4: uuid } = require('uuid')
 const indices = require('../../../lib/indices')
 const { getIndexAlias } = require('../../../lib/utils')
 
-const reduceFilters = filterReducer(documentSchema)
-const createElasticFilter = elasticFilterBuilder(documentSchema)
-const schemaAggregations = extractAggs(documentSchema)
+const reduceFilters = filterReducer([documentSchema])
+const createElasticFilter = elasticFilterBuilder([documentSchema])
+const schemaAggregations = extractAggs([documentSchema])
 
 const getFieldList = require('@orbiting/graphql-list-fields')
 
