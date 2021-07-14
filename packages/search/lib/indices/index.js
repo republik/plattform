@@ -7,7 +7,7 @@ const dict = {
 
 const list = []
 
-for (let key in dict) {
+for (const key in dict) {
   list.push(dict[key])
 }
 
