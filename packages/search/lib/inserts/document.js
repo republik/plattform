@@ -28,11 +28,6 @@ const getContext = (payload) => {
   const context = {
     ...payload,
     loaders,
-    user: {
-      name: 'publikator-pullelasticsearch',
-      email: 'ruggedly@republik.ch',
-      roles: ['editor'],
-    },
   }
   Object.keys(loaderBuilders).forEach((key) => {
     loaders[key] = loaderBuilders[key](context)
@@ -144,52 +139,53 @@ module.exports = {
           (p) => p.scope === 'prepublication',
         )
 
-        await Promise.each(publications, async function mapPublication(
-          publication,
-        ) {
-          const doc = await getDocument(
-            { id: publication.commitId, repoId: publication.repoId },
-            { publicAssets: true },
-            context,
-          )
+        await Promise.each(
+          publications,
+          async function mapPublication(publication) {
+            const doc = await getDocument(
+              { id: publication.commitId, repoId: publication.repoId },
+              { publicAssets: true },
+              context,
+            )
 
-          const scheduledAt = publication.scheduledAt
-          const isScheduled = !publication.publishedAt
-          const isPrepublication = publication.scope === 'prepublication'
-          const lastPublishedAt = scheduledAt || publication.publishedAt
+            const scheduledAt = publication.scheduledAt
+            const isScheduled = !publication.publishedAt
+            const isPrepublication = publication.scope === 'prepublication'
+            const lastPublishedAt = scheduledAt || publication.publishedAt
 
-          // prepareMetaForPublish creates missing discussions as a side-effect
-          doc.content.meta = await prepareMetaForPublish({
-            repoId,
-            repoMeta,
-            scheduledAt,
-            lastPublishedAt,
-            prepublication: isPrepublication,
-            doc,
-            now,
-            context,
-          })
+            // prepareMetaForPublish creates missing discussions as a side-effect
+            doc.content.meta = await prepareMetaForPublish({
+              repoId,
+              repoMeta,
+              scheduledAt,
+              lastPublishedAt,
+              prepublication: isPrepublication,
+              doc,
+              now,
+              context,
+            })
 
-          const elasticDoc = getElasticDoc({
-            indexName,
-            indexType,
-            doc,
-            commitId: publication.commitId,
-            versionName: publication.name,
-          })
+            const elasticDoc = getElasticDoc({
+              indexName,
+              indexType,
+              doc,
+              commitId: publication.commitId,
+              versionName: publication.name,
+            })
 
-          const publish = createPublish({
-            prepublication: isPrepublication,
-            scheduledAt: isScheduled ? scheduledAt : undefined,
-            hasPrepublication,
-            elastic,
-            elasticDoc,
-          })
+            const publish = createPublish({
+              prepublication: isPrepublication,
+              scheduledAt: isScheduled ? scheduledAt : undefined,
+              hasPrepublication,
+              elastic,
+              elasticDoc,
+            })
 
-          await publish.insert()
+            await publish.insert()
 
-          stats[indexType].added++
-        })
+            stats[indexType].added++
+          },
+        )
       },
       { concurrency: 10 },
     )
