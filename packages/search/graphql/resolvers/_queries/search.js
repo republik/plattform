@@ -10,6 +10,7 @@ const {
   schema: documentSchema,
   addRelatedDocs,
 } = require('../../../lib/Documents')
+const { schema: documentZoneSchema } = require('../../../lib/DocumentZones')
 const {
   filterReducer,
   getFilterValue,
@@ -27,9 +28,12 @@ const { v4: uuid } = require('uuid')
 const indices = require('../../../lib/indices')
 const { getIndexAlias } = require('../../../lib/utils')
 
-const reduceFilters = filterReducer([documentSchema])
-const createElasticFilter = elasticFilterBuilder([documentSchema])
-const schemaAggregations = extractAggs([documentSchema])
+const reduceFilters = filterReducer([documentSchema, documentZoneSchema])
+const createElasticFilter = elasticFilterBuilder([
+  documentSchema,
+  documentZoneSchema,
+])
+const schemaAggregations = extractAggs([documentSchema, documentZoneSchema])
 
 const getFieldList = require('@orbiting/graphql-list-fields')
 
