@@ -27,6 +27,8 @@ The example env assumes a [Republik backend](https://github.com/orbiting/backend
 
 Copy and adopt `zat/settings.json.example` as `zat/settings.json`
 
+Append `https://{subdomain}.zendesk.com` to ENV variable `CSP_FRAME_ANCESTORS`
+
 Run and keep running [Zendesk App Tools](https://developer.zendesk.com/documentation/apps/app-developer-guide/zat/) server:
 
 ```
@@ -52,9 +54,9 @@ Upload latest ZIP file in zat/tmp to Zendesk https://{subdomain}.zendesk.com/age
 
 #### Some resources
 
-https://developer.zendesk.com/documentation/apps/app-developer-guide/zat/
-https://github.com/zendesk/zat-docker/blob/master/Dockerfile
-https://developer.zendesk.com/documentation/apps/app-developer-guide/manifest
+- https://developer.zendesk.com/documentation/apps/app-developer-guide/zat/
+- https://github.com/zendesk/zat-docker/blob/master/Dockerfile
+- https://developer.zendesk.com/documentation/apps/app-developer-guide/manifest
 
 
 ## License
