@@ -88,6 +88,10 @@ type mutations {
     consents: [String!]
   ): NewsletterSubscription!
 
+  resubscribeEmail(
+    userId: ID,
+  ): Boolean!
+
   requestNewsletterSubscription(
     email: String!
     name: NewsletterName!

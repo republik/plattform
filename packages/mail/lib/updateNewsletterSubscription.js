@@ -18,6 +18,8 @@ module.exports = async (
     throw new InterestIdNotFoundMailError({ name })
   }
 
+  /* I guess: 
+  - status_if_new should stay at it is */
   const body = {
     email_address: email,
     status_if_new: MailchimpInterface.MemberStatus.Subscribed,
@@ -27,18 +29,6 @@ module.exports = async (
   }
 
   const mailchimp = MailchimpInterface({ logger })
-  const member = await mailchimp.getMember(email)
-  if (
-    member &&
-    member.status !== MailchimpInterface.MemberStatus.Subscribed &&
-    !ignoreMemberUnsubscribed
-  ) {
-    // If a user subscribes to a newsletter but their status is not subscribed,
-    // we need to set their status to 'pending' which triggers a new confirmation email
-    // from mailchimp to re-subscribe.
-    body.status = MailchimpInterface.MemberStatus.Pending
-  }
-
   await mailchimp.updateMember(email, body)
 
   return NewsletterSubscription.buildSubscription(
