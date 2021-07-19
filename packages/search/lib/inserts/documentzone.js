@@ -35,10 +35,7 @@ module.exports = {
     const context = getContext({ pgdb, redis })
 
     const repos = await pgdb.publikator.repos.find(
-      {
-        // id: 'republik/pae-article-beitrag-mit-chart',
-        archivedAt: null,
-      },
+      { archivedAt: null },
       { orderBy: { updatedAt: 'desc' } },
     )
 
