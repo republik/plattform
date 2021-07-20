@@ -104,6 +104,9 @@ module.exports = {
         commitId: {
           type: 'keyword',
         },
+        versionName: {
+          type: 'keyword',
+        },
         identifier: {
           // CHART, FIGURE, ...
           type: 'keyword',

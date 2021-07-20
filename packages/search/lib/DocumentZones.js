@@ -42,12 +42,12 @@ const findNodes = (elasticDoc) => {
 const getZoneHash = (node) =>
   crypto.createHash('md5').update(JSON.stringify(node)).digest('hex')
 
-const getZoneId = (repoId, commitId, hash) =>
-  Buffer.from(`${repoId}/${commitId}/${hash}`).toString('base64')
+const getZoneId = (repoId, versionName, contentHash) =>
+  Buffer.from(`${repoId}/${versionName}/${contentHash}`).toString('base64')
 
-const getElasticDoc = (repoId, commitId, documentId, state, date, node) => {
-  const hash = getZoneHash(node)
-  const id = getZoneId(repoId, commitId, hash)
+const getElasticDoc = (repoId, commitId, versionName, state, date, node) => {
+  const contentHash = getZoneHash(node)
+  const id = getZoneId(repoId, versionName, contentHash)
 
   const { identifier } = node
 
@@ -61,8 +61,8 @@ const getElasticDoc = (repoId, commitId, documentId, state, date, node) => {
     id,
     repoId,
     commitId,
-    documentId,
-    hash,
+    versionName,
+    contentHash,
     identifier,
     node,
     data: node?.data || {},
@@ -71,7 +71,14 @@ const getElasticDoc = (repoId, commitId, documentId, state, date, node) => {
   }
 }
 
-const switchState = async function (elastic, state, repoId, commitId) {
+const switchState = async function (
+  elastic,
+  state,
+  repoId,
+  commitId,
+  versionName,
+  immediate,
+) {
   debug('switchState', { state, repoId, commitId })
   const queries = []
   const painless = []
@@ -98,7 +105,7 @@ const switchState = async function (elastic, state, repoId, commitId) {
         bool: {
           must: [{ term: { repoId } }],
           should: queries,
-          must_not: [{ term: { commitId } }],
+          must_not: [{ term: { versionName } }],
         },
       },
       script: {
@@ -114,35 +121,39 @@ const switchState = async function (elastic, state, repoId, commitId) {
     },
   })
 
-  await elastic.updateByQuery({
-    ...indexRef,
-    refresh: true,
-    body: {
-      query: {
-        bool: {
-          must: [{ term: { repoId } }, { term: { commitId } }],
+  if (!immediate) {
+    await elastic.updateByQuery({
+      ...indexRef,
+      refresh: true,
+      body: {
+        query: {
+          bool: {
+            must: [{ term: { repoId } }, { term: { versionName } }],
+          },
         },
-      },
-      script: {
-        lang: 'painless',
-        source,
-        params: {
-          state: {
-            published: !!state.published,
-            prepublished: !!state.prepublished,
+        script: {
+          lang: 'painless',
+          source,
+          params: {
+            state: {
+              published: !!state.published,
+              prepublished: !!state.prepublished,
+            },
           },
         },
       },
-    },
-  })
+    })
+  }
 }
 
 const createPublish = (elastic, elasticDoc) => {
   const {
-    id: documentId,
     commitId,
+    versionName,
     meta: { repoId, publishDate },
   } = elasticDoc
+
+  const actions = []
 
   return {
     insert: async (desiredState) => {
@@ -150,7 +161,7 @@ const createPublish = (elastic, elasticDoc) => {
         const documentZoneElasticDoc = getElasticDoc(
           repoId,
           commitId,
-          documentId,
+          versionName,
           desiredState,
           publishDate,
           node,
@@ -163,10 +174,20 @@ const createPublish = (elastic, elasticDoc) => {
         })
       })
 
+      actions.push('insert')
+
       return inserts.length
     },
     after: async (desiredState) => {
-      await switchState(elastic, desiredState, repoId, commitId)
+      await switchState(
+        elastic,
+        desiredState,
+        repoId,
+        commitId,
+        versionName,
+        actions.includes('insert'),
+      )
+      actions.push('after')
     },
   }
 }
