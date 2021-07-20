@@ -1,13 +1,14 @@
 const dict = {
   comments: require('./comments'),
   documents: require('./documents'),
+  documentzones: require('./documentzones'),
   users: require('./users'),
   repos: require('./repos'),
 }
 
 const list = []
 
-for (let key in dict) {
+for (const key in dict) {
   list.push(dict[key])
 }
 

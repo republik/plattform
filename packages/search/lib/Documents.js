@@ -28,6 +28,11 @@ const createCache = require('./cache')
 
 const { getIndexAlias, mdastContentToString } = require('./utils')
 
+const {
+  createPublish: createPublishDocumentZones,
+  unpublish: unpublishDocumentZones,
+} = require('./DocumentZones')
+
 const SHORT_DURATION_MINS = 5
 const MIDDLE_DURATION_MINS = 15
 const LONG_DURATION_MINS = 30
@@ -510,177 +515,219 @@ const unpublish = async (elastic, redis, repoId) => {
     },
   })
 
+  await unpublishDocumentZones(elastic, repoId)
+
   await sleep(1000 * REINDEX_AWAIT_SECS)
   await createCache(redis).invalidate()
 }
 
-const publish = (elastic, redis, elasticDoc, hasPrepublication) => ({
-  insert: async () => {
-    elasticDoc.meta.scheduledAt = undefined
-    return elastic.index({
-      ...indexRef,
-      id: elasticDoc.id,
-      body: {
-        ...elasticDoc,
-        __state: {
-          published: true,
-          prepublished: !hasPrepublication,
-        },
-      },
-    })
-  },
-  after: async () => {
-    await switchState(
-      elastic,
-      { published: true, prepublished: true },
-      elasticDoc.meta.repoId,
-      elasticDoc.id,
-    )
+const publish = (elastic, redis, elasticDoc, hasPrepublication) => {
+  const zones = createPublishDocumentZones(elastic, elasticDoc)
 
-    await resetScheduledAt(
-      elastic,
-      false,
-      elasticDoc.meta.repoId,
-      elasticDoc.id,
-    )
-
-    await sleep(1000 * REINDEX_AWAIT_SECS)
-    await createCache(redis).invalidate()
-  },
-})
-
-const prepublish = (elastic, redis, elasticDoc) => ({
-  insert: async () => {
-    elasticDoc.meta.scheduledAt = undefined
-    return elastic.index({
-      ...indexRef,
-      id: elasticDoc.id,
-      body: {
-        ...elasticDoc,
-        __state: {
-          published: false,
-          prepublished: true,
-        },
-      },
-    })
-  },
-  after: async () => {
-    await switchState(
-      elastic,
-      { prepublished: true },
-      elasticDoc.meta.repoId,
-      elasticDoc.id,
-    )
-
-    await resetScheduledAt(elastic, true, elasticDoc.meta.repoId, elasticDoc.id)
-
-    await sleep(1000 * REINDEX_AWAIT_SECS)
-    await createCache(redis).invalidate()
-  },
-})
-
-const publishScheduled = (elastic, redis, elasticDoc) => ({
-  insert: async () => {
-    if (!elasticDoc.meta.scheduledAt) {
-      throw new Error('missing body.meta.scheduledAt')
-    }
-
-    return elastic.index({
-      ...indexRef,
-      id: elasticDoc.id,
-      body: {
-        ...elasticDoc,
-        __state: {
-          published: false,
-          prepublished: false,
-        },
-      },
-    })
-  },
-  after: async () => {
-    await resetScheduledAt(
-      elastic,
-      false,
-      elasticDoc.meta.repoId,
-      elasticDoc.id,
-    )
-  },
-  afterScheduled: async () => {
-    await elastic.update({
-      ...indexRef,
-      id: elasticDoc.id,
-      refresh: true,
-      body: {
-        doc: {
-          meta: { scheduledAt: null },
+  return {
+    insert: async () => {
+      elasticDoc.meta.scheduledAt = undefined
+      await elastic.index({
+        ...indexRef,
+        id: elasticDoc.id,
+        body: {
+          ...elasticDoc,
           __state: {
             published: true,
-            prepublished: true,
+            prepublished: !hasPrepublication,
           },
         },
-      },
-    })
+      })
+    },
+    after: async () => {
+      await switchState(
+        elastic,
+        { published: true, prepublished: true },
+        elasticDoc.meta.repoId,
+        elasticDoc.id,
+      )
 
-    await switchState(
-      elastic,
-      { published: true, prepublished: true },
-      elasticDoc.meta.repoId,
-      elasticDoc.id,
-    )
+      await resetScheduledAt(
+        elastic,
+        false,
+        elasticDoc.meta.repoId,
+        elasticDoc.id,
+      )
 
-    await sleep(1000 * REINDEX_AWAIT_SECS)
-    await createCache(redis).invalidate()
-  },
-})
+      await zones.insert({ published: true, prepublished: true })
+      await zones.after({ published: true, prepublished: true })
 
-const prepublishScheduled = (elastic, redis, elasticDoc) => ({
-  insert: async () => {
-    if (!elasticDoc.meta.scheduledAt) {
-      throw new Error('missing body.meta.scheduledAt')
-    }
+      await sleep(1000 * REINDEX_AWAIT_SECS)
+      await createCache(redis).invalidate()
+    },
+  }
+}
 
-    return elastic.index({
-      ...indexRef,
-      id: elasticDoc.id,
-      body: {
-        ...elasticDoc,
-        __state: {
-          published: false,
-          prepublished: false,
-        },
-      },
-    })
-  },
-  after: async () => {
-    await resetScheduledAt(elastic, true, elasticDoc.meta.repoId, elasticDoc.id)
-  },
-  afterScheduled: async () => {
-    await elastic.update({
-      ...indexRef,
-      id: elasticDoc.id,
-      refresh: true,
-      body: {
-        doc: {
-          meta: { scheduledAt: null },
+const prepublish = (elastic, redis, elasticDoc) => {
+  const zones = createPublishDocumentZones(elastic, elasticDoc)
+
+  return {
+    insert: async () => {
+      elasticDoc.meta.scheduledAt = undefined
+      await elastic.index({
+        ...indexRef,
+        id: elasticDoc.id,
+        body: {
+          ...elasticDoc,
           __state: {
             published: false,
             prepublished: true,
           },
         },
-      },
-    })
+      })
+    },
+    after: async () => {
+      await switchState(
+        elastic,
+        { prepublished: true },
+        elasticDoc.meta.repoId,
+        elasticDoc.id,
+      )
 
-    await switchState(
-      elastic,
-      { prepublished: true },
-      elasticDoc.meta.repoId,
-      elasticDoc.id,
-    )
+      await resetScheduledAt(
+        elastic,
+        true,
+        elasticDoc.meta.repoId,
+        elasticDoc.id,
+      )
 
-    await sleep(1000 * REINDEX_AWAIT_SECS)
-    await createCache(redis).invalidate()
-  },
-})
+      await zones.insert({ prepublished: true })
+      await zones.after({ prepublished: true })
+
+      await sleep(1000 * REINDEX_AWAIT_SECS)
+      await createCache(redis).invalidate()
+    },
+  }
+}
+
+const publishScheduled = (elastic, redis, elasticDoc) => {
+  const zones = createPublishDocumentZones(elastic, elasticDoc)
+
+  return {
+    insert: async () => {
+      if (!elasticDoc.meta.scheduledAt) {
+        throw new Error('missing body.meta.scheduledAt')
+      }
+
+      await elastic.index({
+        ...indexRef,
+        id: elasticDoc.id,
+        body: {
+          ...elasticDoc,
+          __state: {
+            published: false,
+            prepublished: false,
+          },
+        },
+      })
+    },
+    after: async () => {
+      await resetScheduledAt(
+        elastic,
+        false,
+        elasticDoc.meta.repoId,
+        elasticDoc.id,
+      )
+
+      await zones.insert()
+    },
+    afterScheduled: async () => {
+      await elastic.update({
+        ...indexRef,
+        id: elasticDoc.id,
+        refresh: true,
+        body: {
+          doc: {
+            meta: { scheduledAt: null },
+            __state: {
+              published: true,
+              prepublished: true,
+            },
+          },
+        },
+      })
+
+      await switchState(
+        elastic,
+        { published: true, prepublished: true },
+        elasticDoc.meta.repoId,
+        elasticDoc.id,
+      )
+
+      await zones.after({ published: true, prepublished: true })
+
+      await sleep(1000 * REINDEX_AWAIT_SECS)
+      await createCache(redis).invalidate()
+    },
+  }
+}
+
+const prepublishScheduled = (elastic, redis, elasticDoc) => {
+  const zones = createPublishDocumentZones(elastic, elasticDoc)
+
+  return {
+    insert: async () => {
+      if (!elasticDoc.meta.scheduledAt) {
+        throw new Error('missing body.meta.scheduledAt')
+      }
+
+      await elastic.index({
+        ...indexRef,
+        id: elasticDoc.id,
+        body: {
+          ...elasticDoc,
+          __state: {
+            published: false,
+            prepublished: false,
+          },
+        },
+      })
+    },
+    after: async () => {
+      await resetScheduledAt(
+        elastic,
+        true,
+        elasticDoc.meta.repoId,
+        elasticDoc.id,
+      )
+
+      await zones.insert()
+    },
+    afterScheduled: async () => {
+      await elastic.update({
+        ...indexRef,
+        id: elasticDoc.id,
+        refresh: true,
+        body: {
+          doc: {
+            meta: { scheduledAt: null },
+            __state: {
+              published: false,
+              prepublished: true,
+            },
+          },
+        },
+      })
+
+      await switchState(
+        elastic,
+        { prepublished: true },
+        elasticDoc.meta.repoId,
+        elasticDoc.id,
+      )
+
+      await zones.after({ prepublished: true })
+
+      await sleep(1000 * REINDEX_AWAIT_SECS)
+      await createCache(redis).invalidate()
+    },
+  }
+}
 
 const createPublish = ({
   prepublication,

@@ -28,6 +28,7 @@ input DateRangeInput {
 
 enum SearchTypes {
   Document
+  DocumentZone
   Comment
   User
 }
@@ -88,7 +89,7 @@ type SearchNode {
   score: Float
 }
 
-union SearchEntity = Document | Comment | User
+union SearchEntity = Document | DocumentZone | Comment | User
 
 type SearchHighlight {
   path: String!

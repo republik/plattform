@@ -141,6 +141,16 @@ type DocumentNodeConnection {
   totalCount: Int!
 }
 
+type DocumentZone {
+  id: ID!
+  hash: String!
+  identifier: String!
+  data: JSON!
+  text: String
+  node: JSON!
+  document: Document
+}
+
 type DocumentConnection {
   nodes: [Document!]!
   pageInfo: DocumentPageInfo!
