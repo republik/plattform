@@ -1,3 +1,16 @@
+export const chartTypes = [
+  { label: 'Alle Charts', value: undefined },
+  { label: 'Bar', value: 'Bar' },
+  { label: 'Lollipop', value: 'Lollipop' },
+  { label: 'Timebar', value: 'TimeBar' },
+  { label: 'Line', value: 'Line' },
+  { label: 'Slope', value: 'Slope' },
+  { label: 'Scatter Plot', value: 'ScatterPlot' },
+  { label: 'Weltkarte', value: 'GenericMap' },
+  { label: 'Schweiz/Region', value: 'ProjectedMap' },
+  { label: 'Hemicycle', value: 'Hemicycle' }
+]
+
 export const sizes = [
   { label: 'Normal', size: undefined },
   { label: 'Klein', size: 'narrow' },
