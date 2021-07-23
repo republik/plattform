@@ -91,6 +91,8 @@ const OverlayForm = ({
         </div>
         {showPreview && (
           <div {...styles.preview}>
+            {extra}
+            <br />
             <ContextBackground>{preview}</ContextBackground>
             <br />
             <Checkbox
@@ -108,10 +110,6 @@ const OverlayForm = ({
                 <ContextBackground>{preview}</ContextBackground>
               </ColorContextProvider>
             )}
-            <br />
-            <br />
-            <br />
-            {extra}
           </div>
         )}
         <br style={{ clear: 'both' }} />

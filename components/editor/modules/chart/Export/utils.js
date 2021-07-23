@@ -2,31 +2,79 @@ import React from 'react'
 import ReactDOMServer from 'react-dom/server'
 
 export const getSvgNode = (chartElement, width = 660) => {
+  const svgs = getSvgNodes(chartElement, width)
+
+  if (svgs.length === 1) {
+    const svg = svgs[0].svg
+    svg.setAttribute('xmlns', svgNS)
+    return svg
+  }
+
+  const exportSvg = document.createElement('svg')
+  exportSvg.setAttribute('xmlns', svgNS)
+
+  let exportWidth = 0
+  let exportHeight = 0
+
+  svgs.forEach(({ svg, rect }) => {
+    const g = document.createElementNS(svgNS, 'g')
+    g.setAttribute('transform', `translate(${rect.x}, ${rect.y})`)
+    ;[...svg.childNodes].forEach(child => {
+      if (child.getBBox) {
+        g.appendChild(child)
+      } else {
+        exportSvg.appendChild(child)
+      }
+    })
+    exportSvg.appendChild(g)
+
+    exportWidth = Math.max(exportWidth, rect.x + rect.width)
+    exportHeight = Math.max(exportHeight, rect.y + rect.height)
+  })
+  exportSvg.setAttribute('width', exportWidth)
+  exportSvg.setAttribute('height', exportHeight)
+
+  return exportSvg
+}
+
+export const getSvgNodes = (chartElement, width) => {
   const html = ReactDOMServer.renderToStaticMarkup(
     React.cloneElement(chartElement, {
-      width: 660
+      width,
+      allowCanvasRendering: false
     })
   )
-  const template = document.createElement('template')
-  template.innerHTML = html
+  const container = document.createElement('div')
+  container.style.position = 'fixed'
+  container.style.left = 0
+  container.style.top = 0
+  container.style.width = `${width}px`
+  container.innerHTML = html
+  document.body.appendChild(container)
 
-  const svg = document.importNode(template.content.querySelector('svg'), true)
-  svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg')
-  svg.style.margin = '0 auto'
+  const nodes = [...container.querySelectorAll('svg')].map(svg => {
+    ;[
+      ...svg.querySelectorAll(
+        'circle,ellipse,line,path,polygon,polyline,rect,text,use'
+      )
+    ].forEach(node => {
+      const compStyles = window.getComputedStyle(node)
+      node.setAttribute('fill', compStyles.getPropertyValue('fill'))
+      node.setAttribute('stroke', compStyles.getPropertyValue('stroke'))
+      node.setAttribute(
+        'stroke-dasharray',
+        compStyles.getPropertyValue('stroke-dasharray')
+      )
+    })
 
-  document.body.appendChild(svg)
-  ;[
-    ...svg.querySelectorAll(
-      'circle,ellipse,line,path,polygon,polyline,rect,text,use'
-    )
-  ].forEach(node => {
-    const compStyles = window.getComputedStyle(node)
-    node.setAttribute('fill', compStyles.getPropertyValue('fill'))
-    node.setAttribute('stroke', compStyles.getPropertyValue('stroke'))
+    return {
+      svg,
+      rect: svg.getBoundingClientRect()
+    }
   })
-  document.body.removeChild(svg)
+  document.body.removeChild(container)
 
-  return svg
+  return nodes
 }
 
 export const downloadBlobOnClick = getObject => {
@@ -149,7 +197,7 @@ export const createSvgBackgrounder = ({
 }
 
 export const getAbstractSvg = chartElement => {
-  const svg = getSvgNode(chartElement, 660)
+  let svg = getSvgNode(chartElement)
 
   const remove = [
     ...svg.querySelectorAll('text'),
@@ -166,8 +214,14 @@ export const getAbstractSvg = chartElement => {
     node.removeAttribute('xlink:href')
   })
 
-  document.body.appendChild(svg)
+  // force re-rendering for bounding rects
+  const container = document.createElement('div')
+  container.innerHTML = svg.outerHTML
+  document.body.appendChild(container)
+  svg = container.querySelector('svg')
+
   const svgRect = svg.getBoundingClientRect()
+
   const extent = [...svg.childNodes]
     .filter(node => node.getBBox) // only SVGGraphicsElement: ignore desc
     .reduce(
@@ -184,7 +238,6 @@ export const getAbstractSvg = chartElement => {
       },
       [Infinity, Infinity, 0, 0]
     )
-
   let width = Math.abs(extent[2] - extent[0])
   let height = Math.abs(extent[3] - extent[1])
   if (width && height) {
@@ -198,7 +251,7 @@ export const getAbstractSvg = chartElement => {
       [extent[0] - padding, extent[1] - padding, width, height].join(' ')
     )
   }
-  document.body.removeChild(svg)
+  document.body.removeChild(container)
 
   return {
     svg,
