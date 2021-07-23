@@ -168,7 +168,11 @@ const LineGroup = props => {
           textAnchor = 'start'
         }
         return (
-          <g key={`x${tick}`} transform={`translate(${x(tick)},${xAxisY})`}>
+          <g
+            data-axis
+            key={`x${tick}`}
+            transform={`translate(${x(tick)},${xAxisY})`}
+          >
             <line
               {...styles.axisXLine}
               {...colorScheme.set('stroke', 'text')}
@@ -292,7 +296,7 @@ const LineGroup = props => {
         }
       )}
       {yTicks.map((tick, i) => (
-        <g key={`y${tick}`} transform={`translate(0,${y(tick)})`}>
+        <g data-axis key={`y${tick}`} transform={`translate(0,${y(tick)})`}>
           <line
             {...styles.axisYLine}
             x2={width}

@@ -669,6 +669,7 @@ const BarChart = props => {
                     const highlightTick = tick === 0 && highlightZero
                     return (
                       <g
+                        data-axis
                         key={`tick${tick}`}
                         transform={`translate(${x(tick)},0)`}
                       >

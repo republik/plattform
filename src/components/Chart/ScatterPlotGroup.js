@@ -216,6 +216,7 @@ const ScatterPlotGroup = ({
         ))}
         {plotYLines.map(({ tick, label, base }, i) => (
           <g
+            data-axis
             key={tick}
             transform={`translate(${yLinesPaddingLeft},${plotY(tick)})`}
           >
@@ -248,6 +249,7 @@ const ScatterPlotGroup = ({
           }
           return (
             <g
+              data-axis
               key={`x${tick}`}
               transform={`translate(${plotX(tick)},${paddingTop +
                 height +

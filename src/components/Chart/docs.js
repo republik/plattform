@@ -45,6 +45,7 @@ const props = Object.keys(baseChartPropTypes).reduce((all, chart) => {
 const IGNORE_KEYS = [
   // for react usage only
   't',
+  'tLabel',
   'children',
   'values',
   'width',
