@@ -87,7 +87,7 @@ const TimeBarGroup = ({
       })}
       <g transform={`translate(0,${xAxisPos})`}>{xAxis}</g>
       {yTicks.map((tick, i) => (
-        <g key={tick} transform={`translate(0,${y(tick)})`}>
+        <g data-axis key={tick} transform={`translate(0,${y(tick)})`}>
           {tick !== baseTick && (
             <line
               {...styles.axisYLine}

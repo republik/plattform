@@ -31,7 +31,7 @@ const XAxis = ({
   const ticks = getXTicks(xTicks, xValues, xNormalizer, x)
 
   return (
-    <>
+    <g data-axis>
       {baseLines.map((line, i) => (
         <line
           key={i}
@@ -65,7 +65,7 @@ const XAxis = ({
           </text>
         </g>
       ))}
-    </>
+    </g>
   )
 }
 

@@ -129,7 +129,13 @@ const Chart = props => {
 
   const [stateWidth, setWidth] = useState(ssrMode ? 290 : undefined)
 
-  const { width: fixedWidth, config, tLabel } = props
+  const {
+    width: fixedWidth,
+    config,
+    tLabel,
+    // allowCanvasRendering might be set to false when exporting SVGs
+    allowCanvasRendering = true
+  } = props
 
   const width = fixedWidth || stateWidth
   const ReactChart = ReactCharts[config.type]
@@ -191,6 +197,7 @@ const Chart = props => {
       {!!width && (
         <ReactChart
           {...config}
+          allowCanvasRendering={allowCanvasRendering}
           // make colorScheme available for class components—maps
           colorScheme={colorScheme}
           tLabel={tLabel}
