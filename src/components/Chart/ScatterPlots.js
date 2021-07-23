@@ -83,7 +83,8 @@ const ScatterPlot = ({
   columnFilter,
   columns,
   minInnerWidth,
-  annotations
+  annotations,
+  allowCanvasRendering
 }) => {
   const data = values
     .filter(d => d[x] && d[x].length > 0 && d[y] && d[y].length > 0)
@@ -263,7 +264,7 @@ const ScatterPlot = ({
                 )}
                 contextBoxProps={contextBoxProps}
                 // canvas does not support dark mapping yet
-                useCanvas={!colorDarkMapping}
+                allowCanvasRendering={allowCanvasRendering && !colorDarkMapping}
               />
             </div>
           )

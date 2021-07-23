@@ -60,7 +60,7 @@ const ScatterPlotGroup = ({
   xUnit,
   annotations,
   contextBoxProps,
-  useCanvas
+  allowCanvasRendering
 }) => {
   const [hover, setHover] = useState([])
   const [hoverTouch, setHoverTouch] = useState()
@@ -153,7 +153,7 @@ const ScatterPlotGroup = ({
 
   return (
     <div ref={containerRef} style={{ position: 'relative' }}>
-      {useCanvas && (
+      {allowCanvasRendering && (
         <ScatterPlotCanvas
           opacity={opacity}
           symbols={symbols}
@@ -177,7 +177,7 @@ const ScatterPlotGroup = ({
             {title}
           </text>
         )}
-        {!useCanvas &&
+        {!allowCanvasRendering &&
           symbols.map(symbol => (
             <circle
               key={symbol.key}
