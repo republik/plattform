@@ -201,7 +201,7 @@ export const getAbstractSvg = chartElement => {
 
   const remove = [
     ...svg.querySelectorAll('text'),
-    ...svg.querySelectorAll('line')
+    ...svg.querySelectorAll('[data-axis]')
   ]
 
   remove.forEach(node => {
