@@ -45,7 +45,6 @@ const Suspensions = ({ userId }) => {
                 const suspendedHeader = isSuspended
                   ? `gesperrt bis am ${displayDate(suspendedUntil)}`
                   : 'nicht gesperrt'
-                console.log(suspensions)
                 return (
                   <div>
                     <SectionSubhead>Aktuell {suspendedHeader}</SectionSubhead>
