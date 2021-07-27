@@ -18,8 +18,6 @@ module.exports = async (
     throw new InterestIdNotFoundMailError({ name })
   }
 
-  /* I guess: 
-  - status_if_new should stay at it is */
   const body = {
     email_address: email,
     status_if_new: MailchimpInterface.MemberStatus.Subscribed,
