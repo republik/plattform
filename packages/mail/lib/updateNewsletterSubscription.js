@@ -5,10 +5,7 @@ const {
 } = require('../errors')
 const logger = console
 
-module.exports = async (
-  { user, name, subscribed, ignoreMemberUnsubscribed = false },
-  NewsletterSubscription,
-) => {
+module.exports = async ({ user, name, subscribed }, NewsletterSubscription) => {
   if (!NewsletterSubscription) throw new SubscriptionHandlerMissingMailError()
 
   const { email } = user

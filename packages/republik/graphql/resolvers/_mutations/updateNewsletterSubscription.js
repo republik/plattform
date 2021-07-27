@@ -16,7 +16,6 @@ module.exports = async (_, args, context) => {
     email,
     mac,
     consents: _consents = [],
-    ignoreMemberUnsubscribed = false,
   } = args
 
   // only allow PRIVACY consent via this endpint
@@ -81,7 +80,6 @@ module.exports = async (_, args, context) => {
         user,
         name,
         subscribed,
-        ignoreMemberUnsubscribed,
       },
       context,
     )
