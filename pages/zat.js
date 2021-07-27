@@ -20,10 +20,8 @@ const styles = {
     marginTop: '10px',
     paddingTop: '10px'
   }),
-  spacing: css({
-    marginTop: '10px'
-  }),
   title: css({
+    marginTop: '10px',
     ...fontStyles.sansSerifMedium14
   })
 }
@@ -42,7 +40,6 @@ export const GET_ADMIN_USERS = gql`
           }
           periods {
             isCurrent
-            beginDate
             endDate
           }
         }
@@ -55,7 +52,6 @@ export const GET_ADMIN_USERS = gql`
         }
         sessions {
           userAgent
-          expiresAt
         }
       }
     }
@@ -77,12 +73,8 @@ const ZatUsers = ({ users, t }) => {
           const currentPeriod = activeMembership?.periods?.find(
             period => period.isCurrent
           )
-          let currentPeriodRange
-          if (currentPeriod) {
-            currentPeriodRange = `${displayDate(
-              currentPeriod?.beginDate
-            )} - ${displayDate(currentPeriod?.endDate)}`
-          }
+          const currentPeriodRange =
+            currentPeriod && `gültig bis ${displayDate(currentPeriod.endDate)}`
 
           let membershipData = [
             activeMembership?.type?.name,
@@ -94,11 +86,11 @@ const ZatUsers = ({ users, t }) => {
           const newsletterNames = newsletterSettings?.subscriptions
             ?.filter(subscription => subscription.subscribed)
             .map(subscription =>
-              subscription.name
-                ? t(
-                    `account/newsletterSubscriptions/${subscription.name}/label`
-                  )
-                : null
+              t(
+                `account/newsletterSubscriptions/${subscription.name}/label`,
+                undefined,
+                subscription.name
+              )
             )
 
           const newsletterTitel = ['Newsletter', newsletterSettings?.status]
@@ -112,17 +104,11 @@ const ZatUsers = ({ users, t }) => {
                   {name ? `${name} (${email})` : email}
                 </A>
               </div>
-              <div {...styles.spacing}>
+              <div>
                 <DT {...styles.title}>Membership</DT>
-                {membershipData?.length > 0 ? (
-                  <DD>
-                    <Label>{membershipData}</Label>
-                  </DD>
-                ) : (
-                  <DD>
-                    <Label>aktuell kein Abonnement</Label>
-                  </DD>
-                )}
+                <DD>
+                  <Label>{membershipData || 'aktuell kein Abonnement'}</Label>
+                </DD>
               </div>
 
               {newsletterSettings && (
@@ -166,6 +152,7 @@ const Zat = props => {
   const [zafClient, setZafClient] = useState(null)
   const [zafContext, setZafContext] = useState(null)
   const [zafUser, setZafUser] = useState(null)
+  const [searchTerm, setSearchTerm] = useState(null)
 
   useEffect(() => {
     if (typeof window !== 'undefined' && origin && app_guid) {
@@ -199,11 +186,18 @@ const Zat = props => {
     }
   }, [zafContext])
 
-  if (!zafUser) {
+  useEffect(() => {
+    if (zafUser) {
+      const { email, name } = zafUser
+      setSearchTerm(email || name)
+    }
+  }, [zafUser])
+
+  if (!searchTerm) {
     return (
       <App>
         <Body>
-          <p>Lade … (Entität)</p>
+          <Loader loading />
         </Body>
       </App>
     )
@@ -212,14 +206,7 @@ const Zat = props => {
   return (
     <App>
       <Body>
-        {
-          <pre>
-            context.location: {zafContext.location}
-            <br />
-            user.id {zafUser.id}
-          </pre>
-        }
-        <Query query={GET_ADMIN_USERS} variables={{ search: zafUser.email }}>
+        <Query query={GET_ADMIN_USERS} variables={{ search: searchTerm }}>
           {({ loading, error, data }) => {
             const isInitialLoading = loading && !(data && data.adminUsers)
             return (
@@ -259,7 +246,7 @@ const Zat = props => {
                       </div>
                       <div {...styles.item}>
                         <A
-                          href={`/users?search=${zafUser.email}`}
+                          href={`/users?search=${encodeURI(searchTerm)}`}
                           target='_blank'
                         >
                           Zur Suche im Admin-Tool
