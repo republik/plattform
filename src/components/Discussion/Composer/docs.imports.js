@@ -67,7 +67,7 @@ export const CommentComposerPlayground = () => {
       openDiscussionPreferences: () => Promise.resolve({ ok: true })
     },
     getLabel: text => {
-      if (text.indexOf('*') > -1 && text.indexOf('\\*') === -1) {
+      if (!text.includes('\\*') && text.includes('*')) {
         return t('styleguide/CommentComposer/formattingHelp')
       }
       return false
