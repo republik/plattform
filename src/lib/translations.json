@@ -1,5 +1,5 @@
 {
-  "updated": "2021-07-29T15:26:19.281Z",
+  "updated": "2021-07-29T15:29:32.397Z",
   "title": "live",
   "data": [
     {
@@ -32,7 +32,7 @@
     },
     {
       "key": "styleguide/CommentComposer/formatting/asterisk",
-      "value": "Benutzen Sie ein Backslash vor dem Gendersternchen damit es nicht mit kursiv verwechselt wird:\nLeser\\*in"
+      "value": "Damit System Gendersternchen erkennt, stellen Sie einen Backslash voran: Leser\\*in"
     },
     {
       "key": "styleguide/CommentActions/expand",
