@@ -298,11 +298,11 @@ export const CommentComposer = props => {
           <MaxLengthIndicator maxLength={maxLength} length={textLength} />
         )}
       </div>
-      {label ? (
+      {label && (
         <div {...styles.label}>
           <Label>{label}</Label>
         </div>
-      ) : null}
+      )}
 
       <Loader
         loading={preview.loading && !(preview.comment && preview.comment.embed)}
