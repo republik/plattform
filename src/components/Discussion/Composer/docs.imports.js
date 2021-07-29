@@ -87,7 +87,14 @@ export const CommentComposerPlayground = () => {
             .split('*').length > 2
 
         if (snippets.some(hasUnescapedAsterisks)) {
-          return t('styleguide/CommentComposer/formatting/asterisk')
+          return t('styleguide/CommentComposer/hints/formattingAsteriks')
+        }
+
+        return false
+      },
+      function deepThought(text) {
+        if (text.indexOf('42') > -1) {
+          return t('styleguide/CommentComposer/hints/deepThought')
         }
 
         return false
