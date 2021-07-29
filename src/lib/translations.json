@@ -1,5 +1,5 @@
 {
-  "updated": "2021-07-29T14:38:46.724Z",
+  "updated": "2021-07-29T15:26:19.281Z",
   "title": "live",
   "data": [
     {
@@ -31,7 +31,7 @@
       "value": "Sie können {time} wieder einen Beitrag schreiben."
     },
     {
-      "key": "styleguide/CommentComposer/formattingHelp",
+      "key": "styleguide/CommentComposer/formatting/asterisk",
       "value": "Benutzen Sie ein Backslash vor dem Gendersternchen damit es nicht mit kursiv verwechselt wird:\nLeser\\*in"
     },
     {
