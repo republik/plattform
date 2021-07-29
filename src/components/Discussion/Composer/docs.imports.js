@@ -7,7 +7,9 @@ import { default as Button } from '../../Button'
 import { SecondaryAction } from '../Internal/Composer'
 import { CommentComposer } from './CommentComposer'
 import { DiscussionContext } from '../DiscussionContext'
-import { MarkdownIcon, MoodIcon } from '../../Icons'
+import { MarkdownIcon, MoodIcon, StarsIcon } from '../../Icons'
+import { Label, Interaction } from '../../Typography'
+import colors from '../../../theme/colors'
 
 export { CommentComposerPlaceholder } from './CommentComposerPlaceholder'
 
@@ -87,14 +89,31 @@ export const CommentComposerPlayground = () => {
             .split('*').length > 2
 
         if (snippets.some(hasUnescapedAsterisks)) {
-          return t('styleguide/CommentComposer/hints/formattingAsteriks')
+          return (
+            <Label>
+              {t('styleguide/CommentComposer/hints/formattingAsteriks')}
+            </Label>
+          )
         }
 
         return false
       },
       function deepThought(text) {
         if (text.indexOf('42') > -1) {
-          return t('styleguide/CommentComposer/hints/deepThought')
+          return (
+            <div
+              style={{
+                padding: 8,
+                borderRadius: 10,
+                backgroundColor: colors.primaryBg
+              }}
+            >
+              <Interaction.P>
+                <StarsIcon />{' '}
+                {t('styleguide/CommentComposer/hints/deepThought')}
+              </Interaction.P>
+            </div>
+          )
         }
 
         return false

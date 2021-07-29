@@ -43,9 +43,6 @@ const styles = {
     bottom: 6,
     left: 8
   }),
-  hint: css({
-    padding: '8px 8px 0px 8px'
-  }),
   withBorderBottom: css({
     borderBottomWidth: 1,
     borderBottomStyle: 'solid'
@@ -302,11 +299,7 @@ export const CommentComposer = props => {
       </div>
 
       {hints &&
-        hints.map((hint, index) => (
-          <div key={`hint-${index}`} {...styles.hint}>
-            <Label>{hint}</Label>
-          </div>
-        ))}
+        hints.map((hint, index) => <div key={`hint-${index}`}>{hint}</div>)}
 
       <Loader
         loading={preview.loading && !(preview.comment && preview.comment.embed)}
