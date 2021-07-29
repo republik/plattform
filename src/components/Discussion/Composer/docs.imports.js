@@ -68,7 +68,7 @@ export const CommentComposerPlayground = () => {
     },
     getLabel: text => {
       if (!text.includes('\\*') && text.includes('*')) {
-        return t('styleguide/CommentComposer/formattingHelp')
+        return t('styleguide/CommentComposer/formatting/asterisk')
       }
       return false
     },
