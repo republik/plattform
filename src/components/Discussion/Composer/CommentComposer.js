@@ -12,6 +12,7 @@ import { convertStyleToRem } from '../../Typography/utils'
 import { Embed } from '../Internal/Comment'
 import { useDebounce } from '../../../lib/useDebounce'
 import { useColorContext } from '../../Colors/useColorContext'
+import { Label } from '../../Typography'
 import Loader from '../../Loader'
 
 const styles = {
@@ -41,6 +42,9 @@ const styles = {
     position: 'absolute',
     bottom: 6,
     left: 8
+  }),
+  label: css({
+    padding: '8px 8px 0px 8px'
   }),
   withBorderBottom: css({
     borderBottomWidth: 1,
@@ -80,6 +84,7 @@ export const CommentComposer = props => {
    */
   const root = React.useRef()
   const [textarea, textareaRef] = React.useState(null)
+  const [label, setLabel] = React.useState(false)
   const textRef = React.useRef()
   const [preview, setPreview] = React.useState({
     loading: false,
@@ -89,7 +94,7 @@ export const CommentComposer = props => {
   /*
    * Get the discussion metadata and action callbacks from the DiscussionContext.
    */
-  const { discussion, actions } = React.useContext(DiscussionContext)
+  const { discussion, actions, getLabel } = React.useContext(DiscussionContext)
   const { id: discussionId, tags, rules, displayAuthor, isBoard } = discussion
   const { maxLength } = rules
 
@@ -186,6 +191,7 @@ export const CommentComposer = props => {
   const onChangeText = ev => {
     const nextText = ev.target.value
     setText(nextText)
+    setLabel(getLabel(nextText))
     try {
       localStorage.setItem(localStorageKey, ev.target.value)
     } catch (e) {
@@ -292,6 +298,11 @@ export const CommentComposer = props => {
           <MaxLengthIndicator maxLength={maxLength} length={textLength} />
         )}
       </div>
+      {label ? (
+        <div {...styles.label}>
+          <Label>{label}</Label>
+        </div>
+      ) : null}
 
       <Loader
         loading={preview.loading && !(preview.comment && preview.comment.embed)}

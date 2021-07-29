@@ -66,6 +66,12 @@ export const CommentComposerPlayground = () => {
     actions: {
       openDiscussionPreferences: () => Promise.resolve({ ok: true })
     },
+    getLabel: text => {
+      if (text.indexOf('*') > -1 && text.indexOf('\\*') === -1) {
+        return 'Label'
+      }
+      return false
+    },
     composerSecondaryActions: (
       <>
         <SecondaryAction>
