@@ -64,13 +64,13 @@ export const CommentComposerPlayground = () => {
       tagRequired
     },
     actions: {
-      openDiscussionPreferences: () => Promise.resolve({ ok: true })
-    },
-    getLabel: text => {
-      if (!text.includes('\\*') && text.includes('*')) {
-        return t('styleguide/CommentComposer/formatting/asterisk')
+      openDiscussionPreferences: () => Promise.resolve({ ok: true }),
+      getLabel: text => {
+        if (text.indexOf('*') > -1 && text.indexOf('\\*') === -1) {
+          return t('styleguide/CommentComposer/formatting/asterisk')
+        }
+        return false
       }
-      return false
     },
     composerSecondaryActions: (
       <>

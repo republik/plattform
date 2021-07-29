@@ -94,7 +94,7 @@ export const CommentComposer = props => {
   /*
    * Get the discussion metadata and action callbacks from the DiscussionContext.
    */
-  const { discussion, actions, getLabel } = React.useContext(DiscussionContext)
+  const { discussion, actions } = React.useContext(DiscussionContext)
   const { id: discussionId, tags, rules, displayAuthor, isBoard } = discussion
   const { maxLength } = rules
 
@@ -191,7 +191,9 @@ export const CommentComposer = props => {
   const onChangeText = ev => {
     const nextText = ev.target.value
     setText(nextText)
-    setLabel(getLabel(nextText))
+    if (actions.getLabel) {
+      setLabel(actions.getLabel(nextText))
+    }
     try {
       localStorage.setItem(localStorageKey, ev.target.value)
     } catch (e) {
