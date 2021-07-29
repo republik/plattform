@@ -64,14 +64,35 @@ export const CommentComposerPlayground = () => {
       tagRequired
     },
     actions: {
-      openDiscussionPreferences: () => Promise.resolve({ ok: true }),
-      getLabel: text => {
-        if (text.indexOf('*') > -1 && text.indexOf('\\*') === -1) {
+      openDiscussionPreferences: () => Promise.resolve({ ok: true })
+    },
+    composerHints: [
+      // If some snippets have unescaped asterisks, return hint.
+      function formattingAsteriks(text) {
+        // Split into snippets. If asteriks are more then two new lines
+        // apart, Markdown will render * instead of wrapped text
+        // in cursive.
+        const snippets = text.split('\n\n')
+
+        // It will split string by \* and glueing string back together.
+        // All the is left are unescaped astriks.
+        // Then we split string by * and count elements; length of
+        // array is 1 + "amount of astriks".
+        // If length is > 2, unescaped astriks are left which might
+        // Markdown render wrapped text in cursive.
+        const hasUnescapedAsterisks = snippet =>
+          snippet
+            .split('\\*')
+            .join('')
+            .split('*').length > 2
+
+        if (snippets.some(hasUnescapedAsterisks)) {
           return t('styleguide/CommentComposer/formatting/asterisk')
         }
+
         return false
       }
-    },
+    ],
     composerSecondaryActions: (
       <>
         <SecondaryAction>
