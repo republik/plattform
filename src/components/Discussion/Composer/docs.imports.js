@@ -68,7 +68,7 @@ export const CommentComposerPlayground = () => {
     },
     getLabel: text => {
       if (text.indexOf('*') > -1 && text.indexOf('\\*') === -1) {
-        return 'Label'
+        return t('styleguide/CommentComposer/formattingHelp')
       }
       return false
     },
