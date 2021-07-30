@@ -12,7 +12,6 @@ import { convertStyleToRem } from '../../Typography/utils'
 import { Embed } from '../Internal/Comment'
 import { useDebounce } from '../../../lib/useDebounce'
 import { useColorContext } from '../../Colors/useColorContext'
-import { Label } from '../../Typography'
 import Loader from '../../Loader'
 
 const styles = {

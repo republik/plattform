@@ -4,10 +4,10 @@ import { createFormatter } from '../../../lib/translate'
 import { Editorial } from '../../Typography'
 
 import { default as Button } from '../../Button'
-import { SecondaryAction } from '../Internal/Composer'
 import { CommentComposer } from './CommentComposer'
 import { DiscussionContext } from '../DiscussionContext'
-import { MarkdownIcon, MoodIcon, StarsIcon } from '../../Icons'
+import { MarkdownIcon, EtiquetteIcon, StarsIcon } from '../../Icons'
+import IconButton from '../../IconButton'
 import { Label, Interaction } from '../../Typography'
 import colors from '../../../theme/colors'
 
@@ -120,14 +120,10 @@ export const CommentComposerPlayground = () => {
       }
     ],
     composerSecondaryActions: (
-      <>
-        <SecondaryAction>
-          <MoodIcon size={26} />
-        </SecondaryAction>
-        <SecondaryAction>
-          <MarkdownIcon size={26} />
-        </SecondaryAction>
-      </>
+      <div style={{ display: 'flex' }}>
+        <IconButton title='Mood' Icon={EtiquetteIcon} />
+        <IconButton title='Markdown' Icon={MarkdownIcon} />
+      </div>
     )
   }
 
