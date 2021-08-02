@@ -11,7 +11,8 @@ module.exports = async ({ user }, NewsletterSubscription) => {
   const { email, roles } = user
   if (!NewsletterSubscription) throw new SubscriptionHandlerMissingMailError()
 
-  const supportedInterestConfigs = NewsletterSubscription.allInterestConfigurations()
+  const supportedInterestConfigs =
+    NewsletterSubscription.allInterestConfigurations()
 
   const mailchimp = MailchimpInterface({ logger })
   const member = await mailchimp.getMember(email)
@@ -37,10 +38,7 @@ module.exports = async ({ user }, NewsletterSubscription) => {
   const subscriptions = []
   supportedInterestConfigs.forEach(({ interestId, visibleToRoles }) => {
     // only return visible interests
-    const subscribed =
-      status === MailchimpInterface.MemberStatus.Subscribed
-        ? !!member.interests[interestId]
-        : false
+    const subscribed = !!member.interests[interestId]
     if (
       subscribed ||
       !visibleToRoles ||
