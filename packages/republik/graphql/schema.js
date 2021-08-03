@@ -89,7 +89,7 @@ type mutations {
 
   resubscribeEmail(
     userId: ID,
-  ): Boolean!
+  ): NewsletterSettings!
 
   requestNewsletterSubscription(
     email: String!

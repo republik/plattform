@@ -4,7 +4,13 @@ const logger = console
 
 module.exports = async (_, args, context) => {
   const { userId } = args
-  const { user: me, pgdb, req, t } = context
+  const {
+    user: me,
+    pgdb,
+    req,
+    t,
+    mail: { getNewsletterSettings },
+  } = context
 
   const user = userId ? await pgdb.public.users.findOne({ id: userId }) : me
 
@@ -12,9 +18,6 @@ module.exports = async (_, args, context) => {
     console.error('user not found', { req: req._log() })
     throw new Error(t('api/users/404'))
   }
-
-  // user.verified => case not verified
-  // user error und irgendeine art wo wir es gut sehen, wie oft das passiert
 
   const { email, firstName, lastName } = user
 
@@ -38,8 +41,12 @@ module.exports = async (_, args, context) => {
 
   if (!member || member.status !== MailchimpInterface.MemberStatus.Subscribed) {
     await mailchimp.updateMember(email, body)
-    return true
   }
 
-  return false
+  try {
+    return getNewsletterSettings({ user })
+  } catch (error) {
+    console.error('getNewsletterProfile failed', { error })
+    throw new Error(t('api/newsletters/get/failed'))
+  }
 }
