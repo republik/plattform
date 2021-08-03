@@ -40,7 +40,6 @@ module.exports = async ({ user }, NewsletterSubscription) => {
     // only return visible interests
     const subscribed = !!member.interests[interestId]
     if (
-      subscribed ||
       !visibleToRoles ||
       !visibleToRoles.length ||
       userIsInRoles(user, visibleToRoles)
