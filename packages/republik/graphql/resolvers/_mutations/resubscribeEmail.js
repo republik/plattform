@@ -13,19 +13,33 @@ module.exports = async (_, args, context) => {
     throw new Error(t('api/users/404'))
   }
 
-  const { email } = user
+  // user.verified => case not verified
+  // user error und irgendeine art wo wir es gut sehen, wie oft das passiert
+
+  const { email, firstName, lastName } = user
 
   Roles.ensureUserIsMeOrInRoles(user, me, ['supporter'])
 
   const mailchimp = MailchimpInterface({ logger })
   const member = await mailchimp.getMember(email)
 
-  if (member && member.status !== MailchimpInterface.MemberStatus.Subscribed) {
-    await mailchimp.updateMember(email, {
-      email_address: email,
-      status: MailchimpInterface.MemberStatus.Pending,
-    })
+  const body = {
+    email_address: email,
+    status: MailchimpInterface.MemberStatus.Subscribed,
+  }
+
+  if (!member) {
+    body.status_if_new = MailchimpInterface.MemberStatus.Subscribed
+    body.merge_fields = {
+      FNAME: firstName || '',
+      LNAME: lastName || '',
+    }
+  }
+
+  if (!member || member.status !== MailchimpInterface.MemberStatus.Subscribed) {
+    await mailchimp.updateMember(email, body)
     return true
   }
+
   return false
 }
