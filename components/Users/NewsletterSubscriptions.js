@@ -165,7 +165,7 @@ const NewsletterSubscriptions = ({ t, userId }) => {
                                 {...colorScheme.set('color', 'primary')}
                                 onClick={() => {
                                   const answer = confirm(
-                                    'Wollen Sie die Newsletter für diesen Benutzer reaktivieren?'
+                                    'Wollen Sie die Newsletter für diesen Benutzer reaktivieren?\nDer Benutzer wird eine E-Mail erhalten, um die Reaktivierung zu bestätigen.'
                                   )
                                   if (answer)
                                     mutate({ variables: { userId: user.id } })
