@@ -11,7 +11,7 @@ type queries {
     before: String
     after: String
     filters: MaiLogFiltersInput
-  ): MailLogConnection
+  ): MailLogConnection @deprecated(reason: "use query \`mailbox\` instead")
 }
 
 `
