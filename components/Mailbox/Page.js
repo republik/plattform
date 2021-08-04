@@ -8,7 +8,7 @@ import withT from '../../lib/withT'
 
 import { Loader, A, Field } from '@project-r/styleguide'
 
-import { SectionTitle, SectionNav } from '../Display/utils'
+import { SectionNav } from '../Display/utils'
 
 import List from './List'
 
