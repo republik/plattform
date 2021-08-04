@@ -118,3 +118,30 @@ module.exports.paginator = (args, payloadFn, nodesFn) => {
     _nodes: nodes,
   }
 }
+
+module.exports.pageini = async (args, countFn, nodesFn, pageInfoFn) => {
+  const { after: _after, before: _before } = args
+
+  const after = _after && base64toObject(_after)
+  const before = _before && base64toObject(_before)
+
+  const totalCount = (await countFn({ ...args, after, before })) || 0
+  const nodes =
+    (await nodesFn({ ...args, after, before }, { totalCount })) || []
+  const { hasNextPage, end, hasPreviousPage, start } =
+    (await pageInfoFn({ ...args, after, before }, { totalCount, nodes })) || {}
+
+  const startCursor = start && objectToBase64(start)
+  const endCursor = end && objectToBase64(end)
+
+  return {
+    pageInfo: {
+      hasNextPage,
+      endCursor,
+      hasPreviousPage,
+      startCursor,
+    },
+    totalCount,
+    nodes,
+  }
+}
