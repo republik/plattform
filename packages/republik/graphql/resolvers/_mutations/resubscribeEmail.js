@@ -2,6 +2,12 @@ const { Roles } = require('@orbiting/backend-modules-auth')
 const MailchimpInterface = require('../../../../mail/MailchimpInterface')
 const logger = console
 
+const {
+  cache: { create },
+} = require('@orbiting/backend-modules-utils')
+
+const QUERY_CACHE_TTL_SECONDS = 60 // One minute
+
 module.exports = async (_, args, context) => {
   const { userId } = args
   const {
@@ -19,7 +25,7 @@ module.exports = async (_, args, context) => {
     throw new Error(t('api/users/404'))
   }
 
-  const { email, firstName, lastName } = user
+  const { id, email, firstName, lastName } = user
 
   Roles.ensureUserIsMeOrInRoles(user, me, ['supporter'])
 
@@ -28,19 +34,45 @@ module.exports = async (_, args, context) => {
 
   const body = {
     email_address: email,
-    status: MailchimpInterface.MemberStatus.Subscribed,
   }
 
   if (!member) {
     body.status_if_new = MailchimpInterface.MemberStatus.Subscribed
+    body.status = MailchimpInterface.MemberStatus.Subscribed
     body.merge_fields = {
       FNAME: firstName || '',
       LNAME: lastName || '',
     }
+    await mailchimp.updateMember(email, body)
   }
 
-  if (!member || member.status !== MailchimpInterface.MemberStatus.Subscribed) {
+  const cacheLock = create(
+    {
+      namespace: 'republik',
+      prefix: 'mail:resubscribeEmail',
+      key: id,
+      ttl: QUERY_CACHE_TTL_SECONDS,
+    },
+    context,
+  )
+
+  const isLocked = await cacheLock.get()
+
+  if (isLocked && member.status === MailchimpInterface.MemberStatus.Pending) {
+    console.warn(`resubscribe email: user ${id} goes crazy`)
+  }
+
+  if (!isLocked && member.status === MailchimpInterface.MemberStatus.Pending) {
+    body.status = MailchimpInterface.MemberStatus.Unsubscribed
     await mailchimp.updateMember(email, body)
+  }
+
+  if (member.status !== MailchimpInterface.MemberStatus.Subscribed) {
+    body.status = MailchimpInterface.MemberStatus.Pending
+    await mailchimp.updateMember(email, body)
+    if (!isLocked) {
+      await cacheLock.set(true)
+    }
   }
 
   try {

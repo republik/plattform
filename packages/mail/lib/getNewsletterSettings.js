@@ -8,8 +8,10 @@ module.exports = async ({ user }, NewsletterSubscription) => {
     Roles: { userIsInRoles },
   } = require('@orbiting/backend-modules-auth')
 
-  const { email, roles } = user
   if (!NewsletterSubscription) throw new SubscriptionHandlerMissingMailError()
+
+  const { id, email, roles } = user
+  const settingsId = Buffer.from(`${id}/NewsletterSettings`).toString('base64')
 
   const supportedInterestConfigs =
     NewsletterSubscription.allInterestConfigurations()
@@ -31,7 +33,7 @@ module.exports = async ({ user }, NewsletterSubscription) => {
           roles,
         ),
       )
-    return { status, subscriptions }
+    return { id: settingsId, status, subscriptions }
   }
 
   const status = member.status
@@ -54,5 +56,5 @@ module.exports = async ({ user }, NewsletterSubscription) => {
       )
     }
   })
-  return { status, subscriptions }
+  return { id: settingsId, status, subscriptions }
 }
