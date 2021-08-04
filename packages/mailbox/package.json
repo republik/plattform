@@ -1,0 +1,30 @@
+{
+  "name": "@orbiting/backend-modules-mailbox",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Query mailbox and maillog data at once",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/orbiting/backends.git"
+  },
+  "author": "Patrick Venetz <patrick.venetz@republik.ch>",
+  "license": "AGPL-3.0",
+  "publishConfig": {
+    "access": "public"
+  },
+  "bugs": {
+    "url": "https://github.com/orbiting/backends/issues"
+  },
+  "homepage": "https://github.com/orbiting/backends#readme",
+  "dependencies": {
+    "bluebird": "^3.7.2",
+    "body-parser": "^1.19.0",
+    "debug": "^4.1.1",
+    "fs-extra": "^10.0.0",
+    "imapflow": "^1.0.66",
+    "klaw": "^3.0.0",
+    "mailparser": "^3.2.0",
+    "moment": "^2.26.0"
+  }
+}
