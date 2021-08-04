@@ -95,10 +95,10 @@ const Subnav = ({ userId, section }) => (
       route='user'
       params={{
         userId,
-        section: 'maillog'
+        section: 'mailbox'
       }}
     >
-      <a {...styles.navLink} data-active={section === 'maillog'}>
+      <a {...styles.navLink} data-active={section === 'mailbox'}>
         E-Mails
       </a>
     </Link>
