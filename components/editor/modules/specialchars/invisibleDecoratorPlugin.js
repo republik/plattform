@@ -71,7 +71,6 @@ export default () => {
       }
     },
     decorateNode(node) {
-      if (node.kind !== 'block') return
       const texts = node.nodes.filter(child => child.kind === 'text')
       if (!texts.size) return
 
