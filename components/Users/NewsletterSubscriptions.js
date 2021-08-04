@@ -153,7 +153,7 @@ const NewsletterSubscriptions = ({ t, userId }) => {
                   <SectionTitle>Abonnierte Newsletter</SectionTitle>
                   <div>
                     <span style={{ marginRight: 10 }}>Status: {status}</span>
-                    {status === 'unsubscribed' && (
+                    {status !== 'subscribed' && (
                       <Mutation mutation={RESUBSCRIBE_EMAIL}>
                         {(mutate, { loading, error }) => {
                           if (error) return <ErrorMessage error={error} />
