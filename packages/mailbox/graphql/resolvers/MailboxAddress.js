@@ -1,6 +1,3 @@
 module.exports = {
-  user: ({ address }, args, { loaders }) => {
-    console.log(address)
-    return loaders.User.byEmail.load(address)
-  },
+  user: ({ address }, args, { loaders }) => loaders.User.byEmail.load(address),
 }
