@@ -56,7 +56,7 @@ exports.configure = ({
       cookie: {
         domain,
         maxAge: maxAge,
-        sameSite: dev || 'none',
+        sameSite: !dev && 'none',
         secure: !dev,
       },
     }),
