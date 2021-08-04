@@ -225,6 +225,19 @@ const contentUrlResolver = (
       node.data.formatUrl = urlReplacer(node.data.formatUrl, stripDocLinks)
     }
   })
+
+  // Prevent memo node to be exposed
+  visit(doc.content, 'span', (node, index, parent) => {
+    if (node.data?.type === 'MEMO') {
+      // Unwrap node.children into parent.children
+      const { children = [] } = node
+      parent.children = [
+        ...parent.children.slice(0, index),
+        ...children,
+        ...parent.children.slice(index + 1),
+      ]
+    }
+  })
 }
 
 const metaUrlResolver = (
