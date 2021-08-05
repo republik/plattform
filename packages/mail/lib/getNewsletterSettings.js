@@ -8,10 +8,13 @@ module.exports = async ({ user }, NewsletterSubscription) => {
     Roles: { userIsInRoles },
   } = require('@orbiting/backend-modules-auth')
 
-  const { email, roles } = user
   if (!NewsletterSubscription) throw new SubscriptionHandlerMissingMailError()
 
-  const supportedInterestConfigs = NewsletterSubscription.allInterestConfigurations()
+  const { id, email, roles } = user
+  const settingsId = Buffer.from(`${id}/NewsletterSettings`).toString('base64')
+
+  const supportedInterestConfigs =
+    NewsletterSubscription.allInterestConfigurations()
 
   const mailchimp = MailchimpInterface({ logger })
   const member = await mailchimp.getMember(email)
@@ -30,23 +33,19 @@ module.exports = async ({ user }, NewsletterSubscription) => {
           roles,
         ),
       )
-    return { status, subscriptions }
+    return { id: settingsId, status, subscriptions }
   }
 
   const status = member.status
   const subscriptions = []
   supportedInterestConfigs.forEach(({ interestId, visibleToRoles }) => {
     // only return visible interests
-    const subscribed =
-      status === MailchimpInterface.MemberStatus.Subscribed
-        ? !!member.interests[interestId]
-        : false
     if (
-      subscribed ||
       !visibleToRoles ||
       !visibleToRoles.length ||
       userIsInRoles(user, visibleToRoles)
     ) {
+      const subscribed = !!member.interests[interestId]
       subscriptions.push(
         NewsletterSubscription.buildSubscription(
           user.id,
@@ -57,5 +56,5 @@ module.exports = async ({ user }, NewsletterSubscription) => {
       )
     }
   })
-  return { status, subscriptions }
+  return { id: settingsId, status, subscriptions }
 }

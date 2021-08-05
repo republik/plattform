@@ -72,6 +72,7 @@ extend type User {
 }
 
 type NewsletterSettings {
+  id: ID!
   status: String!
   subscriptions: [NewsletterSubscription]
 }
