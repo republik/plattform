@@ -140,75 +140,69 @@ class UpdateSubscription extends Component {
   }
 }
 
-const NewsletterSubscriptions = ({ t, userId }) => {
-  const [colorScheme] = useColorContext()
+const NewsletterSubscriptions = ({ t, userId }) => (
+  <Query query={GET_NEWSLETTER_SUBSCRIPTION} variables={{ id: userId }}>
+    {({ data, loading, error }) => {
+      const isInitialLoading = loading && !(data && data.user)
+      return (
+        <Loader
+          loading={isInitialLoading}
+          error={error}
+          render={() => {
+            const { user } = data
+            const { subscriptions, status } = user.newsletterSettings
+            const hasNonEligibleSubscription = subscriptions.some(
+              newsletter => !newsletter.isEligible
+            )
 
-  return (
-    <Query query={GET_NEWSLETTER_SUBSCRIPTION} variables={{ id: userId }}>
-      {({ data, loading, error }) => {
-        const isInitialLoading = loading && !(data && data.user)
-        return (
-          <Loader
-            loading={isInitialLoading}
-            error={error}
-            render={() => {
-              const { user } = data
-              const { subscriptions, status } = user.newsletterSettings
-              const hasNonEligibleSubscription = subscriptions.some(
-                newsletter => !newsletter.isEligible
-              )
+            return (
+              <Section>
+                <SectionTitle>Abonnierte Newsletter</SectionTitle>
+                <div>
+                  <span style={{ marginRight: 10 }}>Status: {status}</span>
+                  {status !== 'subscribed' && (
+                    <Mutation mutation={RESUBSCRIBE_EMAIL}>
+                      {(mutate, { loading, error }) => {
+                        if (error) return <ErrorMessage error={error} />
 
-              return (
-                <Section>
-                  <SectionTitle>Abonnierte Newsletter</SectionTitle>
-                  <div>
-                    <span style={{ marginRight: 10 }}>Status: {status}</span>
-                    {status !== 'subscribed' && (
-                      <Mutation mutation={RESUBSCRIBE_EMAIL}>
-                        {(mutate, { loading, error }) => {
-                          if (error) return <ErrorMessage error={error} />
-
-                          return (
-                            <div>
-                              <TextButton
-                                disabled={loading}
-                                onClick={() => {
-                                  const answer = confirm(
-                                    'Wollen Sie die Newsletter für diesen Benutzer reaktivieren?\nDer Benutzer wird eine E-Mail erhalten, um die Reaktivierung zu bestätigen.'
-                                  )
-                                  if (answer)
-                                    mutate({ variables: { userId: user.id } })
-                                }}
-                              >
-                                <span {...colorScheme.set('color', 'primary')}>
-                                  reaktivieren
-                                </span>
-                              </TextButton>
-                              {loading && <InlineSpinner size={22} />}
-                            </div>
-                          )
-                        }}
-                      </Mutation>
-                    )}
-                  </div>
-                  {hasNonEligibleSubscription &&
-                    'Es können nur User mit aktiver Membership die Republik-Newsletter abonnieren.'}
-                  {subscriptions.map((subscription, index) => (
-                    <UpdateSubscription
-                      t={t}
-                      key={`${subscription.name}-${index}-${subscription.subscribed}`}
-                      user={user}
-                      subscription={subscription}
-                    />
-                  ))}
-                </Section>
-              )
-            }}
-          />
-        )
-      }}
-    </Query>
-  )
-}
+                        return (
+                          <div>
+                            <TextButton
+                              disabled={loading}
+                              onClick={() => {
+                                const answer = confirm(
+                                  'Wollen Sie die Newsletter für diesen Benutzer reaktivieren?\nDer Benutzer wird eine E-Mail erhalten, um die Reaktivierung zu bestätigen.'
+                                )
+                                if (answer)
+                                  mutate({ variables: { userId: user.id } })
+                              }}
+                            >
+                              reaktivieren
+                            </TextButton>
+                            {loading && <InlineSpinner size={22} />}
+                          </div>
+                        )
+                      }}
+                    </Mutation>
+                  )}
+                </div>
+                {hasNonEligibleSubscription &&
+                  'Es können nur User mit aktiver Membership die Republik-Newsletter abonnieren.'}
+                {subscriptions.map((subscription, index) => (
+                  <UpdateSubscription
+                    t={t}
+                    key={`${subscription.name}-${index}-${subscription.subscribed}`}
+                    user={user}
+                    subscription={subscription}
+                  />
+                ))}
+              </Section>
+            )
+          }}
+        />
+      )
+    }}
+  </Query>
+)
 
 export default withT(NewsletterSubscriptions)
