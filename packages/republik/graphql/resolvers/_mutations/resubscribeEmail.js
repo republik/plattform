@@ -25,9 +25,9 @@ module.exports = async (_, args, context) => {
     throw new Error(t('api/users/404'))
   }
 
-  const { id, email, firstName, lastName } = user
-
   Roles.ensureUserIsMeOrInRoles(user, me, ['supporter'])
+
+  const { id, email, firstName, lastName } = user
 
   const mailchimp = MailchimpInterface({ logger })
   const member = await mailchimp.getMember(email)
@@ -44,34 +44,37 @@ module.exports = async (_, args, context) => {
       LNAME: lastName || '',
     }
     await mailchimp.updateMember(email, body)
-  }
+  } else {
+    const cacheLock = create(
+      {
+        namespace: 'republik',
+        prefix: 'mail:resubscribeEmail',
+        key: id,
+        ttl: QUERY_CACHE_TTL_SECONDS,
+      },
+      context,
+    )
 
-  const cacheLock = create(
-    {
-      namespace: 'republik',
-      prefix: 'mail:resubscribeEmail',
-      key: id,
-      ttl: QUERY_CACHE_TTL_SECONDS,
-    },
-    context,
-  )
+    const isLocked = await cacheLock.get()
 
-  const isLocked = await cacheLock.get()
+    if (isLocked && member.status === MailchimpInterface.MemberStatus.Pending) {
+      console.warn(`resubscribe email: user ${id} goes crazy`)
+    }
 
-  if (isLocked && member.status === MailchimpInterface.MemberStatus.Pending) {
-    console.warn(`resubscribe email: user ${id} goes crazy`)
-  }
+    if (
+      !isLocked &&
+      member.status === MailchimpInterface.MemberStatus.Pending
+    ) {
+      body.status = MailchimpInterface.MemberStatus.Unsubscribed
+      await mailchimp.updateMember(email, body)
+    }
 
-  if (!isLocked && member.status === MailchimpInterface.MemberStatus.Pending) {
-    body.status = MailchimpInterface.MemberStatus.Unsubscribed
-    await mailchimp.updateMember(email, body)
-  }
-
-  if (member.status !== MailchimpInterface.MemberStatus.Subscribed) {
-    body.status = MailchimpInterface.MemberStatus.Pending
-    await mailchimp.updateMember(email, body)
-    if (!isLocked) {
-      await cacheLock.set(true)
+    if (member.status !== MailchimpInterface.MemberStatus.Subscribed) {
+      body.status = MailchimpInterface.MemberStatus.Pending
+      await mailchimp.updateMember(email, body)
+      if (!isLocked) {
+        await cacheLock.set(true)
+      }
     }
   }
 

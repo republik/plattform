@@ -40,12 +40,12 @@ module.exports = async ({ user }, NewsletterSubscription) => {
   const subscriptions = []
   supportedInterestConfigs.forEach(({ interestId, visibleToRoles }) => {
     // only return visible interests
-    const subscribed = !!member.interests[interestId]
     if (
       !visibleToRoles ||
       !visibleToRoles.length ||
       userIsInRoles(user, visibleToRoles)
     ) {
+      const subscribed = !!member.interests[interestId]
       subscriptions.push(
         NewsletterSubscription.buildSubscription(
           user.id,
