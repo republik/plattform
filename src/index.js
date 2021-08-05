@@ -750,6 +750,16 @@ const Styleguide = () => {
                       src: require('./templates/Article/docs.md')
                     },
                     {
+                      path: '/templates/article-email',
+                      title: 'Article Email',
+                      imports: {
+                        schema: require('./templates/Article/Email').default,
+                        ...require('./templates/docs'),
+                        renderMdast: require('mdast-react-render').renderMdast
+                      },
+                      src: require('./templates/Article/Email/docs.md')
+                    },
+                    {
                       path: '/templates/discussion',
                       title: 'Discussion',
                       imports: {
