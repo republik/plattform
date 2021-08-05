@@ -172,7 +172,6 @@ const NewsletterSubscriptions = ({ t, userId }) => {
                             <div>
                               <TextButton
                                 disabled={loading}
-                                {...colorScheme.set('color', 'primary')}
                                 onClick={() => {
                                   const answer = confirm(
                                     'Wollen Sie die Newsletter für diesen Benutzer reaktivieren?\nDer Benutzer wird eine E-Mail erhalten, um die Reaktivierung zu bestätigen.'
@@ -181,7 +180,9 @@ const NewsletterSubscriptions = ({ t, userId }) => {
                                     mutate({ variables: { userId: user.id } })
                                 }}
                               >
-                                reaktivieren
+                                <span {...colorScheme.set('color', 'primary')}>
+                                  reaktivieren
+                                </span>
                               </TextButton>
                               {loading && <InlineSpinner size={22} />}
                             </div>
