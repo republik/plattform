@@ -17,7 +17,16 @@ import { Section, SectionTitle, TextButton } from '../Display/utils'
 
 export const RESUBSCRIBE_EMAIL = gql`
   mutation resubscribeEmail($userId: ID!) {
-    resubscribeEmail(userId: $userId)
+    resubscribeEmail(userId: $userId) {
+      id
+      status
+      subscriptions {
+        id
+        name
+        subscribed
+        isEligible
+      }
+    }
   }
 `
 
@@ -42,6 +51,7 @@ export const GET_NEWSLETTER_SUBSCRIPTION = gql`
     user(slug: $id) {
       id
       newsletterSettings {
+        id
         status
         subscriptions {
           id
