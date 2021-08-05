@@ -9,7 +9,6 @@ import {
   InlineSpinner,
   Loader,
   Checkbox,
-  useColorContext,
   ErrorMessage
 } from '@project-r/styleguide'
 
