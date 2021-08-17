@@ -13,8 +13,6 @@ import { Embed } from '../Internal/Comment'
 import { useDebounce } from '../../../lib/useDebounce'
 import { useColorContext } from '../../Colors/useColorContext'
 import Loader from '../../Loader'
-import IconButton from '../../IconButton'
-import { CloseIcon } from '../../Icons'
 
 const styles = {
   root: css({}),
