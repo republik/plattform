@@ -49,7 +49,7 @@ const styles = {
     borderBottomStyle: 'solid'
   }),
   hints: css({
-    marginBottom: 6
+    marginTop: 6
   })
 }
 
