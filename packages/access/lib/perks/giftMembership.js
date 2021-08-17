@@ -64,6 +64,7 @@ const give = async (
     .then(transformUser)
 
   await mail.sendMembershipClaimNotice({ membership }, { pgdb, t })
+  await mail.sendMembershipClaimerOnboarding({ membership }, { pgdb, t })
 
   return {
     ...electedMembership,

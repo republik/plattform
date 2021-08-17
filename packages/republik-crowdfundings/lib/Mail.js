@@ -673,6 +673,47 @@ mail.sendMembershipClaimNotice = async ({ membership }, { pgdb, t }) => {
   )
 }
 
+mail.sendMembershipClaimerOnboarding = async ({ membership }, { pgdb, t }) => {
+  const claimer = await pgdb.public.users.findOne({ id: membership.userId })
+  const claimedMembershipType = await pgdb.public.membershipTypes.findOne({
+    id: membership.membershipTypeId,
+  })
+  const claimedMembershipCompany = await pgdb.public.companies.findOneFieldOnly(
+    { id: claimedMembershipType.companyId },
+    'name',
+  )
+  const activeMembershipCompany = await pgdb.queryOneColumn(`
+    SELECT c.name
+    FROM memberships m
+    JOIN companies c
+      ON m."companyId" = c.id
+    WHERE m."userId" = '${membership.userId}'
+      AND m.active = true
+  `)
+
+  const subjectDifferentiator =
+    activeMembershipCompany.length > 1 ? 'ACTIVE' : claimedMembershipCompany
+
+  return sendMailTemplate(
+    {
+      to: claimer.email,
+      fromEmail: process.env.DEFAULT_MAIL_FROM_ADDRESS,
+      subject: t(
+        `api/email/membership_claimer_onboarding/${subjectDifferentiator}/subject`,
+      ),
+      templateName: 'membership_claimer_onboarding',
+      mergeLanguage: 'handlebars',
+      globalMergeVars: [
+        {
+          name: 'active_membership_type_company_name',
+          content: activeMembershipCompany,
+        },
+      ],
+    },
+    { pgdb },
+  )
+}
+
 /**
  * Attempts to fetch a pledge and related data, and generates a series of merge
  * variables.
