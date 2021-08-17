@@ -6,10 +6,9 @@ import { Editorial } from '../../Typography'
 import { default as Button } from '../../Button'
 import { CommentComposer } from './CommentComposer'
 import { DiscussionContext } from '../DiscussionContext'
-import { MarkdownIcon, EtiquetteIcon, StarsIcon } from '../../Icons'
+import { MarkdownIcon, EtiquetteIcon } from '../../Icons'
 import IconButton from '../../IconButton'
-import { Label, Interaction } from '../../Typography'
-import colors from '../../../theme/colors'
+import { Label } from '../../Typography'
 
 export { CommentComposerPlaceholder } from './CommentComposerPlaceholder'
 
@@ -91,31 +90,39 @@ export const CommentComposerPlayground = () => {
         if (snippets.some(hasUnescapedAsterisks)) {
           return (
             <Label>
-              {t('styleguide/CommentComposer/hints/formattingAsteriks')}
+              Die Eingabe **fett** wird <strong>fett</strong>, *kursiv* wird{' '}
+              <i>kursiv</i> und aus Leser\*in wird Leser*in.
             </Label>
           )
         }
 
         return false
       },
-      function deepThought(text) {
-        if (text.indexOf('42') > -1) {
+      function strikethorugh(text) {
+        const hasSwungDash = text.indexOf('~') > -1
+        if (hasSwungDash) {
           return (
-            <div
-              style={{
-                padding: 8,
-                borderRadius: 10,
-                backgroundColor: colors.primaryBg
-              }}
-            >
-              <Interaction.P>
-                <StarsIcon />{' '}
-                {t('styleguide/CommentComposer/hints/deepThought')}
-              </Interaction.P>
-            </div>
+            <Label>
+              Die Eingabe ~~durchgestrichen~~ wird{' '}
+              <span style={{ textDecoration: 'line-through' }}>
+                durchgestrichen
+              </span>{' '}
+              .
+            </Label>
           )
         }
-
+        return false
+      },
+      function formattingLinks(text) {
+        const hasSwungDash = text.indexOf('http') > -1
+        if (hasSwungDash) {
+          return (
+            <Label>
+              Ein [Link](https://republik.ch) wird Ein{' '}
+              <a href='https://www.republik.ch'>Link</a>.
+            </Label>
+          )
+        }
         return false
       }
     ],

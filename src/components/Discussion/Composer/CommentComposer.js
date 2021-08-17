@@ -13,6 +13,8 @@ import { Embed } from '../Internal/Comment'
 import { useDebounce } from '../../../lib/useDebounce'
 import { useColorContext } from '../../Colors/useColorContext'
 import Loader from '../../Loader'
+import IconButton from '../../IconButton'
+import { CloseIcon } from '../../Icons'
 
 const styles = {
   root: css({}),
@@ -45,6 +47,9 @@ const styles = {
   withBorderBottom: css({
     borderBottomWidth: 1,
     borderBottomStyle: 'solid'
+  }),
+  hints: css({
+    marginBottom: 6
   })
 }
 
@@ -80,12 +85,13 @@ export const CommentComposer = props => {
    */
   const root = React.useRef()
   const [textarea, textareaRef] = React.useState(null)
-  const [hints, setHints] = React.useState(false)
+  const [hints, setHints] = React.useState([])
   const textRef = React.useRef()
   const [preview, setPreview] = React.useState({
     loading: false,
     comment: null
   })
+  const [showHints, setShowHints] = React.useState(true)
 
   /*
    * Get the discussion metadata, action callbacks and hinters from DiscussionContext.
@@ -296,9 +302,23 @@ export const CommentComposer = props => {
           <MaxLengthIndicator maxLength={maxLength} length={textLength} />
         )}
       </div>
-
-      {hints &&
-        hints.map((hint, index) => <div key={`hint-${index}`}>{hint}</div>)}
+      {hints.length > 0 && showHints && (
+        <div
+          style={{ marginTop: 2, padding: 8 }}
+          {...colorScheme.set('background', 'hover')}
+        >
+          {hints.map((hint, index) => (
+            <div {...styles.hints} key={`hint-${index}`}>
+              {hint}
+            </div>
+          ))}
+          <IconButton
+            Icon={CloseIcon}
+            label='Formattierungshilfe schliessen'
+            onClick={() => setShowHints(false)}
+          />
+        </div>
+      )}
 
       <Loader
         loading={preview.loading && !(preview.comment && preview.comment.embed)}
