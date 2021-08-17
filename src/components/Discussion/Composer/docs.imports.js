@@ -70,8 +70,8 @@ export const CommentComposerPlayground = () => {
     composerHints: [
       function formattingAsteriks(text) {
         // Math where asterix is within a word (not next to whitespace) "n*n" for example
-        const hasSingleAsterix = !!text.match(/[^\\*\s:]\*[^*\s:]/)
-        if (hasSingleAsterix) {
+        const hasUnescapedAsterix = !!text.match(/[^\\*\s:]\*[^*\s:]/)
+        if (hasUnescapedAsterix) {
           return (
             <Label>{t('styleguide/CommentComposer/formatting/asterisk')}</Label>
           )
