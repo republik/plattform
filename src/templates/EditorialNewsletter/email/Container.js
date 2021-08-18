@@ -5,6 +5,7 @@ import Header from './Header'
 import SG from '../../../theme/env'
 import { Editorial } from '../../../components/Typography'
 import { VariableContext } from '../../../components/Variables'
+import Footer from './Footer'
 
 export default ({ children, attributes = {}, meta, variableContext }) => (
   <html>
@@ -47,6 +48,7 @@ export default ({ children, attributes = {}, meta, variableContext }) => (
           <VariableContext.Provider value={variableContext}>
             <Header meta={meta} />
             {children}
+            <Footer meta={meta} />
           </VariableContext.Provider>
         </tbody>
       </table>
