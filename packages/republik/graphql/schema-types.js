@@ -62,6 +62,7 @@ extend type User {
   twitterHandle: String
   publicUrl: String
   disclosures: String
+  gender: String
 
   statement: String
   isListed: Boolean!
