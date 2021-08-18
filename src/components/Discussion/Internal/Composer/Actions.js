@@ -77,7 +77,7 @@ export const Actions = ({
   }, [colorScheme])
   return (
     <div {...styles.root}>
-      {composerSecondaryActions && composerSecondaryActions}
+      {composerSecondaryActions}
 
       <div {...styles.mainActions}>
         <button
