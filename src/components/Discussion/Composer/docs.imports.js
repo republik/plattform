@@ -68,10 +68,10 @@ export const CommentComposerPlayground = () => {
       openDiscussionPreferences: () => Promise.resolve({ ok: true })
     },
     composerHints: [
-      function formattingAsteriks(text) {
-        // Math where asterix is within a word (not next to whitespace) "n*n" for example
-        const hasUnescapedAsterix = !!text.match(/[^\\*\s:]\*[^*\s:]/)
-        if (hasUnescapedAsterix) {
+      function formattingAsterisk(text) {
+        // Math where asterisk is within a word (not next to whitespace) "n*n" for example
+        const hasUnescapedAsterisk = !!text.match(/[^\\*\s:]\*[^*\s:]/)
+        if (hasUnescapedAsterisk) {
           return (
             <Label>{t('styleguide/CommentComposer/formatting/asterisk')}</Label>
           )
