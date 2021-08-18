@@ -1,12 +1,8 @@
 import React from 'react'
 import { fontFamilies } from '../../../theme/fonts'
-import HR from './HR'
 import { Mso } from 'mdast-react-render/lib/email'
-import colors from '../../../theme/colors'
 
-export default ({ children, meta }) => {
-  const { slug, path } = meta
-
+export default ({ children }) => {
   return (
     <tr>
       <td align='center' valign='top'>
