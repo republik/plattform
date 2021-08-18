@@ -1,3 +1,4 @@
+// This stub contains
 export const BaB153Stub = `
 <section><h6>FIGURE</h6>
 
@@ -219,6 +220,165 @@ Von Florian Fisch, 14.02.2019
 <hr /></section>
 
 <hr /></section>
+
+<hr /></section>
+
+
+
+<hr /></section>
+
+`
+
+// This stub contains all elements that should be supported when
+// an article is sent as an email.
+export const ArticleStub = `
+<section><h6>FIGURE</h6>
+
+\`\`\`
+{
+  "excludeFromGallery": false
+}
+\`\`\`
+
+![](https://cdn.republik.pink/s3/republik-assets-staging/repos/republik/love-article-test-artikel-als-email/images/59f30e6de1e5c390ca41db4b807be574d05d0bec.jpeg?size=2250x1500#originalURL=images%2F59f30e6de1e5c390ca41db4b807be574d05d0bec.jpeg%3Fsize%3D2250x1500)
+
+
+
+<hr /></section>
+
+<section><h6>TITLE</h6>
+
+# Test - Artikel als Email
+
+## Das ist ein Subject-Text
+
+Das ist der Lead-Text
+
+Von [Tobias Maier](/~b71592a5-1ef9-4190-96e9-acee30e4eab2), 18.08.2021
+
+<hr /></section>
+
+<section><h6>CENTER</h6>
+
+Das _ist_ **ein** **_Paragraph _**<sub>a</sub>**_ + _**<sup>b</sup>**_ = _**[Video](https://www.youtube.com/watch?v=dQw4w9WgXcQ)
+
+<hr /></section>
+
+<section><h6>FIGURE</h6>
+
+\`\`\`
+{
+  "excludeFromGallery": false
+}
+\`\`\`
+
+![](https://cdn.republik.pink/s3/republik-assets-staging/repos/republik/love-article-test-artikel-als-email/images/59f30e6de1e5c390ca41db4b807be574d05d0bec.jpeg?size=2250x1500#originalURL=images%2F59f30e6de1e5c390ca41db4b807be574d05d0bec.jpeg%3Fsize%3D2250x1500)
+
+Houses_some person_
+
+<hr /></section>
+
+<section><h6>CENTER</h6>
+
+<section><h6>FIGURE</h6>
+
+\`\`\`
+{
+  "excludeFromGallery": false
+}
+\`\`\`
+
+![](https://cdn.republik.pink/s3/republik-assets-staging/repos/republik/love-article-test-artikel-als-email/images/59f30e6de1e5c390ca41db4b807be574d05d0bec.jpeg?size=2250x1500#originalURL=images%2F59f30e6de1e5c390ca41db4b807be574d05d0bec.jpeg%3Fsize%3D2250x1500)
+
+Houses_some person_
+
+<hr /></section>
+
+This text is in the center.
+
+## Zwischentitel kursiv fett <sup>sup</sup> <sub>sub</sub>
+
+<section><h6>INFOBOX</h6>
+
+### <sub>Pullquote</sub>
+
+<section><h6>FIGURE</h6>
+
+\`\`\`
+{
+  "excludeFromGallery": false
+}
+\`\`\`
+
+![](https://cdn.republik.pink/s3/republik-assets-staging/repos/republik/love-article-test-artikel-als-email/images/59f30e6de1e5c390ca41db4b807be574d05d0bec.jpeg?size=2250x1500#originalURL=images%2F59f30e6de1e5c390ca41db4b807be574d05d0bec.jpeg%3Fsize%3D2250x1500)
+
+House_street_
+
+<hr /></section>
+
+Alberto braun [Link](https://www.youtube.com/watch?v=dQw4w9WgXcQ)
+
+Hello :)
+
+#### Boop woop
+
+1.  1
+2.  2
+3.  3
+4.  Hoi
+
+<hr /></section>
+
+<section><h6>BLOCKQUOTE</h6>
+
+> Comparison is the thief of joy.
+>
+> Comparison is the thief of joy.
+>
+> Comparison is the thief of joy.
+
+Zitate_Theodor Roosevelt_
+
+<hr /></section>
+
+<section><h6>FIGUREGROUP</h6>
+
+\`\`\`
+{
+  "columns": 1,
+  "module": "figuregroup"
+}
+\`\`\`
+
+<section><h6>FIGURE</h6>
+
+\`\`\`
+{
+  "excludeFromGallery": false
+}
+\`\`\`
+
+![](https://cdn.republik.pink/s3/republik-assets-staging/repos/republik/love-article-test-artikel-als-email/images/59f30e6de1e5c390ca41db4b807be574d05d0bec.jpeg?size=2250x1500#originalURL=images%2F59f30e6de1e5c390ca41db4b807be574d05d0bec.jpeg%3Fsize%3D2250x1500)
+
+123_123_
+
+<hr /></section>
+
+<section><h6>FIGURE</h6>
+
+\`\`\`
+{
+  "excludeFromGallery": false
+}
+\`\`\`
+
+![](<>)
+
+12_123_
+
+<hr /></section>
+
+123_123_
 
 <hr /></section>
 

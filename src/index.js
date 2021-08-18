@@ -753,11 +753,11 @@ const Styleguide = () => {
                       path: '/templates/article-email',
                       title: 'Article Email',
                       imports: {
-                        schema: require('./templates/Article/Email').default,
+                        schema: require('./templates/Article/email').default,
                         ...require('./templates/docs'),
                         renderMdast: require('mdast-react-render').renderMdast
                       },
-                      src: require('./templates/Article/Email/docs.md')
+                      src: require('./templates/Article/email/docs.md')
                     },
                     {
                       path: '/templates/discussion',
