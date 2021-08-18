@@ -3,7 +3,7 @@ import { cssFor } from 'glamor'
 import { Mso } from 'mdast-react-render/lib/email'
 import Header from './Header'
 import SG from '../../../theme/env'
-import { Editorial } from '../../../components/Typography'
+import { Editorial, Interaction } from '../../../components/Typography'
 import { VariableContext } from '../../../components/Variables'
 import Footer from './Footer'
 
@@ -30,6 +30,7 @@ export default ({ children, attributes = {}, meta, variableContext }) => (
           __html: `
         ${SG.FONT_FACES}
         ${cssFor(Editorial.fontRule)}
+        ${cssFor(Interaction.fontRule)}
       `
         }}
       />
