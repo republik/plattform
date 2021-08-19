@@ -147,6 +147,7 @@ module.exports = async (_, args, context) => {
     'isListed',
     'statement',
     'disclosures',
+    'gender',
   ]
 
   if (
@@ -161,6 +162,8 @@ module.exports = async (_, args, context) => {
 
   if (await isInCandidacy(me._raw, pgdb)) {
     if (await isInCandidacyInCandidacyPhase(me._raw, pgdb)) {
+      // TODO: clarify if biography and gender should be mandatory and not changeable
+      // during election, if so inlcude both below
       if (args.hasPublicProfile === false) {
         throw new Error(t('profile/candidacy/needed'))
       }
