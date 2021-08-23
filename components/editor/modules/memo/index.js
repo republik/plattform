@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react'
+import { compose } from 'react-apollo'
 import { css } from 'glamor'
 import MarkdownSerializer from 'slate-mdast-serializer'
 import AutosizeInput from 'react-textarea-autosize'
 import MemoIcon from 'react-icons/lib/md/comment'
 import DeleteIcon from 'react-icons/lib/md/delete-forever'
+import { stringify, parse } from '@orbiting/remark-preset'
 
 import {
   Field,
@@ -14,12 +16,42 @@ import {
   fontStyles,
   IconButton,
   Button,
-  Label
+  Label,
+  DiscussionContext,
+  CommentList,
+  CommentComposer
 } from '@project-r/styleguide'
 
 import { EditIcon, CheckIcon } from '@project-r/styleguide/icons'
 
 import { matchInline, createInlineButton, buttonStyles } from '../../utils'
+
+import withT from '../../../../lib/withT'
+import withMe from '../../../../lib/withMe'
+
+const asTree = ({ totalCount, directTotalCount, pageInfo, nodes }) => {
+  console.log('asTree', nodes)
+
+  const convertComment = node => ({
+    ...node,
+    comments: {
+      ...node.comments,
+      nodes: childrenOfComment(node.id)
+    }
+  })
+
+  const childrenOfComment = id =>
+    nodes
+      .filter(n => n.parentIds[n.parentIds.length - 1] === id)
+      .map(convertComment)
+
+  return {
+    totalCount,
+    directTotalCount,
+    pageInfo,
+    nodes: nodes.filter(n => n.parentIds.length === 0).map(convertComment)
+  }
+}
 
 const fadeIn = css.keyframes('fadeIn', {
   '0%': { opacity: 0 },
@@ -52,7 +84,7 @@ const styles = {
   colorSelectors: css({
     display: 'flex',
     alignItems: 'center',
-    marginRight: 24
+    marginBottom: 24
   }),
   autoSize: css({
     paddingTop: '7px !important',
@@ -80,6 +112,8 @@ const getMarkerColor = color => {
 }
 
 const serialize = string => {
+  console.log('serialize', string)
+
   try {
     return JSON.stringify(string)
   } catch (e) {
@@ -89,6 +123,8 @@ const serialize = string => {
 }
 
 const deserialize = json => {
+  console.log('deserialize', json)
+
   try {
     return JSON.parse(json || '""')
   } catch (e) {
@@ -97,7 +133,10 @@ const deserialize = json => {
   }
 }
 
-const Memo = ({ editor, node, children, isSelected, me }) => {
+const Memo = compose(
+  withT,
+  withMe
+)(({ editor, node, children, isSelected, me, t }) => {
   const [colorScheme] = useColorContext()
   const markedTextRef = useRef()
   const [showModal, setShowModal] = useState()
@@ -106,6 +145,7 @@ const Memo = ({ editor, node, children, isSelected, me }) => {
   const [memo, setMemo] = useState()
   const [color, setColor] = useState()
   const [dirty, setDirty] = useState()
+  const [comments, setComments] = useState()
 
   // If Memo is untouched – flag is missing – open overlay.
   useEffect(() => {
@@ -140,6 +180,7 @@ const Memo = ({ editor, node, children, isSelected, me }) => {
       change.setNodeByKey(node.key, {
         data: node.data.merge({
           memo: serialize(memo),
+          comments: serialize(comments),
           color,
           touched: true
         })
@@ -151,6 +192,7 @@ const Memo = ({ editor, node, children, isSelected, me }) => {
   const reset = e => {
     e?.preventDefault?.()
     setMemo(deserialize(node.data.get('memo')))
+    setComments(deserialize(node.data.get('comments')))
     setColor(node.data.get('color'))
   }
 
@@ -173,6 +215,81 @@ const Memo = ({ editor, node, children, isSelected, me }) => {
     })
   }
 
+  const discussionContextValue = {
+    discussion: {
+      id: '123',
+      displayAuthor: {
+        id: '32a2e54cd03e756dbe38ebd0b68d040a917c302aecf5726dc63f98a98a89fd9e',
+        name: 'Patrick Venetz',
+        credential: null,
+        profilePicture:
+          'https://cdn.repub.ch/s3/republik-assets/portraits/95b35a0ba210cdaabf10fcea9caafc17.jpeg?size=2988x1681&resize=384x384&bw=true',
+        anonymity: false,
+        slug: 'pae'
+      },
+      rules: {
+        maxLength: null,
+        minInterval: null,
+        disableTopLevelComments: false,
+        anonymity: 'FORBIDDEN'
+      }
+    },
+    actions: {
+      previewComment: ({ content, discussionId, parentId, id }) => {
+        console.log('previewComment', { content, discussionId, parentId, id })
+      },
+      submitComment: (parentComment, text, tags) => {
+        console.log('submitComment', { parentComment, text, tags })
+
+        const now = new Date()
+
+        const comment = {
+          id: new Date(),
+          displayAuthor: { ...discussionContextValue.discussion.displayAuthor },
+          content: parse(text),
+          createdAt: now,
+          parentIds: parentComment
+            ? [...parentComment.parentIds, parentComment.id]
+            : [],
+          tags: []
+        }
+
+        setComments({
+          ...(comments || { totalCount: 0, directTotalCount: 0, nodes: [] }),
+          nodes: [...(comments?.nodes || []), comment]
+        })
+
+        return Promise.resolve({ ok: true })
+      },
+      editComment: (comment, text, tags) => {
+        console.log('editComment', { comment, text, tags })
+
+        return Promise.resolve({ ok: true })
+      },
+      unpublishComment: comment => {
+        console.log('unpublishComment', comment)
+      },
+      fetchMoreComments: ({ parentId, after, appendAfter }) => {
+        console.log('fetchMoreComments', { parentId, after, appendAfter })
+      },
+      shareComment: comment => {
+        console.log('shareComment', comment)
+      },
+      openDiscussionPreferences: () => {
+        console.log('openDiscussionPreferences')
+      },
+      featureComment: false // () => {},
+    },
+    clock: {
+      isDesktop: true,
+      t
+    },
+    Link: ({ children }) => children
+  }
+
+  console.log('comments', comments)
+  const tree = comments && asTree(comments)
+
   return (
     <>
       {showModal && (
@@ -193,7 +310,7 @@ const Memo = ({ editor, node, children, isSelected, me }) => {
                 />
               ))}
             </div>
-            <Field
+            {/* <Field
               label={'Memo'}
               name='memo'
               value={memo}
@@ -205,7 +322,30 @@ const Memo = ({ editor, node, children, isSelected, me }) => {
                   inputRef={ref}
                 />
               )}
-            />
+              /> */}
+            <div>
+              <DiscussionContext.Provider value={discussionContextValue}>
+                {!tree?.nodes?.length && (
+                  <CommentComposer
+                    t={t}
+                    isRoot
+                    onClose={() => {}}
+                    onSubmit={({ text, tags }) => {
+                      discussionContextValue.actions.submitComment(
+                        null,
+                        text,
+                        tags
+                      )
+
+                      return Promise.resolve({ ok: true })
+                    }}
+                    // onSubmitLabel={t('foobar')}
+                  />
+                )}
+
+                {tree?.nodes?.length && <CommentList t={t} comments={tree} />}
+              </DiscussionContext.Provider>
+            </div>
             <div>
               <Button onClick={submit} primary>
                 Übernehmen
@@ -230,14 +370,19 @@ const Memo = ({ editor, node, children, isSelected, me }) => {
       </span>
     </>
   )
-}
+})
 
 const MemoModule = ({ rule, TYPE }) => {
   const memo = {
     match: matchInline(TYPE),
     matchMdast: rule.matchMdast,
     fromMdast: (node, index, parent, { visitChildren, context }) => {
-      console.log('fromMdast', { node, data: node.data, memo: node.data?.memo })
+      console.log('fromMdast', {
+        node,
+        data: node.data,
+        memo: node.data?.memo,
+        comments: node.data?.comments
+      })
 
       return {
         kind: 'inline',
@@ -257,6 +402,7 @@ const MemoModule = ({ rule, TYPE }) => {
         data: {
           type: TYPE,
           memo: object.data?.memo,
+          comments: object.data?.comments,
           color: object.data?.color
         },
         children: visitChildren(object)
