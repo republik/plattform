@@ -242,11 +242,17 @@ export const ArticleStub = `
 
 ![](https://cdn.republik.pink/s3/republik-assets-staging/repos/republik/love-article-test-artikel-als-email/images/59f30e6de1e5c390ca41db4b807be574d05d0bec.jpeg?size=2250x1500#originalURL=images%2F59f30e6de1e5c390ca41db4b807be574d05d0bec.jpeg%3Fsize%3D2250x1500)
 
-
+Legende_Credit bei Thumbnail_
 
 <hr /></section>
 
 <section><h6>TITLE</h6>
+
+\`\`\`
+{
+  "center": true
+}
+\`\`\`
 
 # Test - Artikel als Email
 
@@ -360,7 +366,7 @@ Zitate_Theodor Roosevelt_
 
 ![](https://cdn.republik.pink/s3/republik-assets-staging/repos/republik/love-article-test-artikel-als-email/images/59f30e6de1e5c390ca41db4b807be574d05d0bec.jpeg?size=2250x1500#originalURL=images%2F59f30e6de1e5c390ca41db4b807be574d05d0bec.jpeg%3Fsize%3D2250x1500)
 
-123_123_
+Legende_Credit_
 
 <hr /></section>
 
@@ -374,7 +380,7 @@ Zitate_Theodor Roosevelt_
 
 ![](<>)
 
-12_123_
+Legende_Credit_
 
 <hr /></section>
 
