@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useMemo, useRef } from 'react'
 import { compose } from 'react-apollo'
 import { css } from 'glamor'
 import MarkdownSerializer from 'slate-mdast-serializer'
@@ -172,6 +172,14 @@ const Memo = compose(
   const colorize = color => e => {
     e?.preventDefault?.()
     setColor(color)
+    editor.change(change => {
+      change.setNodeByKey(node.key, {
+        data: node.data.merge({
+          color,
+          touched: true
+        })
+      })
+    })
   }
 
   const submit = e => {
@@ -215,80 +223,171 @@ const Memo = compose(
     })
   }
 
-  const discussionContextValue = {
-    discussion: {
-      id: '123',
-      displayAuthor: {
-        id: '32a2e54cd03e756dbe38ebd0b68d040a917c302aecf5726dc63f98a98a89fd9e',
-        name: 'Patrick Venetz',
-        credential: null,
-        profilePicture:
-          'https://cdn.repub.ch/s3/republik-assets/portraits/95b35a0ba210cdaabf10fcea9caafc17.jpeg?size=2988x1681&resize=384x384&bw=true',
-        anonymity: false,
-        slug: 'pae'
-      },
-      rules: {
-        maxLength: null,
-        minInterval: null,
-        disableTopLevelComments: false,
-        anonymity: 'FORBIDDEN'
-      }
-    },
-    actions: {
-      previewComment: ({ content, discussionId, parentId, id }) => {
-        console.log('previewComment', { content, discussionId, parentId, id })
-      },
-      submitComment: (parentComment, text, tags) => {
-        console.log('submitComment', { parentComment, text, tags })
-
-        const now = new Date()
-
-        const comment = {
-          id: new Date(),
-          displayAuthor: { ...discussionContextValue.discussion.displayAuthor },
-          content: parse(text),
-          createdAt: now,
-          parentIds: parentComment
-            ? [...parentComment.parentIds, parentComment.id]
-            : [],
-          tags: []
+  const discussionContextValue = useMemo(
+    () => ({
+      discussion: {
+        id: '123',
+        displayAuthor: {
+          id: me.id,
+          name: me.name,
+          profilePicture: me.portrait
+        },
+        rules: {
+          maxLength: null,
+          minInterval: null,
+          disableTopLevelComments: false,
+          anonymity: 'FORBIDDEN'
         }
+      },
+      actions: {
+        previewComment: ({ content, discussionId, parentId, id }) => {
+          console.log('previewComment', { content, discussionId, parentId, id })
+        },
+        submitComment: (parentComment, text, tags) => {
+          console.log('submitComment', { parentComment, text, tags })
 
-        setComments({
-          ...(comments || { totalCount: 0, directTotalCount: 0, nodes: [] }),
-          nodes: [...(comments?.nodes || []), comment]
+          const now = new Date().toISOString()
+
+          const comment = {
+            id: now,
+            displayAuthor: {
+              ...discussionContextValue.discussion.displayAuthor
+            },
+            content: parse(text),
+            text,
+            published: true,
+            createdAt: now,
+            parentIds: parentComment
+              ? [...parentComment.parentIds, parentComment.id]
+              : [],
+            tags: []
+          }
+
+          setComments({
+            ...(comments || { totalCount: 0, directTotalCount: 0, nodes: [] }),
+            nodes: [...(comments?.nodes || []), comment]
+          })
+
+          editor.change(change => {
+            change.setNodeByKey(node.key, {
+              data: node.data.merge({
+                comments: serialize({
+                  ...(comments || {
+                    totalCount: 0,
+                    directTotalCount: 0,
+                    nodes: []
+                  }),
+                  nodes: [...(comments?.nodes || []), comment]
+                }),
+                touched: true
+              })
+            })
+          })
+
+          return Promise.resolve({ ok: true })
+        },
+        editComment: (comment, text, tags) => {
+          console.log('editComment', { comment, text, tags })
+
+          const index = comments.nodes.findIndex(c => c.id === comment.id)
+
+          const updatedComments = {
+            ...comments,
+            nodes: [
+              ...comments.nodes.slice(0, index),
+              {
+                ...comment,
+                content: parse(text),
+                text,
+                published: true,
+                updatedAt: new Date().toISOString()
+              },
+              ...comments.nodes.slice(index + 1)
+            ]
+          }
+
+          setComments(updatedComments)
+
+          editor.change(change => {
+            change.setNodeByKey(node.key, {
+              data: node.data.merge({
+                comments: serialize(updatedComments),
+                touched: true
+              })
+            })
+          })
+
+          return Promise.resolve({ ok: true })
+        },
+        unpublishComment: comment => {
+          console.log('unpublishComment', comment)
+
+          const index = comments.nodes.findIndex(c => c.id === comment.id)
+
+          const updatedComments = {
+            ...comments,
+            nodes: [
+              ...comments.nodes.slice(0, index),
+              { ...comment, published: false },
+              ...comments.nodes.slice(index + 1)
+            ]
+          }
+
+          setComments(updatedComments)
+
+          editor.change(change => {
+            change.setNodeByKey(node.key, {
+              data: node.data.merge({
+                comments: serialize(updatedComments),
+                touched: true
+              })
+            })
+          })
+
+          return Promise.resolve({ ok: true })
+        },
+        fetchMoreComments: ({ parentId, after, appendAfter }) => {
+          console.log('fetchMoreComments', { parentId, after, appendAfter })
+        },
+        shareComment: comment => {
+          console.log('shareComment', comment)
+        },
+        openDiscussionPreferences: () => {
+          console.log('openDiscussionPreferences')
+        },
+        featureComment: false // () => {},
+      },
+      clock: {
+        isDesktop: true,
+        t
+      },
+      Link: ({ children }) => children
+    }),
+    [memo]
+  )
+
+  const tree = useMemo(() => {
+    return (
+      comments &&
+      asTree({
+        ...comments,
+        nodes: comments.nodes.map(comment => {
+          const { displayAuthor, published, content, text } = comment
+
+          const userCanEdit =
+            displayAuthor.id ===
+            discussionContextValue.discussion.displayAuthor.id
+
+          return {
+            ...comment,
+            userCanEdit,
+            content: (userCanEdit || published) && content,
+            text: (userCanEdit || published) && text
+          }
         })
-
-        return Promise.resolve({ ok: true })
-      },
-      editComment: (comment, text, tags) => {
-        console.log('editComment', { comment, text, tags })
-
-        return Promise.resolve({ ok: true })
-      },
-      unpublishComment: comment => {
-        console.log('unpublishComment', comment)
-      },
-      fetchMoreComments: ({ parentId, after, appendAfter }) => {
-        console.log('fetchMoreComments', { parentId, after, appendAfter })
-      },
-      shareComment: comment => {
-        console.log('shareComment', comment)
-      },
-      openDiscussionPreferences: () => {
-        console.log('openDiscussionPreferences')
-      },
-      featureComment: false // () => {},
-    },
-    clock: {
-      isDesktop: true,
-      t
-    },
-    Link: ({ children }) => children
-  }
-
-  console.log('comments', comments)
-  const tree = comments && asTree(comments)
+      })
+    )
+  }, [comments])
 
   return (
     <>
@@ -346,12 +445,12 @@ const Memo = compose(
                 {tree?.nodes?.length && <CommentList t={t} comments={tree} />}
               </DiscussionContext.Provider>
             </div>
-            <div>
+            {/* <div>
               <Button onClick={submit} primary>
                 Übernehmen
               </Button>
               <Button onClick={remove}>Entfernen</Button>
-            </div>
+            </div> */}
           </OverlayBody>
         </Overlay>
       )}
