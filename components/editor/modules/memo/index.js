@@ -212,7 +212,6 @@ const Memo = compose(
 
   const close = e => {
     e?.preventDefault?.()
-    reset()
     setShowModal(false)
   }
 
