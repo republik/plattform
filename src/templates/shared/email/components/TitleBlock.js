@@ -2,8 +2,23 @@ import React from 'react'
 import Center from './Center'
 import { fontFamilies } from '../../../../theme/fonts'
 import colors from '../../../../theme/colors'
+import { getFormatLine } from '../../../../components/TeaserFeed/utils'
 
-export const TitleBlock = ({ children, center }) => {
+export const TitleBlock = ({
+  children,
+  center,
+  format,
+  series,
+  repoId,
+  path
+}) => {
+  const formatLine = getFormatLine({
+    format,
+    series,
+    repoId,
+    path
+  })
+
   return (
     <Center>
       <section
@@ -12,6 +27,19 @@ export const TitleBlock = ({ children, center }) => {
           textAlign: center ? 'center' : null
         }}
       >
+        {formatLine.title && (
+          <p
+            style={{
+              fontFamily: fontFamilies.sansSerifMedium,
+              fontWeight: 500,
+              fontSize: '20px',
+              lineHeight: '24px',
+              color: formatLine.color
+            }}
+          >
+            {formatLine.title}
+          </p>
+        )}
         {children}
       </section>
     </Center>
@@ -23,8 +51,8 @@ export const Headline = ({ children, attributes, ...props }) => (
     style={{
       fontFamily: fontFamilies.serifTitle,
       fontWeight: 900,
-      fontSize: '30px',
-      lineHeight: '34px'
+      fontSize: '58px',
+      lineHeight: '69px'
     }}
     {...attributes}
     {...props}
