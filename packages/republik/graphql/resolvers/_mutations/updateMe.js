@@ -162,8 +162,6 @@ module.exports = async (_, args, context) => {
 
   if (await isInCandidacy(me._raw, pgdb)) {
     if (await isInCandidacyInCandidacyPhase(me._raw, pgdb)) {
-      // TODO: clarify if biography and gender should be mandatory and not changeable
-      // during election, if so inlcude both below
       if (args.hasPublicProfile === false) {
         throw new Error(t('profile/candidacy/needed'))
       }
@@ -178,12 +176,22 @@ module.exports = async (_, args, context) => {
       if ('statement' in args && args.statement.length < 1) {
         throw new Error(t('profile/candidacy/statement/needed'))
       }
+
+      if ('biography' in args && args.statement.length < 1) {
+        throw new Error(t('profile/candidacy/biography/needed'))
+      }
+
+      if ('gender' in args && args.statement.length < 1) {
+        throw new Error(t('profile/candidacy/gender/needed'))
+      }
     }
     if (await isInCandidacyInElectionPhase(me._raw, pgdb)) {
       if (
         'hasPublicProfile' in args ||
         'birthday' in args ||
-        'statement' in args
+        'statement' in args ||
+        'biography' in args ||
+        'gender' in args
       ) {
         throw new Error(t('profile/candidacy/electionPhase'))
       }
