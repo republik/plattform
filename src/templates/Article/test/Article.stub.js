@@ -248,17 +248,11 @@ Legende_Credit bei Thumbnail_
 
 <section><h6>TITLE</h6>
 
-\`\`\`
-{
-  "center": true
-}
-\`\`\`
-
 # Test - Artikel als Email
 
-## Das ist ein Subject-Text
+## Das ist ein Subject-Text - bla bla bla blabla
 
-Das ist der Lead-Text
+Das ist der Lead-Text - bla bla bla bla bla bla bal
 
 Von [Tobias Maier](/~b71592a5-1ef9-4190-96e9-acee30e4eab2), 18.08.2021
 
