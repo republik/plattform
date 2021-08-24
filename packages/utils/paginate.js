@@ -119,6 +119,30 @@ module.exports.paginator = (args, payloadFn, nodesFn) => {
   }
 }
 
+/**
+ * Util which helps generating an GraphQL Cursor Connection. It allows to
+ * pagination results.
+ *
+ * @see https://relay.dev/graphql/connections.htm
+ *
+ * This util implementation is somewhat superior to previous pagination
+ * implementation ("paginate", "paginator") as it won't require all data and
+ * then slice it.
+ *
+ * Flow:
+ *
+ * 1) Decode after and before cursors in {args}
+ *
+ * 2) Call {countFn} with {args}, after and before cursors. Its expected to
+ *    return total count of nodes.
+ *
+ * 3) Call {nodesFn} with {args}, after and before cursors and total count. Its
+ *    expected to return (sliced) nodes using provided arguments: a page.
+ *
+ * 4) Call {pageInfoFn} with {args}, cursors, total count and nodes. Its
+ *    expected to return whether there is a next or previous page to "pagniate"
+ *    to. Its expected to return start and end cursor.
+ */
 module.exports.pageini = async (args, countFn, nodesFn, pageInfoFn) => {
   const { after: _after, before: _before } = args
 
