@@ -10,7 +10,7 @@ const address = {
             keyword: {
               type: 'keyword',
               ignore_above: 256,
-              normalizer: 'lowercase',
+              normalizer: 'to_lowercase',
             },
           },
         },
@@ -27,6 +27,15 @@ module.exports = {
   type,
   name: type.toLowerCase(),
   searchable: false,
+  analysis: {
+    normalizer: {
+      to_lowercase: {
+        type: 'custom',
+        char_filter: [],
+        filter: ['lowercase'],
+      },
+    },
+  },
   mapping: {
     [type]: {
       dynamic: false,
