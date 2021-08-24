@@ -8,35 +8,33 @@ export default ({ meta }) => {
     format && format.indexOf('format-covid-19-uhr-newsletter') !== -1
 
   return (
-    <>
-      <tr>
-        <td
-          align='center'
-          valign='top'
-          style={{ borderBottom: `1px solid ${colors.divider}` }}
+    <tr>
+      <td
+        align='center'
+        valign='top'
+        style={{ borderBottom: `1px solid ${colors.divider}` }}
+      >
+        <a
+          href={`https://www.republik.ch${path ? path : `/${slug}`}`}
+          title='Im Web lesen'
         >
-          <a
-            href={`https://www.republik.ch${path ? path : `/${slug}`}`}
-            title='Im Web lesen'
-          >
-            <img
-              height='79'
-              width={isCovid19 ? 226 : 178}
-              src={`https://www.republik.ch/static/logo_republik_newsletter${
-                isCovid19 ? '_covid19_wave2' : ''
-              }.png`}
-              style={{
-                border: 0,
-                width: `${isCovid19 ? 226 : 178}px !important`,
-                height: '79px !important',
-                margin: 0,
-                maxWidth: '100% !important'
-              }}
-              alt='REPUBLIK'
-            />
-          </a>
-        </td>
-      </tr>
-    </>
+          <img
+            height='79'
+            width={isCovid19 ? 226 : 178}
+            src={`https://www.republik.ch/static/logo_republik_newsletter${
+              isCovid19 ? '_covid19_wave2' : ''
+            }.png`}
+            style={{
+              border: 0,
+              width: `${isCovid19 ? 226 : 178}px !important`,
+              height: '79px !important',
+              margin: 0,
+              maxWidth: '100% !important'
+            }}
+            alt='REPUBLIK'
+          />
+        </a>
+      </td>
+    </tr>
   )
 }
