@@ -128,8 +128,12 @@
       "undefined": " "
     },
     {
+      "key": "styleguide/SeriesNav/seriesoverview/link",
+      "value": " {link}."
+    },
+    {
       "key": "styleguide/SeriesNav/seriesoverview",
-      "value": "Zur Serienübersicht"
+      "value": "Zur Übersicht"
     },
     {
       "key": "styleguide/SeriesNav/current",

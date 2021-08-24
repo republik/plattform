@@ -112,16 +112,16 @@ function SeriesNav({
             </InfoBoxTitle>
             <InfoBoxText>
               {series.description}
-              {titlePath && (
-                <>
-                  {' '}
-                  <Link href={titlePath} passHref>
-                    <Editorial.A>
-                      {t('styleguide/SeriesNav/seriesoverview')}
-                    </Editorial.A>
-                  </Link>
-                </>
-              )}
+              {titlePath &&
+                t.elements('styleguide/SeriesNav/seriesoverview/link', {
+                  link: (
+                    <Link href={titlePath} passHref>
+                      <Editorial.A>
+                        {t('styleguide/SeriesNav/seriesoverview')}
+                      </Editorial.A>
+                    </Link>
+                  )
+                })}
             </InfoBoxText>
           </InfoBox>
           {inlineAfterDescription}
