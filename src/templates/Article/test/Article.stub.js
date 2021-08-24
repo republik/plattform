@@ -240,7 +240,7 @@ export const ArticleStub = `
 }
 \`\`\`
 
-![](https://cdn.republik.pink/s3/republik-assets-staging/repos/republik/love-article-test-artikel-als-email/images/59f30e6de1e5c390ca41db4b807be574d05d0bec.jpeg?size=2250x1500#originalURL=images%2F59f30e6de1e5c390ca41db4b807be574d05d0bec.jpeg%3Fsize%3D2250x1500)
+![](https://cdn.republik.pink/s3/republik-assets-staging/repos/republik/love-article-test-artikel-als-email/images/76f497354cb24d396c474551a2c233ec956af8a6.jpeg?size=5000x3750#originalURL=images%2F76f497354cb24d396c474551a2c233ec956af8a6.jpeg%3Fsize%3D5000x3750)
 
 Legende_Credit bei Thumbnail_
 
@@ -349,16 +349,20 @@ Zitate_Theodor Roosevelt_
 
 <hr /></section>
 
-*   Ein item 1
-*   Ein item 2
-*   Ein item 3
-*   Ein item 4
+*   Ein <sup>item</sup> 1
+*   Ein <sub>item</sub> 2
+*   Ein **item** 3
+*   Ein _item_ 4
 
-1.  Item 1
-2.  Item 2
+1.  **_Item_** 1
 
+2.  [**_Item_**](https://www.youtube.com/watch?v=dQw4w9WgXcQ) 2
 
+Test
+
+3.  Test 3
+
+4.  Test 4
 
 <hr /></section>
-
 `
