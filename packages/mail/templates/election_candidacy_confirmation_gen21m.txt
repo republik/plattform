@@ -1,10 +1,37 @@
-Guten Tag
+Sehr geehrte Verlegerin
+sehr geehrter Verleger
 
-Herzlichen Dank für die Einreichung Ihrer Kandidatur für den Genossenschaftsrat.
+Vielen Dank für Ihr Engagement und herzlichen Glückwunsch: Sie sind offiziell
+Kandidatin oder Kandidat für den Genossenschaftsrat von Project R und Republik.
 
-Herzlich
+Zu Ihrer Information: Alle notwendigen Angaben haben wir erfasst.
 
-Ihre Crew der Republik
+Bis zum 30. Oktober können Sie Ihre Angaben ändern oder ergänzen
+{{frontend_base_url}}/vote/genossenschaft/kandidieren?edit , falls Ihnen noch
+etwas einfallen sollte.
+
+Die Wahl selbst dauert vom 12. bis zum 28. November. Zeitgleich zur Wahl findet
+eine Online-Debatte statt. Dort wird Ihr Statement in Ihrem Namen
+veröffentlicht. Während dieser Zeit können die Mitglieder Ihnen Fragen stellen.
+Wir freuen uns, wenn Sie in der Debatte präsent sind. Und wenn Sie sich für die
+eine oder andere Antwort Zeit nehmen.
+
+Wir werden die Debatte moderieren und dafür sorgen, dass unsere Etikette
+{{frontend_base_url}}/etikette eingehalten wird.
+
+Das Resultat der Wahl geben wir anfangs Dezember in einem Project-R-Newsletter
+bekannt.
+
+Wir wünschen Ihnen viel Erfolg und freuen uns auf eine interessante Wahl.
+
+Ihre Crew von Project R und Republik
+
+
+
+Project R Genossenschaft
+Sihlhallenstrasse 1, CH-8004 Zürich
+www.project-r.construction {{link_projectr}}
+office@project-r.construction
 
 
 Republik AG

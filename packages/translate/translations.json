@@ -1,6 +1,4 @@
 {
-  "updated": "2020-10-23T08:52:18.814Z",
-  "title": "live",
   "data": [
     {
       "key": "api/unexpected",
@@ -317,14 +315,6 @@
     {
       "key": "api/users/delete/claimedMembershipsNotSupported",
       "value": "User, welche eine Membership eingelöst habe können zurzeit nicht gelöscht werden. Bitte wenden Sie sich an die IT."
-    },
-    {
-      "key": "api/payment/paymentMethod/404",
-      "value": "Die PaymentMethod konnte nicht gefunden werden."
-    },
-    {
-      "key": "api/payment/paymentIntent/404",
-      "value": "Der PaymentIntent konnte nicht gefunden werden."
     },
     {
       "key": "api/payment/paymentMethod/404",
@@ -1233,6 +1223,10 @@
     {
       "key": "api/access/request/campaign/error",
       "value": "Kampagne «{campaignId}» ist ungültig."
+    },
+    {
+      "key": "api/election/email/election_candidacy_confirmation_gen21m/subject",
+      "value": "Vielen Dank für Ihre Kandidatur"
     },
     {
       "key": "api/election/email/election_candidacy_confirmation_gen18m/subject",
