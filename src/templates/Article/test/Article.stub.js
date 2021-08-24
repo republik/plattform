@@ -274,7 +274,7 @@ Das _ist_ **ein** **_Paragraph _**<sub>a</sub>**_ + _**<sup>b</sup>**_ = _**[Vid
 
 ![](https://cdn.republik.pink/s3/republik-assets-staging/repos/republik/love-article-test-artikel-als-email/images/59f30e6de1e5c390ca41db4b807be574d05d0bec.jpeg?size=2250x1500#originalURL=images%2F59f30e6de1e5c390ca41db4b807be574d05d0bec.jpeg%3Fsize%3D2250x1500)
 
-Houses_some person_
+Houses in Edge 2 Edge_some person_
 
 <hr /></section>
 
@@ -284,17 +284,34 @@ Houses_some person_
 
 \`\`\`
 {
+  "size": "breakout",
   "excludeFromGallery": false
 }
 \`\`\`
 
 ![](https://cdn.republik.pink/s3/republik-assets-staging/repos/republik/love-article-test-artikel-als-email/images/59f30e6de1e5c390ca41db4b807be574d05d0bec.jpeg?size=2250x1500#originalURL=images%2F59f30e6de1e5c390ca41db4b807be574d05d0bec.jpeg%3Fsize%3D2250x1500)
 
-Houses_some person_
+Houses in Gross_some person_
+
+<hr /></section>
+
+<section><h6>FIGURE</h6>
+
+\`\`\`
+{
+  "excludeFromGallery": false
+}
+\`\`\`
+
+![](https://cdn.republik.pink/s3/republik-assets-staging/repos/republik/love-article-test-artikel-als-email/images/76f497354cb24d396c474551a2c233ec956af8a6.jpeg?size=5000x3750#originalURL=images%2F76f497354cb24d396c474551a2c233ec956af8a6.jpeg%3Fsize%3D5000x3750)
+
+Greens in normal size_some person_
 
 <hr /></section>
 
 This text is in the center.
+
+* * *
 
 ## Zwischentitel kursiv fett <sup>sup</sup> <sub>sub</sub>
 
@@ -320,19 +337,10 @@ Alberto braun [Link](https://www.youtube.com/watch?v=dQw4w9WgXcQ)
 
 Hello :)
 
-#### Boop woop
-
-1.  1
-2.  2
-3.  3
-4.  Hoi
-
 <hr /></section>
 
 <section><h6>BLOCKQUOTE</h6>
 
-> Comparison is the thief of joy.
->
 > Comparison is the thief of joy.
 >
 > Comparison is the thief of joy.
@@ -341,46 +349,13 @@ Zitate_Theodor Roosevelt_
 
 <hr /></section>
 
-<section><h6>FIGUREGROUP</h6>
+*   Ein item 1
+*   Ein item 2
+*   Ein item 3
+*   Ein item 4
 
-\`\`\`
-{
-  "columns": 1,
-  "module": "figuregroup"
-}
-\`\`\`
-
-<section><h6>FIGURE</h6>
-
-\`\`\`
-{
-  "excludeFromGallery": false
-}
-\`\`\`
-
-![](https://cdn.republik.pink/s3/republik-assets-staging/repos/republik/love-article-test-artikel-als-email/images/59f30e6de1e5c390ca41db4b807be574d05d0bec.jpeg?size=2250x1500#originalURL=images%2F59f30e6de1e5c390ca41db4b807be574d05d0bec.jpeg%3Fsize%3D2250x1500)
-
-Legende_Credit_
-
-<hr /></section>
-
-<section><h6>FIGURE</h6>
-
-\`\`\`
-{
-  "excludeFromGallery": false
-}
-\`\`\`
-
-![](<>)
-
-Legende_Credit_
-
-<hr /></section>
-
-123_123_
-
-<hr /></section>
+1.  Item 1
+2.  Item 2
 
 
 
