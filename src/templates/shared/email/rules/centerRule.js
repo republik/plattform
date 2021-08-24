@@ -7,6 +7,7 @@ import Center from '../components/Center'
 import { figureRule } from './figureRule'
 import noteRule from './noteRule'
 import articleCollectionRule from './articleCollectionRule'
+import listRule from './listRule'
 
 const centerRule = {
   matchMdast: matchZone('CENTER'),
@@ -16,6 +17,7 @@ const centerRule = {
     ...inlineHeadingsRules,
     hrRule,
     figureRule,
+    listRule,
     blockQuoteRule,
     noteRule,
     articleCollectionRule
