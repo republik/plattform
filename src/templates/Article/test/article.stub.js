@@ -416,6 +416,28 @@ ImageGroup1_CreditGroup1_
 
 <hr /></section>
 
+<section><h6>QUOTE</h6>
+
+<section><h6>FIGURE</h6>
+
+\`\`\`
+{
+  "excludeFromGallery": false
+}
+\`\`\`
+
+![](https://cdn.republik.pink/s3/republik-assets-staging/repos/republik/love-article-test-artikel-als-email/images/76f497354cb24d396c474551a2c233ec956af8a6.jpeg?size=5000x3750#originalURL=images%2F76f497354cb24d396c474551a2c233ec956af8a6.jpeg%3Fsize%3D5000x3750)
+
+
+
+<hr /></section>
+
+«Ich bin sicher, eine kleine Rebellion hie und da ist eine gute Sache; sie ist in der Politik so notwendig, um die Dinge zu klären, wie ein Sturm für das Wetter.»
+
+Thomas Jefferson
+
+<hr /></section>
+
 
 
 <hr /></section>
