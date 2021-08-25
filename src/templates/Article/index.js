@@ -175,7 +175,8 @@ const createSchema = ({
   withCommentData = withData,
   CommentLink = DefaultLink,
   ActionBar = DefaultActionBar,
-  PayNote
+  PayNote,
+  hasEmailTemplate = true
 } = {}) => {
   const base = createBase({ metaBody, metaHeadlines })
   const blocks = createBlocks({
@@ -217,6 +218,7 @@ const createSchema = ({
   return {
     repoPrefix,
     getPath,
+    emailTemplate: hasEmailTemplate,
     rules: [
       {
         matchMdast: matchType('root'),

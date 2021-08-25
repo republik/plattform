@@ -28,12 +28,14 @@ const createSchema = ({
   titleBlockRule,
   getPath = ({ slug }) => `/format/${(slug || '').split('/').pop()}`,
   metaBody = true,
+  hasEmailTemplate = false,
   ...args
 } = {}) => {
   return createArticleSchema({
     Link,
     repoPrefix: 'format-',
     getPath,
+    hasEmailTemplate,
     customMetaFields: [
       {
         label: 'Ebene',

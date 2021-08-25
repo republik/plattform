@@ -4,11 +4,13 @@ import { getDatePath } from '../Article/utils'
 const createSchema = ({
   customMetaFields = [],
   getPath = args => `${getDatePath(args)}/diskussion`,
+  hasEmailTemplate = false,
   ...args
 } = {}) => {
   return createArticleSchema({
     repoPrefix: 'discussion-',
     getPath,
+    hasEmailTemplate,
     customMetaFields: [
       {
         label: 'Beitrag-Maximallänge',
