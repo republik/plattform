@@ -12,7 +12,8 @@ export const NoteParagraph = ({ children, attributes, ...props }) => (
       color: colors.text,
       fontSize: '15px',
       lineHeight: '21px', // 1.3125rem
-      fontFamily: fontFamilies.sansSerifRegular
+      fontFamily: fontFamilies.sansSerifRegular,
+      margin: '30px 0'
     }}
     {...attributes}
     {...props}
