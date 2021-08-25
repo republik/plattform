@@ -3,7 +3,7 @@ import { BaB153Stub, ArticleStub } from './article.stub'
 import { renderEmail } from 'mdast-react-render/lib/email'
 import { renderMdast } from 'mdast-react-render'
 import { parse } from '@orbiting/remark-preset'
-import articleEmailSchema from '../Email'
+import articleEmailSchema from '../email'
 import createSchema from '../index'
 
 const babStub = parse(BaB153Stub)
