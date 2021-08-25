@@ -3,8 +3,9 @@ import { imageResizeUrl } from 'mdast-react-render/lib/utils'
 
 export const Figure = ({ children }) => <div>{children}</div>
 
-export const Image = ({ src, alt, plain, maxWidth, size, ...rest }) => {
+export const Image = ({ src, alt, maxWidth, size, fullWidth }) => {
   const width = useMemo(() => {
+    if (fullWidth) return '100%'
     switch (size) {
       case 'tiny':
         return '325px'
@@ -12,9 +13,6 @@ export const Image = ({ src, alt, plain, maxWidth, size, ...rest }) => {
         return '600px' // Default email container width
     }
   }, [size, maxWidth])
-
-  console.log(`Size: ${size} - ${width}`)
-  console.debug(size, rest, plain)
 
   return (
     <img
