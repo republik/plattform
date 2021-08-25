@@ -1,5 +1,5 @@
 {
-  "updated": "2021-06-15T13:41:23.989Z",
+  "updated": "2021-07-29T19:47:30.679Z",
   "title": "live",
   "data": [
     {
@@ -29,6 +29,10 @@
     {
       "key": "styleguide/CommentComposer/wait",
       "value": "Sie können {time} wieder einen Beitrag schreiben."
+    },
+    {
+      "key": "styleguide/CommentComposer/formatting/asterisk",
+      "value": "Damit System Gendersternchen erkennt, stellen Sie einen Backslash voran: Leser\\*in"
     },
     {
       "key": "styleguide/CommentActions/expand",

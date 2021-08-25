@@ -109,6 +109,12 @@ export const createSampleDiscussionContextValue = ({
   ),
 
   /**
+   * Array of functions run while typing in the comment box. Hints are rendered above secondary
+   * actions slot of the composer.
+   */
+  composerHints: [],
+
+  /**
    * React Element that will be placed into the secondary actions slot of the
    * composer. Can be null to not show anything.
    */

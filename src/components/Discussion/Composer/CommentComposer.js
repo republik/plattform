@@ -45,6 +45,9 @@ const styles = {
   withBorderBottom: css({
     borderBottomWidth: 1,
     borderBottomStyle: 'solid'
+  }),
+  hints: css({
+    marginTop: 6
   })
 }
 
@@ -80,6 +83,7 @@ export const CommentComposer = props => {
    */
   const root = React.useRef()
   const [textarea, textareaRef] = React.useState(null)
+  const [hints, setHints] = React.useState([])
   const textRef = React.useRef()
   const [preview, setPreview] = React.useState({
     loading: false,
@@ -87,9 +91,11 @@ export const CommentComposer = props => {
   })
 
   /*
-   * Get the discussion metadata and action callbacks from the DiscussionContext.
+   * Get the discussion metadata, action callbacks and hinters from DiscussionContext.
    */
-  const { discussion, actions } = React.useContext(DiscussionContext)
+  const { discussion, actions, composerHints = [] } = React.useContext(
+    DiscussionContext
+  )
   const { id: discussionId, tags, rules, displayAuthor, isBoard } = discussion
   const { maxLength } = rules
 
@@ -186,6 +192,7 @@ export const CommentComposer = props => {
   const onChangeText = ev => {
     const nextText = ev.target.value
     setText(nextText)
+    setHints(composerHints.map(fn => fn(nextText)).filter(Boolean))
     try {
       localStorage.setItem(localStorageKey, ev.target.value)
     } catch (e) {
@@ -292,6 +299,12 @@ export const CommentComposer = props => {
           <MaxLengthIndicator maxLength={maxLength} length={textLength} />
         )}
       </div>
+      {hints &&
+        hints.map((hint, index) => (
+          <div {...styles.hints} key={`hint-${index}`}>
+            {hint}
+          </div>
+        ))}
 
       <Loader
         loading={preview.loading && !(preview.comment && preview.comment.embed)}
