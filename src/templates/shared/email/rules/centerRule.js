@@ -9,6 +9,7 @@ import figureGroupRule from './figureGroupRule'
 import noteRule from './noteRule'
 import articleCollectionRule from './articleCollectionRule'
 import listRule from './listRule'
+import pullQuoteRule from './pullQuoteRule'
 
 const centerRule = {
   matchMdast: matchZone('CENTER'),
@@ -21,6 +22,7 @@ const centerRule = {
     figureGroupRule,
     listRule,
     blockQuoteRule,
+    pullQuoteRule,
     noteRule,
     articleCollectionRule
   ]

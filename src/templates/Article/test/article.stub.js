@@ -418,6 +418,14 @@ ImageGroup1_CreditGroup1_
 
 <section><h6>QUOTE</h6>
 
+«D'langstrass ish sho chli en weirde Ort»
+
+Max Muster
+
+<hr /></section>
+
+<section><h6>QUOTE</h6>
+
 <section><h6>FIGURE</h6>
 
 \`\`\`
