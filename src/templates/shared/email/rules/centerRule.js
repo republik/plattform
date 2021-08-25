@@ -5,6 +5,7 @@ import blockQuoteRule from './blockQuoteRule'
 import hrRule from './hrRule'
 import Center from '../components/Center'
 import { figureRule } from './figureRule'
+import figureGroupRule from './figureGroupRule'
 import noteRule from './noteRule'
 import articleCollectionRule from './articleCollectionRule'
 import listRule from './listRule'
@@ -17,6 +18,7 @@ const centerRule = {
     ...inlineHeadingsRules,
     hrRule,
     figureRule,
+    figureGroupRule,
     listRule,
     blockQuoteRule,
     noteRule,

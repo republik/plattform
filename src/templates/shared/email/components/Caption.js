@@ -6,9 +6,9 @@ export const Caption = ({ children }) => (
     key='caption'
     style={{
       fontSize: '15px',
+      lineHeight: '18px',
       fontFamily: fontFamilies.sansSerifRegular,
       marginTop: '5px',
-      marginBottom: '30px',
       textAlign: 'left'
     }}
   >
@@ -21,6 +21,7 @@ export const Byline = ({ children }) => (
     key='caption'
     style={{
       fontSize: '12px',
+      lineHeight: '15px',
       fontFamily: fontFamilies.sansSerifRegular
     }}
   >

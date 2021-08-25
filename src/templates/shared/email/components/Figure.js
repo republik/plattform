@@ -1,7 +1,9 @@
 import React, { useMemo } from 'react'
 import { imageResizeUrl } from 'mdast-react-render/lib/utils'
 
-export const Figure = ({ children }) => <div>{children}</div>
+export const Figure = ({ children }) => (
+  <span style={{ marginBottom: '15px' }}>{children}</span>
+)
 
 export const Image = ({ src, alt, maxWidth, size, fullWidth }) => {
   const width = useMemo(() => {
