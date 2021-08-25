@@ -34,7 +34,8 @@ export const TitleBlock = ({
               fontWeight: 500,
               fontSize: '20px',
               lineHeight: '24px',
-              color: formatLine.color
+              color: formatLine.color,
+              margin: '0px 0px 28px'
             }}
           >
             {formatLine.title}
@@ -52,7 +53,8 @@ export const Headline = ({ children, attributes, ...props }) => (
       fontFamily: fontFamilies.serifTitle,
       fontWeight: 900,
       fontSize: '58px',
-      lineHeight: '69px'
+      lineHeight: '69px',
+      margin: '0px 0px 12px'
     }}
     {...attributes}
     {...props}
@@ -68,8 +70,8 @@ export const Subject = ({ children, attributes, ...props }) => (
       display: 'inline',
       fontFamily: fontFamilies.sansSerifRegular,
       fontWeight: 'normal',
-      fontSize: '19px',
-      lineHeight: '24px',
+      fontSize: '23px',
+      lineHeight: '27px',
       paddingRight: '4px'
     }}
     {...attributes}
