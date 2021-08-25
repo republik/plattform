@@ -1,0 +1,32 @@
+import { matchType } from 'mdast-react-render/lib/utils'
+import Container from '../../EditorialNewsletter/email/Container'
+import { editorialParagraphRule } from '../../shared/email/rules/paragraphRule'
+import centerRule from '../../shared/email/rules/centerRule'
+import { coverRule, figureRule } from '../../shared/email/rules/figureRule'
+import titleBlockRule from '../../shared/email/rules/titleBlockRule'
+
+const articleEmailSchema = {
+  rules: [
+    {
+      matchMdast: matchType('root'),
+      component: Container,
+      props: node => ({
+        meta: node.meta || {},
+        variableContext: {
+          firstName: 'FNAME',
+          lastName: 'LNAME',
+          _mergeTags: true
+        }
+      }),
+      rules: [
+        editorialParagraphRule,
+        titleBlockRule,
+        centerRule,
+        coverRule,
+        figureRule
+      ]
+    }
+  ]
+}
+
+export default articleEmailSchema
