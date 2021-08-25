@@ -339,6 +339,16 @@ Hello :)
 
 <hr /></section>
 
+<section><h6>INFOBOX</h6>
+
+### TITLE - INFOBOX
+
+Infobox Content \\*\\_\\*
+
+Even more Infobox Content
+
+<hr /></section>
+
 <section><h6>BLOCKQUOTE</h6>
 
 > Comparison is the thief of joy.
