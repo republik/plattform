@@ -149,6 +149,10 @@ const createSchema = ({
       label: 'Diskussion',
       key: 'discussion',
       ref: 'repo'
+    },
+    {
+      label: 'E-Mail-Betreff',
+      key: 'emailSubject'
     }
   ],
   titleBlockRule,
