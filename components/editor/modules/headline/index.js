@@ -116,7 +116,7 @@ export default ({ rule, subModules, TYPE }) => {
         schema: {
           blocks: {
             [TYPE]: {
-              nodes: [{ kinds: ['text'] }]
+              nodes: [{ kinds: ['inline', 'text'] }]
             }
           }
         }
