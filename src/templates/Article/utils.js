@@ -110,7 +110,10 @@ const nestedInlines = [
         'QUOTEP',
         'QUOTECITE',
         'BLOCKQUOTEPARAGRAPH',
-        'BYLINE'
+        'BYLINE',
+        'H2',
+        'H1',
+        'LEAD'
       ]
     }
   }
