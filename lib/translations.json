@@ -1,6 +1,4 @@
 {
-  "updated": "2021-06-17T11:49:12.811Z",
-  "title": "live",
   "data": [
     {
       "key": "app/name",
@@ -1559,8 +1557,12 @@
       "value": "Dokument oder Schema nicht verfügbar."
     },
     {
+      "key": "styleguide/SeriesNav/seriesoverview/link",
+      "value": " {link}."
+    },
+    {
       "key": "styleguide/SeriesNav/seriesoverview",
-      "value": "Zur Serienübersicht"
+      "value": "Zur Übersicht"
     },
     {
       "key": "styleguide/SeriesNav/current",
