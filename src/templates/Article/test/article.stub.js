@@ -305,7 +305,7 @@ Houses in Gross_some person_
 
 ![](https://cdn.republik.pink/s3/republik-assets-staging/repos/republik/love-article-test-artikel-als-email/images/76f497354cb24d396c474551a2c233ec956af8a6.jpeg?size=5000x3750#originalURL=images%2F76f497354cb24d396c474551a2c233ec956af8a6.jpeg%3Fsize%3D5000x3750)
 
-Greens in normal size_some person_
+Greens in normal size _some person_
 
 <hr /></section>
 
@@ -436,7 +436,7 @@ Max Muster
 
 ![](https://cdn.republik.pink/s3/republik-assets-staging/repos/republik/love-article-test-artikel-als-email/images/76f497354cb24d396c474551a2c233ec956af8a6.jpeg?size=5000x3750#originalURL=images%2F76f497354cb24d396c474551a2c233ec956af8a6.jpeg%3Fsize%3D5000x3750)
 
-
+Legend _Credit_
 
 <hr /></section>
 
@@ -449,5 +449,4 @@ Thomas Jefferson
 
 
 <hr /></section>
-
 `

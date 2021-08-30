@@ -3,7 +3,8 @@ import React from 'react'
 const BlockQuote = ({ children }) => (
   <blockquote
     style={{
-      margin: '30px auto'
+      margin: '0',
+      padding: '30px auto'
     }}
   >
     {children}
