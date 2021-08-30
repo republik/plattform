@@ -22,8 +22,8 @@ import EventLog from '../components/Users/EventLog'
 import Access from '../components/Users/Access'
 import Sessions from '../components/Users/Sessions'
 import Actions from '../components/Users/Actions'
-import MailLog from '../components/Users/MailLog'
 import Dialog from '../components/Users/Dialog'
+import Mailbox from '../components/Users/Mailbox'
 
 const styles = {
   row: css({
@@ -43,8 +43,8 @@ const SectionSwitch = ({ userId, section }) => {
   if (section === 'access-grants') {
     return <Access userId={userId} />
   }
-  if (section === 'maillog') {
-    return <MailLog userId={userId} />
+  if (section === 'mailbox') {
+    return <Mailbox userId={userId} />
   }
   if (section === 'sessions') {
     return (
@@ -71,7 +71,7 @@ const SectionSwitch = ({ userId, section }) => {
       </div>
       <div {...styles.fifty}>
         <AuthSettings userId={userId} />
-        <MailLog userId={userId} narrow={2} />
+        <Mailbox userId={userId} narrow={3} />
         <AdminNotes userId={userId} />
       </div>
       <div {...styles.fifty}>
