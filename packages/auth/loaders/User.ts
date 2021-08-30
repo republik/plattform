@@ -27,6 +27,16 @@ module.exports = (context: any) => {
         .find({ id: ids })
         .then((users) => users.map((u) => transformUser(u))),
     ),
+    byEmail: createDataLoader(
+      (emails: readonly string[]) =>
+        users.find({ email: emails }).then((users) => users.map(transformUser)),
+      null,
+      (key, rows) =>
+        rows.find((row) => {
+          if (!row) return
+          return row._raw.email.toLowerCase() === key.toLowerCase()
+        }),
+    ),
     byIdOrEmail: createDataLoader(
       async (values: readonly string[]) => {
         const ids = values.filter(isUuid)

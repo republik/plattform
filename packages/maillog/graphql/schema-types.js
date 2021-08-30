@@ -43,7 +43,7 @@ extend type User {
     before: String
     after: String
     filters: MaiLogFiltersInput
-  ): MailLogConnection
+  ): MailLogConnection @deprecated(reason: "use query \`User.mailbox\` instead")
 }
 
 `
