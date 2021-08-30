@@ -1,8 +1,12 @@
 import React from 'react'
-import BlockQuote from '../components/BlockQuote'
-import { interactionParagraphRule } from './paragraphRule'
-import { matchType, matchZone } from 'mdast-react-render/lib/utils'
+import BlockQuote, { Paragraph } from '../components/BlockQuote'
+import {
+  matchParagraph,
+  matchType,
+  matchZone
+} from 'mdast-react-render/lib/utils'
 import legendRule from './legendRules'
+import { inlineInteractionParagraphRules } from './paragraphRule'
 
 const blockQuoteRule = {
   matchMdast: matchZone('BLOCKQUOTE'),
@@ -10,12 +14,14 @@ const blockQuoteRule = {
   rules: [
     {
       matchMdast: matchType('blockquote'),
-      component: ({ children }) => (
-        <div style={{ backgroundColor: '#F6F8F7', padding: '25px' }}>
-          {children}
-        </div>
-      ),
-      rules: [interactionParagraphRule]
+      component: ({ children }) => children,
+      rules: [
+        {
+          matchMdast: matchParagraph,
+          component: Paragraph,
+          rules: inlineInteractionParagraphRules
+        }
+      ]
     },
     legendRule
   ]
