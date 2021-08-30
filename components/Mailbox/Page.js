@@ -1,19 +1,24 @@
-import React from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { Query } from 'react-apollo'
 import gql from 'graphql-tag'
 import InfiniteScroller from 'react-infinite-scroller'
+import debounce from 'lodash.debounce'
 
 import withT from '../../lib/withT'
 
-import { Loader, A } from '@project-r/styleguide'
+import { Loader, A, Field } from '@project-r/styleguide'
 
 import { SectionTitle, SectionNav } from '../Display/utils'
 
 import List from './List'
 
 const GET_MAILBOX = gql`
-  query getMailbox($after: String, $hasError: Boolean) {
-    mailbox(first: 100, after: $after, filters: { hasError: $hasError }) {
+  query getMailbox($after: String, $email: String, $hasError: Boolean) {
+    mailbox(
+      first: 100
+      after: $after
+      filters: { hasError: $hasError, email: $email }
+    ) {
       pageInfo {
         hasNextPage
         endCursor
@@ -74,21 +79,38 @@ const GET_MAILBOX = gql`
 `
 
 const Page = withT(({ params, onChange }) => {
-  const { hasError = false } = params
+  const [email, setEmail] = useState()
+
+  useEffect(() => {
+    setEmail(params?.email)
+  }, [params])
+
+  const debounceOnChange = useCallback(
+    debounce(current => onChange({ ...params, ...current }), 400),
+    []
+  )
+
+  const onChangeEmail = (_, value, shouldValidate) => {
+    debounceOnChange({ email: value })
+    setEmail(value)
+  }
 
   const toggleFilterErrornous = e => {
     e?.preventDefault()
-    onChange({ ...params, hasError: !hasError ? true : null })
+    onChange({ ...params, hasError: !params?.hasError ? true : null })
   }
 
   return (
-    <Query query={GET_MAILBOX} variables={{ hasError: !!hasError }}>
+    <Query
+      query={GET_MAILBOX}
+      variables={{ hasError: !!params?.hasError, email: params?.email }}
+    >
       {({ loading, error, data, fetchMore }) => {
         const fetchMoreNodes = () =>
           fetchMore({
             variables: {
               after: data.mailbox.pageInfo.endCursor,
-              hasError: !!hasError
+              hasError: !!params?.hasError
             },
             updateQuery: (previousResult, { fetchMoreResult }) => {
               const previousNodes = previousResult.mailbox.nodes
@@ -109,32 +131,38 @@ const Page = withT(({ params, onChange }) => {
           })
 
         return (
-          <Loader
-            loading={loading}
-            error={error}
-            render={() => (
-              <>
-                <SectionTitle>
-                  E-Mails {hasError && '(problematische Zustellungen)'}
-                </SectionTitle>
-                <SectionNav>
-                  <A href='#' onClick={toggleFilterErrornous}>
-                    {hasError
-                      ? 'Alle E-Mails'
-                      : 'Nur problematische Zustellungen'}
-                  </A>
-                </SectionNav>
-                <InfiniteScroller
-                  loadMore={fetchMoreNodes}
-                  loader={<Loader loading />}
-                  hasMore={data.mailbox.pageInfo.hasNextPage}
-                  useWindow={false}
-                >
-                  <List nodes={data.mailbox.nodes} />
-                </InfiniteScroller>
-              </>
-            )}
-          />
+          <>
+            <Field
+              name='email'
+              type='email'
+              label={'E-Mail-Adresse'}
+              onChange={onChangeEmail}
+              value={email}
+            />
+            <SectionNav>
+              <A href='#' onClick={toggleFilterErrornous}>
+                {params?.hasError
+                  ? 'Alle E-Mails'
+                  : 'Nur problematische Zustellungen'}
+              </A>
+            </SectionNav>
+            <Loader
+              loading={loading}
+              error={error}
+              render={() => (
+                <>
+                  <InfiniteScroller
+                    loadMore={fetchMoreNodes}
+                    loader={<Loader loading />}
+                    hasMore={data.mailbox.pageInfo.hasNextPage}
+                    useWindow={false}
+                  >
+                    <List nodes={data.mailbox.nodes} />
+                  </InfiniteScroller>
+                </>
+              )}
+            />
+          </>
         )
       }}
     </Query>
