@@ -1,8 +1,41 @@
-import React from 'react'
+import React, { Children, useMemo } from 'react'
 import { fontFamilies } from '../../../../theme/fonts'
+import { Figure } from './Figure'
 
-export const PullQuote = ({ children, hasFigure }) => {
-  return <blockquote>{children}</blockquote>
+export const PullQuote = ({ children }) => {
+  const figure = useMemo(() => {
+    return Children.toArray(children).filter(element => element.type === Figure)
+  }, [children])
+
+  const rest = useMemo(() => {
+    return Children.toArray(children).filter(element => element.type !== Figure)
+  }, [children])
+
+  return (
+    <blockquote
+      style={{
+        margin: '60px 0'
+      }}
+    >
+      {figure.length > 0 ? (
+        <table style={{ width: '100%' }}>
+          <tr style={{ verticalAlign: 'top' }}>
+            <td
+              style={{
+                width: '155px',
+                paddingRight: '15px'
+              }}
+            >
+              {figure}
+            </td>
+            <td>{rest}</td>
+          </tr>
+        </table>
+      ) : (
+        children
+      )}
+    </blockquote>
+  )
 }
 
 export const PullQuoteText = ({ children }) => (
@@ -11,7 +44,8 @@ export const PullQuoteText = ({ children }) => (
       fontFamily: fontFamilies.serifBold,
       fontWeight: '700',
       fontSize: '28px',
-      lineHeight: '33px'
+      lineHeight: '33px',
+      margin: '0px'
     }}
   >
     {children}

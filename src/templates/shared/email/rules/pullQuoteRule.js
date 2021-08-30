@@ -2,12 +2,13 @@ import { matchParagraph, matchZone } from 'mdast-react-render/lib/utils'
 import { matchFigure, matchLast } from '../../../Article/utils'
 import inlineRules from './inlineRules'
 import { linkRule } from './linkRule'
-import { figureRule } from './figureRule'
+import { getImageRules } from './figureRule'
 import {
   PullQuote,
   PullQuoteSource,
   PullQuoteText
 } from '../components/PullQuote'
+import { Figure } from '../components/Figure'
 
 const pullQuoteRule = {
   matchMdast: matchZone('QUOTE'),
@@ -17,7 +18,11 @@ const pullQuoteRule = {
   }),
   rules: [
     // TODO: make sure image is on the left
-    figureRule,
+    {
+      matchMdast: matchZone('FIGURE'),
+      component: Figure,
+      rules: getImageRules({ forceWidth: '155px' })
+    },
     {
       // PullQuote text
       matchMdast: (node, index, parent) =>
