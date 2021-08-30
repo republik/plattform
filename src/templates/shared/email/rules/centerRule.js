@@ -10,6 +10,7 @@ import noteRule from './noteRule'
 import articleCollectionRule from './articleCollectionRule'
 import listRule from './listRule'
 import pullQuoteRule from './pullQuoteRule'
+import infoBoxRule from './infoBoxRule'
 
 const centerRule = {
   matchMdast: matchZone('CENTER'),
@@ -24,6 +25,7 @@ const centerRule = {
     blockQuoteRule,
     pullQuoteRule,
     noteRule,
+    infoBoxRule,
     articleCollectionRule
   ]
 }

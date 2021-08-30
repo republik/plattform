@@ -17,7 +17,6 @@ const pullQuoteRule = {
     hasFigure: !!node.children.find(matchZone('FIGURE'))
   }),
   rules: [
-    // TODO: make sure image is on the left
     {
       matchMdast: matchZone('FIGURE'),
       component: Figure,

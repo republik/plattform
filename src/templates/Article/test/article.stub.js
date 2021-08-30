@@ -240,9 +240,9 @@ export const ArticleStub = `
 }
 \`\`\`
 
-![](https://cdn.republik.pink/s3/republik-assets-staging/repos/republik/love-article-test-artikel-als-email/images/76f497354cb24d396c474551a2c233ec956af8a6.jpeg?size=5000x3750#originalURL=images%2F76f497354cb24d396c474551a2c233ec956af8a6.jpeg%3Fsize%3D5000x3750)
+![](https://cdn.republik.pink/s3/republik-assets-staging/repos/republik/love-article-test-artikel-als-email/images/6dd16b475a819a693c2bd6fddc585de3839667b9.jpeg?size=3150x2100#originalURL=images%2F6dd16b475a819a693c2bd6fddc585de3839667b9.jpeg%3Fsize%3D3150x2100)
 
-Legende_Credit bei Thumbnail_
+Legende _Credit bei Thumbnail_
 
 <hr /></section>
 
@@ -274,7 +274,7 @@ Das _ist_ **ein** **_Paragraph _**<sub>a</sub>**_ + _**<sup>b</sup>**_ = _**[Vid
 
 ![](https://cdn.republik.pink/s3/republik-assets-staging/repos/republik/love-article-test-artikel-als-email/images/59f30e6de1e5c390ca41db4b807be574d05d0bec.jpeg?size=2250x1500#originalURL=images%2F59f30e6de1e5c390ca41db4b807be574d05d0bec.jpeg%3Fsize%3D2250x1500)
 
-Houses in Edge 2 Edge_some person_
+Houses in Edge 2 Edge _some person_
 
 <hr /></section>
 
@@ -291,7 +291,7 @@ Houses in Edge 2 Edge_some person_
 
 ![](https://cdn.republik.pink/s3/republik-assets-staging/repos/republik/love-article-test-artikel-als-email/images/59f30e6de1e5c390ca41db4b807be574d05d0bec.jpeg?size=2250x1500#originalURL=images%2F59f30e6de1e5c390ca41db4b807be574d05d0bec.jpeg%3Fsize%3D2250x1500)
 
-Houses in Gross_some person_
+Houses in Gross _some person_
 
 <hr /></section>
 
@@ -303,7 +303,7 @@ Houses in Gross_some person_
 }
 \`\`\`
 
-![](https://cdn.republik.pink/s3/republik-assets-staging/repos/republik/love-article-test-artikel-als-email/images/76f497354cb24d396c474551a2c233ec956af8a6.jpeg?size=5000x3750#originalURL=images%2F76f497354cb24d396c474551a2c233ec956af8a6.jpeg%3Fsize%3D5000x3750)
+![](https://cdn.republik.pink/s3/republik-assets-staging/repos/republik/love-article-test-artikel-als-email/images/6dd16b475a819a693c2bd6fddc585de3839667b9.jpeg?size=3150x2100#originalURL=images%2F6dd16b475a819a693c2bd6fddc585de3839667b9.jpeg%3Fsize%3D3150x2100)
 
 Greens in normal size _some person_
 
@@ -317,7 +317,7 @@ This text is in the center.
 
 <section><h6>INFOBOX</h6>
 
-### <sub>Pullquote</sub>
+### <sub>Titel der Infobox</sub>
 
 <section><h6>FIGURE</h6>
 
@@ -329,23 +329,33 @@ This text is in the center.
 
 ![](https://cdn.republik.pink/s3/republik-assets-staging/repos/republik/love-article-test-artikel-als-email/images/59f30e6de1e5c390ca41db4b807be574d05d0bec.jpeg?size=2250x1500#originalURL=images%2F59f30e6de1e5c390ca41db4b807be574d05d0bec.jpeg%3Fsize%3D2250x1500)
 
-House_street_
+House _street_
 
 <hr /></section>
 
 Alberto braun [Link](https://www.youtube.com/watch?v=dQw4w9WgXcQ)
 
-Hello :)
+#### Dies ist der Zwischentitel der Infobox
+
+I'm baby mixtape succulents church-key taiyaki, affogato neutra coloring book. Fam hoodie typewriter cloud bread food truck, health goth put a bird on it iceland paleo pop-up. Poke brunch food truck wolf. Poke kogi succulents, man braid pitchfork actually craft beer kale chips hella chartreuse readymade stumptown bitters.
 
 <hr /></section>
 
 <section><h6>INFOBOX</h6>
 
-### TITLE - INFOBOX
+### Titel der Infobox
 
 Infobox Content \\*\\_\\*
 
-Even more Infobox Content
+I'm baby mixtape succulents church-key taiyaki, affogato neutra coloring book. Fam hoodie typewriter cloud bread food truck, health goth put a bird on it iceland paleo pop-up. Poke brunch food truck wolf. Poke kogi succulents, man braid pitchfork actually craft beer kale chips hella chartreuse readymade stumptown bitters.
+
+*   ul > Item 1
+*   ul > Item 2
+*   ul > Item 3
+*   ul > Item 4
+
+1.  ol > item 1
+2.  ol > item 2
 
 <hr /></section>
 
@@ -392,9 +402,9 @@ Test
 }
 \`\`\`
 
-![](https://cdn.republik.pink/s3/republik-assets-staging/repos/republik/love-article-test-artikel-als-email/images/76f497354cb24d396c474551a2c233ec956af8a6.jpeg?size=5000x3750#originalURL=images%2F76f497354cb24d396c474551a2c233ec956af8a6.jpeg%3Fsize%3D5000x3750)
+![](https://cdn.republik.pink/s3/republik-assets-staging/repos/republik/love-article-test-artikel-als-email/images/6dd16b475a819a693c2bd6fddc585de3839667b9.jpeg?size=3150x2100#originalURL=images%2F6dd16b475a819a693c2bd6fddc585de3839667b9.jpeg%3Fsize%3D3150x2100)
 
-Image1_Credit1_
+Image1 _Credit1_
 
 <hr /></section>
 
@@ -408,7 +418,7 @@ Image1_Credit1_
 
 ![](https://cdn.republik.pink/s3/republik-assets-staging/repos/republik/love-article-test-artikel-als-email/images/76f497354cb24d396c474551a2c233ec956af8a6.jpeg?size=5000x3750#originalURL=images%2F76f497354cb24d396c474551a2c233ec956af8a6.jpeg%3Fsize%3D5000x3750)
 
-Image2_Credit2_
+Image2 _Credit2_
 
 <hr /></section>
 
