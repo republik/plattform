@@ -1,5 +1,5 @@
 import React, { Children, useMemo } from 'react'
-import { fontFamilies } from '../../../../theme/fonts'
+import { fontStyles } from '../../../../theme/fonts'
 import { Figure } from './Figure'
 
 export const PullQuote = ({ children }) => {
@@ -12,7 +12,7 @@ export const PullQuote = ({ children }) => {
   }, [children])
 
   return (
-    <blockquote
+    <div
       style={{
         margin: '60px 0'
       }}
@@ -34,15 +34,14 @@ export const PullQuote = ({ children }) => {
       ) : (
         children
       )}
-    </blockquote>
+    </div>
   )
 }
 
 export const PullQuoteText = ({ children }) => (
   <p
     style={{
-      fontFamily: fontFamilies.serifBold,
-      fontWeight: '700',
+      ...fontStyles.serifBold,
       fontSize: '28px',
       lineHeight: '33px',
       margin: '0px'
@@ -55,9 +54,11 @@ export const PullQuoteText = ({ children }) => (
 export const PullQuoteSource = ({ children }) => (
   <cite
     style={{
-      fontFamily: fontFamilies.sansSerifRegular,
+      display: 'block',
+      ...fontStyles.sansSerifRegular,
       fontSize: '15px',
-      marginTop: '21px',
+      lineHeight: '21px',
+      margin: '21px 0 0 0',
       fontStyle: 'normal'
     }}
   >
