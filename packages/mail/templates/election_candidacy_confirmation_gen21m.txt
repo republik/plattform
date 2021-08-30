@@ -7,8 +7,8 @@ Kandidatin oder Kandidat für den Genossenschaftsrat von Project R.
 Zu Ihrer Information: Alle notwendigen Angaben haben wir erfasst.
 
 Bis zum 30. Oktober können Sie Ihre Angaben ändern oder ergänzen
-{{frontend_base_url}}/vote/genossenschaft/kandidieren?edit , falls Ihnen noch
-etwas einfallen sollte.
+{{frontend_base_url}}/vote/2021/kandidieren?edit , falls Ihnen noch etwas
+einfallen sollte.
 
 Die Wahl selbst dauert vom 12. bis zum 28. November. Zeitgleich zur Wahl findet
 eine Online-Debatte statt. Dort wird Ihr Statement in Ihrem Namen
