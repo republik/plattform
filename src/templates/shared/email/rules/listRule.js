@@ -1,6 +1,6 @@
-import { matchType } from 'mdast-react-render/lib/utils'
-import List, { ListItem } from '../components/List'
-import { editorialParagraphRule } from './paragraphRule'
+import { matchParagraph, matchType } from 'mdast-react-render/lib/utils'
+import List, { ListItem, ListParagraph } from '../components/List'
+import { inlineEditorialParagraphRules } from './paragraphRule'
 
 const listRule = {
   matchMdast: matchType('list'),
@@ -15,7 +15,13 @@ const listRule = {
     {
       matchMdast: matchType('listItem'),
       component: ListItem,
-      rules: [editorialParagraphRule]
+      rules: [
+        {
+          matchMdast: matchParagraph,
+          component: ListParagraph,
+          rules: inlineEditorialParagraphRules
+        }
+      ]
     }
   ]
 }

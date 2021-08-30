@@ -36,17 +36,22 @@ const infoBoxRule = {
     {
       matchMdast: matchType('list'),
       component: List,
-      props: node => {
-        return {
-          ordered: node.ordered,
-          start: node.start
-        }
-      },
+      props: node => ({
+        ordered: node.ordered,
+        start: node.start
+      }),
       rules: [
         {
           matchMdast: matchType('listItem'),
           component: ListItem,
-          rules: [infoBoxParagraphRule]
+          rules: [
+            {
+              ...infoBoxParagraphRule,
+              props: () => ({
+                noMargin: true
+              })
+            }
+          ]
         }
       ]
     },

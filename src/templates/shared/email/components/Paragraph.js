@@ -6,7 +6,8 @@ import { Editorial, Interaction } from '../../../../components/Typography'
 const baseParagraphStyle = {
   color: colors.text,
   fontSize: '19px',
-  lineHeight: '30px'
+  lineHeight: '30px',
+  margin: '30px 0'
 }
 
 export const EditorialParagraph = ({ children }) => (

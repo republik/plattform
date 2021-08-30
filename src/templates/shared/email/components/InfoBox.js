@@ -66,12 +66,13 @@ export const SubTitle = ({ children }) => (
   </p>
 )
 
-export const Text = ({ children }) => (
+export const Text = ({ children, noMargin }) => (
   <p
     style={{
       ...fontStyles.sansSerifRegular,
       fontSize: '18px',
-      lineHeight: '30px'
+      lineHeight: '30px',
+      margin: noMargin ? '0px 0px' : undefined
     }}
   >
     {children}
