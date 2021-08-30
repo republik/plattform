@@ -17,7 +17,7 @@ const matchCover = (node, index) => {
  * @param forceWidth force the images to be of a certain width
  * @param isCover
  */
-export const getImageRules = ({ forceWidth, isCover }) => [
+export const getImageRules = ({ forceWidth, isCover } = {}) => [
   {
     matchMdast: matchImagesParagraph,
     component: Image,
@@ -57,7 +57,7 @@ export const getImageRules = ({ forceWidth, isCover }) => [
 export const figureRule = {
   matchMdast: matchZone('FIGURE'),
   component: Figure,
-  rules: getImageRules({ displayWidth: '600px', isCover: false })
+  rules: getImageRules()
 }
 
 export const coverRule = {
@@ -69,5 +69,17 @@ export const coverRule = {
       </td>
     </tr>
   ),
-  rules: getImageRules({ displayWidth: '1280px', isCover: true })
+  rules: getImageRules({ isCover: true })
+}
+
+export const edgeToEdgeFigureRule = {
+  matchMdast: matchZone('FIGURE'),
+  component: ({ children }) => (
+    <tr>
+      <td>
+        <Figure>{children}</Figure>
+      </td>
+    </tr>
+  ),
+  rules: getImageRules()
 }

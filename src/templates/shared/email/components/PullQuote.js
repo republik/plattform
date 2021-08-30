@@ -19,17 +19,19 @@ export const PullQuote = ({ children }) => {
     >
       {figure.length > 0 ? (
         <table style={{ width: '100%' }}>
-          <tr style={{ verticalAlign: 'top' }}>
-            <td
-              style={{
-                width: '155px',
-                paddingRight: '15px'
-              }}
-            >
-              {figure}
-            </td>
-            <td>{rest}</td>
-          </tr>
+          <tbody>
+            <tr style={{ verticalAlign: 'top' }}>
+              <td
+                style={{
+                  width: '155px',
+                  paddingRight: '15px'
+                }}
+              >
+                {figure}
+              </td>
+              <td>{rest}</td>
+            </tr>
+          </tbody>
         </table>
       ) : (
         children

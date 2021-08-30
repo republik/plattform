@@ -2,7 +2,11 @@ import { matchType } from 'mdast-react-render/lib/utils'
 import Container from '../../EditorialNewsletter/email/Container'
 import { editorialParagraphRule } from '../../shared/email/rules/paragraphRule'
 import centerRule from '../../shared/email/rules/centerRule'
-import { coverRule, figureRule } from '../../shared/email/rules/figureRule'
+import {
+  coverRule,
+  edgeToEdgeFigureRule,
+  figureRule
+} from '../../shared/email/rules/figureRule'
 import titleBlockRule from '../../shared/email/rules/titleBlockRule'
 
 const articleEmailSchema = {
@@ -23,7 +27,7 @@ const articleEmailSchema = {
         titleBlockRule,
         centerRule,
         coverRule,
-        figureRule
+        edgeToEdgeFigureRule
       ]
     }
   ]

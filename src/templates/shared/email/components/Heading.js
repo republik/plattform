@@ -6,7 +6,7 @@ export const Heading2 = ({ children }) => (
     style={{
       fontFamily: fontFamilies.serifBold,
       fontSize: '23px',
-      lineHeight: '130%',
+      lineHeight: '27px',
       marginTop: '60px'
     }}
   >

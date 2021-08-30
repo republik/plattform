@@ -260,9 +260,9 @@ Von [Tobias Maier](/~b71592a5-1ef9-4190-96e9-acee30e4eab2), 18.08.2021
 
 <section><h6>CENTER</h6>
 
-Das _ist_ **ein** **_Paragraph _**<sub>a</sub>**_ + _**<sup>b</sup>**_ = _**[Video](https://www.youtube.com/watch?v=dQw4w9WgXcQ)
+Das _ist_ **ein** **_Paragraph _**<sub>a</sub>**_ + _**<sup>b</sup>**_ = _**[Video](https://www.youtube.com/watch?v=dQw4w9WgXcQ):
 
-<hr /></section>
+Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
 
 <section><h6>FIGURE</h6>
 
@@ -272,13 +272,11 @@ Das _ist_ **ein** **_Paragraph _**<sub>a</sub>**_ + _**<sup>b</sup>**_ = _**[Vid
 }
 \`\`\`
 
-![](https://cdn.republik.pink/s3/republik-assets-staging/repos/republik/love-article-test-artikel-als-email/images/59f30e6de1e5c390ca41db4b807be574d05d0bec.jpeg?size=2250x1500#originalURL=images%2F59f30e6de1e5c390ca41db4b807be574d05d0bec.jpeg%3Fsize%3D2250x1500)
+![](https://cdn.republik.pink/s3/republik-assets-staging/repos/republik/love-article-test-artikel-als-email/images/6dd16b475a819a693c2bd6fddc585de3839667b9.jpeg?size=3150x2100#originalURL=images%2F6dd16b475a819a693c2bd6fddc585de3839667b9.jpeg%3Fsize%3D3150x2100)
 
-Houses in Edge 2 Edge _some person_
+Legende _Crädits_
 
 <hr /></section>
-
-<section><h6>CENTER</h6>
 
 <section><h6>FIGURE</h6>
 
@@ -292,20 +290,6 @@ Houses in Edge 2 Edge _some person_
 ![](https://cdn.republik.pink/s3/republik-assets-staging/repos/republik/love-article-test-artikel-als-email/images/59f30e6de1e5c390ca41db4b807be574d05d0bec.jpeg?size=2250x1500#originalURL=images%2F59f30e6de1e5c390ca41db4b807be574d05d0bec.jpeg%3Fsize%3D2250x1500)
 
 Houses in Gross _some person_
-
-<hr /></section>
-
-<section><h6>FIGURE</h6>
-
-\`\`\`
-{
-  "excludeFromGallery": false
-}
-\`\`\`
-
-![](https://cdn.republik.pink/s3/republik-assets-staging/repos/republik/love-article-test-artikel-als-email/images/6dd16b475a819a693c2bd6fddc585de3839667b9.jpeg?size=3150x2100#originalURL=images%2F6dd16b475a819a693c2bd6fddc585de3839667b9.jpeg%3Fsize%3D3150x2100)
-
-Greens in normal size _some person_
 
 <hr /></section>
 
@@ -457,6 +441,20 @@ Thomas Jefferson
 <hr /></section>
 
 
+
+<hr /></section>
+
+<section><h6>FIGURE</h6>
+
+\`\`\`
+{
+  "excludeFromGallery": false
+}
+\`\`\`
+
+![](https://cdn.republik.pink/s3/republik-assets-staging/repos/republik/love-article-test-artikel-als-email/images/6dd16b475a819a693c2bd6fddc585de3839667b9.jpeg?size=3150x2100#originalURL=images%2F6dd16b475a819a693c2bd6fddc585de3839667b9.jpeg%3Fsize%3D3150x2100)
+
+Edge to Edge _Bild_
 
 <hr /></section>
 `
