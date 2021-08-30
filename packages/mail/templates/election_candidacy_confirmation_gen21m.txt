@@ -1,12 +1,13 @@
 Sehr geehrte Verlegerin
 sehr geehrter Verleger
+and everyone beyond
 
-Vielen Dank für Ihr Engagement und herzlichen Glückwunsch: Sie sind offiziell
-Kandidatin oder Kandidat für den Genossenschaftsrat von Project R.
+Vielen Dank für Ihr Engagement und herzlichen Glückwunsch: Sie kandidieren
+offiziell für den Genossenschaftsrat von Project R.
 
 Zu Ihrer Information: Alle notwendigen Angaben haben wir erfasst.
 
-Bis zum 30. Oktober können Sie Ihre Angaben ändern oder ergänzen
+Bis zum 29. Oktober können Sie Ihre Angaben ändern oder ergänzen
 {{frontend_base_url}}/vote/2021/kandidieren?edit , falls Ihnen noch etwas
 einfallen sollte.
 
