@@ -1,21 +1,16 @@
-import React, { useMemo } from 'react'
+import React from 'react'
 import { imageResizeUrl } from 'mdast-react-render/lib/utils'
 
 export const Figure = ({ children }) => (
   <span style={{ marginBottom: '15px' }}>{children}</span>
 )
 
-export const Image = ({ src, alt, maxWidth, size, fullWidth }) => {
-  const width = useMemo(() => {
-    if (fullWidth) return '100%'
-    switch (size) {
-      case 'tiny':
-        return '325px'
-      default:
-        return '600px' // Default email container width
-    }
-  }, [size, maxWidth])
-
+export const Image = ({ src, alt, width, maxWidth, resize }) => {
+  console.debug({
+    width,
+    maxWidth,
+    resize
+  })
   return (
     <img
       key='image'
@@ -27,7 +22,11 @@ export const Image = ({ src, alt, maxWidth, size, fullWidth }) => {
         width
       }}
       width={width}
-      src={imageResizeUrl(src, '600x')}
+      src={imageResizeUrl(
+        src,
+        // If no resize value is given calculate a resize url for the width
+        `${(resize ? resize : width).replace('px', '')}x`
+      )}
       alt={alt}
     />
   )

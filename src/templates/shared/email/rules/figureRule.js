@@ -1,39 +1,52 @@
 import React from 'react'
-import { matchZone } from 'mdast-react-render/lib/utils'
+import { matchType, matchZone } from 'mdast-react-render/lib/utils'
 import { extractImages, matchImagesParagraph } from '../../../Article/utils'
 import { FigureImage } from '../../../../components/Figure'
 import { Figure, Image } from '../components/Figure'
 import legendRule from './legendRules'
+import { getImageSize, isRelativeSize } from '../util/ImageSizingUtil'
+import { getNodeDepth } from '../util/NodeDepthUtil'
 
 const matchCover = (node, index) => {
   return matchZone('FIGURE') && index === 0
 }
 
-const getImageRules = isCover => [
+/**
+ * Get Image rules
+ * @param displayWidth The image is resized to this
+ * @param forceWidth force the images to be of a certain width
+ * @param isCover
+ */
+export const getImageRules = ({ forceWidth, isCover }) => [
   {
     matchMdast: matchImagesParagraph,
     component: Image,
     props: (node, _, parent, { ancestors }) => {
       const { src } = extractImages(node)
-      let displayWidth = 600
+      const altText = node.children[0].alt
       const { plain, size } = parent.data
 
-      let fullWidth = false
+      // Check if the figure is a direct child of the root-node
+      const displayWidth =
+        getNodeDepth(ancestors, matchType('root')) === 1 ? '1280px' : '600px'
+
+      let width = forceWidth ? forceWidth : getImageSize({ displayWidth, size })
+
       if (
         // If it's the cover image without a given sizing
         (!size && isCover) ||
         // If the image is not the cover and directly inside root
-        (!isCover && ancestors.length === 2 && ancestors[1].type === 'root')
-      ) {
-        fullWidth = true
-      }
+        (!isCover && getNodeDepth(ancestors, matchType('root')) === 1)
+      )
+        width = getImageSize({ fill: true })
 
       return {
         ...FigureImage.utils.getResizedSrcs(src, displayWidth),
-        alt: node.children[0].alt,
+        alt: altText,
         plain,
-        size,
-        fullWidth
+        width: width,
+        // If the width is a relative size make sure the src is resized to the display-width
+        resize: isRelativeSize(width) ? displayWidth : undefined
       }
     },
     isVoid: true
@@ -44,7 +57,7 @@ const getImageRules = isCover => [
 export const figureRule = {
   matchMdast: matchZone('FIGURE'),
   component: Figure,
-  rules: getImageRules(false)
+  rules: getImageRules({ displayWidth: '600px', isCover: false })
 }
 
 export const coverRule = {
@@ -56,5 +69,5 @@ export const coverRule = {
       </td>
     </tr>
   ),
-  rules: getImageRules(true)
+  rules: getImageRules({ displayWidth: '1280px', isCover: true })
 }
