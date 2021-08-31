@@ -51,8 +51,8 @@ export const Headline = ({ children, attributes, ...props }) => (
   <h1
     style={{
       ...fontStyles.serifTitle,
-      fontSize: '58px',
-      lineHeight: '60px',
+      fontSize: '30px',
+      lineHeight: '34px',
       margin: '0px 0px 12px'
     }}
     {...attributes}
@@ -67,10 +67,9 @@ export const Subject = ({ children, attributes, ...props }) => (
     style={{
       color: '#8c8c8c',
       display: 'inline',
-      fontFamily: fontFamilies.sansSerifRegular,
-      fontWeight: 'normal',
+      ...fontStyles.sansSerifRegular,
       fontSize: '23px',
-      lineHeight: '27px',
+      lineHeight: '30px',
       paddingRight: '4px'
     }}
     {...attributes}
@@ -84,8 +83,8 @@ export const Lead = ({ children, attributes, ...props }) => (
   <p
     style={{
       color: colors.text,
-      fontFamily: fontFamilies.serifRegular,
-      fontSize: '19px',
+      ...fontStyles.serifRegular,
+      fontSize: '23px',
       lineHeight: '30px',
       display: 'inline'
     }}
@@ -100,9 +99,9 @@ export const Credits = ({ children, attributes, ...props }) => (
   <p
     style={{
       color: colors.text,
-      fontFamily: fontFamilies.sansSerifRegular,
-      fontSize: '14px',
-      lineHeight: '17px'
+      ...fontStyles.sansSerifRegular,
+      fontSize: '15px',
+      lineHeight: '21px'
     }}
     {...attributes}
     {...props}

@@ -5,14 +5,14 @@ export const Figure = ({ children }) => (
   <span style={{ marginBottom: '15px' }}>{children}</span>
 )
 
-export const Image = ({ src, alt, width, maxWidth, resize }) => (
+export const Image = ({ src, alt, width, resize }) => (
   <img
     key='image'
     style={{
       border: '0px',
       height: 'auto',
       margin: '0px',
-      maxWidth,
+      maxWidth: '100%',
       width
     }}
     width={width}
