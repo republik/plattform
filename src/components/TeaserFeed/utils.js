@@ -4,10 +4,7 @@ export const getFormatLine = ({ title, format, series, repoId, path }) => {
   if (format?.meta) {
     return {
       title: format.meta.title,
-      color:
-        format.meta.color ||
-        format.meta.section?.meta?.color ||
-        colors[format.meta.kind],
+      color: format.meta.color || colors[format.meta.kind],
       path: format.meta.path
     }
   }
