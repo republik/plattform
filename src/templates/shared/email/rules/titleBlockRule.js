@@ -24,8 +24,8 @@ const titleBlockRule = {
     return {
       center: node.data.center,
       breakout: node.data.breakout,
-      format: root.format,
-      series: root.series,
+      format: root.meta?.format,
+      series: root.meta?.series,
       repoId: root.repoId,
       path: root.meta?.path
     }
