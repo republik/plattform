@@ -117,11 +117,13 @@ At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergr
 ### With Covid-19 Logo
 
 ```react|noSource
-<Markdown schema={createEmailSchema()}>{`
-\-\-\-
-format: 'https://github.com/republik/format-covid-19-uhr-newsletter'
-\-\-\-
-
+<Markdown schema={createEmailSchema()} rootData={{
+  "meta": {
+    "format": {
+      "repoId": "republik/format-covid-19-uhr-newsletter"
+    }
+  }
+}}>{`
 <section><h6>CENTER</h6>
 
 Liebe Leserinnen, liebe Leser

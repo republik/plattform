@@ -3,9 +3,7 @@ import colors from '../../../theme/colors'
 
 export default ({ meta }) => {
   const { slug, path, format } = meta
-
-  const isCovid19 =
-    format && format.indexOf('format-covid-19-uhr-newsletter') !== -1
+  const isCovid19 = format?.repoId?.includes('format-covid-19-uhr-newsletter')
 
   return (
     <tr>
