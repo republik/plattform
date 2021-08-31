@@ -7,15 +7,15 @@ offiziell für den Genossenschaftsrat von Project R.
 
 Zu Ihrer Information: Alle notwendigen Angaben haben wir erfasst.
 
-Bis zum 29. Oktober können Sie Ihre Angaben ändern oder ergänzen
-{{frontend_base_url}}/vote/2021/kandidieren?edit , falls Ihnen noch etwas
-einfallen sollte.
+Bis zum 29. Oktober können Sie Ihre Angaben ändern
+{{frontend_base_url}}/vote/2021/kandidieren?edit=true , falls Sie das wünschen.
 
 Die Wahl selbst dauert vom 12. bis zum 28. November. Zeitgleich zur Wahl findet
 eine Online-Debatte statt. Dort wird Ihr Statement in Ihrem Namen
-veröffentlicht. Während dieser Zeit können die Mitglieder Ihnen Fragen stellen.
-Wir freuen uns, wenn Sie in der Debatte präsent sind. Und wenn Sie sich für die
-eine oder andere Antwort Zeit nehmen.
+veröffentlicht. Während der Dauer der Wahl können die Mitglieder Ihnen Fragen
+stellen und Sie so ein bisschen besser kennenlernen. Wir freuen uns, wenn Sie in
+der Debatte präsent sind. Und wenn Sie sich für die eine oder andere Antwort
+Zeit nehmen.
 
 Wir werden die Debatte moderieren und dafür sorgen, dass unsere Etikette
 {{frontend_base_url}}/etikette eingehalten wird.

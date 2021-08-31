@@ -177,12 +177,19 @@ module.exports = async (_, args, context) => {
         throw new Error(t('profile/candidacy/statement/needed'))
       }
 
-      if ('biography' in args && args.statement.length < 1) {
+      if ('biography' in args && args.biography.length < 1) {
         throw new Error(t('profile/candidacy/biography/needed'))
       }
 
-      if ('gender' in args && args.statement.length < 1) {
+      if ('gender' in args && args.gender.length < 1) {
         throw new Error(t('profile/candidacy/gender/needed'))
+      }
+
+      if (
+        'portrait' in args &&
+        !(args.portrait === undefined && me._raw.portraitUrl)
+      ) {
+        throw new Error(t('profile/candidacy/portrait/needed'))
       }
     }
     if (await isInCandidacyInElectionPhase(me._raw, pgdb)) {
