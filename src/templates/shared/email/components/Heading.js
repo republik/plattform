@@ -1,13 +1,13 @@
 import React from 'react'
-import { fontFamilies } from '../../../../theme/fonts'
+import { fontStyles } from '../../../../theme/fonts'
 
 export const Heading2 = ({ children }) => (
   <h2
     style={{
-      fontFamily: fontFamilies.serifBold,
-      fontSize: '23px',
-      lineHeight: '27px',
-      marginTop: '60px'
+      ...fontStyles.serifBold,
+      fontSize: '24px',
+      lineHeight: '30px',
+      margin: '46px 0 12px 0'
     }}
   >
     {children}

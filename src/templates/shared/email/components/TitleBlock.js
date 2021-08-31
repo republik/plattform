@@ -1,6 +1,6 @@
 import React from 'react'
 import Center from './Center'
-import { fontFamilies } from '../../../../theme/fonts'
+import { fontFamilies, fontStyles } from '../../../../theme/fonts'
 import colors from '../../../../theme/colors'
 import { getFormatLine } from '../../../../components/TeaserFeed/utils'
 
@@ -50,10 +50,9 @@ export const TitleBlock = ({
 export const Headline = ({ children, attributes, ...props }) => (
   <h1
     style={{
-      fontFamily: fontFamilies.serifTitle,
-      fontWeight: 900,
+      ...fontStyles.serifTitle,
       fontSize: '58px',
-      lineHeight: '69px',
+      lineHeight: '60px',
       margin: '0px 0px 12px'
     }}
     {...attributes}
