@@ -1,28 +1,29 @@
 ```react|noSource
 <div>
-<Markdown schema={schema}rootData={{
-  format: {
+  <Markdown schema={schema} rootData={{
     "meta": {
-    "title": "Briefing aus Bern",
-    "path": "/format/briefing-aus-bern",
-    "kind": "editorial",
-    "color": null,
-    "section": {
-      "meta": {
-        "title": "Briefings",
-        "path": "/briefings",
-        "color": "#07809a"
+      "format": {
+        "meta": {
+          "title": "Briefing aus Bern",
+          "path": "/format/briefing-aus-bern",
+          "kind": "editorial",
+          "color": null,
+          "section": {
+            "meta": {
+              "title": "Briefings",
+              "path": "/briefings",
+              "color": "#07809a"
+            }
+          }
+        }
       }
     }
-  }
-  }
-}}>
+  }}>
     {fixtures.BaB153Stub}
-</Markdown>
+  </Markdown>
 
-
-<Markdown schema={schema}>
+  <Markdown schema={schema}>
     {fixtures.ArticleStub}
-</Markdown>
+  </Markdown>
 </div>
 ```
