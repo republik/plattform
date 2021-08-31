@@ -4,8 +4,7 @@ import { editorialParagraphRule } from '../../shared/email/rules/paragraphRule'
 import centerRule from '../../shared/email/rules/centerRule'
 import {
   coverRule,
-  edgeToEdgeFigureRule,
-  figureRule
+  edgeToEdgeFigureRule
 } from '../../shared/email/rules/figureRule'
 import titleBlockRule from '../../shared/email/rules/titleBlockRule'
 

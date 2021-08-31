@@ -69,7 +69,7 @@ export const Subject = ({ children, attributes, ...props }) => (
       display: 'inline',
       ...fontStyles.sansSerifRegular,
       fontSize: '23px',
-      lineHeight: '30px',
+      lineHeight: '37px',
       paddingRight: '4px'
     }}
     {...attributes}
@@ -86,7 +86,8 @@ export const Lead = ({ children, attributes, ...props }) => (
       ...fontStyles.serifRegular,
       fontSize: '23px',
       lineHeight: '30px',
-      display: 'inline'
+      display: 'inline',
+      margin: '0 0 20px 0'
     }}
     {...attributes}
     {...props}

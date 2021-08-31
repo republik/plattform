@@ -5,7 +5,7 @@ import legendRule from './legendRules'
 
 const figureGroupRule = {
   matchMdast: matchZone('FIGUREGROUP'),
-  component: ({ children }) => <div>{children}</div>,
+  component: ({ children }) => <div role='group'>{children}</div>,
   rules: [figureRule, legendRule]
 }
 

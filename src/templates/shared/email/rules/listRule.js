@@ -18,6 +18,7 @@ const listRule = {
       rules: [
         {
           matchMdast: matchParagraph,
+          // Custom paragraph required as the margin defers from the default variant
           component: ListParagraph,
           rules: inlineEditorialParagraphRules
         }

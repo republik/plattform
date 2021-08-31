@@ -1,6 +1,6 @@
 import React from 'react'
 import colors from '../../../../theme/colors'
-import { fontFamilies } from '../../../../theme/fonts'
+import { fontStyles } from '../../../../theme/fonts'
 import { Editorial, Interaction } from '../../../../components/Typography'
 
 const baseParagraphStyle = {
@@ -13,7 +13,7 @@ const baseParagraphStyle = {
 export const EditorialParagraph = ({ children }) => (
   <p
     className={Editorial.fontRule}
-    style={{ ...baseParagraphStyle, fontFamily: fontFamilies.serifRegular }}
+    style={{ ...baseParagraphStyle, ...fontStyles.serifRegular }}
   >
     {children}
   </p>
@@ -22,7 +22,7 @@ export const EditorialParagraph = ({ children }) => (
 export const InteractionParagraph = ({ children }) => (
   <p
     className={Interaction.fontRule}
-    style={{ ...baseParagraphStyle, fontFamily: fontFamilies.sansSerifRegular }}
+    style={{ ...baseParagraphStyle, ...fontStyles.sansSerifRegular }}
   >
     {children}
   </p>

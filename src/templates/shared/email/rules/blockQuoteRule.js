@@ -13,7 +13,18 @@ import { inlineInteractionParagraphRules } from './paragraphRule'
 
 const blockQuoteRule = {
   matchMdast: matchZone('BLOCKQUOTE'),
-  component: BlockQuote,
+  props: node => {
+    return {
+      isEmpty:
+        node.children &&
+        node.children.length === 1 &&
+        !node.children[0].children
+    }
+  },
+  component: ({ children, isEmpty }) => {
+    if (isEmpty) return null
+    return <BlockQuote>{children}</BlockQuote>
+  },
   rules: [
     {
       matchMdast: matchType('blockquote'),

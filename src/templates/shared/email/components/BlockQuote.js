@@ -1,4 +1,4 @@
-import React, { Children, useMemo } from 'react'
+import React from 'react'
 import { fontStyles } from '../../../../theme/fonts'
 
 const BlockQuote = ({ children }) => <div>{children}</div>

@@ -24,7 +24,7 @@ export const PullQuote = ({ children }) => {
               <td
                 style={{
                   width: '155px',
-                  paddingRight: '15px'
+                  marginRight: '15px'
                 }}
               >
                 {figure}
