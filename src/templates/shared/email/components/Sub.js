@@ -1,5 +1,7 @@
 import React from 'react'
 
-const Sub = ({ children }) => <sub style={{ lineHeight: 0 }}>{children}</sub>
+const Sub = ({ children }) => (
+  <sub style={{ lineHeight: 'inherit' }}>{children}</sub>
+)
 
 export default Sub
