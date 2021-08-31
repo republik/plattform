@@ -1,5 +1,8 @@
 import React from 'react'
-import BlockQuote, { Paragraph } from '../components/BlockQuote'
+import BlockQuote, {
+  Paragraph,
+  ParagraphWrapper
+} from '../components/BlockQuote'
 import {
   matchParagraph,
   matchType,
@@ -14,7 +17,7 @@ const blockQuoteRule = {
   rules: [
     {
       matchMdast: matchType('blockquote'),
-      component: ({ children }) => children,
+      component: ParagraphWrapper,
       rules: [
         {
           matchMdast: matchParagraph,
