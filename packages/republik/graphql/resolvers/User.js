@@ -11,39 +11,35 @@ const { isEligible } = require('../../lib/profile')
 
 const canAccessBasics = (user, me) => Roles.userIsMeOrProfileVisible(user, me)
 
-const exposeProfileField = (key, format) => (
-  user,
-  args,
-  { pgdb, user: me },
-) => {
-  if (canAccessBasics(user, me) || isFieldExposed(user, key)) {
-    return format
-      ? format(user._raw[key] || user[key], args)
-      : user._raw[key] || user[key]
+const exposeProfileField =
+  (key, format) =>
+  (user, args, { pgdb, user: me }) => {
+    if (canAccessBasics(user, me) || isFieldExposed(user, key)) {
+      return format
+        ? format(user._raw[key] || user[key], args)
+        : user._raw[key] || user[key]
+    }
+    return null
   }
-  return null
-}
 
-const exposeAccessField = (accessRoleKey, key, format) => (
-  user,
-  args,
-  { pgdb, user: me },
-) => {
-  if (
-    user._raw[accessRoleKey] === 'PUBLIC' ||
-    Roles.userIsMeOrInRoles(user, me, [
-      user._raw[accessRoleKey].toLowerCase(),
-      'admin',
-      'supporter',
-    ]) ||
-    isFieldExposed(user, key)
-  ) {
-    return format
-      ? format(user._raw[key] || user[key])
-      : user._raw[key] || user[key]
+const exposeAccessField =
+  (accessRoleKey, key, format) =>
+  (user, args, { pgdb, user: me }) => {
+    if (
+      user._raw[accessRoleKey] === 'PUBLIC' ||
+      Roles.userIsMeOrInRoles(user, me, [
+        user._raw[accessRoleKey].toLowerCase(),
+        'admin',
+        'supporter',
+      ]) ||
+      isFieldExposed(user, key)
+    ) {
+      return format
+        ? format(user._raw[key] || user[key])
+        : user._raw[key] || user[key]
+    }
+    return null
   }
-  return null
-}
 
 module.exports = {
   name(user, args, { user: me }) {
@@ -66,6 +62,7 @@ module.exports = {
   publicUrl: exposeProfileField('publicUrl'),
   disclosures: exposeProfileField('disclosures'),
   statement: exposeProfileField('statement'),
+  gender: exposeProfileField('gender'),
   isListed: (user) => user._raw.isListed,
   slug(user, args, { user: me }) {
     if (canAccessBasics(user, me)) {

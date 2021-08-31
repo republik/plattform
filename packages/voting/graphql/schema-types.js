@@ -146,6 +146,7 @@ type Candidacy {
 
   yearOfBirth: Int
   city: String
+  credential: Credential
 }
 
 type ElectionTurnout {

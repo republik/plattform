@@ -147,6 +147,7 @@ module.exports = async (_, args, context) => {
     'isListed',
     'statement',
     'disclosures',
+    'gender',
   ]
 
   if (
@@ -175,12 +176,29 @@ module.exports = async (_, args, context) => {
       if ('statement' in args && args.statement.length < 1) {
         throw new Error(t('profile/candidacy/statement/needed'))
       }
+
+      if ('biography' in args && args.biography.length < 1) {
+        throw new Error(t('profile/candidacy/biography/needed'))
+      }
+
+      if ('gender' in args && args.gender.length < 1) {
+        throw new Error(t('profile/candidacy/gender/needed'))
+      }
+
+      if (
+        'portrait' in args &&
+        !(args.portrait === undefined && me._raw.portraitUrl)
+      ) {
+        throw new Error(t('profile/candidacy/portrait/needed'))
+      }
     }
     if (await isInCandidacyInElectionPhase(me._raw, pgdb)) {
       if (
         'hasPublicProfile' in args ||
         'birthday' in args ||
-        'statement' in args
+        'statement' in args ||
+        'biography' in args ||
+        'gender' in args
       ) {
         throw new Error(t('profile/candidacy/electionPhase'))
       }

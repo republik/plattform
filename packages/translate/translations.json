@@ -825,6 +825,10 @@
       "value": "Ihr Profil ist im Moment mindestens einer Kandidatur zugeordnet, weshalb wir ein Geschlecht zwingend benötigen."
     },
     {
+      "key": "profile/candidacy/portrait/needed",
+      "value": "Ihr Profil ist im Moment mindestens einer Kandidatur zugeordnet, weshalb wir ein Porträtbild zwingend benötigen."
+    },
+    {
       "key": "profile/candidacy/needed",
       "value": "Ihr Profil ist im Moment mindestens einer Kandidatur zugeordnet und kann im Moment nicht zurückgenommen werden."
     },

@@ -24,4 +24,15 @@ module.exports = {
 
     return candidacy.user.address.city
   },
+  credential: (candidacy, args, { user: me, pgdb }) => {
+    if (!Roles.userIsInRoles(me, ['admin', 'supporter', 'associate'])) {
+      return
+    }
+
+    if (!candidacy.credentialId) {
+      return
+    }
+
+    return pgdb.public.credentials.findOne({ id: candidacy.credentialId })
+  },
 }

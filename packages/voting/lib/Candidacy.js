@@ -46,11 +46,16 @@ const findById = async (id, pgdb) => {
     id: candidacy.electionId,
   })
 
+  const credential = await pgdb.public.credentials.findOne({
+    id: candidacy.credentialId,
+  })
+
   return {
     ...candidacy,
     user,
     election,
     comment,
+    credential,
   }
 }
 
