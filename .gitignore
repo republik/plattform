@@ -19,3 +19,8 @@ test/**/out
 
 # editor config
 .idea
+
+# zat
+/zat/tmp
+/zat/.zat
+/zat/settings.json

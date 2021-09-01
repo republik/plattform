@@ -10,7 +10,10 @@
     "heroku-postbuild": "npm run build",
     "start": "node server/server.js",
     "cloc": "find . -name '*.js' -not -path \"./node_modules*\" -not -path \"./.next*\" | xargs wc -l",
-    "lint": "eslint --fix ."
+    "lint": "eslint --fix .",
+    "zat:setup": "docker compose build",
+    "zat:dev": "docker compose up zat-server",
+    "zat:package": "docker compose run --rm zat-package"
   },
   "lint-staged": {
     "*.js": [

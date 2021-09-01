@@ -1,0 +1,36 @@
+{
+  "name": "Admin-Tool",
+  "author": {
+    "name": "Republik AG",
+    "email": "kontakt@republik.ch",
+    "url": "https://www.republik.ch/"
+  },
+  "defaultLocale": "en",
+  "private": true,
+  "singleInstall": true,
+  "parameters": [
+    {
+      "name": "endpoint",
+      "type": "url",
+      "required": true
+    }
+  ],
+  "location": {
+    "support": {
+      "ticket_sidebar": {
+        "url": "{{setting.endpoint}}/zat",
+        "size": {
+          "height": "400px"
+        }
+      },
+      "user_sidebar": {
+        "url": "{{setting.endpoint}}/zat",
+        "size": {
+          "height": "400px"
+        }
+      }
+    }
+  },
+  "version": "1.0.0",
+  "frameworkVersion": "2.0"
+}

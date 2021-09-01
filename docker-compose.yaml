@@ -1,0 +1,12 @@
+services:
+  zat-server:
+    build: .
+    ports:
+      - 4567:4567
+    volumes:
+      - ./zat:/data
+  zat-package:
+    build: .
+    volumes:
+      - ./zat:/data
+    command: ["zat", "package"]
