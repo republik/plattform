@@ -28,18 +28,9 @@ export const TitleBlock = ({
         }}
       >
         {formatLine.title && (
-          <p
-            style={{
-              fontFamily: fontFamilies.sansSerifMedium,
-              fontWeight: 500,
-              fontSize: '20px',
-              lineHeight: '24px',
-              color: formatLine.color,
-              margin: '0px 0px 28px'
-            }}
-          >
+          <Format color={formatLine.color} href={formatLine.path}>
             {formatLine.title}
-          </p>
+          </Format>
         )}
         {children}
       </section>
@@ -108,5 +99,27 @@ export const Credits = ({ children, attributes, ...props }) => (
     {...props}
   >
     {children}
+  </p>
+)
+
+const Format = ({ children, color, href }) => (
+  <p
+    style={{
+      ...fontStyles.sansSerifMedium,
+      fontSize: '20px',
+      fontStyles: '24px',
+      margin: '0 0 28px 0',
+      color
+    }}
+  >
+    <a
+      href={href}
+      style={{
+        color: 'inherit',
+        textDecoration: 'none'
+      }}
+    >
+      {children}
+    </a>
   </p>
 )
