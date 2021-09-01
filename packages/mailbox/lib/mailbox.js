@@ -4,10 +4,29 @@
 const { getIndexAlias } = require('@orbiting/backend-modules-search/lib/utils')
 const { getAddress, getAddresses } = require('./common')
 
+const wrapHtml = (partial) => `
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head>
+<body>
+  ${partial}
+</body>
+</html>
+`
+
 const replaceCharset = (string) =>
   string.replace(/charset=([A-Za-z0-9-]+)/g, 'charset=utf-8')
 
-const toHtml = (text) => `
+const pimpHtml = (html) => {
+  if (!html.includes('<html>')) {
+    return wrapHtml(html)
+  }
+
+  return replaceCharset(html)
+}
+
+const wrapText = (text) => `
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
@@ -72,8 +91,8 @@ const toRecords = ({ _id, _source }) => ({
   bcc: getAddresses(_source.bcc?.value),
   subject: _source.subject,
   html:
-    (_source.html && toBase64(replaceCharset(_source.html))) ||
-    (_source.text && toBase64(toHtml(_source.text))),
+    (_source.html && toBase64(pimpHtml(_source.html))) ||
+    (_source.text && toBase64(wrapText(_source.text))),
   links: null,
 })
 
