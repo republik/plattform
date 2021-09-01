@@ -13,11 +13,11 @@ import { SectionNav } from '../Display/utils'
 import List from './List'
 
 const GET_MAILBOX = gql`
-  query getMailbox($after: String, $email: String, $hasError: Boolean) {
+  query getMailbox($after: String, $search: String, $hasError: Boolean) {
     mailbox(
       first: 100
       after: $after
-      filters: { hasError: $hasError, email: $email }
+      filters: { hasError: $hasError, email: $search }
     ) {
       pageInfo {
         hasNextPage
@@ -79,10 +79,10 @@ const GET_MAILBOX = gql`
 `
 
 const Page = withT(({ params, onChange }) => {
-  const [email, setEmail] = useState()
+  const [search, setSearch] = useState()
 
   useEffect(() => {
-    setEmail(params?.email)
+    setSearch(params?.search)
   }, [params])
 
   const debounceOnChange = useCallback(
@@ -90,9 +90,9 @@ const Page = withT(({ params, onChange }) => {
     []
   )
 
-  const onChangeEmail = (_, value, shouldValidate) => {
-    debounceOnChange({ email: value })
-    setEmail(value)
+  const onChangeSearch = (_, value, shouldValidate) => {
+    debounceOnChange({ search: value })
+    setSearch(value)
   }
 
   const toggleFilterErrornous = e => {
@@ -103,7 +103,7 @@ const Page = withT(({ params, onChange }) => {
   return (
     <Query
       query={GET_MAILBOX}
-      variables={{ hasError: !!params?.hasError, email: params?.email }}
+      variables={{ hasError: !!params?.hasError, search: params?.search }}
     >
       {({ loading, error, data, fetchMore }) => {
         const fetchMoreNodes = () =>
@@ -133,11 +133,11 @@ const Page = withT(({ params, onChange }) => {
         return (
           <>
             <Field
-              name='email'
-              type='email'
-              label={'E-Mail-Adresse'}
-              onChange={onChangeEmail}
-              value={email}
+              name='search'
+              type='search'
+              label={'Suche (nur E-Mail-Adresse)'}
+              onChange={onChangeSearch}
+              value={search}
             />
             <SectionNav>
               <A href='#' onClick={toggleFilterErrornous}>
