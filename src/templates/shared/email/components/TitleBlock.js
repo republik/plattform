@@ -1,6 +1,6 @@
 import React from 'react'
 import Center from './Center'
-import { fontFamilies, fontStyles } from '../../../../theme/fonts'
+import { fontStyles } from '../../../../theme/fonts'
 import colors from '../../../../theme/colors'
 import { getFormatLine } from '../../../../components/TeaserFeed/utils'
 
@@ -112,14 +112,6 @@ const Format = ({ children, color, href }) => (
       color
     }}
   >
-    <a
-      href={href}
-      style={{
-        color: 'inherit',
-        textDecoration: 'none'
-      }}
-    >
-      {children}
-    </a>
+    {children}
   </p>
 )
