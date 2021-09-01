@@ -1,16 +1,31 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import colors from '../../../theme/colors'
+import { getFormatLine } from '../../../components/TeaserFeed/utils'
 
 export default ({ meta }) => {
   const { slug, path, format } = meta
   const isCovid19 = format?.repoId?.includes('format-covid-19-uhr-newsletter')
+
+  const formatLine = useMemo(() => {
+    return getFormatLine({
+      format: meta.format,
+      series: meta.series,
+      repoId: meta.repoId,
+      path: meta.path
+    })
+  }, [meta])
 
   return (
     <tr>
       <td
         align='center'
         valign='top'
-        style={{ borderBottom: `1px solid ${colors.divider}` }}
+        style={{
+          borderBottom:
+            formatLine && formatLine.color
+              ? `3px solid ${formatLine.color}`
+              : `1px solid ${colors.divider}`
+        }}
       >
         <a
           href={`https://www.republik.ch${path ? path : `/${slug}`}`}
