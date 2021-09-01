@@ -12,17 +12,23 @@ import withT from '../lib/withT'
 import ZafClient from '../lib/zat/client'
 
 import { displayDate, DT, DD } from '../components/Display/utils'
-import { css } from 'glamor'
+import { css, merge } from 'glamor'
 
 const styles = {
+  hint: css({
+    borderBottom: '1px solid #DDD',
+    marginBottom: '10px',
+    paddingBottom: '10px',
+    ...fontStyles.sansSerifRegular14
+  }),
   item: css({
-    borderTop: '1px solid #DDD',
-    marginTop: '10px',
-    paddingTop: '10px'
+    borderBottom: '1px solid #DDD',
+    marginBottom: '10px',
+    paddingBottom: '10px'
   }),
   title: css({
     marginTop: '10px',
-    ...fontStyles.sansSerifMedium14
+    ...fontStyles.sansSerif14
   })
 }
 
@@ -98,8 +104,8 @@ const ZatUsers = ({ users, t }) => {
             .join(' · ')
 
           return (
-            <>
-              <div key={id} {...styles.item}>
+            <div key={id} {...styles.item}>
+              <div>
                 <A href={`/users/${id}`} target='_blank'>
                   {name ? `${name} (${email})` : email}
                 </A>
@@ -137,7 +143,7 @@ const ZatUsers = ({ users, t }) => {
                   ))}
                 </div>
               )}
-            </>
+            </div>
           )
         }
       )}
@@ -146,13 +152,14 @@ const ZatUsers = ({ users, t }) => {
 }
 
 const Zat = props => {
-  const { origin, app_guid } = props.router.query
-  const { t } = props
-
   const [zafClient, setZafClient] = useState(null)
   const [zafContext, setZafContext] = useState(null)
   const [zafUser, setZafUser] = useState(null)
-  const [searchTerm, setSearchTerm] = useState(null)
+  const [searchEmail, setSearchEmail] = useState(null)
+  const [searchName, setSearchName] = useState(null)
+
+  const { origin, app_guid } = props.router.query
+  const { t } = props
 
   useEffect(() => {
     if (typeof window !== 'undefined' && origin && app_guid) {
@@ -161,7 +168,7 @@ const Zat = props => {
 
       const fetchZafContext = async () => {
         const context = await client.context()
-        console.log('zaf, context', context)
+        // console.log('zaf, context', context)
         setZafContext(context)
       }
       fetchZafContext()
@@ -179,7 +186,7 @@ const Zat = props => {
               .get('ticket')
               .then(({ ticket }) => ticket.requester))) ||
           null
-        console.log('zaf, user', user)
+        // console.log('zaf, user', user)
         setZafUser(user)
       }
       fetchZafUser()
@@ -189,11 +196,12 @@ const Zat = props => {
   useEffect(() => {
     if (zafUser) {
       const { email, name } = zafUser
-      setSearchTerm(email || name)
+      setSearchEmail(email)
+      setSearchName(name)
     }
   }, [zafUser])
 
-  if (!searchTerm) {
+  if (!searchEmail && !searchName) {
     return (
       <App>
         <Body>
@@ -206,7 +214,30 @@ const Zat = props => {
   return (
     <App>
       <Body>
-        <Query query={GET_ADMIN_USERS} variables={{ search: searchTerm }}>
+        <div {...styles.hint}>
+          Suche{' '}
+          <A
+            href={`/users?search=${encodeURI(searchEmail || searchName)}`}
+            target='_blank'
+          >
+            E-Mail-Adresse
+          </A>
+          {' · '}
+          <A
+            href={`/users?search=${encodeURI(searchName || searchEmail)}`}
+            target='_blank'
+          >
+            Name
+          </A>
+          {' · '}
+          <A href={`/mailbox?search=${encodeURI(searchEmail)}`} target='_blank'>
+            E-Mails
+          </A>
+        </div>
+        <Query
+          query={GET_ADMIN_USERS}
+          variables={{ search: searchEmail || searchName }}
+        >
           {({ loading, error, data }) => {
             const isInitialLoading = loading && !(data && data.adminUsers)
             return (
@@ -231,28 +262,12 @@ const Zat = props => {
                   }
 
                   return (
-                    <div>
+                    <>
                       <div>
-                        {searchInfo && (
-                          <span>
-                            <Label>{searchInfo}</Label>
-                          </span>
-                        )}
-                        <ZatUsers
-                          key={`${zafUser.id}-${zafUser.email}`}
-                          users={resultUsers}
-                          t={t}
-                        />
+                        {searchInfo && <div {...styles.hint}>{searchInfo}</div>}
+                        <ZatUsers users={resultUsers} t={t} />
                       </div>
-                      <div {...styles.item}>
-                        <A
-                          href={`/users?search=${encodeURI(searchTerm)}`}
-                          target='_blank'
-                        >
-                          Zur Suche im Admin-Tool
-                        </A>
-                      </div>
-                    </div>
+                    </>
                   )
                 }}
               />
