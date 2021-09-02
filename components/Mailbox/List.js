@@ -1,10 +1,13 @@
 import React, { useState } from 'react'
-import { Label, A } from '@project-r/styleguide'
+import { css, merge } from 'glamor'
+import { MdError as ProblemIcon } from 'react-icons/md'
+import { MdCallReceived as ReceivedIcon } from 'react-icons/md'
+
+import { Label, A, colors } from '@project-r/styleguide'
 
 import { displayDateTime } from '../Display/utils'
 import { tableStyles } from '../Tables/utils'
 
-import Status from './Status'
 import Mail from './Mail'
 import Address, { Bucket as AddressBucket } from './Address'
 
@@ -12,12 +15,28 @@ import { MAILBOX_SELF } from '../../server/constants'
 
 const self = MAILBOX_SELF?.split(',')
 
+const styles = {
+  icon: css({
+    verticalAlign: 'baseline',
+    marginRight: 5,
+    marginBottom: '-0.2em',
+    fontSize: '1.2em',
+    color: colors.text
+  }),
+  error: css({
+    color: colors.error
+  })
+}
+
 const Row = ({ mail, narrow }) => {
   const [showEmail, setShowEmail] = useState()
 
   const from =
     mail.from?.address && !self.includes(mail.from.address) && mail.from
   const to = mail.to?.filter(({ address }) => !self.includes(address))
+
+  const hasFrom = !!mail.from?.address
+  const isSelfSent = self.includes(mail.from?.address)
 
   const show = e => {
     e?.preventDefault()
@@ -32,12 +51,13 @@ const Row = ({ mail, narrow }) => {
   return (
     <>
       <tr key={mail.id} {...tableStyles.row}>
-        <td {...tableStyles.paddedCell}>
-          {displayDateTime(mail.date)}
-          <Status status={mail.status} error={mail.error} onClick={show} />
-        </td>
+        <td {...tableStyles.paddedCell}>{displayDateTime(mail.date)}</td>
         <td {...tableStyles.paddedCell}>
           <A href='#' onClick={show}>
+            {hasFrom && !isSelfSent && <ReceivedIcon {...styles.icon} />}
+            {mail.status !== 'sent' && mail.error && (
+              <ProblemIcon {...merge(styles.icon, styles.error)} />
+            )}
             {mail.subject || mail.template || mail.type}
           </A>
           {showEmail && <Mail mail={mail} onClose={hide} />}
