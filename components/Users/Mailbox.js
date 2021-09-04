@@ -2,13 +2,14 @@ import React from 'react'
 import { Query } from 'react-apollo'
 import gql from 'graphql-tag'
 
-import withT from '../../lib/withT'
-
 import { A, Loader } from '@project-r/styleguide'
+
+import withT from '../../lib/withT'
 
 import { Section, SectionTitle, SectionNav } from '../Display/utils'
 
 import List from '../Mailbox/List'
+import { fragments } from '../Mailbox/utils'
 
 const GET_USER_MAILBOX = gql`
   query getUserMailbox($id: String, $first: Int, $after: String) {
@@ -21,59 +22,13 @@ const GET_USER_MAILBOX = gql`
           endCursor
         }
         nodes {
-          id
-          type
-          template
-          date
-          status
-          error
-          from {
-            id
-            address
-            name
-            user {
-              id
-              name
-            }
-          }
-          to {
-            id
-            address
-            name
-            user {
-              id
-              name
-            }
-          }
-          cc {
-            id
-            address
-            name
-            user {
-              id
-              name
-            }
-          }
-          bcc {
-            id
-            address
-            name
-            user {
-              id
-              name
-            }
-          }
-          subject
-          html
-          links {
-            id
-            label
-            url
-          }
+          ...MailboxRecordFragment
         }
       }
     }
   }
+
+  ${fragments.record}
 `
 
 const Mailbox = withT(({ userId, narrow = false }) => {

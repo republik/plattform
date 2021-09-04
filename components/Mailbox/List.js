@@ -28,15 +28,29 @@ const styles = {
   })
 }
 
+export const Date = ({ mail }) => displayDateTime(mail.date)
+
+export const Subject = ({ mail }) => {
+  const hasFrom = !!mail.from?.address
+  const isSelfSent = self.includes(mail.from?.address)
+
+  return (
+    <>
+      {hasFrom && !isSelfSent && <ReceivedIcon {...styles.icon} />}
+      {mail.status !== 'sent' && mail.error && (
+        <ProblemIcon {...merge(styles.icon, styles.error)} />
+      )}
+      {mail.subject || mail.template || mail.type}
+    </>
+  )
+}
+
 const Row = ({ mail, narrow }) => {
   const [showEmail, setShowEmail] = useState()
 
   const from =
     mail.from?.address && !self.includes(mail.from.address) && mail.from
   const to = mail.to?.filter(({ address }) => !self.includes(address))
-
-  const hasFrom = !!mail.from?.address
-  const isSelfSent = self.includes(mail.from?.address)
 
   const show = e => {
     e?.preventDefault()
@@ -49,35 +63,31 @@ const Row = ({ mail, narrow }) => {
   }
 
   return (
-    <>
-      <tr key={mail.id} {...tableStyles.row}>
-        <td {...tableStyles.paddedCell}>{displayDateTime(mail.date)}</td>
+    <tr key={mail.id} {...tableStyles.row}>
+      <td {...tableStyles.paddedCell}>
+        <Date mail={mail} />
+      </td>
+      <td {...tableStyles.paddedCell}>
+        <A href={`/mailbox?mailId=${mail.id}`} target='_blank' onClick={show}>
+          <Subject mail={mail} />
+        </A>
+        {showEmail && <Mail mail={mail} onClose={hide} />}
+      </td>
+      {!narrow && (
         <td {...tableStyles.paddedCell}>
-          <A href='#' onClick={show}>
-            {hasFrom && !isSelfSent && <ReceivedIcon {...styles.icon} />}
-            {mail.status !== 'sent' && mail.error && (
-              <ProblemIcon {...merge(styles.icon, styles.error)} />
-            )}
-            {mail.subject || mail.template || mail.type}
-          </A>
-          {showEmail && <Mail mail={mail} onClose={hide} />}
+          {!!from && (
+            <div>
+              <Label>Von</Label> <Address address={from} />
+            </div>
+          )}
+          {!!to?.length && (
+            <div>
+              <Label>An</Label> <AddressBucket addresses={to} />
+            </div>
+          )}
         </td>
-        {!narrow && (
-          <td {...tableStyles.paddedCell}>
-            {!!from && (
-              <div>
-                <Label>Von</Label> <Address address={from} />
-              </div>
-            )}
-            {!!to?.length && (
-              <div>
-                <Label>An</Label> <AddressBucket addresses={to} />
-              </div>
-            )}
-          </td>
-        )}
-      </tr>
-    </>
+      )}
+    </tr>
   )
 }
 

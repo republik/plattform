@@ -1,3 +1,4 @@
+import React from 'react'
 import { css } from 'glamor'
 import { colors } from '@project-r/styleguide'
 import SortIndicator from '../SortIndicator'
@@ -66,7 +67,9 @@ export const tableStyles = {
     textAlign: 'center'
   }),
   paddedCell: css({
-    padding: '15px 2px'
+    padding: '15px 2px',
+    overflowWrap: 'anywhere',
+    whiteSpace: 'normal'
   })
 }
 
@@ -88,10 +91,7 @@ export const createChangeHandler = (params, handler) => (
   }
 }
 
-export const createSortHandler = (
-  sort,
-  handler
-) => fieldName => () => {
+export const createSortHandler = (sort, handler) => fieldName => () => {
   if (sort.field !== fieldName) {
     return handler({
       field: fieldName,

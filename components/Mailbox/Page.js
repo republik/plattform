@@ -4,78 +4,39 @@ import gql from 'graphql-tag'
 import InfiniteScroller from 'react-infinite-scroller'
 import debounce from 'lodash.debounce'
 
-import withT from '../../lib/withT'
-
 import { Loader, A, Field } from '@project-r/styleguide'
+
+import withT from '../../lib/withT'
 
 import { SectionNav } from '../Display/utils'
 
+import { fragments } from './utils'
 import List from './List'
+import { Body as MailBody } from './Mail'
 
 const GET_MAILBOX = gql`
-  query getMailbox($after: String, $search: String, $hasError: Boolean) {
+  query getMailbox(
+    $after: String
+    $search: String
+    $hasError: Boolean
+    $id: ID
+  ) {
     mailbox(
       first: 100
       after: $after
-      filters: { hasError: $hasError, email: $search }
+      filters: { hasError: $hasError, email: $search, id: $id }
     ) {
       pageInfo {
         hasNextPage
         endCursor
       }
       nodes {
-        id
-        type
-        template
-        date
-        status
-        error
-        from {
-          id
-          address
-          name
-          user {
-            id
-            name
-          }
-        }
-        to {
-          id
-          address
-          name
-          user {
-            id
-            name
-          }
-        }
-        cc {
-          id
-          address
-          name
-          user {
-            id
-            name
-          }
-        }
-        bcc {
-          id
-          address
-          name
-          user {
-            id
-            name
-          }
-        }
-        subject
-        html
-        links {
-          id
-          label
-          url
-        }
+        ...MailboxRecordFragment
       }
     }
   }
+
+  ${fragments.record}
 `
 
 const Page = withT(({ params, onChange }) => {
@@ -90,7 +51,7 @@ const Page = withT(({ params, onChange }) => {
     []
   )
 
-  const onChangeSearch = (_, value, shouldValidate) => {
+  const onChangeSearch = (_, value) => {
     debounceOnChange({ search: value })
     setSearch(value)
   }
@@ -103,7 +64,11 @@ const Page = withT(({ params, onChange }) => {
   return (
     <Query
       query={GET_MAILBOX}
-      variables={{ hasError: !!params?.hasError, search: params?.search }}
+      variables={{
+        hasError: !!params?.hasError,
+        search: params?.search,
+        id: params?.mailId
+      }}
     >
       {({ loading, error, data, fetchMore }) => {
         const fetchMoreNodes = () =>
@@ -132,34 +97,37 @@ const Page = withT(({ params, onChange }) => {
 
         return (
           <>
-            <Field
-              name='search'
-              type='search'
-              label={'Suche (nur E-Mail-Adresse)'}
-              onChange={onChangeSearch}
-              value={search}
-            />
-            <SectionNav>
-              <A href='#' onClick={toggleFilterErrornous}>
-                {params?.hasError
-                  ? 'Alle E-Mails'
-                  : 'Nur problematische Zustellungen'}
-              </A>
-            </SectionNav>
+            {!params?.mailId && (
+              <Field
+                name='search'
+                type='search'
+                label={'Suche (nur E-Mail-Adresse)'}
+                onChange={onChangeSearch}
+                value={search}
+              />
+            )}
+            {!params?.mailId && (
+              <SectionNav>
+                <A href='#' onClick={toggleFilterErrornous}>
+                  {params?.hasError
+                    ? 'Alle E-Mails'
+                    : 'Nur problematische Zustellungen'}
+                </A>
+              </SectionNav>
+            )}
             <Loader
               loading={loading}
               error={error}
               render={() => (
-                <>
-                  <InfiniteScroller
-                    loadMore={fetchMoreNodes}
-                    loader={<Loader loading />}
-                    hasMore={data.mailbox.pageInfo.hasNextPage}
-                    useWindow={false}
-                  >
-                    <List nodes={data.mailbox.nodes} />
-                  </InfiniteScroller>
-                </>
+                <InfiniteScroller
+                  loadMore={fetchMoreNodes}
+                  loader={<Loader loading />}
+                  hasMore={data.mailbox.pageInfo.hasNextPage}
+                  useWindow={false}
+                >
+                  {!params?.mailId && <List nodes={data.mailbox.nodes} />}
+                  {params?.mailId && <MailBody mail={data.mailbox.nodes[0]} />}
+                </InfiniteScroller>
               )}
             />
           </>
