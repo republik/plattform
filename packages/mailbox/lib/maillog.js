@@ -2,6 +2,7 @@
  * Set of function to handle queries to mailLob table in Postgres
  */
 const moment = require('moment')
+const { v4: isUuid } = require('is-uuid')
 
 const { getAddress, getAddresses } = require('./common')
 
@@ -22,8 +23,7 @@ const getError = (row) =>
 const getLinks = (row) => {
   return [
     row.createdAt > moment().subtract(30, 'days') &&
-      row.result &&
-      row.result._id && {
+      row.result?._id && {
         id: row.result._id,
         label: 'Content on Mandrill',
         url: [
@@ -50,6 +50,8 @@ const createCondition = (
       or: [{ userId: user.id }, { userId: null, email: user.email }],
     }
 
+  const mustId = filters?.id && { id: isUuid(filters.id) ? filters.id : null }
+
   const mustHaveError = filters?.hasError && {
     or: [
       { "\"mandrillLastEvent\"->'msg'->>'diag' !=": null },
@@ -64,7 +66,9 @@ const createCondition = (
 
   const mustEmail = filters?.email && { email: filters.email }
 
-  const and = [mustUserIdOrEmail, mustHaveError, mustEmail].filter(Boolean)
+  const and = [mustUserIdOrEmail, mustId, mustHaveError, mustEmail].filter(
+    Boolean,
+  )
 
   return {
     ...sort,
@@ -95,6 +99,7 @@ const toRecords = (row) => {
     to: row.email && getAddresses([{ address: row.email }]),
     cc: null,
     bcc: null,
+    hasHtml: false,
     html: null,
     subject: message?.subject,
     links: getLinks(row),

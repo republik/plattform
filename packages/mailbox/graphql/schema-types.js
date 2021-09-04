@@ -3,6 +3,7 @@ module.exports = `
 input MailboxFiltersInput {
   hasError: Boolean
   email: String
+  id: ID
 }
 
 type MailboxRecord {
@@ -17,6 +18,7 @@ type MailboxRecord {
   cc: [MailboxAddress!]
   bcc: [MailboxAddress!]
   subject: String
+  hasHtml: Boolean!
   html: String
   links: [MailboxLink!]
 }
