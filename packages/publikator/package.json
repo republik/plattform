@@ -49,7 +49,7 @@
   },
   "devDependencies": {
     "@types/debug": "^4.1.5",
-    "gsheets": "git+https://github.com/orbiting/gsheets.git",
+    "gsheets": "^3.0.0",
     "nodemon": "^2.0.4",
     "ws": "^7.4.6"
   }

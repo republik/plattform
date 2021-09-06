@@ -6600,9 +6600,10 @@ growly@^1.3.0:
   resolved "https://registry.yarnpkg.com/growly/-/growly-1.3.0.tgz#f10748cbe76af964b7c96c93c6bcc28af120c081"
   integrity sha1-8QdIy+dq+WS3yWyTxrzCivEgwIE=
 
-"gsheets@git+https://github.com/orbiting/gsheets.git":
+gsheets@^3.0.0:
   version "3.0.0"
-  resolved "git+https://github.com/orbiting/gsheets.git#fe6693a0542ca299ca30c4860fba0f46585c233a"
+  resolved "https://registry.yarnpkg.com/gsheets/-/gsheets-3.0.0.tgz#45e422bf01b581a705299b5adea2cb69928a8ae2"
+  integrity sha512-fLT0hOV6iyQ3yd6CI73HffaTYFaIgny9PD6P1VHb8JtQFTcW//+b6ikdLgQagFDOzKX8nU7DtzUpqV91qM1ObA==
   dependencies:
     d3-dsv "^1.0.3"
     minimist "^1.1.0"
