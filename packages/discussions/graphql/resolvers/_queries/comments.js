@@ -28,7 +28,6 @@ module.exports = async (_, args, context, info) => {
     featuredTarget = featured && getDefaultFeaturedTarget(),
   } = options
 
-  console.log(orderBy)
   if (limit > MAX_LIMIT) {
     throw new Error(t('api/discussion/args/first/tooBig', { max: MAX_LIMIT }))
   }

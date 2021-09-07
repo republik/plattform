@@ -244,6 +244,12 @@ module.exports = async (discussion, args, context, info) => {
     }
   }
 
+  /* 
+    AUTO = comments are sorted 
+    - by date if the first comment was created in the last 24 hours 
+    - or by votes otherwise 
+    the property resolvedOrderBy is just needed when DiscussionOrder === AUTO
+  */
   let resolvedOrderBy
   if (orderBy === 'AUTO') {
     const sortedComments = [...comments].sort(
