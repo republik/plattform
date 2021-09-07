@@ -255,7 +255,7 @@ module.exports = async (discussion, args, context, info) => {
         new Date().getTime() - 24 * 60 * 60 * 1000,
       )
       resolvedOrderBy =
-        firstCommentCreatedAt > twentyFourHoursAgo ? 'DATE' : 'VOTE'
+        firstCommentCreatedAt > twentyFourHoursAgo ? 'DATE' : 'VOTES'
     } else {
       resolvedOrderBy = 'DATE'
     }
