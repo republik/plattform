@@ -315,7 +315,8 @@ export const propTypes = {
     })
   ),
   columns: PropTypes.number.isRequired,
-  minInnerWidth: PropTypes.number.isRequired
+  minInnerWidth: PropTypes.number.isRequired,
+  yScaleInvert: PropTypes.bool
 }
 
 TimeBarChart.propTypes = propTypes
