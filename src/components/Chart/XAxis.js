@@ -3,6 +3,7 @@ import { css } from 'glamor'
 import { sansSerifRegular12 as LABEL_FONT } from '../Typography/styles'
 import { useColorContext } from '../Colors/useColorContext'
 import { getBaselines, getXTicks } from './TimeBars.utils'
+import { getLastItemFromArray } from './utils'
 
 const X_TICK_HEIGHT = 3
 
@@ -24,7 +25,8 @@ const XAxis = ({
   x,
   xDomain,
   format,
-  strong
+  strong,
+  xUnit
 }) => {
   const [colorScheme] = useColorContext()
   const baseLines = getBaselines(xDomain, x, width)
@@ -44,7 +46,7 @@ const XAxis = ({
           strokeDasharray={line.gap ? '2 2' : 'none'}
         />
       ))}
-      {ticks.map(tick => (
+      {ticks.map((tick, i) => (
         <g
           key={tick}
           transform={`translate(${x(tick) + Math.round(x.bandwidth() / 2)},0)`}
@@ -61,7 +63,9 @@ const XAxis = ({
             dy='0.6em'
             textAnchor='middle'
           >
-            {format(tick)}
+            {getLastItemFromArray(ticks, i)
+              ? format(tick) + xUnit
+              : format(tick)}
           </text>
         </g>
       ))}

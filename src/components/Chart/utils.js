@@ -378,3 +378,6 @@ export const getColumnLayout = (
 
   return { height, innerWidth, innerHeight, gx, gy }
 }
+
+// get last item from array
+export const getLastItemFromArray = (array, index) => array.length - 1 === index

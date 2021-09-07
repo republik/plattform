@@ -6,7 +6,7 @@ One very physical limitation is the width of a (small) mobile screen: 320px. If 
 
 More than that and the calculated width of the bar ends up at 0, which isn't very useful at all.
 
-## Examples 
+## Examples
 
 ```react
 <div>
@@ -20,7 +20,7 @@ More than that and the calculated width of the bar ends up at 0, which isn't ver
       "numberFormat": ".3s",
       "xAnnotations": [
         {"x1": "2008","x2": "2012","value": 973619338.97,"unit": "Tonnen","label": "Kyoto-Protokoll"},
-        {"x": "2020","value": 748700000,"label": "Ziel 2020","ghost": true}, 
+        {"x": "2020","value": 748700000,"label": "Ziel 2020","ghost": true},
         {"x": "2050","value": 249600000,"label": "Ziel 2050","valuePrefix": "max: ","ghost": true}
       ],
       "padding": 18
@@ -594,7 +594,7 @@ year,typ,value
       "xInterval": "month",
       "xIntervalStep": 6,
       "xAnnotations": [
-        {"x1": "2019-07", "x2": "2019-07","value": 5, "unit": "Punkte", "label": "Ziel 2020"}, 
+        {"x1": "2019-07", "x2": "2019-07","value": 5, "unit": "Punkte", "label": "Ziel 2020"},
         {"x1": "2019-07", "x2": "2019-07","value": 4,"label": "Stand jetzt","position": "bottom","showValue": false},
         {"x": "2022-01", "value": 7, "ghost": true}
       ]
@@ -770,7 +770,7 @@ year,value,color
       "unit": "Verlegerinnen",
       "xTicks": [20, 40, 60, 80, 100],
       "xScale": "ordinal",
-      "padding": 0,  
+      "padding": 0,
     }}
     values={`
 key,value
@@ -903,7 +903,6 @@ year,category,value
 
 ### Small Multiples
 
-
 ```react
 <div>
   <ChartTitle>Das Sterben setzt später ein</ChartTitle>
@@ -947,6 +946,168 @@ age,date,value
     `.trim()} />
   <ChartLegend>
     Quelle: <Editorial.A href='https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationprojections/compendium/nationalpopulationprojections/2014basedreferencevolumeseriespp2/chapter4mortality2014basednationalpopulationprojectionsreferencevolume'>Office for National Statistics</Editorial.A>
+  </ChartLegend>
+</div>
+```
+
+### Custom Label for X Axis
+
+```react
+<div>
+  <ChartTitle>Wer alles ärmer ist als Sie...</ChartTitle>
+  <ChartLead>Vermögensverteilung in der Schweiz (Einzelpersonen)</ChartLead>
+  <CsvChart
+    config={{
+  "type": "TimeBar",
+  "x": "percentile",
+  "xScale": "linear",
+  "padding": 0,
+  "numberFormat": "(.0f",
+  "xTicks": [
+    0,
+    25,
+    50,
+    75,
+    99
+  ],
+  "yTicks": [
+    100000,
+    50000,
+    0
+  ],
+  "xBandPadding": 0.5,
+  "height": 400,
+  "color": "color",
+  "colorLegend": false,
+  "colorMap": {
+    "default": "#D5D8D7",
+    "estimate": "#00A000",
+    "reality": "#D02324"
+  },
+  "unit": "Franken",
+  "xUnit": ". Perzentil",
+  "xAnnotations": [
+    {
+      "x": 40,
+      "value": 6000,
+      "label": "Schätzung",
+      "showValue": false,
+      "position": "top"
+    },
+    {
+      "x": 74,
+      "value": 90712,
+      "label": "Tatsächlich",
+      "showValue": false,
+      "position": "top"
+    }
+  ]
+}}
+    values={`
+percentile,color,value
+0,default,0
+1,default,0
+2,default,0
+3,default,0
+4,default,0
+5,default,0
+6,default,0
+7,default,0
+8,default,0
+9,default,0
+10,default,0
+11,default,0
+12,default,0
+13,default,0
+14,default,0
+15,default,0
+16,default,0
+17,default,0
+18,default,0
+19,default,0
+20,default,0
+21,default,0
+22,default,0
+23,default,0
+24,default,0
+25,default,0
+26,default,0
+27,default,0
+28,default,0
+29,default,88
+30,default,305
+31,default,583
+32,default,920
+33,default,1317
+34,default,1775
+35,default,2292
+36,default,2870
+37,default,3507
+38,default,4203
+39,default,4958
+40,estimate,5770
+41,default,6640
+42,default,7565
+43,default,8546
+44,default,9579
+45,default,10665
+46,default,11802
+47,default,12988
+48,default,14222
+49,default,15504
+50,default,16830
+51,default,18203
+52,default,19620
+53,default,21083
+54,default,22594
+55,default,24156
+56,default,25773
+57,default,27454
+58,default,29208
+59,default,31051
+60,default,33002
+61,default,35089
+62,default,37346
+63,default,39820
+64,default,42571
+65,default,45676
+66,default,49238
+67,default,53360
+68,default,57976
+69,default,62944
+70,default,68139
+71,default,73472
+72,default,78921
+73,default,84578
+74,reality,90712
+75,default,0
+76,default,0
+77,default,0
+78,default,0
+79,default,0
+80,default,0
+81,default,0
+82,default,0
+83,default,0
+84,default,0
+85,default,0
+86,default,0
+87,default,0
+88,default,0
+89,default,0
+90,default,0
+91,default,0
+92,default,0
+93,default,0
+94,default,0
+95,default,0
+96,default,0
+97,default,0
+98,default,0
+99,default,0
+    `.trim()} />
+  <ChartLegend>
+    Quelle: <Editorial.A href='https://www.estv.admin.ch/estv/de/home.html'>ESTV</Editorial.A>
   </ChartLegend>
 </div>
 ```

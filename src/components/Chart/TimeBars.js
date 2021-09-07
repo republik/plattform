@@ -49,6 +49,7 @@ const TimeBarChart = props => {
     xTicks,
     domain,
     padding,
+    xUnit,
     height: innerHeight
   } = props
 
@@ -201,6 +202,7 @@ const TimeBarChart = props => {
       x={x}
       xDomain={xDomain}
       format={x => xFormat(xParser(x))}
+      xUnit={xUnit}
       strong={y.domain()[0] !== 0}
     />
   )
@@ -288,6 +290,7 @@ export const propTypes = {
     })
   ).isRequired,
   unit: PropTypes.string,
+  xUnit: PropTypes.string,
   numberFormat: PropTypes.string.isRequired,
   filter: PropTypes.string,
   tLabel: PropTypes.func.isRequired,
@@ -315,6 +318,7 @@ TimeBarChart.defaultProps = {
   height: 240,
   padding: 50,
   unit: '',
+  xUnit: '',
   colorLegend: true,
   xIntervalStep: 1,
   yAnnotations: [],

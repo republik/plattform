@@ -19,7 +19,8 @@ import {
   deduplicate,
   unsafeDatumFn,
   subsup,
-  getTextColor
+  getTextColor,
+  getLastItemFromArray
 } from './utils'
 import ColorLegend from './ColorLegend'
 import { createTextGauger } from '../../lib/textGauger'
@@ -91,8 +92,6 @@ const BAR_STYLES = {
     }
   }
 }
-
-const last = (array, index) => array.length - 1 === index
 
 const styles = {
   groupTitle: css({
@@ -334,7 +333,7 @@ const BarChart = props => {
         // snap last to last xTick if within one pixel
         if (
           xLastTick &&
-          last(bar.segments, i) &&
+          getLastItemFromArray(bar.segments, i) &&
           Math.abs(xLastTick - d.x - d.width) === 1
         ) {
           d.width += xLastTick - d.x - d.width
@@ -345,7 +344,7 @@ const BarChart = props => {
         } else {
           xPosNegative += size
         }
-        const isLast = last(bar.segments, i)
+        const isLast = getLastItemFromArray(bar.segments, i)
         d.valueTextStartAnchor =
           (d.value >= 0 && isLast) || (d.value < 0 && i !== 0)
         const isLastSegment = isLast && i !== 0
@@ -659,7 +658,7 @@ const BarChart = props => {
                 >
                   {xTicks.map((tick, i) => {
                     let textAnchor = 'middle'
-                    const isLast = last(xTicks, i)
+                    const isLast = getLastItemFromArray(xTicks, i)
                     if (isLast) {
                       textAnchor = 'end'
                     }
