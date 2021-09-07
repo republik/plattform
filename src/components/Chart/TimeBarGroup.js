@@ -39,7 +39,8 @@ const TimeBarGroup = ({
   color,
   width,
   xAxisPos,
-  xAxis
+  xAxis,
+  yScaleChangeDirection
 }) => {
   const [colorScheme] = useColorContext()
   const barWidth = x.bandwidth()
@@ -101,7 +102,7 @@ const TimeBarGroup = ({
           <text
             {...styles.axisLabel}
             {...colorScheme.set('fill', 'text')}
-            dy='-3px'
+            dy={yScaleChangeDirection ? '13px' : '-3px'}
           >
             {yAxis.axisFormat(tick, last(yTicks, i))}
           </text>

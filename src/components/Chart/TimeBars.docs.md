@@ -971,8 +971,7 @@ age,date,value
   ],
   "yTicks": [
     100000,
-    50000,
-    0
+    50000
   ],
   "xBandPadding": 0.5,
   "height": 400,
@@ -985,20 +984,21 @@ age,date,value
   },
   "unit": "Franken",
   "xUnit": ". Perzentil",
+  "yScaleChangeDirection": true,
   "xAnnotations": [
     {
       "x": 40,
       "value": 6000,
       "label": "Schätzung",
       "showValue": false,
-      "position": "top"
+      "position": "bottom"
     },
     {
       "x": 74,
       "value": 90712,
       "label": "Tatsächlich",
       "showValue": false,
-      "position": "top"
+      "position": "bottom"
     }
   ]
 }}

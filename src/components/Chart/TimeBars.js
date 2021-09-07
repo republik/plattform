@@ -50,6 +50,7 @@ const TimeBarChart = props => {
     domain,
     padding,
     xUnit,
+    yScaleChangeDirection,
     height: innerHeight
   } = props
 
@@ -99,11 +100,15 @@ const TimeBarChart = props => {
     true
   )
 
+  const barRange = yScaleChangeDirection
+    ? [AXIS_BOTTOM_HEIGHT + columnTitleHeight, columnHeight - PADDING_TOP]
+    : [columnHeight - PADDING_TOP, AXIS_BOTTOM_HEIGHT + columnTitleHeight]
+
   const y = scaleLinear()
     .domain(
       props.domain ? props.domain : [getMin(groupedData), getMax(groupedData)]
     )
-    .range([columnHeight - PADDING_TOP, AXIS_BOTTOM_HEIGHT + columnTitleHeight])
+    .range(barRange)
 
   if (!domain) {
     y.nice(3)
@@ -116,7 +121,9 @@ const TimeBarChart = props => {
       let downValue = 0
       let downPos = y(0)
       bar.segments.forEach(segment => {
-        const isPositive = segment.value > 0
+        const isPositive = yScaleChangeDirection
+          ? segment.value < 0
+          : segment.value > 0
         const baseValue = isPositive ? upValue : downValue
         const y0 = y(baseValue)
         const y1 = y(baseValue + segment.value)
@@ -204,6 +211,7 @@ const TimeBarChart = props => {
       format={x => xFormat(xParser(x))}
       xUnit={xUnit}
       strong={y.domain()[0] !== 0}
+      yScaleChangeDirection={yScaleChangeDirection}
     />
   )
 
@@ -227,9 +235,14 @@ const TimeBarChart = props => {
                 yAxis={yAxis}
                 width={innerWidth}
                 xAxis={xAxis}
-                xAxisPos={innerHeight + PADDING_TOP + columnTitleHeight}
+                xAxisPos={
+                  yScaleChangeDirection
+                    ? PADDING_TOP + columnTitleHeight
+                    : innerHeight + PADDING_TOP + columnTitleHeight
+                }
                 tLabel={tLabel}
                 color={d => color(colorAccessor(d))}
+                yScaleChangeDirection={yScaleChangeDirection}
               />
             </g>
           )
