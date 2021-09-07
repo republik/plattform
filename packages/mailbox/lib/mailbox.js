@@ -4,40 +4,16 @@
 const { getIndexAlias } = require('@orbiting/backend-modules-search/lib/utils')
 const { getAddress, getAddresses } = require('./common')
 
-const wrapHtml = (partial) => `
-<html>
-<head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-</head>
-<body>
-  ${partial}
-</body>
-</html>
-`
-
-const replaceCharset = (string) =>
-  string.replace(/charset=([A-Za-z0-9-]+)/g, 'charset=utf-8')
-
-const pimpHtml = (html) => {
-  if (!html.includes('<html>')) {
-    return wrapHtml(html)
-  }
-
-  return replaceCharset(html)
-}
-
 const wrapText = (text) => `
 <html>
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta charset="utf-8">
 </head>
 <body style="font-family: monospace, monospace;">
   ${text.replace(/\n/g, '<br>')}
 </body>
 </html>
 `
-
-const toBase64 = (string) => Buffer.from(string).toString('base64')
 
 const createShouldEmail = (email) => ({
   bool: {
@@ -52,6 +28,12 @@ const createShouldEmail = (email) => ({
   },
 })
 
+const createMustId = (id) => ({
+  bool: {
+    must: [{ term: { _id: id } }],
+  },
+})
+
 const createMustNotMatchAll = () => ({
   bool: {
     must_not: { match_all: {} },
@@ -63,13 +45,16 @@ const createQuery = ({ user = {}, filters = {} }, { after, before } = {}) => {
     (after?.date && { range: { date: { lt: after.date } } }) ||
     (before?.date && { range: { date: { gt: before.date } } })
 
+  const mustHaveId = filters?.id && createMustId(filters.id)
   const mustUserEmail = user?.email && createShouldEmail(user.email)
   const mustHaveError = filters?.hasError && createMustNotMatchAll()
   const mustEmail = filters?.email && createShouldEmail(filters.email)
 
   return {
     bool: {
-      must: [sort, mustUserEmail, mustHaveError, mustEmail].filter(Boolean),
+      must: [sort, mustHaveId, mustUserEmail, mustHaveError, mustEmail].filter(
+        Boolean,
+      ),
     },
   }
 }
@@ -90,9 +75,8 @@ const toRecords = ({ _id, _source }) => ({
   cc: getAddresses(_source.cc?.value),
   bcc: getAddresses(_source.bcc?.value),
   subject: _source.subject,
-  html:
-    (_source.html && toBase64(pimpHtml(_source.html))) ||
-    (_source.text && toBase64(wrapText(_source.text))),
+  hasHtml: !!(_source.html || _source.text),
+  html: _source.html || wrapText(_source.text),
   links: null,
 })
 
