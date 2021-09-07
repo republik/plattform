@@ -83,10 +83,9 @@ const deepSortTree = (
         topIds && topIds.includes(comment.id)
           ? topValue
           : bubbleSort
-          ? [
-              comment[sortKey],
-              firstChild.topValue || firstChild[sortKey],
-            ].sort((a, b) => ascDesc(a, b))[0]
+          ? [comment[sortKey], firstChild.topValue || firstChild[sortKey]].sort(
+              (a, b) => ascDesc(a, b),
+            )[0]
           : null
     }
   }
@@ -211,7 +210,7 @@ module.exports = async (discussion, args, context, info) => {
       }
     : args
   const {
-    orderBy = 'HOT',
+    orderBy = 'AUTO',
     orderDirection = 'DESC',
     first = 200,
     exceptIds = [],
@@ -245,6 +244,23 @@ module.exports = async (discussion, args, context, info) => {
     }
   }
 
+  let resolvedOrderBy
+  if (orderBy === 'AUTO') {
+    const sortedComments = [...comments].sort(
+      (a, b) => Date.parse(a.createdAt) - Date.parse(b.createdAt),
+    )
+    if (sortedComments.length > 0) {
+      const firstCommentCreatedAt = Date.parse(sortedComments[0].createdAt)
+      const twentyFourHoursAgo = new Date(
+        new Date().getTime() - 24 * 60 * 60 * 1000,
+      )
+      resolvedOrderBy =
+        firstCommentCreatedAt > twentyFourHoursAgo ? 'DATE' : 'VOTE'
+    } else {
+      resolvedOrderBy = 'DATE'
+    }
+  }
+
   let tree = parentId ? comments.find((c) => c.id === parentId) : {}
 
   // prepare sort
@@ -253,7 +269,7 @@ module.exports = async (discussion, args, context, info) => {
     orderDirection === 'ASC' ? Number.MIN_SAFE_INTEGER : Number.MAX_SAFE_INTEGER
   const bottomValue =
     orderDirection === 'ASC' ? Number.MAX_SAFE_INTEGER : Number.MIN_SAFE_INTEGER
-  const sortKey = getSortKey(orderBy)
+  const sortKey = getSortKey(resolvedOrderBy || orderBy)
   const bubbleSort = sortKey !== 'createdAt' && sortKey !== 'hotness' // bubbling values for sort is disabled for createdAt and hotness
 
   const compare = (
@@ -372,6 +388,10 @@ module.exports = async (discussion, args, context, info) => {
   // return a flat array in the order of the tree
   if (flatDepth) {
     tree.comments.nodes = flattenTreeHorizontally(tree)
+  }
+
+  if (resolvedOrderBy) {
+    tree.comments.resolvedOrderBy = resolvedOrderBy
   }
 
   return tree.comments
