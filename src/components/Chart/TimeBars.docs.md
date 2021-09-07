@@ -920,8 +920,7 @@ year,category,value
       "xTicks": [
         0,
         100
-      ],
-      "xUnit": "Alter"
+      ]
     }}
     values={`
 age,date,value
