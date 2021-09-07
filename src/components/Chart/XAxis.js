@@ -27,7 +27,7 @@ const XAxis = ({
   format,
   strong,
   xUnit,
-  yScaleChangeDirection
+  yScaleInvert
 }) => {
   const [colorScheme] = useColorContext()
   const baseLines = getBaselines(xDomain, x, width)
@@ -55,13 +55,13 @@ const XAxis = ({
           <line
             {...styles.axisXLine}
             {...colorScheme.set('stroke', 'text')}
-            y2={yScaleChangeDirection ? X_TICK_HEIGHT - 6 : X_TICK_HEIGHT}
+            y2={yScaleInvert ? X_TICK_HEIGHT - 6 : X_TICK_HEIGHT}
           />
           <text
             {...styles.axisLabel}
             {...colorScheme.set('fill', 'text')}
             y={X_TICK_HEIGHT + 5}
-            dy={yScaleChangeDirection ? '-1.1em' : '0.6em'}
+            dy={yScaleInvert ? '-1.1em' : '0.6em'}
             textAnchor='middle'
           >
             {isLastItem(ticks, i) ? format(tick) + xUnit : format(tick)}
