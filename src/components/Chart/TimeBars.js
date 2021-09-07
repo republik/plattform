@@ -50,7 +50,7 @@ const TimeBarChart = props => {
     domain,
     padding,
     xUnit,
-    yScaleChangeDirection,
+    yScaleInvert,
     height: innerHeight
   } = props
 
@@ -100,7 +100,7 @@ const TimeBarChart = props => {
     true
   )
 
-  const barRange = yScaleChangeDirection
+  const barRange = yScaleInvert
     ? [AXIS_BOTTOM_HEIGHT + columnTitleHeight, columnHeight - PADDING_TOP]
     : [columnHeight - PADDING_TOP, AXIS_BOTTOM_HEIGHT + columnTitleHeight]
 
@@ -121,9 +121,7 @@ const TimeBarChart = props => {
       let downValue = 0
       let downPos = y(0)
       bar.segments.forEach(segment => {
-        const isPositive = yScaleChangeDirection
-          ? segment.value < 0
-          : segment.value > 0
+        const isPositive = yScaleInvert ? segment.value < 0 : segment.value > 0
         const baseValue = isPositive ? upValue : downValue
         const y0 = y(baseValue)
         const y1 = y(baseValue + segment.value)
@@ -211,7 +209,7 @@ const TimeBarChart = props => {
       format={x => xFormat(xParser(x))}
       xUnit={xUnit}
       strong={y.domain()[0] !== 0}
-      yScaleChangeDirection={yScaleChangeDirection}
+      yScaleInvert={yScaleInvert}
     />
   )
 
@@ -236,13 +234,13 @@ const TimeBarChart = props => {
                 width={innerWidth}
                 xAxis={xAxis}
                 xAxisPos={
-                  yScaleChangeDirection
+                  yScaleInvert
                     ? PADDING_TOP + columnTitleHeight
                     : innerHeight + PADDING_TOP + columnTitleHeight
                 }
                 tLabel={tLabel}
                 color={d => color(colorAccessor(d))}
-                yScaleChangeDirection={yScaleChangeDirection}
+                yScaleInvert={yScaleInvert}
               />
             </g>
           )

@@ -949,7 +949,7 @@ age,date,value
 </div>
 ```
 
-### Custom Label for X Axis
+### Inverted Y Scale
 
 ```react
 <div>
@@ -984,7 +984,7 @@ age,date,value
   },
   "unit": "Franken",
   "xUnit": ". Perzentil",
-  "yScaleChangeDirection": true,
+  "yScaleInvert": true,
   "xAnnotations": [
     {
       "x": 40,
