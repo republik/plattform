@@ -13,8 +13,9 @@ module.exports = async (_, args, context, info) => {
         first: args.first,
       }
     : args
+  let { orderBy = 'DATE' } = options
+  orderBy = orderBy === 'AUTO' ? 'DATE' : orderBy
   const {
-    orderBy = 'DATE',
     orderDirection = 'DESC',
     first: limit = 40,
     offset = 0,
@@ -27,6 +28,7 @@ module.exports = async (_, args, context, info) => {
     featuredTarget = featured && getDefaultFeaturedTarget(),
   } = options
 
+  console.log(orderBy)
   if (limit > MAX_LIMIT) {
     throw new Error(t('api/discussion/args/first/tooBig', { max: MAX_LIMIT }))
   }
