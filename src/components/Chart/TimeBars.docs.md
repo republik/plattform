@@ -1012,7 +1012,6 @@ age,date,value
       unit: 'Franken',
       position: 'bottom',
       ghost: true,
-      textAlignment: 'left',
       leftLabel: true
     },
   ]

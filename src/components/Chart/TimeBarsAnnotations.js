@@ -16,17 +16,10 @@ const labelGauger = createTextGauger(LABEL_FONT, {
   html: true
 })
 
-const convertTextAlignment = alignment => {
-  switch (alignment) {
-    case 'left':
-      return 'start'
-    case 'center':
-      return 'middle'
-    case 'right':
-      return 'end'
-    default:
-      return 'middle'
-  }
+const textAlignmentDict = {
+  left: 'start',
+  center: 'middle',
+  right: 'end'
 }
 
 const styles = {
@@ -140,9 +133,13 @@ export const XAnnotation = ({
         textAnchor = 'start'
         tx = x1
       }
+    } else {
+      textAnchor = 'middle'
     }
+  } else if (annotation.leftLabel) {
+    textAnchor = 'start'
   } else {
-    textAnchor = convertTextAlignment(annotation.textAlignment)
+    textAnchor = textAlignmentDict[annotation.textAlignment] || 'middle'
   }
 
   const isBottom = annotation.position === 'bottom'
