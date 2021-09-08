@@ -139,7 +139,7 @@ export const XAnnotation = ({
   } else if (annotation.leftLabel) {
     textAnchor = 'start'
   } else {
-    textAnchor = textAlignmentDict[annotation.textAlignment] || 'middle'
+    textAnchor = textAlignmentDict[annotation.textAlignment]
   }
 
   const isBottom = annotation.position === 'bottom'
