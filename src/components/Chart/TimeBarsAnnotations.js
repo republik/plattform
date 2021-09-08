@@ -16,6 +16,19 @@ const labelGauger = createTextGauger(LABEL_FONT, {
   html: true
 })
 
+const convertTextAlignment = alignment => {
+  switch (alignment) {
+    case 'left':
+      return 'start'
+    case 'center':
+      return 'middle'
+    case 'right':
+      return 'end'
+    default:
+      return 'middle'
+  }
+}
+
 const styles = {
   annotationLine: css({
     strokeWidth: '1px',
@@ -91,6 +104,7 @@ export const XAnnotation = ({
     return null
   }
   const isRange = annotation.x1 !== undefined && annotation.x2 !== undefined
+
   const labelText = tLabel(annotation.label)
   const valueText =
     showAnnotationValue(annotation) &&
@@ -107,21 +121,30 @@ export const XAnnotation = ({
     labelText ? labelGauger(labelText) : 0,
     valueText ? valueGauger(valueText) : 0
   )
-  const x1 = isRange ? xCalc(annotation.x1) : xCalc(annotation.x)
+  const x1 = annotation.leftLabel
+    ? 0
+    : isRange
+    ? xCalc(annotation.x1)
+    : xCalc(annotation.x)
   const x2 = isRange
     ? xCalc(annotation.x2) + barWidth
     : x1 + Math.max(barWidth, 8)
 
   let textAnchor = 'middle'
-  let tx = x1 + (x2 - x1) / 2
-  if (x1 + (x2 - x1) / 2 + textSize / 2 > width) {
-    textAnchor = 'end'
-    tx = x2
-    if ((isRange ? x2 : x1) - textSize < 0) {
-      textAnchor = 'start'
-      tx = x1
+  let tx = annotation.leftLabel ? 0 : x1 + (x2 - x1) / 2
+  if (annotation.textAlignment === undefined) {
+    if (x1 + (x2 - x1) / 2 + textSize / 2 > width) {
+      textAnchor = 'end'
+      tx = x2
+      if ((isRange ? x2 : x1) - textSize < 0) {
+        textAnchor = 'start'
+        tx = x1
+      }
     }
+  } else {
+    textAnchor = convertTextAlignment(annotation.textAlignment)
   }
+
   const isBottom = annotation.position === 'bottom'
   return (
     <>
@@ -131,12 +154,14 @@ export const XAnnotation = ({
         {...(isRange ? styles.annotationLine : styles.annotationLineValue)}
         {...colorScheme.set('stroke', 'text')}
       />
-      <circle
-        r='3.5'
-        cx={x1}
-        {...colorScheme.set('stroke', 'text')}
-        {...colorScheme.set('fill', 'textInverted')}
-      />
+      {annotation.leftLabel === undefined && (
+        <circle
+          r='3.5'
+          cx={x1}
+          {...colorScheme.set('stroke', 'text')}
+          {...colorScheme.set('fill', 'textInverted')}
+        />
+      )}
       {isRange && (
         <circle
           r='3.5'
