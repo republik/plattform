@@ -992,27 +992,28 @@ age,date,value
       "label": "Schätzung",
       "showValue": false,
       "position": "bottom",
-      textAlignment: 'right',
+      textAlignment: "right",
     },
     {
-      "x": '74',
+      "x": "704",
       "value": 90712,
       "label": "Tatsächlich",
       "showValue": false,
       "position": "bottom",
-      "textAlignment": 'right'
+      "textAlignment": "right"
 
     },
     {
-      x1: '0',
-      x2: '70',
-      value: 68139,
-      label: '70. Perzentile',
-      showValue: true,
-      unit: 'Franken',
-      position: 'bottom',
-      ghost: true,
-      leftLabel: true
+      "x1":" "0",
+      "x2": "70",
+      "value": 68139,
+      "label": "70. Perzentile",
+      "showValue": true,
+      "unit": "Franken",
+      "position": "bottom",
+      "ghost": true,
+      "textAlignment": "left",
+      "leftLabels": true
     },
   ]
 }}
