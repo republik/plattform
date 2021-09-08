@@ -252,20 +252,23 @@ module.exports = async (discussion, args, context, info) => {
     - or by votes otherwise 
     the property resolvedOrderBy is just needed when DiscussionOrder === AUTO
   */
-  const oldestComment = comments?.reduce((oldest, current) => {
-    if (!oldest) {
-      return current
-    }
-    return oldest.createdAt < current.createdAt ? oldest : current
-  }, false)
+  let resolvedOrderBy
+  if (orderBy === 'AUTO') {
+    const oldestComment = comments?.reduce((oldest, current) => {
+      if (!oldest) {
+        return current
+      }
+      return oldest.createdAt < current.createdAt ? oldest : current
+    }, false)
 
-  const thresholdOldDiscussion =
-    new Date().getTime() - THRESHOLD_OLD_DISCUSSION_IN_MS
+    const thresholdOldDiscussion =
+      new Date().getTime() - THRESHOLD_OLD_DISCUSSION_IN_MS
 
-  const resolvedOrderBy =
-    oldestComment && oldestComment.createdAt?.getTime() < thresholdOldDiscussion
-      ? 'VOTES'
-      : 'DATE'
+    resolvedOrderBy =
+      oldestComment?.createdAt?.getTime() < thresholdOldDiscussion
+        ? 'VOTES'
+        : 'DATE'
+  }
 
   let tree = parentId ? comments.find((c) => c.id === parentId) : {}
 
