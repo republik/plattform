@@ -4,6 +4,8 @@ const { ascending, descending } = require('d3-array')
 
 const getSortKey = require('../../../lib/sortKey')
 
+const THRESHOLD_OLD_DISCUSSION_IN_MS = 1000 * 60 * 60 * 24 // 24 hours
+
 const assembleTree = (_comment, _comments) => {
   const coveredComments = []
 
@@ -250,22 +252,20 @@ module.exports = async (discussion, args, context, info) => {
     - or by votes otherwise 
     the property resolvedOrderBy is just needed when DiscussionOrder === AUTO
   */
-  let resolvedOrderBy
-  if (orderBy === 'AUTO') {
-    const sortedComments = [...comments].sort(
-      (a, b) => Date.parse(a.createdAt) - Date.parse(b.createdAt),
-    )
-    if (sortedComments.length > 0) {
-      const firstCommentCreatedAt = Date.parse(sortedComments[0].createdAt)
-      const twentyFourHoursAgo = new Date(
-        new Date().getTime() - 24 * 60 * 60 * 1000,
-      )
-      resolvedOrderBy =
-        firstCommentCreatedAt > twentyFourHoursAgo ? 'DATE' : 'VOTES'
-    } else {
-      resolvedOrderBy = 'DATE'
+  const oldestComment = comments?.reduce((oldest, current) => {
+    if (!oldest) {
+      return current
     }
-  }
+    return oldest.createdAt < current.createdAt ? oldest : current
+  }, false)
+
+  const thresholdOldDiscussion =
+    new Date().getTime() - THRESHOLD_OLD_DISCUSSION_IN_MS
+
+  const resolvedOrderBy =
+    oldestComment && oldestComment.createdAt?.getTime() < thresholdOldDiscussion
+      ? 'VOTES'
+      : 'DATE'
 
   let tree = parentId ? comments.find((c) => c.id === parentId) : {}
 
