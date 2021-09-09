@@ -987,7 +987,7 @@ age,date,value
   "yScaleInvert": true,
   "xAnnotations": [
     {
-      "x": 40,
+      "x": "40",
       "value": 6000,
       "label": "Schätzung",
       "showValue": false,
@@ -995,7 +995,7 @@ age,date,value
       textAlignment: "right",
     },
     {
-      "x": "704",
+      "x": "74",
       "value": 90712,
       "label": "Tatsächlich",
       "showValue": false,
@@ -1004,7 +1004,7 @@ age,date,value
 
     },
     {
-      "x1":" "0",
+      "x1": "0",
       "x2": "70",
       "value": 68139,
       "label": "70. Perzentile",
@@ -1012,8 +1012,7 @@ age,date,value
       "unit": "Franken",
       "position": "bottom",
       "ghost": true,
-      "textAlignment": "left",
-      "leftLabels": true
+      "leftLabel": true
     },
   ]
 }}

@@ -125,7 +125,9 @@ export const XAnnotation = ({
 
   let textAnchor = 'middle'
   let tx = annotation.leftLabel ? 0 : x1 + (x2 - x1) / 2
-  if (annotation.textAlignment === undefined) {
+  if (annotation.leftLabel) {
+    textAnchor = 'start'
+  } else if (annotation.textAlignment === undefined) {
     if (x1 + (x2 - x1) / 2 + textSize / 2 > width) {
       textAnchor = 'end'
       tx = x2
@@ -136,8 +138,6 @@ export const XAnnotation = ({
     } else {
       textAnchor = 'middle'
     }
-  } else if (annotation.leftLabel) {
-    textAnchor = 'start'
   } else {
     textAnchor = textAlignmentDict[annotation.textAlignment]
   }
