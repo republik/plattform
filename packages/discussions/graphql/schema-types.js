@@ -72,6 +72,7 @@ input DiscussionPreferencesInput {
 }
 
 enum DiscussionOrder {
+  AUTO
   DATE
   VOTES
   HOT
@@ -105,6 +106,7 @@ type CommentConnection {
   pageInfo: DiscussionPageInfo
   nodes: [Comment]!
   focus: Comment
+  resolvedOrderBy: DiscussionOrder
 }
 
 type Discussion {

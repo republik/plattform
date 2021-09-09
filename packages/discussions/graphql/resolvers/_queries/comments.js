@@ -27,6 +27,8 @@ module.exports = async (_, args, context, info) => {
     featuredTarget = featured && getDefaultFeaturedTarget(),
   } = options
 
+  const resolvedOrderBy = orderBy === 'AUTO' ? 'DATE' : null
+
   if (limit > MAX_LIMIT) {
     throw new Error(t('api/discussion/args/first/tooBig', { max: MAX_LIMIT }))
   }
@@ -134,5 +136,6 @@ module.exports = async (_, args, context, info) => {
       focusId && comments.length && focusId === comments[0].id
         ? comments[0]
         : null,
+    resolvedOrderBy,
   }
 }
