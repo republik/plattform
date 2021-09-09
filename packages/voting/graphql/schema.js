@@ -31,7 +31,7 @@ type mutations {
   ): VotingResult!
 
   createElection(electionInput: ElectionInput!): Election!
-  submitCandidacy(slug: String!): Candidacy!
+  submitCandidacy(slug: String!, credential: String!): Candidacy!
   cancelCandidacy(slug: String!): Election!
   submitElectionBallot(
     electionId: ID!

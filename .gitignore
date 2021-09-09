@@ -70,6 +70,7 @@ packages/publikator/seeds/seeds.json
 .vim
 .idea/
 local
+data/
 
 # files generated from typescript
 packages/auth/index.js

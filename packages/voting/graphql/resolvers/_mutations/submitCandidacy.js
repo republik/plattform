@@ -5,7 +5,7 @@ const { findBySlug } = require('../../../lib/Election')
 const { findById } = require('../../../lib/Candidacy')
 const mailLib = require('../../../lib/mail')
 
-module.exports = async (_, { slug }, { pgdb, user: me, t }) => {
+module.exports = async (_, { slug, credential }, { pgdb, user: me, t }) => {
   Roles.ensureUserIsInRoles(me, ['admin', 'associate'])
 
   const election = await findBySlug(slug, pgdb)
@@ -32,12 +32,19 @@ module.exports = async (_, { slug }, { pgdb, user: me, t }) => {
     { userId: me.id, discussionId: election.discussionId },
   )
 
+  const { entity: credentialEntity } = await upsert(
+    pgdb.public.credentials,
+    { userId: me.id, description: credential },
+    { userId: me.id, description: credential },
+  )
+
   const { entity, isNew } = await upsert(
     pgdb.public.electionCandidacies,
     {
       userId: me.id,
       electionId: election.id,
       commentId: comment.id,
+      credentialId: credentialEntity.id,
     },
     { userId: me.id, electionId: election.id },
   )

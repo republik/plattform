@@ -56,6 +56,7 @@ type mutations {
     twitterHandle: String
     publicUrl: String
     disclosures: String
+    gender: String
   ): User!
 
   updateAddress(

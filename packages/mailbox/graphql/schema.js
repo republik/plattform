@@ -5,13 +5,13 @@ schema {
 }
 
 type queries {
-  mailLog(
+  mailbox(
     first: Int
     last: Int
     before: String
     after: String
-    filters: MaiLogFiltersInput
-  ): MailLogConnection @deprecated(reason: "use query \`mailbox\` instead")
+    filters: MailboxFiltersInput
+  ): MailboxConnection
 }
 
 `

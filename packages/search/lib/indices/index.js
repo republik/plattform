@@ -2,6 +2,7 @@ const dict = {
   comments: require('./comments'),
   documents: require('./documents'),
   documentzones: require('./documentzones'),
+  mails: require('./mails'),
   users: require('./users'),
   repos: require('./repos'),
 }
