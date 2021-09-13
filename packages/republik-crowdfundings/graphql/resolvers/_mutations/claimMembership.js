@@ -10,7 +10,11 @@ module.exports = async (_, args, context) => {
     pgdb,
     req,
     t,
-    mail: { enforceSubscriptions, sendMembershipClaimNotice },
+    mail: {
+      enforceSubscriptions,
+      sendMembershipClaimNotice,
+      sendMembershipClaimerOnboarding,
+    },
   } = context
   ensureSignedIn(req)
 
@@ -81,6 +85,10 @@ module.exports = async (_, args, context) => {
     try {
       if (!isSelfClaimed) {
         await sendMembershipClaimNotice(
+          { membership: activatedMembership },
+          { pgdb, t },
+        )
+        await sendMembershipClaimerOnboarding(
           { membership: activatedMembership },
           { pgdb, t },
         )

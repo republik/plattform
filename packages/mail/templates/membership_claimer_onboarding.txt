@@ -5,18 +5,20 @@ Guten Tag
 Sie haben soeben ein Geschenk eingelöst.
 
 {{if `active_membership_type_company_name == "REPUBLIK"`}}
-Wir aktivieren dieses automatisch, sobald die aktuelle Periode Ihres Abonnements ausgelaufen ist. 
-So können Sie dann nahtlos weiterlesen.
+
+Wir aktivieren dieses automatisch, sobald die aktuelle Periode Ihres Abonnements
+ausgelaufen ist. So können Sie dann nahtlos weiterlesen.
 
 {{else}}
 
-Wir aktivieren dieses automatisch, sobald die aktuelle Periode Ihrer Mitgliedschaft ausgelaufen ist. 
-So können Sie dann nahtlos weiterlesen.
+Wir aktivieren dieses automatisch, sobald die aktuelle Periode Ihrer
+Mitgliedschaft ausgelaufen ist. So können Sie dann nahtlos weiterlesen.
 
 {{/if}}
 
-Sie erhalten also weiterhin von Montag bis Samstag ein hochwertiges digitales Magazin {{link_signin}} , 
-können an sämtlichen Debatten teilnehmen {{link_dialog}} und Beiträge mit Ihren Freunden oder Feinden teilen.
+Sie erhalten also weiterhin von Montag bis Samstag ein hochwertiges digitales
+Magazin {{link_signin}} , können an sämtlichen Debatten teilnehmen
+{{link_dialog}} und Beiträge mit Ihren Freunden oder Feinden teilen.
 
 {{else}}
 
@@ -26,8 +28,8 @@ teilnehmen {{link_dialog}} , eine öffentliche Profilseite aufschalten
 
 {{/if}}
 
-Falls Sie Fragen zur Handhabung des Magazins haben: Hier finden Sie die Gebrauchsanleitung {{link_manual}} , 
-die die wichtigsten davon klärt.
+Falls Sie Fragen zur Handhabung des Magazins haben: Hier finden Sie die
+Gebrauchsanleitung {{link_manual}} , die die wichtigsten davon klärt.
 
 Wir wünschen Ihnen viel Vergnügen mit der Republik.
 
