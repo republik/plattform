@@ -4,6 +4,8 @@ const { ascending, descending } = require('d3-array')
 
 const getSortKey = require('../../../lib/sortKey')
 
+const THRESHOLD_OLD_DISCUSSION_IN_MS = 1000 * 60 * 60 * 24 // 24 hours
+
 const assembleTree = (_comment, _comments) => {
   const coveredComments = []
 
@@ -83,10 +85,9 @@ const deepSortTree = (
         topIds && topIds.includes(comment.id)
           ? topValue
           : bubbleSort
-          ? [
-              comment[sortKey],
-              firstChild.topValue || firstChild[sortKey],
-            ].sort((a, b) => ascDesc(a, b))[0]
+          ? [comment[sortKey], firstChild.topValue || firstChild[sortKey]].sort(
+              (a, b) => ascDesc(a, b),
+            )[0]
           : null
     }
   }
@@ -211,7 +212,7 @@ module.exports = async (discussion, args, context, info) => {
       }
     : args
   const {
-    orderBy = 'HOT',
+    orderBy = 'AUTO',
     orderDirection = 'DESC',
     first = 200,
     exceptIds = [],
@@ -245,6 +246,30 @@ module.exports = async (discussion, args, context, info) => {
     }
   }
 
+  /* 
+    AUTO = comments are sorted 
+    - by date if the first comment was created in the last 24 hours 
+    - or by votes otherwise 
+    the property resolvedOrderBy is just needed when DiscussionOrder === AUTO
+  */
+  let resolvedOrderBy
+  if (orderBy === 'AUTO') {
+    const oldestComment = comments?.reduce((oldest, current) => {
+      if (!oldest) {
+        return current
+      }
+      return oldest.createdAt < current.createdAt ? oldest : current
+    }, false)
+
+    const thresholdOldDiscussion =
+      new Date().getTime() - THRESHOLD_OLD_DISCUSSION_IN_MS
+
+    resolvedOrderBy =
+      oldestComment?.createdAt?.getTime() < thresholdOldDiscussion
+        ? 'VOTES'
+        : 'DATE'
+  }
+
   let tree = parentId ? comments.find((c) => c.id === parentId) : {}
 
   // prepare sort
@@ -253,7 +278,7 @@ module.exports = async (discussion, args, context, info) => {
     orderDirection === 'ASC' ? Number.MIN_SAFE_INTEGER : Number.MAX_SAFE_INTEGER
   const bottomValue =
     orderDirection === 'ASC' ? Number.MAX_SAFE_INTEGER : Number.MIN_SAFE_INTEGER
-  const sortKey = getSortKey(orderBy)
+  const sortKey = getSortKey(resolvedOrderBy || orderBy)
   const bubbleSort = sortKey !== 'createdAt' && sortKey !== 'hotness' // bubbling values for sort is disabled for createdAt and hotness
 
   const compare = (
@@ -372,6 +397,10 @@ module.exports = async (discussion, args, context, info) => {
   // return a flat array in the order of the tree
   if (flatDepth) {
     tree.comments.nodes = flattenTreeHorizontally(tree)
+  }
+
+  if (resolvedOrderBy) {
+    tree.comments.resolvedOrderBy = resolvedOrderBy
   }
 
   return tree.comments
