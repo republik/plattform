@@ -64,18 +64,28 @@ const TeaserEmbedComment = ({ data, liveData, t, Link }) => {
   return (
     <DiscussionContext.Provider value={discussionContextValue}>
       <div id={data.id} {...styles.root} {...colorScheme.set('color', 'text')}>
-        <Comment.Header t={t} comment={metaDataComment} />
-        <div style={{ margin: '10px 0' }}>
-          <Comment.Body
-            t={t}
-            comment={contentComment}
-            context={
-              contentComment.tags && contentComment.tags[0]
-                ? { title: contentComment.tags[0] }
-                : undefined
-            }
-          />
-        </div>
+        <Comment.Header
+          t={t}
+          comment={metaDataComment}
+          discussion={discussionContextValue.discussion}
+        />
+        <Link
+          comment={metaDataComment}
+          discussion={discussionContextValue.discussion}
+          passHref
+        >
+          <div style={{ margin: '10px 0', cursor: 'pointer' }}>
+            <Comment.Body
+              t={t}
+              comment={contentComment}
+              context={
+                contentComment.tags && contentComment.tags[0]
+                  ? { title: contentComment.tags[0] }
+                  : undefined
+              }
+            />
+          </div>
+        </Link>
         <DiscussionFooter comment={metaDataComment} t={t} Link={Link} />
       </div>
     </DiscussionContext.Provider>
@@ -119,8 +129,12 @@ TeaserEmbedComment.data = {
           document {
             id
             meta {
+              template
               title
               path
+              ownDiscussion {
+                id
+              }
             }
           }
         }
