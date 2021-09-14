@@ -42,9 +42,9 @@
                 <tr>
                   <td style="padding: 20px">
                     <p>Guten Tag</p>
-                    {{if active_membership_type_company_name}}
+                    {{#if active_membership_type_company_name}}
                     <p>Sie haben soeben ein Geschenk eingelöst.</p>
-                    {{if `active_membership_type_company_name == "REPUBLIK"`}}
+                    {{#if `active_membership_type_company_name == "REPUBLIK"`}}
                     <p>
                       Wir aktivieren dieses automatisch, sobald die aktuelle
                       Periode Ihres Abonnements ausgelaufen ist. So können Sie
@@ -59,22 +59,35 @@
                     {{/if}}
                     <p>
                       Sie erhalten also weiterhin von Montag bis Samstag ein
-                      hochwertiges digitales Magazin {{link_signin}} , können an
-                      sämtlichen Debatten teilnehmen {{link_dialog}} und
-                      Beiträge mit Ihren Freunden oder Feinden teilen.
+                      <a href="{{link_signin}}"
+                        >hochwertiges digitales Magazin</a
+                      >
+                      , können an
+                      <a href="{{link_dialog}}"
+                        >sämtlichen Debatten teilnehmen</a
+                      >
+                      und Beiträge mit Ihren Freunden oder Feinden teilen.
                     </p>
                     {{else}}
                     <p>
-                      Sie können ab sofort das Magazin lesen {{link_signin}} ,
-                      an sämtlichen Debatten teilnehmen {{link_dialog}} , eine
-                      öffentliche Profilseite aufschalten {{link_profile}} und
-                      Beiträge mit Ihren Freunden oder Feinden teilen.
+                      Sie können ab sofort
+                      <a href="{{link_signin}}">das Magazin lesen</a>, an
+                      <a href="{{link_dialog}}"
+                        >sämtlichen Debatten teilnehmen</a
+                      >
+                      , eine
+                      <a href="{{link_profile}}"
+                        >öffentliche Profilseite aufschalten</a
+                      >
+                      und Beiträge mit Ihren Freunden oder Feinden teilen.
                     </p>
                     {{/if}}
                     <p>
-                      Falls Sie Fragen zur Handhabung des Magazins haben: Hier
-                      finden Sie die Gebrauchsanleitung {{link_manual}} , die
-                      die wichtigsten davon klärt.
+                      Falls Sie Fragen zur Handhabung des Magazins haben:
+                      <a href="{{link_manual}}"
+                        >Hier finden Sie die Gebrauchsanleitung</a
+                      >
+                      , die die wichtigsten davon klärt.
                     </p>
                     <p>Wir wünschen Ihnen viel Vergnügen mit der Republik.</p>
                     <p>Ihre Crew der Republik</p>

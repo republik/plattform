@@ -1,10 +1,10 @@
 Guten Tag
 
-{{if active_membership_type_company_name}}
+{{#if active_membership_type_company_name}}
 
 Sie haben soeben ein Geschenk eingelöst.
 
-{{if `active_membership_type_company_name == "REPUBLIK"`}}
+{{#if `active_membership_type_company_name == "REPUBLIK"`}}
 
 Wir aktivieren dieses automatisch, sobald die aktuelle Periode Ihres Abonnements
 ausgelaufen ist. So können Sie dann nahtlos weiterlesen.

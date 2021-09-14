@@ -673,49 +673,57 @@ mail.sendMembershipClaimNotice = async ({ membership }, { pgdb, t }) => {
   )
 }
 
-mail.sendMembershipClaimerOnboarding = async ({ membership }, { pgdb, t }) => {
-  const claimer = await pgdb.public.users.findOne({ id: membership.userId })
-  const claimedMembershipType = await pgdb.public.membershipTypes.findOne({
-    id: membership.membershipTypeId,
+mail.sendMembershipClaimerOnboarding = async (
+  { claimedMembership, activeMembership },
+  { pgdb, t },
+) => {
+  const claimer = await pgdb.public.users.findOne({
+    id: claimedMembership.userId,
   })
-  const claimedMembershipCompany = await pgdb.public.companies.findOneFieldOnly(
-    { id: claimedMembershipType.companyId },
-    'name',
-  )
-  const activeMembershipCompany = await pgdb.queryOneField(`
+
+  const mailTemplateData = {
+    to: claimer.email,
+    fromEmail: process.env.DEFAULT_MAIL_FROM_ADDRESS,
+    templateName: 'membership_claimer_onboarding',
+    mergeLanguage: 'handlebars',
+  }
+
+  const claimedMembershipCompany = await pgdb.queryOneField(`
     SELECT c.name
-    FROM memberships m
-    JOIN "membershipTypes" mt
-      ON m."membershipTypeId" = mt.id
+    FROM "membershipTypes" mt
     JOIN companies c
       ON mt."companyId" = c.id
-    WHERE m."userId" = '${membership.userId}'
-      AND m.active = true
+    WHERE mt.id = '${claimedMembership.membershipTypeId}'
     LIMIT 1
   `)
 
-  const subjectDifferentiator = activeMembershipCompany
-    ? 'ACTIVE'
-    : claimedMembershipCompany
+  if (activeMembership) {
+    const activeMembershipCompany = await pgdb.queryOneField(`
+      SELECT c.name
+      FROM "membershipTypes" mt
+      JOIN companies c
+        ON mt."companyId" = c.id
+      WHERE mt.id = '${activeMembership.membershipTypeId}'
+      LIMIT 1
+    `)
 
-  return sendMailTemplate(
-    {
-      to: claimer.email,
-      fromEmail: process.env.DEFAULT_MAIL_FROM_ADDRESS,
-      subject: t(
-        `api/email/membership_claimer_onboarding/${subjectDifferentiator}/subject`,
-      ),
-      templateName: 'membership_claimer_onboarding',
-      mergeLanguage: 'handlebars',
-      globalMergeVars: [
-        {
-          name: 'active_membership_type_company_name',
-          content: activeMembershipCompany,
-        },
-      ],
-    },
-    { pgdb },
-  )
+    mailTemplateData.subject = t(
+      `api/email/membership_claimer_onboarding/ACTIVE/subject`,
+    )
+
+    mailTemplateData.globalMergeVars = [
+      {
+        name: 'active_membership_type_company_name',
+        content: activeMembershipCompany,
+      },
+    ]
+  } else {
+    mailTemplateData.subject = t(
+      `api/email/membership_claimer_onboarding/${claimedMembershipCompany}/subject`,
+    )
+  }
+
+  return sendMailTemplate(mailTemplateData, { pgdb })
 }
 
 /**
