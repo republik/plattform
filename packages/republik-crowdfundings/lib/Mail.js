@@ -682,17 +682,21 @@ mail.sendMembershipClaimerOnboarding = async ({ membership }, { pgdb, t }) => {
     { id: claimedMembershipType.companyId },
     'name',
   )
-  const activeMembershipCompany = await pgdb.queryOneColumn(`
+  const activeMembershipCompany = await pgdb.queryOneField(`
     SELECT c.name
     FROM memberships m
+    JOIN "membershipTypes" mt
+      ON m."membershipTypeId" = mt.id
     JOIN companies c
-      ON m."companyId" = c.id
+      ON mt."companyId" = c.id
     WHERE m."userId" = '${membership.userId}'
       AND m.active = true
+    LIMIT 1
   `)
 
-  const subjectDifferentiator =
-    activeMembershipCompany.length > 1 ? 'ACTIVE' : claimedMembershipCompany
+  const subjectDifferentiator = activeMembershipCompany
+    ? 'ACTIVE'
+    : claimedMembershipCompany
 
   return sendMailTemplate(
     {
