@@ -119,9 +119,6 @@
     "PUBLIC_URL": {
       "required": true
     },
-    "QUESTIONS_MAIL_FROM_ADDRESS": {
-      "required": true
-    },
     "REDIS_URL": {
       "required": true
     },
