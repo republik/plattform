@@ -97,8 +97,6 @@ type mutations {
     name: NewsletterName!
     context: String!
   ): Boolean!
-
-  submitQuestion(question: String!): MutationResult
 }
 
 type subscriptions {

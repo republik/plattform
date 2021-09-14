@@ -147,10 +147,6 @@ type Greeting {
   text: String!
 }
 
-type MutationResult {
-  success: Boolean!
-}
-
 type MembershipStats {
   # Return sum of active or overdue memberships
   count: Int!
