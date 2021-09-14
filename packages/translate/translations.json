@@ -841,10 +841,6 @@
       "value": "Nur Verlegerinnen und Abonnenten können ein Profil veröffentlichen."
     },
     {
-      "key": "api/faq/mail/subject",
-      "value": "Danke für Ihre Frage"
-    },
-    {
       "key": "profile/generic/tooLong",
       "value": "{key}, maximal {max} Zeichen"
     },
