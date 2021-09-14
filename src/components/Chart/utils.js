@@ -49,7 +49,9 @@ const swissNumbers = formatLocale({
   decimal: ',',
   thousands: thousandSeparator,
   grouping: [3],
-  currency: ['CHF\u00a0', '']
+  currency: ['CHF\u00a0', ''],
+  minus: '\u2212',
+  percent: '\u2009%'
 })
 
 const formatPow = (tLabel, baseValue) => {
