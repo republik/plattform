@@ -175,13 +175,17 @@ export const CommentTeaser = ({
         </div>
 
         {discussion?.image && (
-          <img
-            style={{ maxWidth: '100%', maxHeight: '100%' }}
-            src={discussion.image}
-            alt={discussion?.title || ''}
-            {...styles.image}
-            {...colorScheme.set('borderColor', 'divider')}
-          />
+          <Link discussion={discussion} passHref>
+            <a {...styles.link}>
+              <img
+                style={{ maxWidth: '100%', maxHeight: '100%' }}
+                src={discussion.image}
+                alt={discussion?.title || ''}
+                {...styles.image}
+                {...colorScheme.set('borderColor', 'divider')}
+              />
+            </a>
+          </Link>
         )}
 
         <DiscussionFooter comment={comment} t={t} Link={Link} />
