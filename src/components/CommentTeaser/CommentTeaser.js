@@ -175,7 +175,7 @@ export const CommentTeaser = ({
         </div>
 
         {discussion?.image && (
-          <Link discussion={discussion} passHref>
+          <Link comment={comment} discussion={discussion} passHref>
             <a {...styles.link}>
               <img
                 style={{ maxWidth: '100%', maxHeight: '100%' }}
