@@ -686,6 +686,7 @@ mail.sendMembershipClaimerOnboarding = async (
     fromEmail: process.env.DEFAULT_MAIL_FROM_ADDRESS,
     templateName: 'membership_claimer_onboarding',
     mergeLanguage: 'handlebars',
+    subject: t(`api/email/membership_claimer_onboarding/DEFAULT/subject`),
   }
 
   const claimedMembershipCompany = await pgdb.queryOneField(`
@@ -717,7 +718,7 @@ mail.sendMembershipClaimerOnboarding = async (
         content: activeMembershipCompany,
       },
     ]
-  } else {
+  } else if (claimedMembershipCompany) {
     mailTemplateData.subject = t(
       `api/email/membership_claimer_onboarding/${claimedMembershipCompany}/subject`,
     )
