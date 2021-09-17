@@ -716,7 +716,7 @@
     },
     {
       "key": "account/newsletterSubscriptions/DAILY/label",
-      "value": "Republik – Das tägliche Update"
+      "value": "Täglicher Newsletter"
     },
     {
       "key": "account/newsletterSubscriptions/DAILY/frequency",
@@ -724,7 +724,7 @@
     },
     {
       "key": "account/newsletterSubscriptions/WEEKLY/label",
-      "value": "Republik – Der Wochenüberblick"
+      "value": "Wochenend-Newsletter"
     },
     {
       "key": "account/newsletterSubscriptions/WEEKLY/frequency",
@@ -732,7 +732,7 @@
     },
     {
       "key": "account/newsletterSubscriptions/FEUILLETON/label",
-      "value": "Republik – Das Feuilleton"
+      "value": "Feuilleton-Newsletter"
     },
     {
       "key": "account/newsletterSubscriptions/FEUILLETON/frequency",
@@ -740,7 +740,7 @@
     },
     {
       "key": "account/newsletterSubscriptions/PROJECTR/label",
-      "value": "Project R – Wichtige Updates"
+      "value": "Project-R-Newsletter"
     },
     {
       "key": "account/newsletterSubscriptions/PROJECTR/frequency",
@@ -748,7 +748,7 @@
     },
     {
       "key": "account/newsletterSubscriptions/COVID19/label",
-      "value": "Covid-19-Updates"
+      "value": "Covid-19-Uhr-Newsletter"
     },
     {
       "key": "account/newsletterSubscriptions/COVID19/frequency",
@@ -756,7 +756,7 @@
     },
     {
       "key": "account/newsletterSubscriptions/ACCOMPLICE/label",
-      "value": "Republik – Der Komplizen-Newsletter"
+      "value": "Komplizen-Newsletter"
     },
     {
       "key": "account/newsletterSubscriptions/ACCOMPLICE/frequency",
