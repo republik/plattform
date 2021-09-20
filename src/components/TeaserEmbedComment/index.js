@@ -6,6 +6,7 @@ import { useMediaQuery } from '../../lib/useMediaQuery'
 import { mUp } from '../../theme/mediaQueries'
 import { css } from 'glamor'
 import { useColorContext } from '../Colors/ColorContext'
+import { linkRule, plainLinkRule } from '../Typography'
 
 const styles = {
   root: css({
@@ -74,17 +75,19 @@ const TeaserEmbedComment = ({ data, liveData, t, Link }) => {
           discussion={discussionContextValue.discussion}
           passHref
         >
-          <div style={{ margin: '10px 0', cursor: 'pointer' }}>
-            <Comment.Body
-              t={t}
-              comment={contentComment}
-              context={
-                contentComment.tags && contentComment.tags[0]
-                  ? { title: contentComment.tags[0] }
-                  : undefined
-              }
-            />
-          </div>
+          <a {...plainLinkRule}>
+            <div style={{ margin: '10px 0' }}>
+              <Comment.Body
+                t={t}
+                comment={contentComment}
+                context={
+                  contentComment.tags && contentComment.tags[0]
+                    ? { title: contentComment.tags[0] }
+                    : undefined
+                }
+              />
+            </div>
+          </a>
         </Link>
         <DiscussionFooter comment={metaDataComment} t={t} Link={Link} />
       </div>

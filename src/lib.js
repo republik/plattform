@@ -106,6 +106,7 @@ export {
   fontStyles,
   linkBlackStyle,
   linkRule,
+  plainLinkRule,
   A,
   H1,
   H2,
