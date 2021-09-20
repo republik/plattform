@@ -323,13 +323,15 @@ module.exports = {
 
 async function setAutoPayToFalse({ user, membershipId, pgdb }) {
   const message = `setAutoPayToFalse (membershipId: ${membershipId}) \`autoPay\` was set to \`false\` due to AutoPay.suggest missing data (e.g. no pledge or default credit card)\n{ADMIN_FRONTEND_BASE_URL}/users/${user.id}`
-  console.log(message)
+  console.info(message)
   await publishMonitor(user, message)
 
-  // TODO PS: un-comment the folloing code (this is not run, as it is not tested).
-  // await pgdb.public.memberships.updateOne({
-  //   id: membershipId
-  // }, {
-  //   autoPay: false
-  // })
+  await pgdb.public.memberships.updateOne(
+    {
+      id: membershipId,
+    },
+    {
+      autoPay: false,
+    },
+  )
 }
