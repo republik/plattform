@@ -14,7 +14,7 @@ const {
   FIREBASE_DATABASE_URL,
 } = process.env
 
-const DEV = process.env.NODE_ENV && process.env.NODE_ENV !== 'production'
+const DEV = process.env.NODE_ENV ? process.env.NODE_ENV !== 'production' : true
 
 let initialized
 if (

@@ -1,6 +1,6 @@
 const { NODE_ENV, SEND_MAILS, SEND_MAILS_SCHEDULE_TEMPLATE_REGEX } = process.env
 
-const DEV = NODE_ENV && NODE_ENV !== 'production'
+const DEV = NODE_ENV ? NODE_ENV !== 'production' : true
 
 module.exports = (mail, message) => {
   const { SEND_MAILS_LOG = true } = process.env

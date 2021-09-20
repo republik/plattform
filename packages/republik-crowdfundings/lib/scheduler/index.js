@@ -1,4 +1,4 @@
-const DEV = process.env.NODE_ENV && process.env.NODE_ENV !== 'production'
+const DEV = process.env.NODE_ENV ? process.env.NODE_ENV !== 'production' : true
 
 const debug = require('debug')('crowdfundings:lib:scheduler')
 const Promise = require('bluebird')

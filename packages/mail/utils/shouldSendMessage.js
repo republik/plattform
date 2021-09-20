@@ -6,7 +6,7 @@ const {
   SEND_MAILS_CATCHALL,
 } = process.env
 
-const DEV = NODE_ENV && NODE_ENV !== 'production'
+const DEV = NODE_ENV ? NODE_ENV !== 'production' : true
 
 module.exports = (message) => {
   const { SEND_MAILS_LOG = true } = process.env

@@ -70,7 +70,7 @@ const {
   DYNO,
 } = process.env
 
-const DEV = NODE_ENV && NODE_ENV !== 'production'
+const DEV = NODE_ENV ? NODE_ENV !== 'production' : true
 
 // only used by tests, needs to run server and schedulers
 const start = async () => {

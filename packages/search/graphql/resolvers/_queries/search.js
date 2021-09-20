@@ -39,7 +39,7 @@ const getFieldList = require('@orbiting/graphql-list-fields')
 
 const createCache = require('../../../lib/cache')
 
-const DEV = process.env.NODE_ENV && process.env.NODE_ENV !== 'production'
+const DEV = process.env.NODE_ENV ? process.env.NODE_ENV !== 'production' : true
 
 const FUZZINESS_WORD_LENGTH_THRESHOLD = 5
 
