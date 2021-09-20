@@ -78,12 +78,7 @@ export const linkErrorStyleNegative = css({
 
 export const plainLinkRule = css({
   textDecoration: 'none',
-  color: 'inherit',
-  '@media (hover)': {
-    ':hover': {
-      color: 'inherit'
-    }
-  }
+  color: 'inherit'
 })
 
 const styles = {
