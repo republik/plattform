@@ -10,7 +10,7 @@ const sleep = require('await-sleep')
 const graphql = require('./express/graphql')
 const graphiql = require('./express/graphiql')
 
-const DEV = process.env.NODE_ENV && process.env.NODE_ENV !== 'production'
+const DEV = process.env.NODE_ENV ? process.env.NODE_ENV !== 'production' : true
 
 checkEnv(['DATABASE_URL', 'SESSION_SECRET'])
 

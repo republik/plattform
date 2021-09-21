@@ -5,15 +5,10 @@ const { deleteSessionForDevices } = require('./utils')
 const apn = require('apn')
 const debug = require('debug')('notifications:publish:apn')
 
-const {
-  SEND_NOTIFICATIONS,
-  APN_KEY,
-  APN_KEY_ID,
-  APN_TEAM_ID,
-  APN_BUNDLE_ID,
-} = process.env
+const { SEND_NOTIFICATIONS, APN_KEY, APN_KEY_ID, APN_TEAM_ID, APN_BUNDLE_ID } =
+  process.env
 
-const DEV = process.env.NODE_ENV && process.env.NODE_ENV !== 'production'
+const DEV = process.env.NODE_ENV ? process.env.NODE_ENV !== 'production' : true
 
 // singleton
 let provider

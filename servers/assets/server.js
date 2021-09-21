@@ -3,7 +3,7 @@ const cors = require('cors')
 const { express: middlewares } = require('@orbiting/backend-modules-assets')
 const basicAuthMiddleware = require('@orbiting/backend-modules-auth/express/basicAuth')
 
-const DEV = process.env.NODE_ENV && process.env.NODE_ENV !== 'production'
+const DEV = process.env.NODE_ENV ? process.env.NODE_ENV !== 'production' : true
 
 const { PORT, CORS_ALLOWLIST_URL } = process.env
 
