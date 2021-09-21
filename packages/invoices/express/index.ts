@@ -24,37 +24,43 @@ const middleware = async (
       res: Response,
       next: NextFunction,
     ) {
-      const { token } = req.query
+      try {
+        const { token } = req.query
 
-      if (!token) {
-        return next()
-      }
+        if (!token) {
+          return next()
+        }
 
-      const user = await AccessToken.getUserByAccessToken(token, context)
+        const user = await AccessToken.getUserByAccessToken(token, context)
 
-      if (!AccessToken.isReqPathAllowed(user, req)) {
-        return next()
-      }
+        if (!AccessToken.isReqPathAllowed(user, req)) {
+          return next()
+        }
 
-      const { hrid } = req.params
-      const payment = await invoices.commons.resolvePayment({ hrid }, context)
+        const { hrid } = req.params
+        const payment = await invoices.commons.resolvePayment({ hrid }, context)
 
-      if (!isApplicableFn(payment)) {
-        return next()
-      }
+        if (!isApplicableFn(payment)) {
+          return next()
+        }
 
-      if (payment?.pledge?.userId !== user.id) {
-        return next()
-      }
+        if (payment?.pledge?.userId !== user.id) {
+          return next()
+        }
 
-      const pdf = await generateFn(payment, context)
-
-      res
-        .writeHead(200, {
-          'Content-Length': Buffer.byteLength(pdf),
-          'Content-Type': 'application/pdf',
+        const pdf = await generateFn(payment, context)
+        res
+          .writeHead(200, {
+            'Content-Length': Buffer.byteLength(pdf),
+            'Content-Type': 'application/pdf',
+          })
+          .end(pdf)
+      } catch (error) {
+        console.error('error while generating invoice or payment slip', {
+          error,
         })
-        .end(pdf)
+        res.status(500).end()
+      }
     }
   }
 
