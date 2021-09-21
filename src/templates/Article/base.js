@@ -235,6 +235,9 @@ const createBase = ({ metaBody, metaHeadlines }) => {
   const figureCaption = {
     matchMdast: matchParagraph,
     component: FigureCaption,
+    props: (node, index, parent, { ancestors }) => ({
+      groupCaption: parent.identifier === 'FIGUREGROUP'
+    }),
     editorModule: 'figureCaption',
     editorOptions: {
       isStatic: true,
