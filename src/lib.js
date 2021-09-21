@@ -64,7 +64,8 @@ export {
   FigureGroup,
   FigureByline,
   FigureCaption,
-  FigureImage
+  FigureImage,
+  MIN_GALLERY_IMG_WIDTH
 } from './components/Figure'
 export { Tweet } from './components/Social'
 export { Video } from './components/Video'

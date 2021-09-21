@@ -21,7 +21,8 @@ import {
   matchHeading,
   matchType,
   matchZone,
-  matchParagraph
+  matchParagraph,
+  imageSizeInfo
 } from 'mdast-react-render/lib/utils'
 
 import {
@@ -33,6 +34,7 @@ import {
   extractImages,
   matchImagesParagraph
 } from './utils'
+import { MIN_GALLERY_IMG_WIDTH } from '../../components/Figure/Image'
 
 const createBase = ({ metaBody, metaHeadlines }) => {
   const link = {
@@ -181,7 +183,9 @@ const createBase = ({ metaBody, metaHeadlines }) => {
       const displayWidth = getDisplayWidth(ancestors)
       const enableGallery =
         meta.gallery !== false &&
-        (parent.data ? !parent.data.excludeFromGallery : true)
+        (parent.data ? !parent.data.excludeFromGallery : true) &&
+        imageSizeInfo(src) &&
+        imageSizeInfo(src).width > MIN_GALLERY_IMG_WIDTH
 
       const group = ancestors.find(matchZone('FIGUREGROUP'))
 

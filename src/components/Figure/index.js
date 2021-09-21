@@ -15,7 +15,7 @@ import {
 
 import { plainButtonRule } from '../Button'
 
-export { default as FigureImage } from './Image'
+export { default as FigureImage, MIN_GALLERY_IMG_WIDTH } from './Image'
 export { default as FigureCaption } from './Caption'
 export { default as FigureByline } from './Byline'
 
