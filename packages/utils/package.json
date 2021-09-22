@@ -26,6 +26,6 @@
     "get-urls": "^10.0.0",
     "moment": "^2.26.0",
     "unified": "^9.0.0",
-    "unist-util-visit": "^4.0.0"
+    "unist-util-visit": "^2.0.2"
   }
 }
