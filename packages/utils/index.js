@@ -3,6 +3,7 @@ module.exports = {
   ensureStringLength: require('./ensureStringLength'),
   paginate: require('./paginate'),
   naming: require('./naming'),
+  mdastCollapseLink: require('./mdastCollapseLink'),
   mdastToString: require('./mdastToString'),
   hasUserActiveMembership: require('./hasUserActiveMembership'),
   fetchWithTimeout: require('./fetchWithTimeout'),

@@ -1,0 +1,147 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`mdastCollapseLink collapse link nodes 1`] = `
+Object {
+  "children": Array [
+    Object {
+      "children": Array [
+        Object {
+          "type": "text",
+          "value": "Kurzer Link: ",
+        },
+        Object {
+          "children": Array [
+            Object {
+              "type": "text",
+              "value": "https://www.ise.fraunhofer.de",
+            },
+          ],
+          "title": null,
+          "type": "link",
+          "url": "https://www.ise.fraunhofer.de",
+        },
+      ],
+      "type": "paragraph",
+    },
+    Object {
+      "children": Array [
+        Object {
+          "type": "text",
+          "value": "Langer Link: ",
+        },
+        Object {
+          "children": Array [
+            Object {
+              "type": "text",
+              "value": "https://www.ise.fraunhofer.de/conte…2017_e.pdf",
+            },
+          ],
+          "title": null,
+          "type": "link",
+          "url": "https://www.ise.fraunhofer.de/content/dam/ise/en/documents/publications/studies/Stromerzeugung_2017_e.pdf",
+        },
+      ],
+      "type": "paragraph",
+    },
+    Object {
+      "children": Array [
+        Object {
+          "children": Array [
+            Object {
+              "type": "text",
+              "value": "Beschrifteter Link",
+            },
+          ],
+          "title": null,
+          "type": "link",
+          "url": "https://www.ise.fraunhofer.de/content/dam/ise/en/documents/publications/studies/Stromerzeugung_2017_e.pdf",
+        },
+      ],
+      "type": "paragraph",
+    },
+    Object {
+      "children": Array [
+        Object {
+          "type": "text",
+          "value": "Textpassage",
+        },
+      ],
+      "type": "paragraph",
+    },
+  ],
+  "type": "root",
+}
+`;
+
+exports[`mdastCollapseLink collapse link nodes w/ options 1`] = `
+Object {
+  "children": Array [
+    Object {
+      "children": Array [
+        Object {
+          "type": "text",
+          "value": "Kurzer Link: ",
+        },
+        Object {
+          "children": Array [
+            Object {
+              "type": "text",
+              "value": "https://ww–er.de",
+            },
+          ],
+          "title": null,
+          "type": "link",
+          "url": "https://www.ise.fraunhofer.de",
+        },
+      ],
+      "type": "paragraph",
+    },
+    Object {
+      "children": Array [
+        Object {
+          "type": "text",
+          "value": "Langer Link: ",
+        },
+        Object {
+          "children": Array [
+            Object {
+              "type": "text",
+              "value": "https://ww–e.pdf",
+            },
+          ],
+          "title": null,
+          "type": "link",
+          "url": "https://www.ise.fraunhofer.de/content/dam/ise/en/documents/publications/studies/Stromerzeugung_2017_e.pdf",
+        },
+      ],
+      "type": "paragraph",
+    },
+    Object {
+      "children": Array [
+        Object {
+          "children": Array [
+            Object {
+              "type": "text",
+              "value": "Beschrifteter Link",
+            },
+          ],
+          "title": null,
+          "type": "link",
+          "url": "https://www.ise.fraunhofer.de/content/dam/ise/en/documents/publications/studies/Stromerzeugung_2017_e.pdf",
+        },
+      ],
+      "type": "paragraph",
+    },
+    Object {
+      "children": Array [
+        Object {
+          "type": "text",
+          "value": "Textpassage",
+        },
+      ],
+      "type": "paragraph",
+    },
+  ],
+  "type": "root",
+}
+`;
