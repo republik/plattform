@@ -1,7 +1,11 @@
 const crypto = require('crypto')
 
 const { Roles } = require('@orbiting/backend-modules-auth')
-const { mdastToString, remark } = require('@orbiting/backend-modules-utils')
+const {
+  mdastCollapseLink,
+  mdastToString,
+  remark,
+} = require('@orbiting/backend-modules-utils')
 
 const {
   portrait: getPortrait,
@@ -53,9 +57,10 @@ const textForComment = async (comment, strip = false, context) => {
 
   let newContent = content
   if (!isMine && !Roles.userIsInRoles(me, ['member'])) {
-    const namesToClip = await context.loaders.Discussion.byIdCommenterNamesToClip.load(
-      discussionId,
-    )
+    const namesToClip =
+      await context.loaders.Discussion.byIdCommenterNamesToClip.load(
+        discussionId,
+      )
     newContent = clipNamesInText(namesToClip, content)
   }
   if (strip && !!(await embedForComment(comment, context))) {
@@ -81,7 +86,9 @@ const textForComment = async (comment, strip = false, context) => {
  */
 const mdastToHumanString = (node, length = 500) => {
   let string = ''
-  const parts = mdastToString(node).split(/\s+/).filter(Boolean)
+  const parts = mdastToString(mdastCollapseLink(node))
+    .split(/\s+/)
+    .filter(Boolean)
 
   do {
     const part = parts.shift()
