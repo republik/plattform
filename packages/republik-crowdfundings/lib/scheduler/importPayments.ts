@@ -46,22 +46,22 @@ export async function importPayments(
   }
 }
 
-const createPaymentImporter = (context: Context) => async (
-  transaction: PgDb,
-): Promise<Report> => {
-  context = { ...context, pgdb: transaction }
-  const insertPaymentReport = await insertNewPayments(transaction)
-  const matchingReport = await tryMatchingPayments(transaction, context)
-  const unmatchedPaymentsAmount = await getAmountOfUnmatchedPayments(
-    transaction,
-  )
+const createPaymentImporter =
+  (context: Context) =>
+  async (transaction: PgDb): Promise<Report> => {
+    context = { ...context, pgdb: transaction }
+    const insertPaymentReport = await insertNewPayments(transaction)
+    const matchingReport = await tryMatchingPayments(transaction, context)
+    const unmatchedPaymentsAmount = await getAmountOfUnmatchedPayments(
+      transaction,
+    )
 
-  return {
-    ...insertPaymentReport,
-    matchingReport,
-    unmatchedPaymentsAmount,
+    return {
+      ...insertPaymentReport,
+      matchingReport,
+      unmatchedPaymentsAmount,
+    }
   }
-}
 
 async function withTransaction<T>(
   fn: (pgdb: PgDb) => Promise<T>,
@@ -101,11 +101,8 @@ async function notifyAccountants({
   ]
 
   if (matchingReport) {
-    const {
-      numMatchedPayments,
-      numPaymentsSuccessful,
-      numUpdatedPledges,
-    } = matchingReport
+    const { numMatchedPayments, numPaymentsSuccessful, numUpdatedPledges } =
+      matchingReport
     report.push(
       ...[
         `${numMatchedPayments} payment${
@@ -216,9 +213,8 @@ interface PostfinanceImportsRecord {
 }
 
 function postfinanceImportsTable(transaction: PgDb) {
-  return transaction.public.postfinanceImports as PgTable<
-    PostfinanceImportsRecord
-  >
+  return transaction.public
+    .postfinanceImports as PgTable<PostfinanceImportsRecord>
 }
 
 interface InsertPaymentsArguments {
@@ -275,52 +271,14 @@ async function exists(
   record: PostfinancePaymentRecord,
   postfinancePaymentsTable: PgTable<PostfinancePaymentRecord>,
 ) {
-  // after the initial automatic import, exists should be replaced as follows:
-  //
-  // async function exists(
-  //   record: PostfinancePaymentRecord,
-  //   postfinancePaymentsTable: PgTable<PostfinancePaymentRecord>,
-  // ) {
-  //   const { buchungsdatum, valuta, avisierungstext, gutschrift } = record
-
-  //   return !!(await postfinancePaymentsTable.count({
-  //     buchungsdatum,
-  //     valuta,
-  //     avisierungstext,
-  //     gutschrift,
-  //   }))
-  // }
-  //
-  // As of now, we need to take care of two legacy problems:
-  //
-  // 1. some previously imported CSV were encoded in `latin-1` but loaded into memory as `utf-8`
-  // 2. avisierungstext was not timmed before being written
-
   const { buchungsdatum, valuta, avisierungstext, gutschrift } = record
 
-  const avisierungstextLatin = Buffer.from(avisierungstext, 'latin1').toString(
-    'utf-8',
-  )
-
-  return !!(await postfinancePaymentsTable.queryOneField(
-    `
-      select count(*) from "postfinancePayments"
-      where buchungsdatum = :buchungsdatum
-      and valuta = :valuta
-      and gutschrift = :gutschrift
-      and (
-        trim(avisierungstext) = :avisierungstext
-        or trim(avisierungstext) = :avisierungstextLatin
-      )
-    `,
-    {
-      buchungsdatum,
-      valuta,
-      avisierungstext,
-      gutschrift,
-      avisierungstextLatin,
-    },
-  ))
+  return !!(await postfinancePaymentsTable.count({
+    buchungsdatum,
+    valuta,
+    avisierungstext,
+    gutschrift,
+  }))
 }
 
 type ImageDictionary = Dictionary<{
@@ -368,43 +326,42 @@ class WrappingError extends Error {
   }
 }
 
-const extendWithImageAndAccountId = (
-  images: ImageDictionary,
-  ibanToBankAccountId: IbanToBankAccountMap,
-) => ({
-  imageReference,
-  iban,
-  buchungsdatum,
-  valuta,
-  avisierungstext,
-  gutschrift,
-  mitteilung,
-  debitorName,
-}: PaymentEntry): PostfinancePaymentRecord => {
-  let image = null
-  if (imageReference) {
-    image = images[imageReference]?.png
-  }
-
-  const bankAccountId = ibanToBankAccountId.get(iban)
-
-  if (!bankAccountId) {
-    throw new Error(
-      `Import failed: could not find bank account for IBAN ${iban}.`,
-    )
-  }
-
-  return {
+const extendWithImageAndAccountId =
+  (images: ImageDictionary, ibanToBankAccountId: IbanToBankAccountMap) =>
+  ({
+    imageReference,
+    iban,
     buchungsdatum,
     valuta,
     avisierungstext,
     gutschrift,
     mitteilung,
     debitorName,
-    image,
-    bankAccountId,
+  }: PaymentEntry): PostfinancePaymentRecord => {
+    let image = null
+    if (imageReference) {
+      image = images[imageReference]?.png
+    }
+
+    const bankAccountId = ibanToBankAccountId.get(iban)
+
+    if (!bankAccountId) {
+      throw new Error(
+        `Import failed: could not find bank account for IBAN ${iban}.`,
+      )
+    }
+
+    return {
+      buchungsdatum,
+      valuta,
+      avisierungstext,
+      gutschrift,
+      mitteilung,
+      debitorName,
+      image,
+      bankAccountId,
+    }
   }
-}
 
 function getImageFiles(files: SftpFile[]) {
   return files
