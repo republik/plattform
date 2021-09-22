@@ -5,6 +5,7 @@ import gql from 'graphql-tag'
 import { Value, resetKeyGenerator } from 'slate'
 import debounce from 'lodash.debounce'
 import { timeFormat } from 'd3-time-format'
+import { parse } from '@orbiting/remark-preset'
 
 import withAuthorization from '../../components/Auth/withAuthorization'
 
@@ -56,7 +57,11 @@ import SettingsIcon from 'react-icons/lib/fa/cogs'
 
 import createDebug from 'debug'
 import { DARK_MODE_KEY } from '../../components/editor/modules/meta/DarkModeForm'
-import { findTitleLeaf } from '../../lib/utils/helpers'
+import {
+  findAuthorsP,
+  findTitleLeaf,
+  generateAuthorsLine
+} from '../../lib/utils/helpers'
 import { withEditRepoMeta } from '../../components/Repo/EditMetaDate'
 
 const commitMutation = gql`
@@ -512,7 +517,7 @@ export class EditorPage extends Component {
     if (isNew) {
       if (templateRepo) {
         const commit = templateRepo.latestCommit
-        const json = JSON.parse(
+        let json = JSON.parse(
           JSON.stringify({
             ...commit.document.content,
             // add format & section to root mdast node
@@ -526,6 +531,14 @@ export class EditorPage extends Component {
         const titleLeaf = findTitleLeaf(json)
         if (titleLeaf) {
           titleLeaf.value = router.query.title
+        }
+        let authorsP = findAuthorsP(json)
+        if (authorsP) {
+          const authorsMdast = parse(generateAuthorsLine(this.props.me))
+            .children[0]
+          authorsP.children = authorsMdast.children
+          authorsP.type = authorsMdast.type
+          delete authorsP.value
         }
         json.meta.title = router.query.title
 

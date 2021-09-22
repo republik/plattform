@@ -2,16 +2,16 @@ import React from 'react'
 import { Document as SlateDocument } from 'slate'
 import { parse } from '@orbiting/remark-preset'
 
-import { swissTime } from '../../../../lib/utils/format'
 import slugify from '../../../../lib/utils/slug'
 import MarkdownSerializer from 'slate-mdast-serializer'
 
 import createPasteHtml from './createPasteHtml'
 import { safeDump } from 'js-yaml'
 
-import { mdastToString } from '../../../../lib/utils/helpers'
-
-const pubDateFormat = swissTime.format('%d.%m.%Y')
+import {
+  generateAuthorsLine,
+  mdastToString
+} from '../../../../lib/utils/helpers'
 
 export default ({ rule, subModules, TYPE }) => {
   const centerModule = subModules.find(m => m.name === 'center')
@@ -167,9 +167,7 @@ ${
     ? ''
     : `
     
-Von ${me ? `[${me.name}](/~${me.id})` : '[Autor](<>)'}, ${pubDateFormat(
-        new Date()
-      )}
+${generateAuthorsLine(me)}
 
 `
 }
