@@ -17,6 +17,7 @@ const getError = (row) =>
   row.result?.reject_reason ||
   row.result?.error ||
   row.error?.message ||
+  row.error?.meta?.error?.message ||
   row.error?.meta?.error?.type ||
   row.error?.meta?.response
 
@@ -59,6 +60,7 @@ const createCondition = (
       { "result->>'reject_reason' !=": null },
       { "result->>'error' !=": null },
       { "error->>'message' !=": null },
+      { "error->'meta'->'error'->>'message' !=": null },
       { "error->'meta'->'error'->>'type' !=": null },
       { "error->'meta'->>'response' !=": null },
     ],

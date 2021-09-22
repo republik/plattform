@@ -1,9 +1,28 @@
 const fetch = require('isomorphic-unfetch')
-const { NewsletterMemberMailError } = require('./errors')
+const { SendMailError } = require('./errors')
 
 const { MANDRILL_API_KEY } = process.env
 
-const MandrillInterface = ({ logger }) => {
+class MandrillApiError extends Error {
+  constructor(message, meta) {
+    super()
+    this.name = 'MandrillApiError'
+    this.message = message
+    this.meta = meta
+  }
+}
+
+const maybeToJson = async (res) => {
+  try {
+    const json = await res.json()
+    return json
+  } catch (e) {
+    // Swallow JSON parse error and return false
+    return false
+  }
+}
+
+const MandrillInterface = () => {
   return {
     buildApiUrl(path) {
       return `https://mandrillapp.com/api/1.0${path}`
@@ -27,18 +46,36 @@ const MandrillInterface = ({ logger }) => {
       const url = this.buildApiUrl(
         templateName ? '/messages/send-template.json' : '/messages/send.json',
       )
+      const body = { message }
+      if (templateName) {
+        body.template_name = templateName
+        body.template_content = templateContent
+      }
+
       try {
-        const body = { message }
-        if (templateName) {
-          body.template_name = templateName
-          body.template_content = templateContent
+        const res = await this.fetchAuthenticated('POST', url, body)
+
+        // Mandrill might respond with HTTP status code 500. If response body is
+        // not parseable as JSON, it indicates an actual internal server error.
+        const json = await maybeToJson(res)
+        if (!json) {
+          throw new MandrillApiError('Unable to connect to Mandrill', {
+            status: res.status,
+            statusText: res.statusText,
+          })
         }
-        const response = await this.fetchAuthenticated('POST', url, body)
-        const json = await response.json()
+
+        // However, Mandrill will respond with an internal server error, too, if
+        // API is unable to fulfill a request due to faulty parameters or lack
+        // thereof. It said case, it will provide detailed error description as
+        // JSON body.
+        if (json.code < 0) {
+          throw new MandrillApiError('Mandrill responded with an error', json)
+        }
+
         return json
       } catch (error) {
-        logger.error(`mandrill -> exception: ${error.message}`)
-        throw new NewsletterMemberMailError({ error, message })
+        throw new SendMailError({ error })
       }
     },
   }
