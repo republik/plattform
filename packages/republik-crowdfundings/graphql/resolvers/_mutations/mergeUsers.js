@@ -318,6 +318,13 @@ module.exports = async (_, args, context) => {
     )
   } catch (e) {
     await transaction.transactionRollback()
+    await publishMonitor(
+      req.user,
+      [
+        `FAILED mergeUsers {ADMIN_FRONTEND_BASE_URL}/users/${sourceUserId} -> {ADMIN_FRONTEND_BASE_URL}/users/${targetUserId}`,
+        `error message: ${e.message}`,
+      ].join('\n'),
+    )
     logger.info('transaction rollback', { req: req._log(), args, error: e })
     throw e
   }
