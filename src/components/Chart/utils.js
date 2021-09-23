@@ -264,7 +264,7 @@ export const xAccessor = d => d.x
 
 export const yAccessor = d => d.y
 
-export const hasValues = d => d.value && d.value.length > 0
+export const hasValues = d => d.value && d.value.toString().length > 0
 
 export const identityFn = x => x
 
