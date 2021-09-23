@@ -34,7 +34,7 @@ const Zat = props => {
   const [searchEmail, setSearchEmail] = useState(null)
   const [searchName, setSearchName] = useState(null)
 
-  const { origin, app_guid } = props.router.query
+  const { origin, app_guid, email, name } = props.router.query
 
   useEffect(() => {
     if (typeof window !== 'undefined' && origin && app_guid) {
@@ -49,6 +49,18 @@ const Zat = props => {
       fetchZafContext()
     }
   }, [origin, app_guid])
+
+  useEffect(() => {
+    if (email) {
+      setSearchEmail(email)
+    }
+  }, [email])
+
+  useEffect(() => {
+    if (name) {
+      setSearchName(name)
+    }
+  }, [name])
 
   useEffect(() => {
     if (zafContext) {
@@ -102,7 +114,11 @@ const Zat = props => {
                 error={error}
                 render={() => (
                   <>
-                    <Users email={searchEmail} users={data.adminUsers?.items} />
+                    <Users
+                      email={searchEmail}
+                      name={searchName}
+                      users={data.adminUsers?.items}
+                    />
                     <Mails mails={data.mailbox?.nodes} />
                   </>
                 )}
