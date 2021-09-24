@@ -6,7 +6,7 @@ import { commentComposerStorageKey } from './CommentComposer'
  * @returns {{replies}|{text}|any|undefined}
  */
 function loadStoredDraftsObject(key) {
-  if (!localStorage) return undefined
+  if (typeof localStorage === 'undefined') return undefined
   const storedValue = localStorage.getItem(key)
   if (!storedValue) return undefined
 

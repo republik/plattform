@@ -110,7 +110,6 @@ export const CommentComposer = props => {
       return props.initialText
     } else if (typeof localStorage !== 'undefined') {
       try {
-        //return localStorage.getItem(localStorageKey) || ''
         return readDraft(discussionId, commentId) ?? ''
       } catch (e) {
         return ''
