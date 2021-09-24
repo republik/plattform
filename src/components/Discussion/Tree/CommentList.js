@@ -3,12 +3,12 @@ import { css, merge } from 'glamor'
 import scrollIntoView from 'scroll-into-view'
 
 import { DiscussionContext } from '../DiscussionContext'
-import { CommentComposer } from '../Composer/CommentComposer'
+import { CommentComposer } from '../Composer'
 import { LoadMore } from './LoadMore'
 import * as Comment from '../Internal/Comment'
 import * as config from '../config'
 import { mUp } from '../../../theme/mediaQueries'
-import { useColorContext } from '../../Colors/useColorContext'
+import { useColorContext } from '../../Colors/ColorContext'
 
 const buttonStyle = {
   display: 'block',
@@ -412,6 +412,7 @@ const CommentNode = ({
               t={t}
               isRoot={false /* Replies can never be root comments */}
               parentId={comment.id}
+              commentId={comment.id}
               onClose={closeReplyComposer}
               autoFocus={replyComposerAutoFocus}
               onSubmit={({ text, tags }) =>
