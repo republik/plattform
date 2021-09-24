@@ -112,7 +112,7 @@ export function deleteDraft(discussionID, commentID) {
   if (!drafts) return undefined
 
   if (discussionID && !commentID) {
-    delete drafts.text
+    drafts.text = null
   } else if (discussionID && commentID) {
     delete drafts.replies[commentID]
   }
