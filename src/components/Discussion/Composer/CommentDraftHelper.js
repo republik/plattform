@@ -84,18 +84,14 @@ export function saveDraft(discussionID, commentID, value) {
 
   // If no draft exists instantiate a new one.
   if (!drafts) {
-    console.debug('Create a new draft object')
     drafts = createDraftsObject()
   }
 
   if (commentID) {
-    console.debug('Updating reply draft')
     drafts.replies[commentID] = value
   } else {
-    console.debug('Updating comment draft')
     drafts.text = value
   }
-  console.log('Final updated draft', JSON.stringify(drafts))
   localStorage.setItem(storageKey, JSON.stringify(drafts))
 }
 
