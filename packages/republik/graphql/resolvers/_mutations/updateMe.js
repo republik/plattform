@@ -185,10 +185,7 @@ module.exports = async (_, args, context) => {
         throw new Error(t('profile/candidacy/gender/needed'))
       }
 
-      if (
-        'portrait' in args &&
-        (args.portrait === undefined || !me._raw.portraitUrl)
-      ) {
+      if ('portrait' in args && !portrait) {
         throw new Error(t('profile/candidacy/portrait/needed'))
       }
     }
@@ -222,6 +219,7 @@ module.exports = async (_, args, context) => {
     ) {
       throw new Error(t('profile/statement/needed'))
     }
+
     if (!portrait && !(portrait === undefined && me._raw.portraitUrl)) {
       throw new Error(t('profile/portrait/needed'))
     }
