@@ -185,9 +185,11 @@ module.exports = async (_, args, context) => {
         throw new Error(t('profile/candidacy/gender/needed'))
       }
 
+      console.log(`Args portrait: ${args.portrait}`)
+      console.log(`Portrait URL: ${me._raw.portraitUrl}`)
       if (
         'portrait' in args &&
-        !(args.portrait === undefined && me._raw.portraitUrl)
+        (args.portrait === undefined || !me._raw.portraitUrl)
       ) {
         throw new Error(t('profile/candidacy/portrait/needed'))
       }
