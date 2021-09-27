@@ -17,7 +17,7 @@ module.exports = function mdastCollapseLink(node_, options = {}) {
   visit(node, 'link', (node) => {
     if (
       node.children.length === 1 &&
-      node.children[0].value.length > prefixLength + postfixLength + 1 &&
+      node.children[0].value?.length > prefixLength + postfixLength + 1 &&
       node.children[0].value === node.url
     ) {
       node.children[0].value = [
