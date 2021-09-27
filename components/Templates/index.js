@@ -25,18 +25,20 @@ const NoOpLink = ({ children }) =>
     }
   })
 
+const articleSchemaParams = {
+  t,
+  dynamicComponentRequire,
+  dynamicComponentIdentifiers,
+  ...withArticleData
+}
+
 const schemas = {
   // first is default schema for the editor
   // - for Project R this should be the newsletter
   newsletter: newsletterSchema,
   editorialNewsletter: editorialNewsletterSchema(),
   neutrum: neutrumSchema,
-  article: createArticleSchema({
-    t,
-    dynamicComponentRequire,
-    dynamicComponentIdentifiers,
-    ...withArticleData
-  }),
+  article: createArticleSchema(articleSchemaParams),
   front: createFrontSchema({
     Link: NoOpLink,
     CommentLink: NoOpLink,
@@ -44,31 +46,11 @@ const schemas = {
     t,
     ...withFrontData
   }),
-  format: createFormatSchema({
-    t,
-    dynamicComponentRequire,
-    dynamicComponentIdentifiers
-  }),
-  section: createSectionSchema({
-    t,
-    dynamicComponentRequire,
-    dynamicComponentIdentifiers
-  }),
-  discussion: createDiscussionSchema({
-    t,
-    dynamicComponentRequire,
-    dynamicComponentIdentifiers
-  }),
-  dossier: createDossierSchema({
-    t,
-    dynamicComponentRequire,
-    dynamicComponentIdentifiers
-  }),
-  page: createPageSchema({
-    t,
-    dynamicComponentRequire,
-    dynamicComponentIdentifiers
-  })
+  format: createFormatSchema(articleSchemaParams),
+  section: createSectionSchema(articleSchemaParams),
+  discussion: createDiscussionSchema(articleSchemaParams),
+  dossier: createDossierSchema(articleSchemaParams),
+  page: createPageSchema(articleSchemaParams)
 }
 
 export const getSchema = template => {
