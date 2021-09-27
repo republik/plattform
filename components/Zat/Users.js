@@ -1,44 +1,38 @@
 import React from 'react'
 import gql from 'graphql-tag'
-import { Label, A } from '@project-r/styleguide'
+import { A } from '@project-r/styleguide'
 
-import withT from '../../lib/withT'
-
-import { displayDate, DT, DD } from '../Display/utils'
+import Memberships, { fragments as UserMemberships } from './User/Memberships'
+import AccessGrants, {
+  fragments as UserAccessGrants
+} from './User/AccessGrants'
+import NewsletterSettings, {
+  fragments as UserNewsletterSettings
+} from './User/NewsletterSettings'
+import Sessions, { fragments as UserSessions } from './User/Sessions'
 
 import { styles } from './utils'
 
 export const fragments = gql`
   fragment UsersFragment on Users {
-    count
     items {
       id
       email
       name
-      activeMembership {
-        type {
-          name
-        }
-        periods {
-          isCurrent
-          endDate
-        }
-      }
-      newsletterSettings {
-        status
-        subscriptions {
-          name
-          subscribed
-        }
-      }
-      sessions {
-        userAgent
-      }
+      ...UserMemberships
+      ...UserAccessGrants
+      ...UserNewsletterSettings
+      ...UserSessions
     }
   }
+
+  ${UserMemberships}
+  ${UserAccessGrants}
+  ${UserNewsletterSettings}
+  ${UserSessions}
 `
 
-const Users = ({ email, users, t }) => {
+const Users = ({ email, name, users, t }) => {
   const matchingUser = users?.find(u => u.email === email)
   const hasMatchingUsers = !!matchingUser
 
@@ -46,8 +40,25 @@ const Users = ({ email, users, t }) => {
     <>
       {!hasMatchingUsers && (
         <div {...styles.hint}>
-          Keinen User gefunden.{' '}
-          {!!users?.length && <>User mit einer ähnlichen E-Mail-Adresse:</>}
+          Keinen User unter «{email || name}» gefunden.{' '}
+          {!!email && !!users?.length && (
+            <>
+              User mit einer{' '}
+              <A href={`/users?search=${encodeURI(email)}`} target='_blank'>
+                ähnlichen E-Mail-Adresse
+              </A>
+              :
+            </>
+          )}
+          {!email && !!name && !!users?.length && (
+            <>
+              User mit einem{' '}
+              <A href={`/users?search=${encodeURI(name)}`} target='_blank'>
+                ähnlichen Namen
+              </A>
+              :
+            </>
+          )}
         </div>
       )}
       {((hasMatchingUsers && [matchingUser]) || users)?.map(
@@ -56,89 +67,31 @@ const Users = ({ email, users, t }) => {
           email,
           name,
           activeMembership,
+          memberships,
+          accessGrants,
           newsletterSettings,
           sessions
-        }) => {
-          const currentPeriod = activeMembership?.periods?.find(
-            period => period.isCurrent
-          )
-          const currentPeriodRange =
-            currentPeriod && `gültig bis ${displayDate(currentPeriod.endDate)}`
-
-          let membershipData = [
-            activeMembership?.type?.name,
-            currentPeriodRange
-          ]
-            .filter(Boolean)
-            .join(' · ')
-
-          const newsletterNames = newsletterSettings?.subscriptions
-            ?.filter(subscription => subscription.subscribed)
-            .map(subscription =>
-              t(
-                `account/newsletterSubscriptions/${subscription.name}/label`,
-                undefined,
-                subscription.name
-              )
-            )
-
-          const newsletterTitel = ['Newsletter', newsletterSettings?.status]
-            .filter(Boolean)
-            .join(' · ')
-
-          return (
-            <div key={id} {...styles.item}>
-              {/* Name, email address */}
-              <div>
-                <A href={`/users/${id}`} target='_blank'>
-                  {name || email}
-                </A>
-              </div>
+        }) => (
+          <div key={id} {...styles.item}>
+            {/* Name, email address */}
+            <div>
+              <A href={`/users/${id}`} target='_blank'>
+                {name || email}
+              </A>
               {!matchingUser?.length && !!name && <div>{email}</div>}
-
-              {/* Memberships */}
-              <div>
-                <DT {...styles.title}>Membership</DT>
-                <DD>
-                  <Label>{membershipData || 'aktuell kein Abonnement'}</Label>
-                </DD>
-              </div>
-
-              {/* Newsletter */}
-              {newsletterSettings && (
-                <div>
-                  <DT {...styles.title}>{newsletterTitel}</DT>
-                  {newsletterNames.length > 0 ? (
-                    newsletterNames.map((newsletterName, index) => (
-                      <DD key={index}>
-                        <Label>{newsletterName}</Label>
-                      </DD>
-                    ))
-                  ) : (
-                    <DD>
-                      <Label>keine Newsletter abonniert</Label>
-                    </DD>
-                  )}
-                </div>
-              )}
-
-              {/* Sessions */}
-              {sessions && sessions.length > 0 && (
-                <div>
-                  <DT {...styles.title}>Sessions</DT>
-                  {sessions.map((session, index) => (
-                    <DD key={index}>
-                      <Label>{session.userAgent}</Label>
-                    </DD>
-                  ))}
-                </div>
-              )}
             </div>
-          )
-        }
+            <Memberships
+              activeMembership={activeMembership}
+              memberships={memberships}
+            />
+            <AccessGrants accessGrants={accessGrants} />
+            <NewsletterSettings newsletterSettings={newsletterSettings} />
+            <Sessions sessions={sessions} />
+          </div>
+        )
       )}
     </>
   )
 }
 
-export default withT(Users)
+export default Users

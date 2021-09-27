@@ -67,9 +67,7 @@ export const tableStyles = {
     textAlign: 'center'
   }),
   paddedCell: css({
-    padding: '15px 2px',
-    overflowWrap: 'anywhere',
-    whiteSpace: 'normal'
+    padding: '15px 2px'
   })
 }
 
