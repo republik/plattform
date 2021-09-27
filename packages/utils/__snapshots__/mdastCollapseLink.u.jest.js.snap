@@ -68,6 +68,27 @@ Object {
       ],
       "type": "paragraph",
     },
+    Object {
+      "children": Array [
+        Object {
+          "children": Array [
+            Object {
+              "children": Array [
+                Object {
+                  "type": "text",
+                  "value": "Hack",
+                },
+              ],
+              "type": "emphasis",
+            },
+          ],
+          "title": null,
+          "type": "link",
+          "url": "https://de.wikipedia.org/wiki/Hack",
+        },
+      ],
+      "type": "paragraph",
+    },
   ],
   "type": "root",
 }
@@ -137,6 +158,27 @@ Object {
         Object {
           "type": "text",
           "value": "Textpassage",
+        },
+      ],
+      "type": "paragraph",
+    },
+    Object {
+      "children": Array [
+        Object {
+          "children": Array [
+            Object {
+              "children": Array [
+                Object {
+                  "type": "text",
+                  "value": "Hack",
+                },
+              ],
+              "type": "emphasis",
+            },
+          ],
+          "title": null,
+          "type": "link",
+          "url": "https://de.wikipedia.org/wiki/Hack",
         },
       ],
       "type": "paragraph",

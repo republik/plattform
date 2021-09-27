@@ -69,6 +69,27 @@ const node = {
         },
       ],
     },
+    {
+      type: 'paragraph',
+      children: [
+        {
+          type: 'link',
+          title: null,
+          url: 'https://de.wikipedia.org/wiki/Hack',
+          children: [
+            {
+              type: 'emphasis',
+              children: [
+                {
+                  type: 'text',
+                  value: 'Hack',
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    },
   ],
 }
 
