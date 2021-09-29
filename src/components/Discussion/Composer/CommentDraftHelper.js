@@ -64,16 +64,11 @@ export function readDraft(discussionID, commentID) {
  */
 export function writeDraft(discussionID, commentID, value) {
   const storageKey = commentComposerStorageKey(discussionID)
-  let drafts = loadStoredDraftsObject(storageKey)
-
-  // If no draft exists instantiate a new one.
-  if (!drafts) {
-    drafts = createDraftsObject()
-  }
+  let drafts = loadStoredDraftsObject(storageKey) ?? createDraftsObject()
 
   // If the new value is an empty string (which is falsy in JS)
   // Delete the according draft
-  if (!value) {
+  if (!value.trim()) {
     deleteDraft(discussionID, commentID)
     return
   }

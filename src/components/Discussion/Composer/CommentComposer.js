@@ -313,7 +313,11 @@ export const CommentComposer = props => {
 
       <Actions
         t={t}
-        onClose={onClose}
+        onClose={() => {
+          onClose()
+          // Delete the draft of the field
+          deleteDraft(discussionId, commentId)
+        }}
         onCloseLabel={onCloseLabel}
         onSubmit={
           loading || (maxLength && textLength > maxLength)

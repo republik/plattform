@@ -9,6 +9,7 @@ import * as Comment from '../Internal/Comment'
 import * as config from '../config'
 import { mUp } from '../../../theme/mediaQueries'
 import { useColorContext } from '../../Colors/ColorContext'
+import { readDraft } from '../Composer/CommentDraftHelper'
 
 const buttonStyle = {
   display: 'block',
@@ -243,10 +244,11 @@ const CommentNode = ({
       isExpanded: true,
       replyComposerAutoFocus: false,
       showReplyComposer:
-        !!displayAuthor &&
-        isRoot &&
-        !!rootCommentOverlay &&
-        !(comments && comments.nodes && comments.nodes.length)
+        (!!displayAuthor &&
+          isRoot &&
+          !!rootCommentOverlay &&
+          !(comments && comments.nodes && comments.nodes.length)) ||
+        readDraft(discussion.id, comment.id)
     }
   )
 
