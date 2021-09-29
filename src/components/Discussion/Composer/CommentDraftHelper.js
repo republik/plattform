@@ -62,7 +62,7 @@ export function readDraft(discussionID, commentID) {
  * @param commentID put null if the value should be persisted for
  * @param value that should be saved as a draft
  */
-export function saveDraft(discussionID, commentID, value) {
+export function writeDraft(discussionID, commentID, value) {
   const storageKey = commentComposerStorageKey(discussionID)
   let drafts = loadStoredDraftsObject(storageKey)
 
@@ -71,11 +71,19 @@ export function saveDraft(discussionID, commentID, value) {
     drafts = createDraftsObject()
   }
 
+  // If the new value is an empty string (which is falsy in JS)
+  // Delete the according draft
+  if (!value) {
+    deleteDraft(discussionID, commentID)
+    return
+  }
+
   if (commentID) {
     drafts.replies[commentID] = value
   } else {
     drafts.text = value
   }
+
   localStorage.setItem(storageKey, JSON.stringify(drafts))
 }
 

@@ -13,7 +13,7 @@ import { Embed } from '../Internal/Comment'
 import { useDebounce } from '../../../lib/useDebounce'
 import { useColorContext } from '../../Colors/ColorContext'
 import Loader from '../../Loader'
-import { deleteDraft, readDraft, saveDraft } from './CommentDraftHelper'
+import { deleteDraft, readDraft, writeDraft } from './CommentDraftHelper'
 
 const styles = {
   root: css({}),
@@ -194,7 +194,7 @@ export const CommentComposer = props => {
     setText(nextText)
     setHints(composerHints.map(fn => fn(nextText)).filter(Boolean))
     try {
-      saveDraft(discussionId, commentId, ev.target.value)
+      writeDraft(discussionId, commentId, ev.target.value)
     } catch (e) {
       /* Ignore errors */
     }
