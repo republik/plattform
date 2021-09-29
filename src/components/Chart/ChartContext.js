@@ -33,7 +33,7 @@ const PADDING_SIDES = 20
 export const ChartContext = createContext()
 
 export const ChartContextProvider = props => {
-  const mergedProps = { ...defaultProps[props.config.type], ...props }
+  const mergedProps = { ...defaultProps[props.type], ...props }
   const {
     values,
     width,
@@ -54,10 +54,10 @@ export const ChartContextProvider = props => {
   let xFormat = identityFn
   let xSort = (a, b) => 0
   if (xScale === 'time') {
-    xParser = timeParse(props.timeParse)
-    xParserFormat = timeFormat(props.timeParse)
+    xParser = timeParse(mergedProps.timeParse)
+    xParserFormat = timeFormat(mergedProps.timeParse)
     xNormalizer = d => xParserFormat(xParser(d))
-    xFormat = timeFormat(props.timeFormat || props.timeParse)
+    xFormat = timeFormat(mergedProps.timeFormat || mergedProps.timeParse)
     xSort = ascending
   } else if (xScale === 'linear') {
     xParser = x => +x
@@ -66,17 +66,19 @@ export const ChartContextProvider = props => {
   }
 
   let data = values
-    .filter(getDataFilter(props.filter))
+    .filter(getDataFilter(mergedProps.filter))
     .filter(hasValues)
-    .map(normalizeData(props.x, xNormalizer))
+    .map(normalizeData(mergedProps.x, xNormalizer))
 
   const groupedData = useMemo(() => {
-    return groupInColumns(data, props.column, props.columnFilter).map(
-      processSegments
-    )
+    return groupInColumns(
+      data,
+      mergedProps.column,
+      mergedProps.columnFilter
+    ).map(processSegments)
   })
 
-  const columnTitleHeight = props.column ? COLUMN_TITLE_HEIGHT : 0
+  const columnTitleHeight = mergedProps.column ? COLUMN_TITLE_HEIGHT : 0
   const columnHeight =
     innerHeight +
     columnTitleHeight +
@@ -84,12 +86,12 @@ export const ChartContextProvider = props => {
 
   // TODO: different handling of gx and gy
   const { height, innerWidth, gx, gy } = getColumnLayout(
-    props.columns,
+    mergedProps.columns,
     groupedData,
     width,
-    props.minInnerWidth,
+    mergedProps.minInnerWidth,
     () => columnHeight,
-    props.columnSort,
+    mergedProps.columnSort,
     0,
     PADDING_SIDES,
     0,
@@ -121,14 +123,14 @@ export const ChartContextProvider = props => {
     let x = scaleBand()
       .domain(xValues)
       .range([padding, innerWidth - padding])
-      .padding(props.xBandPadding)
+      .padding(mergedProps.xBandPadding)
       .round(true)
 
     let xDomain = insertXDomainGaps(
       xValues,
       xInterval,
-      props.x,
-      props.timeParse,
+      mergedProps.x,
+      mergedProps.timeParse,
       xIntervalStep,
       xParser,
       xParserFormat,
@@ -140,11 +142,11 @@ export const ChartContextProvider = props => {
     }
   }, [xValues, innerWidth])
 
-  const colorAccessor = d => d.datum[props.color]
+  const colorAccessor = d => d.datum[mergedProps.color]
 
   const colorValues = []
     .concat(data.map(colorAccessor))
-    .concat(props.colorLegendValues)
+    .concat(mergedProps.colorLegendValues)
     .filter(Boolean)
     .filter(deduplicate)
 
@@ -167,7 +169,7 @@ export const ChartContextProvider = props => {
 
   return (
     <ChartContext.Provider value={chartContextValue}>
-      {props.children}
+      {mergedProps.children}
     </ChartContext.Provider>
   )
 }
