@@ -14,7 +14,7 @@
   },
   "scripts": {
     "dev": "NODE_ENV=development nodemon $NODE_DEBUG_OPTION --trace-warnings index.js",
-    "inspect": "NODE_DEBUG_OPTION=--inspect yarn run dev",
+    "inspect": "NODE_DEBUG_OPTION=--inspect yarn dev",
     "start": "node index.js"
   },
   "devDependencies": {

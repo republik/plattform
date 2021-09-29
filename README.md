@@ -195,7 +195,7 @@ docker-compose up [-d]
 5. Refresh published articles, due to changed `ASSETS_SERVER_BASE_URL` (in `backends/`):
 
 ```
-yarn run pull:elasticsearch
+yarn pull:elasticsearch
 redis-cli
 > FLUSHALL
 ```
@@ -203,7 +203,7 @@ redis-cli
 6. Run the backend servers (in `backends/`):
 
 ```
-yarn run dev
+yarn dev
 ```
 
 7. Run the frontend server (in `republik-frontend/`):
@@ -243,7 +243,7 @@ At least the android emulator doesn't use the hosts dns resolver
 - run the app as usual (in `app/`)
 
 ```
-yarn run run-android
+yarn run-android
 ```
 
 ### Postfinance Import
