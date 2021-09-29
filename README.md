@@ -100,19 +100,16 @@ cp servers/assets/.env.example servers/assets/.env
 yarn install
 ```
 
-### 4. Initialize
+### 4. Setup
 
 ```
-createdb republik
-yarn run db:migrate:up
-yarn run db:seed
-yarn run pull:elasticsearch
+yarn dev:setup
 ```
 
 ### 5. Run
 
 ```
-yarn run dev
+yarn dev
 ```
 
 This kicks on [foreman](https://github.com/strongloop/node-foreman) which then launches all the servers locally.

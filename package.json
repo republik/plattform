@@ -64,6 +64,7 @@
     "start": "if [ -z \"$SERVER\" ]; then cd servers/graphql; else cd servers/$SERVER; fi && yarn start",
     "start:scheduler": "cd servers/graphql && yarn start:scheduler",
     "dev": "nf --procfile Procfile-dev start",
+    "dev:setup": "yarn migrate:db:create && yarn migrate:up && yarn migrate:db:import && yarn pull:elasticsearch --flush && yarn populate",
     "dev:tsc": "tsc -w",
     "cloc": "find . -name '*.js' -not -path \"*/node_modules*\" -not -path \"./node_modules*\" | xargs wc -l",
     "commit": "git-cz",
