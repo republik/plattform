@@ -21,6 +21,7 @@ import { Note } from '../Typography/Editorial'
 import { convertStyleToRem, pxToRem } from '../Typography/utils'
 import { useColorContext } from '../Colors/useColorContext'
 import { ColorContextLocalExtension } from '../Colors/ColorContext'
+import { ChartContextProvider } from './ChartContext'
 
 export const ReactCharts = {
   Bar,
@@ -195,17 +196,19 @@ const Chart = props => {
       }}
     >
       {!!width && (
-        <ReactChart
-          {...config}
-          allowCanvasRendering={allowCanvasRendering}
-          // make colorScheme available for class components—maps
-          colorScheme={colorScheme}
-          tLabel={tLabel}
-          colorRanges={colorRanges}
-          width={width}
-          values={props.values}
-          description={config.description}
-        />
+        <ChartContextProvider width={width} values={props.values} {...config}>
+          <ReactChart
+            {...config}
+            allowCanvasRendering={allowCanvasRendering}
+            // make colorScheme available for class components—maps
+            colorScheme={colorScheme}
+            tLabel={tLabel}
+            colorRanges={colorRanges}
+            width={width}
+            values={props.values}
+            description={config.description}
+          />
+        </ChartContextProvider>
       )}
     </div>
   )
