@@ -24,19 +24,19 @@ const TimeBarChart = props => {
     height: innerHeight
   } = props
 
-  const chartContextValue = React.useContext(ChartContext)
+  const chartContext = React.useContext(ChartContext)
 
-  chartContextValue.groupedData.forEach(group => {
+  chartContext.groupedData.forEach(group => {
     group.bars.forEach(bar => {
       let upValue = 0
-      let upPos = chartContextValue.y(0)
+      let upPos = chartContext.y(0)
       let downValue = 0
-      let downPos = chartContextValue.y(0)
+      let downPos = chartContext.y(0)
       bar.segments.forEach(segment => {
         const isPositive = yScaleInvert ? segment.value < 0 : segment.value > 0
         const baseValue = isPositive ? upValue : downValue
-        const y0 = chartContextValue.y(baseValue)
-        const y1 = chartContextValue.y(baseValue + segment.value)
+        const y0 = chartContext.y(baseValue)
+        const y1 = chartContext.y(baseValue + segment.value)
         const size = (segment.height = Math.abs(y0 - y1))
         if (isPositive) {
           upPos -= size
@@ -54,7 +54,7 @@ const TimeBarChart = props => {
   const yAxis = calculateAxis(
     props.numberFormat,
     tLabel,
-    chartContextValue.y.domain(),
+    chartContext.y.domain(),
     tLabel(props.unit),
     {
       ticks: props.yTicks
@@ -62,12 +62,12 @@ const TimeBarChart = props => {
   )
   const yTicks = (props.yTicks || yAxis.ticks).sort(ascending)
 
-  const color = getColorMapper(props, chartContextValue.colorValues)
+  const color = getColorMapper(props, chartContext.colorValues)
 
   const colorLegendValues = []
     .concat(
       props.colorLegend &&
-        (props.colorLegendValues || chartContextValue.colorValues).map(
+        (props.colorLegendValues || chartContext.colorValues).map(
           colorValue => ({
             color: color(colorValue),
             label: tLabel(colorValue)
@@ -79,14 +79,14 @@ const TimeBarChart = props => {
   const xAxis = (
     <XAxis
       xTicks={xTicks}
-      width={chartContextValue.innerWidth}
-      xValues={chartContextValue.xValues}
-      xNormalizer={chartContextValue.xNormalizer}
-      x={chartContextValue.xScaleDomain.x}
-      xDomain={chartContextValue.xScaleDomain.xDomain}
-      format={chartContextValue.formatXAxis}
+      width={chartContext.innerWidth}
+      xValues={chartContext.xValues}
+      xNormalizer={chartContext.xNormalizer}
+      x={chartContext.xScaleDomain.x}
+      xDomain={chartContext.xScaleDomain.xDomain}
+      format={chartContext.formatXAxis}
       xUnit={xUnit}
-      strong={chartContextValue.y.domain()[0] !== 0}
+      strong={chartContext.y.domain()[0] !== 0}
       yScaleInvert={yScaleInvert}
     />
   )
@@ -94,15 +94,15 @@ const TimeBarChart = props => {
   return (
     <>
       <ColorLegend inline values={colorLegendValues} />
-      <svg width={width} height={chartContextValue.height}>
+      <svg width={width} height={chartContext.height}>
         <desc>{description}</desc>
-        {chartContextValue.groupedData.map(({ bars, key }) => {
+        {chartContext.groupedData.map(({ bars, key }) => {
           return (
             <g
               key={key || 1}
-              transform={`translate(${chartContextValue.gx(
+              transform={`translate(${chartContext.gx(key)},${chartContext.gy(
                 key
-              )},${chartContextValue.gy(key)})`}
+              )})`}
             >
               <TimeBarGroup
                 bars={bars}
@@ -110,21 +110,19 @@ const TimeBarChart = props => {
                 xAnnotations={xAnnotations}
                 yAnnotations={yAnnotations}
                 yTicks={yTicks}
-                x={chartContextValue.xScaleDomain.x}
-                y={chartContextValue.y}
-                xNormalizer={chartContextValue.xNormalizer}
+                x={chartContext.xScaleDomain.x}
+                y={chartContext.y}
+                xNormalizer={chartContext.xNormalizer}
                 yAxis={yAxis}
-                width={chartContextValue.innerWidth}
+                width={chartContext.innerWidth}
                 xAxis={xAxis}
                 xAxisPos={
                   yScaleInvert
-                    ? PADDING_TOP + chartContextValue.columnTitleHeight
-                    : innerHeight +
-                      PADDING_TOP +
-                      chartContextValue.columnTitleHeight
+                    ? PADDING_TOP + chartContext.columnTitleHeight
+                    : innerHeight + PADDING_TOP + chartContext.columnTitleHeight
                 }
                 tLabel={tLabel}
-                color={d => color(chartContextValue.colorAccessor(d))}
+                color={d => color(chartContext.colorAccessor(d))}
                 yScaleInvert={yScaleInvert}
               />
             </g>
