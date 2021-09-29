@@ -245,7 +245,7 @@ const populate = async (context, resultFn) => {
   // Determine range we've to generate data for
   const [{ minBeginDate, maxEndDate }] = await pgdb.query(`
     SELECT
-      MIN("beginDate") "minBeginDate",
+      LEAST(MIN("beginDate"), now()) "minBeginDate",
       LEAST(MAX("endDate"), now() + '2 years'::interval) "maxEndDate"
 
     FROM "membershipPeriods"
