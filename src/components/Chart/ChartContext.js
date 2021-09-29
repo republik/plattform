@@ -108,10 +108,6 @@ export const ChartContextProvider = props => {
     return domain ? yScale : yScale.nice(3)
   }, [domain, groupedData, barRange])
 
-  if (!domain) {
-    y.nice(3)
-  }
-
   const xValues = data
     .map(xAccessor)
     .concat(getAnnotationsXValues(xAnnotations, xNormalizer))
