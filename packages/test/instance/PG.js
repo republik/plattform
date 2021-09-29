@@ -22,7 +22,7 @@ const getDatabaseUrl = (name) =>
   `postgres://${process.env.PG_USER || 'postgres'}@localhost:5432/${name}`
 
 const migrateUp = (url) =>
-  execAndLog(`DATABASE_URL=${url} yarn run db:migrate:up`)
+  execAndLog(`DATABASE_URL=${url} yarn migrate:up`)
 
 const createAndMigrate = async (name) => {
   try {
