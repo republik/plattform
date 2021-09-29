@@ -33,6 +33,7 @@ const PADDING_SIDES = 20
 export const ChartContext = createContext()
 
 export const ChartContextProvider = props => {
+  const mergedProps = { ...defaultProps[props.config.type], ...props }
   const {
     values,
     width,
@@ -45,7 +46,7 @@ export const ChartContextProvider = props => {
     padding,
     yScaleInvert,
     height: innerHeight
-  } = props
+  } = mergedProps
 
   let xParser = identityFn
   let xParserFormat = identityFn
@@ -171,21 +172,22 @@ export const ChartContextProvider = props => {
   )
 }
 
-// TODO: add props depending on chart type, don't use default props
-ChartContextProvider.defaultProps = {
-  x: 'year',
-  xScale: 'time',
-  xBandPadding: 0.25,
-  timeParse: '%Y',
-  numberFormat: 's',
-  height: 240,
-  padding: 50,
-  unit: '',
-  xUnit: '',
-  colorLegend: true,
-  xIntervalStep: 1,
-  yAnnotations: [],
-  xAnnotations: [],
-  columns: 1,
-  minInnerWidth: 240
+const defaultProps = {
+  TimeBar: {
+    x: 'year',
+    xScale: 'time',
+    xBandPadding: 0.25,
+    timeParse: '%Y',
+    numberFormat: 's',
+    height: 240,
+    padding: 50,
+    unit: '',
+    xUnit: '',
+    colorLegend: true,
+    xIntervalStep: 1,
+    yAnnotations: [],
+    xAnnotations: [],
+    columns: 1,
+    minInnerWidth: 240
+  }
 }
