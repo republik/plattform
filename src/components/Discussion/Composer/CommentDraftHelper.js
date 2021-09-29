@@ -10,16 +10,6 @@ function loadStoredDraftsObject(key) {
   const storedValue = localStorage.getItem(key)
   if (!storedValue) return undefined
 
-  // ---- Handle possible legacy drafts ----
-  // check if the stored value is not a stringified object
-  if (!storedValue.startsWith('{')) {
-    const newValue = createDraftsObject()
-    // assume the legacy-draft is a comment-draft -> save in text property
-    newValue.text = storedValue
-    localStorage.setItem(key, JSON.stringify(newValue))
-    return newValue
-  }
-
   try {
     const value = JSON.parse(storedValue)
 
@@ -33,9 +23,11 @@ function loadStoredDraftsObject(key) {
     }
     return undefined
   } catch (e) {
-    // if an error occurs assume it's due to an invalid drafts-object
-    localStorage.removeItem(key)
-    return undefined
+    const newValue = createDraftsObject()
+    // assume the legacy-draft is a comment-draft -> save in text property
+    newValue.text = storedValue
+    localStorage.setItem(key, JSON.stringify(newValue))
+    return newValue
   }
 }
 
@@ -59,17 +51,9 @@ export function readDraft(discussionID, commentID) {
   if (!storedDrafts) return undefined
 
   // If no reply-draft is searched, return the comment-draft (possibly null)
-  if (!commentID && 'text' in storedDrafts) return storedDrafts.text
+  if (!commentID) return storedDrafts.text
 
-  // If a reply-draft is searched make sure the drafts-object contains the needed key
-  if (
-    'replies' in storedDrafts &&
-    typeof storedDrafts.replies === 'object' &&
-    commentID in storedDrafts.replies
-  )
-    return storedDrafts.replies[commentID]
-
-  return undefined
+  return storedDrafts.replies[commentID] ?? undefined
 }
 
 /**
@@ -107,9 +91,9 @@ export function deleteDraft(discussionID, commentID) {
   let drafts = loadStoredDraftsObject(storageKey)
   if (!drafts) return undefined
 
-  if (discussionID && !commentID) {
+  if (!commentID) {
     drafts.text = null
-  } else if (discussionID && commentID) {
+  } else if (commentID) {
     delete drafts.replies[commentID]
   }
 
