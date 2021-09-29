@@ -100,9 +100,9 @@ const TimeBarChart = props => {
           return (
             <g
               key={key || 1}
-              transform={`translate(${chartContext.gx(key)},${chartContext.gy(
+              transform={`translate(${chartContext.group.x(
                 key
-              )})`}
+              )},${chartContext.group.y(key)})`}
             >
               <TimeBarGroup
                 bars={bars}
@@ -118,8 +118,8 @@ const TimeBarChart = props => {
                 xAxis={xAxis}
                 xAxisPos={
                   yScaleInvert
-                    ? PADDING_TOP + chartContext.columnTitleHeight
-                    : innerHeight + PADDING_TOP + chartContext.columnTitleHeight
+                    ? PADDING_TOP + chartContext.group.titleHeight
+                    : innerHeight + PADDING_TOP + chartContext.group.titleHeight
                 }
                 tLabel={tLabel}
                 color={d => color(chartContext.colorAccessor(d))}

@@ -84,7 +84,6 @@ export const ChartContextProvider = props => {
     columnTitleHeight +
     (mini ? 0 : PADDING_TOP + AXIS_BOTTOM_HEIGHT)
 
-  // TODO: different handling of gx and gy
   const { height, innerWidth, gx, gy } = getColumnLayout(
     mergedProps.columns,
     groupedData,
@@ -150,16 +149,14 @@ export const ChartContextProvider = props => {
     .filter(Boolean)
     .filter(deduplicate)
 
-  const chartContextValue = {
+  const chartContextObject = {
     groupedData,
     xValues,
     height,
     innerWidth,
-    gx,
-    gy,
     y,
     xScaleDomain,
-    columnTitleHeight,
+    group: { y: gy, x: gx, titleHeight: columnTitleHeight },
     colorAccessor,
     colorValues,
     formatXAxis: x => xFormat(xParser(x)),
@@ -168,7 +165,7 @@ export const ChartContextProvider = props => {
   }
 
   return (
-    <ChartContext.Provider value={chartContextValue}>
+    <ChartContext.Provider value={chartContextObject}>
       {mergedProps.children}
     </ChartContext.Provider>
   )
