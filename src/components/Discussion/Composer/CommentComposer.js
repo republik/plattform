@@ -11,8 +11,9 @@ import { DiscussionContext } from '../DiscussionContext'
 import { convertStyleToRem } from '../../Typography/utils'
 import { Embed } from '../Internal/Comment'
 import { useDebounce } from '../../../lib/useDebounce'
-import { useColorContext } from '../../Colors/useColorContext'
+import { useColorContext } from '../../Colors/ColorContext'
 import Loader from '../../Loader'
+import { deleteDraft, readDraft, writeDraft } from './CommentDraftHelper'
 
 const styles = {
   root: css({}),
@@ -104,13 +105,12 @@ export const CommentComposer = props => {
    * provided through props. This way the user won't lose their text if the browser
    * crashes or if they inadvertently close the composer.
    */
-  const localStorageKey = commentComposerStorageKey(discussionId)
   const [text, setText] = React.useState(() => {
     if (props.initialText) {
       return props.initialText
     } else if (typeof localStorage !== 'undefined') {
       try {
-        return localStorage.getItem(localStorageKey) || ''
+        return readDraft(discussionId, commentId) ?? ''
       } catch (e) {
         return ''
       }
@@ -194,7 +194,7 @@ export const CommentComposer = props => {
     setText(nextText)
     setHints(composerHints.map(fn => fn(nextText)).filter(Boolean))
     try {
-      localStorage.setItem(localStorageKey, ev.target.value)
+      writeDraft(discussionId, commentId, ev.target.value)
     } catch (e) {
       /* Ignore errors */
     }
@@ -229,7 +229,7 @@ export const CommentComposer = props => {
 
           if (ok) {
             try {
-              localStorage.removeItem(localStorageKey)
+              deleteDraft(discussionId, commentId)
             } catch (e) {
               /* Ignore */
             }
@@ -313,7 +313,11 @@ export const CommentComposer = props => {
 
       <Actions
         t={t}
-        onClose={onClose}
+        onClose={() => {
+          onClose()
+          // Delete the draft of the field
+          deleteDraft(discussionId, commentId)
+        }}
         onCloseLabel={onCloseLabel}
         onSubmit={
           loading || (maxLength && textLength > maxLength)
