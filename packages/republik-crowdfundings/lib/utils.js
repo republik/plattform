@@ -15,7 +15,19 @@ const getPeriodEndingLast = (periods) =>
 // Finds endDate furthest away in a series of membershipPeriods
 const getLastEndDate = (periods) => getPeriodEndingLast(periods).endDate
 
+const getMembershipCompany = (membership, pgdb) => {
+  return pgdb.queryOneField(`
+    SELECT c.name
+    FROM "membershipTypes" mt
+    JOIN companies c
+      ON mt."companyId" = c.id
+    WHERE mt.id = '${membership.membershipTypeId}'
+    LIMIT 1
+  `)
+}
+
 module.exports = {
   getPeriodEndingLast,
   getLastEndDate,
+  getMembershipCompany,
 }

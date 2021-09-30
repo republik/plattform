@@ -14,7 +14,7 @@ const {
 } = require('@orbiting/backend-modules-formats')
 const invoices = require('@orbiting/backend-modules-invoices')
 
-const { getLastEndDate } = require('./utils')
+const { getLastEndDate, getMembershipCompany } = require('./utils')
 
 const dateFormat = timeFormat('%x')
 
@@ -680,51 +680,36 @@ mail.sendMembershipClaimerOnboarding = async (
   const claimer = await pgdb.public.users.findOne({
     id: claimedMembership.userId,
   })
+  const claimedMembershipCompany = await getMembershipCompany(
+    claimedMembership,
+    pgdb,
+  )
+  const activeMembershipCompany =
+    activeMembership && (await getMembershipCompany(activeMembership, pgdb))
 
-  const mailTemplateData = {
-    to: claimer.email,
-    fromEmail: process.env.DEFAULT_MAIL_FROM_ADDRESS,
-    templateName: 'membership_claimer_onboarding',
-    mergeLanguage: 'handlebars',
-    subject: t(`api/email/membership_claimer_onboarding/DEFAULT/subject`),
-  }
-
-  const claimedMembershipCompany = await pgdb.queryOneField(`
-    SELECT c.name
-    FROM "membershipTypes" mt
-    JOIN companies c
-      ON mt."companyId" = c.id
-    WHERE mt.id = '${claimedMembership.membershipTypeId}'
-    LIMIT 1
-  `)
-
-  if (activeMembership) {
-    const activeMembershipCompany = await pgdb.queryOneField(`
-      SELECT c.name
-      FROM "membershipTypes" mt
-      JOIN companies c
-        ON mt."companyId" = c.id
-      WHERE mt.id = '${activeMembership.membershipTypeId}'
-      LIMIT 1
-    `)
-
-    mailTemplateData.subject = t(
-      `api/email/membership_claimer_onboarding/ACTIVE/subject`,
-    )
-
-    mailTemplateData.globalMergeVars = [
-      {
-        name: 'active_membership_type_company_name',
-        content: activeMembershipCompany,
-      },
-    ]
-  } else if (claimedMembershipCompany) {
-    mailTemplateData.subject = t(
-      `api/email/membership_claimer_onboarding/${claimedMembershipCompany}/subject`,
-    )
-  }
-
-  return sendMailTemplate(mailTemplateData, { pgdb })
+  return sendMailTemplate(
+    {
+      to: claimer.email,
+      fromEmail: process.env.DEFAULT_MAIL_FROM_ADDRESS,
+      templateName: 'membership_claimer_onboarding',
+      mergeLanguage: 'handlebars',
+      subject: t.first(
+        [
+          activeMembership &&
+            `api/email/membership_claimer_onboarding/has_active_membership/subject`, // New key, instead ACTIVE
+          `api/email/membership_claimer_onboarding/${claimedMembershipCompany}/subject`,
+          `api/email/membership_claimer_onboarding/subject`, // New key, DEFAULT removed
+        ].filter(Boolean),
+      ),
+      globalMergeVars: [
+        {
+          name: 'active_membership_type_company_name',
+          content: activeMembershipCompany,
+        },
+      ],
+    },
+    { pgdb },
+  )
 }
 
 /**

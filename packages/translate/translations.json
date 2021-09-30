@@ -565,8 +565,8 @@
       "value": "Geschenk von {recipientName} eingelöst"
     },
     {
-      "key": "api/email/membership_claimer_onboarding/DEFAULT/subject",
-      "value": "Willkommen bei der Republik"
+      "key": "api/email/membership_claimer_onboarding/has_active_membership/subject",
+      "value": "Geschenk eingelöst"
     },
     {
       "key": "api/email/membership_claimer_onboarding/REPUBLIK/subject",
@@ -577,8 +577,8 @@
       "value": "Ihre Mitgliedschaft: Willkommen bei der Republik"
     },
     {
-      "key": "api/email/membership_claimer_onboarding/ACTIVE/subject",
-      "value": "Geschenk eingelöst"
+      "key": "api/email/membership_claimer_onboarding/subject",
+      "value": "Willkommen bei der Republik"
     },
     {
       "key": "api/email/membership_winback_NO_TIME/subject",

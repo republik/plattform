@@ -87,31 +87,31 @@ module.exports = async (_, args, context) => {
       })
     }
 
-    if (!isSelfClaimed) {
-      try {
+    try {
+      if (!isSelfClaimed) {
         await sendMembershipClaimNotice(
           { membership: claimedMembership },
           { pgdb, t },
         )
-      } catch (e) {
-        logger.error('mail.sendMembershipClaimNotice failed', {
-          req: req._log(),
-          args,
-          error: e,
-        })
       }
-      try {
-        await sendMembershipClaimerOnboarding(
-          { claimedMembership, activeMembership },
-          { pgdb, t },
-        )
-      } catch (e) {
-        logger.error('mail.sendMembershipClaimerOnboarding failed', {
-          req: req._log(),
-          args,
-          error: e,
-        })
-      }
+    } catch (e) {
+      logger.error('mail.sendMembershipClaimNotice failed', {
+        req: req._log(),
+        args,
+        error: e,
+      })
+    }
+    try {
+      await sendMembershipClaimerOnboarding(
+        { claimedMembership, activeMembership },
+        { pgdb, t },
+      )
+    } catch (e) {
+      logger.error('mail.sendMembershipClaimerOnboarding failed', {
+        req: req._log(),
+        args,
+        error: e,
+      })
     }
   } catch (e) {
     await transaction.transactionRollback()
