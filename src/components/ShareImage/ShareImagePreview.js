@@ -117,7 +117,7 @@ const ShareImagePreview = ({
     )
   }, [text, fontSize])
 
-  const previewWidth = socialPreviewWidth[preview]
+  const previewWidth = socialPreviewWidth[preview] || (preview && 600)
 
   return (
     <>
