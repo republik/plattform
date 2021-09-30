@@ -1,7 +1,8 @@
 import React, { useRef, useEffect, useState } from 'react'
 import { css } from 'glamor'
 import { fontStyles } from '../../theme/fonts'
-import { imageStyle } from './SharePreviewTwitter'
+import { imageStyle, TWITTER_CARD_PREVIEW_WIDTH } from './SharePreviewTwitter'
+import { FACEBOOK_CARD_PREVIEW_WIDTH } from './SharePreviewFacebook'
 import { Label } from '../Typography'
 import colors from '../../theme/colors'
 import { PLACEHOLDER_TEXT } from './index'
@@ -12,6 +13,11 @@ export const SHARE_IMAGE_PADDING = 48
 
 export const socialPreviewStyles = {
   twitter: imageStyle
+}
+
+const socialPreviewWidth = {
+  twitter: TWITTER_CARD_PREVIEW_WIDTH,
+  facebook: FACEBOOK_CARD_PREVIEW_WIDTH
 }
 
 const styles = {
@@ -26,11 +32,6 @@ const styles = {
     padding: SHARE_IMAGE_PADDING,
     overflow: 'hidden',
     wordWrap: 'break-word'
-  }),
-  containerHalfSize: css({
-    transform: `scale(${0.5})`,
-    transformOrigin: '0 0',
-    marginBottom: -SHARE_IMAGE_HEIGHT / 2
   }),
   kolumnenContainer: css({
     alignItems: 'flex-end'
@@ -116,6 +117,8 @@ const ShareImagePreview = ({
     )
   }, [text, fontSize])
 
+  const previewWidth = socialPreviewWidth[preview]
+
   return (
     <>
       {preview && textContainerOverflow ? (
@@ -125,7 +128,13 @@ const ShareImagePreview = ({
       ) : null}
       <div
         {...styles.container}
-        {...(preview && styles.containerHalfSize)}
+        {...(previewWidth &&
+          css({
+            transform: `scale(${previewWidth / SHARE_IMAGE_WIDTH})`,
+            transformOrigin: '0 0',
+            marginBottom:
+              -SHARE_IMAGE_HEIGHT * (1 - previewWidth / SHARE_IMAGE_WIDTH)
+          }))}
         {...socialPreview}
         {...(shareImage && styles.kolumnenContainer)}
         style={{

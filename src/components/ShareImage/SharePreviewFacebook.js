@@ -1,11 +1,13 @@
 import React from 'react'
 import { css } from 'glamor'
 
+export const FACEBOOK_CARD_PREVIEW_WIDTH = 590
+
 const styles = {
   container: css({
     backgroundColor: '#fff',
     color: '#000',
-    width: 600,
+    width: FACEBOOK_CARD_PREVIEW_WIDTH,
     padding: '10px 12px',
     maxHeight: 120,
     overflow: 'hidden'

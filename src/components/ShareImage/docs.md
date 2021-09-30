@@ -63,6 +63,22 @@ Supported props:
 </div>
 ```
 
+### Max Text Length Test
+
+```react
+<div>
+<SharePreviewTwitter
+  title='«Viele Pflegende brauchen jetzt noch mehr Kraft, weil sie wissen: Es müsste nicht sein»' 
+  description='Bericht aus den Intensiv­stationen des Uni­spitals Zürich: Pflege­expertin Carmen Karde erzählt, wie sich die vierte Corona-Welle auf den Alltag der Pflege­fachkräfte auswirkt.' 
+/>
+<br />
+<SharePreviewFacebook
+  title='«Viele Pflegende brauchen jetzt noch mehr Kraft, weil sie wissen: Es müsste nicht sein»' 
+  description='Bericht aus den Intensiv­stationen des Unispitals Zürich: Pflege­expertin Carmen Karde erzählt, wie sich die vierte Corona-Welle auf den Alltag der Pflege­fachkräfte auswirkt.'
+/>
+</div>
+```
+
 # Share Image Generator
 
 A `<ShareImageGenerator />` takes a format type and returns a form to create a share image for that specific format type style.
