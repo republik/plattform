@@ -76,7 +76,7 @@ export const ChartContextProvider = props => {
       mergedProps.column,
       mergedProps.columnFilter
     ).map(processSegments)
-  })
+  }, [data, mergedProps.column, mergedProps.columnFilter])
 
   const columnTitleHeight = mergedProps.column ? COLUMN_TITLE_HEIGHT : 0
   const columnHeight =
@@ -139,7 +139,18 @@ export const ChartContextProvider = props => {
       xDomain,
       x: x.domain(xDomain).round(true)
     }
-  }, [xValues, innerWidth])
+  }, [
+    xValues,
+    innerWidth,
+    mergedProps.timeParse,
+    mergedProps.x,
+    mergedProps.xBandPadding,
+    padding,
+    xInterval,
+    xIntervalStep,
+    xParser,
+    xParserFormat
+  ])
 
   const colorAccessor = d => d.datum[mergedProps.color]
 
