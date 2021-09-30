@@ -15,6 +15,7 @@ const getPeriodEndingLast = (periods) =>
 // Finds endDate furthest away in a series of membershipPeriods
 const getLastEndDate = (periods) => getPeriodEndingLast(periods).endDate
 
+// Finds company (Republik or Project R) of given membership
 const getMembershipCompany = (membership, pgdb) => {
   return pgdb.queryOneField(`
     SELECT c.name

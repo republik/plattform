@@ -696,9 +696,9 @@ mail.sendMembershipClaimerOnboarding = async (
       subject: t.first(
         [
           activeMembership &&
-            `api/email/membership_claimer_onboarding/has_active_membership/subject`, // New key, instead ACTIVE
+            `api/email/membership_claimer_onboarding/has_active_membership/subject`,
           `api/email/membership_claimer_onboarding/${claimedMembershipCompany}/subject`,
-          `api/email/membership_claimer_onboarding/subject`, // New key, DEFAULT removed
+          `api/email/membership_claimer_onboarding/subject`,
         ].filter(Boolean),
       ),
       globalMergeVars: [
