@@ -13,7 +13,7 @@ import Address, { Bucket as AddressBucket } from './Address'
 
 import { MAILBOX_SELF } from '../../server/constants'
 
-const self = MAILBOX_SELF?.split(',')
+const self = MAILBOX_SELF?.split(',') ?? []
 
 const styles = {
   icon: css({
