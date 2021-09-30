@@ -3,9 +3,11 @@ import PropTypes from 'prop-types'
 import { css } from 'glamor'
 import { min, max } from 'd3-array'
 import { scalePoint, scaleTime, scaleLinear } from 'd3-scale'
-import { line as lineShape, area as areaShape } from 'd3-shape'
 import { timeYear } from 'd3-time'
 import { useColorContext } from '../Colors/useColorContext'
+import { ChartContext } from './ChartContext'
+import LineGroup from './LineGroup'
+import { createTextGauger } from '../../lib/textGauger'
 
 import {
   sansSerifRegular12,
@@ -15,25 +17,31 @@ import {
 } from '../Typography/styles'
 import { timeFormat } from '../../lib/timeFormat'
 
+import {
+  groupByLines,
+  addLabels,
+  calculateAndMoveLabelY,
+  Y_END_LABEL_SPACE
+} from './Lines.utils'
+
 import layout, {
   LABEL_FONT,
   VALUE_FONT,
-  Y_CONNECTOR,
-  Y_CONNECTOR_PADDING,
-  Y_LABEL_HEIGHT,
-  AXIS_BOTTOM_HEIGHT,
+  Y_GROUP_MARGIN,
   yScales
 } from './Lines.layout'
 
 import {
-  subsup,
   deduplicate,
   sortPropType,
   sortBy,
   getFormat,
-  xAccessor,
-  getColumnLayout
+  getColumnLayout,
+  unsafeDatumFn,
+  calculateAxis
 } from './utils'
+import { getColorMapper } from './colorMaps'
+
 import ColorLegend from './ColorLegend'
 
 const styles = {
@@ -89,429 +97,34 @@ const styles = {
   })
 }
 
-const X_TICK_HEIGHT = 4
-const Y_GROUP_MARGIN = 20
-
-const last = (array, index) => array.length - 1 === index
-
-const LineGroup = props => {
-  const {
-    lines,
-    mini,
-    title,
-    y,
-    yTicks,
-    yAxisFormat,
-    x,
-    xTicks,
-    xFormat,
-    xUnit,
-    width,
-    yCut,
-    yCutHeight,
-    yConnectorSize,
-    yNeedsConnectors,
-    yAnnotations,
-    xAnnotations,
-    band,
-    endDy
-  } = props
-  const [colorScheme] = useColorContext()
-
-  const [height] = y.range()
-  const xAxisY = height + (yCut ? yCutHeight : 0)
-
-  const pathGenerator = lineShape()
-    .x(d => x(xAccessor(d)))
-    .y(d => y(d.value))
-
-  const bandArea = areaShape()
-    .x(d => x(xAccessor(d)))
-    .y0(d => y(+d.datum[`${band}_lower`]))
-    .y1(d => y(+d.datum[`${band}_upper`]))
-
-  const linesWithLayout = lines.map(line => {
-    return {
-      ...line,
-      startX: x(xAccessor(line.start)),
-      // we always render at end label outside of the chart area
-      // even if the line ends in the middle of the graph
-      endX: width
-    }
-  })
-
-  return (
-    <g>
-      <text
-        dy='1.7em'
-        {...styles.columnTitle}
-        {...colorScheme.set('fill', 'text')}
-      >
-        {subsup.svg(title)}
-      </text>
-      {!!yCut && (
-        <text
-          y={height + yCutHeight / 2}
-          dy='0.3em'
-          {...styles.axisLabel}
-          {...colorScheme.set('fill', 'text')}
-        >
-          {yCut}
-        </text>
-      )}
-      {xTicks.map((tick, i) => {
-        let textAnchor = 'middle'
-        if (last(xTicks, i)) {
-          textAnchor = 'end'
-        }
-        if (i === 0) {
-          textAnchor = 'start'
-        }
-        return (
-          <g
-            data-axis
-            key={`x${tick}`}
-            transform={`translate(${x(tick)},${xAxisY})`}
-          >
-            <line
-              {...styles.axisXLine}
-              {...colorScheme.set('stroke', 'text')}
-              y2={X_TICK_HEIGHT}
-            />
-            <text
-              {...styles.axisLabel}
-              {...colorScheme.set('fill', 'text')}
-              y={X_TICK_HEIGHT + 5}
-              dy='0.6em'
-              textAnchor={textAnchor}
-            >
-              {xFormat(tick)}
-            </text>
-          </g>
-        )
-      })}
-      {xUnit && (
-        <text
-          x={width}
-          y={height + AXIS_BOTTOM_HEIGHT + X_TICK_HEIGHT * 2}
-          textAnchor='end'
-          {...styles.axisLabel}
-          {...colorScheme.set('fill', 'text')}
-        >
-          {xUnit}
-        </text>
-      )}
-      {linesWithLayout.map(
-        (
-          {
-            line,
-            startValue,
-            endValue,
-            endLabel,
-            highlighted,
-            stroked,
-            start,
-            startX,
-            startY,
-            startLabelY,
-            end,
-            endX,
-            endY,
-            endLabelY,
-            lineColor
-          },
-          i
-        ) => {
-          return (
-            <g key={`line${endLabel}${i}`}>
-              {startValue && (
-                <g>
-                  {yNeedsConnectors && (
-                    <circle
-                      cx={startX - Y_CONNECTOR_PADDING - Y_CONNECTOR / 2}
-                      cy={startLabelY + 0.5}
-                      r={Y_CONNECTOR / 2}
-                      {...colorScheme.set('fill', lineColor, 'charts')}
-                    />
-                  )}
-                  <text
-                    {...styles.value}
-                    {...colorScheme.set('fill', 'text')}
-                    dy='0.3em'
-                    x={startX - yConnectorSize}
-                    y={startLabelY}
-                    textAnchor='end'
-                  >
-                    {startValue}
-                  </text>
-                </g>
-              )}
-              {band && line.find(d => d.datum[`${band}_lower`]) && (
-                <path
-                  {...colorScheme.set('fill', lineColor, 'charts')}
-                  fillOpacity='0.2'
-                  d={bandArea(line)}
-                />
-              )}
-              <path
-                fill='none'
-                {...colorScheme.set('stroke', lineColor, 'charts')}
-                strokeWidth={highlighted ? 6 : 3}
-                strokeDasharray={stroked ? '6 2' : 'none'}
-                d={pathGenerator(line)}
-              />
-              {(endValue || endLabel) && (
-                <g>
-                  {!mini && yNeedsConnectors && (
-                    <circle
-                      cx={endX + Y_CONNECTOR_PADDING + Y_CONNECTOR / 2}
-                      cy={endLabelY + 0.5}
-                      r={Y_CONNECTOR / 2}
-                      {...colorScheme.set('fill', lineColor, 'charts')}
-                    />
-                  )}
-                  <text
-                    dy={endDy}
-                    x={mini ? endX : endX + yConnectorSize}
-                    y={mini ? endLabelY - Y_LABEL_HEIGHT : endLabelY}
-                    {...colorScheme.set('fill', 'text')}
-                    textAnchor={mini ? 'end' : 'start'}
-                  >
-                    <tspan {...styles[mini ? 'valueMini' : 'value']}>
-                      {endValue}
-                    </tspan>
-                    {endLabel && (
-                      <tspan
-                        {...styles.label}
-                        {...colorScheme.set('fill', 'text')}
-                      >
-                        {subsup.svg(endLabel)}
-                      </tspan>
-                    )}
-                  </text>
-                </g>
-              )}
-            </g>
-          )
-        }
-      )}
-      {yTicks.map((tick, i) => (
-        <g data-axis key={`y${tick}`} transform={`translate(0,${y(tick)})`}>
-          <line
-            {...styles.axisYLine}
-            x2={width}
-            {...colorScheme.set('stroke', 'text')}
-            style={{
-              opacity: tick === 0 ? 0.8 : 0.17
-            }}
-          />
-          <text
-            {...styles.axisLabel}
-            {...colorScheme.set('fill', 'text')}
-            dy='-3px'
-          >
-            {yAxisFormat(tick, last(yTicks, i))}
-          </text>
-        </g>
-      ))}
-      {yAnnotations.map((annotation, i) => (
-        <g
-          key={`annotation-${i}`}
-          transform={`translate(0,${y(annotation.value)})`}
-        >
-          <line
-            x1={0}
-            x2={width}
-            {...styles.annotationLine}
-            {...colorScheme.set('stroke', 'text')}
-          />
-          <circle
-            r='3.5'
-            cx={annotation.x ? x(annotation.x) : 4}
-            {...colorScheme.set('stroke', 'text')}
-            {...colorScheme.set('fill', 'textInverted')}
-          />
-          <text
-            x={width}
-            textAnchor='end'
-            dy={annotation.dy || '-0.4em'}
-            {...styles.annotationText}
-            {...colorScheme.set('fill', 'text')}
-          >
-            {annotation.label}
-            {annotation.showValue !== false && (
-              <>
-                {' '}
-                {annotation.formattedValue} {annotation.unit}
-              </>
-            )}
-          </text>
-        </g>
-      ))}
-      {xAnnotations.map((annotation, i) => {
-        const range = annotation.x1 !== undefined && annotation.x2 !== undefined
-
-        const x1 = range ? x(annotation.x1) : x(annotation.x)
-        const x2 = range && x(annotation.x2)
-
-        const fullWidth = width + (props.paddingRight || 0)
-        let textAnchor = 'middle'
-        if (
-          x1 + (range ? x2 - x1 : 0) / 2 + annotation.labelSize / 2 >
-          fullWidth
-        ) {
-          textAnchor = 'end'
-          if ((range ? x2 : x1) - annotation.labelSize < 0) {
-            textAnchor = 'start'
-          }
-        }
-        let tx = x1
-        if (range) {
-          if (textAnchor === 'end') {
-            tx = x2
-          }
-          if (textAnchor === 'middle') {
-            tx = x1 + (x2 - x1) / 2
-          }
-        }
-
-        const isBottom = annotation.position === 'bottom'
-        const showValue = annotation.showValue !== false
-
-        return (
-          <g
-            key={`x-annotation-${i}`}
-            transform={`translate(0,${y(annotation.value)})`}
-          >
-            {range && (
-              <line
-                x1={x1}
-                x2={x2}
-                {...styles.annotationLine}
-                {...colorScheme.set('stroke', 'text')}
-              />
-            )}
-            <circle
-              r='3.5'
-              cx={x1}
-              {...colorScheme.set('fill', 'textInverted')}
-              {...colorScheme.set('stroke', 'text')}
-            />
-            {range && (
-              <circle
-                r='3.5'
-                cx={x2}
-                {...colorScheme.set('fill', 'textInverted')}
-                {...colorScheme.set('stroke', 'text')}
-              />
-            )}
-            <text
-              x={tx}
-              textAnchor={textAnchor}
-              dy={
-                showValue
-                  ? isBottom
-                    ? '2.7em'
-                    : '-1.8em'
-                  : isBottom
-                  ? '1.4em'
-                  : '-0.5em'
-              }
-              {...styles.annotationText}
-              {...colorScheme.set('fill', 'text')}
-            >
-              {annotation.label}
-            </text>
-            {showValue && (
-              <text
-                x={tx}
-                textAnchor={textAnchor}
-                dy={isBottom ? '1.4em' : '-0.5em'}
-                {...styles.annotationValue}
-                {...colorScheme.set('fill', 'text')}
-              >
-                {annotation.valuePrefix}
-                {annotation.formattedValue} {annotation.unit}
-              </text>
-            )}
-          </g>
-        )
-      })}
-    </g>
-  )
-}
-
-LineGroup.propTypes = {
-  lines: PropTypes.arrayOf(
-    PropTypes.shape({
-      line: PropTypes.arrayOf(
-        PropTypes.shape({
-          value: PropTypes.number.isRequired
-        })
-      ),
-      start: PropTypes.shape({ value: PropTypes.number.isRequired }),
-      end: PropTypes.shape({ value: PropTypes.number.isRequired }),
-      highlighted: PropTypes.bool,
-      stroked: PropTypes.bool,
-      lineColor: PropTypes.string.isRequired,
-      startValue: PropTypes.oneOfType([PropTypes.bool, PropTypes.string])
-        .isRequired,
-      endValue: PropTypes.oneOfType([PropTypes.bool, PropTypes.string])
-        .isRequired
-    })
-  ),
-  mini: PropTypes.bool,
-  title: PropTypes.string,
-  y: PropTypes.func.isRequired,
-  yCut: PropTypes.string,
-  yCutHeight: PropTypes.number.isRequired,
-  yTicks: PropTypes.array.isRequired,
-  yAxisFormat: PropTypes.func.isRequired,
-  yAnnotations: PropTypes.arrayOf(
-    PropTypes.shape({
-      value: PropTypes.number.isRequired,
-      label: PropTypes.string,
-      x: PropTypes.date,
-      dy: PropTypes.string
-    })
-  ),
-  x: PropTypes.func.isRequired,
-  xTicks: PropTypes.array.isRequired,
-  xAccessor: PropTypes.func.isRequired,
-  xFormat: PropTypes.func.isRequired,
-  endDy: PropTypes.string.isRequired,
-  width: PropTypes.number.isRequired,
-  band: PropTypes.string
-}
-
 const LineChart = props => {
   const { width, mini, description, band, bandLegend, endDy } = props
 
   const {
     data,
-    groupedData,
     xParser,
+    groupedData,
     xAccessor,
     y,
-    yAxis,
     yCut,
     yCutHeight,
     yConnectorSize,
-    yNeedsConnectors,
     yAnnotations,
     xAnnotations,
     colorLegend,
     colorLegendValues,
     paddingLeft,
     paddingRight,
-    columnHeight
+    columnHeight,
+    tLabel
   } = layout(props)
 
   const [colorScheme] = useColorContext()
+  const chartContext = React.useContext(ChartContext)
 
   const { height, innerWidth, gx, gy } = getColumnLayout(
     props.columns,
-    groupedData,
+    chartContext.groupedData,
     width,
     props.minInnerWidth,
     () => columnHeight,
@@ -522,6 +135,97 @@ const LineChart = props => {
     paddingLeft,
     Y_GROUP_MARGIN
   )
+
+  const color = getColorMapper(props, chartContext.colorValues)
+
+  const yAxis = calculateAxis(
+    props.numberFormat,
+    tLabel,
+    chartContext.y.domain(),
+    props.unit,
+    {
+      ticks: props.yTicks
+    }
+  )
+
+  const { format: yFormat } = yAxis
+
+  const startValue = !mini && props.startValue
+  const endLabel =
+    !mini && props.endLabel && chartContext.colorValues.length > 0
+
+  let startValueSizes = []
+  let endValueSizes = []
+  let endLabelSizes = []
+  let yNeedsConnectors = false
+
+  const labelFilter = props.labelFilter
+    ? unsafeDatumFn(props.labelFilter)
+    : () => true
+
+  const valueGauger = createTextGauger(VALUE_FONT, {
+    dimension: 'width',
+    html: true
+  })
+
+  const labelGauger = createTextGauger(LABEL_FONT, {
+    dimension: 'width',
+    html: true
+  })
+
+  const groupedLines = chartContext.groupedData
+    .map(groupByLines(props.color, props.category))
+    .map(({ values: lines, key }) => {
+      const linesWithLabels = lines.map(
+        addLabels(
+          color,
+          chartContext.colorAccessor,
+          labelFilter,
+          yFormat,
+          chartContext.y,
+          props.highlight,
+          props.stroke,
+          startValue,
+          props.endValue,
+          props.endLabel
+        )
+      )
+      let labelsMoved = 0
+      labelsMoved += calculateAndMoveLabelY(linesWithLabels, 'start')
+      labelsMoved += calculateAndMoveLabelY(linesWithLabels, 'end')
+      yNeedsConnectors =
+        yNeedsConnectors || (labelsMoved >= 1 && linesWithLabels.length > 2)
+
+      if (startValue) {
+        startValueSizes = startValueSizes.concat(
+          linesWithLabels.map(line =>
+            line.startValue ? valueGauger(line.startValue) : 0
+          )
+        )
+      }
+      if (!mini) {
+        endValueSizes = endValueSizes.concat(
+          linesWithLabels.map(line =>
+            line.endValue ? valueGauger(line.endValue) : 0
+          )
+        )
+        if (endLabel) {
+          endLabelSizes = endLabelSizes.concat(
+            linesWithLabels.map(line =>
+              line.endLabel ? labelGauger(line.endLabel) + Y_END_LABEL_SPACE : 0
+            )
+          )
+        }
+      }
+
+      return {
+        key,
+        values: linesWithLabels
+      }
+    })
+
+  console.log(groupedData)
+  console.log('groupedLines', groupedLines)
 
   let xTicks = props.xTicks && props.xTicks.map(xParser)
   const xValues = data.map(xAccessor).concat(xTicks || [])
@@ -572,7 +276,7 @@ const LineChart = props => {
   if (mini) {
     xTicks = [xTicks[0], xTicks[xTicks.length - 1]]
   }
-  x.range([0, innerWidth])
+  x.range([0, chartContext.innerWidth])
 
   const visibleColorLegendValues = []
     .concat(props.colorLegend !== false && colorLegend && colorLegendValues)
@@ -602,7 +306,7 @@ const LineChart = props => {
       </div>
       <svg width={width} height={height}>
         <desc>{description}</desc>
-        {groupedData.map(({ values: lines, key }) => {
+        {groupedLines.map(({ values: lines, key }) => {
           return (
             <g
               key={key || 1}
@@ -617,7 +321,7 @@ const LineChart = props => {
                 xAccessor={xAccessor}
                 xFormat={xFormat}
                 xUnit={props.xUnit}
-                y={y}
+                y={chartContext.y}
                 yTicks={props.yTicks || yAxis.ticks}
                 yAxisFormat={yAxis.axisFormat}
                 band={band}

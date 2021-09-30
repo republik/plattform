@@ -40,6 +40,8 @@ export const Y_CONNECTOR = 7
 export const Y_CONNECTOR_PADDING = 4
 export const Y_LABEL_HEIGHT = 14
 const Y_END_LABEL_SPACE = 3 // width of space between label and value
+export const X_TICK_HEIGHT = 4
+export const Y_GROUP_MARGIN = 20
 
 const valueGauger = createTextGauger(VALUE_FONT, {
   dimension: 'width',
@@ -173,6 +175,7 @@ export default props => {
   if (props.yNice) {
     y.nice(props.yNice)
   }
+
   const colorAccessor = props.color
     ? d => d.datum[props.color]
     : d => d.category

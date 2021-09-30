@@ -1,7 +1,7 @@
 import React, { createContext, useMemo } from 'react'
 
-import { ascending } from 'd3-array'
-import { scaleLinear, scaleBand } from 'd3-scale'
+import { ascending, min, max } from 'd3-array'
+import { scaleLinear, scaleBand, scaleLog } from 'd3-scale'
 import { timeFormat, timeParse } from '../../lib/timeFormat'
 
 import {
@@ -23,6 +23,8 @@ import {
   getMin
 } from './TimeBars.utils'
 
+import { categorizeData } from './Lines.utils'
+
 // TODO: use padding instead fo axis bottom height
 const COLUMN_TITLE_HEIGHT = 24
 const AXIS_BOTTOM_HEIGHT = 24
@@ -35,11 +37,14 @@ export const ChartContext = createContext()
 export const ChartContextProvider = props => {
   const mergedProps = { ...defaultProps[props.type], ...props }
   const {
+    type,
     values,
     width,
     mini,
     xAnnotations,
+    yAnnotations,
     xScale,
+    yScale,
     xInterval,
     xIntervalStep,
     domain,
@@ -65,24 +70,19 @@ export const ChartContextProvider = props => {
     xSort = ascending
   }
 
-  let data = values
-    .filter(getDataFilter(mergedProps.filter))
-    .filter(hasValues)
-    .map(normalizeData(mergedProps.x, xNormalizer))
-
-  const groupedData = useMemo(() => {
-    return groupInColumns(
-      data,
-      mergedProps.column,
-      mergedProps.columnFilter
-    ).map(processSegments)
-  }, [data, mergedProps.column, mergedProps.columnFilter])
-
   const columnTitleHeight = mergedProps.column ? COLUMN_TITLE_HEIGHT : 0
   const columnHeight =
     innerHeight +
     columnTitleHeight +
     (mini ? 0 : PADDING_TOP + AXIS_BOTTOM_HEIGHT)
+
+  let data = values
+    .filter(getDataFilter(mergedProps.filter))
+    .filter(hasValues)
+    .map(normalizeData(mergedProps.x, type === 'Line' ? xParser : xNormalizer))
+    .map(categorizeData(mergedProps.category))
+
+  const groupedData = dataProcesser[type](mergedProps, data)
 
   const { height, innerWidth, gx, gy } = getColumnLayout(
     mergedProps.columns,
@@ -103,12 +103,49 @@ export const ChartContextProvider = props => {
     ? [AXIS_BOTTOM_HEIGHT + columnTitleHeight, columnHeight - PADDING_TOP]
     : [columnHeight - PADDING_TOP, AXIS_BOTTOM_HEIGHT + columnTitleHeight]
 
+  // if we have logScale, we have to force Zero
+  const logScale = yScale === 'log'
+  const forceZero = !logScale && props.zero
+
+  const yScales = {
+    linear: scaleLinear,
+    log: scaleLog
+  }
+
+  const valueAccessor = d => d.value
+
+  const appendAnnotations = (values, annotations) =>
+    annotations ? values.concat(annotations.map(valueAccessor)) : values
+
+  let yValues = data.map(valueAccessor)
+  yValues = appendAnnotations(yValues, yAnnotations)
+  yValues = appendAnnotations(yValues, xAnnotations)
+
+  const minValue = min(yValues)
+
   const y = useMemo(() => {
-    let yScale = scaleLinear()
-      .domain(domain ? domain : [getMin(groupedData), getMax(groupedData)])
-      .range(barRange)
-    return domain ? yScale : yScale.nice(3)
+    let createYScale =
+      type === 'TimeBar'
+        ? scaleLinear()
+            .domain(
+              domain ? domain : [getMin(groupedData), getMax(groupedData)]
+            )
+            .range(barRange)
+        : yScales[yScale]()
+            .domain([
+              forceZero ? Math.min(0, minValue) : minValue,
+              max(yValues)
+            ])
+            .range(barRange)
+    return domain ? createYScale : createYScale.nice(3)
   }, [domain, groupedData, barRange])
+
+  // const y = yScales[props.yScale]()
+  //   .domain([forceZero ? Math.min(0, minValue) : minValue, max(yValues)])
+  //   .range([innerHeight + paddingTop, paddingTop])
+  // if (props.yNice) {
+  //   y.nice(props.yNice)
+  // }
 
   const xValues = data
     .map(xAccessor)
@@ -152,7 +189,9 @@ export const ChartContextProvider = props => {
     xParserFormat
   ])
 
-  const colorAccessor = d => d.datum[mergedProps.color]
+  const colorAccessor = props.color
+    ? d => d.datum[props.color]
+    : d => d.category
 
   const colorValues = []
     .concat(data.map(colorAccessor))
@@ -199,5 +238,36 @@ const defaultProps = {
     xAnnotations: [],
     columns: 1,
     minInnerWidth: 240
+  },
+  Line: {
+    x: 'year',
+    xScale: 'time',
+    yScale: 'linear',
+    timeParse: '%Y',
+    timeFormat: '%Y',
+    numberFormat: '.0%',
+    zero: true,
+    unit: '',
+    startValue: false,
+    endValue: true,
+    endLabel: true,
+    endDy: '0.3em',
+    minInnerWidth: 110,
+    columns: 1,
+    height: 240,
+    yNice: 3
   }
 }
+
+const dataProcesser = {
+  TimeBar: (props, data) => {
+    return groupInColumns(data, props.column, props.columnFilter).map(
+      processSegments
+    )
+  },
+  Line: (props, data) => {
+    return groupInColumns(data, props.column, props.columnFilter)
+  }
+}
+
+const chartsToUseContext = ['TimeBar', 'Line']
