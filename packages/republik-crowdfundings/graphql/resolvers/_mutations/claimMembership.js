@@ -10,7 +10,11 @@ module.exports = async (_, args, context) => {
     pgdb,
     req,
     t,
-    mail: { enforceSubscriptions, sendMembershipClaimNotice },
+    mail: {
+      enforceSubscriptions,
+      sendMembershipClaimNotice,
+      sendMembershipClaimerOnboarding,
+    },
   } = context
   ensureSignedIn(req)
 
@@ -28,7 +32,12 @@ module.exports = async (_, args, context) => {
       throw new Error(t('api/membership/claim/invalidToken'))
     }
 
-    const activatedMembership = await activateMembership(
+    const activeMembership = await transaction.public.memberships.findOne({
+      userId: req.user.id,
+      active: true,
+    })
+
+    const claimedMembership = await activateMembership(
       membership,
       req.user,
       t,
@@ -38,12 +47,12 @@ module.exports = async (_, args, context) => {
     // commit transaction
     await transaction.transactionCommit()
 
-    const isSelfClaimed = membership.userId === activatedMembership.userId
+    const isSelfClaimed = membership.userId === claimedMembership.userId
 
     try {
       // Clear cache of claimer (if different to original owner)
       await createCache(
-        { prefix: `User:${activatedMembership.userId}` },
+        { prefix: `User:${claimedMembership.userId}` },
         context,
       ).invalidate()
 
@@ -66,7 +75,7 @@ module.exports = async (_, args, context) => {
     try {
       await enforceSubscriptions({
         pgdb,
-        userId: activatedMembership.userId,
+        userId: claimedMembership.userId,
         subscribeToEditorialNewsletters: !req.user.roles.includes('member'),
       })
     } catch (e) {
@@ -81,12 +90,24 @@ module.exports = async (_, args, context) => {
     try {
       if (!isSelfClaimed) {
         await sendMembershipClaimNotice(
-          { membership: activatedMembership },
+          { membership: claimedMembership },
           { pgdb, t },
         )
       }
     } catch (e) {
       logger.error('mail.sendMembershipClaimNotice failed', {
+        req: req._log(),
+        args,
+        error: e,
+      })
+    }
+    try {
+      await sendMembershipClaimerOnboarding(
+        { claimedMembership, activeMembership },
+        { pgdb, t },
+      )
+    } catch (e) {
+      logger.error('mail.sendMembershipClaimerOnboarding failed', {
         req: req._log(),
         args,
         error: e,

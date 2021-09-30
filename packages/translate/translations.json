@@ -565,6 +565,22 @@
       "value": "Geschenk von {recipientName} eingelöst"
     },
     {
+      "key": "api/email/membership_claimer_onboarding/has_active_membership/subject",
+      "value": "Geschenk eingelöst"
+    },
+    {
+      "key": "api/email/membership_claimer_onboarding/REPUBLIK/subject",
+      "value": "Ihr Abo: Willkommen bei der Republik"
+    },
+    {
+      "key": "api/email/membership_claimer_onboarding/PROJECT_R/subject",
+      "value": "Ihre Mitgliedschaft: Willkommen bei der Republik"
+    },
+    {
+      "key": "api/email/membership_claimer_onboarding/subject",
+      "value": "Willkommen bei der Republik"
+    },
+    {
       "key": "api/email/membership_winback_NO_TIME/subject",
       "value": "Das Beste der Republik"
     },

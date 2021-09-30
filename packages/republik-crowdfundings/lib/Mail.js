@@ -14,7 +14,7 @@ const {
 } = require('@orbiting/backend-modules-formats')
 const invoices = require('@orbiting/backend-modules-invoices')
 
-const { getLastEndDate } = require('./utils')
+const { getLastEndDate, getMembershipCompany } = require('./utils')
 
 const dateFormat = timeFormat('%x')
 
@@ -671,6 +671,45 @@ mail.sendMembershipClaimNotice = async ({ membership }, { pgdb, t }) => {
         {
           name: 'membership_type_interval',
           content: membershipType.interval,
+        },
+      ],
+    },
+    { pgdb },
+  )
+}
+
+mail.sendMembershipClaimerOnboarding = async (
+  { claimedMembership, activeMembership },
+  { pgdb, t },
+) => {
+  const claimer = await pgdb.public.users.findOne({
+    id: claimedMembership.userId,
+  })
+  const claimedMembershipCompany = await getMembershipCompany(
+    claimedMembership,
+    pgdb,
+  )
+  const activeMembershipCompany =
+    activeMembership && (await getMembershipCompany(activeMembership, pgdb))
+
+  return sendMailTemplate(
+    {
+      to: claimer.email,
+      fromEmail: process.env.DEFAULT_MAIL_FROM_ADDRESS,
+      templateName: 'membership_claimer_onboarding',
+      mergeLanguage: 'handlebars',
+      subject: t.first(
+        [
+          activeMembership &&
+            `api/email/membership_claimer_onboarding/has_active_membership/subject`,
+          `api/email/membership_claimer_onboarding/${claimedMembershipCompany}/subject`,
+          `api/email/membership_claimer_onboarding/subject`,
+        ].filter(Boolean),
+      ),
+      globalMergeVars: [
+        {
+          name: 'active_membership_type_company_name',
+          content: activeMembershipCompany,
         },
       ],
     },
