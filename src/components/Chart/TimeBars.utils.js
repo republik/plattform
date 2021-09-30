@@ -127,10 +127,10 @@ export const processSegments = data => ({
 // TODO: right now I am adding stuff that the functions don't break
 // while adapting the context to lines maybe I can rewrite these functions later to use it in lines and bars
 const getGroupMin = group =>
-  group.bar !== undefined && min(group.bars, d => d.down)
+  group.bars !== undefined && min(group.bars, d => d.down)
 
 const getGroupMax = group =>
-  group.bar !== undefined && max(group.bars, d => d.up)
+  group.bars !== undefined && max(group.bars, d => d.up)
 
 export const getMin = groupedData => {
   return min([0].concat(groupedData.map(getGroupMin)))

@@ -7,7 +7,6 @@ import { timeYear } from 'd3-time'
 import { useColorContext } from '../Colors/useColorContext'
 import { ChartContext } from './ChartContext'
 import LineGroup from './LineGroup'
-import { createTextGauger } from '../../lib/textGauger'
 
 import {
   sansSerifRegular12,
@@ -103,7 +102,7 @@ const LineChart = props => {
   const {
     data,
     xParser,
-    groupedData,
+    yNeedsConnectors,
     xAccessor,
     y,
     yCut,
@@ -115,28 +114,11 @@ const LineChart = props => {
     colorLegendValues,
     paddingLeft,
     paddingRight,
-    columnHeight,
     tLabel
   } = layout(props)
 
   const [colorScheme] = useColorContext()
   const chartContext = React.useContext(ChartContext)
-
-  const { height, innerWidth, gx, gy } = getColumnLayout(
-    props.columns,
-    chartContext.groupedData,
-    width,
-    props.minInnerWidth,
-    () => columnHeight,
-    props.columnSort,
-    0,
-    paddingRight,
-    0,
-    paddingLeft,
-    Y_GROUP_MARGIN
-  )
-
-  const color = getColorMapper(props, chartContext.colorValues)
 
   const yAxis = calculateAxis(
     props.numberFormat,
@@ -147,85 +129,6 @@ const LineChart = props => {
       ticks: props.yTicks
     }
   )
-
-  const { format: yFormat } = yAxis
-
-  const startValue = !mini && props.startValue
-  const endLabel =
-    !mini && props.endLabel && chartContext.colorValues.length > 0
-
-  let startValueSizes = []
-  let endValueSizes = []
-  let endLabelSizes = []
-  let yNeedsConnectors = false
-
-  const labelFilter = props.labelFilter
-    ? unsafeDatumFn(props.labelFilter)
-    : () => true
-
-  const valueGauger = createTextGauger(VALUE_FONT, {
-    dimension: 'width',
-    html: true
-  })
-
-  const labelGauger = createTextGauger(LABEL_FONT, {
-    dimension: 'width',
-    html: true
-  })
-
-  const groupedLines = chartContext.groupedData
-    .map(groupByLines(props.color, props.category))
-    .map(({ values: lines, key }) => {
-      const linesWithLabels = lines.map(
-        addLabels(
-          color,
-          chartContext.colorAccessor,
-          labelFilter,
-          yFormat,
-          chartContext.y,
-          props.highlight,
-          props.stroke,
-          startValue,
-          props.endValue,
-          props.endLabel
-        )
-      )
-      let labelsMoved = 0
-      labelsMoved += calculateAndMoveLabelY(linesWithLabels, 'start')
-      labelsMoved += calculateAndMoveLabelY(linesWithLabels, 'end')
-      yNeedsConnectors =
-        yNeedsConnectors || (labelsMoved >= 1 && linesWithLabels.length > 2)
-
-      if (startValue) {
-        startValueSizes = startValueSizes.concat(
-          linesWithLabels.map(line =>
-            line.startValue ? valueGauger(line.startValue) : 0
-          )
-        )
-      }
-      if (!mini) {
-        endValueSizes = endValueSizes.concat(
-          linesWithLabels.map(line =>
-            line.endValue ? valueGauger(line.endValue) : 0
-          )
-        )
-        if (endLabel) {
-          endLabelSizes = endLabelSizes.concat(
-            linesWithLabels.map(line =>
-              line.endLabel ? labelGauger(line.endLabel) + Y_END_LABEL_SPACE : 0
-            )
-          )
-        }
-      }
-
-      return {
-        key,
-        values: linesWithLabels
-      }
-    })
-
-  console.log(groupedData)
-  console.log('groupedLines', groupedLines)
 
   let xTicks = props.xTicks && props.xTicks.map(xParser)
   const xValues = data.map(xAccessor).concat(xTicks || [])
@@ -304,13 +207,14 @@ const LineChart = props => {
       <div style={{ paddingLeft, paddingRight }}>
         <ColorLegend inline values={visibleColorLegendValues} />
       </div>
-      <svg width={width} height={height}>
+      <svg width={width} height={chartContext.height}>
         <desc>{description}</desc>
-        {groupedLines.map(({ values: lines, key }) => {
+        {chartContext.groupedData.map(({ values: lines, key }) => {
           return (
             <g
               key={key || 1}
-              transform={`translate(${gx(key) + paddingLeft},${gy(key)})`}
+              transform={`translate(${chartContext.group.x(key) +
+                paddingLeft},${chartContext.group.y(key)})`}
             >
               <LineGroup
                 mini={mini}
@@ -332,7 +236,7 @@ const LineChart = props => {
                 yAnnotations={yAnnotations}
                 xAnnotations={xAnnotations}
                 endDy={endDy}
-                width={innerWidth}
+                width={chartContext.innerWidth}
                 paddingRight={paddingRight}
               />
             </g>
