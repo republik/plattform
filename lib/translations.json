@@ -185,50 +185,6 @@
       "value": "Seite"
     },
     {
-      "key": "repo/phase/draft",
-      "value": "Entwurf"
-    },
-    {
-      "key": "repo/phase/conception",
-      "value": "Konzeption"
-    },
-    {
-      "key": "repo/phase/finalEditing",
-      "value": "Abschlussredaktion"
-    },
-    {
-      "key": "repo/phase/creation",
-      "value": "Kreation"
-    },
-    {
-      "key": "repo/phase/production",
-      "value": "Produktion"
-    },
-    {
-      "key": "repo/phase/proofReading",
-      "value": "Korrektorat"
-    },
-    {
-      "key": "repo/phase/cr",
-      "value": "CR"
-    },
-    {
-      "key": "repo/phase/finalControl",
-      "value": "Endkontrolle"
-    },
-    {
-      "key": "repo/phase/ready",
-      "value": "Ready"
-    },
-    {
-      "key": "repo/phase/scheduled",
-      "value": "Terminiert"
-    },
-    {
-      "key": "repo/phase/published",
-      "value": "Publiziert"
-    },
-    {
       "key": "repo/search/field/label",
       "value": "Suche"
     },
@@ -365,8 +321,12 @@
       "value": "{name} für"
     },
     {
+      "key": "checklist/labels/startTC",
+      "value": "Go Tribe-Chief"
+    },
+    {
       "key": "checklist/labels/finalEditing",
-      "value": "Go Abschlussredaktion"
+      "value": "Go CvD"
     },
     {
       "key": "checklist/labels/startCR",
