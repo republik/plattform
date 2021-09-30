@@ -49,8 +49,7 @@ export const ChartContextProvider = props => {
     xIntervalStep,
     domain,
     padding,
-    yScaleInvert,
-    height: innerHeight
+    yScaleInvert
   } = mergedProps
 
   let xParser = identityFn
@@ -70,11 +69,11 @@ export const ChartContextProvider = props => {
     xSort = ascending
   }
 
-  const columnTitleHeight = mergedProps.column ? COLUMN_TITLE_HEIGHT : 0
-  const columnHeight =
-    innerHeight +
-    columnTitleHeight +
-    (mini ? 0 : PADDING_TOP + AXIS_BOTTOM_HEIGHT)
+  // const columnTitleHeight = mergedProps.column ? COLUMN_TITLE_HEIGHT : 0
+  // const columnHeight =
+  //   innerHeight +
+  //   columnTitleHeight +
+  //   (mini ? 0 : PADDING_TOP + AXIS_BOTTOM_HEIGHT)
 
   let data = values
     .filter(getDataFilter(mergedProps.filter))
@@ -82,22 +81,15 @@ export const ChartContextProvider = props => {
     .map(normalizeData(mergedProps.x, type === 'Line' ? xParser : xNormalizer))
     .map(categorizeData(mergedProps.category))
 
-  const groupedData = dataProcesser[type](mergedProps, data)
-
-  const { height, innerWidth, gx, gy } = getColumnLayout(
-    mergedProps.columns,
+  const {
     groupedData,
-    width,
-    mergedProps.minInnerWidth,
-    () => columnHeight,
-    mergedProps.columnSort,
-    0,
-    PADDING_SIDES,
-    0,
-    PADDING_SIDES,
-    COLUMN_PADDING,
-    true
-  )
+    height,
+    innerWidth,
+    gx,
+    gy,
+    columnTitleHeight,
+    columnHeight
+  } = dataProcesser[type](mergedProps, data)
 
   const barRange = yScaleInvert
     ? [AXIS_BOTTOM_HEIGHT + columnTitleHeight, columnHeight - PADDING_TOP]
@@ -126,26 +118,16 @@ export const ChartContextProvider = props => {
   const y = useMemo(() => {
     let createYScale =
       type === 'TimeBar'
-        ? scaleLinear()
-            .domain(
-              domain ? domain : [getMin(groupedData), getMax(groupedData)]
-            )
-            .range(barRange)
-        : yScales[yScale]()
-            .domain([
-              forceZero ? Math.min(0, minValue) : minValue,
-              max(yValues)
-            ])
-            .range(barRange)
+        ? scaleLinear().domain(
+            domain ? domain : [getMin(groupedData), getMax(groupedData)]
+          )
+        : yScales[yScale]().domain([
+            forceZero ? Math.min(0, minValue) : minValue,
+            max(yValues)
+          ])
+    createYScale.range(barRange)
     return domain ? createYScale : createYScale.nice(3)
   }, [domain, groupedData, barRange])
-
-  // const y = yScales[props.yScale]()
-  //   .domain([forceZero ? Math.min(0, minValue) : minValue, max(yValues)])
-  //   .range([innerHeight + paddingTop, paddingTop])
-  // if (props.yNice) {
-  //   y.nice(props.yNice)
-  // }
 
   const xValues = data
     .map(xAccessor)
@@ -261,9 +243,42 @@ const defaultProps = {
 
 const dataProcesser = {
   TimeBar: (props, data) => {
-    return groupInColumns(data, props.column, props.columnFilter).map(
-      processSegments
+    const groupedData = groupInColumns(
+      data,
+      props.column,
+      props.columnFilter
+    ).map(processSegments)
+
+    const columnTitleHeight = props.column ? COLUMN_TITLE_HEIGHT : 0
+
+    const columnHeight =
+      props.height +
+      columnTitleHeight +
+      (props.mini ? 0 : PADDING_TOP + AXIS_BOTTOM_HEIGHT)
+
+    const { height, innerWidth, gx, gy } = getColumnLayout(
+      props.columns,
+      groupedData,
+      props.width,
+      props.minInnerWidth,
+      () => columnHeight,
+      props.columnSort,
+      0,
+      PADDING_SIDES,
+      0,
+      PADDING_SIDES,
+      COLUMN_PADDING,
+      true
     )
+    return {
+      groupedData,
+      height,
+      innerWidth,
+      gx,
+      gy,
+      columnHeight,
+      columnTitleHeight
+    }
   },
   Line: (props, data) => {
     return groupInColumns(data, props.column, props.columnFilter)
