@@ -7,14 +7,19 @@ import {
   SharePreviewFacebook,
   SharePreviewTwitter,
   socialPreviewStyles,
+  socialPreviewWidth,
   Label,
   SHARE_IMAGE_DEFAULTS,
+  SHARE_IMAGE_HEIGHT,
+  SHARE_IMAGE_WIDTH,
   Radio
 } from '@project-r/styleguide'
 import ImageInput from '../../utils/ImageInput'
 import withT from '../../../../lib/withT'
 
 export const SOCIAL_MEDIA = ['facebook', 'twitter']
+
+const imageHeightRatio = SHARE_IMAGE_HEIGHT / SHARE_IMAGE_WIDTH
 
 const previews = {
   facebook: SharePreviewFacebook,
@@ -42,11 +47,15 @@ const UploadImage = withT(({ t, data, onInputChange, socialKey }) => {
   const imageKey = socialKey + 'Image'
   const labelHeight = 17 + 5
 
+  const width = socialPreviewWidth[socialKey] || 600
+  const height = width * imageHeightRatio
+
   return (
-    <div style={{ height: 314 + labelHeight, width: 600, overflow: 'hidden' }}>
+    <div style={{ height: height + labelHeight, width, overflow: 'hidden' }}>
       <ImageInput
-        maxWidth='100%'
-        maxHeight={314}
+        width={width}
+        height={height}
+        maxWidth='none'
         imageStyles={socialPreviewStyles[socialKey]}
         label={t(`metaData/field/${imageKey}`)}
         src={data.get(imageKey)}

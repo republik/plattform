@@ -70,7 +70,9 @@ const ImageInput = ({
   maxHeight,
   imageStyles,
   placeholder,
-  maxWidth = 200
+  maxWidth = 200,
+  width,
+  height
 }) => (
   <div style={{ position: 'relative' }}>
     <label>
@@ -91,7 +93,9 @@ const ImageInput = ({
           maxWidth,
           maxHeight,
           objectFit: 'cover',
-          width: src ? undefined : '100%',
+          objectPosition: 'center',
+          width: width || (src ? undefined : '100%'),
+          height,
           backgroundColor: dark ? '#1F1F1F' : '#fff'
         }}
         alt=''
