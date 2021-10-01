@@ -18,7 +18,8 @@
     "cloc": "find . -name '*.js' -not -path \"./node_modules*\" -not -path \"./.next*\" | xargs wc -l",
     "lint": "eslint --fix .",
     "precommit": "npm run test:unit && lint-staged",
-    "translations": "gsheets --key=1qPubCKz2YzbcFkRfF0MrgRqD0KLsgRPxoZfG5G3tHOA --title=live --pretty --out lib/translations.json",
+    "translations-raw": "NODE_OPTIONS='-r dotenv/config' gsheets --key=1qPubCKz2YzbcFkRfF0MrgRqD0KLsgRPxoZfG5G3tHOA --title=live --pretty --out lib/translations.json",
+    "translations": "npm run translations-raw && git add -p lib/translations.json && git checkout -- lib/translations.json",
     "sg:link": "./scripts/sg_link.sh",
     "sg:unlink": "./scripts/sg_unlink.sh"
   },
@@ -53,7 +54,7 @@
     "eslint-plugin-prettier": "^3.1.4",
     "eslint-plugin-react": "^7.20.3",
     "eslint-plugin-react-hooks": "^2.5.1",
-    "gsheets": "^2.0.0",
+    "gsheets": "^3.0.0",
     "husky": "^1.0.0-rc.15",
     "jsdom": "^12.0.0",
     "lint-staged": "^7.3.0",
