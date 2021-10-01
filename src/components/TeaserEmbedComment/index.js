@@ -6,7 +6,7 @@ import { useMediaQuery } from '../../lib/useMediaQuery'
 import { mUp } from '../../theme/mediaQueries'
 import { css } from 'glamor'
 import { useColorContext } from '../Colors/ColorContext'
-import { linkRule, plainLinkRule } from '../Typography'
+import { plainLinkRule } from '../Typography'
 
 const styles = {
   root: css({

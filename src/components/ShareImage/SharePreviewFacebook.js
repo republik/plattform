@@ -1,6 +1,5 @@
 import React from 'react'
 import { css } from 'glamor'
-import { Editorial } from '../Typography'
 
 export const FACEBOOK_CARD_PREVIEW_WIDTH = 590
 
