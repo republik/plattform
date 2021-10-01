@@ -52,14 +52,20 @@ const phases: Phase[] = [
     tags: ['startCreation'],
   },
   {
+    key: 'tc',
+    color: 'Orange', 
+    lock: false,
+    tags: ['startTC'],
+  },
+  {
     key: 'finalEditing',
-    color: 'Orange',
+    color: 'Chocolate',
     lock: false,
     tags: ['finalEditing'],
   },
   {
     key: 'cr',
-    color: 'Chocolate',
+    color: 'Brown',
     lock: false,
     tags: ['startCR'],
   },

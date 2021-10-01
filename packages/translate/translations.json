@@ -1905,8 +1905,12 @@
       "value": "Peer"
     },
     {
+      "key": "api/repo/phase/tc",
+      "value": "Tribe-Chief"
+    },
+    {
       "key": "api/repo/phase/finalEditing",
-      "value": "Abschlussredaktion"
+      "value": "CvD"
     },
     {
       "key": "api/repo/phase/cr",
