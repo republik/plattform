@@ -1,7 +1,10 @@
 import React, { useRef, useEffect, useState } from 'react'
 import { css } from 'glamor'
 import { fontStyles } from '../../theme/fonts'
-import { imageStyle, TWITTER_CARD_PREVIEW_WIDTH } from './SharePreviewTwitter'
+import {
+  previewImageStyle,
+  TWITTER_CARD_PREVIEW_WIDTH
+} from './SharePreviewTwitter'
 import { FACEBOOK_CARD_PREVIEW_WIDTH } from './SharePreviewFacebook'
 import { Label } from '../Typography'
 import colors from '../../theme/colors'
@@ -12,10 +15,10 @@ export const SHARE_IMAGE_HEIGHT = 628
 export const SHARE_IMAGE_PADDING = 48
 
 export const socialPreviewStyles = {
-  twitter: imageStyle
+  twitter: previewImageStyle
 }
 
-const socialPreviewWidth = {
+export const socialPreviewWidth = {
   twitter: TWITTER_CARD_PREVIEW_WIDTH,
   facebook: FACEBOOK_CARD_PREVIEW_WIDTH
 }

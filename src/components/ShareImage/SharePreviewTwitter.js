@@ -2,7 +2,7 @@ import React from 'react'
 import { css } from 'glamor'
 import { fontStyles } from '../../theme/fonts'
 
-export const imageStyle = css({
+export const previewImageStyle = css({
   borderTopLeftRadius: 15,
   borderTopRightRadius: 15,
   // boxshadow of image is 2x that of text container beacuse
