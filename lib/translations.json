@@ -545,6 +545,22 @@
       "value": "Twitter Vorschau"
     },
     {
+      "key": "metaData/field/seoTitle",
+      "value": "SEO Titel"
+    },
+    {
+      "key": "metaData/field/seoDescription",
+      "value": "SEO Lead"
+    },
+    {
+      "key": "metaData/field/googlePreview",
+      "value": "Google Vorschau"
+    },
+    {
+      "key": "metaData/field/googlePreview/note",
+      "value": "Der Lead wird allenfalls durch ein Textausschnitt ersetzt sofern es der Suchanfrage mehr entspricht. Sofern nicht explizit definiert erscheinen Twitter oder allgemeine Titel und Leads."
+    },
+    {
       "key": "metaData/field/href",
       "value": "URL"
     },
