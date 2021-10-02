@@ -202,6 +202,9 @@ const ShareImageForm = withT(({ t, editor, node, onInputChange, format }) => {
             />
           )}
           <PreviewText data={data} socialKey={socialKey} />
+          <div style={{ marginTop: 5 }}>
+            <Label>{t(`metaData/field/${socialKey}Preview/note`)}</Label>
+          </div>
           <br />
         </Fragment>
       ))}
@@ -209,4 +212,4 @@ const ShareImageForm = withT(({ t, editor, node, onInputChange, format }) => {
   )
 })
 
-export default ShareImageForm
+export default withT(ShareImageForm)

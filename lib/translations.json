@@ -529,6 +529,10 @@
       "value": "Facebook Vorschau"
     },
     {
+      "key": "metaData/field/facebookPreview/note",
+      "value": "Sichtbare Textlänge varriert nach Bildschirmgrösse. Sobald der Titel zweizeilig wird, wird der Lead meist ausgeblendet. Auf Mobile passiert dies bereits ab 40 bis 50 Zeichen."
+    },
+    {
       "key": "metaData/field/twitterTitle",
       "value": "Twitter Titel"
     },
@@ -543,6 +547,10 @@
     {
       "key": "metaData/field/twitterPreview",
       "value": "Twitter Vorschau"
+    },
+    {
+      "key": "metaData/field/twitterPreview/note",
+      "value": "Sichtbare Textlänge varriert nach Bildschirmgrösse und Ansicht. Auf Mobile wird der Lead meist nicht angezeigt."
     },
     {
       "key": "metaData/field/seoTitle",
