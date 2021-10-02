@@ -430,7 +430,7 @@
     },
     {
       "key": "metaData/field/auto",
-      "value": "Automatisch vom Titelblock ableiten (Titel, Lead & Slug)"
+      "value": "Automatisch vom Titelblock ableiten (Titel, Lead)"
     },
     {
       "key": "metaData/field/shortTitle",
@@ -554,11 +554,11 @@
     },
     {
       "key": "metaData/field/seoTitle",
-      "value": "SEO Titel"
+      "value": "SEO Titel (optional)"
     },
     {
       "key": "metaData/field/seoDescription",
-      "value": "SEO Lead"
+      "value": "SEO Lead (optional)"
     },
     {
       "key": "metaData/field/googlePreview",

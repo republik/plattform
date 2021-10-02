@@ -77,7 +77,13 @@ const MetaData = ({
   )
 
   const onInputChange = key => (_, inputValue) => {
-    const newData = key !== 'auto' ? node.data.remove('auto') : node.data
+    let newData = node.data
+    if (key === 'title' || key === 'description') {
+      newData = newData.remove('auto')
+    }
+    if (key === 'slug') {
+      newData = newData.remove('autoSlug')
+    }
     editor.change(change => {
       change.setNodeByKey(node.key, {
         data:
@@ -259,6 +265,17 @@ const MetaData = ({
           value={node.data.get('slug')}
           onChange={onInputChange('slug')}
           isTemplate={isTemplate}
+          icon={
+            <span style={{ display: 'inline-block', paddingTop: 10 }}>
+              <Checkbox
+                checked={node.data.get('autoSlug')}
+                onChange={onInputChange('autoSlug')}
+                black
+              >
+                <span style={{ verticalAlign: 'top' }}>automatisch</span>
+              </Checkbox>
+            </span>
+          }
         />
         <br />
         {!isTemplate && mdastSchema && mdastSchema.getPath && (

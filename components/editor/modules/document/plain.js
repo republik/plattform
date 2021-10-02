@@ -39,38 +39,48 @@ export default ({ rule, subModules, TYPE }) => {
   const autoMeta = documentNode => {
     const data = documentNode.data
     const autoMeta = !data || !data.delete('template').size || data.get('auto')
-    if (!autoMeta) {
+    const autoSlug = data.get('autoSlug')
+    if (!autoMeta && !autoSlug) {
       return null
     }
 
     let newData = data
 
-    const title =
-      titleModule &&
-      documentNode.nodes.find(
-        n => n.type === titleModule.TYPE && n.kind === 'block'
-      )
-    const fallbackTitle = data.get('title')
+    if (autoMeta) {
+      const title =
+        titleModule &&
+        documentNode.nodes.find(
+          n => n.type === titleModule.TYPE && n.kind === 'block'
+        )
+      const fallbackTitle = data.get('title')
 
-    if (title) {
-      const headline = title.nodes.first()
-      const headlineText = headline ? headline.text : ''
-      const lead = title.nodes.get(2)
+      if (title) {
+        const headline = title.nodes.first()
+        const headlineText = headline ? headline.text : ''
+        const lead = title.nodes.get(2)
 
-      newData = newData
-        .set('title', headlineText)
-        .set('description', lead ? lead.text : '')
-        .set('slug', slugify(headlineText))
-    } else if (fallbackTitle) {
-      if (data.get('template') === 'editorialNewsletter') {
         newData = newData
-          .set('emailSubject', fallbackTitle)
-          .set('slug', slugify(fallbackTitle))
+          .set('title', headlineText)
+          .set('description', lead ? lead.text : '')
+      } else if (fallbackTitle) {
+        if (data.get('template') === 'editorialNewsletter') {
+          newData = newData.set('emailSubject', fallbackTitle)
+        }
+      }
+
+      if (data.get('template') === 'discussion') {
+        newData = newData.set('collapsable', true)
       }
     }
-
-    if (data.get('template') === 'discussion') {
-      newData = newData.set('collapsable', true)
+    if (autoSlug) {
+      newData = newData.set(
+        'slug',
+        slugify(
+          newData.get('seoTitle') ||
+            newData.get('twitterTitle') ||
+            newData.get('title')
+        )
+      )
     }
 
     return data.equals(newData) ? null : newData
@@ -142,7 +152,14 @@ export default ({ rule, subModules, TYPE }) => {
     serializer.deserialize({
       repoId,
       ...parse(`---
-${safeDump({ template: schema, title, auto: true, feed: true, gallery: true })}
+${safeDump({
+  template: schema,
+  title,
+  auto: true,
+  autoSlug: true,
+  feed: true,
+  gallery: true
+})}
 ---
 ${
   titleModule

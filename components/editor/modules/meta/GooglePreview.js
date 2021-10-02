@@ -22,7 +22,13 @@ function wordTrim(text, length) {
   return text
 }
 
-const GooglePreview = ({ title, description, path, publishDate, t }) => {
+const GooglePreview = ({
+  title = '',
+  description = '',
+  path = '',
+  publishDate,
+  t
+}) => {
   let pathSegments = path.split('/').filter(Boolean)
 
   const hasDateSegement = path.match(/^\/[0-9]{4}\/[0-9]{2}\/[0-9]{2}\//)
