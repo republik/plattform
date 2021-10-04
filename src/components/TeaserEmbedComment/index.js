@@ -4,7 +4,7 @@ import DiscussionFooter from '../CommentTeaser/DiscussionFooter'
 import { DiscussionContext } from '../Discussion/DiscussionContext'
 import { useMediaQuery } from '../../lib/useMediaQuery'
 import { mUp } from '../../theme/mediaQueries'
-import { css } from 'glamor'
+import { css, merge } from 'glamor'
 import { useColorContext } from '../Colors/ColorContext'
 import { plainLinkRule } from '../Typography'
 
@@ -12,22 +12,34 @@ const styles = {
   root: css({
     borderTopWidth: 1,
     borderTopStyle: 'solid',
-    borderBottomWidth: 1,
-    borderBottomStyle: 'solid',
     paddingTop: 10,
     paddingBottom: 10,
     textAlign: 'left',
-    margin: '36px auto',
+    margin: '0 auto',
     position: 'relative',
     maxWidth: '455px',
     whiteSpace: 'normal',
     [mUp]: {
-      margin: '45px auto'
+      margin: '0 auto'
+    }
+  }),
+  isLast: css({
+    marginBottom: 36,
+    borderBottomWidth: 1,
+    borderBottomStyle: 'solid',
+    [mUp]: {
+      marginBottom: 45
+    }
+  }),
+  isFirst: css({
+    marginTop: 36,
+    [mUp]: {
+      marginTop: 45
     }
   })
 }
 
-const TeaserEmbedComment = ({ data, liveData, t, Link }) => {
+const TeaserEmbedComment = ({ data, liveData, t, Link, isFirst, isLast }) => {
   const isDesktop = useMediaQuery(mUp)
   const [colorScheme] = useColorContext()
 
@@ -64,7 +76,15 @@ const TeaserEmbedComment = ({ data, liveData, t, Link }) => {
   }
   return (
     <DiscussionContext.Provider value={discussionContextValue}>
-      <div id={data.id} {...styles.root} {...colorScheme.set('color', 'text')}>
+      <div
+        id={data.id}
+        {...merge(
+          styles.root,
+          isFirst && styles.isFirst,
+          isLast && styles.isLast
+        )}
+        {...colorScheme.set('color', 'text')}
+      >
         <Comment.Header
           t={t}
           comment={metaDataComment}

@@ -542,12 +542,22 @@ const createSchema = ({
               },
               {
                 matchMdast: matchZone('EMBEDCOMMENT'),
-                props: node => ({
-                  data: {
-                    ...node.data,
-                    url: node.children[0].children[0].url
+                props: (node, index, parent) => {
+                  const isNotComment = i => {
+                    if (i < 0 || i > parent.children.length - 1) {
+                      return true
+                    }
+                    return !matchZone('EMBEDCOMMENT')(parent.children[i])
                   }
-                }),
+                  return {
+                    isFirst: isNotComment(index - 1),
+                    isLast: isNotComment(index + 1),
+                    data: {
+                      ...node.data,
+                      url: node.children[0].children[0].url
+                    }
+                  }
+                },
                 component: TeaserEmbedCommentSwitch,
                 editorModule: 'embedComment',
                 editorOptions: {
