@@ -375,6 +375,8 @@ const dataProcesser = {
       ? unsafeDatumFn(props.labelFilter)
       : () => true
 
+    const color = getColorMapper(props, colorValues)
+
     const addLabels = (color, colorAccessor, labelFilter, yFormat, y) => ({
       values: line
     }) => {
@@ -401,8 +403,6 @@ const dataProcesser = {
         endY: y(end.value)
       }
     }
-
-    const color = getColorMapper(props, colorValues)
 
     groupedData = groupedData
       .map(groupByLines(props.color, props.category))

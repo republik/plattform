@@ -196,7 +196,12 @@ const Chart = props => {
       }}
     >
       {!!width && (
-        <ChartContextProvider width={width} values={props.values} {...config}>
+        <ChartContextProvider
+          width={width}
+          values={props.values}
+          {...config}
+          colorRanges={colorRanges}
+        >
           <ReactChart
             {...config}
             allowCanvasRendering={allowCanvasRendering}
