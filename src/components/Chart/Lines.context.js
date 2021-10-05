@@ -266,7 +266,6 @@ export const linesProcesser = ({
   let xDomain
   if (props.xScale === 'time') {
     const xTimes = xValuesUnformatted.map(d => d.getTime())
-    console.log(xTimes)
     const domainTime = [min(xTimes), max(xTimes)]
     const domain = domainTime.map(d => new Date(d))
     x = scaleTime().domain(domain)
@@ -331,6 +330,8 @@ export const linesProcesser = ({
     x2: d.x2 ? xParser(d.x2) : undefined,
     labelSize: d.label ? labelGauger(d.label) : 0
   }))
+
+  console.log(colorLegendValues)
 
   return {
     groupedData,

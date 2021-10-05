@@ -122,7 +122,6 @@ const LineChart = props => {
       width={chartContext.innerWidth}
       height={innerHeight}
       xValues={chartContext.xValues}
-      xNormalizer={chartContext.xNormalizer}
       x={chartContext.xScaleDomain.x}
       xDomain={chartContext.xScaleDomain.xDomain}
       xUnit={props.xUnit}

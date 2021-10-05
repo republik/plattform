@@ -1,4 +1,5 @@
 import React, { createContext } from 'react'
+import PropTypes from 'prop-types'
 
 import { ascending } from 'd3-array'
 import { timeFormat, timeParse } from '../../lib/timeFormat'
@@ -18,6 +19,14 @@ import { timeBarsProcesser } from './TimeBars.context'
 import { linesProcesser } from './Lines.context'
 
 import { categorizeData } from './Lines.utils'
+
+const dataProcesser = {
+  TimeBar: timeBarsProcesser,
+  Line: linesProcesser,
+  Slope: linesProcesser
+}
+
+const chartsToUseContext = ['TimeBar', 'Line', 'Slope']
 
 export const ChartContext = createContext()
 
@@ -91,9 +100,7 @@ export const ChartContextProvider = props => {
     colorValues,
     formatXAxis:
       mergedProps.type === 'TimeBar' ? x => xFormat(xParser(x)) : xFormat,
-    xNormalizer,
-    xParser,
-    xSort
+    xNormalizer
   }
 
   return (
@@ -159,12 +166,40 @@ const defaultProps = {
   }
 }
 
-const dataProcesser = {
-  TimeBar: timeBarsProcesser,
-  Line: linesProcesser,
-  Slope: linesProcesser
+ChartContextProvider.propTypes = {
+  groupedData: PropTypes.array,
+  height: PropTypes.number,
+  innerWidth: PropTypes.number,
+  groupPosition: PropTypes.shape({
+    y: PropTypes.number,
+    x: PropTypes.number,
+    titleHeight: PropTypes.number
+  }),
+  y: PropTypes.func,
+  yAxis: PropTypes.func,
+  yLayout: PropTypes.shape({
+    yCut: PropTypes.string,
+    yCutHeight: PropTypes.number,
+    yNeedsConnectors: PropTypes.bool,
+    yConnectorSize: PropTypes.number
+  }),
+  paddingLeft: PropTypes.number,
+  paddingRight: PropTypes.number,
+  columnHeight: PropTypes.number,
+  xScaleDomain: PropTypes.shape({
+    xDomain: PropTypes.array,
+    x: PropTypes.func
+  }),
+  xValues: PropTypes.array,
+  xTicks: PropTypes.array,
+  formatXAxis: PropTypes.func,
+  xNormalizer: PropTypes.func,
+  colorAccessor: PropTypes.func,
+  colorValues: PropTypes.array,
+  colorLegend: PropTypes.bool,
+  colorLegendValues: PropTypes.array,
+  yAnnotations: PropTypes.array,
+  xAnnotations: PropTypes.array
 }
 
-const chartsToUseContext = ['TimeBar', 'Line', 'Slope']
-
-// TODO: proptypes für context, alles reinnehmen, was required ist
+// TODO: fix padding of inverted y Scale
