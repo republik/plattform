@@ -331,8 +331,6 @@ export const linesProcesser = ({
     labelSize: d.label ? labelGauger(d.label) : 0
   }))
 
-  console.log(colorLegendValues)
-
   return {
     groupedData,
     height,

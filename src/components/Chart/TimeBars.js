@@ -205,4 +205,22 @@ export const propTypes = {
 
 TimeBarChart.propTypes = propTypes
 
+TimeBarChart.defaultProps = {
+  x: 'year',
+  xScale: 'time',
+  xBandPadding: 0.25,
+  timeParse: '%Y',
+  numberFormat: 's',
+  height: 240,
+  padding: 50,
+  unit: '',
+  xUnit: '',
+  colorLegend: true,
+  xIntervalStep: 1,
+  yAnnotations: [],
+  xAnnotations: [],
+  columns: 1,
+  minInnerWidth: 240
+}
+
 export default TimeBarChart

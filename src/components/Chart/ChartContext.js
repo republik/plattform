@@ -166,7 +166,7 @@ const defaultProps = {
   }
 }
 
-ChartContextProvider.propTypes = {
+export const propTypes = {
   groupedData: PropTypes.array,
   height: PropTypes.number,
   innerWidth: PropTypes.number,
@@ -201,5 +201,7 @@ ChartContextProvider.propTypes = {
   yAnnotations: PropTypes.array,
   xAnnotations: PropTypes.array
 }
+
+ChartContextProvider.propTypes = propTypes
 
 // TODO: fix padding of inverted y Scale
