@@ -32,6 +32,8 @@ import {
   getXTicks
 } from './TimeBars.utils'
 
+import { timeBarsProcesser } from './TimeBars.context'
+
 import {
   categorizeData,
   groupByLines,
@@ -178,111 +180,7 @@ const defaultProps = {
 }
 
 const dataProcesser = {
-  TimeBar: ({
-    props,
-    data,
-    xValuesUnformatted,
-    xParser,
-    xParserFormat,
-    xSort,
-    xNormalizer
-  }) => {
-    const groupedData = groupInColumns(
-      data,
-      props.column,
-      props.columnFilter
-    ).map(processSegments)
-
-    const columnTitleHeight = props.column ? COLUMN_TITLE_HEIGHT : 0
-
-    const columnHeight =
-      props.height +
-      columnTitleHeight +
-      (props.mini ? 0 : PADDING_TOP + AXIS_BOTTOM_HEIGHT)
-
-    const barRange = props.yScaleInvert
-      ? [AXIS_BOTTOM_HEIGHT + columnTitleHeight, columnHeight - PADDING_TOP]
-      : [columnHeight - PADDING_TOP, AXIS_BOTTOM_HEIGHT + columnTitleHeight]
-
-    const { height, innerWidth, gx, gy } = getColumnLayout(
-      props.columns,
-      groupedData,
-      props.width,
-      props.minInnerWidth,
-      () => columnHeight,
-      props.columnSort,
-      0,
-      PADDING_SIDES,
-      0,
-      PADDING_SIDES,
-      COLUMN_PADDING,
-      true
-    )
-
-    const y = useMemo(() => {
-      let createYScale = scaleLinear()
-        .domain(
-          props.domain
-            ? props.domain
-            : [getMin(groupedData), getMax(groupedData)]
-        )
-        .range(barRange)
-
-      return props.domain ? createYScale : createYScale.nice(3)
-    }, [props.domain, groupedData, barRange])
-
-    const xValues = xValuesUnformatted
-      .map(xParser)
-      .sort(xSort)
-      .map(xParserFormat)
-
-    const xScaleDomain = useMemo(() => {
-      let x = scaleBand()
-        .domain(xValues)
-        .range([props.padding, innerWidth - props.padding])
-        .padding(props.xBandPadding)
-        .round(true)
-
-      let xDomain = insertXDomainGaps(
-        xValues,
-        props.xInterval,
-        props.x,
-        props.timeParse,
-        props.xIntervalStep,
-        xParser,
-        xParserFormat,
-        x
-      )
-      return {
-        xDomain,
-        x: x.domain(xDomain).round(true)
-      }
-    }, [
-      xValues,
-      innerWidth,
-      props.timeParse,
-      props.x,
-      props.xBandPadding,
-      props.padding,
-      props.xInterval,
-      props.xIntervalStep,
-      xParser,
-      xParserFormat
-    ])
-
-    const xTicks = getXTicks(props.xTicks, xValues, xNormalizer, xScaleDomain.x)
-
-    return {
-      groupedData,
-      height,
-      innerWidth,
-      groupPosition: { y: gy, x: gx, titleHeight: columnTitleHeight },
-      y,
-      xScaleDomain,
-      xValues,
-      xTicks
-    }
-  },
+  TimeBar: timeBarsProcesser,
   Line: ({
     props,
     data,
