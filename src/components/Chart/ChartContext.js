@@ -22,6 +22,9 @@ import { categorizeData } from './Lines.utils'
 export const ChartContext = createContext()
 
 export const ChartContextProvider = props => {
+  if (chartsToUseContext.indexOf(props.type) === -1) {
+    return props.children
+  }
   const mergedProps = { ...defaultProps[props.type], ...props }
   const { type, values, xAnnotations, xScale } = mergedProps
 
@@ -135,20 +138,33 @@ const defaultProps = {
     columns: 1,
     height: 240,
     yNice: 3
+  },
+  Slope: {
+    x: 'year',
+    xScale: 'ordinal',
+    yScale: 'linear',
+    timeParse: '%Y',
+    timeFormat: '%Y',
+    numberFormat: '.0%',
+    zero: true,
+    unit: '',
+    startValue: true,
+    endValue: true,
+    endLabel: false,
+    endDy: '0.3em',
+    minInnerWidth: 90,
+    columns: 2,
+    height: 240,
+    yNice: 3
   }
 }
 
 const dataProcesser = {
   TimeBar: timeBarsProcesser,
-  Line: linesProcesser
+  Line: linesProcesser,
+  Slope: linesProcesser
 }
 
-const chartsToUseContext = ['TimeBar', 'Line']
+const chartsToUseContext = ['TimeBar', 'Line', 'Slope']
 
-// ChartContextGenerator über dem Provider und dort dann den switch reinmachen
-
-// LineChart.context.js
-
-// proptypes für context, alles reinnehmen, was required ist
-
-// eigentlich immer const und nicht let
+// TODO: proptypes für context, alles reinnehmen, was required ist
