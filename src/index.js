@@ -155,7 +155,8 @@ const Styleguide = () => {
                         ...require('./components/Typography'),
                         ShareImageGenerator: require('./components/ShareImage'),
                         ShareImagePreview: require('./components/ShareImage/ShareImagePreview'),
-                        SharePreviewTwitter: require('./components/ShareImage/SharePreviewTwitter')
+                        SharePreviewTwitter: require('./components/ShareImage/SharePreviewTwitter'),
+                        SharePreviewFacebook: require('./components/ShareImage/SharePreviewFacebook')
                       }
                     }
                   ]

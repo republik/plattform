@@ -156,6 +156,7 @@ export { default as ShareImageGenerator } from './components/ShareImage'
 export {
   default as ShareImagePreview,
   socialPreviewStyles,
+  socialPreviewWidth,
   SHARE_IMAGE_DEFAULTS,
   SHARE_IMAGE_HEIGHT,
   SHARE_IMAGE_WIDTH
