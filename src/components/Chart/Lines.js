@@ -266,45 +266,7 @@ LineChart.propTypes = propTypes
 
 export const Line = props => <LineChart {...props} />
 
-Line.defaultProps = {
-  x: 'year',
-  xScale: 'time',
-  yScale: 'linear',
-  timeParse: '%Y',
-  timeFormat: '%Y',
-  numberFormat: '.0%',
-  zero: true,
-  unit: '',
-  startValue: false,
-  endValue: true,
-  endLabel: true,
-  endDy: '0.3em',
-  minInnerWidth: 110,
-  columns: 1,
-  height: 240,
-  yNice: 3
-}
-
 export const Slope = props => <LineChart {...props} />
-
-Slope.defaultProps = {
-  x: 'year',
-  xScale: 'ordinal',
-  yScale: 'linear',
-  timeParse: '%Y',
-  timeFormat: '%Y',
-  numberFormat: '.0%',
-  zero: true,
-  unit: '',
-  startValue: true,
-  endValue: true,
-  endLabel: false,
-  endDy: '0.3em',
-  minInnerWidth: 90,
-  columns: 2,
-  height: 240,
-  yNice: 3
-}
 
 // Additional Info for Docs
 // - Slope just has different default props
