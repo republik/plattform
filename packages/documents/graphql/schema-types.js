@@ -56,6 +56,8 @@ type Meta {
   twitterTitle: String
   twitterImage: String
   twitterDescription: String
+  seoTitle: String
+  seoDescription: String
   shareText: String
   shareFontSize: Int
   shareInverted: Boolean
