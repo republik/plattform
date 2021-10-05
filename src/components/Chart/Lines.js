@@ -1,45 +1,24 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { css } from 'glamor'
-import { min, max } from 'd3-array'
-import { scalePoint, scaleTime, scaleLinear } from 'd3-scale'
-import { timeYear } from 'd3-time'
 import { useColorContext } from '../Colors/useColorContext'
 import { ChartContext } from './ChartContext'
 import LineGroup from './LineGroup'
+import XAxis from './XAxis'
 
 import {
-  sansSerifRegular12,
+  sansSerifMedium12 as VALUE_FONT,
+  sansSerifRegular12 as LABEL_FONT,
   sansSerifMedium12,
   sansSerifMedium14,
   sansSerifMedium22
 } from '../Typography/styles'
-import { timeFormat } from '../../lib/timeFormat'
 
-import {
-  groupByLines,
-  addLabels,
-  calculateAndMoveLabelY,
-  Y_END_LABEL_SPACE
-} from './Lines.utils'
+import { X_UNIT_PADDING, PADDING_TOP } from './Layout.constants'
 
-import layout, {
-  LABEL_FONT,
-  VALUE_FONT,
-  Y_GROUP_MARGIN,
-  yScales
-} from './Lines.layout'
+import { yScales } from './Lines.utils'
 
-import {
-  deduplicate,
-  sortPropType,
-  sortBy,
-  getFormat,
-  getColumnLayout,
-  unsafeDatumFn,
-  calculateAxis
-} from './utils'
-import { getColorMapper } from './colorMaps'
+import { sortPropType, xAccessor } from './utils'
 
 import ColorLegend from './ColorLegend'
 
@@ -48,7 +27,7 @@ const styles = {
     ...sansSerifMedium14
   }),
   axisLabel: css({
-    ...sansSerifRegular12
+    ...LABEL_FONT
   }),
   axisYLine: css({
     strokeWidth: '1px',
@@ -66,7 +45,7 @@ const styles = {
     strokeLinejoin: 'round'
   }),
   annotationText: css({
-    ...sansSerifRegular12
+    ...LABEL_FONT
   }),
   annotationValue: css({
     ...sansSerifMedium12
@@ -81,7 +60,7 @@ const styles = {
     ...LABEL_FONT
   }),
   bandLegend: css({
-    ...sansSerifRegular12,
+    ...LABEL_FONT,
     whiteSpace: 'nowrap'
   }),
   bandBar: css({
@@ -97,92 +76,27 @@ const styles = {
 }
 
 const LineChart = props => {
-  const { width, mini, description, band, bandLegend, endDy } = props
-
   const {
-    data,
-    xParser,
-    yNeedsConnectors,
-    xAccessor,
-    y,
-    yCut,
-    yCutHeight,
-    yConnectorSize,
-    yAnnotations,
-    xAnnotations,
-    colorLegend,
-    colorLegendValues,
-    paddingLeft,
-    paddingRight,
-    tLabel
-  } = layout(props)
+    width,
+    mini,
+    description,
+    band,
+    bandLegend,
+    endDy,
+    yScaleInvert,
+    height: innerHeight
+  } = props
 
   const [colorScheme] = useColorContext()
   const chartContext = React.useContext(ChartContext)
-
-  const yAxis = calculateAxis(
-    props.numberFormat,
-    tLabel,
-    chartContext.y.domain(),
-    props.unit,
-    {
-      ticks: props.yTicks
-    }
-  )
-
-  let xTicks = props.xTicks && props.xTicks.map(xParser)
-  const xValues = data.map(xAccessor).concat(xTicks || [])
-  let x
-  let xFormat = d => d
-  if (props.xScale === 'time') {
-    xFormat = timeFormat(props.timeFormat)
-    const xTimes = xValues.map(d => d.getTime())
-    const domainTime = [min(xTimes), max(xTimes)]
-    const domain = domainTime.map(d => new Date(d))
-    x = scaleTime().domain(domain)
-
-    if (!xTicks) {
-      let yearInteval = Math.round(timeYear.count(domain[0], domain[1]) / 3)
-
-      let time1 = timeYear.offset(domain[0], yearInteval).getTime()
-      let time2 = timeYear.offset(domain[1], -yearInteval).getTime()
-
-      xTicks = [
-        domainTime[0],
-        sortBy(xTimes, d => Math.abs(d - time1))[0],
-        sortBy(xTimes, d => Math.abs(d - time2))[0],
-        domainTime[1]
-      ]
-        .filter(deduplicate)
-        .map(d => new Date(d))
-    }
-  } else if (props.xScale === 'linear') {
-    const domain = [min(xValues), max(xValues)]
-    x = scaleLinear().domain(domain)
-    xTicks = xTicks || domain
-    xFormat = getFormat(props.xNumberFormat || props.numberFormat, props.tLabel)
-  } else {
-    const domain = xValues.filter(deduplicate)
-    x = scalePoint().domain(domain)
-    if (!xTicks && domain.length > 5) {
-      let maxIndex = domain.length - 1
-      xTicks = [
-        domain[0],
-        domain[Math.round(maxIndex * 0.33)],
-        domain[Math.round(maxIndex * 0.66)],
-        domain[maxIndex]
-      ].filter(deduplicate)
-    } else if (!xTicks) {
-      xTicks = domain
-    }
-  }
-  if (mini) {
-    xTicks = [xTicks[0], xTicks[xTicks.length - 1]]
-  }
-  x.range([0, chartContext.innerWidth])
+  const { paddingLeft, paddingRight, yLayout, groupPosition } = chartContext
 
   const visibleColorLegendValues = []
-    .concat(props.colorLegend !== false && colorLegend && colorLegendValues)
+    .concat(
+      props.colorLegend !== false &&
+        chartContext.colorLegend &&
+        chartContext.colorLegendValues
+    )
     .concat(
       !mini &&
         band &&
@@ -202,42 +116,62 @@ const LineChart = props => {
     )
     .filter(Boolean)
 
+  const xAxis = (
+    <XAxis
+      xTicks={chartContext.xTicks}
+      width={chartContext.innerWidth}
+      height={innerHeight}
+      xValues={chartContext.xValues}
+      xNormalizer={chartContext.xNormalizer}
+      x={chartContext.xScaleDomain.x}
+      xDomain={chartContext.xScaleDomain.xDomain}
+      xUnit={props.xUnit}
+      yScaleInvert={yScaleInvert}
+      format={chartContext.formatXAxis}
+      type={props.type}
+    />
+  )
+
   return (
     <>
       <div style={{ paddingLeft, paddingRight }}>
         <ColorLegend inline values={visibleColorLegendValues} />
       </div>
-      <svg width={width} height={chartContext.height}>
+      <svg
+        width={width}
+        height={chartContext.height + (props.xUnit ? X_UNIT_PADDING : 0)}
+      >
         <desc>{description}</desc>
         {chartContext.groupedData.map(({ values: lines, key }) => {
           return (
             <g
               key={key || 1}
-              transform={`translate(${chartContext.group.x(key) +
-                paddingLeft},${chartContext.group.y(key)})`}
+              transform={`translate(${groupPosition.x(key) +
+                paddingLeft},${groupPosition.y(key)})`}
             >
               <LineGroup
                 mini={mini}
                 title={key}
                 lines={lines}
-                x={x}
-                xTicks={xTicks}
+                x={chartContext.xScaleDomain.x}
+                xTicks={chartContext.xTicks}
                 xAccessor={xAccessor}
-                xFormat={xFormat}
-                xUnit={props.xUnit}
+                xFormat={chartContext.formatXAxis}
                 y={chartContext.y}
-                yTicks={props.yTicks || yAxis.ticks}
-                yAxisFormat={yAxis.axisFormat}
+                yTicks={props.yTicks || chartContext.yAxis.ticks}
+                yAxisFormat={chartContext.yAxis.axisFormat}
                 band={band}
-                yCut={yCut}
-                yCutHeight={yCutHeight}
-                yConnectorSize={yConnectorSize}
-                yNeedsConnectors={yNeedsConnectors}
-                yAnnotations={yAnnotations}
-                xAnnotations={xAnnotations}
+                yCut={yLayout.yCut}
+                yCutHeight={yLayout.yCutHeight}
+                yConnectorSize={yLayout.yConnectorSize}
+                yNeedsConnectors={yLayout.yNeedsConnectors}
+                yAnnotations={chartContext.yAnnotations}
+                xAnnotations={chartContext.xAnnotations}
                 endDy={endDy}
                 width={chartContext.innerWidth}
                 paddingRight={paddingRight}
+                xAxis={xAxis}
+                xAxisPos={chartContext.height - PADDING_TOP}
               />
             </g>
           )

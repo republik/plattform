@@ -17,6 +17,7 @@ export const normalizeData = (x, xNormalizer) => d => ({
 
 export const getXTicks = (userTicks, xValues, xNormalizer, x) => {
   if (userTicks) {
+    console.log(userTicks)
     return userTicks.map(xNormalizer)
   }
   // 12px a average number width

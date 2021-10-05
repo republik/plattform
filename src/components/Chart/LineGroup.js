@@ -8,18 +8,14 @@ import { useColorContext } from '../Colors/useColorContext'
 import { subsup, isLastItem } from './utils'
 
 import {
-  LABEL_FONT,
-  VALUE_FONT,
   Y_CONNECTOR,
   Y_CONNECTOR_PADDING,
-  Y_LABEL_HEIGHT,
-  AXIS_BOTTOM_HEIGHT,
-  X_TICK_HEIGHT
-} from './Lines.layout'
+  Y_LABEL_HEIGHT
+} from './Layout.constants'
 
 import {
-  sansSerifRegular12,
-  sansSerifMedium12,
+  sansSerifRegular12 as VALUE_FONT,
+  sansSerifMedium12 as LABEL_FONT,
   sansSerifMedium14,
   sansSerifMedium22
 } from '../Typography/styles'
@@ -29,7 +25,7 @@ const styles = {
     ...sansSerifMedium14
   }),
   axisLabel: css({
-    ...sansSerifRegular12
+    ...VALUE_FONT
   }),
   axisYLine: css({
     strokeWidth: '1px',
@@ -47,10 +43,10 @@ const styles = {
     strokeLinejoin: 'round'
   }),
   annotationText: css({
-    ...sansSerifRegular12
+    ...VALUE_FONT
   }),
   annotationValue: css({
-    ...sansSerifMedium12
+    ...LABEL_FONT
   }),
   value: css({
     ...VALUE_FONT
@@ -62,7 +58,7 @@ const styles = {
     ...LABEL_FONT
   }),
   bandLegend: css({
-    ...sansSerifRegular12,
+    ...VALUE_FONT,
     whiteSpace: 'nowrap'
   }),
   bandBar: css({
@@ -86,9 +82,6 @@ const LineGroup = props => {
     yTicks,
     yAxisFormat,
     x,
-    xTicks,
-    xFormat,
-    xUnit,
     width,
     yCut,
     yCutHeight,
@@ -98,12 +91,13 @@ const LineGroup = props => {
     xAnnotations,
     band,
     endDy,
-    xAccessor
+    xAccessor,
+    xAxisPos,
+    xAxis
   } = props
   const [colorScheme] = useColorContext()
 
   const [height] = y.range()
-  const xAxisY = height + (yCut ? yCutHeight : 0)
 
   const pathGenerator = lineShape()
     .x(d => x(xAccessor(d)))
@@ -143,48 +137,7 @@ const LineGroup = props => {
           {yCut}
         </text>
       )}
-      {xTicks.map((tick, i) => {
-        let textAnchor = 'middle'
-        if (isLastItem(xTicks, i)) {
-          textAnchor = 'end'
-        }
-        if (i === 0) {
-          textAnchor = 'start'
-        }
-        return (
-          <g
-            data-axis
-            key={`x${tick}`}
-            transform={`translate(${x(tick)},${xAxisY})`}
-          >
-            <line
-              {...styles.axisXLine}
-              {...colorScheme.set('stroke', 'text')}
-              y2={X_TICK_HEIGHT}
-            />
-            <text
-              {...styles.axisLabel}
-              {...colorScheme.set('fill', 'text')}
-              y={X_TICK_HEIGHT + 5}
-              dy='0.6em'
-              textAnchor={textAnchor}
-            >
-              {xFormat(tick)}
-            </text>
-          </g>
-        )
-      })}
-      {xUnit && (
-        <text
-          x={width}
-          y={height + AXIS_BOTTOM_HEIGHT + X_TICK_HEIGHT * 2}
-          textAnchor='end'
-          {...styles.axisLabel}
-          {...colorScheme.set('fill', 'text')}
-        >
-          {xUnit}
-        </text>
-      )}
+      <g transform={`translate(0,${xAxisPos})`}>{xAxis}</g>
       {linesWithLayout.map(
         (
           {

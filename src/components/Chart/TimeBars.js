@@ -9,7 +9,7 @@ import { intervals } from './TimeBars.utils'
 import XAxis from './XAxis'
 import { ChartContext } from './ChartContext'
 
-const PADDING_TOP = 24
+import { PADDING_TOP } from './Layout.constants'
 
 const TimeBarChart = props => {
   const {
@@ -18,13 +18,13 @@ const TimeBarChart = props => {
     description,
     yAnnotations,
     xAnnotations,
-    xTicks,
     xUnit,
     yScaleInvert,
     height: innerHeight
   } = props
 
   const chartContext = React.useContext(ChartContext)
+  const { groupPosition } = chartContext
 
   chartContext.groupedData.forEach(group => {
     group.bars.forEach(bar => {
@@ -78,16 +78,18 @@ const TimeBarChart = props => {
 
   const xAxis = (
     <XAxis
-      xTicks={xTicks}
+      xTicks={chartContext.xTicks}
       width={chartContext.innerWidth}
+      height={chartContext.height}
       xValues={chartContext.xValues}
       xNormalizer={chartContext.xNormalizer}
       x={chartContext.xScaleDomain.x}
       xDomain={chartContext.xScaleDomain.xDomain}
-      format={chartContext.formatXAxis}
       xUnit={xUnit}
       strong={chartContext.y.domain()[0] !== 0}
       yScaleInvert={yScaleInvert}
+      format={chartContext.formatXAxis}
+      type={props.type}
     />
   )
 
@@ -100,9 +102,9 @@ const TimeBarChart = props => {
           return (
             <g
               key={key || 1}
-              transform={`translate(${chartContext.group.x(
+              transform={`translate(${groupPosition.x(key)},${groupPosition.y(
                 key
-              )},${chartContext.group.y(key)})`}
+              )})`}
             >
               <TimeBarGroup
                 bars={bars}
@@ -118,8 +120,8 @@ const TimeBarChart = props => {
                 xAxis={xAxis}
                 xAxisPos={
                   yScaleInvert
-                    ? PADDING_TOP + chartContext.group.titleHeight
-                    : innerHeight + PADDING_TOP + chartContext.group.titleHeight
+                    ? PADDING_TOP + groupPosition.titleHeight
+                    : innerHeight + PADDING_TOP + groupPosition.titleHeight
                 }
                 tLabel={tLabel}
                 color={d => color(chartContext.colorAccessor(d))}

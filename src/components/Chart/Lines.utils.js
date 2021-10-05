@@ -1,4 +1,16 @@
 import { unsafeDatumFn, sortBy } from './utils'
+import { scaleLinear, scaleLog } from 'd3-scale'
+import { createTextGauger } from '../../lib/textGauger'
+
+import {
+  sansSerifMedium12 as VALUE_FONT,
+  sansSerifRegular12 as LABEL_FONT
+} from '../Typography/styles'
+
+export const yScales = {
+  linear: scaleLinear,
+  log: scaleLog
+}
 
 export const Y_LABEL_HEIGHT = 14
 export const Y_END_LABEL_SPACE = 3 // width of space between label and value
@@ -93,3 +105,17 @@ export const calculateAndMoveLabelY = (linesWithLayout, property) => {
   })
   return labelsMoved
 }
+
+export const valueAccessor = d => d.value
+
+export const appendAnnotations = (values, annotations) =>
+  annotations ? values.concat(annotations.map(valueAccessor)) : values
+
+export const valueGauger = createTextGauger(VALUE_FONT, {
+  dimension: 'width',
+  html: true
+})
+export const labelGauger = createTextGauger(LABEL_FONT, {
+  dimension: 'width',
+  html: true
+})

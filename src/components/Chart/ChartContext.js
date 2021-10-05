@@ -1,10 +1,9 @@
 import React, { createContext, useMemo } from 'react'
-import { useColorContext } from '../Colors/useColorContext'
 
 import { ascending, min, max } from 'd3-array'
-import { scaleLinear, scaleBand, scaleLog } from 'd3-scale'
+import { scaleLinear, scaleBand, scaleTime, scalePoint } from 'd3-scale'
+import { timeYear } from 'd3-time'
 import { timeFormat, timeParse } from '../../lib/timeFormat'
-import { createTextGauger } from '../../lib/textGauger'
 
 import { getColorMapper } from './colorMaps'
 import {
@@ -18,6 +17,8 @@ import {
   unsafeDatumFn,
   calculateAxis,
   runSort,
+  getFormat,
+  sortBy,
   subsup
 } from './utils'
 
@@ -27,77 +28,41 @@ import {
   getAnnotationsXValues,
   processSegments,
   getMax,
-  getMin
+  getMin,
+  getXTicks
 } from './TimeBars.utils'
 
 import {
   categorizeData,
   groupByLines,
-  addLabels,
-  calculateAndMoveLabelY
+  calculateAndMoveLabelY,
+  yScales,
+  valueAccessor,
+  appendAnnotations,
+  valueGauger,
+  labelGauger
 } from './Lines.utils'
 
 import {
-  sansSerifMedium12 as VALUE_FONT,
-  sansSerifRegular12 as LABEL_FONT
-} from '../Typography/styles'
-
-// TODO: use padding instead fo axis bottom height
-const COLUMN_TITLE_HEIGHT = 24
-const AXIS_BOTTOM_HEIGHT = 24
-const PADDING_TOP = 24
-const COLUMN_PADDING = 20
-const PADDING_SIDES = 20
-
-const AXIS_TOP_HEIGHT = 24
-const AXIS_BOTTOM_CUTOFF_HEIGHT = 40
-const AXIS_BOTTOM_XUNIT_HEIGHT = 12
-
-const Y_CONNECTOR = 7
-const Y_CONNECTOR_PADDING = 4
-const Y_LABEL_HEIGHT = 14
-const Y_END_LABEL_SPACE = 3 // width of space between label and value
-const X_TICK_HEIGHT = 4
-const Y_GROUP_MARGIN = 20
-
-const yScales = {
-  linear: scaleLinear,
-  log: scaleLog
-}
-
-const valueAccessor = d => d.value
-
-const appendAnnotations = (values, annotations) =>
-  annotations ? values.concat(annotations.map(valueAccessor)) : values
-
-const valueGauger = createTextGauger(VALUE_FONT, {
-  dimension: 'width',
-  html: true
-})
-const labelGauger = createTextGauger(LABEL_FONT, {
-  dimension: 'width',
-  html: true
-})
+  COLUMN_TITLE_HEIGHT,
+  AXIS_BOTTOM_HEIGHT,
+  AXIS_TOP_HEIGHT,
+  AXIS_BOTTOM_CUTOFF_HEIGHT,
+  AXIS_BOTTOM_XUNIT_HEIGHT,
+  PADDING_TOP,
+  COLUMN_PADDING,
+  PADDING_SIDES,
+  Y_CONNECTOR,
+  Y_CONNECTOR_PADDING,
+  Y_GROUP_MARGIN,
+  Y_END_LABEL_SPACE
+} from './Layout.constants'
 
 export const ChartContext = createContext()
 
 export const ChartContextProvider = props => {
   const mergedProps = { ...defaultProps[props.type], ...props }
-  const {
-    type,
-    values,
-    width,
-    mini,
-    xAnnotations,
-    yAnnotations,
-    xScale,
-    yScale,
-    xInterval,
-    xIntervalStep,
-    domain,
-    padding,
-    yScaleInvert
-  } = mergedProps
+  const { type, values, xAnnotations, xScale } = mergedProps
 
   let xParser = identityFn
   let xParserFormat = identityFn
@@ -114,9 +79,10 @@ export const ChartContextProvider = props => {
     xParser = x => +x
     xParserFormat = x => x.toString()
     xSort = ascending
+    xFormat = getFormat(props.xNumberFormat || props.numberFormat, props.tLabel)
   }
 
-  let data = values
+  const data = values
     .filter(getDataFilter(mergedProps.filter))
     .filter(hasValues)
     .map(normalizeData(mergedProps.x, type === 'Line' ? xParser : xNormalizer))
@@ -132,70 +98,37 @@ export const ChartContextProvider = props => {
     .filter(Boolean)
     .filter(deduplicate)
 
-  const {
-    groupedData,
-    height,
-    innerWidth,
-    gx,
-    gy,
-    columnTitleHeight,
-    y
-  } = dataProcesser[type](mergedProps, data, colorAccessor, colorValues)
+  const xTicksFromProps = props.xTicks && props.xTicks.map(xParser)
 
-  const xValues = data
+  const xValuesUnformatted = data
     .map(xAccessor)
-    .concat(getAnnotationsXValues(xAnnotations, xNormalizer))
-    .filter(deduplicate)
-    .map(xParser)
-    .sort(xSort)
-    .map(xParserFormat)
-
-  const xScaleDomain = useMemo(() => {
-    let x = scaleBand()
-      .domain(xValues)
-      .range([padding, innerWidth - padding])
-      .padding(mergedProps.xBandPadding)
-      .round(true)
-
-    let xDomain = insertXDomainGaps(
-      xValues,
-      xInterval,
-      mergedProps.x,
-      mergedProps.timeParse,
-      xIntervalStep,
-      xParser,
-      xParserFormat,
-      x
+    .concat(
+      type === 'TimeBar'
+        ? getAnnotationsXValues(xAnnotations, xNormalizer)
+        : xTicksFromProps || []
     )
-    return {
-      xDomain,
-      x: x.domain(xDomain).round(true)
-    }
-  }, [
-    xValues,
-    innerWidth,
-    mergedProps.timeParse,
-    mergedProps.x,
-    mergedProps.xBandPadding,
-    padding,
-    xInterval,
-    xIntervalStep,
-    xParser,
-    xParserFormat
-  ])
+    .filter(deduplicate)
 
-  const chartContextObject = {
-    groupedData,
-    xValues,
-    height,
-    innerWidth,
-    y,
-    xScaleDomain,
-    group: { y: gy, x: gx, titleHeight: columnTitleHeight },
+  const processedData = dataProcesser[type]({
+    props: mergedProps,
+    data,
     colorAccessor,
     colorValues,
-    formatXAxis: x => xFormat(xParser(x)),
+    xValuesUnformatted,
+    xParser,
+    xParserFormat,
+    xSort,
+    xNormalizer
+  })
+
+  const chartContextObject = {
+    ...processedData,
+    colorAccessor,
+    colorValues,
+    formatXAxis:
+      mergedProps.type === 'TimeBar' ? x => xFormat(xParser(x)) : xFormat,
     xNormalizer,
+    xParser,
     xSort
   }
 
@@ -245,7 +178,15 @@ const defaultProps = {
 }
 
 const dataProcesser = {
-  TimeBar: (props, data, colorAccessor, colorValues) => {
+  TimeBar: ({
+    props,
+    data,
+    xValuesUnformatted,
+    xParser,
+    xParserFormat,
+    xSort,
+    xNormalizer
+  }) => {
     const groupedData = groupInColumns(
       data,
       props.column,
@@ -290,17 +231,66 @@ const dataProcesser = {
       return props.domain ? createYScale : createYScale.nice(3)
     }, [props.domain, groupedData, barRange])
 
+    const xValues = xValuesUnformatted
+      .map(xParser)
+      .sort(xSort)
+      .map(xParserFormat)
+
+    const xScaleDomain = useMemo(() => {
+      let x = scaleBand()
+        .domain(xValues)
+        .range([props.padding, innerWidth - props.padding])
+        .padding(props.xBandPadding)
+        .round(true)
+
+      let xDomain = insertXDomainGaps(
+        xValues,
+        props.xInterval,
+        props.x,
+        props.timeParse,
+        props.xIntervalStep,
+        xParser,
+        xParserFormat,
+        x
+      )
+      return {
+        xDomain,
+        x: x.domain(xDomain).round(true)
+      }
+    }, [
+      xValues,
+      innerWidth,
+      props.timeParse,
+      props.x,
+      props.xBandPadding,
+      props.padding,
+      props.xInterval,
+      props.xIntervalStep,
+      xParser,
+      xParserFormat
+    ])
+
+    const xTicks = getXTicks(props.xTicks, xValues, xNormalizer, xScaleDomain.x)
+
     return {
       groupedData,
       height,
       innerWidth,
-      gx,
-      gy,
+      groupPosition: { y: gy, x: gx, titleHeight: columnTitleHeight },
       y,
-      columnTitleHeight
+      xScaleDomain,
+      xValues,
+      xTicks
     }
   },
-  Line: (props, data, colorAccessor, colorValues) => {
+  Line: ({
+    props,
+    data,
+    colorAccessor,
+    colorValues,
+    xValuesUnformatted,
+    xParser
+  }) => {
     let groupedData = groupInColumns(data, props.column, props.columnFilter)
 
     // if we have logScale, we have to force Zero
@@ -524,16 +514,104 @@ const dataProcesser = {
       Y_GROUP_MARGIN
     )
 
+    let x
+    let xTicks = props.xTicks && props.xTicks.map(xParser)
+    let xDomain
+    if (props.xScale === 'time') {
+      const xTimes = xValuesUnformatted.map(d => d.getTime())
+      console.log(xTimes)
+      const domainTime = [min(xTimes), max(xTimes)]
+      const domain = domainTime.map(d => new Date(d))
+      x = scaleTime().domain(domain)
+      xDomain = domain
+
+      if (!props.xTicks) {
+        let yearInteval = Math.round(timeYear.count(domain[0], domain[1]) / 3)
+
+        let time1 = timeYear.offset(domain[0], yearInteval).getTime()
+        let time2 = timeYear.offset(domain[1], -yearInteval).getTime()
+
+        xTicks = [
+          domainTime[0],
+          sortBy(xTimes, d => Math.abs(d - time1))[0],
+          sortBy(xTimes, d => Math.abs(d - time2))[0],
+          domainTime[1]
+        ]
+          .filter(deduplicate)
+          .map(d => new Date(d))
+      }
+    } else if (props.xScale === 'linear') {
+      const domain = [min(xValuesUnformatted), max(xValuesUnformatted)]
+      x = scaleLinear().domain(domain)
+      xTicks = xTicks || domain
+      xDomain = domain
+    } else {
+      const domain = xValuesUnformatted.filter(deduplicate)
+      xDomain = domain
+      x = scalePoint().domain(domain)
+      if (!xTicks && domain.length > 5) {
+        let maxIndex = domain.length - 1
+        xTicks = [
+          domain[0],
+          domain[Math.round(maxIndex * 0.33)],
+          domain[Math.round(maxIndex * 0.66)],
+          domain[maxIndex]
+        ].filter(deduplicate)
+      } else if (!xTicks) {
+        xTicks = domain
+      }
+    }
+    if (props.mini) {
+      xTicks = [xTicks[0], xTicks[xTicks.length - 1]]
+    }
+    x.range([0, innerWidth])
+
+    const colorLegendValues = colorValuesForLegend.map(value => ({
+      color: color(value),
+      label: subsup(value)
+    }))
+
+    const translatedYAnnotations = (props.yAnnotations || []).map(d => ({
+      formattedValue: yFormat(d.value),
+      ...d,
+      x: d.x ? xParser(d.x) : undefined
+    }))
+    const translatedXAnnotations = (props.xAnnotations || []).map(d => ({
+      formattedValue: yFormat(d.value),
+      ...d,
+      x: d.x ? xParser(d.x) : undefined,
+      x1: d.x1 ? xParser(d.x1) : undefined,
+      x2: d.x2 ? xParser(d.x2) : undefined,
+      labelSize: d.label ? labelGauger(d.label) : 0
+    }))
+
     return {
       groupedData,
       height,
       innerWidth,
-      gx,
-      gy,
+      groupPosition: { y: gy, x: gx },
       y,
-      columnTitleHeight: 0
+      xScaleDomain: { x, xDomain },
+      xTicks,
+      yAxis,
+      yLayout: { yCut, yCutHeight, yNeedsConnectors, yConnectorSize },
+      paddingLeft,
+      paddingRight,
+      columnHeight,
+      yAnnotations: translatedYAnnotations,
+      xAnnotations: translatedXAnnotations,
+      colorLegend,
+      colorLegendValues
     }
   }
 }
 
 const chartsToUseContext = ['TimeBar', 'Line']
+
+// ChartContextGenerator über dem Provider und dort dann den switch reinmachen
+
+// LineChart.context.js
+
+// proptypes für context, alles reinnehmen, was required ist
+
+// eigentlich immer const und nicht let
