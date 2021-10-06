@@ -14,6 +14,9 @@ const hasParent = (type, document, key) => {
   return parent.type === type ? true : hasParent(type, document, parent.key)
 }
 
+const removeBoldTags = html =>
+  html.replace(/<b[^>]*>/g, '').replace(/<\/b>/g, '')
+
 export default (centerModule, figureModule) => (event, change, editor) => {
   const transfer = getEventTransfer(event)
   if (transfer.type !== 'html') return
@@ -35,7 +38,7 @@ export default (centerModule, figureModule) => (event, change, editor) => {
     .use(rehype2remark)
     .use(stringify)
   const pastedMd = toMd.processSync(
-    isCenter || isCaption ? transfer.html : transfer.text
+    isCenter || isCaption ? removeBoldTags(transfer.html) : transfer.text
   )
   const currentSerializer = isCaption
     ? figureModule.helpers.captionSerializer
