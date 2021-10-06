@@ -37,6 +37,7 @@ module.exports = (server) => {
         webp: !!req.params.webp,
         cacheTags: ['proxy'],
       },
+      req,
     })
   })
 }

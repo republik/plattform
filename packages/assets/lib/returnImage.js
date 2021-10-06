@@ -4,6 +4,7 @@ const { fileTypeStream } = require('file-type-stream2')
 const { PassThrough } = require('stream')
 const toArray = require('stream-to-array')
 const debug = require('debug')('assets:returnImage')
+const { parse: parsePath } = require('path')
 
 const { SHARP_NO_CACHE } = process.env
 
@@ -26,7 +27,7 @@ const pipeHeaders = [
   'X-Robots-Tag',
 ]
 
-const supportedFormats = ['jpeg', 'png', 'webp']
+const supportedFormats = ['jpeg', 'png', 'webp', 'auto']
 
 const toBuffer = async (stream) => {
   return toArray(stream).then((parts) => {
@@ -44,10 +45,11 @@ module.exports = async ({
   options = {},
   path,
   returnResult,
+  req,
 }) => {
   const { resize, bw, webp, format: _format, cacheTags = [] } = options
 
-  const format =
+  let format =
     _format && supportedFormats.indexOf(_format) !== -1
       ? _format
       : webp
@@ -127,9 +129,19 @@ module.exports = async ({
       'Cache-Tag',
       cacheTags
         .concat(mime && mime.split('/'))
+        .concat(format === 'auto' && 'auto')
         .filter(Boolean)
         .join(' '),
     )
+
+    if (format === 'auto') {
+      res.set('Vary', 'Accept')
+      if (req.headers.accept?.includes('image/webp')) {
+        format = 'webp'
+      } else {
+        format = null
+      }
+    }
 
     let pipeline
     if (
@@ -152,6 +164,12 @@ module.exports = async ({
       }
       if (format) {
         res.set('Content-Type', `image/${format}`)
+        if (path) {
+          res.set(
+            'Content-Disposition',
+            `inline; filename="${parsePath(path).name}.${format}"`,
+          )
+        }
         pipeline.toFormat(format, {
           // avoid interlaced pngs
           // - not supported in pdfkit

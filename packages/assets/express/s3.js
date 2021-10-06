@@ -50,6 +50,7 @@ module.exports = (server) => {
         webp: !!webp,
         cacheTags: ['s3'],
       },
+      req,
     })
   })
 }
