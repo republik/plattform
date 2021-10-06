@@ -13,8 +13,10 @@ const hasParent = (type, document, key) => {
   return parent.type === type ? true : hasParent(type, document, parent.key)
 }
 
+// Google adds a weird b tag around the paragraphs.
+// We remove it, because the parser doesnt like it.
 const normalise = html =>
-  html.replace(/<b[^>]*(?:font-weight:normal)[^>]*>/g, '')
+  html.replace(/<b[^>]*font-weight\s*:\s*normal[^>]*>/g, '')
 
 export default (centerModule, figureModule) => (event, change, editor) => {
   const transfer = getEventTransfer(event)
@@ -28,8 +30,6 @@ export default (centerModule, figureModule) => (event, change, editor) => {
 
   const isCenter = hasParent(centerModule.TYPE, editor.value.document, cursor)
   const isCaption = blockType === 'CAPTION_TEXT'
-
-  console.log(transfer.html)
 
   const toMd = unified()
     .use(htmlParse, {
