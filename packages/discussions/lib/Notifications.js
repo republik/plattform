@@ -43,11 +43,7 @@ const getDiscussionUrl = async (discussion, context) => {
 }
 
 const getDisplayAuthor = (comment, context) => {
-  return originalGetDisplayAuthor(
-    comment,
-    { portrait: { webp: false } },
-    context,
-  )
+  return originalGetDisplayAuthor(comment, {}, context)
 }
 
 const getCommentInfo = async (comment, displayAuthor, discussion, context) => {
