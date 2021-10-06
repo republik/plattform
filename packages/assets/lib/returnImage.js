@@ -136,7 +136,7 @@ module.exports = async ({
 
     if (format === 'auto') {
       res.set('Vary', 'Accept')
-      if (req.headers.accept?.includes('image/webp')) {
+      if (req.get('Accept').includes('image/webp')) {
         format = 'webp'
       } else {
         format = null
