@@ -430,7 +430,7 @@
     },
     {
       "key": "metaData/field/auto",
-      "value": "Automatisch vom Titelblock ableiten (Titel, Lead & Slug)"
+      "value": "Automatisch vom Titelblock ableiten (Titel, Lead)"
     },
     {
       "key": "metaData/field/shortTitle",
@@ -529,6 +529,10 @@
       "value": "Facebook Vorschau"
     },
     {
+      "key": "metaData/field/facebookPreview/note",
+      "value": "Sobald der Titel zweizeilig wird, wird der Lead meist ausgeblendet. Auf Mobile passiert dies bereits ab 40 bis 50 Zeichen. Sichtbare Textlänge varriert nach Bildschirmgrösse. "
+    },
+    {
       "key": "metaData/field/twitterTitle",
       "value": "Twitter Titel"
     },
@@ -543,6 +547,26 @@
     {
       "key": "metaData/field/twitterPreview",
       "value": "Twitter Vorschau"
+    },
+    {
+      "key": "metaData/field/twitterPreview/note",
+      "value": "Auf Mobile wird der Lead meist nicht angezeigt. Sichtbare Textlänge varriert nach Bildschirmgrösse und Ansicht."
+    },
+    {
+      "key": "metaData/field/seoTitle",
+      "value": "SEO Titel (optional)"
+    },
+    {
+      "key": "metaData/field/seoDescription",
+      "value": "SEO Lead (optional)"
+    },
+    {
+      "key": "metaData/field/googlePreview",
+      "value": "Google Vorschau"
+    },
+    {
+      "key": "metaData/field/googlePreview/note",
+      "value": "Google verwendet einen Textausschnitt statt den Lead, falls es mehr zur Suchanfrage passt. Sofern nicht explizit definiert erscheinen Twitter oder allgemeine Titel und Leads."
     },
     {
       "key": "metaData/field/href",

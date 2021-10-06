@@ -18,6 +18,7 @@ import AudioForm from './AudioForm'
 import UIForm from '../../UIForm'
 import DarkModeForm, { DARK_MODE_KEY } from './DarkModeForm'
 import ShareImageForm from './ShareImageForm'
+import GooglePreview from './GooglePreview'
 
 const styles = {
   container: css({
@@ -69,8 +70,20 @@ const MetaData = ({
     node.data.filter((_, key) => genericKeys.has(key))
   )
 
+  const seoKeys = Set(['seoTitle', 'seoDescription'])
+  const seoDefaultValues = Map(seoKeys.map(key => [key, '']))
+  const seoData = seoDefaultValues.merge(
+    node.data.filter((_, key) => seoKeys.has(key))
+  )
+
   const onInputChange = key => (_, inputValue) => {
-    const newData = key !== 'auto' ? node.data.remove('auto') : node.data
+    let newData = node.data
+    if (key === 'title' || key === 'description') {
+      newData = newData.remove('auto')
+    }
+    if (key === 'slug') {
+      newData = newData.remove('autoSlug')
+    }
     editor.change(change => {
       change.setNodeByKey(node.key, {
         data:
@@ -130,6 +143,15 @@ const MetaData = ({
 
   const customFieldsRest = customFields.filter(f => !f.ref)
 
+  const previewPublishDate = contextMeta.publishDate
+    ? new Date(contextMeta.publishDate)
+    : new Date()
+  const previewPath = mdastSchema.getPath({
+    ...dataAsJs,
+    publishDate: previewPublishDate,
+    slug: slugify(dataAsJs.slug || '')
+  })
+
   return (
     <div {...styles.container}>
       <div {...styles.center}>
@@ -143,45 +165,6 @@ const MetaData = ({
             {t('metaData/field/auto')}
           </Checkbox>
         </div>
-        <br />
-        <SlugField
-          black
-          label={t(
-            `metaData/field/${isTemplate ? 'repoSlug' : 'slug'}`,
-            undefined,
-            'slug'
-          )}
-          value={node.data.get('slug')}
-          onChange={onInputChange('slug')}
-          isTemplate={isTemplate}
-        />
-        {!isTemplate && mdastSchema && mdastSchema.getPath && (
-          <Label>
-            {t('metaData/field/slug/note', {
-              base: FRONTEND_BASE_URL
-                ? FRONTEND_BASE_URL.replace(/https?:\/\/(www\.)?/, '')
-                : '',
-              path: mdastSchema.getPath({
-                ...dataAsJs,
-                publishDate: contextMeta.publishDate
-                  ? new Date(contextMeta.publishDate)
-                  : new Date(),
-                slug: slugify(dataAsJs.slug || '')
-              })
-            })}
-            <br />
-            {!!dataAsJs.path && (
-              <>
-                {t('metaData/field/slug/pathNote', {
-                  base: FRONTEND_BASE_URL.replace(/https?:\/\/(www\.)?/, ''),
-                  path: dataAsJs.path
-                })}
-                <br />
-              </>
-            )}
-            <br />
-          </Label>
-        )}
         <MetaForm
           data={genericData}
           onInputChange={onInputChange}
@@ -269,6 +252,66 @@ const MetaData = ({
           format={titleData?.format?.meta}
           editor={editor}
           node={node}
+        />
+        <br />
+        <MetaForm data={seoData} onInputChange={onInputChange} black />
+        <SlugField
+          black
+          label={t(
+            `metaData/field/${isTemplate ? 'repoSlug' : 'slug'}`,
+            undefined,
+            'slug'
+          )}
+          value={node.data.get('slug')}
+          onChange={onInputChange('slug')}
+          isTemplate={isTemplate}
+          icon={
+            <span style={{ display: 'inline-block', paddingTop: 10 }}>
+              <Checkbox
+                checked={node.data.get('autoSlug')}
+                onChange={onInputChange('autoSlug')}
+                black
+              >
+                <span style={{ verticalAlign: 'top' }}>automatisch</span>
+              </Checkbox>
+            </span>
+          }
+        />
+        <br />
+        {!isTemplate && mdastSchema && mdastSchema.getPath && (
+          <Label>
+            {t('metaData/field/slug/note', {
+              base: FRONTEND_BASE_URL
+                ? FRONTEND_BASE_URL.replace(/https?:\/\/(www\.)?/, '')
+                : '',
+              path: previewPath
+            })}
+            <br />
+            {!!dataAsJs.path && (
+              <>
+                {t('metaData/field/slug/pathNote', {
+                  base: FRONTEND_BASE_URL.replace(/https?:\/\/(www\.)?/, ''),
+                  path: dataAsJs.path
+                })}
+                <br />
+              </>
+            )}
+            <br />
+          </Label>
+        )}
+        <GooglePreview
+          title={
+            node.data.get('seoTitle') ||
+            node.data.get('twitterTitle') ||
+            node.data.get('title')
+          }
+          description={
+            node.data.get('seoDescription') ||
+            node.data.get('twitterDescription') ||
+            node.data.get('description')
+          }
+          publishDate={previewPublishDate}
+          path={dataAsJs.path || previewPath}
         />
         <br />
         <br />
