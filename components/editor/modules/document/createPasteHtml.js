@@ -1,4 +1,3 @@
-import React from 'react'
 import { parse } from '@orbiting/remark-preset'
 
 import * as htmlParse from 'rehype-parse'
@@ -13,6 +12,11 @@ const hasParent = (type, document, key) => {
   if (!parent) return
   return parent.type === type ? true : hasParent(type, document, parent.key)
 }
+
+// Google adds a weird b tag around the paragraphs.
+// We remove it, because the parser doesnt like it.
+const normalise = html =>
+  html.replace(/<b[^>]*font-weight\s*:\s*normal[^>]*>/g, '')
 
 export default (centerModule, figureModule) => (event, change, editor) => {
   const transfer = getEventTransfer(event)
@@ -35,7 +39,7 @@ export default (centerModule, figureModule) => (event, change, editor) => {
     .use(rehype2remark)
     .use(stringify)
   const pastedMd = toMd.processSync(
-    isCenter || isCaption ? transfer.html : transfer.text
+    isCenter || isCaption ? normalise(transfer.html) : transfer.text
   )
   const currentSerializer = isCaption
     ? figureModule.helpers.captionSerializer
