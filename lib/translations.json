@@ -530,7 +530,7 @@
     },
     {
       "key": "metaData/field/facebookPreview/note",
-      "value": "Sichtbare Textlänge varriert nach Bildschirmgrösse. Sobald der Titel zweizeilig wird, wird der Lead meist ausgeblendet. Auf Mobile passiert dies bereits ab 40 bis 50 Zeichen."
+      "value": "Sobald der Titel zweizeilig wird, wird der Lead meist ausgeblendet. Auf Mobile passiert dies bereits ab 40 bis 50 Zeichen. Sichtbare Textlänge varriert nach Bildschirmgrösse. "
     },
     {
       "key": "metaData/field/twitterTitle",
@@ -550,7 +550,7 @@
     },
     {
       "key": "metaData/field/twitterPreview/note",
-      "value": "Sichtbare Textlänge varriert nach Bildschirmgrösse und Ansicht. Auf Mobile wird der Lead meist nicht angezeigt."
+      "value": "Auf Mobile wird der Lead meist nicht angezeigt. Sichtbare Textlänge varriert nach Bildschirmgrösse und Ansicht."
     },
     {
       "key": "metaData/field/seoTitle",
@@ -566,7 +566,7 @@
     },
     {
       "key": "metaData/field/googlePreview/note",
-      "value": "Der Lead wird allenfalls durch ein Textausschnitt ersetzt sofern es der Suchanfrage mehr entspricht. Sofern nicht explizit definiert erscheinen Twitter oder allgemeine Titel und Leads."
+      "value": "Google verwendet einen Textausschnitt statt den Lead, falls es mehr zur Suchanfrage passt. Sofern nicht explizit definiert erscheinen Twitter oder allgemeine Titel und Leads."
     },
     {
       "key": "metaData/field/href",
