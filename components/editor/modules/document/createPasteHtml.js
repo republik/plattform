@@ -1,4 +1,3 @@
-import React from 'react'
 import { parse } from '@orbiting/remark-preset'
 
 import * as htmlParse from 'rehype-parse'
@@ -14,8 +13,8 @@ const hasParent = (type, document, key) => {
   return parent.type === type ? true : hasParent(type, document, parent.key)
 }
 
-const removeBoldTags = html =>
-  html.replace(/<b[^>]*>/g, '').replace(/<\/b>/g, '')
+const normalise = html =>
+  html.replace(/<b[^>]*(?:font-weight:normal)[^>]*>/g, '')
 
 export default (centerModule, figureModule) => (event, change, editor) => {
   const transfer = getEventTransfer(event)
@@ -30,6 +29,8 @@ export default (centerModule, figureModule) => (event, change, editor) => {
   const isCenter = hasParent(centerModule.TYPE, editor.value.document, cursor)
   const isCaption = blockType === 'CAPTION_TEXT'
 
+  console.log(transfer.html)
+
   const toMd = unified()
     .use(htmlParse, {
       emitParseErrors: true,
@@ -38,7 +39,7 @@ export default (centerModule, figureModule) => (event, change, editor) => {
     .use(rehype2remark)
     .use(stringify)
   const pastedMd = toMd.processSync(
-    isCenter || isCaption ? removeBoldTags(transfer.html) : transfer.text
+    isCenter || isCaption ? normalise(transfer.html) : transfer.text
   )
   const currentSerializer = isCaption
     ? figureModule.helpers.captionSerializer
