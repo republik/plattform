@@ -52,7 +52,12 @@ export const ChartContextProvider = props => {
     xParser = x => +x
     xParserFormat = x => x.toString()
     xSort = ascending
-    xFormat = getFormat(props.xNumberFormat || props.numberFormat, props.tLabel)
+    if (type === 'Line') {
+      xFormat = getFormat(
+        props.xNumberFormat || props.numberFormat,
+        props.tLabel
+      )
+    }
   }
 
   const data = values
