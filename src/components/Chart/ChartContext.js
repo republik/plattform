@@ -167,7 +167,7 @@ const defaultProps = {
 }
 
 const propTypes = {
-  groupedData: PropTypes.array,
+  groupedData: PropTypes.array.isRequired,
   height: PropTypes.number,
   innerWidth: PropTypes.number,
   groupPosition: PropTypes.shape({
