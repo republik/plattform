@@ -4,7 +4,14 @@ state: {}
 <div>
   <JSONEditor schema={createLineSchema({
     fields: ['year','gender','at_age'],
-    defaults: {}
+    defaults: {
+      type: 'Line',
+      unit: 'Jahre',
+      numberFormat: '.1f',
+      zero: false,
+      color: 'gender',
+      colorRange: ["#C40046","#F2BF18","#F28502"]
+    }
   })} onChange={setState} />
   <ErrorBoundary
     key={JSON.stringify(state)}

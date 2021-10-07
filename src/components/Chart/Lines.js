@@ -4,7 +4,7 @@ import { css } from 'glamor'
 import { min, max } from 'd3-array'
 import { scalePoint, scaleTime, scaleLinear } from 'd3-scale'
 import { line as lineShape, area as areaShape } from 'd3-shape'
-import { timeYear } from 'd3-time'
+import { timeTuesdays, timeYear } from 'd3-time'
 import { useColorContext } from '../Colors/useColorContext'
 
 import {
@@ -740,95 +740,73 @@ Line.defaultProps = {
 
 export const createSchema = ({ fields, defaults }) => {
   return {
+    title: 'Chart WYSIWYG',
     type: 'object',
-    title: 'LineChartConfig',
-    format: 'grid',
+    format: 'categories',
+    basicCategoryTitle: 'Grundeinstellungen',
+    options: {
+      disable_properties: true,
+      disable_edit_json: true,
+      disable_collapse: true
+    },
     properties: {
       x: {
+        title: 'Spalte für X-Achse',
         type: 'string',
         enum: fields,
         default: Line.defaultProps.x || defaults.x || ''
       },
       color: {
+        title: 'Spalte für Farbe',
         type: 'string',
         enum: fields,
         default: Line.defaultProps.color || defaults.color || ''
       },
       xScale: {
+        title: 'Typ X-Achse',
         type: 'string',
         enum: ['time', 'ordinal', 'linear'],
-        default: Line.defaultProps.xScale
-      },
-      yScale: {
-        type: 'string',
-        enum: ['log', 'linear'],
-        default: Line.defaultProps.yScale
-      },
-      timeParse: {
-        type: 'string',
-        default: Line.defaultProps.timeParse
-      },
-      timeFormat: {
-        type: 'string',
-        default: Line.defaultProps.timeFormat
+        default: defaults.xScale || Line.defaultProps.xScale || ''
       },
       numberFormat: {
+        title: 'Zahlenformat',
         type: 'string',
-        default: Line.defaultProps.numberFormat
+        default: defaults.numberFormat || Line.defaultProps.numberFormat || ''
       },
       unit: {
+        title: 'Beschriftung Y-Achse',
         type: 'string',
-        default: Line.defaultProps.unit
+        default: defaults.unit || Line.defaultProps.unit || ''
       },
-      startValue: {
+      zero: {
+        title: 'Y-Achse bei 0 beginnen',
         type: 'boolean',
         format: 'checkbox',
-        default: Line.defaultProps.startValue
-      },
-      endValue: {
-        type: 'boolean',
-        format: 'checkbox',
-        default: Line.defaultProps.endValue
+        default: defaults.zero || Line.defaultProps.zero || ''
       },
       endLabel: {
+        title: 'Beschriftung am Linienende',
         type: 'boolean',
         format: 'checkbox',
         default: Line.defaultProps.endLabel
       },
-      endDy: {
-        type: 'string',
-        default: Line.defaultProps.endDy || defaults.endDy
-      },
-      column: {
-        type: 'string',
-        enum: fields,
-        default: Line.defaultProps.column || defaults.column || ''
-      },
-      columns: {
-        type: 'integer',
-        default: 1
-      },
-      columnSort: {
-        type: 'string',
-        enum: ['none', 'ascending', 'descending'],
-        default: Line.defaultProps.columnSort || defaults.columnSort || ''
-      },
-      minInnerWidth: {
-        type: 'integer',
-        default: 110
-      },
-      height: {
-        type: 'integer',
-        default: 240
-      },
-      yNice: {
-        type: 'integer',
-        default: 3
-      },
-      sort: {
-        type: 'string',
-        enum: ['none', 'ascending', 'descending'],
-        default: Line.defaultProps.sort || defaults.sort || ''
+      advanced: {
+        type: 'object',
+        title: 'Weitere Einstellungen',
+        format: 'grid',
+        options: {
+          disable_properties: true,
+          disable_edit_json: true,
+          disable_collapse: true
+        },
+        properties: {
+          b: {
+            title: 'Beschriftung am Linienende',
+            type: 'boolean',
+            format: 'checkbox',
+            default: Line.defaultProps.endLabel
+          }
+        }
       }
     }
   }

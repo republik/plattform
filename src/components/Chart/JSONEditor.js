@@ -15,8 +15,9 @@ const Form = ({ schema, onChange }) => {
 
     const onEditorChange = () => {
       const value = editor.getValue()
+      const flatData = { ...value, ...value.advanced }
       if (onChange) {
-        onChange(value)
+        onChange(flatData)
       }
     }
     editor.on('change', onEditorChange)
