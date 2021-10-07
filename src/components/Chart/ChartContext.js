@@ -175,8 +175,8 @@ const propTypes = {
     x: PropTypes.number,
     titleHeight: PropTypes.number
   }),
-  y: PropTypes.func,
-  yAxis: PropTypes.func,
+  y: PropTypes.func.isRequired,
+  yAxis: PropTypes.func.isRequired,
   yLayout: PropTypes.shape({
     yCut: PropTypes.string,
     yCutHeight: PropTypes.number,
