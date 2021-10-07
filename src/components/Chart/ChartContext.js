@@ -187,9 +187,9 @@ const propTypes = {
   paddingRight: PropTypes.number,
   columnHeight: PropTypes.number,
   xScaleDomain: PropTypes.shape({
-    xDomain: PropTypes.array,
-    x: PropTypes.func
-  }),
+    xDomain: PropTypes.array.isRequired,
+    x: PropTypes.func.isRequired
+  }).isRequired,
   xValues: PropTypes.array,
   xTicks: PropTypes.array,
   formatXAxis: PropTypes.func,
