@@ -202,6 +202,8 @@ const propTypes = {
   xAnnotations: PropTypes.array
 }
 
-ChartContextProvider.propTypes = propTypes
+ChartContext.Provider.propTypes = {
+  value: PropTypes.shape(propTypes).isRequired
+}
 
 // TODO: fix padding of inverted y Scale
