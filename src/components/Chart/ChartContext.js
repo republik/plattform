@@ -166,7 +166,7 @@ const defaultProps = {
   }
 }
 
-export const propTypes = {
+const propTypes = {
   groupedData: PropTypes.array,
   height: PropTypes.number,
   innerWidth: PropTypes.number,
