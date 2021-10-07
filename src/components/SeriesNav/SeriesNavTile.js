@@ -12,7 +12,7 @@ import SeriesNavTileContent from './SeriesNavTileContent'
 
 import { localInvertedColors } from '../../theme/colors'
 
-const GRID_MIN_WIDTH = 315
+const GRID_MIN_WIDTH = 300
 const OUTER_CONTAINER_PADDING = PADDING
 
 const styles = {

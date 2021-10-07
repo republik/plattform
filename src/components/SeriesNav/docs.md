@@ -16,6 +16,7 @@
       )
     }
     PayNote={TestPayNote}
+    seriesDescription={true}
     t={t}
   />
 ```
