@@ -5,6 +5,7 @@ import { useColorContext } from '../Colors/useColorContext'
 import { ChartContext } from './ChartContext'
 import LineGroup from './LineGroup'
 import XAxis from './XAxis'
+import { defaultProps } from './ChartContext'
 
 import {
   sansSerifMedium12 as VALUE_FONT,
@@ -265,45 +266,11 @@ LineChart.propTypes = propTypes
 
 export const Line = props => <LineChart {...props} />
 
-Line.defaultProps = {
-  x: 'year',
-  xScale: 'time',
-  yScale: 'linear',
-  timeParse: '%Y',
-  timeFormat: '%Y',
-  numberFormat: '.0%',
-  zero: true,
-  unit: '',
-  startValue: false,
-  endValue: true,
-  endLabel: true,
-  endDy: '0.3em',
-  minInnerWidth: 110,
-  columns: 1,
-  height: 240,
-  yNice: 3
-}
+Line.defaultProps = defaultProps.Line
 
 export const Slope = props => <LineChart {...props} />
 
-Slope.defaultProps = {
-  x: 'year',
-  xScale: 'ordinal',
-  yScale: 'linear',
-  timeParse: '%Y',
-  timeFormat: '%Y',
-  numberFormat: '.0%',
-  zero: true,
-  unit: '',
-  startValue: true,
-  endValue: true,
-  endLabel: false,
-  endDy: '0.3em',
-  minInnerWidth: 90,
-  columns: 2,
-  height: 240,
-  yNice: 3
-}
+Slope.defaultProps = defaultProps.Slope
 
 // Additional Info for Docs
 // - Slope just has different default props

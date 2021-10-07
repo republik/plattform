@@ -110,7 +110,7 @@ export const ChartContextProvider = props => {
   )
 }
 
-const defaultProps = {
+export const defaultProps = {
   TimeBar: {
     x: 'year',
     xScale: 'time',
