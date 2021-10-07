@@ -14,8 +14,8 @@ import {
 } from './Layout.constants'
 
 import {
-  sansSerifRegular12 as VALUE_FONT,
-  sansSerifMedium12 as LABEL_FONT,
+  sansSerifRegular12 as LABEL_FONT,
+  sansSerifMedium12 as VALUE_FONT,
   sansSerifMedium14,
   sansSerifMedium22
 } from '../Typography/styles'
@@ -25,7 +25,7 @@ const styles = {
     ...sansSerifMedium14
   }),
   axisLabel: css({
-    ...VALUE_FONT
+    ...LABEL_FONT
   }),
   axisYLine: css({
     strokeWidth: '1px',
@@ -43,10 +43,10 @@ const styles = {
     strokeLinejoin: 'round'
   }),
   annotationText: css({
-    ...VALUE_FONT
+    ...LABEL_FONT
   }),
   annotationValue: css({
-    ...LABEL_FONT
+    ...VALUE_FONT
   }),
   value: css({
     ...VALUE_FONT
@@ -58,7 +58,7 @@ const styles = {
     ...LABEL_FONT
   }),
   bandLegend: css({
-    ...VALUE_FONT,
+    ...LABEL_FONT,
     whiteSpace: 'nowrap'
   }),
   bandBar: css({
