@@ -3,7 +3,7 @@ import { css } from 'glamor'
 import { sansSerifRegular12 as LABEL_FONT } from '../Typography/styles'
 import { useColorContext } from '../Colors/useColorContext'
 import { getBaselines } from './TimeBars.utils'
-import { isLastItem } from './utils'
+import { isLastItem, subsup } from './utils'
 
 import { X_UNIT_PADDING, X_TICK_HEIGHT } from './Layout.constants'
 import { createTextGauger } from '../../lib/textGauger'
@@ -103,7 +103,7 @@ const XAxis = ({
           {...styles.axisLabel}
           {...colorScheme.set('fill', 'text')}
         >
-          {xUnit}
+          {subsup.svg(xUnit)}
         </text>
       )}
     </g>
