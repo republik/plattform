@@ -170,7 +170,6 @@ const LineChart = props => {
                 width={chartContext.innerWidth}
                 paddingRight={paddingRight}
                 xAxis={xAxis}
-                xAxisPos={chartContext.height - PADDING_TOP}
               />
             </g>
           )

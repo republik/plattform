@@ -137,7 +137,9 @@ const LineGroup = props => {
           {yCut}
         </text>
       )}
-      <g transform={`translate(0,${xAxisPos})`}>{xAxis}</g>
+      <g transform={`translate(0,${height + (!!yCut && yCutHeight)})`}>
+        {xAxis}
+      </g>
       {linesWithLayout.map(
         (
           {
