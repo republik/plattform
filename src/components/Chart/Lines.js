@@ -121,6 +121,8 @@ const LineChart = props => {
     <XAxis
       xTicks={chartContext.xTicks}
       width={chartContext.innerWidth}
+      paddingLeft={chartContext.paddingLeft}
+      paddingRight={chartContext.paddingRight}
       height={innerHeight}
       xValues={chartContext.xValues}
       x={chartContext.xScaleDomain.x}

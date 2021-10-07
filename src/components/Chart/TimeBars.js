@@ -86,7 +86,6 @@ const TimeBarChart = props => {
       x={chartContext.xScaleDomain.x}
       xDomain={chartContext.xScaleDomain.xDomain}
       xUnit={xUnit}
-      strong={chartContext.y.domain()[0] !== 0}
       yScaleInvert={yScaleInvert}
       format={chartContext.formatXAxis}
       type={props.type}

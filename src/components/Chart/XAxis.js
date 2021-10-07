@@ -6,24 +6,29 @@ import { getBaselines } from './TimeBars.utils'
 import { isLastItem } from './utils'
 
 import { X_UNIT_PADDING, X_TICK_HEIGHT } from './Layout.constants'
+import { createTextGauger } from '../../lib/textGauger'
 
 const styles = {
-  axisLabel: css({
-    ...LABEL_FONT
-  }),
+  axisLabel: css(LABEL_FONT),
   axisXLine: css({
     strokeWidth: '1px',
     shapeRendering: 'crispEdges'
   })
 }
 
+const tickGauger = createTextGauger(LABEL_FONT, {
+  dimension: 'width',
+  html: true
+})
+
 const XAxis = ({
   xTicks,
   width,
+  paddingRight = 0,
+  paddingLeft = 0,
   x,
   xDomain,
   format,
-  strong,
   xUnit,
   yScaleInvert,
   type
@@ -31,6 +36,10 @@ const XAxis = ({
   const [colorScheme] = useColorContext()
   const baseLines = type === 'TimeBar' && getBaselines(xDomain, x, width)
   const tickPosition = type === 'TimeBar' ? Math.round(x.bandwidth() / 2) : 0
+
+  const xUnitWidth = xUnit ? tickGauger(xUnit) : 0
+  let currentTextAnchor
+  let currentX
 
   return (
     <g data-axis>
@@ -41,23 +50,35 @@ const XAxis = ({
             x1={line.x1}
             x2={line.x2}
             {...styles.axisXLine}
-            {...(strong
-              ? colorScheme.set('stroke', 'text')
-              : colorScheme.set('stroke', 'divider'))}
+            {...colorScheme.set('stroke', 'divider')}
             strokeDasharray={line.gap ? '2 2' : 'none'}
           />
         ))}
       {xTicks.map((tick, i) => {
-        let textAnchor = 'middle'
+        const tickText = format(tick)
+
+        currentX = x(tick) + tickPosition
+        currentTextAnchor = 'middle'
         if (isLastItem(xTicks, i)) {
-          textAnchor = 'end'
+          const tickTextWidth = Math.max(tickGauger(tickText), xUnitWidth)
+          if (currentX + tickTextWidth / 2 > width + paddingRight) {
+            currentTextAnchor = 'end'
+          }
         }
         if (i === 0) {
-          textAnchor = 'start'
+          const tickTextWidth = tickGauger(tickText)
+          if (paddingLeft + currentX - tickTextWidth / 2 < 0) {
+            currentTextAnchor = 'start'
+          }
         }
+        const lineAlignmentCorrection =
+          currentX === 0 ? 0.5 : currentX === width ? -0.5 : 0
+
         return (
-          <g key={tick} transform={`translate(${x(tick) + tickPosition}, 0)`}>
+          <g key={tick} transform={`translate(${currentX}, 0)`}>
             <line
+              x1={lineAlignmentCorrection}
+              x2={lineAlignmentCorrection}
               {...styles.axisXLine}
               {...colorScheme.set('stroke', 'text')}
               y2={yScaleInvert ? X_TICK_HEIGHT - 6 : X_TICK_HEIGHT}
@@ -67,22 +88,18 @@ const XAxis = ({
               {...colorScheme.set('fill', 'text')}
               y={X_TICK_HEIGHT + 5}
               dy={yScaleInvert ? '-1.1em' : '0.6em'}
-              textAnchor={type === 'TimeBar' ? 'middle' : textAnchor}
+              textAnchor={currentTextAnchor}
             >
-              {format(tick)}
+              {tickText}
             </text>
           </g>
         )
       })}
-      {xUnit && (
+      {!!xTicks.length && xUnit && (
         <text
-          x={
-            type === 'TimeBar'
-              ? x(xTicks[xTicks.length - 1]) + tickPosition
-              : width
-          }
+          x={currentX}
           y={yScaleInvert ? -20 : X_UNIT_PADDING}
-          textAnchor={type === 'TimeBar' ? 'middle' : 'end'}
+          textAnchor={currentTextAnchor}
           {...styles.axisLabel}
           {...colorScheme.set('fill', 'text')}
         >
