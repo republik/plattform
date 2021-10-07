@@ -983,7 +983,7 @@ age,date,value
     "reality": "#D02324"
   },
   "unit": "Franken",
-  "xUnit": ". Perzentil",
+  "xUnit": "Perzentil",
   "yScaleInvert": true,
   "xAnnotations": [
     {

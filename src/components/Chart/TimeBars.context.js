@@ -32,16 +32,20 @@ export const timeBarsProcesser = ({
     props.columnFilter
   ).map(processSegments)
 
+  const paddingTop = props.yScaleInvert
+    ? PADDING_TOP + PADDING_TOP / 2
+    : PADDING_TOP
+
   const columnTitleHeight = props.column ? COLUMN_TITLE_HEIGHT : 0
 
   const columnHeight =
     props.height +
     columnTitleHeight +
-    (props.mini ? 0 : PADDING_TOP + AXIS_BOTTOM_HEIGHT)
+    (props.mini ? 0 : paddingTop + AXIS_BOTTOM_HEIGHT)
 
   const barRange = props.yScaleInvert
-    ? [AXIS_BOTTOM_HEIGHT + columnTitleHeight, columnHeight - PADDING_TOP]
-    : [columnHeight - PADDING_TOP, AXIS_BOTTOM_HEIGHT + columnTitleHeight]
+    ? [paddingTop + columnTitleHeight, columnHeight - AXIS_BOTTOM_HEIGHT]
+    : [columnHeight - paddingTop, AXIS_BOTTOM_HEIGHT + columnTitleHeight]
 
   const { height, innerWidth, gx, gy } = getColumnLayout(
     props.columns,

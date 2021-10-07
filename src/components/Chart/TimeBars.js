@@ -120,7 +120,7 @@ const TimeBarChart = props => {
                 xAxis={xAxis}
                 xAxisPos={
                   yScaleInvert
-                    ? PADDING_TOP + groupPosition.titleHeight
+                    ? PADDING_TOP + PADDING_TOP / 2 + groupPosition.titleHeight
                     : innerHeight + PADDING_TOP + groupPosition.titleHeight
                 }
                 tLabel={tLabel}

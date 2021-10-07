@@ -76,9 +76,13 @@ const XAxis = ({
       })}
       {xUnit && (
         <text
-          x={width}
-          y={yScaleInvert ? -(X_UNIT_PADDING / 2) : X_UNIT_PADDING}
-          textAnchor='end'
+          x={
+            type === 'TimeBar'
+              ? x(xTicks[xTicks.length - 1]) + tickPosition
+              : width
+          }
+          y={yScaleInvert ? -20 : X_UNIT_PADDING}
+          textAnchor={type === 'TimeBar' ? 'middle' : 'end'}
           {...styles.axisLabel}
           {...colorScheme.set('fill', 'text')}
         >
