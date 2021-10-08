@@ -140,7 +140,7 @@ function SeriesNav({
           {inlineAfterDescription}
         </Center>
       ) : showSeriesDescripion ? (
-        <Editorial.P {...styles.description}>{series.description}</Editorial.P>
+        <Editorial.P style={{padding: '0px 15px'}}>{series.description}</Editorial.P>
       ) : null}
 
       <TeaserCarousel grid={!inline} isSeriesNav>
