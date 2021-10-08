@@ -58,6 +58,7 @@ module.exports = (server) => {
         webp: !!webp,
         cacheTags: ['frontend'],
       },
+      req,
     })
   })
 }

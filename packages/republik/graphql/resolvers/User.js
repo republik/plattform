@@ -154,12 +154,9 @@ module.exports = {
         ...querystring.parse(query),
         resize,
         bw: bw || undefined,
+        format: 'auto',
       })
-      const webp =
-        args && args.webp !== undefined
-          ? args.webp
-          : req && req.get('Accept').indexOf('image/webp') > -1
-      return `${url}${webp ? '.webp' : ''}?${newQuery}`
+      return `${url}?${newQuery}`
     }
     return null
   },

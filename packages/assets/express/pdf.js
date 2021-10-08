@@ -36,6 +36,7 @@ module.exports = (server) => {
         ...req.query,
         cacheTags: ['pdf-proxy'],
       },
+      req,
     })
   })
 }
