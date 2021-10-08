@@ -54,11 +54,11 @@ function SeriesNav({
   seriesDescription
 }) {
   const showSeriesDescripion =
-    seriesDescription !== undefined
-      ? seriesDescription
-      : inline
+    seriesDescription ?? (
+      inline
       ? true
       : undefined
+    )
 
   const currentTile =
     repoId &&
