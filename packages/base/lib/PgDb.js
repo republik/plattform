@@ -1,6 +1,8 @@
 const { PgDb } = require('pogi')
 const { timeParse } = require('d3-time-format')
 
+PgDb.prototype.queryInBatches = require('./PgDb/queryInBatches')
+
 const parser = timeParse('%Y-%m-%d %H %Z')
 
 const connect = ({ applicationName = 'backends' } = {}) => {
