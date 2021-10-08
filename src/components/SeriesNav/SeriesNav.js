@@ -53,12 +53,7 @@ function SeriesNav({
   aboveTheFold,
   seriesDescription
 }) {
-  const showSeriesDescripion =
-    seriesDescription ?? (
-      inline
-      ? true
-      : undefined
-    )
+  const showSeriesDescripion = seriesDescription ?? (inline ? true : undefined)
 
   const currentTile =
     repoId &&
@@ -140,7 +135,9 @@ function SeriesNav({
           {inlineAfterDescription}
         </Center>
       ) : showSeriesDescripion ? (
-        <Editorial.P style={{padding: '0px 15px'}}>{series.description}</Editorial.P>
+        <Editorial.P style={{ padding: '0px 15px' }}>
+          {series.description}
+        </Editorial.P>
       ) : null}
 
       <TeaserCarousel grid={!inline} isSeriesNav>
