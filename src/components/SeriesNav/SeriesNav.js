@@ -28,6 +28,9 @@ const styles = {
     padding: 0,
     width: '100%'
   }),
+  description: css({
+    padding: '0px 15px'
+  }),
   plainlink: css({
     textDecoration: 'none',
     color: 'inherit'
@@ -47,8 +50,11 @@ function SeriesNav({
   context,
   PayNote,
   onEpisodeClick,
-  aboveTheFold
+  aboveTheFold,
+  seriesDescription
 }) {
+  const showSeriesDescripion = seriesDescription ?? (inline ? true : undefined)
+
   const currentTile =
     repoId &&
     series.episodes.find(episode => episode.document?.repoId === repoId)
@@ -110,22 +116,28 @@ function SeriesNav({
                 series.title
               )}
             </InfoBoxTitle>
-            <InfoBoxText>
-              {series.description}
-              {titlePath &&
-                t.elements('styleguide/SeriesNav/seriesoverview/link', {
-                  link: (
-                    <Link href={titlePath} passHref>
-                      <Editorial.A>
-                        {t('styleguide/SeriesNav/seriesoverview')}
-                      </Editorial.A>
-                    </Link>
-                  )
-                })}
-            </InfoBoxText>
+            {showSeriesDescripion && (
+              <InfoBoxText>
+                {series.description}
+                {titlePath &&
+                  t.elements('styleguide/SeriesNav/seriesoverview/link', {
+                    link: (
+                      <Link href={titlePath} passHref>
+                        <Editorial.A>
+                          {t('styleguide/SeriesNav/seriesoverview')}
+                        </Editorial.A>
+                      </Link>
+                    )
+                  })}
+              </InfoBoxText>
+            )}
           </InfoBox>
           {inlineAfterDescription}
         </Center>
+      ) : showSeriesDescripion ? (
+        <Editorial.P style={{ padding: '0px 15px' }}>
+          {series.description}
+        </Editorial.P>
       ) : null}
 
       <TeaserCarousel grid={!inline} isSeriesNav>
@@ -173,7 +185,8 @@ SeriesNav.propTypes = {
   inline: PropTypes.bool,
   height: PropTypes.number,
   onEpisodeClick: PropTypes.func,
-  t: PropTypes.func.isRequired
+  t: PropTypes.func.isRequired,
+  seriesDescription: PropTypes.bool
 }
 
 export default SeriesNav
