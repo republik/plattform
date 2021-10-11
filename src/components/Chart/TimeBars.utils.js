@@ -100,15 +100,16 @@ export const insertXDomainGaps = (
 }
 
 export const getAnnotationsXValues = (annotations, xNormalizer) =>
-  annotations &&
   annotations
-    .reduce(
-      (years, annotation) =>
-        years.concat(annotation.x, annotation.x1, annotation.x2),
-      []
-    )
-    .filter(Boolean)
-    .map(xNormalizer) // ensure format
+    ? annotations
+        .reduce(
+          (years, annotation) =>
+            years.concat(annotation.x, annotation.x1, annotation.x2),
+          []
+        )
+        .filter(Boolean)
+        .map(xNormalizer) // ensure format
+    : []
 
 const sumSegments = (sum, segment) => sum + segment.value
 

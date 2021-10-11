@@ -45,7 +45,6 @@ export const ChartContextProvider = props => {
   if (xScale === 'time') {
     xParser = timeParse(mergedProps.timeParse)
     xParserFormat = timeFormat(mergedProps.timeParse)
-    xNormalizer = d => xParserFormat(xParser(d))
     xFormat = timeFormat(mergedProps.timeFormat || mergedProps.timeParse)
     xSort = ascending
   } else if (xScale === 'linear') {
@@ -59,11 +58,14 @@ export const ChartContextProvider = props => {
       )
     }
   }
+  // time bar always uses a band scale and needs strings on the x axis
+  xNormalizer =
+    type === 'TimeBar' ? d => xParserFormat(xParser(d)).toString() : xParser
 
   const data = values
     .filter(getDataFilter(mergedProps.filter))
     .filter(hasValues)
-    .map(normalizeData(mergedProps.x, type === 'Line' ? xParser : xNormalizer))
+    .map(normalizeData(mergedProps.x, xNormalizer))
     .map(categorizeData(mergedProps.category))
 
   const colorAccessor = mergedProps.color
@@ -76,15 +78,10 @@ export const ChartContextProvider = props => {
     .filter(Boolean)
     .filter(deduplicate)
 
-  const xTicksFromProps = props.xTicks && props.xTicks.map(xParser)
-
   const xValuesUnformatted = data
     .map(xAccessor)
-    .concat(
-      type === 'TimeBar'
-        ? getAnnotationsXValues(xAnnotations, xNormalizer)
-        : xTicksFromProps || []
-    )
+    .concat(props.xTicks ? props.xTicks.map(xNormalizer) : [])
+    .concat(getAnnotationsXValues(xAnnotations, xNormalizer))
     .filter(deduplicate)
 
   const processedData = dataProcesser[type]({
