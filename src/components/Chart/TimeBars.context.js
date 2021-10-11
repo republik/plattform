@@ -94,9 +94,9 @@ export const timeBarsProcesser = ({
     x
   )
 
-  const xScaleDomain = { xDomain, x: x.domain(xDomain).round(true) }
+  x.domain(xDomain).round(true)
 
-  const xTicks = getXTicks(props.xTicks, xValues, xNormalizer, xScaleDomain.x)
+  const xTicks = getXTicks(props.xTicks, xValues, xNormalizer, x)
 
   return {
     groupedData,
@@ -104,7 +104,8 @@ export const timeBarsProcesser = ({
     innerWidth,
     groupPosition: { y: gy, x: gx, titleHeight: columnTitleHeight },
     y,
-    xScaleDomain,
+    x,
+    xDomain,
     xValues,
     xTicks
   }

@@ -83,8 +83,8 @@ const TimeBarChart = props => {
       width={chartContext.innerWidth}
       height={chartContext.height}
       xValues={chartContext.xValues}
-      x={chartContext.xScaleDomain.x}
-      xDomain={chartContext.xScaleDomain.xDomain}
+      x={chartContext.x}
+      xDomain={chartContext.xDomain}
       xUnit={xUnit}
       yScaleInvert={yScaleInvert}
       format={chartContext.formatXAxis}
@@ -111,7 +111,7 @@ const TimeBarChart = props => {
                 xAnnotations={xAnnotations}
                 yAnnotations={yAnnotations}
                 yTicks={yTicks}
-                x={chartContext.xScaleDomain.x}
+                x={chartContext.x}
                 y={chartContext.y}
                 xNormalizer={chartContext.xNormalizer}
                 yAxis={yAxis}

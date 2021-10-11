@@ -125,8 +125,8 @@ const LineChart = props => {
       paddingRight={chartContext.paddingRight}
       height={innerHeight}
       xValues={chartContext.xValues}
-      x={chartContext.xScaleDomain.x}
-      xDomain={chartContext.xScaleDomain.xDomain}
+      x={chartContext.x}
+      xDomain={chartContext.xDomain}
       xUnit={props.xUnit}
       yScaleInvert={yScaleInvert}
       format={chartContext.formatXAxis}
@@ -155,7 +155,7 @@ const LineChart = props => {
                 mini={mini}
                 title={key}
                 lines={lines}
-                x={chartContext.xScaleDomain.x}
+                x={chartContext.x}
                 xTicks={chartContext.xTicks}
                 xAccessor={xAccessor}
                 xFormat={chartContext.formatXAxis}
