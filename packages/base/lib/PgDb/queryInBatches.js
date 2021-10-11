@@ -14,7 +14,6 @@ module.exports = async function queryInBatches(
     throw new Error('handleFn argument is not a function')
   }
 
-  // @TODO: Throw error if query is faulty.
   const stream = await this.queryAsStream(sql, params, options)
 
   let count = 0
