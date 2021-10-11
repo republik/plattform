@@ -992,7 +992,7 @@ age,date,value
       "label": "Schätzung",
       "showValue": false,
       "position": "bottom",
-      textAlignment: "right",
+      "textAlignment": "right"
     },
     {
       "x": "74",
@@ -1001,7 +1001,6 @@ age,date,value
       "showValue": false,
       "position": "bottom",
       "textAlignment": "right"
-
     },
     {
       "x1": "0",
@@ -1011,7 +1010,6 @@ age,date,value
       "showValue": true,
       "unit": "Franken",
       "position": "bottom",
-      "ghost": true,
       "leftLabel": true
     },
   ]
