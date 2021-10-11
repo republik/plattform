@@ -10,7 +10,7 @@ const getYears = async (pgdb) => {
   const maxYear = new Date().getFullYear()
   const years = []
   for (let year = minYear; year <= maxYear; year++) {
-    years.push(year.toString())
+    year && years.push(year.toString())
   }
   return years
 }

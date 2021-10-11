@@ -31,10 +31,10 @@
   },
   "scripts": {
     "dev": "NODE_ENV=development nodemon $NODE_DEBUG_OPTION --trace-warnings index.js",
-    "devScheduler": "NODE_ENV=development nodemon $NODE_DEBUG_OPTION --trace-warnings scheduler.js",
-    "inspect": "NODE_DEBUG_OPTION=--inspect yarn run dev",
+    "dev:scheduler": "NODE_ENV=development nodemon $NODE_DEBUG_OPTION --trace-warnings scheduler.js",
+    "inspect": "NODE_DEBUG_OPTION=--inspect yarn dev",
     "start": "node index.js",
-    "startScheduler": "node scheduler.js"
+    "start:scheduler": "node scheduler.js"
   },
   "devDependencies": {
     "apollo-fetch": "^0.7.0",
