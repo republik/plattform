@@ -175,14 +175,30 @@ const axisPropType = PropTypes.shape({
 
 const propTypes = {
   groupedData: PropTypes.array.isRequired,
-  height: PropTypes.number,
-  innerWidth: PropTypes.number,
   groupPosition: PropTypes.shape({
     y: PropTypes.func.isRequired,
     x: PropTypes.func.isRequired,
-    titleHeight: PropTypes.number
+    titleHeight: PropTypes.number // timebar only
   }).isRequired,
+  height: PropTypes.number.isRequired,
+  innerWidth: PropTypes.number.isRequired,
+  x: PropTypes.func.isRequired,
+  xAxis: axisPropType.isRequired,
+  xDomain: PropTypes.array.isRequired,
   y: PropTypes.func.isRequired,
+  // inconsistent
+  colorValues: PropTypes.array,
+  colorLegend: PropTypes.bool,
+  colorLegendValues: PropTypes.array,
+  // only used by timebar
+  colorAccessor: PropTypes.func,
+  xNormalizer: PropTypes.func,
+  // timebar only
+  xValues: PropTypes.array,
+  // line only
+  paddingLeft: PropTypes.number,
+  paddingRight: PropTypes.number,
+  columnHeight: PropTypes.number,
   yAxis: axisPropType,
   yLayout: PropTypes.shape({
     yCut: PropTypes.string,
@@ -190,19 +206,6 @@ const propTypes = {
     yNeedsConnectors: PropTypes.bool,
     yConnectorSize: PropTypes.number
   }),
-  paddingLeft: PropTypes.number,
-  paddingRight: PropTypes.number,
-  columnHeight: PropTypes.number,
-  x: PropTypes.func.isRequired,
-  xAxis: axisPropType.isRequired,
-  xDomain: PropTypes.array.isRequired,
-  xValues: PropTypes.array,
-  xTicks: PropTypes.array,
-  xNormalizer: PropTypes.func,
-  colorAccessor: PropTypes.func,
-  colorValues: PropTypes.array,
-  colorLegend: PropTypes.bool,
-  colorLegendValues: PropTypes.array,
   yAnnotations: PropTypes.array,
   xAnnotations: PropTypes.array
 }
