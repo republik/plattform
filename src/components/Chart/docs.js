@@ -148,7 +148,8 @@ const chartPages = charts.map(key => {
     return null
   }
 
-  return markdown`### ${key}
+  return (
+    <div key={key}>{markdown`### ${key}
 
   ${label}
 
@@ -161,7 +162,8 @@ const chartPages = charts.map(key => {
     />
   )}
 
-  `
+  `}</div>
+  )
 })
 
 const allProps = markdown`
