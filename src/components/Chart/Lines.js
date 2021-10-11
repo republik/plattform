@@ -117,9 +117,9 @@ const LineChart = props => {
     )
     .filter(Boolean)
 
-  const xAxis = (
+  const xAxisElement = (
     <XAxis
-      xTicks={chartContext.xTicks}
+      xTicks={chartContext.xAxis.ticks}
       width={chartContext.innerWidth}
       paddingLeft={chartContext.paddingLeft}
       paddingRight={chartContext.paddingRight}
@@ -129,7 +129,7 @@ const LineChart = props => {
       xDomain={chartContext.xDomain}
       xUnit={props.xUnit}
       yScaleInvert={yScaleInvert}
-      format={chartContext.formatXAxis}
+      format={chartContext.xAxis.axisFormat}
       type={props.type}
     />
   )
@@ -156,9 +156,7 @@ const LineChart = props => {
                 title={key}
                 lines={lines}
                 x={chartContext.x}
-                xTicks={chartContext.xTicks}
                 xAccessor={xAccessor}
-                xFormat={chartContext.formatXAxis}
                 y={chartContext.y}
                 yTicks={props.yTicks || chartContext.yAxis.ticks}
                 yAxisFormat={chartContext.yAxis.axisFormat}
@@ -172,7 +170,7 @@ const LineChart = props => {
                 endDy={endDy}
                 width={chartContext.innerWidth}
                 paddingRight={paddingRight}
-                xAxis={xAxis}
+                xAxisElement={xAxisElement}
               />
             </g>
           )

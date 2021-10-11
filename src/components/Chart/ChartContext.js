@@ -90,6 +90,7 @@ export const ChartContextProvider = props => {
     colorAccessor,
     colorValues,
     xValuesUnformatted,
+    xFormat,
     xParser,
     xParserFormat,
     xSort,
@@ -100,8 +101,6 @@ export const ChartContextProvider = props => {
     ...processedData,
     colorAccessor,
     colorValues,
-    formatXAxis:
-      mergedProps.type === 'TimeBar' ? x => xFormat(xParser(x)) : xFormat,
     xNormalizer
   }
 
@@ -168,6 +167,12 @@ export const defaultProps = {
   }
 }
 
+const axisPropType = PropTypes.shape({
+  ticks: PropTypes.array.isRequired,
+  format: PropTypes.func.isRequired,
+  axisFormat: PropTypes.func.isRequired
+})
+
 const propTypes = {
   groupedData: PropTypes.array.isRequired,
   height: PropTypes.number,
@@ -178,11 +183,7 @@ const propTypes = {
     titleHeight: PropTypes.number
   }).isRequired,
   y: PropTypes.func.isRequired,
-  yAxis: PropTypes.shape({
-    ticks: PropTypes.array.isRequired,
-    format: PropTypes.func.isRequired,
-    axisFormat: PropTypes.func.isRequired
-  }),
+  yAxis: axisPropType,
   yLayout: PropTypes.shape({
     yCut: PropTypes.string,
     yCutHeight: PropTypes.number,
@@ -193,10 +194,10 @@ const propTypes = {
   paddingRight: PropTypes.number,
   columnHeight: PropTypes.number,
   x: PropTypes.func.isRequired,
+  xAxis: axisPropType.isRequired,
   xDomain: PropTypes.array.isRequired,
   xValues: PropTypes.array,
   xTicks: PropTypes.array,
-  formatXAxis: PropTypes.func,
   xNormalizer: PropTypes.func,
   colorAccessor: PropTypes.func,
   colorValues: PropTypes.array,

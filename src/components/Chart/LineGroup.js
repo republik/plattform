@@ -92,7 +92,7 @@ const LineGroup = props => {
     band,
     endDy,
     xAccessor,
-    xAxis
+    xAxisElement
   } = props
   const [colorScheme] = useColorContext()
 
@@ -137,7 +137,7 @@ const LineGroup = props => {
         </text>
       )}
       <g transform={`translate(0,${height + (!!yCut && yCutHeight)})`}>
-        {xAxis}
+        {xAxisElement}
       </g>
       {linesWithLayout.map(
         (
@@ -414,9 +414,7 @@ LineGroup.propTypes = {
     })
   ),
   x: PropTypes.func.isRequired,
-  xTicks: PropTypes.array.isRequired,
   xAccessor: PropTypes.func.isRequired,
-  xFormat: PropTypes.func.isRequired,
   endDy: PropTypes.string.isRequired,
   width: PropTypes.number.isRequired,
   band: PropTypes.string

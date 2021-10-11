@@ -21,6 +21,7 @@ export const timeBarsProcesser = ({
   props,
   data,
   xValuesUnformatted,
+  xFormat,
   xParser,
   xParserFormat,
   xSort,
@@ -107,6 +108,10 @@ export const timeBarsProcesser = ({
     x,
     xDomain,
     xValues,
-    xTicks
+    xAxis: {
+      ticks: xTicks,
+      format: xFormat,
+      axisFormat: x => xFormat(xParser(x))
+    }
   }
 }

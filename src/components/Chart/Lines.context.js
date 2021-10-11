@@ -42,6 +42,7 @@ export const linesProcesser = ({
   colorAccessor,
   colorValues,
   xValuesUnformatted,
+  xFormat,
   xParser
 }) => {
   let groupedData = groupInColumns(data, props.column, props.columnFilter)
@@ -339,8 +340,12 @@ export const linesProcesser = ({
     y,
     x,
     xDomain,
-    xTicks,
     yAxis,
+    xAxis: {
+      ticks: xTicks,
+      format: xFormat,
+      axisFormat: xFormat
+    },
     yLayout: { yCut, yCutHeight, yNeedsConnectors, yConnectorSize },
     paddingLeft,
     paddingRight,
