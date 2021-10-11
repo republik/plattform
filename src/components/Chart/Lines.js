@@ -15,7 +15,7 @@ import {
   sansSerifMedium22
 } from '../Typography/styles'
 
-import { X_UNIT_PADDING, PADDING_TOP } from './Layout.constants'
+import { X_UNIT_PADDING } from './Layout.constants'
 
 import { yScales } from './Lines.utils'
 

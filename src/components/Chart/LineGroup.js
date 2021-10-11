@@ -92,7 +92,6 @@ const LineGroup = props => {
     band,
     endDy,
     xAccessor,
-    xAxisPos,
     xAxis
   } = props
   const [colorScheme] = useColorContext()
