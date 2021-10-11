@@ -176,12 +176,16 @@ const propTypes = {
   height: PropTypes.number,
   innerWidth: PropTypes.number,
   groupPosition: PropTypes.shape({
-    y: PropTypes.number,
-    x: PropTypes.number,
+    y: PropTypes.func.isRequired,
+    x: PropTypes.func.isRequired,
     titleHeight: PropTypes.number
-  }),
+  }).isRequired,
   y: PropTypes.func.isRequired,
-  yAxis: PropTypes.func.isRequired,
+  yAxis: PropTypes.shape({
+    ticks: PropTypes.array.isRequired,
+    format: PropTypes.func.isRequired,
+    axisFormat: PropTypes.func.isRequired
+  }),
   yLayout: PropTypes.shape({
     yCut: PropTypes.string,
     yCutHeight: PropTypes.number,
