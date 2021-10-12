@@ -43,7 +43,7 @@ const XAxis = ({
 
   return (
     <g data-axis>
-      {type === 'TimeBar' &&
+      {baseLines &&
         baseLines.map((line, i) => (
           <line
             key={i}
