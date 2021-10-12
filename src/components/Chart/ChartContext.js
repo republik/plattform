@@ -220,8 +220,15 @@ const propTypes = {
   xAxis: axisPropType.isRequired,
   xDomain: PropTypes.array.isRequired,
   y: PropTypes.func.isRequired,
+  color: PropTypes.func.isRequired,
+  colorLegendValues: PropTypes.arrayOf(
+    PropTypes.shape({
+      color: PropTypes.string.isRequired,
+      label: PropTypes.string.isRequired
+    })
+  ).isRequired,
+  // lines only
   colorLegend: PropTypes.bool,
-  colorLegendValues: PropTypes.array,
   // only used by timebar
   colorAccessor: PropTypes.func,
   xNormalizer: PropTypes.func,
