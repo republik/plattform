@@ -146,7 +146,17 @@ type Candidacy {
 
   yearOfBirth: Int
   city: String
+  postalCodeGeo: PostalCodeGeo
   credential: Credential
+  isIncumbent: Boolean
+}
+
+type PostalCodeGeo {
+  countryName: String
+  countryCode: String
+  postalCode: String
+  lat: Float
+  lon: Float
 }
 
 type ElectionTurnout {

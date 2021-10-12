@@ -46,6 +46,11 @@ const getCandidacies = async (election, pgdb) => {
     discussionId: election.discussionId,
   })
 
+  /* add sorting (probably):
+    - first: all previous GRs
+    - in general alphabetically 
+  */
+
   return candidacies.map((candidacy) => ({
     ...candidacy,
     user: usersWithAddresses.find((user) => user.id === candidacy.userId),
