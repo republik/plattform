@@ -184,6 +184,8 @@ export const defaultProps = {
 }
 
 const axisPropType = PropTypes.shape({
+  scale: PropTypes.func.isRequired,
+  domain: PropTypes.array.isRequired,
   ticks: PropTypes.array.isRequired,
   format: PropTypes.func.isRequired,
   axisFormat: PropTypes.func.isRequired
@@ -198,10 +200,8 @@ const propTypes = {
   }).isRequired,
   height: PropTypes.number.isRequired,
   innerWidth: PropTypes.number.isRequired,
-  x: PropTypes.func.isRequired,
   xAxis: axisPropType.isRequired,
-  xDomain: PropTypes.array.isRequired,
-  y: PropTypes.func.isRequired,
+  yAxis: axisPropType.isRequired,
   color: PropTypes.func.isRequired,
   colorAccessor: PropTypes.func.isRequired, // only used by timebar
   colorLegendValues: PropTypes.arrayOf(
@@ -215,7 +215,6 @@ const propTypes = {
   paddingLeft: PropTypes.number,
   paddingRight: PropTypes.number,
   columnHeight: PropTypes.number,
-  yAxis: axisPropType,
   yLayout: PropTypes.shape({
     yCut: PropTypes.string,
     yCutHeight: PropTypes.number,

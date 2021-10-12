@@ -301,11 +301,13 @@ export const linesProcesser = ({
     height,
     innerWidth,
     groupPosition: { y: gy, x: gx },
-    y,
-    x,
-    xDomain,
-    yAxis,
+    yAxis: {
+      ...yAxis,
+      scale: y
+    },
     xAxis: {
+      scale: x,
+      domain: xDomain,
       ticks: xTicks,
       format: xFormat,
       axisFormat: xFormat

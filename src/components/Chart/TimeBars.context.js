@@ -1,5 +1,5 @@
 import { scaleLinear, scaleBand } from 'd3-scale'
-import { groupInColumns, getColumnLayout } from './utils'
+import { groupInColumns, getColumnLayout, calculateAxis } from './utils'
 
 import {
   insertXDomainGaps,
@@ -100,19 +100,31 @@ export const timeBarsProcesser = ({
 
   const xTicks = getXTicks(props.xTicks, xValues, xNormalizer, x)
 
+  const yAxis = calculateAxis(
+    props.numberFormat,
+    props.tLabel,
+    y.domain(),
+    props.unit,
+    {
+      ticks: props.yTicks
+    }
+  )
+
   return {
     groupedData,
     height,
     innerWidth,
     groupPosition: { y: gy, x: gx, titleHeight: columnTitleHeight },
-    y,
-    x,
-    xDomain,
-    xValues,
     xAxis: {
+      scale: x,
+      domain: xDomain,
       ticks: xTicks,
       format: xFormat,
       axisFormat: x => xFormat(xParser(x))
+    },
+    yAxis: {
+      ...yAxis,
+      scale: y
     },
     colorValuesForLegend: colorValues
   }

@@ -39,7 +39,7 @@ const TimeBarGroup = ({
   color,
   width,
   xAxisPos,
-  xAxis,
+  xAxisElement,
   yScaleInvert
 }) => {
   const [colorScheme] = useColorContext()
@@ -86,7 +86,7 @@ const TimeBarGroup = ({
           </g>
         )
       })}
-      <g transform={`translate(0,${xAxisPos})`}>{xAxis}</g>
+      <g transform={`translate(0,${xAxisPos})`}>{xAxisElement}</g>
       {yTicks.map((tick, i) => (
         <g data-axis key={tick} transform={`translate(0,${y(tick)})`}>
           {tick !== baseTick && (

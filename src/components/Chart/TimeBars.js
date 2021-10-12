@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types'
 import React from 'react'
 import { ascending } from 'd3-array'
-import { calculateAxis, sortPropType } from './utils'
+import { sortPropType } from './utils'
 import ColorLegend from './ColorLegend'
 import TimeBarGroup from './TimeBarGroup'
 import { intervals } from './TimeBars.utils'
@@ -29,14 +29,14 @@ const TimeBarChart = props => {
   chartContext.groupedData.forEach(group => {
     group.bars.forEach(bar => {
       let upValue = 0
-      let upPos = chartContext.y(0)
+      let upPos = chartContext.yAxis.scale(0)
       let downValue = 0
-      let downPos = chartContext.y(0)
+      let downPos = chartContext.yAxis.scale(0)
       bar.segments.forEach(segment => {
         const isPositive = yScaleInvert ? segment.value < 0 : segment.value > 0
         const baseValue = isPositive ? upValue : downValue
-        const y0 = chartContext.y(baseValue)
-        const y1 = chartContext.y(baseValue + segment.value)
+        const y0 = chartContext.yAxis.scale(baseValue)
+        const y1 = chartContext.yAxis.scale(baseValue + segment.value)
         const size = (segment.height = Math.abs(y0 - y1))
         if (isPositive) {
           upPos -= size
@@ -51,24 +51,15 @@ const TimeBarChart = props => {
     })
   })
 
-  const yAxis = calculateAxis(
-    props.numberFormat,
-    tLabel,
-    chartContext.y.domain(),
-    tLabel(props.unit),
-    {
-      ticks: props.yTicks
-    }
-  )
-  const yTicks = (props.yTicks || yAxis.ticks).sort(ascending)
+  const yTicks = [].concat(chartContext.yAxis.ticks).sort(ascending)
 
-  const xAxis = (
+  const xAxisElement = (
     <XAxis
       xTicks={chartContext.xAxis.ticks}
       width={chartContext.innerWidth}
       height={chartContext.height}
-      x={chartContext.x}
-      xDomain={chartContext.xDomain}
+      x={chartContext.xAxis.scale}
+      xDomain={chartContext.xAxis.domain}
       xUnit={xUnit}
       yScaleInvert={yScaleInvert}
       format={chartContext.xAxis.axisFormat}
@@ -95,12 +86,12 @@ const TimeBarChart = props => {
                 xAnnotations={xAnnotations}
                 yAnnotations={yAnnotations}
                 yTicks={yTicks}
-                x={chartContext.x}
-                y={chartContext.y}
+                x={chartContext.xAxis.scale}
+                y={chartContext.yAxis.scale}
                 xNormalizer={chartContext.xNormalizer}
-                yAxis={yAxis}
+                yAxis={chartContext.yAxis}
                 width={chartContext.innerWidth}
-                xAxis={xAxis}
+                xAxisElement={xAxisElement}
                 xAxisPos={
                   yScaleInvert
                     ? PADDING_TOP + PADDING_TOP / 2 + groupPosition.titleHeight

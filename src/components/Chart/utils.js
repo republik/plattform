@@ -186,7 +186,8 @@ export const calculateAxis = (
   return {
     ticks,
     format: formatter,
-    axisFormat
+    axisFormat,
+    domain
   }
 }
 

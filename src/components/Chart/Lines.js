@@ -120,8 +120,8 @@ const LineChart = props => {
       paddingLeft={chartContext.paddingLeft}
       paddingRight={chartContext.paddingRight}
       height={innerHeight}
-      x={chartContext.x}
-      xDomain={chartContext.xDomain}
+      x={chartContext.xAxis.scale}
+      xDomain={chartContext.xAxis.domain}
       xUnit={props.xUnit}
       yScaleInvert={yScaleInvert}
       format={chartContext.xAxis.axisFormat}
@@ -150,10 +150,10 @@ const LineChart = props => {
                 mini={mini}
                 title={key}
                 lines={lines}
-                x={chartContext.x}
+                x={chartContext.xAxis.scale}
                 xAccessor={xAccessor}
-                y={chartContext.y}
-                yTicks={props.yTicks || chartContext.yAxis.ticks}
+                y={chartContext.yAxis.scale}
+                yTicks={chartContext.yAxis.ticks}
                 yAxisFormat={chartContext.yAxis.axisFormat}
                 band={band}
                 yCut={yLayout.yCut}

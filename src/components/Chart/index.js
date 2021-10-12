@@ -200,6 +200,7 @@ const Chart = props => {
           width={width}
           values={props.values}
           {...config}
+          tLabel={tLabel}
           colorRanges={colorRanges}
         >
           <ReactChart
