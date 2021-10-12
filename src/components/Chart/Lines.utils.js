@@ -47,18 +47,16 @@ export const addLabels = (
   labelFilter,
   yFormat,
   y,
-  highlight,
-  stroke,
-  startValue,
-  endValue,
-  endLabel
+  props
 ) => ({ values: line }) => {
   const start = line[0]
   const end = line[line.length - 1]
   const label = labelFilter(start.datum)
 
-  const isHighlight = highlight ? unsafeDatumFn(highlight) : () => false
-  const hasStroke = stroke ? unsafeDatumFn(stroke) : () => false
+  const isHighlight = props.highlight
+    ? unsafeDatumFn(props.highlight)
+    : () => false
+  const hasStroke = props.stroke ? unsafeDatumFn(props.stroke) : () => false
 
   return {
     line,
@@ -67,9 +65,9 @@ export const addLabels = (
     highlighted: isHighlight(start.datum),
     stroked: hasStroke(start.datum),
     lineColor: color(colorAccessor(start)),
-    startValue: label && startValue && yFormat(start.value),
-    endValue: label && endValue && yFormat(end.value),
-    endLabel: label && endLabel && ` ${colorAccessor(end)}`,
+    startValue: label && props.startValue && yFormat(start.value),
+    endValue: label && props.endValue && yFormat(end.value),
+    endLabel: label && props.endLabel && ` ${colorAccessor(end)}`,
     startY: y(start.value),
     endY: y(end.value)
   }

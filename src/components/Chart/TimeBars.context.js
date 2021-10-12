@@ -20,6 +20,7 @@ import {
 export const timeBarsProcesser = ({
   props,
   data,
+  colorValues,
   xValuesUnformatted,
   xFormat,
   xParser,
@@ -112,6 +113,7 @@ export const timeBarsProcesser = ({
       ticks: xTicks,
       format: xFormat,
       axisFormat: x => xFormat(xParser(x))
-    }
+    },
+    colorValuesForLegend: colorValues
   }
 }

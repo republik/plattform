@@ -86,31 +86,6 @@ export const ChartContextProvider = props => {
 
   const color = getColorMapper(props, colorValues)
 
-  const labelFilter = props.labelFilter
-    ? unsafeDatumFn(props.labelFilter)
-    : () => true
-
-  // transform all color values (always visible on small screens) and group titles for display
-  const colorValuesForLegend = (
-    props.colorLegendValues ||
-    data.filter(d => labelFilter(d.datum)).map(colorAccessor)
-  )
-    .filter(deduplicate)
-    .filter(Boolean)
-  runSort(props.colorSort, colorValuesForLegend)
-
-  const colorLegendValues = []
-    .concat(
-      props.colorLegend &&
-        (props.colorLegendValues || colorValues).map(colorValue => ({
-          color: color(colorValue),
-          label: subsup(colorValue).toString()
-        }))
-    )
-    .filter(Boolean)
-
-  console.log(colorLegendValues)
-
   const xValuesUnformatted = data
     .map(xAccessor)
     .concat(props.xTicks ? props.xTicks.map(xNormalizer) : [])
@@ -123,7 +98,6 @@ export const ChartContextProvider = props => {
     colorAccessor,
     color,
     colorValues,
-    colorValuesForLegend,
     xValuesUnformatted,
     xFormat,
     xParser,
@@ -131,6 +105,14 @@ export const ChartContextProvider = props => {
     xSort,
     xNormalizer
   })
+
+  const colorLegendValues =
+    mergedProps.colorLegend !== false
+      ? processedData.colorValuesForLegend.map(colorValue => ({
+          color: color(colorValue),
+          label: subsup(colorValue)
+        }))
+      : []
 
   const chartContextObject = {
     ...processedData,
@@ -226,7 +208,7 @@ const propTypes = {
   colorLegendValues: PropTypes.arrayOf(
     PropTypes.shape({
       color: PropTypes.string.isRequired,
-      label: PropTypes.string.isRequired
+      label: PropTypes.node.isRequired
     })
   ).isRequired,
   // lines only

@@ -19,7 +19,8 @@ import {
   valueAccessor,
   appendAnnotations,
   valueGauger,
-  labelGauger
+  labelGauger,
+  addLabels
 } from './Lines.utils'
 
 import {
@@ -40,7 +41,6 @@ export const linesProcesser = ({
   colorAccessor,
   color,
   colorValues,
-  colorValuesForLegend,
   xValuesUnformatted,
   xFormat,
   xParser
@@ -119,33 +119,6 @@ export const linesProcesser = ({
     ? unsafeDatumFn(props.labelFilter)
     : () => true
 
-  const addLabels = (color, colorAccessor, labelFilter, yFormat, y) => ({
-    values: line
-  }) => {
-    const start = line[0]
-    const end = line[line.length - 1]
-    const label = labelFilter(start.datum)
-
-    const isHighlight = props.highlight
-      ? unsafeDatumFn(props.highlight)
-      : () => false
-    const hasStroke = props.stroke ? unsafeDatumFn(props.stroke) : () => false
-
-    return {
-      line,
-      start,
-      end,
-      highlighted: isHighlight(start.datum),
-      stroked: hasStroke(start.datum),
-      lineColor: color(colorAccessor(start)),
-      startValue: label && props.startValue && yFormat(start.value),
-      endValue: label && props.endValue && yFormat(end.value),
-      endLabel: label && props.endLabel && ` ${colorAccessor(end)}`,
-      startY: y(start.value),
-      endY: y(end.value)
-    }
-  }
-
   groupedData = groupedData
     .map(groupByLines(props.color, props.category))
     .map(({ values: lines, key }) => {
@@ -186,10 +159,7 @@ export const linesProcesser = ({
       }
     })
 
-  let colorLegend =
-    !props.mini &&
-    colorValuesForLegend.length > 0 &&
-    (!endLabel || props.colorLegend === true)
+  let colorLegend = !endLabel || props.colorLegend === true
 
   const yConnectorSize = yNeedsConnectors
     ? Y_CONNECTOR + Y_CONNECTOR_PADDING * 2
@@ -236,6 +206,16 @@ export const linesProcesser = ({
       paddingLeft = props.paddingLeft + whiteSpacePadding
     }
   }
+
+  const colorValuesForLegend = colorLegend
+    ? (
+        props.colorLegendValues ||
+        data.filter(d => labelFilter(d.datum)).map(colorAccessor)
+      )
+        .filter(deduplicate)
+        .filter(Boolean)
+    : []
+  runSort(props.colorSort, colorValuesForLegend)
 
   const { height, innerWidth, gx, gy } = getColumnLayout(
     props.columns,
@@ -336,6 +316,6 @@ export const linesProcesser = ({
     columnHeight,
     yAnnotations: translatedYAnnotations,
     xAnnotations: translatedXAnnotations,
-    colorLegend
+    colorValuesForLegend
   }
 }

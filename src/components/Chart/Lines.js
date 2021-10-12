@@ -93,11 +93,7 @@ const LineChart = props => {
   const { paddingLeft, paddingRight, yLayout, groupPosition } = chartContext
 
   const visibleColorLegendValues = []
-    .concat(
-      props.colorLegend !== false &&
-        chartContext.colorLegend &&
-        chartContext.colorLegendValues
-    )
+    .concat(chartContext.colorLegendValues)
     .concat(
       !mini &&
         band &&
