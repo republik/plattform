@@ -120,7 +120,6 @@ const LineChart = props => {
       paddingLeft={chartContext.paddingLeft}
       paddingRight={chartContext.paddingRight}
       height={innerHeight}
-      xValues={chartContext.xValues}
       x={chartContext.x}
       xDomain={chartContext.xDomain}
       xUnit={props.xUnit}

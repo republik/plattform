@@ -12,9 +12,7 @@ import {
   xAccessor,
   getDataFilter,
   getFormat,
-  runSort,
-  subsup,
-  unsafeDatumFn
+  subsup
 } from './utils'
 
 import { timeBarsProcesser } from './TimeBars.context'
@@ -205,19 +203,14 @@ const propTypes = {
   xDomain: PropTypes.array.isRequired,
   y: PropTypes.func.isRequired,
   color: PropTypes.func.isRequired,
+  colorAccessor: PropTypes.func.isRequired, // only used by timebar
   colorLegendValues: PropTypes.arrayOf(
     PropTypes.shape({
       color: PropTypes.string.isRequired,
       label: PropTypes.node.isRequired
     })
   ).isRequired,
-  // lines only
-  colorLegend: PropTypes.bool,
-  // only used by timebar
-  colorAccessor: PropTypes.func,
-  xNormalizer: PropTypes.func,
-  // timebar only
-  xValues: PropTypes.array,
+  xNormalizer: PropTypes.func.isRequired, // only used by timebar
   // line only
   paddingLeft: PropTypes.number,
   paddingRight: PropTypes.number,

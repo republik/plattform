@@ -67,7 +67,6 @@ const TimeBarChart = props => {
       xTicks={chartContext.xAxis.ticks}
       width={chartContext.innerWidth}
       height={chartContext.height}
-      xValues={chartContext.xValues}
       x={chartContext.x}
       xDomain={chartContext.xDomain}
       xUnit={xUnit}
