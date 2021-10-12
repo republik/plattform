@@ -104,10 +104,12 @@ export const ChartContextProvider = props => {
       props.colorLegend &&
         (props.colorLegendValues || colorValues).map(colorValue => ({
           color: color(colorValue),
-          label: subsup(colorValue)
+          label: subsup(colorValue).toString()
         }))
     )
     .filter(Boolean)
+
+  console.log(colorLegendValues)
 
   const xValuesUnformatted = data
     .map(xAccessor)
