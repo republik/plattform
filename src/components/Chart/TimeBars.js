@@ -20,23 +20,24 @@ const TimeBarChart = props => {
     xAnnotations,
     xUnit,
     yScaleInvert,
+    type,
     height: innerHeight
   } = props
 
   const chartContext = React.useContext(ChartContext)
-  const { groupPosition } = chartContext
+  const { groupPosition, yAxis, xAxis } = chartContext
 
   chartContext.groupedData.forEach(group => {
     group.bars.forEach(bar => {
       let upValue = 0
-      let upPos = chartContext.yAxis.scale(0)
+      let upPos = yAxis.scale(0)
       let downValue = 0
-      let downPos = chartContext.yAxis.scale(0)
+      let downPos = yAxis.scale(0)
       bar.segments.forEach(segment => {
         const isPositive = yScaleInvert ? segment.value < 0 : segment.value > 0
         const baseValue = isPositive ? upValue : downValue
-        const y0 = chartContext.yAxis.scale(baseValue)
-        const y1 = chartContext.yAxis.scale(baseValue + segment.value)
+        const y0 = yAxis.scale(baseValue)
+        const y1 = yAxis.scale(baseValue + segment.value)
         const size = (segment.height = Math.abs(y0 - y1))
         if (isPositive) {
           upPos -= size
@@ -51,20 +52,10 @@ const TimeBarChart = props => {
     })
   })
 
-  const yTicks = [].concat(chartContext.yAxis.ticks).sort(ascending)
+  const yTicks = [].concat(yAxis.ticks).sort(ascending)
 
   const xAxisElement = (
-    <XAxis
-      xTicks={chartContext.xAxis.ticks}
-      width={chartContext.innerWidth}
-      height={chartContext.height}
-      x={chartContext.xAxis.scale}
-      xDomain={chartContext.xAxis.domain}
-      xUnit={xUnit}
-      yScaleInvert={yScaleInvert}
-      format={chartContext.xAxis.axisFormat}
-      type={props.type}
-    />
+    <XAxis xUnit={xUnit} yScaleInvert={yScaleInvert} type={type} />
   )
 
   return (
@@ -86,10 +77,10 @@ const TimeBarChart = props => {
                 xAnnotations={xAnnotations}
                 yAnnotations={yAnnotations}
                 yTicks={yTicks}
-                x={chartContext.xAxis.scale}
-                y={chartContext.yAxis.scale}
+                x={xAxis.scale}
+                y={yAxis.scale}
                 xNormalizer={chartContext.xNormalizer}
-                yAxis={chartContext.yAxis}
+                yAxis={yAxis}
                 width={chartContext.innerWidth}
                 xAxisElement={xAxisElement}
                 xAxisPos={

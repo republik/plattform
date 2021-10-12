@@ -77,20 +77,18 @@ const styles = {
 }
 
 const LineChart = props => {
-  const {
-    width,
-    mini,
-    description,
-    band,
-    bandLegend,
-    endDy,
-    yScaleInvert,
-    height: innerHeight
-  } = props
+  const { width, mini, description, band, bandLegend, endDy } = props
 
   const [colorScheme] = useColorContext()
   const chartContext = React.useContext(ChartContext)
-  const { paddingLeft, paddingRight, yLayout, groupPosition } = chartContext
+  const {
+    paddingLeft,
+    paddingRight,
+    yLayout,
+    groupPosition,
+    xAxis,
+    yAxis
+  } = chartContext
 
   const visibleColorLegendValues = []
     .concat(chartContext.colorLegendValues)
@@ -113,21 +111,7 @@ const LineChart = props => {
     )
     .filter(Boolean)
 
-  const xAxisElement = (
-    <XAxis
-      xTicks={chartContext.xAxis.ticks}
-      width={chartContext.innerWidth}
-      paddingLeft={chartContext.paddingLeft}
-      paddingRight={chartContext.paddingRight}
-      height={innerHeight}
-      x={chartContext.xAxis.scale}
-      xDomain={chartContext.xAxis.domain}
-      xUnit={props.xUnit}
-      yScaleInvert={yScaleInvert}
-      format={chartContext.xAxis.axisFormat}
-      type={props.type}
-    />
-  )
+  const xAxisElement = <XAxis xUnit={props.xUnit} type={props.type} />
 
   return (
     <>
@@ -150,11 +134,11 @@ const LineChart = props => {
                 mini={mini}
                 title={key}
                 lines={lines}
-                x={chartContext.xAxis.scale}
+                x={xAxis.scale}
                 xAccessor={xAccessor}
-                y={chartContext.yAxis.scale}
-                yTicks={chartContext.yAxis.ticks}
-                yAxisFormat={chartContext.yAxis.axisFormat}
+                y={yAxis.scale}
+                yTicks={yAxis.ticks}
+                yAxisFormat={yAxis.axisFormat}
                 band={band}
                 yCut={yLayout.yCut}
                 yCutHeight={yLayout.yCutHeight}

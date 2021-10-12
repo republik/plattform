@@ -4,6 +4,7 @@ import { sansSerifRegular12 as LABEL_FONT } from '../Typography/styles'
 import { useColorContext } from '../Colors/useColorContext'
 import { getBaselines } from './TimeBars.utils'
 import { isLastItem, subsup } from './utils'
+import { ChartContext } from './ChartContext'
 
 import { X_UNIT_PADDING, X_TICK_HEIGHT } from './Layout.constants'
 import { createTextGauger } from '../../lib/textGauger'
@@ -21,21 +22,15 @@ const tickGauger = createTextGauger(LABEL_FONT, {
   html: true
 })
 
-const XAxis = ({
-  xTicks,
-  width,
-  paddingRight = 0,
-  paddingLeft = 0,
-  x,
-  xDomain,
-  format,
-  xUnit,
-  yScaleInvert,
-  type
-}) => {
+const XAxis = ({ xUnit, yScaleInvert, type }) => {
   const [colorScheme] = useColorContext()
-  const baseLines = type === 'TimeBar' && getBaselines(xDomain, x, width)
-  const tickPosition = type === 'TimeBar' ? Math.round(x.bandwidth() / 2) : 0
+  const chartContext = React.useContext(ChartContext)
+  const { xAxis } = chartContext
+  const baseLines =
+    type === 'TimeBar' &&
+    getBaselines(xAxis.domain, xAxis.scale, chartContext.width)
+  const tickPosition =
+    type === 'TimeBar' ? Math.round(xAxis.scale.bandwidth() / 2) : 0
 
   const xUnitWidth = xUnit ? tickGauger(xUnit) : 0
   let currentTextAnchor
@@ -54,25 +49,28 @@ const XAxis = ({
             strokeDasharray={line.gap ? '2 2' : 'none'}
           />
         ))}
-      {xTicks.map((tick, i) => {
-        const tickText = format(tick)
+      {xAxis.ticks.map((tick, i) => {
+        const tickText = xAxis.axisFormat(tick)
 
-        currentX = x(tick) + tickPosition
+        currentX = xAxis.scale(tick) + tickPosition
         currentTextAnchor = 'middle'
-        if (isLastItem(xTicks, i)) {
+        if (isLastItem(xAxis.ticks, i)) {
           const tickTextWidth = Math.max(tickGauger(tickText), xUnitWidth)
-          if (currentX + tickTextWidth / 2 > width + paddingRight) {
+          if (
+            currentX + tickTextWidth / 2 >
+            chartContext.width + chartContext.paddingRight
+          ) {
             currentTextAnchor = 'end'
           }
         }
         if (i === 0) {
           const tickTextWidth = tickGauger(tickText)
-          if (paddingLeft + currentX - tickTextWidth / 2 < 0) {
+          if (chartContext.paddingLeft + currentX - tickTextWidth / 2 < 0) {
             currentTextAnchor = 'start'
           }
         }
         const lineAlignmentCorrection =
-          currentX === 0 ? 0.5 : currentX === width ? -0.5 : 0
+          currentX === 0 ? 0.5 : currentX === chartContext.width ? -0.5 : 0
 
         return (
           <g key={tick} transform={`translate(${currentX}, 0)`}>
@@ -95,7 +93,7 @@ const XAxis = ({
           </g>
         )
       })}
-      {!!xTicks.length && xUnit && (
+      {!!xAxis.ticks.length && xUnit && (
         <text
           x={currentX}
           y={yScaleInvert ? -20 : X_UNIT_PADDING}
