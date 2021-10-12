@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 
 import { ascending } from 'd3-array'
 import { timeFormat, timeParse } from '../../lib/timeFormat'
+import { getColorMapper } from './colorMaps'
 
 import {
   deduplicate,
@@ -10,15 +11,20 @@ import {
   identityFn,
   xAccessor,
   getDataFilter,
-  getFormat
+  getFormat,
+  runSort,
+  subsup,
+  unsafeDatumFn
 } from './utils'
-
-import { normalizeData, getAnnotationsXValues } from './TimeBars.utils'
 
 import { timeBarsProcesser } from './TimeBars.context'
 import { linesProcesser } from './Lines.context'
 
-import { categorizeData } from './Lines.utils'
+import {
+  categorizeData,
+  normalizeData,
+  getAnnotationsXValues
+} from './ChartContext.utils'
 
 const dataProcesser = {
   TimeBar: timeBarsProcesser,
@@ -78,6 +84,31 @@ export const ChartContextProvider = props => {
     .filter(Boolean)
     .filter(deduplicate)
 
+  const color = getColorMapper(props, colorValues)
+
+  const labelFilter = props.labelFilter
+    ? unsafeDatumFn(props.labelFilter)
+    : () => true
+
+  // transform all color values (always visible on small screens) and group titles for display
+  const colorValuesForLegend = (
+    props.colorLegendValues ||
+    data.filter(d => labelFilter(d.datum)).map(colorAccessor)
+  )
+    .filter(deduplicate)
+    .filter(Boolean)
+  runSort(props.colorSort, colorValuesForLegend)
+
+  const colorLegendValues = []
+    .concat(
+      props.colorLegend &&
+        (props.colorLegendValues || colorValues).map(colorValue => ({
+          color: color(colorValue),
+          label: subsup(colorValue)
+        }))
+    )
+    .filter(Boolean)
+
   const xValuesUnformatted = data
     .map(xAccessor)
     .concat(props.xTicks ? props.xTicks.map(xNormalizer) : [])
@@ -88,7 +119,9 @@ export const ChartContextProvider = props => {
     props: mergedProps,
     data,
     colorAccessor,
+    color,
     colorValues,
+    colorValuesForLegend,
     xValuesUnformatted,
     xFormat,
     xParser,
@@ -100,7 +133,8 @@ export const ChartContextProvider = props => {
   const chartContextObject = {
     ...processedData,
     colorAccessor,
-    colorValues,
+    color,
+    colorLegendValues,
     xNormalizer
   }
 
@@ -186,8 +220,6 @@ const propTypes = {
   xAxis: axisPropType.isRequired,
   xDomain: PropTypes.array.isRequired,
   y: PropTypes.func.isRequired,
-  // inconsistent
-  colorValues: PropTypes.array,
   colorLegend: PropTypes.bool,
   colorLegendValues: PropTypes.array,
   // only used by timebar

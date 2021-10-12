@@ -15,17 +15,6 @@ export const yScales = {
 export const Y_LABEL_HEIGHT = 14
 export const Y_END_LABEL_SPACE = 3 // width of space between label and value
 
-export const categorizeData = category => d => {
-  if (category) {
-    const categorize = unsafeDatumFn(category)
-    return {
-      ...d,
-      category: categorize(d.datum)
-    }
-  }
-  return d
-}
-
 export const groupBy = (array, key) => {
   const keys = []
   const object = array.reduce((o, item, index) => {

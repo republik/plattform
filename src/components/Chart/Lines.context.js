@@ -2,7 +2,6 @@ import { min, max } from 'd3-array'
 import { scaleLinear, scaleTime, scalePoint } from 'd3-scale'
 import { timeYear } from 'd3-time'
 
-import { getColorMapper } from './colorMaps'
 import {
   deduplicate,
   groupInColumns,
@@ -10,8 +9,7 @@ import {
   unsafeDatumFn,
   calculateAxis,
   runSort,
-  sortBy,
-  subsup
+  sortBy
 } from './utils'
 
 import {
@@ -40,7 +38,9 @@ export const linesProcesser = ({
   props,
   data,
   colorAccessor,
+  color,
   colorValues,
+  colorValuesForLegend,
   xValuesUnformatted,
   xFormat,
   xParser
@@ -119,8 +119,6 @@ export const linesProcesser = ({
     ? unsafeDatumFn(props.labelFilter)
     : () => true
 
-  const color = getColorMapper(props, colorValues)
-
   const addLabels = (color, colorAccessor, labelFilter, yFormat, y) => ({
     values: line
   }) => {
@@ -187,15 +185,6 @@ export const linesProcesser = ({
         values: linesWithLabels
       }
     })
-
-  // transform all color values (always visible on small screens) and group titles for display
-  const colorValuesForLegend = (
-    props.colorLegendValues ||
-    data.filter(d => labelFilter(d.datum)).map(colorAccessor)
-  )
-    .filter(deduplicate)
-    .filter(Boolean)
-  runSort(props.colorSort, colorValuesForLegend)
 
   let colorLegend =
     !props.mini &&
@@ -313,11 +302,6 @@ export const linesProcesser = ({
   }
   x.range([0, innerWidth])
 
-  const colorLegendValues = colorValuesForLegend.map(value => ({
-    color: color(value),
-    label: subsup(value)
-  }))
-
   const translatedYAnnotations = (props.yAnnotations || []).map(d => ({
     formattedValue: yFormat(d.value),
     ...d,
@@ -352,7 +336,6 @@ export const linesProcesser = ({
     columnHeight,
     yAnnotations: translatedYAnnotations,
     xAnnotations: translatedXAnnotations,
-    colorLegend,
-    colorLegendValues
+    colorLegend
   }
 }

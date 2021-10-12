@@ -9,12 +9,6 @@ export const intervals = Object.keys(d3Intervals)
     return all
   }, {})
 
-export const normalizeData = (x, xNormalizer) => d => ({
-  datum: d,
-  x: xNormalizer(d[x]),
-  value: +d.value
-})
-
 export const getXTicks = (userTicks, xValues, xNormalizer, x) => {
   if (userTicks) {
     return userTicks.map(xNormalizer)
@@ -98,18 +92,6 @@ export const insertXDomainGaps = (
     ? insertXGaps(xValues, intervals, xIntervalStep, xParser, xParserFormat, x)
     : xValues
 }
-
-export const getAnnotationsXValues = (annotations, xNormalizer) =>
-  annotations
-    ? annotations
-        .reduce(
-          (years, annotation) =>
-            years.concat(annotation.x, annotation.x1, annotation.x2),
-          []
-        )
-        .filter(Boolean)
-        .map(xNormalizer) // ensure format
-    : []
 
 const sumSegments = (sum, segment) => sum + segment.value
 

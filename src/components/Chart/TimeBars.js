@@ -2,7 +2,6 @@ import PropTypes from 'prop-types'
 import React from 'react'
 import { ascending } from 'd3-array'
 import { calculateAxis, sortPropType } from './utils'
-import { getColorMapper } from './colorMaps'
 import ColorLegend from './ColorLegend'
 import TimeBarGroup from './TimeBarGroup'
 import { intervals } from './TimeBars.utils'
@@ -63,20 +62,6 @@ const TimeBarChart = props => {
   )
   const yTicks = (props.yTicks || yAxis.ticks).sort(ascending)
 
-  const color = getColorMapper(props, chartContext.colorValues)
-
-  const colorLegendValues = []
-    .concat(
-      props.colorLegend &&
-        (props.colorLegendValues || chartContext.colorValues).map(
-          colorValue => ({
-            color: color(colorValue),
-            label: tLabel(colorValue)
-          })
-        )
-    )
-    .filter(Boolean)
-
   const xAxis = (
     <XAxis
       xTicks={chartContext.xAxis.ticks}
@@ -94,7 +79,7 @@ const TimeBarChart = props => {
 
   return (
     <>
-      <ColorLegend inline values={colorLegendValues} />
+      <ColorLegend inline values={chartContext.colorLegendValues} />
       <svg width={width} height={chartContext.height}>
         <desc>{description}</desc>
         {chartContext.groupedData.map(({ bars, key }) => {
@@ -123,7 +108,7 @@ const TimeBarChart = props => {
                     : innerHeight + PADDING_TOP + groupPosition.titleHeight
                 }
                 tLabel={tLabel}
-                color={d => color(chartContext.colorAccessor(d))}
+                color={d => chartContext.color(chartContext.colorAccessor(d))}
                 yScaleInvert={yScaleInvert}
               />
             </g>
