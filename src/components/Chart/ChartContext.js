@@ -1,7 +1,6 @@
 import React, { createContext } from 'react'
 import PropTypes from 'prop-types'
 
-import { ascending } from 'd3-array'
 import { timeFormat, timeParse } from '../../lib/timeFormat'
 import { getColorMapper } from './colorMaps'
 
@@ -12,7 +11,8 @@ import {
   xAccessor,
   getDataFilter,
   getFormat,
-  subsup
+  subsup,
+  runSort
 } from './utils'
 
 import { timeBarsProcesser } from './TimeBars.context'
@@ -34,27 +34,23 @@ const chartsToUseContext = ['TimeBar', 'Line', 'Slope']
 
 export const ChartContext = createContext()
 
-export const ChartContextProvider = props => {
-  if (chartsToUseContext.indexOf(props.type) === -1) {
-    return props.children
+export const ChartContextProvider = plainProps => {
+  if (chartsToUseContext.indexOf(plainProps.type) === -1) {
+    return plainProps.children
   }
-  const mergedProps = { ...defaultProps[props.type], ...props }
-  const { type, values, xAnnotations, xScale } = mergedProps
+  const props = { ...defaultProps[plainProps.type], ...plainProps }
+  const { type, values, xAnnotations, xScale } = props
 
   let xParser = identityFn
   let xParserFormat = identityFn
-  let xNormalizer = identityFn
   let xFormat = identityFn
-  let xSort = (a, b) => 0
   if (xScale === 'time') {
-    xParser = timeParse(mergedProps.timeParse)
-    xParserFormat = timeFormat(mergedProps.timeParse)
-    xFormat = timeFormat(mergedProps.timeFormat || mergedProps.timeParse)
-    xSort = ascending
+    xParser = timeParse(props.timeParse)
+    xParserFormat = timeFormat(props.timeParse)
+    xFormat = timeFormat(props.timeFormat || props.timeParse)
   } else if (xScale === 'linear') {
     xParser = x => +x
     xParserFormat = x => x.toString()
-    xSort = ascending
     if (type === 'Line') {
       xFormat = getFormat(
         props.xNumberFormat || props.numberFormat,
@@ -62,23 +58,32 @@ export const ChartContextProvider = props => {
       )
     }
   }
-  // time bar always uses a band scale and needs strings on the x axis
-  xNormalizer =
-    type === 'TimeBar' ? d => xParserFormat(xParser(d)).toString() : xParser
+  let xNormalizer = xParser
+  let xCompareAccessor = identityFn
+  if (type === 'TimeBar') {
+    // time bar always uses a band scale and needs strings on the x axis
+    xNormalizer = d => xParserFormat(xParser(d)).toString()
+    xCompareAccessor = xParser
+  }
 
   const data = values
-    .filter(getDataFilter(mergedProps.filter))
+    .filter(getDataFilter(props.filter))
     .filter(hasValues)
-    .map(normalizeData(mergedProps.x, xNormalizer))
-    .map(categorizeData(mergedProps.category))
+    .map(normalizeData(props.x, xNormalizer))
+    .map(categorizeData(props.category))
 
-  const colorAccessor = mergedProps.color
-    ? d => d.datum[mergedProps.color]
+  const shouldXSort = props.xSort || xScale === 'time' || xScale === 'linear'
+  if (shouldXSort) {
+    runSort(props.xSort, data, d => xCompareAccessor(xAccessor(d)))
+  }
+
+  const colorAccessor = props.color
+    ? d => d.datum[props.color]
     : d => d.category
 
   const colorValues = []
     .concat(data.map(colorAccessor))
-    .concat(mergedProps.colorLegendValues)
+    .concat(props.colorLegendValues)
     .filter(Boolean)
     .filter(deduplicate)
 
@@ -89,9 +94,12 @@ export const ChartContextProvider = props => {
     .concat(props.xTicks ? props.xTicks.map(xNormalizer) : [])
     .concat(getAnnotationsXValues(xAnnotations, xNormalizer))
     .filter(deduplicate)
+  if (shouldXSort) {
+    runSort(props.xSort, xValuesUnformatted, xCompareAccessor)
+  }
 
   const processedData = dataProcesser[type]({
-    props: mergedProps,
+    props: props,
     data,
     colorAccessor,
     color,
@@ -100,18 +108,17 @@ export const ChartContextProvider = props => {
     xFormat,
     xParser,
     xParserFormat,
-    xSort,
     xNormalizer
   })
 
   const colorLegendValues =
-    mergedProps.colorLegend !== false
-      ? (
-          mergedProps.colorLegendValues || processedData.colorValuesForLegend
-        ).map(colorValue => ({
-          color: color(colorValue),
-          label: subsup(colorValue)
-        }))
+    props.colorLegend !== false
+      ? (props.colorLegendValues || processedData.colorValuesForLegend).map(
+          colorValue => ({
+            color: color(colorValue),
+            label: subsup(colorValue)
+          })
+        )
       : []
 
   const chartContextObject = {
@@ -124,7 +131,7 @@ export const ChartContextProvider = props => {
 
   return (
     <ChartContext.Provider value={chartContextObject}>
-      {mergedProps.children}
+      {props.children}
     </ChartContext.Provider>
   )
 }

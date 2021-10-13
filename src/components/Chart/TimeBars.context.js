@@ -25,7 +25,6 @@ export const timeBarsProcesser = ({
   xFormat,
   xParser,
   xParserFormat,
-  xSort,
   xNormalizer
 }) => {
   const groupedData = groupInColumns(
@@ -74,19 +73,14 @@ export const timeBarsProcesser = ({
     y.nice(3)
   }
 
-  const xValues = xValuesUnformatted
-    .map(xParser)
-    .sort(xSort)
-    .map(xParserFormat)
-
   const x = scaleBand()
-    .domain(xValues)
+    .domain(xValuesUnformatted)
     .range([props.padding, innerWidth - props.padding])
     .padding(props.xBandPadding)
     .round(true)
 
   const xDomain = insertXDomainGaps(
-    xValues,
+    xValuesUnformatted,
     props.xInterval,
     props.x,
     props.timeParse,
@@ -98,7 +92,7 @@ export const timeBarsProcesser = ({
 
   x.domain(xDomain).round(true)
 
-  const xTicks = getXTicks(props.xTicks, xValues, xNormalizer, x)
+  const xTicks = getXTicks(props.xTicks, xValuesUnformatted, xNormalizer, x)
 
   const yAxis = calculateAxis(
     props.numberFormat,
