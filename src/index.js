@@ -849,9 +849,10 @@ const Styleguide = () => {
                       title: 'Editor Prototype',
                       imports: {
                         ...require('./components/Typography'),
-                        JSONEditor: require('./components/Chart/JSONEditor'),
-                        createLineSchema: require('./components/Chart/Lines')
-                          .createSchema,
+                        ChartEditor: require('./components/Chart/ChartEditor'),
+                        data: {
+                          ...require('./components/Chart/Editor.docs.data')
+                        },
                         ErrorBoundary: require('./components/ErrorBoundary'),
                         CsvChart: require('./components/Chart/Csv'),
                         t
