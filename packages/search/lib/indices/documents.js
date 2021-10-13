@@ -102,7 +102,7 @@ module.exports = {
         const should = [
           {
             bool: {
-              must: [
+              should: [
                 { term: { '__state.published': true } },
                 { term: { '__state.prepublished': true } },
               ],
