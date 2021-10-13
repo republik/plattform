@@ -106,7 +106,9 @@ export const ChartContextProvider = props => {
 
   const colorLegendValues =
     mergedProps.colorLegend !== false
-      ? processedData.colorValuesForLegend.map(colorValue => ({
+      ? (
+          mergedProps.colorLegendValues || processedData.colorValuesForLegend
+        ).map(colorValue => ({
           color: color(colorValue),
           label: subsup(colorValue)
         }))

@@ -208,10 +208,9 @@ export const linesProcesser = ({
   }
 
   const colorValuesForLegend = colorLegend
-    ? (
-        props.colorLegendValues ||
-        data.filter(d => labelFilter(d.datum)).map(colorAccessor)
-      )
+    ? data
+        .filter(d => labelFilter(d.datum))
+        .map(colorAccessor)
         .filter(deduplicate)
         .filter(Boolean)
     : []
