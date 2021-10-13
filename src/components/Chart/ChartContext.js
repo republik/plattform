@@ -202,6 +202,8 @@ const propTypes = {
   }).isRequired,
   height: PropTypes.number.isRequired,
   innerWidth: PropTypes.number.isRequired,
+  paddingLeft: PropTypes.number.isRequired,
+  paddingRight: PropTypes.number.isRequired,
   xAxis: axisPropType.isRequired,
   yAxis: axisPropType.isRequired,
   color: PropTypes.func.isRequired,
@@ -214,8 +216,6 @@ const propTypes = {
   ).isRequired,
   xNormalizer: PropTypes.func.isRequired, // only used by timebar
   // line only
-  paddingLeft: PropTypes.number,
-  paddingRight: PropTypes.number,
   columnHeight: PropTypes.number,
   yLayout: PropTypes.shape({
     yCut: PropTypes.string,

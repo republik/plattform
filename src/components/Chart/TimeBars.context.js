@@ -114,6 +114,8 @@ export const timeBarsProcesser = ({
     groupedData,
     height,
     innerWidth,
+    paddingRight: 0,
+    paddingLeft: 0,
     groupPosition: { y: gy, x: gx, titleHeight: columnTitleHeight },
     xAxis: {
       scale: x,

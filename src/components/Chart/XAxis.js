@@ -28,7 +28,7 @@ const XAxis = ({ xUnit, yScaleInvert, type }) => {
   const { xAxis } = chartContext
   const baseLines =
     type === 'TimeBar' &&
-    getBaselines(xAxis.domain, xAxis.scale, chartContext.width)
+    getBaselines(xAxis.domain, xAxis.scale, chartContext.innerWidth)
   const tickPosition =
     type === 'TimeBar' ? Math.round(xAxis.scale.bandwidth() / 2) : 0
 
@@ -58,7 +58,7 @@ const XAxis = ({ xUnit, yScaleInvert, type }) => {
           const tickTextWidth = Math.max(tickGauger(tickText), xUnitWidth)
           if (
             currentX + tickTextWidth / 2 >
-            chartContext.width + chartContext.paddingRight
+            chartContext.innerWidth + chartContext.paddingRight
           ) {
             currentTextAnchor = 'end'
           }
@@ -70,7 +70,7 @@ const XAxis = ({ xUnit, yScaleInvert, type }) => {
           }
         }
         const lineAlignmentCorrection =
-          currentX === 0 ? 0.5 : currentX === chartContext.width ? -0.5 : 0
+          currentX === 0 ? 0.5 : currentX === chartContext.innerWidth ? -0.5 : 0
 
         return (
           <g key={tick} transform={`translate(${currentX}, 0)`}>
