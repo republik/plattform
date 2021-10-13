@@ -122,7 +122,7 @@ export const propTypes = {
       value: PropTypes.number.isRequired,
       unit: PropTypes.string,
       label: PropTypes.string.isRequired,
-      x: PropTypes.string,
+      x: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
       dy: PropTypes.string,
       showValue: PropTypes.bool
     })
@@ -139,12 +139,13 @@ export const propTypes = {
   xAnnotations: PropTypes.arrayOf(
     PropTypes.shape({
       valuePrefix: PropTypes.string,
-      value: PropTypes.number.isRequired,
+      value: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+        .isRequired,
       unit: PropTypes.string,
       label: PropTypes.string,
-      x: PropTypes.string,
-      x1: PropTypes.string,
-      x2: PropTypes.string,
+      x: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+      x1: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+      x2: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
       ghost: PropTypes.bool,
       position: PropTypes.oneOf(['top', 'bottom']),
       showValue: PropTypes.bool
