@@ -134,10 +134,8 @@
     }
   },
   "dependencies": {
-    "@json-editor/json-editor": "^2.5.4",
     "@react-icons/all-files": "^4.1.0",
-    "body-scroll-lock": "3.0.3",
-    "bootstrap": "^4.6.0"
+    "body-scroll-lock": "3.0.3"
   },
   "browserslist": [
     ">0.2%",
