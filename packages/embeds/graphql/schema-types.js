@@ -4,11 +4,9 @@ enum EmbedType {
   YoutubeEmbed
   VimeoEmbed
   TwitterEmbed
-  DocumentCloudEmbed
 }
 
-union Embed = TwitterEmbed | YoutubeEmbed | VimeoEmbed | DocumentCloudEmbed
-union CachedEmbed = LinkPreview | TwitterEmbed
+union Embed = LinkPreview | TwitterEmbed | YoutubeEmbed | VimeoEmbed
 
 type TwitterEmbed {
   id: ID!
@@ -61,18 +59,6 @@ type VimeoEmbed implements PlayableMedia {
   src: VimeoSrc
   mediaId: ID!
   durationMs: Int!
-}
-
-type DocumentCloudEmbed {
-  id: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  retrievedAt: DateTime!
-  contributorUrl: String
-  contributorName: String
-  thumbnail: String!
-  title: String!
-  url: String!
 }
 
 type LinkPreview {
