@@ -72,6 +72,11 @@ const SeriesNavTile = ({
 
   return (
     <div
+      /* 
+      Hide PayNote for members by setting the hideForMember class. 
+      This class is defined in the MeContext in republik-frontend
+      */
+      className={PayNote ? 'hideIfMember' : undefined}
       {...(inline ? styles.inlineTile : styles.tile)}
       style={{
         opacity: inactiveTile ? 0.6 : 1
