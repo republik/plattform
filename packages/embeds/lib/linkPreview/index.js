@@ -111,7 +111,9 @@ const getLinkPreviewByUrl = async (url) => {
 }
 
 module.exports = {
-  getLinkPreviewByUrl,
+  TYPE: 'LinkPreview',
+  REGEX: /^(https?:\/\/.+)/,
+  get: getLinkPreviewByUrl,
   imageKeys: ['siteImageUrl', 'imageUrl'],
   REQUEST_TIMEOUT_SECS,
   MAX_NUM_REQUESTS,

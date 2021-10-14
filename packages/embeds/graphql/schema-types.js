@@ -62,6 +62,7 @@ type VimeoEmbed implements PlayableMedia {
 }
 
 type LinkPreview {
+  id: ID!
   url: String!
   title: String!
   description: String
