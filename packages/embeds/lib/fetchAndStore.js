@@ -52,7 +52,7 @@ const fetchContent = async (url, { t }) => {
   }
 }
 
-const proxyContent = (content, type) => {
+const applyProxyUrls = (content, type) => {
   const newContent = {}
   for (const key of embeds.find((e) => e.TYPE === type).imageKeys) {
     newContent[key] = proxyUrl(content[key])
@@ -175,7 +175,7 @@ const transformDBEntry = (dbEntry) => {
     type: __typename
   } = dbEntry
 
-  const proxyfiedContent = proxyContent(content, __typename)
+  const proxyfiedContent = applyProxyUrls(content, __typename)
 
   return {
     id: contentId || id,
@@ -230,4 +230,5 @@ module.exports = {
   getEmbedByUrl,
   getEmbedData,
   canGetEmbedType,
+  applyProxyUrls,
 }
