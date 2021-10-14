@@ -5,7 +5,10 @@ const {
 } = require('@orbiting/backend-modules-auth')
 const {
   imageKeys: embedImageKeys,
+  getEmbedByUrl,
+  canGetEmbedType,
 } = require('@orbiting/backend-modules-embeds')
+const { mdastToString } = require('@orbiting/backend-modules-utils')
 
 const modifiers = require('./modifiers')
 
@@ -93,16 +96,32 @@ const processEmbedImageUrlsInContent = async (mdast, fn) => {
   return Promise.all(fns.map((fn) => fn()))
 }
 
-const processEmbedsInContent = async (mdast, fn) => {
+const processEmbedsInContent = async (mdast, context) => {
   const fns = []
 
   visit(mdast, 'zone', (node) => {
-    if (node.data && node.identifier.indexOf('EMBED') > -1) {
+    if (
+      node.data &&
+      node.identifier.indexOf('EMBED') > -1 &&
+      canGetEmbedType(node.data?.__typename)
+    ) {
       fns.push(async () => {
-        const result = await fn(node.data)
-        if (result !== undefined) {
-          node.data = result
+        const url = mdastToString(node)
+        if (url) {
+          try {
+            const embed = await getEmbedByUrl(url, context)
+            if (embed) {
+              node.data = {
+                ...node.data,
+                ...embed,
+              }
+            }
+          } catch (e) {
+            console.warn(`processEmbedsInContent on "${url}" failed: ${e.message}`)
+          }
         }
+
+        return node.data
       })
     }
   })
