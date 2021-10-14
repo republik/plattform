@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState, useMemo } from 'react'
+import React, { useState, useMemo } from 'react'
 import { css } from 'glamor'
 import { csvParse } from 'd3-dsv'
 
@@ -6,6 +6,8 @@ import Field from '../Form/Field'
 import Dropdown from '../Form/Dropdown'
 import { Interaction, fontStyles } from '../Typography'
 import { useColorContext } from '../Colors/ColorContext'
+
+import { timeParse } from '../../lib/timeFormat'
 
 const styles = {
   wrapper: css({}),
@@ -89,12 +91,6 @@ const ChartEditor = ({ data, value, onChange }) => {
 
   const createOnFieldChange = key => {
     return (_, newValue) => {
-      let splitTicks
-      if (key === 'xTicks') {
-        splitTicks = newValue.split(',')
-        console.log(splitTicks)
-        newValue = splitTicks
-      }
       onChange({ ...value, [key]: newValue })
     }
   }
@@ -150,6 +146,50 @@ const ChartEditor = ({ data, value, onChange }) => {
   )
 }
 
+const parseCommaValue = (newValue = '') => {
+  return newValue
+    .split(',')
+    .map(d => d.trim())
+    .filter(Boolean)
+}
+const formatCommaValue = (value = []) => value.join(', ')
+
+const useCommaField = (value, onChange, parser) => {
+  const isInvalid = newValue => {
+    try {
+      return !parser(newValue)
+    } catch (e) {
+      return true
+    }
+  }
+
+  const valueToField = (value = []) => ({
+    error: value.some(isInvalid),
+    value: formatCommaValue(value)
+  })
+
+  const [field, setField] = useState(valueToField(value))
+
+  // maybe later, depends on if it can change on the outside
+  // useEffect(() => {
+  //   setField(valueToField(value))
+  // }, [value])
+
+  const onFieldValueChange = (_, newValue) => {
+    const parsedValue = parseCommaValue(newValue)
+    const error = parsedValue.some(isInvalid)
+    setField({
+      value: newValue,
+      error
+    })
+    if (!error && formatCommaValue(value) !== formatCommaValue(parsedValue)) {
+      onChange(_, parsedValue)
+    }
+  }
+
+  return [field, onFieldValueChange]
+}
+
 const BasicSettings = props => {
   const {
     xAxisColumns,
@@ -157,6 +197,16 @@ const BasicSettings = props => {
     createOnDropdownChange,
     createOnFieldChange
   } = props
+
+  const timeFormatParser = timeParse(
+    value.timeParse || value.timeFormat || '%Y'
+  )
+  const [xTicksField, onXTicksChange] = useCommaField(
+    value.xTicks,
+    createOnFieldChange('xTicks'),
+    timeFormatParser
+  )
+
   return (
     <div {...styles.wrapper}>
       <div {...styles.row}>
@@ -176,8 +226,9 @@ const BasicSettings = props => {
           />
           <Field
             label='Achsenticks'
-            value={value.xTicks === undefined ? '' : value.xTicks}
-            onChange={createOnFieldChange('xTicks')}
+            value={xTicksField.value}
+            error={xTicksField.error && 'Achsenticks fehlerhaft'}
+            onChange={onXTicksChange}
           />
           <Field
             label='Beschriftung'
