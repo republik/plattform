@@ -4,7 +4,7 @@ import { css } from 'glamor'
 import { min, max } from 'd3-array'
 import { scalePoint, scaleTime, scaleLinear } from 'd3-scale'
 import { line as lineShape, area as areaShape } from 'd3-shape'
-import { timeTuesdays, timeYear } from 'd3-time'
+import { timeYear } from 'd3-time'
 import { useColorContext } from '../Colors/useColorContext'
 
 import {
