@@ -99,7 +99,7 @@ const ChartEditor = ({ data, value, onChange }) => {
     }
   }
 
-  const createOnDropdownChange = (key, item) => {
+  const createOnDropdownChange = key => item => {
     return onChange({ ...value, [key]: item.value })
   }
 
@@ -166,17 +166,13 @@ const BasicSettings = props => {
             label='Spalte auswählen'
             items={xAxisColumns}
             value={value.x === undefined ? 'year' : value.x}
-            onChange={item => {
-              createOnDropdownChange('x', item)
-            }}
+            onChange={createOnDropdownChange('x')}
           />
           <Dropdown
             label='Achsenformat'
             items={timeFormats}
             value={value.timeFormat === undefined ? '%Y' : value.timeFormat}
-            onChange={item => {
-              props.createOnDropdownChange('timeFormat', item)
-            }}
+            onChange={createOnDropdownChange('timeFormat')}
           />
           <Field
             label='Achsenticks'
@@ -195,9 +191,7 @@ const BasicSettings = props => {
             label='Spalte auswählen'
             items={xAxisColumns}
             value={value.x === undefined ? '.0%' : value.x}
-            onChange={item => {
-              createOnDropdownChange('x', item)
-            }}
+            onChange={createOnDropdownChange('x')}
           />
           <Dropdown
             label='Achsenformat'
@@ -205,9 +199,7 @@ const BasicSettings = props => {
             value={
               value.numberFormat === undefined ? '.0%' : value.numberFormat
             }
-            onChange={item => {
-              createOnDropdownChange('numberFormat', item)
-            }}
+            onChange={createOnDropdownChange('numberFormat')}
           />
         </div>
       </div>
