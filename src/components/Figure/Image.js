@@ -9,6 +9,8 @@ import { sansSerifRegular12, sansSerifRegular15 } from '../Typography/styles'
 import { mUp } from '../../theme/mediaQueries'
 import SwitchImage from './SwitchImage'
 
+export const MIN_GALLERY_IMG_WIDTH = 600
+
 const styles = {
   image: css({
     width: '100%'

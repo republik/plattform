@@ -186,7 +186,7 @@ A `<FigureGroup />` containing two side-by-side `<Figure>` elements, with one sh
   <Figure>
     <FigureImage src='/static/landscape.jpg' alt='' />
   </Figure>
-  <FigureCaption>
+  <FigureCaption groupCaption>
     This is an image caption stretching beautifully over both images as you can see above.{' '}
     <FigureByline>Photos: Laurent Burst</FigureByline>
   </FigureCaption>
@@ -277,7 +277,7 @@ A `<FigureGroup />` containing four `<Figure>` elements in two columns:
       <FigureByline>Photo: Laurent Burst</FigureByline>
     </FigureCaption>
   </Figure>
-  <FigureCaption>
+  <FigureCaption groupCaption>
     This is a caption stretching beautifully across the group of all images as you can see above.
   </FigureCaption>
 </FigureGroup>
@@ -297,7 +297,7 @@ Supports `breakout` sizes:
     <Figure>
       <FigureImage src='/static/landscape.jpg' alt='' />
     </Figure>
-    <FigureCaption>
+    <FigureCaption groupCaption>
       This is an image caption stretching beautifully over both images as you can see above.{' '}
       <FigureByline>Photos: Laurent Burst</FigureByline>
     </FigureCaption>

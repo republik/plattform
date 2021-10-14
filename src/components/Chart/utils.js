@@ -49,7 +49,9 @@ const swissNumbers = formatLocale({
   decimal: ',',
   thousands: thousandSeparator,
   grouping: [3],
-  currency: ['CHF\u00a0', '']
+  currency: ['CHF\u00a0', ''],
+  minus: '\u2212',
+  percent: '\u2009%'
 })
 
 const formatPow = (tLabel, baseValue) => {
@@ -184,7 +186,8 @@ export const calculateAxis = (
   return {
     ticks,
     format: formatter,
-    axisFormat
+    axisFormat,
+    domain
   }
 }
 
@@ -234,7 +237,9 @@ subsup.svg = subSupSplitter((tag, key, text) => {
       </tspan>
       {/* reset dy: https://stackoverflow.com/a/33711370 */}
       {/* adds a zero width space */}
-      <tspan dy={`-${dy}`}>{'\u200b'}</tspan>
+      <tspan dy={tag === 'sub' ? `-${dy}` : dy.slice(1)} fontSize='75%'>
+        {'\u200b'}
+      </tspan>
     </Fragment>
   )
 })
@@ -258,7 +263,9 @@ export const getTextColor = bgColor => {
 
 export const xAccessor = d => d.x
 
-export const hasValues = d => d.value && d.value.length > 0
+export const yAccessor = d => d.y
+
+export const hasValues = d => d.value && d.value.toString().length > 0
 
 export const identityFn = x => x
 
@@ -329,10 +336,12 @@ export const getColumnLayout = (
   groupedData,
   width,
   minWidth,
-  columnHeight,
+  getHeight,
   columnSort,
-  paddingLeft,
+  paddingTop,
   paddingRight,
+  paddingBottom,
+  paddingLeft,
   columnMargin,
   skipRowPadding
 ) => {
@@ -347,7 +356,6 @@ export const getColumnLayout = (
     skipRowPadding
   )
   const rows = Math.ceil(itemCount / columns)
-  const height = rows * columnHeight + (rows - 1) * columnMargin
   // account for start and end of columns missing padding when skipping row padding
   const innerWidth =
     Math.floor(
@@ -356,6 +364,9 @@ export const getColumnLayout = (
           (skipRowPadding ? columns - 1 : columns)) /
         columns
     ) - 1
+  const innerHeight = getHeight(innerWidth)
+  const columnHeight = innerHeight + paddingBottom + paddingTop
+  const height = rows * columnHeight + (rows - 1) * columnMargin
 
   let groups = groupedData.map(g => g.key)
   runSort(columnSort, groups)
@@ -368,5 +379,8 @@ export const getColumnLayout = (
   )
   const gy = yTranslateFn(groups, columns, columnHeight, columnMargin)
 
-  return { height, innerWidth, gx, gy }
+  return { height, innerWidth, innerHeight, gx, gy }
 }
+
+// get last item from array
+export const isLastItem = (array, index) => array.length - 1 === index

@@ -21,6 +21,7 @@ import { Note } from '../Typography/Editorial'
 import { convertStyleToRem, pxToRem } from '../Typography/utils'
 import { useColorContext } from '../Colors/useColorContext'
 import { ColorContextLocalExtension } from '../Colors/ColorContext'
+import { ChartContextProvider } from './ChartContext'
 
 export const ReactCharts = {
   Bar,
@@ -109,11 +110,33 @@ export const ChartLegend = ({ children, ...props }) => {
   )
 }
 
+const ssrAttribute = 'data-chart-ssr'
+
 const Chart = props => {
   const [colorScheme] = useColorContext()
-  const [stateWidth, setWidth] = useState(290)
 
-  const { width: fixedWidth, config, tLabel } = props
+  const isDomAvailable = typeof document !== 'undefined'
+  const [ssrMode, setSsrMode] = useState(
+    () =>
+      !isDomAvailable ||
+      (isDomAvailable &&
+        document.querySelectorAll(`[${ssrAttribute}]`).length > 0)
+  )
+  useEffect(() => {
+    if (ssrMode) {
+      setSsrMode(false)
+    }
+  }, [ssrMode])
+
+  const [stateWidth, setWidth] = useState(ssrMode ? 290 : undefined)
+
+  const {
+    width: fixedWidth,
+    config,
+    tLabel,
+    // allowCanvasRendering might be set to false when exporting SVGs
+    allowCanvasRendering = true
+  } = props
 
   const width = fixedWidth || stateWidth
   const ReactChart = ReactCharts[config.type]
@@ -166,22 +189,32 @@ const Chart = props => {
 
   const content = (
     <div
+      {...(ssrMode && { [ssrAttribute]: true })}
       ref={fixedWidth ? undefined : ref}
       style={{
         maxWidth: config.maxWidth
       }}
     >
       {!!width && (
-        <ReactChart
-          {...config}
-          // make colorScheme available for class components—maps
-          colorScheme={colorScheme}
-          tLabel={tLabel}
-          colorRanges={colorRanges}
+        <ChartContextProvider
           width={width}
           values={props.values}
-          description={config.description}
-        />
+          {...config}
+          tLabel={tLabel}
+          colorRanges={colorRanges}
+        >
+          <ReactChart
+            {...config}
+            allowCanvasRendering={allowCanvasRendering}
+            // make colorScheme available for class components—maps
+            colorScheme={colorScheme}
+            tLabel={tLabel}
+            colorRanges={colorRanges}
+            width={width}
+            values={props.values}
+            description={config.description}
+          />
+        </ChartContextProvider>
       )}
     </div>
   )

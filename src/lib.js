@@ -64,7 +64,8 @@ export {
   FigureGroup,
   FigureByline,
   FigureCaption,
-  FigureImage
+  FigureImage,
+  MIN_GALLERY_IMG_WIDTH
 } from './components/Figure'
 export { Tweet } from './components/Social'
 export { Video } from './components/Video'
@@ -99,19 +100,14 @@ export {
   CommentBodyParagraph
 } from './components/CommentBody/web'
 export { CommentTeaser } from './components/CommentTeaser'
-export {
-  Overlay,
-  OverlayToolbar,
-  OverlayToolbarClose,
-  OverlayToolbarConfirm,
-  OverlayBody
-} from './components/Overlay'
+export { Overlay, OverlayToolbar, OverlayBody } from './components/Overlay'
 
 export { Container, NarrowContainer } from './components/Grid'
 export {
   fontStyles,
   linkBlackStyle,
   linkRule,
+  plainLinkRule,
   A,
   H1,
   H2,
@@ -137,7 +133,6 @@ export {
   CommentComposer,
   CommentComposerPlaceholder
 } from './components/Discussion/Composer'
-export { SecondaryAction as CommentComposerSecondaryAction } from './components/Discussion/Internal/Composer'
 export { renderCommentMdast } from './components/Discussion/Internal/Comment/render'
 export { IconLink as DiscussionIconLink } from './components/Discussion/Internal/Comment/IconLink'
 
@@ -161,6 +156,7 @@ export { default as ShareImageGenerator } from './components/ShareImage'
 export {
   default as ShareImagePreview,
   socialPreviewStyles,
+  socialPreviewWidth,
   SHARE_IMAGE_DEFAULTS,
   SHARE_IMAGE_HEIGHT,
   SHARE_IMAGE_WIDTH
