@@ -6,7 +6,6 @@ const {
   processMembersOnlyZonesInContent,
   processRepoImageUrlsInContent,
   processRepoImageUrlsInMeta,
-  processEmbedImageUrlsInContent,
   processNodeModifiersInContent,
 } = require('../../lib/process')
 const { getMeta } = require('../../lib/meta')
@@ -69,10 +68,9 @@ module.exports = {
         context.user || null,
       )
 
-      await processEmbedsInContent(doc.content, context)
       await Promise.all([
         processRepoImageUrlsInContent(doc.content, addFormatAuto),
-        processEmbedImageUrlsInContent(doc.content, addFormatAuto),
+        processEmbedsInContent(doc.content, addFormatAuto, { context }),
       ])
 
       processMembersOnlyZonesInContent(doc.content, context.user)
@@ -152,7 +150,7 @@ module.exports = {
       const idsFromNodes = await Promise.map(nodes, async (node) => {
         await Promise.all([
           processRepoImageUrlsInContent(node, addFormatAuto),
-          processEmbedImageUrlsInContent(node, addFormatAuto),
+          processEmbedsInContent(node, addFormatAuto, { context }),
         ])
 
         processMembersOnlyZonesInContent(node, context.user)
