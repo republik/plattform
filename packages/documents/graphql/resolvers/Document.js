@@ -228,13 +228,4 @@ module.exports = {
 
     return getDocuments(doc, args, context, info)
   },
-  async embeds(doc, { types = [] }, context, info) {
-    const embeds = []
-    await processEmbedsInContent(doc.content, (embed) => {
-      if (!types.length || types.includes(embed.__typename)) {
-        embeds.push(embed)
-      }
-    })
-    return embeds
-  },
 }
