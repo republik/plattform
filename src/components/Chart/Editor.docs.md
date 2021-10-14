@@ -1,5 +1,5 @@
 ```react
-state: {}
+state: { numberFormat: '.1f'}
 ---
 <div>
   <ChartEditor value={state} data={data.chartData} onChange={setState} />
