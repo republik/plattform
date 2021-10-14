@@ -27,10 +27,16 @@ const getPath = ({ slug, template, publishDate, prepublication, path }) => {
       ? new RegExp(/.*\/(.*)/g).exec(slug)[1] // ignore everything before the last /
       : slug
 
-  const useSlugDate = !['front', 'section', 'page', 'dossier', 'format'].includes(template)
+  const useSlugDate = ![
+    'front',
+    'section',
+    'page',
+    'dossier',
+    'format',
+  ].includes(template)
 
   const parts = [
-    !!prepublication && 'preview',
+    !!prepublication && 'vorschau',
     useSlugDate && slugDateFormat(publishDate),
     template === 'dossier' && 'dossier',
     template === 'format' && 'format',
