@@ -33,9 +33,10 @@ export const timeBarsProcesser = ({
     props.columnFilter
   ).map(processSegments)
 
-  const paddingTop = props.yScaleInvert
-    ? PADDING_TOP + PADDING_TOP / 2
-    : PADDING_TOP
+  const paddingTop =
+    props.yScaleInvert || props.xUnit
+      ? PADDING_TOP + PADDING_TOP / 2
+      : PADDING_TOP
 
   const columnTitleHeight = props.column ? COLUMN_TITLE_HEIGHT : 0
 
