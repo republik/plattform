@@ -110,10 +110,11 @@ const processEmbedsInContent = async (mdast, fn, context) => {
                 .filter((key) => typeof node.data[key] !== 'object')
                 .filter((key) => !!embed[key])
                 .forEach((key) => (node.data[key] = embed[key]))
-              node.data.src &&
+              if (node.data.src) {
                 Object.keys(node.data.src)
                   .filter((key) => !!embed.src?.[key])
                   .forEach((key) => (node.data.src[key] = embed.src[key]))
+              }
             }
           } catch (e) {
             console.warn(
