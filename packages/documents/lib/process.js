@@ -87,8 +87,7 @@ const processEmbedImageUrlsInContent = async (mdast, fn) => {
   return Promise.all(fns.map((fn) => fn()))
 }
 
-const processEmbedsInContent = async (mdast, fn, options) => {
-  const { context, existingPropsOnly = false } = options
+const processEmbedsInContent = async (mdast, fn, context) => {
   const fns = []
 
   visit(mdast, 'zone', (node) => {
@@ -100,22 +99,18 @@ const processEmbedsInContent = async (mdast, fn, options) => {
           try {
             const embed =
               url &&
-              canGetEmbedType(node.data?.__typename) &&
+              canGetEmbedType(node.data.__typename) &&
               (await getEmbedByUrl(url, context))
 
             if (embed) {
-              if (existingPropsOnly) {
-                Object.keys(node.data)
-                  .filter((key) => typeof node.data[key] !== 'object')
-                  .filter((key) => embed[key])
-                  .forEach((key) => (node.data[key] = embed[key]))
+              Object.keys(node.data)
+                .filter((key) => typeof node.data[key] !== 'object')
+                .filter((key) => !!embed[key])
+                .forEach((key) => (node.data[key] = embed[key]))
+              node.data.src &&
                 Object.keys(node.data.src)
-                  .filter((key) => typeof node.data.src[key] !== 'object')
-                  .filter((key) => embed.src?.[key])
+                  .filter((key) => !!embed.src?.[key])
                   .forEach((key) => (node.data.src[key] = embed.src[key]))
-              } else {
-                Object.assign(node.data, embed)
-              }
             }
           } catch (e) {
             console.warn(
@@ -124,9 +119,12 @@ const processEmbedsInContent = async (mdast, fn, options) => {
           }
 
           await Promise.map(embedImageKeys, async (key) => {
-            node.data?.[key] && (node.data[key] = await fn(node.data[key]))
-            node.data?.src?.[key] &&
-              (node.data.src[key] = await fn(node.data.src[key]))
+            if (node.data[key]) {
+              await fn(node.data[key])
+            }
+            if (node.data.src?.[key]) {
+              await fn(node.data.src[key])
+            }
           })
 
           return node.data

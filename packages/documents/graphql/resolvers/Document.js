@@ -2,10 +2,10 @@ const crypto = require('crypto')
 const Promise = require('bluebird')
 const { contentUrlResolver, metaUrlResolver } = require('../../lib/resolve')
 const {
-  processEmbedsInContent,
   processMembersOnlyZonesInContent,
   processRepoImageUrlsInContent,
   processRepoImageUrlsInMeta,
+  processEmbedImageUrlsInContent,
   processNodeModifiersInContent,
 } = require('../../lib/process')
 const { getMeta } = require('../../lib/meta')
@@ -70,7 +70,7 @@ module.exports = {
 
       await Promise.all([
         processRepoImageUrlsInContent(doc.content, addFormatAuto),
-        processEmbedsInContent(doc.content, addFormatAuto, { context }),
+        processEmbedImageUrlsInContent(doc.content, addFormatAuto),
       ])
 
       processMembersOnlyZonesInContent(doc.content, context.user)
@@ -150,7 +150,7 @@ module.exports = {
       const idsFromNodes = await Promise.map(nodes, async (node) => {
         await Promise.all([
           processRepoImageUrlsInContent(node, addFormatAuto),
-          processEmbedsInContent(node, addFormatAuto, { context }),
+          processEmbedImageUrlsInContent(doc.content, addFormatAuto),
         ])
 
         processMembersOnlyZonesInContent(node, context.user)

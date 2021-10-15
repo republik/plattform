@@ -50,7 +50,7 @@ module.exports = {
     await Promise.all([
       processRepoImageUrlsInContent(mdast, prefix),
       processRepoImageUrlsInMeta(mdast, prefix),
-      processEmbedsInContent(mdast, proxy, { context, existingPropsOnly: true }),
+      processEmbedsInContent(mdast, proxy, context),
     ])
 
     return {
