@@ -30,7 +30,7 @@ const IconButton = React.forwardRef(
     const customStyles = style || null
     const [colorScheme] = useColorContext()
 
-    const fillValue = fill || fillColorName || 'text'
+    const fillValue = disabled ? 'disabled' : fill ? fillColorName : 'text'
 
     return (
       <Element
@@ -102,7 +102,6 @@ const styles = {
       marginRight: 24
     },
     ':disabled': {
-      opacity: 0.6,
       cursor: 'default'
     }
   }),
