@@ -77,7 +77,7 @@ const SeriesNavTile = ({
       This class is defined in the MeContext in republik-frontend
       */
       {...(PayNote && {
-        'data-hide-if-member': true
+        'data-hide-if-active-membership': true
       })}
       {...(inline ? styles.inlineTile : styles.tile)}
       style={{
