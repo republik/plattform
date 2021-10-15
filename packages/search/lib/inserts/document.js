@@ -20,6 +20,7 @@ const loaderBuilders = {
   ...require('@orbiting/backend-modules-auth/loaders'),
   ...require('@orbiting/backend-modules-discussions/loaders'),
   ...require('@orbiting/backend-modules-documents/loaders'),
+  ...require('@orbiting/backend-modules-embeds/loaders'),
   ...require('@orbiting/backend-modules-publikator/loaders'),
 }
 
