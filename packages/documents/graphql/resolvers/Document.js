@@ -150,7 +150,7 @@ module.exports = {
       const idsFromNodes = await Promise.map(nodes, async (node) => {
         await Promise.all([
           processRepoImageUrlsInContent(node, addFormatAuto),
-          processEmbedImageUrlsInContent(doc.content, addFormatAuto),
+          processEmbedImageUrlsInContent(node, addFormatAuto),
         ])
 
         processMembersOnlyZonesInContent(node, context.user)
