@@ -56,7 +56,6 @@ import {
 import SettingsIcon from 'react-icons/lib/fa/cogs'
 
 import createDebug from 'debug'
-import { DARK_MODE_KEY } from '../../components/editor/modules/meta/DarkModeForm'
 import {
   findAuthorsP,
   findTitleLeaf,
@@ -827,7 +826,7 @@ export class EditorPage extends Component {
     const error = data.error || templateError || this.state.error
     const showLoading =
       committing || loading || templateLoading || (!schema && !error)
-    const dark = editorState && editorState.document.data.get(DARK_MODE_KEY)
+    const dark = editorState && editorState.document.data.get('darkMode')
 
     const sidebarPrependChildren = [
       ...warnings.filter(Boolean).map(({ time, message }, i) => (

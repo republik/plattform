@@ -16,7 +16,6 @@ import SeriesForm from './SeriesForm'
 import PaynotesForm from './PaynotesForm'
 import AudioForm from './AudioForm'
 import UIForm from '../../UIForm'
-import DarkModeForm, { DARK_MODE_KEY } from './DarkModeForm'
 import ShareImageForm from './ShareImageForm'
 import GooglePreview from './GooglePreview'
 
@@ -152,6 +151,55 @@ const MetaData = ({
     slug: slugify(dataAsJs.slug || '')
   })
 
+  const slugFieldElement = (
+    <>
+      <SlugField
+        black
+        label={t(
+          `metaData/field/${isTemplate ? 'repoSlug' : 'slug'}`,
+          undefined,
+          'slug'
+        )}
+        value={node.data.get('slug')}
+        onChange={onInputChange('slug')}
+        isTemplate={isTemplate}
+        icon={
+          <span style={{ display: 'inline-block', paddingTop: 10 }}>
+            <Checkbox
+              checked={node.data.get('autoSlug')}
+              onChange={onInputChange('autoSlug')}
+              black
+            >
+              <span style={{ verticalAlign: 'top' }}>automatisch</span>
+            </Checkbox>
+          </span>
+        }
+      />
+      <br />
+      {!isTemplate && mdastSchema && mdastSchema.getPath && (
+        <Label>
+          {t('metaData/field/slug/note', {
+            base: FRONTEND_BASE_URL
+              ? FRONTEND_BASE_URL.replace(/https?:\/\/(www\.)?/, '')
+              : '',
+            path: previewPath
+          })}
+          <br />
+          {!!dataAsJs.path && (
+            <>
+              {t('metaData/field/slug/pathNote', {
+                base: FRONTEND_BASE_URL.replace(/https?:\/\/(www\.)?/, ''),
+                path: dataAsJs.path
+              })}
+              <br />
+            </>
+          )}
+          <br />
+        </Label>
+      )}
+    </>
+  )
+
   return (
     <div {...styles.container}>
       <div {...styles.center}>
@@ -171,18 +219,29 @@ const MetaData = ({
           black
           getWidth={getWidth}
         />
-        {(customFieldsByRef['bool'] || []).map(customField => {
-          return (
-            <div key={customField.key} {...styles.bool}>
-              <Checkbox
-                checked={node.data.get(customField.key)}
-                onChange={onInputChange(customField.key)}
-              >
-                {customField.label}
-              </Checkbox>
-            </div>
+        <br />
+        {slugFieldElement}
+        {(customFieldsByRef['bool'] || [])
+          .concat(
+            darkMode
+              ? {
+                  key: 'darkMode',
+                  label: t('metaData/darkMode')
+                }
+              : []
           )
-        })}
+          .map(customField => {
+            return (
+              <div key={customField.key} {...styles.bool}>
+                <Checkbox
+                  checked={node.data.get(customField.key)}
+                  onChange={onInputChange(customField.key)}
+                >
+                  {customField.label}
+                </Checkbox>
+              </div>
+            )
+          })}
         <br />
         <UIForm getWidth={() => '50%'}>
           {(customFieldsByRef['repo'] || []).map(customField => {
@@ -238,12 +297,6 @@ const MetaData = ({
             />
           </div>
         )}
-        {!!darkMode && (
-          <DarkModeForm
-            data={node.data}
-            onChange={onInputChange(DARK_MODE_KEY)}
-          />
-        )}
         <br />
         <br />
         <br />
@@ -255,50 +308,7 @@ const MetaData = ({
         />
         <br />
         <MetaForm data={seoData} onInputChange={onInputChange} black />
-        <SlugField
-          black
-          label={t(
-            `metaData/field/${isTemplate ? 'repoSlug' : 'slug'}`,
-            undefined,
-            'slug'
-          )}
-          value={node.data.get('slug')}
-          onChange={onInputChange('slug')}
-          isTemplate={isTemplate}
-          icon={
-            <span style={{ display: 'inline-block', paddingTop: 10 }}>
-              <Checkbox
-                checked={node.data.get('autoSlug')}
-                onChange={onInputChange('autoSlug')}
-                black
-              >
-                <span style={{ verticalAlign: 'top' }}>automatisch</span>
-              </Checkbox>
-            </span>
-          }
-        />
-        <br />
-        {!isTemplate && mdastSchema && mdastSchema.getPath && (
-          <Label>
-            {t('metaData/field/slug/note', {
-              base: FRONTEND_BASE_URL
-                ? FRONTEND_BASE_URL.replace(/https?:\/\/(www\.)?/, '')
-                : '',
-              path: previewPath
-            })}
-            <br />
-            {!!dataAsJs.path && (
-              <>
-                {t('metaData/field/slug/pathNote', {
-                  base: FRONTEND_BASE_URL.replace(/https?:\/\/(www\.)?/, ''),
-                  path: dataAsJs.path
-                })}
-                <br />
-              </>
-            )}
-            <br />
-          </Label>
-        )}
+        {slugFieldElement}
         <GooglePreview
           title={
             node.data.get('seoTitle') ||
