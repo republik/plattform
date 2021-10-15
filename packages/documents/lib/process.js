@@ -74,13 +74,16 @@ const processEmbedImageUrlsInContent = async (mdast, fn) => {
 
   visit(mdast, 'zone', (node) => {
     if (node.data && node.identifier.startsWith('EMBED')) {
-      fns.push(() =>
-        Promise.map(embedImageKeys, async (key) => {
-          node.data?.[key] && (node.data[key] = await fn(node.data[key]))
-          node.data?.src?.[key] &&
-            (node.data.src[key] = await fn(node.data.src[key]))
-        }),
-      )
+      fns.push(() => {
+        return Promise.map(embedImageKeys, async (key) => {
+          if (node.data[key]) {
+            node.data[key] = await fn(node.data[key])
+          }
+          if (node.data.src?.[key]) {
+            node.data.src[key] = await fn(node.data.src[key])
+          }
+        })
+      })
     }
   })
 
@@ -120,10 +123,10 @@ const processEmbedsInContent = async (mdast, fn, context) => {
 
           await Promise.map(embedImageKeys, async (key) => {
             if (node.data[key]) {
-              await fn(node.data[key])
+              node.data[key] = await fn(node.data[key])
             }
             if (node.data.src?.[key]) {
-              await fn(node.data.src[key])
+              node.data.src[key] = await fn(node.data.src[key])
             }
           })
 
