@@ -76,9 +76,9 @@ const getVimeoVideoById = async (id) => {
     src:
       mp4 && !isLiveOrScheduled
         ? {
-            mp4: mp4,
-            hls: hls,
-            thumbnail: thumbnail,
+            mp4,
+            hls,
+            thumbnail,
             // TODO: subtitles
           }
         : null,
