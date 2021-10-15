@@ -30,7 +30,7 @@ const IconButton = React.forwardRef(
     const customStyles = style || null
     const [colorScheme] = useColorContext()
 
-    const fillValue = disabled ? 'disabled' : fill ? fillColorName : 'text'
+    const fillValue = disabled ? 'disabled' : fill || fillColorName || 'text'
 
     return (
       <Element
