@@ -2,11 +2,10 @@ const crypto = require('crypto')
 const Promise = require('bluebird')
 const { contentUrlResolver, metaUrlResolver } = require('../../lib/resolve')
 const {
+  processEmbedsInContent,
   processMembersOnlyZonesInContent,
   processRepoImageUrlsInContent,
   processRepoImageUrlsInMeta,
-  processEmbedImageUrlsInContent,
-  processEmbedsInContent,
   processNodeModifiersInContent,
 } = require('../../lib/process')
 const { getMeta } = require('../../lib/meta')
@@ -71,7 +70,7 @@ module.exports = {
 
       await Promise.all([
         processRepoImageUrlsInContent(doc.content, addFormatAuto),
-        processEmbedImageUrlsInContent(doc.content, addFormatAuto),
+        processEmbedsInContent(doc.content, addFormatAuto, { context }),
       ])
 
       processMembersOnlyZonesInContent(doc.content, context.user)
@@ -151,7 +150,7 @@ module.exports = {
       const idsFromNodes = await Promise.map(nodes, async (node) => {
         await Promise.all([
           processRepoImageUrlsInContent(node, addFormatAuto),
-          processEmbedImageUrlsInContent(node, addFormatAuto),
+          processEmbedsInContent(node, addFormatAuto, { context }),
         ])
 
         processMembersOnlyZonesInContent(node, context.user)
@@ -227,14 +226,5 @@ module.exports = {
     }
 
     return getDocuments(doc, args, context, info)
-  },
-  async embeds(doc, { types = [] }, context, info) {
-    const embeds = []
-    await processEmbedsInContent(doc.content, (embed) => {
-      if (!types.length || types.includes(embed.__typename)) {
-        embeds.push(embed)
-      }
-    })
-    return embeds
   },
 }

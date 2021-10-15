@@ -228,7 +228,7 @@ type Comment {
 
   contentLength: Int
 
-  embed: CachedEmbed
+  embed: Embed
 
   mentioningDocument: MentioningDocument
 

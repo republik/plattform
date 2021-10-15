@@ -1,22 +1,22 @@
 const moment = require('moment')
+const Redlock = require('redlock')
+const debug = require('debug')('embeds:lib:fetchAndStore')
+
 const {
   createProxyUrlPrefixer,
 } = require('@orbiting/backend-modules-assets/lib/urlPrefixing')
 const proxyUrl = createProxyUrlPrefixer()
-const Redlock = require('redlock')
-const debug = require('debug')('embeds:lib:fetchAndStore')
-const twitter = require('./twitter')
-const linkPreview = require('./linkPreview')
-const types = {
-  TwitterEmbed: {
-    ...twitter,
-  },
-  LinkPreview: {
-    ...linkPreview,
-  },
-}
 
-const { REQUEST_TIMEOUT_SECS, MAX_NUM_REQUESTS } = linkPreview
+const embeds = [
+  require('./twitter'),
+  require('./vimeo'),
+  require('./youtube'),
+  require('./linkPreview'),
+]
+const types = embeds.map(({ TYPE }) => TYPE).filter(Boolean)
+
+const REQUEST_TIMEOUT_SECS = 10
+const MAX_NUM_REQUESTS = 3
 
 const LOCK_TTL_MS = (MAX_NUM_REQUESTS + 1) * REQUEST_TIMEOUT_SECS * 1000
 const LOCK_RETRY_DELAY_MS = 400
@@ -24,7 +24,7 @@ const LOCK_RETRY_JITTER_MS = 20
 const LOCK_RETRY_COUNT = Math.ceil(LOCK_TTL_MS / LOCK_RETRY_DELAY_MS)
 
 const NUM_BURST_TRYS = 3
-const REFRESH_EMBEDS_AFTER_SECS = 6 * 60 * 60 // 6h
+const REFRESH_EMBEDS_AFTER_SECS = 60 * 60 * 24 * 7 // 7 days
 
 const redlock = (redis) => {
   return new Redlock([redis], {
@@ -37,26 +37,24 @@ const redlock = (redis) => {
 
 const fetchContent = async (url, { t }) => {
   debug(`fetching url: ${url}...`)
-  if (twitter.REGEX.test(url)) {
-    const tweetId = twitter.REGEX.exec(url)[1]
-    return {
-      type: 'TwitterEmbed',
-      content: await twitter.getTweetById(tweetId, t).catch((e) => {
-        return null
-      }),
-    }
+
+  // Test to find matching embed
+  const embed = embeds.find(({ REGEX }) => !!REGEX.test(url))
+  if (!embed) {
+    throw new Error(`No embed matches ${url}.`)
   }
+
+  const [, id] = url.match(embed.REGEX)
+
   return {
-    type: 'LinkPreview',
-    content: await linkPreview.getLinkPreviewByUrl(url).catch((e) => {
-      return null
-    }),
+    type: embed.TYPE,
+    content: await embed.get(id, t).catch(() => null),
   }
 }
 
-const proxyContent = (content, type) => {
+const applyProxyUrls = (content, type) => {
   const newContent = {}
-  for (const key of types[type].imageKeys) {
+  for (const key of embeds.find((e) => e.TYPE === type).imageKeys) {
     newContent[key] = proxyUrl(content[key])
   }
   return {
@@ -92,7 +90,7 @@ const isValid = (embed) => embed && embed.content && !embed.disappeared
 const fetchEmbed = async ({ url, forceRefetch = false }, context) => {
   const { pgdb, redis, loaders } = context
 
-  const lockKey = `locks:embeds:fetch:${url.toLowerCase()}`
+  const lockKey = `locks:embeds:fetch:${url}`
 
   const lock = await redlock(redis).lock(lockKey, LOCK_TTL_MS)
   try {
@@ -162,26 +160,40 @@ const fetchEmbed = async ({ url, forceRefetch = false }, context) => {
     )
     return result
   } finally {
-    await loaders.Embed.byUrl.clear(url.toLowerCase())
+    await loaders.Embed.byUrl.clear(url)
     await lock.unlock()
   }
 }
 
-const getEmbedByUrl = async (url, context, forceRefetch = false) => {
-  if (!url || !url.trim().length) {
+const transformDBEntry = (dbEntry) => {
+  const {
+    id,
+    url,
+    contentId,
+    content,
+    updatedAt,
+    type: __typename
+  } = dbEntry
+
+  const proxyfiedContent = applyProxyUrls(content, __typename)
+
+  return {
+    id: contentId || id,
+    url,
+    updatedAt,
+    __typename,
+    ...proxyfiedContent,
+  }
+} 
+
+const getEmbedByUrl = async (rawUrl, context, forceRefetch = false) => {
+  if (!rawUrl) {
     return null
   }
 
-  const transformDBEntry = (dbEntry) => ({
-    ...dbEntry,
-    ...proxyContent(dbEntry.content, dbEntry.type),
-    id: dbEntry.typeId || dbEntry.id,
-    __typename: dbEntry.type,
-  })
+  const url = new URL(rawUrl).toString()
 
-  const { loaders } = context
-
-  const embed = await loaders.Embed.byUrl.load(url.toLowerCase())
+  const embed = await context.loaders.Embed.byUrl.load(url)
 
   const now = moment()
   const doFetch = mustFetch(embed, now)
@@ -202,6 +214,21 @@ const getEmbedByUrl = async (url, context, forceRefetch = false) => {
   return null
 }
 
+const getEmbedData = ({ id, embedType }, t) => {
+  const embed = embeds.find(({ TYPE }) => TYPE === embedType)
+
+  if (!embed) {
+    throw new Error(`embedType ${embedType} unknown.`)
+  }
+
+  return embed.get(id, t)
+}
+
+const canGetEmbedType = (embedType) => types.includes(embedType)
+
 module.exports = {
   getEmbedByUrl,
+  getEmbedData,
+  canGetEmbedType,
+  applyProxyUrls,
 }

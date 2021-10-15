@@ -121,8 +121,6 @@ type Document {
     after: ID
     feed: Boolean
   ): DocumentConnection!
-
-  embeds(types: [EmbedType!]): [Embed!]!
 }
 
 type DocumentNode {

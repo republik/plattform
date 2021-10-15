@@ -84,22 +84,23 @@ const getTweetById = async (id, t) => {
 
   return {
     id: response.id_str,
-    createdAt: new Date(response.created_at),
-    retrievedAt: new Date(),
     text: sanitizedText,
     html,
+    createdAt: new Date(response.created_at),
+    retrievedAt: new Date(),
     userId: response.user.id_str,
     userName: response.user.name,
     userScreenName: response.user.screen_name,
     userProfileImageUrl: response.user.profile_image_url_https,
     image: firstMedium && firstMedium.media_url_https,
-    more: more,
-    playable: playable,
+    more,
+    playable,
   }
 }
 
 module.exports = {
-  getTweetById,
-  imageKeys: ['userProfileImageUrl', 'image'],
+  TYPE: 'TwitterEmbed',
   REGEX: /^https?:\/\/twitter\.com\/(?:#!\/)?\w+\/status(?:es)?\/(\d+)/,
+  get: getTweetById,
+  imageKeys: ['userProfileImageUrl', 'image'],
 }
