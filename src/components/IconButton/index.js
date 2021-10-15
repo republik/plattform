@@ -21,7 +21,8 @@ const IconButton = React.forwardRef(
       onClick,
       children,
       style,
-      size
+      size,
+      disabled
     },
     ref
   ) => {
@@ -29,14 +30,14 @@ const IconButton = React.forwardRef(
     const customStyles = style || null
     const [colorScheme] = useColorContext()
 
-    const fillValue = fill || fillColorName || 'text'
+    const fillValue = disabled ? 'disabled' : fill || fillColorName || 'text'
 
     return (
       <Element
         {...styles.button}
-        {...((onClick || href) && styles.hover)}
+        {...((onClick || href) && !disabled && styles.hover)}
         style={{
-          cursor: href || onClick ? 'pointer' : 'auto',
+          cursor: (href || onClick) && !disabled ? 'pointer' : 'auto',
           ...customStyles
         }}
         onClick={onClick}
@@ -45,6 +46,7 @@ const IconButton = React.forwardRef(
         rel={target === '_blank' ? 'noopener' : ''}
         ref={ref}
         title={title}
+        disabled={disabled}
       >
         <Icon
           {...styles.icon}
@@ -98,6 +100,9 @@ const styles = {
     },
     [mUp]: {
       marginRight: 24
+    },
+    ':disabled': {
+      cursor: 'default'
     }
   }),
   hover: css({
