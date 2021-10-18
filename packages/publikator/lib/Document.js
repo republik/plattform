@@ -17,9 +17,16 @@ const { updateRepo } = require('./postgres')
 
 const slugDateFormat = timeFormat('%Y/%m/%d')
 
+const PREFIX_PREPUBLICATION_PATH = 'vorschau'
+
 const getPath = ({ slug, template, publishDate, prepublication, path }) => {
   if (path) {
-    return path
+    const parts = [
+      !!prepublication && PREFIX_PREPUBLICATION_PATH,
+      ...path.split('/'),
+    ]
+  
+    return `/${parts.filter(Boolean).join('/')}`
   }
 
   const cleanedSlug =
@@ -36,7 +43,7 @@ const getPath = ({ slug, template, publishDate, prepublication, path }) => {
   ].includes(template)
 
   const parts = [
-    !!prepublication && 'vorschau',
+    !!prepublication && PREFIX_PREPUBLICATION_PATH,
     useSlugDate && slugDateFormat(publishDate),
     template === 'dossier' && 'dossier',
     template === 'format' && 'format',
