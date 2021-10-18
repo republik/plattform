@@ -4,24 +4,17 @@ import { csvParse } from 'd3-dsv'
 
 import Field from '../Form/Field'
 import Dropdown from '../Form/Dropdown'
+import Checkbox from '../Form/Checkbox'
+import Slider from '../Form/Slider'
 import { Interaction, fontStyles } from '../Typography'
 import { useColorContext } from '../Colors/ColorContext'
+import { useCommaField } from './ChartEditor.utils'
 
 import { timeParse } from '../../lib/timeFormat'
+import { getFormat } from './utils'
+import { defaultProps } from './ChartContext'
 
 const styles = {
-  wrapper: css({}),
-  row: css({
-    display: 'flex',
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    width: '100%',
-    justifyContent: 'space-between'
-  }),
-  column: css({
-    width: '48%',
-    position: 'relative'
-  }),
   orderBy: css({
     ...fontStyles.sansSerifRegular16,
     outline: 'none',
@@ -41,9 +34,34 @@ const styles = {
   }),
   tabs: css({
     margin: '20px 0px'
+  }),
+  gridContainer: css({
+    display: 'grid',
+    gridTemplateColumns: '1fr 1fr',
+    gridTemplateRows: '1fr',
+    gap: '50px 30px',
+    gridTemplateAreas: '"xaxis yaxis" "color layout"',
+    margin: '20px 0'
   })
 }
 
+const chartTypes = [
+  {
+    value: 'Line',
+    text: 'Linie'
+  },
+  {
+    value: 'TimeBar',
+    text: 'Balken über Zeit'
+  },
+  {
+    value: 'Bar',
+    text: 'Balken'
+  }
+]
+
+// TODO: there is also a xNumberFormat option if some is using a linear xScale and the yNumberFormat
+// is not machting the xNumberFormat. Should we include this?
 const numberFormats = [
   {
     value: '.0%',
@@ -56,6 +74,32 @@ const numberFormats = [
   {
     value: '.1f',
     text: '20,0'
+  }
+]
+
+const xScaleTypes = [
+  {
+    value: 'time',
+    text: 'zeitlich'
+  },
+  {
+    value: 'linear',
+    text: 'linear'
+  },
+  {
+    value: 'ordinal',
+    text: 'ordinal'
+  }
+]
+
+const yScaleTypes = [
+  {
+    value: 'linear',
+    text: 'linear'
+  },
+  {
+    value: 'log',
+    text: 'logarithmisch'
   }
 ]
 
@@ -83,9 +127,44 @@ const ChartEditor = ({ data, value, onChange }) => {
   const [activeTab, setActiveTab] = useState('basic')
   const chartData = useMemo(() => csvParse(data), [data])
 
+  const createRanges = ({
+    neutral,
+    sequential,
+    sequential3,
+    opposite3,
+    discrete
+  }) => {
+    const oppositeReversed = [].concat(opposite3).reverse()
+    return {
+      diverging1: [sequential3[1], opposite3[1]],
+      diverging1n: [sequential3[1], neutral, opposite3[1]],
+      diverging2: [...sequential3.slice(0, 2), ...oppositeReversed.slice(0, 2)],
+      diverging3: [...sequential3, ...oppositeReversed],
+      sequential3,
+      sequential: sequential,
+      discrete
+    }
+  }
+
+  const colorRanges = useMemo(() => createRanges(colorScheme.ranges), [
+    colorScheme
+  ])
+
+  const colorRangesArray = Object.keys(colorRanges)
+
+  const colorDropdownItems = colorRangesArray.map((d, i) => {
+    return {
+      value: d,
+      text: d,
+      element: (
+        <ColorElement key={'colorRange' + i} colorRange={colorRanges[d]} />
+      )
+    }
+  })
+
   const columnNames = Object.keys(chartData[0])
 
-  const xAxisColumns = columnNames.map(d => {
+  const columns = columnNames.map(d => {
     return { value: d, text: d }
   })
 
@@ -134,69 +213,35 @@ const ChartEditor = ({ data, value, onChange }) => {
 
       {activeTab === 'basic' ? (
         <BasicSettings
-          xAxisColumns={xAxisColumns}
+          columns={columns}
           value={value}
           createOnDropdownChange={createOnDropdownChange}
           createOnFieldChange={createOnFieldChange}
+          colorDropdownItems={colorDropdownItems}
         />
       ) : (
-        <AdvancedSettings />
+        <AdvancedSettings
+          columns={columns}
+          value={value}
+          createOnDropdownChange={createOnDropdownChange}
+          createOnFieldChange={createOnFieldChange}
+          colorDropdownItems={colorDropdownItems}
+        />
       )}
     </div>
   )
 }
 
-const parseCommaValue = (newValue = '') => {
-  return newValue
-    .split(',')
-    .map(d => d.trim())
-    .filter(Boolean)
-}
-const formatCommaValue = (value = []) => value.join(', ')
-
-const useCommaField = (value, onChange, parser) => {
-  const isInvalid = newValue => {
-    try {
-      return !parser(newValue)
-    } catch (e) {
-      return true
-    }
-  }
-
-  const valueToField = (value = []) => ({
-    error: value.some(isInvalid),
-    value: formatCommaValue(value)
-  })
-
-  const [field, setField] = useState(valueToField(value))
-
-  // maybe later, depends on if it can change on the outside
-  // useEffect(() => {
-  //   setField(valueToField(value))
-  // }, [value])
-
-  const onFieldValueChange = (_, newValue) => {
-    const parsedValue = parseCommaValue(newValue)
-    const error = parsedValue.some(isInvalid)
-    setField({
-      value: newValue,
-      error
-    })
-    if (!error && formatCommaValue(value) !== formatCommaValue(parsedValue)) {
-      onChange(_, parsedValue)
-    }
-  }
-
-  return [field, onFieldValueChange]
-}
-
 const BasicSettings = props => {
   const {
-    xAxisColumns,
+    columns,
     value,
     createOnDropdownChange,
-    createOnFieldChange
+    createOnFieldChange,
+    colorDropdownItems
   } = props
+
+  const [showCustomColors, setShowCustomColors] = useState(false)
 
   const timeFormatParser = timeParse(
     value.timeParse || value.timeFormat || '%Y'
@@ -207,50 +252,128 @@ const BasicSettings = props => {
     timeFormatParser
   )
 
+  const numberFormatParser = getFormat(value.numberFormat || '.1f')
+  const [yTicksField, onYTicksChange] = useCommaField(
+    value.xTicks,
+    createOnFieldChange('yTicks'),
+    numberFormatParser
+  )
+
+  const handleShowCustomColors = () => {
+    showCustomColors ? setShowCustomColors(false) : setShowCustomColors(true)
+  }
+
   return (
-    <div {...styles.wrapper}>
-      <div {...styles.row}>
-        <div {...styles.column}>
+    <div>
+      <Dropdown
+        label='Charttyp auswählen'
+        items={chartTypes}
+        value={value.type || 'type'}
+        onChange={createOnDropdownChange('type')}
+      />
+      <div {...styles.gridContainer}>
+        <div className='xaxis'>
           <Interaction.H3>Horizontale Achse</Interaction.H3>
           <Dropdown
             label='Spalte auswählen'
-            items={xAxisColumns}
-            value={value.x === undefined ? 'year' : value.x}
+            items={columns}
+            value={value.x || 'year'}
             onChange={createOnDropdownChange('x')}
           />
           <Dropdown
             label='Achsenformat'
             items={timeFormats}
-            value={value.timeFormat === undefined ? '%Y' : value.timeFormat}
+            value={value.timeFormat || '%Y'}
             onChange={createOnDropdownChange('timeFormat')}
           />
           <Field
             label='Achsenticks'
             value={xTicksField.value}
-            error={xTicksField.error && 'Achsenticks fehlerhaft'}
+            error={xTicksField.error && 'Fehler in Achsenticks'}
             onChange={onXTicksChange}
           />
           <Field
             label='Beschriftung'
-            value={value.xUnit === undefined ? '' : value.xUnit}
+            value={value.xUnit || ''}
             onChange={createOnFieldChange('xUnit')}
           />
+          <Dropdown
+            label='Skalierungstyp'
+            items={xScaleTypes}
+            value={value.xScale || 'time'}
+            onChange={createOnDropdownChange('xScale')}
+          />
         </div>
-        <div {...styles.column}>
+        <div className='yaxis'>
           <Interaction.H3>Vertikale Achse</Interaction.H3>
           <Dropdown
             label='Spalte auswählen'
-            items={xAxisColumns}
-            value={value.x === undefined ? '.0%' : value.x}
-            onChange={createOnDropdownChange('x')}
+            items={columns}
+            value={value.y || 'value'}
+            onChange={createOnDropdownChange('y')}
           />
           <Dropdown
             label='Achsenformat'
             items={numberFormats}
-            value={
-              value.numberFormat === undefined ? '.0%' : value.numberFormat
-            }
+            value={value.numberFormat || '.0%'}
             onChange={createOnDropdownChange('numberFormat')}
+          />
+          <Field
+            label='Achsenticks'
+            value={yTicksField.value}
+            error={yTicksField.error && 'Fehler in Achsenticks'}
+            onChange={onYTicksChange}
+          />
+          <Field
+            label='Beschriftung'
+            value={value.unit || ''}
+            onChange={createOnFieldChange('unit')}
+          />
+          <Dropdown
+            label='Skalierungstyp'
+            items={yScaleTypes}
+            value={value.yScale || 'linear'}
+            onChange={createOnDropdownChange('yScale')}
+          />
+        </div>
+        <div className='color'>
+          <Interaction.H3>Farbe</Interaction.H3>
+          <Dropdown
+            label='Spalte auswählen'
+            items={columns.concat({ text: '', value: '' })}
+            value={value.color || ''}
+            onChange={createOnDropdownChange('color')}
+          />
+          <Dropdown
+            label='Farbschema auswählen'
+            items={colorDropdownItems}
+            value={value.colorRange || 'diverging1'}
+            onChange={createOnDropdownChange('colorRange')}
+          />
+          {value.color && (
+            <Checkbox
+              checked={showCustomColors}
+              onChange={handleShowCustomColors}
+            >
+              Farben direkt zuweisen
+            </Checkbox>
+          )}
+        </div>
+        <div className='layout'>
+          <Interaction.H3>Layout</Interaction.H3>
+          <Dropdown
+            label='Spalte auswählen'
+            items={columns.concat({ text: '', value: '' })}
+            value={value.column || ''}
+            onChange={createOnDropdownChange('column')}
+          />
+          <Slider
+            label={'Anzahl Spalten pro Zeile'}
+            value={value.columns || '1'}
+            min='1'
+            max='6'
+            fullWidth
+            onChange={createOnFieldChange('columns')}
           />
         </div>
       </div>
@@ -259,7 +382,41 @@ const BasicSettings = props => {
 }
 
 const AdvancedSettings = props => {
-  return <div>No settings yet</div>
+  const {
+    columns,
+    value,
+    createOnDropdownChange,
+    createOnFieldChange,
+    colorDropdownItems
+  } = props
+  return (
+    <div {...styles.gridContainer}>
+      <div className='yaxis'>
+        <Interaction.H3>Vertikale Achse</Interaction.H3>
+        <Checkbox checked={value.zero} onChange={createOnFieldChange('zero')}>
+          Y-Achse bei 0 beginnen
+        </Checkbox>
+      </div>
+    </div>
+  )
+}
+
+const ColorElement = props => {
+  const { colorRange } = props
+  return (
+    <div style={{ display: 'flex', height: '25px', marginRight: '50px' }}>
+      {colorRange.map((d, i) => (
+        <span
+          key={d + i}
+          style={{
+            display: 'inline-block',
+            flex: 1,
+            backgroundColor: d
+          }}
+        />
+      ))}
+    </div>
+  )
 }
 
 export default ChartEditor
