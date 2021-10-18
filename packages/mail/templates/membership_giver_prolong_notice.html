@@ -61,14 +61,6 @@
                       von Nachrichten?
                     </p>
                     <p>
-                      Jede Mitgliedschaft unterstützt die Republik und die Idee
-                      hinter unserem Projekt einer wirklich unabhängigen vierten
-                      Gewalt und zentralen demokratischen Institution. Und
-                      stärkt unser gemeinsames Projekt gegen den Zynismus, den
-                      Vormarsch der Autoritären und gegen die Diktatur der
-                      Angst.
-                    </p>
-                    <p>
                       Folgende{{#if `gifted_memberships_count == 1`}}
                       Mitgliedschaft steht{{elseif `gifted_memberships_count >
                       1`}} Mitgliedschaften stehen{{/if}} zur Verlängerung an:
@@ -81,30 +73,46 @@
                       <li>{{this.olabel}}</li>
                       {{/options}}
                     </ul>
-
                     <p>
-                      Klicken Sie
-                      <a href="{{prolong_url}}"
-                        >hier, um {{#if `gifted_memberships_count == 1`}}die
-                        Geschenkmitgliedschaft{{elseif `gifted_memberships_count
-                        > 1`}}die Geschenkmitgliedschaften{{/if}} zu
-                        verlängern</a
-                      >.
+                      Klicken Sie hier, um {{#if `gifted_memberships_count ==
+                      1`}}die Geschenkmitgliedschaft{{elseif
+                      `gifted_memberships_count > 1`}}die
+                      Geschenkmitgliedschaften{{/if}} zu verlängern:
                     </p>
+                    <table
+                      width="100%"
+                      border="0"
+                      cellspacing="0"
+                      cellpadding="0"
+                    >
+                      <tr>
+                        <td>
+                          <table border="0" cellspacing="0" cellpadding="0">
+                            <tr>
+                              <td align="center" bgcolor="#3CAD00">
+                                <a
+                                  href="{{prolong_url}}"
+                                  style="font-size:20px;{{sg_font_style_sans_serif_regular}}color:#ffffff;text-decoration:none;border-radius:0;padding:15px 30px 15px 30px;border:1px solid #3CAD00;display:inline-block;"
+                                  >Jetzt weiter die Republik verschenken</a
+                                >
+                              </td>
+                            </tr>
+                          </table>
+                        </td>
+                      </tr>
+                    </table>
                     <p>
                       Falls Sie innerhalb der nächsten {{inform_claimers_days}}
                       Tage nichts unternehmen, erlauben wir uns, {{#if
-                      `gifted_memberships_count == 1`}}den oder die
-                      Beschenkte{{elseif `gifted_memberships_count > 1`}}die
-                      Beschenkten{{/if}} direkt anzufragen, ob {{#if
-                      `gifted_memberships_count == 1`}}sie oder er{{elseif
-                      `gifted_memberships_count > 1`}}sie{{/if}} ein weiteres
-                      Jahr an Bord sein {{#if `gifted_memberships_count ==
-                      1`}}möchte{{elseif `gifted_memberships_count >
-                      1`}}möchten{{/if}}. Dies dann natürlich auf eigene
-                      Rechnung.
+                      `gifted_memberships_count == 1`}} die beschenkte
+                      Person{{elseif `gifted_memberships_count > 1`}}die
+                      beschenkten Personen{{/if}} direkt anzufragen, ob
+                      sie{{/if}} ein weiteres Jahr an Bord sein {{#if
+                      `gifted_memberships_count == 1`}}möchte{{elseif
+                      `gifted_memberships_count > 1`}}möchten{{/if}}. Dies dann
+                      natürlich auf eigene Rechnung.
                     </p>
-                    <p>Vielen Dank für Ihre Unterstützung.</p>
+                    <p>Wir danken Ihnen herzlich für die Unterstützung!</p>
                     <p>Ihre Crew der Republik</p>
                   </td>
                 </tr>
