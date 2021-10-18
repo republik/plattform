@@ -116,6 +116,8 @@ const Image = (props, context) => {
   return (
     <div
       {...styles.imageContainer}
+      // recreate dom for chaning src to ensure old image is not shown while new one loads
+      key={src}
       style={{
         cursor: enableGallery // during SSR context.toggleGallery and therefore onClick are not present
           ? 'zoom-in'
