@@ -25,8 +25,7 @@ type queries {
   ): DocumentConnection!
   # (pre)published document
   document(
-    path: String
-    repoId: ID
+    path: String!
   ): Document
 }
 `

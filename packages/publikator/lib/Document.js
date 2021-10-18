@@ -17,9 +17,16 @@ const { updateRepo } = require('./postgres')
 
 const slugDateFormat = timeFormat('%Y/%m/%d')
 
-const getPath = ({ slug, template, publishDate, path }) => {
+const PREFIX_PREPUBLICATION_PATH = 'vorschau'
+
+const getPath = ({ slug, template, publishDate, prepublication, path }) => {
   if (path) {
-    return path
+    const parts = [
+      !!prepublication && PREFIX_PREPUBLICATION_PATH,
+      ...path.split('/'),
+    ]
+  
+    return `/${parts.filter(Boolean).join('/')}`
   }
 
   const cleanedSlug =
@@ -27,20 +34,24 @@ const getPath = ({ slug, template, publishDate, path }) => {
       ? new RegExp(/.*\/(.*)/g).exec(slug)[1] // ignore everything before the last /
       : slug
 
-  switch (template) {
-    case 'front':
-    case 'section':
-    case 'page':
-      return `/${cleanedSlug || ''}`
-    case 'dossier':
-      return `/dossier/${cleanedSlug}`
-    case 'format':
-      return `/format/${cleanedSlug}`
-    case 'discussion':
-      return `/${slugDateFormat(publishDate)}/${cleanedSlug}/diskussion`
-    default:
-      return `/${slugDateFormat(publishDate)}/${cleanedSlug}`
-  }
+  const useSlugDate = ![
+    'front',
+    'section',
+    'page',
+    'dossier',
+    'format',
+  ].includes(template)
+
+  const parts = [
+    !!prepublication && PREFIX_PREPUBLICATION_PATH,
+    useSlugDate && slugDateFormat(publishDate),
+    template === 'dossier' && 'dossier',
+    template === 'format' && 'format',
+    cleanedSlug || '',
+    template === 'discussion' && 'diskussion',
+  ]
+
+  return `/${parts.filter(Boolean).join('/')}`
 }
 
 // TODO this can move to packages/search as soon as redis is out
@@ -69,11 +80,12 @@ const prepareMetaForPublish = async ({
   const path = getPath({
     ...docMeta,
     publishDate,
+    prepublication,
   })
 
   // discussionId is not saved to repoMeta anymore, but repoId to discussion
   // see Meta.ownDiscussion resolver
-  if (!scheduledAt) {
+  if (!scheduledAt && !prepublication) {
     await upsertDiscussion(
       { ...docMeta, path, repoId },
       context,
