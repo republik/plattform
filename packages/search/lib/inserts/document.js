@@ -142,10 +142,14 @@ module.exports = {
         await Promise.each(
           publications,
           async function mapPublication(publication) {
-            const doc = await getDocument(
-              { id: publication.commitId, repoId: publication.repoId },
-              { publicAssets: true },
-              context,
+            const doc = JSON.parse(
+              JSON.stringify(
+                await getDocument(
+                  { id: publication.commitId, repoId: publication.repoId },
+                  { publicAssets: true },
+                  context,
+                ),
+              ),
             )
 
             const scheduledAt = publication.scheduledAt
