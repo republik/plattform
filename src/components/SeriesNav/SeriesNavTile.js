@@ -73,7 +73,7 @@ const SeriesNavTile = ({
   return (
     <div
       /* 
-      Hide PayNote for members by setting the data-hide-if-member attribute. 
+      Hide PayNote for members by setting the data-hide-if-active-membership attribute. 
       This class is defined in the MeContext in republik-frontend
       */
       {...(PayNote && {

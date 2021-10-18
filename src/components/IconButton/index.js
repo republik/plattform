@@ -22,7 +22,8 @@ const IconButton = React.forwardRef(
       children,
       style,
       size,
-      disabled
+      disabled,
+      attributes
     },
     ref
   ) => {
@@ -35,7 +36,8 @@ const IconButton = React.forwardRef(
     return (
       <Element
         {...styles.button}
-        {...((onClick || href) && !disabled && styles.hover)}
+        {...((onClick || href) && styles.hover)}
+        {...attributes}
         style={{
           cursor: (href || onClick) && !disabled ? 'pointer' : 'auto',
           ...customStyles
