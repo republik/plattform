@@ -49,6 +49,9 @@ module.exports = {
         .join('/')
     )
   },
+  issuedForUserId(doc, args, context) {  
+    return context.user?.id|| null
+  },
   async content(doc, { urlPrefix, searchString }, context, info) {
     // we only do auto slugging when in a published documents context
     // - this is easiest detectable by _all being present from documents resolver
